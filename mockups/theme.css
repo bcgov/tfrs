@@ -50,7 +50,7 @@ body {
 }
 
 input:checked + .slider {
-  background-color: #2196F3;
+  background-image: linear-gradient(to bottom,#337ab7 0,#265a88 100%);
 }
 
 input:focus + .slider {
