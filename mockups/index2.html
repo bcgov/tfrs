@@ -43,93 +43,99 @@
 		<div class="tab-content">
 		<p> </p>
 			<div class="tab-pane" id="home">
-			
 			</div> <!-- tab-pane home -->
 			<div class="tab-pane active" id="reports">
 				<div class="row">
+				    <div class="form-group">
+						<div class="col-lg-4 col-sm-6 col-xs-12">	  
+							<label for="fueltype">Fuel Type:</label>
+							  <select class="form-control" id="fueltype">
+								<option selected disabled>Select a Fuel Type</option>
+								<option>Petroleum_based_gasoline</option>
+								<option>Petroleum_based_diesel</option>
+								<option>Hydrogen</option>
+								<option>Electricity</option>
+								<option>CNG</option>
+								<option>LNG</option>
+								<option>Propane</option>
+								<option>Ethanol</option>
+								<option>Biodiesel</option>
+								<option>HDRD</option>
+								<option>Renewable_diesel</option>
+								<option>Natural_gas_based_gasoline</option>
+								<option>Renewable_gasoline</option>
+							  </select>
+							<label for="fuelclass">Fuel Class:</label>
+							  <select class="form-control" id="fuelclass">
+								<option selected disabled>Select a Fuel Class</option>
+								<option>Gasoline</option>
+								<option>Diesel</option>
+							  </select>
+							
+							<label for="section">Provision of Act:</label>
+							  <select class="form-control" id="section">
+								<option selected disabled>section used to determine carbon intensity</option>
+								<option>section 6 (5) (d) (i) - Regulation default value</option>
+								<option>Hydrogen CI Determination Method</option>
+								<option>Electricity CI Determination Method</option>
+								<option>CNG CI Determination Method</option>
+								<option>LNG CI Determination Method</option>
+								<option>Propane CI Determination Method</option>
+								<option>Diesel CI Determination Method</option>	
+								<option>Ethanol CI Determination Method</option>	
+								<option>HDRD CI Determination Method</option>	
+								<option>Biodiesel CI Determination Method</option>	
+								<option>Gasoline CI Determination Method</option>							  
+							  </select>
+							<label for="fuelcode">Fuel Code:</label>
+							  <select class="form-control" id="fuelcode" placeholder="select the fuel code">
+								<option selected disabled>If Section 6.5.c, what is the Fuel Code?</option>
+								<option>BCLCF101.0</option>
+								<option>BCLCF101.1</option>
+								<option>BCLCF102.1</option>
+								<option>BCLCF103.0</option>
+							  </select>
+							</div>
+							<div class="col-lg-4 col-sm-6 col-xs-12">
+								<label for="quantity">Fuel Quantity:</label>
+								  <input type="text" class="form-control" id="quantity" placeholder="Specify the quantity of fuel">
+								<label for="fueluse">Use of Fuel:</label>
+								  <select class="form-control" id="fuelclass">
+									<option selected disabled>Select the use of fuel</option>
+									<option>Transportation</option>
+									<option>Heating</option>
+									<option>other</option>							
+								  </select>
+							</div>
+						<div class="row">
+							<div class="col-sm-12" align="right">
+							<p> </p>
+							</div>
+						</div>
+						<div class="col-sm-12" align="right">
+							<a class="btn btn-primary" href="#"> + Add Fuel </a>
+						</div>
+					</div> <!-- / form group -->
+				</div> <!-- / row -->
+				<div class="row">
 					<div class="col-xs-12">
-						<!-- table with pagination -->
+						<h3>Fuel Supply Summary</h2>
 						
-
+						<!-- table with pagination -->
 						<table id="table"
 							data-pagination="true"
 							data-search="true"
 							data-height="350">
 						</table>
-							
-	
 						<!-- / table with pagination -->
 					</div>
-				</div>
-				
-				<div class="row">
-					
-				    <div class="form-group">
-						<div class="col-sm-6 col-xs-12">	  
-						<label for="fueltype">Fuel Type:</label>
-						  <select class="form-control" id="fueltype">
-							<option selected disabled>Select a Fuel Type</option>
-							<option>Petroleum_based_gasoline</option>
-							<option>Petroleum_based_diesel</option>
-							<option>Hydrogen</option>
-							<option>Electricity</option>
-							<option>CNG</option>
-							<option>LNG</option>
-							<option>Propane</option>
-							<option>Ethanol</option>
-							<option>Biodiesel</option>
-							<option>HDRD</option>
-							<option>Renewable_diesel</option>
-							<option>Natural_gas_based_gasoline</option>
-							<option>Renewable_gasoline</option>
-						  </select>
-						  <label for="fuelclass">Fuel Class:</label>
-						  <select class="form-control" id="fuelclass">
-							<option selected disabled>Select a Fuel Class</option>
-							<option>Gasoline</option>
-							<option>Diesel</option>
-						  </select>
-						</div>
-						<div class="col-sm-6">
-							<label for="section">Provision of Act:</label>
-							<select class="form-control" id="section">
-							  <option selected disabled>What provision of the Act was used to determine the carbon intensity?</option>
-							  <option>section 6 (5) (d) (i) - Regulation default value</option>
-							  <option>Hydrogen CI Determination Method</option>
-							  <option>Electricity CI Determination Method</option>
-							  <option>CNG CI Determination Method</option>
-							  <option>LNG CI Determination Method</option>
-							  <option>Propane CI Determination Method</option>
-							  <option>Diesel CI Determination Method</option>	
-							  <option>Ethanol CI Determination Method</option>	
-							  <option>HDRD CI Determination Method</option>	
-							  <option>Biodiesel CI Determination Method</option>	
-							  <option>Gasoline CI Determination Method</option>							  
-							</select>
-						</div>
-						<div class="col-sm-6">
-							<label for="fuelcode">Fuel Code:</label>
-							<select class="form-control" id="fuelcode" placeholder="select the fuel code">
-							  <option selected disabled>If Section 6.5.c, what is the Fuel Code?</option>
-							  <option>BCLCF101.0</option>
-							  <option>BCLCF101.1</option>
-							  <option>BCLCF102.1</option>
-							  <option>BCLCF103.0</option>
- 						   </select>
-						</div>
-						<div class="col-sm-6">
-							<label for="quantity">Fuel Quantity:</label>
-							<input type="text" class="form-control" id="quantity" placeholder="Specify the quantity of fuel">
-						</div>
-						<div class="row">
-							<div class="col-sm-12" align="right">
-								<p><a class="btn btn-primary" href="#"> + Add Fuel </a></p>
-							</div>
-						</div>
+					<div class="col-xs-12">
+						<label for="transferagreement">Do you have any transfers that you would like to report for this fuel?</label>
+						<label class="switch" id="transferagreement">
+						  <input type="checkbox">
+						  <div class="slider"></div>
+						</label>
 					</div>
-					
-					 
-					 
 				</div> <!-- / row -->
 			</div> <!-- / tab pane content -->
 			<div class="tab-pane" id="applications">
