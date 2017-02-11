@@ -41,8 +41,8 @@ body {
 .slider:before {
   position: absolute;
   content: "";
-  height: 28px;
-  width: 28px;
+  height: 27px;
+  width: 27px;
   left: 2px;
   bottom: 2px;
   background-color: white;
@@ -52,7 +52,6 @@ body {
 
 input:checked + .slider {
   background-image: linear-gradient(to bottom,#337ab7 0,#265a88 100%);
-  /*background-color: #2196F3;*/
 }
 
 input:focus + .slider {
