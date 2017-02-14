@@ -36,7 +36,7 @@ body {
   background-color: #ccc;
   -webkit-transition: .4s;
   transition: .4s;
-  border-radius: 4px;
+  border-radius: 5px;
 }
 
 .slider:before {
@@ -49,6 +49,7 @@ body {
   background-color: white;
   -webkit-transition: .4s;
   transition: .4s;
+  border-radius: 4px;
 }
 
 input:checked + .slider {
