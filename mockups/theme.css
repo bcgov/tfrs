@@ -37,8 +37,8 @@ body {
   -webkit-transition: .4s;
   transition: .4s;
   border-radius: 5px;
-  padding-top: 15px;
-  padding-bottom:30px;
+  padding-top: 5px;
+  padding-bottom:10px;
 }
 
 .slider:before {
@@ -52,8 +52,8 @@ body {
   -webkit-transition: .4s;
   transition: .4s;
   border-radius: 4px;
-  padding-top: 15px;
-  padding-bottom:30px;
+  padding-top: 5px;
+  padding-bottom:10px;
 }
 
 input:checked + .slider {
