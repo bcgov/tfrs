@@ -54,6 +54,7 @@ body {
 
 input:checked + .slider {
   background-image: linear-gradient(to bottom,#337ab7 0,#265a88 100%);
+  content: "Yes";
 }
 
 input:focus + .slider {
@@ -64,6 +65,7 @@ input:checked + .slider:before {
   -webkit-transform: translateX(26px);
   -ms-transform: translateX(26px);
   transform: translateX(26px);
+  content: "No";
 }
 
 /* Rounded sliders */
