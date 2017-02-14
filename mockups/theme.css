@@ -20,7 +20,7 @@ body {
 .switch {
   position: relative;
   display: inline-block;
-  width: 65px;
+  width: 68px;
   height: 32px;
 }
 
@@ -47,7 +47,7 @@ body {
   position: absolute;
   content: "";
   height: 28px;
-  width: 32px;
+  width: 33px;
   left: 2px;
   bottom: 2px;
   background-color: white;
@@ -69,9 +69,9 @@ input:focus + .slider {
 }
 
 input:checked + .slider:before {
-  -webkit-transform: translateX(30px);
-  -ms-transform: translateX(30px);
-  transform: translateX(30px);
+  -webkit-transform: translateX(31px);
+  -ms-transform: translateX(31px);
+  transform: translateX(31px);
 }
 input:checked + .slider:before {
    content:"Yes";
