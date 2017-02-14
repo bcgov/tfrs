@@ -36,13 +36,14 @@ body {
   background-color: #ccc;
   -webkit-transition: .4s;
   transition: .4s;
+  border-radius: 4px;
 }
 
 .slider:before {
   position: absolute;
   content: "";
-  height: 27px;
-  width: 27px;
+  height: 28px;
+  width: 28px;
   left: 2px;
   bottom: 2px;
   background-color: white;
