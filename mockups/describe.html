@@ -43,94 +43,144 @@
 		<div class="tab-content">
 		<p> </p>
 			<div class="tab-pane" id="home">
-			
 			</div> <!-- tab-pane home -->
 			<div class="tab-pane active" id="reports">
+				
+				<div class="row" valign="center">
+					<div class="col-xs-6" valign="top">
+						<label for="supplyinbc">Did you supply or transfer fuel in BC this compliance period?</label>
+					</div>
+					<div class="col-xs-6">
+						<div class="btn-group btn-toggle" data-toggle="collapse" data-target="#reportFuelSupply,#fuelSupplySummaryTable"> 
+							<button class="btn btn-sm btn-default">YES</button>
+							<button class="btn btn-sm btn-primary active">NO</button>
+						</div>
+					</div>
+				</div> <!-- / row -->
+				
+				<div class="row">
+				    <div class="collapse" id="reportFuelSupply">
+					<div class="form-group">
+								<div class="col-lg-4 col-sm-6 col-xs-12">	  
+									<label for="fueltype">Fuel Type:</label>
+									  <select class="form-control" id="fueltype">
+										<option selected disabled>Select a Fuel Type</option>
+										<option>Petroleum_based_gasoline</option>
+										<option>Petroleum_based_diesel</option>
+										<option>Hydrogen</option>
+										<option>Electricity</option>
+										<option>CNG</option>
+										<option>LNG</option>
+										<option>Propane</option>
+										<option>Ethanol</option>
+										<option>Biodiesel</option>
+										<option>HDRD</option>
+										<option>Renewable_diesel</option>
+										<option>Natural_gas_based_gasoline</option>
+										<option>Renewable_gasoline</option>
+									  </select>
+									<label for="fuelclass">Fuel Class:</label>
+									  <select class="form-control" id="fuelclass">
+										<option selected disabled>Select a Fuel Class</option>
+										<option>Gasoline</option>
+										<option>Diesel</option>
+									  </select>
+									
+									<label for="section">Provision of Act:</label>
+									  <select class="form-control" id="section">
+										<option selected disabled>section used to determine carbon intensity</option>
+										<option>section 6 (5) (d) (i) - Regulation default value</option>
+										<option>Hydrogen CI Determination Method</option>
+										<option>Electricity CI Determination Method</option>
+										<option>CNG CI Determination Method</option>
+										<option>LNG CI Determination Method</option>
+										<option>Propane CI Determination Method</option>
+										<option>Diesel CI Determination Method</option>	
+										<option>Ethanol CI Determination Method</option>	
+										<option>HDRD CI Determination Method</option>	
+										<option>Biodiesel CI Determination Method</option>	
+										<option>Gasoline CI Determination Method</option>							  
+									  </select>
+									<label for="fuelcode">Fuel Code:</label>
+									  <select class="form-control" id="fuelcode" placeholder="select the fuel code">
+										<option selected disabled>If Section 6.5.c, what is the Fuel Code?</option>
+										<option>BCLCF101.0</option>
+										<option>BCLCF101.1</option>
+										<option>BCLCF102.1</option>
+										<option>BCLCF103.0</option>
+									  </select>
+								</div>
+								<div class="col-lg-4 col-sm-6 col-xs-12">
+									<label for="quantity">Fuel Quantity:</label>
+									  <input type="text" class="form-control" id="quantity" placeholder="Specify the quantity of fuel">
+									<label for="fueluse">Use of Fuel:</label>
+									  <select class="form-control" id="fuelclass">
+										<option selected disabled>Select the use of fuel</option>
+										<option>Transportation</option>
+										<option>Heating</option>
+										<option>other</option>							
+									  </select>
+								</div>
+								<div class="col-sm-12" align="right">
+								<p> </p>
+								</div>
+								<div class="col-sm-12" align="right">
+									<a class="btn btn-primary" href="#"> + Add Fuel </a>
+								</div>
+					</div> <!-- / form group -->
+					</div> <!-- /collapse -->
+				</div> <!-- / row -->
 				<div class="row">
 					<div class="col-xs-12">
-						<!-- table with pagination -->
+						<h3>Fuel Supply Summary</h3>
 						
-
-						<table id="table"
+						<!-- table with pagination -->
+						<table id="fuelSupplyTable"
 							data-pagination="true"
 							data-search="true"
 							data-height="350">
 						</table>
-							
-	
 						<!-- / table with pagination -->
 					</div>
-				</div>
-				
+				</div> <!-- /row -->
 				<div class="row">
-					
-				    <div class="form-group">
-						<div class="col-sm-6 col-xs-12">	  
-						<label for="fueltype">Fuel Type:</label>
-						  <select class="form-control" id="fueltype">
-							<option selected disabled>Select a Fuel Type</option>
-							<option>Petroleum_based_gasoline</option>
-							<option>Petroleum_based_diesel</option>
-							<option>Hydrogen</option>
-							<option>Electricity</option>
-							<option>CNG</option>
-							<option>LNG</option>
-							<option>Propane</option>
-							<option>Ethanol</option>
-							<option>Biodiesel</option>
-							<option>HDRD</option>
-							<option>Renewable_diesel</option>
-							<option>Natural_gas_based_gasoline</option>
-							<option>Renewable_gasoline</option>
-						  </select>
-						  <label for="fuelclass">Fuel Class:</label>
-						  <select class="form-control" id="fuelclass">
-							<option selected disabled>Select a Fuel Class</option>
-							<option>Gasoline</option>
-							<option>Diesel</option>
-						  </select>
-						</div>
-						<div class="col-sm-6">
-							<label for="section">Provision of Act:</label>
-							<select class="form-control" id="section">
-							  <option selected disabled>What provision of the Act was used to determine the carbon intensity?</option>
-							  <option>section 6 (5) (d) (i) - Regulation default value</option>
-							  <option>Hydrogen CI Determination Method</option>
-							  <option>Electricity CI Determination Method</option>
-							  <option>CNG CI Determination Method</option>
-							  <option>LNG CI Determination Method</option>
-							  <option>Propane CI Determination Method</option>
-							  <option>Diesel CI Determination Method</option>	
-							  <option>Ethanol CI Determination Method</option>	
-							  <option>HDRD CI Determination Method</option>	
-							  <option>Biodiesel CI Determination Method</option>	
-							  <option>Gasoline CI Determination Method</option>							  
-							</select>
-						</div>
-						<div class="col-sm-6">
-							<label for="fuelcode">Fuel Code:</label>
-							<select class="form-control" id="fuelcode" placeholder="select the fuel code">
-							  <option selected disabled>If Section 6.5.c, what is the Fuel Code?</option>
-							  <option>BCLCF101.0</option>
-							  <option>BCLCF101.1</option>
-							  <option>BCLCF102.1</option>
-							  <option>BCLCF103.0</option>
- 						   </select>
-						</div>
-						<div class="col-sm-6">
-							<label for="quantity">Fuel Quantity:</label>
-							<input type="text" class="form-control" id="quantity" placeholder="Specify the quantity of fuel">
-						</div>
-						<div class="row">
-							<div class="col-sm-12" align="right">
-								<p><a class="btn btn-primary" href="#"> + Add Fuel </a></p>
-							</div>
+					<div class="col-xs-6" valign="top">
+						<label for="transferagreement">Do you have any transfers that you would like to report for this fuel?</label>
+					</div>
+					<div class="col-xs-6">
+						<div class="btn-group btn-toggle" data-toggle="collapse" data-target="#transfers0,#transfers1,#transfers2,#transfers3,#transfers4"> 
+							<button class="btn btn-sm btn-default">YES</button>
+							<button class="btn btn-sm btn-primary active">NO</button>
 						</div>
 					</div>
-					
-					 
-					 
 				</div> <!-- / row -->
+				<div class="row">
+					<div class="col-xs-12 collapse" id="transfers0">
+						<p>I transferred a fuel quantity of: </p>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-xs-12 col-sm-6 col-lg-4 collapse" id="transfers1">
+						  <input type="text" class="form-control" id="quantityTransferred" placeholder="Specify the quantity of fuel transferred">
+					</div>
+					<div class="col-xs-12 col-sm-6 col-lg-2 collapse" id="transfers2">Litres
+						<div class="btn-group btn-toggle" id="transferDirection"> 
+							<button class="btn btn-sm btn-default">TO</button>
+							<button class="btn btn-sm btn-primary active">FROM</button>
+						</div>
+					</div>
+					<div class="col-xs-12 col-sm-6 col-lg-2 collapse" id="transfers3">
+						<p>this Transfer Partner: </p>
+					</div>
+					<div class="col-xs-12 col-sm-6 col-lg-4 collapse" id="transfers4">
+						  <select class="form-control" id="transferPartner">
+							<option selected disabled>Select Legal and/or Operating Name of supplier</option>
+							<option>Shell</option>
+							<option>PetroCan</option>
+							<option>BigPetro</option>							
+						</select>
+					</div>
+				</div> <!-- /row -->
 			</div> <!-- / tab pane content -->
 			<div class="tab-pane" id="applications">
 				<p> </p>
@@ -288,14 +338,39 @@
 							];
 						
 							$(function() {
-							  $('#table').bootstrapTable({
+							  $('#fuelSupplyTable').bootstrapTable({
 								data: data,
 								columns: columns
 							  });
 							});
-
-
-
 							</script>
+							<script>
+							/*bootstrap switch button toggle effect*/
+							$('.btn-toggle').click(function() {
+								$(this).find('.btn').toggleClass('active');  
+								
+								if ($(this).find('.btn-primary').size()>0) {
+									$(this).find('.btn').toggleClass('btn-primary');
+								}
+								if ($(this).find('.btn-danger').size()>0) {
+									$(this).find('.btn').toggleClass('btn-danger');
+								}
+								if ($(this).find('.btn-success').size()>0) {
+									$(this).find('.btn').toggleClass('btn-success');
+								}
+								if ($(this).find('.btn-info').size()>0) {
+									$(this).find('.btn').toggleClass('btn-info');
+								}
+								
+								$(this).find('.btn').toggleClass('btn-default');
+								   
+							});
+
+							$('form').submit(function(){
+								alert($(this["options"]).val());
+								return false;
+							});
+							</script>
+							
   </body>
 </html>
