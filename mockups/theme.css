@@ -1,5 +1,5 @@
 body {
-  padding-top: 15px;
+  padding-top: 0px;
   padding-bottom: 30px;
 }
 
@@ -91,7 +91,7 @@ input:not(:checked) + .slider:before {
 
 #header-main {
     background-color: #003366;
-	  color: #FFFFFF;
+	color: #FFFFFF;
 }
 
 .navigationRibbon {
