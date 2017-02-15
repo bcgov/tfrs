@@ -51,15 +51,16 @@
 						<label for="supplyinbc">Did you supply or transfer fuel in BC this compliance period?</label>
 					</div>
 					<div class="col-xs-6">
-						<label class="switch" id="supplyinbc">
-						  <input type="checkbox" data-toggle="collapse" data-target="#reportFuelSupply">
-						  <div class="slider"></div>
-						</label>
+						<div class="btn-group btn-toggle" data-toggle="collapse" data-target="#reportFuelSupply,#fuelSupplySummaryTable"> 
+							<button class="btn btn-sm btn-default">YES</button>
+							<button class="btn btn-sm btn-primary active">NO</button>
+						</div>
 					</div>
 				</div> <!-- / row -->
-				<div class="collapse" id="reportFuelSupply">
+				
 				<div class="row">
-				    <div class="form-group">
+				    <div class="collapse" id="reportFuelSupply">
+					<div class="form-group">
 								<div class="col-lg-4 col-sm-6 col-xs-12">	  
 									<label for="fueltype">Fuel Type:</label>
 									  <select class="form-control" id="fueltype">
@@ -127,6 +128,7 @@
 									<a class="btn btn-primary" href="#"> + Add Fuel </a>
 								</div>
 					</div> <!-- / form group -->
+					</div> <!-- /collapse -->
 				</div> <!-- / row -->
 				<div class="row">
 					<div class="col-xs-12">
@@ -140,17 +142,45 @@
 						</table>
 						<!-- / table with pagination -->
 					</div>
+				</div> <!-- /row -->
+				<div class="row">
 					<div class="col-xs-6" valign="top">
 						<label for="transferagreement">Do you have any transfers that you would like to report for this fuel?</label>
 					</div>
 					<div class="col-xs-6">
-						<label class="switch" id="transferagreement">
-						  <input type="checkbox">
-						  <div class="slider"></div>
-						</label>
+						<div class="btn-group btn-toggle" data-toggle="collapse" data-target="#transfers0,#transfers1,#transfers2,#transfers3,#transfers4"> 
+							<button class="btn btn-sm btn-default">YES</button>
+							<button class="btn btn-sm btn-primary active">NO</button>
+						</div>
 					</div>
 				</div> <!-- / row -->
-				</div> <!-- /collapse -->
+				<div class="row">
+					<div class="col-xs-12 collapse" id="transfers0">
+						<p>I transferred a fuel quantity of: </p>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-xs-12 col-sm-6 col-lg-4 collapse" id="transfers1">
+						  <input type="text" class="form-control" id="quantityTransferred" placeholder="Specify the quantity of fuel transferred">
+					</div>
+					<div class="col-xs-12 col-sm-6 col-lg-2 collapse" id="transfers2">Litres
+						<div class="btn-group btn-toggle" id="transferDirection"> 
+							<button class="btn btn-sm btn-default">TO</button>
+							<button class="btn btn-sm btn-primary active">FROM</button>
+						</div>
+					</div>
+					<div class="col-xs-12 col-sm-6 col-lg-2 collapse" id="transfers3">
+						<p>this Transfer Partner: </p>
+					</div>
+					<div class="col-xs-12 col-sm-6 col-lg-4 collapse" id="transfers4">
+						  <select class="form-control" id="transferPartner">
+							<option selected disabled>Select Legal and/or Operating Name of supplier</option>
+							<option>Shell</option>
+							<option>PetroCan</option>
+							<option>BigPetro</option>							
+						</select>
+					</div>
+				</div> <!-- /row -->
 			</div> <!-- / tab pane content -->
 			<div class="tab-pane" id="applications">
 				<p> </p>
@@ -314,5 +344,33 @@
 							  });
 							});
 							</script>
+							<script>
+							/*bootstrap switch button toggle effect*/
+							$('.btn-toggle').click(function() {
+								$(this).find('.btn').toggleClass('active');  
+								
+								if ($(this).find('.btn-primary').size()>0) {
+									$(this).find('.btn').toggleClass('btn-primary');
+								}
+								if ($(this).find('.btn-danger').size()>0) {
+									$(this).find('.btn').toggleClass('btn-danger');
+								}
+								if ($(this).find('.btn-success').size()>0) {
+									$(this).find('.btn').toggleClass('btn-success');
+								}
+								if ($(this).find('.btn-info').size()>0) {
+									$(this).find('.btn').toggleClass('btn-info');
+								}
+								
+								$(this).find('.btn').toggleClass('btn-default');
+								   
+							});
+
+							$('form').submit(function(){
+								alert($(this["options"]).val());
+								return false;
+							});
+							</script>
+							
   </body>
 </html>
