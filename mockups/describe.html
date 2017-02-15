@@ -26,13 +26,15 @@
 
   </head>
   <body>
-
-  
-    <div class="container">
-		<div class="jumbotron">
-			<h2><a href="index.html">Transportation Fuels Reporting System</a></h2>
-			<p>Welcome to TFRS</p>
+	<div id="header-main">
+		<div class="container">
+			<div class="row" id="header-main-row1">
+				<h2><a href="https://www2.gov.bc.ca/gov/content/home"><img src="http://www2.gov.bc.ca/assets/gov/home/bc_gov_logo_transparent.png" alt="Government of B.C." title="Government of B.C." /></a>
+				Transportation Fuels Reporting System</h2>
+			</div>
 		</div>
+	</div>
+	<div class="navigationRibbon">
 	</div>
 	<div class="container">
 		<ul class="nav nav-tabs">
@@ -43,7 +45,8 @@
 		<div class="tab-content">
 		<p> </p>
 			<div class="tab-pane" id="home">
-			</div> <!-- tab-pane home -->
+				<!-- Home Content Here -->
+			</div> <!-- / tab-pane home -->
 			<div class="tab-pane active" id="reports">
 				
 				<div class="row" valign="center">
@@ -59,7 +62,7 @@
 				</div> <!-- / row -->
 				
 				<div class="row">
-				    <div class="collapse" id="reportFuelSupply">
+				    <!--<div class="collapse" id="reportFuelSupply">-->
 					<div class="form-group">
 								<div class="col-lg-4 col-sm-6 col-xs-12">	  
 									<label for="fueltype">Fuel Type:</label>
@@ -128,7 +131,7 @@
 									<a class="btn btn-primary" href="#"> + Add Fuel </a>
 								</div>
 					</div> <!-- / form group -->
-					</div> <!-- /collapse -->
+					<!--</div> <!-- /collapse -->
 				</div> <!-- / row -->
 				<div class="row">
 					<div class="col-xs-12">
@@ -148,39 +151,41 @@
 						<label for="transferagreement">Do you have any transfers that you would like to report for this fuel?</label>
 					</div>
 					<div class="col-xs-6">
-						<div class="btn-group btn-toggle" data-toggle="collapse" data-target="#transfers0,#transfers1,#transfers2,#transfers3,#transfers4"> 
+						<div class="btn-group btn-toggle" data-toggle="collapse" data-target="#transfers,#transfers0,#transfers1,#transfers2,#transfers3,#transfers4"> 
 							<button class="btn btn-sm btn-default">YES</button>
 							<button class="btn btn-sm btn-primary active">NO</button>
 						</div>
 					</div>
 				</div> <!-- / row -->
-				<div class="row">
-					<div class="col-xs-12 collapse" id="transfers0">
-						<p>I transferred a fuel quantity of: </p>
-					</div>
-				</div>
-				<div class="row">
-					<div class="col-xs-12 col-sm-6 col-lg-4 collapse" id="transfers1">
-						  <input type="text" class="form-control" id="quantityTransferred" placeholder="Specify the quantity of fuel transferred">
-					</div>
-					<div class="col-xs-12 col-sm-6 col-lg-2 collapse" id="transfers2">Litres
-						<div class="btn-group btn-toggle" id="transferDirection"> 
-							<button class="btn btn-sm btn-default">TO</button>
-							<button class="btn btn-sm btn-primary active">FROM</button>
+				<!--<div class="collapse" id="transfers">-->
+					<div class="row">
+						<div class="col-xs-12" id="transfers0">
+							<p>I transferred a fuel quantity of: </p>
 						</div>
 					</div>
-					<div class="col-xs-12 col-sm-6 col-lg-2 collapse" id="transfers3">
-						<p>this Transfer Partner: </p>
-					</div>
-					<div class="col-xs-12 col-sm-6 col-lg-4 collapse" id="transfers4">
-						  <select class="form-control" id="transferPartner">
-							<option selected disabled>Select Legal and/or Operating Name of supplier</option>
-							<option>Shell</option>
-							<option>PetroCan</option>
-							<option>BigPetro</option>							
-						</select>
-					</div>
-				</div> <!-- /row -->
+					<div class="row">
+						<div class="col-xs-12 col-sm-6 col-lg-4" id="transfers1">
+							  <input type="text" class="form-control" id="quantityTransferred" placeholder="Specify the quantity of fuel transferred">
+						</div>
+						<div class="col-xs-12 col-sm-6 col-lg-2" id="transfers2">Litres
+							<div class="btn-group btn-toggle" id="transferDirection"> 
+								<button class="btn btn-sm btn-default">TO</button>
+								<button class="btn btn-sm btn-primary active">FROM</button>
+							</div>
+						</div>
+						<div class="col-xs-12 col-sm-6 col-lg-2" id="transfers3">
+							<p>this Transfer Partner: </p>
+						</div>
+						<div class="col-xs-12 col-sm-6 col-lg-4" id="transfers4">
+							  <select class="form-control" id="transferPartner">
+								<option selected disabled>Select Legal and/or Operating Name of supplier</option>
+								<option>Shell</option>
+								<option>PetroCan</option>
+								<option>BigPetro</option>							
+							</select>
+						</div>
+					</div> <!-- /row -->
+				<!--</div> <!-- / collapse -->
 			</div> <!-- / tab pane content -->
 			<div class="tab-pane" id="applications">
 				<p> </p>
