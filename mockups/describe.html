@@ -50,24 +50,25 @@
 			<div class="tab-pane active" id="reports">
 				
 				<div class="row" valign="center">
-					<div class="col-xs-6" valign="top">
+					<div class="col-xs-8" valign="top">
 						<label for="supplyinbc">Did you supply or transfer fuel in BC this compliance period?</label>
 					</div>
-					<div class="col-xs-2">
-						<div class="btn-group btn-toggle" data-toggle="collapse" data-target="#reportFuelSupply,#fuelSupplySummaryTable"> 
-							<button class="btn btn-sm btn-default">YES</button>
-							<button class="btn btn-sm btn-primary active">NO</button>
+					<div class="col-xs-4">
+						<div class="btn-group btn-toggle" data-toggle="collapse" data-target="#reportFuelSupply,#fuelSupplySummaryTable,#ifTransfers,#summary,#submitFuel,#transferQuestion"> 
+							<button class="btn btn-sm btn-primary active">YES</button>
+							<button class="btn btn-sm btn-default">NO</button>
 						</div>
 					</div>
 				</div> <!-- / row -->
 				<div class="row">
 					<p> </p>
 				</div>
-				<div class="row well">
-				    <!--<div class="collapse" id="reportFuelSupply">-->
+				<div class="row well collapse in" id="reportFuelSupply">
 					<div class="form-group">
-								<div class="col-sm-6 col-xs-12">	  
-									<label for="fueltype">Fuel Type:</label>
+								<div class="col-xs-4 col-lg-2">	  
+									<p><label for="fueltype">Fuel Type:</label></p>
+								</div>
+								<div class="col-xs-8 col-lg-4 ">
 									  <select class="form-control" id="fueltype">
 										<option selected disabled>Select a Fuel Type</option>
 										<option>Petroleum_based_gasoline</option>
@@ -83,15 +84,57 @@
 										<option>Renewable_diesel</option>
 										<option>Natural_gas_based_gasoline</option>
 										<option>Renewable_gasoline</option>
-									  </select>
-									<label for="fuelclass">Fuel Class:</label>
-									  <select class="form-control" id="fuelclass">
+									  </select></br>
+								</div>
+								<div class="col-xs-4 col-lg-2">	
+									<p><label for="fuelclass">Fuel Class:</label></p>
+								</div>
+								<div class="col-xs-8 col-lg-4">								
+									<select class="form-control" id="fuelclass">
 										<option selected disabled>Select a Fuel Class</option>
 										<option>Gasoline</option>
 										<option>Diesel</option>
+									  </select>	</br>							
+								</div>
+								<div class="col-xs-4 col-lg-2">
+									<p><label for="quantity">Fuel Quantity:</label></p>
+								</div>
+								<div class="col-xs-8 col-lg-4">
+									<input type="text" class="form-control" id="quantity" placeholder="Specify the quantity of fuel"></br>
+								</div>
+								<div class="col-xs-4 col-lg-2">									
+									<p><label for="fueluse">Use of Fuel:</label></p>
+								</div>
+								<div class="col-xs-8 col-lg-4">									
+									<select class="form-control" id="fueluse">
+										<option selected disabled>Select the use of fuel</option>
+										<option>Transportation</option>
+										<option>Heating</option>
+										<option>other</option>							
 									  </select>
-									
-									<label for="section">Provision of Act:</label>
+								</div>
+					</div> <!-- / form group -->
+				</div> <!-- / row --><!-- /collapse -->
+				<div class="row collapse in" id="transferQuestion">
+					<div class="col-xs-8" valign="top">
+						<label for="transferagreement">Do you have any transfers that you would like to report for this fuel?</label>
+					</div>
+					<div class="col-xs-2" align="left">
+						<div class="btn-group btn-toggle" data-toggle="collapse" data-target="#ifTransfers,#transfers,#transfers0,#transfers1,#transfers2,#transfers3,#transfers4"> 
+							<button class="btn btn-sm btn-default">YES</button>
+							<button class="btn btn-sm btn-primary active">NO</button>
+						</div>
+					</div>
+				</div> <!-- / row -->
+				<div class="row">
+					<p> </p>
+				</div>
+				<div class="row well collapse in" id="ifTransfers">
+					<div class="form-group">
+								<div class="col-xs-4 col-lg-2">	  
+									<p><label for="section">Provision of Act:</label></p>
+								</div>
+								<div class="col-xs-8 col-lg-4 ">
 									  <select class="form-control" id="section">
 										<option selected disabled>section used to determine carbon intensity</option>
 										<option>section 6 (5) (d) (i) - Regulation default value</option>
@@ -104,21 +147,13 @@
 										<option>Ethanol CI Determination Method</option>	
 										<option>HDRD CI Determination Method</option>	
 										<option>Biodiesel CI Determination Method</option>	
-										<option>Gasoline CI Determination Method</option>							  
-									  </select>
-
+										<option>Gasoline CI Determination Method</option>		  
+									  </select></br>								
 								</div>
-								<div class="col-sm-6 col-xs-12">
-									<label for="quantity">Fuel Quantity:</label>
-									  <input type="text" class="form-control" id="quantity" placeholder="Specify the quantity of fuel">
-									<label for="fueluse">Use of Fuel:</label>
-									  <select class="form-control" id="fuelclass">
-										<option selected disabled>Select the use of fuel</option>
-										<option>Transportation</option>
-										<option>Heating</option>
-										<option>other</option>							
-									  </select>
-									<label for="fuelcode">Fuel Code:</label>
+								<div class="col-xs-4 col-lg-2">
+									<p><label for="fuelcode">Fuel Code:</label></p>
+								</div>
+								<div class="col-xs-8 col-lg-4" align="right">
 									  <select class="form-control" id="fuelcode" placeholder="select the fuel code">
 										<option selected disabled>If Section 6.5.c, what is the Fuel Code?</option>
 										<option>BCLCF101.0</option>
@@ -127,16 +162,16 @@
 										<option>BCLCF103.0</option>
 									  </select>
 								</div>
-								<div class="col-sm-12" align="right">
-								<p> </p>
-								</div>
-								<div class="col-sm-12" align="right">
-									<a class="btn btn-primary" href="#"> + Add Fuel </a>
-								</div>
 					</div> <!-- / form group -->
-					<!--</div> <!-- /collapse -->
-				</div> <!-- / row -->
-				<div class="row">
+				</div> <!-- / row --><!-- /collapse -->
+				<div class="row collapse in" id="submitFuel">
+	
+					<div class="col-xs-12" align="right">
+						<a class="btn btn-primary" href="#"> + Add Fuel </a>
+					</div> 
+
+				</div>				
+				<div class="row collapse in" id="summary">
 					<div class="col-xs-12">
 						<h3>Fuel Supply Summary</h3>
 						
@@ -149,20 +184,12 @@
 						<!-- / table with pagination -->
 					</div>
 				</div> <!-- /row -->
-				<div class="row">
-					<div class="col-xs-6" valign="top">
-						<label for="transferagreement">Do you have any transfers that you would like to report for this fuel?</label>
-					</div>
-					<div class="col-xs-2" align="left">
-						<div class="btn-group btn-toggle" data-toggle="collapse" data-target="#transfers,#transfers0,#transfers1,#transfers2,#transfers3,#transfers4"> 
-							<button class="btn btn-sm btn-default">YES</button>
-							<button class="btn btn-sm btn-primary active">NO</button>
-						</div>
-					</div>
-				</div> <!-- / row -->
-				<!--<div class="collapse" id="transfers">-->
+
+				<div class="collapse" id="transfers">
 					<div class="row">
-						<p> </p>
+						<p>		
+
+						</p>
 					</div>
 					<div class="row well">
 						<div class="col-xs-2" id="transfers0">
@@ -189,7 +216,7 @@
 							</select>
 						</div>
 					</div> <!-- /row -->
-				<!--</div> <!-- / collapse -->
+				</div> <!-- / collapse -->
 			</div> <!-- / tab pane content -->
 			<div class="tab-pane" id="applications">
 				<p> </p>
