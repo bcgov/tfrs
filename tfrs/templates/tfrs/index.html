@@ -1,0 +1,14 @@
+{% load static %}
+
+<link rel="stylesheet" type="text/css" href="{% static 'tfrs/style.css' %}" />
+
+
+{% if supplier_list %}
+    <ul>
+    {% for supplier in supplier_list %}
+        <li><a href="{% url 'supply' supplier.id %}">{{ supplier.name }}</a></li>
+    {% endfor %}
+    </ul>
+{% else %}
+    <p>No suppliers exist.</p>
+{% endif %}
