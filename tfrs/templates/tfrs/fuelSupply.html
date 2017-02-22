@@ -1,0 +1,13 @@
+{% load static %}
+
+<link rel="stylesheet" type="text/css" href="{% static 'tfrs/style.css' %}" />
+
+{% if latest_supply_list %}
+    <ul>
+    {% for supply in latest_supply_list %}
+        <li>{{ supply.quantity }}&nbsp;{{ supply.supply_year|date }}</li>
+    {% endfor %}
+    </ul>
+{% else %}
+    <p>No supply records are available.</p>
+{% endif %}
