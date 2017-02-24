@@ -33,7 +33,7 @@ oc policy add-role-to-user edit system:serviceaccount:mem-tfrs-tools:default -n 
 
 
 In the GitHub repository go to Settings > Webhooks > Add webhook
-Create a webhook for the push event only to Payload URL:  <route to jenkins>/github-webhook/
+Create a webhook for the push event only to Payload URL:  https://jenkins-mem-tfrs-tools.pathfinder.gov.bc.ca/github-webhook/
 Content type: application/json
 
  
@@ -49,23 +49,23 @@ Where APP_DEPLOYMENT_TAG used is dev, test, prod as set up in Jenkins instance.
 The deployment config uses the mem-tfrs-tools namespace since that is where the image stream resides.
 
 
-h1. How to access Jenkins for TFRS
+How to access Jenkins for TFRS
 
 - Login to https://jenkins-mem-tfrs-tools.pathfinder.gov.bc.ca with the username/password that was provided to you.
 
-h1. How to access OpenShift for TFRS
+How to access OpenShift for TFRS
 
-h2. Web UI
+Web UI
 - Login to https://console.pathfinder.gov.bc.ca:8443; you'll be prompted for GitHub authorization.
 
-h2. Command-line (```oc```) tools
+Command-line (```oc```) tools
 - Download OpenShift [command line tools](https://github.com/openshift/origin/releases/download/v1.2.1/openshift-origin-client-tools-v1.2.1-5e723f6-mac.zip), unzip, and add ```oc``` to your PATH.  
 - Copy command line login string from https://console.pathfinder.gov.bc.ca:8443/console/command-line.  It will look like ```oc login https://console.pathfinder.gov.bc.ca:8443 --token=xtyz123xtyz123xtyz123xtyz123```
-- Paste the login string into a terminal session.  You are no authenticated against OpenShift and will be able to execute ```oc``` commands. ```oc -h``` provides a summary of available commands.
+- Paste the login string into a terminal session.  You are now authenticated against OpenShift and will be able to execute ```oc``` commands. ```oc -h``` provides a summary of available commands.
 
 
 
-h1. Background reading/Resources
+Background reading/Resources
 
 [Free OpenShift book](https://www.openshift.com/promotions/for-developers.html) from RedHat – good overview
 
