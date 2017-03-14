@@ -502,7 +502,7 @@ label {
     text-decoration: underline;
 }
 
-env-alert li {
+.env-alert li {
     list-style-type: none !important;
     list-style-image: none !important;
     background-image: none !important;
