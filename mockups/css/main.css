@@ -2238,3 +2238,7 @@ h5.twitterUserName a{
 .alert-danger {
     color: #d2322d;
 }
+
+.notification-list > a {
+  text-decoration: none;
+}
