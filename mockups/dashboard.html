@@ -41,7 +41,7 @@
     <meta name="msapplication-TileImage" content="icons/ms-icon-144x144.png"/>
     <meta name="theme-color" content="#ffffff"/>
 
-    <title>TFRS Website</title>
+    <title>Transportation Fuels Reporting System</title>
 
     <!-- BOOTSTRAP CORE CSS v3.3.6 -->
     <link rel="stylesheet" href="css/bootstrap.min.css"/>
@@ -98,9 +98,9 @@
                 <img src="images/menu-open-mobile.png" />
               </button>
             </div>
-            <div class="col-sm-8 col-md-8 col-lg-6 hidden-xs">
+            <div class="col-sm-8 col-md-8 col-lg-8 hidden-xs">
               <div class="bcgov-title">
-                <h1>TFRS Website</h1>
+                <h1>Transportation Fuels Reporting System</h1>
               </div>
             </div>
             <!-- /GOV & ENV TITLE -->
@@ -138,28 +138,91 @@
             <a href="#">Home</a>
           </li>
           <li>
-            <a href="#">Dashboard</a>
+            <a href="#">Low Carbon Fuel Credits</a>
           </li>
         </ol>
       </div>
+
 
       <!-- PAGE CONTENT -->
       <div class="row">
         <div id="main-content" role="main" class="contentPageMainColumn col-sm-12">
           <a id="main-content-anchor"></a>
-          <h1>Dashboard</h1>
+          <div class="row">
+            <div class="col-xs-12">
+              <p style="margin-bottom: 0;">Exxon</p>
+            </div>
+          </div>
 
           <div class="row">
-            <div class="col-xs-6 text-center">
+            <div class="col-xs-12 col-sm-6">
               <h2>Account Balance</h2>
-            </div>
-            <div class="col-xs-6 text-center">
+                <div>
+                  <div class="list-group">
+                    <a href="#" class="list-group-item" style="background: #f1f1f1; font-size: 16px;">
+                      <span class="badge" style="font-size: 16px;">65</span>
+                      Available Balance of Validated Credits
+                    </a>
+                    <a href="#" class="list-group-item" style="border-bottom: none">
+                      <span class="badge">10</span>
+                      Validated Credits
+                    </a>
+                    <a href="#" class="list-group-item" style="border-bottom: none; border-top: none">
+                      <span class="badge">50</span>
+                      <span style="padding-left: 30px">Credits Awarded from Fuel Supply</span>
+                    </a>
+                    <a href="#" class="list-group-item" style="border-bottom: none; border-top: none">
+                      <span class="badge">5</span>
+                      <span style="padding-left: 30px">Credits Awarded from Part 3 Agreement</span>
+                    </a>
+                    <a href="#" class="list-group-item" style="border-top: none">
+                      <span class="badge">5</span>
+                      Encumbered by Proposed Transfer
+                    </a>
+                  </div>
+                </div>
+              </div>
+            <div class="col-xs-12 col-sm-6">
               <h2>Notifications</h2>
+                <div class="list-group notification-list">
+                  <a href="#" class="list-group-item">
+                    <span class="notification-item">
+                      A credit transfer has been proposed
+                    </span>
+                    <span class="pull-right">5 dys ago</span>
+                  </a>
+                  <a href="#" class="list-group-item">
+                    <span class="notification-item">
+                    Credits have been awarded from fuel supply
+                    </span>
+                    <span class="pull-right">2 wks ago</span>
+                  </a>
+                  <a href="#" class="list-group-item">
+                    <span class="notification-item">
+                    Credits have been awarded from fuel supply
+                    </span>
+                    <span class="pull-right">2 wks ago</span>
+                  </a>
+                  <a href="#" class="list-group-item">
+                    <span class="notification-item">
+                    A credit transfer has been proposed
+                    </span>
+                    <span class="pull-right">2 wks ago</span>
+                  </a>
+                  <a href="#" class="list-group-item">
+                    <span class="notification-item">
+                    Credits have been awarded from fuel supply
+                    </span>
+                    <span class="pull-right">2 mos ago</span>
+                  </a>
+              </div>
             </div>
           </div>
           <div class="row">
-            <div class="col-xs-12 text-center">
+            <div class="col-xs-12">
               <h2>Account Activity</h2>
+              <table id="fuelSupplyTable">
+              </table>
             </div>
           </div>
         </div>
@@ -232,7 +295,74 @@ $(function() {
   $("#effectiveDate").datepicker();
 });
       </script>
-
+							<script>
+							var data = [
+{"transaction":{ "fuelSupplier": "Chevron", "type": "Sold", "partner": "Exxon", "unitsOfTransfer": "Credits", "quantity": 5, "fairMarketValue": 100, "effectiveDate": "Directors Approval", "status": "Pending"}},
+{"transaction":{ "fuelSupplier": "Chevron", "type": "Sold", "partner": "Exxon", "unitsOfTransfer": "Credits", "quantity": 5, "fairMarketValue": 100, "effectiveDate": "Directors Approval", "status": "Pending"}},
+{"transaction":{ "fuelSupplier": "Chevron", "type": "Sold", "partner": "Exxon", "unitsOfTransfer": "Credits", "quantity": 5, "fairMarketValue": 100, "effectiveDate": "Directors Approval", "status": "Pending"}},
+{"transaction":{ "fuelSupplier": "Chevron", "type": "Sold", "partner": "Exxon", "unitsOfTransfer": "Credits", "quantity": 5, "fairMarketValue": 100, "effectiveDate": "Directors Approval", "status": "Pending"}},
+{"transaction":{ "fuelSupplier": "Chevron", "type": "Sold", "partner": "Exxon", "unitsOfTransfer": "Credits", "quantity": 5, "fairMarketValue": 100, "effectiveDate": "Directors Approval", "status": "Pending"}}
+							];
+							var columns = [
+                [{
+								"field": "transaction.fuelSupplier",
+								"title": "Fuel Supplier",
+								"colspan": 1,
+								"sortable": true,
+								"rowspan": 1
+							  },
+                {
+								"field": "transaction.type",
+								"title": "Transaction Type",
+								"colspan": 1,
+								"sortable": true,
+								"rowspan": 1
+							  }, {
+								"field": "transaction.partner",
+								"title": "Transaction Partner",
+								"sortable": true,
+								"colspan": 1,
+								"rowspan": 1
+							  }, {
+								"field": "transaction.unitsOfTransfer",
+								"title": "Units of Transfer",
+								"sortable": true,
+								"colspan": 1,
+								"rowspan": 1
+							  }, {
+								"field": "transaction.quantity",
+								"title": "Quantity",
+								"sortable": true,
+								"colspan": 1,
+								"rowspan": 1
+							  }, {
+								"field": "transaction.fairMarketValue",
+								"title": "Fair Market Value",
+								"sortable": true,
+								"colspan": 1,
+								"rowspan": 1
+							  }, {
+								"field": "transaction.effectiveDate",
+								"title": "Effective Date",
+								"sortable": true,
+								"colspan": 1,
+								"rowspan": 1
+							  }, {
+								"field": "transaction.status",
+								"title": "Status",
+								"sortable": true,
+								"colspan": 1,
+								"rowspan": 1
+							  }]
+							];
+						
+							$(function() {
+							  $('#fuelSupplyTable').bootstrapTable({
+								data: data,
+								columns: columns,
+							  });
+							});
+							</script>
 
   </body>
 

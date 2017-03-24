@@ -2242,3 +2242,11 @@ h5.twitterUserName a{
 .notification-list > a {
   text-decoration: none;
 }
+
+.transaction-item {
+  height: 59px;
+}
+
+.notification-item {
+  width: calc(100% - 70px);
+}
