@@ -230,6 +230,8 @@
 							var data = [
 {"transaction":{ "fuelSupplier": "Chevron", "type": "Sold", "partner": "Exxon", "unitsOfTransfer": "Credits", "quantity": 5, "fairMarketValue": 100, "effectiveDate": "Directors Approval", "status": "Pending"}},
 {"transaction":{ "fuelSupplier": "Chevron", "type": "Sold", "partner": "Exxon", "unitsOfTransfer": "Credits", "quantity": 5, "fairMarketValue": 100, "effectiveDate": "Directors Approval", "status": "Pending"}},
+{"transaction":{ "fuelSupplier": "Chevron", "type": "Sold", "partner": "Exxon", "unitsOfTransfer": "Credits", "quantity": 5, "fairMarketValue": 100, "effectiveDate": "Directors Approval", "status": "Pending"}},
+{"transaction":{ "fuelSupplier": "Chevron", "type": "Sold", "partner": "Exxon", "unitsOfTransfer": "Credits", "quantity": 5, "fairMarketValue": 100, "effectiveDate": "Directors Approval", "status": "Pending"}},
 {"transaction":{ "fuelSupplier": "Chevron", "type": "Sold", "partner": "Exxon", "unitsOfTransfer": "Credits", "quantity": 5, "fairMarketValue": 100, "effectiveDate": "Directors Approval", "status": "Pending"}}
 							];
 							var columns = [
@@ -288,7 +290,8 @@
 							$(function() {
 							  $('#fuelSupplyTable').bootstrapTable({
 								data: data,
-								columns: columns
+								columns: columns,
+                height: 350
 							  });
 							});
 							</script>
