@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <div class="row">
+    <div class="col-xs-12">
+      <h2>Account Activity</h2>
+      <table id="fuelSupplyTable">
+      </table>
+    </div>
+  </div>
+<script>
+var data = [
+{"transaction":{ "fuelSupplier": "Chevron", "type": "Sold", "partner": "Exxon", "unitsOfTransfer": "Credits", "quantity": 5, "fairMarketValue": "$100", "effectiveDate": "Directors Approval", "status": "Pending"}},
+{"transaction":{ "fuelSupplier": "Chevron", "type": "Sold", "partner": "Exxon", "unitsOfTransfer": "Credits", "quantity": 5, "fairMarketValue": "$100", "effectiveDate": "Directors Approval", "status": "Pending"}},
+{"transaction":{ "fuelSupplier": "Chevron", "type": "Sold", "partner": "Exxon", "unitsOfTransfer": "Credits", "quantity": 5, "fairMarketValue": "$100", "effectiveDate": "Directors Approval", "status": "Pending"}},
+{"transaction":{ "fuelSupplier": "Chevron", "type": "Sold", "partner": "Exxon", "unitsOfTransfer": "Credits", "quantity": 5, "fairMarketValue": "$100", "effectiveDate": "Directors Approval", "status": "Pending"}},
+{"transaction":{ "fuelSupplier": "Chevron", "type": "Sold", "partner": "Exxon", "unitsOfTransfer": "Credits", "quantity": 5, "fairMarketValue": "$100", "effectiveDate": "Directors Approval", "status": "Pending"}}
+];
+var columns = [
+  [{
+    "field": "transaction.fuelSupplier",
+    "title": "Fuel Supplier",
+    "colspan": 1,
+    "sortable": true,
+    "rowspan": 1
+  },
+{
+  "field": "transaction.type",
+  "title": "Transaction Type",
+  "colspan": 1,
+  "sortable": true,
+  "rowspan": 1
+}, {
+  "field": "transaction.partner",
+  "title": "Transaction Partner",
+  "sortable": true,
+  "colspan": 1,
+  "rowspan": 1
+}, {
+  "field": "transaction.unitsOfTransfer",
+  "title": "Units of Transfer",
+  "sortable": true,
+  "colspan": 1,
+  "rowspan": 1
+}, {
+  "field": "transaction.quantity",
+  "title": "Quantity",
+  "sortable": true,
+  "colspan": 1,
+  "rowspan": 1
+}, {
+  "field": "transaction.fairMarketValue",
+  "title": "Fair Market Value",
+  "sortable": true,
+  "colspan": 1,
+  "rowspan": 1
+}, {
+  "field": "transaction.effectiveDate",
+  "title": "Effective Date",
+  "sortable": true,
+  "colspan": 1,
+  "rowspan": 1
+}, {
+  "field": "transaction.status",
+  "title": "Status",
+  "sortable": true,
+  "colspan": 1,
+  "rowspan": 1
+}]
+];
+
+$(function() {
+  $('#fuelSupplyTable').bootstrapTable({
+    data: data,
+    columns: columns,
+  });
+});
+</script>
+{% endblock %}
