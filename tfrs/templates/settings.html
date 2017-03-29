@@ -1,0 +1,137 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div id="main-content" role="main" class="contentPageMainColumn col-sm-12">
+        <a id="main-content-anchor"></a>
+        <div class="row">
+                <div class="col-xs-12 right-align">
+                        <p style="margin-bottom: 0;">Name</p>
+                </div>
+        </div>
+
+        <div class="row">
+                <h2>Settings</h2>
+                <ul class="nav nav-tabs" role="tablist">
+                        <li role="presentation" class="active"><a href="#home" aria-controls="home" role="tab" data-toggle="tab">Contact Info</a></li>
+                        <li role="presentation"><a href="#profile" aria-controls="profile" role="tab" data-toggle="tab">Alerts</a></li>
+                </ul>
+
+                <!-- Tab panes -->
+                <div class="tab-content">
+                        <div role="tabpanel" class="tab-pane active" id="home">
+                                <div class="row">
+                                        <div class="well well-sm" style="margin-top: 8px">
+                                                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec pretium posuere luctus. Aenean volutpat massa sit amet odio sollicitudin, sit amet aliquet dui interdum. Nullam dignissim, velit id elementum varius, ex turpis lobortis dui, eget ornare massa turpis quis enim. Mauris vel posuere nibh. In vehicula nisl ac tincidunt faucibus. Pellentesque dolor dui, feugiat vel ex non, condimentum hendrerit purus. Suspendisse bibendum est nisi, at vehicula massa iaculis quis. Nulla facilisi. Quisque faucibus risus eget dictum interdum. Sed nunc purus, laoreet ut facilisis eget, convallis sed leo.</p>
+                                        </div>
+                                </div>
+                                <div class="row">
+                                        <div class="col-xs-12 col-lg-6 transaction-item">
+                                                <p>
+                                                <div class="col-xs-4">
+                                                        <label>Text:</label>
+                                                </div>
+                                                </p>
+                                                <div class="col-xs-8">
+                                                        <input type="text" id="phone" class="form-control" placeholder="Enter your phone number">
+                                                </div>
+
+                                        </div>
+                                        <div class="col-xs-12 col-lg-6 transaction-item">
+                                                <p>
+                                                <div class="col-xs-4">
+                                                        <label>Email:</label>
+                                                </div>
+                                                </p>
+                                                <div class="col-xs-8">
+                                                        <input type="text" id="email" class="form-control" placeholder="Enter your email">
+                                                </div>
+                                        </div>
+                                </div>
+                                <div class="row" style="padding-top: 10px; text-align: right;">
+                                        <button style="margin-right: 5px" type="button" class="btn btn-primary">Save</button>
+                                        <button type="button" class="btn btn-default">Cancel</button>
+                                </div>
+                        </div>
+                        <div role="tabpanel" class="tab-pane" id="profile">
+                                <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+                                        <div class="panel panel-default">
+                                                <div class="panel-heading" role="tab" id="headingOne">
+                                                        <h4 class="panel-title">
+                                                                <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#balanceAlerts" aria-expanded="false" aria-controls="balanceAlerts">
+                                                                        Balance Alerts
+                                                                </a>
+                                                        </h4>
+                                                </div>
+                                                <div id="balanceAlerts" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
+                                                        <div class="panel-body">
+                                                                <button style="margin-right: 5px" type="button" class="btn btn-primary">Email</button>
+                                                                <button type="button" class="btn btn-default">Text</button>
+                                                        </div>
+                                                </div>
+                                        </div>
+                                        <div class="panel panel-default">
+                                                <div class="panel-heading" role="tab" id="headingTwo">
+                                                        <h4 class="panel-title">
+                                                                <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#draftSaved" aria-expanded="false" aria-controls="draftSaved">
+                                                                        Draft Saved
+                                                                </a>
+                                                        </h4>
+                                                </div>
+                                                <div id="draftSaved" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
+                                                        <div class="panel-body">
+                                                                <button style="margin-right: 5px" type="button" class="btn btn-primary">Email</button>
+                                                                <button type="button" class="btn btn-default">Text</button>
+                                                        </div>
+                                                </div>
+                                        </div>
+                                        <div class="panel panel-default">
+                                                <div class="panel-heading" role="tab" id="headingThree">
+                                                        <h4 class="panel-title">
+                                                                <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#transactionProposed" aria-expanded="false" aria-controls="transactionProposed">
+                                                                        Transaction Proposed
+                                                                </a>
+                                                        </h4>
+                                                </div>
+                                                <div id="transactionProposed" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingThree">
+                                                        <div class="panel-body">
+                                                                <button style="margin-right: 5px" type="button" class="btn btn-primary">Email</button>
+                                                                <button type="button" class="btn btn-default">Text</button>
+                                                        </div>
+                                                </div>
+                                        </div>
+                                        <div class="panel panel-default">
+                                                <div class="panel-heading" role="tab" id="headingFour">
+                                                        <h4 class="panel-title">
+                                                                <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#transactionApproved" aria-expanded="false" aria-controls="transactionApproved">
+                                                                        Transaction Approved
+                                                                </a>
+                                                        </h4>
+                                                </div>
+                                                <div id="transactionApproved" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingFour">
+                                                        <div class="panel-body">
+                                                                <button style="margin-right: 5px" type="button" class="btn btn-primary">Email</button>
+                                                                <button type="button" class="btn btn-default">Text</button>
+                                                        </div>
+                                                </div>
+                                        </div>
+                                        <div class="panel panel-default">
+                                                <div class="panel-heading" role="tab" id="headingFive">
+                                                        <h4 class="panel-title">
+                                                                <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#transactionPending" aria-expanded="false" aria-controls="transactionPending">
+                                                                        Transaction Pending
+                                                                </a>
+                                                        </h4>
+                                                </div>
+                                                <div id="transactionPending" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingFive">
+                                                        <div class="panel-body">
+                                                                <button style="margin-right: 5px" type="button" class="btn btn-primary">Email</button>
+                                                                <button type="button" class="btn btn-default">Text</button>
+                                                        </div>
+                                                </div>
+                                        </div>
+                                </div>
+                        </div>
+                </div>
+        </div>
+</div>
+{% endblock %}

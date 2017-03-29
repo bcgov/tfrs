@@ -418,12 +418,6 @@ ul.list-group > li.list-group-item {
     background-color: #f1f1f2;
 }
 
-.panel-default > .panel-heading {
-    color: #fff;
-    background-color: #666;
-    border-color: #222;
-}
-
 .panel-default > .panel-body {
     background-color: #f1f1f2;
 }

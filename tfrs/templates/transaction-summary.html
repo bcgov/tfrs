@@ -12,23 +12,11 @@
         <label for="fueltype">Transaction Partner: </label>
       </div>
       </p>
+      <p>
       <div class="col-xs-8">
-        <div class="form-group">
-          <div class="input-group">
-            <select class="form-control">
-              <option selected disabled>Select a Transaction Partner</option>
-              <option>Chevron</option>
-              <option>Esso</option>
-              <option>Exxon</option>
-              <option>Huskey</option>
-              <option>Suncor</option>
-            </select>
-            <span class="input-group-btn">
-              <button data-toggle="modal" data-target="#partnerNotFound" class="btn btn-default" type="button">Not Listed?</button>
-            </span>
-          </div>
-        </div>
+        Chevron
       </div> 
+      </p>
     </div>
     <div class="col-xs-12 col-lg-6 transaction-item" id="fuelType">
       <p>
@@ -50,17 +38,11 @@
         <label for="fueltype">Transaction Type: </label>
       </div>
       </p>
+      <p>
       <div class="col-xs-8">
-        <select class="form-control">
-          <option selected disabled>Select a Transaction Type</option>
-          <option>Purchase</option>
-          <option>Sell</option>
-          <option>Retire Credits</option>
-          <option>Awarded From Fuel Supply</option>
-          <option>Adjustment</option>
-          <option>Awarded from Part 3 Agreement</option>
-        </select>
+        Purchase
       </div>
+      </p>
     </div>
     <div class="col-xs-12 col-lg-6 transaction-item">
       <p>
@@ -68,9 +50,11 @@
         <label>Credits Transfer Quantity:</label>
       </div>
       </p>
+      <p>
       <div class="col-xs-8">
-        <input type="number" id="creditsTransfered" class="form-control" min="0" placeholder="Specify the Credits Transfer Quantity">
+        2000
       </div>
+      </p>
     </div>
     <div class="col-xs-12 col-lg-6 transaction-item">
       <p>
@@ -78,12 +62,11 @@
         <label>Fair Market Value Per Credit (CAD):</label>
       </div>
       </p>
+      <p>
       <div class="col-xs-8">
-        <div class="input-group">
-          <span class="input-group-addon">$</span>
-          <input type="number" id="marketValue" min="0" class="form-control" placeholder="Specify the Fair Market Value Per Credit">
-        </div>
+        $20,000
       </div>
+      </p>
     </div>
     <div class="col-xs-12 col-lg-6 transaction-item">
       <p>
@@ -91,8 +74,8 @@
         <label>Total Value of Transaction:</label>
       </div>
       </p>
-      <p>
-      <div id="totalTransactionValue" class="col-xs-8">
+      <p id="totalTransactionValue">
+      <div class="col-xs-8">
         $0
       </div>
       </p>
@@ -103,15 +86,11 @@
         <label for="fueltype">Compliance Period: </label>
       </div>
       </p>
+      <p>
       <div class="col-xs-8">
-        <select class="form-control">
-          <option selected disabled>Select a Compliance Period</option>
-          <option>January 2015</option>
-          <option>January 2015</option>
-          <option>January 2015</option>
-          <option>January 2015</option>
-        </select>
+        January 2015
       </div>
+      </p>
     </div>
     <div class="horizontal-line col-xs-12"></div>
     <div class="col-xs-12 col-lg-6 transaction-item">
@@ -120,12 +99,11 @@
         <label for="supplyinbc">Effective Date</label>
       </div>
       </p>
+      <p>
       <div class="col-xs-8">
-        <div class="btn-group btn-toggle" data-toggle="collapse" data-target="#datepicker">
-          <button class="btn btn-sm btn-primary">UPON DIRECTORS APPROVAL</button>
-          <button class="btn btn-sm btn-default">LATER DATE</button>
-        </div>
+        Upon Directors Approval
       </div>
+      </p>
     </div>
     <div class="col-xs-12 col-lg-6 collapse" id="datepicker">
       <p>
@@ -139,9 +117,9 @@
     </div>
   </div>
   <div class="row" style="padding-top: 10px; text-align: right;">
-    <a href="/transaction-summary" style="margin-right: 5px" type="button" class="btn btn-success">Review and Complete</a>
-    <a href="/dashboard" style="margin-right: 5px" type="button" class="btn btn-primary">Save as Draft</a>
-    <a href="/dashboard" type="button" class="btn btn-default">Cancel</a>
+    <button style="margin-right: 5px" type="button" class="btn btn-success">Review and Complete</button>
+    <button style="margin-right: 5px" type="button" class="btn btn-primary">Save as Draft</button>
+    <button type="button" class="btn btn-default">Cancel</button>
   </div>
 </div>
     <div class="modal fade" id="partnerNotFound" tabindex="-1" role="dialog" aria-labelledby="partnerNotFound">
@@ -154,7 +132,9 @@
           <div class="modal-body">
             <h4>Lorem ipsum dolor sit amet, consectetur</h4>
             <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam et ex quis nunc iaculis vulputate quis at dui. Maecenas posuere diam ligula, vel faucibus ex blandit elementum. Duis ac sem vel nibh efficitur ultrices quis et mauris. Integer ac enim semper, convallis justo vitae, viverra lorem. Mauris nec fringilla sem, et fringilla est. Aenean commodo urna in felis ornare, ac bibendum nunc mollis. Vivamus sit amet euismod augue. Sed vitae magna nibh. In fringilla ultricies tortor, ut gravida mi tincidunt in. Nulla interdum magna quis ligula egestas, in lacinia dui sagittis.</p>
+
             <p>Morbi placerat ex ac ornare semper. Mauris in velit at purus tincidunt ultricies. Integer tellus magna, viverra ut leo vitae, ultricies vestibulum risus. Cras non varius dolor. Praesent vulputate semper nibh. Maecenas consequat, dui id sollicitudin pharetra, tellus eros ornare nibh, at scelerisque felis dolor id nulla. Praesent eros ex, cursus sit amet consequat et, feugiat sed enim. Nullam sit amet augue malesuada, cursus est ut, feugiat sapien. Nam sed odio facilisis, pharetra mauris eget, consequat erat. Interdum et malesuada fames ac ante ipsum primis in faucibus. Ut ut lectus sapien. Maecenas eu congue tortor, euismod luctus tortor. Praesent dictum tellus a pulvinar bibendum. Duis interdum nulla vel pharetra ultricies. Aenean in tempor quam. Vestibulum porttitor est sit amet bibendum vulputate.</p>
+
             <p>Aliquam vel tortor a magna molestie lobortis sit amet nec leo. Integer velit elit, pellentesque a est quis, ultricies porta libero. Donec at ex at risus imperdiet finibus. In sit amet suscipit massa. Donec sit amet elit nec mauris gravida condimentum. Morbi lobortis, orci sed cursus molestie, justo mauris ornare odio, sit amet auctor mauris sem eu enim. Nunc nec dignissim eros.</p>
           </div>
           <div class="modal-footer">
@@ -164,40 +144,4 @@
         </div> 
       </div>
     </div>
-{% endblock %}
-
-{% block template_scripts %}
-<script>
-$('.btn-toggle').click(function() {
-        $(this).find('.btn').toggleClass('active');  
-
-        if ($(this).find('.btn-primary').size()>0) {
-                $(this).find('.btn').toggleClass('btn-primary');
-        }
-        if ($(this).find('.btn-danger').size()>0) {
-                $(this).find('.btn').toggleClass('btn-danger');
-        }
-        if ($(this).find('.btn-success').size()>0) {
-                $(this).find('.btn').toggleClass('btn-success');
-        }
-        if ($(this).find('.btn-info').size()>0) {
-                $(this).find('.btn').toggleClass('btn-info');
-        }
-
-        $(this).find('.btn').toggleClass('btn-default');
-
-});
-
-$('#marketValue').on('keyup mouseup', function() {
-        $('#totalTransactionValue').text(moneyFormat($(this).val() * $('#creditsTransfered').val()));
-});
-
-$('#creditsTransfered').on('keyup mouseup', function() {
-        $('#totalTransactionValue').text(moneyFormat($(this).val() * $('#marketValue').val()));
-});
-
-function moneyFormat(num) {
-        return "$" + num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-}
-</script>
 {% endblock %}
