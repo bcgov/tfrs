@@ -4,28 +4,41 @@ Transportation Fuels Reporting System
 ### Usage
 This software is being developed to streamline compliance reporting for transportation fuel suppliers  
 
-#### Data
-The system will have data on the following topics:
-<ul>
-<li>A record of all approved Fuels (and their corresponding Carbon Intensity Records) which are supplied in BC</li>
-<li>A record of a companies that Supply fuel in BC</li>
-<li>A record of all fuel transfers between companies</li>
-<li>A record of all fuels supplied each years</li>
-<li>A record of the Carbon credit balances of fuel suppliers</li>
-<li>A record of all Carbon Credit trades between fuel suppliers</li>
-</ul>
-#### Code
-Currently the code consists of html/js/css referencing bootstrap css and js libraries
-https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css
-https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css
-https://rawgit.com/wenzhixin/bootstrap-table/master/src/bootstrap-table.css
-https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js
-https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js
-https://rawgit.com/wenzhixin/bootstrap-table/master/src/bootstrap-table.js
+### Data
+Documentation for system data is dynamical generated using Schema Spy:
+http://schema-spy-mem-tfrs-dev.pathfinder.gov.bc.ca/index.html
 
+### Code
+- css and js libraries provided as part of the Gov 2.0 Bootstrap Skeleton
+- Django/Python
 
 ### Project Status
-This project is in development. Current work includes low-fidelity and hi-fidelity mockups.
+This project is in development. 
+The following Deliverable have been produced:
+- low-fidelity and hi-fidelity mockups for
+	* Credit Transfer and Credit Awards
+		- Dashboard
+		- Credit account balance
+		- Account activity
+		- Setting, Alerts, Notifications
+		- Create/Edit a proposed credit transfer
+		- Accept/Approve a proposed/authorized credit transfer
+	* Compliance Reporting
+		- Compliance Report
+		- Exclusions Report
+		- Exemption Report
+- prototype of credit transfer and award application using Django Templates and Static Controllers to input test data
+- Deployment pipeline built out so far includes:
+	* build (openshift pipeline/jenkins)
+	* deploy (openshift pipeline/jenkins)
+	* automated datamodeling (schema spy)
+	* functional testing (navUnit) (*in progress*)
+	* code analysis and vulnerability testing (sonar cubes) (*in progress*) 
+- architectural deployment (*in progress*)
+	* React front-end
+	* REST API
+	* Django Back-end
+	* Postgres Database
 
 ### Getting Help or Reporting an Issue
 To report bugs/issues/features requests, please file an [issue](https://github.com/bcgov/tfrs/issues/).
