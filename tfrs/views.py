@@ -16,7 +16,15 @@ def dashboard(request):
         {'transaction':{ 'fuelSupplier': 'Chevron', 'type': 'Sold', 'partner': 'Exxon', 'quantity': 5, 'fairMarketValue': '$100', 'effectiveDate': 'Directors Approval', 'status': 'Pending', 'balance': 1000, 'compliancePeriod': 'January 2015'}},
         {'transaction':{ 'fuelSupplier': 'Chevron', 'type': 'Sold', 'partner': 'Exxon', 'quantity': 5, 'fairMarketValue': '$100', 'effectiveDate': 'Directors Approval', 'status': 'Pending', 'balance': 1000, 'compliancePeriod': 'January 2015'}}
     ]
-    return render(request, 'dashboard.html', {'table_data': json.dumps(table_data)})
+    notifications = [
+        {'id': 1, 'subject': 'Credit Transfer Proposed', 'date': '7/12/2015', 'flagged': False, 'message': 'A credit transfer was proposed from exxon'},
+        {'id': 2, 'subject': 'Credits Awarded - Fuel Supply', 'date': '4/3/2015', 'flagged': True, 'message': 'Credits have been awarded by Fuel Supply'},
+        {'id': 3, 'subject': 'Credits Awarded - Part Three', 'date': '6/21/2014', 'flagged': False, 'message': 'Credits have been awarded by Part Three Agreement'}
+    ]
+    return render(request, 'dashboard.html', {
+        'table_data': json.dumps(table_data),
+        'notifications': json.dumps(notifications)
+    })
 
 def account_activity(request):
     table_data = [
@@ -38,7 +46,17 @@ def new_transaction(request):
     return render(request, 'new-transaction.html', {})
 
 def transaction_summary(request):
-    return render(request, 'transaction-summary.html', {})
+    transaction = {
+        'partner': 'Chevron',
+        'partner_adddress': '1234 Douglas Road, V3G 6N1, Victoria, BC',
+        'type': 'Purchase',
+        'quantity': 200,
+        'fair_market_value': '$200',
+        'total_value': '$40,000',
+        'compliance_period': 'January 2015',
+        'effective_date': 'Directors Approval'
+    }
+    return render(request, 'transaction-summary.html', {'transaction': transaction})
 
 def settings(request):
     return render(request, 'settings.html', {})

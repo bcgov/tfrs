@@ -43,7 +43,7 @@
     <meta name="msapplication-TileImage" content="icons/ms-icon-144x144.png"/>
     <meta name="theme-color" content="#ffffff"/>
 
-    <title>Transportation Fuels Reporting System</title>
+    <title>Transportation Fuels Reporting System - {% block title %}{% endblock %}</title>
 
     <!-- BOOTSTRAP CORE CSS v3.3.6 -->
     <link rel="stylesheet" href="{% static "css/bootstrap.min.css" %}"/>
@@ -81,7 +81,7 @@
             <!-- GOV TITLE -->
             <div class="col-sm-3 col-md-2 col-lg-2 header-main-left">
               <div id="logo">
-                      <a href="http://gov.bc.ca"><img src="{% static "images/gov3_bc_logo.png" %}" alt="Province of British Columbia" title="Province of British Columbia logo" /></a>
+                      <a id="gov-logo" href="http://gov.bc.ca"><img src="{% static "images/gov3_bc_logo.png" %}" alt="Province of British Columbia" title="Province of British Columbia logo" /></a>
               </div>
               <div id="access">
                 <ul>
@@ -111,10 +111,9 @@
             <div id="navbar" class="collapse navbar-collapse" role="navigation">
               <a id="navigation-anchor"></a>
               <ul class="nav navbar-nav">
-                <li><a href="#">Home</a></li>
-                <li><a href="/">Dashboard</a></li>
-                <li><a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Credits <span class="caret"></span></a></li>
-                <li><a href="/settings">Settings</a></li>
+                <li><a id="collapse-navbar-home" href="#">Home</a></li>
+                <li><a id="collapse-navbar-dashboard" href="/">Dashboard</a></li>
+                <li><a id="collapse-navbar-settings" href="/settings">Settings</a></li>
               </ul>
             </div>
             <!-- /COLLAPSING NAVBAR -->
@@ -123,14 +122,14 @@
         <div class="navigationRibbon">
           <div class="level2Navigation">
             <div class="container">
-              <a href="#">Home</a>
-              <a href="/">Dashboard</a>
+              <a id="navbar-home" href="#">Home</a>
+              <a id="navbar-dashboard" href="/">Dashboard</a>
               <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Credits <span class="caret"></span></a>
               <a href="/settings">Settings</a>
               <ul class="dropdown-menu">
-                <li><a href="/new-transaction">New Transaction</a></li>
-                <li><a href="/account-activity">Account Activity</a></li>
-                <li><a href="/notifications">Notifications</a></li>
+                <li><a id="navbar-new-transaction" href="/new-transaction">New Transaction</a></li>
+                <li><a id="navbar-account-activity" href="/account-activity">Account Activity</a></li>
+                <li><a id="navbar-notifications" href="/notifications">Notifications</a></li>
               </ul>
             </div>
           </div>
@@ -160,25 +159,25 @@
             <div id="footerAdminLinks" class="row">
               <ul class="inline">
                 <li>
-                  <a href="#" target="_self">Home</a>
+                  <a id="footer-home" href="#" target="_self">Home</a>
                 </li>
                 <li>
-                  <a href="#" target="_self">About this site</a>
+                  <a id="footer-about-site" href="#" target="_self">About this site</a>
                 </li>
                 <li>
-                  <a href="http://gov.bc.ca/disclaimer/" target="_self">Disclaimer</a>
+                  <a id="footer-about-disclaimer" href="http://gov.bc.ca/disclaimer/" target="_self">Disclaimer</a>
                 </li>
                 <li>
-                  <a href="http://gov.bc.ca/privacy/" target="_self">Privacy</a>
+                  <a id="footer-about-privacy" href="http://gov.bc.ca/privacy/" target="_self">Privacy</a>
                 </li>
                 <li>
-                  <a href="http://gov.bc.ca/webaccessibility/" target="_self">Accessibility</a>
+                  <a id="footer-about-accessibility" href="http://gov.bc.ca/webaccessibility/" target="_self">Accessibility</a>
                 </li>
                 <li>
-                  <a href="http://gov.bc.ca/copyright" target="_self">Copyright</a>
+                  <a id="footer-about-copyright" href="http://gov.bc.ca/copyright" target="_self">Copyright</a>
                 </li>
                 <li>
-                  <a href="#" target="_self">Contact Us</a>
+                  <a id="footer-about-contact" href="#" target="_self">Contact Us</a>
                 </li>
               </ul>
             </div>
