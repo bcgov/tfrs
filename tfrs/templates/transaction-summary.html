@@ -1,5 +1,7 @@
 {% extends "base.html" %}
 
+{% block title %}Transaction Summary{% endblock %}
+
 {% block content %}
 <div id="main-content" role="main" class="contentPageMainColumn col-sm-12">
   <a id="main-content-anchor"></a>
@@ -117,8 +119,10 @@
     </div>
   </div>
   <div class="row" style="padding-top: 10px; text-align: right;">
-    <button style="margin-right: 5px" type="button" class="btn btn-success">Review and Complete</button>
-    <button style="margin-right: 5px" type="button" class="btn btn-primary">Save as Draft</button>
+    <button style="margin-right: 5px" type="button" class="btn btn-success">Authorize</button>
+    <button style="margin-right: 5px" type="button" class="btn btn-success">Approve</button>
+    <button style="margin-right: 5px" type="button" class="btn btn-primary">Edit</button>
+    <button style="margin-right: 5px" type="button" class="btn btn-danger">Reject</button>
     <button type="button" class="btn btn-default">Cancel</button>
   </div>
 </div>
