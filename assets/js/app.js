@@ -39,7 +39,7 @@ var columns = [
     "rowspan": 1
   }, {
     "field": "transaction.status",
-    "title": "Status",
+    "title": "Transaction<br>Status",
     "sortable": true,
     "colspan": 1,
     "rowspan": 1
@@ -57,7 +57,7 @@ var columns = [
     "rowspan": 1
   }, {
     "field": "transaction.effectiveDate",
-    "title": "Date",
+    "title": "Effective Date",
     "sortable": true,
     "colspan": 1,
     "rowspan": 1
@@ -88,7 +88,7 @@ var columns = [
       "rowspan": 1
     }, {
       "field": "transaction.balance",
-      "title": "Balance At Time<br>of Transaction",
+      "title": "Balance at Time<br>of Transaction",
       "sortable": true,
       "colspan": 1,
       "rowspan": 1
