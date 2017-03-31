@@ -5,11 +5,11 @@ from django.shortcuts import render
 
 def dashboard(request):
     table_data = [
-        {'transaction':{ 'fuelSupplier': 'Chevron', 'type': 'Sold', 'partner': 'Exxon', 'quantity': 5, 'fairMarketValue': '$100', 'lastModified': '2/5/2017', 'effectiveDate': '5/12/2017', 'status': 'Pending', 'balance': 1000, 'compliancePeriod': 'January 2015'}},
-        {'transaction':{ 'fuelSupplier': 'Chevron', 'type': 'Sold', 'partner': 'Exxon', 'quantity': 5, 'fairMarketValue': '$100', 'lastModified': '2/5/2017', 'effectiveDate': '', 'status': 'Pending', 'balance': 1000, 'compliancePeriod': 'January 2015'}},
-        {'transaction':{ 'fuelSupplier': 'Chevron', 'type': 'Sold', 'partner': 'Exxon', 'quantity': 5, 'fairMarketValue': '$100', 'lastModified': '2/5/2017', 'effectiveDate': '', 'status': 'Pending', 'balance': 1000, 'compliancePeriod': 'January 2015'}},
-        {'transaction':{ 'fuelSupplier': 'Chevron', 'type': 'Sold', 'partner': 'Exxon', 'quantity': 5, 'fairMarketValue': '$100', 'lastModified': '2/5/2017', 'effectiveDate': '9/7/2018', 'status': 'Pending', 'balance': 1000, 'compliancePeriod': 'January 2015'}},
-        {'transaction':{ 'fuelSupplier': 'Chevron', 'type': 'Sold', 'partner': 'Exxon', 'quantity': 5, 'fairMarketValue': '$100', 'lastModified': '2/5/2017', 'effectiveDate': '', 'status': 'Pending', 'balance': 1000, 'compliancePeriod': 'January 2015'}}
+        {'transaction':{ 'fuelSupplier': 'Chevron', 'type': 'Sold', 'partner': 'Exxon', 'quantity': 5, 'fairMarketValue': '$100', 'lastModified': '2/5/2017', 'effectiveDate': '5/12/2017', 'status': 'Pending', 'balance': 1000, 'compliancePeriod': '2015'}},
+        {'transaction':{ 'fuelSupplier': 'Chevron', 'type': 'Sold', 'partner': 'Exxon', 'quantity': 5, 'fairMarketValue': '$100', 'lastModified': '2/5/2017', 'effectiveDate': '', 'status': 'Pending', 'balance': 1000, 'compliancePeriod': '2015'}},
+        {'transaction':{ 'fuelSupplier': 'Chevron', 'type': 'Sold', 'partner': 'Exxon', 'quantity': 5, 'fairMarketValue': '$100', 'lastModified': '2/5/2017', 'effectiveDate': '', 'status': 'Pending', 'balance': 1000, 'compliancePeriod': '2015'}},
+        {'transaction':{ 'fuelSupplier': 'Chevron', 'type': 'Sold', 'partner': 'Exxon', 'quantity': 5, 'fairMarketValue': '$100', 'lastModified': '2/5/2017', 'effectiveDate': '9/7/2018', 'status': 'Pending', 'balance': 1000, 'compliancePeriod': '2015'}},
+        {'transaction':{ 'fuelSupplier': 'Chevron', 'type': 'Sold', 'partner': 'Exxon', 'quantity': 5, 'fairMarketValue': '$100', 'lastModified': '2/5/2017', 'effectiveDate': '', 'status': 'Pending', 'balance': 1000, 'compliancePeriod': '2015'}}
     ]
     notifications = [
         {'id': 1, 'subject': 'Credit Transfer Proposed', 'date': '2 dys ago', 'flagged': False, 'message': 'A credit transfer was proposed from exxon'},
@@ -23,17 +23,17 @@ def dashboard(request):
 
 def account_activity(request):
     table_data = [
-        {'transaction':{ 'fuelSupplier': 'Chevron', 'type': 'Sold', 'partner': 'Exxon', 'quantity': 5, 'fairMarketValue': '$100', 'lastModified': '2/5/2017', 'effectiveDate': 'Directors Approval', 'status': 'Pending', 'balance': 1000, 'compliancePeriod': 'January 2015'}},
-        {'transaction':{ 'fuelSupplier': 'Chevron', 'type': 'Sold', 'partner': 'Exxon', 'quantity': 5, 'fairMarketValue': '$100', 'lastModified': '2/5/2017', 'effectiveDate': 'Directors Approval', 'status': 'Pending', 'balance': 1000, 'compliancePeriod': 'January 2015'}},
-        {'transaction':{ 'fuelSupplier': 'Chevron', 'type': 'Sold', 'partner': 'Exxon', 'quantity': 5, 'fairMarketValue': '$100', 'lastModified': '2/5/2017', 'effectiveDate': 'Directors Approval', 'status': 'Pending', 'balance': 1000, 'compliancePeriod': 'January 2015'}},
-        {'transaction':{ 'fuelSupplier': 'Chevron', 'type': 'Sold', 'partner': 'Exxon', 'quantity': 5, 'fairMarketValue': '$100', 'lastModified': '2/5/2017', 'effectiveDate': 'Directors Approval', 'status': 'Pending', 'balance': 1000, 'compliancePeriod': 'January 2015'}},
-        {'transaction':{ 'fuelSupplier': 'Chevron', 'type': 'Sold', 'partner': 'Exxon', 'quantity': 5, 'fairMarketValue': '$100', 'lastModified': '2/5/2017', 'effectiveDate': 'Directors Approval', 'status': 'Pending', 'balance': 1000, 'compliancePeriod': 'January 2015'}},
-        {'transaction':{ 'fuelSupplier': 'Chevron', 'type': 'Sold', 'partner': 'Exxon', 'quantity': 5, 'fairMarketValue': '$100', 'lastModified': '2/5/2017', 'effectiveDate': 'Directors Approval', 'status': 'Pending', 'balance': 1000, 'compliancePeriod': 'January 2015'}},
-        {'transaction':{ 'fuelSupplier': 'Chevron', 'type': 'Sold', 'partner': 'Exxon', 'quantity': 5, 'fairMarketValue': '$100', 'lastModified': '2/5/2017', 'effectiveDate': 'Directors Approval', 'status': 'Pending', 'balance': 1000, 'compliancePeriod': 'January 2015'}},
-        {'transaction':{ 'fuelSupplier': 'Chevron', 'type': 'Sold', 'partner': 'Exxon', 'quantity': 5, 'fairMarketValue': '$100', 'lastModified': '2/5/2017', 'effectiveDate': 'Directors Approval', 'status': 'Pending', 'balance': 1000, 'compliancePeriod': 'January 2015'}},
-        {'transaction':{ 'fuelSupplier': 'Chevron', 'type': 'Sold', 'partner': 'Exxon', 'quantity': 5, 'fairMarketValue': '$100', 'lastModified': '2/5/2017', 'effectiveDate': 'Directors Approval', 'status': 'Pending', 'balance': 1000, 'compliancePeriod': 'January 2015'}},
-        {'transaction':{ 'fuelSupplier': 'Chevron', 'type': 'Sold', 'partner': 'Exxon', 'quantity': 5, 'fairMarketValue': '$100', 'lastModified': '2/5/2017', 'effectiveDate': 'Directors Approval', 'status': 'Pending', 'balance': 1000, 'compliancePeriod': 'January 2015'}},
-        {'transaction':{ 'fuelSupplier': 'Chevron', 'type': 'Sold', 'partner': 'Exxon', 'quantity': 5, 'fairMarketValue': '$100', 'lastModified': '2/5/2017', 'effectiveDate': 'Directors Approval', 'status': 'Pending', 'balance': 1000, 'compliancePeriod': 'January 2015'}}
+        {'transaction':{ 'fuelSupplier': 'Chevron', 'type': 'Sold', 'partner': 'Exxon', 'quantity': 5, 'fairMarketValue': '$100', 'lastModified': '2/5/2017', 'effectiveDate': 'Directors Approval', 'status': 'Pending', 'balance': 1000, 'compliancePeriod': '2015'}},
+        {'transaction':{ 'fuelSupplier': 'Chevron', 'type': 'Sold', 'partner': 'Exxon', 'quantity': 5, 'fairMarketValue': '$100', 'lastModified': '2/5/2017', 'effectiveDate': 'Directors Approval', 'status': 'Pending', 'balance': 1000, 'compliancePeriod': '2015'}},
+        {'transaction':{ 'fuelSupplier': 'Chevron', 'type': 'Sold', 'partner': 'Exxon', 'quantity': 5, 'fairMarketValue': '$100', 'lastModified': '2/5/2017', 'effectiveDate': 'Directors Approval', 'status': 'Pending', 'balance': 1000, 'compliancePeriod': '2015'}},
+        {'transaction':{ 'fuelSupplier': 'Chevron', 'type': 'Sold', 'partner': 'Exxon', 'quantity': 5, 'fairMarketValue': '$100', 'lastModified': '2/5/2017', 'effectiveDate': 'Directors Approval', 'status': 'Pending', 'balance': 1000, 'compliancePeriod': '2015'}},
+        {'transaction':{ 'fuelSupplier': 'Chevron', 'type': 'Sold', 'partner': 'Exxon', 'quantity': 5, 'fairMarketValue': '$100', 'lastModified': '2/5/2017', 'effectiveDate': 'Directors Approval', 'status': 'Pending', 'balance': 1000, 'compliancePeriod': '2015'}},
+        {'transaction':{ 'fuelSupplier': 'Chevron', 'type': 'Sold', 'partner': 'Exxon', 'quantity': 5, 'fairMarketValue': '$100', 'lastModified': '2/5/2017', 'effectiveDate': 'Directors Approval', 'status': 'Pending', 'balance': 1000, 'compliancePeriod': '2015'}},
+        {'transaction':{ 'fuelSupplier': 'Chevron', 'type': 'Sold', 'partner': 'Exxon', 'quantity': 5, 'fairMarketValue': '$100', 'lastModified': '2/5/2017', 'effectiveDate': 'Directors Approval', 'status': 'Pending', 'balance': 1000, 'compliancePeriod': '2015'}},
+        {'transaction':{ 'fuelSupplier': 'Chevron', 'type': 'Sold', 'partner': 'Exxon', 'quantity': 5, 'fairMarketValue': '$100', 'lastModified': '2/5/2017', 'effectiveDate': 'Directors Approval', 'status': 'Pending', 'balance': 1000, 'compliancePeriod': '2015'}},
+        {'transaction':{ 'fuelSupplier': 'Chevron', 'type': 'Sold', 'partner': 'Exxon', 'quantity': 5, 'fairMarketValue': '$100', 'lastModified': '2/5/2017', 'effectiveDate': 'Directors Approval', 'status': 'Pending', 'balance': 1000, 'compliancePeriod': '2015'}},
+        {'transaction':{ 'fuelSupplier': 'Chevron', 'type': 'Sold', 'partner': 'Exxon', 'quantity': 5, 'fairMarketValue': '$100', 'lastModified': '2/5/2017', 'effectiveDate': 'Directors Approval', 'status': 'Pending', 'balance': 1000, 'compliancePeriod': '2015'}},
+        {'transaction':{ 'fuelSupplier': 'Chevron', 'type': 'Sold', 'partner': 'Exxon', 'quantity': 5, 'fairMarketValue': '$100', 'lastModified': '2/5/2017', 'effectiveDate': 'Directors Approval', 'status': 'Pending', 'balance': 1000, 'compliancePeriod': '2015'}}
     ]
     return render(request, 'account-activity.html', {'table_data': json.dumps(table_data)})
 
@@ -48,7 +48,7 @@ def transaction_summary(request):
         'quantity': 200,
         'fair_market_value': '$200',
         'total_value': '$40,000',
-        'compliance_period': 'January 2015',
+        'compliance_period': '2015',
         'effective_date': 'Directors Approval'
     }
     return render(request, 'transaction-summary.html', {'transaction': transaction})
