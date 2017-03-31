@@ -13,4 +13,5 @@ urlpatterns = [
     url(r'^new-transaction/$', views.new_transaction),
     url(r'^transaction-summary/$', views.transaction_summary),
     url(r'^admin/', include(admin.site.urls)),
+    url(r'^health$', health),
 ]
