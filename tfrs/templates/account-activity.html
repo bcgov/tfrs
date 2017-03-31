@@ -6,81 +6,11 @@
   <div class="row">
     <div class="col-xs-12">
       <h2>Account Activity</h2>
-      <table id="fuelSupplyTable">
+      <table id="account-activity-table">
       </table>
     </div>
   </div>
-
-{% endblock %}
-
-{% block template_scripts %}
-<script>
-var data = {{ table_data|safe }}
-var columns = [
-        [{
-                "field": "transaction.fuelSupplier",
-                "title": "Fuel Supplier",
-                "colspan": 1,
-                "sortable": true,
-                "rowspan": 1
-        }, {
-        "field": "transaction.status",
-        "title": "Status",
-        "sortable": true,
-        "colspan": 1,
-        "rowspan": 1
-}, {
-        "field": "transaction.compliancePeriod",
-        "title": "Compliance Period",
-        "sortable": true,
-        "colspan": 1,
-        "rowspan": 1
-}, {
-        "field": "transaction.effectiveDate",
-        "title": "Date",
-        "sortable": true,
-        "colspan": 1,
-        "rowspan": 1
-},
-{
-        "field": "transaction.type",
-        "title": "Transaction Type",
-        "colspan": 1,
-        "sortable": true,
-        "rowspan": 1
-}, {
-        "field": "transaction.partner",
-        "title": "Transaction Partner",
-        "sortable": true,
-        "colspan": 1,
-        "rowspan": 1
-}, {
-        "field": "transaction.quantity",
-        "title": "Number of Credits",
-        "sortable": true,
-        "colspan": 1,
-        "rowspan": 1
-}, {
-        "field": "transaction.fairMarketValue",
-        "title": "Fair Market Value Per Credit",
-        "sortable": true,
-        "colspan": 1,
-        "rowspan": 1
-}, {
-        "field": "transaction.balance",
-        "title": "Balance",
-        "sortable": true,
-        "colspan": 1,
-        "rowspan": 1
-}]
-];
-
-$(function() {
-        $('#fuelSupplyTable').bootstrapTable({
-                data: data,
-                columns: columns,
-                pagination: true,
-        });
-});
-</script>
+  <script>
+  var data = {{ table_data|safe }}
+  </script>
 {% endblock %}

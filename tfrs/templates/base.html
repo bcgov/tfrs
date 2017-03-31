@@ -53,6 +53,7 @@
 
     <!-- STANDARD CSS -->
     <link type="text/css" href="{% static "css/app.css" %}" rel="stylesheet"/>
+    <link type="text/css" href="{% static "css/extensions.css" %}" rel="stylesheet"/>
 
     <!-- FONTS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css"/>
@@ -141,6 +142,16 @@
     <div id="topicTemplate" class="template container env-container">
       <!-- PAGE CONTENT -->
       <div class="row">
+        <div class="row">
+          <div class="col-xs-12">
+            <span class="pull-left" style="font-size: 20px">Chevron</span>
+            <span class="pull-right">
+              <span style="font-size: 20px">BC EveryFuel</span>
+              <i style="font-size: 32px" class="fa fa-user" aria-hidden="true"></i>
+              <i style="font-size: 32px" class="fa fa-cog" aria-hidden="true"></i>
+            </span>
+          </div>
+        </div>
         {% block content %}{% endblock %}
       </div>
       <!-- PAGE CONTENT -->
@@ -199,18 +210,12 @@
       <script src="{% static "js/bootstrap.min.js" %}"></script>
       <script src="{% static "js/misc.js" %}"></script>
       <script src="{% static "js/navMenu.js" %}"></script>
+      <script src="{% static "js/app.js" %}"></script>
       <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
       <script src="{% static "js/ie10-viewport-bug-workaround.js" %}"></script>
 
       <script src="https://rawgit.com/wenzhixin/bootstrap-table/master/src/bootstrap-table.js"></script>
-
-      <script>
-$(function() {
-  $("#effectiveDate").datepicker();
-});
-      </script>
-      {% block template_scripts %}{% endblock %}
-
+      <script src="{% static "js/extensions.js" %}"></script>
   </body>
 
 </html>
