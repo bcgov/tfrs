@@ -6,12 +6,6 @@
 <div id="main-content" role="main" class="contentPageMainColumn col-sm-12">
   <a id="main-content-anchor"></a>
   <div class="row">
-    <div class="col-xs-12 right-align">
-      <p style="margin-bottom: 0;">Name</p>
-    </div>
-  </div>
-
-  <div class="row">
     <div class="col-xs-12 col-sm-6">
       <h2>Account Balance</h2>
       <div>
@@ -32,106 +26,27 @@
       </div>
     </div>
     <div class="col-xs-12 col-sm-6">
-      <h2><a id="dashboard-notifications-header" href="/notifications">Notifications</a></h2>
+      <a id="dashboard-notifications-header" href="/notifications" style="text-decoration: none;"><h2>Notifications</h2></a>
       <div class="list-group notification-list">
+        {% for notification in notifications %}
         <a href="/notifications" class="list-group-item">
           <span class="notification-item">
-            Credit Transfer Proposed
+            {{ notification.subject }}
           </span>
-          <span class="pull-right">5 dys ago</span>
+          <span class="pull-right">{{ notification.date }}</span>
         </a>
-        <a href="/notifications" class="list-group-item">
-          <span class="notification-item">
-            Credits Awarded - Fuel Supply
-          </span>
-          <span class="pull-right">2 wks ago</span>
-        </a>
-        <a href="/notifications" class="list-group-item">
-          <span class="notification-item">
-            Credits Awarded - Part 3
-          </span>
-          <span class="pull-right">2 wks ago</span>
-        </a>
+        {% endfor %}
       </div>
     </div>
   </div>
   <div class="row">
     <div class="col-xs-12">
       <h2>Recent Account Activity</h2>
-      <table id="fuelSupplyTable">
-      </table>
+      <table id="recent-account-activity-table"></table>
     </div>
   </div>
 </div>
-{% endblock %}
-
-{% block template_scripts %}
 <script>
 var data = {{ table_data|safe }}
-var columns = [
-        [{
-                "field": "transaction.fuelSupplier",
-                "title": "Fuel Supplier",
-                "colspan": 1,
-                "sortable": true,
-                "rowspan": 1
-        }, {
-        "field": "transaction.status",
-        "title": "Status",
-        "sortable": true,
-        "colspan": 1,
-        "rowspan": 1
-}, {
-        "field": "transaction.compliancePeriod",
-        "title": "Compliance Period",
-        "sortable": true,
-        "colspan": 1,
-        "rowspan": 1
-}, {
-        "field": "transaction.effectiveDate",
-        "title": "Date",
-        "sortable": true,
-        "colspan": 1,
-        "rowspan": 1
-},
-{
-        "field": "transaction.type",
-        "title": "Transaction Type",
-        "colspan": 1,
-        "sortable": true,
-        "rowspan": 1
-}, {
-        "field": "transaction.partner",
-        "title": "Transaction Partner",
-        "sortable": true,
-        "colspan": 1,
-        "rowspan": 1
-}, {
-        "field": "transaction.quantity",
-        "title": "Number of Credits",
-        "sortable": true,
-        "colspan": 1,
-        "rowspan": 1
-}, {
-        "field": "transaction.fairMarketValue",
-        "title": "Fair Market Value Per Credit",
-        "sortable": true,
-        "colspan": 1,
-        "rowspan": 1
-}, {
-        "field": "transaction.balance",
-        "title": "Balance",
-        "sortable": true,
-        "colspan": 1,
-        "rowspan": 1
-}]
-];
-
-$(function() {
-        $('#fuelSupplyTable').bootstrapTable({
-                data: data,
-                columns: columns,
-        });
-});
 </script>
 {% endblock %}
