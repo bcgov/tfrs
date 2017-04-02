@@ -8,16 +8,14 @@
       <h2>Notifications</h2>
         <div>
                 <div class="list-group notification-list">
-                  <a href="#" data-toggle="modal" data-target="#{{ notification.title }}-notification" class="list-group-item notifications-header">
-                    <span class="col-xs-6">Subject</span>
+                  <a href="#" class="list-group-item notifications-header">
+                    <span class="col-xs-9">Subject</span>
                     <span class="col-xs-3">Date</span>
-                    <span class="col-xs-3">Flag</span>
                   </a>
                   {% for notification in notifications %}
-                  <a href="#" class="list-group-item">
-                    <span class="col-xs-6">{{ notification.subject }}</span>
+                  <a href="#" data-toggle="modal" data-target="#{{ notification.id }}-notification" class="list-group-item">
+                    <span class="col-xs-9">{{ notification.subject }}</span>
                     <span class="col-xs-3">{{ notification.date }}</span>
-                    <span class="col-xs-3"><i class="fa fa-flag {% if notification.flagged %}active{% endif %}" aria-hidden="true"></i></span>
                   </a>
                   {% endfor %}
                 </div>

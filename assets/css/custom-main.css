@@ -129,7 +129,7 @@ a label.env-username {
 
 @media (min-width: 768px) {
     .env-container {
-        padding-top: 150px !important;
+        padding-top: 120px !important;
         position: relative;
     }
     #breadcrumbContainer {
