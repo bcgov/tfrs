@@ -5,7 +5,7 @@
 {% block content %}
 <div id="main-content" role="main" class="contentPageMainColumn col-sm-12">
   <a id="main-content-anchor"></a>
-  <h1>New Transaction</h1>
+  <h1>Review Transaction</h1>
 
   <div class="row well">
     <div class="col-xs-12 col-lg-6 transaction-item" id="fuelType">
@@ -29,6 +29,30 @@
       <p>
       <div class="col-xs-8">
         1234 Douglas Road, V3G 6N1, Victoria, BC
+      </div> 
+      </p>
+    </div>
+    <div class="col-xs-12 col-lg-6 transaction-item" id="fuelType">
+      <p>
+      <div class="col-xs-4">	  
+        <label for="fueltype">Fuel Supplier: </label>
+      </div>
+      </p>
+      <p>
+      <div class="col-xs-8">
+        Exxon
+      </div> 
+      </p>
+    </div>
+    <div class="col-xs-12 col-lg-6 transaction-item" id="fuelType">
+      <p>
+      <div class="col-xs-4">	  
+        <label for="fueltype">Fuel Supplier Address: </label>
+      </div>
+      </p>
+      <p>
+      <div class="col-xs-8">
+        4321 Douglas Road, V3G 6N1, Victoria, BC
       </div> 
       </p>
     </div>
@@ -90,7 +114,19 @@
       </p>
       <p>
       <div class="col-xs-8">
-        January 2015
+        2015
+      </div>
+      </p>
+    </div>
+    <div class="col-xs-12 col-lg-6 transaction-item" id="fuelType">
+      <p>
+      <div class="col-xs-4">	  
+        <label for="fueltype">Status:</label>
+      </div>
+      </p>
+      <p>
+      <div class="col-xs-8">
+        Draft
       </div>
       </p>
     </div>
@@ -107,23 +143,23 @@
       </div>
       </p>
     </div>
-    <div class="col-xs-12 col-lg-6 collapse" id="datepicker">
+    <div class="col-xs-12 col-lg-6">
       <p>
-      <div class="col-xs-4">	  
-        <label for="fueltype">Specify Effective Date: </label>
+      <div class="col-xs-4">
+        <label for="fueltype">Last Modified:</label>
       </div>
       </p>
       <div class="col-xs-8">
-        <input type="text" id="effectiveDate" class="form-control" placeholder="Specify the Effective Date">
+        7/14/2016
       </div>
     </div>
   </div>
   <div class="row" style="padding-top: 10px; text-align: right;">
-    <button style="margin-right: 5px" type="button" class="btn btn-success">Authorize</button>
-    <button style="margin-right: 5px" type="button" class="btn btn-success">Approve</button>
-    <button style="margin-right: 5px" type="button" class="btn btn-primary">Edit</button>
-    <button style="margin-right: 5px" type="button" class="btn btn-danger">Reject</button>
-    <button type="button" class="btn btn-default">Cancel</button>
+    <a href="/" style="margin-right: 5px" type="button" class="btn btn-success">Authorize</a>
+    <a href="/" style="margin-right: 5px" type="button" class="btn btn-success">Approve</a>
+    <a href="/new-transaction" style="margin-right: 5px" type="button" class="btn btn-primary">Edit</a>
+    <a href="/" style="margin-right: 5px" type="button" class="btn btn-danger">Reject</a >
+    <a href="/" type="button" class="btn btn-default">Cancel</a>
   </div>
 </div>
     <div class="modal fade" id="partnerNotFound" tabindex="-1" role="dialog" aria-labelledby="partnerNotFound">

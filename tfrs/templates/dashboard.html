@@ -24,12 +24,13 @@
           </span>
         </div>
       </div>
+      <a class="more-link" href="/account-activity">More</a>
     </div>
     <div class="col-xs-12 col-sm-6">
-      <a id="dashboard-notifications-header" href="/notifications" style="text-decoration: none;"><h2>Notifications</h2></a>
+      <h2>Notifications</h2>
       <div class="list-group notification-list">
         {% for notification in notifications %}
-        <a href="/notifications" class="list-group-item">
+        <a href="#" data-toggle="modal" data-target="#{{ notification.id }}-notification" class="list-group-item">
           <span class="notification-item">
             {{ notification.subject }}
           </span>
@@ -37,16 +38,36 @@
         </a>
         {% endfor %}
       </div>
+      <a class="more-link" href="/notifications">More</a>
     </div>
   </div>
   <div class="row">
     <div class="col-xs-12">
       <h2>Recent Account Activity</h2>
       <table id="recent-account-activity-table"></table>
+      <a class="more-link" href="/account-activity">More</a>
     </div>
   </div>
 </div>
 <script>
 var data = {{ table_data|safe }}
 </script>
+{% for notification in notifications %}
+  <div class="modal fade" id="{{ notification.id }}-notification" tabindex="-1" role="dialog" aria-labelledby="partnerNotFound">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title" id="myModalLabel">{{ notification.subject }}</h4>
+          </div>
+          <div class="modal-body">
+            <p>{{ notification.message }}</p>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+          </div>
+        </div> 
+      </div>
+    </div>
+  {% endfor %}
 {% endblock %}
