@@ -43,13 +43,13 @@ var columns = [
     "sortable": true,
     "colspan": 1,
     "rowspan": 1
-  }, {
+  }, /*{
     "field": "transaction.compliancePeriod",
     "title": "Compliance<br>Period",
     "sortable": true,
     "colspan": 1,
     "rowspan": 1
-  }, {
+  },*/ {
     "field": "transaction.lastModified",
     "title": "Last<br>Modified",
     "sortable": true,
@@ -57,12 +57,11 @@ var columns = [
     "rowspan": 1
   }, {
     "field": "transaction.effectiveDate",
-    "title": "Effective Date",
+    "title": "Effective<br>Date",
     "sortable": true,
     "colspan": 1,
     "rowspan": 1
-  },
-    {
+  }, {
       "field": "transaction.type",
       "title": "Transaction<br>Type",
       "colspan": 1,
