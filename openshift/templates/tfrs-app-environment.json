@@ -196,7 +196,7 @@
         "name": "${SCHEMASPY_NAME}"
       },
       "spec": {
-        "host": "${APPLICATION_DOMAIN}",
+        "host": "${SCHEMASPY_NAME}-${APPLICATION_DOMAIN}",
         "to": {
           "kind": "Service",
           "name": "${SCHEMASPY_NAME}"
