@@ -39,17 +39,17 @@ var columns = [
     "rowspan": 1
   }, {
     "field": "transaction.status",
-    "title": "Status",
+    "title": "Transaction<br>Status",
     "sortable": true,
     "colspan": 1,
     "rowspan": 1
-  }, {
+  }, /*{
     "field": "transaction.compliancePeriod",
     "title": "Compliance<br>Period",
     "sortable": true,
     "colspan": 1,
     "rowspan": 1
-  }, {
+  },*/ {
     "field": "transaction.lastModified",
     "title": "Last<br>Modified",
     "sortable": true,
@@ -57,12 +57,11 @@ var columns = [
     "rowspan": 1
   }, {
     "field": "transaction.effectiveDate",
-    "title": "Date",
+    "title": "Effective<br>Date",
     "sortable": true,
     "colspan": 1,
     "rowspan": 1
-  },
-    {
+  }, {
       "field": "transaction.type",
       "title": "Transaction<br>Type",
       "colspan": 1,
@@ -88,7 +87,7 @@ var columns = [
       "rowspan": 1
     }, {
       "field": "transaction.balance",
-      "title": "Balance At Time<br>of Transaction",
+      "title": "Balance at Time<br>of Transaction",
       "sortable": true,
       "colspan": 1,
       "rowspan": 1

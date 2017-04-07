@@ -2265,3 +2265,26 @@ h5.twitterUserName a{
 i.active {
   color: red;
 }
+
+.company-header {
+  font-size: 50px;
+  font-weight: bold;
+}
+
+.header-profile {
+  line-height: 71px;
+}
+
+.header-profile > span {
+  font-size: 20px;
+}
+
+.header-profile > i {
+  font-size: 22px;
+  padding-left: 5px;
+}
+
+.more-link {
+  float: right;
+  text-decoration: none !important;
+}
