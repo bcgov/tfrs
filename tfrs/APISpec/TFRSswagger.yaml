@@ -1,0 +1,3849 @@
+swagger: '2.0'
+info:
+  version: v1
+  title: REST API Documentation for the NRS TFRS Credit Trading Application
+  description: The Transportation Fuels Reporting System is being designed to streamline compliance reporting for transportation fuel suppliers in accordance with the Renewable & Low Carbon Fuel Requirements Regulation.
+  termsOfService: N/A
+basePath: /api
+paths:
+  /credittrades:
+    get:
+      tags:
+        - CreditTrade
+      consumes: []
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      responses:
+        200:
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/CreditTrade"
+    post:
+      tags:
+        - CreditTrade
+      consumes:
+        - application/json
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      parameters:
+        - name: item
+          in: body
+          required: true
+          schema:
+            $ref: "#/definitions/CreditTrade"
+      responses:
+        201:
+          description: CreditTrade created
+          headers:
+            Location:
+              description: A link to the CreditTrade
+              type: string
+              format: url
+          schema:
+            $ref: "#/definitions/CreditTrade"  
+  /credittrades/bulk:
+    post:
+      tags:
+        - CreditTrade
+      consumes:
+        - application/json
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      parameters:
+        - name: items
+          in: body
+          required: true
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/CreditTrade"
+      responses:
+        201:
+          description: CreditTrade created
+  /credittrades/{id}:
+    get:
+      tags:
+        - CreditTrade
+      consumes: []
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: "#/definitions/CreditTrade"
+        404:
+          description: CreditTrade not found
+      parameters:
+        - name: id
+          in: path
+          description: id of CreditTrade to fetch
+          required: true
+          type: integer
+    put:
+      tags:
+        - CreditTrade
+      consumes:
+        - application/json
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: "#/definitions/CreditTrade"
+        404:
+          description: CreditTrade not found
+      parameters:
+        - name: id
+          in: path
+          description: id of CreditTrade to fetch
+          required: true
+          type: integer
+        - name: item
+          in: body
+          required: true
+          schema:
+            $ref: "#/definitions/CreditTrade"
+  /credittrades/{id}/delete:
+    post:
+      tags:
+        - CreditTrade
+      consumes: []
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      responses:
+        200:
+          description: OK
+        404:
+          description: CreditTrade not found
+      parameters:
+        - name: id
+          in: path
+          description: id of CreditTrade to delete
+          required: true
+          type: integer
+  /fuelsuppliers:
+    get:
+      tags:
+        - FuelSupplier
+      consumes: []
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      responses:
+        200:
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/FuelSupplier"
+    post:
+      tags:
+        - FuelSupplier
+      consumes:
+        - application/json
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      parameters:
+        - name: item
+          in: body
+          required: true
+          schema:
+            $ref: "#/definitions/FuelSupplier"
+      responses:
+        201:
+          description: FuelSupplier created
+          headers:
+            Location:
+              description: A link to the FuelSupplier
+              type: string
+              format: url
+          schema:
+            $ref: "#/definitions/FuelSupplier"  
+  /fuelsuppliers/bulk:
+    post:
+      tags:
+        - FuelSupplier
+      consumes:
+        - application/json
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      parameters:
+        - name: items
+          in: body
+          required: true
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/FuelSupplier"
+      responses:
+        201:
+          description: FuelSupplier created
+  /fuelsuppliers/{id}:
+    get:
+      tags:
+        - FuelSupplier
+      consumes: []
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: "#/definitions/FuelSupplier"
+        404:
+          description: FuelSupplier not found
+      parameters:
+        - name: id
+          in: path
+          description: id of FuelSupplier to fetch
+          required: true
+          type: integer
+    put:
+      tags:
+        - FuelSupplier
+      consumes:
+        - application/json
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: "#/definitions/FuelSupplier"
+        404:
+          description: FuelSupplier not found
+      parameters:
+        - name: id
+          in: path
+          description: id of FuelSupplier to fetch
+          required: true
+          type: integer
+        - name: item
+          in: body
+          required: true
+          schema:
+            $ref: "#/definitions/FuelSupplier"
+  /fuelsuppliers/{id}/delete:
+    post:
+      tags:
+        - FuelSupplier
+      consumes: []
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      responses:
+        200:
+          description: OK
+        404:
+          description: FuelSupplier not found
+      parameters:
+        - name: id
+          in: path
+          description: id of FuelSupplier to delete
+          required: true
+          type: integer
+  /credittradetradelogentries:
+    get:
+      tags:
+        - CreditTradeLogEntry
+      consumes: []
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      responses:
+        200:
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/CreditTradeLogEntry"
+    post:
+      tags:
+        - CreditTradeLogEntry
+      consumes:
+        - application/json
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      parameters:
+        - name: item
+          in: body
+          required: true
+          schema:
+            $ref: "#/definitions/CreditTradeLogEntry"
+      responses:
+        201:
+          description: CreditTradeLogEntry created
+          headers:
+            Location:
+              description: A link to the CreditTradeLogEntry
+              type: string
+              format: url
+          schema:
+            $ref: "#/definitions/CreditTradeLogEntry"  
+  /credittradetradelogentries/bulk:
+    post:
+      tags:
+        - CreditTradeLogEntry
+      consumes:
+        - application/json
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      parameters:
+        - name: items
+          in: body
+          required: true
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/CreditTradeLogEntry"
+      responses:
+        201:
+          description: CreditTradeLogEntry created
+  /credittradetradelogentries/{id}:
+    get:
+      tags:
+        - CreditTradeLogEntry
+      consumes: []
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: "#/definitions/CreditTradeLogEntry"
+        404:
+          description: CreditTradeLogEntry not found
+      parameters:
+        - name: id
+          in: path
+          description: id of CreditTradeLogEntry to fetch
+          required: true
+          type: integer
+    put:
+      tags:
+        - CreditTradeLogEntry
+      consumes:
+        - application/json
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: "#/definitions/CreditTradeLogEntry"
+        404:
+          description: CreditTradeLogEntry not found
+      parameters:
+        - name: id
+          in: path
+          description: id of CreditTradeLogEntry to fetch
+          required: true
+          type: integer
+        - name: item
+          in: body
+          required: true
+          schema:
+            $ref: "#/definitions/CreditTradeLogEntry"
+  /credittradetradelogentries/{id}/delete:
+    post:
+      tags:
+        - CreditTradeLogEntry
+      consumes: []
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      responses:
+        200:
+          description: OK
+        404:
+          description: CreditTradeLogEntry not found
+      parameters:
+        - name: id
+          in: path
+          description: id of CreditTradeLogEntry to delete
+          required: true
+          type: integer
+  /complianceperiods:
+    get:
+      tags:
+        - CompliancePeriod
+      consumes: []
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      responses:
+        200:
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/CompliancePeriod"
+    post:
+      tags:
+        - CompliancePeriod
+      consumes:
+        - application/json
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      parameters:
+        - name: item
+          in: body
+          required: true
+          schema:
+            $ref: "#/definitions/CompliancePeriod"
+      responses:
+        201:
+          description: CompliancePeriod created
+          headers:
+            Location:
+              description: A link to the CompliancePeriod
+              type: string
+              format: url
+          schema:
+            $ref: "#/definitions/CompliancePeriod"  
+  /complianceperiods/bulk:
+    post:
+      tags:
+        - CompliancePeriod
+      consumes:
+        - application/json
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      parameters:
+        - name: items
+          in: body
+          required: true
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/CompliancePeriod"
+      responses:
+        201:
+          description: CompliancePeriod created
+  /complianceperiods/{id}:
+    get:
+      tags:
+        - CompliancePeriod
+      consumes: []
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: "#/definitions/CompliancePeriod"
+        404:
+          description: CompliancePeriod not found
+      parameters:
+        - name: id
+          in: path
+          description: id of CompliancePeriod to fetch
+          required: true
+          type: integer
+    put:
+      tags:
+        - CompliancePeriod
+      consumes:
+        - application/json
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: "#/definitions/CompliancePeriod"
+        404:
+          description: CompliancePeriod not found
+      parameters:
+        - name: id
+          in: path
+          description: id of CompliancePeriod to fetch
+          required: true
+          type: integer
+        - name: item
+          in: body
+          required: true
+          schema:
+            $ref: "#/definitions/CompliancePeriod"
+  /complianceperiods/{id}/delete:
+    post:
+      tags:
+        - CompliancePeriod
+      consumes: []
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      responses:
+        200:
+          description: OK
+        404:
+          description: CompliancePeriod not found
+      parameters:
+        - name: id
+          in: path
+          description: id of CompliancePeriod to delete
+          required: true
+          type: integer
+  /lookuplists:
+    get:
+      tags:
+        - LookupList
+      consumes: []
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      responses:
+        200:
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/LookupList"
+    post:
+      tags:
+        - LookupList
+      consumes:
+        - application/json
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      parameters:
+        - name: item
+          in: body
+          required: true
+          schema:
+            $ref: "#/definitions/LookupList"
+      responses:
+        201:
+          description: LookupList created
+          headers:
+            Location:
+              description: A link to the LookupList
+              type: string
+              format: url
+          schema:
+            $ref: "#/definitions/LookupList"  
+  /lookuplists/bulk:
+    post:
+      tags:
+        - LookupList
+      consumes:
+        - application/json
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      parameters:
+        - name: items
+          in: body
+          required: true
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/LookupList"
+      responses:
+        201:
+          description: LookupList created
+  /lookuplists/{id}:
+    get:
+      tags:
+        - LookupList
+      consumes: []
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: "#/definitions/LookupList"
+        404:
+          description: LookupList not found
+      parameters:
+        - name: id
+          in: path
+          description: id of LookupList to fetch
+          required: true
+          type: integer
+    put:
+      tags:
+        - LookupList
+      consumes:
+        - application/json
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: "#/definitions/LookupList"
+        404:
+          description: LookupList not found
+      parameters:
+        - name: id
+          in: path
+          description: id of LookupList to fetch
+          required: true
+          type: integer
+        - name: item
+          in: body
+          required: true
+          schema:
+            $ref: "#/definitions/LookupList"
+  /lookuplists/{id}/delete:
+    post:
+      tags:
+        - LookupList
+      consumes: []
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      responses:
+        200:
+          description: OK
+        404:
+          description: LookupList not found
+      parameters:
+        - name: id
+          in: path
+          description: id of LookupList to delete
+          required: true
+          type: integer
+  /notes:
+    get:
+      tags:
+        - Note
+      consumes: []
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      responses:
+        200:
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/Note"
+    post:
+      tags:
+        - Note
+      consumes:
+        - application/json
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      parameters:
+        - name: item
+          in: body
+          required: true
+          schema:
+            $ref: "#/definitions/Note"
+      responses:
+        201:
+          description: Note created
+          headers:
+            Location:
+              description: A link to the Note
+              type: string
+              format: url
+          schema:
+            $ref: "#/definitions/Note"  
+  /notes/bulk:
+    post:
+      tags:
+        - Note
+      consumes:
+        - application/json
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      parameters:
+        - name: items
+          in: body
+          required: true
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/Note"
+      responses:
+        201:
+          description: Note created
+  /notes/{id}:
+    get:
+      tags:
+        - Note
+      consumes: []
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: "#/definitions/Note"
+        404:
+          description: Note not found
+      parameters:
+        - name: id
+          in: path
+          description: id of Note to fetch
+          required: true
+          type: integer
+    put:
+      tags:
+        - Note
+      consumes:
+        - application/json
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: "#/definitions/Note"
+        404:
+          description: Note not found
+      parameters:
+        - name: id
+          in: path
+          description: id of Note to fetch
+          required: true
+          type: integer
+        - name: item
+          in: body
+          required: true
+          schema:
+            $ref: "#/definitions/Note"
+  /notes/{id}/delete:
+    post:
+      tags:
+        - Note
+      consumes: []
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      responses:
+        200:
+          description: OK
+        404:
+          description: Note not found
+      parameters:
+        - name: id
+          in: path
+          description: id of Note to delete
+          required: true
+          type: integer
+  /attachments:
+    get:
+      tags:
+        - Attachment
+      consumes: []
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      responses:
+        200:
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/Attachment"
+    post:
+      tags:
+        - Attachment
+      consumes:
+        - application/json
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      parameters:
+        - name: item
+          in: body
+          required: true
+          schema:
+            $ref: "#/definitions/Attachment"
+      responses:
+        201:
+          description: Attachment created
+          headers:
+            Location:
+              description: A link to the Attachment
+              type: string
+              format: url
+          schema:
+            $ref: "#/definitions/Attachment"  
+  /attachments/bulk:
+    post:
+      tags:
+        - Attachment
+      consumes:
+        - application/json
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      parameters:
+        - name: items
+          in: body
+          required: true
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/Attachment"
+      responses:
+        201:
+          description: Attachment created
+  /attachments/{id}:
+    get:
+      tags:
+        - Attachment
+      consumes: []
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: "#/definitions/Attachment"
+        404:
+          description: Attachment not found
+      parameters:
+        - name: id
+          in: path
+          description: id of Attachment to fetch
+          required: true
+          type: integer
+    put:
+      tags:
+        - Attachment
+      consumes:
+        - application/json
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: "#/definitions/Attachment"
+        404:
+          description: Attachment not found
+      parameters:
+        - name: id
+          in: path
+          description: id of Attachment to fetch
+          required: true
+          type: integer
+        - name: item
+          in: body
+          required: true
+          schema:
+            $ref: "#/definitions/Attachment"
+  /attachments/{id}/delete:
+    post:
+      tags:
+        - Attachment
+      consumes: []
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      responses:
+        200:
+          description: OK
+        404:
+          description: Attachment not found
+      parameters:
+        - name: id
+          in: path
+          description: id of Attachment to delete
+          required: true
+          type: integer
+  /histories:
+    get:
+      tags:
+        - History
+      consumes: []
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      responses:
+        200:
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/History"
+    post:
+      tags:
+        - History
+      consumes:
+        - application/json
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      parameters:
+        - name: item
+          in: body
+          required: true
+          schema:
+            $ref: "#/definitions/History"
+      responses:
+        201:
+          description: History created
+          headers:
+            Location:
+              description: A link to the History
+              type: string
+              format: url
+          schema:
+            $ref: "#/definitions/History"  
+  /histories/bulk:
+    post:
+      tags:
+        - History
+      consumes:
+        - application/json
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      parameters:
+        - name: items
+          in: body
+          required: true
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/History"
+      responses:
+        201:
+          description: History created
+  /histories/{id}:
+    get:
+      tags:
+        - History
+      consumes: []
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: "#/definitions/History"
+        404:
+          description: History not found
+      parameters:
+        - name: id
+          in: path
+          description: id of History to fetch
+          required: true
+          type: integer
+    put:
+      tags:
+        - History
+      consumes:
+        - application/json
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: "#/definitions/History"
+        404:
+          description: History not found
+      parameters:
+        - name: id
+          in: path
+          description: id of History to fetch
+          required: true
+          type: integer
+        - name: item
+          in: body
+          required: true
+          schema:
+            $ref: "#/definitions/History"
+  /histories/{id}/delete:
+    post:
+      tags:
+        - History
+      consumes: []
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      responses:
+        200:
+          description: OK
+        404:
+          description: History not found
+      parameters:
+        - name: id
+          in: path
+          description: id of History to delete
+          required: true
+          type: integer
+  /contacts:
+    get:
+      tags:
+        - Contact
+      consumes: []
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      responses:
+        200:
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/Contact"
+    post:
+      tags:
+        - Contact
+      consumes:
+        - application/json
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      parameters:
+        - name: item
+          in: body
+          required: true
+          schema:
+            $ref: "#/definitions/Contact"
+      responses:
+        201:
+          description: Contact created
+          headers:
+            Location:
+              description: A link to the Contact
+              type: string
+              format: url
+          schema:
+            $ref: "#/definitions/Contact"  
+  /contacts/bulk:
+    post:
+      tags:
+        - Contact
+      consumes:
+        - application/json
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      parameters:
+        - name: items
+          in: body
+          required: true
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/Contact"
+      responses:
+        201:
+          description: Contact created
+  /contacts/{id}:
+    get:
+      tags:
+        - Contact
+      consumes: []
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: "#/definitions/Contact"
+        404:
+          description: Contact not found
+      parameters:
+        - name: id
+          in: path
+          description: id of Contact to fetch
+          required: true
+          type: integer
+    put:
+      tags:
+        - Contact
+      consumes:
+        - application/json
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: "#/definitions/Contact"
+        404:
+          description: Contact not found
+      parameters:
+        - name: id
+          in: path
+          description: id of Contact to fetch
+          required: true
+          type: integer
+        - name: item
+          in: body
+          required: true
+          schema:
+            $ref: "#/definitions/Contact"
+  /contacts/{id}/delete:
+    post:
+      tags:
+        - Contact
+      consumes: []
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      responses:
+        200:
+          description: OK
+        404:
+          description: Contact not found
+      parameters:
+        - name: id
+          in: path
+          description: id of Contact to delete
+          required: true
+          type: integer
+  /notifications:
+    get:
+      tags:
+        - Notification
+      consumes: []
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      responses:
+        200:
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/Notification"
+    post:
+      tags:
+        - Notification
+      consumes:
+        - application/json
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      parameters:
+        - name: item
+          in: body
+          required: true
+          schema:
+            $ref: "#/definitions/Notification"
+      responses:
+        201:
+          description: Notification created
+          headers:
+            Location:
+              description: A link to the Notification
+              type: string
+              format: url
+          schema:
+            $ref: "#/definitions/Notification"  
+  /notifications/bulk:
+    post:
+      tags:
+        - Notification
+      consumes:
+        - application/json
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      parameters:
+        - name: items
+          in: body
+          required: true
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/Notification"
+      responses:
+        201:
+          description: Notification created
+  /notifications/{id}:
+    get:
+      tags:
+        - Notification
+      consumes: []
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: "#/definitions/Notification"
+        404:
+          description: Notification not found
+      parameters:
+        - name: id
+          in: path
+          description: id of Notification to fetch
+          required: true
+          type: integer
+    put:
+      tags:
+        - Notification
+      consumes:
+        - application/json
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: "#/definitions/Notification"
+        404:
+          description: Notification not found
+      parameters:
+        - name: id
+          in: path
+          description: id of Notification to fetch
+          required: true
+          type: integer
+        - name: item
+          in: body
+          required: true
+          schema:
+            $ref: "#/definitions/Notification"
+  /notifications/{id}/delete:
+    post:
+      tags:
+        - Notification
+      consumes: []
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      responses:
+        200:
+          description: OK
+        404:
+          description: Notification not found
+      parameters:
+        - name: id
+          in: path
+          description: id of Notification to delete
+          required: true
+          type: integer
+  /notificationevents:
+    get:
+      tags:
+        - NotificationEvent
+      consumes: []
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      responses:
+        200:
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/NotificationEvent"
+    post:
+      tags:
+        - NotificationEvent
+      consumes:
+        - application/json
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      parameters:
+        - name: item
+          in: body
+          required: true
+          schema:
+            $ref: "#/definitions/NotificationEvent"
+      responses:
+        201:
+          description: NotificationEvent created
+          headers:
+            Location:
+              description: A link to the NotificationEvent
+              type: string
+              format: url
+          schema:
+            $ref: "#/definitions/NotificationEvent"  
+  /notificationevents/bulk:
+    post:
+      tags:
+        - NotificationEvent
+      consumes:
+        - application/json
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      parameters:
+        - name: items
+          in: body
+          required: true
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/NotificationEvent"
+      responses:
+        201:
+          description: NotificationEvent created
+  /notificationevents/{id}:
+    get:
+      tags:
+        - NotificationEvent
+      consumes: []
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: "#/definitions/NotificationEvent"
+        404:
+          description: NotificationEvent not found
+      parameters:
+        - name: id
+          in: path
+          description: id of NotificationEvent to fetch
+          required: true
+          type: integer
+    put:
+      tags:
+        - NotificationEvent
+      consumes:
+        - application/json
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: "#/definitions/NotificationEvent"
+        404:
+          description: NotificationEvent not found
+      parameters:
+        - name: id
+          in: path
+          description: id of NotificationEvent to fetch
+          required: true
+          type: integer
+        - name: item
+          in: body
+          required: true
+          schema:
+            $ref: "#/definitions/NotificationEvent"
+  /notificationevents/{id}/delete:
+    post:
+      tags:
+        - NotificationEvent
+      consumes: []
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      responses:
+        200:
+          description: OK
+        404:
+          description: NotificationEvent not found
+      parameters:
+        - name: id
+          in: path
+          description: id of NotificationEvent to delete
+          required: true
+          type: integer
+  /groups:
+    get:
+      tags:
+        - Group
+      consumes: []
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      responses:
+        200:
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/Group"
+    post:
+      tags:
+        - Group
+      x-codegen-permission: ADMIN
+      consumes:
+        - application/json
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      parameters:
+        - name: item
+          in: body
+          required: true
+          schema:
+            $ref: "#/definitions/Group"
+      responses:
+        201:
+          description: Group created
+          headers:
+            Location:
+              description: A link to the Group
+              type: string
+              format: url
+          schema:
+            $ref: "#/definitions/Group"  
+  /groups/bulk:
+    post:
+      tags:
+        - Group
+      consumes:
+        - application/json
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      parameters:
+        - name: items
+          in: body
+          required: true
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/Group"
+      responses:
+        201:
+          description: Group created
+  /groups/{id}:
+    get:
+      tags:
+        - Group
+      consumes: []
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: "#/definitions/Group"
+        404:
+          description: Group not found
+      parameters:
+        - name: id
+          in: path
+          description: id of Group to fetch
+          required: true
+          type: integer
+    put:
+      tags:
+        - Group
+      x-codegen-permission: ADMIN
+      consumes:
+        - application/json
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: "#/definitions/Group"
+        404:
+          description: Group not found
+      parameters:
+        - name: id
+          in: path
+          description: id of Group to fetch
+          required: true
+          type: integer
+        - name: item
+          in: body
+          required: true
+          schema:
+            $ref: "#/definitions/Group"
+  /groups/{id}/delete:
+    post:
+      tags:
+        - Group
+      x-codegen-permission: ADMIN
+      consumes: []
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      responses:
+        200:
+          description: OK
+        404:
+          description: Group not found
+      parameters:
+        - name: id
+          in: path
+          description: id of Group to delete
+          required: true
+          type: integer
+  /permissions:
+    get:
+      tags:
+        - Permission
+      consumes: []
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      responses:
+        200:
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/PermissionViewModel"
+    post:
+      tags:
+        - Permission
+      x-codegen-permission: ADMIN
+      consumes:
+        - application/json
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      parameters:
+        - name: item
+          in: body
+          required: true
+          schema:
+            $ref: "#/definitions/PermissionViewModel"
+      responses:
+        201:
+          description: Permission created
+          headers:
+            Location:
+              description: A link to the Permission
+              type: string
+              format: url
+          schema:
+            $ref: "#/definitions/PermissionViewModel"  
+  /permissions/bulk:
+    post:
+      tags:
+        - Permission
+      consumes:
+        - application/json
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      parameters:
+        - name: items
+          in: body
+          required: true
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/PermissionViewModel"
+      responses:
+        201:
+          description: Permission created
+  /permissions/{id}:
+    get:
+      tags:
+        - Permission
+      consumes: []
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: "#/definitions/PermissionViewModel"
+        404:
+          description: Permission not found
+      parameters:
+        - name: id
+          in: path
+          description: id of Permission to fetch
+          required: true
+          type: integer
+    put:
+      tags:
+        - Permission
+      x-codegen-permission: ADMIN
+      consumes:
+        - application/json
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: "#/definitions/PermissionViewModel"
+        404:
+          description: Permission not found
+      parameters:
+        - name: id
+          in: path
+          description: id of Permission to fetch
+          required: true
+          type: integer
+        - name: item
+          in: body
+          required: true
+          schema:
+            $ref: "#/definitions/PermissionViewModel"
+  /permissions/{id}/delete:
+    post:
+      tags:
+        - Permission
+      x-codegen-permission: ADMIN
+      consumes: []
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      responses:
+        200:
+          description: OK
+        404:
+          description: Permission not found
+      parameters:
+        - name: id
+          in: path
+          description: id of Permission to delete
+          required: true
+          type: integer
+  /roles:
+    get:
+      tags:
+        - Role
+      consumes: []
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      responses:
+        200:
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/RoleViewModel"
+    post:
+      tags:
+        - Role
+      x-codegen-permission: ADMIN
+      consumes:
+        - application/json
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      parameters:
+        - name: item
+          in: body
+          required: true
+          schema:
+            $ref: "#/definitions/RoleViewModel"
+      responses:
+        201:
+          description: Role created
+          headers:
+            Location:
+              description: A link to the Role
+              type: string
+              format: url
+          schema:
+            $ref: "#/definitions/RoleViewModel"  
+  /roles/bulk:
+    post:
+      tags:
+        - Role
+      consumes:
+        - application/json
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      parameters:
+        - name: items
+          in: body
+          required: true
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/RoleViewModel"
+      responses:
+        201:
+          description: Role created
+  /roles/{id}:
+    get:
+      tags:
+        - Role
+      consumes: []
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: "#/definitions/RoleViewModel"
+        404:
+          description: Role not found
+      parameters:
+        - name: id
+          in: path
+          description: id of Role to fetch
+          required: true
+          type: integer
+    put:
+      tags:
+        - Role
+      x-codegen-permission: ADMIN
+      consumes:
+        - application/json
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: "#/definitions/RoleViewModel"
+        404:
+          description: Role not found
+      parameters:
+        - name: id
+          in: path
+          description: id of Role to fetch
+          required: true
+          type: integer
+        - name: item
+          in: body
+          required: true
+          schema:
+            $ref: "#/definitions/RoleViewModel"
+  /roles/{id}/delete:
+    post:
+      tags:
+        - Role
+      x-codegen-permission: ADMIN
+      consumes: []
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      responses:
+        200:
+          description: OK
+        404:
+          description: Role not found
+      parameters:
+        - name: id
+          in: path
+          description: id of Role to delete
+          required: true
+          type: integer
+  /attachments/{id}/download:
+    get:
+      summary: Returns the binary file component of an attachment
+      tags:
+        - Attachment
+      consumes: []
+      produces:      
+        - application/octet-stream        
+      parameters:                
+        - name: id
+          in: path
+          description: Attachment Id
+          required: true
+          type: integer
+      responses:
+        200:
+          description: OK
+        404:
+          description: Attachment not found in CCW system    
+  /groups/{id}/users:
+    get:
+      summary: returns users in a given Group
+      description:
+        Used to get users in a given Group
+      tags:
+        - Group
+      consumes:
+        - application/json
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      parameters:
+        - name: id
+          in: path
+          description: id of Group to fetch Users for
+          required: true
+          type: integer
+      responses:
+        200:
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/UserViewModel"          
+  /credittrading/search:
+    get:
+      summary: Searches credit trades
+      description:
+        Used for the search on the credit trades list screen page.
+      tags:
+        - CreditTrade
+      consumes:
+        - application/json
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      parameters:        
+        - name: organization
+          in: query
+          description: FuelSuppliers (array of id numbers)
+          collectionFormat: multi
+          type: array
+          items:
+            type: integer
+        - name: tradeType
+          in: query
+          description: TradeTypes (array of id numbers)
+          type: array
+          items:
+              type: integer
+        - name: status
+          in: query
+          description: Credit Trade Status types to return (array of strings)
+          collectionFormat: multi
+          type: array
+          items:
+            type: string
+        - name: dateType
+          in: query
+          description: The type of credit trade date to search on eg created, approved, concluded, last updated 
+          type: string
+        - name: startDate
+          description: Start of date range to search on - null for from start of time
+          in: query
+          type: string
+          format: date-time
+        - name: endDate
+          description: End of date range to search on - null for from start of time
+          in: query
+          type: string
+          format: date-time
+      responses:
+        200:
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/CreditTrade"
+  /creditTrade/{id}/notes:
+    get:
+      description: Returns notes for a particular CreditTrade.
+      tags:
+        - CreditTrade
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Note'
+        "404":
+           description: CreditTrade not found
+      parameters:
+        - name: id
+          in: path
+          description: id of CreditTrade to fetch notes for
+          required: true
+          type: integer
+  /credittrades/{id}/attachments:
+    get:
+      description: Returns attachments for a particular CreditTrade
+      tags:
+        - CreditTrade
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/AttachmentViewModel'
+        "404":
+           description: CreditTrade not found
+      parameters:
+        - name: id
+          in: path
+          description: id of CreditTrade to fetch attachments for
+          required: true
+          type: integer    
+  /credittrades/{id}/history:
+    get:
+      description: Returns History for a particular CreditTrade
+      tags:
+        - CreditTrade
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/HistoryViewModel'
+      parameters:
+        - name: id
+          in: path
+          description: id of CreditTrade to fetch History for
+          required: true
+          type: integer
+        - name: offset
+          in: query
+          description: offset for records that are returned 
+          required: false
+          type: integer
+        - name: limit
+          in: query
+          description: limits the number of records returned.  
+          required: false
+          type: integer
+    post:
+      description: Add a History record to the CreditTrade
+      tags:
+        - CreditTrade
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      parameters:
+        - name: id
+          in: path
+          description: id of CreditTrade to fetch History for
+          required: true
+          type: integer
+        - name: item
+          in: body
+          required: true
+          schema:
+            $ref: "#/definitions/History"
+      responses:
+        '200':
+          description: OK
+        '201':
+          description: History created
+          headers:
+            Location:
+              description: A link to the History
+              type: string
+              format: url
+          schema:
+            $ref: "#/definitions/History"        
+  /fuelsuppliers/{id}/attachments:
+    get:
+      description: Returns attachments for a particular FuelSupplier
+      tags:
+        - FuelSupplier
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Attachment'
+      parameters:
+        - name: id
+          in: path
+          description: id of FuelSupplier to fetch attachments for
+          required: true
+          type: integer
+  /fuelsuppliers/{id}/history:
+    get:
+      description: Returns History for a particular FuelSupplier
+      tags:
+        - FuelSupplier
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/HistoryViewModel'
+      parameters:
+        - name: id
+          in: path
+          description: id of FuelSupplier for which to fetch History
+          required: true
+          type: integer
+        - name: offset
+          in: query
+          description: offset for records that are returned 
+          required: false
+          type: integer
+        - name: limit
+          in: query
+          description: limits the number of records returned.  
+          required: false
+          type: integer
+    post:
+      description: Add a History record to the FuelSupplier
+      tags:
+        - FuelSupplier
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      parameters:
+        - name: id
+          in: path
+          description: id of FuelSupplier to add History for
+          required: true
+          type: integer
+        - name: item
+          in: body
+          required: true
+          schema:
+            $ref: "#/definitions/History"
+      responses:
+        '200':
+          description: OK
+        '201':
+          description: History created
+          headers:
+            Location:
+              description: A link to the History
+              type: string
+              format: url
+          schema:
+            $ref: "#/definitions/History"          
+  /fuelsuppliers/{id}/notes:
+    get:
+      description: Returns notes for a particular FuelSupplier
+      tags:
+        - FuelSupplier
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Note'
+      parameters:
+        - name: id
+          in: path
+          description: id of FuelSupplier for which to fetch notes
+          required: true
+          type: integer
+  /fuelsuppliers/search:
+    get:
+      summary: Searches school bus owners
+      description:
+        Used for the search school bus owners.
+      tags:
+        - FuelSupplier
+      consumes:
+        - application/json
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      parameters:        
+        - name: fuelSupplierName
+          in: query
+          description: Partial or complete name of a Fuel Supplier for contains search
+          type: string
+        - name: includeInactive
+          in: query
+          description: True if Inactive FuelSuppliers will be returned
+          type: boolean
+      responses:
+        200:
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/FuelSupplier"  
+  /roles/{id}/permissions:
+    get:
+      description: Get all the permissions for a role
+      tags:
+        - Role
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      parameters:
+        - name: id
+          in: path
+          description: id of Role to fetch
+          required: true
+          type: integer
+      responses:
+        200:
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/PermissionViewModel"
+    put:
+      description: Updates the permissions for a role
+      tags:
+        - Role
+      x-codegen-permission: ADMIN
+      consumes:
+        - application/json
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      parameters:
+        - name: id
+          in: path
+          description: id of Role to update
+          required: true
+          type: integer
+        - name: items
+          in: body
+          required: true
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/PermissionViewModel"
+      responses:
+        200:
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/PermissionViewModel"
+        404:
+          description: Role not found
+    post:
+      description: Adds a permissions to a role
+      tags:
+        - Role
+      x-codegen-permission: ADMIN
+      consumes:
+        - application/json
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      parameters:
+        - name: id
+          in: path
+          description: id of Role to update
+          required: true
+          type: integer
+        - name: item
+          in: body
+          required: true
+          schema:
+            $ref: "#/definitions/PermissionViewModel"
+      responses:
+        200:
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/PermissionViewModel"
+        404:
+          description: Role not found
+  /roles/{id}/users:
+    get:
+      description: Gets all the users for a role
+      tags:
+        - Role
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      parameters:
+        - name: id
+          in: path
+          description: id of Role to fetch
+          required: true
+          type: integer
+      responses:
+        200:
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/UserRoleViewModel"
+    put:
+      description: Updates the users for a role
+      tags:
+        - Role
+      x-codegen-permission: ADMIN
+      consumes:
+        - application/json
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      parameters:
+        - name: id
+          in: path
+          description: id of Role to update
+          required: true
+          type: integer
+        - name: items
+          in: body
+          required: true
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/UserRoleViewModel"
+      responses:
+        200:
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/UserRoleViewModel"
+        404:
+          description: Role not found
+  /users:
+    get:
+      description: Returns all users
+      tags:
+        - User
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      responses:
+        200:
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/UserViewModel"
+        404:
+           description: User not found
+    post:
+      description: Create new user
+      tags:
+        - User
+      x-codegen-permission: ADMIN
+      consumes:
+        - application/json
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      parameters:
+        - name: item
+          in: body
+          required: true
+          schema:
+            $ref: "#/definitions/User"
+      responses:
+        201:
+          description: User created
+          headers:
+            Location:
+              description: A link to the User
+              type: string
+              format: url
+          schema:
+            $ref: "#/definitions/User"
+  /users/current:
+    get:
+      description: Get the currently logged in user
+      tags:
+        - CurrentUser
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: "#/definitions/CurrentUserViewModel"
+  /users/current/favourites:
+    put:
+      description: Updates a favourite
+      tags:
+        - CurrentUser
+      consumes:
+        - application/json
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      parameters:
+        - name: item
+          in: body
+          required: true
+          schema:
+            $ref: "#/definitions/UserFavourite"
+      responses:
+        201:
+          description: UserFavourite created
+          headers:
+            Location:
+              description: A link to the UserFavourite
+              type: string
+              format: url
+          schema:
+            $ref: "#/definitions/UserFavourite"            
+    post:
+      description: Create new favourite for the current user
+      tags:
+        - CurrentUser
+      consumes:
+        - application/json
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      parameters:
+        - name: item
+          in: body
+          required: true
+          schema:
+            $ref: "#/definitions/UserFavourite"
+      responses:
+        201:
+          description: UserFavourite created
+          headers:
+            Location:
+              description: A link to the UserFavourite
+              type: string
+              format: url
+          schema:
+            $ref: "#/definitions/UserFavourite"
+  /users/current/favourites/{type}:
+    get:
+      description: Returns a user's favourites of a given type.  If type is empty, returns all.
+      tags:
+        - CurrentUser
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/UserFavourite"
+        "404":
+           description: User not found
+      parameters:
+        - name: type
+          in: path
+          description: type of favourite to return
+          required: true
+          type: string
+  /users/current/favourites/{id}/delete:
+    post:
+      description: Removes a specific user favourite
+      tags:
+        - CurrentUser
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      responses:
+        '200':
+          description: OK
+      parameters:
+        - name: id
+          in: path
+          description: id of Favourite to delete
+          required: true
+          type: integer      
+  /users/bulk:
+    post:
+      description: Adds a number of users
+      tags:
+        - User
+      x-codegen-permission: ADMIN
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      parameters:
+        - name: items
+          in: body
+          required: true
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/User"
+      responses:
+        200:
+          description: OK
+  /users/search:
+    get:
+      summary: Searches Users
+      description:
+        Used for the search users.
+      tags:
+        - User
+      consumes:
+        - application/json
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      parameters:        
+        - name: fuelSuppliers
+          in: query
+          description: FuelSupplier (array of id numbers)
+          collectionFormat: multi
+          type: array
+          items:
+            type: integer       
+        - name: surname
+          in: query
+          type: string
+        - name: includeInactive
+          in: query
+          description: True if Inactive users will be returned
+          type: boolean
+      responses:
+        200:
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/UserViewModel"  
+  /users/{id}:
+    get:
+      description: Returns data for a particular user
+      tags:
+        - User
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      parameters:
+        - name: id
+          in: path
+          description: id of User to fetch
+          required: true
+          type: integer
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: "#/definitions/UserViewModel"
+        404:
+           description: User not found
+    put:
+      description: Updates a user
+      tags:
+        - User
+      x-codegen-permission: ADMIN
+      consumes:
+        - application/json
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      parameters:
+        - name: id
+          in: path
+          description: id of User to update
+          required: true
+          type: integer
+        - name: item
+          in: body
+          required: true
+          schema:
+            $ref: "#/definitions/UserViewModel"
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: "#/definitions/UserViewModel"
+        404:
+          description: User not found
+  /users/{id}/delete:
+    post:
+      description: Deletes a user
+      tags:
+        - User
+      x-codegen-permission: ADMIN
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      parameters:
+        - name: id
+          in: path
+          description: id of User to delete
+          required: true
+          type: integer
+      responses:
+        200:
+          description: OK
+        404:
+          description: User not found
+  /users/{id}/favourites:
+    get:
+      description: Returns the favourites for a user
+      tags:
+        - User
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      parameters:
+        - name: id
+          in: path
+          description: id of User to fetch
+          required: true
+          type: integer
+      responses:
+        200:
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/UserFavourite"
+        404:
+           description: User not found
+    post:
+      description: Adds favourites to a user
+      tags:
+        - User
+      consumes:
+        - application/json
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      parameters:
+        - name: id
+          in: path
+          description: id of User to update
+          required: true
+          type: integer
+        - name: item
+          in: body
+          required: true
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/UserFavourite"
+      responses:
+        200:
+          description: Favourites added to user          
+    put:
+      description: Updates the favourites for a user
+      tags:
+        - User
+      consumes:
+        - application/json
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      parameters:
+        - name: id
+          in: path
+          description: id of User to update
+          required: true
+          type: integer
+        - name: items
+          in: body
+          required: true
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/UserFavourite"
+      responses:
+        200:
+          description: OK          
+        404:
+          description: User not found  
+  /users/{id}/roles:
+    get:
+      description: Returns the roles for a user
+      tags:
+        - User
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      parameters:
+        - name: id
+          in: path
+          description: id of User to fetch
+          required: true
+          type: integer
+      responses:
+        200:
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/UserRoleViewModel"
+        404:
+           description: User not found
+    post:
+      description: Adds a role to a user
+      tags:
+        - User
+      x-codegen-permission: ADMIN
+      consumes:
+        - application/json
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      parameters:
+        - name: id
+          in: path
+          description: id of User to update
+          required: true
+          type: integer
+        - name: item
+          in: body
+          required: true
+          schema:
+            $ref: "#/definitions/UserRoleViewModel"
+      responses:
+        201:
+          description: Role created for user
+          headers:
+            Location:
+              description: A link to the User Role
+              type: string
+              format: url
+          schema:
+            $ref: "#/definitions/UserRoleViewModel"
+    put:
+      description: Updates the roles for a user
+      tags:
+        - User
+      x-codegen-permission: ADMIN
+      consumes:
+        - application/json
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      parameters:
+        - name: id
+          in: path
+          description: id of User to update
+          required: true
+          type: integer
+        - name: items
+          in: body
+          required: true
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/UserRoleViewModel"
+      responses:
+        200:
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/UserRoleViewModel"
+        404:
+          description: User not found
+  /users/{id}/permissions:
+    get:
+      description: Returns the set of permissions for a user
+      tags:
+        - User
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      parameters:
+        - name: id
+          in: path
+          description: id of User to fetch
+          required: true
+          type: integer
+      responses:
+        200:
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/PermissionViewModel"
+        404:
+           description: User not found
+  /users/{id}/groups:
+    get:
+      description: Returns all groups that a user is a member of
+      tags:
+        - User
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      parameters:
+        - name: id
+          in: path
+          description: id of User to fetch
+          required: true
+          type: integer
+      responses:
+        200:
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/GroupMembershipViewModel"
+        404:
+           description: User not found
+    put:
+      description: Updates the active set of groups for a user
+      tags:
+        - User
+      x-codegen-permission: ADMIN
+      consumes:
+        - application/json
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      parameters:
+        - name: id
+          in: path
+          description: id of User to update
+          required: true
+          type: integer
+        - name: items
+          in: body
+          required: true
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/GroupMembershipViewModel"
+      responses:
+        200:
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/GroupMembershipViewModel"
+        404:
+          description: User not found
+    post:
+      description: Add to the active set of groups for a user
+      tags:
+        - User
+      x-codegen-permission: ADMIN
+      consumes:
+        - application/json
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      parameters:
+        - name: id
+          in: path
+          description: id of User to update
+          required: true
+          type: integer
+        - name: item
+          in: body
+          required: true
+          schema:
+            $ref: "#/definitions/GroupMembershipViewModel"
+      responses:
+        200:
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/GroupMembershipViewModel"
+        404:
+          description: User not found  
+  /users/{id}/notifications:
+    get:
+      description: Returns a user's notifications
+      tags:
+        - User
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/NotificationViewModel"
+      parameters:
+        - name: id
+          in: path
+          description: id of User to fetch notifications for
+          required: true
+          type: integer
+definitions:
+  CreditTrade:
+    type: object
+    required:
+      - id
+      - fuelSupplier
+      - transactionPartnerFuelSupplier
+      - compliancePeriod
+      - fuelSupplierLastUpdatedBy
+      - transactionType
+      - numberOfCredits
+      - fairMarketValuePrice
+    properties:
+      id:
+        format: int32
+        type: integer
+      status:
+        type: string
+      fuelSupplier:
+        $ref: '#/definitions/FuelSupplier'
+      transactionPartnerFuelSupplier:
+        $ref: '#/definitions/FuelSupplier'
+      compliancePeriod:
+        $ref: '#/definitions/CompliancePeriod'
+      fuelSupplierLastUpdatedBy:
+        $ref: '#/definitions/User'
+      partnerLastUpdatedBy:
+        $ref: '#/definitions/User'
+      reviewedRejectedBy:
+        $ref: '#/definitions/User'
+      approvedRejectedBy:
+        $ref: '#/definitions/User'
+      cancelledBy:
+        $ref: '#/definitions/User'
+      tradeExecutionDate:
+        type: string
+        format: date-time
+      transactionType:
+        type: string
+      numberOfCredits:
+        format: int32
+        type: integer
+      fairMarketValuePrice:
+        type: number
+        format: float
+      fuelSupplierBalanceAtTransactionTime:
+        type: string
+        format: date-time
+      creditTradeLogEntry:
+        type: array
+        items:
+          $ref: '#/definitions/CreditTradeLogEntry'
+      notes:
+        type: array
+        items:
+          $ref: '#/definitions/Note'
+      attachments:
+        type: array
+        items:
+          $ref: '#/definitions/Attachment'
+      history:
+        type: array
+        items:
+          $ref: '#/definitions/History'
+  FuelSupplier:
+    type: object
+    required:
+      - id
+      - name
+      - status
+      - dateCreated
+    properties:
+      id:
+        format: int32
+        type: integer
+      name:
+        type: string
+        uniqueItems: true
+      status:
+        type: string
+      dateCreated:
+        type: string
+        format: date-time
+      primaryContact:
+        $ref: '#/definitions/Contact'
+      contacts:
+        type: array
+        items:
+          $ref: '#/definitions/Contact'
+      notes:
+        type: array
+        items:
+          $ref: '#/definitions/Note'
+      attachments:
+        type: array
+        items:
+          $ref: '#/definitions/Attachment'
+      history:
+        type: array
+        items:
+          $ref: '#/definitions/History'
+  CreditTradeLogEntry:
+    type: object
+    required:
+      - id
+      - logEntryTime
+      - newCompliancePeriod
+      - newStatus
+      - newNumberOfCredits
+    properties:
+      id:
+        format: int32
+        type: integer
+      creditTrade:
+        $ref: '#/definitions/CreditTrade'
+      user:
+        $ref: '#/definitions/User'
+      logEntryTime:
+        type: string
+        format: date-time
+      newCompliancePeriod:
+        $ref: '#/definitions/CompliancePeriod'
+      newStatus:
+        type: string
+      newTradeExecutionDate:
+        type: string
+        format: date-time
+      newTransactionType:
+        type: string
+      newNumberOfCredits:
+        format: int32
+        type: integer
+      newFairMarketValuePrice:
+        type: number
+        format: float
+      newFuelSupplierBalanceAtTransactionTime:
+        format: int32
+        type: integer
+  CompliancePeriod:
+    type: object
+    required:
+      - id
+    properties:
+      id:
+        format: int32
+        type: integer
+      periodName:
+        type: string
+      isActive:
+        type: boolean
+  LookupList:
+    type: object
+    description: Lookup values for various enumerated types in the systems - entity status values, trade types and others. Used to pull the values out of the code and into the database but without having to have a table for each lookup instance.
+    required:
+      - id
+      - contextName
+      - isDefault
+      - codeName
+      - value
+    properties:
+      id:
+        format: int32
+        type: integer
+        description: A system-generated unique identifier for a LookupList
+      contextName:
+        type: string
+        description: The context within the app in which this lookup list if used. Defined and referenced in the code of the application.
+      isDefault:
+        type: boolean
+        description: True of the value within the lookup list context should be the default for the lookup instance.
+      displaySortOrder:
+        format: int32
+        type: integer
+        description: The sort order for list of values within a list context.
+      codeName:
+        type: string
+        description: The a shorter lookup name to find the value. Can be used at the option of the application to present on the screen a short version of the lookup list value.
+      value:
+        type: string
+        description: The fully spelled out value of the lookup entry.
+  Note:
+    type: object
+    description: Notes entered by users about instance of entities - e.g. Credit Trades and Fuel Suppliers
+    required:
+      - id
+      - noteText
+    properties:
+      id:
+        format: int32
+        type: integer
+        description: A system-generated unique identifier for a Note
+      noteText:
+        type: string
+        description: The contents of the note.
+      isNoLongerRelevant:
+        type: boolean
+        description: A user set flag that the note is no longer relevant. Allows the note to be retained for historical reasons,  but identified to other users as no longer applicable.
+  Attachment:
+    type: object
+    description: Attachments uploaded by users about instance of entities - e.g. Credit Trades and Fuel Suppliers
+    required:
+      - id
+    properties:
+      id:
+        format: int32
+        type: integer
+        description: A system-generated unique identifier for an Attachment
+      fileName:
+        type: string
+        description: Filename as passed by the user uploading the file
+      fileContents:
+        type: string
+        format: binary
+        description: Binary contents of the file
+      description:
+        type: string
+        description: A note about the attachment,  optionally maintained by the user.
+      type:
+        type: string
+        description: Type of attachment
+  History:
+    type: object
+    description: The history of updates made to an entity - e.g. a Credit Trades and Fuel Suppliers
+    required:
+      - id
+      - historyText
+    properties:
+      id:
+        format: int32
+        type: integer
+        description: A system-generated unique identifier for a History
+      historyText:
+        type: string
+        description: The text of the history entry tracked against the related entity.
+  Contact:
+    type: object
+    description: A table of contacts related to various entities in the system. FK fields are used to link contacts to records in the system.
+    required:
+      - id
+    properties:
+      id:
+        format: int32
+        type: integer
+        description: A system-generated unique identifier for a Contact
+      givenName:
+        type: string
+        description: The given name of the contact.
+      surname:
+        type: string
+        description: The surname of the contact.
+      organizationName:
+        type: string
+        description: The organization name of the contact.
+      role:
+        type: string
+        description: The role of the contact. UI controlled as to whether it is free form or selected from an enumerated list - for initial implementation, the field is freeform.
+      notes:
+        type: string
+        description: A note about the contact maintained by the users.
+      emailAddress:
+        type: string
+        description: The email address for the contact.
+      workPhoneNumber:
+        type: string
+        description: The work phone number for the contact.
+      mobilePhoneNumber:
+        type: string
+        description: The mobile phone number for the contact.
+      faxPhoneNumber:
+        type: string
+        description: The fax phone number for the contact.
+      address1:
+        type: string
+        description: Address 1 line of the address.
+      address2:
+        type: string
+        description: Address 2 line of the address.
+      city:
+        type: string
+        description: The City of the address.
+      province:
+        type: string
+        description: The Province of the address.
+      postalCode:
+        type: string
+        description: The postal code of the address.
+  UserFavourite:
+    type: object
+    description: User specific settings for a specific location in the UI. The location and saved settings are internally defined by the UI.
+    required:
+      - id
+    properties:
+      id:
+        format: int32
+        type: integer
+        description: A system-generated unique identifier for a UserFavourite
+      type:
+        type: string
+        description: The type of Favourite
+      name:
+        type: string
+        description: The user-defined name for the recorded settings. Allows the user to save different groups of settings and access each one easily when needed.
+      value:
+        type: string
+        description: The settings saved by the user. In general,  a UI defined chunk of json that stores the settings in place when the user created the favourite.
+      isDefault:
+        type: boolean
+        description: True if this Favourite is the default for this Context Type. On first access to a context in a session the default favourite for the context it is invoked. If there is no default favourite,  a system-wide default is invoked. On return to the context within a session,  the last parameters used are reapplied.
+      User:
+        $ref: '#/definitions/User'
+  Notification:
+    type: object
+    description: Users associated with specific notifications, created at the time the notification record is created because of the user&#39;s business relationship to the bus - e.g. the user is the currently assigned inspector, or the user is the manager for the District in which the bus is located. The rules for linking a user to a notification for a specific bus could vary over time based on the needs of the business. At minimum, it is expected the current inspector assigned to a bus will be notified of every notification for that bus.
+    required:
+      - id
+    properties:
+      id:
+        format: int32
+        type: integer
+        description: A system-generated unique identifier for a Notification
+      event:
+        $ref: '#/definitions/NotificationEvent'
+      hasBeenViewed:
+        type: boolean
+        description: True if the user linked to the notification has read the notification
+      isWatchNotification:
+        type: boolean
+        description: True if the user linked to the notification has flagged the notification to remain visible
+      user:
+        $ref: '#/definitions/User'
+  NotificationEvent:
+    type: object
+    description: Notifications associated about changes to information related to a specific Credit Trade - eg trade suggested, trade countered, trade approved, etc.
+    required:
+      - id
+    properties:
+      id:
+        format: int32
+        type: integer
+        description: A system-generated unique identifier for a NotificationEvent
+      eventTime:
+        type: string
+        format: date-time
+        description: The date&#x2F;time of the creation of the event that triggered the creation of the notification.
+      eventTypeCode:
+        type: string
+        description: A categorization of the event for which the notification was created. The categories will be defined over time in code based on the requirements of the business. An example might be a notification &quot;Trade Created&quot; when a trade is created by a Fuel Supplier and the notification is linked to the Partner Fuel Supplier.
+      notes:
+        type: string
+        description: An assembled text string about the event that triggered the notification. Includes both static text and data about the notification. User Interface code will be used (based on the eventTypeCode - category) to assemble a dynamic string of information about the event - potentially including links to other relevant data - such as link to the School Bus detail screen.
+      creditTrade:
+        $ref: '#/definitions/CreditTrade'
+  User:
+    type: object
+    description: Information about the users of the system.
+    required:
+      - id
+      - givenName
+      - surname
+      - status
+    properties:
+      id:
+        format: int32
+        type: integer
+        description: A system-generated unique identifier for a User
+      givenName:
+        type: string
+        description: Given name of the user.
+      surname:
+        type: string
+        description: Surname of the user.
+      initials:
+        type: string
+        description: Initials of the user, to be presented where screen space is at a premium.
+      email:
+        type: string
+        description: The email address of the user in the system.
+      status:
+        type: string
+        description: The status of the user in the system. Only a status of &quot;Active&quot; allows the user access to the system.
+      fuelSupplier:
+        $ref: '#/definitions/FuelSupplier'
+      smUserId:
+        type: string
+        description: Security Manager User ID
+      guid:
+        type: string
+        description: The GUID unique to the user as provided by the authentication system. In this case, authentication is done by Siteminder and the GUID uniquely identifies the user within the user directories managed by Siteminder - e.g. IDIR and BCeID. The GUID is equivalent to the IDIR Id, but is guaranteed unique to a person, while the IDIR ID is not - IDIR IDs can be recycled.
+      smAuthorizationDirectory:
+        type: string
+        description: The user directory service used by Siteminder to authenticate the user - usually IDIR or BCeID.
+      userRoles:
+        type: array
+        items:
+          $ref: '#/definitions/UserRole'
+      groupMemberships:
+        type: array
+        items:
+          $ref: '#/definitions/GroupMembership'
+  UserRole:
+    type: object
+    description: A join table that provides allows each user to have any number of Roles in the system.  At login time the user is given the sum of the permissions of the roles assigned to that user. 
+    required:
+      - id
+      - effectiveDate
+    properties:
+      id:
+        format: int32
+        type: integer
+        description: A system-generated unique identifier for a UserRole
+      effectiveDate:
+        type: string
+        format: date-time
+        description: The date on which the user was given the related role.
+      expiryDate:
+        type: string
+        format: date-time
+        description: The date on which a role previously assigned to a user was removed from that user.
+      role:
+        $ref: '#/definitions/Role'
+  Role:
+    type: object
+    description: A table managed in the application by authorized users to create named Roles that can be assigned to Users as needed. Roles can be created as needed to support the users of the system and the roles they perform within the organization.
+    required:
+      - id
+      - name
+      - description
+    properties:
+      id:
+        format: int32
+        type: integer
+        description: A system-generated unique identifier for a Role
+      name:
+        type: string
+        description: The name of the Role, as established by the user creating the role.
+      description:
+        type: string
+        description: A description of the role as set by the user creating&#x2F;updating the role.
+      rolePermissions:
+        type: array
+        items:
+          $ref: '#/definitions/RolePermission'
+      userRoles:
+        type: array
+        items:
+          $ref: '#/definitions/UserRole'
+  RolePermission:
+    type: object
+    description: The collection of permissions included in a role.
+    required:
+      - id
+    properties:
+      id:
+        format: int32
+        type: integer
+        description: A system-generated unique identifier for a RolePermission
+      role:
+        $ref: '#/definitions/Role'
+      permission:
+        $ref: '#/definitions/Permission'
+  Permission:
+    type: object
+    description: The set of permissions defined in the application. Each permission is given a name and triggers some behavior defined in the application. For example, a permission might allow users to see data or to have access to functionality restricted to users without that permission. Permissions are created as needed to the application and are added to the permissions table by data migrations executed at the time the software that uses the permission is deployed.
+    required:
+      - id
+      - code
+      - name
+      - description
+    properties:
+      id:
+        format: int32
+        type: integer
+        description: A system-generated unique identifier for a Permission
+      code:
+        type: string
+        description: The name of the permission referenced in the software of the application.
+      name:
+        type: string
+        description: The &#39;user friendly&#39; name of the permission exposed to the user selecting the permissions to be included in a Role.
+      description:
+        type: string
+        description: A description of the purpose of the permission and exposed to the user selecting the permissions to be included in a Role.
+  GroupMembership:
+    type: object
+    description: The users associated with a given group that has been defined in the application.
+    required:
+      - id
+      - active
+    properties:
+      id:
+        format: int32
+        type: integer
+        description: A system-generated unique identifier for a GroupMembership
+      active:
+        type: boolean
+        description: A flag indicating the User is active in the group. Set false to remove the user from the designated group.
+      group:
+        $ref: '#/definitions/Group'
+      user:
+        $ref: '#/definitions/User'
+  Group:
+    type: object
+    description: A named entity that is used to created a collection of users into a group. For example, the School Bus Inspectors are in the group Inspectors. Groups, like permissions are defined by the application and referenced in the code of the application.
+    required:
+      - id
+      - name
+      - description
+    properties:
+      id:
+        format: int32
+        type: integer
+        description: A system-generated unique identifier for a Group
+      name:
+        type: string
+        description: The name of the group, as refenced in the code.
+      description:
+        type: string
+        description: A description of the group that is presented to the user when they are setting a user into a group.
+  Audit:
+    type: object
+    description: Server generated audit log
+    required:
+      - id
+    properties:
+      id:
+        format: int32
+        type: integer
+        description: A system-generated unique identifier for an Audit
+      appCreateTimestamp:
+        type: string
+        format: date-time
+        description: The date and time of the application action that created the record. 
+      appCreateUserid:
+        type: string
+        description: The user account name of the application user who performed the action that created the record (e.g. JSMITH). This value is not preceded by the directory name. 
+      appCreateUserGuid:
+        type: string
+        description: The Globally Unique Identifier of the application user who performed the action that created the record. This value must be non-NULL if APP_CREATE_USER_DIRECTORY is &#39;IDIR&#39; or &#39;BCEID&#39;, but it must be NULL if APP_CREATE_USER_DIRECTORY is &#39;ORACLE&#39;. APP
+      appCreateUserDirectory:
+        type: string
+        description: The directory in which APP_CREATE_USERID is defined. Valid values are &#39;IDIR&#39;, &#39; BCEID&#39; or &#39;ORACLE&#39;. 
+      appLastUpdateTimestamp:
+        type: string
+        format: date-time
+        description: The date and time of the application action that created or last updated the record.
+      appLastUpdateUserid:
+        type: string
+        description: The Globally Unique Identifier of the application user who performed the action that created the record. This value must be non-NULL if APP_CREATE_USER_DIRECTORY is &#39;IDIR&#39; or &#39;BCEID&#39;, but it must be NULL if APP_CREATE_USER_DIRECTORY is &#39;ORACLE&#39;. APP
+      appLastUpdateUserGuid:
+        type: string
+        description: The Globally Unique Identifier of the application user who performed the action that created or last updated the record. This value must be non-NULL if APP_CREATE_USER_DIRECTORY is &#39;IDIR&#39; or &#39;BCEID&#39;, but it must be NULL if APP_CREATE_USER_DIRECTORY is &#39;ORACLE&#39;. 
+      appLastUpdateUserDirectory:
+        type: string
+        description: The directory in which APP_LAST_UPDATE_USERID is defined. Valid values are &#39;IDIR&#39;, &#39; BCEID&#39; or &#39;ORACLE&#39;. 
+      entityName:
+        type: string
+        description: The name of the entity that has changed
+      entityId:
+        format: int32
+        type: integer
+        description: The primary key in the entity that has changed
+      propertyName:
+        type: string
+        description: The property that has changed
+      oldValue:
+        type: string
+        description: The old value
+      newValue:
+        type: string
+        description: The new value
+      isDelete:
+        type: boolean
+        description: If true the record was deleted
+  HistoryViewModel:
+    type: object
+    x-codegen-viewmodel: true
+    required:
+      - id      
+    properties:
+      id:
+        format: int32
+        type: integer
+        uniqueItems: true
+        description: A system-generated unique identifier for a History
+      historyText:
+        type: string
+        maxLength: 2048
+        description: The text of the history entry tracked against the related entity.
+      lastUpdateUserid:
+        type: string
+        description: Audit information - SM User Id for the User who most recently updated the record.
+      lastUpdateTimestamp:
+        type: string
+        format: date-time
+        description: Audit information - Timestamp for record modification       
+      affectedEntityId:
+        format: int32
+        type: integer
+        description: The primary key of the affected record        
+  AttachmentViewModel:
+    type: object
+    x-codegen-viewmodel: true
+    required:
+      - id      
+    properties:
+      id:
+        format: int32
+        type: integer
+        description: Primary Key
+      fileName:
+        type: string
+        maxLength: 2048
+        description: Filename as passed by the user uploading the file    
+      description:
+        type: string
+        maxLength: 2048
+        description: A note about the attachment,  optionally maintained by the user.
+      type:
+        type: string
+        maxLength: 255
+        description: Type of attachment
+  UserViewModel:
+    type: object
+    x-codegen-viewmodel: true
+    required:
+      - id
+      - active
+    properties:
+      id:
+        format: int32
+        type: integer
+        x-type-options:
+          min: 1
+          max: 1000
+      givenName:
+        type: string
+        x-chance-type: name
+      surname:
+        type: string
+        x-chance-type: name      
+      email:
+        type: string
+        x-chance-type: email
+      active:
+        type: boolean
+      smUserId:
+        type: string
+      userRoles:
+        type: array
+        items:
+          $ref: '#/definitions/UserRole'
+      groupMemberships:
+        type: array
+        items:
+          $ref: '#/definitions/GroupMembership'
+  CurrentUserViewModel:
+    type: object
+    x-codegen-viewmodel: true
+    properties:
+      id:
+        format: int32
+        type: integer
+        x-type-options:
+          min: 1
+          max: 1000
+      givenName:
+        type: string
+        x-chance-type: name
+      surname:
+        type: string
+        x-chance-type: name      
+      email:
+        type: string
+        x-chance-type: email
+      active:
+        type: boolean
+      userRoles:
+        type: array
+        items:
+          $ref: '#/definitions/UserRole'
+      smUserId:
+        type: string
+      smAuthorizationDirectory:
+        type: string
+      groupMemberships:
+        type: array
+        items:
+          $ref: '#/definitions/GroupMembership'
+  UserDetailsViewModel:
+    type: object
+    x-codegen-viewmodel: true
+    required:
+      - id
+      - active
+    properties:
+      id:
+        format: int32
+        type: integer
+        x-type-options:
+          min: 1
+          max: 1000
+      givenName:
+        type: string
+        x-chance-type: name
+      surname:
+        type: string
+        x-chance-type: name
+      initials:
+        type: string
+      email:
+        type: string
+        x-chance-type: email
+      active:
+        type: boolean
+      permissions:
+        type: array
+        items:
+          $ref: '#/definitions/PermissionViewModel'
+  UserRoleViewModel:
+    type: object
+    x-codegen-viewmodel: true
+    required:
+      - effectiveDate
+      - userId
+      - roleId
+    properties:
+      id:
+        format: int32
+        type: integer
+        x-type-options:
+          min: 1
+          max: 1000
+      effectiveDate:
+        type: string
+        format: date-time
+      expiryDate:
+        type: string
+        format: date-time
+      roleId:
+        format: int32
+        type: integer
+        x-type-options:
+          min: 1
+          max: 1000
+      userId:
+        format: int32
+        type: integer
+        x-type-options:
+          min: 1
+          max: 1000
+  RoleViewModel:
+    type: object
+    x-codegen-viewmodel: true
+    required:
+      - id
+      - name
+      - description
+    properties:
+      id:
+        format: int32
+        type: integer
+        x-type-options:
+          min: 1
+          max: 1000
+      name:
+        type: string
+        x-chance-type: name
+      description:
+        type: string
+        x-chance-type: sentence
+  RolePermissionViewModel:
+    type: object
+    x-codegen-viewmodel: true
+    required:
+      - roleId
+      - permissionId
+    properties:
+      id:
+        format: int32
+        type: integer
+        x-type-options:
+          min: 1
+          max: 1000
+      roleId:
+        format: int32
+        type: integer
+        x-type-options:
+          min: 1
+          max: 1000
+      permissionId:
+        format: int32
+        type: integer
+        x-type-options:
+          min: 1
+          max: 1000
+  PermissionViewModel:
+    type: object
+    x-codegen-viewmodel: true
+    required:
+      - code
+      - name
+      - description
+    properties:
+      id:
+        format: int32
+        type: integer
+        x-type-options:
+          min: 1
+          max: 1000
+      code:
+        type: string
+      name:
+        type: string
+        x-chance-type: name
+      description:
+        type: string
+        x-chance-type: sentence
+  GroupMembershipViewModel:
+    type: object
+    x-codegen-viewmodel: true
+    required:
+      - active
+      - userId
+      - groupId
+    properties:
+      id:
+        format: int32
+        type: integer
+        x-type-options:
+          min: 1
+          max: 1000
+      active:
+        type: boolean
+      groupId:
+        format: int32
+        type: integer
+        x-type-options:
+          min: 1
+          max: 1000
+      userId:
+        format: int32
+        type: integer
+        x-type-options:
+          min: 1
+          max: 1000
+  GroupViewModel:
+    type: object
+    x-codegen-viewmodel: true
+    required:
+      - name
+      - description
+    properties:
+      id:
+        format: int32
+        type: integer
+        x-type-options:
+          min: 1
+          max: 1000
+      name:
+        type: string
+        x-chance-type: name
+      description:
+        type: string
+        x-chance-type: sentence
+  UserFavouriteViewModel:
+    type: object
+    x-codegen-viewmodel: true
+    properties:
+      id:
+        format: int32
+        type: integer
+        x-type-options:
+          min: 1
+          max: 1000
+      name:
+        type: string
+        description:  Context Name
+        x-chance-type: name
+      value:
+        type: string
+        description:  Saved search
+        x-chance-type: word
+      isDefault:
+        type: boolean
+      type:
+        type: string
+        description:  Type of favourite        
+  NotificationViewModel:
+    type: object
+    x-codegen-viewmodel: true
+    properties:
+      id:
+          format: int32
+          type: integer
+          x-type-options:
+            min: 1
+            max: 1000
+      eventId:
+          format: int32
+          type: integer
+          x-type-options:
+            min: 1
+            max: 1000
+      event2Id:
+          format: int32
+          type: integer
+          x-type-options:
+            min: 1
+            max: 1000
+      hasBeenViewed:
+        type: boolean
+      isWatchNotification:
+        type: boolean
+      isExpired:
+        type: boolean
+      isAllDay:
+        type: boolean
+      priorityCode:
+        type: string
+      userId:
+          format: int32
+          type: integer
+          x-type-options:
+            min: 1
+            max: 1000
+
+securityDefinitions: {}

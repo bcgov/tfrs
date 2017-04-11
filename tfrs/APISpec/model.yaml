@@ -1,0 +1,573 @@
+definitions:
+  CreditTrade:
+    type: object
+    required:
+      - id
+      - fuelSupplier
+      - transactionPartnerFuelSupplier
+      - compliancePeriod
+      - fuelSupplierLastUpdatedBy
+      - transactionType
+      - numberOfCredits
+      - fairMarketValuePrice
+    properties:
+      id:
+        format: int32
+        type: integer
+      status:
+        type: string
+      fuelSupplier:
+        $ref: '#/definitions/FuelSupplier'
+      transactionPartnerFuelSupplier:
+        $ref: '#/definitions/FuelSupplier'
+      compliancePeriod:
+        $ref: '#/definitions/CompliancePeriod'
+      fuelSupplierLastUpdatedBy:
+        $ref: '#/definitions/User'
+      partnerLastUpdatedBy:
+        $ref: '#/definitions/User'
+      reviewedRejectedBy:
+        $ref: '#/definitions/User'
+      approvedRejectedBy:
+        $ref: '#/definitions/User'
+      cancelledBy:
+        $ref: '#/definitions/User'
+      tradeExecutionDate:
+        type: string
+        format: date-time
+      transactionType:
+        type: string
+      numberOfCredits:
+        format: int32
+        type: integer
+      fairMarketValuePrice:
+        type: number
+        format: float
+      fuelSupplierBalanceAtTransactionTime:
+        type: string
+        format: date-time
+      creditTradeLogEntry:
+        type: array
+        items:
+          $ref: '#/definitions/CreditTradeLogEntry'
+      notes:
+        type: array
+        items:
+          $ref: '#/definitions/Note'
+      attachments:
+        type: array
+        items:
+          $ref: '#/definitions/Attachment'
+      history:
+        type: array
+        items:
+          $ref: '#/definitions/History'
+  FuelSupplier:
+    type: object
+    required:
+      - id
+      - name
+      - status
+      - dateCreated
+    properties:
+      id:
+        format: int32
+        type: integer
+      name:
+        type: string
+        uniqueItems: true
+      status:
+        type: string
+      dateCreated:
+        type: string
+        format: date-time
+      primaryContact:
+        $ref: '#/definitions/Contact'
+      contacts:
+        type: array
+        items:
+          $ref: '#/definitions/Contact'
+      notes:
+        type: array
+        items:
+          $ref: '#/definitions/Note'
+      attachments:
+        type: array
+        items:
+          $ref: '#/definitions/Attachment'
+      history:
+        type: array
+        items:
+          $ref: '#/definitions/History'
+  CreditTradeLogEntry:
+    type: object
+    required:
+      - id
+      - logEntryTime
+      - newCompliancePeriod
+      - newStatus
+      - newNumberOfCredits
+    properties:
+      id:
+        format: int32
+        type: integer
+      creditTrade:
+        $ref: '#/definitions/CreditTrade'
+      user:
+        $ref: '#/definitions/User'
+      logEntryTime:
+        type: string
+        format: date-time
+      newCompliancePeriod:
+        $ref: '#/definitions/CompliancePeriod'
+      newStatus:
+        type: string
+      newTradeExecutionDate:
+        type: string
+        format: date-time
+      newTransactionType:
+        type: string
+      newNumberOfCredits:
+        format: int32
+        type: integer
+      newFairMarketValuePrice:
+        type: number
+        format: float
+      newFuelSupplierBalanceAtTransactionTime:
+        format: int32
+        type: integer
+  CompliancePeriod:
+    type: object
+    required:
+      - id
+    properties:
+      id:
+        format: int32
+        type: integer
+      periodName:
+        type: string
+      isActive:
+        type: boolean
+  LookupList:
+    type: object
+    description: Lookup values for various enumerated types in the systems - entity status values, trade types and others. Used to pull the values out of the code and into the database but without having to have a table for each lookup instance.
+    required:
+      - id
+      - contextName
+      - isDefault
+      - codeName
+      - value
+    properties:
+      id:
+        format: int32
+        type: integer
+        description: A system-generated unique identifier for a LookupList
+      contextName:
+        type: string
+        description: The context within the app in which this lookup list if used. Defined and referenced in the code of the application.
+      isDefault:
+        type: boolean
+        description: True of the value within the lookup list context should be the default for the lookup instance.
+      displaySortOrder:
+        format: int32
+        type: integer
+        description: The sort order for list of values within a list context.
+      codeName:
+        type: string
+        description: The a shorter lookup name to find the value. Can be used at the option of the application to present on the screen a short version of the lookup list value.
+      value:
+        type: string
+        description: The fully spelled out value of the lookup entry.
+  Note:
+    type: object
+    description: Notes entered by users about instance of entities - e.g. Credit Trades and Fuel Suppliers
+    required:
+      - id
+      - noteText
+    properties:
+      id:
+        format: int32
+        type: integer
+        description: A system-generated unique identifier for a Note
+      noteText:
+        type: string
+        description: The contents of the note.
+      isNoLongerRelevant:
+        type: boolean
+        description: A user set flag that the note is no longer relevant. Allows the note to be retained for historical reasons,  but identified to other users as no longer applicable.
+  Attachment:
+    type: object
+    description: Attachments uploaded by users about instance of entities - e.g. Credit Trades and Fuel Suppliers
+    required:
+      - id
+    properties:
+      id:
+        format: int32
+        type: integer
+        description: A system-generated unique identifier for an Attachment
+      fileName:
+        type: string
+        description: Filename as passed by the user uploading the file
+      fileContents:
+        type: string
+        format: binary
+        description: Binary contents of the file
+      description:
+        type: string
+        description: A note about the attachment,  optionally maintained by the user.
+      type:
+        type: string
+        description: Type of attachment
+  History:
+    type: object
+    description: The history of updates made to an entity - e.g. a Credit Trades and Fuel Suppliers
+    required:
+      - id
+      - historyText
+    properties:
+      id:
+        format: int32
+        type: integer
+        description: A system-generated unique identifier for a History
+      historyText:
+        type: string
+        description: The text of the history entry tracked against the related entity.
+  Contact:
+    type: object
+    description: A table of contacts related to various entities in the system. FK fields are used to link contacts to records in the system.
+    required:
+      - id
+    properties:
+      id:
+        format: int32
+        type: integer
+        description: A system-generated unique identifier for a Contact
+      givenName:
+        type: string
+        description: The given name of the contact.
+      surname:
+        type: string
+        description: The surname of the contact.
+      organizationName:
+        type: string
+        description: The organization name of the contact.
+      role:
+        type: string
+        description: The role of the contact. UI controlled as to whether it is free form or selected from an enumerated list - for initial implementation, the field is freeform.
+      notes:
+        type: string
+        description: A note about the contact maintained by the users.
+      emailAddress:
+        type: string
+        description: The email address for the contact.
+      workPhoneNumber:
+        type: string
+        description: The work phone number for the contact.
+      mobilePhoneNumber:
+        type: string
+        description: The mobile phone number for the contact.
+      faxPhoneNumber:
+        type: string
+        description: The fax phone number for the contact.
+      address1:
+        type: string
+        description: Address 1 line of the address.
+      address2:
+        type: string
+        description: Address 2 line of the address.
+      city:
+        type: string
+        description: The City of the address.
+      province:
+        type: string
+        description: The Province of the address.
+      postalCode:
+        type: string
+        description: The postal code of the address.
+  UserFavourite:
+    type: object
+    description: User specific settings for a specific location in the UI. The location and saved settings are internally defined by the UI.
+    required:
+      - id
+    properties:
+      id:
+        format: int32
+        type: integer
+        description: A system-generated unique identifier for a UserFavourite
+      type:
+        type: string
+        description: The type of Favourite
+      name:
+        type: string
+        description: The user-defined name for the recorded settings. Allows the user to save different groups of settings and access each one easily when needed.
+      value:
+        type: string
+        description: The settings saved by the user. In general,  a UI defined chunk of json that stores the settings in place when the user created the favourite.
+      isDefault:
+        type: boolean
+        description: True if this Favourite is the default for this Context Type. On first access to a context in a session the default favourite for the context it is invoked. If there is no default favourite,  a system-wide default is invoked. On return to the context within a session,  the last parameters used are reapplied.
+      User:
+        $ref: '#/definitions/User'
+  Notification:
+    type: object
+    description: Users associated with specific notifications, created at the time the notification record is created because of the user&#39;s business relationship to the bus - e.g. the user is the currently assigned inspector, or the user is the manager for the District in which the bus is located. The rules for linking a user to a notification for a specific bus could vary over time based on the needs of the business. At minimum, it is expected the current inspector assigned to a bus will be notified of every notification for that bus.
+    required:
+      - id
+    properties:
+      id:
+        format: int32
+        type: integer
+        description: A system-generated unique identifier for a Notification
+      event:
+        $ref: '#/definitions/NotificationEvent'
+      hasBeenViewed:
+        type: boolean
+        description: True if the user linked to the notification has read the notification
+      isWatchNotification:
+        type: boolean
+        description: True if the user linked to the notification has flagged the notification to remain visible
+      user:
+        $ref: '#/definitions/User'
+  NotificationEvent:
+    type: object
+    description: Notifications associated about changes to information related to a specific Credit Trade - eg trade suggested, trade countered, trade approved, etc.
+    required:
+      - id
+    properties:
+      id:
+        format: int32
+        type: integer
+        description: A system-generated unique identifier for a NotificationEvent
+      eventTime:
+        type: string
+        format: date-time
+        description: The date&#x2F;time of the creation of the event that triggered the creation of the notification.
+      eventTypeCode:
+        type: string
+        description: A categorization of the event for which the notification was created. The categories will be defined over time in code based on the requirements of the business. An example might be a notification &quot;Trade Created&quot; when a trade is created by a Fuel Supplier and the notification is linked to the Partner Fuel Supplier.
+      notes:
+        type: string
+        description: An assembled text string about the event that triggered the notification. Includes both static text and data about the notification. User Interface code will be used (based on the eventTypeCode - category) to assemble a dynamic string of information about the event - potentially including links to other relevant data - such as link to the School Bus detail screen.
+      creditTrade:
+        $ref: '#/definitions/CreditTrade'
+  User:
+    type: object
+    description: Information about the users of the system.
+    required:
+      - id
+      - givenName
+      - surname
+      - status
+    properties:
+      id:
+        format: int32
+        type: integer
+        description: A system-generated unique identifier for a User
+      givenName:
+        type: string
+        description: Given name of the user.
+      surname:
+        type: string
+        description: Surname of the user.
+      initials:
+        type: string
+        description: Initials of the user, to be presented where screen space is at a premium.
+      email:
+        type: string
+        description: The email address of the user in the system.
+      status:
+        type: string
+        description: The status of the user in the system. Only a status of &quot;Active&quot; allows the user access to the system.
+      fuelSupplier:
+        $ref: '#/definitions/FuelSupplier'
+      smUserId:
+        type: string
+        description: Security Manager User ID
+      guid:
+        type: string
+        description: The GUID unique to the user as provided by the authentication system. In this case, authentication is done by Siteminder and the GUID uniquely identifies the user within the user directories managed by Siteminder - e.g. IDIR and BCeID. The GUID is equivalent to the IDIR Id, but is guaranteed unique to a person, while the IDIR ID is not - IDIR IDs can be recycled.
+      smAuthorizationDirectory:
+        type: string
+        description: The user directory service used by Siteminder to authenticate the user - usually IDIR or BCeID.
+      userRoles:
+        type: array
+        items:
+          $ref: '#/definitions/UserRole'
+      groupMemberships:
+        type: array
+        items:
+          $ref: '#/definitions/GroupMembership'
+  UserRole:
+    type: object
+    description: A join table that provides allows each user to have any number of Roles in the system.  At login time the user is given the sum of the permissions of the roles assigned to that user. 
+    required:
+      - id
+      - effectiveDate
+    properties:
+      id:
+        format: int32
+        type: integer
+        description: A system-generated unique identifier for a UserRole
+      effectiveDate:
+        type: string
+        format: date-time
+        description: The date on which the user was given the related role.
+      expiryDate:
+        type: string
+        format: date-time
+        description: The date on which a role previously assigned to a user was removed from that user.
+      role:
+        $ref: '#/definitions/Role'
+  Role:
+    type: object
+    description: A table managed in the application by authorized users to create named Roles that can be assigned to Users as needed. Roles can be created as needed to support the users of the system and the roles they perform within the organization.
+    required:
+      - id
+      - name
+      - description
+    properties:
+      id:
+        format: int32
+        type: integer
+        description: A system-generated unique identifier for a Role
+      name:
+        type: string
+        description: The name of the Role, as established by the user creating the role.
+      description:
+        type: string
+        description: A description of the role as set by the user creating&#x2F;updating the role.
+      rolePermissions:
+        type: array
+        items:
+          $ref: '#/definitions/RolePermission'
+      userRoles:
+        type: array
+        items:
+          $ref: '#/definitions/UserRole'
+  RolePermission:
+    type: object
+    description: The collection of permissions included in a role.
+    required:
+      - id
+    properties:
+      id:
+        format: int32
+        type: integer
+        description: A system-generated unique identifier for a RolePermission
+      role:
+        $ref: '#/definitions/Role'
+      permission:
+        $ref: '#/definitions/Permission'
+  Permission:
+    type: object
+    description: The set of permissions defined in the application. Each permission is given a name and triggers some behavior defined in the application. For example, a permission might allow users to see data or to have access to functionality restricted to users without that permission. Permissions are created as needed to the application and are added to the permissions table by data migrations executed at the time the software that uses the permission is deployed.
+    required:
+      - id
+      - code
+      - name
+      - description
+    properties:
+      id:
+        format: int32
+        type: integer
+        description: A system-generated unique identifier for a Permission
+      code:
+        type: string
+        description: The name of the permission referenced in the software of the application.
+      name:
+        type: string
+        description: The &#39;user friendly&#39; name of the permission exposed to the user selecting the permissions to be included in a Role.
+      description:
+        type: string
+        description: A description of the purpose of the permission and exposed to the user selecting the permissions to be included in a Role.
+  GroupMembership:
+    type: object
+    description: The users associated with a given group that has been defined in the application.
+    required:
+      - id
+      - active
+    properties:
+      id:
+        format: int32
+        type: integer
+        description: A system-generated unique identifier for a GroupMembership
+      active:
+        type: boolean
+        description: A flag indicating the User is active in the group. Set false to remove the user from the designated group.
+      group:
+        $ref: '#/definitions/Group'
+      user:
+        $ref: '#/definitions/User'
+  Group:
+    type: object
+    description: A named entity that is used to created a collection of users into a group. For example, the School Bus Inspectors are in the group Inspectors. Groups, like permissions are defined by the application and referenced in the code of the application.
+    required:
+      - id
+      - name
+      - description
+    properties:
+      id:
+        format: int32
+        type: integer
+        description: A system-generated unique identifier for a Group
+      name:
+        type: string
+        description: The name of the group, as refenced in the code.
+      description:
+        type: string
+        description: A description of the group that is presented to the user when they are setting a user into a group.
+  Audit:
+    type: object
+    description: Server generated audit log
+    required:
+      - id
+    properties:
+      id:
+        format: int32
+        type: integer
+        description: A system-generated unique identifier for an Audit
+      appCreateTimestamp:
+        type: string
+        format: date-time
+        description: The date and time of the application action that created the record. 
+      appCreateUserid:
+        type: string
+        description: The user account name of the application user who performed the action that created the record (e.g. JSMITH). This value is not preceded by the directory name. 
+      appCreateUserGuid:
+        type: string
+        description: The Globally Unique Identifier of the application user who performed the action that created the record. This value must be non-NULL if APP_CREATE_USER_DIRECTORY is &#39;IDIR&#39; or &#39;BCEID&#39;, but it must be NULL if APP_CREATE_USER_DIRECTORY is &#39;ORACLE&#39;. APP
+      appCreateUserDirectory:
+        type: string
+        description: The directory in which APP_CREATE_USERID is defined. Valid values are &#39;IDIR&#39;, &#39; BCEID&#39; or &#39;ORACLE&#39;. 
+      appLastUpdateTimestamp:
+        type: string
+        format: date-time
+        description: The date and time of the application action that created or last updated the record.
+      appLastUpdateUserid:
+        type: string
+        description: The Globally Unique Identifier of the application user who performed the action that created the record. This value must be non-NULL if APP_CREATE_USER_DIRECTORY is &#39;IDIR&#39; or &#39;BCEID&#39;, but it must be NULL if APP_CREATE_USER_DIRECTORY is &#39;ORACLE&#39;. APP
+      appLastUpdateUserGuid:
+        type: string
+        description: The Globally Unique Identifier of the application user who performed the action that created or last updated the record. This value must be non-NULL if APP_CREATE_USER_DIRECTORY is &#39;IDIR&#39; or &#39;BCEID&#39;, but it must be NULL if APP_CREATE_USER_DIRECTORY is &#39;ORACLE&#39;. 
+      appLastUpdateUserDirectory:
+        type: string
+        description: The directory in which APP_LAST_UPDATE_USERID is defined. Valid values are &#39;IDIR&#39;, &#39; BCEID&#39; or &#39;ORACLE&#39;. 
+      entityName:
+        type: string
+        description: The name of the entity that has changed
+      entityId:
+        format: int32
+        type: integer
+        description: The primary key in the entity that has changed
+      propertyName:
+        type: string
+        description: The property that has changed
+      oldValue:
+        type: string
+        description: The old value
+      newValue:
+        type: string
+        description: The new value
+      isDelete:
+        type: boolean
+        description: If true the record was deleted
