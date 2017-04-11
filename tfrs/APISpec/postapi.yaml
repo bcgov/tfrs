@@ -1,0 +1,1071 @@
+  /attachments/{id}/download:
+    get:
+      summary: Returns the binary file component of an attachment
+      tags:
+        - Attachment
+      consumes: []
+      produces:      
+        - application/octet-stream        
+      parameters:                
+        - name: id
+          in: path
+          description: Attachment Id
+          required: true
+          type: integer
+      responses:
+        200:
+          description: OK
+        404:
+          description: Attachment not found in CCW system    
+  /groups/{id}/users:
+    get:
+      summary: returns users in a given Group
+      description:
+        Used to get users in a given Group
+      tags:
+        - Group
+      consumes:
+        - application/json
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      parameters:
+        - name: id
+          in: path
+          description: id of Group to fetch Users for
+          required: true
+          type: integer
+      responses:
+        200:
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/UserViewModel"          
+  /credittrading/search:
+    get:
+      summary: Searches credit trades
+      description:
+        Used for the search on the credit trades list screen page.
+      tags:
+        - CreditTrade
+      consumes:
+        - application/json
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      parameters:        
+        - name: organization
+          in: query
+          description: FuelSuppliers (array of id numbers)
+          collectionFormat: multi
+          type: array
+          items:
+            type: integer
+        - name: tradeType
+          in: query
+          description: TradeTypes (array of id numbers)
+          type: array
+          items:
+              type: integer
+        - name: status
+          in: query
+          description: Credit Trade Status types to return (array of strings)
+          collectionFormat: multi
+          type: array
+          items:
+            type: string
+        - name: dateType
+          in: query
+          description: The type of credit trade date to search on eg created, approved, concluded, last updated 
+          type: string
+        - name: startDate
+          description: Start of date range to search on - null for from start of time
+          in: query
+          type: string
+          format: date-time
+        - name: endDate
+          description: End of date range to search on - null for from start of time
+          in: query
+          type: string
+          format: date-time
+      responses:
+        200:
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/CreditTrade"
+  /creditTrade/{id}/notes:
+    get:
+      description: Returns notes for a particular CreditTrade.
+      tags:
+        - CreditTrade
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Note'
+        "404":
+           description: CreditTrade not found
+      parameters:
+        - name: id
+          in: path
+          description: id of CreditTrade to fetch notes for
+          required: true
+          type: integer
+  /credittrades/{id}/attachments:
+    get:
+      description: Returns attachments for a particular CreditTrade
+      tags:
+        - CreditTrade
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/AttachmentViewModel'
+        "404":
+           description: CreditTrade not found
+      parameters:
+        - name: id
+          in: path
+          description: id of CreditTrade to fetch attachments for
+          required: true
+          type: integer    
+  /credittrades/{id}/history:
+    get:
+      description: Returns History for a particular CreditTrade
+      tags:
+        - CreditTrade
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/HistoryViewModel'
+      parameters:
+        - name: id
+          in: path
+          description: id of CreditTrade to fetch History for
+          required: true
+          type: integer
+        - name: offset
+          in: query
+          description: offset for records that are returned 
+          required: false
+          type: integer
+        - name: limit
+          in: query
+          description: limits the number of records returned.  
+          required: false
+          type: integer
+    post:
+      description: Add a History record to the CreditTrade
+      tags:
+        - CreditTrade
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      parameters:
+        - name: id
+          in: path
+          description: id of CreditTrade to fetch History for
+          required: true
+          type: integer
+        - name: item
+          in: body
+          required: true
+          schema:
+            $ref: "#/definitions/History"
+      responses:
+        '200':
+          description: OK
+        '201':
+          description: History created
+          headers:
+            Location:
+              description: A link to the History
+              type: string
+              format: url
+          schema:
+            $ref: "#/definitions/History"        
+  /fuelsuppliers/{id}/attachments:
+    get:
+      description: Returns attachments for a particular FuelSupplier
+      tags:
+        - FuelSupplier
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Attachment'
+      parameters:
+        - name: id
+          in: path
+          description: id of FuelSupplier to fetch attachments for
+          required: true
+          type: integer
+  /fuelsuppliers/{id}/history:
+    get:
+      description: Returns History for a particular FuelSupplier
+      tags:
+        - FuelSupplier
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/HistoryViewModel'
+      parameters:
+        - name: id
+          in: path
+          description: id of FuelSupplier for which to fetch History
+          required: true
+          type: integer
+        - name: offset
+          in: query
+          description: offset for records that are returned 
+          required: false
+          type: integer
+        - name: limit
+          in: query
+          description: limits the number of records returned.  
+          required: false
+          type: integer
+    post:
+      description: Add a History record to the FuelSupplier
+      tags:
+        - FuelSupplier
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      parameters:
+        - name: id
+          in: path
+          description: id of FuelSupplier to add History for
+          required: true
+          type: integer
+        - name: item
+          in: body
+          required: true
+          schema:
+            $ref: "#/definitions/History"
+      responses:
+        '200':
+          description: OK
+        '201':
+          description: History created
+          headers:
+            Location:
+              description: A link to the History
+              type: string
+              format: url
+          schema:
+            $ref: "#/definitions/History"          
+  /fuelsuppliers/{id}/notes:
+    get:
+      description: Returns notes for a particular FuelSupplier
+      tags:
+        - FuelSupplier
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Note'
+      parameters:
+        - name: id
+          in: path
+          description: id of FuelSupplier for which to fetch notes
+          required: true
+          type: integer
+  /fuelsuppliers/search:
+    get:
+      summary: Searches school bus owners
+      description:
+        Used for the search school bus owners.
+      tags:
+        - FuelSupplier
+      consumes:
+        - application/json
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      parameters:        
+        - name: fuelSupplierName
+          in: query
+          description: Partial or complete name of a Fuel Supplier for contains search
+          type: string
+        - name: includeInactive
+          in: query
+          description: True if Inactive FuelSuppliers will be returned
+          type: boolean
+      responses:
+        200:
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/FuelSupplier"  
+  /roles/{id}/permissions:
+    get:
+      description: Get all the permissions for a role
+      tags:
+        - Role
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      parameters:
+        - name: id
+          in: path
+          description: id of Role to fetch
+          required: true
+          type: integer
+      responses:
+        200:
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/PermissionViewModel"
+    put:
+      description: Updates the permissions for a role
+      tags:
+        - Role
+      x-codegen-permission: ADMIN
+      consumes:
+        - application/json
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      parameters:
+        - name: id
+          in: path
+          description: id of Role to update
+          required: true
+          type: integer
+        - name: items
+          in: body
+          required: true
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/PermissionViewModel"
+      responses:
+        200:
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/PermissionViewModel"
+        404:
+          description: Role not found
+    post:
+      description: Adds a permissions to a role
+      tags:
+        - Role
+      x-codegen-permission: ADMIN
+      consumes:
+        - application/json
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      parameters:
+        - name: id
+          in: path
+          description: id of Role to update
+          required: true
+          type: integer
+        - name: item
+          in: body
+          required: true
+          schema:
+            $ref: "#/definitions/PermissionViewModel"
+      responses:
+        200:
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/PermissionViewModel"
+        404:
+          description: Role not found
+  /roles/{id}/users:
+    get:
+      description: Gets all the users for a role
+      tags:
+        - Role
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      parameters:
+        - name: id
+          in: path
+          description: id of Role to fetch
+          required: true
+          type: integer
+      responses:
+        200:
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/UserRoleViewModel"
+    put:
+      description: Updates the users for a role
+      tags:
+        - Role
+      x-codegen-permission: ADMIN
+      consumes:
+        - application/json
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      parameters:
+        - name: id
+          in: path
+          description: id of Role to update
+          required: true
+          type: integer
+        - name: items
+          in: body
+          required: true
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/UserRoleViewModel"
+      responses:
+        200:
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/UserRoleViewModel"
+        404:
+          description: Role not found
+  /users:
+    get:
+      description: Returns all users
+      tags:
+        - User
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      responses:
+        200:
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/UserViewModel"
+        404:
+           description: User not found
+    post:
+      description: Create new user
+      tags:
+        - User
+      x-codegen-permission: ADMIN
+      consumes:
+        - application/json
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      parameters:
+        - name: item
+          in: body
+          required: true
+          schema:
+            $ref: "#/definitions/User"
+      responses:
+        201:
+          description: User created
+          headers:
+            Location:
+              description: A link to the User
+              type: string
+              format: url
+          schema:
+            $ref: "#/definitions/User"
+  /users/current:
+    get:
+      description: Get the currently logged in user
+      tags:
+        - CurrentUser
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: "#/definitions/CurrentUserViewModel"
+  /users/current/favourites:
+    put:
+      description: Updates a favourite
+      tags:
+        - CurrentUser
+      consumes:
+        - application/json
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      parameters:
+        - name: item
+          in: body
+          required: true
+          schema:
+            $ref: "#/definitions/UserFavourite"
+      responses:
+        201:
+          description: UserFavourite created
+          headers:
+            Location:
+              description: A link to the UserFavourite
+              type: string
+              format: url
+          schema:
+            $ref: "#/definitions/UserFavourite"            
+    post:
+      description: Create new favourite for the current user
+      tags:
+        - CurrentUser
+      consumes:
+        - application/json
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      parameters:
+        - name: item
+          in: body
+          required: true
+          schema:
+            $ref: "#/definitions/UserFavourite"
+      responses:
+        201:
+          description: UserFavourite created
+          headers:
+            Location:
+              description: A link to the UserFavourite
+              type: string
+              format: url
+          schema:
+            $ref: "#/definitions/UserFavourite"
+  /users/current/favourites/{type}:
+    get:
+      description: Returns a user's favourites of a given type.  If type is empty, returns all.
+      tags:
+        - CurrentUser
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/UserFavourite"
+        "404":
+           description: User not found
+      parameters:
+        - name: type
+          in: path
+          description: type of favourite to return
+          required: true
+          type: string
+  /users/current/favourites/{id}/delete:
+    post:
+      description: Removes a specific user favourite
+      tags:
+        - CurrentUser
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      responses:
+        '200':
+          description: OK
+      parameters:
+        - name: id
+          in: path
+          description: id of Favourite to delete
+          required: true
+          type: integer      
+  /users/bulk:
+    post:
+      description: Adds a number of users
+      tags:
+        - User
+      x-codegen-permission: ADMIN
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      parameters:
+        - name: items
+          in: body
+          required: true
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/User"
+      responses:
+        200:
+          description: OK
+  /users/search:
+    get:
+      summary: Searches Users
+      description:
+        Used for the search users.
+      tags:
+        - User
+      consumes:
+        - application/json
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      parameters:        
+        - name: fuelSuppliers
+          in: query
+          description: FuelSupplier (array of id numbers)
+          collectionFormat: multi
+          type: array
+          items:
+            type: integer       
+        - name: surname
+          in: query
+          type: string
+        - name: includeInactive
+          in: query
+          description: True if Inactive users will be returned
+          type: boolean
+      responses:
+        200:
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/UserViewModel"  
+  /users/{id}:
+    get:
+      description: Returns data for a particular user
+      tags:
+        - User
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      parameters:
+        - name: id
+          in: path
+          description: id of User to fetch
+          required: true
+          type: integer
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: "#/definitions/UserViewModel"
+        404:
+           description: User not found
+    put:
+      description: Updates a user
+      tags:
+        - User
+      x-codegen-permission: ADMIN
+      consumes:
+        - application/json
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      parameters:
+        - name: id
+          in: path
+          description: id of User to update
+          required: true
+          type: integer
+        - name: item
+          in: body
+          required: true
+          schema:
+            $ref: "#/definitions/UserViewModel"
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: "#/definitions/UserViewModel"
+        404:
+          description: User not found
+  /users/{id}/delete:
+    post:
+      description: Deletes a user
+      tags:
+        - User
+      x-codegen-permission: ADMIN
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      parameters:
+        - name: id
+          in: path
+          description: id of User to delete
+          required: true
+          type: integer
+      responses:
+        200:
+          description: OK
+        404:
+          description: User not found
+  /users/{id}/favourites:
+    get:
+      description: Returns the favourites for a user
+      tags:
+        - User
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      parameters:
+        - name: id
+          in: path
+          description: id of User to fetch
+          required: true
+          type: integer
+      responses:
+        200:
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/UserFavourite"
+        404:
+           description: User not found
+    post:
+      description: Adds favourites to a user
+      tags:
+        - User
+      consumes:
+        - application/json
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      parameters:
+        - name: id
+          in: path
+          description: id of User to update
+          required: true
+          type: integer
+        - name: item
+          in: body
+          required: true
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/UserFavourite"
+      responses:
+        200:
+          description: Favourites added to user          
+    put:
+      description: Updates the favourites for a user
+      tags:
+        - User
+      consumes:
+        - application/json
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      parameters:
+        - name: id
+          in: path
+          description: id of User to update
+          required: true
+          type: integer
+        - name: items
+          in: body
+          required: true
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/UserFavourite"
+      responses:
+        200:
+          description: OK          
+        404:
+          description: User not found  
+  /users/{id}/roles:
+    get:
+      description: Returns the roles for a user
+      tags:
+        - User
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      parameters:
+        - name: id
+          in: path
+          description: id of User to fetch
+          required: true
+          type: integer
+      responses:
+        200:
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/UserRoleViewModel"
+        404:
+           description: User not found
+    post:
+      description: Adds a role to a user
+      tags:
+        - User
+      x-codegen-permission: ADMIN
+      consumes:
+        - application/json
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      parameters:
+        - name: id
+          in: path
+          description: id of User to update
+          required: true
+          type: integer
+        - name: item
+          in: body
+          required: true
+          schema:
+            $ref: "#/definitions/UserRoleViewModel"
+      responses:
+        201:
+          description: Role created for user
+          headers:
+            Location:
+              description: A link to the User Role
+              type: string
+              format: url
+          schema:
+            $ref: "#/definitions/UserRoleViewModel"
+    put:
+      description: Updates the roles for a user
+      tags:
+        - User
+      x-codegen-permission: ADMIN
+      consumes:
+        - application/json
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      parameters:
+        - name: id
+          in: path
+          description: id of User to update
+          required: true
+          type: integer
+        - name: items
+          in: body
+          required: true
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/UserRoleViewModel"
+      responses:
+        200:
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/UserRoleViewModel"
+        404:
+          description: User not found
+  /users/{id}/permissions:
+    get:
+      description: Returns the set of permissions for a user
+      tags:
+        - User
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      parameters:
+        - name: id
+          in: path
+          description: id of User to fetch
+          required: true
+          type: integer
+      responses:
+        200:
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/PermissionViewModel"
+        404:
+           description: User not found
+  /users/{id}/groups:
+    get:
+      description: Returns all groups that a user is a member of
+      tags:
+        - User
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      parameters:
+        - name: id
+          in: path
+          description: id of User to fetch
+          required: true
+          type: integer
+      responses:
+        200:
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/GroupMembershipViewModel"
+        404:
+           description: User not found
+    put:
+      description: Updates the active set of groups for a user
+      tags:
+        - User
+      x-codegen-permission: ADMIN
+      consumes:
+        - application/json
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      parameters:
+        - name: id
+          in: path
+          description: id of User to update
+          required: true
+          type: integer
+        - name: items
+          in: body
+          required: true
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/GroupMembershipViewModel"
+      responses:
+        200:
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/GroupMembershipViewModel"
+        404:
+          description: User not found
+    post:
+      description: Add to the active set of groups for a user
+      tags:
+        - User
+      x-codegen-permission: ADMIN
+      consumes:
+        - application/json
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      parameters:
+        - name: id
+          in: path
+          description: id of User to update
+          required: true
+          type: integer
+        - name: item
+          in: body
+          required: true
+          schema:
+            $ref: "#/definitions/GroupMembershipViewModel"
+      responses:
+        200:
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/GroupMembershipViewModel"
+        404:
+          description: User not found  
+  /users/{id}/notifications:
+    get:
+      description: Returns a user's notifications
+      tags:
+        - User
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/NotificationViewModel"
+      parameters:
+        - name: id
+          in: path
+          description: id of User to fetch notifications for
+          required: true
+          type: integer
