@@ -13,7 +13,7 @@ SET OUTPUT_FILE=TFRSswagger.yaml
 
 rem make a backup of the current output file.
 
-copy %OUTPUT_FILE% %OUTPUTFILE%.bck
+copy %OUTPUT_FILE% %OUTPUT_FILE%.bck
 
 SET PYTHONCMD=C:\Python27\python.exe
 
