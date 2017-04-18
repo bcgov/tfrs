@@ -2968,10 +2968,6 @@ definitions:
       fuelSupplierBalanceAtTransactionTime:
         type: string
         format: date-time
-      creditTradeLogEntry:
-        type: array
-        items:
-          $ref: '#/definitions/CreditTradeLogEntry'
       notes:
         type: array
         items:
@@ -3311,20 +3307,14 @@ definitions:
       smAuthorizationDirectory:
         type: string
         description: The user directory service used by Siteminder to authenticate the user - usually IDIR or BCeID.
-      userRoles:
-        type: array
-        items:
-          $ref: '#/definitions/UserRole'
-      groupMemberships:
-        type: array
-        items:
-          $ref: '#/definitions/GroupMembership'
   UserRole:
     type: object
     description: A join table that provides allows each user to have any number of Roles in the system.  At login time the user is given the sum of the permissions of the roles assigned to that user. 
     required:
       - id
       - effectiveDate
+      - user
+      - role
     properties:
       id:
         format: int32
@@ -3338,6 +3328,8 @@ definitions:
         type: string
         format: date-time
         description: The date on which a role previously assigned to a user was removed from that user.
+      user:
+        $ref: '#/definitions/User'
       role:
         $ref: '#/definitions/Role'
   Role:
@@ -3358,14 +3350,6 @@ definitions:
       description:
         type: string
         description: A description of the role as set by the user creating&#x2F;updating the role.
-      rolePermissions:
-        type: array
-        items:
-          $ref: '#/definitions/RolePermission'
-      userRoles:
-        type: array
-        items:
-          $ref: '#/definitions/UserRole'
   RolePermission:
     type: object
     description: The collection of permissions included in a role.
