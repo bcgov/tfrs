@@ -3,28 +3,23 @@ definitions:
     type: object
     required:
       - id
-      - fuelSupplier
-      - transactionPartnerFuelSupplier
-      - compliancePeriod
-      - fuelSupplierLastUpdatedBy
+      - respondent
+      - initiatorLastUpdateBy
       - transactionType
       - numberOfCredits
-      - fairMarketValuePrice
     properties:
       id:
         format: int32
         type: integer
       status:
         type: string
-      fuelSupplier:
+      initiator:
         $ref: '#/definitions/FuelSupplier'
-      transactionPartnerFuelSupplier:
+      respondent:
         $ref: '#/definitions/FuelSupplier'
-      compliancePeriod:
-        $ref: '#/definitions/CompliancePeriod'
-      fuelSupplierLastUpdatedBy:
+      initiatorLastUpdateBy:
         $ref: '#/definitions/User'
-      partnerLastUpdatedBy:
+      respondentLastUpdatedBy:
         $ref: '#/definitions/User'
       reviewedRejectedBy:
         $ref: '#/definitions/User'
@@ -43,46 +38,11 @@ definitions:
       fairMarketValuePrice:
         type: number
         format: float
-      fuelSupplierBalanceAtTransactionTime:
+      offer:
+        $ref: '#/definitions/Offer'
+      fuelSupplierBalanceBeforeTransaction:
         type: string
         format: date-time
-      notes:
-        type: array
-        items:
-          $ref: '#/definitions/Note'
-      attachments:
-        type: array
-        items:
-          $ref: '#/definitions/Attachment'
-      history:
-        type: array
-        items:
-          $ref: '#/definitions/History'
-  FuelSupplier:
-    type: object
-    required:
-      - id
-      - name
-      - status
-      - dateCreated
-    properties:
-      id:
-        format: int32
-        type: integer
-      name:
-        type: string
-        uniqueItems: true
-      status:
-        type: string
-      dateCreated:
-        type: string
-        format: date-time
-      primaryContact:
-        $ref: '#/definitions/Contact'
-      contacts:
-        type: array
-        items:
-          $ref: '#/definitions/Contact'
       notes:
         type: array
         items:
@@ -132,18 +92,76 @@ definitions:
       newFuelSupplierBalanceAtTransactionTime:
         format: int32
         type: integer
-  CompliancePeriod:
+  Offer:
     type: object
     required:
       - id
+      - fuelSupplier
+      - status
+      - buyOrSell
+      - numberOfCredits
     properties:
       id:
         format: int32
         type: integer
-      periodName:
+      fuelSupplier:
+        $ref: '#/definitions/FuelSupplier'
+      status:
         type: string
-      isActive:
-        type: boolean
+      buyOrSell:
+        type: string
+      numberOfCredits:
+        format: int32
+        type: integer
+      numberOfViews:
+        format: int32
+        type: integer
+      datePosted:
+        type: string
+        format: date-time
+      note:
+        type: string
+      history:
+        type: array
+        items:
+          $ref: '#/definitions/History'
+  FuelSupplier:
+    type: object
+    required:
+      - id
+      - name
+      - status
+      - dateCreated
+    properties:
+      id:
+        format: int32
+        type: integer
+      name:
+        type: string
+        uniqueItems: true
+      status:
+        type: string
+      dateCreated:
+        type: string
+        format: date-time
+      primaryContact:
+        $ref: '#/definitions/Contact'
+      contacts:
+        type: array
+        items:
+          $ref: '#/definitions/Contact'
+      notes:
+        type: array
+        items:
+          $ref: '#/definitions/Note'
+      attachments:
+        type: array
+        items:
+          $ref: '#/definitions/Attachment'
+      history:
+        type: array
+        items:
+          $ref: '#/definitions/History'
   LookupList:
     type: object
     description: Lookup values for various enumerated types in the systems - entity status values, trade types and others. Used to pull the values out of the code and into the database but without having to have a table for each lookup instance.
@@ -346,6 +364,8 @@ definitions:
         description: An assembled text string about the event that triggered the notification. Includes both static text and data about the notification. User Interface code will be used (based on the eventTypeCode - category) to assemble a dynamic string of information about the event - potentially including links to other relevant data - such as link to the School Bus detail screen.
       creditTrade:
         $ref: '#/definitions/CreditTrade'
+      offer:
+        $ref: '#/definitions/Offer'
   User:
     type: object
     description: Information about the users of the system.
