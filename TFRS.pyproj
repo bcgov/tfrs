@@ -1,0 +1,196 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
+  <PropertyGroup>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
+    <Name>tfrs</Name>
+    <RootNamespace>TFRS</RootNamespace>
+    <DjangoSettingsModule>tfrs.settings</DjangoSettingsModule>
+  </PropertyGroup>
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>8cd6548c-8c38-4840-8d8f-d0dfd66699ee</ProjectGuid>
+    <ProjectHome>
+    </ProjectHome>
+    <ProjectTypeGuids>{5F0BE9CA-D677-4A4D-8806-6076C0FAAD37};{349c5851-65df-11da-9384-00065b846f21};{888888a0-9f3d-457c-b088-3a5042f75d52}</ProjectTypeGuids>
+    <StartupFile>manage.py</StartupFile>
+    <SearchPath>..\tfrs</SearchPath>
+    <WorkingDirectory>.</WorkingDirectory>
+    <WebBrowserUrl>http://localhost</WebBrowserUrl>
+    <LaunchProvider>Django launcher</LaunchProvider>
+    <OutputPath>.</OutputPath>
+    <SuppressCollectPythonCloudServiceFiles>true</SuppressCollectPythonCloudServiceFiles>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+    <DebugSymbols>true</DebugSymbols>
+    <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+    <DebugSymbols>true</DebugSymbols>
+    <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="manage.py" />
+    <Compile Include="server\database.py" />
+    <Compile Include="server\migrations\0001_initial.py" />
+    <Compile Include="server\migrations\0002_auto_20170214_1526.py" />
+    <Compile Include="server\migrations\0003_auto_20170419_1214.py" />
+    <Compile Include="server\migrations\__init__.py" />
+    <Compile Include="server\models\Attachment.py" />
+    <Compile Include="server\models\AttachmentViewModel.py" />
+    <Compile Include="server\models\Audit.py" />
+    <Compile Include="server\models\CompliancePeriod.py" />
+    <Compile Include="server\models\Contact.py" />
+    <Compile Include="server\models\CreditTrade.py" />
+    <Compile Include="server\models\CreditTradeLogEntry.py" />
+    <Compile Include="server\models\CurrentUserViewModel.py" />
+    <Compile Include="server\models\FuelSupplier.py" />
+    <Compile Include="server\models\Group.py" />
+    <Compile Include="server\models\GroupMembership.py" />
+    <Compile Include="server\models\GroupMembershipViewModel.py" />
+    <Compile Include="server\models\GroupViewModel.py" />
+    <Compile Include="server\models\History.py" />
+    <Compile Include="server\models\HistoryViewModel.py" />
+    <Compile Include="server\models\LookupList.py" />
+    <Compile Include="server\models\Note.py" />
+    <Compile Include="server\models\Notification.py" />
+    <Compile Include="server\models\NotificationEvent.py" />
+    <Compile Include="server\models\NotificationViewModel.py" />
+    <Compile Include="server\models\Permission.py" />
+    <Compile Include="server\models\PermissionViewModel.py" />
+    <Compile Include="server\models\Role.py" />
+    <Compile Include="server\models\RolePermission.py" />
+    <Compile Include="server\models\RolePermissionViewModel.py" />
+    <Compile Include="server\models\RoleViewModel.py" />
+    <Compile Include="server\models\User.py" />
+    <Compile Include="server\models\UserDetailsViewModel.py" />
+    <Compile Include="server\models\UserFavourite.py" />
+    <Compile Include="server\models\UserFavouriteViewModel.py" />
+    <Compile Include="server\models\UserRole.py" />
+    <Compile Include="server\models\UserRoleViewModel.py" />
+    <Compile Include="server\models\UserViewModel.py" />
+    <Compile Include="server\models\__init__.py" />
+    <Compile Include="server\serializers.py" />
+    <Compile Include="server\test_api.py" />
+    <Compile Include="server\test_models.py" />
+    <Compile Include="server\urls.py" />
+    <Compile Include="server\views\Attachment.py" />
+    <Compile Include="server\views\CompliancePeriod.py" />
+    <Compile Include="server\views\Contact.py" />
+    <Compile Include="server\views\CreditTrade.py" />
+    <Compile Include="server\views\CreditTradeLogEntry.py" />
+    <Compile Include="server\views\CurrentUser.py" />
+    <Compile Include="server\views\FuelSupplier.py" />
+    <Compile Include="server\views\Group.py" />
+    <Compile Include="server\views\History.py" />
+    <Compile Include="server\views\LookupList.py" />
+    <Compile Include="server\views\Note.py" />
+    <Compile Include="server\views\Notification.py" />
+    <Compile Include="server\views\NotificationEvent.py" />
+    <Compile Include="server\views\Permission.py" />
+    <Compile Include="server\views\Role.py" />
+    <Compile Include="server\views\User.py" />
+    <Compile Include="server\views\__init__.py" />
+    <Compile Include="server\__init__.py" />
+    <Compile Include="tfrs\admin.py" />
+    <Compile Include="tfrs\database.py" />
+    <Compile Include="tfrs\settings.py" />
+    <Compile Include="tfrs\urls.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="tfrs\views.py" />
+    <Compile Include="tfrs\__init__.py" />
+    <Compile Include="welcome\admin.py" />
+    <Compile Include="welcome\database.py" />
+    <Compile Include="welcome\models.py" />
+    <Compile Include="welcome\tests.py" />
+    <Compile Include="welcome\views.py" />
+    <Compile Include="welcome\__init__.py" />
+    <Compile Include="wsgi.py" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="requirements.txt" />
+    <Content Include="server\migrations\__pycache__\0001_initial.cpython-35.pyc" />
+    <Content Include="server\migrations\__pycache__\0002_auto_20170214_1526.cpython-35.pyc" />
+    <Content Include="server\migrations\__pycache__\0003_auto_20170419_1214.cpython-35.pyc" />
+    <Content Include="server\migrations\__pycache__\__init__.cpython-35.pyc" />
+    <Content Include="server\models\__pycache__\Attachment.cpython-35.pyc" />
+    <Content Include="server\models\__pycache__\AttachmentViewModel.cpython-35.pyc" />
+    <Content Include="server\models\__pycache__\Audit.cpython-35.pyc" />
+    <Content Include="server\models\__pycache__\CompliancePeriod.cpython-35.pyc" />
+    <Content Include="server\models\__pycache__\Contact.cpython-35.pyc" />
+    <Content Include="server\models\__pycache__\CreditTrade.cpython-35.pyc" />
+    <Content Include="server\models\__pycache__\FuelSupplier.cpython-35.pyc" />
+    <Content Include="server\models\__pycache__\History.cpython-35.pyc" />
+    <Content Include="server\models\__pycache__\Note.cpython-35.pyc" />
+    <Content Include="server\models\__pycache__\__init__.cpython-35.pyc" />
+    <Content Include="server\views\__pycache__\Attachment.cpython-35.pyc" />
+    <Content Include="server\views\__pycache__\CompliancePeriod.cpython-35.pyc" />
+    <Content Include="server\views\__pycache__\Contact.cpython-35.pyc" />
+    <Content Include="server\views\__pycache__\CreditTrade.cpython-35.pyc" />
+    <Content Include="server\views\__pycache__\CreditTradeLogEntry.cpython-35.pyc" />
+    <Content Include="server\views\__pycache__\CurrentUser.cpython-35.pyc" />
+    <Content Include="server\views\__pycache__\FuelSupplier.cpython-35.pyc" />
+    <Content Include="server\views\__pycache__\Group.cpython-35.pyc" />
+    <Content Include="server\views\__pycache__\History.cpython-35.pyc" />
+    <Content Include="server\views\__pycache__\LookupList.cpython-35.pyc" />
+    <Content Include="server\views\__pycache__\Note.cpython-35.pyc" />
+    <Content Include="server\views\__pycache__\Notification.cpython-35.pyc" />
+    <Content Include="server\views\__pycache__\NotificationEvent.cpython-35.pyc" />
+    <Content Include="server\views\__pycache__\Permission.cpython-35.pyc" />
+    <Content Include="server\views\__pycache__\Role.cpython-35.pyc" />
+    <Content Include="server\views\__pycache__\User.cpython-35.pyc" />
+    <Content Include="server\views\__pycache__\__init__.cpython-35.pyc" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="server\" />
+    <Folder Include="server\migrations\" />
+    <Folder Include="server\migrations\__pycache__\" />
+    <Folder Include="server\models\" />
+    <Folder Include="server\models\__pycache__\" />
+    <Folder Include="server\views\" />
+    <Folder Include="server\views\__pycache__\" />
+    <Folder Include="welcome\" />
+    <Folder Include="tfrs\" />
+  </ItemGroup>
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.Django.targets" />
+  <!-- Specify pre- and post-build commands in the BeforeBuild and 
+       AfterBuild targets below. -->
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
+        <WebProjectProperties>
+          <AutoAssignPort>True</AutoAssignPort>
+          <UseCustomServer>True</UseCustomServer>
+          <CustomServerUrl>http://localhost</CustomServerUrl>
+          <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
+        </WebProjectProperties>
+      </FlavorProperties>
+      <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}" User="">
+        <WebProjectProperties>
+          <StartPageUrl>
+          </StartPageUrl>
+          <StartAction>CurrentPage</StartAction>
+          <AspNetDebugging>True</AspNetDebugging>
+          <SilverlightDebugging>False</SilverlightDebugging>
+          <NativeDebugging>False</NativeDebugging>
+          <SQLDebugging>False</SQLDebugging>
+          <ExternalProgram>
+          </ExternalProgram>
+          <StartExternalURL>
+          </StartExternalURL>
+          <StartCmdLineArguments>
+          </StartCmdLineArguments>
+          <StartWorkingDirectory>
+          </StartWorkingDirectory>
+          <EnableENC>False</EnableENC>
+          <AlwaysStartWebServerOnDebug>False</AlwaysStartWebServerOnDebug>
+        </WebProjectProperties>
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+</Project>

@@ -100,6 +100,7 @@
               $ref: "#/definitions/CreditTrade"
   /creditTrade/{id}/notes:
     get:
+      summary: Returns notes for a particular CreditTrade
       description: Returns notes for a particular CreditTrade.
       tags:
         - CreditTrade
@@ -124,7 +125,7 @@
           type: integer
   /credittrades/{id}/attachments:
     get:
-      description: Returns attachments for a particular CreditTrade
+      summary: Returns attachments for a particular CreditTrade
       tags:
         - CreditTrade
       produces:
@@ -148,7 +149,7 @@
           type: integer    
   /credittrades/{id}/history:
     get:
-      description: Returns History for a particular CreditTrade
+      summary: Returns History for a particular CreditTrade
       tags:
         - CreditTrade
       produces:
@@ -179,6 +180,7 @@
           required: false
           type: integer
     post:
+      summary: Add a History record to the CreditTrade
       description: Add a History record to the CreditTrade
       tags:
         - CreditTrade
@@ -211,6 +213,7 @@
             $ref: "#/definitions/History"        
   /fuelsuppliers/{id}/attachments:
     get:
+      summary: Returns attachments for a particular FuelSupplier
       description: Returns attachments for a particular FuelSupplier
       tags:
         - FuelSupplier
@@ -233,6 +236,7 @@
           type: integer
   /fuelsuppliers/{id}/history:
     get:
+      summary: Returns History for a particular FuelSupplier
       description: Returns History for a particular FuelSupplier
       tags:
         - FuelSupplier
@@ -264,7 +268,7 @@
           required: false
           type: integer
     post:
-      description: Add a History record to the FuelSupplier
+      summary: Add a History record to the FuelSupplier
       tags:
         - FuelSupplier
       produces:
@@ -296,7 +300,7 @@
             $ref: "#/definitions/History"          
   /fuelsuppliers/{id}/notes:
     get:
-      description: Returns notes for a particular FuelSupplier
+      summary: Returns notes for a particular FuelSupplier
       tags:
         - FuelSupplier
       produces:
@@ -318,9 +322,7 @@
           type: integer
   /fuelsuppliers/search:
     get:
-      summary: Searches school bus owners
-      description:
-        Used for the search school bus owners.
+      summary: Searches fuel suppliers
       tags:
         - FuelSupplier
       consumes:
@@ -347,7 +349,7 @@
               $ref: "#/definitions/FuelSupplier"  
   /roles/{id}/permissions:
     get:
-      description: Get all the permissions for a role
+      summary: Get all the permissions for a role
       tags:
         - Role
       produces:
@@ -368,7 +370,7 @@
             items:
               $ref: "#/definitions/PermissionViewModel"
     put:
-      description: Updates the permissions for a role
+      summary: Updates the permissions for a role
       tags:
         - Role
       x-codegen-permission: ADMIN
@@ -401,7 +403,7 @@
         404:
           description: Role not found
     post:
-      description: Adds a permissions to a role
+      summary: Adds a permissions to a role
       tags:
         - Role
       x-codegen-permission: ADMIN
@@ -433,7 +435,7 @@
           description: Role not found
   /roles/{id}/users:
     get:
-      description: Gets all the users for a role
+      summary: Gets all the users for a role
       tags:
         - Role
       produces:
@@ -454,7 +456,7 @@
             items:
               $ref: "#/definitions/UserRoleViewModel"
     put:
-      description: Updates the users for a role
+      summary: Updates the users for a role
       tags:
         - Role
       x-codegen-permission: ADMIN
@@ -488,7 +490,7 @@
           description: Role not found
   /users:
     get:
-      description: Returns all users
+      summary: Returns all users
       tags:
         - User
       produces:
@@ -505,7 +507,7 @@
         404:
            description: User not found
     post:
-      description: Create new user
+      summary: Create new user
       tags:
         - User
       x-codegen-permission: ADMIN
@@ -533,7 +535,7 @@
             $ref: "#/definitions/User"
   /users/current:
     get:
-      description: Get the currently logged in user
+      summary: Get the currently logged in user
       tags:
         - CurrentUser
       produces:
@@ -547,7 +549,7 @@
             $ref: "#/definitions/CurrentUserViewModel"
   /users/current/favourites:
     put:
-      description: Updates a favourite
+      summary: Updates a favourite
       tags:
         - CurrentUser
       consumes:
@@ -573,7 +575,7 @@
           schema:
             $ref: "#/definitions/UserFavourite"            
     post:
-      description: Create new favourite for the current user
+      summary: Create new favourite for the current user
       tags:
         - CurrentUser
       consumes:
@@ -600,7 +602,7 @@
             $ref: "#/definitions/UserFavourite"
   /users/current/favourites/{type}:
     get:
-      description: Returns a user's favourites of a given type.  If type is empty, returns all.
+      summary: Returns a user's favourites of a given type.  If type is empty, returns all.
       tags:
         - CurrentUser
       produces:
@@ -624,7 +626,7 @@
           type: string
   /users/current/favourites/{id}/delete:
     post:
-      description: Removes a specific user favourite
+      summary: Removes a specific user favourite
       tags:
         - CurrentUser
       produces:
@@ -642,7 +644,7 @@
           type: integer      
   /users/bulk:
     post:
-      description: Adds a number of users
+      summary: Adds a number of users
       tags:
         - User
       x-codegen-permission: ADMIN
@@ -698,7 +700,7 @@
               $ref: "#/definitions/UserViewModel"  
   /users/{id}:
     get:
-      description: Returns data for a particular user
+      summary: Returns data for a particular user
       tags:
         - User
       produces:
@@ -749,7 +751,7 @@
           description: User not found
   /users/{id}/delete:
     post:
-      description: Deletes a user
+      summary: Deletes a user
       tags:
         - User
       x-codegen-permission: ADMIN
@@ -770,7 +772,7 @@
           description: User not found
   /users/{id}/favourites:
     get:
-      description: Returns the favourites for a user
+      summary: Returns the favourites for a user
       tags:
         - User
       produces:
@@ -793,7 +795,7 @@
         404:
            description: User not found
     post:
-      description: Adds favourites to a user
+      summary: Adds favourites to a user
       tags:
         - User
       consumes:
@@ -819,7 +821,7 @@
         200:
           description: Favourites added to user          
     put:
-      description: Updates the favourites for a user
+      summary: Updates the favourites for a user
       tags:
         - User
       consumes:
@@ -848,7 +850,7 @@
           description: User not found  
   /users/{id}/roles:
     get:
-      description: Returns the roles for a user
+      summary: Returns the roles for a user
       tags:
         - User
       produces:
@@ -871,7 +873,7 @@
         404:
            description: User not found
     post:
-      description: Adds a role to a user
+      summary: Adds a role to a user
       tags:
         - User
       x-codegen-permission: ADMIN
@@ -903,7 +905,7 @@
           schema:
             $ref: "#/definitions/UserRoleViewModel"
     put:
-      description: Updates the roles for a user
+      summary: Updates the roles for a user
       tags:
         - User
       x-codegen-permission: ADMIN
@@ -937,7 +939,7 @@
           description: User not found
   /users/{id}/permissions:
     get:
-      description: Returns the set of permissions for a user
+      summary: Returns the set of permissions for a user
       tags:
         - User
       produces:
@@ -961,7 +963,7 @@
            description: User not found
   /users/{id}/groups:
     get:
-      description: Returns all groups that a user is a member of
+      summary: Returns all groups that a user is a member of
       tags:
         - User
       produces:
@@ -984,7 +986,7 @@
         404:
            description: User not found
     put:
-      description: Updates the active set of groups for a user
+      summary: Updates the active set of groups for a user
       tags:
         - User
       x-codegen-permission: ADMIN
@@ -1017,7 +1019,7 @@
         404:
           description: User not found
     post:
-      description: Add to the active set of groups for a user
+      summary: Add to the active set of groups for a user
       tags:
         - User
       x-codegen-permission: ADMIN
@@ -1049,7 +1051,7 @@
           description: User not found  
   /users/{id}/notifications:
     get:
-      description: Returns a user's notifications
+      summary: Returns a user's notifications
       tags:
         - User
       produces:

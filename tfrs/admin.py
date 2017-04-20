@@ -1,9 +1,4 @@
 from django.contrib import admin
+from server.models import FuelSupplier
 
-from .models import FuelSupplier, FuelClass, FuelType
-
-
-
-admin.site.register(FuelSupplier)
-admin.site.register(FuelClass)
-admin.site.register(FuelType)
+admin.site.register(FuelSupplier.FuelSupplier)

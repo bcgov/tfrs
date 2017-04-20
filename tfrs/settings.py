@@ -44,8 +44,12 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'debug_toolbar',
-    'welcome',
+    'django_extensions',
+    'rest_framework',
+    'rest_framework_swagger',
+    'welcome',   
     'tfrs',
+    'server',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -59,6 +63,11 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.security.SecurityMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
 )
+
+REST_FRAMEWORK = {
+#   'DEFAULT_AUTHENTICATION_CLASSES': ('rest_framework.permissions.AllowAny',),
+    'DEFAULT_PERMISSION_CLASSES': ('rest_framework.permissions.AllowAny',)
+}
 
 ROOT_URLCONF = 'tfrs.urls'
 
@@ -84,7 +93,10 @@ WSGI_APPLICATION = 'wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/1.8/ref/settings/#databases
 
-from . import database
+try:
+     from . import database  
+except:
+     import database 
 
 DATABASES = {
     'default': database.config()
@@ -117,3 +129,10 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 # STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.StaticFilesStorage'
+
+SWAGGER_SETTINGS = {
+    'USE_SESSION_AUTH': False,
+    'DOC_EXPANSION': 'list',
+    'APIS_SORTER': 'alpha',
+    'SHOW_REQUEST_HEADERS': True
+}

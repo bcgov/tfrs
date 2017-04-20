@@ -10,6 +10,7 @@ paths:
     get:
       tags:
         - CreditTrade
+      summary: Lists available CreditTrade objects
       consumes: []
       produces:
         - text/plain
@@ -25,6 +26,7 @@ paths:
     post:
       tags:
         - CreditTrade
+      summary: Creates a new CreditTrade object            
       consumes:
         - application/json
       produces:
@@ -51,6 +53,7 @@ paths:
     post:
       tags:
         - CreditTrade
+      summary: Bulk create / update a number of CreditTrade object      
       consumes:
         - application/json
       produces:
@@ -72,6 +75,7 @@ paths:
     get:
       tags:
         - CreditTrade
+      summary: Gets a specific CreditTrade object      
       consumes: []
       produces:
         - text/plain
@@ -93,6 +97,7 @@ paths:
     put:
       tags:
         - CreditTrade
+      summary: Updates a specific CreditTrade object      
       consumes:
         - application/json
       produces:
@@ -121,6 +126,7 @@ paths:
     post:
       tags:
         - CreditTrade
+      summary: Deletes a specific CreditTrade object      
       consumes: []
       produces:
         - text/plain
@@ -141,6 +147,7 @@ paths:
     get:
       tags:
         - FuelSupplier
+      summary: Lists available FuelSupplier objects
       consumes: []
       produces:
         - text/plain
@@ -156,6 +163,7 @@ paths:
     post:
       tags:
         - FuelSupplier
+      summary: Creates a new FuelSupplier object            
       consumes:
         - application/json
       produces:
@@ -182,6 +190,7 @@ paths:
     post:
       tags:
         - FuelSupplier
+      summary: Bulk create / update a number of FuelSupplier object      
       consumes:
         - application/json
       produces:
@@ -203,6 +212,7 @@ paths:
     get:
       tags:
         - FuelSupplier
+      summary: Gets a specific FuelSupplier object      
       consumes: []
       produces:
         - text/plain
@@ -224,6 +234,7 @@ paths:
     put:
       tags:
         - FuelSupplier
+      summary: Updates a specific FuelSupplier object      
       consumes:
         - application/json
       produces:
@@ -252,6 +263,7 @@ paths:
     post:
       tags:
         - FuelSupplier
+      summary: Deletes a specific FuelSupplier object      
       consumes: []
       produces:
         - text/plain
@@ -272,6 +284,7 @@ paths:
     get:
       tags:
         - CreditTradeLogEntry
+      summary: Lists available CreditTradeLogEntry objects
       consumes: []
       produces:
         - text/plain
@@ -287,6 +300,7 @@ paths:
     post:
       tags:
         - CreditTradeLogEntry
+      summary: Creates a new CreditTradeLogEntry object            
       consumes:
         - application/json
       produces:
@@ -313,6 +327,7 @@ paths:
     post:
       tags:
         - CreditTradeLogEntry
+      summary: Bulk create / update a number of CreditTradeLogEntry object      
       consumes:
         - application/json
       produces:
@@ -334,6 +349,7 @@ paths:
     get:
       tags:
         - CreditTradeLogEntry
+      summary: Gets a specific CreditTradeLogEntry object      
       consumes: []
       produces:
         - text/plain
@@ -355,6 +371,7 @@ paths:
     put:
       tags:
         - CreditTradeLogEntry
+      summary: Updates a specific CreditTradeLogEntry object      
       consumes:
         - application/json
       produces:
@@ -383,6 +400,7 @@ paths:
     post:
       tags:
         - CreditTradeLogEntry
+      summary: Deletes a specific CreditTradeLogEntry object      
       consumes: []
       produces:
         - text/plain
@@ -403,6 +421,7 @@ paths:
     get:
       tags:
         - CompliancePeriod
+      summary: Lists available CompliancePeriod objects
       consumes: []
       produces:
         - text/plain
@@ -418,6 +437,7 @@ paths:
     post:
       tags:
         - CompliancePeriod
+      summary: Creates a new CompliancePeriod object            
       consumes:
         - application/json
       produces:
@@ -444,6 +464,7 @@ paths:
     post:
       tags:
         - CompliancePeriod
+      summary: Bulk create / update a number of CompliancePeriod object      
       consumes:
         - application/json
       produces:
@@ -465,6 +486,7 @@ paths:
     get:
       tags:
         - CompliancePeriod
+      summary: Gets a specific CompliancePeriod object      
       consumes: []
       produces:
         - text/plain
@@ -486,6 +508,7 @@ paths:
     put:
       tags:
         - CompliancePeriod
+      summary: Updates a specific CompliancePeriod object      
       consumes:
         - application/json
       produces:
@@ -514,6 +537,7 @@ paths:
     post:
       tags:
         - CompliancePeriod
+      summary: Deletes a specific CompliancePeriod object      
       consumes: []
       produces:
         - text/plain
@@ -534,6 +558,7 @@ paths:
     get:
       tags:
         - LookupList
+      summary: Lists available LookupList objects
       consumes: []
       produces:
         - text/plain
@@ -549,6 +574,7 @@ paths:
     post:
       tags:
         - LookupList
+      summary: Creates a new LookupList object            
       consumes:
         - application/json
       produces:
@@ -575,6 +601,7 @@ paths:
     post:
       tags:
         - LookupList
+      summary: Bulk create / update a number of LookupList object      
       consumes:
         - application/json
       produces:
@@ -596,6 +623,7 @@ paths:
     get:
       tags:
         - LookupList
+      summary: Gets a specific LookupList object      
       consumes: []
       produces:
         - text/plain
@@ -617,6 +645,7 @@ paths:
     put:
       tags:
         - LookupList
+      summary: Updates a specific LookupList object      
       consumes:
         - application/json
       produces:
@@ -645,6 +674,7 @@ paths:
     post:
       tags:
         - LookupList
+      summary: Deletes a specific LookupList object      
       consumes: []
       produces:
         - text/plain
@@ -665,6 +695,7 @@ paths:
     get:
       tags:
         - Note
+      summary: Lists available Note objects
       consumes: []
       produces:
         - text/plain
@@ -680,6 +711,7 @@ paths:
     post:
       tags:
         - Note
+      summary: Creates a new Note object            
       consumes:
         - application/json
       produces:
@@ -706,6 +738,7 @@ paths:
     post:
       tags:
         - Note
+      summary: Bulk create / update a number of Note object      
       consumes:
         - application/json
       produces:
@@ -727,6 +760,7 @@ paths:
     get:
       tags:
         - Note
+      summary: Gets a specific Note object      
       consumes: []
       produces:
         - text/plain
@@ -748,6 +782,7 @@ paths:
     put:
       tags:
         - Note
+      summary: Updates a specific Note object      
       consumes:
         - application/json
       produces:
@@ -776,6 +811,7 @@ paths:
     post:
       tags:
         - Note
+      summary: Deletes a specific Note object      
       consumes: []
       produces:
         - text/plain
@@ -796,6 +832,7 @@ paths:
     get:
       tags:
         - Attachment
+      summary: Lists available Attachment objects
       consumes: []
       produces:
         - text/plain
@@ -811,6 +848,7 @@ paths:
     post:
       tags:
         - Attachment
+      summary: Creates a new Attachment object            
       consumes:
         - application/json
       produces:
@@ -837,6 +875,7 @@ paths:
     post:
       tags:
         - Attachment
+      summary: Bulk create / update a number of Attachment object      
       consumes:
         - application/json
       produces:
@@ -858,6 +897,7 @@ paths:
     get:
       tags:
         - Attachment
+      summary: Gets a specific Attachment object      
       consumes: []
       produces:
         - text/plain
@@ -879,6 +919,7 @@ paths:
     put:
       tags:
         - Attachment
+      summary: Updates a specific Attachment object      
       consumes:
         - application/json
       produces:
@@ -907,6 +948,7 @@ paths:
     post:
       tags:
         - Attachment
+      summary: Deletes a specific Attachment object      
       consumes: []
       produces:
         - text/plain
@@ -927,6 +969,7 @@ paths:
     get:
       tags:
         - History
+      summary: Lists available History objects
       consumes: []
       produces:
         - text/plain
@@ -942,6 +985,7 @@ paths:
     post:
       tags:
         - History
+      summary: Creates a new History object            
       consumes:
         - application/json
       produces:
@@ -968,6 +1012,7 @@ paths:
     post:
       tags:
         - History
+      summary: Bulk create / update a number of History object      
       consumes:
         - application/json
       produces:
@@ -989,6 +1034,7 @@ paths:
     get:
       tags:
         - History
+      summary: Gets a specific History object      
       consumes: []
       produces:
         - text/plain
@@ -1010,6 +1056,7 @@ paths:
     put:
       tags:
         - History
+      summary: Updates a specific History object      
       consumes:
         - application/json
       produces:
@@ -1038,6 +1085,7 @@ paths:
     post:
       tags:
         - History
+      summary: Deletes a specific History object      
       consumes: []
       produces:
         - text/plain
@@ -1058,6 +1106,7 @@ paths:
     get:
       tags:
         - Contact
+      summary: Lists available Contact objects
       consumes: []
       produces:
         - text/plain
@@ -1073,6 +1122,7 @@ paths:
     post:
       tags:
         - Contact
+      summary: Creates a new Contact object            
       consumes:
         - application/json
       produces:
@@ -1099,6 +1149,7 @@ paths:
     post:
       tags:
         - Contact
+      summary: Bulk create / update a number of Contact object      
       consumes:
         - application/json
       produces:
@@ -1120,6 +1171,7 @@ paths:
     get:
       tags:
         - Contact
+      summary: Gets a specific Contact object      
       consumes: []
       produces:
         - text/plain
@@ -1141,6 +1193,7 @@ paths:
     put:
       tags:
         - Contact
+      summary: Updates a specific Contact object      
       consumes:
         - application/json
       produces:
@@ -1169,6 +1222,7 @@ paths:
     post:
       tags:
         - Contact
+      summary: Deletes a specific Contact object      
       consumes: []
       produces:
         - text/plain
@@ -1189,6 +1243,7 @@ paths:
     get:
       tags:
         - Notification
+      summary: Lists available Notification objects
       consumes: []
       produces:
         - text/plain
@@ -1204,6 +1259,7 @@ paths:
     post:
       tags:
         - Notification
+      summary: Creates a new Notification object            
       consumes:
         - application/json
       produces:
@@ -1230,6 +1286,7 @@ paths:
     post:
       tags:
         - Notification
+      summary: Bulk create / update a number of Notification object      
       consumes:
         - application/json
       produces:
@@ -1251,6 +1308,7 @@ paths:
     get:
       tags:
         - Notification
+      summary: Gets a specific Notification object      
       consumes: []
       produces:
         - text/plain
@@ -1272,6 +1330,7 @@ paths:
     put:
       tags:
         - Notification
+      summary: Updates a specific Notification object      
       consumes:
         - application/json
       produces:
@@ -1300,6 +1359,7 @@ paths:
     post:
       tags:
         - Notification
+      summary: Deletes a specific Notification object      
       consumes: []
       produces:
         - text/plain
@@ -1320,6 +1380,7 @@ paths:
     get:
       tags:
         - NotificationEvent
+      summary: Lists available NotificationEvent objects
       consumes: []
       produces:
         - text/plain
@@ -1335,6 +1396,7 @@ paths:
     post:
       tags:
         - NotificationEvent
+      summary: Creates a new NotificationEvent object            
       consumes:
         - application/json
       produces:
@@ -1361,6 +1423,7 @@ paths:
     post:
       tags:
         - NotificationEvent
+      summary: Bulk create / update a number of NotificationEvent object      
       consumes:
         - application/json
       produces:
@@ -1382,6 +1445,7 @@ paths:
     get:
       tags:
         - NotificationEvent
+      summary: Gets a specific NotificationEvent object      
       consumes: []
       produces:
         - text/plain
@@ -1403,6 +1467,7 @@ paths:
     put:
       tags:
         - NotificationEvent
+      summary: Updates a specific NotificationEvent object      
       consumes:
         - application/json
       produces:
@@ -1431,6 +1496,7 @@ paths:
     post:
       tags:
         - NotificationEvent
+      summary: Deletes a specific NotificationEvent object      
       consumes: []
       produces:
         - text/plain
@@ -1451,6 +1517,7 @@ paths:
     get:
       tags:
         - Group
+      summary: Lists available Group objects
       consumes: []
       produces:
         - text/plain
@@ -1467,6 +1534,7 @@ paths:
       tags:
         - Group
       x-codegen-permission: ADMIN
+      summary: Creates a new Group object            
       consumes:
         - application/json
       produces:
@@ -1493,6 +1561,7 @@ paths:
     post:
       tags:
         - Group
+      summary: Bulk create / update a number of Group object      
       consumes:
         - application/json
       produces:
@@ -1514,6 +1583,7 @@ paths:
     get:
       tags:
         - Group
+      summary: Gets a specific Group object      
       consumes: []
       produces:
         - text/plain
@@ -1534,8 +1604,9 @@ paths:
           type: integer
     put:
       tags:
-        - Group
+        - Group      
       x-codegen-permission: ADMIN
+      summary: Updates a specific Group object      
       consumes:
         - application/json
       produces:
@@ -1563,8 +1634,9 @@ paths:
   /groups/{id}/delete:
     post:
       tags:
-        - Group
+        - Group      
       x-codegen-permission: ADMIN
+      summary: Deletes a specific Group object      
       consumes: []
       produces:
         - text/plain
@@ -1585,6 +1657,7 @@ paths:
     get:
       tags:
         - Permission
+      summary: Lists available PermissionViewModel objects
       consumes: []
       produces:
         - text/plain
@@ -1601,6 +1674,7 @@ paths:
       tags:
         - Permission
       x-codegen-permission: ADMIN
+      summary: Creates a new PermissionViewModel object            
       consumes:
         - application/json
       produces:
@@ -1627,6 +1701,7 @@ paths:
     post:
       tags:
         - Permission
+      summary: Bulk create / update a number of PermissionViewModel object      
       consumes:
         - application/json
       produces:
@@ -1648,6 +1723,7 @@ paths:
     get:
       tags:
         - Permission
+      summary: Gets a specific PermissionViewModel object      
       consumes: []
       produces:
         - text/plain
@@ -1668,8 +1744,9 @@ paths:
           type: integer
     put:
       tags:
-        - Permission
+        - Permission      
       x-codegen-permission: ADMIN
+      summary: Updates a specific PermissionViewModel object      
       consumes:
         - application/json
       produces:
@@ -1697,8 +1774,9 @@ paths:
   /permissions/{id}/delete:
     post:
       tags:
-        - Permission
+        - Permission      
       x-codegen-permission: ADMIN
+      summary: Deletes a specific PermissionViewModel object      
       consumes: []
       produces:
         - text/plain
@@ -1719,6 +1797,7 @@ paths:
     get:
       tags:
         - Role
+      summary: Lists available RoleViewModel objects
       consumes: []
       produces:
         - text/plain
@@ -1735,6 +1814,7 @@ paths:
       tags:
         - Role
       x-codegen-permission: ADMIN
+      summary: Creates a new RoleViewModel object            
       consumes:
         - application/json
       produces:
@@ -1761,6 +1841,7 @@ paths:
     post:
       tags:
         - Role
+      summary: Bulk create / update a number of RoleViewModel object      
       consumes:
         - application/json
       produces:
@@ -1782,6 +1863,7 @@ paths:
     get:
       tags:
         - Role
+      summary: Gets a specific RoleViewModel object      
       consumes: []
       produces:
         - text/plain
@@ -1802,8 +1884,9 @@ paths:
           type: integer
     put:
       tags:
-        - Role
+        - Role      
       x-codegen-permission: ADMIN
+      summary: Updates a specific RoleViewModel object      
       consumes:
         - application/json
       produces:
@@ -1831,8 +1914,9 @@ paths:
   /roles/{id}/delete:
     post:
       tags:
-        - Role
+        - Role      
       x-codegen-permission: ADMIN
+      summary: Deletes a specific RoleViewModel object      
       consumes: []
       produces:
         - text/plain
@@ -1951,6 +2035,7 @@ paths:
               $ref: "#/definitions/CreditTrade"
   /creditTrade/{id}/notes:
     get:
+      summary: Returns notes for a particular CreditTrade
       description: Returns notes for a particular CreditTrade.
       tags:
         - CreditTrade
@@ -1975,7 +2060,7 @@ paths:
           type: integer
   /credittrades/{id}/attachments:
     get:
-      description: Returns attachments for a particular CreditTrade
+      summary: Returns attachments for a particular CreditTrade
       tags:
         - CreditTrade
       produces:
@@ -1999,7 +2084,7 @@ paths:
           type: integer    
   /credittrades/{id}/history:
     get:
-      description: Returns History for a particular CreditTrade
+      summary: Returns History for a particular CreditTrade
       tags:
         - CreditTrade
       produces:
@@ -2030,6 +2115,7 @@ paths:
           required: false
           type: integer
     post:
+      summary: Add a History record to the CreditTrade
       description: Add a History record to the CreditTrade
       tags:
         - CreditTrade
@@ -2062,6 +2148,7 @@ paths:
             $ref: "#/definitions/History"        
   /fuelsuppliers/{id}/attachments:
     get:
+      summary: Returns attachments for a particular FuelSupplier
       description: Returns attachments for a particular FuelSupplier
       tags:
         - FuelSupplier
@@ -2084,6 +2171,7 @@ paths:
           type: integer
   /fuelsuppliers/{id}/history:
     get:
+      summary: Returns History for a particular FuelSupplier
       description: Returns History for a particular FuelSupplier
       tags:
         - FuelSupplier
@@ -2115,7 +2203,7 @@ paths:
           required: false
           type: integer
     post:
-      description: Add a History record to the FuelSupplier
+      summary: Add a History record to the FuelSupplier
       tags:
         - FuelSupplier
       produces:
@@ -2147,7 +2235,7 @@ paths:
             $ref: "#/definitions/History"          
   /fuelsuppliers/{id}/notes:
     get:
-      description: Returns notes for a particular FuelSupplier
+      summary: Returns notes for a particular FuelSupplier
       tags:
         - FuelSupplier
       produces:
@@ -2169,9 +2257,7 @@ paths:
           type: integer
   /fuelsuppliers/search:
     get:
-      summary: Searches school bus owners
-      description:
-        Used for the search school bus owners.
+      summary: Searches fuel suppliers
       tags:
         - FuelSupplier
       consumes:
@@ -2198,7 +2284,7 @@ paths:
               $ref: "#/definitions/FuelSupplier"  
   /roles/{id}/permissions:
     get:
-      description: Get all the permissions for a role
+      summary: Get all the permissions for a role
       tags:
         - Role
       produces:
@@ -2219,7 +2305,7 @@ paths:
             items:
               $ref: "#/definitions/PermissionViewModel"
     put:
-      description: Updates the permissions for a role
+      summary: Updates the permissions for a role
       tags:
         - Role
       x-codegen-permission: ADMIN
@@ -2252,7 +2338,7 @@ paths:
         404:
           description: Role not found
     post:
-      description: Adds a permissions to a role
+      summary: Adds a permissions to a role
       tags:
         - Role
       x-codegen-permission: ADMIN
@@ -2284,7 +2370,7 @@ paths:
           description: Role not found
   /roles/{id}/users:
     get:
-      description: Gets all the users for a role
+      summary: Gets all the users for a role
       tags:
         - Role
       produces:
@@ -2305,7 +2391,7 @@ paths:
             items:
               $ref: "#/definitions/UserRoleViewModel"
     put:
-      description: Updates the users for a role
+      summary: Updates the users for a role
       tags:
         - Role
       x-codegen-permission: ADMIN
@@ -2339,7 +2425,7 @@ paths:
           description: Role not found
   /users:
     get:
-      description: Returns all users
+      summary: Returns all users
       tags:
         - User
       produces:
@@ -2356,7 +2442,7 @@ paths:
         404:
            description: User not found
     post:
-      description: Create new user
+      summary: Create new user
       tags:
         - User
       x-codegen-permission: ADMIN
@@ -2384,7 +2470,7 @@ paths:
             $ref: "#/definitions/User"
   /users/current:
     get:
-      description: Get the currently logged in user
+      summary: Get the currently logged in user
       tags:
         - CurrentUser
       produces:
@@ -2398,7 +2484,7 @@ paths:
             $ref: "#/definitions/CurrentUserViewModel"
   /users/current/favourites:
     put:
-      description: Updates a favourite
+      summary: Updates a favourite
       tags:
         - CurrentUser
       consumes:
@@ -2424,7 +2510,7 @@ paths:
           schema:
             $ref: "#/definitions/UserFavourite"            
     post:
-      description: Create new favourite for the current user
+      summary: Create new favourite for the current user
       tags:
         - CurrentUser
       consumes:
@@ -2451,7 +2537,7 @@ paths:
             $ref: "#/definitions/UserFavourite"
   /users/current/favourites/{type}:
     get:
-      description: Returns a user's favourites of a given type.  If type is empty, returns all.
+      summary: Returns a user's favourites of a given type.  If type is empty, returns all.
       tags:
         - CurrentUser
       produces:
@@ -2475,7 +2561,7 @@ paths:
           type: string
   /users/current/favourites/{id}/delete:
     post:
-      description: Removes a specific user favourite
+      summary: Removes a specific user favourite
       tags:
         - CurrentUser
       produces:
@@ -2493,7 +2579,7 @@ paths:
           type: integer      
   /users/bulk:
     post:
-      description: Adds a number of users
+      summary: Adds a number of users
       tags:
         - User
       x-codegen-permission: ADMIN
@@ -2549,7 +2635,7 @@ paths:
               $ref: "#/definitions/UserViewModel"  
   /users/{id}:
     get:
-      description: Returns data for a particular user
+      summary: Returns data for a particular user
       tags:
         - User
       produces:
@@ -2600,7 +2686,7 @@ paths:
           description: User not found
   /users/{id}/delete:
     post:
-      description: Deletes a user
+      summary: Deletes a user
       tags:
         - User
       x-codegen-permission: ADMIN
@@ -2621,7 +2707,7 @@ paths:
           description: User not found
   /users/{id}/favourites:
     get:
-      description: Returns the favourites for a user
+      summary: Returns the favourites for a user
       tags:
         - User
       produces:
@@ -2644,7 +2730,7 @@ paths:
         404:
            description: User not found
     post:
-      description: Adds favourites to a user
+      summary: Adds favourites to a user
       tags:
         - User
       consumes:
@@ -2670,7 +2756,7 @@ paths:
         200:
           description: Favourites added to user          
     put:
-      description: Updates the favourites for a user
+      summary: Updates the favourites for a user
       tags:
         - User
       consumes:
@@ -2699,7 +2785,7 @@ paths:
           description: User not found  
   /users/{id}/roles:
     get:
-      description: Returns the roles for a user
+      summary: Returns the roles for a user
       tags:
         - User
       produces:
@@ -2722,7 +2808,7 @@ paths:
         404:
            description: User not found
     post:
-      description: Adds a role to a user
+      summary: Adds a role to a user
       tags:
         - User
       x-codegen-permission: ADMIN
@@ -2754,7 +2840,7 @@ paths:
           schema:
             $ref: "#/definitions/UserRoleViewModel"
     put:
-      description: Updates the roles for a user
+      summary: Updates the roles for a user
       tags:
         - User
       x-codegen-permission: ADMIN
@@ -2788,7 +2874,7 @@ paths:
           description: User not found
   /users/{id}/permissions:
     get:
-      description: Returns the set of permissions for a user
+      summary: Returns the set of permissions for a user
       tags:
         - User
       produces:
@@ -2812,7 +2898,7 @@ paths:
            description: User not found
   /users/{id}/groups:
     get:
-      description: Returns all groups that a user is a member of
+      summary: Returns all groups that a user is a member of
       tags:
         - User
       produces:
@@ -2835,7 +2921,7 @@ paths:
         404:
            description: User not found
     put:
-      description: Updates the active set of groups for a user
+      summary: Updates the active set of groups for a user
       tags:
         - User
       x-codegen-permission: ADMIN
@@ -2868,7 +2954,7 @@ paths:
         404:
           description: User not found
     post:
-      description: Add to the active set of groups for a user
+      summary: Add to the active set of groups for a user
       tags:
         - User
       x-codegen-permission: ADMIN
@@ -2900,7 +2986,7 @@ paths:
           description: User not found  
   /users/{id}/notifications:
     get:
-      description: Returns a user's notifications
+      summary: Returns a user's notifications
       tags:
         - User
       produces:

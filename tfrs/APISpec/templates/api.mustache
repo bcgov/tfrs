@@ -3,6 +3,7 @@
     get:
       tags:
         - {{tag}}
+      summary: Lists available {{respDef}} objects
       consumes: []
       produces:
         - text/plain
@@ -20,6 +21,7 @@
       tags:
         - {{tag}}{{#x-codegen-permission}}
       x-codegen-permission: {{x-codegen-permission}}{{/x-codegen-permission}}
+      summary: Creates a {{respDef}} object
       consumes:
         - application/json
       produces:
@@ -48,6 +50,7 @@
       tags:
         - {{tag}}{{#x-codegen-permission}}
       x-codegen-permission: {{x-codegen-permission}}{{/x-codegen-permission}}
+      summary: Bulk loads a number of {{respDef}} objects      
       consumes:
         - application/json
       produces:
@@ -70,6 +73,7 @@
     get:
       tags:
         - {{tag}}
+      summary: Returns a specific {{respDef}} object
       consumes: []
       produces:
         - text/plain
@@ -92,6 +96,7 @@
     put:
       tags:
         - {{tag}}
+      summary: Updates a specific {{respDef}} object
       consumes:
         - application/json
       produces:
@@ -120,8 +125,9 @@
   /{{path}}/{id}/delete:
     post:
       tags:
-        - {{tag}}{{#x-codegen-permission}}
+        - {{tag}}{{#x-codegen-permission}}      
       x-codegen-permission: {{x-codegen-permission}}{{/x-codegen-permission}}
+      summary: Deletes a specific {{respDef}} object
       consumes: []
       produces:
         - text/plain
@@ -147,6 +153,7 @@
     get:
       tags:
         - {{tag}}
+      summary: Lists available {{#paramDef}}{{paramDef}}{{/paramDef}}{{^paramDef}}{{tag}}{{/paramDef}} objects
       consumes: []
       produces:
         - text/plain
@@ -163,6 +170,7 @@
       tags:
         - {{tag}}{{#x-codegen-permission}}
       x-codegen-permission: {{x-codegen-permission}}{{/x-codegen-permission}}
+      summary: Creates a new {{#paramDef}}{{paramDef}}{{/paramDef}}{{^paramDef}}{{tag}}{{/paramDef}} object            
       consumes:
         - application/json
       produces:
@@ -189,6 +197,7 @@
     post:
       tags:
         - {{tag}}
+      summary: Bulk create / update a number of {{#paramDef}}{{paramDef}}{{/paramDef}}{{^paramDef}}{{tag}}{{/paramDef}} object      
       consumes:
         - application/json
       produces:
@@ -210,6 +219,7 @@
     get:
       tags:
         - {{tag}}
+      summary: Gets a specific {{#paramDef}}{{paramDef}}{{/paramDef}}{{^paramDef}}{{tag}}{{/paramDef}} object      
       consumes: []
       produces:
         - text/plain
@@ -230,8 +240,9 @@
           type: integer
     put:
       tags:
-        - {{tag}}{{#x-codegen-permission}}
+        - {{tag}}{{#x-codegen-permission}}      
       x-codegen-permission: {{x-codegen-permission}}{{/x-codegen-permission}}
+      summary: Updates a specific {{#paramDef}}{{paramDef}}{{/paramDef}}{{^paramDef}}{{tag}}{{/paramDef}} object      
       consumes:
         - application/json
       produces:
@@ -259,8 +270,9 @@
   /{{path}}/{id}/delete:
     post:
       tags:
-        - {{tag}}{{#x-codegen-permission}}
+        - {{tag}}{{#x-codegen-permission}}      
       x-codegen-permission: {{x-codegen-permission}}{{/x-codegen-permission}}
+      summary: Deletes a specific {{#paramDef}}{{paramDef}}{{/paramDef}}{{^paramDef}}{{tag}}{{/paramDef}} object      
       consumes: []
       produces:
         - text/plain
