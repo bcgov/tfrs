@@ -3,7 +3,7 @@
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <Name>tfrs</Name>
-    <RootNamespace>TFRS</RootNamespace>
+    <RootNamespace>tfrs</RootNamespace>
     <DjangoSettingsModule>tfrs.settings</DjangoSettingsModule>
   </PropertyGroup>
   <PropertyGroup>
@@ -31,10 +31,10 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="manage.py" />
+    <Compile Include="server\admin.py" />
     <Compile Include="server\database.py" />
     <Compile Include="server\migrations\0001_initial.py" />
     <Compile Include="server\migrations\0002_auto_20170214_1526.py" />
-    <Compile Include="server\migrations\0003_auto_20170419_1214.py" />
     <Compile Include="server\migrations\__init__.py" />
     <Compile Include="server\models\Attachment.py" />
     <Compile Include="server\models\AttachmentViewModel.py" />
@@ -72,27 +72,10 @@
     <Compile Include="server\models\__init__.py" />
     <Compile Include="server\serializers.py" />
     <Compile Include="server\test_api.py" />
-    <Compile Include="server\test_models.py" />
+    <Compile Include="server\views.py" />
+    <Compile Include="tfrs\test_models.py" />
     <Compile Include="server\urls.py" />
-    <Compile Include="server\views\Attachment.py" />
-    <Compile Include="server\views\CompliancePeriod.py" />
-    <Compile Include="server\views\Contact.py" />
-    <Compile Include="server\views\CreditTrade.py" />
-    <Compile Include="server\views\CreditTradeLogEntry.py" />
-    <Compile Include="server\views\CurrentUser.py" />
-    <Compile Include="server\views\FuelSupplier.py" />
-    <Compile Include="server\views\Group.py" />
-    <Compile Include="server\views\History.py" />
-    <Compile Include="server\views\LookupList.py" />
-    <Compile Include="server\views\Note.py" />
-    <Compile Include="server\views\Notification.py" />
-    <Compile Include="server\views\NotificationEvent.py" />
-    <Compile Include="server\views\Permission.py" />
-    <Compile Include="server\views\Role.py" />
-    <Compile Include="server\views\User.py" />
-    <Compile Include="server\views\__init__.py" />
     <Compile Include="server\__init__.py" />
-    <Compile Include="tfrs\admin.py" />
     <Compile Include="tfrs\database.py" />
     <Compile Include="tfrs\settings.py" />
     <Compile Include="tfrs\urls.py">
@@ -110,10 +93,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="requirements.txt" />
-    <Content Include="server\migrations\__pycache__\0001_initial.cpython-35.pyc" />
-    <Content Include="server\migrations\__pycache__\0002_auto_20170214_1526.cpython-35.pyc" />
-    <Content Include="server\migrations\__pycache__\0003_auto_20170419_1214.cpython-35.pyc" />
-    <Content Include="server\migrations\__pycache__\__init__.cpython-35.pyc" />
     <Content Include="server\models\__pycache__\Attachment.cpython-35.pyc" />
     <Content Include="server\models\__pycache__\AttachmentViewModel.cpython-35.pyc" />
     <Content Include="server\models\__pycache__\Audit.cpython-35.pyc" />
@@ -124,32 +103,12 @@
     <Content Include="server\models\__pycache__\History.cpython-35.pyc" />
     <Content Include="server\models\__pycache__\Note.cpython-35.pyc" />
     <Content Include="server\models\__pycache__\__init__.cpython-35.pyc" />
-    <Content Include="server\views\__pycache__\Attachment.cpython-35.pyc" />
-    <Content Include="server\views\__pycache__\CompliancePeriod.cpython-35.pyc" />
-    <Content Include="server\views\__pycache__\Contact.cpython-35.pyc" />
-    <Content Include="server\views\__pycache__\CreditTrade.cpython-35.pyc" />
-    <Content Include="server\views\__pycache__\CreditTradeLogEntry.cpython-35.pyc" />
-    <Content Include="server\views\__pycache__\CurrentUser.cpython-35.pyc" />
-    <Content Include="server\views\__pycache__\FuelSupplier.cpython-35.pyc" />
-    <Content Include="server\views\__pycache__\Group.cpython-35.pyc" />
-    <Content Include="server\views\__pycache__\History.cpython-35.pyc" />
-    <Content Include="server\views\__pycache__\LookupList.cpython-35.pyc" />
-    <Content Include="server\views\__pycache__\Note.cpython-35.pyc" />
-    <Content Include="server\views\__pycache__\Notification.cpython-35.pyc" />
-    <Content Include="server\views\__pycache__\NotificationEvent.cpython-35.pyc" />
-    <Content Include="server\views\__pycache__\Permission.cpython-35.pyc" />
-    <Content Include="server\views\__pycache__\Role.cpython-35.pyc" />
-    <Content Include="server\views\__pycache__\User.cpython-35.pyc" />
-    <Content Include="server\views\__pycache__\__init__.cpython-35.pyc" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="server\" />
     <Folder Include="server\migrations\" />
-    <Folder Include="server\migrations\__pycache__\" />
     <Folder Include="server\models\" />
     <Folder Include="server\models\__pycache__\" />
-    <Folder Include="server\views\" />
-    <Folder Include="server\views\__pycache__\" />
     <Folder Include="welcome\" />
     <Folder Include="tfrs\" />
   </ItemGroup>

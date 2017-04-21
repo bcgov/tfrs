@@ -23,18 +23,12 @@ import datetime
 
 from django.db import models
 from django.utils import timezone
-try:
-  from . import User
-except:
-  import User
-try:
-  from . import Role
-except:
-  import Role
+from .User import User
+from .Role import Role
 
 
 class UserRole(models.Model):	    
     effectiveDate = models.DateField()   
     expiryDate = models.DateField()   
-    user = models.ForeignKey('User', on_delete=models.CASCADE,related_name='userUser')   
-    role = models.ForeignKey('Role', on_delete=models.CASCADE,related_name='roleRole')   
+    user = models.ForeignKey('User', on_delete=models.CASCADE,related_name='UserRoleuser')   
+    role = models.ForeignKey('Role', on_delete=models.CASCADE,related_name='UserRolerole')   

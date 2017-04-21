@@ -23,14 +23,8 @@ import datetime
 
 from django.db import models
 from django.utils import timezone
-try:
-  from . import UserRole
-except:
-  import UserRole
-try:
-  from . import GroupMembership
-except:
-  import GroupMembership
+from .UserRole import UserRole
+from .GroupMembership import GroupMembership
 
 
 class CurrentUserViewModel(models.Model):	    
@@ -38,7 +32,7 @@ class CurrentUserViewModel(models.Model):
     surname = models.CharField(max_length=255)   
     email = models.CharField(max_length=255)   
     active = models.BooleanField()   
-    userRoles = models.ManyToManyField('UserRole',related_name='userRolesUserRole')   
+    userRoles = models.ManyToManyField('UserRole',related_name='CurrentUserViewModeluserRoles')   
     smUserId = models.CharField(max_length=255)   
     smAuthorizationDirectory = models.CharField(max_length=255)   
-    groupMemberships = models.ManyToManyField('GroupMembership',related_name='groupMembershipsGroupMembership')   
+    groupMemberships = models.ManyToManyField('GroupMembership',related_name='CurrentUserViewModelgroupMemberships')   

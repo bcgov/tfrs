@@ -23,17 +23,11 @@ import datetime
 
 from django.db import models
 from django.utils import timezone
-try:
-  from . import Group
-except:
-  import Group
-try:
-  from . import User
-except:
-  import User
+from .Group import Group
+from .User import User
 
 
 class GroupMembership(models.Model):	    
     active = models.BooleanField()   
-    group = models.ForeignKey('Group', on_delete=models.CASCADE,related_name='groupGroup')   
-    user = models.ForeignKey('User', on_delete=models.CASCADE,related_name='userUser')   
+    group = models.ForeignKey('Group', on_delete=models.CASCADE,related_name='GroupMembershipgroup')   
+    user = models.ForeignKey('User', on_delete=models.CASCADE,related_name='GroupMembershipuser')   

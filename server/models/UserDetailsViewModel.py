@@ -23,10 +23,7 @@ import datetime
 
 from django.db import models
 from django.utils import timezone
-try:
-  from . import PermissionViewModel
-except:
-  import PermissionViewModel
+from .PermissionViewModel import PermissionViewModel
 
 
 class UserDetailsViewModel(models.Model):	    
@@ -35,4 +32,4 @@ class UserDetailsViewModel(models.Model):
     initials = models.CharField(max_length=255)   
     email = models.CharField(max_length=255)   
     active = models.BooleanField()   
-    permissions = models.ManyToManyField('PermissionViewModel',related_name='permissionsPermissionViewModel')   
+    permissions = models.ManyToManyField('PermissionViewModel',related_name='UserDetailsViewModelpermissions')   

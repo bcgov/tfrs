@@ -11,6 +11,7 @@ paths:
       tags:
         - CreditTrade
       summary: Lists available CreditTrade objects
+      x-codegen-operation: list
       consumes: []
       produces:
         - text/plain
@@ -26,6 +27,7 @@ paths:
     post:
       tags:
         - CreditTrade
+      x-codegen-operation: create
       summary: Creates a new CreditTrade object            
       consumes:
         - application/json
@@ -54,6 +56,7 @@ paths:
       tags:
         - CreditTrade
       summary: Bulk create / update a number of CreditTrade object      
+      x-codegen-operation: bulk
       consumes:
         - application/json
       produces:
@@ -76,6 +79,7 @@ paths:
       tags:
         - CreditTrade
       summary: Gets a specific CreditTrade object      
+      x-codegen-operation: retrieve
       consumes: []
       produces:
         - text/plain
@@ -97,6 +101,7 @@ paths:
     put:
       tags:
         - CreditTrade
+      x-codegen-operation: update
       summary: Updates a specific CreditTrade object      
       consumes:
         - application/json
@@ -126,6 +131,7 @@ paths:
     post:
       tags:
         - CreditTrade
+      x-codegen-operation: destroy
       summary: Deletes a specific CreditTrade object      
       consumes: []
       produces:
@@ -148,6 +154,7 @@ paths:
       tags:
         - FuelSupplier
       summary: Lists available FuelSupplier objects
+      x-codegen-operation: list
       consumes: []
       produces:
         - text/plain
@@ -163,6 +170,7 @@ paths:
     post:
       tags:
         - FuelSupplier
+      x-codegen-operation: create
       summary: Creates a new FuelSupplier object            
       consumes:
         - application/json
@@ -191,6 +199,7 @@ paths:
       tags:
         - FuelSupplier
       summary: Bulk create / update a number of FuelSupplier object      
+      x-codegen-operation: bulk
       consumes:
         - application/json
       produces:
@@ -213,6 +222,7 @@ paths:
       tags:
         - FuelSupplier
       summary: Gets a specific FuelSupplier object      
+      x-codegen-operation: retrieve
       consumes: []
       produces:
         - text/plain
@@ -234,6 +244,7 @@ paths:
     put:
       tags:
         - FuelSupplier
+      x-codegen-operation: update
       summary: Updates a specific FuelSupplier object      
       consumes:
         - application/json
@@ -263,6 +274,7 @@ paths:
     post:
       tags:
         - FuelSupplier
+      x-codegen-operation: destroy
       summary: Deletes a specific FuelSupplier object      
       consumes: []
       produces:
@@ -285,6 +297,7 @@ paths:
       tags:
         - CreditTradeLogEntry
       summary: Lists available CreditTradeLogEntry objects
+      x-codegen-operation: list
       consumes: []
       produces:
         - text/plain
@@ -300,6 +313,7 @@ paths:
     post:
       tags:
         - CreditTradeLogEntry
+      x-codegen-operation: create
       summary: Creates a new CreditTradeLogEntry object            
       consumes:
         - application/json
@@ -328,6 +342,7 @@ paths:
       tags:
         - CreditTradeLogEntry
       summary: Bulk create / update a number of CreditTradeLogEntry object      
+      x-codegen-operation: bulk
       consumes:
         - application/json
       produces:
@@ -350,6 +365,7 @@ paths:
       tags:
         - CreditTradeLogEntry
       summary: Gets a specific CreditTradeLogEntry object      
+      x-codegen-operation: retrieve
       consumes: []
       produces:
         - text/plain
@@ -371,6 +387,7 @@ paths:
     put:
       tags:
         - CreditTradeLogEntry
+      x-codegen-operation: update
       summary: Updates a specific CreditTradeLogEntry object      
       consumes:
         - application/json
@@ -400,6 +417,7 @@ paths:
     post:
       tags:
         - CreditTradeLogEntry
+      x-codegen-operation: destroy
       summary: Deletes a specific CreditTradeLogEntry object      
       consumes: []
       produces:
@@ -422,6 +440,7 @@ paths:
       tags:
         - CompliancePeriod
       summary: Lists available CompliancePeriod objects
+      x-codegen-operation: list
       consumes: []
       produces:
         - text/plain
@@ -437,6 +456,7 @@ paths:
     post:
       tags:
         - CompliancePeriod
+      x-codegen-operation: create
       summary: Creates a new CompliancePeriod object            
       consumes:
         - application/json
@@ -465,6 +485,7 @@ paths:
       tags:
         - CompliancePeriod
       summary: Bulk create / update a number of CompliancePeriod object      
+      x-codegen-operation: bulk
       consumes:
         - application/json
       produces:
@@ -487,6 +508,7 @@ paths:
       tags:
         - CompliancePeriod
       summary: Gets a specific CompliancePeriod object      
+      x-codegen-operation: retrieve
       consumes: []
       produces:
         - text/plain
@@ -508,6 +530,7 @@ paths:
     put:
       tags:
         - CompliancePeriod
+      x-codegen-operation: update
       summary: Updates a specific CompliancePeriod object      
       consumes:
         - application/json
@@ -537,6 +560,7 @@ paths:
     post:
       tags:
         - CompliancePeriod
+      x-codegen-operation: destroy
       summary: Deletes a specific CompliancePeriod object      
       consumes: []
       produces:
@@ -559,6 +583,7 @@ paths:
       tags:
         - LookupList
       summary: Lists available LookupList objects
+      x-codegen-operation: list
       consumes: []
       produces:
         - text/plain
@@ -574,6 +599,7 @@ paths:
     post:
       tags:
         - LookupList
+      x-codegen-operation: create
       summary: Creates a new LookupList object            
       consumes:
         - application/json
@@ -602,6 +628,7 @@ paths:
       tags:
         - LookupList
       summary: Bulk create / update a number of LookupList object      
+      x-codegen-operation: bulk
       consumes:
         - application/json
       produces:
@@ -624,6 +651,7 @@ paths:
       tags:
         - LookupList
       summary: Gets a specific LookupList object      
+      x-codegen-operation: retrieve
       consumes: []
       produces:
         - text/plain
@@ -645,6 +673,7 @@ paths:
     put:
       tags:
         - LookupList
+      x-codegen-operation: update
       summary: Updates a specific LookupList object      
       consumes:
         - application/json
@@ -674,6 +703,7 @@ paths:
     post:
       tags:
         - LookupList
+      x-codegen-operation: destroy
       summary: Deletes a specific LookupList object      
       consumes: []
       produces:
@@ -696,6 +726,7 @@ paths:
       tags:
         - Note
       summary: Lists available Note objects
+      x-codegen-operation: list
       consumes: []
       produces:
         - text/plain
@@ -711,6 +742,7 @@ paths:
     post:
       tags:
         - Note
+      x-codegen-operation: create
       summary: Creates a new Note object            
       consumes:
         - application/json
@@ -739,6 +771,7 @@ paths:
       tags:
         - Note
       summary: Bulk create / update a number of Note object      
+      x-codegen-operation: bulk
       consumes:
         - application/json
       produces:
@@ -761,6 +794,7 @@ paths:
       tags:
         - Note
       summary: Gets a specific Note object      
+      x-codegen-operation: retrieve
       consumes: []
       produces:
         - text/plain
@@ -782,6 +816,7 @@ paths:
     put:
       tags:
         - Note
+      x-codegen-operation: update
       summary: Updates a specific Note object      
       consumes:
         - application/json
@@ -811,6 +846,7 @@ paths:
     post:
       tags:
         - Note
+      x-codegen-operation: destroy
       summary: Deletes a specific Note object      
       consumes: []
       produces:
@@ -833,6 +869,7 @@ paths:
       tags:
         - Attachment
       summary: Lists available Attachment objects
+      x-codegen-operation: list
       consumes: []
       produces:
         - text/plain
@@ -848,6 +885,7 @@ paths:
     post:
       tags:
         - Attachment
+      x-codegen-operation: create
       summary: Creates a new Attachment object            
       consumes:
         - application/json
@@ -876,6 +914,7 @@ paths:
       tags:
         - Attachment
       summary: Bulk create / update a number of Attachment object      
+      x-codegen-operation: bulk
       consumes:
         - application/json
       produces:
@@ -898,6 +937,7 @@ paths:
       tags:
         - Attachment
       summary: Gets a specific Attachment object      
+      x-codegen-operation: retrieve
       consumes: []
       produces:
         - text/plain
@@ -919,6 +959,7 @@ paths:
     put:
       tags:
         - Attachment
+      x-codegen-operation: update
       summary: Updates a specific Attachment object      
       consumes:
         - application/json
@@ -948,6 +989,7 @@ paths:
     post:
       tags:
         - Attachment
+      x-codegen-operation: destroy
       summary: Deletes a specific Attachment object      
       consumes: []
       produces:
@@ -970,6 +1012,7 @@ paths:
       tags:
         - History
       summary: Lists available History objects
+      x-codegen-operation: list
       consumes: []
       produces:
         - text/plain
@@ -985,6 +1028,7 @@ paths:
     post:
       tags:
         - History
+      x-codegen-operation: create
       summary: Creates a new History object            
       consumes:
         - application/json
@@ -1013,6 +1057,7 @@ paths:
       tags:
         - History
       summary: Bulk create / update a number of History object      
+      x-codegen-operation: bulk
       consumes:
         - application/json
       produces:
@@ -1035,6 +1080,7 @@ paths:
       tags:
         - History
       summary: Gets a specific History object      
+      x-codegen-operation: retrieve
       consumes: []
       produces:
         - text/plain
@@ -1056,6 +1102,7 @@ paths:
     put:
       tags:
         - History
+      x-codegen-operation: update
       summary: Updates a specific History object      
       consumes:
         - application/json
@@ -1085,6 +1132,7 @@ paths:
     post:
       tags:
         - History
+      x-codegen-operation: destroy
       summary: Deletes a specific History object      
       consumes: []
       produces:
@@ -1107,6 +1155,7 @@ paths:
       tags:
         - Contact
       summary: Lists available Contact objects
+      x-codegen-operation: list
       consumes: []
       produces:
         - text/plain
@@ -1122,6 +1171,7 @@ paths:
     post:
       tags:
         - Contact
+      x-codegen-operation: create
       summary: Creates a new Contact object            
       consumes:
         - application/json
@@ -1150,6 +1200,7 @@ paths:
       tags:
         - Contact
       summary: Bulk create / update a number of Contact object      
+      x-codegen-operation: bulk
       consumes:
         - application/json
       produces:
@@ -1172,6 +1223,7 @@ paths:
       tags:
         - Contact
       summary: Gets a specific Contact object      
+      x-codegen-operation: retrieve
       consumes: []
       produces:
         - text/plain
@@ -1193,6 +1245,7 @@ paths:
     put:
       tags:
         - Contact
+      x-codegen-operation: update
       summary: Updates a specific Contact object      
       consumes:
         - application/json
@@ -1222,6 +1275,7 @@ paths:
     post:
       tags:
         - Contact
+      x-codegen-operation: destroy
       summary: Deletes a specific Contact object      
       consumes: []
       produces:
@@ -1244,6 +1298,7 @@ paths:
       tags:
         - Notification
       summary: Lists available Notification objects
+      x-codegen-operation: list
       consumes: []
       produces:
         - text/plain
@@ -1259,6 +1314,7 @@ paths:
     post:
       tags:
         - Notification
+      x-codegen-operation: create
       summary: Creates a new Notification object            
       consumes:
         - application/json
@@ -1287,6 +1343,7 @@ paths:
       tags:
         - Notification
       summary: Bulk create / update a number of Notification object      
+      x-codegen-operation: bulk
       consumes:
         - application/json
       produces:
@@ -1309,6 +1366,7 @@ paths:
       tags:
         - Notification
       summary: Gets a specific Notification object      
+      x-codegen-operation: retrieve
       consumes: []
       produces:
         - text/plain
@@ -1330,6 +1388,7 @@ paths:
     put:
       tags:
         - Notification
+      x-codegen-operation: update
       summary: Updates a specific Notification object      
       consumes:
         - application/json
@@ -1359,6 +1418,7 @@ paths:
     post:
       tags:
         - Notification
+      x-codegen-operation: destroy
       summary: Deletes a specific Notification object      
       consumes: []
       produces:
@@ -1381,6 +1441,7 @@ paths:
       tags:
         - NotificationEvent
       summary: Lists available NotificationEvent objects
+      x-codegen-operation: list
       consumes: []
       produces:
         - text/plain
@@ -1396,6 +1457,7 @@ paths:
     post:
       tags:
         - NotificationEvent
+      x-codegen-operation: create
       summary: Creates a new NotificationEvent object            
       consumes:
         - application/json
@@ -1424,6 +1486,7 @@ paths:
       tags:
         - NotificationEvent
       summary: Bulk create / update a number of NotificationEvent object      
+      x-codegen-operation: bulk
       consumes:
         - application/json
       produces:
@@ -1446,6 +1509,7 @@ paths:
       tags:
         - NotificationEvent
       summary: Gets a specific NotificationEvent object      
+      x-codegen-operation: retrieve
       consumes: []
       produces:
         - text/plain
@@ -1467,6 +1531,7 @@ paths:
     put:
       tags:
         - NotificationEvent
+      x-codegen-operation: update
       summary: Updates a specific NotificationEvent object      
       consumes:
         - application/json
@@ -1496,6 +1561,7 @@ paths:
     post:
       tags:
         - NotificationEvent
+      x-codegen-operation: destroy
       summary: Deletes a specific NotificationEvent object      
       consumes: []
       produces:
@@ -1518,6 +1584,7 @@ paths:
       tags:
         - Group
       summary: Lists available Group objects
+      x-codegen-operation: list
       consumes: []
       produces:
         - text/plain
@@ -1534,6 +1601,7 @@ paths:
       tags:
         - Group
       x-codegen-permission: ADMIN
+      x-codegen-operation: create
       summary: Creates a new Group object            
       consumes:
         - application/json
@@ -1562,6 +1630,7 @@ paths:
       tags:
         - Group
       summary: Bulk create / update a number of Group object      
+      x-codegen-operation: bulk
       consumes:
         - application/json
       produces:
@@ -1584,6 +1653,7 @@ paths:
       tags:
         - Group
       summary: Gets a specific Group object      
+      x-codegen-operation: retrieve
       consumes: []
       produces:
         - text/plain
@@ -1606,6 +1676,7 @@ paths:
       tags:
         - Group      
       x-codegen-permission: ADMIN
+      x-codegen-operation: update
       summary: Updates a specific Group object      
       consumes:
         - application/json
@@ -1636,6 +1707,7 @@ paths:
       tags:
         - Group      
       x-codegen-permission: ADMIN
+      x-codegen-operation: destroy
       summary: Deletes a specific Group object      
       consumes: []
       produces:
@@ -1658,6 +1730,7 @@ paths:
       tags:
         - Permission
       summary: Lists available PermissionViewModel objects
+      x-codegen-operation: list
       consumes: []
       produces:
         - text/plain
@@ -1674,6 +1747,7 @@ paths:
       tags:
         - Permission
       x-codegen-permission: ADMIN
+      x-codegen-operation: create
       summary: Creates a new PermissionViewModel object            
       consumes:
         - application/json
@@ -1702,6 +1776,7 @@ paths:
       tags:
         - Permission
       summary: Bulk create / update a number of PermissionViewModel object      
+      x-codegen-operation: bulk
       consumes:
         - application/json
       produces:
@@ -1724,6 +1799,7 @@ paths:
       tags:
         - Permission
       summary: Gets a specific PermissionViewModel object      
+      x-codegen-operation: retrieve
       consumes: []
       produces:
         - text/plain
@@ -1746,6 +1822,7 @@ paths:
       tags:
         - Permission      
       x-codegen-permission: ADMIN
+      x-codegen-operation: update
       summary: Updates a specific PermissionViewModel object      
       consumes:
         - application/json
@@ -1776,6 +1853,7 @@ paths:
       tags:
         - Permission      
       x-codegen-permission: ADMIN
+      x-codegen-operation: destroy
       summary: Deletes a specific PermissionViewModel object      
       consumes: []
       produces:
@@ -1798,6 +1876,7 @@ paths:
       tags:
         - Role
       summary: Lists available RoleViewModel objects
+      x-codegen-operation: list
       consumes: []
       produces:
         - text/plain
@@ -1814,6 +1893,7 @@ paths:
       tags:
         - Role
       x-codegen-permission: ADMIN
+      x-codegen-operation: create
       summary: Creates a new RoleViewModel object            
       consumes:
         - application/json
@@ -1842,6 +1922,7 @@ paths:
       tags:
         - Role
       summary: Bulk create / update a number of RoleViewModel object      
+      x-codegen-operation: bulk
       consumes:
         - application/json
       produces:
@@ -1864,6 +1945,7 @@ paths:
       tags:
         - Role
       summary: Gets a specific RoleViewModel object      
+      x-codegen-operation: retrieve
       consumes: []
       produces:
         - text/plain
@@ -1886,6 +1968,7 @@ paths:
       tags:
         - Role      
       x-codegen-permission: ADMIN
+      x-codegen-operation: update
       summary: Updates a specific RoleViewModel object      
       consumes:
         - application/json
@@ -1916,6 +1999,7 @@ paths:
       tags:
         - Role      
       x-codegen-permission: ADMIN
+      x-codegen-operation: destroy
       summary: Deletes a specific RoleViewModel object      
       consumes: []
       produces:

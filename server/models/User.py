@@ -23,10 +23,7 @@ import datetime
 
 from django.db import models
 from django.utils import timezone
-try:
-  from . import FuelSupplier
-except:
-  import FuelSupplier
+from .FuelSupplier import FuelSupplier
 
 
 class User(models.Model):	    
@@ -35,7 +32,7 @@ class User(models.Model):
     initials = models.CharField(max_length=255)   
     email = models.CharField(max_length=255)   
     status = models.CharField(max_length=255)   
-    fuelSupplier = models.ForeignKey('FuelSupplier', on_delete=models.CASCADE,related_name='fuelSupplierFuelSupplier')   
+    fuelSupplier = models.ForeignKey('FuelSupplier', on_delete=models.CASCADE,related_name='UserfuelSupplier')   
     smUserId = models.CharField(max_length=255)   
     guid = models.CharField(max_length=255)   
     smAuthorizationDirectory = models.CharField(max_length=255)   

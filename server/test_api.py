@@ -20,753 +20,765 @@
 """
 
 from django.test import TestCase
+from django.test import Client
+
 from rest_framework.test import APIRequestFactory
+from rest_framework import status
+
+from .models.Attachment import Attachment
+from .serializers import AttachmentSerializer
+from .models.AttachmentViewModel import AttachmentViewModel
+from .serializers import AttachmentViewModelSerializer
+from .models.Audit import Audit
+from .serializers import AuditSerializer
+from .models.CompliancePeriod import CompliancePeriod
+from .serializers import CompliancePeriodSerializer
+from .models.Contact import Contact
+from .serializers import ContactSerializer
+from .models.CreditTrade import CreditTrade
+from .serializers import CreditTradeSerializer
+from .models.CreditTradeLogEntry import CreditTradeLogEntry
+from .serializers import CreditTradeLogEntrySerializer
+from .models.CurrentUserViewModel import CurrentUserViewModel
+from .serializers import CurrentUserViewModelSerializer
+from .models.FuelSupplier import FuelSupplier
+from .serializers import FuelSupplierSerializer
+from .models.Group import Group
+from .serializers import GroupSerializer
+from .models.GroupMembership import GroupMembership
+from .serializers import GroupMembershipSerializer
+from .models.GroupMembershipViewModel import GroupMembershipViewModel
+from .serializers import GroupMembershipViewModelSerializer
+from .models.GroupViewModel import GroupViewModel
+from .serializers import GroupViewModelSerializer
+from .models.History import History
+from .serializers import HistorySerializer
+from .models.HistoryViewModel import HistoryViewModel
+from .serializers import HistoryViewModelSerializer
+from .models.LookupList import LookupList
+from .serializers import LookupListSerializer
+from .models.Note import Note
+from .serializers import NoteSerializer
+from .models.Notification import Notification
+from .serializers import NotificationSerializer
+from .models.NotificationEvent import NotificationEvent
+from .serializers import NotificationEventSerializer
+from .models.NotificationViewModel import NotificationViewModel
+from .serializers import NotificationViewModelSerializer
+from .models.Permission import Permission
+from .serializers import PermissionSerializer
+from .models.PermissionViewModel import PermissionViewModel
+from .serializers import PermissionViewModelSerializer
+from .models.Role import Role
+from .serializers import RoleSerializer
+from .models.RolePermission import RolePermission
+from .serializers import RolePermissionSerializer
+from .models.RolePermissionViewModel import RolePermissionViewModel
+from .serializers import RolePermissionViewModelSerializer
+from .models.RoleViewModel import RoleViewModel
+from .serializers import RoleViewModelSerializer
+from .models.User import User
+from .serializers import UserSerializer
+from .models.UserDetailsViewModel import UserDetailsViewModel
+from .serializers import UserDetailsViewModelSerializer
+from .models.UserFavourite import UserFavourite
+from .serializers import UserFavouriteSerializer
+from .models.UserFavouriteViewModel import UserFavouriteViewModel
+from .serializers import UserFavouriteViewModelSerializer
+from .models.UserRole import UserRole
+from .serializers import UserRoleSerializer
+from .models.UserRoleViewModel import UserRoleViewModel
+from .serializers import UserRoleViewModelSerializer
+from .models.UserViewModel import UserViewModel
+from .serializers import UserViewModelSerializer
+
 
 class Test_Api(TestCase):
 
-    def test_attachmentsBulkPost(self):
-        # Using the standard RequestFactory API to create a form request
-        factory = APIRequestFactory()
-        request = factory.POST('/api/attachments/bulk', {})
+    def setUp(self):
+        # Every test needs a client.
+        self.client = Client()
 
+
+    def test_attachmentsBulkPost(self):
+        serializer_class = AttachmentSerializer
+        response = self.client.post('/api/attachments/bulk/')
+        # Check that the response is 200 OK.
+        assert status.HTTP_200_OK == response.status_code
+        
 
     def test_attachmentsGet(self):
-        # Using the standard RequestFactory API to create a form request
-        factory = APIRequestFactory()
-        request = factory.GET('/api/attachments', {})
-
+        response = self.client.get('/api/attachments/')
+        # Check that the response is 200 OK.
+        assert status.HTTP_200_OK == response.status_code
+        
 
     def test_attachmentsIdDeletePost(self):
-        # Using the standard RequestFactory API to create a form request
-        factory = APIRequestFactory()
-        request = factory.POST('/api/attachments/{id}/delete', {})
-
+        testID = 1
+        testURL = operation.path.replace ("(.*)",testId)
+        response = self.client.post('/api/attachments/(.*)/delete/')
+        # Check that the response is 200 OK.
+        assert status.HTTP_200_OK == response.status_code
+        
 
     def test_attachmentsIdDownloadGet(self):
-        # Using the standard RequestFactory API to create a form request
-        factory = APIRequestFactory()
-        request = factory.GET('/api/attachments/{id}/download', {})
-
+        self.fail("Not implemented")        
 
     def test_attachmentsIdGet(self):
-        # Using the standard RequestFactory API to create a form request
-        factory = APIRequestFactory()
-        request = factory.GET('/api/attachments/{id}', {})
-
+        response = self.client.get('/api/attachments/(.*)/')
+        # Check that the response is 200 OK.
+        assert status.HTTP_200_OK == response.status_code
+        
 
     def test_attachmentsIdPut(self):
-        # Using the standard RequestFactory API to create a form request
-        factory = APIRequestFactory()
-        request = factory.PUT('/api/attachments/{id}', {})
-
+        response = self.client.put('/api/attachments/(.*)/')
+        # Check that the response is 200 OK.
+        assert status.HTTP_200_OK == response.status_code
+        
 
     def test_attachmentsPost(self):
-        # Using the standard RequestFactory API to create a form request
-        factory = APIRequestFactory()
-        request = factory.POST('/api/attachments', {})
-
+        serializer_class = AttachmentSerializer
+        response = self.client.post('/api/attachments/'
+)        # Check that the response is 200 OK.
+        assert status.HTTP_200_OK == response.status_code
+        
 
     def test_complianceperiodsBulkPost(self):
-        # Using the standard RequestFactory API to create a form request
-        factory = APIRequestFactory()
-        request = factory.POST('/api/complianceperiods/bulk', {})
-
+        serializer_class = CompliancePeriodSerializer
+        response = self.client.post('/api/complianceperiods/bulk/')
+        # Check that the response is 200 OK.
+        assert status.HTTP_200_OK == response.status_code
+        
 
     def test_complianceperiodsGet(self):
-        # Using the standard RequestFactory API to create a form request
-        factory = APIRequestFactory()
-        request = factory.GET('/api/complianceperiods', {})
-
+        response = self.client.get('/api/complianceperiods/')
+        # Check that the response is 200 OK.
+        assert status.HTTP_200_OK == response.status_code
+        
 
     def test_complianceperiodsIdDeletePost(self):
-        # Using the standard RequestFactory API to create a form request
-        factory = APIRequestFactory()
-        request = factory.POST('/api/complianceperiods/{id}/delete', {})
-
+        testID = 1
+        testURL = operation.path.replace ("(.*)",testId)
+        response = self.client.post('/api/complianceperiods/(.*)/delete/')
+        # Check that the response is 200 OK.
+        assert status.HTTP_200_OK == response.status_code
+        
 
     def test_complianceperiodsIdGet(self):
-        # Using the standard RequestFactory API to create a form request
-        factory = APIRequestFactory()
-        request = factory.GET('/api/complianceperiods/{id}', {})
-
+        response = self.client.get('/api/complianceperiods/(.*)/')
+        # Check that the response is 200 OK.
+        assert status.HTTP_200_OK == response.status_code
+        
 
     def test_complianceperiodsIdPut(self):
-        # Using the standard RequestFactory API to create a form request
-        factory = APIRequestFactory()
-        request = factory.PUT('/api/complianceperiods/{id}', {})
-
+        response = self.client.put('/api/complianceperiods/(.*)/')
+        # Check that the response is 200 OK.
+        assert status.HTTP_200_OK == response.status_code
+        
 
     def test_complianceperiodsPost(self):
-        # Using the standard RequestFactory API to create a form request
-        factory = APIRequestFactory()
-        request = factory.POST('/api/complianceperiods', {})
-
+        serializer_class = CompliancePeriodSerializer
+        response = self.client.post('/api/complianceperiods/'
+)        # Check that the response is 200 OK.
+        assert status.HTTP_200_OK == response.status_code
+        
 
     def test_contactsBulkPost(self):
-        # Using the standard RequestFactory API to create a form request
-        factory = APIRequestFactory()
-        request = factory.POST('/api/contacts/bulk', {})
-
+        serializer_class = ContactSerializer
+        response = self.client.post('/api/contacts/bulk/')
+        # Check that the response is 200 OK.
+        assert status.HTTP_200_OK == response.status_code
+        
 
     def test_contactsGet(self):
-        # Using the standard RequestFactory API to create a form request
-        factory = APIRequestFactory()
-        request = factory.GET('/api/contacts', {})
-
+        response = self.client.get('/api/contacts/')
+        # Check that the response is 200 OK.
+        assert status.HTTP_200_OK == response.status_code
+        
 
     def test_contactsIdDeletePost(self):
-        # Using the standard RequestFactory API to create a form request
-        factory = APIRequestFactory()
-        request = factory.POST('/api/contacts/{id}/delete', {})
-
+        testID = 1
+        testURL = operation.path.replace ("(.*)",testId)
+        response = self.client.post('/api/contacts/(.*)/delete/')
+        # Check that the response is 200 OK.
+        assert status.HTTP_200_OK == response.status_code
+        
 
     def test_contactsIdGet(self):
-        # Using the standard RequestFactory API to create a form request
-        factory = APIRequestFactory()
-        request = factory.GET('/api/contacts/{id}', {})
-
+        response = self.client.get('/api/contacts/(.*)/')
+        # Check that the response is 200 OK.
+        assert status.HTTP_200_OK == response.status_code
+        
 
     def test_contactsIdPut(self):
-        # Using the standard RequestFactory API to create a form request
-        factory = APIRequestFactory()
-        request = factory.PUT('/api/contacts/{id}', {})
-
+        response = self.client.put('/api/contacts/(.*)/')
+        # Check that the response is 200 OK.
+        assert status.HTTP_200_OK == response.status_code
+        
 
     def test_contactsPost(self):
-        # Using the standard RequestFactory API to create a form request
-        factory = APIRequestFactory()
-        request = factory.POST('/api/contacts', {})
-
+        serializer_class = ContactSerializer
+        response = self.client.post('/api/contacts/'
+)        # Check that the response is 200 OK.
+        assert status.HTTP_200_OK == response.status_code
+        
 
     def test_creditTradeIdNotesGet(self):
-        # Using the standard RequestFactory API to create a form request
-        factory = APIRequestFactory()
-        request = factory.GET('/api/creditTrade/{id}/notes', {})
-
+        self.fail("Not implemented")        
 
     def test_credittradesBulkPost(self):
-        # Using the standard RequestFactory API to create a form request
-        factory = APIRequestFactory()
-        request = factory.POST('/api/credittrades/bulk', {})
-
+        serializer_class = CreditTradeSerializer
+        response = self.client.post('/api/credittrades/bulk/')
+        # Check that the response is 200 OK.
+        assert status.HTTP_200_OK == response.status_code
+        
 
     def test_credittradesGet(self):
-        # Using the standard RequestFactory API to create a form request
-        factory = APIRequestFactory()
-        request = factory.GET('/api/credittrades', {})
-
+        response = self.client.get('/api/credittrades/')
+        # Check that the response is 200 OK.
+        assert status.HTTP_200_OK == response.status_code
+        
 
     def test_credittradesIdAttachmentsGet(self):
-        # Using the standard RequestFactory API to create a form request
-        factory = APIRequestFactory()
-        request = factory.GET('/api/credittrades/{id}/attachments', {})
-
+        self.fail("Not implemented")        
 
     def test_credittradesIdDeletePost(self):
-        # Using the standard RequestFactory API to create a form request
-        factory = APIRequestFactory()
-        request = factory.POST('/api/credittrades/{id}/delete', {})
-
+        testID = 1
+        testURL = operation.path.replace ("(.*)",testId)
+        response = self.client.post('/api/credittrades/(.*)/delete/')
+        # Check that the response is 200 OK.
+        assert status.HTTP_200_OK == response.status_code
+        
 
     def test_credittradesIdGet(self):
-        # Using the standard RequestFactory API to create a form request
-        factory = APIRequestFactory()
-        request = factory.GET('/api/credittrades/{id}', {})
-
+        response = self.client.get('/api/credittrades/(.*)/')
+        # Check that the response is 200 OK.
+        assert status.HTTP_200_OK == response.status_code
+        
 
     def test_credittradesIdHistoryGet(self):
-        # Using the standard RequestFactory API to create a form request
-        factory = APIRequestFactory()
-        request = factory.GET('/api/credittrades/{id}/history', {})
-
+        self.fail("Not implemented")        
 
     def test_credittradesIdHistoryPost(self):
-        # Using the standard RequestFactory API to create a form request
-        factory = APIRequestFactory()
-        request = factory.POST('/api/credittrades/{id}/history', {})
-
+        self.fail("Not implemented")        
 
     def test_credittradesIdPut(self):
-        # Using the standard RequestFactory API to create a form request
-        factory = APIRequestFactory()
-        request = factory.PUT('/api/credittrades/{id}', {})
-
+        response = self.client.put('/api/credittrades/(.*)/')
+        # Check that the response is 200 OK.
+        assert status.HTTP_200_OK == response.status_code
+        
 
     def test_credittradesPost(self):
-        # Using the standard RequestFactory API to create a form request
-        factory = APIRequestFactory()
-        request = factory.POST('/api/credittrades', {})
-
+        serializer_class = CreditTradeSerializer
+        response = self.client.post('/api/credittrades/'
+)        # Check that the response is 200 OK.
+        assert status.HTTP_200_OK == response.status_code
+        
 
     def test_credittradingSearchGet(self):
-        # Using the standard RequestFactory API to create a form request
-        factory = APIRequestFactory()
-        request = factory.GET('/api/credittrading/search', {})
-
+        self.fail("Not implemented")        
 
     def test_credittradetradelogentriesBulkPost(self):
-        # Using the standard RequestFactory API to create a form request
-        factory = APIRequestFactory()
-        request = factory.POST('/api/credittradetradelogentries/bulk', {})
-
+        serializer_class = CreditTradeLogEntrySerializer
+        response = self.client.post('/api/credittradetradelogentries/bulk/')
+        # Check that the response is 200 OK.
+        assert status.HTTP_200_OK == response.status_code
+        
 
     def test_credittradetradelogentriesGet(self):
-        # Using the standard RequestFactory API to create a form request
-        factory = APIRequestFactory()
-        request = factory.GET('/api/credittradetradelogentries', {})
-
+        response = self.client.get('/api/credittradetradelogentries/')
+        # Check that the response is 200 OK.
+        assert status.HTTP_200_OK == response.status_code
+        
 
     def test_credittradetradelogentriesIdDeletePost(self):
-        # Using the standard RequestFactory API to create a form request
-        factory = APIRequestFactory()
-        request = factory.POST('/api/credittradetradelogentries/{id}/delete', {})
-
+        testID = 1
+        testURL = operation.path.replace ("(.*)",testId)
+        response = self.client.post('/api/credittradetradelogentries/(.*)/delete/')
+        # Check that the response is 200 OK.
+        assert status.HTTP_200_OK == response.status_code
+        
 
     def test_credittradetradelogentriesIdGet(self):
-        # Using the standard RequestFactory API to create a form request
-        factory = APIRequestFactory()
-        request = factory.GET('/api/credittradetradelogentries/{id}', {})
-
+        response = self.client.get('/api/credittradetradelogentries/(.*)/')
+        # Check that the response is 200 OK.
+        assert status.HTTP_200_OK == response.status_code
+        
 
     def test_credittradetradelogentriesIdPut(self):
-        # Using the standard RequestFactory API to create a form request
-        factory = APIRequestFactory()
-        request = factory.PUT('/api/credittradetradelogentries/{id}', {})
-
+        response = self.client.put('/api/credittradetradelogentries/(.*)/')
+        # Check that the response is 200 OK.
+        assert status.HTTP_200_OK == response.status_code
+        
 
     def test_credittradetradelogentriesPost(self):
-        # Using the standard RequestFactory API to create a form request
-        factory = APIRequestFactory()
-        request = factory.POST('/api/credittradetradelogentries', {})
-
+        serializer_class = CreditTradeLogEntrySerializer
+        response = self.client.post('/api/credittradetradelogentries/'
+)        # Check that the response is 200 OK.
+        assert status.HTTP_200_OK == response.status_code
+        
 
     def test_usersCurrentFavouritesIdDeletePost(self):
-        # Using the standard RequestFactory API to create a form request
-        factory = APIRequestFactory()
-        request = factory.POST('/api/users/current/favourites/{id}/delete', {})
-
+        self.fail("Not implemented")        
 
     def test_usersCurrentFavouritesPost(self):
-        # Using the standard RequestFactory API to create a form request
-        factory = APIRequestFactory()
-        request = factory.POST('/api/users/current/favourites', {})
-
+        self.fail("Not implemented")        
 
     def test_usersCurrentFavouritesPut(self):
-        # Using the standard RequestFactory API to create a form request
-        factory = APIRequestFactory()
-        request = factory.PUT('/api/users/current/favourites', {})
-
+        self.fail("Not implemented")        
 
     def test_usersCurrentFavouritesTypeGet(self):
-        # Using the standard RequestFactory API to create a form request
-        factory = APIRequestFactory()
-        request = factory.GET('/api/users/current/favourites/{type}', {})
-
+        self.fail("Not implemented")        
 
     def test_usersCurrentGet(self):
-        # Using the standard RequestFactory API to create a form request
-        factory = APIRequestFactory()
-        request = factory.GET('/api/users/current', {})
-
+        self.fail("Not implemented")        
 
     def test_fuelsuppliersBulkPost(self):
-        # Using the standard RequestFactory API to create a form request
-        factory = APIRequestFactory()
-        request = factory.POST('/api/fuelsuppliers/bulk', {})
-
+        serializer_class = FuelSupplierSerializer
+        response = self.client.post('/api/fuelsuppliers/bulk/')
+        # Check that the response is 200 OK.
+        assert status.HTTP_200_OK == response.status_code
+        
 
     def test_fuelsuppliersGet(self):
-        # Using the standard RequestFactory API to create a form request
-        factory = APIRequestFactory()
-        request = factory.GET('/api/fuelsuppliers', {})
-
+        response = self.client.get('/api/fuelsuppliers/')
+        # Check that the response is 200 OK.
+        assert status.HTTP_200_OK == response.status_code
+        
 
     def test_fuelsuppliersIdAttachmentsGet(self):
-        # Using the standard RequestFactory API to create a form request
-        factory = APIRequestFactory()
-        request = factory.GET('/api/fuelsuppliers/{id}/attachments', {})
-
+        self.fail("Not implemented")        
 
     def test_fuelsuppliersIdDeletePost(self):
-        # Using the standard RequestFactory API to create a form request
-        factory = APIRequestFactory()
-        request = factory.POST('/api/fuelsuppliers/{id}/delete', {})
-
+        testID = 1
+        testURL = operation.path.replace ("(.*)",testId)
+        response = self.client.post('/api/fuelsuppliers/(.*)/delete/')
+        # Check that the response is 200 OK.
+        assert status.HTTP_200_OK == response.status_code
+        
 
     def test_fuelsuppliersIdGet(self):
-        # Using the standard RequestFactory API to create a form request
-        factory = APIRequestFactory()
-        request = factory.GET('/api/fuelsuppliers/{id}', {})
-
+        response = self.client.get('/api/fuelsuppliers/(.*)/')
+        # Check that the response is 200 OK.
+        assert status.HTTP_200_OK == response.status_code
+        
 
     def test_fuelsuppliersIdHistoryGet(self):
-        # Using the standard RequestFactory API to create a form request
-        factory = APIRequestFactory()
-        request = factory.GET('/api/fuelsuppliers/{id}/history', {})
-
+        self.fail("Not implemented")        
 
     def test_fuelsuppliersIdHistoryPost(self):
-        # Using the standard RequestFactory API to create a form request
-        factory = APIRequestFactory()
-        request = factory.POST('/api/fuelsuppliers/{id}/history', {})
-
+        self.fail("Not implemented")        
 
     def test_fuelsuppliersIdNotesGet(self):
-        # Using the standard RequestFactory API to create a form request
-        factory = APIRequestFactory()
-        request = factory.GET('/api/fuelsuppliers/{id}/notes', {})
-
+        self.fail("Not implemented")        
 
     def test_fuelsuppliersIdPut(self):
-        # Using the standard RequestFactory API to create a form request
-        factory = APIRequestFactory()
-        request = factory.PUT('/api/fuelsuppliers/{id}', {})
-
+        response = self.client.put('/api/fuelsuppliers/(.*)/')
+        # Check that the response is 200 OK.
+        assert status.HTTP_200_OK == response.status_code
+        
 
     def test_fuelsuppliersPost(self):
-        # Using the standard RequestFactory API to create a form request
-        factory = APIRequestFactory()
-        request = factory.POST('/api/fuelsuppliers', {})
-
+        serializer_class = FuelSupplierSerializer
+        response = self.client.post('/api/fuelsuppliers/'
+)        # Check that the response is 200 OK.
+        assert status.HTTP_200_OK == response.status_code
+        
 
     def test_fuelsuppliersSearchGet(self):
-        # Using the standard RequestFactory API to create a form request
-        factory = APIRequestFactory()
-        request = factory.GET('/api/fuelsuppliers/search', {})
-
+        self.fail("Not implemented")        
 
     def test_groupsBulkPost(self):
-        # Using the standard RequestFactory API to create a form request
-        factory = APIRequestFactory()
-        request = factory.POST('/api/groups/bulk', {})
-
+        serializer_class = GroupSerializer
+        response = self.client.post('/api/groups/bulk/')
+        # Check that the response is 200 OK.
+        assert status.HTTP_200_OK == response.status_code
+        
 
     def test_groupsGet(self):
-        # Using the standard RequestFactory API to create a form request
-        factory = APIRequestFactory()
-        request = factory.GET('/api/groups', {})
-
+        response = self.client.get('/api/groups/')
+        # Check that the response is 200 OK.
+        assert status.HTTP_200_OK == response.status_code
+        
 
     def test_groupsIdDeletePost(self):
-        # Using the standard RequestFactory API to create a form request
-        factory = APIRequestFactory()
-        request = factory.POST('/api/groups/{id}/delete', {})
-
+        testID = 1
+        testURL = operation.path.replace ("(.*)",testId)
+        response = self.client.post('/api/groups/(.*)/delete/')
+        # Check that the response is 200 OK.
+        assert status.HTTP_200_OK == response.status_code
+        
 
     def test_groupsIdGet(self):
-        # Using the standard RequestFactory API to create a form request
-        factory = APIRequestFactory()
-        request = factory.GET('/api/groups/{id}', {})
-
+        response = self.client.get('/api/groups/(.*)/')
+        # Check that the response is 200 OK.
+        assert status.HTTP_200_OK == response.status_code
+        
 
     def test_groupsIdPut(self):
-        # Using the standard RequestFactory API to create a form request
-        factory = APIRequestFactory()
-        request = factory.PUT('/api/groups/{id}', {})
-
+        response = self.client.put('/api/groups/(.*)/')
+        # Check that the response is 200 OK.
+        assert status.HTTP_200_OK == response.status_code
+        
 
     def test_groupsIdUsersGet(self):
-        # Using the standard RequestFactory API to create a form request
-        factory = APIRequestFactory()
-        request = factory.GET('/api/groups/{id}/users', {})
-
+        self.fail("Not implemented")        
 
     def test_groupsPost(self):
-        # Using the standard RequestFactory API to create a form request
-        factory = APIRequestFactory()
-        request = factory.POST('/api/groups', {})
-
+        serializer_class = GroupSerializer
+        response = self.client.post('/api/groups/'
+)        # Check that the response is 200 OK.
+        assert status.HTTP_200_OK == response.status_code
+        
 
     def test_historiesBulkPost(self):
-        # Using the standard RequestFactory API to create a form request
-        factory = APIRequestFactory()
-        request = factory.POST('/api/histories/bulk', {})
-
+        serializer_class = HistorySerializer
+        response = self.client.post('/api/histories/bulk/')
+        # Check that the response is 200 OK.
+        assert status.HTTP_200_OK == response.status_code
+        
 
     def test_historiesGet(self):
-        # Using the standard RequestFactory API to create a form request
-        factory = APIRequestFactory()
-        request = factory.GET('/api/histories', {})
-
+        response = self.client.get('/api/histories/')
+        # Check that the response is 200 OK.
+        assert status.HTTP_200_OK == response.status_code
+        
 
     def test_historiesIdDeletePost(self):
-        # Using the standard RequestFactory API to create a form request
-        factory = APIRequestFactory()
-        request = factory.POST('/api/histories/{id}/delete', {})
-
+        testID = 1
+        testURL = operation.path.replace ("(.*)",testId)
+        response = self.client.post('/api/histories/(.*)/delete/')
+        # Check that the response is 200 OK.
+        assert status.HTTP_200_OK == response.status_code
+        
 
     def test_historiesIdGet(self):
-        # Using the standard RequestFactory API to create a form request
-        factory = APIRequestFactory()
-        request = factory.GET('/api/histories/{id}', {})
-
+        response = self.client.get('/api/histories/(.*)/')
+        # Check that the response is 200 OK.
+        assert status.HTTP_200_OK == response.status_code
+        
 
     def test_historiesIdPut(self):
-        # Using the standard RequestFactory API to create a form request
-        factory = APIRequestFactory()
-        request = factory.PUT('/api/histories/{id}', {})
-
+        response = self.client.put('/api/histories/(.*)/')
+        # Check that the response is 200 OK.
+        assert status.HTTP_200_OK == response.status_code
+        
 
     def test_historiesPost(self):
-        # Using the standard RequestFactory API to create a form request
-        factory = APIRequestFactory()
-        request = factory.POST('/api/histories', {})
-
+        serializer_class = HistorySerializer
+        response = self.client.post('/api/histories/'
+)        # Check that the response is 200 OK.
+        assert status.HTTP_200_OK == response.status_code
+        
 
     def test_lookuplistsBulkPost(self):
-        # Using the standard RequestFactory API to create a form request
-        factory = APIRequestFactory()
-        request = factory.POST('/api/lookuplists/bulk', {})
-
+        serializer_class = LookupListSerializer
+        response = self.client.post('/api/lookuplists/bulk/')
+        # Check that the response is 200 OK.
+        assert status.HTTP_200_OK == response.status_code
+        
 
     def test_lookuplistsGet(self):
-        # Using the standard RequestFactory API to create a form request
-        factory = APIRequestFactory()
-        request = factory.GET('/api/lookuplists', {})
-
+        response = self.client.get('/api/lookuplists/')
+        # Check that the response is 200 OK.
+        assert status.HTTP_200_OK == response.status_code
+        
 
     def test_lookuplistsIdDeletePost(self):
-        # Using the standard RequestFactory API to create a form request
-        factory = APIRequestFactory()
-        request = factory.POST('/api/lookuplists/{id}/delete', {})
-
+        testID = 1
+        testURL = operation.path.replace ("(.*)",testId)
+        response = self.client.post('/api/lookuplists/(.*)/delete/')
+        # Check that the response is 200 OK.
+        assert status.HTTP_200_OK == response.status_code
+        
 
     def test_lookuplistsIdGet(self):
-        # Using the standard RequestFactory API to create a form request
-        factory = APIRequestFactory()
-        request = factory.GET('/api/lookuplists/{id}', {})
-
+        response = self.client.get('/api/lookuplists/(.*)/')
+        # Check that the response is 200 OK.
+        assert status.HTTP_200_OK == response.status_code
+        
 
     def test_lookuplistsIdPut(self):
-        # Using the standard RequestFactory API to create a form request
-        factory = APIRequestFactory()
-        request = factory.PUT('/api/lookuplists/{id}', {})
-
+        response = self.client.put('/api/lookuplists/(.*)/')
+        # Check that the response is 200 OK.
+        assert status.HTTP_200_OK == response.status_code
+        
 
     def test_lookuplistsPost(self):
-        # Using the standard RequestFactory API to create a form request
-        factory = APIRequestFactory()
-        request = factory.POST('/api/lookuplists', {})
-
+        serializer_class = LookupListSerializer
+        response = self.client.post('/api/lookuplists/'
+)        # Check that the response is 200 OK.
+        assert status.HTTP_200_OK == response.status_code
+        
 
     def test_notesBulkPost(self):
-        # Using the standard RequestFactory API to create a form request
-        factory = APIRequestFactory()
-        request = factory.POST('/api/notes/bulk', {})
-
+        serializer_class = NoteSerializer
+        response = self.client.post('/api/notes/bulk/')
+        # Check that the response is 200 OK.
+        assert status.HTTP_200_OK == response.status_code
+        
 
     def test_notesGet(self):
-        # Using the standard RequestFactory API to create a form request
-        factory = APIRequestFactory()
-        request = factory.GET('/api/notes', {})
-
+        response = self.client.get('/api/notes/')
+        # Check that the response is 200 OK.
+        assert status.HTTP_200_OK == response.status_code
+        
 
     def test_notesIdDeletePost(self):
-        # Using the standard RequestFactory API to create a form request
-        factory = APIRequestFactory()
-        request = factory.POST('/api/notes/{id}/delete', {})
-
+        testID = 1
+        testURL = operation.path.replace ("(.*)",testId)
+        response = self.client.post('/api/notes/(.*)/delete/')
+        # Check that the response is 200 OK.
+        assert status.HTTP_200_OK == response.status_code
+        
 
     def test_notesIdGet(self):
-        # Using the standard RequestFactory API to create a form request
-        factory = APIRequestFactory()
-        request = factory.GET('/api/notes/{id}', {})
-
+        response = self.client.get('/api/notes/(.*)/')
+        # Check that the response is 200 OK.
+        assert status.HTTP_200_OK == response.status_code
+        
 
     def test_notesIdPut(self):
-        # Using the standard RequestFactory API to create a form request
-        factory = APIRequestFactory()
-        request = factory.PUT('/api/notes/{id}', {})
-
+        response = self.client.put('/api/notes/(.*)/')
+        # Check that the response is 200 OK.
+        assert status.HTTP_200_OK == response.status_code
+        
 
     def test_notesPost(self):
-        # Using the standard RequestFactory API to create a form request
-        factory = APIRequestFactory()
-        request = factory.POST('/api/notes', {})
-
+        serializer_class = NoteSerializer
+        response = self.client.post('/api/notes/'
+)        # Check that the response is 200 OK.
+        assert status.HTTP_200_OK == response.status_code
+        
 
     def test_notificationsBulkPost(self):
-        # Using the standard RequestFactory API to create a form request
-        factory = APIRequestFactory()
-        request = factory.POST('/api/notifications/bulk', {})
-
+        serializer_class = NotificationSerializer
+        response = self.client.post('/api/notifications/bulk/')
+        # Check that the response is 200 OK.
+        assert status.HTTP_200_OK == response.status_code
+        
 
     def test_notificationsGet(self):
-        # Using the standard RequestFactory API to create a form request
-        factory = APIRequestFactory()
-        request = factory.GET('/api/notifications', {})
-
+        response = self.client.get('/api/notifications/')
+        # Check that the response is 200 OK.
+        assert status.HTTP_200_OK == response.status_code
+        
 
     def test_notificationsIdDeletePost(self):
-        # Using the standard RequestFactory API to create a form request
-        factory = APIRequestFactory()
-        request = factory.POST('/api/notifications/{id}/delete', {})
-
+        testID = 1
+        testURL = operation.path.replace ("(.*)",testId)
+        response = self.client.post('/api/notifications/(.*)/delete/')
+        # Check that the response is 200 OK.
+        assert status.HTTP_200_OK == response.status_code
+        
 
     def test_notificationsIdGet(self):
-        # Using the standard RequestFactory API to create a form request
-        factory = APIRequestFactory()
-        request = factory.GET('/api/notifications/{id}', {})
-
+        response = self.client.get('/api/notifications/(.*)/')
+        # Check that the response is 200 OK.
+        assert status.HTTP_200_OK == response.status_code
+        
 
     def test_notificationsIdPut(self):
-        # Using the standard RequestFactory API to create a form request
-        factory = APIRequestFactory()
-        request = factory.PUT('/api/notifications/{id}', {})
-
+        response = self.client.put('/api/notifications/(.*)/')
+        # Check that the response is 200 OK.
+        assert status.HTTP_200_OK == response.status_code
+        
 
     def test_notificationsPost(self):
-        # Using the standard RequestFactory API to create a form request
-        factory = APIRequestFactory()
-        request = factory.POST('/api/notifications', {})
-
+        serializer_class = NotificationSerializer
+        response = self.client.post('/api/notifications/'
+)        # Check that the response is 200 OK.
+        assert status.HTTP_200_OK == response.status_code
+        
 
     def test_notificationeventsBulkPost(self):
-        # Using the standard RequestFactory API to create a form request
-        factory = APIRequestFactory()
-        request = factory.POST('/api/notificationevents/bulk', {})
-
+        serializer_class = NotificationEventSerializer
+        response = self.client.post('/api/notificationevents/bulk/')
+        # Check that the response is 200 OK.
+        assert status.HTTP_200_OK == response.status_code
+        
 
     def test_notificationeventsGet(self):
-        # Using the standard RequestFactory API to create a form request
-        factory = APIRequestFactory()
-        request = factory.GET('/api/notificationevents', {})
-
+        response = self.client.get('/api/notificationevents/')
+        # Check that the response is 200 OK.
+        assert status.HTTP_200_OK == response.status_code
+        
 
     def test_notificationeventsIdDeletePost(self):
-        # Using the standard RequestFactory API to create a form request
-        factory = APIRequestFactory()
-        request = factory.POST('/api/notificationevents/{id}/delete', {})
-
+        testID = 1
+        testURL = operation.path.replace ("(.*)",testId)
+        response = self.client.post('/api/notificationevents/(.*)/delete/')
+        # Check that the response is 200 OK.
+        assert status.HTTP_200_OK == response.status_code
+        
 
     def test_notificationeventsIdGet(self):
-        # Using the standard RequestFactory API to create a form request
-        factory = APIRequestFactory()
-        request = factory.GET('/api/notificationevents/{id}', {})
-
+        response = self.client.get('/api/notificationevents/(.*)/')
+        # Check that the response is 200 OK.
+        assert status.HTTP_200_OK == response.status_code
+        
 
     def test_notificationeventsIdPut(self):
-        # Using the standard RequestFactory API to create a form request
-        factory = APIRequestFactory()
-        request = factory.PUT('/api/notificationevents/{id}', {})
-
+        response = self.client.put('/api/notificationevents/(.*)/')
+        # Check that the response is 200 OK.
+        assert status.HTTP_200_OK == response.status_code
+        
 
     def test_notificationeventsPost(self):
-        # Using the standard RequestFactory API to create a form request
-        factory = APIRequestFactory()
-        request = factory.POST('/api/notificationevents', {})
-
+        serializer_class = NotificationEventSerializer
+        response = self.client.post('/api/notificationevents/'
+)        # Check that the response is 200 OK.
+        assert status.HTTP_200_OK == response.status_code
+        
 
     def test_permissionsBulkPost(self):
-        # Using the standard RequestFactory API to create a form request
-        factory = APIRequestFactory()
-        request = factory.POST('/api/permissions/bulk', {})
-
+        serializer_class = PermissionSerializer
+        response = self.client.post('/api/permissions/bulk/')
+        # Check that the response is 200 OK.
+        assert status.HTTP_200_OK == response.status_code
+        
 
     def test_permissionsGet(self):
-        # Using the standard RequestFactory API to create a form request
-        factory = APIRequestFactory()
-        request = factory.GET('/api/permissions', {})
-
+        response = self.client.get('/api/permissions/')
+        # Check that the response is 200 OK.
+        assert status.HTTP_200_OK == response.status_code
+        
 
     def test_permissionsIdDeletePost(self):
-        # Using the standard RequestFactory API to create a form request
-        factory = APIRequestFactory()
-        request = factory.POST('/api/permissions/{id}/delete', {})
-
+        testID = 1
+        testURL = operation.path.replace ("(.*)",testId)
+        response = self.client.post('/api/permissions/(.*)/delete/')
+        # Check that the response is 200 OK.
+        assert status.HTTP_200_OK == response.status_code
+        
 
     def test_permissionsIdGet(self):
-        # Using the standard RequestFactory API to create a form request
-        factory = APIRequestFactory()
-        request = factory.GET('/api/permissions/{id}', {})
-
+        response = self.client.get('/api/permissions/(.*)/')
+        # Check that the response is 200 OK.
+        assert status.HTTP_200_OK == response.status_code
+        
 
     def test_permissionsIdPut(self):
-        # Using the standard RequestFactory API to create a form request
-        factory = APIRequestFactory()
-        request = factory.PUT('/api/permissions/{id}', {})
-
+        response = self.client.put('/api/permissions/(.*)/')
+        # Check that the response is 200 OK.
+        assert status.HTTP_200_OK == response.status_code
+        
 
     def test_permissionsPost(self):
-        # Using the standard RequestFactory API to create a form request
-        factory = APIRequestFactory()
-        request = factory.POST('/api/permissions', {})
-
+        serializer_class = PermissionSerializer
+        response = self.client.post('/api/permissions/'
+)        # Check that the response is 200 OK.
+        assert status.HTTP_200_OK == response.status_code
+        
 
     def test_rolesBulkPost(self):
-        # Using the standard RequestFactory API to create a form request
-        factory = APIRequestFactory()
-        request = factory.POST('/api/roles/bulk', {})
-
+        serializer_class = RoleSerializer
+        response = self.client.post('/api/roles/bulk/')
+        # Check that the response is 200 OK.
+        assert status.HTTP_200_OK == response.status_code
+        
 
     def test_rolesGet(self):
-        # Using the standard RequestFactory API to create a form request
-        factory = APIRequestFactory()
-        request = factory.GET('/api/roles', {})
-
+        response = self.client.get('/api/roles/')
+        # Check that the response is 200 OK.
+        assert status.HTTP_200_OK == response.status_code
+        
 
     def test_rolesIdDeletePost(self):
-        # Using the standard RequestFactory API to create a form request
-        factory = APIRequestFactory()
-        request = factory.POST('/api/roles/{id}/delete', {})
-
+        testID = 1
+        testURL = operation.path.replace ("(.*)",testId)
+        response = self.client.post('/api/roles/(.*)/delete/')
+        # Check that the response is 200 OK.
+        assert status.HTTP_200_OK == response.status_code
+        
 
     def test_rolesIdGet(self):
-        # Using the standard RequestFactory API to create a form request
-        factory = APIRequestFactory()
-        request = factory.GET('/api/roles/{id}', {})
-
+        response = self.client.get('/api/roles/(.*)/')
+        # Check that the response is 200 OK.
+        assert status.HTTP_200_OK == response.status_code
+        
 
     def test_rolesIdPermissionsGet(self):
-        # Using the standard RequestFactory API to create a form request
-        factory = APIRequestFactory()
-        request = factory.GET('/api/roles/{id}/permissions', {})
-
+        self.fail("Not implemented")        
 
     def test_rolesIdPermissionsPost(self):
-        # Using the standard RequestFactory API to create a form request
-        factory = APIRequestFactory()
-        request = factory.POST('/api/roles/{id}/permissions', {})
-
+        self.fail("Not implemented")        
 
     def test_rolesIdPermissionsPut(self):
-        # Using the standard RequestFactory API to create a form request
-        factory = APIRequestFactory()
-        request = factory.PUT('/api/roles/{id}/permissions', {})
-
+        self.fail("Not implemented")        
 
     def test_rolesIdPut(self):
-        # Using the standard RequestFactory API to create a form request
-        factory = APIRequestFactory()
-        request = factory.PUT('/api/roles/{id}', {})
-
+        response = self.client.put('/api/roles/(.*)/')
+        # Check that the response is 200 OK.
+        assert status.HTTP_200_OK == response.status_code
+        
 
     def test_rolesIdUsersGet(self):
-        # Using the standard RequestFactory API to create a form request
-        factory = APIRequestFactory()
-        request = factory.GET('/api/roles/{id}/users', {})
-
+        self.fail("Not implemented")        
 
     def test_rolesIdUsersPut(self):
-        # Using the standard RequestFactory API to create a form request
-        factory = APIRequestFactory()
-        request = factory.PUT('/api/roles/{id}/users', {})
-
+        self.fail("Not implemented")        
 
     def test_rolesPost(self):
-        # Using the standard RequestFactory API to create a form request
-        factory = APIRequestFactory()
-        request = factory.POST('/api/roles', {})
-
+        serializer_class = RoleSerializer
+        response = self.client.post('/api/roles/'
+)        # Check that the response is 200 OK.
+        assert status.HTTP_200_OK == response.status_code
+        
 
     def test_usersBulkPost(self):
-        # Using the standard RequestFactory API to create a form request
-        factory = APIRequestFactory()
-        request = factory.POST('/api/users/bulk', {})
-
+        self.fail("Not implemented")        
 
     def test_usersGet(self):
-        # Using the standard RequestFactory API to create a form request
-        factory = APIRequestFactory()
-        request = factory.GET('/api/users', {})
-
+        self.fail("Not implemented")        
 
     def test_usersIdDeletePost(self):
-        # Using the standard RequestFactory API to create a form request
-        factory = APIRequestFactory()
-        request = factory.POST('/api/users/{id}/delete', {})
-
+        self.fail("Not implemented")        
 
     def test_usersIdFavouritesGet(self):
-        # Using the standard RequestFactory API to create a form request
-        factory = APIRequestFactory()
-        request = factory.GET('/api/users/{id}/favourites', {})
-
+        self.fail("Not implemented")        
 
     def test_usersIdFavouritesPost(self):
-        # Using the standard RequestFactory API to create a form request
-        factory = APIRequestFactory()
-        request = factory.POST('/api/users/{id}/favourites', {})
-
+        self.fail("Not implemented")        
 
     def test_usersIdFavouritesPut(self):
-        # Using the standard RequestFactory API to create a form request
-        factory = APIRequestFactory()
-        request = factory.PUT('/api/users/{id}/favourites', {})
-
+        self.fail("Not implemented")        
 
     def test_usersIdGet(self):
-        # Using the standard RequestFactory API to create a form request
-        factory = APIRequestFactory()
-        request = factory.GET('/api/users/{id}', {})
-
+        self.fail("Not implemented")        
 
     def test_usersIdGroupsGet(self):
-        # Using the standard RequestFactory API to create a form request
-        factory = APIRequestFactory()
-        request = factory.GET('/api/users/{id}/groups', {})
-
+        self.fail("Not implemented")        
 
     def test_usersIdGroupsPost(self):
-        # Using the standard RequestFactory API to create a form request
-        factory = APIRequestFactory()
-        request = factory.POST('/api/users/{id}/groups', {})
-
+        self.fail("Not implemented")        
 
     def test_usersIdGroupsPut(self):
-        # Using the standard RequestFactory API to create a form request
-        factory = APIRequestFactory()
-        request = factory.PUT('/api/users/{id}/groups', {})
-
+        self.fail("Not implemented")        
 
     def test_usersIdNotificationsGet(self):
-        # Using the standard RequestFactory API to create a form request
-        factory = APIRequestFactory()
-        request = factory.GET('/api/users/{id}/notifications', {})
-
+        self.fail("Not implemented")        
 
     def test_usersIdPermissionsGet(self):
-        # Using the standard RequestFactory API to create a form request
-        factory = APIRequestFactory()
-        request = factory.GET('/api/users/{id}/permissions', {})
-
+        self.fail("Not implemented")        
 
     def test_usersIdPut(self):
-        # Using the standard RequestFactory API to create a form request
-        factory = APIRequestFactory()
-        request = factory.PUT('/api/users/{id}', {})
-
+        self.fail("Not implemented")        
 
     def test_usersIdRolesGet(self):
-        # Using the standard RequestFactory API to create a form request
-        factory = APIRequestFactory()
-        request = factory.GET('/api/users/{id}/roles', {})
-
+        self.fail("Not implemented")        
 
     def test_usersIdRolesPost(self):
-        # Using the standard RequestFactory API to create a form request
-        factory = APIRequestFactory()
-        request = factory.POST('/api/users/{id}/roles', {})
-
+        self.fail("Not implemented")        
 
     def test_usersIdRolesPut(self):
-        # Using the standard RequestFactory API to create a form request
-        factory = APIRequestFactory()
-        request = factory.PUT('/api/users/{id}/roles', {})
-
+        self.fail("Not implemented")        
 
     def test_usersPost(self):
-        # Using the standard RequestFactory API to create a form request
-        factory = APIRequestFactory()
-        request = factory.POST('/api/users', {})
-
+        self.fail("Not implemented")        
 
     def test_usersSearchGet(self):
-        # Using the standard RequestFactory API to create a form request
-        factory = APIRequestFactory()
-        request = factory.GET('/api/users/search', {})
-
+        self.fail("Not implemented")        
 
 if __name__ == '__main__':
     unittest.main()

@@ -5,6 +5,7 @@ psycopg2==2.7.1
 whitenoise==3.0
 django-extensions==1.7.7
 djangorestframework==3.6.2
+djangorestframework-bulk==0.2.1
 # Optional packages which may be used with REST framework.
 markdown===2.6.8
 django-filter===1.0.2

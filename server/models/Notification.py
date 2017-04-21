@@ -23,18 +23,12 @@ import datetime
 
 from django.db import models
 from django.utils import timezone
-try:
-  from . import NotificationEvent
-except:
-  import NotificationEvent
-try:
-  from . import User
-except:
-  import User
+from .NotificationEvent import NotificationEvent
+from .User import User
 
 
 class Notification(models.Model):	    
-    event = models.ForeignKey('NotificationEvent', on_delete=models.CASCADE,related_name='eventNotificationEvent')   
+    event = models.ForeignKey('NotificationEvent', on_delete=models.CASCADE,related_name='Notificationevent')   
     hasBeenViewed = models.BooleanField()   
     isWatchNotification = models.BooleanField()   
-    user = models.ForeignKey('User', on_delete=models.CASCADE,related_name='userUser')   
+    user = models.ForeignKey('User', on_delete=models.CASCADE,related_name='Notificationuser')   

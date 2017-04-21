@@ -23,30 +23,18 @@ import datetime
 
 from django.db import models
 from django.utils import timezone
-try:
-  from . import Contact
-except:
-  import Contact
-try:
-  from . import Note
-except:
-  import Note
-try:
-  from . import Attachment
-except:
-  import Attachment
-try:
-  from . import History
-except:
-  import History
+from .Contact import Contact
+from .Note import Note
+from .Attachment import Attachment
+from .History import History
 
 
 class FuelSupplier(models.Model):	    
     name = models.CharField(max_length=255)   
     status = models.CharField(max_length=255)   
     dateCreated = models.DateField()   
-    primaryContact = models.ForeignKey('Contact', on_delete=models.CASCADE,related_name='primaryContactContact')   
-    contacts = models.ManyToManyField('Contact',related_name='contactsContact')   
-    notes = models.ManyToManyField('Note',related_name='notesNote')   
-    attachments = models.ManyToManyField('Attachment',related_name='attachmentsAttachment')   
-    history = models.ManyToManyField('History',related_name='historyHistory')   
+    primaryContact = models.ForeignKey('Contact', on_delete=models.CASCADE,related_name='FuelSupplierprimaryContact')   
+    contacts = models.ManyToManyField('Contact',related_name='FuelSuppliercontacts')   
+    notes = models.ManyToManyField('Note',related_name='FuelSuppliernotes')   
+    attachments = models.ManyToManyField('Attachment',related_name='FuelSupplierattachments')   
+    history = models.ManyToManyField('History',related_name='FuelSupplierhistory')   

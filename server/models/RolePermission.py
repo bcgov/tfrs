@@ -23,16 +23,10 @@ import datetime
 
 from django.db import models
 from django.utils import timezone
-try:
-  from . import Role
-except:
-  import Role
-try:
-  from . import Permission
-except:
-  import Permission
+from .Role import Role
+from .Permission import Permission
 
 
 class RolePermission(models.Model):	    
-    role = models.ForeignKey('Role', on_delete=models.CASCADE,related_name='roleRole')   
-    permission = models.ForeignKey('Permission', on_delete=models.CASCADE,related_name='permissionPermission')   
+    role = models.ForeignKey('Role', on_delete=models.CASCADE,related_name='RolePermissionrole')   
+    permission = models.ForeignKey('Permission', on_delete=models.CASCADE,related_name='RolePermissionpermission')   

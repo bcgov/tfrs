@@ -23,25 +23,16 @@ import datetime
 
 from django.db import models
 from django.utils import timezone
-try:
-  from . import CreditTrade
-except:
-  import CreditTrade
-try:
-  from . import User
-except:
-  import User
-try:
-  from . import CompliancePeriod
-except:
-  import CompliancePeriod
+from .CreditTrade import CreditTrade
+from .User import User
+from .CompliancePeriod import CompliancePeriod
 
 
 class CreditTradeLogEntry(models.Model):	    
-    creditTrade = models.ForeignKey('CreditTrade', on_delete=models.CASCADE,related_name='creditTradeCreditTrade')   
-    user = models.ForeignKey('User', on_delete=models.CASCADE,related_name='userUser')   
+    creditTrade = models.ForeignKey('CreditTrade', on_delete=models.CASCADE,related_name='CreditTradeLogEntrycreditTrade')   
+    user = models.ForeignKey('User', on_delete=models.CASCADE,related_name='CreditTradeLogEntryuser')   
     logEntryTime = models.DateField()   
-    newCompliancePeriod = models.ForeignKey('CompliancePeriod', on_delete=models.CASCADE,related_name='newCompliancePeriodCompliancePeriod')   
+    newCompliancePeriod = models.ForeignKey('CompliancePeriod', on_delete=models.CASCADE,related_name='CreditTradeLogEntrynewCompliancePeriod')   
     newStatus = models.CharField(max_length=255)   
     newTradeExecutionDate = models.DateField()   
     newTransactionType = models.CharField(max_length=255)   

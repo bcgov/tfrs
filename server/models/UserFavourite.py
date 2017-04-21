@@ -23,10 +23,7 @@ import datetime
 
 from django.db import models
 from django.utils import timezone
-try:
-  from . import User
-except:
-  import User
+from .User import User
 
 
 class UserFavourite(models.Model):	    
@@ -34,4 +31,4 @@ class UserFavourite(models.Model):
     name = models.CharField(max_length=255)   
     value = models.CharField(max_length=255)   
     isDefault = models.BooleanField()   
-    User = models.ForeignKey('User', on_delete=models.CASCADE,related_name='UserUser')   
+    User = models.ForeignKey('User', on_delete=models.CASCADE,related_name='UserFavouriteUser')   
