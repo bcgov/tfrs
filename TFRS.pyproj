@@ -5,6 +5,8 @@
     <Name>tfrs</Name>
     <RootNamespace>tfrs</RootNamespace>
     <DjangoSettingsModule>tfrs.settings</DjangoSettingsModule>
+    <IsWindowsApplication>False</IsWindowsApplication>
+    <InterpreterId>Global|PythonCore|3.5</InterpreterId>
   </PropertyGroup>
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -33,6 +35,7 @@
     <Compile Include="manage.py" />
     <Compile Include="server\admin.py" />
     <Compile Include="server\database.py" />
+    <Compile Include="server\fakedata.py" />
     <Compile Include="server\migrations\0001_initial.py" />
     <Compile Include="server\migrations\0002_auto_20170214_1526.py" />
     <Compile Include="server\migrations\__init__.py" />
@@ -111,6 +114,9 @@
     <Folder Include="server\models\__pycache__\" />
     <Folder Include="welcome\" />
     <Folder Include="tfrs\" />
+  </ItemGroup>
+  <ItemGroup>
+    <InterpreterReference Include="Global|PythonCore|3.5" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.Django.targets" />
   <!-- Specify pre- and post-build commands in the BeforeBuild and 

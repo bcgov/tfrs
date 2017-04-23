@@ -19,12 +19,16 @@
     limitations under the License.
 """
 
+import json
 from django.test import TestCase
 from django.test import Client
+import django
 
 from rest_framework.test import APIRequestFactory
+from rest_framework.parsers import JSONParser
 from rest_framework import status
 
+from . import fakedata
 from .models.Attachment import Attachment
 from .serializers import AttachmentSerializer
 from .models.AttachmentViewModel import AttachmentViewModel
@@ -98,162 +102,345 @@ class Test_Api(TestCase):
     def setUp(self):
         # Every test needs a client.
         self.client = Client()
+        # needed to setup django
+        django.setup()
 
 
     def test_attachmentsBulkPost(self):
-        serializer_class = AttachmentSerializer
-        response = self.client.post('/api/attachments/bulk/')
+        # Test Bulk Load.
+        payload = fakedata.AttachmentTestDataCreate()
+        jsonString = "[]"
+        response = self.client.post('/api/attachments/bulk',content_type='application/json', data=jsonString)
         # Check that the response is 200 OK.
-        assert status.HTTP_200_OK == response.status_code
+        assert status.HTTP_201_CREATED == response.status_code
         
 
     def test_attachmentsGet(self):
-        response = self.client.get('/api/attachments/')
+        # Test Create and List operations.
+        testUrl = "/api/attachments"
+        # Create:
+        serializer_class = AttachmentSerializer
+        payload = fakedata.AttachmentTestDataCreate()
+        jsonString = json.dumps(payload)
+        response = self.client.post(testUrl, content_type='application/json', data=jsonString)
+        # Check that the response is OK.
+        assert status.HTTP_201_CREATED == response.status_code
+        # parse the response.
+        jsonString = response.content.decode("utf-8")
+        data = json.loads(jsonString)
+        createdId = data['id']
+        # List:
+        response = self.client.get(testUrl)
         # Check that the response is 200 OK.
         assert status.HTTP_200_OK == response.status_code
+        # Cleanup:
+        deleteUrl = testUrl + "/" + str(createdId) + "/delete"
+        response = self.client.post(deleteUrl)
+        # Check that the response is OK.
+        assert status.HTTP_204_NO_CONTENT == response.status_code
         
 
     def test_attachmentsIdDeletePost(self):
-        testID = 1
-        testURL = operation.path.replace ("(.*)",testId)
-        response = self.client.post('/api/attachments/(.*)/delete/')
-        # Check that the response is 200 OK.
-        assert status.HTTP_200_OK == response.status_code
+        # Test Retrieve and Update operations.
+        testUrl = "/api/attachments/(?P<id>[0-9]+)/delete"
+        createUrl = testUrl.replace ("/(?P<id>[0-9]+)/delete","")
+        # Create an object:
+        payload = fakedata.AttachmentTestDataCreate()
+        jsonString = json.dumps(payload)
+        response = self.client.post(createUrl, content_type='application/json', data=jsonString)
+        # Check that the response is OK.
+        assert status.HTTP_201_CREATED == response.status_code
+        # parse the response.
+        jsonString = response.content.decode("utf-8")
+        data = json.loads(jsonString)
+        createdId = data['id']
+        deleteUrl = testUrl.replace ("(?P<id>[0-9]+)",str(createdId))
+        response = self.client.post(deleteUrl)
+        # Check that the response is OK.
+        assert status.HTTP_204_NO_CONTENT == response.status_code
         
 
     def test_attachmentsIdDownloadGet(self):
         self.fail("Not implemented")        
 
     def test_attachmentsIdGet(self):
-        response = self.client.get('/api/attachments/(.*)/')
+        # Test Retrieve and Update operations.
+        testUrl = "/api/attachments/(?P<id>[0-9]+)"
+        createUrl = testUrl.replace ("/(?P<id>[0-9]+)","")
+        # Create an object:
+        payload = fakedata.AttachmentTestDataCreate()
+        jsonString = json.dumps(payload)
+        response = self.client.post(createUrl, content_type='application/json', data=jsonString)
+        # Check that the response is OK.
+        assert status.HTTP_201_CREATED == response.status_code
+        # parse the response.
+        jsonString = response.content.decode("utf-8")
+        data = json.loads(jsonString)
+        createdId = data['id']
+        # Update the object:
+        updateUrl = testUrl.replace ("(?P<id>[0-9]+)",str(createdId))
+        payload = fakedata.AttachmentTestDataUpdate()
+        jsonString = json.dumps(payload)
+        response = self.client.put(updateUrl, content_type='application/json', data=jsonString)
         # Check that the response is 200 OK.
         assert status.HTTP_200_OK == response.status_code
-        
-
-    def test_attachmentsIdPut(self):
-        response = self.client.put('/api/attachments/(.*)/')
-        # Check that the response is 200 OK.
-        assert status.HTTP_200_OK == response.status_code
-        
-
-    def test_attachmentsPost(self):
-        serializer_class = AttachmentSerializer
-        response = self.client.post('/api/attachments/'
-)        # Check that the response is 200 OK.
-        assert status.HTTP_200_OK == response.status_code
+        # Cleanup:
+        deleteUrl = createUrl + "/" + str(createdId) + "/delete"
+        response = self.client.post(deleteUrl)
+        # Check that the response is OK.
+        assert status.HTTP_204_NO_CONTENT == response.status_code
         
 
     def test_complianceperiodsBulkPost(self):
-        serializer_class = CompliancePeriodSerializer
-        response = self.client.post('/api/complianceperiods/bulk/')
+        # Test Bulk Load.
+        payload = fakedata.CompliancePeriodTestDataCreate()
+        jsonString = "[]"
+        response = self.client.post('/api/complianceperiods/bulk',content_type='application/json', data=jsonString)
         # Check that the response is 200 OK.
-        assert status.HTTP_200_OK == response.status_code
+        assert status.HTTP_201_CREATED == response.status_code
         
 
     def test_complianceperiodsGet(self):
-        response = self.client.get('/api/complianceperiods/')
+        # Test Create and List operations.
+        testUrl = "/api/complianceperiods"
+        # Create:
+        serializer_class = CompliancePeriodSerializer
+        payload = fakedata.CompliancePeriodTestDataCreate()
+        jsonString = json.dumps(payload)
+        response = self.client.post(testUrl, content_type='application/json', data=jsonString)
+        # Check that the response is OK.
+        assert status.HTTP_201_CREATED == response.status_code
+        # parse the response.
+        jsonString = response.content.decode("utf-8")
+        data = json.loads(jsonString)
+        createdId = data['id']
+        # List:
+        response = self.client.get(testUrl)
         # Check that the response is 200 OK.
         assert status.HTTP_200_OK == response.status_code
+        # Cleanup:
+        deleteUrl = testUrl + "/" + str(createdId) + "/delete"
+        response = self.client.post(deleteUrl)
+        # Check that the response is OK.
+        assert status.HTTP_204_NO_CONTENT == response.status_code
         
 
     def test_complianceperiodsIdDeletePost(self):
-        testID = 1
-        testURL = operation.path.replace ("(.*)",testId)
-        response = self.client.post('/api/complianceperiods/(.*)/delete/')
-        # Check that the response is 200 OK.
-        assert status.HTTP_200_OK == response.status_code
+        # Test Retrieve and Update operations.
+        testUrl = "/api/complianceperiods/(?P<id>[0-9]+)/delete"
+        createUrl = testUrl.replace ("/(?P<id>[0-9]+)/delete","")
+        # Create an object:
+        payload = fakedata.CompliancePeriodTestDataCreate()
+        jsonString = json.dumps(payload)
+        response = self.client.post(createUrl, content_type='application/json', data=jsonString)
+        # Check that the response is OK.
+        assert status.HTTP_201_CREATED == response.status_code
+        # parse the response.
+        jsonString = response.content.decode("utf-8")
+        data = json.loads(jsonString)
+        createdId = data['id']
+        deleteUrl = testUrl.replace ("(?P<id>[0-9]+)",str(createdId))
+        response = self.client.post(deleteUrl)
+        # Check that the response is OK.
+        assert status.HTTP_204_NO_CONTENT == response.status_code
         
 
     def test_complianceperiodsIdGet(self):
-        response = self.client.get('/api/complianceperiods/(.*)/')
+        # Test Retrieve and Update operations.
+        testUrl = "/api/complianceperiods/(?P<id>[0-9]+)"
+        createUrl = testUrl.replace ("/(?P<id>[0-9]+)","")
+        # Create an object:
+        payload = fakedata.CompliancePeriodTestDataCreate()
+        jsonString = json.dumps(payload)
+        response = self.client.post(createUrl, content_type='application/json', data=jsonString)
+        # Check that the response is OK.
+        assert status.HTTP_201_CREATED == response.status_code
+        # parse the response.
+        jsonString = response.content.decode("utf-8")
+        data = json.loads(jsonString)
+        createdId = data['id']
+        # Update the object:
+        updateUrl = testUrl.replace ("(?P<id>[0-9]+)",str(createdId))
+        payload = fakedata.CompliancePeriodTestDataUpdate()
+        jsonString = json.dumps(payload)
+        response = self.client.put(updateUrl, content_type='application/json', data=jsonString)
         # Check that the response is 200 OK.
         assert status.HTTP_200_OK == response.status_code
-        
-
-    def test_complianceperiodsIdPut(self):
-        response = self.client.put('/api/complianceperiods/(.*)/')
-        # Check that the response is 200 OK.
-        assert status.HTTP_200_OK == response.status_code
-        
-
-    def test_complianceperiodsPost(self):
-        serializer_class = CompliancePeriodSerializer
-        response = self.client.post('/api/complianceperiods/'
-)        # Check that the response is 200 OK.
-        assert status.HTTP_200_OK == response.status_code
+        # Cleanup:
+        deleteUrl = createUrl + "/" + str(createdId) + "/delete"
+        response = self.client.post(deleteUrl)
+        # Check that the response is OK.
+        assert status.HTTP_204_NO_CONTENT == response.status_code
         
 
     def test_contactsBulkPost(self):
-        serializer_class = ContactSerializer
-        response = self.client.post('/api/contacts/bulk/')
+        # Test Bulk Load.
+        payload = fakedata.ContactTestDataCreate()
+        jsonString = "[]"
+        response = self.client.post('/api/contacts/bulk',content_type='application/json', data=jsonString)
         # Check that the response is 200 OK.
-        assert status.HTTP_200_OK == response.status_code
+        assert status.HTTP_201_CREATED == response.status_code
         
 
     def test_contactsGet(self):
-        response = self.client.get('/api/contacts/')
+        # Test Create and List operations.
+        testUrl = "/api/contacts"
+        # Create:
+        serializer_class = ContactSerializer
+        payload = fakedata.ContactTestDataCreate()
+        jsonString = json.dumps(payload)
+        response = self.client.post(testUrl, content_type='application/json', data=jsonString)
+        # Check that the response is OK.
+        assert status.HTTP_201_CREATED == response.status_code
+        # parse the response.
+        jsonString = response.content.decode("utf-8")
+        data = json.loads(jsonString)
+        createdId = data['id']
+        # List:
+        response = self.client.get(testUrl)
         # Check that the response is 200 OK.
         assert status.HTTP_200_OK == response.status_code
+        # Cleanup:
+        deleteUrl = testUrl + "/" + str(createdId) + "/delete"
+        response = self.client.post(deleteUrl)
+        # Check that the response is OK.
+        assert status.HTTP_204_NO_CONTENT == response.status_code
         
 
     def test_contactsIdDeletePost(self):
-        testID = 1
-        testURL = operation.path.replace ("(.*)",testId)
-        response = self.client.post('/api/contacts/(.*)/delete/')
-        # Check that the response is 200 OK.
-        assert status.HTTP_200_OK == response.status_code
+        # Test Retrieve and Update operations.
+        testUrl = "/api/contacts/(?P<id>[0-9]+)/delete"
+        createUrl = testUrl.replace ("/(?P<id>[0-9]+)/delete","")
+        # Create an object:
+        payload = fakedata.ContactTestDataCreate()
+        jsonString = json.dumps(payload)
+        response = self.client.post(createUrl, content_type='application/json', data=jsonString)
+        # Check that the response is OK.
+        assert status.HTTP_201_CREATED == response.status_code
+        # parse the response.
+        jsonString = response.content.decode("utf-8")
+        data = json.loads(jsonString)
+        createdId = data['id']
+        deleteUrl = testUrl.replace ("(?P<id>[0-9]+)",str(createdId))
+        response = self.client.post(deleteUrl)
+        # Check that the response is OK.
+        assert status.HTTP_204_NO_CONTENT == response.status_code
         
 
     def test_contactsIdGet(self):
-        response = self.client.get('/api/contacts/(.*)/')
+        # Test Retrieve and Update operations.
+        testUrl = "/api/contacts/(?P<id>[0-9]+)"
+        createUrl = testUrl.replace ("/(?P<id>[0-9]+)","")
+        # Create an object:
+        payload = fakedata.ContactTestDataCreate()
+        jsonString = json.dumps(payload)
+        response = self.client.post(createUrl, content_type='application/json', data=jsonString)
+        # Check that the response is OK.
+        assert status.HTTP_201_CREATED == response.status_code
+        # parse the response.
+        jsonString = response.content.decode("utf-8")
+        data = json.loads(jsonString)
+        createdId = data['id']
+        # Update the object:
+        updateUrl = testUrl.replace ("(?P<id>[0-9]+)",str(createdId))
+        payload = fakedata.ContactTestDataUpdate()
+        jsonString = json.dumps(payload)
+        response = self.client.put(updateUrl, content_type='application/json', data=jsonString)
         # Check that the response is 200 OK.
         assert status.HTTP_200_OK == response.status_code
-        
-
-    def test_contactsIdPut(self):
-        response = self.client.put('/api/contacts/(.*)/')
-        # Check that the response is 200 OK.
-        assert status.HTTP_200_OK == response.status_code
-        
-
-    def test_contactsPost(self):
-        serializer_class = ContactSerializer
-        response = self.client.post('/api/contacts/'
-)        # Check that the response is 200 OK.
-        assert status.HTTP_200_OK == response.status_code
+        # Cleanup:
+        deleteUrl = createUrl + "/" + str(createdId) + "/delete"
+        response = self.client.post(deleteUrl)
+        # Check that the response is OK.
+        assert status.HTTP_204_NO_CONTENT == response.status_code
         
 
     def test_creditTradeIdNotesGet(self):
         self.fail("Not implemented")        
 
     def test_credittradesBulkPost(self):
-        serializer_class = CreditTradeSerializer
-        response = self.client.post('/api/credittrades/bulk/')
+        # Test Bulk Load.
+        payload = fakedata.CreditTradeTestDataCreate()
+        jsonString = "[]"
+        response = self.client.post('/api/credittrades/bulk',content_type='application/json', data=jsonString)
         # Check that the response is 200 OK.
-        assert status.HTTP_200_OK == response.status_code
+        assert status.HTTP_201_CREATED == response.status_code
         
 
     def test_credittradesGet(self):
-        response = self.client.get('/api/credittrades/')
+        # Test Create and List operations.
+        testUrl = "/api/credittrades"
+        # Create:
+        serializer_class = CreditTradeSerializer
+        payload = fakedata.CreditTradeTestDataCreate()
+        jsonString = json.dumps(payload)
+        response = self.client.post(testUrl, content_type='application/json', data=jsonString)
+        # Check that the response is OK.
+        assert status.HTTP_201_CREATED == response.status_code
+        # parse the response.
+        jsonString = response.content.decode("utf-8")
+        data = json.loads(jsonString)
+        createdId = data['id']
+        # List:
+        response = self.client.get(testUrl)
         # Check that the response is 200 OK.
         assert status.HTTP_200_OK == response.status_code
+        # Cleanup:
+        deleteUrl = testUrl + "/" + str(createdId) + "/delete"
+        response = self.client.post(deleteUrl)
+        # Check that the response is OK.
+        assert status.HTTP_204_NO_CONTENT == response.status_code
         
 
     def test_credittradesIdAttachmentsGet(self):
         self.fail("Not implemented")        
 
     def test_credittradesIdDeletePost(self):
-        testID = 1
-        testURL = operation.path.replace ("(.*)",testId)
-        response = self.client.post('/api/credittrades/(.*)/delete/')
-        # Check that the response is 200 OK.
-        assert status.HTTP_200_OK == response.status_code
+        # Test Retrieve and Update operations.
+        testUrl = "/api/credittrades/(?P<id>[0-9]+)/delete"
+        createUrl = testUrl.replace ("/(?P<id>[0-9]+)/delete","")
+        # Create an object:
+        payload = fakedata.CreditTradeTestDataCreate()
+        jsonString = json.dumps(payload)
+        response = self.client.post(createUrl, content_type='application/json', data=jsonString)
+        # Check that the response is OK.
+        assert status.HTTP_201_CREATED == response.status_code
+        # parse the response.
+        jsonString = response.content.decode("utf-8")
+        data = json.loads(jsonString)
+        createdId = data['id']
+        deleteUrl = testUrl.replace ("(?P<id>[0-9]+)",str(createdId))
+        response = self.client.post(deleteUrl)
+        # Check that the response is OK.
+        assert status.HTTP_204_NO_CONTENT == response.status_code
         
 
     def test_credittradesIdGet(self):
-        response = self.client.get('/api/credittrades/(.*)/')
+        # Test Retrieve and Update operations.
+        testUrl = "/api/credittrades/(?P<id>[0-9]+)"
+        createUrl = testUrl.replace ("/(?P<id>[0-9]+)","")
+        # Create an object:
+        payload = fakedata.CreditTradeTestDataCreate()
+        jsonString = json.dumps(payload)
+        response = self.client.post(createUrl, content_type='application/json', data=jsonString)
+        # Check that the response is OK.
+        assert status.HTTP_201_CREATED == response.status_code
+        # parse the response.
+        jsonString = response.content.decode("utf-8")
+        data = json.loads(jsonString)
+        createdId = data['id']
+        # Update the object:
+        updateUrl = testUrl.replace ("(?P<id>[0-9]+)",str(createdId))
+        payload = fakedata.CreditTradeTestDataUpdate()
+        jsonString = json.dumps(payload)
+        response = self.client.put(updateUrl, content_type='application/json', data=jsonString)
         # Check that the response is 200 OK.
         assert status.HTTP_200_OK == response.status_code
+        # Cleanup:
+        deleteUrl = createUrl + "/" + str(createdId) + "/delete"
+        response = self.client.post(deleteUrl)
+        # Check that the response is OK.
+        assert status.HTTP_204_NO_CONTENT == response.status_code
         
 
     def test_credittradesIdHistoryGet(self):
@@ -262,60 +449,89 @@ class Test_Api(TestCase):
     def test_credittradesIdHistoryPost(self):
         self.fail("Not implemented")        
 
-    def test_credittradesIdPut(self):
-        response = self.client.put('/api/credittrades/(.*)/')
-        # Check that the response is 200 OK.
-        assert status.HTTP_200_OK == response.status_code
-        
-
-    def test_credittradesPost(self):
-        serializer_class = CreditTradeSerializer
-        response = self.client.post('/api/credittrades/'
-)        # Check that the response is 200 OK.
-        assert status.HTTP_200_OK == response.status_code
-        
-
     def test_credittradingSearchGet(self):
         self.fail("Not implemented")        
 
     def test_credittradetradelogentriesBulkPost(self):
-        serializer_class = CreditTradeLogEntrySerializer
-        response = self.client.post('/api/credittradetradelogentries/bulk/')
+        # Test Bulk Load.
+        payload = fakedata.CreditTradeLogEntryTestDataCreate()
+        jsonString = "[]"
+        response = self.client.post('/api/credittradetradelogentries/bulk',content_type='application/json', data=jsonString)
         # Check that the response is 200 OK.
-        assert status.HTTP_200_OK == response.status_code
+        assert status.HTTP_201_CREATED == response.status_code
         
 
     def test_credittradetradelogentriesGet(self):
-        response = self.client.get('/api/credittradetradelogentries/')
+        # Test Create and List operations.
+        testUrl = "/api/credittradetradelogentries"
+        # Create:
+        serializer_class = CreditTradeLogEntrySerializer
+        payload = fakedata.CreditTradeLogEntryTestDataCreate()
+        jsonString = json.dumps(payload)
+        response = self.client.post(testUrl, content_type='application/json', data=jsonString)
+        # Check that the response is OK.
+        assert status.HTTP_201_CREATED == response.status_code
+        # parse the response.
+        jsonString = response.content.decode("utf-8")
+        data = json.loads(jsonString)
+        createdId = data['id']
+        # List:
+        response = self.client.get(testUrl)
         # Check that the response is 200 OK.
         assert status.HTTP_200_OK == response.status_code
+        # Cleanup:
+        deleteUrl = testUrl + "/" + str(createdId) + "/delete"
+        response = self.client.post(deleteUrl)
+        # Check that the response is OK.
+        assert status.HTTP_204_NO_CONTENT == response.status_code
         
 
     def test_credittradetradelogentriesIdDeletePost(self):
-        testID = 1
-        testURL = operation.path.replace ("(.*)",testId)
-        response = self.client.post('/api/credittradetradelogentries/(.*)/delete/')
-        # Check that the response is 200 OK.
-        assert status.HTTP_200_OK == response.status_code
+        # Test Retrieve and Update operations.
+        testUrl = "/api/credittradetradelogentries/(?P<id>[0-9]+)/delete"
+        createUrl = testUrl.replace ("/(?P<id>[0-9]+)/delete","")
+        # Create an object:
+        payload = fakedata.CreditTradeLogEntryTestDataCreate()
+        jsonString = json.dumps(payload)
+        response = self.client.post(createUrl, content_type='application/json', data=jsonString)
+        # Check that the response is OK.
+        assert status.HTTP_201_CREATED == response.status_code
+        # parse the response.
+        jsonString = response.content.decode("utf-8")
+        data = json.loads(jsonString)
+        createdId = data['id']
+        deleteUrl = testUrl.replace ("(?P<id>[0-9]+)",str(createdId))
+        response = self.client.post(deleteUrl)
+        # Check that the response is OK.
+        assert status.HTTP_204_NO_CONTENT == response.status_code
         
 
     def test_credittradetradelogentriesIdGet(self):
-        response = self.client.get('/api/credittradetradelogentries/(.*)/')
+        # Test Retrieve and Update operations.
+        testUrl = "/api/credittradetradelogentries/(?P<id>[0-9]+)"
+        createUrl = testUrl.replace ("/(?P<id>[0-9]+)","")
+        # Create an object:
+        payload = fakedata.CreditTradeLogEntryTestDataCreate()
+        jsonString = json.dumps(payload)
+        response = self.client.post(createUrl, content_type='application/json', data=jsonString)
+        # Check that the response is OK.
+        assert status.HTTP_201_CREATED == response.status_code
+        # parse the response.
+        jsonString = response.content.decode("utf-8")
+        data = json.loads(jsonString)
+        createdId = data['id']
+        # Update the object:
+        updateUrl = testUrl.replace ("(?P<id>[0-9]+)",str(createdId))
+        payload = fakedata.CreditTradeLogEntryTestDataUpdate()
+        jsonString = json.dumps(payload)
+        response = self.client.put(updateUrl, content_type='application/json', data=jsonString)
         # Check that the response is 200 OK.
         assert status.HTTP_200_OK == response.status_code
-        
-
-    def test_credittradetradelogentriesIdPut(self):
-        response = self.client.put('/api/credittradetradelogentries/(.*)/')
-        # Check that the response is 200 OK.
-        assert status.HTTP_200_OK == response.status_code
-        
-
-    def test_credittradetradelogentriesPost(self):
-        serializer_class = CreditTradeLogEntrySerializer
-        response = self.client.post('/api/credittradetradelogentries/'
-)        # Check that the response is 200 OK.
-        assert status.HTTP_200_OK == response.status_code
+        # Cleanup:
+        deleteUrl = createUrl + "/" + str(createdId) + "/delete"
+        response = self.client.post(deleteUrl)
+        # Check that the response is OK.
+        assert status.HTTP_204_NO_CONTENT == response.status_code
         
 
     def test_usersCurrentFavouritesIdDeletePost(self):
@@ -334,33 +550,88 @@ class Test_Api(TestCase):
         self.fail("Not implemented")        
 
     def test_fuelsuppliersBulkPost(self):
-        serializer_class = FuelSupplierSerializer
-        response = self.client.post('/api/fuelsuppliers/bulk/')
+        # Test Bulk Load.
+        payload = fakedata.FuelSupplierTestDataCreate()
+        jsonString = "[]"
+        response = self.client.post('/api/fuelsuppliers/bulk',content_type='application/json', data=jsonString)
         # Check that the response is 200 OK.
-        assert status.HTTP_200_OK == response.status_code
+        assert status.HTTP_201_CREATED == response.status_code
         
 
     def test_fuelsuppliersGet(self):
-        response = self.client.get('/api/fuelsuppliers/')
+        # Test Create and List operations.
+        testUrl = "/api/fuelsuppliers"
+        # Create:
+        serializer_class = FuelSupplierSerializer
+        payload = fakedata.FuelSupplierTestDataCreate()
+        jsonString = json.dumps(payload)
+        response = self.client.post(testUrl, content_type='application/json', data=jsonString)
+        # Check that the response is OK.
+        assert status.HTTP_201_CREATED == response.status_code
+        # parse the response.
+        jsonString = response.content.decode("utf-8")
+        data = json.loads(jsonString)
+        createdId = data['id']
+        # List:
+        response = self.client.get(testUrl)
         # Check that the response is 200 OK.
         assert status.HTTP_200_OK == response.status_code
+        # Cleanup:
+        deleteUrl = testUrl + "/" + str(createdId) + "/delete"
+        response = self.client.post(deleteUrl)
+        # Check that the response is OK.
+        assert status.HTTP_204_NO_CONTENT == response.status_code
         
 
     def test_fuelsuppliersIdAttachmentsGet(self):
         self.fail("Not implemented")        
 
     def test_fuelsuppliersIdDeletePost(self):
-        testID = 1
-        testURL = operation.path.replace ("(.*)",testId)
-        response = self.client.post('/api/fuelsuppliers/(.*)/delete/')
-        # Check that the response is 200 OK.
-        assert status.HTTP_200_OK == response.status_code
+        # Test Retrieve and Update operations.
+        testUrl = "/api/fuelsuppliers/(?P<id>[0-9]+)/delete"
+        createUrl = testUrl.replace ("/(?P<id>[0-9]+)/delete","")
+        # Create an object:
+        payload = fakedata.FuelSupplierTestDataCreate()
+        jsonString = json.dumps(payload)
+        response = self.client.post(createUrl, content_type='application/json', data=jsonString)
+        # Check that the response is OK.
+        assert status.HTTP_201_CREATED == response.status_code
+        # parse the response.
+        jsonString = response.content.decode("utf-8")
+        data = json.loads(jsonString)
+        createdId = data['id']
+        deleteUrl = testUrl.replace ("(?P<id>[0-9]+)",str(createdId))
+        response = self.client.post(deleteUrl)
+        # Check that the response is OK.
+        assert status.HTTP_204_NO_CONTENT == response.status_code
         
 
     def test_fuelsuppliersIdGet(self):
-        response = self.client.get('/api/fuelsuppliers/(.*)/')
+        # Test Retrieve and Update operations.
+        testUrl = "/api/fuelsuppliers/(?P<id>[0-9]+)"
+        createUrl = testUrl.replace ("/(?P<id>[0-9]+)","")
+        # Create an object:
+        payload = fakedata.FuelSupplierTestDataCreate()
+        jsonString = json.dumps(payload)
+        response = self.client.post(createUrl, content_type='application/json', data=jsonString)
+        # Check that the response is OK.
+        assert status.HTTP_201_CREATED == response.status_code
+        # parse the response.
+        jsonString = response.content.decode("utf-8")
+        data = json.loads(jsonString)
+        createdId = data['id']
+        # Update the object:
+        updateUrl = testUrl.replace ("(?P<id>[0-9]+)",str(createdId))
+        payload = fakedata.FuelSupplierTestDataUpdate()
+        jsonString = json.dumps(payload)
+        response = self.client.put(updateUrl, content_type='application/json', data=jsonString)
         # Check that the response is 200 OK.
         assert status.HTTP_200_OK == response.status_code
+        # Cleanup:
+        deleteUrl = createUrl + "/" + str(createdId) + "/delete"
+        response = self.client.post(deleteUrl)
+        # Check that the response is OK.
+        assert status.HTTP_204_NO_CONTENT == response.status_code
         
 
     def test_fuelsuppliersIdHistoryGet(self):
@@ -372,330 +643,666 @@ class Test_Api(TestCase):
     def test_fuelsuppliersIdNotesGet(self):
         self.fail("Not implemented")        
 
-    def test_fuelsuppliersIdPut(self):
-        response = self.client.put('/api/fuelsuppliers/(.*)/')
-        # Check that the response is 200 OK.
-        assert status.HTTP_200_OK == response.status_code
-        
-
-    def test_fuelsuppliersPost(self):
-        serializer_class = FuelSupplierSerializer
-        response = self.client.post('/api/fuelsuppliers/'
-)        # Check that the response is 200 OK.
-        assert status.HTTP_200_OK == response.status_code
-        
-
     def test_fuelsuppliersSearchGet(self):
         self.fail("Not implemented")        
 
     def test_groupsBulkPost(self):
-        serializer_class = GroupSerializer
-        response = self.client.post('/api/groups/bulk/')
+        # Test Bulk Load.
+        payload = fakedata.GroupTestDataCreate()
+        jsonString = "[]"
+        response = self.client.post('/api/groups/bulk',content_type='application/json', data=jsonString)
         # Check that the response is 200 OK.
-        assert status.HTTP_200_OK == response.status_code
+        assert status.HTTP_201_CREATED == response.status_code
         
 
     def test_groupsGet(self):
-        response = self.client.get('/api/groups/')
+        # Test Create and List operations.
+        testUrl = "/api/groups"
+        # Create:
+        serializer_class = GroupSerializer
+        payload = fakedata.GroupTestDataCreate()
+        jsonString = json.dumps(payload)
+        response = self.client.post(testUrl, content_type='application/json', data=jsonString)
+        # Check that the response is OK.
+        assert status.HTTP_201_CREATED == response.status_code
+        # parse the response.
+        jsonString = response.content.decode("utf-8")
+        data = json.loads(jsonString)
+        createdId = data['id']
+        # List:
+        response = self.client.get(testUrl)
         # Check that the response is 200 OK.
         assert status.HTTP_200_OK == response.status_code
+        # Cleanup:
+        deleteUrl = testUrl + "/" + str(createdId) + "/delete"
+        response = self.client.post(deleteUrl)
+        # Check that the response is OK.
+        assert status.HTTP_204_NO_CONTENT == response.status_code
         
 
     def test_groupsIdDeletePost(self):
-        testID = 1
-        testURL = operation.path.replace ("(.*)",testId)
-        response = self.client.post('/api/groups/(.*)/delete/')
-        # Check that the response is 200 OK.
-        assert status.HTTP_200_OK == response.status_code
+        # Test Retrieve and Update operations.
+        testUrl = "/api/groups/(?P<id>[0-9]+)/delete"
+        createUrl = testUrl.replace ("/(?P<id>[0-9]+)/delete","")
+        # Create an object:
+        payload = fakedata.GroupTestDataCreate()
+        jsonString = json.dumps(payload)
+        response = self.client.post(createUrl, content_type='application/json', data=jsonString)
+        # Check that the response is OK.
+        assert status.HTTP_201_CREATED == response.status_code
+        # parse the response.
+        jsonString = response.content.decode("utf-8")
+        data = json.loads(jsonString)
+        createdId = data['id']
+        deleteUrl = testUrl.replace ("(?P<id>[0-9]+)",str(createdId))
+        response = self.client.post(deleteUrl)
+        # Check that the response is OK.
+        assert status.HTTP_204_NO_CONTENT == response.status_code
         
 
     def test_groupsIdGet(self):
-        response = self.client.get('/api/groups/(.*)/')
+        # Test Retrieve and Update operations.
+        testUrl = "/api/groups/(?P<id>[0-9]+)"
+        createUrl = testUrl.replace ("/(?P<id>[0-9]+)","")
+        # Create an object:
+        payload = fakedata.GroupTestDataCreate()
+        jsonString = json.dumps(payload)
+        response = self.client.post(createUrl, content_type='application/json', data=jsonString)
+        # Check that the response is OK.
+        assert status.HTTP_201_CREATED == response.status_code
+        # parse the response.
+        jsonString = response.content.decode("utf-8")
+        data = json.loads(jsonString)
+        createdId = data['id']
+        # Update the object:
+        updateUrl = testUrl.replace ("(?P<id>[0-9]+)",str(createdId))
+        payload = fakedata.GroupTestDataUpdate()
+        jsonString = json.dumps(payload)
+        response = self.client.put(updateUrl, content_type='application/json', data=jsonString)
         # Check that the response is 200 OK.
         assert status.HTTP_200_OK == response.status_code
-        
-
-    def test_groupsIdPut(self):
-        response = self.client.put('/api/groups/(.*)/')
-        # Check that the response is 200 OK.
-        assert status.HTTP_200_OK == response.status_code
+        # Cleanup:
+        deleteUrl = createUrl + "/" + str(createdId) + "/delete"
+        response = self.client.post(deleteUrl)
+        # Check that the response is OK.
+        assert status.HTTP_204_NO_CONTENT == response.status_code
         
 
     def test_groupsIdUsersGet(self):
         self.fail("Not implemented")        
 
-    def test_groupsPost(self):
-        serializer_class = GroupSerializer
-        response = self.client.post('/api/groups/'
-)        # Check that the response is 200 OK.
-        assert status.HTTP_200_OK == response.status_code
-        
-
     def test_historiesBulkPost(self):
-        serializer_class = HistorySerializer
-        response = self.client.post('/api/histories/bulk/')
+        # Test Bulk Load.
+        payload = fakedata.HistoryTestDataCreate()
+        jsonString = "[]"
+        response = self.client.post('/api/histories/bulk',content_type='application/json', data=jsonString)
         # Check that the response is 200 OK.
-        assert status.HTTP_200_OK == response.status_code
+        assert status.HTTP_201_CREATED == response.status_code
         
 
     def test_historiesGet(self):
-        response = self.client.get('/api/histories/')
+        # Test Create and List operations.
+        testUrl = "/api/histories"
+        # Create:
+        serializer_class = HistorySerializer
+        payload = fakedata.HistoryTestDataCreate()
+        jsonString = json.dumps(payload)
+        response = self.client.post(testUrl, content_type='application/json', data=jsonString)
+        # Check that the response is OK.
+        assert status.HTTP_201_CREATED == response.status_code
+        # parse the response.
+        jsonString = response.content.decode("utf-8")
+        data = json.loads(jsonString)
+        createdId = data['id']
+        # List:
+        response = self.client.get(testUrl)
         # Check that the response is 200 OK.
         assert status.HTTP_200_OK == response.status_code
+        # Cleanup:
+        deleteUrl = testUrl + "/" + str(createdId) + "/delete"
+        response = self.client.post(deleteUrl)
+        # Check that the response is OK.
+        assert status.HTTP_204_NO_CONTENT == response.status_code
         
 
     def test_historiesIdDeletePost(self):
-        testID = 1
-        testURL = operation.path.replace ("(.*)",testId)
-        response = self.client.post('/api/histories/(.*)/delete/')
-        # Check that the response is 200 OK.
-        assert status.HTTP_200_OK == response.status_code
+        # Test Retrieve and Update operations.
+        testUrl = "/api/histories/(?P<id>[0-9]+)/delete"
+        createUrl = testUrl.replace ("/(?P<id>[0-9]+)/delete","")
+        # Create an object:
+        payload = fakedata.HistoryTestDataCreate()
+        jsonString = json.dumps(payload)
+        response = self.client.post(createUrl, content_type='application/json', data=jsonString)
+        # Check that the response is OK.
+        assert status.HTTP_201_CREATED == response.status_code
+        # parse the response.
+        jsonString = response.content.decode("utf-8")
+        data = json.loads(jsonString)
+        createdId = data['id']
+        deleteUrl = testUrl.replace ("(?P<id>[0-9]+)",str(createdId))
+        response = self.client.post(deleteUrl)
+        # Check that the response is OK.
+        assert status.HTTP_204_NO_CONTENT == response.status_code
         
 
     def test_historiesIdGet(self):
-        response = self.client.get('/api/histories/(.*)/')
+        # Test Retrieve and Update operations.
+        testUrl = "/api/histories/(?P<id>[0-9]+)"
+        createUrl = testUrl.replace ("/(?P<id>[0-9]+)","")
+        # Create an object:
+        payload = fakedata.HistoryTestDataCreate()
+        jsonString = json.dumps(payload)
+        response = self.client.post(createUrl, content_type='application/json', data=jsonString)
+        # Check that the response is OK.
+        assert status.HTTP_201_CREATED == response.status_code
+        # parse the response.
+        jsonString = response.content.decode("utf-8")
+        data = json.loads(jsonString)
+        createdId = data['id']
+        # Update the object:
+        updateUrl = testUrl.replace ("(?P<id>[0-9]+)",str(createdId))
+        payload = fakedata.HistoryTestDataUpdate()
+        jsonString = json.dumps(payload)
+        response = self.client.put(updateUrl, content_type='application/json', data=jsonString)
         # Check that the response is 200 OK.
         assert status.HTTP_200_OK == response.status_code
-        
-
-    def test_historiesIdPut(self):
-        response = self.client.put('/api/histories/(.*)/')
-        # Check that the response is 200 OK.
-        assert status.HTTP_200_OK == response.status_code
-        
-
-    def test_historiesPost(self):
-        serializer_class = HistorySerializer
-        response = self.client.post('/api/histories/'
-)        # Check that the response is 200 OK.
-        assert status.HTTP_200_OK == response.status_code
+        # Cleanup:
+        deleteUrl = createUrl + "/" + str(createdId) + "/delete"
+        response = self.client.post(deleteUrl)
+        # Check that the response is OK.
+        assert status.HTTP_204_NO_CONTENT == response.status_code
         
 
     def test_lookuplistsBulkPost(self):
-        serializer_class = LookupListSerializer
-        response = self.client.post('/api/lookuplists/bulk/')
+        # Test Bulk Load.
+        payload = fakedata.LookupListTestDataCreate()
+        jsonString = "[]"
+        response = self.client.post('/api/lookuplists/bulk',content_type='application/json', data=jsonString)
         # Check that the response is 200 OK.
-        assert status.HTTP_200_OK == response.status_code
+        assert status.HTTP_201_CREATED == response.status_code
         
 
     def test_lookuplistsGet(self):
-        response = self.client.get('/api/lookuplists/')
+        # Test Create and List operations.
+        testUrl = "/api/lookuplists"
+        # Create:
+        serializer_class = LookupListSerializer
+        payload = fakedata.LookupListTestDataCreate()
+        jsonString = json.dumps(payload)
+        response = self.client.post(testUrl, content_type='application/json', data=jsonString)
+        # Check that the response is OK.
+        assert status.HTTP_201_CREATED == response.status_code
+        # parse the response.
+        jsonString = response.content.decode("utf-8")
+        data = json.loads(jsonString)
+        createdId = data['id']
+        # List:
+        response = self.client.get(testUrl)
         # Check that the response is 200 OK.
         assert status.HTTP_200_OK == response.status_code
+        # Cleanup:
+        deleteUrl = testUrl + "/" + str(createdId) + "/delete"
+        response = self.client.post(deleteUrl)
+        # Check that the response is OK.
+        assert status.HTTP_204_NO_CONTENT == response.status_code
         
 
     def test_lookuplistsIdDeletePost(self):
-        testID = 1
-        testURL = operation.path.replace ("(.*)",testId)
-        response = self.client.post('/api/lookuplists/(.*)/delete/')
-        # Check that the response is 200 OK.
-        assert status.HTTP_200_OK == response.status_code
+        # Test Retrieve and Update operations.
+        testUrl = "/api/lookuplists/(?P<id>[0-9]+)/delete"
+        createUrl = testUrl.replace ("/(?P<id>[0-9]+)/delete","")
+        # Create an object:
+        payload = fakedata.LookupListTestDataCreate()
+        jsonString = json.dumps(payload)
+        response = self.client.post(createUrl, content_type='application/json', data=jsonString)
+        # Check that the response is OK.
+        assert status.HTTP_201_CREATED == response.status_code
+        # parse the response.
+        jsonString = response.content.decode("utf-8")
+        data = json.loads(jsonString)
+        createdId = data['id']
+        deleteUrl = testUrl.replace ("(?P<id>[0-9]+)",str(createdId))
+        response = self.client.post(deleteUrl)
+        # Check that the response is OK.
+        assert status.HTTP_204_NO_CONTENT == response.status_code
         
 
     def test_lookuplistsIdGet(self):
-        response = self.client.get('/api/lookuplists/(.*)/')
+        # Test Retrieve and Update operations.
+        testUrl = "/api/lookuplists/(?P<id>[0-9]+)"
+        createUrl = testUrl.replace ("/(?P<id>[0-9]+)","")
+        # Create an object:
+        payload = fakedata.LookupListTestDataCreate()
+        jsonString = json.dumps(payload)
+        response = self.client.post(createUrl, content_type='application/json', data=jsonString)
+        # Check that the response is OK.
+        assert status.HTTP_201_CREATED == response.status_code
+        # parse the response.
+        jsonString = response.content.decode("utf-8")
+        data = json.loads(jsonString)
+        createdId = data['id']
+        # Update the object:
+        updateUrl = testUrl.replace ("(?P<id>[0-9]+)",str(createdId))
+        payload = fakedata.LookupListTestDataUpdate()
+        jsonString = json.dumps(payload)
+        response = self.client.put(updateUrl, content_type='application/json', data=jsonString)
         # Check that the response is 200 OK.
         assert status.HTTP_200_OK == response.status_code
-        
-
-    def test_lookuplistsIdPut(self):
-        response = self.client.put('/api/lookuplists/(.*)/')
-        # Check that the response is 200 OK.
-        assert status.HTTP_200_OK == response.status_code
-        
-
-    def test_lookuplistsPost(self):
-        serializer_class = LookupListSerializer
-        response = self.client.post('/api/lookuplists/'
-)        # Check that the response is 200 OK.
-        assert status.HTTP_200_OK == response.status_code
+        # Cleanup:
+        deleteUrl = createUrl + "/" + str(createdId) + "/delete"
+        response = self.client.post(deleteUrl)
+        # Check that the response is OK.
+        assert status.HTTP_204_NO_CONTENT == response.status_code
         
 
     def test_notesBulkPost(self):
-        serializer_class = NoteSerializer
-        response = self.client.post('/api/notes/bulk/')
+        # Test Bulk Load.
+        payload = fakedata.NoteTestDataCreate()
+        jsonString = "[]"
+        response = self.client.post('/api/notes/bulk',content_type='application/json', data=jsonString)
         # Check that the response is 200 OK.
-        assert status.HTTP_200_OK == response.status_code
+        assert status.HTTP_201_CREATED == response.status_code
         
 
     def test_notesGet(self):
-        response = self.client.get('/api/notes/')
+        # Test Create and List operations.
+        testUrl = "/api/notes"
+        # Create:
+        serializer_class = NoteSerializer
+        payload = fakedata.NoteTestDataCreate()
+        jsonString = json.dumps(payload)
+        response = self.client.post(testUrl, content_type='application/json', data=jsonString)
+        # Check that the response is OK.
+        assert status.HTTP_201_CREATED == response.status_code
+        # parse the response.
+        jsonString = response.content.decode("utf-8")
+        data = json.loads(jsonString)
+        createdId = data['id']
+        # List:
+        response = self.client.get(testUrl)
         # Check that the response is 200 OK.
         assert status.HTTP_200_OK == response.status_code
+        # Cleanup:
+        deleteUrl = testUrl + "/" + str(createdId) + "/delete"
+        response = self.client.post(deleteUrl)
+        # Check that the response is OK.
+        assert status.HTTP_204_NO_CONTENT == response.status_code
         
 
     def test_notesIdDeletePost(self):
-        testID = 1
-        testURL = operation.path.replace ("(.*)",testId)
-        response = self.client.post('/api/notes/(.*)/delete/')
-        # Check that the response is 200 OK.
-        assert status.HTTP_200_OK == response.status_code
+        # Test Retrieve and Update operations.
+        testUrl = "/api/notes/(?P<id>[0-9]+)/delete"
+        createUrl = testUrl.replace ("/(?P<id>[0-9]+)/delete","")
+        # Create an object:
+        payload = fakedata.NoteTestDataCreate()
+        jsonString = json.dumps(payload)
+        response = self.client.post(createUrl, content_type='application/json', data=jsonString)
+        # Check that the response is OK.
+        assert status.HTTP_201_CREATED == response.status_code
+        # parse the response.
+        jsonString = response.content.decode("utf-8")
+        data = json.loads(jsonString)
+        createdId = data['id']
+        deleteUrl = testUrl.replace ("(?P<id>[0-9]+)",str(createdId))
+        response = self.client.post(deleteUrl)
+        # Check that the response is OK.
+        assert status.HTTP_204_NO_CONTENT == response.status_code
         
 
     def test_notesIdGet(self):
-        response = self.client.get('/api/notes/(.*)/')
+        # Test Retrieve and Update operations.
+        testUrl = "/api/notes/(?P<id>[0-9]+)"
+        createUrl = testUrl.replace ("/(?P<id>[0-9]+)","")
+        # Create an object:
+        payload = fakedata.NoteTestDataCreate()
+        jsonString = json.dumps(payload)
+        response = self.client.post(createUrl, content_type='application/json', data=jsonString)
+        # Check that the response is OK.
+        assert status.HTTP_201_CREATED == response.status_code
+        # parse the response.
+        jsonString = response.content.decode("utf-8")
+        data = json.loads(jsonString)
+        createdId = data['id']
+        # Update the object:
+        updateUrl = testUrl.replace ("(?P<id>[0-9]+)",str(createdId))
+        payload = fakedata.NoteTestDataUpdate()
+        jsonString = json.dumps(payload)
+        response = self.client.put(updateUrl, content_type='application/json', data=jsonString)
         # Check that the response is 200 OK.
         assert status.HTTP_200_OK == response.status_code
-        
-
-    def test_notesIdPut(self):
-        response = self.client.put('/api/notes/(.*)/')
-        # Check that the response is 200 OK.
-        assert status.HTTP_200_OK == response.status_code
-        
-
-    def test_notesPost(self):
-        serializer_class = NoteSerializer
-        response = self.client.post('/api/notes/'
-)        # Check that the response is 200 OK.
-        assert status.HTTP_200_OK == response.status_code
+        # Cleanup:
+        deleteUrl = createUrl + "/" + str(createdId) + "/delete"
+        response = self.client.post(deleteUrl)
+        # Check that the response is OK.
+        assert status.HTTP_204_NO_CONTENT == response.status_code
         
 
     def test_notificationsBulkPost(self):
-        serializer_class = NotificationSerializer
-        response = self.client.post('/api/notifications/bulk/')
+        # Test Bulk Load.
+        payload = fakedata.NotificationTestDataCreate()
+        jsonString = "[]"
+        response = self.client.post('/api/notifications/bulk',content_type='application/json', data=jsonString)
         # Check that the response is 200 OK.
-        assert status.HTTP_200_OK == response.status_code
+        assert status.HTTP_201_CREATED == response.status_code
         
 
     def test_notificationsGet(self):
-        response = self.client.get('/api/notifications/')
+        # Test Create and List operations.
+        testUrl = "/api/notifications"
+        # Create:
+        serializer_class = NotificationSerializer
+        payload = fakedata.NotificationTestDataCreate()
+        jsonString = json.dumps(payload)
+        response = self.client.post(testUrl, content_type='application/json', data=jsonString)
+        # Check that the response is OK.
+        assert status.HTTP_201_CREATED == response.status_code
+        # parse the response.
+        jsonString = response.content.decode("utf-8")
+        data = json.loads(jsonString)
+        createdId = data['id']
+        # List:
+        response = self.client.get(testUrl)
         # Check that the response is 200 OK.
         assert status.HTTP_200_OK == response.status_code
+        # Cleanup:
+        deleteUrl = testUrl + "/" + str(createdId) + "/delete"
+        response = self.client.post(deleteUrl)
+        # Check that the response is OK.
+        assert status.HTTP_204_NO_CONTENT == response.status_code
         
 
     def test_notificationsIdDeletePost(self):
-        testID = 1
-        testURL = operation.path.replace ("(.*)",testId)
-        response = self.client.post('/api/notifications/(.*)/delete/')
-        # Check that the response is 200 OK.
-        assert status.HTTP_200_OK == response.status_code
+        # Test Retrieve and Update operations.
+        testUrl = "/api/notifications/(?P<id>[0-9]+)/delete"
+        createUrl = testUrl.replace ("/(?P<id>[0-9]+)/delete","")
+        # Create an object:
+        payload = fakedata.NotificationTestDataCreate()
+        jsonString = json.dumps(payload)
+        response = self.client.post(createUrl, content_type='application/json', data=jsonString)
+        # Check that the response is OK.
+        assert status.HTTP_201_CREATED == response.status_code
+        # parse the response.
+        jsonString = response.content.decode("utf-8")
+        data = json.loads(jsonString)
+        createdId = data['id']
+        deleteUrl = testUrl.replace ("(?P<id>[0-9]+)",str(createdId))
+        response = self.client.post(deleteUrl)
+        # Check that the response is OK.
+        assert status.HTTP_204_NO_CONTENT == response.status_code
         
 
     def test_notificationsIdGet(self):
-        response = self.client.get('/api/notifications/(.*)/')
+        # Test Retrieve and Update operations.
+        testUrl = "/api/notifications/(?P<id>[0-9]+)"
+        createUrl = testUrl.replace ("/(?P<id>[0-9]+)","")
+        # Create an object:
+        payload = fakedata.NotificationTestDataCreate()
+        jsonString = json.dumps(payload)
+        response = self.client.post(createUrl, content_type='application/json', data=jsonString)
+        # Check that the response is OK.
+        assert status.HTTP_201_CREATED == response.status_code
+        # parse the response.
+        jsonString = response.content.decode("utf-8")
+        data = json.loads(jsonString)
+        createdId = data['id']
+        # Update the object:
+        updateUrl = testUrl.replace ("(?P<id>[0-9]+)",str(createdId))
+        payload = fakedata.NotificationTestDataUpdate()
+        jsonString = json.dumps(payload)
+        response = self.client.put(updateUrl, content_type='application/json', data=jsonString)
         # Check that the response is 200 OK.
         assert status.HTTP_200_OK == response.status_code
-        
-
-    def test_notificationsIdPut(self):
-        response = self.client.put('/api/notifications/(.*)/')
-        # Check that the response is 200 OK.
-        assert status.HTTP_200_OK == response.status_code
-        
-
-    def test_notificationsPost(self):
-        serializer_class = NotificationSerializer
-        response = self.client.post('/api/notifications/'
-)        # Check that the response is 200 OK.
-        assert status.HTTP_200_OK == response.status_code
+        # Cleanup:
+        deleteUrl = createUrl + "/" + str(createdId) + "/delete"
+        response = self.client.post(deleteUrl)
+        # Check that the response is OK.
+        assert status.HTTP_204_NO_CONTENT == response.status_code
         
 
     def test_notificationeventsBulkPost(self):
-        serializer_class = NotificationEventSerializer
-        response = self.client.post('/api/notificationevents/bulk/')
+        # Test Bulk Load.
+        payload = fakedata.NotificationEventTestDataCreate()
+        jsonString = "[]"
+        response = self.client.post('/api/notificationevents/bulk',content_type='application/json', data=jsonString)
         # Check that the response is 200 OK.
-        assert status.HTTP_200_OK == response.status_code
+        assert status.HTTP_201_CREATED == response.status_code
         
 
     def test_notificationeventsGet(self):
-        response = self.client.get('/api/notificationevents/')
+        # Test Create and List operations.
+        testUrl = "/api/notificationevents"
+        # Create:
+        serializer_class = NotificationEventSerializer
+        payload = fakedata.NotificationEventTestDataCreate()
+        jsonString = json.dumps(payload)
+        response = self.client.post(testUrl, content_type='application/json', data=jsonString)
+        # Check that the response is OK.
+        assert status.HTTP_201_CREATED == response.status_code
+        # parse the response.
+        jsonString = response.content.decode("utf-8")
+        data = json.loads(jsonString)
+        createdId = data['id']
+        # List:
+        response = self.client.get(testUrl)
         # Check that the response is 200 OK.
         assert status.HTTP_200_OK == response.status_code
+        # Cleanup:
+        deleteUrl = testUrl + "/" + str(createdId) + "/delete"
+        response = self.client.post(deleteUrl)
+        # Check that the response is OK.
+        assert status.HTTP_204_NO_CONTENT == response.status_code
         
 
     def test_notificationeventsIdDeletePost(self):
-        testID = 1
-        testURL = operation.path.replace ("(.*)",testId)
-        response = self.client.post('/api/notificationevents/(.*)/delete/')
-        # Check that the response is 200 OK.
-        assert status.HTTP_200_OK == response.status_code
+        # Test Retrieve and Update operations.
+        testUrl = "/api/notificationevents/(?P<id>[0-9]+)/delete"
+        createUrl = testUrl.replace ("/(?P<id>[0-9]+)/delete","")
+        # Create an object:
+        payload = fakedata.NotificationEventTestDataCreate()
+        jsonString = json.dumps(payload)
+        response = self.client.post(createUrl, content_type='application/json', data=jsonString)
+        # Check that the response is OK.
+        assert status.HTTP_201_CREATED == response.status_code
+        # parse the response.
+        jsonString = response.content.decode("utf-8")
+        data = json.loads(jsonString)
+        createdId = data['id']
+        deleteUrl = testUrl.replace ("(?P<id>[0-9]+)",str(createdId))
+        response = self.client.post(deleteUrl)
+        # Check that the response is OK.
+        assert status.HTTP_204_NO_CONTENT == response.status_code
         
 
     def test_notificationeventsIdGet(self):
-        response = self.client.get('/api/notificationevents/(.*)/')
+        # Test Retrieve and Update operations.
+        testUrl = "/api/notificationevents/(?P<id>[0-9]+)"
+        createUrl = testUrl.replace ("/(?P<id>[0-9]+)","")
+        # Create an object:
+        payload = fakedata.NotificationEventTestDataCreate()
+        jsonString = json.dumps(payload)
+        response = self.client.post(createUrl, content_type='application/json', data=jsonString)
+        # Check that the response is OK.
+        assert status.HTTP_201_CREATED == response.status_code
+        # parse the response.
+        jsonString = response.content.decode("utf-8")
+        data = json.loads(jsonString)
+        createdId = data['id']
+        # Update the object:
+        updateUrl = testUrl.replace ("(?P<id>[0-9]+)",str(createdId))
+        payload = fakedata.NotificationEventTestDataUpdate()
+        jsonString = json.dumps(payload)
+        response = self.client.put(updateUrl, content_type='application/json', data=jsonString)
         # Check that the response is 200 OK.
         assert status.HTTP_200_OK == response.status_code
-        
-
-    def test_notificationeventsIdPut(self):
-        response = self.client.put('/api/notificationevents/(.*)/')
-        # Check that the response is 200 OK.
-        assert status.HTTP_200_OK == response.status_code
-        
-
-    def test_notificationeventsPost(self):
-        serializer_class = NotificationEventSerializer
-        response = self.client.post('/api/notificationevents/'
-)        # Check that the response is 200 OK.
-        assert status.HTTP_200_OK == response.status_code
+        # Cleanup:
+        deleteUrl = createUrl + "/" + str(createdId) + "/delete"
+        response = self.client.post(deleteUrl)
+        # Check that the response is OK.
+        assert status.HTTP_204_NO_CONTENT == response.status_code
         
 
     def test_permissionsBulkPost(self):
-        serializer_class = PermissionSerializer
-        response = self.client.post('/api/permissions/bulk/')
+        # Test Bulk Load.
+        payload = fakedata.PermissionTestDataCreate()
+        jsonString = "[]"
+        response = self.client.post('/api/permissions/bulk',content_type='application/json', data=jsonString)
         # Check that the response is 200 OK.
-        assert status.HTTP_200_OK == response.status_code
+        assert status.HTTP_201_CREATED == response.status_code
         
 
     def test_permissionsGet(self):
-        response = self.client.get('/api/permissions/')
+        # Test Create and List operations.
+        testUrl = "/api/permissions"
+        # Create:
+        serializer_class = PermissionSerializer
+        payload = fakedata.PermissionTestDataCreate()
+        jsonString = json.dumps(payload)
+        response = self.client.post(testUrl, content_type='application/json', data=jsonString)
+        # Check that the response is OK.
+        assert status.HTTP_201_CREATED == response.status_code
+        # parse the response.
+        jsonString = response.content.decode("utf-8")
+        data = json.loads(jsonString)
+        createdId = data['id']
+        # List:
+        response = self.client.get(testUrl)
         # Check that the response is 200 OK.
         assert status.HTTP_200_OK == response.status_code
+        # Cleanup:
+        deleteUrl = testUrl + "/" + str(createdId) + "/delete"
+        response = self.client.post(deleteUrl)
+        # Check that the response is OK.
+        assert status.HTTP_204_NO_CONTENT == response.status_code
         
 
     def test_permissionsIdDeletePost(self):
-        testID = 1
-        testURL = operation.path.replace ("(.*)",testId)
-        response = self.client.post('/api/permissions/(.*)/delete/')
-        # Check that the response is 200 OK.
-        assert status.HTTP_200_OK == response.status_code
+        # Test Retrieve and Update operations.
+        testUrl = "/api/permissions/(?P<id>[0-9]+)/delete"
+        createUrl = testUrl.replace ("/(?P<id>[0-9]+)/delete","")
+        # Create an object:
+        payload = fakedata.PermissionTestDataCreate()
+        jsonString = json.dumps(payload)
+        response = self.client.post(createUrl, content_type='application/json', data=jsonString)
+        # Check that the response is OK.
+        assert status.HTTP_201_CREATED == response.status_code
+        # parse the response.
+        jsonString = response.content.decode("utf-8")
+        data = json.loads(jsonString)
+        createdId = data['id']
+        deleteUrl = testUrl.replace ("(?P<id>[0-9]+)",str(createdId))
+        response = self.client.post(deleteUrl)
+        # Check that the response is OK.
+        assert status.HTTP_204_NO_CONTENT == response.status_code
         
 
     def test_permissionsIdGet(self):
-        response = self.client.get('/api/permissions/(.*)/')
+        # Test Retrieve and Update operations.
+        testUrl = "/api/permissions/(?P<id>[0-9]+)"
+        createUrl = testUrl.replace ("/(?P<id>[0-9]+)","")
+        # Create an object:
+        payload = fakedata.PermissionTestDataCreate()
+        jsonString = json.dumps(payload)
+        response = self.client.post(createUrl, content_type='application/json', data=jsonString)
+        # Check that the response is OK.
+        assert status.HTTP_201_CREATED == response.status_code
+        # parse the response.
+        jsonString = response.content.decode("utf-8")
+        data = json.loads(jsonString)
+        createdId = data['id']
+        # Update the object:
+        updateUrl = testUrl.replace ("(?P<id>[0-9]+)",str(createdId))
+        payload = fakedata.PermissionTestDataUpdate()
+        jsonString = json.dumps(payload)
+        response = self.client.put(updateUrl, content_type='application/json', data=jsonString)
         # Check that the response is 200 OK.
         assert status.HTTP_200_OK == response.status_code
-        
-
-    def test_permissionsIdPut(self):
-        response = self.client.put('/api/permissions/(.*)/')
-        # Check that the response is 200 OK.
-        assert status.HTTP_200_OK == response.status_code
-        
-
-    def test_permissionsPost(self):
-        serializer_class = PermissionSerializer
-        response = self.client.post('/api/permissions/'
-)        # Check that the response is 200 OK.
-        assert status.HTTP_200_OK == response.status_code
+        # Cleanup:
+        deleteUrl = createUrl + "/" + str(createdId) + "/delete"
+        response = self.client.post(deleteUrl)
+        # Check that the response is OK.
+        assert status.HTTP_204_NO_CONTENT == response.status_code
         
 
     def test_rolesBulkPost(self):
-        serializer_class = RoleSerializer
-        response = self.client.post('/api/roles/bulk/')
+        # Test Bulk Load.
+        payload = fakedata.RoleTestDataCreate()
+        jsonString = "[]"
+        response = self.client.post('/api/roles/bulk',content_type='application/json', data=jsonString)
         # Check that the response is 200 OK.
-        assert status.HTTP_200_OK == response.status_code
+        assert status.HTTP_201_CREATED == response.status_code
         
 
     def test_rolesGet(self):
-        response = self.client.get('/api/roles/')
+        # Test Create and List operations.
+        testUrl = "/api/roles"
+        # Create:
+        serializer_class = RoleSerializer
+        payload = fakedata.RoleTestDataCreate()
+        jsonString = json.dumps(payload)
+        response = self.client.post(testUrl, content_type='application/json', data=jsonString)
+        # Check that the response is OK.
+        assert status.HTTP_201_CREATED == response.status_code
+        # parse the response.
+        jsonString = response.content.decode("utf-8")
+        data = json.loads(jsonString)
+        createdId = data['id']
+        # List:
+        response = self.client.get(testUrl)
         # Check that the response is 200 OK.
         assert status.HTTP_200_OK == response.status_code
+        # Cleanup:
+        deleteUrl = testUrl + "/" + str(createdId) + "/delete"
+        response = self.client.post(deleteUrl)
+        # Check that the response is OK.
+        assert status.HTTP_204_NO_CONTENT == response.status_code
         
 
     def test_rolesIdDeletePost(self):
-        testID = 1
-        testURL = operation.path.replace ("(.*)",testId)
-        response = self.client.post('/api/roles/(.*)/delete/')
-        # Check that the response is 200 OK.
-        assert status.HTTP_200_OK == response.status_code
+        # Test Retrieve and Update operations.
+        testUrl = "/api/roles/(?P<id>[0-9]+)/delete"
+        createUrl = testUrl.replace ("/(?P<id>[0-9]+)/delete","")
+        # Create an object:
+        payload = fakedata.RoleTestDataCreate()
+        jsonString = json.dumps(payload)
+        response = self.client.post(createUrl, content_type='application/json', data=jsonString)
+        # Check that the response is OK.
+        assert status.HTTP_201_CREATED == response.status_code
+        # parse the response.
+        jsonString = response.content.decode("utf-8")
+        data = json.loads(jsonString)
+        createdId = data['id']
+        deleteUrl = testUrl.replace ("(?P<id>[0-9]+)",str(createdId))
+        response = self.client.post(deleteUrl)
+        # Check that the response is OK.
+        assert status.HTTP_204_NO_CONTENT == response.status_code
         
 
     def test_rolesIdGet(self):
-        response = self.client.get('/api/roles/(.*)/')
+        # Test Retrieve and Update operations.
+        testUrl = "/api/roles/(?P<id>[0-9]+)"
+        createUrl = testUrl.replace ("/(?P<id>[0-9]+)","")
+        # Create an object:
+        payload = fakedata.RoleTestDataCreate()
+        jsonString = json.dumps(payload)
+        response = self.client.post(createUrl, content_type='application/json', data=jsonString)
+        # Check that the response is OK.
+        assert status.HTTP_201_CREATED == response.status_code
+        # parse the response.
+        jsonString = response.content.decode("utf-8")
+        data = json.loads(jsonString)
+        createdId = data['id']
+        # Update the object:
+        updateUrl = testUrl.replace ("(?P<id>[0-9]+)",str(createdId))
+        payload = fakedata.RoleTestDataUpdate()
+        jsonString = json.dumps(payload)
+        response = self.client.put(updateUrl, content_type='application/json', data=jsonString)
         # Check that the response is 200 OK.
         assert status.HTTP_200_OK == response.status_code
+        # Cleanup:
+        deleteUrl = createUrl + "/" + str(createdId) + "/delete"
+        response = self.client.post(deleteUrl)
+        # Check that the response is OK.
+        assert status.HTTP_204_NO_CONTENT == response.status_code
         
 
     def test_rolesIdPermissionsGet(self):
@@ -707,24 +1314,11 @@ class Test_Api(TestCase):
     def test_rolesIdPermissionsPut(self):
         self.fail("Not implemented")        
 
-    def test_rolesIdPut(self):
-        response = self.client.put('/api/roles/(.*)/')
-        # Check that the response is 200 OK.
-        assert status.HTTP_200_OK == response.status_code
-        
-
     def test_rolesIdUsersGet(self):
         self.fail("Not implemented")        
 
     def test_rolesIdUsersPut(self):
         self.fail("Not implemented")        
-
-    def test_rolesPost(self):
-        serializer_class = RoleSerializer
-        response = self.client.post('/api/roles/'
-)        # Check that the response is 200 OK.
-        assert status.HTTP_200_OK == response.status_code
-        
 
     def test_usersBulkPost(self):
         self.fail("Not implemented")        
