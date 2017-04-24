@@ -31,7 +31,7 @@ class Migration(migrations.Migration):
                 ('quantity', models.IntegerField()),
                 ('supply_year', models.DateField(verbose_name='year')),
                 ('last_modified', models.DateField(auto_now=True)),
-                ('fuel_supplier', models.ForeignKey(to='tfrs.FuelSupplier')),
+                ('fuel_supplier', models.ForeignKey(to='server.FuelSupplier')),
             ],
         ),
         migrations.CreateModel(
@@ -39,12 +39,12 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.AutoField(verbose_name='ID', primary_key=True, serialize=False, auto_created=True)),
                 ('name', models.CharField(max_length=100)),
-                ('fuel_class', models.ForeignKey(to='tfrs.FuelClass')),
+                ('fuel_class', models.ForeignKey(to='server.FuelClass')),
             ],
         ),
         migrations.AddField(
             model_name='fuelsupply',
             name='fuel_type',
-            field=models.ForeignKey(to='tfrs.FuelType'),
+            field=models.ForeignKey(to='server.FuelType'),
         ),
     ]

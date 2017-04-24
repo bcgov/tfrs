@@ -40,6 +40,13 @@ The following Deliverable have been produced:
 	* Django Back-end
 	* Postgres Database
 
+### Development
+
+If using Windows as your development environment, install the following:
+- Python 3.5.1
+- Postgresql.  Be sure to add the postgresql bin folder to your path or else you will have problems with psycopg2 not being able to find the postgrsql libraries.
+- Visual Studio Community Preview with the Python extensions (As of 2017-4-18 the Preview version is required in order to use the Python extensions, which can be selected at time of install)
+
 ### Getting Help or Reporting an Issue
 To report bugs/issues/features requests, please file an [issue](https://github.com/bcgov/tfrs/issues/).
 
