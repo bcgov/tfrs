@@ -102,9 +102,13 @@ class attachmentsIdDeletePost(mixins.DestroyModelMixin, generics.GenericAPIView)
   lookup_field = 'id'
   permission_classes = (permissions.AllowAny,)  
   queryset = Attachment.objects.all()  
-  serializer_class = serializers.AttachmentSerializer  
-  def post(self, request, id):
-    return self.destroy(request, id)
+  serializer_class = serializers.AttachmentSerializer
+  def post(self, request, *args, **kwargs):
+    """
+    Destroys the specified Attachment object
+    """
+    return self.destroy(request, *args, **kwargs)
+
 
 class attachmentsIdDownloadGet(APIView):
   """  
@@ -196,9 +200,13 @@ class complianceperiodsIdDeletePost(mixins.DestroyModelMixin, generics.GenericAP
   lookup_field = 'id'
   permission_classes = (permissions.AllowAny,)  
   queryset = CompliancePeriod.objects.all()  
-  serializer_class = serializers.CompliancePeriodSerializer  
-  def post(self, request, id):
-    return self.destroy(request, id)
+  serializer_class = serializers.CompliancePeriodSerializer
+  def post(self, request, *args, **kwargs):
+    """
+    Destroys the specified CompliancePeriod object
+    """
+    return self.destroy(request, *args, **kwargs)
+
 
 class complianceperiodsIdGet(mixins.RetrieveModelMixin, mixins.UpdateModelMixin, generics.GenericAPIView):
   """  
@@ -281,9 +289,13 @@ class contactsIdDeletePost(mixins.DestroyModelMixin, generics.GenericAPIView):
   lookup_field = 'id'
   permission_classes = (permissions.AllowAny,)  
   queryset = Contact.objects.all()  
-  serializer_class = serializers.ContactSerializer  
-  def post(self, request, id):
-    return self.destroy(request, id)
+  serializer_class = serializers.ContactSerializer
+  def post(self, request, *args, **kwargs):
+    """
+    Destroys the specified Contact object
+    """
+    return self.destroy(request, *args, **kwargs)
+
 
 class contactsIdGet(mixins.RetrieveModelMixin, mixins.UpdateModelMixin, generics.GenericAPIView):
   """  
@@ -384,9 +396,13 @@ class credittradesIdDeletePost(mixins.DestroyModelMixin, generics.GenericAPIView
   lookup_field = 'id'
   permission_classes = (permissions.AllowAny,)  
   queryset = CreditTrade.objects.all()  
-  serializer_class = serializers.CreditTradeSerializer  
-  def post(self, request, id):
-    return self.destroy(request, id)
+  serializer_class = serializers.CreditTradeSerializer
+  def post(self, request, *args, **kwargs):
+    """
+    Destroys the specified CreditTrade object
+    """
+    return self.destroy(request, *args, **kwargs)
+
 
 class credittradesIdGet(mixins.RetrieveModelMixin, mixins.UpdateModelMixin, generics.GenericAPIView):
   """  
@@ -496,9 +512,13 @@ class credittradetradelogentriesIdDeletePost(mixins.DestroyModelMixin, generics.
   lookup_field = 'id'
   permission_classes = (permissions.AllowAny,)  
   queryset = CreditTradeLogEntry.objects.all()  
-  serializer_class = serializers.CreditTradeLogEntrySerializer  
-  def post(self, request, id):
-    return self.destroy(request, id)
+  serializer_class = serializers.CreditTradeLogEntrySerializer
+  def post(self, request, *args, **kwargs):
+    """
+    Destroys the specified CreditTradeLogEntry object
+    """
+    return self.destroy(request, *args, **kwargs)
+
 
 class credittradetradelogentriesIdGet(mixins.RetrieveModelMixin, mixins.UpdateModelMixin, generics.GenericAPIView):
   """  
@@ -635,9 +655,13 @@ class fuelsuppliersIdDeletePost(mixins.DestroyModelMixin, generics.GenericAPIVie
   lookup_field = 'id'
   permission_classes = (permissions.AllowAny,)  
   queryset = FuelSupplier.objects.all()  
-  serializer_class = serializers.FuelSupplierSerializer  
-  def post(self, request, id):
-    return self.destroy(request, id)
+  serializer_class = serializers.FuelSupplierSerializer
+  def post(self, request, *args, **kwargs):
+    """
+    Destroys the specified FuelSupplier object
+    """
+    return self.destroy(request, *args, **kwargs)
+
 
 class fuelsuppliersIdGet(mixins.RetrieveModelMixin, mixins.UpdateModelMixin, generics.GenericAPIView):
   """  
@@ -756,9 +780,13 @@ class groupsIdDeletePost(mixins.DestroyModelMixin, generics.GenericAPIView):
   lookup_field = 'id'
   permission_classes = (permissions.AllowAny,)  
   queryset = Group.objects.all()  
-  serializer_class = serializers.GroupSerializer  
-  def post(self, request, id):
-    return self.destroy(request, id)
+  serializer_class = serializers.GroupSerializer
+  def post(self, request, *args, **kwargs):
+    """
+    Destroys the specified Group object
+    """
+    return self.destroy(request, *args, **kwargs)
+
 
 class groupsIdGet(mixins.RetrieveModelMixin, mixins.UpdateModelMixin, generics.GenericAPIView):
   """  
@@ -850,9 +878,13 @@ class historiesIdDeletePost(mixins.DestroyModelMixin, generics.GenericAPIView):
   lookup_field = 'id'
   permission_classes = (permissions.AllowAny,)  
   queryset = History.objects.all()  
-  serializer_class = serializers.HistorySerializer  
-  def post(self, request, id):
-    return self.destroy(request, id)
+  serializer_class = serializers.HistorySerializer
+  def post(self, request, *args, **kwargs):
+    """
+    Destroys the specified History object
+    """
+    return self.destroy(request, *args, **kwargs)
+
 
 class historiesIdGet(mixins.RetrieveModelMixin, mixins.UpdateModelMixin, generics.GenericAPIView):
   """  
@@ -935,9 +967,13 @@ class lookuplistsIdDeletePost(mixins.DestroyModelMixin, generics.GenericAPIView)
   lookup_field = 'id'
   permission_classes = (permissions.AllowAny,)  
   queryset = LookupList.objects.all()  
-  serializer_class = serializers.LookupListSerializer  
-  def post(self, request, id):
-    return self.destroy(request, id)
+  serializer_class = serializers.LookupListSerializer
+  def post(self, request, *args, **kwargs):
+    """
+    Destroys the specified LookupList object
+    """
+    return self.destroy(request, *args, **kwargs)
+
 
 class lookuplistsIdGet(mixins.RetrieveModelMixin, mixins.UpdateModelMixin, generics.GenericAPIView):
   """  
@@ -1020,9 +1056,13 @@ class notesIdDeletePost(mixins.DestroyModelMixin, generics.GenericAPIView):
   lookup_field = 'id'
   permission_classes = (permissions.AllowAny,)  
   queryset = Note.objects.all()  
-  serializer_class = serializers.NoteSerializer  
-  def post(self, request, id):
-    return self.destroy(request, id)
+  serializer_class = serializers.NoteSerializer
+  def post(self, request, *args, **kwargs):
+    """
+    Destroys the specified Note object
+    """
+    return self.destroy(request, *args, **kwargs)
+
 
 class notesIdGet(mixins.RetrieveModelMixin, mixins.UpdateModelMixin, generics.GenericAPIView):
   """  
@@ -1105,9 +1145,13 @@ class notificationsIdDeletePost(mixins.DestroyModelMixin, generics.GenericAPIVie
   lookup_field = 'id'
   permission_classes = (permissions.AllowAny,)  
   queryset = Notification.objects.all()  
-  serializer_class = serializers.NotificationSerializer  
-  def post(self, request, id):
-    return self.destroy(request, id)
+  serializer_class = serializers.NotificationSerializer
+  def post(self, request, *args, **kwargs):
+    """
+    Destroys the specified Notification object
+    """
+    return self.destroy(request, *args, **kwargs)
+
 
 class notificationsIdGet(mixins.RetrieveModelMixin, mixins.UpdateModelMixin, generics.GenericAPIView):
   """  
@@ -1190,9 +1234,13 @@ class notificationeventsIdDeletePost(mixins.DestroyModelMixin, generics.GenericA
   lookup_field = 'id'
   permission_classes = (permissions.AllowAny,)  
   queryset = NotificationEvent.objects.all()  
-  serializer_class = serializers.NotificationEventSerializer  
-  def post(self, request, id):
-    return self.destroy(request, id)
+  serializer_class = serializers.NotificationEventSerializer
+  def post(self, request, *args, **kwargs):
+    """
+    Destroys the specified NotificationEvent object
+    """
+    return self.destroy(request, *args, **kwargs)
+
 
 class notificationeventsIdGet(mixins.RetrieveModelMixin, mixins.UpdateModelMixin, generics.GenericAPIView):
   """  
@@ -1275,9 +1323,13 @@ class permissionsIdDeletePost(mixins.DestroyModelMixin, generics.GenericAPIView)
   lookup_field = 'id'
   permission_classes = (permissions.AllowAny,)  
   queryset = Permission.objects.all()  
-  serializer_class = serializers.PermissionSerializer  
-  def post(self, request, id):
-    return self.destroy(request, id)
+  serializer_class = serializers.PermissionSerializer
+  def post(self, request, *args, **kwargs):
+    """
+    Destroys the specified Permission object
+    """
+    return self.destroy(request, *args, **kwargs)
+
 
 class permissionsIdGet(mixins.RetrieveModelMixin, mixins.UpdateModelMixin, generics.GenericAPIView):
   """  
@@ -1360,9 +1412,13 @@ class rolesIdDeletePost(mixins.DestroyModelMixin, generics.GenericAPIView):
   lookup_field = 'id'
   permission_classes = (permissions.AllowAny,)  
   queryset = Role.objects.all()  
-  serializer_class = serializers.RoleSerializer  
-  def post(self, request, id):
-    return self.destroy(request, id)
+  serializer_class = serializers.RoleSerializer
+  def post(self, request, *args, **kwargs):
+    """
+    Destroys the specified Role object
+    """
+    return self.destroy(request, *args, **kwargs)
+
 
 class rolesIdGet(mixins.RetrieveModelMixin, mixins.UpdateModelMixin, generics.GenericAPIView):
   """  
@@ -1450,32 +1506,53 @@ class rolesPost(APIView):
   def post(self, request, item):
     return Response()
 
-class usersBulkPost(APIView):
+class usersBulkPost(BulkCreateModelMixin, generics.GenericAPIView):
   """  
   Adds a number of users  
   """
   lookup_field = 'id'
   permission_classes = (permissions.AllowAny,)  
-  def post(self, request, items):
-    return Response()
+  queryset = User.objects.all()  
+  serializer_class = serializers.UserSerializer
+  def post(self, request, *args, **kwargs):
+    """
+    Creates a number of new User objects
+    """
+    return self.create(request, *args, **kwargs)
 
-class usersGet(APIView):
+class usersGet(mixins.ListModelMixin, mixins.CreateModelMixin, generics.GenericAPIView):
   """  
   Returns all users  
   """
   lookup_field = 'id'
   permission_classes = (permissions.AllowAny,)  
-  def get(self, request, ):
-    return Response()
+  queryset = User.objects.all()  
+  serializer_class = serializers.UserSerializer
+  def get(self, request, *args, **kwargs):
+    """
+    Lists available User objects
+    """
+    return self.list(request, *args, **kwargs)
+  def post(self, request, *args, **kwargs):
+    """
+    Creates a new User object
+    """
+    return self.create(request, *args, **kwargs)
 
-class usersIdDeletePost(APIView):
+class usersIdDeletePost(mixins.DestroyModelMixin, generics.GenericAPIView):
   """  
   Deletes a user  
   """
   lookup_field = 'id'
   permission_classes = (permissions.AllowAny,)  
-  def post(self, request, id):
-    return Response()
+  queryset = User.objects.all()  
+  serializer_class = serializers.UserSerializer
+  def post(self, request, *args, **kwargs):
+    """
+    Destroys the specified User object
+    """
+    return self.destroy(request, *args, **kwargs)
+
 
 class usersIdFavouritesGet(APIView):
   """  
@@ -1504,14 +1581,24 @@ class usersIdFavouritesPut(APIView):
   def put(self, request, id, items):
     return Response()
 
-class usersIdGet(APIView):
+class usersIdGet(mixins.RetrieveModelMixin, mixins.UpdateModelMixin, generics.GenericAPIView):
   """  
   Returns data for a particular user  
   """
   lookup_field = 'id'
   permission_classes = (permissions.AllowAny,)  
-  def get(self, request, id):
-    return Response()
+  queryset = User.objects.all()  
+  serializer_class = serializers.UserSerializer
+  def get(self, request, *args, **kwargs):
+    """
+    Retrieves the specified User object
+    """
+    return self.retrieve(request, *args, **kwargs)
+  def put(self, request, *args, **kwargs):
+    """
+    Updates the specified User object
+    """
+    return self.update(request, *args, **kwargs)
 
 class usersIdGroupsGet(APIView):
   """  
@@ -1564,6 +1651,8 @@ class usersIdPut(APIView):
   """
   lookup_field = 'id'
   permission_classes = (permissions.AllowAny,)  
+  queryset = User.objects.all()  
+  serializer_class = serializers.UserSerializer  
   def put(self, request, id, item):
     return Response()
 
@@ -1600,6 +1689,8 @@ class usersPost(APIView):
   """
   lookup_field = 'id'
   permission_classes = (permissions.AllowAny,)  
+  queryset = User.objects.all()  
+  serializer_class = serializers.UserSerializer  
   def post(self, request, item):
     return Response()
 

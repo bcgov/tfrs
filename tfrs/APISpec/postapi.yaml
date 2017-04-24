@@ -491,6 +491,7 @@
   /users:
     get:
       summary: Returns all users
+      x-codegen-operation: list
       tags:
         - User
       produces:
@@ -511,6 +512,7 @@
       tags:
         - User
       x-codegen-permission: ADMIN
+      x-codegen-operation: create
       consumes:
         - application/json
       produces:
@@ -626,7 +628,7 @@
           type: string
   /users/current/favourites/{id}/delete:
     post:
-      summary: Removes a specific user favourite
+      summary: Removes a specific user favourite      
       tags:
         - CurrentUser
       produces:
@@ -645,6 +647,7 @@
   /users/bulk:
     post:
       summary: Adds a number of users
+      x-codegen-operation: bulk
       tags:
         - User
       x-codegen-permission: ADMIN
@@ -701,6 +704,7 @@
   /users/{id}:
     get:
       summary: Returns data for a particular user
+      x-codegen-operation: retrieve
       tags:
         - User
       produces:
@@ -722,6 +726,7 @@
            description: User not found
     put:
       description: Updates a user
+      x-codegen-operation: update
       tags:
         - User
       x-codegen-permission: ADMIN
@@ -752,6 +757,7 @@
   /users/{id}/delete:
     post:
       summary: Deletes a user
+      x-codegen-operation: destroy
       tags:
         - User
       x-codegen-permission: ADMIN

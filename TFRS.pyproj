@@ -74,8 +74,9 @@
     <Compile Include="server\models\UserViewModel.py" />
     <Compile Include="server\models\__init__.py" />
     <Compile Include="server\serializers.py" />
-    <Compile Include="server\test_api.py" />
+    <Compile Include="server\test_api_simple.py" />
     <Compile Include="server\views.py" />
+    <Compile Include="server\views_custom.py" />
     <Compile Include="tfrs\test_models.py" />
     <Compile Include="server\urls.py" />
     <Compile Include="server\__init__.py" />
