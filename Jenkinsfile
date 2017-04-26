@@ -1,5 +1,8 @@
 node('maven') {
 
+   stage('pwd cmd')
+   sh 'pwd'
+
    stage('list working dir')
    sh 'ls -l -srt'
 
