@@ -1,5 +1,8 @@
 node('maven') {
 
+   stage('checkout tfrs-sample-sonar')
+   git url: 'https://github.com/dmarley/tfrs.git'
+
    stage('pwd cmd')
    sh 'pwd'
 
