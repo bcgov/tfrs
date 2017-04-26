@@ -9,7 +9,7 @@ sonarqube {
     properties {
         property "sonar.projectName", "TFRS Server Project :: API "
         property "sonar.projectKey", "org.sonarqube:tfrs-api"
-        property "sonar.sources", "../server"
+        property "sonar.sources", "server"
         property "sonar.jacoco.reportPath", "${project.buildDir}/jacoco/test.exec"
     }
 }
