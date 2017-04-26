@@ -1,10 +1,7 @@
 node('maven') {
 
-   stage('checkout tfrs-sample-sonar')
+   stage('checkout tfrs src onto docker slave')
    git url: 'https://github.com/dmarley/tfrs.git'
-
-   stage('pwd cmd')
-   sh 'pwd'
 
    stage('list working dir')
    sh 'ls -l -srt'
