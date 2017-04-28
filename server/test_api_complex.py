@@ -37,7 +37,6 @@ from .serializers import AttachmentViewModelSerializer
 from .models.Audit import Audit
 from .serializers import AuditSerializer
 from .models.CompliancePeriod import CompliancePeriod
-from .serializers import CompliancePeriodSerializer
 from .models.Contact import Contact
 from .serializers import ContactSerializer
 from .models.CreditTrade import CreditTrade
