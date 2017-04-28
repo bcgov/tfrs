@@ -24,8 +24,8 @@ import datetime
 from django.db import models
 from django.utils import timezone
 from .FuelSupplier import FuelSupplier
-from .CompliancePeriod import CompliancePeriod
 from .User import User
+from .Offer import Offer
 from .Note import Note
 from .Attachment import Attachment
 from .History import History
@@ -33,19 +33,19 @@ from .History import History
 
 class CreditTrade(models.Model):	    
     status = models.CharField(max_length=255)   
-    fuelSupplier = models.ForeignKey('FuelSupplier', on_delete=models.CASCADE,related_name='CreditTradefuelSupplier')   
-    transactionPartnerFuelSupplier = models.ForeignKey('FuelSupplier', on_delete=models.CASCADE,related_name='CreditTradetransactionPartnerFuelSupplier')   
-    compliancePeriod = models.ForeignKey('CompliancePeriod', on_delete=models.CASCADE,related_name='CreditTradecompliancePeriod')   
-    fuelSupplierLastUpdatedBy = models.ForeignKey('User', on_delete=models.CASCADE,related_name='CreditTradefuelSupplierLastUpdatedBy')   
-    partnerLastUpdatedBy = models.ForeignKey('User', on_delete=models.CASCADE,related_name='CreditTradepartnerLastUpdatedBy')   
-    reviewedRejectedBy = models.ForeignKey('User', on_delete=models.CASCADE,related_name='CreditTradereviewedRejectedBy')   
-    approvedRejectedBy = models.ForeignKey('User', on_delete=models.CASCADE,related_name='CreditTradeapprovedRejectedBy')   
-    cancelledBy = models.ForeignKey('User', on_delete=models.CASCADE,related_name='CreditTradecancelledBy')   
-    tradeExecutionDate = models.DateField()   
+    initiator = models.ForeignKey('FuelSupplier', blank=True, null=True, related_name='CreditTradeinitiator')   
+    respondent = models.ForeignKey('FuelSupplier', blank=True, null=True, related_name='CreditTraderespondent')   
+    initiatorLastUpdateBy = models.ForeignKey('User', blank=True, null=True, related_name='CreditTradeinitiatorLastUpdateBy')   
+    respondentLastUpdatedBy = models.ForeignKey('User', blank=True, null=True, related_name='CreditTraderespondentLastUpdatedBy')   
+    reviewedRejectedBy = models.ForeignKey('User', blank=True, null=True, related_name='CreditTradereviewedRejectedBy')   
+    approvedRejectedBy = models.ForeignKey('User', blank=True, null=True, related_name='CreditTradeapprovedRejectedBy')   
+    cancelledBy = models.ForeignKey('User', blank=True, null=True, related_name='CreditTradecancelledBy')   
+    tradeExecutionDate = models.DateField(blank=True, null=True)   
     transactionType = models.CharField(max_length=255)   
     numberOfCredits = models.IntegerField()   
     fairMarketValuePrice = models.CharField(max_length=255)   
-    fuelSupplierBalanceAtTransactionTime = models.DateField()   
-    notes = models.ManyToManyField('Note',related_name='CreditTradenotes')   
-    attachments = models.ManyToManyField('Attachment',related_name='CreditTradeattachments')   
-    history = models.ManyToManyField('History',related_name='CreditTradehistory')   
+    offer = models.ForeignKey('Offer', blank=True, null=True, related_name='CreditTradeoffer')   
+    fuelSupplierBalanceBeforeTransaction = models.DateField(blank=True, null=True)   
+    notes = models.ManyToManyField('Note', blank=True, related_name='CreditTradenotes')   
+    attachments = models.ManyToManyField('Attachment', blank=True, related_name='CreditTradeattachments')   
+    history = models.ManyToManyField('History', blank=True, related_name='CreditTradehistory')   

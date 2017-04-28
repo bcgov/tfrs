@@ -26,7 +26,7 @@ from django.utils import timezone
 
 
 class UserRoleViewModel(models.Model):	    
-    effectiveDate = models.DateField()   
-    expiryDate = models.DateField()   
+    effectiveDate = models.DateField(blank=True, null=True)   
+    expiryDate = models.DateField(blank=True, null=True)   
     roleId = models.IntegerField()   
     userId = models.IntegerField()   

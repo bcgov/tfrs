@@ -32,4 +32,4 @@ class UserDetailsViewModel(models.Model):
     initials = models.CharField(max_length=255)   
     email = models.CharField(max_length=255)   
     active = models.BooleanField()   
-    permissions = models.ManyToManyField('PermissionViewModel',related_name='UserDetailsViewModelpermissions')   
+    permissions = models.ManyToManyField('PermissionViewModel', blank=True, related_name='UserDetailsViewModelpermissions')   

@@ -28,5 +28,5 @@ from .Permission import Permission
 
 
 class RolePermission(models.Model):	    
-    role = models.ForeignKey('Role', on_delete=models.CASCADE,related_name='RolePermissionrole')   
-    permission = models.ForeignKey('Permission', on_delete=models.CASCADE,related_name='RolePermissionpermission')   
+    role = models.ForeignKey('Role', blank=True, null=True, related_name='RolePermissionrole')   
+    permission = models.ForeignKey('Permission', blank=True, null=True, related_name='RolePermissionpermission')   

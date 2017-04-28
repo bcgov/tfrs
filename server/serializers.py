@@ -23,7 +23,6 @@ from rest_framework import serializers
 from .models.Attachment import Attachment
 from .models.AttachmentViewModel import AttachmentViewModel
 from .models.Audit import Audit
-from .models.CompliancePeriod import CompliancePeriod
 from .models.Contact import Contact
 from .models.CreditTrade import CreditTrade
 from .models.CreditTradeLogEntry import CreditTradeLogEntry
@@ -40,6 +39,7 @@ from .models.Note import Note
 from .models.Notification import Notification
 from .models.NotificationEvent import NotificationEvent
 from .models.NotificationViewModel import NotificationViewModel
+from .models.Offer import Offer
 from .models.Permission import Permission
 from .models.PermissionViewModel import PermissionViewModel
 from .models.Role import Role
@@ -69,11 +69,6 @@ class AuditSerializer(serializers.ModelSerializer):
     model = Audit
     fields = ('id','appCreateTimestamp','appCreateUserid','appCreateUserGuid','appCreateUserDirectory','appLastUpdateTimestamp','appLastUpdateUserid','appLastUpdateUserGuid','appLastUpdateUserDirectory','entityName','entityId','propertyName','oldValue','newValue','isDelete')
 
-class CompliancePeriodSerializer(serializers.ModelSerializer):
-  class Meta:
-    model = CompliancePeriod
-    fields = ('id','periodName','isActive')
-
 class ContactSerializer(serializers.ModelSerializer):
   class Meta:
     model = Contact
@@ -82,12 +77,12 @@ class ContactSerializer(serializers.ModelSerializer):
 class CreditTradeSerializer(serializers.ModelSerializer):
   class Meta:
     model = CreditTrade
-    fields = ('id','status','fuelSupplier','transactionPartnerFuelSupplier','compliancePeriod','fuelSupplierLastUpdatedBy','partnerLastUpdatedBy','reviewedRejectedBy','approvedRejectedBy','cancelledBy','tradeExecutionDate','transactionType','numberOfCredits','fairMarketValuePrice','fuelSupplierBalanceAtTransactionTime','notes','attachments','history')
+    fields = ('id','status','initiator','respondent','initiatorLastUpdateBy','respondentLastUpdatedBy','reviewedRejectedBy','approvedRejectedBy','cancelledBy','tradeExecutionDate','transactionType','numberOfCredits','fairMarketValuePrice','offer','fuelSupplierBalanceBeforeTransaction','notes','attachments','history')
 
 class CreditTradeLogEntrySerializer(serializers.ModelSerializer):
   class Meta:
     model = CreditTradeLogEntry
-    fields = ('id','creditTrade','user','logEntryTime','newCompliancePeriod','newStatus','newTradeExecutionDate','newTransactionType','newNumberOfCredits','newFairMarketValuePrice','newFuelSupplierBalanceAtTransactionTime')
+    fields = ('id','creditTrade','user','logEntryTime','newStatus','newTradeExecutionDate','newTransactionType','newNumberOfCredits','newFairMarketValuePrice','newFuelSupplierBalanceAtTransactionTime')
 
 class CurrentUserViewModelSerializer(serializers.ModelSerializer):
   class Meta:
@@ -147,12 +142,17 @@ class NotificationSerializer(serializers.ModelSerializer):
 class NotificationEventSerializer(serializers.ModelSerializer):
   class Meta:
     model = NotificationEvent
-    fields = ('id','eventTime','eventTypeCode','notes','creditTrade')
+    fields = ('id','eventTime','eventTypeCode','notes','creditTrade','offer')
 
 class NotificationViewModelSerializer(serializers.ModelSerializer):
   class Meta:
     model = NotificationViewModel
     fields = ('id','eventId','event2Id','hasBeenViewed','isWatchNotification','isExpired','isAllDay','priorityCode','userId')
+
+class OfferSerializer(serializers.ModelSerializer):
+  class Meta:
+    model = Offer
+    fields = ('id','fuelSupplier','status','buyOrSell','numberOfCredits','numberOfViews','datePosted','note','history')
 
 class PermissionSerializer(serializers.ModelSerializer):
   class Meta:
@@ -197,7 +197,7 @@ class UserDetailsViewModelSerializer(serializers.ModelSerializer):
 class UserFavouriteSerializer(serializers.ModelSerializer):
   class Meta:
     model = UserFavourite
-    fields = ('id','type','name','value','isDefault','User')
+    fields = ('id','type','name','value','isDefault','user')
 
 class UserFavouriteViewModelSerializer(serializers.ModelSerializer):
   class Meta:
@@ -218,3 +218,4 @@ class UserViewModelSerializer(serializers.ModelSerializer):
   class Meta:
     model = UserViewModel
     fields = ('id','givenName','surname','email','active','smUserId','userRoles','groupMemberships')
+

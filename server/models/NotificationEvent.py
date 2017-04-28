@@ -24,10 +24,12 @@ import datetime
 from django.db import models
 from django.utils import timezone
 from .CreditTrade import CreditTrade
+from .Offer import Offer
 
 
 class NotificationEvent(models.Model):	    
-    eventTime = models.DateField()   
+    eventTime = models.DateField(blank=True, null=True)   
     eventTypeCode = models.CharField(max_length=255)   
     notes = models.CharField(max_length=255)   
-    creditTrade = models.ForeignKey('CreditTrade', on_delete=models.CASCADE,related_name='NotificationEventcreditTrade')   
+    creditTrade = models.ForeignKey('CreditTrade', blank=True, null=True, related_name='NotificationEventcreditTrade')   
+    offer = models.ForeignKey('Offer', blank=True, null=True, related_name='NotificationEventoffer')   

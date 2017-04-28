@@ -28,7 +28,7 @@ from .User import User
 
 
 class Notification(models.Model):	    
-    event = models.ForeignKey('NotificationEvent', on_delete=models.CASCADE,related_name='Notificationevent')   
+    event = models.ForeignKey('NotificationEvent', blank=True, null=True, related_name='Notificationevent')   
     hasBeenViewed = models.BooleanField()   
     isWatchNotification = models.BooleanField()   
-    user = models.ForeignKey('User', on_delete=models.CASCADE,related_name='Notificationuser')   
+    user = models.ForeignKey('User', blank=True, null=True, related_name='Notificationuser')   

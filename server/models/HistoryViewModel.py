@@ -28,5 +28,5 @@ from django.utils import timezone
 class HistoryViewModel(models.Model):	    
     historyText = models.CharField(max_length=2048)   
     lastUpdateUserid = models.CharField(max_length=255)   
-    lastUpdateTimestamp = models.DateField()   
+    lastUpdateTimestamp = models.DateField(blank=True, null=True)   
     affectedEntityId = models.IntegerField()   

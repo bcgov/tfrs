@@ -37,10 +37,6 @@
 #except:
 #     import Audit
 #try:
-#     from . import CompliancePeriod  
-#except:
-#     import CompliancePeriod
-#try:
 #     from . import Contact  
 #except:
 #     import Contact
@@ -104,6 +100,10 @@
 #     from . import NotificationViewModel  
 #except:
 #     import NotificationViewModel
+#try:
+#     from . import Offer  
+#except:
+#     import Offer
 #try:
 #     from . import Permission  
 #except:
