@@ -33,5 +33,5 @@ class UserViewModel(models.Model):
     email = models.CharField(max_length=255)   
     active = models.BooleanField()   
     smUserId = models.CharField(max_length=255)   
-    userRoles = models.ManyToManyField('UserRole',related_name='UserViewModeluserRoles')   
-    groupMemberships = models.ManyToManyField('GroupMembership',related_name='UserViewModelgroupMemberships')   
+    userRoles = models.ManyToManyField('UserRole', blank=True, related_name='UserViewModeluserRoles')   
+    groupMemberships = models.ManyToManyField('GroupMembership', blank=True, related_name='UserViewModelgroupMemberships')   

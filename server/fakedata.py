@@ -85,19 +85,6 @@ def AuditTestDataUpdate():
   }
 
 
-def CompliancePeriodTestDataCreate():
-  return {
-    'periodName':'Initial',
-    'isActive':True,
-  }
-
-def CompliancePeriodTestDataUpdate():
-  return {
-    'periodName':'Changed',
-    'isActive':False,
-  }
-
-
 def ContactTestDataCreate():
   return {
     'givenName':'Initial',
@@ -359,6 +346,25 @@ def NotificationViewModelTestDataUpdate():
     'isAllDay':False,
     'priorityCode':'Changed',
     'userId':0,
+  }
+
+
+def OfferTestDataCreate():
+  return {
+    'status':'Initial',
+    'buyOrSell':'Initial',
+    'numberOfCredits':1,
+    'numberOfViews':1,
+    'note':'Initial',
+  }
+
+def OfferTestDataUpdate():
+  return {
+    'status':'Changed',
+    'buyOrSell':'Changed',
+    'numberOfCredits':0,
+    'numberOfViews':0,
+    'note':'Changed',
   }
 
 

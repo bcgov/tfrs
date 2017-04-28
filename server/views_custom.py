@@ -18,6 +18,9 @@
     See the License for the specific language governing permissions and
     limitations under the License.
 """
+import sys
+import json
+from django.http import HttpResponse
 
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -64,230 +67,205 @@ from .models.UserViewModel import UserViewModel
 
 # Custom views.  This file is hand edited.
 
-class attachmentsIdDeletePost(mixins.DestroyModelMixin, generics.GenericAPIView):
-  """  
-  Deletes a specific Attachment object  
-  """
-  # enter code for this routine here.        
-  
-  def post(self, request, id):
-    return Response()
-
-class attachmentsIdDownloadGet(APIView):
-  """  
-  Returns the binary file component of an attachment  
-  """
-  # enter code for this routine here.        
-  
+class attachmentsIdDownloadGet(APIView):  
   def get(self, request, id):
-    return Response()
+    """  
+    Returns the binary file component of an attachment  
+    """
+    try:
+      attachment = Attachment.objects.get(id=id)
+      response = HttpResponse(attachment.fileContents, content_type='application/octet-stream')
+      response['Content-Disposition'] = 'attachment; filename=' + attachment.fileName
+      response['Content-Length'] = sys.getsizeof(attachment.fileContents)    
+      return response  
+    except Attachment.DoesNotExist:
+      return HttpResponse(status=404)
 
-class attachmentsIdPut(APIView):
-  """  
-  Updates a specific Attachment object  
-  """
-  # enter code for this routine here.        
-  
-  def put(self, request, id, item):
-    return Response()
+class attachmentsUploadPost(APIView):
+  def get(self, request):
+    """  
+    File upload form.  
+    """     
+    return HttpResponse("<html><body><form method=\"post\" action=\"/api/attachments/upload\" enctype=\"multipart/form-data\"><input type=\"file\" name = \"file\" /><br>Description <input type=text name=description><br>Type <input type=text name=type><br><input type = \"submit\" value = \"Upload\" /></body></html>")
 
-class attachmentsPost(APIView):
-  """  
-  Creates a new Attachment object  
-  """
-  # enter code for this routine here.        
-  
-  def post(self, request, item):
-    return Response()
+  def post(self, request):
+    """  
+    Accepts a new file upload.  
+    """
+    jsonString = self.request.POST['item']
+    data = json.loads(jsonString)
+    fileName = request.FILES['file'].name
+    fileData = request.FILES['file'].read()
+    attachment = Attachment(fileContents=fileData, fileName=fileName, description=data['description'],type=data['type'])    
+    attachment.save()
+    # convert the attachment to json.
+    serializer = serializers.AttachmentSerializer(attachment)
+    return Response(serializer.data)
 
-class complianceperiodsIdDeletePost(mixins.DestroyModelMixin, generics.GenericAPIView):
-  """  
-  Deletes a specific CompliancePeriod object  
-  """
-  # enter code for this routine here.        
-  
-  def post(self, request, id):
-    return Response()
-
-class complianceperiodsIdPut(APIView):
-  """  
-  Updates a specific CompliancePeriod object  
-  """
-  # enter code for this routine here.        
-  
-  def put(self, request, id, item):
-    return Response()
-
-class complianceperiodsPost(APIView):
-  """  
-  Creates a new CompliancePeriod object  
-  """
-  # enter code for this routine here.        
-  
-  def post(self, request, item):
-    return Response()
-
-class contactsIdDeletePost(mixins.DestroyModelMixin, generics.GenericAPIView):
-  """  
-  Deletes a specific Contact object  
-  """
-  # enter code for this routine here.        
-  
-  def post(self, request, id):
-    return Response()
-
-class contactsIdPut(APIView):
-  """  
-  Updates a specific Contact object  
-  """
-  # enter code for this routine here.        
-  
-  def put(self, request, id, item):
-    return Response()
-
-class contactsPost(APIView):
-  """  
-  Creates a new Contact object  
-  """
-  # enter code for this routine here.        
-  
-  def post(self, request, item):
-    return Response()
-
-class creditTradeIdNotesGet(APIView):
+class credittradesIdNotesGet(APIView):
   """  
   Returns notes for a particular CreditTrade  
   """
   # enter code for this routine here.        
   
-  def get(self, request, id):
-    return Response()
+  def get(self, request, id):     
+    """
+    Returns notes for a particular CreditTrade
+    """
+    creditTrade = CreditTrade.objects.filter(id=id)    
+    serializer = serializers.NotesSerializer(creditTrade.notes, many=True)    
+    return Response(serializer.data)
 
-class credittradesIdAttachmentsGet(APIView):
-  """  
-  Returns attachments for a particular CreditTrade  
-  """
-  # enter code for this routine here.        
-  
-  def get(self, request, id):
-    return Response()
+  def post(self, request, id ): 
+    """
+    Add a note to the creditTrade
+    """
+    creditTrade = CreditTrade.objects.get(id=id)   
+    # the body of the post is the data to be added.
+    jsonString = request.body.decode('utf-8')
+    data = json.loads(jsonString)
+    note = Note(noteText=data['noteText'], isNoLongerRelevant=data['isNoLongerRelevant'])
+    note.save()
+    creditTrade.notes.add(note)
+    creditTrade.save()
+    serializer = serializers.NoteSerializer(note)
+    return Response(serializer.data)
 
-class credittradesIdDeletePost(mixins.DestroyModelMixin, generics.GenericAPIView):
-  """  
-  Deletes a specific CreditTrade object  
-  """
-  # enter code for this routine here.        
-  
+class credittradesIdAttachmentsGet(mixins.CreateModelMixin, APIView):
+  lookup_field = 'id'
+  permission_classes = (permissions.AllowAny,)  
+  queryset = Attachment.objects.all()  
+  serializer_class = serializers.AttachmentSerializer
+
+  def get(self, request, id):
+    """  
+    Returns attachments for a particular CreditTrade  
+    """
+    creditTrade = CreditTrade.objects.get(id=id)    
+    serializer = AttachmentSerializer(creditTrade.attachments, many=True)
+    return Response(serializer.data)
+
   def post(self, request, id):
-    return Response()
+    """  
+    Accepts a new file upload.  
+    """
+    jsonString = request.body.decode('utf-8')
+    jsonString = self.request.POST['item']
+    data = json.loads(jsonString)
+    fileName = request.FILES['file'].name
+    fileData = request.FILES['file'].read()
+    attachment = Attachment(fileContents=fileData, fileName=fileName, description=data['description'],type=data['type'])    
+    attachment.save()
+    creditTrade = CreditTrade.objects.get(id=id)   
+    creditTrade.attachments.add (attachment)
+    creditTrade.save()
+    serializer = serializers.AttachmentSerializer(attachment)
+    return Response(serializer.data)
 
-class credittradesIdHistoryGet(APIView):
-  """  
-  Returns History for a particular CreditTrade  
-  """
-  # enter code for this routine here.        
-  
+class credittradesIdHistoryGet(mixins.CreateModelMixin, APIView):
+  lookup_field = 'id'
+  permission_classes = (permissions.AllowAny,)  
+  queryset = History.objects.all()  
+  serializer_class = serializers.HistorySerializer
+     
   def get(self, request, id, offset = None, limit = None):
-    return Response()
+    """  
+    Returns History for a particular CreditTrade  
+    """
+    creditTrade = CreditTrade.objects.filter(id=id)    
+    serializer = serializers.HistorySerializer(creditTrade.history, many=True)
+    return Response(serializer.data)
 
-class credittradesIdHistoryPost(APIView):
-  """  
-  Add a History record to the CreditTrade  
-  """
-  # enter code for this routine here.        
-  
-  def post(self, request, id, item):
-    return Response()
+  def post(self, request, id):
+    """  
+    Add a History record to the CreditTrade  
+    """
+    jsonString = request.body.decode('utf-8')
+    data = json.loads(jsonString)
+    history = History(historyText=data['historyText'])
+    history.save()
 
-class credittradesIdPut(APIView):
-  """  
-  Updates a specific CreditTrade object  
-  """
-  # enter code for this routine here.        
-  
-  def put(self, request, id, item):
-    return Response()
+    creditTrade = CreditTrade.objects.get(id=id)       
+    creditTrade.history.add(history)
+    creditTrade.save()
+    serializer = serializers.HistorySerializer(history)
+    return Response(serializer.data)
 
-class credittradesPost(APIView):
-  """  
-  Creates a new CreditTrade object  
-  """
-  # enter code for this routine here.        
-  
-  def post(self, request, item):
-    return Response()
-
-class credittradingSearchGet(APIView):
+class credittradesSearchGet(APIView):
   """  
   Searches credit trades  
-  """
-  # enter code for this routine here.        
-  
+  """  
   def get(self, request, organization = None, tradeType = None, status = None, dateType = None, startDate = None, endDate = None):
-    return Response()
-
-class credittradetradelogentriesIdDeletePost(mixins.DestroyModelMixin, generics.GenericAPIView):
-  """  
-  Deletes a specific CreditTradeLogEntry object  
-  """
-  # enter code for this routine here.        
-  
-  def post(self, request, id):
-    return Response()
-
-class credittradetradelogentriesIdPut(APIView):
-  """  
-  Updates a specific CreditTradeLogEntry object  
-  """
-  # enter code for this routine here.        
-  
-  def put(self, request, id, item):
-    return Response()
-
-class credittradetradelogentriesPost(APIView):
-  """  
-  Creates a new CreditTradeLogEntry object  
-  """
-  # enter code for this routine here.        
-  
-  def post(self, request, item):
-    return Response()
+    result = CreditTrade.objects.all()
+    if organization != None:
+       result = result.filter(organization__icontains = organization)
+    if status != None:
+       result = result.filter(status__icontains = status)
+    if dateType != None:
+       result = result.filter(dateType = dateType)
+    if startDate != None:
+        result = result.filter(tradeExecutionDate__gt = startDate, tradeExecutionDate__lt = endDate)
+    if endDate != None:
+        result = result.filter(tradeExecutionDate__lt = endDate)
+       
+    serializer = serializers.CreditTradeSerializer(result, many=True)
+    return Response(serializer.data)    
 
 class usersCurrentFavouritesIdDeletePost(APIView):
   """  
   Removes a specific user favourite  
-  """
-  # enter code for this routine here.        
-  
-  def post(self, request, id):
-    return Response()
-
-class usersCurrentFavouritesPost(APIView):
   """  
-  Create new favourite for the current user  
-  """
-  # enter code for this routine here.        
-  
-  def post(self, request, item):
-    return Response()
+  def post(self, request, id):
+    userFavourite = UserFavourite.objects.get(id=id)
+    userFavourite.remove()
+    serializer = serializers.UserFavouriteSerializer(userFavourite)
+    return Response(serializer.data)
 
 class usersCurrentFavouritesPut(APIView):
   """  
-  Updates a favourite  
+  Create new favourite for the current user  
   """
-  # enter code for this routine here.        
   
-  def put(self, request, item):
-    return Response()
+  def post(self, request):    
+    user = User.objects.all()[0] # replace with getcurrentuserid    
+    jsonString = request.body.decode('utf-8')
+    data = json.loads(jsonString)
+    userFavourite = UserFavourite(type = data['type'], name = data['name'], value = data['value'], isDefault = data['isDefault'], user = user)
+    userFavourite.save()
+    serializer = serializers.UserFavouriteSerializer(userFavourite)
+    return Response(serializer.data)  
 
-class usersCurrentFavouritesTypeGet(APIView):
+  def put(self, request):
+    user = User.objects.all()[0] # replace with getcurrentuserid    
+    jsonString = request.body.decode('utf-8')
+    alldata = json.loads(jsonString)
+    # clear existing favourites.
+    UserFavourite.objects.filter(user=user).delete()
+
+    # add the replacement favourites
+    for data in alldata:
+      userFavourite = UserFavourite(type = data['type'], name = data['name'], value = data['value'], isDefault = data['isDefault'], user = user)
+      userFavourite.save()
+    result = UserFavourite.objects.filter(user=user)
+    serializer = serializers.UserFavouriteSerializer(result, many=True)
+    return Response(serializer.data)  
+
+class usersCurrentFavouritesSearchGet(APIView):
   """  
-  Returns a user's favourites of a given type.  If type is empty, returns all.  
+  Returns a user's favourites of a given type.   
   """
   # enter code for this routine here.        
   
-  def get(self, request, type):
-    return Response()
+  def get(self, request):
+    currentUser = User.objects.all()[0] # replace with current user
+    type = request.GET.get('type', None)
+    userFavourites = UserFavourite.objects.filter(user = currentUser)
+    if type != None:
+        userFavourites = userFavourites.filter(type = type)
+
+    serializer = serializers.UserFavouriteSerializer(userFavourites, many=True)
+    return Response(serializer.data)
+    
 
 class usersCurrentGet(APIView):
   """  
@@ -296,97 +274,106 @@ class usersCurrentGet(APIView):
   # enter code for this routine here.        
   
   def get(self, request, ):
-    return Response()
+    currentUser = User.objects.all()[0] # replace with current user
+    serializer = serializers.UserSerializer(currentUser)
+    return Response(serializer.data)
 
-class fuelsuppliersIdAttachmentsGet(APIView):
+class fuelsuppliersIdAttachmentsGet(mixins.CreateModelMixin, APIView):
   """  
   Returns attachments for a particular FuelSupplier  
   """
   # enter code for this routine here.        
-  
-  def get(self, request, id):
-    return Response()
+  lookup_field = 'id'
+  permission_classes = (permissions.AllowAny,)  
+  queryset = History.objects.all()  
+  serializer_class = serializers.HistorySerializer
 
-class fuelsuppliersIdDeletePost(mixins.DestroyModelMixin, generics.GenericAPIView):
-  """  
-  Deletes a specific FuelSupplier object  
-  """
-  # enter code for this routine here.        
-  
+  def get(self, request, id):
+    """  
+    Returns attachments for a particular Fuel Supplier  
+    """
+    fuelSupplier = FuelSupplier.objects.get(id=id)    
+    serializer = AttachmentSerializer(fuelSupplier.attachments, many=True)
+    return Response(serializer.data)
+
   def post(self, request, id):
-    return Response()
+    """  
+    Accepts a new file upload.  
+    """    
+    jsonString = self.request.POST['item']
+    data = json.loads(jsonString)
+    fileName = request.FILES['file'].name
+    fileData = request.FILES['file'].read()
+    attachment = Attachment(fileContents=fileData, fileName=fileName, description=data['description'],type=data['type'])    
+    attachment.save()
+    fuelSupplier = FuelSupplier.objects.get(id=id)   
+    fuelSupplier.attachments.add (attachment)
+    fuelSupplier.save()
+    serializer = serializers.AttachmentSerializer(attachment)
+    return Response(serializer.data)
 
 class fuelsuppliersIdHistoryGet(APIView):
   """  
   Returns History for a particular FuelSupplier  
-  """
-  # enter code for this routine here.        
+  """  
   
   def get(self, request, id, offset = None, limit = None):
-    return Response()
+    fuelSupplier = FuelSupplier.objects.get(id=id)
+    serializer = serializers.HistorySerializer(fuelSupplier.history, many=true)
+    return Response(serializer.data)
 
-class fuelsuppliersIdHistoryPost(APIView):
-  """  
-  Add a History record to the FuelSupplier  
-  """
-  # enter code for this routine here.        
-  
-  def post(self, request, id, item):
-    return Response()
+  def post(self, request, id):
+    """  
+    Add a History record to the FuelSupplier  
+    """
+    fuelSupplier = FuelSupplier.objects.get(id=id)
+    jsonString = request.body.decode('utf-8')
+    data = json.loads(jsonString)
+    history = History(historyText=data['historyText'])
+    history.save()
+    fuelSupplier.history.add(history)
+    fuelSupplier.save()
+    serializer = serializers.HistorySerializer(history)
+    return Response(serializer.data)  
 
-class fuelsuppliersIdNotesGet(APIView):
-  """  
-  Returns notes for a particular FuelSupplier  
-  """
-  # enter code for this routine here.        
+class fuelsuppliersIdNotesGet(APIView):    
   
-  def get(self, request, id):
-    return Response()
+  def get(self, request, id):     
+    """
+    Returns notes for a particular FuelSupplier
+    """
+    fuelSupplier = FuelSupplier.objects.get(id=id)    
+    serializer = serializers.NotesSerializer(fuelSupplier.notes, many=True)    
+    return Response(serializer.data)
 
-class fuelsuppliersIdPut(APIView):
-  """  
-  Updates a specific FuelSupplier object  
-  """
-  # enter code for this routine here.        
-  
-  def put(self, request, id, item):
-    return Response()
-
-class fuelsuppliersPost(APIView):
-  """  
-  Creates a new FuelSupplier object  
-  """
-  # enter code for this routine here.        
-  
-  def post(self, request, item):
-    return Response()
+  def post(self, request, id ): 
+    """
+    Add a note to the FuelSupplier
+    """
+    fuelSupplier = FuelSupplier.objects.get(id=id)   
+    # the body of the post is the data to be added.
+    jsonString = request.body.decode('utf-8')
+    data = json.loads(jsonString)
+    note = Note(noteText=data['noteText'], isNoLongerRelevant=data['isNoLongerRelevant'])
+    note.save()
+    fuelSupplier.notes.add(note)
+    fuelSupplier.save()
+    serializer = serializers.NoteSerializer(note)
+    return Response(serializer.data)
 
 class fuelsuppliersSearchGet(APIView):
   """  
   Searches fuel suppliers  
-  """
-  # enter code for this routine here.        
-  
+  """   
   def get(self, request, fuelSupplierName = None, includeInactive = None):
-    return Response()
-
-class groupsIdDeletePost(mixins.DestroyModelMixin, generics.GenericAPIView):
-  """  
-  Deletes a specific Group object  
-  """
-  # enter code for this routine here.        
-  
-  def post(self, request, id):
-    return Response()
-
-class groupsIdPut(APIView):
-  """  
-  Updates a specific Group object  
-  """
-  # enter code for this routine here.        
-  
-  def put(self, request, id, item):
-    return Response()
+    result = FuelSupplier.objects.all()
+    if fuelSupplierName != None:
+       result = result.filter(name__icontains = fuelSupplierName)
+    if includeInactive == None or includeInactive == False:
+       result = result.filter(status__icontains = 'Active')
+        
+    serializer = serializers.FuelSupplierSerializer(result, many=True)
+    return Response(serializer.data)    
 
 class groupsIdUsersGet(APIView):
   """  
@@ -395,187 +382,11 @@ class groupsIdUsersGet(APIView):
   # enter code for this routine here.        
   
   def get(self, request, id):
-    return Response()
-
-class groupsPost(APIView):
-  """  
-  Creates a new Group object  
-  """
-  # enter code for this routine here.        
-  
-  def post(self, request, item):
-    return Response()
-
-class historiesIdDeletePost(mixins.DestroyModelMixin, generics.GenericAPIView):
-  """  
-  Deletes a specific History object  
-  """
-  # enter code for this routine here.        
-  
-  def post(self, request, id):
-    return Response()
-
-class historiesIdPut(APIView):
-  """  
-  Updates a specific History object  
-  """
-  # enter code for this routine here.        
-  
-  def put(self, request, id, item):
-    return Response()
-
-class historiesPost(APIView):
-  """  
-  Creates a new History object  
-  """
-  # enter code for this routine here.        
-  
-  def post(self, request, item):
-    return Response()
-
-class lookuplistsIdDeletePost(mixins.DestroyModelMixin, generics.GenericAPIView):
-  """  
-  Deletes a specific LookupList object  
-  """
-  # enter code for this routine here.        
-  
-  def post(self, request, id):
-    return Response()
-
-class lookuplistsIdPut(APIView):
-  """  
-  Updates a specific LookupList object  
-  """
-  # enter code for this routine here.        
-  
-  def put(self, request, id, item):
-    return Response()
-
-class lookuplistsPost(APIView):
-  """  
-  Creates a new LookupList object  
-  """
-  # enter code for this routine here.        
-  
-  def post(self, request, item):
-    return Response()
-
-class notesIdDeletePost(mixins.DestroyModelMixin, generics.GenericAPIView):
-  """  
-  Deletes a specific Note object  
-  """
-  # enter code for this routine here.        
-  
-  def post(self, request, id):
-    return Response()
-
-class notesIdPut(APIView):
-  """  
-  Updates a specific Note object  
-  """
-  # enter code for this routine here.        
-  
-  def put(self, request, id, item):
-    return Response()
-
-class notesPost(APIView):
-  """  
-  Creates a new Note object  
-  """
-  # enter code for this routine here.        
-  
-  def post(self, request, item):
-    return Response()
-
-class notificationsIdDeletePost(mixins.DestroyModelMixin, generics.GenericAPIView):
-  """  
-  Deletes a specific Notification object  
-  """
-  # enter code for this routine here.        
-  
-  def post(self, request, id):
-    return Response()
-
-class notificationsIdPut(APIView):
-  """  
-  Updates a specific Notification object  
-  """
-  # enter code for this routine here.        
-  
-  def put(self, request, id, item):
-    return Response()
-
-class notificationsPost(APIView):
-  """  
-  Creates a new Notification object  
-  """
-  # enter code for this routine here.        
-  
-  def post(self, request, item):
-    return Response()
-
-class notificationeventsIdDeletePost(mixins.DestroyModelMixin, generics.GenericAPIView):
-  """  
-  Deletes a specific NotificationEvent object  
-  """
-  # enter code for this routine here.        
-  
-  def post(self, request, id):
-    return Response()
-
-class notificationeventsIdPut(APIView):
-  """  
-  Updates a specific NotificationEvent object  
-  """
-  # enter code for this routine here.        
-  
-  def put(self, request, id, item):
-    return Response()
-
-class notificationeventsPost(APIView):
-  """  
-  Creates a new NotificationEvent object  
-  """
-  # enter code for this routine here.        
-  
-  def post(self, request, item):
-    return Response()
-
-class permissionsIdDeletePost(mixins.DestroyModelMixin, generics.GenericAPIView):
-  """  
-  Deletes a specific PermissionViewModel object  
-  """
-  # enter code for this routine here.        
-  
-  def post(self, request, id):
-    return Response()
-
-class permissionsIdPut(APIView):
-  """  
-  Updates a specific PermissionViewModel object  
-  """
-  # enter code for this routine here.        
-  
-  def put(self, request, id, item):
-    return Response()
-
-class permissionsPost(APIView):
-  """  
-  Creates a new PermissionViewModel object  
-  """
-  # enter code for this routine here.        
-  
-  def post(self, request, item):
-    return Response()
-
-class rolesIdDeletePost(mixins.DestroyModelMixin, generics.GenericAPIView):
-  """  
-  Deletes a specific RoleViewModel object  
-  """
-  # enter code for this routine here.        
-  
-  def post(self, request, id):
-    return Response()
+    group = Group.objects.get (id = id)
+    groupMembership = GroupMembership.objects.filter(group=group)
+    serializer = serializers.GroupMembershipSerializer(groupMembership.users, many=True)
+    return Response(serializer.data)
+    
 
 class rolesIdPermissionsGet(APIView):
   """  
@@ -584,34 +395,40 @@ class rolesIdPermissionsGet(APIView):
   # enter code for this routine here.        
   
   def get(self, request, id):
-    return Response()
-
-class rolesIdPermissionsPost(APIView):
-  """  
-  Adds a permissions to a role  
-  """
-  # enter code for this routine here.        
+    role = Role.objects.get (id = id)
+    rolePermissions = RolePermission.objects.filter(role = role)    
+    serializer = serializers.RolePermissionSerializer(rolePermissions, many=True)
+    return Response(serializer.data)
   
-  def post(self, request, id, item):
-    return Response()
+  def post(self, request, id):
+    """  
+    Adds a permission to a role  
+    """
+    role = Role.objects.get (id = id)
+    jsonString = request.body.decode('utf-8')
+    data = json.loads(jsonString)
+    permission = Permission.objects.get(id = data['permission'])
+    rolePermission = RolePermission(role = role, permission = permission)
+    rolePermission.save()
+    serializer = serializers.RolePermissionSerializer(rolePermission)
+    return Response(serializer.data)    
 
-class rolesIdPermissionsPut(APIView):
-  """  
-  Updates the permissions for a role  
-  """
-  # enter code for this routine here.        
-  
-  def put(self, request, id, items):
-    return Response()
-
-class rolesIdPut(APIView):
-  """  
-  Updates a specific RoleViewModel object  
-  """
-  # enter code for this routine here.        
-  
-  def put(self, request, id, item):
-    return Response()
+  def put(self, request, id):
+    """  
+    Updates the permissions for a role  
+    """
+    role = Role.objects.get (id = id)
+    jsonString = request.body.decode('utf-8')
+    data = json.loads(jsonString)
+    # start by clearing out any existing roles.
+    RolePermission.objects.filter(role=role).delete()
+    for row in data:
+        permission = Permission.objects.get(id = data['permission'])
+        rolePermission = RolePermission (permission = permission, role = role)
+        rolePermission.save()
+    results = RolePermission.objects.filter(role=role)
+    serializer = serializers.RolePermissionSerializer(results, many=True)
+    return Response(serializer.data)    
 
 class rolesIdUsersGet(APIView):
   """  
@@ -620,7 +437,9 @@ class rolesIdUsersGet(APIView):
   # enter code for this routine here.        
   
   def get(self, request, id):
-    return Response()
+    role = Role.objects.get (id = id)       
+    serializer = serializers.UserSerializer(role.users)
+    return Response(serializer.data)        
 
 class rolesIdUsersPut(APIView):
   """  
@@ -631,148 +450,161 @@ class rolesIdUsersPut(APIView):
   def put(self, request, id, items):
     return Response()
 
-class rolesPost(APIView):
-  """  
-  Creates a new RoleViewModel object  
-  """
-  # enter code for this routine here.        
-  
-  def post(self, request, item):
-    return Response()
+class usersIdFavouritesGet(APIView):
+  def get(self, request, id):
+    """  
+    Returns the favourites for a user  
+    """
+    user = User.objects.get(id)
+    result = UserFavourite.objects.filter(user=user)
+    serializer = serializers.UserFavouriteSerializer(result)
+    return Response(serializer.data)  
 
-class usersIdDeletePost(mixins.DestroyModelMixin, generics.GenericAPIView):
-  """  
-  Deletes a user  
-  """
-  # enter code for this routine here.        
+  def post(self, request, id):    
+    """  
+    Adds favourites to a user  
+    """  
+    user = User.objects.get(id=id)    
+    jsonString = request.body.decode('utf-8')
+    data = json.loads(jsonString)
+    userFavourite = UserFavourite(type = data['type'], name = data['name'], value = data['value'], isDefault = data['isDefault'], user = user)
+    userFavourite.save()
+    serializer = serializers.UserFavouriteSerializer(userFavourite)
+    return Response(serializer.data)  
+
+  def put(self, request, id):
+    """  
+    Updates the favourites for a user  
+    """
+    user = User.objects.get(id=id)   
+    jsonString = request.body.decode('utf-8')
+    alldata = json.loads(jsonString)
+    # clear existing favourites.
+    UserFavourite.objects.filter(user=user).delete()
+
+    # add the replacement favourites
+    for data in alldata:
+      userFavourite = UserFavourite(type = data['type'], name = data['name'], value = data['value'], isDefault = data['isDefault'], user = user)
+      userFavourite.save()
+    result = UserFavourite.objects.filter(user=user)
+    serializer = serializers.UserFavouriteSerializer(result, many=True)
+    return Response(serializer.data)  
+
+class usersIdGroupsGet(APIView):            
+  
+  def get(self, request, id):
+    """  
+    Returns all groups that a user is a member of  
+    """
+    group = Group.objects.get(id=id)
+    result = GroupMembership.objects.filter(group=group)
+    serializer = serializers.GroupMembershipSerializer(result, many=True)
+    return Response(serializer.data)
   
   def post(self, request, id):
+    """  
+    Adds a user to a group.  
+    """    
+    user = User.objects.get(id = id)
+    jsonString = request.body.decode('utf-8')
+    data = json.loads(jsonString)
+    group = Group.objects.get(id = data['group'])
+    groupMembership = GroupMembership(active = data['active'], group = group, user = user)
+    groupMembership.save()
+    serializer = serializers.GroupMembershipSerializer(groupMembership)
+    return Response(serializer.data)
+    
+  def put(self, request, id):
     return Response()
 
-class usersIdFavouritesGet(APIView):
-  """  
-  Returns the favourites for a user  
-  """
-  # enter code for this routine here.        
+class usersIdNotificationsGet(APIView):        
   
   def get(self, request, id):
-    return Response()
-
-class usersIdFavouritesPost(APIView):
-  """  
-  Adds favourites to a user  
-  """
-  # enter code for this routine here.        
+    """  
+    Returns a user's notifications 
+    """
+    user = User.objects.get(id=id)
+    result = Notification.objects.filter(user=user)
+    serializer = serializers.NotificationSerializer(result, many=True)
+    return Response(serializer.data)
   
-  def post(self, request, id, item):
-    return Response()
-
-class usersIdFavouritesPut(APIView):
-  """  
-  Updates the favourites for a user  
-  """
-  # enter code for this routine here.        
-  
-  def put(self, request, id, items):
-    return Response()
-
-class usersIdGroupsGet(APIView):
-  """  
-  Returns all groups that a user is a member of  
-  """
-  # enter code for this routine here.        
-  
-  def get(self, request, id):
-    return Response()
-
-class usersIdGroupsPost(APIView):
-  """  
-  Add to the active set of groups for a user  
-  """
-  # enter code for this routine here.        
-  
-  def post(self, request, id, item):
-    return Response()
-
-class usersIdGroupsPut(APIView):
-  """  
-  Updates the active set of groups for a user  
-  """
-  # enter code for this routine here.        
-  
-  def put(self, request, id, items):
-    return Response()
-
-class usersIdNotificationsGet(APIView):
-  """  
-  Returns a user's notifications  
-  """
-  # enter code for this routine here.        
-  
-  def get(self, request, id):
-    return Response()
+  def post(self, request, id):
+    """  
+    Adds a notification to user 
+    """    
+    user = User.objects.get(id = id)
+    jsonString = request.body.decode('utf-8')
+    data = json.loads(jsonString)
+    notificationEvent = NotificationEvent.objects.get(id=data['event'])
+    notification = Notification(event = notificationEvent, hasBeenViewed = data['hasBeenViewed'], isWatchNotification = data['isWatchNotification'], user = user)
+    notification.save()
+    serializer = serializers.NotificationSerializer(notification)
+    return Response(serializer.data)
 
 class usersIdPermissionsGet(APIView):
   """  
   Returns the set of permissions for a user  
   """
-  # enter code for this routine here.        
-  
   def get(self, request, id):
-    return Response()
-
-class usersIdPut(APIView):
-  """  
-    
-  """
-  # enter code for this routine here.        
+    """  
+    Returns a user's permissions 
+    """
+    user = User.objects.get(id=id)
+    userRoles = UserRole.objects.filter(user=user)
+    result = []
+    for userRole in userRoles:
+        rolePermissions = RolePermission.objects.filter(role=userRole.role)
+        for rolePermission in rolePermissions:
+            result.append (rolePermission.permission)
+    serializer = serializers.PermissionSerializer(result, many=True)
+    return Response(serializer.data)
   
-  def put(self, request, id, item):
-    return Response()
 
 class usersIdRolesGet(APIView):
-  """  
-  Returns the roles for a user  
-  """
-  # enter code for this routine here.        
-  
   def get(self, request, id):
+    """  
+    Returns all roles that a user is a member of  
+    """
+    result = UserRole.objects.filter(user=id)
+    serializer = serializers.UserRoleSerializer(result, many=True)
+    return Response(serializer.data)
+  
+  def post(self, request, id):
+    """  
+    Adds a user to a role.  
+    """    
+    user = User.objects.get(id = id)
+    jsonString = request.body.decode('utf-8')
+    data = json.loads(jsonString)
+    role = Role.objects.get(id = data['role'])
+    userRole = UserRole(effectiveDate = data['effectiveDate'], expiryDate = data['expiryDate'],role = role, user = user)
+    userRole.save()
+    serializer = serializers.UserRoleSerializer(userRole)
+    return Response(serializer.data)
+    
+  def put(self, request, id):
+    """  
+    Updates the roles for a user  
+    """
     return Response()
 
-class usersIdRolesPost(APIView):
-  """  
-  Adds a role to a user  
-  """
-  # enter code for this routine here.        
-  
-  def post(self, request, id, item):
-    return Response()
-
-class usersIdRolesPut(APIView):
-  """  
-  Updates the roles for a user  
-  """
-  # enter code for this routine here.        
-  
-  def put(self, request, id, items):
-    return Response()
-
-class usersPost(APIView):
-  """  
-  Create new user  
-  """
-  # enter code for this routine here.        
-  
-  def post(self, request, item):
-    return Response()
-
-class usersSearchGet(APIView):
-  """  
-  Searches Users  
-  """
-  # enter code for this routine here.        
-  
+class usersSearchGet(APIView):  
   def get(self, request, fuelSuppliers = None, surname = None, includeInactive = None):
-    return Response()
+    """  
+    Searches Users  
+    """   
+    result = User.objects.all()
+    if fuelSuppliers != None:
+       # split on comma.
+       fuelSuppliers = fuelSuppliers.split(",")
+       for fuelSupplier in fuelSuppliers:
+         result = result.filter(fuelSupplier__id = fuelSupplier)
+    if surname != None:
+       result = result.filter(surname__icontains = surname)
+    if includeInactive != True:
+       result = result.filter(status = 'Active')    
+       
+    serializer = serializers.UserSerializer(result, many=True)
+    return Response(serializer.data)    
 
 

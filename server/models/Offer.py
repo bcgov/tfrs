@@ -23,12 +23,16 @@ import datetime
 
 from django.db import models
 from django.utils import timezone
-from .User import User
+from .FuelSupplier import FuelSupplier
+from .History import History
 
 
-class UserFavourite(models.Model):	    
-    type = models.CharField(max_length=255)   
-    name = models.CharField(max_length=255)   
-    value = models.CharField(max_length=255)   
-    isDefault = models.BooleanField()   
-    user = models.ForeignKey('User', blank=True, null=True, related_name='UserFavouriteuser')   
+class Offer(models.Model):	    
+    fuelSupplier = models.ForeignKey('FuelSupplier', blank=True, null=True, related_name='OfferfuelSupplier')   
+    status = models.CharField(max_length=255)   
+    buyOrSell = models.CharField(max_length=255)   
+    numberOfCredits = models.IntegerField()   
+    numberOfViews = models.IntegerField()   
+    datePosted = models.DateField(blank=True, null=True)   
+    note = models.CharField(max_length=255)   
+    history = models.ManyToManyField('History', blank=True, related_name='Offerhistory')   

@@ -435,149 +435,6 @@ paths:
           description: id of CreditTradeLogEntry to delete
           required: true
           type: integer
-  /complianceperiods:
-    get:
-      tags:
-        - CompliancePeriod
-      summary: Lists available CompliancePeriod objects
-      x-codegen-operation: list
-      consumes: []
-      produces:
-        - text/plain
-        - application/json
-        - text/json
-      responses:
-        200:
-          description: OK
-          schema:
-            type: array
-            items:
-              $ref: "#/definitions/CompliancePeriod"
-    post:
-      tags:
-        - CompliancePeriod
-      x-codegen-operation: create
-      summary: Creates a new CompliancePeriod object            
-      consumes:
-        - application/json
-      produces:
-        - text/plain
-        - application/json
-        - text/json
-      parameters:
-        - name: item
-          in: body
-          required: true
-          schema:
-            $ref: "#/definitions/CompliancePeriod"
-      responses:
-        201:
-          description: CompliancePeriod created
-          headers:
-            Location:
-              description: A link to the CompliancePeriod
-              type: string
-              format: url
-          schema:
-            $ref: "#/definitions/CompliancePeriod"  
-  /complianceperiods/bulk:
-    post:
-      tags:
-        - CompliancePeriod
-      summary: Bulk create / update a number of CompliancePeriod object      
-      x-codegen-operation: bulk
-      consumes:
-        - application/json
-      produces:
-        - text/plain
-        - application/json
-        - text/json
-      parameters:
-        - name: items
-          in: body
-          required: true
-          schema:
-            type: array
-            items:
-              $ref: "#/definitions/CompliancePeriod"
-      responses:
-        201:
-          description: CompliancePeriod created
-  /complianceperiods/{id}:
-    get:
-      tags:
-        - CompliancePeriod
-      summary: Gets a specific CompliancePeriod object      
-      x-codegen-operation: retrieve
-      consumes: []
-      produces:
-        - text/plain
-        - application/json
-        - text/json
-      responses:
-        200:
-          description: OK
-          schema:
-            $ref: "#/definitions/CompliancePeriod"
-        404:
-          description: CompliancePeriod not found
-      parameters:
-        - name: id
-          in: path
-          description: id of CompliancePeriod to fetch
-          required: true
-          type: integer
-    put:
-      tags:
-        - CompliancePeriod
-      x-codegen-operation: update
-      summary: Updates a specific CompliancePeriod object      
-      consumes:
-        - application/json
-      produces:
-        - text/plain
-        - application/json
-        - text/json
-      responses:
-        200:
-          description: OK
-          schema:
-            $ref: "#/definitions/CompliancePeriod"
-        404:
-          description: CompliancePeriod not found
-      parameters:
-        - name: id
-          in: path
-          description: id of CompliancePeriod to fetch
-          required: true
-          type: integer
-        - name: item
-          in: body
-          required: true
-          schema:
-            $ref: "#/definitions/CompliancePeriod"
-  /complianceperiods/{id}/delete:
-    post:
-      tags:
-        - CompliancePeriod
-      x-codegen-operation: destroy
-      summary: Deletes a specific CompliancePeriod object      
-      consumes: []
-      produces:
-        - text/plain
-        - application/json
-        - text/json
-      responses:
-        200:
-          description: OK
-        404:
-          description: CompliancePeriod not found
-      parameters:
-        - name: id
-          in: path
-          description: id of CompliancePeriod to delete
-          required: true
-          type: integer
   /lookuplists:
     get:
       tags:
@@ -2017,6 +1874,733 @@ paths:
           description: id of Role to delete
           required: true
           type: integer
+  /rolepermissions:
+    get:
+      tags:
+        - RolePermission
+      summary: Lists available RolePermission objects
+      x-codegen-operation: list
+      consumes: []
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      responses:
+        200:
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/RolePermission"
+    post:
+      tags:
+        - RolePermission
+      x-codegen-permission: ADMIN
+      x-codegen-operation: create
+      summary: Creates a new RolePermission object            
+      consumes:
+        - application/json
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      parameters:
+        - name: item
+          in: body
+          required: true
+          schema:
+            $ref: "#/definitions/RolePermission"
+      responses:
+        201:
+          description: RolePermission created
+          headers:
+            Location:
+              description: A link to the RolePermission
+              type: string
+              format: url
+          schema:
+            $ref: "#/definitions/RolePermission"  
+  /rolepermissions/bulk:
+    post:
+      tags:
+        - RolePermission
+      summary: Bulk create / update a number of RolePermission object      
+      x-codegen-operation: bulk
+      consumes:
+        - application/json
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      parameters:
+        - name: items
+          in: body
+          required: true
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/RolePermission"
+      responses:
+        201:
+          description: RolePermission created
+  /rolepermissions/{id}:
+    get:
+      tags:
+        - RolePermission
+      summary: Gets a specific RolePermission object      
+      x-codegen-operation: retrieve
+      consumes: []
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: "#/definitions/RolePermission"
+        404:
+          description: RolePermission not found
+      parameters:
+        - name: id
+          in: path
+          description: id of RolePermission to fetch
+          required: true
+          type: integer
+    put:
+      tags:
+        - RolePermission      
+      x-codegen-permission: ADMIN
+      x-codegen-operation: update
+      summary: Updates a specific RolePermission object      
+      consumes:
+        - application/json
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: "#/definitions/RolePermission"
+        404:
+          description: RolePermission not found
+      parameters:
+        - name: id
+          in: path
+          description: id of RolePermission to fetch
+          required: true
+          type: integer
+        - name: item
+          in: body
+          required: true
+          schema:
+            $ref: "#/definitions/RolePermission"
+  /rolepermissions/{id}/delete:
+    post:
+      tags:
+        - RolePermission      
+      x-codegen-permission: ADMIN
+      x-codegen-operation: destroy
+      summary: Deletes a specific RolePermission object      
+      consumes: []
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      responses:
+        200:
+          description: OK
+        404:
+          description: RolePermission not found
+      parameters:
+        - name: id
+          in: path
+          description: id of RolePermission to delete
+          required: true
+          type: integer
+  /groupmemberships:
+    get:
+      tags:
+        - GroupMembership
+      summary: Lists available GroupMembership objects
+      x-codegen-operation: list
+      consumes: []
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      responses:
+        200:
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/GroupMembership"
+    post:
+      tags:
+        - GroupMembership
+      x-codegen-permission: ADMIN
+      x-codegen-operation: create
+      summary: Creates a new GroupMembership object            
+      consumes:
+        - application/json
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      parameters:
+        - name: item
+          in: body
+          required: true
+          schema:
+            $ref: "#/definitions/GroupMembership"
+      responses:
+        201:
+          description: GroupMembership created
+          headers:
+            Location:
+              description: A link to the GroupMembership
+              type: string
+              format: url
+          schema:
+            $ref: "#/definitions/GroupMembership"  
+  /groupmemberships/bulk:
+    post:
+      tags:
+        - GroupMembership
+      summary: Bulk create / update a number of GroupMembership object      
+      x-codegen-operation: bulk
+      consumes:
+        - application/json
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      parameters:
+        - name: items
+          in: body
+          required: true
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/GroupMembership"
+      responses:
+        201:
+          description: GroupMembership created
+  /groupmemberships/{id}:
+    get:
+      tags:
+        - GroupMembership
+      summary: Gets a specific GroupMembership object      
+      x-codegen-operation: retrieve
+      consumes: []
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: "#/definitions/GroupMembership"
+        404:
+          description: GroupMembership not found
+      parameters:
+        - name: id
+          in: path
+          description: id of GroupMembership to fetch
+          required: true
+          type: integer
+    put:
+      tags:
+        - GroupMembership      
+      x-codegen-permission: ADMIN
+      x-codegen-operation: update
+      summary: Updates a specific GroupMembership object      
+      consumes:
+        - application/json
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: "#/definitions/GroupMembership"
+        404:
+          description: GroupMembership not found
+      parameters:
+        - name: id
+          in: path
+          description: id of GroupMembership to fetch
+          required: true
+          type: integer
+        - name: item
+          in: body
+          required: true
+          schema:
+            $ref: "#/definitions/GroupMembership"
+  /groupmemberships/{id}/delete:
+    post:
+      tags:
+        - GroupMembership      
+      x-codegen-permission: ADMIN
+      x-codegen-operation: destroy
+      summary: Deletes a specific GroupMembership object      
+      consumes: []
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      responses:
+        200:
+          description: OK
+        404:
+          description: GroupMembership not found
+      parameters:
+        - name: id
+          in: path
+          description: id of GroupMembership to delete
+          required: true
+          type: integer
+  /userroles:
+    get:
+      tags:
+        - UserRole
+      summary: Lists available UserRole objects
+      x-codegen-operation: list
+      consumes: []
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      responses:
+        200:
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/UserRole"
+    post:
+      tags:
+        - UserRole
+      x-codegen-permission: ADMIN
+      x-codegen-operation: create
+      summary: Creates a new UserRole object            
+      consumes:
+        - application/json
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      parameters:
+        - name: item
+          in: body
+          required: true
+          schema:
+            $ref: "#/definitions/UserRole"
+      responses:
+        201:
+          description: UserRole created
+          headers:
+            Location:
+              description: A link to the UserRole
+              type: string
+              format: url
+          schema:
+            $ref: "#/definitions/UserRole"  
+  /userroles/bulk:
+    post:
+      tags:
+        - UserRole
+      summary: Bulk create / update a number of UserRole object      
+      x-codegen-operation: bulk
+      consumes:
+        - application/json
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      parameters:
+        - name: items
+          in: body
+          required: true
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/UserRole"
+      responses:
+        201:
+          description: UserRole created
+  /userroles/{id}:
+    get:
+      tags:
+        - UserRole
+      summary: Gets a specific UserRole object      
+      x-codegen-operation: retrieve
+      consumes: []
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: "#/definitions/UserRole"
+        404:
+          description: UserRole not found
+      parameters:
+        - name: id
+          in: path
+          description: id of UserRole to fetch
+          required: true
+          type: integer
+    put:
+      tags:
+        - UserRole      
+      x-codegen-permission: ADMIN
+      x-codegen-operation: update
+      summary: Updates a specific UserRole object      
+      consumes:
+        - application/json
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: "#/definitions/UserRole"
+        404:
+          description: UserRole not found
+      parameters:
+        - name: id
+          in: path
+          description: id of UserRole to fetch
+          required: true
+          type: integer
+        - name: item
+          in: body
+          required: true
+          schema:
+            $ref: "#/definitions/UserRole"
+  /userroles/{id}/delete:
+    post:
+      tags:
+        - UserRole      
+      x-codegen-permission: ADMIN
+      x-codegen-operation: destroy
+      summary: Deletes a specific UserRole object      
+      consumes: []
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      responses:
+        200:
+          description: OK
+        404:
+          description: UserRole not found
+      parameters:
+        - name: id
+          in: path
+          description: id of UserRole to delete
+          required: true
+          type: integer
+  /users:
+    get:
+      tags:
+        - User
+      summary: Lists available User objects
+      x-codegen-operation: list
+      consumes: []
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      responses:
+        200:
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/User"
+    post:
+      tags:
+        - User
+      x-codegen-permission: ADMIN
+      x-codegen-operation: create
+      summary: Creates a new User object            
+      consumes:
+        - application/json
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      parameters:
+        - name: item
+          in: body
+          required: true
+          schema:
+            $ref: "#/definitions/User"
+      responses:
+        201:
+          description: User created
+          headers:
+            Location:
+              description: A link to the User
+              type: string
+              format: url
+          schema:
+            $ref: "#/definitions/User"  
+  /users/bulk:
+    post:
+      tags:
+        - User
+      summary: Bulk create / update a number of User object      
+      x-codegen-operation: bulk
+      consumes:
+        - application/json
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      parameters:
+        - name: items
+          in: body
+          required: true
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/User"
+      responses:
+        201:
+          description: User created
+  /users/{id}:
+    get:
+      tags:
+        - User
+      summary: Gets a specific User object      
+      x-codegen-operation: retrieve
+      consumes: []
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: "#/definitions/User"
+        404:
+          description: User not found
+      parameters:
+        - name: id
+          in: path
+          description: id of User to fetch
+          required: true
+          type: integer
+    put:
+      tags:
+        - User      
+      x-codegen-permission: ADMIN
+      x-codegen-operation: update
+      summary: Updates a specific User object      
+      consumes:
+        - application/json
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: "#/definitions/User"
+        404:
+          description: User not found
+      parameters:
+        - name: id
+          in: path
+          description: id of User to fetch
+          required: true
+          type: integer
+        - name: item
+          in: body
+          required: true
+          schema:
+            $ref: "#/definitions/User"
+  /users/{id}/delete:
+    post:
+      tags:
+        - User      
+      x-codegen-permission: ADMIN
+      x-codegen-operation: destroy
+      summary: Deletes a specific User object      
+      consumes: []
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      responses:
+        200:
+          description: OK
+        404:
+          description: User not found
+      parameters:
+        - name: id
+          in: path
+          description: id of User to delete
+          required: true
+          type: integer
+  /offers:
+    get:
+      tags:
+        - Offer
+      summary: Lists available Offer objects
+      x-codegen-operation: list
+      consumes: []
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      responses:
+        200:
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/Offer"
+    post:
+      tags:
+        - Offer
+      x-codegen-operation: create
+      summary: Creates a new Offer object            
+      consumes:
+        - application/json
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      parameters:
+        - name: item
+          in: body
+          required: true
+          schema:
+            $ref: "#/definitions/Offer"
+      responses:
+        201:
+          description: Offer created
+          headers:
+            Location:
+              description: A link to the Offer
+              type: string
+              format: url
+          schema:
+            $ref: "#/definitions/Offer"  
+  /offers/bulk:
+    post:
+      tags:
+        - Offer
+      summary: Bulk create / update a number of Offer object      
+      x-codegen-operation: bulk
+      consumes:
+        - application/json
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      parameters:
+        - name: items
+          in: body
+          required: true
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/Offer"
+      responses:
+        201:
+          description: Offer created
+  /offers/{id}:
+    get:
+      tags:
+        - Offer
+      summary: Gets a specific Offer object      
+      x-codegen-operation: retrieve
+      consumes: []
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: "#/definitions/Offer"
+        404:
+          description: Offer not found
+      parameters:
+        - name: id
+          in: path
+          description: id of Offer to fetch
+          required: true
+          type: integer
+    put:
+      tags:
+        - Offer
+      x-codegen-operation: update
+      summary: Updates a specific Offer object      
+      consumes:
+        - application/json
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: "#/definitions/Offer"
+        404:
+          description: Offer not found
+      parameters:
+        - name: id
+          in: path
+          description: id of Offer to fetch
+          required: true
+          type: integer
+        - name: item
+          in: body
+          required: true
+          schema:
+            $ref: "#/definitions/Offer"
+  /offers/{id}/delete:
+    post:
+      tags:
+        - Offer
+      x-codegen-operation: destroy
+      summary: Deletes a specific Offer object      
+      consumes: []
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      responses:
+        200:
+          description: OK
+        404:
+          description: Offer not found
+      parameters:
+        - name: id
+          in: path
+          description: id of Offer to delete
+          required: true
+          type: integer
   /attachments/{id}/download:
     get:
       summary: Returns the binary file component of an attachment
@@ -2035,7 +2619,28 @@ paths:
         200:
           description: OK
         404:
-          description: Attachment not found in CCW system    
+          description: Attachment not found   
+  /attachments/upload:
+    post:
+      summary: Used to upload an attachment
+      tags:
+        - Attachment
+      description: Append the file to request files item 'file'      
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      parameters:        
+        - name: item
+          in: body
+          description: Attachment meta data.  Do not include the binary data in the JSON. 
+          required: true
+          schema:
+            $ref: "#/definitions/Attachment"
+      consumes: []
+      responses:
+        201:
+          description: Attachment created        
   /groups/{id}/users:
     get:
       summary: returns users in a given Group
@@ -2062,7 +2667,7 @@ paths:
             type: array
             items:
               $ref: "#/definitions/UserViewModel"          
-  /credittrading/search:
+  /credittrades/search:
     get:
       summary: Searches credit trades
       description:
@@ -2117,7 +2722,7 @@ paths:
             type: array
             items:
               $ref: "#/definitions/CreditTrade"
-  /creditTrade/{id}/notes:
+  /credittrades/{id}/notes:
     get:
       summary: Returns notes for a particular CreditTrade
       description: Returns notes for a particular CreditTrade.
@@ -2166,6 +2771,31 @@ paths:
           description: id of CreditTrade to fetch attachments for
           required: true
           type: integer    
+    post:
+      summary: Adds a file attachment to a credit trade.  
+      description: Append the file to request files item 'file'
+      x-operation-ignore: YES
+      tags:
+        - CreditTrade
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      responses:
+        '201':
+          description: OK
+      parameters:
+        - name: id
+          in: path
+          description: id of CreditTrade to add attachment to
+          required: true
+          type: integer
+        - name: item
+          in: body
+          description: Attachment meta data.  Do not include the binary data in the JSON. 
+          required: true
+          schema:
+            $ref: "#/definitions/Attachment"          
   /credittrades/{id}/history:
     get:
       summary: Returns History for a particular CreditTrade
@@ -2201,6 +2831,7 @@ paths:
     post:
       summary: Add a History record to the CreditTrade
       description: Add a History record to the CreditTrade
+      x-operation-ignore: YES
       tags:
         - CreditTrade
       produces:
@@ -2288,6 +2919,7 @@ paths:
           type: integer
     post:
       summary: Add a History record to the FuelSupplier
+      x-operation-ignore: YES
       tags:
         - FuelSupplier
       produces:
@@ -2299,7 +2931,7 @@ paths:
           in: path
           description: id of FuelSupplier to add History for
           required: true
-          type: integer
+          type: integer          
         - name: item
           in: body
           required: true
@@ -2390,6 +3022,7 @@ paths:
               $ref: "#/definitions/PermissionViewModel"
     put:
       summary: Updates the permissions for a role
+      x-operation-ignore: YES
       tags:
         - Role
       x-codegen-permission: ADMIN
@@ -2423,6 +3056,7 @@ paths:
           description: Role not found
     post:
       summary: Adds a permissions to a role
+      x-operation-ignore: YES
       tags:
         - Role
       x-codegen-permission: ADMIN
@@ -2476,6 +3110,7 @@ paths:
               $ref: "#/definitions/UserRoleViewModel"
     put:
       summary: Updates the users for a role
+      x-operation-ignore: YES
       tags:
         - Role
       x-codegen-permission: ADMIN
@@ -2527,6 +3162,7 @@ paths:
         404:
            description: User not found
     post:
+      x-operation-ignore: YES
       summary: Create new user
       tags:
         - User
@@ -2597,6 +3233,7 @@ paths:
             $ref: "#/definitions/UserFavourite"            
     post:
       summary: Create new favourite for the current user
+      x-operation-ignore: YES
       tags:
         - CurrentUser
       consumes:
@@ -2621,7 +3258,7 @@ paths:
               format: url
           schema:
             $ref: "#/definitions/UserFavourite"
-  /users/current/favourites/{type}:
+  /users/current/favourites/search:
     get:
       summary: Returns a user's favourites of a given type.  If type is empty, returns all.
       tags:
@@ -2641,7 +3278,7 @@ paths:
            description: User not found
       parameters:
         - name: type
-          in: path
+          in: query
           description: type of favourite to return
           required: true
           type: string
@@ -2745,7 +3382,7 @@ paths:
            description: User not found
     put:
       description: Updates a user
-      x-codegen-operation: update
+      x-operation-ignore: YES      
       tags:
         - User
       x-codegen-permission: ADMIN
@@ -2820,7 +3457,8 @@ paths:
         404:
            description: User not found
     post:
-      summary: Adds favourites to a user
+      summary: Adds favourite to a user
+      x-operation-ignore: YES
       tags:
         - User
       consumes:
@@ -2847,6 +3485,7 @@ paths:
           description: Favourites added to user          
     put:
       summary: Updates the favourites for a user
+      x-operation-ignore: YES
       tags:
         - User
       consumes:
@@ -2899,6 +3538,7 @@ paths:
            description: User not found
     post:
       summary: Adds a role to a user
+      x-operation-ignore: YES
       tags:
         - User
       x-codegen-permission: ADMIN
@@ -2930,7 +3570,8 @@ paths:
           schema:
             $ref: "#/definitions/UserRoleViewModel"
     put:
-      summary: Updates the roles for a user
+      summary: Updates the roles for a user      
+      x-operation-ignore: YES
       tags:
         - User
       x-codegen-permission: ADMIN
@@ -3012,6 +3653,7 @@ paths:
            description: User not found
     put:
       summary: Updates the active set of groups for a user
+      x-operation-ignore: YES
       tags:
         - User
       x-codegen-permission: ADMIN
@@ -3045,6 +3687,7 @@ paths:
           description: User not found
     post:
       summary: Add to the active set of groups for a user
+      x-operation-ignore: YES
       tags:
         - User
       x-codegen-permission: ADMIN
@@ -3158,7 +3801,6 @@ definitions:
     required:
       - id
       - logEntryTime
-      - newCompliancePeriod
       - newStatus
       - newNumberOfCredits
     properties:
@@ -3172,8 +3814,6 @@ definitions:
       logEntryTime:
         type: string
         format: date-time
-      newCompliancePeriod:
-        $ref: '#/definitions/CompliancePeriod'
       newStatus:
         type: string
       newTradeExecutionDate:
@@ -3418,7 +4058,7 @@ definitions:
       isDefault:
         type: boolean
         description: True if this Favourite is the default for this Context Type. On first access to a context in a session the default favourite for the context it is invoked. If there is no default favourite,  a system-wide default is invoked. On return to the context within a session,  the last parameters used are reapplied.
-      User:
+      user:
         $ref: '#/definitions/User'
   Notification:
     type: object

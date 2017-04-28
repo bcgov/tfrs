@@ -16,7 +16,28 @@
         200:
           description: OK
         404:
-          description: Attachment not found in CCW system    
+          description: Attachment not found   
+  /attachments/upload:
+    post:
+      summary: Used to upload an attachment
+      tags:
+        - Attachment
+      description: Append the file to request files item 'file'      
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      parameters:        
+        - name: item
+          in: body
+          description: Attachment meta data.  Do not include the binary data in the JSON. 
+          required: true
+          schema:
+            $ref: "#/definitions/Attachment"
+      consumes: []
+      responses:
+        201:
+          description: Attachment created        
   /groups/{id}/users:
     get:
       summary: returns users in a given Group
@@ -43,7 +64,7 @@
             type: array
             items:
               $ref: "#/definitions/UserViewModel"          
-  /credittrading/search:
+  /credittrades/search:
     get:
       summary: Searches credit trades
       description:
@@ -98,7 +119,7 @@
             type: array
             items:
               $ref: "#/definitions/CreditTrade"
-  /creditTrade/{id}/notes:
+  /credittrades/{id}/notes:
     get:
       summary: Returns notes for a particular CreditTrade
       description: Returns notes for a particular CreditTrade.
@@ -147,6 +168,31 @@
           description: id of CreditTrade to fetch attachments for
           required: true
           type: integer    
+    post:
+      summary: Adds a file attachment to a credit trade.  
+      description: Append the file to request files item 'file'
+      x-operation-ignore: YES
+      tags:
+        - CreditTrade
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      responses:
+        '201':
+          description: OK
+      parameters:
+        - name: id
+          in: path
+          description: id of CreditTrade to add attachment to
+          required: true
+          type: integer
+        - name: item
+          in: body
+          description: Attachment meta data.  Do not include the binary data in the JSON. 
+          required: true
+          schema:
+            $ref: "#/definitions/Attachment"          
   /credittrades/{id}/history:
     get:
       summary: Returns History for a particular CreditTrade
@@ -182,6 +228,7 @@
     post:
       summary: Add a History record to the CreditTrade
       description: Add a History record to the CreditTrade
+      x-operation-ignore: YES
       tags:
         - CreditTrade
       produces:
@@ -269,6 +316,7 @@
           type: integer
     post:
       summary: Add a History record to the FuelSupplier
+      x-operation-ignore: YES
       tags:
         - FuelSupplier
       produces:
@@ -280,7 +328,7 @@
           in: path
           description: id of FuelSupplier to add History for
           required: true
-          type: integer
+          type: integer          
         - name: item
           in: body
           required: true
@@ -371,6 +419,7 @@
               $ref: "#/definitions/PermissionViewModel"
     put:
       summary: Updates the permissions for a role
+      x-operation-ignore: YES
       tags:
         - Role
       x-codegen-permission: ADMIN
@@ -404,6 +453,7 @@
           description: Role not found
     post:
       summary: Adds a permissions to a role
+      x-operation-ignore: YES
       tags:
         - Role
       x-codegen-permission: ADMIN
@@ -457,6 +507,7 @@
               $ref: "#/definitions/UserRoleViewModel"
     put:
       summary: Updates the users for a role
+      x-operation-ignore: YES
       tags:
         - Role
       x-codegen-permission: ADMIN
@@ -508,6 +559,7 @@
         404:
            description: User not found
     post:
+      x-operation-ignore: YES
       summary: Create new user
       tags:
         - User
@@ -578,6 +630,7 @@
             $ref: "#/definitions/UserFavourite"            
     post:
       summary: Create new favourite for the current user
+      x-operation-ignore: YES
       tags:
         - CurrentUser
       consumes:
@@ -602,7 +655,7 @@
               format: url
           schema:
             $ref: "#/definitions/UserFavourite"
-  /users/current/favourites/{type}:
+  /users/current/favourites/search:
     get:
       summary: Returns a user's favourites of a given type.  If type is empty, returns all.
       tags:
@@ -622,7 +675,7 @@
            description: User not found
       parameters:
         - name: type
-          in: path
+          in: query
           description: type of favourite to return
           required: true
           type: string
@@ -726,7 +779,7 @@
            description: User not found
     put:
       description: Updates a user
-      x-codegen-operation: update
+      x-operation-ignore: YES      
       tags:
         - User
       x-codegen-permission: ADMIN
@@ -801,7 +854,8 @@
         404:
            description: User not found
     post:
-      summary: Adds favourites to a user
+      summary: Adds favourite to a user
+      x-operation-ignore: YES
       tags:
         - User
       consumes:
@@ -828,6 +882,7 @@
           description: Favourites added to user          
     put:
       summary: Updates the favourites for a user
+      x-operation-ignore: YES
       tags:
         - User
       consumes:
@@ -880,6 +935,7 @@
            description: User not found
     post:
       summary: Adds a role to a user
+      x-operation-ignore: YES
       tags:
         - User
       x-codegen-permission: ADMIN
@@ -911,7 +967,8 @@
           schema:
             $ref: "#/definitions/UserRoleViewModel"
     put:
-      summary: Updates the roles for a user
+      summary: Updates the roles for a user      
+      x-operation-ignore: YES
       tags:
         - User
       x-codegen-permission: ADMIN
@@ -993,6 +1050,7 @@
            description: User not found
     put:
       summary: Updates the active set of groups for a user
+      x-operation-ignore: YES
       tags:
         - User
       x-codegen-permission: ADMIN
@@ -1026,6 +1084,7 @@
           description: User not found
     post:
       summary: Add to the active set of groups for a user
+      x-operation-ignore: YES
       tags:
         - User
       x-codegen-permission: ADMIN

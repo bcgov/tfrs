@@ -26,11 +26,11 @@ from django.utils import timezone
 
 
 class Audit(models.Model):	    
-    appCreateTimestamp = models.DateField()   
+    appCreateTimestamp = models.DateField(blank=True, null=True)   
     appCreateUserid = models.CharField(max_length=255)   
     appCreateUserGuid = models.CharField(max_length=255)   
     appCreateUserDirectory = models.CharField(max_length=255)   
-    appLastUpdateTimestamp = models.DateField()   
+    appLastUpdateTimestamp = models.DateField(blank=True, null=True)   
     appLastUpdateUserid = models.CharField(max_length=255)   
     appLastUpdateUserGuid = models.CharField(max_length=255)   
     appLastUpdateUserDirectory = models.CharField(max_length=255)   

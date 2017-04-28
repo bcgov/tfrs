@@ -32,7 +32,7 @@ class User(models.Model):
     initials = models.CharField(max_length=255)   
     email = models.CharField(max_length=255)   
     status = models.CharField(max_length=255)   
-    fuelSupplier = models.ForeignKey('FuelSupplier', on_delete=models.CASCADE,related_name='UserfuelSupplier')   
+    fuelSupplier = models.ForeignKey('FuelSupplier', blank=True, null=True, related_name='UserfuelSupplier')   
     smUserId = models.CharField(max_length=255)   
     guid = models.CharField(max_length=255)   
     smAuthorizationDirectory = models.CharField(max_length=255)   

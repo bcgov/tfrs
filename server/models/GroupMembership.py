@@ -29,5 +29,5 @@ from .User import User
 
 class GroupMembership(models.Model):	    
     active = models.BooleanField()   
-    group = models.ForeignKey('Group', on_delete=models.CASCADE,related_name='GroupMembershipgroup')   
-    user = models.ForeignKey('User', on_delete=models.CASCADE,related_name='GroupMembershipuser')   
+    group = models.ForeignKey('Group', blank=True, null=True, related_name='GroupMembershipgroup')   
+    user = models.ForeignKey('User', blank=True, null=True, related_name='GroupMembershipuser')   
