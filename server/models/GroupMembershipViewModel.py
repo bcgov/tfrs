@@ -29,3 +29,6 @@ class GroupMembershipViewModel(models.Model):
     active = models.BooleanField()   
     groupId = models.IntegerField()   
     userId = models.IntegerField()   
+    class Meta:
+      abstract = True
+

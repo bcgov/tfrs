@@ -32,5 +32,8 @@ class NotificationViewModel(models.Model):
     isWatchNotification = models.BooleanField()   
     isExpired = models.BooleanField()   
     isAllDay = models.BooleanField()   
-    priorityCode = models.CharField(max_length=255)   
+    priorityCode = models.CharField(max_length=255, blank=True, null=True)   
     userId = models.IntegerField()   
+    class Meta:
+      abstract = True
+

@@ -29,5 +29,6 @@ from .User import User
 
 class GroupMembership(models.Model):	    
     active = models.BooleanField()   
-    group = models.ForeignKey('Group', blank=True, null=True, related_name='GroupMembershipgroup')   
-    user = models.ForeignKey('User', blank=True, null=True, related_name='GroupMembershipuser')   
+    group = models.ForeignKey('Group', related_name='GroupMembershipgroup', blank=True, null=True)   
+    user = models.ForeignKey('User', related_name='GroupMembershipuser', blank=True, null=True)   
+

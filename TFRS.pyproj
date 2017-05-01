@@ -40,6 +40,7 @@
     <Compile Include="server\migrations\0002_auto_20170214_1526.py" />
     <Compile Include="server\migrations\0003_auto_20170421_1327.py" />
     <Compile Include="server\migrations\0004_auto_20170427_1726.py" />
+    <Compile Include="server\migrations\0005_auto_20170501_1354.py" />
     <Compile Include="server\migrations\__init__.py" />
     <Compile Include="server\models\Attachment.py" />
     <Compile Include="server\models\AttachmentViewModel.py" />

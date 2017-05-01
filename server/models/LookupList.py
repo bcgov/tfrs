@@ -31,3 +31,4 @@ class LookupList(models.Model):
     displaySortOrder = models.IntegerField()   
     codeName = models.CharField(max_length=255)   
     value = models.CharField(max_length=255)   
+

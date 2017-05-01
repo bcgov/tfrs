@@ -26,6 +26,9 @@ from django.utils import timezone
 
 
 class AttachmentViewModel(models.Model):	    
-    fileName = models.CharField(max_length=2048)   
-    description = models.CharField(max_length=2048)   
-    type = models.CharField(max_length=255)   
+    fileName = models.CharField(max_length=2048, blank=True, null=True)   
+    description = models.CharField(max_length=2048, blank=True, null=True)   
+    type = models.CharField(max_length=255, blank=True, null=True)   
+    class Meta:
+      abstract = True
+

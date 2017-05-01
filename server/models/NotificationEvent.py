@@ -29,7 +29,8 @@ from .Offer import Offer
 
 class NotificationEvent(models.Model):	    
     eventTime = models.DateField(blank=True, null=True)   
-    eventTypeCode = models.CharField(max_length=255)   
-    notes = models.CharField(max_length=255)   
-    creditTrade = models.ForeignKey('CreditTrade', blank=True, null=True, related_name='NotificationEventcreditTrade')   
-    offer = models.ForeignKey('Offer', blank=True, null=True, related_name='NotificationEventoffer')   
+    eventTypeCode = models.CharField(max_length=255, blank=True, null=True)   
+    notes = models.CharField(max_length=255, blank=True, null=True)   
+    creditTrade = models.ForeignKey('CreditTrade', related_name='NotificationEventcreditTrade', blank=True, null=True)   
+    offer = models.ForeignKey('Offer', related_name='NotificationEventoffer', blank=True, null=True)   
+
