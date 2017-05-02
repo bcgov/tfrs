@@ -21,71 +21,58 @@
 
 from django.contrib import admin
 from .models.Attachment import Attachment
-from .models.AttachmentViewModel import AttachmentViewModel
+
 from .models.Audit import Audit
 from .models.Contact import Contact
 from .models.CreditTrade import CreditTrade
 from .models.CreditTradeLogEntry import CreditTradeLogEntry
-from .models.CurrentUserViewModel import CurrentUserViewModel
+
 from .models.FuelSupplier import FuelSupplier
 from .models.Group import Group
 from .models.GroupMembership import GroupMembership
-from .models.GroupMembershipViewModel import GroupMembershipViewModel
-from .models.GroupViewModel import GroupViewModel
+
+
 from .models.History import History
-from .models.HistoryViewModel import HistoryViewModel
+
 from .models.LookupList import LookupList
 from .models.Note import Note
 from .models.Notification import Notification
 from .models.NotificationEvent import NotificationEvent
-from .models.NotificationViewModel import NotificationViewModel
+
 from .models.Offer import Offer
 from .models.Permission import Permission
-from .models.PermissionViewModel import PermissionViewModel
+
 from .models.Role import Role
 from .models.RolePermission import RolePermission
-from .models.RolePermissionViewModel import RolePermissionViewModel
-from .models.RoleViewModel import RoleViewModel
+
+
 from .models.User import User
-from .models.UserDetailsViewModel import UserDetailsViewModel
+
 from .models.UserFavourite import UserFavourite
-from .models.UserFavouriteViewModel import UserFavouriteViewModel
+
 from .models.UserRole import UserRole
-from .models.UserRoleViewModel import UserRoleViewModel
-from .models.UserViewModel import UserViewModel
+
+
 
 
 
 admin.site.register(Attachment)
-admin.site.register(AttachmentViewModel)
 admin.site.register(Audit)
 admin.site.register(Contact)
 admin.site.register(CreditTrade)
 admin.site.register(CreditTradeLogEntry)
-admin.site.register(CurrentUserViewModel)
 admin.site.register(FuelSupplier)
 admin.site.register(Group)
 admin.site.register(GroupMembership)
-admin.site.register(GroupMembershipViewModel)
-admin.site.register(GroupViewModel)
 admin.site.register(History)
-admin.site.register(HistoryViewModel)
 admin.site.register(LookupList)
 admin.site.register(Note)
 admin.site.register(Notification)
 admin.site.register(NotificationEvent)
-admin.site.register(NotificationViewModel)
 admin.site.register(Offer)
 admin.site.register(Permission)
-admin.site.register(PermissionViewModel)
 admin.site.register(Role)
 admin.site.register(RolePermission)
-admin.site.register(RolePermissionViewModel)
-admin.site.register(RoleViewModel)
 admin.site.register(User)
-admin.site.register(UserDetailsViewModel)
 admin.site.register(UserFavourite)
-admin.site.register(UserFavouriteViewModel)
 admin.site.register(UserRole)
-admin.site.register(UserRoleViewModel)
-admin.site.register(UserViewModel)

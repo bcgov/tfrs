@@ -28,3 +28,4 @@ from django.utils import timezone
 class Note(models.Model):	    
     noteText = models.CharField(max_length=255)   
     isNoLongerRelevant = models.BooleanField()   
+

@@ -28,3 +28,6 @@ from django.utils import timezone
 class GroupViewModel(models.Model):	    
     name = models.CharField(max_length=255)   
     description = models.CharField(max_length=255)   
+    class Meta:
+      abstract = True
+

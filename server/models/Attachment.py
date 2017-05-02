@@ -26,7 +26,8 @@ from django.utils import timezone
 
 
 class Attachment(models.Model):	    
-    fileName = models.CharField(max_length=255)   
-    fileContents = models.BinaryField()   
-    description = models.CharField(max_length=255)   
-    type = models.CharField(max_length=255)   
+    fileName = models.CharField(max_length=255, blank=True, null=True)   
+    fileContents = models.BinaryField(blank=True, null=True)   
+    description = models.CharField(max_length=255, blank=True, null=True)   
+    type = models.CharField(max_length=255, blank=True, null=True)   
+

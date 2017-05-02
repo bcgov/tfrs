@@ -28,3 +28,4 @@ from django.utils import timezone
 class Group(models.Model):	    
     name = models.CharField(max_length=255)   
     description = models.CharField(max_length=255)   
+

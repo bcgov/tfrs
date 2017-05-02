@@ -28,12 +28,13 @@ from .User import User
 
 
 class CreditTradeLogEntry(models.Model):	    
-    creditTrade = models.ForeignKey('CreditTrade', blank=True, null=True, related_name='CreditTradeLogEntrycreditTrade')   
-    user = models.ForeignKey('User', blank=True, null=True, related_name='CreditTradeLogEntryuser')   
-    logEntryTime = models.DateField(blank=True, null=True)   
+    creditTrade = models.ForeignKey('CreditTrade', related_name='CreditTradeLogEntrycreditTrade', blank=True, null=True)   
+    user = models.ForeignKey('User', related_name='CreditTradeLogEntryuser', blank=True, null=True)   
+    logEntryTime = models.DateField()   
     newStatus = models.CharField(max_length=255)   
     newTradeExecutionDate = models.DateField(blank=True, null=True)   
-    newTransactionType = models.CharField(max_length=255)   
+    newTransactionType = models.CharField(max_length=255, blank=True, null=True)   
     newNumberOfCredits = models.IntegerField()   
-    newFairMarketValuePrice = models.CharField(max_length=255)   
+    newFairMarketValuePrice = models.CharField(blank=True, null=True, max_length=255)   
     newFuelSupplierBalanceAtTransactionTime = models.IntegerField()   
+

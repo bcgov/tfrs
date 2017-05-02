@@ -28,11 +28,12 @@ from .History import History
 
 
 class Offer(models.Model):	    
-    fuelSupplier = models.ForeignKey('FuelSupplier', blank=True, null=True, related_name='OfferfuelSupplier')   
+    fuelSupplier = models.ForeignKey('FuelSupplier', related_name='OfferfuelSupplier')   
     status = models.CharField(max_length=255)   
     buyOrSell = models.CharField(max_length=255)   
     numberOfCredits = models.IntegerField()   
     numberOfViews = models.IntegerField()   
     datePosted = models.DateField(blank=True, null=True)   
-    note = models.CharField(max_length=255)   
-    history = models.ManyToManyField('History', blank=True, related_name='Offerhistory')   
+    note = models.CharField(max_length=255, blank=True, null=True)   
+    history = models.ManyToManyField('History', related_name='Offerhistory', blank=True)   
+

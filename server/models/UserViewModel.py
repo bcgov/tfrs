@@ -28,10 +28,13 @@ from .GroupMembership import GroupMembership
 
 
 class UserViewModel(models.Model):	    
-    givenName = models.CharField(max_length=255)   
-    surname = models.CharField(max_length=255)   
-    email = models.CharField(max_length=255)   
+    givenName = models.CharField(max_length=255, blank=True, null=True)   
+    surname = models.CharField(max_length=255, blank=True, null=True)   
+    email = models.CharField(max_length=255, blank=True, null=True)   
     active = models.BooleanField()   
-    smUserId = models.CharField(max_length=255)   
-    userRoles = models.ManyToManyField('UserRole', blank=True, related_name='UserViewModeluserRoles')   
-    groupMemberships = models.ManyToManyField('GroupMembership', blank=True, related_name='UserViewModelgroupMemberships')   
+    smUserId = models.CharField(max_length=255, blank=True, null=True)   
+    userRoles = models.ManyToManyField('UserRole', related_name='UserViewModeluserRoles', blank=True)   
+    groupMemberships = models.ManyToManyField('GroupMembership', related_name='UserViewModelgroupMemberships', blank=True)   
+    class Meta:
+      abstract = True
+

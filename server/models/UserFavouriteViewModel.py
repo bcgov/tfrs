@@ -26,7 +26,10 @@ from django.utils import timezone
 
 
 class UserFavouriteViewModel(models.Model):	    
-    name = models.CharField(max_length=255)   
-    value = models.CharField(max_length=255)   
+    name = models.CharField(max_length=255, blank=True, null=True)   
+    value = models.CharField(max_length=255, blank=True, null=True)   
     isDefault = models.BooleanField()   
-    type = models.CharField(max_length=255)   
+    type = models.CharField(max_length=255, blank=True, null=True)   
+    class Meta:
+      abstract = True
+

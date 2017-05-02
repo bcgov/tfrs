@@ -27,3 +27,4 @@ from django.utils import timezone
 
 class History(models.Model):	    
     historyText = models.CharField(max_length=255)   
+

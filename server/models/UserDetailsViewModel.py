@@ -27,9 +27,12 @@ from .PermissionViewModel import PermissionViewModel
 
 
 class UserDetailsViewModel(models.Model):	    
-    givenName = models.CharField(max_length=255)   
-    surname = models.CharField(max_length=255)   
-    initials = models.CharField(max_length=255)   
-    email = models.CharField(max_length=255)   
+    givenName = models.CharField(max_length=255, blank=True, null=True)   
+    surname = models.CharField(max_length=255, blank=True, null=True)   
+    initials = models.CharField(max_length=255, blank=True, null=True)   
+    email = models.CharField(max_length=255, blank=True, null=True)   
     active = models.BooleanField()   
-    permissions = models.ManyToManyField('PermissionViewModel', blank=True, related_name='UserDetailsViewModelpermissions')   
+    permissions = models.ManyToManyField('PermissionViewModel', related_name='UserDetailsViewModelpermissions', blank=True)   
+    class Meta:
+      abstract = True
+
