@@ -105,9 +105,7 @@ class attachmentsUploadPost(APIView):
 class credittradesIdNotesGet(APIView):
   """  
   Returns notes for a particular CreditTrade  
-  """
-  # enter code for this routine here.        
-  
+  """       
   def get(self, request, id):     
     """
     Returns notes for a particular CreditTrade
@@ -253,8 +251,7 @@ class usersCurrentFavouritesPut(APIView):
 class usersCurrentFavouritesSearchGet(APIView):
   """  
   Returns a user's favourites of a given type.   
-  """
-  # enter code for this routine here.        
+  """       
   
   def get(self, request):
     currentUser = User.objects.all()[0] # replace with current user
@@ -270,9 +267,7 @@ class usersCurrentFavouritesSearchGet(APIView):
 class usersCurrentGet(APIView):
   """  
   Get the currently logged in user  
-  """
-  # enter code for this routine here.        
-  
+  """        
   def get(self, request, ):
     currentUser = User.objects.all()[0] # replace with current user
     serializer = serializers.UserSerializer(currentUser)
@@ -282,7 +277,6 @@ class fuelsuppliersIdAttachmentsGet(mixins.CreateModelMixin, APIView):
   """  
   Returns attachments for a particular FuelSupplier  
   """
-  # enter code for this routine here.        
   lookup_field = 'id'
   permission_classes = (permissions.AllowAny,)  
   queryset = History.objects.all()  
@@ -315,8 +309,7 @@ class fuelsuppliersIdAttachmentsGet(mixins.CreateModelMixin, APIView):
 class fuelsuppliersIdHistoryGet(APIView):
   """  
   Returns History for a particular FuelSupplier  
-  """  
-  
+  """    
   def get(self, request, id, offset = None, limit = None):
     fuelSupplier = FuelSupplier.objects.get(id=id)
     serializer = serializers.HistorySerializer(fuelSupplier.history, many=true)
@@ -350,8 +343,7 @@ class fuelsuppliersIdNotesGet(APIView):
     """
     Add a note to the FuelSupplier
     """
-    fuelSupplier = FuelSupplier.objects.get(id=id)   
-    # the body of the post is the data to be added.
+    fuelSupplier = FuelSupplier.objects.get(id=id)       
     jsonString = request.body.decode('utf-8')
     data = json.loads(jsonString)
     note = Note(noteText=data['noteText'], isNoLongerRelevant=data['isNoLongerRelevant'])
@@ -378,22 +370,18 @@ class fuelsuppliersSearchGet(APIView):
 class groupsIdUsersGet(APIView):
   """  
   returns users in a given Group  
-  """
-  # enter code for this routine here.        
-  
+  """          
   def get(self, request, id):
     group = Group.objects.get (id = id)
     groupMembership = GroupMembership.objects.filter(group=group)
-    serializer = serializers.GroupMembershipSerializer(groupMembership.users, many=True)
+    serializer = serializers.GroupMembershipSerializer(groupMembership, many=True)
     return Response(serializer.data)
     
 
 class rolesIdPermissionsGet(APIView):
   """  
   Get all the permissions for a role  
-  """
-  # enter code for this routine here.        
-  
+  """         
   def get(self, request, id):
     role = Role.objects.get (id = id)
     rolePermissions = RolePermission.objects.filter(role = role)    
@@ -433,23 +421,32 @@ class rolesIdPermissionsGet(APIView):
 class rolesIdUsersGet(APIView):
   """  
   Gets all the users for a role  
-  """
-  # enter code for this routine here.        
-  
+  """      
   def get(self, request, id):
-    role = Role.objects.get (id = id)       
-    serializer = serializers.UserSerializer(role.users)
+    role = Role.objects.get (id = id)   
+    userRoles = UserRole.objects.filter(role = role)
+    serializer = serializers.UserRoleSerializer(userRoles)
     return Response(serializer.data)        
 
-class rolesIdUsersPut(APIView):
-  """  
-  Updates the users for a role  
-  """
-  # enter code for this routine here.        
-  
-  def put(self, request, id, items):
-    return Response()
+  def put(self, request, id):
+    """  
+    Updates the users for a role  
+    """
+    role = Role.objects.get (id = id)          
+    jsonString = request.body.decode('utf-8')
+    alldata = json.loads(jsonString)
+    # clear existing User Roles.
+    UserRole.objects.filter(user=user).delete()
 
+    # add the replacement User Role
+    for data in alldata:
+      role = Role.objects.get(id = data['role'])
+      userRole = UserRole(effectiveDate = data['effectiveDate'], expiryDate = data['expiryDate'],role = role, user = user)
+      userRole.save()
+    result = UserRole.objects.filter(user=user)
+    serializer = serializers.UserRoleSerializer(result, many=True)
+    return Response(serializer.data)        
+  
 class usersIdFavouritesGet(APIView):
   def get(self, request, id):
     """  
@@ -490,8 +487,7 @@ class usersIdFavouritesGet(APIView):
     serializer = serializers.UserFavouriteSerializer(result, many=True)
     return Response(serializer.data)  
 
-class usersIdGroupsGet(APIView):            
-  
+class usersIdGroupsGet(APIView):              
   def get(self, request, id):
     """  
     Returns all groups that a user is a member of  
@@ -515,7 +511,23 @@ class usersIdGroupsGet(APIView):
     return Response(serializer.data)
     
   def put(self, request, id):
-    return Response()
+    """  
+    Updates a user's group membership  
+    """    
+    user = User.objects.get(id=id)   
+    jsonString = request.body.decode('utf-8')
+    alldata = json.loads(jsonString)
+    # clear existing favourites.
+    GroupMembership.objects.filter(user=user).delete()
+
+    # add the replacement GroupMemberships
+    for data in alldata:
+      group = Group.objects.get(id = data['group'])
+      groupMembership = GroupMembership(active = data['active'], group = group, user = user)
+      groupMembership.save()
+    result = GroupMembership.objects.filter(user=user)
+    serializer = serializers.GroupMembershipSerializer(result, many=True)
+    return Response(serializer.data)  
 
 class usersIdNotificationsGet(APIView):        
   
@@ -542,12 +554,10 @@ class usersIdNotificationsGet(APIView):
     return Response(serializer.data)
 
 class usersIdPermissionsGet(APIView):
-  """  
-  Returns the set of permissions for a user  
-  """
+
   def get(self, request, id):
     """  
-    Returns a user's permissions 
+    Returns the set of permissions for a user  
     """
     user = User.objects.get(id=id)
     userRoles = UserRole.objects.filter(user=user)
@@ -586,7 +596,20 @@ class usersIdRolesGet(APIView):
     """  
     Updates the roles for a user  
     """
-    return Response()
+    user = User.objects.get(id=id)   
+    jsonString = request.body.decode('utf-8')
+    alldata = json.loads(jsonString)
+    # clear existing favourites.
+    UserRole.objects.filter(user=user).delete()
+
+    # add the replacement User Role
+    for data in alldata:
+      role = Role.objects.get(id = data['role'])
+      userRole = UserRole(effectiveDate = data['effectiveDate'], expiryDate = data['expiryDate'],role = role, user = user)
+      userRole.save()
+    result = UserRole.objects.filter(user=user)
+    serializer = serializers.UserRoleSerializer(result, many=True)
+    return Response(serializer.data) 
 
 class usersSearchGet(APIView):  
   def get(self, request, fuelSuppliers = None, surname = None, includeInactive = None):
@@ -606,5 +629,3 @@ class usersSearchGet(APIView):
        
     serializer = serializers.UserSerializer(result, many=True)
     return Response(serializer.data)    
-
-

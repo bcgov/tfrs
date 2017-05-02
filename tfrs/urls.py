@@ -10,6 +10,7 @@ urlpatterns = [
     url(r'^settings/$', views.settings),
     url(r'^test/$', views.settings),
     url(r'^notifications/$', views.notifications),
+    url(r'^db-notifications/$', views.db_notifications),
     url(r'^new-transaction/$', views.new_transaction),
     url(r'^transaction-summary/$', views.transaction_summary),
  #   url(r'^admin/', include(admin.site.urls)),
