@@ -2,6 +2,7 @@ import json
 
 from django.http import HttpResponse
 from django.shortcuts import render
+from server.models.FuelSupplier import FuelSupplier
 
 def dashboard(request):
     table_data = [
@@ -71,3 +72,9 @@ from server.models.Notification import Notification
 def db_notifications(request):
     notifications = Notification.objects.all() # .select_related()
     return render(request, 'db-notifications.html', {'notifications': notifications})
+
+def health(request):
+    """
+    Health check for OpenShift
+    """
+    return HttpResponse(FuelSupplier.objects.count())

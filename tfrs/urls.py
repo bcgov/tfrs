@@ -1,7 +1,6 @@
 from django.conf.urls import include, url
 from django.contrib import admin
 
-from welcome.views import index, health
 from . import views
 
 urlpatterns = [
@@ -14,6 +13,6 @@ urlpatterns = [
     url(r'^new-transaction/$', views.new_transaction),
     url(r'^transaction-summary/$', views.transaction_summary),
  #   url(r'^admin/', include(admin.site.urls)),
-    url(r'^health$', health),
     url(r'^api/', include('server.urls')),
+    url(r'^health$', views.health),
 ]
