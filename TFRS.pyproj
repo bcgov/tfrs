@@ -102,23 +102,24 @@
     <Compile Include="wsgi.py" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="requirements.txt" />
-    <Content Include="server\models\__pycache__\Attachment.cpython-35.pyc" />
-    <Content Include="server\models\__pycache__\AttachmentViewModel.cpython-35.pyc" />
-    <Content Include="server\models\__pycache__\Audit.cpython-35.pyc" />
-    <Content Include="server\models\__pycache__\CompliancePeriod.cpython-35.pyc" />
-    <Content Include="server\models\__pycache__\Contact.cpython-35.pyc" />
-    <Content Include="server\models\__pycache__\CreditTrade.cpython-35.pyc" />
-    <Content Include="server\models\__pycache__\FuelSupplier.cpython-35.pyc" />
-    <Content Include="server\models\__pycache__\History.cpython-35.pyc" />
-    <Content Include="server\models\__pycache__\Note.cpython-35.pyc" />
-    <Content Include="server\models\__pycache__\__init__.cpython-35.pyc" />
+    <Content Include="requirements.txt" />    
+    <Content Include="tfrs\templates\account-activity.html" />
+    <Content Include="tfrs\templates\base.html" />
+    <Content Include="tfrs\templates\dashboard.html" />
+    <Content Include="tfrs\templates\new-transaction.html" />
+    <Content Include="tfrs\templates\db-notifications.html" />
+    <Content Include="tfrs\templates\notifications.html" />
+    <Content Include="tfrs\templates\settings.html" />
+    <Content Include="tfrs\templates\tfrs\fuelSupply.html" />
+    <Content Include="tfrs\templates\tfrs\index.html" />
+    <Content Include="tfrs\templates\transaction-summary.html" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="server\" />
     <Folder Include="server\migrations\" />
     <Folder Include="server\models\" />
-    <Folder Include="server\models\__pycache__\" />
+    <Folder Include="tfrs\templates\" />
+    <Folder Include="tfrs\templates\tfrs\" />
     <Folder Include="welcome\" />
     <Folder Include="tfrs\" />
   </ItemGroup>

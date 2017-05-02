@@ -1128,7 +1128,7 @@ class Test_Api_Custom(TestCase):
         fuelSupplierId = self.createFuelSupplier(contactId)
         userId = self.createUser(fuelSupplierId)
         # add user to group.
-        userGroupUrl = "/api/users/" + str(userId) + "/groups"
+        userGroupUrl = "/api/users/" + str(groupId) + "/groups"
         # create a new group membership.
         payload = {'active': True, 'group':groupId, 'user':userId}
         jsonString = json.dumps(payload)
@@ -1427,7 +1427,11 @@ class Test_Api_Custom(TestCase):
         self.deleteUser(userId) 
         self.deleteFuelSupplier(fuelSupplierId)
         self.deleteContact(contactId) 
-        
+    
+    def test_ApiViewer(self):
+        testUrl = "/api/"        
+        response = self.client.get(testUrl)
+        assert status.HTTP_200_OK == response.status_code
 
 if __name__ == '__main__':
     unittest.main()
