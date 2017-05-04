@@ -31,11 +31,12 @@ The following Deliverable have been produced:
 - Deployment pipeline built out so far includes:
 	* build (openshift pipeline/jenkins)
 	* deploy (openshift pipeline/jenkins)
+	* integration testing (python tests)
 	* automated datamodeling (schema spy)
 	* functional testing (navUnit) (*in progress*)
 	* code analysis and vulnerability testing (sonar cubes) (*in progress*) 
 - architectural deployment (*in progress*)
-	* React front-end
+	* React front-end (Not yet started)
 	* REST API
 	* Django Back-end
 	* Postgres Database
@@ -43,9 +44,11 @@ The following Deliverable have been produced:
 ### Development
 
 If using Windows as your development environment, install the following:
-- Python 3.5.1
-- Postgresql.  Be sure to add the postgresql bin folder to your path or else you will have problems with psycopg2 not being able to find the postgrsql libraries.
-- Visual Studio 2017 Community Preview with the Python extensions (As of 2017-4-18 the Preview version is required in order to use the Python extensions, which can be selected at time of install)
+- Python 3.5.1 - Select one of the installation options here that fits your workstation type: https://www.python.org/downloads/release/python-351/
+- Postgresql http://www.enterprisedb.com/products/pgdownload.do#windows 
+Be sure to edit the "PATH" environment variable to your in the advanced system settings on the control panel and add the postgresql bin folder. If you already have a PATH variable set to something you can add another separated by a semicolon. e.g. "C:\blah\npm; C:\Program Files\PostgreSQL\9.6\bin" 
+(Without doing this you will have problems with psycopg2 not being able to find the postgrsql libraries)
+- Visual Studio Community 2017 Preview https://www.visualstudio.com/vs/preview/ with the Python extensions (As of 2017-4-18 the Preview version is required in order to use the Python extensions, which can be selected at time of install)
 
 ### Code Generation
 
