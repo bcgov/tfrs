@@ -1,3 +1,6 @@
+# Visual Studio
+.vs/
+
 # Django
 db.sqlite3
 staticfiles/
