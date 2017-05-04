@@ -2,6 +2,7 @@ import json
 
 from django.http import HttpResponse
 from django.shortcuts import render
+from server.models.FuelSupplier import FuelSupplier
 
 def dashboard(request):
     table_data = [
@@ -63,3 +64,17 @@ def notifications(request):
         {'id': 3, 'subject': 'Credits Awarded - Part Three', 'date': '2017-02-15', 'flagged': False, 'message': 'Credits have been awarded by Part Three Agreement'}
     ]
     return render(request, 'notifications.html', {'notifications': notifications})
+
+# example of connecting a view to the generated API
+
+from server.models.Notification import Notification
+
+def db_notifications(request):
+    notifications = Notification.objects.all() # .select_related()
+    return render(request, 'db-notifications.html', {'notifications': notifications})
+
+def health(request):
+    """
+    Health check for OpenShift
+    """
+    return HttpResponse(FuelSupplier.objects.count())
