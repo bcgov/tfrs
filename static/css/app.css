@@ -2121,8 +2121,6 @@ a.accordion-btn:hover{
  
 .panel>.panel-heading {
     background-color: #f1f1f3;
-    border-color: #f1f1f3;
-    padding: 8px;
     cursor: pointer;
 }
 .panel-heading{
@@ -2240,6 +2238,7 @@ h5.twitterUserName a{
 
 .notification-list > a {
   text-decoration: none;
+  height: 42px;
 }
 
 .transaction-item {
@@ -2248,4 +2247,44 @@ h5.twitterUserName a{
 
 .notification-item {
   width: calc(100% - 70px);
+}
+
+.horizontal-line {
+  height: 1px;
+  background-color: rgb(204, 204, 204);
+}
+
+.notifications-header {
+  background-color: #f5f5f5;
+}
+
+.notifications-header > span {
+  font-weight: bold;
+}
+
+i.active {
+  color: red;
+}
+
+.company-header {
+  font-size: 50px;
+  font-weight: bold;
+}
+
+.header-profile {
+  padding-top: 15px;
+}
+
+.header-profile > span {
+  font-size: 20px;
+}
+
+.header-profile > i {
+  font-size: 22px;
+  padding-left: 5px;
+}
+
+.more-link {
+  float: right;
+  text-decoration: none !important;
 }

@@ -2272,7 +2272,7 @@ i.active {
 }
 
 .header-profile {
-  line-height: 71px;
+  padding-top: 15px;
 }
 
 .header-profile > span {
