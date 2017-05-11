@@ -1,7 +1,7 @@
 node('maven') {
 
    stage('checkout tfrs src onto docker slave')
-   git url: 'https://github.com/dmarley/tfrs.git'
+   git url: 'https://github.com/bcgov/tfrs.git'
 
    stage('list working dir')
    sh 'ls -l -srt'
