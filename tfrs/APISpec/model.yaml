@@ -3,222 +3,157 @@ definitions:
     type: object
     required:
       - id
-      - respondent
-      - initiatorLastUpdateBy
-      - transactionType
+      - creditTradeStatusId
+      - initiator
       - numberOfCredits
     properties:
       id:
         format: int32
         type: integer
-      status:
-        type: string
+        description: A system-generated unique identifier for a Credit Trade
+      creditTradeStatusId:
+        $ref: '#/definitions/CreditTradeStatus'
+        description: A foreign key reference to a CreditTradeStatus
       initiator:
         $ref: '#/definitions/FuelSupplier'
+        description: A foreign key reference to a FuelSupplier
       respondent:
         $ref: '#/definitions/FuelSupplier'
-      initiatorLastUpdateBy:
-        $ref: '#/definitions/User'
-      respondentLastUpdatedBy:
-        $ref: '#/definitions/User'
-      reviewedRejectedBy:
-        $ref: '#/definitions/User'
-      approvedRejectedBy:
-        $ref: '#/definitions/User'
-      cancelledBy:
-        $ref: '#/definitions/User'
-      tradeExecutionDate:
+        description: A foreign key reference to a FuelSupplier
+      tradeEffectiveDate:
         type: string
         format: date-time
-      transactionType:
-        type: string
+      creditTradeTypeId:
+        $ref: '#/definitions/CreditTradeType'
+        description: A foreign key reference to a CreditTradeType
       numberOfCredits:
         format: int32
         type: integer
-      fairMarketValuePrice:
+      fairMarketValuePerCredit:
         type: number
         format: float
-      offer:
+      offerId:
         $ref: '#/definitions/Offer'
-      fuelSupplierBalanceBeforeTransaction:
-        type: string
-        format: date-time
-      notes:
-        type: array
-        items:
-          $ref: '#/definitions/Note'
-      attachments:
-        type: array
-        items:
-          $ref: '#/definitions/Attachment'
-      history:
-        type: array
-        items:
-          $ref: '#/definitions/History'
-  CreditTradeLogEntry:
+        description: A foreign key reference to a Offer
+  CreditTradeHistory:
     type: object
     required:
       - id
       - logEntryTime
-      - newCompliancePeriod
-      - newStatus
+      - creditTradeStatusId
       - newNumberOfCredits
     properties:
       id:
         format: int32
         type: integer
-      creditTrade:
+        description: A system-generated unique identifier for a Credit Trade History
+      creditTradeId:
         $ref: '#/definitions/CreditTrade'
-      user:
+        description: A foreign key reference to a CreditTrade
+      userId:
         $ref: '#/definitions/User'
+        description: A foreign key reference to a User
       logEntryTime:
         type: string
         format: date-time
-      newCompliancePeriod:
-        $ref: '#/definitions/CompliancePeriod'
-      newStatus:
-        type: string
-      newTradeExecutionDate:
+      creditTradeStatusId:
+        $ref: '#/definitions/CreditTradeStatus'
+        description: A foreign key reference to a CreditTradeStatus
+      newTradeEffectiveDate:
         type: string
         format: date-time
-      newTransactionType:
-        type: string
+      creditTradeTypeId:
+        $ref: '#/definitions/CreditTradeType'
+        description: A foreign key reference to a CreditTradeType
       newNumberOfCredits:
         format: int32
         type: integer
-      newFairMarketValuePrice:
+      newFairMarketValuePerCredit:
         type: number
         format: float
-      newFuelSupplierBalanceAtTransactionTime:
-        format: int32
-        type: integer
-  Offer:
+      fuelSupplierBalanceId:
+        $ref: '#/definitions/FuelSupplierBalance'
+        description: A foreign key reference to a FuelSupplierBalance
+  CreditTradeStatus:
     type: object
     required:
       - id
-      - fuelSupplier
-      - status
-      - buyOrSell
-      - numberOfCredits
+      - effectiveDate
     properties:
       id:
         format: int32
         type: integer
-      fuelSupplier:
-        $ref: '#/definitions/FuelSupplier'
+        description: A system-generated unique identifier for a Credit Trade Status
       status:
         type: string
-      buyOrSell:
+      description:
         type: string
-      numberOfCredits:
-        format: int32
-        type: integer
-      numberOfViews:
-        format: int32
-        type: integer
-      datePosted:
+      effectiveDate:
         type: string
         format: date-time
-      note:
+      expirationDate:
         type: string
-      history:
-        type: array
-        items:
-          $ref: '#/definitions/History'
-  FuelSupplier:
+        format: date-time
+      displayOrder:
+        format: int32
+        type: integer
+  CreditTradeType:
     type: object
     required:
       - id
-      - name
-      - status
-      - dateCreated
+      - effectiveDate
     properties:
       id:
         format: int32
         type: integer
-      name:
+        description: A system-generated unique identifier for a Credit Trade Type
+      type:
         type: string
-        uniqueItems: true
       status:
         type: string
-      dateCreated:
+      description:
+        type: string
+      effectiveDate:
         type: string
         format: date-time
-      primaryContact:
-        $ref: '#/definitions/Contact'
-      contacts:
-        type: array
-        items:
-          $ref: '#/definitions/Contact'
-      notes:
-        type: array
-        items:
-          $ref: '#/definitions/Note'
-      attachments:
-        type: array
-        items:
-          $ref: '#/definitions/Attachment'
-      history:
-        type: array
-        items:
-          $ref: '#/definitions/History'
-  LookupList:
-    type: object
-    description: Lookup values for various enumerated types in the systems - entity status values, trade types and others. Used to pull the values out of the code and into the database but without having to have a table for each lookup instance.
-    required:
-      - id
-      - contextName
-      - isDefault
-      - codeName
-      - value
-    properties:
-      id:
+      displayOrder:
         format: int32
         type: integer
-        description: A system-generated unique identifier for a LookupList
-      contextName:
-        type: string
-        description: The context within the app in which this lookup list if used. Defined and referenced in the code of the application.
-      isDefault:
-        type: boolean
-        description: True of the value within the lookup list context should be the default for the lookup instance.
-      displaySortOrder:
-        format: int32
-        type: integer
-        description: The sort order for list of values within a list context.
-      codeName:
-        type: string
-        description: The a shorter lookup name to find the value. Can be used at the option of the application to present on the screen a short version of the lookup list value.
-      value:
-        type: string
-        description: The fully spelled out value of the lookup entry.
-  Note:
+  CreditTradeNote:
     type: object
-    description: Notes entered by users about instance of entities - e.g. Credit Trades and Fuel Suppliers
+    description: Notes entered by users about Credit Trades
     required:
       - id
+      - creditTradeId
       - noteText
     properties:
       id:
         format: int32
         type: integer
-        description: A system-generated unique identifier for a Note
+        description: A system-generated unique identifier for a Credit Trade Note
+      creditTradeId:
+        $ref: '#/definitions/CreditTrade'
+        description: A foreign key reference to a CreditTrade
       noteText:
         type: string
         description: The contents of the note.
       isNoLongerRelevant:
         type: boolean
         description: A user set flag that the note is no longer relevant. Allows the note to be retained for historical reasons,  but identified to other users as no longer applicable.
-  Attachment:
+  CreditTradeAttachment:
     type: object
-    description: Attachments uploaded by users about instance of entities - e.g. Credit Trades and Fuel Suppliers
+    description: Attachments uploaded by users about Credit Trades
     required:
       - id
+      - creditTradeId
     properties:
       id:
         format: int32
         type: integer
-        description: A system-generated unique identifier for an Attachment
+        description: A system-generated unique identifier for a Credit Trade Attachment
+      creditTradeId:
+        $ref: '#/definitions/CreditTrade'
+        description: A foreign key reference to a CreditTrade
       fileName:
         type: string
         description: Filename as passed by the user uploading the file
@@ -229,12 +164,113 @@ definitions:
       description:
         type: string
         description: A note about the attachment,  optionally maintained by the user.
+      creditTradeAttachmentTypeId:
+        $ref: '#/definitions/CreditTradeAttachmentType'
+        description: A foreign key reference to a CreditTradeAttachmentType
+  CreditTradeAttachmentType:
+    type: object
+    required:
+      - id
+      - effectiveDate
+    properties:
+      id:
+        format: int32
+        type: integer
+        description: A system-generated unique identifier for a Credit Trade Attachment Type
       type:
         type: string
-        description: Type of attachment
-  History:
+      status:
+        type: string
+      description:
+        type: string
+      effectiveDate:
+        type: string
+        format: date-time
+      displayOrder:
+        format: int32
+        type: integer
+  Offer:
     type: object
-    description: The history of updates made to an entity - e.g. a Credit Trades and Fuel Suppliers
+    required:
+      - id
+      - fuelSupplierId
+      - offerStatusId
+      - offerTypeId
+      - numberOfCredits
+    properties:
+      id:
+        format: int32
+        type: integer
+        description: A system-generated unique identifier for an Offer
+      fuelSupplierId:
+        $ref: '#/definitions/FuelSupplier'
+        description: A foreign key reference to a FuelSupplier
+      offerStatusId:
+        $ref: '#/definitions/OfferStatus'
+        description: A foreign key reference to a OfferStatus
+      offerTypeId:
+        $ref: '#/definitions/OfferType'
+        description: A foreign key reference to a OfferType
+      numberOfCredits:
+        format: int32
+        type: integer
+      offerFairMarketValuePerCredit:
+        type: number
+        format: float
+      numberOfViews:
+        format: int32
+        type: integer
+      datePosted:
+        type: string
+        format: date-time
+      offerBackgroundNote:
+        type: string
+  OfferStatus:
+    type: object
+    required:
+      - id
+      - effectiveDate
+    properties:
+      id:
+        format: int32
+        type: integer
+        description: A system-generated unique identifier for an Offer Status
+      status:
+        type: string
+      status:
+        type: string
+      description:
+        type: string
+      effectiveDate:
+        type: string
+        format: date-time
+      displayOrder:
+        format: int32
+        type: integer
+  OfferType:
+    type: object
+    required:
+      - effectiveDate
+    properties:
+      id:
+        format: int32
+        type: integer
+        description: A system-generated unique identifier for an Offer Type
+      type:
+        type: string
+      status:
+        type: string
+      description:
+        type: string
+      effectiveDate:
+        type: string
+        format: date-time
+      displayOrder:
+        format: int32
+        type: integer
+  OfferHistory:
+    type: object
+    description: The history of updates made to an Offer
     required:
       - id
       - historyText
@@ -242,32 +278,162 @@ definitions:
       id:
         format: int32
         type: integer
-        description: A system-generated unique identifier for a History
+        description: A system-generated unique identifier for an Offer History
+      offerId:
+        $ref: '#/definitions/Offer'
+        description: A foreign key reference to a Offer
       historyText:
         type: string
         description: The text of the history entry tracked against the related entity.
-  Contact:
+  OfferNote:
     type: object
-    description: A table of contacts related to various entities in the system. FK fields are used to link contacts to records in the system.
+    description: Notes entered by users about Credit Trades
     required:
       - id
+      - offerId
+      - noteText
     properties:
       id:
         format: int32
         type: integer
-        description: A system-generated unique identifier for a Contact
+        description: A system-generated unique identifier for an Offer Note
+      offerId:
+        $ref: '#/definitions/Offer'
+        description: A foreign key reference to a Offer
+      noteText:
+        type: string
+        description: The contents of the note.
+      isNoLongerRelevant:
+        type: boolean
+        description: A user set flag that the note is no longer relevant. Allows the note to be retained for historical reasons,  but identified to other users as no longer applicable.
+  FuelSupplier:
+    type: object
+    required:
+      - id
+      - commonClientOrgId
+      - lastUpdatefromCommonClient
+      - name
+      - fuelSupplierStatusId
+      - dateCreated
+    properties:
+      id:
+        format: int32
+        type: integer
+        description: A system-generated unique identifier for a Fuel Supplier
+      commonClientOrgId:
+        type: string
+        uniqueItems: true
+      lastUpdatefromCommonClient:
+        type: string
+        format: date-time
+      name:
+        type: string
+        uniqueItems: true
+      fuelSupplierStatusId:
+        $ref: '#/definitions/FuelSupplierStatus'
+        description: A foreign key reference to a FuelSupplierStatus
+      dateCreated:
+        type: string
+        format: date-time
+  FuelSupplierBalance:
+    type: object
+    required:
+      - id
+      - fuelSupplierId
+      - validatedCredits
+      - encumberedCredits
+      - effectiveDate
+    properties:
+      id:
+        format: int32
+        type: integer
+        description: A system-generated unique identifier for a Fuel Supplier Balance
+      fuelSupplierId:
+        $ref: '#/definitions/FuelSupplier'
+        description: A foreign key reference to a FuelSupplier
+      validatedCredits:
+        format: int32
+        type: integer
+      encumberedCredits:
+        format: int32
+        type: integer
+      effectiveDate:
+        type: string
+        format: date-time
+      endDate:
+        type: string
+        format: date-time
+      creditTradeId:
+        $ref: '#/definitions/CreditTrade'
+        description: A foreign key reference to a CreditTrade
+  FuelSupplierStatus:
+    type: object
+    required:
+      - effectiveDate
+    properties:
+      id:
+        format: int32
+        type: integer
+        description: A system-generated unique identifier for a Fuel Supplier Status
+      status:
+        type: string
+      status:
+        type: string
+      description:
+        type: string
+      effectiveDate:
+        type: string
+        format: date-time
+      displayOrder:
+        format: int32
+        type: integer
+  FuelSupplierNote:
+    type: object
+    description: Notes entered by users about Fuel Suppliers
+    required:
+      - id
+      - fuelSupplierId
+      - noteText
+    properties:
+      id:
+        format: int32
+        type: integer
+        description: A system-generated unique identifier for a Fuel Supplier Note
+      fuelSupplierId:
+        $ref: '#/definitions/FuelSupplier'
+        description: A foreign key reference to a FuelSupplier
+      noteText:
+        type: string
+        description: The contents of the note.
+      isNoLongerRelevant:
+        type: boolean
+        description: A user set flag that the note is no longer relevant. Allows the note to be retained for historical reasons,  but identified to other users as no longer applicable.
+  FuelSupplierContact:
+    type: object
+    description: A table of contacts related to various entities in the system.
+    required:
+      - id
+      - fuelSupplierId
+    properties:
+      id:
+        format: int32
+        type: integer
+        description: A system-generated unique identifier for a Fuel Supplier Contact
+      fuelSupplierId:
+        $ref: '#/definitions/FuelSupplier'
+        description: A foreign key reference to a FuelSupplier
       givenName:
         type: string
         description: The given name of the contact.
       surname:
         type: string
         description: The surname of the contact.
-      organizationName:
+      title:
         type: string
-        description: The organization name of the contact.
-      role:
-        type: string
-        description: The role of the contact. UI controlled as to whether it is free form or selected from an enumerated list - for initial implementation, the field is freeform.
+        description: The title of the contact within their organization.
+      userId:
+        $ref: '#/definitions/User'
+        description: A foreign key reference to a User
       notes:
         type: string
         description: A note about the contact maintained by the users.
@@ -298,6 +464,73 @@ definitions:
       postalCode:
         type: string
         description: The postal code of the address.
+  FuelSupplierAttachment:
+    type: object
+    description: Attachments uploaded by users about Fuel Supplier
+    required:
+      - id
+      - fuelSupplierId
+    properties:
+      id:
+        format: int32
+        type: integer
+        description: A system-generated unique identifier for a Fuel Supplier Attachment
+      fuelSupplierId:
+        $ref: '#/definitions/FuelSupplier'
+        description: A foreign key reference to a FuelSupplier
+      fileName:
+        type: string
+        description: Filename as passed by the user uploading the file
+      fileContents:
+        type: string
+        format: binary
+        description: Binary contents of the file
+      description:
+        type: string
+        description: A note about the attachment,  optionally maintained by the user.
+      fuelSupplierAttachmentTypeId:
+        $ref: '#/definitions/FuelSupplierAttachmentType'
+        description: A foreign key reference to a FuelSupplierAttachmentType
+  FuelSupplierAttachmentType:
+    type: object
+    required:
+      - id
+      - effectiveDate
+    properties:
+      id:
+        format: int32
+        type: integer
+        description: A system-generated unique identifier for a Fuel Supplier Attachment Type
+      type:
+        type: string
+      status:
+        type: string
+      description:
+        type: string
+      effectiveDate:
+        type: string
+        format: date-time
+      displayOrder:
+        format: int32
+        type: integer
+  FuelSupplierHistory:
+    type: object
+    description: The history of updates made to a Fuel Supplier
+    required:
+      - id
+      - fuelSupplierId
+      - historyText
+    properties:
+      id:
+        format: int32
+        type: integer
+        description: A system-generated unique identifier for a Fuel Supplier History
+      fuelSupplierId:
+        $ref: '#/definitions/FuelSupplier'
+        description: A foreign key reference to a FuelSupplier
+      historyText:
+        type: string
+        description: The text of the history entry tracked against the related entity.
   UserFavourite:
     type: object
     description: User specific settings for a specific location in the UI. The location and saved settings are internally defined by the UI.
@@ -307,10 +540,10 @@ definitions:
       id:
         format: int32
         type: integer
-        description: A system-generated unique identifier for a UserFavourite
-      type:
+        description: A system-generated unique identifier for a User Favourite
+      context:
         type: string
-        description: The type of Favourite
+        description: The context (as defined by the UI) in the application to which this favourite applies.
       name:
         type: string
         description: The user-defined name for the recorded settings. Allows the user to save different groups of settings and access each one easily when needed.
@@ -320,8 +553,9 @@ definitions:
       isDefault:
         type: boolean
         description: True if this Favourite is the default for this Context Type. On first access to a context in a session the default favourite for the context it is invoked. If there is no default favourite,  a system-wide default is invoked. On return to the context within a session,  the last parameters used are reapplied.
-      User:
+      userId:
         $ref: '#/definitions/User'
+        description: A foreign key reference to a User
   Notification:
     type: object
     description: Users associated with specific notifications, created at the time the notification record is created because of the user&#39;s business relationship to the bus - e.g. the user is the currently assigned inspector, or the user is the manager for the District in which the bus is located. The rules for linking a user to a notification for a specific bus could vary over time based on the needs of the business. At minimum, it is expected the current inspector assigned to a bus will be notified of every notification for that bus.
@@ -332,16 +566,18 @@ definitions:
         format: int32
         type: integer
         description: A system-generated unique identifier for a Notification
-      event:
+      notificationEventId:
         $ref: '#/definitions/NotificationEvent'
+        description: A foreign key reference to a NotificationEvent
       hasBeenViewed:
         type: boolean
         description: True if the user linked to the notification has read the notification
       isWatchNotification:
         type: boolean
         description: True if the user linked to the notification has flagged the notification to remain visible
-      user:
+      userId:
         $ref: '#/definitions/User'
+        description: A foreign key reference to a User
   NotificationEvent:
     type: object
     description: Notifications associated about changes to information related to a specific Credit Trade - eg trade suggested, trade countered, trade approved, etc.
@@ -351,7 +587,7 @@ definitions:
       id:
         format: int32
         type: integer
-        description: A system-generated unique identifier for a NotificationEvent
+        description: A system-generated unique identifier for a Notification Event
       eventTime:
         type: string
         format: date-time
@@ -362,10 +598,12 @@ definitions:
       notes:
         type: string
         description: An assembled text string about the event that triggered the notification. Includes both static text and data about the notification. User Interface code will be used (based on the eventTypeCode - category) to assemble a dynamic string of information about the event - potentially including links to other relevant data - such as link to the School Bus detail screen.
-      creditTrade:
+      creditTradeId:
         $ref: '#/definitions/CreditTrade'
-      offer:
+        description: A foreign key reference to a CreditTrade
+      offerId:
         $ref: '#/definitions/Offer'
+        description: A foreign key reference to a Offer
   User:
     type: object
     description: Information about the users of the system.
@@ -373,29 +611,26 @@ definitions:
       - id
       - givenName
       - surname
-      - status
     properties:
       id:
         format: int32
         type: integer
         description: A system-generated unique identifier for a User
+      authorizationID:
+        type: string
+        description: The ID of the User in the authorization system of record
       givenName:
         type: string
         description: Given name of the user.
       surname:
         type: string
         description: Surname of the user.
-      initials:
-        type: string
-        description: Initials of the user, to be presented where screen space is at a premium.
       email:
         type: string
         description: The email address of the user in the system.
-      status:
-        type: string
-        description: The status of the user in the system. Only a status of &quot;Active&quot; allows the user access to the system.
-      fuelSupplier:
+      fuelSupplierId:
         $ref: '#/definitions/FuelSupplier'
+        description: A foreign key reference to a FuelSupplier
       smUserId:
         type: string
         description: Security Manager User ID
@@ -405,31 +640,6 @@ definitions:
       smAuthorizationDirectory:
         type: string
         description: The user directory service used by Siteminder to authenticate the user - usually IDIR or BCeID.
-  UserRole:
-    type: object
-    description: A join table that provides allows each user to have any number of Roles in the system.  At login time the user is given the sum of the permissions of the roles assigned to that user. 
-    required:
-      - id
-      - effectiveDate
-      - user
-      - role
-    properties:
-      id:
-        format: int32
-        type: integer
-        description: A system-generated unique identifier for a UserRole
-      effectiveDate:
-        type: string
-        format: date-time
-        description: The date on which the user was given the related role.
-      expiryDate:
-        type: string
-        format: date-time
-        description: The date on which a role previously assigned to a user was removed from that user.
-      user:
-        $ref: '#/definitions/User'
-      role:
-        $ref: '#/definitions/Role'
   Role:
     type: object
     description: A table managed in the application by authorized users to create named Roles that can be assigned to Users as needed. Roles can be created as needed to support the users of the system and the roles they perform within the organization.
@@ -457,11 +667,13 @@ definitions:
       id:
         format: int32
         type: integer
-        description: A system-generated unique identifier for a RolePermission
-      role:
+        description: A system-generated unique identifier for a Role Permission
+      roleId:
         $ref: '#/definitions/Role'
-      permission:
+        description: A foreign key reference to a Role
+      permissionId:
         $ref: '#/definitions/Permission'
+        description: A foreign key reference to a Permission
   Permission:
     type: object
     description: The set of permissions defined in the application. Each permission is given a name and triggers some behavior defined in the application. For example, a permission might allow users to see data or to have access to functionality restricted to users without that permission. Permissions are created as needed to the application and are added to the permissions table by data migrations executed at the time the software that uses the permission is deployed.
@@ -494,14 +706,16 @@ definitions:
       id:
         format: int32
         type: integer
-        description: A system-generated unique identifier for a GroupMembership
+        description: A system-generated unique identifier for a Group Membership
       active:
         type: boolean
         description: A flag indicating the User is active in the group. Set false to remove the user from the designated group.
-      group:
+      groupId:
         $ref: '#/definitions/Group'
-      user:
+        description: A foreign key reference to a Group
+      userId:
         $ref: '#/definitions/User'
+        description: A foreign key reference to a User
   Group:
     type: object
     description: A named entity that is used to created a collection of users into a group. For example, the School Bus Inspectors are in the group Inspectors. Groups, like permissions are defined by the application and referenced in the code of the application.
