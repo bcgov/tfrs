@@ -6,7 +6,8 @@ This software is being developed to streamline compliance reporting for transpor
 
 ### Data
 Documentation for system data is dynamical generated using Schema Spy:
-http://schema-spy-mem-tfrs-dev.pathfinder.gov.bc.ca/index.html
+http://schema-spy-mem-tfrs-dev.pathfinder.gov.bc.ca/index.html  
+> To learn more about the regulation governing the disclosure of data in this system please read [Renewable and Low Carbon Fuel Requirements Regulation 11.11 \(5\)](http://www.bclaws.ca/EPLibraries/bclaws_new/document/ID/freeside/394_2008#section11.11)
 
 ### Code
 - css and js libraries provided as part of the Gov 2.0 Bootstrap Skeleton
@@ -14,32 +15,7 @@ http://schema-spy-mem-tfrs-dev.pathfinder.gov.bc.ca/index.html
 
 ### Project Status
 This project is in development. 
-The following Deliverable have been produced:
-- low-fidelity and hi-fidelity mockups for
-	* Credit Transfer and Credit Awards
-		- Dashboard
-		- Credit account balance
-		- Account activity
-		- Setting, Alerts, Notifications
-		- Create/Edit a proposed credit transfer
-		- Accept/Approve a proposed/authorized credit transfer
-	* Compliance Reporting
-		- Compliance Report
-		- Exclusions Report
-		- Exemption Report
-- prototype of credit transfer and award application using Django Templates and Static Controllers to input test data
-- Deployment pipeline built out so far includes:
-	* build (openshift pipeline/jenkins)
-	* deploy (openshift pipeline/jenkins)
-	* integration testing (python tests)
-	* automated datamodeling (schema spy)
-	* functional testing (navUnit) (*in progress*)
-	* code analysis and vulnerability testing (sonar cubes) (*in progress*) 
-- architectural deployment (*in progress*)
-	* React front-end (Not yet started)
-	* REST API
-	* Django Back-end
-	* Postgres Database
+To see the status of feature development please refer to the [features](https://github.com/bcgov/tfrs/wiki/features/) page on the project wiki 
 
 ### Development
 
@@ -55,16 +31,17 @@ Be sure to edit the "PATH" environment variable to your in the advanced system s
 This project has made use of the Swagger.io Code Generator.  Here is the procedure for generation of code:
 
 1. First install an environment capable of running Java 7+ programs.  As of 2017-5-2 the current JRE can be used.   
-2. If building the code generator from source, follow the instructions at the code generator extension repository:  https://github.com/bcgov/Swagger-Codegen-Extension
-	1. An alternative to building from source is to obtain the jar files for the code generator and extension.
+2. If building the code generator from source, follow the instructions at the code generator extension repository:
+   https://github.com/bcgov/Swagger-Codegen-Extension   
+   An alternative to building from source is to obtain the jar files for the code generator and extension.
 3. Make changes to the Excel file currently located at `tfrs\APISpec\in\TFRSSwagger.xlsm`
 4. Export from Excel using the CTRL-SHIFT-V macro in the above excel file
 5. Run the file called `update.bat` located in `tfrs\APISpec`
-6. In the Swagger-Codgen-Extension folder, run the Django generator batch file with the following parameters:
-7. `generate-all-django.bat <path to OpenAPI YAML file> <output folder name> <path to configuration file>
+6. In the Swagger-Codgen-Extension folder, run the Django generator batch file with the following parameters:  
+   `generate-all-django.bat <path to OpenAPI YAML file> <output folder name> <path to configuration file>`
 	1. The OpenAPI YAML file is located in this repository at `tfrs/ApiSpec/TFRSswagger.yaml` 
 	2. The configuration file is located in this repository at `tfrs/ApiSpec/swagger-codegen-config.json`
-8. Copy the following artifacts to the folder `server` in this repository.
+7. Copy the following artifacts to the folder `server` in this repository.
 	1. admin.py
 	2. serializers.py
 	3. urls.py
