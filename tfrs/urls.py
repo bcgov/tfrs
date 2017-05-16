@@ -6,6 +6,7 @@ from . import views
 urlpatterns = [
     url(r'^$', views.dashboard),
     url(r'^account-activity/$', views.account_activity),
+	url(r'^offers/$', views.offers),
     url(r'^settings/$', views.settings),
     url(r'^test/$', views.settings),
     url(r'^notifications/$', views.notifications),
