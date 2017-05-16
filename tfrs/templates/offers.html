@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block title%}Offers{% endblock %}
+
+{% block content %}
+  <div class="row">
+    <div class="col-xs-12">
+      <h2>Offers</h2>
+      <table id="offers-table">
+      </table>
+    </div>
+  </div>
+  <script>
+  var data = {{ table_data|safe }}
+  </script>
+{% endblock %}

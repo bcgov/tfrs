@@ -32,12 +32,18 @@ def account_activity(request):
         {'transaction':{ 'fuelSupplier': 'BC EveryFuel', 'type': 'Offer to Sell', 'partner': 'BC AnyFuel', 'quantity': 5000, 'fairMarketValue': '$90', 'lastModified': '2017-04-04', 'effectiveDate': '2017-11-11', 'status': 'Proposed', 'balance': 75000, 'compliance_period': '2016'}},
         {'transaction':{ 'fuelSupplier': 'BC EveryFuel', 'type': 'Offer to Sell', 'partner': 'BC AnyFuel', 'quantity': 15000, 'fairMarketValue': '$100', 'lastModified': '2015-04-01', 'effectiveDate': '2015-04-01', 'status': 'Draft', 'balance': 75000, 'compliance_period': '2016'}},
         {'transaction':{ 'fuelSupplier': 'BC EveryFuel', 'type': 'Offer to Buy', 'partner': 'BC AnyFuel', 'quantity': 5000, 'fairMarketValue': '$70', 'lastModified': '2016-12-15', 'effectiveDate': '2017-01-31', 'status': 'Balanced Updated', 'balance': 80000, 'compliance_period': '2016'}},
-        {'transaction':{ 'fuelSupplier': 'BC EveryFuel', 'type': 'Offer to Sell', 'partner': 'BC AnyFuel', 'quantity': 75000, 'fairMarketValue': '$125', 'lastModified': '2017-04-04', 'effectiveDate': '2017-12-31', 'status': 'Offer', 'balance': 80000, 'compliance_period': '2016'}},
         {'transaction':{ 'fuelSupplier': 'BC EveryFuel', 'type': 'Offer to Sell', 'partner': 'BC AnyFuel', 'quantity': 7500, 'fairMarketValue': '$120', 'lastModified': '2017-02-28', 'effectiveDate': '2017-02-28', 'status': 'Balanced Updated', 'balance': 87500, 'compliance_period': '2016'}},
         {'transaction':{ 'fuelSupplier': 'BC EveryFuel', 'type': 'Offer to Buy', 'partner': 'BC AnyFuel', 'quantity': 1500, 'fairMarketValue': '$750', 'lastModified': '2017-03-20', 'effectiveDate': '2017-03-20', 'status': 'Balanced Updated', 'balance': 89000, 'compliance_period': '2016'}}
     ]
     return render(request, 'account-activity.html', {'table_data': json.dumps(table_data)})
 
+def offers(request):
+    table_data = [
+        {'transaction':{ 'fuelSupplier': 'BC AnyFuel', 'type': 'Offer to Buy', 'partner': '', 'quantity': 100000, 'fairMarketValue': '$100', 'lastModified': '2017-05-16', 'effectiveDate': '2017-12-25', 'status': 'Offer'}},
+		{'transaction':{ 'fuelSupplier': 'BC EveryFuel', 'type': 'Offer to Sell', 'partner': '', 'quantity': 75000, 'fairMarketValue': '$125', 'lastModified': '2017-04-04', 'effectiveDate': '2017-12-31', 'status': 'Offer'}}
+    ]
+    return render(request, 'offers.html', {'table_data': json.dumps(table_data)})	
+	
 def new_transaction(request):
     return render(request, 'new-transaction.html', {})
 
