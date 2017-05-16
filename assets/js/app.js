@@ -111,4 +111,13 @@ $(function() {
     showExport: true,
     reorderableColumns: true,
   });
+  
+  $('#offers-table').bootstrapTable({
+    data: data,
+    columns: columns,
+    pagination: true,
+    search: true,
+    showExport: true,
+    reorderableColumns: true,
+  });
 });
