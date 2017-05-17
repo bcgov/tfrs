@@ -3,6 +3,13 @@ import json
 from django.http import HttpResponse
 from django.shortcuts import render
 from server.models.FuelSupplier import FuelSupplier
+from server.models.Notification import Notification
+
+def health(request):
+    """
+    Health check for OpenShift
+    """
+    return HttpResponse(FuelSupplier.objects.count())
 
 def dashboard(request):
     table_data = [
@@ -71,16 +78,15 @@ def notifications(request):
     ]
     return render(request, 'notifications.html', {'notifications': notifications})
 
-# example of connecting a view to the generated API
-
-from server.models.Notification import Notification
+# examples of connecting a view to the postgresql database
 
 def db_notifications(request):
     notifications = Notification.objects.all() # .select_related()
     return render(request, 'db-notifications.html', {'notifications': notifications})
 
-def health(request):
-    """
-    Health check for OpenShift
-    """
-    return HttpResponse(FuelSupplier.objects.count())
+def db_fuel_suppliers(request):
+    fuelsuppliers = FuelSupplier.objects.all() # .select_related()
+    return render(request, 'db-fuel-suppliers.html', {'fuelsuppliers': fuelsuppliers})
+
+
+	

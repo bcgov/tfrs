@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+
+{% block title %}FuelSuppliers{% endblock %}
+
+{% block content %}
+  <div class="row">
+    <div class="col-xs-8 col-xs-offset-2">
+      <h2>Fuel Suppliers</h2>
+        <div>
+                <div class="list-group notification-list">
+                  <a href="#" class="list-group-item notifications-header">
+                    <span class="col-xs-9">Name</span>
+                    <span class="col-xs-3">Date Created</span>
+                  </a>
+                  {% for fuelsupplier in fuelsuppliers %}
+                  <a href="#" data-toggle="modal" data-target="#{{ fuelsupplier.id }}-fuelsupplier" class="list-group-item">
+                    <span class="col-xs-9">{{ fuelsupplier.name }}</span>
+                    <span class="col-xs-3">{{ fuelsupplier.dateCreated }}</span>
+                  </a>
+                  {% endfor %}
+                </div>
+              </div>
+    </div>
+  </div>
+
+  {% for fuelsupplier in fuelsuppliers %}
+  <div class="modal fade" id="{{ fuelsupplier.id }}-fuelsupplier" tabindex="-1" role="dialog" aria-labelledby="partnerNotFound">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title" id="myModalLabel">{{ fuelsupplier.name }}</h4>
+          </div>
+          <div class="modal-body">
+            <p>{{ fuelsupplier.dateCreated }}</p>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+          </div>
+        </div> 
+      </div>
+    </div>
+  {% endfor %}
+{% endblock %}
