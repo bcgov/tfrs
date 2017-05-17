@@ -70,7 +70,7 @@
           }
         ],
         "postCommit": {
-		    "script": "python manage.py test tfrs"
+		    "script": "python manage.py test"
 		}
       }
     },
