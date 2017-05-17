@@ -9,7 +9,8 @@ sonarqube {
     properties {
         property "sonar.projectName", "TFRS Server Project :: API "
         property "sonar.projectKey", "org.sonarqube:tfrs-api"
-        property "sonar.sources", "../server/models"
+        property "sonar.projectBaseDir", "../"
+        property "sonar.sources", "./server/models"
         property "sonar.lanuage", "py"
         //property "sonar.tests", "test"
         property "sourceEncoding", "UTF-8"
