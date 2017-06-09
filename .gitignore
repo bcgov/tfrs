@@ -4,6 +4,9 @@
 # Django
 db.sqlite3
 staticfiles/
+static/
+obj/
+tfrs.pyproj
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
