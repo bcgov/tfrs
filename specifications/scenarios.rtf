@@ -50,10 +50,13 @@ Scenario 7: Adding Fuel Suppliers
 Given I am a Government Analyst
 And I am on the Supplier List page
 When I click add company
-And a modal popup occurs that I type Shell in
+And a modal popup occurs that I type Exxon in
 And I click search
 Then the system returns a search result with <values: unique identifiers>
 And I can select the correct company to add to the TFRS system
+And I see more details about the company
+And I can can confirm the addition of the company
+
 Scenario 8: View Company Details
 Given I am a Government Analyst
 And I am on the Supplier List page
@@ -86,10 +89,71 @@ Then I see a modal popup
 And I can upload an attachment, and specify <meta data: note, compliance>
 And submit the correspondence attachment
 
-Scenario 11: Manage Correspondence (government)
+Scenario 12: Manage Correspondence (government)
 Given I am a Government Analyst
 And I am on the Fuel Supplier Details page
 When I click add correspondence
 Then I see a modal popup 
 And I can upload an attachment, and specify <meta data: note, compliance or tags>
 And submit the correspondence attachment
+
+Scenario 13: Adding credits to a new Fuel Supplier
+Given I am a Government Analyst 
+And I have added a new Fuel Supplier
+And the fuel supplier has 0 credits
+And I am on the Fuel Supplier details screen
+When I click add credits button in the Account Balance box
+Then I go to the create transaction screen
+And the Fuel Supplier is automatically selected
+
+Scenario 14: Company History Update
+Given I am a government user
+And I set or change the company status to Active
+And I set the action to Buy or Sell
+And I set the Fuel Supplier type to Petroleum
+When I click save
+Then the record is saved to the database
+And the records is added to the company history
+
+Scenario 15: Credit Transfer Status Changes (multiple from credit transfer details screen)
+Given I am a 
+And I am on the Credit Transfer screen
+When I click the <button>
+Then the status becomes <status>
+And the transaction history is updated
+
+Scenario 16: Respond to Opportunity
+Given I am a Fuel Supplier 
+And I am on the Opportunity screen
+When I click on Accept Offer with offer details (a, b, c and d)
+Then I see a modal popup with the opportunity details 
+And I can enter a comment
+And I can click Accept or Cancel 
+
+Scenario 17: Counter an Opportunity
+Given I am a Fuel Supplier
+And I am on the Opportunity screen
+When I click on Counter Offer with offer details (a, b, c and d)
+Then I go to the  credit transfer proposal screen
+And the opportunity details are prepopulated
+And I can enter changes to those details
+And I can propose the credit transfer
+And the transfer is linked to the opportunity
+
+Scenario 18: <Create, Edit, Publish, Unpublish, Archive> Opportunity
+Given I am a Fuel Supplier
+And I am on the Opportunity Details screen
+And the Opportunity details are (a,b,c and d)
+When I click <action>
+Then the Opportunity status changes to <action status>
+And I go to the Opportunities screen
+And the Opportinity details are (a,b,c and d)
+
+Scenario 19: Cancel creating an Opportunity
+Given I am a Fuel Supplier
+And I am on the Opportunity Details screen
+And there is no opportunity record for those details
+When I Click Cancel
+Then I go back to the Opportunities screen
+And no opportunity was created
+And the Opportunity is visible on the My Opportunity 
