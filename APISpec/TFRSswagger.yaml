@@ -292,149 +292,6 @@ paths:
           description: id of CreditTradeHistory to delete
           required: true
           type: integer
-  /credittradenotes:
-    get:
-      tags:
-        - CreditTradeNote
-      summary: Lists available CreditTradeNote objects
-      x-codegen-operation: list
-      consumes: []
-      produces:
-        - text/plain
-        - application/json
-        - text/json
-      responses:
-        200:
-          description: OK
-          schema:
-            type: array
-            items:
-              $ref: "#/definitions/CreditTradeNote"
-    post:
-      tags:
-        - CreditTradeNote
-      x-codegen-operation: create
-      summary: Creates a new CreditTradeNote object            
-      consumes:
-        - application/json
-      produces:
-        - text/plain
-        - application/json
-        - text/json
-      parameters:
-        - name: item
-          in: body
-          required: true
-          schema:
-            $ref: "#/definitions/CreditTradeNote"
-      responses:
-        201:
-          description: CreditTradeNote created
-          headers:
-            Location:
-              description: A link to the CreditTradeNote
-              type: string
-              format: url
-          schema:
-            $ref: "#/definitions/CreditTradeNote"  
-  /credittradenotes/bulk:
-    post:
-      tags:
-        - CreditTradeNote
-      summary: Bulk create / update a number of CreditTradeNote object      
-      x-codegen-operation: bulk
-      consumes:
-        - application/json
-      produces:
-        - text/plain
-        - application/json
-        - text/json
-      parameters:
-        - name: items
-          in: body
-          required: true
-          schema:
-            type: array
-            items:
-              $ref: "#/definitions/CreditTradeNote"
-      responses:
-        201:
-          description: CreditTradeNote created
-  /credittradenotes/{id}:
-    get:
-      tags:
-        - CreditTradeNote
-      summary: Gets a specific CreditTradeNote object      
-      x-codegen-operation: retrieve
-      consumes: []
-      produces:
-        - text/plain
-        - application/json
-        - text/json
-      responses:
-        200:
-          description: OK
-          schema:
-            $ref: "#/definitions/CreditTradeNote"
-        404:
-          description: CreditTradeNote not found
-      parameters:
-        - name: id
-          in: path
-          description: id of CreditTradeNote to fetch
-          required: true
-          type: integer
-    put:
-      tags:
-        - CreditTradeNote
-      x-codegen-operation: update
-      summary: Updates a specific CreditTradeNote object      
-      consumes:
-        - application/json
-      produces:
-        - text/plain
-        - application/json
-        - text/json
-      responses:
-        200:
-          description: OK
-          schema:
-            $ref: "#/definitions/CreditTradeNote"
-        404:
-          description: CreditTradeNote not found
-      parameters:
-        - name: id
-          in: path
-          description: id of CreditTradeNote to fetch
-          required: true
-          type: integer
-        - name: item
-          in: body
-          required: true
-          schema:
-            $ref: "#/definitions/CreditTradeNote"
-  /credittradenotes/{id}/delete:
-    post:
-      tags:
-        - CreditTradeNote
-      x-codegen-operation: destroy
-      summary: Deletes a specific CreditTradeNote object      
-      consumes: []
-      produces:
-        - text/plain
-        - application/json
-        - text/json
-      responses:
-        200:
-          description: OK
-        404:
-          description: CreditTradeNote not found
-      parameters:
-        - name: id
-          in: path
-          description: id of CreditTradeNote to delete
-          required: true
-          type: integer
   /credittradestatuses:
     get:
       tags:
@@ -721,11 +578,11 @@ paths:
           description: id of CreditTradeType to delete
           required: true
           type: integer
-  /credittradeattachments:
+  /opportunities:
     get:
       tags:
-        - CreditTradeAttachment
-      summary: Lists available CreditTradeAttachment objects
+        - Opportunity
+      summary: Lists available Opportunity objects
       x-codegen-operation: list
       consumes: []
       produces:
@@ -738,12 +595,12 @@ paths:
           schema:
             type: array
             items:
-              $ref: "#/definitions/CreditTradeAttachment"
+              $ref: "#/definitions/Opportunity"
     post:
       tags:
-        - CreditTradeAttachment
+        - Opportunity
       x-codegen-operation: create
-      summary: Creates a new CreditTradeAttachment object            
+      summary: Creates a new Opportunity object            
       consumes:
         - application/json
       produces:
@@ -755,22 +612,22 @@ paths:
           in: body
           required: true
           schema:
-            $ref: "#/definitions/CreditTradeAttachment"
+            $ref: "#/definitions/Opportunity"
       responses:
         201:
-          description: CreditTradeAttachment created
+          description: Opportunity created
           headers:
             Location:
-              description: A link to the CreditTradeAttachment
+              description: A link to the Opportunity
               type: string
               format: url
           schema:
-            $ref: "#/definitions/CreditTradeAttachment"  
-  /credittradeattachments/bulk:
+            $ref: "#/definitions/Opportunity"  
+  /opportunities/bulk:
     post:
       tags:
-        - CreditTradeAttachment
-      summary: Bulk create / update a number of CreditTradeAttachment object      
+        - Opportunity
+      summary: Bulk create / update a number of Opportunity object      
       x-codegen-operation: bulk
       consumes:
         - application/json
@@ -785,15 +642,15 @@ paths:
           schema:
             type: array
             items:
-              $ref: "#/definitions/CreditTradeAttachment"
+              $ref: "#/definitions/Opportunity"
       responses:
         201:
-          description: CreditTradeAttachment created
-  /credittradeattachments/{id}:
+          description: Opportunity created
+  /opportunities/{id}:
     get:
       tags:
-        - CreditTradeAttachment
-      summary: Gets a specific CreditTradeAttachment object      
+        - Opportunity
+      summary: Gets a specific Opportunity object      
       x-codegen-operation: retrieve
       consumes: []
       produces:
@@ -804,20 +661,20 @@ paths:
         200:
           description: OK
           schema:
-            $ref: "#/definitions/CreditTradeAttachment"
+            $ref: "#/definitions/Opportunity"
         404:
-          description: CreditTradeAttachment not found
+          description: Opportunity not found
       parameters:
         - name: id
           in: path
-          description: id of CreditTradeAttachment to fetch
+          description: id of Opportunity to fetch
           required: true
           type: integer
     put:
       tags:
-        - CreditTradeAttachment
+        - Opportunity
       x-codegen-operation: update
-      summary: Updates a specific CreditTradeAttachment object      
+      summary: Updates a specific Opportunity object      
       consumes:
         - application/json
       produces:
@@ -828,26 +685,26 @@ paths:
         200:
           description: OK
           schema:
-            $ref: "#/definitions/CreditTradeAttachment"
+            $ref: "#/definitions/Opportunity"
         404:
-          description: CreditTradeAttachment not found
+          description: Opportunity not found
       parameters:
         - name: id
           in: path
-          description: id of CreditTradeAttachment to fetch
+          description: id of Opportunity to fetch
           required: true
           type: integer
         - name: item
           in: body
           required: true
           schema:
-            $ref: "#/definitions/CreditTradeAttachment"
-  /credittradeattachments/{id}/delete:
+            $ref: "#/definitions/Opportunity"
+  /opportunities/{id}/delete:
     post:
       tags:
-        - CreditTradeAttachment
+        - Opportunity
       x-codegen-operation: destroy
-      summary: Deletes a specific CreditTradeAttachment object      
+      summary: Deletes a specific Opportunity object      
       consumes: []
       produces:
         - text/plain
@@ -857,18 +714,18 @@ paths:
         200:
           description: OK
         404:
-          description: CreditTradeAttachment not found
+          description: Opportunity not found
       parameters:
         - name: id
           in: path
-          description: id of CreditTradeAttachment to delete
+          description: id of Opportunity to delete
           required: true
           type: integer
-  /credittradeattachmenttypes:
+  /opportunityhistories:
     get:
       tags:
-        - CreditTradeAttachmentType
-      summary: Lists available CreditTradeAttachmentType objects
+        - OpportunityHistory
+      summary: Lists available OpportunityHistory objects
       x-codegen-operation: list
       consumes: []
       produces:
@@ -881,12 +738,12 @@ paths:
           schema:
             type: array
             items:
-              $ref: "#/definitions/CreditTradeAttachmentType"
+              $ref: "#/definitions/OpportunityHistory"
     post:
       tags:
-        - CreditTradeAttachmentType
+        - OpportunityHistory
       x-codegen-operation: create
-      summary: Creates a new CreditTradeAttachmentType object            
+      summary: Creates a new OpportunityHistory object            
       consumes:
         - application/json
       produces:
@@ -898,22 +755,22 @@ paths:
           in: body
           required: true
           schema:
-            $ref: "#/definitions/CreditTradeAttachmentType"
+            $ref: "#/definitions/OpportunityHistory"
       responses:
         201:
-          description: CreditTradeAttachmentType created
+          description: OpportunityHistory created
           headers:
             Location:
-              description: A link to the CreditTradeAttachmentType
+              description: A link to the OpportunityHistory
               type: string
               format: url
           schema:
-            $ref: "#/definitions/CreditTradeAttachmentType"  
-  /credittradeattachmenttypes/bulk:
+            $ref: "#/definitions/OpportunityHistory"  
+  /opportunityhistories/bulk:
     post:
       tags:
-        - CreditTradeAttachmentType
-      summary: Bulk create / update a number of CreditTradeAttachmentType object      
+        - OpportunityHistory
+      summary: Bulk create / update a number of OpportunityHistory object      
       x-codegen-operation: bulk
       consumes:
         - application/json
@@ -928,15 +785,15 @@ paths:
           schema:
             type: array
             items:
-              $ref: "#/definitions/CreditTradeAttachmentType"
+              $ref: "#/definitions/OpportunityHistory"
       responses:
         201:
-          description: CreditTradeAttachmentType created
-  /credittradeattachmenttypes/{id}:
+          description: OpportunityHistory created
+  /opportunityhistories/{id}:
     get:
       tags:
-        - CreditTradeAttachmentType
-      summary: Gets a specific CreditTradeAttachmentType object      
+        - OpportunityHistory
+      summary: Gets a specific OpportunityHistory object      
       x-codegen-operation: retrieve
       consumes: []
       produces:
@@ -947,20 +804,20 @@ paths:
         200:
           description: OK
           schema:
-            $ref: "#/definitions/CreditTradeAttachmentType"
+            $ref: "#/definitions/OpportunityHistory"
         404:
-          description: CreditTradeAttachmentType not found
+          description: OpportunityHistory not found
       parameters:
         - name: id
           in: path
-          description: id of CreditTradeAttachmentType to fetch
+          description: id of OpportunityHistory to fetch
           required: true
           type: integer
     put:
       tags:
-        - CreditTradeAttachmentType
+        - OpportunityHistory
       x-codegen-operation: update
-      summary: Updates a specific CreditTradeAttachmentType object      
+      summary: Updates a specific OpportunityHistory object      
       consumes:
         - application/json
       produces:
@@ -971,26 +828,26 @@ paths:
         200:
           description: OK
           schema:
-            $ref: "#/definitions/CreditTradeAttachmentType"
+            $ref: "#/definitions/OpportunityHistory"
         404:
-          description: CreditTradeAttachmentType not found
+          description: OpportunityHistory not found
       parameters:
         - name: id
           in: path
-          description: id of CreditTradeAttachmentType to fetch
+          description: id of OpportunityHistory to fetch
           required: true
           type: integer
         - name: item
           in: body
           required: true
           schema:
-            $ref: "#/definitions/CreditTradeAttachmentType"
-  /credittradeattachmenttypes/{id}/delete:
+            $ref: "#/definitions/OpportunityHistory"
+  /opportunityhistories/{id}/delete:
     post:
       tags:
-        - CreditTradeAttachmentType
+        - OpportunityHistory
       x-codegen-operation: destroy
-      summary: Deletes a specific CreditTradeAttachmentType object      
+      summary: Deletes a specific OpportunityHistory object      
       consumes: []
       produces:
         - text/plain
@@ -1000,18 +857,18 @@ paths:
         200:
           description: OK
         404:
-          description: CreditTradeAttachmentType not found
+          description: OpportunityHistory not found
       parameters:
         - name: id
           in: path
-          description: id of CreditTradeAttachmentType to delete
+          description: id of OpportunityHistory to delete
           required: true
           type: integer
-  /offers:
+  /opportunitystatuses:
     get:
       tags:
-        - Offer
-      summary: Lists available Offer objects
+        - OpportunityStatus
+      summary: Lists available OpportunityStatus objects
       x-codegen-operation: list
       consumes: []
       produces:
@@ -1024,12 +881,12 @@ paths:
           schema:
             type: array
             items:
-              $ref: "#/definitions/Offer"
+              $ref: "#/definitions/OpportunityStatus"
     post:
       tags:
-        - Offer
+        - OpportunityStatus
       x-codegen-operation: create
-      summary: Creates a new Offer object            
+      summary: Creates a new OpportunityStatus object            
       consumes:
         - application/json
       produces:
@@ -1041,22 +898,22 @@ paths:
           in: body
           required: true
           schema:
-            $ref: "#/definitions/Offer"
+            $ref: "#/definitions/OpportunityStatus"
       responses:
         201:
-          description: Offer created
+          description: OpportunityStatus created
           headers:
             Location:
-              description: A link to the Offer
+              description: A link to the OpportunityStatus
               type: string
               format: url
           schema:
-            $ref: "#/definitions/Offer"  
-  /offers/bulk:
+            $ref: "#/definitions/OpportunityStatus"  
+  /opportunitystatuses/bulk:
     post:
       tags:
-        - Offer
-      summary: Bulk create / update a number of Offer object      
+        - OpportunityStatus
+      summary: Bulk create / update a number of OpportunityStatus object      
       x-codegen-operation: bulk
       consumes:
         - application/json
@@ -1071,15 +928,15 @@ paths:
           schema:
             type: array
             items:
-              $ref: "#/definitions/Offer"
+              $ref: "#/definitions/OpportunityStatus"
       responses:
         201:
-          description: Offer created
-  /offers/{id}:
+          description: OpportunityStatus created
+  /opportunitystatuses/{id}:
     get:
       tags:
-        - Offer
-      summary: Gets a specific Offer object      
+        - OpportunityStatus
+      summary: Gets a specific OpportunityStatus object      
       x-codegen-operation: retrieve
       consumes: []
       produces:
@@ -1090,20 +947,20 @@ paths:
         200:
           description: OK
           schema:
-            $ref: "#/definitions/Offer"
+            $ref: "#/definitions/OpportunityStatus"
         404:
-          description: Offer not found
+          description: OpportunityStatus not found
       parameters:
         - name: id
           in: path
-          description: id of Offer to fetch
+          description: id of OpportunityStatus to fetch
           required: true
           type: integer
     put:
       tags:
-        - Offer
+        - OpportunityStatus
       x-codegen-operation: update
-      summary: Updates a specific Offer object      
+      summary: Updates a specific OpportunityStatus object      
       consumes:
         - application/json
       produces:
@@ -1114,26 +971,26 @@ paths:
         200:
           description: OK
           schema:
-            $ref: "#/definitions/Offer"
+            $ref: "#/definitions/OpportunityStatus"
         404:
-          description: Offer not found
+          description: OpportunityStatus not found
       parameters:
         - name: id
           in: path
-          description: id of Offer to fetch
+          description: id of OpportunityStatus to fetch
           required: true
           type: integer
         - name: item
           in: body
           required: true
           schema:
-            $ref: "#/definitions/Offer"
-  /offers/{id}/delete:
+            $ref: "#/definitions/OpportunityStatus"
+  /opportunitystatuses/{id}/delete:
     post:
       tags:
-        - Offer
+        - OpportunityStatus
       x-codegen-operation: destroy
-      summary: Deletes a specific Offer object      
+      summary: Deletes a specific OpportunityStatus object      
       consumes: []
       produces:
         - text/plain
@@ -1143,583 +1000,11 @@ paths:
         200:
           description: OK
         404:
-          description: Offer not found
+          description: OpportunityStatus not found
       parameters:
         - name: id
           in: path
-          description: id of Offer to delete
-          required: true
-          type: integer
-  /offerstatuses:
-    get:
-      tags:
-        - OfferStatus
-      summary: Lists available OfferStatus objects
-      x-codegen-operation: list
-      consumes: []
-      produces:
-        - text/plain
-        - application/json
-        - text/json
-      responses:
-        200:
-          description: OK
-          schema:
-            type: array
-            items:
-              $ref: "#/definitions/OfferStatus"
-    post:
-      tags:
-        - OfferStatus
-      x-codegen-operation: create
-      summary: Creates a new OfferStatus object            
-      consumes:
-        - application/json
-      produces:
-        - text/plain
-        - application/json
-        - text/json
-      parameters:
-        - name: item
-          in: body
-          required: true
-          schema:
-            $ref: "#/definitions/OfferStatus"
-      responses:
-        201:
-          description: OfferStatus created
-          headers:
-            Location:
-              description: A link to the OfferStatus
-              type: string
-              format: url
-          schema:
-            $ref: "#/definitions/OfferStatus"  
-  /offerstatuses/bulk:
-    post:
-      tags:
-        - OfferStatus
-      summary: Bulk create / update a number of OfferStatus object      
-      x-codegen-operation: bulk
-      consumes:
-        - application/json
-      produces:
-        - text/plain
-        - application/json
-        - text/json
-      parameters:
-        - name: items
-          in: body
-          required: true
-          schema:
-            type: array
-            items:
-              $ref: "#/definitions/OfferStatus"
-      responses:
-        201:
-          description: OfferStatus created
-  /offerstatuses/{id}:
-    get:
-      tags:
-        - OfferStatus
-      summary: Gets a specific OfferStatus object      
-      x-codegen-operation: retrieve
-      consumes: []
-      produces:
-        - text/plain
-        - application/json
-        - text/json
-      responses:
-        200:
-          description: OK
-          schema:
-            $ref: "#/definitions/OfferStatus"
-        404:
-          description: OfferStatus not found
-      parameters:
-        - name: id
-          in: path
-          description: id of OfferStatus to fetch
-          required: true
-          type: integer
-    put:
-      tags:
-        - OfferStatus
-      x-codegen-operation: update
-      summary: Updates a specific OfferStatus object      
-      consumes:
-        - application/json
-      produces:
-        - text/plain
-        - application/json
-        - text/json
-      responses:
-        200:
-          description: OK
-          schema:
-            $ref: "#/definitions/OfferStatus"
-        404:
-          description: OfferStatus not found
-      parameters:
-        - name: id
-          in: path
-          description: id of OfferStatus to fetch
-          required: true
-          type: integer
-        - name: item
-          in: body
-          required: true
-          schema:
-            $ref: "#/definitions/OfferStatus"
-  /offerstatuses/{id}/delete:
-    post:
-      tags:
-        - OfferStatus
-      x-codegen-operation: destroy
-      summary: Deletes a specific OfferStatus object      
-      consumes: []
-      produces:
-        - text/plain
-        - application/json
-        - text/json
-      responses:
-        200:
-          description: OK
-        404:
-          description: OfferStatus not found
-      parameters:
-        - name: id
-          in: path
-          description: id of OfferStatus to delete
-          required: true
-          type: integer
-  /offertypes:
-    get:
-      tags:
-        - OfferType
-      summary: Lists available OfferType objects
-      x-codegen-operation: list
-      consumes: []
-      produces:
-        - text/plain
-        - application/json
-        - text/json
-      responses:
-        200:
-          description: OK
-          schema:
-            type: array
-            items:
-              $ref: "#/definitions/OfferType"
-    post:
-      tags:
-        - OfferType
-      x-codegen-operation: create
-      summary: Creates a new OfferType object            
-      consumes:
-        - application/json
-      produces:
-        - text/plain
-        - application/json
-        - text/json
-      parameters:
-        - name: item
-          in: body
-          required: true
-          schema:
-            $ref: "#/definitions/OfferType"
-      responses:
-        201:
-          description: OfferType created
-          headers:
-            Location:
-              description: A link to the OfferType
-              type: string
-              format: url
-          schema:
-            $ref: "#/definitions/OfferType"  
-  /offertypes/bulk:
-    post:
-      tags:
-        - OfferType
-      summary: Bulk create / update a number of OfferType object      
-      x-codegen-operation: bulk
-      consumes:
-        - application/json
-      produces:
-        - text/plain
-        - application/json
-        - text/json
-      parameters:
-        - name: items
-          in: body
-          required: true
-          schema:
-            type: array
-            items:
-              $ref: "#/definitions/OfferType"
-      responses:
-        201:
-          description: OfferType created
-  /offertypes/{id}:
-    get:
-      tags:
-        - OfferType
-      summary: Gets a specific OfferType object      
-      x-codegen-operation: retrieve
-      consumes: []
-      produces:
-        - text/plain
-        - application/json
-        - text/json
-      responses:
-        200:
-          description: OK
-          schema:
-            $ref: "#/definitions/OfferType"
-        404:
-          description: OfferType not found
-      parameters:
-        - name: id
-          in: path
-          description: id of OfferType to fetch
-          required: true
-          type: integer
-    put:
-      tags:
-        - OfferType
-      x-codegen-operation: update
-      summary: Updates a specific OfferType object      
-      consumes:
-        - application/json
-      produces:
-        - text/plain
-        - application/json
-        - text/json
-      responses:
-        200:
-          description: OK
-          schema:
-            $ref: "#/definitions/OfferType"
-        404:
-          description: OfferType not found
-      parameters:
-        - name: id
-          in: path
-          description: id of OfferType to fetch
-          required: true
-          type: integer
-        - name: item
-          in: body
-          required: true
-          schema:
-            $ref: "#/definitions/OfferType"
-  /offertypes/{id}/delete:
-    post:
-      tags:
-        - OfferType
-      x-codegen-operation: destroy
-      summary: Deletes a specific OfferType object      
-      consumes: []
-      produces:
-        - text/plain
-        - application/json
-        - text/json
-      responses:
-        200:
-          description: OK
-        404:
-          description: OfferType not found
-      parameters:
-        - name: id
-          in: path
-          description: id of OfferType to delete
-          required: true
-          type: integer
-  /offerhistories:
-    get:
-      tags:
-        - OfferHistory
-      summary: Lists available OfferHistory objects
-      x-codegen-operation: list
-      consumes: []
-      produces:
-        - text/plain
-        - application/json
-        - text/json
-      responses:
-        200:
-          description: OK
-          schema:
-            type: array
-            items:
-              $ref: "#/definitions/OfferHistory"
-    post:
-      tags:
-        - OfferHistory
-      x-codegen-operation: create
-      summary: Creates a new OfferHistory object            
-      consumes:
-        - application/json
-      produces:
-        - text/plain
-        - application/json
-        - text/json
-      parameters:
-        - name: item
-          in: body
-          required: true
-          schema:
-            $ref: "#/definitions/OfferHistory"
-      responses:
-        201:
-          description: OfferHistory created
-          headers:
-            Location:
-              description: A link to the OfferHistory
-              type: string
-              format: url
-          schema:
-            $ref: "#/definitions/OfferHistory"  
-  /offerhistories/bulk:
-    post:
-      tags:
-        - OfferHistory
-      summary: Bulk create / update a number of OfferHistory object      
-      x-codegen-operation: bulk
-      consumes:
-        - application/json
-      produces:
-        - text/plain
-        - application/json
-        - text/json
-      parameters:
-        - name: items
-          in: body
-          required: true
-          schema:
-            type: array
-            items:
-              $ref: "#/definitions/OfferHistory"
-      responses:
-        201:
-          description: OfferHistory created
-  /offerhistories/{id}:
-    get:
-      tags:
-        - OfferHistory
-      summary: Gets a specific OfferHistory object      
-      x-codegen-operation: retrieve
-      consumes: []
-      produces:
-        - text/plain
-        - application/json
-        - text/json
-      responses:
-        200:
-          description: OK
-          schema:
-            $ref: "#/definitions/OfferHistory"
-        404:
-          description: OfferHistory not found
-      parameters:
-        - name: id
-          in: path
-          description: id of OfferHistory to fetch
-          required: true
-          type: integer
-    put:
-      tags:
-        - OfferHistory
-      x-codegen-operation: update
-      summary: Updates a specific OfferHistory object      
-      consumes:
-        - application/json
-      produces:
-        - text/plain
-        - application/json
-        - text/json
-      responses:
-        200:
-          description: OK
-          schema:
-            $ref: "#/definitions/OfferHistory"
-        404:
-          description: OfferHistory not found
-      parameters:
-        - name: id
-          in: path
-          description: id of OfferHistory to fetch
-          required: true
-          type: integer
-        - name: item
-          in: body
-          required: true
-          schema:
-            $ref: "#/definitions/OfferHistory"
-  /offerhistories/{id}/delete:
-    post:
-      tags:
-        - OfferHistory
-      x-codegen-operation: destroy
-      summary: Deletes a specific OfferHistory object      
-      consumes: []
-      produces:
-        - text/plain
-        - application/json
-        - text/json
-      responses:
-        200:
-          description: OK
-        404:
-          description: OfferHistory not found
-      parameters:
-        - name: id
-          in: path
-          description: id of OfferHistory to delete
-          required: true
-          type: integer
-  /offernotes:
-    get:
-      tags:
-        - OfferNote
-      summary: Lists available OfferNote objects
-      x-codegen-operation: list
-      consumes: []
-      produces:
-        - text/plain
-        - application/json
-        - text/json
-      responses:
-        200:
-          description: OK
-          schema:
-            type: array
-            items:
-              $ref: "#/definitions/OfferNote"
-    post:
-      tags:
-        - OfferNote
-      x-codegen-operation: create
-      summary: Creates a new OfferNote object            
-      consumes:
-        - application/json
-      produces:
-        - text/plain
-        - application/json
-        - text/json
-      parameters:
-        - name: item
-          in: body
-          required: true
-          schema:
-            $ref: "#/definitions/OfferNote"
-      responses:
-        201:
-          description: OfferNote created
-          headers:
-            Location:
-              description: A link to the OfferNote
-              type: string
-              format: url
-          schema:
-            $ref: "#/definitions/OfferNote"  
-  /offernotes/bulk:
-    post:
-      tags:
-        - OfferNote
-      summary: Bulk create / update a number of OfferNote object      
-      x-codegen-operation: bulk
-      consumes:
-        - application/json
-      produces:
-        - text/plain
-        - application/json
-        - text/json
-      parameters:
-        - name: items
-          in: body
-          required: true
-          schema:
-            type: array
-            items:
-              $ref: "#/definitions/OfferNote"
-      responses:
-        201:
-          description: OfferNote created
-  /offernotes/{id}:
-    get:
-      tags:
-        - OfferNote
-      summary: Gets a specific OfferNote object      
-      x-codegen-operation: retrieve
-      consumes: []
-      produces:
-        - text/plain
-        - application/json
-        - text/json
-      responses:
-        200:
-          description: OK
-          schema:
-            $ref: "#/definitions/OfferNote"
-        404:
-          description: OfferNote not found
-      parameters:
-        - name: id
-          in: path
-          description: id of OfferNote to fetch
-          required: true
-          type: integer
-    put:
-      tags:
-        - OfferNote
-      x-codegen-operation: update
-      summary: Updates a specific OfferNote object      
-      consumes:
-        - application/json
-      produces:
-        - text/plain
-        - application/json
-        - text/json
-      responses:
-        200:
-          description: OK
-          schema:
-            $ref: "#/definitions/OfferNote"
-        404:
-          description: OfferNote not found
-      parameters:
-        - name: id
-          in: path
-          description: id of OfferNote to fetch
-          required: true
-          type: integer
-        - name: item
-          in: body
-          required: true
-          schema:
-            $ref: "#/definitions/OfferNote"
-  /offernotes/{id}/delete:
-    post:
-      tags:
-        - OfferNote
-      x-codegen-operation: destroy
-      summary: Deletes a specific OfferNote object      
-      consumes: []
-      produces:
-        - text/plain
-        - application/json
-        - text/json
-      responses:
-        200:
-          description: OK
-        404:
-          description: OfferNote not found
-      parameters:
-        - name: id
-          in: path
-          description: id of OfferNote to delete
+          description: id of OpportunityStatus to delete
           required: true
           type: integer
   /fuelsuppliers:
@@ -1863,6 +1148,149 @@ paths:
         - name: id
           in: path
           description: id of FuelSupplier to delete
+          required: true
+          type: integer
+  /fuelsuppliersCCDatum:
+    get:
+      tags:
+        - FuelSupplierCCData
+      summary: Lists available FuelSupplierCCData objects
+      x-codegen-operation: list
+      consumes: []
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      responses:
+        200:
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/FuelSupplierCCData"
+    post:
+      tags:
+        - FuelSupplierCCData
+      x-codegen-operation: create
+      summary: Creates a new FuelSupplierCCData object            
+      consumes:
+        - application/json
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      parameters:
+        - name: item
+          in: body
+          required: true
+          schema:
+            $ref: "#/definitions/FuelSupplierCCData"
+      responses:
+        201:
+          description: FuelSupplierCCData created
+          headers:
+            Location:
+              description: A link to the FuelSupplierCCData
+              type: string
+              format: url
+          schema:
+            $ref: "#/definitions/FuelSupplierCCData"  
+  /fuelsuppliersCCDatum/bulk:
+    post:
+      tags:
+        - FuelSupplierCCData
+      summary: Bulk create / update a number of FuelSupplierCCData object      
+      x-codegen-operation: bulk
+      consumes:
+        - application/json
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      parameters:
+        - name: items
+          in: body
+          required: true
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/FuelSupplierCCData"
+      responses:
+        201:
+          description: FuelSupplierCCData created
+  /fuelsuppliersCCDatum/{id}:
+    get:
+      tags:
+        - FuelSupplierCCData
+      summary: Gets a specific FuelSupplierCCData object      
+      x-codegen-operation: retrieve
+      consumes: []
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: "#/definitions/FuelSupplierCCData"
+        404:
+          description: FuelSupplierCCData not found
+      parameters:
+        - name: id
+          in: path
+          description: id of FuelSupplierCCData to fetch
+          required: true
+          type: integer
+    put:
+      tags:
+        - FuelSupplierCCData
+      x-codegen-operation: update
+      summary: Updates a specific FuelSupplierCCData object      
+      consumes:
+        - application/json
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: "#/definitions/FuelSupplierCCData"
+        404:
+          description: FuelSupplierCCData not found
+      parameters:
+        - name: id
+          in: path
+          description: id of FuelSupplierCCData to fetch
+          required: true
+          type: integer
+        - name: item
+          in: body
+          required: true
+          schema:
+            $ref: "#/definitions/FuelSupplierCCData"
+  /fuelsuppliersCCDatum/{id}/delete:
+    post:
+      tags:
+        - FuelSupplierCCData
+      x-codegen-operation: destroy
+      summary: Deletes a specific FuelSupplierCCData object      
+      consumes: []
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      responses:
+        200:
+          description: OK
+        404:
+          description: FuelSupplierCCData not found
+      parameters:
+        - name: id
+          in: path
+          description: id of FuelSupplierCCData to delete
           required: true
           type: integer
   /fuelsupplierbalances:
@@ -2151,11 +1579,11 @@ paths:
           description: id of FuelSupplierStatus to delete
           required: true
           type: integer
-  /fuelsuppliernotes:
+  /fuelsuppliertypes:
     get:
       tags:
-        - FuelSupplierNote
-      summary: Lists available FuelSupplierNote objects
+        - FuelSupplierType
+      summary: Lists available FuelSupplierType objects
       x-codegen-operation: list
       consumes: []
       produces:
@@ -2168,12 +1596,12 @@ paths:
           schema:
             type: array
             items:
-              $ref: "#/definitions/FuelSupplierNote"
+              $ref: "#/definitions/FuelSupplierType"
     post:
       tags:
-        - FuelSupplierNote
+        - FuelSupplierType
       x-codegen-operation: create
-      summary: Creates a new FuelSupplierNote object            
+      summary: Creates a new FuelSupplierType object            
       consumes:
         - application/json
       produces:
@@ -2185,22 +1613,22 @@ paths:
           in: body
           required: true
           schema:
-            $ref: "#/definitions/FuelSupplierNote"
+            $ref: "#/definitions/FuelSupplierType"
       responses:
         201:
-          description: FuelSupplierNote created
+          description: FuelSupplierType created
           headers:
             Location:
-              description: A link to the FuelSupplierNote
+              description: A link to the FuelSupplierType
               type: string
               format: url
           schema:
-            $ref: "#/definitions/FuelSupplierNote"  
-  /fuelsuppliernotes/bulk:
+            $ref: "#/definitions/FuelSupplierType"  
+  /fuelsuppliertypes/bulk:
     post:
       tags:
-        - FuelSupplierNote
-      summary: Bulk create / update a number of FuelSupplierNote object      
+        - FuelSupplierType
+      summary: Bulk create / update a number of FuelSupplierType object      
       x-codegen-operation: bulk
       consumes:
         - application/json
@@ -2215,15 +1643,15 @@ paths:
           schema:
             type: array
             items:
-              $ref: "#/definitions/FuelSupplierNote"
+              $ref: "#/definitions/FuelSupplierType"
       responses:
         201:
-          description: FuelSupplierNote created
-  /fuelsuppliernotes/{id}:
+          description: FuelSupplierType created
+  /fuelsuppliertypes/{id}:
     get:
       tags:
-        - FuelSupplierNote
-      summary: Gets a specific FuelSupplierNote object      
+        - FuelSupplierType
+      summary: Gets a specific FuelSupplierType object      
       x-codegen-operation: retrieve
       consumes: []
       produces:
@@ -2234,20 +1662,20 @@ paths:
         200:
           description: OK
           schema:
-            $ref: "#/definitions/FuelSupplierNote"
+            $ref: "#/definitions/FuelSupplierType"
         404:
-          description: FuelSupplierNote not found
+          description: FuelSupplierType not found
       parameters:
         - name: id
           in: path
-          description: id of FuelSupplierNote to fetch
+          description: id of FuelSupplierType to fetch
           required: true
           type: integer
     put:
       tags:
-        - FuelSupplierNote
+        - FuelSupplierType
       x-codegen-operation: update
-      summary: Updates a specific FuelSupplierNote object      
+      summary: Updates a specific FuelSupplierType object      
       consumes:
         - application/json
       produces:
@@ -2258,26 +1686,26 @@ paths:
         200:
           description: OK
           schema:
-            $ref: "#/definitions/FuelSupplierNote"
+            $ref: "#/definitions/FuelSupplierType"
         404:
-          description: FuelSupplierNote not found
+          description: FuelSupplierType not found
       parameters:
         - name: id
           in: path
-          description: id of FuelSupplierNote to fetch
+          description: id of FuelSupplierType to fetch
           required: true
           type: integer
         - name: item
           in: body
           required: true
           schema:
-            $ref: "#/definitions/FuelSupplierNote"
-  /fuelsuppliernotes/{id}/delete:
+            $ref: "#/definitions/FuelSupplierType"
+  /fuelsuppliertypes/{id}/delete:
     post:
       tags:
-        - FuelSupplierNote
+        - FuelSupplierType
       x-codegen-operation: destroy
-      summary: Deletes a specific FuelSupplierNote object      
+      summary: Deletes a specific FuelSupplierType object      
       consumes: []
       produces:
         - text/plain
@@ -2287,11 +1715,154 @@ paths:
         200:
           description: OK
         404:
-          description: FuelSupplierNote not found
+          description: FuelSupplierType not found
       parameters:
         - name: id
           in: path
-          description: id of FuelSupplierNote to delete
+          description: id of FuelSupplierType to delete
+          required: true
+          type: integer
+  /fuelsupplieractionstypes:
+    get:
+      tags:
+        - FuelSupplierActionsType
+      summary: Lists available FuelSupplierActionsType objects
+      x-codegen-operation: list
+      consumes: []
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      responses:
+        200:
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/FuelSupplierActionsType"
+    post:
+      tags:
+        - FuelSupplierActionsType
+      x-codegen-operation: create
+      summary: Creates a new FuelSupplierActionsType object            
+      consumes:
+        - application/json
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      parameters:
+        - name: item
+          in: body
+          required: true
+          schema:
+            $ref: "#/definitions/FuelSupplierActionsType"
+      responses:
+        201:
+          description: FuelSupplierActionsType created
+          headers:
+            Location:
+              description: A link to the FuelSupplierActionsType
+              type: string
+              format: url
+          schema:
+            $ref: "#/definitions/FuelSupplierActionsType"  
+  /fuelsupplieractionstypes/bulk:
+    post:
+      tags:
+        - FuelSupplierActionsType
+      summary: Bulk create / update a number of FuelSupplierActionsType object      
+      x-codegen-operation: bulk
+      consumes:
+        - application/json
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      parameters:
+        - name: items
+          in: body
+          required: true
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/FuelSupplierActionsType"
+      responses:
+        201:
+          description: FuelSupplierActionsType created
+  /fuelsupplieractionstypes/{id}:
+    get:
+      tags:
+        - FuelSupplierActionsType
+      summary: Gets a specific FuelSupplierActionsType object      
+      x-codegen-operation: retrieve
+      consumes: []
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: "#/definitions/FuelSupplierActionsType"
+        404:
+          description: FuelSupplierActionsType not found
+      parameters:
+        - name: id
+          in: path
+          description: id of FuelSupplierActionsType to fetch
+          required: true
+          type: integer
+    put:
+      tags:
+        - FuelSupplierActionsType
+      x-codegen-operation: update
+      summary: Updates a specific FuelSupplierActionsType object      
+      consumes:
+        - application/json
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: "#/definitions/FuelSupplierActionsType"
+        404:
+          description: FuelSupplierActionsType not found
+      parameters:
+        - name: id
+          in: path
+          description: id of FuelSupplierActionsType to fetch
+          required: true
+          type: integer
+        - name: item
+          in: body
+          required: true
+          schema:
+            $ref: "#/definitions/FuelSupplierActionsType"
+  /fuelsupplieractionstypes/{id}/delete:
+    post:
+      tags:
+        - FuelSupplierActionsType
+      x-codegen-operation: destroy
+      summary: Deletes a specific FuelSupplierActionsType object      
+      consumes: []
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      responses:
+        200:
+          description: OK
+        404:
+          description: FuelSupplierActionsType not found
+      parameters:
+        - name: id
+          in: path
+          description: id of FuelSupplierActionsType to delete
           required: true
           type: integer
   /fuelsupplierattachments:
@@ -2437,11 +2008,11 @@ paths:
           description: id of FuelSupplierAttachment to delete
           required: true
           type: integer
-  /fuelsupplierattachmenttypes:
+  /fuelsupplierattachmenttags:
     get:
       tags:
-        - FuelSupplierAttachmentType
-      summary: Lists available FuelSupplierAttachmentType objects
+        - FuelSupplierAttachmentTag
+      summary: Lists available FuelSupplierAttachmentTag objects
       x-codegen-operation: list
       consumes: []
       produces:
@@ -2454,12 +2025,12 @@ paths:
           schema:
             type: array
             items:
-              $ref: "#/definitions/FuelSupplierAttachmentType"
+              $ref: "#/definitions/FuelSupplierAttachmentTag"
     post:
       tags:
-        - FuelSupplierAttachmentType
+        - FuelSupplierAttachmentTag
       x-codegen-operation: create
-      summary: Creates a new FuelSupplierAttachmentType object            
+      summary: Creates a new FuelSupplierAttachmentTag object            
       consumes:
         - application/json
       produces:
@@ -2471,22 +2042,22 @@ paths:
           in: body
           required: true
           schema:
-            $ref: "#/definitions/FuelSupplierAttachmentType"
+            $ref: "#/definitions/FuelSupplierAttachmentTag"
       responses:
         201:
-          description: FuelSupplierAttachmentType created
+          description: FuelSupplierAttachmentTag created
           headers:
             Location:
-              description: A link to the FuelSupplierAttachmentType
+              description: A link to the FuelSupplierAttachmentTag
               type: string
               format: url
           schema:
-            $ref: "#/definitions/FuelSupplierAttachmentType"  
-  /fuelsupplierattachmenttypes/bulk:
+            $ref: "#/definitions/FuelSupplierAttachmentTag"  
+  /fuelsupplierattachmenttags/bulk:
     post:
       tags:
-        - FuelSupplierAttachmentType
-      summary: Bulk create / update a number of FuelSupplierAttachmentType object      
+        - FuelSupplierAttachmentTag
+      summary: Bulk create / update a number of FuelSupplierAttachmentTag object      
       x-codegen-operation: bulk
       consumes:
         - application/json
@@ -2501,15 +2072,15 @@ paths:
           schema:
             type: array
             items:
-              $ref: "#/definitions/FuelSupplierAttachmentType"
+              $ref: "#/definitions/FuelSupplierAttachmentTag"
       responses:
         201:
-          description: FuelSupplierAttachmentType created
-  /fuelsupplierattachmenttypes/{id}:
+          description: FuelSupplierAttachmentTag created
+  /fuelsupplierattachmenttags/{id}:
     get:
       tags:
-        - FuelSupplierAttachmentType
-      summary: Gets a specific FuelSupplierAttachmentType object      
+        - FuelSupplierAttachmentTag
+      summary: Gets a specific FuelSupplierAttachmentTag object      
       x-codegen-operation: retrieve
       consumes: []
       produces:
@@ -2520,20 +2091,20 @@ paths:
         200:
           description: OK
           schema:
-            $ref: "#/definitions/FuelSupplierAttachmentType"
+            $ref: "#/definitions/FuelSupplierAttachmentTag"
         404:
-          description: FuelSupplierAttachmentType not found
+          description: FuelSupplierAttachmentTag not found
       parameters:
         - name: id
           in: path
-          description: id of FuelSupplierAttachmentType to fetch
+          description: id of FuelSupplierAttachmentTag to fetch
           required: true
           type: integer
     put:
       tags:
-        - FuelSupplierAttachmentType
+        - FuelSupplierAttachmentTag
       x-codegen-operation: update
-      summary: Updates a specific FuelSupplierAttachmentType object      
+      summary: Updates a specific FuelSupplierAttachmentTag object      
       consumes:
         - application/json
       produces:
@@ -2544,26 +2115,26 @@ paths:
         200:
           description: OK
           schema:
-            $ref: "#/definitions/FuelSupplierAttachmentType"
+            $ref: "#/definitions/FuelSupplierAttachmentTag"
         404:
-          description: FuelSupplierAttachmentType not found
+          description: FuelSupplierAttachmentTag not found
       parameters:
         - name: id
           in: path
-          description: id of FuelSupplierAttachmentType to fetch
+          description: id of FuelSupplierAttachmentTag to fetch
           required: true
           type: integer
         - name: item
           in: body
           required: true
           schema:
-            $ref: "#/definitions/FuelSupplierAttachmentType"
-  /fuelsupplierattachmenttypes/{id}/delete:
+            $ref: "#/definitions/FuelSupplierAttachmentTag"
+  /fuelsupplierattachmenttags/{id}/delete:
     post:
       tags:
-        - FuelSupplierAttachmentType
+        - FuelSupplierAttachmentTag
       x-codegen-operation: destroy
-      summary: Deletes a specific FuelSupplierAttachmentType object      
+      summary: Deletes a specific FuelSupplierAttachmentTag object      
       consumes: []
       produces:
         - text/plain
@@ -2573,11 +2144,11 @@ paths:
         200:
           description: OK
         404:
-          description: FuelSupplierAttachmentType not found
+          description: FuelSupplierAttachmentTag not found
       parameters:
         - name: id
           in: path
-          description: id of FuelSupplierAttachmentType to delete
+          description: id of FuelSupplierAttachmentTag to delete
           required: true
           type: integer
   /fuelsupplierhistories:
@@ -2866,6 +2437,149 @@ paths:
           description: id of FuelSupplierContact to delete
           required: true
           type: integer
+  /fuelsuppliercontactroles:
+    get:
+      tags:
+        - FuelSupplierContactRole
+      summary: Lists available FuelSupplierContactRole objects
+      x-codegen-operation: list
+      consumes: []
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      responses:
+        200:
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/FuelSupplierContactRole"
+    post:
+      tags:
+        - FuelSupplierContactRole
+      x-codegen-operation: create
+      summary: Creates a new FuelSupplierContactRole object            
+      consumes:
+        - application/json
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      parameters:
+        - name: item
+          in: body
+          required: true
+          schema:
+            $ref: "#/definitions/FuelSupplierContactRole"
+      responses:
+        201:
+          description: FuelSupplierContactRole created
+          headers:
+            Location:
+              description: A link to the FuelSupplierContactRole
+              type: string
+              format: url
+          schema:
+            $ref: "#/definitions/FuelSupplierContactRole"  
+  /fuelsuppliercontactroles/bulk:
+    post:
+      tags:
+        - FuelSupplierContactRole
+      summary: Bulk create / update a number of FuelSupplierContactRole object      
+      x-codegen-operation: bulk
+      consumes:
+        - application/json
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      parameters:
+        - name: items
+          in: body
+          required: true
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/FuelSupplierContactRole"
+      responses:
+        201:
+          description: FuelSupplierContactRole created
+  /fuelsuppliercontactroles/{id}:
+    get:
+      tags:
+        - FuelSupplierContactRole
+      summary: Gets a specific FuelSupplierContactRole object      
+      x-codegen-operation: retrieve
+      consumes: []
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: "#/definitions/FuelSupplierContactRole"
+        404:
+          description: FuelSupplierContactRole not found
+      parameters:
+        - name: id
+          in: path
+          description: id of FuelSupplierContactRole to fetch
+          required: true
+          type: integer
+    put:
+      tags:
+        - FuelSupplierContactRole
+      x-codegen-operation: update
+      summary: Updates a specific FuelSupplierContactRole object      
+      consumes:
+        - application/json
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: "#/definitions/FuelSupplierContactRole"
+        404:
+          description: FuelSupplierContactRole not found
+      parameters:
+        - name: id
+          in: path
+          description: id of FuelSupplierContactRole to fetch
+          required: true
+          type: integer
+        - name: item
+          in: body
+          required: true
+          schema:
+            $ref: "#/definitions/FuelSupplierContactRole"
+  /fuelsuppliercontactroles/{id}/delete:
+    post:
+      tags:
+        - FuelSupplierContactRole
+      x-codegen-operation: destroy
+      summary: Deletes a specific FuelSupplierContactRole object      
+      consumes: []
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      responses:
+        200:
+          description: OK
+        404:
+          description: FuelSupplierContactRole not found
+      parameters:
+        - name: id
+          in: path
+          description: id of FuelSupplierContactRole to delete
+          required: true
+          type: integer
   /notifications:
     get:
       tags:
@@ -3150,6 +2864,149 @@ paths:
         - name: id
           in: path
           description: id of NotificationEvent to delete
+          required: true
+          type: integer
+  /notificationtypes:
+    get:
+      tags:
+        - NotificationType
+      summary: Lists available NotificationType objects
+      x-codegen-operation: list
+      consumes: []
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      responses:
+        200:
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/NotificationType"
+    post:
+      tags:
+        - NotificationType
+      x-codegen-operation: create
+      summary: Creates a new NotificationType object            
+      consumes:
+        - application/json
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      parameters:
+        - name: item
+          in: body
+          required: true
+          schema:
+            $ref: "#/definitions/NotificationType"
+      responses:
+        201:
+          description: NotificationType created
+          headers:
+            Location:
+              description: A link to the NotificationType
+              type: string
+              format: url
+          schema:
+            $ref: "#/definitions/NotificationType"  
+  /notificationtypes/bulk:
+    post:
+      tags:
+        - NotificationType
+      summary: Bulk create / update a number of NotificationType object      
+      x-codegen-operation: bulk
+      consumes:
+        - application/json
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      parameters:
+        - name: items
+          in: body
+          required: true
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/NotificationType"
+      responses:
+        201:
+          description: NotificationType created
+  /notificationtypes/{id}:
+    get:
+      tags:
+        - NotificationType
+      summary: Gets a specific NotificationType object      
+      x-codegen-operation: retrieve
+      consumes: []
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: "#/definitions/NotificationType"
+        404:
+          description: NotificationType not found
+      parameters:
+        - name: id
+          in: path
+          description: id of NotificationType to fetch
+          required: true
+          type: integer
+    put:
+      tags:
+        - NotificationType
+      x-codegen-operation: update
+      summary: Updates a specific NotificationType object      
+      consumes:
+        - application/json
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: "#/definitions/NotificationType"
+        404:
+          description: NotificationType not found
+      parameters:
+        - name: id
+          in: path
+          description: id of NotificationType to fetch
+          required: true
+          type: integer
+        - name: item
+          in: body
+          required: true
+          schema:
+            $ref: "#/definitions/NotificationType"
+  /notificationtypes/{id}/delete:
+    post:
+      tags:
+        - NotificationType
+      x-codegen-operation: destroy
+      summary: Deletes a specific NotificationType object      
+      consumes: []
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      responses:
+        200:
+          description: OK
+        404:
+          description: NotificationType not found
+      parameters:
+        - name: id
+          in: path
+          description: id of NotificationType to delete
           required: true
           type: integer
   /groups:
@@ -4028,46 +3885,6 @@ paths:
           description: id of User to delete
           required: true
           type: integer
-  /attachments/{id}/download:
-    get:
-      summary: Returns the binary file component of an attachment
-      tags:
-        - Attachment
-      consumes: []
-      produces:      
-        - application/octet-stream        
-      parameters:                
-        - name: id
-          in: path
-          description: Attachment Id
-          required: true
-          type: integer
-      responses:
-        200:
-          description: OK
-        404:
-          description: Attachment not found   
-  /attachments/upload:
-    post:
-      summary: Used to upload an attachment
-      tags:
-        - Attachment
-      description: Append the file to request files item 'file'      
-      produces:
-        - text/plain
-        - application/json
-        - text/json
-      parameters:        
-        - name: item
-          in: body
-          description: Attachment meta data.  Do not include the binary data in the JSON. 
-          required: true
-          schema:
-            $ref: "#/definitions/Attachment"
-      consumes: []
-      responses:
-        201:
-          description: Attachment created        
   /groups/{id}/users:
     get:
       summary: returns users in a given Group
@@ -4149,145 +3966,6 @@ paths:
             type: array
             items:
               $ref: "#/definitions/CreditTrade"
-  /credittrades/{id}/notes:
-    get:
-      summary: Returns notes for a particular CreditTrade
-      description: Returns notes for a particular CreditTrade.
-      tags:
-        - CreditTrade
-      produces:
-        - text/plain
-        - application/json
-        - text/json
-      responses:
-        '200':
-          description: OK
-          schema:
-            type: array
-            items:
-              $ref: '#/definitions/Note'
-        "404":
-           description: CreditTrade not found
-      parameters:
-        - name: id
-          in: path
-          description: id of CreditTrade to fetch notes for
-          required: true
-          type: integer
-  /credittrades/{id}/attachments:
-    get:
-      summary: Returns attachments for a particular CreditTrade
-      tags:
-        - CreditTrade
-      produces:
-        - text/plain
-        - application/json
-        - text/json
-      responses:
-        '200':
-          description: OK
-          schema:
-            type: array
-            items:
-              $ref: '#/definitions/AttachmentViewModel'
-        "404":
-           description: CreditTrade not found
-      parameters:
-        - name: id
-          in: path
-          description: id of CreditTrade to fetch attachments for
-          required: true
-          type: integer    
-    post:
-      summary: Adds a file attachment to a credit trade.  
-      description: Append the file to request files item 'file'
-      x-operation-ignore: YES
-      tags:
-        - CreditTrade
-      produces:
-        - text/plain
-        - application/json
-        - text/json
-      responses:
-        '201':
-          description: OK
-      parameters:
-        - name: id
-          in: path
-          description: id of CreditTrade to add attachment to
-          required: true
-          type: integer
-        - name: item
-          in: body
-          description: Attachment meta data.  Do not include the binary data in the JSON. 
-          required: true
-          schema:
-            $ref: "#/definitions/Attachment"          
-  /credittrades/{id}/history:
-    get:
-      summary: Returns History for a particular CreditTrade
-      tags:
-        - CreditTrade
-      produces:
-        - text/plain
-        - application/json
-        - text/json
-      responses:
-        '200':
-          description: OK
-          schema:
-            type: array
-            items:
-              $ref: '#/definitions/HistoryViewModel'
-      parameters:
-        - name: id
-          in: path
-          description: id of CreditTrade to fetch History for
-          required: true
-          type: integer
-        - name: offset
-          in: query
-          description: offset for records that are returned 
-          required: false
-          type: integer
-        - name: limit
-          in: query
-          description: limits the number of records returned.  
-          required: false
-          type: integer
-    post:
-      summary: Add a History record to the CreditTrade
-      description: Add a History record to the CreditTrade
-      x-operation-ignore: YES
-      tags:
-        - CreditTrade
-      produces:
-        - text/plain
-        - application/json
-        - text/json
-      parameters:
-        - name: id
-          in: path
-          description: id of CreditTrade to fetch History for
-          required: true
-          type: integer
-        - name: item
-          in: body
-          required: true
-          schema:
-            $ref: "#/definitions/History"
-      responses:
-        '200':
-          description: OK
-        '201':
-          description: History created
-          headers:
-            Location:
-              description: A link to the History
-              type: string
-              format: url
-          schema:
-            $ref: "#/definitions/History"        
   /fuelsuppliers/{id}/attachments:
     get:
       summary: Returns attachments for a particular FuelSupplier
@@ -4375,29 +4053,7 @@ paths:
               type: string
               format: url
           schema:
-            $ref: "#/definitions/History"          
-  /fuelsuppliers/{id}/notes:
-    get:
-      summary: Returns notes for a particular FuelSupplier
-      tags:
-        - FuelSupplier
-      produces:
-        - text/plain
-        - application/json
-        - text/json
-      responses:
-        '200':
-          description: OK
-          schema:
-            type: array
-            items:
-              $ref: '#/definitions/Note'
-      parameters:
-        - name: id
-          in: path
-          description: id of FuelSupplier for which to fetch notes
-          required: true
-          type: integer
+            $ref: "#/definitions/History"
   /fuelsuppliers/search:
     get:
       summary: Searches fuel suppliers
@@ -5169,81 +4825,102 @@ paths:
 definitions:
   CreditTrade:
     type: object
+    description: A transaction that if completed changes the number of Low-Carbon Fuel Credits owned by a Fuel Supplier. The transfer of Credits may involve the BC Gov&#39;t (an award or retirement of Credits) or another Fuel Supplier (a Buy or Sell).
     required:
       - id
       - creditTradeStatusId
-      - initiator
+      - respondent
+      - creditTradeTypeId
       - numberOfCredits
+      - plainEnglishPhrase
     properties:
       id:
         format: int32
         type: integer
-        description: A system-generated unique identifier for a Credit Trade
+        description: A system-generated unique identifier for a Credit Trade.
       creditTradeStatusId:
         $ref: '#/definitions/CreditTradeStatus'
-        description: A foreign key reference to a CreditTradeStatus
+        description: A foreign key reference to a CreditTradeStatus.
       initiator:
         $ref: '#/definitions/FuelSupplier'
-        description: A foreign key reference to a FuelSupplier
+        description: A foreign key reference to the Fuel Supplier that initiated the transaction. Will be NULL if the Government of BC initiated the transaction.
       respondent:
         $ref: '#/definitions/FuelSupplier'
-        description: A foreign key reference to a FuelSupplier
+        description: A foreign key reference to a Fuel Supplier to which the trade was proposed.
       tradeEffectiveDate:
         type: string
         format: date-time
+        description: The effective date of the trade if specified beforehand and after execution. If NULL - indicates the trade has not occurred and the effective date will be the date the Ministry Approver approves the transaction.
       creditTradeTypeId:
         $ref: '#/definitions/CreditTradeType'
-        description: A foreign key reference to a CreditTradeType
+        description: A foreign key reference to the CreditTradeType.
       numberOfCredits:
         format: int32
         type: integer
+        description: The number of credits involved in the Credit Trade.
       fairMarketValuePerCredit:
         type: number
         format: float
-      offerId:
-        $ref: '#/definitions/Offer'
-        description: A foreign key reference to a Offer
+        description: The price (if applicable) of each credit in the transaction. There is no fair market value on transaction initiated by the Government of BC.
+      history:
+        type: array
+        items:
+          $ref: '#/definitions/CreditTradeHistory'
+        description: A foreign key reference to the Credit Trade History entries related to this Credit Trade.
+      plainEnglishPhrase:
+        type: string
+        maxLength: 255
+        description: A plain English phrase displaying the current state of the Credit Trade.
   CreditTradeHistory:
     type: object
+    description: A snapshot of a Credit Trade following a change to the Credit Trade data.
     required:
       - id
-      - logEntryTime
+      - userId
+      - creditTradeUpdateTime
       - creditTradeStatusId
+      - creditTradeTypeId
       - newNumberOfCredits
     properties:
       id:
         format: int32
         type: integer
-        description: A system-generated unique identifier for a Credit Trade History
-      creditTradeId:
-        $ref: '#/definitions/CreditTrade'
-        description: A foreign key reference to a CreditTrade
+        description: A system-generated unique identifier for a Credit Trade History.
       userId:
         $ref: '#/definitions/User'
-        description: A foreign key reference to a User
-      logEntryTime:
+        description: A foreign key reference to the User that updated the Credit Trade.
+      creditTradeUpdateTime:
         type: string
         format: date-time
+        description: The date&#x2F;time the update was made to the Credit Trade.
       creditTradeStatusId:
         $ref: '#/definitions/CreditTradeStatus'
-        description: A foreign key reference to a CreditTradeStatus
+        description: A foreign key reference to a CreditTradeStatus indicating the Credit Trade Status after the update.
       newTradeEffectiveDate:
         type: string
         format: date-time
+        description: The Trade Effective Date of the Credit Trade after the update.
       creditTradeTypeId:
         $ref: '#/definitions/CreditTradeType'
-        description: A foreign key reference to a CreditTradeType
+        description: A foreign key reference to a CreditTradeType after the update.
       newNumberOfCredits:
         format: int32
         type: integer
+        description: The number of credits involved in the Credit Trade after the update.
       newFairMarketValuePerCredit:
         type: number
         format: float
-      fuelSupplierBalanceId:
-        $ref: '#/definitions/FuelSupplierBalance'
-        description: A foreign key reference to a FuelSupplierBalance
+        description: The Fair Market Value per Credit in the Credit Trade after the update.
+      note:
+        type: string
+        maxLength: 4096
+        description: A note entered by the user making the update about the Credit Trade update.
+      isInternalHistoryRecord:
+        type: boolean
+        description: True if the Credit Trade history record is to be visible only to those in the organization of the user that made the update.
   CreditTradeStatus:
     type: object
+    description: The possible status values associated with a Credit Trade.
     required:
       - id
       - effectiveDate
@@ -5251,150 +4928,165 @@ definitions:
       id:
         format: int32
         type: integer
-        description: A system-generated unique identifier for a Credit Trade Status
+        description: A system-generated unique identifier for a Credit Trade Status.
       status:
         type: string
+        description: The name of the Credit Trade status.
       description:
         type: string
+        description: Information about the purpose of the Credit Trade status.
       effectiveDate:
         type: string
         format: date-time
+        description: The datetime upon which the Credit Trade status was activated for use.
       expirationDate:
         type: string
         format: date-time
+        description: The data after which the Credit Trade status will no longer be used.
       displayOrder:
         format: int32
         type: integer
+        description: The order of display of the Credit Trade status. In general the order will be listed chronologically as they occur in a typical transaction, with exception statuses (e.g. Cancelled) at the bottom.
   CreditTradeType:
     type: object
+    description: The types of Credit Trades that can be proposed by the initiating organization.
     required:
       - id
       - effectiveDate
+      - expirationDate
     properties:
       id:
         format: int32
         type: integer
-        description: A system-generated unique identifier for a Credit Trade Type
+        description: A system-generated unique identifier for a Credit Trade Type.
       type:
         type: string
-      status:
-        type: string
+        description: The name of the type of Credit Trade, such as Buy, Sell, Award, etc.
       description:
         type: string
+        description: End user help-text information about the Credit Trade type.
       effectiveDate:
         type: string
         format: date-time
+        description: The datetime upon which the Credit Trade type was activated for use.
+      expirationDate:
+        type: string
+        format: date-time
+        description: The data after which the Credit Trade type will no longer be used.
       displayOrder:
         format: int32
         type: integer
-  CreditTradeNote:
-    type: object
-    description: Notes entered by users about Credit Trades
-    required:
-      - id
-      - creditTradeId
-      - noteText
-    properties:
-      id:
-        format: int32
-        type: integer
-        description: A system-generated unique identifier for a Credit Trade Note
-      creditTradeId:
-        $ref: '#/definitions/CreditTrade'
-        description: A foreign key reference to a CreditTrade
-      noteText:
-        type: string
-        description: The contents of the note.
-      isNoLongerRelevant:
+        description: The order of display of the Credit Trade type In general the order will be listed in the order of expected frequency.
+      isGovOnlyType:
         type: boolean
-        description: A user set flag that the note is no longer relevant. Allows the note to be retained for historical reasons,  but identified to other users as no longer applicable.
-  CreditTradeAttachment:
+        description: The Credit Trade Type is a government-only type of Credit Trade - not available to Fuel Suppliers.
+  Opportunity:
     type: object
-    description: Attachments uploaded by users about Credit Trades
-    required:
-      - id
-      - creditTradeId
-    properties:
-      id:
-        format: int32
-        type: integer
-        description: A system-generated unique identifier for a Credit Trade Attachment
-      creditTradeId:
-        $ref: '#/definitions/CreditTrade'
-        description: A foreign key reference to a CreditTrade
-      fileName:
-        type: string
-        description: Filename as passed by the user uploading the file
-      fileContents:
-        type: string
-        format: binary
-        description: Binary contents of the file
-      description:
-        type: string
-        description: A note about the attachment,  optionally maintained by the user.
-      creditTradeAttachmentTypeId:
-        $ref: '#/definitions/CreditTradeAttachmentType'
-        description: A foreign key reference to a CreditTradeAttachmentType
-  CreditTradeAttachmentType:
-    type: object
-    required:
-      - id
-      - effectiveDate
-    properties:
-      id:
-        format: int32
-        type: integer
-        description: A system-generated unique identifier for a Credit Trade Attachment Type
-      type:
-        type: string
-      status:
-        type: string
-      description:
-        type: string
-      effectiveDate:
-        type: string
-        format: date-time
-      displayOrder:
-        format: int32
-        type: integer
-  Offer:
-    type: object
+    description: A posting by a Fuel Supplier seller to indicate an interest in making a Credit Trade visible to all other Fuel Suppliers of a designated type.
     required:
       - id
       - fuelSupplierId
-      - offerStatusId
-      - offerTypeId
+      - opportunityStatusId
+      - creditTradeTypeId
+      - fuelSupplierTypeId
       - numberOfCredits
+      - plainEnglishPhrase
     properties:
       id:
         format: int32
         type: integer
-        description: A system-generated unique identifier for an Offer
+        description: A system-generated unique identifier for an Opportunity.
       fuelSupplierId:
         $ref: '#/definitions/FuelSupplier'
-        description: A foreign key reference to a FuelSupplier
-      offerStatusId:
-        $ref: '#/definitions/OfferStatus'
-        description: A foreign key reference to a OfferStatus
-      offerTypeId:
-        $ref: '#/definitions/OfferType'
-        description: A foreign key reference to a OfferType
+        description: A foreign key reference to the FuelSupplier that created the Opportunity.
+      opportunityStatusId:
+        $ref: '#/definitions/OpportunityStatus'
+        description: A foreign key reference to Opportunity Status.
+      creditTradeTypeId:
+        $ref: '#/definitions/CreditTradeType'
+        description: A foreign key reference to Credit Trade Type.
+      fuelSupplierTypeId:
+        $ref: '#/definitions/FuelSupplierType'
+        description: A foreign key reference to Fuel Supplier Type that is being invited to respond to the Opportunity.
       numberOfCredits:
         format: int32
         type: integer
-      offerFairMarketValuePerCredit:
+        description: The number of credits being suggested as part of the Opportunity.
+      suggestedValuePerCredit:
         type: number
         format: float
+        description: The suggested price of each credit that is part of the Opportunity.
+      hasTradeNow:
+        type: boolean
+        description: Set true by the Fuel Supplier posting the Opportunity confirming they are willing to automatically accept a proposal for all of the credits at the suggested price per credit.
       numberOfViews:
         format: int32
         type: integer
+        description: A count of the number of views of the Opportunity.
       datePosted:
         type: string
         format: date-time
-      offerBackgroundNote:
+        description: The date&#x2F;time the Opportunity was publically posted for potential trading partners.
+      opportunityBackgroundNote:
         type: string
-  OfferStatus:
+        description: A note about the Opportunity that is set by the Fuel Supplier posting the Opportunity and visible to those viewing the Opportunity.
+      creditTrades:
+        type: array
+        items:
+          $ref: '#/definitions/CreditTrade'
+        description: A foreign key reference to the Credit Trades that were generated from the publishing of this Opportunity.
+      plainEnglishPhrase:
+        type: string
+        maxLength: 255
+        description: A plain English phrase displaying the current state of the Opportunity.
+  OpportunityHistory:
     type: object
+    description: The history of updates made to an Opportunity.
+    required:
+      - id
+      - opportunityId
+      - userId
+      - creditTradeTypeId
+      - fuelSupplierTypeId
+    properties:
+      id:
+        format: int32
+        type: integer
+        description: A system-generated unique identifier for an Opportunity History.
+      opportunityId:
+        $ref: '#/definitions/Opportunity'
+        description: A foreign key reference to a Opportunity.
+
+        description: A foreign key reference to the User that made the update to the Opportunity.
+      updateTime:
+        type: string
+        format: date-time
+        description: The date&#x2F;time the change was made to the Opportunity.
+      creditTradeTypeId:
+        $ref: '#/definitions/CreditTradeType'
+        description: A foreign key reference to a Credit Trade Type after the Opportunity update.
+      newNumberOfCredits:
+        format: int32
+        type: integer
+        description: The number of credits involved in the Opportunity after the update.
+      newProposedValuePerCredit:
+        type: number
+        format: float
+        description: The Proposed Fair Market Value per Credit in the Opportunity after the update.
+      fuelSupplierTypeId:
+        $ref: '#/definitions/FuelSupplierType'
+        description: A foreign key reference to the Fuel Supplier Type invited to respond to the Opportunity after the Opportunity update.
+      newTradeEffectiveDate:
+        type: string
+        format: date-time
+        description: The Trade Effective Date of the opportunity after the update.
+      note:
+        type: string
+        maxLength: 4096
+        description: A note entered about the Opportunity update.
+  OpportunityStatus:
+    type: object
+    description: The possible status values associated with an opportunity.
     required:
       - id
       - effectiveDate
@@ -5402,183 +5094,239 @@ definitions:
       id:
         format: int32
         type: integer
-        description: A system-generated unique identifier for an Offer Status
+        description: A system-generated unique identifier for the Opportunity status.
       status:
         type: string
-      status:
-        type: string
+        description: The name of the Opportunity status.
       description:
         type: string
+        description: End user help-text information about the Opportunity status.
       effectiveDate:
         type: string
         format: date-time
-      displayOrder:
-        format: int32
-        type: integer
-  OfferType:
-    type: object
-    required:
-      - effectiveDate
-    properties:
-      id:
-        format: int32
-        type: integer
-        description: A system-generated unique identifier for an Offer Type
-      type:
-        type: string
-      status:
-        type: string
-      description:
-        type: string
-      effectiveDate:
+        description: The date&#x2F;time upon which the Opportunity status was activated for use.
+      expirationDate:
         type: string
         format: date-time
+        description: The data after which the Opportunity status will no longer be used.
       displayOrder:
         format: int32
         type: integer
-  OfferHistory:
-    type: object
-    description: The history of updates made to an Offer
-    required:
-      - id
-      - historyText
-    properties:
-      id:
-        format: int32
-        type: integer
-        description: A system-generated unique identifier for an Offer History
-      offerId:
-        $ref: '#/definitions/Offer'
-        description: A foreign key reference to a Offer
-      historyText:
-        type: string
-        description: The text of the history entry tracked against the related entity.
-  OfferNote:
-    type: object
-    description: Notes entered by users about Credit Trades
-    required:
-      - id
-      - offerId
-      - noteText
-    properties:
-      id:
-        format: int32
-        type: integer
-        description: A system-generated unique identifier for an Offer Note
-      offerId:
-        $ref: '#/definitions/Offer'
-        description: A foreign key reference to a Offer
-      noteText:
-        type: string
-        description: The contents of the note.
-      isNoLongerRelevant:
-        type: boolean
-        description: A user set flag that the note is no longer relevant. Allows the note to be retained for historical reasons,  but identified to other users as no longer applicable.
+        description: The order of display of the Opportunity status. In general the order will be listed chronologically as they occur in a typical transaction, with exception statuses (e.g. Cancelled) at the bottom.
   FuelSupplier:
     type: object
+    description: A Fuel Supplier that is or was eligible to be a part of the Low Carbon Fuel Credits trading program.
     required:
       - id
-      - commonClientOrgId
-      - lastUpdatefromCommonClient
       - name
       - fuelSupplierStatusId
+      - fuelSupplierTypeId
+      - fuelSupplierActionsTypeId
       - dateCreated
+      - commonClientOrgId
     properties:
       id:
         format: int32
         type: integer
-        description: A system-generated unique identifier for a Fuel Supplier
-      commonClientOrgId:
-        type: string
-        uniqueItems: true
-      lastUpdatefromCommonClient:
-        type: string
-        format: date-time
+        description: A system-generated unique identifier for the Fuel Supplier.
       name:
         type: string
         uniqueItems: true
+        description: The name of the Fuel Supplier pulled from the Common Client information about the Fuel Supplier.
       fuelSupplierStatusId:
         $ref: '#/definitions/FuelSupplierStatus'
-        description: A foreign key reference to a FuelSupplierStatus
+        description: A foreign key reference to the Fuel Supplier Status.
+      fuelSupplierTypeId:
+        $ref: '#/definitions/FuelSupplierType'
+        description: A foreign key reference to the Fuel Supplier Type.
+      fuelSupplierActionsTypeId:
+        $ref: '#/definitions/FuelSupplierActionsType'
+        description: A foreign key reference to the Fuel Supplier&#39;s Actions Type.
       dateCreated:
         type: string
         format: date-time
+        description: The date&#x2F;time the Fuel Supplier was added as a Fuel Supplier to the TFRS program.
+  FuelSupplierCCData:
+    type: object
+    description: Information from the Natural Resources Sector&#39;s Common Client system about the Fuel Supplier. The data is a cache of the data in Common Client and is ideally (assuming Common Client is online) updated on each access of the information, and periodically (for reporting purposes).
+    required:
+      - id
+      - fuelSupplierId
+      - lastUpdatefromCommonClient
+      - name
+    properties:
+      id:
+        format: int32
+        type: integer
+        description: A system-generated unique identifier for the Fuel Supplier Common Client record.
+      fuelSupplierId:
+        $ref: '#/definitions/FuelSupplier'
+        description: A foreign key reference to a Fuel Supplier for which the Common Client data is related.
+      commonClientOrgId:
+        type: string
+        uniqueItems: true
+        description: The Foreign Key Id of the Fuel Supplier in Common Client. Used for Web Services calls to the NRS Common Client API.
+      lastUpdatefromCommonClient:
+        type: string
+        format: date-time
+        description: The date&#x2F;time of the last update of the Common Client information about the Fuel Supplier.
+      name:
+        type: string
+        description: The Name of the Fuel Supplier - from Common Client.
+      corporateAddressLine1:
+        type: string
+        description: Address Line 1  of the Fuel Supplier&#39;s primary Corporate Address - from Common Client.
+      corporateAddressLine2:
+        type: string
+        description: Address Line 2  of the Fuel Supplier&#39;s primary Corporate Address - from Common Client.
+      corporateAddressCity:
+        type: string
+        description: City of the Fuel Supplier&#39;s primary Corporate Address - from Common Client.
+      corporateAddressPostalCode:
+        type: string
+        description: Postal Code  of the Fuel Supplier&#39;s primary Corporate Address - from Common Client.
+      corporateAddressProvince:
+        type: string
+        description: Province of the Fuel Supplier&#39;s primary Corporate Address - from Common Client.
   FuelSupplierBalance:
     type: object
+    description: The ledger tracking the balance of Credits owned by a Fuel Supplier and updated on the completion of Credit Trade.
     required:
       - id
       - fuelSupplierId
       - validatedCredits
       - encumberedCredits
       - effectiveDate
+      - creditTradeId
     properties:
       id:
         format: int32
         type: integer
-        description: A system-generated unique identifier for a Fuel Supplier Balance
+        description: A system-generated unique identifier for the Fuel Supplier Balance.
       fuelSupplierId:
         $ref: '#/definitions/FuelSupplier'
-        description: A foreign key reference to a FuelSupplier
+        description: A foreign key reference to the FuelSupplier.
       validatedCredits:
         format: int32
         type: integer
+        description: The number of validated credits held by the Fuel Supplier at the time the record was active.
       encumberedCredits:
         format: int32
         type: integer
+        description: The number of encumbered credits held by the Fuel Supplier at the time the record was active.
       effectiveDate:
         type: string
         format: date-time
+        description: The effective date at which the given numbers of validated and encumbered credits were held by the Fuel Supplier.
       endDate:
         type: string
         format: date-time
+        description: The date this record was no longer in effect - likely because a new record was added with new Credit count(s).
       creditTradeId:
         $ref: '#/definitions/CreditTrade'
-        description: A foreign key reference to a CreditTrade
+        description: A foreign key reference to a CreditTrade that triggered a change in the number of validated or encumbered credits held by the Fuel Supplier.
   FuelSupplierStatus:
     type: object
+    description: The statuses of a Fuel Supplier over their lifecycle in the application.
     required:
       - effectiveDate
     properties:
       id:
         format: int32
         type: integer
-        description: A system-generated unique identifier for a Fuel Supplier Status
+        description: A system-generated unique identifier for a Fuel Supplier Status.
       status:
         type: string
-      status:
-        type: string
+        description: The name of the Fuel Supplier status.
       description:
         type: string
+        description: End user help-text information about the Fuel Supplier Status.
       effectiveDate:
         type: string
         format: date-time
+        description: The date&#x2F;time upon which the Fuel Supplier status was activated for use.
+      expirationDate:
+        type: string
+        format: date-time
+        description: The data after which the Fuel Supplier status will no longer be used.
       displayOrder:
         format: int32
         type: integer
-  FuelSupplierNote:
+        description: The order of display of the Fuel Supplier status. In general the order will be listed chronologically as they occur in a typical transaction, with exception statuses (e.g. Cancelled) at the bottom.
+  FuelSupplierType:
     type: object
-    description: Notes entered by users about Fuel Suppliers
+    description: The types of Fuel Suppliers that can be proposed by the initiating organization.
     required:
       - id
-      - fuelSupplierId
-      - noteText
+      - type
+      - effectiveDate
+      - expirationDate
     properties:
       id:
         format: int32
         type: integer
-        description: A system-generated unique identifier for a Fuel Supplier Note
+        description: A system-generated unique identifier for a Fuel Supplier Type.
+      type:
+        type: string
+        description: The name of the type of Fuel Supplier, such as Part 3 Fuel Supplier, Petroleum Fuel Supplier, etc.
+      description:
+        type: string
+        description: End user help-text information about the Fuel Supplier type.
+      effectiveDate:
+        type: string
+        format: date-time
+        description: The datetime upon which the Fuel Supplier type was activated for use.
+      expirationDate:
+        type: string
+        format: date-time
+        description: The data after which the Fuel Supplier type will no longer be used.
+      displayOrder:
+        format: int32
+        type: integer
+        description: The order of display of the Fuel Supplier type. In general, the order will be listed alphabetically.
+  FuelSupplierActionsType:
+    type: object
+    description: The types of actions that Fuel Suppliers that can take - Buy and Sell, Buy Only, etc.
+    required:
+    properties:
+      id:
+        format: int32
+        type: integer
+        description: A system-generated unique identifier for a Fuel Supplier Actions Type.
+      type:
+        type: string
+        description: The name of the type of actions the Fuel Supplier can perform.
+      description:
+        type: string
+        description: End user help-text information about the Fuel Supplier actions type.
+      effectiveDate:
+        type: string
+        format: date-time
+        description: The datetime upon which the Fuel Supplier actions type was activated for use.
+      expirationDate:
+        type: string
+        format: date-time
+        description: The date&#x2F;time after which the Fuel Supplier action type will no longer be used.
+      displayOrder:
+        format: int32
+        type: integer
+        description: The order of display of the Fuel Supplier actions type. The order will be alphabetic.
+      id:
+        format: int32
+        type: integer
+        description: A system-generated unique identifier for a Fuel Supplier Note.
       fuelSupplierId:
         $ref: '#/definitions/FuelSupplier'
-        description: A foreign key reference to a FuelSupplier
+        description: A foreign key reference to a FuelSupplier.
       noteText:
         type: string
-        description: The contents of the note.
+        description: The contents of the note about the Fuel Supplier.
       isNoLongerRelevant:
         type: boolean
         description: A user set flag that the note is no longer relevant. Allows the note to be retained for historical reasons,  but identified to other users as no longer applicable.
   FuelSupplierContact:
     type: object
-    description: A table of contacts related to various entities in the system.
+    description: A table of contacts related to the Fuel Suppliers in the system.
     required:
       - id
       - fuelSupplierId
@@ -5586,10 +5334,10 @@ definitions:
       id:
         format: int32
         type: integer
-        description: A system-generated unique identifier for a Fuel Supplier Contact
+        description: A system-generated unique identifier for a Fuel Supplier Contact.
       fuelSupplierId:
         $ref: '#/definitions/FuelSupplier'
-        description: A foreign key reference to a FuelSupplier
+        description: A foreign key reference to a FuelSupplier.
       givenName:
         type: string
         description: The given name of the contact.
@@ -5601,7 +5349,7 @@ definitions:
         description: The title of the contact within their organization.
       userId:
         $ref: '#/definitions/User'
-        description: A foreign key reference to a User
+        description: A foreign key reference to a User.
       notes:
         type: string
         description: A note about the contact maintained by the users.
@@ -5614,27 +5362,22 @@ definitions:
       mobilePhoneNumber:
         type: string
         description: The mobile phone number for the contact.
-      faxPhoneNumber:
-        type: string
-        description: The fax phone number for the contact.
-      address1:
-        type: string
-        description: Address 1 line of the address.
-      address2:
-        type: string
-        description: Address 2 line of the address.
-      city:
-        type: string
-        description: The City of the address.
-      province:
-        type: string
-        description: The Province of the address.
-      postalCode:
-        type: string
-        description: The postal code of the address.
+  FuelSupplierContactRole:
+    type: object
+    description: The set of roles that can be given to a contact in the system.
+    required:
+      - roleId
+    properties:
+      id:
+        format: int32
+        type: integer
+        description: A system-generated unique identifier for a Fuel Supplier Contact Role.
+      roleId:
+        $ref: '#/definitions/Role'
+        description: A foreign key reference to a Role that can be assigned to a Fuel Supplier contact user.
   FuelSupplierAttachment:
     type: object
-    description: Attachments uploaded by users about Fuel Supplier
+    description: Attachments uploaded by users about Fuel Supplier.
     required:
       - id
       - fuelSupplierId
@@ -5642,48 +5385,42 @@ definitions:
       id:
         format: int32
         type: integer
-        description: A system-generated unique identifier for a Fuel Supplier Attachment
+        description: A system-generated unique identifier for a Fuel Supplier Attachment.
       fuelSupplierId:
         $ref: '#/definitions/FuelSupplier'
-        description: A foreign key reference to a FuelSupplier
+        description: A foreign key reference to a FuelSupplier.
       fileName:
         type: string
-        description: Filename as passed by the user uploading the file
-      fileContents:
+        description: Filename as passed by the user uploading the file.
+      fileLocation:
         type: string
-        format: binary
-        description: Binary contents of the file
+        description: The location of the file relative to the server - possibly an ID for getting the file from the Natural Resources Sector (NRS) Document Management system.
       description:
         type: string
-        description: A note about the attachment,  optionally maintained by the user.
-      fuelSupplierAttachmentTypeId:
-        $ref: '#/definitions/FuelSupplierAttachmentType'
-        description: A foreign key reference to a FuelSupplierAttachmentType
-  FuelSupplierAttachmentType:
+        description: A note about the attachment,  optionally provided by the user on upload or replacement.
+      complianceYear:
+        type: string
+        description: The compliance year (FY) to which this document pertains.
+  FuelSupplierAttachmentTag:
     type: object
+    description: A tag associated with a Fuel Supplier Attachment.
     required:
-      - id
-      - effectiveDate
+      - fuelSupplierAttachmentId
     properties:
       id:
         format: int32
         type: integer
-        description: A system-generated unique identifier for a Fuel Supplier Attachment Type
-      type:
+        description: A system-generated unique identifier for a Fuel Supplier Attachment.
+      fuelSupplierAttachmentId:
+        $ref: '#/definitions/FuelSupplierAttachment'
+        description: A foreign key reference to the Fuel Supplier Attachment to which the tag is related.
+      tag:
         type: string
-      status:
-        type: string
-      description:
-        type: string
-      effectiveDate:
-        type: string
-        format: date-time
-      displayOrder:
-        format: int32
-        type: integer
+        maxLength: 100
+        description: A user-entered to tag applied to the Fuel Supplier Attachment.
   FuelSupplierHistory:
     type: object
-    description: The history of updates made to a Fuel Supplier
+    description: The history of updates made to a Fuel Supplier.
     required:
       - id
       - fuelSupplierId
@@ -5692,10 +5429,10 @@ definitions:
       id:
         format: int32
         type: integer
-        description: A system-generated unique identifier for a Fuel Supplier History
+        description: A system-generated unique identifier for a Fuel Supplier History.
       fuelSupplierId:
         $ref: '#/definitions/FuelSupplier'
-        description: A foreign key reference to a FuelSupplier
+        description: A foreign key reference to a FuelSupplier.
       historyText:
         type: string
         description: The text of the history entry tracked against the related entity.
@@ -5704,17 +5441,18 @@ definitions:
     description: User specific settings for a specific location in the UI. The location and saved settings are internally defined by the UI.
     required:
       - id
+      - userId
     properties:
       id:
         format: int32
         type: integer
-        description: A system-generated unique identifier for a User Favourite
+        description: A system-generated unique identifier for a User Favourite.
       context:
         type: string
         description: The context (as defined by the UI) in the application to which this favourite applies.
       name:
         type: string
-        description: The user-defined name for the recorded settings. Allows the user to save different groups of settings and access each one easily when needed.
+        description: The user-defined name for the recorded settings. Allows the user to save dipportunityent groups of settings and access each one easily when needed.
       value:
         type: string
         description: The settings saved by the user. In general,  a UI defined chunk of json that stores the settings in place when the user created the favourite.
@@ -5723,29 +5461,31 @@ definitions:
         description: True if this Favourite is the default for this Context Type. On first access to a context in a session the default favourite for the context it is invoked. If there is no default favourite,  a system-wide default is invoked. On return to the context within a session,  the last parameters used are reapplied.
       userId:
         $ref: '#/definitions/User'
-        description: A foreign key reference to a User
+        description: A foreign key reference to a User.
   Notification:
     type: object
     description: Users associated with specific notifications, created at the time the notification record is created because of the user&#39;s business relationship to the bus - e.g. the user is the currently assigned inspector, or the user is the manager for the District in which the bus is located. The rules for linking a user to a notification for a specific bus could vary over time based on the needs of the business. At minimum, it is expected the current inspector assigned to a bus will be notified of every notification for that bus.
     required:
       - id
+      - notificationEventId
+      - userId
     properties:
       id:
         format: int32
         type: integer
-        description: A system-generated unique identifier for a Notification
+        description: A system-generated unique identifier for a Notification.
       notificationEventId:
         $ref: '#/definitions/NotificationEvent'
-        description: A foreign key reference to a NotificationEvent
+        description: A foreign key reference to a NotificationEvent.
       hasBeenViewed:
         type: boolean
-        description: True if the user linked to the notification has read the notification
+        description: True if the user linked to the notification has read the notification.
       isWatchNotification:
         type: boolean
-        description: True if the user linked to the notification has flagged the notification to remain visible
+        description: True if the user linked to the notification has flagged the notification to remain visible.
       userId:
         $ref: '#/definitions/User'
-        description: A foreign key reference to a User
+        description: A foreign key reference to a User.
   NotificationEvent:
     type: object
     description: Notifications associated about changes to information related to a specific Credit Trade - eg trade suggested, trade countered, trade approved, etc.
@@ -5755,7 +5495,7 @@ definitions:
       id:
         format: int32
         type: integer
-        description: A system-generated unique identifier for a Notification Event
+        description: A system-generated unique identifier for a Notification Event.
       eventTime:
         type: string
         format: date-time
@@ -5768,10 +5508,37 @@ definitions:
         description: An assembled text string about the event that triggered the notification. Includes both static text and data about the notification. User Interface code will be used (based on the eventTypeCode - category) to assemble a dynamic string of information about the event - potentially including links to other relevant data - such as link to the School Bus detail screen.
       creditTradeId:
         $ref: '#/definitions/CreditTrade'
-        description: A foreign key reference to a CreditTrade
-      offerId:
-        $ref: '#/definitions/Offer'
-        description: A foreign key reference to a Offer
+        description: A foreign key reference to a CreditTrade.
+      opportunityId:
+        $ref: '#/definitions/Opportunity'
+        description: A foreign key reference to a Opportunity.
+  NotificationType:
+    type: object
+    description: The types of notifications that occur in the system and might be of interest to users.
+    required:
+    properties:
+      id:
+        format: int32
+        type: integer
+        description: A system-generated unique identifier for a Notification Type.
+      type:
+        type: string
+        description: The name of the notification type presented to the users.
+      description:
+        type: string
+        description: End user help-text information about the notification type.
+      effectiveDate:
+        type: string
+        format: date-time
+        description: The datetime upon which the notification type was activated for use.
+      expirationDate:
+        type: string
+        format: date-time
+        description: The date&#x2F;time after which the notification type will no longer be used.
+      displayOrder:
+        format: int32
+        type: integer
+        description: The order of display of the notification types.
   User:
     type: object
     description: Information about the users of the system.
@@ -5783,10 +5550,10 @@ definitions:
       id:
         format: int32
         type: integer
-        description: A system-generated unique identifier for a User
+        description: A system-generated unique identifier for a User.
       authorizationID:
         type: string
-        description: The ID of the User in the authorization system of record
+        description: The ID of the User in the authorization system of record.
       givenName:
         type: string
         description: Given name of the user.
@@ -5798,16 +5565,16 @@ definitions:
         description: The email address of the user in the system.
       fuelSupplierId:
         $ref: '#/definitions/FuelSupplier'
-        description: A foreign key reference to a FuelSupplier
-      smUserId:
+        description: A foreign key reference to a FuelSupplier.
+      userId:
         type: string
-        description: Security Manager User ID
+        description: The text user ID of the user in the given Authorization Directory.
       guid:
         type: string
         description: The GUID unique to the user as provided by the authentication system. In this case, authentication is done by Siteminder and the GUID uniquely identifies the user within the user directories managed by Siteminder - e.g. IDIR and BCeID. The GUID is equivalent to the IDIR Id, but is guaranteed unique to a person, while the IDIR ID is not - IDIR IDs can be recycled.
-      smAuthorizationDirectory:
+      authorizationDirectory:
         type: string
-        description: The user directory service used by Siteminder to authenticate the user - usually IDIR or BCeID.
+        description: The name of the Authorization Directory from with which the user Id is recorded.
   Role:
     type: object
     description: A table managed in the application by authorized users to create named Roles that can be assigned to Users as needed. Roles can be created as needed to support the users of the system and the roles they perform within the organization.
@@ -5819,7 +5586,7 @@ definitions:
       id:
         format: int32
         type: integer
-        description: A system-generated unique identifier for a Role
+        description: A system-generated unique identifier for a Role.
       name:
         type: string
         description: The name of the Role, as established by the user creating the role.
@@ -5831,17 +5598,19 @@ definitions:
     description: The collection of permissions included in a role.
     required:
       - id
+      - roleId
+      - permissionId
     properties:
       id:
         format: int32
         type: integer
-        description: A system-generated unique identifier for a Role Permission
+        description: A system-generated unique identifier for a Role Permission.
       roleId:
         $ref: '#/definitions/Role'
-        description: A foreign key reference to a Role
+        description: A foreign key reference to a Role.
       permissionId:
         $ref: '#/definitions/Permission'
-        description: A foreign key reference to a Permission
+        description: A foreign key reference to a Permission.
   Permission:
     type: object
     description: The set of permissions defined in the application. Each permission is given a name and triggers some behavior defined in the application. For example, a permission might allow users to see data or to have access to functionality restricted to users without that permission. Permissions are created as needed to the application and are added to the permissions table by data migrations executed at the time the software that uses the permission is deployed.
@@ -5854,7 +5623,7 @@ definitions:
       id:
         format: int32
         type: integer
-        description: A system-generated unique identifier for a Permission
+        description: A system-generated unique identifier for a Permission.
       code:
         type: string
         description: The name of the permission referenced in the software of the application.
@@ -5870,20 +5639,22 @@ definitions:
     required:
       - id
       - active
+      - groupId
+      - userId
     properties:
       id:
         format: int32
         type: integer
-        description: A system-generated unique identifier for a Group Membership
+        description: A system-generated unique identifier for a Group Membership.
       active:
         type: boolean
         description: A flag indicating the User is active in the group. Set false to remove the user from the designated group.
       groupId:
         $ref: '#/definitions/Group'
-        description: A foreign key reference to a Group
+        description: A foreign key reference to a Group.
       userId:
         $ref: '#/definitions/User'
-        description: A foreign key reference to a User
+        description: A foreign key reference to a User.
   Group:
     type: object
     description: A named entity that is used to created a collection of users into a group. For example, the School Bus Inspectors are in the group Inspectors. Groups, like permissions are defined by the application and referenced in the code of the application.
@@ -5895,7 +5666,7 @@ definitions:
       id:
         format: int32
         type: integer
-        description: A system-generated unique identifier for a Group
+        description: A system-generated unique identifier for a Group.
       name:
         type: string
         description: The name of the group, as refenced in the code.
@@ -5904,107 +5675,59 @@ definitions:
         description: A description of the group that is presented to the user when they are setting a user into a group.
   Audit:
     type: object
-    description: Server generated audit log
+    description: Server generated audit log.
     required:
       - id
     properties:
       id:
         format: int32
         type: integer
-        description: A system-generated unique identifier for an Audit
+        description: A system-generated unique identifier for an Audit.
       appCreateTimestamp:
         type: string
         format: date-time
-        description: The date and time of the application action that created the record. 
+        description: The date and time of the application action that created the record. .
       appCreateUserid:
         type: string
-        description: The user account name of the application user who performed the action that created the record (e.g. JSMITH). This value is not preceded by the directory name. 
+        description: The user account name of the application user who performed the action that created the record (e.g. JSMITH). This value is not preceded by the directory name. .
       appCreateUserGuid:
         type: string
-        description: The Globally Unique Identifier of the application user who performed the action that created the record. This value must be non-NULL if APP_CREATE_USER_DIRECTORY is &#39;IDIR&#39; or &#39;BCEID&#39;, but it must be NULL if APP_CREATE_USER_DIRECTORY is &#39;ORACLE&#39;. APP
+        description: The Globally Unique Identifier of the application user who performed the action that created the record. This value must be non-NULL if APP_CREATE_USER_DIRECTORY is &#39;IDIR&#39; or &#39;BCEID&#39;, but it must be NULL if APP_CREATE_USER_DIRECTORY is &#39;ORACLE&#39;. APP.
       appCreateUserDirectory:
         type: string
-        description: The directory in which APP_CREATE_USERID is defined. Valid values are &#39;IDIR&#39;, &#39; BCEID&#39; or &#39;ORACLE&#39;. 
+        description: The directory in which APP_CREATE_USERID is defined. Valid values are &#39;IDIR&#39;, &#39; BCEID&#39; or &#39;ORACLE&#39;. .
       appLastUpdateTimestamp:
         type: string
         format: date-time
         description: The date and time of the application action that created or last updated the record.
       appLastUpdateUserid:
         type: string
-        description: The Globally Unique Identifier of the application user who performed the action that created the record. This value must be non-NULL if APP_CREATE_USER_DIRECTORY is &#39;IDIR&#39; or &#39;BCEID&#39;, but it must be NULL if APP_CREATE_USER_DIRECTORY is &#39;ORACLE&#39;. APP
+        description: The Globally Unique Identifier of the application user who performed the action that created the record. This value must be non-NULL if APP_CREATE_USER_DIRECTORY is &#39;IDIR&#39; or &#39;BCEID&#39;, but it must be NULL if APP_CREATE_USER_DIRECTORY is &#39;ORACLE&#39;. APP.
       appLastUpdateUserGuid:
         type: string
-        description: The Globally Unique Identifier of the application user who performed the action that created or last updated the record. This value must be non-NULL if APP_CREATE_USER_DIRECTORY is &#39;IDIR&#39; or &#39;BCEID&#39;, but it must be NULL if APP_CREATE_USER_DIRECTORY is &#39;ORACLE&#39;. 
+        description: The Globally Unique Identifier of the application user who performed the action that created or last updated the record. This value must be non-NULL if APP_CREATE_USER_DIRECTORY is &#39;IDIR&#39; or &#39;BCEID&#39;, but it must be NULL if APP_CREATE_USER_DIRECTORY is &#39;ORACLE&#39;. .
       appLastUpdateUserDirectory:
         type: string
-        description: The directory in which APP_LAST_UPDATE_USERID is defined. Valid values are &#39;IDIR&#39;, &#39; BCEID&#39; or &#39;ORACLE&#39;. 
+        description: The directory in which APP_LAST_UPDATE_USERID is defined. Valid values are &#39;IDIR&#39;, &#39; BCEID&#39; or &#39;ORACLE&#39;. .
       entityName:
         type: string
-        description: The name of the entity that has changed
+        description: The name of the entity that has changed.
       entityId:
         format: int32
         type: integer
-        description: The primary key in the entity that has changed
+        description: The primary key in the entity that has changed.
       propertyName:
         type: string
-        description: The property that has changed
+        description: The property that has changed.
       oldValue:
         type: string
-        description: The old value
+        description: The old value.
       newValue:
         type: string
-        description: The new value
+        description: The new value.
       isDelete:
         type: boolean
-        description: If true the record was deleted
-  HistoryViewModel:
-    type: object
-    x-codegen-viewmodel: true
-    required:
-      - id      
-    properties:
-      id:
-        format: int32
-        type: integer
-        uniqueItems: true
-        description: A system-generated unique identifier for a History
-      historyText:
-        type: string
-        maxLength: 2048
-        description: The text of the history entry tracked against the related entity.
-      lastUpdateUserid:
-        type: string
-        description: Audit information - SM User Id for the User who most recently updated the record.
-      lastUpdateTimestamp:
-        type: string
-        format: date-time
-        description: Audit information - Timestamp for record modification       
-      affectedEntityId:
-        format: int32
-        type: integer
-        description: The primary key of the affected record        
-  AttachmentViewModel:
-    type: object
-    x-codegen-viewmodel: true
-    required:
-      - id      
-    properties:
-      id:
-        format: int32
-        type: integer
-        description: Primary Key
-      fileName:
-        type: string
-        maxLength: 2048
-        description: Filename as passed by the user uploading the file    
-      description:
-        type: string
-        maxLength: 2048
-        description: A note about the attachment,  optionally maintained by the user.
-      type:
-        type: string
-        maxLength: 255
-        description: Type of attachment
+        description: If true the record was deleted.
   UserViewModel:
     type: object
     x-codegen-viewmodel: true
