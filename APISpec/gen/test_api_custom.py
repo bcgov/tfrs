@@ -29,46 +29,54 @@ from rest_framework.parsers import JSONParser
 from rest_framework import status
 
 from . import fakedata
-from .models.Attachment import Attachment
-from .serializers import AttachmentSerializer
-from .models.AttachmentViewModel import AttachmentViewModel
-from .serializers import AttachmentViewModelSerializer
 from .models.Audit import Audit
 from .serializers import AuditSerializer
-from .models.Contact import Contact
-from .serializers import ContactSerializer
 from .models.CreditTrade import CreditTrade
 from .serializers import CreditTradeSerializer
-from .models.CreditTradeLogEntry import CreditTradeLogEntry
-from .serializers import CreditTradeLogEntrySerializer
+from .models.CreditTradeHistory import CreditTradeHistory
+from .serializers import CreditTradeHistorySerializer
+from .models.CreditTradeStatus import CreditTradeStatus
+from .serializers import CreditTradeStatusSerializer
+from .models.CreditTradeType import CreditTradeType
+from .serializers import CreditTradeTypeSerializer
 from .models.CurrentUserViewModel import CurrentUserViewModel
 from .serializers import CurrentUserViewModelSerializer
 from .models.FuelSupplier import FuelSupplier
 from .serializers import FuelSupplierSerializer
-from .models.Group import Group
-from .serializers import GroupSerializer
-from .models.GroupMembership import GroupMembership
-from .serializers import GroupMembershipSerializer
-from .models.GroupMembershipViewModel import GroupMembershipViewModel
-from .serializers import GroupMembershipViewModelSerializer
-from .models.GroupViewModel import GroupViewModel
-from .serializers import GroupViewModelSerializer
-from .models.History import History
-from .serializers import HistorySerializer
-from .models.HistoryViewModel import HistoryViewModel
-from .serializers import HistoryViewModelSerializer
-from .models.LookupList import LookupList
-from .serializers import LookupListSerializer
-from .models.Note import Note
-from .serializers import NoteSerializer
+from .models.FuelSupplierActionsType import FuelSupplierActionsType
+from .serializers import FuelSupplierActionsTypeSerializer
+from .models.FuelSupplierAttachment import FuelSupplierAttachment
+from .serializers import FuelSupplierAttachmentSerializer
+from .models.FuelSupplierAttachmentTag import FuelSupplierAttachmentTag
+from .serializers import FuelSupplierAttachmentTagSerializer
+from .models.FuelSupplierBalance import FuelSupplierBalance
+from .serializers import FuelSupplierBalanceSerializer
+from .models.FuelSupplierCCData import FuelSupplierCCData
+from .serializers import FuelSupplierCCDataSerializer
+from .models.FuelSupplierContact import FuelSupplierContact
+from .serializers import FuelSupplierContactSerializer
+from .models.FuelSupplierContactRole import FuelSupplierContactRole
+from .serializers import FuelSupplierContactRoleSerializer
+from .models.FuelSupplierHistory import FuelSupplierHistory
+from .serializers import FuelSupplierHistorySerializer
+from .models.FuelSupplierStatus import FuelSupplierStatus
+from .serializers import FuelSupplierStatusSerializer
+from .models.FuelSupplierType import FuelSupplierType
+from .serializers import FuelSupplierTypeSerializer
 from .models.Notification import Notification
 from .serializers import NotificationSerializer
 from .models.NotificationEvent import NotificationEvent
 from .serializers import NotificationEventSerializer
+from .models.NotificationType import NotificationType
+from .serializers import NotificationTypeSerializer
 from .models.NotificationViewModel import NotificationViewModel
 from .serializers import NotificationViewModelSerializer
-from .models.Offer import Offer
-from .serializers import OfferSerializer
+from .models.Opportunity import Opportunity
+from .serializers import OpportunitySerializer
+from .models.OpportunityHistory import OpportunityHistory
+from .serializers import OpportunityHistorySerializer
+from .models.OpportunityStatus import OpportunityStatus
+from .serializers import OpportunityStatusSerializer
 from .models.Permission import Permission
 from .serializers import PermissionSerializer
 from .models.PermissionViewModel import PermissionViewModel
@@ -89,8 +97,6 @@ from .models.UserFavourite import UserFavourite
 from .serializers import UserFavouriteSerializer
 from .models.UserFavouriteViewModel import UserFavouriteViewModel
 from .serializers import UserFavouriteViewModelSerializer
-from .models.UserRole import UserRole
-from .serializers import UserRoleSerializer
 from .models.UserRoleViewModel import UserRoleViewModel
 from .serializers import UserRoleViewModelSerializer
 from .models.UserViewModel import UserViewModel
@@ -109,21 +115,6 @@ class Test_Api_Custom(TestCase):
         # needed to setup django
         django.setup()
 
-
-    def test_attachmentsIdDownloadGet(self):
-        self.fail("Not implemented")        
-
-    def test_attachmentsUploadPost(self):
-        self.fail("Not implemented")        
-
-    def test_credittradesIdAttachmentsGet(self):
-        self.fail("Not implemented")        
-
-    def test_credittradesIdHistoryGet(self):
-        self.fail("Not implemented")        
-
-    def test_credittradesIdNotesGet(self):
-        self.fail("Not implemented")        
 
     def test_credittradesSearchGet(self):
         self.fail("Not implemented")        
@@ -146,13 +137,7 @@ class Test_Api_Custom(TestCase):
     def test_fuelsuppliersIdHistoryGet(self):
         self.fail("Not implemented")        
 
-    def test_fuelsuppliersIdNotesGet(self):
-        self.fail("Not implemented")        
-
     def test_fuelsuppliersSearchGet(self):
-        self.fail("Not implemented")        
-
-    def test_groupsIdUsersGet(self):
         self.fail("Not implemented")        
 
     def test_rolesIdPermissionsGet(self):
@@ -162,9 +147,6 @@ class Test_Api_Custom(TestCase):
         self.fail("Not implemented")        
 
     def test_usersIdFavouritesGet(self):
-        self.fail("Not implemented")        
-
-    def test_usersIdGroupsGet(self):
         self.fail("Not implemented")        
 
     def test_usersIdNotificationsGet(self):

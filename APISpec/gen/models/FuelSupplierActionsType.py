@@ -25,10 +25,10 @@ from django.db import models
 from django.utils import timezone
 
 
-class LookupList(models.Model):	    
-    contextName = models.CharField(max_length=255)   
-    isDefault = models.BooleanField()   
-    displaySortOrder = models.IntegerField()   
-    codeName = models.CharField(max_length=255)   
-    value = models.CharField(max_length=255)   
+class FuelSupplierActionsType(models.Model):	    
+    type = models.CharField(max_length=255, blank=True, null=True)   
+    description = models.CharField(max_length=255, blank=True, null=True)   
+    effectiveDate = models.DateField(blank=True, null=True)   
+    expirationDate = models.DateField(blank=True, null=True)   
+    displayOrder = models.IntegerField()   
 

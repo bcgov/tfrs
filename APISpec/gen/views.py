@@ -27,26 +27,30 @@ from rest_framework import mixins
 from rest_framework import generics
 from rest_framework_bulk import BulkCreateModelMixin
 from . import serializers
-from .models.Attachment import Attachment
-from .models.AttachmentViewModel import AttachmentViewModel
 from .models.Audit import Audit
-from .models.Contact import Contact
 from .models.CreditTrade import CreditTrade
-from .models.CreditTradeLogEntry import CreditTradeLogEntry
+from .models.CreditTradeHistory import CreditTradeHistory
+from .models.CreditTradeStatus import CreditTradeStatus
+from .models.CreditTradeType import CreditTradeType
 from .models.CurrentUserViewModel import CurrentUserViewModel
 from .models.FuelSupplier import FuelSupplier
-from .models.Group import Group
-from .models.GroupMembership import GroupMembership
-from .models.GroupMembershipViewModel import GroupMembershipViewModel
-from .models.GroupViewModel import GroupViewModel
-from .models.History import History
-from .models.HistoryViewModel import HistoryViewModel
-from .models.LookupList import LookupList
-from .models.Note import Note
+from .models.FuelSupplierActionsType import FuelSupplierActionsType
+from .models.FuelSupplierAttachment import FuelSupplierAttachment
+from .models.FuelSupplierAttachmentTag import FuelSupplierAttachmentTag
+from .models.FuelSupplierBalance import FuelSupplierBalance
+from .models.FuelSupplierCCData import FuelSupplierCCData
+from .models.FuelSupplierContact import FuelSupplierContact
+from .models.FuelSupplierContactRole import FuelSupplierContactRole
+from .models.FuelSupplierHistory import FuelSupplierHistory
+from .models.FuelSupplierStatus import FuelSupplierStatus
+from .models.FuelSupplierType import FuelSupplierType
 from .models.Notification import Notification
 from .models.NotificationEvent import NotificationEvent
+from .models.NotificationType import NotificationType
 from .models.NotificationViewModel import NotificationViewModel
-from .models.Offer import Offer
+from .models.Opportunity import Opportunity
+from .models.OpportunityHistory import OpportunityHistory
+from .models.OpportunityStatus import OpportunityStatus
 from .models.Permission import Permission
 from .models.PermissionViewModel import PermissionViewModel
 from .models.Role import Role
@@ -57,144 +61,9 @@ from .models.User import User
 from .models.UserDetailsViewModel import UserDetailsViewModel
 from .models.UserFavourite import UserFavourite
 from .models.UserFavouriteViewModel import UserFavouriteViewModel
-from .models.UserRole import UserRole
 from .models.UserRoleViewModel import UserRoleViewModel
 from .models.UserViewModel import UserViewModel
 
-
-class attachmentsBulkPost(BulkCreateModelMixin, generics.GenericAPIView):
-  """  
-  Bulk create / update a number of Attachment object  
-  """
-  lookup_field = 'id'
-  permission_classes = (permissions.AllowAny,)  
-  queryset = Attachment.objects.all()  
-  serializer_class = serializers.AttachmentSerializer
-  def post(self, request, *args, **kwargs):
-    """
-    Creates a number of new Attachment objects
-    """
-    return self.create(request, *args, **kwargs)
-
-class attachmentsGet(mixins.ListModelMixin, mixins.CreateModelMixin, generics.GenericAPIView):
-  """  
-  Lists available Attachment objects  
-  """
-  lookup_field = 'id'
-  permission_classes = (permissions.AllowAny,)  
-  queryset = Attachment.objects.all()  
-  serializer_class = serializers.AttachmentSerializer
-  def get(self, request, *args, **kwargs):
-    """
-    Lists available Attachment objects
-    """
-    return self.list(request, *args, **kwargs)
-  def post(self, request, *args, **kwargs):
-    """
-    Creates a new Attachment object
-    """
-    return self.create(request, *args, **kwargs)
-
-class attachmentsIdDeletePost(mixins.DestroyModelMixin, generics.GenericAPIView):
-  """  
-  Deletes a specific Attachment object  
-  """
-  lookup_field = 'id'
-  permission_classes = (permissions.AllowAny,)  
-  queryset = Attachment.objects.all()  
-  serializer_class = serializers.AttachmentSerializer
-  def post(self, request, *args, **kwargs):
-    """
-    Destroys the specified Attachment object
-    """
-    return self.destroy(request, *args, **kwargs)
-
-
-class attachmentsIdGet(mixins.RetrieveModelMixin, mixins.UpdateModelMixin, generics.GenericAPIView):
-  """  
-  Gets a specific Attachment object  
-  """
-  lookup_field = 'id'
-  permission_classes = (permissions.AllowAny,)  
-  queryset = Attachment.objects.all()  
-  serializer_class = serializers.AttachmentSerializer
-  def get(self, request, *args, **kwargs):
-    """
-    Retrieves the specified Attachment object
-    """
-    return self.retrieve(request, *args, **kwargs)
-  def put(self, request, *args, **kwargs):
-    """
-    Updates the specified Attachment object
-    """
-    return self.update(request, *args, **kwargs)
-
-class contactsBulkPost(BulkCreateModelMixin, generics.GenericAPIView):
-  """  
-  Bulk create / update a number of Contact object  
-  """
-  lookup_field = 'id'
-  permission_classes = (permissions.AllowAny,)  
-  queryset = Contact.objects.all()  
-  serializer_class = serializers.ContactSerializer
-  def post(self, request, *args, **kwargs):
-    """
-    Creates a number of new Contact objects
-    """
-    return self.create(request, *args, **kwargs)
-
-class contactsGet(mixins.ListModelMixin, mixins.CreateModelMixin, generics.GenericAPIView):
-  """  
-  Lists available Contact objects  
-  """
-  lookup_field = 'id'
-  permission_classes = (permissions.AllowAny,)  
-  queryset = Contact.objects.all()  
-  serializer_class = serializers.ContactSerializer
-  def get(self, request, *args, **kwargs):
-    """
-    Lists available Contact objects
-    """
-    return self.list(request, *args, **kwargs)
-  def post(self, request, *args, **kwargs):
-    """
-    Creates a new Contact object
-    """
-    return self.create(request, *args, **kwargs)
-
-class contactsIdDeletePost(mixins.DestroyModelMixin, generics.GenericAPIView):
-  """  
-  Deletes a specific Contact object  
-  """
-  lookup_field = 'id'
-  permission_classes = (permissions.AllowAny,)  
-  queryset = Contact.objects.all()  
-  serializer_class = serializers.ContactSerializer
-  def post(self, request, *args, **kwargs):
-    """
-    Destroys the specified Contact object
-    """
-    return self.destroy(request, *args, **kwargs)
-
-
-class contactsIdGet(mixins.RetrieveModelMixin, mixins.UpdateModelMixin, generics.GenericAPIView):
-  """  
-  Gets a specific Contact object  
-  """
-  lookup_field = 'id'
-  permission_classes = (permissions.AllowAny,)  
-  queryset = Contact.objects.all()  
-  serializer_class = serializers.ContactSerializer
-  def get(self, request, *args, **kwargs):
-    """
-    Retrieves the specified Contact object
-    """
-    return self.retrieve(request, *args, **kwargs)
-  def put(self, request, *args, **kwargs):
-    """
-    Updates the specified Contact object
-    """
-    return self.update(request, *args, **kwargs)
 
 class credittradesBulkPost(BulkCreateModelMixin, generics.GenericAPIView):
   """  
@@ -263,70 +132,204 @@ class credittradesIdGet(mixins.RetrieveModelMixin, mixins.UpdateModelMixin, gene
     """
     return self.update(request, *args, **kwargs)
 
-class credittradetradelogentriesBulkPost(BulkCreateModelMixin, generics.GenericAPIView):
+class credittradehistoriesBulkPost(BulkCreateModelMixin, generics.GenericAPIView):
   """  
-  Bulk create / update a number of CreditTradeLogEntry object  
+  Bulk create / update a number of CreditTradeHistory object  
   """
   lookup_field = 'id'
   permission_classes = (permissions.AllowAny,)  
-  queryset = CreditTradeLogEntry.objects.all()  
-  serializer_class = serializers.CreditTradeLogEntrySerializer
+  queryset = CreditTradeHistory.objects.all()  
+  serializer_class = serializers.CreditTradeHistorySerializer
   def post(self, request, *args, **kwargs):
     """
-    Creates a number of new CreditTradeLogEntry objects
+    Creates a number of new CreditTradeHistory objects
     """
     return self.create(request, *args, **kwargs)
 
-class credittradetradelogentriesGet(mixins.ListModelMixin, mixins.CreateModelMixin, generics.GenericAPIView):
+class credittradehistoriesGet(mixins.ListModelMixin, mixins.CreateModelMixin, generics.GenericAPIView):
   """  
-  Lists available CreditTradeLogEntry objects  
+  Lists available CreditTradeHistory objects  
   """
   lookup_field = 'id'
   permission_classes = (permissions.AllowAny,)  
-  queryset = CreditTradeLogEntry.objects.all()  
-  serializer_class = serializers.CreditTradeLogEntrySerializer
+  queryset = CreditTradeHistory.objects.all()  
+  serializer_class = serializers.CreditTradeHistorySerializer
   def get(self, request, *args, **kwargs):
     """
-    Lists available CreditTradeLogEntry objects
+    Lists available CreditTradeHistory objects
     """
     return self.list(request, *args, **kwargs)
   def post(self, request, *args, **kwargs):
     """
-    Creates a new CreditTradeLogEntry object
+    Creates a new CreditTradeHistory object
     """
     return self.create(request, *args, **kwargs)
 
-class credittradetradelogentriesIdDeletePost(mixins.DestroyModelMixin, generics.GenericAPIView):
+class credittradehistoriesIdDeletePost(mixins.DestroyModelMixin, generics.GenericAPIView):
   """  
-  Deletes a specific CreditTradeLogEntry object  
+  Deletes a specific CreditTradeHistory object  
   """
   lookup_field = 'id'
   permission_classes = (permissions.AllowAny,)  
-  queryset = CreditTradeLogEntry.objects.all()  
-  serializer_class = serializers.CreditTradeLogEntrySerializer
+  queryset = CreditTradeHistory.objects.all()  
+  serializer_class = serializers.CreditTradeHistorySerializer
   def post(self, request, *args, **kwargs):
     """
-    Destroys the specified CreditTradeLogEntry object
+    Destroys the specified CreditTradeHistory object
     """
     return self.destroy(request, *args, **kwargs)
 
 
-class credittradetradelogentriesIdGet(mixins.RetrieveModelMixin, mixins.UpdateModelMixin, generics.GenericAPIView):
+class credittradehistoriesIdGet(mixins.RetrieveModelMixin, mixins.UpdateModelMixin, generics.GenericAPIView):
   """  
-  Gets a specific CreditTradeLogEntry object  
+  Gets a specific CreditTradeHistory object  
   """
   lookup_field = 'id'
   permission_classes = (permissions.AllowAny,)  
-  queryset = CreditTradeLogEntry.objects.all()  
-  serializer_class = serializers.CreditTradeLogEntrySerializer
+  queryset = CreditTradeHistory.objects.all()  
+  serializer_class = serializers.CreditTradeHistorySerializer
   def get(self, request, *args, **kwargs):
     """
-    Retrieves the specified CreditTradeLogEntry object
+    Retrieves the specified CreditTradeHistory object
     """
     return self.retrieve(request, *args, **kwargs)
   def put(self, request, *args, **kwargs):
     """
-    Updates the specified CreditTradeLogEntry object
+    Updates the specified CreditTradeHistory object
+    """
+    return self.update(request, *args, **kwargs)
+
+class credittradestatusesBulkPost(BulkCreateModelMixin, generics.GenericAPIView):
+  """  
+  Bulk create / update a number of CreditTradeStatus object  
+  """
+  lookup_field = 'id'
+  permission_classes = (permissions.AllowAny,)  
+  queryset = CreditTradeStatus.objects.all()  
+  serializer_class = serializers.CreditTradeStatusSerializer
+  def post(self, request, *args, **kwargs):
+    """
+    Creates a number of new CreditTradeStatus objects
+    """
+    return self.create(request, *args, **kwargs)
+
+class credittradestatusesGet(mixins.ListModelMixin, mixins.CreateModelMixin, generics.GenericAPIView):
+  """  
+  Lists available CreditTradeStatus objects  
+  """
+  lookup_field = 'id'
+  permission_classes = (permissions.AllowAny,)  
+  queryset = CreditTradeStatus.objects.all()  
+  serializer_class = serializers.CreditTradeStatusSerializer
+  def get(self, request, *args, **kwargs):
+    """
+    Lists available CreditTradeStatus objects
+    """
+    return self.list(request, *args, **kwargs)
+  def post(self, request, *args, **kwargs):
+    """
+    Creates a new CreditTradeStatus object
+    """
+    return self.create(request, *args, **kwargs)
+
+class credittradestatusesIdDeletePost(mixins.DestroyModelMixin, generics.GenericAPIView):
+  """  
+  Deletes a specific CreditTradeStatus object  
+  """
+  lookup_field = 'id'
+  permission_classes = (permissions.AllowAny,)  
+  queryset = CreditTradeStatus.objects.all()  
+  serializer_class = serializers.CreditTradeStatusSerializer
+  def post(self, request, *args, **kwargs):
+    """
+    Destroys the specified CreditTradeStatus object
+    """
+    return self.destroy(request, *args, **kwargs)
+
+
+class credittradestatusesIdGet(mixins.RetrieveModelMixin, mixins.UpdateModelMixin, generics.GenericAPIView):
+  """  
+  Gets a specific CreditTradeStatus object  
+  """
+  lookup_field = 'id'
+  permission_classes = (permissions.AllowAny,)  
+  queryset = CreditTradeStatus.objects.all()  
+  serializer_class = serializers.CreditTradeStatusSerializer
+  def get(self, request, *args, **kwargs):
+    """
+    Retrieves the specified CreditTradeStatus object
+    """
+    return self.retrieve(request, *args, **kwargs)
+  def put(self, request, *args, **kwargs):
+    """
+    Updates the specified CreditTradeStatus object
+    """
+    return self.update(request, *args, **kwargs)
+
+class credittradetypesBulkPost(BulkCreateModelMixin, generics.GenericAPIView):
+  """  
+  Bulk create / update a number of CreditTradeType object  
+  """
+  lookup_field = 'id'
+  permission_classes = (permissions.AllowAny,)  
+  queryset = CreditTradeType.objects.all()  
+  serializer_class = serializers.CreditTradeTypeSerializer
+  def post(self, request, *args, **kwargs):
+    """
+    Creates a number of new CreditTradeType objects
+    """
+    return self.create(request, *args, **kwargs)
+
+class credittradetypesGet(mixins.ListModelMixin, mixins.CreateModelMixin, generics.GenericAPIView):
+  """  
+  Lists available CreditTradeType objects  
+  """
+  lookup_field = 'id'
+  permission_classes = (permissions.AllowAny,)  
+  queryset = CreditTradeType.objects.all()  
+  serializer_class = serializers.CreditTradeTypeSerializer
+  def get(self, request, *args, **kwargs):
+    """
+    Lists available CreditTradeType objects
+    """
+    return self.list(request, *args, **kwargs)
+  def post(self, request, *args, **kwargs):
+    """
+    Creates a new CreditTradeType object
+    """
+    return self.create(request, *args, **kwargs)
+
+class credittradetypesIdDeletePost(mixins.DestroyModelMixin, generics.GenericAPIView):
+  """  
+  Deletes a specific CreditTradeType object  
+  """
+  lookup_field = 'id'
+  permission_classes = (permissions.AllowAny,)  
+  queryset = CreditTradeType.objects.all()  
+  serializer_class = serializers.CreditTradeTypeSerializer
+  def post(self, request, *args, **kwargs):
+    """
+    Destroys the specified CreditTradeType object
+    """
+    return self.destroy(request, *args, **kwargs)
+
+
+class credittradetypesIdGet(mixins.RetrieveModelMixin, mixins.UpdateModelMixin, generics.GenericAPIView):
+  """  
+  Gets a specific CreditTradeType object  
+  """
+  lookup_field = 'id'
+  permission_classes = (permissions.AllowAny,)  
+  queryset = CreditTradeType.objects.all()  
+  serializer_class = serializers.CreditTradeTypeSerializer
+  def get(self, request, *args, **kwargs):
+    """
+    Retrieves the specified CreditTradeType object
+    """
+    return self.retrieve(request, *args, **kwargs)
+  def put(self, request, *args, **kwargs):
+    """
+    Updates the specified CreditTradeType object
     """
     return self.update(request, *args, **kwargs)
 
@@ -397,338 +400,673 @@ class fuelsuppliersIdGet(mixins.RetrieveModelMixin, mixins.UpdateModelMixin, gen
     """
     return self.update(request, *args, **kwargs)
 
-class groupsBulkPost(BulkCreateModelMixin, generics.GenericAPIView):
+class fuelsupplieractionstypesBulkPost(BulkCreateModelMixin, generics.GenericAPIView):
   """  
-  Bulk create / update a number of Group object  
+  Bulk create / update a number of FuelSupplierActionsType object  
   """
   lookup_field = 'id'
   permission_classes = (permissions.AllowAny,)  
-  queryset = Group.objects.all()  
-  serializer_class = serializers.GroupSerializer
+  queryset = FuelSupplierActionsType.objects.all()  
+  serializer_class = serializers.FuelSupplierActionsTypeSerializer
   def post(self, request, *args, **kwargs):
     """
-    Creates a number of new Group objects
+    Creates a number of new FuelSupplierActionsType objects
     """
     return self.create(request, *args, **kwargs)
 
-class groupsGet(mixins.ListModelMixin, mixins.CreateModelMixin, generics.GenericAPIView):
+class fuelsupplieractionstypesGet(mixins.ListModelMixin, mixins.CreateModelMixin, generics.GenericAPIView):
   """  
-  Lists available Group objects  
+  Lists available FuelSupplierActionsType objects  
   """
   lookup_field = 'id'
   permission_classes = (permissions.AllowAny,)  
-  queryset = Group.objects.all()  
-  serializer_class = serializers.GroupSerializer
+  queryset = FuelSupplierActionsType.objects.all()  
+  serializer_class = serializers.FuelSupplierActionsTypeSerializer
   def get(self, request, *args, **kwargs):
     """
-    Lists available Group objects
+    Lists available FuelSupplierActionsType objects
     """
     return self.list(request, *args, **kwargs)
   def post(self, request, *args, **kwargs):
     """
-    Creates a new Group object
+    Creates a new FuelSupplierActionsType object
     """
     return self.create(request, *args, **kwargs)
 
-class groupsIdDeletePost(mixins.DestroyModelMixin, generics.GenericAPIView):
+class fuelsupplieractionstypesIdDeletePost(mixins.DestroyModelMixin, generics.GenericAPIView):
   """  
-  Deletes a specific Group object  
+  Deletes a specific FuelSupplierActionsType object  
   """
   lookup_field = 'id'
   permission_classes = (permissions.AllowAny,)  
-  queryset = Group.objects.all()  
-  serializer_class = serializers.GroupSerializer
+  queryset = FuelSupplierActionsType.objects.all()  
+  serializer_class = serializers.FuelSupplierActionsTypeSerializer
   def post(self, request, *args, **kwargs):
     """
-    Destroys the specified Group object
+    Destroys the specified FuelSupplierActionsType object
     """
     return self.destroy(request, *args, **kwargs)
 
 
-class groupsIdGet(mixins.RetrieveModelMixin, mixins.UpdateModelMixin, generics.GenericAPIView):
+class fuelsupplieractionstypesIdGet(mixins.RetrieveModelMixin, mixins.UpdateModelMixin, generics.GenericAPIView):
   """  
-  Gets a specific Group object  
+  Gets a specific FuelSupplierActionsType object  
   """
   lookup_field = 'id'
   permission_classes = (permissions.AllowAny,)  
-  queryset = Group.objects.all()  
-  serializer_class = serializers.GroupSerializer
+  queryset = FuelSupplierActionsType.objects.all()  
+  serializer_class = serializers.FuelSupplierActionsTypeSerializer
   def get(self, request, *args, **kwargs):
     """
-    Retrieves the specified Group object
+    Retrieves the specified FuelSupplierActionsType object
     """
     return self.retrieve(request, *args, **kwargs)
   def put(self, request, *args, **kwargs):
     """
-    Updates the specified Group object
+    Updates the specified FuelSupplierActionsType object
     """
     return self.update(request, *args, **kwargs)
 
-class groupmembershipsBulkPost(BulkCreateModelMixin, generics.GenericAPIView):
+class fuelsupplierattachmentsBulkPost(BulkCreateModelMixin, generics.GenericAPIView):
   """  
-  Bulk create / update a number of GroupMembership object  
+  Bulk create / update a number of FuelSupplierAttachment object  
   """
   lookup_field = 'id'
   permission_classes = (permissions.AllowAny,)  
-  queryset = GroupMembership.objects.all()  
-  serializer_class = serializers.GroupMembershipSerializer
+  queryset = FuelSupplierAttachment.objects.all()  
+  serializer_class = serializers.FuelSupplierAttachmentSerializer
   def post(self, request, *args, **kwargs):
     """
-    Creates a number of new GroupMembership objects
+    Creates a number of new FuelSupplierAttachment objects
     """
     return self.create(request, *args, **kwargs)
 
-class groupmembershipsGet(mixins.ListModelMixin, mixins.CreateModelMixin, generics.GenericAPIView):
+class fuelsupplierattachmentsGet(mixins.ListModelMixin, mixins.CreateModelMixin, generics.GenericAPIView):
   """  
-  Lists available GroupMembership objects  
+  Lists available FuelSupplierAttachment objects  
   """
   lookup_field = 'id'
   permission_classes = (permissions.AllowAny,)  
-  queryset = GroupMembership.objects.all()  
-  serializer_class = serializers.GroupMembershipSerializer
+  queryset = FuelSupplierAttachment.objects.all()  
+  serializer_class = serializers.FuelSupplierAttachmentSerializer
   def get(self, request, *args, **kwargs):
     """
-    Lists available GroupMembership objects
+    Lists available FuelSupplierAttachment objects
     """
     return self.list(request, *args, **kwargs)
   def post(self, request, *args, **kwargs):
     """
-    Creates a new GroupMembership object
+    Creates a new FuelSupplierAttachment object
     """
     return self.create(request, *args, **kwargs)
 
-class groupmembershipsIdDeletePost(mixins.DestroyModelMixin, generics.GenericAPIView):
+class fuelsupplierattachmentsIdDeletePost(mixins.DestroyModelMixin, generics.GenericAPIView):
   """  
-  Deletes a specific GroupMembership object  
+  Deletes a specific FuelSupplierAttachment object  
   """
   lookup_field = 'id'
   permission_classes = (permissions.AllowAny,)  
-  queryset = GroupMembership.objects.all()  
-  serializer_class = serializers.GroupMembershipSerializer
+  queryset = FuelSupplierAttachment.objects.all()  
+  serializer_class = serializers.FuelSupplierAttachmentSerializer
   def post(self, request, *args, **kwargs):
     """
-    Destroys the specified GroupMembership object
+    Destroys the specified FuelSupplierAttachment object
     """
     return self.destroy(request, *args, **kwargs)
 
 
-class groupmembershipsIdGet(mixins.RetrieveModelMixin, mixins.UpdateModelMixin, generics.GenericAPIView):
+class fuelsupplierattachmentsIdGet(mixins.RetrieveModelMixin, mixins.UpdateModelMixin, generics.GenericAPIView):
   """  
-  Gets a specific GroupMembership object  
+  Gets a specific FuelSupplierAttachment object  
   """
   lookup_field = 'id'
   permission_classes = (permissions.AllowAny,)  
-  queryset = GroupMembership.objects.all()  
-  serializer_class = serializers.GroupMembershipSerializer
+  queryset = FuelSupplierAttachment.objects.all()  
+  serializer_class = serializers.FuelSupplierAttachmentSerializer
   def get(self, request, *args, **kwargs):
     """
-    Retrieves the specified GroupMembership object
+    Retrieves the specified FuelSupplierAttachment object
     """
     return self.retrieve(request, *args, **kwargs)
   def put(self, request, *args, **kwargs):
     """
-    Updates the specified GroupMembership object
+    Updates the specified FuelSupplierAttachment object
     """
     return self.update(request, *args, **kwargs)
 
-class historiesBulkPost(BulkCreateModelMixin, generics.GenericAPIView):
+class fuelsupplierattachmenttagsBulkPost(BulkCreateModelMixin, generics.GenericAPIView):
   """  
-  Bulk create / update a number of History object  
+  Bulk create / update a number of FuelSupplierAttachmentTag object  
   """
   lookup_field = 'id'
   permission_classes = (permissions.AllowAny,)  
-  queryset = History.objects.all()  
-  serializer_class = serializers.HistorySerializer
+  queryset = FuelSupplierAttachmentTag.objects.all()  
+  serializer_class = serializers.FuelSupplierAttachmentTagSerializer
   def post(self, request, *args, **kwargs):
     """
-    Creates a number of new History objects
+    Creates a number of new FuelSupplierAttachmentTag objects
     """
     return self.create(request, *args, **kwargs)
 
-class historiesGet(mixins.ListModelMixin, mixins.CreateModelMixin, generics.GenericAPIView):
+class fuelsupplierattachmenttagsGet(mixins.ListModelMixin, mixins.CreateModelMixin, generics.GenericAPIView):
   """  
-  Lists available History objects  
+  Lists available FuelSupplierAttachmentTag objects  
   """
   lookup_field = 'id'
   permission_classes = (permissions.AllowAny,)  
-  queryset = History.objects.all()  
-  serializer_class = serializers.HistorySerializer
+  queryset = FuelSupplierAttachmentTag.objects.all()  
+  serializer_class = serializers.FuelSupplierAttachmentTagSerializer
   def get(self, request, *args, **kwargs):
     """
-    Lists available History objects
+    Lists available FuelSupplierAttachmentTag objects
     """
     return self.list(request, *args, **kwargs)
   def post(self, request, *args, **kwargs):
     """
-    Creates a new History object
+    Creates a new FuelSupplierAttachmentTag object
     """
     return self.create(request, *args, **kwargs)
 
-class historiesIdDeletePost(mixins.DestroyModelMixin, generics.GenericAPIView):
+class fuelsupplierattachmenttagsIdDeletePost(mixins.DestroyModelMixin, generics.GenericAPIView):
   """  
-  Deletes a specific History object  
+  Deletes a specific FuelSupplierAttachmentTag object  
   """
   lookup_field = 'id'
   permission_classes = (permissions.AllowAny,)  
-  queryset = History.objects.all()  
-  serializer_class = serializers.HistorySerializer
+  queryset = FuelSupplierAttachmentTag.objects.all()  
+  serializer_class = serializers.FuelSupplierAttachmentTagSerializer
   def post(self, request, *args, **kwargs):
     """
-    Destroys the specified History object
+    Destroys the specified FuelSupplierAttachmentTag object
     """
     return self.destroy(request, *args, **kwargs)
 
 
-class historiesIdGet(mixins.RetrieveModelMixin, mixins.UpdateModelMixin, generics.GenericAPIView):
+class fuelsupplierattachmenttagsIdGet(mixins.RetrieveModelMixin, mixins.UpdateModelMixin, generics.GenericAPIView):
   """  
-  Gets a specific History object  
+  Gets a specific FuelSupplierAttachmentTag object  
   """
   lookup_field = 'id'
   permission_classes = (permissions.AllowAny,)  
-  queryset = History.objects.all()  
-  serializer_class = serializers.HistorySerializer
+  queryset = FuelSupplierAttachmentTag.objects.all()  
+  serializer_class = serializers.FuelSupplierAttachmentTagSerializer
   def get(self, request, *args, **kwargs):
     """
-    Retrieves the specified History object
+    Retrieves the specified FuelSupplierAttachmentTag object
     """
     return self.retrieve(request, *args, **kwargs)
   def put(self, request, *args, **kwargs):
     """
-    Updates the specified History object
+    Updates the specified FuelSupplierAttachmentTag object
     """
     return self.update(request, *args, **kwargs)
 
-class lookuplistsBulkPost(BulkCreateModelMixin, generics.GenericAPIView):
+class fuelsupplierbalancesBulkPost(BulkCreateModelMixin, generics.GenericAPIView):
   """  
-  Bulk create / update a number of LookupList object  
+  Bulk create / update a number of FuelSupplierBalance object  
   """
   lookup_field = 'id'
   permission_classes = (permissions.AllowAny,)  
-  queryset = LookupList.objects.all()  
-  serializer_class = serializers.LookupListSerializer
+  queryset = FuelSupplierBalance.objects.all()  
+  serializer_class = serializers.FuelSupplierBalanceSerializer
   def post(self, request, *args, **kwargs):
     """
-    Creates a number of new LookupList objects
+    Creates a number of new FuelSupplierBalance objects
     """
     return self.create(request, *args, **kwargs)
 
-class lookuplistsGet(mixins.ListModelMixin, mixins.CreateModelMixin, generics.GenericAPIView):
+class fuelsupplierbalancesGet(mixins.ListModelMixin, mixins.CreateModelMixin, generics.GenericAPIView):
   """  
-  Lists available LookupList objects  
+  Lists available FuelSupplierBalance objects  
   """
   lookup_field = 'id'
   permission_classes = (permissions.AllowAny,)  
-  queryset = LookupList.objects.all()  
-  serializer_class = serializers.LookupListSerializer
+  queryset = FuelSupplierBalance.objects.all()  
+  serializer_class = serializers.FuelSupplierBalanceSerializer
   def get(self, request, *args, **kwargs):
     """
-    Lists available LookupList objects
+    Lists available FuelSupplierBalance objects
     """
     return self.list(request, *args, **kwargs)
   def post(self, request, *args, **kwargs):
     """
-    Creates a new LookupList object
+    Creates a new FuelSupplierBalance object
     """
     return self.create(request, *args, **kwargs)
 
-class lookuplistsIdDeletePost(mixins.DestroyModelMixin, generics.GenericAPIView):
+class fuelsupplierbalancesIdDeletePost(mixins.DestroyModelMixin, generics.GenericAPIView):
   """  
-  Deletes a specific LookupList object  
+  Deletes a specific FuelSupplierBalance object  
   """
   lookup_field = 'id'
   permission_classes = (permissions.AllowAny,)  
-  queryset = LookupList.objects.all()  
-  serializer_class = serializers.LookupListSerializer
+  queryset = FuelSupplierBalance.objects.all()  
+  serializer_class = serializers.FuelSupplierBalanceSerializer
   def post(self, request, *args, **kwargs):
     """
-    Destroys the specified LookupList object
+    Destroys the specified FuelSupplierBalance object
     """
     return self.destroy(request, *args, **kwargs)
 
 
-class lookuplistsIdGet(mixins.RetrieveModelMixin, mixins.UpdateModelMixin, generics.GenericAPIView):
+class fuelsupplierbalancesIdGet(mixins.RetrieveModelMixin, mixins.UpdateModelMixin, generics.GenericAPIView):
   """  
-  Gets a specific LookupList object  
+  Gets a specific FuelSupplierBalance object  
   """
   lookup_field = 'id'
   permission_classes = (permissions.AllowAny,)  
-  queryset = LookupList.objects.all()  
-  serializer_class = serializers.LookupListSerializer
+  queryset = FuelSupplierBalance.objects.all()  
+  serializer_class = serializers.FuelSupplierBalanceSerializer
   def get(self, request, *args, **kwargs):
     """
-    Retrieves the specified LookupList object
+    Retrieves the specified FuelSupplierBalance object
     """
     return self.retrieve(request, *args, **kwargs)
   def put(self, request, *args, **kwargs):
     """
-    Updates the specified LookupList object
+    Updates the specified FuelSupplierBalance object
     """
     return self.update(request, *args, **kwargs)
 
-class notesBulkPost(BulkCreateModelMixin, generics.GenericAPIView):
+class fuelsuppliersCCDatumBulkPost(BulkCreateModelMixin, generics.GenericAPIView):
   """  
-  Bulk create / update a number of Note object  
+  Bulk create / update a number of FuelSupplierCCData object  
   """
   lookup_field = 'id'
   permission_classes = (permissions.AllowAny,)  
-  queryset = Note.objects.all()  
-  serializer_class = serializers.NoteSerializer
+  queryset = FuelSupplierCCData.objects.all()  
+  serializer_class = serializers.FuelSupplierCCDataSerializer
   def post(self, request, *args, **kwargs):
     """
-    Creates a number of new Note objects
+    Creates a number of new FuelSupplierCCData objects
     """
     return self.create(request, *args, **kwargs)
 
-class notesGet(mixins.ListModelMixin, mixins.CreateModelMixin, generics.GenericAPIView):
+class fuelsuppliersCCDatumGet(mixins.ListModelMixin, mixins.CreateModelMixin, generics.GenericAPIView):
   """  
-  Lists available Note objects  
+  Lists available FuelSupplierCCData objects  
   """
   lookup_field = 'id'
   permission_classes = (permissions.AllowAny,)  
-  queryset = Note.objects.all()  
-  serializer_class = serializers.NoteSerializer
+  queryset = FuelSupplierCCData.objects.all()  
+  serializer_class = serializers.FuelSupplierCCDataSerializer
   def get(self, request, *args, **kwargs):
     """
-    Lists available Note objects
+    Lists available FuelSupplierCCData objects
     """
     return self.list(request, *args, **kwargs)
   def post(self, request, *args, **kwargs):
     """
-    Creates a new Note object
+    Creates a new FuelSupplierCCData object
     """
     return self.create(request, *args, **kwargs)
 
-class notesIdDeletePost(mixins.DestroyModelMixin, generics.GenericAPIView):
+class fuelsuppliersCCDatumIdDeletePost(mixins.DestroyModelMixin, generics.GenericAPIView):
   """  
-  Deletes a specific Note object  
+  Deletes a specific FuelSupplierCCData object  
   """
   lookup_field = 'id'
   permission_classes = (permissions.AllowAny,)  
-  queryset = Note.objects.all()  
-  serializer_class = serializers.NoteSerializer
+  queryset = FuelSupplierCCData.objects.all()  
+  serializer_class = serializers.FuelSupplierCCDataSerializer
   def post(self, request, *args, **kwargs):
     """
-    Destroys the specified Note object
+    Destroys the specified FuelSupplierCCData object
     """
     return self.destroy(request, *args, **kwargs)
 
 
-class notesIdGet(mixins.RetrieveModelMixin, mixins.UpdateModelMixin, generics.GenericAPIView):
+class fuelsuppliersCCDatumIdGet(mixins.RetrieveModelMixin, mixins.UpdateModelMixin, generics.GenericAPIView):
   """  
-  Gets a specific Note object  
+  Gets a specific FuelSupplierCCData object  
   """
   lookup_field = 'id'
   permission_classes = (permissions.AllowAny,)  
-  queryset = Note.objects.all()  
-  serializer_class = serializers.NoteSerializer
+  queryset = FuelSupplierCCData.objects.all()  
+  serializer_class = serializers.FuelSupplierCCDataSerializer
   def get(self, request, *args, **kwargs):
     """
-    Retrieves the specified Note object
+    Retrieves the specified FuelSupplierCCData object
     """
     return self.retrieve(request, *args, **kwargs)
   def put(self, request, *args, **kwargs):
     """
-    Updates the specified Note object
+    Updates the specified FuelSupplierCCData object
+    """
+    return self.update(request, *args, **kwargs)
+
+class fuelsuppliercontactsBulkPost(BulkCreateModelMixin, generics.GenericAPIView):
+  """  
+  Bulk create / update a number of FuelSupplierContact object  
+  """
+  lookup_field = 'id'
+  permission_classes = (permissions.AllowAny,)  
+  queryset = FuelSupplierContact.objects.all()  
+  serializer_class = serializers.FuelSupplierContactSerializer
+  def post(self, request, *args, **kwargs):
+    """
+    Creates a number of new FuelSupplierContact objects
+    """
+    return self.create(request, *args, **kwargs)
+
+class fuelsuppliercontactsGet(mixins.ListModelMixin, mixins.CreateModelMixin, generics.GenericAPIView):
+  """  
+  Lists available FuelSupplierContact objects  
+  """
+  lookup_field = 'id'
+  permission_classes = (permissions.AllowAny,)  
+  queryset = FuelSupplierContact.objects.all()  
+  serializer_class = serializers.FuelSupplierContactSerializer
+  def get(self, request, *args, **kwargs):
+    """
+    Lists available FuelSupplierContact objects
+    """
+    return self.list(request, *args, **kwargs)
+  def post(self, request, *args, **kwargs):
+    """
+    Creates a new FuelSupplierContact object
+    """
+    return self.create(request, *args, **kwargs)
+
+class fuelsuppliercontactsIdDeletePost(mixins.DestroyModelMixin, generics.GenericAPIView):
+  """  
+  Deletes a specific FuelSupplierContact object  
+  """
+  lookup_field = 'id'
+  permission_classes = (permissions.AllowAny,)  
+  queryset = FuelSupplierContact.objects.all()  
+  serializer_class = serializers.FuelSupplierContactSerializer
+  def post(self, request, *args, **kwargs):
+    """
+    Destroys the specified FuelSupplierContact object
+    """
+    return self.destroy(request, *args, **kwargs)
+
+
+class fuelsuppliercontactsIdGet(mixins.RetrieveModelMixin, mixins.UpdateModelMixin, generics.GenericAPIView):
+  """  
+  Gets a specific FuelSupplierContact object  
+  """
+  lookup_field = 'id'
+  permission_classes = (permissions.AllowAny,)  
+  queryset = FuelSupplierContact.objects.all()  
+  serializer_class = serializers.FuelSupplierContactSerializer
+  def get(self, request, *args, **kwargs):
+    """
+    Retrieves the specified FuelSupplierContact object
+    """
+    return self.retrieve(request, *args, **kwargs)
+  def put(self, request, *args, **kwargs):
+    """
+    Updates the specified FuelSupplierContact object
+    """
+    return self.update(request, *args, **kwargs)
+
+class fuelsuppliercontactrolesBulkPost(BulkCreateModelMixin, generics.GenericAPIView):
+  """  
+  Bulk create / update a number of FuelSupplierContactRole object  
+  """
+  lookup_field = 'id'
+  permission_classes = (permissions.AllowAny,)  
+  queryset = FuelSupplierContactRole.objects.all()  
+  serializer_class = serializers.FuelSupplierContactRoleSerializer
+  def post(self, request, *args, **kwargs):
+    """
+    Creates a number of new FuelSupplierContactRole objects
+    """
+    return self.create(request, *args, **kwargs)
+
+class fuelsuppliercontactrolesGet(mixins.ListModelMixin, mixins.CreateModelMixin, generics.GenericAPIView):
+  """  
+  Lists available FuelSupplierContactRole objects  
+  """
+  lookup_field = 'id'
+  permission_classes = (permissions.AllowAny,)  
+  queryset = FuelSupplierContactRole.objects.all()  
+  serializer_class = serializers.FuelSupplierContactRoleSerializer
+  def get(self, request, *args, **kwargs):
+    """
+    Lists available FuelSupplierContactRole objects
+    """
+    return self.list(request, *args, **kwargs)
+  def post(self, request, *args, **kwargs):
+    """
+    Creates a new FuelSupplierContactRole object
+    """
+    return self.create(request, *args, **kwargs)
+
+class fuelsuppliercontactrolesIdDeletePost(mixins.DestroyModelMixin, generics.GenericAPIView):
+  """  
+  Deletes a specific FuelSupplierContactRole object  
+  """
+  lookup_field = 'id'
+  permission_classes = (permissions.AllowAny,)  
+  queryset = FuelSupplierContactRole.objects.all()  
+  serializer_class = serializers.FuelSupplierContactRoleSerializer
+  def post(self, request, *args, **kwargs):
+    """
+    Destroys the specified FuelSupplierContactRole object
+    """
+    return self.destroy(request, *args, **kwargs)
+
+
+class fuelsuppliercontactrolesIdGet(mixins.RetrieveModelMixin, mixins.UpdateModelMixin, generics.GenericAPIView):
+  """  
+  Gets a specific FuelSupplierContactRole object  
+  """
+  lookup_field = 'id'
+  permission_classes = (permissions.AllowAny,)  
+  queryset = FuelSupplierContactRole.objects.all()  
+  serializer_class = serializers.FuelSupplierContactRoleSerializer
+  def get(self, request, *args, **kwargs):
+    """
+    Retrieves the specified FuelSupplierContactRole object
+    """
+    return self.retrieve(request, *args, **kwargs)
+  def put(self, request, *args, **kwargs):
+    """
+    Updates the specified FuelSupplierContactRole object
+    """
+    return self.update(request, *args, **kwargs)
+
+class fuelsupplierhistoriesBulkPost(BulkCreateModelMixin, generics.GenericAPIView):
+  """  
+  Bulk create / update a number of FuelSupplierHistory object  
+  """
+  lookup_field = 'id'
+  permission_classes = (permissions.AllowAny,)  
+  queryset = FuelSupplierHistory.objects.all()  
+  serializer_class = serializers.FuelSupplierHistorySerializer
+  def post(self, request, *args, **kwargs):
+    """
+    Creates a number of new FuelSupplierHistory objects
+    """
+    return self.create(request, *args, **kwargs)
+
+class fuelsupplierhistoriesGet(mixins.ListModelMixin, mixins.CreateModelMixin, generics.GenericAPIView):
+  """  
+  Lists available FuelSupplierHistory objects  
+  """
+  lookup_field = 'id'
+  permission_classes = (permissions.AllowAny,)  
+  queryset = FuelSupplierHistory.objects.all()  
+  serializer_class = serializers.FuelSupplierHistorySerializer
+  def get(self, request, *args, **kwargs):
+    """
+    Lists available FuelSupplierHistory objects
+    """
+    return self.list(request, *args, **kwargs)
+  def post(self, request, *args, **kwargs):
+    """
+    Creates a new FuelSupplierHistory object
+    """
+    return self.create(request, *args, **kwargs)
+
+class fuelsupplierhistoriesIdDeletePost(mixins.DestroyModelMixin, generics.GenericAPIView):
+  """  
+  Deletes a specific FuelSupplierHistory object  
+  """
+  lookup_field = 'id'
+  permission_classes = (permissions.AllowAny,)  
+  queryset = FuelSupplierHistory.objects.all()  
+  serializer_class = serializers.FuelSupplierHistorySerializer
+  def post(self, request, *args, **kwargs):
+    """
+    Destroys the specified FuelSupplierHistory object
+    """
+    return self.destroy(request, *args, **kwargs)
+
+
+class fuelsupplierhistoriesIdGet(mixins.RetrieveModelMixin, mixins.UpdateModelMixin, generics.GenericAPIView):
+  """  
+  Gets a specific FuelSupplierHistory object  
+  """
+  lookup_field = 'id'
+  permission_classes = (permissions.AllowAny,)  
+  queryset = FuelSupplierHistory.objects.all()  
+  serializer_class = serializers.FuelSupplierHistorySerializer
+  def get(self, request, *args, **kwargs):
+    """
+    Retrieves the specified FuelSupplierHistory object
+    """
+    return self.retrieve(request, *args, **kwargs)
+  def put(self, request, *args, **kwargs):
+    """
+    Updates the specified FuelSupplierHistory object
+    """
+    return self.update(request, *args, **kwargs)
+
+class fuelsupplierstatusesBulkPost(BulkCreateModelMixin, generics.GenericAPIView):
+  """  
+  Bulk create / update a number of FuelSupplierStatus object  
+  """
+  lookup_field = 'id'
+  permission_classes = (permissions.AllowAny,)  
+  queryset = FuelSupplierStatus.objects.all()  
+  serializer_class = serializers.FuelSupplierStatusSerializer
+  def post(self, request, *args, **kwargs):
+    """
+    Creates a number of new FuelSupplierStatus objects
+    """
+    return self.create(request, *args, **kwargs)
+
+class fuelsupplierstatusesGet(mixins.ListModelMixin, mixins.CreateModelMixin, generics.GenericAPIView):
+  """  
+  Lists available FuelSupplierStatus objects  
+  """
+  lookup_field = 'id'
+  permission_classes = (permissions.AllowAny,)  
+  queryset = FuelSupplierStatus.objects.all()  
+  serializer_class = serializers.FuelSupplierStatusSerializer
+  def get(self, request, *args, **kwargs):
+    """
+    Lists available FuelSupplierStatus objects
+    """
+    return self.list(request, *args, **kwargs)
+  def post(self, request, *args, **kwargs):
+    """
+    Creates a new FuelSupplierStatus object
+    """
+    return self.create(request, *args, **kwargs)
+
+class fuelsupplierstatusesIdDeletePost(mixins.DestroyModelMixin, generics.GenericAPIView):
+  """  
+  Deletes a specific FuelSupplierStatus object  
+  """
+  lookup_field = 'id'
+  permission_classes = (permissions.AllowAny,)  
+  queryset = FuelSupplierStatus.objects.all()  
+  serializer_class = serializers.FuelSupplierStatusSerializer
+  def post(self, request, *args, **kwargs):
+    """
+    Destroys the specified FuelSupplierStatus object
+    """
+    return self.destroy(request, *args, **kwargs)
+
+
+class fuelsupplierstatusesIdGet(mixins.RetrieveModelMixin, mixins.UpdateModelMixin, generics.GenericAPIView):
+  """  
+  Gets a specific FuelSupplierStatus object  
+  """
+  lookup_field = 'id'
+  permission_classes = (permissions.AllowAny,)  
+  queryset = FuelSupplierStatus.objects.all()  
+  serializer_class = serializers.FuelSupplierStatusSerializer
+  def get(self, request, *args, **kwargs):
+    """
+    Retrieves the specified FuelSupplierStatus object
+    """
+    return self.retrieve(request, *args, **kwargs)
+  def put(self, request, *args, **kwargs):
+    """
+    Updates the specified FuelSupplierStatus object
+    """
+    return self.update(request, *args, **kwargs)
+
+class fuelsuppliertypesBulkPost(BulkCreateModelMixin, generics.GenericAPIView):
+  """  
+  Bulk create / update a number of FuelSupplierType object  
+  """
+  lookup_field = 'id'
+  permission_classes = (permissions.AllowAny,)  
+  queryset = FuelSupplierType.objects.all()  
+  serializer_class = serializers.FuelSupplierTypeSerializer
+  def post(self, request, *args, **kwargs):
+    """
+    Creates a number of new FuelSupplierType objects
+    """
+    return self.create(request, *args, **kwargs)
+
+class fuelsuppliertypesGet(mixins.ListModelMixin, mixins.CreateModelMixin, generics.GenericAPIView):
+  """  
+  Lists available FuelSupplierType objects  
+  """
+  lookup_field = 'id'
+  permission_classes = (permissions.AllowAny,)  
+  queryset = FuelSupplierType.objects.all()  
+  serializer_class = serializers.FuelSupplierTypeSerializer
+  def get(self, request, *args, **kwargs):
+    """
+    Lists available FuelSupplierType objects
+    """
+    return self.list(request, *args, **kwargs)
+  def post(self, request, *args, **kwargs):
+    """
+    Creates a new FuelSupplierType object
+    """
+    return self.create(request, *args, **kwargs)
+
+class fuelsuppliertypesIdDeletePost(mixins.DestroyModelMixin, generics.GenericAPIView):
+  """  
+  Deletes a specific FuelSupplierType object  
+  """
+  lookup_field = 'id'
+  permission_classes = (permissions.AllowAny,)  
+  queryset = FuelSupplierType.objects.all()  
+  serializer_class = serializers.FuelSupplierTypeSerializer
+  def post(self, request, *args, **kwargs):
+    """
+    Destroys the specified FuelSupplierType object
+    """
+    return self.destroy(request, *args, **kwargs)
+
+
+class fuelsuppliertypesIdGet(mixins.RetrieveModelMixin, mixins.UpdateModelMixin, generics.GenericAPIView):
+  """  
+  Gets a specific FuelSupplierType object  
+  """
+  lookup_field = 'id'
+  permission_classes = (permissions.AllowAny,)  
+  queryset = FuelSupplierType.objects.all()  
+  serializer_class = serializers.FuelSupplierTypeSerializer
+  def get(self, request, *args, **kwargs):
+    """
+    Retrieves the specified FuelSupplierType object
+    """
+    return self.retrieve(request, *args, **kwargs)
+  def put(self, request, *args, **kwargs):
+    """
+    Updates the specified FuelSupplierType object
     """
     return self.update(request, *args, **kwargs)
 
@@ -866,70 +1204,271 @@ class notificationeventsIdGet(mixins.RetrieveModelMixin, mixins.UpdateModelMixin
     """
     return self.update(request, *args, **kwargs)
 
-class offersBulkPost(BulkCreateModelMixin, generics.GenericAPIView):
+class notificationtypesBulkPost(BulkCreateModelMixin, generics.GenericAPIView):
   """  
-  Bulk create / update a number of Offer object  
+  Bulk create / update a number of NotificationType object  
   """
   lookup_field = 'id'
   permission_classes = (permissions.AllowAny,)  
-  queryset = Offer.objects.all()  
-  serializer_class = serializers.OfferSerializer
+  queryset = NotificationType.objects.all()  
+  serializer_class = serializers.NotificationTypeSerializer
   def post(self, request, *args, **kwargs):
     """
-    Creates a number of new Offer objects
+    Creates a number of new NotificationType objects
     """
     return self.create(request, *args, **kwargs)
 
-class offersGet(mixins.ListModelMixin, mixins.CreateModelMixin, generics.GenericAPIView):
+class notificationtypesGet(mixins.ListModelMixin, mixins.CreateModelMixin, generics.GenericAPIView):
   """  
-  Lists available Offer objects  
+  Lists available NotificationType objects  
   """
   lookup_field = 'id'
   permission_classes = (permissions.AllowAny,)  
-  queryset = Offer.objects.all()  
-  serializer_class = serializers.OfferSerializer
+  queryset = NotificationType.objects.all()  
+  serializer_class = serializers.NotificationTypeSerializer
   def get(self, request, *args, **kwargs):
     """
-    Lists available Offer objects
+    Lists available NotificationType objects
     """
     return self.list(request, *args, **kwargs)
   def post(self, request, *args, **kwargs):
     """
-    Creates a new Offer object
+    Creates a new NotificationType object
     """
     return self.create(request, *args, **kwargs)
 
-class offersIdDeletePost(mixins.DestroyModelMixin, generics.GenericAPIView):
+class notificationtypesIdDeletePost(mixins.DestroyModelMixin, generics.GenericAPIView):
   """  
-  Deletes a specific Offer object  
+  Deletes a specific NotificationType object  
   """
   lookup_field = 'id'
   permission_classes = (permissions.AllowAny,)  
-  queryset = Offer.objects.all()  
-  serializer_class = serializers.OfferSerializer
+  queryset = NotificationType.objects.all()  
+  serializer_class = serializers.NotificationTypeSerializer
   def post(self, request, *args, **kwargs):
     """
-    Destroys the specified Offer object
+    Destroys the specified NotificationType object
     """
     return self.destroy(request, *args, **kwargs)
 
 
-class offersIdGet(mixins.RetrieveModelMixin, mixins.UpdateModelMixin, generics.GenericAPIView):
+class notificationtypesIdGet(mixins.RetrieveModelMixin, mixins.UpdateModelMixin, generics.GenericAPIView):
   """  
-  Gets a specific Offer object  
+  Gets a specific NotificationType object  
   """
   lookup_field = 'id'
   permission_classes = (permissions.AllowAny,)  
-  queryset = Offer.objects.all()  
-  serializer_class = serializers.OfferSerializer
+  queryset = NotificationType.objects.all()  
+  serializer_class = serializers.NotificationTypeSerializer
   def get(self, request, *args, **kwargs):
     """
-    Retrieves the specified Offer object
+    Retrieves the specified NotificationType object
     """
     return self.retrieve(request, *args, **kwargs)
   def put(self, request, *args, **kwargs):
     """
-    Updates the specified Offer object
+    Updates the specified NotificationType object
+    """
+    return self.update(request, *args, **kwargs)
+
+class opportunitiesBulkPost(BulkCreateModelMixin, generics.GenericAPIView):
+  """  
+  Bulk create / update a number of Opportunity object  
+  """
+  lookup_field = 'id'
+  permission_classes = (permissions.AllowAny,)  
+  queryset = Opportunity.objects.all()  
+  serializer_class = serializers.OpportunitySerializer
+  def post(self, request, *args, **kwargs):
+    """
+    Creates a number of new Opportunity objects
+    """
+    return self.create(request, *args, **kwargs)
+
+class opportunitiesGet(mixins.ListModelMixin, mixins.CreateModelMixin, generics.GenericAPIView):
+  """  
+  Lists available Opportunity objects  
+  """
+  lookup_field = 'id'
+  permission_classes = (permissions.AllowAny,)  
+  queryset = Opportunity.objects.all()  
+  serializer_class = serializers.OpportunitySerializer
+  def get(self, request, *args, **kwargs):
+    """
+    Lists available Opportunity objects
+    """
+    return self.list(request, *args, **kwargs)
+  def post(self, request, *args, **kwargs):
+    """
+    Creates a new Opportunity object
+    """
+    return self.create(request, *args, **kwargs)
+
+class opportunitiesIdDeletePost(mixins.DestroyModelMixin, generics.GenericAPIView):
+  """  
+  Deletes a specific Opportunity object  
+  """
+  lookup_field = 'id'
+  permission_classes = (permissions.AllowAny,)  
+  queryset = Opportunity.objects.all()  
+  serializer_class = serializers.OpportunitySerializer
+  def post(self, request, *args, **kwargs):
+    """
+    Destroys the specified Opportunity object
+    """
+    return self.destroy(request, *args, **kwargs)
+
+
+class opportunitiesIdGet(mixins.RetrieveModelMixin, mixins.UpdateModelMixin, generics.GenericAPIView):
+  """  
+  Gets a specific Opportunity object  
+  """
+  lookup_field = 'id'
+  permission_classes = (permissions.AllowAny,)  
+  queryset = Opportunity.objects.all()  
+  serializer_class = serializers.OpportunitySerializer
+  def get(self, request, *args, **kwargs):
+    """
+    Retrieves the specified Opportunity object
+    """
+    return self.retrieve(request, *args, **kwargs)
+  def put(self, request, *args, **kwargs):
+    """
+    Updates the specified Opportunity object
+    """
+    return self.update(request, *args, **kwargs)
+
+class opportunityhistoriesBulkPost(BulkCreateModelMixin, generics.GenericAPIView):
+  """  
+  Bulk create / update a number of OpportunityHistory object  
+  """
+  lookup_field = 'id'
+  permission_classes = (permissions.AllowAny,)  
+  queryset = OpportunityHistory.objects.all()  
+  serializer_class = serializers.OpportunityHistorySerializer
+  def post(self, request, *args, **kwargs):
+    """
+    Creates a number of new OpportunityHistory objects
+    """
+    return self.create(request, *args, **kwargs)
+
+class opportunityhistoriesGet(mixins.ListModelMixin, mixins.CreateModelMixin, generics.GenericAPIView):
+  """  
+  Lists available OpportunityHistory objects  
+  """
+  lookup_field = 'id'
+  permission_classes = (permissions.AllowAny,)  
+  queryset = OpportunityHistory.objects.all()  
+  serializer_class = serializers.OpportunityHistorySerializer
+  def get(self, request, *args, **kwargs):
+    """
+    Lists available OpportunityHistory objects
+    """
+    return self.list(request, *args, **kwargs)
+  def post(self, request, *args, **kwargs):
+    """
+    Creates a new OpportunityHistory object
+    """
+    return self.create(request, *args, **kwargs)
+
+class opportunityhistoriesIdDeletePost(mixins.DestroyModelMixin, generics.GenericAPIView):
+  """  
+  Deletes a specific OpportunityHistory object  
+  """
+  lookup_field = 'id'
+  permission_classes = (permissions.AllowAny,)  
+  queryset = OpportunityHistory.objects.all()  
+  serializer_class = serializers.OpportunityHistorySerializer
+  def post(self, request, *args, **kwargs):
+    """
+    Destroys the specified OpportunityHistory object
+    """
+    return self.destroy(request, *args, **kwargs)
+
+
+class opportunityhistoriesIdGet(mixins.RetrieveModelMixin, mixins.UpdateModelMixin, generics.GenericAPIView):
+  """  
+  Gets a specific OpportunityHistory object  
+  """
+  lookup_field = 'id'
+  permission_classes = (permissions.AllowAny,)  
+  queryset = OpportunityHistory.objects.all()  
+  serializer_class = serializers.OpportunityHistorySerializer
+  def get(self, request, *args, **kwargs):
+    """
+    Retrieves the specified OpportunityHistory object
+    """
+    return self.retrieve(request, *args, **kwargs)
+  def put(self, request, *args, **kwargs):
+    """
+    Updates the specified OpportunityHistory object
+    """
+    return self.update(request, *args, **kwargs)
+
+class opportunitystatusesBulkPost(BulkCreateModelMixin, generics.GenericAPIView):
+  """  
+  Bulk create / update a number of OpportunityStatus object  
+  """
+  lookup_field = 'id'
+  permission_classes = (permissions.AllowAny,)  
+  queryset = OpportunityStatus.objects.all()  
+  serializer_class = serializers.OpportunityStatusSerializer
+  def post(self, request, *args, **kwargs):
+    """
+    Creates a number of new OpportunityStatus objects
+    """
+    return self.create(request, *args, **kwargs)
+
+class opportunitystatusesGet(mixins.ListModelMixin, mixins.CreateModelMixin, generics.GenericAPIView):
+  """  
+  Lists available OpportunityStatus objects  
+  """
+  lookup_field = 'id'
+  permission_classes = (permissions.AllowAny,)  
+  queryset = OpportunityStatus.objects.all()  
+  serializer_class = serializers.OpportunityStatusSerializer
+  def get(self, request, *args, **kwargs):
+    """
+    Lists available OpportunityStatus objects
+    """
+    return self.list(request, *args, **kwargs)
+  def post(self, request, *args, **kwargs):
+    """
+    Creates a new OpportunityStatus object
+    """
+    return self.create(request, *args, **kwargs)
+
+class opportunitystatusesIdDeletePost(mixins.DestroyModelMixin, generics.GenericAPIView):
+  """  
+  Deletes a specific OpportunityStatus object  
+  """
+  lookup_field = 'id'
+  permission_classes = (permissions.AllowAny,)  
+  queryset = OpportunityStatus.objects.all()  
+  serializer_class = serializers.OpportunityStatusSerializer
+  def post(self, request, *args, **kwargs):
+    """
+    Destroys the specified OpportunityStatus object
+    """
+    return self.destroy(request, *args, **kwargs)
+
+
+class opportunitystatusesIdGet(mixins.RetrieveModelMixin, mixins.UpdateModelMixin, generics.GenericAPIView):
+  """  
+  Gets a specific OpportunityStatus object  
+  """
+  lookup_field = 'id'
+  permission_classes = (permissions.AllowAny,)  
+  queryset = OpportunityStatus.objects.all()  
+  serializer_class = serializers.OpportunityStatusSerializer
+  def get(self, request, *args, **kwargs):
+    """
+    Retrieves the specified OpportunityStatus object
+    """
+    return self.retrieve(request, *args, **kwargs)
+  def put(self, request, *args, **kwargs):
+    """
+    Updates the specified OpportunityStatus object
     """
     return self.update(request, *args, **kwargs)
 
@@ -1136,7 +1675,7 @@ class rolepermissionsIdGet(mixins.RetrieveModelMixin, mixins.UpdateModelMixin, g
 
 class usersBulkPost(BulkCreateModelMixin, generics.GenericAPIView):
   """  
-  Adds a number of users  
+  Bulk create / update a number of User object  
   """
   lookup_field = 'id'
   permission_classes = (permissions.AllowAny,)  
@@ -1150,7 +1689,7 @@ class usersBulkPost(BulkCreateModelMixin, generics.GenericAPIView):
 
 class usersGet(mixins.ListModelMixin, mixins.CreateModelMixin, generics.GenericAPIView):
   """  
-  Returns all users  
+  Lists available User objects  
   """
   lookup_field = 'id'
   permission_classes = (permissions.AllowAny,)  
@@ -1169,7 +1708,7 @@ class usersGet(mixins.ListModelMixin, mixins.CreateModelMixin, generics.GenericA
 
 class usersIdDeletePost(mixins.DestroyModelMixin, generics.GenericAPIView):
   """  
-  Deletes a user  
+  Deletes a specific User object  
   """
   lookup_field = 'id'
   permission_classes = (permissions.AllowAny,)  
@@ -1184,7 +1723,7 @@ class usersIdDeletePost(mixins.DestroyModelMixin, generics.GenericAPIView):
 
 class usersIdGet(mixins.RetrieveModelMixin, mixins.UpdateModelMixin, generics.GenericAPIView):
   """  
-  Returns data for a particular user  
+  Gets a specific User object  
   """
   lookup_field = 'id'
   permission_classes = (permissions.AllowAny,)  
@@ -1198,73 +1737,6 @@ class usersIdGet(mixins.RetrieveModelMixin, mixins.UpdateModelMixin, generics.Ge
   def put(self, request, *args, **kwargs):
     """
     Updates the specified User object
-    """
-    return self.update(request, *args, **kwargs)
-
-class userrolesBulkPost(BulkCreateModelMixin, generics.GenericAPIView):
-  """  
-  Bulk create / update a number of UserRole object  
-  """
-  lookup_field = 'id'
-  permission_classes = (permissions.AllowAny,)  
-  queryset = UserRole.objects.all()  
-  serializer_class = serializers.UserRoleSerializer
-  def post(self, request, *args, **kwargs):
-    """
-    Creates a number of new UserRole objects
-    """
-    return self.create(request, *args, **kwargs)
-
-class userrolesGet(mixins.ListModelMixin, mixins.CreateModelMixin, generics.GenericAPIView):
-  """  
-  Lists available UserRole objects  
-  """
-  lookup_field = 'id'
-  permission_classes = (permissions.AllowAny,)  
-  queryset = UserRole.objects.all()  
-  serializer_class = serializers.UserRoleSerializer
-  def get(self, request, *args, **kwargs):
-    """
-    Lists available UserRole objects
-    """
-    return self.list(request, *args, **kwargs)
-  def post(self, request, *args, **kwargs):
-    """
-    Creates a new UserRole object
-    """
-    return self.create(request, *args, **kwargs)
-
-class userrolesIdDeletePost(mixins.DestroyModelMixin, generics.GenericAPIView):
-  """  
-  Deletes a specific UserRole object  
-  """
-  lookup_field = 'id'
-  permission_classes = (permissions.AllowAny,)  
-  queryset = UserRole.objects.all()  
-  serializer_class = serializers.UserRoleSerializer
-  def post(self, request, *args, **kwargs):
-    """
-    Destroys the specified UserRole object
-    """
-    return self.destroy(request, *args, **kwargs)
-
-
-class userrolesIdGet(mixins.RetrieveModelMixin, mixins.UpdateModelMixin, generics.GenericAPIView):
-  """  
-  Gets a specific UserRole object  
-  """
-  lookup_field = 'id'
-  permission_classes = (permissions.AllowAny,)  
-  queryset = UserRole.objects.all()  
-  serializer_class = serializers.UserRoleSerializer
-  def get(self, request, *args, **kwargs):
-    """
-    Retrieves the specified UserRole object
-    """
-    return self.retrieve(request, *args, **kwargs)
-  def put(self, request, *args, **kwargs):
-    """
-    Updates the specified UserRole object
     """
     return self.update(request, *args, **kwargs)
 

@@ -3009,152 +3009,6 @@ paths:
           description: id of NotificationType to delete
           required: true
           type: integer
-  /groups:
-    get:
-      tags:
-        - Group
-      summary: Lists available Group objects
-      x-codegen-operation: list
-      consumes: []
-      produces:
-        - text/plain
-        - application/json
-        - text/json
-      responses:
-        200:
-          description: OK
-          schema:
-            type: array
-            items:
-              $ref: "#/definitions/Group"
-    post:
-      tags:
-        - Group
-      x-codegen-permission: ADMIN
-      x-codegen-operation: create
-      summary: Creates a new Group object            
-      consumes:
-        - application/json
-      produces:
-        - text/plain
-        - application/json
-        - text/json
-      parameters:
-        - name: item
-          in: body
-          required: true
-          schema:
-            $ref: "#/definitions/Group"
-      responses:
-        201:
-          description: Group created
-          headers:
-            Location:
-              description: A link to the Group
-              type: string
-              format: url
-          schema:
-            $ref: "#/definitions/Group"  
-  /groups/bulk:
-    post:
-      tags:
-        - Group
-      summary: Bulk create / update a number of Group object      
-      x-codegen-operation: bulk
-      consumes:
-        - application/json
-      produces:
-        - text/plain
-        - application/json
-        - text/json
-      parameters:
-        - name: items
-          in: body
-          required: true
-          schema:
-            type: array
-            items:
-              $ref: "#/definitions/Group"
-      responses:
-        201:
-          description: Group created
-  /groups/{id}:
-    get:
-      tags:
-        - Group
-      summary: Gets a specific Group object      
-      x-codegen-operation: retrieve
-      consumes: []
-      produces:
-        - text/plain
-        - application/json
-        - text/json
-      responses:
-        200:
-          description: OK
-          schema:
-            $ref: "#/definitions/Group"
-        404:
-          description: Group not found
-      parameters:
-        - name: id
-          in: path
-          description: id of Group to fetch
-          required: true
-          type: integer
-    put:
-      tags:
-        - Group      
-      x-codegen-permission: ADMIN
-      x-codegen-operation: update
-      summary: Updates a specific Group object      
-      consumes:
-        - application/json
-      produces:
-        - text/plain
-        - application/json
-        - text/json
-      responses:
-        200:
-          description: OK
-          schema:
-            $ref: "#/definitions/Group"
-        404:
-          description: Group not found
-      parameters:
-        - name: id
-          in: path
-          description: id of Group to fetch
-          required: true
-          type: integer
-        - name: item
-          in: body
-          required: true
-          schema:
-            $ref: "#/definitions/Group"
-  /groups/{id}/delete:
-    post:
-      tags:
-        - Group      
-      x-codegen-permission: ADMIN
-      x-codegen-operation: destroy
-      summary: Deletes a specific Group object      
-      consumes: []
-      produces:
-        - text/plain
-        - application/json
-        - text/json
-      responses:
-        200:
-          description: OK
-        404:
-          description: Group not found
-      parameters:
-        - name: id
-          in: path
-          description: id of Group to delete
-          required: true
-          type: integer
   /permissions:
     get:
       tags:
@@ -3593,152 +3447,6 @@ paths:
           description: id of RolePermission to delete
           required: true
           type: integer
-  /groupmemberships:
-    get:
-      tags:
-        - GroupMembership
-      summary: Lists available GroupMembership objects
-      x-codegen-operation: list
-      consumes: []
-      produces:
-        - text/plain
-        - application/json
-        - text/json
-      responses:
-        200:
-          description: OK
-          schema:
-            type: array
-            items:
-              $ref: "#/definitions/GroupMembership"
-    post:
-      tags:
-        - GroupMembership
-      x-codegen-permission: ADMIN
-      x-codegen-operation: create
-      summary: Creates a new GroupMembership object            
-      consumes:
-        - application/json
-      produces:
-        - text/plain
-        - application/json
-        - text/json
-      parameters:
-        - name: item
-          in: body
-          required: true
-          schema:
-            $ref: "#/definitions/GroupMembership"
-      responses:
-        201:
-          description: GroupMembership created
-          headers:
-            Location:
-              description: A link to the GroupMembership
-              type: string
-              format: url
-          schema:
-            $ref: "#/definitions/GroupMembership"  
-  /groupmemberships/bulk:
-    post:
-      tags:
-        - GroupMembership
-      summary: Bulk create / update a number of GroupMembership object      
-      x-codegen-operation: bulk
-      consumes:
-        - application/json
-      produces:
-        - text/plain
-        - application/json
-        - text/json
-      parameters:
-        - name: items
-          in: body
-          required: true
-          schema:
-            type: array
-            items:
-              $ref: "#/definitions/GroupMembership"
-      responses:
-        201:
-          description: GroupMembership created
-  /groupmemberships/{id}:
-    get:
-      tags:
-        - GroupMembership
-      summary: Gets a specific GroupMembership object      
-      x-codegen-operation: retrieve
-      consumes: []
-      produces:
-        - text/plain
-        - application/json
-        - text/json
-      responses:
-        200:
-          description: OK
-          schema:
-            $ref: "#/definitions/GroupMembership"
-        404:
-          description: GroupMembership not found
-      parameters:
-        - name: id
-          in: path
-          description: id of GroupMembership to fetch
-          required: true
-          type: integer
-    put:
-      tags:
-        - GroupMembership      
-      x-codegen-permission: ADMIN
-      x-codegen-operation: update
-      summary: Updates a specific GroupMembership object      
-      consumes:
-        - application/json
-      produces:
-        - text/plain
-        - application/json
-        - text/json
-      responses:
-        200:
-          description: OK
-          schema:
-            $ref: "#/definitions/GroupMembership"
-        404:
-          description: GroupMembership not found
-      parameters:
-        - name: id
-          in: path
-          description: id of GroupMembership to fetch
-          required: true
-          type: integer
-        - name: item
-          in: body
-          required: true
-          schema:
-            $ref: "#/definitions/GroupMembership"
-  /groupmemberships/{id}/delete:
-    post:
-      tags:
-        - GroupMembership      
-      x-codegen-permission: ADMIN
-      x-codegen-operation: destroy
-      summary: Deletes a specific GroupMembership object      
-      consumes: []
-      produces:
-        - text/plain
-        - application/json
-        - text/json
-      responses:
-        200:
-          description: OK
-        404:
-          description: GroupMembership not found
-      parameters:
-        - name: id
-          in: path
-          description: id of GroupMembership to delete
-          required: true
-          type: integer
   /users:
     get:
       tags:
@@ -3956,7 +3664,7 @@ paths:
           schema:
             type: array
             items:
-              $ref: '#/definitions/Attachment'
+              $ref: '#/definitions/FuelSupplierAttachment'
       parameters:
         - name: id
           in: path
@@ -3979,7 +3687,7 @@ paths:
           schema:
             type: array
             items:
-              $ref: '#/definitions/HistoryViewModel'
+              $ref: '#/definitions/FuelSupplierHistory'
       parameters:
         - name: id
           in: path
@@ -4528,7 +4236,9 @@ paths:
           in: path
           description: id of User for which to fetch notifications
           required: true
-          type: integerdefinitions:
+          type: integer
+
+definitions:
   CreditTrade:
     type: object
     description: A transaction that if completed changes the number of Low-Carbon Fuel Credits owned by a Fuel Supplier. The transfer of Credits may involve the BC Gov&#39;t (an award or retirement of Credits) or another Fuel Supplier (a Buy or Sell).
@@ -4762,7 +4472,8 @@ paths:
       opportunityId:
         $ref: '#/definitions/Opportunity'
         description: A foreign key reference to a Opportunity.
-
+      userId:
+        $ref: '#/definitions/User'
         description: A foreign key reference to the User that made the update to the Opportunity.
       updateTime:
         type: string
@@ -5017,19 +4728,6 @@ paths:
         format: int32
         type: integer
         description: The order of display of the Fuel Supplier actions type. The order will be alphabetic.
-      id:
-        format: int32
-        type: integer
-        description: A system-generated unique identifier for a Fuel Supplier Note.
-      fuelSupplierId:
-        $ref: '#/definitions/FuelSupplier'
-        description: A foreign key reference to a FuelSupplier.
-      noteText:
-        type: string
-        description: The contents of the note about the Fuel Supplier.
-      isNoLongerRelevant:
-        type: boolean
-        description: A user set flag that the note is no longer relevant. Allows the note to be retained for historical reasons,  but identified to other users as no longer applicable.
   FuelSupplierContact:
     type: object
     description: A table of contacts related to the Fuel Suppliers in the system.
@@ -5339,46 +5037,6 @@ paths:
       description:
         type: string
         description: A description of the purpose of the permission and exposed to the user selecting the permissions to be included in a Role.
-  GroupMembership:
-    type: object
-    description: The users associated with a given group that has been defined in the application.
-    required:
-      - id
-      - active
-      - groupId
-      - userId
-    properties:
-      id:
-        format: int32
-        type: integer
-        description: A system-generated unique identifier for a Group Membership.
-      active:
-        type: boolean
-        description: A flag indicating the User is active in the group. Set false to remove the user from the designated group.
-      groupId:
-        $ref: '#/definitions/Group'
-        description: A foreign key reference to a Group.
-      userId:
-        $ref: '#/definitions/User'
-        description: A foreign key reference to a User.
-  Group:
-    type: object
-    description: A named entity that is used to created a collection of users into a group. For example, the School Bus Inspectors are in the group Inspectors. Groups, like permissions are defined by the application and referenced in the code of the application.
-    required:
-      - id
-      - name
-      - description
-    properties:
-      id:
-        format: int32
-        type: integer
-        description: A system-generated unique identifier for a Group.
-      name:
-        type: string
-        description: The name of the group, as refenced in the code.
-      description:
-        type: string
-        description: A description of the group that is presented to the user when they are setting a user into a group.
   Audit:
     type: object
     description: Server generated audit log.

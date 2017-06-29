@@ -23,20 +23,24 @@ import datetime
 
 from django.db import models
 from django.utils import timezone
-from .CreditTradeStatus import CreditTradeStatus
 from .FuelSupplier import FuelSupplier
+from .OpportunityStatus import OpportunityStatus
 from .CreditTradeType import CreditTradeType
-from .CreditTradeHistory import CreditTradeHistory
+from .FuelSupplierType import FuelSupplierType
+from .CreditTrade import CreditTrade
 
 
-class CreditTrade(models.Model):	    
-    creditTradeStatusId = models.ForeignKey('CreditTradeStatus', related_name='CreditTradecreditTradeStatusId')   
-    initiator = models.ForeignKey('FuelSupplier', related_name='CreditTradeinitiator', blank=True, null=True)   
-    respondent = models.ForeignKey('FuelSupplier', related_name='CreditTraderespondent')   
-    tradeEffectiveDate = models.DateField(blank=True, null=True)   
-    creditTradeTypeId = models.ForeignKey('CreditTradeType', related_name='CreditTradecreditTradeTypeId')   
+class Opportunity(models.Model):	    
+    fuelSupplierId = models.ForeignKey('FuelSupplier', related_name='OpportunityfuelSupplierId')   
+    opportunityStatusId = models.ForeignKey('OpportunityStatus', related_name='OpportunityopportunityStatusId')   
+    creditTradeTypeId = models.ForeignKey('CreditTradeType', related_name='OpportunitycreditTradeTypeId')   
+    fuelSupplierTypeId = models.ForeignKey('FuelSupplierType', related_name='OpportunityfuelSupplierTypeId')   
     numberOfCredits = models.IntegerField()   
-    fairMarketValuePerCredit = models.CharField(blank=True, null=True, max_length=255)   
-    history = models.ManyToManyField('CreditTradeHistory', related_name='CreditTradehistory', blank=True)   
+    suggestedValuePerCredit = models.CharField(blank=True, null=True, max_length=255)   
+    hasTradeNow = models.BooleanField()   
+    numberOfViews = models.IntegerField()   
+    datePosted = models.DateField(blank=True, null=True)   
+    opportunityBackgroundNote = models.CharField(max_length=255, blank=True, null=True)   
+    creditTrades = models.ManyToManyField('CreditTrade', related_name='OpportunitycreditTrades', blank=True)   
     plainEnglishPhrase = models.CharField(max_length=255)   
 

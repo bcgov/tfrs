@@ -23,12 +23,17 @@ import datetime
 
 from django.db import models
 from django.utils import timezone
-from .Group import Group
-from .User import User
+from .FuelSupplier import FuelSupplier
 
 
-class GroupMembership(models.Model):	    
-    active = models.BooleanField()   
-    group = models.ForeignKey('Group', related_name='GroupMembershipgroup', blank=True, null=True)   
-    user = models.ForeignKey('User', related_name='GroupMembershipuser', blank=True, null=True)   
+class FuelSupplierCCData(models.Model):	    
+    fuelSupplierId = models.ForeignKey('FuelSupplier', related_name='FuelSupplierCCDatafuelSupplierId')   
+    commonClientOrgId = models.CharField(max_length=255, blank=True, null=True)   
+    lastUpdatefromCommonClient = models.DateField()   
+    name = models.CharField(max_length=255)   
+    corporateAddressLine1 = models.CharField(max_length=255, blank=True, null=True)   
+    corporateAddressLine2 = models.CharField(max_length=255, blank=True, null=True)   
+    corporateAddressCity = models.CharField(max_length=255, blank=True, null=True)   
+    corporateAddressPostalCode = models.CharField(max_length=255, blank=True, null=True)   
+    corporateAddressProvince = models.CharField(max_length=255, blank=True, null=True)   
 

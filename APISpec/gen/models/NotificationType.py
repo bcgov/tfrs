@@ -25,11 +25,10 @@ from django.db import models
 from django.utils import timezone
 
 
-class HistoryViewModel(models.Model):	    
-    historyText = models.CharField(max_length=2048, blank=True, null=True)   
-    lastUpdateUserid = models.CharField(max_length=255, blank=True, null=True)   
-    lastUpdateTimestamp = models.DateField(blank=True, null=True)   
-    affectedEntityId = models.IntegerField()   
-    class Meta:
-      abstract = True
+class NotificationType(models.Model):	    
+    type = models.CharField(max_length=255, blank=True, null=True)   
+    description = models.CharField(max_length=255, blank=True, null=True)   
+    effectiveDate = models.DateField(blank=True, null=True)   
+    expirationDate = models.DateField(blank=True, null=True)   
+    displayOrder = models.IntegerField()   
 

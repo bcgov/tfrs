@@ -232,7 +232,8 @@ definitions:
       opportunityId:
         $ref: '#/definitions/Opportunity'
         description: A foreign key reference to a Opportunity.
-
+      userId:
+        $ref: '#/definitions/User'
         description: A foreign key reference to the User that made the update to the Opportunity.
       updateTime:
         type: string
@@ -487,19 +488,6 @@ definitions:
         format: int32
         type: integer
         description: The order of display of the Fuel Supplier actions type. The order will be alphabetic.
-      id:
-        format: int32
-        type: integer
-        description: A system-generated unique identifier for a Fuel Supplier Note.
-      fuelSupplierId:
-        $ref: '#/definitions/FuelSupplier'
-        description: A foreign key reference to a FuelSupplier.
-      noteText:
-        type: string
-        description: The contents of the note about the Fuel Supplier.
-      isNoLongerRelevant:
-        type: boolean
-        description: A user set flag that the note is no longer relevant. Allows the note to be retained for historical reasons,  but identified to other users as no longer applicable.
   FuelSupplierContact:
     type: object
     description: A table of contacts related to the Fuel Suppliers in the system.
@@ -809,46 +797,6 @@ definitions:
       description:
         type: string
         description: A description of the purpose of the permission and exposed to the user selecting the permissions to be included in a Role.
-  GroupMembership:
-    type: object
-    description: The users associated with a given group that has been defined in the application.
-    required:
-      - id
-      - active
-      - groupId
-      - userId
-    properties:
-      id:
-        format: int32
-        type: integer
-        description: A system-generated unique identifier for a Group Membership.
-      active:
-        type: boolean
-        description: A flag indicating the User is active in the group. Set false to remove the user from the designated group.
-      groupId:
-        $ref: '#/definitions/Group'
-        description: A foreign key reference to a Group.
-      userId:
-        $ref: '#/definitions/User'
-        description: A foreign key reference to a User.
-  Group:
-    type: object
-    description: A named entity that is used to created a collection of users into a group. For example, the School Bus Inspectors are in the group Inspectors. Groups, like permissions are defined by the application and referenced in the code of the application.
-    required:
-      - id
-      - name
-      - description
-    properties:
-      id:
-        format: int32
-        type: integer
-        description: A system-generated unique identifier for a Group.
-      name:
-        type: string
-        description: The name of the group, as refenced in the code.
-      description:
-        type: string
-        description: A description of the group that is presented to the user when they are setting a user into a group.
   Audit:
     type: object
     description: Server generated audit log.

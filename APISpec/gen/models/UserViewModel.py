@@ -24,7 +24,6 @@ import datetime
 from django.db import models
 from django.utils import timezone
 from .UserRole import UserRole
-from .GroupMembership import GroupMembership
 
 
 class UserViewModel(models.Model):	    
@@ -34,7 +33,6 @@ class UserViewModel(models.Model):
     active = models.BooleanField()   
     smUserId = models.CharField(max_length=255, blank=True, null=True)   
     userRoles = models.ManyToManyField('UserRole', related_name='UserViewModeluserRoles', blank=True)   
-    groupMemberships = models.ManyToManyField('GroupMembership', related_name='UserViewModelgroupMemberships', blank=True)   
     class Meta:
       abstract = True
 

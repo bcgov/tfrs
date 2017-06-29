@@ -25,7 +25,11 @@ from django.db import models
 from django.utils import timezone
 
 
-class Group(models.Model):	    
-    name = models.CharField(max_length=255)   
-    description = models.CharField(max_length=255)   
+class CreditTradeType(models.Model):	    
+    type = models.CharField(max_length=255, blank=True, null=True)   
+    description = models.CharField(max_length=255, blank=True, null=True)   
+    effectiveDate = models.DateField()   
+    expirationDate = models.DateField()   
+    displayOrder = models.IntegerField()   
+    isGovOnlyType = models.BooleanField()   
 

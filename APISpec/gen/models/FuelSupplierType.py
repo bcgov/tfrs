@@ -23,18 +23,12 @@ import datetime
 
 from django.db import models
 from django.utils import timezone
-from .CreditTrade import CreditTrade
-from .User import User
 
 
-class CreditTradeLogEntry(models.Model):	    
-    creditTrade = models.ForeignKey('CreditTrade', related_name='CreditTradeLogEntrycreditTrade', blank=True, null=True)   
-    user = models.ForeignKey('User', related_name='CreditTradeLogEntryuser', blank=True, null=True)   
-    logEntryTime = models.DateField()   
-    newStatus = models.CharField(max_length=255)   
-    newTradeExecutionDate = models.DateField(blank=True, null=True)   
-    newTransactionType = models.CharField(max_length=255, blank=True, null=True)   
-    newNumberOfCredits = models.IntegerField()   
-    newFairMarketValuePrice = models.CharField(blank=True, null=True, max_length=255)   
-    newFuelSupplierBalanceAtTransactionTime = models.IntegerField()   
+class FuelSupplierType(models.Model):	    
+    type = models.CharField(max_length=255)   
+    description = models.CharField(max_length=255, blank=True, null=True)   
+    effectiveDate = models.DateField()   
+    expirationDate = models.DateField()   
+    displayOrder = models.IntegerField()   
 

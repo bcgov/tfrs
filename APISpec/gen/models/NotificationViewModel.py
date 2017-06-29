@@ -27,7 +27,6 @@ from django.utils import timezone
 
 class NotificationViewModel(models.Model):	    
     eventId = models.IntegerField()   
-    event2Id = models.IntegerField()   
     hasBeenViewed = models.BooleanField()   
     isWatchNotification = models.BooleanField()   
     isExpired = models.BooleanField()   

@@ -23,13 +23,12 @@ import datetime
 
 from django.db import models
 from django.utils import timezone
-from .User import User
-from .Role import Role
 
 
-class UserRole(models.Model):	    
+class OpportunityStatus(models.Model):	    
+    status = models.CharField(max_length=255, blank=True, null=True)   
+    description = models.CharField(max_length=255, blank=True, null=True)   
     effectiveDate = models.DateField()   
-    expiryDate = models.DateField(blank=True, null=True)   
-    user = models.ForeignKey('User', related_name='UserRoleuser')   
-    role = models.ForeignKey('Role', related_name='UserRolerole')   
+    expirationDate = models.DateField(blank=True, null=True)   
+    displayOrder = models.IntegerField()   
 

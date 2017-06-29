@@ -27,9 +27,9 @@ from .User import User
 
 
 class UserFavourite(models.Model):	    
-    type = models.CharField(max_length=255, blank=True, null=True)   
+    context = models.CharField(max_length=255, blank=True, null=True)   
     name = models.CharField(max_length=255, blank=True, null=True)   
     value = models.CharField(max_length=255, blank=True, null=True)   
     isDefault = models.BooleanField()   
-    user = models.ForeignKey('User', related_name='UserFavouriteuser', blank=True, null=True)   
+    userId = models.ForeignKey('User', related_name='UserFavouriteuserId')   
 
