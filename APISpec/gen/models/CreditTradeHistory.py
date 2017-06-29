@@ -23,12 +23,19 @@ import datetime
 
 from django.db import models
 from django.utils import timezone
+from .User import User
+from .CreditTradeStatus import CreditTradeStatus
+from .CreditTradeType import CreditTradeType
 
 
-class AttachmentViewModel(models.Model):	    
-    fileName = models.CharField(max_length=2048, blank=True, null=True)   
-    description = models.CharField(max_length=2048, blank=True, null=True)   
-    type = models.CharField(max_length=255, blank=True, null=True)   
-    class Meta:
-      abstract = True
+class CreditTradeHistory(models.Model):	    
+    userId = models.ForeignKey('User', related_name='CreditTradeHistoryuserId')   
+    creditTradeUpdateTime = models.DateField()   
+    creditTradeStatusId = models.ForeignKey('CreditTradeStatus', related_name='CreditTradeHistorycreditTradeStatusId')   
+    newTradeEffectiveDate = models.DateField(blank=True, null=True)   
+    creditTradeTypeId = models.ForeignKey('CreditTradeType', related_name='CreditTradeHistorycreditTradeTypeId')   
+    newNumberOfCredits = models.IntegerField()   
+    newFairMarketValuePerCredit = models.CharField(blank=True, null=True, max_length=255)   
+    note = models.CharField(max_length=4096, blank=True, null=True)   
+    isInternalHistoryRecord = models.BooleanField()   
 

@@ -27,13 +27,12 @@ from .FuelSupplier import FuelSupplier
 
 
 class User(models.Model):	    
+    authorizationID = models.CharField(max_length=255, blank=True, null=True)   
     givenName = models.CharField(max_length=255)   
     surname = models.CharField(max_length=255)   
-    initials = models.CharField(max_length=255, blank=True, null=True)   
     email = models.CharField(max_length=255, blank=True, null=True)   
-    status = models.CharField(max_length=255)   
-    fuelSupplier = models.ForeignKey('FuelSupplier', related_name='UserfuelSupplier', blank=True, null=True)   
-    smUserId = models.CharField(max_length=255, blank=True, null=True)   
+    fuelSupplierId = models.ForeignKey('FuelSupplier', related_name='UserfuelSupplierId', blank=True, null=True)   
+    userId = models.CharField(max_length=255, blank=True, null=True)   
     guid = models.CharField(max_length=255, blank=True, null=True)   
-    smAuthorizationDirectory = models.CharField(max_length=255, blank=True, null=True)   
+    authorizationDirectory = models.CharField(max_length=255, blank=True, null=True)   
 

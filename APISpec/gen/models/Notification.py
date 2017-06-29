@@ -28,8 +28,8 @@ from .User import User
 
 
 class Notification(models.Model):	    
-    event = models.ForeignKey('NotificationEvent', related_name='Notificationevent', blank=True, null=True)   
+    notificationEventId = models.ForeignKey('NotificationEvent', related_name='NotificationnotificationEventId')   
     hasBeenViewed = models.BooleanField()   
     isWatchNotification = models.BooleanField()   
-    user = models.ForeignKey('User', related_name='Notificationuser', blank=True, null=True)   
+    userId = models.ForeignKey('User', related_name='NotificationuserId')   
 

@@ -23,11 +23,20 @@ import datetime
 
 from django.db import models
 from django.utils import timezone
+from .Opportunity import Opportunity
+from .User import User
+from .CreditTradeType import CreditTradeType
+from .FuelSupplierType import FuelSupplierType
 
 
-class Attachment(models.Model):	    
-    fileName = models.CharField(max_length=255, blank=True, null=True)   
-    fileContents = models.BinaryField(blank=True, null=True)   
-    description = models.CharField(max_length=255, blank=True, null=True)   
-    type = models.CharField(max_length=255, blank=True, null=True)   
+class OpportunityHistory(models.Model):	    
+    opportunityId = models.ForeignKey('Opportunity', related_name='OpportunityHistoryopportunityId')   
+    userId = models.ForeignKey('User', related_name='OpportunityHistoryuserId')   
+    updateTime = models.DateField(blank=True, null=True)   
+    creditTradeTypeId = models.ForeignKey('CreditTradeType', related_name='OpportunityHistorycreditTradeTypeId')   
+    newNumberOfCredits = models.IntegerField()   
+    newProposedValuePerCredit = models.CharField(blank=True, null=True, max_length=255)   
+    fuelSupplierTypeId = models.ForeignKey('FuelSupplierType', related_name='OpportunityHistoryfuelSupplierTypeId')   
+    newTradeEffectiveDate = models.DateField(blank=True, null=True)   
+    note = models.CharField(max_length=4096, blank=True, null=True)   
 

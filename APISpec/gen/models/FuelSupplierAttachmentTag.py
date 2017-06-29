@@ -23,11 +23,10 @@ import datetime
 
 from django.db import models
 from django.utils import timezone
+from .FuelSupplierAttachment import FuelSupplierAttachment
 
 
-class GroupViewModel(models.Model):	    
-    name = models.CharField(max_length=255)   
-    description = models.CharField(max_length=255)   
-    class Meta:
-      abstract = True
+class FuelSupplierAttachmentTag(models.Model):	    
+    fuelSupplierAttachmentId = models.ForeignKey('FuelSupplierAttachment', related_name='FuelSupplierAttachmentTagfuelSupplierAttachmentId')   
+    tag = models.CharField(max_length=100, blank=True, null=True)   
 

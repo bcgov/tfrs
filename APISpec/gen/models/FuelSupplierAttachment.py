@@ -24,16 +24,12 @@ import datetime
 from django.db import models
 from django.utils import timezone
 from .FuelSupplier import FuelSupplier
-from .History import History
 
 
-class Offer(models.Model):	    
-    fuelSupplier = models.ForeignKey('FuelSupplier', related_name='OfferfuelSupplier')   
-    status = models.CharField(max_length=255)   
-    buyOrSell = models.CharField(max_length=255)   
-    numberOfCredits = models.IntegerField()   
-    numberOfViews = models.IntegerField()   
-    datePosted = models.DateField(blank=True, null=True)   
-    note = models.CharField(max_length=255, blank=True, null=True)   
-    history = models.ManyToManyField('History', related_name='Offerhistory', blank=True)   
+class FuelSupplierAttachment(models.Model):	    
+    fuelSupplierId = models.ForeignKey('FuelSupplier', related_name='FuelSupplierAttachmentfuelSupplierId')   
+    fileName = models.CharField(max_length=255, blank=True, null=True)   
+    fileLocation = models.CharField(max_length=255, blank=True, null=True)   
+    description = models.CharField(max_length=255, blank=True, null=True)   
+    complianceYear = models.CharField(max_length=255, blank=True, null=True)   
 

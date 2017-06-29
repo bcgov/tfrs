@@ -69,7 +69,7 @@
           schema:
             type: array
             items:
-              $ref: '#/definitions/Attachment'
+              $ref: '#/definitions/FuelSupplierAttachment'
       parameters:
         - name: id
           in: path
@@ -92,7 +92,7 @@
           schema:
             type: array
             items:
-              $ref: '#/definitions/HistoryViewModel'
+              $ref: '#/definitions/FuelSupplierHistory'
       parameters:
         - name: id
           in: path
@@ -642,3 +642,4 @@
           description: id of User for which to fetch notifications
           required: true
           type: integer
+
