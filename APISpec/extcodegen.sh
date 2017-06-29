@@ -23,6 +23,71 @@ CONFIG_FILE="swagger-codegen-config.json"
 # Set the swagger file
 SWAGGER_FILE="TFRSswagger.yaml"
 
+# Command line processing
+# See Usage below.
+# Use -gt 1 to consume two arguments per pass in the loop (e.g. each
+# argument has a corresponding value to go with it).
+# Use -gt 0 to consume one or more arguments per pass in the loop (e.g.
+# some arguments don't have a corresponding value to go with it such
+# as in the --default example).
+# note: if this is set to -gt 0 the /etc/hosts part is not recognized ( may be a bug )
+
+usage="0"
+while [ $# -gt 0 ] && [ "$usage" == "0" ]
+do
+key="$1"
+
+case $key in
+    -h|--help)
+    usage="1"
+    ;;
+    -f|--file)
+    SWAGGER_FILE="$2"
+    shift # past argument
+    ;;
+    -o|--output)
+    OUTPUT="$2"
+    shift # past argument
+    ;;
+    -c|--config)
+    CONFIG_FILE="$2"
+    shift # past argument
+    ;;
+    -s|--stack)
+    TARGET_STACK="$2"
+    shift # past argument
+    ;;
+    -j|--jars)
+    executable="$2"
+    shift # past argument
+    ;;
+    *)
+    usage="1"        # unknown option
+    ;;
+esac
+shift # past argument or value
+done
+
+echo Usage is $usage
+if [ "$usage" == "1" ]; then
+  echo Extended Swagger Code Generator
+  echo USAGE $0 [args]
+  echo where no args uses the defaults set in this file and runs the code generation
+  echo Args:
+  echo '  -h|--help - print usage information'
+  echo '  -f|--file <swagger file> - specify the swagger file to use'
+  echo '  -o|--output <output folder> - specify the output folder to output the generated code'
+  echo '  -c|--config <config json> - specify the swagger code generator json file to use'
+  echo '  -s|--stack <django|fuse|aspnetmvc> - specify the stack to generate - could also be one of the many supported by Swagger'
+  echo Current options:
+  echo ..Target Stack: $TARGET_STACK
+  echo ..........JARs: $executable
+  echo .Output Folder: $OUTPUT
+  echo ...Config File: $CONFIG_FILE
+  echo ..Swagger File: $SWAGGER_FILE
+  exit 1
+fi
+
 # TODO - Convert this to bash
 # Process required command line options to override defaults
 # IF "%1."=="." GOTO :USAGE
