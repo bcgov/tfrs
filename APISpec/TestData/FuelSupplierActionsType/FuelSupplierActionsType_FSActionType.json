@@ -1,0 +1,29 @@
+[
+    {
+        " !id": "20000",
+        " description": "A Fuel Supplier permitted to both Buy and Sell Low Carbon Credits.",
+        " displayOrder": "1",
+        " effectiveDate": "1/1/2017",
+        " expirationDate": null,
+        " id": "20000",
+        " type": "Buy And Sell"
+    },
+    {
+        " !id": "20001",
+        " description": "A Fuel Supplier permitted to only to Sell Low Carbon Credits.",
+        " displayOrder": "2",
+        " effectiveDate": "1/1/2017",
+        " expirationDate": null,
+        " id": "20001",
+        " type": "Sell Only"
+    },
+    {
+        " !id": "20002",
+        " description": "A Fuel Supplier not currently permitted to either Buy and Sell Low Carbon Credits.",
+        " displayOrder": "3",
+        " effectiveDate": "1/1/2017",
+        " expirationDate": null,
+        " id": "20002",
+        " type": "None"
+    }
+]

@@ -1,0 +1,38 @@
+[
+    {
+        " !id": "20000",
+        " description": "The Opportunity has been created but has not yet been published.",
+        " displayOrder": "1",
+        " effectiveDate": "1/1/2017",
+        " expirationDate": null,
+        " id": "20000",
+        " status": "Draft"
+    },
+    {
+        " !id": "20001",
+        " description": "The Opportunity has been created and published for other Fuel Suppliers to see.",
+        " displayOrder": "2",
+        " effectiveDate": "1/1/2017",
+        " expirationDate": null,
+        " id": "20001",
+        " status": "Published"
+    },
+    {
+        " !id": "20002",
+        " description": "The Opportunity has previously been published, subsequently removed from publication, and is no longer visible to other Fuel Suppliers.",
+        " displayOrder": "3",
+        " effectiveDate": "1/1/2017",
+        " expirationDate": null,
+        " id": "20002",
+        " status": "Un-Published"
+    },
+    {
+        " !id": "20003",
+        " description": "The Opportunity was drafted but never published.",
+        " displayOrder": "4",
+        " effectiveDate": "1/1/2017",
+        " expirationDate": null,
+        " id": "20003",
+        " status": "Cancelled"
+    }
+]

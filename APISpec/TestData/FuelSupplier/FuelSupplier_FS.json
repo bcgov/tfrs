@@ -1,0 +1,242 @@
+[
+    {
+        " !id": "20000",
+        " dateCreated": "1/29/2013",
+        " fuelSupplierActionsTypeId": "20000",
+        " fuelSupplierStatusId": "20000",
+        " fuelSupplierTypeId": "20000",
+        " id": "20000",
+        " name": "Air Liquide Canada Inc.",
+        "shortName": "Air Liquide"
+    },
+    {
+        " !id": "20001",
+        " dateCreated": "1/26/2014",
+        " fuelSupplierActionsTypeId": "20000",
+        " fuelSupplierStatusId": "20000",
+        " fuelSupplierTypeId": "20000",
+        " id": "20001",
+        " name": "BC Hydro",
+        "shortName": "BC Hydro"
+    },
+    {
+        " !id": "20002",
+        " dateCreated": "7/16/2012",
+        " fuelSupplierActionsTypeId": "20000",
+        " fuelSupplierStatusId": "20000",
+        " fuelSupplierTypeId": "20000",
+        " id": "20002",
+        " name": "BC Transit",
+        "shortName": "BC Transit"
+    },
+    {
+        " !id": "20003",
+        " dateCreated": "1/31/2012",
+        " fuelSupplierActionsTypeId": "20000",
+        " fuelSupplierStatusId": "20000",
+        " fuelSupplierTypeId": "20000",
+        " id": "20003",
+        " name": "Cal-Gas Inc., Canwest Propane",
+        "shortName": "Cal-Gas"
+    },
+    {
+        " !id": "20004",
+        " dateCreated": "11/7/2013",
+        " fuelSupplierActionsTypeId": "20000",
+        " fuelSupplierStatusId": "20000",
+        " fuelSupplierTypeId": "20000",
+        " id": "20004",
+        " name": "Chevron Canada Limited",
+        "shortName": "Chevron Canada"
+    },
+    {
+        " !id": "20005",
+        " dateCreated": "8/2/2013",
+        " fuelSupplierActionsTypeId": "20001",
+        " fuelSupplierStatusId": "20000",
+        " fuelSupplierTypeId": "20000",
+        " id": "20005",
+        " name": "Consolidated Biofuels Ltd.",
+        "shortName": "Consolidated Biofuels"
+    },
+    {
+        " !id": "20006",
+        " dateCreated": "2/18/2014",
+        " fuelSupplierActionsTypeId": "20001",
+        " fuelSupplierStatusId": "20000",
+        " fuelSupplierTypeId": "20000",
+        " id": "20006",
+        " name": "eco-Options Energy Cooperative",
+        "shortName": "eco-Options"
+    },
+    {
+        " !id": "20007",
+        " dateCreated": "1/21/2013",
+        " fuelSupplierActionsTypeId": "20000",
+        " fuelSupplierStatusId": "20000",
+        " fuelSupplierTypeId": "20000",
+        " id": "20007",
+        " name": "Emterra Environmental",
+        "shortName": "Emterra Environmental"
+    },
+    {
+        " !id": "20008",
+        " dateCreated": "2/11/2013",
+        " fuelSupplierActionsTypeId": "20000",
+        " fuelSupplierStatusId": "20000",
+        " fuelSupplierTypeId": "20001",
+        " id": "20008",
+        " name": "Federated Co-Operatives Ltd.",
+        "shortName": "Federated Co-Operatives"
+    },
+    {
+        " !id": "20009",
+        " dateCreated": "4/13/2013",
+        " fuelSupplierActionsTypeId": "20000",
+        " fuelSupplierStatusId": "20000",
+        " fuelSupplierTypeId": "20001",
+        " id": "20009",
+        " name": "FortisBC Energy Inc.",
+        "shortName": "FortisBC"
+    },
+    {
+        " !id": "20010",
+        " dateCreated": "7/2/2013",
+        " fuelSupplierActionsTypeId": "20000",
+        " fuelSupplierStatusId": "20000",
+        " fuelSupplierTypeId": "20001",
+        " id": "20010",
+        " name": "HTEC Hydrogen Technology &",
+        "shortName": "HTEC"
+    },
+    {
+        " !id": "20011",
+        " dateCreated": "8/8/2013",
+        " fuelSupplierActionsTypeId": "20001",
+        " fuelSupplierStatusId": "20000",
+        " fuelSupplierTypeId": "20001",
+        " id": "20011",
+        " name": "Energy Corporation",
+        "shortName": "Energy Corp"
+    },
+    {
+        " !id": "20012",
+        " dateCreated": "5/28/2012",
+        " fuelSupplierActionsTypeId": "20000",
+        " fuelSupplierStatusId": "20000",
+        " fuelSupplierTypeId": "20001",
+        " id": "20012",
+        " name": "Husky Oil Ltd.",
+        "shortName": "Husky Oil"
+    },
+    {
+        " !id": "20013",
+        " dateCreated": "5/5/2013",
+        " fuelSupplierActionsTypeId": "20000",
+        " fuelSupplierStatusId": "20000",
+        " fuelSupplierTypeId": "20001",
+        " id": "20013",
+        " name": "Imperial Oil Limited & McColl",
+        "shortName": "Imperial Oil Limited"
+    },
+    {
+        " !id": "20014",
+        " dateCreated": "10/14/2013",
+        " fuelSupplierActionsTypeId": "20000",
+        " fuelSupplierStatusId": "20000",
+        " fuelSupplierTypeId": "20001",
+        " id": "20014",
+        " name": "Frontenac Petroleum Inc.",
+        "shortName": "Frontenac Petroleum"
+    },
+    {
+        " !id": "20015",
+        " dateCreated": "2/7/2013",
+        " fuelSupplierActionsTypeId": "20000",
+        " fuelSupplierStatusId": "20000",
+        " fuelSupplierTypeId": "20001",
+        " id": "20015",
+        " name": "Powerex Corporation",
+        "shortName": "Powerex Corp"
+    },
+    {
+        " !id": "20016",
+        " dateCreated": "11/27/2013",
+        " fuelSupplierActionsTypeId": "20000",
+        " fuelSupplierStatusId": "20000",
+        " fuelSupplierTypeId": "20001",
+        " id": "20016",
+        " name": "Powertech Labs Inc.",
+        "shortName": "Powertech Labs"
+    },
+    {
+        " !id": "20017",
+        " dateCreated": "1/17/2014",
+        " fuelSupplierActionsTypeId": "20001",
+        " fuelSupplierStatusId": "20000",
+        " fuelSupplierTypeId": "20001",
+        " id": "20017",
+        " name": "Shell Canada Products",
+        "shortName": "Shell Canada"
+    },
+    {
+        " !id": "20018",
+        " dateCreated": "5/26/2012",
+        " fuelSupplierActionsTypeId": "20001",
+        " fuelSupplierStatusId": "20000",
+        " fuelSupplierTypeId": "20001",
+        " id": "20018",
+        " name": "Smithrite Disposal Limited",
+        "shortName": "Smithrite Disposal"
+    },
+    {
+        " !id": "20019",
+        " dateCreated": "2/13/2014",
+        " fuelSupplierActionsTypeId": "20000",
+        " fuelSupplierStatusId": "20000",
+        " fuelSupplierTypeId": "20001",
+        " id": "20019",
+        " name": "South Coast British Columbia",
+        "shortName": "South Coast"
+    },
+    {
+        " !id": "20020",
+        " dateCreated": "6/21/2012",
+        " fuelSupplierActionsTypeId": "20000",
+        " fuelSupplierStatusId": "20000",
+        " fuelSupplierTypeId": "20001",
+        " id": "20020",
+        " name": "Transportation Authority (TransLink)",
+        "shortName": "TransLink"
+    },
+    {
+        " !id": "20021",
+        " dateCreated": "12/29/2012",
+        " fuelSupplierActionsTypeId": "20000",
+        " fuelSupplierStatusId": "20000",
+        " fuelSupplierTypeId": "20001",
+        " id": "20021",
+        " name": "Suncor Energy Products Partnership",
+        "shortName": "Suncor"
+    },
+    {
+        " !id": "20022",
+        " dateCreated": "1/7/2014",
+        " fuelSupplierActionsTypeId": "20000",
+        " fuelSupplierStatusId": "20000",
+        " fuelSupplierTypeId": "20001",
+        " id": "20022",
+        " name": "Superior Propane",
+        "shortName": "Superior Propane"
+    },
+    {
+        " !id": "20023",
+        " dateCreated": "3/25/2012",
+        " fuelSupplierActionsTypeId": "20002",
+        " fuelSupplierStatusId": "20001",
+        " fuelSupplierTypeId": "20001",
+        " id": "20023",
+        " name": "Super Save Group",
+        "shortName": "Super Save Group"
+    }
+]
