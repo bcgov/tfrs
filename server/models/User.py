@@ -23,7 +23,7 @@ import datetime
 
 from django.db import models
 from django.utils import timezone
-from .FuelSupplier import FuelSupplier
+#from .FuelSupplier import FuelSupplier
 
 
 class User(models.Model):	    
@@ -32,7 +32,7 @@ class User(models.Model):
     initials = models.CharField(max_length=255, blank=True, null=True)   
     email = models.CharField(max_length=255, blank=True, null=True)   
     status = models.CharField(max_length=255)   
-    fuelSupplier = models.ForeignKey('FuelSupplier', related_name='UserfuelSupplier', blank=True, null=True)   
+    # fuelSupplier = models.ForeignKey('FuelSupplier', related_name='UserfuelSupplier', blank=True, null=True)   
     smUserId = models.CharField(max_length=255, blank=True, null=True)   
     guid = models.CharField(max_length=255, blank=True, null=True)   
     smAuthorizationDirectory = models.CharField(max_length=255, blank=True, null=True)   
