@@ -61,6 +61,8 @@ from .models.UserRole import UserRole
 from .models.UserRoleViewModel import UserRoleViewModel
 from .models.UserViewModel import UserViewModel
 
+from auditable.views import AuditableMixin
+
 
 class attachmentsBulkPost(BulkCreateModelMixin, generics.GenericAPIView):
   """  
