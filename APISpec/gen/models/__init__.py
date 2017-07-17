@@ -161,6 +161,10 @@
 #except:
 #     import UserFavouriteViewModel
 #try:
+#     from . import UserRole  
+#except:
+#     import UserRole
+#try:
 #     from . import UserRoleViewModel  
 #except:
 #     import UserRoleViewModel

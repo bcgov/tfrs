@@ -97,6 +97,8 @@ from .models.UserFavourite import UserFavourite
 from .serializers import UserFavouriteSerializer
 from .models.UserFavouriteViewModel import UserFavouriteViewModel
 from .serializers import UserFavouriteViewModelSerializer
+from .models.UserRole import UserRole
+from .serializers import UserRoleSerializer
 from .models.UserRoleViewModel import UserRoleViewModel
 from .serializers import UserRoleViewModelSerializer
 from .models.UserViewModel import UserViewModel
