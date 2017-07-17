@@ -55,6 +55,7 @@ from .models.User import User
 from .models.UserDetailsViewModel import UserDetailsViewModel
 from .models.UserFavourite import UserFavourite
 from .models.UserFavouriteViewModel import UserFavouriteViewModel
+from .models.UserRole import UserRole
 from .models.UserRoleViewModel import UserRoleViewModel
 from .models.UserViewModel import UserViewModel
 
@@ -227,6 +228,11 @@ class UserFavouriteViewModelSerializer(serializers.ModelSerializer):
   class Meta:
     model = UserFavouriteViewModel
     fields = ('id','name','value','isDefault','type')
+
+class UserRoleSerializer(serializers.ModelSerializer):
+  class Meta:
+    model = UserRole
+    fields = ('id','userId','roleId')
 
 class UserRoleViewModelSerializer(serializers.ModelSerializer):
   class Meta:

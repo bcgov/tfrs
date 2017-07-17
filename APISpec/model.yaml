@@ -757,24 +757,24 @@ definitions:
       description:
         type: string
         description: A description of the role as set by the user creating&#x2F;updating the role.
-  RolePermission:
+  UserRole:
     type: object
-    description: The collection of permissions included in a role.
+    description: A link defining the Roles associated with each User.
     required:
       - id
+      - userId
       - roleId
-      - permissionId
     properties:
       id:
         format: int32
         type: integer
-        description: A system-generated unique identifier for a Role Permission.
+        description: A system-generated unique identifier for a UserRole.
+      userId:
+        $ref: '#/definitions/User'
+        description: A foreign key reference to a User.
       roleId:
         $ref: '#/definitions/Role'
         description: A foreign key reference to a Role.
-      permissionId:
-        $ref: '#/definitions/Permission'
-        description: A foreign key reference to a Permission.
   Permission:
     type: object
     description: The set of permissions defined in the application. Each permission is given a name and triggers some behavior defined in the application. For example, a permission might allow users to see data or to have access to functionality restricted to users without that permission. Permissions are created as needed to the application and are added to the permissions table by data migrations executed at the time the software that uses the permission is deployed.
@@ -797,6 +797,24 @@ definitions:
       description:
         type: string
         description: A description of the purpose of the permission and exposed to the user selecting the permissions to be included in a Role.
+  RolePermission:
+    type: object
+    description: The collection of permissions included in a role.
+    required:
+      - id
+      - roleId
+      - permissionId
+    properties:
+      id:
+        format: int32
+        type: integer
+        description: A system-generated unique identifier for a Role Permission.
+      roleId:
+        $ref: '#/definitions/Role'
+        description: A foreign key reference to a Role.
+      permissionId:
+        $ref: '#/definitions/Permission'
+        description: A foreign key reference to a Permission.
   Audit:
     type: object
     description: Server generated audit log.

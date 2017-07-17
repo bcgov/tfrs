@@ -54,6 +54,7 @@ from .models.User import User
 
 from .models.UserFavourite import UserFavourite
 
+from .models.UserRole import UserRole
 
 
 
@@ -86,3 +87,4 @@ admin.site.register(Role)
 admin.site.register(RolePermission)
 admin.site.register(User)
 admin.site.register(UserFavourite)
+admin.site.register(UserRole)

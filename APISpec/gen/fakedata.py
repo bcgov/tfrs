@@ -562,6 +562,15 @@ def UserFavouriteViewModelTestDataUpdate():
   }
 
 
+def UserRoleTestDataCreate():
+  return {
+  }
+
+def UserRoleTestDataUpdate():
+  return {
+  }
+
+
 def UserRoleViewModelTestDataCreate():
   return {
     'roleId':1,

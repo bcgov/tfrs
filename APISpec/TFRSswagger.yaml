@@ -3593,6 +3593,152 @@ paths:
           description: id of User to delete
           required: true
           type: integer
+  /userroles:
+    get:
+      tags:
+        - UserRole
+      summary: Lists available UserRole objects
+      x-codegen-operation: list
+      consumes: []
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      responses:
+        200:
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/UserRole"
+    post:
+      tags:
+        - UserRole
+      x-codegen-permission: ADMIN
+      x-codegen-operation: create
+      summary: Creates a new UserRole object            
+      consumes:
+        - application/json
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      parameters:
+        - name: item
+          in: body
+          required: true
+          schema:
+            $ref: "#/definitions/UserRole"
+      responses:
+        201:
+          description: UserRole created
+          headers:
+            Location:
+              description: A link to the UserRole
+              type: string
+              format: url
+          schema:
+            $ref: "#/definitions/UserRole"  
+  /userroles/bulk:
+    post:
+      tags:
+        - UserRole
+      summary: Bulk create / update a number of UserRole object      
+      x-codegen-operation: bulk
+      consumes:
+        - application/json
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      parameters:
+        - name: items
+          in: body
+          required: true
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/UserRole"
+      responses:
+        201:
+          description: UserRole created
+  /userroles/{id}:
+    get:
+      tags:
+        - UserRole
+      summary: Gets a specific UserRole object      
+      x-codegen-operation: retrieve
+      consumes: []
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: "#/definitions/UserRole"
+        404:
+          description: UserRole not found
+      parameters:
+        - name: id
+          in: path
+          description: id of UserRole to fetch
+          required: true
+          type: integer
+    put:
+      tags:
+        - UserRole      
+      x-codegen-permission: ADMIN
+      x-codegen-operation: update
+      summary: Updates a specific UserRole object      
+      consumes:
+        - application/json
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: "#/definitions/UserRole"
+        404:
+          description: UserRole not found
+      parameters:
+        - name: id
+          in: path
+          description: id of UserRole to fetch
+          required: true
+          type: integer
+        - name: item
+          in: body
+          required: true
+          schema:
+            $ref: "#/definitions/UserRole"
+  /userroles/{id}/delete:
+    post:
+      tags:
+        - UserRole      
+      x-codegen-permission: ADMIN
+      x-codegen-operation: destroy
+      summary: Deletes a specific UserRole object      
+      consumes: []
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      responses:
+        200:
+          description: OK
+        404:
+          description: UserRole not found
+      parameters:
+        - name: id
+          in: path
+          description: id of UserRole to delete
+          required: true
+          type: integer
   /credittrades/search:
     get:
       summary: Searches credit trades
@@ -4997,24 +5143,24 @@ definitions:
       description:
         type: string
         description: A description of the role as set by the user creating&#x2F;updating the role.
-  RolePermission:
+  UserRole:
     type: object
-    description: The collection of permissions included in a role.
+    description: A link defining the Roles associated with each User.
     required:
       - id
+      - userId
       - roleId
-      - permissionId
     properties:
       id:
         format: int32
         type: integer
-        description: A system-generated unique identifier for a Role Permission.
+        description: A system-generated unique identifier for a UserRole.
+      userId:
+        $ref: '#/definitions/User'
+        description: A foreign key reference to a User.
       roleId:
         $ref: '#/definitions/Role'
         description: A foreign key reference to a Role.
-      permissionId:
-        $ref: '#/definitions/Permission'
-        description: A foreign key reference to a Permission.
   Permission:
     type: object
     description: The set of permissions defined in the application. Each permission is given a name and triggers some behavior defined in the application. For example, a permission might allow users to see data or to have access to functionality restricted to users without that permission. Permissions are created as needed to the application and are added to the permissions table by data migrations executed at the time the software that uses the permission is deployed.
@@ -5037,6 +5183,24 @@ definitions:
       description:
         type: string
         description: A description of the purpose of the permission and exposed to the user selecting the permissions to be included in a Role.
+  RolePermission:
+    type: object
+    description: The collection of permissions included in a role.
+    required:
+      - id
+      - roleId
+      - permissionId
+    properties:
+      id:
+        format: int32
+        type: integer
+        description: A system-generated unique identifier for a Role Permission.
+      roleId:
+        $ref: '#/definitions/Role'
+        description: A foreign key reference to a Role.
+      permissionId:
+        $ref: '#/definitions/Permission'
+        description: A foreign key reference to a Permission.
   Audit:
     type: object
     description: Server generated audit log.
