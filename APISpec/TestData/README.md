@@ -15,14 +15,14 @@ Once exported, use the "gendata.bat" or "gendata.sh" scripts to generate the JSO
 
 Loading the Test Data
 ----------------
-Once the data is generated, two scripts (currently only in ".bat" form) are used to load the data via the API.  The load scripts have been used in another project but have not yet been tested for TFRS and may require some tweaking.
+Once the data is generated, pairs of scripts (.bat and .sh scripts) are used to load the data via the API.  The load scripts have been used in another project but have not yet been used for TFRS with live APIs and may require some tweaking.
 
-The "load.bat" file takes as arguments:
+The "load.*" script takes as arguments:
 
 * a JSON file
 * an "bulk" API endpoint
-* a server URL (dev, test or prod)
+* a server URL (literal dev, test or prod or a full URL)
 
-and loads the data into the application.  The load.bat includes a call to authenticate the user with the application and create a cookie for the subsequent call to actually load the data. An improvement to the script would be a mechanism (e.g. a flag) to only make the authenticate when needed vs. every time - for example, on the first call of a sequence of loads.
+and loads the data into the application using the given endpoint.  The load.* script includes a commented out call to authenticate the user with the application and create a cookie for the subsequent call to actually load the data. The authenticate call is expected to only be called if the "cookie" file does not exist.
 
-The "load-all.bat" script takes just the server to be loaded and loads all of the tables to initialize the application. The load-all script is defined to load the tables in a relational correct order. Again - it has not yet been tested and may need further tweaking.
+The "load-all.*" script takes just the server as an argument (same format as load.*) to be loaded and loads in relational appropriate order all of the tables to initialize the application. Again - it has not yet been run with live api's and may need further tweaking. The load-all script removes the "cookie" file if it exists so that on only the first call to the load script, the (currently commented out) authentication call will be made to the server.
