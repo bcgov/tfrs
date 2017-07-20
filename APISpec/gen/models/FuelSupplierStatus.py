@@ -26,7 +26,7 @@ from django.utils import timezone
 
 
 class FuelSupplierStatus(models.Model):	    
-    status = models.CharField(max_length=255, blank=True, null=True)   
+    status = models.CharField(max_length=255)   
     description = models.CharField(max_length=255, blank=True, null=True)   
     effectiveDate = models.DateField()   
     expirationDate = models.DateField(blank=True, null=True)   

@@ -28,7 +28,7 @@ from .FuelSupplier import FuelSupplier
 
 class FuelSupplierCCData(models.Model):	    
     fuelSupplierId = models.ForeignKey('FuelSupplier', related_name='FuelSupplierCCDatafuelSupplierId')   
-    commonClientOrgId = models.CharField(max_length=255, blank=True, null=True)   
+    commonClientOrgId = models.CharField(max_length=255)   
     lastUpdatefromCommonClient = models.DateField()   
     name = models.CharField(max_length=255)   
     corporateAddressLine1 = models.CharField(max_length=255, blank=True, null=True)   

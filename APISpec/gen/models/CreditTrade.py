@@ -37,6 +37,6 @@ class CreditTrade(models.Model):
     creditTradeTypeId = models.ForeignKey('CreditTradeType', related_name='CreditTradecreditTradeTypeId')   
     numberOfCredits = models.IntegerField()   
     fairMarketValuePerCredit = models.CharField(blank=True, null=True, max_length=255)   
-    history = models.ManyToManyField('CreditTradeHistory', related_name='CreditTradehistory', blank=True)   
+    historySet = models.ManyToManyField('CreditTradeHistory', related_name='CreditTradehistorySet', blank=True)   
     plainEnglishPhrase = models.CharField(max_length=255)   
 

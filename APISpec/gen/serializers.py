@@ -67,7 +67,7 @@ class AuditSerializer(serializers.ModelSerializer):
 class CreditTradeSerializer(serializers.ModelSerializer):
   class Meta:
     model = CreditTrade
-    fields = ('id','creditTradeStatusId','initiator','respondent','tradeEffectiveDate','creditTradeTypeId','numberOfCredits','fairMarketValuePerCredit','history','plainEnglishPhrase')
+    fields = ('id','creditTradeStatusId','initiator','respondent','tradeEffectiveDate','creditTradeTypeId','numberOfCredits','fairMarketValuePerCredit','historySet','plainEnglishPhrase')
 
 class CreditTradeHistorySerializer(serializers.ModelSerializer):
   class Meta:
@@ -82,7 +82,7 @@ class CreditTradeStatusSerializer(serializers.ModelSerializer):
 class CreditTradeTypeSerializer(serializers.ModelSerializer):
   class Meta:
     model = CreditTradeType
-    fields = ('id','type','description','effectiveDate','expirationDate','displayOrder','isGovOnlyType')
+    fields = ('id','theType','description','effectiveDate','expirationDate','displayOrder','isGovOnlyType')
 
 class CurrentUserViewModelSerializer(serializers.ModelSerializer):
   class Meta:
@@ -97,7 +97,7 @@ class FuelSupplierSerializer(serializers.ModelSerializer):
 class FuelSupplierActionsTypeSerializer(serializers.ModelSerializer):
   class Meta:
     model = FuelSupplierActionsType
-    fields = ('id','type','description','effectiveDate','expirationDate','displayOrder')
+    fields = ('id','theType','description','effectiveDate','expirationDate','displayOrder')
 
 class FuelSupplierAttachmentSerializer(serializers.ModelSerializer):
   class Meta:
@@ -142,7 +142,7 @@ class FuelSupplierStatusSerializer(serializers.ModelSerializer):
 class FuelSupplierTypeSerializer(serializers.ModelSerializer):
   class Meta:
     model = FuelSupplierType
-    fields = ('id','type','description','effectiveDate','expirationDate','displayOrder')
+    fields = ('id','theType','description','effectiveDate','expirationDate','displayOrder')
 
 class NotificationSerializer(serializers.ModelSerializer):
   class Meta:
@@ -157,7 +157,7 @@ class NotificationEventSerializer(serializers.ModelSerializer):
 class NotificationTypeSerializer(serializers.ModelSerializer):
   class Meta:
     model = NotificationType
-    fields = ('id','type','description','effectiveDate','expirationDate','displayOrder')
+    fields = ('id','theType','description','effectiveDate','expirationDate','displayOrder')
 
 class NotificationViewModelSerializer(serializers.ModelSerializer):
   class Meta:
@@ -167,7 +167,7 @@ class NotificationViewModelSerializer(serializers.ModelSerializer):
 class OpportunitySerializer(serializers.ModelSerializer):
   class Meta:
     model = Opportunity
-    fields = ('id','fuelSupplierId','opportunityStatusId','creditTradeTypeId','fuelSupplierTypeId','numberOfCredits','suggestedValuePerCredit','hasTradeNow','numberOfViews','datePosted','opportunityBackgroundNote','creditTrades','plainEnglishPhrase')
+    fields = ('id','fuelSupplierId','opportunityStatusId','creditTradeTypeId','fuelSupplierTypeId','numberOfCredits','suggestedValuePerCredit','hasTradeNow','numberOfViews','datePosted','opportunityBackgroundNote','creditTradesSet','plainEnglishPhrase')
 
 class OpportunityHistorySerializer(serializers.ModelSerializer):
   class Meta:
@@ -212,7 +212,7 @@ class RoleViewModelSerializer(serializers.ModelSerializer):
 class UserSerializer(serializers.ModelSerializer):
   class Meta:
     model = User
-    fields = ('id','authorizationID','givenName','surname','email','fuelSupplierId','userId','guid','authorizationDirectory')
+    fields = ('id','authorizationID','givenName','surname','email','userId','guid','authorizationDirectory')
 
 class UserDetailsViewModelSerializer(serializers.ModelSerializer):
   class Meta:

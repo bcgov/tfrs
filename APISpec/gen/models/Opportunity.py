@@ -41,6 +41,6 @@ class Opportunity(models.Model):
     numberOfViews = models.IntegerField()   
     datePosted = models.DateField(blank=True, null=True)   
     opportunityBackgroundNote = models.CharField(max_length=255, blank=True, null=True)   
-    creditTrades = models.ManyToManyField('CreditTrade', related_name='OpportunitycreditTrades', blank=True)   
+    creditTradesSet = models.ManyToManyField('CreditTrade', related_name='OpportunitycreditTradesSet', blank=True)   
     plainEnglishPhrase = models.CharField(max_length=255)   
 
