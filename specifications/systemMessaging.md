@@ -71,6 +71,14 @@ The server timed out waiting for the request. According to HTTP specifications: 
 
 The request entity has a [media type](https://en.wikipedia.org/wiki/Internet_media_type) which the server or resource does not support. For example, the client uploads an image as [image/svg+xml](https://en.wikipedia.org/wiki/Scalable_Vector_Graphics), but the server requires that images use a different format.
 
+## 422 Unprocessable Entity
+
+> We're sorry
+>
+> Looks like you are trying to submit some information that we can't process.
+
+The 422 (Unprocessable Entity) status code means the server understands the content type of the request entity (hence a 415(Unsupported Media Type) status code is inappropriate), and the syntax of the request entity is correct (thus a 400 (Bad Request) status code is inappropriate) but was unable to process the contained instructions. For example, this error condition may occur if an XML request body contains well-formed (i.e., syntactically correct), but semantically erroneous, XML instructions.
+
 ## 500 Internal Server Error
 
 > We're sorry.
