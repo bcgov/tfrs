@@ -38,7 +38,7 @@ definitions:
         type: number
         format: float
         description: The price (if applicable) of each credit in the transaction. There is no fair market value on transaction initiated by the Government of BC.
-      history:
+      historySet:
         type: array
         items:
           $ref: '#/definitions/CreditTradeHistory'
@@ -135,7 +135,7 @@ definitions:
         format: int32
         type: integer
         description: A system-generated unique identifier for a Credit Trade Type.
-      type:
+      theType:
         type: string
         description: The name of the type of Credit Trade, such as Buy, Sell, Award, etc.
       description:
@@ -206,7 +206,7 @@ definitions:
       opportunityBackgroundNote:
         type: string
         description: A note about the Opportunity that is set by the Fuel Supplier posting the Opportunity and visible to those viewing the Opportunity.
-      creditTrades:
+      creditTradesSet:
         type: array
         items:
           $ref: '#/definitions/CreditTrade'
@@ -300,7 +300,6 @@ definitions:
       - fuelSupplierTypeId
       - fuelSupplierActionsTypeId
       - dateCreated
-      - commonClientOrgId
     properties:
       id:
         format: int32
@@ -329,6 +328,7 @@ definitions:
     required:
       - id
       - fuelSupplierId
+      - commonClientOrgId
       - lastUpdatefromCommonClient
       - name
     properties:
@@ -406,6 +406,8 @@ definitions:
     type: object
     description: The statuses of a Fuel Supplier over their lifecycle in the application.
     required:
+      - id
+      - status
       - effectiveDate
     properties:
       id:
@@ -435,7 +437,7 @@ definitions:
     description: The types of Fuel Suppliers that can be proposed by the initiating organization.
     required:
       - id
-      - type
+      - theType
       - effectiveDate
       - expirationDate
     properties:
@@ -443,7 +445,7 @@ definitions:
         format: int32
         type: integer
         description: A system-generated unique identifier for a Fuel Supplier Type.
-      type:
+      theType:
         type: string
         description: The name of the type of Fuel Supplier, such as Part 3 Fuel Supplier, Petroleum Fuel Supplier, etc.
       description:
@@ -465,12 +467,15 @@ definitions:
     type: object
     description: The types of actions that Fuel Suppliers that can take - Buy and Sell, Buy Only, etc.
     required:
+      - id
+      - theType
+      - effectiveDate
     properties:
       id:
         format: int32
         type: integer
         description: A system-generated unique identifier for a Fuel Supplier Actions Type.
-      type:
+      theType:
         type: string
         description: The name of the type of actions the Fuel Supplier can perform.
       description:
@@ -530,6 +535,7 @@ definitions:
     type: object
     description: The set of roles that can be given to a contact in the system.
     required:
+      - id
       - roleId
     properties:
       id:
@@ -569,7 +575,9 @@ definitions:
     type: object
     description: A tag associated with a Fuel Supplier Attachment.
     required:
+      - id
       - fuelSupplierAttachmentId
+      - tag
     properties:
       id:
         format: int32
@@ -680,12 +688,15 @@ definitions:
     type: object
     description: The types of notifications that occur in the system and might be of interest to users.
     required:
+      - id
+      - theType
+      - effectiveDate
     properties:
       id:
         format: int32
         type: integer
         description: A system-generated unique identifier for a Notification Type.
-      type:
+      theType:
         type: string
         description: The name of the notification type presented to the users.
       description:
@@ -727,9 +738,6 @@ definitions:
       email:
         type: string
         description: The email address of the user in the system.
-      fuelSupplierId:
-        $ref: '#/definitions/FuelSupplier'
-        description: A foreign key reference to a FuelSupplier.
       userId:
         type: string
         description: The text user ID of the user in the given Authorization Directory.

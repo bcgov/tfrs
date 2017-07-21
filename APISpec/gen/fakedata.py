@@ -100,7 +100,7 @@ def CreditTradeStatusTestDataUpdate():
 
 def CreditTradeTypeTestDataCreate():
   return {
-    'type':'Initial',
+    'theType':'Initial',
     'description':'Initial',
     'displayOrder':1,
     'isGovOnlyType':True,
@@ -108,7 +108,7 @@ def CreditTradeTypeTestDataCreate():
 
 def CreditTradeTypeTestDataUpdate():
   return {
-    'type':'Changed',
+    'theType':'Changed',
     'description':'Changed',
     'displayOrder':0,
     'isGovOnlyType':False,
@@ -149,14 +149,14 @@ def FuelSupplierTestDataUpdate():
 
 def FuelSupplierActionsTypeTestDataCreate():
   return {
-    'type':'Initial',
+    'theType':'Initial',
     'description':'Initial',
     'displayOrder':1,
   }
 
 def FuelSupplierActionsTypeTestDataUpdate():
   return {
-    'type':'Changed',
+    'theType':'Changed',
     'description':'Changed',
     'displayOrder':0,
   }
@@ -286,14 +286,14 @@ def FuelSupplierStatusTestDataUpdate():
 
 def FuelSupplierTypeTestDataCreate():
   return {
-    'type':'Initial',
+    'theType':'Initial',
     'description':'Initial',
     'displayOrder':1,
   }
 
 def FuelSupplierTypeTestDataUpdate():
   return {
-    'type':'Changed',
+    'theType':'Changed',
     'description':'Changed',
     'displayOrder':0,
   }
@@ -327,14 +327,14 @@ def NotificationEventTestDataUpdate():
 
 def NotificationTypeTestDataCreate():
   return {
-    'type':'Initial',
+    'theType':'Initial',
     'description':'Initial',
     'displayOrder':1,
   }
 
 def NotificationTypeTestDataUpdate():
   return {
-    'type':'Changed',
+    'theType':'Changed',
     'description':'Changed',
     'displayOrder':0,
   }
