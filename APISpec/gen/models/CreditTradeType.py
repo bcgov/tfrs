@@ -26,7 +26,7 @@ from django.utils import timezone
 
 
 class CreditTradeType(models.Model):	    
-    type = models.CharField(max_length=255, blank=True, null=True)   
+    theType = models.CharField(max_length=255, blank=True, null=True)   
     description = models.CharField(max_length=255, blank=True, null=True)   
     effectiveDate = models.DateField()   
     expirationDate = models.DateField()   

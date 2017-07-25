@@ -23,7 +23,6 @@ import datetime
 
 from django.db import models
 from django.utils import timezone
-from .FuelSupplier import FuelSupplier
 
 
 class User(models.Model):	    
@@ -31,7 +30,6 @@ class User(models.Model):
     givenName = models.CharField(max_length=255)   
     surname = models.CharField(max_length=255)   
     email = models.CharField(max_length=255, blank=True, null=True)   
-    fuelSupplierId = models.ForeignKey('FuelSupplier', related_name='UserfuelSupplierId', blank=True, null=True)   
     userId = models.CharField(max_length=255, blank=True, null=True)   
     guid = models.CharField(max_length=255, blank=True, null=True)   
     authorizationDirectory = models.CharField(max_length=255, blank=True, null=True)   

@@ -161,7 +161,11 @@ urlpatterns = [
     url(r'^users/(?P<id>[0-9]+)/notifications$', views_custom.usersIdNotificationsGet.as_view()),
     url(r'^users/(?P<id>[0-9]+)/permissions$', views_custom.usersIdPermissionsGet.as_view()),
     url(r'^users/(?P<id>[0-9]+)/roles$', views_custom.usersIdRolesGet.as_view()),
-    url(r'^users/search$', views_custom.usersSearchGet.as_view())
+    url(r'^users/search$', views_custom.usersSearchGet.as_view()),
+    url(r'^userroles/bulk$', views.userrolesBulkPost.as_view()),
+    url(r'^userroles$', views.userrolesGet.as_view()),
+    url(r'^userroles/(?P<id>[0-9]+)/delete$', views.userrolesIdDeletePost.as_view()),
+    url(r'^userroles/(?P<id>[0-9]+)$', views.userrolesIdGet.as_view())
 ]
 
 urlpatterns = format_suffix_patterns(urlpatterns)

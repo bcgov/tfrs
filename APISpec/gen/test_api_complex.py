@@ -97,6 +97,8 @@ from .models.UserFavourite import UserFavourite
 from .serializers import UserFavouriteSerializer
 from .models.UserFavouriteViewModel import UserFavouriteViewModel
 from .serializers import UserFavouriteViewModelSerializer
+from .models.UserRole import UserRole
+from .serializers import UserRoleSerializer
 from .models.UserRoleViewModel import UserRoleViewModel
 from .serializers import UserRoleViewModelSerializer
 from .models.UserViewModel import UserViewModel
@@ -1347,21 +1349,21 @@ class Test_Api_Complex(TestCase):
         assert status.HTTP_204_NO_CONTENT == response.status_code
         
 
-    def test_usersBulkPost(self):
+    def test_userrolesBulkPost(self):
         # Test Bulk Load.
-        payload = fakedata.UserTestDataCreate()
+        payload = fakedata.UserRoleTestDataCreate()
         jsonString = "[]"
-        response = self.client.post('/api/users/bulk',content_type='application/json', data=jsonString)
+        response = self.client.post('/api/userroles/bulk',content_type='application/json', data=jsonString)
         # Check that the response is 200 OK.
         assert status.HTTP_201_CREATED == response.status_code
         
 
-    def test_usersGet(self):
+    def test_userrolesGet(self):
         # Test Create and List operations.
-        testUrl = "/api/users"
+        testUrl = "/api/userroles"
         # Create:
-        serializer_class = UserSerializer
-        payload = fakedata.UserTestDataCreate()
+        serializer_class = UserRoleSerializer
+        payload = fakedata.UserRoleTestDataCreate()
         jsonString = json.dumps(payload)
         response = self.client.post(testUrl, content_type='application/json', data=jsonString)
         # Check that the response is OK.
@@ -1381,12 +1383,12 @@ class Test_Api_Complex(TestCase):
         assert status.HTTP_204_NO_CONTENT == response.status_code
         
 
-    def test_usersIdDeletePost(self):
+    def test_userrolesIdDeletePost(self):
         # Test Retrieve and Update operations.
-        testUrl = "/api/users/(?P<id>[0-9]+)/delete"
+        testUrl = "/api/userroles/(?P<id>[0-9]+)/delete"
         createUrl = testUrl.replace ("/(?P<id>[0-9]+)/delete","")
         # Create an object:
-        payload = fakedata.UserTestDataCreate()
+        payload = fakedata.UserRoleTestDataCreate()
         jsonString = json.dumps(payload)
         response = self.client.post(createUrl, content_type='application/json', data=jsonString)
         # Check that the response is OK.
@@ -1401,12 +1403,12 @@ class Test_Api_Complex(TestCase):
         assert status.HTTP_204_NO_CONTENT == response.status_code
         
 
-    def test_usersIdGet(self):
+    def test_userrolesIdGet(self):
         # Test Retrieve and Update operations.
-        testUrl = "/api/users/(?P<id>[0-9]+)"
+        testUrl = "/api/userroles/(?P<id>[0-9]+)"
         createUrl = testUrl.replace ("/(?P<id>[0-9]+)","")
         # Create an object:
-        payload = fakedata.UserTestDataCreate()
+        payload = fakedata.UserRoleTestDataCreate()
         jsonString = json.dumps(payload)
         response = self.client.post(createUrl, content_type='application/json', data=jsonString)
         # Check that the response is OK.
@@ -1417,7 +1419,7 @@ class Test_Api_Complex(TestCase):
         createdId = data['id']
         # Update the object:
         updateUrl = testUrl.replace ("(?P<id>[0-9]+)",str(createdId))
-        payload = fakedata.UserTestDataUpdate()
+        payload = fakedata.UserRoleTestDataUpdate()
         jsonString = json.dumps(payload)
         response = self.client.put(updateUrl, content_type='application/json', data=jsonString)
         # Check that the response is 200 OK.

@@ -3593,6 +3593,152 @@ paths:
           description: id of User to delete
           required: true
           type: integer
+  /userroles:
+    get:
+      tags:
+        - UserRole
+      summary: Lists available UserRole objects
+      x-codegen-operation: list
+      consumes: []
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      responses:
+        200:
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/UserRole"
+    post:
+      tags:
+        - UserRole
+      x-codegen-permission: ADMIN
+      x-codegen-operation: create
+      summary: Creates a new UserRole object            
+      consumes:
+        - application/json
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      parameters:
+        - name: item
+          in: body
+          required: true
+          schema:
+            $ref: "#/definitions/UserRole"
+      responses:
+        201:
+          description: UserRole created
+          headers:
+            Location:
+              description: A link to the UserRole
+              type: string
+              format: url
+          schema:
+            $ref: "#/definitions/UserRole"  
+  /userroles/bulk:
+    post:
+      tags:
+        - UserRole
+      summary: Bulk create / update a number of UserRole object      
+      x-codegen-operation: bulk
+      consumes:
+        - application/json
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      parameters:
+        - name: items
+          in: body
+          required: true
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/UserRole"
+      responses:
+        201:
+          description: UserRole created
+  /userroles/{id}:
+    get:
+      tags:
+        - UserRole
+      summary: Gets a specific UserRole object      
+      x-codegen-operation: retrieve
+      consumes: []
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: "#/definitions/UserRole"
+        404:
+          description: UserRole not found
+      parameters:
+        - name: id
+          in: path
+          description: id of UserRole to fetch
+          required: true
+          type: integer
+    put:
+      tags:
+        - UserRole      
+      x-codegen-permission: ADMIN
+      x-codegen-operation: update
+      summary: Updates a specific UserRole object      
+      consumes:
+        - application/json
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: "#/definitions/UserRole"
+        404:
+          description: UserRole not found
+      parameters:
+        - name: id
+          in: path
+          description: id of UserRole to fetch
+          required: true
+          type: integer
+        - name: item
+          in: body
+          required: true
+          schema:
+            $ref: "#/definitions/UserRole"
+  /userroles/{id}/delete:
+    post:
+      tags:
+        - UserRole      
+      x-codegen-permission: ADMIN
+      x-codegen-operation: destroy
+      summary: Deletes a specific UserRole object      
+      consumes: []
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      responses:
+        200:
+          description: OK
+        404:
+          description: UserRole not found
+      parameters:
+        - name: id
+          in: path
+          description: id of UserRole to delete
+          required: true
+          type: integer
   /credittrades/search:
     get:
       summary: Searches credit trades
@@ -4278,7 +4424,7 @@ definitions:
         type: number
         format: float
         description: The price (if applicable) of each credit in the transaction. There is no fair market value on transaction initiated by the Government of BC.
-      history:
+      historySet:
         type: array
         items:
           $ref: '#/definitions/CreditTradeHistory'
@@ -4375,7 +4521,7 @@ definitions:
         format: int32
         type: integer
         description: A system-generated unique identifier for a Credit Trade Type.
-      type:
+      theType:
         type: string
         description: The name of the type of Credit Trade, such as Buy, Sell, Award, etc.
       description:
@@ -4446,7 +4592,7 @@ definitions:
       opportunityBackgroundNote:
         type: string
         description: A note about the Opportunity that is set by the Fuel Supplier posting the Opportunity and visible to those viewing the Opportunity.
-      creditTrades:
+      creditTradesSet:
         type: array
         items:
           $ref: '#/definitions/CreditTrade'
@@ -4540,7 +4686,6 @@ definitions:
       - fuelSupplierTypeId
       - fuelSupplierActionsTypeId
       - dateCreated
-      - commonClientOrgId
     properties:
       id:
         format: int32
@@ -4569,6 +4714,7 @@ definitions:
     required:
       - id
       - fuelSupplierId
+      - commonClientOrgId
       - lastUpdatefromCommonClient
       - name
     properties:
@@ -4646,6 +4792,8 @@ definitions:
     type: object
     description: The statuses of a Fuel Supplier over their lifecycle in the application.
     required:
+      - id
+      - status
       - effectiveDate
     properties:
       id:
@@ -4675,7 +4823,7 @@ definitions:
     description: The types of Fuel Suppliers that can be proposed by the initiating organization.
     required:
       - id
-      - type
+      - theType
       - effectiveDate
       - expirationDate
     properties:
@@ -4683,7 +4831,7 @@ definitions:
         format: int32
         type: integer
         description: A system-generated unique identifier for a Fuel Supplier Type.
-      type:
+      theType:
         type: string
         description: The name of the type of Fuel Supplier, such as Part 3 Fuel Supplier, Petroleum Fuel Supplier, etc.
       description:
@@ -4705,12 +4853,15 @@ definitions:
     type: object
     description: The types of actions that Fuel Suppliers that can take - Buy and Sell, Buy Only, etc.
     required:
+      - id
+      - theType
+      - effectiveDate
     properties:
       id:
         format: int32
         type: integer
         description: A system-generated unique identifier for a Fuel Supplier Actions Type.
-      type:
+      theType:
         type: string
         description: The name of the type of actions the Fuel Supplier can perform.
       description:
@@ -4770,6 +4921,7 @@ definitions:
     type: object
     description: The set of roles that can be given to a contact in the system.
     required:
+      - id
       - roleId
     properties:
       id:
@@ -4809,7 +4961,9 @@ definitions:
     type: object
     description: A tag associated with a Fuel Supplier Attachment.
     required:
+      - id
       - fuelSupplierAttachmentId
+      - tag
     properties:
       id:
         format: int32
@@ -4920,12 +5074,15 @@ definitions:
     type: object
     description: The types of notifications that occur in the system and might be of interest to users.
     required:
+      - id
+      - theType
+      - effectiveDate
     properties:
       id:
         format: int32
         type: integer
         description: A system-generated unique identifier for a Notification Type.
-      type:
+      theType:
         type: string
         description: The name of the notification type presented to the users.
       description:
@@ -4967,9 +5124,6 @@ definitions:
       email:
         type: string
         description: The email address of the user in the system.
-      fuelSupplierId:
-        $ref: '#/definitions/FuelSupplier'
-        description: A foreign key reference to a FuelSupplier.
       userId:
         type: string
         description: The text user ID of the user in the given Authorization Directory.
@@ -4997,24 +5151,24 @@ definitions:
       description:
         type: string
         description: A description of the role as set by the user creating&#x2F;updating the role.
-  RolePermission:
+  UserRole:
     type: object
-    description: The collection of permissions included in a role.
+    description: A link defining the Roles associated with each User.
     required:
       - id
+      - userId
       - roleId
-      - permissionId
     properties:
       id:
         format: int32
         type: integer
-        description: A system-generated unique identifier for a Role Permission.
+        description: A system-generated unique identifier for a UserRole.
+      userId:
+        $ref: '#/definitions/User'
+        description: A foreign key reference to a User.
       roleId:
         $ref: '#/definitions/Role'
         description: A foreign key reference to a Role.
-      permissionId:
-        $ref: '#/definitions/Permission'
-        description: A foreign key reference to a Permission.
   Permission:
     type: object
     description: The set of permissions defined in the application. Each permission is given a name and triggers some behavior defined in the application. For example, a permission might allow users to see data or to have access to functionality restricted to users without that permission. Permissions are created as needed to the application and are added to the permissions table by data migrations executed at the time the software that uses the permission is deployed.
@@ -5037,6 +5191,24 @@ definitions:
       description:
         type: string
         description: A description of the purpose of the permission and exposed to the user selecting the permissions to be included in a Role.
+  RolePermission:
+    type: object
+    description: The collection of permissions included in a role.
+    required:
+      - id
+      - roleId
+      - permissionId
+    properties:
+      id:
+        format: int32
+        type: integer
+        description: A system-generated unique identifier for a Role Permission.
+      roleId:
+        $ref: '#/definitions/Role'
+        description: A foreign key reference to a Role.
+      permissionId:
+        $ref: '#/definitions/Permission'
+        description: A foreign key reference to a Permission.
   Audit:
     type: object
     description: Server generated audit log.

@@ -1,0 +1,68 @@
+[
+    {
+        "code": "LOGIN",
+        "description": "A minimum permission needed for an authenticated user to access the system.",
+        "id": "20000",
+        "name": "Login"
+    },
+    {
+        "code": "ADMIN",
+        "description": "Gives the user System Administration power in the system. Assignment of this permission should go to a very limited set of users an an as needed/backup basis.",
+        "id": "20001",
+        "name": "System Administrator"
+    },
+    {
+        "code": "USER_MANAGEMENT",
+        "description": "Gives the user access to the User Management screens",
+        "id": "20002",
+        "name": "User Management"
+    },
+    {
+        "code": "ROLES_AND_PERMISSIONS",
+        "description": "Gives the user access to the Roles and Permissions screens",
+        "id": "20003",
+        "name": "Roles and Permissions"
+    },
+    {
+        "code": "APPROVE_TRANSFER",
+        "description": "Approve Transfer",
+        "id": "20004",
+        "name": "Approve Transfer"
+    },
+    {
+        "code": "ADD_FS_USER",
+        "description": "Add Fuel Supplier User",
+        "id": "20005",
+        "name": "Add Fuel Supplier User"
+    },
+    {
+        "code": "AUTHORIZE_TRANSFER",
+        "description": "Authorize Transfer",
+        "id": "20006",
+        "name": "Authorize Transfer"
+    },
+    {
+        "code": "PUBLISH_OPPORTUNITY",
+        "description": "Publish Opportunity",
+        "id": "20007",
+        "name": "Publish Opportunity"
+    },
+    {
+        "code": "PROPOSE_CREDIT_TRANSFER",
+        "description": "Propose Credit Transfer",
+        "id": "20008",
+        "name": "Propose Credit Transfer"
+    },
+    {
+        "code": "GOV_VIEW",
+        "description": "Gov View",
+        "id": "20009",
+        "name": "Gov View"
+    },
+    {
+        "code": "FUEL_SUP_VIEW",
+        "description": "Fuel Supplier View",
+        "id": "20010",
+        "name": "Fuel Supplier View"
+    }
+]

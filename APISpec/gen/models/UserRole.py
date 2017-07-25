@@ -23,10 +23,11 @@ import datetime
 
 from django.db import models
 from django.utils import timezone
-from .FuelSupplierAttachment import FuelSupplierAttachment
+from .User import User
+from .Role import Role
 
 
-class FuelSupplierAttachmentTag(models.Model):	    
-    fuelSupplierAttachmentId = models.ForeignKey('FuelSupplierAttachment', related_name='FuelSupplierAttachmentTagfuelSupplierAttachmentId')   
-    tag = models.CharField(max_length=100)   
+class UserRole(models.Model):	    
+    userId = models.ForeignKey('User', related_name='UserRoleuserId')   
+    roleId = models.ForeignKey('Role', related_name='UserRoleroleId')   
 

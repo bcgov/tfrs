@@ -1,0 +1,27 @@
+[
+    {
+        "description": "A regular government user in the system.",
+        "id": "20000",
+        "name": "GovUser"
+    },
+    {
+        "description": "A System Administrator in the application with User Management and Roles and Permissions access.",
+        "id": "20001",
+        "name": "Admin"
+    },
+    {
+        "description": "A government user with authorization to Approve Credit Transfers.",
+        "id": "20002",
+        "name": "GovDirector"
+    },
+    {
+        "description": "A Fuel Supplier user with limited abilities to take actions.",
+        "id": "20003",
+        "name": "FSUser"
+    },
+    {
+        "description": "A Fuel Supplier user with authority to act on behalf of the Fuel Supplier on Credit Transfers.",
+        "id": "20004",
+        "name": "FSManager"
+    }
+]

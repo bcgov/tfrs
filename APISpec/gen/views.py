@@ -61,6 +61,7 @@ from .models.User import User
 from .models.UserDetailsViewModel import UserDetailsViewModel
 from .models.UserFavourite import UserFavourite
 from .models.UserFavouriteViewModel import UserFavouriteViewModel
+from .models.UserRole import UserRole
 from .models.UserRoleViewModel import UserRoleViewModel
 from .models.UserViewModel import UserViewModel
 
@@ -1737,6 +1738,73 @@ class usersIdGet(mixins.RetrieveModelMixin, mixins.UpdateModelMixin, generics.Ge
   def put(self, request, *args, **kwargs):
     """
     Updates the specified User object
+    """
+    return self.update(request, *args, **kwargs)
+
+class userrolesBulkPost(BulkCreateModelMixin, generics.GenericAPIView):
+  """  
+  Bulk create / update a number of UserRole object  
+  """
+  lookup_field = 'id'
+  permission_classes = (permissions.AllowAny,)  
+  queryset = UserRole.objects.all()  
+  serializer_class = serializers.UserRoleSerializer
+  def post(self, request, *args, **kwargs):
+    """
+    Creates a number of new UserRole objects
+    """
+    return self.create(request, *args, **kwargs)
+
+class userrolesGet(mixins.ListModelMixin, mixins.CreateModelMixin, generics.GenericAPIView):
+  """  
+  Lists available UserRole objects  
+  """
+  lookup_field = 'id'
+  permission_classes = (permissions.AllowAny,)  
+  queryset = UserRole.objects.all()  
+  serializer_class = serializers.UserRoleSerializer
+  def get(self, request, *args, **kwargs):
+    """
+    Lists available UserRole objects
+    """
+    return self.list(request, *args, **kwargs)
+  def post(self, request, *args, **kwargs):
+    """
+    Creates a new UserRole object
+    """
+    return self.create(request, *args, **kwargs)
+
+class userrolesIdDeletePost(mixins.DestroyModelMixin, generics.GenericAPIView):
+  """  
+  Deletes a specific UserRole object  
+  """
+  lookup_field = 'id'
+  permission_classes = (permissions.AllowAny,)  
+  queryset = UserRole.objects.all()  
+  serializer_class = serializers.UserRoleSerializer
+  def post(self, request, *args, **kwargs):
+    """
+    Destroys the specified UserRole object
+    """
+    return self.destroy(request, *args, **kwargs)
+
+
+class userrolesIdGet(mixins.RetrieveModelMixin, mixins.UpdateModelMixin, generics.GenericAPIView):
+  """  
+  Gets a specific UserRole object  
+  """
+  lookup_field = 'id'
+  permission_classes = (permissions.AllowAny,)  
+  queryset = UserRole.objects.all()  
+  serializer_class = serializers.UserRoleSerializer
+  def get(self, request, *args, **kwargs):
+    """
+    Retrieves the specified UserRole object
+    """
+    return self.retrieve(request, *args, **kwargs)
+  def put(self, request, *args, **kwargs):
+    """
+    Updates the specified UserRole object
     """
     return self.update(request, *args, **kwargs)
 
