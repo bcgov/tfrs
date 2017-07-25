@@ -61,6 +61,8 @@ from .models.UserRole import UserRole
 from .models.UserRoleViewModel import UserRoleViewModel
 from .models.UserViewModel import UserViewModel
 
+from auditable.views import AuditableMixin
+
 
 class attachmentsBulkPost(BulkCreateModelMixin, generics.GenericAPIView):
   """  
@@ -665,7 +667,7 @@ class lookuplistsIdGet(mixins.RetrieveModelMixin, mixins.UpdateModelMixin, gener
     """
     return self.update(request, *args, **kwargs)
 
-class notesBulkPost(BulkCreateModelMixin, generics.GenericAPIView):
+class notesBulkPost(AuditableMixin, BulkCreateModelMixin, generics.GenericAPIView):
   """  
   Bulk create / update a number of Note object  
   """
@@ -679,7 +681,7 @@ class notesBulkPost(BulkCreateModelMixin, generics.GenericAPIView):
     """
     return self.create(request, *args, **kwargs)
 
-class notesGet(mixins.ListModelMixin, mixins.CreateModelMixin, generics.GenericAPIView):
+class notesGet(AuditableMixin, mixins.ListModelMixin, mixins.CreateModelMixin, generics.GenericAPIView):
   """  
   Lists available Note objects  
   """
@@ -698,7 +700,7 @@ class notesGet(mixins.ListModelMixin, mixins.CreateModelMixin, generics.GenericA
     """
     return self.create(request, *args, **kwargs)
 
-class notesIdDeletePost(mixins.DestroyModelMixin, generics.GenericAPIView):
+class notesIdDeletePost(AuditableMixin, mixins.DestroyModelMixin, generics.GenericAPIView):
   """  
   Deletes a specific Note object  
   """
@@ -713,7 +715,7 @@ class notesIdDeletePost(mixins.DestroyModelMixin, generics.GenericAPIView):
     return self.destroy(request, *args, **kwargs)
 
 
-class notesIdGet(mixins.RetrieveModelMixin, mixins.UpdateModelMixin, generics.GenericAPIView):
+class notesIdGet(AuditableMixin, mixins.RetrieveModelMixin, mixins.UpdateModelMixin, generics.GenericAPIView):
   """  
   Gets a specific Note object  
   """

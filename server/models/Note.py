@@ -24,8 +24,9 @@ import datetime
 from django.db import models
 from django.utils import timezone
 
+from auditable.models import Auditable
 
-class Note(models.Model):	    
+class Note(Auditable):
     noteText = models.CharField(max_length=255)   
     isNoLongerRelevant = models.BooleanField()   
 

@@ -54,6 +54,7 @@ from .models.UserFavouriteViewModel import UserFavouriteViewModel
 from .models.UserRole import UserRole
 from .models.UserRoleViewModel import UserRoleViewModel
 from .models.UserViewModel import UserViewModel
+from server.exceptions import CustomValidation
 
 class AttachmentSerializer(serializers.ModelSerializer):
   class Meta:
@@ -76,6 +77,16 @@ class ContactSerializer(serializers.ModelSerializer):
     fields = ('id','givenName','surname','organizationName','role','notes','emailAddress','workPhoneNumber','mobilePhoneNumber','faxPhoneNumber','address1','address2','city','province','postalCode')
 
 class CreditTradeSerializer(serializers.ModelSerializer):
+  def validate(self, data):
+    """
+    Check numberOfCredits should be positive integer
+    """
+    number_of_credits = data['numberOfCredits']
+    if number_of_credits <= 0:
+      raise CustomValidation('Value must be a positive integer','numberOfCredits', status_code=422)
+
+    return data
+
   class Meta:
     model = CreditTrade
     fields = ('id','status','initiator','respondent','initiatorLastUpdateBy','respondentLastUpdatedBy','reviewedRejectedBy','approvedRejectedBy','cancelledBy','tradeExecutionDate','transactionType','numberOfCredits','fairMarketValuePrice','offer','fuelSupplierBalanceBeforeTransaction','notes','attachments','history')
@@ -133,7 +144,7 @@ class LookupListSerializer(serializers.ModelSerializer):
 class NoteSerializer(serializers.ModelSerializer):
   class Meta:
     model = Note
-    fields = ('id','noteText','isNoLongerRelevant')
+    fields = ('id','noteText','isNoLongerRelevant', 'CREATE_USER', 'UPDATE_USER')
 
 class NotificationSerializer(serializers.ModelSerializer):
   class Meta:
@@ -188,7 +199,7 @@ class RoleViewModelSerializer(serializers.ModelSerializer):
 class UserSerializer(serializers.ModelSerializer):
   class Meta:
     model = User
-    fields = ('id','givenName','surname','initials','email','status','fuelSupplier','smUserId','guid','smAuthorizationDirectory')
+    fields = ('id','givenName','surname','initials','email','status','smUserId','guid','smAuthorizationDirectory')
 
 class UserDetailsViewModelSerializer(serializers.ModelSerializer):
   class Meta:
