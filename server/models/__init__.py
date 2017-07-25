@@ -25,29 +25,25 @@
 
 # import models into model package
 #try:
-#     from . import Attachment  
-#except:
-#     import Attachment
-#try:
-#     from . import AttachmentViewModel  
-#except:
-#     import AttachmentViewModel
-#try:
 #     from . import Audit  
 #except:
 #     import Audit
-#try:
-#     from . import Contact  
-#except:
-#     import Contact
 #try:
 #     from . import CreditTrade  
 #except:
 #     import CreditTrade
 #try:
-#     from . import CreditTradeLogEntry  
+#     from . import CreditTradeHistory  
 #except:
-#     import CreditTradeLogEntry
+#     import CreditTradeHistory
+#try:
+#     from . import CreditTradeStatus  
+#except:
+#     import CreditTradeStatus
+#try:
+#     from . import CreditTradeType  
+#except:
+#     import CreditTradeType
 #try:
 #     from . import CurrentUserViewModel  
 #except:
@@ -57,37 +53,45 @@
 #except:
 #     import FuelSupplier
 #try:
-#     from . import Group  
+#     from . import FuelSupplierActionsType  
 #except:
-#     import Group
+#     import FuelSupplierActionsType
 #try:
-#     from . import GroupMembership  
+#     from . import FuelSupplierAttachment  
 #except:
-#     import GroupMembership
+#     import FuelSupplierAttachment
 #try:
-#     from . import GroupMembershipViewModel  
+#     from . import FuelSupplierAttachmentTag  
 #except:
-#     import GroupMembershipViewModel
+#     import FuelSupplierAttachmentTag
 #try:
-#     from . import GroupViewModel  
+#     from . import FuelSupplierBalance  
 #except:
-#     import GroupViewModel
+#     import FuelSupplierBalance
 #try:
-#     from . import History  
+#     from . import FuelSupplierCCData  
 #except:
-#     import History
+#     import FuelSupplierCCData
 #try:
-#     from . import HistoryViewModel  
+#     from . import FuelSupplierContact  
 #except:
-#     import HistoryViewModel
+#     import FuelSupplierContact
 #try:
-#     from . import LookupList  
+#     from . import FuelSupplierContactRole  
 #except:
-#     import LookupList
+#     import FuelSupplierContactRole
 #try:
-#     from . import Note  
+#     from . import FuelSupplierHistory  
 #except:
-#     import Note
+#     import FuelSupplierHistory
+#try:
+#     from . import FuelSupplierStatus  
+#except:
+#     import FuelSupplierStatus
+#try:
+#     from . import FuelSupplierType  
+#except:
+#     import FuelSupplierType
 #try:
 #     from . import Notification  
 #except:
@@ -97,13 +101,25 @@
 #except:
 #     import NotificationEvent
 #try:
+#     from . import NotificationType  
+#except:
+#     import NotificationType
+#try:
 #     from . import NotificationViewModel  
 #except:
 #     import NotificationViewModel
 #try:
-#     from . import Offer  
+#     from . import Opportunity  
 #except:
-#     import Offer
+#     import Opportunity
+#try:
+#     from . import OpportunityHistory  
+#except:
+#     import OpportunityHistory
+#try:
+#     from . import OpportunityStatus  
+#except:
+#     import OpportunityStatus
 #try:
 #     from . import Permission  
 #except:
@@ -144,10 +160,6 @@
 #     from . import UserFavouriteViewModel  
 #except:
 #     import UserFavouriteViewModel
-#try:
-#     from . import UserRole  
-#except:
-#     import UserRole
 #try:
 #     from . import UserRoleViewModel  
 #except:

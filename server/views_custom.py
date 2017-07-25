@@ -18,9 +18,7 @@
     See the License for the specific language governing permissions and
     limitations under the License.
 """
-import sys
 import json
-from django.http import HttpResponse
 
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -30,26 +28,30 @@ from rest_framework import mixins
 from rest_framework import generics
 from rest_framework_bulk import BulkCreateModelMixin
 from . import serializers
-from .models.Attachment import Attachment
-from .models.AttachmentViewModel import AttachmentViewModel
 from .models.Audit import Audit
-from .models.CompliancePeriod import CompliancePeriod
-from .models.Contact import Contact
 from .models.CreditTrade import CreditTrade
-from .models.CreditTradeLogEntry import CreditTradeLogEntry
+from .models.CreditTradeHistory import CreditTradeHistory
+from .models.CreditTradeStatus import CreditTradeStatus
+from .models.CreditTradeType import CreditTradeType
 from .models.CurrentUserViewModel import CurrentUserViewModel
 from .models.FuelSupplier import FuelSupplier
-from .models.Group import Group
-from .models.GroupMembership import GroupMembership
-from .models.GroupMembershipViewModel import GroupMembershipViewModel
-from .models.GroupViewModel import GroupViewModel
-from .models.History import History
-from .models.HistoryViewModel import HistoryViewModel
-from .models.LookupList import LookupList
-from .models.Note import Note
+from .models.FuelSupplierActionsType import FuelSupplierActionsType
+from .models.FuelSupplierAttachment import FuelSupplierAttachment
+from .models.FuelSupplierAttachmentTag import FuelSupplierAttachmentTag
+from .models.FuelSupplierBalance import FuelSupplierBalance
+from .models.FuelSupplierCCData import FuelSupplierCCData
+from .models.FuelSupplierContact import FuelSupplierContact
+from .models.FuelSupplierContactRole import FuelSupplierContactRole
+from .models.FuelSupplierHistory import FuelSupplierHistory
+from .models.FuelSupplierStatus import FuelSupplierStatus
+from .models.FuelSupplierType import FuelSupplierType
 from .models.Notification import Notification
 from .models.NotificationEvent import NotificationEvent
+from .models.NotificationType import NotificationType
 from .models.NotificationViewModel import NotificationViewModel
+from .models.Opportunity import Opportunity
+from .models.OpportunityHistory import OpportunityHistory
+from .models.OpportunityStatus import OpportunityStatus
 from .models.Permission import Permission
 from .models.PermissionViewModel import PermissionViewModel
 from .models.Role import Role
@@ -66,128 +68,6 @@ from .models.UserViewModel import UserViewModel
 
 
 # Custom views.  This file is hand edited.
-
-class attachmentsIdDownloadGet(APIView):  
-  def get(self, request, id):
-    """  
-    Returns the binary file component of an attachment  
-    """
-    try:
-      attachment = Attachment.objects.get(id=id)
-      response = HttpResponse(attachment.fileContents, content_type='application/octet-stream')
-      response['Content-Disposition'] = 'attachment; filename=' + attachment.fileName
-      response['Content-Length'] = sys.getsizeof(attachment.fileContents)    
-      return response  
-    except Attachment.DoesNotExist:
-      return HttpResponse(status=404)
-
-class attachmentsUploadPost(APIView):
-  def get(self, request):
-    """  
-    File upload form.  
-    """     
-    return HttpResponse("<html><body><form method=\"post\" action=\"/api/attachments/upload\" enctype=\"multipart/form-data\"><input type=\"file\" name = \"file\" /><br>Description <input type=text name=description><br>Type <input type=text name=type><br><input type = \"submit\" value = \"Upload\" /></body></html>")
-
-  def post(self, request):
-    """  
-    Accepts a new file upload.  
-    """
-    jsonString = self.request.POST['item']
-    data = json.loads(jsonString)
-    fileName = request.FILES['file'].name
-    fileData = request.FILES['file'].read()
-    attachment = Attachment(fileContents=fileData, fileName=fileName, description=data['description'],type=data['type'])    
-    attachment.save()
-    # convert the attachment to json.
-    serializer = serializers.AttachmentSerializer(attachment)
-    return Response(serializer.data)
-
-class credittradesIdNotesGet(APIView):
-  """  
-  Returns notes for a particular CreditTrade  
-  """       
-  def get(self, request, id):     
-    """
-    Returns notes for a particular CreditTrade
-    """
-    creditTrade = CreditTrade.objects.filter(id=id)    
-    serializer = serializers.NotesSerializer(creditTrade.notes, many=True)    
-    return Response(serializer.data)
-
-  def post(self, request, id ): 
-    """
-    Add a note to the creditTrade
-    """
-    creditTrade = CreditTrade.objects.get(id=id)   
-    # the body of the post is the data to be added.
-    jsonString = request.body.decode('utf-8')
-    data = json.loads(jsonString)
-    note = Note(noteText=data['noteText'], isNoLongerRelevant=data['isNoLongerRelevant'])
-    note.save()
-    creditTrade.notes.add(note)
-    creditTrade.save()
-    serializer = serializers.NoteSerializer(note)
-    return Response(serializer.data)
-
-class credittradesIdAttachmentsGet(mixins.CreateModelMixin, APIView):
-  lookup_field = 'id'
-  permission_classes = (permissions.AllowAny,)  
-  queryset = Attachment.objects.all()  
-  serializer_class = serializers.AttachmentSerializer
-
-  def get(self, request, id):
-    """  
-    Returns attachments for a particular CreditTrade  
-    """
-    creditTrade = CreditTrade.objects.get(id=id)    
-    serializer = AttachmentSerializer(creditTrade.attachments, many=True)
-    return Response(serializer.data)
-
-  def post(self, request, id):
-    """  
-    Accepts a new file upload.  
-    """
-    jsonString = request.body.decode('utf-8')
-    jsonString = self.request.POST['item']
-    data = json.loads(jsonString)
-    fileName = request.FILES['file'].name
-    fileData = request.FILES['file'].read()
-    attachment = Attachment(fileContents=fileData, fileName=fileName, description=data['description'],type=data['type'])    
-    attachment.save()
-    creditTrade = CreditTrade.objects.get(id=id)   
-    creditTrade.attachments.add (attachment)
-    creditTrade.save()
-    serializer = serializers.AttachmentSerializer(attachment)
-    return Response(serializer.data)
-
-class credittradesIdHistoryGet(mixins.CreateModelMixin, APIView):
-  lookup_field = 'id'
-  permission_classes = (permissions.AllowAny,)  
-  queryset = History.objects.all()  
-  serializer_class = serializers.HistorySerializer
-     
-  def get(self, request, id, offset = None, limit = None):
-    """  
-    Returns History for a particular CreditTrade  
-    """
-    creditTrade = CreditTrade.objects.filter(id=id)    
-    serializer = serializers.HistorySerializer(creditTrade.history, many=True)
-    return Response(serializer.data)
-
-  def post(self, request, id):
-    """  
-    Add a History record to the CreditTrade  
-    """
-    jsonString = request.body.decode('utf-8')
-    data = json.loads(jsonString)
-    history = History(historyText=data['historyText'])
-    history.save()
-
-    creditTrade = CreditTrade.objects.get(id=id)       
-    creditTrade.history.add(history)
-    creditTrade.save()
-    serializer = serializers.HistorySerializer(history)
-    return Response(serializer.data)
 
 class credittradesSearchGet(APIView):
   """  
@@ -215,7 +95,7 @@ class usersCurrentFavouritesIdDeletePost(APIView):
   """  
   def post(self, request, id):
     userFavourite = UserFavourite.objects.get(id=id)
-    userFavourite.remove()
+    userFavourite.delete()
     serializer = serializers.UserFavouriteSerializer(userFavourite)
     return Response(serializer.data)
 
@@ -223,12 +103,11 @@ class usersCurrentFavouritesPut(APIView):
   """  
   Create new favourite for the current user  
   """
-  
   def post(self, request):    
     user = User.objects.all()[0] # replace with getcurrentuserid    
     jsonString = request.body.decode('utf-8')
     data = json.loads(jsonString)
-    userFavourite = UserFavourite(type = data['type'], name = data['name'], value = data['value'], isDefault = data['isDefault'], user = user)
+    userFavourite = UserFavourite(name = data['name'], value = data['value'], isDefault = data['isDefault'], userId = user)
     userFavourite.save()
     serializer = serializers.UserFavouriteSerializer(userFavourite)
     return Response(serializer.data)  
@@ -238,13 +117,13 @@ class usersCurrentFavouritesPut(APIView):
     jsonString = request.body.decode('utf-8')
     alldata = json.loads(jsonString)
     # clear existing favourites.
-    UserFavourite.objects.filter(user=user).delete()
+    UserFavourite.objects.filter(userId=user).delete()
 
     # add the replacement favourites
     for data in alldata:
-      userFavourite = UserFavourite(type = data['type'], name = data['name'], value = data['value'], isDefault = data['isDefault'], user = user)
+      userFavourite = UserFavourite(name = data['name'], value = data['value'], isDefault = data['isDefault'], userId = user)
       userFavourite.save()
-    result = UserFavourite.objects.filter(user=user)
+    result = UserFavourite.objects.filter(userId=user)
     serializer = serializers.UserFavouriteSerializer(result, many=True)
     return Response(serializer.data)  
 
@@ -252,17 +131,15 @@ class usersCurrentFavouritesSearchGet(APIView):
   """  
   Returns a user's favourites of a given type.   
   """       
-  
   def get(self, request):
     currentUser = User.objects.all()[0] # replace with current user
     type = request.GET.get('type', None)
-    userFavourites = UserFavourite.objects.filter(user = currentUser)
+    userFavourites = UserFavourite.objects.filter(userId = currentUser)
     if type != None:
         userFavourites = userFavourites.filter(type = type)
 
     serializer = serializers.UserFavouriteSerializer(userFavourites, many=True)
     return Response(serializer.data)
-    
 
 class usersCurrentGet(APIView):
   """  
@@ -279,8 +156,8 @@ class fuelsuppliersIdAttachmentsGet(mixins.CreateModelMixin, APIView):
   """
   lookup_field = 'id'
   permission_classes = (permissions.AllowAny,)  
-  queryset = History.objects.all()  
-  serializer_class = serializers.HistorySerializer
+  queryset = FuelSupplierHistory.objects.all()  
+  serializer_class = serializers.FuelSupplierHistorySerializer
 
   def get(self, request, id):
     """  
@@ -297,13 +174,18 @@ class fuelsuppliersIdAttachmentsGet(mixins.CreateModelMixin, APIView):
     jsonString = self.request.POST['item']
     data = json.loads(jsonString)
     fileName = request.FILES['file'].name
+    # TODO: save file to disk
     fileData = request.FILES['file'].read()
-    attachment = Attachment(fileContents=fileData, fileName=fileName, description=data['description'],type=data['type'])    
-    attachment.save()
     fuelSupplier = FuelSupplier.objects.get(id=id)   
-    fuelSupplier.attachments.add (attachment)
-    fuelSupplier.save()
-    serializer = serializers.AttachmentSerializer(attachment)
+    # TODO: remove hard coded fileLocation string an replace with real
+    attachment = FuelSupplierAttachment(
+      fuelSupplierId=fuelSupplier,
+      fileName=fileName,
+      fileLocation='fileLocation',
+      description=data['description'],
+      complianceYear=data.get('complianceYear'))
+    attachment.save()
+    serializer = serializers.FuelSupplierAttachmentSerializer(attachment)
     return Response(serializer.data)
 
 class fuelsuppliersIdHistoryGet(APIView):
@@ -312,7 +194,7 @@ class fuelsuppliersIdHistoryGet(APIView):
   """    
   def get(self, request, id, offset = None, limit = None):
     fuelSupplier = FuelSupplier.objects.get(id=id)
-    serializer = serializers.HistorySerializer(fuelSupplier.history, many=true)
+    serializer = serializers.FuelSupplierHistorySerializer(fuelSupplier.history, many=true)
     return Response(serializer.data)
 
   def post(self, request, id):
@@ -322,36 +204,10 @@ class fuelsuppliersIdHistoryGet(APIView):
     fuelSupplier = FuelSupplier.objects.get(id=id)
     jsonString = request.body.decode('utf-8')
     data = json.loads(jsonString)
-    history = History(historyText=data['historyText'])
+    history = FuelSupplierHistory(fuelSupplierId_id=id, historyText=data['historyText'])
     history.save()
-    fuelSupplier.history.add(history)
-    fuelSupplier.save()
-    serializer = serializers.HistorySerializer(history)
+    serializer = serializers.FuelSupplierHistorySerializer(history)
     return Response(serializer.data)  
-
-class fuelsuppliersIdNotesGet(APIView):    
-  
-  def get(self, request, id):     
-    """
-    Returns notes for a particular FuelSupplier
-    """
-    fuelSupplier = FuelSupplier.objects.get(id=id)    
-    serializer = serializers.NotesSerializer(fuelSupplier.notes, many=True)    
-    return Response(serializer.data)
-
-  def post(self, request, id ): 
-    """
-    Add a note to the FuelSupplier
-    """
-    fuelSupplier = FuelSupplier.objects.get(id=id)       
-    jsonString = request.body.decode('utf-8')
-    data = json.loads(jsonString)
-    note = Note(noteText=data['noteText'], isNoLongerRelevant=data['isNoLongerRelevant'])
-    note.save()
-    fuelSupplier.notes.add(note)
-    fuelSupplier.save()
-    serializer = serializers.NoteSerializer(note)
-    return Response(serializer.data)
 
 class fuelsuppliersSearchGet(APIView):
   """  
@@ -362,21 +218,10 @@ class fuelsuppliersSearchGet(APIView):
     if fuelSupplierName != None:
        result = result.filter(name__icontains = fuelSupplierName)
     if includeInactive == None or includeInactive == False:
-       result = result.filter(status__icontains = 'Active')
+       result = result.filter(fuelSupplierStatusId__status__icontains = 'Active')
         
     serializer = serializers.FuelSupplierSerializer(result, many=True)
     return Response(serializer.data)    
-
-class groupsIdUsersGet(APIView):
-  """  
-  returns users in a given Group  
-  """          
-  def get(self, request, id):
-    group = Group.objects.get (id = id)
-    groupMembership = GroupMembership.objects.filter(group=group)
-    serializer = serializers.GroupMembershipSerializer(groupMembership, many=True)
-    return Response(serializer.data)
-    
 
 class rolesIdPermissionsGet(APIView):
   """  
@@ -384,7 +229,7 @@ class rolesIdPermissionsGet(APIView):
   """         
   def get(self, request, id):
     role = Role.objects.get (id = id)
-    rolePermissions = RolePermission.objects.filter(role = role)    
+    rolePermissions = RolePermission.objects.filter(roleId=role)
     serializer = serializers.RolePermissionSerializer(rolePermissions, many=True)
     return Response(serializer.data)
   
@@ -395,8 +240,8 @@ class rolesIdPermissionsGet(APIView):
     role = Role.objects.get (id = id)
     jsonString = request.body.decode('utf-8')
     data = json.loads(jsonString)
-    permission = Permission.objects.get(id = data['permission'])
-    rolePermission = RolePermission(role = role, permission = permission)
+    permission = Permission.objects.get(id=data['permissionId'])
+    rolePermission = RolePermission(roleId=role, permissionId=permission)
     rolePermission.save()
     serializer = serializers.RolePermissionSerializer(rolePermission)
     return Response(serializer.data)    
@@ -409,12 +254,12 @@ class rolesIdPermissionsGet(APIView):
     jsonString = request.body.decode('utf-8')
     data = json.loads(jsonString)
     # start by clearing out any existing roles.
-    RolePermission.objects.filter(role=role).delete()
+    RolePermission.objects.filter(roleId=role).delete()
     for row in data:
-        permission = Permission.objects.get(id = data['permission'])
-        rolePermission = RolePermission (permission = permission, role = role)
+        permission = Permission.objects.get(id=data['permissionId'])
+        rolePermission = RolePermission (permissionId=permission, roleId=role)
         rolePermission.save()
-    results = RolePermission.objects.filter(role=role)
+    results = RolePermission.objects.filter(roleId=role)
     serializer = serializers.RolePermissionSerializer(results, many=True)
     return Response(serializer.data)    
 
@@ -446,25 +291,25 @@ class rolesIdUsersGet(APIView):
     result = UserRole.objects.filter(user=user)
     serializer = serializers.UserRoleSerializer(result, many=True)
     return Response(serializer.data)        
-  
+
 class usersIdFavouritesGet(APIView):
   def get(self, request, id):
     """  
     Returns the favourites for a user  
     """
-    user = User.objects.get(id)
-    result = UserFavourite.objects.filter(user=user)
-    serializer = serializers.UserFavouriteSerializer(result)
-    return Response(serializer.data)  
+    user = User.objects.get(id=id)
+    result = UserFavourite.objects.filter(userId=user)
+    serializer = serializers.UserFavouriteSerializer(result, many=True)
+    return Response(serializer.data)
 
   def post(self, request, id):    
     """  
     Adds favourites to a user  
     """  
-    user = User.objects.get(id=id)    
+    user = User.objects.get(id=id)
     jsonString = request.body.decode('utf-8')
     data = json.loads(jsonString)
-    userFavourite = UserFavourite(type = data['type'], name = data['name'], value = data['value'], isDefault = data['isDefault'], user = user)
+    userFavourite = UserFavourite(name = data['name'], value = data['value'], isDefault = data['isDefault'], userId = user)
     userFavourite.save()
     serializer = serializers.UserFavouriteSerializer(userFavourite)
     return Response(serializer.data)  
@@ -477,66 +322,22 @@ class usersIdFavouritesGet(APIView):
     jsonString = request.body.decode('utf-8')
     alldata = json.loads(jsonString)
     # clear existing favourites.
-    UserFavourite.objects.filter(user=user).delete()
+    UserFavourite.objects.filter(userId=user).delete()
 
     # add the replacement favourites
     for data in alldata:
-      userFavourite = UserFavourite(type = data['type'], name = data['name'], value = data['value'], isDefault = data['isDefault'], user = user)
+      userFavourite = UserFavourite(name = data['name'], value = data['value'], isDefault = data['isDefault'], userId = user)
       userFavourite.save()
-    result = UserFavourite.objects.filter(user=user)
+    result = UserFavourite.objects.filter(userId=user)
     serializer = serializers.UserFavouriteSerializer(result, many=True)
     return Response(serializer.data)  
 
-class usersIdGroupsGet(APIView):              
-  def get(self, request, id):
-    """  
-    Returns all groups that a user is a member of  
-    """
-    group = Group.objects.get(id=id)
-    result = GroupMembership.objects.filter(group=group)
-    serializer = serializers.GroupMembershipSerializer(result, many=True)
-    return Response(serializer.data)
-  
-  def post(self, request, id):
-    """  
-    Adds a user to a group.  
-    """    
-    user = User.objects.get(id = id)
-    jsonString = request.body.decode('utf-8')
-    data = json.loads(jsonString)
-    group = Group.objects.get(id = data['group'])
-    groupMembership = GroupMembership(active = data['active'], group = group, user = user)
-    groupMembership.save()
-    serializer = serializers.GroupMembershipSerializer(groupMembership)
-    return Response(serializer.data)
-    
-  def put(self, request, id):
-    """  
-    Updates a user's group membership  
-    """    
-    user = User.objects.get(id=id)   
-    jsonString = request.body.decode('utf-8')
-    alldata = json.loads(jsonString)
-    # clear existing favourites.
-    GroupMembership.objects.filter(user=user).delete()
-
-    # add the replacement GroupMemberships
-    for data in alldata:
-      group = Group.objects.get(id = data['group'])
-      groupMembership = GroupMembership(active = data['active'], group = group, user = user)
-      groupMembership.save()
-    result = GroupMembership.objects.filter(user=user)
-    serializer = serializers.GroupMembershipSerializer(result, many=True)
-    return Response(serializer.data)  
-
-class usersIdNotificationsGet(APIView):        
-  
+class usersIdNotificationsGet(APIView):
   def get(self, request, id):
     """  
     Returns a user's notifications 
     """
-    user = User.objects.get(id=id)
-    result = Notification.objects.filter(user=user)
+    result = Notification.objects.filter(userId_id=id)
     serializer = serializers.NotificationSerializer(result, many=True)
     return Response(serializer.data)
   
@@ -544,11 +345,14 @@ class usersIdNotificationsGet(APIView):
     """  
     Adds a notification to user 
     """    
-    user = User.objects.get(id = id)
     jsonString = request.body.decode('utf-8')
     data = json.loads(jsonString)
-    notificationEvent = NotificationEvent.objects.get(id=data['event'])
-    notification = Notification(event = notificationEvent, hasBeenViewed = data['hasBeenViewed'], isWatchNotification = data['isWatchNotification'], user = user)
+    notification = Notification(
+      hasBeenViewed=data['hasBeenViewed'],
+      isWatchNotification=data['isWatchNotification'],
+      notificationEventId_id=data['notificationEventId'],
+      userId_id=id,
+    )
     notification.save()
     serializer = serializers.NotificationSerializer(notification)
     return Response(serializer.data)
@@ -568,7 +372,21 @@ class usersIdPermissionsGet(APIView):
             result.append (rolePermission.permission)
     serializer = serializers.PermissionSerializer(result, many=True)
     return Response(serializer.data)
-  
+
+class usersIdPermissionsGet(APIView):
+  def get(self, request, id):
+    """  
+    Returns the set of permissions for a user  
+    """
+    user = User.objects.get(id=id)
+    userRoles = UserRole.objects.filter(user=user)
+    result = []
+    for userRole in userRoles:
+        rolePermissions = RolePermission.objects.filter(role=userRole.role)
+        for rolePermission in rolePermissions:
+            result.append (rolePermission.permission)
+    serializer = serializers.PermissionSerializer(result, many=True)
+    return Response(serializer.data)
 
 class usersIdRolesGet(APIView):
   def get(self, request, id):
@@ -611,7 +429,7 @@ class usersIdRolesGet(APIView):
     serializer = serializers.UserRoleSerializer(result, many=True)
     return Response(serializer.data) 
 
-class usersSearchGet(APIView):  
+class usersSearchGet(APIView):
   def get(self, request, fuelSuppliers = None, surname = None, includeInactive = None):
     """  
     Searches Users  
@@ -625,7 +443,7 @@ class usersSearchGet(APIView):
     if surname != None:
        result = result.filter(surname__icontains = surname)
     if includeInactive != True:
-       result = result.filter(status = 'Active')    
+       result = result.filter(fuelSupplierId__fuelSupplierStatusId__status = 'Active')
        
     serializer = serializers.UserSerializer(result, many=True)
     return Response(serializer.data)    

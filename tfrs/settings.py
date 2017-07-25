@@ -67,7 +67,7 @@ MIDDLEWARE_CLASSES = (
 
 REST_FRAMEWORK = {
 #   'DEFAULT_AUTHENTICATION_CLASSES': ('rest_framework.permissions.AllowAny',),
-#    'DEFAULT_AUTHENTICATION_CLASSES': ('server.authentication.UserAuthentication',),
+    # 'DEFAULT_AUTHENTICATION_CLASSES': ('server.authentication.UserAuthentication',),
     'DEFAULT_PERMISSION_CLASSES': ('rest_framework.permissions.AllowAny',)
 }
 

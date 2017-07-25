@@ -25,10 +25,10 @@ from django.db import models
 from django.utils import timezone
 
 
-class GroupMembershipViewModel(models.Model):	    
-    active = models.BooleanField()   
-    groupId = models.IntegerField()   
-    userId = models.IntegerField()   
-    class Meta:
-      abstract = True
+class OpportunityStatus(models.Model):	    
+    status = models.CharField(max_length=255, blank=True, null=True)   
+    description = models.CharField(max_length=255, blank=True, null=True)   
+    effectiveDate = models.DateField()   
+    expirationDate = models.DateField(blank=True, null=True)   
+    displayOrder = models.IntegerField()   
 

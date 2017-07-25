@@ -23,8 +23,9 @@ import datetime
 
 from django.db import models
 from django.utils import timezone
+from .Role import Role
 
 
-class CompliancePeriod(models.Model):	    
-    periodName = models.CharField(max_length=255)   
-    isActive = models.BooleanField()   
+class FuelSupplierContactRole(models.Model):	    
+    roleId = models.ForeignKey('Role', related_name='FuelSupplierContactRoleroleId')   
+

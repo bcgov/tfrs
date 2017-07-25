@@ -23,17 +23,15 @@ import datetime
 
 from django.db import models
 from django.utils import timezone
-from .UserRole import UserRole
+from .FuelSupplier import FuelSupplier
+from .CreditTrade import CreditTrade
 
 
-class CurrentUserViewModel(models.Model):	    
-    givenName = models.CharField(max_length=255, blank=True, null=True)   
-    surname = models.CharField(max_length=255, blank=True, null=True)   
-    email = models.CharField(max_length=255, blank=True, null=True)   
-    active = models.BooleanField()   
-    userRoles = models.ManyToManyField('UserRole', related_name='CurrentUserViewModeluserRoles', blank=True)   
-    smUserId = models.CharField(max_length=255, blank=True, null=True)   
-    smAuthorizationDirectory = models.CharField(max_length=255, blank=True, null=True)   
-    class Meta:
-      abstract = True
+class FuelSupplierBalance(models.Model):	    
+    fuelSupplierId = models.ForeignKey('FuelSupplier', related_name='FuelSupplierBalancefuelSupplierId')   
+    validatedCredits = models.IntegerField()   
+    encumberedCredits = models.IntegerField()   
+    effectiveDate = models.DateField()   
+    endDate = models.DateField(blank=True, null=True)   
+    creditTradeId = models.ForeignKey('CreditTrade', related_name='FuelSupplierBalancecreditTradeId')   
 
