@@ -14,7 +14,7 @@ export default class App extends Component {
 
   updateContainerPadding() {
     let headerHeight = document.getElementById('header-main').clientHeight;
-    document.getElementById('main').setAttribute('style', 'padding-top:' + headerHeight + 'px;');
+    document.getElementById('main').setAttribute('style', 'top:' + headerHeight + 'px;');
   }
   
   render() {
