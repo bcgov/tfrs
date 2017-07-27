@@ -15,6 +15,42 @@
         }
       }
     },
+	{
+    "kind": "BuildConfig",
+    "apiVersion": "v1",
+    "metadata": {
+        "name": "tfrs-pipeline",
+        "creationTimestamp": null,
+        "labels": {
+            "app": "tfrs-pipeline",
+            "name": "tfrs-pipeline",
+            "template": "tfrs-pipeline"
+        }
+    },
+    "spec": {        
+        "runPolicy": "Parallel",
+        "source": {
+            "type": "Git",
+            "git": {
+                "uri": "${SOURCE_REPOSITORY_URL}",
+                "ref": "master"
+            }
+        },
+        "strategy": {
+            "type": "JenkinsPipeline",
+            "jenkinsPipelineStrategy": {
+                "jenkinsfilePath": "Jenkinsfile"
+            }
+        },
+        "output": {},
+        "resources": {},
+        "postCommit": {},
+        "nodeSelector": null
+    },
+    "status": {
+        "lastVersion": 0
+    }
+},
     {
       "kind": "BuildConfig",
       "apiVersion": "v1",
@@ -153,7 +189,7 @@
         }
     },
     "spec": {
-        "host": "sonarqube-gwells-tools.pathfinder.gov.bc.ca",
+        "host": "sonarqube-tfrs-tools.pathfinder.gov.bc.ca",
         "to": {
             "kind": "Service",
             "name": "sonarqube",
@@ -167,7 +203,7 @@
     "status": {
         "ingress": [
             {
-                "host": "sonarqube-gwells-tools.pathfinder.gov.bc.ca",
+                "host": "sonarqube-tfrs-tools.pathfinder.gov.bc.ca",
                 "routerName": "router",
                 "conditions": [
                     {
