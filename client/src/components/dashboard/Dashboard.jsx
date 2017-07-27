@@ -1,15 +1,19 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { getAccountActivity } from '../../actions/accountActivityActions.jsx';
+import { getAccountActivity, acceptCreditTransfer, acceptCreditTransferReset } from '../../actions/accountActivityActions.jsx';
 import * as Routes from '../../constants/routes.jsx';
 import * as ReducerTypes from '../../constants/reducerTypes.jsx';
-import RecentAccountActivityTable from '../reusable/RecentAccountActivityTable.jsx';
+import RecentAccountActivityTable from './RecentAccountActivityTable.jsx';
 
 class Dashboard extends Component {
 
   componentDidMount() {
     this.props.getAccountActivity();
+  }
+
+  handleAcceptCreditTransfer(id, note) {
+    this.props.acceptCreditTransfer(id, note);
   }
   
   render() {
@@ -56,6 +60,9 @@ class Dashboard extends Component {
               </div>
               <RecentAccountActivityTable 
                 accountActivityData={this.props.accountActivityData}
+                handleAcceptCreditTransfer={(id, note) => this.handleAcceptCreditTransfer(id, note)}
+                acceptCreditTransferSuccess={this.props.acceptCreditTransferSuccess}
+                acceptCreditTransferReset={() => this.props.acceptCreditTransferReset()}
               />
             </div>
           </div>
@@ -68,10 +75,17 @@ class Dashboard extends Component {
 export default connect (
   state => ({
     accountActivityData: state.rootReducer[ReducerTypes.GET_ACCOUNT_ACTIVITY].data,
+    acceptCreditTransferSuccess: state.rootReducer[ReducerTypes.ACCEPT_CREDIT_TRANSFER].success,
   }),
   dispatch => ({
     getAccountActivity: () => {
       dispatch(getAccountActivity());
+    },
+    acceptCreditTransfer: (id, note) => {
+      dispatch(acceptCreditTransfer(id, note));
+    },
+    acceptCreditTransferReset: () => {
+      dispatch(acceptCreditTransferReset());
     }
   })
 )(Dashboard)

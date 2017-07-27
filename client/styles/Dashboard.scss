@@ -50,4 +50,16 @@
       }
     }
   }
+
+  .modal {
+
+    .note {
+      width: 100%;
+      resize: none;
+    }
+
+    .alert-success {
+      margin: 1rem 0 0 0;
+    }
+  }
 }

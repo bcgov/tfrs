@@ -49,6 +49,7 @@ function createReducer(reducerFunction, reducerName) {
 
 const rootReducer = combineReducers({
     [ReducerTypes.GET_ACCOUNT_ACTIVITY]: createReducer(genericRequest, ReducerTypes.GET_ACCOUNT_ACTIVITY),
+    [ReducerTypes.ACCEPT_CREDIT_TRANSFER]: createReducer(genericRequest, ReducerTypes.ACCEPT_CREDIT_TRANSFER),
     routing, 
 });
 export default rootReducer;
