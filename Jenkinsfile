@@ -1,26 +1,57 @@
 node('maven') {
 
-   stage('checkout tfrs src onto docker slave')
-   git url: 'https://github.com/bcgov/tfrs.git'
+    stage('checkout') {
+       echo "checking out source"
+       echo "Build: ${BUILD_ID}"
+       checkout scm
+    }
 
-   stage('list working dir')
-   sh 'ls -l -srt'
+    stage('code quality check') {
+            SONARQUBE_PWD = sh (
+             script: 'oc env dc/sonarqube --list | awk  -F  "=" \'/SONARQUBE_ADMINPW/{print $2}\'',
+             returnStdout: true
+              ).trim()
+           echo "SONARQUBE_PWD: ${SONARQUBE_PWD}"
 
-   stage('chg to functional-tests dir')
-   dir('functional-tests'){
-      stage('list dir')
-      sh 'ls -l -srt'
-   
-      stage('execute functional-tests')
-      sh './gradlew phantomJsTest'
-   }
+           SONARQUBE_URL = sh (
+               script: 'oc get routes -o wide --no-headers | awk \'/sonarqube/{ print match($0,/edge/) ?  "https://"$2 : "http://"$2 }\'',
+               returnStdout: true
+                  ).trim()
+           echo "SONARQUBE_URL: ${SONARQUBE_URL}"
 
-   stage('chg to sonar-runner dir')
-   dir('sonar-runner'){
-       stage('list dir runner')
-       sh 'ls -l -srt'
-
-       stage('execute sonar-runner')
-       sh './gradlew sonarqube -Dsonar.host.url=http://sonarqube-mem-tfrs-tools.pathfinder.gov.bc.ca -Dsonar.verbose=true --stacktrace'
+           dir('sonar-runner') {
+            sh returnStdout: true, script: "./gradlew sonarqube -Dsonar.host.url=${SONARQUBE_URL} -Dsonar.verbose=true --stacktrace --info  -Dsonar.sources=.."
+        }
+    }
+	stage('build') {
+	 echo "Building..."
+	 openshiftBuild bldCfg: 'tfrs', showBuildLogs: 'true'
+	 openshiftTag destStream: 'tfrs', verbose: 'true', destTag: '$BUILD_ID', srcStream: 'tfrs', srcTag: 'latest'
+	 openshiftTag destStream: 'tfrs', verbose: 'true', destTag: 'dev', srcStream: 'tfrs', srcTag: 'latest'
+    }
+	
+	stage('validation') {
+          dir('functional-tests'){
+                 sh './gradlew --debug --stacktrace phantomJsTest'
+      }
    }
 }
+
+
+stage('deploy-test') {
+  input "Deploy to test?"
+  
+  node('maven'){
+     openshiftTag destStream: 'tfrs', verbose: 'true', destTag: 'test', srcStream: 'tfrs', srcTag: '$BUILD_ID'
+  }
+}
+
+stage('deploy-prod') {
+  input "Deploy to prod?"
+  node('maven'){
+     openshiftTag destStream: 'tfrs', verbose: 'true', destTag: 'prod', srcStream: 'tfrs', srcTag: '$BUILD_ID'
+  }
+  
+}
+
+
