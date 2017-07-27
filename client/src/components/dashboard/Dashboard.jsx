@@ -1,24 +1,16 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import AccountActivityTable from '../reusable/AccountActivityTable.jsx';
-
-var products = [{
-      id: 1,
-      name: "Item name 1",
-      price: {
-        price: 100,
-        id: 1,
-      }
-  },{
-      id: 2,
-      name: "Item name 2",
-      price: {
-        price: 100,
-        id: 2,
-      }
-  }];
+import { Link } from 'react-router-dom';
+import { getAccountActivity } from '../../actions/accountActivityActions.jsx';
+import * as Routes from '../../constants/routes.jsx';
+import * as ReducerTypes from '../../constants/reducerTypes.jsx';
+import RecentAccountActivityTable from '../reusable/RecentAccountActivityTable.jsx';
 
 class Dashboard extends Component {
+
+  componentDidMount() {
+    this.props.getAccountActivity();
+  }
   
   render() {
     return (
@@ -44,7 +36,6 @@ class Dashboard extends Component {
                   </span>
                 </div>
               </div>
-              <a className="more-link" href="/account-activity">More</a>
             </div>
             <div className="col-xs-12 col-sm-6">
               <h2>Notifications</h2>
@@ -59,9 +50,13 @@ class Dashboard extends Component {
           </div>
           <div className="row">
             <div className="col-xs-12">
-              <h2>Recent Account Activity</h2>
-              <table id="recent-account-activity-table"></table>
-              <AccountActivityTable />
+              <div className="recent-account-activity-container">
+                <h2>Recent Account Activity</h2>
+                <Link to={Routes.ACCOUNT_ACTIVITY} className="view-all">View all</Link>
+              </div>
+              <RecentAccountActivityTable 
+                accountActivityData={this.props.accountActivityData}
+              />
             </div>
           </div>
         </div>
@@ -72,7 +67,11 @@ class Dashboard extends Component {
 
 export default connect (
   state => ({
-    router: state
+    accountActivityData: state.rootReducer[ReducerTypes.GET_ACCOUNT_ACTIVITY].data,
   }),
-  dispatch => ({})
+  dispatch => ({
+    getAccountActivity: () => {
+      dispatch(getAccountActivity());
+    }
+  })
 )(Dashboard)

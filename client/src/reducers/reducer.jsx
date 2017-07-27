@@ -1,61 +1,54 @@
-import {combineReducers} from 'redux';
+import * as ActionTypes from '../constants/actionTypes.jsx';
+import * as ReducerTypes from '../constants/reducerTypes.jsx';
+import { routerReducer as routing } from 'react-router-redux';
+import { combineReducers } from 'redux';
 
-import * as Actions from '../constants/actionTypes.jsx';
-
-const authenticate = ( state = {
-  isFetching: false,
-  didFail: false,
-  user: {},
+const genericRequest = (state = {
+    isFetching: false,
+    data: [],
+    success: false,
+    errorMessage: [],
 }, action) => {
-  switch (action.type) {
-    case Actions.REQUEST_AUTH:
-      return Object.assign({}, state, {
-        isFetching: true,
-      });
-    case Actions.REQUEST_AUTH_FAILURE:
-      return Object.assign({}, state, {
-        isFetching: false,
-        didFail: true,
-      });
-    case Actions.REQUEST_AUTH_SUCCESS:
-      return Object.assign({}, state, {
-        isFetching: false,
-        didFail: false,
-        user: action.user,
-      });
-    default:
-      return state;
-  }
+    switch (action.type) {
+        case ActionTypes.REQUEST:
+            return Object.assign({}, state, {
+                isFetching: true,
+                success: false,
+            })
+        case ActionTypes.SUCCESS:
+            return Object.assign({}, state, {
+                isFetching: false,
+                success: true,
+                data: action.data,
+            })
+        case ActionTypes.ERROR:
+            return Object.assign({}, state, {
+                isFetching: false,
+                success: false,
+                errorMessage: action.errorMessage,
+            })
+        case ActionTypes.RESET:
+            return Object.assign({}, state, {
+                isFetching: false,
+                data: [],
+                success: false,
+                errorMessage: [],
+            })
+        default: return state
+    }
 }
-const login = ( state = {
-  isFetching: false,
-  didFail: false,
-  data: [],
-}, action) => {
-  switch (action.type) {
-    case Actions.REQUEST_LOGIN_SUCCESS:
-      return Object.assign({}, state, {
-        isFetching: false,
-        didFail: false,
-        data: action.data
-      });
-    case Actions.REQUEST_LOGIN_FAILURE: 
-      return Object.assign({}, state, {
-        isFetching: false,
-        didFail: true,
-      });
-    case Actions.REQUEST_LOGIN:
-      return Object.assign({}, state, {
-        isFetching: true,
-      });
-    default: 
-      return state;
-  }
+
+function createReducer(reducerFunction, reducerName) {
+    return (state, action) => {
+        const { name } = action;
+        const isInitializationCall = state === undefined;
+        if (name !== reducerName && !isInitializationCall) return state;
+        return reducerFunction(state, action);
+    }
 }
 
 const rootReducer = combineReducers({
-  login,
-  authenticate,
-})
-
+    [ReducerTypes.GET_ACCOUNT_ACTIVITY]: createReducer(genericRequest, ReducerTypes.GET_ACCOUNT_ACTIVITY),
+    routing, 
+});
 export default rootReducer;

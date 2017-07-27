@@ -1,4 +1,7 @@
 @import './App.scss';
+@import './mixins.scss';
+@import './variables.scss';
+@import './dashboard.scss';
 
 body {
   margin: 0;
@@ -8,5 +11,32 @@ body {
 
 #main {
   position: relative; 
-  padding: 2rem;
+  padding: 2rem 0;
+  padding-bottom: 70px;
+
+  @include tablet {
+    padding-top: 30px !important;
+  } 
+}
+
+#root, [data-reactroot], .App {
+  height: 100%;
+}
+
+// Tables 
+
+table {
+  margin: 0;
+}
+
+.react-bs-table-tool-bar .row div div:nth-child(2) {
+  padding: 0;
+}
+
+.table-bordered>thead>tr>td, .table-bordered>thead>tr>th {
+  border-bottom-width: 0 !important;
+}
+
+.table-bordered>tbody>tr>td {
+  border-bottom: none;
 }

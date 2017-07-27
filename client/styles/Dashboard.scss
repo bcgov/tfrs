@@ -1,0 +1,53 @@
+.dashboard {
+
+  .account-activity-table {
+
+    .react-bs-table .table-bordered {
+      min-width: 700px;
+    }
+  }
+
+  .proposal-description {
+    width: 50%;
+    white-space: pre-wrap;
+  }
+
+  .actions {
+    white-space: pre-wrap;
+  }
+
+  .accept-btn {
+    background: none;
+    border: none;
+    color: $link-color;
+    text-decoration: underline;
+    padding: 0.5rem;
+  
+    &:hover {
+      color: $link-color-hover;
+    }
+  }
+
+  .counter-btn {
+    display: inline-block;
+    padding: 0.5rem;
+  }
+
+  .recent-account-activity-container {
+    margin: 0.5rem 0;
+
+    h2 {
+      display: inline-block;
+      margin: 0;
+    }
+
+    .view-all {
+      float: right;
+    
+      @include mobile {
+        display: block;
+        float: none;
+      }
+    }
+  }
+}

@@ -14,7 +14,9 @@ export default class App extends Component {
 
   updateContainerPadding() {
     let headerHeight = document.getElementById('header-main').clientHeight;
-    document.getElementById('main').setAttribute('style', 'top:' + headerHeight + 'px;');
+    let topSpacing = 30;
+    let totalSpacing = headerHeight + topSpacing; 
+    document.getElementById('main').setAttribute('style', 'padding-top:' + totalSpacing + 'px;');
   }
   
   render() {
@@ -24,6 +26,7 @@ export default class App extends Component {
         <div id="main" className="template container"> 
           {this.props.children}
         </div>
+        <Footer />
       </div>
     );
   }
