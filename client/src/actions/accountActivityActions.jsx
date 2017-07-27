@@ -13,3 +13,21 @@ const getAccountActivitySuccess = (activity) => {
     data: activity,
   }
 }
+
+export const acceptCreditTransfer = (id, note) => (dispatch) => {
+  dispatch(acceptCreditTransferSuccess());
+}
+
+const acceptCreditTransferSuccess = () => {
+  return {
+    name: ReducerTypes.ACCEPT_CREDIT_TRANSFER,
+    type: ActionTypes.SUCCESS,
+  }
+}
+
+export const acceptCreditTransferReset = () => {
+  return {
+    name: ReducerTypes.ACCEPT_CREDIT_TRANSFER,
+    type: ActionTypes.RESET,
+  }
+}
