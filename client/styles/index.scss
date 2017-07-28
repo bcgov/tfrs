@@ -23,6 +23,10 @@ body {
   height: 100%;
 }
 
+#header .bcgov-title h1 {
+  font-weight: 400;
+}
+
 // Tables 
 
 table {
@@ -46,10 +50,9 @@ table {
   border-bottom: none;
 }
 
-.account-activity-table {
+.account-activity-table, .fuel-suppliers-table {
 
   .header {
-    display: inline-block;
     padding: 0;
   }
 
