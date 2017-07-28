@@ -6,14 +6,25 @@ from rest_framework import status
 
 class AuditableMixin(object,):
 
-    def create(self, request, *args, **kwargs):
+    def serialize_object(self, request):
         http_sm_user = request.META.get('HTTP_SM_USER')
         request.data.update({'CREATE_USER':http_sm_user,'UPDATE_USER':http_sm_user})
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         self.perform_create(serializer,request)
-        headers = self.get_success_headers(serializer.data)
-        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+        return serializer.data
+
+    def create(self, request, *args, **kwargs):
+        objs = []
+        if type(request.data) is list:
+            for obj in request.data:
+                objs.append(self.serialize_object(obj))
+        else:
+            objs.append(self.serialize_object(request))
+
+        response = objs[0] if len(objs) == 1 else objs
+        headers = self.get_success_headers(response)
+        return Response(response, status=status.HTTP_201_CREATED, headers=headers)
 
     def perform_create(self, serializer,request):
         instance = serializer.save()
