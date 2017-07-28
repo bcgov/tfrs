@@ -39,12 +39,12 @@ class Navbar extends Component {
               <a id="navigation-anchor"></a>
               <ul className="nav navbar-nav">
                 <li><Link id="collapse-navbar-dashboard" to={Routes.HOME}>Dashboard</Link></li>
-                <li><Link id="navbar-db-fuelsupplier" to={Routes.FUEL_SUPPLIERS}>Fuel Suppliers</Link></li>
-			          <li><Link id="navbar-offers" to={Routes.ACCOUNT_ACTIVITY}>Account Activity</Link></li>
-			      	  <li><Link id="collapse-navbar-account-activity" to={Routes.OPPORTUNITIES}>Opportunities</Link></li>
+                <li><Link id="collapse-navbar-fuel-supplier" to={Routes.FUEL_SUPPLIERS}>Fuel Suppliers</Link></li>
+			          <li><Link id="collapse-navbar-account-activity" to={Routes.ACCOUNT_ACTIVITY}>Account Activity</Link></li>
+			      	  <li><Link id="collapse-navbar-opportunities" to={Routes.OPPORTUNITIES}>Opportunities</Link></li>
 				        <li><Link id="collapse-navbar-notifications" to={Routes.NOTIFICATIONS}>Notifications</Link></li>
                 <li><Link id="collapse-navbar-settings" to={Routes.SETTINGS}>Settings</Link></li>
-                <li><Link id="collapse-navbar-settings" to={Routes.ADMINISTRATION}>Administration</Link></li>
+                <li><Link id="collapse-navbar-administration" to={Routes.ADMINISTRATION}>Administration</Link></li>
               </ul>
             </div>
           </div>
@@ -52,13 +52,13 @@ class Navbar extends Component {
         <div className="navigationRibbon hidden-xs">
           <div className="level2Navigation">
             <div className="container">
-              <Link id="collapse-navbar-dashboard" to={Routes.HOME}>Dashboard</Link>
-              <Link id="navbar-db-fuelsupplier" to={Routes.FUEL_SUPPLIERS}>Fuel Suppliers</Link>
-              <Link id="navbar-offers" to={Routes.ACCOUNT_ACTIVITY}>Account Activity</Link>
-              <Link id="collapse-navbar-account-activity" to={Routes.OPPORTUNITIES}>Opportunities</Link>
-              <Link id="collapse-navbar-notifications" to={Routes.NOTIFICATIONS}>Notifications</Link>
-              <Link id="collapse-navbar-settings" to={Routes.SETTINGS}>Settings</Link>
-              <Link id="collapse-navbar-settings" to={Routes.ADMINISTRATION}>Administration</Link>
+              <Link id="navbar-dashboard" to={Routes.HOME}>Dashboard</Link>
+              <Link id="navbar-fuel-suppliers" to={Routes.FUEL_SUPPLIERS}>Fuel Suppliers</Link>
+              <Link id="navbar-account-activity" to={Routes.ACCOUNT_ACTIVITY}>Account Activity</Link>
+              <Link id="navbar-opportunities" to={Routes.OPPORTUNITIES}>Opportunities</Link>
+              <Link id="navbar-notifications" to={Routes.NOTIFICATIONS}>Notifications</Link>
+              <Link id="navbar-settings" to={Routes.SETTINGS}>Settings</Link>
+              <Link id="navbar-administration" to={Routes.ADMINISTRATION}>Administration</Link>
             </div>
           </div>
         </div>

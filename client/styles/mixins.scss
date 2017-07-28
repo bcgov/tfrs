@@ -19,3 +19,9 @@ $large-width: 1024px;
     @content;
   }
 }
+
+@mixin flex() {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+}

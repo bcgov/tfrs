@@ -56,7 +56,7 @@ class Dashboard extends Component {
             <div className="col-xs-12">
               <div className="recent-account-activity-container">
                 <h2>Recent Account Activity</h2>
-                <Link to={Routes.ACCOUNT_ACTIVITY} className="view-all">View all</Link>
+                <Link to={Routes.ACCOUNT_ACTIVITY} className="view-all" id="account-activity-view-all">View all</Link>
               </div>
               <RecentAccountActivityTable 
                 accountActivityData={this.props.accountActivityData}
