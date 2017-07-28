@@ -13,3 +13,22 @@ const getFuelSuppliersSuccess = (fuelSuppliers) => {
     data: fuelSuppliers,
   }
 }
+
+export const searchFuelSuppliers = (name, city) => (dispatch) => {
+  dispatch(searchFuelSuppliersSuccess(fuelSuppliers));
+}
+
+const searchFuelSuppliersSuccess = (fuelSuppliers) => {
+  return {
+    name: ReducerTypes.SEARCH_FUEL_SUPPLIERS,
+    type: ActionTypes.SUCCESS,
+    data: fuelSuppliers,
+  }
+}
+
+export const searchFuelSuppliersReset = () => {
+  return {
+    name: ReducerTypes.SEARCH_FUEL_SUPPLIERS,
+    type: ActionTypes.RESET,
+  }
+}

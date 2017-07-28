@@ -35,7 +35,7 @@ class RecentAccountActivityTable extends Component {
   actionsFormatter(cell, row) {
     return (
       <div>
-        <button className="accept-btn" data-toggle="modal" data-target="#credit-transfer-modal" onClick={() => this.handleAcceptClick(row)}>Accept</button>
+        <button className="accept-btn" onClick={() => this.handleAcceptClick(row)}>Accept</button>
         <Link to="/" className="counter-btn">Counter</Link>
       </div>
     )

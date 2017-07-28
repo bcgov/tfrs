@@ -14,6 +14,7 @@ export const fuelSuppliers = [{
   id: 1, 
   name: 'BC Any Fuels',
   status: 'active',
+  location: 'Kelowna, BC',
   actions_permitted: ['buy', 'sell'],
   credit_balance: 20000,
   encumbered_credits: 10,
@@ -22,6 +23,7 @@ export const fuelSuppliers = [{
 },{
   id: 1, 
   name: 'Ultramar',
+  location: 'Vancouver, BC',
   status: 'active',
   actions_permitted: ['buy', 'sell'],
   credit_balance: 20000,
