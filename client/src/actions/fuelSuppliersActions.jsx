@@ -32,3 +32,15 @@ export const searchFuelSuppliersReset = () => {
     type: ActionTypes.RESET,
   }
 }
+
+export const addFuelSupplier = (id) => (dispatch) => {
+  console.log(id)
+  dispatch(addFuelSupplierSuccess());
+}
+
+const addFuelSupplierSuccess = () => {
+  return {
+    name: ReducerTypes.ADD_FUEL_SUPPLIER,
+    type: ActionTypes.SUCCESS,
+  }
+}

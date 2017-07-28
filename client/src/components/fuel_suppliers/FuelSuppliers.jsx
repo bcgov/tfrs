@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { Modal } from 'react-bootstrap';
-import { getFuelSuppliers, searchFuelSuppliers, searchFuelSuppliersReset } from '../../actions/fuelSuppliersActions.jsx';
+import { getFuelSuppliers, searchFuelSuppliers, searchFuelSuppliersReset, addFuelSupplier } from '../../actions/fuelSuppliersActions.jsx';
 import * as ReducerTypes from '../../constants/reducerTypes.jsx';
 import { BootstrapTable, TableHeaderColumn, ButtonGroup } from 'react-bootstrap-table';
 
@@ -13,6 +13,8 @@ class FuelSuppliers extends Component {
       newFuelSupplierName: '',
       newFuelSupplierCity: '',
       showModal: false,
+      fuelSupplierDetails: [],
+      showFuelSupplierDetails: false,
     };
   }
 
@@ -33,6 +35,10 @@ class FuelSuppliers extends Component {
     this.props.searchFuelSuppliers(this.state.newFuelSupplierName, this.state.newFuelSupplierCity);
   }
 
+  handleAddFuelSupplier(id) {
+    this.props.addFuelSupplier(id);
+  }
+
   createCustomButtonGroup(props) {
     return (
       <div>
@@ -50,10 +56,23 @@ class FuelSuppliers extends Component {
       </div>
     );
   }
+
+  selectSearchFieldSuppliers(props) {
+    this.setState({
+      fuelSupplierDetails: props,
+      showFuelSupplierDetails: true,
+    })
+  }
   
   render() {
     const options = {
       toolBar: this.createCustomButtonGroup.bind(this)
+    };
+    const selectRowProp = {
+      mode: 'radio',
+      hideSelectColumn: true, 
+      clickToSelect: true,
+      onSelect: this.selectSearchFieldSuppliers.bind(this)
     };
     return (
       <div className="fuel-suppliers row">
@@ -104,6 +123,8 @@ class FuelSuppliers extends Component {
             { this.props.searchFuelSuppliersSuccess &&
               <BootstrapTable 
                 data={this.props.searchFuelSuppliersData}
+                selectRow={ selectRowProp }
+                hover
               >
                 <TableHeaderColumn className="name" dataField="name" isKey={true} dataSort={true}>Organization</TableHeaderColumn>
                 <TableHeaderColumn dataField="status" dataSort={true}>Location</TableHeaderColumn>
@@ -111,6 +132,26 @@ class FuelSuppliers extends Component {
             }
           </Modal.Body>
         </Modal>
+        { this.state.showFuelSupplierDetails &&
+        <Modal
+          container={this}
+          show={this.state.showFuelSupplierDetails}
+          onHide={() => this.setState({showFuelSupplierDetails: false})}
+          aria-labelledby="contained-modal-title"
+          className="new-fuel-supplier-modal"
+        >
+          <Modal.Header closeButton>
+            <Modal.Title id="contained-modal-title">New Fuel Supplier</Modal.Title>
+          </Modal.Header>
+            <Modal.Body>
+              <div>{this.state.fuelSupplierDetails.name}</div>
+            </Modal.Body>
+            <Modal.Footer>
+              <button type="button" className="btn btn-default" onClick={() => this.setState({showFuelSupplierDetails: false})}>Cancel</button>
+              <button type="button" className="btn btn-primary" onClick={(id) => this.handleAddFuelSupplier(this.state.fuelSupplierDetails.id)}>Add New Fuel Supplier</button>
+            </Modal.Footer>
+          </Modal>
+          }
       </div>
     );
   }
@@ -131,6 +172,9 @@ export default connect (
     },
     searchFuelSuppliersReset: () => {
       dispatch(searchFuelSuppliersReset());
+    },
+    addFuelSupplier: (id) => {
+      dispatch(addFuelSupplier(id));
     }
   })
 )(FuelSuppliers)
