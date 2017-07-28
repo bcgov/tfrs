@@ -3,6 +3,7 @@
 @import './variables.scss';
 @import './dashboard.scss';
 @import './FuelSuppliers.scss';
+@import './Opportunities.scss';
 
 body {
   margin: 0;
@@ -51,7 +52,7 @@ table {
   border-bottom: none;
 }
 
-.account-activity-table, .fuel-suppliers-table {
+.account-activity-table, .fuel-suppliers-table, .our-opportunities-table, .open-opportunities-table {
 
   .header {
     padding: 0;
