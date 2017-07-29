@@ -9,3 +9,23 @@ export const activity = [{
     lastUpdated: Date.now(),
     status: 'Proposed',
 }];
+
+export const fuelSuppliers = [{
+  id: 1, 
+  name: 'BC Any Fuels',
+  status: 'active',
+  actions_permitted: ['buy', 'sell'],
+  credit_balance: 20000,
+  encumbered_credits: 10,
+  last_transaction: Date.now(),
+  pending_actions: 2,
+},{
+  id: 1, 
+  name: 'Ultramar',
+  status: 'active',
+  actions_permitted: ['buy', 'sell'],
+  credit_balance: 20000,
+  encumbered_credits: 10,
+  last_transaction: Date.now(),
+  pending_actions: 2,
+}]

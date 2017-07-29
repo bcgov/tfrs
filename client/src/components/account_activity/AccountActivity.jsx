@@ -5,7 +5,6 @@ import { Modal } from 'react-bootstrap';
 import { getAccountActivity, acceptCreditTransfer, acceptCreditTransferReset } from '../../actions/accountActivityActions.jsx';
 import * as ReducerTypes from '../../constants/reducerTypes.jsx';
 import { BootstrapTable, TableHeaderColumn, ButtonGroup } from 'react-bootstrap-table';
-import SearchBar from './SearchBar.jsx';
 
 class AccountActivity extends Component {
   constructor(props) {
@@ -53,12 +52,21 @@ class AccountActivity extends Component {
     )
   }
 
+  handleCheckboxChange() {
+  }
+
   createCustomButtonGroup(props) {
     return (
       <div>
         <h1 className='header'>Account Activity</h1>
         <div className='right-toolbar-container'> 
-          <SearchBar />
+          <div className="actions-container">
+            <button className="btn btn-primary">Propose Trade</button>
+            <label className="checkbox"> 
+              <input type="checkbox" onChange={() => this.handleCheckboxChange()} />
+              Last 12 months
+            </label>
+          </div>
           { props.components.searchPanel }
         </div>
       </div>
@@ -67,7 +75,7 @@ class AccountActivity extends Component {
   
   render() {
     const options = {
-      toolBar: this.createCustomButtonGroup
+      toolBar: this.createCustomButtonGroup.bind(this)
     };
     return (
       <div className="account-activity row">
