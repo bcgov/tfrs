@@ -109,9 +109,72 @@ class Test_Api_Simple(TestCase):
     def setUp(self):
         # Every test needs a client.
         self.client = Client()
+        self.contactId = self.createContact()
+        self.fsId = self.createFuelSupplier(self.contactId)
+        self.userId = self.createUser(self.fsId)
         # needed to setup django
         django.setup()
 
+    def createContact(self):
+        testContactUrl = "/api/contacts"
+        # Create:
+        payload = fakedata.ContactTestDataCreate()
+        jsonString = json.dumps(payload)
+        response = self.client.post(testContactUrl, content_type='application/json', data=jsonString)
+        # Check that the response is OK.
+        assert status.HTTP_201_CREATED == response.status_code
+        # parse the response.
+        jsonString = response.content.decode("utf-8")
+        data = json.loads(jsonString)
+        contactId = data['id']
+        return contactId
+
+    def createFuelSupplier(self, contactId):
+        testUrl = "/api/fuelsuppliers"
+        # Create:
+        payload = {
+          'name': "Initial",
+          'status': "Initial",
+          'dateCreated': '2000-01-01',
+          'primaryContact': contactId,
+          'contacts': [contactId],
+          'notes': [],
+          'attachments': [],
+          'history': []
+        }
+        jsonString = json.dumps(payload)
+        response = self.client.post(testUrl, content_type='application/json', data=jsonString)
+        # Check that the response is OK.
+        assert status.HTTP_201_CREATED == response.status_code
+        # parse the response.
+        jsonString = response.content.decode("utf-8")
+        data = json.loads(jsonString)
+        createdId = data['id']
+        return createdId
+
+    def createUser(self, fuelsupplierId):
+        testUserUrl = "/api/users"
+        # Create:
+        payload = {
+          'givenName': 'Initial',
+          'surname': 'Initial',
+          'initials': 'Initial',
+          'email': 'Initial',
+          'status':'Active',
+          'smUserId': 'Initial',
+          'guid': 'Initial',
+          'smAuthorizationDirectory': 'Initial',
+          'fuelSupplier': fuelsupplierId
+        }
+        jsonString = json.dumps(payload)
+        response = self.client.post(testUserUrl, content_type='application/json', data=jsonString)
+        # Check that the response is OK.
+        assert status.HTTP_201_CREATED == response.status_code
+        # parse the response.
+        jsonString = response.content.decode("utf-8")
+        data = json.loads(jsonString)
+        userId = data['id']
+        return userId
 
     def test_attachmentsBulkPost(self):
         # Test Bulk Load.
