@@ -1,8 +1,9 @@
 @import './App.scss';
 @import './mixins.scss';
 @import './variables.scss';
-@import './dashboard.scss';
 @import './FuelSuppliers.scss';
+@import './Dashboard.scss';
+@import './Notifications.scss';
 
 body {
   margin: 0;
@@ -138,3 +139,7 @@ table {
       margin: 1rem 0 0 0;
     }
   }
+
+.react-bs-table .table-bordered>tbody>tr>td {
+  white-space: pre-wrap;
+}
