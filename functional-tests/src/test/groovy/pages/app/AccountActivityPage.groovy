@@ -2,7 +2,7 @@ package pages.app
 
 import geb.Page
 
-class SettingsPage extends Page {
+class AccountActivityPage extends Page {
     static at = { title == "Transportation Fuels Reporting System - Account Activity" }
 
     static url = "account-activity"

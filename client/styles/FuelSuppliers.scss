@@ -1,0 +1,31 @@
+.fuel-suppliers {
+
+  .new-fuel-supplier-modal {
+  
+    .field-container {
+      margin-bottom: 1rem;
+    
+      label {
+        position: absolute;
+        width: 5rem;
+      }
+    }
+
+    .input-container {
+      margin-left: 6rem;
+      
+      input {
+        width: 100%;
+      }
+    }
+
+    .btn-container {
+      text-align: right;
+      margin-bottom: 1rem;
+
+      .btn {
+        margin: 0 0.5rem;
+      }
+    }
+  }
+}
