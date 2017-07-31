@@ -25,10 +25,11 @@ from django.db import models
 from django.utils import timezone
 
 
-class AttachmentViewModel(models.Model):	    
-    fileName = models.CharField(max_length=2048, blank=True, null=True)   
-    description = models.CharField(max_length=2048, blank=True, null=True)   
+class CreditTradeType(models.Model):	    
     type = models.CharField(max_length=255, blank=True, null=True)   
-    class Meta:
-      abstract = True
+    description = models.CharField(max_length=255, blank=True, null=True)   
+    effectiveDate = models.DateField()   
+    expirationDate = models.DateField()   
+    displayOrder = models.IntegerField()   
+    isGovOnlyType = models.BooleanField()   
 

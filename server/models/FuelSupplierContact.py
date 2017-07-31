@@ -23,21 +23,18 @@ import datetime
 
 from django.db import models
 from django.utils import timezone
+from .FuelSupplier import FuelSupplier
+from .User import User
 
 
-class Contact(models.Model):	    
+class FuelSupplierContact(models.Model):	    
+    fuelSupplierId = models.ForeignKey('FuelSupplier', related_name='FuelSupplierContactfuelSupplierId')   
     givenName = models.CharField(max_length=255, blank=True, null=True)   
     surname = models.CharField(max_length=255, blank=True, null=True)   
-    organizationName = models.CharField(max_length=255, blank=True, null=True)   
-    role = models.CharField(max_length=255, blank=True, null=True)   
+    title = models.CharField(max_length=255, blank=True, null=True)   
+    userId = models.ForeignKey('User', related_name='FuelSupplierContactuserId', blank=True, null=True)   
     notes = models.CharField(max_length=255, blank=True, null=True)   
     emailAddress = models.CharField(max_length=255, blank=True, null=True)   
     workPhoneNumber = models.CharField(max_length=255, blank=True, null=True)   
     mobilePhoneNumber = models.CharField(max_length=255, blank=True, null=True)   
-    faxPhoneNumber = models.CharField(max_length=255, blank=True, null=True)   
-    address1 = models.CharField(max_length=255, blank=True, null=True)   
-    address2 = models.CharField(max_length=255, blank=True, null=True)   
-    city = models.CharField(max_length=255, blank=True, null=True)   
-    province = models.CharField(max_length=255, blank=True, null=True)   
-    postalCode = models.CharField(max_length=255, blank=True, null=True)   
 

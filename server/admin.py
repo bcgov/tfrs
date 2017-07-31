@@ -20,26 +20,30 @@
 """
 
 from django.contrib import admin
-from .models.Attachment import Attachment
-
 from .models.Audit import Audit
-from .models.Contact import Contact
 from .models.CreditTrade import CreditTrade
-from .models.CreditTradeLogEntry import CreditTradeLogEntry
+from .models.CreditTradeHistory import CreditTradeHistory
+from .models.CreditTradeStatus import CreditTradeStatus
+from .models.CreditTradeType import CreditTradeType
 
 from .models.FuelSupplier import FuelSupplier
-from .models.Group import Group
-from .models.GroupMembership import GroupMembership
-
-
-from .models.History import History
-
-from .models.LookupList import LookupList
-from .models.Note import Note
+from .models.FuelSupplierActionsType import FuelSupplierActionsType
+from .models.FuelSupplierAttachment import FuelSupplierAttachment
+from .models.FuelSupplierAttachmentTag import FuelSupplierAttachmentTag
+from .models.FuelSupplierBalance import FuelSupplierBalance
+from .models.FuelSupplierCCData import FuelSupplierCCData
+from .models.FuelSupplierContact import FuelSupplierContact
+from .models.FuelSupplierContactRole import FuelSupplierContactRole
+from .models.FuelSupplierHistory import FuelSupplierHistory
+from .models.FuelSupplierStatus import FuelSupplierStatus
+from .models.FuelSupplierType import FuelSupplierType
 from .models.Notification import Notification
 from .models.NotificationEvent import NotificationEvent
+from .models.NotificationType import NotificationType
 
-from .models.Offer import Offer
+from .models.Opportunity import Opportunity
+from .models.OpportunityHistory import OpportunityHistory
+from .models.OpportunityStatus import OpportunityStatus
 from .models.Permission import Permission
 
 from .models.Role import Role
@@ -56,20 +60,28 @@ from .models.UserRole import UserRole
 
 
 
-admin.site.register(Attachment)
 admin.site.register(Audit)
-admin.site.register(Contact)
 admin.site.register(CreditTrade)
-admin.site.register(CreditTradeLogEntry)
+admin.site.register(CreditTradeHistory)
+admin.site.register(CreditTradeStatus)
+admin.site.register(CreditTradeType)
 admin.site.register(FuelSupplier)
-admin.site.register(Group)
-admin.site.register(GroupMembership)
-admin.site.register(History)
-admin.site.register(LookupList)
-admin.site.register(Note)
+admin.site.register(FuelSupplierActionsType)
+admin.site.register(FuelSupplierAttachment)
+admin.site.register(FuelSupplierAttachmentTag)
+admin.site.register(FuelSupplierBalance)
+admin.site.register(FuelSupplierCCData)
+admin.site.register(FuelSupplierContact)
+admin.site.register(FuelSupplierContactRole)
+admin.site.register(FuelSupplierHistory)
+admin.site.register(FuelSupplierStatus)
+admin.site.register(FuelSupplierType)
 admin.site.register(Notification)
 admin.site.register(NotificationEvent)
-admin.site.register(Offer)
+admin.site.register(NotificationType)
+admin.site.register(Opportunity)
+admin.site.register(OpportunityHistory)
+admin.site.register(OpportunityStatus)
 admin.site.register(Permission)
 admin.site.register(Role)
 admin.site.register(RolePermission)

@@ -22,36 +22,6 @@
 # edit this file with appropriate test data.
 
 
-def AttachmentTestDataCreate():
-  return {
-    'fileName':'Initial',
-    'description':'Initial',
-    'type':'Initial',
-  }
-
-def AttachmentTestDataUpdate():
-  return {
-    'fileName':'Changed',
-    'description':'Changed',
-    'type':'Changed',
-  }
-
-
-def AttachmentViewModelTestDataCreate():
-  return {
-    'fileName':'Initial',
-    'description':'Initial',
-    'type':'Initial',
-  }
-
-def AttachmentViewModelTestDataUpdate():
-  return {
-    'fileName':'Changed',
-    'description':'Changed',
-    'type':'Changed',
-  }
-
-
 def AuditTestDataCreate():
   return {
     'appCreateUserid':'Initial',
@@ -85,72 +55,69 @@ def AuditTestDataUpdate():
   }
 
 
-def ContactTestDataCreate():
-  return {
-    'givenName':'Initial',
-    'surname':'Initial',
-    'organizationName':'Initial',
-    'role':'Initial',
-    'notes':'Initial',
-    'emailAddress':'Initial',
-    'workPhoneNumber':'Initial',
-    'mobilePhoneNumber':'Initial',
-    'faxPhoneNumber':'Initial',
-    'address1':'Initial',
-    'address2':'Initial',
-    'city':'Initial',
-    'province':'Initial',
-    'postalCode':'Initial',
-  }
-
-def ContactTestDataUpdate():
-  return {
-    'givenName':'Changed',
-    'surname':'Changed',
-    'organizationName':'Changed',
-    'role':'Changed',
-    'notes':'Changed',
-    'emailAddress':'Changed',
-    'workPhoneNumber':'Changed',
-    'mobilePhoneNumber':'Changed',
-    'faxPhoneNumber':'Changed',
-    'address1':'Changed',
-    'address2':'Changed',
-    'city':'Changed',
-    'province':'Changed',
-    'postalCode':'Changed',
-  }
-
-
 def CreditTradeTestDataCreate():
   return {
-    'status':'Initial',
-    'transactionType':'Initial',
     'numberOfCredits':1,
+    'plainEnglishPhrase':'Initial',
   }
 
 def CreditTradeTestDataUpdate():
   return {
-    'status':'Changed',
-    'transactionType':'Changed',
     'numberOfCredits':0,
+    'plainEnglishPhrase':'Changed',
   }
 
 
-def CreditTradeLogEntryTestDataCreate():
+def CreditTradeHistoryTestDataCreate():
   return {
-    'newStatus':'Initial',
-    'newTransactionType':'Initial',
     'newNumberOfCredits':1,
-    'newFuelSupplierBalanceAtTransactionTime':1,
+    'note':'Initial',
+    'isInternalHistoryRecord':True,
   }
 
-def CreditTradeLogEntryTestDataUpdate():
+def CreditTradeHistoryTestDataUpdate():
   return {
-    'newStatus':'Changed',
-    'newTransactionType':'Changed',
     'newNumberOfCredits':0,
-    'newFuelSupplierBalanceAtTransactionTime':0,
+    'note':'Changed',
+    'isInternalHistoryRecord':False,
+  }
+
+
+def CreditTradeStatusTestDataCreate():
+  return {
+    'status':'Initial',
+    'description':'Initial',
+    'displayOrder':1,
+    'effectiveDate': '2017-01-01',
+  }
+
+def CreditTradeStatusTestDataUpdate():
+  return {
+    'status':'Changed',
+    'description':'Changed',
+    'displayOrder':0,
+    'effectiveDate': '2017-01-01',
+  }
+
+
+def CreditTradeTypeTestDataCreate():
+  return {
+    'type':'Initial',
+    'description':'Initial',
+    'displayOrder':1,
+    'isGovOnlyType':True,
+    'effectiveDate': '2017-01-01',
+    'expirationDate': '2017-02-01',
+  }
+
+def CreditTradeTypeTestDataUpdate():
+  return {
+    'type':'Changed',
+    'description':'Changed',
+    'displayOrder':0,
+    'isGovOnlyType':False,
+    'effectiveDate': '2017-01-01',
+    'expirationDate': '2017-02-01',
   }
 
 
@@ -178,123 +145,171 @@ def CurrentUserViewModelTestDataUpdate():
 def FuelSupplierTestDataCreate():
   return {
     'name':'Initial',
-    'status':'Initial',
   }
 
 def FuelSupplierTestDataUpdate():
   return {
     'name':'Changed',
+  }
+
+
+def FuelSupplierActionsTypeTestDataCreate():
+  return {
+    'type':'Initial',
+    'description':'Initial',
+    'displayOrder':1,
+  }
+
+def FuelSupplierActionsTypeTestDataUpdate():
+  return {
+    'type':'Changed',
+    'description':'Changed',
+    'displayOrder':0,
+  }
+
+
+def FuelSupplierAttachmentTestDataCreate():
+  return {
+    'fileName':'Initial',
+    'fileLocation':'Initial',
+    'description':'Initial',
+    'complianceYear':'Initial',
+  }
+
+def FuelSupplierAttachmentTestDataUpdate():
+  return {
+    'fileName':'Changed',
+    'fileLocation':'Changed',
+    'description':'Changed',
+    'complianceYear':'Changed',
+  }
+
+
+def FuelSupplierAttachmentTagTestDataCreate():
+  return {
+    'tag':'Initial',
+  }
+
+def FuelSupplierAttachmentTagTestDataUpdate():
+  return {
+    'tag':'Changed',
+  }
+
+
+def FuelSupplierBalanceTestDataCreate():
+  return {
+    'validatedCredits':1,
+    'encumberedCredits':1,
+  }
+
+def FuelSupplierBalanceTestDataUpdate():
+  return {
+    'validatedCredits':0,
+    'encumberedCredits':0,
+  }
+
+
+def FuelSupplierCCDataTestDataCreate():
+  return {
+    'commonClientOrgId':'Initial',
+    'name':'Initial',
+    'corporateAddressLine1':'Initial',
+    'corporateAddressLine2':'Initial',
+    'corporateAddressCity':'Initial',
+    'corporateAddressPostalCode':'Initial',
+    'corporateAddressProvince':'Initial',
+  }
+
+def FuelSupplierCCDataTestDataUpdate():
+  return {
+    'commonClientOrgId':'Changed',
+    'name':'Changed',
+    'corporateAddressLine1':'Changed',
+    'corporateAddressLine2':'Changed',
+    'corporateAddressCity':'Changed',
+    'corporateAddressPostalCode':'Changed',
+    'corporateAddressProvince':'Changed',
+  }
+
+
+def FuelSupplierContactTestDataCreate():
+  return {
+    'givenName':'Initial',
+    'surname':'Initial',
+    'title':'Initial',
+    'notes':'Initial',
+    'emailAddress':'Initial',
+    'workPhoneNumber':'Initial',
+    'mobilePhoneNumber':'Initial',
+  }
+
+def FuelSupplierContactTestDataUpdate():
+  return {
+    'givenName':'Changed',
+    'surname':'Changed',
+    'title':'Changed',
+    'notes':'Changed',
+    'emailAddress':'Changed',
+    'workPhoneNumber':'Changed',
+    'mobilePhoneNumber':'Changed',
+  }
+
+
+def FuelSupplierContactRoleTestDataCreate():
+  return {
+  }
+
+def FuelSupplierContactRoleTestDataUpdate():
+  return {
+  }
+
+
+def FuelSupplierHistoryTestDataCreate():
+  return {
+    'historyText':'Initial',
+  }
+
+def FuelSupplierHistoryTestDataUpdate():
+  return {
+    'historyText':'Changed',
+  }
+
+
+def FuelSupplierStatusTestDataCreate():
+  return {
+    'status':'Initial',
+    'description':'Initial',
+    'displayOrder':1,
+    'effectiveDate': '2017-01-01',
+    'expirationDate': '2017-02-01',
+  }
+
+def FuelSupplierStatusTestDataUpdate():
+  return {
     'status':'Changed',
-  }
-
-
-def GroupTestDataCreate():
-  return {
-    'name':'Initial',
-    'description':'Initial',
-  }
-
-def GroupTestDataUpdate():
-  return {
-    'name':'Changed',
     'description':'Changed',
+    'displayOrder':0,
+    'effectiveDate': '2017-01-01',
+    'expirationDate': '2017-02-01',
   }
 
 
-def GroupMembershipTestDataCreate():
+def FuelSupplierTypeTestDataCreate():
   return {
-    'active':True,
-  }
-
-def GroupMembershipTestDataUpdate():
-  return {
-    'active':False,
-  }
-
-
-def GroupMembershipViewModelTestDataCreate():
-  return {
-    'active':True,
-    'groupId':1,
-    'userId':1,
-  }
-
-def GroupMembershipViewModelTestDataUpdate():
-  return {
-    'active':False,
-    'groupId':0,
-    'userId':0,
-  }
-
-
-def GroupViewModelTestDataCreate():
-  return {
-    'name':'Initial',
+    'type':'Initial',
     'description':'Initial',
+    'displayOrder':1,
+    'effectiveDate': '2017-01-01',
+    'expirationDate': '2017-02-01',
   }
 
-def GroupViewModelTestDataUpdate():
+def FuelSupplierTypeTestDataUpdate():
   return {
-    'name':'Changed',
+    'type':'Changed',
     'description':'Changed',
-  }
-
-
-def HistoryTestDataCreate():
-  return {
-    'historyText':'Initial',
-  }
-
-def HistoryTestDataUpdate():
-  return {
-    'historyText':'Changed',
-  }
-
-
-def HistoryViewModelTestDataCreate():
-  return {
-    'historyText':'Initial',
-    'lastUpdateUserid':'Initial',
-    'affectedEntityId':1,
-  }
-
-def HistoryViewModelTestDataUpdate():
-  return {
-    'historyText':'Changed',
-    'lastUpdateUserid':'Changed',
-    'affectedEntityId':0,
-  }
-
-
-def LookupListTestDataCreate():
-  return {
-    'contextName':'Initial',
-    'isDefault':True,
-    'displaySortOrder':1,
-    'codeName':'Initial',
-    'value':'Initial',
-  }
-
-def LookupListTestDataUpdate():
-  return {
-    'contextName':'Changed',
-    'isDefault':False,
-    'displaySortOrder':0,
-    'codeName':'Changed',
-    'value':'Changed',
-  }
-
-
-def NoteTestDataCreate():
-  return {
-    'noteText':'Initial',
-    'isNoLongerRelevant':True,
-  }
-
-def NoteTestDataUpdate():
-  return {
-    'noteText':'Changed',
-    'isNoLongerRelevant':False,
+    'displayOrder':0,
+    'effectiveDate': '2017-01-01',
+    'expirationDate': '2017-02-01',
   }
 
 
@@ -324,10 +339,24 @@ def NotificationEventTestDataUpdate():
   }
 
 
+def NotificationTypeTestDataCreate():
+  return {
+    'type':'Initial',
+    'description':'Initial',
+    'displayOrder':1,
+  }
+
+def NotificationTypeTestDataUpdate():
+  return {
+    'type':'Changed',
+    'description':'Changed',
+    'displayOrder':0,
+  }
+
+
 def NotificationViewModelTestDataCreate():
   return {
     'eventId':1,
-    'event2Id':1,
     'hasBeenViewed':True,
     'isWatchNotification':True,
     'isExpired':True,
@@ -339,7 +368,6 @@ def NotificationViewModelTestDataCreate():
 def NotificationViewModelTestDataUpdate():
   return {
     'eventId':0,
-    'event2Id':0,
     'hasBeenViewed':False,
     'isWatchNotification':False,
     'isExpired':False,
@@ -349,22 +377,52 @@ def NotificationViewModelTestDataUpdate():
   }
 
 
-def OfferTestDataCreate():
+def OpportunityTestDataCreate():
   return {
-    'status':'Initial',
-    'buyOrSell':'Initial',
     'numberOfCredits':1,
+    'hasTradeNow':True,
     'numberOfViews':1,
+    'opportunityBackgroundNote':'Initial',
+    'plainEnglishPhrase':'Initial',
+  }
+
+def OpportunityTestDataUpdate():
+  return {
+    'numberOfCredits':0,
+    'hasTradeNow':False,
+    'numberOfViews':0,
+    'opportunityBackgroundNote':'Changed',
+    'plainEnglishPhrase':'Changed',
+  }
+
+
+def OpportunityHistoryTestDataCreate():
+  return {
+    'newNumberOfCredits':1,
     'note':'Initial',
   }
 
-def OfferTestDataUpdate():
+def OpportunityHistoryTestDataUpdate():
+  return {
+    'newNumberOfCredits':0,
+    'note':'Changed',
+  }
+
+
+def OpportunityStatusTestDataCreate():
+  return {
+    'status':'Initial',
+    'description':'Initial',
+    'displayOrder':1,
+    'effectiveDate': '2017-01-01',
+  }
+
+def OpportunityStatusTestDataUpdate():
   return {
     'status':'Changed',
-    'buyOrSell':'Changed',
-    'numberOfCredits':0,
-    'numberOfViews':0,
-    'note':'Changed',
+    'description':'Changed',
+    'displayOrder':0,
+    'effectiveDate': '2017-01-01',
   }
 
 
@@ -448,26 +506,24 @@ def RoleViewModelTestDataUpdate():
 
 def UserTestDataCreate():
   return {
+    'authorizationID':'Initial',
     'givenName':'Initial',
     'surname':'Initial',
-    'initials':'Initial',
     'email':'Initial',
-    'status':'Initial',
-    'smUserId':'Initial',
+    'userId':'Initial',
     'guid':'Initial',
-    'smAuthorizationDirectory':'Initial',
+    'authorizationDirectory':'Initial',
   }
 
 def UserTestDataUpdate():
   return {
+    'authorizationID':'Changed',
     'givenName':'Changed',
     'surname':'Changed',
-    'initials':'Changed',
     'email':'Changed',
-    'status':'Changed',
-    'smUserId':'Changed',
+    'userId':'Changed',
     'guid':'Changed',
-    'smAuthorizationDirectory':'Changed',
+    'authorizationDirectory':'Changed',
   }
 
 
@@ -475,7 +531,6 @@ def UserDetailsViewModelTestDataCreate():
   return {
     'givenName':'Initial',
     'surname':'Initial',
-    'initials':'Initial',
     'email':'Initial',
     'active':True,
   }
@@ -484,7 +539,6 @@ def UserDetailsViewModelTestDataUpdate():
   return {
     'givenName':'Changed',
     'surname':'Changed',
-    'initials':'Changed',
     'email':'Changed',
     'active':False,
   }
@@ -492,7 +546,7 @@ def UserDetailsViewModelTestDataUpdate():
 
 def UserFavouriteTestDataCreate():
   return {
-    'type':'Initial',
+    'context':'Initial',
     'name':'Initial',
     'value':'Initial',
     'isDefault':True,
@@ -500,7 +554,7 @@ def UserFavouriteTestDataCreate():
 
 def UserFavouriteTestDataUpdate():
   return {
-    'type':'Changed',
+    'context':'Changed',
     'name':'Changed',
     'value':'Changed',
     'isDefault':False,
@@ -523,15 +577,17 @@ def UserFavouriteViewModelTestDataUpdate():
     'type':'Changed',
   }
 
-
 def UserRoleTestDataCreate():
   return {
+    'effectiveDate': '2017-01-01',
+    'expiryDate': '2017-02-01',
   }
 
 def UserRoleTestDataUpdate():
   return {
+    'effectiveDate': '2018-01-01',
+    'expiryDate': '2018-02-01',
   }
-
 
 def UserRoleViewModelTestDataCreate():
   return {

@@ -23,8 +23,10 @@ import datetime
 
 from django.db import models
 from django.utils import timezone
+from .FuelSupplier import FuelSupplier
 
 
-class History(models.Model):	    
+class FuelSupplierHistory(models.Model):	    
+    fuelSupplierId = models.ForeignKey('FuelSupplier', related_name='FuelSupplierHistoryfuelSupplierId')   
     historyText = models.CharField(max_length=255)   
 

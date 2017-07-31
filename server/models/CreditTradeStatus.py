@@ -23,17 +23,12 @@ import datetime
 
 from django.db import models
 from django.utils import timezone
-from .UserRole import UserRole
 
 
-class CurrentUserViewModel(models.Model):	    
-    givenName = models.CharField(max_length=255, blank=True, null=True)   
-    surname = models.CharField(max_length=255, blank=True, null=True)   
-    email = models.CharField(max_length=255, blank=True, null=True)   
-    active = models.BooleanField()   
-    userRoles = models.ManyToManyField('UserRole', related_name='CurrentUserViewModeluserRoles', blank=True)   
-    smUserId = models.CharField(max_length=255, blank=True, null=True)   
-    smAuthorizationDirectory = models.CharField(max_length=255, blank=True, null=True)   
-    class Meta:
-      abstract = True
+class CreditTradeStatus(models.Model):	    
+    status = models.CharField(max_length=255, blank=True, null=True)   
+    description = models.CharField(max_length=255, blank=True, null=True)   
+    effectiveDate = models.DateField()   
+    expirationDate = models.DateField(blank=True, null=True)   
+    displayOrder = models.IntegerField()   
 
