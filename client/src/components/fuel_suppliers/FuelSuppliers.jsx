@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { Modal } from 'react-bootstrap';
+import * as Routes from '../../constants/routes.jsx';
 import { getFuelSuppliers, searchFuelSuppliers, searchFuelSuppliersReset, addFuelSupplier } from '../../actions/fuelSuppliersActions.jsx';
 import * as ReducerTypes from '../../constants/reducerTypes.jsx';
 import { BootstrapTable, TableHeaderColumn, ButtonGroup } from 'react-bootstrap-table';
@@ -37,6 +38,12 @@ class FuelSuppliers extends Component {
 
   handleAddFuelSupplier(id) {
     this.props.addFuelSupplier(id);
+  }
+
+  nameFormatter(cell, row) {
+    return (
+      <Link to={Routes.FUEL_SUPPLIERS + row.id}>{cell}</Link>
+    );
   }
 
   createCustomButtonGroup(props) {
@@ -82,7 +89,7 @@ class FuelSuppliers extends Component {
               options={ options }
               search
             >
-            <TableHeaderColumn className="name" dataField="name" isKey={true} dataSort={true}>Name</TableHeaderColumn>
+            <TableHeaderColumn className="name" dataField="name" dataFormat={(cell, row) => this.nameFormatter(cell, row)} isKey={true} dataSort={true}>Name</TableHeaderColumn>
             <TableHeaderColumn dataField="status" dataSort={true}>Status</TableHeaderColumn>
             <TableHeaderColumn dataField="actions_permitted" dataSort={true}>Status</TableHeaderColumn>
             <TableHeaderColumn dataField="credit_balance" dataSort={true}>Credit Balance</TableHeaderColumn>

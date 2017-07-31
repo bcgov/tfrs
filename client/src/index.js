@@ -15,6 +15,7 @@ import Opportunities from './components/opportunities/Opportunities.jsx';
 import Notifications from './components/notifications/Notifications.jsx';
 import Administration from './components/administration/Administration.jsx';
 import Settings from './components/settings/Settings.jsx';
+import FuelSupplierDetails from './components/fuel_suppliers/FuelSupplierDetails.jsx';
 
 import '../styles/index.scss';
 
@@ -27,7 +28,8 @@ ReactDOM.render(
 				<App>
 					<Switch>
 						<Route exact path={Routes.HOME} component={withRouter(Dashboard)} />
-						<Route path={Routes.FUEL_SUPPLIERS} component={withRouter(FuelSuppliers)} />
+						<Route exact path={Routes.FUEL_SUPPLIERS} component={withRouter(FuelSuppliers)} />
+						<Route path={Routes.FUEL_SUPPLIER_DETAILS} component={withRouter(FuelSupplierDetails)} />
 						<Route path={Routes.ACCOUNT_ACTIVITY} component={withRouter(AccountActivity)} />
 						<Route path={Routes.OPPORTUNITIES} component={withRouter(Opportunities)} />
 						<Route path={Routes.NOTIFICATIONS} component={withRouter(Notifications)} />									
