@@ -31,3 +31,86 @@ export const fuelSuppliers = [{
   last_transaction: Date.now(),
   pending_actions: 2,
 }]
+
+export const notifications = [
+  {
+    type: 'New offer to sell posted',
+    message: 'BC Every Fuels has posted an Offer to Sell 10,000 credits to any Petroleum Fuel Supplier',
+    date: Date.now(),
+  },
+  {
+    type: 'New offer to sell posted',
+    message: 'BC Every Fuels has posted an Offer to Sell 10,000 credits to any Petroleum Fuel Supplier',
+    date: Date.now(),
+  },
+  {
+    type: 'New offer to sell posted',
+    message: 'BC Every Fuels has posted an Offer to Sell 10,000 credits to any Petroleum Fuel Supplier',
+    date: Date.now(),
+  },
+  {
+    type: 'New offer to sell posted',
+    message: 'BC Every Fuels has posted an Offer to Sell 10,000 credits to any Petroleum Fuel Supplier',
+    date: Date.now(),
+  },
+  {
+    type: 'New offer to sell posted',
+    message: 'BC Every Fuels has posted an Offer to Sell 10,000 credits to any Petroleum Fuel Supplier',
+    date: Date.now(),
+  },
+  {
+    type: 'New offer to sell posted',
+    message: 'BC Every Fuels has posted an Offer to Sell 10,000 credits to any Petroleum Fuel Supplier',
+    date: Date.now(),
+  },
+  {
+    type: 'New offer to sell posted',
+    message: 'BC Every Fuels has posted an Offer to Sell 10,000 credits to any Petroleum Fuel Supplier',
+    date: Date.now(),
+  },
+  {
+    type: 'New offer to sell posted',
+    message: 'BC Every Fuels has posted an Offer to Sell 10,000 credits to any Petroleum Fuel Supplier',
+    date: Date.now(),
+  },
+  {
+    type: 'New offer to sell posted',
+    message: 'BC Every Fuels has posted an Offer to Sell 10,000 credits to any Petroleum Fuel Supplier',
+    date: Date.now(),
+  },
+  {
+    type: 'New offer to sell posted',
+    message: 'BC Every Fuels has posted an Offer to Sell 10,000 credits to any Petroleum Fuel Supplier',
+    date: Date.now(),
+  },
+  {
+    type: 'New offer to sell posted',
+    message: 'BC Every Fuels has posted an Offer to Sell 10,000 credits to any Petroleum Fuel Supplier',
+    date: Date.now(),
+  },
+  {
+    type: 'New offer to sell posted',
+    message: 'BC Every Fuels has posted an Offer to Sell 10,000 credits to any Petroleum Fuel Supplier',
+    date: Date.now(),
+  },
+  {
+    type: 'New offer to sell posted',
+    message: 'BC Every Fuels has posted an Offer to Sell 10,000 credits to any Petroleum Fuel Supplier',
+    date: Date.now(),
+  },
+  {
+    type: 'New offer to sell posted',
+    message: 'BC Every Fuels has posted an Offer to Sell 10,000 credits to any Petroleum Fuel Supplier',
+    date: Date.now(),
+  },
+  {
+    type: 'New offer to sell posted',
+    message: 'BC Every Fuels has posted an Offer to Sell 10,000 credits to any Petroleum Fuel Supplier',
+    date: Date.now(),
+  },
+  {
+    type: 'New offer to sell posted',
+    message: 'BC Every Fuels has posted an Offer to Sell 10,000 credits to any Petroleum Fuel Supplier',
+    date: Date.now(),
+  },
+]
