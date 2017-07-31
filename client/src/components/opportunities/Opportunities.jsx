@@ -19,6 +19,15 @@ class Opportunities extends Component {
       </div>
     )
   }
+
+  openOpportunitiesActionsFormatter(cell, row) {
+    return (
+      <div>
+        <button className="accept-btn" data-toggle="modal" data-target="#credit-transfer-modal">Accept</button>
+        <Link to="" className="counter-btn">Counter</Link>
+      </div>
+    );
+  }
   
   createCustomOurOpportunitiesSearch(props) {
     return (
@@ -65,7 +74,7 @@ class Opportunities extends Component {
             options={ options }
             search
           >
-            <TableHeaderColumn dataField="opportunity_description" isKey={true} dataSort={true} columnClassName="proposal-description">Proposal Description</TableHeaderColumn>
+            <TableHeaderColumn dataField="opportunity_description" isKey={true} dataSort={true} columnClassName="proposal-description">Opportunity Description</TableHeaderColumn>
             <TableHeaderColumn dataField="resulting_transfers" dataSort={true}>Resulting Transfers</TableHeaderColumn>
             <TableHeaderColumn dataField="last_updated" dataSort={true}>Last Updated</TableHeaderColumn>
             <TableHeaderColumn dataField="status" dataSort={true}>Status</TableHeaderColumn>
@@ -78,11 +87,9 @@ class Opportunities extends Component {
             options={ openOpportunitiesOptions }
             search
           >
-            <TableHeaderColumn dataField="opportunity_description" isKey={true} dataSort={true} columnClassName="proposal-description">Proposal Description</TableHeaderColumn>
-            <TableHeaderColumn dataField="resulting_transfers" dataSort={true}>Resulting Transfers</TableHeaderColumn>
+            <TableHeaderColumn dataField="opportunity_description" isKey={true} dataSort={true} columnClassName="proposal-description">Opportunity Description</TableHeaderColumn>
             <TableHeaderColumn dataField="last_updated" dataSort={true}>Last Updated</TableHeaderColumn>
-            <TableHeaderColumn dataField="status" dataSort={true}>Status</TableHeaderColumn>
-            <TableHeaderColumn dataField="id" dataFormat={(cell, row) => this.actionsFormatter(cell, row)}>Actions</TableHeaderColumn>
+            <TableHeaderColumn dataField="id" dataFormat={(cell, row) => this.openOpportunitiesActionsFormatter(cell, row)}>Actions</TableHeaderColumn>
           </BootstrapTable>
         </div>
       </div>
