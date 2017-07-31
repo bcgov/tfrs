@@ -51,6 +51,7 @@ const rootReducer = combineReducers({
     [ReducerTypes.GET_ACCOUNT_ACTIVITY]: createReducer(genericRequest, ReducerTypes.GET_ACCOUNT_ACTIVITY),
     [ReducerTypes.ACCEPT_CREDIT_TRANSFER]: createReducer(genericRequest, ReducerTypes.ACCEPT_CREDIT_TRANSFER),
     [ReducerTypes.GET_FUEL_SUPPLIERS]: createReducer(genericRequest, ReducerTypes.GET_FUEL_SUPPLIERS),
+    [ReducerTypes.GET_FUEL_SUPPLIER]: createReducer(genericRequest, ReducerTypes.GET_FUEL_SUPPLIER),
     [ReducerTypes.SEARCH_FUEL_SUPPLIERS]: createReducer(genericRequest, ReducerTypes.SEARCH_FUEL_SUPPLIERS),
     [ReducerTypes.ADD_FUEL_SUPPLIER]: createReducer(genericRequest, ReducerTypes.ADD_FUEL_SUPPLIER),
     [ReducerTypes.GET_NOTIFICATIONS]: createReducer(genericRequest, ReducerTypes.GET_NOTIFICATIONS),
