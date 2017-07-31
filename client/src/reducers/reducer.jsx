@@ -54,6 +54,7 @@ const rootReducer = combineReducers({
     [ReducerTypes.SEARCH_FUEL_SUPPLIERS]: createReducer(genericRequest, ReducerTypes.SEARCH_FUEL_SUPPLIERS),
     [ReducerTypes.ADD_FUEL_SUPPLIER]: createReducer(genericRequest, ReducerTypes.ADD_FUEL_SUPPLIER),
     [ReducerTypes.GET_NOTIFICATIONS]: createReducer(genericRequest, ReducerTypes.GET_NOTIFICATIONS),
+    [ReducerTypes.GET_OPPORTUNITIES]: createReducer(genericRequest, ReducerTypes.GET_OPPORTUNITIES),
     routing, 
 });
 export default rootReducer;
