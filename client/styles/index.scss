@@ -51,7 +51,9 @@ table {
   border-bottom: none;
 }
 
-.account-activity-table, .fuel-suppliers-table {
+.account-activity-table, .fuel-suppliers-table, .correspondence-table, .history-table {
+  margin-top: 1rem;
+  margin-bottom: 1rem;
 
   .header {
     padding: 0;
