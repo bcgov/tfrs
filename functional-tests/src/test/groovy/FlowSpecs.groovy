@@ -3,6 +3,7 @@ import pages.app.DashboardPage
 import pages.app.NotificationsPage
 import pages.app.SettingsPage
 import pages.app.AccountActivityPage
+import pages.app.OpportunitiesPage
 import pages.app.FuelSuppliersPage
 import pages.app.AdministrationPage
 import pages.external.Accessability
