@@ -9,7 +9,7 @@ TARGET_STACK="aspnetmvc"
 TARGET_STACK="django"
 
 # Adjust these lines to set the names and locations of the code generator jars
-executable="swagger-codegen-extension-1.0.1-jar-with-dependencies.jar;swagger-codegen-cli.jar"
+executable="swagger-codegen-extension-1.0.1-jar-with-dependencies.jar:swagger-codegen-cli.jar"
 
 # Set the code elements to be generate
 GEN_OPTIONS="-DapiTests=true -DmodelTests=true"
