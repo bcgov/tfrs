@@ -27,6 +27,7 @@ from .CreditTradeStatus import CreditTradeStatus
 from .FuelSupplier import FuelSupplier
 from .CreditTradeType import CreditTradeType
 from .CreditTradeHistory import CreditTradeHistory
+from server.exceptions import CustomValidation
 
 
 class CreditTrade(models.Model):	    
@@ -35,7 +36,7 @@ class CreditTrade(models.Model):
     respondent = models.ForeignKey('FuelSupplier', related_name='CreditTraderespondent')   
     tradeEffectiveDate = models.DateField(blank=True, null=True)   
     creditTradeTypeId = models.ForeignKey('CreditTradeType', related_name='CreditTradecreditTradeTypeId')   
-    numberOfCredits = models.IntegerField()   
+    numberOfCredits = models.IntegerField(validators=[CustomValidation('Value must be a positive integer','numberOfCredits',status_code=422)])
     fairMarketValuePerCredit = models.CharField(blank=True, null=True, max_length=255)   
     history = models.ManyToManyField('CreditTradeHistory', related_name='CreditTradehistory', blank=True)   
     plainEnglishPhrase = models.CharField(max_length=255)   
