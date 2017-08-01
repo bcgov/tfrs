@@ -624,7 +624,75 @@
     "status": {
         "loadBalancer": {}
     }
-}	
+},
+    {
+      "kind": "ImageStream",
+      "apiVersion": "v1",
+      "metadata": {
+        "name": "client",
+        "annotations": {
+          "description": "Keeps track of changes in the client / front end image"
+        }
+      }
+    },
+    {
+      "kind": "BuildConfig",
+      "apiVersion": "v1",
+      "metadata": {
+        "name": "client",
+        "annotations": {
+          "description": "Defines how to build the client / front end image"
+        }
+      },
+      "spec": {
+        "source": {
+          "type": "Git",
+          "git": {
+            "uri": "${SOURCE_REPOSITORY_URL}",
+            "ref": "${SOURCE_REPOSITORY_REF}"
+          },
+          "contextDir": "client"
+        },
+        "strategy": {
+          "type": "Source",
+          "sourceStrategy": {
+                "from": {
+                    "kind": "ImageStreamTag",
+                    "namespace": "${S2I_NAMESPACE}",
+                    "name": "nodejs:4"
+                },
+                "incremental": true
+            } 
+        },
+        "output": {
+          "to": {
+            "kind": "ImageStreamTag",
+            "name": "client:latest"
+          }
+        },
+        "triggers": [
+          {
+            "type": "ImageChange"
+          },
+          {
+            "type": "ConfigChange"
+          },
+          {
+            "type": "GitHub",
+            "github": {
+              "secret": "${GITHUB_WEBHOOK_SECRET}"
+            }
+          },
+          {
+            "type": "Generic",
+            "generic": {
+              "secret": "${GENERIC_WEBHOOK_SECRET}"
+            }
+          }
+        ]
+        
+      }
+    }
   ],
   "parameters": [
     {
@@ -717,6 +785,18 @@
       "displayName": "Database service name",
       "description": "Name of the database service",
       "value": "postgresql-sonarqube"
+    },
+	{
+      "name": "DATABASE_SERVICE_NAME",
+      "displayName": "Database service name",
+      "description": "Name of the database service",
+      "value": "postgresql-sonarqube"
+    },
+	{
+      "name": "S2I_NAMESPACE",
+      "displayName": "Namespace",
+      "description": "The OpenShift Namespace where the S2I ImageStream resides.",
+      "value": "openshift"
     }
   ]
 }
