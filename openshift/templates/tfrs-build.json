@@ -692,7 +692,43 @@
         ]
         
       }
+    },
+	{
+    "kind": "BuildConfig",
+    "apiVersion": "v1",
+    "metadata": {
+        "name": "client-pipeline",
+        "creationTimestamp": null,
+        "labels": {
+            "app": "client-pipeline",
+            "name": "client-pipeline",
+            "template": "client-pipeline"
+        }
+    },
+    "spec": {        
+        "runPolicy": "Parallel",
+        "source": {
+            "type": "Git",
+            "git": {
+                "uri": "${SOURCE_REPOSITORY_URL}",
+                "ref": "master"
+            }
+        },
+        "strategy": {
+            "type": "JenkinsPipeline",
+            "jenkinsPipelineStrategy": {
+                "jenkinsfilePath": "client.Jenkinsfile"
+            }
+        },
+        "output": {},
+        "resources": {},
+        "postCommit": {},
+        "nodeSelector": null
+    },
+    "status": {
+        "lastVersion": 0
     }
+},
   ],
   "parameters": [
     {

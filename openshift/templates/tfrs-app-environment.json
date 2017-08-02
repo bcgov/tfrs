@@ -333,20 +333,6 @@
       }
     },
     {
-      "kind": "Route",
-      "apiVersion": "v1",
-      "metadata": {
-        "name": "client"
-      },
-      "spec": {
-        "host": "client-${APPLICATION_DOMAIN}",
-        "to": {
-          "kind": "Service",
-          "name": "client"
-        }
-      }
-    },
-    {
       "kind": "DeploymentConfig",
       "apiVersion": "v1",
       "metadata": {
@@ -380,25 +366,31 @@
         ],
         "replicas": 1,
         "selector": {
-          "name": "${NAME}"
+          "name": "client"
         },
         "template": {
           "metadata": {
-            "name": "${NAME}",
+            "name": "client",
             "labels": {
-              "name": "${NAME}"
+              "name": "client"
             }
           },
           "spec": {		    
             "containers": [
               {
-                "name": "${NAME}",
+                "name": "client",
                 "image": " ",
                 "ports": [
                   {
                     "containerPort": 3000
                   }
                 ],
+				"env": [
+                  {
+                    "name": "PORT",
+                    "value": "3000"
+                  }
+				],
                 "readinessProbe": {
                   "timeoutSeconds": 3000,
                   "initialDelaySeconds": 10,
@@ -425,7 +417,21 @@
           }
         }
       }
-    }	
+    },
+{
+      "kind": "Route",
+      "apiVersion": "v1",
+      "metadata": {
+        "name": "client"
+      },
+      "spec": {
+        "host": "client-${APPLICATION_DOMAIN}",
+        "to": {
+          "kind": "Service",
+          "name": "client"
+        }
+      }
+    }
   ],
   "parameters": [
     {
