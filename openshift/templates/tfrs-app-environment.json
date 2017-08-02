@@ -385,6 +385,12 @@
                     "containerPort": 3000
                   }
                 ],
+				"env": [
+                  {
+                    "name": "PORT",
+                    "value": "3000"
+                  }
+				],
                 "readinessProbe": {
                   "timeoutSeconds": 3000,
                   "initialDelaySeconds": 10,
