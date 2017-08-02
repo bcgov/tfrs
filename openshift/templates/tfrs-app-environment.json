@@ -309,6 +309,122 @@
           }
         }
       }
+    },
+{
+      "kind": "Service",
+      "apiVersion": "v1",
+      "metadata": {
+        "name": "client",
+        "annotations": {
+          "description": "Exposes and load balances the front end pods"
+        }
+      },
+      "spec": {
+        "ports": [
+          {
+            "name": "web",
+            "port": 3000,
+            "targetPort": 3000
+          }
+        ],
+        "selector": {
+          "name": "client"
+        }
+      }
+    },
+    {
+      "kind": "Route",
+      "apiVersion": "v1",
+      "metadata": {
+        "name": "client"
+      },
+      "spec": {
+        "host": "client-${APPLICATION_DOMAIN}",
+        "to": {
+          "kind": "Service",
+          "name": "client"
+        }
+      }
+    },
+    {
+      "kind": "DeploymentConfig",
+      "apiVersion": "v1",
+      "metadata": {
+        "name": "client",
+        "annotations": {
+          "description": "Defines how to deploy the application server"
+        }
+      },
+      "spec": {
+        "strategy": {
+          "type": "Rolling"
+        },
+        "triggers": [
+          {
+            "type": "ImageChange",
+            "imageChangeParams": {
+              "automatic": true,
+              "containerNames": [
+                "client"
+              ],
+              "from": {
+                "kind": "ImageStreamTag",
+                "namespace": "${APP_IMAGE_NAMESPACE}",
+                "name": "client:${APP_DEPLOYMENT_TAG}"
+              }
+            }
+          },
+          {
+            "type": "ConfigChange"
+          }
+        ],
+        "replicas": 1,
+        "selector": {
+          "name": "${NAME}"
+        },
+        "template": {
+          "metadata": {
+            "name": "${NAME}",
+            "labels": {
+              "name": "${NAME}"
+            }
+          },
+          "spec": {		    
+            "containers": [
+              {
+                "name": "${NAME}",
+                "image": " ",
+                "ports": [
+                  {
+                    "containerPort": 3000
+                  }
+                ],
+                "readinessProbe": {
+                  "timeoutSeconds": 3000,
+                  "initialDelaySeconds": 10,
+                  "httpGet": {
+                    "path": "/",
+                    "port": 3000
+                  }
+                },
+                "livenessProbe": {
+                    "timeoutSeconds": 3000,
+                    "initialDelaySeconds": 10,
+                    "httpGet": {
+                      "path": "/",
+                      "port": 3000
+                    }
+                },
+                "resources": {
+                  "limits": {
+                    "memory": "${MEMORY_LIMIT}"
+                  }
+                }
+              }
+            ]
+          }
+        }
+      }
     }	
   ],
   "parameters": [
