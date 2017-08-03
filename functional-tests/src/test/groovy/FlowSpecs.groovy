@@ -29,9 +29,9 @@ class FlowSpecs extends GebReportingSpec {
 
         where:
         startPage           | clickLink                     | clickCount    | timeoutSeconds    || assertPage
-        DashboardPage       | "navbar-notifications"        | 1             | 3                 || NotificationsPage
-        SettingsPage        | "navbar-notifications"        | 1             | 3                 || NotificationsPage
-        NotificationsPage   | "navbar-settings"             | 1             | 3                 || SettingsPage
+        //DashboardPage       | "navbar-notifications"        | 1             | 3                 || NotificationsPage
+        //SettingsPage        | "navbar-notifications"        | 1             | 3                 || NotificationsPage
+        //NotificationsPage   | "navbar-settings"             | 1             | 3                 || SettingsPage
         //DashboardPage       | "account-activity-view-all"   | 1             | 3                 || AccountActivityPage
         //DashboardPage       | "navbar-fuel-suppliers"       | 1             | 3                 || FuelSuppliersPage
         //DashboardPage       | "navbar-account-activity"     | 1             | 3                 || AccountActivityPage
