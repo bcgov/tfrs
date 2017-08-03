@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import { Modal } from 'react-bootstrap';
 import { getAccountActivity, acceptCreditTransfer, acceptCreditTransferReset } from '../../actions/accountActivityActions.jsx';
 import * as ReducerTypes from '../../constants/reducerTypes.jsx';
+import * as Routes from '../../constants/routes.jsx';
 import { BootstrapTable, TableHeaderColumn, ButtonGroup } from 'react-bootstrap-table';
 
 class AccountActivity extends Component {
@@ -46,8 +47,8 @@ class AccountActivity extends Component {
   actionsFormatter(cell, row) {
     return (
       <div>
-        <button className="accept-btn" data-toggle="modal" data-target="#credit-transfer-modal" onClick={() => this.handleAcceptClick(row)}>Accept</button>
-        <Link to="/" className="counter-btn">Counter</Link>
+        <button className="simple-btn" data-toggle="modal" data-target="#credit-transfer-modal" onClick={() => this.handleAcceptClick(row)}>Accept</button>
+        <Link to={Routes.CREDIT_TRANSFER + row.id} className="counter-btn">Counter</Link>
       </div>
     )
   }
@@ -61,7 +62,7 @@ class AccountActivity extends Component {
         <h1 className='header'>Account Activity</h1>
         <div className='right-toolbar-container'> 
           <div className="actions-container">
-            <button className="btn btn-primary">Propose Trade</button>
+            <Link to={Routes.CREDIT_TRANSFER}>Propose Trade</Link>
             <label className="checkbox"> 
               <input type="checkbox" onChange={() => this.handleCheckboxChange()} />
               Last 12 months

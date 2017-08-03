@@ -37,6 +37,7 @@
   },
   "scripts": {
     "start": "node server",
-    "production": "NODE_ENV=production webpack -p --config webpack.production.config.js"
+    "production": "NODE_ENV=production webpack -p --config webpack.production.config.js",
+    "build": "webpack"
   }
 }

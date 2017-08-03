@@ -11,6 +11,7 @@ import App from './components/App.jsx';
 import Dashboard from './components/dashboard/Dashboard.jsx';
 import FuelSuppliers from './components/fuel_suppliers/FuelSuppliers.jsx';
 import AccountActivity from './components/account_activity/AccountActivity.jsx';
+import CreditTransfer from './components/account_activity/CreditTransfer.jsx';
 import Opportunities from './components/opportunities/Opportunities.jsx';
 import Notifications from './components/notifications/Notifications.jsx';
 import Administration from './components/administration/Administration.jsx';
@@ -31,6 +32,8 @@ ReactDOM.render(
 						<Route exact path={Routes.FUEL_SUPPLIERS} component={withRouter(FuelSuppliers)} />
 						<Route path={Routes.FUEL_SUPPLIER_DETAILS} component={withRouter(FuelSupplierDetails)} />
 						<Route path={Routes.ACCOUNT_ACTIVITY} component={withRouter(AccountActivity)} />
+						<Route path={Routes.CREDIT_TRANSFER_DETAILS} component={withRouter(CreditTransfer)} />
+						<Route exact path={Routes.CREDIT_TRANSFER} component={withRouter(CreditTransfer)} />
 						<Route path={Routes.OPPORTUNITIES} component={withRouter(Opportunities)} />
 						<Route path={Routes.NOTIFICATIONS} component={withRouter(Notifications)} />									
 						<Route path={Routes.ADMINISTRATION} component={withRouter(Administration)} />		

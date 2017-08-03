@@ -52,7 +52,7 @@ class FuelSuppliers extends Component {
         <h1 className='header'>Fuel Suppliers</h1>
         <div className='right-toolbar-container'> 
           <div className="actions-container">
-            <button className="btn btn-primary" onClick={() => this.setState({ showModal: true})}>Add</button>
+            <button className="simple-btn" onClick={() => this.setState({ showModal: true})}>Add</button>
             <label className="checkbox"> 
               <input type="checkbox" onChange={() => this.handleCheckboxChange()} />
               Active Only

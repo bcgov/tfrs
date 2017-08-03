@@ -1,6 +1,7 @@
 import * as ActionTypes from '../constants/actionTypes.jsx';
 import * as ReducerTypes from '../constants/reducerTypes.jsx';
 import { activity } from '../sampleData.jsx';
+import { CreditTransfer } from '../sampleData.jsx';
 
 export const getAccountActivity = () => (dispatch) => {
   dispatch(getAccountActivitySuccess(activity));
@@ -28,6 +29,25 @@ const acceptCreditTransferSuccess = () => {
 export const acceptCreditTransferReset = () => {
   return {
     name: ReducerTypes.ACCEPT_CREDIT_TRANSFER,
+    type: ActionTypes.RESET,
+  }
+}
+
+export const getCreditTransfer = (id) => (dispatch) => {
+  dispatch(getCreditTransferSuccess(CreditTransfer));
+}
+
+const getCreditTransferSuccess = (data) => {
+  return {
+    name: ReducerTypes.GET_CREDIT_TRANSFER,
+    type: ActionTypes.SUCCESS,
+    data: data
+  }
+}
+
+export const getCreditTransferReset = () => {
+  return {
+    name: ReducerTypes.GET_CREDIT_TRANSFER,
     type: ActionTypes.RESET,
   }
 }

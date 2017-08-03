@@ -96,11 +96,10 @@ table {
     white-space: pre-wrap;
   }
 
-  .accept-btn {
+  .simple-btn {
     background: none;
     border: none;
     color: $link-color;
-    text-decoration: underline;
     padding: 0.5rem;
   
     &:hover {
