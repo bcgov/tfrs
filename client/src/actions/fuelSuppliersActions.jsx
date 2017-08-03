@@ -56,3 +56,40 @@ const getFuelSupplierSuccess = (fuelSupplier) => {
     data: fuelSupplier,
   }
 }
+
+export const addContact = (data) => (dispatch) => {
+  dispatch(addContactSuccess());
+}
+
+const addContactSuccess = () => {
+  return {
+    name: ReducerTypes.ADD_CONTACT,
+    type: ActionTypes.SUCCESS,
+  }
+}
+
+export const verifyID = (id) => (dispatch) => {
+  dispatch(verifyIDReset());
+}
+
+const verifyIDSuccess = () => {
+  return {
+    name: ReducerTypes.VERIFY_ID,
+    type: ActionTypes.SUCCESS,
+  }
+}
+
+const verifyIDError = (error) => {
+  return {
+    name: ReducerTypes.VERIFY_ID,
+    type: ActionTypes.ERROR,
+    errorMessage: error,
+  }
+}
+
+export const verifyIDReset = () => {
+  return {
+    name: ReducerTypes.VERIFY_ID,
+    type: ActionTypes.RESET,
+  }
+}
