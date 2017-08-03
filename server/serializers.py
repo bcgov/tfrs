@@ -58,7 +58,6 @@ from .models.UserFavouriteViewModel import UserFavouriteViewModel
 from .models.UserRole import UserRole
 from .models.UserRoleViewModel import UserRoleViewModel
 from .models.UserViewModel import UserViewModel
-from server.exceptions import CustomValidation
 
 class AuditSerializer(serializers.ModelSerializer):
   class Meta:
@@ -66,16 +65,6 @@ class AuditSerializer(serializers.ModelSerializer):
     fields = ('id','appCreateTimestamp','appCreateUserid','appCreateUserGuid','appCreateUserDirectory','appLastUpdateTimestamp','appLastUpdateUserid','appLastUpdateUserGuid','appLastUpdateUserDirectory','entityName','entityId','propertyName','oldValue','newValue','isDelete')
 
 class CreditTradeSerializer(serializers.ModelSerializer):
-  def validate(self, data):
-    """
-    Check numberOfCredits should be positive integer
-    """
-    number_of_credits = data['numberOfCredits']
-    if number_of_credits <= 0:
-      raise CustomValidation('Value must be a positive integer','numberOfCredits', status_code=422)
-
-    return data
-
   class Meta:
     model = CreditTrade
     fields = ('id','creditTradeStatusId','initiator','respondent','tradeEffectiveDate','creditTradeTypeId','numberOfCredits','fairMarketValuePerCredit','history','plainEnglishPhrase')

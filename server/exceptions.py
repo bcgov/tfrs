@@ -4,11 +4,19 @@ from rest_framework import status
 
 
 class CustomValidation(APIException):
-    status_code = 422
-    default_detail = 'Validation Error'
 
     def __init__(self, detail, field, status_code):
-        if status_code is not None:self.status_code = status_code
+        self.detail = detail
         if detail is not None:
             self.detail = {field: force_text(detail)}
-        else: self.detail = {'detail': force_text(self.default_detail)}
+        self.message = detail
+        self.field = field
+        self.status_code = status_code
+
+    def __call__(self, value):
+        detail = self.detail
+        message = self.message
+        field = self.field
+        status_code = self.status_code
+        if value <= 0:
+            raise CustomValidation(message, field, status_code)
