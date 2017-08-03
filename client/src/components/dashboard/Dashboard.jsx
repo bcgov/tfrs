@@ -19,7 +19,7 @@ class Dashboard extends Component {
   render() {
     return (
       <div className="dashboard">
-        <div id="main-content" role="main" className="contentPageMainColumn col-sm-12">
+        <div id="main-content" role="main" className="col-sm-12">
           <a id="main-content-anchor"></a>
           <div className="row">
             <div className="col-xs-12 col-sm-6">

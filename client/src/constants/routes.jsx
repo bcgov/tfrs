@@ -8,6 +8,8 @@ export const NOTIFICATIONS = '/notifications';
 export const SETTINGS = '/settings';
 export const ADMINISTRATION = '/administration';
 export const FUEL_SUPPLIER_DETAILS = '/fuel-suppliers/:id';
+export const CREDIT_TRANSFER = '/credittransfer/';
+export const CREDIT_TRANSFER_DETAILS = '/credittransfer/:id';
 
 // API Routes
 

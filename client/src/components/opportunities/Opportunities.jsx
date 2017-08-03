@@ -23,7 +23,7 @@ class Opportunities extends Component {
   openOpportunitiesActionsFormatter(cell, row) {
     return (
       <div>
-        <button className="accept-btn" data-toggle="modal" data-target="#credit-transfer-modal">Accept</button>
+        <button className="simple-btn" data-toggle="modal" data-target="#credit-transfer-modal">Accept</button>
         <Link to="" className="counter-btn">Counter</Link>
       </div>
     );
@@ -35,7 +35,7 @@ class Opportunities extends Component {
         <h2 className='header'>Our Opportunities</h2>
         <div className='right-toolbar-container'> 
           <div className="actions-container">
-            <button className="btn btn-primary">Add</button>
+            <button className="simple-btn">Add</button>
             <label className="checkbox"> 
               <input type="checkbox" />
               Open Only
