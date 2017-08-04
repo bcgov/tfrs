@@ -44,7 +44,7 @@ def account_activity(request):
     ]
     return render(request, 'account-activity.html', {'table_data': json.dumps(table_data)})
 
-def offers(request):
+def opportunities(request):
     table_data = [
         {'transaction':{ 'fuelSupplier': 'BC AnyFuel', 'type': 'Offer to Buy', 'partner': '', 'quantity': 100000, 'fairMarketValue': '$100', 'lastModified': '2017-05-16', 'effectiveDate': '2017-12-25', 'status': 'Offer'}},
 		{'transaction':{ 'fuelSupplier': 'BC EveryFuel', 'type': 'Offer to Sell', 'partner': '', 'quantity': 75000, 'fairMarketValue': '$125', 'lastModified': '2017-04-04', 'effectiveDate': '2017-12-31', 'status': 'Offer'}}
