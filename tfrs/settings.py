@@ -50,10 +50,12 @@ INSTALLED_APPS = (
     'welcome',   
     'tfrs',
     'server',
+    'corsheaders',
 )
 
 MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -138,3 +140,11 @@ SWAGGER_SETTINGS = {
     'APIS_SORTER': 'alpha',
     'SHOW_REQUEST_HEADERS': True
 }
+
+# CORS Settings
+
+# If True, the whitelist below is ignored and all origins will be accepted
+CORS_ORIGIN_ALLOW_ALL = True
+
+# List of origin hostnames that are authorized to make cross-site HTTP requests
+CORS_ORIGIN_WHITELIST = ()

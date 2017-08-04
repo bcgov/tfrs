@@ -14,3 +14,4 @@ django_rest_swagger===2.1.2
 # packages for testing
 pytest-django==3.1.2
 pytest-cov==2.4.0
+django-cors-headers==2.1.0
