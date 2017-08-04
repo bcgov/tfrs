@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import * as ReducerTypes from '../../constants/reducerTypes.jsx';
 import { getCreditTransfer, getCreditTransferReset } from '../../actions/accountActivityActions.jsx';
+import { BootstrapTable, TableHeaderColumn, ButtonGroup } from 'react-bootstrap-table';
 
 class CreditTransfer extends Component {
   constructor(props) {
@@ -36,6 +37,7 @@ class CreditTransfer extends Component {
     const numberOfCredits = this.numberOfCredits.value;
     const respondent = this.respondent.value;
     const valuePerCredit = this.valuePerCredit.value;
+    const note = this.note.value;
   }
   
   render() {
@@ -75,7 +77,7 @@ class CreditTransfer extends Component {
                   defaultValue={this.props.data.number_of_credits}
                   ref={(input) => this.numberOfCredits = input} />
               </div>
-              <span>credits to</span>
+              <span>{this.state.proposalType === "Buy" ? "credits from" : "credits to"}</span>
               <div className="form-group">
                 <input 
                   type="text" 
@@ -93,13 +95,22 @@ class CreditTransfer extends Component {
                   id="value-per-credit" 
                   name="valuePerCredit"
                   defaultValue={this.props.data.fair_market_value_per_credit}
-                 ref={(input) => this.valuePerCredit = input} />
+                  ref={(input) => this.valuePerCredit = input} />
               </div>
               <span>per credit for a total value of</span>
               <span>{
                 this.props.data.fair_market_value_per_credit * this.props.data.number_of_credits
               }</span>
               <span>effective on Director's Approval</span>
+              <div className="form-group note">
+                <label htmlFor="comment">Note:</label>
+                <textarea 
+                  className="form-control" 
+                  rows="5" 
+                  id="note"
+                  ref={(input) => this.note = input}>
+                </textarea>
+              </div>
               <button type="submit" className="btn btn-default">Submit</button>
             </form>
           }
@@ -108,12 +119,6 @@ class CreditTransfer extends Component {
     );
   }
 }
-
-  // initiator: 'BC Any Fuels',
-  // respondent: 'Ultramor', 
-  // trade_effective_date: Date.now(),
-  // number_of_credits: 100,
-  // fair_market_value_per_credit: 10,
 
 export default connect (
   state => ({
