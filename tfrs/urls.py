@@ -6,8 +6,8 @@ from . import views
 urlpatterns = [
     url(r'^$', views.dashboard),
     url(r'^account-activity/$', views.account_activity),
-	url(r'^offers/$', views.offers),
-	url(r'^db-fuel-suppliers/$', views.db_fuel_suppliers),
+    url(r'^opportunities/$', views.opportunities),
+    url(r'^db-fuel-suppliers/$', views.db_fuel_suppliers),
     url(r'^settings/$', views.settings),
     url(r'^test/$', views.settings),
     url(r'^notifications/$', views.notifications),
