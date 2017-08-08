@@ -183,6 +183,7 @@ export const opportunities = [
 export const CreditTransfer = {
   initiator: 'BC Any Fuels',
   respondent: 'Ultramor', 
+  status: "Accepted",
   trade_effective_date: Date.now(),
   number_of_credits: 100,
   fair_market_value_per_credit: 10,

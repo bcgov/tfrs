@@ -3,7 +3,7 @@ import  ReactDOM from 'react-dom'
 import { Provider } from 'react-redux';
 import { Route, withRouter, Switch } from 'react-router'
 import { push, ConnectedRouter } from 'react-router-redux';
-import createHistory from 'history/createBrowserHistory'; // 'history/createHashHistory' for  '#'
+import createHistory from 'history/createHashHistory'; // 'history/createHashHistory' for  '#'
 import * as Routes from './constants/routes.jsx';
 import store from './store/store.jsx';
 

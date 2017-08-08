@@ -13,4 +13,7 @@ export const CREDIT_TRANSFER_DETAILS = '/credittransfer/:id';
 
 // API Routes
 
-export const BASE_URL = 'http://route-to-base-url...'
+export const BASE_URL = 'http://localhost:8000/';
+
+export const POST_CREDIT_TRADE = '/api/credittrades';
+export const SEARCH_CREDIT_TRADES = '/api/credittrades/search';

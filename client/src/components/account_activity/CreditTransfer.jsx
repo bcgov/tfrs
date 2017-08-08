@@ -44,6 +44,14 @@ class CreditTransfer extends Component {
     return (
       <div className="credit-transfer">
         <h1>Credit Transfer {this.props.data.respondent && "Sell to " + this.props.data.respondent + " Proposed " + this.props.data.trade_effective_date}</h1>
+        <div className="credit-transfer-progress-bar">
+          <div className="arrow-steps clearfix">
+            <div className={this.props.data.status === "Proposed" ? "step current" : "step"}><span>Proposed</span></div>
+            <div className={this.props.data.status === "Accepted" ? "step current" : "step"}><span>Accepted</span></div>
+            <div className={this.props.data.status === "Approved" ? "step current" : "step"}><span>Approved</span></div>
+            <div className={this.props.data.status === "Complete" ? "step current" : "step"}><span>Complete</span></div>
+          </div>
+        </div>
         <div className="credit-transfer-details">
           { this.props.data.initiator &&
             <form className="form-inline" onSubmit={(event) => this.handleSubmit(event)}>

@@ -1,5 +1,7 @@
 import * as ActionTypes from '../constants/actionTypes.jsx';
 import * as ReducerTypes from '../constants/reducerTypes.jsx';
+import * as Routes from '../constants/routes.jsx';
+import axios from 'axios';
 import { activity } from '../sampleData.jsx';
 import { CreditTransfer } from '../sampleData.jsx';
 
@@ -50,4 +52,40 @@ export const getCreditTransferReset = () => {
     name: ReducerTypes.GET_CREDIT_TRANSFER,
     type: ActionTypes.RESET,
   }
+}
+
+export const getCreditTransfers = () => (dispatch) => {
+  debugger;
+  axios.post(Routes.BASE_URL + Routes.SEARCH_CREDIT_TRADES, {
+  }).then((response) => {
+    debugger;
+  }).catch((error) => {
+    debugger;
+  })
+}
+
+const getCreditTransfersSuccess = (data) => {
+  return {
+    name: ReducerTypes.GET_CREDIT_TRANSFERS,
+    type: ActionTypes.SUCCESS,
+    data: data
+  }
+}
+
+export const getCreditTransfersReset = () => {
+  return {
+    name: ReducerTypes.GET_CREDIT_TRANSFERS,
+    type: ActionTypes.RESET,
+  }
+}
+
+export const addCreditTransfer = (data) => (dispatch) => {
+  console.log(data);
+  debugger;
+  axios.post(Routes.BASE_URL + Routes.POST_CREDIT_TRADE, {
+  }).then((response) => {
+    debugger;
+  }).catch((error) => {
+    debugger;
+  })
 }
