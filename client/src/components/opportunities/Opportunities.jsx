@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import * as ReducerTypes from '../../constants/reducerTypes.jsx';
+import * as Routes from '../../constants/routes.jsx';
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
 import { Modal } from 'react-bootstrap';
 import { getOpportunities } from '../../actions/opportunitiesActions.jsx';
@@ -35,7 +36,7 @@ class Opportunities extends Component {
         <h2 className='header'>Our Opportunities</h2>
         <div className='right-toolbar-container'> 
           <div className="actions-container">
-            <button className="simple-btn">Add</button>
+            <Link to={Routes.NEW_OPPORTUNITY}>Add</Link>
             <label className="checkbox"> 
               <input type="checkbox" />
               Open Only

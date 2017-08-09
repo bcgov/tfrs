@@ -8,7 +8,6 @@ export const getOpportunities = () => (dispatch) => {
   axios.post(Routes.BASE_URL + Routes.SEARCH_CREDIT_TRADES, {
   }).then((response) => {
   }).catch((error) => {
-    debugger
   })
 }
 

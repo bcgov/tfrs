@@ -17,6 +17,7 @@ import Notifications from './components/notifications/Notifications.jsx';
 import Administration from './components/administration/Administration.jsx';
 import Settings from './components/settings/Settings.jsx';
 import FuelSupplierDetails from './components/fuel_suppliers/FuelSupplierDetails.jsx';
+import Opportunity from './components/opportunities/Opportunity.jsx';
 
 import '../styles/index.scss';
 
@@ -34,7 +35,9 @@ ReactDOM.render(
 						<Route path={Routes.ACCOUNT_ACTIVITY} component={withRouter(AccountActivity)} />
 						<Route path={Routes.CREDIT_TRANSFER_DETAILS} component={withRouter(CreditTransfer)} />
 						<Route exact path={Routes.CREDIT_TRANSFER} component={withRouter(CreditTransfer)} />
-						<Route path={Routes.OPPORTUNITIES} component={withRouter(Opportunities)} />
+						<Route exact path={Routes.OPPORTUNITIES} component={withRouter(Opportunities)} />
+						<Route exact path={Routes.NEW_OPPORTUNITY} component={withRouter(Opportunity)} />
+						<Route path={Routes.OPPORTUNITY_DETAILS} component={withRouter(Opportunity)} />
 						<Route path={Routes.NOTIFICATIONS} component={withRouter(Notifications)} />									
 						<Route path={Routes.ADMINISTRATION} component={withRouter(Administration)} />		
 						<Route path={Routes.SETTINGS} component={withRouter(Settings)} />																

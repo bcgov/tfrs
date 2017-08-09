@@ -1,10 +1,12 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import * as ReducerTypes from '../../constants/reducerTypes.jsx';
+import * as Routes from '../../constants/routes.jsx';
+import { Link } from 'react-router-dom';
 import { getCreditTransfer, getCreditTransferReset } from '../../actions/accountActivityActions.jsx';
 import { BootstrapTable, TableHeaderColumn, ButtonGroup } from 'react-bootstrap-table';
 
-class CreditTransfer extends Component {
+class Opportunity extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -35,25 +37,19 @@ class CreditTransfer extends Component {
     event.preventDefault();
     const initiator = this.initiator.value;
     const numberOfCredits = this.numberOfCredits.value;
-    const respondent = this.respondent.value;
+    const buyerType = this.buyerType.value;
     const valuePerCredit = this.valuePerCredit.value;
     const note = this.note.value;
+    const opportunityAcknowledgement = this.opportunityAckowledgement.checked;
+    debugger;
   }
   
   render() {
     return (
-      <div className="credit-transfer">
-        <h1>Credit Transfer {this.props.data.respondent && "Sell to " + this.props.data.respondent + " Proposed " + this.props.data.trade_effective_date}</h1>
-        <div className="credit-transfer-progress-bar">
-          <div className="arrow-steps clearfix">
-            <div className={this.props.data.status === "Proposed" ? "step current" : "step"}><span>Proposed</span></div>
-            <div className={this.props.data.status === "Accepted" ? "step current" : "step"}><span>Accepted</span></div>
-            <div className={this.props.data.status === "Approved" ? "step current" : "step"}><span>Approved</span></div>
-            <div className={this.props.data.status === "Complete" ? "step current" : "step"}><span>Complete</span></div>
-          </div>
-        </div>
+      <div className="opportunity">
+        <h1>Opportunity {this.props.data.respondent && "Created " + this.props.data.trade_effective_date}</h1>
         <div className="credit-transfer-details">
-          { this.props.data.initiator &&
+          { (this.props.data.initiator || !this.props.match.params.id) &&
             <form className="form-inline" onSubmit={(event) => this.handleSubmit(event)}>
               <div className="main-form">
                 <div className="form-group">
@@ -86,15 +82,17 @@ class CreditTransfer extends Component {
                     defaultValue={this.props.data.number_of_credits}
                     ref={(input) => this.numberOfCredits = input} />
                 </div>
-                <span>{this.state.proposalType === "Buy" ? "credits from" : "credits to"}</span>
+                <span>{this.state.proposalType === "Buy" ? "credits from any " : "credits to any "}</span>
                 <div className="form-group">
-                  <input 
-                    type="text" 
+                  <select 
                     className="form-control" 
-                    id="respondent" 
-                    name="respondent"
-                    defaultValue={this.props.data.respondent}
-                    ref={(input) => this.respondent = input} />
+                    id="proposal-type" 
+                    name="proposalType"
+                    ref={(input) => this.buyerType = input}
+                    onChange={(event) => this.handleInputChange(event)}>
+                    <option>Part 3 Fuel Supplier</option>
+                    <option>Part 2 Fuel Supplier</option>
+                  </select>
                 </div>
                 <span>for </span>
                 <div className="form-group">
@@ -107,10 +105,24 @@ class CreditTransfer extends Component {
                     ref={(input) => this.valuePerCredit = input} />
                 </div>
                 <span>per credit for a total value of $</span>
-                <span>{
-                  this.props.data.fair_market_value_per_credit * this.props.data.number_of_credits
-                }</span>
+                <span>
+                { this.props.data.fair_market_value_per_credit && this.props.data.number_of_credits ?
+                  this.props.data.fair_market_value_per_credit * this.props.data.number_of_credits 
+                  :
+                  '_______'
+                }
+                </span>
                 <span> effective on Director's Approval</span>
+              </div>
+              <div className="checkbox-inline acknowledgement">
+                <label>
+                  <input 
+                    type="checkbox" 
+                    id="opportunity-acknowledgement" 
+                    name="opportunityAcknowledgement"
+                    ref={(input) => this.opportunityAckowledgement = input} />
+                  I acknowledge that an "Accept" action by a Fuel Supplier will result in an Accepted Offer submitted to the Director
+                </label>
               </div>
               <div className="form-group note">
                 <label htmlFor="comment">Note:</label>
@@ -121,7 +133,18 @@ class CreditTransfer extends Component {
                   ref={(input) => this.note = input}>
                 </textarea>
               </div>
-              <button type="submit" className="btn btn-default">Submit</button>
+              { this.props.match.params.id ? 
+                <div className="opportunity-actions-container">
+                  <Link to={Routes.OPPORTUNITIES} className="btn btn-default">Cancel</Link>
+                  <button type="button" className="btn btn-danger">Un-Publish Opportunity</button>
+                  <button type="submit" className="btn btn-primary">Update Opportunity</button>
+                </div>
+              :
+                <div className="opportunity-actions-container">
+                  <Link to={Routes.OPPORTUNITIES} className="btn btn-default">Cancel</Link>
+                  <button type="submit" className="btn btn-primary">Publish Opportunity</button>
+                </div>
+              }
             </form>
           }
         </div>
@@ -142,4 +165,4 @@ export default connect (
       dispatch(getCreditTransferReset());
     }
   })
-)(CreditTransfer)
+)(Opportunity )

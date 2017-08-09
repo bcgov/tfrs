@@ -129,4 +129,18 @@
       border-left: 17px solid #23468c;	
     }
   }
+
+  .main-form {
+    padding: 2rem;
+    border: 1px solid $border-grey;
+    border-radius: 5px;
+
+    input, select {
+      margin: 0.5rem 0.5rem 0.5rem 0;
+    }
+    
+    .form-group {
+      margin-bottom: 0;
+    }
+  }
 }
