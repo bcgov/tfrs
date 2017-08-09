@@ -3,7 +3,7 @@
 export const HOME = '/';
 export const FUEL_SUPPLIERS = '/fuel-suppliers/';
 export const ACCOUNT_ACTIVITY = '/account-activity';
-export const OPPORTUNITIES = '/opportunities';
+export const OPPORTUNITIES = '/opportunities/';
 export const OPPORTUNITY_DETAILS = '/opportunities/:id';
 export const NEW_OPPORTUNITY = '/opportunities/new'
 export const NOTIFICATIONS = '/notifications';

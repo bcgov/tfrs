@@ -4,16 +4,18 @@ import * as ReducerTypes from '../../constants/reducerTypes.jsx';
 import * as Routes from '../../constants/routes.jsx';
 import { Link } from 'react-router-dom';
 import { getCreditTransfer, getCreditTransferReset } from '../../actions/accountActivityActions.jsx';
+import { unpublishOpportunity } from '../../actions/opportunitiesActions.jsx';
 import { BootstrapTable, TableHeaderColumn, ButtonGroup } from 'react-bootstrap-table';
+import { Modal } from 'react-bootstrap';
 
 class Opportunity extends Component {
   constructor(props) {
     super(props);
     this.state = {
       proposalType: '',
+      showConfirmUnpublishModal: false,
     };
   }
-
 
   componentDidMount() {
     if (this.props.match.params.id) {
@@ -33,6 +35,18 @@ class Opportunity extends Component {
     this.setState({[name]: value});
   }
 
+  openConfirmUnpublishModal() {
+    this.setState({showConfirmUnpublishModal: true})
+  }
+
+  closeConfirmUnpublishModal() {
+    this.setState({showConfirmUnpublishModal: false});
+  }
+
+  handleConfirmUnpublish(id) {
+    this.props.unpublishOpportunity(id);
+  }
+
   handleSubmit(event) {
     event.preventDefault();
     const initiator = this.initiator.value;
@@ -41,7 +55,6 @@ class Opportunity extends Component {
     const valuePerCredit = this.valuePerCredit.value;
     const note = this.note.value;
     const opportunityAcknowledgement = this.opportunityAckowledgement.checked;
-    debugger;
   }
   
   render() {
@@ -86,8 +99,8 @@ class Opportunity extends Component {
                 <div className="form-group">
                   <select 
                     className="form-control" 
-                    id="proposal-type" 
-                    name="proposalType"
+                    id="buyer-type" 
+                    name="buyerType"
                     ref={(input) => this.buyerType = input}
                     onChange={(event) => this.handleInputChange(event)}>
                     <option>Part 3 Fuel Supplier</option>
@@ -134,20 +147,41 @@ class Opportunity extends Component {
                 </textarea>
               </div>
               { this.props.match.params.id ? 
-                <div className="opportunity-actions-container">
+                <div className="opportunity-actions-container">                  
                   <Link to={Routes.OPPORTUNITIES} className="btn btn-default">Cancel</Link>
-                  <button type="button" className="btn btn-danger">Un-Publish Opportunity</button>
+                  <button 
+                    type="button" 
+                    className="btn btn-danger"
+                    onClick={() => this.openConfirmUnpublishModal()}>Un-Publish Opportunity</button>
                   <button type="submit" className="btn btn-primary">Update Opportunity</button>
                 </div>
               :
                 <div className="opportunity-actions-container">
                   <Link to={Routes.OPPORTUNITIES} className="btn btn-default">Cancel</Link>
+                  <button type="button" className="btn btn-default">Save as Draft</button>
                   <button type="submit" className="btn btn-primary">Publish Opportunity</button>
                 </div>
               }
             </form>
           }
         </div>
+        <Modal
+          show={this.state.showConfirmUnpublishModal}
+          onHide={() => this.closeConfirmUnpublishModal()}
+          container={this}
+          aria-labelledby="contained-modal-title"
+        >
+          <Modal.Header closeButton>
+            <Modal.Title id="contained-modal-title">Un-publish Opportunity</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            <p>Are you sure you want to un-publish this opportunity?</p>
+          </Modal.Body>
+          <Modal.Footer>
+            <button type="button" className="btn btn-default" onClick={() => this.closeConfirmUnpublishModal()}>Cancel</button>
+            <button type="button" className="btn btn-primary" onClick={(id) => this.handleConfirmUnpublish(this.props.data.id)}>Confirm</button>
+          </Modal.Footer>
+        </Modal>
       </div>
     );
   }
@@ -163,6 +197,9 @@ export default connect (
     },
     getCreditTransferReset: () => {
       dispatch(getCreditTransferReset());
+    },
+    unpublishOpportunity: (id) => {
+      dispatch(unpublishOpportunity(id));
     }
   })
 )(Opportunity )

@@ -181,6 +181,7 @@ export const opportunities = [
 ]
 
 export const CreditTransfer = {
+  id: 1,
   initiator: 'BC Any Fuels',
   respondent: 'Ultramor', 
   status: "Accepted",

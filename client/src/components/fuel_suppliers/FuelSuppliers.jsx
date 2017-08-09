@@ -152,10 +152,19 @@ class FuelSuppliers extends Component {
           </Modal.Header>
             <Modal.Body>
               <div>{this.state.fuelSupplierDetails.name}</div>
+              { this.props.addFuelSupplierSuccess && 
+              <div className="alert alert-success">Fuel Supplier successfully added</div>
+              }
             </Modal.Body>
             <Modal.Footer>
-              <button type="button" className="btn btn-default" onClick={() => this.setState({showFuelSupplierDetails: false})}>Cancel</button>
-              <button type="button" className="btn btn-primary" onClick={(id) => this.handleAddFuelSupplier(this.state.fuelSupplierDetails.id)}>Add New Fuel Supplier</button>
+            { !this.props.addFuelSupplierSuccess ? 
+              <div>
+                <button type="button" className="btn btn-default" onClick={() => this.setState({showFuelSupplierDetails: false})}>Cancel</button>
+                <button type="button" className="btn btn-primary" onClick={(id) => this.handleAddFuelSupplier(this.state.fuelSupplierDetails.id)}>Add New Fuel Supplier</button>
+              </div>
+              :
+              <button type="button" className="btn btn-primary" onClick={() => this.setState({showFuelSupplierDetails: false})}>Okay</button>
+            }
             </Modal.Footer>
           </Modal>
           }
@@ -169,6 +178,7 @@ export default connect (
     fuelSuppliersData: state.rootReducer[ReducerTypes.GET_FUEL_SUPPLIERS].data,
     searchFuelSuppliersData: state.rootReducer[ReducerTypes.SEARCH_FUEL_SUPPLIERS].data,
     searchFuelSuppliersSuccess: state.rootReducer[ReducerTypes.SEARCH_FUEL_SUPPLIERS].success,
+    addFuelSupplierSuccess: state.rootReducer[ReducerTypes.ADD_FUEL_SUPPLIER].success,
   }),
   dispatch => ({
     getFuelSuppliers: () => {
