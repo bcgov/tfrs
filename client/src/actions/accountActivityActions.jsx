@@ -89,3 +89,28 @@ export const addCreditTransfer = (data) => (dispatch) => {
     debugger;
   })
 }
+
+export const approveCreditTransfer = (id) => (dispatch) => {
+  console.log(id);
+  debugger;
+}
+
+export const rejectCreditTransfer = (id) => (dispatch) => {
+  console.log(id);
+  debugger;
+}
+
+export const rescindProposal = (id) => (dispatch) => {
+  console.log(id);
+  debugger;
+}
+
+export const recommendForApproval = (id) => (dispatch) => {
+  console.log(id);
+  debugger;
+}
+
+export const recommendForRejection = (id) => (dispatch) => {
+  console.log(id);
+  debugger;
+}
