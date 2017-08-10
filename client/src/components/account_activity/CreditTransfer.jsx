@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import * as ReducerTypes from '../../constants/reducerTypes.jsx';
+import * as Values from '../../constants/values.jsx';
 import { getCreditTransfer, getCreditTransferReset } from '../../actions/accountActivityActions.jsx';
 import { BootstrapTable, TableHeaderColumn, ButtonGroup } from 'react-bootstrap-table';
 
@@ -44,6 +45,15 @@ class CreditTransfer extends Component {
     return (
       <div className="credit-transfer">
         <h1>Credit Transfer {this.props.data.respondent && "Sell to " + this.props.data.respondent + " Proposed " + this.props.data.trade_effective_date}</h1>
+        { this.props.data.status === Values.STATUS_DRAFT && 
+          <button type="button" className="btn btn-danger">Delete Credit Transfer</button>
+        }
+        { this.props.data.status === Values.STATUS_PROPOSED && 
+          <button type="button" className="btn btn-danger">Rescind Credit Transfer</button>
+        }
+        { this.props.data.status === Values.STATUS_APPROVED && 
+          <button type="button" className="btn btn-danger">Rescind Credit Transfer</button>
+        }
         <div className="credit-transfer-progress-bar">
           <div className="arrow-steps clearfix">
             <div className={this.props.data.status === "Proposed" ? "step current" : "step"}><span>Proposed</span></div>
@@ -53,7 +63,7 @@ class CreditTransfer extends Component {
           </div>
         </div>
         <div className="credit-transfer-details">
-          { this.props.data.initiator &&
+          { (this.props.data.initiator || !this.props.match.params.id) &&
             <form className="form-inline" onSubmit={(event) => this.handleSubmit(event)}>
               <div className="main-form">
                 <div className="form-group">
@@ -121,7 +131,25 @@ class CreditTransfer extends Component {
                   ref={(input) => this.note = input}>
                 </textarea>
               </div>
-              <button type="submit" className="btn btn-default">Submit</button>
+              { (this.props.data.status === Values.STATUS_NEW || this.props.data.status === Values.STATUS_DRAFT) && 
+                <div>
+                  <button type="button" className="btn btn-default">Cancel</button>
+                  <button type="button" className="btn btn-default">Save Draft</button>
+                  <button type="button" className="btn btn-primary">Propose</button>
+                </div>
+              }
+              { this.props.data.status === Values.STATUS_PROPOSED && 
+                <div>
+                  <button type="button" className="btn btn-danger">Reject</button>
+                  <button type="button" className="btn btn-primary">Accept</button>
+                </div>
+              }
+              { (this.props.data.status === Values.STATUS_ACCEPTED || this.props.data.status === Values.STATUS_RECOMMENDED) && 
+                <div>
+                  <button type="button" className="btn btn-danger">Reject</button>
+                  <button type="button" className="btn btn-primary">Accept</button>
+                </div>
+              }
             </form>
           }
         </div>
