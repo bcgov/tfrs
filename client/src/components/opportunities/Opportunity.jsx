@@ -148,7 +148,7 @@ class Opportunity extends Component {
               </div>
               { this.props.match.params.id ? 
                 <div className="opportunity-actions-container">                  
-                  <Link to={Routes.OPPORTUNITIES} className="btn btn-default">Cancel</Link>
+                  <button onClick={() => this.props.history.push(Routes.OPPORTUNITIES)} className="btn btn-default">Cancel</button>
                   <button 
                     type="button" 
                     className="btn btn-danger"
@@ -157,7 +157,7 @@ class Opportunity extends Component {
                 </div>
               :
                 <div className="opportunity-actions-container">
-                  <Link to={Routes.OPPORTUNITIES} className="btn btn-default">Cancel</Link>
+                  <button onClick={() => this.props.history.push(Routes.OPPORTUNITIES)} className="btn btn-default">Cancel</button>
                   <button type="button" className="btn btn-default">Save as Draft</button>
                   <button type="submit" className="btn btn-primary">Publish Opportunity</button>
                 </div>
