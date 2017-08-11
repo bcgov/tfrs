@@ -1,29 +1,26 @@
 [
     {
-        " !id": "20000",
-        " description": "A Part 3 Fuel Supplier",
-        " displayOrder": "1",
-        " effectiveDate": "1/1/2017",
-        " expirationDate": null,
-        " id": "20000",
-        " type": "Part 3 Fuel Supplier"
+        "description": "A Part 3 Fuel Supplier",
+        "displayOrder": "1",
+        "effectiveDate": "2017-01-01",
+        "expirationDate": null,
+        "id": "20000",
+        "type": "Part 3 Fuel Supplier"
     },
     {
-        " !id": "20001",
-        " description": "A Petroleum Fuel Supplier",
-        " displayOrder": "2",
-        " effectiveDate": "1/1/2017",
-        " expirationDate": null,
-        " id": "20001",
-        " type": "Petroleum Fuel Supplier"
+        "description": "A Petroleum Fuel Supplier",
+        "displayOrder": "2",
+        "effectiveDate": "2017-01-01",
+        "expirationDate": null,
+        "id": "20001",
+        "type": "Petroleum Fuel Supplier"
     },
     {
-        " !id": "20002",
-        " description": "A Low Carbon Fuel Supplier, including both Part 3 and Petroleum Fuel Suppliers.",
-        " displayOrder": "3",
-        " effectiveDate": "1/1/2017",
-        " expirationDate": null,
-        " id": "20002",
-        " type": "Low Carbon Fuel Supplier"
+        "description": "A Low Carbon Fuel Supplier, including both Part 3 and Petroleum Fuel Suppliers.",
+        "displayOrder": "3",
+        "effectiveDate": "2017-01-01",
+        "expirationDate": null,
+        "id": "20002",
+        "type": "Low Carbon Fuel Supplier"
     }
 ]
