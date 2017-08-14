@@ -61,5 +61,9 @@ echo "---> Building your Node application from source"
 
 npm install -d
 
+# run webpack
+
+npm run production
+
 # Fix source directory permissions
 fix-permissions ./
