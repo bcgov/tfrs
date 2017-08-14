@@ -308,7 +308,7 @@
     {
         "active": true,
         "email": "StephanieJYoung@jourrapide.com",
-        "fuelSupplierId": null,
+        "fuelSupplierId": "20008",
         "givenName": "Stephanie",
         "id": "200034",
         "smUserID": null,
@@ -317,7 +317,7 @@
     {
         "active": true,
         "email": "WilmaCUrbanski@teleworm.us",
-        "fuelSupplierId": null,
+        "fuelSupplierId": "20008",
         "givenName": "Wilma",
         "id": "200035",
         "smUserID": null,
@@ -326,7 +326,7 @@
     {
         "active": true,
         "email": "KeliHWarren@rhyta.com",
-        "fuelSupplierId": null,
+        "fuelSupplierId": "20008",
         "givenName": "Keli",
         "id": "200036",
         "smUserID": null,
@@ -335,7 +335,7 @@
     {
         "active": true,
         "email": "RalphKGraham@rhyta.com",
-        "fuelSupplierId": null,
+        "fuelSupplierId": "20008",
         "givenName": "Ralph",
         "id": "200037",
         "smUserID": null,
@@ -344,7 +344,7 @@
     {
         "active": true,
         "email": "MargaretRGreene@armyspy.com",
-        "fuelSupplierId": null,
+        "fuelSupplierId": "20008",
         "givenName": "Margaret",
         "id": "200038",
         "smUserID": null,

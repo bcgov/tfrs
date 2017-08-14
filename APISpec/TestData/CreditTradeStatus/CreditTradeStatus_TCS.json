@@ -1,83 +1,74 @@
 [
     {
-        " !id": "20000",
-        " description": "The Credit Trade has been created but is only visible to the initiating organization.",
-        " displayOrder": "1",
-        " effectiveDate": "1/1/2017",
-        " expirationDate": null,
-        " id": "20000",
-        " status": "Draft"
+        "description": "The Credit Trade has been created but is only visible to the initiating organization.",
+        "displayOrder": "1",
+        "effectiveDate": "2017-01-01",
+        "expirationDate": null,
+        "id": "20000",
+        "status": "Draft"
     },
     {
-        " !id": "20001",
-        " description": "The Credit Trade has been created and is visible to both the initiating and responding Fuel Suppliers, and is waiting on the response from the Respondent.",
-        " displayOrder": "2",
-        " effectiveDate": "1/1/2017",
-        " expirationDate": null,
-        " id": "20001",
-        " status": "Proposed"
+        "description": "The Credit Trade has been created and is visible to both the initiating and responding Fuel Suppliers, and is waiting on the response from the Respondent.",
+        "displayOrder": "2",
+        "effectiveDate": "2017-01-01",
+        "expirationDate": null,
+        "id": "20001",
+        "status": "Proposed"
     },
     {
-        " !id": "20002",
-        " description": "The Credit Trade has been accepted by the Respondent and is waiting on approval by the Director.",
-        " displayOrder": "3",
-        " effectiveDate": "1/1/2017",
-        " expirationDate": null,
-        " id": "20002",
-        " status": "Accepted"
+        "description": "The Credit Trade has been accepted by the Respondent and is waiting on approval by the Director.",
+        "displayOrder": "3",
+        "effectiveDate": "2017-01-01",
+        "expirationDate": null,
+        "id": "20002",
+        "status": "Accepted"
     },
     {
-        " !id": "20003",
-        " description": "The Credit Trade has been has been reviewed by a Government Analyst and is Recommended for Approval  by the Director.",
-        " displayOrder": "4",
-        " effectiveDate": "1/1/2017",
-        " expirationDate": null,
-        " id": "20003",
-        " status": "Recommended"
+        "description": "The Credit Trade has been has been reviewed by a Government Analyst and is Recommended for Approval  by the Director.",
+        "displayOrder": "4",
+        "effectiveDate": "2017-01-01",
+        "expirationDate": null,
+        "id": "20003",
+        "status": "Recommended"
     },
     {
-        " !id": "20004",
-        " description": "The Credit Trade has been has been reviewed by a Government Analyst and is Not Recommended for Approval by the Director.",
-        " displayOrder": "4",
-        " effectiveDate": "1/1/2017",
-        " expirationDate": null,
-        " id": "20004",
-        " status": "Not Recommended"
+        "description": "The Credit Trade has been has been reviewed by a Government Analyst and is Not Recommended for Approval by the Director.",
+        "displayOrder": "4",
+        "effectiveDate": "2017-01-01",
+        "expirationDate": null,
+        "id": "20004",
+        "status": "Not Recommended"
     },
     {
-        " !id": "20005",
-        " description": "The Credit Trade has been has been approved by the Director and will be Completed as soon as the Effective Date of the Credit Trade has been reached.",
-        " displayOrder": "5",
-        " effectiveDate": "1/1/2017",
-        " expirationDate": null,
-        " id": "20005",
-        " status": "Approved"
+        "description": "The Credit Trade has been has been approved by the Director and will be Completed as soon as the Effective Date of the Credit Trade has been reached.",
+        "displayOrder": "5",
+        "effectiveDate": "2017-01-01",
+        "expirationDate": null,
+        "id": "20005",
+        "status": "Approved"
     },
     {
-        " !id": "20006",
-        " description": "The Credit Trade has been Completed and the Credit Balance(s) of the Fuel Supplier(s) has been updated.",
-        " displayOrder": "6",
-        " effectiveDate": "1/1/2017",
-        " expirationDate": null,
-        " id": "20006",
-        " status": "Completed"
+        "description": "The Credit Trade has been Completed and the Credit Balance(s) of the Fuel Supplier(s) has been updated.",
+        "displayOrder": "6",
+        "effectiveDate": "2017-01-01",
+        "expirationDate": null,
+        "id": "20006",
+        "status": "Completed"
     },
     {
-        " !id": "20007",
-        " description": "The Credit Trade has been cancelled by one of the participants in the Credit Trade.",
-        " displayOrder": "7",
-        " effectiveDate": "1/1/2017",
-        " expirationDate": null,
-        " id": "20007",
-        " status": "Cancelled"
+        "description": "The Credit Trade has been cancelled by one of the participants in the Credit Trade.",
+        "displayOrder": "7",
+        "effectiveDate": "2017-01-01",
+        "expirationDate": null,
+        "id": "20007",
+        "status": "Cancelled"
     },
     {
-        " !id": "20008",
-        " description": "The Credit Trade has been rejected by the Director.",
-        " displayOrder": "8",
-        " effectiveDate": "1/1/2017",
-        " expirationDate": null,
-        " id": "20008",
-        " status": "Rejected"
+        "description": "The Credit Trade has been rejected by the Director.",
+        "displayOrder": "8",
+        "effectiveDate": "2017-01-01",
+        "expirationDate": null,
+        "id": "20008",
+        "status": "Rejected"
     }
 ]

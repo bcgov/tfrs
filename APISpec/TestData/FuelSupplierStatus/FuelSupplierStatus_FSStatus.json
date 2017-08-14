@@ -1,20 +1,18 @@
 [
     {
-        " !id": "20000",
-        " description": "The Fuel Supplier is an active participant in the Low Carbon Credits trading market.",
-        " displayOrder": "1",
-        " effectiveDate": "1/1/2017",
-        " expirationDate": null,
-        " id": "20000",
-        " status": "Active"
+        "description": "The Fuel Supplier is an active participant in the Low Carbon Credits trading market.",
+        "displayOrder": "1",
+        "effectiveDate": "2017-01-01",
+        "expirationDate": null,
+        "id": "20000",
+        "status": "Active"
     },
     {
-        " !id": "20001",
-        " description": "The Fuel Supplier has been archived and is no longer a participant in the Low Carbon Credits trading market.",
-        " displayOrder": "1",
-        " effectiveDate": "1/1/2017",
-        " expirationDate": null,
-        " id": "20001",
-        " status": "Archived"
+        "description": "The Fuel Supplier has been archived and is no longer a participant in the Low Carbon Credits trading market.",
+        "displayOrder": "1",
+        "effectiveDate": "2017-01-01",
+        "expirationDate": null,
+        "id": "20001",
+        "status": "Archived"
     }
 ]
