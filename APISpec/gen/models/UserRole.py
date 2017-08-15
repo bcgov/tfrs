@@ -28,6 +28,6 @@ from .Role import Role
 
 
 class UserRole(models.Model):	    
-    userId = models.ForeignKey('User', related_name='UserRoleuserId')   
-    roleId = models.ForeignKey('Role', related_name='UserRoleroleId')   
+    userFK = models.ForeignKey('User', related_name='UserRoleuserFK')   
+    roleFK = models.ForeignKey('Role', related_name='UserRoleroleFK')   
 

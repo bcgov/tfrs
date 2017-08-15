@@ -30,13 +30,13 @@ from .CreditTradeHistory import CreditTradeHistory
 
 
 class CreditTrade(models.Model):	    
-    creditTradeStatusId = models.ForeignKey('CreditTradeStatus', related_name='CreditTradecreditTradeStatusId')   
-    initiator = models.ForeignKey('FuelSupplier', related_name='CreditTradeinitiator', blank=True, null=True)   
-    respondent = models.ForeignKey('FuelSupplier', related_name='CreditTraderespondent')   
-    tradeEffectiveDate = models.DateField(blank=True, null=True)   
-    creditTradeTypeId = models.ForeignKey('CreditTradeType', related_name='CreditTradecreditTradeTypeId')   
+    creditTradeStatusFK = models.ForeignKey('CreditTradeStatus', related_name='CreditTradecreditTradeStatusFK')   
+    initiatorFK = models.ForeignKey('FuelSupplier', related_name='CreditTradeinitiatorFK', blank=True, null=True)   
+    respondentFK = models.ForeignKey('FuelSupplier', related_name='CreditTraderespondentFK')   
+    creditTradeTypeFK = models.ForeignKey('CreditTradeType', related_name='CreditTradecreditTradeTypeFK')   
     numberOfCredits = models.IntegerField()   
     fairMarketValuePerCredit = models.CharField(blank=True, null=True, max_length=255)   
+    tradeEffectiveDate = models.DateField(blank=True, null=True)   
+    plainEnglishPhrase = models.CharField(max_length=2000)   
     historySet = models.ManyToManyField('CreditTradeHistory', related_name='CreditTradehistorySet', blank=True)   
-    plainEnglishPhrase = models.CharField(max_length=255)   
 

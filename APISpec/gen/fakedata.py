@@ -366,19 +366,17 @@ def NotificationViewModelTestDataUpdate():
 def OpportunityTestDataCreate():
   return {
     'numberOfCredits':1,
-    'hasTradeNow':True,
-    'numberOfViews':1,
-    'opportunityBackgroundNote':'Initial',
     'plainEnglishPhrase':'Initial',
+    'hasTradeNow':True,
+    'opportunityBackgroundNote':'Initial',
   }
 
 def OpportunityTestDataUpdate():
   return {
     'numberOfCredits':0,
-    'hasTradeNow':False,
-    'numberOfViews':0,
-    'opportunityBackgroundNote':'Changed',
     'plainEnglishPhrase':'Changed',
+    'hasTradeNow':False,
+    'opportunityBackgroundNote':'Changed',
   }
 
 

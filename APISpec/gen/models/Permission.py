@@ -26,7 +26,7 @@ from django.utils import timezone
 
 
 class Permission(models.Model):	    
-    code = models.CharField(max_length=255)   
-    name = models.CharField(max_length=255)   
-    description = models.CharField(max_length=255)   
+    code = models.CharField(max_length=100)   
+    name = models.CharField(max_length=100)   
+    description = models.CharField(max_length=1000)   
 

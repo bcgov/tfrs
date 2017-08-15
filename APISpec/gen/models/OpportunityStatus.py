@@ -26,8 +26,8 @@ from django.utils import timezone
 
 
 class OpportunityStatus(models.Model):	    
-    status = models.CharField(max_length=255, blank=True, null=True)   
-    description = models.CharField(max_length=255, blank=True, null=True)   
+    status = models.CharField(max_length=25, blank=True, null=True)   
+    description = models.CharField(max_length=1000, blank=True, null=True)   
     effectiveDate = models.DateField()   
     expirationDate = models.DateField(blank=True, null=True)   
     displayOrder = models.IntegerField()   

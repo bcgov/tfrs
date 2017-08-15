@@ -27,5 +27,5 @@ from .Role import Role
 
 
 class FuelSupplierContactRole(models.Model):	    
-    roleId = models.ForeignKey('Role', related_name='FuelSupplierContactRoleroleId')   
+    roleFK = models.ForeignKey('Role', related_name='FuelSupplierContactRoleroleFK')   
 
