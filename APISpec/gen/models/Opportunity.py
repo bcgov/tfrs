@@ -31,16 +31,15 @@ from .CreditTrade import CreditTrade
 
 
 class Opportunity(models.Model):	    
-    fuelSupplierId = models.ForeignKey('FuelSupplier', related_name='OpportunityfuelSupplierId')   
-    opportunityStatusId = models.ForeignKey('OpportunityStatus', related_name='OpportunityopportunityStatusId')   
-    creditTradeTypeId = models.ForeignKey('CreditTradeType', related_name='OpportunitycreditTradeTypeId')   
-    fuelSupplierTypeId = models.ForeignKey('FuelSupplierType', related_name='OpportunityfuelSupplierTypeId')   
+    fuelSupplierFK = models.ForeignKey('FuelSupplier', related_name='OpportunityfuelSupplierFK')   
+    opportunityStatusFK = models.ForeignKey('OpportunityStatus', related_name='OpportunityopportunityStatusFK')   
+    creditTradeTypeFK = models.ForeignKey('CreditTradeType', related_name='OpportunitycreditTradeTypeFK')   
+    fuelSupplierTypeFK = models.ForeignKey('FuelSupplierType', related_name='OpportunityfuelSupplierTypeFK')   
     numberOfCredits = models.IntegerField()   
     suggestedValuePerCredit = models.CharField(blank=True, null=True, max_length=255)   
+    plainEnglishPhrase = models.CharField(max_length=2000)   
     hasTradeNow = models.BooleanField()   
-    numberOfViews = models.IntegerField()   
-    datePosted = models.DateField(blank=True, null=True)   
-    opportunityBackgroundNote = models.CharField(max_length=255, blank=True, null=True)   
+    postedDate = models.DateField(blank=True, null=True)   
+    opportunityBackgroundNote = models.CharField(max_length=4000, blank=True, null=True)   
     creditTradesSet = models.ManyToManyField('CreditTrade', related_name='OpportunitycreditTradesSet', blank=True)   
-    plainEnglishPhrase = models.CharField(max_length=255)   
 

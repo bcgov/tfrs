@@ -26,8 +26,8 @@ from django.utils import timezone
 
 
 class NotificationType(models.Model):	    
-    theType = models.CharField(max_length=255)   
-    description = models.CharField(max_length=255, blank=True, null=True)   
+    theType = models.CharField(max_length=25)   
+    description = models.CharField(max_length=1000, blank=True, null=True)   
     effectiveDate = models.DateField()   
     expirationDate = models.DateField(blank=True, null=True)   
     displayOrder = models.IntegerField()   

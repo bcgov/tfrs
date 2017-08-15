@@ -29,9 +29,9 @@ from .FuelSupplierActionsType import FuelSupplierActionsType
 
 
 class FuelSupplier(models.Model):	    
-    name = models.CharField(max_length=255)   
-    fuelSupplierStatusId = models.ForeignKey('FuelSupplierStatus', related_name='FuelSupplierfuelSupplierStatusId')   
-    fuelSupplierTypeId = models.ForeignKey('FuelSupplierType', related_name='FuelSupplierfuelSupplierTypeId')   
-    fuelSupplierActionsTypeId = models.ForeignKey('FuelSupplierActionsType', related_name='FuelSupplierfuelSupplierActionsTypeId')   
-    dateCreated = models.DateField()   
+    name = models.CharField(max_length=500)   
+    fuelSupplierStatusFK = models.ForeignKey('FuelSupplierStatus', related_name='FuelSupplierfuelSupplierStatusFK')   
+    fuelSupplierTypeFK = models.ForeignKey('FuelSupplierType', related_name='FuelSupplierfuelSupplierTypeFK')   
+    fuelSupplierActionsTypeFK = models.ForeignKey('FuelSupplierActionsType', related_name='FuelSupplierfuelSupplierActionsTypeFK')   
+    createdDate = models.DateField()   
 

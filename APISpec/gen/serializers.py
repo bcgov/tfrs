@@ -67,12 +67,12 @@ class AuditSerializer(serializers.ModelSerializer):
 class CreditTradeSerializer(serializers.ModelSerializer):
   class Meta:
     model = CreditTrade
-    fields = ('id','creditTradeStatusId','initiator','respondent','tradeEffectiveDate','creditTradeTypeId','numberOfCredits','fairMarketValuePerCredit','historySet','plainEnglishPhrase')
+    fields = ('id','creditTradeStatusFK','initiatorFK','respondentFK','creditTradeTypeFK','numberOfCredits','fairMarketValuePerCredit','tradeEffectiveDate','plainEnglishPhrase','historySet')
 
 class CreditTradeHistorySerializer(serializers.ModelSerializer):
   class Meta:
     model = CreditTradeHistory
-    fields = ('id','userId','creditTradeUpdateTime','creditTradeStatusId','newTradeEffectiveDate','creditTradeTypeId','newNumberOfCredits','newFairMarketValuePerCredit','note','isInternalHistoryRecord')
+    fields = ('id','userFK','creditTradeUpdateTime','newRespondentFK','creditTradeStatusFK','creditTradeTypeFK','newNumberOfCredits','newFairMarketValuePerCredit','newTradeEffectiveDate','note','isInternalHistoryRecord')
 
 class CreditTradeStatusSerializer(serializers.ModelSerializer):
   class Meta:
@@ -92,7 +92,7 @@ class CurrentUserViewModelSerializer(serializers.ModelSerializer):
 class FuelSupplierSerializer(serializers.ModelSerializer):
   class Meta:
     model = FuelSupplier
-    fields = ('id','name','fuelSupplierStatusId','fuelSupplierTypeId','fuelSupplierActionsTypeId','dateCreated')
+    fields = ('id','name','fuelSupplierStatusFK','fuelSupplierTypeFK','fuelSupplierActionsTypeFK','createdDate')
 
 class FuelSupplierActionsTypeSerializer(serializers.ModelSerializer):
   class Meta:
@@ -102,37 +102,37 @@ class FuelSupplierActionsTypeSerializer(serializers.ModelSerializer):
 class FuelSupplierAttachmentSerializer(serializers.ModelSerializer):
   class Meta:
     model = FuelSupplierAttachment
-    fields = ('id','fuelSupplierId','fileName','fileLocation','description','complianceYear')
+    fields = ('id','fuelSupplierFK','fileName','fileLocation','description','complianceYear')
 
 class FuelSupplierAttachmentTagSerializer(serializers.ModelSerializer):
   class Meta:
     model = FuelSupplierAttachmentTag
-    fields = ('id','fuelSupplierAttachmentId','tag')
+    fields = ('id','fuelSupplierAttachmentFK','tag')
 
 class FuelSupplierBalanceSerializer(serializers.ModelSerializer):
   class Meta:
     model = FuelSupplierBalance
-    fields = ('id','fuelSupplierId','validatedCredits','encumberedCredits','effectiveDate','endDate','creditTradeId')
+    fields = ('id','fuelSupplierFK','validatedCredits','encumberedCredits','effectiveDate','endDate','creditTradeFK')
 
 class FuelSupplierCCDataSerializer(serializers.ModelSerializer):
   class Meta:
     model = FuelSupplierCCData
-    fields = ('id','fuelSupplierId','commonClientOrgId','lastUpdatefromCommonClient','name','corporateAddressLine1','corporateAddressLine2','corporateAddressCity','corporateAddressPostalCode','corporateAddressProvince')
+    fields = ('id','fuelSupplierFK','commonClientOrgId','lastUpdatefromCommonClient','name','corporateAddressLine1','corporateAddressLine2','corporateAddressCity','corporateAddressPostalCode','corporateAddressProvince')
 
 class FuelSupplierContactSerializer(serializers.ModelSerializer):
   class Meta:
     model = FuelSupplierContact
-    fields = ('id','fuelSupplierId','givenName','surname','title','userId','notes','emailAddress','workPhoneNumber','mobilePhoneNumber')
+    fields = ('id','fuelSupplierFK','givenName','surname','title','userFK','notes','emailAddress','workPhoneNumber','mobilePhoneNumber')
 
 class FuelSupplierContactRoleSerializer(serializers.ModelSerializer):
   class Meta:
     model = FuelSupplierContactRole
-    fields = ('id','roleId')
+    fields = ('id','roleFK')
 
 class FuelSupplierHistorySerializer(serializers.ModelSerializer):
   class Meta:
     model = FuelSupplierHistory
-    fields = ('id','fuelSupplierId','historyText')
+    fields = ('id','fuelSupplierFK','historyText')
 
 class FuelSupplierStatusSerializer(serializers.ModelSerializer):
   class Meta:
@@ -147,12 +147,12 @@ class FuelSupplierTypeSerializer(serializers.ModelSerializer):
 class NotificationSerializer(serializers.ModelSerializer):
   class Meta:
     model = Notification
-    fields = ('id','notificationEventId','hasBeenViewed','isWatchNotification','userId')
+    fields = ('id','notificationEventFK','hasBeenViewed','isWatchNotification','userFK')
 
 class NotificationEventSerializer(serializers.ModelSerializer):
   class Meta:
     model = NotificationEvent
-    fields = ('id','eventTime','eventTypeCode','notes','creditTradeId','opportunityId')
+    fields = ('id','eventTime','eventTypeCode','notes','creditTradeFK','opportunityFK')
 
 class NotificationTypeSerializer(serializers.ModelSerializer):
   class Meta:
@@ -167,12 +167,12 @@ class NotificationViewModelSerializer(serializers.ModelSerializer):
 class OpportunitySerializer(serializers.ModelSerializer):
   class Meta:
     model = Opportunity
-    fields = ('id','fuelSupplierId','opportunityStatusId','creditTradeTypeId','fuelSupplierTypeId','numberOfCredits','suggestedValuePerCredit','hasTradeNow','numberOfViews','datePosted','opportunityBackgroundNote','creditTradesSet','plainEnglishPhrase')
+    fields = ('id','fuelSupplierFK','opportunityStatusFK','creditTradeTypeFK','fuelSupplierTypeFK','numberOfCredits','suggestedValuePerCredit','plainEnglishPhrase','hasTradeNow','postedDate','opportunityBackgroundNote','creditTradesSet')
 
 class OpportunityHistorySerializer(serializers.ModelSerializer):
   class Meta:
     model = OpportunityHistory
-    fields = ('id','opportunityId','userId','updateTime','creditTradeTypeId','newNumberOfCredits','newProposedValuePerCredit','fuelSupplierTypeId','newTradeEffectiveDate','note')
+    fields = ('id','opportunityFK','userFK','updateTime','creditTradeTypeFK','newNumberOfCredits','newProposedValuePerCredit','fuelSupplierTypeFK','newTradeEffectiveDate','note')
 
 class OpportunityStatusSerializer(serializers.ModelSerializer):
   class Meta:
@@ -197,7 +197,7 @@ class RoleSerializer(serializers.ModelSerializer):
 class RolePermissionSerializer(serializers.ModelSerializer):
   class Meta:
     model = RolePermission
-    fields = ('id','roleId','permissionId')
+    fields = ('id','roleFK','permissionFK')
 
 class RolePermissionViewModelSerializer(serializers.ModelSerializer):
   class Meta:
@@ -222,7 +222,7 @@ class UserDetailsViewModelSerializer(serializers.ModelSerializer):
 class UserFavouriteSerializer(serializers.ModelSerializer):
   class Meta:
     model = UserFavourite
-    fields = ('id','context','name','value','isDefault','userId')
+    fields = ('id','context','name','value','isDefault','userFK')
 
 class UserFavouriteViewModelSerializer(serializers.ModelSerializer):
   class Meta:
@@ -232,7 +232,7 @@ class UserFavouriteViewModelSerializer(serializers.ModelSerializer):
 class UserRoleSerializer(serializers.ModelSerializer):
   class Meta:
     model = UserRole
-    fields = ('id','userId','roleId')
+    fields = ('id','userFK','roleFK')
 
 class UserRoleViewModelSerializer(serializers.ModelSerializer):
   class Meta:

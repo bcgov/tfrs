@@ -26,11 +26,11 @@ from django.utils import timezone
 
 
 class User(models.Model):	    
-    authorizationID = models.CharField(max_length=255, blank=True, null=True)   
-    givenName = models.CharField(max_length=255)   
-    surname = models.CharField(max_length=255)   
-    email = models.CharField(max_length=255, blank=True, null=True)   
-    userId = models.CharField(max_length=255, blank=True, null=True)   
-    guid = models.CharField(max_length=255, blank=True, null=True)   
-    authorizationDirectory = models.CharField(max_length=255, blank=True, null=True)   
+    authorizationID = models.CharField(max_length=500, blank=True, null=True)   
+    givenName = models.CharField(max_length=100)   
+    surname = models.CharField(max_length=100)   
+    email = models.CharField(max_length=150, blank=True, null=True)   
+    userId = models.CharField(max_length=500, blank=True, null=True)   
+    guid = models.CharField(max_length=100, blank=True, null=True)   
+    authorizationDirectory = models.CharField(max_length=100, blank=True, null=True)   
 

@@ -27,6 +27,6 @@ from .FuelSupplierAttachment import FuelSupplierAttachment
 
 
 class FuelSupplierAttachmentTag(models.Model):	    
-    fuelSupplierAttachmentId = models.ForeignKey('FuelSupplierAttachment', related_name='FuelSupplierAttachmentTagfuelSupplierAttachmentId')   
+    fuelSupplierAttachmentFK = models.ForeignKey('FuelSupplierAttachment', related_name='FuelSupplierAttachmentTagfuelSupplierAttachmentFK')   
     tag = models.CharField(max_length=100)   
 
