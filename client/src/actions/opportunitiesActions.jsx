@@ -23,5 +23,5 @@ const getOpportunitiesSuccess = (opportunities) => {
 }
 
 export const unpublishOpportunity = (id) => (dispatch) => {
-  history.push(Routes.NEW_OPPORTUNITY);
+  history.push(Routes.NEW_OPPORTUNITYr);
 }

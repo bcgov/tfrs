@@ -1,9 +1,24 @@
 import * as ActionTypes from '../constants/actionTypes.jsx';
 import * as ReducerTypes from '../constants/reducerTypes.jsx';
+import axios from 'axios';
+import * as Routes from '../constants/routes.jsx';
 import { fuelSuppliers, fuelSupplier } from '../sampleData.jsx';
 
 export const getFuelSuppliers = () => (dispatch) => {
-  dispatch(getFuelSuppliersSuccess(fuelSuppliers));
+  dispatch(getFuelSuppliersRequest());
+  axios.get(Routes.BASE_URL + Routes.FUEL_SUPPLIERS_API)
+  .then((response) => {
+    dispatch(getFuelSuppliersSuccess(fuelSuppliers));
+  }).catch((error) => {
+    dispatch(getFuelSuppliersError(error.response))
+  })
+}
+
+const getFuelSuppliersRequest = () => {
+  return {
+    name: ReducerTypes.GET_FUEL_SUPPLIERS,
+    type: ActionTypes.SUCCESS,
+  }
 }
 
 const getFuelSuppliersSuccess = (fuelSuppliers) => {
@@ -11,6 +26,14 @@ const getFuelSuppliersSuccess = (fuelSuppliers) => {
     name: ReducerTypes.GET_FUEL_SUPPLIERS,
     type: ActionTypes.SUCCESS,
     data: fuelSuppliers,
+  }
+}
+
+const getFuelSuppliersError = (error) => {
+  return {
+    name: ReducerTypes.GET_FUEL_SUPPLIERS,
+    type: ActionTypes.SUCCESS,
+    errorMessage: error
   }
 }
 
