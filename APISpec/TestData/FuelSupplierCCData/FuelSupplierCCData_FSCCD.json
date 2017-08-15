@@ -8,7 +8,7 @@
         "corporateAddressProvince": "BC",
         "fuelSupplierId": "20000",
         "id": "20000",
-        "lastUpdatefromCommonClient": "2017-07-12",
+        "lastUpdatefromCommonClient": "2017-07-22",
         "name": "Air Liquide Canada Inc."
     },
     {
@@ -20,7 +20,7 @@
         "corporateAddressProvince": "BC",
         "fuelSupplierId": "20001",
         "id": "20001",
-        "lastUpdatefromCommonClient": "2017-08-04",
+        "lastUpdatefromCommonClient": "2017-07-30",
         "name": "BC Hydro"
     },
     {
@@ -32,7 +32,7 @@
         "corporateAddressProvince": "BC",
         "fuelSupplierId": "20002",
         "id": "20002",
-        "lastUpdatefromCommonClient": "2017-08-07",
+        "lastUpdatefromCommonClient": "2017-08-09",
         "name": "BC Transit"
     },
     {
@@ -44,7 +44,7 @@
         "corporateAddressProvince": "BC",
         "fuelSupplierId": "20003",
         "id": "20003",
-        "lastUpdatefromCommonClient": "2017-08-11",
+        "lastUpdatefromCommonClient": "2017-08-15",
         "name": "Cal-Gas Inc., Canwest Propane"
     },
     {
@@ -56,7 +56,7 @@
         "corporateAddressProvince": "BC",
         "fuelSupplierId": "20004",
         "id": "20004",
-        "lastUpdatefromCommonClient": "2017-07-22",
+        "lastUpdatefromCommonClient": "2017-08-04",
         "name": "Chevron Canada Limited"
     },
     {
@@ -68,7 +68,7 @@
         "corporateAddressProvince": "BC",
         "fuelSupplierId": "20005",
         "id": "20005",
-        "lastUpdatefromCommonClient": "2017-08-02",
+        "lastUpdatefromCommonClient": "2017-07-27",
         "name": "Consolidated Biofuels Ltd."
     },
     {
@@ -80,7 +80,7 @@
         "corporateAddressProvince": "BC",
         "fuelSupplierId": "20006",
         "id": "20006",
-        "lastUpdatefromCommonClient": "2017-07-26",
+        "lastUpdatefromCommonClient": "2017-08-11",
         "name": "eco-Options Energy Cooperative"
     },
     {
@@ -92,7 +92,7 @@
         "corporateAddressProvince": "BC",
         "fuelSupplierId": "20007",
         "id": "20007",
-        "lastUpdatefromCommonClient": "2017-07-18",
+        "lastUpdatefromCommonClient": "2017-07-20",
         "name": "Emterra Environmental"
     },
     {
@@ -104,7 +104,7 @@
         "corporateAddressProvince": "BC",
         "fuelSupplierId": "20008",
         "id": "20008",
-        "lastUpdatefromCommonClient": "2017-07-30",
+        "lastUpdatefromCommonClient": "2017-08-10",
         "name": "Federated Co-Operatives Ltd."
     },
     {
@@ -116,7 +116,7 @@
         "corporateAddressProvince": "BC",
         "fuelSupplierId": "20009",
         "id": "20009",
-        "lastUpdatefromCommonClient": "2017-07-12",
+        "lastUpdatefromCommonClient": "2017-07-24",
         "name": "FortisBC Energy Inc."
     },
     {
@@ -128,7 +128,7 @@
         "corporateAddressProvince": "BC",
         "fuelSupplierId": "20010",
         "id": "20010",
-        "lastUpdatefromCommonClient": "2017-07-13",
+        "lastUpdatefromCommonClient": "2017-07-30",
         "name": "HTEC Hydrogen Technology &"
     },
     {
@@ -140,7 +140,7 @@
         "corporateAddressProvince": "BC",
         "fuelSupplierId": "20011",
         "id": "20011",
-        "lastUpdatefromCommonClient": "2017-07-30",
+        "lastUpdatefromCommonClient": "2017-07-22",
         "name": "Energy Corporation"
     },
     {
@@ -152,7 +152,7 @@
         "corporateAddressProvince": "BC",
         "fuelSupplierId": "20012",
         "id": "20012",
-        "lastUpdatefromCommonClient": "2017-07-14",
+        "lastUpdatefromCommonClient": "2017-08-02",
         "name": "Husky Oil Ltd."
     },
     {
@@ -164,7 +164,7 @@
         "corporateAddressProvince": "BC",
         "fuelSupplierId": "20013",
         "id": "20013",
-        "lastUpdatefromCommonClient": "2017-07-14",
+        "lastUpdatefromCommonClient": "2017-08-07",
         "name": "Imperial Oil Limited & McColl"
     },
     {
@@ -176,7 +176,7 @@
         "corporateAddressProvince": "BC",
         "fuelSupplierId": "20014",
         "id": "20014",
-        "lastUpdatefromCommonClient": "2017-07-14",
+        "lastUpdatefromCommonClient": "2017-07-17",
         "name": "Frontenac Petroleum Inc."
     },
     {
@@ -188,7 +188,7 @@
         "corporateAddressProvince": "BC",
         "fuelSupplierId": "20015",
         "id": "20015",
-        "lastUpdatefromCommonClient": "2017-07-27",
+        "lastUpdatefromCommonClient": "2017-07-19",
         "name": "Powerex Corporation"
     },
     {
@@ -200,7 +200,7 @@
         "corporateAddressProvince": "BC",
         "fuelSupplierId": "20016",
         "id": "20016",
-        "lastUpdatefromCommonClient": "2017-08-06",
+        "lastUpdatefromCommonClient": "2017-07-28",
         "name": "Powertech Labs Inc."
     },
     {
@@ -212,7 +212,7 @@
         "corporateAddressProvince": "BC",
         "fuelSupplierId": "20017",
         "id": "20017",
-        "lastUpdatefromCommonClient": "2017-07-28",
+        "lastUpdatefromCommonClient": "2017-07-31",
         "name": "Shell Canada Products"
     },
     {
@@ -224,7 +224,7 @@
         "corporateAddressProvince": "BC",
         "fuelSupplierId": "20018",
         "id": "20018",
-        "lastUpdatefromCommonClient": "2017-07-26",
+        "lastUpdatefromCommonClient": "2017-08-10",
         "name": "Smithrite Disposal Limited"
     },
     {
@@ -236,7 +236,7 @@
         "corporateAddressProvince": "BC",
         "fuelSupplierId": "20019",
         "id": "20019",
-        "lastUpdatefromCommonClient": "2017-07-21",
+        "lastUpdatefromCommonClient": "2017-07-25",
         "name": "South Coast British Columbia"
     },
     {
@@ -248,7 +248,7 @@
         "corporateAddressProvince": "BC",
         "fuelSupplierId": "20020",
         "id": "20020",
-        "lastUpdatefromCommonClient": "2017-07-25",
+        "lastUpdatefromCommonClient": "2017-08-05",
         "name": "Transportation Authority (TransLink)"
     },
     {
@@ -260,7 +260,7 @@
         "corporateAddressProvince": "BC",
         "fuelSupplierId": "20021",
         "id": "20021",
-        "lastUpdatefromCommonClient": "2017-07-24",
+        "lastUpdatefromCommonClient": "2017-08-15",
         "name": "Suncor Energy Products Partnership"
     },
     {
@@ -272,7 +272,7 @@
         "corporateAddressProvince": "BC",
         "fuelSupplierId": "20022",
         "id": "20022",
-        "lastUpdatefromCommonClient": "2017-07-16",
+        "lastUpdatefromCommonClient": "2017-07-28",
         "name": "Superior Propane"
     },
     {
@@ -284,7 +284,7 @@
         "corporateAddressProvince": "BC",
         "fuelSupplierId": "20023",
         "id": "20023",
-        "lastUpdatefromCommonClient": "2017-07-12",
+        "lastUpdatefromCommonClient": "2017-08-12",
         "name": "Super Save Group"
     }
 ]
