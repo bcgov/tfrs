@@ -2,67 +2,67 @@
     {
         "code": "LOGIN",
         "description": "A minimum permission needed for an authenticated user to access the system.",
-        "id": "20000",
+        "id": "1",
         "name": "Login"
     },
     {
         "code": "ADMIN",
         "description": "Gives the user System Administration power in the system. Assignment of this permission should go to a very limited set of users an an as needed/backup basis.",
-        "id": "20001",
+        "id": "2",
         "name": "System Administrator"
     },
     {
         "code": "USER_MANAGEMENT",
         "description": "Gives the user access to the User Management screens",
-        "id": "20002",
+        "id": "3",
         "name": "User Management"
     },
     {
         "code": "ROLES_AND_PERMISSIONS",
         "description": "Gives the user access to the Roles and Permissions screens",
-        "id": "20003",
+        "id": "4",
         "name": "Roles and Permissions"
     },
     {
         "code": "APPROVE_TRANSFER",
         "description": "Approve Transfer",
-        "id": "20004",
+        "id": "5",
         "name": "Approve Transfer"
     },
     {
         "code": "ADD_FS_USER",
         "description": "Add Fuel Supplier User",
-        "id": "20005",
+        "id": "6",
         "name": "Add Fuel Supplier User"
     },
     {
         "code": "AUTHORIZE_TRANSFER",
         "description": "Authorize Transfer",
-        "id": "20006",
+        "id": "7",
         "name": "Authorize Transfer"
     },
     {
         "code": "PUBLISH_OPPORTUNITY",
         "description": "Publish Opportunity",
-        "id": "20007",
+        "id": "8",
         "name": "Publish Opportunity"
     },
     {
         "code": "PROPOSE_CREDIT_TRANSFER",
         "description": "Propose Credit Transfer",
-        "id": "20008",
+        "id": "9",
         "name": "Propose Credit Transfer"
     },
     {
         "code": "GOV_VIEW",
         "description": "Gov View",
-        "id": "20009",
+        "id": "10",
         "name": "Gov View"
     },
     {
         "code": "FUEL_SUP_VIEW",
         "description": "Fuel Supplier View",
-        "id": "20010",
+        "id": "11",
         "name": "Fuel Supplier View"
     }
 ]

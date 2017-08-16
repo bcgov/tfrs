@@ -15,11 +15,11 @@ call load.bat OpportunityStatus/OpportunityStatus_OppStatus.json api/opportunity
 call load.bat permissions/permissions_Perms.json api/permissions/bulk %1%
 call load.bat roles/roles_Role.json api/roles/bulk %1%
 call load.bat rolepermission/rolepermission_RP.json api/rolepermissions/bulk %1%
-call load.bat users/users_user.json api/users/bulk %1%
-call load.bat userRole/userRole_userRole.json api/userroles/bulk %1%
 
 call load.bat FuelSupplier/FuelSupplier_FS.json api/fuelsuppliers/bulk %1%
-call load.bat FuelSupplierCCData/FuelSupplierCCData_FSCCD.json api/fuelsupplierccdata/bulk %1%
+REM call load.bat FuelSupplierCCData/FuelSupplierCCData_FSCCD.json api/fuelsupplierccdata/bulk %1%
+call load.bat users/users_user.json api/users/bulk %1%
+call load.bat userRole/userRole_userRole.json api/userroles/bulk %1%
 call load.bat FuelSupplierContactRole/FuelSupplierContactRole_FSContactRole.json api/fuelsuppliercontactroles/bulk %1%
 call load.bat FuelSupplierContact/FuelSupplierContact_FSContact.json api/fuelsuppliercontacts/bulk %1%
 
