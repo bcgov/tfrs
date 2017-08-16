@@ -4,7 +4,7 @@
         "displayOrder": "1",
         "effectiveDate": "2017-01-01",
         "expirationDate": null,
-        "id": "20000",
+        "id": "1",
         "type": "Buy And Sell"
     },
     {
@@ -12,7 +12,7 @@
         "displayOrder": "2",
         "effectiveDate": "2017-01-01",
         "expirationDate": null,
-        "id": "20001",
+        "id": "2",
         "type": "Sell Only"
     },
     {
@@ -20,7 +20,7 @@
         "displayOrder": "3",
         "effectiveDate": "2017-01-01",
         "expirationDate": null,
-        "id": "20002",
+        "id": "3",
         "type": "None"
     }
 ]

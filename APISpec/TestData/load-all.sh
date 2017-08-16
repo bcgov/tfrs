@@ -26,10 +26,10 @@ fi
 ./load.sh permissions/permissions_Perms.json api/permissions/bulk $1
 ./load.sh roles/roles_Role.json api/roles/bulk $1
 ./load.sh rolepermission/rolepermission_RP.json api/rolepermissions/bulk $1
-./load.sh users/users_user.json api/users/bulk $1
-./load.sh userRole/userRole_userRole.json api/userroles/bulk $1
 
 ./load.sh FuelSupplier/FuelSupplier_FS.json api/fuelsuppliers/bulk $1
-./load.sh FuelSupplierCCData/FuelSupplierCCData_FSCCD.json api/fuelsupplierccdata/bulk $1
+# ./load.sh FuelSupplierCCData/FuelSupplierCCData_FSCCD.json api/fuelsupplierccdata/bulk $1
+./load.sh users/users_user.json api/users/bulk $1
+./load.sh userRole/userRole_userRole.json api/userroles/bulk $1
 ./load.sh FuelSupplierContactRole/FuelSupplierContactRole_FSContactRole.json api/fuelsuppliercontactroles/bulk $1
 ./load.sh FuelSupplierContact/FuelSupplierContact_FSContact.json api/fuelsuppliercontacts/bulk $1
