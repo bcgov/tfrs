@@ -40,4 +40,9 @@
     border: 1px solid $border-grey;
     border-radius: 5px;
   }
+
+  .contacts .react-bs-table {
+    max-height: 300px;
+    overflow: auto;
+  }
 }

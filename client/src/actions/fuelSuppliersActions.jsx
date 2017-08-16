@@ -69,7 +69,21 @@ const addFuelSupplierSuccess = () => {
 }
 
 export const getFuelSupplier = (id) => (dispatch) => {
-  dispatch(getFuelSupplierSuccess(fuelSupplier));
+  dispatch(getFuelSupplierRequest());
+  axios.get(Routes.BASE_URL + Routes.FUEL_SUPPLIERS_API + '/' + id)
+  .then((response) => {  
+    dispatch(getFuelSupplierSuccess(response.data));
+  }).catch((error) => {
+    debugger;
+    dispatch(getFuelSupplierError(error.response))
+  })
+}
+
+const getFuelSupplierRequest = () => {
+  return {
+    name: ReducerTypes.GET_FUEL_SUPPLIER,
+    type: ActionTypes.SUCCESS,
+  }
 }
 
 const getFuelSupplierSuccess = (fuelSupplier) => {
@@ -77,6 +91,14 @@ const getFuelSupplierSuccess = (fuelSupplier) => {
     name: ReducerTypes.GET_FUEL_SUPPLIER,
     type: ActionTypes.SUCCESS,
     data: fuelSupplier,
+  }
+}
+
+const getFuelSupplierError = (error) => {
+  return {
+    name: ReducerTypes.GET_FUEL_SUPPLIER,
+    type: ActionTypes.SUCCESS,
+    errorMessage: error
   }
 }
 
@@ -214,6 +236,39 @@ const getFuelSupplierStatusesSuccess = (fuelSuppliers) => {
 const getFuelSupplierStatusesError = (error) => {
   return {
     name: ReducerTypes.FUEL_SUPPLIER_STATUSES,
+    type: ActionTypes.SUCCESS,
+    errorMessage: error
+  }
+}
+
+export const getFuelSupplierContacts = () => (dispatch) => {
+  dispatch(getFuelSupplierContactsRequest());
+  axios.get(Routes.BASE_URL + Routes.FUEL_SUPPLIER_CONTACTS)
+  .then((response) => {
+    dispatch(getFuelSupplierContactsSuccess(response.data));
+  }).catch((error) => {
+    dispatch(getFuelSupplierContactsError(error.response))
+  })
+}
+
+const getFuelSupplierContactsRequest = () => {
+  return {
+    name: ReducerTypes.FUEL_SUPPLIER_CONTACTS,
+    type: ActionTypes.SUCCESS,
+  }
+}
+
+const getFuelSupplierContactsSuccess = (contacts) => {
+  return {
+    name: ReducerTypes.FUEL_SUPPLIER_CONTACTS,
+    type: ActionTypes.SUCCESS,
+    data: contacts,
+  }
+}
+
+const getFuelSupplierContactsError = (error) => {
+  return {
+    name: ReducerTypes.FUEL_SUPPLIER_CONTACTS,
     type: ActionTypes.SUCCESS,
     errorMessage: error
   }
