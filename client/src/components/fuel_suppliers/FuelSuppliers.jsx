@@ -46,6 +46,30 @@ class FuelSuppliers extends Component {
     );
   }
 
+  actionsFormatter(cell, row) {
+    let actionTypes = this.props.fuelSupplierActionTypes.data;
+    let info = actionTypes.map((actionType) => {
+      if (row.fuelSupplierActionsTypeId === actionType.id) {
+        return actionType.type
+      }
+    });
+    return (
+      <span>{info}</span>
+    )
+  }
+
+  statusFormatter(cell, row) {
+    let statuses = this.props.fuelSupplierStatuses.data;
+    let info = statuses.map((status) => {
+      if (row.fuelSupplierStatusId === status.id) {
+        return status.status
+      }
+    });
+    return (
+      <span>{info}</span>
+    )
+  }
+
   createCustomButtonGroup(props) {
     return (
       <div>
@@ -85,13 +109,25 @@ class FuelSuppliers extends Component {
       <div className="fuel-suppliers row">
         <div className="fuel-suppliers-table col-lg-12">
           <BootstrapTable 
-            data={this.props.fuelSuppliersData}
+            data={this.props.fuelSuppliers.data}
               options={ options }
               search
             >
-            <TableHeaderColumn className="name" dataField="name" dataFormat={(cell, row) => this.nameFormatter(cell, row)} isKey={true} dataSort={true}>Name</TableHeaderColumn>
-            <TableHeaderColumn dataField="status" dataSort={true}>Status</TableHeaderColumn>
-            <TableHeaderColumn dataField="actions_permitted" dataSort={true}>Status</TableHeaderColumn>
+            <TableHeaderColumn 
+              className="name" 
+              dataField="name" 
+              dataFormat={(cell, row) => this.nameFormatter(cell, row)} 
+              isKey={true} 
+              dataSort={true}>
+              Name
+            </TableHeaderColumn>
+            <TableHeaderColumn 
+              dataField="status" 
+              dataSort={true}
+              dataFormat={(cell, row) => this.statusFormatter(cell, row)} >
+              Status
+            </TableHeaderColumn>
+            <TableHeaderColumn dataField="actions_permitted" dataSort={true} dataFormat={(cell, row) => this.actionsFormatter(cell, row)}>Actions Permitted</TableHeaderColumn>
             <TableHeaderColumn dataField="credit_balance" dataSort={true}>Credit Balance</TableHeaderColumn>
             <TableHeaderColumn dataField="encumbered_credits" dataSort={true}>Encumbered Credits</TableHeaderColumn>
             <TableHeaderColumn dataField="last_transaction" dataSort={true}>Last Transaction</TableHeaderColumn>
@@ -175,7 +211,9 @@ class FuelSuppliers extends Component {
 
 export default connect (
   state => ({
-    fuelSuppliersData: state.rootReducer[ReducerTypes.GET_FUEL_SUPPLIERS].data,
+    fuelSuppliers: state.rootReducer[ReducerTypes.GET_FUEL_SUPPLIERS],
+    fuelSupplierActionTypes: state.rootReducer[ReducerTypes.FUEL_SUPPLIER_ACTION_TYPES],
+    fuelSupplierStatuses: state.rootReducer[ReducerTypes.FUEL_SUPPLIER_STATUSES],
     searchFuelSuppliersData: state.rootReducer[ReducerTypes.SEARCH_FUEL_SUPPLIERS].data,
     searchFuelSuppliersSuccess: state.rootReducer[ReducerTypes.SEARCH_FUEL_SUPPLIERS].success,
     addFuelSupplierSuccess: state.rootReducer[ReducerTypes.ADD_FUEL_SUPPLIER].success,

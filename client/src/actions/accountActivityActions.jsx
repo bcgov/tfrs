@@ -55,12 +55,9 @@ export const getCreditTransferReset = () => {
 }
 
 export const getCreditTransfers = () => (dispatch) => {
-  debugger;
   axios.post(Routes.BASE_URL + Routes.SEARCH_CREDIT_TRADES, {
   }).then((response) => {
-    debugger;
   }).catch((error) => {
-    debugger;
   })
 }
 
@@ -80,37 +77,26 @@ export const getCreditTransfersReset = () => {
 }
 
 export const addCreditTransfer = (data) => (dispatch) => {
-  console.log(data);
-  debugger;
   axios.post(Routes.BASE_URL + Routes.POST_CREDIT_TRADE, {
   }).then((response) => {
-    debugger;
   }).catch((error) => {
-    debugger;
   })
 }
 
 export const approveCreditTransfer = (id) => (dispatch) => {
-  console.log(id);
-  debugger;
 }
 
 export const rejectCreditTransfer = (id) => (dispatch) => {
-  console.log(id);
-  debugger;
 }
 
 export const rescindProposal = (id) => (dispatch) => {
-  console.log(id);
-  debugger;
 }
 
 export const recommendForApproval = (id) => (dispatch) => {
-  console.log(id);
-  debugger;
 }
 
 export const recommendForRejection = (id) => (dispatch) => {
-  console.log(id);
-  debugger;
+}
+
+export const acceptCredit = (id) => (dispatch) => {
 }

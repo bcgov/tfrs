@@ -6,6 +6,10 @@ import { push, ConnectedRouter } from 'react-router-redux';
 import createHistory from 'history/createHashHistory'; // 'history/createHashHistory' for  '#'
 import * as Routes from './constants/routes.jsx';
 import store from './store/store.jsx';
+import {
+	getFuelSupplierActionTypes,
+	getFuelSupplierStatuses
+} from './actions/fuelSuppliersActions.jsx';
 
 import App from './components/App.jsx';
 import Dashboard from './components/dashboard/Dashboard.jsx';
@@ -22,6 +26,9 @@ import Opportunity from './components/opportunities/Opportunity.jsx';
 import '../styles/index.scss';
 
 const history = createHistory();
+
+store.dispatch(getFuelSupplierActionTypes());
+store.dispatch(getFuelSupplierStatuses());
 
 ReactDOM.render(
 	<Provider store={store}>
