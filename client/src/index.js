@@ -11,7 +11,13 @@ import {
 	getFuelSupplierStatuses,
 	getFuelSupplierTypes
 } from './actions/fuelSuppliersActions.jsx';
-import { getUsers } from './actions/userActions.jsx';
+import { 
+	getUsers,
+	getPermissions,
+	getRolePermissions,
+	getRoles,
+	getUserRoles
+ } from './actions/userActions.jsx';
 
 import App from './components/App.jsx';
 import Dashboard from './components/dashboard/Dashboard.jsx';
@@ -33,6 +39,10 @@ store.dispatch(getFuelSupplierActionTypes());
 store.dispatch(getFuelSupplierStatuses());
 store.dispatch(getFuelSupplierTypes());
 store.dispatch(getUsers());
+store.dispatch(getPermissions());
+store.dispatch(getRolePermissions());
+store.dispatch(getRoles());
+store.dispatch(getUserRoles());
 
 ReactDOM.render(
 	<Provider store={store}>
