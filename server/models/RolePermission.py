@@ -28,6 +28,6 @@ from .Permission import Permission
 
 
 class RolePermission(models.Model):	    
-    roleId = models.ForeignKey('Role', related_name='RolePermissionroleId')   
-    permissionId = models.ForeignKey('Permission', related_name='RolePermissionpermissionId')   
+    roleFK = models.ForeignKey('Role', related_name='RolePermissionroleFK')   
+    permissionFK = models.ForeignKey('Permission', related_name='RolePermissionpermissionFK')   
 

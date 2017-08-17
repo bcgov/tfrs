@@ -30,13 +30,13 @@ from .FuelSupplierType import FuelSupplierType
 
 
 class OpportunityHistory(models.Model):	    
-    opportunityId = models.ForeignKey('Opportunity', related_name='OpportunityHistoryopportunityId')   
-    userId = models.ForeignKey('User', related_name='OpportunityHistoryuserId')   
+    opportunityFK = models.ForeignKey('Opportunity', related_name='OpportunityHistoryopportunityFK')   
+    userFK = models.ForeignKey('User', related_name='OpportunityHistoryuserFK')   
     updateTime = models.DateField(blank=True, null=True)   
-    creditTradeTypeId = models.ForeignKey('CreditTradeType', related_name='OpportunityHistorycreditTradeTypeId')   
+    creditTradeTypeFK = models.ForeignKey('CreditTradeType', related_name='OpportunityHistorycreditTradeTypeFK')   
     newNumberOfCredits = models.IntegerField()   
     newProposedValuePerCredit = models.CharField(blank=True, null=True, max_length=255)   
-    fuelSupplierTypeId = models.ForeignKey('FuelSupplierType', related_name='OpportunityHistoryfuelSupplierTypeId')   
+    fuelSupplierTypeFK = models.ForeignKey('FuelSupplierType', related_name='OpportunityHistoryfuelSupplierTypeFK')   
     newTradeEffectiveDate = models.DateField(blank=True, null=True)   
-    note = models.CharField(max_length=4096, blank=True, null=True)   
+    note = models.CharField(max_length=4000, blank=True, null=True)   
 

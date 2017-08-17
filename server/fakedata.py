@@ -102,7 +102,7 @@ def CreditTradeStatusTestDataUpdate():
 
 def CreditTradeTypeTestDataCreate():
   return {
-    'type':'Initial',
+    'theType':'Initial',
     'description':'Initial',
     'displayOrder':1,
     'isGovOnlyType':True,
@@ -112,7 +112,7 @@ def CreditTradeTypeTestDataCreate():
 
 def CreditTradeTypeTestDataUpdate():
   return {
-    'type':'Changed',
+    'theType':'Changed',
     'description':'Changed',
     'displayOrder':0,
     'isGovOnlyType':False,
@@ -155,16 +155,18 @@ def FuelSupplierTestDataUpdate():
 
 def FuelSupplierActionsTypeTestDataCreate():
   return {
-    'type':'Initial',
+    'theType':'Initial',
     'description':'Initial',
     'displayOrder':1,
+    'effectiveDate': '2017-01-01',
   }
 
 def FuelSupplierActionsTypeTestDataUpdate():
   return {
-    'type':'Changed',
+    'theType':'Changed',
     'description':'Changed',
     'displayOrder':0,
+    'effectiveDate': '2018-01-01',
   }
 
 
@@ -296,7 +298,7 @@ def FuelSupplierStatusTestDataUpdate():
 
 def FuelSupplierTypeTestDataCreate():
   return {
-    'type':'Initial',
+    'theType':'Initial',
     'description':'Initial',
     'displayOrder':1,
     'effectiveDate': '2017-01-01',
@@ -305,7 +307,7 @@ def FuelSupplierTypeTestDataCreate():
 
 def FuelSupplierTypeTestDataUpdate():
   return {
-    'type':'Changed',
+    'theType':'Changed',
     'description':'Changed',
     'displayOrder':0,
     'effectiveDate': '2017-01-01',
@@ -341,16 +343,18 @@ def NotificationEventTestDataUpdate():
 
 def NotificationTypeTestDataCreate():
   return {
-    'type':'Initial',
+    'theType':'Initial',
     'description':'Initial',
     'displayOrder':1,
+    'effectiveDate': '2017-01-01',
   }
 
 def NotificationTypeTestDataUpdate():
   return {
-    'type':'Changed',
+    'theType':'Changed',
     'description':'Changed',
     'displayOrder':0,
+    'effectiveDate': '2018-01-01',
   }
 
 
@@ -381,7 +385,6 @@ def OpportunityTestDataCreate():
   return {
     'numberOfCredits':1,
     'hasTradeNow':True,
-    'numberOfViews':1,
     'opportunityBackgroundNote':'Initial',
     'plainEnglishPhrase':'Initial',
   }
@@ -390,7 +393,6 @@ def OpportunityTestDataUpdate():
   return {
     'numberOfCredits':0,
     'hasTradeNow':False,
-    'numberOfViews':0,
     'opportunityBackgroundNote':'Changed',
     'plainEnglishPhrase':'Changed',
   }
@@ -566,7 +568,7 @@ def UserFavouriteViewModelTestDataCreate():
     'name':'Initial',
     'value':'Initial',
     'isDefault':True,
-    'type':'Initial',
+    'theType':'Initial',
   }
 
 def UserFavouriteViewModelTestDataUpdate():
@@ -574,7 +576,7 @@ def UserFavouriteViewModelTestDataUpdate():
     'name':'Changed',
     'value':'Changed',
     'isDefault':False,
-    'type':'Changed',
+    'theType':'Changed',
   }
 
 def UserRoleTestDataCreate():

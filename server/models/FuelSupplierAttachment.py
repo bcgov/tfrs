@@ -27,9 +27,9 @@ from .FuelSupplier import FuelSupplier
 
 
 class FuelSupplierAttachment(models.Model):	    
-    fuelSupplierId = models.ForeignKey('FuelSupplier', related_name='FuelSupplierAttachmentfuelSupplierId')   
-    fileName = models.CharField(max_length=255, blank=True, null=True)   
-    fileLocation = models.CharField(max_length=255, blank=True, null=True)   
-    description = models.CharField(max_length=255, blank=True, null=True)   
-    complianceYear = models.CharField(max_length=255, blank=True, null=True)   
+    fuelSupplierFK = models.ForeignKey('FuelSupplier', related_name='FuelSupplierAttachmentfuelSupplierFK')   
+    fileName = models.CharField(max_length=250, blank=True, null=True)   
+    fileLocation = models.CharField(max_length=2000, blank=True, null=True)   
+    description = models.CharField(max_length=4000, blank=True, null=True)   
+    complianceYear = models.CharField(max_length=25, blank=True, null=True)   
 

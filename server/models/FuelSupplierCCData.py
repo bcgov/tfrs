@@ -27,13 +27,13 @@ from .FuelSupplier import FuelSupplier
 
 
 class FuelSupplierCCData(models.Model):	    
-    fuelSupplierId = models.ForeignKey('FuelSupplier', related_name='FuelSupplierCCDatafuelSupplierId')   
-    commonClientOrgId = models.CharField(max_length=255, blank=True, null=True)   
+    fuelSupplierFK = models.ForeignKey('FuelSupplier', related_name='FuelSupplierCCDatafuelSupplierFK')   
+    commonClientOrgId = models.CharField(max_length=100)   
     lastUpdatefromCommonClient = models.DateField()   
-    name = models.CharField(max_length=255)   
-    corporateAddressLine1 = models.CharField(max_length=255, blank=True, null=True)   
-    corporateAddressLine2 = models.CharField(max_length=255, blank=True, null=True)   
-    corporateAddressCity = models.CharField(max_length=255, blank=True, null=True)   
-    corporateAddressPostalCode = models.CharField(max_length=255, blank=True, null=True)   
-    corporateAddressProvince = models.CharField(max_length=255, blank=True, null=True)   
+    name = models.CharField(max_length=500)   
+    corporateAddressLine1 = models.CharField(max_length=150, blank=True, null=True)   
+    corporateAddressLine2 = models.CharField(max_length=150, blank=True, null=True)   
+    corporateAddressCity = models.CharField(max_length=100, blank=True, null=True)   
+    corporateAddressPostalCode = models.CharField(max_length=25, blank=True, null=True)   
+    corporateAddressProvince = models.CharField(max_length=50, blank=True, null=True)   
 

@@ -65,8 +65,6 @@ from .models.UserRole import UserRole
 from .models.UserRoleViewModel import UserRoleViewModel
 from .models.UserViewModel import UserViewModel
 
-from auditable.views import AuditableMixin
-
 
 class credittradesBulkPost(BulkCreateModelMixin, generics.GenericAPIView):
   """  
@@ -1743,7 +1741,6 @@ class usersIdGet(mixins.RetrieveModelMixin, mixins.UpdateModelMixin, generics.Ge
     """
     return self.update(request, *args, **kwargs)
 
-
 class userrolesBulkPost(BulkCreateModelMixin, generics.GenericAPIView):
   """  
   Bulk create / update a number of UserRole object  
@@ -1810,3 +1807,5 @@ class userrolesIdGet(mixins.RetrieveModelMixin, mixins.UpdateModelMixin, generic
     Updates the specified UserRole object
     """
     return self.update(request, *args, **kwargs)
+
+

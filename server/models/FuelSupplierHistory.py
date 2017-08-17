@@ -27,6 +27,6 @@ from .FuelSupplier import FuelSupplier
 
 
 class FuelSupplierHistory(models.Model):	    
-    fuelSupplierId = models.ForeignKey('FuelSupplier', related_name='FuelSupplierHistoryfuelSupplierId')   
-    historyText = models.CharField(max_length=255)   
+    fuelSupplierFK = models.ForeignKey('FuelSupplier', related_name='FuelSupplierHistoryfuelSupplierFK')   
+    historyText = models.CharField(max_length=1000)   
 

@@ -122,7 +122,7 @@ class Test_Api_Custom(TestCase):
         testContactUrl = "/api/fuelsuppliercontacts"
         # Create:        
         payload = fakedata.FuelSupplierContactTestDataCreate()
-        payload['fuelSupplierId'] = fuelSupplierId
+        payload['fuelSupplierFK'] = fuelSupplierId
         jsonString = json.dumps(payload)
         response = self.client.post(testContactUrl, content_type='application/json', data=jsonString)
         # Check that the response is OK.
@@ -185,15 +185,15 @@ class Test_Api_Custom(TestCase):
         payload = {
           'name': "Initial",
           'status': "Initial",
-          'dateCreated': '2000-01-01',   
+          'createdDate': '2000-01-01',   
         #   'primaryContact': contactId ,
         #   'contacts': [contactId],
           'notes': [],          
           'attachments': [],   
           'history': [],
-          'fuelSupplierTypeId': typeId,
-          'fuelSupplierStatusId': statusId,
-          'fuelSupplierActionsTypeId': actionsTypeId,
+          'fuelSupplierTypeFK': typeId,
+          'fuelSupplierStatusFK': statusId,
+          'fuelSupplierActionsTypeFK': actionsTypeId,
         }
         jsonString = json.dumps(payload)
         response = self.client.post(testUrl, content_type='application/json', data=jsonString)
@@ -251,7 +251,7 @@ class Test_Api_Custom(TestCase):
           'surname':fakeUser['surname'],
           'email':fakeUser['email'],
           'status':'Active',
-          'userId':fakeUser['userId'],
+          'userFK':fakeUser['userId'],
           'guid':fakeUser['guid'],
           'authorizationDirectory':fakeUser['authorizationDirectory'],
           'fuelSupplier': fuelsupplierId
@@ -317,8 +317,9 @@ class Test_Api_Custom(TestCase):
           'notes':[],
           'attachments':[],
           'history':[],
-          'creditTradeTypeId': typeId,
-          'creditTradeStatusId': statusId,
+          'creditTradeTypeFK': typeId,
+          'creditTradeStatusFK': statusId,
+          'respondentFK': fuelSupplierId,
         }
         fakeCreditTrade = fakedata.CreditTradeTestDataCreate()
         payload.update(fakeCreditTrade)
@@ -351,10 +352,10 @@ class Test_Api_Custom(TestCase):
 
         testUrl = "/api/opportunities"
         payload = {
-            'creditTradeTypeId': creditTradeTypeId,
-            'fuelSupplierId': fuelSupplierId,
-            'fuelSupplierTypeId': fuelSupplierTypeId,
-            'opportunityStatusId': opStatusId,
+            'creditTradeTypeFK': creditTradeTypeId,
+            'fuelSupplierFK': fuelSupplierId,
+            'fuelSupplierTypeFK': fuelSupplierTypeId,
+            'opportunityStatusFK': opStatusId,
             'datePosted': '2017-01-01',
             'history':[],
         }
@@ -395,8 +396,8 @@ class Test_Api_Custom(TestCase):
         notificationEventId = self.createNotificationEvent()
 
         payload = fakedata.NotificationTestDataCreate()
-        payload['userId'] = userId
-        payload['notificationEventId'] = notificationEventId
+        payload['userFK'] = userId
+        payload['notificationEventFK'] = notificationEventId
 
         request = json.dumps(payload)
         response = self.client.post(testUrl, content_type='application/json', data=request)
@@ -565,7 +566,7 @@ class Test_Api_Custom(TestCase):
         uploadUrl = "/api/fuelsuppliers/"
         uploadUrl += str(fuelSupplierId) + "/attachments"
         payload = fakedata.FuelSupplierAttachmentTestDataCreate()
-        payload['fuelSupplierId'] = fuelSupplierId
+        payload['fuelSupplierFK'] = fuelSupplierId
         rawData = "TEST"                
         jsonString = json.dumps(payload)        
         fileData = SimpleUploadedFile("file.txt", rawData.encode('utf-8') )
@@ -610,7 +611,7 @@ class Test_Api_Custom(TestCase):
 
         testUrl = "/api/fuelsuppliers/" + str(fuelSupplierId) + "/history"
         payload = fakedata.FuelSupplierHistoryTestDataCreate()
-        payload['fuelSupplierId'] = fuelSupplierId
+        payload['fuelSupplierFK'] = fuelSupplierId
         jsonString = json.dumps(payload)
         response = self.client.post(testUrl, content_type='application/json', data=jsonString)
         # Check that the response is OK.
@@ -654,7 +655,7 @@ class Test_Api_Custom(TestCase):
 
         rolePermissionUrl = "/api/roles/" + str(roleId) + "/permissions"
         # create a new group membership.
-        payload = {'roleId':roleId, 'permissionId':permissionId}
+        payload = {'roleFK':roleId, 'permissionFK':permissionId}
         jsonString = json.dumps(payload)
         response = self.client.post(rolePermissionUrl,content_type='application/json', data=jsonString)
         assert status.HTTP_200_OK == response.status_code
@@ -768,10 +769,10 @@ class Test_Api_Custom(TestCase):
         userNotificationUrl = "/api/users/" + str(userId) + "/notifications"
         # create a new UserRole.
         payload = {
-          'notificationEventId': notificationEventId,
+          'notificationEventFK': notificationEventId,
           'hasBeenViewed': False,
           'isWatchNotification': False,
-          'userId':userId
+          'userFK':userId
         }
         jsonString = json.dumps(payload)
         response = self.client.post(userNotificationUrl,content_type='application/json', data=jsonString)
@@ -843,7 +844,8 @@ class Test_Api_Custom(TestCase):
         jsonString = response.content.decode("utf-8")
         data = json.loads(jsonString)
 
-        assert data[0]['effectiveDate'] == '2018-01-01'
+        assert data[0]['userFK'] == userId
+        assert data[0]['roleFK'] == roleId 
 
         self.deleteRole(roleId)
         self.deleteUser(userId)

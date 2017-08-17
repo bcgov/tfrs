@@ -26,6 +26,6 @@ from django.utils import timezone
 
 
 class Role(models.Model):	    
-    name = models.CharField(max_length=255)   
-    description = models.CharField(max_length=255)   
+    name = models.CharField(max_length=200)   
+    description = models.CharField(max_length=1000)   
 

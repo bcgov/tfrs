@@ -28,13 +28,13 @@ from .User import User
 
 
 class FuelSupplierContact(models.Model):	    
-    fuelSupplierId = models.ForeignKey('FuelSupplier', related_name='FuelSupplierContactfuelSupplierId')   
-    givenName = models.CharField(max_length=255, blank=True, null=True)   
-    surname = models.CharField(max_length=255, blank=True, null=True)   
-    title = models.CharField(max_length=255, blank=True, null=True)   
-    userId = models.ForeignKey('User', related_name='FuelSupplierContactuserId', blank=True, null=True)   
-    notes = models.CharField(max_length=255, blank=True, null=True)   
-    emailAddress = models.CharField(max_length=255, blank=True, null=True)   
-    workPhoneNumber = models.CharField(max_length=255, blank=True, null=True)   
-    mobilePhoneNumber = models.CharField(max_length=255, blank=True, null=True)   
+    fuelSupplierFK = models.ForeignKey('FuelSupplier', related_name='FuelSupplierContactfuelSupplierFK')   
+    givenName = models.CharField(max_length=100, blank=True, null=True)   
+    surname = models.CharField(max_length=100, blank=True, null=True)   
+    title = models.CharField(max_length=150, blank=True, null=True)   
+    userFK = models.ForeignKey('User', related_name='FuelSupplierContactuserFK', blank=True, null=True)   
+    notes = models.CharField(max_length=4000, blank=True, null=True)   
+    emailAddress = models.CharField(max_length=150, blank=True, null=True)   
+    workPhoneNumber = models.CharField(max_length=25, blank=True, null=True)   
+    mobilePhoneNumber = models.CharField(max_length=25, blank=True, null=True)   
 

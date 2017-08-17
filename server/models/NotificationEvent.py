@@ -29,8 +29,8 @@ from .Opportunity import Opportunity
 
 class NotificationEvent(models.Model):	    
     eventTime = models.DateField(blank=True, null=True)   
-    eventTypeCode = models.CharField(max_length=255, blank=True, null=True)   
-    notes = models.CharField(max_length=255, blank=True, null=True)   
-    creditTradeId = models.ForeignKey('CreditTrade', related_name='NotificationEventcreditTradeId', blank=True, null=True)   
-    opportunityId = models.ForeignKey('Opportunity', related_name='NotificationEventopportunityId', blank=True, null=True)   
+    eventTypeCode = models.CharField(max_length=25, blank=True, null=True)   
+    notes = models.CharField(max_length=1000, blank=True, null=True)   
+    creditTradeFK = models.ForeignKey('CreditTrade', related_name='NotificationEventcreditTradeFK', blank=True, null=True)   
+    opportunityFK = models.ForeignKey('Opportunity', related_name='NotificationEventopportunityFK', blank=True, null=True)   
 
