@@ -32,4 +32,5 @@ fi
 #   curl -c cookie ${server}/api/authentication/dev/token?userId=scurran
 # fi
 
+echo Loading File ${1} using endpoint ${server}/${2}
 curl -b cookie -v -H "Content-Type: application/json" -X POST --data-binary "@${1}" ${server}/${2}

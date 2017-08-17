@@ -3,273 +3,273 @@
         "effectiveDate": "2017-01-01",
         "expiryDate": null,
         "id": "1",
-        "roleId": "5",
-        "userId": "1"
+        "role": "5",
+        "user": "1"
     },
     {
         "effectiveDate": "2017-01-01",
         "expiryDate": null,
         "id": "2",
-        "roleId": "5",
-        "userId": "2"
+        "role": "5",
+        "user": "2"
     },
     {
         "effectiveDate": "2017-01-01",
         "expiryDate": null,
         "id": "3",
-        "roleId": "5",
-        "userId": "3"
+        "role": "5",
+        "user": "3"
     },
     {
         "effectiveDate": "2017-01-01",
         "expiryDate": null,
         "id": "4",
-        "roleId": "5",
-        "userId": "4"
+        "role": "5",
+        "user": "4"
     },
     {
         "effectiveDate": "2017-01-01",
         "expiryDate": null,
         "id": "5",
-        "roleId": "5",
-        "userId": "5"
+        "role": "5",
+        "user": "5"
     },
     {
         "effectiveDate": "2017-01-01",
         "expiryDate": null,
         "id": "6",
-        "roleId": "5",
-        "userId": "6"
+        "role": "5",
+        "user": "6"
     },
     {
         "effectiveDate": "2017-01-01",
         "expiryDate": null,
         "id": "7",
-        "roleId": "5",
-        "userId": "7"
+        "role": "5",
+        "user": "7"
     },
     {
         "effectiveDate": "2017-01-01",
         "expiryDate": null,
         "id": "8",
-        "roleId": "5",
-        "userId": "8"
+        "role": "5",
+        "user": "8"
     },
     {
         "effectiveDate": "2017-01-01",
         "expiryDate": null,
         "id": "9",
-        "roleId": "5",
-        "userId": "9"
+        "role": "5",
+        "user": "9"
     },
     {
         "effectiveDate": "2017-01-01",
         "expiryDate": null,
         "id": "10",
-        "roleId": "5",
-        "userId": "10"
+        "role": "5",
+        "user": "10"
     },
     {
         "effectiveDate": "2017-01-01",
         "expiryDate": null,
         "id": "11",
-        "roleId": "5",
-        "userId": "11"
+        "role": "5",
+        "user": "11"
     },
     {
         "effectiveDate": "2017-01-01",
         "expiryDate": null,
         "id": "12",
-        "roleId": "5",
-        "userId": "12"
+        "role": "5",
+        "user": "12"
     },
     {
         "effectiveDate": "2017-01-01",
         "expiryDate": null,
         "id": "13",
-        "roleId": "5",
-        "userId": "13"
+        "role": "5",
+        "user": "13"
     },
     {
         "effectiveDate": "2017-01-01",
         "expiryDate": null,
         "id": "14",
-        "roleId": "5",
-        "userId": "14"
+        "role": "5",
+        "user": "14"
     },
     {
         "effectiveDate": "2017-01-01",
         "expiryDate": null,
         "id": "15",
-        "roleId": "5",
-        "userId": "15"
+        "role": "5",
+        "user": "15"
     },
     {
         "effectiveDate": "2017-01-01",
         "expiryDate": null,
         "id": "16",
-        "roleId": "5",
-        "userId": "16"
+        "role": "5",
+        "user": "16"
     },
     {
         "effectiveDate": "2017-01-01",
         "expiryDate": null,
         "id": "17",
-        "roleId": "5",
-        "userId": "17"
+        "role": "5",
+        "user": "17"
     },
     {
         "effectiveDate": "2017-01-01",
         "expiryDate": null,
         "id": "18",
-        "roleId": "5",
-        "userId": "18"
+        "role": "5",
+        "user": "18"
     },
     {
         "effectiveDate": "2017-01-01",
         "expiryDate": null,
         "id": "19",
-        "roleId": "5",
-        "userId": "19"
+        "role": "5",
+        "user": "19"
     },
     {
         "effectiveDate": "2017-01-01",
         "expiryDate": null,
         "id": "20",
-        "roleId": "5",
-        "userId": "20"
+        "role": "5",
+        "user": "20"
     },
     {
         "effectiveDate": "2017-01-01",
         "expiryDate": null,
         "id": "21",
-        "roleId": "5",
-        "userId": "21"
+        "role": "5",
+        "user": "21"
     },
     {
         "effectiveDate": "2017-01-01",
         "expiryDate": null,
         "id": "22",
-        "roleId": "5",
-        "userId": "22"
+        "role": "5",
+        "user": "22"
     },
     {
         "effectiveDate": "2017-01-01",
         "expiryDate": null,
         "id": "23",
-        "roleId": "5",
-        "userId": "23"
+        "role": "5",
+        "user": "23"
     },
     {
         "effectiveDate": "2017-01-01",
         "expiryDate": null,
         "id": "24",
-        "roleId": "5",
-        "userId": "24"
+        "role": "5",
+        "user": "24"
     },
     {
         "effectiveDate": "2017-01-01",
         "expiryDate": null,
         "id": "25",
-        "roleId": "4",
-        "userId": "25"
+        "role": "4",
+        "user": "25"
     },
     {
         "effectiveDate": "2017-01-01",
         "expiryDate": null,
         "id": "26",
-        "roleId": "4",
-        "userId": "26"
+        "role": "4",
+        "user": "26"
     },
     {
         "effectiveDate": "2017-01-01",
         "expiryDate": null,
         "id": "27",
-        "roleId": "4",
-        "userId": "27"
+        "role": "4",
+        "user": "27"
     },
     {
         "effectiveDate": "2017-01-01",
         "expiryDate": null,
         "id": "28",
-        "roleId": "4",
-        "userId": "28"
+        "role": "4",
+        "user": "28"
     },
     {
         "effectiveDate": "2017-01-01",
         "expiryDate": null,
         "id": "29",
-        "roleId": "4",
-        "userId": "29"
+        "role": "4",
+        "user": "29"
     },
     {
         "effectiveDate": "2017-01-01",
         "expiryDate": null,
         "id": "30",
-        "roleId": "4",
-        "userId": "30"
+        "role": "4",
+        "user": "30"
     },
     {
         "effectiveDate": "2017-01-01",
         "expiryDate": null,
         "id": "31",
-        "roleId": "5",
-        "userId": "31"
+        "role": "5",
+        "user": "31"
     },
     {
         "effectiveDate": "2017-01-01",
         "expiryDate": null,
         "id": "32",
-        "roleId": "4",
-        "userId": "32"
+        "role": "4",
+        "user": "32"
     },
     {
         "effectiveDate": "2017-01-01",
         "expiryDate": null,
         "id": "33",
-        "roleId": "4",
-        "userId": "33"
+        "role": "4",
+        "user": "33"
     },
     {
         "effectiveDate": "2017-01-01",
         "expiryDate": null,
         "id": "34",
-        "roleId": "4",
-        "userId": "34"
+        "role": "4",
+        "user": "34"
     },
     {
         "effectiveDate": "2017-01-01",
         "expiryDate": null,
         "id": "35",
-        "roleId": "1",
-        "userId": "35"
+        "role": "1",
+        "user": "35"
     },
     {
         "effectiveDate": "2017-01-01",
         "expiryDate": null,
         "id": "36",
-        "roleId": "1",
-        "userId": "36"
+        "role": "1",
+        "user": "36"
     },
     {
         "effectiveDate": "2017-01-01",
         "expiryDate": null,
         "id": "37",
-        "roleId": "1",
-        "userId": "37"
+        "role": "1",
+        "user": "37"
     },
     {
         "effectiveDate": "2017-01-01",
         "expiryDate": null,
         "id": "38",
-        "roleId": "1",
-        "userId": "38"
+        "role": "1",
+        "user": "38"
     },
     {
         "effectiveDate": "2017-01-01",
         "expiryDate": null,
         "id": "39",
-        "roleId": "1",
-        "userId": "39"
+        "role": "1",
+        "user": "39"
     }
 ]
