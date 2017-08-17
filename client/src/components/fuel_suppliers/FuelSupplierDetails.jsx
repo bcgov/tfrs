@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { 
   getFuelSupplier,
-  getFuelSupplierContacts,
   getFuelSupplierType,
   getFuelSupplierStatus
 } from '../../actions/fuelSuppliersActions.jsx';
@@ -11,27 +10,46 @@ import { addContact, verifyID, verifyIDReset } from '../../actions/fuelSuppliers
 import { Modal } from 'react-bootstrap';
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
 import AddContactForm from './AddContactForm.jsx';
+import UploadDocumentForm from './UploadDocumentForm.jsx';
 
 class FuelSupplierDetails extends Component {
   constructor(props) {
     super(props);
     this.state = {
       showAddContactModal: false,
+      showUploadDocumentModal: false,
       contactName: '',
       contactRole: '',
       contactEmail: '',
       contactWorkPhone: '',
       contactCellPhone: '',
       contactBCeID: '',
+      contacts: [],
     };
   }
   
   componentDidMount() {
     let id = this.props.match.params.id;
     this.props.getFuelSupplier(id);
-    this.props.getFuelSupplierContacts(id);
     this.props.getFuelSupplierType(id);
     this.props.getFuelSupplierStatus(id)
+    if (this.props.fuelSupplierContacts.data != null) {
+      this.filterContacts();
+    }
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    if (prevProps.fuelSupplierContacts !== this.props.fuelSupplierContacts) {
+      this.filterContacts();
+    }
+  }
+
+  filterContacts() {
+    let id = parseInt(this.props.match.params.id);
+    let contacts = this.props.fuelSupplierContacts.data.filter(contact => {
+      return contact['fuelSupplierId'] === id
+    })
+    this.setState({contacts: contacts});
   }
 
   openAddContactModal() {
@@ -41,6 +59,14 @@ class FuelSupplierDetails extends Component {
   closeAddContactModal() {
     this.setState({showAddContactModal: false});
     this.props.verifyIDReset();
+  }
+
+  openUploadDocumentModal() {
+    this.setState({showUploadDocumentModal: true})
+  }
+
+  closeUploadDocumentModal() {
+    this.setState({showUploadDocumentModal: false});
   }
 
   handleInputChange(event) {
@@ -84,7 +110,11 @@ class FuelSupplierDetails extends Component {
         <h1 className='header'>Correspondence</h1>
         <div className='right-toolbar-container'> 
           <div className="actions-container">
-            <button className="btn-link">Add</button>
+            <button 
+              className="btn-link"
+              onClick={() => this.openUploadDocumentModal()}>
+              Add
+            </button>
             <label className="checkbox"> 
               <input type="checkbox" />
               All Years
@@ -158,7 +188,7 @@ class FuelSupplierDetails extends Component {
               <button 
                 className="btn-link add-btn"
                 onClick={() => this.openAddContactModal()}>Add Contact</button>
-              <BootstrapTable data={this.props.fuelSupplierContacts.data}>
+              <BootstrapTable data={this.state.contacts}>
                 <TableHeaderColumn 
                   dataField="name"
                   isKey={true} 
@@ -207,6 +237,34 @@ class FuelSupplierDetails extends Component {
               <TableHeaderColumn dataField="of">Of</TableHeaderColumn>
               <TableHeaderColumn columnClassName="actions" dataFormat={(cell, row) => this.documentsActionsFormatter(cell, row)}>Actions</TableHeaderColumn>
             </BootstrapTable>
+            <Modal
+                show={this.state.showUploadDocumentModal}
+                onHide={() => this.closeUploadDocumentModal()}
+                container={this}
+                aria-labelledby="contained-modal-title"
+              >
+              <Modal.Header closeButton>
+                <Modal.Title id="contained-modal-title">Upload Document</Modal.Title>
+              </Modal.Header>
+              <Modal.Body>
+                <UploadDocumentForm />
+              </Modal.Body>
+              <Modal.Footer>
+                <div>
+                  <button 
+                    type="button" 
+                    className="btn btn-default" 
+                    onClick={() => this.closeUploadDocumentModal()}>
+                    Cancel
+                  </button>
+                  <button 
+                    type="button" 
+                    className="btn btn-primary">
+                    Save Not implemented
+                  </button>
+                </div> 
+              </Modal.Footer>
+            </Modal>
           </div>
         </div>
         <div className="row">
@@ -242,9 +300,6 @@ export default connect (
   dispatch => ({
     getFuelSupplier: (id) => {
       dispatch(getFuelSupplier(id));
-    },
-    getFuelSupplierContacts: (id) => {
-      dispatch(getFuelSupplierContacts(id));
     },
     getFuelSupplierType: (id) => {
       dispatch(getFuelSupplierType(id));

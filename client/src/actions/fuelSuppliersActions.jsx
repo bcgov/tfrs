@@ -95,7 +95,6 @@ export const getFuelSupplier = (id) => (dispatch) => {
   .then((response) => {  
     dispatch(getFuelSupplierSuccess(response.data));
   }).catch((error) => {
-    debugger;
     dispatch(getFuelSupplierError(error.response))
   })
 }
@@ -194,14 +193,11 @@ const getFuelSupplierActionTypesError = (error) => {
 }
 
 export const getFuelSupplierActionType = (id) => (dispatch) => {
-  debugger
   dispatch(getFuelSupplierActionTypeRequest());
   axios.get(Routes.BASE_URL + Routes.FUEL_SUPPLIER_ACTION_TYPES + id)
   .then((response) => {
-    debugger;
     dispatch(getFuelSupplierActionTypeSuccess(response.data));
   }).catch((error) => {
-    debugger;
     dispatch(getFuelSupplierActionTypeError(error.response))
   })
 }

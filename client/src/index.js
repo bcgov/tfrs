@@ -9,7 +9,8 @@ import store from './store/store.jsx';
 import {
 	getFuelSupplierActionTypes,
 	getFuelSupplierStatuses,
-	getFuelSupplierTypes
+	getFuelSupplierTypes,
+	getFuelSupplierContacts
 } from './actions/fuelSuppliersActions.jsx';
 import { 
 	getUsers,
@@ -38,6 +39,7 @@ const history = createHistory();
 store.dispatch(getFuelSupplierActionTypes());
 store.dispatch(getFuelSupplierStatuses());
 store.dispatch(getFuelSupplierTypes());
+store.dispatch(getFuelSupplierContacts());
 store.dispatch(getUsers());
 store.dispatch(getPermissions());
 store.dispatch(getRolePermissions());
