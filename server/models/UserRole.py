@@ -28,8 +28,6 @@ from .Role import Role
 
 
 class UserRole(models.Model):	    
-    effectiveDate = models.DateField()   
-    expiryDate = models.DateField(blank=True, null=True)   
-    user = models.ForeignKey('User', related_name='UserRoleuser')   
-    role = models.ForeignKey('Role', related_name='UserRolerole')   
+    userFK = models.ForeignKey('User', related_name='UserRoleuserFK')   
+    roleFK = models.ForeignKey('Role', related_name='UserRoleroleFK')   
 
