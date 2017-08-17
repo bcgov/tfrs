@@ -8,8 +8,10 @@ import * as Routes from './constants/routes.jsx';
 import store from './store/store.jsx';
 import {
 	getFuelSupplierActionTypes,
-	getFuelSupplierStatuses
+	getFuelSupplierStatuses,
+	getFuelSupplierTypes
 } from './actions/fuelSuppliersActions.jsx';
+import { getUsers } from './actions/userActions.jsx';
 
 import App from './components/App.jsx';
 import Dashboard from './components/dashboard/Dashboard.jsx';
@@ -29,6 +31,8 @@ const history = createHistory();
 
 store.dispatch(getFuelSupplierActionTypes());
 store.dispatch(getFuelSupplierStatuses());
+store.dispatch(getFuelSupplierTypes());
+store.dispatch(getUsers());
 
 ReactDOM.render(
 	<Provider store={store}>

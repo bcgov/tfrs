@@ -2,7 +2,9 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { 
   getFuelSupplier,
-  getFuelSupplierContacts 
+  getFuelSupplierContacts,
+  getFuelSupplierType,
+  getFuelSupplierStatus
 } from '../../actions/fuelSuppliersActions.jsx';
 import * as ReducerTypes from '../../constants/reducerTypes.jsx';
 import { addContact, verifyID, verifyIDReset } from '../../actions/fuelSuppliersActions.jsx';
@@ -25,8 +27,11 @@ class FuelSupplierDetails extends Component {
   }
   
   componentDidMount() {
-    this.props.getFuelSupplier(this.props.match.params.id);
-    this.props.getFuelSupplierContacts(this.props.match.params.id);
+    let id = this.props.match.params.id;
+    this.props.getFuelSupplier(id);
+    this.props.getFuelSupplierContacts(id);
+    this.props.getFuelSupplierType(id);
+    this.props.getFuelSupplierStatus(id)
   }
 
   openAddContactModal() {
@@ -79,7 +84,7 @@ class FuelSupplierDetails extends Component {
         <h1 className='header'>Correspondence</h1>
         <div className='right-toolbar-container'> 
           <div className="actions-container">
-            <button className="btn btn-primary">Add</button>
+            <button className="btn-link">Add</button>
             <label className="checkbox"> 
               <input type="checkbox" />
               All Years
@@ -114,6 +119,10 @@ class FuelSupplierDetails extends Component {
         { this.props.fuelSupplierData &&
         <div>
           <h1 className="col-lg-12">{this.props.fuelSupplierData.name}</h1>
+          <div className="col-lg-12">
+            <span>{this.props.fuelSupplierType && this.props.fuelSupplierType.type}</span>
+            <span> - {this.props.fuelSupplierStatus && this.props.fuelSupplierStatus.status}</span>
+          </div>
           <div className="row">
             <div className="col-xs-12 col-sm-12 col-md-6 col-lg-6">
               <div className="fuel-supplier-info">
@@ -147,8 +156,8 @@ class FuelSupplierDetails extends Component {
             </div>
             <div className="contacts col-xs-12 col-sm-12 col-md-6 col-lg-6">
               <button 
-                className="btn btn-primary"
-                onClick={() => this.openAddContactModal()}>Add</button>
+                className="btn-link add-btn"
+                onClick={() => this.openAddContactModal()}>Add Contact</button>
               <BootstrapTable data={this.props.fuelSupplierContacts.data}>
                 <TableHeaderColumn 
                   dataField="name"
@@ -225,6 +234,8 @@ export default connect (
   state => ({
     fuelSupplierData: state.rootReducer[ReducerTypes.GET_FUEL_SUPPLIER].data,
     fuelSupplierContacts: state.rootReducer[ReducerTypes.FUEL_SUPPLIER_CONTACTS],
+    fuelSupplierType: state.rootReducer[ReducerTypes.FUEL_SUPPLIER_TYPE].data,
+    fuelSupplierStatus: state.rootReducer[ReducerTypes.FUEL_SUPPLIER_STATUS].data,
     verifyIDSuccess: state.rootReducer[ReducerTypes.VERIFY_ID].success,
     verifyIDError: state.rootReducer[ReducerTypes.VERIFY_ID].errorMessage,
   }),
@@ -234,6 +245,12 @@ export default connect (
     },
     getFuelSupplierContacts: (id) => {
       dispatch(getFuelSupplierContacts(id));
+    },
+    getFuelSupplierType: (id) => {
+      dispatch(getFuelSupplierType(id));
+    },
+    getFuelSupplierStatus: (id) => {
+      dispatch(getFuelSupplierStatus(id));
     },
     addContact: (data) => {
       dispatch(addContact(data));

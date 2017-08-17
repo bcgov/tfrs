@@ -38,7 +38,20 @@ const getFuelSuppliersError = (error) => {
 }
 
 export const searchFuelSuppliers = (name, city) => (dispatch) => {
-  dispatch(searchFuelSuppliersSuccess(fuelSuppliers));
+  dispatch(searchFuelSuppliersRequest());
+  axios.get(Routes.BASE_URL + Routes.SEARCH_FUEL_SUPPLIERS)
+  .then((response) => {   
+    dispatch(searchFuelSuppliersSuccess(response.data));
+  }).catch((error) => {
+    dispatch(searchFuelSuppliersError(error.response))
+  })
+}
+
+const searchFuelSuppliersRequest = () => {
+  return {
+    name: ReducerTypes.GET_FUEL_SUPPLIERS,
+    type: ActionTypes.SUCCESS,
+  }
 }
 
 const searchFuelSuppliersSuccess = (fuelSuppliers) => {
@@ -46,6 +59,14 @@ const searchFuelSuppliersSuccess = (fuelSuppliers) => {
     name: ReducerTypes.SEARCH_FUEL_SUPPLIERS,
     type: ActionTypes.SUCCESS,
     data: fuelSuppliers,
+  }
+}
+
+const searchFuelSuppliersError = (error) => {
+  return {
+    name: ReducerTypes.GET_FUEL_SUPPLIERS,
+    type: ActionTypes.SUCCESS,
+    errorMessage: error
   }
 }
 
@@ -241,6 +262,105 @@ const getFuelSupplierStatusesError = (error) => {
   }
 }
 
+export const getFuelSupplierStatus = (id) => (dispatch) => {
+  dispatch(getFuelSupplierStatusRequest());
+  axios.get(Routes.BASE_URL + Routes.FUEL_SUPPLIER_STATUSES + '/' + id)
+  .then((response) => {
+    dispatch(getFuelSupplierStatusSuccess(response.data));
+  }).catch((error) => {
+    dispatch(getFuelSupplierStatusError(error.response))
+  })
+}
+
+const getFuelSupplierStatusRequest = () => {
+  return {
+    name: ReducerTypes.FUEL_SUPPLIER_STATUS,
+    type: ActionTypes.SUCCESS,
+  }
+}
+
+const getFuelSupplierStatusSuccess = (fuelSuppliers) => {
+  return {
+    name: ReducerTypes.FUEL_SUPPLIER_STATUS,
+    type: ActionTypes.SUCCESS,
+    data: fuelSuppliers,
+  }
+}
+
+const getFuelSupplierStatusError = (error) => {
+  return {
+    name: ReducerTypes.FUEL_SUPPLIER_STATUS,
+    type: ActionTypes.SUCCESS,
+    errorMessage: error
+  }
+}
+
+export const getFuelSupplierTypes = () => (dispatch) => {
+  dispatch(getFuelSupplierTypesRequest());
+  axios.get(Routes.BASE_URL + Routes.FUEL_SUPPLIER_TYPES)
+  .then((response) => {
+    dispatch(getFuelSupplierTypesSuccess(response.data));
+  }).catch((error) => {
+    dispatch(getFuelSupplierTypesError(error.response))
+  })
+}
+
+const getFuelSupplierTypesRequest = () => {
+  return {
+    name: ReducerTypes.FUEL_SUPPLIER_TYPES,
+    type: ActionTypes.SUCCESS,
+  }
+}
+
+const getFuelSupplierTypesSuccess = (fuelSuppliers) => {
+  return {
+    name: ReducerTypes.FUEL_SUPPLIER_TYPES,
+    type: ActionTypes.SUCCESS,
+    data: fuelSuppliers,
+  }
+}
+
+const getFuelSupplierTypesError = (error) => {
+  return {
+    name: ReducerTypes.FUEL_SUPPLIER_TYPES,
+    type: ActionTypes.SUCCESS,
+    errorMessage: error
+  }
+}
+
+export const getFuelSupplierType = (id) => (dispatch) => {
+  dispatch(getFuelSupplierTypeRequest());
+  axios.get(Routes.BASE_URL + Routes.FUEL_SUPPLIER_TYPES + '/' + id)
+  .then((response) => {
+    dispatch(getFuelSupplierTypeSuccess(response.data));
+  }).catch((error) => {
+    dispatch(getFuelSupplierTypeError(error.response))
+  })
+}
+
+const getFuelSupplierTypeRequest = () => {
+  return {
+    name: ReducerTypes.FUEL_SUPPLIER_TYPE,
+    type: ActionTypes.SUCCESS,
+  }
+}
+
+const getFuelSupplierTypeSuccess = (fuelSuppliers) => {
+  return {
+    name: ReducerTypes.FUEL_SUPPLIER_TYPE,
+    type: ActionTypes.SUCCESS,
+    data: fuelSuppliers,
+  }
+}
+
+const getFuelSupplierTypeError = (error) => {
+  return {
+    name: ReducerTypes.FUEL_SUPPLIER_TYPE,
+    type: ActionTypes.SUCCESS,
+    errorMessage: error
+  }
+}
+
 export const getFuelSupplierContacts = () => (dispatch) => {
   dispatch(getFuelSupplierContactsRequest());
   axios.get(Routes.BASE_URL + Routes.FUEL_SUPPLIER_CONTACTS)
@@ -273,3 +393,4 @@ const getFuelSupplierContactsError = (error) => {
     errorMessage: error
   }
 }
+

@@ -28,6 +28,7 @@ export const FUEL_SUPPLIER_HISTORIES = 'api/fuelsupplierhistories';
 export const FUEL_SUPPLIERS_CC_DATIUM = 'api/fuelsuppliersCCDatum';
 export const FUEL_SUPPLIER_STATUSES = 'api/fuelsupplierstatuses';
 export const FUEL_SUPPLIER_TYPES = 'api/fuelsuppliertypes';
+export const SEARCH_FUEL_SUPPLIERS = 'api/fuelsuppliers/search';
 
 export const CREDIT_TRADE_API = '/api/credittrades';
 export const SEARCH_CREDIT_TRADES = '/api/credittrades/search';

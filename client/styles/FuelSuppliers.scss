@@ -41,8 +41,22 @@
     border-radius: 5px;
   }
 
-  .contacts .react-bs-table {
-    max-height: 300px;
-    overflow: auto;
+  .contacts {
+    margin: 1rem 0;
+
+    .add-btn {
+      position: absolute;
+      right: 1rem;
+      top: -3rem;
+
+      @include large {
+        position: initial;
+      }
+    }
+
+    .react-bs-table {
+      max-height: 300px;
+      overflow: auto;
+    }
   }
 }
