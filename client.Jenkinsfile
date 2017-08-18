@@ -30,7 +30,7 @@ node('maven') {
         echo "SONARQUBE_URL: ${SONARQUBE_URL}"
 
         dir('sonar-runner') {
-            sh returnStdout: true, script: "./gradlew sonarqube -Dsonar.lanuage=js -Dsonar.projectKey=org.sonarqube:tfrs-client sonar.projectName='TFRS Server Project :: Client'   -Dsonar.host.url=${SONARQUBE_URL} -Dsonar.verbose=true --stacktrace --info  -Dsonar.sources=../client"
+            sh returnStdout: true, script: "./gradlew sonarqube -Dsonar.lanuage=js -Dsonar.projectKey=org.sonarqube:tfrs-client sonar.projectName='TFRS Client Project'   -Dsonar.host.url=${SONARQUBE_URL} -Dsonar.verbose=true --stacktrace --info  -Dsonar.sources=../client"
         }
     }
 	
