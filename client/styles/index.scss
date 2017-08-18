@@ -5,6 +5,7 @@
 @import './Dashboard.scss';
 @import './Notifications.scss';
 @import './Opportunities.scss';
+@import './CreditTransfers.scss';
 
 body {
   margin: 0;
@@ -14,7 +15,7 @@ body {
 
 #main {
   position: relative; 
-  padding: 2rem 0;
+  padding: 2rem;
   padding-bottom: 70px;
 
   @include tablet {
@@ -28,6 +29,10 @@ body {
 
 #header .bcgov-title h1 {
   font-weight: 400;
+}
+
+h1 {
+  font-weight: 500;
 }
 
 // Tables 

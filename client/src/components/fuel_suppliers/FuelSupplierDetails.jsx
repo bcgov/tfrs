@@ -5,6 +5,7 @@ import * as ReducerTypes from '../../constants/reducerTypes.jsx';
 import { addContact, verifyID, verifyIDReset } from '../../actions/fuelSuppliersActions.jsx';
 import { Modal } from 'react-bootstrap';
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
+import AddContactForm from './AddContactForm.jsx';
 
 class FuelSupplierDetails extends Component {
   constructor(props) {
@@ -151,99 +152,15 @@ class FuelSupplierDetails extends Component {
               <Modal.Header closeButton>
                 <Modal.Title id="contained-modal-title">Add Contact</Modal.Title>
               </Modal.Header>
-              <form className="form-horizontal add-contact-form" onSubmit={() => this.handleAddContact()}>
               <Modal.Body>
-                  <div className="form-group">
-                    <label className="control-label col-sm-2" htmlFor="contact-name">Name:</label>
-                    <div className="col-sm-10">
-                      <input 
-                        type="text" 
-                        className="form-control" 
-                        id="contact-name"
-                        name="contactName"
-                        onChange={(event) => this.handleInputChange(event)} />
-                    </div>
-                  </div>
-                  <div className="form-group">
-                    <label className="control-label col-sm-2" htmlFor="contact-role">Role:</label>
-                    <div className="col-sm-10">
-                      <select 
-                        className="form-control" 
-                        id="contact-role" 
-                        name="contactRole"
-                        onChange={(event) => this.handleInputChange(event)} >
-                        <option>1</option>
-                        <option>2</option>
-                        <option>3</option>
-                        <option>4</option>
-                      </select>
-                    </div>
-                  </div>
-                  <div className="form-group">
-                    <label className="control-label col-sm-2" htmlFor="contact-email">Email:</label>
-                    <div className="col-sm-10">
-                      <input 
-                        type="email" 
-                        className="form-control" 
-                        id="contact-email"
-                        name="contactEmail"
-                        onChange={(event) => this.handleInputChange(event)} />
-                    </div>
-                  </div>
-                  <div className="form-group">
-                    <label className="control-label col-sm-2" htmlFor="contact-work-phone">Work Phone:</label>
-                    <div className="col-sm-10">
-                      <input 
-                        type="text" 
-                        className="form-control" 
-                        id="contact-work-phone" 
-                        name="contactWorkPhone"
-                        onChange={(event) => this.handleInputChange(event)} />
-                    </div>
-                  </div>
-                  <div className="form-group">
-                    <label className="control-label col-sm-2" htmlFor="contact-cell-phone">Cell Phone:</label>
-                    <div className="col-sm-10">
-                      <input 
-                        type="text" 
-                        className="form-control" 
-                        id="contact-cell-phone"
-                        name="contactCellPhone"
-                        onChange={(event) => this.handleInputChange(event)} />
-                    </div>
-                  </div>
-                  <div className="form-group">
-                    <label className="control-label col-sm-2" htmlFor="contact-bceid">BCeID:</label>
-                    <div className="col-sm-10">
-                      <input 
-                        type="text" 
-                        className="form-control" 
-                        id="contact-bceid"
-                        name="contactBCeID"
-                        onChange={(event) => this.handleInputChange(event)} />
-                      { this.props.verifyIDSuccess && 
-                        <div className="alert alert-success">Valid BCeID</div>
-                      }
-                      { this.props.verifyIDError.length > 0 && 
-                        <div className="alert alert-warning">{this.props.verifyIDError}</div>
-                      }
-                      <input 
-                        type="button" 
-                        className="btn btn-default verify-btn" 
-                        value="verify"
-                        onClick={() => this.handleVerifyID()} />
-                    </div>
-                  </div>
+                <AddContactForm
+                  closeAddContactModal={() => this.closeAddContactModal()} 
+                  fuelSupplierData={this.props.fuelSupplierData}
+                  verifyIDSuccess={this.props.verifyIDSuccess}
+                  verifyIDError={this.props.verifyIDError}
+                  addContact={(contact) => this.props.addContact(contact)}
+                />
               </Modal.Body>
-              <Modal.Footer>
-                <div className="form-group"> 
-                  <div className="col-sm-offset-2 col-sm-10 btn-container">
-                    <input type="button" className="btn btn-default" onClick={() => this.closeAddContactModal()} value="Cancel" />
-                    <input type="submit" className="btn btn-primary" value="save" />
-                  </div>
-                </div>
-              </Modal.Footer>
-            </form>
             </Modal>
           </div>
       </div>

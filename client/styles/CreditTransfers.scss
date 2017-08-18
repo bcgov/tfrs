@@ -1,0 +1,186 @@
+@import './variables.scss';
+@import './mixins.scss';
+
+.credit-transfer {
+
+  .note {
+    display: block;
+
+    label {
+      display: block;
+    }
+  }
+
+  .credit-transfer-progress-bar {
+    padding: 1rem 2rem 1rem 0rem;
+
+    @include mobile {
+      padding: 1rem 0;
+    }
+    
+    .clearfix:after {
+      clear: both;
+      content: "";
+      display: block;
+      height: 0;
+    }
+
+    .container {
+      font-family: 'Lato', sans-serif;
+      width: 1000px;
+      margin: 0 auto;
+    }
+
+    .wrapper {
+      display: table-cell;
+      height: 400px;
+      vertical-align: middle;
+    }
+
+    .nav {
+      margin-top: 40px;
+    }
+
+    .pull-right {
+      float: right;
+    }
+
+    a, a:active {
+      color: #333;
+      text-decoration: none;
+    }
+
+    a:hover {
+      color: #999;
+    }
+
+    /* Breadcrups CSS */
+
+    .arrow-steps {
+      @include flex;
+
+      @include mobile {
+        display: block;
+      }
+    
+      .step {
+        font-size: 14px;
+        text-align: center;
+        color: $light-font;
+        cursor: default;
+        margin: 0 3px;
+        padding: 8px 10px 8px 30px;
+        width: 24%;
+        float: left;
+        position: relative;
+        background-color: rgba(217, 227, 247, 0.36);
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none; 
+        transition: background-color 0.2s ease;
+
+        @include mobile {
+          width: 100%;
+        }
+      }
+
+      .step:after,
+      .step:before {
+        content: " ";
+        position: absolute;
+        top: 0;
+        right: -17px;
+        width: 0;
+        height: 0;
+        border-top: 19px solid transparent;
+        border-bottom: 17px solid transparent;
+        border-left: 17px solid rgba(217, 227, 247, 0.36);	
+        z-index: 2;
+        transition: border-color 0.2s ease;
+
+        @include mobile {
+          content: none;
+        }
+      }
+
+      .step:before {
+        right: auto;
+        left: 0;
+        border-left: 17px solid #fff;	
+        z-index: 0;
+      }
+
+      .step:first-child:before {
+        border: none;
+      }
+
+      .step:first-child {
+        border-top-left-radius: 4px;
+        border-bottom-left-radius: 4px;
+      }
+
+      .step span {
+        position: relative;
+      }
+
+      .step span:before {
+        opacity: 0;
+        content: "✔";
+        position: absolute;
+        top: -2px;
+        left: -20px;
+      }
+
+      .step.done span:before {
+        opacity: 1;
+        -webkit-transition: opacity 0.3s ease 0.5s;
+        -moz-transition: opacity 0.3s ease 0.5s;
+        -ms-transition: opacity 0.3s ease 0.5s;
+        transition: opacity 0.3s ease 0.5s;
+      }
+
+      .step.current {
+        color: #fff;
+        background-color: #23468c;
+
+        & ~ .step {
+          background-color: #d9e3f7;
+          color: $medium-font;
+
+          &:after {
+            border-left: 17px solid #d9e3f7;	
+          }
+        }
+      }
+
+      .step.current:after {
+        border-left: 17px solid #23468c;	
+      }
+    }
+  }
+
+  .main-form {
+    padding: 2rem;
+    border: 1px solid $border-grey;
+    border-radius: 5px;
+
+    input, select {
+      margin: 0.5rem 0.5rem 0.5rem 0;
+    }
+    
+    .form-group {
+      margin-bottom: 0;
+    }
+  }
+
+  .note {
+    display: block;
+    padding-bottom: 1rem;
+
+    textarea {
+      display: block;
+      width: 100%;
+    }
+  }
+}

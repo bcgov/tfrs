@@ -181,8 +181,10 @@ export const opportunities = [
 ]
 
 export const CreditTransfer = {
+  id: 1,
   initiator: 'BC Any Fuels',
   respondent: 'Ultramor', 
+  status: "Proposed",
   trade_effective_date: Date.now(),
   number_of_credits: 100,
   fair_market_value_per_credit: 10,

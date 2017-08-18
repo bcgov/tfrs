@@ -70,8 +70,14 @@ class RecentAccountActivityTable extends Component {
             }
           </Modal.Body>
           <Modal.Footer>
-            <button type="button" className="btn btn-default" onClick={() => this.handleCloseModal()}>Cancel</button>
-            <button type="button" className="btn btn-primary" onClick={() => this.props.handleAcceptCreditTransfer(this.state.modalProposalID, this.state.note)}>Accept</button>
+            { !this.props.acceptCreditTransferSuccess ? 
+              <div>
+                <button type="button" className="btn btn-default" onClick={() => this.handleCloseModal()}>Cancel</button>
+                <button type="button" className="btn btn-primary" onClick={() => this.props.handleAcceptCreditTransfer(this.state.modalProposalID, this.state.note)}>Accept</button>
+              </div> 
+              : 
+              <button type="button" className="btn btn-primary" onClick={() => this.handleCloseModal()}>Okay</button>
+            }
           </Modal.Footer>
         </Modal>
       </div>
