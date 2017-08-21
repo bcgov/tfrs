@@ -28,8 +28,9 @@ from .User import User
 from .CreditTradeType import CreditTradeType
 from .FuelSupplierType import FuelSupplierType
 
+from auditable.models import Auditable
 
-class OpportunityHistory(models.Model):	    
+class OpportunityHistory(Auditable):	    
     opportunityFK = models.ForeignKey('Opportunity', related_name='OpportunityHistoryopportunityFK')   
     userFK = models.ForeignKey('User', related_name='OpportunityHistoryuserFK')   
     updateTime = models.DateField(blank=True, null=True)   
@@ -39,4 +40,6 @@ class OpportunityHistory(models.Model):
     fuelSupplierTypeFK = models.ForeignKey('FuelSupplierType', related_name='OpportunityHistoryfuelSupplierTypeFK')   
     newTradeEffectiveDate = models.DateField(blank=True, null=True)   
     note = models.CharField(max_length=4000, blank=True, null=True)   
+    class Meta:
+        db_table = 'OPPORTUNITY_HISTORY'
 

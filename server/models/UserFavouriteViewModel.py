@@ -24,7 +24,6 @@ import datetime
 from django.db import models
 from django.utils import timezone
 
-
 class UserFavouriteViewModel(models.Model):	    
     name = models.CharField(max_length=255, blank=True, null=True)   
     value = models.CharField(max_length=255, blank=True, null=True)   
@@ -32,4 +31,3 @@ class UserFavouriteViewModel(models.Model):
     type = models.CharField(max_length=255, blank=True, null=True)   
     class Meta:
       abstract = True
-

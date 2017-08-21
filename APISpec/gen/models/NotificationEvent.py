@@ -26,11 +26,14 @@ from django.utils import timezone
 from .CreditTrade import CreditTrade
 from .Opportunity import Opportunity
 
+from auditable.models import Auditable
 
-class NotificationEvent(models.Model):	    
+class NotificationEvent(Auditable):	    
     eventTime = models.DateField(blank=True, null=True)   
     eventTypeCode = models.CharField(max_length=25, blank=True, null=True)   
     notes = models.CharField(max_length=1000, blank=True, null=True)   
     creditTradeFK = models.ForeignKey('CreditTrade', related_name='NotificationEventcreditTradeFK', blank=True, null=True)   
     opportunityFK = models.ForeignKey('Opportunity', related_name='NotificationEventopportunityFK', blank=True, null=True)   
+    class Meta:
+        db_table = 'NOTIFICATION_EVENT'
 

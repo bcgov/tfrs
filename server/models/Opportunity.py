@@ -29,8 +29,9 @@ from .CreditTradeType import CreditTradeType
 from .FuelSupplierType import FuelSupplierType
 from .CreditTrade import CreditTrade
 
+from auditable.models import Auditable
 
-class Opportunity(models.Model):	    
+class Opportunity(Auditable):	    
     fuelSupplierFK = models.ForeignKey('FuelSupplier', related_name='OpportunityfuelSupplierFK')   
     opportunityStatusFK = models.ForeignKey('OpportunityStatus', related_name='OpportunityopportunityStatusFK')   
     creditTradeTypeFK = models.ForeignKey('CreditTradeType', related_name='OpportunitycreditTradeTypeFK')   
@@ -42,4 +43,6 @@ class Opportunity(models.Model):
     postedDate = models.DateField(blank=True, null=True)   
     opportunityBackgroundNote = models.CharField(max_length=4000, blank=True, null=True)   
     creditTradesSet = models.ManyToManyField('CreditTrade', related_name='OpportunitycreditTradesSet', blank=True)   
+    class Meta:
+        db_table = 'OPPORTUNITY'
 

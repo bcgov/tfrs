@@ -25,7 +25,6 @@ from django.db import models
 from django.utils import timezone
 from .UserRole import UserRole
 
-
 class CurrentUserViewModel(models.Model):	    
     givenName = models.CharField(max_length=255, blank=True, null=True)   
     surname = models.CharField(max_length=255, blank=True, null=True)   
@@ -36,4 +35,3 @@ class CurrentUserViewModel(models.Model):
     smAuthorizationDirectory = models.CharField(max_length=255, blank=True, null=True)   
     class Meta:
       abstract = True
-

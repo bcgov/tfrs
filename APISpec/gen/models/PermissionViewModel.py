@@ -24,11 +24,9 @@ import datetime
 from django.db import models
 from django.utils import timezone
 
-
 class PermissionViewModel(models.Model):	    
     code = models.CharField(max_length=255)   
     name = models.CharField(max_length=255)   
     description = models.CharField(max_length=255)   
     class Meta:
       abstract = True
-

@@ -25,7 +25,6 @@ from django.db import models
 from django.utils import timezone
 from .UserRole import UserRole
 
-
 class UserViewModel(models.Model):	    
     givenName = models.CharField(max_length=255, blank=True, null=True)   
     surname = models.CharField(max_length=255, blank=True, null=True)   
@@ -35,4 +34,3 @@ class UserViewModel(models.Model):
     userRoles = models.ManyToManyField('UserRole', related_name='UserViewModeluserRoles', blank=True)   
     class Meta:
       abstract = True
-

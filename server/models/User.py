@@ -24,8 +24,9 @@ import datetime
 from django.db import models
 from django.utils import timezone
 
+from auditable.models import Auditable
 
-class User(models.Model):	    
+class User(Auditable):	    
     authorizationID = models.CharField(max_length=500, blank=True, null=True)   
     givenName = models.CharField(max_length=100)   
     surname = models.CharField(max_length=100)   
@@ -33,4 +34,6 @@ class User(models.Model):
     userId = models.CharField(max_length=500, blank=True, null=True)   
     guid = models.CharField(max_length=100, blank=True, null=True)   
     authorizationDirectory = models.CharField(max_length=100, blank=True, null=True)   
+    class Meta:
+        db_table = 'USER'
 

@@ -25,7 +25,10 @@ from django.db import models
 from django.utils import timezone
 from .Role import Role
 
+from auditable.models import Auditable
 
-class FuelSupplierContactRole(models.Model):	    
+class FuelSupplierContactRole(Auditable):	    
     roleFK = models.ForeignKey('Role', related_name='FuelSupplierContactRoleroleFK')   
+    class Meta:
+        db_table = 'FUEL_SUPPLIER_CONTACT_ROLE'
 
