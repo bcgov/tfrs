@@ -9,6 +9,7 @@ import {
   approveCreditTransfer,
   rejectCreditTransfer,
   rescindProposal } from '../../actions/accountActivityActions.jsx';
+import { getFuelSuppliers } from '../../actions/fuelSuppliersActions.jsx';
 import { BootstrapTable, TableHeaderColumn, ButtonGroup } from 'react-bootstrap-table';
 
 class CreditTransfer extends Component {
@@ -16,6 +17,8 @@ class CreditTransfer extends Component {
     super(props);
     this.state = {
       proposalType: '',
+      valuePerCredit: '',
+      numberOfCredits: '',
       showRescindCreditTransferModal: false,
       showApproveCreditTransferModal: false,
       showRejectProposalModal: false,
@@ -23,8 +26,18 @@ class CreditTransfer extends Component {
   }
 
   componentDidMount() {
+    this.props.getFuelSuppliers();
     if (this.props.match.params.id) {
       this.props.getCreditTransfer(this.props.match.params.id);
+    }
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    if (!prevProps.data && this.props.data && this.props.data.fairMarketValuePerCredit && this.props.data.numberOfCredits) {
+      this.setState({
+        valuePerCredit: this.props.data.fairMarketValuePerCredit,
+        numberOfCredits: this.props.data.numberOfCredits
+      })
     }
   }
 
@@ -52,44 +65,36 @@ class CreditTransfer extends Component {
   render() {
     return (
       <div className="credit-transfer">
-        <h1>Credit Transfer {this.props.data.respondent && "Sell to " + this.props.data.respondent + " Proposed " + this.props.data.trade_effective_date}</h1>
-        { this.props.data.status === Values.STATUS_DRAFT && 
-          <button type="button" className="btn btn-danger">Delete Credit Transfer</button>
-        }
-        { this.props.data.status === Values.STATUS_PROPOSED && 
-          <button 
-            type="button" 
-            className="btn btn-danger"
-            onClick={() => this.setState({showRescindCreditTransferModal: true})}
-          >
-          Rescind Credit Transfer
-          </button>
-        }
-        { this.props.data.status === Values.STATUS_APPROVED && 
-          <button type="button" className="btn btn-danger">Rescind Credit Transfer</button>
-        }
-        <div className="credit-transfer-progress-bar">
-          <div className="arrow-steps clearfix">
-            <div className={this.props.data.status === "Proposed" ? "step current" : "step"}><span>Proposed</span></div>
-            <div className={this.props.data.status === "Accepted" ? "step current" : "step"}><span>Accepted</span></div>
-            <div className={this.props.data.status === "Approved" ? "step current" : "step"}><span>Approved</span></div>
-            <div className={this.props.data.status === "Complete" ? "step current" : "step"}><span>Complete</span></div>
+        { this.props.data &&
+        <div>
+          <h1>Credit Transfer {this.props.data && "Sell to " + this.props.data.respondentFK + " Proposed " + this.props.data.tradeEffectiveDate}</h1>
+          { this.props.data.creditTradeStatusFK === Values.STATUS_DRAFT && 
+            <button type="button" className="btn btn-danger">Delete Credit Transfer</button>
+          }
+          { this.props.data.status === Values.STATUS_PROPOSED && 
+            <button 
+              type="button" 
+              className="btn btn-danger"
+              onClick={() => this.setState({showRescindCreditTransferModal: true})}
+            >
+            Rescind Credit Transfer
+            </button>
+          }
+          { this.props.data.status === Values.STATUS_APPROVED && 
+            <button type="button" className="btn btn-danger">Rescind Credit Transfer</button>
+          }
+          <div className="credit-transfer-progress-bar">
+            <div className="arrow-steps clearfix">
+              <div className={this.props.data.creditTradeStatusFK === "Proposed" ? "step current" : "step"}><span>Proposed</span></div>
+              <div className={this.props.data.creditTradeStatusFK === "Accepted" ? "step current" : "step"}><span>Accepted</span></div>
+              <div className={this.props.data.creditTradeStatusFK === "Approved" ? "step current" : "step"}><span>Approved</span></div>
+              <div className={this.props.data.creditTradeStatusFK === "Complete" ? "step current" : "step"}><span>Complete</span></div>
+            </div>
           </div>
-        </div>
-        <div className="credit-transfer-details">
-          { (this.props.data.initiator || !this.props.match.params.id) &&
+          <div className="credit-transfer-details">
             <form className="form-inline" onSubmit={(event) => this.handleSubmit(event)}>
               <div className="main-form">
-                <div className="form-group">
-                  <input 
-                    type="text" 
-                    className="form-control" 
-                    id="initiator" 
-                    name="initiator"
-                    defaultValue={this.props.data.initiator}
-                    ref={(input) => this.initiator = input} />
-                </div>
-                <span>proposes to </span>
+                <span>{this.props.data.initiatorFK} proposes to </span>
                 <div className="form-group">
                   <select 
                     className="form-control" 
@@ -107,18 +112,26 @@ class CreditTransfer extends Component {
                     className="form-control" 
                     id="number-of-credits" 
                     name="numberOfCredits"
-                    defaultValue={this.props.data.number_of_credits}
+                    defaultValue={this.props.data.numberOfCredits}
+                    onChange={(event) => this.handleInputChange(event)}
                     ref={(input) => this.numberOfCredits = input} />
                 </div>
-                <span>{this.state.proposalType === "Buy" ? "credits from" : "credits to"}</span>
+                <span>{this.state.proposalType === "Buy" ? "credits from " : "credits to "}</span>
                 <div className="form-group">
-                  <input 
-                    type="text" 
+                  <select 
                     className="form-control" 
                     id="respondent" 
                     name="respondent"
-                    defaultValue={this.props.data.respondent}
-                    ref={(input) => this.respondent = input} />
+                    ref={(input) => this.respondentFK = input}
+                    onChange={(event) => this.handleInputChange(event)}>
+                    { this.props.data.respondentFK &&
+                      <option>{this.props.data.respondentFK}</option>
+                    }
+                    { this.props.fuelSuppliers &&
+                      this.props.fuelSuppliers.map((fuelSupplier) => (
+                        <option value={fuelSupplier.id}>{fuelSupplier.name}</option>
+                    ))}
+                  </select>
                 </div>
                 <span>for </span>
                 <div className="form-group">
@@ -127,13 +140,12 @@ class CreditTransfer extends Component {
                     className="form-control" 
                     id="value-per-credit" 
                     name="valuePerCredit"
-                    defaultValue={this.props.data.fair_market_value_per_credit}
+                    onChange={(event) => this.handleInputChange(event)}
+                    defaultValue={this.props.data.fairMarketValuePerCredit}
                     ref={(input) => this.valuePerCredit = input} />
                 </div>
                 <span>per credit for a total value of $</span>
-                <span>{
-                  this.props.data.fair_market_value_per_credit * this.props.data.number_of_credits
-                }</span>
+                <span>{ this.state.valuePerCredit * this.state.numberOfCredits }</span>
                 <span> effective on Director's Approval</span>
               </div>
               <div className="form-group note">
@@ -183,96 +195,97 @@ class CreditTransfer extends Component {
                 </div>
               }
             </form>
-          }
+          </div>
+          <Modal
+            container={this}
+            show={this.state.showRescindCreditTransferModal}
+            onHide={() => this.setState({showRescindCreditTransferModal: false})}
+            aria-labelledby="contained-modal-title"
+            className="new-fuel-supplier-modal"
+          >
+          <Modal.Header closeButton>
+            <Modal.Title id="contained-modal-title">Rescind Credit Transfer</Modal.Title>
+          </Modal.Header>
+            <Modal.Body>
+              Clicking "Rescind Proposal" will cancel this proposed Credit Transfer
+            </Modal.Body>
+            <Modal.Footer>
+              <button 
+                type="button" 
+                className="btn btn-default"
+                onClick={() => this.setState({showRescindCreditTransferModal: false})}
+              >
+                Cancel
+              </button>
+              <button 
+                type="button" 
+                className="btn btn-danger" 
+                onClick={(id) => this.props.rescindProposal(this.props.data.id)}
+              >
+                Rescind Proposal
+              </button>
+            </Modal.Footer>
+          </Modal>
+          <Modal
+            container={this}
+            show={this.state.showApproveCreditTransferModal}
+            onHide={() => this.setState({showApproveCreditTransferModal: false})}
+            aria-labelledby="contained-modal-title"
+            className="new-fuel-supplier-modal"
+          >
+          <Modal.Header closeButton>
+            <Modal.Title id="contained-modal-title">Approve Credit Transfer</Modal.Title>
+          </Modal.Header>
+            <Modal.Body>
+            </Modal.Body>
+            <Modal.Footer>
+              <button 
+                type="button" 
+                className="btn btn-default" 
+                onClick={() => this.setState({showApproveCreditTransferModal: false})}
+              >
+                Cancel
+              </button>
+              <button 
+                type="button" 
+                className="btn btn-primary" 
+                onClick={(id) => this.props.approveCreditTransfer(this.props.data.id)}
+              >
+                Approve
+              </button>
+            </Modal.Footer>
+          </Modal>
+          <Modal
+            container={this}
+            show={this.state.showRejectProposalModal}
+            onHide={() => this.setState({showRejectProposalModal: false})}
+            aria-labelledby="contained-modal-title"
+            className="new-fuel-supplier-modal"
+          >
+          <Modal.Header closeButton>
+            <Modal.Title id="contained-modal-title">Reject Credit Transfer</Modal.Title>
+          </Modal.Header>
+            <Modal.Body>
+            </Modal.Body>
+            <Modal.Footer>
+              <button 
+                type="button" 
+                className="btn btn-default" 
+                onClick={() => this.setState({showRejectProposalModal: false})}
+              >
+                Cancel
+              </button>
+              <button 
+                type="button" 
+                className="btn btn-danger" 
+                onClick={(id) => this.props.rejectCreditTransfer(this.props.data.id)}
+              >
+                Reject Proposal
+              </button>
+            </Modal.Footer>
+          </Modal>
         </div>
-        <Modal
-          container={this}
-          show={this.state.showRescindCreditTransferModal}
-          onHide={() => this.setState({showRescindCreditTransferModal: false})}
-          aria-labelledby="contained-modal-title"
-          className="new-fuel-supplier-modal"
-        >
-        <Modal.Header closeButton>
-          <Modal.Title id="contained-modal-title">Rescind Credit Transfer</Modal.Title>
-        </Modal.Header>
-          <Modal.Body>
-            Clicking "Rescind Proposal" will cancel this proposed Credit Transfer
-          </Modal.Body>
-          <Modal.Footer>
-            <button 
-              type="button" 
-              className="btn btn-default"
-              onClick={() => this.setState({showRescindCreditTransferModal: false})}
-            >
-              Cancel
-            </button>
-            <button 
-              type="button" 
-              className="btn btn-danger" 
-              onClick={(id) => this.props.rescindProposal(this.props.data.id)}
-            >
-              Rescind Proposal
-            </button>
-          </Modal.Footer>
-        </Modal>
-        <Modal
-          container={this}
-          show={this.state.showApproveCreditTransferModal}
-          onHide={() => this.setState({showApproveCreditTransferModal: false})}
-          aria-labelledby="contained-modal-title"
-          className="new-fuel-supplier-modal"
-        >
-        <Modal.Header closeButton>
-          <Modal.Title id="contained-modal-title">Approve Credit Transfer</Modal.Title>
-        </Modal.Header>
-          <Modal.Body>
-          </Modal.Body>
-          <Modal.Footer>
-            <button 
-              type="button" 
-              className="btn btn-default" 
-              onClick={() => this.setState({showApproveCreditTransferModal: false})}
-            >
-              Cancel
-            </button>
-            <button 
-              type="button" 
-              className="btn btn-primary" 
-              onClick={(id) => this.props.approveCreditTransfer(this.props.data.id)}
-            >
-              Approve
-            </button>
-          </Modal.Footer>
-        </Modal>
-        <Modal
-          container={this}
-          show={this.state.showRejectProposalModal}
-          onHide={() => this.setState({showRejectProposalModal: false})}
-          aria-labelledby="contained-modal-title"
-          className="new-fuel-supplier-modal"
-        >
-        <Modal.Header closeButton>
-          <Modal.Title id="contained-modal-title">Reject Credit Transfer</Modal.Title>
-        </Modal.Header>
-          <Modal.Body>
-          </Modal.Body>
-          <Modal.Footer>
-            <button 
-              type="button" 
-              className="btn btn-default" 
-              onClick={() => this.setState({showRejectProposalModal: false})}
-            >
-              Cancel
-            </button>
-            <button 
-              type="button" 
-              className="btn btn-danger" 
-              onClick={(id) => this.props.rejectCreditTransfer(this.props.data.id)}
-            >
-              Reject Proposal
-            </button>
-          </Modal.Footer>
-        </Modal>
+        }
       </div>
     );
   }
@@ -280,7 +293,8 @@ class CreditTransfer extends Component {
 
 export default connect (
   state => ({
-    data: state.rootReducer[ReducerTypes.GET_CREDIT_TRANSFER].data
+    data: state.rootReducer[ReducerTypes.GET_CREDIT_TRANSFER].data,
+    fuelSuppliers: state.rootReducer[ReducerTypes.GET_FUEL_SUPPLIERS].data,
   }),
   dispatch => ({
     getCreditTransfer: (id) => {
@@ -297,6 +311,9 @@ export default connect (
     },
     rescindProposal: (id) => {
       dispatch(rescindProposal(id));
+    },
+    getFuelSuppliers: () => {
+      dispatch(getFuelSuppliers());
     }
   })
 )(CreditTransfer)

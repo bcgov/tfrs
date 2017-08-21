@@ -98,7 +98,7 @@ class AccountActivity extends Component {
           aria-labelledby="contained-modal-title"
         >
           <Modal.Header closeButton>
-            <Modal.Title id="contained-modal-title">Contained Modal</Modal.Title>
+            <Modal.Title id="contained-modal-title">Accept Proposal</Modal.Title>
           </Modal.Header>
           <Modal.Body>
             <p>{this.state.modalProposalDescription}</p>

@@ -36,14 +36,35 @@ export const acceptCreditTransferReset = () => {
 }
 
 export const getCreditTransfer = (id) => (dispatch) => {
-  dispatch(getCreditTransferSuccess(CreditTransfer));
+  dispatch(getCreditTransferRequest());
+  axios.get(Routes.BASE_URL + Routes.CREDIT_TRADE_API + '/' + id)
+  .then((response) => {   
+    dispatch(getCreditTransferSuccess(response.data));
+  }).catch((error) => {
+    dispatch(getCreditTransferError(error.response))
+  })
+}
+
+const getCreditTransferRequest = () => {
+  return {
+    name: ReducerTypes.GET_CREDIT_TRANSFER,
+    type: ActionTypes.SUCCESS,
+  }
 }
 
 const getCreditTransferSuccess = (data) => {
   return {
     name: ReducerTypes.GET_CREDIT_TRANSFER,
     type: ActionTypes.SUCCESS,
-    data: data
+    data: data,
+  }
+}
+
+const getCreditTransferError = (error) => {
+  return {
+    name: ReducerTypes.GET_CREDIT_TRANSFER,
+    type: ActionTypes.SUCCESS,
+    errorMessage: error
   }
 }
 

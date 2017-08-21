@@ -29,6 +29,11 @@
         margin: 0 0.5rem;
       }
     }
+
+    .react-bs-container-body {
+      max-height: 300px;
+      overflow: auto;
+    }
   }
 }
 

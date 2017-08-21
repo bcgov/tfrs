@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import * as Routes from '../../constants/routes.jsx';
 import { Link } from 'react-router-dom';
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
 import { Modal } from 'react-bootstrap';
@@ -36,7 +37,7 @@ class RecentAccountActivityTable extends Component {
     return (
       <div>
         <button className="simple-btn" onClick={() => this.handleAcceptClick(row)}>Accept</button>
-        <Link to="/" className="no-underline">View</Link>
+        <Link to={Routes.CREDIT_TRANSFER + row.id} className="no-underline">View</Link>
       </div>
     )
   }
@@ -57,7 +58,7 @@ class RecentAccountActivityTable extends Component {
           aria-labelledby="contained-modal-title"
         >
           <Modal.Header closeButton>
-            <Modal.Title id="contained-modal-title">Contained Modal</Modal.Title>
+            <Modal.Title id="contained-modal-title">Accept Proposal</Modal.Title>
           </Modal.Header>
           <Modal.Body>
             <p>{this.state.modalProposalDescription}</p>

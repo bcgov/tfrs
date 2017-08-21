@@ -31,8 +31,6 @@ class FuelSupplierDetails extends Component {
   componentDidMount() {
     let id = this.props.match.params.id;
     this.props.getFuelSupplier(id);
-    this.props.getFuelSupplierType(id);
-    this.props.getFuelSupplierStatus(id)
     if (this.props.fuelSupplierContacts.data != null) {
       this.filterContacts();
     }
@@ -47,7 +45,7 @@ class FuelSupplierDetails extends Component {
   filterContacts() {
     let id = parseInt(this.props.match.params.id);
     let contacts = this.props.fuelSupplierContacts.data.filter(contact => {
-      return contact['fuelSupplierId'] === id
+      return contact['fuelSupplierFK'] === id
     })
     this.setState({contacts: contacts});
   }
@@ -150,8 +148,16 @@ class FuelSupplierDetails extends Component {
         <div>
           <h1 className="col-lg-12">{this.props.fuelSupplierData.name}</h1>
           <div className="col-lg-12">
-            <span>{this.props.fuelSupplierType && this.props.fuelSupplierType.type}</span>
-            <span> - {this.props.fuelSupplierStatus && this.props.fuelSupplierStatus.status}</span>
+            {this.props.fuelSupplierTypes && 
+              this.props.fuelSupplierTypes.map((type) => (
+              type.id === this.props.fuelSupplierData.fuelSupplierTypeFK &&
+                <span>{type.description}</span>
+            ))}
+            {this.props.fuelSupplierStatuses && 
+              this.props.fuelSupplierStatuses.map((status) => (
+              status.id === this.props.fuelSupplierData.fuelSupplierStatusFK &&
+                <span> - {status.status}</span>
+            ))}
           </div>
           <div className="row">
             <div className="col-xs-12 col-sm-12 col-md-6 col-lg-6">
@@ -292,8 +298,8 @@ export default connect (
   state => ({
     fuelSupplierData: state.rootReducer[ReducerTypes.GET_FUEL_SUPPLIER].data,
     fuelSupplierContacts: state.rootReducer[ReducerTypes.FUEL_SUPPLIER_CONTACTS],
-    fuelSupplierType: state.rootReducer[ReducerTypes.FUEL_SUPPLIER_TYPE].data,
-    fuelSupplierStatus: state.rootReducer[ReducerTypes.FUEL_SUPPLIER_STATUS].data,
+    fuelSupplierTypes: state.rootReducer[ReducerTypes.FUEL_SUPPLIER_TYPES].data,
+    fuelSupplierStatuses: state.rootReducer[ReducerTypes.FUEL_SUPPLIER_STATUSES].data,
     verifyIDSuccess: state.rootReducer[ReducerTypes.VERIFY_ID].success,
     verifyIDError: state.rootReducer[ReducerTypes.VERIFY_ID].errorMessage,
   }),

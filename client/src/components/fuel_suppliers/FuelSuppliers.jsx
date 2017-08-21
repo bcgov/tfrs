@@ -61,7 +61,7 @@ class FuelSuppliers extends Component {
   statusFormatter(cell, row) {
     let statuses = this.props.fuelSupplierStatuses.data;
     let info = statuses.map((status) => {
-      if (row.fuelSupplierStatusId === status.id) {
+      if (row.fuelSupplierStatusFK === status.id) {
         return status.status
       }
     });
