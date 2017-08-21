@@ -30,13 +30,7 @@ node('maven') {
         echo "SONARQUBE_URL: ${SONARQUBE_URL}"
 
         dir('sonar-runner') {
-            sh returnStdout: true, script: "./gradlew sonarqube -Dsonar.host.url=${SONARQUBE_URL} -Dsonar.verbose=true --stacktrace --info  -Dsonar.sources=.."
-        }
-    }
-	
-	  stage('validation') {
-        dir('functional-tests') {
-            sh './gradlew --debug --stacktrace phantomJsTest'
+            sh returnStdout: true, script: "./gradlew sonarqube -Dsonar.host.url=${SONARQUBE_URL} -Dsonar.verbose=true --stacktrace --info  -Dsonar.sources=server"
         }
     }
 }
