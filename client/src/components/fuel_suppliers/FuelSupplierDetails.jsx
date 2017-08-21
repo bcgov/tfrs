@@ -6,11 +6,13 @@ import {
   getFuelSupplierStatus
 } from '../../actions/fuelSuppliersActions.jsx';
 import * as ReducerTypes from '../../constants/reducerTypes.jsx';
+import * as Values from '../../constants/values.jsx';
 import { addContact, verifyID, verifyIDReset } from '../../actions/fuelSuppliersActions.jsx';
 import { Modal } from 'react-bootstrap';
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
 import AddContactForm from './AddContactForm.jsx';
 import UploadDocumentForm from './UploadDocumentForm.jsx';
+import ChangeStatusForm from './ChangeStatusForm.jsx';
 
 class FuelSupplierDetails extends Component {
   constructor(props) {
@@ -18,6 +20,7 @@ class FuelSupplierDetails extends Component {
     this.state = {
       showAddContactModal: false,
       showUploadDocumentModal: false,
+      showChangeStatusModal: false,
       contactName: '',
       contactRole: '',
       contactEmail: '',
@@ -63,6 +66,14 @@ class FuelSupplierDetails extends Component {
     this.setState({showUploadDocumentModal: true})
   }
 
+  closeChangeStatusModal() {
+    this.setState({showChangeStatusModal: false});
+  }
+
+  openChangeStatusModal() {
+    this.setState({showChangeStatusModal: true})
+  }
+
   closeUploadDocumentModal() {
     this.setState({showUploadDocumentModal: false});
   }
@@ -96,6 +107,15 @@ class FuelSupplierDetails extends Component {
     )
   }
 
+  contactsActionsFormatter(cell, row) {
+    return (
+      <div>
+        <button className="btn btn-link">Edit</button>
+        <button className="btn btn-link">Delete</button>
+      </div>
+    )
+  }
+
   nameFormatter(cell, row) {
     return (
       <span>{row.givenName + ' ' + row.surname}</span>
@@ -109,7 +129,7 @@ class FuelSupplierDetails extends Component {
         <div className='right-toolbar-container'> 
           <div className="actions-container">
             <button 
-              className="btn-link"
+              className="btn btn-primary"
               onClick={() => this.openUploadDocumentModal()}>
               Add
             </button>
@@ -146,19 +166,44 @@ class FuelSupplierDetails extends Component {
       <div className="row fuel-supplier-details">
         { this.props.fuelSupplierData &&
         <div>
-          <h1 className="col-lg-12">{this.props.fuelSupplierData.name}</h1>
-          <div className="col-lg-12">
-            {this.props.fuelSupplierTypes && 
-              this.props.fuelSupplierTypes.map((type) => (
-              type.id === this.props.fuelSupplierData.fuelSupplierTypeFK &&
-                <span>{type.description}</span>
-            ))}
-            {this.props.fuelSupplierStatuses && 
-              this.props.fuelSupplierStatuses.map((status) => (
-              status.id === this.props.fuelSupplierData.fuelSupplierStatusFK &&
-                <span> - {status.status}</span>
-            ))}
+          <div className="col-lg-12 header-container">
+            <h1 className="title">{this.props.fuelSupplierData.name}</h1>
+            <div className="badge-container">
+              {this.props.fuelSupplierTypes && 
+                this.props.fuelSupplierTypes.map((type) => (
+                type.id === this.props.fuelSupplierData.fuelSupplierTypeFK &&
+                  <span className="label label-primary">{type.description}</span>
+              ))}
+              {this.props.fuelSupplierStatuses && 
+                this.props.fuelSupplierStatuses.map((status) => (
+                status.id === this.props.fuelSupplierData.fuelSupplierStatusFK &&
+                  <span className={status.status === Values.STATUS_ARCHIVED ? "label label-default" : "label label-success"}>{status.status}</span>
+              ))}
+              <button 
+                className="btn-no-style"
+                onClick={() => this.openChangeStatusModal()}>
+                <i className="fa fa-pencil"></i>
+              </button>
+            </div>
           </div>
+          <Modal
+            show={this.state.showChangeStatusModal}
+            onHide={() => this.closeChangeStatusModal()}
+            container={this}
+            aria-labelledby="contained-modal-title"
+            >
+            <Modal.Header closeButton>
+              <Modal.Title id="contained-modal-title">Change Status</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+              <ChangeStatusForm 
+                fuelSupplier={this.props.fuelSupplierData}
+                fuelSupplierStatuses={this.props.fuelSupplierStatuses}
+                fuelSupplierTypes={this.props.fuelSupplierTypes}
+                fuelSupplierActions={this.props.fuelSupplierActions}
+                closeChangeStatusModal={() => this.closeChangeStatusModal()} />
+            </Modal.Body>
+          </Modal>
           <div className="row">
             <div className="col-xs-12 col-sm-12 col-md-6 col-lg-6">
               <div className="fuel-supplier-info">
@@ -192,7 +237,7 @@ class FuelSupplierDetails extends Component {
             </div>
             <div className="contacts col-xs-12 col-sm-12 col-md-6 col-lg-6">
               <button 
-                className="btn-link add-btn"
+                className="btn btn-primary add-btn"
                 onClick={() => this.openAddContactModal()}>Add Contact</button>
               <BootstrapTable data={this.state.contacts}>
                 <TableHeaderColumn 
@@ -204,7 +249,8 @@ class FuelSupplierDetails extends Component {
                 </TableHeaderColumn>
                 <TableHeaderColumn dataField="workPhoneNumber" dataSort={true}>Phone Number</TableHeaderColumn>
                 <TableHeaderColumn dataField="emailAddress" dataSort={true}>Email</TableHeaderColumn>
-                <TableHeaderColumn dataField="title" columnClassName="actions">Role</TableHeaderColumn>
+                <TableHeaderColumn dataField="title" columnClassName="role">Role</TableHeaderColumn>
+                <TableHeaderColumn dataField="id" dataFormat={(cell, row) => this.contactsActionsFormatter(cell, row)} columnClassName="actions">Actions</TableHeaderColumn>
               </BootstrapTable>
               <Modal
                 show={this.state.showAddContactModal}
@@ -300,6 +346,7 @@ export default connect (
     fuelSupplierContacts: state.rootReducer[ReducerTypes.FUEL_SUPPLIER_CONTACTS],
     fuelSupplierTypes: state.rootReducer[ReducerTypes.FUEL_SUPPLIER_TYPES].data,
     fuelSupplierStatuses: state.rootReducer[ReducerTypes.FUEL_SUPPLIER_STATUSES].data,
+    fuelSupplierActions: state.rootReducer[ReducerTypes.FUEL_SUPPLIER_ACTION_TYPES].data,
     verifyIDSuccess: state.rootReducer[ReducerTypes.VERIFY_ID].success,
     verifyIDError: state.rootReducer[ReducerTypes.VERIFY_ID].errorMessage,
   }),

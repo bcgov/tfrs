@@ -51,8 +51,8 @@
 
     .add-btn {
       position: absolute;
-      right: 1rem;
-      top: -3rem;
+      right: 1.5rem;
+      top: -4rem;
 
       @include large {
         position: initial;
@@ -63,5 +63,26 @@
       max-height: 300px;
       overflow: auto;
     }
+  }
+}
+
+.header-container {
+  @include flex;
+  align-items: center;
+  flex-wrap: wrap;
+  margin-bottom: 4rem;
+}
+
+.title {
+  display: inline-block;
+  margin-bottom: 0;
+  margin-right: 2rem;
+}
+
+.badge-container {
+  display: inline-block;
+
+  & > * {
+    margin-right: 0.5rem;
   }
 }

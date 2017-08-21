@@ -212,12 +212,17 @@ export default class AddContactForm extends Component {
         </div>
         <div className="form-group"> 
           <div className="col-sm-offset-2 col-sm-10 btn-container">
-            <input type="button" className="btn btn-default" onClick={this.props.closeAddContactModal} value="Cancel" />
-            <input 
+            <button 
+              type="button" 
+              className="btn btn-default" 
+              onClick={this.props.closeAddContactModal}>
+              Cancel
+            </button>
+            <button 
               type="submit" 
-              className={`btn btn-primary`} 
-              value="save"
-              />
+              className="btn btn-primary not-implemented">
+              Save
+            </button>
           </div>
         </div>
       </form>

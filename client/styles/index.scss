@@ -35,6 +35,35 @@ h1 {
   font-weight: 500;
 }
 
+.btn-no-style {
+  background: none;
+  border: none;
+
+  &:hover {
+    opacity: 0.8;
+  }
+}
+
+.btn-container {
+  text-align: right;
+
+  .btn + .btn {
+    margin-left: 0.5rem;
+  }
+}
+
+.not-implemented:hover {
+
+  &:after {
+    content: 'Not implemented';
+    display: inline-block;
+    background: white;
+    padding: 0.5rem;
+    color: black;
+    position: absolute;
+  }
+}
+
 // Tables 
 
 table {
