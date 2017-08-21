@@ -1,11 +1,24 @@
 const validator = {
-  contactName: {
+  contactGivenName: {
     rules: [
       {
         test: (value) => {
           return value.length > 0;
         },
-        message: 'Name is required.',
+        message: 'First name is required.',
+      },
+    ],
+    errors: [],
+    valid: false,
+    state: '',
+  },
+  contactSurname: {
+    rules: [
+      {
+        test: (value) => {
+          return value.length > 0;
+        },
+        message: 'Last name is required.',
       },
     ],
     errors: [],

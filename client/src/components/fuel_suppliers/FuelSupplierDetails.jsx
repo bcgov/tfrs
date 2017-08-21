@@ -7,7 +7,11 @@ import {
 } from '../../actions/fuelSuppliersActions.jsx';
 import * as ReducerTypes from '../../constants/reducerTypes.jsx';
 import * as Values from '../../constants/values.jsx';
-import { addContact, verifyID, verifyIDReset } from '../../actions/fuelSuppliersActions.jsx';
+import { 
+  addContact, 
+  deleteContact,
+  verifyID, 
+  verifyIDReset } from '../../actions/fuelSuppliersActions.jsx';
 import { Modal } from 'react-bootstrap';
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
 import AddContactForm from './AddContactForm.jsx';
@@ -21,12 +25,14 @@ class FuelSupplierDetails extends Component {
       showAddContactModal: false,
       showUploadDocumentModal: false,
       showChangeStatusModal: false,
+      showDeleteContactModal: false,
       contactName: '',
       contactRole: '',
       contactEmail: '',
       contactWorkPhone: '',
       contactCellPhone: '',
       contactBCeID: '',
+      contactID: '',
       contacts: [],
     };
   }
@@ -40,7 +46,9 @@ class FuelSupplierDetails extends Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    if (prevProps.fuelSupplierContacts !== this.props.fuelSupplierContacts) {
+    if ((prevProps.fuelSupplierContacts !== this.props.fuelSupplierContacts) && 
+        this.props.fuelSupplierContacts.data && 
+        this.props.fuelSupplierContacts.data.length > 0) {
       this.filterContacts();
     }
   }
@@ -62,28 +70,21 @@ class FuelSupplierDetails extends Component {
     this.props.verifyIDReset();
   }
 
-  openUploadDocumentModal() {
-    this.setState({showUploadDocumentModal: true})
-  }
-
-  closeChangeStatusModal() {
-    this.setState({showChangeStatusModal: false});
-  }
-
-  openChangeStatusModal() {
-    this.setState({showChangeStatusModal: true})
-  }
-
-  closeUploadDocumentModal() {
-    this.setState({showUploadDocumentModal: false});
-  }
-
   handleInputChange(event) {
     this.setState({[event.target.name]: event.target.value});
   }
 
   handleVerifyID() {
     this.props.verifyID(this.state.contactBCeID);
+  }
+
+  toggleModal(name) {
+    this.setState({[name]: !this.state[name]})
+  }
+
+  handleToggleDelete(id) {
+    this.toggleModal('showDeleteContactModal');
+    this.setState({contactID: id})
   }
 
   handleAddContact() {
@@ -111,7 +112,9 @@ class FuelSupplierDetails extends Component {
     return (
       <div>
         <button className="btn btn-link">Edit</button>
-        <button className="btn btn-link">Delete</button>
+        <button 
+          className="btn btn-link"
+          onClick={(id) => this.handleToggleDelete(row.id)}>Delete</button>
       </div>
     )
   }
@@ -130,7 +133,7 @@ class FuelSupplierDetails extends Component {
           <div className="actions-container">
             <button 
               className="btn btn-primary"
-              onClick={() => this.openUploadDocumentModal()}>
+              onClick={() => this.toggleModal('showUploadDocumentModal')}>
               Add
             </button>
             <label className="checkbox"> 
@@ -181,14 +184,14 @@ class FuelSupplierDetails extends Component {
               ))}
               <button 
                 className="btn-no-style"
-                onClick={() => this.openChangeStatusModal()}>
+                onClick={() => this.toggleModal('showChangeStatusModal')}>
                 <i className="fa fa-pencil"></i>
               </button>
             </div>
           </div>
           <Modal
             show={this.state.showChangeStatusModal}
-            onHide={() => this.closeChangeStatusModal()}
+            onHide={(name) => this.toggleModal('showChangeStatusModal')}
             container={this}
             aria-labelledby="contained-modal-title"
             >
@@ -201,7 +204,7 @@ class FuelSupplierDetails extends Component {
                 fuelSupplierStatuses={this.props.fuelSupplierStatuses}
                 fuelSupplierTypes={this.props.fuelSupplierTypes}
                 fuelSupplierActions={this.props.fuelSupplierActions}
-                closeChangeStatusModal={() => this.closeChangeStatusModal()} />
+                closeChangeStatusModal={(name) => this.toggleModal('showChangeStatusModal')} />
             </Modal.Body>
           </Modal>
           <div className="row">
@@ -271,6 +274,35 @@ class FuelSupplierDetails extends Component {
                   />
                 </Modal.Body>
               </Modal>
+              <Modal
+                show={this.state.showDeleteContactModal}
+                onHide={(name) => this.toggleModal('showDeleteContactModal')}
+                container={this}
+                aria-labelledby="contained-modal-title"
+                >
+                <Modal.Header closeButton>
+                  <Modal.Title id="contained-modal-title">Delete Contact</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                  Are you sure you want to delete this contact?
+                </Modal.Body>
+                <Modal.Footer>
+                  <div>
+                    <button 
+                      type="button" 
+                      className="btn btn-default" 
+                      onClick={() => this.toggleModal('showDeleteContactModal')}>
+                      Cancel
+                    </button>
+                    <button 
+                      type="button" 
+                      className="btn btn-primary"
+                      onClick={(id) => this.props.deleteContact(this.state.contactID)}>
+                      Confirm
+                    </button>
+                  </div> 
+                </Modal.Footer>
+              </Modal>
             </div>
         </div>
         <div className="row">
@@ -291,7 +323,7 @@ class FuelSupplierDetails extends Component {
             </BootstrapTable>
             <Modal
                 show={this.state.showUploadDocumentModal}
-                onHide={() => this.closeUploadDocumentModal()}
+                onHide={() => this.toggleModal('showUploadDocumentModal')}
                 container={this}
                 aria-labelledby="contained-modal-title"
               >
@@ -306,13 +338,13 @@ class FuelSupplierDetails extends Component {
                   <button 
                     type="button" 
                     className="btn btn-default" 
-                    onClick={() => this.closeUploadDocumentModal()}>
+                    onClick={() => this.toggleModal('showUploadDocumentModal')}>
                     Cancel
                   </button>
                   <button 
                     type="button" 
-                    className="btn btn-primary">
-                    Save Not implemented
+                    className="btn btn-primary not-implemented">
+                    Save
                   </button>
                 </div> 
               </Modal.Footer>
@@ -362,6 +394,9 @@ export default connect (
     },
     addContact: (data) => {
       dispatch(addContact(data));
+    },
+    deleteContact: (id) => {
+      dispatch(deleteContact(id));
     },
     verifyID: (id) => {
       dispatch(verifyID(id));

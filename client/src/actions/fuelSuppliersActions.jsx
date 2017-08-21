@@ -123,13 +123,75 @@ const getFuelSupplierError = (error) => {
 }
 
 export const addContact = (data) => (dispatch) => {
-  dispatch(addContactSuccess());
+  dispatch(addContactRequest());
+  axios.post(Routes.BASE_URL + Routes.FUEL_SUPPLIER_CONTACTS, {
+    fuelSupplierFK: data.fuelSupplierFK,
+    surname: data.contactSurname,
+    givenName: data.contactGivenName,
+    mobilePhoneNumber: data.contactCellPhone,
+    workPhoneNumber: data.contactWorkPhone,
+    emailAddress: data.contactEmail,
+  })
+  .then((response) => {
+    dispatch(addContactSuccess());
+    dispatch(getFuelSupplierContacts());
+  }).catch((error) => {
+    dispatch(addContactError(error.response));
+  })
+}
+
+const addContactRequest = () => {
+  return {
+    name: ReducerTypes.ADD_CONTACT,
+    type: ActionTypes.SUCCESS,
+  }
 }
 
 const addContactSuccess = () => {
   return {
     name: ReducerTypes.ADD_CONTACT,
     type: ActionTypes.SUCCESS,
+  }
+}
+
+const addContactError = (error) => {
+  return {
+    name: ReducerTypes.ADD_CONTACT,
+    type: ActionTypes.SUCCESS,
+    errorMessage: error
+  }
+}
+
+export const deleteContact = (id) => (dispatch) => {
+  dispatch(deleteContactRequest());
+  axios.post(Routes.BASE_URL + Routes.FUEL_SUPPLIER_CONTACTS + '/' + id + Routes.DELETE)
+  .then((response) => {
+    dispatch(deleteContactSuccess());
+    dispatch(getFuelSupplierContacts());
+  }).catch((error) => {
+    dispatch(deleteContactError(error.response));
+  })
+}
+
+const deleteContactRequest = () => {
+  return {
+    name: ReducerTypes.DELETE_CONTACT,
+    type: ActionTypes.SUCCESS,
+  }
+}
+
+const deleteContactSuccess = () => {
+  return {
+    name: ReducerTypes.DELETE_CONTACT,
+    type: ActionTypes.SUCCESS,
+  }
+}
+
+const deleteContactError = (error) => {
+  return {
+    name: ReducerTypes.DELETE_CONTACT,
+    type: ActionTypes.SUCCESS,
+    errorMessage: error
   }
 }
 

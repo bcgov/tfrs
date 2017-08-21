@@ -46,5 +46,7 @@ export const ROLES = 'api/roles';
 export const USER_ROLES = 'api/userroles';
 export const USERS = 'api/users';
 
+export const DELETE = '/delete';
+
 
 

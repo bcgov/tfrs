@@ -57,6 +57,7 @@ const rootReducer = combineReducers({
     [ReducerTypes.GET_NOTIFICATIONS]: createReducer(genericRequest, ReducerTypes.GET_NOTIFICATIONS),
     [ReducerTypes.GET_OPPORTUNITIES]: createReducer(genericRequest, ReducerTypes.GET_OPPORTUNITIES),
     [ReducerTypes.ADD_CONTACT]: createReducer(genericRequest, ReducerTypes.ADD_CONTACT),
+    [ReducerTypes.DELELTE_CONTACT]: createReducer(genericRequest, ReducerTypes.DELELTE_CONTACT),
     [ReducerTypes.VERIFY_ID]: createReducer(genericRequest, ReducerTypes.VERIFY_ID),
     [ReducerTypes.GET_CREDIT_TRANSFER]: createReducer(genericRequest, ReducerTypes.GET_CREDIT_TRANSFER),
     [ReducerTypes.GET_CREDIT_TRANSFERS]: createReducer(genericRequest, ReducerTypes.GET_CREDIT_TRANSFERS),
