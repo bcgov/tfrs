@@ -128,7 +128,7 @@ class CreditTransferNew extends Component {
                 ref={(input) => this.note = input}>
               </textarea>
             </div>
-            <div>
+            <div className="btn-container">
               <button 
                 type="button" 
                 className="btn btn-default"

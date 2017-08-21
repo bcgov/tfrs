@@ -6,7 +6,20 @@ import { activity } from '../sampleData.jsx';
 import { CreditTransfer } from '../sampleData.jsx';
 
 export const getAccountActivity = () => (dispatch) => {
-  dispatch(getAccountActivitySuccess(activity));
+  dispatch(getAccountActivityRequest());
+  axios.get(Routes.BASE_URL + Routes.CREDIT_TRADE_API)
+  .then((response) => {
+    dispatch(getAccountActivitySuccess(response.data));
+  }).catch((error) => {
+    dispatch(getAccountActivityError(error.response))
+  })
+}
+
+const getAccountActivityRequest = () => {
+  return {
+    name: ReducerTypes.GET_ACCOUNT_ACTIVITY,
+    type: ActionTypes.REQUEST,
+  }
 }
 
 const getAccountActivitySuccess = (activity) => {
@@ -14,6 +27,14 @@ const getAccountActivitySuccess = (activity) => {
     name: ReducerTypes.GET_ACCOUNT_ACTIVITY,
     type: ActionTypes.SUCCESS,
     data: activity,
+  }
+}
+
+const getAccountActivityError = (error) => {
+  return {
+    name: ReducerTypes.GET_ACCOUNT_ACTIVITY,
+    type: ActionTypes.ERROR,
+    errorMessage: error,
   }
 }
 

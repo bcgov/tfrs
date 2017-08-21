@@ -94,7 +94,7 @@ class CreditTransfer extends Component {
           <div className="credit-transfer-details">
             <form className="form-inline" onSubmit={(event) => this.handleSubmit(event)}>
               <div className="main-form">
-                <span>{this.props.data.initiatorFK} proposes to </span>
+                <span>{this.props.data.initiatorFK != null ? this.props.data.initiatorFK : Values.DEFAULT_INITIATOR} proposes to </span>
                 <div className="form-group">
                   <select 
                     className="form-control" 

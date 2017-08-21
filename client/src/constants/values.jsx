@@ -10,3 +10,5 @@ export const STATUS_ACTIVE = 'Active';
 export const STATUS_ARCHIVED = 'Archived';
 
 export const COMPLIANCE_YEAR_START = 1975;
+
+export const DEFAULT_INITIATOR = 'BC Government';

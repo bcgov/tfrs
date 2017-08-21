@@ -73,6 +73,18 @@ class AccountActivity extends Component {
       </div>
     );
   }
+
+  statusFormatter(cell, row) {
+    let statusString = '';
+    this.props.creditTradeStatuses.map(function(status) {
+      if (status.id === row.creditTradeStatusFK) {
+        statusString = status.status;
+      }
+    });
+    return (
+      <div>{statusString}</div>
+    )
+  }
   
   render() {
     const options = {
@@ -86,9 +98,9 @@ class AccountActivity extends Component {
             options={ options }
             search
           >
-          <TableHeaderColumn className="proposalDescription" dataField="proposalDescription" isKey={true} dataSort={true} columnClassName="proposal-description">Proposal Description</TableHeaderColumn>
-          <TableHeaderColumn dataField="lastUpdated" dataSort={true}>Last Updated</TableHeaderColumn>
-          <TableHeaderColumn dataField="status" dataSort={true}>Status</TableHeaderColumn>
+          <TableHeaderColumn className="proposalDescription" dataField="plainEnglishPhrase" isKey={true} dataSort={true} columnClassName="proposal-description">Proposal Description</TableHeaderColumn>
+          <TableHeaderColumn dataField="tradeEffectiveDate" dataSort={true}>Last Updated</TableHeaderColumn>
+          <TableHeaderColumn dataField="creditTradeStatusFK" dataSort={true} dataFormat={(cell, row) => this.statusFormatter(cell, row)}>Status</TableHeaderColumn>
           <TableHeaderColumn dataField="id" dataFormat={(cell, row) => this.actionsFormatter(cell, row)} columnClassName="actions">Actions</TableHeaderColumn>
         </BootstrapTable>
         <Modal
@@ -125,6 +137,7 @@ export default connect (
   state => ({
     accountActivityData: state.rootReducer[ReducerTypes.GET_ACCOUNT_ACTIVITY].data,
     acceptCreditTransferSuccess: state.rootReducer[ReducerTypes.ACCEPT_CREDIT_TRANSFER].success,
+    creditTradeStatuses: state.rootReducer[ReducerTypes.CREDIT_TRADE_STATUSES].data,
   }),
   dispatch => ({
     getAccountActivity: () => {

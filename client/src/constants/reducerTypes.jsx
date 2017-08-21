@@ -23,3 +23,4 @@ export const PERMISSIONS = 'PERMISSIONS';
 export const ROLE_PERMISSIONS = 'ROLE_PERMISSIONS';
 export const ROLES = 'ROLES';
 export const USER_ROLES = 'USER_ROLES';
+export const CREDIT_TRADE_STATUSES = 'CREDIT_TRADE_STATUSES';

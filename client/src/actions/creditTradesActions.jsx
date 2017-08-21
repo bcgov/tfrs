@@ -3,34 +3,67 @@ import * as ReducerTypes from '../constants/reducerTypes.jsx';
 import * as Routes from '../constants/routes.jsx';
 import axios from 'axios';
 
-export const getFuelSuppliers = () => (dispatch) => {
-  dispatch(getFuelSuppliersRequest());
-  axios.get(Routes.BASE_URL + Routes.GET_FUEL_SUPPLIERS)
+export const getCreditTrades = () => (dispatch) => {
+  dispatch(getCreditTradesRequest());
+  axios.get(Routes.BASE_URL + Routes.CREDIT_TRADE_API)
   .then((response) => {
-    dispatch(getFuelSuppliersSuccess(fuelSuppliers));
+    dispatch(getCreditTradesSuccess(response.data));
   }).catch((error) => {
-    dispatch(getFuelSuppliersError(error.response))
+    dispatch(getCreditTradesError(error.response))
   })
 }
 
-const getFuelSuppliersRequest = () => {
+const getCreditTradesRequest = () => {
   return {
-    name: ReducerTypes.GET_FUEL_SUPPLIERS,
+    name: ReducerTypes.CREDIT_TRADES,
     type: ActionTypes.SUCCESS,
   }
 }
 
-const getFuelSuppliersSuccess = (fuelSuppliers) => {
+const getCreditTradesSuccess = (fuelSuppliers) => {
   return {
-    name: ReducerTypes.GET_FUEL_SUPPLIERS,
+    name: ReducerTypes.CREDIT_TRADES,
     type: ActionTypes.SUCCESS,
     data: fuelSuppliers,
   }
 }
 
-const getFuelSuppliersError = (error) => {
+const getCreditTradesError = (error) => {
   return {
-    name: ReducerTypes.GET_FUEL_SUPPLIERS,
+    name: ReducerTypes.CREDIT_TRADES,
+    type: ActionTypes.SUCCESS,
+    errorMessage: error
+  }
+}
+
+export const getCreditTradeStatuses = () => (dispatch) => {
+  dispatch(getCreditTradeStatusesRequest());
+  axios.get(Routes.BASE_URL + Routes.CREDIT_TRADE_STATUSES)
+  .then((response) => {
+    dispatch(getCreditTradeStatusesSuccess(response.data));
+  }).catch((error) => {
+    dispatch(getCreditTradeStatusesError(error.response))
+  })
+}
+
+const getCreditTradeStatusesRequest = () => {
+  return {
+    name: ReducerTypes.CREDIT_TRADE_STATUSES,
+    type: ActionTypes.SUCCESS,
+  }
+}
+
+const getCreditTradeStatusesSuccess = (fuelSuppliers) => {
+  return {
+    name: ReducerTypes.CREDIT_TRADE_STATUSES,
+    type: ActionTypes.SUCCESS,
+    data: fuelSuppliers,
+  }
+}
+
+const getCreditTradeStatusesError = (error) => {
+  return {
+    name: ReducerTypes.CREDIT_TRADE_STATUSES,
     type: ActionTypes.SUCCESS,
     errorMessage: error
   }

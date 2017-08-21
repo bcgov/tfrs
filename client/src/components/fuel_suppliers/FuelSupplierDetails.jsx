@@ -111,7 +111,7 @@ class FuelSupplierDetails extends Component {
   contactsActionsFormatter(cell, row) {
     return (
       <div>
-        <button className="btn btn-link">Edit</button>
+        <button className="btn btn-link not-implemented">Edit</button>
         <button 
           className="btn btn-link"
           onClick={(id) => this.handleToggleDelete(row.id)}>Delete</button>
@@ -172,11 +172,6 @@ class FuelSupplierDetails extends Component {
           <div className="col-lg-12 header-container">
             <h1 className="title">{this.props.fuelSupplierData.name}</h1>
             <div className="badge-container">
-              {this.props.fuelSupplierTypes && 
-                this.props.fuelSupplierTypes.map((type) => (
-                type.id === this.props.fuelSupplierData.fuelSupplierTypeFK &&
-                  <span className="label label-primary">{type.description}</span>
-              ))}
               {this.props.fuelSupplierStatuses && 
                 this.props.fuelSupplierStatuses.map((status) => (
                 status.id === this.props.fuelSupplierData.fuelSupplierStatusFK &&
@@ -223,16 +218,8 @@ class FuelSupplierDetails extends Component {
                     <div className="list-group">
                       <span className="list-group-item">
                         <span className="pull-right">50</span>
-                        Available Balance of Validated Credits
-                      </span>
-                      <span className="list-group-item">
-                        <span className="pull-right">55</span>
-                        Validated Credits
-                      </span>
-                      <span className="list-group-item">
-                        <span className="pull-right">5</span>
-                        Encumbered by Proposed Transfer
-                      </span>
+                        Credits
+                        </span>
                     </div>
                   </div>
                 </div>
