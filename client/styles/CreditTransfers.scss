@@ -3,6 +3,10 @@
 
 .credit-transfer {
 
+  .credit-transfer-details {
+    margin-bottom: 4rem;
+  }
+
   .note {
     display: block;
 
@@ -225,4 +229,9 @@
   .initiator-container, .respondent-container {
     color: #FFFFFF;
   }
+}
+
+.account-activity-table .react-bs-table {
+  max-height: 500px;
+  overflow: auto;
 }

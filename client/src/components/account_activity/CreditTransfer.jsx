@@ -2,7 +2,10 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import * as ReducerTypes from '../../constants/reducerTypes.jsx';
 import * as Values from '../../constants/values.jsx';
-import { plainEnglishPhrase, getCreditTransferTitle } from '../../utils/functions.jsx';
+import { 
+  plainEnglishPhrase, 
+  getCreditTransferTitle,
+  getCreditTradeInitiator } from '../../utils/functions.jsx';
 import { Modal } from 'react-bootstrap';
 import { 
   getCreditTransfer,
@@ -30,7 +33,6 @@ class CreditTransfer extends Component {
   }
 
   componentDidMount() {
-    this.props.getFuelSuppliers();
     this.props.getCreditTransfer(this.props.match.params.id);
   }
 
@@ -71,13 +73,13 @@ class CreditTransfer extends Component {
   render() {
     return (
       <div className="credit-transfer">
-        { this.props.data &&
+        { this.props.data && this.props.data.id && 
         <div>
           <h1>{this.props.data.id && getCreditTransferTitle(this.props.data)}</h1>
           { this.props.data.creditTradeStatusFK === Values.STATUS_DRAFT && 
             <button type="button" className="btn btn-danger">Delete Credit Transfer</button>
           }
-          { this.props.data.status === Values.STATUS_PROPOSED && 
+          { this.props.data.creditTradeStatusFK === Values.STATUS_PROPOSED && 
             <button 
               type="button" 
               className="btn btn-danger"
@@ -86,7 +88,7 @@ class CreditTransfer extends Component {
             Rescind Credit Transfer
             </button>
           }
-          { this.props.data.status === Values.STATUS_APPROVED && 
+          { this.props.data.creditTradeStatusFK === Values.STATUS_APPROVED && 
             <button type="button" className="btn btn-danger">Rescind Credit Transfer</button>
           }
           <div className="credit-transfer-progress-bar">
@@ -99,9 +101,9 @@ class CreditTransfer extends Component {
           </div>
           <div className="credit-transfer-details">
             <form className="form-inline" onSubmit={(event) => this.handleSubmit(event)}>
-              { this.props.data.creditTradeStatusFK == Values.DRAFT ? 
+              { this.props.data.creditTradeStatusFK == Values.STATUS_DRAFT ? 
                 <div className="main-form">
-                  <span>{this.props.data.initiatorFK != null ? this.props.data.initiatorFK : Values.DEFAULT_INITIATOR} proposes to </span>
+                  <span>{getCreditTradeInitiator(this.props.data.initiatorFK)} proposes to </span>
                   <div className="form-group">
                     <select 
                       className="form-control" 
@@ -130,10 +132,8 @@ class CreditTransfer extends Component {
                       id="respondent" 
                       name="respondent"
                       ref={(input) => this.respondentFK = input}
+                      defaultValue={this.props.data && this.props.data.respondentFK}
                       onChange={(event) => this.handleInputChange(event)}>
-                      { this.props.data.respondentFK &&
-                        <option>{this.props.data.respondentFK}</option>
-                      }
                       { this.props.fuelSuppliers &&
                         this.props.fuelSuppliers.map((fuelSupplier) => (
                           <option value={fuelSupplier.id}>{fuelSupplier.name}</option>
@@ -172,15 +172,15 @@ class CreditTransfer extends Component {
                   ref={(input) => this.note = input}>
                 </textarea>
               </div>
-              { (this.props.data.status === Values.STATUS_NEW || this.props.data.status === Values.STATUS_DRAFT) && 
-                <div>
+              { (this.props.data.creditTradeStatusFK === Values.STATUS_NEW || this.props.data.creditTradeStatusFK=== Values.STATUS_DRAFT) && 
+                <div className="btn-container">
                   <button type="button" className="btn btn-default">Cancel</button>
                   <button type="button" className="btn btn-default">Save Draft</button>
                   <button type="button" className="btn btn-primary">Propose</button>
                 </div>
               }
-              { this.props.data.status === Values.STATUS_PROPOSED && 
-                <div>
+              { this.props.data.creditTradeStatusFK === Values.STATUS_PROPOSED && 
+                <div className="btn-container">
                   <button 
                     type="button" 
                     className="btn btn-danger"
@@ -191,8 +191,8 @@ class CreditTransfer extends Component {
                   <button type="button" className="btn btn-primary">Accept</button>
                 </div>
               }
-              { (this.props.data.status === Values.STATUS_ACCEPTED || this.props.data.status === Values.STATUS_RECOMMENDED) && 
-                <div>
+              { (this.props.data.creditTradeStatusFK=== Values.STATUS_ACCEPTED || this.props.data.creditTradeStatusFK === Values.STATUS_RECOMMENDED) && 
+                <div className="btn-container">
                   <button 
                     type="button" 
                     className="btn btn-danger"

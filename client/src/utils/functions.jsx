@@ -85,7 +85,7 @@ const getCreditTradeRespondent = (respondentId) => {
   return respondent.name
 }
 
-const getCreditTradeInitiator = (initiatorId) => {
+export const getCreditTradeInitiator = (initiatorId) => {
   if (initiatorId == null) {
     return 'BC Government ';
   } else {

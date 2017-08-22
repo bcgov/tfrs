@@ -90,3 +90,8 @@
     margin-right: 0.5rem;
   }
 }
+
+.fuel-suppliers .react-bs-table {
+  max-height: 500px;
+  overflow: auto;
+}

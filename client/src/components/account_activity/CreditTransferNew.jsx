@@ -27,10 +27,6 @@ class CreditTransferNew extends Component {
     };
   }
 
-  componentDidMount() {
-    this.props.getFuelSuppliers();
-  }
-
   componentWillUnmount() {
     this.props.getCreditTransferReset();
   }

@@ -1,16 +1,10 @@
 export const STATUS_NEW = "New";
-export const STATUS_DRAFT = "Draft";
-export const STATUS_PROPOSED = "Proposed";
-export const STATUS_ACCEPTED = "Accepted";
-export const STATUS_RECOMMENDED = "Recommended";
-export const STATUS_APPROVED = "Approved";
-export const STATUS_COMPLETED = "Completed";
-
-export const DRAFT = 1;
-export const PROPOSED = 2;
-export const ACCEPTED = 3;
-export const APPROVED = 6;
-export const COMPLETED = 7;
+export const STATUS_DRAFT = 1;
+export const STATUS_PROPOSED = 2;
+export const STATUS_ACCEPTED = 3;
+export const STATUS_RECOMMENDED = 4;
+export const STATUS_APPROVED = 6;
+export const STATUS_COMPLETED = 7;
 
 export const STATUS_ACTIVE = 'Active';
 export const STATUS_ARCHIVED = 'Archived';
