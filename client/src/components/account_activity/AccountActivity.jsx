@@ -5,6 +5,7 @@ import { Modal } from 'react-bootstrap';
 import { getAccountActivity, acceptCreditTransfer, acceptCreditTransferReset } from '../../actions/accountActivityActions.jsx';
 import * as ReducerTypes from '../../constants/reducerTypes.jsx';
 import * as Routes from '../../constants/routes.jsx';
+import { plainEnglishPhrase } from '../../utils/functions.jsx';
 import { BootstrapTable, TableHeaderColumn, ButtonGroup } from 'react-bootstrap-table';
 
 class AccountActivity extends Component {
@@ -85,6 +86,12 @@ class AccountActivity extends Component {
       <div>{statusString}</div>
     )
   }
+
+  descriptionFormatter(cell, row) {
+    return (
+      <div>{plainEnglishPhrase(row)}</div>
+    )
+  }
   
   render() {
     const options = {
@@ -98,7 +105,14 @@ class AccountActivity extends Component {
             options={ options }
             search
           >
-          <TableHeaderColumn className="proposalDescription" dataField="plainEnglishPhrase" isKey={true} dataSort={true} columnClassName="proposal-description">Proposal Description</TableHeaderColumn>
+          <TableHeaderColumn 
+            className="proposalDescription" 
+            dataField="plainEnglishPhrase" 
+            isKey={true} 
+            dataFormat={(cell, row) => this.descriptionFormatter(cell, row)}
+            columnClassName="proposal-description">
+            Proposal Description
+          </TableHeaderColumn>
           <TableHeaderColumn dataField="tradeEffectiveDate" dataSort={true}>Last Updated</TableHeaderColumn>
           <TableHeaderColumn dataField="creditTradeStatusFK" dataSort={true} dataFormat={(cell, row) => this.statusFormatter(cell, row)}>Status</TableHeaderColumn>
           <TableHeaderColumn dataField="id" dataFormat={(cell, row) => this.actionsFormatter(cell, row)} columnClassName="actions">Actions</TableHeaderColumn>
