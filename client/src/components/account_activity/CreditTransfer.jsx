@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import * as ReducerTypes from '../../constants/reducerTypes.jsx';
 import * as Values from '../../constants/values.jsx';
+import { plainEnglishPhrase, getCreditTransferTitle } from '../../utils/functions.jsx';
 import { Modal } from 'react-bootstrap';
 import { 
   getCreditTransfer,
@@ -28,9 +29,7 @@ class CreditTransfer extends Component {
 
   componentDidMount() {
     this.props.getFuelSuppliers();
-    if (this.props.match.params.id) {
-      this.props.getCreditTransfer(this.props.match.params.id);
-    }
+    this.props.getCreditTransfer(this.props.match.params.id);
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -39,6 +38,10 @@ class CreditTransfer extends Component {
         valuePerCredit: this.props.data.fairMarketValuePerCredit,
         numberOfCredits: this.props.data.numberOfCredits
       })
+    }
+    if (prevProps.match.params.id != this.props.match.params.id) {
+      this.props.getFuelSuppliers();
+      this.props.getCreditTransfer(this.props.match.params.id);
     }
   }
 
@@ -68,7 +71,7 @@ class CreditTransfer extends Component {
       <div className="credit-transfer">
         { this.props.data &&
         <div>
-          <h1>Credit Transfer {this.props.data && "Sell to " + this.props.data.respondentFK + " Proposed " + this.props.data.tradeEffectiveDate}</h1>
+          <h1>{this.props.data.id && getCreditTransferTitle(this.props.data)}</h1>
           { this.props.data.creditTradeStatusFK === Values.STATUS_DRAFT && 
             <button type="button" className="btn btn-danger">Delete Credit Transfer</button>
           }
@@ -89,66 +92,74 @@ class CreditTransfer extends Component {
               <div className={this.props.data.creditTradeStatusFK == Values.PROPOSED ? "step current" : "step"}><span>Proposed</span></div>
               <div className={this.props.data.creditTradeStatusFK === Values.ACCEPTED ? "step current" : "step"}><span>Accepted</span></div>
               <div className={this.props.data.creditTradeStatusFK === Values.APPROVED ? "step current" : "step"}><span>Approved</span></div>
-              <div className={this.props.data.creditTradeStatusFK === Values.COMPLETE ? "step current" : "step"}><span>Complete</span></div>
+              <div className={this.props.data.creditTradeStatusFK === Values.COMPLETED ? "step current" : "step"}><span>Complete</span></div>
             </div>
           </div>
           <div className="credit-transfer-details">
             <form className="form-inline" onSubmit={(event) => this.handleSubmit(event)}>
-              <div className="main-form">
-                <span>{this.props.data.initiatorFK != null ? this.props.data.initiatorFK : Values.DEFAULT_INITIATOR} proposes to </span>
-                <div className="form-group">
-                  <select 
-                    className="form-control" 
-                    id="proposal-type" 
-                    name="proposalType"
-                    ref={(input) => this.proposalType = input}
-                    onChange={(event) => this.handleInputChange(event)}>
-                    <option>Sell</option>
-                    <option>Buy</option>
-                  </select>
+              { this.props.data.creditTradeStatusFK == Values.DRAFT ? 
+                <div className="main-form">
+                  <span>{this.props.data.initiatorFK != null ? this.props.data.initiatorFK : Values.DEFAULT_INITIATOR} proposes to </span>
+                  <div className="form-group">
+                    <select 
+                      className="form-control" 
+                      id="proposal-type" 
+                      name="proposalType"
+                      ref={(input) => this.proposalType = input}
+                      onChange={(event) => this.handleInputChange(event)}>
+                      <option>Sell</option>
+                      <option>Buy</option>
+                    </select>
+                  </div>
+                  <div className="form-group">
+                    <input 
+                      type="number" 
+                      className="form-control" 
+                      id="number-of-credits" 
+                      name="numberOfCredits"
+                      defaultValue={this.props.data.numberOfCredits}
+                      onChange={(event) => this.handleInputChange(event)}
+                      ref={(input) => this.numberOfCredits = input} />
+                  </div>
+                  <span>{this.state.proposalType === "Buy" ? "credits from " : "credits to "}</span>
+                  <div className="form-group">
+                    <select 
+                      className="form-control" 
+                      id="respondent" 
+                      name="respondent"
+                      ref={(input) => this.respondentFK = input}
+                      onChange={(event) => this.handleInputChange(event)}>
+                      { this.props.data.respondentFK &&
+                        <option>{this.props.data.respondentFK}</option>
+                      }
+                      { this.props.fuelSuppliers &&
+                        this.props.fuelSuppliers.map((fuelSupplier) => (
+                          <option value={fuelSupplier.id}>{fuelSupplier.name}</option>
+                      ))}
+                    </select>
+                  </div>
+                  <span>for </span>
+                  <div className="form-group">
+                    <input 
+                      type="number" 
+                      className="form-control" 
+                      id="value-per-credit" 
+                      name="valuePerCredit"
+                      onChange={(event) => this.handleInputChange(event)}
+                      defaultValue={this.props.data.fairMarketValuePerCredit}
+                      ref={(input) => this.valuePerCredit = input} />
+                  </div>
+                  <span>per credit for a total value of $</span>
+                  <span>{ this.state.valuePerCredit * this.state.numberOfCredits }</span>
+                  <span> effective on Director's Approval</span>
                 </div>
-                <div className="form-group">
-                  <input 
-                    type="number" 
-                    className="form-control" 
-                    id="number-of-credits" 
-                    name="numberOfCredits"
-                    defaultValue={this.props.data.numberOfCredits}
-                    onChange={(event) => this.handleInputChange(event)}
-                    ref={(input) => this.numberOfCredits = input} />
+                :
+                <div className="main-form">
+                  { this.props.data.id &&
+                  <div>{plainEnglishPhrase(this.props.data)}</div>
+                  }
                 </div>
-                <span>{this.state.proposalType === "Buy" ? "credits from " : "credits to "}</span>
-                <div className="form-group">
-                  <select 
-                    className="form-control" 
-                    id="respondent" 
-                    name="respondent"
-                    ref={(input) => this.respondentFK = input}
-                    onChange={(event) => this.handleInputChange(event)}>
-                    { this.props.data.respondentFK &&
-                      <option>{this.props.data.respondentFK}</option>
-                    }
-                    { this.props.fuelSuppliers &&
-                      this.props.fuelSuppliers.map((fuelSupplier) => (
-                        <option value={fuelSupplier.id}>{fuelSupplier.name}</option>
-                    ))}
-                  </select>
-                </div>
-                <span>for </span>
-                <div className="form-group">
-                  <input 
-                    type="number" 
-                    className="form-control" 
-                    id="value-per-credit" 
-                    name="valuePerCredit"
-                    onChange={(event) => this.handleInputChange(event)}
-                    defaultValue={this.props.data.fairMarketValuePerCredit}
-                    ref={(input) => this.valuePerCredit = input} />
-                </div>
-                <span>per credit for a total value of $</span>
-                <span>{ this.state.valuePerCredit * this.state.numberOfCredits }</span>
-                <span> effective on Director's Approval</span>
-              </div>
+                }
               <div className="form-group note">
                 <label htmlFor="comment">Note:</label>
                 <textarea 
