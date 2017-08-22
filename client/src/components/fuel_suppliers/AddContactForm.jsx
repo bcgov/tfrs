@@ -7,7 +7,8 @@ export default class AddContactForm extends Component {
   constructor(props) {
   super(props);
     this.state = {
-      contactName: '',
+      contactGivenName: '',
+      contactSurname: '',
       contactRole: '',
       contactEmail: '',
       contactWorkPhone: '',
@@ -30,12 +31,14 @@ export default class AddContactForm extends Component {
   handleAddContact(event) {
     event.preventDefault();
     let contactData = {
-      contactName: this.state.contactName,
+      contactGivenName: this.state.contactGivenName,
+      contactSurname: this.state.contactSurname,
       contactRole: this.state.contactRole,
       contactEmail: this.state.contactEmail,
       contactWorkPhone: this.state.contactWorkPhone,
       contactCellPhone: this.state.contactCellPhone,
       contactBCeID: this.state.contactBCeID,
+      fuelSupplierFK: this.props.fuelSupplierData.id,
     }
     if (this.isFormValid()) {
       this.props.addContact(contactData);
@@ -51,9 +54,7 @@ export default class AddContactForm extends Component {
    * Which in turn updates the state of this component and validators
    */
   handleInputChange(event) {
-    const newState = Object.assign({}, this.state);
-    newState[event.target.name] = event.target.value;
-    this.setState(newState);
+    this.setState({[event.target.name]: event.target.value});
     this.updateValidators(event.target.name, event.target.value);
   }
   
@@ -77,7 +78,6 @@ export default class AddContactForm extends Component {
         }
       }
     });
-    this.setState({[fieldName]: this.displayValidationErrors(fieldName)});
   }
   
   // This function resets all validators for this form to the default state
@@ -122,15 +122,27 @@ export default class AddContactForm extends Component {
     return (
       <form className="form-horizontal add-contact-form" onSubmit={(event) => this.handleAddContact(event)}>
         <div className="form-group">
-          <label className="control-label col-sm-2" htmlFor="contact-name">Name:</label>
+          <label className="control-label col-sm-2" htmlFor="contact-name">First Name:</label>
           <div className="col-sm-10">
             <input 
               type="text" 
               className="form-control" 
-              id="contact-name"
-              name="contactName"
+              id="contact--given-name"
+              name="contactGivenName"
               onChange={(event) => this.handleInputChange(event)} />
-            { this.displayValidationErrors('contactName') }
+            { this.displayValidationErrors('contactGivenName') }
+          </div>
+        </div>
+        <div className="form-group">
+          <label className="control-label col-sm-2" htmlFor="contact-name">Last Name:</label>
+          <div className="col-sm-10">
+            <input 
+              type="text" 
+              className="form-control" 
+              id="contact-surname"
+              name="contactSurname"
+              onChange={(event) => this.handleInputChange(event)} />
+            { this.displayValidationErrors('contactSurname') }
           </div>
         </div>
         <div className="form-group">
@@ -212,12 +224,17 @@ export default class AddContactForm extends Component {
         </div>
         <div className="form-group"> 
           <div className="col-sm-offset-2 col-sm-10 btn-container">
-            <input type="button" className="btn btn-default" onClick={this.props.closeAddContactModal} value="Cancel" />
-            <input 
+            <button 
+              type="button" 
+              className="btn btn-default" 
+              onClick={this.props.closeAddContactModal}>
+              Cancel
+            </button>
+            <button 
               type="submit" 
-              className={`btn btn-primary`} 
-              value="save"
-              />
+              className="btn btn-primary">
+              Save
+            </button>
           </div>
         </div>
       </form>

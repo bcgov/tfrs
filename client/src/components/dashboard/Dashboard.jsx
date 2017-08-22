@@ -28,15 +28,7 @@ class Dashboard extends Component {
                 <div className="list-group">
                   <span className="list-group-item">
                     <span className="pull-right">50</span>
-                    Available Balance of Validated Credits
-                  </span>
-                  <span className="list-group-item">
-                    <span className="pull-right">55</span>
-                    Validated Credits
-                  </span>
-                  <span className="list-group-item">
-                    <span className="pull-right">5</span>
-                    Encumbered by Proposed Transfer
+                    Credits
                   </span>
                 </div>
               </div>
@@ -63,6 +55,7 @@ class Dashboard extends Component {
                 handleAcceptCreditTransfer={(id, note) => this.handleAcceptCreditTransfer(id, note)}
                 acceptCreditTransferSuccess={this.props.acceptCreditTransferSuccess}
                 acceptCreditTransferReset={() => this.props.acceptCreditTransferReset()}
+                creditTradeStatuses={this.props.creditTradeStatuses}
               />
             </div>
           </div>
@@ -76,6 +69,7 @@ export default connect (
   state => ({
     accountActivityData: state.rootReducer[ReducerTypes.GET_ACCOUNT_ACTIVITY].data,
     acceptCreditTransferSuccess: state.rootReducer[ReducerTypes.ACCEPT_CREDIT_TRANSFER].success,
+    creditTradeStatuses: state.rootReducer[ReducerTypes.CREDIT_TRADE_STATUSES].data,
   }),
   dispatch => ({
     getAccountActivity: () => {

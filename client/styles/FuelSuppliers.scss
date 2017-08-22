@@ -29,6 +29,11 @@
         margin: 0 0.5rem;
       }
     }
+
+    .react-bs-container-body {
+      max-height: 300px;
+      overflow: auto;
+    }
   }
 }
 
@@ -39,5 +44,49 @@
     padding: 1rem;
     border: 1px solid $border-grey;
     border-radius: 5px;
+  }
+
+  .contacts {
+    margin: 1rem 0;
+
+    .add-btn {
+      position: absolute;
+      right: 1.5rem;
+      top: -4rem;
+
+      @include large {
+        position: initial;
+      }
+    }
+
+    .react-bs-table {
+      max-height: 300px;
+      overflow: auto;
+    }
+  }
+
+  .account-balance-container {
+    margin-top: 3rem;
+  }
+}
+
+.header-container {
+  @include flex;
+  align-items: center;
+  flex-wrap: wrap;
+  margin-bottom: 4rem;
+}
+
+.title {
+  display: inline-block;
+  margin-bottom: 0;
+  margin-right: 2rem;
+}
+
+.badge-container {
+  display: inline-block;
+
+  & > * {
+    margin-right: 0.5rem;
   }
 }

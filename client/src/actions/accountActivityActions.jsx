@@ -6,7 +6,20 @@ import { activity } from '../sampleData.jsx';
 import { CreditTransfer } from '../sampleData.jsx';
 
 export const getAccountActivity = () => (dispatch) => {
-  dispatch(getAccountActivitySuccess(activity));
+  dispatch(getAccountActivityRequest());
+  axios.get(Routes.BASE_URL + Routes.CREDIT_TRADE_API)
+  .then((response) => {
+    dispatch(getAccountActivitySuccess(response.data));
+  }).catch((error) => {
+    dispatch(getAccountActivityError(error.response))
+  })
+}
+
+const getAccountActivityRequest = () => {
+  return {
+    name: ReducerTypes.GET_ACCOUNT_ACTIVITY,
+    type: ActionTypes.REQUEST,
+  }
 }
 
 const getAccountActivitySuccess = (activity) => {
@@ -14,6 +27,14 @@ const getAccountActivitySuccess = (activity) => {
     name: ReducerTypes.GET_ACCOUNT_ACTIVITY,
     type: ActionTypes.SUCCESS,
     data: activity,
+  }
+}
+
+const getAccountActivityError = (error) => {
+  return {
+    name: ReducerTypes.GET_ACCOUNT_ACTIVITY,
+    type: ActionTypes.ERROR,
+    errorMessage: error,
   }
 }
 
@@ -36,14 +57,35 @@ export const acceptCreditTransferReset = () => {
 }
 
 export const getCreditTransfer = (id) => (dispatch) => {
-  dispatch(getCreditTransferSuccess(CreditTransfer));
+  dispatch(getCreditTransferRequest());
+  axios.get(Routes.BASE_URL + Routes.CREDIT_TRADE_API + '/' + id)
+  .then((response) => {   
+    dispatch(getCreditTransferSuccess(response.data));
+  }).catch((error) => {
+    dispatch(getCreditTransferError(error.response))
+  })
+}
+
+const getCreditTransferRequest = () => {
+  return {
+    name: ReducerTypes.GET_CREDIT_TRANSFER,
+    type: ActionTypes.SUCCESS,
+  }
 }
 
 const getCreditTransferSuccess = (data) => {
   return {
     name: ReducerTypes.GET_CREDIT_TRANSFER,
     type: ActionTypes.SUCCESS,
-    data: data
+    data: data,
+  }
+}
+
+const getCreditTransferError = (error) => {
+  return {
+    name: ReducerTypes.GET_CREDIT_TRANSFER,
+    type: ActionTypes.SUCCESS,
+    errorMessage: error
   }
 }
 

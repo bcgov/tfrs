@@ -1,4 +1,6 @@
 import React, { Component } from 'react';
+import * as Routes from '../../constants/routes.jsx';
+import { plainEnglishPhrase } from '../../utils/functions.jsx';
 import { Link } from 'react-router-dom';
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
 import { Modal } from 'react-bootstrap';
@@ -36,8 +38,26 @@ class RecentAccountActivityTable extends Component {
     return (
       <div>
         <button className="simple-btn" onClick={() => this.handleAcceptClick(row)}>Accept</button>
-        <Link to="/" className="no-underline">View</Link>
+        <Link to={Routes.CREDIT_TRANSFER + row.id} className="no-underline">View</Link>
       </div>
+    )
+  }
+
+  statusFormatter(cell, row) {
+    let statusString = '';
+    this.props.creditTradeStatuses.map(function(status) {
+      if (status.id === row.creditTradeStatusFK) {
+        statusString = status.status;
+      }
+    });
+    return (
+      <div>{statusString}</div>
+    )
+  }
+
+  descriptionFormatter(cell, row) {
+    return (
+      <div>{plainEnglishPhrase(row)}</div>
     )
   }
   
@@ -45,9 +65,16 @@ class RecentAccountActivityTable extends Component {
     return (
       <div className="account-activity-table">
         <BootstrapTable data={this.props.accountActivityData}>
-          <TableHeaderColumn className="proposalDescription" dataField="proposalDescription" isKey={true} dataSort={true} columnClassName="proposal-description">Proposal Description</TableHeaderColumn>
-          <TableHeaderColumn dataField="lastUpdated" dataSort={true}>Last Updated</TableHeaderColumn>
-          <TableHeaderColumn dataField="status" dataSort={true}>Status</TableHeaderColumn>
+          <TableHeaderColumn 
+            className="proposalDescription" 
+            dataField="plainEnglishPhrase" 
+            isKey={true} 
+            dataFormat={(cell, row) => this.descriptionFormatter(cell, row)}
+            columnClassName="proposal-description">
+            Proposal Description
+          </TableHeaderColumn>
+          <TableHeaderColumn dataField="tradeEffectiveDate" dataSort={true}>Last Updated</TableHeaderColumn>
+          <TableHeaderColumn dataField="creditTradeStatusFK" dataSort={true} dataFormat={(cell, row) => this.statusFormatter(cell, row)}>Status</TableHeaderColumn>
           <TableHeaderColumn dataField="id" dataFormat={(cell, row) => this.actionsFormatter(cell, row)} columnClassName="actions">Actions</TableHeaderColumn>
         </BootstrapTable>
         <Modal
@@ -57,7 +84,7 @@ class RecentAccountActivityTable extends Component {
           aria-labelledby="contained-modal-title"
         >
           <Modal.Header closeButton>
-            <Modal.Title id="contained-modal-title">Contained Modal</Modal.Title>
+            <Modal.Title id="contained-modal-title">Accept Proposal</Modal.Title>
           </Modal.Header>
           <Modal.Body>
             <p>{this.state.modalProposalDescription}</p>
