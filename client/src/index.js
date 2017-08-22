@@ -10,7 +10,8 @@ import {
 	getFuelSupplierActionTypes,
 	getFuelSupplierStatuses,
 	getFuelSupplierTypes,
-	getFuelSupplierContacts
+	getFuelSupplierContacts,
+	getFuelSuppliers
 } from './actions/fuelSuppliersActions.jsx';
 import { 
 	getUsers,
@@ -21,7 +22,8 @@ import {
  } from './actions/userActions.jsx';
 import { 
 	getCreditTrades,
-	getCreditTradeStatuses
+	getCreditTradeStatuses,
+	getCreditTradeTypes
 	} from './actions/creditTradesActions.jsx';
 import App from './components/App.jsx';
 import Dashboard from './components/dashboard/Dashboard.jsx';
@@ -42,6 +44,7 @@ store.dispatch(getFuelSupplierActionTypes());
 store.dispatch(getFuelSupplierStatuses());
 store.dispatch(getFuelSupplierTypes());
 store.dispatch(getFuelSupplierContacts());
+store.dispatch(getFuelSuppliers());
 store.dispatch(getUsers());
 store.dispatch(getPermissions());
 store.dispatch(getRolePermissions());
@@ -49,6 +52,7 @@ store.dispatch(getRoles());
 store.dispatch(getUserRoles());
 store.dispatch(getCreditTrades());
 store.dispatch(getCreditTradeStatuses());
+store.dispatch(getCreditTradeTypes());
 
 ReactDOM.render(
 	<Provider store={store}>

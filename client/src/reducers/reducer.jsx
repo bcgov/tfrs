@@ -74,6 +74,7 @@ const rootReducer = combineReducers({
     [ReducerTypes.ROLES]: createReducer(genericRequest, ReducerTypes.ROLES),    
     [ReducerTypes.USER_ROLES]: createReducer(genericRequest, ReducerTypes.USER_ROLES),    
     [ReducerTypes.CREDIT_TRADE_STATUSES]: createReducer(genericRequest, ReducerTypes.CREDIT_TRADE_STATUSES),    
+    [ReducerTypes.CREDIT_TRADE_TYPES]: createReducer(genericRequest, ReducerTypes.CREDIT_TRADE_TYPES),    
     routing, 
 });
 export default rootReducer;

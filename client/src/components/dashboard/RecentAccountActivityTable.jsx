@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import * as Routes from '../../constants/routes.jsx';
+import { plainEnglishPhrase } from '../../utils/functions.jsx';
 import { Link } from 'react-router-dom';
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
 import { Modal } from 'react-bootstrap';
@@ -53,12 +54,25 @@ class RecentAccountActivityTable extends Component {
       <div>{statusString}</div>
     )
   }
+
+  descriptionFormatter(cell, row) {
+    return (
+      <div>{plainEnglishPhrase(row)}</div>
+    )
+  }
   
   render() {
     return (
       <div className="account-activity-table">
         <BootstrapTable data={this.props.accountActivityData}>
-          <TableHeaderColumn className="proposalDescription" dataField="plainEnglishPhrase" isKey={true} dataSort={true} columnClassName="proposal-description">Proposal Description</TableHeaderColumn>
+          <TableHeaderColumn 
+            className="proposalDescription" 
+            dataField="plainEnglishPhrase" 
+            isKey={true} 
+            dataFormat={(cell, row) => this.descriptionFormatter(cell, row)}
+            columnClassName="proposal-description">
+            Proposal Description
+          </TableHeaderColumn>
           <TableHeaderColumn dataField="tradeEffectiveDate" dataSort={true}>Last Updated</TableHeaderColumn>
           <TableHeaderColumn dataField="creditTradeStatusFK" dataSort={true} dataFormat={(cell, row) => this.statusFormatter(cell, row)}>Status</TableHeaderColumn>
           <TableHeaderColumn dataField="id" dataFormat={(cell, row) => this.actionsFormatter(cell, row)} columnClassName="actions">Actions</TableHeaderColumn>

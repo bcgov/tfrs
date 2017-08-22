@@ -53,17 +53,50 @@ const getCreditTradeStatusesRequest = () => {
   }
 }
 
-const getCreditTradeStatusesSuccess = (fuelSuppliers) => {
+const getCreditTradeStatusesSuccess = (statuses) => {
   return {
     name: ReducerTypes.CREDIT_TRADE_STATUSES,
     type: ActionTypes.SUCCESS,
-    data: fuelSuppliers,
+    data: statuses,
   }
 }
 
 const getCreditTradeStatusesError = (error) => {
   return {
     name: ReducerTypes.CREDIT_TRADE_STATUSES,
+    type: ActionTypes.SUCCESS,
+    errorMessage: error
+  }
+}
+
+export const getCreditTradeTypes = () => (dispatch) => {
+  dispatch(getCreditTradeTypesRequest());
+  axios.get(Routes.BASE_URL + Routes.CREDIT_TRADE_TYPES)
+  .then((response) => {
+    dispatch(getCreditTradeTypesSuccess(response.data));
+  }).catch((error) => {
+    dispatch(getCreditTradeTypesError(error.response))
+  })
+}
+
+const getCreditTradeTypesRequest = () => {
+  return {
+    name: ReducerTypes.CREDIT_TRADE_TYPES,
+    type: ActionTypes.SUCCESS,
+  }
+}
+
+const getCreditTradeTypesSuccess = (types) => {
+  return {
+    name: ReducerTypes.CREDIT_TRADE_TYPES,
+    type: ActionTypes.SUCCESS,
+    data: types,
+  }
+}
+
+const getCreditTradeTypesError = (error) => {
+  return {
+    name: ReducerTypes.CREDIT_TRADE_TYPES,
     type: ActionTypes.SUCCESS,
     errorMessage: error
   }

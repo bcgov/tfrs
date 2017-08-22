@@ -10,6 +10,7 @@ import {
   rejectCreditTransfer,
   rescindProposal } from '../../actions/accountActivityActions.jsx';
 import { getFuelSuppliers } from '../../actions/fuelSuppliersActions.jsx';
+import { plainEnglishSentence } from '../../utils/functions.jsx';
 import { BootstrapTable, TableHeaderColumn, ButtonGroup } from 'react-bootstrap-table';
 
 class CreditTransfer extends Component {
@@ -85,10 +86,10 @@ class CreditTransfer extends Component {
           }
           <div className="credit-transfer-progress-bar">
             <div className="arrow-steps clearfix">
-              <div className={this.props.data.creditTradeStatusFK === "Proposed" ? "step current" : "step"}><span>Proposed</span></div>
-              <div className={this.props.data.creditTradeStatusFK === "Accepted" ? "step current" : "step"}><span>Accepted</span></div>
-              <div className={this.props.data.creditTradeStatusFK === "Approved" ? "step current" : "step"}><span>Approved</span></div>
-              <div className={this.props.data.creditTradeStatusFK === "Complete" ? "step current" : "step"}><span>Complete</span></div>
+              <div className={this.props.data.creditTradeStatusFK == Values.PROPOSED ? "step current" : "step"}><span>Proposed</span></div>
+              <div className={this.props.data.creditTradeStatusFK === Values.ACCEPTED ? "step current" : "step"}><span>Accepted</span></div>
+              <div className={this.props.data.creditTradeStatusFK === Values.APPROVED ? "step current" : "step"}><span>Approved</span></div>
+              <div className={this.props.data.creditTradeStatusFK === Values.COMPLETE ? "step current" : "step"}><span>Complete</span></div>
             </div>
           </div>
           <div className="credit-transfer-details">
