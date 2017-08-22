@@ -14,6 +14,7 @@ import { getFuelSuppliers } from '../../actions/fuelSuppliersActions.jsx';
 import { plainEnglishSentence } from '../../utils/functions.jsx';
 import { BootstrapTable, TableHeaderColumn, ButtonGroup } from 'react-bootstrap-table';
 import TransactionHistory from './TransactionHistory.jsx';
+import CreditTransferVisualRepresentation from './CreditTransferVisualRepresentation.jsx';
 
 class CreditTransfer extends Component {
   constructor(props) {
@@ -161,6 +162,7 @@ class CreditTransfer extends Component {
                   }
                 </div>
                 }
+                <CreditTransferVisualRepresentation data={this.props.data} />
               <div className="form-group note">
                 <label htmlFor="comment">Note:</label>
                 <textarea 

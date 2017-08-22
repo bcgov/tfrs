@@ -191,3 +191,38 @@
     font-weight: bold;
   }
 }
+
+.visual-representation {
+  @include flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  margin-top: 3rem;
+
+  .col-md-4 {
+    text-align: center;
+  }
+
+  .initiator-container, .arrow, .respondent-container {
+    display: inline-block;
+    margin: 1rem;
+    padding: 2rem;
+    border-radius: 5px;
+
+    @include mobile {
+      text-align: center;
+    }
+  }
+
+  .arrow {
+    text-align: center;
+
+    .fa {
+      font-size: 5rem;
+    }
+  }
+
+  .initiator-container, .respondent-container {
+    color: #FFFFFF;
+  }
+}
