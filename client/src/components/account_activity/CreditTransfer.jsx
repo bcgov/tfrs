@@ -13,6 +13,7 @@ import {
 import { getFuelSuppliers } from '../../actions/fuelSuppliersActions.jsx';
 import { plainEnglishSentence } from '../../utils/functions.jsx';
 import { BootstrapTable, TableHeaderColumn, ButtonGroup } from 'react-bootstrap-table';
+import TransactionHistory from './TransactionHistory.jsx';
 
 class CreditTransfer extends Component {
   constructor(props) {
@@ -296,6 +297,7 @@ class CreditTransfer extends Component {
               </button>
             </Modal.Footer>
           </Modal>
+          <TransactionHistory />
         </div>
         }
       </div>

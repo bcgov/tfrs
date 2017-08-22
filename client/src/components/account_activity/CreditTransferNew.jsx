@@ -12,6 +12,7 @@ import {
   rescindProposal } from '../../actions/accountActivityActions.jsx';
 import { getFuelSuppliers } from '../../actions/fuelSuppliersActions.jsx';
 import { BootstrapTable, TableHeaderColumn, ButtonGroup } from 'react-bootstrap-table';
+import TransactionHistory from './TransactionHistory.jsx';
 
 class CreditTransferNew extends Component {
   constructor(props) {
@@ -70,7 +71,7 @@ class CreditTransferNew extends Component {
         <div className="credit-transfer-details">
           <form className="form-inline" onSubmit={(event) => this.handleSubmit(event)}>
             <div className="main-form">
-              <span>Air Liquid Canada proposes to </span>
+              <span>{this.props.fuelSuppliers && this.props.fuelSuppliers[0].name} proposes to </span>
               <div className="form-group">
                 <select 
                   className="form-control" 
@@ -228,6 +229,7 @@ class CreditTransferNew extends Component {
             </button>
           </Modal.Footer>
         </Modal>
+        <TransactionHistory />
       </div>
     );
   }
