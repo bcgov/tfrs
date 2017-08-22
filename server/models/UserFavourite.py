@@ -25,11 +25,14 @@ from django.db import models
 from django.utils import timezone
 from .User import User
 
+from auditable.models import Auditable
 
-class UserFavourite(models.Model):	    
+class UserFavourite(Auditable):	    
     context = models.CharField(max_length=200, blank=True, null=True)   
     name = models.CharField(max_length=200, blank=True, null=True)   
     value = models.CharField(max_length=8000, blank=True, null=True)   
     isDefault = models.BooleanField()   
     userFK = models.ForeignKey('User', related_name='UserFavouriteuserFK')   
+    class Meta:
+        db_table = 'USER_FAVOURITE'
 

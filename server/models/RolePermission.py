@@ -26,8 +26,11 @@ from django.utils import timezone
 from .Role import Role
 from .Permission import Permission
 
+from auditable.models import Auditable
 
-class RolePermission(models.Model):	    
+class RolePermission(Auditable):	    
     roleFK = models.ForeignKey('Role', related_name='RolePermissionroleFK')   
     permissionFK = models.ForeignKey('Permission', related_name='RolePermissionpermissionFK')   
+    class Meta:
+        db_table = 'ROLE_PERMISSION'
 

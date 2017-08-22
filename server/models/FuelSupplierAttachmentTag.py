@@ -25,8 +25,11 @@ from django.db import models
 from django.utils import timezone
 from .FuelSupplierAttachment import FuelSupplierAttachment
 
+from auditable.models import Auditable
 
-class FuelSupplierAttachmentTag(models.Model):	    
+class FuelSupplierAttachmentTag(Auditable):	    
     fuelSupplierAttachmentFK = models.ForeignKey('FuelSupplierAttachment', related_name='FuelSupplierAttachmentTagfuelSupplierAttachmentFK')   
     tag = models.CharField(max_length=100)   
+    class Meta:
+        db_table = 'FUEL_SUPPLIER_ATTACHMENT_TAG'
 

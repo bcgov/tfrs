@@ -24,7 +24,6 @@ import datetime
 from django.db import models
 from django.utils import timezone
 
-
 class NotificationViewModel(models.Model):	    
     eventId = models.IntegerField()   
     hasBeenViewed = models.BooleanField()   
@@ -35,4 +34,3 @@ class NotificationViewModel(models.Model):
     userId = models.IntegerField()   
     class Meta:
       abstract = True
-

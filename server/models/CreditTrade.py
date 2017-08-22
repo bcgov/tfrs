@@ -28,8 +28,9 @@ from .FuelSupplier import FuelSupplier
 from .CreditTradeType import CreditTradeType
 from .CreditTradeHistory import CreditTradeHistory
 
+from auditable.models import Auditable
 
-class CreditTrade(models.Model):	    
+class CreditTrade(Auditable):	    
     creditTradeStatusFK = models.ForeignKey('CreditTradeStatus', related_name='CreditTradecreditTradeStatusFK')   
     initiatorFK = models.ForeignKey('FuelSupplier', related_name='CreditTradeinitiatorFK', blank=True, null=True)   
     respondentFK = models.ForeignKey('FuelSupplier', related_name='CreditTraderespondentFK')   
@@ -39,4 +40,6 @@ class CreditTrade(models.Model):
     tradeEffectiveDate = models.DateField(blank=True, null=True)   
     plainEnglishPhrase = models.CharField(max_length=2000)   
     historySet = models.ManyToManyField('CreditTradeHistory', related_name='CreditTradehistorySet', blank=True)   
+    class Meta:
+        db_table = 'CREDIT_TRADE'
 

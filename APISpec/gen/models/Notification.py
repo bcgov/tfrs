@@ -26,10 +26,13 @@ from django.utils import timezone
 from .NotificationEvent import NotificationEvent
 from .User import User
 
+from auditable.models import Auditable
 
-class Notification(models.Model):	    
+class Notification(Auditable):	    
     notificationEventFK = models.ForeignKey('NotificationEvent', related_name='NotificationnotificationEventFK')   
     hasBeenViewed = models.BooleanField()   
     isWatchNotification = models.BooleanField()   
     userFK = models.ForeignKey('User', related_name='NotificationuserFK')   
+    class Meta:
+        db_table = 'NOTIFICATION'
 

@@ -24,8 +24,11 @@ import datetime
 from django.db import models
 from django.utils import timezone
 
+from auditable.models import Auditable
 
-class Role(models.Model):	    
+class Role(Auditable):	    
     name = models.CharField(max_length=200)   
     description = models.CharField(max_length=1000)   
+    class Meta:
+        db_table = 'ROLE'
 

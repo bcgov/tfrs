@@ -26,8 +26,9 @@ from django.utils import timezone
 from .FuelSupplier import FuelSupplier
 from .User import User
 
+from auditable.models import Auditable
 
-class FuelSupplierContact(models.Model):	    
+class FuelSupplierContact(Auditable):	    
     fuelSupplierFK = models.ForeignKey('FuelSupplier', related_name='FuelSupplierContactfuelSupplierFK')   
     givenName = models.CharField(max_length=100, blank=True, null=True)   
     surname = models.CharField(max_length=100, blank=True, null=True)   
@@ -37,4 +38,6 @@ class FuelSupplierContact(models.Model):
     emailAddress = models.CharField(max_length=150, blank=True, null=True)   
     workPhoneNumber = models.CharField(max_length=25, blank=True, null=True)   
     mobilePhoneNumber = models.CharField(max_length=25, blank=True, null=True)   
+    class Meta:
+        db_table = 'FUEL_SUPPLIER_CONTACT'
 

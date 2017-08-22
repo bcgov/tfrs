@@ -25,8 +25,9 @@ from django.db import models
 from django.utils import timezone
 from .FuelSupplier import FuelSupplier
 
+from auditable.models import Auditable
 
-class FuelSupplierCCData(models.Model):	    
+class FuelSupplierCCData(Auditable):	    
     fuelSupplierFK = models.ForeignKey('FuelSupplier', related_name='FuelSupplierCCDatafuelSupplierFK')   
     commonClientOrgId = models.CharField(max_length=100)   
     lastUpdatefromCommonClient = models.DateField()   
@@ -36,4 +37,6 @@ class FuelSupplierCCData(models.Model):
     corporateAddressCity = models.CharField(max_length=100, blank=True, null=True)   
     corporateAddressPostalCode = models.CharField(max_length=25, blank=True, null=True)   
     corporateAddressProvince = models.CharField(max_length=50, blank=True, null=True)   
+    class Meta:
+        db_table = 'FUEL_SUPPLIER_C_C_DATA'
 

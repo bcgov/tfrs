@@ -24,9 +24,12 @@ import datetime
 from django.db import models
 from django.utils import timezone
 
+from auditable.models import Auditable
 
-class Permission(models.Model):	    
+class Permission(Auditable):	    
     code = models.CharField(max_length=100)   
     name = models.CharField(max_length=100)   
     description = models.CharField(max_length=1000)   
+    class Meta:
+        db_table = 'PERMISSION'
 

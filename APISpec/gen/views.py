@@ -27,6 +27,7 @@ from rest_framework import mixins
 from rest_framework import generics
 from rest_framework_bulk import BulkCreateModelMixin
 from . import serializers
+from auditable.views import AuditableMixin
 from .models.Audit import Audit
 from .models.CreditTrade import CreditTrade
 from .models.CreditTradeHistory import CreditTradeHistory
@@ -66,7 +67,7 @@ from .models.UserRoleViewModel import UserRoleViewModel
 from .models.UserViewModel import UserViewModel
 
 
-class credittradesBulkPost(BulkCreateModelMixin, generics.GenericAPIView):
+class credittradesBulkPost(AuditableMixin,BulkCreateModelMixin, generics.GenericAPIView):
   """  
   Bulk create / update a number of CreditTrade object  
   """
@@ -80,7 +81,7 @@ class credittradesBulkPost(BulkCreateModelMixin, generics.GenericAPIView):
     """
     return self.create(request, *args, **kwargs)
 
-class credittradesGet(mixins.ListModelMixin, mixins.CreateModelMixin, generics.GenericAPIView):
+class credittradesGet(AuditableMixin,mixins.ListModelMixin, mixins.CreateModelMixin, generics.GenericAPIView):
   """  
   Lists available CreditTrade objects  
   """
@@ -99,7 +100,7 @@ class credittradesGet(mixins.ListModelMixin, mixins.CreateModelMixin, generics.G
     """
     return self.create(request, *args, **kwargs)
 
-class credittradesIdDeletePost(mixins.DestroyModelMixin, generics.GenericAPIView):
+class credittradesIdDeletePost(AuditableMixin,mixins.DestroyModelMixin, generics.GenericAPIView):
   """  
   Deletes a specific CreditTrade object  
   """
@@ -114,7 +115,7 @@ class credittradesIdDeletePost(mixins.DestroyModelMixin, generics.GenericAPIView
     return self.destroy(request, *args, **kwargs)
 
 
-class credittradesIdGet(mixins.RetrieveModelMixin, mixins.UpdateModelMixin, generics.GenericAPIView):
+class credittradesIdGet(AuditableMixin,mixins.RetrieveModelMixin, mixins.UpdateModelMixin, generics.GenericAPIView):
   """  
   Gets a specific CreditTrade object  
   """
@@ -133,7 +134,7 @@ class credittradesIdGet(mixins.RetrieveModelMixin, mixins.UpdateModelMixin, gene
     """
     return self.update(request, *args, **kwargs)
 
-class credittradehistoriesBulkPost(BulkCreateModelMixin, generics.GenericAPIView):
+class credittradehistoriesBulkPost(AuditableMixin,BulkCreateModelMixin, generics.GenericAPIView):
   """  
   Bulk create / update a number of CreditTradeHistory object  
   """
@@ -147,7 +148,7 @@ class credittradehistoriesBulkPost(BulkCreateModelMixin, generics.GenericAPIView
     """
     return self.create(request, *args, **kwargs)
 
-class credittradehistoriesGet(mixins.ListModelMixin, mixins.CreateModelMixin, generics.GenericAPIView):
+class credittradehistoriesGet(AuditableMixin,mixins.ListModelMixin, mixins.CreateModelMixin, generics.GenericAPIView):
   """  
   Lists available CreditTradeHistory objects  
   """
@@ -166,7 +167,7 @@ class credittradehistoriesGet(mixins.ListModelMixin, mixins.CreateModelMixin, ge
     """
     return self.create(request, *args, **kwargs)
 
-class credittradehistoriesIdDeletePost(mixins.DestroyModelMixin, generics.GenericAPIView):
+class credittradehistoriesIdDeletePost(AuditableMixin,mixins.DestroyModelMixin, generics.GenericAPIView):
   """  
   Deletes a specific CreditTradeHistory object  
   """
@@ -181,7 +182,7 @@ class credittradehistoriesIdDeletePost(mixins.DestroyModelMixin, generics.Generi
     return self.destroy(request, *args, **kwargs)
 
 
-class credittradehistoriesIdGet(mixins.RetrieveModelMixin, mixins.UpdateModelMixin, generics.GenericAPIView):
+class credittradehistoriesIdGet(AuditableMixin,mixins.RetrieveModelMixin, mixins.UpdateModelMixin, generics.GenericAPIView):
   """  
   Gets a specific CreditTradeHistory object  
   """
@@ -200,7 +201,7 @@ class credittradehistoriesIdGet(mixins.RetrieveModelMixin, mixins.UpdateModelMix
     """
     return self.update(request, *args, **kwargs)
 
-class credittradestatusesBulkPost(BulkCreateModelMixin, generics.GenericAPIView):
+class credittradestatusesBulkPost(AuditableMixin,BulkCreateModelMixin, generics.GenericAPIView):
   """  
   Bulk create / update a number of CreditTradeStatus object  
   """
@@ -214,7 +215,7 @@ class credittradestatusesBulkPost(BulkCreateModelMixin, generics.GenericAPIView)
     """
     return self.create(request, *args, **kwargs)
 
-class credittradestatusesGet(mixins.ListModelMixin, mixins.CreateModelMixin, generics.GenericAPIView):
+class credittradestatusesGet(AuditableMixin,mixins.ListModelMixin, mixins.CreateModelMixin, generics.GenericAPIView):
   """  
   Lists available CreditTradeStatus objects  
   """
@@ -233,7 +234,7 @@ class credittradestatusesGet(mixins.ListModelMixin, mixins.CreateModelMixin, gen
     """
     return self.create(request, *args, **kwargs)
 
-class credittradestatusesIdDeletePost(mixins.DestroyModelMixin, generics.GenericAPIView):
+class credittradestatusesIdDeletePost(AuditableMixin,mixins.DestroyModelMixin, generics.GenericAPIView):
   """  
   Deletes a specific CreditTradeStatus object  
   """
@@ -248,7 +249,7 @@ class credittradestatusesIdDeletePost(mixins.DestroyModelMixin, generics.Generic
     return self.destroy(request, *args, **kwargs)
 
 
-class credittradestatusesIdGet(mixins.RetrieveModelMixin, mixins.UpdateModelMixin, generics.GenericAPIView):
+class credittradestatusesIdGet(AuditableMixin,mixins.RetrieveModelMixin, mixins.UpdateModelMixin, generics.GenericAPIView):
   """  
   Gets a specific CreditTradeStatus object  
   """
@@ -267,7 +268,7 @@ class credittradestatusesIdGet(mixins.RetrieveModelMixin, mixins.UpdateModelMixi
     """
     return self.update(request, *args, **kwargs)
 
-class credittradetypesBulkPost(BulkCreateModelMixin, generics.GenericAPIView):
+class credittradetypesBulkPost(AuditableMixin,BulkCreateModelMixin, generics.GenericAPIView):
   """  
   Bulk create / update a number of CreditTradeType object  
   """
@@ -281,7 +282,7 @@ class credittradetypesBulkPost(BulkCreateModelMixin, generics.GenericAPIView):
     """
     return self.create(request, *args, **kwargs)
 
-class credittradetypesGet(mixins.ListModelMixin, mixins.CreateModelMixin, generics.GenericAPIView):
+class credittradetypesGet(AuditableMixin,mixins.ListModelMixin, mixins.CreateModelMixin, generics.GenericAPIView):
   """  
   Lists available CreditTradeType objects  
   """
@@ -300,7 +301,7 @@ class credittradetypesGet(mixins.ListModelMixin, mixins.CreateModelMixin, generi
     """
     return self.create(request, *args, **kwargs)
 
-class credittradetypesIdDeletePost(mixins.DestroyModelMixin, generics.GenericAPIView):
+class credittradetypesIdDeletePost(AuditableMixin,mixins.DestroyModelMixin, generics.GenericAPIView):
   """  
   Deletes a specific CreditTradeType object  
   """
@@ -315,7 +316,7 @@ class credittradetypesIdDeletePost(mixins.DestroyModelMixin, generics.GenericAPI
     return self.destroy(request, *args, **kwargs)
 
 
-class credittradetypesIdGet(mixins.RetrieveModelMixin, mixins.UpdateModelMixin, generics.GenericAPIView):
+class credittradetypesIdGet(AuditableMixin,mixins.RetrieveModelMixin, mixins.UpdateModelMixin, generics.GenericAPIView):
   """  
   Gets a specific CreditTradeType object  
   """
@@ -334,7 +335,7 @@ class credittradetypesIdGet(mixins.RetrieveModelMixin, mixins.UpdateModelMixin, 
     """
     return self.update(request, *args, **kwargs)
 
-class fuelsuppliersBulkPost(BulkCreateModelMixin, generics.GenericAPIView):
+class fuelsuppliersBulkPost(AuditableMixin,BulkCreateModelMixin, generics.GenericAPIView):
   """  
   Bulk create / update a number of FuelSupplier object  
   """
@@ -348,7 +349,7 @@ class fuelsuppliersBulkPost(BulkCreateModelMixin, generics.GenericAPIView):
     """
     return self.create(request, *args, **kwargs)
 
-class fuelsuppliersGet(mixins.ListModelMixin, mixins.CreateModelMixin, generics.GenericAPIView):
+class fuelsuppliersGet(AuditableMixin,mixins.ListModelMixin, mixins.CreateModelMixin, generics.GenericAPIView):
   """  
   Lists available FuelSupplier objects  
   """
@@ -367,7 +368,7 @@ class fuelsuppliersGet(mixins.ListModelMixin, mixins.CreateModelMixin, generics.
     """
     return self.create(request, *args, **kwargs)
 
-class fuelsuppliersIdDeletePost(mixins.DestroyModelMixin, generics.GenericAPIView):
+class fuelsuppliersIdDeletePost(AuditableMixin,mixins.DestroyModelMixin, generics.GenericAPIView):
   """  
   Deletes a specific FuelSupplier object  
   """
@@ -382,7 +383,7 @@ class fuelsuppliersIdDeletePost(mixins.DestroyModelMixin, generics.GenericAPIVie
     return self.destroy(request, *args, **kwargs)
 
 
-class fuelsuppliersIdGet(mixins.RetrieveModelMixin, mixins.UpdateModelMixin, generics.GenericAPIView):
+class fuelsuppliersIdGet(AuditableMixin,mixins.RetrieveModelMixin, mixins.UpdateModelMixin, generics.GenericAPIView):
   """  
   Gets a specific FuelSupplier object  
   """
@@ -401,7 +402,7 @@ class fuelsuppliersIdGet(mixins.RetrieveModelMixin, mixins.UpdateModelMixin, gen
     """
     return self.update(request, *args, **kwargs)
 
-class fuelsupplieractionstypesBulkPost(BulkCreateModelMixin, generics.GenericAPIView):
+class fuelsupplieractionstypesBulkPost(AuditableMixin,BulkCreateModelMixin, generics.GenericAPIView):
   """  
   Bulk create / update a number of FuelSupplierActionsType object  
   """
@@ -415,7 +416,7 @@ class fuelsupplieractionstypesBulkPost(BulkCreateModelMixin, generics.GenericAPI
     """
     return self.create(request, *args, **kwargs)
 
-class fuelsupplieractionstypesGet(mixins.ListModelMixin, mixins.CreateModelMixin, generics.GenericAPIView):
+class fuelsupplieractionstypesGet(AuditableMixin,mixins.ListModelMixin, mixins.CreateModelMixin, generics.GenericAPIView):
   """  
   Lists available FuelSupplierActionsType objects  
   """
@@ -434,7 +435,7 @@ class fuelsupplieractionstypesGet(mixins.ListModelMixin, mixins.CreateModelMixin
     """
     return self.create(request, *args, **kwargs)
 
-class fuelsupplieractionstypesIdDeletePost(mixins.DestroyModelMixin, generics.GenericAPIView):
+class fuelsupplieractionstypesIdDeletePost(AuditableMixin,mixins.DestroyModelMixin, generics.GenericAPIView):
   """  
   Deletes a specific FuelSupplierActionsType object  
   """
@@ -449,7 +450,7 @@ class fuelsupplieractionstypesIdDeletePost(mixins.DestroyModelMixin, generics.Ge
     return self.destroy(request, *args, **kwargs)
 
 
-class fuelsupplieractionstypesIdGet(mixins.RetrieveModelMixin, mixins.UpdateModelMixin, generics.GenericAPIView):
+class fuelsupplieractionstypesIdGet(AuditableMixin,mixins.RetrieveModelMixin, mixins.UpdateModelMixin, generics.GenericAPIView):
   """  
   Gets a specific FuelSupplierActionsType object  
   """
@@ -468,7 +469,7 @@ class fuelsupplieractionstypesIdGet(mixins.RetrieveModelMixin, mixins.UpdateMode
     """
     return self.update(request, *args, **kwargs)
 
-class fuelsupplierattachmentsBulkPost(BulkCreateModelMixin, generics.GenericAPIView):
+class fuelsupplierattachmentsBulkPost(AuditableMixin,BulkCreateModelMixin, generics.GenericAPIView):
   """  
   Bulk create / update a number of FuelSupplierAttachment object  
   """
@@ -482,7 +483,7 @@ class fuelsupplierattachmentsBulkPost(BulkCreateModelMixin, generics.GenericAPIV
     """
     return self.create(request, *args, **kwargs)
 
-class fuelsupplierattachmentsGet(mixins.ListModelMixin, mixins.CreateModelMixin, generics.GenericAPIView):
+class fuelsupplierattachmentsGet(AuditableMixin,mixins.ListModelMixin, mixins.CreateModelMixin, generics.GenericAPIView):
   """  
   Lists available FuelSupplierAttachment objects  
   """
@@ -501,7 +502,7 @@ class fuelsupplierattachmentsGet(mixins.ListModelMixin, mixins.CreateModelMixin,
     """
     return self.create(request, *args, **kwargs)
 
-class fuelsupplierattachmentsIdDeletePost(mixins.DestroyModelMixin, generics.GenericAPIView):
+class fuelsupplierattachmentsIdDeletePost(AuditableMixin,mixins.DestroyModelMixin, generics.GenericAPIView):
   """  
   Deletes a specific FuelSupplierAttachment object  
   """
@@ -516,7 +517,7 @@ class fuelsupplierattachmentsIdDeletePost(mixins.DestroyModelMixin, generics.Gen
     return self.destroy(request, *args, **kwargs)
 
 
-class fuelsupplierattachmentsIdGet(mixins.RetrieveModelMixin, mixins.UpdateModelMixin, generics.GenericAPIView):
+class fuelsupplierattachmentsIdGet(AuditableMixin,mixins.RetrieveModelMixin, mixins.UpdateModelMixin, generics.GenericAPIView):
   """  
   Gets a specific FuelSupplierAttachment object  
   """
@@ -535,7 +536,7 @@ class fuelsupplierattachmentsIdGet(mixins.RetrieveModelMixin, mixins.UpdateModel
     """
     return self.update(request, *args, **kwargs)
 
-class fuelsupplierattachmenttagsBulkPost(BulkCreateModelMixin, generics.GenericAPIView):
+class fuelsupplierattachmenttagsBulkPost(AuditableMixin,BulkCreateModelMixin, generics.GenericAPIView):
   """  
   Bulk create / update a number of FuelSupplierAttachmentTag object  
   """
@@ -549,7 +550,7 @@ class fuelsupplierattachmenttagsBulkPost(BulkCreateModelMixin, generics.GenericA
     """
     return self.create(request, *args, **kwargs)
 
-class fuelsupplierattachmenttagsGet(mixins.ListModelMixin, mixins.CreateModelMixin, generics.GenericAPIView):
+class fuelsupplierattachmenttagsGet(AuditableMixin,mixins.ListModelMixin, mixins.CreateModelMixin, generics.GenericAPIView):
   """  
   Lists available FuelSupplierAttachmentTag objects  
   """
@@ -568,7 +569,7 @@ class fuelsupplierattachmenttagsGet(mixins.ListModelMixin, mixins.CreateModelMix
     """
     return self.create(request, *args, **kwargs)
 
-class fuelsupplierattachmenttagsIdDeletePost(mixins.DestroyModelMixin, generics.GenericAPIView):
+class fuelsupplierattachmenttagsIdDeletePost(AuditableMixin,mixins.DestroyModelMixin, generics.GenericAPIView):
   """  
   Deletes a specific FuelSupplierAttachmentTag object  
   """
@@ -583,7 +584,7 @@ class fuelsupplierattachmenttagsIdDeletePost(mixins.DestroyModelMixin, generics.
     return self.destroy(request, *args, **kwargs)
 
 
-class fuelsupplierattachmenttagsIdGet(mixins.RetrieveModelMixin, mixins.UpdateModelMixin, generics.GenericAPIView):
+class fuelsupplierattachmenttagsIdGet(AuditableMixin,mixins.RetrieveModelMixin, mixins.UpdateModelMixin, generics.GenericAPIView):
   """  
   Gets a specific FuelSupplierAttachmentTag object  
   """
@@ -602,7 +603,7 @@ class fuelsupplierattachmenttagsIdGet(mixins.RetrieveModelMixin, mixins.UpdateMo
     """
     return self.update(request, *args, **kwargs)
 
-class fuelsupplierbalancesBulkPost(BulkCreateModelMixin, generics.GenericAPIView):
+class fuelsupplierbalancesBulkPost(AuditableMixin,BulkCreateModelMixin, generics.GenericAPIView):
   """  
   Bulk create / update a number of FuelSupplierBalance object  
   """
@@ -616,7 +617,7 @@ class fuelsupplierbalancesBulkPost(BulkCreateModelMixin, generics.GenericAPIView
     """
     return self.create(request, *args, **kwargs)
 
-class fuelsupplierbalancesGet(mixins.ListModelMixin, mixins.CreateModelMixin, generics.GenericAPIView):
+class fuelsupplierbalancesGet(AuditableMixin,mixins.ListModelMixin, mixins.CreateModelMixin, generics.GenericAPIView):
   """  
   Lists available FuelSupplierBalance objects  
   """
@@ -635,7 +636,7 @@ class fuelsupplierbalancesGet(mixins.ListModelMixin, mixins.CreateModelMixin, ge
     """
     return self.create(request, *args, **kwargs)
 
-class fuelsupplierbalancesIdDeletePost(mixins.DestroyModelMixin, generics.GenericAPIView):
+class fuelsupplierbalancesIdDeletePost(AuditableMixin,mixins.DestroyModelMixin, generics.GenericAPIView):
   """  
   Deletes a specific FuelSupplierBalance object  
   """
@@ -650,7 +651,7 @@ class fuelsupplierbalancesIdDeletePost(mixins.DestroyModelMixin, generics.Generi
     return self.destroy(request, *args, **kwargs)
 
 
-class fuelsupplierbalancesIdGet(mixins.RetrieveModelMixin, mixins.UpdateModelMixin, generics.GenericAPIView):
+class fuelsupplierbalancesIdGet(AuditableMixin,mixins.RetrieveModelMixin, mixins.UpdateModelMixin, generics.GenericAPIView):
   """  
   Gets a specific FuelSupplierBalance object  
   """
@@ -669,7 +670,7 @@ class fuelsupplierbalancesIdGet(mixins.RetrieveModelMixin, mixins.UpdateModelMix
     """
     return self.update(request, *args, **kwargs)
 
-class fuelsuppliersCCDatumBulkPost(BulkCreateModelMixin, generics.GenericAPIView):
+class fuelsuppliersCCDatumBulkPost(AuditableMixin,BulkCreateModelMixin, generics.GenericAPIView):
   """  
   Bulk create / update a number of FuelSupplierCCData object  
   """
@@ -683,7 +684,7 @@ class fuelsuppliersCCDatumBulkPost(BulkCreateModelMixin, generics.GenericAPIView
     """
     return self.create(request, *args, **kwargs)
 
-class fuelsuppliersCCDatumGet(mixins.ListModelMixin, mixins.CreateModelMixin, generics.GenericAPIView):
+class fuelsuppliersCCDatumGet(AuditableMixin,mixins.ListModelMixin, mixins.CreateModelMixin, generics.GenericAPIView):
   """  
   Lists available FuelSupplierCCData objects  
   """
@@ -702,7 +703,7 @@ class fuelsuppliersCCDatumGet(mixins.ListModelMixin, mixins.CreateModelMixin, ge
     """
     return self.create(request, *args, **kwargs)
 
-class fuelsuppliersCCDatumIdDeletePost(mixins.DestroyModelMixin, generics.GenericAPIView):
+class fuelsuppliersCCDatumIdDeletePost(AuditableMixin,mixins.DestroyModelMixin, generics.GenericAPIView):
   """  
   Deletes a specific FuelSupplierCCData object  
   """
@@ -717,7 +718,7 @@ class fuelsuppliersCCDatumIdDeletePost(mixins.DestroyModelMixin, generics.Generi
     return self.destroy(request, *args, **kwargs)
 
 
-class fuelsuppliersCCDatumIdGet(mixins.RetrieveModelMixin, mixins.UpdateModelMixin, generics.GenericAPIView):
+class fuelsuppliersCCDatumIdGet(AuditableMixin,mixins.RetrieveModelMixin, mixins.UpdateModelMixin, generics.GenericAPIView):
   """  
   Gets a specific FuelSupplierCCData object  
   """
@@ -736,7 +737,7 @@ class fuelsuppliersCCDatumIdGet(mixins.RetrieveModelMixin, mixins.UpdateModelMix
     """
     return self.update(request, *args, **kwargs)
 
-class fuelsuppliercontactsBulkPost(BulkCreateModelMixin, generics.GenericAPIView):
+class fuelsuppliercontactsBulkPost(AuditableMixin,BulkCreateModelMixin, generics.GenericAPIView):
   """  
   Bulk create / update a number of FuelSupplierContact object  
   """
@@ -750,7 +751,7 @@ class fuelsuppliercontactsBulkPost(BulkCreateModelMixin, generics.GenericAPIView
     """
     return self.create(request, *args, **kwargs)
 
-class fuelsuppliercontactsGet(mixins.ListModelMixin, mixins.CreateModelMixin, generics.GenericAPIView):
+class fuelsuppliercontactsGet(AuditableMixin,mixins.ListModelMixin, mixins.CreateModelMixin, generics.GenericAPIView):
   """  
   Lists available FuelSupplierContact objects  
   """
@@ -769,7 +770,7 @@ class fuelsuppliercontactsGet(mixins.ListModelMixin, mixins.CreateModelMixin, ge
     """
     return self.create(request, *args, **kwargs)
 
-class fuelsuppliercontactsIdDeletePost(mixins.DestroyModelMixin, generics.GenericAPIView):
+class fuelsuppliercontactsIdDeletePost(AuditableMixin,mixins.DestroyModelMixin, generics.GenericAPIView):
   """  
   Deletes a specific FuelSupplierContact object  
   """
@@ -784,7 +785,7 @@ class fuelsuppliercontactsIdDeletePost(mixins.DestroyModelMixin, generics.Generi
     return self.destroy(request, *args, **kwargs)
 
 
-class fuelsuppliercontactsIdGet(mixins.RetrieveModelMixin, mixins.UpdateModelMixin, generics.GenericAPIView):
+class fuelsuppliercontactsIdGet(AuditableMixin,mixins.RetrieveModelMixin, mixins.UpdateModelMixin, generics.GenericAPIView):
   """  
   Gets a specific FuelSupplierContact object  
   """
@@ -803,7 +804,7 @@ class fuelsuppliercontactsIdGet(mixins.RetrieveModelMixin, mixins.UpdateModelMix
     """
     return self.update(request, *args, **kwargs)
 
-class fuelsuppliercontactrolesBulkPost(BulkCreateModelMixin, generics.GenericAPIView):
+class fuelsuppliercontactrolesBulkPost(AuditableMixin,BulkCreateModelMixin, generics.GenericAPIView):
   """  
   Bulk create / update a number of FuelSupplierContactRole object  
   """
@@ -817,7 +818,7 @@ class fuelsuppliercontactrolesBulkPost(BulkCreateModelMixin, generics.GenericAPI
     """
     return self.create(request, *args, **kwargs)
 
-class fuelsuppliercontactrolesGet(mixins.ListModelMixin, mixins.CreateModelMixin, generics.GenericAPIView):
+class fuelsuppliercontactrolesGet(AuditableMixin,mixins.ListModelMixin, mixins.CreateModelMixin, generics.GenericAPIView):
   """  
   Lists available FuelSupplierContactRole objects  
   """
@@ -836,7 +837,7 @@ class fuelsuppliercontactrolesGet(mixins.ListModelMixin, mixins.CreateModelMixin
     """
     return self.create(request, *args, **kwargs)
 
-class fuelsuppliercontactrolesIdDeletePost(mixins.DestroyModelMixin, generics.GenericAPIView):
+class fuelsuppliercontactrolesIdDeletePost(AuditableMixin,mixins.DestroyModelMixin, generics.GenericAPIView):
   """  
   Deletes a specific FuelSupplierContactRole object  
   """
@@ -851,7 +852,7 @@ class fuelsuppliercontactrolesIdDeletePost(mixins.DestroyModelMixin, generics.Ge
     return self.destroy(request, *args, **kwargs)
 
 
-class fuelsuppliercontactrolesIdGet(mixins.RetrieveModelMixin, mixins.UpdateModelMixin, generics.GenericAPIView):
+class fuelsuppliercontactrolesIdGet(AuditableMixin,mixins.RetrieveModelMixin, mixins.UpdateModelMixin, generics.GenericAPIView):
   """  
   Gets a specific FuelSupplierContactRole object  
   """
@@ -870,7 +871,7 @@ class fuelsuppliercontactrolesIdGet(mixins.RetrieveModelMixin, mixins.UpdateMode
     """
     return self.update(request, *args, **kwargs)
 
-class fuelsupplierhistoriesBulkPost(BulkCreateModelMixin, generics.GenericAPIView):
+class fuelsupplierhistoriesBulkPost(AuditableMixin,BulkCreateModelMixin, generics.GenericAPIView):
   """  
   Bulk create / update a number of FuelSupplierHistory object  
   """
@@ -884,7 +885,7 @@ class fuelsupplierhistoriesBulkPost(BulkCreateModelMixin, generics.GenericAPIVie
     """
     return self.create(request, *args, **kwargs)
 
-class fuelsupplierhistoriesGet(mixins.ListModelMixin, mixins.CreateModelMixin, generics.GenericAPIView):
+class fuelsupplierhistoriesGet(AuditableMixin,mixins.ListModelMixin, mixins.CreateModelMixin, generics.GenericAPIView):
   """  
   Lists available FuelSupplierHistory objects  
   """
@@ -903,7 +904,7 @@ class fuelsupplierhistoriesGet(mixins.ListModelMixin, mixins.CreateModelMixin, g
     """
     return self.create(request, *args, **kwargs)
 
-class fuelsupplierhistoriesIdDeletePost(mixins.DestroyModelMixin, generics.GenericAPIView):
+class fuelsupplierhistoriesIdDeletePost(AuditableMixin,mixins.DestroyModelMixin, generics.GenericAPIView):
   """  
   Deletes a specific FuelSupplierHistory object  
   """
@@ -918,7 +919,7 @@ class fuelsupplierhistoriesIdDeletePost(mixins.DestroyModelMixin, generics.Gener
     return self.destroy(request, *args, **kwargs)
 
 
-class fuelsupplierhistoriesIdGet(mixins.RetrieveModelMixin, mixins.UpdateModelMixin, generics.GenericAPIView):
+class fuelsupplierhistoriesIdGet(AuditableMixin,mixins.RetrieveModelMixin, mixins.UpdateModelMixin, generics.GenericAPIView):
   """  
   Gets a specific FuelSupplierHistory object  
   """
@@ -937,7 +938,7 @@ class fuelsupplierhistoriesIdGet(mixins.RetrieveModelMixin, mixins.UpdateModelMi
     """
     return self.update(request, *args, **kwargs)
 
-class fuelsupplierstatusesBulkPost(BulkCreateModelMixin, generics.GenericAPIView):
+class fuelsupplierstatusesBulkPost(AuditableMixin,BulkCreateModelMixin, generics.GenericAPIView):
   """  
   Bulk create / update a number of FuelSupplierStatus object  
   """
@@ -951,7 +952,7 @@ class fuelsupplierstatusesBulkPost(BulkCreateModelMixin, generics.GenericAPIView
     """
     return self.create(request, *args, **kwargs)
 
-class fuelsupplierstatusesGet(mixins.ListModelMixin, mixins.CreateModelMixin, generics.GenericAPIView):
+class fuelsupplierstatusesGet(AuditableMixin,mixins.ListModelMixin, mixins.CreateModelMixin, generics.GenericAPIView):
   """  
   Lists available FuelSupplierStatus objects  
   """
@@ -970,7 +971,7 @@ class fuelsupplierstatusesGet(mixins.ListModelMixin, mixins.CreateModelMixin, ge
     """
     return self.create(request, *args, **kwargs)
 
-class fuelsupplierstatusesIdDeletePost(mixins.DestroyModelMixin, generics.GenericAPIView):
+class fuelsupplierstatusesIdDeletePost(AuditableMixin,mixins.DestroyModelMixin, generics.GenericAPIView):
   """  
   Deletes a specific FuelSupplierStatus object  
   """
@@ -985,7 +986,7 @@ class fuelsupplierstatusesIdDeletePost(mixins.DestroyModelMixin, generics.Generi
     return self.destroy(request, *args, **kwargs)
 
 
-class fuelsupplierstatusesIdGet(mixins.RetrieveModelMixin, mixins.UpdateModelMixin, generics.GenericAPIView):
+class fuelsupplierstatusesIdGet(AuditableMixin,mixins.RetrieveModelMixin, mixins.UpdateModelMixin, generics.GenericAPIView):
   """  
   Gets a specific FuelSupplierStatus object  
   """
@@ -1004,7 +1005,7 @@ class fuelsupplierstatusesIdGet(mixins.RetrieveModelMixin, mixins.UpdateModelMix
     """
     return self.update(request, *args, **kwargs)
 
-class fuelsuppliertypesBulkPost(BulkCreateModelMixin, generics.GenericAPIView):
+class fuelsuppliertypesBulkPost(AuditableMixin,BulkCreateModelMixin, generics.GenericAPIView):
   """  
   Bulk create / update a number of FuelSupplierType object  
   """
@@ -1018,7 +1019,7 @@ class fuelsuppliertypesBulkPost(BulkCreateModelMixin, generics.GenericAPIView):
     """
     return self.create(request, *args, **kwargs)
 
-class fuelsuppliertypesGet(mixins.ListModelMixin, mixins.CreateModelMixin, generics.GenericAPIView):
+class fuelsuppliertypesGet(AuditableMixin,mixins.ListModelMixin, mixins.CreateModelMixin, generics.GenericAPIView):
   """  
   Lists available FuelSupplierType objects  
   """
@@ -1037,7 +1038,7 @@ class fuelsuppliertypesGet(mixins.ListModelMixin, mixins.CreateModelMixin, gener
     """
     return self.create(request, *args, **kwargs)
 
-class fuelsuppliertypesIdDeletePost(mixins.DestroyModelMixin, generics.GenericAPIView):
+class fuelsuppliertypesIdDeletePost(AuditableMixin,mixins.DestroyModelMixin, generics.GenericAPIView):
   """  
   Deletes a specific FuelSupplierType object  
   """
@@ -1052,7 +1053,7 @@ class fuelsuppliertypesIdDeletePost(mixins.DestroyModelMixin, generics.GenericAP
     return self.destroy(request, *args, **kwargs)
 
 
-class fuelsuppliertypesIdGet(mixins.RetrieveModelMixin, mixins.UpdateModelMixin, generics.GenericAPIView):
+class fuelsuppliertypesIdGet(AuditableMixin,mixins.RetrieveModelMixin, mixins.UpdateModelMixin, generics.GenericAPIView):
   """  
   Gets a specific FuelSupplierType object  
   """
@@ -1071,7 +1072,7 @@ class fuelsuppliertypesIdGet(mixins.RetrieveModelMixin, mixins.UpdateModelMixin,
     """
     return self.update(request, *args, **kwargs)
 
-class notificationsBulkPost(BulkCreateModelMixin, generics.GenericAPIView):
+class notificationsBulkPost(AuditableMixin,BulkCreateModelMixin, generics.GenericAPIView):
   """  
   Bulk create / update a number of Notification object  
   """
@@ -1085,7 +1086,7 @@ class notificationsBulkPost(BulkCreateModelMixin, generics.GenericAPIView):
     """
     return self.create(request, *args, **kwargs)
 
-class notificationsGet(mixins.ListModelMixin, mixins.CreateModelMixin, generics.GenericAPIView):
+class notificationsGet(AuditableMixin,mixins.ListModelMixin, mixins.CreateModelMixin, generics.GenericAPIView):
   """  
   Lists available Notification objects  
   """
@@ -1104,7 +1105,7 @@ class notificationsGet(mixins.ListModelMixin, mixins.CreateModelMixin, generics.
     """
     return self.create(request, *args, **kwargs)
 
-class notificationsIdDeletePost(mixins.DestroyModelMixin, generics.GenericAPIView):
+class notificationsIdDeletePost(AuditableMixin,mixins.DestroyModelMixin, generics.GenericAPIView):
   """  
   Deletes a specific Notification object  
   """
@@ -1119,7 +1120,7 @@ class notificationsIdDeletePost(mixins.DestroyModelMixin, generics.GenericAPIVie
     return self.destroy(request, *args, **kwargs)
 
 
-class notificationsIdGet(mixins.RetrieveModelMixin, mixins.UpdateModelMixin, generics.GenericAPIView):
+class notificationsIdGet(AuditableMixin,mixins.RetrieveModelMixin, mixins.UpdateModelMixin, generics.GenericAPIView):
   """  
   Gets a specific Notification object  
   """
@@ -1138,7 +1139,7 @@ class notificationsIdGet(mixins.RetrieveModelMixin, mixins.UpdateModelMixin, gen
     """
     return self.update(request, *args, **kwargs)
 
-class notificationeventsBulkPost(BulkCreateModelMixin, generics.GenericAPIView):
+class notificationeventsBulkPost(AuditableMixin,BulkCreateModelMixin, generics.GenericAPIView):
   """  
   Bulk create / update a number of NotificationEvent object  
   """
@@ -1152,7 +1153,7 @@ class notificationeventsBulkPost(BulkCreateModelMixin, generics.GenericAPIView):
     """
     return self.create(request, *args, **kwargs)
 
-class notificationeventsGet(mixins.ListModelMixin, mixins.CreateModelMixin, generics.GenericAPIView):
+class notificationeventsGet(AuditableMixin,mixins.ListModelMixin, mixins.CreateModelMixin, generics.GenericAPIView):
   """  
   Lists available NotificationEvent objects  
   """
@@ -1171,7 +1172,7 @@ class notificationeventsGet(mixins.ListModelMixin, mixins.CreateModelMixin, gene
     """
     return self.create(request, *args, **kwargs)
 
-class notificationeventsIdDeletePost(mixins.DestroyModelMixin, generics.GenericAPIView):
+class notificationeventsIdDeletePost(AuditableMixin,mixins.DestroyModelMixin, generics.GenericAPIView):
   """  
   Deletes a specific NotificationEvent object  
   """
@@ -1186,7 +1187,7 @@ class notificationeventsIdDeletePost(mixins.DestroyModelMixin, generics.GenericA
     return self.destroy(request, *args, **kwargs)
 
 
-class notificationeventsIdGet(mixins.RetrieveModelMixin, mixins.UpdateModelMixin, generics.GenericAPIView):
+class notificationeventsIdGet(AuditableMixin,mixins.RetrieveModelMixin, mixins.UpdateModelMixin, generics.GenericAPIView):
   """  
   Gets a specific NotificationEvent object  
   """
@@ -1205,7 +1206,7 @@ class notificationeventsIdGet(mixins.RetrieveModelMixin, mixins.UpdateModelMixin
     """
     return self.update(request, *args, **kwargs)
 
-class notificationtypesBulkPost(BulkCreateModelMixin, generics.GenericAPIView):
+class notificationtypesBulkPost(AuditableMixin,BulkCreateModelMixin, generics.GenericAPIView):
   """  
   Bulk create / update a number of NotificationType object  
   """
@@ -1219,7 +1220,7 @@ class notificationtypesBulkPost(BulkCreateModelMixin, generics.GenericAPIView):
     """
     return self.create(request, *args, **kwargs)
 
-class notificationtypesGet(mixins.ListModelMixin, mixins.CreateModelMixin, generics.GenericAPIView):
+class notificationtypesGet(AuditableMixin,mixins.ListModelMixin, mixins.CreateModelMixin, generics.GenericAPIView):
   """  
   Lists available NotificationType objects  
   """
@@ -1238,7 +1239,7 @@ class notificationtypesGet(mixins.ListModelMixin, mixins.CreateModelMixin, gener
     """
     return self.create(request, *args, **kwargs)
 
-class notificationtypesIdDeletePost(mixins.DestroyModelMixin, generics.GenericAPIView):
+class notificationtypesIdDeletePost(AuditableMixin,mixins.DestroyModelMixin, generics.GenericAPIView):
   """  
   Deletes a specific NotificationType object  
   """
@@ -1253,7 +1254,7 @@ class notificationtypesIdDeletePost(mixins.DestroyModelMixin, generics.GenericAP
     return self.destroy(request, *args, **kwargs)
 
 
-class notificationtypesIdGet(mixins.RetrieveModelMixin, mixins.UpdateModelMixin, generics.GenericAPIView):
+class notificationtypesIdGet(AuditableMixin,mixins.RetrieveModelMixin, mixins.UpdateModelMixin, generics.GenericAPIView):
   """  
   Gets a specific NotificationType object  
   """
@@ -1272,7 +1273,7 @@ class notificationtypesIdGet(mixins.RetrieveModelMixin, mixins.UpdateModelMixin,
     """
     return self.update(request, *args, **kwargs)
 
-class opportunitiesBulkPost(BulkCreateModelMixin, generics.GenericAPIView):
+class opportunitiesBulkPost(AuditableMixin,BulkCreateModelMixin, generics.GenericAPIView):
   """  
   Bulk create / update a number of Opportunity object  
   """
@@ -1286,7 +1287,7 @@ class opportunitiesBulkPost(BulkCreateModelMixin, generics.GenericAPIView):
     """
     return self.create(request, *args, **kwargs)
 
-class opportunitiesGet(mixins.ListModelMixin, mixins.CreateModelMixin, generics.GenericAPIView):
+class opportunitiesGet(AuditableMixin,mixins.ListModelMixin, mixins.CreateModelMixin, generics.GenericAPIView):
   """  
   Lists available Opportunity objects  
   """
@@ -1305,7 +1306,7 @@ class opportunitiesGet(mixins.ListModelMixin, mixins.CreateModelMixin, generics.
     """
     return self.create(request, *args, **kwargs)
 
-class opportunitiesIdDeletePost(mixins.DestroyModelMixin, generics.GenericAPIView):
+class opportunitiesIdDeletePost(AuditableMixin,mixins.DestroyModelMixin, generics.GenericAPIView):
   """  
   Deletes a specific Opportunity object  
   """
@@ -1320,7 +1321,7 @@ class opportunitiesIdDeletePost(mixins.DestroyModelMixin, generics.GenericAPIVie
     return self.destroy(request, *args, **kwargs)
 
 
-class opportunitiesIdGet(mixins.RetrieveModelMixin, mixins.UpdateModelMixin, generics.GenericAPIView):
+class opportunitiesIdGet(AuditableMixin,mixins.RetrieveModelMixin, mixins.UpdateModelMixin, generics.GenericAPIView):
   """  
   Gets a specific Opportunity object  
   """
@@ -1339,7 +1340,7 @@ class opportunitiesIdGet(mixins.RetrieveModelMixin, mixins.UpdateModelMixin, gen
     """
     return self.update(request, *args, **kwargs)
 
-class opportunityhistoriesBulkPost(BulkCreateModelMixin, generics.GenericAPIView):
+class opportunityhistoriesBulkPost(AuditableMixin,BulkCreateModelMixin, generics.GenericAPIView):
   """  
   Bulk create / update a number of OpportunityHistory object  
   """
@@ -1353,7 +1354,7 @@ class opportunityhistoriesBulkPost(BulkCreateModelMixin, generics.GenericAPIView
     """
     return self.create(request, *args, **kwargs)
 
-class opportunityhistoriesGet(mixins.ListModelMixin, mixins.CreateModelMixin, generics.GenericAPIView):
+class opportunityhistoriesGet(AuditableMixin,mixins.ListModelMixin, mixins.CreateModelMixin, generics.GenericAPIView):
   """  
   Lists available OpportunityHistory objects  
   """
@@ -1372,7 +1373,7 @@ class opportunityhistoriesGet(mixins.ListModelMixin, mixins.CreateModelMixin, ge
     """
     return self.create(request, *args, **kwargs)
 
-class opportunityhistoriesIdDeletePost(mixins.DestroyModelMixin, generics.GenericAPIView):
+class opportunityhistoriesIdDeletePost(AuditableMixin,mixins.DestroyModelMixin, generics.GenericAPIView):
   """  
   Deletes a specific OpportunityHistory object  
   """
@@ -1387,7 +1388,7 @@ class opportunityhistoriesIdDeletePost(mixins.DestroyModelMixin, generics.Generi
     return self.destroy(request, *args, **kwargs)
 
 
-class opportunityhistoriesIdGet(mixins.RetrieveModelMixin, mixins.UpdateModelMixin, generics.GenericAPIView):
+class opportunityhistoriesIdGet(AuditableMixin,mixins.RetrieveModelMixin, mixins.UpdateModelMixin, generics.GenericAPIView):
   """  
   Gets a specific OpportunityHistory object  
   """
@@ -1406,7 +1407,7 @@ class opportunityhistoriesIdGet(mixins.RetrieveModelMixin, mixins.UpdateModelMix
     """
     return self.update(request, *args, **kwargs)
 
-class opportunitystatusesBulkPost(BulkCreateModelMixin, generics.GenericAPIView):
+class opportunitystatusesBulkPost(AuditableMixin,BulkCreateModelMixin, generics.GenericAPIView):
   """  
   Bulk create / update a number of OpportunityStatus object  
   """
@@ -1420,7 +1421,7 @@ class opportunitystatusesBulkPost(BulkCreateModelMixin, generics.GenericAPIView)
     """
     return self.create(request, *args, **kwargs)
 
-class opportunitystatusesGet(mixins.ListModelMixin, mixins.CreateModelMixin, generics.GenericAPIView):
+class opportunitystatusesGet(AuditableMixin,mixins.ListModelMixin, mixins.CreateModelMixin, generics.GenericAPIView):
   """  
   Lists available OpportunityStatus objects  
   """
@@ -1439,7 +1440,7 @@ class opportunitystatusesGet(mixins.ListModelMixin, mixins.CreateModelMixin, gen
     """
     return self.create(request, *args, **kwargs)
 
-class opportunitystatusesIdDeletePost(mixins.DestroyModelMixin, generics.GenericAPIView):
+class opportunitystatusesIdDeletePost(AuditableMixin,mixins.DestroyModelMixin, generics.GenericAPIView):
   """  
   Deletes a specific OpportunityStatus object  
   """
@@ -1454,7 +1455,7 @@ class opportunitystatusesIdDeletePost(mixins.DestroyModelMixin, generics.Generic
     return self.destroy(request, *args, **kwargs)
 
 
-class opportunitystatusesIdGet(mixins.RetrieveModelMixin, mixins.UpdateModelMixin, generics.GenericAPIView):
+class opportunitystatusesIdGet(AuditableMixin,mixins.RetrieveModelMixin, mixins.UpdateModelMixin, generics.GenericAPIView):
   """  
   Gets a specific OpportunityStatus object  
   """
@@ -1473,7 +1474,7 @@ class opportunitystatusesIdGet(mixins.RetrieveModelMixin, mixins.UpdateModelMixi
     """
     return self.update(request, *args, **kwargs)
 
-class permissionsBulkPost(BulkCreateModelMixin, generics.GenericAPIView):
+class permissionsBulkPost(AuditableMixin,BulkCreateModelMixin, generics.GenericAPIView):
   """  
   Bulk create / update a number of PermissionViewModel object  
   """
@@ -1487,7 +1488,7 @@ class permissionsBulkPost(BulkCreateModelMixin, generics.GenericAPIView):
     """
     return self.create(request, *args, **kwargs)
 
-class permissionsGet(mixins.ListModelMixin, mixins.CreateModelMixin, generics.GenericAPIView):
+class permissionsGet(AuditableMixin,mixins.ListModelMixin, mixins.CreateModelMixin, generics.GenericAPIView):
   """  
   Lists available PermissionViewModel objects  
   """
@@ -1506,7 +1507,7 @@ class permissionsGet(mixins.ListModelMixin, mixins.CreateModelMixin, generics.Ge
     """
     return self.create(request, *args, **kwargs)
 
-class permissionsIdDeletePost(mixins.DestroyModelMixin, generics.GenericAPIView):
+class permissionsIdDeletePost(AuditableMixin,mixins.DestroyModelMixin, generics.GenericAPIView):
   """  
   Deletes a specific PermissionViewModel object  
   """
@@ -1521,7 +1522,7 @@ class permissionsIdDeletePost(mixins.DestroyModelMixin, generics.GenericAPIView)
     return self.destroy(request, *args, **kwargs)
 
 
-class permissionsIdGet(mixins.RetrieveModelMixin, mixins.UpdateModelMixin, generics.GenericAPIView):
+class permissionsIdGet(AuditableMixin,mixins.RetrieveModelMixin, mixins.UpdateModelMixin, generics.GenericAPIView):
   """  
   Gets a specific PermissionViewModel object  
   """
@@ -1540,7 +1541,7 @@ class permissionsIdGet(mixins.RetrieveModelMixin, mixins.UpdateModelMixin, gener
     """
     return self.update(request, *args, **kwargs)
 
-class rolesBulkPost(BulkCreateModelMixin, generics.GenericAPIView):
+class rolesBulkPost(AuditableMixin,BulkCreateModelMixin, generics.GenericAPIView):
   """  
   Bulk create / update a number of RoleViewModel object  
   """
@@ -1554,7 +1555,7 @@ class rolesBulkPost(BulkCreateModelMixin, generics.GenericAPIView):
     """
     return self.create(request, *args, **kwargs)
 
-class rolesGet(mixins.ListModelMixin, mixins.CreateModelMixin, generics.GenericAPIView):
+class rolesGet(AuditableMixin,mixins.ListModelMixin, mixins.CreateModelMixin, generics.GenericAPIView):
   """  
   Lists available RoleViewModel objects  
   """
@@ -1573,7 +1574,7 @@ class rolesGet(mixins.ListModelMixin, mixins.CreateModelMixin, generics.GenericA
     """
     return self.create(request, *args, **kwargs)
 
-class rolesIdDeletePost(mixins.DestroyModelMixin, generics.GenericAPIView):
+class rolesIdDeletePost(AuditableMixin,mixins.DestroyModelMixin, generics.GenericAPIView):
   """  
   Deletes a specific RoleViewModel object  
   """
@@ -1588,7 +1589,7 @@ class rolesIdDeletePost(mixins.DestroyModelMixin, generics.GenericAPIView):
     return self.destroy(request, *args, **kwargs)
 
 
-class rolesIdGet(mixins.RetrieveModelMixin, mixins.UpdateModelMixin, generics.GenericAPIView):
+class rolesIdGet(AuditableMixin,mixins.RetrieveModelMixin, mixins.UpdateModelMixin, generics.GenericAPIView):
   """  
   Gets a specific RoleViewModel object  
   """
@@ -1607,7 +1608,7 @@ class rolesIdGet(mixins.RetrieveModelMixin, mixins.UpdateModelMixin, generics.Ge
     """
     return self.update(request, *args, **kwargs)
 
-class rolepermissionsBulkPost(BulkCreateModelMixin, generics.GenericAPIView):
+class rolepermissionsBulkPost(AuditableMixin,BulkCreateModelMixin, generics.GenericAPIView):
   """  
   Bulk create / update a number of RolePermission object  
   """
@@ -1621,7 +1622,7 @@ class rolepermissionsBulkPost(BulkCreateModelMixin, generics.GenericAPIView):
     """
     return self.create(request, *args, **kwargs)
 
-class rolepermissionsGet(mixins.ListModelMixin, mixins.CreateModelMixin, generics.GenericAPIView):
+class rolepermissionsGet(AuditableMixin,mixins.ListModelMixin, mixins.CreateModelMixin, generics.GenericAPIView):
   """  
   Lists available RolePermission objects  
   """
@@ -1640,7 +1641,7 @@ class rolepermissionsGet(mixins.ListModelMixin, mixins.CreateModelMixin, generic
     """
     return self.create(request, *args, **kwargs)
 
-class rolepermissionsIdDeletePost(mixins.DestroyModelMixin, generics.GenericAPIView):
+class rolepermissionsIdDeletePost(AuditableMixin,mixins.DestroyModelMixin, generics.GenericAPIView):
   """  
   Deletes a specific RolePermission object  
   """
@@ -1655,7 +1656,7 @@ class rolepermissionsIdDeletePost(mixins.DestroyModelMixin, generics.GenericAPIV
     return self.destroy(request, *args, **kwargs)
 
 
-class rolepermissionsIdGet(mixins.RetrieveModelMixin, mixins.UpdateModelMixin, generics.GenericAPIView):
+class rolepermissionsIdGet(AuditableMixin,mixins.RetrieveModelMixin, mixins.UpdateModelMixin, generics.GenericAPIView):
   """  
   Gets a specific RolePermission object  
   """
@@ -1674,7 +1675,7 @@ class rolepermissionsIdGet(mixins.RetrieveModelMixin, mixins.UpdateModelMixin, g
     """
     return self.update(request, *args, **kwargs)
 
-class usersBulkPost(BulkCreateModelMixin, generics.GenericAPIView):
+class usersBulkPost(AuditableMixin,BulkCreateModelMixin, generics.GenericAPIView):
   """  
   Bulk create / update a number of User object  
   """
@@ -1688,7 +1689,7 @@ class usersBulkPost(BulkCreateModelMixin, generics.GenericAPIView):
     """
     return self.create(request, *args, **kwargs)
 
-class usersGet(mixins.ListModelMixin, mixins.CreateModelMixin, generics.GenericAPIView):
+class usersGet(AuditableMixin,mixins.ListModelMixin, mixins.CreateModelMixin, generics.GenericAPIView):
   """  
   Lists available User objects  
   """
@@ -1707,7 +1708,7 @@ class usersGet(mixins.ListModelMixin, mixins.CreateModelMixin, generics.GenericA
     """
     return self.create(request, *args, **kwargs)
 
-class usersIdDeletePost(mixins.DestroyModelMixin, generics.GenericAPIView):
+class usersIdDeletePost(AuditableMixin,mixins.DestroyModelMixin, generics.GenericAPIView):
   """  
   Deletes a specific User object  
   """
@@ -1722,7 +1723,7 @@ class usersIdDeletePost(mixins.DestroyModelMixin, generics.GenericAPIView):
     return self.destroy(request, *args, **kwargs)
 
 
-class usersIdGet(mixins.RetrieveModelMixin, mixins.UpdateModelMixin, generics.GenericAPIView):
+class usersIdGet(AuditableMixin,mixins.RetrieveModelMixin, mixins.UpdateModelMixin, generics.GenericAPIView):
   """  
   Gets a specific User object  
   """
@@ -1741,7 +1742,7 @@ class usersIdGet(mixins.RetrieveModelMixin, mixins.UpdateModelMixin, generics.Ge
     """
     return self.update(request, *args, **kwargs)
 
-class userrolesBulkPost(BulkCreateModelMixin, generics.GenericAPIView):
+class userrolesBulkPost(AuditableMixin,BulkCreateModelMixin, generics.GenericAPIView):
   """  
   Bulk create / update a number of UserRole object  
   """
@@ -1755,7 +1756,7 @@ class userrolesBulkPost(BulkCreateModelMixin, generics.GenericAPIView):
     """
     return self.create(request, *args, **kwargs)
 
-class userrolesGet(mixins.ListModelMixin, mixins.CreateModelMixin, generics.GenericAPIView):
+class userrolesGet(AuditableMixin,mixins.ListModelMixin, mixins.CreateModelMixin, generics.GenericAPIView):
   """  
   Lists available UserRole objects  
   """
@@ -1774,7 +1775,7 @@ class userrolesGet(mixins.ListModelMixin, mixins.CreateModelMixin, generics.Gene
     """
     return self.create(request, *args, **kwargs)
 
-class userrolesIdDeletePost(mixins.DestroyModelMixin, generics.GenericAPIView):
+class userrolesIdDeletePost(AuditableMixin,mixins.DestroyModelMixin, generics.GenericAPIView):
   """  
   Deletes a specific UserRole object  
   """
@@ -1789,7 +1790,7 @@ class userrolesIdDeletePost(mixins.DestroyModelMixin, generics.GenericAPIView):
     return self.destroy(request, *args, **kwargs)
 
 
-class userrolesIdGet(mixins.RetrieveModelMixin, mixins.UpdateModelMixin, generics.GenericAPIView):
+class userrolesIdGet(AuditableMixin,mixins.RetrieveModelMixin, mixins.UpdateModelMixin, generics.GenericAPIView):
   """  
   Gets a specific UserRole object  
   """
@@ -1807,5 +1808,4 @@ class userrolesIdGet(mixins.RetrieveModelMixin, mixins.UpdateModelMixin, generic
     Updates the specified UserRole object
     """
     return self.update(request, *args, **kwargs)
-
 

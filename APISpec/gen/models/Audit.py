@@ -24,8 +24,9 @@ import datetime
 from django.db import models
 from django.utils import timezone
 
+from auditable.models import Auditable
 
-class Audit(models.Model):	    
+class Audit(Auditable):	    
     appCreateTimestamp = models.DateField(blank=True, null=True)   
     appCreateUserid = models.CharField(max_length=100, blank=True, null=True)   
     appCreateUserGuid = models.CharField(max_length=100, blank=True, null=True)   
@@ -40,4 +41,6 @@ class Audit(models.Model):
     oldValue = models.CharField(max_length=8000, blank=True, null=True)   
     newValue = models.CharField(max_length=8000, blank=True, null=True)   
     isDelete = models.BooleanField()   
+    class Meta:
+        db_table = 'AUDIT'
 

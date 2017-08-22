@@ -24,7 +24,6 @@ import datetime
 from django.db import models
 from django.utils import timezone
 
-
 class UserRoleViewModel(models.Model):	    
     effectiveDate = models.DateField()   
     expiryDate = models.DateField(blank=True, null=True)   
@@ -32,4 +31,3 @@ class UserRoleViewModel(models.Model):
     userId = models.IntegerField()   
     class Meta:
       abstract = True
-
