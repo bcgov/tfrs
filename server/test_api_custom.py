@@ -870,6 +870,33 @@ class Test_Api_Custom(TestCase):
         self.deleteContact(contactId) 
         self.deleteFuelSupplier(fuelSupplierId)
 
+    def test_createCreditTradeNegativeNumberOfCredits(self):
+        fsId, _, _, _ = self.createFuelSupplier()        
+        userId = self.createUser(fsId)
+        typeId = self.createCreditTradeType()
+        statusId = self.createCreditTradeStatus()
+
+        testUrl = "/api/credittrades"
+        payload = {
+          'creditTradeStatusFK': statusId,
+          'creditTradeTypeFK': typeId,
+          'fairMarketValuePrice': '100.00',
+          'historySet':[],
+          'initiator': fsId,
+          'respondentFK': fsId,
+          'tradeEffectiveDate': '2017-01-01',
+        }
+        fakeCreditTrade = fakedata.CreditTradeTestDataCreate()
+        payload.update(fakeCreditTrade)
+        payload['numberOfCredits'] = -1
+        jsonString = json.dumps(payload)
+        response = self.client.post(testUrl, content_type='application/json', data=jsonString)
+        # Check that the response is OK.
+        assert status.HTTP_422_UNPROCESSABLE_ENTITY == response.status_code
+
+        self.deleteUser(userId)
+        self.deleteFuelSupplier(fsId)
+
 if __name__ == '__main__':
     unittest.main()
 
