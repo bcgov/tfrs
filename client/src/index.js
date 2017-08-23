@@ -35,6 +35,7 @@ import Notifications from './components/notifications/Notifications.jsx';
 import Administration from './components/administration/Administration.jsx';
 import Settings from './components/settings/Settings.jsx';
 import FuelSupplierDetails from './components/fuel_suppliers/FuelSupplierDetails.jsx';
+import NotFound from './components/reusables/NotFound.jsx';
 
 import '../styles/index.scss';
 
@@ -68,7 +69,8 @@ ReactDOM.render(
 						<Route exact path={Routes.CREDIT_TRANSFER} component={withRouter(CreditTransferNew)} />
 						<Route path={Routes.NOTIFICATIONS} component={withRouter(Notifications)} />									
 						<Route path={Routes.ADMINISTRATION} component={withRouter(Administration)} />		
-						<Route path={Routes.SETTINGS} component={withRouter(Settings)} />																
+						<Route path={Routes.SETTINGS} component={withRouter(Settings)} />	
+						<Route component={NotFound} />															
 					</Switch>
 				</App> 
 			</div>

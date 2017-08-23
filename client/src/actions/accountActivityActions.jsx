@@ -66,6 +66,7 @@ export const getCreditTransfer = (id) => (dispatch) => {
     dispatch(getCreditTransferSuccess(response.data));
   }).catch((error) => {
     dispatch(getCreditTransferError(error.response))
+    history.push(Routes.NOT_FOUND)
   })
 }
 

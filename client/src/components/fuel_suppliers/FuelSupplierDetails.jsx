@@ -9,7 +9,9 @@ import * as ReducerTypes from '../../constants/reducerTypes.jsx';
 import * as Values from '../../constants/values.jsx';
 import { 
   addContact, 
+  addContactReset,
   deleteContact,
+  deleteContactReset,
   verifyID, 
   verifyIDReset } from '../../actions/fuelSuppliersActions.jsx';
 import { Modal } from 'react-bootstrap';
@@ -68,10 +70,20 @@ class FuelSupplierDetails extends Component {
   closeAddContactModal() {
     this.setState({showAddContactModal: false});
     this.props.verifyIDReset();
+    this.props.addContactReset();
   }
 
   handleInputChange(event) {
     this.setState({[event.target.name]: event.target.value});
+  }
+
+  openDeleteContactModal() {
+    this.setState({showDeleteContactModal: true})
+  }
+
+  closeDeleteContactModal() {
+    this.setState({showDeleteContactModal: false});
+    this.props.deleteContactReset();
   }
 
   handleVerifyID() {
@@ -258,14 +270,17 @@ class FuelSupplierDetails extends Component {
                     verifyIDSuccess={this.props.verifyIDSuccess}
                     verifyIDError={this.props.verifyIDError}
                     addContact={(contact) => this.props.addContact(contact)}
+                    addContactIsFetching={this.props.addContactIsFetching}
+                    addContactSuccess={this.props.addContactSuccess}
                   />
                 </Modal.Body>
               </Modal>
               <Modal
                 show={this.state.showDeleteContactModal}
-                onHide={(name) => this.toggleModal('showDeleteContactModal')}
+                onHide={() => this.closeDeleteContactModal()}
                 container={this}
                 aria-labelledby="contained-modal-title"
+                className="delete-contact-modal"
                 >
                 <Modal.Header closeButton>
                   <Modal.Title id="contained-modal-title">Delete Contact</Modal.Title>
@@ -274,11 +289,15 @@ class FuelSupplierDetails extends Component {
                   Are you sure you want to delete this contact?
                 </Modal.Body>
                 <Modal.Footer>
+                { this.props.deleteContactSuccess && 
+                  <div className="alert alert-success">Contact successfully deleted</div>
+                }
+                { !this.props.deleteContactSuccess ? 
                   <div>
                     <button 
                       type="button" 
                       className="btn btn-default" 
-                      onClick={() => this.toggleModal('showDeleteContactModal')}>
+                      onClick={() => this.closeDeleteContactModal()}>
                       Cancel
                     </button>
                     <button 
@@ -288,6 +307,14 @@ class FuelSupplierDetails extends Component {
                       Confirm
                     </button>
                   </div> 
+                  :
+                  <button 
+                    type="button" 
+                    className="btn btn-default" 
+                    onClick={() => this.closeDeleteContactModal()}>
+                    Okay
+                  </button>
+                }
                 </Modal.Footer>
               </Modal>
             </div>
@@ -368,6 +395,8 @@ export default connect (
     fuelSupplierActions: state.rootReducer[ReducerTypes.FUEL_SUPPLIER_ACTION_TYPES].data,
     verifyIDSuccess: state.rootReducer[ReducerTypes.VERIFY_ID].success,
     verifyIDError: state.rootReducer[ReducerTypes.VERIFY_ID].errorMessage,
+    deleteContactSuccess: state.rootReducer[ReducerTypes.DELETE_CONTACT].success,
+    addContactSuccess: state.rootReducer[ReducerTypes.ADD_CONTACT].success,
   }),
   dispatch => ({
     getFuelSupplier: (id) => {
@@ -382,9 +411,15 @@ export default connect (
     addContact: (data) => {
       dispatch(addContact(data));
     },
+    addContactReset: () => {
+      dispatch(addContactReset());
+    },
     deleteContact: (id) => {
       dispatch(deleteContact(id));
     },
+    deleteContactReset: () => {
+      dispatch(deleteContactReset());
+    },  
     verifyID: (id) => {
       dispatch(verifyID(id));
     },

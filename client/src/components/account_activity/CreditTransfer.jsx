@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import * as ReducerTypes from '../../constants/reducerTypes.jsx';
 import * as Values from '../../constants/values.jsx';
+import * as Routes from '../../constants/routes.jsx';
 import { 
   plainEnglishPhrase, 
   getCreditTransferTitle,
@@ -112,10 +113,10 @@ class CreditTransfer extends Component {
           }
           <div className="credit-transfer-progress-bar">
             <div className="arrow-steps clearfix">
-              <div className={this.props.data.creditTradeStatusFK == Values.PROPOSED ? "step current" : "step"}><span>Proposed</span></div>
-              <div className={this.props.data.creditTradeStatusFK === Values.ACCEPTED ? "step current" : "step"}><span>Accepted</span></div>
-              <div className={this.props.data.creditTradeStatusFK === Values.APPROVED ? "step current" : "step"}><span>Approved</span></div>
-              <div className={this.props.data.creditTradeStatusFK === Values.COMPLETED ? "step current" : "step"}><span>Complete</span></div>
+              <div className={this.props.data.creditTradeStatusFK == Values.STATUS_PROPOSED ? "step current" : "step"}><span>Proposed</span></div>
+              <div className={this.props.data.creditTradeStatusFK === Values.STATUS_ACCEPTED ? "step current" : "step"}><span>Accepted</span></div>
+              <div className={this.props.data.creditTradeStatusFK === Values.STATUS_APPROVED ? "step current" : "step"}><span>Approved</span></div>
+              <div className={this.props.data.creditTradeStatusFK === Values.STATUS_COMPLETED ? "step current" : "step"}><span>Complete</span></div>
             </div>
           </div>
           <div className="credit-transfer-details">
@@ -193,7 +194,12 @@ class CreditTransfer extends Component {
               </div>
               { (this.props.data.creditTradeStatusFK === Values.STATUS_NEW || this.props.data.creditTradeStatusFK=== Values.STATUS_DRAFT) && 
                 <div className="btn-container">
-                  <button type="button" className="btn btn-default">Cancel</button>
+                  <button 
+                    type="button" 
+                    className="btn btn-default"
+                    onClick={() => this.props.history.push(Routes.ACCOUNT_ACTIVITY)}>
+                    Cancel
+                  </button>
                   <button type="button" className="btn btn-default">Save Draft</button>
                   <button type="submit" className="btn btn-primary">Propose</button>
                 </div>

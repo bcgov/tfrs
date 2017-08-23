@@ -77,7 +77,7 @@ const getToFrom = (tradeType) => {
   }
 }
 
-const getCreditTradeRespondent = (respondentId) => {
+export const getCreditTradeRespondent = (respondentId) => {
   let fuelSuppliers = store.getState().rootReducer[ReducerTypes.GET_FUEL_SUPPLIERS].data;
   let respondent = fuelSuppliers.find(function(fuelSupplier) {
     return fuelSupplier.id === respondentId

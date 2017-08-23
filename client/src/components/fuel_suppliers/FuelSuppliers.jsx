@@ -76,7 +76,7 @@ class FuelSuppliers extends Component {
         <h1 className='header'>Fuel Suppliers</h1>
         <div className='right-toolbar-container'> 
           <div className="actions-container">
-            <button className="simple-btn" onClick={() => this.setState({ showModal: true})}>Add</button>
+            <button className="btn btn-primary" onClick={() => this.setState({ showModal: true})}>Add</button>
             <label className="checkbox"> 
               <input type="checkbox" onChange={() => this.handleCheckboxChange()} />
               Active Only
@@ -159,8 +159,8 @@ class FuelSuppliers extends Component {
                 </div>
               </div>
               <div className="btn-container">
-                <input className="btn btn-default" type="button" onClick={() => this.handleCloseModal()} value="Cancel" />
-                <input type="submit" className="btn btn-primary" value="search" />
+                <button className="btn btn-default" type="button" onClick={() => this.handleCloseModal()}>Cancel</button>
+                <button type="submit" className="btn btn-primary not-implemented">Search</button>
               </div>
             </form>
             { this.props.searchFuelSuppliersSuccess &&

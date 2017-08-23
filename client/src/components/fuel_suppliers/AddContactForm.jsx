@@ -222,20 +222,34 @@ export default class AddContactForm extends Component {
               onClick={() => this.handleVerifyID()} />
           </div>
         </div>
+        { this.props.addContactSuccess && 
+          <div className="alert alert-success">Contact successfully added</div>
+        }
         <div className="form-group"> 
-          <div className="col-sm-offset-2 col-sm-10 btn-container">
-            <button 
-              type="button" 
-              className="btn btn-default" 
-              onClick={this.props.closeAddContactModal}>
-              Cancel
-            </button>
-            <button 
-              type="submit" 
-              className="btn btn-primary">
-              Save
-            </button>
-          </div>
+          { !this.props.addContactSuccess ? 
+            <div className="col-sm-offset-2 col-sm-10 btn-container">
+              <button 
+                type="button" 
+                className="btn btn-default" 
+                onClick={this.props.closeAddContactModal}>
+                Cancel
+              </button>
+              <button 
+                type="submit" 
+                className="btn btn-primary">
+                Save
+              </button>
+            </div>
+            :
+            <div className="col-sm-offset-2 col-sm-10 btn-container">
+              <button 
+                type="button" 
+                className="btn btn-primary" 
+                onClick={this.props.closeAddContactModal}>
+                Okay
+              </button>
+            </div>
+          }
         </div>
       </form>
     )

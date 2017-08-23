@@ -38,13 +38,6 @@ const getFuelSuppliersError = (error) => {
 }
 
 export const searchFuelSuppliers = (name, city) => (dispatch) => {
-  dispatch(searchFuelSuppliersRequest());
-  axios.get(Routes.BASE_URL + Routes.SEARCH_FUEL_SUPPLIERS)
-  .then((response) => {   
-    dispatch(searchFuelSuppliersSuccess(response.data));
-  }).catch((error) => {
-    dispatch(searchFuelSuppliersError(error.response))
-  })
 }
 
 const searchFuelSuppliersRequest = () => {
@@ -162,6 +155,13 @@ const addContactError = (error) => {
   }
 }
 
+export const addContactReset = () => {
+  return {
+    name: ReducerTypes.ADD_CONTACT,
+    type: ActionTypes.RESET,
+  }
+}
+
 export const deleteContact = (id) => (dispatch) => {
   dispatch(deleteContactRequest());
   axios.post(Routes.BASE_URL + Routes.FUEL_SUPPLIER_CONTACTS + '/' + id + Routes.DELETE)
@@ -192,6 +192,13 @@ const deleteContactError = (error) => {
     name: ReducerTypes.DELETE_CONTACT,
     type: ActionTypes.SUCCESS,
     errorMessage: error
+  }
+}
+
+export const deleteContactReset = () => {
+  return {
+    name: ReducerTypes.DELETE_CONTACT,
+    type: ActionTypes.RESET,
   }
 }
 

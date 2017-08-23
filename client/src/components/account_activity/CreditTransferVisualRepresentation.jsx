@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { getCreditTradeRespondent } from '../../utils/functions.jsx';
 
 export default class CreditTransferVisualRepresentation extends Component {
   render() {
@@ -6,7 +7,7 @@ export default class CreditTransferVisualRepresentation extends Component {
       <div className="row visual-representation">
         <div className="col-sm-4 col-md-3 col-md-offset-1">
           <div className="initiator-container label-success">
-            <div>{this.props.data && this.props.data.initiatorFK}</div>
+            <div>{this.props.data.initiatorFK && getCreditTradeRespondent(this.props.data.initiatorFK)}</div>
             <div>Available: 15,000</div>
           </div>
         </div>
@@ -18,7 +19,7 @@ export default class CreditTransferVisualRepresentation extends Component {
         </div>
         <div className="col-sm-4 col-md-3">
           <div className="respondent-container label-warning">
-            <div>{this.props.data && this.props.data.respondentFK}</div>
+            <div>{this.props.data.respondentFK && getCreditTradeRespondent(this.props.data.respondentFK)}</div>
             <div>Status: Sell Only</div>
           </div>
         </div>

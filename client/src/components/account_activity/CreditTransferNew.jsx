@@ -40,10 +40,6 @@ class CreditTransferNew extends Component {
     this.setState({[name]: value});
   }
 
-  handleCancel() {
-    this.props.history.push(Routes.ACCOUNT_ACTIVITY);
-  }
-
   handleSubmit(event) {
     event.preventDefault();
     const initiatorFK = this.props.fuelSuppliers[0].id;
@@ -142,7 +138,7 @@ class CreditTransferNew extends Component {
               <button 
                 type="button" 
                 className="btn btn-default"
-                onClick={() => this.handleCancel()}>
+                onClick={() => this.props.history.push(Routes.ACCOUNT_ACTIVITY)}>
                 Cancel
               </button>
               <button type="button" className="btn btn-default">Save Draft</button>
