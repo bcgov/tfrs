@@ -10,9 +10,10 @@ import { Modal } from 'react-bootstrap';
 import { 
   getCreditTransfer,
   getCreditTransferReset,
+  updateCreditTransfer,
+  deleteCreditTransfer,
   approveCreditTransfer,
-  rejectCreditTransfer,
-  rescindProposal } from '../../actions/accountActivityActions.jsx';
+  rejectCreditTransfer } from '../../actions/accountActivityActions.jsx';
 import { getFuelSuppliers } from '../../actions/fuelSuppliersActions.jsx';
 import { plainEnglishSentence } from '../../utils/functions.jsx';
 import { BootstrapTable, TableHeaderColumn, ButtonGroup } from 'react-bootstrap-table';
@@ -63,11 +64,25 @@ class CreditTransfer extends Component {
 
   handleSubmit(event) {
     event.preventDefault();
-    const initiator = this.initiator.value;
+    const initiatorFK = this.props.fuelSuppliers[0].id;
+    const creditTradeTypeFK = this.creditTradeTypeFK.value;
     const numberOfCredits = this.numberOfCredits.value;
-    const respondent = this.respondent.value;
+    const respondentFK = this.respondent.value;
     const valuePerCredit = this.valuePerCredit.value;
+    const creditTradeStatusFK = Values.STATUS_PROPOSED
     const note = this.note.value;
+    const id = this.props.match.params.id;
+    const data = {
+      id: id,
+      initiatorFK: initiatorFK,
+      numberOfCredits: numberOfCredits,
+      respondentFK: respondentFK,
+      valuePerCredit: valuePerCredit,
+      note: note,
+      creditTradeStatusFK: creditTradeStatusFK,
+      creditTradeTypeFK: creditTradeTypeFK
+    }
+    this.props.updateCreditTransfer(data);
   }
   
   render() {
@@ -75,9 +90,13 @@ class CreditTransfer extends Component {
       <div className="credit-transfer">
         { this.props.data && this.props.data.id && 
         <div>
-          <h1>{this.props.data.id && getCreditTransferTitle(this.props.data)}</h1>
+          {this.props.data.id && getCreditTransferTitle(this.props.data)}
           { this.props.data.creditTradeStatusFK === Values.STATUS_DRAFT && 
-            <button type="button" className="btn btn-danger">Delete Credit Transfer</button>
+            <button 
+              type="button" 
+              className="btn btn-danger">
+              Delete Credit Transfer
+            </button>
           }
           { this.props.data.creditTradeStatusFK === Values.STATUS_PROPOSED && 
             <button 
@@ -107,12 +126,12 @@ class CreditTransfer extends Component {
                   <div className="form-group">
                     <select 
                       className="form-control" 
-                      id="proposal-type" 
-                      name="proposalType"
-                      ref={(input) => this.proposalType = input}
+                      id="creditTradeTypeFK" 
+                      name="creditTradeTypeFK"
+                      ref={(input) => this.creditTradeTypeFK = input}
                       onChange={(event) => this.handleInputChange(event)}>
-                      <option>Sell</option>
-                      <option>Buy</option>
+                      <option value="1">Sell</option>
+                      <option value="2">Buy</option>
                     </select>
                   </div>
                   <div className="form-group">
@@ -131,7 +150,7 @@ class CreditTransfer extends Component {
                       className="form-control" 
                       id="respondent" 
                       name="respondent"
-                      ref={(input) => this.respondentFK = input}
+                      ref={(input) => this.respondent = input}
                       defaultValue={this.props.data && this.props.data.respondentFK}
                       onChange={(event) => this.handleInputChange(event)}>
                       { this.props.fuelSuppliers &&
@@ -176,7 +195,7 @@ class CreditTransfer extends Component {
                 <div className="btn-container">
                   <button type="button" className="btn btn-default">Cancel</button>
                   <button type="button" className="btn btn-default">Save Draft</button>
-                  <button type="button" className="btn btn-primary">Propose</button>
+                  <button type="submit" className="btn btn-primary">Propose</button>
                 </div>
               }
               { this.props.data.creditTradeStatusFK === Values.STATUS_PROPOSED && 
@@ -235,7 +254,7 @@ class CreditTransfer extends Component {
               <button 
                 type="button" 
                 className="btn btn-danger" 
-                onClick={(id) => this.props.rescindProposal(this.props.data.id)}
+                onClick={(id) => this.props.deleteCreditTransfer(this.props.data.id)}
               >
                 Rescind Proposal
               </button>
@@ -319,14 +338,17 @@ export default connect (
     getCreditTransferReset: () => {
       dispatch(getCreditTransferReset());
     },
+    updateCreditTransfer: (data) => {
+      dispatch(updateCreditTransfer(data));
+    },
     approveCreditTransfer: (id) => {
       dispatch(approveCreditTransfer(id));
     },
     rejectCreditTransfer: (id) => {
       dispatch(rejectCreditTransfer(id));
     },
-    rescindProposal: (id) => {
-      dispatch(rescindProposal(id));
+    deleteCreditTransfer: (id) => {
+      dispatch(deleteCreditTransfer(id));
     },
     getFuelSuppliers: () => {
       dispatch(getFuelSuppliers());

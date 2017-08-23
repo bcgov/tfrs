@@ -8,6 +8,7 @@ import {
   getCreditTransfer,
   getCreditTransferReset,
   approveCreditTransfer,
+  addCreditTransfer,
   rejectCreditTransfer,
   rescindProposal } from '../../actions/accountActivityActions.jsx';
 import { getFuelSuppliers } from '../../actions/fuelSuppliersActions.jsx';
@@ -18,7 +19,7 @@ class CreditTransferNew extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      proposalType: '',
+      creditTradeTypeFK: '',
       valuePerCredit: '',
       numberOfCredits: '',
       showRescindCreditTransferModal: false,
@@ -45,11 +46,23 @@ class CreditTransferNew extends Component {
 
   handleSubmit(event) {
     event.preventDefault();
-    const initiator = this.initiator.value;
+    const initiatorFK = this.props.fuelSuppliers[0].id;
+    const creditTradeTypeFK = this.creditTradeTypeFK.value;
     const numberOfCredits = this.numberOfCredits.value;
-    const respondent = this.respondent.value;
+    const respondentFK = this.respondent.value;
     const valuePerCredit = this.valuePerCredit.value;
+    const creditTradeStatusFK = Values.STATUS_PROPOSED
     const note = this.note.value;
+    const data = {
+      initiatorFK: initiatorFK,
+      numberOfCredits: numberOfCredits,
+      respondentFK: respondentFK,
+      valuePerCredit: valuePerCredit,
+      note: note,
+      creditTradeStatusFK: creditTradeStatusFK,
+      creditTradeTypeFK: creditTradeTypeFK
+    }
+    this.props.addCreditTransfer(data);
   }
   
   render() {
@@ -72,11 +85,11 @@ class CreditTransferNew extends Component {
                 <select 
                   className="form-control" 
                   id="proposal-type" 
-                  name="proposalType"
-                  ref={(input) => this.proposalType = input}
+                  name="creditTradeTypeFK"
+                  ref={(input) => this.creditTradeTypeFK = input}
                   onChange={(event) => this.handleInputChange(event)}>
-                  <option>Sell</option>
-                  <option>Buy</option>
+                  <option value="1">Sell</option>
+                  <option value="2">Buy</option>
                 </select>
               </div>
               <div className="form-group">
@@ -88,13 +101,13 @@ class CreditTransferNew extends Component {
                   onChange={(event) => this.handleInputChange(event)}
                   ref={(input) => this.numberOfCredits = input} />
               </div>
-              <span>{this.state.proposalType === "Buy" ? "credits from " : "credits to "}</span>
+              <span>{this.state.creditTradeTypeFK === "Buy" ? "credits from " : "credits to "}</span>
               <div className="form-group">
                 <select 
                   className="form-control" 
                   id="respondent" 
                   name="respondent"
-                  ref={(input) => this.respondentFK = input}
+                  ref={(input) => this.respondent = input}
                   onChange={(event) => this.handleInputChange(event)}>
                   { this.props.fuelSuppliers &&
                     this.props.fuelSuppliers.map((fuelSupplier) => (
@@ -133,7 +146,11 @@ class CreditTransferNew extends Component {
                 Cancel
               </button>
               <button type="button" className="btn btn-default">Save Draft</button>
-              <button type="button" className="btn btn-primary">Propose</button>
+              <button 
+                type="submit" 
+                className="btn btn-primary">
+                Propose
+              </button>
             </div>
           </form>
         </div>
@@ -239,6 +256,9 @@ export default connect (
   dispatch => ({
     getCreditTransfer: (id) => {
       dispatch(getCreditTransfer(id));
+    },
+    addCreditTransfer: (data) => {
+      dispatch(addCreditTransfer(data));
     },
     getCreditTransferReset: () => {
       dispatch(getCreditTransferReset());
