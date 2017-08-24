@@ -98,19 +98,12 @@ class RecentAccountActivityTable extends Component {
                 rows="4" 
                 onChange={(e) => this.handleNoteChange(e)} />
             </div>
-            { this.props.acceptCreditTransferSuccess && 
-              <div className="alert alert-success">Credit transfer successfully accepted</div>
-            }
           </Modal.Body>
           <Modal.Footer>
-            { !this.props.acceptCreditTransferSuccess ? 
-              <div>
-                <button type="button" className="btn btn-default" onClick={() => this.handleCloseModal()}>Cancel</button>
-                <button type="button" className="btn btn-primary" onClick={() => this.props.handleAcceptCreditTransfer(this.state.modalProposalID, this.state.note)}>Accept</button>
-              </div> 
-              : 
-              <button type="button" className="btn btn-primary" onClick={() => this.handleCloseModal()}>Okay</button>
-            }
+            <div>
+              <button type="button" className="btn btn-default" onClick={() => this.handleCloseModal()}>Cancel</button>
+              <button type="button" className="btn btn-primary not-implemented">Accept</button>
+            </div> 
           </Modal.Footer>
         </Modal>
       </div>

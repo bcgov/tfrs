@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { Modal } from 'react-bootstrap';
-import { getAccountActivity, acceptCreditTransfer, acceptCreditTransferReset } from '../../actions/accountActivityActions.jsx';
+import { getAccountActivity } from '../../actions/accountActivityActions.jsx';
 import * as ReducerTypes from '../../constants/reducerTypes.jsx';
 import * as Routes from '../../constants/routes.jsx';
 import * as Values from '../../constants/values.jsx';
@@ -48,7 +48,6 @@ class AccountActivity extends Component {
 
   handleCloseModal() {
     this.setState({showModal: false});
-    this.props.acceptCreditTransferReset();
   }
 
   actionsFormatter(cell, row) {
@@ -164,7 +163,7 @@ class AccountActivity extends Component {
           </Modal.Body>
           <Modal.Footer>
             <button type="button" className="btn btn-default" onClick={() => this.handleCloseModal()}>Cancel</button>
-            <button type="button" className="btn btn-primary" onClick={() => this.props.handleAcceptCreditTransfer(this.state.modalProposalID, this.state.note)}>Accept</button>
+            <button type="button" className="btn btn-primary not-implemented">Accept</button>
           </Modal.Footer>
         </Modal>
       </div>
@@ -183,11 +182,5 @@ export default connect (
     getAccountActivity: () => {
       dispatch(getAccountActivity());
     },
-    acceptCreditTransfer: (id, note) => {
-      dispatch(acceptCreditTransfer(id, note));
-    },
-    acceptCreditTransferReset: () => {
-      dispatch(acceptCreditTransferReset());
-    }
   })
 )(AccountActivity);
