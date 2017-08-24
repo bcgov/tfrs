@@ -36,6 +36,7 @@ class FuelSupplierDetails extends Component {
       contactBCeID: '',
       contactID: '',
       contacts: [],
+      fuelSupplierAttachments: null,
     };
   }
   
@@ -49,9 +50,12 @@ class FuelSupplierDetails extends Component {
 
   componentDidUpdate(prevProps, prevState) {
     if ((prevProps.fuelSupplierContacts !== this.props.fuelSupplierContacts) && 
-        this.props.fuelSupplierContacts.data && 
-        this.props.fuelSupplierContacts.data.length > 0) {
-      this.filterContacts();
+      this.props.fuelSupplierContacts.data && 
+      this.props.fuelSupplierContacts.data.length > 0) {
+        this.filterContacts();
+    }
+    if (this.state.fuelSupplierAttachments == null && this.props.fuelSupplierAttachmentsSuccess) {
+      this.filterAttachments();
     }
   }
 
@@ -61,6 +65,14 @@ class FuelSupplierDetails extends Component {
       return contact['fuelSupplierFK'] === id
     })
     this.setState({contacts: contacts});
+  }
+
+  filterAttachments() {
+    let id = parseInt(this.props.match.params.id);
+    let attachments = this.props.fuelSupplierAttachments.filter(attachment => {
+      return attachment['fuelSupplierFK'] === id
+    })
+    this.setState({fuelSupplierAttachments: attachments});
   }
 
   openAddContactModal() {
@@ -114,8 +126,8 @@ class FuelSupplierDetails extends Component {
   documentsActionsFormatter(cell, row) {
     return (
       <div>
-        <button className="btn btn-default">Download</button>
-        <button className="btn btn-default">Delete</button>
+        <button className="btn btn-link not-implemented">Download</button>
+        <button className="btn btn-link not-implemented">Delete</button>
       </div>
     )
   }
@@ -321,13 +333,13 @@ class FuelSupplierDetails extends Component {
         <div className="row">
           <div className="correspondence-table col-lg-12">
             <BootstrapTable 
-              data={this.props.fuelSupplierData.documents}
+              data={this.state.fuelSupplierAttachments}
               options={ options }
               search
             >
-              <TableHeaderColumn dataField="name" isKey={true} dataSort={true}>Document Name</TableHeaderColumn>
-              <TableHeaderColumn dataField="notes" dataSort={true}>Notes</TableHeaderColumn>
-              <TableHeaderColumn dataField="year" dataSort={true}>Compliance Year</TableHeaderColumn>
+              <TableHeaderColumn dataField="fileName" isKey={true} dataSort={true}>Document Name</TableHeaderColumn>
+              <TableHeaderColumn dataField="description" dataSort={true}>Notes</TableHeaderColumn>
+              <TableHeaderColumn dataField="complianceYear" dataSort={true}>Compliance Year</TableHeaderColumn>
               <TableHeaderColumn dataField="tags">Tags</TableHeaderColumn>
               <TableHeaderColumn dataField="date_uploaded">Date Uploaded</TableHeaderColumn>
               <TableHeaderColumn dataField="by">By</TableHeaderColumn>
@@ -392,6 +404,8 @@ export default connect (
     fuelSupplierTypes: state.rootReducer[ReducerTypes.FUEL_SUPPLIER_TYPES].data,
     fuelSupplierStatuses: state.rootReducer[ReducerTypes.FUEL_SUPPLIER_STATUSES].data,
     fuelSupplierActions: state.rootReducer[ReducerTypes.FUEL_SUPPLIER_ACTION_TYPES].data,
+    fuelSupplierAttachments: state.rootReducer[ReducerTypes.FUEL_SUPPLIER_ATTACHMENTS].data,
+    fuelSupplierAttachmentsSuccess: state.rootReducer[ReducerTypes.FUEL_SUPPLIER_ATTACHMENTS].success,
     verifyIDSuccess: state.rootReducer[ReducerTypes.VERIFY_ID].success,
     verifyIDError: state.rootReducer[ReducerTypes.VERIFY_ID].errorMessage,
     deleteContactSuccess: state.rootReducer[ReducerTypes.DELETE_CONTACT].success,

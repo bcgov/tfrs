@@ -137,8 +137,7 @@ export const addCreditTransfer = (data) => (dispatch) => {
     history.push(Routes.ACCOUNT_ACTIVITY);
     dispatch(addCreditTransferSuccess(response.data))
   }).catch((error) => {
-    let error = "All fields must have a valid value."
-    dispatch(addCreditTransferError(error));
+    dispatch(addCreditTransferError(error.data));
   })
 }
 
@@ -162,6 +161,13 @@ const addCreditTransferError = (error) => {
     name: ReducerTypes.ADD_CREDIT_TRANSFER,
     type: ActionTypes.ERROR,
     errorMessage: error
+  }
+}
+
+export const addCreditTransferReset = () => {
+  return {
+    name: ReducerTypes.ADD_CREDIT_TRANSFER,
+    type: ActionTypes.RESET,
   }
 }
 

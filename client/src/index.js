@@ -11,6 +11,7 @@ import {
 	getFuelSupplierStatuses,
 	getFuelSupplierTypes,
 	getFuelSupplierContacts,
+	getFuelSupplierAttachments,
 	getFuelSuppliers
 } from './actions/fuelSuppliersActions.jsx';
 import { 
@@ -45,6 +46,7 @@ store.dispatch(getFuelSupplierActionTypes());
 store.dispatch(getFuelSupplierStatuses());
 store.dispatch(getFuelSupplierTypes());
 store.dispatch(getFuelSupplierContacts());
+store.dispatch(getFuelSupplierAttachments());
 store.dispatch(getFuelSuppliers());
 store.dispatch(getUsers());
 store.dispatch(getPermissions());

@@ -71,6 +71,7 @@ const rootReducer = combineReducers({
     [ReducerTypes.FUEL_SUPPLIER_TYPES]: createReducer(genericRequest, ReducerTypes.FUEL_SUPPLIER_TYPES),
     [ReducerTypes.FUEL_SUPPLIER_TYPE]: createReducer(genericRequest, ReducerTypes.FUEL_SUPPLIER_TYPE),
     [ReducerTypes.FUEL_SUPPLIER_CONTACTS]: createReducer(genericRequest, ReducerTypes.FUEL_SUPPLIER_CONTACTS),
+    [ReducerTypes.FUEL_SUPPLIER_ATTACHMENTS]: createReducer(genericRequest, ReducerTypes.FUEL_SUPPLIER_ATTACHMENTS),
     [ReducerTypes.USERS]: createReducer(genericRequest, ReducerTypes.USERS),
     [ReducerTypes.PERMISSIONS]: createReducer(genericRequest, ReducerTypes.PERMISSIONS),
     [ReducerTypes.ROLE_PERMISSIONS]: createReducer(genericRequest, ReducerTypes.ROLE_PERMISSIONS),

@@ -16,7 +16,7 @@ export const getCreditTrades = () => (dispatch) => {
 const getCreditTradesRequest = () => {
   return {
     name: ReducerTypes.CREDIT_TRADES,
-    type: ActionTypes.SUCCESS,
+    type: ActionTypes.REQUEST,
   }
 }
 
@@ -31,7 +31,7 @@ const getCreditTradesSuccess = (fuelSuppliers) => {
 const getCreditTradesError = (error) => {
   return {
     name: ReducerTypes.CREDIT_TRADES,
-    type: ActionTypes.SUCCESS,
+    type: ActionTypes.ERROR,
     errorMessage: error
   }
 }
@@ -49,7 +49,7 @@ export const getCreditTradeStatuses = () => (dispatch) => {
 const getCreditTradeStatusesRequest = () => {
   return {
     name: ReducerTypes.CREDIT_TRADE_STATUSES,
-    type: ActionTypes.SUCCESS,
+    type: ActionTypes.REQUEST,
   }
 }
 
@@ -64,7 +64,7 @@ const getCreditTradeStatusesSuccess = (statuses) => {
 const getCreditTradeStatusesError = (error) => {
   return {
     name: ReducerTypes.CREDIT_TRADE_STATUSES,
-    type: ActionTypes.SUCCESS,
+    type: ActionTypes.ERROR,
     errorMessage: error
   }
 }
@@ -82,7 +82,7 @@ export const getCreditTradeTypes = () => (dispatch) => {
 const getCreditTradeTypesRequest = () => {
   return {
     name: ReducerTypes.CREDIT_TRADE_TYPES,
-    type: ActionTypes.SUCCESS,
+    type: ActionTypes.REQUEST,
   }
 }
 
@@ -97,7 +97,7 @@ const getCreditTradeTypesSuccess = (types) => {
 const getCreditTradeTypesError = (error) => {
   return {
     name: ReducerTypes.CREDIT_TRADE_TYPES,
-    type: ActionTypes.SUCCESS,
+    type: ActionTypes.ERROR,
     errorMessage: error
   }
 }

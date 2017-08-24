@@ -7,7 +7,8 @@ import { Modal } from 'react-bootstrap';
 import { 
   getCreditTransfer,
   getCreditTransferReset,
-  addCreditTransfer } from '../../actions/accountActivityActions.jsx';
+  addCreditTransfer,
+  addCreditTransferReset } from '../../actions/accountActivityActions.jsx';
 import { getFuelSuppliers } from '../../actions/fuelSuppliersActions.jsx';
 import { BootstrapTable, TableHeaderColumn, ButtonGroup } from 'react-bootstrap-table';
 import TransactionHistory from './TransactionHistory.jsx';
@@ -24,6 +25,7 @@ class CreditTransferNew extends Component {
 
   componentWillUnmount() {
     this.props.getCreditTransferReset();
+    this.props.addCreditTransferReset();
   }
 
   handleInputChange(event) {
@@ -87,6 +89,7 @@ class CreditTransferNew extends Component {
                   type="number" 
                   className="form-control" 
                   id="number-of-credits" 
+                  defaultValue="0"
                   name="numberOfCredits"
                   onChange={(event) => this.handleInputChange(event)}
                   ref={(input) => this.numberOfCredits = input} />
@@ -112,6 +115,7 @@ class CreditTransferNew extends Component {
                   className="form-control" 
                   id="value-per-credit" 
                   name="valuePerCredit"
+                  defaultValue="0"
                   onChange={(event) => this.handleInputChange(event)}
                   ref={(input) => this.valuePerCredit = input} />
               </div>
@@ -119,8 +123,11 @@ class CreditTransferNew extends Component {
               <span>{ this.state.valuePerCredit * this.state.numberOfCredits }</span>
               <span> effective on Director's Approval</span>
             </div>
-            <div className="alert-warning">
+            {this.props.addCreditTransferError.length > 0 &&
+            <div className="alert alert-danger">
+              <div>{this.props.addCreditTransferError}</div>
             </div>
+            }
             <div className="form-group note">
               <label htmlFor="comment">Note:</label>
               <textarea 
@@ -161,6 +168,7 @@ export default connect (
   state => ({
     data: state.rootReducer[ReducerTypes.GET_CREDIT_TRANSFER].data,
     fuelSuppliers: state.rootReducer[ReducerTypes.GET_FUEL_SUPPLIERS].data,
+    addCreditTransferError: state.rootReducer[ReducerTypes.ADD_CREDIT_TRANSFER].errorMessage
   }),
   dispatch => ({
     getCreditTransfer: (id) => {
@@ -168,6 +176,9 @@ export default connect (
     },
     addCreditTransfer: (data) => {
       dispatch(addCreditTransfer(data));
+    },
+    addCreditTransferReset: () => {
+      dispatch(addCreditTransferReset());
     },
     getCreditTransferReset: () => {
       dispatch(getCreditTransferReset());

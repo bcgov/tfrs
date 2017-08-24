@@ -17,7 +17,7 @@ export const getFuelSuppliers = () => (dispatch, getState) => {
 const getFuelSuppliersRequest = () => {
   return {
     name: ReducerTypes.GET_FUEL_SUPPLIERS,
-    type: ActionTypes.SUCCESS,
+    type: ActionTypes.REQUEST,
   }
 }
 
@@ -32,7 +32,7 @@ const getFuelSuppliersSuccess = (fuelSuppliers) => {
 const getFuelSuppliersError = (error) => {
   return {
     name: ReducerTypes.GET_FUEL_SUPPLIERS,
-    type: ActionTypes.SUCCESS,
+    type: ActionTypes.ERROR,
     errorMessage: error
   }
 }
@@ -43,7 +43,7 @@ export const searchFuelSuppliers = (name, city) => (dispatch) => {
 const searchFuelSuppliersRequest = () => {
   return {
     name: ReducerTypes.GET_FUEL_SUPPLIERS,
-    type: ActionTypes.SUCCESS,
+    type: ActionTypes.REQUEST,
   }
 }
 
@@ -58,7 +58,7 @@ const searchFuelSuppliersSuccess = (fuelSuppliers) => {
 const searchFuelSuppliersError = (error) => {
   return {
     name: ReducerTypes.GET_FUEL_SUPPLIERS,
-    type: ActionTypes.SUCCESS,
+    type: ActionTypes.ERROR,
     errorMessage: error
   }
 }
@@ -95,7 +95,7 @@ export const getFuelSupplier = (id) => (dispatch) => {
 const getFuelSupplierRequest = () => {
   return {
     name: ReducerTypes.GET_FUEL_SUPPLIER,
-    type: ActionTypes.SUCCESS,
+    type: ActionTypes.REQUEST,
   }
 }
 
@@ -110,7 +110,7 @@ const getFuelSupplierSuccess = (fuelSupplier) => {
 const getFuelSupplierError = (error) => {
   return {
     name: ReducerTypes.GET_FUEL_SUPPLIER,
-    type: ActionTypes.SUCCESS,
+    type: ActionTypes.ERROR,
     errorMessage: error
   }
 }
@@ -136,7 +136,7 @@ export const addContact = (data) => (dispatch) => {
 const addContactRequest = () => {
   return {
     name: ReducerTypes.ADD_CONTACT,
-    type: ActionTypes.SUCCESS,
+    type: ActionTypes.REQUEST,
   }
 }
 
@@ -150,7 +150,7 @@ const addContactSuccess = () => {
 const addContactError = (error) => {
   return {
     name: ReducerTypes.ADD_CONTACT,
-    type: ActionTypes.SUCCESS,
+    type: ActionTypes.ERROR,
     errorMessage: error
   }
 }
@@ -176,7 +176,7 @@ export const deleteContact = (id) => (dispatch) => {
 const deleteContactRequest = () => {
   return {
     name: ReducerTypes.DELETE_CONTACT,
-    type: ActionTypes.SUCCESS,
+    type: ActionTypes.REQUEST,
   }
 }
 
@@ -190,7 +190,7 @@ const deleteContactSuccess = () => {
 const deleteContactError = (error) => {
   return {
     name: ReducerTypes.DELETE_CONTACT,
-    type: ActionTypes.SUCCESS,
+    type: ActionTypes.ERROR,
     errorMessage: error
   }
 }
@@ -241,7 +241,7 @@ export const getFuelSupplierActionTypes = () => (dispatch, getState) => {
 const getFuelSupplierActionTypesRequest = () => {
   return {
     name: ReducerTypes.FUEL_SUPPLIER_ACTION_TYPES,
-    type: ActionTypes.SUCCESS,
+    type: ActionTypes.REQUEST,
   }
 }
 
@@ -256,7 +256,7 @@ const getFuelSupplierActionTypesSuccess = (fuelSuppliers) => {
 const getFuelSupplierActionTypesError = (error) => {
   return {
     name: ReducerTypes.FUEL_SUPPLIER_ACTION_TYPES,
-    type: ActionTypes.SUCCESS,
+    type: ActionTypes.ERROR,
     errorMessage: error
   }
 }
@@ -274,7 +274,7 @@ export const getFuelSupplierActionType = (id) => (dispatch) => {
 const getFuelSupplierActionTypeRequest = () => {
   return {
     name: ReducerTypes.FUEL_SUPPLIER_ACTION_TYPE,
-    type: ActionTypes.SUCCESS,
+    type: ActionTypes.REQUEST,
   }
 }
 
@@ -289,7 +289,7 @@ const getFuelSupplierActionTypeSuccess = (fuelSuppliers) => {
 const getFuelSupplierActionTypeError = (error) => {
   return {
     name: ReducerTypes.FUEL_SUPPLIER_ACTION_TYPE,
-    type: ActionTypes.SUCCESS,
+    type: ActionTypes.ERROR,
     errorMessage: error
   }
 }
@@ -307,7 +307,7 @@ export const getFuelSupplierStatuses = () => (dispatch) => {
 const getFuelSupplierStatusesRequest = () => {
   return {
     name: ReducerTypes.FUEL_SUPPLIER_STATUSES,
-    type: ActionTypes.SUCCESS,
+    type: ActionTypes.REQUEST,
   }
 }
 
@@ -322,7 +322,7 @@ const getFuelSupplierStatusesSuccess = (fuelSuppliers) => {
 const getFuelSupplierStatusesError = (error) => {
   return {
     name: ReducerTypes.FUEL_SUPPLIER_STATUSES,
-    type: ActionTypes.SUCCESS,
+    type: ActionTypes.ERROR,
     errorMessage: error
   }
 }
@@ -340,7 +340,7 @@ export const getFuelSupplierStatus = (id) => (dispatch) => {
 const getFuelSupplierStatusRequest = () => {
   return {
     name: ReducerTypes.FUEL_SUPPLIER_STATUS,
-    type: ActionTypes.SUCCESS,
+    type: ActionTypes.REQUEST,
   }
 }
 
@@ -355,7 +355,7 @@ const getFuelSupplierStatusSuccess = (fuelSuppliers) => {
 const getFuelSupplierStatusError = (error) => {
   return {
     name: ReducerTypes.FUEL_SUPPLIER_STATUS,
-    type: ActionTypes.SUCCESS,
+    type: ActionTypes.ERROR,
     errorMessage: error
   }
 }
@@ -373,7 +373,7 @@ export const getFuelSupplierTypes = () => (dispatch) => {
 const getFuelSupplierTypesRequest = () => {
   return {
     name: ReducerTypes.FUEL_SUPPLIER_TYPES,
-    type: ActionTypes.SUCCESS,
+    type: ActionTypes.REQUEST,
   }
 }
 
@@ -388,7 +388,7 @@ const getFuelSupplierTypesSuccess = (fuelSuppliers) => {
 const getFuelSupplierTypesError = (error) => {
   return {
     name: ReducerTypes.FUEL_SUPPLIER_TYPES,
-    type: ActionTypes.SUCCESS,
+    type: ActionTypes.ERROR,
     errorMessage: error
   }
 }
@@ -406,7 +406,7 @@ export const getFuelSupplierType = (id) => (dispatch) => {
 const getFuelSupplierTypeRequest = () => {
   return {
     name: ReducerTypes.FUEL_SUPPLIER_TYPE,
-    type: ActionTypes.SUCCESS,
+    type: ActionTypes.REQUEST,
   }
 }
 
@@ -421,7 +421,7 @@ const getFuelSupplierTypeSuccess = (fuelSuppliers) => {
 const getFuelSupplierTypeError = (error) => {
   return {
     name: ReducerTypes.FUEL_SUPPLIER_TYPE,
-    type: ActionTypes.SUCCESS,
+    type: ActionTypes.ERROR,
     errorMessage: error
   }
 }
@@ -439,7 +439,7 @@ export const getFuelSupplierContacts = () => (dispatch) => {
 const getFuelSupplierContactsRequest = () => {
   return {
     name: ReducerTypes.FUEL_SUPPLIER_CONTACTS,
-    type: ActionTypes.SUCCESS,
+    type: ActionTypes.REQUEST,
   }
 }
 
@@ -454,8 +454,40 @@ const getFuelSupplierContactsSuccess = (contacts) => {
 const getFuelSupplierContactsError = (error) => {
   return {
     name: ReducerTypes.FUEL_SUPPLIER_CONTACTS,
-    type: ActionTypes.SUCCESS,
+    type: ActionTypes.ERROR,
     errorMessage: error
   }
 }
 
+export const getFuelSupplierAttachments = () => (dispatch) => {
+  dispatch(getFuelSupplierAttachmentsRequest());
+  axios.get(Routes.BASE_URL + Routes.FUEL_SUPPLIER_ATTACHMENTS)
+  .then((response) => {
+    dispatch(getFuelSupplierAttachmentsSuccess(response.data));
+  }).catch((error) => {
+    dispatch(getFuelSupplierAttachmentsError(error.response))
+  })
+}
+
+const getFuelSupplierAttachmentsRequest = () => {
+  return {
+    name: ReducerTypes.FUEL_SUPPLIER_ATTACHMENTS,
+    type: ActionTypes.REQUEST,
+  }
+}
+
+const getFuelSupplierAttachmentsSuccess = (attachments) => {
+  return {
+    name: ReducerTypes.FUEL_SUPPLIER_ATTACHMENTS,
+    type: ActionTypes.SUCCESS,
+    data: attachments,
+  }
+}
+
+const getFuelSupplierAttachmentsError = (error) => {
+  return {
+    name: ReducerTypes.FUEL_SUPPLIER_ATTACHMENTS,
+    type: ActionTypes.ERROR,
+    errorMessage: error
+  }
+}
