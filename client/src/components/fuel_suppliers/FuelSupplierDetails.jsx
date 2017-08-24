@@ -245,7 +245,6 @@ class FuelSupplierDetails extends Component {
                 <TableHeaderColumn 
                   dataField="name"
                   isKey={true} 
-                  dataSort={true}
                   dataFormat={(cell, row) => this.nameFormatter(cell, row)}>
                   Contact
                 </TableHeaderColumn>

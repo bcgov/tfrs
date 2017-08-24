@@ -5,6 +5,8 @@ export const STATUS_ACCEPTED = 3;
 export const STATUS_RECOMMENDED = 4;
 export const STATUS_APPROVED = 6;
 export const STATUS_COMPLETED = 7;
+export const STATUS_CANCELLED = 8;
+export const STATUS_REJECTED = 9;
 
 export const STATUS_ACTIVE = 'Active';
 export const STATUS_ARCHIVED = 'Archived';

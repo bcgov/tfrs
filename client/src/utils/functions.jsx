@@ -4,7 +4,7 @@ import * as ReducerTypes from '../constants/reducerTypes.jsx';
 import store from '../store/store.jsx';
 
 export const plainEnglishPhrase = (data) => {
-  let tradeStatus = getCreditTradeStatus(data.creditTradeStatusFK);
+  let tradeStatus = data.creditTradeStatusFK;
   let tradeRespondent = getCreditTradeRespondent(data.respondentFK);
   let tradeInitiator = getCreditTradeInitiator(data.initiatorFK);
   let tradeType = getCreditTradeType(data.creditTradeTypeFK);
@@ -71,9 +71,9 @@ const getCreditTradeTypePast = (tradeType) => {
 
 const getToFrom = (tradeType) => {
   if (tradeType == 'sell') {
-    return ' credits to ';
+    return 'credits to';
   } else if (tradeType == 'buy') {
-    return ' credits from ';
+    return 'credits from';
   }
 }
 
@@ -87,7 +87,7 @@ export const getCreditTradeRespondent = (respondentId) => {
 
 export const getCreditTradeInitiator = (initiatorId) => {
   if (initiatorId == null) {
-    return 'BC Government ';
+    return 'BC Government';
   } else {
     let fuelSuppliers = store.getState().rootReducer[ReducerTypes.GET_FUEL_SUPPLIERS].data;
     let initiator = fuelSuppliers.find(function(fuelSupplier) {
@@ -102,7 +102,7 @@ const PlainEnglishPhrasePast = (props) => {
   let totalValue = addCommas((Number(props.numberOfCredits) * Number(props.fairMarketValuePerCredit)));
   return (
     <div className="plain-english-phrase">
-      <span className="value">{props.tradeInitiator}</span> <span className="value">{props.tradeTypePast}</span> <span className="value">{props.numberOfCredits}</span> {props.toFrom} <span className="value">{props.tradeRespondent}</span> for <span className="value">${fairMarketValuePerCredit}</span> per credit for a total value of <span className="value">${totalValue}</span> effective on <span className="value">{props.tradeEffectiveDate}</span>
+      <span className="value">{props.tradeInitiator}</span> <span className="value">{props.tradeTypePast}</span> <span className="value">{props.numberOfCredits}</span> {props.toFrom} <span className="value">{props.tradeRespondent}</span> for <span className="value">${fairMarketValuePerCredit}</span> per credit for a total value of <span className="value">${totalValue}</span> effective on <span className="value">{props.tradeEffectiveDate}.</span>
     </div>
   ) 
 }
@@ -133,7 +133,7 @@ export const getCreditTransferTitle = (data) => {
 const CreditTransferTitle = (props) => {
   return (
     <h1>
-      Credit Transfer - {props.tradeType} {props.toFrom} {props.respondent} - proposed {props.tradeEffectiveDate}
+      Credit Transfer - {props.tradeType} {props.toFrom} {props.respondent} {props.tradeEffectiveDate && '- proposed '} {props.tradeEffectiveDate}
     </h1>
   )
 }
@@ -142,4 +142,26 @@ const addCommas = (number) => {
   let parts = number.toFixed(2).toString().split('.');
   parts[0] = parts[0].replace(Values.ADD_COMMAS_REGEX, ',');
   return parts.join('.');
+}
+
+export const plainEnglishPhraseString = (data) => {
+  let tradeStatus = data.creditTradeStatusFK;
+  let tradeRespondent = getCreditTradeRespondent(data.respondentFK);
+  let tradeInitiator = getCreditTradeInitiator(data.initiatorFK);
+  let tradeType = getCreditTradeType(data.creditTradeTypeFK);
+  let tradeTypePast = getCreditTradeTypePast(data.creditTradeTypeFK);
+  let toFrom = getToFrom(tradeType);
+  let fairMarketValuePerCredit = addCommas(Number(data.fairMarketValuePerCredit));
+  let totalValue = addCommas((Number(data.numberOfCredits) * Number(data.fairMarketValuePerCredit)));
+  switch (tradeStatus) {
+    case Values.STATUS_COMPLETED:
+      return (
+        tradeInitiator + ' ' + tradeTypePast + ' ' +  data.numberOfCredits + ' ' + toFrom + ' ' + tradeRespondent + ' for $' + fairMarketValuePerCredit + ' per credit for a total value of $' + totalValue + ' effective on ' + data.tradeEffectiveDate + '.'
+      );
+    default:
+      return (
+        tradeInitiator + ' proposes to ' + tradeType + ' ' +  data.numberOfCredits + ' ' + toFrom + ' ' + tradeRespondent + ' for $' + fairMarketValuePerCredit + ' per credit for a total value of $' + totalValue + " effective on Director's Approval."
+      );
+    break;
+  }
 }

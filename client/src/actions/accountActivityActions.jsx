@@ -127,7 +127,7 @@ export const addCreditTransfer = (data) => (dispatch) => {
   axios.post(Routes.BASE_URL + Routes.CREDIT_TRADE_API, {
     fairMarketValuePerCredit: data.valuePerCredit,
     numberOfCredits: data.numberOfCredits,
-    tradeEffectiveDate: null,
+    tradeEffectiveDate: data.tradeEffectiveDate ? data.tradeEffectiveDate : null,
     respondentFK: data.respondentFK,
     creditTradeStatusFK: data.creditTradeStatusFK,
     initiatorFK: data.initiatorFK,
@@ -137,7 +137,8 @@ export const addCreditTransfer = (data) => (dispatch) => {
     history.push(Routes.ACCOUNT_ACTIVITY);
     dispatch(addCreditTransferSuccess(response.data))
   }).catch((error) => {
-    dispatch(addCreditTransferError(error.response));
+    let error = "All fields must have a valid value."
+    dispatch(addCreditTransferError(error));
   })
 }
 
@@ -169,7 +170,7 @@ export const updateCreditTransfer = (data) => (dispatch) => {
   axios.put(Routes.BASE_URL + Routes.CREDIT_TRADE_API + '/' + data.id, {
     fairMarketValuePerCredit: data.valuePerCredit,
     numberOfCredits: data.numberOfCredits,
-    tradeEffectiveDate: null,
+    tradeEffectiveDate: data.tradeEffectiveDate ? data.tradeEffectiveDate :null,
     respondentFK: data.respondentFK,
     creditTradeStatusFK: data.creditTradeStatusFK,
     initiatorFK: data.initiatorFK,
