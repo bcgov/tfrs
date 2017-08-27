@@ -8,7 +8,6 @@ definitions:
       - respondentFK
       - creditTradeTypeFK
       - numberOfCredits
-      - plainEnglishPhrase
     properties:
       id:
         format: int32
@@ -34,24 +33,19 @@ definitions:
         type: number
         format: float
         description: The price (if applicable) of each credit in the transaction. There is no fair market value on transaction initiated by the Government of BC.
+      CreditTradeZeroReasonFK:
+        $ref: '#/definitions/CreditTradeZeroReason'
+        description: A foreign key reference to the Credit Trade Zero Reason.
       tradeEffectiveDate:
         type: string
         format: date-time
-        description: The effective date of the trade if specified beforehand and after execution. If NULL - indicates the trade has not occurred and the effective date will be the date the Ministry Approver approves the transaction.
-      plainEnglishPhrase:
-        type: string
-        maxLength: 2000
-        description: A plain English phrase displaying the current state of the Credit Trade.
-      historySet:
-        type: array
-        items:
-          $ref: '#/definitions/CreditTradeHistory'
-        description: A foreign key reference to the Credit Trade History entries related to this Credit Trade.
+        description: The effective date of the trade if specified beforehand and the date on which the trade occurred after execution. If NULL - indicates the trade has not occurred and the effective date will be the date the Ministry Approver approves the transaction.
   CreditTradeHistory:
     type: object
     description: A snapshot of a Credit Trade following a change to the Credit Trade data.
     required:
       - id
+      - creditTradeFK
       - userFK
       - creditTradeUpdateTime
       - newRespondentFK
@@ -63,6 +57,9 @@ definitions:
         format: int32
         type: integer
         description: A system-generated unique identifier for a Credit Trade History.
+      creditTradeFK:
+        $ref: '#/definitions/CreditTrade'
+        description: A foreign key reference to the Credit Trade that generated this Credit Trade History record.
       userFK:
         $ref: '#/definitions/User'
         description: A foreign key reference to the User that updated the Credit Trade.
@@ -163,139 +160,39 @@ definitions:
       isGovOnlyType:
         type: boolean
         description: The Credit Trade Type is a government-only type of Credit Trade - not available to Fuel Suppliers.
-  Opportunity:
+  CreditTradeZeroReason:
     type: object
-    description: A posting by a Fuel Supplier seller to indicate an interest in making a Credit Trade visible to all other Fuel Suppliers of a designated type.
+    description: The reason for a $0.00 per Credit Trade.
     required:
       - id
-      - fuelSupplierFK
-      - opportunityStatusFK
-      - creditTradeTypeFK
-      - fuelSupplierTypeFK
-      - numberOfCredits
-      - plainEnglishPhrase
-    properties:
-      id:
-        format: int32
-        type: integer
-        description: A system-generated unique identifier for an Opportunity.
-      fuelSupplierFK:
-        $ref: '#/definitions/FuelSupplier'
-        description: A foreign key reference to the FuelSupplier that created the Opportunity.
-      opportunityStatusFK:
-        $ref: '#/definitions/OpportunityStatus'
-        description: A foreign key reference to Opportunity Status.
-      creditTradeTypeFK:
-        $ref: '#/definitions/CreditTradeType'
-        description: A foreign key reference to Credit Trade Type.
-      fuelSupplierTypeFK:
-        $ref: '#/definitions/FuelSupplierType'
-        description: A foreign key reference to Fuel Supplier Type that is being invited to respond to the Opportunity.
-      numberOfCredits:
-        format: int32
-        type: integer
-        description: The number of credits being suggested as part of the Opportunity.
-      suggestedValuePerCredit:
-        type: number
-        format: float
-        description: The suggested price of each credit that is part of the Opportunity.
-      plainEnglishPhrase:
-        type: string
-        maxLength: 2000
-        description: A plain English phrase displaying the current state of the Opportunity.
-      hasTradeNow:
-        type: boolean
-        description: Set true by the Fuel Supplier posting the Opportunity confirming they are willing to automatically accept a proposal for all of the credits at the suggested price per credit.
-      postedDate:
-        type: string
-        format: date-time
-        description: The date&#x2F;time the Opportunity was publically posted for potential trading partners.
-      opportunityBackgroundNote:
-        type: string
-        maxLength: 4000
-        description: A note about the Opportunity that is set by the Fuel Supplier posting the Opportunity and visible to those viewing the Opportunity.
-      creditTradesSet:
-        type: array
-        items:
-          $ref: '#/definitions/CreditTrade'
-        description: A foreign key reference to the Credit Trades that were generated from the publishing of this Opportunity.
-  OpportunityHistory:
-    type: object
-    description: The history of updates made to an Opportunity.
-    required:
-      - id
-      - opportunityFK
-      - userFK
-      - creditTradeTypeFK
-      - fuelSupplierTypeFK
-    properties:
-      id:
-        format: int32
-        type: integer
-        description: A system-generated unique identifier for an Opportunity History.
-      opportunityFK:
-        $ref: '#/definitions/Opportunity'
-        description: A foreign key reference to a Opportunity.
-      userFK:
-        $ref: '#/definitions/User'
-        description: A foreign key reference to the User that made the update to the Opportunity.
-      updateTime:
-        type: string
-        format: date-time
-        description: The date&#x2F;time the change was made to the Opportunity.
-      creditTradeTypeFK:
-        $ref: '#/definitions/CreditTradeType'
-        description: A foreign key reference to a Credit Trade Type after the Opportunity update.
-      newNumberOfCredits:
-        format: int32
-        type: integer
-        description: The number of credits involved in the Opportunity after the update.
-      newProposedValuePerCredit:
-        type: number
-        format: float
-        description: The Proposed Fair Market Value per Credit in the Opportunity after the update.
-      fuelSupplierTypeFK:
-        $ref: '#/definitions/FuelSupplierType'
-        description: A foreign key reference to the Fuel Supplier Type invited to respond to the Opportunity after the Opportunity update.
-      newTradeEffectiveDate:
-        type: string
-        format: date-time
-        description: The Trade Effective Date of the opportunity after the update.
-      note:
-        type: string
-        maxLength: 4000
-        description: A note entered about the Opportunity update.
-  OpportunityStatus:
-    type: object
-    description: The possible status values associated with an opportunity.
-    required:
-      - id
+      - reason
+      - description
       - effectiveDate
     properties:
       id:
         format: int32
         type: integer
-        description: A system-generated unique identifier for the Opportunity status.
-      status:
+        description: A system-generated unique identifier for a Credit Trade Zero Reason.
+      reason:
         type: string
         maxLength: 25
-        description: The name of the Opportunity status.
+        description: The text of the reason for the $0.00 per Credit Trade trade.
       description:
         type: string
         maxLength: 1000
-        description: End user help-text information about the Opportunity status.
+        description: End user help-text information about the Credit Trade Zero Reason.
       effectiveDate:
         type: string
         format: date-time
-        description: The date&#x2F;time upon which the Opportunity status was activated for use.
+        description: The datetime upon which the Credit Trade Zero Reason was activated for use.
       expirationDate:
         type: string
         format: date-time
-        description: The data after which the Opportunity status will no longer be used.
+        description: The data after which the Credit Trade Zero Reason will no longer be used.
       displayOrder:
         format: int32
         type: integer
-        description: The order of display of the Opportunity status. In general the order will be listed chronologically as they occur in a typical transaction, with exception statuses (e.g. Cancelled) at the bottom.
+        description: The order of display of the Credit Trade Zero Reason. In general the order will be listed in the order of expected frequency.
   FuelSupplier:
     type: object
     description: A Fuel Supplier that is or was eligible to be a part of the Low Carbon Fuel Credits trading program.
@@ -303,7 +200,6 @@ definitions:
       - id
       - name
       - fuelSupplierStatusFK
-      - fuelSupplierTypeFK
       - fuelSupplierActionsTypeFK
       - createdDate
     properties:
@@ -319,9 +215,6 @@ definitions:
       fuelSupplierStatusFK:
         $ref: '#/definitions/FuelSupplierStatus'
         description: A foreign key reference to the Fuel Supplier Status.
-      fuelSupplierTypeFK:
-        $ref: '#/definitions/FuelSupplierType'
-        description: A foreign key reference to the Fuel Supplier Type.
       fuelSupplierActionsTypeFK:
         $ref: '#/definitions/FuelSupplierActionsType'
         description: A foreign key reference to the Fuel Supplier&#39;s Actions Type.
@@ -386,7 +279,6 @@ definitions:
       - id
       - fuelSupplierFK
       - validatedCredits
-      - encumberedCredits
       - effectiveDate
     properties:
       id:
@@ -400,10 +292,6 @@ definitions:
         format: int32
         type: integer
         description: The number of validated credits held by the Fuel Supplier at the time the record was active.
-      encumberedCredits:
-        format: int32
-        type: integer
-        description: The number of encumbered credits held by the Fuel Supplier at the time the record was active.
       effectiveDate:
         type: string
         format: date-time
@@ -414,7 +302,7 @@ definitions:
         description: The date this record was no longer in effect - likely because a new record was added with new Credit count(s).
       creditTradeFK:
         $ref: '#/definitions/CreditTrade'
-        description: A foreign key reference to a CreditTrade that triggered a change in the number of validated or encumbered credits held by the Fuel Supplier.
+        description: A foreign key reference to a CreditTrade that triggered a change in the number of validated credits held by the Fuel Supplier.
   FuelSupplierStatus:
     type: object
     description: The statuses of a Fuel Supplier over their lifecycle in the application.
@@ -447,38 +335,6 @@ definitions:
         format: int32
         type: integer
         description: The order of display of the Fuel Supplier status. In general the order will be listed chronologically as they occur in a typical transaction, with exception statuses (e.g. Cancelled) at the bottom.
-  FuelSupplierType:
-    type: object
-    description: The types of Fuel Suppliers that can be proposed by the initiating organization.
-    required:
-      - id
-      - theType
-      - effectiveDate
-    properties:
-      id:
-        format: int32
-        type: integer
-        description: A system-generated unique identifier for a Fuel Supplier Type.
-      theType:
-        type: string
-        maxLength: 25
-        description: The name of the type of Fuel Supplier, such as Part 3 Fuel Supplier, Petroleum Fuel Supplier, etc.
-      description:
-        type: string
-        maxLength: 1000
-        description: End user help-text information about the Fuel Supplier type.
-      effectiveDate:
-        type: string
-        format: date-time
-        description: The datetime upon which the Fuel Supplier type was activated for use.
-      expirationDate:
-        type: string
-        format: date-time
-        description: The data after which the Fuel Supplier type will no longer be used.
-      displayOrder:
-        format: int32
-        type: integer
-        description: The order of display of the Fuel Supplier type. In general, the order will be listed alphabetically.
   FuelSupplierActionsType:
     type: object
     description: The types of actions that Fuel Suppliers that can take - Buy and Sell, Buy Only, etc.

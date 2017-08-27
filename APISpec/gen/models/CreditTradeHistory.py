@@ -23,6 +23,7 @@ import datetime
 
 from django.db import models
 from django.utils import timezone
+from .CreditTrade import CreditTrade
 from .User import User
 from .FuelSupplier import FuelSupplier
 from .CreditTradeStatus import CreditTradeStatus
@@ -30,6 +31,7 @@ from .CreditTradeType import CreditTradeType
 
 
 class CreditTradeHistory(models.Model):	    
+    creditTradeFK = models.ForeignKey('CreditTrade', related_name='CreditTradeHistorycreditTradeFK')   
     userFK = models.ForeignKey('User', related_name='CreditTradeHistoryuserFK')   
     creditTradeUpdateTime = models.DateField()   
     newRespondentFK = models.ForeignKey('FuelSupplier', related_name='CreditTradeHistorynewRespondentFK')   

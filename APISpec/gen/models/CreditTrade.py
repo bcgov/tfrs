@@ -26,7 +26,7 @@ from django.utils import timezone
 from .CreditTradeStatus import CreditTradeStatus
 from .FuelSupplier import FuelSupplier
 from .CreditTradeType import CreditTradeType
-from .CreditTradeHistory import CreditTradeHistory
+from .CreditTradeZeroReason import CreditTradeZeroReason
 
 
 class CreditTrade(models.Model):	    
@@ -36,7 +36,6 @@ class CreditTrade(models.Model):
     creditTradeTypeFK = models.ForeignKey('CreditTradeType', related_name='CreditTradecreditTradeTypeFK')   
     numberOfCredits = models.IntegerField()   
     fairMarketValuePerCredit = models.CharField(blank=True, null=True, max_length=255)   
+    CreditTradeZeroReasonFK = models.ForeignKey('CreditTradeZeroReason', related_name='CreditTradeCreditTradeZeroReasonFK', blank=True, null=True)   
     tradeEffectiveDate = models.DateField(blank=True, null=True)   
-    plainEnglishPhrase = models.CharField(max_length=2000)   
-    historySet = models.ManyToManyField('CreditTradeHistory', related_name='CreditTradehistorySet', blank=True)   
 

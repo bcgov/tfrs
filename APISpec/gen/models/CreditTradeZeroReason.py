@@ -23,20 +23,12 @@ import datetime
 
 from django.db import models
 from django.utils import timezone
-from .Opportunity import Opportunity
-from .User import User
-from .CreditTradeType import CreditTradeType
-from .FuelSupplierType import FuelSupplierType
 
 
-class OpportunityHistory(models.Model):	    
-    opportunityFK = models.ForeignKey('Opportunity', related_name='OpportunityHistoryopportunityFK')   
-    userFK = models.ForeignKey('User', related_name='OpportunityHistoryuserFK')   
-    updateTime = models.DateField(blank=True, null=True)   
-    creditTradeTypeFK = models.ForeignKey('CreditTradeType', related_name='OpportunityHistorycreditTradeTypeFK')   
-    newNumberOfCredits = models.IntegerField()   
-    newProposedValuePerCredit = models.CharField(blank=True, null=True, max_length=255)   
-    fuelSupplierTypeFK = models.ForeignKey('FuelSupplierType', related_name='OpportunityHistoryfuelSupplierTypeFK')   
-    newTradeEffectiveDate = models.DateField(blank=True, null=True)   
-    note = models.CharField(max_length=4000, blank=True, null=True)   
+class CreditTradeZeroReason(models.Model):	    
+    reason = models.CharField(max_length=25)   
+    description = models.CharField(max_length=1000)   
+    effectiveDate = models.DateField()   
+    expirationDate = models.DateField(blank=True, null=True)   
+    displayOrder = models.IntegerField()   
 

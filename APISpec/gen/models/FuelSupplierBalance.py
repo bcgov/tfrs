@@ -30,7 +30,6 @@ from .CreditTrade import CreditTrade
 class FuelSupplierBalance(models.Model):	    
     fuelSupplierFK = models.ForeignKey('FuelSupplier', related_name='FuelSupplierBalancefuelSupplierFK')   
     validatedCredits = models.IntegerField()   
-    encumberedCredits = models.IntegerField()   
     effectiveDate = models.DateField()   
     endDate = models.DateField(blank=True, null=True)   
     creditTradeFK = models.ForeignKey('CreditTrade', related_name='FuelSupplierBalancecreditTradeFK', blank=True, null=True)   

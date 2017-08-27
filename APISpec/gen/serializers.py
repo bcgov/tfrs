@@ -26,6 +26,7 @@ from .models.CreditTrade import CreditTrade
 from .models.CreditTradeHistory import CreditTradeHistory
 from .models.CreditTradeStatus import CreditTradeStatus
 from .models.CreditTradeType import CreditTradeType
+from .models.CreditTradeZeroReason import CreditTradeZeroReason
 from .models.CurrentUserViewModel import CurrentUserViewModel
 from .models.FuelSupplier import FuelSupplier
 from .models.FuelSupplierActionsType import FuelSupplierActionsType
@@ -37,14 +38,10 @@ from .models.FuelSupplierContact import FuelSupplierContact
 from .models.FuelSupplierContactRole import FuelSupplierContactRole
 from .models.FuelSupplierHistory import FuelSupplierHistory
 from .models.FuelSupplierStatus import FuelSupplierStatus
-from .models.FuelSupplierType import FuelSupplierType
 from .models.Notification import Notification
 from .models.NotificationEvent import NotificationEvent
 from .models.NotificationType import NotificationType
 from .models.NotificationViewModel import NotificationViewModel
-from .models.Opportunity import Opportunity
-from .models.OpportunityHistory import OpportunityHistory
-from .models.OpportunityStatus import OpportunityStatus
 from .models.Permission import Permission
 from .models.PermissionViewModel import PermissionViewModel
 from .models.Role import Role
@@ -67,12 +64,12 @@ class AuditSerializer(serializers.ModelSerializer):
 class CreditTradeSerializer(serializers.ModelSerializer):
   class Meta:
     model = CreditTrade
-    fields = ('id','creditTradeStatusFK','initiatorFK','respondentFK','creditTradeTypeFK','numberOfCredits','fairMarketValuePerCredit','tradeEffectiveDate','plainEnglishPhrase','historySet')
+    fields = ('id','creditTradeStatusFK','initiatorFK','respondentFK','creditTradeTypeFK','numberOfCredits','fairMarketValuePerCredit','CreditTradeZeroReasonFK','tradeEffectiveDate')
 
 class CreditTradeHistorySerializer(serializers.ModelSerializer):
   class Meta:
     model = CreditTradeHistory
-    fields = ('id','userFK','creditTradeUpdateTime','newRespondentFK','creditTradeStatusFK','creditTradeTypeFK','newNumberOfCredits','newFairMarketValuePerCredit','newTradeEffectiveDate','note','isInternalHistoryRecord')
+    fields = ('id','creditTradeFK','userFK','creditTradeUpdateTime','newRespondentFK','creditTradeStatusFK','creditTradeTypeFK','newNumberOfCredits','newFairMarketValuePerCredit','newTradeEffectiveDate','note','isInternalHistoryRecord')
 
 class CreditTradeStatusSerializer(serializers.ModelSerializer):
   class Meta:
@@ -84,6 +81,11 @@ class CreditTradeTypeSerializer(serializers.ModelSerializer):
     model = CreditTradeType
     fields = ('id','theType','description','effectiveDate','expirationDate','displayOrder','isGovOnlyType')
 
+class CreditTradeZeroReasonSerializer(serializers.ModelSerializer):
+  class Meta:
+    model = CreditTradeZeroReason
+    fields = ('id','reason','description','effectiveDate','expirationDate','displayOrder')
+
 class CurrentUserViewModelSerializer(serializers.ModelSerializer):
   class Meta:
     model = CurrentUserViewModel
@@ -92,7 +94,7 @@ class CurrentUserViewModelSerializer(serializers.ModelSerializer):
 class FuelSupplierSerializer(serializers.ModelSerializer):
   class Meta:
     model = FuelSupplier
-    fields = ('id','name','fuelSupplierStatusFK','fuelSupplierTypeFK','fuelSupplierActionsTypeFK','createdDate')
+    fields = ('id','name','fuelSupplierStatusFK','fuelSupplierActionsTypeFK','createdDate')
 
 class FuelSupplierActionsTypeSerializer(serializers.ModelSerializer):
   class Meta:
@@ -112,7 +114,7 @@ class FuelSupplierAttachmentTagSerializer(serializers.ModelSerializer):
 class FuelSupplierBalanceSerializer(serializers.ModelSerializer):
   class Meta:
     model = FuelSupplierBalance
-    fields = ('id','fuelSupplierFK','validatedCredits','encumberedCredits','effectiveDate','endDate','creditTradeFK')
+    fields = ('id','fuelSupplierFK','validatedCredits','effectiveDate','endDate','creditTradeFK')
 
 class FuelSupplierCCDataSerializer(serializers.ModelSerializer):
   class Meta:
@@ -139,11 +141,6 @@ class FuelSupplierStatusSerializer(serializers.ModelSerializer):
     model = FuelSupplierStatus
     fields = ('id','status','description','effectiveDate','expirationDate','displayOrder')
 
-class FuelSupplierTypeSerializer(serializers.ModelSerializer):
-  class Meta:
-    model = FuelSupplierType
-    fields = ('id','theType','description','effectiveDate','expirationDate','displayOrder')
-
 class NotificationSerializer(serializers.ModelSerializer):
   class Meta:
     model = Notification
@@ -163,21 +160,6 @@ class NotificationViewModelSerializer(serializers.ModelSerializer):
   class Meta:
     model = NotificationViewModel
     fields = ('id','eventId','hasBeenViewed','isWatchNotification','isExpired','isAllDay','priorityCode','userId')
-
-class OpportunitySerializer(serializers.ModelSerializer):
-  class Meta:
-    model = Opportunity
-    fields = ('id','fuelSupplierFK','opportunityStatusFK','creditTradeTypeFK','fuelSupplierTypeFK','numberOfCredits','suggestedValuePerCredit','plainEnglishPhrase','hasTradeNow','postedDate','opportunityBackgroundNote','creditTradesSet')
-
-class OpportunityHistorySerializer(serializers.ModelSerializer):
-  class Meta:
-    model = OpportunityHistory
-    fields = ('id','opportunityFK','userFK','updateTime','creditTradeTypeFK','newNumberOfCredits','newProposedValuePerCredit','fuelSupplierTypeFK','newTradeEffectiveDate','note')
-
-class OpportunityStatusSerializer(serializers.ModelSerializer):
-  class Meta:
-    model = OpportunityStatus
-    fields = ('id','status','description','effectiveDate','expirationDate','displayOrder')
 
 class PermissionSerializer(serializers.ModelSerializer):
   class Meta:
