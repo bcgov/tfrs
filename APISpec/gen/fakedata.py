@@ -58,13 +58,11 @@ def AuditTestDataUpdate():
 def CreditTradeTestDataCreate():
   return {
     'numberOfCredits':1,
-    'plainEnglishPhrase':'Initial',
   }
 
 def CreditTradeTestDataUpdate():
   return {
     'numberOfCredits':0,
-    'plainEnglishPhrase':'Changed',
   }
 
 
@@ -112,6 +110,21 @@ def CreditTradeTypeTestDataUpdate():
     'description':'Changed',
     'displayOrder':0,
     'isGovOnlyType':False,
+  }
+
+
+def CreditTradeZeroReasonTestDataCreate():
+  return {
+    'reason':'Initial',
+    'description':'Initial',
+    'displayOrder':1,
+  }
+
+def CreditTradeZeroReasonTestDataUpdate():
+  return {
+    'reason':'Changed',
+    'description':'Changed',
+    'displayOrder':0,
   }
 
 
@@ -193,13 +206,11 @@ def FuelSupplierAttachmentTagTestDataUpdate():
 def FuelSupplierBalanceTestDataCreate():
   return {
     'validatedCredits':1,
-    'encumberedCredits':1,
   }
 
 def FuelSupplierBalanceTestDataUpdate():
   return {
     'validatedCredits':0,
-    'encumberedCredits':0,
   }
 
 
@@ -284,21 +295,6 @@ def FuelSupplierStatusTestDataUpdate():
   }
 
 
-def FuelSupplierTypeTestDataCreate():
-  return {
-    'theType':'Initial',
-    'description':'Initial',
-    'displayOrder':1,
-  }
-
-def FuelSupplierTypeTestDataUpdate():
-  return {
-    'theType':'Changed',
-    'description':'Changed',
-    'displayOrder':0,
-  }
-
-
 def NotificationTestDataCreate():
   return {
     'hasBeenViewed':True,
@@ -360,51 +356,6 @@ def NotificationViewModelTestDataUpdate():
     'isAllDay':False,
     'priorityCode':'Changed',
     'userId':0,
-  }
-
-
-def OpportunityTestDataCreate():
-  return {
-    'numberOfCredits':1,
-    'plainEnglishPhrase':'Initial',
-    'hasTradeNow':True,
-    'opportunityBackgroundNote':'Initial',
-  }
-
-def OpportunityTestDataUpdate():
-  return {
-    'numberOfCredits':0,
-    'plainEnglishPhrase':'Changed',
-    'hasTradeNow':False,
-    'opportunityBackgroundNote':'Changed',
-  }
-
-
-def OpportunityHistoryTestDataCreate():
-  return {
-    'newNumberOfCredits':1,
-    'note':'Initial',
-  }
-
-def OpportunityHistoryTestDataUpdate():
-  return {
-    'newNumberOfCredits':0,
-    'note':'Changed',
-  }
-
-
-def OpportunityStatusTestDataCreate():
-  return {
-    'status':'Initial',
-    'description':'Initial',
-    'displayOrder':1,
-  }
-
-def OpportunityStatusTestDataUpdate():
-  return {
-    'status':'Changed',
-    'description':'Changed',
-    'displayOrder':0,
   }
 
 

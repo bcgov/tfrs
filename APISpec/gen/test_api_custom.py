@@ -39,6 +39,8 @@ from .models.CreditTradeStatus import CreditTradeStatus
 from .serializers import CreditTradeStatusSerializer
 from .models.CreditTradeType import CreditTradeType
 from .serializers import CreditTradeTypeSerializer
+from .models.CreditTradeZeroReason import CreditTradeZeroReason
+from .serializers import CreditTradeZeroReasonSerializer
 from .models.CurrentUserViewModel import CurrentUserViewModel
 from .serializers import CurrentUserViewModelSerializer
 from .models.FuelSupplier import FuelSupplier
@@ -61,8 +63,6 @@ from .models.FuelSupplierHistory import FuelSupplierHistory
 from .serializers import FuelSupplierHistorySerializer
 from .models.FuelSupplierStatus import FuelSupplierStatus
 from .serializers import FuelSupplierStatusSerializer
-from .models.FuelSupplierType import FuelSupplierType
-from .serializers import FuelSupplierTypeSerializer
 from .models.Notification import Notification
 from .serializers import NotificationSerializer
 from .models.NotificationEvent import NotificationEvent
@@ -71,12 +71,6 @@ from .models.NotificationType import NotificationType
 from .serializers import NotificationTypeSerializer
 from .models.NotificationViewModel import NotificationViewModel
 from .serializers import NotificationViewModelSerializer
-from .models.Opportunity import Opportunity
-from .serializers import OpportunitySerializer
-from .models.OpportunityHistory import OpportunityHistory
-from .serializers import OpportunityHistorySerializer
-from .models.OpportunityStatus import OpportunityStatus
-from .serializers import OpportunityStatusSerializer
 from .models.Permission import Permission
 from .serializers import PermissionSerializer
 from .models.PermissionViewModel import PermissionViewModel

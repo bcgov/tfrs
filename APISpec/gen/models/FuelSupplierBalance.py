@@ -31,7 +31,6 @@ from auditable.models import Auditable
 class FuelSupplierBalance(Auditable):	    
     fuelSupplierFK = models.ForeignKey('FuelSupplier', related_name='FuelSupplierBalancefuelSupplierFK')   
     validatedCredits = models.IntegerField()   
-    encumberedCredits = models.IntegerField()   
     effectiveDate = models.DateField()   
     endDate = models.DateField(blank=True, null=True)   
     creditTradeFK = models.ForeignKey('CreditTrade', related_name='FuelSupplierBalancecreditTradeFK', blank=True, null=True)   
