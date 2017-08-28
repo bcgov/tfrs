@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import * as Routes from '../../constants/routes.jsx';
+import * as Values from '../../constants/values.jsx';
 import { plainEnglishPhrase } from '../../utils/functions.jsx';
 import { Link } from 'react-router-dom';
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
@@ -18,7 +19,7 @@ class RecentAccountActivityTable extends Component {
 
   handleAcceptClick(row) {
     this.setState({
-      modalProposalDescription: row.proposalDescription,
+      modalProposalDescription: plainEnglishPhrase(row),
       modalProposalID: row.id,
       showModal: true,
     });
@@ -37,8 +38,10 @@ class RecentAccountActivityTable extends Component {
   actionsFormatter(cell, row) {
     return (
       <div>
-        <button className="simple-btn" onClick={() => this.handleAcceptClick(row)}>Accept</button>
-        <Link to={Routes.CREDIT_TRANSFER + row.id} className="no-underline">View</Link>
+        { row.creditTradeStatusFK == Values.STATUS_PROPOSED &&
+          <button className="simple-btn" data-toggle="modal" data-target="#credit-transfer-modal" onClick={() => this.handleAcceptClick(row)}>Accept</button>
+        }
+        <Link to={Routes.CREDIT_TRANSFER + row.id} className="counter-btn">{ row.creditTradeStatusFK == Values.STATUS_DRAFT ? 'Edit' : 'View'}</Link>
       </div>
     )
   }
@@ -74,7 +77,7 @@ class RecentAccountActivityTable extends Component {
             Proposal Description
           </TableHeaderColumn>
           <TableHeaderColumn dataField="tradeEffectiveDate" dataSort={true}>Last Updated</TableHeaderColumn>
-          <TableHeaderColumn dataField="creditTradeStatusFK" dataSort={true} dataFormat={(cell, row) => this.statusFormatter(cell, row)}>Status</TableHeaderColumn>
+          <TableHeaderColumn dataField="creditTradeStatusFK" dataFormat={(cell, row) => this.statusFormatter(cell, row)}>Status</TableHeaderColumn>
           <TableHeaderColumn dataField="id" dataFormat={(cell, row) => this.actionsFormatter(cell, row)} columnClassName="actions">Actions</TableHeaderColumn>
         </BootstrapTable>
         <Modal
@@ -88,23 +91,19 @@ class RecentAccountActivityTable extends Component {
           </Modal.Header>
           <Modal.Body>
             <p>{this.state.modalProposalDescription}</p>
-            <div className="note-container">                
+            <div className="form-group note">             
               <label>Note:</label>
-              <textarea className="note" rows="4" onChange={(e) => this.handleNoteChange(e)} />
+              <textarea 
+                className="form-control note" 
+                rows="4" 
+                onChange={(e) => this.handleNoteChange(e)} />
             </div>
-            { this.props.acceptCreditTransferSuccess && 
-              <div className="alert alert-success">Credit transfer successfully accepted</div>
-            }
           </Modal.Body>
           <Modal.Footer>
-            { !this.props.acceptCreditTransferSuccess ? 
-              <div>
-                <button type="button" className="btn btn-default" onClick={() => this.handleCloseModal()}>Cancel</button>
-                <button type="button" className="btn btn-primary" onClick={() => this.props.handleAcceptCreditTransfer(this.state.modalProposalID, this.state.note)}>Accept</button>
-              </div> 
-              : 
-              <button type="button" className="btn btn-primary" onClick={() => this.handleCloseModal()}>Okay</button>
-            }
+            <div>
+              <button type="button" className="btn btn-default" onClick={() => this.handleCloseModal()}>Cancel</button>
+              <button type="button" className="btn btn-primary not-implemented">Accept</button>
+            </div> 
           </Modal.Footer>
         </Modal>
       </div>

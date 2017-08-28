@@ -9,6 +9,7 @@ export const ADMINISTRATION = '/administration';
 export const FUEL_SUPPLIER_DETAILS = '/fuel-suppliers/:id';
 export const CREDIT_TRANSFER = '/credittransfer/';
 export const CREDIT_TRANSFER_DETAILS = '/credittransfer/:id';
+export const NOT_FOUND = '/404';
 
 // API Routes
 

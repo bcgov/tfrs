@@ -3,6 +3,10 @@
 
 .credit-transfer {
 
+  .credit-transfer-details {
+    margin-bottom: 4rem;
+  }
+
   .note {
     display: block;
 
@@ -164,6 +168,7 @@
     padding: 2rem;
     border: 1px solid $border-grey;
     border-radius: 5px;
+    margin-bottom: 2rem;
 
     input, select {
       margin: 0.5rem 0.5rem 0.5rem 0;
@@ -183,4 +188,51 @@
       width: 100%;
     }
   }
+}
+
+.plain-english-phrase {
+
+  .value {
+    font-weight: bold;
+  }
+}
+
+.visual-representation {
+  @include flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  margin-top: 3rem;
+
+  .col-md-4 {
+    text-align: center;
+  }
+
+  .initiator-container, .arrow, .respondent-container {
+    display: inline-block;
+    margin: 1rem;
+    padding: 2rem;
+    border-radius: 5px;
+
+    @include mobile {
+      text-align: center;
+    }
+  }
+
+  .arrow {
+    text-align: center;
+
+    .fa {
+      font-size: 5rem;
+    }
+  }
+
+  .initiator-container, .respondent-container {
+    color: #FFFFFF;
+  }
+}
+
+.account-activity-table .react-bs-table {
+  max-height: 500px;
+  overflow: auto;
 }

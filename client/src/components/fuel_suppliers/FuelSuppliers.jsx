@@ -59,15 +59,13 @@ class FuelSuppliers extends Component {
   }
 
   statusFormatter(cell, row) {
-    let statuses = this.props.fuelSupplierStatuses.data;
-    let info = statuses.map((status) => {
-      if (row.fuelSupplierStatusFK === status.id) {
-        return status.status
+    let statusString = '';
+    this.props.fuelSupplierStatuses.data.map(function(status) {
+      if (status.id === row.fuelSupplierStatusFK) {
+        statusString = status.status;
       }
     });
-    return (
-      <span>{info}</span>
-    )
+    return statusString;
   }
 
   createCustomButtonGroup(props) {
@@ -76,7 +74,7 @@ class FuelSuppliers extends Component {
         <h1 className='header'>Fuel Suppliers</h1>
         <div className='right-toolbar-container'> 
           <div className="actions-container">
-            <button className="simple-btn" onClick={() => this.setState({ showModal: true})}>Add</button>
+            <button className="btn btn-primary" onClick={() => this.setState({ showModal: true})}>Add</button>
             <label className="checkbox"> 
               <input type="checkbox" onChange={() => this.handleCheckboxChange()} />
               Active Only
@@ -122,16 +120,16 @@ class FuelSuppliers extends Component {
               Name
             </TableHeaderColumn>
             <TableHeaderColumn 
-              dataField="status" 
-              dataSort={true}
-              dataFormat={(cell, row) => this.statusFormatter(cell, row)} >
+              dataField="fuelSupplierStatusFK" 
+              dataFormat={(cell, row) => this.statusFormatter(cell, row)}
+              filterFormatted={true}>
               Status
             </TableHeaderColumn>
-            <TableHeaderColumn dataField="actions_permitted" dataSort={true} dataFormat={(cell, row) => this.actionsFormatter(cell, row)}>Actions Permitted</TableHeaderColumn>
-            <TableHeaderColumn dataField="credit_balance" dataSort={true}>Credit Balance</TableHeaderColumn>
-            <TableHeaderColumn dataField="encumbered_credits" dataSort={true}>Encumbered Credits</TableHeaderColumn>
-            <TableHeaderColumn dataField="last_transaction" dataSort={true}>Last Transaction</TableHeaderColumn>
-            <TableHeaderColumn dataField="pending_actions" columnClassName="actions">Pending Actions</TableHeaderColumn>
+            <TableHeaderColumn dataField="actionsPermitted" dataSort={true} dataFormat={(cell, row) => this.actionsFormatter(cell, row)}>Actions Permitted</TableHeaderColumn>
+            <TableHeaderColumn dataField="creditBalance" dataSort={true}>Credit Balance</TableHeaderColumn>
+            <TableHeaderColumn dataField="encumberedCredits" dataSort={true}>Encumbered Credits</TableHeaderColumn>
+            <TableHeaderColumn dataField="lastTransaction" dataSort={true}>Last Transaction</TableHeaderColumn>
+            <TableHeaderColumn dataField="pendingActions" columnClassName="actions">Pending Actions</TableHeaderColumn>
           </BootstrapTable>
         </div>
         <Modal
@@ -159,8 +157,8 @@ class FuelSuppliers extends Component {
                 </div>
               </div>
               <div className="btn-container">
-                <input className="btn btn-default" type="button" onClick={() => this.handleCloseModal()} value="Cancel" />
-                <input type="submit" className="btn btn-primary" value="search" />
+                <button className="btn btn-default" type="button" onClick={() => this.handleCloseModal()}>Cancel</button>
+                <button type="submit" className="btn btn-primary not-implemented">Search</button>
               </div>
             </form>
             { this.props.searchFuelSuppliersSuccess &&

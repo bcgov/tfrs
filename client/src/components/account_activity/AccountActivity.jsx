@@ -2,11 +2,17 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { Modal } from 'react-bootstrap';
-import { getAccountActivity, acceptCreditTransfer, acceptCreditTransferReset } from '../../actions/accountActivityActions.jsx';
+import { getAccountActivity } from '../../actions/accountActivityActions.jsx';
 import * as ReducerTypes from '../../constants/reducerTypes.jsx';
 import * as Routes from '../../constants/routes.jsx';
-import { plainEnglishPhrase } from '../../utils/functions.jsx';
+import * as Values from '../../constants/values.jsx';
+import { plainEnglishPhrase, plainEnglishPhraseString } from '../../utils/functions.jsx';
 import { BootstrapTable, TableHeaderColumn, ButtonGroup } from 'react-bootstrap-table';
+
+function descriptionFilterType(cell, row) {
+  let filter = plainEnglishPhraseString(row);
+  return filter;
+}
 
 class AccountActivity extends Component {
   constructor(props) {
@@ -29,7 +35,7 @@ class AccountActivity extends Component {
 
   handleAcceptClick(row) {
     this.setState({
-      modalProposalDescription: row.proposalDescription,
+      modalProposalDescription: plainEnglishPhrase(row),
       modalProposalID: row.id,
       showModal: true,
     });
@@ -42,14 +48,15 @@ class AccountActivity extends Component {
 
   handleCloseModal() {
     this.setState({showModal: false});
-    this.props.acceptCreditTransferReset();
   }
 
   actionsFormatter(cell, row) {
     return (
       <div>
-        <button className="simple-btn" data-toggle="modal" data-target="#credit-transfer-modal" onClick={() => this.handleAcceptClick(row)}>Accept</button>
-        <Link to={Routes.CREDIT_TRANSFER + row.id} className="counter-btn">Counter</Link>
+        { row.creditTradeStatusFK == Values.STATUS_PROPOSED &&
+          <button className="simple-btn" data-toggle="modal" data-target="#credit-transfer-modal" onClick={() => this.handleAcceptClick(row)}>Accept</button>
+        }
+        <Link to={Routes.CREDIT_TRANSFER + row.id} className="counter-btn">{ row.creditTradeStatusFK == Values.STATUS_DRAFT ? 'Edit' : 'View'}</Link>
       </div>
     )
   }
@@ -83,7 +90,7 @@ class AccountActivity extends Component {
       }
     });
     return (
-      <div>{statusString}</div>
+      statusString
     )
   }
 
@@ -92,7 +99,7 @@ class AccountActivity extends Component {
       <div>{plainEnglishPhrase(row)}</div>
     )
   }
-  
+
   render() {
     const options = {
       toolBar: this.createCustomButtonGroup.bind(this)
@@ -109,13 +116,28 @@ class AccountActivity extends Component {
             className="proposalDescription" 
             dataField="plainEnglishPhrase" 
             isKey={true} 
+            filterValue={ descriptionFilterType }
             dataFormat={(cell, row) => this.descriptionFormatter(cell, row)}
             columnClassName="proposal-description">
             Proposal Description
           </TableHeaderColumn>
-          <TableHeaderColumn dataField="tradeEffectiveDate" dataSort={true}>Last Updated</TableHeaderColumn>
-          <TableHeaderColumn dataField="creditTradeStatusFK" dataSort={true} dataFormat={(cell, row) => this.statusFormatter(cell, row)}>Status</TableHeaderColumn>
-          <TableHeaderColumn dataField="id" dataFormat={(cell, row) => this.actionsFormatter(cell, row)} columnClassName="actions">Actions</TableHeaderColumn>
+          <TableHeaderColumn 
+            dataField="tradeEffectiveDate" 
+            dataSort={true}>
+            Last Updated
+          </TableHeaderColumn>
+          <TableHeaderColumn 
+            dataField="creditTradeStatusFK" 
+            dataFormat={(cell, row) => this.statusFormatter(cell, row)}
+            filterFormatted={true}>
+            Status
+          </TableHeaderColumn>
+          <TableHeaderColumn 
+            dataField="id" 
+            dataFormat={(cell, row) => this.actionsFormatter(cell, row)} 
+            columnClassName="actions">
+            Actions
+          </TableHeaderColumn>
         </BootstrapTable>
         <Modal
           show={this.state.showModal}
@@ -128,9 +150,12 @@ class AccountActivity extends Component {
           </Modal.Header>
           <Modal.Body>
             <p>{this.state.modalProposalDescription}</p>
-            <div className="note-container">                
+            <div className="form-group note">             
               <label>Note:</label>
-              <textarea className="note" rows="4" onChange={(e) => this.handleNoteChange(e)} />
+              <textarea 
+                className="form-control note" 
+                rows="4" 
+                onChange={(e) => this.handleNoteChange(e)} />
             </div>
             { this.props.acceptCreditTransferSuccess && 
               <div className="alert alert-success">Credit transfer successfully accepted</div>
@@ -138,7 +163,7 @@ class AccountActivity extends Component {
           </Modal.Body>
           <Modal.Footer>
             <button type="button" className="btn btn-default" onClick={() => this.handleCloseModal()}>Cancel</button>
-            <button type="button" className="btn btn-primary" onClick={() => this.props.handleAcceptCreditTransfer(this.state.modalProposalID, this.state.note)}>Accept</button>
+            <button type="button" className="btn btn-primary not-implemented">Accept</button>
           </Modal.Footer>
         </Modal>
       </div>
@@ -157,11 +182,5 @@ export default connect (
     getAccountActivity: () => {
       dispatch(getAccountActivity());
     },
-    acceptCreditTransfer: (id, note) => {
-      dispatch(acceptCreditTransfer(id, note));
-    },
-    acceptCreditTransferReset: () => {
-      dispatch(acceptCreditTransferReset());
-    }
   })
 )(AccountActivity);

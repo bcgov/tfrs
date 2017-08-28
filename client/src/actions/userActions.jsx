@@ -16,7 +16,7 @@ export const getUsers = () => (dispatch) => {
 const getUsersRequest = () => {
   return {
     name: ReducerTypes.USERS,
-    type: ActionTypes.SUCCESS,
+    type: ActionTypes.REQUEST,
   }
 }
 
@@ -31,7 +31,7 @@ const getUsersSuccess = (contacts) => {
 const getUsersError = (error) => {
   return {
     name: ReducerTypes.USERS,
-    type: ActionTypes.SUCCESS,
+    type: ActionTypes.ERROR,
     errorMessage: error
   }
 }
@@ -49,7 +49,7 @@ export const getPermissions = () => (dispatch) => {
 const getPermissionsRequest = () => {
   return {
     name: ReducerTypes.PERMISSIONS,
-    type: ActionTypes.SUCCESS,
+    type: ActionTypes.REQUEST,
   }
 }
 
@@ -64,7 +64,7 @@ const getPermissionsSuccess = (permissions) => {
 const getPermissionsError = (error) => {
   return {
     name: ReducerTypes.PERMISSIONS,
-    type: ActionTypes.SUCCESS,
+    type: ActionTypes.ERROR,
     errorMessage: error
   }
 }
@@ -82,7 +82,7 @@ export const getRolePermissions = () => (dispatch) => {
 const getRolePermissionsRequest = () => {
   return {
     name: ReducerTypes.ROLE_PERMISSIONS,
-    type: ActionTypes.SUCCESS,
+    type: ActionTypes.REQUEST,
   }
 }
 
@@ -97,7 +97,7 @@ const getRolePermissionsSuccess = (rolePermissions) => {
 const getRolePermissionsError = (error) => {
   return {
     name: ReducerTypes.ROLE_PERMISSIONS,
-    type: ActionTypes.SUCCESS,
+    type: ActionTypes.ERROR,
     errorMessage: error
   }
 }
@@ -115,7 +115,7 @@ export const getRoles = () => (dispatch) => {
 const getRolesRequest = () => {
   return {
     name: ReducerTypes.ROLES,
-    type: ActionTypes.SUCCESS,
+    type: ActionTypes.REQUEST,
   }
 }
 
@@ -130,7 +130,7 @@ const getRolesSuccess = (roles) => {
 const getRolesError = (error) => {
   return {
     name: ReducerTypes.ROLES,
-    type: ActionTypes.SUCCESS,
+    type: ActionTypes.ERROR,
     errorMessage: error
   }
 }
@@ -148,7 +148,7 @@ export const getUserRoles = () => (dispatch) => {
 const getUserRolesRequest = () => {
   return {
     name: ReducerTypes.USER_ROLES,
-    type: ActionTypes.SUCCESS,
+    type: ActionTypes.REQUEST,
   }
 }
 
@@ -163,7 +163,7 @@ const getUserRolesSuccess = (userRoles) => {
 const getUserRolesError = (error) => {
   return {
     name: ReducerTypes.USER_ROLES,
-    type: ActionTypes.SUCCESS,
+    type: ActionTypes.ERROR,
     errorMessage: error
   }
 }

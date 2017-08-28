@@ -7,31 +7,25 @@ import { Modal } from 'react-bootstrap';
 import { 
   getCreditTransfer,
   getCreditTransferReset,
-  approveCreditTransfer,
-  rejectCreditTransfer,
-  rescindProposal } from '../../actions/accountActivityActions.jsx';
+  addCreditTransfer,
+  addCreditTransferReset } from '../../actions/accountActivityActions.jsx';
 import { getFuelSuppliers } from '../../actions/fuelSuppliersActions.jsx';
 import { BootstrapTable, TableHeaderColumn, ButtonGroup } from 'react-bootstrap-table';
+import TransactionHistory from './TransactionHistory.jsx';
 
 class CreditTransferNew extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      proposalType: '',
+      creditTradeTypeFK: '',
       valuePerCredit: '',
       numberOfCredits: '',
-      showRescindCreditTransferModal: false,
-      showApproveCreditTransferModal: false,
-      showRejectProposalModal: false,
     };
-  }
-
-  componentDidMount() {
-    this.props.getFuelSuppliers();
   }
 
   componentWillUnmount() {
     this.props.getCreditTransferReset();
+    this.props.addCreditTransferReset();
   }
 
   handleInputChange(event) {
@@ -42,17 +36,25 @@ class CreditTransferNew extends Component {
     this.setState({[name]: value});
   }
 
-  handleCancel() {
-    this.props.history.push(Routes.ACCOUNT_ACTIVITY);
-  }
-
-  handleSubmit(event) {
+  handleSubmit(event, status) {
     event.preventDefault();
-    const initiator = this.initiator.value;
+    const initiatorFK = this.props.fuelSuppliers[0].id;
+    const creditTradeTypeFK = this.creditTradeTypeFK.value;
     const numberOfCredits = this.numberOfCredits.value;
-    const respondent = this.respondent.value;
+    const respondentFK = this.respondent.value;
     const valuePerCredit = this.valuePerCredit.value;
+    const creditTradeStatusFK = status
     const note = this.note.value;
+    const data = {
+      initiatorFK: initiatorFK,
+      numberOfCredits: numberOfCredits,
+      respondentFK: respondentFK,
+      valuePerCredit: valuePerCredit,
+      note: note,
+      creditTradeStatusFK: creditTradeStatusFK,
+      creditTradeTypeFK: creditTradeTypeFK
+    }
+    this.props.addCreditTransfer(data);
   }
   
   render() {
@@ -68,18 +70,18 @@ class CreditTransferNew extends Component {
           </div>
         </div>
         <div className="credit-transfer-details">
-          <form className="form-inline" onSubmit={(event) => this.handleSubmit(event)}>
+          <form className="form-inline" onSubmit={(event, status) => this.handleSubmit(event, Values.STATUS_PROPOSED)}>
             <div className="main-form">
-              <span>Air Liquid Canada proposes to </span>
+              <span>{this.props.fuelSuppliers && this.props.fuelSuppliers[0].name} proposes to </span>
               <div className="form-group">
                 <select 
                   className="form-control" 
                   id="proposal-type" 
-                  name="proposalType"
-                  ref={(input) => this.proposalType = input}
+                  name="creditTradeTypeFK"
+                  ref={(input) => this.creditTradeTypeFK = input}
                   onChange={(event) => this.handleInputChange(event)}>
-                  <option>Sell</option>
-                  <option>Buy</option>
+                  <option value="1">Sell</option>
+                  <option value="2">Buy</option>
                 </select>
               </div>
               <div className="form-group">
@@ -87,17 +89,18 @@ class CreditTransferNew extends Component {
                   type="number" 
                   className="form-control" 
                   id="number-of-credits" 
+                  defaultValue="0"
                   name="numberOfCredits"
                   onChange={(event) => this.handleInputChange(event)}
                   ref={(input) => this.numberOfCredits = input} />
               </div>
-              <span>{this.state.proposalType === "Buy" ? "credits from " : "credits to "}</span>
+              <span>{this.state.creditTradeTypeFK === "Buy" ? "credits from " : "credits to "}</span>
               <div className="form-group">
                 <select 
                   className="form-control" 
                   id="respondent" 
                   name="respondent"
-                  ref={(input) => this.respondentFK = input}
+                  ref={(input) => this.respondent = input}
                   onChange={(event) => this.handleInputChange(event)}>
                   { this.props.fuelSuppliers &&
                     this.props.fuelSuppliers.map((fuelSupplier) => (
@@ -112,6 +115,7 @@ class CreditTransferNew extends Component {
                   className="form-control" 
                   id="value-per-credit" 
                   name="valuePerCredit"
+                  defaultValue="0"
                   onChange={(event) => this.handleInputChange(event)}
                   ref={(input) => this.valuePerCredit = input} />
               </div>
@@ -119,6 +123,11 @@ class CreditTransferNew extends Component {
               <span>{ this.state.valuePerCredit * this.state.numberOfCredits }</span>
               <span> effective on Director's Approval</span>
             </div>
+            {this.props.addCreditTransferError.length > 0 &&
+            <div className="alert alert-danger">
+              <div>{this.props.addCreditTransferError}</div>
+            </div>
+            }
             <div className="form-group note">
               <label htmlFor="comment">Note:</label>
               <textarea 
@@ -132,102 +141,24 @@ class CreditTransferNew extends Component {
               <button 
                 type="button" 
                 className="btn btn-default"
-                onClick={() => this.handleCancel()}>
+                onClick={() => this.props.history.push(Routes.ACCOUNT_ACTIVITY)}>
                 Cancel
               </button>
-              <button type="button" className="btn btn-default">Save Draft</button>
-              <button type="button" className="btn btn-primary">Propose</button>
+              <button 
+                type="button" 
+                className="btn btn-default"
+                onClick={(event, status) => this.handleSubmit(event, Values.STATUS_DRAFT)}>
+                Save Draft
+              </button>
+              <button 
+                type="submit" 
+                className="btn btn-primary">
+                Propose
+              </button>
             </div>
           </form>
         </div>
-        <Modal
-          container={this}
-          show={this.state.showRescindCreditTransferModal}
-          onHide={() => this.setState({showRescindCreditTransferModal: false})}
-          aria-labelledby="contained-modal-title"
-          className="new-fuel-supplier-modal"
-        >
-        <Modal.Header closeButton>
-          <Modal.Title id="contained-modal-title">Rescind Credit Transfer</Modal.Title>
-        </Modal.Header>
-          <Modal.Body>
-            Clicking "Rescind Proposal" will cancel this proposed Credit Transfer
-          </Modal.Body>
-          <Modal.Footer>
-            <button 
-              type="button" 
-              className="btn btn-default"
-              onClick={() => this.setState({showRescindCreditTransferModal: false})}
-            >
-              Cancel
-            </button>
-            <button 
-              type="button" 
-              className="btn btn-danger" 
-              onClick={(id) => this.props.rescindProposal(this.props.data.id)}
-            >
-              Rescind Proposal
-            </button>
-          </Modal.Footer>
-        </Modal>
-        <Modal
-          container={this}
-          show={this.state.showApproveCreditTransferModal}
-          onHide={() => this.setState({showApproveCreditTransferModal: false})}
-          aria-labelledby="contained-modal-title"
-          className="new-fuel-supplier-modal"
-        >
-        <Modal.Header closeButton>
-          <Modal.Title id="contained-modal-title">Approve Credit Transfer</Modal.Title>
-        </Modal.Header>
-          <Modal.Body>
-          </Modal.Body>
-          <Modal.Footer>
-            <button 
-              type="button" 
-              className="btn btn-default" 
-              onClick={() => this.setState({showApproveCreditTransferModal: false})}
-            >
-              Cancel
-            </button>
-            <button 
-              type="button" 
-              className="btn btn-primary" 
-              onClick={(id) => this.props.approveCreditTransfer(this.props.data.id)}
-            >
-              Approve
-            </button>
-          </Modal.Footer>
-        </Modal>
-        <Modal
-          container={this}
-          show={this.state.showRejectProposalModal}
-          onHide={() => this.setState({showRejectProposalModal: false})}
-          aria-labelledby="contained-modal-title"
-          className="new-fuel-supplier-modal"
-        >
-        <Modal.Header closeButton>
-          <Modal.Title id="contained-modal-title">Reject Credit Transfer</Modal.Title>
-        </Modal.Header>
-          <Modal.Body>
-          </Modal.Body>
-          <Modal.Footer>
-            <button 
-              type="button" 
-              className="btn btn-default" 
-              onClick={() => this.setState({showRejectProposalModal: false})}
-            >
-              Cancel
-            </button>
-            <button 
-              type="button" 
-              className="btn btn-danger" 
-              onClick={(id) => this.props.rejectCreditTransfer(this.props.data.id)}
-            >
-              Reject Proposal
-            </button>
-          </Modal.Footer>
-        </Modal>
+        <TransactionHistory />
       </div>
     );
   }
@@ -237,22 +168,20 @@ export default connect (
   state => ({
     data: state.rootReducer[ReducerTypes.GET_CREDIT_TRANSFER].data,
     fuelSuppliers: state.rootReducer[ReducerTypes.GET_FUEL_SUPPLIERS].data,
+    addCreditTransferError: state.rootReducer[ReducerTypes.ADD_CREDIT_TRANSFER].errorMessage
   }),
   dispatch => ({
     getCreditTransfer: (id) => {
       dispatch(getCreditTransfer(id));
     },
+    addCreditTransfer: (data) => {
+      dispatch(addCreditTransfer(data));
+    },
+    addCreditTransferReset: () => {
+      dispatch(addCreditTransferReset());
+    },
     getCreditTransferReset: () => {
       dispatch(getCreditTransferReset());
-    },
-    approveCreditTransfer: (id) => {
-      dispatch(approveCreditTransfer(id));
-    },
-    rejectCreditTransfer: (id) => {
-      dispatch(rejectCreditTransfer(id));
-    },
-    rescindProposal: (id) => {
-      dispatch(rescindProposal(id));
     },
     getFuelSuppliers: () => {
       dispatch(getFuelSuppliers());
