@@ -24,7 +24,6 @@ import datetime
 from django.db import models
 from django.utils import timezone
 from .FuelSupplierStatus import FuelSupplierStatus
-from .FuelSupplierType import FuelSupplierType
 from .FuelSupplierActionsType import FuelSupplierActionsType
 
 from auditable.models import Auditable
@@ -32,7 +31,6 @@ from auditable.models import Auditable
 class FuelSupplier(Auditable):	    
     name = models.CharField(max_length=500)   
     fuelSupplierStatusFK = models.ForeignKey('FuelSupplierStatus', related_name='FuelSupplierfuelSupplierStatusFK')   
-    fuelSupplierTypeFK = models.ForeignKey('FuelSupplierType', related_name='FuelSupplierfuelSupplierTypeFK')   
     fuelSupplierActionsTypeFK = models.ForeignKey('FuelSupplierActionsType', related_name='FuelSupplierfuelSupplierActionsTypeFK')   
     createdDate = models.DateField()   
     class Meta:

@@ -39,6 +39,8 @@ from .models.CreditTradeStatus import CreditTradeStatus
 from .serializers import CreditTradeStatusSerializer
 from .models.CreditTradeType import CreditTradeType
 from .serializers import CreditTradeTypeSerializer
+from .models.CreditTradeZeroReason import CreditTradeZeroReason
+from .serializers import CreditTradeZeroReasonSerializer
 from .models.CurrentUserViewModel import CurrentUserViewModel
 from .serializers import CurrentUserViewModelSerializer
 from .models.FuelSupplier import FuelSupplier
@@ -61,8 +63,6 @@ from .models.FuelSupplierHistory import FuelSupplierHistory
 from .serializers import FuelSupplierHistorySerializer
 from .models.FuelSupplierStatus import FuelSupplierStatus
 from .serializers import FuelSupplierStatusSerializer
-from .models.FuelSupplierType import FuelSupplierType
-from .serializers import FuelSupplierTypeSerializer
 from .models.Notification import Notification
 from .serializers import NotificationSerializer
 from .models.NotificationEvent import NotificationEvent
@@ -71,12 +71,6 @@ from .models.NotificationType import NotificationType
 from .serializers import NotificationTypeSerializer
 from .models.NotificationViewModel import NotificationViewModel
 from .serializers import NotificationViewModelSerializer
-from .models.Opportunity import Opportunity
-from .serializers import OpportunitySerializer
-from .models.OpportunityHistory import OpportunityHistory
-from .serializers import OpportunityHistorySerializer
-from .models.OpportunityStatus import OpportunityStatus
-from .serializers import OpportunityStatusSerializer
 from .models.Permission import Permission
 from .serializers import PermissionSerializer
 from .models.PermissionViewModel import PermissionViewModel
@@ -939,6 +933,88 @@ class Test_Api_Complex(TestCase):
         assert status.HTTP_204_NO_CONTENT == response.status_code
         
 
+    def test_fuelsuppliertypesBulkPost(self):
+        # Test Bulk Load.
+        payload = fakedata.FuelSupplierTypeTestDataCreate()
+        jsonString = "[]"
+        response = self.client.post('/api/fuelsuppliertypes/bulk',content_type='application/json', data=jsonString)
+        # Check that the response is 200 OK.
+        assert status.HTTP_201_CREATED == response.status_code
+        
+
+    def test_fuelsuppliertypesGet(self):
+        # Test Create and List operations.
+        testUrl = "/api/fuelsuppliertypes"
+        # Create:
+        serializer_class = FuelSupplierTypeSerializer
+        payload = fakedata.FuelSupplierTypeTestDataCreate()
+        jsonString = json.dumps(payload)
+        response = self.client.post(testUrl, content_type='application/json', data=jsonString)
+        # Check that the response is OK.
+        assert status.HTTP_201_CREATED == response.status_code
+        # parse the response.
+        jsonString = response.content.decode("utf-8")
+        data = json.loads(jsonString)
+        createdId = data['id']
+        # List:
+        response = self.client.get(testUrl)
+        # Check that the response is 200 OK.
+        assert status.HTTP_200_OK == response.status_code
+        # Cleanup:
+        deleteUrl = testUrl + "/" + str(createdId) + "/delete"
+        response = self.client.post(deleteUrl)
+        # Check that the response is OK.
+        assert status.HTTP_204_NO_CONTENT == response.status_code
+        
+
+    def test_fuelsuppliertypesIdDeletePost(self):
+        # Test Retrieve and Update operations.
+        testUrl = "/api/fuelsuppliertypes/(?P<id>[0-9]+)/delete"
+        createUrl = testUrl.replace ("/(?P<id>[0-9]+)/delete","")
+        # Create an object:
+        payload = fakedata.FuelSupplierTypeTestDataCreate()
+        jsonString = json.dumps(payload)
+        response = self.client.post(createUrl, content_type='application/json', data=jsonString)
+        # Check that the response is OK.
+        assert status.HTTP_201_CREATED == response.status_code
+        # parse the response.
+        jsonString = response.content.decode("utf-8")
+        data = json.loads(jsonString)
+        createdId = data['id']
+        deleteUrl = testUrl.replace ("(?P<id>[0-9]+)",str(createdId))
+        response = self.client.post(deleteUrl)
+        # Check that the response is OK.
+        assert status.HTTP_204_NO_CONTENT == response.status_code
+        
+
+    def test_fuelsuppliertypesIdGet(self):
+        # Test Retrieve and Update operations.
+        testUrl = "/api/fuelsuppliertypes/(?P<id>[0-9]+)"
+        createUrl = testUrl.replace ("/(?P<id>[0-9]+)","")
+        # Create an object:
+        payload = fakedata.FuelSupplierTypeTestDataCreate()
+        jsonString = json.dumps(payload)
+        response = self.client.post(createUrl, content_type='application/json', data=jsonString)
+        # Check that the response is OK.
+        assert status.HTTP_201_CREATED == response.status_code
+        # parse the response.
+        jsonString = response.content.decode("utf-8")
+        data = json.loads(jsonString)
+        createdId = data['id']
+        # Update the object:
+        updateUrl = testUrl.replace ("(?P<id>[0-9]+)",str(createdId))
+        payload = fakedata.FuelSupplierTypeTestDataUpdate()
+        jsonString = json.dumps(payload)
+        response = self.client.put(updateUrl, content_type='application/json', data=jsonString)
+        # Check that the response is 200 OK.
+        assert status.HTTP_200_OK == response.status_code
+        # Cleanup:
+        deleteUrl = createUrl + "/" + str(createdId) + "/delete"
+        response = self.client.post(deleteUrl)
+        # Check that the response is OK.
+        assert status.HTTP_204_NO_CONTENT == response.status_code
+        
+
     def test_notificationsBulkPost(self):
         # Test Bulk Load.
         payload = fakedata.NotificationTestDataCreate()
@@ -1256,6 +1332,88 @@ class Test_Api_Complex(TestCase):
         # Update the object:
         updateUrl = testUrl.replace ("(?P<id>[0-9]+)",str(createdId))
         payload = fakedata.OpportunityHistoryTestDataUpdate()
+        jsonString = json.dumps(payload)
+        response = self.client.put(updateUrl, content_type='application/json', data=jsonString)
+        # Check that the response is 200 OK.
+        assert status.HTTP_200_OK == response.status_code
+        # Cleanup:
+        deleteUrl = createUrl + "/" + str(createdId) + "/delete"
+        response = self.client.post(deleteUrl)
+        # Check that the response is OK.
+        assert status.HTTP_204_NO_CONTENT == response.status_code
+        
+
+    def test_opportunitystatusesBulkPost(self):
+        # Test Bulk Load.
+        payload = fakedata.OpportunityStatusTestDataCreate()
+        jsonString = "[]"
+        response = self.client.post('/api/opportunitystatuses/bulk',content_type='application/json', data=jsonString)
+        # Check that the response is 200 OK.
+        assert status.HTTP_201_CREATED == response.status_code
+        
+
+    def test_opportunitystatusesGet(self):
+        # Test Create and List operations.
+        testUrl = "/api/opportunitystatuses"
+        # Create:
+        serializer_class = OpportunityStatusSerializer
+        payload = fakedata.OpportunityStatusTestDataCreate()
+        jsonString = json.dumps(payload)
+        response = self.client.post(testUrl, content_type='application/json', data=jsonString)
+        # Check that the response is OK.
+        assert status.HTTP_201_CREATED == response.status_code
+        # parse the response.
+        jsonString = response.content.decode("utf-8")
+        data = json.loads(jsonString)
+        createdId = data['id']
+        # List:
+        response = self.client.get(testUrl)
+        # Check that the response is 200 OK.
+        assert status.HTTP_200_OK == response.status_code
+        # Cleanup:
+        deleteUrl = testUrl + "/" + str(createdId) + "/delete"
+        response = self.client.post(deleteUrl)
+        # Check that the response is OK.
+        assert status.HTTP_204_NO_CONTENT == response.status_code
+        
+
+    def test_opportunitystatusesIdDeletePost(self):
+        # Test Retrieve and Update operations.
+        testUrl = "/api/opportunitystatuses/(?P<id>[0-9]+)/delete"
+        createUrl = testUrl.replace ("/(?P<id>[0-9]+)/delete","")
+        # Create an object:
+        payload = fakedata.OpportunityStatusTestDataCreate()
+        jsonString = json.dumps(payload)
+        response = self.client.post(createUrl, content_type='application/json', data=jsonString)
+        # Check that the response is OK.
+        assert status.HTTP_201_CREATED == response.status_code
+        # parse the response.
+        jsonString = response.content.decode("utf-8")
+        data = json.loads(jsonString)
+        createdId = data['id']
+        deleteUrl = testUrl.replace ("(?P<id>[0-9]+)",str(createdId))
+        response = self.client.post(deleteUrl)
+        # Check that the response is OK.
+        assert status.HTTP_204_NO_CONTENT == response.status_code
+        
+
+    def test_opportunitystatusesIdGet(self):
+        # Test Retrieve and Update operations.
+        testUrl = "/api/opportunitystatuses/(?P<id>[0-9]+)"
+        createUrl = testUrl.replace ("/(?P<id>[0-9]+)","")
+        # Create an object:
+        payload = fakedata.OpportunityStatusTestDataCreate()
+        jsonString = json.dumps(payload)
+        response = self.client.post(createUrl, content_type='application/json', data=jsonString)
+        # Check that the response is OK.
+        assert status.HTTP_201_CREATED == response.status_code
+        # parse the response.
+        jsonString = response.content.decode("utf-8")
+        data = json.loads(jsonString)
+        createdId = data['id']
+        # Update the object:
+        updateUrl = testUrl.replace ("(?P<id>[0-9]+)",str(createdId))
+        payload = fakedata.OpportunityStatusTestDataUpdate()
         jsonString = json.dumps(payload)
         response = self.client.put(updateUrl, content_type='application/json', data=jsonString)
         # Check that the response is 200 OK.

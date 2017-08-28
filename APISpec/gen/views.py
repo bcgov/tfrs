@@ -33,6 +33,7 @@ from .models.CreditTrade import CreditTrade
 from .models.CreditTradeHistory import CreditTradeHistory
 from .models.CreditTradeStatus import CreditTradeStatus
 from .models.CreditTradeType import CreditTradeType
+from .models.CreditTradeZeroReason import CreditTradeZeroReason
 from .models.CurrentUserViewModel import CurrentUserViewModel
 from .models.FuelSupplier import FuelSupplier
 from .models.FuelSupplierActionsType import FuelSupplierActionsType
@@ -44,14 +45,10 @@ from .models.FuelSupplierContact import FuelSupplierContact
 from .models.FuelSupplierContactRole import FuelSupplierContactRole
 from .models.FuelSupplierHistory import FuelSupplierHistory
 from .models.FuelSupplierStatus import FuelSupplierStatus
-from .models.FuelSupplierType import FuelSupplierType
 from .models.Notification import Notification
 from .models.NotificationEvent import NotificationEvent
 from .models.NotificationType import NotificationType
 from .models.NotificationViewModel import NotificationViewModel
-from .models.Opportunity import Opportunity
-from .models.OpportunityHistory import OpportunityHistory
-from .models.OpportunityStatus import OpportunityStatus
 from .models.Permission import Permission
 from .models.PermissionViewModel import PermissionViewModel
 from .models.Role import Role
