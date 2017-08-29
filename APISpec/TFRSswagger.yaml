@@ -578,11 +578,11 @@ paths:
           description: id of CreditTradeType to delete
           required: true
           type: integer
-  /opportunities:
+  /credittradezeroreason:
     get:
       tags:
-        - Opportunity
-      summary: Lists available Opportunity objects
+        - CreditTradeZeroReason
+      summary: Lists available CreditTradeZeroReason objects
       x-codegen-operation: list
       consumes: []
       produces:
@@ -595,12 +595,12 @@ paths:
           schema:
             type: array
             items:
-              $ref: "#/definitions/Opportunity"
+              $ref: "#/definitions/CreditTradeZeroReason"
     post:
       tags:
-        - Opportunity
+        - CreditTradeZeroReason
       x-codegen-operation: create
-      summary: Creates a new Opportunity object            
+      summary: Creates a new CreditTradeZeroReason object            
       consumes:
         - application/json
       produces:
@@ -612,22 +612,22 @@ paths:
           in: body
           required: true
           schema:
-            $ref: "#/definitions/Opportunity"
+            $ref: "#/definitions/CreditTradeZeroReason"
       responses:
         201:
-          description: Opportunity created
+          description: CreditTradeZeroReason created
           headers:
             Location:
-              description: A link to the Opportunity
+              description: A link to the CreditTradeZeroReason
               type: string
               format: url
           schema:
-            $ref: "#/definitions/Opportunity"  
-  /opportunities/bulk:
+            $ref: "#/definitions/CreditTradeZeroReason"  
+  /credittradezeroreason/bulk:
     post:
       tags:
-        - Opportunity
-      summary: Bulk create / update a number of Opportunity object      
+        - CreditTradeZeroReason
+      summary: Bulk create / update a number of CreditTradeZeroReason object      
       x-codegen-operation: bulk
       consumes:
         - application/json
@@ -642,15 +642,15 @@ paths:
           schema:
             type: array
             items:
-              $ref: "#/definitions/Opportunity"
+              $ref: "#/definitions/CreditTradeZeroReason"
       responses:
         201:
-          description: Opportunity created
-  /opportunities/{id}:
+          description: CreditTradeZeroReason created
+  /credittradezeroreason/{id}:
     get:
       tags:
-        - Opportunity
-      summary: Gets a specific Opportunity object      
+        - CreditTradeZeroReason
+      summary: Gets a specific CreditTradeZeroReason object      
       x-codegen-operation: retrieve
       consumes: []
       produces:
@@ -661,20 +661,20 @@ paths:
         200:
           description: OK
           schema:
-            $ref: "#/definitions/Opportunity"
+            $ref: "#/definitions/CreditTradeZeroReason"
         404:
-          description: Opportunity not found
+          description: CreditTradeZeroReason not found
       parameters:
         - name: id
           in: path
-          description: id of Opportunity to fetch
+          description: id of CreditTradeZeroReason to fetch
           required: true
           type: integer
     put:
       tags:
-        - Opportunity
+        - CreditTradeZeroReason
       x-codegen-operation: update
-      summary: Updates a specific Opportunity object      
+      summary: Updates a specific CreditTradeZeroReason object      
       consumes:
         - application/json
       produces:
@@ -685,26 +685,26 @@ paths:
         200:
           description: OK
           schema:
-            $ref: "#/definitions/Opportunity"
+            $ref: "#/definitions/CreditTradeZeroReason"
         404:
-          description: Opportunity not found
+          description: CreditTradeZeroReason not found
       parameters:
         - name: id
           in: path
-          description: id of Opportunity to fetch
+          description: id of CreditTradeZeroReason to fetch
           required: true
           type: integer
         - name: item
           in: body
           required: true
           schema:
-            $ref: "#/definitions/Opportunity"
-  /opportunities/{id}/delete:
+            $ref: "#/definitions/CreditTradeZeroReason"
+  /credittradezeroreason/{id}/delete:
     post:
       tags:
-        - Opportunity
+        - CreditTradeZeroReason
       x-codegen-operation: destroy
-      summary: Deletes a specific Opportunity object      
+      summary: Deletes a specific CreditTradeZeroReason object      
       consumes: []
       produces:
         - text/plain
@@ -714,297 +714,11 @@ paths:
         200:
           description: OK
         404:
-          description: Opportunity not found
+          description: CreditTradeZeroReason not found
       parameters:
         - name: id
           in: path
-          description: id of Opportunity to delete
-          required: true
-          type: integer
-  /opportunityhistories:
-    get:
-      tags:
-        - OpportunityHistory
-      summary: Lists available OpportunityHistory objects
-      x-codegen-operation: list
-      consumes: []
-      produces:
-        - text/plain
-        - application/json
-        - text/json
-      responses:
-        200:
-          description: OK
-          schema:
-            type: array
-            items:
-              $ref: "#/definitions/OpportunityHistory"
-    post:
-      tags:
-        - OpportunityHistory
-      x-codegen-operation: create
-      summary: Creates a new OpportunityHistory object            
-      consumes:
-        - application/json
-      produces:
-        - text/plain
-        - application/json
-        - text/json
-      parameters:
-        - name: item
-          in: body
-          required: true
-          schema:
-            $ref: "#/definitions/OpportunityHistory"
-      responses:
-        201:
-          description: OpportunityHistory created
-          headers:
-            Location:
-              description: A link to the OpportunityHistory
-              type: string
-              format: url
-          schema:
-            $ref: "#/definitions/OpportunityHistory"  
-  /opportunityhistories/bulk:
-    post:
-      tags:
-        - OpportunityHistory
-      summary: Bulk create / update a number of OpportunityHistory object      
-      x-codegen-operation: bulk
-      consumes:
-        - application/json
-      produces:
-        - text/plain
-        - application/json
-        - text/json
-      parameters:
-        - name: items
-          in: body
-          required: true
-          schema:
-            type: array
-            items:
-              $ref: "#/definitions/OpportunityHistory"
-      responses:
-        201:
-          description: OpportunityHistory created
-  /opportunityhistories/{id}:
-    get:
-      tags:
-        - OpportunityHistory
-      summary: Gets a specific OpportunityHistory object      
-      x-codegen-operation: retrieve
-      consumes: []
-      produces:
-        - text/plain
-        - application/json
-        - text/json
-      responses:
-        200:
-          description: OK
-          schema:
-            $ref: "#/definitions/OpportunityHistory"
-        404:
-          description: OpportunityHistory not found
-      parameters:
-        - name: id
-          in: path
-          description: id of OpportunityHistory to fetch
-          required: true
-          type: integer
-    put:
-      tags:
-        - OpportunityHistory
-      x-codegen-operation: update
-      summary: Updates a specific OpportunityHistory object      
-      consumes:
-        - application/json
-      produces:
-        - text/plain
-        - application/json
-        - text/json
-      responses:
-        200:
-          description: OK
-          schema:
-            $ref: "#/definitions/OpportunityHistory"
-        404:
-          description: OpportunityHistory not found
-      parameters:
-        - name: id
-          in: path
-          description: id of OpportunityHistory to fetch
-          required: true
-          type: integer
-        - name: item
-          in: body
-          required: true
-          schema:
-            $ref: "#/definitions/OpportunityHistory"
-  /opportunityhistories/{id}/delete:
-    post:
-      tags:
-        - OpportunityHistory
-      x-codegen-operation: destroy
-      summary: Deletes a specific OpportunityHistory object      
-      consumes: []
-      produces:
-        - text/plain
-        - application/json
-        - text/json
-      responses:
-        200:
-          description: OK
-        404:
-          description: OpportunityHistory not found
-      parameters:
-        - name: id
-          in: path
-          description: id of OpportunityHistory to delete
-          required: true
-          type: integer
-  /opportunitystatuses:
-    get:
-      tags:
-        - OpportunityStatus
-      summary: Lists available OpportunityStatus objects
-      x-codegen-operation: list
-      consumes: []
-      produces:
-        - text/plain
-        - application/json
-        - text/json
-      responses:
-        200:
-          description: OK
-          schema:
-            type: array
-            items:
-              $ref: "#/definitions/OpportunityStatus"
-    post:
-      tags:
-        - OpportunityStatus
-      x-codegen-operation: create
-      summary: Creates a new OpportunityStatus object            
-      consumes:
-        - application/json
-      produces:
-        - text/plain
-        - application/json
-        - text/json
-      parameters:
-        - name: item
-          in: body
-          required: true
-          schema:
-            $ref: "#/definitions/OpportunityStatus"
-      responses:
-        201:
-          description: OpportunityStatus created
-          headers:
-            Location:
-              description: A link to the OpportunityStatus
-              type: string
-              format: url
-          schema:
-            $ref: "#/definitions/OpportunityStatus"  
-  /opportunitystatuses/bulk:
-    post:
-      tags:
-        - OpportunityStatus
-      summary: Bulk create / update a number of OpportunityStatus object      
-      x-codegen-operation: bulk
-      consumes:
-        - application/json
-      produces:
-        - text/plain
-        - application/json
-        - text/json
-      parameters:
-        - name: items
-          in: body
-          required: true
-          schema:
-            type: array
-            items:
-              $ref: "#/definitions/OpportunityStatus"
-      responses:
-        201:
-          description: OpportunityStatus created
-  /opportunitystatuses/{id}:
-    get:
-      tags:
-        - OpportunityStatus
-      summary: Gets a specific OpportunityStatus object      
-      x-codegen-operation: retrieve
-      consumes: []
-      produces:
-        - text/plain
-        - application/json
-        - text/json
-      responses:
-        200:
-          description: OK
-          schema:
-            $ref: "#/definitions/OpportunityStatus"
-        404:
-          description: OpportunityStatus not found
-      parameters:
-        - name: id
-          in: path
-          description: id of OpportunityStatus to fetch
-          required: true
-          type: integer
-    put:
-      tags:
-        - OpportunityStatus
-      x-codegen-operation: update
-      summary: Updates a specific OpportunityStatus object      
-      consumes:
-        - application/json
-      produces:
-        - text/plain
-        - application/json
-        - text/json
-      responses:
-        200:
-          description: OK
-          schema:
-            $ref: "#/definitions/OpportunityStatus"
-        404:
-          description: OpportunityStatus not found
-      parameters:
-        - name: id
-          in: path
-          description: id of OpportunityStatus to fetch
-          required: true
-          type: integer
-        - name: item
-          in: body
-          required: true
-          schema:
-            $ref: "#/definitions/OpportunityStatus"
-  /opportunitystatuses/{id}/delete:
-    post:
-      tags:
-        - OpportunityStatus
-      x-codegen-operation: destroy
-      summary: Deletes a specific OpportunityStatus object      
-      consumes: []
-      produces:
-        - text/plain
-        - application/json
-        - text/json
-      responses:
-        200:
-          description: OK
-        404:
-          description: OpportunityStatus not found
-      parameters:
-        - name: id
-          in: path
-          description: id of OpportunityStatus to delete
+          description: id of CreditTradeZeroReason to delete
           required: true
           type: integer
   /fuelsuppliers:
@@ -1577,149 +1291,6 @@ paths:
         - name: id
           in: path
           description: id of FuelSupplierStatus to delete
-          required: true
-          type: integer
-  /fuelsuppliertypes:
-    get:
-      tags:
-        - FuelSupplierType
-      summary: Lists available FuelSupplierType objects
-      x-codegen-operation: list
-      consumes: []
-      produces:
-        - text/plain
-        - application/json
-        - text/json
-      responses:
-        200:
-          description: OK
-          schema:
-            type: array
-            items:
-              $ref: "#/definitions/FuelSupplierType"
-    post:
-      tags:
-        - FuelSupplierType
-      x-codegen-operation: create
-      summary: Creates a new FuelSupplierType object            
-      consumes:
-        - application/json
-      produces:
-        - text/plain
-        - application/json
-        - text/json
-      parameters:
-        - name: item
-          in: body
-          required: true
-          schema:
-            $ref: "#/definitions/FuelSupplierType"
-      responses:
-        201:
-          description: FuelSupplierType created
-          headers:
-            Location:
-              description: A link to the FuelSupplierType
-              type: string
-              format: url
-          schema:
-            $ref: "#/definitions/FuelSupplierType"  
-  /fuelsuppliertypes/bulk:
-    post:
-      tags:
-        - FuelSupplierType
-      summary: Bulk create / update a number of FuelSupplierType object      
-      x-codegen-operation: bulk
-      consumes:
-        - application/json
-      produces:
-        - text/plain
-        - application/json
-        - text/json
-      parameters:
-        - name: items
-          in: body
-          required: true
-          schema:
-            type: array
-            items:
-              $ref: "#/definitions/FuelSupplierType"
-      responses:
-        201:
-          description: FuelSupplierType created
-  /fuelsuppliertypes/{id}:
-    get:
-      tags:
-        - FuelSupplierType
-      summary: Gets a specific FuelSupplierType object      
-      x-codegen-operation: retrieve
-      consumes: []
-      produces:
-        - text/plain
-        - application/json
-        - text/json
-      responses:
-        200:
-          description: OK
-          schema:
-            $ref: "#/definitions/FuelSupplierType"
-        404:
-          description: FuelSupplierType not found
-      parameters:
-        - name: id
-          in: path
-          description: id of FuelSupplierType to fetch
-          required: true
-          type: integer
-    put:
-      tags:
-        - FuelSupplierType
-      x-codegen-operation: update
-      summary: Updates a specific FuelSupplierType object      
-      consumes:
-        - application/json
-      produces:
-        - text/plain
-        - application/json
-        - text/json
-      responses:
-        200:
-          description: OK
-          schema:
-            $ref: "#/definitions/FuelSupplierType"
-        404:
-          description: FuelSupplierType not found
-      parameters:
-        - name: id
-          in: path
-          description: id of FuelSupplierType to fetch
-          required: true
-          type: integer
-        - name: item
-          in: body
-          required: true
-          schema:
-            $ref: "#/definitions/FuelSupplierType"
-  /fuelsuppliertypes/{id}/delete:
-    post:
-      tags:
-        - FuelSupplierType
-      x-codegen-operation: destroy
-      summary: Deletes a specific FuelSupplierType object      
-      consumes: []
-      produces:
-        - text/plain
-        - application/json
-        - text/json
-      responses:
-        200:
-          description: OK
-        404:
-          description: FuelSupplierType not found
-      parameters:
-        - name: id
-          in: path
-          description: id of FuelSupplierType to delete
           required: true
           type: integer
   /fuelsupplieractionstypes:
@@ -4958,9 +4529,6 @@ definitions:
       creditTradeFK:
         $ref: '#/definitions/CreditTrade'
         description: A foreign key reference to a CreditTrade.
-      opportunityFK:
-        $ref: '#/definitions/Opportunity'
-        description: A foreign key reference to a Opportunity.
   NotificationType:
     type: object
     description: The types of notifications that occur in the system and might be of interest to users.

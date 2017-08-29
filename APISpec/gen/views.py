@@ -332,6 +332,73 @@ class credittradetypesIdGet(AuditableMixin,mixins.RetrieveModelMixin, mixins.Upd
     """
     return self.update(request, *args, **kwargs)
 
+class credittradezeroreasonBulkPost(AuditableMixin,BulkCreateModelMixin, generics.GenericAPIView):
+  """  
+  Bulk create / update a number of CreditTradeZeroReason object  
+  """
+  lookup_field = 'id'
+  permission_classes = (permissions.AllowAny,)  
+  queryset = CreditTradeZeroReason.objects.all()  
+  serializer_class = serializers.CreditTradeZeroReasonSerializer
+  def post(self, request, *args, **kwargs):
+    """
+    Creates a number of new CreditTradeZeroReason objects
+    """
+    return self.create(request, *args, **kwargs)
+
+class credittradezeroreasonGet(AuditableMixin,mixins.ListModelMixin, mixins.CreateModelMixin, generics.GenericAPIView):
+  """  
+  Lists available CreditTradeZeroReason objects  
+  """
+  lookup_field = 'id'
+  permission_classes = (permissions.AllowAny,)  
+  queryset = CreditTradeZeroReason.objects.all()  
+  serializer_class = serializers.CreditTradeZeroReasonSerializer
+  def get(self, request, *args, **kwargs):
+    """
+    Lists available CreditTradeZeroReason objects
+    """
+    return self.list(request, *args, **kwargs)
+  def post(self, request, *args, **kwargs):
+    """
+    Creates a new CreditTradeZeroReason object
+    """
+    return self.create(request, *args, **kwargs)
+
+class credittradezeroreasonIdDeletePost(AuditableMixin,mixins.DestroyModelMixin, generics.GenericAPIView):
+  """  
+  Deletes a specific CreditTradeZeroReason object  
+  """
+  lookup_field = 'id'
+  permission_classes = (permissions.AllowAny,)  
+  queryset = CreditTradeZeroReason.objects.all()  
+  serializer_class = serializers.CreditTradeZeroReasonSerializer
+  def post(self, request, *args, **kwargs):
+    """
+    Destroys the specified CreditTradeZeroReason object
+    """
+    return self.destroy(request, *args, **kwargs)
+
+
+class credittradezeroreasonIdGet(AuditableMixin,mixins.RetrieveModelMixin, mixins.UpdateModelMixin, generics.GenericAPIView):
+  """  
+  Gets a specific CreditTradeZeroReason object  
+  """
+  lookup_field = 'id'
+  permission_classes = (permissions.AllowAny,)  
+  queryset = CreditTradeZeroReason.objects.all()  
+  serializer_class = serializers.CreditTradeZeroReasonSerializer
+  def get(self, request, *args, **kwargs):
+    """
+    Retrieves the specified CreditTradeZeroReason object
+    """
+    return self.retrieve(request, *args, **kwargs)
+  def put(self, request, *args, **kwargs):
+    """
+    Updates the specified CreditTradeZeroReason object
+    """
+    return self.update(request, *args, **kwargs)
+
 class fuelsuppliersBulkPost(AuditableMixin,BulkCreateModelMixin, generics.GenericAPIView):
   """  
   Bulk create / update a number of FuelSupplier object  
@@ -1002,73 +1069,6 @@ class fuelsupplierstatusesIdGet(AuditableMixin,mixins.RetrieveModelMixin, mixins
     """
     return self.update(request, *args, **kwargs)
 
-class fuelsuppliertypesBulkPost(AuditableMixin,BulkCreateModelMixin, generics.GenericAPIView):
-  """  
-  Bulk create / update a number of FuelSupplierType object  
-  """
-  lookup_field = 'id'
-  permission_classes = (permissions.AllowAny,)  
-  queryset = FuelSupplierType.objects.all()  
-  serializer_class = serializers.FuelSupplierTypeSerializer
-  def post(self, request, *args, **kwargs):
-    """
-    Creates a number of new FuelSupplierType objects
-    """
-    return self.create(request, *args, **kwargs)
-
-class fuelsuppliertypesGet(AuditableMixin,mixins.ListModelMixin, mixins.CreateModelMixin, generics.GenericAPIView):
-  """  
-  Lists available FuelSupplierType objects  
-  """
-  lookup_field = 'id'
-  permission_classes = (permissions.AllowAny,)  
-  queryset = FuelSupplierType.objects.all()  
-  serializer_class = serializers.FuelSupplierTypeSerializer
-  def get(self, request, *args, **kwargs):
-    """
-    Lists available FuelSupplierType objects
-    """
-    return self.list(request, *args, **kwargs)
-  def post(self, request, *args, **kwargs):
-    """
-    Creates a new FuelSupplierType object
-    """
-    return self.create(request, *args, **kwargs)
-
-class fuelsuppliertypesIdDeletePost(AuditableMixin,mixins.DestroyModelMixin, generics.GenericAPIView):
-  """  
-  Deletes a specific FuelSupplierType object  
-  """
-  lookup_field = 'id'
-  permission_classes = (permissions.AllowAny,)  
-  queryset = FuelSupplierType.objects.all()  
-  serializer_class = serializers.FuelSupplierTypeSerializer
-  def post(self, request, *args, **kwargs):
-    """
-    Destroys the specified FuelSupplierType object
-    """
-    return self.destroy(request, *args, **kwargs)
-
-
-class fuelsuppliertypesIdGet(AuditableMixin,mixins.RetrieveModelMixin, mixins.UpdateModelMixin, generics.GenericAPIView):
-  """  
-  Gets a specific FuelSupplierType object  
-  """
-  lookup_field = 'id'
-  permission_classes = (permissions.AllowAny,)  
-  queryset = FuelSupplierType.objects.all()  
-  serializer_class = serializers.FuelSupplierTypeSerializer
-  def get(self, request, *args, **kwargs):
-    """
-    Retrieves the specified FuelSupplierType object
-    """
-    return self.retrieve(request, *args, **kwargs)
-  def put(self, request, *args, **kwargs):
-    """
-    Updates the specified FuelSupplierType object
-    """
-    return self.update(request, *args, **kwargs)
-
 class notificationsBulkPost(AuditableMixin,BulkCreateModelMixin, generics.GenericAPIView):
   """  
   Bulk create / update a number of Notification object  
@@ -1267,207 +1267,6 @@ class notificationtypesIdGet(AuditableMixin,mixins.RetrieveModelMixin, mixins.Up
   def put(self, request, *args, **kwargs):
     """
     Updates the specified NotificationType object
-    """
-    return self.update(request, *args, **kwargs)
-
-class opportunitiesBulkPost(AuditableMixin,BulkCreateModelMixin, generics.GenericAPIView):
-  """  
-  Bulk create / update a number of Opportunity object  
-  """
-  lookup_field = 'id'
-  permission_classes = (permissions.AllowAny,)  
-  queryset = Opportunity.objects.all()  
-  serializer_class = serializers.OpportunitySerializer
-  def post(self, request, *args, **kwargs):
-    """
-    Creates a number of new Opportunity objects
-    """
-    return self.create(request, *args, **kwargs)
-
-class opportunitiesGet(AuditableMixin,mixins.ListModelMixin, mixins.CreateModelMixin, generics.GenericAPIView):
-  """  
-  Lists available Opportunity objects  
-  """
-  lookup_field = 'id'
-  permission_classes = (permissions.AllowAny,)  
-  queryset = Opportunity.objects.all()  
-  serializer_class = serializers.OpportunitySerializer
-  def get(self, request, *args, **kwargs):
-    """
-    Lists available Opportunity objects
-    """
-    return self.list(request, *args, **kwargs)
-  def post(self, request, *args, **kwargs):
-    """
-    Creates a new Opportunity object
-    """
-    return self.create(request, *args, **kwargs)
-
-class opportunitiesIdDeletePost(AuditableMixin,mixins.DestroyModelMixin, generics.GenericAPIView):
-  """  
-  Deletes a specific Opportunity object  
-  """
-  lookup_field = 'id'
-  permission_classes = (permissions.AllowAny,)  
-  queryset = Opportunity.objects.all()  
-  serializer_class = serializers.OpportunitySerializer
-  def post(self, request, *args, **kwargs):
-    """
-    Destroys the specified Opportunity object
-    """
-    return self.destroy(request, *args, **kwargs)
-
-
-class opportunitiesIdGet(AuditableMixin,mixins.RetrieveModelMixin, mixins.UpdateModelMixin, generics.GenericAPIView):
-  """  
-  Gets a specific Opportunity object  
-  """
-  lookup_field = 'id'
-  permission_classes = (permissions.AllowAny,)  
-  queryset = Opportunity.objects.all()  
-  serializer_class = serializers.OpportunitySerializer
-  def get(self, request, *args, **kwargs):
-    """
-    Retrieves the specified Opportunity object
-    """
-    return self.retrieve(request, *args, **kwargs)
-  def put(self, request, *args, **kwargs):
-    """
-    Updates the specified Opportunity object
-    """
-    return self.update(request, *args, **kwargs)
-
-class opportunityhistoriesBulkPost(AuditableMixin,BulkCreateModelMixin, generics.GenericAPIView):
-  """  
-  Bulk create / update a number of OpportunityHistory object  
-  """
-  lookup_field = 'id'
-  permission_classes = (permissions.AllowAny,)  
-  queryset = OpportunityHistory.objects.all()  
-  serializer_class = serializers.OpportunityHistorySerializer
-  def post(self, request, *args, **kwargs):
-    """
-    Creates a number of new OpportunityHistory objects
-    """
-    return self.create(request, *args, **kwargs)
-
-class opportunityhistoriesGet(AuditableMixin,mixins.ListModelMixin, mixins.CreateModelMixin, generics.GenericAPIView):
-  """  
-  Lists available OpportunityHistory objects  
-  """
-  lookup_field = 'id'
-  permission_classes = (permissions.AllowAny,)  
-  queryset = OpportunityHistory.objects.all()  
-  serializer_class = serializers.OpportunityHistorySerializer
-  def get(self, request, *args, **kwargs):
-    """
-    Lists available OpportunityHistory objects
-    """
-    return self.list(request, *args, **kwargs)
-  def post(self, request, *args, **kwargs):
-    """
-    Creates a new OpportunityHistory object
-    """
-    return self.create(request, *args, **kwargs)
-
-class opportunityhistoriesIdDeletePost(AuditableMixin,mixins.DestroyModelMixin, generics.GenericAPIView):
-  """  
-  Deletes a specific OpportunityHistory object  
-  """
-  lookup_field = 'id'
-  permission_classes = (permissions.AllowAny,)  
-  queryset = OpportunityHistory.objects.all()  
-  serializer_class = serializers.OpportunityHistorySerializer
-  def post(self, request, *args, **kwargs):
-    """
-    Destroys the specified OpportunityHistory object
-    """
-    return self.destroy(request, *args, **kwargs)
-
-
-class opportunityhistoriesIdGet(AuditableMixin,mixins.RetrieveModelMixin, mixins.UpdateModelMixin, generics.GenericAPIView):
-  """  
-  Gets a specific OpportunityHistory object  
-  """
-  lookup_field = 'id'
-  permission_classes = (permissions.AllowAny,)  
-  queryset = OpportunityHistory.objects.all()  
-  serializer_class = serializers.OpportunityHistorySerializer
-  def get(self, request, *args, **kwargs):
-    """
-    Retrieves the specified OpportunityHistory object
-    """
-    return self.retrieve(request, *args, **kwargs)
-  def put(self, request, *args, **kwargs):
-    """
-    Updates the specified OpportunityHistory object
-    """
-    return self.update(request, *args, **kwargs)
-
-class opportunitystatusesBulkPost(AuditableMixin,BulkCreateModelMixin, generics.GenericAPIView):
-  """  
-  Bulk create / update a number of OpportunityStatus object  
-  """
-  lookup_field = 'id'
-  permission_classes = (permissions.AllowAny,)  
-  queryset = OpportunityStatus.objects.all()  
-  serializer_class = serializers.OpportunityStatusSerializer
-  def post(self, request, *args, **kwargs):
-    """
-    Creates a number of new OpportunityStatus objects
-    """
-    return self.create(request, *args, **kwargs)
-
-class opportunitystatusesGet(AuditableMixin,mixins.ListModelMixin, mixins.CreateModelMixin, generics.GenericAPIView):
-  """  
-  Lists available OpportunityStatus objects  
-  """
-  lookup_field = 'id'
-  permission_classes = (permissions.AllowAny,)  
-  queryset = OpportunityStatus.objects.all()  
-  serializer_class = serializers.OpportunityStatusSerializer
-  def get(self, request, *args, **kwargs):
-    """
-    Lists available OpportunityStatus objects
-    """
-    return self.list(request, *args, **kwargs)
-  def post(self, request, *args, **kwargs):
-    """
-    Creates a new OpportunityStatus object
-    """
-    return self.create(request, *args, **kwargs)
-
-class opportunitystatusesIdDeletePost(AuditableMixin,mixins.DestroyModelMixin, generics.GenericAPIView):
-  """  
-  Deletes a specific OpportunityStatus object  
-  """
-  lookup_field = 'id'
-  permission_classes = (permissions.AllowAny,)  
-  queryset = OpportunityStatus.objects.all()  
-  serializer_class = serializers.OpportunityStatusSerializer
-  def post(self, request, *args, **kwargs):
-    """
-    Destroys the specified OpportunityStatus object
-    """
-    return self.destroy(request, *args, **kwargs)
-
-
-class opportunitystatusesIdGet(AuditableMixin,mixins.RetrieveModelMixin, mixins.UpdateModelMixin, generics.GenericAPIView):
-  """  
-  Gets a specific OpportunityStatus object  
-  """
-  lookup_field = 'id'
-  permission_classes = (permissions.AllowAny,)  
-  queryset = OpportunityStatus.objects.all()  
-  serializer_class = serializers.OpportunityStatusSerializer
-  def get(self, request, *args, **kwargs):
-    """
-    Retrieves the specified OpportunityStatus object
-    """
-    return self.retrieve(request, *args, **kwargs)
-  def put(self, request, *args, **kwargs):
-    """
-    Updates the specified OpportunityStatus object
     """
     return self.update(request, *args, **kwargs)
 
