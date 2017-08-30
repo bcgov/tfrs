@@ -572,9 +572,6 @@ definitions:
       creditTradeFK:
         $ref: '#/definitions/CreditTrade'
         description: A foreign key reference to a CreditTrade.
-      opportunityFK:
-        $ref: '#/definitions/Opportunity'
-        description: A foreign key reference to a Opportunity.
   NotificationType:
     type: object
     description: The types of notifications that occur in the system and might be of interest to users.

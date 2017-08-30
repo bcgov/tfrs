@@ -149,7 +149,7 @@ class NotificationSerializer(serializers.ModelSerializer):
 class NotificationEventSerializer(serializers.ModelSerializer):
   class Meta:
     model = NotificationEvent
-    fields = ('id','eventTime','eventTypeCode','notes','creditTradeFK','opportunityFK')
+    fields = ('id','eventTime','eventTypeCode','notes','creditTradeFK')
 
 class NotificationTypeSerializer(serializers.ModelSerializer):
   class Meta:
