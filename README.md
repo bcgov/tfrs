@@ -14,17 +14,41 @@ http://schema-spy-mem-tfrs-dev.pathfinder.gov.bc.ca/index.html
 - Django/Python
 
 ### Project Status
-This project is in development. 
-To see the status of feature development please refer to the [features](https://github.com/bcgov/tfrs/wiki/features/) page on the project wiki 
+This project is in development.
+To see the status of feature development please refer to the [features](https://github.com/bcgov/tfrs/wiki/features/) page on the project wiki
 
 ### Development
 
 If using Windows as your development environment, install the following:
 - Python 3.5.1 - Select one of the installation options here that fits your workstation type: https://www.python.org/downloads/release/python-351/
-- Postgresql http://www.enterprisedb.com/products/pgdownload.do#windows 
-Be sure to edit the "PATH" environment variable to your in the advanced system settings on the control panel and add the postgresql bin folder. If you already have a PATH variable set to something you can add another separated by a semicolon. e.g. "C:\blah\npm; C:\Program Files\PostgreSQL\9.6\bin" 
+- Postgresql http://www.enterprisedb.com/products/pgdownload.do#windows
+Be sure to edit the "PATH" environment variable to your in the advanced system settings on the control panel and add the postgresql bin folder. If you already have a PATH variable set to something you can add another separated by a semicolon. e.g. "C:\blah\npm; C:\Program Files\PostgreSQL\9.6\bin"
 (Without doing this you will have problems with psycopg2 not being able to find the postgrsql libraries)
 - Visual Studio Community 2017 Preview https://www.visualstudio.com/vs/preview/ with the Python extensions (As of 2017-4-18 the Preview version is required in order to use the Python extensions, which can be selected at time of install)
+
+### Getting Started (development)
+#### REST API Server
+Once you have python, install the required modules
+
+`pip install -r requirements.txt`
+
+Once you have django, set up the database tables
+
+`python manage.py migrate`
+
+...and run the server
+
+`python manage.py runserver`
+
+#### Front-End JavaScript Client
+Once you have npm, install the required modules
+
+`npm install`
+
+...and run the server
+
+`npm run`
+
 
 ### Code Generation
 
