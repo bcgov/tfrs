@@ -15,9 +15,9 @@ The client (front-end) code that interacts with the TFRS API to form the user in
 
 ## Status
 
-This project is in development. To see the status of feature development please refer to the features page on the project [wiki](https://github.com/bcgov/tfrs/wiki/features) 
+This project is in development. To see the status of feature development please refer to the features page on the project [wiki](https://github.com/bcgov/tfrs/wiki/features)
 
-## Devolpment
+## Development
 
 ~~~
 npm install
@@ -27,7 +27,15 @@ npm install
 npm start
 ~~~
 
+## Production
+On a linux server, simply run `npm run production` to trigger a build. Then, run `node server` to serve the static build
 
-
-
-
+On windows, you can do either of the following:
+```bat
+> NODE_ENV=production
+> webpack -p --config webpack.production.config.js
+```
+or if you can run bash/cygwin:
+```bash
+$ NODE_ENV=production webpack -p --config webpack.production.config.js
+```
