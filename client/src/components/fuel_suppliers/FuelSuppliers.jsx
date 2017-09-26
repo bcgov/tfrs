@@ -127,7 +127,6 @@ class FuelSuppliers extends Component {
             </TableHeaderColumn>
             <TableHeaderColumn dataField="actionsPermitted" dataSort={true} dataFormat={(cell, row) => this.actionsFormatter(cell, row)}>Actions Permitted</TableHeaderColumn>
             <TableHeaderColumn dataField="creditBalance" dataSort={true}>Credit Balance</TableHeaderColumn>
-            <TableHeaderColumn dataField="encumberedCredits" dataSort={true}>Encumbered Credits</TableHeaderColumn>
             <TableHeaderColumn dataField="lastTransaction" dataSort={true}>Last Transaction</TableHeaderColumn>
             <TableHeaderColumn dataField="pendingActions" columnClassName="actions">Pending Actions</TableHeaderColumn>
           </BootstrapTable>
