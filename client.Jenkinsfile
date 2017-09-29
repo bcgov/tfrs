@@ -5,11 +5,6 @@ node('maven') {
         openshiftTag destStream: 'client', verbose: 'true', destTag: '$BUILD_ID', srcStream: 'client', srcTag: 'latest'
     }
 
-    stage('deploy-dev') {
-        echo "Deploying to dev..."
-        openshiftTag destStream: 'client', verbose: 'true', destTag: 'dev', srcStream: 'client', srcTag: 'latest'
-    }
-
     stage('checkout for static code analysis') {
         echo "checking out source"
         echo "Build: ${BUILD_ID}"
@@ -34,9 +29,18 @@ node('maven') {
         }
     }
 	
-	  stage('validation') {
+    stage('deploy-dev') {
+        echo "Deploying to dev..."
+        openshiftTag destStream: 'client', verbose: 'true', destTag: 'dev', srcStream: 'client', srcTag: 'latest'
+    }
+
+	stage('validation') {
         dir('functional-tests') {
-            sh './gradlew --debug --stacktrace phantomJsTest'
+			try {
+				sh './gradlew --debug --stacktrace phantomJsTest'
+			} finally {
+				archiveArtifacts allowEmptyArchive: true, artifacts: 'build/reports/**/*'
+			}
         }
     }
 }
