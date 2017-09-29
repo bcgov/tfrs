@@ -32,7 +32,7 @@ from .CreditTradeType import CreditTradeType
 from auditable.models import Auditable
 
 class CreditTradeHistory(Auditable):	    
-    creditTradeFK = models.ForeignKey('CreditTrade', related_name='CreditTradeHistorycreditTradeFK')   
+    creditTradeFK = models.ForeignKey('CreditTrade', related_name='CreditTradeHistorycreditTradeFK', null=True)
     userFK = models.ForeignKey('User', related_name='CreditTradeHistoryuserFK')   
     creditTradeUpdateTime = models.DateField()   
     newRespondentFK = models.ForeignKey('FuelSupplier', related_name='CreditTradeHistorynewRespondentFK')   
