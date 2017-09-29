@@ -20,9 +20,7 @@ fi
 ./load.sh CreditTradeZeroReason/CreditTradeZeroReason_CTZR.json api/credittradezeroreasons/bulk $1
 ./load.sh FuelSupplierActionsType/FuelSupplierActionsType_FSActionType.json api/fuelsupplieractionstypes/bulk $1
 ./load.sh FuelSupplierStatus/FuelSupplierStatus_FSStatus.json api/fuelsupplierstatuses/bulk $1
-./load.sh FuelSupplierType/FuelSupplierType_FSType.json api/fuelsuppliertypes/bulk $1
 ./load.sh NotificationType/NotificationType_NotType.json api/notificationtypes/bulk $1
-./load.sh OpportunityStatus/OpportunityStatus_OppStatus.json api/opportunitystatuses/bulk $1
 
 ./load.sh permissions/permissions_Perms.json api/permissions/bulk $1
 ./load.sh roles/roles_Role.json api/roles/bulk $1
@@ -32,5 +30,4 @@ fi
 ./load.sh FuelSupplierCCData/FuelSupplierCCData_FSCCD.json api/fuelsupplierccdata/bulk $1
 ./load.sh users/users_user.json api/users/bulk $1
 ./load.sh userRole/userRole_userRole.json api/userroles/bulk $1
-./load.sh FuelSupplierContactRole/FuelSupplierContactRole_FSContactRole.json api/fuelsuppliercontactroles/bulk $1
 ./load.sh FuelSupplierContact/FuelSupplierContact_FSContact.json api/fuelsuppliercontacts/bulk $1
