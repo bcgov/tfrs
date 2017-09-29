@@ -5,11 +5,6 @@ node('maven') {
         openshiftTag destStream: 'tfrs', verbose: 'true', destTag: '$BUILD_ID', srcStream: 'tfrs', srcTag: 'latest'
     }
 
-    stage('deploy-dev') {
-        echo "Deploying to dev..."
-        openshiftTag destStream: 'tfrs', verbose: 'true', destTag: 'dev', srcStream: 'tfrs', srcTag: 'latest'
-    }
-
     stage('checkout for static code analysis') {
         echo "checking out source"
         echo "Build: ${BUILD_ID}"
@@ -32,6 +27,11 @@ node('maven') {
         dir('sonar-runner') {
             sh returnStdout: true, script: "./gradlew sonarqube -Dsonar.host.url=${SONARQUBE_URL} -Dsonar.verbose=true --stacktrace --info  -Dsonar.sources=.."
         }
+    }
+
+    stage('deploy-dev') {
+        echo "Deploying to dev..."
+        openshiftTag destStream: 'tfrs', verbose: 'true', destTag: 'dev', srcStream: 'tfrs', srcTag: 'latest'
     }
 }
 
