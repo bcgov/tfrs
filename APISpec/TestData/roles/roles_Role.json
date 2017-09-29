@@ -2,26 +2,43 @@
     {
         "description": "A regular government user in the system.",
         "id": "1",
+        "isGovernmentRole": true,
         "name": "GovUser"
     },
     {
         "description": "A System Administrator in the application with User Management and Roles and Permissions access.",
         "id": "2",
+        "isGovernmentRole": true,
         "name": "Admin"
     },
     {
         "description": "A government user with authorization to Approve Credit Transfers.",
         "id": "3",
+        "isGovernmentRole": true,
         "name": "GovDirector"
     },
     {
         "description": "A Fuel Supplier user with limited abilities to take actions.",
         "id": "4",
+        "isGovernmentRole": false,
         "name": "FSUser"
     },
     {
         "description": "A Fuel Supplier user with authority to act on behalf of the Fuel Supplier on Credit Transfers.",
         "id": "5",
+        "isGovernmentRole": false,
         "name": "FSManager"
+    },
+    {
+        "description": "A Fuel Supplier admin user with authority to add and remove organizational users.",
+        "id": "6",
+        "isGovernmentRole": false,
+        "name": "FSAdmin"
+    },
+    {
+        "description": "A Fuel Supplier user defined in the system, but with no access to system functionality.",
+        "id": "7",
+        "isGovernmentRole": false,
+        "name": "FSNoAccess"
     }
 ]

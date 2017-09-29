@@ -33,5 +33,5 @@ class FuelSupplierStatus(Auditable):
     expirationDate = models.DateField(blank=True, null=True)   
     displayOrder = models.IntegerField()   
     class Meta:
-        db_table = 'FUEL_SUPPLIER_STATUS'
+        db_table = 'fuel_supplier_status'
 

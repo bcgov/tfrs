@@ -81,10 +81,6 @@
 #except:
 #     import FuelSupplierContact
 #try:
-#     from . import FuelSupplierContactRole  
-#except:
-#     import FuelSupplierContactRole
-#try:
 #     from . import FuelSupplierHistory  
 #except:
 #     import FuelSupplierHistory

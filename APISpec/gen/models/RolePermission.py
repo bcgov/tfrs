@@ -32,5 +32,5 @@ class RolePermission(Auditable):
     roleFK = models.ForeignKey('Role', related_name='RolePermissionroleFK')   
     permissionFK = models.ForeignKey('Permission', related_name='RolePermissionpermissionFK')   
     class Meta:
-        db_table = 'ROLE_PERMISSION'
+        db_table = 'role_permission'
 

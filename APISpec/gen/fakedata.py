@@ -260,15 +260,6 @@ def FuelSupplierContactTestDataUpdate():
   }
 
 
-def FuelSupplierContactRoleTestDataCreate():
-  return {
-  }
-
-def FuelSupplierContactRoleTestDataUpdate():
-  return {
-  }
-
-
 def FuelSupplierHistoryTestDataCreate():
   return {
     'historyText':'Initial',
@@ -393,12 +384,14 @@ def RoleTestDataCreate():
   return {
     'name':'Initial',
     'description':'Initial',
+    'isGovernmentRole':True,
   }
 
 def RoleTestDataUpdate():
   return {
     'name':'Changed',
     'description':'Changed',
+    'isGovernmentRole':False,
   }
 
 

@@ -28,6 +28,7 @@ from .User import User
 from .FuelSupplier import FuelSupplier
 from .CreditTradeStatus import CreditTradeStatus
 from .CreditTradeType import CreditTradeType
+from .CreditTradeZeroReason import CreditTradeZeroReason
 
 from auditable.models import Auditable
 
@@ -40,9 +41,10 @@ class CreditTradeHistory(Auditable):
     creditTradeTypeFK = models.ForeignKey('CreditTradeType', related_name='CreditTradeHistorycreditTradeTypeFK')   
     newNumberOfCredits = models.IntegerField()   
     newFairMarketValuePerCredit = models.CharField(blank=True, null=True, max_length=255)   
+    newCreditTradeZeroReasonFK = models.ForeignKey('CreditTradeZeroReason', related_name='CreditTradeHistorynewCreditTradeZeroReasonFK', blank=True, null=True)   
     newTradeEffectiveDate = models.DateField(blank=True, null=True)   
     note = models.CharField(max_length=4000, blank=True, null=True)   
     isInternalHistoryRecord = models.BooleanField()   
     class Meta:
-        db_table = 'CREDIT_TRADE_HISTORY'
+        db_table = 'credit_trade_history'
 

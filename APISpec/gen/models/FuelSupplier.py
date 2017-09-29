@@ -34,5 +34,5 @@ class FuelSupplier(Auditable):
     fuelSupplierActionsTypeFK = models.ForeignKey('FuelSupplierActionsType', related_name='FuelSupplierfuelSupplierActionsTypeFK')   
     createdDate = models.DateField()   
     class Meta:
-        db_table = 'FUEL_SUPPLIER'
+        db_table = 'fuel_supplier'
 

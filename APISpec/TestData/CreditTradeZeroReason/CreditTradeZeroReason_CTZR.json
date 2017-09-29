@@ -1,0 +1,18 @@
+[
+    {
+        "description": "The credits were transferred between units within a single organization at no cost.",
+        "displayOrder": "1",
+        "effectiveDate": "2017-01-01",
+        "expirationDate": "2117-01-01",
+        "id": "1",
+        "reason": "Internal"
+    },
+    {
+        "description": "The transaction was at zero cost for some other reason. Specify the details in the comment box below.",
+        "displayOrder": "2",
+        "effectiveDate": "2017-01-01",
+        "expirationDate": "2117-01-01",
+        "id": "2",
+        "reason": "Other"
+    }
+]

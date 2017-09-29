@@ -39,5 +39,5 @@ class FuelSupplierContact(Auditable):
     workPhoneNumber = models.CharField(max_length=25, blank=True, null=True)   
     mobilePhoneNumber = models.CharField(max_length=25, blank=True, null=True)   
     class Meta:
-        db_table = 'FUEL_SUPPLIER_CONTACT'
+        db_table = 'fuel_supplier_contact'
 

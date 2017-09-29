@@ -34,5 +34,5 @@ class FuelSupplierAttachment(Auditable):
     description = models.CharField(max_length=4000, blank=True, null=True)   
     complianceYear = models.CharField(max_length=25, blank=True, null=True)   
     class Meta:
-        db_table = 'FUEL_SUPPLIER_ATTACHMENT'
+        db_table = 'fuel_supplier_attachment'
 
