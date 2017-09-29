@@ -29,6 +29,7 @@ from auditable.models import Auditable
 class Role(Auditable):	    
     name = models.CharField(max_length=200)   
     description = models.CharField(max_length=1000)   
+    isGovernmentRole = models.BooleanField()   
     class Meta:
-        db_table = 'ROLE'
+        db_table = 'role'
 

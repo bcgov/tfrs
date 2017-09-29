@@ -35,5 +35,5 @@ class FuelSupplierBalance(Auditable):
     endDate = models.DateField(blank=True, null=True)   
     creditTradeFK = models.ForeignKey('CreditTrade', related_name='FuelSupplierBalancecreditTradeFK', blank=True, null=True)   
     class Meta:
-        db_table = 'FUEL_SUPPLIER_BALANCE'
+        db_table = 'fuel_supplier_balance'
 

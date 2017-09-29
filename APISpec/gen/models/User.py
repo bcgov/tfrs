@@ -35,5 +35,5 @@ class User(Auditable):
     guid = models.CharField(max_length=100, blank=True, null=True)   
     authorizationDirectory = models.CharField(max_length=100, blank=True, null=True)   
     class Meta:
-        db_table = 'USER'
+        db_table = 'user'
 

@@ -31,5 +31,5 @@ class Permission(Auditable):
     name = models.CharField(max_length=100)   
     description = models.CharField(max_length=1000)   
     class Meta:
-        db_table = 'PERMISSION'
+        db_table = 'permission'
 

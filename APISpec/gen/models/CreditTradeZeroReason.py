@@ -33,5 +33,5 @@ class CreditTradeZeroReason(Auditable):
     expirationDate = models.DateField(blank=True, null=True)   
     displayOrder = models.IntegerField()   
     class Meta:
-        db_table = 'CREDIT_TRADE_ZERO_REASON'
+        db_table = 'credit_trade_zero_reason'
 
