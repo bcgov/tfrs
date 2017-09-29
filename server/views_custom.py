@@ -33,6 +33,7 @@ from .models.CreditTrade import CreditTrade
 from .models.CreditTradeHistory import CreditTradeHistory
 from .models.CreditTradeStatus import CreditTradeStatus
 from .models.CreditTradeType import CreditTradeType
+from .models.CreditTradeZeroReason import CreditTradeZeroReason
 from .models.CurrentUserViewModel import CurrentUserViewModel
 from .models.FuelSupplier import FuelSupplier
 from .models.FuelSupplierActionsType import FuelSupplierActionsType
@@ -44,14 +45,10 @@ from .models.FuelSupplierContact import FuelSupplierContact
 from .models.FuelSupplierContactRole import FuelSupplierContactRole
 from .models.FuelSupplierHistory import FuelSupplierHistory
 from .models.FuelSupplierStatus import FuelSupplierStatus
-from .models.FuelSupplierType import FuelSupplierType
 from .models.Notification import Notification
 from .models.NotificationEvent import NotificationEvent
 from .models.NotificationType import NotificationType
 from .models.NotificationViewModel import NotificationViewModel
-from .models.Opportunity import Opportunity
-from .models.OpportunityHistory import OpportunityHistory
-from .models.OpportunityStatus import OpportunityStatus
 from .models.Permission import Permission
 from .models.PermissionViewModel import PermissionViewModel
 from .models.Role import Role
@@ -72,7 +69,7 @@ from .models.UserViewModel import UserViewModel
 class credittradesSearchGet(APIView):
   """  
   Searches credit trades  
-  """  
+  """
   def get(self, request, organization = None, tradeType = None, status = None, dateType = None, startDate = None, endDate = None):
     result = CreditTrade.objects.all()
     if organization != None:
@@ -85,14 +82,14 @@ class credittradesSearchGet(APIView):
         result = result.filter(tradeExecutionDate__gt = startDate, tradeExecutionDate__lt = endDate)
     if endDate != None:
         result = result.filter(tradeExecutionDate__lt = endDate)
-       
+
     serializer = serializers.CreditTradeSerializer(result, many=True)
-    return Response(serializer.data)    
+    return Response(serializer.data)
 
 class usersCurrentFavouritesIdDeletePost(APIView):
   """  
   Removes a specific user favourite  
-  """  
+  """
   def post(self, request, id):
     userFavourite = UserFavourite.objects.get(id=id)
     userFavourite.delete()
@@ -101,19 +98,19 @@ class usersCurrentFavouritesIdDeletePost(APIView):
 
 class usersCurrentFavouritesPut(APIView):
   """  
-  Create new favourite for the current user  
+  Create new favourite for the current user
   """
-  def post(self, request):    
-    user = User.objects.all()[0] # replace with getcurrentuserid    
+  def post(self, request):
+    user = User.objects.all()[0] # replace with getcurrentuserid
     jsonString = request.body.decode('utf-8')
     data = json.loads(jsonString)
     userFavourite = UserFavourite(name = data['name'], value = data['value'], isDefault = data['isDefault'], userFK = user)
     userFavourite.save()
     serializer = serializers.UserFavouriteSerializer(userFavourite)
-    return Response(serializer.data)  
+    return Response(serializer.data)
 
   def put(self, request):
-    user = User.objects.all()[0] # replace with getcurrentuserid    
+    user = User.objects.all()[0] # replace with getcurrentuserid
     jsonString = request.body.decode('utf-8')
     alldata = json.loads(jsonString)
     # clear existing favourites.
@@ -125,12 +122,12 @@ class usersCurrentFavouritesPut(APIView):
       userFavourite.save()
     result = UserFavourite.objects.filter(userFK=user)
     serializer = serializers.UserFavouriteSerializer(result, many=True)
-    return Response(serializer.data)  
+    return Response(serializer.data)
 
 class usersCurrentFavouritesSearchGet(APIView):
   """  
-  Returns a user's favourites of a given type.   
-  """       
+  Returns a user's favourites of a given type.
+  """
   def get(self, request):
     currentUser = User.objects.all()[0] # replace with current user
     type = request.GET.get('type', None)
@@ -144,7 +141,7 @@ class usersCurrentFavouritesSearchGet(APIView):
 class usersCurrentGet(APIView):
   """  
   Get the currently logged in user  
-  """        
+  """
   def get(self, request, ):
     currentUser = User.objects.all()[0] # replace with current user
     serializer = serializers.UserSerializer(currentUser)
@@ -155,28 +152,28 @@ class fuelsuppliersIdAttachmentsGet(mixins.CreateModelMixin, APIView):
   Returns attachments for a particular FuelSupplier  
   """
   lookup_field = 'id'
-  permission_classes = (permissions.AllowAny,)  
-  queryset = FuelSupplierHistory.objects.all()  
+  permission_classes = (permissions.AllowAny,)
+  queryset = FuelSupplierHistory.objects.all()
   serializer_class = serializers.FuelSupplierHistorySerializer
 
   def get(self, request, id):
-    """  
-    Returns attachments for a particular Fuel Supplier  
     """
-    fuelSupplier = FuelSupplier.objects.get(id=id)    
+    Returns attachments for a particular Fuel Supplier
+    """
+    fuelSupplier = FuelSupplier.objects.get(id=id)
     serializer = AttachmentSerializer(fuelSupplier.attachments, many=True)
     return Response(serializer.data)
 
   def post(self, request, id):
-    """  
-    Accepts a new file upload.  
-    """    
+    """
+    Accepts a new file upload.
+    """
     jsonString = self.request.POST['item']
     data = json.loads(jsonString)
     fileName = request.FILES['file'].name
     # TODO: save file to disk
     fileData = request.FILES['file'].read()
-    fuelSupplier = FuelSupplier.objects.get(id=id)   
+    fuelSupplier = FuelSupplier.objects.get(id=id)
     # TODO: remove hard coded fileLocation string an replace with real
     attachment = FuelSupplierAttachment(
       fuelSupplierFK=fuelSupplier,
@@ -191,15 +188,15 @@ class fuelsuppliersIdAttachmentsGet(mixins.CreateModelMixin, APIView):
 class fuelsuppliersIdHistoryGet(APIView):
   """  
   Returns History for a particular FuelSupplier  
-  """    
+  """
   def get(self, request, id, offset = None, limit = None):
     fuelSupplier = FuelSupplier.objects.get(id=id)
     serializer = serializers.FuelSupplierHistorySerializer(fuelSupplier.history, many=true)
     return Response(serializer.data)
 
   def post(self, request, id):
-    """  
-    Add a History record to the FuelSupplier  
+    """
+    Add a History record to the FuelSupplier
     """
     fuelSupplier = FuelSupplier.objects.get(id=id)
     jsonString = request.body.decode('utf-8')
@@ -207,35 +204,35 @@ class fuelsuppliersIdHistoryGet(APIView):
     history = FuelSupplierHistory(fuelSupplierFK_id=id, historyText=data['historyText'])
     history.save()
     serializer = serializers.FuelSupplierHistorySerializer(history)
-    return Response(serializer.data)  
+    return Response(serializer.data)
 
 class fuelsuppliersSearchGet(APIView):
   """  
   Searches fuel suppliers  
-  """   
+  """
   def get(self, request, fuelSupplierName = None, includeInactive = None):
     result = FuelSupplier.objects.all()
     if fuelSupplierName != None:
        result = result.filter(name__icontains = fuelSupplierName)
     if includeInactive == None or includeInactive == False:
        result = result.filter(fuelSupplierStatusFK__status__icontains = 'Active')
-        
+
     serializer = serializers.FuelSupplierSerializer(result, many=True)
-    return Response(serializer.data)    
+    return Response(serializer.data)
 
 class rolesIdPermissionsGet(APIView):
   """  
   Get all the permissions for a role  
-  """         
+  """
   def get(self, request, id):
     role = Role.objects.get (id = id)
     rolePermissions = RolePermission.objects.filter(roleFK=role)
     serializer = serializers.RolePermissionSerializer(rolePermissions, many=True)
     return Response(serializer.data)
-  
+
   def post(self, request, id):
-    """  
-    Adds a permission to a role  
+    """
+    Adds a permission to a role
     """
     role = Role.objects.get (id = id)
     jsonString = request.body.decode('utf-8')
@@ -244,11 +241,11 @@ class rolesIdPermissionsGet(APIView):
     rolePermission = RolePermission(roleFK=role, permissionFK=permission)
     rolePermission.save()
     serializer = serializers.RolePermissionSerializer(rolePermission)
-    return Response(serializer.data)    
+    return Response(serializer.data)
 
   def put(self, request, id):
-    """  
-    Updates the permissions for a role  
+    """
+    Updates the permissions for a role
     """
     role = Role.objects.get (id = id)
     jsonString = request.body.decode('utf-8')
@@ -261,23 +258,23 @@ class rolesIdPermissionsGet(APIView):
         rolePermission.save()
     results = RolePermission.objects.filter(roleFK=role)
     serializer = serializers.RolePermissionSerializer(results, many=True)
-    return Response(serializer.data)    
+    return Response(serializer.data)
 
 class rolesIdUsersGet(APIView):
   """  
   Gets all the users for a role  
-  """      
+  """
   def get(self, request, id):
-    role = Role.objects.get (id = id)   
+    role = Role.objects.get (id = id)
     userRoles = UserRole.objects.filter(role = role)
     serializer = serializers.UserRoleSerializer(userRoles)
-    return Response(serializer.data)        
+    return Response(serializer.data)
 
   def put(self, request, id):
-    """  
-    Updates the users for a role  
     """
-    role = Role.objects.get (id = id)          
+    Updates the users for a role
+    """
+    role = Role.objects.get (id = id)
     jsonString = request.body.decode('utf-8')
     alldata = json.loads(jsonString)
     # clear existing User Roles.
@@ -290,35 +287,35 @@ class rolesIdUsersGet(APIView):
       userRole.save()
     result = UserRole.objects.filter(userFK=user)
     serializer = serializers.UserRoleSerializer(result, many=True)
-    return Response(serializer.data)        
+    return Response(serializer.data)
 
 class usersIdFavouritesGet(APIView):
   def get(self, request, id):
-    """  
-    Returns the favourites for a user  
+    """
+    Returns the favourites for a user
     """
     user = User.objects.get(id=id)
     result = UserFavourite.objects.filter(userFK=user)
     serializer = serializers.UserFavouriteSerializer(result, many=True)
     return Response(serializer.data)
 
-  def post(self, request, id):    
-    """  
-    Adds favourites to a user  
-    """  
+  def post(self, request, id):
+    """
+    Adds favourites to a user
+    """
     user = User.objects.get(id=id)
     jsonString = request.body.decode('utf-8')
     data = json.loads(jsonString)
     userFavourite = UserFavourite(name=data['name'], value=data['value'], isDefault=data['isDefault'], userFK=user)
     userFavourite.save()
     serializer = serializers.UserFavouriteSerializer(userFavourite)
-    return Response(serializer.data)  
+    return Response(serializer.data)
 
   def put(self, request, id):
-    """  
-    Updates the favourites for a user  
     """
-    user = User.objects.get(id=id)   
+    Updates the favourites for a user
+    """
+    user = User.objects.get(id=id)
     jsonString = request.body.decode('utf-8')
     alldata = json.loads(jsonString)
     # clear existing favourites.
@@ -330,21 +327,21 @@ class usersIdFavouritesGet(APIView):
       userFavourite.save()
     result = UserFavourite.objects.filter(userFK=user)
     serializer = serializers.UserFavouriteSerializer(result, many=True)
-    return Response(serializer.data)  
+    return Response(serializer.data)
 
 class usersIdNotificationsGet(APIView):
   def get(self, request, id):
-    """  
-    Returns a user's notifications 
+    """
+    Returns a user's notifications
     """
     result = Notification.objects.filter(userFK_id=id)
     serializer = serializers.NotificationSerializer(result, many=True)
     return Response(serializer.data)
-  
+
   def post(self, request, id):
-    """  
-    Adds a notification to user 
-    """    
+    """
+    Adds a notification to user
+    """
     jsonString = request.body.decode('utf-8')
     data = json.loads(jsonString)
     notification = Notification(
@@ -360,8 +357,8 @@ class usersIdNotificationsGet(APIView):
 class usersIdPermissionsGet(APIView):
 
   def get(self, request, id):
-    """  
-    Returns the set of permissions for a user  
+    """
+    Returns the set of permissions for a user
     """
     user = User.objects.get(id=id)
     userRoles = UserRole.objects.filter(userFK=user)
@@ -375,8 +372,8 @@ class usersIdPermissionsGet(APIView):
 
 class usersIdPermissionsGet(APIView):
   def get(self, request, id):
-    """  
-    Returns the set of permissions for a user  
+    """
+    Returns the set of permissions for a user
     """
     user = User.objects.get(id=id)
     userRoles = UserRole.objects.filter(userFK=user)
@@ -390,17 +387,17 @@ class usersIdPermissionsGet(APIView):
 
 class usersIdRolesGet(APIView):
   def get(self, request, id):
-    """  
-    Returns all roles that a user is a member of  
+    """
+    Returns all roles that a user is a member of
     """
     result = UserRole.objects.filter(userFK=id)
     serializer = serializers.UserRoleSerializer(result, many=True)
     return Response(serializer.data)
-  
+
   def post(self, request, id):
-    """  
-    Adds a user to a role.  
-    """    
+    """
+    Adds a user to a role.
+    """
     user = User.objects.get(id = id)
     jsonString = request.body.decode('utf-8')
     data = json.loads(jsonString)
@@ -409,12 +406,12 @@ class usersIdRolesGet(APIView):
     userRole.save()
     serializer = serializers.UserRoleSerializer(userRole)
     return Response(serializer.data)
-    
+
   def put(self, request, id):
-    """  
-    Updates the roles for a user  
     """
-    user = User.objects.get(id=id)   
+    Updates the roles for a user
+    """
+    user = User.objects.get(id=id)
     jsonString = request.body.decode('utf-8')
     alldata = json.loads(jsonString)
     # clear existing favourites.
@@ -427,16 +424,16 @@ class usersIdRolesGet(APIView):
       userRole.save()
     result = UserRole.objects.filter(userFK=user)
     serializer = serializers.UserRoleSerializer(result, many=True)
-    return Response(serializer.data) 
+    return Response(serializer.data)
 
 class usersSearchGet(APIView):
   def get(self, request, fuelSuppliers = None, surname = None, includeInactive = None):
-    """  
-    Searches Users  
-    """   
+    """
+    Searches Users
+    """
     result = User.objects.all()
     if surname != None:
        result = result.filter(surname__icontains = surname)
-       
+
     serializer = serializers.UserSerializer(result, many=True)
-    return Response(serializer.data)    
+    return Response(serializer.data)

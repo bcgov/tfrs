@@ -33,7 +33,7 @@ definitions:
         type: number
         format: float
         description: The price (if applicable) of each credit in the transaction. There is no fair market value on transaction initiated by the Government of BC.
-      CreditTradeZeroReasonFK:
+      creditTradeZeroReasonFK:
         $ref: '#/definitions/CreditTradeZeroReason'
         description: A foreign key reference to the Credit Trade Zero Reason.
       tradeEffectiveDate:

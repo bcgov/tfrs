@@ -64,7 +64,7 @@ class AuditSerializer(serializers.ModelSerializer):
 class CreditTradeSerializer(serializers.ModelSerializer):
   class Meta:
     model = CreditTrade
-    fields = ('id','creditTradeStatusFK','initiatorFK','respondentFK','creditTradeTypeFK','numberOfCredits','fairMarketValuePerCredit','CreditTradeZeroReasonFK','tradeEffectiveDate')
+    fields = ('id','creditTradeStatusFK','initiatorFK','respondentFK','creditTradeTypeFK','numberOfCredits','fairMarketValuePerCredit','creditTradeZeroReasonFK','tradeEffectiveDate')
 
 class CreditTradeHistorySerializer(serializers.ModelSerializer):
   class Meta:
