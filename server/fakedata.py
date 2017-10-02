@@ -58,13 +58,11 @@ def AuditTestDataUpdate():
 def CreditTradeTestDataCreate():
   return {
     'numberOfCredits':1,
-    'plainEnglishPhrase':'Initial',
   }
 
 def CreditTradeTestDataUpdate():
   return {
     'numberOfCredits':0,
-    'plainEnglishPhrase':'Changed',
   }
 
 
@@ -88,7 +86,6 @@ def CreditTradeStatusTestDataCreate():
     'status':'Initial',
     'description':'Initial',
     'displayOrder':1,
-    'effectiveDate': '2017-01-01',
   }
 
 def CreditTradeStatusTestDataUpdate():
@@ -96,7 +93,6 @@ def CreditTradeStatusTestDataUpdate():
     'status':'Changed',
     'description':'Changed',
     'displayOrder':0,
-    'effectiveDate': '2017-01-01',
   }
 
 
@@ -106,8 +102,6 @@ def CreditTradeTypeTestDataCreate():
     'description':'Initial',
     'displayOrder':1,
     'isGovOnlyType':True,
-    'effectiveDate': '2017-01-01',
-    'expirationDate': '2017-02-01',
   }
 
 def CreditTradeTypeTestDataUpdate():
@@ -116,8 +110,21 @@ def CreditTradeTypeTestDataUpdate():
     'description':'Changed',
     'displayOrder':0,
     'isGovOnlyType':False,
-    'effectiveDate': '2017-01-01',
-    'expirationDate': '2017-02-01',
+  }
+
+
+def CreditTradeZeroReasonTestDataCreate():
+  return {
+    'reason':'Initial',
+    'description':'Initial',
+    'displayOrder':1,
+  }
+
+def CreditTradeZeroReasonTestDataUpdate():
+  return {
+    'reason':'Changed',
+    'description':'Changed',
+    'displayOrder':0,
   }
 
 
@@ -158,7 +165,6 @@ def FuelSupplierActionsTypeTestDataCreate():
     'theType':'Initial',
     'description':'Initial',
     'displayOrder':1,
-    'effectiveDate': '2017-01-01',
   }
 
 def FuelSupplierActionsTypeTestDataUpdate():
@@ -166,7 +172,6 @@ def FuelSupplierActionsTypeTestDataUpdate():
     'theType':'Changed',
     'description':'Changed',
     'displayOrder':0,
-    'effectiveDate': '2018-01-01',
   }
 
 
@@ -201,13 +206,11 @@ def FuelSupplierAttachmentTagTestDataUpdate():
 def FuelSupplierBalanceTestDataCreate():
   return {
     'validatedCredits':1,
-    'encumberedCredits':1,
   }
 
 def FuelSupplierBalanceTestDataUpdate():
   return {
     'validatedCredits':0,
-    'encumberedCredits':0,
   }
 
 
@@ -282,8 +285,6 @@ def FuelSupplierStatusTestDataCreate():
     'status':'Initial',
     'description':'Initial',
     'displayOrder':1,
-    'effectiveDate': '2017-01-01',
-    'expirationDate': '2017-02-01',
   }
 
 def FuelSupplierStatusTestDataUpdate():
@@ -291,27 +292,6 @@ def FuelSupplierStatusTestDataUpdate():
     'status':'Changed',
     'description':'Changed',
     'displayOrder':0,
-    'effectiveDate': '2017-01-01',
-    'expirationDate': '2017-02-01',
-  }
-
-
-def FuelSupplierTypeTestDataCreate():
-  return {
-    'theType':'Initial',
-    'description':'Initial',
-    'displayOrder':1,
-    'effectiveDate': '2017-01-01',
-    'expirationDate': '2017-02-01',
-  }
-
-def FuelSupplierTypeTestDataUpdate():
-  return {
-    'theType':'Changed',
-    'description':'Changed',
-    'displayOrder':0,
-    'effectiveDate': '2017-01-01',
-    'expirationDate': '2017-02-01',
   }
 
 
@@ -346,7 +326,6 @@ def NotificationTypeTestDataCreate():
     'theType':'Initial',
     'description':'Initial',
     'displayOrder':1,
-    'effectiveDate': '2017-01-01',
   }
 
 def NotificationTypeTestDataUpdate():
@@ -354,7 +333,6 @@ def NotificationTypeTestDataUpdate():
     'theType':'Changed',
     'description':'Changed',
     'displayOrder':0,
-    'effectiveDate': '2018-01-01',
   }
 
 
@@ -378,53 +356,6 @@ def NotificationViewModelTestDataUpdate():
     'isAllDay':False,
     'priorityCode':'Changed',
     'userId':0,
-  }
-
-
-def OpportunityTestDataCreate():
-  return {
-    'numberOfCredits':1,
-    'hasTradeNow':True,
-    'opportunityBackgroundNote':'Initial',
-    'plainEnglishPhrase':'Initial',
-  }
-
-def OpportunityTestDataUpdate():
-  return {
-    'numberOfCredits':0,
-    'hasTradeNow':False,
-    'opportunityBackgroundNote':'Changed',
-    'plainEnglishPhrase':'Changed',
-  }
-
-
-def OpportunityHistoryTestDataCreate():
-  return {
-    'newNumberOfCredits':1,
-    'note':'Initial',
-  }
-
-def OpportunityHistoryTestDataUpdate():
-  return {
-    'newNumberOfCredits':0,
-    'note':'Changed',
-  }
-
-
-def OpportunityStatusTestDataCreate():
-  return {
-    'status':'Initial',
-    'description':'Initial',
-    'displayOrder':1,
-    'effectiveDate': '2017-01-01',
-  }
-
-def OpportunityStatusTestDataUpdate():
-  return {
-    'status':'Changed',
-    'description':'Changed',
-    'displayOrder':0,
-    'effectiveDate': '2017-01-01',
   }
 
 
@@ -568,7 +499,7 @@ def UserFavouriteViewModelTestDataCreate():
     'name':'Initial',
     'value':'Initial',
     'isDefault':True,
-    'theType':'Initial',
+    'type':'Initial',
   }
 
 def UserFavouriteViewModelTestDataUpdate():
@@ -576,20 +507,18 @@ def UserFavouriteViewModelTestDataUpdate():
     'name':'Changed',
     'value':'Changed',
     'isDefault':False,
-    'theType':'Changed',
+    'type':'Changed',
   }
+
 
 def UserRoleTestDataCreate():
   return {
-    'effectiveDate': '2017-01-01',
-    'expiryDate': '2017-02-01',
   }
 
 def UserRoleTestDataUpdate():
   return {
-    'effectiveDate': '2018-01-01',
-    'expiryDate': '2018-02-01',
   }
+
 
 def UserRoleViewModelTestDataCreate():
   return {

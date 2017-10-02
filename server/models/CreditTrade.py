@@ -26,7 +26,7 @@ from django.utils import timezone
 from .CreditTradeStatus import CreditTradeStatus
 from .FuelSupplier import FuelSupplier
 from .CreditTradeType import CreditTradeType
-from .CreditTradeHistory import CreditTradeHistory
+from .CreditTradeZeroReason import CreditTradeZeroReason
 
 from auditable.models import Auditable
 from server import validators
@@ -38,9 +38,8 @@ class CreditTrade(Auditable):
     creditTradeTypeFK = models.ForeignKey('CreditTradeType', related_name='CreditTradecreditTradeTypeFK')   
     numberOfCredits = models.IntegerField(validators=[validators.CreditTradeNumberOfCreditsValidator])
     fairMarketValuePerCredit = models.CharField(blank=True, null=True, max_length=255)   
+    creditTradeZeroReasonFK = models.ForeignKey('CreditTradeZeroReason', related_name='CreditTradecreditTradeZeroReasonFK', blank=True, null=True)   
     tradeEffectiveDate = models.DateField(blank=True, null=True)   
-    plainEnglishPhrase = models.CharField(max_length=2000)   
-    historySet = models.ManyToManyField('CreditTradeHistory', related_name='CreditTradehistorySet', blank=True)   
     class Meta:
         db_table = 'CREDIT_TRADE'
 

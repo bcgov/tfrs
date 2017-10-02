@@ -45,6 +45,10 @@
 #except:
 #     import CreditTradeType
 #try:
+#     from . import CreditTradeZeroReason  
+#except:
+#     import CreditTradeZeroReason
+#try:
 #     from . import CurrentUserViewModel  
 #except:
 #     import CurrentUserViewModel
@@ -89,10 +93,6 @@
 #except:
 #     import FuelSupplierStatus
 #try:
-#     from . import FuelSupplierType  
-#except:
-#     import FuelSupplierType
-#try:
 #     from . import Notification  
 #except:
 #     import Notification
@@ -108,18 +108,6 @@
 #     from . import NotificationViewModel  
 #except:
 #     import NotificationViewModel
-#try:
-#     from . import Opportunity  
-#except:
-#     import Opportunity
-#try:
-#     from . import OpportunityHistory  
-#except:
-#     import OpportunityHistory
-#try:
-#     from . import OpportunityStatus  
-#except:
-#     import OpportunityStatus
 #try:
 #     from . import Permission  
 #except:
