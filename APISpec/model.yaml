@@ -84,6 +84,9 @@ definitions:
         type: number
         format: float
         description: The Fair Market Value per Credit in the Credit Trade after the update.
+      newCreditTradeZeroReasonFK:
+        $ref: '#/definitions/CreditTradeZeroReason'
+        description: A foreign key reference to the Credit Trade Zero Reason.
       newTradeEffectiveDate:
         type: string
         format: date-time
@@ -412,20 +415,6 @@ definitions:
         type: string
         maxLength: 25
         description: The mobile phone number for the contact.
-  FuelSupplierContactRole:
-    type: object
-    description: The set of roles that can be given to a contact in the system.
-    required:
-      - id
-      - roleFK
-    properties:
-      id:
-        format: int32
-        type: integer
-        description: A system-generated unique identifier for a Fuel Supplier Contact Role.
-      roleFK:
-        $ref: '#/definitions/Role'
-        description: A foreign key reference to a Role that can be assigned to a Fuel Supplier contact user.
   FuelSupplierAttachment:
     type: object
     description: Attachments uploaded by users about Fuel Supplier.
@@ -664,6 +653,9 @@ definitions:
         type: string
         maxLength: 1000
         description: A description of the role as set by the user creating&#x2F;updating the role.
+      isGovernmentRole:
+        type: boolean
+        description: When true, the role is for Government users only and so is not visible to the Fuel Supplier Contact screen.
   UserRole:
     type: object
     description: A link defining the Roles associated with each User.

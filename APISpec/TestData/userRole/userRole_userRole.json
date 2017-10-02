@@ -3,273 +3,273 @@
         "effectiveDate": "2017-01-01",
         "expiryDate": null,
         "id": "1",
-        "role": "5",
-        "user": "1"
+        "roleFK": false,
+        "userFK": "1"
     },
     {
         "effectiveDate": "2017-01-01",
         "expiryDate": null,
         "id": "2",
-        "role": "5",
-        "user": "2"
+        "roleFK": false,
+        "userFK": "2"
     },
     {
         "effectiveDate": "2017-01-01",
         "expiryDate": null,
         "id": "3",
-        "role": "5",
-        "user": "3"
+        "roleFK": false,
+        "userFK": "3"
     },
     {
         "effectiveDate": "2017-01-01",
         "expiryDate": null,
         "id": "4",
-        "role": "5",
-        "user": "4"
+        "roleFK": false,
+        "userFK": "4"
     },
     {
         "effectiveDate": "2017-01-01",
         "expiryDate": null,
         "id": "5",
-        "role": "5",
-        "user": "5"
+        "roleFK": false,
+        "userFK": "5"
     },
     {
         "effectiveDate": "2017-01-01",
         "expiryDate": null,
         "id": "6",
-        "role": "5",
-        "user": "6"
+        "roleFK": false,
+        "userFK": "6"
     },
     {
         "effectiveDate": "2017-01-01",
         "expiryDate": null,
         "id": "7",
-        "role": "5",
-        "user": "7"
+        "roleFK": false,
+        "userFK": "7"
     },
     {
         "effectiveDate": "2017-01-01",
         "expiryDate": null,
         "id": "8",
-        "role": "5",
-        "user": "8"
+        "roleFK": false,
+        "userFK": "8"
     },
     {
         "effectiveDate": "2017-01-01",
         "expiryDate": null,
         "id": "9",
-        "role": "5",
-        "user": "9"
+        "roleFK": false,
+        "userFK": "9"
     },
     {
         "effectiveDate": "2017-01-01",
         "expiryDate": null,
         "id": "10",
-        "role": "5",
-        "user": "10"
+        "roleFK": false,
+        "userFK": "10"
     },
     {
         "effectiveDate": "2017-01-01",
         "expiryDate": null,
         "id": "11",
-        "role": "5",
-        "user": "11"
+        "roleFK": false,
+        "userFK": "11"
     },
     {
         "effectiveDate": "2017-01-01",
         "expiryDate": null,
         "id": "12",
-        "role": "5",
-        "user": "12"
+        "roleFK": false,
+        "userFK": "12"
     },
     {
         "effectiveDate": "2017-01-01",
         "expiryDate": null,
         "id": "13",
-        "role": "5",
-        "user": "13"
+        "roleFK": false,
+        "userFK": "13"
     },
     {
         "effectiveDate": "2017-01-01",
         "expiryDate": null,
         "id": "14",
-        "role": "5",
-        "user": "14"
+        "roleFK": false,
+        "userFK": "14"
     },
     {
         "effectiveDate": "2017-01-01",
         "expiryDate": null,
         "id": "15",
-        "role": "5",
-        "user": "15"
+        "roleFK": false,
+        "userFK": "15"
     },
     {
         "effectiveDate": "2017-01-01",
         "expiryDate": null,
         "id": "16",
-        "role": "5",
-        "user": "16"
+        "roleFK": false,
+        "userFK": "16"
     },
     {
         "effectiveDate": "2017-01-01",
         "expiryDate": null,
         "id": "17",
-        "role": "5",
-        "user": "17"
+        "roleFK": false,
+        "userFK": "17"
     },
     {
         "effectiveDate": "2017-01-01",
         "expiryDate": null,
         "id": "18",
-        "role": "5",
-        "user": "18"
+        "roleFK": false,
+        "userFK": "18"
     },
     {
         "effectiveDate": "2017-01-01",
         "expiryDate": null,
         "id": "19",
-        "role": "5",
-        "user": "19"
+        "roleFK": false,
+        "userFK": "19"
     },
     {
         "effectiveDate": "2017-01-01",
         "expiryDate": null,
         "id": "20",
-        "role": "5",
-        "user": "20"
+        "roleFK": false,
+        "userFK": "20"
     },
     {
         "effectiveDate": "2017-01-01",
         "expiryDate": null,
         "id": "21",
-        "role": "5",
-        "user": "21"
+        "roleFK": false,
+        "userFK": "21"
     },
     {
         "effectiveDate": "2017-01-01",
         "expiryDate": null,
         "id": "22",
-        "role": "5",
-        "user": "22"
+        "roleFK": false,
+        "userFK": "22"
     },
     {
         "effectiveDate": "2017-01-01",
         "expiryDate": null,
         "id": "23",
-        "role": "5",
-        "user": "23"
+        "roleFK": false,
+        "userFK": "23"
     },
     {
         "effectiveDate": "2017-01-01",
         "expiryDate": null,
         "id": "24",
-        "role": "5",
-        "user": "24"
+        "roleFK": false,
+        "userFK": "24"
     },
     {
         "effectiveDate": "2017-01-01",
         "expiryDate": null,
         "id": "25",
-        "role": "4",
-        "user": "25"
+        "roleFK": false,
+        "userFK": "25"
     },
     {
         "effectiveDate": "2017-01-01",
         "expiryDate": null,
         "id": "26",
-        "role": "4",
-        "user": "26"
+        "roleFK": false,
+        "userFK": "26"
     },
     {
         "effectiveDate": "2017-01-01",
         "expiryDate": null,
         "id": "27",
-        "role": "4",
-        "user": "27"
+        "roleFK": false,
+        "userFK": "27"
     },
     {
         "effectiveDate": "2017-01-01",
         "expiryDate": null,
         "id": "28",
-        "role": "4",
-        "user": "28"
+        "roleFK": false,
+        "userFK": "28"
     },
     {
         "effectiveDate": "2017-01-01",
         "expiryDate": null,
         "id": "29",
-        "role": "4",
-        "user": "29"
+        "roleFK": false,
+        "userFK": "29"
     },
     {
         "effectiveDate": "2017-01-01",
         "expiryDate": null,
         "id": "30",
-        "role": "4",
-        "user": "30"
+        "roleFK": false,
+        "userFK": "30"
     },
     {
         "effectiveDate": "2017-01-01",
         "expiryDate": null,
         "id": "31",
-        "role": "5",
-        "user": "31"
+        "roleFK": false,
+        "userFK": "31"
     },
     {
         "effectiveDate": "2017-01-01",
         "expiryDate": null,
         "id": "32",
-        "role": "4",
-        "user": "32"
+        "roleFK": false,
+        "userFK": "32"
     },
     {
         "effectiveDate": "2017-01-01",
         "expiryDate": null,
         "id": "33",
-        "role": "4",
-        "user": "33"
+        "roleFK": false,
+        "userFK": "33"
     },
     {
         "effectiveDate": "2017-01-01",
         "expiryDate": null,
         "id": "34",
-        "role": "4",
-        "user": "34"
+        "roleFK": false,
+        "userFK": "34"
     },
     {
         "effectiveDate": "2017-01-01",
         "expiryDate": null,
         "id": "35",
-        "role": "1",
-        "user": "35"
+        "roleFK": true,
+        "userFK": "35"
     },
     {
         "effectiveDate": "2017-01-01",
         "expiryDate": null,
         "id": "36",
-        "role": "1",
-        "user": "36"
+        "roleFK": true,
+        "userFK": "36"
     },
     {
         "effectiveDate": "2017-01-01",
         "expiryDate": null,
         "id": "37",
-        "role": "1",
-        "user": "37"
+        "roleFK": true,
+        "userFK": "37"
     },
     {
         "effectiveDate": "2017-01-01",
         "expiryDate": null,
         "id": "38",
-        "role": "1",
-        "user": "38"
+        "roleFK": true,
+        "userFK": "38"
     },
     {
         "effectiveDate": "2017-01-01",
         "expiryDate": null,
         "id": "39",
-        "role": "1",
-        "user": "39"
+        "roleFK": true,
+        "userFK": "39"
     }
 ]

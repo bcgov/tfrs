@@ -42,7 +42,6 @@ from .models.FuelSupplierAttachmentTag import FuelSupplierAttachmentTag
 from .models.FuelSupplierBalance import FuelSupplierBalance
 from .models.FuelSupplierCCData import FuelSupplierCCData
 from .models.FuelSupplierContact import FuelSupplierContact
-from .models.FuelSupplierContactRole import FuelSupplierContactRole
 from .models.FuelSupplierHistory import FuelSupplierHistory
 from .models.FuelSupplierStatus import FuelSupplierStatus
 from .models.Notification import Notification

@@ -35,7 +35,6 @@ from .models.FuelSupplierAttachmentTag import FuelSupplierAttachmentTag
 from .models.FuelSupplierBalance import FuelSupplierBalance
 from .models.FuelSupplierCCData import FuelSupplierCCData
 from .models.FuelSupplierContact import FuelSupplierContact
-from .models.FuelSupplierContactRole import FuelSupplierContactRole
 from .models.FuelSupplierHistory import FuelSupplierHistory
 from .models.FuelSupplierStatus import FuelSupplierStatus
 from .models.Notification import Notification
@@ -69,7 +68,7 @@ class CreditTradeSerializer(serializers.ModelSerializer):
 class CreditTradeHistorySerializer(serializers.ModelSerializer):
   class Meta:
     model = CreditTradeHistory
-    fields = ('id','creditTradeFK','userFK','creditTradeUpdateTime','newRespondentFK','creditTradeStatusFK','creditTradeTypeFK','newNumberOfCredits','newFairMarketValuePerCredit','newTradeEffectiveDate','note','isInternalHistoryRecord')
+    fields = ('id','creditTradeFK','userFK','creditTradeUpdateTime','newRespondentFK','creditTradeStatusFK','creditTradeTypeFK','newNumberOfCredits','newFairMarketValuePerCredit','newCreditTradeZeroReasonFK','newTradeEffectiveDate','note','isInternalHistoryRecord')
 
 class CreditTradeStatusSerializer(serializers.ModelSerializer):
   class Meta:
@@ -126,11 +125,6 @@ class FuelSupplierContactSerializer(serializers.ModelSerializer):
     model = FuelSupplierContact
     fields = ('id','fuelSupplierFK','givenName','surname','title','userFK','notes','emailAddress','workPhoneNumber','mobilePhoneNumber')
 
-class FuelSupplierContactRoleSerializer(serializers.ModelSerializer):
-  class Meta:
-    model = FuelSupplierContactRole
-    fields = ('id','roleFK')
-
 class FuelSupplierHistorySerializer(serializers.ModelSerializer):
   class Meta:
     model = FuelSupplierHistory
@@ -174,7 +168,7 @@ class PermissionViewModelSerializer(serializers.ModelSerializer):
 class RoleSerializer(serializers.ModelSerializer):
   class Meta:
     model = Role
-    fields = ('id','name','description')
+    fields = ('id','name','description','isGovernmentRole')
 
 class RolePermissionSerializer(serializers.ModelSerializer):
   class Meta:

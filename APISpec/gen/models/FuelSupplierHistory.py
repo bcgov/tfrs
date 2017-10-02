@@ -31,5 +31,5 @@ class FuelSupplierHistory(Auditable):
     fuelSupplierFK = models.ForeignKey('FuelSupplier', related_name='FuelSupplierHistoryfuelSupplierFK')   
     historyText = models.CharField(max_length=1000)   
     class Meta:
-        db_table = 'FUEL_SUPPLIER_HISTORY'
+        db_table = 'fuel_supplier_history'
 

@@ -40,5 +40,5 @@ class CreditTrade(Auditable):
     creditTradeZeroReasonFK = models.ForeignKey('CreditTradeZeroReason', related_name='CreditTradecreditTradeZeroReasonFK', blank=True, null=True)   
     tradeEffectiveDate = models.DateField(blank=True, null=True)   
     class Meta:
-        db_table = 'CREDIT_TRADE'
+        db_table = 'credit_trade'
 

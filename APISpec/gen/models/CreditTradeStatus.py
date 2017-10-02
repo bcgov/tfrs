@@ -33,5 +33,5 @@ class CreditTradeStatus(Auditable):
     expirationDate = models.DateField(blank=True, null=True)   
     displayOrder = models.IntegerField()   
     class Meta:
-        db_table = 'CREDIT_TRADE_STATUS'
+        db_table = 'credit_trade_status'
 
