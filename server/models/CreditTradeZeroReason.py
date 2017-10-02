@@ -26,12 +26,12 @@ from django.utils import timezone
 
 from auditable.models import Auditable
 
-class OpportunityStatus(Auditable):	    
-    status = models.CharField(max_length=25, blank=True, null=True)   
-    description = models.CharField(max_length=1000, blank=True, null=True)   
+class CreditTradeZeroReason(Auditable):	    
+    reason = models.CharField(max_length=25)   
+    description = models.CharField(max_length=1000)   
     effectiveDate = models.DateField()   
     expirationDate = models.DateField(blank=True, null=True)   
     displayOrder = models.IntegerField()   
     class Meta:
-        db_table = 'OPPORTUNITY_STATUS'
+        db_table = 'CREDIT_TRADE_ZERO_REASON'
 
