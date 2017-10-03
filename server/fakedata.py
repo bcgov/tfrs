@@ -86,6 +86,7 @@ def CreditTradeStatusTestDataCreate():
     'status':'Initial',
     'description':'Initial',
     'displayOrder':1,
+    'effectiveDate': '2017-01-01',
   }
 
 def CreditTradeStatusTestDataUpdate():
@@ -93,6 +94,7 @@ def CreditTradeStatusTestDataUpdate():
     'status':'Changed',
     'description':'Changed',
     'displayOrder':0,
+    'effectiveDate': '2017-01-01',
   }
 
 
@@ -102,6 +104,8 @@ def CreditTradeTypeTestDataCreate():
     'description':'Initial',
     'displayOrder':1,
     'isGovOnlyType':True,
+    'effectiveDate': '2017-01-01',
+    'expirationDate': '2017-02-01',
   }
 
 def CreditTradeTypeTestDataUpdate():
@@ -110,6 +114,8 @@ def CreditTradeTypeTestDataUpdate():
     'description':'Changed',
     'displayOrder':0,
     'isGovOnlyType':False,
+    'effectiveDate': '2017-01-01',
+    'expirationDate': '2017-02-01',
   }
 
 
@@ -118,6 +124,7 @@ def CreditTradeZeroReasonTestDataCreate():
     'reason':'Initial',
     'description':'Initial',
     'displayOrder':1,
+    'effectiveDate': '2017-01-01',
   }
 
 def CreditTradeZeroReasonTestDataUpdate():
@@ -125,6 +132,7 @@ def CreditTradeZeroReasonTestDataUpdate():
     'reason':'Changed',
     'description':'Changed',
     'displayOrder':0,
+    'effectiveDate': '2017-01-01',
   }
 
 
@@ -165,6 +173,7 @@ def FuelSupplierActionsTypeTestDataCreate():
     'theType':'Initial',
     'description':'Initial',
     'displayOrder':1,
+    'effectiveDate': '2017-01-01',
   }
 
 def FuelSupplierActionsTypeTestDataUpdate():
@@ -172,6 +181,7 @@ def FuelSupplierActionsTypeTestDataUpdate():
     'theType':'Changed',
     'description':'Changed',
     'displayOrder':0,
+    'effectiveDate': '2018-01-01',
   }
 
 
@@ -285,6 +295,8 @@ def FuelSupplierStatusTestDataCreate():
     'status':'Initial',
     'description':'Initial',
     'displayOrder':1,
+    'effectiveDate': '2017-01-01',
+    'expirationDate': '2017-02-01',
   }
 
 def FuelSupplierStatusTestDataUpdate():
@@ -292,6 +304,8 @@ def FuelSupplierStatusTestDataUpdate():
     'status':'Changed',
     'description':'Changed',
     'displayOrder':0,
+    'effectiveDate': '2017-01-01',
+    'expirationDate': '2017-02-01',
   }
 
 
@@ -326,6 +340,7 @@ def NotificationTypeTestDataCreate():
     'theType':'Initial',
     'description':'Initial',
     'displayOrder':1,
+    'effectiveDate': '2017-01-01',
   }
 
 def NotificationTypeTestDataUpdate():
@@ -333,6 +348,7 @@ def NotificationTypeTestDataUpdate():
     'theType':'Changed',
     'description':'Changed',
     'displayOrder':0,
+    'effectiveDate': '2018-01-01',
   }
 
 
@@ -513,10 +529,14 @@ def UserFavouriteViewModelTestDataUpdate():
 
 def UserRoleTestDataCreate():
   return {
+    'effectiveDate': '2017-01-01',
+    'expiryDate': '2017-02-01',
   }
 
 def UserRoleTestDataUpdate():
   return {
+    'effectiveDate': '2018-01-01',
+    'expiryDate': '2018-02-01',
   }
 
 

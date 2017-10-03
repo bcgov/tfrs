@@ -180,7 +180,7 @@ class Test_Api_Custom(TestCase):
         jsonString = response.content.decode("utf-8")
         data = json.loads(jsonString)
         createdId = data['id']
-        return createdId, typeId, statusId, actionsTypeId
+        return createdId, statusId, actionsTypeId
 
     def createRole(self):
         testUrl = "/api/roles"
@@ -330,7 +330,7 @@ class Test_Api_Custom(TestCase):
     def createAndVerifyNotification(self):
         testUrl = "/api/notifications"
 
-        fuelSupplierId, typeId, statusId, actionId = self.createFuelSupplier()
+        fuelSupplierId, statusId, actionId = self.createFuelSupplier()
         userId = self.createUser(fuelSupplierId)
         notificationEventId = self.createNotificationEvent()
 
@@ -402,7 +402,7 @@ class Test_Api_Custom(TestCase):
         assert status.HTTP_204_NO_CONTENT == response.status_code
 
     def test_credittradesSearchGet(self):
-        fsId, fsTypeId, _, _ = self.createFuelSupplier()
+        fsId, _, _ = self.createFuelSupplier()
         contactId = self.createContact(fsId)
         userId = self.createUser(fsId)
         credId, credTypeId, _ = self.createCreditTrade(fsId, userId)
@@ -421,7 +421,7 @@ class Test_Api_Custom(TestCase):
         self.deleteFuelSupplier(fsId)
 
     def test_usersCurrentFavouritesIdDeletePost(self):
-        fsId, _, _, _= self.createFuelSupplier()
+        fsId, _, _= self.createFuelSupplier()
         contactId = self.createContact(fsId)
         userId = self.createUser(fsId)
         userFavId = self.createUserFavourite(userId)
@@ -435,7 +435,7 @@ class Test_Api_Custom(TestCase):
         self.deleteFuelSupplier(fsId)
 
     def test_usersCurrentFavouritesPut(self):
-        fsId, _, _, _= self.createFuelSupplier()
+        fsId, _, _= self.createFuelSupplier()
         contactId = self.createContact(fsId)
         userId = self.createUser(fsId)
 
@@ -462,7 +462,7 @@ class Test_Api_Custom(TestCase):
         self.deleteFuelSupplier(fsId)
 
     def test_usersCurrentFavouritesSearchGet(self):
-        fsId, _, _, _= self.createFuelSupplier()
+        fsId, _, _= self.createFuelSupplier()
         contactId = self.createContact(fsId)
         userId = self.createUser(fsId)
         userFavId = self.createUserFavourite(userId)
@@ -480,7 +480,7 @@ class Test_Api_Custom(TestCase):
         self.deleteFuelSupplier(fsId)
 
     def test_usersCurrentGet(self):
-        fuelSupplierId, typeId, statusId, actionId = self.createFuelSupplier()
+        fuelSupplierId, statusId, actionId = self.createFuelSupplier()
         contactId = self.createContact(fuelSupplierId)
         userId = self.createUser(fuelSupplierId)
 
@@ -493,7 +493,7 @@ class Test_Api_Custom(TestCase):
         self.deleteFuelSupplier(fuelSupplierId)
 
     def test_fuelsuppliersIdAttachmentsGet(self):
-        fuelSupplierId, typeId, statusId, actionId = self.createFuelSupplier()
+        fuelSupplierId, statusId, actionId = self.createFuelSupplier()
         contactId = self.createContact(fuelSupplierId)
 
         uploadUrl = "/api/fuelsuppliers/"
@@ -539,7 +539,7 @@ class Test_Api_Custom(TestCase):
         self.deleteFuelSupplier(fuelSupplierId)
 
     def test_fuelsuppliersIdHistoryGet(self):
-        fuelSupplierId, typeId, statusId, actionId = self.createFuelSupplier()
+        fuelSupplierId, statusId, actionId = self.createFuelSupplier()
         contactId = self.createContact(fuelSupplierId)
 
         testUrl = "/api/fuelsuppliers/" + str(fuelSupplierId) + "/history"
@@ -565,7 +565,7 @@ class Test_Api_Custom(TestCase):
         self.deleteFuelSupplier(fuelSupplierId)
 
     def test_fuelsuppliersSearchGet(self):
-        fuelSupplierId, typeId, statusId, actionId = self.createFuelSupplier()
+        fuelSupplierId, statusId, actionId = self.createFuelSupplier()
         contactId = self.createContact(fuelSupplierId)
 
         # do a search
@@ -613,7 +613,7 @@ class Test_Api_Custom(TestCase):
 
     def test_rolesIdUsersGet(self):
         roleId = self.createRole()
-        fuelSupplierId, typeId, statusId, actionId = self.createFuelSupplier()
+        fuelSupplierId, statusId, actionId = self.createFuelSupplier()
         contactId = self.createContact(fuelSupplierId)
         userId = self.createUser(fuelSupplierId)
 
@@ -655,7 +655,7 @@ class Test_Api_Custom(TestCase):
         self.deleteFuelSupplier(fuelSupplierId)
 
     def test_usersIdFavouritesGet(self):
-        fsId, _, _, _= self.createFuelSupplier()
+        fsId, _, _= self.createFuelSupplier()
         contactId = self.createContact(fsId)
         userId = self.createUser(fsId)
 
@@ -690,7 +690,7 @@ class Test_Api_Custom(TestCase):
         self.deleteFuelSupplier(fsId)
 
     def test_usersIdNotificationsGet(self):
-        fsId, fsTypeId, _, _ = self.createFuelSupplier()
+        fsId, fsTypeId, _ = self.createFuelSupplier()
         contactId = self.createContact(fsId)
         userId = self.createUser(fsId)
         credId, credTypeId, _ = self.createCreditTrade(fsId, userId)
@@ -723,7 +723,7 @@ class Test_Api_Custom(TestCase):
 
     def test_usersIdPermissionsGet(self):
         # create a user.
-        fuelSupplierId, typeId, statusId, actionId = self.createFuelSupplier()
+        fuelSupplierId, statusId, actionId = self.createFuelSupplier()
         contactId = self.createContact(fuelSupplierId)
         userId = self.createUser(fuelSupplierId)
 
@@ -746,7 +746,7 @@ class Test_Api_Custom(TestCase):
         self.deleteFuelSupplier(fuelSupplierId)
 
     def test_usersIdRolesGet(self):
-        fsId, _, _, _= self.createFuelSupplier()
+        fsId, _, _= self.createFuelSupplier()
         contactId = self.createContact(fsId)
         userId = self.createUser(fsId)
         roleId = self.createRole()
@@ -784,7 +784,7 @@ class Test_Api_Custom(TestCase):
         self.deleteFuelSupplier(fsId)
 
     def test_usersSearchGet(self):
-        fuelSupplierId, typeId, statusId, actionId = self.createFuelSupplier()
+        fuelSupplierId, statusId, actionId = self.createFuelSupplier()
         contactId = self.createContact(fuelSupplierId)
         userId = self.createUser(fuelSupplierId)
 
@@ -802,7 +802,7 @@ class Test_Api_Custom(TestCase):
         self.deleteFuelSupplier(fuelSupplierId)
 
     def test_createCreditTradeNegativeNumberOfCredits(self):
-        fsId, _, _, _ = self.createFuelSupplier()
+        fsId, _, _ = self.createFuelSupplier()
         userId = self.createUser(fsId)
         typeId = self.createCreditTradeType()
         statusId = self.createCreditTradeStatus()
