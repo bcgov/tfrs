@@ -13,7 +13,7 @@ export const NOT_FOUND = '/404';
 
 // API Routes
 
-export const BASE_URL = 'http://tfrs-mem-tfrs-dev.pathfinder.gov.bc.ca/';
+export const BASE_URL = __API__;
 
 export const FUEL_SUPPLIERS_API = 'api/fuelsuppliers';
 export const FUEL_SUPPLIER_ACTION_TYPES = 'api/fuelsupplieractionstypes';
@@ -45,6 +45,3 @@ export const USER_ROLES = 'api/userroles';
 export const USERS = 'api/users';
 
 export const DELETE = '/delete';
-
-
-

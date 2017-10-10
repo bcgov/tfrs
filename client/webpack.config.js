@@ -4,6 +4,13 @@ const nodeModulesPath = path.resolve(__dirname, 'node_modules');
 const buildPath = path.resolve(__dirname, 'public', 'build');
 const mainPath = path.resolve(__dirname, 'src', 'index.js');
 console.log('using dev');
+
+// If NODE_EV is set to `local` for local development
+const isLocal = process.env.NODE_ENV === "local";
+const apiHost = isLocal
+  ? '"http://localhost:8000"'
+  : '"http://tfrs-mem-tfrs-dev.pathfinder.gov.bc.ca/"';
+
 const config = {
   // Makes sure errors in console map to the correct file
   // and line numbe
@@ -83,7 +90,8 @@ const config = {
  devtool: 'source-map', //debug
   // We have to manually add the Hot Replacement plugin when running
   // from Node
-  plugins: [new Webpack.HotModuleReplacementPlugin()]
+  plugins: [new Webpack.HotModuleReplacementPlugin(),
+  new Webpack.DefinePlugin({__API__: apiHost})]
 };
 
 module.exports = config;

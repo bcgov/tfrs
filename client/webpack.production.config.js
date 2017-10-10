@@ -7,6 +7,13 @@ var mainPath = path.resolve(__dirname, 'src', 'index.js');
 // plugins.ImageminPlugin = require('imagemin-webpack-plugin');
 // plugsin.imageminMozjpeg = require('imagemin-mozjpeg');
 
+// TODO: Change the path to the actual path. Right now, our dev environment is
+// set to 'production'. Need to separate our deployed dev, test and production
+// environments
+const isProduction = process.env.NODE_ENV === "production";
+const apiHost = isProduction
+  ? '"http://tfrs-mem-tfrs-dev.pathfinder.gov.bc.ca/"'
+  : '"http://tfrs-mem-tfrs-dev.pathfinder.gov.bc.ca/"';
 
 var config = {
   entry: [
@@ -58,11 +65,14 @@ var config = {
       'Access-Control-Allow-Headers': 'Origin, X-Requested-With, Content-Type, Accept'
     }
  },
-  plugins: [ new Webpack.optimize.UglifyJsPlugin({
+  plugins: [
+    new Webpack.optimize.UglifyJsPlugin({
         compress: {
           warnings: false
         }
-      })]
+    }),
+    new Webpack.DefinePlugin({ __API__: apiHost })
+  ]
 };
 
 module.exports = config;
