@@ -13,7 +13,7 @@ export const NOT_FOUND = '/404';
 
 // API Routes
 
-export const BASE_URL = __API__;
+export const BASE_URL = __API__ + '/';
 
 export const FUEL_SUPPLIERS_API = 'api/fuelsuppliers';
 export const FUEL_SUPPLIER_ACTION_TYPES = 'api/fuelsupplieractionstypes';
@@ -28,8 +28,8 @@ export const FUEL_SUPPLIER_STATUSES = 'api/fuelsupplierstatuses';
 export const FUEL_SUPPLIER_TYPES = 'api/fuelsuppliertypes';
 export const SEARCH_FUEL_SUPPLIERS = 'api/fuelsuppliers/search';
 
-export const CREDIT_TRADE_API = '/api/credittrades';
-export const SEARCH_CREDIT_TRADES = '/api/credittrades/search';
+export const CREDIT_TRADE_API = 'api/credittrades';
+export const SEARCH_CREDIT_TRADES = 'api/credittrades/search';
 export const CREDIT_TRADE_STATUSES = 'api/credittradestatuses';
 export const CREDIT_TRADE_TYPES = 'api/credittradetypes';
 export const CREDIT_TRADE_HISTORIES = 'api/credittradehistories';
