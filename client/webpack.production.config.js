@@ -9,7 +9,11 @@ var mainPath = path.resolve(__dirname, 'src', 'index.js');
 
 
 var config = {
-  entry: mainPath,
+  entry: [
+    // Polyfill for Object.assign on IE11, etc
+    'babel-polyfill',
+
+    mainPath],
   output: {
     path: buildPath,
     filename: 'bundle.js',

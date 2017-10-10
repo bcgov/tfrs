@@ -9,6 +9,8 @@ const config = {
   // and line numbe
   devtool: 'eval',
   entry: [
+    // Polyfill for Object.assign on IE11, etc
+    'babel-polyfill',
 
     // For hot style updates
     'webpack/hot/dev-server',
