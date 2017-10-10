@@ -47,6 +47,10 @@ Once you have django, set up the database tables
 
 `python manage.py migrate`
 
+Run the tests
+
+`python manage.py test`
+
 ...and run the server
 
 `python manage.py runserver`
