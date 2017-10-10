@@ -32,6 +32,17 @@ Once you have python, install the required modules
 
 `pip install -r requirements.txt`
 
+Once you have postgres setup, set the following environment variables
+
+```bash
+DATABASE_SERVICE_NAME=localhost
+DATABASE_ENGINE=postgresql
+DATABASE_ENGINE=postgresql
+DATABASE_NAME=<database name>
+DATABASE_USER=<postgres user>
+DATABASE_PASSWORD=<password>
+```
+
 Once you have django, set up the database tables
 
 `python manage.py migrate`
@@ -41,13 +52,7 @@ Once you have django, set up the database tables
 `python manage.py runserver`
 
 #### Front-End JavaScript Client
-Once you have npm, install the required modules
-
-`npm install`
-
-...and run the server
-
-`npm run`
+[View the README for the client](client/README.md)
 
 
 ### Code Generation

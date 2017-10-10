@@ -17,22 +17,22 @@ The client (front-end) code that interacts with the TFRS API to form the user in
 
 This project is in development. To see the status of feature development please refer to the features page on the project [wiki](https://github.com/bcgov/tfrs/wiki/features)
 
-## Development
+## Local Development
 
-~~~
-npm install
-~~~
+```bash
+$ npm install
+$ NODE_ENV=local # on Windows, `SET NODE_ENV=local`
+$ npm start
+```
 
-~~~
-npm start
-~~~
+Setting the environment to `local` will set the API URL to `http://localhost:8000`
 
 ## Production
 On a linux server, simply run `npm run production` to trigger a build. Then, run `node server` to serve the static build
 
 On windows, you can do either of the following:
 ```bat
-> NODE_ENV=production
+> SET NODE_ENV=production
 > webpack -p --config webpack.production.config.js
 ```
 or if you can run bash/cygwin:
