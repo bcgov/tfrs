@@ -21,21 +21,20 @@ This project is in development. To see the status of feature development please 
 
 ```bash
 $ npm install
-$ NODE_ENV=local # on Windows, `SET NODE_ENV=local`
+$ export API_BASE_URL=http://localhost:8000 # on Windows, `SET API_BASE_URL=http://localhost:8000`
 $ npm start
 ```
-
-Setting the environment to `local` will set the API URL to `http://localhost:8000`
-
 ## Production
 On a linux server, simply run `npm run production` to trigger a build. Then, run `node server` to serve the static build
 
 On windows, you can do either of the following:
 ```bat
 > SET NODE_ENV=production
+> SET API_BASE_URL=<production URL>
 > webpack -p --config webpack.production.config.js
 ```
 or if you can run bash/cygwin:
 ```bash
+$ export API_BASE_URL=<production URL>
 $ NODE_ENV=production webpack -p --config webpack.production.config.js
 ```
