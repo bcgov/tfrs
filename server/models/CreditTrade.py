@@ -31,7 +31,7 @@ from .CreditTradeZeroReason import CreditTradeZeroReason
 from auditable.models import Auditable
 from server import validators
 
-class CreditTrade(Auditable):	    
+class CreditTrade(Auditable):
     creditTradeStatusFK = models.ForeignKey('CreditTradeStatus', related_name='CreditTradecreditTradeStatusFK')   
     initiatorFK = models.ForeignKey('FuelSupplier', related_name='CreditTradeinitiatorFK', blank=True, null=True)   
     respondentFK = models.ForeignKey('FuelSupplier', related_name='CreditTraderespondentFK')   
@@ -41,5 +41,5 @@ class CreditTrade(Auditable):
     creditTradeZeroReasonFK = models.ForeignKey('CreditTradeZeroReason', related_name='CreditTradecreditTradeZeroReasonFK', blank=True, null=True)   
     tradeEffectiveDate = models.DateField(blank=True, null=True)   
     class Meta:
-        db_table = 'CREDIT_TRADE'
+        db_table = 'credit_trade'
 

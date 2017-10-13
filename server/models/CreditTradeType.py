@@ -34,5 +34,5 @@ class CreditTradeType(Auditable):
     displayOrder = models.IntegerField()   
     isGovOnlyType = models.BooleanField()   
     class Meta:
-        db_table = 'CREDIT_TRADE_TYPE'
+        db_table = 'credit_trade_type'
 

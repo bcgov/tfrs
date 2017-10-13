@@ -32,5 +32,5 @@ class UserRole(Auditable):
     userFK = models.ForeignKey('User', related_name='UserRoleuserFK')   
     roleFK = models.ForeignKey('Role', related_name='UserRoleroleFK')   
     class Meta:
-        db_table = 'USER_ROLE'
+        db_table = 'user_role'
 
