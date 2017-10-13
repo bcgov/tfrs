@@ -33,5 +33,5 @@ class NotificationEvent(Auditable):
     notes = models.CharField(max_length=1000, blank=True, null=True)   
     creditTradeFK = models.ForeignKey('CreditTrade', related_name='NotificationEventcreditTradeFK', blank=True, null=True)   
     class Meta:
-        db_table = 'NOTIFICATION_EVENT'
+        db_table = 'notification_event'
 

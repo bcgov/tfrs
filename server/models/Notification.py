@@ -34,5 +34,5 @@ class Notification(Auditable):
     isWatchNotification = models.BooleanField()   
     userFK = models.ForeignKey('User', related_name='NotificationuserFK')   
     class Meta:
-        db_table = 'NOTIFICATION'
+        db_table = 'notification'
 

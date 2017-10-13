@@ -38,5 +38,5 @@ class FuelSupplierCCData(Auditable):
     corporateAddressPostalCode = models.CharField(max_length=25, blank=True, null=True)   
     corporateAddressProvince = models.CharField(max_length=50, blank=True, null=True)   
     class Meta:
-        db_table = 'FUEL_SUPPLIER_C_C_DATA'
+        db_table = 'fuel_supplier_c_c_data'
 

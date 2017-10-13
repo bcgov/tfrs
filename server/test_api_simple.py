@@ -57,8 +57,6 @@ from .models.FuelSupplierCCData import FuelSupplierCCData
 from .serializers import FuelSupplierCCDataSerializer
 from .models.FuelSupplierContact import FuelSupplierContact
 from .serializers import FuelSupplierContactSerializer
-from .models.FuelSupplierContactRole import FuelSupplierContactRole
-from .serializers import FuelSupplierContactRoleSerializer
 from .models.FuelSupplierHistory import FuelSupplierHistory
 from .serializers import FuelSupplierHistorySerializer
 from .models.FuelSupplierStatus import FuelSupplierStatus

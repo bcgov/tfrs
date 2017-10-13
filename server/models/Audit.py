@@ -42,5 +42,5 @@ class Audit(Auditable):
     newValue = models.CharField(max_length=8000, blank=True, null=True)   
     isDelete = models.BooleanField()   
     class Meta:
-        db_table = 'AUDIT'
+        db_table = 'audit'
 

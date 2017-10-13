@@ -42,7 +42,6 @@ from .models.FuelSupplierAttachmentTag import FuelSupplierAttachmentTag
 from .models.FuelSupplierBalance import FuelSupplierBalance
 from .models.FuelSupplierCCData import FuelSupplierCCData
 from .models.FuelSupplierContact import FuelSupplierContact
-from .models.FuelSupplierContactRole import FuelSupplierContactRole
 from .models.FuelSupplierHistory import FuelSupplierHistory
 from .models.FuelSupplierStatus import FuelSupplierStatus
 from .models.Notification import Notification
@@ -868,72 +867,6 @@ class fuelsuppliercontactsIdGet(AuditableMixin,mixins.RetrieveModelMixin, mixins
     """
     return self.update(request, *args, **kwargs)
 
-class fuelsuppliercontactrolesBulkPost(AuditableMixin,BulkCreateModelMixin, generics.GenericAPIView):
-  """  
-  Bulk create / update a number of FuelSupplierContactRole object  
-  """
-  lookup_field = 'id'
-  permission_classes = (permissions.AllowAny,)  
-  queryset = FuelSupplierContactRole.objects.all()  
-  serializer_class = serializers.FuelSupplierContactRoleSerializer
-  def post(self, request, *args, **kwargs):
-    """
-    Creates a number of new FuelSupplierContactRole objects
-    """
-    return self.create(request, *args, **kwargs)
-
-class fuelsuppliercontactrolesGet(AuditableMixin,mixins.ListModelMixin, mixins.CreateModelMixin, generics.GenericAPIView):
-  """  
-  Lists available FuelSupplierContactRole objects  
-  """
-  lookup_field = 'id'
-  permission_classes = (permissions.AllowAny,)  
-  queryset = FuelSupplierContactRole.objects.all()  
-  serializer_class = serializers.FuelSupplierContactRoleSerializer
-  def get(self, request, *args, **kwargs):
-    """
-    Lists available FuelSupplierContactRole objects
-    """
-    return self.list(request, *args, **kwargs)
-  def post(self, request, *args, **kwargs):
-    """
-    Creates a new FuelSupplierContactRole object
-    """
-    return self.create(request, *args, **kwargs)
-
-class fuelsuppliercontactrolesIdDeletePost(AuditableMixin,mixins.DestroyModelMixin, generics.GenericAPIView):
-  """  
-  Deletes a specific FuelSupplierContactRole object  
-  """
-  lookup_field = 'id'
-  permission_classes = (permissions.AllowAny,)  
-  queryset = FuelSupplierContactRole.objects.all()  
-  serializer_class = serializers.FuelSupplierContactRoleSerializer
-  def post(self, request, *args, **kwargs):
-    """
-    Destroys the specified FuelSupplierContactRole object
-    """
-    return self.destroy(request, *args, **kwargs)
-
-
-class fuelsuppliercontactrolesIdGet(AuditableMixin,mixins.RetrieveModelMixin, mixins.UpdateModelMixin, generics.GenericAPIView):
-  """  
-  Gets a specific FuelSupplierContactRole object  
-  """
-  lookup_field = 'id'
-  permission_classes = (permissions.AllowAny,)  
-  queryset = FuelSupplierContactRole.objects.all()  
-  serializer_class = serializers.FuelSupplierContactRoleSerializer
-  def get(self, request, *args, **kwargs):
-    """
-    Retrieves the specified FuelSupplierContactRole object
-    """
-    return self.retrieve(request, *args, **kwargs)
-  def put(self, request, *args, **kwargs):
-    """
-    Updates the specified FuelSupplierContactRole object
-    """
-    return self.update(request, *args, **kwargs)
 
 class fuelsupplierhistoriesBulkPost(AuditableMixin,BulkCreateModelMixin, generics.GenericAPIView):
   """  

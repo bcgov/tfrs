@@ -34,5 +34,5 @@ class UserFavourite(Auditable):
     isDefault = models.BooleanField()   
     userFK = models.ForeignKey('User', related_name='UserFavouriteuserFK')   
     class Meta:
-        db_table = 'USER_FAVOURITE'
+        db_table = 'user_favourite'
 
