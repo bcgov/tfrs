@@ -1,6 +1,9 @@
 TFRS Wireframes
 ---------------
 
-The TFRS Wireframes were created using [Balsamiq](https://balsamiq.com/). At the time of writing, the up to date online wireframe repository for TFRS could be found [here](https://cloudcompass.mybalsamiq.com/projects/tfrs/grid).
+The TFRS Wireframes were created using [Balsamiq](https://balsamiq.com/). At the time of writing, the up to date wireframe project file  for TFRS can be found on the TFRS network drive.
 
-The 1.0 version of the wireframes were created in May and June 2017, and then reviewed internally and with a number of external stakeholders (Fuel Suppliers) and interested parties (peers in the States of California and Oregon). The output of the review exercise were a number of changes that are now online. As such, a PDF and ZIP file of the 1.0 version of the wireframes were captured and saved into this folder. Also included in this folder is the PowerPoint presentation used for the sessions with the Fuel Suppliers and peers.
+V2 of the wireframes were created in October, expanding on known requirements and clarifying details from internal users. The wireframes are not ready for usability testing at this time. If usability testing is to be conducted on the wireframes, interactivity will be added to the project and the updated output will be posted.
+
+* [Wireframes - Credit Transfers v2.pdf](https://github.com/bcgov/tfrs/blob/brian-22-Wireframes/mockups/Wireframe/TFRS%20-%20Wireframe%20-%20CreditTransfers%20-%20v2.xlsx.pdf)
+
