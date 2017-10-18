@@ -5,5 +5,5 @@ The TFRS Wireframes were created using [Balsamiq](https://balsamiq.com/). At the
 
 V2 of the wireframes were created in October, expanding on known requirements and clarifying details from internal users. The wireframes are not ready for usability testing at this time. If usability testing is to be conducted on the wireframes, interactivity will be added to the project and the updated output will be posted.
 
-* [pdf](https://github.com/bcgov/tfrs/blob/brian-22-Wireframes/mockups/Wireframe/TFRS%20-%20Wireframe%20-%20CreditTransfers%20-%20v2.xlsx.pdf)
+* [Wireframes - Credit Transfers v2.pdf](https://github.com/bcgov/tfrs/blob/brian-22-Wireframes/mockups/Wireframe/TFRS%20-%20Wireframe%20-%20CreditTransfers%20-%20v2.xlsx.pdf)
 
