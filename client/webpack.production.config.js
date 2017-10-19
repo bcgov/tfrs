@@ -7,10 +7,6 @@ var mainPath = path.resolve(__dirname, "src", "index.js");
 // plugins.ImageminPlugin = require('imagemin-webpack-plugin');
 // plugsin.imageminMozjpeg = require('imagemin-mozjpeg');
 
-// Don't set a fall back URL. The users should know immediately if the API URL
-// is not set up correctly
-const apiHost = process.env.API_BASE_URL;
-
 var config = {
   entry: [
     // Polyfill for Object.assign on IE11, etc
@@ -67,8 +63,7 @@ var config = {
       compress: {
         warnings: false
       }
-    }),
-    new Webpack.DefinePlugin({ __API__: '"' + apiHost + '"' })
+    })
   ]
 };
 

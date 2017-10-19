@@ -5,10 +5,6 @@ const buildPath = path.resolve(__dirname, "public", "build");
 const mainPath = path.resolve(__dirname, "src", "index.js");
 console.log("using dev");
 
-const apiHost = process.env.API_BASE_URL
-  ? process.env.API_BASE_URL
-  : "http://tfrs-mem-tfrs-dev.pathfinder.gov.bc.ca";
-
 const config = {
   // Makes sure errors in console map to the correct file
   // and line numbe
@@ -84,8 +80,7 @@ const config = {
   // We have to manually add the Hot Replacement plugin when running
   // from Node
   plugins: [
-    new Webpack.HotModuleReplacementPlugin(),
-    new Webpack.DefinePlugin({ __API__: '"'+apiHost+'"' })
+    new Webpack.HotModuleReplacementPlugin()
   ]
 };
 
