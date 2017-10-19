@@ -9,7 +9,7 @@ export default class CreditTransferVisualRepresentation extends Component {
   }
 
   determineBuyerandSeller(){
-    // let seller = # logic to choose seller here
+    // let seller = # logic to choose seller here.
     // let buyer = # logic to choose buyer based on the type here
 
     /*
