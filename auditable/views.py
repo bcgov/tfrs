@@ -6,12 +6,27 @@ from rest_framework import status
 
 class AuditableMixin(object,):
 
+    def audit(self, request):
+        # Django headers should be in this format: SM-USER
+        # For it to translate to HTTP_SM_USER
+        http_sm_user = request.META.get('HTTP_SM_USER_ID')
+
+        if self.action == 'create':
+            request.data.update({
+                'create_user': http_sm_user
+            })
+
+        request.data.update({
+            'update_user': http_sm_user
+        })
+        return request
+
     def serialize_object(self, request):
         http_sm_user = request.META.get('HTTP_SM_USER')
-        request.data.update({'CREATE_USER':http_sm_user,'UPDATE_USER':http_sm_user})
+        request.data.update({'create_user':http_sm_user,'update_user':http_sm_user})
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        self.perform_create(serializer,request)
+        self.perform_create(serializer)
         return serializer.data
 
     def create(self, request, *args, **kwargs):
@@ -26,7 +41,7 @@ class AuditableMixin(object,):
         headers = self.get_success_headers(response)
         return Response(response, status=status.HTTP_201_CREATED, headers=headers)
 
-    def perform_create(self, serializer,request):
+    def perform_create(self, serializer):
         instance = serializer.save()
 
 
@@ -34,7 +49,7 @@ class AuditableMixin(object,):
         partial = kwargs.pop('partial', False)
         instance = self.get_object()
         http_sm_user = request.META.get('HTTP_SM_USER')
-        request.data.update({'UPDATE_USER':http_sm_user})
+        request.data.update({'update_user':http_sm_user})
         serializer = self.get_serializer(instance, data=request.data, partial=partial)
         serializer.is_valid(raise_exception=True)
         self.perform_update(serializer)

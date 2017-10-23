@@ -19,7 +19,7 @@
     limitations under the License.
 """
 
-from django.conf.urls import url
+from django.conf.urls import url, include
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from rest_framework.schemas import SchemaGenerator
@@ -30,6 +30,14 @@ from rest_framework_swagger import renderers
 from . import views
 # custom views
 from . import views_custom
+from .viewsets.CreditTrade import CreditTradeViewSet
+
+from rest_framework.routers import DefaultRouter
+
+# Create a router and register our views with it.
+router = DefaultRouter()
+router.register(r'credit_trades', CreditTradeViewSet)
+
 
 class SwaggerSchemaView(APIView):
     permission_classes = [AllowAny]
@@ -46,7 +54,8 @@ class SwaggerSchemaView(APIView):
 
 urlpatterns = [
     # Swagger documentation
-    url(r'^$', SwaggerSchemaView.as_view()),
+    url(r'^doc$', SwaggerSchemaView.as_view()),
+    url(r'^', include(router.urls)),
     url(r'^credittrades/bulk$', views.credittradesBulkPost.as_view()),
     url(r'^credittrades$', views.credittradesGet.as_view()),
     url(r'^credittrades/(?P<id>[0-9]+)/delete$', views.credittradesIdDeletePost.as_view()),
@@ -152,4 +161,5 @@ urlpatterns = [
     url(r'^userroles/(?P<id>[0-9]+)$', views.userrolesIdGet.as_view())
 ]
 
-urlpatterns = format_suffix_patterns(urlpatterns)
+# urlpatterns = format_suffix_patterns(urlpatterns)
+urlpatterns += router.urls
