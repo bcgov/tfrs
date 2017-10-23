@@ -11,6 +11,9 @@ def health(request):
     """
     return HttpResponse(FuelSupplier.objects.count())
 
+def blank(request):
+    return HttpResponse('')
+
 def dashboard(request):
     table_data = [
         {'transaction':{ 'fuelSupplier': 'BC EveryFuel', 'type': 'Offer to Sell', 'partner': 'BC AnyFuel', 'quantity': 15000, 'fairMarketValue': '$100', 'lastModified': '2015-04-01', 'effectiveDate': '2015-04-01', 'status': 'Draft', 'balance': 75000, 'compliance_period': '2016'}},

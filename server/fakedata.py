@@ -57,7 +57,7 @@ def AuditTestDataUpdate():
 
 def CreditTradeTestDataCreate():
   return {
-    'numberOfCredits':1,
+    'numberOfCredits': 1,
   }
 
 def CreditTradeTestDataUpdate():

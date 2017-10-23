@@ -32,14 +32,16 @@ from auditable.models import Auditable
 from server import validators
 
 class CreditTrade(Auditable):
-    creditTradeStatusFK = models.ForeignKey('CreditTradeStatus', related_name='CreditTradecreditTradeStatusFK')   
-    initiatorFK = models.ForeignKey('FuelSupplier', related_name='CreditTradeinitiatorFK', blank=True, null=True)   
-    respondentFK = models.ForeignKey('FuelSupplier', related_name='CreditTraderespondentFK')   
-    creditTradeTypeFK = models.ForeignKey('CreditTradeType', related_name='CreditTradecreditTradeTypeFK')   
+    creditTradeStatusFK = models.ForeignKey('CreditTradeStatus', related_name='CreditTradecreditTradeStatusFK')
+    initiatorFK = models.ForeignKey('FuelSupplier', related_name='CreditTradeinitiatorFK', blank=True, null=True)
+    respondentFK = models.ForeignKey('FuelSupplier', related_name='CreditTraderespondentFK')
+    creditTradeTypeFK = models.ForeignKey('CreditTradeType', related_name='CreditTradecreditTradeTypeFK')
     numberOfCredits = models.IntegerField(validators=[validators.CreditTradeNumberOfCreditsValidator])
     fairMarketValuePerCredit = models.CharField(blank=True, null=True, max_length=255)   
     creditTradeZeroReasonFK = models.ForeignKey('CreditTradeZeroReason', related_name='CreditTradecreditTradeZeroReasonFK', blank=True, null=True)   
-    tradeEffectiveDate = models.DateField(blank=True, null=True)   
+    tradeEffectiveDate = models.DateField(blank=True, null=True)
+    note = models.CharField(max_length=4000, blank=True, null=True)
+
     class Meta:
         db_table = 'credit_trade'
 

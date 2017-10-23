@@ -55,10 +55,13 @@ from .models.UserRole import UserRole
 from .models.UserRoleViewModel import UserRoleViewModel
 from .models.UserViewModel import UserViewModel
 
+
+
 class AuditSerializer(serializers.ModelSerializer):
   class Meta:
     model = Audit
     fields = ('id','appCreateTimestamp','appCreateUserid','appCreateUserGuid','appCreateUserDirectory','appLastUpdateTimestamp','appLastUpdateUserid','appLastUpdateUserGuid','appLastUpdateUserDirectory','entityName','entityId','propertyName','oldValue','newValue','isDelete')
+
 
 class CreditTradeSerializer(serializers.ModelSerializer):
   class Meta:
@@ -68,7 +71,7 @@ class CreditTradeSerializer(serializers.ModelSerializer):
 class CreditTradeHistorySerializer(serializers.ModelSerializer):
   class Meta:
     model = CreditTradeHistory
-    fields = ('id','creditTradeFK','userFK','creditTradeUpdateTime','newRespondentFK','creditTradeStatusFK','creditTradeTypeFK','newNumberOfCredits','newFairMarketValuePerCredit','newCreditTradeZeroReasonFK','newTradeEffectiveDate','note','isInternalHistoryRecord')
+    fields = ('id','creditTradeFK','userFK','creditTradeUpdateTime','newRespondentFK','creditTradeStatusFK','creditTradeTypeFK','newNumberOfCredits','newFairMarketValuePerCredit','newCreditTradeZeroReasonFK','newTradeEffectiveDate','newNote','isInternalHistoryRecord')
 
 class CreditTradeStatusSerializer(serializers.ModelSerializer):
   class Meta:
@@ -219,4 +222,39 @@ class UserViewModelSerializer(serializers.ModelSerializer):
   class Meta:
     model = UserViewModel
     fields = ('id','givenName','surname','email','active','smUserId','userRoles')
+
+class CreditTradeCreateSerializer(serializers.ModelSerializer):
+  creditTradeStatusFK = CreditTradeStatusSerializer
+  initiatorFK = FuelSupplierSerializer
+  respondentFK = FuelSupplierSerializer
+  creditTradeTypeFK = CreditTradeTypeSerializer
+  creditTradeZeroReasonFK = CreditTradeZeroReasonSerializer
+
+  class Meta:
+    model = CreditTrade
+    fields = '__all__'
+
+class CreditTrade2Serializer(serializers.ModelSerializer):
+
+  creditTradeStatusFK = CreditTradeStatusSerializer
+  initiatorFK = FuelSupplierSerializer
+  respondentFK = FuelSupplierSerializer
+  creditTradeTypeFK = CreditTradeTypeSerializer
+  creditTradeZeroReasonFK = CreditTradeZeroReasonSerializer
+
+  class Meta:
+    model = CreditTrade
+    exclude = ('note',)
+
+class CreditTradeHistory2Serializer(serializers.ModelSerializer):
+
+  creditTradeStatusFK = CreditTradeStatusSerializer
+  initiatorFK = FuelSupplierSerializer
+  respondentFK = FuelSupplierSerializer
+  creditTradeTypeFK = CreditTradeTypeSerializer
+  creditTradeZeroReasonFK = CreditTradeZeroReasonSerializer
+
+  class Meta:
+    model = CreditTradeHistory
+    fields = '__all__'
 
