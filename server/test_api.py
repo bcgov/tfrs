@@ -176,8 +176,28 @@ class TestCreditTradeAPI(TestCase):
             "{}/{}".format(self.test_url, self.credit_trade_id),
             content_type='application/json')
         response_data = json.loads(response.content.decode("utf-8"))
-        # response_data['creditTradeStatus']
-        pprint(response_data)
+
+        credit_trade_status = {
+            "id": STATUS_DRAFT,
+            "status": "Draft"
+        }
+        self.assertTrue(
+            set(credit_trade_status).issubset(
+                response_data['creditTradeStatusFK']))
+
+    def test_nested_credit_trade_history(self):
+        response = self.client.get(
+            "{}/{}/history".format(self.test_url, self.credit_trade_id),
+            content_type='application/json')
+        response_data = json.loads(response.content.decode("utf-8"))[0]
+
+        credit_trade_status = {
+            "id": STATUS_DRAFT,
+            "status": "Draft"
+        }
+        self.assertTrue(
+            set(credit_trade_status).issubset(
+                response_data['creditTradeStatusFK']))
 
     def test_director_approved(self):
         """Execute and complete a trade when an "On Director's Approval" Trade
