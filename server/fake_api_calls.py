@@ -132,4 +132,47 @@ def create_user(fuel_supplier_id):
     # parse the response.
     data = json.loads(response.content.decode("utf-8"))
     user_id = data['id']
+
     return user_id
+
+
+def create_credit_trade(fuel_supplier_id, user_id):
+
+    type_id = create_credit_trade_type()
+    status_id = create_credit_trade_status()
+
+    test_url = "/api/credit_trades"
+    payload = {
+      'status': 'Active',
+      'initiator': fuel_supplier_id,
+      'respondent': fuel_supplier_id,
+      'initiatorLastUpdateBy': user_id,
+      'respondentLastUpdatedBy': None,
+      'reviewedRejectedBy': None,
+      'approvedRejectedBy': None,
+      'cancelledBy': None,
+      'tradeExecutionDate': '2017-01-01',
+      #   TODO: replace transactionType
+      'transactionType': 'Type',
+      'fairMarketValuePrice': '100.00',
+      'fuelSupplierBalanceBeforeTransaction': '2017-01-01',
+      'note': None,
+      'attachments': [],
+      'creditTradeTypeFK': type_id,
+      'creditTradeStatusFK': status_id,
+      'respondentFK': fuel_supplier_id,
+    }
+    fake_credit_trade = fakedata.CreditTradeTestDataCreate()
+    payload.update(fake_credit_trade)
+    client_with_user = Client(HTTP_SM_USER_ID=user_id)
+
+    response = client_with_user.post(test_url,
+                                     content_type='application/json',
+                                     data=json.dumps(payload))
+
+    # Check that the response is OK.
+    assert status.HTTP_201_CREATED == response.status_code
+    # parse the response.
+    data = json.loads(response.content.decode("utf-8"))
+    credit_trade_id = data['id']
+    return credit_trade_id, type_id, status_id

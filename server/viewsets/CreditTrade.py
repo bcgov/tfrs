@@ -1,6 +1,6 @@
 
 from rest_framework import viewsets, permissions, status
-from rest_framework.decorators import list_route
+from rest_framework.decorators import list_route, detail_route
 from rest_framework.response import Response
 from rest_framework.exceptions import APIException
 
@@ -8,6 +8,7 @@ from rest_framework.exceptions import APIException
 from auditable.views import AuditableMixin
 
 from server.models.CreditTrade import CreditTrade
+from server.models.CreditTradeHistory import CreditTradeHistory
 from server.serializers import CreditTradeCreateSerializer
 from server.serializers import CreditTrade2Serializer as CreditTradeSerializer
 from server.serializers import CreditTradeHistory2Serializer\
@@ -27,6 +28,8 @@ class CreditTradeViewSet(AuditableMixin, viewsets.ModelViewSet):
     """
 
     permission_classes = (permissions.AllowAny,)
+    http_method_names = ['get', 'post', 'put', 'delete', 'head', 'options',
+                         'trace']
     queryset = CreditTrade.objects.all()
     serializer_class = CreditTradeSerializer
     serializer_classes = {
@@ -53,6 +56,15 @@ class CreditTradeViewSet(AuditableMixin, viewsets.ModelViewSet):
         # - the previous status of the Credit Trade is "Draft" and the new
         #   status of the Credit Trade is "Cancelled".
         is_internal_history_record = False
+
+        # if credit_trade['creditTradeStatusFK'] == 1:
+        #     is_internal_history_record = True
+
+        # previous = CreditTradeHistory.objects\
+        #                              .filter(creditTradeFK=credit_trade['id'])\
+        #                              .latest('create_timestamp')
+
+
         credit_trade_update_time = (
             credit_trade['create_timestamp']
             if is_new
@@ -127,7 +139,7 @@ class CreditTradeViewSet(AuditableMixin, viewsets.ModelViewSet):
         serializer.is_valid(raise_exception=True)
 
         self.perform_update(serializer)
-        self.create_history(serializer, False)
+        self.create_history(serializer.data, False)
 
         if getattr(instance, '_prefetched_objects_cache', None):
             # If 'prefetch_related' has been applied to a queryset, we need to
@@ -143,4 +155,15 @@ class CreditTradeViewSet(AuditableMixin, viewsets.ModelViewSet):
     @list_route()
     def search(self, request):
         pass
+
+    @detail_route()
+    def history(self, request, pk=None):
+        """
+        Get the credit trade history
+        """
+        credit_trade = self.get_object()
+        history = CreditTradeHistory.objects.filter(creditTradeFK=credit_trade)
+        serializer = self.get_serializer(history, many=True)
+
+        return Response(serializer.data)
 

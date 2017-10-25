@@ -1,0 +1,90 @@
+[
+  {
+    "model": "server.credittradestatus",
+    "pk": 1,
+    "fields": {
+      "description": "The Credit Trade has been created but is only visible to the initiating organization.",
+      "displayOrder": "1",
+      "effectiveDate": "2017-01-01",
+      "expirationDate": null,
+      "status": "Draft"
+    }
+  },
+  {
+    "model": "server.credittradestatus",
+    "pk": 2,
+    "fields": {
+      "description": "The Credit Trade has been created and is visible to both the initiating and responding Fuel Suppliers, and is waiting on the response from the Respondent.",
+      "displayOrder": "2",
+      "effectiveDate": "2017-01-01",
+      "expirationDate": null,
+      "status": "Proposed"
+    }
+  },
+  {
+    "model": "server.credittradestatus",
+    "pk": 3,
+    "fields": {
+      "description": "The Credit Trade has been accepted by the Respondent and is waiting on approval by the Director.",
+      "displayOrder": "3",
+      "effectiveDate": "2017-01-01",
+      "expirationDate": null,
+      "status": "Accepted"
+    }
+  },
+  {
+    "model": "server.credittradestatus",
+    "pk": 4,
+    "fields": {
+      "description": "The Credit Trade has been has been reviewed by a Government Analyst and is Recommended for Approval  by the Director.",
+      "displayOrder": "4",
+      "effectiveDate": "2017-01-01",
+      "expirationDate": null,
+      "status": "Recommended"
+    }
+  },
+  {
+    "model": "server.credittradestatus",
+    "pk": 5,
+    "fields": {
+      "description": "The Credit Trade has been has been reviewed by a Government Analyst and is Not Recommended for Approval by the Director.",
+      "displayOrder": "4",
+      "effectiveDate": "2017-01-01",
+      "expirationDate": null,
+      "status": "Not Recommended"
+    }
+  },
+  {
+    "model": "server.credittradestatus",
+    "pk": 6,
+    "fields": {
+      "description": "The Credit Trade has been has been approved by the Director and will be Completed as soon as the Effective Date of the Credit Trade has been reached.",
+      "displayOrder": "5",
+      "effectiveDate": "2017-01-01",
+      "expirationDate": null,
+      "status": "Approved"
+    }
+  },
+  {
+    "model": "server.credittradestatus",
+    "pk": 7,
+    "fields": {
+      "description": "The Credit Trade has been Completed and the Credit Balance(s) of the Fuel Supplier(s) has been updated.",
+      "displayOrder": "6",
+      "effectiveDate": "2017-01-01",
+      "expirationDate": null,
+      "status": "Completed"
+    }
+  },
+  {
+    "model": "server.credittradestatus",
+    "pk": 8,
+    "fields": {
+      "description": "The Credit Trade has been cancelled by one of the participants in the Credit Trade.",
+      "displayOrder": "7",
+      "effectiveDate": "2017-01-01",
+      "expirationDate": null,
+      "status": "Cancelled"
+    }
+  }
+]

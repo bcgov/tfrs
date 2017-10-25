@@ -31,7 +31,8 @@ from .CreditTradeType import CreditTradeType
 
 from auditable.models import Auditable
 
-class CreditTradeHistory(Auditable):	    
+
+class CreditTradeHistory(Auditable):
     creditTradeFK = models.ForeignKey('CreditTrade', related_name='CreditTradeHistorycreditTradeFK', null=True)
     userFK = models.ForeignKey('User', related_name='CreditTradeHistoryuserFK')   
     creditTradeUpdateTime = models.DateTimeField()   
@@ -47,4 +48,5 @@ class CreditTradeHistory(Auditable):
 
     class Meta:
         db_table = 'credit_trade_history'
+        ordering = ['-create_timestamp']
 

@@ -35,7 +35,7 @@ from .viewsets.CreditTrade import CreditTradeViewSet
 from rest_framework.routers import DefaultRouter
 
 # Create a router and register our views with it.
-router = DefaultRouter()
+router = DefaultRouter(trailing_slash=False)
 router.register(r'credit_trades', CreditTradeViewSet)
 
 
@@ -46,11 +46,13 @@ class SwaggerSchemaView(APIView):
         renderers.SwaggerUIRenderer
     ]
     _ignore_model_permissions = True
-    exclude_from_schema = True  
+    exclude_from_schema = True
+
     def get(self, request):
         generator = SchemaGenerator()
         schema = generator.get_schema(request=request)
         return Response(schema)
+
 
 urlpatterns = [
     # Swagger documentation
