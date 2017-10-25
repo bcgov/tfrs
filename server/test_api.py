@@ -7,6 +7,11 @@ from pprint import pprint
 
 from server import fake_api_calls
 
+# Credit Trade Statuses
+STATUS_DRAFT = 1
+STATUS_PROPOSED = 2
+STATUS_ACCEPTED = 3
+STATUS_CANCELLED = 8
 
 class TestCreditTradeAPI(TestCase):
 
@@ -37,14 +42,14 @@ class TestCreditTradeAPI(TestCase):
             }
         }, {
             'data': {'numberOfCredits': 1,
-                     'creditTradeStatusFK': 1},
+                     'creditTradeStatusFK': STATUS_DRAFT},
             'response': {
                 "respondentFK": ["This field is required."],
                 "creditTradeTypeFK": ["This field is required."],
             }
         }, {
             'data': {'numberOfCredits': 1,
-                     'creditTradeStatusFK': 1,
+                     'creditTradeStatusFK': STATUS_DRAFT,
                      'respondentFK': self.fs1_id},
             'response': {
                 "creditTradeTypeFK": ["This field is required."]
@@ -53,7 +58,7 @@ class TestCreditTradeAPI(TestCase):
 
         self.test_data_success = [{
             'data': {'numberOfCredits': 1,
-                     'creditTradeStatusFK': 1,
+                     'creditTradeStatusFK': STATUS_DRAFT,
                      'respondentFK': self.fs1_id,
                      'creditTradeTypeFK': self.ct_type_id},
         }]
@@ -102,7 +107,7 @@ class TestCreditTradeAPI(TestCase):
     def test_update(self, **kwargs):
         credit_trade_id = kwargs.get("credit_trade_id", self.credit_trade_id)
         num_of_credits = kwargs.get("num_of_credits", 4)
-        credit_trade_status = kwargs.get("credit_trade_status", 1)
+        credit_trade_status = kwargs.get("credit_trade_status", STATUS_DRAFT)
 
         if not credit_trade_id:
             credit_trade_id = self.credit_trade_id
@@ -135,6 +140,16 @@ class TestCreditTradeAPI(TestCase):
 
         assert status.HTTP_200_OK == response.status_code
 
+    def test_is_internal_history_false(self):
+        data = [STATUS_PROPOSED, STATUS_ACCEPTED]
+        for ct_status in data:
+            self.test_update(credit_trade_status=ct_status)
+            response = self.client.get(
+                "{}/{}/history".format(self.test_url, self.credit_trade_id),
+                content_type='application/json')
+            response_data = json.loads(response.content.decode("utf-8"))
+            self.assertFalse(response_data[0]['isInternalHistoryRecord'])
+
     def test_is_internal_history_draft(self):
         # Initially created credit trade is "Draft"
         response = self.client.get(
@@ -142,24 +157,19 @@ class TestCreditTradeAPI(TestCase):
             content_type='application/json')
 
         response_data = json.loads(response.content.decode("utf-8"))
-        # pprint(response_data)
-        # pprint(response_data[0])
         self.assertTrue(response_data[0]['isInternalHistoryRecord'])
 
     def test_is_internal_history_draft_then_cancelled(self):
         # Initially created credit trade is "Draft"
 
         # Update the status to "Cancelled"
-        self.test_update(credit_trade_status=8)
+        self.test_update(credit_trade_status=STATUS_CANCELLED)
         response = self.client.get(
             "{}/{}/history".format(self.test_url, self.credit_trade_id),
             content_type='application/json')
 
         response_data = json.loads(response.content.decode("utf-8"))
-        # pprint(response_data)
-        # pprint(response_data[0])
         self.assertTrue(response_data[0]['isInternalHistoryRecord'])
-
 
     def test_director_approved(self):
         """Execute and complete a trade when an "On Director's Approval" Trade

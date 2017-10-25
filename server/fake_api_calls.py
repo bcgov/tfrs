@@ -6,6 +6,7 @@ from django.test import Client
 
 client = Client()
 
+STATUS_DRAFT = 1
 
 def create_credit_trade_type():
 
@@ -139,7 +140,6 @@ def create_user(fuel_supplier_id):
 def create_credit_trade(fuel_supplier_id, user_id):
 
     type_id = create_credit_trade_type()
-    status_id = create_credit_trade_status()
 
     test_url = "/api/credit_trades"
     payload = {
@@ -159,7 +159,7 @@ def create_credit_trade(fuel_supplier_id, user_id):
       'note': None,
       'attachments': [],
       'creditTradeTypeFK': type_id,
-      'creditTradeStatusFK': status_id,
+      'creditTradeStatusFK': STATUS_DRAFT,
       'respondentFK': fuel_supplier_id,
     }
     fake_credit_trade = fakedata.CreditTradeTestDataCreate()
@@ -175,4 +175,4 @@ def create_credit_trade(fuel_supplier_id, user_id):
     # parse the response.
     data = json.loads(response.content.decode("utf-8"))
     credit_trade_id = data['id']
-    return credit_trade_id, type_id, status_id
+    return credit_trade_id, type_id
