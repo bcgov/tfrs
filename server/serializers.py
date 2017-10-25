@@ -224,23 +224,19 @@ class UserViewModelSerializer(serializers.ModelSerializer):
     fields = ('id','givenName','surname','email','active','smUserId','userRoles')
 
 class CreditTradeCreateSerializer(serializers.ModelSerializer):
-  creditTradeStatusFK = CreditTradeStatusSerializer
-  initiatorFK = FuelSupplierSerializer
-  respondentFK = FuelSupplierSerializer
-  creditTradeTypeFK = CreditTradeTypeSerializer
-  creditTradeZeroReasonFK = CreditTradeZeroReasonSerializer
 
   class Meta:
     model = CreditTrade
     fields = '__all__'
 
+
 class CreditTrade2Serializer(serializers.ModelSerializer):
 
-  creditTradeStatusFK = CreditTradeStatusSerializer
-  initiatorFK = FuelSupplierSerializer
-  respondentFK = FuelSupplierSerializer
-  creditTradeTypeFK = CreditTradeTypeSerializer
-  creditTradeZeroReasonFK = CreditTradeZeroReasonSerializer
+  creditTradeStatusFK = CreditTradeStatusSerializer(read_only=True)
+  initiatorFK = FuelSupplierSerializer(read_only=True)
+  respondentFK = FuelSupplierSerializer(read_only=True)
+  creditTradeTypeFK = CreditTradeTypeSerializer(read_only=True)
+  creditTradeZeroReasonFK = CreditTradeZeroReasonSerializer(read_only=True)
 
   class Meta:
     model = CreditTrade
@@ -248,13 +244,20 @@ class CreditTrade2Serializer(serializers.ModelSerializer):
 
 class CreditTradeHistory2Serializer(serializers.ModelSerializer):
 
-  creditTradeStatusFK = CreditTradeStatusSerializer
-  initiatorFK = FuelSupplierSerializer
-  respondentFK = FuelSupplierSerializer
-  creditTradeTypeFK = CreditTradeTypeSerializer
-  creditTradeZeroReasonFK = CreditTradeZeroReasonSerializer
+  creditTradeStatusFK = CreditTradeStatusSerializer(read_only=True)
+  initiatorFK = FuelSupplierSerializer(read_only=True)
+  respondentFK = FuelSupplierSerializer(read_only=True)
+  creditTradeTypeFK = CreditTradeTypeSerializer(read_only=True)
+  creditTradeZeroReasonFK = CreditTradeZeroReasonSerializer(read_only=True)
 
   class Meta:
     model = CreditTradeHistory
     fields = '__all__'
+
+class CreditTradeHistoryCreateSerializer(serializers.ModelSerializer):
+
+  class Meta:
+    model = CreditTradeHistory
+    fields = '__all__'
+
 

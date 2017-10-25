@@ -2,23 +2,18 @@
 from rest_framework import viewsets, permissions, status
 from rest_framework.decorators import list_route, detail_route
 from rest_framework.response import Response
-from rest_framework.exceptions import APIException
 
 
 from auditable.views import AuditableMixin
 
 from server.models.CreditTrade import CreditTrade
 from server.models.CreditTradeHistory import CreditTradeHistory
+from server.models.CreditTradeStatus import CreditTradeStatus
 from server.serializers import CreditTradeCreateSerializer
+from server.serializers import CreditTradeHistoryCreateSerializer
 from server.serializers import CreditTrade2Serializer as CreditTradeSerializer
 from server.serializers import CreditTradeHistory2Serializer\
     as CreditTradeHistorySerializer
-
-# from server.serializers_new.CreditTrade import CreditTradeCreateSerializer
-# from server.serializers_new.CreditTrade import CreditTradeSerializer
-# from server.serializers_new.CreditTrade import CreditTradeHistorySerializer
-
-from django.db import transaction, IntegrityError
 
 
 class CreditTradeViewSet(AuditableMixin, viewsets.ModelViewSet):
@@ -50,6 +45,16 @@ class CreditTradeViewSet(AuditableMixin, viewsets.ModelViewSet):
         """
         Create the CreditTradeHistory
         """
+        new_status = CreditTradeStatus.objects.get(
+            pk=credit_trade['creditTradeStatusFK'])
+
+        try:
+            previous_history = CreditTradeHistory.objects\
+                                         .select_related('creditTradeStatusFK')\
+                                         .filter(creditTradeFK=credit_trade['id'])\
+                                         .latest('create_timestamp')
+        except CreditTradeHistory.DoesNotExist:
+            previous_history = None
 
         # This is only set to true if:
         # - the status of the Credit Trade is "Draft"
@@ -57,13 +62,11 @@ class CreditTradeViewSet(AuditableMixin, viewsets.ModelViewSet):
         #   status of the Credit Trade is "Cancelled".
         is_internal_history_record = False
 
-        # if credit_trade['creditTradeStatusFK'] == 1:
-        #     is_internal_history_record = True
-
-        # previous = CreditTradeHistory.objects\
-        #                              .filter(creditTradeFK=credit_trade['id'])\
-        #                              .latest('create_timestamp')
-
+        if (new_status.status == 'Draft' or
+                (not is_new and
+                 new_status.status == 'Cancelled' and
+                 previous_history.creditTradeStatusFK.status == 'Draft')):
+            is_internal_history_record = True
 
         credit_trade_update_time = (
             credit_trade['create_timestamp']
@@ -106,7 +109,7 @@ class CreditTradeViewSet(AuditableMixin, viewsets.ModelViewSet):
                 user
         }
 
-        serializer = CreditTradeHistorySerializer(data=history)
+        serializer = CreditTradeHistoryCreateSerializer(data=history)
 
         serializer.is_valid(raise_exception=True)
         serializer.save()
