@@ -25,18 +25,20 @@ export default class CreditTransferVisualRepresentation extends Component {
   render() {
     return (
       <div className="row visual-representation">
-        <div className="col-sm-4 col-md-3 col-md-offset-1">
+        <div className="col-sm-4 col-md-2 col-md-offset-1">
           <div className="initiator-container label-success">
             {/* this.state.seller*/}
             <div>{this.props.data.initiatorFK && this.props.data.initiatorFK != null ? getCreditTradeRespondent(this.props.data.initiatorFK) : Values.DEFAULT_INITIATOR}</div>
-            <div>Available: 15,000</div>
+            <div>Available: 65,000</div>
           </div>
         </div>
         <div className="col-sm-4 col-md-2">
           <div className="arrow">
-            <i className="fa fa-arrow-circle-right"></i>
+            <div>25,000 credits</div>
+            {/* <i className="fa fa-arrow-circle-right"></i> */}
+            <i className="fa fa-exchange"></i>
             {/* this.state.credit */}
-            <div>10,000</div>
+            <div>$13,250,365.00</div>
           </div>
         </div>
         <div className="col-sm-4 col-md-3">

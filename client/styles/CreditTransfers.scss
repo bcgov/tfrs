@@ -213,6 +213,7 @@
     margin: 1rem;
     padding: 2rem;
     border-radius: 5px;
+    min-width: 11em;
 
     @include mobile {
       text-align: center;
