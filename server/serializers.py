@@ -56,208 +56,282 @@ from .models.UserRoleViewModel import UserRoleViewModel
 from .models.UserViewModel import UserViewModel
 
 
-
 class AuditSerializer(serializers.ModelSerializer):
-  class Meta:
-    model = Audit
-    fields = ('id','appCreateTimestamp','appCreateUserid','appCreateUserGuid','appCreateUserDirectory','appLastUpdateTimestamp','appLastUpdateUserid','appLastUpdateUserGuid','appLastUpdateUserDirectory','entityName','entityId','propertyName','oldValue','newValue','isDelete')
+    class Meta:
+        model = Audit
+        fields = (
+            'id', 'appCreateTimestamp', 'appCreateUserid', 'appCreateUserGuid',
+            'appCreateUserDirectory', 'appLastUpdateTimestamp',
+            'appLastUpdateUserid', 'appLastUpdateUserGuid',
+            'appLastUpdateUserDirectory', 'entityName', 'entityId',
+            'propertyName',
+            'oldValue', 'newValue', 'isDelete')
 
 
 class CreditTradeSerializer(serializers.ModelSerializer):
-  class Meta:
-    model = CreditTrade
-    fields = ('id','creditTradeStatusFK','initiatorFK','respondentFK','creditTradeTypeFK','numberOfCredits','fairMarketValuePerCredit','creditTradeZeroReasonFK','tradeEffectiveDate')
+    class Meta:
+        model = CreditTrade
+        fields = ('id', 'creditTradeStatusFK', 'initiatorFK', 'respondentFK',
+                  'creditTradeTypeFK', 'numberOfCredits',
+                  'fairMarketValuePerCredit', 'creditTradeZeroReasonFK',
+                  'tradeEffectiveDate')
+
 
 class CreditTradeHistorySerializer(serializers.ModelSerializer):
-  class Meta:
-    model = CreditTradeHistory
-    fields = ('id','creditTradeFK','userFK','creditTradeUpdateTime','newRespondentFK','creditTradeStatusFK','creditTradeTypeFK','newNumberOfCredits','newFairMarketValuePerCredit','newCreditTradeZeroReasonFK','newTradeEffectiveDate','newNote','isInternalHistoryRecord')
+    class Meta:
+        model = CreditTradeHistory
+        fields = ('id', 'creditTradeFK', 'userFK', 'creditTradeUpdateTime',
+                  'newRespondentFK', 'creditTradeStatusFK', 'creditTradeTypeFK',
+                  'newNumberOfCredits', 'newFairMarketValuePerCredit',
+                  'newCreditTradeZeroReasonFK', 'newTradeEffectiveDate',
+                  'newNote', 'isInternalHistoryRecord')
+
 
 class CreditTradeStatusSerializer(serializers.ModelSerializer):
-  class Meta:
-    model = CreditTradeStatus
-    fields = ('id','status','description','effectiveDate','expirationDate','displayOrder')
+    class Meta:
+        model = CreditTradeStatus
+        fields = (
+            'id', 'status', 'description', 'effectiveDate', 'expirationDate',
+            'displayOrder')
+
 
 class CreditTradeTypeSerializer(serializers.ModelSerializer):
-  class Meta:
-    model = CreditTradeType
-    fields = ('id','theType','description','effectiveDate','expirationDate','displayOrder','isGovOnlyType')
+    class Meta:
+        model = CreditTradeType
+        fields = (
+            'id', 'theType', 'description', 'effectiveDate', 'expirationDate',
+            'displayOrder', 'isGovOnlyType')
+
 
 class CreditTradeZeroReasonSerializer(serializers.ModelSerializer):
-  class Meta:
-    model = CreditTradeZeroReason
-    fields = ('id','reason','description','effectiveDate','expirationDate','displayOrder')
+    class Meta:
+        model = CreditTradeZeroReason
+        fields = (
+            'id', 'reason', 'description', 'effectiveDate', 'expirationDate',
+            'displayOrder')
+
 
 class CurrentUserViewModelSerializer(serializers.ModelSerializer):
-  class Meta:
-    model = CurrentUserViewModel
-    fields = ('id','givenName','surname','email','active','userRoles','smUserId','smAuthorizationDirectory')
+    class Meta:
+        model = CurrentUserViewModel
+        fields = ('id', 'givenName', 'surname', 'email', 'active', 'userRoles',
+                  'smUserId', 'smAuthorizationDirectory')
+
 
 class FuelSupplierSerializer(serializers.ModelSerializer):
-  class Meta:
-    model = FuelSupplier
-    fields = ('id','name','fuelSupplierStatusFK','fuelSupplierActionsTypeFK','createdDate')
+    class Meta:
+        model = FuelSupplier
+        fields = (
+            'id', 'name', 'fuelSupplierStatusFK', 'fuelSupplierActionsTypeFK',
+            'createdDate')
+
 
 class FuelSupplierActionsTypeSerializer(serializers.ModelSerializer):
-  class Meta:
-    model = FuelSupplierActionsType
-    fields = ('id','theType','description','effectiveDate','expirationDate','displayOrder')
+    class Meta:
+        model = FuelSupplierActionsType
+        fields = (
+            'id', 'theType', 'description', 'effectiveDate', 'expirationDate',
+            'displayOrder')
+
 
 class FuelSupplierAttachmentSerializer(serializers.ModelSerializer):
-  class Meta:
-    model = FuelSupplierAttachment
-    fields = ('id','fuelSupplierFK','fileName','fileLocation','description','complianceYear')
+    class Meta:
+        model = FuelSupplierAttachment
+        fields = (
+            'id', 'fuelSupplierFK', 'fileName', 'fileLocation', 'description',
+            'complianceYear')
+
 
 class FuelSupplierAttachmentTagSerializer(serializers.ModelSerializer):
-  class Meta:
-    model = FuelSupplierAttachmentTag
-    fields = ('id','fuelSupplierAttachmentFK','tag')
+    class Meta:
+        model = FuelSupplierAttachmentTag
+        fields = ('id', 'fuelSupplierAttachmentFK', 'tag')
+
 
 class FuelSupplierBalanceSerializer(serializers.ModelSerializer):
-  class Meta:
-    model = FuelSupplierBalance
-    fields = ('id','fuelSupplierFK','validatedCredits','effectiveDate','endDate','creditTradeFK')
+    class Meta:
+        model = FuelSupplierBalance
+        fields = (
+            'id', 'fuelSupplierFK', 'validatedCredits', 'effectiveDate',
+            'endDate',
+            'creditTradeFK')
+
 
 class FuelSupplierCCDataSerializer(serializers.ModelSerializer):
-  class Meta:
-    model = FuelSupplierCCData
-    fields = ('id','fuelSupplierFK','commonClientOrgId','lastUpdatefromCommonClient','name','corporateAddressLine1','corporateAddressLine2','corporateAddressCity','corporateAddressPostalCode','corporateAddressProvince')
+    class Meta:
+        model = FuelSupplierCCData
+        fields = ('id', 'fuelSupplierFK', 'commonClientOrgId',
+                  'lastUpdatefromCommonClient', 'name', 'corporateAddressLine1',
+                  'corporateAddressLine2', 'corporateAddressCity',
+                  'corporateAddressPostalCode', 'corporateAddressProvince')
+
 
 class FuelSupplierContactSerializer(serializers.ModelSerializer):
-  class Meta:
-    model = FuelSupplierContact
-    fields = ('id','fuelSupplierFK','givenName','surname','title','userFK','notes','emailAddress','workPhoneNumber','mobilePhoneNumber')
+    class Meta:
+        model = FuelSupplierContact
+        fields = (
+            'id', 'fuelSupplierFK', 'givenName', 'surname', 'title', 'userFK',
+            'notes', 'emailAddress', 'workPhoneNumber', 'mobilePhoneNumber')
+
 
 class FuelSupplierHistorySerializer(serializers.ModelSerializer):
-  class Meta:
-    model = FuelSupplierHistory
-    fields = ('id','fuelSupplierFK','historyText')
+    class Meta:
+        model = FuelSupplierHistory
+        fields = ('id', 'fuelSupplierFK', 'historyText')
+
 
 class FuelSupplierStatusSerializer(serializers.ModelSerializer):
-  class Meta:
-    model = FuelSupplierStatus
-    fields = ('id','status','description','effectiveDate','expirationDate','displayOrder')
+    class Meta:
+        model = FuelSupplierStatus
+        fields = (
+            'id', 'status', 'description', 'effectiveDate', 'expirationDate',
+            'displayOrder')
+
 
 class NotificationSerializer(serializers.ModelSerializer):
-  class Meta:
-    model = Notification
-    fields = ('id','notificationEventFK','hasBeenViewed','isWatchNotification','userFK')
+    class Meta:
+        model = Notification
+        fields = (
+            'id', 'notificationEventFK', 'hasBeenViewed', 'isWatchNotification',
+            'userFK')
+
 
 class NotificationEventSerializer(serializers.ModelSerializer):
-  class Meta:
-    model = NotificationEvent
-    fields = ('id','eventTime','eventTypeCode','notes','creditTradeFK')
+    class Meta:
+        model = NotificationEvent
+        fields = ('id', 'eventTime', 'eventTypeCode', 'notes', 'creditTradeFK')
+
 
 class NotificationTypeSerializer(serializers.ModelSerializer):
-  class Meta:
-    model = NotificationType
-    fields = ('id','theType','description','effectiveDate','expirationDate','displayOrder')
+    class Meta:
+        model = NotificationType
+        fields = (
+            'id', 'theType', 'description', 'effectiveDate', 'expirationDate',
+            'displayOrder')
+
 
 class NotificationViewModelSerializer(serializers.ModelSerializer):
-  class Meta:
-    model = NotificationViewModel
-    fields = ('id','eventId','hasBeenViewed','isWatchNotification','isExpired','isAllDay','priorityCode','userId')
+    class Meta:
+        model = NotificationViewModel
+        fields = (
+            'id', 'eventId', 'hasBeenViewed', 'isWatchNotification',
+            'isExpired',
+            'isAllDay', 'priorityCode', 'userId')
+
 
 class PermissionSerializer(serializers.ModelSerializer):
-  class Meta:
-    model = Permission
-    fields = ('id','code','name','description')
+    class Meta:
+        model = Permission
+        fields = ('id', 'code', 'name', 'description')
+
 
 class PermissionViewModelSerializer(serializers.ModelSerializer):
-  class Meta:
-    model = PermissionViewModel
-    fields = ('id','code','name','description')
+    class Meta:
+        model = PermissionViewModel
+        fields = ('id', 'code', 'name', 'description')
+
 
 class RoleSerializer(serializers.ModelSerializer):
-  class Meta:
-    model = Role
-    fields = ('id','name','description','isGovernmentRole')
+    class Meta:
+        model = Role
+        fields = ('id', 'name', 'description', 'isGovernmentRole')
+
 
 class RolePermissionSerializer(serializers.ModelSerializer):
-  class Meta:
-    model = RolePermission
-    fields = ('id','roleFK','permissionFK')
+    class Meta:
+        model = RolePermission
+        fields = ('id', 'roleFK', 'permissionFK')
+
 
 class RolePermissionViewModelSerializer(serializers.ModelSerializer):
-  class Meta:
-    model = RolePermissionViewModel
-    fields = ('id','roleId','permissionId')
+    class Meta:
+        model = RolePermissionViewModel
+        fields = ('id', 'roleId', 'permissionId')
+
 
 class RoleViewModelSerializer(serializers.ModelSerializer):
-  class Meta:
-    model = RoleViewModel
-    fields = ('id','name','description')
+    class Meta:
+        model = RoleViewModel
+        fields = ('id', 'name', 'description')
+
 
 class UserSerializer(serializers.ModelSerializer):
-  class Meta:
-    model = User
-    fields = ('id','authorizationID','givenName','surname','email','userId','guid','authorizationDirectory')
+    class Meta:
+        model = User
+        fields = (
+            'id', 'authorizationID', 'givenName', 'surname', 'email', 'userId',
+            'guid', 'authorizationDirectory')
+
 
 class UserDetailsViewModelSerializer(serializers.ModelSerializer):
-  class Meta:
-    model = UserDetailsViewModel
-    fields = ('id','givenName','surname','email','active','permissions')
+    class Meta:
+        model = UserDetailsViewModel
+        fields = (
+            'id', 'givenName', 'surname', 'email', 'active', 'permissions')
+
 
 class UserFavouriteSerializer(serializers.ModelSerializer):
-  class Meta:
-    model = UserFavourite
-    fields = ('id','context','name','value','isDefault','userFK')
+    class Meta:
+        model = UserFavourite
+        fields = ('id', 'context', 'name', 'value', 'isDefault', 'userFK')
+
 
 class UserFavouriteViewModelSerializer(serializers.ModelSerializer):
-  class Meta:
-    model = UserFavouriteViewModel
-    fields = ('id','name','value','isDefault','type')
+    class Meta:
+        model = UserFavouriteViewModel
+        fields = ('id', 'name', 'value', 'isDefault', 'type')
+
 
 class UserRoleSerializer(serializers.ModelSerializer):
-  class Meta:
-    model = UserRole
-    fields = ('id','userFK','roleFK')
+    class Meta:
+        model = UserRole
+        fields = ('id', 'userFK', 'roleFK')
+
 
 class UserRoleViewModelSerializer(serializers.ModelSerializer):
-  class Meta:
-    model = UserRoleViewModel
-    fields = ('id','effectiveDate','expiryDate','roleId','userId')
+    class Meta:
+        model = UserRoleViewModel
+        fields = ('id', 'effectiveDate', 'expiryDate', 'roleId', 'userId')
+
 
 class UserViewModelSerializer(serializers.ModelSerializer):
-  class Meta:
-    model = UserViewModel
-    fields = ('id','givenName','surname','email','active','smUserId','userRoles')
+    class Meta:
+        model = UserViewModel
+        fields = ('id', 'givenName', 'surname', 'email', 'active', 'smUserId',
+                  'userRoles')
+
 
 class CreditTradeCreateSerializer(serializers.ModelSerializer):
-
-  class Meta:
-    model = CreditTrade
-    fields = '__all__'
+    class Meta:
+        model = CreditTrade
+        fields = '__all__'
 
 
 class CreditTrade2Serializer(serializers.ModelSerializer):
+    creditTradeStatusFK = CreditTradeStatusSerializer(read_only=True)
+    initiatorFK = FuelSupplierSerializer(read_only=True)
+    respondentFK = FuelSupplierSerializer(read_only=True)
+    creditTradeTypeFK = CreditTradeTypeSerializer(read_only=True)
+    creditTradeZeroReasonFK = CreditTradeZeroReasonSerializer(read_only=True)
 
-  creditTradeStatusFK = CreditTradeStatusSerializer(read_only=True)
-  initiatorFK = FuelSupplierSerializer(read_only=True)
-  respondentFK = FuelSupplierSerializer(read_only=True)
-  creditTradeTypeFK = CreditTradeTypeSerializer(read_only=True)
-  creditTradeZeroReasonFK = CreditTradeZeroReasonSerializer(read_only=True)
+    class Meta:
+        model = CreditTrade
+        exclude = ('note',)
 
-  class Meta:
-    model = CreditTrade
-    exclude = ('note',)
 
 class CreditTradeHistory2Serializer(serializers.ModelSerializer):
+    creditTradeStatusFK = CreditTradeStatusSerializer(read_only=True)
+    initiatorFK = FuelSupplierSerializer(read_only=True)
+    respondentFK = FuelSupplierSerializer(read_only=True)
+    creditTradeTypeFK = CreditTradeTypeSerializer(read_only=True)
+    creditTradeZeroReasonFK = CreditTradeZeroReasonSerializer(read_only=True)
 
-  creditTradeStatusFK = CreditTradeStatusSerializer(read_only=True)
-  initiatorFK = FuelSupplierSerializer(read_only=True)
-  respondentFK = FuelSupplierSerializer(read_only=True)
-  creditTradeTypeFK = CreditTradeTypeSerializer(read_only=True)
-  creditTradeZeroReasonFK = CreditTradeZeroReasonSerializer(read_only=True)
+    class Meta:
+        model = CreditTradeHistory
+        fields = '__all__'
 
-  class Meta:
-    model = CreditTradeHistory
-    fields = '__all__'
 
 class CreditTradeHistoryCreateSerializer(serializers.ModelSerializer):
-
-  class Meta:
-    model = CreditTradeHistory
-    fields = '__all__'
-
-
+    class Meta:
+        model = CreditTradeHistory
+        fields = '__all__'

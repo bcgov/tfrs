@@ -105,22 +105,21 @@ from .serializers import UserViewModelSerializer
 # See the file test_api_complex.py for other test cases, which must be hand 
 # written.
 class Test_Api_Simple(TestCase):
-
     def setUp(self):
         # Every test needs a client.
         self.client = Client()
         # needed to setup django
         django.setup()
 
-
     def test_credittradestatusesBulkPost(self):
         # Test Bulk Load.
         payload = fakedata.CreditTradeStatusTestDataCreate()
         jsonString = "[]"
-        response = self.client.post('/api/credittradestatuses/bulk',content_type='application/json', data=jsonString)
+        response = self.client.post('/api/credittradestatuses/bulk',
+                                    content_type='application/json',
+                                    data=jsonString)
         # Check that the response is 200 OK.
         assert status.HTTP_201_CREATED == response.status_code
-        
 
     def test_credittradestatusesGet(self):
         # Test Create and List operations.
@@ -129,7 +128,8 @@ class Test_Api_Simple(TestCase):
         serializer_class = CreditTradeStatusSerializer
         payload = fakedata.CreditTradeStatusTestDataCreate()
         jsonString = json.dumps(payload)
-        response = self.client.post(testUrl, content_type='application/json', data=jsonString)
+        response = self.client.post(testUrl, content_type='application/json',
+                                    data=jsonString)
         # Check that the response is OK.
         assert status.HTTP_201_CREATED == response.status_code
         # parse the response.
@@ -145,36 +145,36 @@ class Test_Api_Simple(TestCase):
         response = self.client.post(deleteUrl)
         # Check that the response is OK.
         assert status.HTTP_204_NO_CONTENT == response.status_code
-        
 
     def test_credittradestatusesIdDeletePost(self):
         # Test Retrieve and Update operations.
         testUrl = "/api/credittradestatuses/(?P<id>[0-9]+)/delete"
-        createUrl = testUrl.replace ("/(?P<id>[0-9]+)/delete","")
+        createUrl = testUrl.replace("/(?P<id>[0-9]+)/delete", "")
         # Create an object:
         payload = fakedata.CreditTradeStatusTestDataCreate()
         jsonString = json.dumps(payload)
-        response = self.client.post(createUrl, content_type='application/json', data=jsonString)
+        response = self.client.post(createUrl, content_type='application/json',
+                                    data=jsonString)
         # Check that the response is OK.
         assert status.HTTP_201_CREATED == response.status_code
         # parse the response.
         jsonString = response.content.decode("utf-8")
         data = json.loads(jsonString)
         createdId = data['id']
-        deleteUrl = testUrl.replace ("(?P<id>[0-9]+)",str(createdId))
+        deleteUrl = testUrl.replace("(?P<id>[0-9]+)", str(createdId))
         response = self.client.post(deleteUrl)
         # Check that the response is OK.
         assert status.HTTP_204_NO_CONTENT == response.status_code
-        
 
     def test_credittradestatusesIdGet(self):
         # Test Retrieve and Update operations.
         testUrl = "/api/credittradestatuses/(?P<id>[0-9]+)"
-        createUrl = testUrl.replace ("/(?P<id>[0-9]+)","")
+        createUrl = testUrl.replace("/(?P<id>[0-9]+)", "")
         # Create an object:
         payload = fakedata.CreditTradeStatusTestDataCreate()
         jsonString = json.dumps(payload)
-        response = self.client.post(createUrl, content_type='application/json', data=jsonString)
+        response = self.client.post(createUrl, content_type='application/json',
+                                    data=jsonString)
         # Check that the response is OK.
         assert status.HTTP_201_CREATED == response.status_code
         # parse the response.
@@ -182,10 +182,11 @@ class Test_Api_Simple(TestCase):
         data = json.loads(jsonString)
         createdId = data['id']
         # Update the object:
-        updateUrl = testUrl.replace ("(?P<id>[0-9]+)",str(createdId))
+        updateUrl = testUrl.replace("(?P<id>[0-9]+)", str(createdId))
         payload = fakedata.CreditTradeStatusTestDataUpdate()
         jsonString = json.dumps(payload)
-        response = self.client.put(updateUrl, content_type='application/json', data=jsonString)
+        response = self.client.put(updateUrl, content_type='application/json',
+                                   data=jsonString)
         # Check that the response is 200 OK.
         assert status.HTTP_200_OK == response.status_code
         # Cleanup:
@@ -193,16 +194,16 @@ class Test_Api_Simple(TestCase):
         response = self.client.post(deleteUrl)
         # Check that the response is OK.
         assert status.HTTP_204_NO_CONTENT == response.status_code
-        
 
     def test_credittradetypesBulkPost(self):
         # Test Bulk Load.
         payload = fakedata.CreditTradeTypeTestDataCreate()
         jsonString = "[]"
-        response = self.client.post('/api/credittradetypes/bulk',content_type='application/json', data=jsonString)
+        response = self.client.post('/api/credittradetypes/bulk',
+                                    content_type='application/json',
+                                    data=jsonString)
         # Check that the response is 200 OK.
         assert status.HTTP_201_CREATED == response.status_code
-        
 
     def test_credittradetypesGet(self):
         # Test Create and List operations.
@@ -211,7 +212,8 @@ class Test_Api_Simple(TestCase):
         serializer_class = CreditTradeTypeSerializer
         payload = fakedata.CreditTradeTypeTestDataCreate()
         jsonString = json.dumps(payload)
-        response = self.client.post(testUrl, content_type='application/json', data=jsonString)
+        response = self.client.post(testUrl, content_type='application/json',
+                                    data=jsonString)
         # Check that the response is OK.
         assert status.HTTP_201_CREATED == response.status_code
         # parse the response.
@@ -227,36 +229,36 @@ class Test_Api_Simple(TestCase):
         response = self.client.post(deleteUrl)
         # Check that the response is OK.
         assert status.HTTP_204_NO_CONTENT == response.status_code
-        
 
     def test_credittradetypesIdDeletePost(self):
         # Test Retrieve and Update operations.
         testUrl = "/api/credittradetypes/(?P<id>[0-9]+)/delete"
-        createUrl = testUrl.replace ("/(?P<id>[0-9]+)/delete","")
+        createUrl = testUrl.replace("/(?P<id>[0-9]+)/delete", "")
         # Create an object:
         payload = fakedata.CreditTradeTypeTestDataCreate()
         jsonString = json.dumps(payload)
-        response = self.client.post(createUrl, content_type='application/json', data=jsonString)
+        response = self.client.post(createUrl, content_type='application/json',
+                                    data=jsonString)
         # Check that the response is OK.
         assert status.HTTP_201_CREATED == response.status_code
         # parse the response.
         jsonString = response.content.decode("utf-8")
         data = json.loads(jsonString)
         createdId = data['id']
-        deleteUrl = testUrl.replace ("(?P<id>[0-9]+)",str(createdId))
+        deleteUrl = testUrl.replace("(?P<id>[0-9]+)", str(createdId))
         response = self.client.post(deleteUrl)
         # Check that the response is OK.
         assert status.HTTP_204_NO_CONTENT == response.status_code
-        
 
     def test_credittradetypesIdGet(self):
         # Test Retrieve and Update operations.
         testUrl = "/api/credittradetypes/(?P<id>[0-9]+)"
-        createUrl = testUrl.replace ("/(?P<id>[0-9]+)","")
+        createUrl = testUrl.replace("/(?P<id>[0-9]+)", "")
         # Create an object:
         payload = fakedata.CreditTradeTypeTestDataCreate()
         jsonString = json.dumps(payload)
-        response = self.client.post(createUrl, content_type='application/json', data=jsonString)
+        response = self.client.post(createUrl, content_type='application/json',
+                                    data=jsonString)
         # Check that the response is OK.
         assert status.HTTP_201_CREATED == response.status_code
         # parse the response.
@@ -264,10 +266,11 @@ class Test_Api_Simple(TestCase):
         data = json.loads(jsonString)
         createdId = data['id']
         # Update the object:
-        updateUrl = testUrl.replace ("(?P<id>[0-9]+)",str(createdId))
+        updateUrl = testUrl.replace("(?P<id>[0-9]+)", str(createdId))
         payload = fakedata.CreditTradeTypeTestDataUpdate()
         jsonString = json.dumps(payload)
-        response = self.client.put(updateUrl, content_type='application/json', data=jsonString)
+        response = self.client.put(updateUrl, content_type='application/json',
+                                   data=jsonString)
         # Check that the response is 200 OK.
         assert status.HTTP_200_OK == response.status_code
         # Cleanup:
@@ -275,16 +278,16 @@ class Test_Api_Simple(TestCase):
         response = self.client.post(deleteUrl)
         # Check that the response is OK.
         assert status.HTTP_204_NO_CONTENT == response.status_code
-        
 
     def test_credittradezeroreasonBulkPost(self):
         # Test Bulk Load.
         payload = fakedata.CreditTradeZeroReasonTestDataCreate()
         jsonString = "[]"
-        response = self.client.post('/api/credittradezeroreason/bulk',content_type='application/json', data=jsonString)
+        response = self.client.post('/api/credittradezeroreason/bulk',
+                                    content_type='application/json',
+                                    data=jsonString)
         # Check that the response is 200 OK.
         assert status.HTTP_201_CREATED == response.status_code
-        
 
     def test_credittradezeroreasonGet(self):
         # Test Create and List operations.
@@ -293,7 +296,8 @@ class Test_Api_Simple(TestCase):
         serializer_class = CreditTradeZeroReasonSerializer
         payload = fakedata.CreditTradeZeroReasonTestDataCreate()
         jsonString = json.dumps(payload)
-        response = self.client.post(testUrl, content_type='application/json', data=jsonString)
+        response = self.client.post(testUrl, content_type='application/json',
+                                    data=jsonString)
         # Check that the response is OK.
         assert status.HTTP_201_CREATED == response.status_code
         # parse the response.
@@ -309,36 +313,36 @@ class Test_Api_Simple(TestCase):
         response = self.client.post(deleteUrl)
         # Check that the response is OK.
         assert status.HTTP_204_NO_CONTENT == response.status_code
-        
 
     def test_credittradezeroreasonIdDeletePost(self):
         # Test Retrieve and Update operations.
         testUrl = "/api/credittradezeroreason/(?P<id>[0-9]+)/delete"
-        createUrl = testUrl.replace ("/(?P<id>[0-9]+)/delete","")
+        createUrl = testUrl.replace("/(?P<id>[0-9]+)/delete", "")
         # Create an object:
         payload = fakedata.CreditTradeZeroReasonTestDataCreate()
         jsonString = json.dumps(payload)
-        response = self.client.post(createUrl, content_type='application/json', data=jsonString)
+        response = self.client.post(createUrl, content_type='application/json',
+                                    data=jsonString)
         # Check that the response is OK.
         assert status.HTTP_201_CREATED == response.status_code
         # parse the response.
         jsonString = response.content.decode("utf-8")
         data = json.loads(jsonString)
         createdId = data['id']
-        deleteUrl = testUrl.replace ("(?P<id>[0-9]+)",str(createdId))
+        deleteUrl = testUrl.replace("(?P<id>[0-9]+)", str(createdId))
         response = self.client.post(deleteUrl)
         # Check that the response is OK.
         assert status.HTTP_204_NO_CONTENT == response.status_code
-        
 
     def test_credittradezeroreasonIdGet(self):
         # Test Retrieve and Update operations.
         testUrl = "/api/credittradezeroreason/(?P<id>[0-9]+)"
-        createUrl = testUrl.replace ("/(?P<id>[0-9]+)","")
+        createUrl = testUrl.replace("/(?P<id>[0-9]+)", "")
         # Create an object:
         payload = fakedata.CreditTradeZeroReasonTestDataCreate()
         jsonString = json.dumps(payload)
-        response = self.client.post(createUrl, content_type='application/json', data=jsonString)
+        response = self.client.post(createUrl, content_type='application/json',
+                                    data=jsonString)
         # Check that the response is OK.
         assert status.HTTP_201_CREATED == response.status_code
         # parse the response.
@@ -346,10 +350,11 @@ class Test_Api_Simple(TestCase):
         data = json.loads(jsonString)
         createdId = data['id']
         # Update the object:
-        updateUrl = testUrl.replace ("(?P<id>[0-9]+)",str(createdId))
+        updateUrl = testUrl.replace("(?P<id>[0-9]+)", str(createdId))
         payload = fakedata.CreditTradeZeroReasonTestDataUpdate()
         jsonString = json.dumps(payload)
-        response = self.client.put(updateUrl, content_type='application/json', data=jsonString)
+        response = self.client.put(updateUrl, content_type='application/json',
+                                   data=jsonString)
         # Check that the response is 200 OK.
         assert status.HTTP_200_OK == response.status_code
         # Cleanup:
@@ -357,16 +362,16 @@ class Test_Api_Simple(TestCase):
         response = self.client.post(deleteUrl)
         # Check that the response is OK.
         assert status.HTTP_204_NO_CONTENT == response.status_code
-        
 
     def test_fuelsupplieractionstypesBulkPost(self):
         # Test Bulk Load.
         payload = fakedata.FuelSupplierActionsTypeTestDataCreate()
         jsonString = "[]"
-        response = self.client.post('/api/fuelsupplieractionstypes/bulk',content_type='application/json', data=jsonString)
+        response = self.client.post('/api/fuelsupplieractionstypes/bulk',
+                                    content_type='application/json',
+                                    data=jsonString)
         # Check that the response is 200 OK.
         assert status.HTTP_201_CREATED == response.status_code
-        
 
     def test_fuelsupplieractionstypesGet(self):
         # Test Create and List operations.
@@ -375,7 +380,8 @@ class Test_Api_Simple(TestCase):
         serializer_class = FuelSupplierActionsTypeSerializer
         payload = fakedata.FuelSupplierActionsTypeTestDataCreate()
         jsonString = json.dumps(payload)
-        response = self.client.post(testUrl, content_type='application/json', data=jsonString)
+        response = self.client.post(testUrl, content_type='application/json',
+                                    data=jsonString)
         # Check that the response is OK.
         assert status.HTTP_201_CREATED == response.status_code
         # parse the response.
@@ -391,36 +397,36 @@ class Test_Api_Simple(TestCase):
         response = self.client.post(deleteUrl)
         # Check that the response is OK.
         assert status.HTTP_204_NO_CONTENT == response.status_code
-        
 
     def test_fuelsupplieractionstypesIdDeletePost(self):
         # Test Retrieve and Update operations.
         testUrl = "/api/fuelsupplieractionstypes/(?P<id>[0-9]+)/delete"
-        createUrl = testUrl.replace ("/(?P<id>[0-9]+)/delete","")
+        createUrl = testUrl.replace("/(?P<id>[0-9]+)/delete", "")
         # Create an object:
         payload = fakedata.FuelSupplierActionsTypeTestDataCreate()
         jsonString = json.dumps(payload)
-        response = self.client.post(createUrl, content_type='application/json', data=jsonString)
+        response = self.client.post(createUrl, content_type='application/json',
+                                    data=jsonString)
         # Check that the response is OK.
         assert status.HTTP_201_CREATED == response.status_code
         # parse the response.
         jsonString = response.content.decode("utf-8")
         data = json.loads(jsonString)
         createdId = data['id']
-        deleteUrl = testUrl.replace ("(?P<id>[0-9]+)",str(createdId))
+        deleteUrl = testUrl.replace("(?P<id>[0-9]+)", str(createdId))
         response = self.client.post(deleteUrl)
         # Check that the response is OK.
         assert status.HTTP_204_NO_CONTENT == response.status_code
-        
 
     def test_fuelsupplieractionstypesIdGet(self):
         # Test Retrieve and Update operations.
         testUrl = "/api/fuelsupplieractionstypes/(?P<id>[0-9]+)"
-        createUrl = testUrl.replace ("/(?P<id>[0-9]+)","")
+        createUrl = testUrl.replace("/(?P<id>[0-9]+)", "")
         # Create an object:
         payload = fakedata.FuelSupplierActionsTypeTestDataCreate()
         jsonString = json.dumps(payload)
-        response = self.client.post(createUrl, content_type='application/json', data=jsonString)
+        response = self.client.post(createUrl, content_type='application/json',
+                                    data=jsonString)
         # Check that the response is OK.
         assert status.HTTP_201_CREATED == response.status_code
         # parse the response.
@@ -428,10 +434,11 @@ class Test_Api_Simple(TestCase):
         data = json.loads(jsonString)
         createdId = data['id']
         # Update the object:
-        updateUrl = testUrl.replace ("(?P<id>[0-9]+)",str(createdId))
+        updateUrl = testUrl.replace("(?P<id>[0-9]+)", str(createdId))
         payload = fakedata.FuelSupplierActionsTypeTestDataUpdate()
         jsonString = json.dumps(payload)
-        response = self.client.put(updateUrl, content_type='application/json', data=jsonString)
+        response = self.client.put(updateUrl, content_type='application/json',
+                                   data=jsonString)
         # Check that the response is 200 OK.
         assert status.HTTP_200_OK == response.status_code
         # Cleanup:
@@ -439,16 +446,16 @@ class Test_Api_Simple(TestCase):
         response = self.client.post(deleteUrl)
         # Check that the response is OK.
         assert status.HTTP_204_NO_CONTENT == response.status_code
-        
 
     def test_fuelsupplierstatusesBulkPost(self):
         # Test Bulk Load.
         payload = fakedata.FuelSupplierStatusTestDataCreate()
         jsonString = "[]"
-        response = self.client.post('/api/fuelsupplierstatuses/bulk',content_type='application/json', data=jsonString)
+        response = self.client.post('/api/fuelsupplierstatuses/bulk',
+                                    content_type='application/json',
+                                    data=jsonString)
         # Check that the response is 200 OK.
         assert status.HTTP_201_CREATED == response.status_code
-        
 
     def test_fuelsupplierstatusesGet(self):
         # Test Create and List operations.
@@ -457,7 +464,8 @@ class Test_Api_Simple(TestCase):
         serializer_class = FuelSupplierStatusSerializer
         payload = fakedata.FuelSupplierStatusTestDataCreate()
         jsonString = json.dumps(payload)
-        response = self.client.post(testUrl, content_type='application/json', data=jsonString)
+        response = self.client.post(testUrl, content_type='application/json',
+                                    data=jsonString)
         # Check that the response is OK.
         assert status.HTTP_201_CREATED == response.status_code
         # parse the response.
@@ -473,36 +481,36 @@ class Test_Api_Simple(TestCase):
         response = self.client.post(deleteUrl)
         # Check that the response is OK.
         assert status.HTTP_204_NO_CONTENT == response.status_code
-        
 
     def test_fuelsupplierstatusesIdDeletePost(self):
         # Test Retrieve and Update operations.
         testUrl = "/api/fuelsupplierstatuses/(?P<id>[0-9]+)/delete"
-        createUrl = testUrl.replace ("/(?P<id>[0-9]+)/delete","")
+        createUrl = testUrl.replace("/(?P<id>[0-9]+)/delete", "")
         # Create an object:
         payload = fakedata.FuelSupplierStatusTestDataCreate()
         jsonString = json.dumps(payload)
-        response = self.client.post(createUrl, content_type='application/json', data=jsonString)
+        response = self.client.post(createUrl, content_type='application/json',
+                                    data=jsonString)
         # Check that the response is OK.
         assert status.HTTP_201_CREATED == response.status_code
         # parse the response.
         jsonString = response.content.decode("utf-8")
         data = json.loads(jsonString)
         createdId = data['id']
-        deleteUrl = testUrl.replace ("(?P<id>[0-9]+)",str(createdId))
+        deleteUrl = testUrl.replace("(?P<id>[0-9]+)", str(createdId))
         response = self.client.post(deleteUrl)
         # Check that the response is OK.
         assert status.HTTP_204_NO_CONTENT == response.status_code
-        
 
     def test_fuelsupplierstatusesIdGet(self):
         # Test Retrieve and Update operations.
         testUrl = "/api/fuelsupplierstatuses/(?P<id>[0-9]+)"
-        createUrl = testUrl.replace ("/(?P<id>[0-9]+)","")
+        createUrl = testUrl.replace("/(?P<id>[0-9]+)", "")
         # Create an object:
         payload = fakedata.FuelSupplierStatusTestDataCreate()
         jsonString = json.dumps(payload)
-        response = self.client.post(createUrl, content_type='application/json', data=jsonString)
+        response = self.client.post(createUrl, content_type='application/json',
+                                    data=jsonString)
         # Check that the response is OK.
         assert status.HTTP_201_CREATED == response.status_code
         # parse the response.
@@ -510,10 +518,11 @@ class Test_Api_Simple(TestCase):
         data = json.loads(jsonString)
         createdId = data['id']
         # Update the object:
-        updateUrl = testUrl.replace ("(?P<id>[0-9]+)",str(createdId))
+        updateUrl = testUrl.replace("(?P<id>[0-9]+)", str(createdId))
         payload = fakedata.FuelSupplierStatusTestDataUpdate()
         jsonString = json.dumps(payload)
-        response = self.client.put(updateUrl, content_type='application/json', data=jsonString)
+        response = self.client.put(updateUrl, content_type='application/json',
+                                   data=jsonString)
         # Check that the response is 200 OK.
         assert status.HTTP_200_OK == response.status_code
         # Cleanup:
@@ -521,16 +530,16 @@ class Test_Api_Simple(TestCase):
         response = self.client.post(deleteUrl)
         # Check that the response is OK.
         assert status.HTTP_204_NO_CONTENT == response.status_code
-        
 
     def test_notificationtypesBulkPost(self):
         # Test Bulk Load.
         payload = fakedata.NotificationTypeTestDataCreate()
         jsonString = "[]"
-        response = self.client.post('/api/notificationtypes/bulk',content_type='application/json', data=jsonString)
+        response = self.client.post('/api/notificationtypes/bulk',
+                                    content_type='application/json',
+                                    data=jsonString)
         # Check that the response is 200 OK.
         assert status.HTTP_201_CREATED == response.status_code
-        
 
     def test_notificationtypesGet(self):
         # Test Create and List operations.
@@ -539,7 +548,8 @@ class Test_Api_Simple(TestCase):
         serializer_class = NotificationTypeSerializer
         payload = fakedata.NotificationTypeTestDataCreate()
         jsonString = json.dumps(payload)
-        response = self.client.post(testUrl, content_type='application/json', data=jsonString)
+        response = self.client.post(testUrl, content_type='application/json',
+                                    data=jsonString)
         # Check that the response is OK.
         assert status.HTTP_201_CREATED == response.status_code
         # parse the response.
@@ -555,36 +565,36 @@ class Test_Api_Simple(TestCase):
         response = self.client.post(deleteUrl)
         # Check that the response is OK.
         assert status.HTTP_204_NO_CONTENT == response.status_code
-        
 
     def test_notificationtypesIdDeletePost(self):
         # Test Retrieve and Update operations.
         testUrl = "/api/notificationtypes/(?P<id>[0-9]+)/delete"
-        createUrl = testUrl.replace ("/(?P<id>[0-9]+)/delete","")
+        createUrl = testUrl.replace("/(?P<id>[0-9]+)/delete", "")
         # Create an object:
         payload = fakedata.NotificationTypeTestDataCreate()
         jsonString = json.dumps(payload)
-        response = self.client.post(createUrl, content_type='application/json', data=jsonString)
+        response = self.client.post(createUrl, content_type='application/json',
+                                    data=jsonString)
         # Check that the response is OK.
         assert status.HTTP_201_CREATED == response.status_code
         # parse the response.
         jsonString = response.content.decode("utf-8")
         data = json.loads(jsonString)
         createdId = data['id']
-        deleteUrl = testUrl.replace ("(?P<id>[0-9]+)",str(createdId))
+        deleteUrl = testUrl.replace("(?P<id>[0-9]+)", str(createdId))
         response = self.client.post(deleteUrl)
         # Check that the response is OK.
         assert status.HTTP_204_NO_CONTENT == response.status_code
-        
 
     def test_notificationtypesIdGet(self):
         # Test Retrieve and Update operations.
         testUrl = "/api/notificationtypes/(?P<id>[0-9]+)"
-        createUrl = testUrl.replace ("/(?P<id>[0-9]+)","")
+        createUrl = testUrl.replace("/(?P<id>[0-9]+)", "")
         # Create an object:
         payload = fakedata.NotificationTypeTestDataCreate()
         jsonString = json.dumps(payload)
-        response = self.client.post(createUrl, content_type='application/json', data=jsonString)
+        response = self.client.post(createUrl, content_type='application/json',
+                                    data=jsonString)
         # Check that the response is OK.
         assert status.HTTP_201_CREATED == response.status_code
         # parse the response.
@@ -592,10 +602,11 @@ class Test_Api_Simple(TestCase):
         data = json.loads(jsonString)
         createdId = data['id']
         # Update the object:
-        updateUrl = testUrl.replace ("(?P<id>[0-9]+)",str(createdId))
+        updateUrl = testUrl.replace("(?P<id>[0-9]+)", str(createdId))
         payload = fakedata.NotificationTypeTestDataUpdate()
         jsonString = json.dumps(payload)
-        response = self.client.put(updateUrl, content_type='application/json', data=jsonString)
+        response = self.client.put(updateUrl, content_type='application/json',
+                                   data=jsonString)
         # Check that the response is 200 OK.
         assert status.HTTP_200_OK == response.status_code
         # Cleanup:
@@ -603,16 +614,16 @@ class Test_Api_Simple(TestCase):
         response = self.client.post(deleteUrl)
         # Check that the response is OK.
         assert status.HTTP_204_NO_CONTENT == response.status_code
-        
 
     def test_permissionsBulkPost(self):
         # Test Bulk Load.
         payload = fakedata.PermissionTestDataCreate()
         jsonString = "[]"
-        response = self.client.post('/api/permissions/bulk',content_type='application/json', data=jsonString)
+        response = self.client.post('/api/permissions/bulk',
+                                    content_type='application/json',
+                                    data=jsonString)
         # Check that the response is 200 OK.
         assert status.HTTP_201_CREATED == response.status_code
-        
 
     def test_permissionsGet(self):
         # Test Create and List operations.
@@ -621,7 +632,8 @@ class Test_Api_Simple(TestCase):
         serializer_class = PermissionSerializer
         payload = fakedata.PermissionTestDataCreate()
         jsonString = json.dumps(payload)
-        response = self.client.post(testUrl, content_type='application/json', data=jsonString)
+        response = self.client.post(testUrl, content_type='application/json',
+                                    data=jsonString)
         # Check that the response is OK.
         assert status.HTTP_201_CREATED == response.status_code
         # parse the response.
@@ -637,36 +649,36 @@ class Test_Api_Simple(TestCase):
         response = self.client.post(deleteUrl)
         # Check that the response is OK.
         assert status.HTTP_204_NO_CONTENT == response.status_code
-        
 
     def test_permissionsIdDeletePost(self):
         # Test Retrieve and Update operations.
         testUrl = "/api/permissions/(?P<id>[0-9]+)/delete"
-        createUrl = testUrl.replace ("/(?P<id>[0-9]+)/delete","")
+        createUrl = testUrl.replace("/(?P<id>[0-9]+)/delete", "")
         # Create an object:
         payload = fakedata.PermissionTestDataCreate()
         jsonString = json.dumps(payload)
-        response = self.client.post(createUrl, content_type='application/json', data=jsonString)
+        response = self.client.post(createUrl, content_type='application/json',
+                                    data=jsonString)
         # Check that the response is OK.
         assert status.HTTP_201_CREATED == response.status_code
         # parse the response.
         jsonString = response.content.decode("utf-8")
         data = json.loads(jsonString)
         createdId = data['id']
-        deleteUrl = testUrl.replace ("(?P<id>[0-9]+)",str(createdId))
+        deleteUrl = testUrl.replace("(?P<id>[0-9]+)", str(createdId))
         response = self.client.post(deleteUrl)
         # Check that the response is OK.
         assert status.HTTP_204_NO_CONTENT == response.status_code
-        
 
     def test_permissionsIdGet(self):
         # Test Retrieve and Update operations.
         testUrl = "/api/permissions/(?P<id>[0-9]+)"
-        createUrl = testUrl.replace ("/(?P<id>[0-9]+)","")
+        createUrl = testUrl.replace("/(?P<id>[0-9]+)", "")
         # Create an object:
         payload = fakedata.PermissionTestDataCreate()
         jsonString = json.dumps(payload)
-        response = self.client.post(createUrl, content_type='application/json', data=jsonString)
+        response = self.client.post(createUrl, content_type='application/json',
+                                    data=jsonString)
         # Check that the response is OK.
         assert status.HTTP_201_CREATED == response.status_code
         # parse the response.
@@ -674,10 +686,11 @@ class Test_Api_Simple(TestCase):
         data = json.loads(jsonString)
         createdId = data['id']
         # Update the object:
-        updateUrl = testUrl.replace ("(?P<id>[0-9]+)",str(createdId))
+        updateUrl = testUrl.replace("(?P<id>[0-9]+)", str(createdId))
         payload = fakedata.PermissionTestDataUpdate()
         jsonString = json.dumps(payload)
-        response = self.client.put(updateUrl, content_type='application/json', data=jsonString)
+        response = self.client.put(updateUrl, content_type='application/json',
+                                   data=jsonString)
         # Check that the response is 200 OK.
         assert status.HTTP_200_OK == response.status_code
         # Cleanup:
@@ -685,16 +698,16 @@ class Test_Api_Simple(TestCase):
         response = self.client.post(deleteUrl)
         # Check that the response is OK.
         assert status.HTTP_204_NO_CONTENT == response.status_code
-        
 
     def test_rolesBulkPost(self):
         # Test Bulk Load.
         payload = fakedata.RoleTestDataCreate()
         jsonString = "[]"
-        response = self.client.post('/api/roles/bulk',content_type='application/json', data=jsonString)
+        response = self.client.post('/api/roles/bulk',
+                                    content_type='application/json',
+                                    data=jsonString)
         # Check that the response is 200 OK.
         assert status.HTTP_201_CREATED == response.status_code
-        
 
     def test_rolesGet(self):
         # Test Create and List operations.
@@ -703,7 +716,8 @@ class Test_Api_Simple(TestCase):
         serializer_class = RoleSerializer
         payload = fakedata.RoleTestDataCreate()
         jsonString = json.dumps(payload)
-        response = self.client.post(testUrl, content_type='application/json', data=jsonString)
+        response = self.client.post(testUrl, content_type='application/json',
+                                    data=jsonString)
         # Check that the response is OK.
         assert status.HTTP_201_CREATED == response.status_code
         # parse the response.
@@ -719,36 +733,36 @@ class Test_Api_Simple(TestCase):
         response = self.client.post(deleteUrl)
         # Check that the response is OK.
         assert status.HTTP_204_NO_CONTENT == response.status_code
-        
 
     def test_rolesIdDeletePost(self):
         # Test Retrieve and Update operations.
         testUrl = "/api/roles/(?P<id>[0-9]+)/delete"
-        createUrl = testUrl.replace ("/(?P<id>[0-9]+)/delete","")
+        createUrl = testUrl.replace("/(?P<id>[0-9]+)/delete", "")
         # Create an object:
         payload = fakedata.RoleTestDataCreate()
         jsonString = json.dumps(payload)
-        response = self.client.post(createUrl, content_type='application/json', data=jsonString)
+        response = self.client.post(createUrl, content_type='application/json',
+                                    data=jsonString)
         # Check that the response is OK.
         assert status.HTTP_201_CREATED == response.status_code
         # parse the response.
         jsonString = response.content.decode("utf-8")
         data = json.loads(jsonString)
         createdId = data['id']
-        deleteUrl = testUrl.replace ("(?P<id>[0-9]+)",str(createdId))
+        deleteUrl = testUrl.replace("(?P<id>[0-9]+)", str(createdId))
         response = self.client.post(deleteUrl)
         # Check that the response is OK.
         assert status.HTTP_204_NO_CONTENT == response.status_code
-        
 
     def test_rolesIdGet(self):
         # Test Retrieve and Update operations.
         testUrl = "/api/roles/(?P<id>[0-9]+)"
-        createUrl = testUrl.replace ("/(?P<id>[0-9]+)","")
+        createUrl = testUrl.replace("/(?P<id>[0-9]+)", "")
         # Create an object:
         payload = fakedata.RoleTestDataCreate()
         jsonString = json.dumps(payload)
-        response = self.client.post(createUrl, content_type='application/json', data=jsonString)
+        response = self.client.post(createUrl, content_type='application/json',
+                                    data=jsonString)
         # Check that the response is OK.
         assert status.HTTP_201_CREATED == response.status_code
         # parse the response.
@@ -756,10 +770,11 @@ class Test_Api_Simple(TestCase):
         data = json.loads(jsonString)
         createdId = data['id']
         # Update the object:
-        updateUrl = testUrl.replace ("(?P<id>[0-9]+)",str(createdId))
+        updateUrl = testUrl.replace("(?P<id>[0-9]+)", str(createdId))
         payload = fakedata.RoleTestDataUpdate()
         jsonString = json.dumps(payload)
-        response = self.client.put(updateUrl, content_type='application/json', data=jsonString)
+        response = self.client.put(updateUrl, content_type='application/json',
+                                   data=jsonString)
         # Check that the response is 200 OK.
         assert status.HTTP_200_OK == response.status_code
         # Cleanup:
@@ -767,16 +782,16 @@ class Test_Api_Simple(TestCase):
         response = self.client.post(deleteUrl)
         # Check that the response is OK.
         assert status.HTTP_204_NO_CONTENT == response.status_code
-        
 
     def test_usersBulkPost(self):
         # Test Bulk Load.
         payload = fakedata.UserTestDataCreate()
         jsonString = "[]"
-        response = self.client.post('/api/users/bulk',content_type='application/json', data=jsonString)
+        response = self.client.post('/api/users/bulk',
+                                    content_type='application/json',
+                                    data=jsonString)
         # Check that the response is 200 OK.
         assert status.HTTP_201_CREATED == response.status_code
-        
 
     def test_usersGet(self):
         # Test Create and List operations.
@@ -785,7 +800,8 @@ class Test_Api_Simple(TestCase):
         serializer_class = UserSerializer
         payload = fakedata.UserTestDataCreate()
         jsonString = json.dumps(payload)
-        response = self.client.post(testUrl, content_type='application/json', data=jsonString)
+        response = self.client.post(testUrl, content_type='application/json',
+                                    data=jsonString)
         # Check that the response is OK.
         assert status.HTTP_201_CREATED == response.status_code
         # parse the response.
@@ -801,36 +817,36 @@ class Test_Api_Simple(TestCase):
         response = self.client.post(deleteUrl)
         # Check that the response is OK.
         assert status.HTTP_204_NO_CONTENT == response.status_code
-        
 
     def test_usersIdDeletePost(self):
         # Test Retrieve and Update operations.
         testUrl = "/api/users/(?P<id>[0-9]+)/delete"
-        createUrl = testUrl.replace ("/(?P<id>[0-9]+)/delete","")
+        createUrl = testUrl.replace("/(?P<id>[0-9]+)/delete", "")
         # Create an object:
         payload = fakedata.UserTestDataCreate()
         jsonString = json.dumps(payload)
-        response = self.client.post(createUrl, content_type='application/json', data=jsonString)
+        response = self.client.post(createUrl, content_type='application/json',
+                                    data=jsonString)
         # Check that the response is OK.
         assert status.HTTP_201_CREATED == response.status_code
         # parse the response.
         jsonString = response.content.decode("utf-8")
         data = json.loads(jsonString)
         createdId = data['id']
-        deleteUrl = testUrl.replace ("(?P<id>[0-9]+)",str(createdId))
+        deleteUrl = testUrl.replace("(?P<id>[0-9]+)", str(createdId))
         response = self.client.post(deleteUrl)
         # Check that the response is OK.
         assert status.HTTP_204_NO_CONTENT == response.status_code
-        
 
     def test_usersIdGet(self):
         # Test Retrieve and Update operations.
         testUrl = "/api/users/(?P<id>[0-9]+)"
-        createUrl = testUrl.replace ("/(?P<id>[0-9]+)","")
+        createUrl = testUrl.replace("/(?P<id>[0-9]+)", "")
         # Create an object:
         payload = fakedata.UserTestDataCreate()
         jsonString = json.dumps(payload)
-        response = self.client.post(createUrl, content_type='application/json', data=jsonString)
+        response = self.client.post(createUrl, content_type='application/json',
+                                    data=jsonString)
         # Check that the response is OK.
         assert status.HTTP_201_CREATED == response.status_code
         # parse the response.
@@ -838,10 +854,11 @@ class Test_Api_Simple(TestCase):
         data = json.loads(jsonString)
         createdId = data['id']
         # Update the object:
-        updateUrl = testUrl.replace ("(?P<id>[0-9]+)",str(createdId))
+        updateUrl = testUrl.replace("(?P<id>[0-9]+)", str(createdId))
         payload = fakedata.UserTestDataUpdate()
         jsonString = json.dumps(payload)
-        response = self.client.put(updateUrl, content_type='application/json', data=jsonString)
+        response = self.client.put(updateUrl, content_type='application/json',
+                                   data=jsonString)
         # Check that the response is 200 OK.
         assert status.HTTP_200_OK == response.status_code
         # Cleanup:
@@ -849,11 +866,7 @@ class Test_Api_Simple(TestCase):
         response = self.client.post(deleteUrl)
         # Check that the response is OK.
         assert status.HTTP_204_NO_CONTENT == response.status_code
-        
+
 
 if __name__ == '__main__':
     unittest.main()
-
-
-
-
