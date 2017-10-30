@@ -23,7 +23,9 @@ body {
   } 
 }
 
-#root, [data-reactroot], .App {
+#root, 
+[data-reactroot], 
+.App {
   height: 100%;
 }
 
@@ -85,15 +87,36 @@ table {
   }
 }
 
-.table-bordered>thead>tr>td, .table-bordered>thead>tr>th {
+.table-bordered > thead > tr > td, 
+.table-bordered > thead > tr > th {
   border-bottom-width: 0 !important;
 }
 
-.table-bordered>tbody>tr>td {
+.table-bordered {
+  thead {
+    background-color: rgba(0, 51, 102, 0.80);
+    color: white;
+    font-size: larger;
+  }
+}
+
+.table-bordered > tbody > tr > td {
   border-bottom: none;
 }
 
-.account-activity-table, .fuel-suppliers-table, .our-opportunities-table, .open-opportunities-table, .correspondence-table, .history-table {
+.table-bordered > tbody > tr {
+  &:nth-child(even) {
+    background-color: #f4f6f9;
+  }
+}
+
+
+.account-activity-table, 
+.fuel-suppliers-table, 
+.our-opportunities-table, 
+.open-opportunities-table, 
+.correspondence-table, 
+.history-table {
   margin-top: 1rem;
   margin-bottom: 1rem;
 
@@ -182,7 +205,11 @@ table {
     }
   }
 
-.react-bs-table .table-bordered>tbody>tr>td {
+.react-bs-table .table-bordered > tbody > tr > td {
   white-space: pre-wrap;
   word-break: break-word;
+}
+
+.react-bs-table-bordered {
+  margin: 1em 0;
 }
