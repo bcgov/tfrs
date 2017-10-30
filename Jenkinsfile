@@ -1,3 +1,13 @@
+node('python') {
+    stage('Unit Test') {
+        echo('Unit Test')
+        checkout scm
+        sh 'pip install --upgrade pip'
+        sh 'pip install -r requirements.txt'
+        sh 'python ./manage.py test'
+    }
+}
+
 node('maven') {
     stage('build') {
         echo "Building..."
