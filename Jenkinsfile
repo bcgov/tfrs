@@ -9,19 +9,11 @@ node('python') {
 }
 
 node('maven') {
-    stage('build') {
-        echo "Building..."
-        openshiftBuild bldCfg: 'tfrs', showBuildLogs: 'true'
-        openshiftTag destStream: 'tfrs', verbose: 'true', destTag: '$BUILD_ID', srcStream: 'tfrs', srcTag: 'latest'
-    }
 
-    stage('checkout for static code analysis') {
+    stage('Quality Check') {
         echo "checking out source"
-        echo "Build: ${BUILD_ID}"
         checkout scm
-    }
-
-    stage('code quality check') {
+        echo('Quality Check')
         SONARQUBE_PWD = sh (
             script: 'oc env dc/sonarqube --list | awk  -F  "=" \'/SONARQUBE_ADMINPW/{print $2}\'',
             returnStdout: true
@@ -39,19 +31,28 @@ node('maven') {
         }
     }
 
-    stage('deploy-dev') {
-        echo "Deploying to dev..."
-        openshiftTag destStream: 'tfrs', verbose: 'true', destTag: 'dev', srcStream: 'tfrs', srcTag: 'latest'
+    stage('Build and Tag') {
+        echo "Build and Tag: ${BUILD_ID}"
+        openshiftBuild bldCfg: 'tfrs', showBuildLogs: 'true'
+        openshiftTag destStream: 'tfrs', verbose: 'true', destTag: '$BUILD_ID', srcStream: 'tfrs', srcTag: 'latest'
     }
+
+    stage('Deploy to Dev') {
+        echo "Deploying to Dev: ${BUILD_ID}"
+        openshiftTag destStream: 'tfrs', verbose: 'true', destTag: 'dev', srcStream: 'tfrs', srcTag: '$BUILD_ID'
+        sh 'sleep 3m'
+    }
+
 }
 
-stage('deploy-test') {
+
+stage('Deploy to Test') {
     node('maven') {
         openshiftTag destStream: 'tfrs', verbose: 'true', destTag: 'test', srcStream: 'tfrs', srcTag: '$BUILD_ID'
     }
 }
 
-stage('deploy-prod') {
+stage('Deploy to Prod') {
     node('maven') {
         openshiftTag destStream: 'tfrs', verbose: 'true', destTag: 'prod', srcStream: 'tfrs', srcTag: '$BUILD_ID'
     }
