@@ -44,7 +44,7 @@ environments {
 //
 // phantomJs --> “./gradlew phantomJsTest”   (headless)
 // chrome    --> "./gradlew chromeTest"
-baseUrl = "http://tfrs-mem-tfrs-dev.pathfinder.gov.bc.ca/"
+baseUrl = "http://dev.lowcarbonfuels.gov.bc.ca/#/"
 
 
 println """
