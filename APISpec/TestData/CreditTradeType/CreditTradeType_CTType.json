@@ -6,7 +6,7 @@
         "expirationDate": "2117-01-01",
         "id": "1",
         "isGovOnlyType": false,
-        "type": "Buy"
+        "theType": "Buy"
     },
     {
         "description": "The buying of Low Carbon Fuel Credits by the Initiator of the Trade or Opportunity.",
@@ -15,7 +15,7 @@
         "expirationDate": "2117-01-01",
         "id": "2",
         "isGovOnlyType": false,
-        "type": "Sell"
+        "theType": "Sell"
     },
     {
         "description": "An adjustment of the number of Fuel Credits owned by a Fuel Supplier initiated by the BC Government.",
@@ -24,7 +24,7 @@
         "expirationDate": "2117-01-01",
         "id": "3",
         "isGovOnlyType": true,
-        "type": "Credit Validation"
+        "theType": "Credit Validation"
     },
     {
         "description": "The retirement of Fuel Credits owned by a Fuel Supplier by the BC Government.",
@@ -33,7 +33,7 @@
         "expirationDate": "2117-01-01",
         "id": "4",
         "isGovOnlyType": true,
-        "type": "Credit Retirement"
+        "theType": "Credit Retirement"
     },
     {
         "description": "The awarding of Low Carbon Fuel Credits to a Fuel Supplier following the completion of a Part 3 Agreement milestone.",
@@ -42,6 +42,6 @@
         "expirationDate": "2117-01-01",
         "id": "5",
         "isGovOnlyType": true,
-        "type": "Part 3 Award"
+        "theType": "Part 3 Award"
     }
 ]
