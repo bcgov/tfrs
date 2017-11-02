@@ -1,0 +1,16 @@
+[
+    {
+        "fields": {
+            "roleId": "4"
+        },
+        "model": "server.fuelsuppliercontactrole",
+        "pk": "1"
+    },
+    {
+        "fields": {
+            "roleId": "5"
+        },
+        "model": "server.fuelsuppliercontactrole",
+        "pk": "2"
+    }
+]
