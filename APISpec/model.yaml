@@ -40,6 +40,10 @@ definitions:
         type: string
         format: date-time
         description: The effective date of the trade if specified beforehand and the date on which the trade occurred after execution. If NULL - indicates the trade has not occurred and the effective date will be the date the Ministry Approver approves the transaction.
+      note:
+        type: string
+        maxLength: 4000
+        description: A note entered by the user making the update about the Credit Trade update.
   CreditTradeHistory:
     type: object
     description: A snapshot of a Credit Trade following a change to the Credit Trade data.
