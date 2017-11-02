@@ -25,10 +25,18 @@ class TestCreditTradeAPI(TestCase):
         self.fs1_id, self.fs1_status_id, self.fs1_action_type_id = (
             fake_api_calls.create_fuel_supplier())
         self.user_id = fake_api_calls.create_user(self.fs1_id)
-        self.credit_trade_id = fake_api_calls.create_credit_trade(
-            self.fs1_id,
-            self.user_id
-        )[0]
+
+        self.credit_trade = fake_api_calls.create_credit_trade(
+            initiatorFK=self.fs1_id,
+            respondentFK=self.fs1_id,
+            creditTradeTypeFK=self.ct_type_id,
+            creditTradeStatusFK=STATUS_DRAFT,
+            user_id=self.user_id,
+        )
+        # self.credit_trade_id = fake_api_calls.create_credit_trade(
+        #     self.fs1_id,
+        #     self.user_id
+        # )[0]
 
         self.client = Client(HTTP_SM_USER_ID=self.user_id)
         self.test_url = "/api/credit_trades"
@@ -105,18 +113,20 @@ class TestCreditTradeAPI(TestCase):
             assert status.HTTP_200_OK == response.status_code
 
     def test_update(self, **kwargs):
-        credit_trade_id = kwargs.get("credit_trade_id", self.credit_trade_id)
+        credit_trade_id = kwargs.get("credit_trade_id", self.credit_trade['id'])
         num_of_credits = kwargs.get("num_of_credits", 4)
         credit_trade_status = kwargs.get("credit_trade_status", STATUS_DRAFT)
-
-        if not credit_trade_id:
-            credit_trade_id = self.credit_trade_id
+        fair_market_value = kwargs.get("fair_market_value", "1")
+        #
+        # if not credit_trade_id:
+        #     credit_trade_id = self.credit_trade_id
 
         data = {
             'numberOfCredits': num_of_credits,
             'creditTradeStatusFK': credit_trade_status,
             'respondentFK': self.fs1_id,
-            'creditTradeTypeFK': self.ct_type_id
+            'creditTradeTypeFK': self.ct_type_id,
+            'fairMarketValuePerCredit': fair_market_value
         }
 
         response = self.client.put(
@@ -131,7 +141,7 @@ class TestCreditTradeAPI(TestCase):
         self.test_update(num_of_credits=2)
 
         response = self.client.get(
-            "{}/{}/history".format(self.test_url, self.credit_trade_id),
+            "{}/{}/history".format(self.test_url, self.credit_trade['id']),
             content_type='application/json')
 
         response_data = json.loads(response.content.decode("utf-8"))
@@ -145,7 +155,7 @@ class TestCreditTradeAPI(TestCase):
         for ct_status in data:
             self.test_update(credit_trade_status=ct_status)
             response = self.client.get(
-                "{}/{}/history".format(self.test_url, self.credit_trade_id),
+                "{}/{}/history".format(self.test_url, self.credit_trade['id']),
                 content_type='application/json')
             response_data = json.loads(response.content.decode("utf-8"))
             self.assertFalse(response_data[0]['isInternalHistoryRecord'])
@@ -153,7 +163,7 @@ class TestCreditTradeAPI(TestCase):
     def test_is_internal_history_draft(self):
         # Initially created credit trade is "Draft"
         response = self.client.get(
-            "{}/{}/history".format(self.test_url, self.credit_trade_id),
+            "{}/{}/history".format(self.test_url, self.credit_trade['id']),
             content_type='application/json')
 
         response_data = json.loads(response.content.decode("utf-8"))
@@ -165,7 +175,7 @@ class TestCreditTradeAPI(TestCase):
         # Update the status to "Cancelled"
         self.test_update(credit_trade_status=STATUS_CANCELLED)
         response = self.client.get(
-            "{}/{}/history".format(self.test_url, self.credit_trade_id),
+            "{}/{}/history".format(self.test_url, self.credit_trade['id']),
             content_type='application/json')
 
         response_data = json.loads(response.content.decode("utf-8"))
@@ -173,7 +183,7 @@ class TestCreditTradeAPI(TestCase):
 
     def test_nested_credit_trade(self):
         response = self.client.get(
-            "{}/{}".format(self.test_url, self.credit_trade_id),
+            "{}/{}".format(self.test_url, self.credit_trade['id']),
             content_type='application/json')
         response_data = json.loads(response.content.decode("utf-8"))
 
@@ -187,7 +197,7 @@ class TestCreditTradeAPI(TestCase):
 
     def test_nested_credit_trade_history(self):
         response = self.client.get(
-            "{}/{}/history".format(self.test_url, self.credit_trade_id),
+            "{}/{}/history".format(self.test_url, self.credit_trade['id']),
             content_type='application/json')
         response_data = json.loads(response.content.decode("utf-8"))[0]
 
