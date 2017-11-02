@@ -2008,149 +2008,6 @@ paths:
           description: id of FuelSupplierContact to delete
           required: true
           type: integer
-  /fuelsuppliercontactroles:
-    get:
-      tags:
-        - FuelSupplierContactRole
-      summary: Lists available FuelSupplierContactRole objects
-      x-codegen-operation: list
-      consumes: []
-      produces:
-        - text/plain
-        - application/json
-        - text/json
-      responses:
-        200:
-          description: OK
-          schema:
-            type: array
-            items:
-              $ref: "#/definitions/FuelSupplierContactRole"
-    post:
-      tags:
-        - FuelSupplierContactRole
-      x-codegen-operation: create
-      summary: Creates a new FuelSupplierContactRole object            
-      consumes:
-        - application/json
-      produces:
-        - text/plain
-        - application/json
-        - text/json
-      parameters:
-        - name: item
-          in: body
-          required: true
-          schema:
-            $ref: "#/definitions/FuelSupplierContactRole"
-      responses:
-        201:
-          description: FuelSupplierContactRole created
-          headers:
-            Location:
-              description: A link to the FuelSupplierContactRole
-              type: string
-              format: url
-          schema:
-            $ref: "#/definitions/FuelSupplierContactRole"  
-  /fuelsuppliercontactroles/bulk:
-    post:
-      tags:
-        - FuelSupplierContactRole
-      summary: Bulk create / update a number of FuelSupplierContactRole object      
-      x-codegen-operation: bulk
-      consumes:
-        - application/json
-      produces:
-        - text/plain
-        - application/json
-        - text/json
-      parameters:
-        - name: items
-          in: body
-          required: true
-          schema:
-            type: array
-            items:
-              $ref: "#/definitions/FuelSupplierContactRole"
-      responses:
-        201:
-          description: FuelSupplierContactRole created
-  /fuelsuppliercontactroles/{id}:
-    get:
-      tags:
-        - FuelSupplierContactRole
-      summary: Gets a specific FuelSupplierContactRole object      
-      x-codegen-operation: retrieve
-      consumes: []
-      produces:
-        - text/plain
-        - application/json
-        - text/json
-      responses:
-        200:
-          description: OK
-          schema:
-            $ref: "#/definitions/FuelSupplierContactRole"
-        404:
-          description: FuelSupplierContactRole not found
-      parameters:
-        - name: id
-          in: path
-          description: id of FuelSupplierContactRole to fetch
-          required: true
-          type: integer
-    put:
-      tags:
-        - FuelSupplierContactRole
-      x-codegen-operation: update
-      summary: Updates a specific FuelSupplierContactRole object      
-      consumes:
-        - application/json
-      produces:
-        - text/plain
-        - application/json
-        - text/json
-      responses:
-        200:
-          description: OK
-          schema:
-            $ref: "#/definitions/FuelSupplierContactRole"
-        404:
-          description: FuelSupplierContactRole not found
-      parameters:
-        - name: id
-          in: path
-          description: id of FuelSupplierContactRole to fetch
-          required: true
-          type: integer
-        - name: item
-          in: body
-          required: true
-          schema:
-            $ref: "#/definitions/FuelSupplierContactRole"
-  /fuelsuppliercontactroles/{id}/delete:
-    post:
-      tags:
-        - FuelSupplierContactRole
-      x-codegen-operation: destroy
-      summary: Deletes a specific FuelSupplierContactRole object      
-      consumes: []
-      produces:
-        - text/plain
-        - application/json
-        - text/json
-      responses:
-        200:
-          description: OK
-        404:
-          description: FuelSupplierContactRole not found
-      parameters:
-        - name: id
-          in: path
-          description: id of FuelSupplierContactRole to delete
-          required: true
-          type: integer
   /notifications:
     get:
       tags:
@@ -3997,6 +3854,10 @@ definitions:
         type: string
         format: date-time
         description: The effective date of the trade if specified beforehand and the date on which the trade occurred after execution. If NULL - indicates the trade has not occurred and the effective date will be the date the Ministry Approver approves the transaction.
+      note:
+        type: string
+        maxLength: 4000
+        description: A note entered by the user making the update about the Credit Trade update.
   CreditTradeHistory:
     type: object
     description: A snapshot of a Credit Trade following a change to the Credit Trade data.
