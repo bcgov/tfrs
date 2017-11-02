@@ -37,7 +37,9 @@ class CreditTrade(Auditable):
     respondentFK = models.ForeignKey('FuelSupplier', related_name='CreditTraderespondentFK')
     creditTradeTypeFK = models.ForeignKey('CreditTradeType', related_name='CreditTradecreditTradeTypeFK')
     numberOfCredits = models.IntegerField(validators=[validators.CreditTradeNumberOfCreditsValidator])
-    fairMarketValuePerCredit = models.CharField(blank=True, null=True, max_length=255)   
+    fairMarketValuePerCredit = models.DecimalField(null=True, max_digits=999,
+                                                   decimal_places=2,
+                                                   default=None)
     creditTradeZeroReasonFK = models.ForeignKey('CreditTradeZeroReason', related_name='CreditTradecreditTradeZeroReasonFK', blank=True, null=True)   
     tradeEffectiveDate = models.DateField(blank=True, null=True)
     note = models.CharField(max_length=4000, blank=True, null=True)
