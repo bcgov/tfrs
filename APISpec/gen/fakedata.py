@@ -58,11 +58,13 @@ def AuditTestDataUpdate():
 def CreditTradeTestDataCreate():
   return {
     'numberOfCredits':1,
+    'note':'Initial',
   }
 
 def CreditTradeTestDataUpdate():
   return {
     'numberOfCredits':0,
+    'note':'Changed',
   }
 
 

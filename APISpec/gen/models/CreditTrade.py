@@ -39,6 +39,7 @@ class CreditTrade(Auditable):
     fairMarketValuePerCredit = models.CharField(blank=True, null=True, max_length=255)   
     creditTradeZeroReasonFK = models.ForeignKey('CreditTradeZeroReason', related_name='CreditTradecreditTradeZeroReasonFK', blank=True, null=True)   
     tradeEffectiveDate = models.DateField(blank=True, null=True)   
+    note = models.CharField(max_length=4000, blank=True, null=True)   
     class Meta:
         db_table = 'credit_trade'
 
