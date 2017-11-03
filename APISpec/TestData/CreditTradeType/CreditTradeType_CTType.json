@@ -6,7 +6,7 @@
         "expirationDate": "2117-01-01",
         "id": "1",
         "isGovOnlyType": false,
-        "theType": "Buy"
+        "theType": "Sell"
     },
     {
         "description": "The buying of Low Carbon Fuel Credits by the Initiator of the Trade or Opportunity.",
@@ -15,7 +15,7 @@
         "expirationDate": "2117-01-01",
         "id": "2",
         "isGovOnlyType": false,
-        "theType": "Sell"
+        "theType": "Buy"
     },
     {
         "description": "An adjustment of the number of Fuel Credits owned by a Fuel Supplier initiated by the BC Government.",
