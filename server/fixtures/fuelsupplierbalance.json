@@ -5,7 +5,7 @@
             "effectiveDate": "2017-04-01",
             "endDate": null,
             "fuelSupplierFK": "1",
-            "validatedCredits": "81000"
+            "validatedCredits": "40000"
         },
         "model": "server.fuelsupplierbalance",
         "pk": "1"
@@ -16,7 +16,7 @@
             "effectiveDate": "2017-04-01",
             "endDate": null,
             "fuelSupplierFK": "2",
-            "validatedCredits": "45000"
+            "validatedCredits": "70000"
         },
         "model": "server.fuelsupplierbalance",
         "pk": "2"
@@ -27,7 +27,7 @@
             "effectiveDate": "2017-04-01",
             "endDate": null,
             "fuelSupplierFK": "3",
-            "validatedCredits": "24000"
+            "validatedCredits": "32000"
         },
         "model": "server.fuelsupplierbalance",
         "pk": "3"
@@ -38,7 +38,7 @@
             "effectiveDate": "2017-04-01",
             "endDate": null,
             "fuelSupplierFK": "4",
-            "validatedCredits": "89000"
+            "validatedCredits": "70000"
         },
         "model": "server.fuelsupplierbalance",
         "pk": "4"
@@ -49,7 +49,7 @@
             "effectiveDate": "2017-04-01",
             "endDate": null,
             "fuelSupplierFK": "5",
-            "validatedCredits": "59000"
+            "validatedCredits": "12000"
         },
         "model": "server.fuelsupplierbalance",
         "pk": "5"
@@ -60,7 +60,7 @@
             "effectiveDate": "2017-04-01",
             "endDate": null,
             "fuelSupplierFK": "6",
-            "validatedCredits": "30000"
+            "validatedCredits": "99000"
         },
         "model": "server.fuelsupplierbalance",
         "pk": "6"
