@@ -5,7 +5,7 @@
         "endDate": null,
         "fuelSupplierFK": "1",
         "id": "1",
-        "validatedCredits": "81000"
+        "validatedCredits": "40000"
     },
     {
         "creditTradeFK": null,
@@ -13,7 +13,7 @@
         "endDate": null,
         "fuelSupplierFK": "2",
         "id": "2",
-        "validatedCredits": "45000"
+        "validatedCredits": "70000"
     },
     {
         "creditTradeFK": null,
@@ -21,7 +21,7 @@
         "endDate": null,
         "fuelSupplierFK": "3",
         "id": "3",
-        "validatedCredits": "24000"
+        "validatedCredits": "32000"
     },
     {
         "creditTradeFK": null,
@@ -29,7 +29,7 @@
         "endDate": null,
         "fuelSupplierFK": "4",
         "id": "4",
-        "validatedCredits": "89000"
+        "validatedCredits": "70000"
     },
     {
         "creditTradeFK": null,
@@ -37,7 +37,7 @@
         "endDate": null,
         "fuelSupplierFK": "5",
         "id": "5",
-        "validatedCredits": "59000"
+        "validatedCredits": "12000"
     },
     {
         "creditTradeFK": null,
@@ -45,7 +45,7 @@
         "endDate": null,
         "fuelSupplierFK": "6",
         "id": "6",
-        "validatedCredits": "30000"
+        "validatedCredits": "99000"
     },
     {
         "creditTradeFK": null,

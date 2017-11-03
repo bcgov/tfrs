@@ -8,7 +8,7 @@
             "corporateAddressPostalCode": "V9R 3A8",
             "corporateAddressProvince": "BC",
             "fuelSupplierFK": "1",
-            "lastUpdatefromCommonClient": "2017-10-12",
+            "lastUpdatefromCommonClient": "2017-10-20",
             "name": "Air Liquide Canada Inc."
         },
         "model": "server.fuelsupplierccdata",
@@ -23,7 +23,7 @@
             "corporateAddressPostalCode": "V0A 1P0",
             "corporateAddressProvince": "BC",
             "fuelSupplierFK": "2",
-            "lastUpdatefromCommonClient": "2017-10-16",
+            "lastUpdatefromCommonClient": "2017-10-07",
             "name": "BC Hydro"
         },
         "model": "server.fuelsupplierccdata",
@@ -38,7 +38,7 @@
             "corporateAddressPostalCode": "V8Y 1Y7",
             "corporateAddressProvince": "BC",
             "fuelSupplierFK": "3",
-            "lastUpdatefromCommonClient": "2017-10-03",
+            "lastUpdatefromCommonClient": "2017-10-20",
             "name": "BC Transit"
         },
         "model": "server.fuelsupplierccdata",
@@ -53,7 +53,7 @@
             "corporateAddressPostalCode": "V6B 1E1",
             "corporateAddressProvince": "BC",
             "fuelSupplierFK": "4",
-            "lastUpdatefromCommonClient": "2017-10-11",
+            "lastUpdatefromCommonClient": "2017-10-28",
             "name": "Cal-Gas Inc., Canwest Propane"
         },
         "model": "server.fuelsupplierccdata",
@@ -68,7 +68,7 @@
             "corporateAddressPostalCode": "V3A 4P6",
             "corporateAddressProvince": "BC",
             "fuelSupplierFK": "5",
-            "lastUpdatefromCommonClient": "2017-10-31",
+            "lastUpdatefromCommonClient": "2017-10-17",
             "name": "Chevron Canada Limited"
         },
         "model": "server.fuelsupplierccdata",
@@ -83,7 +83,7 @@
             "corporateAddressPostalCode": "V0R 3E0",
             "corporateAddressProvince": "BC",
             "fuelSupplierFK": "6",
-            "lastUpdatefromCommonClient": "2017-10-06",
+            "lastUpdatefromCommonClient": "2017-11-01",
             "name": "Consolidated Biofuels Ltd."
         },
         "model": "server.fuelsupplierccdata",
@@ -98,7 +98,7 @@
             "corporateAddressPostalCode": "V5M 3M5",
             "corporateAddressProvince": "BC",
             "fuelSupplierFK": "7",
-            "lastUpdatefromCommonClient": "2017-10-15",
+            "lastUpdatefromCommonClient": "2017-10-26",
             "name": "eco-Options Energy Cooperative"
         },
         "model": "server.fuelsupplierccdata",
@@ -113,7 +113,7 @@
             "corporateAddressPostalCode": "V5M 3M5",
             "corporateAddressProvince": "BC",
             "fuelSupplierFK": "8",
-            "lastUpdatefromCommonClient": "2017-10-05",
+            "lastUpdatefromCommonClient": "2017-10-26",
             "name": "Emterra Environmental"
         },
         "model": "server.fuelsupplierccdata",
@@ -128,7 +128,7 @@
             "corporateAddressPostalCode": "V2N 2S6",
             "corporateAddressProvince": "BC",
             "fuelSupplierFK": "9",
-            "lastUpdatefromCommonClient": "2017-10-27",
+            "lastUpdatefromCommonClient": "2017-11-02",
             "name": "Federated Co-Operatives Ltd."
         },
         "model": "server.fuelsupplierccdata",
@@ -143,7 +143,7 @@
             "corporateAddressPostalCode": "V0G 1R0",
             "corporateAddressProvince": "BC",
             "fuelSupplierFK": "10",
-            "lastUpdatefromCommonClient": "2017-11-01",
+            "lastUpdatefromCommonClient": "2017-10-28",
             "name": "FortisBC Energy Inc."
         },
         "model": "server.fuelsupplierccdata",
@@ -158,7 +158,7 @@
             "corporateAddressPostalCode": "V1C 2R9",
             "corporateAddressProvince": "BC",
             "fuelSupplierFK": "11",
-            "lastUpdatefromCommonClient": "2017-10-22",
+            "lastUpdatefromCommonClient": "2017-10-09",
             "name": "HTEC Hydrogen Technology &"
         },
         "model": "server.fuelsupplierccdata",
@@ -173,7 +173,7 @@
             "corporateAddressPostalCode": "V2R 1C8",
             "corporateAddressProvince": "BC",
             "fuelSupplierFK": "12",
-            "lastUpdatefromCommonClient": "2017-10-18",
+            "lastUpdatefromCommonClient": "2017-10-10",
             "name": "Energy Corporation"
         },
         "model": "server.fuelsupplierccdata",
@@ -188,7 +188,7 @@
             "corporateAddressPostalCode": "V8W 2H9",
             "corporateAddressProvince": "BC",
             "fuelSupplierFK": "13",
-            "lastUpdatefromCommonClient": "2017-10-29",
+            "lastUpdatefromCommonClient": "2017-11-01",
             "name": "Husky Oil Ltd."
         },
         "model": "server.fuelsupplierccdata",
@@ -218,7 +218,7 @@
             "corporateAddressPostalCode": "V0B 1J0",
             "corporateAddressProvince": "BC",
             "fuelSupplierFK": "15",
-            "lastUpdatefromCommonClient": "2017-10-14",
+            "lastUpdatefromCommonClient": "2017-10-08",
             "name": "Frontenac Petroleum Inc."
         },
         "model": "server.fuelsupplierccdata",
@@ -233,7 +233,7 @@
             "corporateAddressPostalCode": "V9B 1X2",
             "corporateAddressProvince": "BC",
             "fuelSupplierFK": "16",
-            "lastUpdatefromCommonClient": "2017-10-31",
+            "lastUpdatefromCommonClient": "2017-10-14",
             "name": "Powerex Corporation"
         },
         "model": "server.fuelsupplierccdata",
@@ -248,7 +248,7 @@
             "corporateAddressPostalCode": "S4P 3Y2",
             "corporateAddressProvince": "BC",
             "fuelSupplierFK": "17",
-            "lastUpdatefromCommonClient": "2017-10-20",
+            "lastUpdatefromCommonClient": "2017-10-30",
             "name": "Powertech Labs Inc."
         },
         "model": "server.fuelsupplierccdata",
@@ -263,7 +263,7 @@
             "corporateAddressPostalCode": "V0E 1N0",
             "corporateAddressProvince": "BC",
             "fuelSupplierFK": "18",
-            "lastUpdatefromCommonClient": "2017-10-16",
+            "lastUpdatefromCommonClient": "2017-10-11",
             "name": "Shell Canada Products"
         },
         "model": "server.fuelsupplierccdata",
@@ -293,7 +293,7 @@
             "corporateAddressPostalCode": "V9Y 4M8",
             "corporateAddressProvince": "BC",
             "fuelSupplierFK": "20",
-            "lastUpdatefromCommonClient": "2017-10-19",
+            "lastUpdatefromCommonClient": "2017-10-14",
             "name": "South Coast British Columbia"
         },
         "model": "server.fuelsupplierccdata",
@@ -308,7 +308,7 @@
             "corporateAddressPostalCode": "V5T 2C1",
             "corporateAddressProvince": "BC",
             "fuelSupplierFK": "21",
-            "lastUpdatefromCommonClient": "2017-10-25",
+            "lastUpdatefromCommonClient": "2017-10-30",
             "name": "Transportation Authority (TransLink)"
         },
         "model": "server.fuelsupplierccdata",
@@ -323,7 +323,7 @@
             "corporateAddressPostalCode": "V8W IE9",
             "corporateAddressProvince": "BC",
             "fuelSupplierFK": "22",
-            "lastUpdatefromCommonClient": "2017-10-08",
+            "lastUpdatefromCommonClient": "2017-11-01",
             "name": "Suncor Energy Products Partnership"
         },
         "model": "server.fuelsupplierccdata",
@@ -338,7 +338,7 @@
             "corporateAddressPostalCode": "V0N 2P0",
             "corporateAddressProvince": "BC",
             "fuelSupplierFK": "23",
-            "lastUpdatefromCommonClient": "2017-10-21",
+            "lastUpdatefromCommonClient": "2017-10-11",
             "name": "Superior Propane"
         },
         "model": "server.fuelsupplierccdata",
@@ -353,7 +353,7 @@
             "corporateAddressPostalCode": "V1T 6N1",
             "corporateAddressProvince": "BC",
             "fuelSupplierFK": "24",
-            "lastUpdatefromCommonClient": "2017-10-07",
+            "lastUpdatefromCommonClient": "2017-10-29",
             "name": "Super Save Group"
         },
         "model": "server.fuelsupplierccdata",
