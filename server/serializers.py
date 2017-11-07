@@ -302,9 +302,21 @@ class UserViewModelSerializer(serializers.ModelSerializer):
 
 
 class CreditTradeCreateSerializer(serializers.ModelSerializer):
+
     class Meta:
         model = CreditTrade
         fields = '__all__'
+
+
+class CreditTradeApproveSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CreditTrade
+        fields = ('id', 'tradeEffectiveDate', 'note',)
+        read_only_fields = ('creditTradeStatusFK', 'numberOfCredits',
+                            'creditTradeTypeFK',
+                            'fairMarketValuePerCredit',
+                            'creditTradeZeroReasonFK',
+                            )
 
 
 class CreditTrade2Serializer(serializers.ModelSerializer):
@@ -313,10 +325,16 @@ class CreditTrade2Serializer(serializers.ModelSerializer):
     respondentFK = FuelSupplierSerializer(read_only=True)
     creditTradeTypeFK = CreditTradeTypeSerializer(read_only=True)
     creditTradeZeroReasonFK = CreditTradeZeroReasonSerializer(read_only=True)
+    credits_from = FuelSupplierSerializer(read_only=True)
+    credits_to = FuelSupplierSerializer(read_only=True)
 
     class Meta:
         model = CreditTrade
-        exclude = ('note',)
+        fields = ('id', 'creditTradeStatusFK', 'initiatorFK', 'respondentFK',
+                  'creditTradeTypeFK', 'numberOfCredits',
+                  'fairMarketValuePerCredit', 'creditTradeZeroReasonFK',
+                  'tradeEffectiveDate', 'credits_from', 'credits_to')
+        # exclude = ('note',)
 
 
 class CreditTradeHistory2Serializer(serializers.ModelSerializer):
