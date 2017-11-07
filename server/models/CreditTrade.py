@@ -22,11 +22,7 @@
 import datetime
 
 from django.db import models
-from django.utils import timezone
-from .CreditTradeStatus import CreditTradeStatus
 from .FuelSupplier import FuelSupplier
-from .CreditTradeType import CreditTradeType
-from .CreditTradeZeroReason import CreditTradeZeroReason
 
 from auditable.models import Auditable
 from server import validators
@@ -44,6 +40,27 @@ class CreditTrade(Auditable):
     tradeEffectiveDate = models.DateField(blank=True, null=True)
     note = models.CharField(max_length=4000, blank=True, null=True)
 
+    @property
+    def credits_from(self):
+        if self.creditTradeTypeFK.id == 1:
+            return self.initiatorFK
+        elif self.creditTradeTypeFK.id in [2, 4]:
+            return self.respondentFK
+        elif self.creditTradeTypeFK.id in [3, 5]:
+            # TODO: Fuel supplier is Government, which is not a fuel supplier
+            return FuelSupplier(id=0, name="Government of British Columbia")
+
+    @property
+    def credits_to(self):
+        if self.creditTradeTypeFK.id == 2:
+            return self.initiatorFK
+        elif self.creditTradeTypeFK.id in [1, 3, 5]:
+            return self.respondentFK
+        elif self.creditTradeTypeFK.id == 4:
+            # TODO: Fuel supplier is Government, which is not a fuel supplier
+            return FuelSupplier(id=0, name="Government of British Columbia")
+
     class Meta:
         db_table = 'credit_trade'
+
 
