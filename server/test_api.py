@@ -116,7 +116,7 @@ class TestCreditTradeAPI(TestCase):
         credit_trade_id = kwargs.get("credit_trade_id", self.credit_trade['id'])
         num_of_credits = kwargs.get("num_of_credits", 4)
         credit_trade_status = kwargs.get("credit_trade_status", STATUS_DRAFT)
-        fair_market_value = kwargs.get("fair_market_value", "1")
+        fair_market_value = kwargs.get("fair_market_value", 1)
         #
         # if not credit_trade_id:
         #     credit_trade_id = self.credit_trade_id

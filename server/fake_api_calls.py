@@ -133,30 +133,9 @@ def create_user(fuel_supplier_id):
 
 def create_credit_trade(**kwargs):
 
-    # body = {
-    #     "numberOfCredits": kwargs.get("numberOfCredits", 2),
-    #     "fairMarketValuePerCredit": kwargs.get("fairMarketValuePerCredit", ""),
-    #     "tradeEffectiveDate": "2017-04-01",
-    #     "creditTradeStatusFK": {
-    #         "id": kwargs.get("creditTradeStatusFK", 1)
-    #     },
-    #     "respondentFK": {
-    #         "id": kwargs.get("respondentFK", create_fuel_supplier())
-    #     },
-    #     "creditTradeTypeFK": {
-    #         "id": kwargs.get("creditTradeTypeFK", 1)
-    #     },
-    #     "initiatorFK": {
-    #         "id": kwargs.get("initiatorFK")
-    #     },
-    #     "creditTradeZeroReasonFK": {
-    #         "id": kwargs.get("creditTradeZeroReasonFK")
-    #     }
-    # }
-
     body = {
         "numberOfCredits": kwargs.get("numberOfCredits", 2),
-        "fairMarketValuePerCredit": kwargs.get("fairMarketValuePerCredit", ""),
+        "fairMarketValuePerCredit": kwargs.get("fairMarketValuePerCredit", 1),
         "tradeEffectiveDate": "2017-04-01",
         "creditTradeStatusFK": kwargs.get("creditTradeStatusFK", 1),
         "respondentFK": kwargs.get("respondentFK", create_fuel_supplier()),
