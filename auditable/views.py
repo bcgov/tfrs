@@ -21,10 +21,10 @@ class AuditableMixin(object,):
         })
         return request
 
-    def serialize_object(self, request):
+    def serialize_object(self, request, data):
         http_sm_user = request.META.get('HTTP_SM_USER')
-        request.data.update({'create_user':http_sm_user,'update_user':http_sm_user})
-        serializer = self.get_serializer(data=request.data)
+        data.update({'create_user':http_sm_user,'update_user':http_sm_user})
+        serializer = self.get_serializer(data=data)
         serializer.is_valid(raise_exception=True)
         self.perform_create(serializer)
         return serializer.data
@@ -32,8 +32,8 @@ class AuditableMixin(object,):
     def create(self, request, *args, **kwargs):
         objs = []
         if type(request.data) is list:
-            for obj in request.data:
-                objs.append(self.serialize_object(obj))
+            for data in request.data:
+                objs.append(self.serialize_object(request, data))
         else:
             objs.append(self.serialize_object(request))
 
