@@ -1,0 +1,242 @@
+[
+    {
+        "fields": {
+            "createdDate": "2013-06-06",
+            "fuelSupplierActionsTypeFK": "1",
+            "fuelSupplierStatusFK": "1",
+            "name": "Air Liquide Canada Inc."
+        },
+        "model": "server.fuelsupplier",
+        "pk": "1"
+    },
+    {
+        "fields": {
+            "createdDate": "2013-08-13",
+            "fuelSupplierActionsTypeFK": "1",
+            "fuelSupplierStatusFK": "1",
+            "name": "BC Hydro"
+        },
+        "model": "server.fuelsupplier",
+        "pk": "2"
+    },
+    {
+        "fields": {
+            "createdDate": "2012-10-19",
+            "fuelSupplierActionsTypeFK": "1",
+            "fuelSupplierStatusFK": "1",
+            "name": "BC Transit"
+        },
+        "model": "server.fuelsupplier",
+        "pk": "3"
+    },
+    {
+        "fields": {
+            "createdDate": "2013-07-07",
+            "fuelSupplierActionsTypeFK": "1",
+            "fuelSupplierStatusFK": "1",
+            "name": "Cal-Gas Inc., Canwest Propane"
+        },
+        "model": "server.fuelsupplier",
+        "pk": "4"
+    },
+    {
+        "fields": {
+            "createdDate": "2014-03-05",
+            "fuelSupplierActionsTypeFK": "1",
+            "fuelSupplierStatusFK": "1",
+            "name": "Chevron Canada Limited"
+        },
+        "model": "server.fuelsupplier",
+        "pk": "5"
+    },
+    {
+        "fields": {
+            "createdDate": "2014-05-31",
+            "fuelSupplierActionsTypeFK": "2",
+            "fuelSupplierStatusFK": "1",
+            "name": "Consolidated Biofuels Ltd."
+        },
+        "model": "server.fuelsupplier",
+        "pk": "6"
+    },
+    {
+        "fields": {
+            "createdDate": "2013-08-07",
+            "fuelSupplierActionsTypeFK": "2",
+            "fuelSupplierStatusFK": "1",
+            "name": "eco-Options Energy Cooperative"
+        },
+        "model": "server.fuelsupplier",
+        "pk": "7"
+    },
+    {
+        "fields": {
+            "createdDate": "2014-01-25",
+            "fuelSupplierActionsTypeFK": "1",
+            "fuelSupplierStatusFK": "1",
+            "name": "Emterra Environmental"
+        },
+        "model": "server.fuelsupplier",
+        "pk": "8"
+    },
+    {
+        "fields": {
+            "createdDate": "2012-08-31",
+            "fuelSupplierActionsTypeFK": "1",
+            "fuelSupplierStatusFK": "1",
+            "name": "Federated Co-Operatives Ltd."
+        },
+        "model": "server.fuelsupplier",
+        "pk": "9"
+    },
+    {
+        "fields": {
+            "createdDate": "2014-02-24",
+            "fuelSupplierActionsTypeFK": "1",
+            "fuelSupplierStatusFK": "1",
+            "name": "FortisBC Energy Inc."
+        },
+        "model": "server.fuelsupplier",
+        "pk": "10"
+    },
+    {
+        "fields": {
+            "createdDate": "2013-02-02",
+            "fuelSupplierActionsTypeFK": "1",
+            "fuelSupplierStatusFK": "1",
+            "name": "HTEC Hydrogen Technology &"
+        },
+        "model": "server.fuelsupplier",
+        "pk": "11"
+    },
+    {
+        "fields": {
+            "createdDate": "2012-06-26",
+            "fuelSupplierActionsTypeFK": "2",
+            "fuelSupplierStatusFK": "1",
+            "name": "Energy Corporation"
+        },
+        "model": "server.fuelsupplier",
+        "pk": "12"
+    },
+    {
+        "fields": {
+            "createdDate": "2014-01-01",
+            "fuelSupplierActionsTypeFK": "1",
+            "fuelSupplierStatusFK": "1",
+            "name": "Husky Oil Ltd."
+        },
+        "model": "server.fuelsupplier",
+        "pk": "13"
+    },
+    {
+        "fields": {
+            "createdDate": "2013-06-19",
+            "fuelSupplierActionsTypeFK": "1",
+            "fuelSupplierStatusFK": "1",
+            "name": "Imperial Oil Limited & McColl"
+        },
+        "model": "server.fuelsupplier",
+        "pk": "14"
+    },
+    {
+        "fields": {
+            "createdDate": "2013-07-08",
+            "fuelSupplierActionsTypeFK": "1",
+            "fuelSupplierStatusFK": "1",
+            "name": "Frontenac Petroleum Inc."
+        },
+        "model": "server.fuelsupplier",
+        "pk": "15"
+    },
+    {
+        "fields": {
+            "createdDate": "2013-12-08",
+            "fuelSupplierActionsTypeFK": "1",
+            "fuelSupplierStatusFK": "1",
+            "name": "Powerex Corporation"
+        },
+        "model": "server.fuelsupplier",
+        "pk": "16"
+    },
+    {
+        "fields": {
+            "createdDate": "2012-09-04",
+            "fuelSupplierActionsTypeFK": "1",
+            "fuelSupplierStatusFK": "1",
+            "name": "Powertech Labs Inc."
+        },
+        "model": "server.fuelsupplier",
+        "pk": "17"
+    },
+    {
+        "fields": {
+            "createdDate": "2013-07-14",
+            "fuelSupplierActionsTypeFK": "2",
+            "fuelSupplierStatusFK": "1",
+            "name": "Shell Canada Products"
+        },
+        "model": "server.fuelsupplier",
+        "pk": "18"
+    },
+    {
+        "fields": {
+            "createdDate": "2012-09-04",
+            "fuelSupplierActionsTypeFK": "2",
+            "fuelSupplierStatusFK": "1",
+            "name": "Smithrite Disposal Limited"
+        },
+        "model": "server.fuelsupplier",
+        "pk": "19"
+    },
+    {
+        "fields": {
+            "createdDate": "2012-10-26",
+            "fuelSupplierActionsTypeFK": "1",
+            "fuelSupplierStatusFK": "1",
+            "name": "South Coast British Columbia"
+        },
+        "model": "server.fuelsupplier",
+        "pk": "20"
+    },
+    {
+        "fields": {
+            "createdDate": "2012-08-27",
+            "fuelSupplierActionsTypeFK": "1",
+            "fuelSupplierStatusFK": "1",
+            "name": "Transportation Authority (TransLink)"
+        },
+        "model": "server.fuelsupplier",
+        "pk": "21"
+    },
+    {
+        "fields": {
+            "createdDate": "2013-01-05",
+            "fuelSupplierActionsTypeFK": "1",
+            "fuelSupplierStatusFK": "1",
+            "name": "Suncor Energy Products Partnership"
+        },
+        "model": "server.fuelsupplier",
+        "pk": "22"
+    },
+    {
+        "fields": {
+            "createdDate": "2012-09-23",
+            "fuelSupplierActionsTypeFK": "1",
+            "fuelSupplierStatusFK": "1",
+            "name": "Superior Propane"
+        },
+        "model": "server.fuelsupplier",
+        "pk": "23"
+    },
+    {
+        "fields": {
+            "createdDate": "2013-12-20",
+            "fuelSupplierActionsTypeFK": "3",
+            "fuelSupplierStatusFK": "2",
+            "name": "Super Save Group"
+        },
+        "model": "server.fuelsupplier",
+        "pk": "24"
+    }
+]
