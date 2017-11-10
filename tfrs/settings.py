@@ -70,7 +70,8 @@ REST_FRAMEWORK = {
 #   'DEFAULT_AUTHENTICATION_CLASSES': ('rest_framework.permissions.AllowAny',),
 # User authentication is commented out here to allow tests to pass, remove comment to re-enable
     # 'DEFAULT_AUTHENTICATION_CLASSES': ('server.authentication.UserAuthentication',),
-    'DEFAULT_PERMISSION_CLASSES': ('rest_framework.permissions.AllowAny',)
+    'DEFAULT_PERMISSION_CLASSES': ('rest_framework.permissions.AllowAny',),
+    # 'EXCEPTION_HANDLER': 'core.exceptions.exception_handler',
 }
 
 ROOT_URLCONF = 'tfrs.urls'

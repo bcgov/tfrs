@@ -1,0 +1,266 @@
+[
+    {
+        "fields": {
+            "creditTradeFK": null,
+            "effectiveDate": "2017-04-01",
+            "endDate": null,
+            "fuelSupplierFK": "1",
+            "validatedCredits": "61000"
+        },
+        "model": "server.fuelsupplierbalance",
+        "pk": "1"
+    },
+    {
+        "fields": {
+            "creditTradeFK": null,
+            "effectiveDate": "2017-04-01",
+            "endDate": null,
+            "fuelSupplierFK": "2",
+            "validatedCredits": "58000"
+        },
+        "model": "server.fuelsupplierbalance",
+        "pk": "2"
+    },
+    {
+        "fields": {
+            "creditTradeFK": null,
+            "effectiveDate": "2017-04-01",
+            "endDate": null,
+            "fuelSupplierFK": "3",
+            "validatedCredits": "47000"
+        },
+        "model": "server.fuelsupplierbalance",
+        "pk": "3"
+    },
+    {
+        "fields": {
+            "creditTradeFK": null,
+            "effectiveDate": "2017-04-01",
+            "endDate": null,
+            "fuelSupplierFK": "4",
+            "validatedCredits": "39000"
+        },
+        "model": "server.fuelsupplierbalance",
+        "pk": "4"
+    },
+    {
+        "fields": {
+            "creditTradeFK": null,
+            "effectiveDate": "2017-04-01",
+            "endDate": null,
+            "fuelSupplierFK": "5",
+            "validatedCredits": "22000"
+        },
+        "model": "server.fuelsupplierbalance",
+        "pk": "5"
+    },
+    {
+        "fields": {
+            "creditTradeFK": null,
+            "effectiveDate": "2017-04-01",
+            "endDate": null,
+            "fuelSupplierFK": "6",
+            "validatedCredits": "94000"
+        },
+        "model": "server.fuelsupplierbalance",
+        "pk": "6"
+    },
+    {
+        "fields": {
+            "creditTradeFK": null,
+            "effectiveDate": "2017-04-01",
+            "endDate": null,
+            "fuelSupplierFK": "7",
+            "validatedCredits": "18000"
+        },
+        "model": "server.fuelsupplierbalance",
+        "pk": "7"
+    },
+    {
+        "fields": {
+            "creditTradeFK": null,
+            "effectiveDate": "2017-04-01",
+            "endDate": null,
+            "fuelSupplierFK": "8",
+            "validatedCredits": "35000"
+        },
+        "model": "server.fuelsupplierbalance",
+        "pk": "8"
+    },
+    {
+        "fields": {
+            "creditTradeFK": null,
+            "effectiveDate": "2017-04-01",
+            "endDate": null,
+            "fuelSupplierFK": "9",
+            "validatedCredits": "14000"
+        },
+        "model": "server.fuelsupplierbalance",
+        "pk": "9"
+    },
+    {
+        "fields": {
+            "creditTradeFK": null,
+            "effectiveDate": "2017-04-01",
+            "endDate": null,
+            "fuelSupplierFK": "10",
+            "validatedCredits": "73000"
+        },
+        "model": "server.fuelsupplierbalance",
+        "pk": "10"
+    },
+    {
+        "fields": {
+            "creditTradeFK": null,
+            "effectiveDate": "2017-04-01",
+            "endDate": null,
+            "fuelSupplierFK": "11",
+            "validatedCredits": "23000"
+        },
+        "model": "server.fuelsupplierbalance",
+        "pk": "11"
+    },
+    {
+        "fields": {
+            "creditTradeFK": null,
+            "effectiveDate": "2017-04-01",
+            "endDate": null,
+            "fuelSupplierFK": "12",
+            "validatedCredits": "41000"
+        },
+        "model": "server.fuelsupplierbalance",
+        "pk": "12"
+    },
+    {
+        "fields": {
+            "creditTradeFK": null,
+            "effectiveDate": "2017-04-01",
+            "endDate": null,
+            "fuelSupplierFK": "13",
+            "validatedCredits": "93000"
+        },
+        "model": "server.fuelsupplierbalance",
+        "pk": "13"
+    },
+    {
+        "fields": {
+            "creditTradeFK": null,
+            "effectiveDate": "2017-04-01",
+            "endDate": null,
+            "fuelSupplierFK": "14",
+            "validatedCredits": "63000"
+        },
+        "model": "server.fuelsupplierbalance",
+        "pk": "14"
+    },
+    {
+        "fields": {
+            "creditTradeFK": null,
+            "effectiveDate": "2017-04-01",
+            "endDate": null,
+            "fuelSupplierFK": "15",
+            "validatedCredits": "78000"
+        },
+        "model": "server.fuelsupplierbalance",
+        "pk": "15"
+    },
+    {
+        "fields": {
+            "creditTradeFK": null,
+            "effectiveDate": "2017-04-01",
+            "endDate": null,
+            "fuelSupplierFK": "16",
+            "validatedCredits": "15000"
+        },
+        "model": "server.fuelsupplierbalance",
+        "pk": "16"
+    },
+    {
+        "fields": {
+            "creditTradeFK": null,
+            "effectiveDate": "2017-04-01",
+            "endDate": null,
+            "fuelSupplierFK": "17",
+            "validatedCredits": "82000"
+        },
+        "model": "server.fuelsupplierbalance",
+        "pk": "17"
+    },
+    {
+        "fields": {
+            "creditTradeFK": null,
+            "effectiveDate": "2017-04-01",
+            "endDate": null,
+            "fuelSupplierFK": "18",
+            "validatedCredits": "88000"
+        },
+        "model": "server.fuelsupplierbalance",
+        "pk": "18"
+    },
+    {
+        "fields": {
+            "creditTradeFK": null,
+            "effectiveDate": "2017-04-01",
+            "endDate": null,
+            "fuelSupplierFK": "19",
+            "validatedCredits": "89000"
+        },
+        "model": "server.fuelsupplierbalance",
+        "pk": "19"
+    },
+    {
+        "fields": {
+            "creditTradeFK": null,
+            "effectiveDate": "2017-04-01",
+            "endDate": null,
+            "fuelSupplierFK": "20",
+            "validatedCredits": "87000"
+        },
+        "model": "server.fuelsupplierbalance",
+        "pk": "20"
+    },
+    {
+        "fields": {
+            "creditTradeFK": null,
+            "effectiveDate": "2017-04-01",
+            "endDate": null,
+            "fuelSupplierFK": "21",
+            "validatedCredits": "10000"
+        },
+        "model": "server.fuelsupplierbalance",
+        "pk": "21"
+    },
+    {
+        "fields": {
+            "creditTradeFK": null,
+            "effectiveDate": "2017-04-01",
+            "endDate": null,
+            "fuelSupplierFK": "22",
+            "validatedCredits": "61000"
+        },
+        "model": "server.fuelsupplierbalance",
+        "pk": "22"
+    },
+    {
+        "fields": {
+            "creditTradeFK": null,
+            "effectiveDate": "2017-04-01",
+            "endDate": null,
+            "fuelSupplierFK": "23",
+            "validatedCredits": "43000"
+        },
+        "model": "server.fuelsupplierbalance",
+        "pk": "23"
+    },
+    {
+        "fields": {
+            "creditTradeFK": null,
+            "effectiveDate": "2017-04-01",
+            "endDate": null,
+            "fuelSupplierFK": "24",
+            "validatedCredits": "27000"
+        },
+        "model": "server.fuelsupplierbalance",
+        "pk": "24"
+    }
+]

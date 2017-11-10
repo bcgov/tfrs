@@ -3,13 +3,12 @@ from rest_framework import status
 from . import fakedata
 from django.test import Client
 
-
 client = Client()
 
 STATUS_DRAFT = 1
 
-def create_credit_trade_type():
 
+def create_credit_trade_type():
     test_url = "/api/credittradetypes"
     payload = fakedata.CreditTradeTypeTestDataCreate()
     payload['expirationDate'] = '2017-01-02'
@@ -29,7 +28,6 @@ def create_credit_trade_type():
 
 
 def create_credit_trade_status():
-
     test_url = "/api/credittradestatuses"
     payload = fakedata.CreditTradeStatusTestDataCreate()
     payload['effectiveDate'] = '2017-01-01'
@@ -46,7 +44,6 @@ def create_credit_trade_status():
 
 
 def create_fuel_supplier_status():
-
     test_url = "/api/fuelsupplierstatuses"
     payload = fakedata.FuelSupplierStatusTestDataCreate()
     payload['effectiveDate'] = '2017-01-01'
@@ -63,7 +60,6 @@ def create_fuel_supplier_status():
 
 
 def create_fuel_supplier_action_type():
-
     test_url = "/api/fuelsupplieractionstypes"
     payload = fakedata.FuelSupplierActionsTypeTestDataCreate()
     response = client.post(
@@ -79,7 +75,6 @@ def create_fuel_supplier_action_type():
 
 
 def create_fuel_supplier():
-
     status_id = create_fuel_supplier_status()
     action_type_id = create_fuel_supplier_action_type()
 
@@ -110,19 +105,18 @@ def create_fuel_supplier():
 
 
 def create_user(fuel_supplier_id):
-
     test_url = "/api/users"
     # Create:
     fake_user = fakedata.UserTestDataCreate()
     payload = {
-      'givenName': fake_user['givenName'],
-      'surname': fake_user['surname'],
-      'email': fake_user['email'],
-      'status': 'Active',
-      'userFK': fake_user['userId'],
-      'guid': fake_user['guid'],
-      'authorizationDirectory': fake_user['authorizationDirectory'],
-      'fuelSupplier': fuel_supplier_id
+        'givenName': fake_user['givenName'],
+        'surname': fake_user['surname'],
+        'email': fake_user['email'],
+        'status': 'Active',
+        'userFK': fake_user['userId'],
+        'guid': fake_user['guid'],
+        'authorizationDirectory': fake_user['authorizationDirectory'],
+        'fuelSupplier': fuel_supplier_id
     }
     response = client.post(
         test_url,
@@ -137,42 +131,39 @@ def create_user(fuel_supplier_id):
     return user_id
 
 
-def create_credit_trade(fuel_supplier_id, user_id):
+def create_credit_trade(**kwargs):
 
-    type_id = create_credit_trade_type()
+    body = {
+        "numberOfCredits": kwargs.get("numberOfCredits", 2),
+        "fairMarketValuePerCredit": kwargs.get("fairMarketValuePerCredit", 1),
 
-    test_url = "/api/credit_trades"
-    payload = {
-      'status': 'Active',
-      'initiator': fuel_supplier_id,
-      'respondent': fuel_supplier_id,
-      'initiatorLastUpdateBy': user_id,
-      'respondentLastUpdatedBy': None,
-      'reviewedRejectedBy': None,
-      'approvedRejectedBy': None,
-      'cancelledBy': None,
-      'tradeExecutionDate': '2017-01-01',
-      #   TODO: replace transactionType
-      'transactionType': 'Type',
-      'fairMarketValuePrice': '100.00',
-      'fuelSupplierBalanceBeforeTransaction': '2017-01-01',
-      'note': None,
-      'attachments': [],
-      'creditTradeTypeFK': type_id,
-      'creditTradeStatusFK': STATUS_DRAFT,
-      'respondentFK': fuel_supplier_id,
+        "tradeEffectiveDate": "2017-04-01",
+        "creditTradeStatusFK": kwargs.get("creditTradeStatusFK", 1),
+        "respondentFK": kwargs.get("respondentFK", create_fuel_supplier()),
+        "creditTradeTypeFK": kwargs.get("creditTradeTypeFK", 1),
+        "initiatorFK": kwargs.get("initiatorFK"),
+        "creditTradeZeroReasonFK": kwargs.get("creditTradeZeroReasonFK")
     }
-    fake_credit_trade = fakedata.CreditTradeTestDataCreate()
-    payload.update(fake_credit_trade)
+
+    user_id = kwargs.get("user_id")
+
     client_with_user = Client(HTTP_SM_USER_ID=user_id)
 
-    response = client_with_user.post(test_url,
+    response = client_with_user.post("/api/credit_trades",
                                      content_type='application/json',
-                                     data=json.dumps(payload))
+                                     data=json.dumps(body))
+    print(response.status_code)
+    print(response.content.decode("utf-8"))
 
-    # Check that the response is OK.
     assert status.HTTP_201_CREATED == response.status_code
-    # parse the response.
-    data = json.loads(response.content.decode("utf-8"))
-    credit_trade_id = data['id']
-    return credit_trade_id, type_id
+    response_data = json.loads(response.content.decode("utf-8"))
+    return response_data
+
+
+def get_fuel_supplier_balances(**kwargs):
+
+    fs_id = kwargs.get("id", create_fuel_supplier())
+    response = client.get("/api/fuelsupplierbalances/{}".format(fs_id))
+    assert status.HTTP_200_OK == response.status_code
+    response_data = json.loads(response.content.decode("utf-8"))
+    return response_data
