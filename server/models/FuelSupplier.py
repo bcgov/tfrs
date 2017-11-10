@@ -28,7 +28,7 @@ from .FuelSupplierActionsType import FuelSupplierActionsType
 
 from auditable.models import Auditable
 
-class FuelSupplier(Auditable):	    
+class FuelSupplier(Auditable):
     name = models.CharField(max_length=500)   
     fuelSupplierStatusFK = models.ForeignKey('FuelSupplierStatus', related_name='FuelSupplierfuelSupplierStatusFK')   
     fuelSupplierActionsTypeFK = models.ForeignKey('FuelSupplierActionsType', related_name='FuelSupplierfuelSupplierActionsTypeFK')   

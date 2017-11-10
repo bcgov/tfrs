@@ -136,6 +136,7 @@ def create_credit_trade(**kwargs):
     body = {
         "numberOfCredits": kwargs.get("numberOfCredits", 2),
         "fairMarketValuePerCredit": kwargs.get("fairMarketValuePerCredit", 1),
+
         "tradeEffectiveDate": "2017-04-01",
         "creditTradeStatusFK": kwargs.get("creditTradeStatusFK", 1),
         "respondentFK": kwargs.get("respondentFK", create_fuel_supplier()),
@@ -151,7 +152,18 @@ def create_credit_trade(**kwargs):
     response = client_with_user.post("/api/credit_trades",
                                      content_type='application/json',
                                      data=json.dumps(body))
+    print(response.status_code)
+    print(response.content.decode("utf-8"))
 
     assert status.HTTP_201_CREATED == response.status_code
+    response_data = json.loads(response.content.decode("utf-8"))
+    return response_data
+
+
+def get_fuel_supplier_balances(**kwargs):
+
+    fs_id = kwargs.get("id", create_fuel_supplier())
+    response = client.get("/api/fuelsupplierbalances/{}".format(fs_id))
+    assert status.HTTP_200_OK == response.status_code
     response_data = json.loads(response.content.decode("utf-8"))
     return response_data
