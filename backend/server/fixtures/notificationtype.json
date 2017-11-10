@@ -1,0 +1,24 @@
+[
+    {
+        "fields": {
+            "description": "A new fuel supplier has been added to the TFRS System. Please login to TFRS to see more about the new Fuel Supplier that was added.",
+            "displayOrder": "2",
+            "effectiveDate": "2017-01-01",
+            "expirationDate": null,
+            "type": "NewFuelSupplier"
+        },
+        "model": "server.notificationtype",
+        "pk": "1"
+    },
+    {
+        "fields": {
+            "description": "A Credit Trade has reached a step in the workflow where an action is required that you can perform. Please log into the TFRS system to see what action is pending that you can take.",
+            "displayOrder": "1",
+            "effectiveDate": "2017-01-01",
+            "expirationDate": null,
+            "type": "CreditTradeAction"
+        },
+        "model": "server.notificationtype",
+        "pk": "2"
+    }
+]

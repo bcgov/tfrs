@@ -1,0 +1,62 @@
+[
+    {
+        "fields": {
+            "description": "The selling of Low Carbon Fuel Credits by the Initiator of the Trade or Opportunity.",
+            "displayOrder": "1",
+            "effectiveDate": "2017-01-01",
+            "expirationDate": "2117-01-01",
+            "isGovOnlyType": false,
+            "theType": "Sell"
+        },
+        "model": "server.credittradetype",
+        "pk": "1"
+    },
+    {
+        "fields": {
+            "description": "The buying of Low Carbon Fuel Credits by the Initiator of the Trade or Opportunity.",
+            "displayOrder": "2",
+            "effectiveDate": "2017-01-01",
+            "expirationDate": "2117-01-01",
+            "isGovOnlyType": false,
+            "theType": "Buy"
+        },
+        "model": "server.credittradetype",
+        "pk": "2"
+    },
+    {
+        "fields": {
+            "description": "An adjustment of the number of Fuel Credits owned by a Fuel Supplier initiated by the BC Government.",
+            "displayOrder": "3",
+            "effectiveDate": "2017-01-01",
+            "expirationDate": "2117-01-01",
+            "isGovOnlyType": true,
+            "theType": "Credit Validation"
+        },
+        "model": "server.credittradetype",
+        "pk": "3"
+    },
+    {
+        "fields": {
+            "description": "The retirement of Fuel Credits owned by a Fuel Supplier by the BC Government.",
+            "displayOrder": "4",
+            "effectiveDate": "2017-01-01",
+            "expirationDate": "2117-01-01",
+            "isGovOnlyType": true,
+            "theType": "Credit Retirement"
+        },
+        "model": "server.credittradetype",
+        "pk": "4"
+    },
+    {
+        "fields": {
+            "description": "The awarding of Low Carbon Fuel Credits to a Fuel Supplier following the completion of a Part 3 Agreement milestone.",
+            "displayOrder": "5",
+            "effectiveDate": "2017-01-01",
+            "expirationDate": "2117-01-01",
+            "isGovOnlyType": true,
+            "theType": "Part 3 Award"
+        },
+        "model": "server.credittradetype",
+        "pk": "5"
+    }
+]
