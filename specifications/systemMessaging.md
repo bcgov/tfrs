@@ -43,9 +43,9 @@ The request was valid, but the server is refusing action. The user might not hav
 
 > We give you credit for trying to find a valid page, but this is not it.  
 >
-> to trade this page for a valid one click <a href="http://dev.lowcarbonfuels.gov.bc.ca/">here</a>  
+> to trade this page for a valid one click <a href="/">here</a>  
 >
-> or learn more about Credit Validation <a href="http://www2.gov.bc.ca/gov/content/industry/electricity-alternative-energy/transportation-energies/renewable-low-carbon-fuels/credits-transfers">here</a>
+> or learn more about Credit Validation <a href="http://www.gov.bc.ca/lowcarbonfuels/">here</a>
 
 The requested resource could not be found but may be available in the future. Subsequent requests by the client are permissible.[[36\]](https://en.wikipedia.org/wiki/List_of_HTTP_status_codes#cite_note-37)
 
