@@ -1,0 +1,35 @@
+[
+    {
+        "fields": {
+            "description": "A Part 3 Fuel Supplier",
+            "displayOrder": "1",
+            "effectiveDate": "2017-01-01",
+            "expirationDate": "2117-01-01",
+            "type": "Part 3 Fuel Supplier"
+        },
+        "model": "api.fuelsuppliertype",
+        "pk": "1"
+    },
+    {
+        "fields": {
+            "description": "A Petroleum Fuel Supplier",
+            "displayOrder": "2",
+            "effectiveDate": "2017-01-01",
+            "expirationDate": "2117-01-01",
+            "type": "Petroleum Fuel Supplier"
+        },
+        "model": "api.fuelsuppliertype",
+        "pk": "2"
+    },
+    {
+        "fields": {
+            "description": "A Low Carbon Fuel Supplier, including both Part 3 and Petroleum Fuel Suppliers.",
+            "displayOrder": "3",
+            "effectiveDate": "2017-01-01",
+            "expirationDate": "2117-01-01",
+            "type": "Low Carbon Fuel Supplier"
+        },
+        "model": "api.fuelsuppliertype",
+        "pk": "3"
+    }
+]
