@@ -2,8 +2,8 @@ import json
 
 from django.http import HttpResponse
 from django.shortcuts import render
-from server.models.FuelSupplier import FuelSupplier
-from server.models.Notification import Notification
+from api.models.FuelSupplier import FuelSupplier
+from api.models.Notification import Notification
 
 def health(request):
     """
