@@ -47,7 +47,6 @@ INSTALLED_APPS = (
     'django_extensions',
     'rest_framework',
     'rest_framework_swagger',
-    'tfrs',
     'api',
     'corsheaders',
 )
@@ -74,23 +73,23 @@ REST_FRAMEWORK = {
     # 'EXCEPTION_HANDLER': 'core.exceptions.exception_handler',
 }
 
-ROOT_URLCONF = 'tfrs.urls'
+ROOT_URLCONF = 'api.urls'
 
-TEMPLATES = [
-    {
-        'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': ['tfrs/templates'],
-        'APP_DIRS': True,
-        'OPTIONS': {
-            'context_processors': [
-                'django.template.context_processors.debug',
-                'django.template.context_processors.request',
-                'django.contrib.auth.context_processors.auth',
-                'django.contrib.messages.context_processors.messages',
-            ],
-        },
-    },
-]
+# TEMPLATES = [
+#     {
+#         'BACKEND': 'django.template.backends.django.DjangoTemplates',
+#         'DIRS': ['api/templates'],
+#         'APP_DIRS': True,
+#         'OPTIONS': {
+#             'context_processors': [
+#                 'django.template.context_processors.debug',
+#                 'django.template.context_processors.request',
+#                 'django.contrib.auth.context_processors.auth',
+#                 'django.contrib.messages.context_processors.messages',
+#             ],
+#         },
+#     },
+# ]
 
 WSGI_APPLICATION = 'wsgi.application'
 
