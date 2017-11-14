@@ -1,0 +1,392 @@
+[
+    {
+        "fields": {
+            "effectiveDate": "2017-01-01",
+            "expiryDate": null,
+            "roleFK": false,
+            "userFK": "1"
+        },
+        "model": "api.userRole",
+        "pk": "1"
+    },
+    {
+        "fields": {
+            "effectiveDate": "2017-01-01",
+            "expiryDate": null,
+            "roleFK": false,
+            "userFK": "2"
+        },
+        "model": "api.userRole",
+        "pk": "2"
+    },
+    {
+        "fields": {
+            "effectiveDate": "2017-01-01",
+            "expiryDate": null,
+            "roleFK": false,
+            "userFK": "3"
+        },
+        "model": "api.userRole",
+        "pk": "3"
+    },
+    {
+        "fields": {
+            "effectiveDate": "2017-01-01",
+            "expiryDate": null,
+            "roleFK": false,
+            "userFK": "4"
+        },
+        "model": "api.userRole",
+        "pk": "4"
+    },
+    {
+        "fields": {
+            "effectiveDate": "2017-01-01",
+            "expiryDate": null,
+            "roleFK": false,
+            "userFK": "5"
+        },
+        "model": "api.userRole",
+        "pk": "5"
+    },
+    {
+        "fields": {
+            "effectiveDate": "2017-01-01",
+            "expiryDate": null,
+            "roleFK": false,
+            "userFK": "6"
+        },
+        "model": "api.userRole",
+        "pk": "6"
+    },
+    {
+        "fields": {
+            "effectiveDate": "2017-01-01",
+            "expiryDate": null,
+            "roleFK": false,
+            "userFK": "7"
+        },
+        "model": "api.userRole",
+        "pk": "7"
+    },
+    {
+        "fields": {
+            "effectiveDate": "2017-01-01",
+            "expiryDate": null,
+            "roleFK": false,
+            "userFK": "8"
+        },
+        "model": "api.userRole",
+        "pk": "8"
+    },
+    {
+        "fields": {
+            "effectiveDate": "2017-01-01",
+            "expiryDate": null,
+            "roleFK": false,
+            "userFK": "9"
+        },
+        "model": "api.userRole",
+        "pk": "9"
+    },
+    {
+        "fields": {
+            "effectiveDate": "2017-01-01",
+            "expiryDate": null,
+            "roleFK": false,
+            "userFK": "10"
+        },
+        "model": "api.userRole",
+        "pk": "10"
+    },
+    {
+        "fields": {
+            "effectiveDate": "2017-01-01",
+            "expiryDate": null,
+            "roleFK": false,
+            "userFK": "11"
+        },
+        "model": "api.userRole",
+        "pk": "11"
+    },
+    {
+        "fields": {
+            "effectiveDate": "2017-01-01",
+            "expiryDate": null,
+            "roleFK": false,
+            "userFK": "12"
+        },
+        "model": "api.userRole",
+        "pk": "12"
+    },
+    {
+        "fields": {
+            "effectiveDate": "2017-01-01",
+            "expiryDate": null,
+            "roleFK": false,
+            "userFK": "13"
+        },
+        "model": "api.userRole",
+        "pk": "13"
+    },
+    {
+        "fields": {
+            "effectiveDate": "2017-01-01",
+            "expiryDate": null,
+            "roleFK": false,
+            "userFK": "14"
+        },
+        "model": "api.userRole",
+        "pk": "14"
+    },
+    {
+        "fields": {
+            "effectiveDate": "2017-01-01",
+            "expiryDate": null,
+            "roleFK": false,
+            "userFK": "15"
+        },
+        "model": "api.userRole",
+        "pk": "15"
+    },
+    {
+        "fields": {
+            "effectiveDate": "2017-01-01",
+            "expiryDate": null,
+            "roleFK": false,
+            "userFK": "16"
+        },
+        "model": "api.userRole",
+        "pk": "16"
+    },
+    {
+        "fields": {
+            "effectiveDate": "2017-01-01",
+            "expiryDate": null,
+            "roleFK": false,
+            "userFK": "17"
+        },
+        "model": "api.userRole",
+        "pk": "17"
+    },
+    {
+        "fields": {
+            "effectiveDate": "2017-01-01",
+            "expiryDate": null,
+            "roleFK": false,
+            "userFK": "18"
+        },
+        "model": "api.userRole",
+        "pk": "18"
+    },
+    {
+        "fields": {
+            "effectiveDate": "2017-01-01",
+            "expiryDate": null,
+            "roleFK": false,
+            "userFK": "19"
+        },
+        "model": "api.userRole",
+        "pk": "19"
+    },
+    {
+        "fields": {
+            "effectiveDate": "2017-01-01",
+            "expiryDate": null,
+            "roleFK": false,
+            "userFK": "20"
+        },
+        "model": "api.userRole",
+        "pk": "20"
+    },
+    {
+        "fields": {
+            "effectiveDate": "2017-01-01",
+            "expiryDate": null,
+            "roleFK": false,
+            "userFK": "21"
+        },
+        "model": "api.userRole",
+        "pk": "21"
+    },
+    {
+        "fields": {
+            "effectiveDate": "2017-01-01",
+            "expiryDate": null,
+            "roleFK": false,
+            "userFK": "22"
+        },
+        "model": "api.userRole",
+        "pk": "22"
+    },
+    {
+        "fields": {
+            "effectiveDate": "2017-01-01",
+            "expiryDate": null,
+            "roleFK": false,
+            "userFK": "23"
+        },
+        "model": "api.userRole",
+        "pk": "23"
+    },
+    {
+        "fields": {
+            "effectiveDate": "2017-01-01",
+            "expiryDate": null,
+            "roleFK": false,
+            "userFK": "24"
+        },
+        "model": "api.userRole",
+        "pk": "24"
+    },
+    {
+        "fields": {
+            "effectiveDate": "2017-01-01",
+            "expiryDate": null,
+            "roleFK": false,
+            "userFK": "25"
+        },
+        "model": "api.userRole",
+        "pk": "25"
+    },
+    {
+        "fields": {
+            "effectiveDate": "2017-01-01",
+            "expiryDate": null,
+            "roleFK": false,
+            "userFK": "26"
+        },
+        "model": "api.userRole",
+        "pk": "26"
+    },
+    {
+        "fields": {
+            "effectiveDate": "2017-01-01",
+            "expiryDate": null,
+            "roleFK": false,
+            "userFK": "27"
+        },
+        "model": "api.userRole",
+        "pk": "27"
+    },
+    {
+        "fields": {
+            "effectiveDate": "2017-01-01",
+            "expiryDate": null,
+            "roleFK": false,
+            "userFK": "28"
+        },
+        "model": "api.userRole",
+        "pk": "28"
+    },
+    {
+        "fields": {
+            "effectiveDate": "2017-01-01",
+            "expiryDate": null,
+            "roleFK": false,
+            "userFK": "29"
+        },
+        "model": "api.userRole",
+        "pk": "29"
+    },
+    {
+        "fields": {
+            "effectiveDate": "2017-01-01",
+            "expiryDate": null,
+            "roleFK": false,
+            "userFK": "30"
+        },
+        "model": "api.userRole",
+        "pk": "30"
+    },
+    {
+        "fields": {
+            "effectiveDate": "2017-01-01",
+            "expiryDate": null,
+            "roleFK": false,
+            "userFK": "31"
+        },
+        "model": "api.userRole",
+        "pk": "31"
+    },
+    {
+        "fields": {
+            "effectiveDate": "2017-01-01",
+            "expiryDate": null,
+            "roleFK": false,
+            "userFK": "32"
+        },
+        "model": "api.userRole",
+        "pk": "32"
+    },
+    {
+        "fields": {
+            "effectiveDate": "2017-01-01",
+            "expiryDate": null,
+            "roleFK": false,
+            "userFK": "33"
+        },
+        "model": "api.userRole",
+        "pk": "33"
+    },
+    {
+        "fields": {
+            "effectiveDate": "2017-01-01",
+            "expiryDate": null,
+            "roleFK": false,
+            "userFK": "34"
+        },
+        "model": "api.userRole",
+        "pk": "34"
+    },
+    {
+        "fields": {
+            "effectiveDate": "2017-01-01",
+            "expiryDate": null,
+            "roleFK": true,
+            "userFK": "35"
+        },
+        "model": "api.userRole",
+        "pk": "35"
+    },
+    {
+        "fields": {
+            "effectiveDate": "2017-01-01",
+            "expiryDate": null,
+            "roleFK": true,
+            "userFK": "36"
+        },
+        "model": "api.userRole",
+        "pk": "36"
+    },
+    {
+        "fields": {
+            "effectiveDate": "2017-01-01",
+            "expiryDate": null,
+            "roleFK": true,
+            "userFK": "37"
+        },
+        "model": "api.userRole",
+        "pk": "37"
+    },
+    {
+        "fields": {
+            "effectiveDate": "2017-01-01",
+            "expiryDate": null,
+            "roleFK": true,
+            "userFK": "38"
+        },
+        "model": "api.userRole",
+        "pk": "38"
+    },
+    {
+        "fields": {
+            "effectiveDate": "2017-01-01",
+            "expiryDate": null,
+            "roleFK": true,
+            "userFK": "39"
+        },
+        "model": "api.userRole",
+        "pk": "39"
+    }
+]
