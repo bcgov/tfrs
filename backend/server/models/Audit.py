@@ -19,28 +19,30 @@
     limitations under the License.
 """
 
-import datetime
-
 from django.db import models
-from django.utils import timezone
 
 from auditable.models import Auditable
 
-class Audit(Auditable):	    
-    appCreateTimestamp = models.DateField(blank=True, null=True)   
-    appCreateUserid = models.CharField(max_length=100, blank=True, null=True)   
-    appCreateUserGuid = models.CharField(max_length=100, blank=True, null=True)   
-    appCreateUserDirectory = models.CharField(max_length=100, blank=True, null=True)   
-    appLastUpdateTimestamp = models.DateField(blank=True, null=True)   
-    appLastUpdateUserid = models.CharField(max_length=100, blank=True, null=True)   
-    appLastUpdateUserGuid = models.CharField(max_length=100, blank=True, null=True)   
-    appLastUpdateUserDirectory = models.CharField(max_length=100, blank=True, null=True)   
-    entityName = models.CharField(max_length=100, blank=True, null=True)   
-    entityId = models.IntegerField()   
-    propertyName = models.CharField(max_length=100, blank=True, null=True)   
-    oldValue = models.CharField(max_length=8000, blank=True, null=True)   
-    newValue = models.CharField(max_length=8000, blank=True, null=True)   
-    isDelete = models.BooleanField()   
+
+class Audit(Auditable):
+    appCreateTimestamp = models.DateField(blank=True, null=True)
+    appCreateUserid = models.CharField(max_length=100, blank=True, null=True)
+    appCreateUserGuid = models.CharField(max_length=100, blank=True, null=True)
+    appCreateUserDirectory = models.CharField(max_length=100, blank=True,
+                                              null=True)
+    appLastUpdateTimestamp = models.DateField(blank=True, null=True)
+    appLastUpdateUserid = models.CharField(max_length=100, blank=True,
+                                           null=True)
+    appLastUpdateUserGuid = models.CharField(max_length=100, blank=True,
+                                             null=True)
+    appLastUpdateUserDirectory = models.CharField(max_length=100, blank=True,
+                                                  null=True)
+    entityName = models.CharField(max_length=100, blank=True, null=True)
+    entityId = models.IntegerField()
+    propertyName = models.CharField(max_length=100, blank=True, null=True)
+    oldValue = models.CharField(max_length=8000, blank=True, null=True)
+    newValue = models.CharField(max_length=8000, blank=True, null=True)
+    isDelete = models.BooleanField()
+
     class Meta:
         db_table = 'audit'
-

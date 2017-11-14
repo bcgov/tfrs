@@ -19,20 +19,17 @@
     limitations under the License.
 """
 
-import datetime
-
 from django.db import models
-from django.utils import timezone
-from .NotificationEvent import NotificationEvent
-from .User import User
 
 from auditable.models import Auditable
 
-class Notification(Auditable):	    
-    notificationEventFK = models.ForeignKey('NotificationEvent', related_name='NotificationnotificationEventFK')   
-    hasBeenViewed = models.BooleanField()   
-    isWatchNotification = models.BooleanField()   
-    userFK = models.ForeignKey('User', related_name='NotificationuserFK')   
+
+class Notification(Auditable):
+    notificationEventFK = models.ForeignKey('NotificationEvent',
+                                            related_name='NotificationnotificationEventFK')
+    hasBeenViewed = models.BooleanField()
+    isWatchNotification = models.BooleanField()
+    userFK = models.ForeignKey('User', related_name='NotificationuserFK')
+
     class Meta:
         db_table = 'notification'
-

@@ -19,19 +19,19 @@
     limitations under the License.
 """
 
-import datetime
-
 from django.db import models
-from django.utils import timezone
-from .CreditTrade import CreditTrade
 
 from auditable.models import Auditable
 
-class NotificationEvent(Auditable):	    
-    eventTime = models.DateField(blank=True, null=True)   
-    eventTypeCode = models.CharField(max_length=25, blank=True, null=True)   
-    notes = models.CharField(max_length=1000, blank=True, null=True)   
-    creditTradeFK = models.ForeignKey('CreditTrade', related_name='NotificationEventcreditTradeFK', blank=True, null=True)   
+
+class NotificationEvent(Auditable):
+    eventTime = models.DateField(blank=True, null=True)
+    # Should an FK to NotificationType
+    eventTypeCode = models.CharField(max_length=25, blank=True, null=True)
+    notes = models.CharField(max_length=1000, blank=True, null=True)
+    creditTradeFK = models.ForeignKey('CreditTrade',
+                                      related_name='NotificationEventcreditTradeFK',
+                                      blank=True, null=True)
+
     class Meta:
         db_table = 'notification_event'
-

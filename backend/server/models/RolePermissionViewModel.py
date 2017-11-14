@@ -19,13 +19,12 @@
     limitations under the License.
 """
 
-import datetime
-
 from django.db import models
-from django.utils import timezone
 
-class RolePermissionViewModel(models.Model):	    
-    roleId = models.IntegerField()   
-    permissionId = models.IntegerField()   
+
+class RolePermissionViewModel(models.Model):
+    roleId = models.IntegerField()
+    permissionId = models.IntegerField()
+
     class Meta:
-      abstract = True
+        abstract = True

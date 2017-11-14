@@ -19,17 +19,16 @@
     limitations under the License.
 """
 
-import datetime
-
 from django.db import models
-from django.utils import timezone
 
 from auditable.models import Auditable
 
+
 class Role(Auditable):
     name = models.CharField(max_length=200)
-    description = models.CharField(max_length=1000)   
+    description = models.CharField(max_length=1000)
     isGovernmentRole = models.BooleanField(default=False)
+
+    # Add effectiveDate and endDate
     class Meta:
         db_table = 'role'
-

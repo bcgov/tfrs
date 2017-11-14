@@ -19,18 +19,15 @@
     limitations under the License.
 """
 
-import datetime
-
 from django.db import models
-from django.utils import timezone
-from .Role import Role
-from .Permission import Permission
 
 from auditable.models import Auditable
 
-class RolePermission(Auditable):	    
-    roleFK = models.ForeignKey('Role', related_name='RolePermissionroleFK')   
-    permissionFK = models.ForeignKey('Permission', related_name='RolePermissionpermissionFK')   
+
+class RolePermission(Auditable):
+    roleFK = models.ForeignKey('Role', related_name='RolePermissionroleFK')
+    permissionFK = models.ForeignKey('Permission',
+                                     related_name='RolePermissionpermissionFK')
+
     class Meta:
         db_table = 'role_permission'
-

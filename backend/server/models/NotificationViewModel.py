@@ -19,18 +19,17 @@
     limitations under the License.
 """
 
-import datetime
-
 from django.db import models
-from django.utils import timezone
 
-class NotificationViewModel(models.Model):	    
-    eventId = models.IntegerField()   
-    hasBeenViewed = models.BooleanField()   
-    isWatchNotification = models.BooleanField()   
-    isExpired = models.BooleanField()   
-    isAllDay = models.BooleanField()   
-    priorityCode = models.CharField(max_length=255, blank=True, null=True)   
-    userId = models.IntegerField()   
+
+class NotificationViewModel(models.Model):
+    eventId = models.IntegerField()
+    hasBeenViewed = models.BooleanField()
+    isWatchNotification = models.BooleanField()
+    isExpired = models.BooleanField()
+    isAllDay = models.BooleanField()
+    priorityCode = models.CharField(max_length=255, blank=True, null=True)
+    userId = models.IntegerField()
+
     class Meta:
-      abstract = True
+        abstract = True

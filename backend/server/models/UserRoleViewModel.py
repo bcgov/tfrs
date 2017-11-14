@@ -19,15 +19,14 @@
     limitations under the License.
 """
 
-import datetime
-
 from django.db import models
-from django.utils import timezone
 
-class UserRoleViewModel(models.Model):	    
-    effectiveDate = models.DateField()   
-    expiryDate = models.DateField(blank=True, null=True)   
-    roleId = models.IntegerField()   
-    userId = models.IntegerField()   
+
+class UserRoleViewModel(models.Model):
+    effectiveDate = models.DateField()
+    expiryDate = models.DateField(blank=True, null=True)
+    roleId = models.IntegerField()
+    userId = models.IntegerField()
+
     class Meta:
-      abstract = True
+        abstract = True
