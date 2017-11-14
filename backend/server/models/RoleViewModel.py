@@ -19,13 +19,12 @@
     limitations under the License.
 """
 
-import datetime
-
 from django.db import models
-from django.utils import timezone
 
-class RoleViewModel(models.Model):	    
-    name = models.CharField(max_length=255)   
-    description = models.CharField(max_length=255)   
+
+class RoleViewModel(models.Model):
+    name = models.CharField(max_length=255)
+    description = models.CharField(max_length=255)
+
     class Meta:
-      abstract = True
+        abstract = True

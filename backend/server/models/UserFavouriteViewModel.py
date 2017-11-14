@@ -19,15 +19,14 @@
     limitations under the License.
 """
 
-import datetime
-
 from django.db import models
-from django.utils import timezone
 
-class UserFavouriteViewModel(models.Model):	    
-    name = models.CharField(max_length=255, blank=True, null=True)   
-    value = models.CharField(max_length=255, blank=True, null=True)   
-    isDefault = models.BooleanField()   
-    type = models.CharField(max_length=255, blank=True, null=True)   
+
+class UserFavouriteViewModel(models.Model):
+    name = models.CharField(max_length=255, blank=True, null=True)
+    value = models.CharField(max_length=255, blank=True, null=True)
+    isDefault = models.BooleanField()
+    type = models.CharField(max_length=255, blank=True, null=True)
+
     class Meta:
-      abstract = True
+        abstract = True

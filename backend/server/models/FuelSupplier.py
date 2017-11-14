@@ -19,20 +19,20 @@
     limitations under the License.
 """
 
-import datetime
-
 from django.db import models
-from django.utils import timezone
-from .FuelSupplierStatus import FuelSupplierStatus
-from .FuelSupplierActionsType import FuelSupplierActionsType
 
 from auditable.models import Auditable
 
+
 class FuelSupplier(Auditable):
-    name = models.CharField(max_length=500)   
-    fuelSupplierStatusFK = models.ForeignKey('FuelSupplierStatus', related_name='FuelSupplierfuelSupplierStatusFK')   
-    fuelSupplierActionsTypeFK = models.ForeignKey('FuelSupplierActionsType', related_name='FuelSupplierfuelSupplierActionsTypeFK')   
-    createdDate = models.DateField()   
+    name = models.CharField(max_length=500)
+    fuelSupplierStatusFK = models.ForeignKey(
+        'FuelSupplierStatus',
+        related_name='FuelSupplierfuelSupplierStatusFK')
+    fuelSupplierActionsTypeFK = models.ForeignKey(
+        'FuelSupplierActionsType',
+        related_name='FuelSupplierfuelSupplierActionsTypeFK')
+    createdDate = models.DateField()
+
     class Meta:
         db_table = 'fuel_supplier'
-

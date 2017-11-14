@@ -19,17 +19,18 @@
     limitations under the License.
 """
 
-import datetime
-
 from django.db import models
-from django.utils import timezone
-from .PermissionViewModel import PermissionViewModel
 
-class UserDetailsViewModel(models.Model):	    
-    givenName = models.CharField(max_length=255, blank=True, null=True)   
-    surname = models.CharField(max_length=255, blank=True, null=True)   
-    email = models.CharField(max_length=255, blank=True, null=True)   
-    active = models.BooleanField()   
-    permissions = models.ManyToManyField('PermissionViewModel', related_name='UserDetailsViewModelpermissions', blank=True)   
+
+class UserDetailsViewModel(models.Model):
+    givenName = models.CharField(max_length=255, blank=True, null=True)
+    surname = models.CharField(max_length=255, blank=True, null=True)
+    email = models.CharField(max_length=255, blank=True, null=True)
+    active = models.BooleanField()
+    permissions = models.ManyToManyField(
+        'PermissionViewModel',
+        related_name='UserDetailsViewModelpermissions',
+        blank=True)
+
     class Meta:
-      abstract = True
+        abstract = True

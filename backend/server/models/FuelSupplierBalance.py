@@ -19,21 +19,22 @@
     limitations under the License.
 """
 
-import datetime
-
 from django.db import models
-from django.utils import timezone
-from .FuelSupplier import FuelSupplier
-from .CreditTrade import CreditTrade
 
 from auditable.models import Auditable
 
-class FuelSupplierBalance(Auditable):	    
-    fuelSupplierFK = models.ForeignKey('FuelSupplier', related_name='FuelSupplierBalancefuelSupplierFK')   
-    validatedCredits = models.IntegerField()   
-    effectiveDate = models.DateField()   
-    endDate = models.DateField(blank=True, null=True)   
-    creditTradeFK = models.ForeignKey('CreditTrade', related_name='FuelSupplierBalancecreditTradeFK', blank=True, null=True)   
+
+class FuelSupplierBalance(Auditable):
+    fuelSupplierFK = models.ForeignKey(
+        'FuelSupplier',
+        related_name='FuelSupplierBalancefuelSupplierFK')
+    validatedCredits = models.IntegerField()
+    effectiveDate = models.DateField()
+    endDate = models.DateField(blank=True, null=True)
+    creditTradeFK = models.ForeignKey(
+        'CreditTrade',
+        related_name='FuelSupplierBalancecreditTradeFK',
+        blank=True, null=True)
+
     class Meta:
         db_table = 'fuel_supplier_balance'
-

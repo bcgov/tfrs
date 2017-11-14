@@ -19,24 +19,28 @@
     limitations under the License.
 """
 
-import datetime
-
 from django.db import models
-from django.utils import timezone
-from .FuelSupplier import FuelSupplier
 
 from auditable.models import Auditable
 
-class FuelSupplierCCData(Auditable):	    
-    fuelSupplierFK = models.ForeignKey('FuelSupplier', related_name='FuelSupplierCCDatafuelSupplierFK')   
-    commonClientOrgId = models.CharField(max_length=100)   
-    lastUpdatefromCommonClient = models.DateField()   
-    name = models.CharField(max_length=500)   
-    corporateAddressLine1 = models.CharField(max_length=150, blank=True, null=True)   
-    corporateAddressLine2 = models.CharField(max_length=150, blank=True, null=True)   
-    corporateAddressCity = models.CharField(max_length=100, blank=True, null=True)   
-    corporateAddressPostalCode = models.CharField(max_length=25, blank=True, null=True)   
-    corporateAddressProvince = models.CharField(max_length=50, blank=True, null=True)   
+
+class FuelSupplierCCData(Auditable):
+    fuelSupplierFK = models.ForeignKey(
+        'FuelSupplier',
+        related_name='FuelSupplierCCDatafuelSupplierFK')
+    commonClientOrgId = models.CharField(max_length=100)
+    lastUpdatefromCommonClient = models.DateField()
+    name = models.CharField(max_length=500)
+    corporateAddressLine1 = models.CharField(max_length=150, blank=True,
+                                             null=True)
+    corporateAddressLine2 = models.CharField(max_length=150, blank=True,
+                                             null=True)
+    corporateAddressCity = models.CharField(max_length=100, blank=True,
+                                            null=True)
+    corporateAddressPostalCode = models.CharField(max_length=25, blank=True,
+                                                  null=True)
+    corporateAddressProvince = models.CharField(max_length=50, blank=True,
+                                                null=True)
+
     class Meta:
         db_table = 'fuel_supplier_c_c_data'
-

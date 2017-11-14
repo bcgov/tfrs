@@ -19,21 +19,23 @@
     limitations under the License.
 """
 
-import datetime
-
 from django.db import models
-from django.utils import timezone
 
 from auditable.models import Auditable
 
-class User(Auditable):	    
-    authorizationID = models.CharField(max_length=500, blank=True, null=True)   
-    givenName = models.CharField(max_length=100)   
-    surname = models.CharField(max_length=100)   
-    email = models.CharField(max_length=150, blank=True, null=True)   
-    userId = models.CharField(max_length=500, blank=True, null=True)   
-    guid = models.CharField(max_length=100, blank=True, null=True)   
-    authorizationDirectory = models.CharField(max_length=100, blank=True, null=True)   
+
+class User(Auditable):
+    authorizationID = models.CharField(max_length=500, blank=True, null=True)
+    givenName = models.CharField(max_length=100)
+    surname = models.CharField(max_length=100)
+    email = models.CharField(max_length=150, blank=True, null=True)
+    userId = models.CharField(max_length=500, blank=True, null=True)
+    guid = models.CharField(max_length=100, blank=True, null=True)
+    authorizationDirectory = models.CharField(max_length=100, blank=True,
+                                              null=True)
+
+    # Add organizationFK
+    # Add effectiveDate and endDate (if end date is set to something,
+    # user is inactive)
     class Meta:
         db_table = 'user'
-

@@ -19,19 +19,17 @@
     limitations under the License.
 """
 
-import datetime
-
 from django.db import models
-from django.utils import timezone
 
 from auditable.models import Auditable
 
-class CreditTradeZeroReason(Auditable):	    
-    reason = models.CharField(max_length=25)   
-    description = models.CharField(max_length=1000)   
-    effectiveDate = models.DateField()   
-    expirationDate = models.DateField(blank=True, null=True)   
-    displayOrder = models.IntegerField()   
+
+class CreditTradeZeroReason(Auditable):
+    reason = models.CharField(max_length=25)
+    description = models.CharField(max_length=1000)
+    effectiveDate = models.DateField()
+    expirationDate = models.DateField(blank=True, null=True)
+    displayOrder = models.IntegerField()
+
     class Meta:
         db_table = 'credit_trade_zero_reason'
-

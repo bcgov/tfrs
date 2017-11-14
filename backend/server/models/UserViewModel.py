@@ -19,18 +19,18 @@
     limitations under the License.
 """
 
-import datetime
-
 from django.db import models
-from django.utils import timezone
-from .UserRole import UserRole
 
-class UserViewModel(models.Model):	    
-    givenName = models.CharField(max_length=255, blank=True, null=True)   
-    surname = models.CharField(max_length=255, blank=True, null=True)   
-    email = models.CharField(max_length=255, blank=True, null=True)   
-    active = models.BooleanField()   
-    smUserId = models.CharField(max_length=255, blank=True, null=True)   
-    userRoles = models.ManyToManyField('UserRole', related_name='UserViewModeluserRoles', blank=True)   
+
+class UserViewModel(models.Model):
+    givenName = models.CharField(max_length=255, blank=True, null=True)
+    surname = models.CharField(max_length=255, blank=True, null=True)
+    email = models.CharField(max_length=255, blank=True, null=True)
+    active = models.BooleanField()
+    smUserId = models.CharField(max_length=255, blank=True, null=True)
+    userRoles = models.ManyToManyField('UserRole',
+                                       related_name='UserViewModeluserRoles',
+                                       blank=True)
+
     class Meta:
-      abstract = True
+        abstract = True
