@@ -23,8 +23,8 @@ from django.db import models
 
 
 class UserRoleViewModel(models.Model):
-    effectiveDate = models.DateField()
-    expiryDate = models.DateField(blank=True, null=True)
+    effective_date = models.DateField()
+    expiration_date = models.DateField(blank=True, null=True)
     roleId = models.IntegerField()
     userId = models.IntegerField()
 

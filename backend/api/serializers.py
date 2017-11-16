@@ -67,7 +67,7 @@ class CreditTradeSerializer(serializers.ModelSerializer):
         fields = ('id', 'creditTradeStatusFK', 'initiatorFK', 'respondentFK',
                   'creditTradeTypeFK', 'numberOfCredits',
                   'fairMarketValuePerCredit', 'creditTradeZeroReasonFK',
-                  'tradeEffectiveDate')
+                  'trade_effective_date')
 
 
 class CreditTradeHistorySerializer(serializers.ModelSerializer):
@@ -84,7 +84,7 @@ class CreditTradeStatusSerializer(serializers.ModelSerializer):
     class Meta:
         model = CreditTradeStatus
         fields = (
-            'id', 'status', 'description', 'effectiveDate', 'expirationDate',
+            'id', 'status', 'description', 'effective_date', 'expiration_date',
             'displayOrder')
 
 
@@ -92,7 +92,7 @@ class CreditTradeTypeSerializer(serializers.ModelSerializer):
     class Meta:
         model = CreditTradeType
         fields = (
-            'id', 'theType', 'description', 'effectiveDate', 'expirationDate',
+            'id', 'theType', 'description', 'effective_date', 'expiration_date',
             'displayOrder', 'isGovOnlyType')
 
 
@@ -100,7 +100,7 @@ class CreditTradeZeroReasonSerializer(serializers.ModelSerializer):
     class Meta:
         model = CreditTradeZeroReason
         fields = (
-            'id', 'reason', 'description', 'effectiveDate', 'expirationDate',
+            'id', 'reason', 'description', 'effective_date', 'expiration_date',
             'displayOrder')
 
 
@@ -123,7 +123,7 @@ class FuelSupplierActionsTypeSerializer(serializers.ModelSerializer):
     class Meta:
         model = FuelSupplierActionsType
         fields = (
-            'id', 'theType', 'description', 'effectiveDate', 'expirationDate',
+            'id', 'theType', 'description', 'effective_date', 'expiration_date',
             'displayOrder')
 
 
@@ -139,8 +139,8 @@ class FuelSupplierBalanceSerializer(serializers.ModelSerializer):
     class Meta:
         model = FuelSupplierBalance
         fields = (
-            'id', 'fuelSupplierFK', 'validatedCredits', 'effectiveDate',
-            'endDate',
+            'id', 'fuelSupplierFK', 'validatedCredits', 'effective_date',
+            'expiration_date',
             'creditTradeFK')
 
 
@@ -154,7 +154,7 @@ class FuelSupplierStatusSerializer(serializers.ModelSerializer):
     class Meta:
         model = FuelSupplierStatus
         fields = (
-            'id', 'status', 'description', 'effectiveDate', 'expirationDate',
+            'id', 'status', 'description', 'effective_date', 'expiration_date',
             'displayOrder')
 
 
@@ -230,7 +230,7 @@ class UserRoleSerializer(serializers.ModelSerializer):
 class UserRoleViewModelSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserRoleViewModel
-        fields = ('id', 'effectiveDate', 'expiryDate', 'roleId', 'userId')
+        fields = ('id', 'effective_date', 'expiration_date', 'roleId', 'userId')
 
 
 class UserViewModelSerializer(serializers.ModelSerializer):
@@ -250,7 +250,7 @@ class CreditTradeCreateSerializer(serializers.ModelSerializer):
 class CreditTradeApproveSerializer(serializers.ModelSerializer):
     class Meta:
         model = CreditTrade
-        fields = ('id', 'tradeEffectiveDate', 'note',)
+        fields = ('id', 'trade_effective_date', 'note',)
         read_only_fields = ('creditTradeStatusFK', 'numberOfCredits',
                             'creditTradeTypeFK',
                             'fairMarketValuePerCredit',
@@ -272,7 +272,7 @@ class CreditTrade2Serializer(serializers.ModelSerializer):
         fields = ('id', 'creditTradeStatusFK', 'initiatorFK', 'respondentFK',
                   'creditTradeTypeFK', 'numberOfCredits',
                   'fairMarketValuePerCredit', 'creditTradeZeroReasonFK',
-                  'tradeEffectiveDate', 'credits_from', 'credits_to')
+                  'trade_effective_date', 'credits_from', 'credits_to')
         # exclude = ('note',)
 
 

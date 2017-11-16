@@ -50,7 +50,7 @@ class CreditTrade(Auditable):
         'CreditTradeZeroReason',
         related_name='CreditTradecreditTradeZeroReasonFK',
         blank=True, null=True)
-    tradeEffectiveDate = models.DateField(blank=True, null=True)
+    trade_effective_date = models.DateField(blank=True, null=True)
     note = models.CharField(max_length=4000, blank=True, null=True)
 
     @property

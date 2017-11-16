@@ -3,8 +3,8 @@
         "fields": {
             "description": "A Fuel Supplier permitted to both Buy and Sell Low Carbon Credits.",
             "displayOrder": "1",
-            "effectiveDate": "2017-01-01",
-            "expirationDate": null,
+            "effective_date": "2017-01-01",
+            "expiration_date": null,
             "theType": "Buy And Sell"
         },
         "model": "api.fuelsupplieractionstype",
@@ -14,8 +14,8 @@
         "fields": {
             "description": "A Fuel Supplier permitted to only to Sell Low Carbon Credits.",
             "displayOrder": "2",
-            "effectiveDate": "2017-01-01",
-            "expirationDate": null,
+            "effective_date": "2017-01-01",
+            "expiration_date": null,
             "theType": "Sell Only"
         },
         "model": "api.fuelsupplieractionstype",
@@ -25,8 +25,8 @@
         "fields": {
             "description": "A Fuel Supplier not currently permitted to either Buy and Sell Low Carbon Credits.",
             "displayOrder": "3",
-            "effectiveDate": "2017-01-01",
-            "expirationDate": null,
+            "effective_date": "2017-01-01",
+            "expiration_date": null,
             "theType": "None"
         },
         "model": "api.fuelsupplieractionstype",

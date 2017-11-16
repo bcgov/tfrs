@@ -29,8 +29,8 @@ class FuelSupplierBalance(Auditable):
         'FuelSupplier',
         related_name='FuelSupplierBalancefuelSupplierFK')
     validatedCredits = models.IntegerField()
-    effectiveDate = models.DateField()
-    endDate = models.DateField(blank=True, null=True)
+    effective_date = models.DateField()
+    expiration_date = models.DateField(blank=True, null=True)
     creditTradeFK = models.ForeignKey(
         'CreditTrade',
         related_name='FuelSupplierBalancecreditTradeFK',

@@ -29,6 +29,6 @@ class Role(Auditable):
     description = models.CharField(max_length=1000)
     isGovernmentRole = models.BooleanField(default=False)
 
-    # Add effectiveDate and endDate
+    # Add effective_date and expiration_date
     class Meta:
         db_table = 'role'
