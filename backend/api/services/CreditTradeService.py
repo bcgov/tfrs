@@ -52,7 +52,7 @@ class CreditTradeService(object):
             newNumberOfCredits=credit_trade.numberOfCredits,
             newFairMarketValuePerCredit=credit_trade.fairMarketValuePerCredit,
             newCreditTradeZeroReasonFK_id=credit_trade.creditTradeZeroReasonFK,
-            newTradeEffectiveDate=credit_trade.tradeEffectiveDate,
+            newTradeEffectiveDate=credit_trade.trade_effective_date,
             newNote=credit_trade.note,
             isInternalHistoryRecord=is_internal_history_record,
             creditTradeUpdateTime=credit_trade_update_time,
@@ -77,7 +77,7 @@ class CreditTradeService(object):
                              effective_date, action='increase'):
         to_starting_bal = FuelSupplierBalance.objects.get(
             fuelSupplierFK_id=_to.id,
-            endDate=None)
+            expiration_date=None)
 
         if 'increase' == action:
             to_credits = to_starting_bal.validatedCredits + num_of_credits
@@ -88,12 +88,12 @@ class CreditTradeService(object):
             raise PositiveIntegerException("Can't complete transaction,"
                                            "insufficient credits")
 
-        to_starting_bal.endDate = effective_date
+        to_starting_bal.expiration_date = effective_date
 
         to_new_bal = FuelSupplierBalance(
             fuelSupplierFK=_to,
             validatedCredits=to_credits,
-            effectiveDate=effective_date,
+            effective_date=effective_date,
             creditTradeFK_id=credit_trade_id
         )
 
@@ -109,7 +109,7 @@ class CreditTradeService(object):
 
         to_starting_bal = FuelSupplierBalance.objects.get(
             fuelSupplierFK_id=_to.id,
-            endDate=None)
+            expiration_date=None)
 
         # Compute for end balance
         from_credits = from_starting_bal.validatedCredits - num_of_credits
@@ -120,21 +120,21 @@ class CreditTradeService(object):
                                            "insufficient credits")
 
         # Update old balance effective date
-        from_starting_bal.endDate = effective_date
-        to_starting_bal.endDate = effective_date
+        from_starting_bal.expiration_date = effective_date
+        to_starting_bal.expiration_date = effective_date
 
         # Create new fuel supplier balance
         from_new_bal = FuelSupplierBalance(
             fuelSupplierFK=_from,
             validatedCredits=from_credits,
-            effectiveDate=effective_date,
+            effective_date=effective_date,
             creditTradeFK_id=credit_trade_id
         )
 
         to_new_bal = FuelSupplierBalance(
             fuelSupplierFK=_to,
             validatedCredits=to_credits,
-            effectiveDate=effective_date,
+            effective_date=effective_date,
             creditTradeFK_id=credit_trade_id
         )
 

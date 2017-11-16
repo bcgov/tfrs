@@ -1,8 +1,8 @@
 [
     {
         "fields": {
-            "effectiveDate": "2017-01-01",
-            "expiryDate": null,
+            "effective_date": "2017-01-01",
+            "expiration_date": null,
             "roleFK": false,
             "userFK": "1"
         },
@@ -11,8 +11,8 @@
     },
     {
         "fields": {
-            "effectiveDate": "2017-01-01",
-            "expiryDate": null,
+            "effective_date": "2017-01-01",
+            "expiration_date": null,
             "roleFK": false,
             "userFK": "2"
         },
@@ -21,8 +21,8 @@
     },
     {
         "fields": {
-            "effectiveDate": "2017-01-01",
-            "expiryDate": null,
+            "effective_date": "2017-01-01",
+            "expiration_date": null,
             "roleFK": false,
             "userFK": "3"
         },
@@ -31,8 +31,8 @@
     },
     {
         "fields": {
-            "effectiveDate": "2017-01-01",
-            "expiryDate": null,
+            "effective_date": "2017-01-01",
+            "expiration_date": null,
             "roleFK": false,
             "userFK": "4"
         },
@@ -41,8 +41,8 @@
     },
     {
         "fields": {
-            "effectiveDate": "2017-01-01",
-            "expiryDate": null,
+            "effective_date": "2017-01-01",
+            "expiration_date": null,
             "roleFK": false,
             "userFK": "5"
         },
@@ -51,8 +51,8 @@
     },
     {
         "fields": {
-            "effectiveDate": "2017-01-01",
-            "expiryDate": null,
+            "effective_date": "2017-01-01",
+            "expiration_date": null,
             "roleFK": false,
             "userFK": "6"
         },
@@ -61,8 +61,8 @@
     },
     {
         "fields": {
-            "effectiveDate": "2017-01-01",
-            "expiryDate": null,
+            "effective_date": "2017-01-01",
+            "expiration_date": null,
             "roleFK": false,
             "userFK": "7"
         },
@@ -71,8 +71,8 @@
     },
     {
         "fields": {
-            "effectiveDate": "2017-01-01",
-            "expiryDate": null,
+            "effective_date": "2017-01-01",
+            "expiration_date": null,
             "roleFK": false,
             "userFK": "8"
         },
@@ -81,8 +81,8 @@
     },
     {
         "fields": {
-            "effectiveDate": "2017-01-01",
-            "expiryDate": null,
+            "effective_date": "2017-01-01",
+            "expiration_date": null,
             "roleFK": false,
             "userFK": "9"
         },
@@ -91,8 +91,8 @@
     },
     {
         "fields": {
-            "effectiveDate": "2017-01-01",
-            "expiryDate": null,
+            "effective_date": "2017-01-01",
+            "expiration_date": null,
             "roleFK": false,
             "userFK": "10"
         },
@@ -101,8 +101,8 @@
     },
     {
         "fields": {
-            "effectiveDate": "2017-01-01",
-            "expiryDate": null,
+            "effective_date": "2017-01-01",
+            "expiration_date": null,
             "roleFK": false,
             "userFK": "11"
         },
@@ -111,8 +111,8 @@
     },
     {
         "fields": {
-            "effectiveDate": "2017-01-01",
-            "expiryDate": null,
+            "effective_date": "2017-01-01",
+            "expiration_date": null,
             "roleFK": false,
             "userFK": "12"
         },
@@ -121,8 +121,8 @@
     },
     {
         "fields": {
-            "effectiveDate": "2017-01-01",
-            "expiryDate": null,
+            "effective_date": "2017-01-01",
+            "expiration_date": null,
             "roleFK": false,
             "userFK": "13"
         },
@@ -131,8 +131,8 @@
     },
     {
         "fields": {
-            "effectiveDate": "2017-01-01",
-            "expiryDate": null,
+            "effective_date": "2017-01-01",
+            "expiration_date": null,
             "roleFK": false,
             "userFK": "14"
         },
@@ -141,8 +141,8 @@
     },
     {
         "fields": {
-            "effectiveDate": "2017-01-01",
-            "expiryDate": null,
+            "effective_date": "2017-01-01",
+            "expiration_date": null,
             "roleFK": false,
             "userFK": "15"
         },
@@ -151,8 +151,8 @@
     },
     {
         "fields": {
-            "effectiveDate": "2017-01-01",
-            "expiryDate": null,
+            "effective_date": "2017-01-01",
+            "expiration_date": null,
             "roleFK": false,
             "userFK": "16"
         },
@@ -161,8 +161,8 @@
     },
     {
         "fields": {
-            "effectiveDate": "2017-01-01",
-            "expiryDate": null,
+            "effective_date": "2017-01-01",
+            "expiration_date": null,
             "roleFK": false,
             "userFK": "17"
         },
@@ -171,8 +171,8 @@
     },
     {
         "fields": {
-            "effectiveDate": "2017-01-01",
-            "expiryDate": null,
+            "effective_date": "2017-01-01",
+            "expiration_date": null,
             "roleFK": false,
             "userFK": "18"
         },
@@ -181,8 +181,8 @@
     },
     {
         "fields": {
-            "effectiveDate": "2017-01-01",
-            "expiryDate": null,
+            "effective_date": "2017-01-01",
+            "expiration_date": null,
             "roleFK": false,
             "userFK": "19"
         },
@@ -191,8 +191,8 @@
     },
     {
         "fields": {
-            "effectiveDate": "2017-01-01",
-            "expiryDate": null,
+            "effective_date": "2017-01-01",
+            "expiration_date": null,
             "roleFK": false,
             "userFK": "20"
         },
@@ -201,8 +201,8 @@
     },
     {
         "fields": {
-            "effectiveDate": "2017-01-01",
-            "expiryDate": null,
+            "effective_date": "2017-01-01",
+            "expiration_date": null,
             "roleFK": false,
             "userFK": "21"
         },
@@ -211,8 +211,8 @@
     },
     {
         "fields": {
-            "effectiveDate": "2017-01-01",
-            "expiryDate": null,
+            "effective_date": "2017-01-01",
+            "expiration_date": null,
             "roleFK": false,
             "userFK": "22"
         },
@@ -221,8 +221,8 @@
     },
     {
         "fields": {
-            "effectiveDate": "2017-01-01",
-            "expiryDate": null,
+            "effective_date": "2017-01-01",
+            "expiration_date": null,
             "roleFK": false,
             "userFK": "23"
         },
@@ -231,8 +231,8 @@
     },
     {
         "fields": {
-            "effectiveDate": "2017-01-01",
-            "expiryDate": null,
+            "effective_date": "2017-01-01",
+            "expiration_date": null,
             "roleFK": false,
             "userFK": "24"
         },
@@ -241,8 +241,8 @@
     },
     {
         "fields": {
-            "effectiveDate": "2017-01-01",
-            "expiryDate": null,
+            "effective_date": "2017-01-01",
+            "expiration_date": null,
             "roleFK": false,
             "userFK": "25"
         },
@@ -251,8 +251,8 @@
     },
     {
         "fields": {
-            "effectiveDate": "2017-01-01",
-            "expiryDate": null,
+            "effective_date": "2017-01-01",
+            "expiration_date": null,
             "roleFK": false,
             "userFK": "26"
         },
@@ -261,8 +261,8 @@
     },
     {
         "fields": {
-            "effectiveDate": "2017-01-01",
-            "expiryDate": null,
+            "effective_date": "2017-01-01",
+            "expiration_date": null,
             "roleFK": false,
             "userFK": "27"
         },
@@ -271,8 +271,8 @@
     },
     {
         "fields": {
-            "effectiveDate": "2017-01-01",
-            "expiryDate": null,
+            "effective_date": "2017-01-01",
+            "expiration_date": null,
             "roleFK": false,
             "userFK": "28"
         },
@@ -281,8 +281,8 @@
     },
     {
         "fields": {
-            "effectiveDate": "2017-01-01",
-            "expiryDate": null,
+            "effective_date": "2017-01-01",
+            "expiration_date": null,
             "roleFK": false,
             "userFK": "29"
         },
@@ -291,8 +291,8 @@
     },
     {
         "fields": {
-            "effectiveDate": "2017-01-01",
-            "expiryDate": null,
+            "effective_date": "2017-01-01",
+            "expiration_date": null,
             "roleFK": false,
             "userFK": "30"
         },
@@ -301,8 +301,8 @@
     },
     {
         "fields": {
-            "effectiveDate": "2017-01-01",
-            "expiryDate": null,
+            "effective_date": "2017-01-01",
+            "expiration_date": null,
             "roleFK": false,
             "userFK": "31"
         },
@@ -311,8 +311,8 @@
     },
     {
         "fields": {
-            "effectiveDate": "2017-01-01",
-            "expiryDate": null,
+            "effective_date": "2017-01-01",
+            "expiration_date": null,
             "roleFK": false,
             "userFK": "32"
         },
@@ -321,8 +321,8 @@
     },
     {
         "fields": {
-            "effectiveDate": "2017-01-01",
-            "expiryDate": null,
+            "effective_date": "2017-01-01",
+            "expiration_date": null,
             "roleFK": false,
             "userFK": "33"
         },
@@ -331,8 +331,8 @@
     },
     {
         "fields": {
-            "effectiveDate": "2017-01-01",
-            "expiryDate": null,
+            "effective_date": "2017-01-01",
+            "expiration_date": null,
             "roleFK": false,
             "userFK": "34"
         },
@@ -341,8 +341,8 @@
     },
     {
         "fields": {
-            "effectiveDate": "2017-01-01",
-            "expiryDate": null,
+            "effective_date": "2017-01-01",
+            "expiration_date": null,
             "roleFK": true,
             "userFK": "35"
         },
@@ -351,8 +351,8 @@
     },
     {
         "fields": {
-            "effectiveDate": "2017-01-01",
-            "expiryDate": null,
+            "effective_date": "2017-01-01",
+            "expiration_date": null,
             "roleFK": true,
             "userFK": "36"
         },
@@ -361,8 +361,8 @@
     },
     {
         "fields": {
-            "effectiveDate": "2017-01-01",
-            "expiryDate": null,
+            "effective_date": "2017-01-01",
+            "expiration_date": null,
             "roleFK": true,
             "userFK": "37"
         },
@@ -371,8 +371,8 @@
     },
     {
         "fields": {
-            "effectiveDate": "2017-01-01",
-            "expiryDate": null,
+            "effective_date": "2017-01-01",
+            "expiration_date": null,
             "roleFK": true,
             "userFK": "38"
         },
@@ -381,8 +381,8 @@
     },
     {
         "fields": {
-            "effectiveDate": "2017-01-01",
-            "expiryDate": null,
+            "effective_date": "2017-01-01",
+            "expiration_date": null,
             "roleFK": true,
             "userFK": "39"
         },

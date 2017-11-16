@@ -3,8 +3,8 @@
         "fields": {
             "description": "The credits were transferred between units within a single organization at no cost.",
             "displayOrder": "1",
-            "effectiveDate": "2017-01-01",
-            "expirationDate": "2117-01-01",
+            "effective_date": "2017-01-01",
+            "expiration_date": "2117-01-01",
             "reason": "Internal"
         },
         "model": "api.credittradezeroreason",
@@ -14,8 +14,8 @@
         "fields": {
             "description": "The transaction was at zero cost for some other reason. Specify the details in the comment box below.",
             "displayOrder": "2",
-            "effectiveDate": "2017-01-01",
-            "expirationDate": "2117-01-01",
+            "effective_date": "2017-01-01",
+            "expiration_date": "2117-01-01",
             "reason": "Other"
         },
         "model": "api.credittradezeroreason",

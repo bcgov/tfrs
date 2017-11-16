@@ -3,8 +3,8 @@
         "fields": {
             "description": "The selling of Low Carbon Fuel Credits by the Initiator of the Trade or Opportunity.",
             "displayOrder": "1",
-            "effectiveDate": "2017-01-01",
-            "expirationDate": "2117-01-01",
+            "effective_date": "2017-01-01",
+            "expiration_date": "2117-01-01",
             "isGovOnlyType": false,
             "theType": "Sell"
         },
@@ -15,8 +15,8 @@
         "fields": {
             "description": "The buying of Low Carbon Fuel Credits by the Initiator of the Trade or Opportunity.",
             "displayOrder": "2",
-            "effectiveDate": "2017-01-01",
-            "expirationDate": "2117-01-01",
+            "effective_date": "2017-01-01",
+            "expiration_date": "2117-01-01",
             "isGovOnlyType": false,
             "theType": "Buy"
         },
@@ -27,8 +27,8 @@
         "fields": {
             "description": "An adjustment of the number of Fuel Credits owned by a Fuel Supplier initiated by the BC Government.",
             "displayOrder": "3",
-            "effectiveDate": "2017-01-01",
-            "expirationDate": "2117-01-01",
+            "effective_date": "2017-01-01",
+            "expiration_date": "2117-01-01",
             "isGovOnlyType": true,
             "theType": "Credit Validation"
         },
@@ -39,8 +39,8 @@
         "fields": {
             "description": "The retirement of Fuel Credits owned by a Fuel Supplier by the BC Government.",
             "displayOrder": "4",
-            "effectiveDate": "2017-01-01",
-            "expirationDate": "2117-01-01",
+            "effective_date": "2017-01-01",
+            "expiration_date": "2117-01-01",
             "isGovOnlyType": true,
             "theType": "Credit Retirement"
         },
@@ -51,8 +51,8 @@
         "fields": {
             "description": "The awarding of Low Carbon Fuel Credits to a Fuel Supplier following the completion of a Part 3 Agreement milestone.",
             "displayOrder": "5",
-            "effectiveDate": "2017-01-01",
-            "expirationDate": "2117-01-01",
+            "effective_date": "2017-01-01",
+            "expiration_date": "2117-01-01",
             "isGovOnlyType": true,
             "theType": "Part 3 Award"
         },

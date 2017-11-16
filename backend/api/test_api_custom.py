@@ -95,7 +95,7 @@ class Test_Api_Custom(TestCase):
     def createFuelSupplierStatus(self):
         testUrl = "/api/fuelsupplierstatuses"
         payload = fakedata.FuelSupplierStatusTestDataCreate()
-        payload['effectiveDate'] = '2017-01-01'
+        payload['effective_date'] = '2017-01-01'
         jsonString = json.dumps(payload)
         response = self.client.post(testUrl, content_type='application/json', data=jsonString)
         # Check that the response is OK.
@@ -211,8 +211,8 @@ class Test_Api_Custom(TestCase):
     def createCreditTradeType(self):
         testUrl = "/api/credittradetypes"
         payload = fakedata.CreditTradeTypeTestDataCreate()
-        payload['expirationDate'] = '2017-01-02'
-        payload['effectiveDate'] = '2017-01-01'
+        payload['expiration_date'] = '2017-01-02'
+        payload['effective_date'] = '2017-01-01'
         jsonString = json.dumps(payload)
         response = self.client.post(testUrl, content_type='application/json', data=jsonString)
         # Check that the response is OK.
@@ -226,7 +226,7 @@ class Test_Api_Custom(TestCase):
     def createCreditTradeStatus(self):
         testUrl = "/api/credittradestatuses"
         payload = fakedata.CreditTradeStatusTestDataCreate()
-        payload['effectiveDate'] = '2017-01-01'
+        payload['effective_date'] = '2017-01-01'
         jsonString = json.dumps(payload)
         response = self.client.post(testUrl, content_type='application/json', data=jsonString)
         # Check that the response is OK.
@@ -454,8 +454,8 @@ class Test_Api_Custom(TestCase):
         userRoleUrl = "/api/users/" + str(userId) + "/roles"
         # create a new UserRole.
         payload = {
-            'effectiveDate': '2000-01-01',
-            'expiryDate': None,
+            'effective_date': '2000-01-01',
+            'expiration_date': None,
             'user': userId,
             'role': roleId
         }
@@ -574,7 +574,7 @@ class Test_Api_Custom(TestCase):
           'historySet':[],
           'initiator': fsId,
           'respondentFK': fsId,
-          'tradeEffectiveDate': '2017-01-01',
+          'trade_effective_date': '2017-01-01',
         }
         fakeCreditTrade = fakedata.CreditTradeTestDataCreate()
         payload.update(fakeCreditTrade)

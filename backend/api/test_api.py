@@ -278,8 +278,8 @@ class TestCreditTradeAPI(TestCase):
     #                      STATUS_COMPLETED)
     #
     #     # Effective date should be today
-    #     self.assertEqual(initiator_bal_after['tradeEffectiveDate'], today)
-    #     self.assertEqual(respondent_bal_after['tradeEffectiveDate'], today)
+    #     self.assertEqual(initiator_bal_after['trade_effective_date'], today)
+    #     self.assertEqual(respondent_bal_after['trade_effective_date'], today)
     #
     #     # Credits should be subtracted/added
     #     self.assertEqual(init_final_bal,

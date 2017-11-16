@@ -11,8 +11,8 @@ STATUS_DRAFT = 1
 def create_credit_trade_type():
     test_url = "/api/credittradetypes"
     payload = fakedata.CreditTradeTypeTestDataCreate()
-    payload['expirationDate'] = '2017-01-02'
-    payload['effectiveDate'] = '2017-01-01'
+    payload['expiration_date'] = '2017-01-02'
+    payload['effective_date'] = '2017-01-01'
 
     response = client.post(
         test_url,
@@ -30,7 +30,7 @@ def create_credit_trade_type():
 def create_credit_trade_status():
     test_url = "/api/credittradestatuses"
     payload = fakedata.CreditTradeStatusTestDataCreate()
-    payload['effectiveDate'] = '2017-01-01'
+    payload['effective_date'] = '2017-01-01'
     response = client.post(
         test_url,
         content_type='application/json',
@@ -46,7 +46,7 @@ def create_credit_trade_status():
 def create_fuel_supplier_status():
     test_url = "/api/fuelsupplierstatuses"
     payload = fakedata.FuelSupplierStatusTestDataCreate()
-    payload['effectiveDate'] = '2017-01-01'
+    payload['effective_date'] = '2017-01-01'
     response = client.post(
         test_url,
         content_type='application/json',
@@ -137,7 +137,7 @@ def create_credit_trade(**kwargs):
         "numberOfCredits": kwargs.get("numberOfCredits", 2),
         "fairMarketValuePerCredit": kwargs.get("fairMarketValuePerCredit", 1),
 
-        "tradeEffectiveDate": "2017-04-01",
+        "trade_effective_date": "2017-04-01",
         "creditTradeStatusFK": kwargs.get("creditTradeStatusFK", 1),
         "respondentFK": kwargs.get("respondentFK", create_fuel_supplier()),
         "creditTradeTypeFK": kwargs.get("creditTradeTypeFK", 1),

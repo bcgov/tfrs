@@ -121,7 +121,7 @@ class CreditTradeViewSet(AuditableMixin, mixins.CreateModelMixin,
 
             # Approve with today's date
             # serializer.save(creditTradeStatusFK=status_approved,
-            #                 tradeEffectiveDate=todays_date)
+            #                 trade_effective_date=todays_date)
 
             credit_trade.creditTradeStatusFK_id = status_approved.id
             # credit_trade.save()
@@ -136,7 +136,7 @@ class CreditTradeViewSet(AuditableMixin, mixins.CreateModelMixin,
             #  newNumberOfCredits=credit_trade.numberOfCredits,
             #  newFairMarketValuePerCredit=credit_trade.fairMarketValuePerCredit,
             #  newCreditTradeZeroReasonFK_id=credit_trade.creditTradeZeroReasonFK,
-            #  newTradeEffectiveDate=credit_trade.tradeEffectiveDate,
+            #  newTradeEffectiveDate=credit_trade.trade_effective_date,
             #  newNote=credit_trade.note,
             # )
             # history.save()
@@ -150,7 +150,7 @@ class CreditTradeViewSet(AuditableMixin, mixins.CreateModelMixin,
 
             # Complete with today's date
             # serializer.save(creditTradeStatusFK=status_completed,
-            #                 tradeEffectiveDate=todays_date)
+            #                 trade_effective_date=todays_date)
 
 
             # num_of_credits_involved = credit_trade.numberOfCredits
@@ -188,7 +188,7 @@ class CreditTradeViewSet(AuditableMixin, mixins.CreateModelMixin,
             # else:
             #     fs_initiator_starting_balance = FuelSupplierBalance.objects.get(
             #         fuelSupplierFK=fs_initiator,
-            #         endDate=None)
+            #         expiration_date=None)
             #
             # print("Initiator", fs_initiator)
             #
@@ -200,7 +200,7 @@ class CreditTradeViewSet(AuditableMixin, mixins.CreateModelMixin,
             #
             # fs_respondent_starting_balance = FuelSupplierBalance.objects.get(
             #     fuelSupplierFK=fs_respondent,
-            #     endDate=None)
+            #     expiration_date=None)
             #
             # fs_respondent_final_credit_balance = fs_respondent_starting_balance
             #
@@ -214,7 +214,7 @@ class CreditTradeViewSet(AuditableMixin, mixins.CreateModelMixin,
 
             # Complete Trade
             # serializer.save(creditTradeStatusFK=status_completed,
-            #                 tradeEffectiveDate=todays_date)
+            #                 trade_effective_date=todays_date)
         except:
             print("Something bad happened")
             tb = traceback.format_exc()

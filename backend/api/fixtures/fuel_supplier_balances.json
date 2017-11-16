@@ -2,8 +2,8 @@
     {
         "fields": {
             "creditTradeFK": null,
-            "effectiveDate": "2017-04-01",
-            "endDate": null,
+            "effective_date": "2017-04-01",
+            "expiration_date": null,
             "fuelSupplierFK": "1",
             "validatedCredits": "61000"
         },
@@ -13,8 +13,8 @@
     {
         "fields": {
             "creditTradeFK": null,
-            "effectiveDate": "2017-04-01",
-            "endDate": null,
+            "effective_date": "2017-04-01",
+            "expiration_date": null,
             "fuelSupplierFK": "2",
             "validatedCredits": "58000"
         },
@@ -24,8 +24,8 @@
     {
         "fields": {
             "creditTradeFK": null,
-            "effectiveDate": "2017-04-01",
-            "endDate": null,
+            "effective_date": "2017-04-01",
+            "expiration_date": null,
             "fuelSupplierFK": "3",
             "validatedCredits": "47000"
         },
@@ -35,8 +35,8 @@
     {
         "fields": {
             "creditTradeFK": null,
-            "effectiveDate": "2017-04-01",
-            "endDate": null,
+            "effective_date": "2017-04-01",
+            "expiration_date": null,
             "fuelSupplierFK": "4",
             "validatedCredits": "39000"
         },
@@ -46,8 +46,8 @@
     {
         "fields": {
             "creditTradeFK": null,
-            "effectiveDate": "2017-04-01",
-            "endDate": null,
+            "effective_date": "2017-04-01",
+            "expiration_date": null,
             "fuelSupplierFK": "5",
             "validatedCredits": "22000"
         },
@@ -57,8 +57,8 @@
     {
         "fields": {
             "creditTradeFK": null,
-            "effectiveDate": "2017-04-01",
-            "endDate": null,
+            "effective_date": "2017-04-01",
+            "expiration_date": null,
             "fuelSupplierFK": "6",
             "validatedCredits": "94000"
         },
@@ -68,8 +68,8 @@
     {
         "fields": {
             "creditTradeFK": null,
-            "effectiveDate": "2017-04-01",
-            "endDate": null,
+            "effective_date": "2017-04-01",
+            "expiration_date": null,
             "fuelSupplierFK": "7",
             "validatedCredits": "18000"
         },
@@ -79,8 +79,8 @@
     {
         "fields": {
             "creditTradeFK": null,
-            "effectiveDate": "2017-04-01",
-            "endDate": null,
+            "effective_date": "2017-04-01",
+            "expiration_date": null,
             "fuelSupplierFK": "8",
             "validatedCredits": "35000"
         },
@@ -90,8 +90,8 @@
     {
         "fields": {
             "creditTradeFK": null,
-            "effectiveDate": "2017-04-01",
-            "endDate": null,
+            "effective_date": "2017-04-01",
+            "expiration_date": null,
             "fuelSupplierFK": "9",
             "validatedCredits": "14000"
         },
@@ -101,8 +101,8 @@
     {
         "fields": {
             "creditTradeFK": null,
-            "effectiveDate": "2017-04-01",
-            "endDate": null,
+            "effective_date": "2017-04-01",
+            "expiration_date": null,
             "fuelSupplierFK": "10",
             "validatedCredits": "73000"
         },
@@ -112,8 +112,8 @@
     {
         "fields": {
             "creditTradeFK": null,
-            "effectiveDate": "2017-04-01",
-            "endDate": null,
+            "effective_date": "2017-04-01",
+            "expiration_date": null,
             "fuelSupplierFK": "11",
             "validatedCredits": "23000"
         },
@@ -123,8 +123,8 @@
     {
         "fields": {
             "creditTradeFK": null,
-            "effectiveDate": "2017-04-01",
-            "endDate": null,
+            "effective_date": "2017-04-01",
+            "expiration_date": null,
             "fuelSupplierFK": "12",
             "validatedCredits": "41000"
         },
@@ -134,8 +134,8 @@
     {
         "fields": {
             "creditTradeFK": null,
-            "effectiveDate": "2017-04-01",
-            "endDate": null,
+            "effective_date": "2017-04-01",
+            "expiration_date": null,
             "fuelSupplierFK": "13",
             "validatedCredits": "93000"
         },
@@ -145,8 +145,8 @@
     {
         "fields": {
             "creditTradeFK": null,
-            "effectiveDate": "2017-04-01",
-            "endDate": null,
+            "effective_date": "2017-04-01",
+            "expiration_date": null,
             "fuelSupplierFK": "14",
             "validatedCredits": "63000"
         },
@@ -156,8 +156,8 @@
     {
         "fields": {
             "creditTradeFK": null,
-            "effectiveDate": "2017-04-01",
-            "endDate": null,
+            "effective_date": "2017-04-01",
+            "expiration_date": null,
             "fuelSupplierFK": "15",
             "validatedCredits": "78000"
         },
@@ -167,8 +167,8 @@
     {
         "fields": {
             "creditTradeFK": null,
-            "effectiveDate": "2017-04-01",
-            "endDate": null,
+            "effective_date": "2017-04-01",
+            "expiration_date": null,
             "fuelSupplierFK": "16",
             "validatedCredits": "15000"
         },
@@ -178,8 +178,8 @@
     {
         "fields": {
             "creditTradeFK": null,
-            "effectiveDate": "2017-04-01",
-            "endDate": null,
+            "effective_date": "2017-04-01",
+            "expiration_date": null,
             "fuelSupplierFK": "17",
             "validatedCredits": "82000"
         },
@@ -189,8 +189,8 @@
     {
         "fields": {
             "creditTradeFK": null,
-            "effectiveDate": "2017-04-01",
-            "endDate": null,
+            "effective_date": "2017-04-01",
+            "expiration_date": null,
             "fuelSupplierFK": "18",
             "validatedCredits": "88000"
         },
@@ -200,8 +200,8 @@
     {
         "fields": {
             "creditTradeFK": null,
-            "effectiveDate": "2017-04-01",
-            "endDate": null,
+            "effective_date": "2017-04-01",
+            "expiration_date": null,
             "fuelSupplierFK": "19",
             "validatedCredits": "89000"
         },
@@ -211,8 +211,8 @@
     {
         "fields": {
             "creditTradeFK": null,
-            "effectiveDate": "2017-04-01",
-            "endDate": null,
+            "effective_date": "2017-04-01",
+            "expiration_date": null,
             "fuelSupplierFK": "20",
             "validatedCredits": "87000"
         },
@@ -222,8 +222,8 @@
     {
         "fields": {
             "creditTradeFK": null,
-            "effectiveDate": "2017-04-01",
-            "endDate": null,
+            "effective_date": "2017-04-01",
+            "expiration_date": null,
             "fuelSupplierFK": "21",
             "validatedCredits": "10000"
         },
@@ -233,8 +233,8 @@
     {
         "fields": {
             "creditTradeFK": null,
-            "effectiveDate": "2017-04-01",
-            "endDate": null,
+            "effective_date": "2017-04-01",
+            "expiration_date": null,
             "fuelSupplierFK": "22",
             "validatedCredits": "61000"
         },
@@ -244,8 +244,8 @@
     {
         "fields": {
             "creditTradeFK": null,
-            "effectiveDate": "2017-04-01",
-            "endDate": null,
+            "effective_date": "2017-04-01",
+            "expiration_date": null,
             "fuelSupplierFK": "23",
             "validatedCredits": "43000"
         },
@@ -255,8 +255,8 @@
     {
         "fields": {
             "creditTradeFK": null,
-            "effectiveDate": "2017-04-01",
-            "endDate": null,
+            "effective_date": "2017-04-01",
+            "expiration_date": null,
             "fuelSupplierFK": "24",
             "validatedCredits": "27000"
         },

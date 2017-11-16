@@ -60,7 +60,7 @@ class credittradesSearchGet(APIView):
   """  
   Searches credit trades  
   """
-  def get(self, request, organization = None, tradeType = None, status = None, dateType = None, startDate = None, endDate = None):
+  def get(self, request, organization = None, tradeType = None, status = None, dateType = None, startDate = None, expiration_date = None):
     result = CreditTrade.objects.all()
     if organization != None:
        result = result.filter(organization__icontains = organization)
@@ -69,9 +69,9 @@ class credittradesSearchGet(APIView):
     if dateType != None:
        result = result.filter(dateType = dateType)
     if startDate != None:
-        result = result.filter(tradeExecutionDate__gt = startDate, tradeExecutionDate__lt = endDate)
-    if endDate != None:
-        result = result.filter(tradeExecutionDate__lt = endDate)
+        result = result.filter(tradeExecutionDate__gt = startDate, tradeExecutionDate__lt = expiration_date)
+    if expiration_date != None:
+        result = result.filter(tradeExecutionDate__lt = expiration_date)
 
     serializer = serializers.CreditTradeSerializer(result, many=True)
     return Response(serializer.data)

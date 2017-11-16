@@ -3,8 +3,8 @@
         "fields": {
             "description": "The Fuel Supplier is an active participant in the Low Carbon Credits trading market.",
             "displayOrder": "1",
-            "effectiveDate": "2017-01-01",
-            "expirationDate": null,
+            "effective_date": "2017-01-01",
+            "expiration_date": null,
             "status": "Active"
         },
         "model": "api.fuelsupplierstatus",
@@ -14,8 +14,8 @@
         "fields": {
             "description": "The Fuel Supplier has been archived and is no longer a participant in the Low Carbon Credits trading market.",
             "displayOrder": "1",
-            "effectiveDate": "2017-01-01",
-            "expirationDate": null,
+            "effective_date": "2017-01-01",
+            "expiration_date": null,
             "status": "Archived"
         },
         "model": "api.fuelsupplierstatus",
