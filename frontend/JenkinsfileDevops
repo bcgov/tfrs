@@ -1,15 +1,14 @@
 node('maven') {
-
-    stage('Build and Tag') {
-        echo "Build and Tag: ${BUILD_ID}"
-        openshiftBuild bldCfg: 'tfrs', showBuildLogs: 'true'
-        openshiftTag destStream: 'tfrs', verbose: 'true', destTag: '$BUILD_ID', srcStream: 'tfrs', srcTag: 'latest'
+    stage('build') {
+        echo "Building..."
+        openshiftBuild bldCfg: 'client', showBuildLogs: 'true'
+        openshiftTag destStream: 'client', verbose: 'true', destTag: '$BUILD_ID', srcStream: 'client', srcTag: 'latest'
     }
 
-    stage('Deploy to Dev') {
-        echo "Deploying to Dev: ${BUILD_ID}"
-        openshiftTag destStream: 'tfrs', verbose: 'true', destTag: 'dev', srcStream: 'tfrs', srcTag: '$BUILD_ID'
-        sh 'sleep 3m'
+    stage('deploy-dev') {
+        echo "Deploying to dev..."
+        openshiftTag destStream: 'client', verbose: 'true', destTag: 'dev', srcStream: 'client', srcTag: 'latest'
     }
-
+	
 }
+
