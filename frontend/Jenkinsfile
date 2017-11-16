@@ -1,19 +1,17 @@
-node('python') {
-    stage('Unit Test') {
-        echo('Unit Test')
-        checkout scm
-        sh 'pip install --upgrade pip'
-        sh 'pip install -r requirements.txt'
-        sh 'python ./manage.py test'
-    }
-}
-
 node('maven') {
+    stage('build') {
+        echo "Building..."
+        openshiftBuild bldCfg: 'client', showBuildLogs: 'true'
+        openshiftTag destStream: 'client', verbose: 'true', destTag: '$BUILD_ID', srcStream: 'client', srcTag: 'latest'
+    }
 
-    stage('Quality Check') {
+    stage('checkout for static code analysis') {
         echo "checking out source"
+        echo "Build: ${BUILD_ID}"
         checkout scm
-        echo('Quality Check')
+    }
+
+    stage('code quality check') {
         SONARQUBE_PWD = sh (
             script: 'oc env dc/sonarqube --list | awk  -F  "=" \'/SONARQUBE_ADMINPW/{print $2}\'',
             returnStdout: true
@@ -27,34 +25,35 @@ node('maven') {
         echo "SONARQUBE_URL: ${SONARQUBE_URL}"
 
         dir('sonar-runner') {
-            sh returnStdout: true, script: "./gradlew sonarqube -Dsonar.host.url=${SONARQUBE_URL} -Dsonar.verbose=true --stacktrace --info  -Dsonar.sources=.."
+            sh returnStdout: true, script: "./gradlew sonarqube -Dsonar.lanuage=js -Dsonar.projectKey=org.sonarqube:tfrs-client -Dsonar.projectName='TFRS Client Project'   -Dsonar.host.url=${SONARQUBE_URL} -Dsonar.verbose=true --stacktrace --info  -Dsonar.sources=client"
         }
     }
-
-    stage('Build and Tag') {
-        echo "Build and Tag: ${BUILD_ID}"
-        openshiftBuild bldCfg: 'tfrs', showBuildLogs: 'true'
-        openshiftTag destStream: 'tfrs', verbose: 'true', destTag: '$BUILD_ID', srcStream: 'tfrs', srcTag: 'latest'
+	
+    stage('deploy-dev') {
+        echo "Deploying to dev..."
+        openshiftTag destStream: 'client', verbose: 'true', destTag: 'dev', srcStream: 'client', srcTag: 'latest'
     }
-
-    stage('Deploy to Dev') {
-        echo "Deploying to Dev: ${BUILD_ID}"
-        openshiftTag destStream: 'tfrs', verbose: 'true', destTag: 'dev', srcStream: 'tfrs', srcTag: '$BUILD_ID'
-        sh 'sleep 3m'
-    }
-
-}
-
-
-stage('Deploy to Test') {
-    node('maven') {
-        openshiftTag destStream: 'tfrs', verbose: 'true', destTag: 'test', srcStream: 'tfrs', srcTag: '$BUILD_ID'
+	
+	stage('validation') {
+        dir('functional-tests') {
+			try {
+				sh './gradlew --debug --stacktrace phantomJsTest'
+			} finally {
+				archiveArtifacts allowEmptyArchive: true, artifacts: 'build/reports/**/*'
+			}
+        }
     }
 }
 
-stage('Deploy to Prod') {
+stage('deploy-test') {
     node('maven') {
-        openshiftTag destStream: 'tfrs', verbose: 'true', destTag: 'prod', srcStream: 'tfrs', srcTag: '$BUILD_ID'
+        openshiftTag destStream: 'client', verbose: 'true', destTag: 'test', srcStream: 'client', srcTag: '$BUILD_ID'
+    }
+}
+
+stage('deploy-prod') {
+    node('maven') {
+        openshiftTag destStream: 'client', verbose: 'true', destTag: 'prod', srcStream: 'client', srcTag: '$BUILD_ID'
     }
 }
 
