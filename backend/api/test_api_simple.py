@@ -49,26 +49,12 @@ from .models.FuelSupplierActionsType import FuelSupplierActionsType
 from .serializers import FuelSupplierActionsTypeSerializer
 from .models.FuelSupplierAttachment import FuelSupplierAttachment
 from .serializers import FuelSupplierAttachmentSerializer
-from .models.FuelSupplierAttachmentTag import FuelSupplierAttachmentTag
-from .serializers import FuelSupplierAttachmentTagSerializer
 from .models.FuelSupplierBalance import FuelSupplierBalance
 from .serializers import FuelSupplierBalanceSerializer
-from .models.FuelSupplierCCData import FuelSupplierCCData
-from .serializers import FuelSupplierCCDataSerializer
-from .models.FuelSupplierContact import FuelSupplierContact
-from .serializers import FuelSupplierContactSerializer
 from .models.FuelSupplierHistory import FuelSupplierHistory
 from .serializers import FuelSupplierHistorySerializer
 from .models.FuelSupplierStatus import FuelSupplierStatus
 from .serializers import FuelSupplierStatusSerializer
-from .models.Notification import Notification
-from .serializers import NotificationSerializer
-from .models.NotificationEvent import NotificationEvent
-from .serializers import NotificationEventSerializer
-from .models.NotificationType import NotificationType
-from .serializers import NotificationTypeSerializer
-from .models.NotificationViewModel import NotificationViewModel
-from .serializers import NotificationViewModelSerializer
 from .models.Permission import Permission
 from .serializers import PermissionSerializer
 from .models.PermissionViewModel import PermissionViewModel
@@ -520,90 +506,6 @@ class Test_Api_Simple(TestCase):
         # Update the object:
         updateUrl = testUrl.replace("(?P<id>[0-9]+)", str(createdId))
         payload = fakedata.FuelSupplierStatusTestDataUpdate()
-        jsonString = json.dumps(payload)
-        response = self.client.put(updateUrl, content_type='application/json',
-                                   data=jsonString)
-        # Check that the response is 200 OK.
-        assert status.HTTP_200_OK == response.status_code
-        # Cleanup:
-        deleteUrl = createUrl + "/" + str(createdId) + "/delete"
-        response = self.client.post(deleteUrl)
-        # Check that the response is OK.
-        assert status.HTTP_204_NO_CONTENT == response.status_code
-
-    def test_notificationtypesBulkPost(self):
-        # Test Bulk Load.
-        payload = fakedata.NotificationTypeTestDataCreate()
-        jsonString = "[]"
-        response = self.client.post('/api/notificationtypes/bulk',
-                                    content_type='application/json',
-                                    data=jsonString)
-        # Check that the response is 200 OK.
-        assert status.HTTP_201_CREATED == response.status_code
-
-    def test_notificationtypesGet(self):
-        # Test Create and List operations.
-        testUrl = "/api/notificationtypes"
-        # Create:
-        serializer_class = NotificationTypeSerializer
-        payload = fakedata.NotificationTypeTestDataCreate()
-        jsonString = json.dumps(payload)
-        response = self.client.post(testUrl, content_type='application/json',
-                                    data=jsonString)
-        # Check that the response is OK.
-        assert status.HTTP_201_CREATED == response.status_code
-        # parse the response.
-        jsonString = response.content.decode("utf-8")
-        data = json.loads(jsonString)
-        createdId = data['id']
-        # List:
-        response = self.client.get(testUrl)
-        # Check that the response is 200 OK.
-        assert status.HTTP_200_OK == response.status_code
-        # Cleanup:
-        deleteUrl = testUrl + "/" + str(createdId) + "/delete"
-        response = self.client.post(deleteUrl)
-        # Check that the response is OK.
-        assert status.HTTP_204_NO_CONTENT == response.status_code
-
-    def test_notificationtypesIdDeletePost(self):
-        # Test Retrieve and Update operations.
-        testUrl = "/api/notificationtypes/(?P<id>[0-9]+)/delete"
-        createUrl = testUrl.replace("/(?P<id>[0-9]+)/delete", "")
-        # Create an object:
-        payload = fakedata.NotificationTypeTestDataCreate()
-        jsonString = json.dumps(payload)
-        response = self.client.post(createUrl, content_type='application/json',
-                                    data=jsonString)
-        # Check that the response is OK.
-        assert status.HTTP_201_CREATED == response.status_code
-        # parse the response.
-        jsonString = response.content.decode("utf-8")
-        data = json.loads(jsonString)
-        createdId = data['id']
-        deleteUrl = testUrl.replace("(?P<id>[0-9]+)", str(createdId))
-        response = self.client.post(deleteUrl)
-        # Check that the response is OK.
-        assert status.HTTP_204_NO_CONTENT == response.status_code
-
-    def test_notificationtypesIdGet(self):
-        # Test Retrieve and Update operations.
-        testUrl = "/api/notificationtypes/(?P<id>[0-9]+)"
-        createUrl = testUrl.replace("/(?P<id>[0-9]+)", "")
-        # Create an object:
-        payload = fakedata.NotificationTypeTestDataCreate()
-        jsonString = json.dumps(payload)
-        response = self.client.post(createUrl, content_type='application/json',
-                                    data=jsonString)
-        # Check that the response is OK.
-        assert status.HTTP_201_CREATED == response.status_code
-        # parse the response.
-        jsonString = response.content.decode("utf-8")
-        data = json.loads(jsonString)
-        createdId = data['id']
-        # Update the object:
-        updateUrl = testUrl.replace("(?P<id>[0-9]+)", str(createdId))
-        payload = fakedata.NotificationTypeTestDataUpdate()
         jsonString = json.dumps(payload)
         response = self.client.put(updateUrl, content_type='application/json',
                                    data=jsonString)

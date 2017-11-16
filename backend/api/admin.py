@@ -30,30 +30,17 @@ from .models.CreditTradeZeroReason import CreditTradeZeroReason
 from .models.FuelSupplier import FuelSupplier
 from .models.FuelSupplierActionsType import FuelSupplierActionsType
 from .models.FuelSupplierAttachment import FuelSupplierAttachment
-from .models.FuelSupplierAttachmentTag import FuelSupplierAttachmentTag
 from .models.FuelSupplierBalance import FuelSupplierBalance
-from .models.FuelSupplierCCData import FuelSupplierCCData
-from .models.FuelSupplierContact import FuelSupplierContact
 from .models.FuelSupplierHistory import FuelSupplierHistory
 from .models.FuelSupplierStatus import FuelSupplierStatus
-from .models.Notification import Notification
-from .models.NotificationEvent import NotificationEvent
-from .models.NotificationType import NotificationType
-
 from .models.Permission import Permission
 
 from .models.Role import Role
 from .models.RolePermission import RolePermission
 
-
 from .models.User import User
 
-from .models.UserFavourite import UserFavourite
-
 from .models.UserRole import UserRole
-
-
-
 
 
 admin.site.register(Audit)
@@ -65,18 +52,11 @@ admin.site.register(CreditTradeZeroReason)
 admin.site.register(FuelSupplier)
 admin.site.register(FuelSupplierActionsType)
 admin.site.register(FuelSupplierAttachment)
-admin.site.register(FuelSupplierAttachmentTag)
 admin.site.register(FuelSupplierBalance)
-admin.site.register(FuelSupplierCCData)
-admin.site.register(FuelSupplierContact)
 admin.site.register(FuelSupplierHistory)
 admin.site.register(FuelSupplierStatus)
-admin.site.register(Notification)
-admin.site.register(NotificationEvent)
-admin.site.register(NotificationType)
 admin.site.register(Permission)
 admin.site.register(Role)
 admin.site.register(RolePermission)
 admin.site.register(User)
-admin.site.register(UserFavourite)
 admin.site.register(UserRole)

@@ -31,16 +31,9 @@ from .models.CurrentUserViewModel import CurrentUserViewModel
 from .models.FuelSupplier import FuelSupplier
 from .models.FuelSupplierActionsType import FuelSupplierActionsType
 from .models.FuelSupplierAttachment import FuelSupplierAttachment
-from .models.FuelSupplierAttachmentTag import FuelSupplierAttachmentTag
 from .models.FuelSupplierBalance import FuelSupplierBalance
-from .models.FuelSupplierCCData import FuelSupplierCCData
-from .models.FuelSupplierContact import FuelSupplierContact
 from .models.FuelSupplierHistory import FuelSupplierHistory
 from .models.FuelSupplierStatus import FuelSupplierStatus
-from .models.Notification import Notification
-from .models.NotificationEvent import NotificationEvent
-from .models.NotificationType import NotificationType
-from .models.NotificationViewModel import NotificationViewModel
 from .models.Permission import Permission
 from .models.PermissionViewModel import PermissionViewModel
 from .models.Role import Role
@@ -142,12 +135,6 @@ class FuelSupplierAttachmentSerializer(serializers.ModelSerializer):
             'complianceYear')
 
 
-class FuelSupplierAttachmentTagSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = FuelSupplierAttachmentTag
-        fields = ('id', 'fuelSupplierAttachmentFK', 'tag')
-
-
 class FuelSupplierBalanceSerializer(serializers.ModelSerializer):
     class Meta:
         model = FuelSupplierBalance
@@ -155,23 +142,6 @@ class FuelSupplierBalanceSerializer(serializers.ModelSerializer):
             'id', 'fuelSupplierFK', 'validatedCredits', 'effectiveDate',
             'endDate',
             'creditTradeFK')
-
-
-class FuelSupplierCCDataSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = FuelSupplierCCData
-        fields = ('id', 'fuelSupplierFK', 'commonClientOrgId',
-                  'lastUpdatefromCommonClient', 'name', 'corporateAddressLine1',
-                  'corporateAddressLine2', 'corporateAddressCity',
-                  'corporateAddressPostalCode', 'corporateAddressProvince')
-
-
-class FuelSupplierContactSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = FuelSupplierContact
-        fields = (
-            'id', 'fuelSupplierFK', 'givenName', 'surname', 'title', 'userFK',
-            'notes', 'emailAddress', 'workPhoneNumber', 'mobilePhoneNumber')
 
 
 class FuelSupplierHistorySerializer(serializers.ModelSerializer):
@@ -186,37 +156,6 @@ class FuelSupplierStatusSerializer(serializers.ModelSerializer):
         fields = (
             'id', 'status', 'description', 'effectiveDate', 'expirationDate',
             'displayOrder')
-
-
-class NotificationSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Notification
-        fields = (
-            'id', 'notificationEventFK', 'hasBeenViewed', 'isWatchNotification',
-            'userFK')
-
-
-class NotificationEventSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = NotificationEvent
-        fields = ('id', 'eventTime', 'eventTypeCode', 'notes', 'creditTradeFK')
-
-
-class NotificationTypeSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = NotificationType
-        fields = (
-            'id', 'theType', 'description', 'effectiveDate', 'expirationDate',
-            'displayOrder')
-
-
-class NotificationViewModelSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = NotificationViewModel
-        fields = (
-            'id', 'eventId', 'hasBeenViewed', 'isWatchNotification',
-            'isExpired',
-            'isAllDay', 'priorityCode', 'userId')
 
 
 class PermissionSerializer(serializers.ModelSerializer):

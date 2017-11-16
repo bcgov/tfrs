@@ -202,17 +202,6 @@ def FuelSupplierAttachmentTestDataUpdate():
   }
 
 
-def FuelSupplierAttachmentTagTestDataCreate():
-  return {
-    'tag':'Initial',
-  }
-
-def FuelSupplierAttachmentTagTestDataUpdate():
-  return {
-    'tag':'Changed',
-  }
-
-
 def FuelSupplierBalanceTestDataCreate():
   return {
     'validatedCredits':1,
@@ -221,61 +210,6 @@ def FuelSupplierBalanceTestDataCreate():
 def FuelSupplierBalanceTestDataUpdate():
   return {
     'validatedCredits':0,
-  }
-
-
-def FuelSupplierCCDataTestDataCreate():
-  return {
-    'commonClientOrgId':'Initial',
-    'name':'Initial',
-    'corporateAddressLine1':'Initial',
-    'corporateAddressLine2':'Initial',
-    'corporateAddressCity':'Initial',
-    'corporateAddressPostalCode':'Initial',
-    'corporateAddressProvince':'Initial',
-  }
-
-def FuelSupplierCCDataTestDataUpdate():
-  return {
-    'commonClientOrgId':'Changed',
-    'name':'Changed',
-    'corporateAddressLine1':'Changed',
-    'corporateAddressLine2':'Changed',
-    'corporateAddressCity':'Changed',
-    'corporateAddressPostalCode':'Changed',
-    'corporateAddressProvince':'Changed',
-  }
-
-
-def FuelSupplierContactTestDataCreate():
-  return {
-    'givenName':'Initial',
-    'surname':'Initial',
-    'title':'Initial',
-    'notes':'Initial',
-    'emailAddress':'Initial',
-    'workPhoneNumber':'Initial',
-    'mobilePhoneNumber':'Initial',
-  }
-
-def FuelSupplierContactTestDataUpdate():
-  return {
-    'givenName':'Changed',
-    'surname':'Changed',
-    'title':'Changed',
-    'notes':'Changed',
-    'emailAddress':'Changed',
-    'workPhoneNumber':'Changed',
-    'mobilePhoneNumber':'Changed',
-  }
-
-
-def FuelSupplierContactRoleTestDataCreate():
-  return {
-  }
-
-def FuelSupplierContactRoleTestDataUpdate():
-  return {
   }
 
 
