@@ -38,16 +38,9 @@ from .models.CurrentUserViewModel import CurrentUserViewModel
 from .models.FuelSupplier import FuelSupplier
 from .models.FuelSupplierActionsType import FuelSupplierActionsType
 from .models.FuelSupplierAttachment import FuelSupplierAttachment
-from .models.FuelSupplierAttachmentTag import FuelSupplierAttachmentTag
 from .models.FuelSupplierBalance import FuelSupplierBalance
-from .models.FuelSupplierCCData import FuelSupplierCCData
-from .models.FuelSupplierContact import FuelSupplierContact
 from .models.FuelSupplierHistory import FuelSupplierHistory
 from .models.FuelSupplierStatus import FuelSupplierStatus
-from .models.Notification import Notification
-from .models.NotificationEvent import NotificationEvent
-from .models.NotificationType import NotificationType
-from .models.NotificationViewModel import NotificationViewModel
 from .models.Permission import Permission
 from .models.PermissionViewModel import PermissionViewModel
 from .models.Role import Role
@@ -56,8 +49,6 @@ from .models.RolePermissionViewModel import RolePermissionViewModel
 from .models.RoleViewModel import RoleViewModel
 from .models.User import User
 from .models.UserDetailsViewModel import UserDetailsViewModel
-from .models.UserFavourite import UserFavourite
-from .models.UserFavouriteViewModel import UserFavouriteViewModel
 from .models.UserRole import UserRole
 from .models.UserRoleViewModel import UserRoleViewModel
 from .models.UserViewModel import UserViewModel
@@ -326,31 +317,6 @@ class usersIdFavouritesGet(APIView):
       userFavourite.save()
     result = UserFavourite.objects.filter(userFK=user)
     serializer = serializers.UserFavouriteSerializer(result, many=True)
-    return Response(serializer.data)
-
-class usersIdNotificationsGet(APIView):
-  def get(self, request, id):
-    """
-    Returns a user's notifications
-    """
-    result = Notification.objects.filter(userFK_id=id)
-    serializer = serializers.NotificationSerializer(result, many=True)
-    return Response(serializer.data)
-
-  def post(self, request, id):
-    """
-    Adds a notification to user
-    """
-    jsonString = request.body.decode('utf-8')
-    data = json.loads(jsonString)
-    notification = Notification(
-      hasBeenViewed=data['hasBeenViewed'],
-      isWatchNotification=data['isWatchNotification'],
-      notificationEventFK_id=data['notificationEventFK'],
-      userFK_id=id,
-    )
-    notification.save()
-    serializer = serializers.NotificationSerializer(notification)
     return Response(serializer.data)
 
 class usersIdPermissionsGet(APIView):

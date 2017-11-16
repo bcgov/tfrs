@@ -50,26 +50,12 @@ from .models.FuelSupplierActionsType import FuelSupplierActionsType
 from .serializers import FuelSupplierActionsTypeSerializer
 from .models.FuelSupplierAttachment import FuelSupplierAttachment
 from .serializers import FuelSupplierAttachmentSerializer
-from .models.FuelSupplierAttachmentTag import FuelSupplierAttachmentTag
-from .serializers import FuelSupplierAttachmentTagSerializer
 from .models.FuelSupplierBalance import FuelSupplierBalance
 from .serializers import FuelSupplierBalanceSerializer
-from .models.FuelSupplierCCData import FuelSupplierCCData
-from .serializers import FuelSupplierCCDataSerializer
-from .models.FuelSupplierContact import FuelSupplierContact
-from .serializers import FuelSupplierContactSerializer
 from .models.FuelSupplierHistory import FuelSupplierHistory
 from .serializers import FuelSupplierHistorySerializer
 from .models.FuelSupplierStatus import FuelSupplierStatus
 from .serializers import FuelSupplierStatusSerializer
-from .models.Notification import Notification
-from .serializers import NotificationSerializer
-from .models.NotificationEvent import NotificationEvent
-from .serializers import NotificationEventSerializer
-from .models.NotificationType import NotificationType
-from .serializers import NotificationTypeSerializer
-from .models.NotificationViewModel import NotificationViewModel
-from .serializers import NotificationViewModelSerializer
 from .models.Permission import Permission
 from .serializers import PermissionSerializer
 from .models.PermissionViewModel import PermissionViewModel
@@ -86,10 +72,6 @@ from .models.User import User
 from .serializers import UserSerializer
 from .models.UserDetailsViewModel import UserDetailsViewModel
 from .serializers import UserDetailsViewModelSerializer
-from .models.UserFavourite import UserFavourite
-from .serializers import UserFavouriteSerializer
-from .models.UserFavouriteViewModel import UserFavouriteViewModel
-from .serializers import UserFavouriteViewModelSerializer
 from .models.UserRole import UserRole
 from .serializers import UserRoleSerializer
 from .models.UserRoleViewModel import UserRoleViewModel
@@ -109,21 +91,6 @@ class Test_Api_Custom(TestCase):
         self.client = Client()
         # needed to setup django
         django.setup()
-
-    def createContact(self, fuelSupplierId):
-        testContactUrl = "/api/fuelsuppliercontacts"
-        # Create:
-        payload = fakedata.FuelSupplierContactTestDataCreate()
-        payload['fuelSupplierFK'] = fuelSupplierId
-        jsonString = json.dumps(payload)
-        response = self.client.post(testContactUrl, content_type='application/json', data=jsonString)
-        # Check that the response is OK.
-        assert status.HTTP_201_CREATED == response.status_code
-        # parse the response.
-        jsonString = response.content.decode("utf-8")
-        data = json.loads(jsonString)
-        contactId = data['id']
-        return contactId
 
     def createFuelSupplierStatus(self):
         testUrl = "/api/fuelsupplierstatuses"
@@ -308,69 +275,10 @@ class Test_Api_Custom(TestCase):
         createdId = data['id']
         return createdId, typeId, statusId
 
-    def createNotificationEvent(self):
-        testUrl = "/api/notificationevents"
-        payload = {
-          'eventTime': '2017-01-01',
-        }
-        event = fakedata.NotificationEventTestDataCreate()
-        payload.update(event)
-        jsonString = json.dumps(payload)
-        response = self.client.post(testUrl, content_type='application/json', data=jsonString)
-        # Check that the response is OK.
-        assert status.HTTP_201_CREATED == response.status_code
-        # parse the response.
-        jsonString = response.content.decode("utf-8")
-        data = json.loads(jsonString)
-        createdId = data['id']
         return createdId
-
-    def createAndVerifyNotification(self):
-        testUrl = "/api/notifications"
-
-        fuelSupplierId, statusId, actionId = self.createFuelSupplier()
-        userId = self.createUser(fuelSupplierId)
-        notificationEventId = self.createNotificationEvent()
-
-        payload = fakedata.NotificationTestDataCreate()
-        payload['userFK'] = userId
-        payload['notificationEventFK'] = notificationEventId
-
-        request = json.dumps(payload)
-        response = self.client.post(testUrl, content_type='application/json', data=request)
-
-        assert status.HTTP_201_CREATED == response.status_code
-
-        return json.loads(response.content.decode("utf-8"))
-
-    def createUserFavourite(self, userId):
-        url = "/api/users/" + str(userId) + "/favourites"
-
-        payload = fakedata.UserFavouriteTestDataCreate()
-        request = json.dumps(payload)
-        response = self.client.post(url, content_type='application/json', data=request)
-
-        assert status.HTTP_200_OK == response.status_code
-
-        jsonString = response.content.decode("utf-8")
-        data = json.loads(jsonString)
-        return data['id']
-
-    def deleteContact(self, contactId):
-        # cleanup the contact
-        deleteUrl = "/api/fuelsuppliercontacts/" + str(contactId) + "/delete"
-        response = self.client.post(deleteUrl)
-        # Check that the response is OK.
-        assert status.HTTP_204_NO_CONTENT == response.status_code
 
     def deleteRole(self, roleId):
         deleteUrl = "/api/roles/" + str(roleId) + "/delete"
-        response = self.client.post(deleteUrl)
-        # Check that the response is OK.
-        assert status.HTTP_204_NO_CONTENT == response.status_code
-
-    def deleteNotificationEvent(self, notificationEventId):
-        deleteUrl = "/api/notificationevents/" + str(notificationEventId) + "/delete"
         response = self.client.post(deleteUrl)
         # Check that the response is OK.
         assert status.HTTP_204_NO_CONTENT == response.status_code
@@ -401,7 +309,6 @@ class Test_Api_Custom(TestCase):
 
     def test_credittradesSearchGet(self):
         fsId, _, _ = self.createFuelSupplier()
-        contactId = self.createContact(fsId)
         userId = self.createUser(fsId)
         credId, credTypeId, _ = self.createCreditTrade(fsId, userId)
 
@@ -415,71 +322,10 @@ class Test_Api_Custom(TestCase):
 
         self.deleteCreditTrade(credId)
         self.deleteUser(userId)
-        self.deleteContact(contactId)
-        self.deleteFuelSupplier(fsId)
-
-    def test_usersCurrentFavouritesIdDeletePost(self):
-        fsId, _, _= self.createFuelSupplier()
-        contactId = self.createContact(fsId)
-        userId = self.createUser(fsId)
-        userFavId = self.createUserFavourite(userId)
-
-        url = "/api/users/current/favourites/" + str(userFavId) + "/delete"
-        response = self.client.post(url)
-        assert status.HTTP_200_OK == response.status_code
-
-        self.deleteUser(userId)
-        self.deleteContact(contactId)
-        self.deleteFuelSupplier(fsId)
-
-    def test_usersCurrentFavouritesPut(self):
-        fsId, _, _= self.createFuelSupplier()
-        contactId = self.createContact(fsId)
-        userId = self.createUser(fsId)
-
-        url = "/api/users/current/favourites"
-        payload = fakedata.UserFavouriteTestDataCreate()
-        request = json.dumps(payload)
-        response = self.client.post(url, content_type='application/json', data=request)
-
-        assert status.HTTP_200_OK == response.status_code
-
-        payload = [fakedata.UserFavouriteTestDataUpdate()]
-        request = json.dumps(payload)
-        response = self.client.put(url, content_type='application/json', data=request)
-
-        assert status.HTTP_200_OK == response.status_code
-
-        jsonString = response.content.decode("utf-8")
-        data = json.loads(jsonString)
-
-        assert data[0]["value"] == "Changed"
-
-        self.deleteUser(userId)
-        self.deleteContact(contactId)
-        self.deleteFuelSupplier(fsId)
-
-    def test_usersCurrentFavouritesSearchGet(self):
-        fsId, _, _= self.createFuelSupplier()
-        contactId = self.createContact(fsId)
-        userId = self.createUser(fsId)
-        userFavId = self.createUserFavourite(userId)
-
-        url = "/api/users/current/favourites/search"
-        response = self.client.get(url)
-        assert status.HTTP_200_OK == response.status_code
-
-        jsonString = response.content.decode("utf-8")
-        data = json.loads(jsonString)
-        assert len(data) == 1
-
-        self.deleteUser(userId)
-        self.deleteContact(contactId)
         self.deleteFuelSupplier(fsId)
 
     def test_usersCurrentGet(self):
         fuelSupplierId, statusId, actionId = self.createFuelSupplier()
-        contactId = self.createContact(fuelSupplierId)
         userId = self.createUser(fuelSupplierId)
 
         testUrl="/api/users/current"
@@ -487,12 +333,10 @@ class Test_Api_Custom(TestCase):
         response = self.client.get(testUrl)
         assert status.HTTP_200_OK == response.status_code
         self.deleteUser (userId)
-        self.deleteContact(contactId)
         self.deleteFuelSupplier(fuelSupplierId)
 
     def test_fuelsuppliersIdAttachmentsGet(self):
         fuelSupplierId, statusId, actionId = self.createFuelSupplier()
-        contactId = self.createContact(fuelSupplierId)
 
         uploadUrl = "/api/fuelsuppliers/"
         uploadUrl += str(fuelSupplierId) + "/attachments"
@@ -533,12 +377,10 @@ class Test_Api_Custom(TestCase):
         assert status.HTTP_204_NO_CONTENT == response.status_code
 
         # Cleanup
-        self.deleteContact(contactId)
         self.deleteFuelSupplier(fuelSupplierId)
 
     def test_fuelsuppliersIdHistoryGet(self):
         fuelSupplierId, statusId, actionId = self.createFuelSupplier()
-        contactId = self.createContact(fuelSupplierId)
 
         testUrl = "/api/fuelsuppliers/" + str(fuelSupplierId) + "/history"
         payload = fakedata.FuelSupplierHistoryTestDataCreate()
@@ -559,12 +401,10 @@ class Test_Api_Custom(TestCase):
         assert status.HTTP_204_NO_CONTENT == response.status_code
 
         # Cleanup
-        self.deleteContact(contactId)
         self.deleteFuelSupplier(fuelSupplierId)
 
     def test_fuelsuppliersSearchGet(self):
         fuelSupplierId, statusId, actionId = self.createFuelSupplier()
-        contactId = self.createContact(fuelSupplierId)
 
         # do a search
         testUrl = "/api/fuelsuppliers/search"
@@ -575,9 +415,6 @@ class Test_Api_Custom(TestCase):
         jsonString = response.content.decode("utf-8")
         data = json.loads(jsonString)
         # Cleanup
-        self.deleteContact(contactId)
-        self.deleteFuelSupplier(fuelSupplierId)
-
     def test_rolesIdPermissionsGet(self):
         # create a group.
         roleId = self.createRole()
@@ -612,7 +449,6 @@ class Test_Api_Custom(TestCase):
     def test_rolesIdUsersGet(self):
         roleId = self.createRole()
         fuelSupplierId, statusId, actionId = self.createFuelSupplier()
-        contactId = self.createContact(fuelSupplierId)
         userId = self.createUser(fuelSupplierId)
 
         userRoleUrl = "/api/users/" + str(userId) + "/roles"
@@ -649,80 +485,10 @@ class Test_Api_Custom(TestCase):
         # cleanup
         self.deleteRole(roleId)
         self.deleteUser(userId)
-        self.deleteContact(contactId)
         self.deleteFuelSupplier(fuelSupplierId)
-
-    def test_usersIdFavouritesGet(self):
-        fsId, _, _= self.createFuelSupplier()
-        contactId = self.createContact(fsId)
-        userId = self.createUser(fsId)
-
-        url = "/api/users/" + str(userId) + "/favourites"
-        payload = fakedata.UserFavouriteTestDataCreate()
-        jsonString = json.dumps(payload)
-        response = self.client.post(url, content_type='application/json', data=jsonString)
-
-        assert status.HTTP_200_OK == response.status_code
-
-        payload = [fakedata.UserFavouriteTestDataUpdate()]
-        jsonString = json.dumps(payload)
-        response = self.client.put(url, content_type='application/json', data=jsonString)
-
-        assert status.HTTP_200_OK == response.status_code
-
-        jsonString = response.content.decode("utf-8")
-        data = json.loads(jsonString)
-
-        assert data[0]["value"] == "Changed"
-
-        response = self.client.get(url)
-        assert status.HTTP_200_OK == response.status_code
-
-        jsonString = response.content.decode("utf-8")
-        data = json.loads(jsonString)
-
-        assert len(data) > 0
-
-        self.deleteUser(userId)
-        self.deleteContact(contactId)
-        self.deleteFuelSupplier(fsId)
-
-    def test_usersIdNotificationsGet(self):
-        fsId, fsTypeId, _ = self.createFuelSupplier()
-        contactId = self.createContact(fsId)
-        userId = self.createUser(fsId)
-        credId, credTypeId, _ = self.createCreditTrade(fsId, userId)
-
-        notificationEventId = self.createNotificationEvent()
-
-        # add notification to user.
-        userNotificationUrl = "/api/users/" + str(userId) + "/notifications"
-        # create a new UserRole.
-        payload = {
-          'notificationEventFK': notificationEventId,
-          'hasBeenViewed': False,
-          'isWatchNotification': False,
-          'userFK':userId
-        }
-        jsonString = json.dumps(payload)
-        response = self.client.post(userNotificationUrl,content_type='application/json', data=jsonString)
-        assert status.HTTP_200_OK == response.status_code
-
-        # test the Get
-        response = self.client.get(userNotificationUrl)
-        assert status.HTTP_200_OK == response.status_code
-
-        # cleanup
-        self.deleteNotificationEvent(notificationEventId)
-        self.deleteCreditTrade(credId)
-        self.deleteUser(userId)
-        self.deleteContact(contactId)
-        self.deleteFuelSupplier(fsId)
-
     def test_usersIdPermissionsGet(self):
         # create a user.
         fuelSupplierId, statusId, actionId = self.createFuelSupplier()
-        contactId = self.createContact(fuelSupplierId)
         userId = self.createUser(fuelSupplierId)
 
         # create a credit trade
@@ -740,12 +506,10 @@ class Test_Api_Custom(TestCase):
 
         # cleanup
         self.deleteUser (userId)
-        self.deleteContact(contactId)
         self.deleteFuelSupplier(fuelSupplierId)
 
     def test_usersIdRolesGet(self):
         fsId, _, _= self.createFuelSupplier()
-        contactId = self.createContact(fsId)
         userId = self.createUser(fsId)
         roleId = self.createRole()
 
@@ -778,12 +542,10 @@ class Test_Api_Custom(TestCase):
 
         self.deleteRole(roleId)
         self.deleteUser(userId)
-        self.deleteContact(contactId)
         self.deleteFuelSupplier(fsId)
 
     def test_usersSearchGet(self):
         fuelSupplierId, statusId, actionId = self.createFuelSupplier()
-        contactId = self.createContact(fuelSupplierId)
         userId = self.createUser(fuelSupplierId)
 
         # do a search
@@ -796,7 +558,6 @@ class Test_Api_Custom(TestCase):
         data = json.loads(jsonString)
         # Cleanup
         self.deleteUser(userId)
-        self.deleteContact(contactId)
         self.deleteFuelSupplier(fuelSupplierId)
 
     def test_createCreditTradeNegativeNumberOfCredits(self):

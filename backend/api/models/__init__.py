@@ -65,25 +65,9 @@
 #except:
 #     import FuelSupplierAttachment
 #try:
-#     from . import FuelSupplierAttachmentTag  
-#except:
-#     import FuelSupplierAttachmentTag
-#try:
 #     from . import FuelSupplierBalance  
 #except:
 #     import FuelSupplierBalance
-#try:
-#     from . import FuelSupplierCCData  
-#except:
-#     import FuelSupplierCCData
-#try:
-#     from . import FuelSupplierContact  
-#except:
-#     import FuelSupplierContact
-#try:
-#     from . import FuelSupplierContactRole  
-#except:
-#     import FuelSupplierContactRole
 #try:
 #     from . import FuelSupplierHistory  
 #except:
@@ -92,22 +76,6 @@
 #     from . import FuelSupplierStatus  
 #except:
 #     import FuelSupplierStatus
-#try:
-#     from . import Notification  
-#except:
-#     import Notification
-#try:
-#     from . import NotificationEvent  
-#except:
-#     import NotificationEvent
-#try:
-#     from . import NotificationType  
-#except:
-#     import NotificationType
-#try:
-#     from . import NotificationViewModel  
-#except:
-#     import NotificationViewModel
 #try:
 #     from . import Permission  
 #except:

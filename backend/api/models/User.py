@@ -33,9 +33,11 @@ class User(Auditable):
     guid = models.CharField(max_length=100, blank=True, null=True)
     authorizationDirectory = models.CharField(max_length=100, blank=True,
                                               null=True)
+    # fuel_supplier = models.ForeignKey(
+    #     'FuelSupplier',
+    #     related_name='UserfuelSupplierFK')
+    # effective_date = models.DateField()
+    # expiry_date = models.DateField()
 
-    # Add organizationFK
-    # Add effectiveDate and endDate (if end date is set to something,
-    # user is inactive)
     class Meta:
         db_table = 'user'
