@@ -27,12 +27,13 @@ from .models.CreditTradeStatus import CreditTradeStatus
 from .models.CreditTradeType import CreditTradeType
 from .models.CreditTradeZeroReason import CreditTradeZeroReason
 
-from .models.FuelSupplier import FuelSupplier
-from .models.FuelSupplierActionsType import FuelSupplierActionsType
-from .models.FuelSupplierAttachment import FuelSupplierAttachment
-from .models.FuelSupplierBalance import FuelSupplierBalance
-from .models.FuelSupplierHistory import FuelSupplierHistory
-from .models.FuelSupplierStatus import FuelSupplierStatus
+from .models.Organization import Organization
+from .models.OrganizationType import OrganizationType
+from .models.OrganizationActionsType import OrganizationActionsType
+from .models.OrganizationAttachment import OrganizationAttachment
+from .models.OrganizationBalance import OrganizationBalance
+from .models.OrganizationHistory import OrganizationHistory
+from .models.OrganizationStatus import OrganizationStatus
 from .models.Permission import Permission
 
 from .models.Role import Role
@@ -49,12 +50,13 @@ admin.site.register(CreditTradeHistory)
 admin.site.register(CreditTradeStatus)
 admin.site.register(CreditTradeType)
 admin.site.register(CreditTradeZeroReason)
-admin.site.register(FuelSupplier)
-admin.site.register(FuelSupplierActionsType)
-admin.site.register(FuelSupplierAttachment)
-admin.site.register(FuelSupplierBalance)
-admin.site.register(FuelSupplierHistory)
-admin.site.register(FuelSupplierStatus)
+admin.site.register(Organization)
+admin.site.register(OrganizationType)
+admin.site.register(OrganizationActionsType)
+admin.site.register(OrganizationAttachment)
+admin.site.register(OrganizationBalance)
+admin.site.register(OrganizationHistory)
+admin.site.register(OrganizationStatus)
 admin.site.register(Permission)
 admin.site.register(Role)
 admin.site.register(RolePermission)

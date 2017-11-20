@@ -7,8 +7,8 @@ from auditable.views import AuditableMixin
 from api.models.CreditTrade import CreditTrade
 from api.models.CreditTradeHistory import CreditTradeHistory
 from api.models.CreditTradeStatus import CreditTradeStatus
-from api.models.FuelSupplierBalance import FuelSupplierBalance
-from api.models.FuelSupplier import FuelSupplier
+from api.models.OrganizationBalance import OrganizationBalance
+from api.models.Organization import Organization
 from api.serializers import CreditTradeCreateSerializer
 from api.serializers import CreditTradeHistoryCreateSerializer
 from api.serializers import CreditTradeApproveSerializer
@@ -66,7 +66,7 @@ class CreditTradeViewSet(AuditableMixin, mixins.CreateModelMixin,
         Get the credit trade history
         """
         credit_trade = self.get_object()
-        history = CreditTradeHistory.objects.filter(creditTradeFK=credit_trade)
+        history = CreditTradeHistory.objects.filter(credit_trade=credit_trade)
         serializer = self.get_serializer(history, many=True)
 
         return Response(serializer.data)
@@ -82,7 +82,7 @@ class CreditTradeViewSet(AuditableMixin, mixins.CreateModelMixin,
         # update record to status 'approve' (create credit trade history)
         # apply credits to fuel
 
-        # create FuelSupplierBalance record for credits applied
+        # create OrganizationBalance record for credits applied
         # update record to status 'completed' (create credit trade history)
         print("Here in viewset")
         # CreditTrade.approve()
@@ -102,7 +102,7 @@ class CreditTradeViewSet(AuditableMixin, mixins.CreateModelMixin,
 
             print("Approved id:", status_approved.id)
             # Check if credit_trade is not yet approved
-            if credit_trade.creditTradeStatusFK.id >= status_approved.id:
+            if credit_trade.status.id >= status_approved.id:
                 return Response(status=status.HTTP_400_BAD_REQUEST)
 
             # CreditTrade
@@ -120,22 +120,22 @@ class CreditTradeViewSet(AuditableMixin, mixins.CreateModelMixin,
             todays_date = date.today()
 
             # Approve with today's date
-            # serializer.save(creditTradeStatusFK=status_approved,
+            # serializer.save(status=status_approved,
             #                 trade_effective_date=todays_date)
 
-            credit_trade.creditTradeStatusFK_id = status_approved.id
+            credit_trade.status_id = status_approved.id
             # credit_trade.save()
 
 
 
             # history = CreditTradeHistory(
-            #  creditTradeFK_id=credit_trade.id,
-            #  newRespondentFK_id=credit_trade.respondentFK.id,
-            #  creditTradeStatusFK_id=credit_trade.creditTradeStatusFK.id,
-            #  creditTradeTypeFK_id=credit_trade.creditTradeTypeFK.id,
+            #  credit_trade_id=credit_trade.id,
+            #  respondent_id=credit_trade.respondent.id,
+            #  status_id=credit_trade.status.id,
+            #  type_id=credit_trade.type.id,
             #  newNumberOfCredits=credit_trade.numberOfCredits,
             #  newFairMarketValuePerCredit=credit_trade.fairMarketValuePerCredit,
-            #  newCreditTradeZeroReasonFK_id=credit_trade.creditTradeZeroReasonFK,
+            #  zero_reason_id=credit_trade.zero_reason,
             #  newTradeEffectiveDate=credit_trade.trade_effective_date,
             #  newNote=credit_trade.note,
             # )
@@ -149,15 +149,15 @@ class CreditTradeViewSet(AuditableMixin, mixins.CreateModelMixin,
                 todays_date)
 
             # Complete with today's date
-            # serializer.save(creditTradeStatusFK=status_completed,
+            # serializer.save(status=status_completed,
             #                 trade_effective_date=todays_date)
 
 
             # num_of_credits_involved = credit_trade.numberOfCredits
             #
-            # fs_initiator = credit_trade.initiatorFK
+            # fs_initiator = credit_trade.initiator
             #
-            # if credit_trade.creditTradeTypeFK.id > 2:
+            # if credit_trade.type.id > 2:
             #     # Government involved transaction
             #     if fs_initiator is not None:
             #         raise BaseException
@@ -169,37 +169,37 @@ class CreditTradeViewSet(AuditableMixin, mixins.CreateModelMixin,
             #     if fs_initiator is None:
             #         raise BaseException
 
-                # if credit_trade.creditTradeTypeFK == 1
+                # if credit_trade.type_id == 1
 
             # Create history
             # CreditTradeService.create_history(serializer.data, False)
 
 
-            # Create FuelSupplier Balance Records, depending on the credit trade
+            # Create Organization Balance Records, depending on the credit trade
             # type
 
             # print()
 
-            # if (fs_initiator is None and credit_trade.creditTradeTypeFK.theType)
+            # if (fs_initiator is None and credit_trade.type.theType)
             # if fs_initiator is None:
             #     fs_initiator = Government()
             #     # fs_initiator_starting_balance = {'validatedCredits': 100000000000000000000}
             #
             # else:
-            #     fs_initiator_starting_balance = FuelSupplierBalance.objects.get(
-            #         fuelSupplierFK=fs_initiator,
+            #     fs_initiator_starting_balance = OrganizationBalance.objects.get(
+            #         organization=fs_initiator,
             #         expiration_date=None)
             #
             # print("Initiator", fs_initiator)
             #
-            # fs_respondent = credit_trade.respondentFK
+            # fs_respondent = credit_trade.respondent
             # print("Respondent", fs_respondent)
             #
             # # If the government is granting this supplier new credits
             # # there is no need for the initiator starting balance
             #
-            # fs_respondent_starting_balance = FuelSupplierBalance.objects.get(
-            #     fuelSupplierFK=fs_respondent,
+            # fs_respondent_starting_balance = OrganizationBalance.objects.get(
+            #     organization=fs_respondent,
             #     expiration_date=None)
             #
             # fs_respondent_final_credit_balance = fs_respondent_starting_balance
@@ -213,7 +213,7 @@ class CreditTradeViewSet(AuditableMixin, mixins.CreateModelMixin,
 
 
             # Complete Trade
-            # serializer.save(creditTradeStatusFK=status_completed,
+            # serializer.save(status=status_completed,
             #                 trade_effective_date=todays_date)
         except:
             print("Something bad happened")

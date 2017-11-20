@@ -19,25 +19,22 @@
     limitations under the License.
 """
 
-
 from django.db import models
 
 from auditable.models import Auditable
 
 
-class FuelSupplierContact(Auditable):
-    fuelSupplierFK = models.ForeignKey(
-        'FuelSupplier',
-        related_name='FuelSupplierContactfuelSupplierFK')
-    givenName = models.CharField(max_length=100, blank=True, null=True)
-    surname = models.CharField(max_length=100, blank=True, null=True)
-    title = models.CharField(max_length=150, blank=True, null=True)
-    userFK = models.ForeignKey('User', related_name='FuelSupplierContactuserFK',
-                               blank=True, null=True)
-    notes = models.CharField(max_length=4000, blank=True, null=True)
-    emailAddress = models.CharField(max_length=150, blank=True, null=True)
-    workPhoneNumber = models.CharField(max_length=25, blank=True, null=True)
-    mobilePhoneNumber = models.CharField(max_length=25, blank=True, null=True)
+class OrganizationBalance(Auditable):
+    organization = models.ForeignKey(
+        'Organization',
+        related_name='balances')
+    validatedCredits = models.IntegerField()
+    effective_date = models.DateField(blank=True, null=True)
+    expiration_date = models.DateField(blank=True, null=True)
+    credit_trade = models.ForeignKey(
+        'CreditTrade',
+        related_name='balances',
+        blank=True, null=True)
 
     class Meta:
-        db_table = 'fuel_supplier_contact'
+        db_table = 'organization_balance'

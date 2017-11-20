@@ -7,7 +7,7 @@
             "expiration_date": null,
             "status": "Active"
         },
-        "model": "api.fuelsupplierstatus",
+        "model": "api.organizationstatus",
         "pk": "1"
     },
     {
@@ -18,7 +18,7 @@
             "expiration_date": null,
             "status": "Archived"
         },
-        "model": "api.fuelsupplierstatus",
+        "model": "api.organizationstatus",
         "pk": "2"
     }
 ]

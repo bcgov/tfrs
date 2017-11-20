@@ -24,12 +24,12 @@ from django.db import models
 from auditable.models import Auditable
 
 
-class FuelSupplierActionsType(Auditable):
+class OrganizationActionsType(Auditable):
     theType = models.CharField(max_length=25)
     description = models.CharField(max_length=1000, blank=True, null=True)
-    effective_date = models.DateField()
+    effective_date = models.DateField(blank=True, null=True)
     expiration_date = models.DateField(blank=True, null=True)
     displayOrder = models.IntegerField()
 
     class Meta:
-        db_table = 'fuel_supplier_actions_type'
+        db_table = 'organization_actions_type'

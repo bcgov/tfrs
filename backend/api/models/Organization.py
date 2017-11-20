@@ -21,12 +21,22 @@
 
 from django.db import models
 
+from auditable.models import Auditable
 
-class UserFavouriteViewModel(models.Model):
-    name = models.CharField(max_length=255, blank=True, null=True)
-    value = models.CharField(max_length=255, blank=True, null=True)
-    isDefault = models.BooleanField()
-    type = models.CharField(max_length=255, blank=True, null=True)
+
+class Organization(Auditable):
+    name = models.CharField(max_length=500)
+    status = models.ForeignKey(
+        'OrganizationStatus',
+        related_name='organizations')
+    actions_type = models.ForeignKey(
+        'OrganizationActionsType',
+        related_name='organizations')
+    type = models.ForeignKey(
+        'OrganizationType',
+        related_name='organizations',
+        blank=True, null=True)
+    createdDate = models.DateField()
 
     class Meta:
-        abstract = True
+        db_table = 'organization'

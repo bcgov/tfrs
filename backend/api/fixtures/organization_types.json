@@ -7,7 +7,7 @@
             "expiration_date": "2117-01-01",
             "type": "Part 3 Fuel Supplier"
         },
-        "model": "api.fuelsuppliertype",
+        "model": "api.organizationtype",
         "pk": "1"
     },
     {
@@ -18,7 +18,7 @@
             "expiration_date": "2117-01-01",
             "type": "Petroleum Fuel Supplier"
         },
-        "model": "api.fuelsuppliertype",
+        "model": "api.organizationtype",
         "pk": "2"
     },
     {
@@ -29,7 +29,18 @@
             "expiration_date": "2117-01-01",
             "type": "Low Carbon Fuel Supplier"
         },
-        "model": "api.fuelsuppliertype",
+        "model": "api.organizationtype",
         "pk": "3"
+    },
+    {
+        "fields": {
+            "description": "Government of British Columbia",
+            "displayOrder": "4",
+            "effective_date": "2017-01-01",
+            "expiration_date": "2117-01-01",
+            "type": "Government"
+        },
+        "model": "api.organizationtype",
+        "pk": "4"
     }
 ]

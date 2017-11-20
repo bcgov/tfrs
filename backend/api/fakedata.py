@@ -157,18 +157,18 @@ def CurrentUserViewModelTestDataUpdate():
   }
 
 
-def FuelSupplierTestDataCreate():
+def OrganizationTestDataCreate():
   return {
     'name':'Initial',
   }
 
-def FuelSupplierTestDataUpdate():
+def OrganizationTestDataUpdate():
   return {
     'name':'Changed',
   }
 
 
-def FuelSupplierActionsTypeTestDataCreate():
+def OrganizationActionsTypeTestDataCreate():
   return {
     'theType':'Initial',
     'description':'Initial',
@@ -176,7 +176,7 @@ def FuelSupplierActionsTypeTestDataCreate():
     'effective_date': '2017-01-01',
   }
 
-def FuelSupplierActionsTypeTestDataUpdate():
+def OrganizationActionsTypeTestDataUpdate():
   return {
     'theType':'Changed',
     'description':'Changed',
@@ -185,7 +185,7 @@ def FuelSupplierActionsTypeTestDataUpdate():
   }
 
 
-def FuelSupplierAttachmentTestDataCreate():
+def OrganizationAttachmentTestDataCreate():
   return {
     'fileName':'Initial',
     'fileLocation':'Initial',
@@ -193,7 +193,7 @@ def FuelSupplierAttachmentTestDataCreate():
     'complianceYear':'Initial',
   }
 
-def FuelSupplierAttachmentTestDataUpdate():
+def OrganizationAttachmentTestDataUpdate():
   return {
     'fileName':'Changed',
     'fileLocation':'Changed',
@@ -202,29 +202,29 @@ def FuelSupplierAttachmentTestDataUpdate():
   }
 
 
-def FuelSupplierBalanceTestDataCreate():
+def OrganizationBalanceTestDataCreate():
   return {
     'validatedCredits':1,
   }
 
-def FuelSupplierBalanceTestDataUpdate():
+def OrganizationBalanceTestDataUpdate():
   return {
     'validatedCredits':0,
   }
 
 
-def FuelSupplierHistoryTestDataCreate():
+def OrganizationHistoryTestDataCreate():
   return {
     'historyText':'Initial',
   }
 
-def FuelSupplierHistoryTestDataUpdate():
+def OrganizationHistoryTestDataUpdate():
   return {
     'historyText':'Changed',
   }
 
 
-def FuelSupplierStatusTestDataCreate():
+def OrganizationStatusTestDataCreate():
   return {
     'status':'Initial',
     'description':'Initial',
@@ -233,7 +233,7 @@ def FuelSupplierStatusTestDataCreate():
     'expiration_date': '2017-02-01',
   }
 
-def FuelSupplierStatusTestDataUpdate():
+def OrganizationStatusTestDataUpdate():
   return {
     'status':'Changed',
     'description':'Changed',
@@ -424,40 +424,6 @@ def UserDetailsViewModelTestDataUpdate():
     'surname':'Changed',
     'email':'Changed',
     'active':False,
-  }
-
-
-def UserFavouriteTestDataCreate():
-  return {
-    'context':'Initial',
-    'name':'Initial',
-    'value':'Initial',
-    'isDefault':True,
-  }
-
-def UserFavouriteTestDataUpdate():
-  return {
-    'context':'Changed',
-    'name':'Changed',
-    'value':'Changed',
-    'isDefault':False,
-  }
-
-
-def UserFavouriteViewModelTestDataCreate():
-  return {
-    'name':'Initial',
-    'value':'Initial',
-    'isDefault':True,
-    'type':'Initial',
-  }
-
-def UserFavouriteViewModelTestDataUpdate():
-  return {
-    'name':'Changed',
-    'value':'Changed',
-    'isDefault':False,
-    'type':'Changed',
   }
 
 

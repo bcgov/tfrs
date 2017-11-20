@@ -35,12 +35,12 @@ from .models.CreditTradeStatus import CreditTradeStatus
 from .models.CreditTradeType import CreditTradeType
 from .models.CreditTradeZeroReason import CreditTradeZeroReason
 from .models.CurrentUserViewModel import CurrentUserViewModel
-from .models.FuelSupplier import FuelSupplier
-from .models.FuelSupplierActionsType import FuelSupplierActionsType
-from .models.FuelSupplierAttachment import FuelSupplierAttachment
-from .models.FuelSupplierBalance import FuelSupplierBalance
-from .models.FuelSupplierHistory import FuelSupplierHistory
-from .models.FuelSupplierStatus import FuelSupplierStatus
+from .models.Organization import Organization
+from .models.OrganizationActionsType import OrganizationActionsType
+from .models.OrganizationAttachment import OrganizationAttachment
+from .models.OrganizationBalance import OrganizationBalance
+from .models.OrganizationHistory import OrganizationHistory
+from .models.OrganizationStatus import OrganizationStatus
 from .models.Permission import Permission
 from .models.PermissionViewModel import PermissionViewModel
 from .models.Role import Role
@@ -49,8 +49,6 @@ from .models.RolePermissionViewModel import RolePermissionViewModel
 from .models.RoleViewModel import RoleViewModel
 from .models.User import User
 from .models.UserDetailsViewModel import UserDetailsViewModel
-from .models.UserFavourite import UserFavourite
-from .models.UserFavouriteViewModel import UserFavouriteViewModel
 from .models.UserRole import UserRole
 from .models.UserRoleViewModel import UserRoleViewModel
 from .models.UserViewModel import UserViewModel
@@ -461,493 +459,493 @@ class credittradezeroreasonIdGet(AuditableMixin, mixins.RetrieveModelMixin,
         return self.update(request, *args, **kwargs)
 
 
-class fuelsuppliersBulkPost(AuditableMixin, BulkCreateModelMixin,
+class organizationsBulkPost(AuditableMixin, BulkCreateModelMixin,
                             generics.GenericAPIView):
     """
-    Bulk create / update a number of FuelSupplier object
+    Bulk create / update a number of Organization object
     """
     lookup_field = 'id'
     permission_classes = (permissions.AllowAny,)
-    queryset = FuelSupplier.objects.all()
-    serializer_class = serializers.FuelSupplierSerializer
+    queryset = Organization.objects.all()
+    serializer_class = serializers.OrganizationSerializer
 
     def post(self, request, *args, **kwargs):
         """
-        Creates a number of new FuelSupplier objects
+        Creates a number of new Organization objects
         """
         return self.create(request, *args, **kwargs)
 
 
-class fuelsuppliersGet(AuditableMixin, mixins.ListModelMixin,
+class organizationsGet(AuditableMixin, mixins.ListModelMixin,
                        mixins.CreateModelMixin, generics.GenericAPIView):
     """
-    Lists available FuelSupplier objects
+    Lists available Organization objects
     """
     lookup_field = 'id'
     permission_classes = (permissions.AllowAny,)
-    queryset = FuelSupplier.objects.all()
-    serializer_class = serializers.FuelSupplierSerializer
+    queryset = Organization.objects.all()
+    serializer_class = serializers.OrganizationSerializer
 
     def get(self, request, *args, **kwargs):
         """
-        Lists available FuelSupplier objects
+        Lists available Organization objects
         """
         return self.list(request, *args, **kwargs)
 
     def post(self, request, *args, **kwargs):
         """
-        Creates a new FuelSupplier object
+        Creates a new Organization object
         """
         return self.create(request, *args, **kwargs)
 
 
-class fuelsuppliersIdDeletePost(AuditableMixin, mixins.DestroyModelMixin,
+class organizationsIdDeletePost(AuditableMixin, mixins.DestroyModelMixin,
                                 generics.GenericAPIView):
     """
-    Deletes a specific FuelSupplier object
+    Deletes a specific Organization object
     """
     lookup_field = 'id'
     permission_classes = (permissions.AllowAny,)
-    queryset = FuelSupplier.objects.all()
-    serializer_class = serializers.FuelSupplierSerializer
+    queryset = Organization.objects.all()
+    serializer_class = serializers.OrganizationSerializer
 
     def post(self, request, *args, **kwargs):
         """
-        Destroys the specified FuelSupplier object
+        Destroys the specified Organization object
         """
         return self.destroy(request, *args, **kwargs)
 
 
-class fuelsuppliersIdGet(AuditableMixin, mixins.RetrieveModelMixin,
+class organizationsIdGet(AuditableMixin, mixins.RetrieveModelMixin,
                          mixins.UpdateModelMixin, generics.GenericAPIView):
     """
-    Gets a specific FuelSupplier object
+    Gets a specific Organization object
     """
     lookup_field = 'id'
     permission_classes = (permissions.AllowAny,)
-    queryset = FuelSupplier.objects.all()
-    serializer_class = serializers.FuelSupplierSerializer
+    queryset = Organization.objects.all()
+    serializer_class = serializers.OrganizationSerializer
 
     def get(self, request, *args, **kwargs):
         """
-        Retrieves the specified FuelSupplier object
+        Retrieves the specified Organization object
         """
         return self.retrieve(request, *args, **kwargs)
 
     def put(self, request, *args, **kwargs):
         """
-        Updates the specified FuelSupplier object
+        Updates the specified Organization object
         """
         return self.update(request, *args, **kwargs)
 
 
-class fuelsupplieractionstypesBulkPost(AuditableMixin, BulkCreateModelMixin,
+class organizationactionstypesBulkPost(AuditableMixin, BulkCreateModelMixin,
                                        generics.GenericAPIView):
     """
-    Bulk create / update a number of FuelSupplierActionsType object
+    Bulk create / update a number of OrganizationActionsType object
     """
     lookup_field = 'id'
     permission_classes = (permissions.AllowAny,)
-    queryset = FuelSupplierActionsType.objects.all()
-    serializer_class = serializers.FuelSupplierActionsTypeSerializer
+    queryset = OrganizationActionsType.objects.all()
+    serializer_class = serializers.OrganizationActionsTypeSerializer
 
     def post(self, request, *args, **kwargs):
         """
-        Creates a number of new FuelSupplierActionsType objects
+        Creates a number of new OrganizationActionsType objects
         """
         return self.create(request, *args, **kwargs)
 
 
-class fuelsupplieractionstypesGet(AuditableMixin, mixins.ListModelMixin,
+class organizationactionstypesGet(AuditableMixin, mixins.ListModelMixin,
                                   mixins.CreateModelMixin,
                                   generics.GenericAPIView):
     """
-    Lists available FuelSupplierActionsType objects
+    Lists available OrganizationActionsType objects
     """
     lookup_field = 'id'
     permission_classes = (permissions.AllowAny,)
-    queryset = FuelSupplierActionsType.objects.all()
-    serializer_class = serializers.FuelSupplierActionsTypeSerializer
+    queryset = OrganizationActionsType.objects.all()
+    serializer_class = serializers.OrganizationActionsTypeSerializer
 
     def get(self, request, *args, **kwargs):
         """
-        Lists available FuelSupplierActionsType objects
+        Lists available OrganizationActionsType objects
         """
         return self.list(request, *args, **kwargs)
 
     def post(self, request, *args, **kwargs):
         """
-        Creates a new FuelSupplierActionsType object
+        Creates a new OrganizationActionsType object
         """
         return self.create(request, *args, **kwargs)
 
 
-class fuelsupplieractionstypesIdDeletePost(AuditableMixin,
+class organizationactionstypesIdDeletePost(AuditableMixin,
                                            mixins.DestroyModelMixin,
                                            generics.GenericAPIView):
     """
-    Deletes a specific FuelSupplierActionsType object
+    Deletes a specific OrganizationActionsType object
     """
     lookup_field = 'id'
     permission_classes = (permissions.AllowAny,)
-    queryset = FuelSupplierActionsType.objects.all()
-    serializer_class = serializers.FuelSupplierActionsTypeSerializer
+    queryset = OrganizationActionsType.objects.all()
+    serializer_class = serializers.OrganizationActionsTypeSerializer
 
     def post(self, request, *args, **kwargs):
         """
-        Destroys the specified FuelSupplierActionsType object
+        Destroys the specified OrganizationActionsType object
         """
         return self.destroy(request, *args, **kwargs)
 
 
-class fuelsupplieractionstypesIdGet(AuditableMixin, mixins.RetrieveModelMixin,
+class organizationactionstypesIdGet(AuditableMixin, mixins.RetrieveModelMixin,
                                     mixins.UpdateModelMixin,
                                     generics.GenericAPIView):
     """
-    Gets a specific FuelSupplierActionsType object
+    Gets a specific OrganizationActionsType object
     """
     lookup_field = 'id'
     permission_classes = (permissions.AllowAny,)
-    queryset = FuelSupplierActionsType.objects.all()
-    serializer_class = serializers.FuelSupplierActionsTypeSerializer
+    queryset = OrganizationActionsType.objects.all()
+    serializer_class = serializers.OrganizationActionsTypeSerializer
 
     def get(self, request, *args, **kwargs):
         """
-        Retrieves the specified FuelSupplierActionsType object
+        Retrieves the specified OrganizationActionsType object
         """
         return self.retrieve(request, *args, **kwargs)
 
     def put(self, request, *args, **kwargs):
         """
-        Updates the specified FuelSupplierActionsType object
+        Updates the specified OrganizationActionsType object
         """
         return self.update(request, *args, **kwargs)
 
 
-class fuelsupplierattachmentsBulkPost(AuditableMixin, BulkCreateModelMixin,
+class organizationattachmentsBulkPost(AuditableMixin, BulkCreateModelMixin,
                                       generics.GenericAPIView):
     """
-    Bulk create / update a number of FuelSupplierAttachment object
+    Bulk create / update a number of OrganizationAttachment object
     """
     lookup_field = 'id'
     permission_classes = (permissions.AllowAny,)
-    queryset = FuelSupplierAttachment.objects.all()
-    serializer_class = serializers.FuelSupplierAttachmentSerializer
+    queryset = OrganizationAttachment.objects.all()
+    serializer_class = serializers.OrganizationAttachmentSerializer
 
     def post(self, request, *args, **kwargs):
         """
-        Creates a number of new FuelSupplierAttachment objects
+        Creates a number of new OrganizationAttachment objects
         """
         return self.create(request, *args, **kwargs)
 
 
-class fuelsupplierattachmentsGet(AuditableMixin, mixins.ListModelMixin,
+class organizationattachmentsGet(AuditableMixin, mixins.ListModelMixin,
                                  mixins.CreateModelMixin,
                                  generics.GenericAPIView):
     """
-    Lists available FuelSupplierAttachment objects
+    Lists available OrganizationAttachment objects
     """
     lookup_field = 'id'
     permission_classes = (permissions.AllowAny,)
-    queryset = FuelSupplierAttachment.objects.all()
-    serializer_class = serializers.FuelSupplierAttachmentSerializer
+    queryset = OrganizationAttachment.objects.all()
+    serializer_class = serializers.OrganizationAttachmentSerializer
 
     def get(self, request, *args, **kwargs):
         """
-        Lists available FuelSupplierAttachment objects
+        Lists available OrganizationAttachment objects
         """
         return self.list(request, *args, **kwargs)
 
     def post(self, request, *args, **kwargs):
         """
-        Creates a new FuelSupplierAttachment object
+        Creates a new OrganizationAttachment object
         """
         return self.create(request, *args, **kwargs)
 
 
-class fuelsupplierattachmentsIdDeletePost(AuditableMixin,
+class organizationattachmentsIdDeletePost(AuditableMixin,
                                           mixins.DestroyModelMixin,
                                           generics.GenericAPIView):
     """
-    Deletes a specific FuelSupplierAttachment object
+    Deletes a specific OrganizationAttachment object
     """
     lookup_field = 'id'
     permission_classes = (permissions.AllowAny,)
-    queryset = FuelSupplierAttachment.objects.all()
-    serializer_class = serializers.FuelSupplierAttachmentSerializer
+    queryset = OrganizationAttachment.objects.all()
+    serializer_class = serializers.OrganizationAttachmentSerializer
 
     def post(self, request, *args, **kwargs):
         """
-        Destroys the specified FuelSupplierAttachment object
+        Destroys the specified OrganizationAttachment object
         """
         return self.destroy(request, *args, **kwargs)
 
 
-class fuelsupplierattachmentsIdGet(AuditableMixin, mixins.RetrieveModelMixin,
+class organizationattachmentsIdGet(AuditableMixin, mixins.RetrieveModelMixin,
                                    mixins.UpdateModelMixin,
                                    generics.GenericAPIView):
     """
-    Gets a specific FuelSupplierAttachment object
+    Gets a specific OrganizationAttachment object
     """
     lookup_field = 'id'
     permission_classes = (permissions.AllowAny,)
-    queryset = FuelSupplierAttachment.objects.all()
-    serializer_class = serializers.FuelSupplierAttachmentSerializer
+    queryset = OrganizationAttachment.objects.all()
+    serializer_class = serializers.OrganizationAttachmentSerializer
 
     def get(self, request, *args, **kwargs):
         """
-        Retrieves the specified FuelSupplierAttachment object
+        Retrieves the specified OrganizationAttachment object
         """
         return self.retrieve(request, *args, **kwargs)
 
     def put(self, request, *args, **kwargs):
         """
-        Updates the specified FuelSupplierAttachment object
+        Updates the specified OrganizationAttachment object
         """
         return self.update(request, *args, **kwargs)
 
 
-class fuelsupplierbalancesBulkPost(AuditableMixin, BulkCreateModelMixin,
+class organizationbalancesBulkPost(AuditableMixin, BulkCreateModelMixin,
                                    generics.GenericAPIView):
     """
-    Bulk create / update a number of FuelSupplierBalance object
+    Bulk create / update a number of OrganizationBalance object
     """
     lookup_field = 'id'
     permission_classes = (permissions.AllowAny,)
-    queryset = FuelSupplierBalance.objects.all()
-    serializer_class = serializers.FuelSupplierBalanceSerializer
+    queryset = OrganizationBalance.objects.all()
+    serializer_class = serializers.OrganizationBalanceSerializer
 
     def post(self, request, *args, **kwargs):
         """
-        Creates a number of new FuelSupplierBalance objects
+        Creates a number of new OrganizationBalance objects
         """
         return self.create(request, *args, **kwargs)
 
 
-class fuelsupplierbalancesGet(AuditableMixin, mixins.ListModelMixin,
+class organizationbalancesGet(AuditableMixin, mixins.ListModelMixin,
                               mixins.CreateModelMixin, generics.GenericAPIView):
     """
-    Lists available FuelSupplierBalance objects
+    Lists available OrganizationBalance objects
     """
     lookup_field = 'id'
     permission_classes = (permissions.AllowAny,)
-    queryset = FuelSupplierBalance.objects.all()
-    serializer_class = serializers.FuelSupplierBalanceSerializer
+    queryset = OrganizationBalance.objects.all()
+    serializer_class = serializers.OrganizationBalanceSerializer
 
     def get(self, request, *args, **kwargs):
         """
-        Lists available FuelSupplierBalance objects
+        Lists available OrganizationBalance objects
         """
         return self.list(request, *args, **kwargs)
 
     def post(self, request, *args, **kwargs):
         """
-        Creates a new FuelSupplierBalance object
+        Creates a new OrganizationBalance object
         """
         return self.create(request, *args, **kwargs)
 
 
-class fuelsupplierbalancesIdDeletePost(AuditableMixin, mixins.DestroyModelMixin,
+class organizationbalancesIdDeletePost(AuditableMixin, mixins.DestroyModelMixin,
                                        generics.GenericAPIView):
     """
-    Deletes a specific FuelSupplierBalance object
+    Deletes a specific OrganizationBalance object
     """
     lookup_field = 'id'
     permission_classes = (permissions.AllowAny,)
-    queryset = FuelSupplierBalance.objects.all()
-    serializer_class = serializers.FuelSupplierBalanceSerializer
+    queryset = OrganizationBalance.objects.all()
+    serializer_class = serializers.OrganizationBalanceSerializer
 
     def post(self, request, *args, **kwargs):
         """
-        Destroys the specified FuelSupplierBalance object
+        Destroys the specified OrganizationBalance object
         """
         return self.destroy(request, *args, **kwargs)
 
 
-class fuelsupplierbalancesIdGet(AuditableMixin, mixins.RetrieveModelMixin,
+class organizationbalancesIdGet(AuditableMixin, mixins.RetrieveModelMixin,
                                 mixins.UpdateModelMixin,
                                 generics.GenericAPIView):
     """
-    Gets a specific FuelSupplierBalance object
+    Gets a specific OrganizationBalance object
     """
     lookup_field = 'id'
     permission_classes = (permissions.AllowAny,)
-    queryset = FuelSupplierBalance.objects.all()
-    serializer_class = serializers.FuelSupplierBalanceSerializer
+    queryset = OrganizationBalance.objects.all()
+    serializer_class = serializers.OrganizationBalanceSerializer
 
     def get(self, request, *args, **kwargs):
         """
-        Retrieves the specified FuelSupplierBalance object
+        Retrieves the specified OrganizationBalance object
         """
         return self.retrieve(request, *args, **kwargs)
 
     def put(self, request, *args, **kwargs):
         """
-        Updates the specified FuelSupplierBalance object
+        Updates the specified OrganizationBalance object
         """
         return self.update(request, *args, **kwargs)
 
 
-class fuelsupplierhistoriesBulkPost(AuditableMixin, BulkCreateModelMixin,
+class organizationhistoriesBulkPost(AuditableMixin, BulkCreateModelMixin,
                                     generics.GenericAPIView):
     """
-    Bulk create / update a number of FuelSupplierHistory object
+    Bulk create / update a number of OrganizationHistory object
     """
     lookup_field = 'id'
     permission_classes = (permissions.AllowAny,)
-    queryset = FuelSupplierHistory.objects.all()
-    serializer_class = serializers.FuelSupplierHistorySerializer
+    queryset = OrganizationHistory.objects.all()
+    serializer_class = serializers.OrganizationHistorySerializer
 
     def post(self, request, *args, **kwargs):
         """
-        Creates a number of new FuelSupplierHistory objects
+        Creates a number of new OrganizationHistory objects
         """
         return self.create(request, *args, **kwargs)
 
 
-class fuelsupplierhistoriesGet(AuditableMixin, mixins.ListModelMixin,
+class organizationhistoriesGet(AuditableMixin, mixins.ListModelMixin,
                                mixins.CreateModelMixin,
                                generics.GenericAPIView):
     """
-    Lists available FuelSupplierHistory objects
+    Lists available OrganizationHistory objects
     """
     lookup_field = 'id'
     permission_classes = (permissions.AllowAny,)
-    queryset = FuelSupplierHistory.objects.all()
-    serializer_class = serializers.FuelSupplierHistorySerializer
+    queryset = OrganizationHistory.objects.all()
+    serializer_class = serializers.OrganizationHistorySerializer
 
     def get(self, request, *args, **kwargs):
         """
-        Lists available FuelSupplierHistory objects
+        Lists available OrganizationHistory objects
         """
         return self.list(request, *args, **kwargs)
 
     def post(self, request, *args, **kwargs):
         """
-        Creates a new FuelSupplierHistory object
+        Creates a new OrganizationHistory object
         """
         return self.create(request, *args, **kwargs)
 
 
-class fuelsupplierhistoriesIdDeletePost(AuditableMixin,
+class organizationhistoriesIdDeletePost(AuditableMixin,
                                         mixins.DestroyModelMixin,
                                         generics.GenericAPIView):
     """
-    Deletes a specific FuelSupplierHistory object
+    Deletes a specific OrganizationHistory object
     """
     lookup_field = 'id'
     permission_classes = (permissions.AllowAny,)
-    queryset = FuelSupplierHistory.objects.all()
-    serializer_class = serializers.FuelSupplierHistorySerializer
+    queryset = OrganizationHistory.objects.all()
+    serializer_class = serializers.OrganizationHistorySerializer
 
     def post(self, request, *args, **kwargs):
         """
-        Destroys the specified FuelSupplierHistory object
+        Destroys the specified OrganizationHistory object
         """
         return self.destroy(request, *args, **kwargs)
 
 
-class fuelsupplierhistoriesIdGet(AuditableMixin, mixins.RetrieveModelMixin,
+class organizationhistoriesIdGet(AuditableMixin, mixins.RetrieveModelMixin,
                                  mixins.UpdateModelMixin,
                                  generics.GenericAPIView):
     """
-    Gets a specific FuelSupplierHistory object
+    Gets a specific OrganizationHistory object
     """
     lookup_field = 'id'
     permission_classes = (permissions.AllowAny,)
-    queryset = FuelSupplierHistory.objects.all()
-    serializer_class = serializers.FuelSupplierHistorySerializer
+    queryset = OrganizationHistory.objects.all()
+    serializer_class = serializers.OrganizationHistorySerializer
 
     def get(self, request, *args, **kwargs):
         """
-        Retrieves the specified FuelSupplierHistory object
+        Retrieves the specified OrganizationHistory object
         """
         return self.retrieve(request, *args, **kwargs)
 
     def put(self, request, *args, **kwargs):
         """
-        Updates the specified FuelSupplierHistory object
+        Updates the specified OrganizationHistory object
         """
         return self.update(request, *args, **kwargs)
 
 
-class fuelsupplierstatusesBulkPost(AuditableMixin, BulkCreateModelMixin,
+class organizationstatusesBulkPost(AuditableMixin, BulkCreateModelMixin,
                                    generics.GenericAPIView):
     """
-    Bulk create / update a number of FuelSupplierStatus object
+    Bulk create / update a number of OrganizationStatus object
     """
     lookup_field = 'id'
     permission_classes = (permissions.AllowAny,)
-    queryset = FuelSupplierStatus.objects.all()
-    serializer_class = serializers.FuelSupplierStatusSerializer
+    queryset = OrganizationStatus.objects.all()
+    serializer_class = serializers.OrganizationStatusSerializer
 
     def post(self, request, *args, **kwargs):
         """
-        Creates a number of new FuelSupplierStatus objects
+        Creates a number of new OrganizationStatus objects
         """
         return self.create(request, *args, **kwargs)
 
 
-class fuelsupplierstatusesGet(AuditableMixin, mixins.ListModelMixin,
+class organizationstatusesGet(AuditableMixin, mixins.ListModelMixin,
                               mixins.CreateModelMixin, generics.GenericAPIView):
     """
-    Lists available FuelSupplierStatus objects
+    Lists available OrganizationStatus objects
     """
     lookup_field = 'id'
     permission_classes = (permissions.AllowAny,)
-    queryset = FuelSupplierStatus.objects.all()
-    serializer_class = serializers.FuelSupplierStatusSerializer
+    queryset = OrganizationStatus.objects.all()
+    serializer_class = serializers.OrganizationStatusSerializer
 
     def get(self, request, *args, **kwargs):
         """
-        Lists available FuelSupplierStatus objects
+        Lists available OrganizationStatus objects
         """
         return self.list(request, *args, **kwargs)
 
     def post(self, request, *args, **kwargs):
         """
-        Creates a new FuelSupplierStatus object
+        Creates a new OrganizationStatus object
         """
         return self.create(request, *args, **kwargs)
 
 
-class fuelsupplierstatusesIdDeletePost(AuditableMixin, mixins.DestroyModelMixin,
+class organizationstatusesIdDeletePost(AuditableMixin, mixins.DestroyModelMixin,
                                        generics.GenericAPIView):
     """
-    Deletes a specific FuelSupplierStatus object
+    Deletes a specific OrganizationStatus object
     """
     lookup_field = 'id'
     permission_classes = (permissions.AllowAny,)
-    queryset = FuelSupplierStatus.objects.all()
-    serializer_class = serializers.FuelSupplierStatusSerializer
+    queryset = OrganizationStatus.objects.all()
+    serializer_class = serializers.OrganizationStatusSerializer
 
     def post(self, request, *args, **kwargs):
         """
-        Destroys the specified FuelSupplierStatus object
+        Destroys the specified OrganizationStatus object
         """
         return self.destroy(request, *args, **kwargs)
 
 
-class fuelsupplierstatusesIdGet(AuditableMixin, mixins.RetrieveModelMixin,
+class organizationstatusesIdGet(AuditableMixin, mixins.RetrieveModelMixin,
                                 mixins.UpdateModelMixin,
                                 generics.GenericAPIView):
     """
-    Gets a specific FuelSupplierStatus object
+    Gets a specific OrganizationStatus object
     """
     lookup_field = 'id'
     permission_classes = (permissions.AllowAny,)
-    queryset = FuelSupplierStatus.objects.all()
-    serializer_class = serializers.FuelSupplierStatusSerializer
+    queryset = OrganizationStatus.objects.all()
+    serializer_class = serializers.OrganizationStatusSerializer
 
     def get(self, request, *args, **kwargs):
         """
-        Retrieves the specified FuelSupplierStatus object
+        Retrieves the specified OrganizationStatus object
         """
         return self.retrieve(request, *args, **kwargs)
 
     def put(self, request, *args, **kwargs):
         """
-        Updates the specified FuelSupplierStatus object
+        Updates the specified OrganizationStatus object
         """
         return self.update(request, *args, **kwargs)
 

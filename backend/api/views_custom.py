@@ -35,12 +35,12 @@ from .models.CreditTradeStatus import CreditTradeStatus
 from .models.CreditTradeType import CreditTradeType
 from .models.CreditTradeZeroReason import CreditTradeZeroReason
 from .models.CurrentUserViewModel import CurrentUserViewModel
-from .models.FuelSupplier import FuelSupplier
-from .models.FuelSupplierActionsType import FuelSupplierActionsType
-from .models.FuelSupplierAttachment import FuelSupplierAttachment
-from .models.FuelSupplierBalance import FuelSupplierBalance
-from .models.FuelSupplierHistory import FuelSupplierHistory
-from .models.FuelSupplierStatus import FuelSupplierStatus
+from .models.Organization import Organization
+from .models.OrganizationActionsType import OrganizationActionsType
+from .models.OrganizationAttachment import OrganizationAttachment
+from .models.OrganizationBalance import OrganizationBalance
+from .models.OrganizationHistory import OrganizationHistory
+from .models.OrganizationStatus import OrganizationStatus
 from .models.Permission import Permission
 from .models.PermissionViewModel import PermissionViewModel
 from .models.Role import Role
@@ -76,58 +76,6 @@ class credittradesSearchGet(APIView):
     serializer = serializers.CreditTradeSerializer(result, many=True)
     return Response(serializer.data)
 
-class usersCurrentFavouritesIdDeletePost(APIView):
-  """  
-  Removes a specific user favourite  
-  """
-  def post(self, request, id):
-    userFavourite = UserFavourite.objects.get(id=id)
-    userFavourite.delete()
-    serializer = serializers.UserFavouriteSerializer(userFavourite)
-    return Response(serializer.data)
-
-class usersCurrentFavouritesPut(APIView):
-  """  
-  Create new favourite for the current user
-  """
-  def post(self, request):
-    user = User.objects.all()[0] # replace with getcurrentuserid
-    jsonString = request.body.decode('utf-8')
-    data = json.loads(jsonString)
-    userFavourite = UserFavourite(name = data['name'], value = data['value'], isDefault = data['isDefault'], userFK = user)
-    userFavourite.save()
-    serializer = serializers.UserFavouriteSerializer(userFavourite)
-    return Response(serializer.data)
-
-  def put(self, request):
-    user = User.objects.all()[0] # replace with getcurrentuserid
-    jsonString = request.body.decode('utf-8')
-    alldata = json.loads(jsonString)
-    # clear existing favourites.
-    UserFavourite.objects.filter(userFK=user).delete()
-
-    # add the replacement favourites
-    for data in alldata:
-      userFavourite = UserFavourite(name = data['name'], value = data['value'], isDefault = data['isDefault'], userFK = user)
-      userFavourite.save()
-    result = UserFavourite.objects.filter(userFK=user)
-    serializer = serializers.UserFavouriteSerializer(result, many=True)
-    return Response(serializer.data)
-
-class usersCurrentFavouritesSearchGet(APIView):
-  """  
-  Returns a user's favourites of a given type.
-  """
-  def get(self, request):
-    currentUser = User.objects.all()[0] # replace with current user
-    type = request.GET.get('type', None)
-    userFavourites = UserFavourite.objects.filter(userFK = currentUser)
-    if type != None:
-        userFavourites = userFavourites.filter(type = type)
-
-    serializer = serializers.UserFavouriteSerializer(userFavourites, many=True)
-    return Response(serializer.data)
-
 class usersCurrentGet(APIView):
   """  
   Get the currently logged in user  
@@ -137,21 +85,21 @@ class usersCurrentGet(APIView):
     serializer = serializers.UserSerializer(currentUser)
     return Response(serializer.data)
 
-class fuelsuppliersIdAttachmentsGet(mixins.CreateModelMixin, APIView):
+class organizationsIdAttachmentsGet(mixins.CreateModelMixin, APIView):
   """  
-  Returns attachments for a particular FuelSupplier  
+  Returns attachments for a particular Organization
   """
   lookup_field = 'id'
   permission_classes = (permissions.AllowAny,)
-  queryset = FuelSupplierHistory.objects.all()
-  serializer_class = serializers.FuelSupplierHistorySerializer
+  queryset = OrganizationHistory.objects.all()
+  serializer_class = serializers.OrganizationHistorySerializer
 
   def get(self, request, id):
     """
     Returns attachments for a particular Fuel Supplier
     """
-    fuelSupplier = FuelSupplier.objects.get(id=id)
-    serializer = AttachmentSerializer(fuelSupplier.attachments, many=True)
+    organization = Organization.objects.get(id=id)
+    serializer = AttachmentSerializer(Organization.attachments, many=True)
     return Response(serializer.data)
 
   def post(self, request, id):
@@ -163,51 +111,51 @@ class fuelsuppliersIdAttachmentsGet(mixins.CreateModelMixin, APIView):
     fileName = request.FILES['file'].name
     # TODO: save file to disk
     fileData = request.FILES['file'].read()
-    fuelSupplier = FuelSupplier.objects.get(id=id)
+    organization = Organization.objects.get(id=id)
     # TODO: remove hard coded fileLocation string an replace with real
-    attachment = FuelSupplierAttachment(
-      fuelSupplierFK=fuelSupplier,
+    attachment = OrganizationAttachment(
+      organization=organization,
       fileName=fileName,
       fileLocation='fileLocation',
       description=data['description'],
       complianceYear=data.get('complianceYear'))
     attachment.save()
-    serializer = serializers.FuelSupplierAttachmentSerializer(attachment)
+    serializer = serializers.OrganizationAttachmentSerializer(attachment)
     return Response(serializer.data)
 
-class fuelsuppliersIdHistoryGet(APIView):
+class organizationsIdHistoryGet(APIView):
   """  
-  Returns History for a particular FuelSupplier  
+  Returns History for a particular Organization
   """
   def get(self, request, id, offset = None, limit = None):
-    fuelSupplier = FuelSupplier.objects.get(id=id)
-    serializer = serializers.FuelSupplierHistorySerializer(fuelSupplier.history, many=true)
+    organization = Organization.objects.get(id=id)
+    serializer = serializers.OrganizationHistorySerializer(organization.history, many=true)
     return Response(serializer.data)
 
   def post(self, request, id):
     """
-    Add a History record to the FuelSupplier
+    Add a History record to the Organization
     """
-    fuelSupplier = FuelSupplier.objects.get(id=id)
+    organization = Organization.objects.get(id=id)
     jsonString = request.body.decode('utf-8')
     data = json.loads(jsonString)
-    history = FuelSupplierHistory(fuelSupplierFK_id=id, historyText=data['historyText'])
+    history = OrganizationHistory(organization_id=id, historyText=data['historyText'])
     history.save()
-    serializer = serializers.FuelSupplierHistorySerializer(history)
+    serializer = serializers.OrganizationHistorySerializer(history)
     return Response(serializer.data)
 
-class fuelsuppliersSearchGet(APIView):
+class organizationsSearchGet(APIView):
   """  
   Searches fuel suppliers  
   """
-  def get(self, request, fuelSupplierName = None, includeInactive = None):
-    result = FuelSupplier.objects.all()
-    if fuelSupplierName != None:
-       result = result.filter(name__icontains = fuelSupplierName)
+  def get(self, request, organization_name = None, includeInactive = None):
+    result = Organization.objects.all()
+    if organization_name != None:
+       result = result.filter(name__icontains = organization_name)
     if includeInactive == None or includeInactive == False:
-       result = result.filter(fuelSupplierStatusFK__status__icontains = 'Active')
+       result = result.filter(status__status__icontains = 'Active')
 
-    serializer = serializers.FuelSupplierSerializer(result, many=True)
+    serializer = serializers.OrganizationSerializer(result, many=True)
     return Response(serializer.data)
 
 class rolesIdPermissionsGet(APIView):
@@ -216,7 +164,7 @@ class rolesIdPermissionsGet(APIView):
   """
   def get(self, request, id):
     role = Role.objects.get (id = id)
-    rolePermissions = RolePermission.objects.filter(roleFK=role)
+    rolePermissions = RolePermission.objects.filter(role=role)
     serializer = serializers.RolePermissionSerializer(rolePermissions, many=True)
     return Response(serializer.data)
 
@@ -227,8 +175,8 @@ class rolesIdPermissionsGet(APIView):
     role = Role.objects.get (id = id)
     jsonString = request.body.decode('utf-8')
     data = json.loads(jsonString)
-    permission = Permission.objects.get(id=data['permissionFK'])
-    rolePermission = RolePermission(roleFK=role, permissionFK=permission)
+    permission = Permission.objects.get(id=data['permission'])
+    rolePermission = RolePermission(role=role, permission=permission)
     rolePermission.save()
     serializer = serializers.RolePermissionSerializer(rolePermission)
     return Response(serializer.data)
@@ -241,12 +189,12 @@ class rolesIdPermissionsGet(APIView):
     jsonString = request.body.decode('utf-8')
     data = json.loads(jsonString)
     # start by clearing out any existing roles.
-    RolePermission.objects.filter(roleFK=role).delete()
+    RolePermission.objects.filter(role=role).delete()
     for row in data:
-        permission = Permission.objects.get(id=data['permissionFK'])
-        rolePermission = RolePermission (permissionFK=permission, roleFK=role)
+        permission = Permission.objects.get(id=data['permission'])
+        rolePermission = RolePermission (permission=permission, role=role)
         rolePermission.save()
-    results = RolePermission.objects.filter(roleFK=role)
+    results = RolePermission.objects.filter(role=role)
     serializer = serializers.RolePermissionSerializer(results, many=True)
     return Response(serializer.data)
 
@@ -268,55 +216,15 @@ class rolesIdUsersGet(APIView):
     jsonString = request.body.decode('utf-8')
     alldata = json.loads(jsonString)
     # clear existing User Roles.
-    UserRole.objects.filter(userFK=user).delete()
+    UserRole.objects.filter(user=user).delete()
 
     # add the replacement User Role
     for data in alldata:
       role = Role.objects.get(id = data['role'])
-      userRole = UserRole(roleFK = role, userFK = user)
+      userRole = UserRole(role = role, user = user)
       userRole.save()
-    result = UserRole.objects.filter(userFK=user)
+    result = UserRole.objects.filter(user=user)
     serializer = serializers.UserRoleSerializer(result, many=True)
-    return Response(serializer.data)
-
-class usersIdFavouritesGet(APIView):
-  def get(self, request, id):
-    """
-    Returns the favourites for a user
-    """
-    user = User.objects.get(id=id)
-    result = UserFavourite.objects.filter(userFK=user)
-    serializer = serializers.UserFavouriteSerializer(result, many=True)
-    return Response(serializer.data)
-
-  def post(self, request, id):
-    """
-    Adds favourites to a user
-    """
-    user = User.objects.get(id=id)
-    jsonString = request.body.decode('utf-8')
-    data = json.loads(jsonString)
-    userFavourite = UserFavourite(name=data['name'], value=data['value'], isDefault=data['isDefault'], userFK=user)
-    userFavourite.save()
-    serializer = serializers.UserFavouriteSerializer(userFavourite)
-    return Response(serializer.data)
-
-  def put(self, request, id):
-    """
-    Updates the favourites for a user
-    """
-    user = User.objects.get(id=id)
-    jsonString = request.body.decode('utf-8')
-    alldata = json.loads(jsonString)
-    # clear existing favourites.
-    UserFavourite.objects.filter(userFK=user).delete()
-
-    # add the replacement favourites
-    for data in alldata:
-      userFavourite = UserFavourite(name = data['name'], value = data['value'], isDefault = data['isDefault'], userFK = user)
-      userFavourite.save()
-    result = UserFavourite.objects.filter(userFK=user)
-    serializer = serializers.UserFavouriteSerializer(result, many=True)
     return Response(serializer.data)
 
 class usersIdPermissionsGet(APIView):
@@ -326,7 +234,7 @@ class usersIdPermissionsGet(APIView):
     Returns the set of permissions for a user
     """
     user = User.objects.get(id=id)
-    userRoles = UserRole.objects.filter(userFK=user)
+    userRoles = UserRole.objects.filter(user=user)
     result = []
     for userRole in userRoles:
         rolePermissions = RolePermission.objects.filter(role=userRole.role)
@@ -341,7 +249,7 @@ class usersIdPermissionsGet(APIView):
     Returns the set of permissions for a user
     """
     user = User.objects.get(id=id)
-    userRoles = UserRole.objects.filter(userFK=user)
+    userRoles = UserRole.objects.filter(user=user)
     result = []
     for userRole in userRoles:
         rolePermissions = RolePermission.objects.filter(role=userRole.role)
@@ -355,7 +263,7 @@ class usersIdRolesGet(APIView):
     """
     Returns all roles that a user is a member of
     """
-    result = UserRole.objects.filter(userFK=id)
+    result = UserRole.objects.filter(user=id)
     serializer = serializers.UserRoleSerializer(result, many=True)
     return Response(serializer.data)
 
@@ -367,7 +275,7 @@ class usersIdRolesGet(APIView):
     jsonString = request.body.decode('utf-8')
     data = json.loads(jsonString)
     role = Role.objects.get(id = data['role'])
-    userRole = UserRole(roleFK = role, userFK = user)
+    userRole = UserRole(role = role, user = user)
     userRole.save()
     serializer = serializers.UserRoleSerializer(userRole)
     return Response(serializer.data)
@@ -380,19 +288,19 @@ class usersIdRolesGet(APIView):
     jsonString = request.body.decode('utf-8')
     alldata = json.loads(jsonString)
     # clear existing favourites.
-    UserRole.objects.filter(userFK=user).delete()
+    UserRole.objects.filter(user=user).delete()
 
     # add the replacement User Role
     for data in alldata:
       role = Role.objects.get(id = data['role'])
-      userRole = UserRole(roleFK = role, userFK = user)
+      userRole = UserRole(role = role, user = user)
       userRole.save()
-    result = UserRole.objects.filter(userFK=user)
+    result = UserRole.objects.filter(user=user)
     serializer = serializers.UserRoleSerializer(result, many=True)
     return Response(serializer.data)
 
 class usersSearchGet(APIView):
-  def get(self, request, fuelSuppliers = None, surname = None, includeInactive = None):
+  def get(self, request, organizations = None, surname = None, includeInactive = None):
     """
     Searches Users
     """

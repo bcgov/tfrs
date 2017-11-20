@@ -43,18 +43,18 @@ from .models.CreditTradeZeroReason import CreditTradeZeroReason
 from .serializers import CreditTradeZeroReasonSerializer
 from .models.CurrentUserViewModel import CurrentUserViewModel
 from .serializers import CurrentUserViewModelSerializer
-from .models.FuelSupplier import FuelSupplier
-from .serializers import FuelSupplierSerializer
-from .models.FuelSupplierActionsType import FuelSupplierActionsType
-from .serializers import FuelSupplierActionsTypeSerializer
-from .models.FuelSupplierAttachment import FuelSupplierAttachment
-from .serializers import FuelSupplierAttachmentSerializer
-from .models.FuelSupplierBalance import FuelSupplierBalance
-from .serializers import FuelSupplierBalanceSerializer
-from .models.FuelSupplierHistory import FuelSupplierHistory
-from .serializers import FuelSupplierHistorySerializer
-from .models.FuelSupplierStatus import FuelSupplierStatus
-from .serializers import FuelSupplierStatusSerializer
+from .models.Organization import Organization
+from .serializers import OrganizationSerializer
+from .models.OrganizationActionsType import OrganizationActionsType
+from .serializers import OrganizationActionsTypeSerializer
+from .models.OrganizationAttachment import OrganizationAttachment
+from .serializers import OrganizationAttachmentSerializer
+from .models.OrganizationBalance import OrganizationBalance
+from .serializers import OrganizationBalanceSerializer
+from .models.OrganizationHistory import OrganizationHistory
+from .serializers import OrganizationHistorySerializer
+from .models.OrganizationStatus import OrganizationStatus
+from .serializers import OrganizationStatusSerializer
 from .models.Permission import Permission
 from .serializers import PermissionSerializer
 from .models.PermissionViewModel import PermissionViewModel
@@ -71,10 +71,6 @@ from .models.User import User
 from .serializers import UserSerializer
 from .models.UserDetailsViewModel import UserDetailsViewModel
 from .serializers import UserDetailsViewModelSerializer
-from .models.UserFavourite import UserFavourite
-from .serializers import UserFavouriteSerializer
-from .models.UserFavouriteViewModel import UserFavouriteViewModel
-from .serializers import UserFavouriteViewModelSerializer
 from .models.UserRole import UserRole
 from .serializers import UserRoleSerializer
 from .models.UserRoleViewModel import UserRoleViewModel
@@ -349,22 +345,22 @@ class Test_Api_Simple(TestCase):
         # Check that the response is OK.
         assert status.HTTP_204_NO_CONTENT == response.status_code
 
-    def test_fuelsupplieractionstypesBulkPost(self):
+    def test_organizationactionstypesBulkPost(self):
         # Test Bulk Load.
-        payload = fakedata.FuelSupplierActionsTypeTestDataCreate()
+        payload = fakedata.OrganizationActionsTypeTestDataCreate()
         jsonString = "[]"
-        response = self.client.post('/api/fuelsupplieractionstypes/bulk',
+        response = self.client.post('/api/organization_actions_types/bulk',
                                     content_type='application/json',
                                     data=jsonString)
         # Check that the response is 200 OK.
         assert status.HTTP_201_CREATED == response.status_code
 
-    def test_fuelsupplieractionstypesGet(self):
+    def test_organizationactionstypesGet(self):
         # Test Create and List operations.
-        testUrl = "/api/fuelsupplieractionstypes"
+        testUrl = "/api/organization_actions_types"
         # Create:
-        serializer_class = FuelSupplierActionsTypeSerializer
-        payload = fakedata.FuelSupplierActionsTypeTestDataCreate()
+        serializer_class = OrganizationActionsTypeSerializer
+        payload = fakedata.OrganizationActionsTypeTestDataCreate()
         jsonString = json.dumps(payload)
         response = self.client.post(testUrl, content_type='application/json',
                                     data=jsonString)
@@ -384,12 +380,12 @@ class Test_Api_Simple(TestCase):
         # Check that the response is OK.
         assert status.HTTP_204_NO_CONTENT == response.status_code
 
-    def test_fuelsupplieractionstypesIdDeletePost(self):
+    def test_organizationactionstypesIdDeletePost(self):
         # Test Retrieve and Update operations.
-        testUrl = "/api/fuelsupplieractionstypes/(?P<id>[0-9]+)/delete"
+        testUrl = "/api/organization_actions_types/(?P<id>[0-9]+)/delete"
         createUrl = testUrl.replace("/(?P<id>[0-9]+)/delete", "")
         # Create an object:
-        payload = fakedata.FuelSupplierActionsTypeTestDataCreate()
+        payload = fakedata.OrganizationActionsTypeTestDataCreate()
         jsonString = json.dumps(payload)
         response = self.client.post(createUrl, content_type='application/json',
                                     data=jsonString)
@@ -404,12 +400,12 @@ class Test_Api_Simple(TestCase):
         # Check that the response is OK.
         assert status.HTTP_204_NO_CONTENT == response.status_code
 
-    def test_fuelsupplieractionstypesIdGet(self):
+    def test_organizationactionstypesIdGet(self):
         # Test Retrieve and Update operations.
-        testUrl = "/api/fuelsupplieractionstypes/(?P<id>[0-9]+)"
+        testUrl = "/api/organization_actions_types/(?P<id>[0-9]+)"
         createUrl = testUrl.replace("/(?P<id>[0-9]+)", "")
         # Create an object:
-        payload = fakedata.FuelSupplierActionsTypeTestDataCreate()
+        payload = fakedata.OrganizationActionsTypeTestDataCreate()
         jsonString = json.dumps(payload)
         response = self.client.post(createUrl, content_type='application/json',
                                     data=jsonString)
@@ -421,7 +417,7 @@ class Test_Api_Simple(TestCase):
         createdId = data['id']
         # Update the object:
         updateUrl = testUrl.replace("(?P<id>[0-9]+)", str(createdId))
-        payload = fakedata.FuelSupplierActionsTypeTestDataUpdate()
+        payload = fakedata.OrganizationActionsTypeTestDataUpdate()
         jsonString = json.dumps(payload)
         response = self.client.put(updateUrl, content_type='application/json',
                                    data=jsonString)
@@ -433,22 +429,22 @@ class Test_Api_Simple(TestCase):
         # Check that the response is OK.
         assert status.HTTP_204_NO_CONTENT == response.status_code
 
-    def test_fuelsupplierstatusesBulkPost(self):
+    def test_organizationstatusesBulkPost(self):
         # Test Bulk Load.
-        payload = fakedata.FuelSupplierStatusTestDataCreate()
+        payload = fakedata.OrganizationStatusTestDataCreate()
         jsonString = "[]"
-        response = self.client.post('/api/fuelsupplierstatuses/bulk',
+        response = self.client.post('/api/organization_statuses/bulk',
                                     content_type='application/json',
                                     data=jsonString)
         # Check that the response is 200 OK.
         assert status.HTTP_201_CREATED == response.status_code
 
-    def test_fuelsupplierstatusesGet(self):
+    def test_organizationstatusesGet(self):
         # Test Create and List operations.
-        testUrl = "/api/fuelsupplierstatuses"
+        testUrl = "/api/organization_statuses"
         # Create:
-        serializer_class = FuelSupplierStatusSerializer
-        payload = fakedata.FuelSupplierStatusTestDataCreate()
+        serializer_class = OrganizationStatusSerializer
+        payload = fakedata.OrganizationStatusTestDataCreate()
         jsonString = json.dumps(payload)
         response = self.client.post(testUrl, content_type='application/json',
                                     data=jsonString)
@@ -468,12 +464,12 @@ class Test_Api_Simple(TestCase):
         # Check that the response is OK.
         assert status.HTTP_204_NO_CONTENT == response.status_code
 
-    def test_fuelsupplierstatusesIdDeletePost(self):
+    def test_organizationstatusesIdDeletePost(self):
         # Test Retrieve and Update operations.
-        testUrl = "/api/fuelsupplierstatuses/(?P<id>[0-9]+)/delete"
+        testUrl = "/api/organization_statuses/(?P<id>[0-9]+)/delete"
         createUrl = testUrl.replace("/(?P<id>[0-9]+)/delete", "")
         # Create an object:
-        payload = fakedata.FuelSupplierStatusTestDataCreate()
+        payload = fakedata.OrganizationStatusTestDataCreate()
         jsonString = json.dumps(payload)
         response = self.client.post(createUrl, content_type='application/json',
                                     data=jsonString)
@@ -488,12 +484,12 @@ class Test_Api_Simple(TestCase):
         # Check that the response is OK.
         assert status.HTTP_204_NO_CONTENT == response.status_code
 
-    def test_fuelsupplierstatusesIdGet(self):
+    def test_organizationstatusesIdGet(self):
         # Test Retrieve and Update operations.
-        testUrl = "/api/fuelsupplierstatuses/(?P<id>[0-9]+)"
+        testUrl = "/api/organization_statuses/(?P<id>[0-9]+)"
         createUrl = testUrl.replace("/(?P<id>[0-9]+)", "")
         # Create an object:
-        payload = fakedata.FuelSupplierStatusTestDataCreate()
+        payload = fakedata.OrganizationStatusTestDataCreate()
         jsonString = json.dumps(payload)
         response = self.client.post(createUrl, content_type='application/json',
                                     data=jsonString)
@@ -505,7 +501,7 @@ class Test_Api_Simple(TestCase):
         createdId = data['id']
         # Update the object:
         updateUrl = testUrl.replace("(?P<id>[0-9]+)", str(createdId))
-        payload = fakedata.FuelSupplierStatusTestDataUpdate()
+        payload = fakedata.OrganizationStatusTestDataUpdate()
         jsonString = json.dumps(payload)
         response = self.client.put(updateUrl, content_type='application/json',
                                    data=jsonString)

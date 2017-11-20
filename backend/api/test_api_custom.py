@@ -44,18 +44,18 @@ from .models.CreditTradeZeroReason import CreditTradeZeroReason
 from .serializers import CreditTradeZeroReasonSerializer
 from .models.CurrentUserViewModel import CurrentUserViewModel
 from .serializers import CurrentUserViewModelSerializer
-from .models.FuelSupplier import FuelSupplier
-from .serializers import FuelSupplierSerializer
-from .models.FuelSupplierActionsType import FuelSupplierActionsType
-from .serializers import FuelSupplierActionsTypeSerializer
-from .models.FuelSupplierAttachment import FuelSupplierAttachment
-from .serializers import FuelSupplierAttachmentSerializer
-from .models.FuelSupplierBalance import FuelSupplierBalance
-from .serializers import FuelSupplierBalanceSerializer
-from .models.FuelSupplierHistory import FuelSupplierHistory
-from .serializers import FuelSupplierHistorySerializer
-from .models.FuelSupplierStatus import FuelSupplierStatus
-from .serializers import FuelSupplierStatusSerializer
+from .models.Organization import Organization
+from .serializers import OrganizationSerializer
+from .models.OrganizationActionsType import OrganizationActionsType
+from .serializers import OrganizationActionsTypeSerializer
+from .models.OrganizationAttachment import OrganizationAttachment
+from .serializers import OrganizationAttachmentSerializer
+from .models.OrganizationBalance import OrganizationBalance
+from .serializers import OrganizationBalanceSerializer
+from .models.OrganizationHistory import OrganizationHistory
+from .serializers import OrganizationHistorySerializer
+from .models.OrganizationStatus import OrganizationStatus
+from .serializers import OrganizationStatusSerializer
 from .models.Permission import Permission
 from .serializers import PermissionSerializer
 from .models.PermissionViewModel import PermissionViewModel
@@ -92,9 +92,9 @@ class Test_Api_Custom(TestCase):
         # needed to setup django
         django.setup()
 
-    def createFuelSupplierStatus(self):
-        testUrl = "/api/fuelsupplierstatuses"
-        payload = fakedata.FuelSupplierStatusTestDataCreate()
+    def createOrganizationStatus(self):
+        testUrl = "/api/organization_statuses"
+        payload = fakedata.OrganizationStatusTestDataCreate()
         payload['effective_date'] = '2017-01-01'
         jsonString = json.dumps(payload)
         response = self.client.post(testUrl, content_type='application/json', data=jsonString)
@@ -106,9 +106,9 @@ class Test_Api_Custom(TestCase):
         createdId = data['id']
         return createdId
 
-    def createFuelSupplierActionType(self):
-        testUrl = "/api/fuelsupplieractionstypes"
-        payload = fakedata.FuelSupplierActionsTypeTestDataCreate()
+    def createOrganizationActionType(self):
+        testUrl = "/api/organization_actions_types"
+        payload = fakedata.OrganizationActionsTypeTestDataCreate()
         jsonString = json.dumps(payload)
         response = self.client.post(testUrl, content_type='application/json', data=jsonString)
         # Check that the response is OK.
@@ -119,23 +119,22 @@ class Test_Api_Custom(TestCase):
         createdId = data['id']
         return createdId
 
-    def createFuelSupplier(self):
-        statusId = self.createFuelSupplierStatus()
-        actionsTypeId = self.createFuelSupplierActionType()
+    def createOrganization(self):
+        statusId = self.createOrganizationStatus()
+        actionsTypeId = self.createOrganizationActionType()
 
-        testUrl = "/api/fuelsuppliers"
+        testUrl = "/api/organizations"
         # Create:
         payload = {
           'name': "Initial",
-          'status': "Initial",
           'createdDate': '2000-01-01',
         #   'primaryContact': contactId ,
         #   'contacts': [contactId],
           'notes': [],
           'attachments': [],
           'history': [],
-          'fuelSupplierStatusFK': statusId,
-          'fuelSupplierActionsTypeFK': actionsTypeId,
+          'status': statusId,
+          'actions_type': actionsTypeId,
         }
         jsonString = json.dumps(payload)
         response = self.client.post(testUrl, content_type='application/json', data=jsonString)
@@ -184,7 +183,7 @@ class Test_Api_Custom(TestCase):
         createdId = data['id']
         return createdId
 
-    def createUser(self, fuelsupplierId):
+    def createUser(self, organization_id):
         testUserUrl = "/api/users"
         # Create:
         fakeUser = fakedata.UserTestDataCreate()
@@ -193,10 +192,10 @@ class Test_Api_Custom(TestCase):
           'surname':fakeUser['surname'],
           'email':fakeUser['email'],
           'status':'Active',
-          'userFK':fakeUser['userId'],
+          'user':fakeUser['userId'],
           'guid':fakeUser['guid'],
           'authorizationDirectory':fakeUser['authorizationDirectory'],
-          'fuelSupplier': fuelsupplierId
+          'organization': organization_id
         }
         jsonString = json.dumps(payload)
         response = self.client.post(testUserUrl, content_type='application/json', data=jsonString)
@@ -237,15 +236,15 @@ class Test_Api_Custom(TestCase):
         createdId = data['id']
         return createdId
 
-    def createCreditTrade(self, fuelSupplierId, userId):
+    def createCreditTrade(self, organization_id, userId):
         typeId = self.createCreditTradeType()
         statusId = self.createCreditTradeStatus()
 
         testUrl = "/api/credittrades"
         payload = {
           'status':'Active',
-          'initiator':fuelSupplierId,
-          'respondent': fuelSupplierId,
+          'initiator':organization_id,
+          'respondent': organization_id,
           'initiatorLastUpdateBy': userId,
           'respondentLastUpdatedBy': None,
           'reviewedRejectedBy': None,
@@ -255,13 +254,12 @@ class Test_Api_Custom(TestCase):
         #   TODO: replace transactionType
           'transactionType':'Type',
           'fairMarketValuePrice': '100.00',
-          'fuelSupplierBalanceBeforeTransaction':'2017-01-01',
           'notes':[],
           'attachments':[],
           'history':[],
-          'creditTradeTypeFK': typeId,
-          'creditTradeStatusFK': statusId,
-          'respondentFK': fuelSupplierId,
+          'type': typeId,
+          'status': statusId,
+          'respondent': organization_id,
         }
         fakeCreditTrade = fakedata.CreditTradeTestDataCreate()
         payload.update(fakeCreditTrade)
@@ -289,8 +287,8 @@ class Test_Api_Custom(TestCase):
         # Check that the response is OK
         assert status.HTTP_204_NO_CONTENT == response.status_code
 
-    def deleteFuelSupplier(self, fuelsupplierId):
-        deleteUrl = "/api/fuelsuppliers/" + str(fuelsupplierId) + "/delete"
+    def deleteOrganization(self, organization_id):
+        deleteUrl = "/api/organizations/" + str(organization_id) + "/delete"
         response = self.client.post(deleteUrl)
         # Check that the response is OK.
         assert status.HTTP_204_NO_CONTENT == response.status_code
@@ -308,7 +306,7 @@ class Test_Api_Custom(TestCase):
         assert status.HTTP_204_NO_CONTENT == response.status_code
 
     def test_credittradesSearchGet(self):
-        fsId, _, _ = self.createFuelSupplier()
+        fsId, _, _ = self.createOrganization()
         userId = self.createUser(fsId)
         credId, credTypeId, _ = self.createCreditTrade(fsId, userId)
 
@@ -322,26 +320,26 @@ class Test_Api_Custom(TestCase):
 
         self.deleteCreditTrade(credId)
         self.deleteUser(userId)
-        self.deleteFuelSupplier(fsId)
+        self.deleteOrganization(fsId)
 
     def test_usersCurrentGet(self):
-        fuelSupplierId, statusId, actionId = self.createFuelSupplier()
-        userId = self.createUser(fuelSupplierId)
+        organization_id, statusId, actionId = self.createOrganization()
+        userId = self.createUser(organization_id)
 
         testUrl="/api/users/current"
         # List:
         response = self.client.get(testUrl)
         assert status.HTTP_200_OK == response.status_code
         self.deleteUser (userId)
-        self.deleteFuelSupplier(fuelSupplierId)
+        self.deleteOrganization(organization_id)
 
-    def test_fuelsuppliersIdAttachmentsGet(self):
-        fuelSupplierId, statusId, actionId = self.createFuelSupplier()
+    def test_organizationssIdAttachmentsGet(self):
+        organization_id, statusId, actionId = self.createOrganization()
 
-        uploadUrl = "/api/fuelsuppliers/"
-        uploadUrl += str(fuelSupplierId) + "/attachments"
-        payload = fakedata.FuelSupplierAttachmentTestDataCreate()
-        payload['fuelSupplierFK'] = fuelSupplierId
+        uploadUrl = "/api/organizations/"
+        uploadUrl += str(organization_id) + "/attachments"
+        payload = fakedata.OrganizationAttachmentTestDataCreate()
+        payload['organization'] = organization_id
         rawData = "TEST"
         jsonString = json.dumps(payload)
         fileData = SimpleUploadedFile("file.txt", rawData.encode('utf-8') )
@@ -357,7 +355,7 @@ class Test_Api_Custom(TestCase):
         data = json.loads(jsonString)
         createdId = data['id']
 
-        testUrl = "/api/fuelsupplierattachments"
+        testUrl = "/api/organization_attachments"
         # download the attachment.
         downloadUrl = testUrl + "/" + str(createdId)
         response = self.client.get(downloadUrl)
@@ -371,20 +369,20 @@ class Test_Api_Custom(TestCase):
         # assert rawData==parsed
 
         # Cleanup:
-        deleteUrl = "/api/fuelsupplierattachments/" + str(createdId) + "/delete"
+        deleteUrl = "/api/organization_attachments/" + str(createdId) + "/delete"
         response = self.client.post(deleteUrl)
         # Check that the response is OK.
         assert status.HTTP_204_NO_CONTENT == response.status_code
 
         # Cleanup
-        self.deleteFuelSupplier(fuelSupplierId)
+        self.deleteOrganization(organization_id)
 
-    def test_fuelsuppliersIdHistoryGet(self):
-        fuelSupplierId, statusId, actionId = self.createFuelSupplier()
+    def test_organizationsIdHistoryGet(self):
+        organization_id, statusId, actionId = self.createOrganization()
 
-        testUrl = "/api/fuelsuppliers/" + str(fuelSupplierId) + "/history"
-        payload = fakedata.FuelSupplierHistoryTestDataCreate()
-        payload['fuelSupplierFK'] = fuelSupplierId
+        testUrl = "/api/organizations/" + str(organization_id) + "/history"
+        payload = fakedata.OrganizationHistoryTestDataCreate()
+        payload['organization'] = organization_id
         jsonString = json.dumps(payload)
         response = self.client.post(testUrl, content_type='application/json', data=jsonString)
         # Check that the response is OK.
@@ -395,19 +393,19 @@ class Test_Api_Custom(TestCase):
         createdId = data['id']
 
         # Cleanup the History
-        deleteUrl = "/api/fuelsupplierhistories/" + str(createdId) + "/delete"
+        deleteUrl = "/api/organization_history/" + str(createdId) + "/delete"
         response = self.client.post(deleteUrl)
         # Check that the response is OK.
         assert status.HTTP_204_NO_CONTENT == response.status_code
 
         # Cleanup
-        self.deleteFuelSupplier(fuelSupplierId)
+        self.deleteOrganization(organization_id)
 
-    def test_fuelsuppliersSearchGet(self):
-        fuelSupplierId, statusId, actionId = self.createFuelSupplier()
+    def test_organizationsSearchGet(self):
+        organization_id, statusId, actionId = self.createOrganization()
 
         # do a search
-        testUrl = "/api/fuelsuppliers/search"
+        testUrl = "/api/organizations/search"
         response = self.client.get(testUrl)
         # Check that the response is OK.
         assert status.HTTP_200_OK == response.status_code
@@ -423,7 +421,7 @@ class Test_Api_Custom(TestCase):
 
         rolePermissionUrl = "/api/roles/" + str(roleId) + "/permissions"
         # create a new group membership.
-        payload = {'roleFK':roleId, 'permissionFK':permissionId}
+        payload = {'role':roleId, 'permission':permissionId}
         jsonString = json.dumps(payload)
         response = self.client.post(rolePermissionUrl,content_type='application/json', data=jsonString)
         assert status.HTTP_200_OK == response.status_code
@@ -448,8 +446,8 @@ class Test_Api_Custom(TestCase):
 
     def test_rolesIdUsersGet(self):
         roleId = self.createRole()
-        fuelSupplierId, statusId, actionId = self.createFuelSupplier()
-        userId = self.createUser(fuelSupplierId)
+        organization_id, statusId, actionId = self.createOrganization()
+        userId = self.createUser(organization_id)
 
         userRoleUrl = "/api/users/" + str(userId) + "/roles"
         # create a new UserRole.
@@ -485,15 +483,15 @@ class Test_Api_Custom(TestCase):
         # cleanup
         self.deleteRole(roleId)
         self.deleteUser(userId)
-        self.deleteFuelSupplier(fuelSupplierId)
+        self.deleteOrganization(organization_id)
     def test_usersIdPermissionsGet(self):
         # create a user.
-        fuelSupplierId, statusId, actionId = self.createFuelSupplier()
-        userId = self.createUser(fuelSupplierId)
+        organization_id, statusId, actionId = self.createOrganization()
+        userId = self.createUser(organization_id)
 
         # create a credit trade
 
-        notificationEventId = self.createUser(fuelSupplierId)
+        notificationEventId = self.createUser(organization_id)
 
         # assign permissions to the user.
         #TODO add that.
@@ -506,10 +504,10 @@ class Test_Api_Custom(TestCase):
 
         # cleanup
         self.deleteUser (userId)
-        self.deleteFuelSupplier(fuelSupplierId)
+        self.deleteOrganization(organization_id)
 
     def test_usersIdRolesGet(self):
-        fsId, _, _= self.createFuelSupplier()
+        fsId, _, _= self.createOrganization()
         userId = self.createUser(fsId)
         roleId = self.createRole()
 
@@ -537,16 +535,16 @@ class Test_Api_Custom(TestCase):
         jsonString = response.content.decode("utf-8")
         data = json.loads(jsonString)
 
-        assert data[0]['userFK'] == userId
-        assert data[0]['roleFK'] == roleId
+        assert data[0]['user'] == userId
+        assert data[0]['role'] == roleId
 
         self.deleteRole(roleId)
         self.deleteUser(userId)
-        self.deleteFuelSupplier(fsId)
+        self.deleteOrganization(fsId)
 
     def test_usersSearchGet(self):
-        fuelSupplierId, statusId, actionId = self.createFuelSupplier()
-        userId = self.createUser(fuelSupplierId)
+        organization_id, statusId, actionId = self.createOrganization()
+        userId = self.createUser(organization_id)
 
         # do a search
         testUrl = "/api/users/search"
@@ -558,22 +556,22 @@ class Test_Api_Custom(TestCase):
         data = json.loads(jsonString)
         # Cleanup
         self.deleteUser(userId)
-        self.deleteFuelSupplier(fuelSupplierId)
+        self.deleteOrganization(organization_id)
 
     def test_createCreditTradeNegativeNumberOfCredits(self):
-        fsId, _, _ = self.createFuelSupplier()
+        fsId, _, _ = self.createOrganization()
         userId = self.createUser(fsId)
         typeId = self.createCreditTradeType()
         statusId = self.createCreditTradeStatus()
 
         testUrl = "/api/credittrades"
         payload = {
-          'creditTradeStatusFK': statusId,
-          'creditTradeTypeFK': typeId,
+          'status': statusId,
+          'type': typeId,
           'fairMarketValuePrice': '100.00',
           'historySet':[],
           'initiator': fsId,
-          'respondentFK': fsId,
+          'respondent': fsId,
           'trade_effective_date': '2017-01-01',
         }
         fakeCreditTrade = fakedata.CreditTradeTestDataCreate()
@@ -585,7 +583,7 @@ class Test_Api_Custom(TestCase):
         assert status.HTTP_422_UNPROCESSABLE_ENTITY == response.status_code
 
         self.deleteUser(userId)
-        self.deleteFuelSupplier(fsId)
+        self.deleteOrganization(fsId)
 
 if __name__ == '__main__':
     unittest.main()
