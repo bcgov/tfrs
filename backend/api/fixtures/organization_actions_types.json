@@ -7,7 +7,7 @@
             "expiration_date": null,
             "theType": "Buy And Sell"
         },
-        "model": "api.fuelsupplieractionstype",
+        "model": "api.organizationactionstype",
         "pk": "1"
     },
     {
@@ -18,7 +18,7 @@
             "expiration_date": null,
             "theType": "Sell Only"
         },
-        "model": "api.fuelsupplieractionstype",
+        "model": "api.organizationactionstype",
         "pk": "2"
     },
     {
@@ -29,7 +29,7 @@
             "expiration_date": null,
             "theType": "None"
         },
-        "model": "api.fuelsupplieractionstype",
+        "model": "api.organizationactionstype",
         "pk": "3"
     }
 ]

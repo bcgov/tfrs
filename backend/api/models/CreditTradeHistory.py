@@ -25,31 +25,31 @@ from auditable.models import Auditable
 
 
 class CreditTradeHistory(Auditable):
-    creditTradeFK = models.ForeignKey(
+    credit_trade = models.ForeignKey(
         'CreditTrade',
-        related_name='CreditTradeHistorycreditTradeFK',
+        related_name='credit_trade_histories',
         null=True)
-    userFK = models.ForeignKey('User', related_name='CreditTradeHistoryuserFK')
+    user = models.ForeignKey('User', related_name='credit_trade_histories')
     creditTradeUpdateTime = models.DateTimeField()
-    newRespondentFK = models.ForeignKey(
-        'FuelSupplier',
-        related_name='CreditTradeHistorynewRespondentFK')
-    creditTradeStatusFK = models.ForeignKey(
+    respondent = models.ForeignKey(
+        'Organization',
+        related_name='credit_trade_histories')
+    status = models.ForeignKey(
         'CreditTradeStatus',
-        related_name='CreditTradeHistorycreditTradeStatusFK')
-    creditTradeTypeFK = models.ForeignKey(
+        related_name='credit_trade_histories')
+    type = models.ForeignKey(
         'CreditTradeType',
-        related_name='CreditTradeHistorycreditTradeTypeFK')
+        related_name='credit_trade_histories')
     newNumberOfCredits = models.IntegerField()
     newFairMarketValuePerCredit = models.DecimalField(
-        null=True, max_digits=999,
+        null=True, blank=True, max_digits=999,
         decimal_places=2,
         default=None)
-    newCreditTradeZeroReasonFK = models.ForeignKey(
+    zero_reason = models.ForeignKey(
         'CreditTradeZeroReason',
-        related_name='CreditTradeHistorynewCreditTradeZeroReasonFK',
+        related_name='credit_trade_histories',
         blank=True, null=True)
-    newTradeEffectiveDate = models.DateField(blank=True, null=True)
+    trade_effective_date = models.DateField(blank=True, null=True)
     newNote = models.CharField(max_length=4000, blank=True, null=True)
     isInternalHistoryRecord = models.BooleanField()
 

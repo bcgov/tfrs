@@ -18,10 +18,11 @@ STATUS_CANCELLED = 8
 
 
 class TestCreditTradeAPI(TestCase):
-    fixtures = ['credit_trade_statuses.json', 'credit_trade_types.json',
-                'fuel_supplier_actions_types.json',
-                'fuel_supplier_statuses.json',
-                'fuel_suppliers.json', 'fuel_supplier_balances.json',
+    fixtures = ['organization_types.json',
+                'organizations.json', 'organization_balances.json',
+                'credit_trade_statuses.json', 'credit_trade_types.json',
+                'organization_actions_types.json',
+                'organization_statuses.json',
                 'users.json']
 
     def setUp(self):
@@ -30,14 +31,14 @@ class TestCreditTradeAPI(TestCase):
         # self.ct_status_id = fake_api_calls?.create_credit_trade_status()
         self.ct_type_id = fake_api_calls.create_credit_trade_type()
         self.fs1_id, self.fs1_status_id, self.fs1_action_type_id = (
-            fake_api_calls.create_fuel_supplier())
+            fake_api_calls.create_organization())
         self.user_id = fake_api_calls.create_user(self.fs1_id)
 
         self.credit_trade = fake_api_calls.create_credit_trade(
-            initiatorFK=self.fs1_id,
-            respondentFK=self.fs1_id,
-            creditTradeTypeFK=self.ct_type_id,
-            creditTradeStatusFK=STATUS_DRAFT,
+            initiator=self.fs1_id,
+            respondent=self.fs1_id,
+            type=self.ct_type_id,
+            status=STATUS_DRAFT,
             user_id=self.user_id,
         )
         # self.credit_trade_id = fake_api_calls.create_credit_trade(
@@ -51,31 +52,31 @@ class TestCreditTradeAPI(TestCase):
         self.test_data_fail = [{
             'data': {'numberOfCredits': 1},
             'response': {
-                "creditTradeStatusFK": ["This field is required."],
-                "respondentFK": ["This field is required."],
-                "creditTradeTypeFK": ["This field is required."]
+                "status": ["This field is required."],
+                "respondent": ["This field is required."],
+                "type": ["This field is required."]
             }
         }, {
             'data': {'numberOfCredits': 1,
-                     'creditTradeStatusFK': STATUS_DRAFT},
+                     'status': STATUS_DRAFT},
             'response': {
-                "respondentFK": ["This field is required."],
-                "creditTradeTypeFK": ["This field is required."],
+                "respondent": ["This field is required."],
+                "type": ["This field is required."],
             }
         }, {
             'data': {'numberOfCredits': 1,
-                     'creditTradeStatusFK': STATUS_DRAFT,
-                     'respondentFK': self.fs1_id},
+                     'status': STATUS_DRAFT,
+                     'respondent': self.fs1_id},
             'response': {
-                "creditTradeTypeFK": ["This field is required."]
+                "type": ["This field is required."]
             }
         }]
 
         self.test_data_success = [{
             'data': {'numberOfCredits': 1,
-                     'creditTradeStatusFK': STATUS_DRAFT,
-                     'respondentFK': self.fs1_id,
-                     'creditTradeTypeFK': self.ct_type_id},
+                     'status': STATUS_DRAFT,
+                     'respondent': self.fs1_id,
+                     'type': self.ct_type_id},
         }]
 
     def test_create_fail(self):
@@ -130,9 +131,9 @@ class TestCreditTradeAPI(TestCase):
 
         data = {
             'numberOfCredits': num_of_credits,
-            'creditTradeStatusFK': credit_trade_status,
-            'respondentFK': self.fs1_id,
-            'creditTradeTypeFK': self.ct_type_id,
+            'status': credit_trade_status,
+            'respondent': self.fs1_id,
+            'type': self.ct_type_id,
             'fairMarketValuePerCredit': fair_market_value
         }
 
@@ -200,7 +201,7 @@ class TestCreditTradeAPI(TestCase):
         }
         self.assertTrue(
             set(credit_trade_status).issubset(
-                response_data['creditTradeStatusFK']))
+                response_data['status']))
 
     def test_nested_credit_trade_history(self):
         response = self.client.get(
@@ -214,7 +215,7 @@ class TestCreditTradeAPI(TestCase):
         }
         self.assertTrue(
             set(credit_trade_status).issubset(
-                response_data['creditTradeStatusFK']))
+                response_data['status']))
 
     # def test_approved_buy(self, **kwargs):
     #     # get fuel supplier balance for fs 1
@@ -231,10 +232,10 @@ class TestCreditTradeAPI(TestCase):
     #
     #     credit_trade = fake_api_calls.create_credit_trade(
     #         user_id=self.user_id,
-    #         creditTradeStatusFK=STATUS_PROPOSED,
+    #         status=STATUS_PROPOSED,
     #         fairMarketValuePerCredit=1000,
-    #         initiatorFK=1,
-    #         respondentFK=2,
+    #         initiator=1,
+    #         respondent=2,
     #         numberOfCredits=num_of_credits
     #     )
     #
@@ -274,7 +275,7 @@ class TestCreditTradeAPI(TestCase):
     #     today = datetime.datetime.today().strftime('%Y-%m-%d')
     #
     #     # Status of Credit Trade should be 'completed'
-    #     self.assertEqual(completed_response['creditTradeStatusFK']['id'],
+    #     self.assertEqual(completed_response['status']['id'],
     #                      STATUS_COMPLETED)
     #
     #     # Effective date should be today
@@ -338,7 +339,7 @@ class TestCreditTradeAPI(TestCase):
 
         # fuel supplier receives credits
         # fuel supplier loses credits
-        # FuelSupplierBalance record created, effective data = transaction create time
+        # OrganizationBalance record created, effective data = transaction create time
         #   end data is None
 
 

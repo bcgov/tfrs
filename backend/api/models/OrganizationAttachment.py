@@ -20,16 +20,17 @@
 """
 
 from django.db import models
-
 from auditable.models import Auditable
 
 
-class FuelSupplierStatus(Auditable):
-    status = models.CharField(max_length=25)
-    description = models.CharField(max_length=1000, blank=True, null=True)
-    effective_date = models.DateField()
-    expiration_date = models.DateField(blank=True, null=True)
-    displayOrder = models.IntegerField()
+class OrganizationAttachment(Auditable):
+    organization = models.ForeignKey(
+        'Organization',
+        related_name='attachments')
+    fileName = models.CharField(max_length=250, blank=True, null=True)
+    fileLocation = models.CharField(max_length=2000, blank=True, null=True)
+    description = models.CharField(max_length=4000, blank=True, null=True)
+    complianceYear = models.CharField(max_length=25, blank=True, null=True)
 
     class Meta:
-        db_table = 'fuel_supplier_status'
+        db_table = 'organization_attachment'

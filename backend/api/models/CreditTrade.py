@@ -20,58 +20,58 @@
 """
 
 from django.db import models
-from .FuelSupplier import FuelSupplier
+from .Organization import Organization
 
 from auditable.models import Auditable
 from api import validators
 
 
 class CreditTrade(Auditable):
-    creditTradeStatusFK = models.ForeignKey(
+    status = models.ForeignKey(
         'CreditTradeStatus',
-        related_name='CreditTradecreditTradeStatusFK')
-    initiatorFK = models.ForeignKey(
-        'FuelSupplier',
-        related_name='CreditTradeinitiatorFK',
+        related_name='credit_trades')
+    initiator = models.ForeignKey(
+        'Organization',
+        related_name='initiator_credit_trades',
         blank=True, null=True)
-    respondentFK = models.ForeignKey(
-        'FuelSupplier',
-        related_name='CreditTraderespondentFK')
-    creditTradeTypeFK = models.ForeignKey(
+    respondent = models.ForeignKey(
+        'Organization',
+        related_name='respondent_credit_trades')
+    type = models.ForeignKey(
         'CreditTradeType',
-        related_name='CreditTradecreditTradeTypeFK')
+        related_name='credit_trades')
     numberOfCredits = models.IntegerField(
         validators=[validators.CreditTradeNumberOfCreditsValidator])
     fairMarketValuePerCredit = models.DecimalField(
-        null=True, max_digits=999,
+        null=True, blank=True, max_digits=999,
         decimal_places=2,
         default=None)
-    creditTradeZeroReasonFK = models.ForeignKey(
+    zero_reason = models.ForeignKey(
         'CreditTradeZeroReason',
-        related_name='CreditTradecreditTradeZeroReasonFK',
+        related_name='credit_trades',
         blank=True, null=True)
     trade_effective_date = models.DateField(blank=True, null=True)
     note = models.CharField(max_length=4000, blank=True, null=True)
 
     @property
     def credits_from(self):
-        if self.creditTradeTypeFK.id == 1:
-            return self.initiatorFK
-        elif self.creditTradeTypeFK.id in [2, 4]:
-            return self.respondentFK
-        elif self.creditTradeTypeFK.id in [3, 5]:
+        if self.type.id == 1:
+            return self.initiator
+        elif self.type.id in [2, 4]:
+            return self.respondent
+        elif self.type.id in [3, 5]:
             # TODO: Fuel supplier is Government, which is not a fuel supplier
-            return FuelSupplier(id=0, name="Government of British Columbia")
+            return Organization(id=0, name="Government of British Columbia")
 
     @property
     def credits_to(self):
-        if self.creditTradeTypeFK.id == 2:
-            return self.initiatorFK
-        elif self.creditTradeTypeFK.id in [1, 3, 5]:
-            return self.respondentFK
-        elif self.creditTradeTypeFK.id == 4:
+        if self.type.id == 2:
+            return self.initiator
+        elif self.type.id in [1, 3, 5]:
+            return self.respondent
+        elif self.type.id == 4:
             # TODO: Fuel supplier is Government, which is not a fuel supplier
-            return FuelSupplier(id=0, name="Government of British Columbia")
+            return Organization(id=0, name="Government of British Columbia")
 
     class Meta:
         db_table = 'credit_trade'

@@ -24,17 +24,11 @@ from django.db import models
 from auditable.models import Auditable
 
 
-class FuelSupplierBalance(Auditable):
-    fuelSupplierFK = models.ForeignKey(
-        'FuelSupplier',
-        related_name='FuelSupplierBalancefuelSupplierFK')
-    validatedCredits = models.IntegerField()
-    effective_date = models.DateField()
-    expiration_date = models.DateField(blank=True, null=True)
-    creditTradeFK = models.ForeignKey(
-        'CreditTrade',
-        related_name='FuelSupplierBalancecreditTradeFK',
-        blank=True, null=True)
+class OrganizationHistory(Auditable):
+    organization = models.ForeignKey(
+        'Organization',
+        related_name='history')
+    historyText = models.CharField(max_length=1000)
 
     class Meta:
-        db_table = 'fuel_supplier_balance'
+        db_table = 'organization_history'

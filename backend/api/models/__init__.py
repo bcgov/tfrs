@@ -53,29 +53,29 @@
 #except:
 #     import CurrentUserViewModel
 #try:
-#     from . import FuelSupplier  
+#     from . import Organization  
 #except:
-#     import FuelSupplier
+#     import Organization
 #try:
-#     from . import FuelSupplierActionsType  
+#     from . import OrganizationActionsType  
 #except:
-#     import FuelSupplierActionsType
+#     import OrganizationActionsType
 #try:
-#     from . import FuelSupplierAttachment  
+#     from . import OrganizationAttachment  
 #except:
-#     import FuelSupplierAttachment
+#     import OrganizationAttachment
 #try:
-#     from . import FuelSupplierBalance  
+#     from . import OrganizationBalance  
 #except:
-#     import FuelSupplierBalance
+#     import OrganizationBalance
 #try:
-#     from . import FuelSupplierHistory  
+#     from . import OrganizationHistory  
 #except:
-#     import FuelSupplierHistory
+#     import OrganizationHistory
 #try:
-#     from . import FuelSupplierStatus  
+#     from . import OrganizationStatus  
 #except:
-#     import FuelSupplierStatus
+#     import OrganizationStatus
 #try:
 #     from . import Permission  
 #except:
@@ -108,14 +108,6 @@
 #     from . import UserDetailsViewModel  
 #except:
 #     import UserDetailsViewModel
-#try:
-#     from . import UserFavourite  
-#except:
-#     import UserFavourite
-#try:
-#     from . import UserFavouriteViewModel  
-#except:
-#     import UserFavouriteViewModel
 #try:
 #     from . import UserRole  
 #except:

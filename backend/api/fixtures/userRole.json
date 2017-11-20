@@ -3,8 +3,8 @@
         "fields": {
             "effective_date": "2017-01-01",
             "expiration_date": null,
-            "roleFK": false,
-            "userFK": "1"
+            "role": false,
+            "user": "1"
         },
         "model": "api.userRole",
         "pk": "1"
@@ -13,8 +13,8 @@
         "fields": {
             "effective_date": "2017-01-01",
             "expiration_date": null,
-            "roleFK": false,
-            "userFK": "2"
+            "role": false,
+            "user": "2"
         },
         "model": "api.userRole",
         "pk": "2"
@@ -23,8 +23,8 @@
         "fields": {
             "effective_date": "2017-01-01",
             "expiration_date": null,
-            "roleFK": false,
-            "userFK": "3"
+            "role": false,
+            "user": "3"
         },
         "model": "api.userRole",
         "pk": "3"
@@ -33,8 +33,8 @@
         "fields": {
             "effective_date": "2017-01-01",
             "expiration_date": null,
-            "roleFK": false,
-            "userFK": "4"
+            "role": false,
+            "user": "4"
         },
         "model": "api.userRole",
         "pk": "4"
@@ -43,8 +43,8 @@
         "fields": {
             "effective_date": "2017-01-01",
             "expiration_date": null,
-            "roleFK": false,
-            "userFK": "5"
+            "role": false,
+            "user": "5"
         },
         "model": "api.userRole",
         "pk": "5"
@@ -53,8 +53,8 @@
         "fields": {
             "effective_date": "2017-01-01",
             "expiration_date": null,
-            "roleFK": false,
-            "userFK": "6"
+            "role": false,
+            "user": "6"
         },
         "model": "api.userRole",
         "pk": "6"
@@ -63,8 +63,8 @@
         "fields": {
             "effective_date": "2017-01-01",
             "expiration_date": null,
-            "roleFK": false,
-            "userFK": "7"
+            "role": false,
+            "user": "7"
         },
         "model": "api.userRole",
         "pk": "7"
@@ -73,8 +73,8 @@
         "fields": {
             "effective_date": "2017-01-01",
             "expiration_date": null,
-            "roleFK": false,
-            "userFK": "8"
+            "role": false,
+            "user": "8"
         },
         "model": "api.userRole",
         "pk": "8"
@@ -83,8 +83,8 @@
         "fields": {
             "effective_date": "2017-01-01",
             "expiration_date": null,
-            "roleFK": false,
-            "userFK": "9"
+            "role": false,
+            "user": "9"
         },
         "model": "api.userRole",
         "pk": "9"
@@ -93,8 +93,8 @@
         "fields": {
             "effective_date": "2017-01-01",
             "expiration_date": null,
-            "roleFK": false,
-            "userFK": "10"
+            "role": false,
+            "user": "10"
         },
         "model": "api.userRole",
         "pk": "10"
@@ -103,8 +103,8 @@
         "fields": {
             "effective_date": "2017-01-01",
             "expiration_date": null,
-            "roleFK": false,
-            "userFK": "11"
+            "role": false,
+            "user": "11"
         },
         "model": "api.userRole",
         "pk": "11"
@@ -113,8 +113,8 @@
         "fields": {
             "effective_date": "2017-01-01",
             "expiration_date": null,
-            "roleFK": false,
-            "userFK": "12"
+            "role": false,
+            "user": "12"
         },
         "model": "api.userRole",
         "pk": "12"
@@ -123,8 +123,8 @@
         "fields": {
             "effective_date": "2017-01-01",
             "expiration_date": null,
-            "roleFK": false,
-            "userFK": "13"
+            "role": false,
+            "user": "13"
         },
         "model": "api.userRole",
         "pk": "13"
@@ -133,8 +133,8 @@
         "fields": {
             "effective_date": "2017-01-01",
             "expiration_date": null,
-            "roleFK": false,
-            "userFK": "14"
+            "role": false,
+            "user": "14"
         },
         "model": "api.userRole",
         "pk": "14"
@@ -143,8 +143,8 @@
         "fields": {
             "effective_date": "2017-01-01",
             "expiration_date": null,
-            "roleFK": false,
-            "userFK": "15"
+            "role": false,
+            "user": "15"
         },
         "model": "api.userRole",
         "pk": "15"
@@ -153,8 +153,8 @@
         "fields": {
             "effective_date": "2017-01-01",
             "expiration_date": null,
-            "roleFK": false,
-            "userFK": "16"
+            "role": false,
+            "user": "16"
         },
         "model": "api.userRole",
         "pk": "16"
@@ -163,8 +163,8 @@
         "fields": {
             "effective_date": "2017-01-01",
             "expiration_date": null,
-            "roleFK": false,
-            "userFK": "17"
+            "role": false,
+            "user": "17"
         },
         "model": "api.userRole",
         "pk": "17"
@@ -173,8 +173,8 @@
         "fields": {
             "effective_date": "2017-01-01",
             "expiration_date": null,
-            "roleFK": false,
-            "userFK": "18"
+            "role": false,
+            "user": "18"
         },
         "model": "api.userRole",
         "pk": "18"
@@ -183,8 +183,8 @@
         "fields": {
             "effective_date": "2017-01-01",
             "expiration_date": null,
-            "roleFK": false,
-            "userFK": "19"
+            "role": false,
+            "user": "19"
         },
         "model": "api.userRole",
         "pk": "19"
@@ -193,8 +193,8 @@
         "fields": {
             "effective_date": "2017-01-01",
             "expiration_date": null,
-            "roleFK": false,
-            "userFK": "20"
+            "role": false,
+            "user": "20"
         },
         "model": "api.userRole",
         "pk": "20"
@@ -203,8 +203,8 @@
         "fields": {
             "effective_date": "2017-01-01",
             "expiration_date": null,
-            "roleFK": false,
-            "userFK": "21"
+            "role": false,
+            "user": "21"
         },
         "model": "api.userRole",
         "pk": "21"
@@ -213,8 +213,8 @@
         "fields": {
             "effective_date": "2017-01-01",
             "expiration_date": null,
-            "roleFK": false,
-            "userFK": "22"
+            "role": false,
+            "user": "22"
         },
         "model": "api.userRole",
         "pk": "22"
@@ -223,8 +223,8 @@
         "fields": {
             "effective_date": "2017-01-01",
             "expiration_date": null,
-            "roleFK": false,
-            "userFK": "23"
+            "role": false,
+            "user": "23"
         },
         "model": "api.userRole",
         "pk": "23"
@@ -233,8 +233,8 @@
         "fields": {
             "effective_date": "2017-01-01",
             "expiration_date": null,
-            "roleFK": false,
-            "userFK": "24"
+            "role": false,
+            "user": "24"
         },
         "model": "api.userRole",
         "pk": "24"
@@ -243,8 +243,8 @@
         "fields": {
             "effective_date": "2017-01-01",
             "expiration_date": null,
-            "roleFK": false,
-            "userFK": "25"
+            "role": false,
+            "user": "25"
         },
         "model": "api.userRole",
         "pk": "25"
@@ -253,8 +253,8 @@
         "fields": {
             "effective_date": "2017-01-01",
             "expiration_date": null,
-            "roleFK": false,
-            "userFK": "26"
+            "role": false,
+            "user": "26"
         },
         "model": "api.userRole",
         "pk": "26"
@@ -263,8 +263,8 @@
         "fields": {
             "effective_date": "2017-01-01",
             "expiration_date": null,
-            "roleFK": false,
-            "userFK": "27"
+            "role": false,
+            "user": "27"
         },
         "model": "api.userRole",
         "pk": "27"
@@ -273,8 +273,8 @@
         "fields": {
             "effective_date": "2017-01-01",
             "expiration_date": null,
-            "roleFK": false,
-            "userFK": "28"
+            "role": false,
+            "user": "28"
         },
         "model": "api.userRole",
         "pk": "28"
@@ -283,8 +283,8 @@
         "fields": {
             "effective_date": "2017-01-01",
             "expiration_date": null,
-            "roleFK": false,
-            "userFK": "29"
+            "role": false,
+            "user": "29"
         },
         "model": "api.userRole",
         "pk": "29"
@@ -293,8 +293,8 @@
         "fields": {
             "effective_date": "2017-01-01",
             "expiration_date": null,
-            "roleFK": false,
-            "userFK": "30"
+            "role": false,
+            "user": "30"
         },
         "model": "api.userRole",
         "pk": "30"
@@ -303,8 +303,8 @@
         "fields": {
             "effective_date": "2017-01-01",
             "expiration_date": null,
-            "roleFK": false,
-            "userFK": "31"
+            "role": false,
+            "user": "31"
         },
         "model": "api.userRole",
         "pk": "31"
@@ -313,8 +313,8 @@
         "fields": {
             "effective_date": "2017-01-01",
             "expiration_date": null,
-            "roleFK": false,
-            "userFK": "32"
+            "role": false,
+            "user": "32"
         },
         "model": "api.userRole",
         "pk": "32"
@@ -323,8 +323,8 @@
         "fields": {
             "effective_date": "2017-01-01",
             "expiration_date": null,
-            "roleFK": false,
-            "userFK": "33"
+            "role": false,
+            "user": "33"
         },
         "model": "api.userRole",
         "pk": "33"
@@ -333,8 +333,8 @@
         "fields": {
             "effective_date": "2017-01-01",
             "expiration_date": null,
-            "roleFK": false,
-            "userFK": "34"
+            "role": false,
+            "user": "34"
         },
         "model": "api.userRole",
         "pk": "34"
@@ -343,8 +343,8 @@
         "fields": {
             "effective_date": "2017-01-01",
             "expiration_date": null,
-            "roleFK": true,
-            "userFK": "35"
+            "role": true,
+            "user": "35"
         },
         "model": "api.userRole",
         "pk": "35"
@@ -353,8 +353,8 @@
         "fields": {
             "effective_date": "2017-01-01",
             "expiration_date": null,
-            "roleFK": true,
-            "userFK": "36"
+            "role": true,
+            "user": "36"
         },
         "model": "api.userRole",
         "pk": "36"
@@ -363,8 +363,8 @@
         "fields": {
             "effective_date": "2017-01-01",
             "expiration_date": null,
-            "roleFK": true,
-            "userFK": "37"
+            "role": true,
+            "user": "37"
         },
         "model": "api.userRole",
         "pk": "37"
@@ -373,8 +373,8 @@
         "fields": {
             "effective_date": "2017-01-01",
             "expiration_date": null,
-            "roleFK": true,
-            "userFK": "38"
+            "role": true,
+            "user": "38"
         },
         "model": "api.userRole",
         "pk": "38"
@@ -383,8 +383,8 @@
         "fields": {
             "effective_date": "2017-01-01",
             "expiration_date": null,
-            "roleFK": true,
-            "userFK": "39"
+            "role": true,
+            "user": "39"
         },
         "model": "api.userRole",
         "pk": "39"

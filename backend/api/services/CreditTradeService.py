@@ -1,5 +1,5 @@
 from api.models.CreditTradeHistory import CreditTradeHistory
-from api.models.FuelSupplierBalance import FuelSupplierBalance
+from api.models.OrganizationBalance import OrganizationBalance
 
 from api.exceptions import PositiveIntegerException
 from django.core.exceptions import ValidationError
@@ -12,12 +12,12 @@ class CreditTradeService(object):
         """
         Create the CreditTradeHistory
         """
-        new_status = credit_trade.creditTradeStatusFK
+        new_status = credit_trade.status
 
         try:
             previous_history = CreditTradeHistory.objects \
-                .select_related('creditTradeStatusFK') \
-                .filter(creditTradeFK=credit_trade.id) \
+                .select_related('status') \
+                .filter(credit_trade=credit_trade.id) \
                 .latest('create_timestamp')
         except CreditTradeHistory.DoesNotExist:
             previous_history = None
@@ -31,7 +31,7 @@ class CreditTradeService(object):
         if (new_status.status == 'Draft' or
                 (not is_new and
                  new_status.status == 'Cancelled' and
-                 previous_history.creditTradeStatusFK.status == 'Draft')):
+                 previous_history.status.status == 'Draft')):
             is_internal_history_record = True
 
         credit_trade_update_time = (
@@ -45,20 +45,20 @@ class CreditTradeService(object):
             else credit_trade.update_user)
 
         history = CreditTradeHistory(
-            creditTradeFK_id=credit_trade.id,
-            newRespondentFK_id=credit_trade.respondentFK.id,
-            creditTradeStatusFK_id=credit_trade.creditTradeStatusFK.id,
-            creditTradeTypeFK_id=credit_trade.creditTradeTypeFK.id,
+            credit_trade_id=credit_trade.id,
+            respondent_id=credit_trade.respondent.id,
+            status_id=credit_trade.status.id,
+            type_id=credit_trade.type.id,
             newNumberOfCredits=credit_trade.numberOfCredits,
             newFairMarketValuePerCredit=credit_trade.fairMarketValuePerCredit,
-            newCreditTradeZeroReasonFK_id=credit_trade.creditTradeZeroReasonFK,
-            newTradeEffectiveDate=credit_trade.trade_effective_date,
+            zero_reason_id=credit_trade.zero_reason,
+            trade_effective_date=credit_trade.trade_effective_date,
             newNote=credit_trade.note,
             isInternalHistoryRecord=is_internal_history_record,
             creditTradeUpdateTime=credit_trade_update_time,
             create_user=user,
             update_user=user,
-            userFK=user
+            user=user
         )
 
         # Validate
@@ -67,16 +67,15 @@ class CreditTradeService(object):
         except ValidationError as e:
             # TODO: Do something based on the errors contained in e.message_dict
             # Display them to a user, or handle them programmatically.
-            print("Throw error", e.message_dict)
-            pass
+            raise ValidationError(e)
 
         history.save()
 
     @staticmethod
     def gov_transfer_credits(_to, credit_trade_id, num_of_credits,
                              effective_date, action='increase'):
-        to_starting_bal = FuelSupplierBalance.objects.get(
-            fuelSupplierFK_id=_to.id,
+        to_starting_bal = OrganizationBalance.objects.get(
+            organization_id=_to.id,
             expiration_date=None)
 
         if 'increase' == action:
@@ -90,11 +89,11 @@ class CreditTradeService(object):
 
         to_starting_bal.expiration_date = effective_date
 
-        to_new_bal = FuelSupplierBalance(
-            fuelSupplierFK=_to,
+        to_new_bal = OrganizationBalance(
+            organization=_to,
             validatedCredits=to_credits,
             effective_date=effective_date,
-            creditTradeFK_id=credit_trade_id
+            credit_trade_id=credit_trade_id
         )
 
         # Save everything
@@ -104,11 +103,11 @@ class CreditTradeService(object):
     @staticmethod
     def transfer_credits(_from, _to, credit_trade_id, num_of_credits,
                          effective_date):
-        from_starting_bal = FuelSupplierBalance.objects.get(
-            fuelSupplierFK_id=_from.id)
+        from_starting_bal = OrganizationBalance.objects.get(
+            organization_id=_from.id)
 
-        to_starting_bal = FuelSupplierBalance.objects.get(
-            fuelSupplierFK_id=_to.id,
+        to_starting_bal = OrganizationBalance.objects.get(
+            organization_id=_to.id,
             expiration_date=None)
 
         # Compute for end balance
@@ -124,18 +123,18 @@ class CreditTradeService(object):
         to_starting_bal.expiration_date = effective_date
 
         # Create new fuel supplier balance
-        from_new_bal = FuelSupplierBalance(
-            fuelSupplierFK=_from,
+        from_new_bal = OrganizationBalance(
+            organization=_from,
             validatedCredits=from_credits,
             effective_date=effective_date,
-            creditTradeFK_id=credit_trade_id
+            credit_trade_id=credit_trade_id
         )
 
-        to_new_bal = FuelSupplierBalance(
-            fuelSupplierFK=_to,
+        to_new_bal = OrganizationBalance(
+            organization=_to,
             validatedCredits=to_credits,
             effective_date=effective_date,
-            creditTradeFK_id=credit_trade_id
+            credit_trade_id=credit_trade_id
         )
 
         # Save everything

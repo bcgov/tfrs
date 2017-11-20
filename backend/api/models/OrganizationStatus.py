@@ -24,12 +24,12 @@ from django.db import models
 from auditable.models import Auditable
 
 
-class UserFavourite(Auditable):
-    context = models.CharField(max_length=200, blank=True, null=True)
-    name = models.CharField(max_length=200, blank=True, null=True)
-    value = models.CharField(max_length=8000, blank=True, null=True)
-    isDefault = models.BooleanField()
-    userFK = models.ForeignKey('User', related_name='UserFavouriteuserFK')
+class OrganizationStatus(Auditable):
+    status = models.CharField(max_length=25)
+    description = models.CharField(max_length=1000, blank=True, null=True)
+    effective_date = models.DateField(blank=True, null=True)
+    expiration_date = models.DateField(blank=True, null=True)
+    displayOrder = models.IntegerField()
 
     class Meta:
-        db_table = 'user_favourite'
+        db_table = 'organization_status'
