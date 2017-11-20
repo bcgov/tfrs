@@ -66,7 +66,7 @@ http {
         add_header X-Frame-Options DENY;
 
         # proxy requests to API
-        location /api/ {
+        location /api {
             proxy_pass %API_URL%;
         }
 
