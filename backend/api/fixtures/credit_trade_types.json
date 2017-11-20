@@ -2,11 +2,11 @@
     {
         "fields": {
             "description": "The selling of Low Carbon Fuel Credits by the Initiator of the Trade or Opportunity.",
-            "displayOrder": "1",
+            "display_order": "1",
             "effective_date": "2017-01-01",
             "expiration_date": "2117-01-01",
-            "isGovOnlyType": false,
-            "theType": "Buy"
+            "is_gov_only_type": false,
+            "the_type": "Buy"
         },
         "model": "api.credittradetype",
         "pk": "1"
@@ -14,11 +14,11 @@
     {
         "fields": {
             "description": "The buying of Low Carbon Fuel Credits by the Initiator of the Trade or Opportunity.",
-            "displayOrder": "2",
+            "display_order": "2",
             "effective_date": "2017-01-01",
             "expiration_date": "2117-01-01",
-            "isGovOnlyType": false,
-            "theType": "Sell"
+            "is_gov_only_type": false,
+            "the_type": "Sell"
         },
         "model": "api.credittradetype",
         "pk": "2"
@@ -26,11 +26,11 @@
     {
         "fields": {
             "description": "An adjustment of the number of Fuel Credits owned by a Fuel Supplier initiated by the BC Government.",
-            "displayOrder": "3",
+            "display_order": "3",
             "effective_date": "2017-01-01",
             "expiration_date": "2117-01-01",
-            "isGovOnlyType": true,
-            "theType": "Credit Validation"
+            "is_gov_only_type": true,
+            "the_type": "Credit Validation"
         },
         "model": "api.credittradetype",
         "pk": "3"
@@ -38,11 +38,11 @@
     {
         "fields": {
             "description": "The retirement of Fuel Credits owned by a Fuel Supplier by the BC Government.",
-            "displayOrder": "4",
+            "display_order": "4",
             "effective_date": "2017-01-01",
             "expiration_date": "2117-01-01",
-            "isGovOnlyType": true,
-            "theType": "Credit Retirement"
+            "is_gov_only_type": true,
+            "the_type": "Credit Retirement"
         },
         "model": "api.credittradetype",
         "pk": "4"
@@ -50,11 +50,11 @@
     {
         "fields": {
             "description": "The awarding of Low Carbon Fuel Credits to a Fuel Supplier following the completion of a Part 3 Agreement milestone.",
-            "displayOrder": "5",
+            "display_order": "5",
             "effective_date": "2017-01-01",
             "expiration_date": "2117-01-01",
-            "isGovOnlyType": true,
-            "theType": "Part 3 Award"
+            "is_gov_only_type": true,
+            "the_type": "Part 3 Award"
         },
         "model": "api.credittradetype",
         "pk": "5"

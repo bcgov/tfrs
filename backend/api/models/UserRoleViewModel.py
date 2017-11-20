@@ -25,8 +25,8 @@ from django.db import models
 class UserRoleViewModel(models.Model):
     effective_date = models.DateField(blank=True, null=True)
     expiration_date = models.DateField(blank=True, null=True)
-    roleId = models.IntegerField()
-    userId = models.IntegerField()
+    role_id = models.IntegerField()
+    authorization_id = models.IntegerField()
 
     class Meta:
         abstract = True

@@ -23,13 +23,13 @@ from django.db import models
 
 
 class UserViewModel(models.Model):
-    givenName = models.CharField(max_length=255, blank=True, null=True)
+    given_name = models.CharField(max_length=255, blank=True, null=True)
     surname = models.CharField(max_length=255, blank=True, null=True)
     email = models.CharField(max_length=255, blank=True, null=True)
     active = models.BooleanField()
-    smUserId = models.CharField(max_length=255, blank=True, null=True)
-    userRoles = models.ManyToManyField('UserRole',
-                                       related_name='UserViewModeluserRoles',
+    sm_authorization_id = models.CharField(max_length=255, blank=True, null=True)
+    user_roles = models.ManyToManyField('UserRole',
+                                       related_name='UserViewModeluser_roles',
                                        blank=True)
 
     class Meta:

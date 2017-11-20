@@ -25,12 +25,12 @@ from auditable.models import Auditable
 
 
 class CreditTradeType(Auditable):
-    theType = models.CharField(max_length=25, blank=True, null=True)
+    the_type = models.CharField(max_length=25, blank=True, null=True)
     description = models.CharField(max_length=1000, blank=True, null=True)
     effective_date = models.DateField(blank=True, null=True)
     expiration_date = models.DateField(blank=True, null=True)
-    displayOrder = models.IntegerField()
-    isGovOnlyType = models.BooleanField()
+    display_order = models.IntegerField()
+    is_gov_only_type = models.BooleanField()
 
     class Meta:
         db_table = 'credit_trade_type'

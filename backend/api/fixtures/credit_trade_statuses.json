@@ -2,7 +2,7 @@
     {
         "fields": {
             "description": "The Credit Trade has been created but is only visible to the initiating organization.",
-            "displayOrder": "1",
+            "display_order": "1",
             "effective_date": "2017-01-01",
             "expiration_date": null,
             "status": "Draft"
@@ -13,7 +13,7 @@
     {
         "fields": {
             "description": "The Credit Trade has been created and is visible to both the initiating and responding Fuel Suppliers, and is waiting on the response from the Respondent.",
-            "displayOrder": "2",
+            "display_order": "2",
             "effective_date": "2017-01-01",
             "expiration_date": null,
             "status": "Proposed"
@@ -24,7 +24,7 @@
     {
         "fields": {
             "description": "The Credit Trade has been accepted by the Respondent and is waiting on approval by the Director.",
-            "displayOrder": "3",
+            "display_order": "3",
             "effective_date": "2017-01-01",
             "expiration_date": null,
             "status": "Accepted"
@@ -35,7 +35,7 @@
     {
         "fields": {
             "description": "The Credit Trade has been has been reviewed by a Government Analyst and is Recommended for Approval  by the Director.",
-            "displayOrder": "4",
+            "display_order": "4",
             "effective_date": "2017-01-01",
             "expiration_date": null,
             "status": "Recommended"
@@ -46,7 +46,7 @@
     {
         "fields": {
             "description": "The Credit Trade has been has been reviewed by a Government Analyst and is Not Recommended for Approval by the Director.",
-            "displayOrder": "4",
+            "display_order": "4",
             "effective_date": "2017-01-01",
             "expiration_date": null,
             "status": "Not Recommended"
@@ -57,7 +57,7 @@
     {
         "fields": {
             "description": "The Credit Trade has been has been approved by the Director and will be Completed as soon as the Effective Date of the Credit Trade has been reached.",
-            "displayOrder": "5",
+            "display_order": "5",
             "effective_date": "2017-01-01",
             "expiration_date": null,
             "status": "Approved"
@@ -68,7 +68,7 @@
     {
         "fields": {
             "description": "The Credit Trade has been Completed and the Credit Balance(s) of the Fuel Supplier(s) has been updated.",
-            "displayOrder": "6",
+            "display_order": "6",
             "effective_date": "2017-01-01",
             "expiration_date": null,
             "status": "Completed"
@@ -79,7 +79,7 @@
     {
         "fields": {
             "description": "The Credit Trade has been cancelled by one of the participants in the Credit Trade.",
-            "displayOrder": "7",
+            "display_order": "7",
             "effective_date": "2017-01-01",
             "expiration_date": null,
             "status": "Cancelled"
@@ -90,7 +90,7 @@
     {
         "fields": {
             "description": "The Credit Trade has been rejected by the Director.",
-            "displayOrder": "8",
+            "display_order": "8",
             "effective_date": "2017-01-01",
             "expiration_date": null,
             "status": "Rejected"

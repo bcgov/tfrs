@@ -28,7 +28,7 @@ class OrganizationHistory(Auditable):
     organization = models.ForeignKey(
         'Organization',
         related_name='history')
-    historyText = models.CharField(max_length=1000)
+    history_text = models.CharField(max_length=1000)
 
     class Meta:
         db_table = 'organization_history'

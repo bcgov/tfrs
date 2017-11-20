@@ -28,7 +28,7 @@ class OrganizationBalance(Auditable):
     organization = models.ForeignKey(
         'Organization',
         related_name='balances')
-    validatedCredits = models.IntegerField()
+    validated_credits = models.IntegerField()
     effective_date = models.DateField(blank=True, null=True)
     expiration_date = models.DateField(blank=True, null=True)
     credit_trade = models.ForeignKey(

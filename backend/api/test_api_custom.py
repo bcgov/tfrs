@@ -25,59 +25,9 @@ from django.test import Client
 from django.core.files.uploadedfile import SimpleUploadedFile
 import django
 
-from rest_framework.test import APIRequestFactory
-from rest_framework.parsers import JSONParser
 from rest_framework import status
 
 from . import fakedata
-from .models.Audit import Audit
-from .serializers import AuditSerializer
-from .models.CreditTrade import CreditTrade
-from .serializers import CreditTradeSerializer
-from .models.CreditTradeHistory import CreditTradeHistory
-from .serializers import CreditTradeHistorySerializer
-from .models.CreditTradeStatus import CreditTradeStatus
-from .serializers import CreditTradeStatusSerializer
-from .models.CreditTradeType import CreditTradeType
-from .serializers import CreditTradeTypeSerializer
-from .models.CreditTradeZeroReason import CreditTradeZeroReason
-from .serializers import CreditTradeZeroReasonSerializer
-from .models.CurrentUserViewModel import CurrentUserViewModel
-from .serializers import CurrentUserViewModelSerializer
-from .models.Organization import Organization
-from .serializers import OrganizationSerializer
-from .models.OrganizationActionsType import OrganizationActionsType
-from .serializers import OrganizationActionsTypeSerializer
-from .models.OrganizationAttachment import OrganizationAttachment
-from .serializers import OrganizationAttachmentSerializer
-from .models.OrganizationBalance import OrganizationBalance
-from .serializers import OrganizationBalanceSerializer
-from .models.OrganizationHistory import OrganizationHistory
-from .serializers import OrganizationHistorySerializer
-from .models.OrganizationStatus import OrganizationStatus
-from .serializers import OrganizationStatusSerializer
-from .models.Permission import Permission
-from .serializers import PermissionSerializer
-from .models.PermissionViewModel import PermissionViewModel
-from .serializers import PermissionViewModelSerializer
-from .models.Role import Role
-from .serializers import RoleSerializer
-from .models.RolePermission import RolePermission
-from .serializers import RolePermissionSerializer
-from .models.RolePermissionViewModel import RolePermissionViewModel
-from .serializers import RolePermissionViewModelSerializer
-from .models.RoleViewModel import RoleViewModel
-from .serializers import RoleViewModelSerializer
-from .models.User import User
-from .serializers import UserSerializer
-from .models.UserDetailsViewModel import UserDetailsViewModel
-from .serializers import UserDetailsViewModelSerializer
-from .models.UserRole import UserRole
-from .serializers import UserRoleSerializer
-from .models.UserRoleViewModel import UserRoleViewModel
-from .serializers import UserRoleViewModelSerializer
-from .models.UserViewModel import UserViewModel
-from .serializers import UserViewModelSerializer
 
 
 # Custom API test cases. 
@@ -127,7 +77,7 @@ class Test_Api_Custom(TestCase):
         # Create:
         payload = {
           'name': "Initial",
-          'createdDate': '2000-01-01',
+          'created_date': '2000-01-01',
         #   'primaryContact': contactId ,
         #   'contacts': [contactId],
           'notes': [],
@@ -188,13 +138,13 @@ class Test_Api_Custom(TestCase):
         # Create:
         fakeUser = fakedata.UserTestDataCreate()
         payload = {
-          'givenName': fakeUser['givenName'],
+          'given_name': fakeUser['given_name'],
           'surname':fakeUser['surname'],
           'email':fakeUser['email'],
           'status':'Active',
-          'user':fakeUser['userId'],
-          'guid':fakeUser['guid'],
-          'authorizationDirectory':fakeUser['authorizationDirectory'],
+          'user':fakeUser['authorization_id'],
+          'authorization_guid':fakeUser['authorization_guid'],
+          'authorization_directory':fakeUser['authorization_directory'],
           'organization': organization_id
         }
         jsonString = json.dumps(payload)
@@ -204,8 +154,8 @@ class Test_Api_Custom(TestCase):
         # parse the response.
         jsonString = response.content.decode("utf-8")
         data = json.loads(jsonString)
-        userId = data['id']
-        return userId
+        authorization_id = data['id']
+        return authorization_id
 
     def createCreditTradeType(self):
         testUrl = "/api/credittradetypes"
@@ -236,7 +186,7 @@ class Test_Api_Custom(TestCase):
         createdId = data['id']
         return createdId
 
-    def createCreditTrade(self, organization_id, userId):
+    def createCreditTrade(self, organization_id, authorization_id):
         typeId = self.createCreditTradeType()
         statusId = self.createCreditTradeStatus()
 
@@ -245,7 +195,7 @@ class Test_Api_Custom(TestCase):
           'status':'Active',
           'initiator':organization_id,
           'respondent': organization_id,
-          'initiatorLastUpdateBy': userId,
+          'initiatorLastUpdateBy': authorization_id,
           'respondentLastUpdatedBy': None,
           'reviewedRejectedBy': None,
           'approvedRejectedBy': None,
@@ -275,14 +225,14 @@ class Test_Api_Custom(TestCase):
 
         return createdId
 
-    def deleteRole(self, roleId):
-        deleteUrl = "/api/roles/" + str(roleId) + "/delete"
+    def deleteRole(self, role_id):
+        deleteUrl = "/api/roles/" + str(role_id) + "/delete"
         response = self.client.post(deleteUrl)
         # Check that the response is OK.
         assert status.HTTP_204_NO_CONTENT == response.status_code
 
-    def deleteUser(self, userId):
-        deleteUrl = "/api/users/" + str(userId) + "/delete"
+    def deleteUser(self, authorization_id):
+        deleteUrl = "/api/users/" + str(authorization_id) + "/delete"
         response = self.client.post(deleteUrl)
         # Check that the response is OK
         assert status.HTTP_204_NO_CONTENT == response.status_code
@@ -299,16 +249,16 @@ class Test_Api_Custom(TestCase):
         # Check that the response is OK.
         assert status.HTTP_204_NO_CONTENT == response.status_code
 
-    def deletePermission(self, permissionId):
-        deleteUrl = "/api/permissions/" + str(permissionId) + "/delete"
+    def deletePermission(self, permission_id):
+        deleteUrl = "/api/permissions/" + str(permission_id) + "/delete"
         response = self.client.post(deleteUrl)
         # Check that the response is OK.
         assert status.HTTP_204_NO_CONTENT == response.status_code
 
     def test_credittradesSearchGet(self):
         fsId, _, _ = self.createOrganization()
-        userId = self.createUser(fsId)
-        credId, credTypeId, _ = self.createCreditTrade(fsId, userId)
+        authorization_id = self.createUser(fsId)
+        credId, credTypeId, _ = self.createCreditTrade(fsId, authorization_id)
 
         testUrl = "/api/credittrades/search"
         response = self.client.get(testUrl)
@@ -319,18 +269,18 @@ class Test_Api_Custom(TestCase):
         assert len(data) == 1
 
         self.deleteCreditTrade(credId)
-        self.deleteUser(userId)
+        self.deleteUser(authorization_id)
         self.deleteOrganization(fsId)
 
     def test_usersCurrentGet(self):
         organization_id, statusId, actionId = self.createOrganization()
-        userId = self.createUser(organization_id)
+        authorization_id = self.createUser(organization_id)
 
         testUrl="/api/users/current"
         # List:
         response = self.client.get(testUrl)
         assert status.HTTP_200_OK == response.status_code
-        self.deleteUser (userId)
+        self.deleteUser (authorization_id)
         self.deleteOrganization(organization_id)
 
     def test_organizationssIdAttachmentsGet(self):
@@ -415,13 +365,13 @@ class Test_Api_Custom(TestCase):
         # Cleanup
     def test_rolesIdPermissionsGet(self):
         # create a group.
-        roleId = self.createRole()
+        role_id = self.createRole()
         # create a permission.
-        permissionId = self.createPermission()
+        permission_id = self.createPermission()
 
-        rolePermissionUrl = "/api/roles/" + str(roleId) + "/permissions"
+        rolePermissionUrl = "/api/roles/" + str(role_id) + "/permissions"
         # create a new group membership.
-        payload = {'role':roleId, 'permission':permissionId}
+        payload = {'role':role_id, 'permission':permission_id}
         jsonString = json.dumps(payload)
         response = self.client.post(rolePermissionUrl,content_type='application/json', data=jsonString)
         assert status.HTTP_200_OK == response.status_code
@@ -441,21 +391,21 @@ class Test_Api_Custom(TestCase):
 
         # cleanup
 
-        self.deleteRole(roleId)
-        self.deletePermission(permissionId)
+        self.deleteRole(role_id)
+        self.deletePermission(permission_id)
 
     def test_rolesIdUsersGet(self):
-        roleId = self.createRole()
+        role_id = self.createRole()
         organization_id, statusId, actionId = self.createOrganization()
-        userId = self.createUser(organization_id)
+        authorization_id = self.createUser(organization_id)
 
-        userRoleUrl = "/api/users/" + str(userId) + "/roles"
+        userRoleUrl = "/api/users/" + str(authorization_id) + "/roles"
         # create a new UserRole.
         payload = {
             'effective_date': '2000-01-01',
             'expiration_date': None,
-            'user': userId,
-            'role': roleId
+            'user': authorization_id,
+            'role': role_id
         }
         jsonString = json.dumps(payload)
         response = self.client.post(userRoleUrl,content_type='application/json', data=jsonString)
@@ -465,7 +415,7 @@ class Test_Api_Custom(TestCase):
         response = self.client.get(userRoleUrl)
         assert status.HTTP_200_OK == response.status_code
 
-        testUrl = "/api/roles/" + str(roleId)
+        testUrl = "/api/roles/" + str(role_id)
         # get the users in the group.
         response = self.client.get(testUrl)
         # Check that the response is OK.
@@ -481,13 +431,13 @@ class Test_Api_Custom(TestCase):
         assert status.HTTP_200_OK == response.status_code
 
         # cleanup
-        self.deleteRole(roleId)
-        self.deleteUser(userId)
+        self.deleteRole(role_id)
+        self.deleteUser(authorization_id)
         self.deleteOrganization(organization_id)
     def test_usersIdPermissionsGet(self):
         # create a user.
         organization_id, statusId, actionId = self.createOrganization()
-        userId = self.createUser(organization_id)
+        authorization_id = self.createUser(organization_id)
 
         # create a credit trade
 
@@ -496,25 +446,25 @@ class Test_Api_Custom(TestCase):
         # assign permissions to the user.
         #TODO add that.
 
-        userPermissionUrl = "/api/users/" + str(userId) + "/permissions"
+        userPermissionUrl = "/api/users/" + str(authorization_id) + "/permissions"
 
         # test the Get
         response = self.client.get(userPermissionUrl)
         assert status.HTTP_200_OK == response.status_code
 
         # cleanup
-        self.deleteUser (userId)
+        self.deleteUser (authorization_id)
         self.deleteOrganization(organization_id)
 
     def test_usersIdRolesGet(self):
         fsId, _, _= self.createOrganization()
-        userId = self.createUser(fsId)
-        roleId = self.createRole()
+        authorization_id = self.createUser(fsId)
+        role_id = self.createRole()
 
-        url = "/api/users/" + str(userId) + "/roles"
+        url = "/api/users/" + str(authorization_id) + "/roles"
         payload = fakedata.UserRoleTestDataCreate()
-        payload['user'] = userId
-        payload['role'] = roleId
+        payload['user'] = authorization_id
+        payload['role'] = role_id
         jsonString = json.dumps(payload)
         response = self.client.post(url, content_type='application/json', data=jsonString)
 
@@ -525,8 +475,8 @@ class Test_Api_Custom(TestCase):
         assert response.status_code == status.HTTP_200_OK
 
         payload = [fakedata.UserRoleTestDataUpdate()]
-        payload[0]['user'] = userId
-        payload[0]['role'] = roleId
+        payload[0]['user'] = authorization_id
+        payload[0]['role'] = role_id
         jsonString = json.dumps(payload)
         response = self.client.put(url, content_type='application/json', data=jsonString)
 
@@ -535,16 +485,16 @@ class Test_Api_Custom(TestCase):
         jsonString = response.content.decode("utf-8")
         data = json.loads(jsonString)
 
-        assert data[0]['user'] == userId
-        assert data[0]['role'] == roleId
+        assert data[0]['user'] == authorization_id
+        assert data[0]['role'] == role_id
 
-        self.deleteRole(roleId)
-        self.deleteUser(userId)
+        self.deleteRole(role_id)
+        self.deleteUser(authorization_id)
         self.deleteOrganization(fsId)
 
     def test_usersSearchGet(self):
         organization_id, statusId, actionId = self.createOrganization()
-        userId = self.createUser(organization_id)
+        authorization_id = self.createUser(organization_id)
 
         # do a search
         testUrl = "/api/users/search"
@@ -555,12 +505,12 @@ class Test_Api_Custom(TestCase):
         jsonString = response.content.decode("utf-8")
         data = json.loads(jsonString)
         # Cleanup
-        self.deleteUser(userId)
+        self.deleteUser(authorization_id)
         self.deleteOrganization(organization_id)
 
     def test_createCreditTradeNegativeNumberOfCredits(self):
         fsId, _, _ = self.createOrganization()
-        userId = self.createUser(fsId)
+        authorization_id = self.createUser(fsId)
         typeId = self.createCreditTradeType()
         statusId = self.createCreditTradeStatus()
 
@@ -576,13 +526,13 @@ class Test_Api_Custom(TestCase):
         }
         fakeCreditTrade = fakedata.CreditTradeTestDataCreate()
         payload.update(fakeCreditTrade)
-        payload['numberOfCredits'] = -1
+        payload['number_of_credits'] = -1
         jsonString = json.dumps(payload)
         response = self.client.post(testUrl, content_type='application/json', data=jsonString)
         # Check that the response is OK.
         assert status.HTTP_422_UNPROCESSABLE_ENTITY == response.status_code
 
-        self.deleteUser(userId)
+        self.deleteUser(authorization_id)
         self.deleteOrganization(fsId)
 
 if __name__ == '__main__':

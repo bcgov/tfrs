@@ -2,7 +2,7 @@
     {
         "fields": {
             "description": "The Opportunity has been created but has not yet been published.",
-            "displayOrder": "1",
+            "display_order": "1",
             "effective_date": "2017-01-01",
             "expiration_date": null,
             "status": "Draft"
@@ -13,7 +13,7 @@
     {
         "fields": {
             "description": "The Opportunity has been created and published for other Fuel Suppliers to see.",
-            "displayOrder": "2",
+            "display_order": "2",
             "effective_date": "2017-01-01",
             "expiration_date": null,
             "status": "Published"
@@ -24,7 +24,7 @@
     {
         "fields": {
             "description": "The Opportunity has previously been published, subsequently removed from publication, and is no longer visible to other Fuel Suppliers.",
-            "displayOrder": "3",
+            "display_order": "3",
             "effective_date": "2017-01-01",
             "expiration_date": null,
             "status": "Un-Published"
@@ -35,7 +35,7 @@
     {
         "fields": {
             "description": "The Opportunity was drafted but never published.",
-            "displayOrder": "4",
+            "display_order": "4",
             "effective_date": "2017-01-01",
             "expiration_date": null,
             "status": "Cancelled"

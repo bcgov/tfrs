@@ -57,27 +57,27 @@ def AuditTestDataUpdate():
 
 def CreditTradeTestDataCreate():
   return {
-    'numberOfCredits': 1,
+    'number_of_credits': 1,
   }
 
 def CreditTradeTestDataUpdate():
   return {
-    'numberOfCredits':0,
+    'number_of_credits':0,
   }
 
 
 def CreditTradeHistoryTestDataCreate():
   return {
-    'newNumberOfCredits':1,
+    'number_of_credits':1,
     'note':'Initial',
-    'isInternalHistoryRecord':True,
+    'is_internal_history_record':True,
   }
 
 def CreditTradeHistoryTestDataUpdate():
   return {
-    'newNumberOfCredits':0,
+    'number_of_credits':0,
     'note':'Changed',
-    'isInternalHistoryRecord':False,
+    'is_internal_history_record':False,
   }
 
 
@@ -85,7 +85,7 @@ def CreditTradeStatusTestDataCreate():
   return {
     'status':'Initial',
     'description':'Initial',
-    'displayOrder':1,
+    'display_order':1,
     'effective_date': '2017-01-01',
   }
 
@@ -93,27 +93,27 @@ def CreditTradeStatusTestDataUpdate():
   return {
     'status':'Changed',
     'description':'Changed',
-    'displayOrder':0,
+    'display_order':0,
     'effective_date': '2017-01-01',
   }
 
 
 def CreditTradeTypeTestDataCreate():
   return {
-    'theType':'Initial',
+    'the_type':'Initial',
     'description':'Initial',
-    'displayOrder':1,
-    'isGovOnlyType':True,
+    'display_order':1,
+    'is_gov_only_type':True,
     'effective_date': '2017-01-01',
     'expiration_date': '2017-02-01',
   }
 
 def CreditTradeTypeTestDataUpdate():
   return {
-    'theType':'Changed',
+    'the_type':'Changed',
     'description':'Changed',
-    'displayOrder':0,
-    'isGovOnlyType':False,
+    'display_order':0,
+    'is_gov_only_type':False,
     'effective_date': '2017-01-01',
     'expiration_date': '2017-02-01',
   }
@@ -123,7 +123,7 @@ def CreditTradeZeroReasonTestDataCreate():
   return {
     'reason':'Initial',
     'description':'Initial',
-    'displayOrder':1,
+    'display_order':1,
     'effective_date': '2017-01-01',
   }
 
@@ -131,28 +131,28 @@ def CreditTradeZeroReasonTestDataUpdate():
   return {
     'reason':'Changed',
     'description':'Changed',
-    'displayOrder':0,
+    'display_order':0,
     'effective_date': '2017-01-01',
   }
 
 
 def CurrentUserViewModelTestDataCreate():
   return {
-    'givenName':'Initial',
+    'given_name':'Initial',
     'surname':'Initial',
     'email':'Initial',
     'active':True,
-    'smUserId':'Initial',
+    'sm_authorization_id':'Initial',
     'smAuthorizationDirectory':'Initial',
   }
 
 def CurrentUserViewModelTestDataUpdate():
   return {
-    'givenName':'Changed',
+    'given_name':'Changed',
     'surname':'Changed',
     'email':'Changed',
     'active':False,
-    'smUserId':'Changed',
+    'sm_authorization_id':'Changed',
     'smAuthorizationDirectory':'Changed',
   }
 
@@ -170,57 +170,57 @@ def OrganizationTestDataUpdate():
 
 def OrganizationActionsTypeTestDataCreate():
   return {
-    'theType':'Initial',
+    'the_type':'Initial',
     'description':'Initial',
-    'displayOrder':1,
+    'display_order':1,
     'effective_date': '2017-01-01',
   }
 
 def OrganizationActionsTypeTestDataUpdate():
   return {
-    'theType':'Changed',
+    'the_type':'Changed',
     'description':'Changed',
-    'displayOrder':0,
+    'display_order':0,
     'effective_date': '2018-01-01',
   }
 
 
 def OrganizationAttachmentTestDataCreate():
   return {
-    'fileName':'Initial',
-    'fileLocation':'Initial',
+    'file_name':'Initial',
+    'file_location':'Initial',
     'description':'Initial',
-    'complianceYear':'Initial',
+    'compliance_year':'Initial',
   }
 
 def OrganizationAttachmentTestDataUpdate():
   return {
-    'fileName':'Changed',
-    'fileLocation':'Changed',
+    'file_name':'Changed',
+    'file_location':'Changed',
     'description':'Changed',
-    'complianceYear':'Changed',
+    'compliance_year':'Changed',
   }
 
 
 def OrganizationBalanceTestDataCreate():
   return {
-    'validatedCredits':1,
+    'validated_credits':1,
   }
 
 def OrganizationBalanceTestDataUpdate():
   return {
-    'validatedCredits':0,
+    'validated_credits':0,
   }
 
 
 def OrganizationHistoryTestDataCreate():
   return {
-    'historyText':'Initial',
+    'history_text':'Initial',
   }
 
 def OrganizationHistoryTestDataUpdate():
   return {
-    'historyText':'Changed',
+    'history_text':'Changed',
   }
 
 
@@ -228,7 +228,7 @@ def OrganizationStatusTestDataCreate():
   return {
     'status':'Initial',
     'description':'Initial',
-    'displayOrder':1,
+    'display_order':1,
     'effective_date': '2017-01-01',
     'expiration_date': '2017-02-01',
   }
@@ -237,7 +237,7 @@ def OrganizationStatusTestDataUpdate():
   return {
     'status':'Changed',
     'description':'Changed',
-    'displayOrder':0,
+    'display_order':0,
     'effective_date': '2017-01-01',
     'expiration_date': '2017-02-01',
   }
@@ -271,17 +271,17 @@ def NotificationEventTestDataUpdate():
 
 def NotificationTypeTestDataCreate():
   return {
-    'theType':'Initial',
+    'the_type':'Initial',
     'description':'Initial',
-    'displayOrder':1,
+    'display_order':1,
     'effective_date': '2017-01-01',
   }
 
 def NotificationTypeTestDataUpdate():
   return {
-    'theType':'Changed',
+    'the_type':'Changed',
     'description':'Changed',
-    'displayOrder':0,
+    'display_order':0,
     'effective_date': '2018-01-01',
   }
 
@@ -294,7 +294,7 @@ def NotificationViewModelTestDataCreate():
     'isExpired':True,
     'isAllDay':True,
     'priorityCode':'Initial',
-    'userId':1,
+    'authorization_id':1,
   }
 
 def NotificationViewModelTestDataUpdate():
@@ -305,7 +305,7 @@ def NotificationViewModelTestDataUpdate():
     'isExpired':False,
     'isAllDay':False,
     'priorityCode':'Changed',
-    'userId':0,
+    'authorization_id':0,
   }
 
 
@@ -363,14 +363,14 @@ def RolePermissionTestDataUpdate():
 
 def RolePermissionViewModelTestDataCreate():
   return {
-    'roleId':1,
-    'permissionId':1,
+    'role_id':1,
+    'permission_id':1,
   }
 
 def RolePermissionViewModelTestDataUpdate():
   return {
-    'roleId':0,
-    'permissionId':0,
+    'role_id':0,
+    'permission_id':0,
   }
 
 
@@ -390,29 +390,29 @@ def RoleViewModelTestDataUpdate():
 def UserTestDataCreate():
   return {
     'authorizationID':'Initial',
-    'givenName':'Initial',
+    'given_name':'Initial',
     'surname':'Initial',
     'email':'Initial',
-    'userId':'Initial',
-    'guid':'Initial',
-    'authorizationDirectory':'Initial',
+    'authorization_id':'Initial',
+    'authorization_guid':'Initial',
+    'authorization_directory':'Initial',
   }
 
 def UserTestDataUpdate():
   return {
     'authorizationID':'Changed',
-    'givenName':'Changed',
+    'given_name':'Changed',
     'surname':'Changed',
     'email':'Changed',
-    'userId':'Changed',
-    'guid':'Changed',
-    'authorizationDirectory':'Changed',
+    'authorization_id':'Changed',
+    'authorization_guid':'Changed',
+    'authorization_directory':'Changed',
   }
 
 
 def UserDetailsViewModelTestDataCreate():
   return {
-    'givenName':'Initial',
+    'given_name':'Initial',
     'surname':'Initial',
     'email':'Initial',
     'active':True,
@@ -420,7 +420,7 @@ def UserDetailsViewModelTestDataCreate():
 
 def UserDetailsViewModelTestDataUpdate():
   return {
-    'givenName':'Changed',
+    'given_name':'Changed',
     'surname':'Changed',
     'email':'Changed',
     'active':False,
@@ -442,32 +442,32 @@ def UserRoleTestDataUpdate():
 
 def UserRoleViewModelTestDataCreate():
   return {
-    'roleId':1,
-    'userId':1,
+    'role_id':1,
+    'authorization_id':1,
   }
 
 def UserRoleViewModelTestDataUpdate():
   return {
-    'roleId':0,
-    'userId':0,
+    'role_id':0,
+    'authorization_id':0,
   }
 
 
 def UserViewModelTestDataCreate():
   return {
-    'givenName':'Initial',
+    'given_name':'Initial',
     'surname':'Initial',
     'email':'Initial',
     'active':True,
-    'smUserId':'Initial',
+    'sm_authorization_id':'Initial',
   }
 
 def UserViewModelTestDataUpdate():
   return {
-    'givenName':'Changed',
+    'given_name':'Changed',
     'surname':'Changed',
     'email':'Changed',
     'active':False,
-    'smUserId':'Changed',
+    'sm_authorization_id':'Changed',
   }
 

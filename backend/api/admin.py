@@ -20,7 +20,6 @@
 """
 
 from django.contrib import admin
-from .models.Audit import Audit
 from .models.CreditTrade import CreditTrade
 from .models.CreditTradeHistory import CreditTradeHistory
 from .models.CreditTradeStatus import CreditTradeStatus
@@ -44,7 +43,6 @@ from .models.User import User
 from .models.UserRole import UserRole
 
 
-admin.site.register(Audit)
 admin.site.register(CreditTrade)
 admin.site.register(CreditTradeHistory)
 admin.site.register(CreditTradeStatus)

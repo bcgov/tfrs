@@ -28,7 +28,6 @@ from rest_framework import mixins
 from rest_framework import generics
 from rest_framework_bulk import BulkCreateModelMixin
 from . import serializers
-from .models.Audit import Audit
 from .models.CreditTrade import CreditTrade
 from .models.CreditTradeHistory import CreditTradeHistory
 from .models.CreditTradeStatus import CreditTradeStatus
@@ -108,17 +107,17 @@ class organizationsIdAttachmentsGet(mixins.CreateModelMixin, APIView):
     """
     jsonString = self.request.POST['item']
     data = json.loads(jsonString)
-    fileName = request.FILES['file'].name
+    file_name = request.FILES['file'].name
     # TODO: save file to disk
     fileData = request.FILES['file'].read()
     organization = Organization.objects.get(id=id)
-    # TODO: remove hard coded fileLocation string an replace with real
+    # TODO: remove hard coded file_location string an replace with real
     attachment = OrganizationAttachment(
       organization=organization,
-      fileName=fileName,
-      fileLocation='fileLocation',
+      file_name=file_name,
+      file_location='file_location',
       description=data['description'],
-      complianceYear=data.get('complianceYear'))
+      compliance_year=data.get('compliance_year'))
     attachment.save()
     serializer = serializers.OrganizationAttachmentSerializer(attachment)
     return Response(serializer.data)
@@ -139,7 +138,7 @@ class organizationsIdHistoryGet(APIView):
     organization = Organization.objects.get(id=id)
     jsonString = request.body.decode('utf-8')
     data = json.loads(jsonString)
-    history = OrganizationHistory(organization_id=id, historyText=data['historyText'])
+    history = OrganizationHistory(organization_id=id, history_text=data['history_text'])
     history.save()
     serializer = serializers.OrganizationHistorySerializer(history)
     return Response(serializer.data)
@@ -204,8 +203,8 @@ class rolesIdUsersGet(APIView):
   """
   def get(self, request, id):
     role = Role.objects.get (id = id)
-    userRoles = UserRole.objects.filter(role = role)
-    serializer = serializers.UserRoleSerializer(userRoles)
+    user_roles = UserRole.objects.filter(role = role)
+    serializer = serializers.UserRoleSerializer(user_roles)
     return Response(serializer.data)
 
   def put(self, request, id):
@@ -234,9 +233,9 @@ class usersIdPermissionsGet(APIView):
     Returns the set of permissions for a user
     """
     user = User.objects.get(id=id)
-    userRoles = UserRole.objects.filter(user=user)
+    user_roles = UserRole.objects.filter(user=user)
     result = []
-    for userRole in userRoles:
+    for userRole in user_roles:
         rolePermissions = RolePermission.objects.filter(role=userRole.role)
         for rolePermission in rolePermissions:
             result.append (rolePermission.permission)
@@ -249,9 +248,9 @@ class usersIdPermissionsGet(APIView):
     Returns the set of permissions for a user
     """
     user = User.objects.get(id=id)
-    userRoles = UserRole.objects.filter(user=user)
+    user_roles = UserRole.objects.filter(user=user)
     result = []
-    for userRole in userRoles:
+    for userRole in user_roles:
         rolePermissions = RolePermission.objects.filter(role=userRole.role)
         for rolePermission in rolePermissions:
             result.append (rolePermission.permission)

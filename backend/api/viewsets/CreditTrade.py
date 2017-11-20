@@ -133,11 +133,11 @@ class CreditTradeViewSet(AuditableMixin, mixins.CreateModelMixin,
             #  respondent_id=credit_trade.respondent.id,
             #  status_id=credit_trade.status.id,
             #  type_id=credit_trade.type.id,
-            #  newNumberOfCredits=credit_trade.numberOfCredits,
-            #  newFairMarketValuePerCredit=credit_trade.fairMarketValuePerCredit,
+            #  number_of_credits=credit_trade.number_of_credits,
+            #  fair_market_value_per_credit=credit_trade.fair_market_value_per_credit,
             #  zero_reason_id=credit_trade.zero_reason,
             #  newTradeEffectiveDate=credit_trade.trade_effective_date,
-            #  newNote=credit_trade.note,
+            #  note=credit_trade.note,
             # )
             # history.save()
 
@@ -145,7 +145,7 @@ class CreditTradeViewSet(AuditableMixin, mixins.CreateModelMixin,
                 credit_trade.credits_from,
                 credit_trade.credits_to,
                 credit_trade.id,
-                credit_trade.numberOfCredits,
+                credit_trade.number_of_credits,
                 todays_date)
 
             # Complete with today's date
@@ -153,7 +153,7 @@ class CreditTradeViewSet(AuditableMixin, mixins.CreateModelMixin,
             #                 trade_effective_date=todays_date)
 
 
-            # num_of_credits_involved = credit_trade.numberOfCredits
+            # num_of_credits_involved = credit_trade.number_of_credits
             #
             # fs_initiator = credit_trade.initiator
             #
@@ -180,10 +180,10 @@ class CreditTradeViewSet(AuditableMixin, mixins.CreateModelMixin,
 
             # print()
 
-            # if (fs_initiator is None and credit_trade.type.theType)
+            # if (fs_initiator is None and credit_trade.type.the_type)
             # if fs_initiator is None:
             #     fs_initiator = Government()
-            #     # fs_initiator_starting_balance = {'validatedCredits': 100000000000000000000}
+            #     # fs_initiator_starting_balance = {'validated_credits': 100000000000000000000}
             #
             # else:
             #     fs_initiator_starting_balance = OrganizationBalance.objects.get(

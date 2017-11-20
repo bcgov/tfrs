@@ -23,16 +23,16 @@ from django.db import models
 
 
 class CurrentUserViewModel(models.Model):
-    givenName = models.CharField(max_length=255, blank=True, null=True)
+    given_name = models.CharField(max_length=255, blank=True, null=True)
     surname = models.CharField(max_length=255, blank=True, null=True)
     email = models.CharField(max_length=255, blank=True, null=True)
     active = models.BooleanField()
-    userRoles = models.ManyToManyField(
+    user_roles = models.ManyToManyField(
         'UserRole',
-        related_name='CurrentUserViewModeluserRoles',
+        related_name='CurrentUserViewModeluser_roles',
         blank=True)
-    smUserId = models.CharField(max_length=255, blank=True, null=True)
-    smAuthorizationDirectory = models.CharField(max_length=255, blank=True,
+    sm_authorization_id = models.CharField(max_length=255, blank=True, null=True)
+    sm_authorization_directory = models.CharField(max_length=255, blank=True,
                                                 null=True)
 
     class Meta:

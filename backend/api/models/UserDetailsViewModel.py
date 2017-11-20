@@ -23,7 +23,7 @@ from django.db import models
 
 
 class UserDetailsViewModel(models.Model):
-    givenName = models.CharField(max_length=255, blank=True, null=True)
+    given_name = models.CharField(max_length=255, blank=True, null=True)
     surname = models.CharField(max_length=255, blank=True, null=True)
     email = models.CharField(max_length=255, blank=True, null=True)
     active = models.BooleanField()

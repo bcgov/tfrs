@@ -25,13 +25,12 @@ from auditable.models import Auditable
 
 
 class User(Auditable):
-    authorizationID = models.CharField(max_length=500, blank=True, null=True)
-    givenName = models.CharField(max_length=100)
+    given_name = models.CharField(max_length=100)
     surname = models.CharField(max_length=100)
     email = models.CharField(max_length=150, blank=True, null=True)
-    userId = models.CharField(max_length=500, blank=True, null=True)
-    guid = models.CharField(max_length=100, blank=True, null=True)
-    authorizationDirectory = models.CharField(max_length=100, blank=True,
+    authorization_id = models.CharField(max_length=500, blank=True, null=True)
+    authorization_guid = models.CharField(max_length=100, blank=True, null=True)
+    authorization_directory = models.CharField(max_length=100, blank=True,
                                               null=True)
     organization = models.ForeignKey(
         'Organization',

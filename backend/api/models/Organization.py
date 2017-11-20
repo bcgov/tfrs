@@ -36,7 +36,7 @@ class Organization(Auditable):
         'OrganizationType',
         related_name='organizations',
         blank=True, null=True)
-    createdDate = models.DateField()
+    created_date = models.DateField()
 
     class Meta:
         db_table = 'organization'

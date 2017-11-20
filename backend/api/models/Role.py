@@ -27,7 +27,7 @@ from auditable.models import Auditable
 class Role(Auditable):
     name = models.CharField(max_length=200)
     description = models.CharField(max_length=1000)
-    isGovernmentRole = models.BooleanField(default=False)
+    is_government_role = models.BooleanField(default=False)
 
     # Add effective_date and expiration_date
     class Meta:

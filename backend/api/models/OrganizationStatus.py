@@ -29,7 +29,7 @@ class OrganizationStatus(Auditable):
     description = models.CharField(max_length=1000, blank=True, null=True)
     effective_date = models.DateField(blank=True, null=True)
     expiration_date = models.DateField(blank=True, null=True)
-    displayOrder = models.IntegerField()
+    display_order = models.IntegerField()
 
     class Meta:
         db_table = 'organization_status'
