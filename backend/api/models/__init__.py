@@ -25,10 +25,6 @@
 
 # import models into model package
 #try:
-#     from . import Audit  
-#except:
-#     import Audit
-#try:
 #     from . import CreditTrade  
 #except:
 #     import CreditTrade

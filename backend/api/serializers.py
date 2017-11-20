@@ -21,7 +21,6 @@
 
 from rest_framework import serializers
 
-from .models.Audit import Audit
 from .models.CreditTrade import CreditTrade
 from .models.CreditTradeHistory import CreditTradeHistory
 from .models.CreditTradeStatus import CreditTradeStatus
@@ -47,35 +46,23 @@ from .models.UserRoleViewModel import UserRoleViewModel
 from .models.UserViewModel import UserViewModel
 
 
-class AuditSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Audit
-        fields = (
-            'id', 'appCreateTimestamp', 'appCreateUserid', 'appCreateUserGuid',
-            'appCreateUserDirectory', 'appLastUpdateTimestamp',
-            'appLastUpdateUserid', 'appLastUpdateUserGuid',
-            'appLastUpdateUserDirectory', 'entityName', 'entityId',
-            'propertyName',
-            'oldValue', 'newValue', 'isDelete')
-
-
 class CreditTradeSerializer(serializers.ModelSerializer):
     class Meta:
         model = CreditTrade
         fields = ('id', 'status', 'initiator', 'respondent',
-                  'type', 'numberOfCredits',
-                  'fairMarketValuePerCredit', 'zero_reason',
+                  'type', 'number_of_credits',
+                  'fair_market_value_per_credit', 'zero_reason',
                   'trade_effective_date')
 
 
 class CreditTradeHistorySerializer(serializers.ModelSerializer):
     class Meta:
         model = CreditTradeHistory
-        fields = ('id', 'credit_trade', 'user', 'creditTradeUpdateTime',
+        fields = ('id', 'credit_trade', 'user', 'credit_trade_update_time',
                   'respondent', 'status', 'type',
-                  'newNumberOfCredits', 'newFairMarketValuePerCredit',
+                  'number_of_credits', 'fair_market_value_per_credit',
                   'zero_reason', 'trade_effective_date',
-                  'newNote', 'isInternalHistoryRecord')
+                  'note', 'is_internal_history_record')
 
 
 class CreditTradeStatusSerializer(serializers.ModelSerializer):
@@ -83,15 +70,15 @@ class CreditTradeStatusSerializer(serializers.ModelSerializer):
         model = CreditTradeStatus
         fields = (
             'id', 'status', 'description', 'effective_date', 'expiration_date',
-            'displayOrder')
+            'display_order')
 
 
 class CreditTradeTypeSerializer(serializers.ModelSerializer):
     class Meta:
         model = CreditTradeType
         fields = (
-            'id', 'theType', 'description', 'effective_date', 'expiration_date',
-            'displayOrder', 'isGovOnlyType')
+            'id', 'the_type', 'description', 'effective_date', 'expiration_date',
+            'display_order', 'is_gov_only_type')
 
 
 class CreditTradeZeroReasonSerializer(serializers.ModelSerializer):
@@ -99,14 +86,14 @@ class CreditTradeZeroReasonSerializer(serializers.ModelSerializer):
         model = CreditTradeZeroReason
         fields = (
             'id', 'reason', 'description', 'effective_date', 'expiration_date',
-            'displayOrder')
+            'display_order')
 
 
 class CurrentUserViewModelSerializer(serializers.ModelSerializer):
     class Meta:
         model = CurrentUserViewModel
-        fields = ('id', 'givenName', 'surname', 'email', 'active', 'userRoles',
-                  'smUserId', 'smAuthorizationDirectory')
+        fields = ('id', 'given_name', 'surname', 'email', 'active', 'user_roles',
+                  'sm_authorization_id', 'sm_authorization_directory')
 
 
 class OrganizationSerializer(serializers.ModelSerializer):
@@ -114,30 +101,30 @@ class OrganizationSerializer(serializers.ModelSerializer):
         model = Organization
         fields = (
             'id', 'name', 'status', 'actions_type',
-            'createdDate')
+            'created_date')
 
 
 class OrganizationActionsTypeSerializer(serializers.ModelSerializer):
     class Meta:
         model = OrganizationActionsType
         fields = (
-            'id', 'theType', 'description', 'effective_date', 'expiration_date',
-            'displayOrder')
+            'id', 'the_type', 'description', 'effective_date', 'expiration_date',
+            'display_order')
 
 
 class OrganizationAttachmentSerializer(serializers.ModelSerializer):
     class Meta:
         model = OrganizationAttachment
         fields = (
-            'id', 'organization', 'fileName', 'fileLocation', 'description',
-            'complianceYear')
+            'id', 'organization', 'file_name', 'file_location', 'description',
+            'compliance_year')
 
 
 class OrganizationBalanceSerializer(serializers.ModelSerializer):
     class Meta:
         model = OrganizationBalance
         fields = (
-            'id', 'organization', 'validatedCredits', 'effective_date',
+            'id', 'organization', 'validated_credits', 'effective_date',
             'expiration_date',
             'credit_trade')
 
@@ -145,7 +132,7 @@ class OrganizationBalanceSerializer(serializers.ModelSerializer):
 class OrganizationHistorySerializer(serializers.ModelSerializer):
     class Meta:
         model = OrganizationHistory
-        fields = ('id', 'organization', 'historyText')
+        fields = ('id', 'organization', 'history_text')
 
 
 class OrganizationStatusSerializer(serializers.ModelSerializer):
@@ -153,7 +140,7 @@ class OrganizationStatusSerializer(serializers.ModelSerializer):
         model = OrganizationStatus
         fields = (
             'id', 'status', 'description', 'effective_date', 'expiration_date',
-            'displayOrder')
+            'display_order')
 
 
 class PermissionSerializer(serializers.ModelSerializer):
@@ -171,7 +158,7 @@ class PermissionViewModelSerializer(serializers.ModelSerializer):
 class RoleSerializer(serializers.ModelSerializer):
     class Meta:
         model = Role
-        fields = ('id', 'name', 'description', 'isGovernmentRole')
+        fields = ('id', 'name', 'description', 'is_government_role')
 
 
 class RolePermissionSerializer(serializers.ModelSerializer):
@@ -183,7 +170,7 @@ class RolePermissionSerializer(serializers.ModelSerializer):
 class RolePermissionViewModelSerializer(serializers.ModelSerializer):
     class Meta:
         model = RolePermissionViewModel
-        fields = ('id', 'roleId', 'permissionId')
+        fields = ('id', 'role_id', 'permission_id')
 
 
 class RoleViewModelSerializer(serializers.ModelSerializer):
@@ -196,15 +183,15 @@ class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = (
-            'id', 'authorizationID', 'givenName', 'surname', 'email', 'userId',
-            'guid', 'authorizationDirectory')
+                'id', 'given_name', 'surname', 'email', 'authorization_id',
+            'authorization_guid', 'authorization_directory')
 
 
 class UserDetailsViewModelSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserDetailsViewModel
         fields = (
-            'id', 'givenName', 'surname', 'email', 'active', 'permissions')
+            'id', 'given_name', 'surname', 'email', 'active', 'permissions')
 
 
 
@@ -217,14 +204,14 @@ class UserRoleSerializer(serializers.ModelSerializer):
 class UserRoleViewModelSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserRoleViewModel
-        fields = ('id', 'effective_date', 'expiration_date', 'roleId', 'userId')
+        fields = ('id', 'effective_date', 'expiration_date', 'role_id', 'authorization_id')
 
 
 class UserViewModelSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserViewModel
-        fields = ('id', 'givenName', 'surname', 'email', 'active', 'smUserId',
-                  'userRoles')
+        fields = ('id', 'given_name', 'surname', 'email', 'active', 'sm_authorization_id',
+                  'user_roles')
 
 
 class CreditTradeCreateSerializer(serializers.ModelSerializer):
@@ -238,9 +225,9 @@ class CreditTradeApproveSerializer(serializers.ModelSerializer):
     class Meta:
         model = CreditTrade
         fields = ('id', 'trade_effective_date', 'note',)
-        read_only_fields = ('status', 'numberOfCredits',
+        read_only_fields = ('status', 'number_of_credits',
                             'type',
-                            'fairMarketValuePerCredit',
+                            'fair_market_value_per_credit',
                             'zero_reason',
                             )
 
@@ -257,8 +244,8 @@ class CreditTrade2Serializer(serializers.ModelSerializer):
     class Meta:
         model = CreditTrade
         fields = ('id', 'status', 'initiator', 'respondent',
-                  'type', 'numberOfCredits',
-                  'fairMarketValuePerCredit', 'zero_reason',
+                  'type', 'number_of_credits',
+                  'fair_market_value_per_credit', 'zero_reason',
                   'trade_effective_date', 'credits_from', 'credits_to')
         # exclude = ('note',)
 

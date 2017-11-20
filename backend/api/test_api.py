@@ -50,21 +50,21 @@ class TestCreditTradeAPI(TestCase):
         self.test_url = "/api/credit_trades"
 
         self.test_data_fail = [{
-            'data': {'numberOfCredits': 1},
+            'data': {'number_of_credits': 1},
             'response': {
                 "status": ["This field is required."],
                 "respondent": ["This field is required."],
                 "type": ["This field is required."]
             }
         }, {
-            'data': {'numberOfCredits': 1,
+            'data': {'number_of_credits': 1,
                      'status': STATUS_DRAFT},
             'response': {
                 "respondent": ["This field is required."],
                 "type": ["This field is required."],
             }
         }, {
-            'data': {'numberOfCredits': 1,
+            'data': {'number_of_credits': 1,
                      'status': STATUS_DRAFT,
                      'respondent': self.fs1_id},
             'response': {
@@ -73,7 +73,7 @@ class TestCreditTradeAPI(TestCase):
         }]
 
         self.test_data_success = [{
-            'data': {'numberOfCredits': 1,
+            'data': {'number_of_credits': 1,
                      'status': STATUS_DRAFT,
                      'respondent': self.fs1_id,
                      'type': self.ct_type_id},
@@ -130,11 +130,11 @@ class TestCreditTradeAPI(TestCase):
         #     credit_trade_id = self.credit_trade_id
 
         data = {
-            'numberOfCredits': num_of_credits,
+            'number_of_credits': num_of_credits,
             'status': credit_trade_status,
             'respondent': self.fs1_id,
             'type': self.ct_type_id,
-            'fairMarketValuePerCredit': fair_market_value
+            'fair_market_value_per_credit': fair_market_value
         }
 
         response = self.client.put(
@@ -166,7 +166,7 @@ class TestCreditTradeAPI(TestCase):
                 "{}/{}/history".format(self.test_url, self.credit_trade['id']),
                 content_type='application/json')
             response_data = json.loads(response.content.decode("utf-8"))
-            self.assertFalse(response_data[0]['isInternalHistoryRecord'])
+            self.assertFalse(response_data[0]['is_internal_history_record'])
 
     def test_is_internal_history_draft(self):
         # Initially created credit trade is "Draft"
@@ -175,7 +175,7 @@ class TestCreditTradeAPI(TestCase):
             content_type='application/json')
 
         response_data = json.loads(response.content.decode("utf-8"))
-        self.assertTrue(response_data[0]['isInternalHistoryRecord'])
+        self.assertTrue(response_data[0]['is_internal_history_record'])
 
     def test_is_internal_history_draft_then_cancelled(self):
         # Initially created credit trade is "Draft"
@@ -187,7 +187,7 @@ class TestCreditTradeAPI(TestCase):
             content_type='application/json')
 
         response_data = json.loads(response.content.decode("utf-8"))
-        self.assertTrue(response_data[0]['isInternalHistoryRecord'])
+        self.assertTrue(response_data[0]['is_internal_history_record'])
 
     def test_nested_credit_trade(self):
         response = self.client.get(
@@ -222,10 +222,10 @@ class TestCreditTradeAPI(TestCase):
     #     initiator_bal = fake_api_calls.get_fuel_supplier_balances(id=1)
     #     respondent_bal = fake_api_calls.get_fuel_supplier_balances(id=2)
     #
-    #     # balance = initiator_balance['validatedCredits']
+    #     # balance = initiator_balance['validated_credits']
     #     print("initiator & respondent")
-    #     print(initiator_bal['validatedCredits'])
-    #     print(respondent_bal['validatedCredits'])
+    #     print(initiator_bal['validated_credits'])
+    #     print(respondent_bal['validated_credits'])
     #     # get fuel supplier balance for fs 2
     #
     #     num_of_credits = 50
@@ -233,10 +233,10 @@ class TestCreditTradeAPI(TestCase):
     #     credit_trade = fake_api_calls.create_credit_trade(
     #         user_id=self.user_id,
     #         status=STATUS_PROPOSED,
-    #         fairMarketValuePerCredit=1000,
+    #         fair_market_value_per_credit=1000,
     #         initiator=1,
     #         respondent=2,
-    #         numberOfCredits=num_of_credits
+    #         number_of_credits=num_of_credits
     #     )
     #
     #     pprint(credit_trade)
@@ -257,11 +257,11 @@ class TestCreditTradeAPI(TestCase):
     #     print("After approval")
     #     initiator_bal_after = fake_api_calls.get_fuel_supplier_balances(id=1)
     #     respondent_bal_after = fake_api_calls.get_fuel_supplier_balances(id=2)
-    #     print(initiator_bal['validatedCredits'])
-    #     print(respondent_bal['validatedCredits'])
+    #     print(initiator_bal['validated_credits'])
+    #     print(respondent_bal['validated_credits'])
     #
-    #     init_final_bal = initiator_bal['validatedCredits'] + num_of_credits
-    #     resp_final_bal = respondent_bal['validatedCredits'] - num_of_credits
+    #     init_final_bal = initiator_bal['validated_credits'] + num_of_credits
+    #     resp_final_bal = respondent_bal['validated_credits'] - num_of_credits
     #
     #     ct_completed = self.client.get(
     #         "{}/{}".format(self.test_url, credit_trade['id']),
@@ -284,9 +284,9 @@ class TestCreditTradeAPI(TestCase):
     #
     #     # Credits should be subtracted/added
     #     self.assertEqual(init_final_bal,
-    #                      initiator_bal_after['validatedCredits'])
+    #                      initiator_bal_after['validated_credits'])
     #     self.assertEqual(resp_final_bal,
-    #                      respondent_bal_after['validatedCredits'])
+    #                      respondent_bal_after['validated_credits'])
 
     def test_approved_sell(self, **kwargs):
         pass

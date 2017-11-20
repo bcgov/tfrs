@@ -28,7 +28,6 @@ from rest_framework import generics
 from rest_framework_bulk import BulkCreateModelMixin
 from . import serializers
 from auditable.views import AuditableMixin
-from .models.Audit import Audit
 from .models.CreditTrade import CreditTrade
 from .models.CreditTradeHistory import CreditTradeHistory
 from .models.CreditTradeStatus import CreditTradeStatus

@@ -23,8 +23,8 @@ from django.db import models
 
 
 class RolePermissionViewModel(models.Model):
-    roleId = models.IntegerField()
-    permissionId = models.IntegerField()
+    role_id = models.IntegerField()
+    permission_id = models.IntegerField()
 
     class Meta:
         abstract = True

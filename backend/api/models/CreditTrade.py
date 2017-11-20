@@ -40,9 +40,9 @@ class CreditTrade(Auditable):
     type = models.ForeignKey(
         'CreditTradeType',
         related_name='credit_trades')
-    numberOfCredits = models.IntegerField(
+    number_of_credits = models.IntegerField(
         validators=[validators.CreditTradeNumberOfCreditsValidator])
-    fairMarketValuePerCredit = models.DecimalField(
+    fair_market_value_per_credit = models.DecimalField(
         null=True, blank=True, max_digits=999,
         decimal_places=2,
         default=None)

@@ -2,7 +2,7 @@
     {
         "fields": {
             "description": "A regular government user in the system.",
-            "isGovernmentRole": true,
+            "is_government_role": true,
             "name": "GovUser"
         },
         "model": "api.roles",
@@ -11,7 +11,7 @@
     {
         "fields": {
             "description": "A System Administrator in the application with User Management and Roles and Permissions access.",
-            "isGovernmentRole": true,
+            "is_government_role": true,
             "name": "Admin"
         },
         "model": "api.roles",
@@ -20,7 +20,7 @@
     {
         "fields": {
             "description": "A government user with authorization to Approve Credit Transfers.",
-            "isGovernmentRole": true,
+            "is_government_role": true,
             "name": "GovDirector"
         },
         "model": "api.roles",
@@ -29,7 +29,7 @@
     {
         "fields": {
             "description": "A Fuel Supplier user with limited abilities to take actions.",
-            "isGovernmentRole": false,
+            "is_government_role": false,
             "name": "FSUser"
         },
         "model": "api.roles",
@@ -38,7 +38,7 @@
     {
         "fields": {
             "description": "A Fuel Supplier user with authority to act on behalf of the Fuel Supplier on Credit Transfers.",
-            "isGovernmentRole": false,
+            "is_government_role": false,
             "name": "FSManager"
         },
         "model": "api.roles",
@@ -47,7 +47,7 @@
     {
         "fields": {
             "description": "A Fuel Supplier admin user with authority to add and remove organizational users.",
-            "isGovernmentRole": false,
+            "is_government_role": false,
             "name": "FSAdmin"
         },
         "model": "api.roles",
@@ -56,7 +56,7 @@
     {
         "fields": {
             "description": "A Fuel Supplier user defined in the system, but with no access to system functionality.",
-            "isGovernmentRole": false,
+            "is_government_role": false,
             "name": "FSNoAccess"
         },
         "model": "api.roles",

@@ -83,7 +83,7 @@ def create_organization():
     # Create:
     payload = {
         'name': "Initial",
-        'createdDate': '2000-01-01',
+        'created_date': '2000-01-01',
         #   'primaryContact': contactId ,
         #   'contacts': [contactId],
         'notes': [],
@@ -109,13 +109,13 @@ def create_user(organization_id):
     # Create:
     fake_user = fakedata.UserTestDataCreate()
     payload = {
-        'givenName': fake_user['givenName'],
+        'given_name': fake_user['given_name'],
         'surname': fake_user['surname'],
         'email': fake_user['email'],
         'status': 'Active',
-        'user': fake_user['userId'],
-        'guid': fake_user['guid'],
-        'authorizationDirectory': fake_user['authorizationDirectory'],
+        'user': fake_user['authorization_id'],
+        'authorization_guid': fake_user['authorization_guid'],
+        'authorization_directory': fake_user['authorization_directory'],
         'organization': organization_id
     }
     response = client.post(
@@ -134,8 +134,8 @@ def create_user(organization_id):
 def create_credit_trade(**kwargs):
 
     body = {
-        "numberOfCredits": kwargs.get("numberOfCredits", 2),
-        "fairMarketValuePerCredit": kwargs.get("fairMarketValuePerCredit", 1),
+        "number_of_credits": kwargs.get("number_of_credits", 2),
+        "fair_market_value_per_credit": kwargs.get("fair_market_value_per_credit", 1),
 
         "trade_effective_date": "2017-04-01",
         "status": kwargs.get("status", 1),

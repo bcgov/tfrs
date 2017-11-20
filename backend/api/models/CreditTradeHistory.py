@@ -30,7 +30,7 @@ class CreditTradeHistory(Auditable):
         related_name='credit_trade_histories',
         null=True)
     user = models.ForeignKey('User', related_name='credit_trade_histories')
-    creditTradeUpdateTime = models.DateTimeField()
+    credit_trade_update_time = models.DateTimeField()
     respondent = models.ForeignKey(
         'Organization',
         related_name='credit_trade_histories')
@@ -40,8 +40,8 @@ class CreditTradeHistory(Auditable):
     type = models.ForeignKey(
         'CreditTradeType',
         related_name='credit_trade_histories')
-    newNumberOfCredits = models.IntegerField()
-    newFairMarketValuePerCredit = models.DecimalField(
+    number_of_credits = models.IntegerField()
+    fair_market_value_per_credit = models.DecimalField(
         null=True, blank=True, max_digits=999,
         decimal_places=2,
         default=None)
@@ -50,8 +50,8 @@ class CreditTradeHistory(Auditable):
         related_name='credit_trade_histories',
         blank=True, null=True)
     trade_effective_date = models.DateField(blank=True, null=True)
-    newNote = models.CharField(max_length=4000, blank=True, null=True)
-    isInternalHistoryRecord = models.BooleanField()
+    note = models.CharField(max_length=4000, blank=True, null=True)
+    is_internal_history_record = models.BooleanField()
 
     class Meta:
         db_table = 'credit_trade_history'

@@ -49,13 +49,13 @@ class CreditTradeService(object):
             respondent_id=credit_trade.respondent.id,
             status_id=credit_trade.status.id,
             type_id=credit_trade.type.id,
-            newNumberOfCredits=credit_trade.numberOfCredits,
-            newFairMarketValuePerCredit=credit_trade.fairMarketValuePerCredit,
+            number_of_credits=credit_trade.number_of_credits,
+            fair_market_value_per_credit=credit_trade.fair_market_value_per_credit,
             zero_reason_id=credit_trade.zero_reason,
             trade_effective_date=credit_trade.trade_effective_date,
-            newNote=credit_trade.note,
-            isInternalHistoryRecord=is_internal_history_record,
-            creditTradeUpdateTime=credit_trade_update_time,
+            note=credit_trade.note,
+            is_internal_history_record=is_internal_history_record,
+            credit_trade_update_time=credit_trade_update_time,
             create_user=user,
             update_user=user,
             user=user
@@ -79,9 +79,9 @@ class CreditTradeService(object):
             expiration_date=None)
 
         if 'increase' == action:
-            to_credits = to_starting_bal.validatedCredits + num_of_credits
+            to_credits = to_starting_bal.validated_credits + num_of_credits
         else:
-            to_credits = to_starting_bal.validatedCredits - num_of_credits
+            to_credits = to_starting_bal.validated_credits - num_of_credits
 
         if 0 > to_credits:
             raise PositiveIntegerException("Can't complete transaction,"
@@ -91,7 +91,7 @@ class CreditTradeService(object):
 
         to_new_bal = OrganizationBalance(
             organization=_to,
-            validatedCredits=to_credits,
+            validated_credits=to_credits,
             effective_date=effective_date,
             credit_trade_id=credit_trade_id
         )
@@ -111,8 +111,8 @@ class CreditTradeService(object):
             expiration_date=None)
 
         # Compute for end balance
-        from_credits = from_starting_bal.validatedCredits - num_of_credits
-        to_credits = to_starting_bal.validatedCredits + num_of_credits
+        from_credits = from_starting_bal.validated_credits - num_of_credits
+        to_credits = to_starting_bal.validated_credits + num_of_credits
 
         if 0 > from_credits:
             raise PositiveIntegerException("Can't complete transaction,"
@@ -125,14 +125,14 @@ class CreditTradeService(object):
         # Create new fuel supplier balance
         from_new_bal = OrganizationBalance(
             organization=_from,
-            validatedCredits=from_credits,
+            validated_credits=from_credits,
             effective_date=effective_date,
             credit_trade_id=credit_trade_id
         )
 
         to_new_bal = OrganizationBalance(
             organization=_to,
-            validatedCredits=to_credits,
+            validated_credits=to_credits,
             effective_date=effective_date,
             credit_trade_id=credit_trade_id
         )

@@ -27,10 +27,10 @@ class OrganizationAttachment(Auditable):
     organization = models.ForeignKey(
         'Organization',
         related_name='attachments')
-    fileName = models.CharField(max_length=250, blank=True, null=True)
-    fileLocation = models.CharField(max_length=2000, blank=True, null=True)
+    file_name = models.CharField(max_length=250, blank=True, null=True)
+    file_location = models.CharField(max_length=2000, blank=True, null=True)
     description = models.CharField(max_length=4000, blank=True, null=True)
-    complianceYear = models.CharField(max_length=25, blank=True, null=True)
+    compliance_year = models.CharField(max_length=25, blank=True, null=True)
 
     class Meta:
         db_table = 'organization_attachment'
