@@ -13,8 +13,7 @@ export const NOT_FOUND = '/404';
 
 // API Routes
 // Change this to relative URL once nginx is in place
-// export const BASE_URL = window.location.host + '/server/api';
-export const BASE_URL = 'http://server-mem-tfrs-dev.pathfinder.gov.bc.ca/api'
+export const BASE_URL = location.protocol + '//' + window.location.host + '/api';
 console.log("API URL:", BASE_URL);
 
 export const FUEL_SUPPLIERS_API = '/fuelsuppliers';
