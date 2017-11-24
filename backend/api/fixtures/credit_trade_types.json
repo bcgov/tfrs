@@ -6,7 +6,7 @@
             "effective_date": "2017-01-01",
             "expiration_date": "2117-01-01",
             "is_gov_only_type": false,
-            "the_type": "Buy"
+            "the_type": "Sell"
         },
         "model": "api.credittradetype",
         "pk": "1"
@@ -18,7 +18,7 @@
             "effective_date": "2017-01-01",
             "expiration_date": "2117-01-01",
             "is_gov_only_type": false,
-            "the_type": "Sell"
+            "the_type": "Buy"
         },
         "model": "api.credittradetype",
         "pk": "2"
