@@ -1,0 +1,686 @@
+[
+  {
+    "model": "api.credittrade",
+    "pk": 2,
+    "fields": {
+      "create_timestamp": null,
+      "create_user": null,
+      "update_timestamp": null,
+      "update_user": null,
+      "status": 8,
+      "initiator": 2,
+      "respondent": 2,
+      "type": 2,
+      "number_of_credits": 100,
+      "fair_market_value_per_credit": "120.00",
+      "zero_reason": null,
+      "trade_effective_date": "2017-08-07",
+      "note": null
+    }
+  },
+  {
+    "model": "api.credittrade",
+    "pk": 3,
+    "fields": {
+      "create_timestamp": null,
+      "create_user": null,
+      "update_timestamp": null,
+      "update_user": null,
+      "status": 7,
+      "initiator": 2,
+      "respondent": 3,
+      "type": 2,
+      "number_of_credits": 100,
+      "fair_market_value_per_credit": "120.00",
+      "zero_reason": null,
+      "trade_effective_date": "2017-08-07",
+      "note": null
+    }
+  },
+  {
+    "model": "api.credittrade",
+    "pk": 4,
+    "fields": {
+      "create_timestamp": null,
+      "create_user": null,
+      "update_timestamp": "2017-10-04T01:05:58.963Z",
+      "update_user": null,
+      "status": 6,
+      "initiator": 6,
+      "respondent": 5,
+      "type": 1,
+      "number_of_credits": 100,
+      "fair_market_value_per_credit": "120.50",
+      "zero_reason": null,
+      "trade_effective_date": "2017-08-07",
+      "note": null
+    }
+  },
+  {
+    "model": "api.credittrade",
+    "pk": 5,
+    "fields": {
+      "create_timestamp": null,
+      "create_user": null,
+      "update_timestamp": "2017-09-15T21:39:11.405Z",
+      "update_user": null,
+      "status": 3,
+      "initiator": 6,
+      "respondent": 5,
+      "type": 1,
+      "number_of_credits": 1,
+      "fair_market_value_per_credit": "120.50",
+      "zero_reason": null,
+      "trade_effective_date": "2017-08-07",
+      "note": null
+    }
+  },
+  {
+    "model": "api.credittrade",
+    "pk": 6,
+    "fields": {
+      "create_timestamp": null,
+      "create_user": null,
+      "update_timestamp": null,
+      "update_user": null,
+      "status": 3,
+      "initiator": 6,
+      "respondent": 2,
+      "type": 1,
+      "number_of_credits": 1,
+      "fair_market_value_per_credit": "120.50",
+      "zero_reason": null,
+      "trade_effective_date": "2017-08-07",
+      "note": null
+    }
+  },
+  {
+    "model": "api.credittrade",
+    "pk": 7,
+    "fields": {
+      "create_timestamp": null,
+      "create_user": null,
+      "update_timestamp": "2017-10-04T01:09:26.702Z",
+      "update_user": null,
+      "status": 9,
+      "initiator": 1,
+      "respondent": 2,
+      "type": 1,
+      "number_of_credits": 1,
+      "fair_market_value_per_credit": "120.50",
+      "zero_reason": null,
+      "trade_effective_date": "2017-08-07",
+      "note": null
+    }
+  },
+  {
+    "model": "api.credittrade",
+    "pk": 9,
+    "fields": {
+      "create_timestamp": null,
+      "create_user": null,
+      "update_timestamp": "2017-09-28T17:01:07.282Z",
+      "update_user": null,
+      "status": 6,
+      "initiator": 1,
+      "respondent": 1,
+      "type": 1,
+      "number_of_credits": 1,
+      "fair_market_value_per_credit": "10.00",
+      "zero_reason": null,
+      "trade_effective_date": null,
+      "note": null
+    }
+  },
+  {
+    "model": "api.credittrade",
+    "pk": 10,
+    "fields": {
+      "create_timestamp": null,
+      "create_user": null,
+      "update_timestamp": "2017-11-01T01:49:19.868Z",
+      "update_user": null,
+      "status": 3,
+      "initiator": 1,
+      "respondent": 1,
+      "type": 1,
+      "number_of_credits": 10,
+      "fair_market_value_per_credit": "10.00",
+      "zero_reason": null,
+      "trade_effective_date": null,
+      "note": null
+    }
+  },
+  {
+    "model": "api.credittrade",
+    "pk": 11,
+    "fields": {
+      "create_timestamp": null,
+      "create_user": null,
+      "update_timestamp": "2017-11-01T01:48:21.568Z",
+      "update_user": null,
+      "status": 3,
+      "initiator": 1,
+      "respondent": 5,
+      "type": 2,
+      "number_of_credits": 11,
+      "fair_market_value_per_credit": "1.00",
+      "zero_reason": null,
+      "trade_effective_date": null,
+      "note": null
+    }
+  },
+  {
+    "model": "api.credittrade",
+    "pk": 12,
+    "fields": {
+      "create_timestamp": null,
+      "create_user": null,
+      "update_timestamp": "2017-11-07T17:45:17.521Z",
+      "update_user": null,
+      "status": 3,
+      "initiator": 1,
+      "respondent": 1,
+      "type": 1,
+      "number_of_credits": 1,
+      "fair_market_value_per_credit": "1.00",
+      "zero_reason": null,
+      "trade_effective_date": null,
+      "note": null
+    }
+  },
+  {
+    "model": "api.credittrade",
+    "pk": 13,
+    "fields": {
+      "create_timestamp": null,
+      "create_user": null,
+      "update_timestamp": "2017-11-07T17:45:53.350Z",
+      "update_user": null,
+      "status": 3,
+      "initiator": 1,
+      "respondent": 1,
+      "type": 1,
+      "number_of_credits": 1,
+      "fair_market_value_per_credit": "2.00",
+      "zero_reason": null,
+      "trade_effective_date": null,
+      "note": null
+    }
+  },
+  {
+    "model": "api.credittrade",
+    "pk": 33,
+    "fields": {
+      "create_timestamp": null,
+      "create_user": null,
+      "update_timestamp": null,
+      "update_user": null,
+      "status": 8,
+      "initiator": 1,
+      "respondent": 1,
+      "type": 1,
+      "number_of_credits": 100,
+      "fair_market_value_per_credit": "1.00",
+      "zero_reason": null,
+      "trade_effective_date": null,
+      "note": null
+    }
+  },
+  {
+    "model": "api.credittrade",
+    "pk": 34,
+    "fields": {
+      "create_timestamp": null,
+      "create_user": null,
+      "update_timestamp": null,
+      "update_user": null,
+      "status": 8,
+      "initiator": 1,
+      "respondent": 24,
+      "type": 1,
+      "number_of_credits": 11,
+      "fair_market_value_per_credit": "1.00",
+      "zero_reason": null,
+      "trade_effective_date": null,
+      "note": null
+    }
+  },
+  {
+    "model": "api.credittrade",
+    "pk": 35,
+    "fields": {
+      "create_timestamp": null,
+      "create_user": null,
+      "update_timestamp": null,
+      "update_user": null,
+      "status": 9,
+      "initiator": 1,
+      "respondent": 5,
+      "type": 1,
+      "number_of_credits": 11,
+      "fair_market_value_per_credit": "2.00",
+      "zero_reason": null,
+      "trade_effective_date": null,
+      "note": null
+    }
+  },
+  {
+    "model": "api.credittrade",
+    "pk": 36,
+    "fields": {
+      "create_timestamp": null,
+      "create_user": null,
+      "update_timestamp": null,
+      "update_user": null,
+      "status": 8,
+      "initiator": 1,
+      "respondent": 1,
+      "type": 1,
+      "number_of_credits": 11,
+      "fair_market_value_per_credit": "11.00",
+      "zero_reason": null,
+      "trade_effective_date": null,
+      "note": null
+    }
+  },
+  {
+    "model": "api.credittrade",
+    "pk": 37,
+    "fields": {
+      "create_timestamp": null,
+      "create_user": null,
+      "update_timestamp": null,
+      "update_user": null,
+      "status": 7,
+      "initiator": null,
+      "respondent": 10,
+      "type": 2,
+      "number_of_credits": 10,
+      "fair_market_value_per_credit": "120.00",
+      "zero_reason": null,
+      "trade_effective_date": "2017-09-09",
+      "note": null
+    }
+  },
+  {
+    "model": "api.credittrade",
+    "pk": 38,
+    "fields": {
+      "create_timestamp": null,
+      "create_user": null,
+      "update_timestamp": "2017-09-20T21:20:24.587Z",
+      "update_user": null,
+      "status": 1,
+      "initiator": 1,
+      "respondent": 1,
+      "type": 1,
+      "number_of_credits": 1,
+      "fair_market_value_per_credit": "1.00",
+      "zero_reason": null,
+      "trade_effective_date": null,
+      "note": null
+    }
+  },
+  {
+    "model": "api.credittrade",
+    "pk": 39,
+    "fields": {
+      "create_timestamp": null,
+      "create_user": null,
+      "update_timestamp": null,
+      "update_user": null,
+      "status": 2,
+      "initiator": 1,
+      "respondent": 1,
+      "type": 1,
+      "number_of_credits": 10,
+      "fair_market_value_per_credit": "10.00",
+      "zero_reason": null,
+      "trade_effective_date": null,
+      "note": null
+    }
+  },
+  {
+    "model": "api.credittrade",
+    "pk": 40,
+    "fields": {
+      "create_timestamp": null,
+      "create_user": null,
+      "update_timestamp": null,
+      "update_user": null,
+      "status": 2,
+      "initiator": 1,
+      "respondent": 1,
+      "type": 1,
+      "number_of_credits": 10,
+      "fair_market_value_per_credit": "0.00",
+      "zero_reason": null,
+      "trade_effective_date": null,
+      "note": null
+    }
+  },
+  {
+    "model": "api.credittrade",
+    "pk": 41,
+    "fields": {
+      "create_timestamp": null,
+      "create_user": null,
+      "update_timestamp": null,
+      "update_user": null,
+      "status": 8,
+      "initiator": 1,
+      "respondent": 1,
+      "type": 1,
+      "number_of_credits": 0,
+      "fair_market_value_per_credit": "0.00",
+      "zero_reason": null,
+      "trade_effective_date": null,
+      "note": null
+    }
+  },
+  {
+    "model": "api.credittrade",
+    "pk": 42,
+    "fields": {
+      "create_timestamp": null,
+      "create_user": null,
+      "update_timestamp": null,
+      "update_user": null,
+      "status": 2,
+      "initiator": 1,
+      "respondent": 24,
+      "type": 1,
+      "number_of_credits": 5,
+      "fair_market_value_per_credit": "10.00",
+      "zero_reason": null,
+      "trade_effective_date": null,
+      "note": null
+    }
+  },
+  {
+    "model": "api.credittrade",
+    "pk": 43,
+    "fields": {
+      "create_timestamp": null,
+      "create_user": null,
+      "update_timestamp": "2017-09-19T18:28:10.018Z",
+      "update_user": null,
+      "status": 8,
+      "initiator": 1,
+      "respondent": 2,
+      "type": 1,
+      "number_of_credits": 10,
+      "fair_market_value_per_credit": "100.00",
+      "zero_reason": null,
+      "trade_effective_date": null,
+      "note": null
+    }
+  },
+  {
+    "model": "api.credittrade",
+    "pk": 44,
+    "fields": {
+      "create_timestamp": null,
+      "create_user": null,
+      "update_timestamp": null,
+      "update_user": null,
+      "status": 9,
+      "initiator": 1,
+      "respondent": 1,
+      "type": 1,
+      "number_of_credits": 0,
+      "fair_market_value_per_credit": "0.00",
+      "zero_reason": null,
+      "trade_effective_date": null,
+      "note": null
+    }
+  },
+  {
+    "model": "api.credittrade",
+    "pk": 45,
+    "fields": {
+      "create_timestamp": null,
+      "create_user": null,
+      "update_timestamp": null,
+      "update_user": null,
+      "status": 2,
+      "initiator": 1,
+      "respondent": 2,
+      "type": 2,
+      "number_of_credits": 0,
+      "fair_market_value_per_credit": "0.00",
+      "zero_reason": null,
+      "trade_effective_date": null,
+      "note": null
+    }
+  },
+  {
+    "model": "api.credittrade",
+    "pk": 46,
+    "fields": {
+      "create_timestamp": null,
+      "create_user": null,
+      "update_timestamp": null,
+      "update_user": null,
+      "status": 9,
+      "initiator": 1,
+      "respondent": 25,
+      "type": 1,
+      "number_of_credits": 75000,
+      "fair_market_value_per_credit": "125.00",
+      "zero_reason": null,
+      "trade_effective_date": null,
+      "note": null
+    }
+  },
+  {
+    "model": "api.credittrade",
+    "pk": 47,
+    "fields": {
+      "create_timestamp": null,
+      "create_user": null,
+      "update_timestamp": "2017-09-11T18:27:42.271Z",
+      "update_user": null,
+      "status": 8,
+      "initiator": 1,
+      "respondent": 25,
+      "type": 1,
+      "number_of_credits": 480000,
+      "fair_market_value_per_credit": "180.00",
+      "zero_reason": null,
+      "trade_effective_date": null,
+      "note": null
+    }
+  },
+  {
+    "model": "api.credittrade",
+    "pk": 48,
+    "fields": {
+      "create_timestamp": "2017-09-11T18:22:25.744Z",
+      "create_user": null,
+      "update_timestamp": "2017-09-11T18:26:03.768Z",
+      "update_user": null,
+      "status": 9,
+      "initiator": 1,
+      "respondent": 25,
+      "type": 1,
+      "number_of_credits": 500000,
+      "fair_market_value_per_credit": "190.00",
+      "zero_reason": null,
+      "trade_effective_date": null,
+      "note": null
+    }
+  },
+  {
+    "model": "api.credittrade",
+    "pk": 49,
+    "fields": {
+      "create_timestamp": "2017-09-15T20:52:32.421Z",
+      "create_user": null,
+      "update_timestamp": "2017-09-28T17:00:19.233Z",
+      "update_user": null,
+      "status": 3,
+      "initiator": 1,
+      "respondent": 25,
+      "type": 1,
+      "number_of_credits": 20000,
+      "fair_market_value_per_credit": "-50.00",
+      "zero_reason": null,
+      "trade_effective_date": null,
+      "note": null
+    }
+  },
+  {
+    "model": "api.credittrade",
+    "pk": 50,
+    "fields": {
+      "create_timestamp": "2017-09-27T23:20:43.741Z",
+      "create_user": null,
+      "update_timestamp": "2017-09-27T23:20:43.741Z",
+      "update_user": null,
+      "status": 2,
+      "initiator": 1,
+      "respondent": 5,
+      "type": 1,
+      "number_of_credits": 1000,
+      "fair_market_value_per_credit": "110.00",
+      "zero_reason": null,
+      "trade_effective_date": null,
+      "note": null
+    }
+  },
+  {
+    "model": "api.credittrade",
+    "pk": 51,
+    "fields": {
+      "create_timestamp": "2017-09-28T17:42:09.236Z",
+      "create_user": null,
+      "update_timestamp": "2017-09-28T17:42:09.236Z",
+      "update_user": null,
+      "status": 2,
+      "initiator": 1,
+      "respondent": 1,
+      "type": 1,
+      "number_of_credits": 100,
+      "fair_market_value_per_credit": "179.00",
+      "zero_reason": null,
+      "trade_effective_date": null,
+      "note": null
+    }
+  },
+  {
+    "model": "api.credittrade",
+    "pk": 52,
+    "fields": {
+      "create_timestamp": "2017-09-29T15:32:14.979Z",
+      "create_user": null,
+      "update_timestamp": "2017-11-07T17:41:01.999Z",
+      "update_user": null,
+      "status": 1,
+      "initiator": 1,
+      "respondent": 5,
+      "type": 1,
+      "number_of_credits": 6000,
+      "fair_market_value_per_credit": "185.00",
+      "zero_reason": null,
+      "trade_effective_date": null,
+      "note": null
+    }
+  },
+  {
+    "model": "api.credittrade",
+    "pk": 53,
+    "fields": {
+      "create_timestamp": "2017-10-03T16:14:26.403Z",
+      "create_user": null,
+      "update_timestamp": "2017-10-03T16:14:26.403Z",
+      "update_user": null,
+      "status": 1,
+      "initiator": 1,
+      "respondent": 1,
+      "type": 2,
+      "number_of_credits": 1500,
+      "fair_market_value_per_credit": "165.00",
+      "zero_reason": null,
+      "trade_effective_date": null,
+      "note": null
+    }
+  },
+  {
+    "model": "api.credittrade",
+    "pk": 54,
+    "fields": {
+      "create_timestamp": "2017-10-26T17:24:57.640Z",
+      "create_user": null,
+      "update_timestamp": "2017-10-26T17:24:57.640Z",
+      "update_user": null,
+      "status": 2,
+      "initiator": 1,
+      "respondent": 2,
+      "type": 1,
+      "number_of_credits": 5,
+      "fair_market_value_per_credit": "14.00",
+      "zero_reason": null,
+      "trade_effective_date": null,
+      "note": null
+    }
+  },
+  {
+    "model": "api.credittrade",
+    "pk": 55,
+    "fields": {
+      "create_timestamp": "2017-10-27T18:25:15.353Z",
+      "create_user": null,
+      "update_timestamp": "2017-10-27T18:27:19.405Z",
+      "update_user": null,
+      "status": 6,
+      "initiator": 1,
+      "respondent": 25,
+      "type": 1,
+      "number_of_credits": 5532825,
+      "fair_market_value_per_credit": "124.00",
+      "zero_reason": null,
+      "trade_effective_date": null,
+      "note": null
+    }
+  },
+  {
+    "model": "api.credittrade",
+    "pk": 56,
+    "fields": {
+      "create_timestamp": "2017-11-01T01:51:25.139Z",
+      "create_user": null,
+      "update_timestamp": "2017-11-01T01:53:28.222Z",
+      "update_user": null,
+      "status": 6,
+      "initiator": 1,
+      "respondent": 7,
+      "type": 1,
+      "number_of_credits": 200000,
+      "fair_market_value_per_credit": "150.00",
+      "zero_reason": null,
+      "trade_effective_date": null,
+      "note": null
+    }
+  },
+  {
+    "model": "api.credittrade",
+    "pk": 57,
+    "fields": {
+      "create_timestamp": "2017-11-07T19:52:52.895Z",
+      "create_user": null,
+      "update_timestamp": "2017-11-07T19:52:52.895Z",
+      "update_user": null,
+      "status": 1,
+      "initiator": 1,
+      "respondent": 3,
+      "type": 2,
+      "number_of_credits": 10,
+      "fair_market_value_per_credit": "150.00",
+      "zero_reason": null,
+      "trade_effective_date": null,
+      "note": null
+    }
+  }
+]
