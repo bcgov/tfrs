@@ -19,11 +19,17 @@ STATUS_CANCELLED = 8
 
 class TestCreditTradeAPI(TestCase):
     fixtures = ['organization_types.json',
-                'organizations.json', 'organization_balances.json',
-                'credit_trade_statuses.json', 'credit_trade_types.json',
+                'organization_government.json',
+                'organization_balance_gov.json',
+                'credit_trade_statuses.json',
                 'organization_actions_types.json',
                 'organization_statuses.json',
-                'users.json']
+                'test_users.json',
+                'credit_trade_types.json',
+                'test_credit_trades.json',
+                'test_organization_fuel_suppliers.json',
+                'test_organization_balances.json',
+                ]
 
     def setUp(self):
 
