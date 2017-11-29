@@ -123,10 +123,7 @@ class OrganizationAttachmentSerializer(serializers.ModelSerializer):
 class OrganizationBalanceSerializer(serializers.ModelSerializer):
     class Meta:
         model = OrganizationBalance
-        fields = (
-            'id', 'organization', 'validated_credits', 'effective_date',
-            'expiration_date',
-            'credit_trade')
+        fields = '__all__'
 
 
 class OrganizationHistorySerializer(serializers.ModelSerializer):

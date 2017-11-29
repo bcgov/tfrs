@@ -24,19 +24,20 @@ from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from rest_framework.schemas import SchemaGenerator
 from rest_framework.views import APIView
-from rest_framework.urlpatterns import format_suffix_patterns
 from rest_framework_swagger import renderers
 # generated views
 from . import views
 # custom views
 from . import views_custom
 from .viewsets.CreditTrade import CreditTradeViewSet
+from .viewsets.Organization import OrganizationViewSet
 
 from rest_framework.routers import DefaultRouter
 
 # Create a router and register our views with it.
 router = DefaultRouter(trailing_slash=False)
 router.register(r'credit_trades', CreditTradeViewSet)
+router.register(r'organizations', OrganizationViewSet)
 
 
 class SwaggerSchemaView(APIView):
@@ -80,13 +81,13 @@ urlpatterns = [
     url(r'^credittradezeroreason/(?P<id>[0-9]+)/delete$', views.credittradezeroreasonIdDeletePost.as_view()),
     url(r'^credittradezeroreason/(?P<id>[0-9]+)$', views.credittradezeroreasonIdGet.as_view()),
     url(r'^users/current$', views_custom.usersCurrentGet.as_view()),
-    url(r'^organizations/bulk$', views.organizationsBulkPost.as_view()),
-    url(r'^organizations$', views.organizationsGet.as_view()),
-    url(r'^organizations/(?P<id>[0-9]+)/attachments$', views_custom.organizationsIdAttachmentsGet.as_view()),
-    url(r'^organizations/(?P<id>[0-9]+)/delete$', views.organizationsIdDeletePost.as_view()),
-    url(r'^organizations/(?P<id>[0-9]+)$', views.organizationsIdGet.as_view()),
-    url(r'^organizations/(?P<id>[0-9]+)/history$', views_custom.organizationsIdHistoryGet.as_view()),
-    url(r'^organizations/search$', views_custom.organizationsSearchGet.as_view()),
+    # url(r'^organizations/bulk$', views.organizationsBulkPost.as_view()),
+    # url(r'^organizations$', views.organizationsGet.as_view()),
+    # url(r'^organizations/(?P<id>[0-9]+)/attachments$', views_custom.organizationsIdAttachmentsGet.as_view()),
+    # url(r'^organizations/(?P<id>[0-9]+)/delete$', views.organizationsIdDeletePost.as_view()),
+    # url(r'^organizations/(?P<id>[0-9]+)$', views.organizationsIdGet.as_view()),
+    # url(r'^organizations/(?P<id>[0-9]+)/history$', views_custom.organizationsIdHistoryGet.as_view()),
+    # url(r'^organizations/search$', views_custom.organizationsSearchGet.as_view()),
     url(r'^organization_actions_types/bulk$', views.organizationactionstypesBulkPost.as_view()),
     url(r'^organization_actions_types$', views.organizationactionstypesGet.as_view()),
     url(r'^organization_actions_types/(?P<id>[0-9]+)/delete$', views.organizationactionstypesIdDeletePost.as_view()),

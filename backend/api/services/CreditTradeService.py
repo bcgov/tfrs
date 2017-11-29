@@ -1,14 +1,17 @@
 from api.models.CreditTradeHistory import CreditTradeHistory
+from api.models.CreditTradeStatus import CreditTradeStatus
 from api.models.OrganizationBalance import OrganizationBalance
 
 from api.exceptions import PositiveIntegerException
 from django.core.exceptions import ValidationError
 
+import datetime
+
 
 class CreditTradeService(object):
 
     @staticmethod
-    def create_history(credit_trade, is_new=True):
+    def create_history(credit_trade, is_new=False):
         """
         Create the CreditTradeHistory
         """
@@ -72,33 +75,30 @@ class CreditTradeService(object):
         history.save()
 
     @staticmethod
-    def gov_transfer_credits(_to, credit_trade_id, num_of_credits,
-                             effective_date, action='increase'):
-        to_starting_bal = OrganizationBalance.objects.get(
-            organization_id=_to.id,
-            expiration_date=None)
+    def approve(credit_trade):
 
-        if 'increase' == action:
-            to_credits = to_starting_bal.validated_credits + num_of_credits
-        else:
-            to_credits = to_starting_bal.validated_credits - num_of_credits
+        status_approved = CreditTradeStatus.objects.get(status="Approved")
+        status_completed = CreditTradeStatus.objects.get(status="Completed")
 
-        if 0 > to_credits:
-            raise PositiveIntegerException("Can't complete transaction,"
-                                           "insufficient credits")
+        credit_trade.status = status_approved
+        CreditTradeService.create_history(credit_trade)
+        credit_trade.save()
 
-        to_starting_bal.expiration_date = effective_date
-
-        to_new_bal = OrganizationBalance(
-            organization=_to,
-            validated_credits=to_credits,
-            effective_date=effective_date,
-            credit_trade_id=credit_trade_id
+        effective_date = datetime.date.today()
+        CreditTradeService.transfer_credits(
+            credit_trade.credits_from,
+            credit_trade.credits_to,
+            credit_trade.id,
+            credit_trade.number_of_credits,
+            effective_date
         )
 
-        # Save everything
-        to_starting_bal.save()
-        to_new_bal.save()
+        credit_trade.status = status_completed
+        credit_trade.trade_effective_date = effective_date
+        CreditTradeService.create_history(credit_trade)
+        credit_trade.save()
+
+        return credit_trade
 
     @staticmethod
     def transfer_credits(_from, _to, credit_trade_id, num_of_credits,
@@ -140,5 +140,11 @@ class CreditTradeService(object):
         # Save everything
         from_starting_bal.save()
         to_starting_bal.save()
+
         from_new_bal.save()
         to_new_bal.save()
+
+        # print("to bal s", to_starting_bal.effective_date, vars(to_starting_bal))
+        # print("to bal e", to_new_bal.effective_date, vars(to_new_bal))
+        # print("from bal s", from_starting_bal.effective_date, vars(from_starting_bal))
+        # print("from bal e", from_new_bal.effective_date, vars(from_new_bal))

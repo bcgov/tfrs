@@ -55,23 +55,19 @@ class CreditTrade(Auditable):
 
     @property
     def credits_from(self):
-        if self.type.id == 1:
+        # 3 and 5 is government
+        if self.type.id in [1, 3, 5]:
             return self.initiator
         elif self.type.id in [2, 4]:
             return self.respondent
-        elif self.type.id in [3, 5]:
-            # TODO: Fuel supplier is Government, which is not a fuel supplier
-            return Organization(id=0, name="Government of British Columbia")
 
     @property
     def credits_to(self):
-        if self.type.id == 2:
+        # 4 is government
+        if self.type.id in [2, 4]:
             return self.initiator
         elif self.type.id in [1, 3, 5]:
             return self.respondent
-        elif self.type.id == 4:
-            # TODO: Fuel supplier is Government, which is not a fuel supplier
-            return Organization(id=0, name="Government of British Columbia")
 
     class Meta:
         db_table = 'credit_trade'
