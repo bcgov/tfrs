@@ -32,7 +32,7 @@ class FlowSpecs extends GebReportingSpec {
         //SettingsPage        | "navbar-dashboard"          | 1             | 5                 || DashboardPage
         //NotificationsPage   | "navbar-settings"           | 1             | 5                 || SettingsPage
         //Test Externally Linked Pages
-        SettingsPage        | "footer-about-copyright"        | 1             | 3                 || Copyright
+        //SettingsPage        | "footer-about-copyright"        | 1             | 3                 || Copyright
         //SettingsPage      | "footer-about-disclaimer"       | 1             | 3                 || Disclaimer
         //SettingsPage      | "footer-about-privacy"          | 1             | 3                 || Privacy
         //SettingsPage      | "footer-about-accessibility"    | 1             | 3                 || Accessability
