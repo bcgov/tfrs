@@ -223,76 +223,60 @@ class TestCreditTradeAPI(TestCase):
             set(credit_trade_status).issubset(
                 response_data['status']))
 
-    # def test_approved_buy(self, **kwargs):
-    #     # get fuel supplier balance for fs 1
-    #     initiator_bal = fake_api_calls.get_fuel_supplier_balances(id=1)
-    #     respondent_bal = fake_api_calls.get_fuel_supplier_balances(id=2)
-    #
-    #     # balance = initiator_balance['validated_credits']
-    #     print("initiator & respondent")
-    #     print(initiator_bal['validated_credits'])
-    #     print(respondent_bal['validated_credits'])
-    #     # get fuel supplier balance for fs 2
-    #
-    #     num_of_credits = 50
-    #
-    #     credit_trade = fake_api_calls.create_credit_trade(
-    #         user_id=self.user_id,
-    #         status=STATUS_PROPOSED,
-    #         fair_market_value_per_credit=1000,
-    #         initiator=1,
-    #         respondent=2,
-    #         number_of_credits=num_of_credits
-    #     )
-    #
-    #     pprint(credit_trade)
-    #
-    #     response = self.client.put(
-    #         "{}/{}/approve".format(self.test_url, credit_trade['id']),
-    #         content_type='application/json')
-    #
-    #     response_data = json.loads(response.content.decode("utf-8"))
-    #     print(response)
-    #     print(response_data)
-    #     assert status.HTTP_200_OK == response.status_code
-    #
-    #     # TODO: Make sure two credit histories are created
-    #
-    #     pprint(response_data)
-    #
-    #     print("After approval")
-    #     initiator_bal_after = fake_api_calls.get_fuel_supplier_balances(id=1)
-    #     respondent_bal_after = fake_api_calls.get_fuel_supplier_balances(id=2)
-    #     print(initiator_bal['validated_credits'])
-    #     print(respondent_bal['validated_credits'])
-    #
-    #     init_final_bal = initiator_bal['validated_credits'] + num_of_credits
-    #     resp_final_bal = respondent_bal['validated_credits'] - num_of_credits
-    #
-    #     ct_completed = self.client.get(
-    #         "{}/{}".format(self.test_url, credit_trade['id']),
-    #         content_type='application/json')
-    #
-    #     completed_response = json.loads(
-    #         ct_completed.content.decode("utf-8"))
-    #
-    #     # response_data should have status == completed
-    #     print(completed_response)
-    #     today = datetime.datetime.today().strftime('%Y-%m-%d')
-    #
-    #     # Status of Credit Trade should be 'completed'
-    #     self.assertEqual(completed_response['status']['id'],
-    #                      STATUS_COMPLETED)
-    #
-    #     # Effective date should be today
-    #     self.assertEqual(initiator_bal_after['trade_effective_date'], today)
-    #     self.assertEqual(respondent_bal_after['trade_effective_date'], today)
-    #
-    #     # Credits should be subtracted/added
-    #     self.assertEqual(init_final_bal,
-    #                      initiator_bal_after['validated_credits'])
-    #     self.assertEqual(resp_final_bal,
-    #                      respondent_bal_after['validated_credits'])
+    def test_approved_buy(self, **kwargs):
+        # get fuel supplier balance for fs 1
+        initiator_bal = fake_api_calls.get_organization_balance(id=2)
+        respondent_bal = fake_api_calls.get_organization_balance(id=3)
+
+        num_of_credits = 50
+
+        credit_trade = fake_api_calls.create_credit_trade(
+            user_id=self.user_id,
+            status=STATUS_PROPOSED,
+            fair_market_value_per_credit=1000,
+            initiator=2,
+            respondent=3,
+            number_of_credits=num_of_credits,
+            type=2
+        )
+
+        response = self.client.put(
+            "{}/{}/approve".format(self.test_url, credit_trade['id']),
+            content_type='application/json')
+
+        assert status.HTTP_200_OK == response.status_code
+
+        # TODO: Make sure two credit histories are created
+
+        initiator_bal_after = fake_api_calls.get_organization_balance(id=2)
+        respondent_bal_after = fake_api_calls.get_organization_balance(id=3)
+
+        init_final_bal = initiator_bal['validated_credits'] + num_of_credits
+        resp_final_bal = respondent_bal['validated_credits'] - num_of_credits
+
+        ct_completed = self.client.get(
+            "{}/{}".format(self.test_url, credit_trade['id']),
+            content_type='application/json')
+
+        completed_response = json.loads(
+            ct_completed.content.decode("utf-8"))
+
+        # response_data should have status == completed
+        today = datetime.datetime.today().strftime('%Y-%m-%d')
+
+        # Status of Credit Trade should be 'completed'
+        self.assertEqual(completed_response['status']['id'],
+                         STATUS_COMPLETED)
+
+        # Effective date should be today
+        self.assertEqual(initiator_bal_after['effective_date'], today)
+        self.assertEqual(respondent_bal_after['effective_date'], today)
+
+        # Credits should be subtracted/added
+        self.assertEqual(init_final_bal,
+                         initiator_bal_after['validated_credits'])
+        self.assertEqual(resp_final_bal,
+                         respondent_bal_after['validated_credits'])
 
     def test_approved_sell(self, **kwargs):
         pass

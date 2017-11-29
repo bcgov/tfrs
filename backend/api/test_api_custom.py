@@ -239,7 +239,7 @@ class Test_Api_Custom(TestCase):
 
     def deleteOrganization(self, organization_id):
         deleteUrl = "/api/organizations/" + str(organization_id) + "/delete"
-        response = self.client.post(deleteUrl)
+        response = self.client.put(deleteUrl)
         # Check that the response is OK.
         assert status.HTTP_204_NO_CONTENT == response.status_code
 
@@ -296,6 +296,7 @@ class Test_Api_Custom(TestCase):
         jsonString = response.content.decode("utf-8")
         data = json.loads(jsonString)
         # Cleanup
+
     def test_rolesIdPermissionsGet(self):
         # create a group.
         role_id = self.createRole()

@@ -160,10 +160,10 @@ def create_credit_trade(**kwargs):
     return response_data
 
 
-def get_organization_balances(**kwargs):
+def get_organization_balance(**kwargs):
 
     fs_id = kwargs.get("id", create_organization())
-    response = client.get("/api/organization_balances/{}".format(fs_id))
+    response = client.get("/api/organizations/{}/balance".format(fs_id))
     assert status.HTTP_200_OK == response.status_code
     response_data = json.loads(response.content.decode("utf-8"))
     return response_data
