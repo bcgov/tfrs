@@ -39,6 +39,8 @@ node('maven') {
         dir('functional-tests') {
 			try {
 				sh './gradlew --debug --stacktrace phantomJsTest'
+			} catch(Throwable t) {
+				mail (to: 'Kuan.Fan@gov.bc.ca;Daine.Trinidad@gov.bc.ca;Raj.Persram@gov.bc.ca', subject: "FYI: Job '${env.JOB_NAME}' (${env.BUILD_NUMBER}) functional test failed", body: "See ${env.BUILD_URL} for details. ");
 			} finally {
 				archiveArtifacts allowEmptyArchive: true, artifacts: 'build/reports/**/*'
 			}
