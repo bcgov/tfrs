@@ -293,7 +293,7 @@
       "update_timestamp": null,
       "update_user": null,
       "status": 7,
-      "initiator": null,
+      "initiator": 1,
       "respondent": 10,
       "type": 2,
       "number_of_credits": 10,
