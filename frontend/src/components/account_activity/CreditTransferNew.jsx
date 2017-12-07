@@ -9,7 +9,7 @@ import {
   getCreditTransferReset,
   addCreditTransfer,
   addCreditTransferReset } from '../../actions/accountActivityActions.jsx';
-import { getFuelSuppliers } from '../../actions/fuelSuppliersActions.jsx';
+import { getOrganizations } from '../../actions/organizationActions.jsx';
 import { BootstrapTable, TableHeaderColumn, ButtonGroup } from 'react-bootstrap-table';
 import TransactionHistory from './TransactionHistory.jsx';
 
@@ -38,7 +38,7 @@ class CreditTransferNew extends Component {
 
   handleSubmit(event, status) {
     event.preventDefault();
-    const initiatorFK = this.props.fuelSuppliers[0].id;
+    const initiatorFK = this.props.organizations[0].id;
     const creditTradeTypeFK = this.creditTradeTypeFK.value;
     const numberOfCredits = this.numberOfCredits.value;
     const respondentFK = this.respondent.value;
@@ -72,7 +72,7 @@ class CreditTransferNew extends Component {
         <div className="credit-transfer-details">
           <form className="form-inline" onSubmit={(event, status) => this.handleSubmit(event, Values.STATUS_PROPOSED)}>
             <div className="main-form">
-              <span>{this.props.fuelSuppliers && this.props.fuelSuppliers[0].name} proposes to </span>
+              <span>{this.props.organizations && this.props.organizations[0].name} proposes to </span>
               <div className="form-group">
                 <select 
                   className="form-control" 
@@ -102,9 +102,9 @@ class CreditTransferNew extends Component {
                   name="respondent"
                   ref={(input) => this.respondent = input}
                   onChange={(event) => this.handleInputChange(event)}>
-                  { this.props.fuelSuppliers &&
-                    this.props.fuelSuppliers.map((fuelSupplier) => (
-                      <option value={fuelSupplier.id}>{fuelSupplier.name}</option>
+                  { this.props.organizations &&
+                    this.props.organizations.map((organization) => (
+                      <option value={organization.id}>{organization.name}</option>
                   ))}
                 </select>
               </div>
@@ -167,7 +167,7 @@ class CreditTransferNew extends Component {
 export default connect (
   state => ({
     data: state.rootReducer[ReducerTypes.GET_CREDIT_TRANSFER].data,
-    fuelSuppliers: state.rootReducer[ReducerTypes.GET_FUEL_SUPPLIERS].data,
+    organizations: state.rootReducer[ReducerTypes.GET_ORGANIZATIONS].data,
     addCreditTransferError: state.rootReducer[ReducerTypes.ADD_CREDIT_TRANSFER].errorMessage
   }),
   dispatch => ({
@@ -183,8 +183,8 @@ export default connect (
     getCreditTransferReset: () => {
       dispatch(getCreditTransferReset());
     },
-    getFuelSuppliers: () => {
-      dispatch(getFuelSuppliers());
+    getOrganizations: () => {
+      dispatch(getOrganizations());
     }
   })
 )(CreditTransferNew)

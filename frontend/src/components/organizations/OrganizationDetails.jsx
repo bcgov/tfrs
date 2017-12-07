@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { 
-  getFuelSupplier,
-  getFuelSupplierType,
-  getFuelSupplierStatus
-} from '../../actions/fuelSuppliersActions.jsx';
+  getOrganization,
+  getOrganizationType,
+  getOrganizationStatus
+} from '../../actions/organizationActions.jsx';
 import * as ReducerTypes from '../../constants/reducerTypes.jsx';
 import * as Values from '../../constants/values.jsx';
 import { 
@@ -13,14 +13,14 @@ import {
   deleteContact,
   deleteContactReset,
   verifyID, 
-  verifyIDReset } from '../../actions/fuelSuppliersActions.jsx';
+  verifyIDReset } from '../../actions/organizationActions.jsx';
 import { Modal } from 'react-bootstrap';
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
 import AddContactForm from './AddContactForm.jsx';
 import UploadDocumentForm from './UploadDocumentForm.jsx';
 import ChangeStatusForm from './ChangeStatusForm.jsx';
 
-class FuelSupplierDetails extends Component {
+class OrganizationDetails extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -36,43 +36,43 @@ class FuelSupplierDetails extends Component {
       contactBCeID: '',
       contactID: '',
       contacts: [],
-      fuelSupplierAttachments: null,
+      OrganizationAttachments: null,
     };
   }
   
   componentDidMount() {
     let id = this.props.match.params.id;
-    this.props.getFuelSupplier(id);
-    if (this.props.fuelSupplierContacts.data != null) {
+    this.props.getOrganization(id);
+    if (this.props.OrganizationContacts.data != null) {
       this.filterContacts();
     }
   }
 
   componentDidUpdate(prevProps, prevState) {
-    if ((prevProps.fuelSupplierContacts !== this.props.fuelSupplierContacts) && 
-      this.props.fuelSupplierContacts.data && 
-      this.props.fuelSupplierContacts.data.length > 0) {
+    if ((prevProps.OrganizationContacts !== this.props.OrganizationContacts) && 
+      this.props.OrganizationContacts.data && 
+      this.props.OrganizationContacts.data.length > 0) {
         this.filterContacts();
     }
-    if (this.state.fuelSupplierAttachments == null && this.props.fuelSupplierAttachmentsSuccess) {
+    if (this.state.OrganizationAttachments == null && this.props.OrganizationAttachmentsSuccess) {
       this.filterAttachments();
     }
   }
 
   filterContacts() {
     let id = parseInt(this.props.match.params.id);
-    let contacts = this.props.fuelSupplierContacts.data.filter(contact => {
-      return contact['fuelSupplierFK'] === id
+    let contacts = this.props.OrganizationContacts.data.filter(contact => {
+      return contact['OrganizationFK'] === id
     })
     this.setState({contacts: contacts});
   }
 
   filterAttachments() {
     let id = parseInt(this.props.match.params.id);
-    let attachments = this.props.fuelSupplierAttachments.filter(attachment => {
-      return attachment['fuelSupplierFK'] === id
+    let attachments = this.props.OrganizationAttachments.filter(attachment => {
+      return attachment['OrganizationFK'] === id
     })
-    this.setState({fuelSupplierAttachments: attachments});
+    this.setState({OrganizationAttachments: attachments});
   }
 
   openAddContactModal() {
@@ -190,15 +190,15 @@ class FuelSupplierDetails extends Component {
       toolBar: this.historySearchPanel.bind(this)
     };
     return (
-      <div className="row fuel-supplier-details">
-        { this.props.fuelSupplierData &&
+      <div className="row organization-details">
+        { this.props.OrganizationData &&
         <div>
           <div className="col-lg-12 header-container">
-            <h1 className="title">{this.props.fuelSupplierData.name}</h1>
+            <h1 className="title">{this.props.OrganizationData.name}</h1>
             <div className="badge-container">
-              {this.props.fuelSupplierStatuses && 
-                this.props.fuelSupplierStatuses.map((status) => (
-                status.id === this.props.fuelSupplierData.fuelSupplierStatusFK &&
+              {this.props.OrganizationStatuses && 
+                this.props.OrganizationStatuses.map((status) => (
+                status.id === this.props.OrganizationData.OrganizationStatusFK &&
                   <span className={status.status === Values.STATUS_ARCHIVED ? "label label-default" : "label label-success"}>{status.status}</span>
               ))}
               <button 
@@ -219,22 +219,22 @@ class FuelSupplierDetails extends Component {
             </Modal.Header>
             <Modal.Body>
               <ChangeStatusForm 
-                fuelSupplier={this.props.fuelSupplierData}
-                fuelSupplierStatuses={this.props.fuelSupplierStatuses}
-                fuelSupplierTypes={this.props.fuelSupplierTypes}
-                fuelSupplierActions={this.props.fuelSupplierActions}
+                Organization={this.props.OrganizationData}
+                OrganizationStatuses={this.props.OrganizationStatuses}
+                OrganizationTypes={this.props.OrganizationTypes}
+                OrganizationActions={this.props.OrganizationActions}
                 closeChangeStatusModal={(name) => this.toggleModal('showChangeStatusModal')} />
             </Modal.Body>
           </Modal>
           <div className="row">
             <div className="col-xs-12 col-sm-12 col-md-6 col-lg-6">
-              <div className="fuel-supplier-info">
-                <h2>Fuel Supplier Information</h2>
+              <div className="organization-info">
+                <h2>Organization Information</h2>
                 <div>
-                  <span className="info-label">Name:</span><span className="info">{this.props.fuelSupplierData.name}</span>
+                  <span className="info-label">Name:</span><span className="info">{this.props.OrganizationData.name}</span>
                 </div>
                 <div>
-                  <span className="info-label">Corporate Address:</span><span className="info">{this.props.fuelSupplierData.address}</span>          
+                  <span className="info-label">Corporate Address:</span><span className="info">{this.props.OrganizationData.address}</span>          
                 </div>
                 <div className="account-balance-container">
                   <h2>Account Balance</h2>
@@ -277,7 +277,7 @@ class FuelSupplierDetails extends Component {
                 <Modal.Body>
                   <AddContactForm
                     closeAddContactModal={() => this.closeAddContactModal()} 
-                    fuelSupplierData={this.props.fuelSupplierData}
+                    OrganizationData={this.props.OrganizationData}
                     verifyIDSuccess={this.props.verifyIDSuccess}
                     verifyIDError={this.props.verifyIDError}
                     addContact={(contact) => this.props.addContact(contact)}
@@ -333,7 +333,7 @@ class FuelSupplierDetails extends Component {
         <div className="row">
           <div className="correspondence-table col-lg-12">
             <BootstrapTable 
-              data={this.state.fuelSupplierAttachments}
+              data={this.state.OrganizationAttachments}
               options={ options }
               search
             >
@@ -379,7 +379,7 @@ class FuelSupplierDetails extends Component {
         <div className="row">
           <div className="history-table col-lg-12">
             <BootstrapTable 
-              data={this.props.fuelSupplierData.history}
+              data={this.props.OrganizationData.history}
               options={ historyTableOptions }
               search
             >
@@ -399,27 +399,27 @@ class FuelSupplierDetails extends Component {
 
 export default connect (
   state => ({
-    fuelSupplierData: state.rootReducer[ReducerTypes.GET_FUEL_SUPPLIER].data,
-    fuelSupplierContacts: state.rootReducer[ReducerTypes.FUEL_SUPPLIER_CONTACTS],
-    fuelSupplierTypes: state.rootReducer[ReducerTypes.FUEL_SUPPLIER_TYPES].data,
-    fuelSupplierStatuses: state.rootReducer[ReducerTypes.FUEL_SUPPLIER_STATUSES].data,
-    fuelSupplierActions: state.rootReducer[ReducerTypes.FUEL_SUPPLIER_ACTION_TYPES].data,
-    fuelSupplierAttachments: state.rootReducer[ReducerTypes.FUEL_SUPPLIER_ATTACHMENTS].data,
-    fuelSupplierAttachmentsSuccess: state.rootReducer[ReducerTypes.FUEL_SUPPLIER_ATTACHMENTS].success,
+    OrganizationData: state.rootReducer[ReducerTypes.GET_ORGANIZATION].data,
+    OrganizationContacts: state.rootReducer[ReducerTypes.ORGANIZATION_CONTACTS],
+    OrganizationTypes: state.rootReducer[ReducerTypes.ORGANIZATION_TYPES].data,
+    OrganizationStatuses: state.rootReducer[ReducerTypes.ORGANIZATION_STATUSES].data,
+    OrganizationActions: state.rootReducer[ReducerTypes.ORGANIZATION_ACTION_TYPES].data,
+    OrganizationAttachments: state.rootReducer[ReducerTypes.ORGANIZATION_ATTACHMENTS].data,
+    OrganizationAttachmentsSuccess: state.rootReducer[ReducerTypes.ORGANIZATION_ATTACHMENTS].success,
     verifyIDSuccess: state.rootReducer[ReducerTypes.VERIFY_ID].success,
     verifyIDError: state.rootReducer[ReducerTypes.VERIFY_ID].errorMessage,
     deleteContactSuccess: state.rootReducer[ReducerTypes.DELETE_CONTACT].success,
     addContactSuccess: state.rootReducer[ReducerTypes.ADD_CONTACT].success,
   }),
   dispatch => ({
-    getFuelSupplier: (id) => {
-      dispatch(getFuelSupplier(id));
+    getOrganization: (id) => {
+      dispatch(getOrganization(id));
     },
-    getFuelSupplierType: (id) => {
-      dispatch(getFuelSupplierType(id));
+    getOrganizationType: (id) => {
+      dispatch(getOrganizationType(id));
     },
-    getFuelSupplierStatus: (id) => {
-      dispatch(getFuelSupplierStatus(id));
+    getOrganizationStatus: (id) => {
+      dispatch(getOrganizationStatus(id));
     },
     addContact: (data) => {
       dispatch(addContact(data));
@@ -440,4 +440,4 @@ export default connect (
       dispatch(verifyIDReset());
     }
   })
-)(FuelSupplierDetails)
+)(OrganizationDetails)

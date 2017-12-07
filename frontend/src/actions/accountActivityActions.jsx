@@ -9,11 +9,15 @@ import { CreditTransfer } from '../sampleData.jsx';
 const history = createHistory();
 
 export const getAccountActivity = () => (dispatch) => {
+  console.log("dispatch account activity")
   dispatch(getAccountActivityRequest());
+  console.log(Routes.BASE_URL + Routes.CREDIT_TRADE_API)
   axios.get(Routes.BASE_URL + Routes.CREDIT_TRADE_API)
   .then((response) => {
+    console.log("Response is", response)
     dispatch(getAccountActivitySuccess(response.data));
   }).catch((error) => {
+    console.log("Error!", error.response)
     dispatch(getAccountActivityError(error.response))
   })
 }

@@ -7,13 +7,13 @@ import createHistory from 'history/createHashHistory'; // 'history/createHashHis
 import * as Routes from './constants/routes.jsx';
 import store from './store/store.jsx';
 import {
-	getFuelSupplierActionTypes,
-	getFuelSupplierStatuses,
-	getFuelSupplierTypes,
-	getFuelSupplierContacts,
-	getFuelSupplierAttachments,
-	getFuelSuppliers
-} from './actions/fuelSuppliersActions.jsx';
+	getOrganizationActionTypes,
+	getOrganizationStatuses,
+	getOrganizationTypes,
+	getOrganizationContacts,
+	getOrganizationAttachments,
+	getOrganizations
+} from './actions/organizationActions.jsx';
 import { 
 	getUsers,
 	getPermissions,
@@ -26,28 +26,31 @@ import {
 	getCreditTradeStatuses,
 	getCreditTradeTypes
 	} from './actions/creditTradesActions.jsx';
+import {
+	getAccountActivity
+	} from './actions/accountActivityActions.jsx'
 import App from './components/App.jsx';
 import Dashboard from './components/dashboard/Dashboard.jsx';
-import FuelSuppliers from './components/fuel_suppliers/FuelSuppliers.jsx';
+import Organizations from './components/organizations/Organizations.jsx';
 import AccountActivity from './components/account_activity/AccountActivity.jsx';
 import CreditTransfer from './components/account_activity/CreditTransfer.jsx';
 import CreditTransferNew from './components/account_activity/CreditTransferNew.jsx'
 import Notifications from './components/notifications/Notifications.jsx';
 import Administration from './components/administration/Administration.jsx';
 import Settings from './components/settings/Settings.jsx';
-import FuelSupplierDetails from './components/fuel_suppliers/FuelSupplierDetails.jsx';
+import OrganizationDetails from './components/organizations/OrganizationDetails.jsx';
 import NotFound from './components/reusables/NotFound.jsx';
 
 import '../styles/index.scss';
 
 const history = createHistory();
 
-store.dispatch(getFuelSupplierActionTypes());
-store.dispatch(getFuelSupplierStatuses());
-store.dispatch(getFuelSupplierTypes());
-store.dispatch(getFuelSupplierContacts());
-store.dispatch(getFuelSupplierAttachments());
-store.dispatch(getFuelSuppliers());
+// store.dispatch(getOrganizationActionTypes());
+// store.dispatch(getOrganizationStatuses());
+// store.dispatch(getOrganizationTypes());
+// store.dispatch(getOrganizationContacts());
+// store.dispatch(getOrganizationAttachments());
+// store.dispatch(getOrganizations());
 store.dispatch(getUsers());
 store.dispatch(getPermissions());
 store.dispatch(getRolePermissions());
@@ -56,6 +59,8 @@ store.dispatch(getUserRoles());
 store.dispatch(getCreditTrades());
 store.dispatch(getCreditTradeStatuses());
 store.dispatch(getCreditTradeTypes());
+// store.dispatch(getAccountActivity());
+
 
 ReactDOM.render(
 	<Provider store={store}>
@@ -64,8 +69,8 @@ ReactDOM.render(
 				<App>
 					<Switch>
 						<Route exact path={Routes.HOME} component={withRouter(Dashboard)} />
-						<Route exact path={Routes.FUEL_SUPPLIERS} component={withRouter(FuelSuppliers)} />
-						<Route path={Routes.FUEL_SUPPLIER_DETAILS} component={withRouter(FuelSupplierDetails)} />
+						<Route exact path={Routes.ORGANIZATIONS} component={withRouter(Organizations)} />
+						<Route path={Routes.ORGANIZATION_DETAILS} component={withRouter(OrganizationDetails)} />
 						<Route path={Routes.ACCOUNT_ACTIVITY} component={withRouter(AccountActivity)} />
 						<Route path={Routes.CREDIT_TRANSFER_DETAILS} component={withRouter(CreditTransfer)} />
 						<Route exact path={Routes.CREDIT_TRANSFER} component={withRouter(CreditTransferNew)} />

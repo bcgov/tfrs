@@ -3,24 +3,24 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { Modal } from 'react-bootstrap';
 import * as Routes from '../../constants/routes.jsx';
-import { getFuelSuppliers, searchFuelSuppliers, searchFuelSuppliersReset, addFuelSupplier } from '../../actions/fuelSuppliersActions.jsx';
+import { getOrganizations, searchOrganizations, searchOrganizationsReset, addOrganization } from '../../actions/organizationActions.jsx';
 import * as ReducerTypes from '../../constants/reducerTypes.jsx';
 import { BootstrapTable, TableHeaderColumn, ButtonGroup } from 'react-bootstrap-table';
 
-class FuelSuppliers extends Component {
+class Organizations extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      newFuelSupplierName: '',
-      newFuelSupplierCity: '',
+      newOrganizationName: '',
+      newOrganizationCity: '',
       showModal: false,
-      fuelSupplierDetails: [],
-      showFuelSupplierDetails: false,
+      OrganizationDetails: [],
+      showOrganizationDetails: false,
     };
   }
 
   componentDidMount() {
-    this.props.getFuelSuppliers();
+    this.props.getOrganizations();
   }
 
   handleCheckboxChange() {
@@ -28,28 +28,28 @@ class FuelSuppliers extends Component {
 
   handleCloseModal() {
     this.setState({showModal: false});
-    this.props.searchFuelSuppliersReset();
+    this.props.searchOrganizationsReset();
   }
 
   handleSearch(e) {
     e.preventDefault();
-    this.props.searchFuelSuppliers(this.state.newFuelSupplierName, this.state.newFuelSupplierCity);
+    this.props.searchOrganizations(this.state.newOrganizationName, this.state.newOrganizationCity);
   }
 
-  handleAddFuelSupplier(id) {
-    this.props.addFuelSupplier(id);
+  handleAddOrganization(id) {
+    this.props.addOrganization(id);
   }
 
   nameFormatter(cell, row) {
     return (
-      <Link to={Routes.FUEL_SUPPLIERS + row.id}>{cell}</Link>
+      <Link to={Routes.ORGANIZATIONS + '/' + row.id}>{cell}</Link>
     );
   }
 
   actionsFormatter(cell, row) {
-    let actionTypes = this.props.fuelSupplierActionTypes.data;
+    let actionTypes = this.props.OrganizationActionTypes.data;
     let info = actionTypes.map((actionType) => {
-      if (row.fuelSupplierActionsTypeId === actionType.id) {
+      if (row.OrganizationActionsTypeId === actionType.id) {
         return actionType.type
       }
     });
@@ -60,8 +60,8 @@ class FuelSuppliers extends Component {
 
   statusFormatter(cell, row) {
     let statusString = '';
-    this.props.fuelSupplierStatuses.data.map(function(status) {
-      if (status.id === row.fuelSupplierStatusFK) {
+    this.props.OrganizationStatuses.data.map(function(status) {
+      if (status.id === row.OrganizationStatusFK) {
         statusString = status.status;
       }
     });
@@ -71,7 +71,7 @@ class FuelSuppliers extends Component {
   createCustomButtonGroup(props) {
     return (
       <div>
-        <h1 className='header'>Fuel Suppliers</h1>
+        <h1 className='header'>Organizations</h1>
         <div className='right-toolbar-container'> 
           <div className="actions-container">
             <button className="btn btn-primary" onClick={() => this.setState({ showModal: true})}>Add</button>
@@ -88,8 +88,8 @@ class FuelSuppliers extends Component {
 
   selectSearchFieldSuppliers(props) {
     this.setState({
-      fuelSupplierDetails: props,
-      showFuelSupplierDetails: true,
+      OrganizationDetails: props,
+      showOrganizationDetails: true,
     })
   }
   
@@ -103,11 +103,12 @@ class FuelSuppliers extends Component {
       clickToSelect: true,
       onSelect: this.selectSearchFieldSuppliers.bind(this)
     };
+    console.log("org data", this.props.Organizations.data)
     return (
-      <div className="fuel-suppliers row">
-        <div className="fuel-suppliers-table col-lg-12">
+      <div className="organizations row">
+        <div className="organizations-table col-lg-12">
           <BootstrapTable 
-            data={this.props.fuelSuppliers.data}
+            data={this.props.Organizations.data}
               options={ options }
               search
             >
@@ -120,7 +121,7 @@ class FuelSuppliers extends Component {
               Name
             </TableHeaderColumn>
             <TableHeaderColumn 
-              dataField="fuelSupplierStatusFK" 
+              dataField="status" 
               dataFormat={(cell, row) => this.statusFormatter(cell, row)}
               filterFormatted={true}>
               Status
@@ -136,23 +137,23 @@ class FuelSuppliers extends Component {
           show={this.state.showModal}
           onHide={() => this.handleCloseModal()}
           aria-labelledby="contained-modal-title"
-          className="new-fuel-supplier-modal"
+          className="new-organization-modal"
         >
           <Modal.Header closeButton>
-            <Modal.Title id="contained-modal-title">New Fuel Supplier</Modal.Title>
+            <Modal.Title id="contained-modal-title">New Organization</Modal.Title>
           </Modal.Header>
           <Modal.Body>
             <form onSubmit={(e) => this.handleSearch(e)}>
               <div className="field-container">
                 <label htmlFor="name-field">Name:</label>
                 <div className="input-container">
-                  <input id="name-field" type="text" onChange={(e) => this.setState({newFuelSupplierName: e.target.value})} />
+                  <input id="name-field" type="text" onChange={(e) => this.setState({newOrganizationName: e.target.value})} />
                 </div>
               </div>
               <div className="field-container">
                 <label htmlFor="city-field">City:</label>
                 <div className="input-container">
-                  <input id="city-field" type="text" placeholder="optional" onChange={(e) => this.setState({newFuelSupplierCity: e.target.value})} />
+                  <input id="city-field" type="text" placeholder="optional" onChange={(e) => this.setState({newOrganizationCity: e.target.value})} />
                 </div>
               </div>
               <div className="btn-container">
@@ -160,9 +161,9 @@ class FuelSuppliers extends Component {
                 <button type="submit" className="btn btn-primary not-implemented">Search</button>
               </div>
             </form>
-            { this.props.searchFuelSuppliersSuccess &&
+            { this.props.searchOrganizationsSuccess &&
               <BootstrapTable 
-                data={this.props.searchFuelSuppliersData}
+                data={this.props.searchOrganizationsData}
                 selectRow={ selectRowProp }
                 hover
               >
@@ -172,31 +173,31 @@ class FuelSuppliers extends Component {
             }
           </Modal.Body>
         </Modal>
-        { this.state.showFuelSupplierDetails &&
+        { this.state.showOrganizationDetails &&
         <Modal
           container={this}
-          show={this.state.showFuelSupplierDetails}
-          onHide={() => this.setState({showFuelSupplierDetails: false})}
+          show={this.state.showOrganizationDetails}
+          onHide={() => this.setState({showOrganizationDetails: false})}
           aria-labelledby="contained-modal-title"
-          className="new-fuel-supplier-modal"
+          className="new-organization-modal"
         >
           <Modal.Header closeButton>
-            <Modal.Title id="contained-modal-title">New Fuel Supplier</Modal.Title>
+            <Modal.Title id="contained-modal-title">New Organization</Modal.Title>
           </Modal.Header>
             <Modal.Body>
-              <div>{this.state.fuelSupplierDetails.name}</div>
-              { this.props.addFuelSupplierSuccess && 
-              <div className="alert alert-success">Fuel Supplier successfully added</div>
+              <div>{this.state.OrganizationDetails.name}</div>
+              { this.props.addOrganizationSuccess && 
+              <div className="alert alert-success">Organization successfully added</div>
               }
             </Modal.Body>
             <Modal.Footer>
-            { !this.props.addFuelSupplierSuccess ? 
+            { !this.props.addOrganizationSuccess ? 
               <div>
-                <button type="button" className="btn btn-default" onClick={() => this.setState({showFuelSupplierDetails: false})}>Cancel</button>
-                <button type="button" className="btn btn-primary" onClick={(id) => this.handleAddFuelSupplier(this.state.fuelSupplierDetails.id)}>Add New Fuel Supplier</button>
+                <button type="button" className="btn btn-default" onClick={() => this.setState({showOrganizationDetails: false})}>Cancel</button>
+                <button type="button" className="btn btn-primary" onClick={(id) => this.handleAddOrganization(this.state.OrganizationDetails.id)}>Add New Organization</button>
               </div>
               :
-              <button type="button" className="btn btn-primary" onClick={() => this.setState({showFuelSupplierDetails: false})}>Okay</button>
+              <button type="button" className="btn btn-primary" onClick={() => this.setState({showOrganizationDetails: false})}>Okay</button>
             }
             </Modal.Footer>
           </Modal>
@@ -208,26 +209,26 @@ class FuelSuppliers extends Component {
 
 export default connect (
   state => ({
-    fuelSuppliers: state.rootReducer[ReducerTypes.GET_FUEL_SUPPLIERS],
-    fuelSupplierActionTypes: state.rootReducer[ReducerTypes.FUEL_SUPPLIER_ACTION_TYPES],
-    fuelSupplierStatuses: state.rootReducer[ReducerTypes.FUEL_SUPPLIER_STATUSES],
-    searchFuelSuppliersData: state.rootReducer[ReducerTypes.SEARCH_FUEL_SUPPLIERS].data,
-    searchFuelSuppliersSuccess: state.rootReducer[ReducerTypes.SEARCH_FUEL_SUPPLIERS].success,
-    addFuelSupplierSuccess: state.rootReducer[ReducerTypes.ADD_FUEL_SUPPLIER].success,
+    Organizations: state.rootReducer[ReducerTypes.GET_ORGANIZATIONS],
+    OrganizationActionTypes: state.rootReducer[ReducerTypes.ORGANIZATION_ACTION_TYPES],
+    OrganizationStatuses: state.rootReducer[ReducerTypes.ORGANIZATION_STATUSES],
+    searchOrganizationsData: state.rootReducer[ReducerTypes.SEARCH_ORGANIZATIONS].data,
+    searchOrganizationsSuccess: state.rootReducer[ReducerTypes.SEARCH_ORGANIZATIONS].success,
+    addOrganizationSuccess: state.rootReducer[ReducerTypes.ADD_ORGANIZATION].success,
   }),
   dispatch => ({
-    getFuelSuppliers: () => {
-      dispatch(getFuelSuppliers());
+    getOrganizations: () => {
+      dispatch(getOrganizations());
     },
-    searchFuelSuppliers: (name, city) => {
-      dispatch(searchFuelSuppliers(name, city));
+    searchOrganizations: (name, city) => {
+      dispatch(searchOrganizations(name, city));
     },
-    searchFuelSuppliersReset: () => {
-      dispatch(searchFuelSuppliersReset());
+    searchOrganizationsReset: () => {
+      dispatch(searchOrganizationsReset());
     },
-    addFuelSupplier: (id) => {
-      dispatch(addFuelSupplier(id));
+    addOrganization: (id) => {
+      dispatch(addOrganization(id));
     }
   })
-)(FuelSuppliers)
+)(Organizations)
 
