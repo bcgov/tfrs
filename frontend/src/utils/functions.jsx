@@ -4,34 +4,34 @@ import * as ReducerTypes from '../constants/reducerTypes.jsx';
 import store from '../store/store.jsx';
 
 export const plainEnglishPhrase = (data) => {
-  let tradeStatus = data.creditTradeStatusFK;
-  let tradeRespondent = getCreditTradeRespondent(data.respondentFK);
-  let tradeInitiator = getCreditTradeInitiator(data.initiatorFK);
-  let tradeType = getCreditTradeType(data.creditTradeTypeFK);
-  let tradeTypePast = getCreditTradeTypePast(data.creditTradeTypeFK);
+  let tradeStatus = data.status;
+  let tradeRespondent = data.respondent;
+  let tradeInitiator = data.initiator;
+  let tradeType = data.type;
+  let tradeTypePast = getCreditTradeTypePast(data.type);
   let toFrom = getToFrom(tradeType);
-  switch (tradeStatus) {
+  switch (tradeStatus.id) {
     case Values.STATUS_COMPLETED:
       return (
         <PlainEnglishPhrasePast
           tradeInitiator={tradeInitiator}
           tradeTypePast={tradeTypePast}
-          numberOfCredits={data.numberOfCredits}
+          numberOfCredits={data.number_of_credits}
           toFrom={toFrom}
           tradeRespondent={tradeRespondent}
-          fairMarketValuePerCredit={data.fairMarketValuePerCredit}
-          tradeEffectiveDate={data.tradeEffectiveDate} />
+          fairMarketValuePerCredit={data.fair_market_value_per_credit}
+          tradeEffectiveDate={data.trade_effective_date} />
       );
     default:
       return (
         <PlainEnglishPhrase
           tradeInitiator={tradeInitiator}
           tradeType={tradeType}
-          numberOfCredits={data.numberOfCredits}
+          numberOfCredits={data.number_of_credits}
           toFrom={toFrom}
           tradeRespondent={tradeRespondent}
-          fairMarketValuePerCredit={data.fairMarketValuePerCredit}
-          tradeEffectiveDate={data.tradeEffectiveDate} />
+          fairMarketValuePerCredit={data.fair_market_value_per_credit}
+          tradeEffectiveDate={data.trade_effective_date} />
       );
     break;
   }
@@ -45,26 +45,10 @@ const getCreditTradeStatus = (tradeStatus) => {
   return statusType.status;
 }
 
-const getCreditTradeType = (tradeType) => {
-  let types = store.getState().rootReducer[ReducerTypes.CREDIT_TRADE_TYPES].data;
-  let typeName = types.find(function(type) {
-    return type.id === tradeType
-  })
-  if (typeName['description'].includes('selling')) {
-    return 'sell'
-  } else if (typeName['description'].includes('buying')) {
-    return 'buy'
-  }
-}
-
-const getCreditTradeTypePast = (tradeType) => {
-  let types = store.getState().rootReducer[ReducerTypes.CREDIT_TRADE_TYPES].data;
-  let typeName = types.find(function(type) {
-    return type.id === tradeType
-  })
-  if (typeName['description'].includes('selling')) {
+const getCreditTradeTypePast = (type) => {
+  if (type.the_type.includes('Sell')) {
     return 'sold'
-  } else if (typeName['description'].includes('buying')) {
+  } else if (type.the_type.includes('Buy')) {
     return 'bought'
   }
 }
@@ -78,9 +62,9 @@ const getToFrom = (tradeType) => {
 }
 
 export const getCreditTradeRespondent = (respondentId) => {
-  let fuelSuppliers = store.getState().rootReducer[ReducerTypes.GET_FUEL_SUPPLIERS].data;
-  let respondent = fuelSuppliers.find(function(fuelSupplier) {
-    return fuelSupplier.id === respondentId
+  let organizations = store.getState().rootReducer[ReducerTypes.GET_ORGANIZATIONS].data;
+  let respondent = organizations.find(function(organization) {
+    return organization.id === respondentId
   })
   return respondent.name
 }
@@ -89,9 +73,9 @@ export const getCreditTradeInitiator = (initiatorId) => {
   if (initiatorId == null) {
     return 'BC Government';
   } else {
-    let fuelSuppliers = store.getState().rootReducer[ReducerTypes.GET_FUEL_SUPPLIERS].data;
-    let initiator = fuelSuppliers.find(function(fuelSupplier) {
-      return fuelSupplier.id === initiatorId
+    let organizations = store.getState().rootReducer[ReducerTypes.GET_ORGANIZATIONS].data;
+    let initiator = organizations.find(function(organization) {
+      return organization.id === initiatorId
     })
     return initiator.name
   }
@@ -102,7 +86,7 @@ const PlainEnglishPhrasePast = (props) => {
   let totalValue = addCommas((Number(props.numberOfCredits) * Number(props.fairMarketValuePerCredit)));
   return (
     <div className="plain-english-phrase">
-      <span className="value">{props.tradeInitiator}</span> <span className="value">{props.tradeTypePast}</span> <span className="value">{props.numberOfCredits}</span> {props.toFrom} <span className="value">{props.tradeRespondent}</span> for <span className="value">${fairMarketValuePerCredit}</span> per credit for a total value of <span className="value">${totalValue}</span> effective on <span className="value">{props.tradeEffectiveDate}.</span>
+      <span className="value">{props.tradeInitiator.name}</span> <span className="value">{props.tradeTypePast}</span> <span className="value">{props.numberOfCredits}</span> {props.toFrom} <span className="value">{props.tradeRespondent.name}</span> for <span className="value">${fairMarketValuePerCredit}</span> per credit for a total value of <span className="value">${totalValue}</span> effective on <span className="value">{props.tradeEffectiveDate}.</span>
     </div>
   ) 
 }
@@ -112,7 +96,7 @@ const PlainEnglishPhrase = (props) => {
   let totalValue = addCommas((Number(props.numberOfCredits) * Number(props.fairMarketValuePerCredit)));
   return (
     <div className="plain-english-phrase">
-      <span className="value">{props.tradeInitiator}</span> proposes to <span className="value">{props.tradeType}</span> <span className="value">{props.numberOfCredits}</span> {props.toFrom} <span className="value">{props.tradeRespondent}</span> for <span className="value">${fairMarketValuePerCredit}</span> per credit for a total value of <span className="value">${totalValue}</span> effective on Director's Approval.
+      <span className="value">{props.tradeInitiator.name}</span> proposes to <span className="value">{props.tradeType.the_type.toLowerCase()}</span> <span className="value">{props.numberOfCredits}</span> {props.toFrom} <span className="value">{props.tradeRespondent.name}</span> for <span className="value">${fairMarketValuePerCredit}</span> per credit for a total value of <span className="value">${totalValue}</span> effective on Director's Approval.
     </div>
   )
 }
@@ -145,11 +129,11 @@ const addCommas = (number) => {
 }
 
 export const plainEnglishPhraseString = (data) => {
-  let tradeStatus = data.creditTradeStatusFK;
-  let tradeRespondent = getCreditTradeRespondent(data.respondentFK);
-  let tradeInitiator = getCreditTradeInitiator(data.initiatorFK);
-  let tradeType = getCreditTradeType(data.creditTradeTypeFK);
-  let tradeTypePast = getCreditTradeTypePast(data.creditTradeTypeFK);
+  let tradeStatus = data.status;
+  let tradeRespondent = data.respondent;
+  let tradeInitiator = data.initiator;
+  let tradeType = data.type
+  let tradeTypePast = getCreditTradeTypePast(data.type);
   let toFrom = getToFrom(tradeType);
   let fairMarketValuePerCredit = addCommas(Number(data.fairMarketValuePerCredit));
   let totalValue = addCommas((Number(data.numberOfCredits) * Number(data.fairMarketValuePerCredit)));

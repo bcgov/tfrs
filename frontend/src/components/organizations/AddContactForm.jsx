@@ -38,7 +38,7 @@ export default class AddContactForm extends Component {
       contactWorkPhone: this.state.contactWorkPhone,
       contactCellPhone: this.state.contactCellPhone,
       contactBCeID: this.state.contactBCeID,
-      fuelSupplierFK: this.props.fuelSupplierData.id,
+      organization: this.props.organizationData.id,
     }
     if (this.isFormValid()) {
       this.props.addContact(contactData);

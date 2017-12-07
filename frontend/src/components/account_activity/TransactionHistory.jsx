@@ -7,7 +7,7 @@ const data = [
     actionBy: 'John Williams',
     organization: 'BC Any Fuels',
     date: '2017-09-04',
-    fuelSupplierPartner: 'Ultramar',
+    organizationPartner: 'Ultramar',
     transactionType: 'offer to sell',
     tradeEffectiveDate: "Director's Approval",
     credits: 10000,
@@ -25,7 +25,7 @@ export default class TransactionHistory extends Component {
           <TableHeaderColumn dataField="actionBy" dataSort={true}>Action By</TableHeaderColumn>
           <TableHeaderColumn dataField="organization" dataSort={true}>Organization</TableHeaderColumn>
           <TableHeaderColumn dataField="date" dataSort={true}>Date</TableHeaderColumn>
-          <TableHeaderColumn dataField="fuelSupplierPartner">Fuel Supplier Partner</TableHeaderColumn>
+          <TableHeaderColumn dataField="organizationPartner">Organization Partner</TableHeaderColumn>
           <TableHeaderColumn dataField="transactionType" dataSort={true}>Transaction Type</TableHeaderColumn>
           <TableHeaderColumn dataField="tradeEffectiveDate" dataSort={true}>Trade Effective Date</TableHeaderColumn>
           <TableHeaderColumn dataField="credits" dataSort={true}>Credits</TableHeaderColumn>

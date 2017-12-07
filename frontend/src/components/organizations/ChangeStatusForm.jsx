@@ -36,10 +36,10 @@ export default class UploadDocumentForm extends Component {
               className="form-control" 
               id="status" 
               name="status"
-              defaultValue={this.props.fuelSupplier.fuelSupplierStatusFK}
+              defaultValue={this.props.organization.organizationStatusFK}
               ref={(input) => this.status = input}
               onChange={(event) => this.handleInputChange(event)} >
-              { this.props.fuelSupplierStatuses.map((status) => (
+              { this.props.organizationStatuses.map((status) => (
                 <option key={status.id} value={status.id}>{status.status}</option>
               ))}
             </select>
@@ -52,10 +52,10 @@ export default class UploadDocumentForm extends Component {
               className="form-control" 
               id="actions" 
               name="actions"
-              defaultValue={this.props.fuelSupplier.fuelSupplierActionsTypeFK}
+              defaultValue={this.props.organization.organizationActionsTypeFK}
               ref={(input) => this.action = input}
               onChange={(event) => this.handleInputChange(event)} >
-              { this.props.fuelSupplierActions.map((action) => (
+              { this.props.organizationActions.map((action) => (
                 <option key={action.id} value={action.id} >{action.description}</option>
               ))}
             </select>
@@ -68,10 +68,10 @@ export default class UploadDocumentForm extends Component {
               className="form-control" 
               id="type" 
               name="type"
-              defaultValue={this.props.fuelSupplier.fuelSupplierTypeFK}
+              defaultValue={this.props.organization.organizationTypeFK}
               ref={(input) => this.type = input}
               onChange={(event) => this.handleInputChange(event)} >
-              { this.props.fuelSupplierTypes.map((type) => (
+              { this.props.organizationTypes.map((type) => (
                 <option key={type.id} value={type.id}>{type.description}</option>
               ))}
             </select>

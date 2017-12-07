@@ -9,7 +9,9 @@ import RecentAccountActivityTable from './RecentAccountActivityTable.jsx';
 class Dashboard extends Component {
 
   componentDidMount() {
+    console.log("componentDidMount")
     this.props.getAccountActivity();
+    console.log("got acct Activity")
   }
 
   handleAcceptCreditTransfer(id, note) {
@@ -17,6 +19,7 @@ class Dashboard extends Component {
   }
   
   render() {
+    console.log("rendering...")
     return (
       <div className="dashboard">
         <div id="main-content" role="main" className="col-sm-12">

@@ -3,7 +3,7 @@ import { Route, withRouter, Switch } from 'react-router-dom'
 import * as Routes from '../constants/routes.jsx';
 import Navbar from './Navbar.jsx';
 import Footer from './Footer.jsx';
-import FuelSuppliers from './fuel_suppliers/FuelSuppliers.jsx';
+// import FuelSuppliers from './fuel_suppliers/FuelSuppliers.jsx';
 
 export default class App extends Component {
  

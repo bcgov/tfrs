@@ -10,7 +10,7 @@ export const activity = [{
     status: 'Proposed',
 }];
 
-export const fuelSuppliers = [{
+export const organizations = [{
   id: 1, 
   name: 'BC Any Fuels',
   status: 'active',
@@ -32,7 +32,7 @@ export const fuelSuppliers = [{
   pending_actions: 2,
 }]
 
-export const fuelSupplier = {
+export const organization = {
   id: 1, 
   name: 'BC Any Fuels',
   status: 'active',
