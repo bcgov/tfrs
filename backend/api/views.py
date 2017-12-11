@@ -51,6 +51,7 @@ from .models.UserDetailsViewModel import UserDetailsViewModel
 from .models.UserRole import UserRole
 from .models.UserRoleViewModel import UserRoleViewModel
 from .models.UserViewModel import UserViewModel
+from django.http import HttpResponse
 
 
 class credittradesBulkPost(AuditableMixin, BulkCreateModelMixin,
@@ -1347,3 +1348,7 @@ class userrolesIdGet(AuditableMixin, mixins.RetrieveModelMixin,
         Updates the specified UserRole object
         """
         return self.update(request, *args, **kwargs)
+
+
+def sm_info_get(request):
+    return HttpResponse(request.META)
