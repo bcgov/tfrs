@@ -20,11 +20,11 @@ const getCreditTradesRequest = () => {
   }
 }
 
-const getCreditTradesSuccess = (fuelSuppliers) => {
+const getCreditTradesSuccess = (organizations) => {
   return {
     name: ReducerTypes.CREDIT_TRADES,
     type: ActionTypes.SUCCESS,
-    data: fuelSuppliers,
+    data: organizations,
   }
 }
 

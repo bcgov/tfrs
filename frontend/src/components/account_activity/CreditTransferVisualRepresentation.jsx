@@ -5,6 +5,7 @@ import * as Values from '../../constants/values.jsx';
 export default class CreditTransferVisualRepresentation extends Component {
   constructor(props) {
     super(props);
+    console.log("this is the data", this.props.data)
     //determineBuyerandSeller()
   }
 

@@ -48,7 +48,7 @@ INSTALLED_APPS = (
     'rest_framework',
     'rest_framework_swagger',
     'tfrs',
-    'server',
+    'api',
     'corsheaders',
 )
 
@@ -63,13 +63,13 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
-    'server.middleware.SMUserMiddleware',
+    'api.middleware.SMUserMiddleware',
 )
 
 REST_FRAMEWORK = {
 #   'DEFAULT_AUTHENTICATION_CLASSES': ('rest_framework.permissions.AllowAny',),
 # User authentication is commented out here to allow tests to pass, remove comment to re-enable
-    # 'DEFAULT_AUTHENTICATION_CLASSES': ('server.authentication.UserAuthentication',),
+    # 'DEFAULT_AUTHENTICATION_CLASSES': ('api.authentication.UserAuthentication',),
     'DEFAULT_PERMISSION_CLASSES': ('rest_framework.permissions.AllowAny',),
     # 'EXCEPTION_HANDLER': 'core.exceptions.exception_handler',
 }
@@ -126,11 +126,11 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.8/howto/static-files/
 
 # We don't use this anywhere
-# STATICFILES_DIRS = (
-#    os.path.join(BASE_DIR, "assets"),
-#)
+STATICFILES_DIRS = (
+   os.path.join(BASE_DIR, "assets"),
+)
 
-STATIC_URL = '/static/'
+STATIC_URL = '/api/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 # STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
