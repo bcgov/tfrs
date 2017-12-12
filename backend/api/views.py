@@ -51,7 +51,7 @@ from .models.UserDetailsViewModel import UserDetailsViewModel
 from .models.UserRole import UserRole
 from .models.UserRoleViewModel import UserRoleViewModel
 from .models.UserViewModel import UserViewModel
-from django.http import HttpResponse
+from django.http import JsonResponse
 
 
 class credittradesBulkPost(AuditableMixin, BulkCreateModelMixin,
@@ -1351,4 +1351,5 @@ class userrolesIdGet(AuditableMixin, mixins.RetrieveModelMixin,
 
 
 def sm_info_get(request):
-    return HttpResponse(request.META)
+    headers = {x: str(request.META.get(x)) for x in request.META}
+    return JsonResponse(headers)
