@@ -2,7 +2,7 @@ node('maven') {
 stage('Build and Tag') {
     checkout scm
         echo "Build and Tag: ${BUILD_ID}"
-        openshiftBuild bldCfg: 'tfrs-develop', showBuildLogs: 'true'
+        openshiftBuild bldCfg: 'tfrs-develop-headers', showBuildLogs: 'true'
         openshiftTag destStream: 'tfrs', verbose: 'true', destTag: '$BUILD_ID', srcStream: 'tfrs', srcTag: 'latest'
     }
     
