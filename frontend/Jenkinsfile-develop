@@ -50,6 +50,7 @@ node('maven') {
 }
 
 stage('deploy-test') {
+    input "Deploy to Test?"
     node('maven') {
         openshiftTag destStream: 'client', verbose: 'true', destTag: 'test', srcStream: 'client', srcTag: '$BUILD_ID'
     }
