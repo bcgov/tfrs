@@ -1,0 +1,957 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- CSS  -->
+  <link rel="stylesheet" href="./assets/css/bootstrap.min.css" type="text/css">
+  <link rel="stylesheet" href="./assets/css/main.css" type="text/css">
+  <link rel="stylesheet" href="./assets/css/custom-main.css" type="text/css">
+  <link rel="stylesheet" href="./assets/css/react-bootstrap-table-all.min.css">
+  <link rel="stylesheet" href="./assets/fonts/font-awesome/css/font-awesome.min.css" type="text/css">
+  <link rel="shortcut icon" href="./assets/icons/favicon.ico">
+  <title>TFRS</title>
+  <style type="text/css">
+    .fuel-suppliers .new-fuel-supplier-modal .field-container {
+      margin-bottom: 1rem
+    }
+
+    .fuel-suppliers .new-fuel-supplier-modal .field-container label {
+      position: absolute;
+      width: 5rem
+    }
+
+    .fuel-suppliers .new-fuel-supplier-modal .input-container {
+      margin-left: 6rem
+    }
+
+    .fuel-suppliers .new-fuel-supplier-modal .input-container input {
+      width: 100%
+    }
+
+    .fuel-suppliers .new-fuel-supplier-modal .btn-container {
+      text-align: right;
+      margin-bottom: 1rem
+    }
+
+    .fuel-suppliers .new-fuel-supplier-modal .btn-container .btn {
+      margin: 0 .5rem
+    }
+
+    .fuel-suppliers .new-fuel-supplier-modal .react-bs-container-body {
+      max-height: 300px;
+      overflow: auto
+    }
+
+    .fuel-supplier-details .fuel-supplier-info {
+      margin: 1rem 0;
+      padding: 1rem;
+      border: 1px solid #ddd;
+      border-radius: 5px
+    }
+
+    .fuel-supplier-details .contacts {
+      margin: 1rem 0
+    }
+
+    .fuel-supplier-details .contacts .add-btn {
+      position: absolute;
+      right: 1.5rem;
+      top: -4rem
+    }
+
+    @media (max-width:991px) {
+      .fuel-supplier-details .contacts .add-btn {
+        position: static;
+        margin-bottom: .5rem
+      }
+    }
+
+    .fuel-supplier-details .contacts .react-bs-table {
+      max-height: 300px;
+      overflow: auto
+    }
+
+    .fuel-supplier-details .account-balance-container {
+      margin-top: 3rem
+    }
+
+    .header-container {
+      display: -webkit-box;
+      display: -ms-flexbox;
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      margin-bottom: 4rem
+    }
+
+    .title {
+      margin-bottom: 0;
+      margin-right: 2rem
+    }
+
+    .badge-container,
+    .title {
+      display: inline-block
+    }
+
+    .badge-container>* {
+      margin-right: .5rem
+    }
+
+    .fuel-suppliers .react-bs-table {
+      max-height: 500px;
+      overflow: auto
+    }
+
+    .add-contact-form .alert.alert-success {
+      margin: 1rem 0
+    }
+
+    .delete-contact-modal .alert.alert-success {
+      margin: 1rem 0;
+      text-align: left
+    }
+
+    .notifications .form-group.form-group-sm.react-bs-table-search-form {
+      float: right
+    }
+
+    .notifications .row {
+      margin: 0 -15px
+    }
+
+    .notifications .react-bs-table {
+      max-height: 500px;
+      overflow: auto
+    }
+
+    .opportunities .open-opportunities-table,
+    .opportunities .our-opportunities-table,
+    .opportunities h1 {
+      margin-bottom: 3rem
+    }
+
+    .opportunities .open-opportunities-table .header,
+    .opportunities .our-opportunities-table .header {
+      display: inline-block
+    }
+
+    .opportunity .main-form {
+      padding: 2rem;
+      border: 1px solid #ddd;
+      border-radius: 5px
+    }
+
+    .opportunity .main-form input,
+    .opportunity .main-form select {
+      margin: .5rem .5rem .5rem 0
+    }
+
+    .opportunity .main-form .form-group {
+      margin-bottom: 0
+    }
+
+    .opportunity .acknowledgement {
+      padding: 1rem 8rem
+    }
+
+    @media (max-width:500px) {
+      .opportunity .acknowledgement {
+        padding: 1rem 2rem
+      }
+    }
+
+    .opportunity .acknowledgement label {
+      font-weight: 400
+    }
+
+    .opportunity .note {
+      display: block;
+      padding-bottom: 1rem
+    }
+
+    .opportunity .note textarea {
+      display: block;
+      width: 100%
+    }
+
+    .opportunity .opportunity-actions-container {
+      text-align: right
+    }
+
+    .opportunity .opportunity-actions-container .btn {
+      margin-right: .5rem
+    }
+
+    @media (max-width:500px) {
+      .opportunity .opportunity-actions-container .btn {
+        width: 100%;
+        margin: 0 0 .5rem
+      }
+    }
+
+    .opportunity .opportunity-actions-container .btn:last-child {
+      margin-right: 0
+    }
+
+    .credit-transfer .credit-transfer-details {
+      margin-bottom: 4rem
+    }
+
+    .credit-transfer .note label {
+      display: block
+    }
+
+    .credit-transfer .credit-transfer-progress-bar {
+      padding: 1rem 2rem 1rem 0
+    }
+
+    @media (max-width:500px) {
+      .credit-transfer .credit-transfer-progress-bar {
+        padding: 1rem 0
+      }
+    }
+
+    .credit-transfer .credit-transfer-progress-bar .clearfix:after {
+      clear: both;
+      content: "";
+      display: block;
+      height: 0
+    }
+
+    .credit-transfer .credit-transfer-progress-bar .container {
+      font-family: Lato, sans-serif;
+      width: 1000px;
+      margin: 0 auto
+    }
+
+    .credit-transfer .credit-transfer-progress-bar .wrapper {
+      display: table-cell;
+      height: 400px;
+      vertical-align: middle
+    }
+
+    .credit-transfer .credit-transfer-progress-bar .nav {
+      margin-top: 40px
+    }
+
+    .credit-transfer .credit-transfer-progress-bar .pull-right {
+      float: right
+    }
+
+    .credit-transfer .credit-transfer-progress-bar a,
+    .credit-transfer .credit-transfer-progress-bar a:active {
+      color: #333;
+      text-decoration: none
+    }
+
+    .credit-transfer .credit-transfer-progress-bar a:hover {
+      color: #999
+    }
+
+    .credit-transfer .credit-transfer-progress-bar .arrow-steps {
+      display: -webkit-box;
+      display: -ms-flexbox;
+      display: flex
+    }
+
+    @media (max-width:500px) {
+      .credit-transfer .credit-transfer-progress-bar .arrow-steps {
+        display: block
+      }
+    }
+
+    .credit-transfer .credit-transfer-progress-bar .arrow-steps .step {
+      font-size: 14px;
+      text-align: center;
+      color: #999;
+      cursor: default;
+      margin: 0 3px;
+      padding: 8px 10px 8px 30px;
+      width: 24%;
+      float: left;
+      position: relative;
+      background-color: rgba(217, 227, 247, .36);
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
+      transition: background-color .2s ease
+    }
+
+    @media (max-width:500px) {
+      .credit-transfer .credit-transfer-progress-bar .arrow-steps .step {
+        width: 100%
+      }
+    }
+
+    .credit-transfer .credit-transfer-progress-bar .arrow-steps .step:after,
+    .credit-transfer .credit-transfer-progress-bar .arrow-steps .step:before {
+      content: " ";
+      position: absolute;
+      top: 0;
+      right: -17px;
+      width: 0;
+      height: 0;
+      border-top: 19px solid transparent;
+      border-bottom: 17px solid transparent;
+      border-left: 17px solid rgba(217, 227, 247, .36);
+      z-index: 2;
+      transition: border-color .2s ease
+    }
+
+    @media (max-width:500px) {
+      .credit-transfer .credit-transfer-progress-bar .arrow-steps .step:after,
+      .credit-transfer .credit-transfer-progress-bar .arrow-steps .step:before {
+        content: none
+      }
+    }
+
+    .credit-transfer .credit-transfer-progress-bar .arrow-steps .step:before {
+      right: auto;
+      left: 0;
+      border-left: 17px solid #fff;
+      z-index: 0
+    }
+
+    .credit-transfer .credit-transfer-progress-bar .arrow-steps .step:first-child:before {
+      border: none
+    }
+
+    .credit-transfer .credit-transfer-progress-bar .arrow-steps .step:first-child {
+      border-top-left-radius: 4px;
+      border-bottom-left-radius: 4px
+    }
+
+    .credit-transfer .credit-transfer-progress-bar .arrow-steps .step span {
+      position: relative
+    }
+
+    .credit-transfer .credit-transfer-progress-bar .arrow-steps .step span:before {
+      opacity: 0;
+      content: "\2714";
+      position: absolute;
+      top: -2px;
+      left: -20px
+    }
+
+    .credit-transfer .credit-transfer-progress-bar .arrow-steps .step.done span:before {
+      opacity: 1;
+      -webkit-transition: opacity .3s ease .5s;
+      -moz-transition: opacity .3s ease .5s;
+      -ms-transition: opacity .3s ease .5s;
+      transition: opacity .3s ease .5s
+    }
+
+    .credit-transfer .credit-transfer-progress-bar .arrow-steps .step.current {
+      color: #fff;
+      background-color: #23468c
+    }
+
+    .credit-transfer .credit-transfer-progress-bar .arrow-steps .step.current~.step {
+      background-color: #d9e3f7;
+      color: #666
+    }
+
+    .credit-transfer .credit-transfer-progress-bar .arrow-steps .step.current~.step:after {
+      border-left: 17px solid #d9e3f7
+    }
+
+    .credit-transfer .credit-transfer-progress-bar .arrow-steps .step.current:after {
+      border-left: 17px solid #23468c
+    }
+
+    .credit-transfer .main-form {
+      padding: 2rem;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      margin-bottom: 2rem
+    }
+
+    .credit-transfer .main-form input,
+    .credit-transfer .main-form select {
+      margin: .5rem .5rem .5rem 0
+    }
+
+    .credit-transfer .main-form .form-group {
+      margin-bottom: 0
+    }
+
+    .credit-transfer .note {
+      display: block;
+      padding: 3rem 0 1rem
+    }
+
+    .credit-transfer .note textarea {
+      display: block;
+      width: 100%
+    }
+
+    .plain-english-phrase .value {
+      font-weight: 700
+    }
+
+    .visual-representation {
+      display: -webkit-box;
+      display: -ms-flexbox;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: center;
+      margin-top: 3rem
+    }
+
+    .visual-representation .col-md-4 {
+      text-align: center
+    }
+
+    .visual-representation .arrow,
+    .visual-representation .initiator-container,
+    .visual-representation .respondent-container {
+      display: inline-block;
+      margin: 1rem;
+      padding: 2rem;
+      border-radius: 5px;
+      min-width: 11em
+    }
+
+    @media (max-width:500px) {
+      .visual-representation .arrow,
+      .visual-representation .initiator-container,
+      .visual-representation .respondent-container {
+        text-align: center
+      }
+    }
+
+    .visual-representation .arrow {
+      text-align: center
+    }
+
+    .visual-representation .arrow .fa {
+      font-size: 5rem
+    }
+
+    .visual-representation .initiator-container,
+    .visual-representation .respondent-container {
+      color: #fff
+    }
+
+    .account-activity-table .react-bs-table {
+      max-height: 500px;
+      overflow: auto
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: sans-serif
+    }
+
+    #main {
+      position: relative;
+      padding: 2rem;
+      padding-bottom: 70px
+    }
+
+    @media (max-width:768px) {
+      #main {
+        padding-top: 30px!important
+      }
+    }
+
+    #root,
+    .App,
+    [data-reactroot] {
+      height: 100%
+    }
+
+    #header .bcgov-title h1 {
+      font-weight: 400
+    }
+
+    h1 {
+      font-weight: 500
+    }
+
+    @media (max-width:500px) {
+      h1 {
+        font-size: 1.5rem
+      }
+    }
+
+    .btn {
+      margin: 0 .3em
+    }
+
+    .btn:first-child {
+      margin-left: 0
+    }
+
+    .btn:last-child {
+      margin-right: 0
+    }
+
+    .btn-no-style {
+      background: none;
+      border: none
+    }
+
+    .btn-no-style:hover {
+      opacity: .8
+    }
+
+    .btn-container {
+      text-align: right
+    }
+
+    .btn-container .btn+.btn {
+      margin-left: .5rem
+    }
+
+    .not-implemented:hover {
+      position: relative;
+      z-index: 10000
+    }
+
+    .not-implemented:hover:after {
+      content: "Not implemented";
+      display: inline-block;
+      background: #fff;
+      padding: .5rem;
+      color: #000;
+      position: absolute
+    }
+
+    table {
+      margin: 0
+    }
+
+    .form-group.form-group-sm.react-bs-table-search-form {
+      padding: 0;
+      display: inline-block
+    }
+
+    @media (max-width:500px) {
+      .form-group.form-group-sm.react-bs-table-search-form {
+        width: 100%
+      }
+    }
+
+    .table-bordered>thead>tr>td,
+    .table-bordered>thead>tr>th {
+      border-bottom-width: 0!important
+    }
+
+    .table-bordered thead {
+      background-color: rgba(0, 51, 102, .8);
+      color: #fff;
+      font-size: larger
+    }
+
+    .table-bordered>tbody>tr>td {
+      border-bottom: none
+    }
+
+    .table-bordered>tbody>tr:nth-child(2n) {
+      background-color: #f4f6f9
+    }
+
+    .account-activity-table,
+    .correspondence-table,
+    .fuel-suppliers-table,
+    .history-table,
+    .open-opportunities-table,
+    .our-opportunities-table {
+      margin-top: 1rem;
+      margin-bottom: 1rem
+    }
+
+    .account-activity-table .header,
+    .correspondence-table .header,
+    .fuel-suppliers-table .header,
+    .history-table .header,
+    .open-opportunities-table .header,
+    .our-opportunities-table .header {
+      padding: 0
+    }
+
+    .account-activity-table .right-toolbar-container,
+    .correspondence-table .right-toolbar-container,
+    .fuel-suppliers-table .right-toolbar-container,
+    .history-table .right-toolbar-container,
+    .open-opportunities-table .right-toolbar-container,
+    .our-opportunities-table .right-toolbar-container {
+      float: right
+    }
+
+    @media (max-width:768px) {
+      .account-activity-table .right-toolbar-container,
+      .correspondence-table .right-toolbar-container,
+      .fuel-suppliers-table .right-toolbar-container,
+      .history-table .right-toolbar-container,
+      .open-opportunities-table .right-toolbar-container,
+      .our-opportunities-table .right-toolbar-container {
+        float: none
+      }
+    }
+
+    .account-activity-table .right-toolbar-container .checkbox,
+    .correspondence-table .right-toolbar-container .checkbox,
+    .fuel-suppliers-table .right-toolbar-container .checkbox,
+    .history-table .right-toolbar-container .checkbox,
+    .open-opportunities-table .right-toolbar-container .checkbox,
+    .our-opportunities-table .right-toolbar-container .checkbox {
+      display: inline-block;
+      margin: 0 1rem 0 3rem
+    }
+
+    .account-activity-table .right-toolbar-container .actions-container,
+    .correspondence-table .right-toolbar-container .actions-container,
+    .fuel-suppliers-table .right-toolbar-container .actions-container,
+    .history-table .right-toolbar-container .actions-container,
+    .open-opportunities-table .right-toolbar-container .actions-container,
+    .our-opportunities-table .right-toolbar-container .actions-container {
+      display: inline-block
+    }
+
+    @media (max-width:500px) {
+      .account-activity-table .right-toolbar-container .actions-container,
+      .correspondence-table .right-toolbar-container .actions-container,
+      .fuel-suppliers-table .right-toolbar-container .actions-container,
+      .history-table .right-toolbar-container .actions-container,
+      .open-opportunities-table .right-toolbar-container .actions-container,
+      .our-opportunities-table .right-toolbar-container .actions-container {
+        margin-bottom: .5rem
+      }
+    }
+
+    .account-activity-table .react-bs-table .table-bordered,
+    .correspondence-table .react-bs-table .table-bordered,
+    .fuel-suppliers-table .react-bs-table .table-bordered,
+    .history-table .react-bs-table .table-bordered,
+    .open-opportunities-table .react-bs-table .table-bordered,
+    .our-opportunities-table .react-bs-table .table-bordered {
+      min-width: 700px
+    }
+
+    .proposal-description {
+      width: 50%;
+      white-space: pre-wrap
+    }
+
+    .actions {
+      white-space: pre-wrap
+    }
+
+    .simple-btn {
+      background: none;
+      border: none;
+      color: #1a5a96;
+      padding: .5rem
+    }
+
+    .simple-btn:hover {
+      color: blue
+    }
+
+    .counter-btn {
+      display: inline-block;
+      padding: .5rem
+    }
+
+    .recent-account-activity-container {
+      margin: .5rem 0
+    }
+
+    .recent-account-activity-container h2 {
+      display: inline-block;
+      margin: 0
+    }
+
+    .recent-account-activity-container .view-all {
+      float: right
+    }
+
+    @media (max-width:500px) {
+      .recent-account-activity-container .view-all {
+        display: block;
+        float: none
+      }
+    }
+
+    .modal .note {
+      width: 100%;
+      resize: none
+    }
+
+    .modal .alert-success {
+      margin: 1rem 0 0
+    }
+
+    .react-bs-table .table-bordered>tbody>tr>td {
+      white-space: pre-wrap;
+      word-break: break-word
+    }
+
+    .react-bs-table-bordered {
+      margin: 1em 0
+    }
+  </style>
+</head>
+
+<body>
+  <div id="root">
+    <div data-reactroot="">
+      <div class="App">
+        <div id="header" role="banner">
+          <div id="header-main" class="navbar navbar-default navbar-fixed-top">
+            <div class="container">
+              <div id="header-main-row" class="row">
+                <div class="col-sm-3 col-md-2 col-lg-2 header-main-left">
+                  <div id="logo">
+                    <a id="gov-logo" href="http://gov.bc.ca">
+                      <img src="./assets/images/gov3_bc_logo.png" alt="Province of British Columbia" title="Province of British Columbia logo">
+                    </a>
+                  </div>
+                  <div id="access">
+                    <ul>
+                      <li aria-label="Keyboard Tab Skip">
+                        <a accesskey="0" href="#main-content-anchor" aria-label="Skip to main content">Skip to main content</a>
+                      </li>
+                      <li aria-label="Keyboard Tab Skip">
+                        <a accesskey="0" href="#navigation-anchor" aria-label="Skip to navigation">Skip to navigation</a>
+                      </li>
+                      <li aria-label="Keyboard Tab Skip">
+                        <a accesskey="0" href="http://gov.bc.ca/webaccessibility/" aria-label="Accessibility Statement">Accessibility Statement</a>
+                      </li>
+                    </ul>
+                  </div>
+                  <button type="button" class="navbar-toggle env-button-custom collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="true"
+                    aria-label="Burger Navigation">
+                    <img src="./assets/images/menu-open-mobile.png">
+                  </button>
+                </div>
+                <div class="col-sm-8 col-md-8 col-lg-8 hidden-xs">
+                  <div class="bcgov-title">
+                    <h1>Transportation Fuels Reporting System</h1>
+                  </div>
+                </div>
+                <div id="navbar" class="collapse navbar-collapse" role="navigation">
+                  <a id="navigation-anchor"></a>
+                  <ul class="nav navbar-nav">
+                    <li>
+                      <a id="collapse-navbar-dashboard" href="#/">Dashboard</a>
+                    </li>
+                    <li>
+                      <a id="collapse-navbar-fuel-supplier" href="#/fuel-suppliers/">Fuel Suppliers</a>
+                    </li>
+                    <li>
+                      <a id="collapse-navbar-account-activity" href="#/account-activity">Account Activity</a>
+                    </li>
+                    <li>
+                      <a id="collapse-navbar-notifications" href="#/notifications">Notifications</a>
+                    </li>
+                    <li>
+                      <a id="collapse-navbar-settings" href="#/settings">Settings</a>
+                    </li>
+                    <li>
+                      <a id="collapse-navbar-administration" href="#/administration">Administration</a>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+            <div class="navigationRibbon hidden-xs">
+              <div class="level2Navigation">
+                <div class="container">
+                  <a id="navbar-dashboard" href="#/">Dashboard</a>
+                  <a id="navbar-fuel-suppliers" href="#/fuel-suppliers/">Fuel Suppliers</a>
+                  <a id="navbar-account-activity" href="#/account-activity">Account Activity</a>
+                  <a id="navbar-notifications" href="#/notifications">Notifications</a>
+                  <a id="navbar-settings" href="#/settings">Settings</a>
+                  <a id="navbar-administration" href="#/administration">Administration</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div id="main" class="template container" style="padding-top:136px;">
+          <div class="fuel-suppliers row">
+            <div class="fuel-suppliers-table col-lg-12">
+              <div class="react-bs-table-container">
+                <div class="react-bs-table-tool-bar ">
+                  <div class="row">
+                    <div>
+                      <h1 class="header">Fuel Suppliers</h1>
+                      <div class="right-toolbar-container">
+                        <div class="actions-container">
+                          <button class="btn btn-primary">Add</button>
+                          <label class="checkbox">
+                            <input type="checkbox" value="on">
+                            <!-- react-text: 144 -->Active Only
+                            <!-- /react-text -->
+                          </label>
+                        </div>
+                        <div class="form-group form-group-sm react-bs-table-search-form">
+                          <input type="text" class="form-control " placeholder="Search" value="" style="z-index: 0;">
+                          <span class="input-group-btn"></span>
+                        </div>
+                      </div>
+                    </div>
+                    <div id="toast-container" class="toast-top-right" aria-live="polite" role="alert"></div>
+                  </div>
+                </div>
+                <div class="react-bs-table react-bs-table-bordered" style="height: 100%;">
+                  <div class="react-bs-container-header table-header-wrapper">
+                    <table class="table table-hover table-bordered">
+                      <colgroup>
+                        <col class="">
+                        <col class="">
+                        <col class="">
+                        <col class="">
+                        <col class="">
+                        <col class="actions">
+                      </colgroup>
+                      <thead>
+                        <tr>
+                          <th class="name sort-column" data-is-only-head="false" title="Name" data-field="name" style="text-align: left;">
+                            <!-- react-text: 162 -->Name
+                            <!-- /react-text -->
+                            <span class="order">
+                              <span class="dropdown">
+                                <span class="caret" style="margin: 10px 0px 10px 5px; color: rgb(204, 204, 204);"></span>
+                              </span>
+                              <span class="dropup">
+                                <span class="caret" style="margin: 10px 0px; color: rgb(204, 204, 204);"></span>
+                              </span>
+                            </span>
+                            <div></div>
+                          </th>
+                          <th class="" data-is-only-head="false" title="Status" data-field="fuelSupplierStatusFK" style="text-align: left;">
+                            <!-- react-text: 170 -->Status
+                            <!-- /react-text -->
+                            <div></div>
+                          </th>
+                          <th class="sort-column" data-is-only-head="false" title="Actions Permitted" data-field="actionsPermitted" style="text-align: left;">
+                            <!-- react-text: 173 -->Actions Permitted
+                            <!-- /react-text -->
+                            <span class="order">
+                              <span class="dropdown">
+                                <span class="caret" style="margin: 10px 0px 10px 5px; color: rgb(204, 204, 204);"></span>
+                              </span>
+                              <span class="dropup">
+                                <span class="caret" style="margin: 10px 0px; color: rgb(204, 204, 204);"></span>
+                              </span>
+                            </span>
+                            <div></div>
+                          </th>
+                          <th class="sort-column" data-is-only-head="false" title="Credit Balance" data-field="creditBalance" style="text-align: left;">
+                            <!-- react-text: 181 -->Credit Balance
+                            <!-- /react-text -->
+                            <span class="order">
+                              <span class="dropdown">
+                                <span class="caret" style="margin: 10px 0px 10px 5px; color: rgb(204, 204, 204);"></span>
+                              </span>
+                              <span class="dropup">
+                                <span class="caret" style="margin: 10px 0px; color: rgb(204, 204, 204);"></span>
+                              </span>
+                            </span>
+                            <div></div>
+                          </th>
+                          <th class="sort-column" data-is-only-head="false" title="Last Transaction" data-field="lastTransaction" style="text-align: left;">
+                            <!-- react-text: 189 -->Last Transaction
+                            <!-- /react-text -->
+                            <span class="order">
+                              <span class="dropdown">
+                                <span class="caret" style="margin: 10px 0px 10px 5px; color: rgb(204, 204, 204);"></span>
+                              </span>
+                              <span class="dropup">
+                                <span class="caret" style="margin: 10px 0px; color: rgb(204, 204, 204);"></span>
+                              </span>
+                            </span>
+                            <div></div>
+                          </th>
+                          <th class="" data-is-only-head="false" title="Pending Actions" data-field="pendingActions" style="text-align: left;">
+                            <!-- react-text: 197 -->Pending Actions
+                            <!-- /react-text -->
+                            <div></div>
+                          </th>
+                        </tr>
+                      </thead>
+                    </table>
+                  </div>
+                  <div class="react-bs-container-body" style="height: 100%;">
+                    <table class="table table-bordered">
+                      <colgroup>
+                        <col class="">
+                        <col class="">
+                        <col class="">
+                        <col class="">
+                        <col class="">
+                        <col class="actions">
+                      </colgroup>
+                      <tbody>
+                        <tr class="">
+                          <td data-toggle="collapse" colspan="6" class="react-bs-table-no-data">There is no data to display</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- react-empty: 211 -->
+          </div>
+        </div>
+        <div id="footer" role="contentinfo">
+          <img class="back-to-top" src="./assets/images/back-to-top.png" alt="Back to top" title="Back to top">
+          <div id="footerWrapper">
+            <div id="footerAdminSection">
+              <div id="footerAdminLinksContainer" class="container">
+                <div id="footerAdminLinks" class="row">
+                  <ul class="inline">
+                    <li>
+                      <a id="footer-home" href="#" target="_self">Home</a>
+                    </li>
+                    <li>
+                      <a id="footer-about-site" href="#" target="_self">About this site</a>
+                    </li>
+                    <li>
+                      <a id="footer-about-disclaimer" href="http://gov.bc.ca/disclaimer/" target="_self">Disclaimer</a>
+                    </li>
+                    <li>
+                      <a id="footer-about-privacy" href="http://gov.bc.ca/privacy/" target="_self">Privacy</a>
+                    </li>
+                    <li>
+                      <a id="footer-about-accessibility" href="http://gov.bc.ca/webaccessibility/" target="_self">Accessibility</a>
+                    </li>
+                    <li>
+                      <a id="footer-about-copyright" href="http://gov.bc.ca/copyright" target="_self">Copyright</a>
+                    </li>
+                    <li>
+                      <a id="footer-about-contact" href="#" target="_self">Contact Us</a>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script src="build/bundle.js"></script>
+  <script src="./assets/js/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.js"></script>
+  <script src="./assets/js/bootstrap.min.js"></script>
+  <script src="./assets/js/misc.js"></script>
+  <script src="./assets/js/navMenu.js"></script>
+  <script src="./assets/js/ie10-viewport-bug-workaround.js"></script>
+
+
+</body>
+
+</html>

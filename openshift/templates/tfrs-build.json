@@ -34,7 +34,8 @@
             "git": {
                 "uri": "${SOURCE_REPOSITORY_URL}",
                 "ref": "master"
-            }
+            },
+           "contextDir": "backend"
         },
         "strategy": {
             "type": "JenkinsPipeline",
@@ -651,7 +652,7 @@
             "uri": "${SOURCE_REPOSITORY_URL}",
             "ref": "${SOURCE_REPOSITORY_REF}"
           },
-          "contextDir": "client"
+          "contextDir": "frontend"
         },
         "strategy": {
           "type": "Source",
@@ -712,12 +713,13 @@
             "git": {
                 "uri": "${SOURCE_REPOSITORY_URL}",
                 "ref": "master"
-            }
+            },
+            "contextDir": "frontend"
         },
         "strategy": {
             "type": "JenkinsPipeline",
             "jenkinsPipelineStrategy": {
-                "jenkinsfilePath": "client.Jenkinsfile"
+                "jenkinsfilePath": "Jenkinsfile"
             }
         },
         "output": {},

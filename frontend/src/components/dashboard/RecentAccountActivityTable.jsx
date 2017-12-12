@@ -15,6 +15,8 @@ class RecentAccountActivityTable extends Component {
       showModal: false,
       note: '',
     };
+    console.log("RecentAccountActivityTable")
+    console.log(this.props.accountActivityData)
   }
 
   handleAcceptClick(row) {

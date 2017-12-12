@@ -39,7 +39,7 @@ class Navbar extends Component {
               <a id="navigation-anchor"></a>
               <ul className="nav navbar-nav">
                 <li><Link id="collapse-navbar-dashboard" to={Routes.HOME}>Dashboard</Link></li>
-                <li><Link id="collapse-navbar-fuel-supplier" to={Routes.FUEL_SUPPLIERS}>Fuel Suppliers</Link></li>
+                <li><Link id="collapse-navbar-organization" to={Routes.ORGANIZATIONS}>Fuel Suppliers</Link></li>
 			          <li><Link id="collapse-navbar-account-activity" to={Routes.ACCOUNT_ACTIVITY}>Account Activity</Link></li>
 				        <li><Link id="collapse-navbar-notifications" to={Routes.NOTIFICATIONS}>Notifications</Link></li>
                 <li><Link id="collapse-navbar-settings" to={Routes.SETTINGS}>Settings</Link></li>
@@ -52,7 +52,7 @@ class Navbar extends Component {
           <div className="level2Navigation">
             <div className="container">
               <Link id="navbar-dashboard" to={Routes.HOME}>Dashboard</Link>
-              <Link id="navbar-fuel-suppliers" to={Routes.FUEL_SUPPLIERS}>Fuel Suppliers</Link>
+              <Link id="navbar-organizations" to={Routes.ORGANIZATIONS}>Fuel Suppliers</Link>
               <Link id="navbar-account-activity" to={Routes.ACCOUNT_ACTIVITY}>Account Activity</Link>
               <Link id="navbar-notifications" to={Routes.NOTIFICATIONS}>Notifications</Link>
               <Link id="navbar-settings" to={Routes.SETTINGS}>Settings</Link>

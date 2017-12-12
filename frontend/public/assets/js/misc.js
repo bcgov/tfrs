@@ -440,7 +440,7 @@ $(window).on("load resize", function() {
 	$('#leftNav').collapse({'toggle': true})
   
 	// When our page loads, check to see if it contains and anchor
-	scroll_if_anchor(window.location.hash);
+	// scroll_if_anchor(window.location.hash);
 
 	// Intercept all anchor clicks in the accessibility section and page content
 	//$("#access").on("click", "a", scroll_if_anchor);		

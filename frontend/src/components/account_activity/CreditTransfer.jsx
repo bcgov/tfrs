@@ -13,7 +13,7 @@ import {
   getCreditTransferReset,
   updateCreditTransfer,
   deleteCreditTransfer } from '../../actions/accountActivityActions.jsx';
-import { getFuelSuppliers } from '../../actions/fuelSuppliersActions.jsx';
+import { getOrganizations } from '../../actions/organizationActions.jsx';
 import { plainEnglishSentence } from '../../utils/functions.jsx';
 import { BootstrapTable, TableHeaderColumn, ButtonGroup } from 'react-bootstrap-table';
 import TransactionHistory from './TransactionHistory.jsx';
@@ -46,7 +46,7 @@ class CreditTransfer extends Component {
       })
     }
     if (prevProps.match.params.id != this.props.match.params.id) {
-      this.props.getFuelSuppliers();
+      this.props.getOrganizations();
       this.props.getCreditTransfer(this.props.match.params.id);
     }
   }
@@ -81,7 +81,7 @@ class CreditTransfer extends Component {
 
   handleSubmit(event, status) {
     event.preventDefault();
-    const initiatorFK = this.props.fuelSuppliers[0].id;
+    const initiatorFK = this.props.organizations[0].id;
     const creditTradeTypeFK = this.creditTradeTypeFK.value;
     const numberOfCredits = this.numberOfCredits.value;
     const respondentFK = this.respondent.value;
@@ -167,9 +167,9 @@ class CreditTransfer extends Component {
                       ref={(input) => this.respondent = input}
                       defaultValue={this.props.data && this.props.data.respondentFK}
                       onChange={(event) => this.handleInputChange(event)}>
-                      { this.props.fuelSuppliers &&
-                        this.props.fuelSuppliers.map((fuelSupplier) => (
-                          <option value={fuelSupplier.id}>{fuelSupplier.name}</option>
+                      { this.props.organizations &&
+                        this.props.organizations.map((organization) => (
+                          <option value={organization.id}>{organization.name}</option>
                       ))}
                     </select>
                   </div>
@@ -268,7 +268,7 @@ class CreditTransfer extends Component {
             show={this.state.showRescindCreditTransferModal}
             onHide={() => this.setState({showRescindCreditTransferModal: false})}
             aria-labelledby="contained-modal-title"
-            className="new-fuel-supplier-modal"
+            className="new-organization-modal"
           >
           <Modal.Header closeButton>
             <Modal.Title id="contained-modal-title">Rescind Credit Transfer</Modal.Title>
@@ -298,7 +298,7 @@ class CreditTransfer extends Component {
             show={this.state.showApproveCreditTransferModal}
             onHide={() => this.setState({showApproveCreditTransferModal: false})}
             aria-labelledby="contained-modal-title"
-            className="new-fuel-supplier-modal"
+            className="new-organization-modal"
           >
           <Modal.Header closeButton>
             <Modal.Title id="contained-modal-title">Approve Credit Transfer</Modal.Title>
@@ -328,7 +328,7 @@ class CreditTransfer extends Component {
             show={this.state.showAcceptCreditTransferModal}
             onHide={() => this.setState({showAcceptCreditTransferModal: false})}
             aria-labelledby="contained-modal-title"
-            className="new-fuel-supplier-modal"
+            className="new-organization-modal"
           >
           <Modal.Header closeButton>
             <Modal.Title id="contained-modal-title">Accept Credit Transfer</Modal.Title>
@@ -358,7 +358,7 @@ class CreditTransfer extends Component {
             show={this.state.showRejectProposalModal}
             onHide={() => this.setState({showRejectProposalModal: false})}
             aria-labelledby="contained-modal-title"
-            className="new-fuel-supplier-modal"
+            className="new-organization-modal"
           >
           <Modal.Header closeButton>
             <Modal.Title id="contained-modal-title">Reject Credit Transfer</Modal.Title>
@@ -388,7 +388,7 @@ class CreditTransfer extends Component {
             show={this.state.showDeleteCreditTransferModal}
             onHide={() => this.setState({showDeleteCreditTransferModal: false})}
             aria-labelledby="contained-modal-title"
-            className="new-fuel-supplier-modal"
+            className="new-organization-modal"
           >
           <Modal.Header closeButton>
             <Modal.Title id="contained-modal-title">Delete Credit Transfer</Modal.Title>
@@ -424,7 +424,7 @@ class CreditTransfer extends Component {
 export default connect (
   state => ({
     data: state.rootReducer[ReducerTypes.GET_CREDIT_TRANSFER].data,
-    fuelSuppliers: state.rootReducer[ReducerTypes.GET_FUEL_SUPPLIERS].data,
+    organizations: state.rootReducer[ReducerTypes.GET_ORGANIZATIONS].data,
   }),
   dispatch => ({
     getCreditTransfer: (id) => {
@@ -439,8 +439,8 @@ export default connect (
     deleteCreditTransfer: (id) => {
       dispatch(deleteCreditTransfer(id));
     },
-    getFuelSuppliers: () => {
-      dispatch(getFuelSuppliers());
+    getOrganizations: () => {
+      dispatch(getOrganizations());
     }
   })
 )(CreditTransfer)

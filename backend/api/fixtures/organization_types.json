@@ -1,0 +1,46 @@
+[
+    {
+        "fields": {
+            "description": "A Part 3 Fuel Supplier",
+            "display_order": "1",
+            "effective_date": "2017-01-01",
+            "expiration_date": "2117-01-01",
+            "type": "Part 3 Fuel Supplier"
+        },
+        "model": "api.organizationtype",
+        "pk": "1"
+    },
+    {
+        "fields": {
+            "description": "A Petroleum Fuel Supplier",
+            "display_order": "2",
+            "effective_date": "2017-01-01",
+            "expiration_date": "2117-01-01",
+            "type": "Petroleum Fuel Supplier"
+        },
+        "model": "api.organizationtype",
+        "pk": "2"
+    },
+    {
+        "fields": {
+            "description": "A Low Carbon Fuel Supplier, including both Part 3 and Petroleum Fuel Suppliers.",
+            "display_order": "3",
+            "effective_date": "2017-01-01",
+            "expiration_date": "2117-01-01",
+            "type": "Low Carbon Fuel Supplier"
+        },
+        "model": "api.organizationtype",
+        "pk": "3"
+    },
+    {
+        "fields": {
+            "description": "Government of British Columbia",
+            "display_order": "4",
+            "effective_date": "2017-01-01",
+            "expiration_date": "2117-01-01",
+            "type": "Government"
+        },
+        "model": "api.organizationtype",
+        "pk": "4"
+    }
+]

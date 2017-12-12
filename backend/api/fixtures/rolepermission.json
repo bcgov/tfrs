@@ -1,0 +1,162 @@
+[
+    {
+        "fields": {
+            "permission": "1",
+            "role": "1"
+        },
+        "model": "api.rolepermission",
+        "pk": "1"
+    },
+    {
+        "fields": {
+            "permission": "6",
+            "role": "1"
+        },
+        "model": "api.rolepermission",
+        "pk": "2"
+    },
+    {
+        "fields": {
+            "permission": "10",
+            "role": "1"
+        },
+        "model": "api.rolepermission",
+        "pk": "3"
+    },
+    {
+        "fields": {
+            "permission": "1",
+            "role": "3"
+        },
+        "model": "api.rolepermission",
+        "pk": "4"
+    },
+    {
+        "fields": {
+            "permission": "6",
+            "role": "3"
+        },
+        "model": "api.rolepermission",
+        "pk": "5"
+    },
+    {
+        "fields": {
+            "permission": "10",
+            "role": "3"
+        },
+        "model": "api.rolepermission",
+        "pk": "6"
+    },
+    {
+        "fields": {
+            "permission": "5",
+            "role": "3"
+        },
+        "model": "api.rolepermission",
+        "pk": "7"
+    },
+    {
+        "fields": {
+            "permission": "1",
+            "role": "2"
+        },
+        "model": "api.rolepermission",
+        "pk": "8"
+    },
+    {
+        "fields": {
+            "permission": "3",
+            "role": "2"
+        },
+        "model": "api.rolepermission",
+        "pk": "9"
+    },
+    {
+        "fields": {
+            "permission": "4",
+            "role": "2"
+        },
+        "model": "api.rolepermission",
+        "pk": "10"
+    },
+    {
+        "fields": {
+            "permission": "1",
+            "role": "4"
+        },
+        "model": "api.rolepermission",
+        "pk": "11"
+    },
+    {
+        "fields": {
+            "permission": "11",
+            "role": "4"
+        },
+        "model": "api.rolepermission",
+        "pk": "12"
+    },
+    {
+        "fields": {
+            "permission": "6",
+            "role": "4"
+        },
+        "model": "api.rolepermission",
+        "pk": "13"
+    },
+    {
+        "fields": {
+            "permission": "1",
+            "role": "5"
+        },
+        "model": "api.rolepermission",
+        "pk": "14"
+    },
+    {
+        "fields": {
+            "permission": "11",
+            "role": "5"
+        },
+        "model": "api.rolepermission",
+        "pk": "15"
+    },
+    {
+        "fields": {
+            "permission": "6",
+            "role": "6"
+        },
+        "model": "api.rolepermission",
+        "pk": "16"
+    },
+    {
+        "fields": {
+            "permission": "7",
+            "role": "5"
+        },
+        "model": "api.rolepermission",
+        "pk": "17"
+    },
+    {
+        "fields": {
+            "permission": "8",
+            "role": "5"
+        },
+        "model": "api.rolepermission",
+        "pk": "18"
+    },
+    {
+        "fields": {
+            "permission": "9",
+            "role": "5"
+        },
+        "model": "api.rolepermission",
+        "pk": "19"
+    },
+    {
+        "fields": {
+            "permission": "6",
+            "role": "5"
+        },
+        "model": "api.rolepermission",
+        "pk": "20"
+    }
+]
