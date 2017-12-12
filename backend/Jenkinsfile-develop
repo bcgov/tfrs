@@ -1,0 +1,57 @@
+node('python') {
+    stage('Unit Test') {
+        echo('Unit Test')
+        checkout scm
+        try {
+        sh 'cd backend && pip install --upgrade pip && pip install -r requirements.txt && python ./manage.py test'
+        } catch(Throwable t) {
+            mail (to: 'Kuan.Fan@gov.bc.ca,Daine.Trinidad@gov.bc.ca,Raj.Persram@gov.bc.ca', subject: "FYI: Job '${env.JOB_NAME}' (${env.BUILD_NUMBER}) unit test failed", body: "See ${env.BUILD_URL} for details. ");
+        }
+    }
+}
+
+node('maven') {
+
+    stage('Quality Check') {
+        echo "checking out source"
+        checkout scm
+        echo('Quality Check')
+        SONARQUBE_PWD = sh (
+            script: 'oc env dc/sonarqube --list | awk  -F  "=" \'/SONARQUBE_ADMINPW/{print $2}\'',
+            returnStdout: true
+        ).trim()
+        echo "SONARQUBE_PWD: ${SONARQUBE_PWD}"
+
+        SONARQUBE_URL = sh (
+            script: 'oc get routes -o wide --no-headers | awk \'/sonarqube/{ print match($0,/edge/) ?  "https://"$2 : "http://"$2 }\'',
+            returnStdout: true
+        ).trim()
+        echo "SONARQUBE_URL: ${SONARQUBE_URL}"
+
+        dir('sonar-runner') {
+            sh returnStdout: true, script: "./gradlew sonarqube -Dsonar.host.url=${SONARQUBE_URL} -Dsonar.verbose=true --stacktrace --info  -Dsonar.sources=.."
+        }
+    }
+
+    stage('Build and Tag') {
+        echo "Build and Tag: ${BUILD_ID}"
+        openshiftBuild bldCfg: 'tfrs-develop', showBuildLogs: 'true'
+        openshiftTag destStream: 'tfrs', verbose: 'true', destTag: '$BUILD_ID', srcStream: 'tfrs', srcTag: 'latest'
+    }
+
+    stage('Deploy to Dev') {
+        echo "Deploying to Dev: ${BUILD_ID}"
+        openshiftTag destStream: 'tfrs', verbose: 'true', destTag: 'dev', srcStream: 'tfrs', srcTag: '$BUILD_ID'
+        sh 'sleep 3m'
+    }
+
+}
+
+
+stage('Deploy to Test') {
+    input "Deploy to Test?"
+    node('maven') {
+        openshiftTag destStream: 'tfrs', verbose: 'true', destTag: 'test', srcStream: 'tfrs', srcTag: '$BUILD_ID'
+    }
+}
+
