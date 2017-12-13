@@ -1,19 +1,17 @@
-# # django>=1.8,<1.9
-# django==1.11
-# django-debug-toolbar==1.5
+django==1.11
+django-debug-toolbar==1.5
 gunicorn==19.4.5
-# psycopg2==2.7.1
-# whitenoise==3.0
-# django-extensions==1.7.7
-# djangorestframework==3.6.2
-# djangorestframework-bulk==0.2.1
-# Optional packages which may be used with REST framework.
-# markdown===2.6.8
-# django-filter===1.0.2
-# # documentation
-# django_rest_swagger===2.1.2
-# # packages for testing
-# pytest-django==3.1.2
-# pytest-cov==2.4.0
-# django-cors-headers==2.1.0
-flask
+psycopg2==2.7.1
+whitenoise==3.0
+django-extensions==1.7.7
+djangorestframework==3.6.2
+djangorestframework-bulk==0.2.1
+Optional packages which may be used with REST framework.
+markdown===2.6.8
+django-filter===1.0.2
+#documentation
+django_rest_swagger===2.1.2
+#packages for testing
+pytest-django==3.1.2
+pytest-cov==2.4.0
+django-cors-headers==2.1.0
