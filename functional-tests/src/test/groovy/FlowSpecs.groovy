@@ -1,10 +1,8 @@
 import geb.spock.GebReportingSpec
 import pages.app.DashboardPage
 import pages.app.NotificationsPage
-import pages.app.SettingsPage
-import pages.app.AccountActivityPage
 import pages.app.FuelSuppliersPage
-//import pages.app.AdministrationPage
+import pages.app.AccountActivityPage
 import pages.external.Accessability
 import pages.external.Copyright
 import pages.external.Disclaimer
@@ -15,26 +13,22 @@ class FlowSpecs extends GebReportingSpec {
 
     @Unroll
     def "Navigate Page from: #startPage, click Link: #clickLink, Assert Page: #assertPage"(){
-        when:
+        when: "I am on #startPage"
         to startPage
-
-        and:
-        (1..clickCount).each{
+        and: "I click on #clickLink"
             $("a", id:"$clickLink").click()
-        }
-
-        then:
+        then: "I should see #assertPage"
         at assertPage
 
         where:
-        startPage           | clickLink                     | clickCount    | timeoutSeconds    || assertPage
-        //DashboardPage       | "navbar-notifications"      | 1             | 5                 || NotificationsPage
-        //SettingsPage        | "navbar-dashboard"          | 1             | 5                 || DashboardPage
-        //NotificationsPage   | "navbar-settings"           | 1             | 5                 || SettingsPage
+        startPage           | clickLink                     || assertPage
+        DashboardPage       | "navbar-notifications"        || NotificationsPage
+        DashboardPage       | "navbar-organizations"        || FuelSuppliersPage
+        //DashboardPage       | "navbar-account-activity"     || AccountActivityPage
         //Test Externally Linked Pages
-        //SettingsPage        | "footer-about-copyright"        | 1             | 3                 || Copyright
-        //SettingsPage      | "footer-about-disclaimer"       | 1             | 3                 || Disclaimer
-        //SettingsPage      | "footer-about-privacy"          | 1             | 3                 || Privacy
-        //SettingsPage      | "footer-about-accessibility"    | 1             | 3                 || Accessability
+        DashboardPage        | "footer-about-copyright"     || Copyright
+        DashboardPage        | "footer-about-disclaimer"    || Disclaimer
+        DashboardPage        | "footer-about-privacy"       || Privacy
+        DashboardPage        | "footer-about-accessibility" || Accessability
     }
 }
