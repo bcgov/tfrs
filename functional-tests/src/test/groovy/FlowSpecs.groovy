@@ -13,12 +13,11 @@ class FlowSpecs extends GebReportingSpec {
 
     @Unroll
     def "Navigate Page from: #startPage, click Link: #clickLink, Assert Page: #assertPage"(){
-        when:
+        when: "I am on #startPage"
         to startPage
-
-        and:
+        and: "I click on #clickLink"
             $("a", id:"$clickLink").click()
-        then:
+        then: "I should see #assertPage"
         at assertPage
 
         where:
