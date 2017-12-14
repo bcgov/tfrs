@@ -1,7 +1,7 @@
 node('maven') {
     stage('build') {
         echo "Building..."
-        openshiftBuild bldCfg: 'client', showBuildLogs: 'true'
+        openshiftBuild bldCfg: 'client-develop', showBuildLogs: 'true'
         openshiftTag destStream: 'client', verbose: 'true', destTag: '$BUILD_ID', srcStream: 'client', srcTag: 'latest'
     }
 
@@ -55,12 +55,4 @@ stage('deploy-test') {
         openshiftTag destStream: 'client', verbose: 'true', destTag: 'test', srcStream: 'client', srcTag: '$BUILD_ID'
     }
 }
-
-stage('deploy-prod') {
-    input "Deploy to Prod?"
-    node('maven') {
-        openshiftTag destStream: 'client', verbose: 'true', destTag: 'prod', srcStream: 'client', srcTag: '$BUILD_ID'
-    }
-}
-
 
