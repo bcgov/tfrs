@@ -2,8 +2,9 @@
     {
         "fields": {
             "email": "BradJSmith@cuvox.de",
-            "given_name": "Brad",
-            "surname": "Smith"
+            "username": "BSmith",
+            "first_name": "Brad",
+            "last_name": "Smith"
         },
         "model": "api.user",
         "pk": "1"
@@ -11,8 +12,9 @@
     {
         "fields": {
             "email": "JudyHHolbert@gustr.com",
-            "given_name": "Judy",
-            "surname": "Holbert"
+            "username": "JHolbert",
+            "first_name": "Judy",
+            "last_name": "Holbert"
         },
         "model": "api.user",
         "pk": "2"
@@ -20,8 +22,9 @@
     {
         "fields": {
             "email": "ClaytonSMcCullough@fleckens.hu",
-            "given_name": "Clayton",
-            "surname": "McCullough"
+            "username": "CMcCullough",
+            "first_name": "Clayton",
+            "last_name": "McCullough"
         },
         "model": "api.user",
         "pk": "3"
@@ -29,8 +32,9 @@
     {
         "fields": {
             "email": "BettyJTacker@gustr.com",
-            "given_name": "Betty",
-            "surname": "Tacker"
+            "username": "BTacker",
+            "first_name": "Betty",
+            "last_name": "Tacker"
         },
         "model": "api.user",
         "pk": "4"
@@ -38,8 +42,9 @@
     {
         "fields": {
             "email": "GayleCYork@dayrep.com",
-            "given_name": "Gayle",
-            "surname": "York"
+            "username": "GYork",
+            "first_name": "Gayle",
+            "last_name": "York"
         },
         "model": "api.user",
         "pk": "5"
@@ -47,8 +52,9 @@
     {
         "fields": {
             "email": "BrianBHealey@jourrapide.com",
-            "given_name": "Brian",
-            "surname": "Healey"
+            "username": "BHealey",
+            "first_name": "Brian",
+            "last_name": "Healey"
         },
         "model": "api.user",
         "pk": "6"
@@ -56,8 +62,9 @@
     {
         "fields": {
             "email": "RosaDMayer@cuvox.de",
-            "given_name": "Rosa",
-            "surname": "Mayer"
+            "username": "RMayer",
+            "first_name": "Rosa",
+            "last_name": "Mayer"
         },
         "model": "api.user",
         "pk": "7"
@@ -65,8 +72,9 @@
     {
         "fields": {
             "email": "AlbertAMills@superrito.com",
-            "given_name": "Albert",
-            "surname": "Mills"
+            "username": "AMills",
+            "first_name": "Albert",
+            "last_name": "Mills"
         },
         "model": "api.user",
         "pk": "8"
@@ -74,8 +82,9 @@
     {
         "fields": {
             "email": "CynthiaKWhipple@einrot.com",
-            "given_name": "Cynthia",
-            "surname": "Whipple"
+            "username": "CWhipple",
+            "first_name": "Cynthia",
+            "last_name": "Whipple"
         },
         "model": "api.user",
         "pk": "9"
@@ -83,8 +92,9 @@
     {
         "fields": {
             "email": "MichaelDWashington@dayrep.com",
-            "given_name": "Michael",
-            "surname": "Washington"
+            "username": "MWashington",
+            "first_name": "Michael",
+            "last_name": "Washington"
         },
         "model": "api.user",
         "pk": "10"
@@ -92,8 +102,9 @@
     {
         "fields": {
             "email": "SarahKWard@teleworm.us",
-            "given_name": "Sarah",
-            "surname": "Ward"
+            "username": "SWard",
+            "first_name": "Sarah",
+            "last_name": "Ward"
         },
         "model": "api.user",
         "pk": "11"
@@ -101,8 +112,9 @@
     {
         "fields": {
             "email": "HarryDSolomon@armyspy.com",
-            "given_name": "Harry",
-            "surname": "Solomon"
+            "username": "HSolomon",
+            "first_name": "Harry",
+            "last_name": "Solomon"
         },
         "model": "api.user",
         "pk": "12"
@@ -110,8 +122,9 @@
     {
         "fields": {
             "email": "CherylGMills@armyspy.com",
-            "given_name": "Cheryl",
-            "surname": "Mills"
+            "username": "CMills",
+            "first_name": "Cheryl",
+            "last_name": "Mills"
         },
         "model": "api.user",
         "pk": "13"
@@ -119,8 +132,9 @@
     {
         "fields": {
             "email": "MichaelGWilkerson@gustr.com",
-            "given_name": "Michael",
-            "surname": "Wilkerson"
+            "username": "MWilkerson",
+            "first_name": "Michael",
+            "last_name": "Wilkerson"
         },
         "model": "api.user",
         "pk": "14"
@@ -128,8 +142,9 @@
     {
         "fields": {
             "email": "CeliaWSchreier@jourrapide.com",
-            "given_name": "Celia",
-            "surname": "Schreier"
+            "username": "CSchreier",
+            "first_name": "Celia",
+            "last_name": "Schreier"
         },
         "model": "api.user",
         "pk": "15"
@@ -137,8 +152,9 @@
     {
         "fields": {
             "email": "LillianJWarner@teleworm.us",
-            "given_name": "Lillian",
-            "surname": "Warner"
+            "username": "LWarner",
+            "first_name": "Lillian",
+            "last_name": "Warner"
         },
         "model": "api.user",
         "pk": "16"
@@ -146,8 +162,9 @@
     {
         "fields": {
             "email": "MarilynBNovak@jourrapide.com",
-            "given_name": "Marilyn",
-            "surname": "Novak"
+            "username": "MNovak",
+            "first_name": "Marilyn",
+            "last_name": "Novak"
         },
         "model": "api.user",
         "pk": "17"
@@ -155,8 +172,9 @@
     {
         "fields": {
             "email": "JoshuaKBjork@jourrapide.com",
-            "given_name": "Joshua",
-            "surname": "Bjork"
+            "username": "JBjork",
+            "first_name": "Joshua",
+            "last_name": "Bjork"
         },
         "model": "api.user",
         "pk": "18"
@@ -164,8 +182,9 @@
     {
         "fields": {
             "email": "PatriciaJRiley@dayrep.com",
-            "given_name": "Patricia",
-            "surname": "Riley"
+            "username": "PRiley",
+            "first_name": "Patricia",
+            "last_name": "Riley"
         },
         "model": "api.user",
         "pk": "19"
@@ -173,8 +192,9 @@
     {
         "fields": {
             "email": "BeverlyWClyde@rhyta.com",
-            "given_name": "Beverly",
-            "surname": "Clyde"
+            "username": "BClyde",
+            "first_name": "Beverly",
+            "last_name": "Clyde"
         },
         "model": "api.user",
         "pk": "20"
@@ -182,8 +202,9 @@
     {
         "fields": {
             "email": "BillMFinley@gustr.com",
-            "given_name": "Bill",
-            "surname": "Finley"
+            "username": "BFinley",
+            "first_name": "Bill",
+            "last_name": "Finley"
         },
         "model": "api.user",
         "pk": "21"
@@ -191,8 +212,9 @@
     {
         "fields": {
             "email": "CharlesJSeng@armyspy.com",
-            "given_name": "Charles",
-            "surname": "Seng"
+            "username": "CSeng",
+            "first_name": "Charles",
+            "last_name": "Seng"
         },
         "model": "api.user",
         "pk": "22"
@@ -200,8 +222,9 @@
     {
         "fields": {
             "email": "RobertGMiller@teleworm.us",
-            "given_name": "Robert",
-            "surname": "Miller"
+            "username": "RMiller",
+            "first_name": "Robert",
+            "last_name": "Miller"
         },
         "model": "api.user",
         "pk": "23"
@@ -209,8 +232,9 @@
     {
         "fields": {
             "email": "DavidBKelly@gustr.com",
-            "given_name": "David",
-            "surname": "Kelly"
+            "username": "DKelly",
+            "first_name": "David",
+            "last_name": "Kelly"
         },
         "model": "api.user",
         "pk": "24"
@@ -218,8 +242,9 @@
     {
         "fields": {
             "email": "EmoryCHanson@armyspy.com",
-            "given_name": "Emory",
-            "surname": "Hanson"
+            "username": "EHanson",
+            "first_name": "Emory",
+            "last_name": "Hanson"
         },
         "model": "api.user",
         "pk": "25"
@@ -227,8 +252,9 @@
     {
         "fields": {
             "email": "RichardETurner@jourrapide.com",
-            "given_name": "Richard",
-            "surname": "Turner"
+            "username": "RTurner",
+            "first_name": "Richard",
+            "last_name": "Turner"
         },
         "model": "api.user",
         "pk": "26"
@@ -236,8 +262,9 @@
     {
         "fields": {
             "email": "CletusDHill@gustr.com",
-            "given_name": "Cletus",
-            "surname": "Hill"
+            "username": "CHill",
+            "first_name": "Cletus",
+            "last_name": "Hill"
         },
         "model": "api.user",
         "pk": "27"
@@ -245,8 +272,9 @@
     {
         "fields": {
             "email": "NancyFFoley@cuvox.de",
-            "given_name": "Nancy",
-            "surname": "Foley"
+            "username": "NFoley",
+            "first_name": "Nancy",
+            "last_name": "Foley"
         },
         "model": "api.user",
         "pk": "28"
@@ -254,8 +282,9 @@
     {
         "fields": {
             "email": "NicholeDMitchell@fleckens.hu",
-            "given_name": "Nichole",
-            "surname": "Mitchell"
+            "username": "NMitchell",
+            "first_name": "Nichole",
+            "last_name": "Mitchell"
         },
         "model": "api.user",
         "pk": "29"
@@ -263,8 +292,9 @@
     {
         "fields": {
             "email": "RickyFNestor@rhyta.com",
-            "given_name": "Ricky",
-            "surname": "Nestor"
+            "username": "RNestor",
+            "first_name": "Ricky",
+            "last_name": "Nestor"
         },
         "model": "api.user",
         "pk": "30"
@@ -272,8 +302,9 @@
     {
         "fields": {
             "email": "DorothyJFisher@dayrep.com",
-            "given_name": "Dorothy",
-            "surname": "Fisher"
+            "username": "DFisher",
+            "first_name": "Dorothy",
+            "last_name": "Fisher"
         },
         "model": "api.user",
         "pk": "31"
@@ -281,8 +312,9 @@
     {
         "fields": {
             "email": "BruceIWelsh@teleworm.us",
-            "given_name": "Bruce",
-            "surname": "Welsh"
+            "username": "BWelsh",
+            "first_name": "Bruce",
+            "last_name": "Welsh"
         },
         "model": "api.user",
         "pk": "32"
@@ -290,8 +322,9 @@
     {
         "fields": {
             "email": "AlmaTSterling@gustr.com",
-            "given_name": "Alma",
-            "surname": "Sterling"
+            "username": "ASterling",
+            "first_name": "Alma",
+            "last_name": "Sterling"
         },
         "model": "api.user",
         "pk": "33"
@@ -299,8 +332,9 @@
     {
         "fields": {
             "email": "RobertLHunt@teleworm.us",
-            "given_name": "Robert",
-            "surname": "Hunt"
+            "username": "RHunt",
+            "first_name": "Robert",
+            "last_name": "Hunt"
         },
         "model": "api.user",
         "pk": "34"
@@ -308,8 +342,9 @@
     {
         "fields": {
             "email": "StephanieJYoung@jourrapide.com",
-            "given_name": "Stephanie",
-            "surname": "Young"
+            "username": "SYoung",
+            "first_name": "Stephanie",
+            "last_name": "Young"
         },
         "model": "api.user",
         "pk": "35"
@@ -317,8 +352,9 @@
     {
         "fields": {
             "email": "WilmaCUrbanski@teleworm.us",
-            "given_name": "Wilma",
-            "surname": "Urbanski"
+            "username": "WUrbanski",
+            "first_name": "Wilma",
+            "last_name": "Urbanski"
         },
         "model": "api.user",
         "pk": "36"
@@ -326,8 +362,9 @@
     {
         "fields": {
             "email": "KeliHWarren@rhyta.com",
-            "given_name": "Keli",
-            "surname": "Warren"
+            "username": "KWarren",
+            "first_name": "Keli",
+            "last_name": "Warren"
         },
         "model": "api.user",
         "pk": "37"
@@ -335,8 +372,9 @@
     {
         "fields": {
             "email": "RalphKGraham@rhyta.com",
-            "given_name": "Ralph",
-            "surname": "Graham"
+            "username": "RGraham",
+            "first_name": "Ralph",
+            "last_name": "Graham"
         },
         "model": "api.user",
         "pk": "38"
@@ -344,8 +382,9 @@
     {
         "fields": {
             "email": "MargaretRGreene@armyspy.com",
-            "given_name": "Margaret",
-            "surname": "Greene"
+            "username": "MGreene",
+            "first_name": "Margaret",
+            "last_name": "Greene"
         },
         "model": "api.user",
         "pk": "39"
