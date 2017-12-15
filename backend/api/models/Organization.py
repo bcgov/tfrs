@@ -38,5 +38,8 @@ class Organization(Auditable):
         blank=True, null=True)
     created_date = models.DateField()
 
+    def __str__(self):
+        return self.name
+
     class Meta:
         db_table = 'organization'
