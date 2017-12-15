@@ -29,13 +29,13 @@ node('maven') {
             //sh returnStdout: true, script: "./gradlew sonarqube -Dsonar.lanuage=js -Dsonar.projectKey=org.sonarqube:tfrs-client -Dsonar.projectName='TFRS Client Project'   -Dsonar.host.url=${SONARQUBE_URL} -Dsonar.verbose=true --stacktrace --info  -Dsonar.sources=client"
         }
     }
-	
+
     stage('deploy-dev') {
         echo "Deploying to dev..."
         openshiftTag destStream: 'client', verbose: 'true', destTag: 'dev', srcStream: 'client', srcTag: 'latest'
 	sh 'sleep 3m'
     }
-	
+
 }
 
 node('bddstack') {
@@ -45,6 +45,7 @@ node('bddstack') {
     echo "Build: ${BUILD_ID}"
     checkout scm
     sh 'pwd'
+    sh 'sleep 5m'
     dir('functional-tests') {
       try {
       sh './gradlew --debug --stacktrace chromeHeadlessTest'
@@ -63,4 +64,3 @@ stage('deploy-test') {
         openshiftTag destStream: 'client', verbose: 'true', destTag: 'test', srcStream: 'client', srcTag: '$BUILD_ID'
     }
 }
-
