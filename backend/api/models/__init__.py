@@ -117,3 +117,5 @@
 #except:
 #     import UserViewModel
 #
+
+from . import User

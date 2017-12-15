@@ -52,7 +52,11 @@ class TestCreditTradeAPI(TestCase):
         #     self.user_id
         # )[0]
 
-        self.client = Client(HTTP_SM_USER_ID=self.user_id)
+        self.client = Client(
+            HTTP_SMGOV_USERGUID='c9804c52-05f1-4a6a-9d24-332d9d8be2a9',
+            HTTP_SMAUTH_USERDISPLAYNAME='Brad Smith',
+            HTTP_SMGOV_USEREMAIL='BradJSmith@cuvox.de',
+            HTTP_SM_UNIVERSALID='BSmith')
         self.test_url = "/api/credit_trades"
 
         self.test_data_fail = [{
@@ -243,6 +247,9 @@ class TestCreditTradeAPI(TestCase):
         response = self.client.put(
             "{}/{}/approve".format(self.test_url, credit_trade['id']),
             content_type='application/json')
+
+        # print(response.status_code)
+        # print(response.content.decode("utf-8"))
 
         assert status.HTTP_200_OK == response.status_code
 

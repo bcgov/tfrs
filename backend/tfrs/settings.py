@@ -66,11 +66,14 @@ MIDDLEWARE_CLASSES = (
     'api.middleware.SMUserMiddleware',
 )
 
+# Auth User
+AUTH_USER_MODEL = 'api.User'
+
 REST_FRAMEWORK = {
 #   'DEFAULT_AUTHENTICATION_CLASSES': ('rest_framework.permissions.AllowAny',),
 # User authentication is commented out here to allow tests to pass, remove comment to re-enable
-    # 'DEFAULT_AUTHENTICATION_CLASSES': ('api.authentication.UserAuthentication',),
-    'DEFAULT_PERMISSION_CLASSES': ('rest_framework.permissions.AllowAny',),
+    'DEFAULT_AUTHENTICATION_CLASSES': ('api.authentication.UserAuthentication',),
+    'DEFAULT_PERMISSION_CLASSES': ('rest_framework.permissions.IsAuthenticated',),
     # 'EXCEPTION_HANDLER': 'core.exceptions.exception_handler',
 }
 
