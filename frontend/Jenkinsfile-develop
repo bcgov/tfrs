@@ -45,7 +45,7 @@ node('bddstack') {
     echo "Build: ${BUILD_ID}"
     checkout scm
     sh 'pwd'
-    sh 'sleep 5m'
+    sh 'sleep 10m'
     dir('functional-tests') {
       try {
       sh './gradlew --debug --stacktrace chromeHeadlessTest'
