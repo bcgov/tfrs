@@ -44,15 +44,13 @@ node('bddstack') {
     echo "checking out source"
     echo "Build: ${BUILD_ID}"
     checkout scm
-    sh 'pwd'
-    sh 'sleep 10m'
     dir('functional-tests') {
       try {
-      sh './gradlew --debug --stacktrace chromeHeadlessTest'
+          sh './gradlew --debug --stacktrace chromeHeadlessTest'
       } finally {
-      archiveArtifacts allowEmptyArchive: true, artifacts: 'build/reports/**/*'
-      archiveArtifacts allowEmptyArchive: true, artifacts: 'build/test-results/**/*'
-      junit 'build/test-results/**/*.xml'
+          archiveArtifacts allowEmptyArchive: true, artifacts: 'build/reports/**/*'
+          archiveArtifacts allowEmptyArchive: true, artifacts: 'build/test-results/**/*'
+          junit 'build/test-results/**/*.xml'
       }
     }
   }
