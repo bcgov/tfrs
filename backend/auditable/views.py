@@ -3,27 +3,29 @@ from django.shortcuts import render
 from rest_framework.response import Response
 from rest_framework import status
 
+from api.models.User import User
+
 
 class AuditableMixin(object,):
 
     def audit(self, request):
-        # Django headers should be in this format: SM-USER
-        # For it to translate to HTTP_SM_USER
-        http_sm_user = request.META.get('HTTP_SM_USER_ID')
+        header_user_guid = request.META.get('HTTP_SMAUTH_USERGUID')
+        user = User.objects.get(authorization_guid=header_user_guid)
 
         if self.action == 'create':
             request.data.update({
-                'create_user': http_sm_user
+                'create_user': user.id
             })
 
         request.data.update({
-            'update_user': http_sm_user
+            'update_user': user.id
         })
         return request
 
     def serialize_object(self, request, data):
-        http_sm_user = request.META.get('HTTP_SM_USER')
-        data.update({'create_user':http_sm_user,'update_user':http_sm_user})
+        header_user_guid = request.META.get('HTTP_SMAUTH_USERGUID')
+        user = User.objects.get(authorization_guid=header_user_guid)
+        data.update({'create_user': user.id,'update_user': user.id})
         serializer = self.get_serializer(data=data)
         serializer.is_valid(raise_exception=True)
         self.perform_create(serializer)
@@ -48,8 +50,9 @@ class AuditableMixin(object,):
     def update(self, request, *args, **kwargs):
         partial = kwargs.pop('partial', False)
         instance = self.get_object()
-        http_sm_user = request.META.get('HTTP_SM_USER')
-        request.data.update({'update_user':http_sm_user})
+        header_user_guid = request.META.get('HTTP_SMAUTH_USERGUID')
+        user = User.objects.get(authorization_guid=header_user_guid)
+        request.data.update({'update_user': user.id})
         serializer = self.get_serializer(instance, data=request.data, partial=partial)
         serializer.is_valid(raise_exception=True)
         self.perform_update(serializer)

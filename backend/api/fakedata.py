@@ -21,6 +21,8 @@
 
 # edit this file with appropriate test data.
 
+import uuid
+from django.utils.crypto import get_random_string
 
 def AuditTestDataCreate():
   return {
@@ -138,9 +140,9 @@ def CreditTradeZeroReasonTestDataUpdate():
 
 def CurrentUserViewModelTestDataCreate():
   return {
-    'given_name':'Initial',
-    'surname':'Initial',
-    'email':'Initial',
+    'first_name':'Initial',
+    'last_name':'Initial',
+    'email':'test@test.com',
     'active':True,
     'sm_authorization_id':'Initial',
     'smAuthorizationDirectory':'Initial',
@@ -148,9 +150,9 @@ def CurrentUserViewModelTestDataCreate():
 
 def CurrentUserViewModelTestDataUpdate():
   return {
-    'given_name':'Changed',
-    'surname':'Changed',
-    'email':'Changed',
+    'first_name':'Changed',
+    'last_name':'Changed',
+    'email':'test@test.com',
     'active':False,
     'sm_authorization_id':'Changed',
     'smAuthorizationDirectory':'Changed',
@@ -386,43 +388,42 @@ def RoleViewModelTestDataUpdate():
     'description':'Changed',
   }
 
-
 def UserTestDataCreate():
   return {
-    'authorizationID':'Initial',
-    'given_name':'Initial',
-    'surname':'Initial',
-    'email':'Initial',
+    'username': get_random_string(length=8),
+    'first_name':'Initial',
+    'last_name':'Initial',
+    'email':'test@test.com',
     'authorization_id':'Initial',
-    'authorization_guid':'Initial',
+    'authorization_guid': str(uuid.uuid4()),
     'authorization_directory':'Initial',
   }
 
 def UserTestDataUpdate():
   return {
-    'authorizationID':'Changed',
-    'given_name':'Changed',
-    'surname':'Changed',
-    'email':'Changed',
+    'username': get_random_string(length=8),
+    'first_name':'Changed',
+    'last_name':'Changed',
+    'email':'testchange@test.com',
     'authorization_id':'Changed',
-    'authorization_guid':'Changed',
+    'authorization_guid': str(uuid.uuid4()),
     'authorization_directory':'Changed',
   }
 
 
 def UserDetailsViewModelTestDataCreate():
   return {
-    'given_name':'Initial',
-    'surname':'Initial',
-    'email':'Initial',
+    'first_name':'Initial',
+    'last_name':'Initial',
+    'email':'test@test.com',
     'active':True,
   }
 
 def UserDetailsViewModelTestDataUpdate():
   return {
-    'given_name':'Changed',
-    'surname':'Changed',
-    'email':'Changed',
+    'first_name':'Changed',
+    'last_name':'Changed',
+    'email':'testchange@test.com',
     'active':False,
   }
 
@@ -455,18 +456,18 @@ def UserRoleViewModelTestDataUpdate():
 
 def UserViewModelTestDataCreate():
   return {
-    'given_name':'Initial',
-    'surname':'Initial',
-    'email':'Initial',
+    'first_name':'Initial',
+    'last_name':'Initial',
+    'email':'test@test.com',
     'active':True,
     'sm_authorization_id':'Initial',
   }
 
 def UserViewModelTestDataUpdate():
   return {
-    'given_name':'Changed',
-    'surname':'Changed',
-    'email':'Changed',
+    'first_name':'Changed',
+    'last_name':'Changed',
+    'email':'testchange@test.com',
     'active':False,
     'sm_authorization_id':'Changed',
   }
