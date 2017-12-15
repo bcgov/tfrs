@@ -31,5 +31,8 @@ class OrganizationType(Auditable):
     expiration_date = models.DateField(blank=True, null=True)
     display_order = models.IntegerField(blank=True, null=True)
 
+    def __str__(self):
+        return self.type
+
     class Meta:
         db_table = 'organization_type'
