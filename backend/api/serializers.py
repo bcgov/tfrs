@@ -92,7 +92,7 @@ class CreditTradeZeroReasonSerializer(serializers.ModelSerializer):
 class CurrentUserViewModelSerializer(serializers.ModelSerializer):
     class Meta:
         model = CurrentUserViewModel
-        fields = ('id', 'given_name', 'surname', 'email', 'active', 'user_roles',
+        fields = ('id', 'first_name', 'last_name', 'email', 'active', 'user_roles',
                   'sm_authorization_id', 'sm_authorization_directory')
 
 
@@ -180,15 +180,15 @@ class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = (
-                'id', 'given_name', 'surname', 'email', 'authorization_id',
-            'authorization_guid', 'authorization_directory')
+                'id', 'first_name', 'last_name', 'email', 'authorization_id',
+            'authorization_guid', 'authorization_directory', 'display_name')
 
 
 class UserDetailsViewModelSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserDetailsViewModel
         fields = (
-            'id', 'given_name', 'surname', 'email', 'active', 'permissions')
+            'id', 'first_name', 'last_name', 'email', 'active', 'permissions')
 
 
 
@@ -207,7 +207,7 @@ class UserRoleViewModelSerializer(serializers.ModelSerializer):
 class UserViewModelSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserViewModel
-        fields = ('id', 'given_name', 'surname', 'email', 'active', 'sm_authorization_id',
+        fields = ('id', 'first_name', 'last_name', 'email', 'active', 'sm_authorization_id',
                   'user_roles')
 
 
