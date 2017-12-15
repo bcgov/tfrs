@@ -47,4 +47,18 @@ class Migration(migrations.Migration):
             name='fuel_type',
             field=models.ForeignKey(to='api.FuelType'),
         ),
+        migrations.CreateModel(
+            name='User',
+            fields=[
+                ('id', models.AutoField(serialize=False, auto_created=True, primary_key=True, verbose_name='ID')),
+                ('givenName', models.CharField(max_length=255)),
+                ('surname', models.CharField(max_length=255)),
+                ('initials', models.CharField(max_length=255)),
+                ('email', models.CharField(max_length=255)),
+                ('status', models.CharField(max_length=255)),
+                ('smUserId', models.CharField(max_length=255)),
+                ('guid', models.CharField(max_length=255)),
+                ('smAuthorizationDirectory', models.CharField(max_length=255)),
+            ],
+        ),
     ]
