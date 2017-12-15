@@ -47,7 +47,11 @@ from .serializers import UserSerializer
 class Test_Api_Simple(TestCase):
     def setUp(self):
         # Every test needs a client.
-        self.client = Client()
+        self.client = Client(
+            HTTP_SMGOV_USERGUID='c9804c52-05f1-4a6a-9d24-332d9d8be2a9',
+            HTTP_SMAUTH_USERDISPLAYNAME='Brad Smith',
+            HTTP_SMGOV_USEREMAIL='BradJSmith@cuvox.de',
+            HTTP_SM_UNIVERSALID='BSmith')
         # needed to setup django
         django.setup()
 
@@ -715,6 +719,8 @@ class Test_Api_Simple(TestCase):
         jsonString = json.dumps(payload)
         response = self.client.put(updateUrl, content_type='application/json',
                                    data=jsonString)
+        # print(response.status_code)
+        # print(response.content.decode("utf-8"))
         # Check that the response is 200 OK.
         assert status.HTTP_200_OK == response.status_code
         # Cleanup:

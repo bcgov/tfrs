@@ -3,7 +3,13 @@ from rest_framework import status
 from . import fakedata
 from django.test import Client
 
-client = Client()
+# client = Client()
+client = Client(
+    HTTP_SMGOV_USERGUID='c9804c52-05f1-4a6a-9d24-332d9d8be2a9',
+    HTTP_SMAUTH_USERDISPLAYNAME='Brad Smith',
+    HTTP_SMGOV_USEREMAIL='BradJSmith@cuvox.de',
+    HTTP_SM_UNIVERSALID='BSmith'
+)
 
 STATUS_DRAFT = 1
 
@@ -109,11 +115,11 @@ def create_user(organization_id):
     # Create:
     fake_user = fakedata.UserTestDataCreate()
     payload = {
-        'given_name': fake_user['given_name'],
-        'surname': fake_user['surname'],
+        'first_name': fake_user['first_name'],
+        'last_name': fake_user['last_name'],
         'email': fake_user['email'],
         'status': 'Active',
-        'user': fake_user['authorization_id'],
+        'username': fake_user['username'],
         'authorization_guid': fake_user['authorization_guid'],
         'authorization_directory': fake_user['authorization_directory'],
         'organization': organization_id
@@ -145,11 +151,11 @@ def create_credit_trade(**kwargs):
         "zero_reason": kwargs.get("zero_reason")
     }
 
-    user_id = kwargs.get("user_id")
+    # user_id = kwargs.get("user_id")
 
-    client_with_user = Client(HTTP_SM_USER_ID=user_id)
+    # client_with_user = Client(HTTP_SM_USER_ID=user_id)
 
-    response = client_with_user.post("/api/credit_trades",
+    response = client.post("/api/credit_trades",
                                      content_type='application/json',
                                      data=json.dumps(body))
     # print(response.status_code)
