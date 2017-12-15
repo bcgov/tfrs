@@ -33,6 +33,7 @@ node('maven') {
     stage('deploy-dev') {
         echo "Deploying to dev..."
         openshiftTag destStream: 'client', verbose: 'true', destTag: 'dev', srcStream: 'client', srcTag: 'latest'
+	sh 'sleep 3m'
     }
 	
 }
