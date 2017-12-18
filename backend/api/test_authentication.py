@@ -36,7 +36,7 @@ class TestAuthentication(TestCase):
             'HTTP_SMAUTH_UNIVERSALID': 'BSmith',
         }
 
-        user = self.userauth.authenticate(request)
+        user, auth = self.userauth.authenticate(request)
         # print(user)
         # print(user.display_name)
 
@@ -61,7 +61,7 @@ class TestAuthentication(TestCase):
         }
 
         # authenticate should match authorization_id and create the user
-        user = self.userauth.authenticate(request)
+        user, auth = self.userauth.authenticate(request)
 
         assert user is not None
         assert user.display_name == display_name
@@ -86,7 +86,7 @@ class TestAuthentication(TestCase):
         }
 
         # authenticate should match authorization_id and create the user
-        user = self.userauth.authenticate(request)
+        user, auth = self.userauth.authenticate(request)
 
         gov_organization = Organization.objects.get(
             type=OrganizationType.objects.get(type="Government"))
@@ -114,7 +114,7 @@ class TestAuthentication(TestCase):
             'HTTP_SMAUTH_USERTYPE': 'Internal'
         }
 
-        user = self.userauth.authenticate(request)
+        user, auth = self.userauth.authenticate(request)
 
         assert user is None
 
