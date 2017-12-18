@@ -1,43 +1,59 @@
 # from django.contrib.auth.models import User
+from django.db.models import Q
+from rest_framework import authentication
+from rest_framework import exceptions
 from api.models.User import User
 from api.models.Organization import Organization
 from api.models.OrganizationType import OrganizationType
-from rest_framework import authentication
-from rest_framework import exceptions
+from api.utils import get_firstname_lastname
 
 
 class UserAuthentication(authentication.BaseAuthentication):
     def authenticate(self, request):
-        header_user_id = request.META.get('HTTP_SMAUTH_USER')
+        header_username = request.META.get('HTTP_SMAUTH_USER', request.META.get(
+            'HTTP_SMAUTH_UNIVERSALID'))
         header_user_guid = request.META.get('HTTP_SMAUTH_USERGUID')
         header_user_dir = request.META.get('HTTP_SMAUTH_DIRNAME')
-        header_username = request.META.get('HTTP_SMAUTH_UNIVERSALID')
+        header_user_id = request.META.get('HTTP_SMAUTH_UNIVERSALID')
         header_user_email = request.META.get('HTTP_SMAUTH_USEREMAIL')
         header_user_displayname = request.META.get(
             'HTTP_SMAUTH_USERDISPLAYNAME')
+        header_user_type = request.META.get('HTTP_SMAUTH_USERTYPE')
 
-        if not header_user_guid:
-            raise exceptions.AuthenticationFailed('No Siteminder headers found')
+        if not header_user_guid and not header_user_id:
+            raise exceptions.AuthenticationFailed('No SiteMinder headers found')
 
-        organization = None
-        if (request.META.get('HTTP_SMAUTH_USERTYPE') == 'Internal' and
-                    request.META.get('HTTP_SMAUTH_DIRNAME') == 'IDIR'):
-            organization = Organization.objects.get(
+        government_user = False
+        if header_user_type == 'Internal' and header_user_dir == 'IDIR':
+            government_user = True
+            gov_organization = Organization.objects.get(
                 type=OrganizationType.objects.get(type="Government"))
 
-        # TODO: Update this so it doesn't create a user. Instead, display
-        # a prompt to ask the administrator to add their GUID to the system
-        user, created = User.objects.update_or_create(
-            authorization_guid=header_user_guid,
-            defaults={'username': header_username,
-                      'email': header_user_email,
-                      'authorization_id': header_user_id,
-                      'authorization_directory': header_user_dir,
-                      'display_name': header_user_displayname,
-                      'organization': organization},
-        )
+        try:
+            user = User.objects.get(Q(authorization_guid=header_user_guid) |
+                                    Q(authorization_id=header_user_id))
 
+            # First time logging in, map the GUID to the user and set fname & lname
+            if user.authorization_guid is None:
+                user.authorization_guid = header_user_guid
+                first_name, last_name = get_firstname_lastname(
+                    header_user_displayname, header_user_type)
+                user.first_name = first_name if first_name else ""
+                user.last_name = last_name if last_name else ""
 
-        # print("User is", vars(user))
+            user.username = user.username if user.username else header_username
+            user.authorization_email = header_user_email
+            user.authorization_id = header_user_id
+            user.authorization_directory = header_user_dir
+            user.display_name = header_user_displayname
 
-        return user, None
+            if government_user:
+                user.organization = gov_organization
+            user.save()
+
+        except User.DoesNotExist:
+            # Log this attempt
+            # raise exceptions.AuthenticationFailed('User is not authorized.')
+            return None
+
+        return user
