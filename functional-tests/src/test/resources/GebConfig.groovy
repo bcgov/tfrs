@@ -89,8 +89,7 @@ baseNavigatorWaiting = true
 def env = System.getenv()
 baseUrl = env['BASEURL']
 if (!baseUrl) {
-	//baseUrl = "http://dev.lowcarbonfuels.gov.bc.ca/#/"
-	baseUrl = "http://ft-tfrs-dev-client.pathfinder.gov.bc.ca/#/"
+	baseUrl = "http://dev.lowcarbonfuels.gov.bc.ca/"
 }
 
 println "BaseURL: ${baseUrl}"
