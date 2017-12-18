@@ -54,6 +54,12 @@ class UserAuthentication(authentication.BaseAuthentication):
         except User.DoesNotExist:
             # Log this attempt
             # raise exceptions.AuthenticationFailed('User is not authorized.')
-            return None
+            return (None, None)
 
-        return user
+        return (user, None)
+
+    def get_user(self, user_id):
+        try:
+            return User.objects.get(pk=user_id)
+        except User.DoesNotExist:
+            return (None, None)

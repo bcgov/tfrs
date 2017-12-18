@@ -45,6 +45,16 @@ from .serializers import UserSerializer
 # See the file test_api_complex.py for other test cases, which must be hand 
 # written.
 class Test_Api_Simple(TestCase):
+    fixtures = ['organization_types.json',
+                'organization_government.json',
+                'organization_balance_gov.json',
+                'credit_trade_statuses.json',
+                'organization_actions_types.json',
+                'organization_statuses.json',
+                'credit_trade_types.json',
+                'test_users.json',
+                ]
+
     def setUp(self):
         # Every test needs a client.
         self.client = Client(
