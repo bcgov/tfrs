@@ -47,10 +47,6 @@ class TestCreditTradeAPI(TestCase):
             status=STATUS_DRAFT,
             user_id=self.user_id,
         )
-        # self.credit_trade_id = fake_api_calls.create_credit_trade(
-        #     self.fs1_id,
-        #     self.user_id
-        # )[0]
 
         self.client = Client(
             HTTP_SMGOV_USERGUID='c9804c52-05f1-4a6a-9d24-332d9d8be2a9',
