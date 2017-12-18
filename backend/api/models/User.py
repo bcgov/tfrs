@@ -21,23 +21,35 @@
 
 from django.db import models
 from django.contrib.auth.models import AbstractUser
+from django.core.validators import RegexValidator
 
 from auditable.models import Auditable
 
 
 class User(AbstractUser, Auditable):
+    phone_regex = RegexValidator(regex=r'^\+?1?\d{9,15}$',
+                                 message="Phone number must be entered in the format: '+999999999'. Up to 15 digits allowed.")
+
     password = models.CharField(max_length=128, blank=True, null=True)
-    authorization_id = models.CharField(max_length=500, blank=True, null=True)
-    authorization_guid = models.UUIDField(unique=True, default=None, null=True)
-    authorization_directory = models.CharField(max_length=100, blank=True,
-                                               null=True)
-    display_name = models.CharField(max_length=500, blank=True, null=True)
+
+    title = models.CharField(max_length=100, blank=True, null=True)
+    phone = models.CharField(validators=[phone_regex], max_length=17,
+                             blank=True, null=True)
+    cell_phone = models.CharField(validators=[phone_regex], max_length=17, blank=True, null=True)
     organization = models.ForeignKey(
         'Organization',
         related_name='users',
         blank=True, null=True)
     effective_date = models.DateField(auto_now_add=True, blank=True, null=True)
     expiration_date = models.DateField(blank=True, null=True)
+
+    # Siteminder headers
+    authorization_id = models.CharField(max_length=500, blank=True, null=True)
+    authorization_guid = models.UUIDField(unique=True, default=None, null=True)
+    authorization_directory = models.CharField(max_length=100, blank=True,
+                                               null=True)
+    authorization_email = models.EmailField(blank=True)
+    display_name = models.CharField(max_length=500, blank=True, null=True)
 
     class Meta:
         db_table = 'user'
