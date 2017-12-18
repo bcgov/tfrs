@@ -5,5 +5,5 @@ import extensions.ReactJSAware
 
 class DashboardPage extends Page implements ReactJSAware {
     static at = { reactReady && title == "TFRS"}
-    static url = ""
+    static url = "?#/"
 }
