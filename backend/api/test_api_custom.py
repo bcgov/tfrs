@@ -35,6 +35,15 @@ from . import fakedata
 # file.
 #
 class Test_Api_Custom(TestCase):
+    fixtures = ['organization_types.json',
+                'organization_government.json',
+                'organization_balance_gov.json',
+                'credit_trade_statuses.json',
+                'organization_actions_types.json',
+                'organization_statuses.json',
+                'credit_trade_types.json',
+                'test_users.json',
+                ]
 
     def setUp(self):
         # Every test needs a client.
