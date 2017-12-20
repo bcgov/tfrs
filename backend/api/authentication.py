@@ -41,6 +41,11 @@ class UserAuthentication(authentication.BaseAuthentication):
                 user.first_name = first_name if first_name else ""
                 user.last_name = last_name if last_name else ""
 
+            # If we have a guid in the system, but it doesn't match the user's
+            if str(user.authorization_guid) != header_user_guid:
+                raise exceptions.AuthenticationFailed(
+                    'Invalid user identifier. Please contact your administrator.')
+
             user.username = user.username if user.username else header_username
             user.authorization_email = header_user_email
             user.authorization_id = header_user_id

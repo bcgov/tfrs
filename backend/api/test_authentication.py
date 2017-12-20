@@ -4,7 +4,6 @@ from .authentication import UserAuthentication
 from .models.User import User
 from .models.Organization import Organization
 from .models.OrganizationType import OrganizationType
-from rest_framework.exceptions import AuthenticationFailed
 
 
 class TestAuthentication(TestCase):
@@ -20,8 +19,6 @@ class TestAuthentication(TestCase):
 
     def setUp(self):
         self.userauth = UserAuthentication()
-        # request = self.factory.get('/', )
-        # self.
         self.factory = RequestFactory()
         pass
 

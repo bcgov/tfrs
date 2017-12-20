@@ -31,11 +31,13 @@ class User(AbstractUser, Auditable):
                                  message="Phone number must be entered in the format: '+999999999'. Up to 15 digits allowed.")
 
     password = models.CharField(max_length=128, blank=True, null=True)
+    email = email = models.EmailField(blank=True, null=True)
 
     title = models.CharField(max_length=100, blank=True, null=True)
     phone = models.CharField(validators=[phone_regex], max_length=17,
                              blank=True, null=True)
-    cell_phone = models.CharField(validators=[phone_regex], max_length=17, blank=True, null=True)
+    cell_phone = models.CharField(validators=[phone_regex], max_length=17,
+                                  blank=True, null=True)
     organization = models.ForeignKey(
         'Organization',
         related_name='users',
@@ -48,7 +50,7 @@ class User(AbstractUser, Auditable):
     authorization_guid = models.UUIDField(unique=True, default=None, null=True)
     authorization_directory = models.CharField(max_length=100, blank=True,
                                                null=True)
-    authorization_email = models.EmailField(blank=True)
+    authorization_email = models.EmailField(blank=True, null=True)
     display_name = models.CharField(max_length=500, blank=True, null=True)
 
     class Meta:
