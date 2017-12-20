@@ -63,3 +63,16 @@ stage('FT on Test (TBD)') {
         sh 'sleep 5s'
     }
 }
+
+stage('Deploy on Prod') {
+    input "Deploy to Prod?"
+    node('master') {
+        openshiftTag destStream: 'client', verbose: 'true', destTag: 'prod', srcStream: 'client', srcTag: '$BUILD_ID'
+    }
+}
+
+stage('ST on prod (TBD)') {
+    node('master') {
+        sh 'sleep 5s'
+    }
+}
