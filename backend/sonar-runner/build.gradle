@@ -11,7 +11,7 @@ sonarqube {
         property "sonar.projectKey", "tfrs-backend"
         property "sonar.projectBaseDir", ".."
         property "sonar.sources", "api"
-        property "sonar.lanuage", "py"
+        property "sonar.language", "py"
         //property "sonar.tests", "test"
         property "sourceEncoding", "UTF-8"
         //property "sonar.python.xunit.reportPath","nosetests.xml"
