@@ -4,6 +4,7 @@ from rest_framework.decorators import list_route, detail_route
 from rest_framework.response import Response
 
 from api.models.User import User
+from api.serializers import UserSerializer
 
 
 class UserViewSet(AuditableMixin, viewsets.ModelViewSet):
@@ -13,31 +14,26 @@ class UserViewSet(AuditableMixin, viewsets.ModelViewSet):
     """
     permission_classes = (permissions.AllowAny,)
     # http_method_names = ['get', 'post', 'put']
-    queryset = Organization.objects.all()
-    serializer_class = OrganizationSerializer
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
 
-    serializer_classes = {
-        'balance': OrganizationBalanceSerializer,
-        'default': OrganizationSerializer,
-        'history': OrganizationHistorySerializer
-    }
-
-    def get_serializer_class(self):
-        if self.action in list(self.serializer_classes.keys()):
-            return self.serializer_classes[self.action]
-        else:
-            return self.serializer_classes['default']
-
-    @detail_route()
-    def current(self, request, pk=None):
+    @list_route()
+    def current(self, request):
         """
         Get the current user
         """
-
-        user, created = User.objects.get_or_create(
-
-        )
-        # print("Organization")
-        serializer = self.get_serializer(user)
-
+        serializer = self.get_serializer(request.user)
         return Response(serializer.data)
+
+    @list_route()
+    def search(self, request, organizations = None, surname = None, includeInactive = None):
+        result = User.objects.all()
+        if surname != None:
+            result = result.filter(surname__icontains=surname)
+
+        serializer = self.get_serializer(result, many=True)
+        return Response(serializer.data)
+
+    @list_route(methods=['post'])
+    def bulk(self):
+        pass
