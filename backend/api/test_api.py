@@ -50,7 +50,7 @@ class TestCreditTradeAPI(TestCase):
 
         self.client = Client(
             HTTP_SMGOV_USERGUID='c9804c52-05f1-4a6a-9d24-332d9d8be2a9',
-            HTTP_SMAUTH_USERDISPLAYNAME='Brad Smith',
+            HTTP_SMGOV_USERDISPLAYNAME='Brad Smith',
             HTTP_SMGOV_USEREMAIL='BradJSmith@cuvox.de',
             HTTP_SM_UNIVERSALID='BSmith')
         self.test_url = "/api/credit_trades"
@@ -84,6 +84,21 @@ class TestCreditTradeAPI(TestCase):
                      'respondent': self.fs1_id,
                      'type': self.ct_type_id},
         }]
+
+    def test_current_user(self):
+        response = self.client.get('/api/users/current')
+
+        response_data = json.loads(response.content.decode("utf-8"))
+
+        HTTP_SMGOV_USERGUID = 'c9804c52-05f1-4a6a-9d24-332d9d8be2a9'
+        HTTP_SMGOV_USERDISPLAYNAME = 'Brad Smith'
+        HTTP_SMGOV_USEREMAIL = 'BradJSmith@cuvox.de'
+        HTTP_SM_UNIVERSALID = 'BSmith'
+
+        assert response_data['authorization_guid'] == HTTP_SMGOV_USERGUID
+        assert response_data['authorization_id'] == HTTP_SM_UNIVERSALID
+        assert response_data['email'] == HTTP_SMGOV_USEREMAIL
+        assert response_data['display_name'] == HTTP_SMGOV_USERDISPLAYNAME
 
     def test_create_fail(self):
         credit_trades = self.test_data_fail
