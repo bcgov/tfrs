@@ -54,3 +54,11 @@ stage('Deploy to Test') {
         sh 'sleep 5s'
     }
 }
+
+stage('Deploy to Prod') {
+    input "Deploy to Prod?"
+    node('master') {
+        openshiftTag destStream: 'tfrs', verbose: 'true', destTag: 'prod', srcStream: 'tfrs', srcTag: '$BUILD_ID'
+        sh 'sleep 5s'
+    }
+}
