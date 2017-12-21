@@ -73,6 +73,7 @@ const rootReducer = combineReducers({
     [ReducerTypes.ORGANIZATION_CONTACTS]: createReducer(genericRequest, ReducerTypes.ORGANIZATION_CONTACTS),
     [ReducerTypes.ORGANIZATION_ATTACHMENTS]: createReducer(genericRequest, ReducerTypes.ORGANIZATION_ATTACHMENTS),
     [ReducerTypes.USERS]: createReducer(genericRequest, ReducerTypes.USERS),
+    [ReducerTypes.GET_LOGGED_IN_USER]: createReducer(genericRequest, ReducerTypes.GET_LOGGED_IN_USER),
     [ReducerTypes.PERMISSIONS]: createReducer(genericRequest, ReducerTypes.PERMISSIONS),
     [ReducerTypes.ROLE_PERMISSIONS]: createReducer(genericRequest, ReducerTypes.ROLE_PERMISSIONS),
     [ReducerTypes.ROLES]: createReducer(genericRequest, ReducerTypes.ROLES),    

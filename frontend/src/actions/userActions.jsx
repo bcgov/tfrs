@@ -13,6 +13,39 @@ export const getUsers = () => (dispatch) => {
   })
 }
 
+export const getLoggedInUser = () => (dispatch) => {
+  dispatch(getLoggedInUserRequest());
+  axios.get(Routes.BASE_URL + Routes.USERS + '/current')
+  .then((response) => {
+    dispatch(getLoggedInUserSuccess(response.data));
+  }).catch((error) => {
+    dispatch(getLoggedInUserError(error.response))
+  })
+}
+
+const getLoggedInUserRequest = () => {
+  return {
+    name: ReducerTypes.GET_LOGGED_IN_USER,
+    type: ActionTypes.REQUEST,
+  }
+}
+
+const getLoggedInUserSuccess = (contacts) => {
+  return {
+    name: ReducerTypes.GET_LOGGED_IN_USER,
+    type: ActionTypes.SUCCESS,
+    data: contacts,
+  }
+}
+
+const getLoggedInUserError = (error) => {
+  return {
+    name: ReducerTypes.GET_LOGGED_IN_USER,
+    type: ActionTypes.ERROR,
+    errorMessage: error
+  }
+}
+
 const getUsersRequest = () => {
   return {
     name: ReducerTypes.USERS,
