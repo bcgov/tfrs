@@ -1,14 +1,23 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
+import { connect } from 'react-redux';
+import { getLoggedInUser } from '../actions/userActions.jsx';
+import * as ReducerTypes from '../constants/reducerTypes.jsx';
 import * as Routes from '../constants/routes.jsx';
 
 class Navbar extends Component {
+
+  componentDidMount() {
+    this.props.getLoggedInUser();
+  }
+
   render() {
     return (
     <div id="header" role="banner">
       <div id="header-main" className="navbar navbar-default navbar-fixed-top">
         <div className="container">
           <div id="header-main-row" className="row">
+
             <div className="col-sm-3 col-md-2 col-lg-2 header-main-left">
               <div id="logo">
                 <a id="gov-logo" href="http://gov.bc.ca"><img src="./assets/images/gov3_bc_logo.png" alt="Province of British Columbia" title="Province of British Columbia logo" /></a>
@@ -30,10 +39,13 @@ class Navbar extends Component {
                       <img src="./assets/images/menu-open-mobile.png" />
               </button>
             </div>
-            <div className="col-sm-8 col-md-8 col-lg-8 hidden-xs">
+            <div className="col-sm-6 col-md-6 col-lg-6 hidden-xs">
               <div className="bcgov-title">
                 <h1>Transportation Fuels Reporting System</h1>
               </div>
+            </div>
+            <div className="col-sm-4 col-md-4 col-lg-4 hidden-xs">
+                  <span id="display_name" className="pull-right">{this.props.loggedInUserData.display_name}</span>
             </div>
             <div id="navbar" className="collapse navbar-collapse" role="navigation">
               <a id="navigation-anchor"></a>
@@ -66,4 +78,13 @@ class Navbar extends Component {
   }
 }
 
-export default Navbar;
+export default connect (
+  state => ({
+    loggedInUserData: state.rootReducer[ReducerTypes.GET_LOGGED_IN_USER].data,
+  }),
+  dispatch => ({
+    getLoggedInUser: () => {
+      dispatch(getLoggedInUser());
+    },
+  })
+)(Navbar)
