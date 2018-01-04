@@ -31,6 +31,8 @@ from . import views
 from . import views_custom
 from .viewsets.CreditTrade import CreditTradeViewSet
 from .viewsets.Organization import OrganizationViewSet
+from .viewsets.User import UserViewSet
+
 
 from rest_framework.routers import DefaultRouter
 from django.conf import settings
@@ -39,6 +41,8 @@ from django.conf import settings
 router = DefaultRouter(trailing_slash=False)
 router.register(r'credit_trades', CreditTradeViewSet)
 router.register(r'organizations', OrganizationViewSet)
+router.register(r'users', UserViewSet)
+
 
 
 class SwaggerSchemaView(APIView):
@@ -128,7 +132,7 @@ urlpatterns = [
     url(r'^users/(?P<id>[0-9]+)$', views.usersIdGet.as_view()),
     url(r'^users/(?P<id>[0-9]+)/permissions$', views_custom.usersIdPermissionsGet.as_view()),
     url(r'^users/(?P<id>[0-9]+)/roles$', views_custom.usersIdRolesGet.as_view()),
-    url(r'^users/search$', views_custom.usersSearchGet.as_view()),
+    # url(r'^users/search$', views_custom.usersSearchGet.as_view()),
     url(r'^userroles/bulk$', views.userrolesBulkPost.as_view()),
     url(r'^userroles$', views.userrolesGet.as_view()),
     url(r'^userroles/(?P<id>[0-9]+)/delete$', views.userrolesIdDeletePost.as_view()),

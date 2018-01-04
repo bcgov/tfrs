@@ -15,10 +15,9 @@ node('maven') {
             returnStdout: true
         ).trim()
         echo "SONARQUBE_URL: ${SONARQUBE_URL}"
-        //verify later
-        //dir('sonar-runner') {
-          //sh returnStdout: true, script: "./gradlew sonarqube -Dsonar.lanuage=js -Dsonar.projectKey=org.sonarqube:tfrs-client -Dsonar.projectName='TFRS Client Project'   -Dsonar.host.url=${SONARQUBE_URL} -Dsonar.verbose=true --stacktrace --info  -Dsonar.sources=client"
-        //}
+        dir('frontend/sonar-runner') {
+          sh returnStdout: true, script: "./gradlew sonarqube -Dsonar.host.url=${SONARQUBE_URL} -Dsonar.verbose=true --stacktrace --info"
+        }
     }
 
     stage('Build') {
@@ -60,6 +59,19 @@ stage('Deploy on Test') {
 }
 
 stage('FT on Test (TBD)') {
+    node('master') {
+        sh 'sleep 5s'
+    }
+}
+
+stage('Deploy on Prod') {
+    input "Deploy to Prod?"
+    node('master') {
+        openshiftTag destStream: 'client', verbose: 'true', destTag: 'prod', srcStream: 'client', srcTag: '$BUILD_ID'
+    }
+}
+
+stage('ST on prod (TBD)') {
     node('master') {
         sh 'sleep 5s'
     }
