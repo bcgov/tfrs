@@ -69,3 +69,13 @@ class OrganizationViewSet(AuditableMixin, viewsets.ModelViewSet):
         serializer = self.get_serializer(balance)
 
         return Response(serializer.data)
+
+    @detail_route()
+    def users(self, request, pk=None):
+        """
+        Returns a list of all the group names that the given
+        user belongs to.
+        """
+        organization = self.get_object()
+        users = organization.users.all()
+        return Response([user.display_name for user in users])
