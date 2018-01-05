@@ -17,7 +17,7 @@ export const getAccountActivity = () => (dispatch) => {
     console.log("Response is", response)
     dispatch(getAccountActivitySuccess(response.data));
   }).catch((error) => {
-    console.log("Error!", error.response)
+    console.log("Error!", error, error.response)
     dispatch(getAccountActivityError(error.response))
   })
 }
