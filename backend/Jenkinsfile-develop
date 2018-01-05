@@ -51,7 +51,7 @@ stage('Deploy to Test') {
     input "Deploy to Test?"
     node('master') {
         openshiftTag destStream: 'tfrs', verbose: 'true', destTag: 'test', srcStream: 'tfrs', srcTag: '$BUILD_ID'
-        sh 'sleep 5s'
+        openshiftVerifyDeployment depCfg: 'tfrs', namespace: 'mem-tfrs-test', replicaCount: 1, verbose: 'false'
     }
 }
 
@@ -59,6 +59,6 @@ stage('Deploy to Prod') {
     input "Deploy to Prod?"
     node('master') {
         openshiftTag destStream: 'tfrs', verbose: 'true', destTag: 'prod', srcStream: 'tfrs', srcTag: '$BUILD_ID'
-        sh 'sleep 5s'
+        openshiftVerifyDeployment depCfg: 'tfrs', namespace: 'mem-tfrs-prod', replicaCount: 1, verbose: 'false'
     }
 }
