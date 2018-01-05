@@ -42,7 +42,7 @@ node('maven') {
     stage('Deploy to Dev') {
         echo "Deploying to Dev: ${BUILD_ID}"
         openshiftTag destStream: 'tfrs', verbose: 'true', destTag: 'dev', srcStream: 'tfrs', srcTag: '$BUILD_ID'
-        sh 'sleep 3m'
+        openshiftVerifyDeployment depCfg: 'tfrs', namespace: 'mem-tfrs-dev', replicaCount: 1, verbose: 'false'
     }
 
 }
