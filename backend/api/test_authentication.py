@@ -1,5 +1,6 @@
 from django.test import TestCase, Client, RequestFactory
 from rest_framework import status
+from rest_framework import exceptions
 from .authentication import UserAuthentication
 from .models.User import User
 from .models.Organization import Organization
@@ -97,7 +98,6 @@ class TestAuthentication(TestCase):
     def test_user_first_login_idir_invalid(self):
         # User can login through siteminder, but their user id doesn't
         # exist in the database, so they can't log in to the app.
-        new_user = User.objects.create(authorization_id='TestUser')
 
         display_name = 'Test User'
         userguid = 'af2a7728-1228-4aea-9461-b0464cba8fa1'
@@ -111,7 +111,5 @@ class TestAuthentication(TestCase):
             'HTTP_SMAUTH_USERTYPE': 'Internal'
         }
 
-        user, auth = self.userauth.authenticate(request)
-
-        assert user is None
-
+        with self.assertRaises(exceptions.AuthenticationFailed):
+            user, auth = self.userauth.authenticate(request)
