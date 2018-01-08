@@ -1,7 +1,7 @@
 [
     {
         "fields": {
-            "description": "The Credit Trade has been created but is only visible to the initiating organization.",
+            "description": "The Credit Transfer has been created but is only visible to the initiating organization.",
             "display_order": "1",
             "effective_date": "2017-01-01",
             "expiration_date": null,
@@ -12,18 +12,18 @@
     },
     {
         "fields": {
-            "description": "The Credit Trade has been created and is visible to both the initiating and responding Fuel Suppliers, and is waiting on the response from the Respondent.",
+            "description": "The Credit Transfer Proposal has been created and is visible to both the initiating and responding Fuel Suppliers, and is waiting on the response from the Respondent.",
             "display_order": "2",
             "effective_date": "2017-01-01",
             "expiration_date": null,
-            "status": "Proposed"
+            "status": "Submitted"
         },
         "model": "api.credittradestatus",
         "pk": "2"
     },
     {
         "fields": {
-            "description": "The Credit Trade has been accepted by the Respondent and is waiting on approval by the Director.",
+            "description": "The Credit Transfer has been accepted by the Respondent and is waiting on approval by the Director.",
             "display_order": "3",
             "effective_date": "2017-01-01",
             "expiration_date": null,
@@ -34,18 +34,18 @@
     },
     {
         "fields": {
-            "description": "The Credit Trade has been has been reviewed by a Government Analyst and is Recommended for Approval  by the Director.",
+            "description": "The Credit Transfer has been has been reviewed by a Government Analyst and is Recommended for Approval  by the Director.",
             "display_order": "4",
             "effective_date": "2017-01-01",
             "expiration_date": null,
-            "status": "Recommended"
+            "status": "Recommended for decision"
         },
         "model": "api.credittradestatus",
         "pk": "4"
     },
     {
         "fields": {
-            "description": "The Credit Trade has been has been reviewed by a Government Analyst and is Not Recommended for Approval by the Director.",
+            "description": "The Credit Transfer has been has been reviewed by a Government Analyst and is Not Recommended for Approval by the Director.",
             "display_order": "4",
             "effective_date": "2017-01-01",
             "expiration_date": null,
@@ -56,7 +56,7 @@
     },
     {
         "fields": {
-            "description": "The Credit Trade has been has been approved by the Director and will be Completed as soon as the Effective Date of the Credit Trade has been reached.",
+            "description": "The Credit Transfer has been has been approved by the Director and will be Completed as soon as the Effective Date of the Credit Trade has been reached.",
             "display_order": "5",
             "effective_date": "2017-01-01",
             "expiration_date": null,
@@ -67,7 +67,7 @@
     },
     {
         "fields": {
-            "description": "The Credit Trade has been Completed and the Credit Balance(s) of the Fuel Supplier(s) has been updated.",
+            "description": "The Credit Transfer has been Completed and the Credit Balance(s) of the Fuel Supplier(s) has been updated.",
             "display_order": "6",
             "effective_date": "2017-01-01",
             "expiration_date": null,
@@ -78,22 +78,22 @@
     },
     {
         "fields": {
-            "description": "The Credit Trade has been cancelled by one of the participants in the Credit Trade.",
+            "description": "The Credit Transfer has been cancelled by one of the participants in the Credit Trade.",
             "display_order": "7",
             "effective_date": "2017-01-01",
             "expiration_date": null,
-            "status": "Cancelled"
+            "status": "Rescinded"
         },
         "model": "api.credittradestatus",
         "pk": "8"
     },
     {
         "fields": {
-            "description": "The Credit Trade has been rejected by the Director.",
+            "description": "The Credit Transfer has been rejected by the Director.",
             "display_order": "8",
             "effective_date": "2017-01-01",
             "expiration_date": null,
-            "status": "Rejected"
+            "status": "Declined for approval"
         },
         "model": "api.credittradestatus",
         "pk": "9"
