@@ -33,7 +33,8 @@ class UserAuthentication(authentication.BaseAuthentication):
             user = User.objects.get(Q(authorization_guid=header_user_guid) |
                                     Q(authorization_id=header_user_id))
 
-            # First time logging in, map the GUID to the user and set fname & lname
+            # First time logging in, map the GUID to the user and set
+            # fname & lname
             if user.authorization_guid is None:
                 user.authorization_guid = header_user_guid
                 first_name, last_name = get_firstname_lastname(
@@ -44,7 +45,8 @@ class UserAuthentication(authentication.BaseAuthentication):
             # If we have a guid in the system, but it doesn't match the user's
             if str(user.authorization_guid) != header_user_guid:
                 raise exceptions.AuthenticationFailed(
-                    'Invalid user identifier. Please contact your administrator.')
+                    'Invalid user identifier. '
+                    'Please contact your administrator.')
 
             user.username = user.username if user.username else header_username
             user.authorization_email = header_user_email
@@ -58,8 +60,9 @@ class UserAuthentication(authentication.BaseAuthentication):
 
         except User.DoesNotExist:
             # Log this attempt
-            # raise exceptions.AuthenticationFailed('User is not authorized.')
-            return (None, None)
+            raise exceptions.AuthenticationFailed(
+                'User is not authorized to access this application. '
+                'Please contact your administrator')
 
         return (user, None)
 
