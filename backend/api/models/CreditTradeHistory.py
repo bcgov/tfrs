@@ -28,18 +28,24 @@ class CreditTradeHistory(Auditable):
     credit_trade = models.ForeignKey(
         'CreditTrade',
         related_name='credit_trade_histories',
-        null=True)
-    user = models.ForeignKey('User', related_name='credit_trade_histories')
+        null=True,
+        on_delete=models.PROTECT)
+    user = models.ForeignKey(
+        'User', related_name='credit_trade_histories',
+        on_delete=models.PROTECT)
     credit_trade_update_time = models.DateTimeField()
     respondent = models.ForeignKey(
         'Organization',
-        related_name='credit_trade_histories')
+        related_name='credit_trade_histories',
+        on_delete=models.PROTECT)
     status = models.ForeignKey(
         'CreditTradeStatus',
-        related_name='credit_trade_histories')
+        related_name='credit_trade_histories',
+        on_delete=models.PROTECT)
     type = models.ForeignKey(
         'CreditTradeType',
-        related_name='credit_trade_histories')
+        related_name='credit_trade_histories',
+        on_delete=models.PROTECT)
     number_of_credits = models.IntegerField()
     fair_market_value_per_credit = models.DecimalField(
         null=True, blank=True, max_digits=999,
@@ -48,7 +54,8 @@ class CreditTradeHistory(Auditable):
     zero_reason = models.ForeignKey(
         'CreditTradeZeroReason',
         related_name='credit_trade_histories',
-        blank=True, null=True)
+        blank=True, null=True,
+        on_delete=models.PROTECT)
     trade_effective_date = models.DateField(blank=True, null=True)
     note = models.CharField(max_length=4000, blank=True, null=True)
     is_internal_history_record = models.BooleanField()

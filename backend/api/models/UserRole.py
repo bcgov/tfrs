@@ -25,8 +25,12 @@ from auditable.models import Auditable
 
 
 class UserRole(Auditable):
-    user = models.ForeignKey('User', related_name='user_roles')
-    role = models.ForeignKey('Role', related_name='user_roles')
+    user = models.ForeignKey('User',
+                             related_name='user_roles',
+                             on_delete=models.CASCADE)
+    role = models.ForeignKey('Role',
+                             related_name='user_roles',
+                             on_delete=models.CASCADE)
 
     class Meta:
         db_table = 'user_role'
