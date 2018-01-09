@@ -95,10 +95,10 @@ class TestCreditTradeAPI(TestCase):
         HTTP_SMGOV_USEREMAIL = 'BradJSmith@cuvox.de'
         HTTP_SM_UNIVERSALID = 'BSmith'
 
-        assert response_data['authorization_guid'] == HTTP_SMGOV_USERGUID
-        assert response_data['authorization_id'] == HTTP_SM_UNIVERSALID
+        assert response_data['authorizationGuid'] == HTTP_SMGOV_USERGUID
+        assert response_data['authorizationId'] == HTTP_SM_UNIVERSALID
         assert response_data['email'] == HTTP_SMGOV_USEREMAIL
-        assert response_data['display_name'] == HTTP_SMGOV_USERDISPLAYNAME
+        assert response_data['displayName'] == HTTP_SMGOV_USERDISPLAYNAME
 
     def test_create_fail(self):
         credit_trades = self.test_data_fail
@@ -187,7 +187,7 @@ class TestCreditTradeAPI(TestCase):
                 "{}/{}/history".format(self.test_url, self.credit_trade['id']),
                 content_type='application/json')
             response_data = json.loads(response.content.decode("utf-8"))
-            self.assertFalse(response_data[0]['is_internal_history_record'])
+            self.assertFalse(response_data[0]['isInternalHistoryRecord'])
 
     def test_is_internal_history_draft(self):
         # Initially created credit trade is "Draft"
@@ -196,7 +196,7 @@ class TestCreditTradeAPI(TestCase):
             content_type='application/json')
 
         response_data = json.loads(response.content.decode("utf-8"))
-        self.assertTrue(response_data[0]['is_internal_history_record'])
+        self.assertTrue(response_data[0]['isInternalHistoryRecord'])
 
     def test_is_internal_history_draft_then_cancelled(self):
         # Initially created credit trade is "Draft"
@@ -208,7 +208,7 @@ class TestCreditTradeAPI(TestCase):
             content_type='application/json')
 
         response_data = json.loads(response.content.decode("utf-8"))
-        self.assertTrue(response_data[0]['is_internal_history_record'])
+        self.assertTrue(response_data[0]['isInternalHistoryRecord'])
 
     def test_nested_credit_trade(self):
         response = self.client.get(
@@ -269,8 +269,8 @@ class TestCreditTradeAPI(TestCase):
         initiator_bal_after = fake_api_calls.get_organization_balance(id=2)
         respondent_bal_after = fake_api_calls.get_organization_balance(id=3)
 
-        init_final_bal = initiator_bal['validated_credits'] + num_of_credits
-        resp_final_bal = respondent_bal['validated_credits'] - num_of_credits
+        init_final_bal = initiator_bal['validatedCredits'] + num_of_credits
+        resp_final_bal = respondent_bal['validatedCredits'] - num_of_credits
 
         ct_completed = self.client.get(
             "{}/{}".format(self.test_url, credit_trade['id']),
@@ -287,14 +287,14 @@ class TestCreditTradeAPI(TestCase):
                          STATUS_COMPLETED)
 
         # Effective date should be today
-        self.assertEqual(initiator_bal_after['effective_date'], today)
-        self.assertEqual(respondent_bal_after['effective_date'], today)
+        self.assertEqual(initiator_bal_after['effectiveDate'], today)
+        self.assertEqual(respondent_bal_after['effectiveDate'], today)
 
         # Credits should be subtracted/added
         self.assertEqual(init_final_bal,
-                         initiator_bal_after['validated_credits'])
+                         initiator_bal_after['validatedCredits'])
         self.assertEqual(resp_final_bal,
-                         respondent_bal_after['validated_credits'])
+                         respondent_bal_after['validatedCredits'])
 
     def test_approved_sell(self, **kwargs):
         pass
