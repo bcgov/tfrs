@@ -27,7 +27,8 @@ from auditable.models import Auditable
 class OrganizationHistory(Auditable):
     organization = models.ForeignKey(
         'Organization',
-        related_name='history')
+        related_name='history',
+        on_delete=models.CASCADE)
     history_text = models.CharField(max_length=1000)
 
     class Meta:
