@@ -26,7 +26,8 @@ from auditable.models import Auditable
 class OrganizationAttachment(Auditable):
     organization = models.ForeignKey(
         'Organization',
-        related_name='attachments')
+        related_name='attachments',
+        on_delete=models.CASCADE)
     file_name = models.CharField(max_length=250, blank=True, null=True)
     file_location = models.CharField(max_length=2000, blank=True, null=True)
     description = models.CharField(max_length=4000, blank=True, null=True)

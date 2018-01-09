@@ -29,17 +29,21 @@ from api import validators
 class CreditTrade(Auditable):
     status = models.ForeignKey(
         'CreditTradeStatus',
-        related_name='credit_trades')
+        related_name='credit_trades',
+        on_delete=models.PROTECT)
     initiator = models.ForeignKey(
         'Organization',
         related_name='initiator_credit_trades',
-        blank=True, null=True)
+        blank=True, null=True,
+        on_delete=models.PROTECT)
     respondent = models.ForeignKey(
         'Organization',
-        related_name='respondent_credit_trades')
+        related_name='respondent_credit_trades',
+        on_delete=models.PROTECT)
     type = models.ForeignKey(
         'CreditTradeType',
-        related_name='credit_trades')
+        related_name='credit_trades',
+        on_delete=models.PROTECT)
     number_of_credits = models.IntegerField(
         validators=[validators.CreditTradeNumberOfCreditsValidator])
     fair_market_value_per_credit = models.DecimalField(
@@ -49,7 +53,8 @@ class CreditTrade(Auditable):
     zero_reason = models.ForeignKey(
         'CreditTradeZeroReason',
         related_name='credit_trades',
-        blank=True, null=True)
+        blank=True, null=True,
+        on_delete=models.PROTECT)
     trade_effective_date = models.DateField(blank=True, null=True)
     note = models.CharField(max_length=4000, blank=True, null=True)
 

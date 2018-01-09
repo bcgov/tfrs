@@ -151,13 +151,13 @@ class Test_Api_Custom(TestCase):
         # Create:
         fakeUser = fakedata.UserTestDataCreate()
         payload = {
-          'first_name': fakeUser['first_name'],
-          'last_name':fakeUser['last_name'],
+          'firstName': fakeUser['first_name'],
+          'lastName':fakeUser['last_name'],
           'email':fakeUser['email'],
           'status':'Active',
           'username': fakeUser['username'],
-          'authorization_guid':fakeUser['authorization_guid'],
-          'authorization_directory':fakeUser['authorization_directory'],
+          'authorizationGuid':fakeUser['authorization_guid'],
+          'authorizationDirectory':fakeUser['authorization_directory'],
           'organization': organization_id
         }
         jsonString = json.dumps(payload)
@@ -169,8 +169,8 @@ class Test_Api_Custom(TestCase):
         data = json.loads(jsonString)
 
         user_headers = {
-            'authorization_guid': data['authorization_guid'],
-            'display_name': data['display_name'],
+            'authorizationGuid': data['authorizationGuid'],
+            'displayName': data['displayName'],
             'email': data['email'],
             'username': data['email'],
             'id': data['id']

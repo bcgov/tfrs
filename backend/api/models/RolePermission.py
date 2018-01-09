@@ -25,9 +25,12 @@ from auditable.models import Auditable
 
 
 class RolePermission(Auditable):
-    role = models.ForeignKey('Role', related_name='role_permissions')
+    role = models.ForeignKey('Role',
+                             related_name='role_permissions',
+                             on_delete=models.CASCADE)
     permission = models.ForeignKey('Permission',
-                                   related_name='role_permissions')
+                                   related_name='role_permissions',
+                                   on_delete=models.CASCADE)
 
     class Meta:
         db_table = 'role_permission'

@@ -27,14 +27,16 @@ from auditable.models import Auditable
 class OrganizationBalance(Auditable):
     organization = models.ForeignKey(
         'Organization',
-        related_name='balances')
+        related_name='balances',
+        on_delete=models.CASCADE)
     validated_credits = models.BigIntegerField()
     effective_date = models.DateField(blank=True, null=True)
     expiration_date = models.DateField(blank=True, null=True)
     credit_trade = models.ForeignKey(
         'CreditTrade',
         related_name='balances',
-        blank=True, null=True)
+        blank=True, null=True,
+        on_delete=models.PROTECT)
 
     class Meta:
         db_table = 'organization_balance'

@@ -41,7 +41,7 @@ class User(AbstractUser, Auditable):
     organization = models.ForeignKey(
         'Organization',
         related_name='users',
-        blank=True, null=True)
+        blank=True, null=True, on_delete=models.SET_NULL)
     effective_date = models.DateField(auto_now_add=True, blank=True, null=True)
     expiration_date = models.DateField(blank=True, null=True)
 

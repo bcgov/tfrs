@@ -28,14 +28,17 @@ class Organization(Auditable):
     name = models.CharField(max_length=500)
     status = models.ForeignKey(
         'OrganizationStatus',
-        related_name='organizations')
+        related_name='organizations',
+        on_delete=models.PROTECT)
     actions_type = models.ForeignKey(
         'OrganizationActionsType',
-        related_name='organizations')
+        related_name='organizations',
+        on_delete=models.PROTECT)
     type = models.ForeignKey(
         'OrganizationType',
         related_name='organizations',
-        blank=True, null=True)
+        blank=True, null=True,
+        on_delete=models.PROTECT)
     created_date = models.DateField()
 
     def __str__(self):
