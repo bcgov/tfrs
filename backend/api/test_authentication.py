@@ -45,7 +45,7 @@ class TestAuthentication(TestCase):
     def test_user_first_login_valid(self):
         # Create mapping by updating the user model
         # (authorization_guid = sm header guid)
-        new_user = User.objects.create(authorization_id='TestUser')
+        new_user = User.objects.create(authorization_id='testuser')
 
         assert new_user.authorization_guid is None
 
@@ -72,7 +72,36 @@ class TestAuthentication(TestCase):
         # (authorization_guid = sm header guid)
         gov_organization = Organization.objects.get(
             type=OrganizationType.objects.get(type="Government"))
-        new_user = User.objects.create(authorization_id='TUSER',
+        new_user = User.objects.create(authorization_id='tuser',
+                                       organization=gov_organization)
+
+        display_name = 'Test User'
+        userguid = 'af2a7728-1228-4aea-9461-b0464cba8fa1'
+        request = self.factory.get('/')
+        request.META = {
+            'HTTP_SMAUTH_USERGUID': userguid,
+            'HTTP_SMAUTH_USERDISPLAYNAME': display_name,
+            'HTTP_SMAUTH_USEREMAIL': 'TestUser@testcompany.ca',
+            'HTTP_SMAUTH_UNIVERSALID': 'TUSER',
+            'HTTP_SMAUTH_DIRNAME': 'IDIR',
+            'HTTP_SMAUTH_USERTYPE': 'Internal'
+        }
+
+        # authenticate should match authorization_id and create the user
+        user, auth = self.userauth.authenticate(request)
+
+        assert user is not None
+        assert user.display_name == display_name
+        assert new_user.authorization_id == user.authorization_id
+        assert user.authorization_guid == userguid
+        assert gov_organization.id == user.organization.id
+
+    def test_user_first_login_idir_different_case_valid(self):
+        # Create mapping by updating the user model
+        # (authorization_guid = sm header guid)
+        gov_organization = Organization.objects.get(
+            type=OrganizationType.objects.get(type="Government"))
+        new_user = User.objects.create(authorization_id='tuser',
                                        organization=gov_organization)
 
         display_name = 'Test User'
@@ -127,11 +156,11 @@ class TestAuthentication(TestCase):
             name="Test", status=org_status, actions_type=org_actions_type,
             type=org_type)
 
-        new_user1 = User.objects.create(authorization_id='TUSER',
+        new_user1 = User.objects.create(authorization_id='tuser',
                                         username="internal_tuser",
                                         organization=gov_organization)
 
-        new_user2 = User.objects.create(authorization_id='TUSER',
+        new_user2 = User.objects.create(authorization_id='tuser',
                                         username="business_tuser",
                                         organization=external_organization)
 

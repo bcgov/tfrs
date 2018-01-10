@@ -96,7 +96,7 @@ class TestCreditTradeAPI(TestCase):
         HTTP_SM_UNIVERSALID = 'BSmith'
 
         assert response_data['authorizationGuid'] == HTTP_SMGOV_USERGUID
-        assert response_data['authorizationId'] == HTTP_SM_UNIVERSALID
+        assert response_data['authorizationId'] == HTTP_SM_UNIVERSALID.lower()
         assert response_data['email'] == HTTP_SMGOV_USEREMAIL
         assert response_data['displayName'] == HTTP_SMGOV_USERDISPLAYNAME
 
