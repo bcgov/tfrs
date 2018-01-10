@@ -1,9 +1,10 @@
 from django.test import TestCase, Client, RequestFactory
-from rest_framework import status
 from rest_framework import exceptions
 from .authentication import UserAuthentication
 from .models.User import User
 from .models.Organization import Organization
+from .models.OrganizationStatus import OrganizationStatus
+from .models.OrganizationActionsType import OrganizationActionsType
 from .models.OrganizationType import OrganizationType
 
 
@@ -69,7 +70,10 @@ class TestAuthentication(TestCase):
     def test_user_first_login_idir_valid(self):
         # Create mapping by updating the user model
         # (authorization_guid = sm header guid)
-        new_user = User.objects.create(authorization_id='TUSER')
+        gov_organization = Organization.objects.get(
+            type=OrganizationType.objects.get(type="Government"))
+        new_user = User.objects.create(authorization_id='TUSER',
+                                       organization=gov_organization)
 
         display_name = 'Test User'
         userguid = 'af2a7728-1228-4aea-9461-b0464cba8fa1'
@@ -85,9 +89,6 @@ class TestAuthentication(TestCase):
 
         # authenticate should match authorization_id and create the user
         user, auth = self.userauth.authenticate(request)
-
-        gov_organization = Organization.objects.get(
-            type=OrganizationType.objects.get(type="Government"))
 
         assert user is not None
         assert user.display_name == display_name
@@ -113,3 +114,55 @@ class TestAuthentication(TestCase):
 
         with self.assertRaises(exceptions.AuthenticationFailed):
             user, auth = self.userauth.authenticate(request)
+
+    def test_user_same_username_external_internal(self):
+        gov_organization = Organization.objects.get(
+            type=OrganizationType.objects.get(type="Government"))
+
+        org_status = OrganizationStatus.objects.get(pk=1)
+        org_actions_type = OrganizationActionsType.objects.get(pk=1)
+        org_type = OrganizationType.objects.get(pk=1)
+
+        external_organization = Organization.objects.create(
+            name="Test", status=org_status, actions_type=org_actions_type,
+            type=org_type)
+
+        new_user1 = User.objects.create(authorization_id='TUSER',
+                                        username="internal_tuser",
+                                        organization=gov_organization)
+
+        new_user2 = User.objects.create(authorization_id='TUSER',
+                                        username="business_tuser",
+                                        organization=external_organization)
+
+        userguid1 = 'af2a7728-1228-4aea-9461-b0464cba8fa1'
+        userguid2 = '05fa1e10-08e1-454c-b1a3-cee38e825d47'
+
+        request = self.factory.get('/')
+        request.META = {
+            'HTTP_SMAUTH_USERGUID': userguid1,
+            'HTTP_SMAUTH_USERDISPLAYNAME': "Test User",
+            'HTTP_SMAUTH_USEREMAIL': 'TestUser@gov.bc.ca',
+            'HTTP_SMAUTH_UNIVERSALID': 'TUSER',
+            'HTTP_SMAUTH_DIRNAME': 'IDIR',
+            'HTTP_SMAUTH_USERTYPE': 'Internal'
+        }
+
+        user1, auth = self.userauth.authenticate(request)
+        assert user1.organization.id == gov_organization.id
+        assert user1.username == "internal_tuser"
+        assert user1.authorization_id == new_user1.authorization_id
+
+        request.META = {
+            'HTTP_SMAUTH_USERGUID': userguid2,
+            'HTTP_SMAUTH_USERDISPLAYNAME': "Test User",
+            'HTTP_SMAUTH_USEREMAIL': 'TestUser@testcompany.ca',
+            'HTTP_SMAUTH_UNIVERSALID': 'TUSER',
+            'HTTP_SMAUTH_DIRNAME': 'CAP TBCEID',
+            'HTTP_SMAUTH_USERTYPE': 'Business'
+        }
+
+        user2, auth = self.userauth.authenticate(request)
+        assert user2.organization.id == external_organization.id
+        assert user2.username == "business_tuser"
+        assert user2.authorization_id == new_user2.authorization_id
