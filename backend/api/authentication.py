@@ -18,20 +18,27 @@ class UserAuthentication(authentication.BaseAuthentication):
         header_user_email = request.META.get('HTTP_SMAUTH_USEREMAIL')
         header_user_displayname = request.META.get(
             'HTTP_SMAUTH_USERDISPLAYNAME')
-        header_user_type = request.META.get('HTTP_SMAUTH_USERTYPE')
+        header_user_type = request.META.get('HTTP_SMAUTH_USERTYPE', 'Business')
 
         if not header_user_guid and not header_user_id:
             raise exceptions.AuthenticationFailed('No SiteMinder headers found')
 
-        government_user = False
-        if header_user_type == 'Internal' and header_user_dir == 'IDIR':
-            government_user = True
+        try:
             gov_organization = Organization.objects.get(
                 type=OrganizationType.objects.get(type="Government"))
 
-        try:
-            user = User.objects.get(Q(authorization_guid=header_user_guid) |
-                                    Q(authorization_id=header_user_id))
+            if header_user_type == 'Internal' and header_user_dir == 'IDIR':
+                # User is a government/Internal user
+                user = User.objects.get(
+                    Q(organization_id=gov_organization.id),
+                    Q(authorization_guid=header_user_guid) |
+                    Q(authorization_id=header_user_id))
+
+            else:
+                user = User.objects.get(
+                    ~Q(organization_id=gov_organization.id),
+                    Q(authorization_guid=header_user_guid) |
+                    Q(authorization_id=header_user_id))
 
             # First time logging in, map the GUID to the user and set
             # fname & lname
@@ -48,14 +55,13 @@ class UserAuthentication(authentication.BaseAuthentication):
                     'Invalid user identifier. '
                     'Please contact your administrator.')
 
-            user.username = user.username if user.username else header_username
+            username = "_".join([header_user_type.lower(), header_username.lower()])
+            user.username = user.username if user.username else username
             user.authorization_email = header_user_email
             user.authorization_id = header_user_id
             user.authorization_directory = header_user_dir
             user.display_name = header_user_displayname
 
-            if government_user:
-                user.organization = gov_organization
             user.save()
 
         except User.DoesNotExist:
