@@ -39,7 +39,6 @@ class Organization(Auditable):
         related_name='organizations',
         blank=True, null=True,
         on_delete=models.PROTECT)
-    created_date = models.DateField()
 
     def __str__(self):
         return self.name

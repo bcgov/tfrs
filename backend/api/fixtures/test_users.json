@@ -3,7 +3,7 @@
         "fields": {
             "authorization_guid": "c9804c52-05f1-4a6a-9d24-332d9d8be2a9",
             "email": "BradJSmith@cuvox.de",
-            "username": "BSmith",
+            "username": "business_bsmith",
             "authorization_id": "BSmith",
             "display_name": "Brad Smith",
             "first_name": "Brad",
@@ -16,7 +16,7 @@
         "fields": {
             "authorization_guid": "9fb0a959-7df5-4c93-8ed3-e6bbcda3a946",
             "email": "JudyHHolbert@gustr.com",
-            "username": "JHolbert",
+            "username": "business_jholbert",
             "authorization_id": "JHolbert",
             "display_name": "Judy Holbert",
             "first_name": "Judy",
@@ -29,7 +29,7 @@
         "fields": {
             "authorization_guid": "b3fb7a72-f594-4d58-914a-a2a0575e84bd",
             "email": "ClaytonSMcCullough@fleckens.hu",
-            "username": "CMcCullough",
+            "username": "business_cmccullough",
             "authorization_id": "CMcCullough",
             "display_name": "Clayton McCullough",
             "first_name": "Clayton",
@@ -42,7 +42,7 @@
         "fields": {
             "authorization_guid": "fc9f15d5-f7a0-47c7-aad5-34ddd022a3e5",
             "email": "BettyJTacker@gustr.com",
-            "username": "BTacker",
+            "username": "business_btacker",
             "authorization_id": "BTacker",
             "display_name": "Betty Tacker",
             "first_name": "Betty",
@@ -55,7 +55,7 @@
         "fields": {
             "authorization_guid": "82c9725a-e6a7-4ac1-9cc5-00bfb4c176ae",
             "email": "GayleCYork@dayrep.com",
-            "username": "GYork",
+            "username": "business_gyork",
             "authorization_id": "GYork",
             "display_name": "Gayle York",
             "first_name": "Gayle",
@@ -68,7 +68,7 @@
         "fields": {
             "authorization_guid": "2813ca5a-9ff5-4b6e-9f72-e90bb75898cf",
             "email": "BrianBHealey@jourrapide.com",
-            "username": "BHealey",
+            "username": "business_bhealey",
             "authorization_id": "BHealey",
             "display_name": "Brian Healey",
             "first_name": "Brian",
@@ -81,7 +81,7 @@
         "fields": {
             "authorization_guid": "88cce0b1-5059-497e-9a50-27770d8c8433",
             "email": "RosaDMayer@cuvox.de",
-            "username": "RMayer",
+            "username": "business_rmayer",
             "authorization_id": "RMayer",
             "display_name": "Rosa Mayer",
             "first_name": "Rosa",
@@ -94,7 +94,7 @@
         "fields": {
             "authorization_guid": "f228b9a5-c95f-4c82-bbba-ce4f60fe9b87",
             "email": "AlbertAMills@superrito.com",
-            "username": "AMills",
+            "username": "business_amills",
             "authorization_id": "AMills",
             "display_name": "Albert Mills",
             "first_name": "Albert",
@@ -107,7 +107,7 @@
         "fields": {
             "authorization_guid": "8da807c6-cf2c-4e58-814f-4a89ee9c46b6",
             "email": "CynthiaKWhipple@einrot.com",
-            "username": "CWhipple",
+            "username": "business_cwhipple",
             "authorization_id": "CWhipple",
             "display_name": "Cynthia Whipple",
             "first_name": "Cynthia",
@@ -120,7 +120,7 @@
         "fields": {
             "authorization_guid": "c0937af8-5489-44b2-8a52-c53dbb7f2011",
             "email": "MichaelDWashington@dayrep.com",
-            "username": "MWashington",
+            "username": "business_mwashington",
             "authorization_id": "MWashington",
             "display_name": "Michael Washington",
             "first_name": "Michael",
@@ -133,7 +133,7 @@
         "fields": {
             "authorization_guid": "aed9ebaa-07a6-4432-af89-b6b59d3cf16f",
             "email": "SarahKWard@teleworm.us",
-            "username": "SWard",
+            "username": "business_sward",
             "authorization_id": "SWard",
             "display_name": "Sarah Ward",
             "first_name": "Sarah",
@@ -146,7 +146,7 @@
         "fields": {
             "authorization_guid": "c62619f4-5051-4989-ae23-0f81a11ec978",
             "email": "HarryDSolomon@armyspy.com",
-            "username": "HSolomon",
+            "username": "business_hsolomon",
             "authorization_id": "HSolomon",
             "display_name": "Harry Solomon",
             "first_name": "Harry",
@@ -159,7 +159,7 @@
         "fields": {
             "authorization_guid": "3a28221c-0cef-4852-9e4a-1ef59a5f7b28",
             "email": "CherylGMills@armyspy.com",
-            "username": "CMills",
+            "username": "business_cmills",
             "authorization_id": "CMills",
             "display_name": "Cheryl Mills",
             "first_name": "Cheryl",
@@ -172,7 +172,7 @@
         "fields": {
             "authorization_guid": "b2f6c3e4-4360-4dfe-bbdb-919fd4250404",
             "email": "MichaelGWilkerson@gustr.com",
-            "username": "MWilkerson",
+            "username": "business_mwilkerson",
             "authorization_id": "MWilkerson",
             "display_name": "Michael Wilkerson",
             "first_name": "Michael",
@@ -185,7 +185,7 @@
         "fields": {
             "authorization_guid": "86f63df7-e507-41af-95a0-e3556c784fb3",
             "email": "CeliaWSchreier@jourrapide.com",
-            "username": "CSchreier",
+            "username": "business_cschreier",
             "authorization_id": "CSchreier",
             "display_name": "Celia Schreier",
             "first_name": "Celia",
@@ -198,7 +198,7 @@
         "fields": {
             "authorization_guid": "695c2fd8-fa29-4d4f-a8ac-0015b2e45d44",
             "email": "LillianJWarner@teleworm.us",
-            "username": "LWarner",
+            "username": "business_lwarner",
             "authorization_id": "LWarner",
             "display_name": "Lillian Warner",
             "first_name": "Lillian",
@@ -211,7 +211,7 @@
         "fields": {
             "authorization_guid": "fea1f061-90c2-4e27-93cd-8aa0cd6cf3a3",
             "email": "MarilynBNovak@jourrapide.com",
-            "username": "MNovak",
+            "username": "business_mnovak",
             "authorization_id": "MNovak",
             "display_name": "Marilyn Novak",
             "first_name": "Marilyn",
@@ -224,7 +224,7 @@
         "fields": {
             "authorization_guid": "4d3bd9ef-10bd-4ffc-8428-97d123da1435",
             "email": "JoshuaKBjork@jourrapide.com",
-            "username": "JBjork",
+            "username": "business_jbjork",
             "authorization_id": "JBjork",
             "display_name": "Joshua Bjork",
             "first_name": "Joshua",
@@ -237,7 +237,7 @@
         "fields": {
             "authorization_guid": "34c2ac0b-df42-4f1f-a734-534843051471",
             "email": "PatriciaJRiley@dayrep.com",
-            "username": "PRiley",
+            "username": "business_priley",
             "authorization_id": "PRiley",
             "display_name": "Patricia Riley",
             "first_name": "Patricia",
@@ -250,7 +250,7 @@
         "fields": {
             "authorization_guid": "9e12f24f-131e-4760-8be6-2dcec3e57312",
             "email": "BeverlyWClyde@rhyta.com",
-            "username": "BClyde",
+            "username": "business_bclyde",
             "authorization_id": "BClyde",
             "display_name": "Beverly Clyde",
             "first_name": "Beverly",
@@ -263,7 +263,7 @@
         "fields": {
             "authorization_guid": "e6f8075b-7bb2-44b5-b8b0-51ef9f6df912",
             "email": "BillMFinley@gustr.com",
-            "username": "BFinley",
+            "username": "business_bfinley",
             "authorization_id": "BFinley",
             "display_name": "Bill Finley",
             "first_name": "Bill",
@@ -276,7 +276,7 @@
         "fields": {
             "authorization_guid": "805a63ca-5c0f-451d-96a7-7270fc5d40d4",
             "email": "CharlesJSeng@armyspy.com",
-            "username": "CSeng",
+            "username": "business_cseng",
             "authorization_id": "CSeng",
             "display_name": "Charles Seng",
             "first_name": "Charles",
@@ -289,7 +289,7 @@
         "fields": {
             "authorization_guid": "d9aaa435-471c-4938-9177-fb6f0a77cf6c",
             "email": "RobertGMiller@teleworm.us",
-            "username": "RMiller",
+            "username": "business_rmiller",
             "authorization_id": "RMiller",
             "display_name": "Robert Miller",
             "first_name": "Robert",
@@ -302,7 +302,7 @@
         "fields": {
             "authorization_guid": "87a43750-9302-44e3-b4e2-2f1c4824d030",
             "email": "DavidBKelly@gustr.com",
-            "username": "DKelly",
+            "username": "business_dkelly",
             "authorization_id": "DKelly",
             "display_name": "David Kelly",
             "first_name": "David",
@@ -315,7 +315,7 @@
         "fields": {
             "authorization_guid": "ad199e7d-adcb-4afa-b027-dc08fd1ccebd",
             "email": "EmoryCHanson@armyspy.com",
-            "username": "EHanson",
+            "username": "business_ehanson",
             "authorization_id": "EHanson",
             "display_name": "Emory Hanson",
             "first_name": "Emory",
@@ -328,7 +328,7 @@
         "fields": {
             "authorization_guid": "f51e0d33-c747-418e-8674-ae700ef85034",
             "email": "RichardETurner@jourrapide.com",
-            "username": "RTurner",
+            "username": "business_rturner",
             "authorization_id": "RTurner",
             "display_name": "Richard Turner",
             "first_name": "Richard",
@@ -341,7 +341,7 @@
         "fields": {
             "authorization_guid": "4594027a-7a30-4aab-8312-a38a149ac1f2",
             "email": "CletusDHill@gustr.com",
-            "username": "CHill",
+            "username": "business_chill",
             "authorization_id": "CHill",
             "display_name": "Cletus Hill",
             "first_name": "Cletus",
@@ -354,7 +354,7 @@
         "fields": {
             "authorization_guid": "908afb38-c224-4df0-89ac-16c562165722",
             "email": "NancyFFoley@cuvox.de",
-            "username": "NFoley",
+            "username": "business_nfoley",
             "authorization_id": "NFoley",
             "display_name": "Nancy Foley",
             "first_name": "Nancy",
@@ -367,7 +367,7 @@
         "fields": {
             "authorization_guid": "bef73a73-fde9-46bf-be73-2f316fad4df8",
             "email": "NicholeDMitchell@fleckens.hu",
-            "username": "NMitchell",
+            "username": "business_nmitchell",
             "authorization_id": "NMitchell",
             "display_name": "Nichole Mitchell",
             "first_name": "Nichole",
@@ -380,7 +380,7 @@
         "fields": {
             "authorization_guid": "26bca515-007d-455d-8e77-82a90d9441e5",
             "email": "RickyFNestor@rhyta.com",
-            "username": "RNestor",
+            "username": "business_rnestor",
             "authorization_id": "RNestor",
             "display_name": "Ricky Nestor",
             "first_name": "Ricky",
@@ -393,7 +393,7 @@
         "fields": {
             "authorization_guid": "721491ac-0ecc-43a4-9241-13ea8a2bdfe8",
             "email": "DorothyJFisher@dayrep.com",
-            "username": "DFisher",
+            "username": "business_dfisher",
             "authorization_id": "DFisher",
             "display_name": "Dorothy Fisher",
             "first_name": "Dorothy",
@@ -406,7 +406,7 @@
         "fields": {
             "authorization_guid": "6703d8b3-764e-4ba3-a9d9-2a232e1dc90c",
             "email": "BruceIWelsh@teleworm.us",
-            "username": "BWelsh",
+            "username": "business_bwelsh",
             "authorization_id": "BWelsh",
             "display_name": "Bruce Welsh",
             "first_name": "Bruce",
@@ -419,7 +419,7 @@
         "fields": {
             "authorization_guid": "e30ac9c3-374b-416f-bcfc-62aff5b39a67",
             "email": "AlmaTSterling@gustr.com",
-            "username": "ASterling",
+            "username": "business_asterling",
             "authorization_id": "ASterling",
             "display_name": "Alma Sterling",
             "first_name": "Alma",
@@ -432,7 +432,7 @@
         "fields": {
             "authorization_guid": "7a5686b1-04f8-4944-a4e4-4150b1d7f37b",
             "email": "RobertLHunt@teleworm.us",
-            "username": "RHunt",
+            "username": "business_rhunt",
             "authorization_id": "RHunt",
             "display_name": "Robert Hunt",
             "first_name": "Robert",
@@ -445,7 +445,7 @@
         "fields": {
             "authorization_guid": "88bcd313-4287-4b06-9bda-cd1790270c0f",
             "email": "StephanieJYoung@jourrapide.com",
-            "username": "SYoung",
+            "username": "business_syoung",
             "authorization_id": "SYoung",
             "display_name": "Stephanie Young",
             "first_name": "Stephanie",
@@ -458,7 +458,7 @@
         "fields": {
             "authorization_guid": "52db559a-f616-432b-bea3-a5a6b98041ea",
             "email": "WilmaCUrbanski@teleworm.us",
-            "username": "WUrbanski",
+            "username": "business_wurbanski",
             "authorization_id": "WUrbanski",
             "display_name": "Wilma Urbanski",
             "first_name": "Wilma",
@@ -471,7 +471,7 @@
         "fields": {
             "authorization_guid": "8ab4448a-c414-418d-952d-6fd1d7bf49b2",
             "email": "KeliHWarren@rhyta.com",
-            "username": "KWarren",
+            "username": "business_kwarren",
             "authorization_id": "KWarren",
             "display_name": "Keli Warren",
             "first_name": "Keli",
@@ -484,7 +484,7 @@
         "fields": {
             "authorization_guid": "55984577-e033-4046-86c1-04f7cbd7cd0e",
             "email": "RalphKGraham@rhyta.com",
-            "username": "RGraham",
+            "username": "business_rgraham",
             "authorization_id": "RGraham",
             "display_name": "Ralph Graham",
             "first_name": "Ralph",
@@ -497,7 +497,7 @@
         "fields": {
             "authorization_guid": "245d5aa2-3331-4ea1-97e4-79020037a540",
             "email": "MargaretRGreene@armyspy.com",
-            "username": "MGreene",
+            "username": "business_mgreene",
             "authorization_id": "MGreene",
             "display_name": "Margaret Greene",
             "first_name": "Margaret",
@@ -509,13 +509,105 @@
     {
         "fields": {
             "email": "Daine.Trinidad@gov.bc.ca",
-            "username": "DATRINID2",
-            "authorization_id": "DATRINID2",
-            "display_name": "Trinidad, Daine (Rose) CSNR:EX",
+            "username": "internal_datrinid",
+            "authorization_id": "DATRINID",
+            "first_name": "Daine",
+            "last_name": "Trinidad",
+            "organization_id": 1
+        },
+        "model": "api.user",
+        "pk": "40"
+    },
+    {
+        "fields": {
+            "email": "Daine.Trinidad@gov.bc.ca",
+            "username": "business_dtrinidad",
+            "authorization_id": "DTrinidad",
             "first_name": "Daine",
             "last_name": "Trinidad"
         },
         "model": "api.user",
-        "pk": "40"
+        "pk": "41"
+    },
+    {
+        "fields": {
+            "email": "Raj.Persram@gov.bc.ca",
+            "username": "internal_rpersram",
+            "authorization_id": "RPERSRAM",
+            "first_name": "Raj",
+            "last_name": "Persram",
+            "organization_id": 1
+        },
+        "model": "api.user",
+        "pk": "42"
+    },
+  {
+        "fields": {
+            "email": "Raj.Persram@gov.bc.ca",
+            "username": "business_rpersram",
+            "authorization_id": "RPERSRAM",
+            "first_name": "Raj",
+            "last_name": "Persram",
+            "organization_id": 1
+        },
+        "model": "api.user",
+        "pk": "43"
+    },
+    {
+        "fields": {
+            "email": "Brian.Finn@gov.bc.ca",
+            "username": "internal_bfinn",
+            "authorization_id": "BFINN",
+            "first_name": "Brian",
+            "last_name": "Finn",
+            "organization_id": 1
+        },
+        "model": "api.user",
+        "pk": "44"
+    },
+    {
+        "fields": {
+            "email": "Brian.Finn@gov.bc.ca",
+            "username": "business_bfin",
+            "authorization_id": "BFin",
+            "first_name": "Brian",
+            "last_name": "Finn"
+        },
+        "model": "api.user",
+        "pk": "45"
+    },
+    {
+        "fields": {
+            "email": "Justin.Lepitzki@gov.bc.ca",
+            "username": "internal_jlepitz",
+            "authorization_id": "JLEPITZ",
+            "first_name": "Justin",
+            "last_name": "Lepitzki",
+            "organization_id": 1
+        },
+        "model": "api.user",
+        "pk": "46"
+    },
+    {
+        "fields": {
+            "email": "Justin.Lepitzki@gov.bc.ca",
+            "username": "business_jlepitzki",
+            "authorization_id": "JLepitzki",
+            "first_name": "Justin",
+            "last_name": "Lepitzki"
+        },
+        "model": "api.user",
+        "pk": "47"
+    },
+    {
+        "fields": {
+            "email": "Matthew.Hall@gov.bc.ca",
+            "username": "business_mhall",
+            "authorization_id": "MHall",
+            "first_name": "Matthew",
+            "last_name": "Hall"
+        },
+        "model": "api.user",
+        "pk": "47"
     }
 ]
