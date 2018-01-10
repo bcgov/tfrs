@@ -14,7 +14,7 @@ class UserAuthentication(authentication.BaseAuthentication):
             'HTTP_SMAUTH_UNIVERSALID'))
         header_user_guid = request.META.get('HTTP_SMAUTH_USERGUID')
         header_user_dir = request.META.get('HTTP_SMAUTH_DIRNAME')
-        header_user_id = request.META.get('HTTP_SMAUTH_UNIVERSALID')
+        header_user_id = request.META.get('HTTP_SMAUTH_UNIVERSALID').lower()
         header_user_email = request.META.get('HTTP_SMAUTH_USEREMAIL')
         header_user_displayname = request.META.get(
             'HTTP_SMAUTH_USERDISPLAYNAME')
