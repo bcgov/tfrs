@@ -42,7 +42,7 @@ node('maven') {
 
     stage('Deploy to Dev') {
         echo "Deploying to Dev: ${BUILD_ID}"
-        openshiftTag destStream: 'tfrs', verbose: 'true', destTag: 'dev', srcStream: 'tfrs', srcTag: '${IMAGE_HASH}'
+        openshiftTag destStream: 'tfrs', verbose: 'true', destTag: 'dev', srcStream: 'tfrs', srcTag: "${IMAGE_HASH}"
         openshiftVerifyDeployment depCfg: 'tfrs', namespace: 'mem-tfrs-dev', replicaCount: 1, verbose: 'false'
     }
 
@@ -51,7 +51,7 @@ node('maven') {
 stage('Deploy to Test') {
     input "Deploy to Test?"
     node('master') {
-        openshiftTag destStream: 'tfrs', verbose: 'true', destTag: 'test', srcStream: 'tfrs', srcTag: '${IMAGE_HASH}'
+        openshiftTag destStream: 'tfrs', verbose: 'true', destTag: 'test', srcStream: 'tfrs', srcTag: "${IMAGE_HASH}"
         openshiftVerifyDeployment depCfg: 'tfrs', namespace: 'mem-tfrs-test', replicaCount: 1, verbose: 'false'
     }
 }
@@ -59,7 +59,7 @@ stage('Deploy to Test') {
 stage('Deploy to Prod') {
     input "Deploy to Prod?"
     node('master') {
-        openshiftTag destStream: 'tfrs', verbose: 'true', destTag: 'prod', srcStream: 'tfrs', srcTag: '${IMAGE_HASH}'
+        openshiftTag destStream: 'tfrs', verbose: 'true', destTag: 'prod', srcStream: 'tfrs', srcTag: "${IMAGE_HASH}"
         openshiftVerifyDeployment depCfg: 'tfrs', namespace: 'mem-tfrs-prod', replicaCount: 1, verbose: 'false'
     }
 }
