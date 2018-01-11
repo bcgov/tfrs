@@ -3,7 +3,7 @@ import { Route, withRouter, Switch } from 'react-router-dom'
 import * as Routes from '../constants/routes.jsx';
 import Navbar from './Navbar.jsx';
 import Footer from './Footer.jsx';
-// import FuelSuppliers from './fuel_suppliers/FuelSuppliers.jsx';
+import {IntlProvider} from 'react-intl';
 
 export default class App extends Component {
  
@@ -21,13 +21,15 @@ export default class App extends Component {
   
   render() {
     return (
-      <div className="App">
-        <Navbar />
-        <div id="main" className="template container"> 
-          {this.props.children}
+      <IntlProvider locale="en-CA">
+        <div className="App">
+          <Navbar />
+          <div id="main" className="template container"> 
+            {this.props.children}
+          </div>
+          <Footer />
         </div>
-        <Footer />
-      </div>
+      </IntlProvider>
     );
   }
 }

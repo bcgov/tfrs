@@ -48,7 +48,7 @@ const getAccountActivityError = (error) => {
 export const getCreditTransfer = (id) => (dispatch) => {
   dispatch(getCreditTransferRequest());
   axios.get(Routes.BASE_URL + Routes.CREDIT_TRADE_API + '/' + id)
-  .then((response) => {   
+  .then((response) => {
     dispatch(getCreditTransferSuccess(response.data));
   }).catch((error) => {
     dispatch(getCreditTransferError(error.response))
@@ -63,11 +63,11 @@ const getCreditTransferRequest = () => {
   }
 }
 
-const getCreditTransferSuccess = (data) => {
+const getCreditTransferSuccess = (creditTransfer) => {
   return {
     name: ReducerTypes.GET_CREDIT_TRANSFER,
     type: ActionTypes.SUCCESS,
-    data: data,
+    data: creditTransfer,
   }
 }
 

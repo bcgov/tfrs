@@ -46,9 +46,9 @@ const getCreditTradeStatus = (tradeStatus) => {
 }
 
 const getCreditTradeTypePast = (type) => {
-  if (type.the_type.includes('Sell')) {
+  if (type.theType.includes('Sell')) {
     return 'sold'
-  } else if (type.the_type.includes('Buy')) {
+  } else if (type.theType.includes('Buy')) {
     return 'bought'
   }
 }
@@ -58,26 +58,6 @@ const getToFrom = (tradeType) => {
     return 'credits to';
   } else if (tradeType == 'buy') {
     return 'credits from';
-  }
-}
-
-export const getCreditTradeRespondent = (respondentId) => {
-  let organizations = store.getState().rootReducer[ReducerTypes.GET_ORGANIZATIONS].data;
-  let respondent = organizations.find(function(organization) {
-    return organization.id === respondentId
-  })
-  return respondent.name
-}
-
-export const getCreditTradeInitiator = (initiatorId) => {
-  if (initiatorId == null) {
-    return 'BC Government';
-  } else {
-    let organizations = store.getState().rootReducer[ReducerTypes.GET_ORGANIZATIONS].data;
-    let initiator = organizations.find(function(organization) {
-      return organization.id === initiatorId
-    })
-    return initiator.name
   }
 }
 
@@ -96,15 +76,15 @@ const PlainEnglishPhrase = (props) => {
   let totalValue = addCommas((Number(props.numberOfCredits) * Number(props.fairMarketValuePerCredit)));
   return (
     <div className="plain-english-phrase">
-      <span className="value">{props.tradeInitiator.name}</span> proposes to <span className="value">{props.tradeType.the_type.toLowerCase()}</span> <span className="value">{props.numberOfCredits}</span> {props.toFrom} <span className="value">{props.tradeRespondent.name}</span> for <span className="value">${fairMarketValuePerCredit}</span> per credit for a total value of <span className="value">${totalValue}</span> effective on Director's Approval.
+      <span className="value">{props.tradeInitiator.name}</span> proposes to <span className="value">{props.tradeType.theType.toLowerCase()}</span> <span className="value">{props.numberOfCredits}</span> {props.toFrom} <span className="value">{props.tradeRespondent.name}</span> for <span className="value">${fairMarketValuePerCredit}</span> per credit for a total value of <span className="value">${totalValue}</span> effective on Director's Approval.
     </div>
   )
 }
 
 export const getCreditTransferTitle = (data) => {
-  let respondent = getCreditTradeRespondent(data.respondentFK);
-  let tradeType = getCreditTradeType(data.creditTradeTypeFK);
-  let toFrom = getToFrom(tradeType);
+  let respondent = data.respondent.name;
+  let tradeType = data.type.theType
+  let toFrom = getToFrom(data.type.theType)
   return (
     <CreditTransferTitle
       respondent={respondent}
