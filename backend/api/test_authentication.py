@@ -42,6 +42,21 @@ class TestAuthentication(TestCase):
         assert user is not None
         assert user.display_name == display_name
 
+    def test_user_has_mapping_uuid_formatted_and_matched(self):
+        # Return user
+        request = self.factory.get('/')
+        display_name = 'Brad Smith'
+        request.META = {
+            'HTTP_SMAUTH_USERGUID': 'C9804C5205F14A6A9D24332D9D8BE2A9',
+            'HTTP_SMAUTH_USERDISPLAYNAME': display_name,
+            'HTTP_SMAUTH_USEREMAIL': 'BradJSmith@cuvox.de',
+            'HTTP_SMAUTH_UNIVERSALID': 'BSmith',
+        }
+
+        user, auth = self.userauth.authenticate(request)
+        assert user is not None
+        assert user.display_name == display_name
+
     def test_user_first_login_valid(self):
         # Create mapping by updating the user model
         # (authorization_guid = sm header guid)
@@ -65,7 +80,7 @@ class TestAuthentication(TestCase):
         assert user is not None
         assert user.display_name == display_name
         assert new_user.authorization_id == user.authorization_id
-        assert user.authorization_guid == userguid
+        assert str(user.authorization_guid) == userguid
 
     def test_user_first_login_idir_valid(self):
         # Create mapping by updating the user model
@@ -93,7 +108,7 @@ class TestAuthentication(TestCase):
         assert user is not None
         assert user.display_name == display_name
         assert new_user.authorization_id == user.authorization_id
-        assert user.authorization_guid == userguid
+        assert str(user.authorization_guid) == userguid
         assert gov_organization.id == user.organization.id
 
     def test_user_first_login_idir_different_case_valid(self):
@@ -122,7 +137,7 @@ class TestAuthentication(TestCase):
         assert user is not None
         assert user.display_name == display_name
         assert new_user.authorization_id == user.authorization_id
-        assert user.authorization_guid == userguid
+        assert str(user.authorization_guid) == userguid
         assert gov_organization.id == user.organization.id
 
     def test_user_first_login_idir_invalid(self):
