@@ -16,21 +16,21 @@ export const plainEnglishPhrase = (data) => {
         <PlainEnglishPhrasePast
           tradeInitiator={tradeInitiator}
           tradeTypePast={tradeTypePast}
-          numberOfCredits={data.number_of_credits}
+          numberOfCredits={data.numberOfCredits}
           toFrom={toFrom}
           tradeRespondent={tradeRespondent}
-          fairMarketValuePerCredit={data.fair_market_value_per_credit}
-          tradeEffectiveDate={data.trade_effective_date} />
+          fairMarketValuePerCredit={data.fairMarketValuePerCredit}
+          tradeEffectiveDate={data.tradeEffectiveDate} />
       );
     default:
       return (
         <PlainEnglishPhrase
           tradeInitiator={tradeInitiator}
           tradeType={tradeType}
-          numberOfCredits={data.number_of_credits}
+          numberOfCredits={data.numberOfCredits}
           toFrom={toFrom}
           tradeRespondent={tradeRespondent}
-          fairMarketValuePerCredit={data.fair_market_value_per_credit}
+          fairMarketValuePerCredit={data.fairMarketValuePerCredit}
           tradeEffectiveDate={data.trade_effective_date} />
       );
     break;

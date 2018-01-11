@@ -9,15 +9,11 @@ import { CreditTransfer } from '../sampleData.jsx';
 const history = createHistory();
 
 export const getAccountActivity = () => (dispatch) => {
-  console.log("dispatch account activity")
   dispatch(getAccountActivityRequest());
-  console.log(Routes.BASE_URL + Routes.CREDIT_TRADE_API)
   axios.get(Routes.BASE_URL + Routes.CREDIT_TRADE_API)
   .then((response) => {
-    console.log("Response is", response)
     dispatch(getAccountActivitySuccess(response.data));
   }).catch((error) => {
-    console.log("Error!", error, error.response)
     dispatch(getAccountActivityError(error.response))
   })
 }
@@ -85,6 +81,49 @@ export const getCreditTransferReset = () => {
     type: ActionTypes.RESET,
   }
 }
+
+
+export const getCreditTransferHistory = (id) => (dispatch) => {
+  dispatch(getCreditTransferHistoryRequest());
+  axios.get(Routes.BASE_URL + Routes.CREDIT_TRADE_API + '/' + id + '/history')
+  .then((response) => {
+    dispatch(getCreditTransferHistorySuccess(response.data));
+  }).catch((error) => {
+    dispatch(getCreditTransferHistoryError(error.response))
+  })
+}
+
+const getCreditTransferHistoryRequest = () => {
+  return {
+    name: ReducerTypes.CREDIT_TRANSFER_HISTORY,
+    type: ActionTypes.REQUEST,
+  }
+}
+
+const getCreditTransferHistorySuccess = (history) => {
+  return {
+    name: ReducerTypes.CREDIT_TRANSFER_HISTORY,
+    type: ActionTypes.SUCCESS,
+    data: history,
+  }
+}
+
+const getCreditTransferHistoryError = (error) => {
+  return {
+    name: ReducerTypes.CREDIT_TRANSFER_HISTORY,
+    type: ActionTypes.ERROR,
+    errorMessage: error
+  }
+}
+
+export const getCreditTransferHistoryReset = () => {
+  return {
+    name: ReducerTypes.CREDIT_TRANSFER_HISTORY,
+    type: ActionTypes.RESET,
+  }
+}
+
+
 
 export const getCreditTransfers = () => (dispatch) => {
   axios.post(Routes.BASE_URL + Routes.SEARCH_CREDIT_TRADES, {

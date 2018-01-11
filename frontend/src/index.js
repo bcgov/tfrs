@@ -45,12 +45,6 @@ import '../styles/index.scss';
 
 const history = createHistory();
 
-// store.dispatch(getOrganizationActionTypes());
-// store.dispatch(getOrganizationStatuses());
-// store.dispatch(getOrganizationTypes());
-// store.dispatch(getOrganizationContacts());
-// store.dispatch(getOrganizationAttachments());
-// store.dispatch(getOrganizations());
 store.dispatch(getUsers());
 store.dispatch(getPermissions());
 store.dispatch(getRolePermissions());
@@ -59,7 +53,6 @@ store.dispatch(getUserRoles());
 store.dispatch(getCreditTrades());
 store.dispatch(getCreditTradeStatuses());
 store.dispatch(getCreditTradeTypes());
-// store.dispatch(getAccountActivity());
 
 
 ReactDOM.render(
