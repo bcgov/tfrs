@@ -8,7 +8,10 @@ import * as Routes from '../constants/routes.jsx';
 class Navbar extends Component {
 
   componentDidMount() {
+
     this.props.getLoggedInUser();
+
+    console.log("login user data", this.props.loggedInUserData)
   }
 
   render() {
@@ -45,7 +48,7 @@ class Navbar extends Component {
               </div>
             </div>
             <div className="col-sm-4 col-md-4 col-lg-4 hidden-xs">
-                  <span id="display_name" className="pull-right">{this.props.loggedInUserData.display_name}</span>
+                  <span id="display_name" className="pull-right">{this.props.loggedInUserData.displayName}</span>
             </div>
             <div id="navbar" className="collapse navbar-collapse" role="navigation">
               <a id="navigation-anchor"></a>

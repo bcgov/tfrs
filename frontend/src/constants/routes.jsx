@@ -7,8 +7,8 @@ export const NOTIFICATIONS = '/notifications';
 export const SETTINGS = '/settings';
 export const ADMINISTRATION = '/administration';
 export const ORGANIZATION_DETAILS = '/organizations/:id';
-export const CREDIT_TRANSFER = '/credittransfer/';
-export const CREDIT_TRANSFER_DETAILS = '/credittransfer/:id';
+export const CREDIT_TRANSFER = '/credit_transfer/';
+export const CREDIT_TRANSFER_DETAILS = '/credit_transfer/:id';
 export const NOT_FOUND = '/404';
 
 // API Routes

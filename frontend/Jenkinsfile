@@ -1,6 +1,6 @@
 node('maven') {
 
-    stage('Code Qality Check') {
+    stage('Code Quality Check') {
         echo "checking out source"
         echo "Build: ${BUILD_ID}"
         checkout scm

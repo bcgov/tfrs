@@ -5,8 +5,7 @@ import * as Values from '../../constants/values.jsx';
 import * as Routes from '../../constants/routes.jsx';
 import { 
   plainEnglishPhrase, 
-  getCreditTransferTitle,
-  getCreditTradeInitiator } from '../../utils/functions.jsx';
+  getCreditTransferTitle } from '../../utils/functions.jsx';
 import { Modal } from 'react-bootstrap';
 import { 
   getCreditTransfer,
@@ -35,18 +34,28 @@ class CreditTransfer extends Component {
   }
 
   componentDidMount() {
+    this.props.getOrganizations();
     this.props.getCreditTransfer(this.props.match.params.id);
+
+    console.log("data is" , this.props.data)
+
+    this.setState({
+        fairMarketValuePerCredit: this.props.data.fairMarketValuePerCredit,
+        numberOfCredits: this.props.data.numberOfCredits
+      })
   }
 
   componentDidUpdate(prevProps, prevState) {
+
+    console.log("updated data is" , this.props.data)
     if (!prevProps.data && this.props.data && this.props.data.fairMarketValuePerCredit && this.props.data.numberOfCredits) {
       this.setState({
-        valuePerCredit: this.props.data.fairMarketValuePerCredit,
+        fairMarketValuePerCredit: this.props.data.fairMarketValuePerCredit,
         numberOfCredits: this.props.data.numberOfCredits
       })
     }
     if (prevProps.match.params.id != this.props.match.params.id) {
-      this.props.getOrganizations();
+      // this.props.getOrganizations();
       this.props.getCreditTransfer(this.props.match.params.id);
     }
   }
@@ -67,37 +76,38 @@ class CreditTransfer extends Component {
     const note = this.note.value;
     const data = {
       id: this.props.data.id,
-      initiatorFK: this.props.data.initiatorFK,
+      initiator: this.props.data.initiator,
       numberOfCredits: this.props.data.numberOfCredits,
-      respondentFK: this.props.data.respondentFK,
-      valuePerCredit: this.props.data.valuePerCredit,
+      respondent: this.props.data.respondent,
+      fairMarketValuePerCredit: this.props.data.fairMarketValuePerCredit,
       note: note,
-      creditTradeStatusFK: status,
-      creditTradeTypeFK: this.props.data.creditTradeTypeFK,
-      tradeEffectiveDate: this.props.data.tradeEffectiveDate,
+      status: status,
+      type: this.props.data.type,
+      tradeEffectiveDate: this.props.data.trade_effective_date,
     }
     this.props.updateCreditTransfer(data);
   }
 
   handleSubmit(event, status) {
     event.preventDefault();
-    const initiatorFK = this.props.organizations[0].id;
-    const creditTradeTypeFK = this.creditTradeTypeFK.value;
+    // const initiator = this.props.organizations[0].id;
+    const initiatorId = this.props.data.initiator.id;
+    const typeId = this.typeId.value;
     const numberOfCredits = this.numberOfCredits.value;
-    const respondentFK = this.respondent.value;
-    const valuePerCredit = this.valuePerCredit.value;
-    const creditTradeStatusFK = status;
+    const respondentId = this.respondentId.value;
+    const fairMarketValuePerCredit = this.fairMarketValuePerCredit.value;
+    // const status = status;
     const note = this.note.value;
     const id = this.props.match.params.id;
     const data = {
       id: id,
-      initiatorFK: initiatorFK,
+      initiator: initiatorId,
       numberOfCredits: numberOfCredits,
-      respondentFK: respondentFK,
-      valuePerCredit: valuePerCredit,
+      respondent: respondentId,
+      fairMarketValuePerCredit: fairMarketValuePerCredit,
       note: note,
-      creditTradeStatusFK: creditTradeStatusFK,
-      creditTradeTypeFK: creditTradeTypeFK
+      status: status,
+      type: typeId
     }
     this.props.updateCreditTransfer(data);
   }
@@ -108,7 +118,7 @@ class CreditTransfer extends Component {
         { this.props.data && this.props.data.id && 
         <div>
           {this.props.data.id && getCreditTransferTitle(this.props.data)}
-          { this.props.data.creditTradeStatusFK === Values.STATUS_DRAFT && 
+          { this.props.data.status.id === Values.STATUS_DRAFT && 
             <button 
               type="button" 
               className="btn btn-danger"
@@ -116,7 +126,7 @@ class CreditTransfer extends Component {
               Delete Credit Transfer
             </button>
           }
-          { (this.props.data.creditTradeStatusFK === Values.STATUS_PROPOSED || this.props.data.creditTradeStatusFK === Values.STATUS_APPROVED) && 
+          { (this.props.data.status.id === Values.STATUS_PROPOSED || this.props.data.status.id === Values.STATUS_APPROVED) && 
             <button 
               type="button" 
               className="btn btn-danger"
@@ -126,26 +136,26 @@ class CreditTransfer extends Component {
           }
           <div className="credit-transfer-progress-bar">
             <div className="arrow-steps clearfix">
-              <div className={this.props.data.creditTradeStatusFK == Values.STATUS_PROPOSED ? "step current" : "step"}><span>Proposed</span></div>
-              <div className={this.props.data.creditTradeStatusFK === Values.STATUS_ACCEPTED ? "step current" : "step"}><span>Accepted</span></div>
-              <div className={this.props.data.creditTradeStatusFK === Values.STATUS_APPROVED ? "step current" : "step"}><span>Approved</span></div>
-              <div className={this.props.data.creditTradeStatusFK === Values.STATUS_COMPLETED ? "step current" : "step"}><span>Complete</span></div>
+              <div className={this.props.data.status.id == Values.STATUS_PROPOSED ? "step current" : "step"}><span>Proposed</span></div>
+              <div className={this.props.data.status.id === Values.STATUS_ACCEPTED ? "step current" : "step"}><span>Accepted</span></div>
+              <div className={this.props.data.status.id === Values.STATUS_APPROVED ? "step current" : "step"}><span>Approved</span></div>
+              <div className={this.props.data.status.id === Values.STATUS_COMPLETED ? "step current" : "step"}><span>Complete</span></div>
             </div>
           </div>
           <div className="credit-transfer-details">
             <form className="form-inline" onSubmit={(event, status) => this.handleSubmit(event, Values.STATUS_PROPOSED)}>
-              { this.props.data.creditTradeStatusFK == Values.STATUS_DRAFT ? 
+              { this.props.data.status.id == Values.STATUS_DRAFT ? 
                 <div className="main-form">
-                  <span>{getCreditTradeInitiator(this.props.data.initiatorFK)} proposes to </span>
+                  <span>{this.props.data.initiator.name} proposes to </span>
                   <div className="form-group">
                     <select 
                       className="form-control" 
-                      id="creditTradeTypeFK" 
-                      name="creditTradeTypeFK"
-                      ref={(input) => this.creditTradeTypeFK = input}
+                      id="credit-trade-type" 
+                      name="credit_trade_type"
+                      ref={(input) => this.typeId = input}
                       onChange={(event) => this.handleInputChange(event)}>
-                      <option value="1">Sell</option>
-                      <option value="2">Buy</option>
+                      <option value="1" key="type_1">Sell</option>
+                      <option value="2" key="type_2">Buy</option>
                     </select>
                   </div>
                   <div className="form-group">
@@ -164,12 +174,12 @@ class CreditTransfer extends Component {
                       className="form-control" 
                       id="respondent" 
                       name="respondent"
-                      ref={(input) => this.respondent = input}
-                      defaultValue={this.props.data && this.props.data.respondentFK}
+                      ref={(input) => this.respondentId = input}
+                      defaultValue={this.props.data && this.props.data.respondent.id}
                       onChange={(event) => this.handleInputChange(event)}>
                       { this.props.organizations &&
                         this.props.organizations.map((organization) => (
-                          <option value={organization.id}>{organization.name}</option>
+                          <option value={organization.id} key={'organization_' + organization.id}>{organization.name}</option>
                       ))}
                     </select>
                   </div>
@@ -178,14 +188,14 @@ class CreditTransfer extends Component {
                     <input 
                       type="number" 
                       className="form-control" 
-                      id="value-per-credit" 
-                      name="valuePerCredit"
+                      id="fair-market-value-per-credit" 
+                      name="fairMarketValuePerCredit"
                       onChange={(event) => this.handleInputChange(event)}
                       defaultValue={this.props.data.fairMarketValuePerCredit}
-                      ref={(input) => this.valuePerCredit = input} />
+                      ref={(input) => this.fairMarketValuePerCredit = input} />
                   </div>
-                  <span>per credit for a total value of $</span>
-                  <span>{ this.state.valuePerCredit * this.state.numberOfCredits }</span>
+                  <span>per credit for a total value off {this.state.fairMarketValuePerCredit}$</span>
+                  <span>{ this.state.fairMarketValuePerCredit * this.state.numberOfCredits }</span>
                   <span> effective on Director's Approval</span>
                 </div>
                 :
@@ -205,7 +215,7 @@ class CreditTransfer extends Component {
                   ref={(input) => this.note = input}>
                 </textarea>
               </div>
-              { (this.props.data.creditTradeStatusFK === Values.STATUS_NEW || this.props.data.creditTradeStatusFK=== Values.STATUS_DRAFT) && 
+              { (this.props.data.status.id === Values.STATUS_NEW || this.props.data.status.id=== Values.STATUS_DRAFT) && 
                 <div className="btn-container">
                   <button 
                     type="button" 
@@ -226,7 +236,7 @@ class CreditTransfer extends Component {
                   </button>
                 </div>
               }
-              { this.props.data.creditTradeStatusFK === Values.STATUS_PROPOSED && 
+              { this.props.data.status.id === Values.STATUS_PROPOSED && 
                 <div className="btn-container">
                   <button 
                     type="button" 
@@ -243,7 +253,7 @@ class CreditTransfer extends Component {
                   </button>
                 </div>
               }
-              { (this.props.data.creditTradeStatusFK=== Values.STATUS_ACCEPTED || this.props.data.creditTradeStatusFK === Values.STATUS_RECOMMENDED) && 
+              { (this.props.data.status.id=== Values.STATUS_ACCEPTED || this.props.data.status.id === Values.STATUS_RECOMMENDED) && 
                 <div className="btn-container">
                   <button 
                     type="button" 
