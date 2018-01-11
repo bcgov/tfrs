@@ -9,6 +9,7 @@ import {
 import { Modal } from 'react-bootstrap';
 import { 
   getCreditTransfer,
+  getCreditTransferHistory,
   getCreditTransferReset,
   updateCreditTransfer,
   deleteCreditTransfer } from '../../actions/accountActivityActions.jsx';
@@ -23,7 +24,7 @@ class CreditTransfer extends Component {
     super(props);
     this.state = {
       proposalType: '',
-      valuePerCredit: '',
+      fairMarketValuePerCredit: '',
       numberOfCredits: '',
       showRescindCreditTransferModal: false,
       showDeleteCreditTransferModal: false,
@@ -36,6 +37,7 @@ class CreditTransfer extends Component {
   componentDidMount() {
     this.props.getOrganizations();
     this.props.getCreditTransfer(this.props.match.params.id);
+    this.props.getCreditTransferHistory(this.props.match.params.id);
 
     console.log("data is" , this.props.data)
 
@@ -48,7 +50,9 @@ class CreditTransfer extends Component {
   componentDidUpdate(prevProps, prevState) {
 
     console.log("updated data is" , this.props.data)
+    console.log("prevprops", prevProps.data)
     if (!prevProps.data && this.props.data && this.props.data.fairMarketValuePerCredit && this.props.data.numberOfCredits) {
+      
       this.setState({
         fairMarketValuePerCredit: this.props.data.fairMarketValuePerCredit,
         numberOfCredits: this.props.data.numberOfCredits
@@ -57,6 +61,7 @@ class CreditTransfer extends Component {
     if (prevProps.match.params.id != this.props.match.params.id) {
       // this.props.getOrganizations();
       this.props.getCreditTransfer(this.props.match.params.id);
+      this.props.getCreditTransferHistory(this.props.match.params.id);
     }
   }
 
@@ -118,7 +123,7 @@ class CreditTransfer extends Component {
         { this.props.data && this.props.data.id && 
         <div>
           {this.props.data.id && getCreditTransferTitle(this.props.data)}
-          { this.props.data.status.id === Values.STATUS_DRAFT && 
+          { this.props.data.status.status == "Draft" && 
             <button 
               type="button" 
               className="btn btn-danger"
@@ -144,7 +149,7 @@ class CreditTransfer extends Component {
           </div>
           <div className="credit-transfer-details">
             <form className="form-inline" onSubmit={(event, status) => this.handleSubmit(event, Values.STATUS_PROPOSED)}>
-              { this.props.data.status.id == Values.STATUS_DRAFT ? 
+              { this.props.data.status.status == "Draft" ? 
                 <div className="main-form">
                   <span>{this.props.data.initiator.name} proposes to </span>
                   <div className="form-group">
@@ -194,7 +199,7 @@ class CreditTransfer extends Component {
                       defaultValue={this.props.data.fairMarketValuePerCredit}
                       ref={(input) => this.fairMarketValuePerCredit = input} />
                   </div>
-                  <span>per credit for a total value off {this.state.fairMarketValuePerCredit}$</span>
+                  <span>per credit for a total value of {this.state.fairMarketValuePerCredit}$</span>
                   <span>{ this.state.fairMarketValuePerCredit * this.state.numberOfCredits }</span>
                   <span> effective on Director's Approval</span>
                 </div>
@@ -215,7 +220,7 @@ class CreditTransfer extends Component {
                   ref={(input) => this.note = input}>
                 </textarea>
               </div>
-              { (this.props.data.status.id === Values.STATUS_NEW || this.props.data.status.id=== Values.STATUS_DRAFT) && 
+              { (this.props.data.status.id === Values.STATUS_NEW || this.props.data.status.status == 'Draft') && 
                 <div className="btn-container">
                   <button 
                     type="button" 
@@ -435,6 +440,7 @@ export default connect (
   state => ({
     data: state.rootReducer[ReducerTypes.GET_CREDIT_TRANSFER].data,
     organizations: state.rootReducer[ReducerTypes.GET_ORGANIZATIONS].data,
+    creditTransferHistory: state.rootReducer[ReducerTypes.GET_CREDIT_TRANSFER_HISTORY].data,
   }),
   dispatch => ({
     getCreditTransfer: (id) => {
@@ -451,6 +457,9 @@ export default connect (
     },
     getOrganizations: () => {
       dispatch(getOrganizations());
+    },
+    getCreditTransferHistory: (id) => {
+      dispatch(getCreditTransferHistory(id));
     }
   })
 )(CreditTransfer)
