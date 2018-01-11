@@ -77,7 +77,8 @@ class CreditTradeTypeSerializer(serializers.ModelSerializer):
     class Meta:
         model = CreditTradeType
         fields = (
-            'id', 'the_type', 'description', 'effective_date', 'expiration_date',
+            'id', 'the_type', 'description', 'effective_date',
+            'expiration_date',
             'display_order', 'is_gov_only_type')
 
 
@@ -92,8 +93,9 @@ class CreditTradeZeroReasonSerializer(serializers.ModelSerializer):
 class CurrentUserViewModelSerializer(serializers.ModelSerializer):
     class Meta:
         model = CurrentUserViewModel
-        fields = ('id', 'first_name', 'last_name', 'email', 'active', 'user_roles',
-                  'sm_authorization_id', 'sm_authorization_directory')
+        fields = (
+        'id', 'first_name', 'last_name', 'email', 'active', 'user_roles',
+        'sm_authorization_id', 'sm_authorization_directory')
 
 
 class OrganizationSerializer(serializers.ModelSerializer):
@@ -108,7 +110,8 @@ class OrganizationActionsTypeSerializer(serializers.ModelSerializer):
     class Meta:
         model = OrganizationActionsType
         fields = (
-            'id', 'the_type', 'description', 'effective_date', 'expiration_date',
+            'id', 'the_type', 'description', 'effective_date',
+            'expiration_date',
             'display_order')
 
 
@@ -177,11 +180,13 @@ class RoleViewModelSerializer(serializers.ModelSerializer):
 
 
 class UserSerializer(serializers.ModelSerializer):
+    organization = OrganizationSerializer(read_only=True)
     class Meta:
         model = User
         fields = (
-                'id', 'first_name', 'last_name', 'email', 'authorization_id',
-            'authorization_guid', 'authorization_directory', 'display_name')
+            'id', 'first_name', 'last_name', 'email', 'authorization_id',
+            'authorization_guid', 'authorization_directory', 'display_name',
+            'organization')
 
 
 class UserDetailsViewModelSerializer(serializers.ModelSerializer):
@@ -189,7 +194,6 @@ class UserDetailsViewModelSerializer(serializers.ModelSerializer):
         model = UserDetailsViewModel
         fields = (
             'id', 'first_name', 'last_name', 'email', 'active', 'permissions')
-
 
 
 class UserRoleSerializer(serializers.ModelSerializer):
@@ -201,18 +205,19 @@ class UserRoleSerializer(serializers.ModelSerializer):
 class UserRoleViewModelSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserRoleViewModel
-        fields = ('id', 'effective_date', 'expiration_date', 'role_id', 'authorization_id')
+        fields = ('id', 'effective_date', 'expiration_date', 'role_id',
+                  'authorization_id')
 
 
 class UserViewModelSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserViewModel
-        fields = ('id', 'first_name', 'last_name', 'email', 'active', 'sm_authorization_id',
+        fields = ('id', 'first_name', 'last_name', 'email', 'active',
+                  'sm_authorization_id',
                   'user_roles')
 
 
 class CreditTradeCreateSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = CreditTrade
         fields = '__all__'
