@@ -1,51 +1,31 @@
 import React, { Component } from 'react';
-import { getCreditTradeRespondent } from '../../utils/functions.jsx';
 import * as Values from '../../constants/values.jsx';
+import { FormattedNumber } from 'react-intl';
 
 export default class CreditTransferVisualRepresentation extends Component {
   constructor(props) {
     super(props);
-    console.log("this is the data", this.props.data)
-    //determineBuyerandSeller()
   }
 
-  determineBuyerandSeller(){
-    // let seller = # logic to choose seller here.
-    // let buyer = # logic to choose buyer based on the type here
-
-    /*
-    this.setState({
-      //update the state here
-      seller: seller,
-      numberOfCredits: this.props.data.numberOfCredits
-      buyer: buyer
-    })
-    */
-  }
-  
   render() {
+    let cost = this.props.data.fair_market_value_per_credit * this.props.data.number_of_credits;
     return (
       <div className="row visual-representation">
         <div className="col-sm-4 col-md-2 col-md-offset-1">
           <div className="initiator-container label-success">
-            {/* this.state.seller*/}
-            <div>{this.props.data.initiatorFK && this.props.data.initiatorFK != null ? getCreditTradeRespondent(this.props.data.initiatorFK) : Values.DEFAULT_INITIATOR}</div>
-            <div>Available: 65,000</div>
+            <div>{this.props.data.initiator && this.props.data.initiator != null ? this.props.data.initiator.name : Values.DEFAULT_INITIATOR}</div>
           </div>
         </div>
         <div className="col-sm-4 col-md-2">
           <div className="arrow">
-            <div>25,000 credits</div>
-            {/* <i className="fa fa-arrow-circle-right"></i> */}
+            <div>{this.props.data.number_of_credits} credit{this.props.data.number_of_credits > 2 && 's'}</div>
             <i className="fa fa-exchange"></i>
-            {/* this.state.credit */}
-            <div>$13,250,365.00</div>
+            <div><FormattedNumber value={cost} style="currency" currency="CAD"/> </div>
           </div>
         </div>
         <div className="col-sm-4 col-md-3">
           <div className="respondent-container label-warning">
-            {/* this.state.buyer */}
-            <div>{this.props.data.respondentFK && getCreditTradeRespondent(this.props.data.respondentFK)}</div>
+            <div>{this.props.data.respondent.name}</div>
             <div>Status: Sell Only</div>
           </div>
         </div>
