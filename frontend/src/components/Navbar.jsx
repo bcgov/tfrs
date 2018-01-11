@@ -48,7 +48,10 @@ class Navbar extends Component {
               </div>
             </div>
             <div className="col-sm-4 col-md-4 col-lg-4 hidden-xs">
-                  <span id="display_name" className="pull-right">{this.props.loggedInUserData.displayName}</span>
+                <div className="pull-right">
+                  <h5 id="display_name">{this.props.loggedInUserData.displayName}</h5>
+                  <span id="user_organization">{this.props.loggedInUserData.organization && this.props.loggedInUserData.organization.name}</span>
+                </div>
             </div>
             <div id="navbar" className="collapse navbar-collapse" role="navigation">
               <a id="navigation-anchor"></a>
