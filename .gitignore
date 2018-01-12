@@ -71,3 +71,8 @@ target/
 
 # VirtualEnv
 venv/
+functional-tests/.classpath
+functional-tests/.project
+functional-tests/.settings/org.eclipse.buildship.core.prefs
+functional-tests/bin
+
