@@ -42,7 +42,7 @@ node('bddstack') {
     dir('functional-tests') {
       try {
           echo ">> FT_LOG_LEVEL=${FT_LOG_LEVEL}"
-          sh './gradlew --\"${FT_LOG_LEVEL}\" --stacktrace chromeHeadlessTest'
+          sh "./gradlew --${FT_LOG_LEVEL} --stacktrace chromeHeadlessTest"
       } finally {
           archiveArtifacts allowEmptyArchive: true, artifacts: 'build/reports/**/*'
           archiveArtifacts allowEmptyArchive: true, artifacts: 'build/test-results/**/*'
