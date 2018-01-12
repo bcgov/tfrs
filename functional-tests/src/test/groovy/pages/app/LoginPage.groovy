@@ -9,7 +9,6 @@ class LoginPage extends Page {
         userName { $("#user") }
         passWord {  $("#password") }
         logIn { $("input", type:"submit", value:"Continue") }
-        userDiplayname {$("span",id:"displayname")}
     }
 }
 
