@@ -165,7 +165,7 @@ class TestAuthentication(TestCase):
 
         org_status = OrganizationStatus.objects.get(pk=1)
         org_actions_type = OrganizationActionsType.objects.get(pk=1)
-        org_type = OrganizationType.objects.get(pk=1)
+        org_type = OrganizationType.objects.get(pk=2)
 
         external_organization = Organization.objects.create(
             name="Test", status=org_status, actions_type=org_actions_type,
