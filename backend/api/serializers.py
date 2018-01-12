@@ -103,7 +103,7 @@ class OrganizationSerializer(serializers.ModelSerializer):
         model = Organization
         fields = (
             'id', 'name', 'status', 'actions_type',
-            'create_timestamp')
+            'create_timestamp', 'type')
 
 
 class OrganizationActionsTypeSerializer(serializers.ModelSerializer):

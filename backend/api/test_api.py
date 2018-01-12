@@ -2,8 +2,6 @@ import json
 from django.test import TestCase, Client
 
 from rest_framework import status
-
-from pprint import pprint
 import datetime
 
 from api import fake_api_calls
@@ -237,6 +235,11 @@ class TestCreditTradeAPI(TestCase):
         self.assertTrue(
             set(credit_trade_status).issubset(
                 response_data['status']))
+
+    def test_get_fuel_suppliers_only(self):
+        response_data = fake_api_calls.get_fuel_suppliers()
+        for r in response_data:
+            assert r['type'] == 2
 
     def test_approved_buy(self, **kwargs):
         # get fuel supplier balance for fs 1
