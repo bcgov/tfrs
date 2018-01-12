@@ -1,7 +1,7 @@
 [
     {
         "fields": {
-            "type_id": "3",
+            "type_id": "2",
             "actions_type": "1",
             "status": "1",
             "name": "Air Liquide Canada Inc."
@@ -11,7 +11,7 @@
     },
     {
         "fields": {
-        "type_id": 1,
+        "type_id": "2",
             "actions_type": "1",
             "status": "1",
             "name": "BC Hydro"
@@ -21,7 +21,7 @@
     },
     {
         "fields": {
-            "type_id": "3",
+            "type_id": "2",
             "actions_type": "1",
             "status": "1",
             "name": "BC Transit"
@@ -31,7 +31,7 @@
     },
     {
         "fields": {
-            "type_id": "3",
+            "type_id": "2",
             "actions_type": "1",
             "status": "1",
             "name": "Cal-Gas Inc., Canwest Propane"
@@ -41,7 +41,7 @@
     },
     {
         "fields": {
-            "type_id": "3",
+            "type_id": "2",
             "actions_type": "1",
             "status": "1",
             "name": "Chevron Canada Limited"
@@ -51,7 +51,7 @@
     },
     {
         "fields": {
-            "type_id": "3",
+            "type_id": "2",
             "actions_type": "2",
             "status": "1",
             "name": "Consolidated Biofuels Ltd."
@@ -61,7 +61,7 @@
     },
     {
         "fields": {
-            "type_id": "3",
+            "type_id": "2",
             "actions_type": "2",
             "status": "1",
             "name": "eco-Options Energy Cooperative"
@@ -71,7 +71,7 @@
     },
     {
         "fields": {
-            "type_id": "3",
+            "type_id": "2",
             "actions_type": "1",
             "status": "1",
             "name": "Emterra Environmental"
@@ -81,7 +81,7 @@
     },
     {
         "fields": {
-            "type_id": "3",
+            "type_id": "2",
             "actions_type": "1",
             "status": "1",
             "name": "Federated Co-Operatives Ltd."
@@ -91,7 +91,7 @@
     },
     {
         "fields": {
-            "type_id": "3",
+            "type_id": "2",
             "actions_type": "1",
             "status": "1",
             "name": "FortisBC Energy Inc."
@@ -101,7 +101,7 @@
     },
     {
         "fields": {
-            "type_id": "3",
+            "type_id": "2",
             "actions_type": "1",
             "status": "1",
             "name": "HTEC Hydrogen Technology &"
@@ -111,7 +111,7 @@
     },
     {
         "fields": {
-            "type_id": "3",
+            "type_id": "2",
             "actions_type": "2",
             "status": "1",
             "name": "Energy Corporation"
@@ -121,7 +121,7 @@
     },
     {
         "fields": {
-            "type_id": "3",
+            "type_id": "2",
             "actions_type": "1",
             "status": "1",
             "name": "Husky Oil Ltd."
@@ -131,7 +131,7 @@
     },
     {
         "fields": {
-            "type_id": "3",
+            "type_id": "2",
             "actions_type": "1",
             "status": "1",
             "name": "Imperial Oil Limited & McColl"
@@ -141,7 +141,7 @@
     },
     {
         "fields": {
-            "type_id": "3",
+            "type_id": "2",
             "actions_type": "1",
             "status": "1",
             "name": "Frontenac Petroleum Inc."
@@ -151,7 +151,7 @@
     },
     {
         "fields": {
-            "type_id": "3",
+            "type_id": "2",
             "actions_type": "1",
             "status": "1",
             "name": "Powerex Corporation"
@@ -161,7 +161,7 @@
     },
     {
         "fields": {
-            "type_id": "3",
+            "type_id": "2",
             "actions_type": "1",
             "status": "1",
             "name": "Powertech Labs Inc."
@@ -171,7 +171,7 @@
     },
     {
         "fields": {
-            "type_id": "3",
+            "type_id": "2",
             "actions_type": "2",
             "status": "1",
             "name": "Shell Canada Products"
@@ -181,7 +181,7 @@
     },
     {
         "fields": {
-            "type_id": "3",
+            "type_id": "2",
             "actions_type": "2",
             "status": "1",
             "name": "Smithrite Disposal Limited"
@@ -191,7 +191,7 @@
     },
     {
         "fields": {
-            "type_id": "3",
+            "type_id": "2",
             "actions_type": "1",
             "status": "1",
             "name": "South Coast British Columbia"
@@ -201,7 +201,7 @@
     },
     {
         "fields": {
-            "type_id": "3",
+            "type_id": "2",
             "actions_type": "1",
             "status": "1",
             "name": "Transportation Authority (TransLink)"
@@ -211,7 +211,7 @@
     },
     {
         "fields": {
-            "type_id": "3",
+            "type_id": "2",
             "actions_type": "1",
             "status": "1",
             "name": "Suncor Energy Products Partnership"
@@ -221,7 +221,7 @@
     },
     {
         "fields": {
-            "type_id": "3",
+            "type_id": "2",
             "actions_type": "1",
             "status": "1",
             "name": "Superior Propane"
@@ -231,7 +231,7 @@
     },
     {
         "fields": {
-            "type_id": "3",
+            "type_id": "2",
             "actions_type": "3",
             "status": "2",
             "name": "Super Save Group"

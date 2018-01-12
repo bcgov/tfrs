@@ -6,6 +6,8 @@ from rest_framework.response import Response
 from api.models.Organization import Organization
 from api.models.OrganizationBalance import OrganizationBalance
 from api.models.OrganizationHistory import OrganizationHistory
+from api.models.OrganizationType import OrganizationType
+
 from api.serializers import OrganizationSerializer
 from api.serializers import OrganizationBalanceSerializer
 from api.serializers import OrganizationHistorySerializer
@@ -25,7 +27,7 @@ class OrganizationViewSet(AuditableMixin, viewsets.ModelViewSet):
     serializer_classes = {
         'balance': OrganizationBalanceSerializer,
         'default': OrganizationSerializer,
-        'history': OrganizationHistorySerializer
+        'history': OrganizationHistorySerializer,
     }
 
     def get_serializer_class(self):
@@ -79,3 +81,11 @@ class OrganizationViewSet(AuditableMixin, viewsets.ModelViewSet):
         organization = self.get_object()
         users = organization.users.all()
         return Response([user.display_name for user in users])
+
+    @list_route(methods=['get'])
+    def fuel_suppliers(self, request):
+        fuel_suppliers = Organization.objects.filter(
+            type=OrganizationType.objects.get(type="Part3FuelSupplier"))
+
+        serializer = self.get_serializer(fuel_suppliers, many=True)
+        return Response(serializer.data)
