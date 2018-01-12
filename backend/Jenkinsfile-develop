@@ -2,9 +2,10 @@ node('python') {
     stage('Unit Test') {
         checkout scm
         try {
-        sh 'cd backend && pip install --upgrade pip && pip install -r requirements.txt && python ./manage.py test'
+            sh 'cd backend && pip install --upgrade pip && pip install -r requirements.txt && python ./manage.py test'
         } catch(Throwable t) {
             mail (to: 'Kuan.Fan@gov.bc.ca,Daine.Trinidad@gov.bc.ca,Raj.Persram@gov.bc.ca', subject: "FYI: Job '${env.JOB_NAME}' (${env.BUILD_NUMBER}) unit test failed", body: "See ${env.BUILD_URL} for details. ");
+            System.exit(1)
         }
     }
 }
