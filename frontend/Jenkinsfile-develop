@@ -41,7 +41,8 @@ node('bddstack') {
     checkout scm
     dir('functional-tests') {
       try {
-          sh "./gradlew --${FT_LOG_LEVEL} --stacktrace chromeHeadlessTest"
+          echo ">> FT_LOG_LEVEL=${FT_LOG_LEVEL}"
+          sh './gradlew --\"${FT_LOG_LEVEL}\" --stacktrace chromeHeadlessTest'
       } finally {
           archiveArtifacts allowEmptyArchive: true, artifacts: 'build/reports/**/*'
           archiveArtifacts allowEmptyArchive: true, artifacts: 'build/test-results/**/*'
