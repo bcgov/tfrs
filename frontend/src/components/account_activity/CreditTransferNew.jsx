@@ -2,14 +2,15 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import * as ReducerTypes from '../../constants/reducerTypes.jsx';
 import * as Values from '../../constants/values.jsx';
+import { CREDIT_TRANSFER_STATUS, CREDIT_TRANSFER_TYPES } from '../../constants/values.jsx'
 import * as Routes from '../../constants/routes.jsx';
 import { Modal } from 'react-bootstrap';
+import { getLoggedInUser } from '../../actions/userActions.jsx';
 import { 
-  getCreditTransfer,
   getCreditTransferReset,
   addCreditTransfer,
   addCreditTransferReset } from '../../actions/accountActivityActions.jsx';
-import { getOrganizations } from '../../actions/organizationActions.jsx';
+import { getFuelSuppliers } from '../../actions/organizationActions.jsx';
 import { BootstrapTable, TableHeaderColumn, ButtonGroup } from 'react-bootstrap-table';
 import TransactionHistory from './TransactionHistory.jsx';
 
@@ -17,10 +18,36 @@ class CreditTransferNew extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      creditTradeTypeFK: '',
-      valuePerCredit: '',
-      numberOfCredits: '',
+      creditTransfer: {
+        initiator: null,
+        typeId: CREDIT_TRANSFER_TYPES.buy.id,
+        numberOfCredits: 0,
+        respondent: null,
+        fairMarketValuePerCredit: 0.00,
+        note: ""
+      }
     };
+  }
+
+  componentDidMount() {
+    console.log("statuses", CREDIT_TRANSFER_STATUS);
+    console.log("logged in user", this.props.loggedInUserData);
+    this.props.getFuelSuppliers();
+    this.props.getLoggedInUser();
+
+    this.state = {
+      creditTransfer: {
+        initiator: this.props.loggedInUserData.organization.id,
+        typeId: CREDIT_TRANSFER_TYPES.buy.id,
+        numberOfCredits: 0,
+        respondent: null,
+        fairMarketValuePerCredit: 0.00,
+        note: ""
+      }
+    };
+  }
+
+  componentDidUpdate(prevProps, prevState) {
   }
 
   componentWillUnmount() {
@@ -38,23 +65,23 @@ class CreditTransferNew extends Component {
 
   handleSubmit(event, status) {
     event.preventDefault();
-    const initiatorFK = this.props.organizations[0].id;
-    const creditTradeTypeFK = this.creditTradeTypeFK.value;
-    const numberOfCredits = this.numberOfCredits.value;
-    const respondentFK = this.respondent.value;
+    const initiator = this.props.loggedInUserData.organization.id;
+    const creditTradeTypeFK = this.creditTransfer.value;
+    const numberOfCredits = this.creditTransfer.numberOfCredits.value;
+    const respondent = this.respondent.value;
     const valuePerCredit = this.valuePerCredit.value;
-    const creditTradeStatusFK = status
     const note = this.note.value;
     const data = {
-      initiatorFK: initiatorFK,
+      initiator: initiator,
       numberOfCredits: numberOfCredits,
-      respondentFK: respondentFK,
+      respondent: respondent,
       valuePerCredit: valuePerCredit,
       note: note,
-      creditTradeStatusFK: creditTradeStatusFK,
+      status: status.id,
       creditTradeTypeFK: creditTradeTypeFK
     }
-    this.props.addCreditTransfer(data);
+    console.log(data)
+    // this.props.addCreditTransfer(data);
   }
   
   render() {
@@ -72,14 +99,15 @@ class CreditTransferNew extends Component {
         <div className="credit-transfer-details">
           <form className="form-inline" onSubmit={(event, status) => this.handleSubmit(event, Values.STATUS_PROPOSED)}>
             <div className="main-form">
-              <span>{this.props.organizations && this.props.organizations[0].name} proposes to </span>
+              <span>{this.props.loggedInUserData.organization && this.props.loggedInUserData.organization.name} proposes to </span>
               <div className="form-group">
                 <select 
                   className="form-control" 
                   id="proposal-type" 
-                  name="creditTradeTypeFK"
-                  ref={(input) => this.creditTradeTypeFK = input}
-                  onChange={(event) => this.handleInputChange(event)}>
+                  name="creditTradeType"
+                  // ref={(input) => this.creditTransfer.type = input}
+                  value={this.state.creditTransfer.typeId}
+                  onChange={this.handleInputChange}>
                   <option value="1">Sell</option>
                   <option value="2">Buy</option>
                 </select>
@@ -91,8 +119,9 @@ class CreditTransferNew extends Component {
                   id="number-of-credits" 
                   defaultValue="0"
                   name="numberOfCredits"
-                  onChange={(event) => this.handleInputChange(event)}
-                  ref={(input) => this.numberOfCredits = input} />
+                  value={this.state.creditTransfer.numberOfCredits}
+                  onChange={this.handleInputChange} />
+                  {/* ref={(input) => this.numberOfCredits = input} />*/}
               </div>
               <span>{this.state.creditTradeTypeFK === "Buy" ? "credits from " : "credits to "}</span>
               <div className="form-group">
@@ -102,22 +131,29 @@ class CreditTransferNew extends Component {
                   name="respondent"
                   ref={(input) => this.respondent = input}
                   onChange={(event) => this.handleInputChange(event)}>
-                  { this.props.organizations &&
-                    this.props.organizations.map((organization) => (
-                      <option value={organization.id}>{organization.name}</option>
-                  ))}
+                  { this.props.fuelSuppliers &&
+                    this.props.fuelSuppliers.map((organization) => {
+                      return (this.props.loggedInUserData.organization.id != organization.id) && 
+                        <option key={organization.id} value={organization.id}>{organization.name}</option>
+                    }
+                  )}
                 </select>
               </div>
               <span>for </span>
               <div className="form-group">
-                <input 
-                  type="number" 
-                  className="form-control" 
-                  id="value-per-credit" 
-                  name="valuePerCredit"
-                  defaultValue="0"
-                  onChange={(event) => this.handleInputChange(event)}
-                  ref={(input) => this.valuePerCredit = input} />
+                <div className="input-group">
+                  <span className="input-group-addon">$</span>
+                  <input 
+                    type="number" 
+                    data-number-to-fixed="2"
+                    className="form-control"
+                    id="value-per-credit" 
+                    name="valuePerCredit"
+                    placeholder="Amount"
+                    onChange={(event) => this.handleInputChange(event)}
+                    ref={(input) => this.valuePerCredit = input} />
+                  <div className="input-group-addon">.00</div>
+                </div>
               </div>
               <span>per credit for a total value of $</span>
               <span>{ this.state.valuePerCredit * this.state.numberOfCredits }</span>
@@ -147,7 +183,7 @@ class CreditTransferNew extends Component {
               <button 
                 type="button" 
                 className="btn btn-default"
-                onClick={(event, status) => this.handleSubmit(event, Values.STATUS_DRAFT)}>
+                onClick={(event, status) => this.handleSubmit(event, CREDIT_TRANSFER_STATUS.draft)}>
                 Save Draft
               </button>
               <button 
@@ -158,7 +194,6 @@ class CreditTransferNew extends Component {
             </div>
           </form>
         </div>
-        <TransactionHistory />
       </div>
     );
   }
@@ -167,13 +202,11 @@ class CreditTransferNew extends Component {
 export default connect (
   state => ({
     data: state.rootReducer[ReducerTypes.GET_CREDIT_TRANSFER].data,
-    organizations: state.rootReducer[ReducerTypes.GET_ORGANIZATIONS].data,
-    addCreditTransferError: state.rootReducer[ReducerTypes.ADD_CREDIT_TRANSFER].errorMessage
+    addCreditTransferError: state.rootReducer[ReducerTypes.ADD_CREDIT_TRANSFER].errorMessage,
+    fuelSuppliers: state.rootReducer[ReducerTypes.GET_ORGANIZATIONS_FUEL_SUPPLIERS].data,
+    loggedInUserData: state.rootReducer[ReducerTypes.GET_LOGGED_IN_USER].data,
   }),
   dispatch => ({
-    getCreditTransfer: (id) => {
-      dispatch(getCreditTransfer(id));
-    },
     addCreditTransfer: (data) => {
       dispatch(addCreditTransfer(data));
     },
@@ -183,8 +216,11 @@ export default connect (
     getCreditTransferReset: () => {
       dispatch(getCreditTransferReset());
     },
-    getOrganizations: () => {
-      dispatch(getOrganizations());
-    }
+    getFuelSuppliers: () => {
+      dispatch(getFuelSuppliers());
+    },
+    getLoggedInUser: () => {
+      dispatch(getLoggedInUser());
+    },
   })
 )(CreditTransferNew)

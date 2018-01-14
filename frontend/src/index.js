@@ -6,29 +6,29 @@ import { push, ConnectedRouter } from 'react-router-redux';
 import createHistory from 'history/createHashHistory'; // 'history/createHashHistory' for  '#'
 import * as Routes from './constants/routes.jsx';
 import store from './store/store.jsx';
-import {
-	getOrganizationActionTypes,
-	getOrganizationStatuses,
-	getOrganizationTypes,
-	getOrganizationContacts,
-	getOrganizationAttachments,
-	getOrganizations
-} from './actions/organizationActions.jsx';
-import { 
-	getUsers,
-	getPermissions,
-	getRolePermissions,
-	getRoles,
-	getUserRoles
- } from './actions/userActions.jsx';
-import { 
-	getCreditTrades,
-	getCreditTradeStatuses,
-	getCreditTradeTypes
-	} from './actions/creditTradesActions.jsx';
-import {
-	getAccountActivity
-	} from './actions/accountActivityActions.jsx'
+// import {
+// 	getOrganizationActionTypes,
+// 	getOrganizationStatuses,
+// 	getOrganizationTypes,
+// 	getOrganizationContacts,
+// 	getOrganizationAttachments,
+// 	getOrganizations
+// } from './actions/organizationActions.jsx';
+// import { 
+// 	getUsers,
+// 	getPermissions,
+// 	getRolePermissions,
+// 	getRoles,
+// 	getUserRoles
+//  } from './actions/userActions.jsx';
+// import { 
+// 	getCreditTrades,
+// 	getCreditTradeStatuses,
+// 	getCreditTradeTypes
+// 	} from './actions/creditTradesActions.jsx';
+// import {
+// 	getAccountActivity
+// 	} from './actions/accountActivityActions.jsx'
 import App from './components/App.jsx';
 import Dashboard from './components/dashboard/Dashboard.jsx';
 import Organizations from './components/organizations/Organizations.jsx';
@@ -40,19 +40,20 @@ import Administration from './components/administration/Administration.jsx';
 import Settings from './components/settings/Settings.jsx';
 import OrganizationDetails from './components/organizations/OrganizationDetails.jsx';
 import NotFound from './components/reusables/NotFound.jsx';
+import CreditTransferListContainer from './credit_transfers/CreditTransferListContainer.js';
 
 import '../styles/index.scss';
 
 const history = createHistory();
 
-store.dispatch(getUsers());
-store.dispatch(getPermissions());
-store.dispatch(getRolePermissions());
-store.dispatch(getRoles());
-store.dispatch(getUserRoles());
-store.dispatch(getCreditTrades());
-store.dispatch(getCreditTradeStatuses());
-store.dispatch(getCreditTradeTypes());
+// store.dispatch(getUsers());
+// store.dispatch(getPermissions());
+// store.dispatch(getRolePermissions());
+// store.dispatch(getRoles());
+// store.dispatch(getUserRoles());
+// store.dispatch(getCreditTrades());
+// store.dispatch(getCreditTradeStatuses());
+// store.dispatch(getCreditTradeTypes());
 
 
 ReactDOM.render(
@@ -70,6 +71,7 @@ ReactDOM.render(
 						<Route path={Routes.NOTIFICATIONS} component={withRouter(Notifications)} />									
 						<Route path={Routes.ADMINISTRATION} component={withRouter(Administration)} />		
 						<Route path={Routes.SETTINGS} component={withRouter(Settings)} />	
+						<Route path="/credit_transfers" component={withRouter(CreditTransferListContainer)} />	
 						<Route component={NotFound} />															
 					</Switch>
 				</App> 

@@ -11,7 +11,6 @@ class Navbar extends Component {
 
     this.props.getLoggedInUser();
 
-    console.log("login user data", this.props.loggedInUserData)
   }
 
   render() {
