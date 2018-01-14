@@ -26,6 +26,8 @@ export const ORGANIZATION_HISTORIES = '/organizationhistories';
 export const ORGANIZATION_STATUSES = '/organizationstatuses';
 export const ORGANIZATION_TYPES = '/organizationtypes';
 export const SEARCH_ORGANIZATIONS = '/organizations/search';
+export const ORGANIZATIONS_FUEL_SUPPLIERS = '/organizations/fuel_suppliers';
+
 
 export const CREDIT_TRADE_API = '/credit_trades';
 export const SEARCH_CREDIT_TRADES = '/credittrades/search';

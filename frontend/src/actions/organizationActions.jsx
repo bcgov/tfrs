@@ -37,6 +37,40 @@ const getOrganizationsError = (error) => {
   }
 }
 
+export const getFuelSuppliers = () => (dispatch, getState) => {
+  dispatch(getFuelSuppliersRequest());
+  console.log("getting fuel suppliers")
+  axios.get(Routes.BASE_URL + Routes.ORGANIZATIONS_FUEL_SUPPLIERS)
+  .then((response) => {   
+    dispatch(getFuelSuppliersSuccess(response.data));
+  }).catch((error) => {
+    dispatch(getFuelSuppliersError(error.response))
+  })
+}
+
+const getFuelSuppliersRequest = () => {
+  return {
+    name: ReducerTypes.GET_ORGANIZATIONS_FUEL_SUPPLIERS,
+    type: ActionTypes.REQUEST,
+  }
+}
+
+const getFuelSuppliersSuccess = (fuelSuppliers) => {
+  return {
+    name: ReducerTypes.GET_ORGANIZATIONS_FUEL_SUPPLIERS,
+    type: ActionTypes.SUCCESS,
+    data: fuelSuppliers,
+  }
+}
+
+const getFuelSuppliersError = (error) => {
+  return {
+    name: ReducerTypes.GET_ORGANIZATIONS_FUEL_SUPPLIERS,
+    type: ActionTypes.ERROR,
+    errorMessage: error
+  }
+}
+
 export const searchOrganizations = (name, city) => (dispatch) => {
 }
 
