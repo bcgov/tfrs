@@ -173,6 +173,10 @@
     .form-group {
     margin: 0.5rem 0.5rem 0.5rem 0;
     }
+
+    input[type="number"]{
+      text-align: right;
+    }
   }
 
   .note {

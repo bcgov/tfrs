@@ -1,5 +1,8 @@
 import * as ActionTypes from '../constants/actionTypes.jsx';
 import * as ReducerTypes from '../constants/reducerTypes.jsx';
+
+import { creditTransfer, creditTransfers } from './creditTransferReducer.js';
+
 import { routerReducer as routing } from 'react-router-redux';
 import { combineReducers } from 'redux';
 
@@ -26,7 +29,7 @@ const genericRequest = (state = {
                 isFetching: false,
                 success: false,
                 errorMessage: action.errorMessage,
-            })
+            })  
         case ActionTypes.RESET:
             return Object.assign({}, state, {
                 isFetching: false,
@@ -47,10 +50,16 @@ function createReducer(reducerFunction, reducerName) {
     }
 }
 
+// const creditTransferReducers = combineReducers({
+//   creditTransfer,
+//   creditTransfers
+// });
+
 const rootReducer = combineReducers({
     [ReducerTypes.GET_ACCOUNT_ACTIVITY]: createReducer(genericRequest, ReducerTypes.GET_ACCOUNT_ACTIVITY),
     [ReducerTypes.ACCEPT_CREDIT_TRANSFER]: createReducer(genericRequest, ReducerTypes.ACCEPT_CREDIT_TRANSFER),
     [ReducerTypes.GET_ORGANIZATIONS]: createReducer(genericRequest, ReducerTypes.GET_ORGANIZATIONS),
+    [ReducerTypes.GET_ORGANIZATIONS_FUEL_SUPPLIERS]: createReducer(genericRequest, ReducerTypes.GET_ORGANIZATIONS_FUEL_SUPPLIERS),
     [ReducerTypes.GET_ORGANIZATION]: createReducer(genericRequest, ReducerTypes.GET_ORGANIZATION),
     [ReducerTypes.SEARCH_ORGANIZATIONS]: createReducer(genericRequest, ReducerTypes.SEARCH_ORGANIZATIONS),
     [ReducerTypes.ADD_ORGANIZATION]: createReducer(genericRequest, ReducerTypes.ADD_ORGANIZATION),
@@ -79,7 +88,9 @@ const rootReducer = combineReducers({
     [ReducerTypes.ROLES]: createReducer(genericRequest, ReducerTypes.ROLES),    
     [ReducerTypes.USER_ROLES]: createReducer(genericRequest, ReducerTypes.USER_ROLES),    
     [ReducerTypes.CREDIT_TRADE_STATUSES]: createReducer(genericRequest, ReducerTypes.CREDIT_TRADE_STATUSES),    
-    [ReducerTypes.CREDIT_TRADE_TYPES]: createReducer(genericRequest, ReducerTypes.CREDIT_TRADE_TYPES),    
+    [ReducerTypes.CREDIT_TRADE_TYPES]: createReducer(genericRequest, ReducerTypes.CREDIT_TRADE_TYPES),   
+    creditTransfer,
+    creditTransfers, 
     routing, 
 });
 export default rootReducer;
