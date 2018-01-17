@@ -3,7 +3,7 @@ import pages.app.DashboardPage
 import pages.app.LoginPage
 import spock.lang.Unroll
 
-class LoginSpecs extends GebReportingSpec {
+class AoginSpecs extends GebReportingSpec {
 
     def "Login with BCEID"(){
         given: "I want to access TFRS"
@@ -17,6 +17,6 @@ class LoginSpecs extends GebReportingSpec {
         then: "I should see the TFRS Dashboard"
             at DashboardPage
         and: "the full displayname of the logged-in user should be shown"    
-            assert userDiplayname.text() == "Roland Stens"
+            assert displayname.text() == "Roland Stens"
     }
 }
