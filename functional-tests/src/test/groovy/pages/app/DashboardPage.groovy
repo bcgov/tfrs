@@ -7,6 +7,6 @@ class DashboardPage extends Page implements ReactJSAware {
     static at = { reactReady && title == "TFRS" && $("h2")[0].text() == "Account Balance" }
     static url = "#/"
     static content = {
-        displayname { $("span", id:"display_name") }
+        displayname { $("h5", id:"display_name") }
     }
 }
