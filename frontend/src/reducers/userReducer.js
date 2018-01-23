@@ -1,45 +1,47 @@
 import * as ActionTypes from '../constants/actionTypes';
 
-const creditTransfer = (state = {
+const userRequest = (state = {
   isFetching: false,
-  didInvalidate: false,
-  item: {}
+  requestStarted: false,
+  serverError: false,
+  isAuthenticated: false,
+  loggedInUser: {},
+  error: {}
 }, action) => {
+  console.log('switch', action.type, action.errorData);
   switch (action.type) {
-    case ActionTypes.CREATE_CREDIT_TRANSFER:
-      return [
-        ...state,
-        Object.assign({}, action.data)];
-    case ActionTypes.UPDATE_CREDIT_TRANSFER:
-      return [
-        ...state,
-        Object.assign({}, action.data)];
-    case ActionTypes.DELETE_REQUEST_ITEM:
-      return [
-        ...state,
-        Object.assign({}, action.data)];
-    case ActionTypes.GET_REQUEST_ITEM:
+    case ActionTypes.GET_LOGGED_IN_USER:
       return Object.assign({}, state, {
         isFetching: true,
-        item: {},
-        didInvalidate: false
+        requestStarted: true,
+        isAuthenticated: false,
+        loggedInUser: {}
       });
-    case ActionTypes.RECEIVE_REQUEST_ITEM:
+    case ActionTypes.RECEIVE_LOGGED_IN_USER:
       return Object.assign({}, state, {
         isFetching: false,
-        didInvalidate: false,
-        item: action.data
+        requestStarted: true,
+        isAuthenticated: true,
+        loggedInUser: action.data
+      });
+    case ActionTypes.ERROR_LOGGED_IN_USER:
+      return Object.assign({}, state, {
+        isFetching: false,
+        requestStarted: true,
+        isAuthenticated: false,
+        serverError: true,
+        loggedInUser: {},
+        error: action.errorData
       });
     default:
       return state;
   }
 };
 
-const creditTransfers = (state = {
+const usersRequest = (state = {
   items: [],
-  isFetching: false,
   success: false,
-  errorMessage: []
+  error: []
 }, action) => {
   switch (action.type) {
     case ActionTypes.GET_CREDIT_TRANSFERS:
@@ -57,11 +59,11 @@ const creditTransfers = (state = {
       return Object.assign({}, state, {
         isFetching: false,
         success: false,
-        errorMessage: action.errorMessage
+        error: action.errorData
       });
     default:
       return state;
   }
 };
 
-export { creditTransfer, creditTransfers };
+export { userRequest, usersRequest };

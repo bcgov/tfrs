@@ -1,50 +1,48 @@
-import * as ActionTypes from '../constants/actionTypes.jsx';
-import * as ReducerTypes from '../constants/reducerTypes.jsx';
 import axios from 'axios';
-import * as Routes from '../constants/routes.jsx';
+
+import * as ActionTypes from '../constants/actionTypes';
+import * as ReducerTypes from '../constants/reducerTypes';
+import * as Routes from '../constants/routes';
 
 export const getUsers = () => (dispatch) => {
   dispatch(getUsersRequest());
   axios.get(Routes.BASE_URL + Routes.USERS)
-  .then((response) => {
-    dispatch(getUsersSuccess(response.data));
-  }).catch((error) => {
-    dispatch(getUsersError(error.response))
-  })
-}
+    .then((response) => {
+      dispatch(getUsersSuccess(response.data));
+    }).catch((error) => {
+      dispatch(getUsersError(error.response));
+    });
+};
 
 export const getLoggedInUser = () => (dispatch) => {
   dispatch(getLoggedInUserRequest());
-  axios.get(Routes.BASE_URL + Routes.USERS + '/current')
-  .then((response) => {
-    dispatch(getLoggedInUserSuccess(response.data));
-  }).catch((error) => {
-    dispatch(getLoggedInUserError(error.response))
-  })
-}
+  axios.get(Routes.BASE_URL + Routes.CURRENT_USER)
+    .then((response) => {
+      // localStorage.setItem('isAuthenticated', true);
+      // localStorage.setItem('loggedInUser', response.data);
 
-const getLoggedInUserRequest = () => {
-  return {
-    name: ReducerTypes.GET_LOGGED_IN_USER,
-    type: ActionTypes.REQUEST,
-  }
-}
+      dispatch(getLoggedInUserSuccess(response.data));
+    }).catch((error) => {
+      dispatch(getLoggedInUserError(error.response));
+    });
+};
 
-const getLoggedInUserSuccess = (contacts) => {
-  return {
-    name: ReducerTypes.GET_LOGGED_IN_USER,
-    type: ActionTypes.SUCCESS,
-    data: contacts,
-  }
-}
+const getLoggedInUserRequest = () => ({
+  name: ReducerTypes.GET_LOGGED_IN_USER,
+  type: ActionTypes.GET_LOGGED_IN_USER
+});
 
-const getLoggedInUserError = (error) => {
-  return {
-    name: ReducerTypes.GET_LOGGED_IN_USER,
-    type: ActionTypes.ERROR,
-    errorMessage: error
-  }
-}
+const getLoggedInUserSuccess = loggedInUser => ({
+  name: ReducerTypes.GET_LOGGED_IN_USER,
+  type: ActionTypes.RECEIVE_LOGGED_IN_USER,
+  data: loggedInUser
+});
+
+const getLoggedInUserError = error => ({
+  name: ReducerTypes.GET_LOGGED_IN_USER,
+  type: ActionTypes.ERROR_LOGGED_IN_USER,
+  errorData: error
+});
 
 const getUsersRequest = () => {
   return {
