@@ -6,7 +6,7 @@ import { CREDIT_TRANSFER_STATUS, CREDIT_TRANSFER_TYPES } from '../../constants/v
 import * as Routes from '../../constants/routes.jsx';
 import { Modal } from 'react-bootstrap';
 import { getLoggedInUser } from '../../actions/userActions.jsx';
-import { 
+import {
   getCreditTransferReset,
   addCreditTransfer,
   addCreditTransferReset } from '../../actions/accountActivityActions.jsx';
@@ -83,7 +83,7 @@ class CreditTransferNew extends Component {
     console.log(data)
     // this.props.addCreditTransfer(data);
   }
-  
+
   render() {
     return (
       <div className="credit-transfer">
@@ -101,22 +101,22 @@ class CreditTransferNew extends Component {
             <div className="main-form">
               <span>{this.props.loggedInUserData.organization && this.props.loggedInUserData.organization.name} proposes to </span>
               <div className="form-group">
-                <select 
-                  className="form-control" 
-                  id="proposal-type" 
+                <select
+                  className="form-control"
+                  id="proposal-type"
                   name="creditTradeType"
                   // ref={(input) => this.creditTransfer.type = input}
-                  value={this.state.creditTransfer.typeId}
+                    value={this.state.creditTransfer.typeId}
                   onChange={this.handleInputChange}>
                   <option value="1">Sell</option>
                   <option value="2">Buy</option>
                 </select>
               </div>
               <div className="form-group">
-                <input 
-                  type="number" 
-                  className="form-control" 
-                  id="number-of-credits" 
+                <input
+                  type="number"
+                  className="form-control"
+                  id="number-of-credits"
                   defaultValue="0"
                   name="numberOfCredits"
                   value={this.state.creditTransfer.numberOfCredits}
@@ -125,15 +125,15 @@ class CreditTransferNew extends Component {
               </div>
               <span>{this.state.creditTradeTypeFK === "Buy" ? "credits from " : "credits to "}</span>
               <div className="form-group">
-                <select 
-                  className="form-control" 
-                  id="respondent" 
+                <select
+                  className="form-control"
+                  id="respondent"
                   name="respondent"
                   ref={(input) => this.respondent = input}
                   onChange={(event) => this.handleInputChange(event)}>
                   { this.props.fuelSuppliers &&
                     this.props.fuelSuppliers.map((organization) => {
-                      return (this.props.loggedInUserData.organization.id != organization.id) && 
+                      return (this.props.loggedInUserData.organization.id != organization.id) &&
                         <option key={organization.id} value={organization.id}>{organization.name}</option>
                     }
                   )}
@@ -143,11 +143,11 @@ class CreditTransferNew extends Component {
               <div className="form-group">
                 <div className="input-group">
                   <span className="input-group-addon">$</span>
-                  <input 
-                    type="number" 
+                  <input
+                    type="number"
                     data-number-to-fixed="2"
                     className="form-control"
-                    id="value-per-credit" 
+                    id="value-per-credit"
                     name="valuePerCredit"
                     placeholder="Amount"
                     onChange={(event) => this.handleInputChange(event)}
@@ -166,28 +166,28 @@ class CreditTransferNew extends Component {
             }
             <div className="form-group note">
               <label htmlFor="comment">Note:</label>
-              <textarea 
-                className="form-control" 
-                rows="5" 
+              <textarea
+                className="form-control"
+                rows="5"
                 id="note"
                 ref={(input) => this.note = input}>
               </textarea>
             </div>
             <div className="btn-container">
-              <button 
-                type="button" 
+              <button
+                type="button"
                 className="btn btn-default"
                 onClick={() => this.props.history.push(Routes.ACCOUNT_ACTIVITY)}>
                 Cancel
               </button>
-              <button 
-                type="button" 
+              <button
+                type="button"
                 className="btn btn-default"
                 onClick={(event, status) => this.handleSubmit(event, CREDIT_TRANSFER_STATUS.draft)}>
                 Save Draft
               </button>
-              <button 
-                type="submit" 
+              <button
+                type="submit"
                 className="btn btn-primary">
                 Propose
               </button>
