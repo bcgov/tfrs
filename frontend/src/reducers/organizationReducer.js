@@ -1,57 +1,44 @@
 import * as ActionTypes from '../constants/actionTypes';
 
-const creditTransfer = (state = {
+const organizationRequest = (state = {
   isFetching: false,
   didInvalidate: false,
-  item: {}
+  fuelSupplier: {}
 }, action) => {
   switch (action.type) {
-    case ActionTypes.CREATE_CREDIT_TRANSFER:
-      return [
-        ...state,
-        Object.assign({}, action.data)];
-    case ActionTypes.UPDATE_CREDIT_TRANSFER:
-      return [
-        ...state,
-        Object.assign({}, action.data)];
-    case ActionTypes.DELETE_REQUEST_ITEM:
-      return [
-        ...state,
-        Object.assign({}, action.data)];
-    case ActionTypes.GET_REQUEST_ITEM:
+    case ActionTypes.GET_ORGANIZATION:
       return Object.assign({}, state, {
         isFetching: true,
-        item: {},
+        fuelSupplier: {},
         didInvalidate: false
       });
-    case ActionTypes.RECEIVE_REQUEST_ITEM:
+    case ActionTypes.RECEIVE_ORGANIZATION:
       return Object.assign({}, state, {
         isFetching: false,
         didInvalidate: false,
-        item: action.data
+        fuelSupplier: action.data
       });
     default:
       return state;
   }
 };
 
-const creditTransfers = (state = {
-  items: [],
-  isFetching: false,
+const fuelSuppliersRequest = (state = {
+  fuelSuppliers: [],
   success: false,
   errorMessage: []
 }, action) => {
   switch (action.type) {
-    case ActionTypes.GET_CREDIT_TRANSFERS:
+    case ActionTypes.GET_FUEL_SUPPLIERS:
       return Object.assign({}, state, {
         isFetching: true,
         success: false
       });
-    case ActionTypes.RECEIVE_CREDIT_TRANSFERS:
+    case ActionTypes.RECEIVE_FUEL_SUPPLIERS:
       return Object.assign({}, state, {
         isFetching: false,
         success: true,
-        items: action.data
+        fuelSuppliers: action.data
       });
     case ActionTypes.ERROR:
       return Object.assign({}, state, {
@@ -64,4 +51,4 @@ const creditTransfers = (state = {
   }
 };
 
-export { creditTransfer, creditTransfers };
+export { organizationRequest, fuelSuppliersRequest };

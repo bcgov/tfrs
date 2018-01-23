@@ -12,8 +12,7 @@ export const CREDIT_TRANSFER_DETAILS = '/credit_transfer/:id';
 export const NOT_FOUND = '/404';
 
 // API Routes
-export const BASE_URL = location.protocol + '//' + window.location.host + '/api';
-// console.log("API URL:", BASE_URL);
+export const BASE_URL = location.protocol + '//' + window.location.host + '/api-business';
 
 export const ORGANIZATIONS_API = '/organizations';
 export const ORGANIZATION_ACTION_TYPES = '/organizationactionstypes';
@@ -44,6 +43,8 @@ export const ROLE_PERMISSIONS = '/rolepermissions';
 export const ROLES = '/roles';
 export const USER_ROLES = '/userroles';
 export const USERS = '/users';
+export const CURRENT_USER = '/users/current';
+
 
 // Appended at the end of the route. Ideally this shouldn't be like this,
 // It should be an HTTP DELETE request.

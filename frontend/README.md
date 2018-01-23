@@ -23,8 +23,17 @@ This project is in development. To see the status of feature development please 
 $ npm install
 $ npm start
 ```
+
+
 ## Production
-On a linux server, simply run `npm run production` to trigger a build. Then, run `node server` to serve the static build
+On a linux server:
+```bash
+$ export NODE_ENV=production
+$ export PORT=3000
+
+$ npm run production
+$ node server
+```
 
 On windows, you can do either of the following:
 ```bat
