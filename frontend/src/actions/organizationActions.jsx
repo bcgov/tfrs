@@ -1,75 +1,62 @@
-import * as ActionTypes from '../constants/actionTypes.jsx';
-import * as ReducerTypes from '../constants/reducerTypes.jsx';
 import axios from 'axios';
-import * as Routes from '../constants/routes.jsx';
-import { organizations, organization } from '../sampleData.jsx';
+
+import * as ActionTypes from '../constants/actionTypes';
+import * as ReducerTypes from '../constants/reducerTypes';
+import * as Routes from '../constants/routes';
 
 export const getOrganizations = () => (dispatch, getState) => {
   dispatch(getOrganizationsRequest());
   axios.get(Routes.BASE_URL + Routes.ORGANIZATIONS_API)
-  .then((response) => {   
-    dispatch(getOrganizationsSuccess(response.data));
-  }).catch((error) => {
-    dispatch(getOrganizationsError(error.response))
-  })
-}
+    .then((response) => {
+      dispatch(getOrganizationsSuccess(response.data));
+    }).catch((error) => {
+      dispatch(getOrganizationsError(error.response));
+    });
+};
 
-const getOrganizationsRequest = () => {
-  return {
-    name: ReducerTypes.GET_ORGANIZATIONS,
-    type: ActionTypes.REQUEST,
-  }
-}
+const getOrganizationsRequest = () => ({
+  name: ReducerTypes.GET_ORGANIZATIONS,
+  type: ActionTypes.REQUEST
+});
 
-const getOrganizationsSuccess = (organizations) => {
-  return {
-    name: ReducerTypes.GET_ORGANIZATIONS,
-    type: ActionTypes.SUCCESS,
-    data: organizations,
-  }
-}
+const getOrganizationsSuccess = organizations => ({
+  name: ReducerTypes.GET_ORGANIZATIONS,
+  type: ActionTypes.SUCCESS,
+  data: organizations
+});
 
-const getOrganizationsError = (error) => {
-  return {
-    name: ReducerTypes.GET_ORGANIZATIONS,
-    type: ActionTypes.ERROR,
-    errorMessage: error
-  }
-}
+const getOrganizationsError = error => ({
+  name: ReducerTypes.GET_ORGANIZATIONS,
+  type: ActionTypes.ERROR,
+  errorMessage: error
+});
 
 export const getFuelSuppliers = () => (dispatch, getState) => {
   dispatch(getFuelSuppliersRequest());
-  console.log("getting fuel suppliers")
   axios.get(Routes.BASE_URL + Routes.ORGANIZATIONS_FUEL_SUPPLIERS)
-  .then((response) => {   
-    dispatch(getFuelSuppliersSuccess(response.data));
-  }).catch((error) => {
-    dispatch(getFuelSuppliersError(error.response))
-  })
-}
+    .then((response) => {
+      dispatch(getFuelSuppliersSuccess(response.data));
+    }).catch((error) => {
+      dispatch(getFuelSuppliersError(error.response));
+    });
+};
 
-const getFuelSuppliersRequest = () => {
-  return {
-    name: ReducerTypes.GET_ORGANIZATIONS_FUEL_SUPPLIERS,
-    type: ActionTypes.REQUEST,
-  }
-}
+const getFuelSuppliersRequest = () => ({
+  name: ReducerTypes.GET_ORGANIZATIONS_FUEL_SUPPLIERS,
+  type: ActionTypes.GET_FUEL_SUPPLIERS
+});
 
-const getFuelSuppliersSuccess = (fuelSuppliers) => {
-  return {
-    name: ReducerTypes.GET_ORGANIZATIONS_FUEL_SUPPLIERS,
-    type: ActionTypes.SUCCESS,
-    data: fuelSuppliers,
-  }
-}
+const getFuelSuppliersSuccess = fuelSuppliers => ({
+  name: ReducerTypes.GET_ORGANIZATIONS_FUEL_SUPPLIERS,
+  type: ActionTypes.RECEIVE_FUEL_SUPPLIERS,
+  data: fuelSuppliers
+});
 
-const getFuelSuppliersError = (error) => {
-  return {
-    name: ReducerTypes.GET_ORGANIZATIONS_FUEL_SUPPLIERS,
-    type: ActionTypes.ERROR,
-    errorMessage: error
-  }
-}
+const getFuelSuppliersError = (error) => ({
+  name: ReducerTypes.GET_ORGANIZATIONS_FUEL_SUPPLIERS,
+  type: ActionTypes.ERROR,
+  errorMessage: error
+});
 
 export const searchOrganizations = (name, city) => (dispatch) => {
 }
