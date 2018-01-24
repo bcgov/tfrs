@@ -12,17 +12,20 @@ class CreditTransferAddContainer extends Component {
   constructor (props) {
     super(props);
     this.state = {
-      initiator: {},
-      tradeType: { id: 0 },
-      numberOfCredits: '',
-      respondent: { id: 0, name: '' },
-      fairMarketValuePerCredit: '',
-      tradeStatus: { id: 0 },
-      totalValue: 0,
-      note: ''
+      fields: {
+        initiator: {},
+        tradeType: { id: 0 },
+        numberOfCredits: '',
+        respondent: { id: 0, name: '' },
+        fairMarketValuePerCredit: '',
+        tradeStatus: { id: 0 },
+        note: ''
+      },
+      totalValue: 0
     };
 
     this._handleInputChange = this._handleInputChange.bind(this);
+    this._handleSubmit = this._handleSubmit.bind(this);
   }
 
   componentDidMount () {
@@ -31,49 +34,60 @@ class CreditTransferAddContainer extends Component {
 
   componentWillReceiveProps (props) {
     // Set the initiator as the logged in user's organization
+    const fieldState = { ...this.state.fields };
+    fieldState.initiator = this.props.loggedInUser.organization;
     this.setState({
-      initiator: this.props.loggedInUser.organization
+      fields: fieldState
     });
   }
 
   _handleInputChange (event) {
     const { value, name } = event.target;
-    if (typeof this.state[name] === 'object') {
+    const fieldState = { ...this.state.fields };
+
+    if (typeof fieldState[name] === 'object') {
       this.changeObjectProp(parseInt(value, 10), name);
     } else {
-      this.setState({ [name]: value }, () => this.computeTotalValue(name));
+      fieldState[name] = value;
+      this.setState({
+        fields: fieldState
+      }, () => this.computeTotalValue(name));
     }
   }
 
   changeObjectProp (id, name) {
+    let fieldState = { ...this.state.fields };
     if (name === 'respondent') {
       const respondents = this.props.fuelSuppliers.filter((fuelSupplier) => {
-        return (fuelSupplier.id === id);
+        return fuelSupplier.id === id;
       });
-      if (respondents.length === 1) {
-        this.setState({ [name]: respondent[0] });
-      } else {
-        this.setState({ [name]: { id: 0 } });
-      }
+
+      fieldState.respondent = respondents.length === 1 ? respondents[0] : { id: 0 };
+      this.setState({
+        fields: fieldState
+      });
     } else {
-      this.setState({ [name]: { id: id || 0 } });
+      fieldState = { id: id || 0 };
+      this.setState({
+        fields: fieldState
+      });
     }
   }
 
-  handleSubmit (event, status) {
+  _handleSubmit (event, status) {
     event.preventDefault();
 
     console.log(event, status);
     console.log(this.state);
 
     const data = {
-      initiator: this.state.initiator.id,
-      number_of_credits: this.state.numberOfCredits,
-      respondent: this.respondent.id,
-      fair_market_value_per_credit: this.state.fairMarketValuePerCredit,
-      note: this.note,
+      initiator: this.state.fields.initiator.id,
+      number_of_credits: this.state.fields.numberOfCredits,
+      respondent: this.state.fields.respondent.id,
+      fair_market_value_per_credit: this.state.fields.fairMarketValuePerCredit,
+      note: this.state.fields.note,
       status: CREDIT_TRANSFER_STATUS.draft.id,
-      credit_trade_type: this.state.tradeType.id
+      credit_trade_type: this.state.fields.tradeType.id
     };
 
     console.log("submitting", data);
@@ -85,7 +99,7 @@ class CreditTransferAddContainer extends Component {
     if (['numberOfCredits', 'fairMarketValuePerCredit'].includes(name)) {
       this.setState({
         totalValue:
-          this.state.numberOfCredits * this.state.fairMarketValuePerCredit
+          this.state.fields.numberOfCredits * this.state.fields.fairMarketValuePerCredit
       });
     }
   }
@@ -95,16 +109,11 @@ class CreditTransferAddContainer extends Component {
       <CreditTransferForm
         fuelSuppliers={this.props.fuelSuppliers}
         title="New Credit Transfer"
-        initiator={this.state.initiator}
-        tradeType={this.state.tradeType}
-        numberOfCredits={this.state.numberOfCredits}
-        respondent={this.state.respondent}
-        fairMarketValuePerCredit={this.state.fairMarketValuePerCredit}
+        fields={this.state.fields}
         totalValue={this.state.totalValue}
-        note={this.state.note}
         tradeStatus={this.state.tradeStatus}
         handleInputChange={this._handleInputChange}
-        handleSubmit={this.handleSubmit}
+        handleSubmit={this._handleSubmit}
         history={this.props.history}
         errors=''
       />
@@ -113,7 +122,6 @@ class CreditTransferAddContainer extends Component {
 }
 
 CreditTransferAddContainer.propTypes = {
-  getLoggedInUser: PropTypes.func.isRequired,
   getFuelSuppliers: PropTypes.func.isRequired,
   loggedInUser: PropTypes.shape({
     displayName: PropTypes.string,
