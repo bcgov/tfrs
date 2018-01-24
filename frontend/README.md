@@ -44,3 +44,6 @@ or if you can run bash/cygwin:
 ```bash
 $ NODE_ENV=production webpack -p --config webpack.production.config.js
 ```
+
+## Contributing
+See our [contributing guidelines](contributing.md)
