@@ -17,11 +17,7 @@ const CreditTransferForm = props => (
     <form className="form-inline">
       <CreditTransferFormDetails
         fuelSuppliers={props.fuelSuppliers}
-        initiator={props.initiator}
-        tradeType={props.tradeType}
-        numberOfCredits={props.numberOfCredits}
-        respondent={props.respondent}
-        fairMarketValuePerCredit={props.fairMarketValuePerCredit}
+        fields={props.fields}
         totalValue={props.totalValue}
         handleInputChange={props.handleInputChange}
       />
@@ -31,13 +27,13 @@ const CreditTransferForm = props => (
         </div>
       }
       <CreditTransferVisualRepresentation
-        initiator={props.initiator}
-        respondent={props.respondent}
-        numberOfCredits={props.numberOfCredits}
+        initiator={props.fields.initiator}
+        respondent={props.fields.respondent}
+        numberOfCredits={props.fields.numberOfCredits}
         totalValue={props.totalValue}
       />
       <CreditTransferFormNote
-        note={props.note}
+        note={props.fields.note}
         handleInputChange={props.handleInputChange}
       />
       <CreditTransferFormButtons
@@ -49,39 +45,30 @@ const CreditTransferForm = props => (
 );
 
 CreditTransferForm.defaultProps = {
-  title: 'Credit Transfer',
-  initiator: {
-    name: 'Initiator'
-  },
-  respondent: {
-    name: 'Respondent'
-  },
-  tradeType: {
-    id: 1
-  },
-  numberOfCredits: '',
-  fairMarketValuePerCredit: ''
+  title: 'Credit Transfer'
 };
 
 CreditTransferForm.propTypes = {
   title: PropTypes.string,
   fuelSuppliers: PropTypes.arrayOf(PropTypes.shape()).isRequired,
-  initiator: PropTypes.shape({
-    name: PropTypes.string,
-    id: PropTypes.number
-  }),
-  respondent: PropTypes.shape({
-    name: PropTypes.string,
-    id: PropTypes.number
-  }),
-  tradeType: PropTypes.shape({
-    name: PropTypes.string,
-    id: PropTypes.number
-  }),
-  numberOfCredits: PropTypes.string,
-  fairMarketValuePerCredit: PropTypes.string,
+  fields: PropTypes.shape({
+    initiator: PropTypes.shape({
+      name: PropTypes.string,
+      id: PropTypes.number
+    }),
+    respondent: PropTypes.shape({
+      name: PropTypes.string,
+      id: PropTypes.number
+    }),
+    tradeType: PropTypes.shape({
+      name: PropTypes.string,
+      id: PropTypes.number
+    }),
+    numberOfCredits: PropTypes.string,
+    fairMarketValuePerCredit: PropTypes.string,
+    note: PropTypes.string.isRequired
+  }).isRequired,
   totalValue: PropTypes.number.isRequired,
-  note: PropTypes.string.isRequired,
   handleInputChange: PropTypes.func.isRequired,
   handleSubmit: PropTypes.func.isRequired,
   history: PropTypes.shape({}).isRequired,
