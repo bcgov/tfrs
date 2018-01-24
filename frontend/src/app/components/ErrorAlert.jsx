@@ -1,12 +1,16 @@
-import React, {Component} from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 
-export default class ErrorAlert extends Component {
-  render () {
-    return (
-      <div>
-        <h1>{this.props.title}</h1>
-        <p>{this.props.message}</p>
-      </div>
-    );
-  }
-}
+const ErrorAlert = props => (
+  <div>
+    <h1>{props.title}</h1>
+    <p>{props.message}</p>
+  </div>
+);
+
+ErrorAlert.propTypes = {
+  title: PropTypes.string.isRequired,
+  message: PropTypes.string.isRequired
+};
+
+export default ErrorAlert;
