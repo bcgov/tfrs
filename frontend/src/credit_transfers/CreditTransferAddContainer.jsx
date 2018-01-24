@@ -15,7 +15,7 @@ class CreditTransferAddContainer extends Component {
       initiator: {},
       tradeType: { id: 0 },
       numberOfCredits: '',
-      respondent: { id: 0 },
+      respondent: { id: 0, name: '' },
       fairMarketValuePerCredit: '',
       tradeStatus: { id: 0 },
       totalValue: 0,
@@ -26,7 +26,6 @@ class CreditTransferAddContainer extends Component {
   }
 
   componentDidMount () {
-    // this.props.getLoggedInUser();
     this.props.getFuelSuppliers();
   }
 
@@ -40,9 +39,24 @@ class CreditTransferAddContainer extends Component {
   _handleInputChange (event) {
     const { value, name } = event.target;
     if (typeof this.state[name] === 'object') {
-      this.setState({ [name]: { id: parseInt(value, 10) || 0 } });
+      this.changeObjectProp(parseInt(value, 10), name);
     } else {
       this.setState({ [name]: value }, () => this.computeTotalValue(name));
+    }
+  }
+
+  changeObjectProp (id, name) {
+    if (name === 'respondent') {
+      const respondents = this.props.fuelSuppliers.filter((fuelSupplier) => {
+        return (fuelSupplier.id === id);
+      });
+      if (respondents.length === 1) {
+        this.setState({ [name]: respondent[0] });
+      } else {
+        this.setState({ [name]: { id: 0 } });
+      }
+    } else {
+      this.setState({ [name]: { id: id || 0 } });
     }
   }
 
