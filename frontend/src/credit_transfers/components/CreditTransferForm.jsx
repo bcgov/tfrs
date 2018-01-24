@@ -6,6 +6,7 @@ import PropTypes from 'prop-types';
 // import { CREDIT_TRANSFER_STATUS, CREDIT_TRANSFER_TYPES } from "../../constants/values";
 import CreditTransferProgress from './CreditTransferProgress';
 import CreditTransferFormDetails from './CreditTransferFormDetails';
+import CreditTransferVisualRepresentation from './CreditTransferVisualRepresentation';
 import CreditTransferFormNote from './CreditTransferFormNote';
 import CreditTransferFormButtons from './CreditTransferFormButtons';
 
@@ -29,6 +30,12 @@ const CreditTransferForm = props => (
           <div>{props.errors}</div>
         </div>
       }
+      <CreditTransferVisualRepresentation
+        initiator={props.initiator}
+        respondent={props.respondent}
+        numberOfCredits={props.numberOfCredits}
+        totalValue={props.totalValue}
+      />
       <CreditTransferFormNote
         note={props.note}
         handleInputChange={props.handleInputChange}
