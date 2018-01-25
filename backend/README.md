@@ -98,3 +98,6 @@ Load test data fixtures
 ```
 $ python manage.py loaddata test_credit_trades.json test_organization_fuel_suppliers.json test_organization_balances.json test_users.json
 ```
+
+## Contributing
+See our [contributing guidelines](contributing.md)
