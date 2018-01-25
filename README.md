@@ -1,3 +1,8 @@
+
+Develop Backend [![Build Status](https://jenkins-mem-tfrs-tools.pathfinder.gov.bc.ca/buildStatus/icon?job=mem-tfrs-tools-develop-tfrs-pipeline)](https://jenkins-mem-tfrs-tools.pathfinder.gov.bc.ca/me/my-views/view/all/job/mem-tfrs-tools-develop-tfrs-pipeline/)
+
+Develop Frontend [![Build Status](https://jenkins-mem-tfrs-tools.pathfinder.gov.bc.ca/buildStatus/icon?job=mem-tfrs-tools-develop-client-pipeline)](https://jenkins-mem-tfrs-tools.pathfinder.gov.bc.ca/job/mem-tfrs-tools-develop-client-pipeline)
+
 # TFRS
 Transportation Fuels Reporting System
 
