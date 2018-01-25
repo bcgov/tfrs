@@ -19,6 +19,17 @@ This project is in development.
 To see the status of feature development please refer to the [features](https://github.com/bcgov/tfrs/wiki/features/) page on the project wiki
 
 ### Getting Started (development)
+This project is a Single Page Application with a REST API backend and a JavaScript (React) front-end.
+
+The easiest way to have it up and running is to setup a web proxy (nginx or apache) in your local machine that has the path `/` pointing to the front-end server and `/api` pointing to the api server.
+
+This project requires authentication via Siteminder headers. You would need to configure your webproxy to set specific headers:
+```
+proxy_set_header Sm-UniversalId "YOUR_USERNAME";
+proxy_set_header Smgov-Userguid "b5762a7b-87ba-46d0-b050-f4459124f60a";
+```
+It then checks this header against the  `authorization_id` field on `user` table in the database.
+
 #### REST API Server
 [View the README for the backend](backend/README.md)
 
@@ -30,6 +41,8 @@ To report bugs/issues/features requests, please file an [issue](https://github.c
 
 ### How to Contribute
 If you would like to contribute, please see our [contributing](contributing.md) guidelines.
+
+There are also separate and specific contributing guidelines for our [frontend](frontend/contributing.md) and [backend](backend/contributing.md) codebases.
 
 Please note that this project is released with a [Contributor Code of Conduct](code_of_conduct.md). By participating in this project you agree to abide by its terms.
 
