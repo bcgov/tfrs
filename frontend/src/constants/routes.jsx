@@ -12,7 +12,7 @@ export const CREDIT_TRANSFER_DETAILS = '/credit_transfer/:id';
 export const NOT_FOUND = '/404';
 
 // API Routes
-export const BASE_URL = location.protocol + '//' + window.location.host + '/api-business';
+export const BASE_URL = location.protocol + '//' + window.location.host + '/api';
 
 export const ORGANIZATIONS_API = '/organizations';
 export const ORGANIZATION_ACTION_TYPES = '/organizationactionstypes';

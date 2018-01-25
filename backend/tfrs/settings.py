@@ -31,7 +31,7 @@ SECRET_KEY = os.getenv(
 #DEBUG = True
 DEBUG = os.getenv('DJANGO_DEBUG', 'True') == 'True'
 
-ALLOWED_HOSTS = ['*']
+# ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -150,6 +150,10 @@ SWAGGER_SETTINGS = {
     'APIS_SORTER': 'alpha',
     'SHOW_REQUEST_HEADERS': True
 }
+
+USE_X_FORWARDED_HOST = True
+USE_X_FORWARDED_PORT = True
+ALLOWED_HOSTS = ['.lowcarbonfuels.gov.bc.ca', 'localhost', '127.0.0.1']
 
 # CORS Settings
 
