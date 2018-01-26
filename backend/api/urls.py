@@ -33,6 +33,7 @@ from .viewsets.CreditTrade import CreditTradeViewSet
 from .viewsets.Organization import OrganizationViewSet
 from .viewsets.User import UserViewSet
 
+from rest_framework.documentation import include_docs_urls
 
 from rest_framework.routers import DefaultRouter
 from django.conf import settings
@@ -62,6 +63,7 @@ class SwaggerSchemaView(APIView):
 
 urlpatterns = [
     # Swagger documentation
+    url(r'^doc_core/', include_docs_urls(title='TFRS API Documentation')),
     url(r'^doc$', SwaggerSchemaView.as_view()),
     url(r'^', include(router.urls)),
     url(r'^credittrades/bulk$', views.credittradesBulkPost.as_view()),
