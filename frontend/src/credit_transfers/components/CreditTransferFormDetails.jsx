@@ -19,6 +19,7 @@ const CreditTransferFormDetails = props => (
           value={props.fields.tradeType.id}
           onChange={props.handleInputChange}
         >
+          <option value="" />
           <option value="1">Sell</option>
           <option value="2">Buy</option>
         </select>
@@ -31,10 +32,11 @@ const CreditTransferFormDetails = props => (
           name="numberOfCredits"
           value={props.fields.numberOfCredits}
           onChange={props.handleInputChange}
+          required="true"
         />
       </div>
       <span>
-        {props.fields.tradeType.id === 1 ? 'credits from ' : 'credits to '}
+        {props.fields.tradeType.id === 1 ? 'credits to ' : 'credits from '}
       </span>
       <div className="form-group">
         <select
@@ -43,8 +45,9 @@ const CreditTransferFormDetails = props => (
           name="respondent"
           value={props.fields.respondent.id}
           onChange={props.handleInputChange}
+          required="true"
         >
-          <option key="0" value="0" default />
+          <option key="0" value="" default />
           {props.fuelSuppliers &&
             props.fuelSuppliers.map(organization => (
               props.fields.initiator.id !== organization.id && (
@@ -68,6 +71,7 @@ const CreditTransferFormDetails = props => (
             value={props.fields.fairMarketValuePerCredit}
             placeholder="Amount"
             onChange={props.handleInputChange}
+            required="true"
           />
           <div className="input-group-addon">.00</div>
         </div>

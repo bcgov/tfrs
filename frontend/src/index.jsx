@@ -18,6 +18,7 @@ import Administration from './components/administration/Administration';
 import Settings from './components/settings/Settings';
 import OrganizationDetails from './components/organizations/OrganizationDetails';
 import NotFound from './components/reusables/NotFound';
+import AccountActivityContainer from './account_activity/AccountActivityContainer';
 import CreditTransferListContainer from './credit_transfers/CreditTransferListContainer';
 import CreditTransferAddContainer from './credit_transfers/CreditTransferAddContainer';
 
@@ -73,6 +74,11 @@ ReactDOM.render(
               component={withRouter(Administration)}
             />
             <Route path={Routes.SETTINGS} component={withRouter(Settings)} />
+            <Route
+              exact
+              path="/account_activity"
+              component={withRouter(AccountActivityContainer)}
+            />
             <Route
               exact
               path="/credit_transfers"

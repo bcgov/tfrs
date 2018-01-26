@@ -14,7 +14,7 @@ const CreditTransferFormButtons = props => (
       Cancel
     </button>
     <button
-      type="button"
+      type="submit"
       className="btn btn-default"
       onClick={(event, status) => props.handleSubmit(event, CREDIT_TRANSFER_STATUS.draft)}
     >
