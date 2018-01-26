@@ -153,8 +153,7 @@ SWAGGER_SETTINGS = {
 
 USE_X_FORWARDED_HOST = True
 USE_X_FORWARDED_PORT = True
-ALLOWED_HOSTS = ['.lowcarbonfuels.gov.bc.ca', '.pathfinder.gov.bc.ca',
-                 '.gov.bc.ca', '.bcgov' 'localhost', '127.0.0.1']
+ALLOWED_HOSTS = ['*']
 
 # CORS Settings
 
