@@ -14,7 +14,7 @@ const CreditTransferForm = props => (
   <div className="credit-transfer">
     <h1>{props.title}</h1>
     <CreditTransferProgress />
-    <form className="form-inline">
+    <form className="form-inline" onSubmit={props.handleSubmit} >
       <CreditTransferFormDetails
         fuelSuppliers={props.fuelSuppliers}
         fields={props.fields}
