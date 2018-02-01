@@ -74,5 +74,9 @@ class CreditTrade(Auditable):
         elif self.type.id in [1, 3, 5]:
             return self.respondent
 
+    @property
+    def total_value(self):
+        return self.number_of_credits * self.fair_market_value_per_credit
+
     class Meta:
         db_table = 'credit_trade'

@@ -248,7 +248,8 @@ class CreditTrade2Serializer(serializers.ModelSerializer):
         fields = ('id', 'status', 'initiator', 'respondent',
                   'type', 'number_of_credits',
                   'fair_market_value_per_credit', 'zero_reason',
-                  'trade_effective_date', 'credits_from', 'credits_to')
+                  'trade_effective_date', 'credits_from', 'credits_to',
+                  'update_timestamp', 'total_value')
         # exclude = ('note',)
 
 
