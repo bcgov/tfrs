@@ -35,7 +35,7 @@ node('maven') {
     }
 
 }
-
+/**
 node('bddstack') {
 
 	stage('FT on Dev') {
@@ -72,7 +72,7 @@ node('bddstack') {
     }
 }
 
-
+**/
 
 
 stage('Deploy on Test') {
