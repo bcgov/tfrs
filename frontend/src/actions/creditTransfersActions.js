@@ -37,21 +37,53 @@ const getCreditTransfersError = error => ({
   errorMessage: error
 });
 
+export const getCreditTransfer = id => (dispatch) => {
+  dispatch(getCreditTransferRequest());
+  setTimeout(() => {
+  axios.get(`${Routes.BASE_URL}${Routes.CREDIT_TRADE_API}/${id}`)
+    .then((response) => {
+      dispatch(getCreditTransferSuccess(response.data));
+    }).catch((error) => {
+      dispatch(getCreditTransferError(error.response));
+    });
+  },  5000);
+};
+
+const getCreditTransferRequest = () => ({
+  name: 'GET_CREDIT_TRANSFER_REQUEST',
+  type: ActionTypes.GET_CREDIT_TRANSFER
+});
+
+const getCreditTransferSuccess = creditTransfers => ({
+  name: 'RECEIVE_CREDIT_TRANSFER_REQUEST',
+  type: ActionTypes.RECEIVE_CREDIT_TRANSFER,
+  data: creditTransfers
+});
+
+const getCreditTransferError = error => ({
+  name: 'ERROR_CREDIT_TRANSFER_REQUEST',
+  type: ActionTypes.ERROR,
+  errorMessage: error
+});
+
 /*
  * Add Credit Transfers
  */
-export const addCreditTransfer = data => (dispatch) => {
+export const addCreditTransfer = (data, callback) => (dispatch) => {
   dispatch(addCreditTransferRequest());
   console.log('sending data', data);
   axios
     .post(Routes.BASE_URL + Routes.CREDIT_TRADE_API, data)
     .then((response) => {
-      history.push(Routes.ACCOUNT_ACTIVITY);
+      // history.push(Routes.ACCOUNT_ACTIVITY);
+
+      typeof callback === 'function' && callback();
+      // callback();
       console.log("success", response);
       // dispatch(addCreditTransferSuccess(response.data));
     }).catch((error) => {
       console.log("error", error);
-      // dispatch(addCreditTransferError(error.data));
+      // dispatch(addCreditTransferError(error.data));d
     });
 };
 

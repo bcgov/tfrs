@@ -3,7 +3,7 @@
  */
 import React from 'react';
 import PropTypes from 'prop-types';
-// import { CREDIT_TRANSFER_STATUS, CREDIT_TRANSFER_TYPES } from "../../constants/values";
+
 import CreditTransferProgress from './CreditTransferProgress';
 import CreditTransferFormDetails from './CreditTransferFormDetails';
 import CreditTransferVisualRepresentation from './CreditTransferVisualRepresentation';
@@ -37,7 +37,6 @@ const CreditTransferForm = props => (
         handleInputChange={props.handleInputChange}
       />
       <CreditTransferFormButtons
-        history={props.history}
         handleSubmit={props.handleSubmit}
       />
     </form>
@@ -71,7 +70,6 @@ CreditTransferForm.propTypes = {
   totalValue: PropTypes.number.isRequired,
   handleInputChange: PropTypes.func.isRequired,
   handleSubmit: PropTypes.func.isRequired,
-  history: PropTypes.shape({}).isRequired,
   errors: PropTypes.string.isRequired
 };
 

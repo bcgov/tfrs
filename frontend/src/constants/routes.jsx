@@ -1,15 +1,21 @@
 // Page Routes
 
 export const HOME = '/';
+export const CREDIT_TRANSACTIONS = '/credit_transactions';
+export const CREDIT_TRANSACTIONS_ADD = '/credit_transactions/add';
+export const CREDIT_TRANSACTION_DETAILS = '/credit_transactions/view/:id';
+
 export const ORGANIZATIONS = '/organizations';
-export const ACCOUNT_ACTIVITY = '/account-activity';
-export const NOTIFICATIONS = '/notifications';
-export const SETTINGS = '/settings';
 export const ADMINISTRATION = '/administration';
 export const ORGANIZATION_DETAILS = '/organizations/:id';
 export const CREDIT_TRANSFER = '/credit_transfer/';
-export const CREDIT_TRANSFER_DETAILS = '/credit_transfer/:id';
 export const NOT_FOUND = '/404';
+
+// Deprecated pages
+export const ACCOUNT_ACTIVITY = '/account-activity';
+export const NOTIFICATIONS = '/notifications';
+export const SETTINGS = '/settings';
+export const CREDIT_TRANSFER_DETAILS = '/credit_transfer/:id';
 
 // API Routes
 export const BASE_URL = location.protocol + '//' + window.location.host + '/api';
@@ -43,7 +49,6 @@ export const ROLES = '/roles';
 export const USER_ROLES = '/userroles';
 export const USERS = '/users';
 export const CURRENT_USER = '/users/current';
-
 
 // Appended at the end of the route. Ideally this shouldn't be like this,
 // It should be an HTTP DELETE request.
