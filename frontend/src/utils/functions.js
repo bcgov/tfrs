@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
-import * as Values from '../constants/values.jsx';
-import * as ReducerTypes from '../constants/reducerTypes.jsx';
-import store from '../store/store.jsx';
+import * as Values from '../constants/values';
+import * as ReducerTypes from '../constants/reducerTypes';
+import store from '../store/store';
 
 export const plainEnglishPhrase = (data) => {
   let tradeStatus = data.status;

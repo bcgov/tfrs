@@ -2,11 +2,11 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { Modal } from 'react-bootstrap';
-import { getAccountActivity } from '../../actions/accountActivityActions.jsx';
-import * as ReducerTypes from '../../constants/reducerTypes.jsx';
-import * as Routes from '../../constants/routes.jsx';
-import * as Values from '../../constants/values.jsx';
-import { plainEnglishPhrase, plainEnglishPhraseString } from '../../utils/functions.jsx';
+import { getAccountActivity } from '../../actions/accountActivityActions';
+import * as ReducerTypes from '../../constants/reducerTypes';
+import * as Routes from '../../constants/routes';
+import * as Values from '../../constants/values';
+import { plainEnglishPhrase, plainEnglishPhraseString } from '../../utils/functions';
 import { BootstrapTable, TableHeaderColumn, ButtonGroup } from 'react-bootstrap-table';
 
 function descriptionFilterType(cell, row) {

@@ -2,9 +2,9 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { Modal } from 'react-bootstrap';
-import * as Routes from '../../constants/routes.jsx';
-import { getOrganizations, searchOrganizations, searchOrganizationsReset, addOrganization } from '../../actions/organizationActions.jsx';
-import * as ReducerTypes from '../../constants/reducerTypes.jsx';
+import * as Routes from '../../constants/routes';
+import { getOrganizations, searchOrganizations, searchOrganizationsReset, addOrganization } from '../../actions/organizationActions';
+import * as ReducerTypes from '../../constants/reducerTypes';
 import { BootstrapTable, TableHeaderColumn, ButtonGroup } from 'react-bootstrap-table';
 
 class Organizations extends Component {

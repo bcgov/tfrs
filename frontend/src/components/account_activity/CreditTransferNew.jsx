@@ -1,18 +1,18 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import * as ReducerTypes from '../../constants/reducerTypes.jsx';
-import * as Values from '../../constants/values.jsx';
-import { CREDIT_TRANSFER_STATUS, CREDIT_TRANSFER_TYPES } from '../../constants/values.jsx'
-import * as Routes from '../../constants/routes.jsx';
+import * as ReducerTypes from '../../constants/reducerTypes';
+import * as Values from '../../constants/values';
+import { CREDIT_TRANSFER_STATUS, CREDIT_TRANSFER_TYPES } from '../../constants/values'
+import * as Routes from '../../constants/routes';
 import { Modal } from 'react-bootstrap';
-import { getLoggedInUser } from '../../actions/userActions.jsx';
+import { getLoggedInUser } from '../../actions/userActions';
 import {
   getCreditTransferReset,
   addCreditTransfer,
-  addCreditTransferReset } from '../../actions/accountActivityActions.jsx';
-import { getFuelSuppliers } from '../../actions/organizationActions.jsx';
+  addCreditTransferReset } from '../../actions/accountActivityActions';
+import { getFuelSuppliers } from '../../actions/organizationActions';
 import { BootstrapTable, TableHeaderColumn, ButtonGroup } from 'react-bootstrap-table';
-import TransactionHistory from './TransactionHistory.jsx';
+import TransactionHistory from './TransactionHistory';
 
 class CreditTransferNew extends Component {
   constructor(props) {

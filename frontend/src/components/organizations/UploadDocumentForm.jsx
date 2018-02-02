@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import * as Values from '../../constants/values.jsx';
+import * as Values from '../../constants/values';
 
 export default class UploadDocumentForm extends Component {
   constructor(props) {
