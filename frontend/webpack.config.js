@@ -63,7 +63,13 @@ const config = {
         test: /\.css$/,
         exclude: /node_modules/,
         loader:
-          'style!css?modules&localIdentName=[name]---[local]---[hash:base64:5]'
+          'style-loader!css-loader?modules&localIdentName=[name]---[local]---[hash:base64:5]'
+      },
+      {
+        test: /\.css$/,
+        include: /node_modules/,
+        loader:
+          'style-loader!css-loader'
       },
       {
         test: /\.(jpe?g|png|gif|svg)$/i,

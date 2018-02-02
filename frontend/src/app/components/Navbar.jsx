@@ -32,8 +32,8 @@ class Navbar extends Component {
           <Link id="navbar-organizations" to={Routes.ORGANIZATIONS}>
             Fuel Suppliers
           </Link>
-          <Link id="navbar-account-activity" to={Routes.ACCOUNT_ACTIVITY}>
-            Account Activity
+          <Link id="navbar-account-activity" to={Routes.CREDIT_TRANSACTIONS}>
+            Credit Transactions
           </Link>
           <Link id="navbar-notifications" to={Routes.NOTIFICATIONS}>
             Notifications

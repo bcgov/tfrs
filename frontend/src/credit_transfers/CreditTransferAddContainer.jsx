@@ -2,6 +2,9 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
+import history from '../app/History';
+import * as Routes from '../constants/routes';
+
 import { getFuelSuppliers } from '../actions/organizationActions';
 import { getLoggedInUser } from '../actions/userActions';
 import { addCreditTransfer } from '../actions/creditTransfersActions';
@@ -11,6 +14,10 @@ import { CREDIT_TRANSFER_STATUS } from '../constants/values';
 import CreditTransferForm from './components/CreditTransferForm';
 
 class CreditTransferAddContainer extends Component {
+  // static redirectToPage (page) {
+  //   history.push(page);
+  // }
+
   constructor (props) {
     super(props);
     this.state = {
@@ -86,7 +93,7 @@ class CreditTransferAddContainer extends Component {
     console.log(event, status);
     console.log(this.state);
 
-    status = status ? status : CREDIT_TRANSFER_STATUS.propose;
+    let transferStatus = status || CREDIT_TRANSFER_STATUS.propose;
 
     // API data structure
     const data = {
@@ -104,7 +111,10 @@ class CreditTransferAddContainer extends Component {
 
     // TODO: Add more validation here?
 
-    this.props.addCreditTransfer(data);
+    this.props.addCreditTransfer(
+      data,
+      history.push(Routes.CREDIT_TRANSACTIONS)
+    );
   }
 
   computeTotalValue (name) {

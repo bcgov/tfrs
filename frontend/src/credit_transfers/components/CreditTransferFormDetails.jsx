@@ -3,7 +3,9 @@
  */
 import React from 'react';
 import PropTypes from 'prop-types';
-import { FormattedNumber } from 'react-intl';
+import numeral from 'numeral';
+
+import * as NumberFormat from '../../constants/numeralFormats';
 
 const CreditTransferFormDetails = props => (
   <div className="credit-transfer-details">
@@ -77,7 +79,7 @@ const CreditTransferFormDetails = props => (
         </div>
       </div>
       <span>per credit for a total value of </span>
-      <span><FormattedNumber value={props.totalValue} style="currency" currency="CAD" /></span>
+      <span>{numeral(props.totalValue).format(NumberFormat.CURRENCY)}</span>
       <span> effective on Director&apos;s Approval</span>
     </div>
   </div>

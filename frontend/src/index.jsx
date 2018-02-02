@@ -3,11 +3,14 @@ import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 import { Route, withRouter, Switch } from 'react-router';
 import { ConnectedRouter } from 'react-router-redux';
-import createHistory from 'history/createHashHistory'; // 'history/createHashHistory' for  '#'
+
+// import createHistory from 'history/createHashHistory'; // 'history/createHashHistory' for  '#'
 import * as Routes from './constants/routes';
 import store from './store/store';
 
 import App from './app/App';
+import history from './app/History';
+import './app/FontAwesome';
 import Dashboard from './components/dashboard/Dashboard';
 import Organizations from './components/organizations/Organizations';
 import AccountActivity from './components/account_activity/AccountActivity';
@@ -18,9 +21,9 @@ import Administration from './components/administration/Administration';
 import Settings from './components/settings/Settings';
 import OrganizationDetails from './components/organizations/OrganizationDetails';
 import NotFound from './components/reusables/NotFound';
-import AccountActivityContainer from './account_activity/AccountActivityContainer';
-import CreditTransferListContainer from './credit_transfers/CreditTransferListContainer';
+import CreditTransactionsContainer from './credit_transfers/CreditTransactionsContainer';
 import CreditTransferAddContainer from './credit_transfers/CreditTransferAddContainer';
+import CreditTransferViewContainer from './credit_transfers/CreditTransferViewContainer';
 
 import { getLoggedInUser } from './actions/userActions';
 
@@ -28,7 +31,7 @@ import { getLoggedInUser } from './actions/userActions';
 
 import '../styles/index.scss';
 
-const history = createHistory();
+// const history = createHistory();
 
 store.dispatch(getLoggedInUser());
 
@@ -60,6 +63,7 @@ ReactDOM.render(
               path={Routes.CREDIT_TRANSFER_DETAILS}
               component={withRouter(CreditTransfer)}
             />
+
             <Route
               exact
               path={Routes.CREDIT_TRANSFER}
@@ -76,17 +80,16 @@ ReactDOM.render(
             <Route path={Routes.SETTINGS} component={withRouter(Settings)} />
             <Route
               exact
-              path="/account_activity"
-              component={withRouter(AccountActivityContainer)}
+              path={Routes.CREDIT_TRANSACTIONS}
+              component={withRouter(CreditTransactionsContainer)}
+            />
+            <Route
+              path={Routes.CREDIT_TRANSACTION_DETAILS}
+              component={withRouter(CreditTransferViewContainer)}
             />
             <Route
               exact
-              path="/credit_transfers"
-              component={withRouter(CreditTransferListContainer)}
-            />
-            <Route
-              exact
-              path="/credit_transfers/add"
+              path={Routes.CREDIT_TRANSACTIONS_ADD}
               component={withRouter(CreditTransferAddContainer)}
             />
             <Route component={NotFound} />

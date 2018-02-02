@@ -18,13 +18,13 @@ const creditTransfer = (state = {
       return [
         ...state,
         Object.assign({}, action.data)];
-    case ActionTypes.GET_REQUEST_ITEM:
+    case ActionTypes.GET_CREDIT_TRANSFER:
       return Object.assign({}, state, {
         isFetching: true,
         item: {},
         didInvalidate: false
       });
-    case ActionTypes.RECEIVE_REQUEST_ITEM:
+    case ActionTypes.RECEIVE_CREDIT_TRANSFER:
       return Object.assign({}, state, {
         isFetching: false,
         didInvalidate: false,
