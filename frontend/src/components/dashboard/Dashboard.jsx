@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { getAccountActivity, acceptCreditTransfer, acceptCreditTransferReset } from '../../actions/accountActivityActions.jsx';
-import * as Routes from '../../constants/routes.jsx';
-import * as ReducerTypes from '../../constants/reducerTypes.jsx';
-import RecentAccountActivityTable from './RecentAccountActivityTable.jsx';
+import { getAccountActivity, acceptCreditTransfer, acceptCreditTransferReset } from '../../actions/accountActivityActions';
+import * as Routes from '../../constants/routes';
+import * as ReducerTypes from '../../constants/reducerTypes';
+import RecentAccountActivityTable from './RecentAccountActivityTable';
 
 class Dashboard extends Component {
 

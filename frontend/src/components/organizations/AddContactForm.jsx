@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Modal } from 'react-bootstrap';
-import validators from '../../utils/validator.jsx';
+import validators from '../../utils/validator';
 import InputMask from 'react-input-mask';
 
 export default class AddContactForm extends Component {

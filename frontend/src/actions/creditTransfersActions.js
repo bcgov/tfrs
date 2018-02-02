@@ -2,7 +2,7 @@ import axios from 'axios';
 import createHistory from 'history/createHashHistory';
 
 import * as ActionTypes from '../constants/actionTypes';
-import * as ReducerTypes from '../constants/reducerTypes.jsx';
+import * as ReducerTypes from '../constants/reducerTypes';
 import * as Routes from '../constants/routes';
 
 const history = createHistory();

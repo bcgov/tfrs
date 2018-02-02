@@ -1,6 +1,6 @@
-import * as ActionTypes from '../constants/actionTypes.jsx';
-import * as ReducerTypes from '../constants/reducerTypes.jsx';
-import * as Routes from '../constants/routes.jsx';
+import * as ActionTypes from '../constants/actionTypes';
+import * as ReducerTypes from '../constants/reducerTypes';
+import * as Routes from '../constants/routes';
 import axios from 'axios';
 
 export const getCreditTransfers = () => (dispatch) => {

@@ -1,23 +1,23 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import * as ReducerTypes from '../../constants/reducerTypes.jsx';
-import * as Values from '../../constants/values.jsx';
-import * as Routes from '../../constants/routes.jsx';
+import * as ReducerTypes from '../../constants/reducerTypes';
+import * as Values from '../../constants/values';
+import * as Routes from '../../constants/routes';
 import { 
   plainEnglishPhrase, 
-  getCreditTransferTitle } from '../../utils/functions.jsx';
+  getCreditTransferTitle } from '../../utils/functions';
 import { Modal } from 'react-bootstrap';
 import { 
   getCreditTransfer,
   getCreditTransferHistory,
   getCreditTransferReset,
   updateCreditTransfer,
-  deleteCreditTransfer } from '../../actions/accountActivityActions.jsx';
-import { getOrganizations } from '../../actions/organizationActions.jsx';
-import { plainEnglishSentence } from '../../utils/functions.jsx';
+  deleteCreditTransfer } from '../../actions/accountActivityActions';
+import { getOrganizations } from '../../actions/organizationActions';
+import { plainEnglishSentence } from '../../utils/functions';
 import { BootstrapTable, TableHeaderColumn, ButtonGroup } from 'react-bootstrap-table';
-import TransactionHistory from './TransactionHistory.jsx';
-import CreditTransferVisualRepresentation from './CreditTransferVisualRepresentation.jsx';
+import TransactionHistory from './TransactionHistory';
+import CreditTransferVisualRepresentation from './CreditTransferVisualRepresentation';
 
 class CreditTransfer extends Component {
   constructor(props) {

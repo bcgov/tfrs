@@ -1,10 +1,10 @@
-import * as ActionTypes from '../constants/actionTypes.jsx';
-import * as ReducerTypes from '../constants/reducerTypes.jsx';
-import * as Routes from '../constants/routes.jsx';
+import * as ActionTypes from '../constants/actionTypes';
+import * as ReducerTypes from '../constants/reducerTypes';
+import * as Routes from '../constants/routes';
 import axios from 'axios';
 import createHistory from 'history/createHashHistory';
-import { activity } from '../sampleData.jsx';
-import { CreditTransfer } from '../sampleData.jsx';
+import { activity } from '../sampleData';
+import { CreditTransfer } from '../sampleData';
 
 const history = createHistory();
 

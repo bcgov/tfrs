@@ -1,6 +1,6 @@
-import * as ActionTypes from '../constants/actionTypes.jsx';
-import * as ReducerTypes from '../constants/reducerTypes.jsx';
-import { notifications } from '../sampleData.jsx';
+import * as ActionTypes from '../constants/actionTypes';
+import * as ReducerTypes from '../constants/reducerTypes';
+import { notifications } from '../sampleData';
 
 export const getNotifications = () => (dispatch) => {
   dispatch(getNotificationsSuccess(notifications));
