@@ -1,11 +1,8 @@
 import axios from 'axios';
-import createHistory from 'history/createHashHistory';
 
 import * as ActionTypes from '../constants/actionTypes';
 import * as ReducerTypes from '../constants/reducerTypes';
 import * as Routes from '../constants/routes';
-
-const history = createHistory();
 
 /*
  * Credit Transfers
@@ -39,14 +36,12 @@ const getCreditTransfersError = error => ({
 
 export const getCreditTransfer = id => (dispatch) => {
   dispatch(getCreditTransferRequest());
-  setTimeout(() => {
   axios.get(`${Routes.BASE_URL}${Routes.CREDIT_TRADE_API}/${id}`)
     .then((response) => {
       dispatch(getCreditTransferSuccess(response.data));
     }).catch((error) => {
       dispatch(getCreditTransferError(error.response));
     });
-  },  5000);
 };
 
 const getCreditTransferRequest = () => ({
@@ -75,15 +70,15 @@ export const addCreditTransfer = (data, callback) => (dispatch) => {
   axios
     .post(Routes.BASE_URL + Routes.CREDIT_TRADE_API, data)
     .then((response) => {
-      // history.push(Routes.ACCOUNT_ACTIVITY);
-
-      typeof callback === 'function' && callback();
-      // callback();
       console.log("success", response);
-      // dispatch(addCreditTransferSuccess(response.data));
+      dispatch(addCreditTransferSuccess(response.data));
+      // Call the callback function if defined
+
+      console.log("CALLING CALLBACK")
+      typeof callback === 'function' && callback();
     }).catch((error) => {
-      console.log("error", error);
-      // dispatch(addCreditTransferError(error.data));d
+      console.log("error", error, error.response);
+      dispatch(addCreditTransferError(error.response.data));
     });
 };
 
@@ -99,7 +94,7 @@ const addCreditTransferSuccess = data => ({
 });
 
 const addCreditTransferError = error => ({
-  name: ReducerTypes.ADD_CREDIT_TRANSFER,
+  name: 'ERROR_ADD_CREDIT_TRANSFER',
   type: ActionTypes.ERROR,
   errorMessage: error
 });

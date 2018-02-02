@@ -1,10 +1,15 @@
+/*
+ * Container component
+ * All data handling & manipulation should be handled here.
+ */
+
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
-import history from '../app/History';
 import * as Routes from '../constants/routes';
 
+import history from '../app/History';
 import { getFuelSuppliers } from '../actions/organizationActions';
 import { getLoggedInUser } from '../actions/userActions';
 import { addCreditTransfer } from '../actions/creditTransfersActions';
@@ -14,22 +19,20 @@ import { CREDIT_TRANSFER_STATUS } from '../constants/values';
 import CreditTransferForm from './components/CreditTransferForm';
 
 class CreditTransferAddContainer extends Component {
-  // static redirectToPage (page) {
-  //   history.push(page);
-  // }
-
   constructor (props) {
     super(props);
     this.state = {
       fields: {
         initiator: {},
-        tradeType: { id: 1 },
+        tradeType: { id: 1, name: 'Sell' },
         numberOfCredits: '',
         respondent: { id: 0, name: '' },
         fairMarketValuePerCredit: '',
         tradeStatus: { id: 0 },
         note: ''
       },
+      creditsFrom: {},
+      creditsTo: {},
       totalValue: 0
     };
 
@@ -46,7 +49,8 @@ class CreditTransferAddContainer extends Component {
     const fieldState = { ...this.state.fields };
     fieldState.initiator = this.props.loggedInUser.organization;
     this.setState({
-      fields: fieldState
+      fields: fieldState,
+      creditsFrom: fieldState.initiator
     });
   }
 
@@ -54,7 +58,7 @@ class CreditTransferAddContainer extends Component {
     const { value, name } = event.target;
     const fieldState = { ...this.state.fields };
 
-    console.log(typeof fieldState[name], value, name);
+    // console.log(typeof fieldState[name], value, name);
 
     if (typeof fieldState[name] === 'object') {
       this.changeObjectProp(parseInt(value, 10), name);
@@ -67,8 +71,9 @@ class CreditTransferAddContainer extends Component {
   }
 
   changeObjectProp (id, name) {
-    let fieldState = { ...this.state.fields };
+    const fieldState = { ...this.state.fields };
     if (name === 'respondent') {
+      // Populate the dropdown
       const respondents = this.props.fuelSuppliers.filter((fuelSupplier) => {
         return fuelSupplier.id === id;
       });
@@ -76,11 +81,22 @@ class CreditTransferAddContainer extends Component {
       fieldState.respondent = respondents.length === 1 ? respondents[0] : { id: 0 };
       this.setState({
         fields: fieldState
-      });
-    } else {
-      console.log('setting number here to', id);
+      }, () => this.changeFromTo(
+        this.state.fields.tradeType,
+        this.state.fields.initiator,
+        this.state.fields.respondent
+      ));
+    } else if (name === 'tradeType') {
       fieldState[name] = { id: id || 0 };
-      console.log(fieldState);
+      this.setState({
+        fields: fieldState
+      }, () => this.changeFromTo(
+        this.state.fields.tradeType,
+        this.state.fields.initiator,
+        this.state.fields.respondent
+      ));
+    } else {
+      fieldState[name] = { id: id || 0 };
       this.setState({
         fields: fieldState
       });
@@ -88,12 +104,11 @@ class CreditTransferAddContainer extends Component {
   }
 
   _handleSubmit (event, status) {
-    event.preventDefault();
+    // event.preventDefault();
 
-    console.log(event, status);
-    console.log(this.state);
+    // console.log('validity', this.checkValidity());
 
-    let transferStatus = status || CREDIT_TRANSFER_STATUS.propose;
+    const creditTransferStatus = status || CREDIT_TRANSFER_STATUS.draft;
 
     // API data structure
     const data = {
@@ -102,22 +117,37 @@ class CreditTransferAddContainer extends Component {
       respondent: this.state.fields.respondent.id,
       fairMarketValuePerCredit: parseInt(this.state.fields.fairMarketValuePerCredit, 10),
       note: this.state.fields.note,
-      status: CREDIT_TRANSFER_STATUS.draft.id,
+      status: creditTransferStatus.id,
       type: this.state.fields.tradeType.id,
       tradeEffectiveDate: null
     };
 
-    console.log("submitting", data);
+    console.log('submitting', data);
 
     // TODO: Add more validation here?
 
     this.props.addCreditTransfer(
       data,
-      history.push(Routes.CREDIT_TRANSACTIONS)
+      () => { history.push(Routes.CREDIT_TRANSACTIONS); }
     );
+
+    return false;
+  }
+
+  changeFromTo (tradeType, initiator, respondent) {
+    // Change the creditsFrom and creditsTo according to the trade type
+    let creditsFrom = initiator;
+    let creditsTo = respondent;
+    if (tradeType.id === 2) {
+      creditsFrom = respondent;
+      creditsTo = initiator;
+    }
+
+    this.setState({ creditsFrom, creditsTo });
   }
 
   computeTotalValue (name) {
+    // Compute the total value when the fields change
     if (['numberOfCredits', 'fairMarketValuePerCredit'].includes(name)) {
       this.setState({
         totalValue:
@@ -136,8 +166,9 @@ class CreditTransferAddContainer extends Component {
         tradeStatus={this.state.tradeStatus}
         handleInputChange={this._handleInputChange}
         handleSubmit={this._handleSubmit}
-        history={this.props.history}
-        errors=''
+        creditsFrom={this.state.creditsFrom}
+        creditsTo={this.state.creditsTo}
+        errors={this.props.errors}
       />
     );
   }
@@ -154,12 +185,13 @@ CreditTransferAddContainer.propTypes = {
     })
   }).isRequired,
   fuelSuppliers: PropTypes.arrayOf(PropTypes.shape()).isRequired,
-  history: PropTypes.shape({}).isRequired
+  errors: PropTypes.shape({})
 };
 
 const mapStateToProps = state => ({
   loggedInUser: state.rootReducer.userRequest.loggedInUser,
-  fuelSuppliers: state.rootReducer.fuelSuppliersRequest.fuelSuppliers
+  fuelSuppliers: state.rootReducer.fuelSuppliersRequest.fuelSuppliers,
+  errors: state.rootReducer.creditTransfer.errors
 });
 
 const mapDispatchToProps = dispatch => ({

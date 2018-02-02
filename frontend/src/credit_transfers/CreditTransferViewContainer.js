@@ -2,6 +2,7 @@
  * Container component
  * All data handling & manipulation should be handled here.
  */
+ 
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
@@ -15,11 +16,17 @@ class CreditTransferViewContainer extends Component {
     this._handleSubmit = this._handleSubmit.bind(this);
   }
   componentDidMount () {
-    this.loadData();
+    this.loadData(this.props.match.params.id);
   }
 
-  loadData () {
-    this.props.getCreditTransfer(this.props.match.params.id);
+  loadData (id) {
+    this.props.getCreditTransfer(id);
+  }
+
+  componentWillReceiveNewProps (prevProps, newProps) {
+    if (prevProps.match.params.id !== newProps.match.params.id) {
+      this.loadData(newProps.match.params.id);
+    }
   }
 
   _handleSubmit (event, status) {

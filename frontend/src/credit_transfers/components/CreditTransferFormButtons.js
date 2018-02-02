@@ -24,6 +24,7 @@ const CreditTransferFormButtons = props => (
     <button
       type="submit"
       className="btn btn-primary"
+      onClick={(event, status) => props.handleSubmit(event, CREDIT_TRANSFER_STATUS.proposed)}
     >
       Propose
     </button>

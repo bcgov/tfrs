@@ -2,9 +2,9 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 
-import CreditTransferTable from './CreditTransferTable';
-
 import * as Routes from '../../constants/routes';
+import Loading from '../../app/components/Loading';
+import CreditTransferTable from './CreditTransferTable';
 
 const CreditTransactionsPage = (props) => {
   const { isFetching, items } = props.creditTransfers;
@@ -17,11 +17,14 @@ const CreditTransactionsPage = (props) => {
           <Link to={Routes.CREDIT_TRANSACTIONS_ADD}>Propose Trade</Link>
         </div>
       </div>
+      {isFetching && <Loading />}
+      {!isFetching &&
       <CreditTransferTable
         items={items}
         isFetching={isFetching}
         isEmpty={isEmpty}
       />
+      }
     </div>
   );
 };
