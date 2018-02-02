@@ -4,15 +4,13 @@ import FontAwesomeIcon from '@fortawesome/react-fontawesome';
 import numeral from 'numeral';
 
 import * as NumberFormat from '../../constants/numeralFormats';
-import * as Values from '../../constants/values';
 
 const CreditTransferVisualRepresentation = props => (
   <div className="row visual-representation">
     <div className="col-sm-4 col-md-2 col-md-offset-1">
       <div className="initiator-container label-success">
         <div>
-          { props.initiator &&
-            props.initiator != null ? props.initiator.name : Values.DEFAULT_INITIATOR }
+          { props.creditsFrom && props.creditsFrom.name }
         </div>
       </div>
     </div>
@@ -25,28 +23,28 @@ const CreditTransferVisualRepresentation = props => (
     </div>
     <div className="col-sm-4 col-md-3">
       <div className="respondent-container label-warning">
-        <div>{props.respondent.name}</div>
+        <div>{props.creditsTo.name}</div>
       </div>
     </div>
   </div>
 );
 
 CreditTransferVisualRepresentation.defaultProps = {
-  initiator: {
-    name: 'Initiator'
+  creditsFrom: {
+    name: 'From'
   },
-  respondent: {
-    name: 'Respondent'
+  creditsTo: {
+    name: 'To'
   },
   numberOfCredits: ''
 };
 
 CreditTransferVisualRepresentation.propTypes = {
-  initiator: PropTypes.shape({
+  creditsFrom: PropTypes.shape({
     name: PropTypes.string,
     id: PropTypes.number
   }),
-  respondent: PropTypes.shape({
+  creditsTo: PropTypes.shape({
     name: PropTypes.string,
     id: PropTypes.number
   }),

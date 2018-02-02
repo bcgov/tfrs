@@ -67,14 +67,18 @@ const CreditTransferTable = (props) => {
 
   const filterMethod = (filter, row, column) => {
     const id = filter.pivotId || filter.id;
-    return row[id] !== undefined ? String(row[id]).toLowerCase().includes(filter.value.toLowerCase()) : true;
+    return row[id] !== undefined ? String(row[id])
+      .toLowerCase()
+      .includes(filter.value.toLowerCase()) : true;
   };
+
+  const filterable = true;
 
   return (
     <ReactTable
       data={props.items}
       defaultPageSize={25}
-      filterable={true}
+      filterable={filterable}
       defaultFilterMethod={filterMethod}
       columns={columns}
     />

@@ -3,7 +3,8 @@ import * as ActionTypes from '../constants/actionTypes';
 const creditTransfer = (state = {
   isFetching: false,
   didInvalidate: false,
-  item: {}
+  item: {},
+  errors: {}
 }, action) => {
   switch (action.type) {
     case ActionTypes.CREATE_CREDIT_TRANSFER:
@@ -29,6 +30,12 @@ const creditTransfer = (state = {
         isFetching: false,
         didInvalidate: false,
         item: action.data
+      });
+    case ActionTypes.ERROR:
+      return Object.assign({}, state, {
+        isFetching: false,
+        didInvalidate: true,
+        errors: action.errorMessage
       });
     default:
       return state;

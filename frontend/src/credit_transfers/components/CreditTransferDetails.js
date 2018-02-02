@@ -3,7 +3,6 @@
  */
 import React from 'react';
 import PropTypes from 'prop-types';
-import FontAwesomeIcon from '@fortawesome/react-fontawesome';
 import numeral from 'numeral';
 
 import * as NumberFormat from '../../constants/numeralFormats';
@@ -37,8 +36,8 @@ const CreditTransferDetails = props => (
           </div>
         </div>
         <CreditTransferVisualRepresentation
-          initiator={props.creditsFrom}
-          respondent={props.creditsTo}
+          creditsFrom={props.creditsFrom}
+          creditsTo={props.creditsTo}
           numberOfCredits={props.numberOfCredits}
           totalValue={props.totalValue}
         />

@@ -34,7 +34,7 @@ const CreditTransferFormDetails = props => (
           name="numberOfCredits"
           value={props.fields.numberOfCredits}
           onChange={props.handleInputChange}
-          required="true"
+          required="required"
         />
       </div>
       <span>
@@ -47,7 +47,7 @@ const CreditTransferFormDetails = props => (
           name="respondent"
           value={props.fields.respondent.id}
           onChange={props.handleInputChange}
-          required="true"
+          required="required"
         >
           <option key="0" value="" default />
           {props.fuelSuppliers &&
@@ -73,7 +73,7 @@ const CreditTransferFormDetails = props => (
             value={props.fields.fairMarketValuePerCredit}
             placeholder="Amount"
             onChange={props.handleInputChange}
-            required="true"
+            required="required"
           />
           <div className="input-group-addon">.00</div>
         </div>
