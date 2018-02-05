@@ -1,5 +1,7 @@
 from django.test import TestCase, Client, RequestFactory
 from rest_framework import exceptions
+from django.conf import settings
+
 from .authentication import UserAuthentication
 from .models.User import User
 from .models.Organization import Organization
@@ -22,6 +24,7 @@ class TestAuthentication(TestCase):
     def setUp(self):
         self.userauth = UserAuthentication()
         self.factory = RequestFactory()
+        settings.DEBUG = False
         pass
 
     def test_user_has_mapping(self):
@@ -210,3 +213,30 @@ class TestAuthentication(TestCase):
         assert user2.organization.id == external_organization.id
         assert user2.username == "business_tuser"
         assert user2.authorization_id == new_user2.authorization_id
+
+    def test_debug_local(self):
+        settings.DEBUG = True
+
+        request = self.factory.get('/')
+        request.META = {
+            'HTTP_HOST': 'localhost'
+        }
+
+        user, auth = self.userauth.authenticate(request)
+        # First user in the database
+        assert user.username == 'business_bsmith'
+
+    def test_debug_local_error(self):
+        settings.DEBUG = True
+
+        request = self.factory.get('/')
+        request.META = {
+            'HTTP_HOST': 'test.localhost.com'
+        }
+
+        # Will throw error on this line on authentication.py:
+        # header_user_guid = uuid.UUID(request.META.get('HTTP_SMAUTH_USERGUID'))
+        # raise TypeError('one of the hex, bytes, bytes_le, fields, '
+
+        with self.assertRaises(TypeError):
+            user, auth = self.userauth.authenticate(request)
