@@ -1,0 +1,216 @@
+{
+    "kind": "Template",
+    "apiVersion": "v1",
+    "metadata": {
+        "name": "test-route",
+        "creationTimestamp": null
+    },
+    "objects": [
+        {
+            "kind": "RoleBinding",
+            "apiVersion": "v1",
+            "metadata": {
+                "name": "admin",
+                "creationTimestamp": null
+            },
+            "userNames": [
+                "sheaphillips",
+                "rajpersram",
+                "kuanfandevops",
+                "cvarjao"
+            ],
+            "groupNames": null,
+            "subjects": [
+                {
+                    "kind": "User",
+                    "name": "sheaphillips"
+                },
+                {
+                    "kind": "User",
+                    "name": "rajpersram"
+                },
+                {
+                    "kind": "User",
+                    "name": "kuanfandevops"
+                },
+                {
+                    "kind": "User",
+                    "name": "cvarjao"
+                }
+            ],
+            "roleRef": {
+                "name": "admin"
+            }
+        },
+        {
+            "kind": "RoleBinding",
+            "apiVersion": "v1",
+            "metadata": {
+                "name": "jenkins_edit",
+                "creationTimestamp": null,
+                "labels": {
+                    "app": "jenkins-pipeline",
+                    "template": "jenkins-persistent-template"
+                }
+            },
+            "userNames": [
+                "system:serviceaccount:mem-tfrs-tools:jenkins",
+                "matthewhall78",
+                "dainetrinidad",
+                "rstens"
+            ],
+            "groupNames": null,
+            "subjects": [
+                {
+                    "kind": "ServiceAccount",
+                    "namespace": "mem-tfrs-tools",
+                    "name": "jenkins"
+                },
+                {
+                    "kind": "User",
+                    "name": "matthewhall78"
+                },
+                {
+                    "kind": "User",
+                    "name": "dainetrinidad"
+                },
+                {
+                    "kind": "User",
+                    "name": "rstens"
+                }
+            ],
+            "roleRef": {
+                "name": "edit"
+            }
+        },
+        {
+            "kind": "RoleBinding",
+            "apiVersion": "v1",
+            "metadata": {
+                "name": "system:deployers",
+                "creationTimestamp": null
+            },
+            "userNames": [
+                "system:serviceaccount:mem-tfrs-tools:deployer"
+            ],
+            "groupNames": null,
+            "subjects": [
+                {
+                    "kind": "ServiceAccount",
+                    "namespace": "mem-tfrs-tools",
+                    "name": "deployer"
+                }
+            ],
+            "roleRef": {
+                "name": "system:deployer"
+            }
+        },
+        {
+            "kind": "RoleBinding",
+            "apiVersion": "v1",
+            "metadata": {
+                "name": "system:image-builders",
+                "creationTimestamp": null
+            },
+            "userNames": [
+                "system:serviceaccount:mem-tfrs-tools:builder"
+            ],
+            "groupNames": null,
+            "subjects": [
+                {
+                    "kind": "ServiceAccount",
+                    "namespace": "mem-tfrs-tools",
+                    "name": "builder"
+                }
+            ],
+            "roleRef": {
+                "name": "system:image-builder"
+            }
+        },
+        {
+            "kind": "RoleBinding",
+            "apiVersion": "v1",
+            "metadata": {
+                "name": "system:image-pullers",
+                "creationTimestamp": null
+            },
+            "userNames": [
+                "system:serviceaccount:mem-tfrs-dev:default",
+                "system:serviceaccount:mem-tfrs-test:default",
+                "system:serviceaccount:mem-tfrs-prod:default",
+                "system:serviceaccount:default:jenkins",
+                "system:serviceaccount:default:jenkins-pipeline-svc",
+                "system:serviceaccount:mem-tfrs-dev:deployer"
+            ],
+            "groupNames": [
+                "system:serviceaccounts:mem-tfrs-tools"
+            ],
+            "subjects": [
+                {
+                    "kind": "ServiceAccount",
+                    "namespace": "mem-tfrs-dev",
+                    "name": "default"
+                },
+                {
+                    "kind": "ServiceAccount",
+                    "namespace": "mem-tfrs-test",
+                    "name": "default"
+                },
+                {
+                    "kind": "ServiceAccount",
+                    "namespace": "mem-tfrs-prod",
+                    "name": "default"
+                },
+                {
+                    "kind": "ServiceAccount",
+                    "namespace": "default",
+                    "name": "jenkins"
+                },
+                {
+                    "kind": "ServiceAccount",
+                    "namespace": "default",
+                    "name": "jenkins-pipeline-svc"
+                },
+                {
+                    "kind": "ServiceAccount",
+                    "namespace": "mem-tfrs-dev",
+                    "name": "deployer"
+                },
+                {
+                    "kind": "SystemGroup",
+                    "name": "system:serviceaccounts:mem-tfrs-tools"
+                }
+            ],
+            "roleRef": {
+                "name": "system:image-puller"
+            }
+        },
+        {
+            "kind": "RoleBinding",
+            "apiVersion": "v1",
+            "metadata": {
+                "name": "view",
+                "creationTimestamp": null
+            },
+            "userNames": [
+                "swcurran",
+                "system:serviceaccount:default:jenkins"
+            ],
+            "groupNames": null,
+            "subjects": [
+                {
+                    "kind": "User",
+                    "name": "swcurran"
+                },
+                {
+                    "kind": "ServiceAccount",
+                    "namespace": "default",
+                    "name": "jenkins"
+                }
+            ],
+            "roleRef": {
+                "name": "view"
+            }
+        }
+    ]
+}
