@@ -119,39 +119,6 @@
             "kind": "Service",
             "apiVersion": "v1",
             "metadata": {
-                "name": "httpd-example",
-                "creationTimestamp": null,
-                "labels": {
-                    "app": "httpd-example",
-                    "template": "httpd-example"
-                },
-                "annotations": {
-                    "description": "Exposes and load balances the application pods"
-                }
-            },
-            "spec": {
-                "ports": [
-                    {
-                        "name": "web",
-                        "protocol": "TCP",
-                        "port": 8080,
-                        "targetPort": 8080
-                    }
-                ],
-                "selector": {
-                    "name": "httpd-example"
-                },
-                "type": "ClusterIP",
-                "sessionAffinity": "None"
-            },
-            "status": {
-                "loadBalancer": {}
-            }
-        },
-        {
-            "kind": "Service",
-            "apiVersion": "v1",
-            "metadata": {
                 "name": "postgresql",
                 "creationTimestamp": null,
                 "labels": {
