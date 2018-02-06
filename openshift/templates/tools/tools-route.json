@@ -1,8 +1,11 @@
 {
-    "kind": "List",
+    "kind": "Template",
     "apiVersion": "v1",
-    "metadata": {},
-    "items": [
+    "metadata": {
+        "name": "tools-route",
+        "creationTimestamp": null
+    },
+    "objects": [
         {
             "kind": "Route",
             "apiVersion": "v1",
@@ -14,6 +17,7 @@
                     "template": "jenkins-persistent-template"
                 },
                 "annotations": {
+                    "haproxy.router.openshift.io/timeout": "180s",
                     "openshift.io/host.generated": "true",
                     "template.openshift.io/expose-uri": "http://{.spec.host}{.spec.path}"
                 }
