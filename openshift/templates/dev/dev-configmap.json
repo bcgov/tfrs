@@ -1,11 +1,8 @@
 {
-    "kind": "Template",
+    "kind": "List",
     "apiVersion": "v1",
-    "metadata": {
-        "name": "dev-route",
-        "creationTimestamp": null
-    },
-    "objects": [
+    "metadata": {},
+    "items": [
         {
             "kind": "ConfigMap",
             "apiVersion": "v1",
