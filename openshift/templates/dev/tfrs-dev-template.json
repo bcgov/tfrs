@@ -7,19 +7,6 @@
     },
     "objects": [
         {
-            "kind": "Secret",
-            "apiVersion": "v1",
-            "metadata": {
-                "name": "tfrs-postgresql",
-                "creationTimestamp": null
-            },
-            "data": {
-                "DATABASE_PASSWORD": "UHcyT0Y3amE2cTJveEp3Yg==",
-                "DATABASE_USER": "dXNlclhZSw=="
-            },
-            "type": "Opaque"
-        },
-        {
             "kind": "ConfigMap",
             "apiVersion": "v1",
             "metadata": {
@@ -585,7 +572,7 @@
                         "containers": [
                             {
                                 "name": "client",
-                                "image": "172.50.0.2:5000/mem-tfrs-tools/client@sha256:f84c1334d8d0c00a0cda35eab3d8f56d5e7f9203968e784fda14b971b04b4137",
+                                "image": "172.50.0.2:5000/mem-tfrs-tools/client@sha256:ba57753bff5e6c319abbbcdf0951ed209b503b25b35c4b7eddc68c2ba5096921",
                                 "ports": [
                                     {
                                         "containerPort": 3000,
