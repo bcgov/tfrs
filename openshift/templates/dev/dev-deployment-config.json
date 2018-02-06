@@ -1,11 +1,8 @@
 {
-    "kind": "Template",
+    "kind": "List",
     "apiVersion": "v1",
-    "metadata": {
-        "name": "dev-deployment-config",
-        "creationTimestamp": null
-    },
-    "objects": [
+    "metadata": {},
+    "items": [
         {
             "kind": "DeploymentConfig",
             "apiVersion": "v1",
@@ -187,7 +184,7 @@
                         "containers": [
                             {
                                 "name": "client",
-                                "image": "172.50.0.2:5000/mem-tfrs-tools/client@sha256:434298948de1fea766cc14e0bd552d89b233f39f2eebc24020b237476aece0e9",
+                                "image": "172.50.0.2:5000/mem-tfrs-tools/client@sha256:f84c1334d8d0c00a0cda35eab3d8f56d5e7f9203968e784fda14b971b04b4137",
                                 "ports": [
                                     {
                                         "containerPort": 3000,
