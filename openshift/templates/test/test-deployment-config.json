@@ -1,8 +1,11 @@
 {
-    "kind": "List",
+    "kind": "Template",
     "apiVersion": "v1",
-    "metadata": {},
-    "items": [
+    "metadata": {
+        "name": "test-deployment-config",
+        "creationTimestamp": null
+    },
+    "objects": [
         {
             "kind": "DeploymentConfig",
             "apiVersion": "v1",
@@ -63,14 +66,14 @@
                             {
                                 "name": "jenkins-data",
                                 "persistentVolumeClaim": {
-                                    "claimName": "jenkins"
+                                    "claimName": "jenkins-cns2"
                                 }
                             }
                         ],
                         "containers": [
                             {
                                 "name": "jenkins",
-                                "image": "registry.access.redhat.com/openshift3/jenkins-2-rhel7@sha256:c47b5d8c9ba8a57255e5191cbf0ed9e0cb998bc823846ba52c34cca11a3cf2a0",
+                                "image": "registry.access.redhat.com/openshift3/jenkins-2-rhel7@sha256:c2e5ffc909fc598628caebe56571849cbcbeea6c99f885a9870cb8c5967d5111",
                                 "env": [
                                     {
                                         "name": "OPENSHIFT_ENABLE_OAUTH",
@@ -103,11 +106,12 @@
                                 ],
                                 "resources": {
                                     "limits": {
-                                        "cpu": "1",
-                                        "memory": "4Gi"
+                                        "cpu": "2",
+                                        "memory": "6Gi"
                                     },
                                     "requests": {
-                                        "cpu": "300m"
+                                        "cpu": "1",
+                                        "memory": "2Gi"
                                     }
                                 },
                                 "volumeMounts": [
@@ -116,30 +120,6 @@
                                         "mountPath": "/var/lib/jenkins"
                                     }
                                 ],
-                                "livenessProbe": {
-                                    "httpGet": {
-                                        "path": "/login",
-                                        "port": 8080,
-                                        "scheme": "HTTP"
-                                    },
-                                    "initialDelaySeconds": 420,
-                                    "timeoutSeconds": 3,
-                                    "periodSeconds": 10,
-                                    "successThreshold": 1,
-                                    "failureThreshold": 30
-                                },
-                                "readinessProbe": {
-                                    "httpGet": {
-                                        "path": "/login",
-                                        "port": 8080,
-                                        "scheme": "HTTP"
-                                    },
-                                    "initialDelaySeconds": 3,
-                                    "timeoutSeconds": 3,
-                                    "periodSeconds": 10,
-                                    "successThreshold": 1,
-                                    "failureThreshold": 3
-                                },
                                 "terminationMessagePath": "/dev/termination-log",
                                 "terminationMessagePolicy": "File",
                                 "imagePullPolicy": "IfNotPresent",
@@ -194,9 +174,6 @@
                 },
                 "triggers": [
                     {
-                        "type": "ConfigChange"
-                    },
-                    {
                         "type": "ImageChange",
                         "imageChangeParams": {
                             "automatic": true,
@@ -206,9 +183,12 @@
                             "from": {
                                 "kind": "ImageStreamTag",
                                 "namespace": "openshift",
-                                "name": "postgres:9.4"
+                                "name": "postgresql:9.4"
                             }
                         }
+                    },
+                    {
+                        "type": "ConfigChange"
                     }
                 ],
                 "replicas": 1,
@@ -233,14 +213,14 @@
                             {
                                 "name": "postgresql-sonarqube-data",
                                 "persistentVolumeClaim": {
-                                    "claimName": "postgresql-sonarqube-pvc"
+                                    "claimName": "postgresql-sonarqube-cns"
                                 }
                             }
                         ],
                         "containers": [
                             {
                                 "name": "postgres",
-                                "image": "registry.access.redhat.com/rhscl/postgresql-94-rhel7",
+                                "image": "registry.access.redhat.com/rhscl/postgresql-94-rhel7@sha256:999f3041aed3bbdbca5c55bfc5849ca15e5546f457e82582863ae271b6485478",
                                 "ports": [
                                     {
                                         "containerPort": 5432,
@@ -347,21 +327,14 @@
             },
             "spec": {
                 "strategy": {
-                    "type": "Rolling",
-                    "rollingParams": {
-                        "updatePeriodSeconds": 1,
-                        "intervalSeconds": 1,
-                        "timeoutSeconds": 600,
-                        "maxUnavailable": "25%",
-                        "maxSurge": "25%"
+                    "type": "Recreate",
+                    "recreateParams": {
+                        "timeoutSeconds": 600
                     },
                     "resources": {},
                     "activeDeadlineSeconds": 21600
                 },
                 "triggers": [
-                    {
-                        "type": "ConfigChange"
-                    },
                     {
                         "type": "ImageChange",
                         "imageChangeParams": {
@@ -375,6 +348,9 @@
                                 "name": "sonarqube:6.0"
                             }
                         }
+                    },
+                    {
+                        "type": "ConfigChange"
                     }
                 ],
                 "replicas": 1,
@@ -399,7 +375,7 @@
                             {
                                 "name": "sonarqube-extensions",
                                 "persistentVolumeClaim": {
-                                    "claimName": "sonarqube-data"
+                                    "claimName": "sonarqube-data-cns"
                                 }
                             }
                         ],
