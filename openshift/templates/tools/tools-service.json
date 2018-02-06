@@ -1,14 +1,124 @@
 {
-    "kind": "List",
+    "kind": "Template",
     "apiVersion": "v1",
-    "metadata": {},
-    "items": [
+    "metadata": {
+        "name": "tools-service",
+        "creationTimestamp": null
+    },
+    "objects": [
+        {
+            "kind": "Service",
+            "apiVersion": "v1",
+            "metadata": {
+                "name": "cns-upgrade",
+                "creationTimestamp": null,
+                "labels": {
+                    "app": "cns-upgrade"
+                },
+                "annotations": {
+                    "openshift.io/generated-by": "OpenShiftWebConsole"
+                }
+            },
+            "spec": {
+                "ports": [
+                    {
+                        "name": "8080-tcp",
+                        "protocol": "TCP",
+                        "port": 8080,
+                        "targetPort": 8080
+                    }
+                ],
+                "selector": {
+                    "deploymentconfig": "cns-upgrade"
+                },
+                "type": "ClusterIP",
+                "sessionAffinity": "None"
+            },
+            "status": {
+                "loadBalancer": {}
+            }
+        },
         {
             "kind": "Service",
             "apiVersion": "v1",
             "metadata": {
                 "name": "glusterfs-cluster-app",
                 "creationTimestamp": null
+            },
+            "spec": {
+                "ports": [
+                    {
+                        "protocol": "TCP",
+                        "port": 1,
+                        "targetPort": 1
+                    }
+                ],
+                "type": "ClusterIP",
+                "sessionAffinity": "None"
+            },
+            "status": {
+                "loadBalancer": {}
+            }
+        },
+        {
+            "kind": "Service",
+            "apiVersion": "v1",
+            "metadata": {
+                "name": "glusterfs-dynamic-jenkins-cns2",
+                "creationTimestamp": null,
+                "labels": {
+                    "gluster.kubernetes.io/provisioned-for-pvc": "jenkins-cns2"
+                }
+            },
+            "spec": {
+                "ports": [
+                    {
+                        "protocol": "TCP",
+                        "port": 1,
+                        "targetPort": 1
+                    }
+                ],
+                "type": "ClusterIP",
+                "sessionAffinity": "None"
+            },
+            "status": {
+                "loadBalancer": {}
+            }
+        },
+        {
+            "kind": "Service",
+            "apiVersion": "v1",
+            "metadata": {
+                "name": "glusterfs-dynamic-postgresql-sonarqube-cns",
+                "creationTimestamp": null,
+                "labels": {
+                    "gluster.kubernetes.io/provisioned-for-pvc": "postgresql-sonarqube-cns"
+                }
+            },
+            "spec": {
+                "ports": [
+                    {
+                        "protocol": "TCP",
+                        "port": 1,
+                        "targetPort": 1
+                    }
+                ],
+                "type": "ClusterIP",
+                "sessionAffinity": "None"
+            },
+            "status": {
+                "loadBalancer": {}
+            }
+        },
+        {
+            "kind": "Service",
+            "apiVersion": "v1",
+            "metadata": {
+                "name": "glusterfs-dynamic-sonarqube-data-cns",
+                "creationTimestamp": null,
+                "labels": {
+                    "gluster.kubernetes.io/provisioned-for-pvc": "sonarqube-data-cns"
+                }
             },
             "spec": {
                 "ports": [
@@ -140,6 +250,38 @@
                 "selector": {
                     "app": "sonarqube",
                     "deploymentconfig": "sonarqube"
+                },
+                "type": "ClusterIP",
+                "sessionAffinity": "None"
+            },
+            "status": {
+                "loadBalancer": {}
+            }
+        },
+        {
+            "kind": "Service",
+            "apiVersion": "v1",
+            "metadata": {
+                "name": "tfrs-cnsupgrade",
+                "creationTimestamp": null,
+                "labels": {
+                    "app": "tfrs-cnsupgrade"
+                },
+                "annotations": {
+                    "openshift.io/generated-by": "OpenShiftWebConsole"
+                }
+            },
+            "spec": {
+                "ports": [
+                    {
+                        "name": "8080-tcp",
+                        "protocol": "TCP",
+                        "port": 8080,
+                        "targetPort": 8080
+                    }
+                ],
+                "selector": {
+                    "deploymentconfig": "tfrs-cnsupgrade"
                 },
                 "type": "ClusterIP",
                 "sessionAffinity": "None"
