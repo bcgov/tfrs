@@ -10,41 +10,32 @@
             "kind": "Route",
             "apiVersion": "v1",
             "metadata": {
-                "name": "jenkins",
-                "creationTimestamp": null,
-                "labels": {
-                    "app": "jenkins-pipeline",
-                    "template": "jenkins-persistent-template"
-                },
-                "annotations": {
-                    "haproxy.router.openshift.io/timeout": "180s",
-                    "openshift.io/host.generated": "true",
-                    "template.openshift.io/expose-uri": "http://{.spec.host}{.spec.path}"
-                }
+                "name": "api",
+                "creationTimestamp": null
             },
             "spec": {
-                "host": "jenkins-mem-tfrs-tools.pathfinder.gov.bc.ca",
+                "host": "test-lowcarbonfuels.pathfinder.bcgov",
+                "path": "/api",
                 "to": {
                     "kind": "Service",
-                    "name": "jenkins",
+                    "name": "backend",
                     "weight": 100
                 },
-                "tls": {
-                    "termination": "edge",
-                    "insecureEdgeTerminationPolicy": "Redirect"
+                "port": {
+                    "targetPort": "web"
                 },
                 "wildcardPolicy": "None"
             },
             "status": {
                 "ingress": [
                     {
-                        "host": "jenkins-mem-tfrs-tools.pathfinder.gov.bc.ca",
+                        "host": "test-lowcarbonfuels.pathfinder.bcgov",
                         "routerName": "router",
                         "conditions": [
                             {
                                 "type": "Admitted",
                                 "status": "True",
-                                "lastTransitionTime": "2017-10-27T22:29:05Z"
+                                "lastTransitionTime": "2018-01-24T21:01:59Z"
                             }
                         ],
                         "wildcardPolicy": "None"
@@ -56,37 +47,67 @@
             "kind": "Route",
             "apiVersion": "v1",
             "metadata": {
-                "name": "sonarqube",
-                "creationTimestamp": null,
-                "labels": {
-                    "app": "sonarqube"
-                },
-                "annotations": {
-                    "openshift.io/host.generated": "true"
-                }
+                "name": "main",
+                "creationTimestamp": null
             },
             "spec": {
-                "host": "sonarqube-tfrs-tools.pathfinder.gov.bc.ca",
+                "host": "test-lowcarbonfuels.pathfinder.bcgov",
                 "to": {
                     "kind": "Service",
-                    "name": "sonarqube",
+                    "name": "client",
                     "weight": 100
                 },
                 "port": {
-                    "targetPort": "9000-tcp"
+                    "targetPort": "web"
                 },
                 "wildcardPolicy": "None"
             },
             "status": {
                 "ingress": [
                     {
-                        "host": "sonarqube-tfrs-tools.pathfinder.gov.bc.ca",
+                        "host": "test-lowcarbonfuels.pathfinder.bcgov",
                         "routerName": "router",
                         "conditions": [
                             {
                                 "type": "Admitted",
                                 "status": "True",
-                                "lastTransitionTime": "2017-07-27T16:25:16Z"
+                                "lastTransitionTime": "2018-01-31T23:14:30Z"
+                            }
+                        ],
+                        "wildcardPolicy": "None"
+                    }
+                ]
+            }
+        },
+        {
+            "kind": "Route",
+            "apiVersion": "v1",
+            "metadata": {
+                "name": "schema-spy",
+                "creationTimestamp": null
+            },
+            "spec": {
+                "host": "schema-spy-mem-tfrs-test.pathfinder.gov.bc.ca",
+                "to": {
+                    "kind": "Service",
+                    "name": "schema-spy",
+                    "weight": 100
+                },
+                "port": {
+                    "targetPort": "8080-tcp"
+                },
+                "wildcardPolicy": "None"
+            },
+            "status": {
+                "ingress": [
+                    {
+                        "host": "schema-spy-mem-tfrs-test.pathfinder.gov.bc.ca",
+                        "routerName": "router",
+                        "conditions": [
+                            {
+                                "type": "Admitted",
+                                "status": "True",
+                                "lastTransitionTime": "2017-11-30T21:39:14Z"
                             }
                         ],
                         "wildcardPolicy": "None"
