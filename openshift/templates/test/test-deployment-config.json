@@ -10,22 +10,22 @@
             "kind": "DeploymentConfig",
             "apiVersion": "v1",
             "metadata": {
-                "name": "jenkins",
+                "name": "client",
                 "generation": 1,
                 "creationTimestamp": null,
-                "labels": {
-                    "app": "jenkins-pipeline",
-                    "template": "jenkins-persistent-template"
-                },
                 "annotations": {
-                    "template.alpha.openshift.io/wait-for-ready": "true"
+                    "description": "Defines how to deploy the application server"
                 }
             },
             "spec": {
                 "strategy": {
-                    "type": "Recreate",
-                    "recreateParams": {
-                        "timeoutSeconds": 600
+                    "type": "Rolling",
+                    "rollingParams": {
+                        "updatePeriodSeconds": 1,
+                        "intervalSeconds": 1,
+                        "timeoutSeconds": 600,
+                        "maxUnavailable": "25%",
+                        "maxSurge": "25%"
                     },
                     "resources": {},
                     "activeDeadlineSeconds": 21600
@@ -36,12 +36,12 @@
                         "imageChangeParams": {
                             "automatic": true,
                             "containerNames": [
-                                "jenkins"
+                                "client"
                             ],
                             "from": {
                                 "kind": "ImageStreamTag",
-                                "namespace": "openshift",
-                                "name": "jenkins:latest"
+                                "namespace": "mem-tfrs-tools",
+                                "name": "client:test"
                             }
                         }
                     },
@@ -52,88 +52,62 @@
                 "replicas": 1,
                 "test": false,
                 "selector": {
-                    "name": "jenkins"
+                    "name": "client"
                 },
                 "template": {
                     "metadata": {
+                        "name": "client",
                         "creationTimestamp": null,
                         "labels": {
-                            "name": "jenkins"
+                            "name": "client"
                         }
                     },
                     "spec": {
-                        "volumes": [
-                            {
-                                "name": "jenkins-data",
-                                "persistentVolumeClaim": {
-                                    "claimName": "jenkins-cns2"
-                                }
-                            }
-                        ],
                         "containers": [
                             {
-                                "name": "jenkins",
-                                "image": "registry.access.redhat.com/openshift3/jenkins-2-rhel7@sha256:c2e5ffc909fc598628caebe56571849cbcbeea6c99f885a9870cb8c5967d5111",
+                                "name": "client",
+                                "image": "172.50.0.2:5000/mem-tfrs-tools/client@sha256:7b70a249fcf707aba746df06eee95ff1b3c329b0287abed2304f91c3caba16a1",
+                                "ports": [
+                                    {
+                                        "containerPort": 3000,
+                                        "protocol": "TCP"
+                                    }
+                                ],
                                 "env": [
                                     {
-                                        "name": "OPENSHIFT_ENABLE_OAUTH",
-                                        "value": "true"
+                                        "name": "API_URL",
+                                        "value": "http://backend-mem-tfrs-test.pathfinder.gov.bc.ca/api/"
                                     },
                                     {
-                                        "name": "OPENSHIFT_ENABLE_REDIRECT_PROMPT",
-                                        "value": "true"
+                                        "name": "RealIpFrom"
                                     },
                                     {
-                                        "name": "OPENSHIFT_JENKINS_JVM_ARCH",
-                                        "value": "x86_64"
+                                        "name": "AdditionalRealIpFromRules"
                                     },
                                     {
-                                        "name": "KUBERNETES_MASTER",
-                                        "value": "https://kubernetes.default:443"
+                                        "name": "IpFilterRules"
                                     },
                                     {
-                                        "name": "KUBERNETES_TRUST_CERTIFICATES",
-                                        "value": "true"
+                                        "name": "HTTP_BASIC"
                                     },
                                     {
-                                        "name": "JNLP_SERVICE_NAME",
-                                        "value": "jenkins-jnlp"
-                                    },
-                                    {
-                                        "name": "JAVA_OPTS",
-                                        "value": "-XX:MaxMetaspaceSize=512m"
+                                        "name": "API_URL",
+                                        "value": "http://backend.mem-tfrs-test.svc.cluster.local:8080/api/"
                                     }
                                 ],
                                 "resources": {
                                     "limits": {
-                                        "cpu": "2",
-                                        "memory": "6Gi"
-                                    },
-                                    "requests": {
-                                        "cpu": "1",
-                                        "memory": "2Gi"
+                                        "memory": "1Gi"
                                     }
                                 },
-                                "volumeMounts": [
-                                    {
-                                        "name": "jenkins-data",
-                                        "mountPath": "/var/lib/jenkins"
-                                    }
-                                ],
                                 "terminationMessagePath": "/dev/termination-log",
                                 "terminationMessagePolicy": "File",
-                                "imagePullPolicy": "IfNotPresent",
-                                "securityContext": {
-                                    "capabilities": {},
-                                    "privileged": false
-                                }
+                                "imagePullPolicy": "IfNotPresent"
                             }
                         ],
                         "restartPolicy": "Always",
                         "terminationGracePeriodSeconds": 30,
                         "dnsPolicy": "ClusterFirst",
-                        "serviceAccountName": "jenkins",
-                        "serviceAccount": "jenkins",
                         "securityContext": {},
                         "schedulerName": "default-scheduler"
                     }
@@ -152,15 +126,12 @@
             "kind": "DeploymentConfig",
             "apiVersion": "v1",
             "metadata": {
-                "name": "postgresql-sonarqube",
+                "name": "postgresql",
                 "generation": 1,
                 "creationTimestamp": null,
                 "labels": {
-                    "app": "postgresql-sonarqube"
-                },
-                "annotations": {
-                    "description": "Defines how to deploy the database",
-                    "openshift.io/container.postgresql.image.entrypoint": "[\"container-entrypoint\",\"run-postgresql\"]"
+                    "app": "postgresql-persistent",
+                    "template": "postgresql-persistent-template"
                 }
             },
             "spec": {
@@ -178,12 +149,12 @@
                         "imageChangeParams": {
                             "automatic": true,
                             "containerNames": [
-                                "postgres"
+                                "postgresql"
                             ],
                             "from": {
                                 "kind": "ImageStreamTag",
                                 "namespace": "openshift",
-                                "name": "postgresql:9.4"
+                                "name": "postgresql:9.5"
                             }
                         }
                     },
@@ -194,33 +165,28 @@
                 "replicas": 1,
                 "test": false,
                 "selector": {
-                    "app": "postgresql-sonarqube",
-                    "deploymentconfig": "postgresql-sonarqube"
+                    "name": "postgresql"
                 },
                 "template": {
                     "metadata": {
                         "creationTimestamp": null,
                         "labels": {
-                            "app": "postgresql-sonarqube",
-                            "deploymentconfig": "postgresql-sonarqube"
-                        },
-                        "annotations": {
-                            "openshift.io/container.postgresql.image.entrypoint": "[\"container-entrypoint\",\"run-postgresql\"]"
+                            "name": "postgresql"
                         }
                     },
                     "spec": {
                         "volumes": [
                             {
-                                "name": "postgresql-sonarqube-data",
+                                "name": "postgresql-data",
                                 "persistentVolumeClaim": {
-                                    "claimName": "postgresql-sonarqube-cns"
+                                    "claimName": "postgresql-cns"
                                 }
                             }
                         ],
                         "containers": [
                             {
-                                "name": "postgres",
-                                "image": "registry.access.redhat.com/rhscl/postgresql-94-rhel7@sha256:999f3041aed3bbdbca5c55bfc5849ca15e5546f457e82582863ae271b6485478",
+                                "name": "postgresql",
+                                "image": "registry.access.redhat.com/rhscl/postgresql-95-rhel7@sha256:19aacf0c8331df76b67932415bd84abf74ec36fd9d4aef518ad9f6285c4a948a",
                                 "ports": [
                                     {
                                         "containerPort": 5432,
@@ -230,40 +196,35 @@
                                 "env": [
                                     {
                                         "name": "POSTGRESQL_DATABASE",
-                                        "value": "sonarqube"
-                                    },
-                                    {
-                                        "name": "POSTGRESQL_PASSWORD",
-                                        "valueFrom": {
-                                            "secretKeyRef": {
-                                                "name": "sonarqube-secrets",
-                                                "key": "database-password"
-                                            }
-                                        }
-                                    },
-                                    {
-                                        "name": "POSTGRESQL_ADMIN_PASSWORD",
-                                        "valueFrom": {
-                                            "secretKeyRef": {
-                                                "name": "sonarqube-secrets",
-                                                "key": "database-admin-password"
-                                            }
-                                        }
+                                        "value": "tfrs"
                                     },
                                     {
                                         "name": "POSTGRESQL_USER",
                                         "valueFrom": {
                                             "secretKeyRef": {
-                                                "name": "sonarqube-secrets",
-                                                "key": "database-user"
+                                                "name": "tfrs-postgresql",
+                                                "key": "DATABASE_USER"
+                                            }
+                                        }
+                                    },
+                                    {
+                                        "name": "POSTGRESQL_PASSWORD",
+                                        "valueFrom": {
+                                            "secretKeyRef": {
+                                                "name": "tfrs-postgresql",
+                                                "key": "DATABASE_PASSWORD"
                                             }
                                         }
                                     }
                                 ],
-                                "resources": {},
+                                "resources": {
+                                    "limits": {
+                                        "memory": "512Mi"
+                                    }
+                                },
                                 "volumeMounts": [
                                     {
-                                        "name": "postgresql-sonarqube-data",
+                                        "name": "postgresql-data",
                                         "mountPath": "/var/lib/pgsql/data"
                                     }
                                 ],
@@ -286,7 +247,7 @@
                                             "psql -h 127.0.0.1 -U $POSTGRESQL_USER -q -d $POSTGRESQL_DATABASE -c 'SELECT 1'"
                                         ]
                                     },
-                                    "initialDelaySeconds": 15,
+                                    "initialDelaySeconds": 5,
                                     "timeoutSeconds": 1,
                                     "periodSeconds": 10,
                                     "successThreshold": 1,
@@ -294,7 +255,11 @@
                                 },
                                 "terminationMessagePath": "/dev/termination-log",
                                 "terminationMessagePolicy": "File",
-                                "imagePullPolicy": "Always"
+                                "imagePullPolicy": "IfNotPresent",
+                                "securityContext": {
+                                    "capabilities": {},
+                                    "privileged": false
+                                }
                             }
                         ],
                         "restartPolicy": "Always",
@@ -318,18 +283,22 @@
             "kind": "DeploymentConfig",
             "apiVersion": "v1",
             "metadata": {
-                "name": "sonarqube",
+                "name": "schema-spy",
                 "generation": 1,
                 "creationTimestamp": null,
-                "labels": {
-                    "app": "sonarqube"
+                "annotations": {
+                    "description": "Defines how to deploy the container."
                 }
             },
             "spec": {
                 "strategy": {
-                    "type": "Recreate",
-                    "recreateParams": {
-                        "timeoutSeconds": 600
+                    "type": "Rolling",
+                    "rollingParams": {
+                        "updatePeriodSeconds": 1,
+                        "intervalSeconds": 1,
+                        "timeoutSeconds": 600,
+                        "maxUnavailable": "25%",
+                        "maxSurge": "25%"
                     },
                     "resources": {},
                     "activeDeadlineSeconds": 21600
@@ -340,12 +309,12 @@
                         "imageChangeParams": {
                             "automatic": true,
                             "containerNames": [
-                                "sonarqube"
+                                "schema-spy"
                             ],
                             "from": {
                                 "kind": "ImageStreamTag",
-                                "namespace": "openshift",
-                                "name": "sonarqube:6.0"
+                                "namespace": "mem-tfrs-tools",
+                                "name": "schema-spy:latest"
                             }
                         }
                     },
@@ -356,92 +325,243 @@
                 "replicas": 1,
                 "test": false,
                 "selector": {
-                    "app": "sonarqube",
-                    "deploymentconfig": "sonarqube"
+                    "name": "schema-spy"
                 },
                 "template": {
                     "metadata": {
+                        "name": "schema-spy",
                         "creationTimestamp": null,
                         "labels": {
-                            "app": "sonarqube",
-                            "deploymentconfig": "sonarqube"
-                        },
-                        "annotations": {
-                            "openshift.io/container.sonarqube.image.entrypoint": "[\"./bin/run.sh\"]"
+                            "name": "schema-spy"
                         }
                     },
                     "spec": {
-                        "volumes": [
-                            {
-                                "name": "sonarqube-extensions",
-                                "persistentVolumeClaim": {
-                                    "claimName": "sonarqube-data-cns"
-                                }
-                            }
-                        ],
                         "containers": [
                             {
-                                "name": "sonarqube",
-                                "image": "openshiftdemos/sonarqube@sha256:90bc4c270d3a9f9923ef0b38f7904cfb9c00e4307d4d853e9341a334e8f29cf0",
+                                "name": "schema-spy",
+                                "image": "172.50.0.2:5000/mem-tfrs-tools/schema-spy@sha256:7a420819e019200ec98ebebe06388872f2f72f37baa7c64162a4a4d4909bcfbf",
                                 "ports": [
                                     {
-                                        "containerPort": 9000,
+                                        "containerPort": 8080,
                                         "protocol": "TCP"
                                     }
                                 ],
                                 "env": [
                                     {
-                                        "name": "SONARQUBE_JDBC_USERNAME",
+                                        "name": "DATABASE_SERVICE_NAME",
+                                        "value": "postgresql"
+                                    },
+                                    {
+                                        "name": "POSTGRESQL_DATABASE",
+                                        "value": "tfrs"
+                                    },
+                                    {
+                                        "name": "POSTGRESQL_USER",
                                         "valueFrom": {
                                             "secretKeyRef": {
-                                                "name": "sonarqube-secrets",
-                                                "key": "database-user"
+                                                "name": "tfrs-postgresql",
+                                                "key": "DATABASE_USER"
                                             }
                                         }
                                     },
                                     {
-                                        "name": "SONARQUBE_JDBC_URL",
-                                        "value": "jdbc:postgresql://postgresql-sonarqube/sonarqube"
-                                    },
-                                    {
-                                        "name": "SONARQUBE_JDBC_PASSWORD",
+                                        "name": "POSTGRESQL_PASSWORD",
                                         "valueFrom": {
                                             "secretKeyRef": {
-                                                "name": "sonarqube-secrets",
-                                                "key": "database-password"
-                                            }
-                                        }
-                                    },
-                                    {
-                                        "name": "SONARQUBE_ADMINPW",
-                                        "valueFrom": {
-                                            "secretKeyRef": {
-                                                "name": "sonarqube-secrets",
-                                                "key": "sonar-admin-password"
+                                                "name": "tfrs-postgresql",
+                                                "key": "DATABASE_PASSWORD"
                                             }
                                         }
                                     }
                                 ],
                                 "resources": {
                                     "limits": {
-                                        "cpu": "1",
-                                        "memory": "4Gi"
+                                        "memory": "512Mi"
                                     }
                                 },
-                                "volumeMounts": [
-                                    {
-                                        "name": "sonarqube-extensions",
-                                        "mountPath": "/opt/sonarqube/extensions"
-                                    }
-                                ],
+                                "livenessProbe": {
+                                    "httpGet": {
+                                        "path": "/",
+                                        "port": 8080,
+                                        "scheme": "HTTP"
+                                    },
+                                    "initialDelaySeconds": 30,
+                                    "timeoutSeconds": 3000,
+                                    "periodSeconds": 10,
+                                    "successThreshold": 1,
+                                    "failureThreshold": 3
+                                },
                                 "readinessProbe": {
                                     "httpGet": {
                                         "path": "/",
-                                        "port": 9000,
+                                        "port": 8080,
                                         "scheme": "HTTP"
                                     },
-                                    "initialDelaySeconds": 15,
-                                    "timeoutSeconds": 1,
+                                    "initialDelaySeconds": 3,
+                                    "timeoutSeconds": 3000,
+                                    "periodSeconds": 10,
+                                    "successThreshold": 1,
+                                    "failureThreshold": 3
+                                },
+                                "terminationMessagePath": "/dev/termination-log",
+                                "terminationMessagePolicy": "File",
+                                "imagePullPolicy": "IfNotPresent"
+                            }
+                        ],
+                        "restartPolicy": "Always",
+                        "terminationGracePeriodSeconds": 30,
+                        "dnsPolicy": "ClusterFirst",
+                        "securityContext": {},
+                        "schedulerName": "default-scheduler"
+                    }
+                }
+            },
+            "status": {
+                "latestVersion": 0,
+                "observedGeneration": 0,
+                "replicas": 0,
+                "updatedReplicas": 0,
+                "availableReplicas": 0,
+                "unavailableReplicas": 0
+            }
+        },
+        {
+            "kind": "DeploymentConfig",
+            "apiVersion": "v1",
+            "metadata": {
+                "name": "tfrs",
+                "generation": 1,
+                "creationTimestamp": null,
+                "labels": {
+                    "template": "tfrs-app-environment"
+                },
+                "annotations": {
+                    "description": "Defines how to deploy the application server"
+                }
+            },
+            "spec": {
+                "strategy": {
+                    "type": "Recreate",
+                    "recreateParams": {
+                        "timeoutSeconds": 600,
+                        "mid": {
+                            "failurePolicy": "Abort",
+                            "execNewPod": {
+                                "command": [
+                                    "/bin/sh",
+                                    "-c",
+                                    "python manage.py migrate"
+                                ],
+                                "containerName": "tfrs-app"
+                            }
+                        }
+                    },
+                    "resources": {},
+                    "activeDeadlineSeconds": 21600
+                },
+                "triggers": [
+                    {
+                        "type": "ImageChange",
+                        "imageChangeParams": {
+                            "automatic": true,
+                            "containerNames": [
+                                "tfrs-app"
+                            ],
+                            "from": {
+                                "kind": "ImageStreamTag",
+                                "namespace": "mem-tfrs-tools",
+                                "name": "tfrs:test"
+                            }
+                        }
+                    },
+                    {
+                        "type": "ConfigChange"
+                    }
+                ],
+                "replicas": 3,
+                "test": false,
+                "selector": {
+                    "name": "tfrs"
+                },
+                "template": {
+                    "metadata": {
+                        "name": "tfrs",
+                        "creationTimestamp": null,
+                        "labels": {
+                            "name": "tfrs"
+                        }
+                    },
+                    "spec": {
+                        "containers": [
+                            {
+                                "name": "tfrs-app",
+                                "image": "172.50.0.2:5000/mem-tfrs-tools/tfrs@sha256:14551021a28ff5f0b07e055e7cfa29bd0044024fbdc47644c3aee509198955a1",
+                                "ports": [
+                                    {
+                                        "containerPort": 8080,
+                                        "protocol": "TCP"
+                                    }
+                                ],
+                                "env": [
+                                    {
+                                        "name": "DATABASE_SERVICE_NAME",
+                                        "value": "postgresql"
+                                    },
+                                    {
+                                        "name": "DATABASE_ENGINE",
+                                        "value": "postgresql"
+                                    },
+                                    {
+                                        "name": "DATABASE_NAME",
+                                        "value": "tfrs"
+                                    },
+                                    {
+                                        "name": "APP_CONFIG"
+                                    },
+                                    {
+                                        "name": "DATABASE_USER",
+                                        "valueFrom": {
+                                            "secretKeyRef": {
+                                                "name": "tfrs-postgresql",
+                                                "key": "DATABASE_USER"
+                                            }
+                                        }
+                                    },
+                                    {
+                                        "name": "DATABASE_PASSWORD",
+                                        "valueFrom": {
+                                            "secretKeyRef": {
+                                                "name": "tfrs-postgresql",
+                                                "key": "DATABASE_PASSWORD"
+                                            }
+                                        }
+                                    }
+                                ],
+                                "resources": {
+                                    "limits": {
+                                        "memory": "512Mi"
+                                    }
+                                },
+                                "livenessProbe": {
+                                    "httpGet": {
+                                        "path": "/health",
+                                        "port": 8080,
+                                        "scheme": "HTTP"
+                                    },
+                                    "initialDelaySeconds": 30,
+                                    "timeoutSeconds": 3,
+                                    "periodSeconds": 10,
+                                    "successThreshold": 1,
+                                    "failureThreshold": 3
+                                },
+                                "readinessProbe": {
+                                    "httpGet": {
+                                        "path": "/health",
+                                        "port": 8080,
+                                        "scheme": "HTTP"
+                                    },
+                                    "initialDelaySeconds": 3,
+                                    "timeoutSeconds": 3,
                                     "periodSeconds": 10,
                                     "successThreshold": 1,
                                     "failureThreshold": 3
