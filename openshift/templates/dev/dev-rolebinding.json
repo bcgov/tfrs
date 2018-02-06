@@ -46,29 +46,36 @@
             "kind": "RoleBinding",
             "apiVersion": "v1",
             "metadata": {
-                "name": "jenkins_edit",
-                "creationTimestamp": null,
-                "labels": {
-                    "app": "jenkins-pipeline",
-                    "template": "jenkins-persistent-template"
-                }
+                "name": "edit",
+                "creationTimestamp": null
             },
             "userNames": [
-                "system:serviceaccount:mem-tfrs-tools:jenkins",
-                "matthewhall78",
+                "system:serviceaccount:mem-tfrs-tools:default",
+                "dmarley",
+                "swcurran",
+                "GeorgeWalker",
                 "dainetrinidad",
-                "rstens"
+                "rstens",
+                "system:serviceaccount:mem-tfrs-tools:jenkins"
             ],
             "groupNames": null,
             "subjects": [
                 {
                     "kind": "ServiceAccount",
                     "namespace": "mem-tfrs-tools",
-                    "name": "jenkins"
+                    "name": "default"
                 },
                 {
                     "kind": "User",
-                    "name": "matthewhall78"
+                    "name": "dmarley"
+                },
+                {
+                    "kind": "User",
+                    "name": "swcurran"
+                },
+                {
+                    "kind": "User",
+                    "name": "GeorgeWalker"
                 },
                 {
                     "kind": "User",
@@ -77,6 +84,11 @@
                 {
                     "kind": "User",
                     "name": "rstens"
+                },
+                {
+                    "kind": "ServiceAccount",
+                    "namespace": "mem-tfrs-tools",
+                    "name": "jenkins"
                 }
             ],
             "roleRef": {
@@ -91,13 +103,13 @@
                 "creationTimestamp": null
             },
             "userNames": [
-                "system:serviceaccount:mem-tfrs-tools:deployer"
+                "system:serviceaccount:mem-tfrs-dev:deployer"
             ],
             "groupNames": null,
             "subjects": [
                 {
                     "kind": "ServiceAccount",
-                    "namespace": "mem-tfrs-tools",
+                    "namespace": "mem-tfrs-dev",
                     "name": "deployer"
                 }
             ],
@@ -113,13 +125,13 @@
                 "creationTimestamp": null
             },
             "userNames": [
-                "system:serviceaccount:mem-tfrs-tools:builder"
+                "system:serviceaccount:mem-tfrs-dev:builder"
             ],
             "groupNames": null,
             "subjects": [
                 {
                     "kind": "ServiceAccount",
-                    "namespace": "mem-tfrs-tools",
+                    "namespace": "mem-tfrs-dev",
                     "name": "builder"
                 }
             ],
@@ -135,50 +147,20 @@
                 "creationTimestamp": null
             },
             "userNames": [
-                "system:serviceaccount:mem-tfrs-dev:default",
-                "system:serviceaccount:mem-tfrs-test:default",
-                "system:serviceaccount:mem-tfrs-prod:default",
-                "system:serviceaccount:default:jenkins",
-                "system:serviceaccount:default:jenkins-pipeline-svc",
-                "system:serviceaccount:mem-tfrs-dev:deployer"
+                "system:serviceaccount:mem-tfrs-tools:default"
             ],
             "groupNames": [
-                "system:serviceaccounts:mem-tfrs-tools"
+                "system:serviceaccounts:mem-tfrs-dev"
             ],
             "subjects": [
                 {
                     "kind": "ServiceAccount",
-                    "namespace": "mem-tfrs-dev",
+                    "namespace": "mem-tfrs-tools",
                     "name": "default"
-                },
-                {
-                    "kind": "ServiceAccount",
-                    "namespace": "mem-tfrs-test",
-                    "name": "default"
-                },
-                {
-                    "kind": "ServiceAccount",
-                    "namespace": "mem-tfrs-prod",
-                    "name": "default"
-                },
-                {
-                    "kind": "ServiceAccount",
-                    "namespace": "default",
-                    "name": "jenkins"
-                },
-                {
-                    "kind": "ServiceAccount",
-                    "namespace": "default",
-                    "name": "jenkins-pipeline-svc"
-                },
-                {
-                    "kind": "ServiceAccount",
-                    "namespace": "mem-tfrs-dev",
-                    "name": "deployer"
                 },
                 {
                     "kind": "SystemGroup",
-                    "name": "system:serviceaccounts:mem-tfrs-tools"
+                    "name": "system:serviceaccounts:mem-tfrs-dev"
                 }
             ],
             "roleRef": {
@@ -193,19 +175,23 @@
                 "creationTimestamp": null
             },
             "userNames": [
+                "matthewhall78",
                 "swcurran",
-                "system:serviceaccount:default:jenkins"
+                "system:serviceaccount:mem-tfrs-dev:system:serviceaccount:mem-tfrs-tools:jenkins"
             ],
             "groupNames": null,
             "subjects": [
                 {
                     "kind": "User",
+                    "name": "matthewhall78"
+                },
+                {
+                    "kind": "User",
                     "name": "swcurran"
                 },
                 {
-                    "kind": "ServiceAccount",
-                    "namespace": "default",
-                    "name": "jenkins"
+                    "kind": "SystemUser",
+                    "name": "system:serviceaccount:mem-tfrs-dev:system:serviceaccount:mem-tfrs-tools:jenkins"
                 }
             ],
             "roleRef": {

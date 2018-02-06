@@ -10,14 +10,94 @@
             "kind": "BuildConfig",
             "apiVersion": "v1",
             "metadata": {
-                "name": "client",
+                "name": "caddy-app",
                 "creationTimestamp": null,
-                "annotations": {
-                    "description": "Defines how to build the client / front end image"
+                "labels": {
+                    "build": "caddy-app",
+                    "template": "caddy-template"
                 }
             },
             "spec": {
                 "triggers": [
+                    {
+                        "type": "GitHub",
+                        "github": {
+                            "secret": "dLUFqHx4HXi80yTFi5rEaEfbcaoFLtLxsPF5nFJe"
+                        }
+                    },
+                    {
+                        "type": "Generic",
+                        "generic": {
+                            "secret": "KmbAl3HF5ttakkEvGyV20RXwrXge1XhuSQbQPdch"
+                        }
+                    },
+                    {
+                        "type": "ConfigChange"
+                    },
+                    {
+                        "type": "ImageChange",
+                        "imageChange": {}
+                    }
+                ],
+                "runPolicy": "Serial",
+                "source": {
+                    "type": "Git",
+                    "git": {
+                        "uri": "https://github.com/BCDevOps/openshift-tools.git"
+                    },
+                    "contextDir": "/utils/caddy-proxy"
+                },
+                "strategy": {
+                    "type": "Source",
+                    "sourceStrategy": {
+                        "from": {
+                            "kind": "ImageStreamTag",
+                            "namespace": "openshift",
+                            "name": "bcgov-s2i-caddy:latest"
+                        }
+                    }
+                },
+                "output": {
+                    "to": {
+                        "kind": "ImageStreamTag",
+                        "name": "caddy-app:latest"
+                    }
+                },
+                "resources": {},
+                "postCommit": {},
+                "nodeSelector": null
+            },
+            "status": {
+                "lastVersion": 0
+            }
+        },
+        {
+            "kind": "BuildConfig",
+            "apiVersion": "v1",
+            "metadata": {
+                "name": "request-logger",
+                "creationTimestamp": null,
+                "labels": {
+                    "app": "request-logger"
+                },
+                "annotations": {
+                    "openshift.io/generated-by": "OpenShiftWebConsole"
+                }
+            },
+            "spec": {
+                "triggers": [
+                    {
+                        "type": "Generic",
+                        "generic": {
+                            "secret": "d8ba7ff148c0970c"
+                        }
+                    },
+                    {
+                        "type": "GitHub",
+                        "github": {
+                            "secret": "e27a392996821e2d"
+                        }
+                    },
                     {
                         "type": "ImageChange",
                         "imageChange": {}
@@ -30,10 +110,10 @@
                 "source": {
                     "type": "Git",
                     "git": {
-                        "uri": "https://github.com/bcgov/tfrs.git",
+                        "uri": "https://github.com/bcdevops/openshift-tools/",
                         "ref": "master"
                     },
-                    "contextDir": "frontend"
+                    "contextDir": "/utils/request_logger"
                 },
                 "strategy": {
                     "type": "Source",
@@ -41,589 +121,19 @@
                         "from": {
                             "kind": "ImageStreamTag",
                             "namespace": "openshift",
-                            "name": "nodejs:latest"
-                        },
-                        "runtimeImage": {
-                            "kind": "ImageStreamTag",
-                            "namespace": "openshift",
-                            "name": "nginx-runtime:latest"
-                        },
-                        "runtimeArtifacts": [
-                            {
-                                "sourcePath": "/opt/app-root/src/public/index.html",
-                                "destinationDir": "tmp/app/dist"
-                            },
-                            {
-                                "sourcePath": "/opt/app-root/src/public/assets",
-                                "destinationDir": "tmp/app/dist"
-                            },
-                            {
-                                "sourcePath": "/opt/app-root/src/public/build",
-                                "destinationDir": "tmp/app/dist"
-                            }
-                        ]
+                            "name": "python:3.5"
+                        }
                     }
                 },
                 "output": {
                     "to": {
                         "kind": "ImageStreamTag",
-                        "name": "client:latest"
-                    }
-                },
-                "resources": {
-                    "limits": {
-                        "cpu": "2",
-                        "memory": "4Gi"
-                    }
-                },
-                "postCommit": {},
-                "nodeSelector": null
-            },
-            "status": {
-                "lastVersion": 0
-            }
-        },
-        {
-            "kind": "BuildConfig",
-            "apiVersion": "v1",
-            "metadata": {
-                "name": "client-develop",
-                "creationTimestamp": null,
-                "annotations": {
-                    "description": "Defines how to build the client / front end image"
-                }
-            },
-            "spec": {
-                "triggers": [
-                    {
-                        "type": "ImageChange",
-                        "imageChange": {}
-                    },
-                    {
-                        "type": "ConfigChange"
-                    }
-                ],
-                "runPolicy": "Serial",
-                "source": {
-                    "type": "Git",
-                    "git": {
-                        "uri": "https://github.com/bcgov/tfrs.git",
-                        "ref": "develop"
-                    },
-                    "contextDir": "frontend"
-                },
-                "strategy": {
-                    "type": "Source",
-                    "sourceStrategy": {
-                        "from": {
-                            "kind": "ImageStreamTag",
-                            "namespace": "openshift",
-                            "name": "nodejs:latest"
-                        },
-                        "runtimeImage": {
-                            "kind": "ImageStreamTag",
-                            "namespace": "mem-tfrs-tools",
-                            "name": "nginx-runtime:latest"
-                        },
-                        "runtimeArtifacts": [
-                            {
-                                "sourcePath": "/opt/app-root/src/public/index.html",
-                                "destinationDir": "tmp/app/dist"
-                            },
-                            {
-                                "sourcePath": "/opt/app-root/src/public/assets",
-                                "destinationDir": "tmp/app/dist"
-                            },
-                            {
-                                "sourcePath": "/opt/app-root/src/public/build",
-                                "destinationDir": "tmp/app/dist"
-                            }
-                        ]
-                    }
-                },
-                "output": {
-                    "to": {
-                        "kind": "ImageStreamTag",
-                        "name": "client:latest"
-                    }
-                },
-                "resources": {
-                    "limits": {
-                        "cpu": "2",
-                        "memory": "4Gi"
-                    }
-                },
-                "postCommit": {},
-                "nodeSelector": null
-            },
-            "status": {
-                "lastVersion": 0
-            }
-        },
-        {
-            "kind": "BuildConfig",
-            "apiVersion": "v1",
-            "metadata": {
-                "name": "develop-client-pipeline",
-                "creationTimestamp": null,
-                "labels": {
-                    "app": "develop-client-pipeline",
-                    "name": "develop-client-pipeline",
-                    "template": "develop-client-pipeline"
-                }
-            },
-            "spec": {
-                "triggers": [],
-                "runPolicy": "Parallel",
-                "source": {
-                    "type": "Git",
-                    "git": {
-                        "uri": "https://github.com/bcgov/tfrs.git",
-                        "ref": "develop"
-                    }
-                },
-                "strategy": {
-                    "type": "JenkinsPipeline",
-                    "jenkinsPipelineStrategy": {
-                        "jenkinsfilePath": "frontend/Jenkinsfile-develop"
-                    }
-                },
-                "output": {},
-                "resources": {},
-                "postCommit": {},
-                "nodeSelector": {}
-            },
-            "status": {
-                "lastVersion": 0
-            }
-        },
-        {
-            "kind": "BuildConfig",
-            "apiVersion": "v1",
-            "metadata": {
-                "name": "develop-tfrs-pipeline",
-                "creationTimestamp": null,
-                "labels": {
-                    "app": "develop-tfrs-pipeline",
-                    "name": "develop-tfrs-pipeline",
-                    "template": "develop-tfrs-pipeline"
-                }
-            },
-            "spec": {
-                "triggers": [],
-                "runPolicy": "Parallel",
-                "source": {
-                    "type": "Git",
-                    "git": {
-                        "uri": "https://github.com/bcgov/tfrs.git",
-                        "ref": "develop"
-                    }
-                },
-                "strategy": {
-                    "type": "JenkinsPipeline",
-                    "jenkinsPipelineStrategy": {
-                        "jenkinsfilePath": "backend/Jenkinsfile-develop"
-                    }
-                },
-                "output": {},
-                "resources": {},
-                "postCommit": {},
-                "nodeSelector": {}
-            },
-            "status": {
-                "lastVersion": 0
-            }
-        },
-        {
-            "kind": "BuildConfig",
-            "apiVersion": "v1",
-            "metadata": {
-                "name": "devops-testdisablemigration",
-                "creationTimestamp": null,
-                "annotations": {
-                    "description": "Defines how to build the application"
-                }
-            },
-            "spec": {
-                "triggers": [],
-                "runPolicy": "Serial",
-                "source": {
-                    "type": "Git",
-                    "git": {
-                        "uri": "https://github.com/bcgov/tfrs.git",
-                        "ref": "devops-testdisablemigration"
-                    },
-                    "contextDir": "backend"
-                },
-                "strategy": {
-                    "type": "Source",
-                    "sourceStrategy": {
-                        "from": {
-                            "kind": "ImageStreamTag",
-                            "namespace": "openshift",
-                            "name": "python:3.6"
-                        },
-                        "env": [
-                            {
-                                "name": "PIP_INDEX_URL"
-                            }
-                        ]
-                    }
-                },
-                "output": {
-                    "to": {
-                        "kind": "ImageStreamTag",
-                        "name": "tfrs:latest"
+                        "name": "request-logger:latest"
                     }
                 },
                 "resources": {},
                 "postCommit": {},
                 "nodeSelector": null
-            },
-            "status": {
-                "lastVersion": 0
-            }
-        },
-        {
-            "kind": "BuildConfig",
-            "apiVersion": "v1",
-            "metadata": {
-                "name": "master-client-pipeline",
-                "creationTimestamp": null,
-                "labels": {
-                    "app": "master-client-pipeline",
-                    "name": "master-client-pipeline",
-                    "template": "master-client-pipeline"
-                }
-            },
-            "spec": {
-                "triggers": [],
-                "runPolicy": "Parallel",
-                "source": {
-                    "type": "Git",
-                    "git": {
-                        "uri": "https://github.com/bcgov/tfrs.git",
-                        "ref": "master"
-                    }
-                },
-                "strategy": {
-                    "type": "JenkinsPipeline",
-                    "jenkinsPipelineStrategy": {
-                        "jenkinsfilePath": "frontend/Jenkinsfile-develop"
-                    }
-                },
-                "output": {},
-                "resources": {},
-                "postCommit": {},
-                "nodeSelector": {}
-            },
-            "status": {
-                "lastVersion": 0
-            }
-        },
-        {
-            "kind": "BuildConfig",
-            "apiVersion": "v1",
-            "metadata": {
-                "name": "master-tfrs-pipeline",
-                "creationTimestamp": null,
-                "labels": {
-                    "app": "master-tfrs-pipeline",
-                    "name": "master-tfrs-pipeline",
-                    "template": "master-tfrs-pipeline"
-                }
-            },
-            "spec": {
-                "triggers": [],
-                "runPolicy": "Parallel",
-                "source": {
-                    "type": "Git",
-                    "git": {
-                        "uri": "https://github.com/bcgov/tfrs.git",
-                        "ref": "master"
-                    }
-                },
-                "strategy": {
-                    "type": "JenkinsPipeline",
-                    "jenkinsPipelineStrategy": {
-                        "jenkinsfilePath": "backend/Jenkinsfile-develop"
-                    }
-                },
-                "output": {},
-                "resources": {},
-                "postCommit": {},
-                "nodeSelector": {}
-            },
-            "status": {
-                "lastVersion": 0
-            }
-        },
-        {
-            "kind": "BuildConfig",
-            "apiVersion": "v1",
-            "metadata": {
-                "name": "nginx-runtime",
-                "creationTimestamp": null,
-                "labels": {
-                    "app": "nginx-runtime"
-                }
-            },
-            "spec": {
-                "triggers": [],
-                "runPolicy": "Serial",
-                "source": {
-                    "type": "Git",
-                    "git": {
-                        "uri": "https://github.com/bcgov/tfrs",
-                        "ref": "devops-nginx"
-                    },
-                    "contextDir": "openshift/templates/nginx-runtime"
-                },
-                "strategy": {
-                    "type": "Docker",
-                    "dockerStrategy": {}
-                },
-                "output": {
-                    "to": {
-                        "kind": "ImageStreamTag",
-                        "name": "nginx-runtime:latest"
-                    }
-                },
-                "resources": {},
-                "postCommit": {},
-                "nodeSelector": null
-            },
-            "status": {
-                "lastVersion": 0
-            }
-        },
-        {
-            "kind": "BuildConfig",
-            "apiVersion": "v1",
-            "metadata": {
-                "name": "schema-spy",
-                "creationTimestamp": null,
-                "labels": {
-                    "app": "schema-spy",
-                    "buildconfig": "schema-spy"
-                }
-            },
-            "spec": {
-                "triggers": [
-                    {
-                        "type": "ConfigChange"
-                    }
-                ],
-                "runPolicy": "Serial",
-                "source": {
-                    "type": "Git",
-                    "git": {
-                        "uri": "https://github.com/bcgov/SchemaSpy.git"
-                    }
-                },
-                "strategy": {
-                    "type": "Docker",
-                    "dockerStrategy": {}
-                },
-                "output": {
-                    "to": {
-                        "kind": "ImageStreamTag",
-                        "name": "schema-spy:latest"
-                    }
-                },
-                "resources": {},
-                "postCommit": {},
-                "nodeSelector": null
-            },
-            "status": {
-                "lastVersion": 0
-            }
-        },
-        {
-            "kind": "BuildConfig",
-            "apiVersion": "v1",
-            "metadata": {
-                "name": "tfrs",
-                "creationTimestamp": null,
-                "annotations": {
-                    "description": "Defines how to build the application"
-                }
-            },
-            "spec": {
-                "triggers": [
-                    {
-                        "type": "ImageChange",
-                        "imageChange": {}
-                    },
-                    {
-                        "type": "ConfigChange"
-                    }
-                ],
-                "runPolicy": "Serial",
-                "source": {
-                    "type": "Git",
-                    "git": {
-                        "uri": "https://github.com/bcgov/tfrs.git",
-                        "ref": "master"
-                    },
-                    "contextDir": "backend"
-                },
-                "strategy": {
-                    "type": "Source",
-                    "sourceStrategy": {
-                        "from": {
-                            "kind": "ImageStreamTag",
-                            "namespace": "openshift",
-                            "name": "python:3.6"
-                        },
-                        "env": [
-                            {
-                                "name": "PIP_INDEX_URL"
-                            }
-                        ]
-                    }
-                },
-                "output": {
-                    "to": {
-                        "kind": "ImageStreamTag",
-                        "name": "tfrs:latest"
-                    }
-                },
-                "resources": {},
-                "postCommit": {},
-                "nodeSelector": null
-            },
-            "status": {
-                "lastVersion": 0
-            }
-        },
-        {
-            "kind": "BuildConfig",
-            "apiVersion": "v1",
-            "metadata": {
-                "name": "tfrs-develop",
-                "creationTimestamp": null,
-                "annotations": {
-                    "description": "Defines how to build the application"
-                }
-            },
-            "spec": {
-                "triggers": [
-                    {
-                        "type": "ImageChange",
-                        "imageChange": {}
-                    },
-                    {
-                        "type": "ConfigChange"
-                    }
-                ],
-                "runPolicy": "Serial",
-                "source": {
-                    "type": "Git",
-                    "git": {
-                        "uri": "https://github.com/bcgov/tfrs.git",
-                        "ref": "develop"
-                    },
-                    "contextDir": "backend"
-                },
-                "strategy": {
-                    "type": "Source",
-                    "sourceStrategy": {
-                        "from": {
-                            "kind": "ImageStreamTag",
-                            "namespace": "openshift",
-                            "name": "python:3.6"
-                        },
-                        "env": [
-                            {
-                                "name": "PIP_INDEX_URL"
-                            }
-                        ]
-                    }
-                },
-                "output": {
-                    "to": {
-                        "kind": "ImageStreamTag",
-                        "name": "tfrs:latest"
-                    }
-                },
-                "resources": {},
-                "postCommit": {},
-                "nodeSelector": null
-            },
-            "status": {
-                "lastVersion": 0
-            }
-        },
-        {
-            "kind": "BuildConfig",
-            "apiVersion": "v1",
-            "metadata": {
-                "name": "working-client-pipeline",
-                "creationTimestamp": null,
-                "labels": {
-                    "app": "working-client-pipeline",
-                    "name": "working-client-pipeline",
-                    "template": "working-client-pipeline"
-                }
-            },
-            "spec": {
-                "triggers": [],
-                "runPolicy": "Parallel",
-                "source": {
-                    "type": "Git",
-                    "git": {
-                        "uri": "https://github.com/bcgov/tfrs.git",
-                        "ref": "devops-coverage"
-                    }
-                },
-                "strategy": {
-                    "type": "JenkinsPipeline",
-                    "jenkinsPipelineStrategy": {
-                        "jenkinsfilePath": "backend/Jenkinsfile-develop"
-                    }
-                },
-                "output": {},
-                "resources": {},
-                "postCommit": {},
-                "nodeSelector": {}
-            },
-            "status": {
-                "lastVersion": 0
-            }
-        },
-        {
-            "kind": "BuildConfig",
-            "apiVersion": "v1",
-            "metadata": {
-                "name": "working-tfrs-pipeline",
-                "creationTimestamp": null,
-                "labels": {
-                    "app": "working-tfrs-pipeline",
-                    "name": "working-tfrs-pipeline",
-                    "template": "working-tfrs-pipeline"
-                }
-            },
-            "spec": {
-                "triggers": [],
-                "runPolicy": "Serial",
-                "source": {
-                    "type": "Git",
-                    "git": {
-                        "uri": "https://github.com/bcgov/tfrs.git",
-                        "ref": "devops-testdisablemigration"
-                    }
-                },
-                "strategy": {
-                    "type": "JenkinsPipeline",
-                    "jenkinsPipelineStrategy": {
-                        "jenkinsfilePath": "backend/Jenkinsfile-develop"
-                    }
-                },
-                "output": {},
-                "resources": {},
-                "postCommit": {},
-                "nodeSelector": {}
             },
             "status": {
                 "lastVersion": 0
