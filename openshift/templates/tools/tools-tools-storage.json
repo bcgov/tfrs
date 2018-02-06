@@ -1,0 +1,115 @@
+{
+    "kind": "Template",
+    "apiVersion": "v1",
+    "metadata": {
+        "name": "tools-storage",
+        "creationTimestamp": null
+    },
+    "objects": [
+        {
+            "kind": "PersistentVolumeClaim",
+            "apiVersion": "v1",
+            "metadata": {
+                "name": "jenkins-cns",
+                "creationTimestamp": null,
+                "annotations": {
+                    "control-plane.alpha.kubernetes.io/leader": "{\"holderIdentity\":\"d49aaa14-e506-11e7-bfd0-0a58ac332043\",\"leaseDurationSeconds\":15,\"acquireTime\":\"2018-01-09T21:25:22Z\",\"renewTime\":\"2018-01-09T21:25:26Z\",\"leaderTransitions\":0}",
+                    "pv.kubernetes.io/bind-completed": "yes",
+                    "pv.kubernetes.io/bound-by-controller": "yes",
+                    "volume.beta.kubernetes.io/storage-class": "gluster-block",
+                    "volume.beta.kubernetes.io/storage-provisioner": "gluster.org/glusterblock"
+                }
+            },
+            "spec": {
+                "accessModes": [
+                    "ReadWriteOnce"
+                ],
+                "resources": {
+                    "requests": {
+                        "storage": "5Gi"
+                    }
+                },
+                "volumeName": "pvc-99698347-f583-11e7-9ace-0050568348cc"
+            },
+            "status": {}
+        },
+        {
+            "kind": "PersistentVolumeClaim",
+            "apiVersion": "v1",
+            "metadata": {
+                "name": "jenkins-cns2",
+                "creationTimestamp": null,
+                "annotations": {
+                    "pv.kubernetes.io/bind-completed": "yes",
+                    "pv.kubernetes.io/bound-by-controller": "yes",
+                    "volume.beta.kubernetes.io/storage-class": "gluster-file",
+                    "volume.beta.kubernetes.io/storage-provisioner": "kubernetes.io/glusterfs"
+                }
+            },
+            "spec": {
+                "accessModes": [
+                    "ReadWriteOnce"
+                ],
+                "resources": {
+                    "requests": {
+                        "storage": "10Gi"
+                    }
+                },
+                "volumeName": "pvc-d753561f-fd60-11e7-b70e-005056832285"
+            },
+            "status": {}
+        },
+        {
+            "kind": "PersistentVolumeClaim",
+            "apiVersion": "v1",
+            "metadata": {
+                "name": "postgresql-sonarqube-cns",
+                "creationTimestamp": null,
+                "annotations": {
+                    "pv.kubernetes.io/bind-completed": "yes",
+                    "pv.kubernetes.io/bound-by-controller": "yes",
+                    "volume.beta.kubernetes.io/storage-class": "gluster-file",
+                    "volume.beta.kubernetes.io/storage-provisioner": "kubernetes.io/glusterfs"
+                }
+            },
+            "spec": {
+                "accessModes": [
+                    "ReadWriteOnce"
+                ],
+                "resources": {
+                    "requests": {
+                        "storage": "5Gi"
+                    }
+                },
+                "volumeName": "pvc-814c86b8-f634-11e7-9f70-005056832285"
+            },
+            "status": {}
+        },
+        {
+            "kind": "PersistentVolumeClaim",
+            "apiVersion": "v1",
+            "metadata": {
+                "name": "sonarqube-data-cns",
+                "creationTimestamp": null,
+                "annotations": {
+                    "pv.kubernetes.io/bind-completed": "yes",
+                    "pv.kubernetes.io/bound-by-controller": "yes",
+                    "volume.beta.kubernetes.io/storage-class": "gluster-file",
+                    "volume.beta.kubernetes.io/storage-provisioner": "kubernetes.io/glusterfs"
+                }
+            },
+            "spec": {
+                "accessModes": [
+                    "ReadWriteOnce"
+                ],
+                "resources": {
+                    "requests": {
+                        "storage": "1Gi"
+                    }
+                },
+                "volumeName": "pvc-6eefa34f-f634-11e7-9f70-005056832285"
+            },
+            "status": {}
+        }
+    ]
+}
