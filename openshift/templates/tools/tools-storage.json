@@ -1,11 +1,8 @@
 {
-    "kind": "Template",
+    "kind": "List",
     "apiVersion": "v1",
-    "metadata": {
-        "name": "tools-storage",
-        "creationTimestamp": null
-    },
-    "objects": [
+    "metadata": {},
+    "items": [
         {
             "kind": "PersistentVolumeClaim",
             "apiVersion": "v1",

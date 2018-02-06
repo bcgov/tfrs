@@ -1,11 +1,8 @@
 {
-    "kind": "Template",
+    "kind": "List",
     "apiVersion": "v1",
-    "metadata": {
-        "name": "tools-service",
-        "creationTimestamp": null
-    },
-    "objects": [
+    "metadata": {},
+    "items": [
         {
             "kind": "Service",
             "apiVersion": "v1",
