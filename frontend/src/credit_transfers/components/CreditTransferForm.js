@@ -42,7 +42,7 @@ const CreditTransferForm = props => (
         handleInputChange={props.handleInputChange}
       />
       <CreditTransferFormButtons
-        handleSubmit={props.handleSubmit}
+        changeStatus={props.changeStatus}
       />
     </form>
   </div>
@@ -83,6 +83,7 @@ CreditTransferForm.propTypes = {
   totalValue: PropTypes.number.isRequired,
   handleInputChange: PropTypes.func.isRequired,
   handleSubmit: PropTypes.func.isRequired,
+  changeStatus: PropTypes.func.isRequired,
   errors: PropTypes.shape({}).isRequired
 };
 

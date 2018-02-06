@@ -73,7 +73,6 @@ export const addCreditTransfer = (data, callback) => (dispatch) => {
       console.log("success", response);
       dispatch(addCreditTransferSuccess(response.data));
       // Call the callback function if defined
-
       console.log("CALLING CALLBACK")
       typeof callback === 'function' && callback();
     }).catch((error) => {
@@ -83,17 +82,47 @@ export const addCreditTransfer = (data, callback) => (dispatch) => {
 };
 
 const addCreditTransferRequest = () => ({
-  name: ReducerTypes.ADD_CREDIT_TRANSFER,
+  name: 'ADD_CREDIT_TRANSFER',
   type: ActionTypes.REQUEST
 });
 
 const addCreditTransferSuccess = data => ({
-  name: ReducerTypes.ADD_CREDIT_TRANSFER,
+  name: 'SUCCESS_ADD_CREDIT_TRANSFER',
   type: ActionTypes.SUCCESS,
   data
 });
 
 const addCreditTransferError = error => ({
+  name: 'ERROR_ADD_CREDIT_TRANSFER',
+  type: ActionTypes.ERROR,
+  errorMessage: error
+});
+
+export const updateCreditTransfer = (data, callback) => (dispatch) => {
+  dispatch(updateCreditTransferRequest());
+  axios
+    .post(Routes.BASE_URL + Routes.CREDIT_TRADE_API, data)
+    .then((response) => {
+      dispatch(updateCreditTransferSuccess(response.data));
+      // Call the callback function if defined
+      typeof callback === 'function' && callback();
+    }).catch((error) => {
+      dispatch(updateCreditTransferError(error.response.data));
+    });
+};
+
+const updateCreditTransferRequest = () => ({
+  name: 'UPDATE_CREDIT_TRANSFER',
+  type: ActionTypes.REQUEST
+});
+
+const updateCreditTransferSuccess = data => ({
+  name: 'SUCCESS_UPDATE_CREDIT_TRANSFER',
+  type: ActionTypes.SUCCESS,
+  data
+});
+
+const updateCreditTransferError = error => ({
   name: 'ERROR_ADD_CREDIT_TRANSFER',
   type: ActionTypes.ERROR,
   errorMessage: error
