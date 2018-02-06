@@ -1,11 +1,8 @@
 {
-    "kind": "Template",
+    "kind": "List",
     "apiVersion": "v1",
-    "metadata": {
-        "name": "prod-route",
-        "creationTimestamp": null
-    },
-    "objects": [
+    "metadata": {},
+    "items": [
         {
             "kind": "RoleBinding",
             "apiVersion": "v1",
