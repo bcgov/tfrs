@@ -7,19 +7,6 @@
     },
     "objects": [
         {
-            "kind": "Secret",
-            "apiVersion": "v1",
-            "metadata": {
-                "name": "tfrs-postgresql",
-                "creationTimestamp": null
-            },
-            "data": {
-                "DATABASE_PASSWORD": "WXd5cnl1dkIxMmdYTEZkRQ==",
-                "DATABASE_USER": "dXNlclNSVQ=="
-            },
-            "type": "Opaque"
-        },
-        {
             "kind": "RoleBinding",
             "apiVersion": "v1",
             "metadata": {
