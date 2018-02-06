@@ -1,11 +1,8 @@
 {
-    "kind": "Template",
+    "kind": "List",
     "apiVersion": "v1",
-    "metadata": {
-        "name": "prod-route",
-        "creationTimestamp": null
-    },
-    "objects": [
+    "metadata": {},
+    "items": [
         {
             "kind": "Route",
             "apiVersion": "v1",
@@ -36,6 +33,47 @@
                                 "type": "Admitted",
                                 "status": "True",
                                 "lastTransitionTime": "2018-02-01T00:17:50Z"
+                            }
+                        ],
+                        "wildcardPolicy": "None"
+                    }
+                ]
+            }
+        },
+        {
+            "kind": "Route",
+            "apiVersion": "v1",
+            "metadata": {
+                "name": "httpd-example",
+                "creationTimestamp": null,
+                "labels": {
+                    "app": "httpd-example",
+                    "template": "httpd-example"
+                },
+                "annotations": {
+                    "openshift.io/host.generated": "true",
+                    "template.openshift.io/expose-uri": "http://{.spec.host}{.spec.path}"
+                }
+            },
+            "spec": {
+                "host": "httpd-example-mem-tfrs-prod.pathfinder.gov.bc.ca",
+                "to": {
+                    "kind": "Service",
+                    "name": "httpd-example",
+                    "weight": 100
+                },
+                "wildcardPolicy": "None"
+            },
+            "status": {
+                "ingress": [
+                    {
+                        "host": "httpd-example-mem-tfrs-prod.pathfinder.gov.bc.ca",
+                        "routerName": "router",
+                        "conditions": [
+                            {
+                                "type": "Admitted",
+                                "status": "True",
+                                "lastTransitionTime": "2018-02-06T17:57:14Z"
                             }
                         ],
                         "wildcardPolicy": "None"
