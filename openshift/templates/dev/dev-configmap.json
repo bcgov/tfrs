@@ -1,0 +1,44 @@
+{
+    "kind": "Template",
+    "apiVersion": "v1",
+    "metadata": {
+        "name": "dev-route",
+        "creationTimestamp": null
+    },
+    "objects": [
+        {
+            "kind": "ConfigMap",
+            "apiVersion": "v1",
+            "metadata": {
+                "name": "caddyfile",
+                "creationTimestamp": null
+            },
+            "data": {
+                "caddyfile": "0.0.0.0:2015\n\nroot /var/www/html\n\nlog stdout\n\nerrors stdout\n\ngzip\n\nproxy / http://{%REQUEST_LOGGER_SERVICE_HOST%}:{%REQUEST_LOGGER_SERVICE_PORT%} {\n    transparent\n}"
+            }
+        },
+        {
+            "kind": "ConfigMap",
+            "apiVersion": "v1",
+            "metadata": {
+                "name": "reques-logger",
+                "creationTimestamp": null
+            },
+            "data": {
+                "reques_logger.py": "from flask import Flask, request\napp = Flask(__name__)\n\n@app.route('/', defaults={'path': ''})\n@app.route('/\u003cpath:path\u003e')\ndef dump_headers(path):\n  print(request.headers)\n  return str(request.headers), 200, {'Content-Type': 'text/plain; charset=utf-8'}\n  "
+            }
+        },
+        {
+            "kind": "ConfigMap",
+            "apiVersion": "v1",
+            "metadata": {
+                "name": "test-config",
+                "creationTimestamp": null
+            },
+            "data": {
+                "filters.properties": "addport=6789\r\npass=pass123",
+                "key1": "conifg3"
+            }
+        }
+    ]
+}
