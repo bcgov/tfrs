@@ -2,7 +2,7 @@ apiVersion: v1
 kind: Template
 metadata:
   creationTimestamp: null
-  name: tfrs-tools
+  name: mem-tfrs-tools
 objects:
 - apiVersion: v1
   groupNames: null
