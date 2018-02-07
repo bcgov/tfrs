@@ -1,7 +1,9 @@
+def result = 0;
+
 node('python') {
     stage('Unit Test') {
         checkout scm
-        def result = 0;
+        
         try {
             sh 'cd backend && pip install --upgrade pip && pip install -r requirements.txt'
             sh 'cd backend && coverage erase && coverage run --source=. manage.py test && coverage html && coverage xml'
