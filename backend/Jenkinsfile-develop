@@ -9,8 +9,8 @@ node('python') {
             System.exit(1)
         } finally {
             publishHTML (target: [
-                allowMissing: false,
-                alwaysLinkToLastBuild: false,
+                allowMissing: true,
+                alwaysLinkToLastBuild: true,
                 keepAll: true,
                 reportDir: 'backend/htmlcov',
                 reportFiles: 'index.html',
