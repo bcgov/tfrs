@@ -24,12 +24,11 @@ node('python') {
             }
         }
     }
-}
-
-if (result != 0) {
-    echo '[FAILURE] Unit Test stage failed'
-    currentBuild.result = 'FAILURE'
-    return
+    if (result != 0) {
+        echo '[FAILURE] Unit Test stage failed'
+        currentBuild.result = 'FAILURE'
+        return
+    }
 }
 
 node('maven') {
