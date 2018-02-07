@@ -11,8 +11,10 @@ node('python') {
         } finally {
             def htmlcovFolder = new File( 'backend/htmlcov' )
             if(htmlcovFolder.exists()) {
+                echo "htmlcov folder exists"
                 def indexhtmlFile = new File('backend/htmlcov/index.html')
                 if(indexhtmlFile.exists()) {
+                    echo "index.html file exists"
                     publishHTML (target: [
                         allowMissing: true,
                         alwaysLinkToLastBuild: true,
@@ -23,11 +25,12 @@ node('python') {
                 }
             }
         }
-    }
-    if (result != 0) {
-        echo '[FAILURE] Unit Test stage failed'
-        currentBuild.result = 'FAILURE'
-        return
+        echo "result is ${result}"
+        if (result != 0) {
+            echo "[FAILURE] Unit Test stage failed"
+            currentBuild.result = 'FAILURE'
+            return
+        }
     }
 }
 
