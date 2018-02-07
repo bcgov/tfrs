@@ -28,7 +28,7 @@ class CreditTransferAddContainer extends Component {
         numberOfCredits: '',
         respondent: { id: 0, name: '' },
         fairMarketValuePerCredit: '',
-        tradeStatus: { id: 0 },
+        tradeStatus: CREDIT_TRANSFER_STATUS.draft,
         note: ''
       },
       creditsFrom: {},
@@ -38,6 +38,7 @@ class CreditTransferAddContainer extends Component {
 
     this._handleInputChange = this._handleInputChange.bind(this);
     this._handleSubmit = this._handleSubmit.bind(this);
+    this._changeStatus = this._changeStatus.bind(this);
   }
 
   componentDidMount () {
@@ -104,11 +105,7 @@ class CreditTransferAddContainer extends Component {
   }
 
   _handleSubmit (event, status) {
-    // event.preventDefault();
-
-    // console.log('validity', this.checkValidity());
-
-    const creditTransferStatus = status || CREDIT_TRANSFER_STATUS.draft;
+    event.preventDefault();
 
     // API data structure
     const data = {
@@ -117,7 +114,7 @@ class CreditTransferAddContainer extends Component {
       respondent: this.state.fields.respondent.id,
       fairMarketValuePerCredit: parseInt(this.state.fields.fairMarketValuePerCredit, 10),
       note: this.state.fields.note,
-      status: creditTransferStatus.id,
+      status: this.state.fields.tradeStatus.id,
       type: this.state.fields.tradeType.id,
       tradeEffectiveDate: null
     };
@@ -132,6 +129,10 @@ class CreditTransferAddContainer extends Component {
     );
 
     return false;
+  }
+
+  _changeStatus (status) {
+    this.changeObjectProp(status.id, 'tradeStatus');
   }
 
   changeFromTo (tradeType, initiator, respondent) {
@@ -169,6 +170,7 @@ class CreditTransferAddContainer extends Component {
         creditsFrom={this.state.creditsFrom}
         creditsTo={this.state.creditsTo}
         errors={this.props.errors}
+        changeStatus={this._changeStatus}
       />
     );
   }

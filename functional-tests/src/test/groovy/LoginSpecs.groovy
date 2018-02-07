@@ -3,7 +3,7 @@ import pages.app.DashboardPage
 import pages.app.LoginPage
 import spock.lang.Unroll
 
-class AoginSpecs extends GebReportingSpec {
+class LoginSpecs extends GebReportingSpec {
 
     def "Login with BCEID"(){
         given: "I want to access TFRS"

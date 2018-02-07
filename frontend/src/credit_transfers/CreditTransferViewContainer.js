@@ -13,7 +13,7 @@ import CreditTransferDetails from './components/CreditTransferDetails';
 class CreditTransferViewContainer extends Component {
   constructor (props) {
     super(props);
-    this._handleSubmit = this._handleSubmit.bind(this);
+    this._changeStatus = this._changeStatus.bind(this);
   }
   componentDidMount () {
     this.loadData(this.props.match.params.id);
@@ -29,10 +29,29 @@ class CreditTransferViewContainer extends Component {
     }
   }
 
-  _handleSubmit (event, status) {
-    event.preventDefault();
+  _changeStatus (status) {
+    const { item } = this.props;
 
-    // Submit status change to API
+    // API data structure
+    const data = {
+      initiator: item.initiator.id,
+      numberOfCredits: item.numberOfCredits,
+      respondent: item.respondent.id,
+      fairMarketValuePerCredit: item.fairMarketValuePerCredit,
+      note: item.note,
+      status: status.id,
+      type: item.id,
+      tradeEffectiveDate: null
+    };
+
+    console.log('submitting', data);
+
+    // Update credit transfer (just the status)
+
+    // this.props.addCreditTransfer(
+    //   data,
+    //   () => { history.push(Routes.CREDIT_TRANSACTIONS); }
+    // );
   }
 
   render () {
@@ -47,7 +66,7 @@ class CreditTransferViewContainer extends Component {
         totalValue={item.totalValue}
         isFetching={isFetching}
         tradeType={item.type}
-        handleSubmit={this._handleSubmit}
+        changeStatus={this._changeStatus}
       />
     );
   }

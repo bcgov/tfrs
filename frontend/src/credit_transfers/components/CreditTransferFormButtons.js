@@ -17,14 +17,14 @@ const CreditTransferFormButtons = props => (
     <button
       type="submit"
       className="btn btn-default"
-      onClick={(event, status) => props.handleSubmit(event, CREDIT_TRANSFER_STATUS.draft)}
+      onClick={() => props.changeStatus(CREDIT_TRANSFER_STATUS.draft)}
     >
       Save Draft
     </button>
     <button
       type="submit"
       className="btn btn-primary"
-      onClick={(event, status) => props.handleSubmit(event, CREDIT_TRANSFER_STATUS.proposed)}
+      onClick={() => props.changeStatus(CREDIT_TRANSFER_STATUS.proposed)}
     >
       Propose
     </button>
@@ -32,7 +32,7 @@ const CreditTransferFormButtons = props => (
 );
 
 CreditTransferFormButtons.propTypes = {
-  handleSubmit: PropTypes.func.isRequired
+  changeStatus: PropTypes.func.isRequired
 };
 
 export default CreditTransferFormButtons;
