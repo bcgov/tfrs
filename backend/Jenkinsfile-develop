@@ -9,12 +9,8 @@ node('python') {
             result = 1;
             mail (from: "${EMAIL_FROM}", to: "${EMAIL_TO}", subject: "FYI: Job '${env.JOB_NAME}' (${env.BUILD_NUMBER}) unit test failed", body: "See ${env.BUILD_URL} for details. ");
         } finally {
-            def htmlcovFolder = new File( 'backend/htmlcov' )
-            if(htmlcovFolder.exists()) {
-                echo "htmlcov folder exists"
-                def indexhtmlFile = new File('backend/htmlcov/index.html')
+            if(fileExists('backend/htmlcov/index.html')) {
                 if(indexhtmlFile.exists()) {
-                    echo "index.html file exists"
                     publishHTML (target: [
                         allowMissing: true,
                         alwaysLinkToLastBuild: true,
