@@ -1,0 +1,706 @@
+apiVersion: v1
+kind: Template
+metadata:
+  creationTimestamp: null
+  name: mem-tfrs-test
+objects:
+- apiVersion: v1
+  groupNames: null
+  kind: RoleBinding
+  metadata:
+    creationTimestamp: null
+    name: admin
+  roleRef:
+    name: admin
+  subjects:
+  - kind: User
+    name: sheaphillips
+  - kind: User
+    name: rajpersram
+  - kind: User
+    name: kuanfandevops
+  - kind: User
+    name: cvarjao
+  userNames:
+  - sheaphillips
+  - rajpersram
+  - kuanfandevops
+  - cvarjao
+- apiVersion: v1
+  groupNames: null
+  kind: RoleBinding
+  metadata:
+    creationTimestamp: null
+    name: edit
+  roleRef:
+    name: edit
+  subjects:
+  - kind: ServiceAccount
+    name: default
+    namespace: mem-tfrs-tools
+  - kind: User
+    name: dmarley
+  - kind: User
+    name: swcurran
+  - kind: User
+    name: GeorgeWalker
+  - kind: User
+    name: dainetrinidad
+  - kind: User
+    name: rstens
+  - kind: ServiceAccount
+    name: jenkins
+    namespace: mem-tfrs-tools
+  userNames:
+  - system:serviceaccount:mem-tfrs-tools:default
+  - dmarley
+  - swcurran
+  - GeorgeWalker
+  - dainetrinidad
+  - rstens
+  - system:serviceaccount:mem-tfrs-tools:jenkins
+- apiVersion: v1
+  groupNames: null
+  kind: RoleBinding
+  metadata:
+    creationTimestamp: null
+    name: system:deployers
+  roleRef:
+    name: system:deployer
+  subjects:
+  - kind: ServiceAccount
+    name: deployer
+    namespace: mem-tfrs-test
+  userNames:
+  - system:serviceaccount:mem-tfrs-test:deployer
+- apiVersion: v1
+  groupNames: null
+  kind: RoleBinding
+  metadata:
+    creationTimestamp: null
+    name: system:image-builders
+  roleRef:
+    name: system:image-builder
+  subjects:
+  - kind: ServiceAccount
+    name: builder
+    namespace: mem-tfrs-test
+  userNames:
+  - system:serviceaccount:mem-tfrs-test:builder
+- apiVersion: v1
+  groupNames:
+  - system:serviceaccounts:mem-tfrs-test
+  kind: RoleBinding
+  metadata:
+    creationTimestamp: null
+    name: system:image-pullers
+  roleRef:
+    name: system:image-puller
+  subjects:
+  - kind: SystemGroup
+    name: system:serviceaccounts:mem-tfrs-test
+  userNames: null
+- apiVersion: v1
+  groupNames: null
+  kind: RoleBinding
+  metadata:
+    creationTimestamp: null
+    name: view
+  roleRef:
+    name: view
+  subjects:
+  - kind: User
+    name: matthewhall78
+  - kind: User
+    name: swcurran
+  userNames:
+  - matthewhall78
+  - swcurran
+- apiVersion: v1
+  kind: PersistentVolumeClaim
+  metadata:
+    annotations:
+      pv.kubernetes.io/bind-completed: "yes"
+      pv.kubernetes.io/bound-by-controller: "yes"
+      volume.beta.kubernetes.io/storage-class: gluster-file
+      volume.beta.kubernetes.io/storage-provisioner: kubernetes.io/glusterfs
+    creationTimestamp: null
+    name: postgresql-cns
+  spec:
+    accessModes:
+    - ReadWriteOnce
+    resources:
+      requests:
+        storage: 5Gi
+    volumeName: pvc-e278977a-0068-11e8-b783-0050568379a2
+  status: {}
+- apiVersion: v1
+  kind: DeploymentConfig
+  metadata:
+    annotations:
+      description: Defines how to deploy the application server
+    creationTimestamp: null
+    generation: 1
+    name: client
+  spec:
+    replicas: 1
+    selector:
+      name: client
+    strategy:
+      activeDeadlineSeconds: 21600
+      resources: {}
+      rollingParams:
+        intervalSeconds: 1
+        maxSurge: 25%
+        maxUnavailable: 25%
+        timeoutSeconds: 600
+        updatePeriodSeconds: 1
+      type: Rolling
+    template:
+      metadata:
+        creationTimestamp: null
+        labels:
+          name: client
+        name: client
+      spec:
+        containers:
+        - env:
+          - name: API_URL
+            value: http://backend-mem-tfrs-test.pathfinder.gov.bc.ca/api/
+          - name: RealIpFrom
+          - name: AdditionalRealIpFromRules
+          - name: IpFilterRules
+          - name: HTTP_BASIC
+          - name: API_URL
+            value: http://backend.mem-tfrs-test.svc.cluster.local:8080/api/
+          image: 172.50.0.2:5000/mem-tfrs-tools/client@sha256:7b70a249fcf707aba746df06eee95ff1b3c329b0287abed2304f91c3caba16a1
+          imagePullPolicy: IfNotPresent
+          name: client
+          ports:
+          - containerPort: 3000
+            protocol: TCP
+          resources:
+            limits:
+              memory: 1Gi
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+    test: false
+    triggers:
+    - imageChangeParams:
+        automatic: true
+        containerNames:
+        - client
+        from:
+          kind: ImageStreamTag
+          name: client:test
+          namespace: mem-tfrs-tools
+      type: ImageChange
+    - type: ConfigChange
+  status:
+    availableReplicas: 0
+    latestVersion: 0
+    observedGeneration: 0
+    replicas: 0
+    unavailableReplicas: 0
+    updatedReplicas: 0
+- apiVersion: v1
+  kind: DeploymentConfig
+  metadata:
+    creationTimestamp: null
+    generation: 1
+    labels:
+      app: postgresql-persistent
+      template: postgresql-persistent-template
+    name: postgresql
+  spec:
+    replicas: 1
+    selector:
+      name: postgresql
+    strategy:
+      activeDeadlineSeconds: 21600
+      recreateParams:
+        timeoutSeconds: 600
+      resources: {}
+      type: Recreate
+    template:
+      metadata:
+        creationTimestamp: null
+        labels:
+          name: postgresql
+      spec:
+        containers:
+        - env:
+          - name: POSTGRESQL_DATABASE
+            value: tfrs
+          - name: POSTGRESQL_USER
+            valueFrom:
+              secretKeyRef:
+                key: DATABASE_USER
+                name: tfrs-postgresql
+          - name: POSTGRESQL_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                key: DATABASE_PASSWORD
+                name: tfrs-postgresql
+          image: registry.access.redhat.com/rhscl/postgresql-95-rhel7@sha256:19aacf0c8331df76b67932415bd84abf74ec36fd9d4aef518ad9f6285c4a948a
+          imagePullPolicy: IfNotPresent
+          livenessProbe:
+            failureThreshold: 3
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            successThreshold: 1
+            tcpSocket:
+              port: 5432
+            timeoutSeconds: 1
+          name: postgresql
+          ports:
+          - containerPort: 5432
+            protocol: TCP
+          readinessProbe:
+            exec:
+              command:
+              - /bin/sh
+              - -i
+              - -c
+              - psql -h 127.0.0.1 -U $POSTGRESQL_USER -q -d $POSTGRESQL_DATABASE -c
+                'SELECT 1'
+            failureThreshold: 3
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 1
+          resources:
+            limits:
+              memory: 512Mi
+          securityContext:
+            capabilities: {}
+            privileged: false
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+          volumeMounts:
+          - mountPath: /var/lib/pgsql/data
+            name: postgresql-data
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+        volumes:
+        - name: postgresql-data
+          persistentVolumeClaim:
+            claimName: postgresql-cns
+    test: false
+    triggers:
+    - imageChangeParams:
+        automatic: true
+        containerNames:
+        - postgresql
+        from:
+          kind: ImageStreamTag
+          name: postgresql:9.5
+          namespace: openshift
+      type: ImageChange
+    - type: ConfigChange
+  status:
+    availableReplicas: 0
+    latestVersion: 0
+    observedGeneration: 0
+    replicas: 0
+    unavailableReplicas: 0
+    updatedReplicas: 0
+- apiVersion: v1
+  kind: DeploymentConfig
+  metadata:
+    annotations:
+      description: Defines how to deploy the container.
+    creationTimestamp: null
+    generation: 1
+    name: schema-spy
+  spec:
+    replicas: 1
+    selector:
+      name: schema-spy
+    strategy:
+      activeDeadlineSeconds: 21600
+      resources: {}
+      rollingParams:
+        intervalSeconds: 1
+        maxSurge: 25%
+        maxUnavailable: 25%
+        timeoutSeconds: 600
+        updatePeriodSeconds: 1
+      type: Rolling
+    template:
+      metadata:
+        creationTimestamp: null
+        labels:
+          name: schema-spy
+        name: schema-spy
+      spec:
+        containers:
+        - env:
+          - name: DATABASE_SERVICE_NAME
+            value: postgresql
+          - name: POSTGRESQL_DATABASE
+            value: tfrs
+          - name: POSTGRESQL_USER
+            valueFrom:
+              secretKeyRef:
+                key: DATABASE_USER
+                name: tfrs-postgresql
+          - name: POSTGRESQL_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                key: DATABASE_PASSWORD
+                name: tfrs-postgresql
+          image: 172.50.0.2:5000/mem-tfrs-tools/schema-spy@sha256:7a420819e019200ec98ebebe06388872f2f72f37baa7c64162a4a4d4909bcfbf
+          imagePullPolicy: IfNotPresent
+          livenessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /
+              port: 8080
+              scheme: HTTP
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 3000
+          name: schema-spy
+          ports:
+          - containerPort: 8080
+            protocol: TCP
+          readinessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /
+              port: 8080
+              scheme: HTTP
+            initialDelaySeconds: 3
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 3000
+          resources:
+            limits:
+              memory: 512Mi
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+    test: false
+    triggers:
+    - imageChangeParams:
+        automatic: true
+        containerNames:
+        - schema-spy
+        from:
+          kind: ImageStreamTag
+          name: schema-spy:latest
+          namespace: mem-tfrs-tools
+      type: ImageChange
+    - type: ConfigChange
+  status:
+    availableReplicas: 0
+    latestVersion: 0
+    observedGeneration: 0
+    replicas: 0
+    unavailableReplicas: 0
+    updatedReplicas: 0
+- apiVersion: v1
+  kind: DeploymentConfig
+  metadata:
+    annotations:
+      description: Defines how to deploy the application server
+    creationTimestamp: null
+    generation: 1
+    labels:
+      template: tfrs-app-environment
+    name: tfrs
+  spec:
+    replicas: 3
+    selector:
+      name: tfrs
+    strategy:
+      activeDeadlineSeconds: 21600
+      recreateParams:
+        mid:
+          execNewPod:
+            command:
+            - /bin/sh
+            - -c
+            - python manage.py migrate
+            containerName: tfrs-app
+          failurePolicy: Abort
+        timeoutSeconds: 600
+      resources: {}
+      type: Recreate
+    template:
+      metadata:
+        creationTimestamp: null
+        labels:
+          name: tfrs
+        name: tfrs
+      spec:
+        containers:
+        - env:
+          - name: DATABASE_SERVICE_NAME
+            value: postgresql
+          - name: DATABASE_ENGINE
+            value: postgresql
+          - name: DATABASE_NAME
+            value: tfrs
+          - name: APP_CONFIG
+          - name: DATABASE_USER
+            valueFrom:
+              secretKeyRef:
+                key: DATABASE_USER
+                name: tfrs-postgresql
+          - name: DATABASE_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                key: DATABASE_PASSWORD
+                name: tfrs-postgresql
+          image: 172.50.0.2:5000/mem-tfrs-tools/tfrs@sha256:14551021a28ff5f0b07e055e7cfa29bd0044024fbdc47644c3aee509198955a1
+          imagePullPolicy: IfNotPresent
+          livenessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /health
+              port: 8080
+              scheme: HTTP
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 3
+          name: tfrs-app
+          ports:
+          - containerPort: 8080
+            protocol: TCP
+          readinessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /health
+              port: 8080
+              scheme: HTTP
+            initialDelaySeconds: 3
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 3
+          resources:
+            limits:
+              memory: 512Mi
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+    test: false
+    triggers:
+    - imageChangeParams:
+        automatic: true
+        containerNames:
+        - tfrs-app
+        from:
+          kind: ImageStreamTag
+          name: tfrs:test
+          namespace: mem-tfrs-tools
+      type: ImageChange
+    - type: ConfigChange
+  status:
+    availableReplicas: 0
+    latestVersion: 0
+    observedGeneration: 0
+    replicas: 0
+    unavailableReplicas: 0
+    updatedReplicas: 0
+- apiVersion: v1
+  kind: Service
+  metadata:
+    annotations:
+      description: Exposes and load balances the application pods
+      service.alpha.openshift.io/dependencies: '[{"name": "postgresql", "kind": "Service"}]'
+    creationTimestamp: null
+    labels:
+      template: tfrs-app-environment
+    name: backend
+  spec:
+    ports:
+    - name: web
+      port: 8080
+      protocol: TCP
+      targetPort: 8080
+    selector:
+      name: tfrs
+    sessionAffinity: None
+    type: ClusterIP
+  status:
+    loadBalancer: {}
+- apiVersion: v1
+  kind: Service
+  metadata:
+    annotations:
+      description: Exposes and load balances the front end pods
+    creationTimestamp: null
+    labels:
+      template: tfrs-app-environment
+    name: client
+  spec:
+    ports:
+    - name: web
+      port: 8080
+      protocol: TCP
+      targetPort: 8080
+    selector:
+      name: client
+    sessionAffinity: None
+    type: ClusterIP
+  status:
+    loadBalancer: {}
+- apiVersion: v1
+  kind: Service
+  metadata:
+    creationTimestamp: null
+    name: glusterfs-cluster-app
+  spec:
+    ports:
+    - port: 1
+      protocol: TCP
+      targetPort: 1
+    sessionAffinity: None
+    type: ClusterIP
+  status:
+    loadBalancer: {}
+- apiVersion: v1
+  kind: Service
+  metadata:
+    creationTimestamp: null
+    labels:
+      gluster.kubernetes.io/provisioned-for-pvc: postgresql-cns
+    name: glusterfs-dynamic-postgresql-cns
+  spec:
+    ports:
+    - port: 1
+      protocol: TCP
+      targetPort: 1
+    sessionAffinity: None
+    type: ClusterIP
+  status:
+    loadBalancer: {}
+- apiVersion: v1
+  kind: Service
+  metadata:
+    creationTimestamp: null
+    labels:
+      app: postgresql-persistent
+      template: postgresql-persistent-template
+    name: postgresql
+  spec:
+    ports:
+    - name: postgresql
+      port: 5432
+      protocol: TCP
+      targetPort: 5432
+    selector:
+      name: postgresql
+    sessionAffinity: None
+    type: ClusterIP
+  status:
+    loadBalancer: {}
+- apiVersion: v1
+  kind: Service
+  metadata:
+    annotations:
+      description: Exposes and load balances the application pods
+    creationTimestamp: null
+    name: schema-spy
+  spec:
+    ports:
+    - name: 8080-tcp
+      port: 8080
+      protocol: TCP
+      targetPort: 8080
+    selector:
+      name: schema-spy
+    sessionAffinity: None
+    type: ClusterIP
+  status:
+    loadBalancer: {}
+- apiVersion: v1
+  kind: Route
+  metadata:
+    creationTimestamp: null
+    name: api
+  spec:
+    host: test-lowcarbonfuels.pathfinder.bcgov
+    path: /api
+    port:
+      targetPort: web
+    to:
+      kind: Service
+      name: backend
+      weight: 100
+    wildcardPolicy: None
+  status:
+    ingress:
+    - conditions:
+      - lastTransitionTime: 2018-01-24T21:01:59Z
+        status: "True"
+        type: Admitted
+      host: test-lowcarbonfuels.pathfinder.bcgov
+      routerName: router
+      wildcardPolicy: None
+- apiVersion: v1
+  kind: Route
+  metadata:
+    creationTimestamp: null
+    name: main
+  spec:
+    host: test-lowcarbonfuels.pathfinder.bcgov
+    port:
+      targetPort: web
+    to:
+      kind: Service
+      name: client
+      weight: 100
+    wildcardPolicy: None
+  status:
+    ingress:
+    - conditions:
+      - lastTransitionTime: 2018-01-31T23:14:30Z
+        status: "True"
+        type: Admitted
+      host: test-lowcarbonfuels.pathfinder.bcgov
+      routerName: router
+      wildcardPolicy: None
+- apiVersion: v1
+  kind: Route
+  metadata:
+    creationTimestamp: null
+    name: schema-spy
+  spec:
+    host: schema-spy-mem-tfrs-test.pathfinder.gov.bc.ca
+    port:
+      targetPort: 8080-tcp
+    to:
+      kind: Service
+      name: schema-spy
+      weight: 100
+    wildcardPolicy: None
+  status:
+    ingress:
+    - conditions:
+      - lastTransitionTime: 2017-11-30T21:39:14Z
+        status: "True"
+        type: Admitted
+      host: schema-spy-mem-tfrs-test.pathfinder.gov.bc.ca
+      routerName: router
+      wildcardPolicy: None
