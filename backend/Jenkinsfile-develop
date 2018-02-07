@@ -11,7 +11,7 @@ node('python') {
         } finally {
             def htmlcovFolder = new File( 'backend/htmlcov' )
             if(htmlcovFolder.exists()) {
-                def indexhtmlFile = new file('backend/htmlcov/index.html')
+                def indexhtmlFile = new File('backend/htmlcov/index.html')
                 if(indexhtmlFile.exists()) {
                     publishHTML (target: [
                         allowMissing: true,
