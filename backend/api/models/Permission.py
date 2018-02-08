@@ -25,7 +25,7 @@ from auditable.models import Auditable
 
 
 class Permission(Auditable):
-    code = models.CharField(max_length=100)
+    code = models.CharField(max_length=100, unique=True)
     name = models.CharField(max_length=100)
     description = models.CharField(max_length=1000)
 

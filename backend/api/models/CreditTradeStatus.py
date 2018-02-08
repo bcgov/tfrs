@@ -25,7 +25,7 @@ from auditable.models import Auditable
 
 
 class CreditTradeStatus(Auditable):
-    status = models.CharField(max_length=25, blank=True, null=True)
+    status = models.CharField(max_length=25, blank=True, null=True, unique=True)
     description = models.CharField(max_length=4000, blank=True, null=True)
     effective_date = models.DateField(blank=True, null=True)
     expiration_date = models.DateField(blank=True, null=True)
