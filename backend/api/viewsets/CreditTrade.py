@@ -6,7 +6,9 @@ from auditable.views import AuditableMixin
 
 from api.models.CreditTrade import CreditTrade
 from api.models.CreditTradeHistory import CreditTradeHistory
+
 from api.serializers import CreditTradeCreateSerializer
+from api.serializers import CreditTradeUpdateSerializer
 from api.serializers import CreditTradeApproveSerializer
 from api.serializers import CreditTrade2Serializer as CreditTradeSerializer
 from api.serializers import CreditTradeHistory2Serializer \
@@ -14,7 +16,7 @@ from api.serializers import CreditTradeHistory2Serializer \
 
 from api.services.CreditTradeService import CreditTradeService
 
-# class CreditTradeViewSet(AuditableMixin, viewsets.ModelViewSet):
+
 class CreditTradeViewSet(AuditableMixin, mixins.CreateModelMixin,
                          mixins.RetrieveModelMixin, mixins.UpdateModelMixin,
                          mixins.ListModelMixin, viewsets.GenericViewSet):
@@ -29,7 +31,7 @@ class CreditTradeViewSet(AuditableMixin, mixins.CreateModelMixin,
     serializer_class = CreditTradeSerializer
     serializer_classes = {
         'create': CreditTradeCreateSerializer,
-        'update': CreditTradeCreateSerializer,
+        'update': CreditTradeUpdateSerializer,
         'default': CreditTradeSerializer,
         'history': CreditTradeHistorySerializer,
         'approve': CreditTradeApproveSerializer,
