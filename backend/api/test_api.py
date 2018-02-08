@@ -8,11 +8,13 @@ from api import fake_api_calls
 
 # Credit Trade Statuses
 STATUS_DRAFT = 1
-STATUS_PROPOSED = 2
+STATUS_SUBMITTED = 2
 STATUS_ACCEPTED = 3
+STATUS_RECOMMENDED = 4
 STATUS_APPROVED = 6
 STATUS_COMPLETED = 7
 STATUS_CANCELLED = 8
+STATUS_DECLINED = 9
 
 
 class TestCreditTradeAPI(TestCase):
@@ -178,9 +180,10 @@ class TestCreditTradeAPI(TestCase):
         assert status.HTTP_200_OK == response.status_code
 
     def test_is_internal_history_false(self):
-        data = [STATUS_PROPOSED, STATUS_ACCEPTED]
+        data = [STATUS_SUBMITTED, STATUS_ACCEPTED]
         for ct_status in data:
             self.test_update(credit_trade_status=ct_status)
+            # TODO: Change this to /id/propose and /id/accept
             response = self.client.get(
                 "{}/{}/history".format(self.test_url, self.credit_trade['id']),
                 content_type='application/json')
@@ -250,7 +253,7 @@ class TestCreditTradeAPI(TestCase):
 
         credit_trade = fake_api_calls.create_credit_trade(
             user_id=self.user_id,
-            status=STATUS_PROPOSED,
+            status=STATUS_SUBMITTED,
             fair_market_value_per_credit=1000,
             initiator=2,
             respondent=3,
@@ -355,3 +358,94 @@ class TestCreditTradeAPI(TestCase):
 
 
         # pass
+
+    # Test transitions of statuses
+    def test_create_draft_or_proposed(self, **kwargs):
+        credit_trades = [{
+                'numberOfCredits': 1,
+                'status': STATUS_DRAFT,
+                'respondent': self.fs1_id,
+                'type': self.ct_type_id
+            }, {
+                'numberOfCredits': 1,
+                'status': STATUS_SUBMITTED,
+                'respondent': self.fs1_id,
+                'type': self.ct_type_id
+            }]
+
+        for ct in credit_trades:
+            response = self.client.post(
+                self.test_url,
+                content_type='application/json',
+                data=json.dumps(ct))
+
+            assert status.HTTP_201_CREATED == response.status_code
+
+    def test_create_other_statuses_fail(self, **kwargs):
+        credit_trades = [{
+                'numberOfCredits': 1,
+                'status': STATUS_ACCEPTED,
+                'respondent': self.fs1_id,
+                'type': self.ct_type_id
+            }, {
+                'numberOfCredits': 1,
+                'status': STATUS_RECOMMENDED,
+                'respondent': self.fs1_id,
+                'type': self.ct_type_id
+            }, {
+                'numberOfCredits': 1,
+                'status': STATUS_APPROVED,
+                'respondent': self.fs1_id,
+                'type': self.ct_type_id
+            }, {
+                'numberOfCredits': 1,
+                'status': STATUS_COMPLETED,
+                'respondent': self.fs1_id,
+                'type': self.ct_type_id
+            }, {
+                'numberOfCredits': 1,
+                'status': STATUS_CANCELLED,
+                'respondent': self.fs1_id,
+                'type': self.ct_type_id
+            }, {
+                'numberOfCredits': 1,
+                'status': STATUS_DECLINED,
+                'respondent': self.fs1_id,
+                'type': self.ct_type_id
+            }]
+
+        for tests in credit_trades:
+            response = self.client.post(
+                self.test_url,
+                content_type='application/json',
+                data=json.dumps(tests))
+
+            # self.assertJSONEqual(
+            #     response.content.decode("utf-8"),
+            #     tests['response'])
+            assert response.status_code == status.HTTP_400_BAD_REQUEST
+        pass
+
+    def test_update_draft_to_proposed(self, **kwargs):
+        pass
+
+    def test_update_proposed_to_accepted(self, **kwargs):
+        pass
+
+    def test_update_proposed_to_rescinded(self, **kwargs):
+        pass
+
+    def test_update_proposed_to_refused(self, **kwargs):
+        pass
+
+    def test_update_accepted_to_rescinded(self, **kwargs):
+        pass
+
+    def test_update_accepted_to_recommended(self, **kwargs):
+        pass
+
+    def test_update_accepted_to_approved(self, **kwargs):
+        pass
+
+    def test_update_accepted_to_declined(self, **kwargs):
+        pass

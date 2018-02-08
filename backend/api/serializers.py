@@ -218,6 +218,34 @@ class UserViewModelSerializer(serializers.ModelSerializer):
 
 
 class CreditTradeCreateSerializer(serializers.ModelSerializer):
+
+    def validate(self, data):
+        allowed_statuses = list(
+            CreditTradeStatus.objects
+                .filter(status__in=["Draft", "Submitted"])
+                .only('id'))
+
+        credit_trade_status = data.get('status')
+
+        if credit_trade_status not in allowed_statuses:
+            raise serializers.ValidationError({
+                'status': 'Status cannot be `{}` on create. '
+                          'Use `Draft` or `Submitted` instead.'.format(
+                    credit_trade_status.status
+                )})
+
+        return data
+
+    class Meta:
+        model = CreditTrade
+        fields = '__all__'
+
+
+class CreditTradeUpdateSerializer(serializers.ModelSerializer):
+
+    def validate(self, data):
+        return data
+
     class Meta:
         model = CreditTrade
         fields = '__all__'

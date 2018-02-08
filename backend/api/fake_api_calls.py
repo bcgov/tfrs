@@ -82,8 +82,8 @@ def create_organization_action_type():
 
 
 def create_organization():
-    status_id = create_organization_status()
-    action_type_id = create_organization_action_type()
+    status_id = 1 # Active
+    action_type_id = 1 # buy and sell
 
     test_url = "/api/organizations"
     # Create:
