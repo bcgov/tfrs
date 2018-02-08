@@ -11,15 +11,13 @@ node('python') {
             mail (from: "${EMAIL_FROM}", to: "${EMAIL_TO}", subject: "FYI: Job '${env.JOB_NAME}' (${env.BUILD_NUMBER}) unit test failed", body: "See ${env.BUILD_URL} for details. ");
         } finally {
             if(fileExists('backend/htmlcov/index.html')) {
-                if(indexhtmlFile.exists()) {
-                    publishHTML (target: [
-                        allowMissing: true,
-                        alwaysLinkToLastBuild: true,
-                        keepAll: true,
-                        reportDir: 'backend/htmlcov',
-                        reportFiles: 'index.html',
-                        reportName: "Unit Test Code Coverage Report" ])
-                }
+                publishHTML (target: [
+                    allowMissing: true,
+                    alwaysLinkToLastBuild: true,
+                    keepAll: true,
+                    reportDir: 'backend/htmlcov',
+                    reportFiles: 'index.html',
+                    reportName: "Unit Test Code Coverage Report" ])
             }
         }
 
