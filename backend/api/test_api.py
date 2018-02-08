@@ -383,48 +383,72 @@ class TestCreditTradeAPI(TestCase):
 
     def test_create_other_statuses_fail(self, **kwargs):
         credit_trades = [{
-                'numberOfCredits': 1,
-                'status': STATUS_ACCEPTED,
-                'respondent': self.fs1_id,
-                'type': self.ct_type_id
+                'data': {
+                    'numberOfCredits': 1,
+                    'status': STATUS_ACCEPTED,
+                    'respondent': self.fs1_id,
+                    'type': self.ct_type_id },
+                'error': {"status": ["Status cannot be "
+                                     "`Accepted` on create. "
+                                     "Use `Draft` or `Submitted` instead."]}
             }, {
-                'numberOfCredits': 1,
-                'status': STATUS_RECOMMENDED,
-                'respondent': self.fs1_id,
-                'type': self.ct_type_id
+                'data': {
+                    'numberOfCredits': 1,
+                    'status': STATUS_RECOMMENDED,
+                    'respondent': self.fs1_id,
+                    'type': self.ct_type_id},
+                'error': {"status": ["Status cannot be "
+                                     "`Recommended for decision` on create. "
+                                     "Use `Draft` or `Submitted` instead."]}
+
             }, {
-                'numberOfCredits': 1,
-                'status': STATUS_APPROVED,
-                'respondent': self.fs1_id,
-                'type': self.ct_type_id
+                'data': {
+                    'numberOfCredits': 1,
+                    'status': STATUS_APPROVED,
+                    'respondent': self.fs1_id,
+                    'type': self.ct_type_id},
+                'error': {"status": ["Status cannot be "
+                                     "`Approved` on create. "
+                                     "Use `Draft` or `Submitted` instead."]}
             }, {
-                'numberOfCredits': 1,
-                'status': STATUS_COMPLETED,
-                'respondent': self.fs1_id,
-                'type': self.ct_type_id
+                'data': {
+                    'numberOfCredits': 1,
+                    'status': STATUS_COMPLETED,
+                    'respondent': self.fs1_id,
+                    'type': self.ct_type_id},
+                'error': {"status": ["Status cannot be "
+                                     "`Completed` on create. "
+                                     "Use `Draft` or `Submitted` instead."]}
             }, {
-                'numberOfCredits': 1,
-                'status': STATUS_CANCELLED,
-                'respondent': self.fs1_id,
-                'type': self.ct_type_id
+                'data': {
+                    'numberOfCredits': 1,
+                    'status': STATUS_CANCELLED,
+                    'respondent': self.fs1_id,
+                    'type': self.ct_type_id},
+                'error': {"status": ["Status cannot be "
+                                     "`Rescinded` on create. "
+                                     "Use `Draft` or `Submitted` instead."]}
             }, {
-                'numberOfCredits': 1,
-                'status': STATUS_DECLINED,
-                'respondent': self.fs1_id,
-                'type': self.ct_type_id
+                'data': {
+                    'numberOfCredits': 1,
+                    'status': STATUS_DECLINED,
+                    'respondent': self.fs1_id,
+                    'type': self.ct_type_id},
+                'error': {"status": ["Status cannot be "
+                                     "`Declined for approval` on create. "
+                                     "Use `Draft` or `Submitted` instead."]}
             }]
 
         for tests in credit_trades:
             response = self.client.post(
                 self.test_url,
                 content_type='application/json',
-                data=json.dumps(tests))
+                data=json.dumps(tests['data']))
 
-            # self.assertJSONEqual(
-            #     response.content.decode("utf-8"),
-            #     tests['response'])
+            self.assertJSONEqual(
+                response.content.decode("utf-8"),
+                tests['error'])
             assert response.status_code == status.HTTP_400_BAD_REQUEST
-        pass
 
     def test_update_draft_to_proposed(self, **kwargs):
         pass
