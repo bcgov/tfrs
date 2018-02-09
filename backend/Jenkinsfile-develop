@@ -33,7 +33,7 @@ if (result != 0) {
         
 node('maven') {
 
-    stage('Quality Check') {
+    stage('Code Quality Check') {
         checkout scm
         echo('Quality Check')
         SONARQUBE_PWD = sh (
@@ -69,21 +69,3 @@ node('maven') {
     }
 
 }
-
-/*********
-stage('Deploy to Test') {
-    input "Deploy to Test?"
-    node('master') {
-        openshiftTag destStream: 'tfrs', verbose: 'true', destTag: 'test', srcStream: 'tfrs', srcTag: "${IMAGE_HASH}"
-        openshiftVerifyDeployment depCfg: 'tfrs', namespace: 'mem-tfrs-test', replicaCount: 1, verbose: 'false'
-    }
-}
-
-stage('Deploy to Prod') {
-    input "Deploy to Prod?"
-    node('master') {
-        openshiftTag destStream: 'tfrs', verbose: 'true', destTag: 'prod', srcStream: 'tfrs', srcTag: "${IMAGE_HASH}"
-        openshiftVerifyDeployment depCfg: 'tfrs', namespace: 'mem-tfrs-prod', replicaCount: 1, verbose: 'false'
-    }
-}
-*********/
