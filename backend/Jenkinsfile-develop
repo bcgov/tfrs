@@ -57,19 +57,20 @@ node('maven') {
         openshiftBuild bldCfg: 'tfrs-develop', showBuildLogs: 'true'
         echo ">> Getting Image Hash"
         IMAGE_HASH = sh (
-            script: 'oc get istag tfrs:latest -o template --template="{{.image.dockerImageReference}}"|awk -F ":" \'{print $3}\'',
+            script: 'oc get istag tfrs-develop:latest -o template --template="{{.image.dockerImageReference}}"|awk -F ":" \'{print $3}\'',
  	            returnStdout: true).trim()
         echo ">> IMAGE_HASH: $IMAGE_HASH"
     }
 
     stage('Deploy to Dev') {
         echo "Deploying to Dev: ${BUILD_ID}"
-        openshiftTag destStream: 'tfrs', verbose: 'true', destTag: 'dev', srcStream: 'tfrs', srcTag: "${IMAGE_HASH}"
+        openshiftTag destStream: 'tfrs-develop', verbose: 'true', destTag: 'dev', srcStream: 'tfrs-develop', srcTag: "${IMAGE_HASH}"
         openshiftVerifyDeployment depCfg: 'tfrs', namespace: 'mem-tfrs-dev', replicaCount: 1, verbose: 'false'
     }
 
 }
 
+/*********
 stage('Deploy to Test') {
     input "Deploy to Test?"
     node('master') {
@@ -85,3 +86,4 @@ stage('Deploy to Prod') {
         openshiftVerifyDeployment depCfg: 'tfrs', namespace: 'mem-tfrs-prod', replicaCount: 1, verbose: 'false'
     }
 }
+*********/
