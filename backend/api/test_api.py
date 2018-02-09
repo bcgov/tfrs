@@ -394,7 +394,7 @@ class TestCreditTradeAPI(TestCase):
                     'respondent': self.fs1_id,
                     'type': self.ct_type_id},
                 'error': {"status": ["Status cannot be "
-                                     "`Recommended for decision` on create. "
+                                     "`Recommended` on create. "
                                      "Use `Draft` or `Submitted` instead."]}
 
             }, {
@@ -422,7 +422,7 @@ class TestCreditTradeAPI(TestCase):
                     'respondent': self.fs1_id,
                     'type': self.ct_type_id},
                 'error': {"status": ["Status cannot be "
-                                     "`Rescinded` on create. "
+                                     "`Cancelled` on create. "
                                      "Use `Draft` or `Submitted` instead."]}
             }, {
                 'data': {
@@ -431,7 +431,7 @@ class TestCreditTradeAPI(TestCase):
                     'respondent': self.fs1_id,
                     'type': self.ct_type_id},
                 'error': {"status": ["Status cannot be "
-                                     "`Declined for approval` on create. "
+                                     "`Declined` on create. "
                                      "Use `Draft` or `Submitted` instead."]}
             }]
 
@@ -449,16 +449,25 @@ class TestCreditTradeAPI(TestCase):
             'respondent': self.fs1_id,
             'type': self.ct_type_id
         }, {
-            'numberOfCredits': 1,
-            'status': STATUS_SUBMITTED,
+            'numberOfCredits': 5,
+            'status': STATUS_DRAFT,
             'respondent': self.fs1_id,
             'type': self.ct_type_id
         }]
 
         self.test_create_success()
         for ct in credit_trades:
+            # Create
             response = fake_api_calls.create_credit_trade_dict(ct)
             assert status.HTTP_201_CREATED == response.status_code
+
+            # Update
+            ct['status'] = STATUS_SUBMITTED
+            updated_response = fake_api_calls.update_credit_trade_dict(
+                ct,
+                response.json()['id'])
+
+            assert status.HTTP_200_OK == updated_response.status_code
 
     def test_update_proposed_to_accepted(self, **kwargs):
         pass
@@ -508,5 +517,5 @@ class TestCreditTradeAPI(TestCase):
 
             created_ct = fake_api_calls.get_credit_trade(ct_id)
             assert status.HTTP_200_OK == created_ct.status_code
-            assert created_ct.json()['totalValue'] == (trade['numberOfCredits'] * 0)\
+            assert created_ct.json()['totalValue'] == (trade['numberOfCredits'] * 0)
 

@@ -270,14 +270,17 @@ class CreditTrade2Serializer(serializers.ModelSerializer):
     zero_reason = CreditTradeZeroReasonSerializer(read_only=True)
     credits_from = OrganizationSerializer(read_only=True)
     credits_to = OrganizationSerializer(read_only=True)
+    actions = CreditTradeStatusSerializer(many=True, read_only=True)
 
     class Meta:
         model = CreditTrade
-        fields = ('id', 'status', 'initiator', 'respondent',
+        fields = ('id', 'status', 'status_display',
+                  'initiator', 'respondent',
                   'type', 'number_of_credits',
-                  'fair_market_value_per_credit', 'zero_reason',
+                  'fair_market_value_per_credit', 'total_value',
+                  'zero_reason',
                   'trade_effective_date', 'credits_from', 'credits_to',
-                  'update_timestamp', 'total_value')
+                  'update_timestamp', 'actions')
         # exclude = ('note',)
 
 

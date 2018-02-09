@@ -192,9 +192,9 @@ def create_credit_trade_dict(data):
     return response
 
 
-def update_credit_trade_dict(data):
+def update_credit_trade_dict(data, id):
     response = client.put(
-        '/api/credit_trades',
+        '/api/credit_trades/{}'.format(id),
         content_type='application/json',
         data=json.dumps(data))
 
