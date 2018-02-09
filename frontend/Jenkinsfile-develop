@@ -20,6 +20,7 @@ node('maven') {
 
     stage('Build') {
         echo "Building..."
+	openshiftBuild bldCfg: 'client-develop-angular-app-build', showBuildLogs: 'true'
         openshiftBuild bldCfg: 'client-develop', showBuildLogs: 'true'
         echo ">> Getting Image Hash"
         IMAGE_HASH = sh (
