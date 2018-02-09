@@ -62,7 +62,7 @@ node('maven') {
         echo ">> IMAGE_HASH: $IMAGE_HASH"
     }
 
-    stage('Deploy to Dev') {
+    stage('Deploy on Dev') {
         echo "Deploying to Dev: ${BUILD_ID}"
         openshiftTag destStream: 'tfrs-develop', verbose: 'true', destTag: 'dev', srcStream: 'tfrs-develop', srcTag: "${IMAGE_HASH}"
         openshiftVerifyDeployment depCfg: 'tfrs', namespace: 'mem-tfrs-dev', replicaCount: 1, verbose: 'false'
