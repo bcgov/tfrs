@@ -33,7 +33,7 @@ class CreditTradeService(object):
 
         if (new_status.status == 'Draft' or
                 (not is_new and
-                 new_status.status == 'Rescinded' and
+                 new_status.status == 'Cancelled' and
                  previous_history.status.status == 'Draft')):
             is_internal_history_record = True
 

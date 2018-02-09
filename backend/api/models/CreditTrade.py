@@ -20,6 +20,7 @@
 """
 from decimal import Decimal
 from django.db import models
+from .CreditTradeStatus import CreditTradeStatus
 
 from auditable.models import Auditable
 from api import validators
@@ -78,9 +79,44 @@ class CreditTrade(Auditable):
         return self.number_of_credits * self.fair_market_value_per_credit
 
     @property
+    def status_display(self):
+        """Display text for the status in a user-friendly way"""
+        cur_status = self.status.status
+        if cur_status == "Cancelled":
+            # If this was cancelled by the initiator, it's "Rescinded"
+            # If it was cancelled by the respondent, it's "Refused"
+            # If it was cancelled by the respondent after accepting,
+            #   it's "Rescinded"
+            return "Cancelled"
+        elif cur_status == "Declined":
+            return "Declined for approval"
+        elif cur_status == "Recommended":
+            return "Recommended for decision"
+
+        return cur_status
+
+    @property
     def actions(self):
         """Statuses that can be made for this credit trade"""
-        return
+        statuses = CreditTradeStatus.objects.all()
+        status_dict = {s.status: s for s in statuses}
+
+        cur_status = self.status.status
+
+        if cur_status == "Draft":
+            return [status_dict["Draft"],
+                    status_dict["Submitted"]]
+        elif cur_status == "Submitted":
+            return [status_dict["Accepted"],
+                    status_dict["Cancelled"]]  # Rescind
+        elif cur_status == "Accepted":
+            return [status_dict["Cancelled"],  # Refuse
+                    status_dict["Recommended"]]
+        elif cur_status == "Recommended":
+            return [status_dict["Approved"],
+                    status_dict["Declined"]]
+
+        return []
 
     class Meta:
         db_table = 'credit_trade'
