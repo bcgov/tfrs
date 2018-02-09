@@ -23,7 +23,8 @@ node('maven') {
 
     stage('Build') {
         echo "Building..."
-        openshiftBuild bldCfg: 'client-develop', showBuildLogs: 'true'
+	openshiftBuild bldCfg: 'client-angular-app-build', showBuildLogs: 'true'
+        openshiftBuild bldCfg: 'client', showBuildLogs: 'true'
         openshiftTag destStream: 'client', verbose: 'true', destTag: '$BUILD_ID', srcStream: 'client', srcTag: 'latest'
     }
 
