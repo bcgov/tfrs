@@ -374,11 +374,7 @@ class TestCreditTradeAPI(TestCase):
             }]
 
         for ct in credit_trades:
-            response = self.client.post(
-                self.test_url,
-                content_type='application/json',
-                data=json.dumps(ct))
-
+            response = fake_api_calls.create_credit_trade_dict(ct)
             assert status.HTTP_201_CREATED == response.status_code
 
     def test_create_other_statuses_fail(self, **kwargs):
@@ -440,18 +436,29 @@ class TestCreditTradeAPI(TestCase):
             }]
 
         for tests in credit_trades:
-            response = self.client.post(
-                self.test_url,
-                content_type='application/json',
-                data=json.dumps(tests['data']))
-
+            response = fake_api_calls.create_credit_trade_dict(tests['data'])
             self.assertJSONEqual(
                 response.content.decode("utf-8"),
                 tests['error'])
             assert response.status_code == status.HTTP_400_BAD_REQUEST
 
-    def test_update_draft_to_proposed(self, **kwargs):
-        pass
+    def test_update_draft_to_proposed_success(self, **kwargs):
+        credit_trades = [{
+            'numberOfCredits': 1,
+            'status': STATUS_DRAFT,
+            'respondent': self.fs1_id,
+            'type': self.ct_type_id
+        }, {
+            'numberOfCredits': 1,
+            'status': STATUS_SUBMITTED,
+            'respondent': self.fs1_id,
+            'type': self.ct_type_id
+        }]
+
+        self.test_create_success()
+        for ct in credit_trades:
+            response = fake_api_calls.create_credit_trade_dict(ct)
+            assert status.HTTP_201_CREATED == response.status_code
 
     def test_update_proposed_to_accepted(self, **kwargs):
         pass
@@ -473,3 +480,33 @@ class TestCreditTradeAPI(TestCase):
 
     def test_update_accepted_to_declined(self, **kwargs):
         pass
+
+    def test_can_create_and_get_a_zero_dollar_transaction(self):
+        trades = [{
+            'numberOfCredits': 5,
+            'status': STATUS_DRAFT,
+            'respondent': self.fs1_id,
+            'type': self.ct_type_id
+        }, {
+            'numberOfCredits': 5,
+            'status': STATUS_DRAFT,
+            'fairMarketValuePerCredit': 0.00,
+            'respondent': self.fs1_id,
+            'type': self.ct_type_id
+        }, {
+            'numberOfCredits': 5,
+            'status': STATUS_DRAFT,
+            'fairMarketValuePerCredit': '0.00',
+            'respondent': self.fs1_id,
+            'type': self.ct_type_id}]
+
+        for trade in trades:
+            # Create trade
+            response = fake_api_calls.create_credit_trade_dict(trade)
+            assert status.HTTP_201_CREATED == response.status_code
+            ct_id = json.loads(response.content.decode("utf-8"))['id']
+
+            created_ct = fake_api_calls.get_credit_trade(ct_id)
+            assert status.HTTP_200_OK == created_ct.status_code
+            assert created_ct.json()['totalValue'] == (trade['numberOfCredits'] * 0)\
+

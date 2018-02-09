@@ -18,9 +18,8 @@
     See the License for the specific language governing permissions and
     limitations under the License.
 """
-
+from decimal import Decimal
 from django.db import models
-from .Organization import Organization
 
 from auditable.models import Auditable
 from api import validators
@@ -49,7 +48,7 @@ class CreditTrade(Auditable):
     fair_market_value_per_credit = models.DecimalField(
         null=True, blank=True, max_digits=999,
         decimal_places=2,
-        default=None)
+        default=Decimal('0.00'))
     zero_reason = models.ForeignKey(
         'CreditTradeZeroReason',
         related_name='credit_trades',
@@ -77,6 +76,11 @@ class CreditTrade(Auditable):
     @property
     def total_value(self):
         return self.number_of_credits * self.fair_market_value_per_credit
+
+    @property
+    def actions(self):
+        """Statuses that can be made for this credit trade"""
+        return
 
     class Meta:
         db_table = 'credit_trade'
