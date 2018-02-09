@@ -173,7 +173,7 @@ objects:
           - name: HTTP_BASIC
           - name: API_URL
             value: http://backend.mem-tfrs-prod.svc.cluster.local:8080/api/
-          image: 172.50.0.2:5000/mem-tfrs-tools/client@sha256:7b70a249fcf707aba746df06eee95ff1b3c329b0287abed2304f91c3caba16a1
+          image: 172.50.0.2:5000/mem-tfrs-tools/client@sha256:391ef74b686d0eff42e7c82bb73cba33b8e7a698f866fe777f08cb5a73b9f5b6
           imagePullPolicy: IfNotPresent
           livenessProbe:
             failureThreshold: 3
@@ -487,7 +487,7 @@ objects:
               secretKeyRef:
                 key: DATABASE_PASSWORD
                 name: tfrs-postgresql
-          image: 172.50.0.2:5000/mem-tfrs-tools/tfrs@sha256:14551021a28ff5f0b07e055e7cfa29bd0044024fbdc47644c3aee509198955a1
+          image: 172.50.0.2:5000/mem-tfrs-tools/tfrs@sha256:50ca4b0774b605102043039c8368c2134601ea3e927314080a92ff368b7a5d5c
           imagePullPolicy: IfNotPresent
           livenessProbe:
             failureThreshold: 3

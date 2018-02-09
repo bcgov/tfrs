@@ -380,7 +380,7 @@ objects:
           - name: HTTP_BASIC
           - name: API_URL
             value: http://backend.mem-tfrs-dev.svc.cluster.local:8080/api/
-          image: 172.50.0.2:5000/mem-tfrs-tools/client@sha256:ba57753bff5e6c319abbbcdf0951ed209b503b25b35c4b7eddc68c2ba5096921
+          image: 172.50.0.2:5000/mem-tfrs-tools/client-develop@sha256:0d335a08da8af2a0cfdb6ee4e46f872bb8ad3dd379e4ddb4c3eeb0f2113ad1db
           imagePullPolicy: IfNotPresent
           livenessProbe:
             failureThreshold: 3
@@ -424,7 +424,7 @@ objects:
         - client
         from:
           kind: ImageStreamTag
-          name: client:dev
+          name: client-develop:dev
           namespace: mem-tfrs-tools
       type: ImageChange
     - type: ConfigChange
@@ -551,7 +551,7 @@ objects:
       app: request-logger
     name: request-logger
   spec:
-    replicas: 0
+    replicas: 1
     selector:
       deploymentconfig: request-logger
     strategy:
@@ -776,7 +776,7 @@ objects:
               secretKeyRef:
                 key: DATABASE_PASSWORD
                 name: tfrs-postgresql
-          image: 172.50.0.2:5000/mem-tfrs-tools/tfrs@sha256:baf4f62102015a20bca6c68ace066bb6fe4a430e1a9687c0946ff887fe9fe59d
+          image: 172.50.0.2:5000/mem-tfrs-tools/tfrs-develop@sha256:bdb8dad04d32184986e3641b65711dfbf3bcc0ffc05a89a6ca63dd43f739c667
           imagePullPolicy: IfNotPresent
           livenessProbe:
             failureThreshold: 3
@@ -820,7 +820,7 @@ objects:
         - tfrs-app
         from:
           kind: ImageStreamTag
-          name: tfrs:dev
+          name: tfrs-develop:dev
           namespace: mem-tfrs-tools
       type: ImageChange
     - type: ConfigChange

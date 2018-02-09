@@ -227,6 +227,54 @@ objects:
         memory: 4Gi
     runPolicy: Serial
     source:
+      dockerfile: |-
+        FROM client-angular-app:latest
+        COPY * /tmp/app/dist/
+        CMD  /usr/libexec/s2i/run
+      images:
+      - from:
+          kind: ImageStreamTag
+          name: client-angular-app:latest
+        paths:
+        - destinationDir: tmp
+          sourcePath: /opt/app-root/src/public/.
+      type: Dockerfile
+    strategy:
+      dockerStrategy:
+        from:
+          kind: ImageStreamTag
+          name: nginx-runtime:latest
+          namespace: openshift
+      type: Docker
+    triggers:
+    - imageChange: {}
+      type: ImageChange
+    - type: ConfigChange
+  status:
+    lastVersion: 0
+- apiVersion: v1
+  kind: BuildConfig
+  metadata:
+    creationTimestamp: null
+    labels:
+      build: client-angular-app-build
+    name: client-angular-app-build
+  spec:
+    failedBuildsHistoryLimit: 5
+    nodeSelector: null
+    output:
+      to:
+        kind: ImageStreamTag
+        name: client-angular-app:latest
+    postCommit: {}
+    resources:
+      limits:
+        cpu: "1"
+        memory: 4Gi
+      requests:
+        memory: 2Gi
+    runPolicy: Serial
+    source:
       contextDir: frontend
       git:
         ref: master
@@ -236,24 +284,14 @@ objects:
       sourceStrategy:
         from:
           kind: ImageStreamTag
-          name: nodejs:latest
-          namespace: openshift
-        runtimeArtifacts:
-        - destinationDir: tmp/app/dist
-          sourcePath: /opt/app-root/src/public/index.html
-        - destinationDir: tmp/app/dist
-          sourcePath: /opt/app-root/src/public/assets
-        - destinationDir: tmp/app/dist
-          sourcePath: /opt/app-root/src/public/build
-        runtimeImage:
-          kind: ImageStreamTag
-          name: nginx-runtime:latest
+          name: nodejs:6
           namespace: openshift
       type: Source
+    successfulBuildsHistoryLimit: 5
     triggers:
+    - type: ConfigChange
     - imageChange: {}
       type: ImageChange
-    - type: ConfigChange
   status:
     lastVersion: 0
 - apiVersion: v1
@@ -268,12 +306,59 @@ objects:
     output:
       to:
         kind: ImageStreamTag
-        name: client:latest
+        name: client-develop:latest
     postCommit: {}
     resources:
       limits:
         cpu: "2"
         memory: 4Gi
+    runPolicy: Serial
+    source:
+      dockerfile: |-
+        FROM client-develop-angular-app:latest
+        COPY * /tmp/app/dist/
+        CMD  /usr/libexec/s2i/run
+      images:
+      - from:
+          kind: ImageStreamTag
+          name: client-develop-angular-app:latest
+        paths:
+        - destinationDir: tmp
+          sourcePath: /opt/app-root/src/public/.
+      type: Dockerfile
+    strategy:
+      dockerStrategy:
+        from:
+          kind: ImageStreamTag
+          name: nginx-runtime:latest
+      type: Docker
+    triggers:
+    - imageChange: {}
+      type: ImageChange
+    - type: ConfigChange
+  status:
+    lastVersion: 0
+- apiVersion: v1
+  kind: BuildConfig
+  metadata:
+    creationTimestamp: null
+    labels:
+      build: client-develop-angular-app-build
+    name: client-develop-angular-app-build
+  spec:
+    failedBuildsHistoryLimit: 5
+    nodeSelector: null
+    output:
+      to:
+        kind: ImageStreamTag
+        name: client-develop-angular-app:latest
+    postCommit: {}
+    resources:
+      limits:
+        cpu: "1"
+        memory: 4Gi
+      requests:
+        memory: 2Gi
     runPolicy: Serial
     source:
       contextDir: frontend
@@ -285,24 +370,14 @@ objects:
       sourceStrategy:
         from:
           kind: ImageStreamTag
-          name: nodejs:latest
+          name: nodejs:6
           namespace: openshift
-        runtimeArtifacts:
-        - destinationDir: tmp/app/dist
-          sourcePath: /opt/app-root/src/public/index.html
-        - destinationDir: tmp/app/dist
-          sourcePath: /opt/app-root/src/public/assets
-        - destinationDir: tmp/app/dist
-          sourcePath: /opt/app-root/src/public/build
-        runtimeImage:
-          kind: ImageStreamTag
-          name: nginx-runtime:latest
-          namespace: mem-tfrs-tools
       type: Source
+    successfulBuildsHistoryLimit: 5
     triggers:
+    - type: ConfigChange
     - imageChange: {}
       type: ImageChange
-    - type: ConfigChange
   status:
     lastVersion: 0
 - apiVersion: v1
@@ -329,7 +404,10 @@ objects:
       jenkinsPipelineStrategy:
         jenkinsfilePath: frontend/Jenkinsfile-develop
       type: JenkinsPipeline
-    triggers: []
+    triggers:
+    - github:
+        secret: 52bb2cb14fcd26c5
+      type: GitHub
   status:
     lastVersion: 0
 - apiVersion: v1
@@ -356,7 +434,10 @@ objects:
       jenkinsPipelineStrategy:
         jenkinsfilePath: backend/Jenkinsfile-develop
       type: JenkinsPipeline
-    triggers: []
+    triggers:
+    - github:
+        secret: ea1e1dc777dea4bb
+      type: GitHub
   status:
     lastVersion: 0
 - apiVersion: v1
@@ -396,6 +477,86 @@ objects:
 - apiVersion: v1
   kind: BuildConfig
   metadata:
+    annotations:
+      description: Defines how to build the application
+      template.alpha.openshift.io/wait-for-ready: "true"
+    creationTimestamp: null
+    labels:
+      app: django-psql-example
+      template: django-psql-example
+    name: django-psql-example
+  spec:
+    nodeSelector: null
+    output:
+      to:
+        kind: ImageStreamTag
+        name: django-psql-example:latest
+    postCommit:
+      script: ./manage.py test
+    resources: {}
+    runPolicy: Serial
+    source:
+      git:
+        uri: https://github.com/kuanfandevops/django-ex.git
+      type: Git
+    strategy:
+      sourceStrategy:
+        env:
+        - name: PIP_INDEX_URL
+        from:
+          kind: ImageStreamTag
+          name: python:3.5
+          namespace: openshift
+      type: Source
+    triggers:
+    - github:
+        secret: VqTGCI1KJrAxLIgnSCjVSIqKBXHOlFClsJMSOA2G
+      type: GitHub
+    - imageChange: {}
+      type: ImageChange
+    - type: ConfigChange
+  status:
+    lastVersion: 0
+- apiVersion: v1
+  kind: BuildConfig
+  metadata:
+    annotations:
+      description: Defines how to build the application
+      template.alpha.openshift.io/wait-for-ready: "true"
+    creationTimestamp: null
+    labels:
+      app: httpd-example
+      template: httpd-example
+    name: httpd-example
+  spec:
+    nodeSelector: null
+    output:
+      to:
+        kind: ImageStreamTag
+        name: httpd-example:latest
+    postCommit: {}
+    resources: {}
+    runPolicy: Serial
+    source:
+      git:
+        uri: https://github.com/kuanfandevops/httpd-ex.git
+      type: Git
+    strategy:
+      sourceStrategy:
+        from:
+          kind: ImageStreamTag
+          name: httpd:2.4
+          namespace: openshift
+      type: Source
+    triggers:
+    - imageChange: {}
+      type: ImageChange
+    - type: ConfigChange
+  status:
+    lastVersion: 0
+- apiVersion: v1
+  kind: BuildConfig
+  metadata:
     creationTimestamp: null
     labels:
       app: master-client-pipeline
@@ -415,7 +576,7 @@ objects:
       type: Git
     strategy:
       jenkinsPipelineStrategy:
-        jenkinsfilePath: frontend/Jenkinsfile-develop
+        jenkinsfilePath: frontend/Jenkinsfile
       type: JenkinsPipeline
     triggers: []
   status:
@@ -442,7 +603,7 @@ objects:
       type: Git
     strategy:
       jenkinsPipelineStrategy:
-        jenkinsfilePath: backend/Jenkinsfile-develop
+        jenkinsfilePath: backend/Jenkinsfile
       type: JenkinsPipeline
     triggers: []
   status:
@@ -552,10 +713,10 @@ objects:
     output:
       to:
         kind: ImageStreamTag
-        name: tfrs:latest
+        name: tfrs-develop:latest
     postCommit: {}
     resources: {}
-    runPolicy: Serial
+    runPolicy: Parallel
     source:
       contextDir: backend
       git:
@@ -578,59 +739,200 @@ objects:
   status:
     lastVersion: 0
 - apiVersion: v1
-  kind: BuildConfig
+  kind: DeploymentConfig
   metadata:
+    annotations:
+      description: Defines how to deploy the application server
+      template.alpha.openshift.io/wait-for-ready: "true"
     creationTimestamp: null
+    generation: 1
     labels:
-      app: working-client-pipeline
-      name: working-client-pipeline
-      template: working-client-pipeline
-    name: working-client-pipeline
+      app: django-psql-example
+      template: django-psql-example
+    name: django-psql-example
   spec:
-    nodeSelector: {}
-    output: {}
-    postCommit: {}
-    resources: {}
-    runPolicy: Parallel
-    source:
-      git:
-        ref: devops-coverage
-        uri: https://github.com/bcgov/tfrs.git
-      type: Git
+    replicas: 1
+    selector:
+      name: django-psql-example
     strategy:
-      jenkinsPipelineStrategy:
-        jenkinsfilePath: backend/Jenkinsfile-develop
-      type: JenkinsPipeline
-    triggers: []
+      activeDeadlineSeconds: 21600
+      recreateParams:
+        timeoutSeconds: 600
+      resources: {}
+      type: Recreate
+    template:
+      metadata:
+        creationTimestamp: null
+        labels:
+          name: django-psql-example
+        name: django-psql-example
+      spec:
+        containers:
+        - env:
+          - name: DATABASE_SERVICE_NAME
+            value: postgresql
+          - name: DATABASE_ENGINE
+            value: postgresql
+          - name: DATABASE_NAME
+            value: default
+          - name: DATABASE_USER
+            valueFrom:
+              secretKeyRef:
+                key: database-user
+                name: django-psql-example
+          - name: DATABASE_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                key: database-password
+                name: django-psql-example
+          - name: APP_CONFIG
+          - name: DJANGO_SECRET_KEY
+            valueFrom:
+              secretKeyRef:
+                key: django-secret-key
+                name: django-psql-example
+          image: 172.50.0.2:5000/mem-tfrs-tools/django-psql-example@sha256:be6271c60f3cee1f630b0bf2bc4e61ec32dbc6fece008d99633fa8f9b9b19a65
+          imagePullPolicy: IfNotPresent
+          livenessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /health
+              port: 8080
+              scheme: HTTP
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 3
+          name: django-psql-example
+          ports:
+          - containerPort: 8080
+            protocol: TCP
+          readinessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /health
+              port: 8080
+              scheme: HTTP
+            initialDelaySeconds: 3
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 3
+          resources:
+            limits:
+              memory: 512Mi
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+    test: false
+    triggers:
+    - imageChangeParams:
+        containerNames:
+        - django-psql-example
+        from:
+          kind: ImageStreamTag
+          name: django-psql-example:latest
+          namespace: mem-tfrs-tools
+      type: ImageChange
+    - type: ConfigChange
   status:
-    lastVersion: 0
+    availableReplicas: 0
+    latestVersion: 0
+    observedGeneration: 0
+    replicas: 0
+    unavailableReplicas: 0
+    updatedReplicas: 0
 - apiVersion: v1
-  kind: BuildConfig
+  kind: DeploymentConfig
   metadata:
+    annotations:
+      description: Defines how to deploy the application server
+      template.alpha.openshift.io/wait-for-ready: "true"
     creationTimestamp: null
+    generation: 1
     labels:
-      app: working-tfrs-pipeline
-      name: working-tfrs-pipeline
-      template: working-tfrs-pipeline
-    name: working-tfrs-pipeline
+      app: httpd-example
+      template: httpd-example
+    name: httpd-example
   spec:
-    nodeSelector: {}
-    output: {}
-    postCommit: {}
-    resources: {}
-    runPolicy: Serial
-    source:
-      git:
-        ref: devops-testdisablemigration
-        uri: https://github.com/bcgov/tfrs.git
-      type: Git
+    replicas: 0
+    selector:
+      name: httpd-example
     strategy:
-      jenkinsPipelineStrategy:
-        jenkinsfilePath: backend/Jenkinsfile-develop
-      type: JenkinsPipeline
-    triggers: []
+      activeDeadlineSeconds: 21600
+      resources: {}
+      rollingParams:
+        intervalSeconds: 1
+        maxSurge: 25%
+        maxUnavailable: 25%
+        timeoutSeconds: 600
+        updatePeriodSeconds: 1
+      type: Rolling
+    template:
+      metadata:
+        creationTimestamp: null
+        labels:
+          name: httpd-example
+        name: httpd-example
+      spec:
+        containers:
+        - image: 172.50.0.2:5000/mem-tfrs-tools/httpd-example@sha256:03feddcf05a5daa39b596678f58cf4de0ce552c26e1e76a5baab44fa2da5dc42
+          imagePullPolicy: IfNotPresent
+          livenessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /
+              port: 8080
+              scheme: HTTP
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 3
+          name: httpd-example
+          ports:
+          - containerPort: 8080
+            protocol: TCP
+          readinessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /
+              port: 8080
+              scheme: HTTP
+            initialDelaySeconds: 3
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 3
+          resources:
+            limits:
+              memory: 512Mi
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+    test: false
+    triggers:
+    - imageChangeParams:
+        containerNames:
+        - httpd-example
+        from:
+          kind: ImageStreamTag
+          name: httpd-example:latest
+          namespace: mem-tfrs-tools
+      type: ImageChange
+    - type: ConfigChange
   status:
-    lastVersion: 0
+    availableReplicas: 0
+    latestVersion: 0
+    observedGeneration: 0
+    replicas: 0
+    unavailableReplicas: 0
+    updatedReplicas: 0
 - apiVersion: v1
   kind: DeploymentConfig
   metadata:
@@ -712,6 +1014,110 @@ objects:
         from:
           kind: ImageStreamTag
           name: jenkins:latest
+          namespace: openshift
+      type: ImageChange
+    - type: ConfigChange
+  status:
+    availableReplicas: 0
+    latestVersion: 0
+    observedGeneration: 0
+    replicas: 0
+    unavailableReplicas: 0
+    updatedReplicas: 0
+- apiVersion: v1
+  kind: DeploymentConfig
+  metadata:
+    annotations:
+      description: Defines how to deploy the database
+    creationTimestamp: null
+    generation: 1
+    labels:
+      app: django-psql-example
+      template: django-psql-example
+    name: postgresql
+  spec:
+    replicas: 1
+    selector:
+      name: postgresql
+    strategy:
+      activeDeadlineSeconds: 21600
+      recreateParams:
+        timeoutSeconds: 600
+      resources: {}
+      type: Recreate
+    template:
+      metadata:
+        creationTimestamp: null
+        labels:
+          name: postgresql
+        name: postgresql
+      spec:
+        containers:
+        - env:
+          - name: POSTGRESQL_USER
+            valueFrom:
+              secretKeyRef:
+                key: database-user
+                name: django-psql-example
+          - name: POSTGRESQL_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                key: database-password
+                name: django-psql-example
+          - name: POSTGRESQL_DATABASE
+            value: default
+          image: registry.access.redhat.com/rhscl/postgresql-95-rhel7@sha256:19aacf0c8331df76b67932415bd84abf74ec36fd9d4aef518ad9f6285c4a948a
+          imagePullPolicy: IfNotPresent
+          livenessProbe:
+            failureThreshold: 3
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            successThreshold: 1
+            tcpSocket:
+              port: 5432
+            timeoutSeconds: 1
+          name: postgresql
+          ports:
+          - containerPort: 5432
+            protocol: TCP
+          readinessProbe:
+            exec:
+              command:
+              - /bin/sh
+              - -i
+              - -c
+              - psql -h 127.0.0.1 -U ${POSTGRESQL_USER} -q -d ${POSTGRESQL_DATABASE}
+                -c 'SELECT 1'
+            failureThreshold: 3
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 1
+          resources:
+            limits:
+              memory: 512Mi
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+          volumeMounts:
+          - mountPath: /var/lib/pgsql/data
+            name: data
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+        volumes:
+        - emptyDir: {}
+          name: data
+    test: false
+    triggers:
+    - imageChangeParams:
+        automatic: true
+        containerNames:
+        - postgresql
+        from:
+          kind: ImageStreamTag
+          name: postgresql:9.5
           namespace: openshift
       type: ImageChange
     - type: ConfigChange
@@ -957,6 +1363,29 @@ objects:
 - apiVersion: v1
   kind: Service
   metadata:
+    annotations:
+      description: Exposes and load balances the application pods
+      service.alpha.openshift.io/dependencies: '[{"name": "postgresql", "kind": "Service"}]'
+    creationTimestamp: null
+    labels:
+      app: django-psql-example
+      template: django-psql-example
+    name: django-psql-example
+  spec:
+    ports:
+    - name: web
+      port: 8080
+      protocol: TCP
+      targetPort: 8080
+    selector:
+      name: django-psql-example
+    sessionAffinity: None
+    type: ClusterIP
+  status:
+    loadBalancer: {}
+- apiVersion: v1
+  kind: Service
+  metadata:
     creationTimestamp: null
     name: glusterfs-cluster-app
   spec:
@@ -1020,6 +1449,28 @@ objects:
   kind: Service
   metadata:
     annotations:
+      description: Exposes and load balances the application pods
+    creationTimestamp: null
+    labels:
+      app: httpd-example
+      template: httpd-example
+    name: httpd-example
+  spec:
+    ports:
+    - name: web
+      port: 8080
+      protocol: TCP
+      targetPort: 8080
+    selector:
+      name: httpd-example
+    sessionAffinity: None
+    type: ClusterIP
+  status:
+    loadBalancer: {}
+- apiVersion: v1
+  kind: Service
+  metadata:
+    annotations:
       service.alpha.openshift.io/dependencies: '[{"name": "jenkins-jnlp", "namespace":
         "", "kind": "Service"}]'
       service.openshift.io/infrastructure: "true"
@@ -1056,6 +1507,28 @@ objects:
       targetPort: 50000
     selector:
       name: jenkins
+    sessionAffinity: None
+    type: ClusterIP
+  status:
+    loadBalancer: {}
+- apiVersion: v1
+  kind: Service
+  metadata:
+    annotations:
+      description: Exposes the database server
+    creationTimestamp: null
+    labels:
+      app: django-psql-example
+      template: django-psql-example
+    name: postgresql
+  spec:
+    ports:
+    - name: postgresql
+      port: 5432
+      protocol: TCP
+      targetPort: 5432
+    selector:
+      name: postgresql
     sessionAffinity: None
     type: ClusterIP
   status:
@@ -1120,6 +1593,60 @@ objects:
     type: ClusterIP
   status:
     loadBalancer: {}
+- apiVersion: v1
+  kind: Route
+  metadata:
+    annotations:
+      openshift.io/host.generated: "true"
+      template.openshift.io/expose-uri: http://{.spec.host}{.spec.path}
+    creationTimestamp: null
+    labels:
+      app: django-psql-example
+      template: django-psql-example
+    name: django-psql-example
+  spec:
+    host: django-psql-example-mem-tfrs-tools.pathfinder.gov.bc.ca
+    to:
+      kind: Service
+      name: django-psql-example
+      weight: 100
+    wildcardPolicy: None
+  status:
+    ingress:
+    - conditions:
+      - lastTransitionTime: 2018-02-08T19:44:20Z
+        status: "True"
+        type: Admitted
+      host: django-psql-example-mem-tfrs-tools.pathfinder.gov.bc.ca
+      routerName: router
+      wildcardPolicy: None
+- apiVersion: v1
+  kind: Route
+  metadata:
+    annotations:
+      openshift.io/host.generated: "true"
+      template.openshift.io/expose-uri: http://{.spec.host}{.spec.path}
+    creationTimestamp: null
+    labels:
+      app: httpd-example
+      template: httpd-example
+    name: httpd-example
+  spec:
+    host: httpd-example-mem-tfrs-tools.pathfinder.gov.bc.ca
+    to:
+      kind: Service
+      name: httpd-example
+      weight: 100
+    wildcardPolicy: None
+  status:
+    ingress:
+    - conditions:
+      - lastTransitionTime: 2018-02-08T18:23:40Z
+        status: "True"
+        type: Admitted
+      host: httpd-example-mem-tfrs-tools.pathfinder.gov.bc.ca
+      routerName: router
+      wildcardPolicy: None
 - apiVersion: v1
   kind: Route
   metadata:
