@@ -1,0 +1,160 @@
+apiVersion: v1
+items:
+- apiVersion: v1
+  groupNames: null
+  kind: RoleBinding
+  metadata:
+    creationTimestamp: 2017-01-31T22:11:57Z
+    name: admin
+    namespace: mem-tfrs-tools
+    resourceVersion: "271465035"
+    selfLink: /oapi/v1/namespaces/mem-tfrs-tools/rolebindings/admin
+    uid: 482b8066-e802-11e6-a665-005056832285
+  roleRef:
+    name: admin
+  subjects:
+  - kind: User
+    name: sheaphillips
+  - kind: User
+    name: rajpersram
+  - kind: User
+    name: kuanfandevops
+  - kind: User
+    name: cvarjao
+  userNames:
+  - sheaphillips
+  - rajpersram
+  - kuanfandevops
+  - cvarjao
+- apiVersion: v1
+  groupNames: null
+  kind: RoleBinding
+  metadata:
+    creationTimestamp: 2017-10-27T22:29:05Z
+    labels:
+      app: jenkins-pipeline
+      template: jenkins-persistent-template
+    name: jenkins_edit
+    namespace: mem-tfrs-tools
+    resourceVersion: "288498409"
+    selfLink: /oapi/v1/namespaces/mem-tfrs-tools/rolebindings/jenkins_edit
+    uid: 3da2a0dc-bb66-11e7-9c18-005056832285
+  roleRef:
+    name: edit
+  subjects:
+  - kind: ServiceAccount
+    name: jenkins
+    namespace: mem-tfrs-tools
+  - kind: User
+    name: matthewhall78
+  - kind: User
+    name: dainetrinidad
+  - kind: User
+    name: rstens
+  userNames:
+  - system:serviceaccount:mem-tfrs-tools:jenkins
+  - matthewhall78
+  - dainetrinidad
+  - rstens
+- apiVersion: v1
+  groupNames: null
+  kind: RoleBinding
+  metadata:
+    creationTimestamp: 2017-01-31T22:11:58Z
+    name: system:deployers
+    namespace: mem-tfrs-tools
+    resourceVersion: "37131682"
+    selfLink: /oapi/v1/namespaces/mem-tfrs-tools/rolebindings/system%3Adeployers
+    uid: 48369d63-e802-11e6-a665-005056832285
+  roleRef:
+    name: system:deployer
+  subjects:
+  - kind: ServiceAccount
+    name: deployer
+    namespace: mem-tfrs-tools
+  userNames:
+  - system:serviceaccount:mem-tfrs-tools:deployer
+- apiVersion: v1
+  groupNames: null
+  kind: RoleBinding
+  metadata:
+    creationTimestamp: 2017-01-31T22:11:58Z
+    name: system:image-builders
+    namespace: mem-tfrs-tools
+    resourceVersion: "37131680"
+    selfLink: /oapi/v1/namespaces/mem-tfrs-tools/rolebindings/system%3Aimage-builders
+    uid: 4834a780-e802-11e6-a665-005056832285
+  roleRef:
+    name: system:image-builder
+  subjects:
+  - kind: ServiceAccount
+    name: builder
+    namespace: mem-tfrs-tools
+  userNames:
+  - system:serviceaccount:mem-tfrs-tools:builder
+- apiVersion: v1
+  groupNames:
+  - system:serviceaccounts:mem-tfrs-tools
+  kind: RoleBinding
+  metadata:
+    creationTimestamp: 2017-01-31T22:11:58Z
+    name: system:image-pullers
+    namespace: mem-tfrs-tools
+    resourceVersion: "288498443"
+    selfLink: /oapi/v1/namespaces/mem-tfrs-tools/rolebindings/system%3Aimage-pullers
+    uid: 48305c84-e802-11e6-a665-005056832285
+  roleRef:
+    name: system:image-puller
+  subjects:
+  - kind: ServiceAccount
+    name: default
+    namespace: mem-tfrs-dev
+  - kind: ServiceAccount
+    name: default
+    namespace: mem-tfrs-test
+  - kind: ServiceAccount
+    name: default
+    namespace: mem-tfrs-prod
+  - kind: ServiceAccount
+    name: jenkins
+    namespace: default
+  - kind: ServiceAccount
+    name: jenkins-pipeline-svc
+    namespace: default
+  - kind: ServiceAccount
+    name: deployer
+    namespace: mem-tfrs-dev
+  - kind: SystemGroup
+    name: system:serviceaccounts:mem-tfrs-tools
+  userNames:
+  - system:serviceaccount:mem-tfrs-dev:default
+  - system:serviceaccount:mem-tfrs-test:default
+  - system:serviceaccount:mem-tfrs-prod:default
+  - system:serviceaccount:default:jenkins
+  - system:serviceaccount:default:jenkins-pipeline-svc
+  - system:serviceaccount:mem-tfrs-dev:deployer
+- apiVersion: v1
+  groupNames: null
+  kind: RoleBinding
+  metadata:
+    creationTimestamp: 2017-02-28T19:00:21Z
+    name: view
+    namespace: mem-tfrs-tools
+    resourceVersion: "288498356"
+    selfLink: /oapi/v1/namespaces/mem-tfrs-tools/rolebindings/view
+    uid: 2725ceb3-fde8-11e6-b4f5-0050568379a2
+  roleRef:
+    name: view
+  subjects:
+  - kind: User
+    name: swcurran
+  - kind: ServiceAccount
+    name: jenkins
+    namespace: default
+  userNames:
+  - swcurran
+  - system:serviceaccount:default:jenkins
+kind: List
+metadata: {}
+resourceVersion: ""
+selfLink: ""

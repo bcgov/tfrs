@@ -1,0 +1,142 @@
+apiVersion: v1
+items:
+- apiVersion: v1
+  groupNames: null
+  kind: RoleBinding
+  metadata:
+    creationTimestamp: 2017-01-31T22:12:44Z
+    name: admin
+    namespace: mem-tfrs-test
+    resourceVersion: "269286536"
+    selfLink: /oapi/v1/namespaces/mem-tfrs-test/rolebindings/admin
+    uid: 63cbd0e4-e802-11e6-a665-005056832285
+  roleRef:
+    name: admin
+  subjects:
+  - kind: User
+    name: sheaphillips
+  - kind: User
+    name: rajpersram
+  - kind: User
+    name: kuanfandevops
+  - kind: User
+    name: cvarjao
+  userNames:
+  - sheaphillips
+  - rajpersram
+  - kuanfandevops
+  - cvarjao
+- apiVersion: v1
+  groupNames: null
+  kind: RoleBinding
+  metadata:
+    creationTimestamp: 2017-02-23T00:27:20Z
+    name: edit
+    namespace: mem-tfrs-test
+    resourceVersion: "287781110"
+    selfLink: /oapi/v1/namespaces/mem-tfrs-test/rolebindings/edit
+    uid: d6a5422b-f95e-11e6-a694-005056832285
+  roleRef:
+    name: edit
+  subjects:
+  - kind: ServiceAccount
+    name: default
+    namespace: mem-tfrs-tools
+  - kind: User
+    name: dmarley
+  - kind: User
+    name: swcurran
+  - kind: User
+    name: GeorgeWalker
+  - kind: User
+    name: dainetrinidad
+  - kind: User
+    name: rstens
+  - kind: ServiceAccount
+    name: jenkins
+    namespace: mem-tfrs-tools
+  userNames:
+  - system:serviceaccount:mem-tfrs-tools:default
+  - dmarley
+  - swcurran
+  - GeorgeWalker
+  - dainetrinidad
+  - rstens
+  - system:serviceaccount:mem-tfrs-tools:jenkins
+- apiVersion: v1
+  groupNames: null
+  kind: RoleBinding
+  metadata:
+    creationTimestamp: 2017-01-31T22:12:44Z
+    name: system:deployers
+    namespace: mem-tfrs-test
+    resourceVersion: "37131835"
+    selfLink: /oapi/v1/namespaces/mem-tfrs-test/rolebindings/system%3Adeployers
+    uid: 63d76523-e802-11e6-a665-005056832285
+  roleRef:
+    name: system:deployer
+  subjects:
+  - kind: ServiceAccount
+    name: deployer
+    namespace: mem-tfrs-test
+  userNames:
+  - system:serviceaccount:mem-tfrs-test:deployer
+- apiVersion: v1
+  groupNames: null
+  kind: RoleBinding
+  metadata:
+    creationTimestamp: 2017-01-31T22:12:44Z
+    name: system:image-builders
+    namespace: mem-tfrs-test
+    resourceVersion: "37131832"
+    selfLink: /oapi/v1/namespaces/mem-tfrs-test/rolebindings/system%3Aimage-builders
+    uid: 63d469dc-e802-11e6-a665-005056832285
+  roleRef:
+    name: system:image-builder
+  subjects:
+  - kind: ServiceAccount
+    name: builder
+    namespace: mem-tfrs-test
+  userNames:
+  - system:serviceaccount:mem-tfrs-test:builder
+- apiVersion: v1
+  groupNames:
+  - system:serviceaccounts:mem-tfrs-test
+  kind: RoleBinding
+  metadata:
+    creationTimestamp: 2017-01-31T22:12:44Z
+    name: system:image-pullers
+    namespace: mem-tfrs-test
+    resourceVersion: "37131831"
+    selfLink: /oapi/v1/namespaces/mem-tfrs-test/rolebindings/system%3Aimage-pullers
+    uid: 63d1e43b-e802-11e6-a665-005056832285
+  roleRef:
+    name: system:image-puller
+  subjects:
+  - kind: SystemGroup
+    name: system:serviceaccounts:mem-tfrs-test
+  userNames: null
+- apiVersion: v1
+  groupNames: null
+  kind: RoleBinding
+  metadata:
+    creationTimestamp: 2017-02-28T19:00:12Z
+    name: view
+    namespace: mem-tfrs-test
+    resourceVersion: "272020627"
+    selfLink: /oapi/v1/namespaces/mem-tfrs-test/rolebindings/view
+    uid: 222edbec-fde8-11e6-b4f5-0050568379a2
+  roleRef:
+    name: view
+  subjects:
+  - kind: User
+    name: matthewhall78
+  - kind: User
+    name: swcurran
+  userNames:
+  - matthewhall78
+  - swcurran
+kind: List
+metadata: {}
+resourceVersion: ""
+selfLink: ""

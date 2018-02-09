@@ -1,0 +1,3693 @@
+apiVersion: v1
+items:
+- apiVersion: v1
+  kind: ImageStream
+  metadata:
+    annotations:
+      description: Keeps track of changes in the application image
+    creationTimestamp: null
+    generation: 1
+    labels:
+      app: httpd-example
+      template: httpd-example
+    name: httpd-example
+  spec:
+    lookupPolicy:
+      local: false
+    tags:
+    - annotations: null
+      from:
+        kind: DockerImage
+        name: 172.50.0.2:5000/mem-tfrs-test/httpd-example:latest
+      generation: null
+      importPolicy: {}
+      name: latest
+      referencePolicy:
+        type: ""
+  status:
+    dockerImageRepository: ""
+- apiVersion: v1
+  kind: DeploymentConfig
+  metadata:
+    annotations:
+      description: Defines how to deploy the application server
+    creationTimestamp: null
+    generation: 1
+    name: client
+  spec:
+    replicas: 1
+    selector:
+      name: client
+    strategy:
+      activeDeadlineSeconds: 21600
+      resources: {}
+      rollingParams:
+        intervalSeconds: 1
+        maxSurge: 25%
+        maxUnavailable: 25%
+        timeoutSeconds: 600
+        updatePeriodSeconds: 1
+      type: Rolling
+    template:
+      metadata:
+        creationTimestamp: null
+        labels:
+          name: client
+        name: client
+      spec:
+        containers:
+        - env:
+          - name: API_URL
+            value: http://backend-mem-tfrs-test.pathfinder.gov.bc.ca/api/
+          - name: RealIpFrom
+          - name: AdditionalRealIpFromRules
+          - name: IpFilterRules
+          - name: HTTP_BASIC
+          - name: API_URL
+            value: http://backend.mem-tfrs-test.svc.cluster.local:8080/api/
+          image: 172.50.0.2:5000/mem-tfrs-tools/client@sha256:7b70a249fcf707aba746df06eee95ff1b3c329b0287abed2304f91c3caba16a1
+          imagePullPolicy: IfNotPresent
+          name: client
+          ports:
+          - containerPort: 3000
+            protocol: TCP
+          resources:
+            limits:
+              memory: 1Gi
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+    test: false
+    triggers:
+    - imageChangeParams:
+        automatic: true
+        containerNames:
+        - client
+        from:
+          kind: ImageStreamTag
+          name: client:test
+          namespace: mem-tfrs-tools
+      type: ImageChange
+    - type: ConfigChange
+  status:
+    availableReplicas: 0
+    latestVersion: 0
+    observedGeneration: 0
+    replicas: 0
+    unavailableReplicas: 0
+    updatedReplicas: 0
+- apiVersion: v1
+  kind: DeploymentConfig
+  metadata:
+    creationTimestamp: null
+    generation: 1
+    labels:
+      app: postgresql-persistent
+      template: postgresql-persistent-template
+    name: postgresql
+  spec:
+    replicas: 1
+    selector:
+      name: postgresql
+    strategy:
+      activeDeadlineSeconds: 21600
+      recreateParams:
+        timeoutSeconds: 600
+      resources: {}
+      type: Recreate
+    template:
+      metadata:
+        creationTimestamp: null
+        labels:
+          name: postgresql
+      spec:
+        containers:
+        - env:
+          - name: POSTGRESQL_DATABASE
+            value: tfrs
+          - name: POSTGRESQL_USER
+            valueFrom:
+              secretKeyRef:
+                key: DATABASE_USER
+                name: tfrs-postgresql
+          - name: POSTGRESQL_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                key: DATABASE_PASSWORD
+                name: tfrs-postgresql
+          image: registry.access.redhat.com/rhscl/postgresql-95-rhel7@sha256:19aacf0c8331df76b67932415bd84abf74ec36fd9d4aef518ad9f6285c4a948a
+          imagePullPolicy: IfNotPresent
+          livenessProbe:
+            failureThreshold: 3
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            successThreshold: 1
+            tcpSocket:
+              port: 5432
+            timeoutSeconds: 1
+          name: postgresql
+          ports:
+          - containerPort: 5432
+            protocol: TCP
+          readinessProbe:
+            exec:
+              command:
+              - /bin/sh
+              - -i
+              - -c
+              - psql -h 127.0.0.1 -U $POSTGRESQL_USER -q -d $POSTGRESQL_DATABASE -c
+                'SELECT 1'
+            failureThreshold: 3
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 1
+          resources:
+            limits:
+              memory: 512Mi
+          securityContext:
+            capabilities: {}
+            privileged: false
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+          volumeMounts:
+          - mountPath: /var/lib/pgsql/data
+            name: postgresql-data
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+        volumes:
+        - name: postgresql-data
+          persistentVolumeClaim:
+            claimName: postgresql-cns
+    test: false
+    triggers:
+    - imageChangeParams:
+        automatic: true
+        containerNames:
+        - postgresql
+        from:
+          kind: ImageStreamTag
+          name: postgresql:9.5
+          namespace: openshift
+      type: ImageChange
+    - type: ConfigChange
+  status:
+    availableReplicas: 0
+    latestVersion: 0
+    observedGeneration: 0
+    replicas: 0
+    unavailableReplicas: 0
+    updatedReplicas: 0
+- apiVersion: v1
+  kind: DeploymentConfig
+  metadata:
+    annotations:
+      description: Defines how to deploy the container.
+    creationTimestamp: null
+    generation: 1
+    name: schema-spy
+  spec:
+    replicas: 1
+    selector:
+      name: schema-spy
+    strategy:
+      activeDeadlineSeconds: 21600
+      resources: {}
+      rollingParams:
+        intervalSeconds: 1
+        maxSurge: 25%
+        maxUnavailable: 25%
+        timeoutSeconds: 600
+        updatePeriodSeconds: 1
+      type: Rolling
+    template:
+      metadata:
+        creationTimestamp: null
+        labels:
+          name: schema-spy
+        name: schema-spy
+      spec:
+        containers:
+        - env:
+          - name: DATABASE_SERVICE_NAME
+            value: postgresql
+          - name: POSTGRESQL_DATABASE
+            value: tfrs
+          - name: POSTGRESQL_USER
+            valueFrom:
+              secretKeyRef:
+                key: DATABASE_USER
+                name: tfrs-postgresql
+          - name: POSTGRESQL_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                key: DATABASE_PASSWORD
+                name: tfrs-postgresql
+          image: 172.50.0.2:5000/mem-tfrs-tools/schema-spy@sha256:7a420819e019200ec98ebebe06388872f2f72f37baa7c64162a4a4d4909bcfbf
+          imagePullPolicy: IfNotPresent
+          livenessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /
+              port: 8080
+              scheme: HTTP
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 3000
+          name: schema-spy
+          ports:
+          - containerPort: 8080
+            protocol: TCP
+          readinessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /
+              port: 8080
+              scheme: HTTP
+            initialDelaySeconds: 3
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 3000
+          resources:
+            limits:
+              memory: 512Mi
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+    test: false
+    triggers:
+    - imageChangeParams:
+        automatic: true
+        containerNames:
+        - schema-spy
+        from:
+          kind: ImageStreamTag
+          name: schema-spy:latest
+          namespace: mem-tfrs-tools
+      type: ImageChange
+    - type: ConfigChange
+  status:
+    availableReplicas: 0
+    latestVersion: 0
+    observedGeneration: 0
+    replicas: 0
+    unavailableReplicas: 0
+    updatedReplicas: 0
+- apiVersion: v1
+  kind: DeploymentConfig
+  metadata:
+    annotations:
+      description: Defines how to deploy the application server
+    creationTimestamp: null
+    generation: 1
+    labels:
+      template: tfrs-app-environment
+    name: tfrs
+  spec:
+    replicas: 3
+    selector:
+      name: tfrs
+    strategy:
+      activeDeadlineSeconds: 21600
+      recreateParams:
+        mid:
+          execNewPod:
+            command:
+            - /bin/sh
+            - -c
+            - python manage.py migrate
+            containerName: tfrs-app
+          failurePolicy: Abort
+        timeoutSeconds: 600
+      resources: {}
+      type: Recreate
+    template:
+      metadata:
+        creationTimestamp: null
+        labels:
+          name: tfrs
+        name: tfrs
+      spec:
+        containers:
+        - env:
+          - name: DATABASE_SERVICE_NAME
+            value: postgresql
+          - name: DATABASE_ENGINE
+            value: postgresql
+          - name: DATABASE_NAME
+            value: tfrs
+          - name: APP_CONFIG
+          - name: DATABASE_USER
+            valueFrom:
+              secretKeyRef:
+                key: DATABASE_USER
+                name: tfrs-postgresql
+          - name: DATABASE_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                key: DATABASE_PASSWORD
+                name: tfrs-postgresql
+          image: 172.50.0.2:5000/mem-tfrs-tools/tfrs@sha256:14551021a28ff5f0b07e055e7cfa29bd0044024fbdc47644c3aee509198955a1
+          imagePullPolicy: IfNotPresent
+          livenessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /health
+              port: 8080
+              scheme: HTTP
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 3
+          name: tfrs-app
+          ports:
+          - containerPort: 8080
+            protocol: TCP
+          readinessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /health
+              port: 8080
+              scheme: HTTP
+            initialDelaySeconds: 3
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 3
+          resources:
+            limits:
+              memory: 512Mi
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+    test: false
+    triggers:
+    - imageChangeParams:
+        automatic: true
+        containerNames:
+        - tfrs-app
+        from:
+          kind: ImageStreamTag
+          name: tfrs:test
+          namespace: mem-tfrs-tools
+      type: ImageChange
+    - type: ConfigChange
+  status:
+    availableReplicas: 0
+    latestVersion: 0
+    observedGeneration: 0
+    replicas: 0
+    unavailableReplicas: 0
+    updatedReplicas: 0
+- apiVersion: v1
+  kind: ReplicationController
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/desired-replicas: "1"
+      kubectl.kubernetes.io/update-source-id: client-14:07ffea3c-b47d-11e7-9c18-005056832285
+      openshift.io/deployer-pod.name: client-18-deploy
+      openshift.io/deployment-config.latest-version: "18"
+      openshift.io/deployment-config.name: client
+      openshift.io/deployment.cancelled: "true"
+      openshift.io/deployment.phase: Failed
+      openshift.io/deployment.replicas: "0"
+      openshift.io/deployment.status-reason: newer deployment was found running
+      openshift.io/encoded-deployment-config: |
+        {"kind":"DeploymentConfig","apiVersion":"v1","metadata":{"name":"client","namespace":"mem-tfrs-test","selfLink":"/oapi/v1/namespaces/mem-tfrs-test/deploymentconfigs/client","uid":"2a6c1af7-a549-11e7-b185-005056832285","resourceVersion":"269483101","generation":24,"creationTimestamp":"2017-09-29T19:05:32Z","annotations":{"description":"Defines how to deploy the application server"}},"spec":{"strategy":{"type":"Rolling","rollingParams":{"updatePeriodSeconds":1,"intervalSeconds":1,"timeoutSeconds":600,"maxUnavailable":"25%","maxSurge":"25%"},"resources":{},"activeDeadlineSeconds":21600},"triggers":[{"type":"ImageChange","imageChangeParams":{"automatic":true,"containerNames":["client"],"from":{"kind":"ImageStreamTag","namespace":"mem-tfrs-tools","name":"client:test"},"lastTriggeredImage":"172.50.0.2:5000/mem-tfrs-tools/client@sha256:17b2239fdbe56c31f8b44c1df41608f96027b2f8b02bbf1646d7c5620a22ac72"}},{"type":"ConfigChange"}],"replicas":1,"test":false,"selector":{"name":"client"},"template":{"metadata":{"name":"client","creationTimestamp":null,"labels":{"name":"client"}},"spec":{"containers":[{"name":"client","image":"172.50.0.2:5000/mem-tfrs-tools/client@sha256:17b2239fdbe56c31f8b44c1df41608f96027b2f8b02bbf1646d7c5620a22ac72","ports":[{"containerPort":3000,"protocol":"TCP"}],"env":[{"name":"API_URL","value":"http://backend-mem-tfrs-test.pathfinder.gov.bc.ca/api/"},{"name":"RealIpFrom"},{"name":"AdditionalRealIpFromRules"},{"name":"IpFilterRules"},{"name":"HTTP_BASIC"}],"resources":{"limits":{"memory":"1Gi"}},"livenessProbe":{"httpGet":{"path":"/","port":3000,"scheme":"HTTP"},"initialDelaySeconds":10,"timeoutSeconds":3000,"periodSeconds":10,"successThreshold":1,"failureThreshold":3},"readinessProbe":{"httpGet":{"path":"/","port":3000,"scheme":"HTTP"},"initialDelaySeconds":10,"timeoutSeconds":3000,"periodSeconds":10,"successThreshold":1,"failureThreshold":3},"terminationMessagePath":"/dev/termination-log","imagePullPolicy":"IfNotPresent"}],"restartPolicy":"Always","terminationGracePeriodSeconds":30,"dnsPolicy":"ClusterFirst","securityContext":{}}}},"status":{"latestVersion":18,"observedGeneration":23,"replicas":2,"updatedReplicas":1,"availableReplicas":1,"unavailableReplicas":1,"details":{"message":"config change","causes":[{"type":"ConfigChange"}]},"conditions":[{"type":"Available","status":"True","lastUpdateTime":"2017-11-19T14:54:28Z","lastTransitionTime":"2017-11-19T14:54:28Z","message":"Deployment config has minimum availability."},{"type":"Progressing","status":"True","lastUpdateTime":"2017-11-21T21:30:36Z","lastTransitionTime":"2017-11-21T21:30:36Z","reason":"ReplicationControllerUpdated","message":"replication controller \"client-17\" is progressing"}],"readyReplicas":1}}
+    creationTimestamp: null
+    generation: 1
+    labels:
+      openshift.io/deployment-config.name: client
+    name: client-18
+    ownerReferences:
+    - apiVersion: apps.openshift.io/v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: DeploymentConfig
+      name: client
+      uid: 2a6c1af7-a549-11e7-b185-005056832285
+  spec:
+    replicas: 0
+    selector:
+      deployment: client-18
+      deploymentconfig: client
+      name: client
+    template:
+      metadata:
+        annotations:
+          openshift.io/deployment-config.latest-version: "18"
+          openshift.io/deployment-config.name: client
+          openshift.io/deployment.name: client-18
+        creationTimestamp: null
+        labels:
+          deployment: client-18
+          deploymentconfig: client
+          name: client
+      spec:
+        containers:
+        - env:
+          - name: API_URL
+            value: http://backend-mem-tfrs-test.pathfinder.gov.bc.ca/api/
+          - name: RealIpFrom
+          - name: AdditionalRealIpFromRules
+          - name: IpFilterRules
+          - name: HTTP_BASIC
+          image: 172.50.0.2:5000/mem-tfrs-tools/client@sha256:17b2239fdbe56c31f8b44c1df41608f96027b2f8b02bbf1646d7c5620a22ac72
+          imagePullPolicy: IfNotPresent
+          livenessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /
+              port: 3000
+              scheme: HTTP
+            initialDelaySeconds: 10
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 3000
+          name: client
+          ports:
+          - containerPort: 3000
+            protocol: TCP
+          readinessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /
+              port: 3000
+              scheme: HTTP
+            initialDelaySeconds: 10
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 3000
+          resources:
+            limits:
+              memory: 1Gi
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+  status:
+    replicas: 0
+- apiVersion: v1
+  kind: ReplicationController
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/original-replicas: "1"
+      openshift.io/deployer-pod.name: client-31-deploy
+      openshift.io/deployment-config.latest-version: "31"
+      openshift.io/deployment-config.name: client
+      openshift.io/deployment.phase: Complete
+      openshift.io/deployment.replicas: ""
+      openshift.io/deployment.status-reason: image change
+      openshift.io/encoded-deployment-config: |
+        {"kind":"DeploymentConfig","apiVersion":"v1","metadata":{"name":"client","namespace":"mem-tfrs-test","selfLink":"/apis/apps.openshift.io/v1/namespaces/mem-tfrs-test/deploymentconfigs/client","uid":"2a6c1af7-a549-11e7-b185-005056832285","resourceVersion":"286121663","generation":48,"creationTimestamp":"2017-09-29T19:05:32Z","annotations":{"description":"Defines how to deploy the application server"}},"spec":{"strategy":{"type":"Rolling","rollingParams":{"updatePeriodSeconds":1,"intervalSeconds":1,"timeoutSeconds":600,"maxUnavailable":"25%","maxSurge":"25%"},"resources":{},"activeDeadlineSeconds":21600},"triggers":[{"type":"ImageChange","imageChangeParams":{"automatic":true,"containerNames":["client"],"from":{"kind":"ImageStreamTag","namespace":"mem-tfrs-tools","name":"client:test"},"lastTriggeredImage":"172.50.0.2:5000/mem-tfrs-tools/client@sha256:d983cf7cd18b41b0f5e1281fef4758ff902853f4d31f4b1cf02ef5bf67f89cca"}},{"type":"ConfigChange"}],"replicas":1,"test":false,"selector":{"name":"client"},"template":{"metadata":{"name":"client","creationTimestamp":null,"labels":{"name":"client"}},"spec":{"containers":[{"name":"client","image":"172.50.0.2:5000/mem-tfrs-tools/client@sha256:d983cf7cd18b41b0f5e1281fef4758ff902853f4d31f4b1cf02ef5bf67f89cca","ports":[{"containerPort":3000,"protocol":"TCP"}],"env":[{"name":"API_URL","value":"http://backend-mem-tfrs-test.pathfinder.gov.bc.ca/api/"},{"name":"RealIpFrom"},{"name":"AdditionalRealIpFromRules"},{"name":"IpFilterRules"},{"name":"HTTP_BASIC"},{"name":"API_URL","value":"http://backend.mem-tfrs-test.svc.cluster.local:8080/api/"}],"resources":{"limits":{"memory":"1Gi"}},"terminationMessagePath":"/dev/termination-log","terminationMessagePolicy":"File","imagePullPolicy":"IfNotPresent"}],"restartPolicy":"Always","terminationGracePeriodSeconds":30,"dnsPolicy":"ClusterFirst","securityContext":{},"schedulerName":"default-scheduler"}}},"status":{"latestVersion":31,"observedGeneration":47,"replicas":1,"updatedReplicas":1,"availableReplicas":1,"unavailableReplicas":0,"details":{"message":"image change","causes":[{"type":"ImageChange","imageTrigger":{"from":{"kind":"ImageStreamTag","namespace":"mem-tfrs-tools","name":"client:test"}}}]},"conditions":[{"type":"Available","status":"True","lastUpdateTime":"2017-12-05T03:22:20Z","lastTransitionTime":"2017-12-05T03:22:20Z","message":"Deployment config has minimum availability."},{"type":"Progressing","status":"True","lastUpdateTime":"2017-12-12T18:47:06Z","lastTransitionTime":"2017-12-12T18:47:05Z","reason":"NewReplicationControllerAvailable","message":"replication controller \"client-30\" successfully rolled out"}],"readyReplicas":1}}
+    creationTimestamp: null
+    generation: 1
+    labels:
+      openshift.io/deployment-config.name: client
+    name: client-31
+    ownerReferences:
+    - apiVersion: apps.openshift.io/v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: DeploymentConfig
+      name: client
+      uid: 2a6c1af7-a549-11e7-b185-005056832285
+  spec:
+    replicas: 0
+    selector:
+      deployment: client-31
+      deploymentconfig: client
+      name: client
+    template:
+      metadata:
+        annotations:
+          openshift.io/deployment-config.latest-version: "31"
+          openshift.io/deployment-config.name: client
+          openshift.io/deployment.name: client-31
+        creationTimestamp: null
+        labels:
+          deployment: client-31
+          deploymentconfig: client
+          name: client
+      spec:
+        containers:
+        - env:
+          - name: API_URL
+            value: http://backend-mem-tfrs-test.pathfinder.gov.bc.ca/api/
+          - name: RealIpFrom
+          - name: AdditionalRealIpFromRules
+          - name: IpFilterRules
+          - name: HTTP_BASIC
+          - name: API_URL
+            value: http://backend.mem-tfrs-test.svc.cluster.local:8080/api/
+          image: 172.50.0.2:5000/mem-tfrs-tools/client@sha256:d983cf7cd18b41b0f5e1281fef4758ff902853f4d31f4b1cf02ef5bf67f89cca
+          imagePullPolicy: IfNotPresent
+          name: client
+          ports:
+          - containerPort: 3000
+            protocol: TCP
+          resources:
+            limits:
+              memory: 1Gi
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+  status:
+    replicas: 0
+- apiVersion: v1
+  kind: ReplicationController
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/original-replicas: "1"
+      openshift.io/deployer-pod.name: client-32-deploy
+      openshift.io/deployment-config.latest-version: "32"
+      openshift.io/deployment-config.name: client
+      openshift.io/deployment.phase: Complete
+      openshift.io/deployment.replicas: ""
+      openshift.io/deployment.status-reason: image change
+      openshift.io/encoded-deployment-config: |
+        {"kind":"DeploymentConfig","apiVersion":"v1","metadata":{"name":"client","namespace":"mem-tfrs-test","selfLink":"/apis/apps.openshift.io/v1/namespaces/mem-tfrs-test/deploymentconfigs/client","uid":"2a6c1af7-a549-11e7-b185-005056832285","resourceVersion":"288573557","generation":50,"creationTimestamp":"2017-09-29T19:05:32Z","annotations":{"description":"Defines how to deploy the application server"}},"spec":{"strategy":{"type":"Rolling","rollingParams":{"updatePeriodSeconds":1,"intervalSeconds":1,"timeoutSeconds":600,"maxUnavailable":"25%","maxSurge":"25%"},"resources":{},"activeDeadlineSeconds":21600},"triggers":[{"type":"ImageChange","imageChangeParams":{"automatic":true,"containerNames":["client"],"from":{"kind":"ImageStreamTag","namespace":"mem-tfrs-tools","name":"client:test"},"lastTriggeredImage":"172.50.0.2:5000/mem-tfrs-tools/client@sha256:c7437f44a719763f3ae0a223d0aee9b1828d3ceeef29fc4ca19972496e2e4b05"}},{"type":"ConfigChange"}],"replicas":1,"test":false,"selector":{"name":"client"},"template":{"metadata":{"name":"client","creationTimestamp":null,"labels":{"name":"client"}},"spec":{"containers":[{"name":"client","image":"172.50.0.2:5000/mem-tfrs-tools/client@sha256:c7437f44a719763f3ae0a223d0aee9b1828d3ceeef29fc4ca19972496e2e4b05","ports":[{"containerPort":3000,"protocol":"TCP"}],"env":[{"name":"API_URL","value":"http://backend-mem-tfrs-test.pathfinder.gov.bc.ca/api/"},{"name":"RealIpFrom"},{"name":"AdditionalRealIpFromRules"},{"name":"IpFilterRules"},{"name":"HTTP_BASIC"},{"name":"API_URL","value":"http://backend.mem-tfrs-test.svc.cluster.local:8080/api/"}],"resources":{"limits":{"memory":"1Gi"}},"terminationMessagePath":"/dev/termination-log","terminationMessagePolicy":"File","imagePullPolicy":"IfNotPresent"}],"restartPolicy":"Always","terminationGracePeriodSeconds":30,"dnsPolicy":"ClusterFirst","securityContext":{},"schedulerName":"default-scheduler"}}},"status":{"latestVersion":32,"observedGeneration":49,"replicas":1,"updatedReplicas":1,"availableReplicas":1,"unavailableReplicas":0,"details":{"message":"image change","causes":[{"type":"ImageChange","imageTrigger":{"from":{"kind":"ImageStreamTag","namespace":"mem-tfrs-tools","name":"client:test"}}}]},"conditions":[{"type":"Available","status":"True","lastUpdateTime":"2017-12-05T03:22:20Z","lastTransitionTime":"2017-12-05T03:22:20Z","message":"Deployment config has minimum availability."},{"type":"Progressing","status":"True","lastUpdateTime":"2017-12-12T22:51:57Z","lastTransitionTime":"2017-12-12T22:51:55Z","reason":"NewReplicationControllerAvailable","message":"replication controller \"client-31\" successfully rolled out"}],"readyReplicas":1}}
+    creationTimestamp: null
+    generation: 1
+    labels:
+      openshift.io/deployment-config.name: client
+    name: client-32
+    ownerReferences:
+    - apiVersion: apps.openshift.io/v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: DeploymentConfig
+      name: client
+      uid: 2a6c1af7-a549-11e7-b185-005056832285
+  spec:
+    replicas: 0
+    selector:
+      deployment: client-32
+      deploymentconfig: client
+      name: client
+    template:
+      metadata:
+        annotations:
+          openshift.io/deployment-config.latest-version: "32"
+          openshift.io/deployment-config.name: client
+          openshift.io/deployment.name: client-32
+        creationTimestamp: null
+        labels:
+          deployment: client-32
+          deploymentconfig: client
+          name: client
+      spec:
+        containers:
+        - env:
+          - name: API_URL
+            value: http://backend-mem-tfrs-test.pathfinder.gov.bc.ca/api/
+          - name: RealIpFrom
+          - name: AdditionalRealIpFromRules
+          - name: IpFilterRules
+          - name: HTTP_BASIC
+          - name: API_URL
+            value: http://backend.mem-tfrs-test.svc.cluster.local:8080/api/
+          image: 172.50.0.2:5000/mem-tfrs-tools/client@sha256:c7437f44a719763f3ae0a223d0aee9b1828d3ceeef29fc4ca19972496e2e4b05
+          imagePullPolicy: IfNotPresent
+          name: client
+          ports:
+          - containerPort: 3000
+            protocol: TCP
+          resources:
+            limits:
+              memory: 1Gi
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+  status:
+    replicas: 0
+- apiVersion: v1
+  kind: ReplicationController
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/original-replicas: "1"
+      openshift.io/deployer-pod.name: client-33-deploy
+      openshift.io/deployment-config.latest-version: "33"
+      openshift.io/deployment-config.name: client
+      openshift.io/deployment.phase: Complete
+      openshift.io/deployment.replicas: ""
+      openshift.io/deployment.status-reason: image change
+      openshift.io/encoded-deployment-config: |
+        {"kind":"DeploymentConfig","apiVersion":"v1","metadata":{"name":"client","namespace":"mem-tfrs-test","selfLink":"/apis/apps.openshift.io/v1/namespaces/mem-tfrs-test/deploymentconfigs/client","uid":"2a6c1af7-a549-11e7-b185-005056832285","resourceVersion":"288649931","generation":52,"creationTimestamp":"2017-09-29T19:05:32Z","annotations":{"description":"Defines how to deploy the application server"}},"spec":{"strategy":{"type":"Rolling","rollingParams":{"updatePeriodSeconds":1,"intervalSeconds":1,"timeoutSeconds":600,"maxUnavailable":"25%","maxSurge":"25%"},"resources":{},"activeDeadlineSeconds":21600},"triggers":[{"type":"ImageChange","imageChangeParams":{"automatic":true,"containerNames":["client"],"from":{"kind":"ImageStreamTag","namespace":"mem-tfrs-tools","name":"client:test"},"lastTriggeredImage":"172.50.0.2:5000/mem-tfrs-tools/client@sha256:03bfe8671c1d39bb58855be24b21a8ac3d587eeb6b3f170a931c11badba60d4e"}},{"type":"ConfigChange"}],"replicas":1,"test":false,"selector":{"name":"client"},"template":{"metadata":{"name":"client","creationTimestamp":null,"labels":{"name":"client"}},"spec":{"containers":[{"name":"client","image":"172.50.0.2:5000/mem-tfrs-tools/client@sha256:03bfe8671c1d39bb58855be24b21a8ac3d587eeb6b3f170a931c11badba60d4e","ports":[{"containerPort":3000,"protocol":"TCP"}],"env":[{"name":"API_URL","value":"http://backend-mem-tfrs-test.pathfinder.gov.bc.ca/api/"},{"name":"RealIpFrom"},{"name":"AdditionalRealIpFromRules"},{"name":"IpFilterRules"},{"name":"HTTP_BASIC"},{"name":"API_URL","value":"http://backend.mem-tfrs-test.svc.cluster.local:8080/api/"}],"resources":{"limits":{"memory":"1Gi"}},"terminationMessagePath":"/dev/termination-log","terminationMessagePolicy":"File","imagePullPolicy":"IfNotPresent"}],"restartPolicy":"Always","terminationGracePeriodSeconds":30,"dnsPolicy":"ClusterFirst","securityContext":{},"schedulerName":"default-scheduler"}}},"status":{"latestVersion":33,"observedGeneration":51,"replicas":1,"updatedReplicas":1,"availableReplicas":1,"unavailableReplicas":0,"details":{"message":"image change","causes":[{"type":"ImageChange","imageTrigger":{"from":{"kind":"ImageStreamTag","namespace":"mem-tfrs-tools","name":"client:test"}}}]},"conditions":[{"type":"Available","status":"True","lastUpdateTime":"2017-12-05T03:22:20Z","lastTransitionTime":"2017-12-05T03:22:20Z","message":"Deployment config has minimum availability."},{"type":"Progressing","status":"True","lastUpdateTime":"2017-12-15T21:05:34Z","lastTransitionTime":"2017-12-15T21:05:32Z","reason":"NewReplicationControllerAvailable","message":"replication controller \"client-32\" successfully rolled out"}],"readyReplicas":1}}
+    creationTimestamp: null
+    generation: 1
+    labels:
+      openshift.io/deployment-config.name: client
+    name: client-33
+    ownerReferences:
+    - apiVersion: apps.openshift.io/v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: DeploymentConfig
+      name: client
+      uid: 2a6c1af7-a549-11e7-b185-005056832285
+  spec:
+    replicas: 0
+    selector:
+      deployment: client-33
+      deploymentconfig: client
+      name: client
+    template:
+      metadata:
+        annotations:
+          openshift.io/deployment-config.latest-version: "33"
+          openshift.io/deployment-config.name: client
+          openshift.io/deployment.name: client-33
+        creationTimestamp: null
+        labels:
+          deployment: client-33
+          deploymentconfig: client
+          name: client
+      spec:
+        containers:
+        - env:
+          - name: API_URL
+            value: http://backend-mem-tfrs-test.pathfinder.gov.bc.ca/api/
+          - name: RealIpFrom
+          - name: AdditionalRealIpFromRules
+          - name: IpFilterRules
+          - name: HTTP_BASIC
+          - name: API_URL
+            value: http://backend.mem-tfrs-test.svc.cluster.local:8080/api/
+          image: 172.50.0.2:5000/mem-tfrs-tools/client@sha256:03bfe8671c1d39bb58855be24b21a8ac3d587eeb6b3f170a931c11badba60d4e
+          imagePullPolicy: IfNotPresent
+          name: client
+          ports:
+          - containerPort: 3000
+            protocol: TCP
+          resources:
+            limits:
+              memory: 1Gi
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+  status:
+    replicas: 0
+- apiVersion: v1
+  kind: ReplicationController
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/original-replicas: "1"
+      openshift.io/deployer-pod.name: client-34-deploy
+      openshift.io/deployment-config.latest-version: "34"
+      openshift.io/deployment-config.name: client
+      openshift.io/deployment.phase: Complete
+      openshift.io/deployment.replicas: ""
+      openshift.io/deployment.status-reason: image change
+      openshift.io/encoded-deployment-config: |
+        {"kind":"DeploymentConfig","apiVersion":"v1","metadata":{"name":"client","namespace":"mem-tfrs-test","selfLink":"/apis/apps.openshift.io/v1/namespaces/mem-tfrs-test/deploymentconfigs/client","uid":"2a6c1af7-a549-11e7-b185-005056832285","resourceVersion":"288670396","generation":54,"creationTimestamp":"2017-09-29T19:05:32Z","annotations":{"description":"Defines how to deploy the application server"}},"spec":{"strategy":{"type":"Rolling","rollingParams":{"updatePeriodSeconds":1,"intervalSeconds":1,"timeoutSeconds":600,"maxUnavailable":"25%","maxSurge":"25%"},"resources":{},"activeDeadlineSeconds":21600},"triggers":[{"type":"ImageChange","imageChangeParams":{"automatic":true,"containerNames":["client"],"from":{"kind":"ImageStreamTag","namespace":"mem-tfrs-tools","name":"client:test"},"lastTriggeredImage":"172.50.0.2:5000/mem-tfrs-tools/client@sha256:fdf5c060bed798f9088a3f1c56f7d14536c5dcbdf2bbe6e74035de02b8a80a3b"}},{"type":"ConfigChange"}],"replicas":1,"test":false,"selector":{"name":"client"},"template":{"metadata":{"name":"client","creationTimestamp":null,"labels":{"name":"client"}},"spec":{"containers":[{"name":"client","image":"172.50.0.2:5000/mem-tfrs-tools/client@sha256:fdf5c060bed798f9088a3f1c56f7d14536c5dcbdf2bbe6e74035de02b8a80a3b","ports":[{"containerPort":3000,"protocol":"TCP"}],"env":[{"name":"API_URL","value":"http://backend-mem-tfrs-test.pathfinder.gov.bc.ca/api/"},{"name":"RealIpFrom"},{"name":"AdditionalRealIpFromRules"},{"name":"IpFilterRules"},{"name":"HTTP_BASIC"},{"name":"API_URL","value":"http://backend.mem-tfrs-test.svc.cluster.local:8080/api/"}],"resources":{"limits":{"memory":"1Gi"}},"terminationMessagePath":"/dev/termination-log","terminationMessagePolicy":"File","imagePullPolicy":"IfNotPresent"}],"restartPolicy":"Always","terminationGracePeriodSeconds":30,"dnsPolicy":"ClusterFirst","securityContext":{},"schedulerName":"default-scheduler"}}},"status":{"latestVersion":34,"observedGeneration":53,"replicas":1,"updatedReplicas":1,"availableReplicas":1,"unavailableReplicas":0,"details":{"message":"image change","causes":[{"type":"ImageChange","imageTrigger":{"from":{"kind":"ImageStreamTag","namespace":"mem-tfrs-tools","name":"client:test"}}}]},"conditions":[{"type":"Available","status":"True","lastUpdateTime":"2017-12-05T03:22:20Z","lastTransitionTime":"2017-12-05T03:22:20Z","message":"Deployment config has minimum availability."},{"type":"Progressing","status":"True","lastUpdateTime":"2017-12-15T23:20:34Z","lastTransitionTime":"2017-12-15T23:20:32Z","reason":"NewReplicationControllerAvailable","message":"replication controller \"client-33\" successfully rolled out"}],"readyReplicas":1}}
+    creationTimestamp: null
+    generation: 1
+    labels:
+      openshift.io/deployment-config.name: client
+    name: client-34
+    ownerReferences:
+    - apiVersion: apps.openshift.io/v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: DeploymentConfig
+      name: client
+      uid: 2a6c1af7-a549-11e7-b185-005056832285
+  spec:
+    replicas: 0
+    selector:
+      deployment: client-34
+      deploymentconfig: client
+      name: client
+    template:
+      metadata:
+        annotations:
+          openshift.io/deployment-config.latest-version: "34"
+          openshift.io/deployment-config.name: client
+          openshift.io/deployment.name: client-34
+        creationTimestamp: null
+        labels:
+          deployment: client-34
+          deploymentconfig: client
+          name: client
+      spec:
+        containers:
+        - env:
+          - name: API_URL
+            value: http://backend-mem-tfrs-test.pathfinder.gov.bc.ca/api/
+          - name: RealIpFrom
+          - name: AdditionalRealIpFromRules
+          - name: IpFilterRules
+          - name: HTTP_BASIC
+          - name: API_URL
+            value: http://backend.mem-tfrs-test.svc.cluster.local:8080/api/
+          image: 172.50.0.2:5000/mem-tfrs-tools/client@sha256:fdf5c060bed798f9088a3f1c56f7d14536c5dcbdf2bbe6e74035de02b8a80a3b
+          imagePullPolicy: IfNotPresent
+          name: client
+          ports:
+          - containerPort: 3000
+            protocol: TCP
+          resources:
+            limits:
+              memory: 1Gi
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+  status:
+    replicas: 0
+- apiVersion: v1
+  kind: ReplicationController
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/original-replicas: "1"
+      openshift.io/deployer-pod.name: client-35-deploy
+      openshift.io/deployment-config.latest-version: "35"
+      openshift.io/deployment-config.name: client
+      openshift.io/deployment.phase: Complete
+      openshift.io/deployment.replicas: ""
+      openshift.io/deployment.status-reason: image change
+      openshift.io/encoded-deployment-config: |
+        {"kind":"DeploymentConfig","apiVersion":"v1","metadata":{"name":"client","namespace":"mem-tfrs-test","selfLink":"/apis/apps.openshift.io/v1/namespaces/mem-tfrs-test/deploymentconfigs/client","uid":"2a6c1af7-a549-11e7-b185-005056832285","resourceVersion":"291092723","generation":56,"creationTimestamp":"2017-09-29T19:05:32Z","annotations":{"description":"Defines how to deploy the application server"}},"spec":{"strategy":{"type":"Rolling","rollingParams":{"updatePeriodSeconds":1,"intervalSeconds":1,"timeoutSeconds":600,"maxUnavailable":"25%","maxSurge":"25%"},"resources":{},"activeDeadlineSeconds":21600},"triggers":[{"type":"ImageChange","imageChangeParams":{"automatic":true,"containerNames":["client"],"from":{"kind":"ImageStreamTag","namespace":"mem-tfrs-tools","name":"client:test"},"lastTriggeredImage":"172.50.0.2:5000/mem-tfrs-tools/client@sha256:abbb3570e19e820d61e9d62547f8fad7a0715fcfd2597512b48d5be834a674c9"}},{"type":"ConfigChange"}],"replicas":1,"test":false,"selector":{"name":"client"},"template":{"metadata":{"name":"client","creationTimestamp":null,"labels":{"name":"client"}},"spec":{"containers":[{"name":"client","image":"172.50.0.2:5000/mem-tfrs-tools/client@sha256:abbb3570e19e820d61e9d62547f8fad7a0715fcfd2597512b48d5be834a674c9","ports":[{"containerPort":3000,"protocol":"TCP"}],"env":[{"name":"API_URL","value":"http://backend-mem-tfrs-test.pathfinder.gov.bc.ca/api/"},{"name":"RealIpFrom"},{"name":"AdditionalRealIpFromRules"},{"name":"IpFilterRules"},{"name":"HTTP_BASIC"},{"name":"API_URL","value":"http://backend.mem-tfrs-test.svc.cluster.local:8080/api/"}],"resources":{"limits":{"memory":"1Gi"}},"terminationMessagePath":"/dev/termination-log","terminationMessagePolicy":"File","imagePullPolicy":"IfNotPresent"}],"restartPolicy":"Always","terminationGracePeriodSeconds":30,"dnsPolicy":"ClusterFirst","securityContext":{},"schedulerName":"default-scheduler"}}},"status":{"latestVersion":35,"observedGeneration":55,"replicas":1,"updatedReplicas":1,"availableReplicas":1,"unavailableReplicas":0,"details":{"message":"image change","causes":[{"type":"ImageChange","imageTrigger":{"from":{"kind":"ImageStreamTag","namespace":"mem-tfrs-tools","name":"client:test"}}}]},"conditions":[{"type":"Available","status":"True","lastUpdateTime":"2017-12-05T03:22:20Z","lastTransitionTime":"2017-12-05T03:22:20Z","message":"Deployment config has minimum availability."},{"type":"Progressing","status":"True","lastUpdateTime":"2017-12-16T00:05:01Z","lastTransitionTime":"2017-12-16T00:04:59Z","reason":"NewReplicationControllerAvailable","message":"replication controller \"client-34\" successfully rolled out"}],"readyReplicas":1}}
+    creationTimestamp: null
+    generation: 1
+    labels:
+      openshift.io/deployment-config.name: client
+    name: client-35
+    ownerReferences:
+    - apiVersion: apps.openshift.io/v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: DeploymentConfig
+      name: client
+      uid: 2a6c1af7-a549-11e7-b185-005056832285
+  spec:
+    replicas: 0
+    selector:
+      deployment: client-35
+      deploymentconfig: client
+      name: client
+    template:
+      metadata:
+        annotations:
+          openshift.io/deployment-config.latest-version: "35"
+          openshift.io/deployment-config.name: client
+          openshift.io/deployment.name: client-35
+        creationTimestamp: null
+        labels:
+          deployment: client-35
+          deploymentconfig: client
+          name: client
+      spec:
+        containers:
+        - env:
+          - name: API_URL
+            value: http://backend-mem-tfrs-test.pathfinder.gov.bc.ca/api/
+          - name: RealIpFrom
+          - name: AdditionalRealIpFromRules
+          - name: IpFilterRules
+          - name: HTTP_BASIC
+          - name: API_URL
+            value: http://backend.mem-tfrs-test.svc.cluster.local:8080/api/
+          image: 172.50.0.2:5000/mem-tfrs-tools/client@sha256:abbb3570e19e820d61e9d62547f8fad7a0715fcfd2597512b48d5be834a674c9
+          imagePullPolicy: IfNotPresent
+          name: client
+          ports:
+          - containerPort: 3000
+            protocol: TCP
+          resources:
+            limits:
+              memory: 1Gi
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+  status:
+    replicas: 0
+- apiVersion: v1
+  kind: ReplicationController
+  metadata:
+    annotations:
+      openshift.io/deployer-pod.name: client-36-deploy
+      openshift.io/deployment-config.latest-version: "36"
+      openshift.io/deployment-config.name: client
+      openshift.io/deployment.phase: Complete
+      openshift.io/deployment.replicas: ""
+      openshift.io/deployment.status-reason: image change
+      openshift.io/encoded-deployment-config: |
+        {"kind":"DeploymentConfig","apiVersion":"v1","metadata":{"name":"client","namespace":"mem-tfrs-test","selfLink":"/apis/apps.openshift.io/v1/namespaces/mem-tfrs-test/deploymentconfigs/client","uid":"2a6c1af7-a549-11e7-b185-005056832285","resourceVersion":"329822173","generation":58,"creationTimestamp":"2017-09-29T19:05:32Z","annotations":{"description":"Defines how to deploy the application server"}},"spec":{"strategy":{"type":"Rolling","rollingParams":{"updatePeriodSeconds":1,"intervalSeconds":1,"timeoutSeconds":600,"maxUnavailable":"25%","maxSurge":"25%"},"resources":{},"activeDeadlineSeconds":21600},"triggers":[{"type":"ImageChange","imageChangeParams":{"automatic":true,"containerNames":["client"],"from":{"kind":"ImageStreamTag","namespace":"mem-tfrs-tools","name":"client:test"},"lastTriggeredImage":"172.50.0.2:5000/mem-tfrs-tools/client@sha256:7b70a249fcf707aba746df06eee95ff1b3c329b0287abed2304f91c3caba16a1"}},{"type":"ConfigChange"}],"replicas":1,"test":false,"selector":{"name":"client"},"template":{"metadata":{"name":"client","creationTimestamp":null,"labels":{"name":"client"}},"spec":{"containers":[{"name":"client","image":"172.50.0.2:5000/mem-tfrs-tools/client@sha256:7b70a249fcf707aba746df06eee95ff1b3c329b0287abed2304f91c3caba16a1","ports":[{"containerPort":3000,"protocol":"TCP"}],"env":[{"name":"API_URL","value":"http://backend-mem-tfrs-test.pathfinder.gov.bc.ca/api/"},{"name":"RealIpFrom"},{"name":"AdditionalRealIpFromRules"},{"name":"IpFilterRules"},{"name":"HTTP_BASIC"},{"name":"API_URL","value":"http://backend.mem-tfrs-test.svc.cluster.local:8080/api/"}],"resources":{"limits":{"memory":"1Gi"}},"terminationMessagePath":"/dev/termination-log","terminationMessagePolicy":"File","imagePullPolicy":"IfNotPresent"}],"restartPolicy":"Always","terminationGracePeriodSeconds":30,"dnsPolicy":"ClusterFirst","securityContext":{},"schedulerName":"default-scheduler"}}},"status":{"latestVersion":36,"observedGeneration":57,"replicas":1,"updatedReplicas":1,"availableReplicas":1,"unavailableReplicas":0,"details":{"message":"image change","causes":[{"type":"ImageChange","imageTrigger":{"from":{"kind":"ImageStreamTag","namespace":"mem-tfrs-tools","name":"client:test"}}}]},"conditions":[{"type":"Progressing","status":"True","lastUpdateTime":"2017-12-18T18:03:24Z","lastTransitionTime":"2017-12-18T18:03:22Z","reason":"NewReplicationControllerAvailable","message":"replication controller \"client-35\" successfully rolled out"},{"type":"Available","status":"True","lastUpdateTime":"2018-01-25T19:50:20Z","lastTransitionTime":"2018-01-25T19:50:20Z","message":"Deployment config has minimum availability."}],"readyReplicas":1}}
+    creationTimestamp: null
+    generation: 1
+    labels:
+      openshift.io/deployment-config.name: client
+    name: client-36
+    ownerReferences:
+    - apiVersion: apps.openshift.io/v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: DeploymentConfig
+      name: client
+      uid: 2a6c1af7-a549-11e7-b185-005056832285
+  spec:
+    replicas: 1
+    selector:
+      deployment: client-36
+      deploymentconfig: client
+      name: client
+    template:
+      metadata:
+        annotations:
+          openshift.io/deployment-config.latest-version: "36"
+          openshift.io/deployment-config.name: client
+          openshift.io/deployment.name: client-36
+        creationTimestamp: null
+        labels:
+          deployment: client-36
+          deploymentconfig: client
+          name: client
+      spec:
+        containers:
+        - env:
+          - name: API_URL
+            value: http://backend-mem-tfrs-test.pathfinder.gov.bc.ca/api/
+          - name: RealIpFrom
+          - name: AdditionalRealIpFromRules
+          - name: IpFilterRules
+          - name: HTTP_BASIC
+          - name: API_URL
+            value: http://backend.mem-tfrs-test.svc.cluster.local:8080/api/
+          image: 172.50.0.2:5000/mem-tfrs-tools/client@sha256:7b70a249fcf707aba746df06eee95ff1b3c329b0287abed2304f91c3caba16a1
+          imagePullPolicy: IfNotPresent
+          name: client
+          ports:
+          - containerPort: 3000
+            protocol: TCP
+          resources:
+            limits:
+              memory: 1Gi
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+  status:
+    replicas: 0
+- apiVersion: v1
+  kind: ReplicationController
+  metadata:
+    annotations:
+      openshift.io/deployer-pod.name: postgresql-10-deploy
+      openshift.io/deployment-config.latest-version: "10"
+      openshift.io/deployment-config.name: postgresql
+      openshift.io/deployment.phase: Complete
+      openshift.io/deployment.replicas: "0"
+      openshift.io/deployment.status-reason: config change
+      openshift.io/encoded-deployment-config: |
+        {"kind":"DeploymentConfig","apiVersion":"v1","metadata":{"name":"postgresql","namespace":"mem-tfrs-test","selfLink":"/apis/apps.openshift.io/v1/namespaces/mem-tfrs-test/deploymentconfigs/postgresql","uid":"c3673a65-fac7-11e6-8d55-0050568348cc","resourceVersion":"327877135","generation":25,"creationTimestamp":"2017-02-24T19:30:56Z","labels":{"app":"postgresql-persistent","template":"postgresql-persistent-template"}},"spec":{"strategy":{"type":"Recreate","recreateParams":{"timeoutSeconds":600},"resources":{},"activeDeadlineSeconds":21600},"triggers":[{"type":"ImageChange","imageChangeParams":{"automatic":true,"containerNames":["postgresql"],"from":{"kind":"ImageStreamTag","namespace":"openshift","name":"postgresql:9.5"},"lastTriggeredImage":"registry.access.redhat.com/rhscl/postgresql-95-rhel7@sha256:19aacf0c8331df76b67932415bd84abf74ec36fd9d4aef518ad9f6285c4a948a"}},{"type":"ConfigChange"}],"replicas":0,"test":false,"selector":{"name":"postgresql"},"template":{"metadata":{"creationTimestamp":null,"labels":{"name":"postgresql"}},"spec":{"volumes":[{"name":"postgresql-data","persistentVolumeClaim":{"claimName":"postgresql-cns"}}],"containers":[{"name":"postgresql","image":"registry.access.redhat.com/rhscl/postgresql-95-rhel7@sha256:19aacf0c8331df76b67932415bd84abf74ec36fd9d4aef518ad9f6285c4a948a","ports":[{"containerPort":5432,"protocol":"TCP"}],"env":[{"name":"POSTGRESQL_DATABASE","value":"tfrs"},{"name":"POSTGRESQL_USER","valueFrom":{"secretKeyRef":{"name":"tfrs-postgresql","key":"DATABASE_USER"}}},{"name":"POSTGRESQL_PASSWORD","valueFrom":{"secretKeyRef":{"name":"tfrs-postgresql","key":"DATABASE_PASSWORD"}}}],"resources":{"limits":{"memory":"512Mi"}},"volumeMounts":[{"name":"postgresql-data","mountPath":"/var/lib/pgsql/data"}],"livenessProbe":{"tcpSocket":{"port":5432},"initialDelaySeconds":30,"timeoutSeconds":1,"periodSeconds":10,"successThreshold":1,"failureThreshold":3},"readinessProbe":{"exec":{"command":["/bin/sh","-i","-c","psql -h 127.0.0.1 -U $POSTGRESQL_USER -q -d $POSTGRESQL_DATABASE -c 'SELECT 1'"]},"initialDelaySeconds":5,"timeoutSeconds":1,"periodSeconds":10,"successThreshold":1,"failureThreshold":3},"terminationMessagePath":"/dev/termination-log","terminationMessagePolicy":"File","imagePullPolicy":"IfNotPresent","securityContext":{"capabilities":{},"privileged":false}}],"restartPolicy":"Always","terminationGracePeriodSeconds":30,"dnsPolicy":"ClusterFirst","securityContext":{},"schedulerName":"default-scheduler"}}},"status":{"latestVersion":10,"observedGeneration":24,"replicas":0,"updatedReplicas":0,"availableReplicas":0,"unavailableReplicas":0,"details":{"message":"config change","causes":[{"type":"ConfigChange"}]},"conditions":[{"type":"Progressing","status":"True","lastUpdateTime":"2018-01-23T22:53:58Z","lastTransitionTime":"2018-01-23T22:53:58Z","reason":"NewReplicationControllerAvailable","message":"replication controller \"postgresql-9\" successfully rolled out"},{"type":"Available","status":"False","lastUpdateTime":"2018-01-30T19:49:58Z","lastTransitionTime":"2018-01-30T19:49:58Z","message":"Deployment config does not have minimum availability."}]}}
+    creationTimestamp: null
+    generation: 1
+    labels:
+      app: postgresql-persistent
+      openshift.io/deployment-config.name: postgresql
+      template: postgresql-persistent-template
+    name: postgresql-10
+    ownerReferences:
+    - apiVersion: apps.openshift.io/v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: DeploymentConfig
+      name: postgresql
+      uid: c3673a65-fac7-11e6-8d55-0050568348cc
+  spec:
+    replicas: 1
+    selector:
+      deployment: postgresql-10
+      deploymentconfig: postgresql
+      name: postgresql
+    template:
+      metadata:
+        annotations:
+          openshift.io/deployment-config.latest-version: "10"
+          openshift.io/deployment-config.name: postgresql
+          openshift.io/deployment.name: postgresql-10
+        creationTimestamp: null
+        labels:
+          deployment: postgresql-10
+          deploymentconfig: postgresql
+          name: postgresql
+      spec:
+        containers:
+        - env:
+          - name: POSTGRESQL_DATABASE
+            value: tfrs
+          - name: POSTGRESQL_USER
+            valueFrom:
+              secretKeyRef:
+                key: DATABASE_USER
+                name: tfrs-postgresql
+          - name: POSTGRESQL_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                key: DATABASE_PASSWORD
+                name: tfrs-postgresql
+          image: registry.access.redhat.com/rhscl/postgresql-95-rhel7@sha256:19aacf0c8331df76b67932415bd84abf74ec36fd9d4aef518ad9f6285c4a948a
+          imagePullPolicy: IfNotPresent
+          livenessProbe:
+            failureThreshold: 3
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            successThreshold: 1
+            tcpSocket:
+              port: 5432
+            timeoutSeconds: 1
+          name: postgresql
+          ports:
+          - containerPort: 5432
+            protocol: TCP
+          readinessProbe:
+            exec:
+              command:
+              - /bin/sh
+              - -i
+              - -c
+              - psql -h 127.0.0.1 -U $POSTGRESQL_USER -q -d $POSTGRESQL_DATABASE -c
+                'SELECT 1'
+            failureThreshold: 3
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 1
+          resources:
+            limits:
+              memory: 512Mi
+          securityContext:
+            capabilities: {}
+            privileged: false
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+          volumeMounts:
+          - mountPath: /var/lib/pgsql/data
+            name: postgresql-data
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+        volumes:
+        - name: postgresql-data
+          persistentVolumeClaim:
+            claimName: postgresql-cns
+  status:
+    replicas: 0
+- apiVersion: v1
+  kind: ReplicationController
+  metadata:
+    annotations:
+      openshift.io/deployer-pod.name: postgresql-4-deploy
+      openshift.io/deployment-config.latest-version: "4"
+      openshift.io/deployment-config.name: postgresql
+      openshift.io/deployment.phase: Complete
+      openshift.io/deployment.replicas: "1"
+      openshift.io/deployment.status-reason: caused by an image change
+      openshift.io/encoded-deployment-config: |
+        {"kind":"DeploymentConfig","apiVersion":"v1","metadata":{"name":"postgresql","namespace":"mem-tfrs-test","selfLink":"/oapi/v1/namespaces/mem-tfrs-test/deploymentconfigs/postgresql","uid":"c3673a65-fac7-11e6-8d55-0050568348cc","resourceVersion":"138652225","generation":5,"creationTimestamp":"2017-02-24T19:30:56Z","labels":{"app":"postgresql-persistent","template":"postgresql-persistent-template"}},"spec":{"strategy":{"type":"Recreate","recreateParams":{"timeoutSeconds":600},"resources":{}},"triggers":[{"type":"ImageChange","imageChangeParams":{"automatic":true,"containerNames":["postgresql"],"from":{"kind":"ImageStreamTag","namespace":"openshift","name":"postgresql:9.5"},"lastTriggeredImage":"registry.access.redhat.com/rhscl/postgresql-95-rhel7@sha256:155cf81a3d3a8bbcab3a1f61b177cab75a4105306146d172ef8fb29488cf58b4"}},{"type":"ConfigChange"}],"replicas":1,"test":false,"selector":{"name":"postgresql"},"template":{"metadata":{"creationTimestamp":null,"labels":{"name":"postgresql"}},"spec":{"volumes":[{"name":"postgresql-data","persistentVolumeClaim":{"claimName":"postgresql"}}],"containers":[{"name":"postgresql","image":"registry.access.redhat.com/rhscl/postgresql-95-rhel7@sha256:155cf81a3d3a8bbcab3a1f61b177cab75a4105306146d172ef8fb29488cf58b4","ports":[{"containerPort":5432,"protocol":"TCP"}],"env":[{"name":"POSTGRESQL_USER","value":"userUQL"},{"name":"POSTGRESQL_PASSWORD","value":"oa3g6nhfyoE7HcxG"},{"name":"POSTGRESQL_DATABASE","value":"tfrs"}],"resources":{"limits":{"memory":"512Mi"}},"volumeMounts":[{"name":"postgresql-data","mountPath":"/var/lib/pgsql/data"}],"livenessProbe":{"tcpSocket":{"port":5432},"initialDelaySeconds":30,"timeoutSeconds":1,"periodSeconds":10,"successThreshold":1,"failureThreshold":3},"readinessProbe":{"exec":{"command":["/bin/sh","-i","-c","psql -h 127.0.0.1 -U $POSTGRESQL_USER -q -d $POSTGRESQL_DATABASE -c 'SELECT 1'"]},"initialDelaySeconds":5,"timeoutSeconds":1,"periodSeconds":10,"successThreshold":1,"failureThreshold":3},"terminationMessagePath":"/dev/termination-log","imagePullPolicy":"IfNotPresent","securityContext":{"capabilities":{},"privileged":false}}],"restartPolicy":"Always","terminationGracePeriodSeconds":30,"dnsPolicy":"ClusterFirst","securityContext":{}}}},"status":{"latestVersion":4,"observedGeneration":5,"replicas":1,"updatedReplicas":1,"availableReplicas":1,"details":{"message":"caused by an image change","causes":[{"type":"ImageChange","imageTrigger":{"from":{"kind":"ImageStreamTag","namespace":"openshift","name":"postgresql:9.5"}}}]}}}
+    creationTimestamp: null
+    generation: 1
+    labels:
+      app: postgresql-persistent
+      openshift.io/deployment-config.name: postgresql
+      template: postgresql-persistent-template
+    name: postgresql-4
+    ownerReferences:
+    - apiVersion: apps.openshift.io/v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: DeploymentConfig
+      name: postgresql
+      uid: c3673a65-fac7-11e6-8d55-0050568348cc
+  spec:
+    replicas: 0
+    selector:
+      deployment: postgresql-4
+      deploymentconfig: postgresql
+      name: postgresql
+    template:
+      metadata:
+        annotations:
+          openshift.io/deployment-config.latest-version: "4"
+          openshift.io/deployment-config.name: postgresql
+          openshift.io/deployment.name: postgresql-4
+        creationTimestamp: null
+        labels:
+          deployment: postgresql-4
+          deploymentconfig: postgresql
+          name: postgresql
+      spec:
+        containers:
+        - env:
+          - name: POSTGRESQL_USER
+            value: userUQL
+          - name: POSTGRESQL_PASSWORD
+            value: oa3g6nhfyoE7HcxG
+          - name: POSTGRESQL_DATABASE
+            value: tfrs
+          image: registry.access.redhat.com/rhscl/postgresql-95-rhel7@sha256:155cf81a3d3a8bbcab3a1f61b177cab75a4105306146d172ef8fb29488cf58b4
+          imagePullPolicy: IfNotPresent
+          livenessProbe:
+            failureThreshold: 3
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            successThreshold: 1
+            tcpSocket:
+              port: 5432
+            timeoutSeconds: 1
+          name: postgresql
+          ports:
+          - containerPort: 5432
+            protocol: TCP
+          readinessProbe:
+            exec:
+              command:
+              - /bin/sh
+              - -i
+              - -c
+              - psql -h 127.0.0.1 -U $POSTGRESQL_USER -q -d $POSTGRESQL_DATABASE -c
+                'SELECT 1'
+            failureThreshold: 3
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 1
+          resources:
+            limits:
+              memory: 512Mi
+          securityContext:
+            capabilities: {}
+            privileged: false
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+          volumeMounts:
+          - mountPath: /var/lib/pgsql/data
+            name: postgresql-data
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+        volumes:
+        - name: postgresql-data
+          persistentVolumeClaim:
+            claimName: postgresql
+  status:
+    replicas: 0
+- apiVersion: v1
+  kind: ReplicationController
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/desired-replicas: "1"
+      openshift.io/deployer-pod.name: postgresql-5-deploy
+      openshift.io/deployment-config.latest-version: "5"
+      openshift.io/deployment-config.name: postgresql
+      openshift.io/deployment.phase: Failed
+      openshift.io/deployment.replicas: "0"
+      openshift.io/deployment.status-reason: image change
+      openshift.io/encoded-deployment-config: |
+        {"kind":"DeploymentConfig","apiVersion":"v1","metadata":{"name":"postgresql","namespace":"mem-tfrs-test","selfLink":"/apis/apps.openshift.io/v1/namespaces/mem-tfrs-test/deploymentconfigs/postgresql","uid":"c3673a65-fac7-11e6-8d55-0050568348cc","resourceVersion":"269638523","generation":7,"creationTimestamp":"2017-02-24T19:30:56Z","labels":{"app":"postgresql-persistent","template":"postgresql-persistent-template"}},"spec":{"strategy":{"type":"Recreate","recreateParams":{"timeoutSeconds":600},"resources":{},"activeDeadlineSeconds":21600},"triggers":[{"type":"ImageChange","imageChangeParams":{"automatic":true,"containerNames":["postgresql"],"from":{"kind":"ImageStreamTag","namespace":"openshift","name":"postgresql:9.5"},"lastTriggeredImage":"registry.access.redhat.com/rhscl/postgresql-95-rhel7@sha256:19aacf0c8331df76b67932415bd84abf74ec36fd9d4aef518ad9f6285c4a948a"}},{"type":"ConfigChange"}],"replicas":1,"test":false,"selector":{"name":"postgresql"},"template":{"metadata":{"creationTimestamp":null,"labels":{"name":"postgresql"}},"spec":{"volumes":[{"name":"postgresql-data","persistentVolumeClaim":{"claimName":"postgresql"}}],"containers":[{"name":"postgresql","image":"registry.access.redhat.com/rhscl/postgresql-95-rhel7@sha256:19aacf0c8331df76b67932415bd84abf74ec36fd9d4aef518ad9f6285c4a948a","ports":[{"containerPort":5432,"protocol":"TCP"}],"env":[{"name":"POSTGRESQL_USER","value":"userUQL"},{"name":"POSTGRESQL_PASSWORD","value":"oa3g6nhfyoE7HcxG"},{"name":"POSTGRESQL_DATABASE","value":"tfrs"}],"resources":{"limits":{"memory":"512Mi"}},"volumeMounts":[{"name":"postgresql-data","mountPath":"/var/lib/pgsql/data"}],"livenessProbe":{"tcpSocket":{"port":5432},"initialDelaySeconds":30,"timeoutSeconds":1,"periodSeconds":10,"successThreshold":1,"failureThreshold":3},"readinessProbe":{"exec":{"command":["/bin/sh","-i","-c","psql -h 127.0.0.1 -U $POSTGRESQL_USER -q -d $POSTGRESQL_DATABASE -c 'SELECT 1'"]},"initialDelaySeconds":5,"timeoutSeconds":1,"periodSeconds":10,"successThreshold":1,"failureThreshold":3},"terminationMessagePath":"/dev/termination-log","terminationMessagePolicy":"File","imagePullPolicy":"IfNotPresent","securityContext":{"capabilities":{},"privileged":false}}],"restartPolicy":"Always","terminationGracePeriodSeconds":30,"dnsPolicy":"ClusterFirst","securityContext":{},"schedulerName":"default-scheduler"}}},"status":{"latestVersion":5,"observedGeneration":6,"replicas":1,"updatedReplicas":1,"availableReplicas":1,"unavailableReplicas":0,"details":{"message":"image change","causes":[{"type":"ImageChange","imageTrigger":{"from":{"kind":"ImageStreamTag","namespace":"openshift","name":"postgresql:9.5"}}}]},"conditions":[{"type":"Progressing","status":"True","lastUpdateTime":null,"lastTransitionTime":"2017-08-14T20:50:47Z","reason":"NewReplicationControllerAvailable","message":"Replication controller \"postgresql-4\" has completed progressing"},{"type":"Available","status":"True","lastUpdateTime":"2017-11-19T14:53:41Z","lastTransitionTime":"2017-11-19T14:53:41Z","message":"Deployment config has minimum availability."}],"readyReplicas":1}}
+    creationTimestamp: null
+    generation: 1
+    labels:
+      app: postgresql-persistent
+      openshift.io/deployment-config.name: postgresql
+      template: postgresql-persistent-template
+    name: postgresql-5
+    ownerReferences:
+    - apiVersion: apps.openshift.io/v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: DeploymentConfig
+      name: postgresql
+      uid: c3673a65-fac7-11e6-8d55-0050568348cc
+  spec:
+    replicas: 0
+    selector:
+      deployment: postgresql-5
+      deploymentconfig: postgresql
+      name: postgresql
+    template:
+      metadata:
+        annotations:
+          openshift.io/deployment-config.latest-version: "5"
+          openshift.io/deployment-config.name: postgresql
+          openshift.io/deployment.name: postgresql-5
+        creationTimestamp: null
+        labels:
+          deployment: postgresql-5
+          deploymentconfig: postgresql
+          name: postgresql
+      spec:
+        containers:
+        - env:
+          - name: POSTGRESQL_USER
+            value: userUQL
+          - name: POSTGRESQL_PASSWORD
+            value: oa3g6nhfyoE7HcxG
+          - name: POSTGRESQL_DATABASE
+            value: tfrs
+          image: registry.access.redhat.com/rhscl/postgresql-95-rhel7@sha256:19aacf0c8331df76b67932415bd84abf74ec36fd9d4aef518ad9f6285c4a948a
+          imagePullPolicy: IfNotPresent
+          livenessProbe:
+            failureThreshold: 3
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            successThreshold: 1
+            tcpSocket:
+              port: 5432
+            timeoutSeconds: 1
+          name: postgresql
+          ports:
+          - containerPort: 5432
+            protocol: TCP
+          readinessProbe:
+            exec:
+              command:
+              - /bin/sh
+              - -i
+              - -c
+              - psql -h 127.0.0.1 -U $POSTGRESQL_USER -q -d $POSTGRESQL_DATABASE -c
+                'SELECT 1'
+            failureThreshold: 3
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 1
+          resources:
+            limits:
+              memory: 512Mi
+          securityContext:
+            capabilities: {}
+            privileged: false
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+          volumeMounts:
+          - mountPath: /var/lib/pgsql/data
+            name: postgresql-data
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+        volumes:
+        - name: postgresql-data
+          persistentVolumeClaim:
+            claimName: postgresql
+  status:
+    replicas: 0
+- apiVersion: v1
+  kind: ReplicationController
+  metadata:
+    annotations:
+      openshift.io/deployer-pod.name: postgresql-6-deploy
+      openshift.io/deployment-config.latest-version: "6"
+      openshift.io/deployment-config.name: postgresql
+      openshift.io/deployment.phase: Complete
+      openshift.io/deployment.replicas: "1"
+      openshift.io/deployment.status-reason: manual change
+      openshift.io/encoded-deployment-config: |
+        {"kind":"DeploymentConfig","apiVersion":"v1","metadata":{"name":"postgresql","namespace":"mem-tfrs-test","selfLink":"/apis/apps.openshift.io/v1/namespaces/mem-tfrs-test/deploymentconfigs/postgresql","uid":"c3673a65-fac7-11e6-8d55-0050568348cc","resourceVersion":"276191292","generation":8,"creationTimestamp":"2017-02-24T19:30:56Z","labels":{"app":"postgresql-persistent","template":"postgresql-persistent-template"}},"spec":{"strategy":{"type":"Recreate","recreateParams":{"timeoutSeconds":600},"resources":{},"activeDeadlineSeconds":21600},"triggers":[{"type":"ImageChange","imageChangeParams":{"automatic":true,"containerNames":["postgresql"],"from":{"kind":"ImageStreamTag","namespace":"openshift","name":"postgresql:9.5"},"lastTriggeredImage":"registry.access.redhat.com/rhscl/postgresql-95-rhel7@sha256:19aacf0c8331df76b67932415bd84abf74ec36fd9d4aef518ad9f6285c4a948a"}},{"type":"ConfigChange"}],"replicas":1,"test":false,"selector":{"name":"postgresql"},"template":{"metadata":{"creationTimestamp":null,"labels":{"name":"postgresql"}},"spec":{"volumes":[{"name":"postgresql-data","persistentVolumeClaim":{"claimName":"postgresql"}}],"containers":[{"name":"postgresql","image":"registry.access.redhat.com/rhscl/postgresql-95-rhel7@sha256:19aacf0c8331df76b67932415bd84abf74ec36fd9d4aef518ad9f6285c4a948a","ports":[{"containerPort":5432,"protocol":"TCP"}],"env":[{"name":"POSTGRESQL_USER","value":"userUQL"},{"name":"POSTGRESQL_PASSWORD","value":"oa3g6nhfyoE7HcxG"},{"name":"POSTGRESQL_DATABASE","value":"tfrs"}],"resources":{"limits":{"memory":"512Mi"}},"volumeMounts":[{"name":"postgresql-data","mountPath":"/var/lib/pgsql/data"}],"livenessProbe":{"tcpSocket":{"port":5432},"initialDelaySeconds":30,"timeoutSeconds":1,"periodSeconds":10,"successThreshold":1,"failureThreshold":3},"readinessProbe":{"exec":{"command":["/bin/sh","-i","-c","psql -h 127.0.0.1 -U $POSTGRESQL_USER -q -d $POSTGRESQL_DATABASE -c 'SELECT 1'"]},"initialDelaySeconds":5,"timeoutSeconds":1,"periodSeconds":10,"successThreshold":1,"failureThreshold":3},"terminationMessagePath":"/dev/termination-log","terminationMessagePolicy":"File","imagePullPolicy":"IfNotPresent","securityContext":{"capabilities":{},"privileged":false}}],"restartPolicy":"Always","terminationGracePeriodSeconds":30,"dnsPolicy":"ClusterFirst","securityContext":{},"schedulerName":"default-scheduler"}}},"status":{"latestVersion":6,"observedGeneration":7,"replicas":1,"updatedReplicas":0,"availableReplicas":1,"unavailableReplicas":0,"details":{"message":"manual change","causes":[{"type":"Manual"}]},"conditions":[{"type":"Progressing","status":"False","lastUpdateTime":"2017-11-22T00:37:45Z","lastTransitionTime":"2017-11-22T00:37:45Z","reason":"ProgressDeadlineExceeded","message":"replication controller \"postgresql-5\" has failed progressing"},{"type":"Available","status":"True","lastUpdateTime":"2017-11-27T19:04:27Z","lastTransitionTime":"2017-11-27T19:04:27Z","message":"Deployment config has minimum availability."}],"readyReplicas":1}}
+    creationTimestamp: null
+    generation: 1
+    labels:
+      app: postgresql-persistent
+      openshift.io/deployment-config.name: postgresql
+      template: postgresql-persistent-template
+    name: postgresql-6
+    ownerReferences:
+    - apiVersion: apps.openshift.io/v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: DeploymentConfig
+      name: postgresql
+      uid: c3673a65-fac7-11e6-8d55-0050568348cc
+  spec:
+    replicas: 0
+    selector:
+      deployment: postgresql-6
+      deploymentconfig: postgresql
+      name: postgresql
+    template:
+      metadata:
+        annotations:
+          openshift.io/deployment-config.latest-version: "6"
+          openshift.io/deployment-config.name: postgresql
+          openshift.io/deployment.name: postgresql-6
+        creationTimestamp: null
+        labels:
+          deployment: postgresql-6
+          deploymentconfig: postgresql
+          name: postgresql
+      spec:
+        containers:
+        - env:
+          - name: POSTGRESQL_USER
+            value: userUQL
+          - name: POSTGRESQL_PASSWORD
+            value: oa3g6nhfyoE7HcxG
+          - name: POSTGRESQL_DATABASE
+            value: tfrs
+          image: registry.access.redhat.com/rhscl/postgresql-95-rhel7@sha256:19aacf0c8331df76b67932415bd84abf74ec36fd9d4aef518ad9f6285c4a948a
+          imagePullPolicy: IfNotPresent
+          livenessProbe:
+            failureThreshold: 3
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            successThreshold: 1
+            tcpSocket:
+              port: 5432
+            timeoutSeconds: 1
+          name: postgresql
+          ports:
+          - containerPort: 5432
+            protocol: TCP
+          readinessProbe:
+            exec:
+              command:
+              - /bin/sh
+              - -i
+              - -c
+              - psql -h 127.0.0.1 -U $POSTGRESQL_USER -q -d $POSTGRESQL_DATABASE -c
+                'SELECT 1'
+            failureThreshold: 3
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 1
+          resources:
+            limits:
+              memory: 512Mi
+          securityContext:
+            capabilities: {}
+            privileged: false
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+          volumeMounts:
+          - mountPath: /var/lib/pgsql/data
+            name: postgresql-data
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+        volumes:
+        - name: postgresql-data
+          persistentVolumeClaim:
+            claimName: postgresql
+  status:
+    replicas: 0
+- apiVersion: v1
+  kind: ReplicationController
+  metadata:
+    annotations:
+      openshift.io/deployer-pod.name: postgresql-7-deploy
+      openshift.io/deployment-config.latest-version: "7"
+      openshift.io/deployment-config.name: postgresql
+      openshift.io/deployment.phase: Complete
+      openshift.io/deployment.replicas: "0"
+      openshift.io/deployment.status-reason: config change
+      openshift.io/encoded-deployment-config: |
+        {"kind":"DeploymentConfig","apiVersion":"v1","metadata":{"name":"postgresql","namespace":"mem-tfrs-test","selfLink":"/apis/apps.openshift.io/v1/namespaces/mem-tfrs-test/deploymentconfigs/postgresql","uid":"c3673a65-fac7-11e6-8d55-0050568348cc","resourceVersion":"322289094","generation":13,"creationTimestamp":"2017-02-24T19:30:56Z","labels":{"app":"postgresql-persistent","template":"postgresql-persistent-template"}},"spec":{"strategy":{"type":"Recreate","recreateParams":{"timeoutSeconds":600},"resources":{},"activeDeadlineSeconds":21600},"triggers":[{"type":"ImageChange","imageChangeParams":{"automatic":true,"containerNames":["postgresql"],"from":{"kind":"ImageStreamTag","namespace":"openshift","name":"postgresql:9.5"},"lastTriggeredImage":"registry.access.redhat.com/rhscl/postgresql-95-rhel7@sha256:19aacf0c8331df76b67932415bd84abf74ec36fd9d4aef518ad9f6285c4a948a"}},{"type":"ConfigChange"}],"replicas":0,"test":false,"selector":{"name":"postgresql"},"template":{"metadata":{"creationTimestamp":null,"labels":{"name":"postgresql"}},"spec":{"volumes":[{"name":"postgresql-data","persistentVolumeClaim":{"claimName":"postgresql-cns"}}],"containers":[{"name":"postgresql","image":"registry.access.redhat.com/rhscl/postgresql-95-rhel7@sha256:19aacf0c8331df76b67932415bd84abf74ec36fd9d4aef518ad9f6285c4a948a","ports":[{"containerPort":5432,"protocol":"TCP"}],"env":[{"name":"POSTGRESQL_USER","value":"userUQL"},{"name":"POSTGRESQL_PASSWORD","value":"oa3g6nhfyoE7HcxG"},{"name":"POSTGRESQL_DATABASE","value":"tfrs"}],"resources":{"limits":{"memory":"512Mi"}},"volumeMounts":[{"name":"postgresql-data","mountPath":"/var/lib/pgsql/data"}],"livenessProbe":{"tcpSocket":{"port":5432},"initialDelaySeconds":30,"timeoutSeconds":1,"periodSeconds":10,"successThreshold":1,"failureThreshold":3},"readinessProbe":{"exec":{"command":["/bin/sh","-i","-c","psql -h 127.0.0.1 -U $POSTGRESQL_USER -q -d $POSTGRESQL_DATABASE -c 'SELECT 1'"]},"initialDelaySeconds":5,"timeoutSeconds":1,"periodSeconds":10,"successThreshold":1,"failureThreshold":3},"terminationMessagePath":"/dev/termination-log","terminationMessagePolicy":"File","imagePullPolicy":"IfNotPresent","securityContext":{"capabilities":{},"privileged":false}}],"restartPolicy":"Always","terminationGracePeriodSeconds":30,"dnsPolicy":"ClusterFirst","securityContext":{},"schedulerName":"default-scheduler"}}},"status":{"latestVersion":7,"observedGeneration":12,"replicas":0,"updatedReplicas":0,"availableReplicas":0,"unavailableReplicas":0,"details":{"message":"config change","causes":[{"type":"ConfigChange"}]},"conditions":[{"type":"Progressing","status":"True","lastUpdateTime":"2017-11-29T22:41:45Z","lastTransitionTime":"2017-11-29T22:41:24Z","reason":"NewReplicationControllerAvailable","message":"replication controller \"postgresql-6\" successfully rolled out"},{"type":"Available","status":"False","lastUpdateTime":"2018-01-23T18:36:03Z","lastTransitionTime":"2018-01-23T18:36:03Z","message":"Deployment config does not have minimum availability."}]}}
+    creationTimestamp: null
+    generation: 1
+    labels:
+      app: postgresql-persistent
+      openshift.io/deployment-config.name: postgresql
+      template: postgresql-persistent-template
+    name: postgresql-7
+    ownerReferences:
+    - apiVersion: apps.openshift.io/v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: DeploymentConfig
+      name: postgresql
+      uid: c3673a65-fac7-11e6-8d55-0050568348cc
+  spec:
+    replicas: 0
+    selector:
+      deployment: postgresql-7
+      deploymentconfig: postgresql
+      name: postgresql
+    template:
+      metadata:
+        annotations:
+          openshift.io/deployment-config.latest-version: "7"
+          openshift.io/deployment-config.name: postgresql
+          openshift.io/deployment.name: postgresql-7
+        creationTimestamp: null
+        labels:
+          deployment: postgresql-7
+          deploymentconfig: postgresql
+          name: postgresql
+      spec:
+        containers:
+        - env:
+          - name: POSTGRESQL_USER
+            value: userUQL
+          - name: POSTGRESQL_PASSWORD
+            value: oa3g6nhfyoE7HcxG
+          - name: POSTGRESQL_DATABASE
+            value: tfrs
+          image: registry.access.redhat.com/rhscl/postgresql-95-rhel7@sha256:19aacf0c8331df76b67932415bd84abf74ec36fd9d4aef518ad9f6285c4a948a
+          imagePullPolicy: IfNotPresent
+          livenessProbe:
+            failureThreshold: 3
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            successThreshold: 1
+            tcpSocket:
+              port: 5432
+            timeoutSeconds: 1
+          name: postgresql
+          ports:
+          - containerPort: 5432
+            protocol: TCP
+          readinessProbe:
+            exec:
+              command:
+              - /bin/sh
+              - -i
+              - -c
+              - psql -h 127.0.0.1 -U $POSTGRESQL_USER -q -d $POSTGRESQL_DATABASE -c
+                'SELECT 1'
+            failureThreshold: 3
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 1
+          resources:
+            limits:
+              memory: 512Mi
+          securityContext:
+            capabilities: {}
+            privileged: false
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+          volumeMounts:
+          - mountPath: /var/lib/pgsql/data
+            name: postgresql-data
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+        volumes:
+        - name: postgresql-data
+          persistentVolumeClaim:
+            claimName: postgresql-cns
+  status:
+    replicas: 0
+- apiVersion: v1
+  kind: ReplicationController
+  metadata:
+    annotations:
+      openshift.io/deployer-pod.name: postgresql-8-deploy
+      openshift.io/deployment-config.latest-version: "8"
+      openshift.io/deployment-config.name: postgresql
+      openshift.io/deployment.phase: Complete
+      openshift.io/deployment.replicas: "0"
+      openshift.io/deployment.status-reason: config change
+      openshift.io/encoded-deployment-config: |
+        {"kind":"DeploymentConfig","apiVersion":"v1","metadata":{"name":"postgresql","namespace":"mem-tfrs-test","selfLink":"/apis/apps.openshift.io/v1/namespaces/mem-tfrs-test/deploymentconfigs/postgresql","uid":"c3673a65-fac7-11e6-8d55-0050568348cc","resourceVersion":"322293723","generation":17,"creationTimestamp":"2017-02-24T19:30:56Z","labels":{"app":"postgresql-persistent","template":"postgresql-persistent-template"}},"spec":{"strategy":{"type":"Recreate","recreateParams":{"timeoutSeconds":600},"resources":{},"activeDeadlineSeconds":21600},"triggers":[{"type":"ImageChange","imageChangeParams":{"automatic":true,"containerNames":["postgresql"],"from":{"kind":"ImageStreamTag","namespace":"openshift","name":"postgresql:9.5"},"lastTriggeredImage":"registry.access.redhat.com/rhscl/postgresql-95-rhel7@sha256:19aacf0c8331df76b67932415bd84abf74ec36fd9d4aef518ad9f6285c4a948a"}},{"type":"ConfigChange"}],"replicas":0,"test":false,"selector":{"name":"postgresql"},"template":{"metadata":{"creationTimestamp":null,"labels":{"name":"postgresql"}},"spec":{"volumes":[{"name":"postgresql-data","persistentVolumeClaim":{"claimName":"postgresql"}}],"containers":[{"name":"postgresql","image":"registry.access.redhat.com/rhscl/postgresql-95-rhel7@sha256:19aacf0c8331df76b67932415bd84abf74ec36fd9d4aef518ad9f6285c4a948a","ports":[{"containerPort":5432,"protocol":"TCP"}],"env":[{"name":"POSTGRESQL_USER","value":"userUQL"},{"name":"POSTGRESQL_PASSWORD","value":"oa3g6nhfyoE7HcxG"},{"name":"POSTGRESQL_DATABASE","value":"tfrs"}],"resources":{"limits":{"memory":"512Mi"}},"volumeMounts":[{"name":"postgresql-data","mountPath":"/var/lib/pgsql/data"}],"livenessProbe":{"tcpSocket":{"port":5432},"initialDelaySeconds":30,"timeoutSeconds":1,"periodSeconds":10,"successThreshold":1,"failureThreshold":3},"readinessProbe":{"exec":{"command":["/bin/sh","-i","-c","psql -h 127.0.0.1 -U $POSTGRESQL_USER -q -d $POSTGRESQL_DATABASE -c 'SELECT 1'"]},"initialDelaySeconds":5,"timeoutSeconds":1,"periodSeconds":10,"successThreshold":1,"failureThreshold":3},"terminationMessagePath":"/dev/termination-log","terminationMessagePolicy":"File","imagePullPolicy":"IfNotPresent","securityContext":{"capabilities":{},"privileged":false}}],"restartPolicy":"Always","terminationGracePeriodSeconds":30,"dnsPolicy":"ClusterFirst","securityContext":{},"schedulerName":"default-scheduler"}}},"status":{"latestVersion":8,"observedGeneration":16,"replicas":0,"updatedReplicas":0,"availableReplicas":0,"unavailableReplicas":0,"details":{"message":"config change","causes":[{"type":"ConfigChange"}]},"conditions":[{"type":"Progressing","status":"True","lastUpdateTime":"2018-01-23T18:37:51Z","lastTransitionTime":"2018-01-23T18:37:51Z","reason":"NewReplicationControllerAvailable","message":"replication controller \"postgresql-7\" successfully rolled out"},{"type":"Available","status":"False","lastUpdateTime":"2018-01-23T18:49:05Z","lastTransitionTime":"2018-01-23T18:49:05Z","message":"Deployment config does not have minimum availability."}]}}
+    creationTimestamp: null
+    generation: 1
+    labels:
+      app: postgresql-persistent
+      openshift.io/deployment-config.name: postgresql
+      template: postgresql-persistent-template
+    name: postgresql-8
+    ownerReferences:
+    - apiVersion: apps.openshift.io/v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: DeploymentConfig
+      name: postgresql
+      uid: c3673a65-fac7-11e6-8d55-0050568348cc
+  spec:
+    replicas: 0
+    selector:
+      deployment: postgresql-8
+      deploymentconfig: postgresql
+      name: postgresql
+    template:
+      metadata:
+        annotations:
+          openshift.io/deployment-config.latest-version: "8"
+          openshift.io/deployment-config.name: postgresql
+          openshift.io/deployment.name: postgresql-8
+        creationTimestamp: null
+        labels:
+          deployment: postgresql-8
+          deploymentconfig: postgresql
+          name: postgresql
+      spec:
+        containers:
+        - env:
+          - name: POSTGRESQL_USER
+            value: userUQL
+          - name: POSTGRESQL_PASSWORD
+            value: oa3g6nhfyoE7HcxG
+          - name: POSTGRESQL_DATABASE
+            value: tfrs
+          image: registry.access.redhat.com/rhscl/postgresql-95-rhel7@sha256:19aacf0c8331df76b67932415bd84abf74ec36fd9d4aef518ad9f6285c4a948a
+          imagePullPolicy: IfNotPresent
+          livenessProbe:
+            failureThreshold: 3
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            successThreshold: 1
+            tcpSocket:
+              port: 5432
+            timeoutSeconds: 1
+          name: postgresql
+          ports:
+          - containerPort: 5432
+            protocol: TCP
+          readinessProbe:
+            exec:
+              command:
+              - /bin/sh
+              - -i
+              - -c
+              - psql -h 127.0.0.1 -U $POSTGRESQL_USER -q -d $POSTGRESQL_DATABASE -c
+                'SELECT 1'
+            failureThreshold: 3
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 1
+          resources:
+            limits:
+              memory: 512Mi
+          securityContext:
+            capabilities: {}
+            privileged: false
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+          volumeMounts:
+          - mountPath: /var/lib/pgsql/data
+            name: postgresql-data
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+        volumes:
+        - name: postgresql-data
+          persistentVolumeClaim:
+            claimName: postgresql
+  status:
+    replicas: 0
+- apiVersion: v1
+  kind: ReplicationController
+  metadata:
+    annotations:
+      openshift.io/deployer-pod.name: postgresql-9-deploy
+      openshift.io/deployment-config.latest-version: "9"
+      openshift.io/deployment-config.name: postgresql
+      openshift.io/deployment.phase: Complete
+      openshift.io/deployment.replicas: "0"
+      openshift.io/deployment.status-reason: config change
+      openshift.io/encoded-deployment-config: |
+        {"kind":"DeploymentConfig","apiVersion":"v1","metadata":{"name":"postgresql","namespace":"mem-tfrs-test","selfLink":"/apis/apps.openshift.io/v1/namespaces/mem-tfrs-test/deploymentconfigs/postgresql","uid":"c3673a65-fac7-11e6-8d55-0050568348cc","resourceVersion":"322420723","generation":21,"creationTimestamp":"2017-02-24T19:30:56Z","labels":{"app":"postgresql-persistent","template":"postgresql-persistent-template"}},"spec":{"strategy":{"type":"Recreate","recreateParams":{"timeoutSeconds":600},"resources":{},"activeDeadlineSeconds":21600},"triggers":[{"type":"ImageChange","imageChangeParams":{"automatic":true,"containerNames":["postgresql"],"from":{"kind":"ImageStreamTag","namespace":"openshift","name":"postgresql:9.5"},"lastTriggeredImage":"registry.access.redhat.com/rhscl/postgresql-95-rhel7@sha256:19aacf0c8331df76b67932415bd84abf74ec36fd9d4aef518ad9f6285c4a948a"}},{"type":"ConfigChange"}],"replicas":0,"test":false,"selector":{"name":"postgresql"},"template":{"metadata":{"creationTimestamp":null,"labels":{"name":"postgresql"}},"spec":{"volumes":[{"name":"postgresql-data","persistentVolumeClaim":{"claimName":"postgresql-cns"}}],"containers":[{"name":"postgresql","image":"registry.access.redhat.com/rhscl/postgresql-95-rhel7@sha256:19aacf0c8331df76b67932415bd84abf74ec36fd9d4aef518ad9f6285c4a948a","ports":[{"containerPort":5432,"protocol":"TCP"}],"env":[{"name":"POSTGRESQL_USER","value":"userUQL"},{"name":"POSTGRESQL_PASSWORD","value":"oa3g6nhfyoE7HcxG"},{"name":"POSTGRESQL_DATABASE","value":"tfrs"}],"resources":{"limits":{"memory":"512Mi"}},"volumeMounts":[{"name":"postgresql-data","mountPath":"/var/lib/pgsql/data"}],"livenessProbe":{"tcpSocket":{"port":5432},"initialDelaySeconds":30,"timeoutSeconds":1,"periodSeconds":10,"successThreshold":1,"failureThreshold":3},"readinessProbe":{"exec":{"command":["/bin/sh","-i","-c","psql -h 127.0.0.1 -U $POSTGRESQL_USER -q -d $POSTGRESQL_DATABASE -c 'SELECT 1'"]},"initialDelaySeconds":5,"timeoutSeconds":1,"periodSeconds":10,"successThreshold":1,"failureThreshold":3},"terminationMessagePath":"/dev/termination-log","terminationMessagePolicy":"File","imagePullPolicy":"IfNotPresent","securityContext":{"capabilities":{},"privileged":false}}],"restartPolicy":"Always","terminationGracePeriodSeconds":30,"dnsPolicy":"ClusterFirst","securityContext":{},"schedulerName":"default-scheduler"}}},"status":{"latestVersion":9,"observedGeneration":20,"replicas":0,"updatedReplicas":0,"availableReplicas":0,"unavailableReplicas":0,"details":{"message":"config change","causes":[{"type":"ConfigChange"}]},"conditions":[{"type":"Progressing","status":"True","lastUpdateTime":"2018-01-23T18:49:49Z","lastTransitionTime":"2018-01-23T18:49:49Z","reason":"NewReplicationControllerAvailable","message":"replication controller \"postgresql-8\" successfully rolled out"},{"type":"Available","status":"False","lastUpdateTime":"2018-01-23T22:46:33Z","lastTransitionTime":"2018-01-23T22:46:33Z","message":"Deployment config does not have minimum availability."}]}}
+    creationTimestamp: null
+    generation: 1
+    labels:
+      app: postgresql-persistent
+      openshift.io/deployment-config.name: postgresql
+      template: postgresql-persistent-template
+    name: postgresql-9
+    ownerReferences:
+    - apiVersion: apps.openshift.io/v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: DeploymentConfig
+      name: postgresql
+      uid: c3673a65-fac7-11e6-8d55-0050568348cc
+  spec:
+    replicas: 0
+    selector:
+      deployment: postgresql-9
+      deploymentconfig: postgresql
+      name: postgresql
+    template:
+      metadata:
+        annotations:
+          openshift.io/deployment-config.latest-version: "9"
+          openshift.io/deployment-config.name: postgresql
+          openshift.io/deployment.name: postgresql-9
+        creationTimestamp: null
+        labels:
+          deployment: postgresql-9
+          deploymentconfig: postgresql
+          name: postgresql
+      spec:
+        containers:
+        - env:
+          - name: POSTGRESQL_USER
+            value: userUQL
+          - name: POSTGRESQL_PASSWORD
+            value: oa3g6nhfyoE7HcxG
+          - name: POSTGRESQL_DATABASE
+            value: tfrs
+          image: registry.access.redhat.com/rhscl/postgresql-95-rhel7@sha256:19aacf0c8331df76b67932415bd84abf74ec36fd9d4aef518ad9f6285c4a948a
+          imagePullPolicy: IfNotPresent
+          livenessProbe:
+            failureThreshold: 3
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            successThreshold: 1
+            tcpSocket:
+              port: 5432
+            timeoutSeconds: 1
+          name: postgresql
+          ports:
+          - containerPort: 5432
+            protocol: TCP
+          readinessProbe:
+            exec:
+              command:
+              - /bin/sh
+              - -i
+              - -c
+              - psql -h 127.0.0.1 -U $POSTGRESQL_USER -q -d $POSTGRESQL_DATABASE -c
+                'SELECT 1'
+            failureThreshold: 3
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 1
+          resources:
+            limits:
+              memory: 512Mi
+          securityContext:
+            capabilities: {}
+            privileged: false
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+          volumeMounts:
+          - mountPath: /var/lib/pgsql/data
+            name: postgresql-data
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+        volumes:
+        - name: postgresql-data
+          persistentVolumeClaim:
+            claimName: postgresql-cns
+  status:
+    replicas: 0
+- apiVersion: v1
+  kind: ReplicationController
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/original-replicas: "1"
+      openshift.io/deployer-pod.name: schema-spy-1-deploy
+      openshift.io/deployment-config.latest-version: "1"
+      openshift.io/deployment-config.name: schema-spy
+      openshift.io/deployment.phase: Complete
+      openshift.io/deployment.replicas: "1"
+      openshift.io/deployment.status-reason: image change
+      openshift.io/encoded-deployment-config: |
+        {"kind":"DeploymentConfig","apiVersion":"v1","metadata":{"name":"schema-spy","namespace":"mem-tfrs-test","selfLink":"/apis/apps.openshift.io/v1/namespaces/mem-tfrs-test/deploymentconfigs/schema-spy","uid":"f22de86c-d612-11e7-9b28-0050568379a2","resourceVersion":"277088527","generation":4,"creationTimestamp":"2017-11-30T21:10:51Z","annotations":{"description":"Defines how to deploy the container."}},"spec":{"strategy":{"type":"Rolling","rollingParams":{"updatePeriodSeconds":1,"intervalSeconds":1,"timeoutSeconds":600,"maxUnavailable":"25%","maxSurge":"25%"},"resources":{},"activeDeadlineSeconds":21600},"triggers":[{"type":"ImageChange","imageChangeParams":{"automatic":true,"containerNames":["schema-spy"],"from":{"kind":"ImageStreamTag","namespace":"mem-tfrs-tools","name":"schema-spy:latest"},"lastTriggeredImage":"172.50.0.2:5000/mem-tfrs-tools/schema-spy@sha256:30ba9d203cc30dd60a016e1744877909b1670d15a35997198980c0119b77fd91"}},{"type":"ConfigChange"}],"replicas":1,"test":false,"selector":{"name":"schema-spy"},"template":{"metadata":{"name":"schema-spy","creationTimestamp":null,"labels":{"name":"schema-spy"}},"spec":{"containers":[{"name":"schema-spy","image":"172.50.0.2:5000/mem-tfrs-tools/schema-spy@sha256:30ba9d203cc30dd60a016e1744877909b1670d15a35997198980c0119b77fd91","ports":[{"containerPort":8080,"protocol":"TCP"}],"env":[{"name":"DATABASE_SERVICE_NAME","value":"postgresql"},{"name":"POSTGRESQL_DATABASE","value":"tfrs"},{"name":"POSTGRESQL_USER","valueFrom":{"secretKeyRef":{"name":"postgresql","key":"username"}}},{"name":"POSTGRESQL_PASSWORD","valueFrom":{"secretKeyRef":{"name":"postgresql","key":"password"}}}],"resources":{"limits":{"memory":"512Mi"}},"livenessProbe":{"httpGet":{"path":"/","port":8080,"scheme":"HTTP"},"initialDelaySeconds":30,"timeoutSeconds":3000,"periodSeconds":10,"successThreshold":1,"failureThreshold":3},"readinessProbe":{"httpGet":{"path":"/","port":8080,"scheme":"HTTP"},"initialDelaySeconds":3,"timeoutSeconds":3000,"periodSeconds":10,"successThreshold":1,"failureThreshold":3},"terminationMessagePath":"/dev/termination-log","terminationMessagePolicy":"File","imagePullPolicy":"IfNotPresent"}],"restartPolicy":"Always","terminationGracePeriodSeconds":30,"dnsPolicy":"ClusterFirst","securityContext":{},"schedulerName":"default-scheduler"}}},"status":{"latestVersion":1,"observedGeneration":3,"replicas":0,"updatedReplicas":0,"availableReplicas":0,"unavailableReplicas":0,"details":{"message":"image change","causes":[{"type":"ImageChange","imageTrigger":{"from":{"kind":"ImageStreamTag","namespace":"mem-tfrs-tools","name":"schema-spy:latest"}}}]},"conditions":[{"type":"Available","status":"False","lastUpdateTime":"2017-11-30T21:10:51Z","lastTransitionTime":"2017-11-30T21:10:51Z","message":"Deployment config does not have minimum availability."}]}}
+    creationTimestamp: null
+    generation: 1
+    labels:
+      openshift.io/deployment-config.name: schema-spy
+    name: schema-spy-1
+    ownerReferences:
+    - apiVersion: apps.openshift.io/v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: DeploymentConfig
+      name: schema-spy
+      uid: f22de86c-d612-11e7-9b28-0050568379a2
+  spec:
+    replicas: 0
+    selector:
+      deployment: schema-spy-1
+      deploymentconfig: schema-spy
+      name: schema-spy
+    template:
+      metadata:
+        annotations:
+          openshift.io/deployment-config.latest-version: "1"
+          openshift.io/deployment-config.name: schema-spy
+          openshift.io/deployment.name: schema-spy-1
+        creationTimestamp: null
+        labels:
+          deployment: schema-spy-1
+          deploymentconfig: schema-spy
+          name: schema-spy
+      spec:
+        containers:
+        - env:
+          - name: DATABASE_SERVICE_NAME
+            value: postgresql
+          - name: POSTGRESQL_DATABASE
+            value: tfrs
+          - name: POSTGRESQL_USER
+            valueFrom:
+              secretKeyRef:
+                key: username
+                name: postgresql
+          - name: POSTGRESQL_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                key: password
+                name: postgresql
+          image: 172.50.0.2:5000/mem-tfrs-tools/schema-spy@sha256:30ba9d203cc30dd60a016e1744877909b1670d15a35997198980c0119b77fd91
+          imagePullPolicy: IfNotPresent
+          livenessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /
+              port: 8080
+              scheme: HTTP
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 3000
+          name: schema-spy
+          ports:
+          - containerPort: 8080
+            protocol: TCP
+          readinessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /
+              port: 8080
+              scheme: HTTP
+            initialDelaySeconds: 3
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 3000
+          resources:
+            limits:
+              memory: 512Mi
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+  status:
+    replicas: 0
+- apiVersion: v1
+  kind: ReplicationController
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/original-replicas: "1"
+      openshift.io/deployer-pod.name: schema-spy-2-deploy
+      openshift.io/deployment-config.latest-version: "2"
+      openshift.io/deployment-config.name: schema-spy
+      openshift.io/deployment.phase: Complete
+      openshift.io/deployment.replicas: ""
+      openshift.io/deployment.status-reason: image change
+      openshift.io/encoded-deployment-config: |
+        {"kind":"DeploymentConfig","apiVersion":"v1","metadata":{"name":"schema-spy","namespace":"mem-tfrs-test","selfLink":"/apis/apps.openshift.io/v1/namespaces/mem-tfrs-test/deploymentconfigs/schema-spy","uid":"f22de86c-d612-11e7-9b28-0050568379a2","resourceVersion":"277688341","generation":6,"creationTimestamp":"2017-11-30T21:10:51Z","annotations":{"description":"Defines how to deploy the container."}},"spec":{"strategy":{"type":"Rolling","rollingParams":{"updatePeriodSeconds":1,"intervalSeconds":1,"timeoutSeconds":600,"maxUnavailable":"25%","maxSurge":"25%"},"resources":{},"activeDeadlineSeconds":21600},"triggers":[{"type":"ImageChange","imageChangeParams":{"automatic":true,"containerNames":["schema-spy"],"from":{"kind":"ImageStreamTag","namespace":"mem-tfrs-tools","name":"schema-spy:latest"},"lastTriggeredImage":"172.50.0.2:5000/mem-tfrs-tools/schema-spy@sha256:34a41b022f6df5242c7dbfdc29121f63261f7daba26b79ac375d47116b8b9cea"}},{"type":"ConfigChange"}],"replicas":1,"test":false,"selector":{"name":"schema-spy"},"template":{"metadata":{"name":"schema-spy","creationTimestamp":null,"labels":{"name":"schema-spy"}},"spec":{"containers":[{"name":"schema-spy","image":"172.50.0.2:5000/mem-tfrs-tools/schema-spy@sha256:34a41b022f6df5242c7dbfdc29121f63261f7daba26b79ac375d47116b8b9cea","ports":[{"containerPort":8080,"protocol":"TCP"}],"env":[{"name":"DATABASE_SERVICE_NAME","value":"postgresql"},{"name":"POSTGRESQL_DATABASE","value":"tfrs"},{"name":"POSTGRESQL_USER","valueFrom":{"secretKeyRef":{"name":"postgresql","key":"username"}}},{"name":"POSTGRESQL_PASSWORD","valueFrom":{"secretKeyRef":{"name":"postgresql","key":"password"}}}],"resources":{"limits":{"memory":"512Mi"}},"livenessProbe":{"httpGet":{"path":"/","port":8080,"scheme":"HTTP"},"initialDelaySeconds":30,"timeoutSeconds":3000,"periodSeconds":10,"successThreshold":1,"failureThreshold":3},"readinessProbe":{"httpGet":{"path":"/","port":8080,"scheme":"HTTP"},"initialDelaySeconds":3,"timeoutSeconds":3000,"periodSeconds":10,"successThreshold":1,"failureThreshold":3},"terminationMessagePath":"/dev/termination-log","terminationMessagePolicy":"File","imagePullPolicy":"IfNotPresent"}],"restartPolicy":"Always","terminationGracePeriodSeconds":30,"dnsPolicy":"ClusterFirst","securityContext":{},"schedulerName":"default-scheduler"}}},"status":{"latestVersion":2,"observedGeneration":5,"replicas":1,"updatedReplicas":1,"availableReplicas":1,"unavailableReplicas":0,"details":{"message":"image change","causes":[{"type":"ImageChange","imageTrigger":{"from":{"kind":"ImageStreamTag","namespace":"mem-tfrs-tools","name":"schema-spy:latest"}}}]},"conditions":[{"type":"Available","status":"True","lastUpdateTime":"2017-11-30T21:16:20Z","lastTransitionTime":"2017-11-30T21:16:20Z","message":"Deployment config has minimum availability."},{"type":"Progressing","status":"True","lastUpdateTime":"2017-11-30T21:16:22Z","lastTransitionTime":"2017-11-30T21:16:22Z","reason":"NewReplicationControllerAvailable","message":"replication controller \"schema-spy-1\" successfully rolled out"}],"readyReplicas":1}}
+    creationTimestamp: null
+    generation: 1
+    labels:
+      openshift.io/deployment-config.name: schema-spy
+    name: schema-spy-2
+    ownerReferences:
+    - apiVersion: apps.openshift.io/v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: DeploymentConfig
+      name: schema-spy
+      uid: f22de86c-d612-11e7-9b28-0050568379a2
+  spec:
+    replicas: 0
+    selector:
+      deployment: schema-spy-2
+      deploymentconfig: schema-spy
+      name: schema-spy
+    template:
+      metadata:
+        annotations:
+          openshift.io/deployment-config.latest-version: "2"
+          openshift.io/deployment-config.name: schema-spy
+          openshift.io/deployment.name: schema-spy-2
+        creationTimestamp: null
+        labels:
+          deployment: schema-spy-2
+          deploymentconfig: schema-spy
+          name: schema-spy
+      spec:
+        containers:
+        - env:
+          - name: DATABASE_SERVICE_NAME
+            value: postgresql
+          - name: POSTGRESQL_DATABASE
+            value: tfrs
+          - name: POSTGRESQL_USER
+            valueFrom:
+              secretKeyRef:
+                key: username
+                name: postgresql
+          - name: POSTGRESQL_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                key: password
+                name: postgresql
+          image: 172.50.0.2:5000/mem-tfrs-tools/schema-spy@sha256:34a41b022f6df5242c7dbfdc29121f63261f7daba26b79ac375d47116b8b9cea
+          imagePullPolicy: IfNotPresent
+          livenessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /
+              port: 8080
+              scheme: HTTP
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 3000
+          name: schema-spy
+          ports:
+          - containerPort: 8080
+            protocol: TCP
+          readinessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /
+              port: 8080
+              scheme: HTTP
+            initialDelaySeconds: 3
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 3000
+          resources:
+            limits:
+              memory: 512Mi
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+  status:
+    replicas: 0
+- apiVersion: v1
+  kind: ReplicationController
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/original-replicas: "1"
+      openshift.io/deployer-pod.name: schema-spy-3-deploy
+      openshift.io/deployment-config.latest-version: "3"
+      openshift.io/deployment-config.name: schema-spy
+      openshift.io/deployment.phase: Complete
+      openshift.io/deployment.replicas: ""
+      openshift.io/deployment.status-reason: image change
+      openshift.io/encoded-deployment-config: |
+        {"kind":"DeploymentConfig","apiVersion":"v1","metadata":{"name":"schema-spy","namespace":"mem-tfrs-test","selfLink":"/apis/apps.openshift.io/v1/namespaces/mem-tfrs-test/deploymentconfigs/schema-spy","uid":"f22de86c-d612-11e7-9b28-0050568379a2","resourceVersion":"277758407","generation":8,"creationTimestamp":"2017-11-30T21:10:51Z","annotations":{"description":"Defines how to deploy the container."}},"spec":{"strategy":{"type":"Rolling","rollingParams":{"updatePeriodSeconds":1,"intervalSeconds":1,"timeoutSeconds":600,"maxUnavailable":"25%","maxSurge":"25%"},"resources":{},"activeDeadlineSeconds":21600},"triggers":[{"type":"ImageChange","imageChangeParams":{"automatic":true,"containerNames":["schema-spy"],"from":{"kind":"ImageStreamTag","namespace":"mem-tfrs-tools","name":"schema-spy:latest"},"lastTriggeredImage":"172.50.0.2:5000/mem-tfrs-tools/schema-spy@sha256:43e43d8b988b50b5eb6b09fdb34c350e3efa1500108d208c0f754f7217f19274"}},{"type":"ConfigChange"}],"replicas":1,"test":false,"selector":{"name":"schema-spy"},"template":{"metadata":{"name":"schema-spy","creationTimestamp":null,"labels":{"name":"schema-spy"}},"spec":{"containers":[{"name":"schema-spy","image":"172.50.0.2:5000/mem-tfrs-tools/schema-spy@sha256:43e43d8b988b50b5eb6b09fdb34c350e3efa1500108d208c0f754f7217f19274","ports":[{"containerPort":8080,"protocol":"TCP"}],"env":[{"name":"DATABASE_SERVICE_NAME","value":"postgresql"},{"name":"POSTGRESQL_DATABASE","value":"tfrs"},{"name":"POSTGRESQL_USER","valueFrom":{"secretKeyRef":{"name":"postgresql","key":"username"}}},{"name":"POSTGRESQL_PASSWORD","valueFrom":{"secretKeyRef":{"name":"postgresql","key":"password"}}}],"resources":{"limits":{"memory":"512Mi"}},"livenessProbe":{"httpGet":{"path":"/","port":8080,"scheme":"HTTP"},"initialDelaySeconds":30,"timeoutSeconds":3000,"periodSeconds":10,"successThreshold":1,"failureThreshold":3},"readinessProbe":{"httpGet":{"path":"/","port":8080,"scheme":"HTTP"},"initialDelaySeconds":3,"timeoutSeconds":3000,"periodSeconds":10,"successThreshold":1,"failureThreshold":3},"terminationMessagePath":"/dev/termination-log","terminationMessagePolicy":"File","imagePullPolicy":"IfNotPresent"}],"restartPolicy":"Always","terminationGracePeriodSeconds":30,"dnsPolicy":"ClusterFirst","securityContext":{},"schedulerName":"default-scheduler"}}},"status":{"latestVersion":3,"observedGeneration":7,"replicas":1,"updatedReplicas":1,"availableReplicas":1,"unavailableReplicas":0,"details":{"message":"image change","causes":[{"type":"ImageChange","imageTrigger":{"from":{"kind":"ImageStreamTag","namespace":"mem-tfrs-tools","name":"schema-spy:latest"}}}]},"conditions":[{"type":"Available","status":"True","lastUpdateTime":"2017-11-30T21:16:20Z","lastTransitionTime":"2017-11-30T21:16:20Z","message":"Deployment config has minimum availability."},{"type":"Progressing","status":"True","lastUpdateTime":"2017-12-01T22:39:41Z","lastTransitionTime":"2017-12-01T22:39:39Z","reason":"NewReplicationControllerAvailable","message":"replication controller \"schema-spy-2\" successfully rolled out"}],"readyReplicas":1}}
+    creationTimestamp: null
+    generation: 1
+    labels:
+      openshift.io/deployment-config.name: schema-spy
+    name: schema-spy-3
+    ownerReferences:
+    - apiVersion: apps.openshift.io/v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: DeploymentConfig
+      name: schema-spy
+      uid: f22de86c-d612-11e7-9b28-0050568379a2
+  spec:
+    replicas: 0
+    selector:
+      deployment: schema-spy-3
+      deploymentconfig: schema-spy
+      name: schema-spy
+    template:
+      metadata:
+        annotations:
+          openshift.io/deployment-config.latest-version: "3"
+          openshift.io/deployment-config.name: schema-spy
+          openshift.io/deployment.name: schema-spy-3
+        creationTimestamp: null
+        labels:
+          deployment: schema-spy-3
+          deploymentconfig: schema-spy
+          name: schema-spy
+      spec:
+        containers:
+        - env:
+          - name: DATABASE_SERVICE_NAME
+            value: postgresql
+          - name: POSTGRESQL_DATABASE
+            value: tfrs
+          - name: POSTGRESQL_USER
+            valueFrom:
+              secretKeyRef:
+                key: username
+                name: postgresql
+          - name: POSTGRESQL_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                key: password
+                name: postgresql
+          image: 172.50.0.2:5000/mem-tfrs-tools/schema-spy@sha256:43e43d8b988b50b5eb6b09fdb34c350e3efa1500108d208c0f754f7217f19274
+          imagePullPolicy: IfNotPresent
+          livenessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /
+              port: 8080
+              scheme: HTTP
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 3000
+          name: schema-spy
+          ports:
+          - containerPort: 8080
+            protocol: TCP
+          readinessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /
+              port: 8080
+              scheme: HTTP
+            initialDelaySeconds: 3
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 3000
+          resources:
+            limits:
+              memory: 512Mi
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+  status:
+    replicas: 0
+- apiVersion: v1
+  kind: ReplicationController
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/original-replicas: "0"
+      openshift.io/deployer-pod.name: schema-spy-4-deploy
+      openshift.io/deployment-config.latest-version: "4"
+      openshift.io/deployment-config.name: schema-spy
+      openshift.io/deployment.phase: Complete
+      openshift.io/deployment.replicas: ""
+      openshift.io/deployment.status-reason: image change
+      openshift.io/encoded-deployment-config: |
+        {"kind":"DeploymentConfig","apiVersion":"v1","metadata":{"name":"schema-spy","namespace":"mem-tfrs-test","selfLink":"/apis/apps.openshift.io/v1/namespaces/mem-tfrs-test/deploymentconfigs/schema-spy","uid":"f22de86c-d612-11e7-9b28-0050568379a2","resourceVersion":"327770073","generation":14,"creationTimestamp":"2017-11-30T21:10:51Z","annotations":{"description":"Defines how to deploy the container."}},"spec":{"strategy":{"type":"Rolling","rollingParams":{"updatePeriodSeconds":1,"intervalSeconds":1,"timeoutSeconds":600,"maxUnavailable":"25%","maxSurge":"25%"},"resources":{},"activeDeadlineSeconds":21600},"triggers":[{"type":"ImageChange","imageChangeParams":{"automatic":true,"containerNames":["schema-spy"],"from":{"kind":"ImageStreamTag","namespace":"mem-tfrs-tools","name":"schema-spy:latest"},"lastTriggeredImage":"172.50.0.2:5000/mem-tfrs-tools/schema-spy@sha256:7a420819e019200ec98ebebe06388872f2f72f37baa7c64162a4a4d4909bcfbf"}},{"type":"ConfigChange"}],"replicas":1,"test":false,"selector":{"name":"schema-spy"},"template":{"metadata":{"name":"schema-spy","creationTimestamp":null,"labels":{"name":"schema-spy"}},"spec":{"containers":[{"name":"schema-spy","image":"172.50.0.2:5000/mem-tfrs-tools/schema-spy@sha256:7a420819e019200ec98ebebe06388872f2f72f37baa7c64162a4a4d4909bcfbf","ports":[{"containerPort":8080,"protocol":"TCP"}],"env":[{"name":"DATABASE_SERVICE_NAME","value":"postgresql"},{"name":"POSTGRESQL_DATABASE","value":"tfrs"},{"name":"POSTGRESQL_USER","valueFrom":{"secretKeyRef":{"name":"postgresql","key":"username"}}},{"name":"POSTGRESQL_PASSWORD","valueFrom":{"secretKeyRef":{"name":"postgresql","key":"password"}}}],"resources":{"limits":{"memory":"512Mi"}},"livenessProbe":{"httpGet":{"path":"/","port":8080,"scheme":"HTTP"},"initialDelaySeconds":30,"timeoutSeconds":3000,"periodSeconds":10,"successThreshold":1,"failureThreshold":3},"readinessProbe":{"httpGet":{"path":"/","port":8080,"scheme":"HTTP"},"initialDelaySeconds":3,"timeoutSeconds":3000,"periodSeconds":10,"successThreshold":1,"failureThreshold":3},"terminationMessagePath":"/dev/termination-log","terminationMessagePolicy":"File","imagePullPolicy":"IfNotPresent"}],"restartPolicy":"Always","terminationGracePeriodSeconds":30,"dnsPolicy":"ClusterFirst","securityContext":{},"schedulerName":"default-scheduler"}}},"status":{"latestVersion":4,"observedGeneration":13,"replicas":1,"updatedReplicas":1,"availableReplicas":1,"unavailableReplicas":0,"details":{"message":"image change","causes":[{"type":"ImageChange","imageTrigger":{"from":{"kind":"ImageStreamTag","namespace":"mem-tfrs-tools","name":"schema-spy:latest"}}}]},"conditions":[{"type":"Progressing","status":"True","lastUpdateTime":"2017-12-02T00:54:33Z","lastTransitionTime":"2017-12-02T00:54:31Z","reason":"NewReplicationControllerAvailable","message":"replication controller \"schema-spy-3\" successfully rolled out"},{"type":"Available","status":"True","lastUpdateTime":"2018-01-25T18:41:39Z","lastTransitionTime":"2018-01-25T18:41:39Z","message":"Deployment config has minimum availability."}],"readyReplicas":1}}
+    creationTimestamp: null
+    generation: 1
+    labels:
+      openshift.io/deployment-config.name: schema-spy
+    name: schema-spy-4
+    ownerReferences:
+    - apiVersion: apps.openshift.io/v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: DeploymentConfig
+      name: schema-spy
+      uid: f22de86c-d612-11e7-9b28-0050568379a2
+  spec:
+    replicas: 0
+    selector:
+      deployment: schema-spy-4
+      deploymentconfig: schema-spy
+      name: schema-spy
+    template:
+      metadata:
+        annotations:
+          openshift.io/deployment-config.latest-version: "4"
+          openshift.io/deployment-config.name: schema-spy
+          openshift.io/deployment.name: schema-spy-4
+        creationTimestamp: null
+        labels:
+          deployment: schema-spy-4
+          deploymentconfig: schema-spy
+          name: schema-spy
+      spec:
+        containers:
+        - env:
+          - name: DATABASE_SERVICE_NAME
+            value: postgresql
+          - name: POSTGRESQL_DATABASE
+            value: tfrs
+          - name: POSTGRESQL_USER
+            valueFrom:
+              secretKeyRef:
+                key: username
+                name: postgresql
+          - name: POSTGRESQL_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                key: password
+                name: postgresql
+          image: 172.50.0.2:5000/mem-tfrs-tools/schema-spy@sha256:7a420819e019200ec98ebebe06388872f2f72f37baa7c64162a4a4d4909bcfbf
+          imagePullPolicy: IfNotPresent
+          livenessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /
+              port: 8080
+              scheme: HTTP
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 3000
+          name: schema-spy
+          ports:
+          - containerPort: 8080
+            protocol: TCP
+          readinessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /
+              port: 8080
+              scheme: HTTP
+            initialDelaySeconds: 3
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 3000
+          resources:
+            limits:
+              memory: 512Mi
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+  status:
+    replicas: 0
+- apiVersion: v1
+  kind: ReplicationController
+  metadata:
+    annotations:
+      openshift.io/deployer-pod.name: schema-spy-5-deploy
+      openshift.io/deployment-config.latest-version: "5"
+      openshift.io/deployment-config.name: schema-spy
+      openshift.io/deployment.phase: Complete
+      openshift.io/deployment.replicas: ""
+      openshift.io/deployment.status-reason: config change
+      openshift.io/encoded-deployment-config: |
+        {"kind":"DeploymentConfig","apiVersion":"v1","metadata":{"name":"schema-spy","namespace":"mem-tfrs-test","selfLink":"/apis/apps.openshift.io/v1/namespaces/mem-tfrs-test/deploymentconfigs/schema-spy","uid":"f22de86c-d612-11e7-9b28-0050568379a2","resourceVersion":"327878467","generation":17,"creationTimestamp":"2017-11-30T21:10:51Z","annotations":{"description":"Defines how to deploy the container."}},"spec":{"strategy":{"type":"Rolling","rollingParams":{"updatePeriodSeconds":1,"intervalSeconds":1,"timeoutSeconds":600,"maxUnavailable":"25%","maxSurge":"25%"},"resources":{},"activeDeadlineSeconds":21600},"triggers":[{"type":"ImageChange","imageChangeParams":{"automatic":true,"containerNames":["schema-spy"],"from":{"kind":"ImageStreamTag","namespace":"mem-tfrs-tools","name":"schema-spy:latest"},"lastTriggeredImage":"172.50.0.2:5000/mem-tfrs-tools/schema-spy@sha256:7a420819e019200ec98ebebe06388872f2f72f37baa7c64162a4a4d4909bcfbf"}},{"type":"ConfigChange"}],"replicas":0,"test":false,"selector":{"name":"schema-spy"},"template":{"metadata":{"name":"schema-spy","creationTimestamp":null,"labels":{"name":"schema-spy"}},"spec":{"containers":[{"name":"schema-spy","image":"172.50.0.2:5000/mem-tfrs-tools/schema-spy@sha256:7a420819e019200ec98ebebe06388872f2f72f37baa7c64162a4a4d4909bcfbf","ports":[{"containerPort":8080,"protocol":"TCP"}],"env":[{"name":"DATABASE_SERVICE_NAME","value":"postgresql"},{"name":"POSTGRESQL_DATABASE","value":"tfrs"},{"name":"POSTGRESQL_USER","valueFrom":{"secretKeyRef":{"name":"tfrs-postgresql","key":"DATABASE_USER"}}},{"name":"POSTGRESQL_PASSWORD","valueFrom":{"secretKeyRef":{"name":"tfrs-postgresql","key":"DATABASE_PASSWORD"}}}],"resources":{"limits":{"memory":"512Mi"}},"livenessProbe":{"httpGet":{"path":"/","port":8080,"scheme":"HTTP"},"initialDelaySeconds":30,"timeoutSeconds":3000,"periodSeconds":10,"successThreshold":1,"failureThreshold":3},"readinessProbe":{"httpGet":{"path":"/","port":8080,"scheme":"HTTP"},"initialDelaySeconds":3,"timeoutSeconds":3000,"periodSeconds":10,"successThreshold":1,"failureThreshold":3},"terminationMessagePath":"/dev/termination-log","terminationMessagePolicy":"File","imagePullPolicy":"IfNotPresent"}],"restartPolicy":"Always","terminationGracePeriodSeconds":30,"dnsPolicy":"ClusterFirst","securityContext":{},"schedulerName":"default-scheduler"}}},"status":{"latestVersion":5,"observedGeneration":16,"replicas":0,"updatedReplicas":0,"availableReplicas":0,"unavailableReplicas":0,"details":{"message":"config change","causes":[{"type":"ConfigChange"}]},"conditions":[{"type":"Progressing","status":"True","lastUpdateTime":"2018-01-30T17:30:59Z","lastTransitionTime":"2018-01-30T17:30:57Z","reason":"NewReplicationControllerAvailable","message":"replication controller \"schema-spy-4\" successfully rolled out"},{"type":"Available","status":"False","lastUpdateTime":"2018-01-30T19:49:35Z","lastTransitionTime":"2018-01-30T19:49:35Z","message":"Deployment config does not have minimum availability."}]}}
+    creationTimestamp: null
+    generation: 1
+    labels:
+      openshift.io/deployment-config.name: schema-spy
+    name: schema-spy-5
+    ownerReferences:
+    - apiVersion: apps.openshift.io/v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: DeploymentConfig
+      name: schema-spy
+      uid: f22de86c-d612-11e7-9b28-0050568379a2
+  spec:
+    replicas: 1
+    selector:
+      deployment: schema-spy-5
+      deploymentconfig: schema-spy
+      name: schema-spy
+    template:
+      metadata:
+        annotations:
+          openshift.io/deployment-config.latest-version: "5"
+          openshift.io/deployment-config.name: schema-spy
+          openshift.io/deployment.name: schema-spy-5
+        creationTimestamp: null
+        labels:
+          deployment: schema-spy-5
+          deploymentconfig: schema-spy
+          name: schema-spy
+      spec:
+        containers:
+        - env:
+          - name: DATABASE_SERVICE_NAME
+            value: postgresql
+          - name: POSTGRESQL_DATABASE
+            value: tfrs
+          - name: POSTGRESQL_USER
+            valueFrom:
+              secretKeyRef:
+                key: DATABASE_USER
+                name: tfrs-postgresql
+          - name: POSTGRESQL_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                key: DATABASE_PASSWORD
+                name: tfrs-postgresql
+          image: 172.50.0.2:5000/mem-tfrs-tools/schema-spy@sha256:7a420819e019200ec98ebebe06388872f2f72f37baa7c64162a4a4d4909bcfbf
+          imagePullPolicy: IfNotPresent
+          livenessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /
+              port: 8080
+              scheme: HTTP
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 3000
+          name: schema-spy
+          ports:
+          - containerPort: 8080
+            protocol: TCP
+          readinessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /
+              port: 8080
+              scheme: HTTP
+            initialDelaySeconds: 3
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 3000
+          resources:
+            limits:
+              memory: 512Mi
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+  status:
+    replicas: 0
+- apiVersion: v1
+  kind: ReplicationController
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/desired-replicas: "1"
+      kubectl.kubernetes.io/update-source-id: tfrs-21:de7df504-796a-11e7-97f8-005056832285
+      openshift.io/deployer-pod.name: tfrs-25-deploy
+      openshift.io/deployment-config.latest-version: "25"
+      openshift.io/deployment-config.name: tfrs
+      openshift.io/deployment.phase: Failed
+      openshift.io/deployment.replicas: "0"
+      openshift.io/deployment.status-reason: image change
+      openshift.io/encoded-deployment-config: |
+        {"kind":"DeploymentConfig","apiVersion":"v1","metadata":{"name":"tfrs","namespace":"mem-tfrs-test","selfLink":"/oapi/v1/namespaces/mem-tfrs-test/deploymentconfigs/tfrs","uid":"666c28a6-fad9-11e6-8d55-0050568348cc","resourceVersion":"179603715","generation":26,"creationTimestamp":"2017-02-24T21:37:11Z","labels":{"template":"tfrs-app-environment"},"annotations":{"description":"Defines how to deploy the application server"}},"spec":{"strategy":{"type":"Rolling","rollingParams":{"updatePeriodSeconds":1,"intervalSeconds":1,"timeoutSeconds":600,"maxUnavailable":"25%","maxSurge":"25%"},"resources":{},"activeDeadlineSeconds":21600},"triggers":[{"type":"ImageChange","imageChangeParams":{"automatic":true,"containerNames":["tfrs-app"],"from":{"kind":"ImageStreamTag","namespace":"mem-tfrs-tools","name":"tfrs:test"},"lastTriggeredImage":"172.50.0.2:5000/mem-tfrs-tools/tfrs@sha256:cb839e747581d30fb82af2c9f2f6157f0089b7b45874cbc2b03636a3ec4af90b"}},{"type":"ConfigChange"}],"replicas":1,"test":false,"selector":{"name":"tfrs"},"template":{"metadata":{"name":"tfrs","creationTimestamp":null,"labels":{"name":"tfrs"}},"spec":{"containers":[{"name":"tfrs-app","image":"172.50.0.2:5000/mem-tfrs-tools/tfrs@sha256:cb839e747581d30fb82af2c9f2f6157f0089b7b45874cbc2b03636a3ec4af90b","ports":[{"containerPort":8080,"protocol":"TCP"}],"env":[{"name":"DATABASE_SERVICE_NAME","value":"postgresql"},{"name":"DATABASE_ENGINE","value":"postgresql"},{"name":"DATABASE_NAME","value":"tfrs"},{"name":"DATABASE_USER","value":"userUQL"},{"name":"DATABASE_PASSWORD","value":"oa3g6nhfyoE7HcxG"},{"name":"APP_CONFIG"}],"resources":{"limits":{"memory":"512Mi"}},"livenessProbe":{"httpGet":{"path":"/health","port":8080,"scheme":"HTTP"},"initialDelaySeconds":30,"timeoutSeconds":3,"periodSeconds":10,"successThreshold":1,"failureThreshold":3},"readinessProbe":{"httpGet":{"path":"/health","port":8080,"scheme":"HTTP"},"initialDelaySeconds":3,"timeoutSeconds":3,"periodSeconds":10,"successThreshold":1,"failureThreshold":3},"terminationMessagePath":"/dev/termination-log","imagePullPolicy":"IfNotPresent"}],"restartPolicy":"Always","terminationGracePeriodSeconds":30,"dnsPolicy":"ClusterFirst","securityContext":{}}}},"status":{"latestVersion":25,"observedGeneration":25,"replicas":2,"updatedReplicas":1,"availableReplicas":1,"unavailableReplicas":1,"details":{"message":"image change","causes":[{"type":"ImageChange","imageTrigger":{"from":{"kind":"ImageStreamTag","namespace":"mem-tfrs-tools","name":"tfrs:test"}}}]},"conditions":[{"type":"Available","status":"True","lastUpdateTime":"2017-09-06T23:32:39Z","lastTransitionTime":"2017-09-06T23:32:39Z","message":"Deployment config has minimum availability."},{"type":"Progressing","status":"True","lastUpdateTime":"2017-09-06T23:35:53Z","lastTransitionTime":"2017-09-06T23:35:53Z","reason":"ReplicationControllerUpdated","message":"replication controller \"tfrs-24\" is progressing"}],"readyReplicas":1}}
+    creationTimestamp: null
+    generation: 1
+    labels:
+      openshift.io/deployment-config.name: tfrs
+      template: tfrs-app-environment
+    name: tfrs-25
+    ownerReferences:
+    - apiVersion: apps.openshift.io/v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: DeploymentConfig
+      name: tfrs
+      uid: 666c28a6-fad9-11e6-8d55-0050568348cc
+  spec:
+    replicas: 0
+    selector:
+      deployment: tfrs-25
+      deploymentconfig: tfrs
+      name: tfrs
+    template:
+      metadata:
+        annotations:
+          openshift.io/deployment-config.latest-version: "25"
+          openshift.io/deployment-config.name: tfrs
+          openshift.io/deployment.name: tfrs-25
+        creationTimestamp: null
+        labels:
+          deployment: tfrs-25
+          deploymentconfig: tfrs
+          name: tfrs
+      spec:
+        containers:
+        - env:
+          - name: DATABASE_SERVICE_NAME
+            value: postgresql
+          - name: DATABASE_ENGINE
+            value: postgresql
+          - name: DATABASE_NAME
+            value: tfrs
+          - name: DATABASE_USER
+            value: userUQL
+          - name: DATABASE_PASSWORD
+            value: oa3g6nhfyoE7HcxG
+          - name: APP_CONFIG
+          image: 172.50.0.2:5000/mem-tfrs-tools/tfrs@sha256:cb839e747581d30fb82af2c9f2f6157f0089b7b45874cbc2b03636a3ec4af90b
+          imagePullPolicy: IfNotPresent
+          livenessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /health
+              port: 8080
+              scheme: HTTP
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 3
+          name: tfrs-app
+          ports:
+          - containerPort: 8080
+            protocol: TCP
+          readinessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /health
+              port: 8080
+              scheme: HTTP
+            initialDelaySeconds: 3
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 3
+          resources:
+            limits:
+              memory: 512Mi
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+  status:
+    replicas: 0
+- apiVersion: v1
+  kind: ReplicationController
+  metadata:
+    annotations:
+      openshift.io/deployer-pod.name: tfrs-64-deploy
+      openshift.io/deployment-config.latest-version: "64"
+      openshift.io/deployment-config.name: tfrs
+      openshift.io/deployment.phase: Complete
+      openshift.io/deployment.replicas: "0"
+      openshift.io/deployment.status-reason: image change
+      openshift.io/encoded-deployment-config: |
+        {"kind":"DeploymentConfig","apiVersion":"v1","metadata":{"name":"tfrs","namespace":"mem-tfrs-test","selfLink":"/apis/apps.openshift.io/v1/namespaces/mem-tfrs-test/deploymentconfigs/tfrs","uid":"666c28a6-fad9-11e6-8d55-0050568348cc","resourceVersion":"328895049","generation":101,"creationTimestamp":"2017-02-24T21:37:11Z","labels":{"template":"tfrs-app-environment"},"annotations":{"description":"Defines how to deploy the application server"}},"spec":{"strategy":{"type":"Recreate","recreateParams":{"timeoutSeconds":600},"resources":{},"activeDeadlineSeconds":21600},"triggers":[{"type":"ImageChange","imageChangeParams":{"automatic":true,"containerNames":["tfrs-app"],"from":{"kind":"ImageStreamTag","namespace":"mem-tfrs-tools","name":"tfrs:test"},"lastTriggeredImage":"172.50.0.2:5000/mem-tfrs-tools/tfrs@sha256:b67e604122f52f5bf084a02be9482a9cd81410e0f1d095f5c414b6c5b019c6f6"}},{"type":"ConfigChange"}],"replicas":0,"test":false,"selector":{"name":"tfrs"},"template":{"metadata":{"name":"tfrs","creationTimestamp":null,"labels":{"name":"tfrs"}},"spec":{"containers":[{"name":"tfrs-app","image":"172.50.0.2:5000/mem-tfrs-tools/tfrs@sha256:b67e604122f52f5bf084a02be9482a9cd81410e0f1d095f5c414b6c5b019c6f6","ports":[{"containerPort":8080,"protocol":"TCP"}],"env":[{"name":"DATABASE_SERVICE_NAME","value":"postgresql"},{"name":"DATABASE_ENGINE","value":"postgresql"},{"name":"DATABASE_NAME","value":"tfrs"},{"name":"APP_CONFIG"},{"name":"DATABASE_USER","valueFrom":{"secretKeyRef":{"name":"tfrs-postgresql","key":"DATABASE_USER"}}},{"name":"DATABASE_PASSWORD","valueFrom":{"secretKeyRef":{"name":"tfrs-postgresql","key":"DATABASE_PASSWORD"}}}],"resources":{"limits":{"memory":"512Mi"}},"livenessProbe":{"httpGet":{"path":"/health","port":8080,"scheme":"HTTP"},"initialDelaySeconds":30,"timeoutSeconds":3,"periodSeconds":10,"successThreshold":1,"failureThreshold":3},"readinessProbe":{"httpGet":{"path":"/health","port":8080,"scheme":"HTTP"},"initialDelaySeconds":3,"timeoutSeconds":3,"periodSeconds":10,"successThreshold":1,"failureThreshold":3},"terminationMessagePath":"/dev/termination-log","terminationMessagePolicy":"File","imagePullPolicy":"IfNotPresent"}],"restartPolicy":"Always","terminationGracePeriodSeconds":30,"dnsPolicy":"ClusterFirst","securityContext":{},"schedulerName":"default-scheduler"}}},"status":{"latestVersion":64,"observedGeneration":100,"replicas":0,"updatedReplicas":0,"availableReplicas":0,"unavailableReplicas":0,"details":{"message":"image change","causes":[{"type":"ImageChange","imageTrigger":{"from":{"kind":"ImageStreamTag","namespace":"mem-tfrs-tools","name":"tfrs:test"}}}]},"conditions":[{"type":"Available","status":"False","lastUpdateTime":"2018-01-30T19:57:34Z","lastTransitionTime":"2018-01-30T19:57:34Z","message":"Deployment config does not have minimum availability."},{"type":"Progressing","status":"True","lastUpdateTime":"2018-01-31T19:47:14Z","lastTransitionTime":"2018-01-31T19:47:14Z","reason":"NewReplicationControllerAvailable","message":"replication controller \"tfrs-63\" successfully rolled out"}]}}
+    creationTimestamp: null
+    generation: 1
+    labels:
+      openshift.io/deployment-config.name: tfrs
+      template: tfrs-app-environment
+    name: tfrs-64
+    ownerReferences:
+    - apiVersion: apps.openshift.io/v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: DeploymentConfig
+      name: tfrs
+      uid: 666c28a6-fad9-11e6-8d55-0050568348cc
+  spec:
+    replicas: 0
+    selector:
+      deployment: tfrs-64
+      deploymentconfig: tfrs
+      name: tfrs
+    template:
+      metadata:
+        annotations:
+          openshift.io/deployment-config.latest-version: "64"
+          openshift.io/deployment-config.name: tfrs
+          openshift.io/deployment.name: tfrs-64
+        creationTimestamp: null
+        labels:
+          deployment: tfrs-64
+          deploymentconfig: tfrs
+          name: tfrs
+      spec:
+        containers:
+        - env:
+          - name: DATABASE_SERVICE_NAME
+            value: postgresql
+          - name: DATABASE_ENGINE
+            value: postgresql
+          - name: DATABASE_NAME
+            value: tfrs
+          - name: APP_CONFIG
+          - name: DATABASE_USER
+            valueFrom:
+              secretKeyRef:
+                key: DATABASE_USER
+                name: tfrs-postgresql
+          - name: DATABASE_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                key: DATABASE_PASSWORD
+                name: tfrs-postgresql
+          image: 172.50.0.2:5000/mem-tfrs-tools/tfrs@sha256:b67e604122f52f5bf084a02be9482a9cd81410e0f1d095f5c414b6c5b019c6f6
+          imagePullPolicy: IfNotPresent
+          livenessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /health
+              port: 8080
+              scheme: HTTP
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 3
+          name: tfrs-app
+          ports:
+          - containerPort: 8080
+            protocol: TCP
+          readinessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /health
+              port: 8080
+              scheme: HTTP
+            initialDelaySeconds: 3
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 3
+          resources:
+            limits:
+              memory: 512Mi
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+  status:
+    replicas: 0
+- apiVersion: v1
+  kind: ReplicationController
+  metadata:
+    annotations:
+      openshift.io/deployer-pod.name: tfrs-65-deploy
+      openshift.io/deployment-config.latest-version: "65"
+      openshift.io/deployment-config.name: tfrs
+      openshift.io/deployment.phase: Complete
+      openshift.io/deployment.replicas: "0"
+      openshift.io/deployment.status-reason: image change
+      openshift.io/encoded-deployment-config: |
+        {"kind":"DeploymentConfig","apiVersion":"v1","metadata":{"name":"tfrs","namespace":"mem-tfrs-test","selfLink":"/apis/apps.openshift.io/v1/namespaces/mem-tfrs-test/deploymentconfigs/tfrs","uid":"666c28a6-fad9-11e6-8d55-0050568348cc","resourceVersion":"328954865","generation":103,"creationTimestamp":"2017-02-24T21:37:11Z","labels":{"template":"tfrs-app-environment"},"annotations":{"description":"Defines how to deploy the application server"}},"spec":{"strategy":{"type":"Recreate","recreateParams":{"timeoutSeconds":600},"resources":{},"activeDeadlineSeconds":21600},"triggers":[{"type":"ImageChange","imageChangeParams":{"automatic":true,"containerNames":["tfrs-app"],"from":{"kind":"ImageStreamTag","namespace":"mem-tfrs-tools","name":"tfrs:test"},"lastTriggeredImage":"172.50.0.2:5000/mem-tfrs-tools/tfrs@sha256:43b2b9aec15dc0f972bbd622b10778ce32b2c4a9dfa5e76a4d5ef1e87032e2cc"}},{"type":"ConfigChange"}],"replicas":0,"test":false,"selector":{"name":"tfrs"},"template":{"metadata":{"name":"tfrs","creationTimestamp":null,"labels":{"name":"tfrs"}},"spec":{"containers":[{"name":"tfrs-app","image":"172.50.0.2:5000/mem-tfrs-tools/tfrs@sha256:43b2b9aec15dc0f972bbd622b10778ce32b2c4a9dfa5e76a4d5ef1e87032e2cc","ports":[{"containerPort":8080,"protocol":"TCP"}],"env":[{"name":"DATABASE_SERVICE_NAME","value":"postgresql"},{"name":"DATABASE_ENGINE","value":"postgresql"},{"name":"DATABASE_NAME","value":"tfrs"},{"name":"APP_CONFIG"},{"name":"DATABASE_USER","valueFrom":{"secretKeyRef":{"name":"tfrs-postgresql","key":"DATABASE_USER"}}},{"name":"DATABASE_PASSWORD","valueFrom":{"secretKeyRef":{"name":"tfrs-postgresql","key":"DATABASE_PASSWORD"}}}],"resources":{"limits":{"memory":"512Mi"}},"livenessProbe":{"httpGet":{"path":"/health","port":8080,"scheme":"HTTP"},"initialDelaySeconds":30,"timeoutSeconds":3,"periodSeconds":10,"successThreshold":1,"failureThreshold":3},"readinessProbe":{"httpGet":{"path":"/health","port":8080,"scheme":"HTTP"},"initialDelaySeconds":3,"timeoutSeconds":3,"periodSeconds":10,"successThreshold":1,"failureThreshold":3},"terminationMessagePath":"/dev/termination-log","terminationMessagePolicy":"File","imagePullPolicy":"IfNotPresent"}],"restartPolicy":"Always","terminationGracePeriodSeconds":30,"dnsPolicy":"ClusterFirst","securityContext":{},"schedulerName":"default-scheduler"}}},"status":{"latestVersion":65,"observedGeneration":102,"replicas":0,"updatedReplicas":0,"availableReplicas":0,"unavailableReplicas":0,"details":{"message":"image change","causes":[{"type":"ImageChange","imageTrigger":{"from":{"kind":"ImageStreamTag","namespace":"mem-tfrs-tools","name":"tfrs:test"}}}]},"conditions":[{"type":"Available","status":"False","lastUpdateTime":"2018-01-30T19:57:34Z","lastTransitionTime":"2018-01-30T19:57:34Z","message":"Deployment config does not have minimum availability."},{"type":"Progressing","status":"True","lastUpdateTime":"2018-01-31T21:36:52Z","lastTransitionTime":"2018-01-31T21:36:52Z","reason":"NewReplicationControllerAvailable","message":"replication controller \"tfrs-64\" successfully rolled out"}]}}
+    creationTimestamp: null
+    generation: 1
+    labels:
+      openshift.io/deployment-config.name: tfrs
+      template: tfrs-app-environment
+    name: tfrs-65
+    ownerReferences:
+    - apiVersion: apps.openshift.io/v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: DeploymentConfig
+      name: tfrs
+      uid: 666c28a6-fad9-11e6-8d55-0050568348cc
+  spec:
+    replicas: 0
+    selector:
+      deployment: tfrs-65
+      deploymentconfig: tfrs
+      name: tfrs
+    template:
+      metadata:
+        annotations:
+          openshift.io/deployment-config.latest-version: "65"
+          openshift.io/deployment-config.name: tfrs
+          openshift.io/deployment.name: tfrs-65
+        creationTimestamp: null
+        labels:
+          deployment: tfrs-65
+          deploymentconfig: tfrs
+          name: tfrs
+      spec:
+        containers:
+        - env:
+          - name: DATABASE_SERVICE_NAME
+            value: postgresql
+          - name: DATABASE_ENGINE
+            value: postgresql
+          - name: DATABASE_NAME
+            value: tfrs
+          - name: APP_CONFIG
+          - name: DATABASE_USER
+            valueFrom:
+              secretKeyRef:
+                key: DATABASE_USER
+                name: tfrs-postgresql
+          - name: DATABASE_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                key: DATABASE_PASSWORD
+                name: tfrs-postgresql
+          image: 172.50.0.2:5000/mem-tfrs-tools/tfrs@sha256:43b2b9aec15dc0f972bbd622b10778ce32b2c4a9dfa5e76a4d5ef1e87032e2cc
+          imagePullPolicy: IfNotPresent
+          livenessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /health
+              port: 8080
+              scheme: HTTP
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 3
+          name: tfrs-app
+          ports:
+          - containerPort: 8080
+            protocol: TCP
+          readinessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /health
+              port: 8080
+              scheme: HTTP
+            initialDelaySeconds: 3
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 3
+          resources:
+            limits:
+              memory: 512Mi
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+  status:
+    replicas: 0
+- apiVersion: v1
+  kind: ReplicationController
+  metadata:
+    annotations:
+      openshift.io/deployer-pod.name: tfrs-66-deploy
+      openshift.io/deployment-config.latest-version: "66"
+      openshift.io/deployment-config.name: tfrs
+      openshift.io/deployment.phase: Complete
+      openshift.io/deployment.replicas: "1"
+      openshift.io/deployment.status-reason: manual change
+      openshift.io/encoded-deployment-config: |
+        {"kind":"DeploymentConfig","apiVersion":"v1","metadata":{"name":"tfrs","namespace":"mem-tfrs-test","selfLink":"/apis/apps.openshift.io/v1/namespaces/mem-tfrs-test/deploymentconfigs/tfrs","uid":"666c28a6-fad9-11e6-8d55-0050568348cc","resourceVersion":"330007514","generation":106,"creationTimestamp":"2017-02-24T21:37:11Z","labels":{"template":"tfrs-app-environment"},"annotations":{"description":"Defines how to deploy the application server"}},"spec":{"strategy":{"type":"Recreate","recreateParams":{"timeoutSeconds":600,"mid":{"failurePolicy":"Abort","execNewPod":{"command":["/bin/sh","-c","pwd; date; sleep 1m"],"containerName":"tfrs-app"}}},"resources":{},"activeDeadlineSeconds":21600},"triggers":[{"type":"ImageChange","imageChangeParams":{"automatic":true,"containerNames":["tfrs-app"],"from":{"kind":"ImageStreamTag","namespace":"mem-tfrs-tools","name":"tfrs:test"},"lastTriggeredImage":"172.50.0.2:5000/mem-tfrs-tools/tfrs@sha256:43b2b9aec15dc0f972bbd622b10778ce32b2c4a9dfa5e76a4d5ef1e87032e2cc"}},{"type":"ConfigChange"}],"replicas":1,"test":false,"selector":{"name":"tfrs"},"template":{"metadata":{"name":"tfrs","creationTimestamp":null,"labels":{"name":"tfrs"}},"spec":{"containers":[{"name":"tfrs-app","image":"172.50.0.2:5000/mem-tfrs-tools/tfrs@sha256:43b2b9aec15dc0f972bbd622b10778ce32b2c4a9dfa5e76a4d5ef1e87032e2cc","ports":[{"containerPort":8080,"protocol":"TCP"}],"env":[{"name":"DATABASE_SERVICE_NAME","value":"postgresql"},{"name":"DATABASE_ENGINE","value":"postgresql"},{"name":"DATABASE_NAME","value":"tfrs"},{"name":"APP_CONFIG"},{"name":"DATABASE_USER","valueFrom":{"secretKeyRef":{"name":"tfrs-postgresql","key":"DATABASE_USER"}}},{"name":"DATABASE_PASSWORD","valueFrom":{"secretKeyRef":{"name":"tfrs-postgresql","key":"DATABASE_PASSWORD"}}}],"resources":{"limits":{"memory":"512Mi"}},"livenessProbe":{"httpGet":{"path":"/health","port":8080,"scheme":"HTTP"},"initialDelaySeconds":30,"timeoutSeconds":3,"periodSeconds":10,"successThreshold":1,"failureThreshold":3},"readinessProbe":{"httpGet":{"path":"/health","port":8080,"scheme":"HTTP"},"initialDelaySeconds":3,"timeoutSeconds":3,"periodSeconds":10,"successThreshold":1,"failureThreshold":3},"terminationMessagePath":"/dev/termination-log","terminationMessagePolicy":"File","imagePullPolicy":"IfNotPresent"}],"restartPolicy":"Always","terminationGracePeriodSeconds":30,"dnsPolicy":"ClusterFirst","securityContext":{},"schedulerName":"default-scheduler"}}},"status":{"latestVersion":66,"observedGeneration":105,"replicas":1,"updatedReplicas":1,"availableReplicas":1,"unavailableReplicas":0,"details":{"message":"manual change","causes":[{"type":"Manual"}]},"conditions":[{"type":"Progressing","status":"True","lastUpdateTime":"2018-01-31T23:03:18Z","lastTransitionTime":"2018-01-31T23:03:18Z","reason":"NewReplicationControllerAvailable","message":"replication controller \"tfrs-65\" successfully rolled out"},{"type":"Available","status":"True","lastUpdateTime":"2018-01-31T23:06:50Z","lastTransitionTime":"2018-01-31T23:06:50Z","message":"Deployment config has minimum availability."}],"readyReplicas":1}}
+    creationTimestamp: null
+    generation: 1
+    labels:
+      openshift.io/deployment-config.name: tfrs
+      template: tfrs-app-environment
+    name: tfrs-66
+    ownerReferences:
+    - apiVersion: apps.openshift.io/v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: DeploymentConfig
+      name: tfrs
+      uid: 666c28a6-fad9-11e6-8d55-0050568348cc
+  spec:
+    replicas: 0
+    selector:
+      deployment: tfrs-66
+      deploymentconfig: tfrs
+      name: tfrs
+    template:
+      metadata:
+        annotations:
+          openshift.io/deployment-config.latest-version: "66"
+          openshift.io/deployment-config.name: tfrs
+          openshift.io/deployment.name: tfrs-66
+        creationTimestamp: null
+        labels:
+          deployment: tfrs-66
+          deploymentconfig: tfrs
+          name: tfrs
+      spec:
+        containers:
+        - env:
+          - name: DATABASE_SERVICE_NAME
+            value: postgresql
+          - name: DATABASE_ENGINE
+            value: postgresql
+          - name: DATABASE_NAME
+            value: tfrs
+          - name: APP_CONFIG
+          - name: DATABASE_USER
+            valueFrom:
+              secretKeyRef:
+                key: DATABASE_USER
+                name: tfrs-postgresql
+          - name: DATABASE_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                key: DATABASE_PASSWORD
+                name: tfrs-postgresql
+          image: 172.50.0.2:5000/mem-tfrs-tools/tfrs@sha256:43b2b9aec15dc0f972bbd622b10778ce32b2c4a9dfa5e76a4d5ef1e87032e2cc
+          imagePullPolicy: IfNotPresent
+          livenessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /health
+              port: 8080
+              scheme: HTTP
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 3
+          name: tfrs-app
+          ports:
+          - containerPort: 8080
+            protocol: TCP
+          readinessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /health
+              port: 8080
+              scheme: HTTP
+            initialDelaySeconds: 3
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 3
+          resources:
+            limits:
+              memory: 512Mi
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+  status:
+    replicas: 0
+- apiVersion: v1
+  kind: ReplicationController
+  metadata:
+    annotations:
+      openshift.io/deployer-pod.name: tfrs-67-deploy
+      openshift.io/deployment-config.latest-version: "67"
+      openshift.io/deployment-config.name: tfrs
+      openshift.io/deployment.phase: Complete
+      openshift.io/deployment.replicas: "3"
+      openshift.io/deployment.status-reason: manual change
+      openshift.io/encoded-deployment-config: |
+        {"kind":"DeploymentConfig","apiVersion":"v1","metadata":{"name":"tfrs","namespace":"mem-tfrs-test","selfLink":"/apis/apps.openshift.io/v1/namespaces/mem-tfrs-test/deploymentconfigs/tfrs","uid":"666c28a6-fad9-11e6-8d55-0050568348cc","resourceVersion":"330011089","generation":108,"creationTimestamp":"2017-02-24T21:37:11Z","labels":{"template":"tfrs-app-environment"},"annotations":{"description":"Defines how to deploy the application server"}},"spec":{"strategy":{"type":"Recreate","recreateParams":{"timeoutSeconds":600,"mid":{"failurePolicy":"Abort","execNewPod":{"command":["/bin/sh","-c","pwd; date; sleep 1m"],"containerName":"tfrs-app"}}},"resources":{},"activeDeadlineSeconds":21600},"triggers":[{"type":"ImageChange","imageChangeParams":{"automatic":true,"containerNames":["tfrs-app"],"from":{"kind":"ImageStreamTag","namespace":"mem-tfrs-tools","name":"tfrs:test"},"lastTriggeredImage":"172.50.0.2:5000/mem-tfrs-tools/tfrs@sha256:43b2b9aec15dc0f972bbd622b10778ce32b2c4a9dfa5e76a4d5ef1e87032e2cc"}},{"type":"ConfigChange"}],"replicas":3,"test":false,"selector":{"name":"tfrs"},"template":{"metadata":{"name":"tfrs","creationTimestamp":null,"labels":{"name":"tfrs"}},"spec":{"containers":[{"name":"tfrs-app","image":"172.50.0.2:5000/mem-tfrs-tools/tfrs@sha256:43b2b9aec15dc0f972bbd622b10778ce32b2c4a9dfa5e76a4d5ef1e87032e2cc","ports":[{"containerPort":8080,"protocol":"TCP"}],"env":[{"name":"DATABASE_SERVICE_NAME","value":"postgresql"},{"name":"DATABASE_ENGINE","value":"postgresql"},{"name":"DATABASE_NAME","value":"tfrs"},{"name":"APP_CONFIG"},{"name":"DATABASE_USER","valueFrom":{"secretKeyRef":{"name":"tfrs-postgresql","key":"DATABASE_USER"}}},{"name":"DATABASE_PASSWORD","valueFrom":{"secretKeyRef":{"name":"tfrs-postgresql","key":"DATABASE_PASSWORD"}}}],"resources":{"limits":{"memory":"512Mi"}},"livenessProbe":{"httpGet":{"path":"/health","port":8080,"scheme":"HTTP"},"initialDelaySeconds":30,"timeoutSeconds":3,"periodSeconds":10,"successThreshold":1,"failureThreshold":3},"readinessProbe":{"httpGet":{"path":"/health","port":8080,"scheme":"HTTP"},"initialDelaySeconds":3,"timeoutSeconds":3,"periodSeconds":10,"successThreshold":1,"failureThreshold":3},"terminationMessagePath":"/dev/termination-log","terminationMessagePolicy":"File","imagePullPolicy":"IfNotPresent"}],"restartPolicy":"Always","terminationGracePeriodSeconds":30,"dnsPolicy":"ClusterFirst","securityContext":{},"schedulerName":"default-scheduler"}}},"status":{"latestVersion":67,"observedGeneration":107,"replicas":3,"updatedReplicas":3,"availableReplicas":3,"unavailableReplicas":0,"details":{"message":"manual change","causes":[{"type":"Manual"}]},"conditions":[{"type":"Progressing","status":"True","lastUpdateTime":"2018-02-01T22:40:00Z","lastTransitionTime":"2018-02-01T22:39:37Z","reason":"NewReplicationControllerAvailable","message":"replication controller \"tfrs-66\" successfully rolled out"},{"type":"Available","status":"True","lastUpdateTime":"2018-02-01T22:41:47Z","lastTransitionTime":"2018-02-01T22:41:47Z","message":"Deployment config has minimum availability."}],"readyReplicas":3}}
+    creationTimestamp: null
+    generation: 1
+    labels:
+      openshift.io/deployment-config.name: tfrs
+      template: tfrs-app-environment
+    name: tfrs-67
+    ownerReferences:
+    - apiVersion: apps.openshift.io/v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: DeploymentConfig
+      name: tfrs
+      uid: 666c28a6-fad9-11e6-8d55-0050568348cc
+  spec:
+    replicas: 0
+    selector:
+      deployment: tfrs-67
+      deploymentconfig: tfrs
+      name: tfrs
+    template:
+      metadata:
+        annotations:
+          openshift.io/deployment-config.latest-version: "67"
+          openshift.io/deployment-config.name: tfrs
+          openshift.io/deployment.name: tfrs-67
+        creationTimestamp: null
+        labels:
+          deployment: tfrs-67
+          deploymentconfig: tfrs
+          name: tfrs
+      spec:
+        containers:
+        - env:
+          - name: DATABASE_SERVICE_NAME
+            value: postgresql
+          - name: DATABASE_ENGINE
+            value: postgresql
+          - name: DATABASE_NAME
+            value: tfrs
+          - name: APP_CONFIG
+          - name: DATABASE_USER
+            valueFrom:
+              secretKeyRef:
+                key: DATABASE_USER
+                name: tfrs-postgresql
+          - name: DATABASE_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                key: DATABASE_PASSWORD
+                name: tfrs-postgresql
+          image: 172.50.0.2:5000/mem-tfrs-tools/tfrs@sha256:43b2b9aec15dc0f972bbd622b10778ce32b2c4a9dfa5e76a4d5ef1e87032e2cc
+          imagePullPolicy: IfNotPresent
+          livenessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /health
+              port: 8080
+              scheme: HTTP
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 3
+          name: tfrs-app
+          ports:
+          - containerPort: 8080
+            protocol: TCP
+          readinessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /health
+              port: 8080
+              scheme: HTTP
+            initialDelaySeconds: 3
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 3
+          resources:
+            limits:
+              memory: 512Mi
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+  status:
+    replicas: 0
+- apiVersion: v1
+  kind: ReplicationController
+  metadata:
+    annotations:
+      openshift.io/deployer-pod.name: tfrs-68-deploy
+      openshift.io/deployment-config.latest-version: "68"
+      openshift.io/deployment-config.name: tfrs
+      openshift.io/deployment.phase: Complete
+      openshift.io/deployment.replicas: "3"
+      openshift.io/deployment.status-reason: image change
+      openshift.io/encoded-deployment-config: |
+        {"kind":"DeploymentConfig","apiVersion":"v1","metadata":{"name":"tfrs","namespace":"mem-tfrs-test","selfLink":"/apis/apps.openshift.io/v1/namespaces/mem-tfrs-test/deploymentconfigs/tfrs","uid":"666c28a6-fad9-11e6-8d55-0050568348cc","resourceVersion":"330038493","generation":111,"creationTimestamp":"2017-02-24T21:37:11Z","labels":{"template":"tfrs-app-environment"},"annotations":{"description":"Defines how to deploy the application server"}},"spec":{"strategy":{"type":"Recreate","recreateParams":{"timeoutSeconds":600,"mid":{"failurePolicy":"Abort","execNewPod":{"command":["/bin/sh","-c","python manage.py migrate"],"containerName":"tfrs-app"}}},"resources":{},"activeDeadlineSeconds":21600},"triggers":[{"type":"ImageChange","imageChangeParams":{"automatic":true,"containerNames":["tfrs-app"],"from":{"kind":"ImageStreamTag","namespace":"mem-tfrs-tools","name":"tfrs:test"},"lastTriggeredImage":"172.50.0.2:5000/mem-tfrs-tools/tfrs@sha256:587242822c57288dd1ab96b9d17cb07c1ed21772fe69e5454fb78b1233256629"}},{"type":"ConfigChange"}],"replicas":3,"test":false,"selector":{"name":"tfrs"},"template":{"metadata":{"name":"tfrs","creationTimestamp":null,"labels":{"name":"tfrs"}},"spec":{"containers":[{"name":"tfrs-app","image":"172.50.0.2:5000/mem-tfrs-tools/tfrs@sha256:587242822c57288dd1ab96b9d17cb07c1ed21772fe69e5454fb78b1233256629","ports":[{"containerPort":8080,"protocol":"TCP"}],"env":[{"name":"DATABASE_SERVICE_NAME","value":"postgresql"},{"name":"DATABASE_ENGINE","value":"postgresql"},{"name":"DATABASE_NAME","value":"tfrs"},{"name":"APP_CONFIG"},{"name":"DATABASE_USER","valueFrom":{"secretKeyRef":{"name":"tfrs-postgresql","key":"DATABASE_USER"}}},{"name":"DATABASE_PASSWORD","valueFrom":{"secretKeyRef":{"name":"tfrs-postgresql","key":"DATABASE_PASSWORD"}}}],"resources":{"limits":{"memory":"512Mi"}},"livenessProbe":{"httpGet":{"path":"/health","port":8080,"scheme":"HTTP"},"initialDelaySeconds":30,"timeoutSeconds":3,"periodSeconds":10,"successThreshold":1,"failureThreshold":3},"readinessProbe":{"httpGet":{"path":"/health","port":8080,"scheme":"HTTP"},"initialDelaySeconds":3,"timeoutSeconds":3,"periodSeconds":10,"successThreshold":1,"failureThreshold":3},"terminationMessagePath":"/dev/termination-log","terminationMessagePolicy":"File","imagePullPolicy":"IfNotPresent"}],"restartPolicy":"Always","terminationGracePeriodSeconds":30,"dnsPolicy":"ClusterFirst","securityContext":{},"schedulerName":"default-scheduler"}}},"status":{"latestVersion":68,"observedGeneration":110,"replicas":3,"updatedReplicas":3,"availableReplicas":3,"unavailableReplicas":0,"details":{"message":"image change","causes":[{"type":"ImageChange","imageTrigger":{"from":{"kind":"ImageStreamTag","namespace":"mem-tfrs-tools","name":"tfrs:test"}}}]},"conditions":[{"type":"Progressing","status":"True","lastUpdateTime":"2018-02-01T22:44:18Z","lastTransitionTime":"2018-02-01T22:44:16Z","reason":"NewReplicationControllerAvailable","message":"replication controller \"tfrs-67\" successfully rolled out"},{"type":"Available","status":"True","lastUpdateTime":"2018-02-01T22:44:37Z","lastTransitionTime":"2018-02-01T22:44:37Z","message":"Deployment config has minimum availability."}],"readyReplicas":3}}
+    creationTimestamp: null
+    generation: 1
+    labels:
+      openshift.io/deployment-config.name: tfrs
+      template: tfrs-app-environment
+    name: tfrs-68
+    ownerReferences:
+    - apiVersion: apps.openshift.io/v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: DeploymentConfig
+      name: tfrs
+      uid: 666c28a6-fad9-11e6-8d55-0050568348cc
+  spec:
+    replicas: 0
+    selector:
+      deployment: tfrs-68
+      deploymentconfig: tfrs
+      name: tfrs
+    template:
+      metadata:
+        annotations:
+          openshift.io/deployment-config.latest-version: "68"
+          openshift.io/deployment-config.name: tfrs
+          openshift.io/deployment.name: tfrs-68
+        creationTimestamp: null
+        labels:
+          deployment: tfrs-68
+          deploymentconfig: tfrs
+          name: tfrs
+      spec:
+        containers:
+        - env:
+          - name: DATABASE_SERVICE_NAME
+            value: postgresql
+          - name: DATABASE_ENGINE
+            value: postgresql
+          - name: DATABASE_NAME
+            value: tfrs
+          - name: APP_CONFIG
+          - name: DATABASE_USER
+            valueFrom:
+              secretKeyRef:
+                key: DATABASE_USER
+                name: tfrs-postgresql
+          - name: DATABASE_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                key: DATABASE_PASSWORD
+                name: tfrs-postgresql
+          image: 172.50.0.2:5000/mem-tfrs-tools/tfrs@sha256:587242822c57288dd1ab96b9d17cb07c1ed21772fe69e5454fb78b1233256629
+          imagePullPolicy: IfNotPresent
+          livenessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /health
+              port: 8080
+              scheme: HTTP
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 3
+          name: tfrs-app
+          ports:
+          - containerPort: 8080
+            protocol: TCP
+          readinessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /health
+              port: 8080
+              scheme: HTTP
+            initialDelaySeconds: 3
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 3
+          resources:
+            limits:
+              memory: 512Mi
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+  status:
+    replicas: 0
+- apiVersion: v1
+  kind: ReplicationController
+  metadata:
+    annotations:
+      openshift.io/deployer-pod.name: tfrs-69-deploy
+      openshift.io/deployment-config.latest-version: "69"
+      openshift.io/deployment-config.name: tfrs
+      openshift.io/deployment.phase: Complete
+      openshift.io/deployment.replicas: "3"
+      openshift.io/deployment.status-reason: image change
+      openshift.io/encoded-deployment-config: |
+        {"kind":"DeploymentConfig","apiVersion":"v1","metadata":{"name":"tfrs","namespace":"mem-tfrs-test","selfLink":"/apis/apps.openshift.io/v1/namespaces/mem-tfrs-test/deploymentconfigs/tfrs","uid":"666c28a6-fad9-11e6-8d55-0050568348cc","resourceVersion":"330764645","generation":113,"creationTimestamp":"2017-02-24T21:37:11Z","labels":{"template":"tfrs-app-environment"},"annotations":{"description":"Defines how to deploy the application server"}},"spec":{"strategy":{"type":"Recreate","recreateParams":{"timeoutSeconds":600,"mid":{"failurePolicy":"Abort","execNewPod":{"command":["/bin/sh","-c","python manage.py migrate"],"containerName":"tfrs-app"}}},"resources":{},"activeDeadlineSeconds":21600},"triggers":[{"type":"ImageChange","imageChangeParams":{"automatic":true,"containerNames":["tfrs-app"],"from":{"kind":"ImageStreamTag","namespace":"mem-tfrs-tools","name":"tfrs:test"},"lastTriggeredImage":"172.50.0.2:5000/mem-tfrs-tools/tfrs@sha256:14551021a28ff5f0b07e055e7cfa29bd0044024fbdc47644c3aee509198955a1"}},{"type":"ConfigChange"}],"replicas":3,"test":false,"selector":{"name":"tfrs"},"template":{"metadata":{"name":"tfrs","creationTimestamp":null,"labels":{"name":"tfrs"}},"spec":{"containers":[{"name":"tfrs-app","image":"172.50.0.2:5000/mem-tfrs-tools/tfrs@sha256:14551021a28ff5f0b07e055e7cfa29bd0044024fbdc47644c3aee509198955a1","ports":[{"containerPort":8080,"protocol":"TCP"}],"env":[{"name":"DATABASE_SERVICE_NAME","value":"postgresql"},{"name":"DATABASE_ENGINE","value":"postgresql"},{"name":"DATABASE_NAME","value":"tfrs"},{"name":"APP_CONFIG"},{"name":"DATABASE_USER","valueFrom":{"secretKeyRef":{"name":"tfrs-postgresql","key":"DATABASE_USER"}}},{"name":"DATABASE_PASSWORD","valueFrom":{"secretKeyRef":{"name":"tfrs-postgresql","key":"DATABASE_PASSWORD"}}}],"resources":{"limits":{"memory":"512Mi"}},"livenessProbe":{"httpGet":{"path":"/health","port":8080,"scheme":"HTTP"},"initialDelaySeconds":30,"timeoutSeconds":3,"periodSeconds":10,"successThreshold":1,"failureThreshold":3},"readinessProbe":{"httpGet":{"path":"/health","port":8080,"scheme":"HTTP"},"initialDelaySeconds":3,"timeoutSeconds":3,"periodSeconds":10,"successThreshold":1,"failureThreshold":3},"terminationMessagePath":"/dev/termination-log","terminationMessagePolicy":"File","imagePullPolicy":"IfNotPresent"}],"restartPolicy":"Always","terminationGracePeriodSeconds":30,"dnsPolicy":"ClusterFirst","securityContext":{},"schedulerName":"default-scheduler"}}},"status":{"latestVersion":69,"observedGeneration":112,"replicas":3,"updatedReplicas":3,"availableReplicas":3,"unavailableReplicas":0,"details":{"message":"image change","causes":[{"type":"ImageChange","imageTrigger":{"from":{"kind":"ImageStreamTag","namespace":"mem-tfrs-tools","name":"tfrs:test"}}}]},"conditions":[{"type":"Progressing","status":"True","lastUpdateTime":"2018-02-01T23:19:47Z","lastTransitionTime":"2018-02-01T23:19:47Z","reason":"NewReplicationControllerAvailable","message":"replication controller \"tfrs-68\" successfully rolled out"},{"type":"Available","status":"True","lastUpdateTime":"2018-02-01T23:20:07Z","lastTransitionTime":"2018-02-01T23:20:07Z","message":"Deployment config has minimum availability."}],"readyReplicas":3}}
+    creationTimestamp: null
+    generation: 1
+    labels:
+      openshift.io/deployment-config.name: tfrs
+      template: tfrs-app-environment
+    name: tfrs-69
+    ownerReferences:
+    - apiVersion: apps.openshift.io/v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: DeploymentConfig
+      name: tfrs
+      uid: 666c28a6-fad9-11e6-8d55-0050568348cc
+  spec:
+    replicas: 3
+    selector:
+      deployment: tfrs-69
+      deploymentconfig: tfrs
+      name: tfrs
+    template:
+      metadata:
+        annotations:
+          openshift.io/deployment-config.latest-version: "69"
+          openshift.io/deployment-config.name: tfrs
+          openshift.io/deployment.name: tfrs-69
+        creationTimestamp: null
+        labels:
+          deployment: tfrs-69
+          deploymentconfig: tfrs
+          name: tfrs
+      spec:
+        containers:
+        - env:
+          - name: DATABASE_SERVICE_NAME
+            value: postgresql
+          - name: DATABASE_ENGINE
+            value: postgresql
+          - name: DATABASE_NAME
+            value: tfrs
+          - name: APP_CONFIG
+          - name: DATABASE_USER
+            valueFrom:
+              secretKeyRef:
+                key: DATABASE_USER
+                name: tfrs-postgresql
+          - name: DATABASE_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                key: DATABASE_PASSWORD
+                name: tfrs-postgresql
+          image: 172.50.0.2:5000/mem-tfrs-tools/tfrs@sha256:14551021a28ff5f0b07e055e7cfa29bd0044024fbdc47644c3aee509198955a1
+          imagePullPolicy: IfNotPresent
+          livenessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /health
+              port: 8080
+              scheme: HTTP
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 3
+          name: tfrs-app
+          ports:
+          - containerPort: 8080
+            protocol: TCP
+          readinessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /health
+              port: 8080
+              scheme: HTTP
+            initialDelaySeconds: 3
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 3
+          resources:
+            limits:
+              memory: 512Mi
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+  status:
+    replicas: 0
+- apiVersion: v1
+  kind: Route
+  metadata:
+    creationTimestamp: null
+    name: api
+  spec:
+    host: test-lowcarbonfuels.pathfinder.bcgov
+    path: /api
+    port:
+      targetPort: web
+    to:
+      kind: Service
+      name: backend
+      weight: 100
+    wildcardPolicy: None
+  status:
+    ingress:
+    - conditions:
+      - lastTransitionTime: 2018-01-24T21:01:59Z
+        status: "True"
+        type: Admitted
+      host: test-lowcarbonfuels.pathfinder.bcgov
+      routerName: router
+      wildcardPolicy: None
+- apiVersion: v1
+  kind: Route
+  metadata:
+    creationTimestamp: null
+    name: main
+  spec:
+    host: test-lowcarbonfuels.pathfinder.bcgov
+    port:
+      targetPort: web
+    to:
+      kind: Service
+      name: client
+      weight: 100
+    wildcardPolicy: None
+  status:
+    ingress:
+    - conditions:
+      - lastTransitionTime: 2018-01-31T23:14:30Z
+        status: "True"
+        type: Admitted
+      host: test-lowcarbonfuels.pathfinder.bcgov
+      routerName: router
+      wildcardPolicy: None
+- apiVersion: v1
+  kind: Route
+  metadata:
+    creationTimestamp: null
+    name: schema-spy
+  spec:
+    host: schema-spy-mem-tfrs-test.pathfinder.gov.bc.ca
+    port:
+      targetPort: 8080-tcp
+    to:
+      kind: Service
+      name: schema-spy
+      weight: 100
+    wildcardPolicy: None
+  status:
+    ingress:
+    - conditions:
+      - lastTransitionTime: 2017-11-30T21:39:14Z
+        status: "True"
+        type: Admitted
+      host: schema-spy-mem-tfrs-test.pathfinder.gov.bc.ca
+      routerName: router
+      wildcardPolicy: None
+- apiVersion: v1
+  kind: Service
+  metadata:
+    annotations:
+      description: Exposes and load balances the application pods
+      service.alpha.openshift.io/dependencies: '[{"name": "postgresql", "kind": "Service"}]'
+    creationTimestamp: null
+    labels:
+      template: tfrs-app-environment
+    name: backend
+  spec:
+    ports:
+    - name: web
+      port: 8080
+      protocol: TCP
+      targetPort: 8080
+    selector:
+      name: tfrs
+    sessionAffinity: None
+    type: ClusterIP
+  status:
+    loadBalancer: {}
+- apiVersion: v1
+  kind: Service
+  metadata:
+    annotations:
+      description: Exposes and load balances the front end pods
+    creationTimestamp: null
+    labels:
+      template: tfrs-app-environment
+    name: client
+  spec:
+    ports:
+    - name: web
+      port: 8080
+      protocol: TCP
+      targetPort: 8080
+    selector:
+      name: client
+    sessionAffinity: None
+    type: ClusterIP
+  status:
+    loadBalancer: {}
+- apiVersion: v1
+  kind: Service
+  metadata:
+    creationTimestamp: null
+    name: glusterfs-cluster-app
+  spec:
+    ports:
+    - port: 1
+      protocol: TCP
+      targetPort: 1
+    sessionAffinity: None
+    type: ClusterIP
+  status:
+    loadBalancer: {}
+- apiVersion: v1
+  kind: Service
+  metadata:
+    creationTimestamp: null
+    labels:
+      gluster.kubernetes.io/provisioned-for-pvc: postgresql-cns
+    name: glusterfs-dynamic-postgresql-cns
+  spec:
+    ports:
+    - port: 1
+      protocol: TCP
+      targetPort: 1
+    sessionAffinity: None
+    type: ClusterIP
+  status:
+    loadBalancer: {}
+- apiVersion: v1
+  kind: Service
+  metadata:
+    creationTimestamp: null
+    labels:
+      app: postgresql-persistent
+      template: postgresql-persistent-template
+    name: postgresql
+  spec:
+    ports:
+    - name: postgresql
+      port: 5432
+      protocol: TCP
+      targetPort: 5432
+    selector:
+      name: postgresql
+    sessionAffinity: None
+    type: ClusterIP
+  status:
+    loadBalancer: {}
+- apiVersion: v1
+  kind: Service
+  metadata:
+    annotations:
+      description: Exposes and load balances the application pods
+    creationTimestamp: null
+    name: schema-spy
+  spec:
+    ports:
+    - name: 8080-tcp
+      port: 8080
+      protocol: TCP
+      targetPort: 8080
+    selector:
+      name: schema-spy
+    sessionAffinity: None
+    type: ClusterIP
+  status:
+    loadBalancer: {}
+- apiVersion: v1
+  kind: Pod
+  metadata:
+    annotations:
+      kubernetes.io/created-by: |
+        {"kind":"SerializedReference","apiVersion":"v1","reference":{"kind":"ReplicationController","namespace":"mem-tfrs-test","name":"client-36","uid":"869beb96-077e-11e8-b39a-0050568348cc","apiVersion":"v1","resourceVersion":"329822281"}}
+      kubernetes.io/limit-ranger: 'LimitRanger plugin set: cpu request for container
+        client; cpu limit for container client'
+      openshift.io/deployment-config.latest-version: "36"
+      openshift.io/deployment-config.name: client
+      openshift.io/deployment.name: client-36
+      openshift.io/scc: restricted
+    creationTimestamp: null
+    generateName: client-36-
+    labels:
+      deployment: client-36
+      deploymentconfig: client
+      name: client
+    ownerReferences:
+    - apiVersion: v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: ReplicationController
+      name: client-36
+      uid: 869beb96-077e-11e8-b39a-0050568348cc
+  spec:
+    containers:
+    - env:
+      - name: API_URL
+        value: http://backend-mem-tfrs-test.pathfinder.gov.bc.ca/api/
+      - name: RealIpFrom
+      - name: AdditionalRealIpFromRules
+      - name: IpFilterRules
+      - name: HTTP_BASIC
+      - name: API_URL
+        value: http://backend.mem-tfrs-test.svc.cluster.local:8080/api/
+      image: 172.50.0.2:5000/mem-tfrs-tools/client@sha256:7b70a249fcf707aba746df06eee95ff1b3c329b0287abed2304f91c3caba16a1
+      imagePullPolicy: IfNotPresent
+      name: client
+      ports:
+      - containerPort: 3000
+        protocol: TCP
+      resources:
+        limits:
+          cpu: "1"
+          memory: 1Gi
+        requests:
+          cpu: 100m
+          memory: 1Gi
+      securityContext:
+        capabilities:
+          drop:
+          - KILL
+          - MKNOD
+          - SETGID
+          - SETUID
+          - SYS_CHROOT
+        privileged: false
+        runAsUser: 1000230000
+        seLinuxOptions:
+          level: s0:c15,c10
+      terminationMessagePath: /dev/termination-log
+      terminationMessagePolicy: File
+      volumeMounts:
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: default-token-knha0
+        readOnly: true
+    dnsPolicy: ClusterFirst
+    imagePullSecrets:
+    - name: default-dockercfg-6pspm
+    nodeName: ociopf-p-189.dmz
+    nodeSelector:
+      region: app
+    restartPolicy: Always
+    schedulerName: default-scheduler
+    securityContext:
+      fsGroup: 1000230000
+      seLinuxOptions:
+        level: s0:c15,c10
+    serviceAccount: default
+    serviceAccountName: default
+    terminationGracePeriodSeconds: 30
+    volumes:
+    - name: default-token-knha0
+      secret:
+        defaultMode: 420
+        secretName: default-token-knha0
+  status:
+    phase: Pending
+    qosClass: Burstable
+- apiVersion: v1
+  kind: Pod
+  metadata:
+    annotations:
+      kubernetes.io/created-by: |
+        {"kind":"SerializedReference","apiVersion":"v1","reference":{"kind":"ReplicationController","namespace":"mem-tfrs-test","name":"postgresql-10","uid":"27c81ca0-05f7-11e8-b39a-0050568348cc","apiVersion":"v1","resourceVersion":"327877338"}}
+      kubernetes.io/limit-ranger: 'LimitRanger plugin set: cpu request for container
+        postgresql; cpu limit for container postgresql'
+      openshift.io/deployment-config.latest-version: "10"
+      openshift.io/deployment-config.name: postgresql
+      openshift.io/deployment.name: postgresql-10
+      openshift.io/scc: restricted
+    creationTimestamp: null
+    generateName: postgresql-10-
+    labels:
+      deployment: postgresql-10
+      deploymentconfig: postgresql
+      name: postgresql
+    ownerReferences:
+    - apiVersion: v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: ReplicationController
+      name: postgresql-10
+      uid: 27c81ca0-05f7-11e8-b39a-0050568348cc
+  spec:
+    containers:
+    - env:
+      - name: POSTGRESQL_DATABASE
+        value: tfrs
+      - name: POSTGRESQL_USER
+        valueFrom:
+          secretKeyRef:
+            key: DATABASE_USER
+            name: tfrs-postgresql
+      - name: POSTGRESQL_PASSWORD
+        valueFrom:
+          secretKeyRef:
+            key: DATABASE_PASSWORD
+            name: tfrs-postgresql
+      image: registry.access.redhat.com/rhscl/postgresql-95-rhel7@sha256:19aacf0c8331df76b67932415bd84abf74ec36fd9d4aef518ad9f6285c4a948a
+      imagePullPolicy: IfNotPresent
+      livenessProbe:
+        failureThreshold: 3
+        initialDelaySeconds: 30
+        periodSeconds: 10
+        successThreshold: 1
+        tcpSocket:
+          port: 5432
+        timeoutSeconds: 1
+      name: postgresql
+      ports:
+      - containerPort: 5432
+        protocol: TCP
+      readinessProbe:
+        exec:
+          command:
+          - /bin/sh
+          - -i
+          - -c
+          - psql -h 127.0.0.1 -U $POSTGRESQL_USER -q -d $POSTGRESQL_DATABASE -c 'SELECT
+            1'
+        failureThreshold: 3
+        initialDelaySeconds: 5
+        periodSeconds: 10
+        successThreshold: 1
+        timeoutSeconds: 1
+      resources:
+        limits:
+          cpu: "1"
+          memory: 512Mi
+        requests:
+          cpu: 100m
+          memory: 512Mi
+      securityContext:
+        capabilities:
+          drop:
+          - KILL
+          - MKNOD
+          - SETGID
+          - SETUID
+          - SYS_CHROOT
+        privileged: false
+        runAsUser: 1000230000
+        seLinuxOptions:
+          level: s0:c15,c10
+      terminationMessagePath: /dev/termination-log
+      terminationMessagePolicy: File
+      volumeMounts:
+      - mountPath: /var/lib/pgsql/data
+        name: postgresql-data
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: default-token-knha0
+        readOnly: true
+    dnsPolicy: ClusterFirst
+    imagePullSecrets:
+    - name: default-dockercfg-6pspm
+    nodeName: ociopf-p-187.dmz
+    nodeSelector:
+      region: app
+    restartPolicy: Always
+    schedulerName: default-scheduler
+    securityContext:
+      fsGroup: 1000230000
+      seLinuxOptions:
+        level: s0:c15,c10
+    serviceAccount: default
+    serviceAccountName: default
+    terminationGracePeriodSeconds: 30
+    volumes:
+    - name: postgresql-data
+      persistentVolumeClaim:
+        claimName: postgresql-cns
+    - name: default-token-knha0
+      secret:
+        defaultMode: 420
+        secretName: default-token-knha0
+  status:
+    phase: Pending
+    qosClass: Burstable
+- apiVersion: v1
+  kind: Pod
+  metadata:
+    annotations:
+      kubernetes.io/created-by: |
+        {"kind":"SerializedReference","apiVersion":"v1","reference":{"kind":"ReplicationController","namespace":"mem-tfrs-test","name":"schema-spy-5","uid":"68fb2721-05f7-11e8-b39a-0050568348cc","apiVersion":"v1","resourceVersion":"328957617"}}
+      kubernetes.io/limit-ranger: 'LimitRanger plugin set: cpu request for container
+        schema-spy; cpu limit for container schema-spy'
+      openshift.io/deployment-config.latest-version: "5"
+      openshift.io/deployment-config.name: schema-spy
+      openshift.io/deployment.name: schema-spy-5
+      openshift.io/scc: restricted
+    creationTimestamp: null
+    generateName: schema-spy-5-
+    labels:
+      deployment: schema-spy-5
+      deploymentconfig: schema-spy
+      name: schema-spy
+    ownerReferences:
+    - apiVersion: v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: ReplicationController
+      name: schema-spy-5
+      uid: 68fb2721-05f7-11e8-b39a-0050568348cc
+  spec:
+    containers:
+    - env:
+      - name: DATABASE_SERVICE_NAME
+        value: postgresql
+      - name: POSTGRESQL_DATABASE
+        value: tfrs
+      - name: POSTGRESQL_USER
+        valueFrom:
+          secretKeyRef:
+            key: DATABASE_USER
+            name: tfrs-postgresql
+      - name: POSTGRESQL_PASSWORD
+        valueFrom:
+          secretKeyRef:
+            key: DATABASE_PASSWORD
+            name: tfrs-postgresql
+      image: 172.50.0.2:5000/mem-tfrs-tools/schema-spy@sha256:7a420819e019200ec98ebebe06388872f2f72f37baa7c64162a4a4d4909bcfbf
+      imagePullPolicy: IfNotPresent
+      livenessProbe:
+        failureThreshold: 3
+        httpGet:
+          path: /
+          port: 8080
+          scheme: HTTP
+        initialDelaySeconds: 30
+        periodSeconds: 10
+        successThreshold: 1
+        timeoutSeconds: 3000
+      name: schema-spy
+      ports:
+      - containerPort: 8080
+        protocol: TCP
+      readinessProbe:
+        failureThreshold: 3
+        httpGet:
+          path: /
+          port: 8080
+          scheme: HTTP
+        initialDelaySeconds: 3
+        periodSeconds: 10
+        successThreshold: 1
+        timeoutSeconds: 3000
+      resources:
+        limits:
+          cpu: "1"
+          memory: 512Mi
+        requests:
+          cpu: 100m
+          memory: 512Mi
+      securityContext:
+        capabilities:
+          drop:
+          - KILL
+          - MKNOD
+          - SETGID
+          - SETUID
+          - SYS_CHROOT
+        privileged: false
+        runAsUser: 1000230000
+        seLinuxOptions:
+          level: s0:c15,c10
+      terminationMessagePath: /dev/termination-log
+      terminationMessagePolicy: File
+      volumeMounts:
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: default-token-knha0
+        readOnly: true
+    dnsPolicy: ClusterFirst
+    imagePullSecrets:
+    - name: default-dockercfg-6pspm
+    nodeName: ociopf-p-185.dmz
+    nodeSelector:
+      region: app
+    restartPolicy: Always
+    schedulerName: default-scheduler
+    securityContext:
+      fsGroup: 1000230000
+      seLinuxOptions:
+        level: s0:c15,c10
+    serviceAccount: default
+    serviceAccountName: default
+    terminationGracePeriodSeconds: 30
+    volumes:
+    - name: default-token-knha0
+      secret:
+        defaultMode: 420
+        secretName: default-token-knha0
+  status:
+    phase: Pending
+    qosClass: Burstable
+- apiVersion: v1
+  kind: Pod
+  metadata:
+    annotations:
+      kubernetes.io/created-by: |
+        {"kind":"SerializedReference","apiVersion":"v1","reference":{"kind":"ReplicationController","namespace":"mem-tfrs-test","name":"tfrs-69","uid":"e9339c00-083c-11e8-a354-0050568379a2","apiVersion":"v1","resourceVersion":"330765510"}}
+      kubernetes.io/limit-ranger: 'LimitRanger plugin set: cpu request for container
+        tfrs-app; cpu limit for container tfrs-app'
+      openshift.io/deployment-config.latest-version: "69"
+      openshift.io/deployment-config.name: tfrs
+      openshift.io/deployment.name: tfrs-69
+      openshift.io/scc: restricted
+    creationTimestamp: null
+    generateName: tfrs-69-
+    labels:
+      deployment: tfrs-69
+      deploymentconfig: tfrs
+      name: tfrs
+    ownerReferences:
+    - apiVersion: v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: ReplicationController
+      name: tfrs-69
+      uid: e9339c00-083c-11e8-a354-0050568379a2
+  spec:
+    containers:
+    - env:
+      - name: DATABASE_SERVICE_NAME
+        value: postgresql
+      - name: DATABASE_ENGINE
+        value: postgresql
+      - name: DATABASE_NAME
+        value: tfrs
+      - name: APP_CONFIG
+      - name: DATABASE_USER
+        valueFrom:
+          secretKeyRef:
+            key: DATABASE_USER
+            name: tfrs-postgresql
+      - name: DATABASE_PASSWORD
+        valueFrom:
+          secretKeyRef:
+            key: DATABASE_PASSWORD
+            name: tfrs-postgresql
+      image: 172.50.0.2:5000/mem-tfrs-tools/tfrs@sha256:14551021a28ff5f0b07e055e7cfa29bd0044024fbdc47644c3aee509198955a1
+      imagePullPolicy: IfNotPresent
+      livenessProbe:
+        failureThreshold: 3
+        httpGet:
+          path: /health
+          port: 8080
+          scheme: HTTP
+        initialDelaySeconds: 30
+        periodSeconds: 10
+        successThreshold: 1
+        timeoutSeconds: 3
+      name: tfrs-app
+      ports:
+      - containerPort: 8080
+        protocol: TCP
+      readinessProbe:
+        failureThreshold: 3
+        httpGet:
+          path: /health
+          port: 8080
+          scheme: HTTP
+        initialDelaySeconds: 3
+        periodSeconds: 10
+        successThreshold: 1
+        timeoutSeconds: 3
+      resources:
+        limits:
+          cpu: "1"
+          memory: 512Mi
+        requests:
+          cpu: 100m
+          memory: 512Mi
+      securityContext:
+        capabilities:
+          drop:
+          - KILL
+          - MKNOD
+          - SETGID
+          - SETUID
+          - SYS_CHROOT
+        privileged: false
+        runAsUser: 1000230000
+        seLinuxOptions:
+          level: s0:c15,c10
+      terminationMessagePath: /dev/termination-log
+      terminationMessagePolicy: File
+      volumeMounts:
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: default-token-knha0
+        readOnly: true
+    dnsPolicy: ClusterFirst
+    imagePullSecrets:
+    - name: default-dockercfg-6pspm
+    nodeName: ociopf-p-185.dmz
+    nodeSelector:
+      region: app
+    restartPolicy: Always
+    schedulerName: default-scheduler
+    securityContext:
+      fsGroup: 1000230000
+      seLinuxOptions:
+        level: s0:c15,c10
+    serviceAccount: default
+    serviceAccountName: default
+    terminationGracePeriodSeconds: 30
+    volumes:
+    - name: default-token-knha0
+      secret:
+        defaultMode: 420
+        secretName: default-token-knha0
+  status:
+    phase: Pending
+    qosClass: Burstable
+- apiVersion: v1
+  kind: Pod
+  metadata:
+    annotations:
+      kubernetes.io/created-by: |
+        {"kind":"SerializedReference","apiVersion":"v1","reference":{"kind":"ReplicationController","namespace":"mem-tfrs-test","name":"tfrs-69","uid":"e9339c00-083c-11e8-a354-0050568379a2","apiVersion":"v1","resourceVersion":"330765247"}}
+      kubernetes.io/limit-ranger: 'LimitRanger plugin set: cpu request for container
+        tfrs-app; cpu limit for container tfrs-app'
+      openshift.io/deployment-config.latest-version: "69"
+      openshift.io/deployment-config.name: tfrs
+      openshift.io/deployment.name: tfrs-69
+      openshift.io/scc: restricted
+    creationTimestamp: null
+    generateName: tfrs-69-
+    labels:
+      deployment: tfrs-69
+      deploymentconfig: tfrs
+      name: tfrs
+    ownerReferences:
+    - apiVersion: v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: ReplicationController
+      name: tfrs-69
+      uid: e9339c00-083c-11e8-a354-0050568379a2
+  spec:
+    containers:
+    - env:
+      - name: DATABASE_SERVICE_NAME
+        value: postgresql
+      - name: DATABASE_ENGINE
+        value: postgresql
+      - name: DATABASE_NAME
+        value: tfrs
+      - name: APP_CONFIG
+      - name: DATABASE_USER
+        valueFrom:
+          secretKeyRef:
+            key: DATABASE_USER
+            name: tfrs-postgresql
+      - name: DATABASE_PASSWORD
+        valueFrom:
+          secretKeyRef:
+            key: DATABASE_PASSWORD
+            name: tfrs-postgresql
+      image: 172.50.0.2:5000/mem-tfrs-tools/tfrs@sha256:14551021a28ff5f0b07e055e7cfa29bd0044024fbdc47644c3aee509198955a1
+      imagePullPolicy: IfNotPresent
+      livenessProbe:
+        failureThreshold: 3
+        httpGet:
+          path: /health
+          port: 8080
+          scheme: HTTP
+        initialDelaySeconds: 30
+        periodSeconds: 10
+        successThreshold: 1
+        timeoutSeconds: 3
+      name: tfrs-app
+      ports:
+      - containerPort: 8080
+        protocol: TCP
+      readinessProbe:
+        failureThreshold: 3
+        httpGet:
+          path: /health
+          port: 8080
+          scheme: HTTP
+        initialDelaySeconds: 3
+        periodSeconds: 10
+        successThreshold: 1
+        timeoutSeconds: 3
+      resources:
+        limits:
+          cpu: "1"
+          memory: 512Mi
+        requests:
+          cpu: 100m
+          memory: 512Mi
+      securityContext:
+        capabilities:
+          drop:
+          - KILL
+          - MKNOD
+          - SETGID
+          - SETUID
+          - SYS_CHROOT
+        privileged: false
+        runAsUser: 1000230000
+        seLinuxOptions:
+          level: s0:c15,c10
+      terminationMessagePath: /dev/termination-log
+      terminationMessagePolicy: File
+      volumeMounts:
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: default-token-knha0
+        readOnly: true
+    dnsPolicy: ClusterFirst
+    imagePullSecrets:
+    - name: default-dockercfg-6pspm
+    nodeName: ociopf-p-189.dmz
+    nodeSelector:
+      region: app
+    restartPolicy: Always
+    schedulerName: default-scheduler
+    securityContext:
+      fsGroup: 1000230000
+      seLinuxOptions:
+        level: s0:c15,c10
+    serviceAccount: default
+    serviceAccountName: default
+    terminationGracePeriodSeconds: 30
+    volumes:
+    - name: default-token-knha0
+      secret:
+        defaultMode: 420
+        secretName: default-token-knha0
+  status:
+    phase: Pending
+    qosClass: Burstable
+- apiVersion: v1
+  kind: Pod
+  metadata:
+    annotations:
+      kubernetes.io/created-by: |
+        {"kind":"SerializedReference","apiVersion":"v1","reference":{"kind":"ReplicationController","namespace":"mem-tfrs-test","name":"tfrs-69","uid":"e9339c00-083c-11e8-a354-0050568379a2","apiVersion":"v1","resourceVersion":"330765510"}}
+      kubernetes.io/limit-ranger: 'LimitRanger plugin set: cpu request for container
+        tfrs-app; cpu limit for container tfrs-app'
+      openshift.io/deployment-config.latest-version: "69"
+      openshift.io/deployment-config.name: tfrs
+      openshift.io/deployment.name: tfrs-69
+      openshift.io/scc: restricted
+    creationTimestamp: null
+    generateName: tfrs-69-
+    labels:
+      deployment: tfrs-69
+      deploymentconfig: tfrs
+      name: tfrs
+    ownerReferences:
+    - apiVersion: v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: ReplicationController
+      name: tfrs-69
+      uid: e9339c00-083c-11e8-a354-0050568379a2
+  spec:
+    containers:
+    - env:
+      - name: DATABASE_SERVICE_NAME
+        value: postgresql
+      - name: DATABASE_ENGINE
+        value: postgresql
+      - name: DATABASE_NAME
+        value: tfrs
+      - name: APP_CONFIG
+      - name: DATABASE_USER
+        valueFrom:
+          secretKeyRef:
+            key: DATABASE_USER
+            name: tfrs-postgresql
+      - name: DATABASE_PASSWORD
+        valueFrom:
+          secretKeyRef:
+            key: DATABASE_PASSWORD
+            name: tfrs-postgresql
+      image: 172.50.0.2:5000/mem-tfrs-tools/tfrs@sha256:14551021a28ff5f0b07e055e7cfa29bd0044024fbdc47644c3aee509198955a1
+      imagePullPolicy: IfNotPresent
+      livenessProbe:
+        failureThreshold: 3
+        httpGet:
+          path: /health
+          port: 8080
+          scheme: HTTP
+        initialDelaySeconds: 30
+        periodSeconds: 10
+        successThreshold: 1
+        timeoutSeconds: 3
+      name: tfrs-app
+      ports:
+      - containerPort: 8080
+        protocol: TCP
+      readinessProbe:
+        failureThreshold: 3
+        httpGet:
+          path: /health
+          port: 8080
+          scheme: HTTP
+        initialDelaySeconds: 3
+        periodSeconds: 10
+        successThreshold: 1
+        timeoutSeconds: 3
+      resources:
+        limits:
+          cpu: "1"
+          memory: 512Mi
+        requests:
+          cpu: 100m
+          memory: 512Mi
+      securityContext:
+        capabilities:
+          drop:
+          - KILL
+          - MKNOD
+          - SETGID
+          - SETUID
+          - SYS_CHROOT
+        privileged: false
+        runAsUser: 1000230000
+        seLinuxOptions:
+          level: s0:c15,c10
+      terminationMessagePath: /dev/termination-log
+      terminationMessagePolicy: File
+      volumeMounts:
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: default-token-knha0
+        readOnly: true
+    dnsPolicy: ClusterFirst
+    imagePullSecrets:
+    - name: default-dockercfg-6pspm
+    nodeName: ociopf-p-187.dmz
+    nodeSelector:
+      region: app
+    restartPolicy: Always
+    schedulerName: default-scheduler
+    securityContext:
+      fsGroup: 1000230000
+      seLinuxOptions:
+        level: s0:c15,c10
+    serviceAccount: default
+    serviceAccountName: default
+    terminationGracePeriodSeconds: 30
+    volumes:
+    - name: default-token-knha0
+      secret:
+        defaultMode: 420
+        secretName: default-token-knha0
+  status:
+    phase: Pending
+    qosClass: Burstable
+kind: List
+metadata: {}
