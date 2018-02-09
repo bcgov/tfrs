@@ -1,0 +1,33 @@
+apiVersion: v1
+items:
+- apiVersion: v1
+  kind: PersistentVolumeClaim
+  metadata:
+    annotations:
+      pv.kubernetes.io/bind-completed: "yes"
+      pv.kubernetes.io/bound-by-controller: "yes"
+      volume.beta.kubernetes.io/storage-class: gluster-file
+      volume.beta.kubernetes.io/storage-provisioner: kubernetes.io/glusterfs
+    creationTimestamp: 2018-01-23T23:26:07Z
+    name: postgresql-cns
+    namespace: mem-tfrs-prod
+    resourceVersion: "322437802"
+    selfLink: /api/v1/namespaces/mem-tfrs-prod/persistentvolumeclaims/postgresql-cns
+    uid: ca0e197f-0094-11e8-b783-0050568379a2
+  spec:
+    accessModes:
+    - ReadWriteOnce
+    resources:
+      requests:
+        storage: 5Gi
+    volumeName: pvc-ca0e197f-0094-11e8-b783-0050568379a2
+  status:
+    accessModes:
+    - ReadWriteOnce
+    capacity:
+      storage: 5Gi
+    phase: Bound
+kind: List
+metadata: {}
+resourceVersion: ""
+selfLink: ""
