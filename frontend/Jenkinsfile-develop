@@ -36,7 +36,7 @@ node('maven') {
     }
 
 }
-
+/**********
 node('bddstack') {
 
 	stage('FT on Dev') {
@@ -100,3 +100,4 @@ stage('ST on prod (TBD)') {
         sh 'sleep 5s'
     }
 }
+*******************/
