@@ -377,6 +377,13 @@ class TestCreditTradeAPI(TestCase):
             response = fake_api_calls.create_credit_trade_dict(ct)
             assert status.HTTP_201_CREATED == response.status_code
 
+            # Make sure actions are "Draft" and "Submitted"
+            new_ct = fake_api_calls.get_credit_trade(response.json()['id'])
+            if ct['status'] == STATUS_DRAFT:
+                actions = [a['status'] for a in new_ct.json()['actions']]
+                assert sorted(["Draft", "Submitted"]) == sorted(actions)
+
+
     def test_create_other_statuses_fail(self, **kwargs):
         credit_trades = [{
                 'data': {
