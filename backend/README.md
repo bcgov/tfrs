@@ -20,7 +20,7 @@ Using virtualenv is handy for development work
 $ sudo pip install virtualenv
 ```
 
-Go to the `tfrs\backend` folder and create your virtualenv folder
+Go to the `tfrs/backend` folder and create your virtualenv folder
 
 ```
 $ cd ~/projects/tfrs/backend
