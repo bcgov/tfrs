@@ -70,7 +70,14 @@ class CreditTradeStatusSerializer(serializers.ModelSerializer):
         model = CreditTradeStatus
         fields = (
             'id', 'status', 'description', 'effective_date', 'expiration_date',
-            'display_order')
+            'display_order', 'action')
+
+
+class CreditTradeStatusMinSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CreditTradeStatus
+        fields = (
+            'id', 'status', 'action')
 
 
 class CreditTradeTypeSerializer(serializers.ModelSerializer):
@@ -263,14 +270,14 @@ class CreditTradeApproveSerializer(serializers.ModelSerializer):
 
 
 class CreditTrade2Serializer(serializers.ModelSerializer):
-    status = CreditTradeStatusSerializer(read_only=True)
+    status = CreditTradeStatusMinSerializer(read_only=True)
     initiator = OrganizationSerializer(read_only=True)
     respondent = OrganizationSerializer(read_only=True)
     type = CreditTradeTypeSerializer(read_only=True)
     zero_reason = CreditTradeZeroReasonSerializer(read_only=True)
     credits_from = OrganizationSerializer(read_only=True)
     credits_to = OrganizationSerializer(read_only=True)
-    actions = CreditTradeStatusSerializer(many=True, read_only=True)
+    actions = CreditTradeStatusMinSerializer(many=True, read_only=True)
 
     class Meta:
         model = CreditTrade
@@ -281,7 +288,6 @@ class CreditTrade2Serializer(serializers.ModelSerializer):
                   'zero_reason',
                   'trade_effective_date', 'credits_from', 'credits_to',
                   'update_timestamp', 'actions')
-        # exclude = ('note',)
 
 
 class CreditTradeHistory2Serializer(serializers.ModelSerializer):
