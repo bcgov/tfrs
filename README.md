@@ -10,7 +10,7 @@ Master Branch:
 Transportation Fuels Reporting System
 
 ### Usage
-This software is being developed to streamline compliance reporting for transportation fuel suppliers  
+This software is being developed to streamline compliance reporting for transportation fuel suppliers.  
 
 ### Data
 Documentation for system data is dynamical generated using Schema Spy:
