@@ -30,6 +30,7 @@ node('maven') {
     }
 
     stage('Deploy on Test') {
+	input "Deploy to Test?"
         echo "Deploying to Test..."
         openshiftTag destStream: 'client', verbose: 'true', destTag: 'test', srcStream: 'client', srcTag: "${IMAGE_HASH}"
         openshiftVerifyDeployment depCfg: 'client', namespace: 'mem-tfrs-test', replicaCount: 1, verbose: 'false'
