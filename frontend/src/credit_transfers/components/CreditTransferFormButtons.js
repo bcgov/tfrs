@@ -14,6 +14,7 @@ const CreditTransferFormButtons = props => (
     >
       Cancel
     </button>
+    {props.actions.includes('Save Draft') &&
     <button
       type="submit"
       className="btn btn-default"
@@ -21,6 +22,8 @@ const CreditTransferFormButtons = props => (
     >
       Save Draft
     </button>
+    }
+    {props.actions.includes('Propose') &&
     <button
       type="submit"
       className="btn btn-primary"
@@ -28,11 +31,13 @@ const CreditTransferFormButtons = props => (
     >
       Propose
     </button>
+    }
   </div>
 );
 
 CreditTransferFormButtons.propTypes = {
-  changeStatus: PropTypes.func.isRequired
+  changeStatus: PropTypes.func.isRequired,
+  actions: PropTypes.arrayOf(PropTypes.string).isRequired
 };
 
 export default CreditTransferFormButtons;

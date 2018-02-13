@@ -122,10 +122,9 @@ class CreditTransferAddContainer extends Component {
     console.log('submitting', data);
 
     // TODO: Add more validation here?
-
     this.props.addCreditTransfer(
       data,
-      () => { history.push(Routes.CREDIT_TRANSACTIONS); }
+      history.push(Routes.CREDIT_TRANSACTIONS)
     );
 
     return false;

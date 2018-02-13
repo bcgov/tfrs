@@ -2,7 +2,6 @@
  * Container component
  * All data handling & manipulation should be handled here.
  */
- 
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
@@ -15,6 +14,7 @@ class CreditTransferViewContainer extends Component {
     super(props);
     this._changeStatus = this._changeStatus.bind(this);
   }
+
   componentDidMount () {
     this.loadData(this.props.match.params.id);
   }
@@ -56,7 +56,15 @@ class CreditTransferViewContainer extends Component {
 
   render () {
     const { isFetching, item } = this.props;
-    console.log(this.props);
+
+    let buttonActions = [];
+    if (!isFetching && item.actions) {
+      // TODO: Add util function to return appropriate actions
+      buttonActions = item.actions.map(action => (
+        action.action
+      ));
+    }
+
     return (
       <CreditTransferDetails
         creditsFrom={item.creditsFrom}
@@ -67,6 +75,7 @@ class CreditTransferViewContainer extends Component {
         isFetching={isFetching}
         tradeType={item.type}
         changeStatus={this._changeStatus}
+        buttonActions={buttonActions}
       />
     );
   }
@@ -87,7 +96,8 @@ CreditTransferViewContainer.propTypes = {
     totalValue: PropTypes.oneOfType([
       PropTypes.string,
       PropTypes.number
-    ])
+    ]),
+    actions: PropTypes.arrayOf(PropTypes.shape({}))
   }).isRequired,
   getCreditTransfer: PropTypes.func.isRequired,
   isFetching: PropTypes.bool.isRequired,
