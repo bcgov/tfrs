@@ -45,6 +45,7 @@ const CreditTransferDetails = props => (
         <form onSubmit={e => e.preventDefault()}>
           <CreditTransferFormButtons
             changeStatus={props.changeStatus}
+            actions={props.buttonActions}
           />
         </form>
       </div>
@@ -97,6 +98,7 @@ CreditTransferDetails.propTypes = {
     PropTypes.number
   ]),
   changeStatus: PropTypes.func.isRequired,
+  buttonActions: PropTypes.arrayOf(PropTypes.string).isRequired,
   isFetching: PropTypes.bool.isRequired
 
 };

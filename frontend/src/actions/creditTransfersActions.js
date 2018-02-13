@@ -1,7 +1,6 @@
 import axios from 'axios';
 
 import * as ActionTypes from '../constants/actionTypes';
-import * as ReducerTypes from '../constants/reducerTypes';
 import * as Routes from '../constants/routes';
 
 /*
@@ -66,14 +65,14 @@ const getCreditTransferError = error => ({
  */
 export const addCreditTransfer = (data, callback) => (dispatch) => {
   dispatch(addCreditTransferRequest());
-  console.log('sending data', data);
+  console.log('sending data', data, callback);
   axios
     .post(Routes.BASE_URL + Routes.CREDIT_TRADE_API, data)
     .then((response) => {
       console.log("success", response);
       dispatch(addCreditTransferSuccess(response.data));
       // Call the callback function if defined
-      console.log("CALLING CALLBACK")
+      console.log("CALLING CALLBACK", callback);
       typeof callback === 'function' && callback();
     }).catch((error) => {
       console.log("error", error, error.response);

@@ -13,6 +13,10 @@ import CreditTransferVisualRepresentation from './CreditTransferVisualRepresenta
 import CreditTransferFormNote from './CreditTransferFormNote';
 import CreditTransferFormButtons from './CreditTransferFormButtons';
 
+import * as Lang from '../../constants/langEnUs';
+
+const buttonActions = [Lang.BTN_SAVE_DRAFT, Lang.BTN_PROPOSE];
+
 const CreditTransferForm = props => (
   <div className="credit-transfer">
     <h1>{props.title}</h1>
@@ -43,6 +47,7 @@ const CreditTransferForm = props => (
       />
       <CreditTransferFormButtons
         changeStatus={props.changeStatus}
+        actions={buttonActions}
       />
     </form>
   </div>
