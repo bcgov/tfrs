@@ -33,3 +33,20 @@ class CreditTradeStatus(Auditable):
 
     class Meta:
         db_table = 'credit_trade_status'
+
+    @property
+    def action(self):
+        if self.status == 'Draft':
+            return 'Save Draft'
+        elif self.status == 'Submitted':
+            return 'Propose'
+        elif self.status == 'Accepted':
+            return 'Accept'
+        elif self.status == 'Cancelled':
+            return 'Cancel'
+        elif self.status == 'Recommended':
+            return 'Recommend for Decision'
+        elif self.status == 'Approved':
+            return 'Approve'
+        elif self.status == 'Declined':
+            return 'Decline for approval'

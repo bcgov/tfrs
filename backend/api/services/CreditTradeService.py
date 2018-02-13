@@ -143,8 +143,3 @@ class CreditTradeService(object):
 
         from_new_bal.save()
         to_new_bal.save()
-
-        # print("to bal s", to_starting_bal.effective_date, vars(to_starting_bal))
-        # print("to bal e", to_new_bal.effective_date, vars(to_new_bal))
-        # print("from bal s", from_starting_bal.effective_date, vars(from_starting_bal))
-        # print("from bal e", from_new_bal.effective_date, vars(from_new_bal))
