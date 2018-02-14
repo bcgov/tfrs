@@ -45,6 +45,10 @@ export const CREDIT_TRANSFER_STATUS = {
     id: 8,
     description: 'Rescinded'
   },
+  refused: {
+    id: 8,
+    description: 'Refused'
+  },
   declinedForApproval: {
     id: 9,
     description: 'Declined for approval'

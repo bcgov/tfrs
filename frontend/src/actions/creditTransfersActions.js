@@ -64,7 +64,7 @@ export const invalidateCreditTransfers = creditTransfers => ({
  */
 export const getCreditTransfer = id => (dispatch) => {
   dispatch(getCreditTransferRequest());
-  axios.get(`${Routes.BASE_URL}${Routes.CREDIT_TRADE_API}/${id}`)
+  return axios.get(`${Routes.BASE_URL}${Routes.CREDIT_TRADE_API}/${id}`)
     .then((response) => {
       dispatch(getCreditTransferSuccess(response.data));
     }).catch((error) => {
@@ -98,7 +98,7 @@ export const invalidateCreditTransfer = creditTransfers => ({
 /*
  * Add Credit Transfers
  */
-export const addCreditTransfer = (data, callback) => (dispatch) => {
+export const addCreditTransfer = data => (dispatch) => {
   dispatch(addCreditTransferRequest());
   return axios
     .post(Routes.BASE_URL + Routes.CREDIT_TRADE_API, data)
@@ -129,14 +129,13 @@ const addCreditTransferError = error => ({
 /*
  * Edit/Update credit transfer
  */
-export const updateCreditTransfer = (data, callback) => (dispatch) => {
+export const updateCreditTransfer = (id, data) => (dispatch) => {
   dispatch(updateCreditTransferRequest());
-  axios
-    .post(Routes.BASE_URL + Routes.CREDIT_TRADE_API, data)
+  console.log('updating', data);
+  return axios
+    .put(`${Routes.BASE_URL}${Routes.CREDIT_TRADE_API}/${id}`, data)
     .then((response) => {
       dispatch(updateCreditTransferSuccess(response.data));
-      // Call the callback function if defined
-      typeof callback === 'function' && callback();
     }).catch((error) => {
       dispatch(updateCreditTransferError(error.response.data));
     });
@@ -162,14 +161,12 @@ const updateCreditTransferError = error => ({
 /*
  * Delete credit transfer
  */
-export const deleteCreditTransfer = (data, callback) => (dispatch) => {
+export const deleteCreditTransfer = data => (dispatch) => {
   dispatch(deleteCreditTransferRequest());
   axios
     .post(Routes.BASE_URL + Routes.CREDIT_TRADE_API, data)
     .then((response) => {
       dispatch(deleteCreditTransferSuccess(response.data));
-      // Call the callback function if defined
-      typeof callback === 'function' && callback();
     }).catch((error) => {
       dispatch(deleteCreditTransferError(error.response.data));
     });
