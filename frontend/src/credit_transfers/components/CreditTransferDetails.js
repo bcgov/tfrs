@@ -56,6 +56,7 @@ const CreditTransferDetails = props => (
 
 CreditTransferDetails.defaultProps = {
   title: 'Credit Transfer',
+  id: 0,
   totalValue: '0',
   numberOfCredits: '0',
   fairMarketValuePerCredit: '0',
@@ -72,7 +73,7 @@ CreditTransferDetails.defaultProps = {
 
 CreditTransferDetails.propTypes = {
   title: PropTypes.string,
-  id: PropTypes.number.isRequired,
+  id: PropTypes.number,
   creditsFrom: PropTypes.shape({
     name: PropTypes.string,
     id: PropTypes.number
