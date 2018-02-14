@@ -44,6 +44,7 @@ const CreditTransferDetails = props => (
         <div>{props.note}</div>
         <form onSubmit={e => e.preventDefault()}>
           <CreditTransferFormButtons
+            id={props.id}
             changeStatus={props.changeStatus}
             actions={props.buttonActions}
           />
@@ -71,6 +72,7 @@ CreditTransferDetails.defaultProps = {
 
 CreditTransferDetails.propTypes = {
   title: PropTypes.string,
+  id: PropTypes.number.isRequired,
   creditsFrom: PropTypes.shape({
     name: PropTypes.string,
     id: PropTypes.number

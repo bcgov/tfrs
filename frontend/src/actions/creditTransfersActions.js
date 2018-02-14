@@ -97,6 +97,9 @@ const addCreditTransferError = error => ({
   errorMessage: error
 });
 
+/*
+ * Edit/Update credit transfer
+ */
 export const updateCreditTransfer = (data, callback) => (dispatch) => {
   dispatch(updateCreditTransferRequest());
   axios
@@ -122,6 +125,39 @@ const updateCreditTransferSuccess = data => ({
 });
 
 const updateCreditTransferError = error => ({
+  name: 'ERROR_ADD_CREDIT_TRANSFER',
+  type: ActionTypes.ERROR,
+  errorMessage: error
+});
+
+/*
+ * Delete credit transfer
+ */
+export const deleteCreditTransfer = (data, callback) => (dispatch) => {
+  dispatch(deleteCreditTransferRequest());
+  axios
+    .post(Routes.BASE_URL + Routes.CREDIT_TRADE_API, data)
+    .then((response) => {
+      dispatch(deleteCreditTransferSuccess(response.data));
+      // Call the callback function if defined
+      typeof callback === 'function' && callback();
+    }).catch((error) => {
+      dispatch(deleteCreditTransferError(error.response.data));
+    });
+};
+
+const deleteCreditTransferRequest = () => ({
+  name: 'UPDATE_CREDIT_TRANSFER',
+  type: ActionTypes.REQUEST
+});
+
+const deleteCreditTransferSuccess = data => ({
+  name: 'SUCCESS_UPDATE_CREDIT_TRANSFER',
+  type: ActionTypes.SUCCESS,
+  data
+});
+
+const deleteCreditTransferError = error => ({
   name: 'ERROR_ADD_CREDIT_TRANSFER',
   type: ActionTypes.ERROR,
   errorMessage: error

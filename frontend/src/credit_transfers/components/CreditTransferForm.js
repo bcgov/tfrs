@@ -46,6 +46,7 @@ const CreditTransferForm = props => (
         handleInputChange={props.handleInputChange}
       />
       <CreditTransferFormButtons
+        id={props.id}
         changeStatus={props.changeStatus}
         actions={buttonActions}
       />
@@ -54,11 +55,13 @@ const CreditTransferForm = props => (
 );
 
 CreditTransferForm.defaultProps = {
-  title: 'Credit Transfer'
+  title: 'Credit Transfer',
+  id: 0
 };
 
 CreditTransferForm.propTypes = {
   title: PropTypes.string,
+  id: PropTypes.number,
   fuelSuppliers: PropTypes.arrayOf(PropTypes.shape()).isRequired,
   fields: PropTypes.shape({
     initiator: PropTypes.shape({

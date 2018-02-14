@@ -6,12 +6,12 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
-import { getCreditTransfer, deleteCreditTransfer } from '../actions/creditTransfersActions';
+import { getCreditTransfer } from '../actions/creditTransfersActions';
 import CreditTransferDetails from './components/CreditTransferDetails';
 
 import * as Lang from '../constants/langEnUs';
 
-class CreditTransferViewContainer extends Component {
+class CreditTransferEditContainer extends Component {
   constructor (props) {
     super(props);
     this._changeStatus = this._changeStatus.bind(this);
@@ -56,24 +56,14 @@ class CreditTransferViewContainer extends Component {
     // );
   }
 
-  _deleteCreditTransfer (id) {
-    // TODO: Popup notification before delete
-    this.props.deleteCreditTransfer(this.props.item.id);
-  }
-
   render () {
     const { isFetching, item } = this.props;
     let buttonActions = [];
 
     if (!isFetching && item.actions) {
-      // TODO: Add util function to return appropriate actions
       buttonActions = item.actions.map(action => (
         action.action
       ));
-      if (buttonActions.includes(Lang.BTN_SAVE_DRAFT)) {
-        buttonActions.push('Delete');
-        buttonActions[buttonActions.indexOf(Lang.BTN_SAVE_DRAFT)] = Lang.BTN_EDIT_DRAFT;
-      }
     }
 
     return (
@@ -93,7 +83,7 @@ class CreditTransferViewContainer extends Component {
   }
 }
 
-CreditTransferViewContainer.propTypes = {
+CreditTransferEditContainer.propTypes = {
   item: PropTypes.shape({
     id: PropTypes.number,
     creditsFrom: PropTypes.shape({}),
@@ -113,7 +103,6 @@ CreditTransferViewContainer.propTypes = {
     actions: PropTypes.arrayOf(PropTypes.shape({}))
   }).isRequired,
   getCreditTransfer: PropTypes.func.isRequired,
-  deleteCreditTransfer: PropTypes.func.isRequired,
   isFetching: PropTypes.bool.isRequired,
   match: PropTypes.shape({
     params: PropTypes.shape({
@@ -128,8 +117,7 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  getCreditTransfer: (id) => { dispatch(getCreditTransfer(id)); },
-  deleteCreditTransfer: (id) => { dispatch(deleteCreditTransfer(id)); }
+  getCreditTransfer: (id) => { dispatch(getCreditTransfer(id)); }
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(CreditTransferViewContainer);
+export default connect(mapStateToProps, mapDispatchToProps)(CreditTransferEditContainer);
