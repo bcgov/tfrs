@@ -7,7 +7,11 @@ const creditTransfer = (state = {
   errors: {}
 }, action) => {
   switch (action.type) {
-    case ActionTypes.CREATE_CREDIT_TRANSFER:
+    case ActionTypes.ADD_CREDIT_TRANSFER:
+      return [
+        ...state,
+        Object.assign({}, action.data)];
+    case ActionTypes.SUCCESS_ADD_CREDIT_TRANSFER:
       return [
         ...state,
         Object.assign({}, action.data)];
@@ -37,6 +41,10 @@ const creditTransfer = (state = {
         didInvalidate: true,
         errors: action.errorMessage
       });
+    case ActionTypes.INVALIDATE_CREDIT_TRANSFER:
+      return Object.assign({}, state, {
+        didInvalidate: true
+      });
     default:
       return state;
   }
@@ -65,6 +73,10 @@ const creditTransfers = (state = {
         isFetching: false,
         success: false,
         errorMessage: action.errorMessage
+      });
+    case ActionTypes.INVALIDATE_CREDIT_TRANSFERS:
+      return Object.assign({}, state, {
+        didInvalidate: true
       });
     default:
       return state;

@@ -6,7 +6,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { getCreditTransfers } from '../actions/creditTransfersActions';
+import { getCreditTransfersIfNeeded } from '../actions/creditTransfersActions';
 import CreditTransactionsPage from './components/CreditTransactionsPage';
 
 // import CreditTransferList from './components/CreditTransferList';
@@ -17,7 +17,7 @@ class CreditTransactionsContainer extends Component {
   }
 
   loadData () {
-    this.props.getCreditTransfers();
+    this.props.getCreditTransfersIfNeeded();
   }
 
   render () {
@@ -31,7 +31,7 @@ class CreditTransactionsContainer extends Component {
 }
 
 CreditTransactionsContainer.propTypes = {
-  getCreditTransfers: PropTypes.func.isRequired,
+  getCreditTransfersIfNeeded: PropTypes.func.isRequired,
   creditTransfers: PropTypes.shape({
     items: PropTypes.arrayOf(PropTypes.shape()).isRequired,
     isFetching: PropTypes.bool.isRequired
@@ -46,8 +46,8 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  getCreditTransfers: () => {
-    dispatch(getCreditTransfers());
+  getCreditTransfersIfNeeded: () => {
+    dispatch(getCreditTransfersIfNeeded());
   }
 });
 
