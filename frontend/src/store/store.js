@@ -1,7 +1,7 @@
 import { createStore, applyMiddleware, combineReducers } from 'redux';
 import { routerReducer, routerMiddleware } from 'react-router-redux';
 import { createLogger } from 'redux-logger';
-import thunkMiddleware from 'redux-thunk';
+import thunk from 'redux-thunk';
 import rootReducer from '../reducers/reducer';
 
 const middleware = routerMiddleware(history);
@@ -13,7 +13,7 @@ const store = process.env.NODE_ENV !== 'production' ? createStore(
     routing: routerReducer
   }),
   applyMiddleware(
-    thunkMiddleware,
+    thunk,
     loggerMiddleware,
     middleware
   )
@@ -23,7 +23,7 @@ const store = process.env.NODE_ENV !== 'production' ? createStore(
     routing: routerReducer
   }),
   applyMiddleware(
-    thunkMiddleware,
+    thunk,
     middleware
   )
 );
