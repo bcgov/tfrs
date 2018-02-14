@@ -27,7 +27,7 @@ const CreditTransferFormButtons = props => (
       }
       {props.actions.includes('Edit Draft') &&
       <button
-        type="submit"
+        type="button"
         className="btn btn-default"
         onClick={() => history.push(Routes.CREDIT_TRANSACTION_EDIT.replace(':id', props.id))}
       >
@@ -105,10 +105,14 @@ const CreditTransferFormButtons = props => (
   </div>
 );
 
+CreditTransferFormButtons.defaultProps = {
+  deleteCreditTransfer: () => {}
+};
+
 CreditTransferFormButtons.propTypes = {
   id: PropTypes.number.isRequired,
   changeStatus: PropTypes.func.isRequired,
-  deleteCreditTransfer: PropTypes.func.isRequired,
+  deleteCreditTransfer: PropTypes.func,
   actions: PropTypes.arrayOf(PropTypes.string).isRequired
 };
 
