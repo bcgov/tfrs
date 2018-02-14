@@ -17,7 +17,7 @@ const CreditTransferTable = (props) => {
   const columns = [{
     Header: 'ID',
     accessor: 'id',
-    maxWidth: 30
+    maxWidth: 35
   }, {
     id: 'creditsFrom',
     Header: 'From',
