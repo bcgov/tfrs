@@ -6,8 +6,9 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
-import { getCreditTransfer } from '../actions/creditTransfersActions';
+import { getCreditTransfer, deleteCreditTransfer } from '../actions/creditTransfersActions';
 import CreditTransferDetails from './components/CreditTransferDetails';
+import CreditTransferForm from './components/CreditTransferForm';
 
 import * as Lang from '../constants/langEnUs';
 
@@ -18,6 +19,7 @@ class CreditTransferEditContainer extends Component {
   }
 
   componentDidMount () {
+    console.log("props", this.props);
     this.loadData(this.props.match.params.id);
   }
 
@@ -56,29 +58,55 @@ class CreditTransferEditContainer extends Component {
     // );
   }
 
+  _deleteCreditTransfer (id) {
+    // TODO: Popup notification before delete
+    this.props.deleteCreditTransfer(this.props.item.id);
+  }
+
   render () {
     const { isFetching, item } = this.props;
     let buttonActions = [];
 
     if (!isFetching && item.actions) {
+      // TODO: Add util function to return appropriate actions
       buttonActions = item.actions.map(action => (
         action.action
       ));
+      if (buttonActions.includes(Lang.BTN_SAVE_DRAFT)) {
+        buttonActions.push('Delete');
+      }
     }
 
     return (
-      <CreditTransferDetails
-        id={item.id}
-        creditsFrom={item.creditsFrom}
-        creditsTo={item.creditsTo}
-        numberOfCredits={item.numberOfCredits}
-        fairMarketValuePerCredit={item.fairMarketValuePerCredit}
-        totalValue={item.totalValue}
-        isFetching={isFetching}
-        tradeType={item.type}
-        changeStatus={this._changeStatus}
-        buttonActions={buttonActions}
-      />
+      <div>
+        <CreditTransferDetails
+          id={item.id}
+          creditsFrom={item.creditsFrom}
+          creditsTo={item.creditsTo}
+          numberOfCredits={item.numberOfCredits}
+          fairMarketValuePerCredit={item.fairMarketValuePerCredit}
+          totalValue={item.totalValue}
+          isFetching={isFetching}
+          tradeType={item.type}
+          changeStatus={this._changeStatus}
+          buttonActions={buttonActions}
+        />
+        {/*
+        <CreditTransferForm
+          fuelSuppliers={this.props.fuelSuppliers}
+          title="Edit Credit Transfer"
+          fields={this.state.fields}
+          totalValue={item.totalValue}
+          tradeStatus={this.state.tradeStatus}
+          handleInputChange={this._handleInputChange}
+          handleSubmit={this._handleSubmit}
+          creditsFrom={this.state.creditsFrom}
+          creditsTo={this.state.creditsTo}
+          errors={this.props.errors}
+          changeStatus={this._changeStatus}
+        />
+        */}
+      </div>
     );
   }
 }
@@ -103,6 +131,7 @@ CreditTransferEditContainer.propTypes = {
     actions: PropTypes.arrayOf(PropTypes.shape({}))
   }).isRequired,
   getCreditTransfer: PropTypes.func.isRequired,
+  deleteCreditTransfer: PropTypes.func.isRequired,
   isFetching: PropTypes.bool.isRequired,
   match: PropTypes.shape({
     params: PropTypes.shape({
@@ -117,7 +146,8 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  getCreditTransfer: (id) => { dispatch(getCreditTransfer(id)); }
+  getCreditTransfer: (id) => { dispatch(getCreditTransfer(id)); },
+  deleteCreditTransfer: (id) => { dispatch(deleteCreditTransfer(id)); }
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(CreditTransferEditContainer);

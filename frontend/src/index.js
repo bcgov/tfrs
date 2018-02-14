@@ -23,6 +23,7 @@ import OrganizationDetails from './components/organizations/OrganizationDetails'
 import NotFound from './components/reusables/NotFound';
 import CreditTransactionsContainer from './credit_transfers/CreditTransactionsContainer';
 import CreditTransferAddContainer from './credit_transfers/CreditTransferAddContainer';
+import CreditTransferEditContainer from './credit_transfers/CreditTransferEditContainer';
 import CreditTransferViewContainer from './credit_transfers/CreditTransferViewContainer';
 
 import { getLoggedInUser } from './actions/userActions';
@@ -91,6 +92,10 @@ ReactDOM.render(
               exact
               path={Routes.CREDIT_TRANSACTIONS_ADD}
               component={withRouter(CreditTransferAddContainer)}
+            />
+            <Route
+              path={Routes.CREDIT_TRANSACTION_EDIT}
+              component={withRouter(CreditTransferEditContainer)}
             />
             <Route component={NotFound} />
           </Switch>
