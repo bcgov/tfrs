@@ -1,6 +1,7 @@
 from rest_framework import viewsets, permissions, status, mixins
 from rest_framework.decorators import list_route, detail_route
 from rest_framework.response import Response
+from rest_framework import filters
 
 from auditable.views import AuditableMixin
 
@@ -28,6 +29,9 @@ class CreditTradeViewSet(AuditableMixin, mixins.CreateModelMixin,
     permission_classes = (permissions.AllowAny,)
     http_method_names = ['get', 'post', 'put']
     queryset = CreditTrade.objects.all()
+    filter_backends = (filters.OrderingFilter,)
+    ordering_fields = '__all__'
+    ordering = ('-id',)
     serializer_class = CreditTradeSerializer
     serializer_classes = {
         'create': CreditTradeCreateSerializer,
