@@ -9,7 +9,6 @@ import { bindActionCreators } from 'redux';
 import PropTypes from 'prop-types';
 
 import * as Routes from '../constants/routes';
-
 import history from '../app/History';
 import { getFuelSuppliers } from '../actions/organizationActions';
 import { getLoggedInUser } from '../actions/userActions';
@@ -59,8 +58,6 @@ class CreditTransferAddContainer extends Component {
   _handleInputChange (event) {
     const { value, name } = event.target;
     const fieldState = { ...this.state.fields };
-
-    // console.log(typeof fieldState[name], value, name);
 
     if (typeof fieldState[name] === 'object') {
       this.changeObjectProp(parseInt(value, 10), name);

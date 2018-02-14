@@ -5,9 +5,18 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
+import { bindActionCreators } from 'redux';
 
-import { getCreditTransfer, deleteCreditTransfer } from '../actions/creditTransfersActions';
+import * as Routes from '../constants/routes';
+import history from '../app/History';
+
+import {
+  getCreditTransfer,
+  deleteCreditTransfer,
+  updateCreditTransfer,
+  invalidateCreditTransfer } from '../actions/creditTransfersActions';
 import CreditTransferDetails from './components/CreditTransferDetails';
+import { getLoggedInUser } from '../actions/userActions';
 
 import * as Lang from '../constants/langEnUs';
 
@@ -18,7 +27,6 @@ class CreditTransferViewContainer extends Component {
   }
 
   componentDidMount () {
-    console.log("props", this.props);
     this.loadData(this.props.match.params.id);
   }
 
@@ -43,18 +51,20 @@ class CreditTransferViewContainer extends Component {
       fairMarketValuePerCredit: item.fairMarketValuePerCredit,
       note: item.note,
       status: status.id,
-      type: item.id,
+      type: item.type.id,
       tradeEffectiveDate: null
     };
 
-    console.log('submitting', data);
-
     // Update credit transfer (just the status)
 
-    // this.props.addCreditTransfer(
-    //   data,
-    //   () => { history.push(Routes.CREDIT_TRANSACTIONS); }
-    // );
+    const { id } = this.props.item;
+
+    this.props.updateCreditTransfer(id, data).then(() => {
+      this.props.invalidateCreditTransfer();
+      history.push(Routes.CREDIT_TRANSACTIONS);
+    }, () => {
+      // Failed to update
+    });
   }
 
   _deleteCreditTransfer (id) {
@@ -63,7 +73,7 @@ class CreditTransferViewContainer extends Component {
   }
 
   render () {
-    const { isFetching, item } = this.props;
+    const { isFetching, item, loggedInUser } = this.props;
     let buttonActions = [];
 
     if (!isFetching && item.actions) {
@@ -71,6 +81,14 @@ class CreditTransferViewContainer extends Component {
       buttonActions = item.actions.map(action => (
         action.action
       ));
+
+      if (item.initiator.id === loggedInUser.organization.id) {
+        // Current user is the initiator
+        buttonActions[buttonActions.indexOf(Lang.BTN_CT_CANCEL)] = Lang.BTN_RESCIND;
+      } else {
+        buttonActions[buttonActions.indexOf(Lang.BTN_CT_CANCEL)] = Lang.BTN_REFUSE;
+      }
+
       if (buttonActions.includes(Lang.BTN_SAVE_DRAFT)) {
         buttonActions.push('Delete');
         buttonActions[buttonActions.indexOf(Lang.BTN_SAVE_DRAFT)] = Lang.BTN_EDIT_DRAFT;
@@ -95,6 +113,8 @@ class CreditTransferViewContainer extends Component {
 }
 
 CreditTransferViewContainer.propTypes = {
+  updateCreditTransfer: PropTypes.func.isRequired,
+  invalidateCreditTransfer: PropTypes.func.isRequired,
   item: PropTypes.shape({
     id: PropTypes.number,
     creditsFrom: PropTypes.shape({}),
@@ -124,13 +144,17 @@ CreditTransferViewContainer.propTypes = {
 };
 
 const mapStateToProps = state => ({
+  loggedInUser: state.rootReducer.userRequest.loggedInUser,
   item: state.rootReducer.creditTransfer.item,
   isFetching: state.rootReducer.creditTransfer.isFetching
 });
 
 const mapDispatchToProps = dispatch => ({
-  getCreditTransfer: (id) => { dispatch(getCreditTransfer(id)); },
-  deleteCreditTransfer: (id) => { dispatch(deleteCreditTransfer(id)); }
+  getLoggedInUser: bindActionCreators(getLoggedInUser, dispatch),
+  getCreditTransfer: bindActionCreators(getCreditTransfer, dispatch),
+  deleteCreditTransfer: bindActionCreators(deleteCreditTransfer, dispatch),
+  updateCreditTransfer: bindActionCreators(updateCreditTransfer, dispatch),
+  invalidateCreditTransfer: bindActionCreators(invalidateCreditTransfer, dispatch)
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(CreditTransferViewContainer);
