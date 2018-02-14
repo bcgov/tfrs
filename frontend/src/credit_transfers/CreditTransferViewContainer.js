@@ -18,6 +18,7 @@ class CreditTransferViewContainer extends Component {
   }
 
   componentDidMount () {
+    console.log("props", this.props);
     this.loadData(this.props.match.params.id);
   }
 

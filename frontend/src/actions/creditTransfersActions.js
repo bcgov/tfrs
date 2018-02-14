@@ -8,13 +8,33 @@ import * as Routes from '../constants/routes';
  */
 export const getCreditTransfers = () => (dispatch) => {
   dispatch(getCreditTransfersRequest());
-  axios.get(Routes.BASE_URL + Routes.CREDIT_TRADE_API)
+  return axios.get(Routes.BASE_URL + Routes.CREDIT_TRADE_API)
     .then((response) => {
       dispatch(getCreditTransfersSuccess(response.data));
     }).catch((error) => {
       dispatch(getCreditTransfersError(error.response));
     });
 };
+
+export const shouldGetCreditTransfers = (state) => {
+  const { creditTransfers } = state;
+  if (!creditTransfers) {
+    return true;
+  } else if (creditTransfers.isFetching) {
+    return false;
+  }
+  return creditTransfers.didInvalidate;
+};
+
+export const getCreditTransfersIfNeeded = () =>
+  (dispatch, getState) => {
+    if (shouldGetCreditTransfers(getState())) {
+      // Dispatch a thunk from thunk!
+      return dispatch(getCreditTransfers());
+    }
+    // Let the calling code know there's nothing to wait for.
+    return Promise.resolve();
+  };
 
 const getCreditTransfersRequest = () => ({
   name: 'GET_CREDIT_TRANSFERS_REQUEST',
@@ -24,7 +44,8 @@ const getCreditTransfersRequest = () => ({
 const getCreditTransfersSuccess = creditTransfers => ({
   name: 'RECEIVE_CREDIT_TRANSFERS_REQUEST',
   type: ActionTypes.RECEIVE_CREDIT_TRANSFERS,
-  data: creditTransfers
+  data: creditTransfers,
+  receivedAt: Date.now()
 });
 
 const getCreditTransfersError = error => ({
@@ -33,6 +54,14 @@ const getCreditTransfersError = error => ({
   errorMessage: error
 });
 
+export const invalidateCreditTransfers = creditTransfers => ({
+  type: ActionTypes.INVALIDATE_CREDIT_TRANSFERS,
+  data: creditTransfers
+});
+
+/*
+ * Credit Transfer Detail
+ */
 export const getCreditTransfer = id => (dispatch) => {
   dispatch(getCreditTransferRequest());
   axios.get(`${Routes.BASE_URL}${Routes.CREDIT_TRADE_API}/${id}`)
@@ -51,7 +80,8 @@ const getCreditTransferRequest = () => ({
 const getCreditTransferSuccess = creditTransfers => ({
   name: 'RECEIVE_CREDIT_TRANSFER_REQUEST',
   type: ActionTypes.RECEIVE_CREDIT_TRANSFER,
-  data: creditTransfers
+  data: creditTransfers,
+  receivedAt: Date.now()
 });
 
 const getCreditTransferError = error => ({
@@ -60,34 +90,33 @@ const getCreditTransferError = error => ({
   errorMessage: error
 });
 
+export const invalidateCreditTransfer = creditTransfers => ({
+  type: ActionTypes.INVALIDATE_CREDIT_TRANSFER,
+  data: creditTransfers
+});
+
 /*
  * Add Credit Transfers
  */
 export const addCreditTransfer = (data, callback) => (dispatch) => {
   dispatch(addCreditTransferRequest());
-  console.log('sending data', data, callback);
-  axios
+  return axios
     .post(Routes.BASE_URL + Routes.CREDIT_TRADE_API, data)
     .then((response) => {
-      console.log("success", response);
       dispatch(addCreditTransferSuccess(response.data));
-      // Call the callback function if defined
-      console.log("CALLING CALLBACK", callback);
-      typeof callback === 'function' && callback();
     }).catch((error) => {
-      console.log("error", error, error.response);
       dispatch(addCreditTransferError(error.response.data));
     });
 };
 
 const addCreditTransferRequest = () => ({
   name: 'ADD_CREDIT_TRANSFER',
-  type: ActionTypes.REQUEST
+  type: ActionTypes.ADD_CREDIT_TRANSFER
 });
 
 const addCreditTransferSuccess = data => ({
   name: 'SUCCESS_ADD_CREDIT_TRANSFER',
-  type: ActionTypes.SUCCESS,
+  type: ActionTypes.SUCCESS_ADD_CREDIT_TRANSFER,
   data
 });
 

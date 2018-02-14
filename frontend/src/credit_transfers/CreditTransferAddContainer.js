@@ -5,6 +5,7 @@
 
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 import PropTypes from 'prop-types';
 
 import * as Routes from '../constants/routes';
@@ -12,7 +13,7 @@ import * as Routes from '../constants/routes';
 import history from '../app/History';
 import { getFuelSuppliers } from '../actions/organizationActions';
 import { getLoggedInUser } from '../actions/userActions';
-import { addCreditTransfer } from '../actions/creditTransfersActions';
+import { addCreditTransfer, invalidateCreditTransfers } from '../actions/creditTransfersActions';
 
 import { CREDIT_TRANSFER_STATUS } from '../constants/values';
 
@@ -119,13 +120,10 @@ class CreditTransferAddContainer extends Component {
       tradeEffectiveDate: null
     };
 
-    console.log('submitting', data);
-
-    // TODO: Add more validation here?
-    this.props.addCreditTransfer(
-      data,
-      history.push(Routes.CREDIT_TRANSACTIONS)
-    );
+    this.props.addCreditTransfer(data).then(() => {
+      this.props.invalidateCreditTransfers();
+      history.push(Routes.CREDIT_TRANSACTIONS);
+    });
 
     return false;
   }
@@ -175,9 +173,14 @@ class CreditTransferAddContainer extends Component {
   }
 }
 
+CreditTransferAddContainer.defaultProps = {
+  errors: {}
+};
+
 CreditTransferAddContainer.propTypes = {
   addCreditTransfer: PropTypes.func.isRequired,
   getFuelSuppliers: PropTypes.func.isRequired,
+  invalidateCreditTransfers: PropTypes.func.isRequired,
   loggedInUser: PropTypes.shape({
     displayName: PropTypes.string,
     organization: PropTypes.shape({
@@ -196,15 +199,10 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  getFuelSuppliers: () => {
-    dispatch(getFuelSuppliers());
-  },
-  getLoggedInUser: () => {
-    dispatch(getLoggedInUser());
-  },
-  addCreditTransfer: (data) => {
-    dispatch(addCreditTransfer(data));
-  }
+  getFuelSuppliers: bindActionCreators(getFuelSuppliers, dispatch),
+  getLoggedInUser: bindActionCreators(getLoggedInUser, dispatch),
+  addCreditTransfer: bindActionCreators(addCreditTransfer, dispatch),
+  invalidateCreditTransfers: bindActionCreators(invalidateCreditTransfers, dispatch)
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(CreditTransferAddContainer);
