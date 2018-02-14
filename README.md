@@ -10,7 +10,12 @@ Master Branch:
 Transportation Fuels Reporting System
 
 ### Usage
-This software is being developed to streamline compliance reporting for transportation fuel suppliers.  
+Facilitates online Fuel Reporting and Low Carbon Fuel credit transfers supporting BC's market-based approach to avoiding lifecycle GHG emissions from transportation fuel.  
+
+- Fuel suppliers buy and sell low carbon fuel credits
+- Government approves credit transfers and tracks balances
+- Government awards credits for infrastructure projects
+- Government validates credits from the supply of low carbon fuels
 
 ### Data
 Documentation for system data is dynamical generated using Schema Spy:
