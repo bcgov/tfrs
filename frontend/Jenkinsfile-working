@@ -1,0 +1,76 @@
+node('maven') {
+/******
+    stage('Code Quality Check') {
+        checkout scm
+        SONARQUBE_PWD = sh (
+            script: 'oc env dc/sonarqube --list | awk  -F  "=" \'/SONARQUBE_ADMINPW/{print $2}\'',
+            returnStdout: true
+        ).trim()
+        echo ">> SONARQUBE_PWD: ${SONARQUBE_PWD}"
+
+        SONARQUBE_URL = sh (
+            script: 'oc get routes -o wide --no-headers | awk \'/sonarqube/{ print match($0,/edge/) ?  "https://"$2 : "http://"$2 }\'',
+            returnStdout: true
+        ).trim()
+        echo ">> SONARQUBE_URL: ${SONARQUBE_URL}"
+        dir('frontend/sonar-runner') {
+          sh returnStdout: true, script: "./gradlew sonarqube -Dsonar.host.url=${SONARQUBE_URL} -Dsonar.verbose=true --stacktrace --info"
+        }
+    }
+*********/
+    stage('Build') {
+        echo "Building..."
+	openshiftBuild bldCfg: 'client-develop-angular-app-build', showBuildLogs: 'true'
+        openshiftBuild bldCfg: 'client-develop', showBuildLogs: 'true'
+        echo ">> Getting Image Hash"
+        IMAGE_HASH = sh (
+            script: 'oc get istag client-develop:latest -o template --template="{{.image.dockerImageReference}}"|awk -F ":" \'{print $3}\'',
+ 	            returnStdout: true).trim()
+        echo ">> IMAGE_HASH: $IMAGE_HASH"
+    }
+
+    stage('Deploy on Dev') {
+        echo "Deploying to dev..."
+        openshiftTag destStream: 'client-develop', verbose: 'true', destTag: 'dev', srcStream: 'client-develop', srcTag: "${IMAGE_HASH}"
+        openshiftVerifyDeployment depCfg: 'client', namespace: 'mem-tfrs-dev', replicaCount: 1, verbose: 'false'
+    }
+
+}
+/**********
+node('bddstack') {
+
+	stage('FT on Dev') {
+		//the checkout is mandatory, otherwise functional test would fail
+        echo "checking out source"
+        echo "Build: ${BUILD_ID}"
+        checkout scm
+        dir('functional-tests') {
+	    try {   
+                echo ">> FT_LOG_LEVEL=${FT_LOG_LEVEL}"
+                sh './gradlew --debug --stacktrace chromeHeadlessTest'
+	    } finally {
+		archiveArtifacts allowEmptyArchive: true, artifacts: 'build/reports/  **  /    *'
+                archiveArtifacts allowEmptyArchive: true, artifacts: 'build/test-results/ **  /  *'
+                junit 'build/test-results/  **  /  *  .xml'
+                publishHTML (target: [
+                            allowMissing: false,
+                            alwaysLinkToLastBuild: false,
+                            keepAll: true,
+                            reportDir: 'build/reports/spock',
+                            reportFiles: 'index.html',
+                            reportName: "BDD Spock Report"
+                        ])
+                publishHTML (target: [
+                            allowMissing: false,
+                            alwaysLinkToLastBuild: false,
+                            keepAll: true,
+                            reportDir: 'build/reports/tests/chromeHeadlessTest',
+                            reportFiles: 'index.html',
+                            reportName: "Full Test Report"
+                        ])        
+	    }
+        }
+    }
+}
+
+*******************/
