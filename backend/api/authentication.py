@@ -12,10 +12,10 @@ from django.conf import settings
 class UserAuthentication(authentication.BaseAuthentication):
     def authenticate(self, request):
 
-        # Bypass authentication if running locally on debug mode
-        if settings.DEBUG and request.META.get('HTTP_HOST')\
-                                          .startswith('localhost'):
+        # Bypass auth env variable
+        if settings.BYPASS_AUTH:
             return (User.objects.first(), None)
+
 
         header_username = request.META.get('HTTP_SMAUTH_USER', request.META.get(
             'HTTP_SMAUTH_UNIVERSALID'))

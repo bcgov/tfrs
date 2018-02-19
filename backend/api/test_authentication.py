@@ -27,6 +27,9 @@ class TestAuthentication(TestCase):
         settings.DEBUG = False
         pass
 
+    def tearDown(self):
+        settings.BYPASS_AUTH = False
+
     def test_user_has_mapping(self):
         # Return user
         request = self.factory.get('/')
@@ -214,25 +217,19 @@ class TestAuthentication(TestCase):
         assert user2.username == "business_tuser"
         assert user2.authorization_id == new_user2.authorization_id
 
-    def test_debug_local(self):
-        settings.DEBUG = True
+    def test_bypass_auth(self):
+        settings.BYPASS_AUTH = True
 
         request = self.factory.get('/')
-        request.META = {
-            'HTTP_HOST': 'localhost'
-        }
 
         user, auth = self.userauth.authenticate(request)
         # First user in the database
         assert user.username == 'business_bsmith'
 
-    def test_debug_local_error(self):
-        settings.DEBUG = True
+    def test_bypass_auth_error(self):
+        settings.BYPASS_AUTH = False
 
         request = self.factory.get('/')
-        request.META = {
-            'HTTP_HOST': 'test.localhost.com'
-        }
 
         # Will throw error on this line on authentication.py:
         # header_user_guid = uuid.UUID(request.META.get('HTTP_SMAUTH_USERGUID'))
