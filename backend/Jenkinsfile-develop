@@ -3,18 +3,19 @@ def result = 0;
 node('python') {
     stage('Unit Test') {
         checkout scm
-        try {
-            sh 'pip install --upgrade pip && pip install -r requirements.txt'
-            sh 'python manage.py collectstatic && python manage.py migrate'
-            sh 'python manage.py test -c nose.cfg'
-        } catch(Throwable t) {
-            result = 1;
-            mail (from: "${EMAIL_FROM}", to: "${EMAIL_TO}", subject: "FYI: Job '${env.JOB_NAME}' (${env.BUILD_NUMBER}) unit test failed", body: "See ${env.BUILD_URL} for details. ");
-        } finally {
-            stash includes: 'nosetests.xml,coverage.xml', name: 'coverage'
-            junit 'nosetests.xml'
+        dir('backend') {
+            try {
+                sh 'pip install --upgrade pip && pip install -r requirements.txt'
+                sh 'python manage.py collectstatic && python manage.py migrate'
+                sh 'python manage.py test -c nose.cfg'
+            } catch(Throwable t) {
+                result = 1;
+                mail (from: "${EMAIL_FROM}", to: "${EMAIL_TO}", subject: "FYI: Job '${env.JOB_NAME}' (${env.BUILD_NUMBER}) unit test failed", body: "See ${env.BUILD_URL} for details. ");
+            } finally {
+                stash includes: 'nosetests.xml,coverage.xml', name: 'coverage'
+                junit 'nosetests.xml'
+            }
         }
-
     }
 }
         
