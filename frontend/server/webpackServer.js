@@ -39,7 +39,8 @@ module.exports = function () {
     noInfo: true,
     stats: {
       colors: true
-    }
+    },
+    historyApiFallback: true
   });
 
   // We fire up the development server and give notice in the terminal

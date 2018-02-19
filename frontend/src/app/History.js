@@ -1,5 +1,4 @@
-import createHistory from 'history/createHashHistory'; // 'history/createHashHistory' for  '#'
-// TODO: Change to 'history/createBrowserHistory' but web server should route all /* (except /api/*) back to the front-end client
+import createHistory from 'history/createBrowserHistory'; // 'history/createHashHistory' for  '#'
 
 const history = createHistory();
 export default history;
