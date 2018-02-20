@@ -25,7 +25,8 @@ body {
 
 #root, 
 [data-reactroot], 
-.App {
+#root > div,
+#root div.App {
   height: 100%;
 }
 
