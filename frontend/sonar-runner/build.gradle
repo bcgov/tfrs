@@ -9,8 +9,8 @@ sonarqube {
     properties {
       property "sonar.projectName", "Transportation Fuels Reporting System - Frontend"
       property "sonar.projectKey", "tfrs-frontend"
-      property "sonar.projectBaseDir", "./"
-      property "sonar.sources", "./"
+      property "sonar.projectBaseDir", "../"
+      property "sonar.sources", "../"
       //property "sonar.language", "js,css,jsx,html"
       //property "sonar.tests", "test"
       property "sourceEncoding", "UTF-8"
