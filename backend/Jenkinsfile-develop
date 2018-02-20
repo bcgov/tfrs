@@ -3,24 +3,19 @@ def result = 0;
 node('python') {
     stage('Unit Test') {
         checkout scm
-        try {
-            sh 'cd backend && pip install --upgrade pip && pip install -r requirements.txt'
-            sh 'cd backend && coverage erase && coverage run --source=. manage.py test && coverage html && coverage xml'
-        } catch(Throwable t) {
-            result = 1;
-            mail (from: "${EMAIL_FROM}", to: "${EMAIL_TO}", subject: "FYI: Job '${env.JOB_NAME}' (${env.BUILD_NUMBER}) unit test failed", body: "See ${env.BUILD_URL} for details. ");
-        } finally {
-            if(fileExists('backend/htmlcov/index.html')) {
-                publishHTML (target: [
-                    allowMissing: true,
-                    alwaysLinkToLastBuild: true,
-                    keepAll: true,
-                    reportDir: 'backend/htmlcov',
-                    reportFiles: 'index.html',
-                    reportName: "Unit Test Code Coverage Report" ])
+        dir('backend') {
+            try {
+                sh 'pip install --upgrade pip && pip install -r requirements.txt'
+                sh 'python manage.py collectstatic && python manage.py migrate'
+                sh 'python manage.py test -c nose.cfg'
+            } catch(Throwable t) {
+                result = 1;
+                mail (from: "${EMAIL_FROM}", to: "${EMAIL_TO}", subject: "FYI: Job '${env.JOB_NAME}' (${env.BUILD_NUMBER}) unit test failed", body: "See ${env.BUILD_URL} for details. ");
+            } finally {
+                stash includes: 'nosetests.xml,coverage.xml', name: 'coverage'
+                junit 'nosetests.xml'
             }
         }
-
     }
 }
         
@@ -49,6 +44,7 @@ node('maven') {
         echo ">> SONARQUBE_URL: ${SONARQUBE_URL}"
 
         dir('backend/sonar-runner') {
+            unstash 'coverage'
             sh returnStdout: true, script: "./gradlew sonarqube -Dsonar.host.url=${SONARQUBE_URL} -Dsonar.verbose=true --stacktrace --info"
         }
     }

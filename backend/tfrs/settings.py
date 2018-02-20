@@ -51,6 +51,7 @@ INSTALLED_APPS = (
     'tfrs',
     'api',
     'corsheaders',
+    'django_nose',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -105,6 +106,7 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'wsgi.application'
+TEST_RUNNER = 'django_nose.NoseTestSuiteRunner'
 
 
 # Database
