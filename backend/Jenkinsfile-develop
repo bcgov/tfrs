@@ -14,20 +14,17 @@ node('python') {
             } finally {
                 stash includes: 'nosetests.xml,coverage.xml', name: 'coverage'
                 junit 'nosetests.xml'
-                sh 'sleep 3m'
             }
         }
     }
 }
 
-/** temp commented out        
 echo "result is ${result}"
 if (result != 0) {
     echo "[FAILURE] Unit Test stage failed"
     currentBuild.result = 'FAILURE'
     return
 }
-**/
         
 node('maven') {
 
@@ -48,7 +45,6 @@ node('maven') {
 
         dir('backend/sonar-runner') {
             unstash 'coverage'
-            sh 'sleep 3m'
             sh returnStdout: true, script: "./gradlew sonarqube -Dsonar.host.url=${SONARQUBE_URL} -Dsonar.verbose=true --stacktrace --info"
         }
     }
