@@ -7,7 +7,8 @@
             "authorization_id": "bsmith",
             "display_name": "Brad Smith",
             "first_name": "Brad",
-            "last_name": "Smith"
+            "last_name": "Smith",
+            "organization_id": 2
         },
         "model": "api.user",
         "pk": null
@@ -20,7 +21,8 @@
             "authorization_id": "jholbert",
             "display_name": "Judy Holbert",
             "first_name": "Judy",
-            "last_name": "Holbert"
+            "last_name": "Holbert",
+            "organization_id": 3
         },
         "model": "api.user",
         "pk": null
