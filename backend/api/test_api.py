@@ -41,7 +41,7 @@ class TestCreditTradeAPI(TestCase):
         self.user_id = fake_api_calls.create_user(self.fs1_id)
 
         self.credit_trade = fake_api_calls.create_credit_trade(
-            initiator=self.fs1_id,
+            initiator=2,
             respondent=self.fs1_id,
             type=self.ct_type_id,
             status=STATUS_DRAFT,
@@ -81,6 +81,7 @@ class TestCreditTradeAPI(TestCase):
         self.test_data_success = [{
             'data': {'number_of_credits': 1,
                      'status': STATUS_DRAFT,
+                     'initiator': 2,
                      'respondent': self.fs1_id,
                      'type': self.ct_type_id},
         }]
@@ -153,6 +154,7 @@ class TestCreditTradeAPI(TestCase):
         data = {
             'number_of_credits': num_of_credits,
             'status': credit_trade_status,
+            'initiator': 2,
             'respondent': self.fs1_id,
             'type': self.ct_type_id,
             'fair_market_value_per_credit': fair_market_value
@@ -364,11 +366,13 @@ class TestCreditTradeAPI(TestCase):
         credit_trades = [{
                 'numberOfCredits': 1,
                 'status': STATUS_DRAFT,
+                'initiator': 2,
                 'respondent': self.fs1_id,
                 'type': self.ct_type_id
             }, {
                 'numberOfCredits': 1,
                 'status': STATUS_SUBMITTED,
+                'initiator': 2,
                 'respondent': self.fs1_id,
                 'type': self.ct_type_id
             }]
@@ -455,11 +459,13 @@ class TestCreditTradeAPI(TestCase):
         credit_trades = [{
             'numberOfCredits': 1,
             'status': STATUS_DRAFT,
+            'initiator': 2,
             'respondent': self.fs1_id,
             'type': self.ct_type_id
         }, {
             'numberOfCredits': 5,
             'status': STATUS_DRAFT,
+            'initiator': 2,
             'respondent': self.fs1_id,
             'type': self.ct_type_id
         }]
@@ -503,18 +509,21 @@ class TestCreditTradeAPI(TestCase):
         trades = [{
             'numberOfCredits': 5,
             'status': STATUS_DRAFT,
+            'initiator': 2,
             'respondent': self.fs1_id,
             'type': self.ct_type_id
         }, {
             'numberOfCredits': 5,
             'status': STATUS_DRAFT,
             'fairMarketValuePerCredit': 0.00,
+            'initiator': 2,
             'respondent': self.fs1_id,
             'type': self.ct_type_id
         }, {
             'numberOfCredits': 5,
             'status': STATUS_DRAFT,
             'fairMarketValuePerCredit': '0.00',
+            'initiator': 2,
             'respondent': self.fs1_id,
             'type': self.ct_type_id}]
 
@@ -527,4 +536,23 @@ class TestCreditTradeAPI(TestCase):
             created_ct = fake_api_calls.get_credit_trade(ct_id)
             assert status.HTTP_200_OK == created_ct.status_code
             assert created_ct.json()['totalValue'] == (trade['numberOfCredits'] * 0)
+
+
+    def test_get_credit_trades(self):
+        # Assign users to organizations
+        # 1 = government
+        # 2 & 3 = fuel suppliers
+        # User.objects.filter(id=1).update(organization_id=1) # government
+        # User.objects.filter(id=2).update(organization_id=2) #
+        # User.objects.filter(id=3).update(organization_id=3)
+
+        # select from credit trades where
+        # user is the initiator
+        # or user is the respondent and status is greater than submitted
+        # in [submitted, accepted]
+        # return CreditTrade.objects.all()
+        # or user is government and status is greater than accepted
+
+
+        pass
 

@@ -18,6 +18,7 @@ class TestAuthentication(TestCase):
                 'organization_actions_types.json',
                 'organization_statuses.json',
                 'credit_trade_types.json',
+                'test_organization_fuel_suppliers.json',
                 'test_users.json',
                 ]
 
