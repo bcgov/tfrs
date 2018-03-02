@@ -1,6 +1,25 @@
 [
   {
     "model": "api.credittrade",
+    "pk": 3,
+    "fields": {
+      "create_timestamp": null,
+      "create_user": null,
+      "update_timestamp": null,
+      "update_user": null,
+      "status": 1,
+      "initiator": 2,
+      "respondent": 3,
+      "type": 2,
+      "number_of_credits": 1000,
+      "fair_market_value_per_credit": "20.00",
+      "zero_reason": null,
+      "trade_effective_date": "2017-08-07",
+      "note": null
+    }
+  },
+  {
+    "model": "api.credittrade",
     "pk": 2,
     "fields": {
       "create_timestamp": null,
