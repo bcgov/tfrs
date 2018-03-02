@@ -12,7 +12,7 @@ sonarqube {
         property "sonar.projectBaseDir", ".."
         property "sonar.sources", "api"
         property "sonar.language", "py"
-        property "sourceEncoding", "UTF-8"
+        property "sonar.sourceEncoding", "UTF-8"
         property "sonar.python.xunit.reportPath","nosetests.xml"
         property "sonar.python.coverage.reportPath","coverage.xml"
         property "sonar.python.coveragePlugin","cobertura"
@@ -25,7 +25,7 @@ allprojects {
   def env = System.getenv()
   TimeZone.getTimeZone('UTC')
   Date date= new Date()
-  String newdate=date.format("YYYYMMDD")
+  String newdate=date.format("YYYYMMdd")
   ext.baseVersion = newdate + "." + env['BUILD_NUMBER']
   ext.snapshotVersion = false
 
