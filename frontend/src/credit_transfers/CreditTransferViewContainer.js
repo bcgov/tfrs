@@ -11,7 +11,7 @@ import * as Routes from '../constants/routes';
 import history from '../app/History';
 
 import {
-  getCreditTransfer,
+  getCreditTransferIfNeeded,
   deleteCreditTransfer,
   updateCreditTransfer,
   invalidateCreditTransfer } from '../actions/creditTransfersActions';
@@ -31,7 +31,7 @@ class CreditTransferViewContainer extends Component {
   }
 
   loadData (id) {
-    this.props.getCreditTransfer(id);
+    this.props.getCreditTransferIfNeeded(id);
   }
 
   componentWillReceiveNewProps (prevProps, newProps) {
@@ -133,7 +133,7 @@ CreditTransferViewContainer.propTypes = {
     ]),
     actions: PropTypes.arrayOf(PropTypes.shape({}))
   }).isRequired,
-  getCreditTransfer: PropTypes.func.isRequired,
+  getCreditTransferIfNeeded: PropTypes.func.isRequired,
   deleteCreditTransfer: PropTypes.func.isRequired,
   isFetching: PropTypes.bool.isRequired,
   match: PropTypes.shape({
@@ -151,7 +151,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   getLoggedInUser: bindActionCreators(getLoggedInUser, dispatch),
-  getCreditTransfer: bindActionCreators(getCreditTransfer, dispatch),
+  getCreditTransferIfNeeded: bindActionCreators(getCreditTransferIfNeeded, dispatch),
   deleteCreditTransfer: bindActionCreators(deleteCreditTransfer, dispatch),
   updateCreditTransfer: bindActionCreators(updateCreditTransfer, dispatch),
   invalidateCreditTransfer: bindActionCreators(invalidateCreditTransfer, dispatch)

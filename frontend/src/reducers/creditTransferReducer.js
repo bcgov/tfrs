@@ -8,21 +8,29 @@ const creditTransfer = (state = {
 }, action) => {
   switch (action.type) {
     case ActionTypes.ADD_CREDIT_TRANSFER:
-      return [
-        ...state,
-        Object.assign({}, action.data)];
+      return Object.assign({}, state, {
+        isFetching: false,
+        didInvalidate: false,
+        item: action.data
+      });
     case ActionTypes.SUCCESS_ADD_CREDIT_TRANSFER:
-      return [
-        ...state,
-        Object.assign({}, action.data)];
+      return Object.assign({}, state, {
+        isFetching: false,
+        didInvalidate: true,
+        item: {} //action.data
+      });
     case ActionTypes.UPDATE_CREDIT_TRANSFER:
-      return [
-        ...state,
-        Object.assign({}, action.data)];
+      return Object.assign({}, state, {
+        isFetching: false,
+        didInvalidate: false,
+        item: action.data
+      });
     case ActionTypes.DELETE_REQUEST_ITEM:
-      return [
-        ...state,
-        Object.assign({}, action.data)];
+      return Object.assign({}, state, {
+        isFetching: false,
+        didInvalidate: false,
+        item: action.data
+      });
     case ActionTypes.GET_CREDIT_TRANSFER:
       return Object.assign({}, state, {
         isFetching: true,
