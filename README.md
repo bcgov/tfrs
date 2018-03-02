@@ -35,7 +35,6 @@ To see the status of feature development please refer to the [features](https://
 ### Getting Started (development)
 This project is a Single Page Application with a REST API backend and a JavaScript (React) front-end.
 
-
 #### Authentication
 
 This project has implemented authentication via SiteMinder/BCeID. The entire application is protected by SiteMinder. It uses the headers sent by SiteMinder to authenticate a user. You can read more about it [here](docs/auth.md)
