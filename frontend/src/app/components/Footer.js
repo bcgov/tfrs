@@ -1,4 +1,6 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
+import * as Routes from '../../constants/routes';
 
 const Footer = props => (
   <div id="footer" role="contentinfo">
@@ -14,7 +16,9 @@ const Footer = props => (
           <div id="footerAdminLinks" className="row">
             <ul className="inline">
               <li>
-                <a id="footer-home" href="#" target="_self">Home</a>
+                <Link id="collapse-navbar-dashboard" to={Routes.HOME}>
+                  Home
+                </Link>
               </li>
               <li>
                 <a id="footer-about-site" href="#" target="_self">About this site</a>
