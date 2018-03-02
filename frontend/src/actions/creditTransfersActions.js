@@ -72,15 +72,35 @@ export const getCreditTransfer = id => (dispatch) => {
     });
 };
 
+export const shouldGetCreditTransfer = (state) => {
+  const { creditTransfer } = state;
+  if (!creditTransfer) {
+    return true;
+  } else if (creditTransfer.isFetching) {
+    return false;
+  }
+  return creditTransfer.didInvalidate;
+};
+
+export const getCreditTransferIfNeeded = id =>
+  (dispatch, getState) => {
+    if (shouldGetCreditTransfer(getState())) {
+      // Dispatch a thunk from thunk!
+      return dispatch(getCreditTransfer(id));
+    }
+    // Let the calling code know there's nothing to wait for.
+    return Promise.resolve();
+  };
+
 const getCreditTransferRequest = () => ({
   name: 'GET_CREDIT_TRANSFER_REQUEST',
   type: ActionTypes.GET_CREDIT_TRANSFER
 });
 
-const getCreditTransferSuccess = creditTransfers => ({
+const getCreditTransferSuccess = creditTransfer => ({
   name: 'RECEIVE_CREDIT_TRANSFER_REQUEST',
   type: ActionTypes.RECEIVE_CREDIT_TRANSFER,
-  data: creditTransfers,
+  data: creditTransfer,
   receivedAt: Date.now()
 });
 
@@ -90,9 +110,9 @@ const getCreditTransferError = error => ({
   errorMessage: error
 });
 
-export const invalidateCreditTransfer = creditTransfers => ({
+export const invalidateCreditTransfer = creditTransfer => ({
   type: ActionTypes.INVALIDATE_CREDIT_TRANSFER,
-  data: creditTransfers
+  data: creditTransfer
 });
 
 /*
