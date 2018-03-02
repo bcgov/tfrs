@@ -17,7 +17,7 @@ STATUS_CANCELLED = 8
 STATUS_DECLINED = 9
 
 
-class TestCreditTradeAPI(TestCase):
+class TestAPI(TestCase):
     fixtures = ['organization_types.json',
                 'organization_government.json',
                 'organization_balance_gov.json',
@@ -181,6 +181,8 @@ class TestCreditTradeAPI(TestCase):
 
         assert status.HTTP_200_OK == response.status_code
 
+    # TODO: possibly move the next set of tests to another file;
+    # They test the business logic & not the API itself.
     def test_is_internal_history_false(self):
         data = [STATUS_SUBMITTED, STATUS_ACCEPTED]
         for ct_status in data:
@@ -536,23 +538,3 @@ class TestCreditTradeAPI(TestCase):
             created_ct = fake_api_calls.get_credit_trade(ct_id)
             assert status.HTTP_200_OK == created_ct.status_code
             assert created_ct.json()['totalValue'] == (trade['numberOfCredits'] * 0)
-
-
-    def test_get_credit_trades(self):
-        # Assign users to organizations
-        # 1 = government
-        # 2 & 3 = fuel suppliers
-        # User.objects.filter(id=1).update(organization_id=1) # government
-        # User.objects.filter(id=2).update(organization_id=2) #
-        # User.objects.filter(id=3).update(organization_id=3)
-
-        # select from credit trades where
-        # user is the initiator
-        # or user is the respondent and status is greater than submitted
-        # in [submitted, accepted]
-        # return CreditTrade.objects.all()
-        # or user is government and status is greater than accepted
-
-
-        pass
-

@@ -47,6 +47,14 @@ class CreditTradeViewSet(AuditableMixin, mixins.CreateModelMixin,
         else:
             return self.serializer_classes['default']
 
+    def get_queryset(self):
+        """
+        This view should return a list of all the purchases
+        for the currently authenticated user.
+        """
+        user = self.request.user
+        return CreditTradeService.get_organization_credit_trades(user.organization)
+
     def perform_create(self, serializer):
         credit_trade = serializer.save()
         CreditTradeService.create_history(credit_trade, True)
