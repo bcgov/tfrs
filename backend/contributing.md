@@ -24,3 +24,7 @@ Pull requests are the best way to propose changes to the codebase (we use [Githu
 * For any new feature, make sure to write your unit tests first.
 * Try to follow [PEP8](https://pep8.org/), but you may ignore the line length limit if following it would make the code uglier.
 * Make sure your tests are passing before pushing
+
+## Testing
+# Adding a unit test
+- We use nose for the test runner. If you create a new test file, make sure nose can find it by opening `nose.cfg` and adding the filepath to the second line (`tests=...`)

@@ -65,16 +65,11 @@ http {
         add_header X-XSS-Protection 1;
         add_header X-Frame-Options DENY;
 
-        # proxy requests to API
-        location /api {
-            proxy_pass %API_URL%;
-        }
-
         # serve our app here
         location / {
             root   /tmp/app/dist;
             index  index.html index.htm;
-            try_files $uri /index.html;
+            try_files $uri $uri/ /index.html;
             gzip            on;
             gzip_min_length 1000;
             gzip_types      *;

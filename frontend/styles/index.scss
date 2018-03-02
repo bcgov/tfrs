@@ -25,7 +25,8 @@ body {
 
 #root, 
 [data-reactroot], 
-.App {
+#root > div,
+#root div.App {
   height: 100%;
 }
 
@@ -78,8 +79,6 @@ h1 {
 }
 
 .btn-container {
-  text-align: right;
-
   .btn + .btn {
     margin-left: 0.5rem;
   }

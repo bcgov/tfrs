@@ -8,14 +8,16 @@ from api import fake_api_calls
 
 # Credit Trade Statuses
 STATUS_DRAFT = 1
-STATUS_PROPOSED = 2
+STATUS_SUBMITTED = 2
 STATUS_ACCEPTED = 3
+STATUS_RECOMMENDED = 4
 STATUS_APPROVED = 6
 STATUS_COMPLETED = 7
 STATUS_CANCELLED = 8
+STATUS_DECLINED = 9
 
 
-class TestCreditTradeAPI(TestCase):
+class TestAPI(TestCase):
     fixtures = ['organization_types.json',
                 'organization_government.json',
                 'organization_balance_gov.json',
@@ -39,7 +41,7 @@ class TestCreditTradeAPI(TestCase):
         self.user_id = fake_api_calls.create_user(self.fs1_id)
 
         self.credit_trade = fake_api_calls.create_credit_trade(
-            initiator=self.fs1_id,
+            initiator=2,
             respondent=self.fs1_id,
             type=self.ct_type_id,
             status=STATUS_DRAFT,
@@ -79,6 +81,7 @@ class TestCreditTradeAPI(TestCase):
         self.test_data_success = [{
             'data': {'number_of_credits': 1,
                      'status': STATUS_DRAFT,
+                     'initiator': 2,
                      'respondent': self.fs1_id,
                      'type': self.ct_type_id},
         }]
@@ -151,6 +154,7 @@ class TestCreditTradeAPI(TestCase):
         data = {
             'number_of_credits': num_of_credits,
             'status': credit_trade_status,
+            'initiator': 2,
             'respondent': self.fs1_id,
             'type': self.ct_type_id,
             'fair_market_value_per_credit': fair_market_value
@@ -177,10 +181,13 @@ class TestCreditTradeAPI(TestCase):
 
         assert status.HTTP_200_OK == response.status_code
 
+    # TODO: possibly move the next set of tests to another file;
+    # They test the business logic & not the API itself.
     def test_is_internal_history_false(self):
-        data = [STATUS_PROPOSED, STATUS_ACCEPTED]
+        data = [STATUS_SUBMITTED, STATUS_ACCEPTED]
         for ct_status in data:
             self.test_update(credit_trade_status=ct_status)
+            # TODO: Change this to /id/propose and /id/accept
             response = self.client.get(
                 "{}/{}/history".format(self.test_url, self.credit_trade['id']),
                 content_type='application/json')
@@ -250,7 +257,7 @@ class TestCreditTradeAPI(TestCase):
 
         credit_trade = fake_api_calls.create_credit_trade(
             user_id=self.user_id,
-            status=STATUS_PROPOSED,
+            status=STATUS_SUBMITTED,
             fair_market_value_per_credit=1000,
             initiator=2,
             respondent=3,
@@ -355,3 +362,179 @@ class TestCreditTradeAPI(TestCase):
 
 
         # pass
+
+    # Test transitions of statuses
+    def test_create_draft_or_proposed(self, **kwargs):
+        credit_trades = [{
+                'numberOfCredits': 1,
+                'status': STATUS_DRAFT,
+                'initiator': 2,
+                'respondent': self.fs1_id,
+                'type': self.ct_type_id
+            }, {
+                'numberOfCredits': 1,
+                'status': STATUS_SUBMITTED,
+                'initiator': 2,
+                'respondent': self.fs1_id,
+                'type': self.ct_type_id
+            }]
+
+        for ct in credit_trades:
+            response = fake_api_calls.create_credit_trade_dict(ct)
+            assert status.HTTP_201_CREATED == response.status_code
+
+            # Make sure action statuses are "Draft" and "Submitted"
+            # And Button actions are "Save as Draft" and "Propose"
+            new_ct = fake_api_calls.get_credit_trade(response.json()['id'])
+            if ct['status'] == STATUS_DRAFT:
+                statuses = [a['status'] for a in new_ct.json()['actions']]
+                actions = [a['action'] for a in new_ct.json()['actions']]
+                assert sorted(["Draft", "Submitted"]) == sorted(statuses)
+                assert sorted(["Save Draft", "Propose"]) == sorted(actions)
+
+    def test_create_other_statuses_fail(self, **kwargs):
+        credit_trades = [{
+                'data': {
+                    'numberOfCredits': 1,
+                    'status': STATUS_ACCEPTED,
+                    'respondent': self.fs1_id,
+                    'type': self.ct_type_id },
+                'error': {"status": ["Status cannot be "
+                                     "`Accepted` on create. "
+                                     "Use `Draft` or `Submitted` instead."]}
+            }, {
+                'data': {
+                    'numberOfCredits': 1,
+                    'status': STATUS_RECOMMENDED,
+                    'respondent': self.fs1_id,
+                    'type': self.ct_type_id},
+                'error': {"status": ["Status cannot be "
+                                     "`Recommended` on create. "
+                                     "Use `Draft` or `Submitted` instead."]}
+
+            }, {
+                'data': {
+                    'numberOfCredits': 1,
+                    'status': STATUS_APPROVED,
+                    'respondent': self.fs1_id,
+                    'type': self.ct_type_id},
+                'error': {"status": ["Status cannot be "
+                                     "`Approved` on create. "
+                                     "Use `Draft` or `Submitted` instead."]}
+            }, {
+                'data': {
+                    'numberOfCredits': 1,
+                    'status': STATUS_COMPLETED,
+                    'respondent': self.fs1_id,
+                    'type': self.ct_type_id},
+                'error': {"status": ["Status cannot be "
+                                     "`Completed` on create. "
+                                     "Use `Draft` or `Submitted` instead."]}
+            }, {
+                'data': {
+                    'numberOfCredits': 1,
+                    'status': STATUS_CANCELLED,
+                    'respondent': self.fs1_id,
+                    'type': self.ct_type_id},
+                'error': {"status": ["Status cannot be "
+                                     "`Cancelled` on create. "
+                                     "Use `Draft` or `Submitted` instead."]}
+            }, {
+                'data': {
+                    'numberOfCredits': 1,
+                    'status': STATUS_DECLINED,
+                    'respondent': self.fs1_id,
+                    'type': self.ct_type_id},
+                'error': {"status": ["Status cannot be "
+                                     "`Declined` on create. "
+                                     "Use `Draft` or `Submitted` instead."]}
+            }]
+
+        for tests in credit_trades:
+            response = fake_api_calls.create_credit_trade_dict(tests['data'])
+            self.assertJSONEqual(
+                response.content.decode("utf-8"),
+                tests['error'])
+            assert response.status_code == status.HTTP_400_BAD_REQUEST
+
+    def test_update_draft_to_proposed_success(self, **kwargs):
+        credit_trades = [{
+            'numberOfCredits': 1,
+            'status': STATUS_DRAFT,
+            'initiator': 2,
+            'respondent': self.fs1_id,
+            'type': self.ct_type_id
+        }, {
+            'numberOfCredits': 5,
+            'status': STATUS_DRAFT,
+            'initiator': 2,
+            'respondent': self.fs1_id,
+            'type': self.ct_type_id
+        }]
+
+        self.test_create_success()
+        for ct in credit_trades:
+            # Create
+            response = fake_api_calls.create_credit_trade_dict(ct)
+            assert status.HTTP_201_CREATED == response.status_code
+
+            # Update
+            ct['status'] = STATUS_SUBMITTED
+            updated_response = fake_api_calls.update_credit_trade_dict(
+                ct,
+                response.json()['id'])
+
+            assert status.HTTP_200_OK == updated_response.status_code
+
+    def test_update_proposed_to_accepted(self, **kwargs):
+        pass
+
+    def test_update_proposed_to_rescinded(self, **kwargs):
+        pass
+
+    def test_update_proposed_to_refused(self, **kwargs):
+        pass
+
+    def test_update_accepted_to_rescinded(self, **kwargs):
+        pass
+
+    def test_update_accepted_to_recommended(self, **kwargs):
+        pass
+
+    def test_update_accepted_to_approved(self, **kwargs):
+        pass
+
+    def test_update_accepted_to_declined(self, **kwargs):
+        pass
+
+    def test_can_create_and_get_a_zero_dollar_transaction(self):
+        trades = [{
+            'numberOfCredits': 5,
+            'status': STATUS_DRAFT,
+            'initiator': 2,
+            'respondent': self.fs1_id,
+            'type': self.ct_type_id
+        }, {
+            'numberOfCredits': 5,
+            'status': STATUS_DRAFT,
+            'fairMarketValuePerCredit': 0.00,
+            'initiator': 2,
+            'respondent': self.fs1_id,
+            'type': self.ct_type_id
+        }, {
+            'numberOfCredits': 5,
+            'status': STATUS_DRAFT,
+            'fairMarketValuePerCredit': '0.00',
+            'initiator': 2,
+            'respondent': self.fs1_id,
+            'type': self.ct_type_id}]
+
+        for trade in trades:
+            # Create trade
+            response = fake_api_calls.create_credit_trade_dict(trade)
+            assert status.HTTP_201_CREATED == response.status_code
+            ct_id = json.loads(response.content.decode("utf-8"))['id']
+
+            created_ct = fake_api_calls.get_credit_trade(ct_id)
+            assert status.HTTP_200_OK == created_ct.status_code
+            assert created_ct.json()['totalValue'] == (trade['numberOfCredits'] * 0)

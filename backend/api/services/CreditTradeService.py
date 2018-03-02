@@ -1,14 +1,45 @@
 from api.models.CreditTradeHistory import CreditTradeHistory
 from api.models.CreditTradeStatus import CreditTradeStatus
+from api.models.Organization import Organization
 from api.models.OrganizationBalance import OrganizationBalance
+from api.models.CreditTrade import CreditTrade
 
 from api.exceptions import PositiveIntegerException
 from django.core.exceptions import ValidationError
+from django.db.models import Q
 
 import datetime
 
 
 class CreditTradeService(object):
+
+    @staticmethod
+    def get_organization_credit_trades(organization):
+
+        # Government Organization -- assume OrganizationType id 1 is gov
+        gov_org = Organization.objects.get(type=1)
+        # TODO: Is there a better way to optimize this? I would prefer
+        # not to have to do 2 database lookups for the statuses.
+        if organization == gov_org:
+            # Government
+            status_accepted = CreditTradeStatus.objects \
+                                               .get(status="Accepted")
+            status_cancelled = CreditTradeStatus.objects \
+                                                .get(status="Cancelled")
+            credit_trades = CreditTrade.objects.filter(
+                Q(initiator=organization) |
+                (Q(status__id__gte=status_accepted.id) &
+                 ~Q(status__id=status_cancelled.id)))
+        else:
+            # Fuel suppliers
+            status_submitted = CreditTradeStatus.objects \
+                                                .get(status="Submitted")
+            credit_trades = CreditTrade.objects.filter(
+                Q(initiator=organization) |
+                (Q(respondent=organization) &
+                 Q(status__id__gte=status_submitted.id)))
+
+        return credit_trades
 
     @staticmethod
     def create_history(credit_trade, is_new=False):
@@ -33,7 +64,7 @@ class CreditTradeService(object):
 
         if (new_status.status == 'Draft' or
                 (not is_new and
-                 new_status.status == 'Rescinded' and
+                 new_status.status == 'Cancelled' and
                  previous_history.status.status == 'Draft')):
             is_internal_history_record = True
 
@@ -143,8 +174,3 @@ class CreditTradeService(object):
 
         from_new_bal.save()
         to_new_bal.save()
-
-        # print("to bal s", to_starting_bal.effective_date, vars(to_starting_bal))
-        # print("to bal e", to_new_bal.effective_date, vars(to_new_bal))
-        # print("from bal s", from_starting_bal.effective_date, vars(from_starting_bal))
-        # print("from bal e", from_new_bal.effective_date, vars(from_new_bal))

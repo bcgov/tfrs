@@ -38,7 +38,7 @@
             "display_order": "4",
             "effective_date": "2017-01-01",
             "expiration_date": null,
-            "status": "Recommended for decision"
+            "status": "Recommended"
         },
         "model": "api.credittradestatus",
         "pk": "4"
@@ -78,11 +78,11 @@
     },
     {
         "fields": {
-            "description": "The Credit Transfer has been cancelled by one of the participants in the Credit Trade.",
+            "description": "The Credit Transfer has been cancelled by one of the participants in the Credit Trade. Shows up as Rescinded or Refused.",
             "display_order": "7",
             "effective_date": "2017-01-01",
             "expiration_date": null,
-            "status": "Rescinded"
+            "status": "Cancelled"
         },
         "model": "api.credittradestatus",
         "pk": "8"
@@ -93,7 +93,7 @@
             "display_order": "8",
             "effective_date": "2017-01-01",
             "expiration_date": null,
-            "status": "Declined for approval"
+            "status": "Declined"
         },
         "model": "api.credittradestatus",
         "pk": "9"

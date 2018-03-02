@@ -82,8 +82,8 @@ def create_organization_action_type():
 
 
 def create_organization():
-    status_id = create_organization_status()
-    action_type_id = create_organization_action_type()
+    status_id = 1 # Active
+    action_type_id = 1 # buy and sell
 
     test_url = "/api/organizations"
     # Create:
@@ -181,3 +181,31 @@ def get_fuel_suppliers(**kwargs):
     assert status.HTTP_200_OK == response.status_code
     response_data = json.loads(response.content.decode("utf-8"))
     return response_data
+
+
+def create_credit_trade_dict(data):
+    response = client.post(
+        '/api/credit_trades',
+        content_type='application/json',
+        data=json.dumps(data))
+
+    return response
+
+
+def update_credit_trade_dict(data, id):
+    response = client.put(
+        '/api/credit_trades/{}'.format(id),
+        content_type='application/json',
+        data=json.dumps(data))
+
+    return response
+
+
+def get_credit_trade(id):
+    response = client.get('/api/credit_trades/{}'.format(id))
+    return response
+
+
+def get_credit_trades():
+    response = client.get('/api/credit_trades')
+    return response

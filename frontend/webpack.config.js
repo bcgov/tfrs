@@ -3,7 +3,7 @@ const path = require('path');
 
 const nodeModulesPath = path.resolve(__dirname, 'node_modules');
 const buildPath = path.resolve(__dirname, 'public', 'build');
-const mainPath = path.resolve(__dirname, 'src', 'index.jsx');
+const mainPath = path.resolve(__dirname, 'src', 'index.js');
 console.log('using dev');
 
 const config = {
@@ -63,7 +63,13 @@ const config = {
         test: /\.css$/,
         exclude: /node_modules/,
         loader:
-          'style!css?modules&localIdentName=[name]---[local]---[hash:base64:5]'
+          'style-loader!css-loader?modules&localIdentName=[name]---[local]---[hash:base64:5]'
+      },
+      {
+        test: /\.css$/,
+        include: /node_modules/,
+        loader:
+          'style-loader!css-loader'
       },
       {
         test: /\.(jpe?g|png|gif|svg)$/i,

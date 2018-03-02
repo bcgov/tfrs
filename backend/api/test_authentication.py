@@ -1,5 +1,7 @@
 from django.test import TestCase, Client, RequestFactory
 from rest_framework import exceptions
+from django.conf import settings
+
 from .authentication import UserAuthentication
 from .models.User import User
 from .models.Organization import Organization
@@ -16,13 +18,18 @@ class TestAuthentication(TestCase):
                 'organization_actions_types.json',
                 'organization_statuses.json',
                 'credit_trade_types.json',
+                'test_organization_fuel_suppliers.json',
                 'test_users.json',
                 ]
 
     def setUp(self):
         self.userauth = UserAuthentication()
         self.factory = RequestFactory()
+        settings.DEBUG = False
         pass
+
+    def tearDown(self):
+        settings.BYPASS_AUTH = False
 
     def test_user_has_mapping(self):
         # Return user
@@ -210,3 +217,24 @@ class TestAuthentication(TestCase):
         assert user2.organization.id == external_organization.id
         assert user2.username == "business_tuser"
         assert user2.authorization_id == new_user2.authorization_id
+
+    def test_bypass_auth(self):
+        settings.BYPASS_AUTH = True
+
+        request = self.factory.get('/')
+
+        user, auth = self.userauth.authenticate(request)
+        # First user in the database
+        assert user.username == 'business_bsmith'
+
+    def test_bypass_auth_error(self):
+        settings.BYPASS_AUTH = False
+
+        request = self.factory.get('/')
+
+        # Will throw error on this line on authentication.py:
+        # header_user_guid = uuid.UUID(request.META.get('HTTP_SMAUTH_USERGUID'))
+        # raise TypeError('one of the hex, bytes, bytes_le, fields, '
+
+        with self.assertRaises(TypeError):
+            user, auth = self.userauth.authenticate(request)

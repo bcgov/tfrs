@@ -3,7 +3,7 @@ const path = require('path');
 
 const nodeModulesPath = path.resolve(__dirname, 'node_modules');
 const buildPath = path.resolve(__dirname, 'public', 'build');
-const mainPath = path.resolve(__dirname, 'src', 'index.jsx');
+const mainPath = path.resolve(__dirname, 'src', 'index.js');
 // var plugins = require('webpack-load-plugins')();
 // plugins.ImageminPlugin = require('imagemin-webpack-plugin');
 // plugsin.imageminMozjpeg = require('imagemin-mozjpeg');

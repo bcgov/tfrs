@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { BootstrapTable, TableHeaderColumn, ButtonGroup } from 'react-bootstrap-table';
-import { getNotifications } from '../../actions/notificationActions.jsx';
-import * as ReducerTypes from '../../constants/reducerTypes.jsx';
+import { getNotifications } from '../../actions/notificationActions';
+import * as ReducerTypes from '../../constants/reducerTypes';
 
 class Notifications extends Component {
 
