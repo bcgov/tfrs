@@ -18,9 +18,9 @@
     See the License for the specific language governing permissions and
     limitations under the License.
 """
-
+from decimal import Decimal
 from django.db import models
-from .Organization import Organization
+from .CreditTradeStatus import CreditTradeStatus
 
 from auditable.models import Auditable
 from api import validators
@@ -49,7 +49,7 @@ class CreditTrade(Auditable):
     fair_market_value_per_credit = models.DecimalField(
         null=True, blank=True, max_digits=999,
         decimal_places=2,
-        default=None)
+        default=Decimal('0.00'))
     zero_reason = models.ForeignKey(
         'CreditTradeZeroReason',
         related_name='credit_trades',
@@ -73,6 +73,52 @@ class CreditTrade(Auditable):
             return self.initiator
         elif self.type.id in [1, 3, 5]:
             return self.respondent
+
+    @property
+    def total_value(self):
+        return self.number_of_credits * self.fair_market_value_per_credit
+
+    @property
+    def status_display(self):
+        """Display text for the status in a user-friendly way"""
+        cur_status = self.status.status
+        if cur_status == "Cancelled":
+            # If this was cancelled by the initiator, it's "Rescinded"
+            # If it was cancelled by the respondent, it's "Refused"
+            # If it was cancelled by the respondent after accepting,
+            #   it's "Rescinded"
+            return "Cancelled"
+        elif cur_status == "Declined":
+            return "Declined for approval"
+        elif cur_status == "Recommended":
+            return "Recommended for decision"
+
+        return cur_status
+
+    @property
+    def actions(self):
+        """Statuses that can be made for this credit trade"""
+        statuses = CreditTradeStatus.objects.all().only('id', 'status')
+        status_dict = {s.status: s for s in statuses}
+
+        cur_status = self.status.status
+
+        if cur_status == "Draft":
+            return [status_dict["Draft"],
+                    status_dict["Submitted"]]
+        elif cur_status == "Submitted":
+            # Change status to rescind
+            return [status_dict["Accepted"],
+                    status_dict["Cancelled"]]  # Rescind
+        elif cur_status == "Accepted":
+            # Change status to refuse
+            return [status_dict["Cancelled"],  # Refuse
+                    status_dict["Recommended"]]
+        elif cur_status == "Recommended":
+            return [status_dict["Approved"],
+                    status_dict["Declined"]]
+
+        return []
 
     class Meta:
         db_table = 'credit_trade'

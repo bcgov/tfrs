@@ -7,7 +7,8 @@
             "authorization_id": "bsmith",
             "display_name": "Brad Smith",
             "first_name": "Brad",
-            "last_name": "Smith"
+            "last_name": "Smith",
+            "organization_id": 2
         },
         "model": "api.user",
         "pk": null
@@ -20,7 +21,21 @@
             "authorization_id": "jholbert",
             "display_name": "Judy Holbert",
             "first_name": "Judy",
-            "last_name": "Holbert"
+            "last_name": "Holbert",
+            "organization_id": 3
+        },
+        "model": "api.user",
+        "pk": null
+    },
+    {
+        "fields": {
+            "authorization_guid": "c2971372-3a96-4704-9b9c-18e4e9298ee3",
+            "email": "Test.Person@gov.bc.ca",
+            "username": "internal_teperson",
+            "authorization_id": "teperson",
+            "first_name": "Test",
+            "last_name": "Person",
+            "organization_id": 1
         },
         "model": "api.user",
         "pk": null
@@ -33,7 +48,8 @@
             "authorization_id": "cmccullough",
             "display_name": "Clayton McCullough",
             "first_name": "Clayton",
-            "last_name": "McCullough"
+            "last_name": "McCullough",
+            "organization_id": 4
         },
         "model": "api.user",
         "pk": null
@@ -502,143 +518,6 @@
             "display_name": "Margaret Greene",
             "first_name": "Margaret",
             "last_name": "Greene"
-        },
-        "model": "api.user",
-        "pk": null
-    },
-    {
-        "fields": {
-            "email": "Daine.Trinidad@gov.bc.ca",
-            "username": "internal_datrinid",
-            "authorization_id": "datrinid",
-            "first_name": "Daine",
-            "last_name": "Trinidad",
-            "organization_id": 1
-        },
-        "model": "api.user",
-        "pk": null
-    },
-    {
-        "fields": {
-            "email": "Daine.Trinidad@gov.bc.ca",
-            "username": "business_dtrinidad",
-            "authorization_id": "dtrinidad",
-            "first_name": "Daine",
-            "last_name": "Trinidad"
-        },
-        "model": "api.user",
-        "pk": null
-    },
-    {
-        "fields": {
-            "email": "Raj.Persram@gov.bc.ca",
-            "username": "internal_rpersram",
-            "authorization_id": "rpersram",
-            "first_name": "Raj",
-            "last_name": "Persram",
-            "organization_id": 1
-        },
-        "model": "api.user",
-        "pk": null
-    },
-  {
-        "fields": {
-            "email": "Raj.Persram@gov.bc.ca",
-            "username": "business_rpersram",
-            "authorization_id": "rpersram",
-            "first_name": "Raj",
-            "last_name": "Persram",
-            "organization_id": 1
-        },
-        "model": "api.user",
-        "pk": null
-    },
-    {
-        "fields": {
-            "email": "Brian.Finn@gov.bc.ca",
-            "username": "internal_bfinn",
-            "authorization_id": "bfinn",
-            "first_name": "Brian",
-            "last_name": "Finn",
-            "organization_id": 1
-        },
-        "model": "api.user",
-        "pk": null
-    },
-    {
-        "fields": {
-            "email": "Brian.Finn@gov.bc.ca",
-            "username": "business_bfin",
-            "authorization_id": "bfin",
-            "first_name": "Brian",
-            "last_name": "Finn"
-        },
-        "model": "api.user",
-        "pk": null
-    },
-    {
-        "fields": {
-            "email": "Justin.Lepitzki@gov.bc.ca",
-            "username": "internal_jlepitz",
-            "authorization_id": "jlepitz",
-            "first_name": "Justin",
-            "last_name": "Lepitzki",
-            "organization_id": 1
-        },
-        "model": "api.user",
-        "pk": null
-    },
-    {
-        "fields": {
-            "email": "Justin.Lepitzki@gov.bc.ca",
-            "username": "business_jlepitzki",
-            "authorization_id": "jlepitzki",
-            "first_name": "Justin",
-            "last_name": "Lepitzki"
-        },
-        "model": "api.user",
-        "pk": null
-    },
-    {
-        "fields": {
-            "email": "Matthew.Hall@gov.bc.ca",
-            "username": "internall_mahall",
-            "authorization_id": "mahall",
-            "first_name": "Matthew",
-            "last_name": "Hall"
-        },
-        "model": "api.user",
-        "pk": null
-    },
-    {
-        "fields": {
-            "email": "Matthew.Hall@gov.bc.ca",
-            "username": "business_mhall",
-            "authorization_id": "mhall",
-            "first_name": "Matthew",
-            "last_name": "Hall"
-        },
-        "model": "api.user",
-        "pk": null
-    },
-    {
-        "fields": {
-            "email": "Roland.Stens@gov.bc.ca",
-            "username": "internal_rstens",
-            "authorization_id": "rstens",
-            "first_name": "Roland",
-            "last_name": "Stens"
-        },
-        "model": "api.user",
-        "pk": null
-    },
-    {
-        "fields": {
-            "email": "roland.stens@gmail.com",
-            "username": "business_rstens",
-            "authorization_id": "rstens",
-            "first_name": "Roland",
-            "last_name": "Stens"
         },
         "model": "api.user",
         "pk": null

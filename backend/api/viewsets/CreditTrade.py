@@ -1,12 +1,15 @@
 from rest_framework import viewsets, permissions, status, mixins
 from rest_framework.decorators import list_route, detail_route
 from rest_framework.response import Response
+from rest_framework import filters
 
 from auditable.views import AuditableMixin
 
 from api.models.CreditTrade import CreditTrade
 from api.models.CreditTradeHistory import CreditTradeHistory
+
 from api.serializers import CreditTradeCreateSerializer
+from api.serializers import CreditTradeUpdateSerializer
 from api.serializers import CreditTradeApproveSerializer
 from api.serializers import CreditTrade2Serializer as CreditTradeSerializer
 from api.serializers import CreditTradeHistory2Serializer \
@@ -14,7 +17,7 @@ from api.serializers import CreditTradeHistory2Serializer \
 
 from api.services.CreditTradeService import CreditTradeService
 
-# class CreditTradeViewSet(AuditableMixin, viewsets.ModelViewSet):
+
 class CreditTradeViewSet(AuditableMixin, mixins.CreateModelMixin,
                          mixins.RetrieveModelMixin, mixins.UpdateModelMixin,
                          mixins.ListModelMixin, viewsets.GenericViewSet):
@@ -26,10 +29,13 @@ class CreditTradeViewSet(AuditableMixin, mixins.CreateModelMixin,
     permission_classes = (permissions.AllowAny,)
     http_method_names = ['get', 'post', 'put']
     queryset = CreditTrade.objects.all()
+    filter_backends = (filters.OrderingFilter,)
+    ordering_fields = '__all__'
+    ordering = ('-id',)
     serializer_class = CreditTradeSerializer
     serializer_classes = {
         'create': CreditTradeCreateSerializer,
-        'update': CreditTradeCreateSerializer,
+        'update': CreditTradeUpdateSerializer,
         'default': CreditTradeSerializer,
         'history': CreditTradeHistorySerializer,
         'approve': CreditTradeApproveSerializer,
@@ -40,6 +46,14 @@ class CreditTradeViewSet(AuditableMixin, mixins.CreateModelMixin,
             return self.serializer_classes[self.action]
         else:
             return self.serializer_classes['default']
+
+    def get_queryset(self):
+        """
+        This view should return a list of all the purchases
+        for the currently authenticated user.
+        """
+        user = self.request.user
+        return CreditTradeService.get_organization_credit_trades(user.organization)
 
     def perform_create(self, serializer):
         credit_trade = serializer.save()

@@ -2,28 +2,30 @@
 plugins {
   id "java"
   id "jacoco"
-  id "org.sonarqube" version "1.2"
+  id "org.sonarqube" version "2.6.1"
 }
 
 sonarqube {
     properties {
+      //property "sonar.host.url", "https://sonarqube-mem-tfrs-tools.pathfinder.gov.bc.ca"  
       property "sonar.projectName", "Transportation Fuels Reporting System - Frontend"
       property "sonar.projectKey", "tfrs-frontend"
-      property "sonar.projectBaseDir", ".."
-      property "sonar.sources", "."
-      //property "sonar.language", "js,css,jsx,html"
-      //property "sonar.tests", "test"
-      property "sourceEncoding", "UTF-8"
-      //property "sonar.python.xunit.reportPath","nosetests.xml"
-      //property "sonar.python.coverage.reportPath","coverage.xml"
+      property "sonar.projectBaseDir", "../"
+      property "sonar.sources", "src/.,public/.,server/."
+      property "sonar.scm.provider","git"
+      property "sonar.sourceEncoding", "UTF-8"
       property "sonar.python.coveragePlugin","cobertura"
       property "sonar.jacoco.reportPath", "${project.buildDir}/jacoco/test.exec"
     }
 }
 
 allprojects {
-  ext.baseVersion = "0.1"
-  ext.snapshotVersion = true
+  def env = System.getenv()
+  TimeZone.getTimeZone('UTC')
+  Date date= new Date()
+  String newdate=date.format("YYYYMMdd")
+  ext.baseVersion = newdate + "." + env['BUILD_NUMBER']
+  ext.snapshotVersion = false
 
   group = "org.sonarqube"
   version = "$baseVersion" + (snapshotVersion ? "-SNAPSHOT" : "")
@@ -47,3 +49,4 @@ repositories {
     }
   }
 }
+  

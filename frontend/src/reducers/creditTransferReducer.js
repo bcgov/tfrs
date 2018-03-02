@@ -3,32 +3,55 @@ import * as ActionTypes from '../constants/actionTypes';
 const creditTransfer = (state = {
   isFetching: false,
   didInvalidate: false,
-  item: {}
+  item: {},
+  errors: {}
 }, action) => {
   switch (action.type) {
-    case ActionTypes.CREATE_CREDIT_TRANSFER:
-      return [
-        ...state,
-        Object.assign({}, action.data)];
+    case ActionTypes.ADD_CREDIT_TRANSFER:
+      return Object.assign({}, state, {
+        isFetching: false,
+        didInvalidate: false,
+        item: action.data
+      });
+    case ActionTypes.SUCCESS_ADD_CREDIT_TRANSFER:
+      return Object.assign({}, state, {
+        isFetching: false,
+        didInvalidate: true,
+        item: {} //action.data
+      });
     case ActionTypes.UPDATE_CREDIT_TRANSFER:
-      return [
-        ...state,
-        Object.assign({}, action.data)];
+      return Object.assign({}, state, {
+        isFetching: false,
+        didInvalidate: false,
+        item: action.data
+      });
     case ActionTypes.DELETE_REQUEST_ITEM:
-      return [
-        ...state,
-        Object.assign({}, action.data)];
-    case ActionTypes.GET_REQUEST_ITEM:
+      return Object.assign({}, state, {
+        isFetching: false,
+        didInvalidate: false,
+        item: action.data
+      });
+    case ActionTypes.GET_CREDIT_TRANSFER:
       return Object.assign({}, state, {
         isFetching: true,
         item: {},
         didInvalidate: false
       });
-    case ActionTypes.RECEIVE_REQUEST_ITEM:
+    case ActionTypes.RECEIVE_CREDIT_TRANSFER:
       return Object.assign({}, state, {
         isFetching: false,
         didInvalidate: false,
         item: action.data
+      });
+    case ActionTypes.ERROR:
+      return Object.assign({}, state, {
+        isFetching: false,
+        didInvalidate: true,
+        errors: action.errorMessage
+      });
+    case ActionTypes.INVALIDATE_CREDIT_TRANSFER:
+      return Object.assign({}, state, {
+        didInvalidate: true
       });
     default:
       return state;
@@ -58,6 +81,10 @@ const creditTransfers = (state = {
         isFetching: false,
         success: false,
         errorMessage: action.errorMessage
+      });
+    case ActionTypes.INVALIDATE_CREDIT_TRANSFERS:
+      return Object.assign({}, state, {
+        didInvalidate: true
       });
     default:
       return state;

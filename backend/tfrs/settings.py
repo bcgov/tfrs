@@ -31,7 +31,10 @@ SECRET_KEY = os.getenv(
 #DEBUG = True
 DEBUG = os.getenv('DJANGO_DEBUG', 'True') == 'True'
 
-ALLOWED_HOSTS = ['*']
+# SECURITY WARNING: never set this on in production
+BYPASS_AUTH = os.getenv('BYPASS_HEADER_AUTHENTICATION', False)
+
+# ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -45,10 +48,10 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'django_extensions',
     'rest_framework',
-    'rest_framework_swagger',
     'tfrs',
     'api',
     'corsheaders',
+    'django_nose',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -80,6 +83,8 @@ REST_FRAMEWORK = {
     'DEFAULT_PARSER_CLASSES': (
         'djangorestframework_camel_case.parser.CamelCaseJSONParser',
     ),
+    'DEFAULT_FILTER_BACKENDS': (
+        'django_filters.rest_framework.DjangoFilterBackend',)
 }
 
 ROOT_URLCONF = 'tfrs.urls'
@@ -101,6 +106,7 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'wsgi.application'
+TEST_RUNNER = 'django_nose.NoseTestSuiteRunner'
 
 
 # Database
@@ -150,6 +156,10 @@ SWAGGER_SETTINGS = {
     'APIS_SORTER': 'alpha',
     'SHOW_REQUEST_HEADERS': True
 }
+
+USE_X_FORWARDED_HOST = True
+USE_X_FORWARDED_PORT = True
+ALLOWED_HOSTS = ['*']
 
 # CORS Settings
 

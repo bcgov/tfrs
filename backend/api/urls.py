@@ -24,7 +24,6 @@ from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from rest_framework.schemas import SchemaGenerator
 from rest_framework.views import APIView
-from rest_framework_swagger import renderers
 # generated views
 from . import views
 # custom views
@@ -33,6 +32,7 @@ from .viewsets.CreditTrade import CreditTradeViewSet
 from .viewsets.Organization import OrganizationViewSet
 from .viewsets.User import UserViewSet
 
+from rest_framework.documentation import include_docs_urls
 
 from rest_framework.routers import DefaultRouter
 from django.conf import settings
@@ -45,24 +45,9 @@ router.register(r'users', UserViewSet)
 
 
 
-class SwaggerSchemaView(APIView):
-    permission_classes = [AllowAny]
-    renderer_classes = [
-        renderers.OpenAPIRenderer,
-        renderers.SwaggerUIRenderer
-    ]
-    _ignore_model_permissions = True
-    exclude_from_schema = True
-
-    def get(self, request):
-        generator = SchemaGenerator()
-        schema = generator.get_schema(request=request)
-        return Response(schema)
-
-
 urlpatterns = [
     # Swagger documentation
-    url(r'^doc$', SwaggerSchemaView.as_view()),
+    url(r'^doc/', include_docs_urls(title='TFRS API Documentation')),
     url(r'^', include(router.urls)),
     url(r'^credittrades/bulk$', views.credittradesBulkPost.as_view()),
     url(r'^credittrades$', views.credittradesGet.as_view()),

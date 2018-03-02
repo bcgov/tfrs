@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
-import * as Routes from '../../constants/routes.jsx';
-import * as Values from '../../constants/values.jsx';
-import { plainEnglishPhrase } from '../../utils/functions.jsx';
+import * as Routes from '../../constants/routes';
+import * as Values from '../../constants/values';
+import { plainEnglishPhrase } from '../../utils/functions';
 import { Link } from 'react-router-dom';
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
 import { Modal } from 'react-bootstrap';

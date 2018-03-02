@@ -20,6 +20,8 @@ Pull requests are the best way to propose changes to the codebase (we use [Githu
 5. Make sure your code lints.
 6. Issue that pull request!
 
+## Separation of Display Components to Business Logic
+All your business logic, data handling and manipulation should be in a file called `<File>Container.js`. JSX Template files should be under a folder called `components` and must not contain any non-ui logic.
 
 ## Use a Consistent Coding Style
 Ideally, we'd like to follow the [airbnb style guide](https://github.com/airbnb/javascript)

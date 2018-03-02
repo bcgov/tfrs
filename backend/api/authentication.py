@@ -6,10 +6,17 @@ from api.models.User import User
 from api.models.Organization import Organization
 from api.models.OrganizationType import OrganizationType
 from api.utils import get_firstname_lastname
+from django.conf import settings
 
 
 class UserAuthentication(authentication.BaseAuthentication):
     def authenticate(self, request):
+
+        # Bypass auth env variable
+        if settings.BYPASS_AUTH:
+            return (User.objects.first(), None)
+
+
         header_username = request.META.get('HTTP_SMAUTH_USER', request.META.get(
             'HTTP_SMAUTH_UNIVERSALID'))
         header_user_guid = uuid.UUID(request.META.get('HTTP_SMAUTH_USERGUID'))

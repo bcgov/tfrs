@@ -1,0 +1,1158 @@
+apiVersion: v1
+kind: Template
+metadata:
+  creationTimestamp: null
+  name: mem-tfrs-dev
+objects:
+- apiVersion: v1
+  data:
+    caddyfile: |-
+      0.0.0.0:2015
+
+      root /var/www/html
+
+      log stdout
+
+      errors stdout
+
+      gzip
+
+      proxy / http://{%REQUEST_LOGGER_SERVICE_HOST%}:{%REQUEST_LOGGER_SERVICE_PORT%} {
+          transparent
+      }
+  kind: ConfigMap
+  metadata:
+    creationTimestamp: null
+    name: caddyfile
+- apiVersion: v1
+  data:
+    reques_logger.py: "from flask import Flask, request\napp = Flask(__name__)\n\n@app.route('/',
+      defaults={'path': ''})\n@app.route('/<path:path>')\ndef dump_headers(path):\n
+      \ print(request.headers)\n  return str(request.headers), 200, {'Content-Type':
+      'text/plain; charset=utf-8'}\n  "
+  kind: ConfigMap
+  metadata:
+    creationTimestamp: null
+    name: reques-logger
+- apiVersion: v1
+  data:
+    filters.properties: "addport=6789\r\npass=pass123"
+    key1: conifg3
+  kind: ConfigMap
+  metadata:
+    creationTimestamp: null
+    name: test-config
+- apiVersion: v1
+  groupNames: null
+  kind: RoleBinding
+  metadata:
+    creationTimestamp: null
+    name: admin
+  roleRef:
+    name: admin
+  subjects:
+  - kind: User
+    name: sheaphillips
+  - kind: User
+    name: rajpersram
+  - kind: User
+    name: kuanfandevops
+  - kind: User
+    name: cvarjao
+  userNames:
+  - sheaphillips
+  - rajpersram
+  - kuanfandevops
+  - cvarjao
+- apiVersion: v1
+  groupNames: null
+  kind: RoleBinding
+  metadata:
+    creationTimestamp: null
+    name: edit
+  roleRef:
+    name: edit
+  subjects:
+  - kind: ServiceAccount
+    name: default
+    namespace: mem-tfrs-tools
+  - kind: User
+    name: dmarley
+  - kind: User
+    name: swcurran
+  - kind: User
+    name: GeorgeWalker
+  - kind: User
+    name: dainetrinidad
+  - kind: User
+    name: rstens
+  - kind: ServiceAccount
+    name: jenkins
+    namespace: mem-tfrs-tools
+  userNames:
+  - system:serviceaccount:mem-tfrs-tools:default
+  - dmarley
+  - swcurran
+  - GeorgeWalker
+  - dainetrinidad
+  - rstens
+  - system:serviceaccount:mem-tfrs-tools:jenkins
+- apiVersion: v1
+  groupNames: null
+  kind: RoleBinding
+  metadata:
+    creationTimestamp: null
+    name: system:deployers
+  roleRef:
+    name: system:deployer
+  subjects:
+  - kind: ServiceAccount
+    name: deployer
+    namespace: mem-tfrs-dev
+  userNames:
+  - system:serviceaccount:mem-tfrs-dev:deployer
+- apiVersion: v1
+  groupNames: null
+  kind: RoleBinding
+  metadata:
+    creationTimestamp: null
+    name: system:image-builders
+  roleRef:
+    name: system:image-builder
+  subjects:
+  - kind: ServiceAccount
+    name: builder
+    namespace: mem-tfrs-dev
+  userNames:
+  - system:serviceaccount:mem-tfrs-dev:builder
+- apiVersion: v1
+  groupNames:
+  - system:serviceaccounts:mem-tfrs-dev
+  kind: RoleBinding
+  metadata:
+    creationTimestamp: null
+    name: system:image-pullers
+  roleRef:
+    name: system:image-puller
+  subjects:
+  - kind: ServiceAccount
+    name: default
+    namespace: mem-tfrs-tools
+  - kind: SystemGroup
+    name: system:serviceaccounts:mem-tfrs-dev
+  userNames:
+  - system:serviceaccount:mem-tfrs-tools:default
+- apiVersion: v1
+  groupNames: null
+  kind: RoleBinding
+  metadata:
+    creationTimestamp: null
+    name: view
+  roleRef:
+    name: view
+  subjects:
+  - kind: User
+    name: matthewhall78
+  - kind: User
+    name: swcurran
+  - kind: SystemUser
+    name: system:serviceaccount:mem-tfrs-dev:system:serviceaccount:mem-tfrs-tools:jenkins
+  userNames:
+  - matthewhall78
+  - swcurran
+  - system:serviceaccount:mem-tfrs-dev:system:serviceaccount:mem-tfrs-tools:jenkins
+- apiVersion: v1
+  kind: PersistentVolumeClaim
+  metadata:
+    annotations:
+      pv.kubernetes.io/bind-completed: "yes"
+      pv.kubernetes.io/bound-by-controller: "yes"
+      volume.beta.kubernetes.io/storage-class: gluster-file
+      volume.beta.kubernetes.io/storage-provisioner: kubernetes.io/glusterfs
+    creationTimestamp: null
+    name: postgresql-cns
+  spec:
+    accessModes:
+    - ReadWriteOnce
+    resources:
+      requests:
+        storage: 5Gi
+    volumeName: pvc-7f1938e3-fd6f-11e7-b70e-005056832285
+  status: {}
+- apiVersion: v1
+  kind: BuildConfig
+  metadata:
+    creationTimestamp: null
+    labels:
+      build: caddy-app
+      template: caddy-template
+    name: caddy-app
+  spec:
+    nodeSelector: null
+    output:
+      to:
+        kind: ImageStreamTag
+        name: caddy-app:latest
+    postCommit: {}
+    resources: {}
+    runPolicy: Serial
+    source:
+      contextDir: /utils/caddy-proxy
+      git:
+        uri: https://github.com/BCDevOps/openshift-tools.git
+      type: Git
+    strategy:
+      sourceStrategy:
+        from:
+          kind: ImageStreamTag
+          name: bcgov-s2i-caddy:latest
+          namespace: openshift
+      type: Source
+    triggers:
+    - github:
+        secret: dLUFqHx4HXi80yTFi5rEaEfbcaoFLtLxsPF5nFJe
+      type: GitHub
+    - generic:
+        secret: KmbAl3HF5ttakkEvGyV20RXwrXge1XhuSQbQPdch
+      type: Generic
+    - type: ConfigChange
+    - imageChange: {}
+      type: ImageChange
+  status:
+    lastVersion: 0
+- apiVersion: v1
+  kind: BuildConfig
+  metadata:
+    annotations:
+      openshift.io/generated-by: OpenShiftWebConsole
+    creationTimestamp: null
+    labels:
+      app: request-logger
+    name: request-logger
+  spec:
+    nodeSelector: null
+    output:
+      to:
+        kind: ImageStreamTag
+        name: request-logger:latest
+    postCommit: {}
+    resources: {}
+    runPolicy: Serial
+    source:
+      contextDir: /utils/request_logger
+      git:
+        ref: master
+        uri: https://github.com/bcdevops/openshift-tools/
+      type: Git
+    strategy:
+      sourceStrategy:
+        from:
+          kind: ImageStreamTag
+          name: python:3.5
+          namespace: openshift
+      type: Source
+    triggers:
+    - generic:
+        secret: d8ba7ff148c0970c
+      type: Generic
+    - github:
+        secret: e27a392996821e2d
+      type: GitHub
+    - imageChange: {}
+      type: ImageChange
+    - type: ConfigChange
+  status:
+    lastVersion: 0
+- apiVersion: v1
+  kind: DeploymentConfig
+  metadata:
+    creationTimestamp: null
+    generation: 1
+    labels:
+      app: caddy-app
+      template: caddy-template
+    name: caddy-app
+  spec:
+    replicas: 0
+    selector:
+      app: caddy-app
+      deploymentconfig: caddy-app
+    strategy:
+      activeDeadlineSeconds: 21600
+      resources: {}
+      rollingParams:
+        intervalSeconds: 1
+        maxSurge: 25%
+        maxUnavailable: 25%
+        timeoutSeconds: 600
+        updatePeriodSeconds: 1
+      type: Rolling
+    template:
+      metadata:
+        annotations:
+          openshift.io/container.pathfinder.image.entrypoint: '["/sbin/tini","caddy","-quic","--conf","/etc/Caddyfile"]'
+          openshift.io/generated-by: OpenShiftNewApp
+        creationTimestamp: null
+        labels:
+          app: caddy-app
+          deploymentconfig: caddy-app
+      spec:
+        containers:
+        - image: 172.50.0.2:5000/mem-tfrs-dev/caddy-app@sha256:7220588395b9149195c2cfec67dda62e7cd37ce1adebcd4a2330905af86f453f
+          imagePullPolicy: Always
+          name: caddy-app
+          ports:
+          - containerPort: 2015
+            protocol: TCP
+          resources:
+            limits:
+              cpu: 500m
+              memory: 512Mi
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+          volumeMounts:
+          - mountPath: /etc
+            name: caddyfile-volume
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+        volumes:
+        - configMap:
+            defaultMode: 420
+            items:
+            - key: caddyfile
+              path: Caddyfile
+            name: caddyfile
+          name: caddyfile-volume
+    test: false
+    triggers:
+    - imageChangeParams:
+        automatic: true
+        containerNames:
+        - caddy-app
+        from:
+          kind: ImageStreamTag
+          name: caddy-app:latest
+          namespace: mem-tfrs-dev
+      type: ImageChange
+    - type: ConfigChange
+  status:
+    availableReplicas: 0
+    latestVersion: 0
+    observedGeneration: 0
+    replicas: 0
+    unavailableReplicas: 0
+    updatedReplicas: 0
+- apiVersion: v1
+  kind: DeploymentConfig
+  metadata:
+    annotations:
+      description: Defines how to deploy the application server
+    creationTimestamp: null
+    generation: 1
+    labels:
+      template: tfrs-app-environment
+    name: client
+  spec:
+    replicas: 1
+    selector:
+      name: client
+    strategy:
+      activeDeadlineSeconds: 21600
+      recreateParams:
+        timeoutSeconds: 600
+      resources: {}
+      type: Recreate
+    template:
+      metadata:
+        creationTimestamp: null
+        labels:
+          name: client
+        name: client
+      spec:
+        containers:
+        - env:
+          - name: RealIpFrom
+          - name: AdditionalRealIpFromRules
+          - name: IpFilterRules
+          - name: HTTP_BASIC
+          - name: API_URL
+            value: http://backend.mem-tfrs-dev.svc.cluster.local:8080/api/
+          image: 172.50.0.2:5000/mem-tfrs-tools/client-develop@sha256:0d335a08da8af2a0cfdb6ee4e46f872bb8ad3dd379e4ddb4c3eeb0f2113ad1db
+          imagePullPolicy: IfNotPresent
+          livenessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /
+              port: 8080
+              scheme: HTTP
+            initialDelaySeconds: 20
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 3
+          name: client
+          ports:
+          - containerPort: 3000
+            protocol: TCP
+          readinessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /
+              port: 8080
+              scheme: HTTP
+            initialDelaySeconds: 10
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 3
+          resources:
+            limits:
+              memory: 512Mi
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+    test: false
+    triggers:
+    - imageChangeParams:
+        automatic: true
+        containerNames:
+        - client
+        from:
+          kind: ImageStreamTag
+          name: client-develop:dev
+          namespace: mem-tfrs-tools
+      type: ImageChange
+    - type: ConfigChange
+  status:
+    availableReplicas: 0
+    latestVersion: 0
+    observedGeneration: 0
+    replicas: 0
+    unavailableReplicas: 0
+    updatedReplicas: 0
+- apiVersion: v1
+  kind: DeploymentConfig
+  metadata:
+    creationTimestamp: null
+    generation: 1
+    labels:
+      app: postgresql-persistent
+      template: postgresql-persistent-template
+    name: postgresql
+  spec:
+    replicas: 1
+    selector:
+      name: postgresql
+    strategy:
+      activeDeadlineSeconds: 21600
+      recreateParams:
+        timeoutSeconds: 600
+      resources: {}
+      type: Recreate
+    template:
+      metadata:
+        creationTimestamp: null
+        labels:
+          name: postgresql
+      spec:
+        containers:
+        - env:
+          - name: POSTGRESQL_DATABASE
+            value: tfrs
+          - name: POSTGRESQL_USER
+            valueFrom:
+              secretKeyRef:
+                key: DATABASE_USER
+                name: tfrs-postgresql
+          - name: POSTGRESQL_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                key: DATABASE_PASSWORD
+                name: tfrs-postgresql
+          image: registry.access.redhat.com/rhscl/postgresql-95-rhel7@sha256:19aacf0c8331df76b67932415bd84abf74ec36fd9d4aef518ad9f6285c4a948a
+          imagePullPolicy: IfNotPresent
+          livenessProbe:
+            failureThreshold: 3
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            successThreshold: 1
+            tcpSocket:
+              port: 5432
+            timeoutSeconds: 1
+          name: postgresql
+          ports:
+          - containerPort: 5432
+            protocol: TCP
+          readinessProbe:
+            exec:
+              command:
+              - /bin/sh
+              - -i
+              - -c
+              - psql -h 127.0.0.1 -U $POSTGRESQL_USER -q -d $POSTGRESQL_DATABASE -c
+                'SELECT 1'
+            failureThreshold: 3
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 1
+          resources:
+            limits:
+              memory: 512Mi
+          securityContext:
+            capabilities: {}
+            privileged: false
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+          volumeMounts:
+          - mountPath: /var/lib/pgsql/data
+            name: postgresql-data
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+        volumes:
+        - name: postgresql-data
+          persistentVolumeClaim:
+            claimName: postgresql-cns
+    test: false
+    triggers:
+    - imageChangeParams:
+        automatic: true
+        containerNames:
+        - postgresql
+        from:
+          kind: ImageStreamTag
+          name: postgresql:9.5
+          namespace: openshift
+      type: ImageChange
+    - type: ConfigChange
+  status:
+    availableReplicas: 0
+    latestVersion: 0
+    observedGeneration: 0
+    replicas: 0
+    unavailableReplicas: 0
+    updatedReplicas: 0
+- apiVersion: v1
+  kind: DeploymentConfig
+  metadata:
+    annotations:
+      openshift.io/generated-by: OpenShiftWebConsole
+    creationTimestamp: null
+    generation: 1
+    labels:
+      app: request-logger
+    name: request-logger
+  spec:
+    replicas: 1
+    selector:
+      deploymentconfig: request-logger
+    strategy:
+      activeDeadlineSeconds: 21600
+      resources: {}
+      rollingParams:
+        intervalSeconds: 1
+        maxSurge: 25%
+        maxUnavailable: 25%
+        timeoutSeconds: 600
+        updatePeriodSeconds: 1
+      type: Rolling
+    template:
+      metadata:
+        creationTimestamp: null
+        labels:
+          app: request-logger
+          deploymentconfig: request-logger
+      spec:
+        containers:
+        - image: 172.50.0.2:5000/mem-tfrs-dev/request-logger@sha256:6a09a8baa58acd905518d5ff502f01d00c32ebead94853b2202db39991b0ccc3
+          imagePullPolicy: Always
+          name: request-logger
+          ports:
+          - containerPort: 8080
+            protocol: TCP
+          resources:
+            limits:
+              cpu: 500m
+              memory: 512Mi
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+          volumeMounts:
+          - mountPath: /opt/app-root/src
+            name: volume-8g9sa
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+        volumes:
+        - configMap:
+            defaultMode: 420
+            items:
+            - key: reques_logger.py
+              path: request_logger.py
+            name: reques-logger
+          name: volume-8g9sa
+    test: false
+    triggers:
+    - imageChangeParams:
+        automatic: true
+        containerNames:
+        - request-logger
+        from:
+          kind: ImageStreamTag
+          name: request-logger:latest
+          namespace: mem-tfrs-dev
+      type: ImageChange
+    - type: ConfigChange
+  status:
+    availableReplicas: 0
+    latestVersion: 0
+    observedGeneration: 0
+    replicas: 0
+    unavailableReplicas: 0
+    updatedReplicas: 0
+- apiVersion: v1
+  kind: DeploymentConfig
+  metadata:
+    annotations:
+      description: Defines how to deploy the container.
+    creationTimestamp: null
+    generation: 1
+    name: schema-spy
+  spec:
+    replicas: 1
+    selector:
+      name: schema-spy
+    strategy:
+      activeDeadlineSeconds: 21600
+      resources: {}
+      rollingParams:
+        intervalSeconds: 1
+        maxSurge: 25%
+        maxUnavailable: 25%
+        timeoutSeconds: 600
+        updatePeriodSeconds: 1
+      type: Rolling
+    template:
+      metadata:
+        creationTimestamp: null
+        labels:
+          name: schema-spy
+        name: schema-spy
+      spec:
+        containers:
+        - env:
+          - name: DATABASE_SERVICE_NAME
+            value: postgresql
+          - name: POSTGRESQL_DATABASE
+            value: tfrs
+          - name: POSTGRESQL_USER
+            valueFrom:
+              secretKeyRef:
+                key: DATABASE_USER
+                name: tfrs-postgresql
+          - name: POSTGRESQL_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                key: DATABASE_PASSWORD
+                name: tfrs-postgresql
+          image: 172.50.0.2:5000/mem-tfrs-tools/schema-spy@sha256:7a420819e019200ec98ebebe06388872f2f72f37baa7c64162a4a4d4909bcfbf
+          imagePullPolicy: IfNotPresent
+          livenessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /
+              port: 8080
+              scheme: HTTP
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 3000
+          name: schema-spy
+          ports:
+          - containerPort: 8080
+            protocol: TCP
+          readinessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /
+              port: 8080
+              scheme: HTTP
+            initialDelaySeconds: 3
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 3000
+          resources:
+            limits:
+              cpu: 500m
+              memory: 512Mi
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+    test: false
+    triggers:
+    - type: ConfigChange
+    - imageChangeParams:
+        automatic: true
+        containerNames:
+        - schema-spy
+        from:
+          kind: ImageStreamTag
+          name: schema-spy:latest
+          namespace: mem-tfrs-tools
+      type: ImageChange
+  status:
+    availableReplicas: 0
+    latestVersion: 0
+    observedGeneration: 0
+    replicas: 0
+    unavailableReplicas: 0
+    updatedReplicas: 0
+- apiVersion: v1
+  kind: DeploymentConfig
+  metadata:
+    annotations:
+      description: Defines how to deploy the application server
+    creationTimestamp: null
+    generation: 1
+    labels:
+      template: tfrs-app-environment
+    name: tfrs
+  spec:
+    replicas: 2
+    selector:
+      name: tfrs
+    strategy:
+      activeDeadlineSeconds: 21600
+      recreateParams:
+        mid:
+          execNewPod:
+            command:
+            - /bin/sh
+            - -c
+            - python manage.py migrate
+            containerName: tfrs-app
+          failurePolicy: Abort
+        timeoutSeconds: 600
+      resources: {}
+      type: Recreate
+    template:
+      metadata:
+        creationTimestamp: null
+        labels:
+          name: tfrs
+        name: tfrs
+      spec:
+        containers:
+        - env:
+          - name: DATABASE_SERVICE_NAME
+            value: postgresql
+          - name: DATABASE_ENGINE
+            value: postgresql
+          - name: DATABASE_NAME
+            value: tfrs
+          - name: APP_CONFIG
+          - name: DJANGO_DEBUG
+            value: "True"
+          - name: DATABASE_USER
+            valueFrom:
+              secretKeyRef:
+                key: DATABASE_USER
+                name: tfrs-postgresql
+          - name: DATABASE_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                key: DATABASE_PASSWORD
+                name: tfrs-postgresql
+          image: 172.50.0.2:5000/mem-tfrs-tools/tfrs-develop@sha256:bdb8dad04d32184986e3641b65711dfbf3bcc0ffc05a89a6ca63dd43f739c667
+          imagePullPolicy: IfNotPresent
+          livenessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /health
+              port: 8080
+              scheme: HTTP
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 3
+          name: tfrs-app
+          ports:
+          - containerPort: 8080
+            protocol: TCP
+          readinessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /health
+              port: 8080
+              scheme: HTTP
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 3
+          resources:
+            limits:
+              memory: 512Mi
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+    test: false
+    triggers:
+    - imageChangeParams:
+        automatic: true
+        containerNames:
+        - tfrs-app
+        from:
+          kind: ImageStreamTag
+          name: tfrs-develop:dev
+          namespace: mem-tfrs-tools
+      type: ImageChange
+    - type: ConfigChange
+  status:
+    availableReplicas: 0
+    latestVersion: 0
+    observedGeneration: 0
+    replicas: 0
+    unavailableReplicas: 0
+    updatedReplicas: 0
+- apiVersion: v1
+  kind: Service
+  metadata:
+    annotations:
+      description: Exposes and load balances the application pods
+      service.alpha.openshift.io/dependencies: '[{"name": "postgresql", "kind": "Service"}]'
+    creationTimestamp: null
+    labels:
+      template: tfrs-app-environment
+    name: backend
+  spec:
+    ports:
+    - name: web
+      port: 8080
+      protocol: TCP
+      targetPort: 8080
+    selector:
+      name: tfrs
+    sessionAffinity: None
+    type: ClusterIP
+  status:
+    loadBalancer: {}
+- apiVersion: v1
+  kind: Service
+  metadata:
+    creationTimestamp: null
+    labels:
+      app: caddy-app
+      template: caddy-template
+    name: caddy-app
+  spec:
+    ports:
+    - name: 2015-tcp
+      port: 2015
+      protocol: TCP
+      targetPort: 2015
+    selector:
+      app: caddy-app
+      deploymentconfig: caddy-app
+    sessionAffinity: None
+    type: ClusterIP
+  status:
+    loadBalancer: {}
+- apiVersion: v1
+  kind: Service
+  metadata:
+    annotations:
+      description: Exposes and load balances the front end pods
+    creationTimestamp: null
+    labels:
+      template: tfrs-app-environment
+    name: client
+  spec:
+    ports:
+    - name: web
+      port: 8080
+      protocol: TCP
+      targetPort: 8080
+    selector:
+      name: client
+    sessionAffinity: None
+    type: ClusterIP
+  status:
+    loadBalancer: {}
+- apiVersion: v1
+  kind: Service
+  metadata:
+    creationTimestamp: null
+    name: glusterfs-cluster-app
+  spec:
+    ports:
+    - port: 1
+      protocol: TCP
+      targetPort: 1
+    sessionAffinity: None
+    type: ClusterIP
+  status:
+    loadBalancer: {}
+- apiVersion: v1
+  kind: Service
+  metadata:
+    creationTimestamp: null
+    labels:
+      gluster.kubernetes.io/provisioned-for-pvc: postgresql-cns
+    name: glusterfs-dynamic-postgresql-cns
+  spec:
+    ports:
+    - port: 1
+      protocol: TCP
+      targetPort: 1
+    sessionAffinity: None
+    type: ClusterIP
+  status:
+    loadBalancer: {}
+- apiVersion: v1
+  kind: Service
+  metadata:
+    creationTimestamp: null
+    labels:
+      app: postgresql-persistent
+      template: postgresql-persistent-template
+    name: postgresql
+  spec:
+    ports:
+    - name: postgresql
+      port: 5432
+      protocol: TCP
+      targetPort: 5432
+    selector:
+      name: postgresql
+    sessionAffinity: None
+    type: ClusterIP
+  status:
+    loadBalancer: {}
+- apiVersion: v1
+  kind: Service
+  metadata:
+    annotations:
+      openshift.io/generated-by: OpenShiftWebConsole
+    creationTimestamp: null
+    labels:
+      app: request-logger
+    name: request-logger
+  spec:
+    ports:
+    - name: 8080-tcp
+      port: 8080
+      protocol: TCP
+      targetPort: 8080
+    selector:
+      deploymentconfig: request-logger
+    sessionAffinity: None
+    type: ClusterIP
+  status:
+    loadBalancer: {}
+- apiVersion: v1
+  kind: Service
+  metadata:
+    annotations:
+      description: Exposes and load balances the application pods
+    creationTimestamp: null
+    name: schema-spy
+  spec:
+    ports:
+    - name: 8080-tcp
+      port: 8080
+      protocol: TCP
+      targetPort: 8080
+    selector:
+      name: schema-spy
+    sessionAffinity: None
+    type: ClusterIP
+  status:
+    loadBalancer: {}
+- apiVersion: v1
+  kind: Route
+  metadata:
+    creationTimestamp: null
+    name: api
+  spec:
+    host: dev-lowcarbonfuels.pathfinder.bcgov
+    path: /api
+    port:
+      targetPort: web
+    to:
+      kind: Service
+      name: backend
+      weight: 100
+    wildcardPolicy: None
+  status:
+    ingress:
+    - conditions:
+      - lastTransitionTime: 2017-12-13T17:31:23Z
+        status: "True"
+        type: Admitted
+      host: dev-lowcarbonfuels.pathfinder.bcgov
+      routerName: router
+      wildcardPolicy: None
+- apiVersion: v1
+  kind: Route
+  metadata:
+    creationTimestamp: null
+    name: caddy-app
+  spec:
+    host: tfrs-dev-caddy-proxy.pathfinder.gov.bc.ca
+    port:
+      targetPort: 2015-tcp
+    tls:
+      insecureEdgeTerminationPolicy: Redirect
+      termination: edge
+    to:
+      kind: Service
+      name: caddy-app
+      weight: 100
+    wildcardPolicy: None
+  status:
+    ingress:
+    - conditions:
+      - lastTransitionTime: 2017-11-29T19:47:30Z
+        status: "True"
+        type: Admitted
+      host: tfrs-dev-caddy-proxy.pathfinder.gov.bc.ca
+      routerName: router
+      wildcardPolicy: None
+- apiVersion: v1
+  kind: Route
+  metadata:
+    creationTimestamp: null
+    name: main
+  spec:
+    host: dev-lowcarbonfuels.pathfinder.bcgov
+    port:
+      targetPort: web
+    to:
+      kind: Service
+      name: client
+      weight: 100
+    wildcardPolicy: None
+  status:
+    ingress:
+    - conditions:
+      - lastTransitionTime: 2017-12-13T17:32:35Z
+        status: "True"
+        type: Admitted
+      host: dev-lowcarbonfuels.pathfinder.bcgov
+      routerName: router
+      wildcardPolicy: None
+- apiVersion: v1
+  kind: Route
+  metadata:
+    creationTimestamp: null
+    name: request-logger
+  spec:
+    host: tfrs-dev-request-logger.pathfinder.gov.bc.ca
+    port:
+      targetPort: 8080-tcp
+    tls:
+      insecureEdgeTerminationPolicy: Redirect
+      termination: edge
+    to:
+      kind: Service
+      name: request-logger
+      weight: 100
+    wildcardPolicy: None
+  status:
+    ingress:
+    - conditions:
+      - lastTransitionTime: 2017-11-29T20:39:46Z
+        status: "True"
+        type: Admitted
+      host: tfrs-dev-request-logger.pathfinder.gov.bc.ca
+      routerName: router
+      wildcardPolicy: None
+- apiVersion: v1
+  kind: Route
+  metadata:
+    creationTimestamp: null
+    name: schema-spy
+  spec:
+    host: schema-spy-mem-tfrs-dev.pathfinder.gov.bc.ca
+    to:
+      kind: Service
+      name: schema-spy
+      weight: 100
+    wildcardPolicy: None
+  status:
+    ingress:
+    - conditions:
+      - lastTransitionTime: 2017-11-30T22:19:02Z
+        status: "True"
+        type: Admitted
+      host: schema-spy-mem-tfrs-dev.pathfinder.gov.bc.ca
+      routerName: router
+      wildcardPolicy: None
+- apiVersion: v1
+  kind: Route
+  metadata:
+    creationTimestamp: null
+    name: sminfo
+  spec:
+    host: client-mem-tfrs-dev.pathfinder.gov.bc.ca
+    path: /sminfo/
+    port:
+      targetPort: 8080-tcp
+    tls:
+      insecureEdgeTerminationPolicy: Allow
+      termination: edge
+    to:
+      kind: Service
+      name: request-logger
+      weight: 100
+    wildcardPolicy: None
+  status:
+    ingress:
+    - conditions:
+      - lastTransitionTime: 2017-12-08T22:30:21Z
+        status: "True"
+        type: Admitted
+      host: client-mem-tfrs-dev.pathfinder.gov.bc.ca
+      routerName: router
+      wildcardPolicy: None
+- apiVersion: v1
+  kind: Route
+  metadata:
+    creationTimestamp: null
+    name: sminfo3
+  spec:
+    host: dev-lowcarbonfuels.pathfinder.bcgov
+    path: /sminfo
+    port:
+      targetPort: 8080-tcp
+    to:
+      kind: Service
+      name: request-logger
+      weight: 100
+    wildcardPolicy: None
+  status:
+    ingress:
+    - conditions:
+      - lastTransitionTime: 2017-12-13T17:29:44Z
+        status: "True"
+        type: Admitted
+      host: dev-lowcarbonfuels.pathfinder.bcgov
+      routerName: router
+      wildcardPolicy: None

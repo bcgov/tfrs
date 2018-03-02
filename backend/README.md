@@ -1,3 +1,9 @@
+## Build Status
+Develop Branch: 
+- Backend: [![Build Status](https://jenkins-mem-tfrs-tools.pathfinder.gov.bc.ca/buildStatus/icon?job=mem-tfrs-tools-develop-tfrs-pipeline)](https://jenkins-mem-tfrs-tools.pathfinder.gov.bc.ca/me/my-views/view/all/job/mem-tfrs-tools-develop-tfrs-pipeline/)      
+
+Master Branch:
+- Backend: [![Build Status](https://jenkins-mem-tfrs-tools.pathfinder.gov.bc.ca/buildStatus/icon?job=mem-tfrs-tools-master-tfrs-pipeline)](https://jenkins-mem-tfrs-tools.pathfinder.gov.bc.ca/job/mem-tfrs-tools-master-tfrs-pipeline) 
 
 ## Development
 
@@ -14,7 +20,7 @@ Using virtualenv is handy for development work
 $ sudo pip install virtualenv
 ```
 
-Go to the `tfrs\backend` folder and create your virtualenv folder
+Go to the `tfrs/backend` folder and create your virtualenv folder
 
 ```
 $ cd ~/projects/tfrs/backend

@@ -70,7 +70,14 @@ class CreditTradeStatusSerializer(serializers.ModelSerializer):
         model = CreditTradeStatus
         fields = (
             'id', 'status', 'description', 'effective_date', 'expiration_date',
-            'display_order')
+            'display_order', 'action')
+
+
+class CreditTradeStatusMinSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CreditTradeStatus
+        fields = (
+            'id', 'status', 'action')
 
 
 class CreditTradeTypeSerializer(serializers.ModelSerializer):
@@ -218,6 +225,34 @@ class UserViewModelSerializer(serializers.ModelSerializer):
 
 
 class CreditTradeCreateSerializer(serializers.ModelSerializer):
+
+    def validate(self, data):
+        allowed_statuses = list(
+            CreditTradeStatus.objects
+                .filter(status__in=["Draft", "Submitted"])
+                .only('id'))
+
+        credit_trade_status = data.get('status')
+
+        if credit_trade_status not in allowed_statuses:
+            raise serializers.ValidationError({
+                'status': 'Status cannot be `{}` on create. '
+                          'Use `Draft` or `Submitted` instead.'.format(
+                    credit_trade_status.status
+                )})
+
+        return data
+
+    class Meta:
+        model = CreditTrade
+        fields = '__all__'
+
+
+class CreditTradeUpdateSerializer(serializers.ModelSerializer):
+
+    def validate(self, data):
+        return data
+
     class Meta:
         model = CreditTrade
         fields = '__all__'
@@ -235,21 +270,24 @@ class CreditTradeApproveSerializer(serializers.ModelSerializer):
 
 
 class CreditTrade2Serializer(serializers.ModelSerializer):
-    status = CreditTradeStatusSerializer(read_only=True)
+    status = CreditTradeStatusMinSerializer(read_only=True)
     initiator = OrganizationSerializer(read_only=True)
     respondent = OrganizationSerializer(read_only=True)
     type = CreditTradeTypeSerializer(read_only=True)
     zero_reason = CreditTradeZeroReasonSerializer(read_only=True)
     credits_from = OrganizationSerializer(read_only=True)
     credits_to = OrganizationSerializer(read_only=True)
+    actions = CreditTradeStatusMinSerializer(many=True, read_only=True)
 
     class Meta:
         model = CreditTrade
-        fields = ('id', 'status', 'initiator', 'respondent',
+        fields = ('id', 'status', 'status_display',
+                  'initiator', 'respondent',
                   'type', 'number_of_credits',
-                  'fair_market_value_per_credit', 'zero_reason',
-                  'trade_effective_date', 'credits_from', 'credits_to')
-        # exclude = ('note',)
+                  'fair_market_value_per_credit', 'total_value',
+                  'zero_reason',
+                  'trade_effective_date', 'credits_from', 'credits_to',
+                  'update_timestamp', 'actions')
 
 
 class CreditTradeHistory2Serializer(serializers.ModelSerializer):

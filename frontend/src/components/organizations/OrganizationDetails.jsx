@@ -4,21 +4,21 @@ import {
   getOrganization,
   getOrganizationType,
   getOrganizationStatus
-} from '../../actions/organizationActions.jsx';
-import * as ReducerTypes from '../../constants/reducerTypes.jsx';
-import * as Values from '../../constants/values.jsx';
+} from '../../actions/organizationActions';
+import * as ReducerTypes from '../../constants/reducerTypes';
+import * as Values from '../../constants/values';
 import { 
   addContact, 
   addContactReset,
   deleteContact,
   deleteContactReset,
   verifyID, 
-  verifyIDReset } from '../../actions/organizationActions.jsx';
+  verifyIDReset } from '../../actions/organizationActions';
 import { Modal } from 'react-bootstrap';
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
-import AddContactForm from './AddContactForm.jsx';
-import UploadDocumentForm from './UploadDocumentForm.jsx';
-import ChangeStatusForm from './ChangeStatusForm.jsx';
+import AddContactForm from './AddContactForm';
+import UploadDocumentForm from './UploadDocumentForm';
+import ChangeStatusForm from './ChangeStatusForm';
 
 class OrganizationDetails extends Component {
   constructor(props) {
