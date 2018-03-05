@@ -51,6 +51,8 @@ objects:
   - kind: ServiceAccount
     name: jenkins
     namespace: mem-tfrs-tools
+  - kind: User
+    name: DerekRoberts
   userNames:
   - system:serviceaccount:mem-tfrs-tools:default
   - dmarley
@@ -59,6 +61,7 @@ objects:
   - dainetrinidad
   - rstens
   - system:serviceaccount:mem-tfrs-tools:jenkins
+  - DerekRoberts
 - apiVersion: v1
   groupNames: null
   kind: RoleBinding
@@ -173,7 +176,7 @@ objects:
           - name: HTTP_BASIC
           - name: API_URL
             value: http://backend.mem-tfrs-test.svc.cluster.local:8080/api/
-          image: 172.50.0.2:5000/mem-tfrs-tools/client@sha256:391ef74b686d0eff42e7c82bb73cba33b8e7a698f866fe777f08cb5a73b9f5b6
+          image: 172.50.0.2:5000/mem-tfrs-tools/client@sha256:0e75d94f2ed0f2cec0d9a1675c069667e9af2f233e0e45babb4adf47d52a3d7d
           imagePullPolicy: IfNotPresent
           name: client
           ports:
@@ -198,6 +201,80 @@ objects:
         from:
           kind: ImageStreamTag
           name: client:test
+          namespace: mem-tfrs-tools
+      type: ImageChange
+    - type: ConfigChange
+  status:
+    availableReplicas: 0
+    latestVersion: 0
+    observedGeneration: 0
+    replicas: 0
+    unavailableReplicas: 0
+    updatedReplicas: 0
+- apiVersion: v1
+  kind: DeploymentConfig
+  metadata:
+    annotations:
+      description: Defines how to deploy the application server
+    creationTimestamp: null
+    generation: 1
+    name: client-develop
+  spec:
+    replicas: 0
+    selector:
+      name: client-develop
+    strategy:
+      activeDeadlineSeconds: 21600
+      resources: {}
+      rollingParams:
+        intervalSeconds: 1
+        maxSurge: 25%
+        maxUnavailable: 25%
+        timeoutSeconds: 600
+        updatePeriodSeconds: 1
+      type: Rolling
+    template:
+      metadata:
+        creationTimestamp: null
+        labels:
+          name: client-develop
+        name: client-develop
+      spec:
+        containers:
+        - env:
+          - name: API_URL
+            value: http://backend-mem-tfrs-test.pathfinder.gov.bc.ca/api/
+          - name: RealIpFrom
+          - name: AdditionalRealIpFromRules
+          - name: IpFilterRules
+          - name: HTTP_BASIC
+          - name: API_URL
+            value: http://backend.mem-tfrs-test.svc.cluster.local:8080/api/
+          image: 172.50.0.2:5000/mem-tfrs-tools/client-develop@sha256:3d4a788d75f1a193ca282ddae86abf6a7917efa19b58bc55f209acd844dab2af
+          imagePullPolicy: IfNotPresent
+          name: client-develop
+          ports:
+          - containerPort: 3000
+            protocol: TCP
+          resources:
+            limits:
+              memory: 1Gi
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+    test: false
+    triggers:
+    - imageChangeParams:
+        automatic: true
+        containerNames:
+        - client-develop
+        from:
+          kind: ImageStreamTag
+          name: client-develop:test
           namespace: mem-tfrs-tools
       type: ImageChange
     - type: ConfigChange
@@ -247,7 +324,7 @@ objects:
               secretKeyRef:
                 key: DATABASE_PASSWORD
                 name: tfrs-postgresql
-          image: registry.access.redhat.com/rhscl/postgresql-95-rhel7@sha256:19aacf0c8331df76b67932415bd84abf74ec36fd9d4aef518ad9f6285c4a948a
+          image: registry.access.redhat.com/rhscl/postgresql-95-rhel7@sha256:f90b4ce7c2328e2f38d01e37b3a69cf60f06433df907ecb9432b0934af9624ed
           imagePullPolicy: IfNotPresent
           livenessProbe:
             failureThreshold: 3
@@ -467,7 +544,7 @@ objects:
               secretKeyRef:
                 key: DATABASE_PASSWORD
                 name: tfrs-postgresql
-          image: 172.50.0.2:5000/mem-tfrs-tools/tfrs@sha256:50ca4b0774b605102043039c8368c2134601ea3e927314080a92ff368b7a5d5c
+          image: 172.50.0.2:5000/mem-tfrs-tools/tfrs@sha256:7bfe24a5a4ede5f301e0a94586f1a9a6abcea33d5162e9362effb3bf66df68dc
           imagePullPolicy: IfNotPresent
           livenessProbe:
             failureThreshold: 3
@@ -512,6 +589,115 @@ objects:
         from:
           kind: ImageStreamTag
           name: tfrs:test
+          namespace: mem-tfrs-tools
+      type: ImageChange
+    - type: ConfigChange
+  status:
+    availableReplicas: 0
+    latestVersion: 0
+    observedGeneration: 0
+    replicas: 0
+    unavailableReplicas: 0
+    updatedReplicas: 0
+- apiVersion: v1
+  kind: DeploymentConfig
+  metadata:
+    annotations:
+      description: Defines how to deploy the application server
+    creationTimestamp: null
+    generation: 1
+    labels:
+      template: tfrs-app-environment
+    name: tfrs-develop
+  spec:
+    replicas: 0
+    selector:
+      name: tfrs-develop
+    strategy:
+      activeDeadlineSeconds: 21600
+      recreateParams:
+        mid:
+          execNewPod:
+            command:
+            - /bin/sh
+            - -c
+            - python manage.py migrate
+            containerName: tfrs-app
+          failurePolicy: Abort
+        timeoutSeconds: 600
+      resources: {}
+      type: Recreate
+    template:
+      metadata:
+        creationTimestamp: null
+        labels:
+          name: tfrs-develop
+        name: tfrs-develop
+      spec:
+        containers:
+        - env:
+          - name: DATABASE_SERVICE_NAME
+            value: postgresql
+          - name: DATABASE_ENGINE
+            value: postgresql
+          - name: DATABASE_NAME
+            value: tfrs
+          - name: APP_CONFIG
+          - name: DATABASE_USER
+            valueFrom:
+              secretKeyRef:
+                key: DATABASE_USER
+                name: tfrs-postgresql
+          - name: DATABASE_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                key: DATABASE_PASSWORD
+                name: tfrs-postgresql
+          image: 172.50.0.2:5000/mem-tfrs-tools/tfrs-develop@sha256:fd9e19daaf7e188ecda9fc2ab9f79dcd075180418c1888d7772133666a8011f1
+          imagePullPolicy: IfNotPresent
+          livenessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /health
+              port: 8080
+              scheme: HTTP
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 3
+          name: tfrs-app
+          ports:
+          - containerPort: 8080
+            protocol: TCP
+          readinessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /health
+              port: 8080
+              scheme: HTTP
+            initialDelaySeconds: 3
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 3
+          resources:
+            limits:
+              memory: 512Mi
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+    test: false
+    triggers:
+    - imageChangeParams:
+        automatic: true
+        containerNames:
+        - tfrs-app
+        from:
+          kind: ImageStreamTag
+          name: tfrs-develop:test
           namespace: mem-tfrs-tools
       type: ImageChange
     - type: ConfigChange

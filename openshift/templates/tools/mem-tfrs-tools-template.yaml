@@ -47,11 +47,14 @@ objects:
     name: dainetrinidad
   - kind: User
     name: rstens
+  - kind: User
+    name: DerekRoberts
   userNames:
   - system:serviceaccount:mem-tfrs-tools:jenkins
   - matthewhall78
   - dainetrinidad
   - rstens
+  - DerekRoberts
 - apiVersion: v1
   groupNames: null
   kind: RoleBinding
@@ -180,14 +183,14 @@ objects:
       volume.beta.kubernetes.io/storage-class: gluster-file
       volume.beta.kubernetes.io/storage-provisioner: kubernetes.io/glusterfs
     creationTimestamp: null
-    name: postgresql-sonarqube-cns
+    name: postgresql-sonarqube-data
   spec:
     accessModes:
     - ReadWriteOnce
     resources:
       requests:
         storage: 5Gi
-    volumeName: pvc-814c86b8-f634-11e7-9f70-005056832285
+    volumeName: pvc-1e329a9c-12a3-11e8-b39a-0050568348cc
   status: {}
 - apiVersion: v1
   kind: PersistentVolumeClaim
@@ -198,14 +201,14 @@ objects:
       volume.beta.kubernetes.io/storage-class: gluster-file
       volume.beta.kubernetes.io/storage-provisioner: kubernetes.io/glusterfs
     creationTimestamp: null
-    name: sonarqube-data-cns
+    name: sonarqube-data
   spec:
     accessModes:
     - ReadWriteOnce
     resources:
       requests:
-        storage: 1Gi
-    volumeName: pvc-6eefa34f-f634-11e7-9f70-005056832285
+        storage: 5Gi
+    volumeName: pvc-1e33dd23-12a3-11e8-b39a-0050568348cc
   status: {}
 - apiVersion: v1
   kind: BuildConfig
@@ -244,7 +247,6 @@ objects:
         from:
           kind: ImageStreamTag
           name: nginx-runtime:latest
-          namespace: openshift
       type: Docker
     triggers:
     - imageChange: {}
@@ -578,7 +580,10 @@ objects:
       jenkinsPipelineStrategy:
         jenkinsfilePath: frontend/Jenkinsfile
       type: JenkinsPipeline
-    triggers: []
+    triggers:
+    - github:
+        secret: 802a78d1c8a98727
+      type: GitHub
   status:
     lastVersion: 0
 - apiVersion: v1
@@ -605,7 +610,10 @@ objects:
       jenkinsPipelineStrategy:
         jenkinsfilePath: backend/Jenkinsfile
       type: JenkinsPipeline
-    triggers: []
+    triggers:
+    - github:
+        secret: e4fa4a15ca71d597
+      type: GitHub
   status:
     lastVersion: 0
 - apiVersion: v1
@@ -627,7 +635,7 @@ objects:
     source:
       contextDir: openshift/templates/nginx-runtime
       git:
-        ref: devops-nginx
+        ref: develop
         uri: https://github.com/bcgov/tfrs
       type: Git
     strategy:
@@ -667,6 +675,60 @@ objects:
 - apiVersion: v1
   kind: BuildConfig
   metadata:
+    creationTimestamp: null
+    labels:
+      app: snyk-client-pipeline
+      name: snyk-client-pipeline
+      template: snyk-client-pipeline
+    name: snyk-client-pipeline
+  spec:
+    nodeSelector: {}
+    output: {}
+    postCommit: {}
+    resources: {}
+    runPolicy: Parallel
+    source:
+      git:
+        ref: develop
+        uri: https://github.com/kuanfandevops/tfrs.git
+      type: Git
+    strategy:
+      jenkinsPipelineStrategy:
+        jenkinsfilePath: frontend/Jenkinsfile-snyk
+      type: JenkinsPipeline
+    triggers: []
+  status:
+    lastVersion: 0
+- apiVersion: v1
+  kind: BuildConfig
+  metadata:
+    creationTimestamp: null
+    labels:
+      app: testing-tfrs-pipeline
+      name: testing-tfrs-pipeline
+      template: testing-tfrs-pipeline
+    name: testing-tfrs-pipeline
+  spec:
+    nodeSelector: {}
+    output: {}
+    postCommit: {}
+    resources: {}
+    runPolicy: Parallel
+    source:
+      git:
+        ref: develop
+        uri: https://github.com/kuanfandevops/tfrs
+      type: Git
+    strategy:
+      jenkinsPipelineStrategy:
+        jenkinsfilePath: backend/Jenkinsfile-develop
+      type: JenkinsPipeline
+    triggers: []
+  status:
+    lastVersion: 0
+- apiVersion: v1
+  kind: BuildConfig
+  metadata:
     annotations:
       description: Defines how to build the application
     creationTimestamp: null
@@ -684,6 +746,43 @@ objects:
       contextDir: backend
       git:
         ref: master
+        uri: https://github.com/bcgov/tfrs.git
+      type: Git
+    strategy:
+      sourceStrategy:
+        env:
+        - name: PIP_INDEX_URL
+        from:
+          kind: ImageStreamTag
+          name: python:3.6
+          namespace: openshift
+      type: Source
+    triggers:
+    - imageChange: {}
+      type: ImageChange
+    - type: ConfigChange
+  status:
+    lastVersion: 0
+- apiVersion: v1
+  kind: BuildConfig
+  metadata:
+    annotations:
+      description: Defines how to build the application
+    creationTimestamp: null
+    name: tfrs-bypass
+  spec:
+    nodeSelector: null
+    output:
+      to:
+        kind: ImageStreamTag
+        name: tfrs-bypass:latest
+    postCommit: {}
+    resources: {}
+    runPolicy: Serial
+    source:
+      contextDir: backend
+      git:
+        ref: develop
         uri: https://github.com/bcgov/tfrs.git
       type: Git
     strategy:
@@ -739,6 +838,123 @@ objects:
   status:
     lastVersion: 0
 - apiVersion: v1
+  kind: BuildConfig
+  metadata:
+    creationTimestamp: null
+    labels:
+      app: working-client-pipeline
+      name: working-client-pipeline
+      template: working-client-pipeline
+    name: working-client-pipeline
+  spec:
+    nodeSelector: {}
+    output: {}
+    postCommit: {}
+    resources: {}
+    runPolicy: Parallel
+    source:
+      git:
+        ref: develop
+        uri: https://github.com/bcgov/tfrs.git
+      type: Git
+    strategy:
+      jenkinsPipelineStrategy:
+        jenkinsfilePath: frontend/Jenkinsfile-working
+      type: JenkinsPipeline
+    triggers:
+    - github:
+        secret: 52bb2cb14fcd26c5
+      type: GitHub
+  status:
+    lastVersion: 0
+- apiVersion: v1
+  kind: BuildConfig
+  metadata:
+    creationTimestamp: null
+    labels:
+      app: working-tfrs-pipeline
+      name: working-tfrs-pipeline
+      template: working-tfrs-pipeline
+    name: working-tfrs-pipeline
+  spec:
+    nodeSelector: {}
+    output: {}
+    postCommit: {}
+    resources: {}
+    runPolicy: Parallel
+    source:
+      git:
+        ref: develop
+        uri: https://github.com/bcgov/tfrs.git
+      type: Git
+    strategy:
+      jenkinsPipelineStrategy:
+        jenkinsfilePath: backend/Jenkinsfile-working
+      type: JenkinsPipeline
+    triggers:
+    - github:
+        secret: ea1e1dc777dea4bb
+      type: GitHub
+  status:
+    lastVersion: 0
+- apiVersion: v1
+  kind: BuildConfig
+  metadata:
+    creationTimestamp: null
+    labels:
+      app: zap-pipeline
+      name: zap-pipeline
+      template: zap-pipeline
+    name: zap-pipeline
+  spec:
+    nodeSelector: {}
+    output: {}
+    postCommit: {}
+    resources: {}
+    runPolicy: Parallel
+    source:
+      git:
+        ref: develop
+        uri: https://github.com/bcgov/tfrs.git
+      type: Git
+    strategy:
+      jenkinsPipelineStrategy:
+        jenkinsfilePath: zap/Jenkinsfile-zap
+      type: JenkinsPipeline
+    triggers: []
+  status:
+    lastVersion: 0
+- apiVersion: v1
+  kind: BuildConfig
+  metadata:
+    creationTimestamp: null
+    labels:
+      app: zbypass-tfrs-pipeline
+      name: zbypass-tfrs-pipeline
+      template: zbypass-tfrs-pipeline
+    name: zbypass-tfrs-pipeline
+  spec:
+    nodeSelector: {}
+    output: {}
+    postCommit: {}
+    resources: {}
+    runPolicy: Parallel
+    source:
+      git:
+        ref: develop
+        uri: https://github.com/bcgov/tfrs.git
+      type: Git
+    strategy:
+      jenkinsPipelineStrategy:
+        jenkinsfilePath: backend/Jenkinsfile-bypass
+      type: JenkinsPipeline
+    triggers:
+    - github:
+        secret: ea1e1dc777dea4bb
+      type: GitHub
+  status:
+    lastVersion: 0
+- apiVersion: v1
   kind: DeploymentConfig
   metadata:
     annotations:
@@ -751,7 +967,7 @@ objects:
       template: django-psql-example
     name: django-psql-example
   spec:
-    replicas: 1
+    replicas: 0
     selector:
       name: django-psql-example
     strategy:
@@ -975,8 +1191,8 @@ objects:
           - name: JNLP_SERVICE_NAME
             value: jenkins-jnlp
           - name: JAVA_OPTS
-            value: -XX:MaxMetaspaceSize=512m
-          image: registry.access.redhat.com/openshift3/jenkins-2-rhel7@sha256:c2e5ffc909fc598628caebe56571849cbcbeea6c99f885a9870cb8c5967d5111
+            value: -XX:MaxMetaspaceSize=512m -Dhudson.model.DirectoryBrowserSupport.CSP=
+          image: registry.access.redhat.com/openshift3/jenkins-2-rhel7@sha256:e76280e6d366e8c0057b36c48504e91d7e25e6e392d65fb253ec432c2d1287a2
           imagePullPolicy: IfNotPresent
           name: jenkins
           resources:
@@ -1036,7 +1252,7 @@ objects:
       template: django-psql-example
     name: postgresql
   spec:
-    replicas: 1
+    replicas: 0
     selector:
       name: postgresql
     strategy:
@@ -1066,7 +1282,7 @@ objects:
                 name: django-psql-example
           - name: POSTGRESQL_DATABASE
             value: default
-          image: registry.access.redhat.com/rhscl/postgresql-95-rhel7@sha256:19aacf0c8331df76b67932415bd84abf74ec36fd9d4aef518ad9f6285c4a948a
+          image: registry.access.redhat.com/rhscl/postgresql-95-rhel7@sha256:f90b4ce7c2328e2f38d01e37b3a69cf60f06433df907ecb9432b0934af9624ed
           imagePullPolicy: IfNotPresent
           livenessProbe:
             failureThreshold: 3
@@ -1131,18 +1347,16 @@ objects:
 - apiVersion: v1
   kind: DeploymentConfig
   metadata:
-    annotations:
-      description: Defines how to deploy the database
-      openshift.io/container.postgresql.image.entrypoint: '["container-entrypoint","run-postgresql"]'
     creationTimestamp: null
     generation: 1
     labels:
-      app: postgresql-sonarqube
+      app: sonarqube
+      deploymentconfig: postgresql-sonarqube
     name: postgresql-sonarqube
   spec:
     replicas: 1
     selector:
-      app: postgresql-sonarqube
+      app: sonarqube
       deploymentconfig: postgresql-sonarqube
     strategy:
       activeDeadlineSeconds: 21600
@@ -1152,34 +1366,21 @@ objects:
       type: Recreate
     template:
       metadata:
-        annotations:
-          openshift.io/container.postgresql.image.entrypoint: '["container-entrypoint","run-postgresql"]'
         creationTimestamp: null
         labels:
-          app: postgresql-sonarqube
+          app: sonarqube
           deploymentconfig: postgresql-sonarqube
       spec:
         containers:
         - env:
-          - name: POSTGRESQL_DATABASE
-            value: sonarqube
-          - name: POSTGRESQL_PASSWORD
-            valueFrom:
-              secretKeyRef:
-                key: database-password
-                name: sonarqube-secrets
-          - name: POSTGRESQL_ADMIN_PASSWORD
-            valueFrom:
-              secretKeyRef:
-                key: database-admin-password
-                name: sonarqube-secrets
           - name: POSTGRESQL_USER
-            valueFrom:
-              secretKeyRef:
-                key: database-user
-                name: sonarqube-secrets
-          image: registry.access.redhat.com/rhscl/postgresql-94-rhel7@sha256:999f3041aed3bbdbca5c55bfc5849ca15e5546f457e82582863ae271b6485478
-          imagePullPolicy: Always
+            value: sonar
+          - name: POSTGRESQL_PASSWORD
+            value: T2iCewvNVOwCpQd2
+          - name: POSTGRESQL_DATABASE
+            value: sonar
+          image: registry.access.redhat.com/rhscl/postgresql-95-rhel7@sha256:f90b4ce7c2328e2f38d01e37b3a69cf60f06433df907ecb9432b0934af9624ed
+          imagePullPolicy: IfNotPresent
           livenessProbe:
             failureThreshold: 3
             initialDelaySeconds: 30
@@ -1188,7 +1389,7 @@ objects:
             tcpSocket:
               port: 5432
             timeoutSeconds: 1
-          name: postgres
+          name: postgresql
           ports:
           - containerPort: 5432
             protocol: TCP
@@ -1201,34 +1402,43 @@ objects:
               - psql -h 127.0.0.1 -U $POSTGRESQL_USER -q -d $POSTGRESQL_DATABASE -c
                 'SELECT 1'
             failureThreshold: 3
-            initialDelaySeconds: 15
+            initialDelaySeconds: 5
             periodSeconds: 10
             successThreshold: 1
             timeoutSeconds: 1
-          resources: {}
+          resources:
+            limits:
+              cpu: 100m
+              memory: 256Mi
+            requests:
+              cpu: 10m
+              memory: 100Mi
+          securityContext:
+            capabilities: {}
+            privileged: false
           terminationMessagePath: /dev/termination-log
           terminationMessagePolicy: File
           volumeMounts:
           - mountPath: /var/lib/pgsql/data
-            name: postgresql-sonarqube-data
+            name: postgresql-data
         dnsPolicy: ClusterFirst
         restartPolicy: Always
         schedulerName: default-scheduler
         securityContext: {}
         terminationGracePeriodSeconds: 30
         volumes:
-        - name: postgresql-sonarqube-data
+        - name: postgresql-data
           persistentVolumeClaim:
-            claimName: postgresql-sonarqube-cns
+            claimName: postgresql-sonarqube-data
     test: false
     triggers:
     - imageChangeParams:
         automatic: true
         containerNames:
-        - postgres
+        - postgresql
         from:
           kind: ImageStreamTag
-          name: postgresql:9.4
+          name: postgresql:9.5
           namespace: openshift
       type: ImageChange
     - type: ConfigChange
@@ -1246,6 +1456,7 @@ objects:
     generation: 1
     labels:
       app: sonarqube
+      deploymentconfig: sonarqube
     name: sonarqube
   spec:
     replicas: 1
@@ -1254,10 +1465,14 @@ objects:
       deploymentconfig: sonarqube
     strategy:
       activeDeadlineSeconds: 21600
-      recreateParams:
-        timeoutSeconds: 600
       resources: {}
-      type: Recreate
+      rollingParams:
+        intervalSeconds: 1
+        maxSurge: 25%
+        maxUnavailable: 25%
+        timeoutSeconds: 600
+        updatePeriodSeconds: 1
+      type: Rolling
     template:
       metadata:
         annotations:
@@ -1269,25 +1484,24 @@ objects:
       spec:
         containers:
         - env:
-          - name: SONARQUBE_JDBC_USERNAME
-            valueFrom:
-              secretKeyRef:
-                key: database-user
-                name: sonarqube-secrets
-          - name: SONARQUBE_JDBC_URL
-            value: jdbc:postgresql://postgresql-sonarqube/sonarqube
           - name: SONARQUBE_JDBC_PASSWORD
-            valueFrom:
-              secretKeyRef:
-                key: database-password
-                name: sonarqube-secrets
-          - name: SONARQUBE_ADMINPW
-            valueFrom:
-              secretKeyRef:
-                key: sonar-admin-password
-                name: sonarqube-secrets
-          image: openshiftdemos/sonarqube@sha256:90bc4c270d3a9f9923ef0b38f7904cfb9c00e4307d4d853e9341a334e8f29cf0
+            value: T2iCewvNVOwCpQd2
+          - name: SONARQUBE_JDBC_URL
+            value: jdbc:postgresql://postgresql-sonarqube/sonar
+          - name: SONARQUBE_JDBC_USERNAME
+            value: sonar
+          image: 172.50.0.2:5000/openshift/sonarqube@sha256:6f42c766e3db030f154f1ebca7188191a3717990537e0c7dc08bf0a680d4b1f1
           imagePullPolicy: IfNotPresent
+          livenessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /
+              port: 9000
+              scheme: HTTP
+            initialDelaySeconds: 60
+            periodSeconds: 20
+            successThreshold: 1
+            timeoutSeconds: 5
           name: sonarqube
           ports:
           - containerPort: 9000
@@ -1298,40 +1512,59 @@ objects:
               path: /
               port: 9000
               scheme: HTTP
-            initialDelaySeconds: 15
-            periodSeconds: 10
+            initialDelaySeconds: 60
+            periodSeconds: 20
             successThreshold: 1
-            timeoutSeconds: 1
+            timeoutSeconds: 5
           resources:
             limits:
               cpu: "1"
               memory: 4Gi
+            requests:
+              cpu: 500m
+              memory: 2Gi
           terminationMessagePath: /dev/termination-log
           terminationMessagePolicy: File
           volumeMounts:
-          - mountPath: /opt/sonarqube/extensions
-            name: sonarqube-extensions
+          - mountPath: /opt/sonarqube/data
+            name: sonar-data
+            subPath: data
+          - mountPath: /opt/sonarqube/logs
+            name: sonar-logs
+            subPath: logs
+          - mountPath: /opt/sonarqube/temp
+            name: sonar-temp
+            subPath: temp
+          - mountPath: /opt/sonarqube/extensions/plugins
+            name: sonar-plugins
+            subPath: plugins
         dnsPolicy: ClusterFirst
         restartPolicy: Always
         schedulerName: default-scheduler
         securityContext: {}
         terminationGracePeriodSeconds: 30
         volumes:
-        - name: sonarqube-extensions
+        - emptyDir: {}
+          name: sonar-data
+        - emptyDir: {}
+          name: sonar-logs
+        - emptyDir: {}
+          name: sonar-temp
+        - name: sonar-plugins
           persistentVolumeClaim:
-            claimName: sonarqube-data-cns
+            claimName: sonarqube-data
     test: false
     triggers:
+    - type: ConfigChange
     - imageChangeParams:
         automatic: true
         containerNames:
         - sonarqube
         from:
           kind: ImageStreamTag
-          name: sonarqube:6.0
+          name: sonarqube:6.7.1
           namespace: openshift
       type: ImageChange
-    - type: ConfigChange
   status:
     availableReplicas: 0
     latestVersion: 0
@@ -1418,8 +1651,8 @@ objects:
   metadata:
     creationTimestamp: null
     labels:
-      gluster.kubernetes.io/provisioned-for-pvc: postgresql-sonarqube-cns
-    name: glusterfs-dynamic-postgresql-sonarqube-cns
+      gluster.kubernetes.io/provisioned-for-pvc: postgresql-sonarqube-data
+    name: glusterfs-dynamic-postgresql-sonarqube-data
   spec:
     ports:
     - port: 1
@@ -1434,8 +1667,8 @@ objects:
   metadata:
     creationTimestamp: null
     labels:
-      gluster.kubernetes.io/provisioned-for-pvc: sonarqube-data-cns
-    name: glusterfs-dynamic-sonarqube-data-cns
+      gluster.kubernetes.io/provisioned-for-pvc: sonarqube-data
+    name: glusterfs-dynamic-sonarqube-data
   spec:
     ports:
     - port: 1
@@ -1515,6 +1748,27 @@ objects:
   kind: Service
   metadata:
     annotations:
+      openshift.io/generated-by: OpenShiftWebConsole
+    creationTimestamp: null
+    labels:
+      app: jenkins-slave-bddstack
+    name: jenkins-slave-bddstack
+  spec:
+    ports:
+    - name: 8080-tcp
+      port: 8080
+      protocol: TCP
+      targetPort: 8080
+    selector:
+      deploymentconfig: jenkins-slave-bddstack
+    sessionAffinity: None
+    type: ClusterIP
+  status:
+    loadBalancer: {}
+- apiVersion: v1
+  kind: Service
+  metadata:
+    annotations:
       description: Exposes the database server
     creationTimestamp: null
     labels:
@@ -1536,18 +1790,19 @@ objects:
 - apiVersion: v1
   kind: Service
   metadata:
-    annotations:
-      description: Exposes the database server
     creationTimestamp: null
+    labels:
+      app: sonarqube
     name: postgresql-sonarqube
   spec:
     ports:
-    - name: postgres
+    - name: postgresql
       port: 5432
       protocol: TCP
       targetPort: 5432
     selector:
-      app: postgresql-sonarqube
+      app: sonarqube
+      deploymentconfig: postgresql-sonarqube
     sessionAffinity: None
     type: ClusterIP
   status:
@@ -1561,7 +1816,7 @@ objects:
     name: sonarqube
   spec:
     ports:
-    - name: 9000-tcp
+    - name: sonarqube
       port: 9000
       protocol: TCP
       targetPort: 9000
@@ -1682,15 +1937,18 @@ objects:
   kind: Route
   metadata:
     annotations:
+      description: Route for SonarQube's http service.
       openshift.io/host.generated: "true"
     creationTimestamp: null
     labels:
       app: sonarqube
     name: sonarqube
   spec:
-    host: sonarqube-tfrs-tools.pathfinder.gov.bc.ca
+    host: sonarqube-mem-tfrs-tools.pathfinder.gov.bc.ca
     port:
-      targetPort: 9000-tcp
+      targetPort: sonarqube
+    tls:
+      termination: edge
     to:
       kind: Service
       name: sonarqube
@@ -1699,9 +1957,9 @@ objects:
   status:
     ingress:
     - conditions:
-      - lastTransitionTime: 2017-07-27T16:25:16Z
+      - lastTransitionTime: 2018-02-15T22:54:02Z
         status: "True"
         type: Admitted
-      host: sonarqube-tfrs-tools.pathfinder.gov.bc.ca
+      host: sonarqube-mem-tfrs-tools.pathfinder.gov.bc.ca
       routerName: router
       wildcardPolicy: None

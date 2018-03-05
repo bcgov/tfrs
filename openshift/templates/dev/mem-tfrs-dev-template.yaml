@@ -89,6 +89,8 @@ objects:
   - kind: ServiceAccount
     name: jenkins
     namespace: mem-tfrs-tools
+  - kind: User
+    name: DerekRoberts
   userNames:
   - system:serviceaccount:mem-tfrs-tools:default
   - dmarley
@@ -97,6 +99,7 @@ objects:
   - dainetrinidad
   - rstens
   - system:serviceaccount:mem-tfrs-tools:jenkins
+  - DerekRoberts
 - apiVersion: v1
   groupNames: null
   kind: RoleBinding
@@ -170,6 +173,42 @@ objects:
       volume.beta.kubernetes.io/storage-class: gluster-file
       volume.beta.kubernetes.io/storage-provisioner: kubernetes.io/glusterfs
     creationTimestamp: null
+    name: postgresql-backup-cns
+  spec:
+    accessModes:
+    - ReadWriteMany
+    resources:
+      requests:
+        storage: 5Gi
+    volumeName: pvc-41929239-1cdc-11e8-8a7d-005056832285
+  status: {}
+- apiVersion: v1
+  kind: PersistentVolumeClaim
+  metadata:
+    annotations:
+      pv.kubernetes.io/bind-completed: "yes"
+      pv.kubernetes.io/bound-by-controller: "yes"
+      volume.beta.kubernetes.io/storage-class: gluster-file
+      volume.beta.kubernetes.io/storage-provisioner: kubernetes.io/glusterfs
+    creationTimestamp: null
+    name: postgresql-bypass-cns
+  spec:
+    accessModes:
+    - ReadWriteOnce
+    resources:
+      requests:
+        storage: 5Gi
+    volumeName: pvc-cccc95a2-1369-11e8-844f-005056832285
+  status: {}
+- apiVersion: v1
+  kind: PersistentVolumeClaim
+  metadata:
+    annotations:
+      pv.kubernetes.io/bind-completed: "yes"
+      pv.kubernetes.io/bound-by-controller: "yes"
+      volume.beta.kubernetes.io/storage-class: gluster-file
+      volume.beta.kubernetes.io/storage-provisioner: kubernetes.io/glusterfs
+    creationTimestamp: null
     name: postgresql-cns
   spec:
     accessModes:
@@ -178,6 +217,24 @@ objects:
       requests:
         storage: 5Gi
     volumeName: pvc-7f1938e3-fd6f-11e7-b70e-005056832285
+  status: {}
+- apiVersion: v1
+  kind: PersistentVolumeClaim
+  metadata:
+    annotations:
+      pv.kubernetes.io/bind-completed: "yes"
+      pv.kubernetes.io/bound-by-controller: "yes"
+      volume.beta.kubernetes.io/storage-class: gluster-file
+      volume.beta.kubernetes.io/storage-provisioner: kubernetes.io/glusterfs
+    creationTimestamp: null
+    name: postgresql-standby-cns
+  spec:
+    accessModes:
+    - ReadWriteMany
+    resources:
+      requests:
+        storage: 5Gi
+    volumeName: pvc-03f2bc9c-1dab-11e8-8a7d-005056832285
   status: {}
 - apiVersion: v1
   kind: BuildConfig
@@ -218,6 +275,49 @@ objects:
     - type: ConfigChange
     - imageChange: {}
       type: ImageChange
+  status:
+    lastVersion: 0
+- apiVersion: v1
+  kind: BuildConfig
+  metadata:
+    annotations:
+      description: Defines how to build the application
+      template.alpha.openshift.io/wait-for-ready: "true"
+    creationTimestamp: null
+    labels:
+      app: httpd-example
+      template: httpd-example
+    name: httpd-example
+  spec:
+    nodeSelector: null
+    output:
+      to:
+        kind: ImageStreamTag
+        name: httpd-example:latest
+    postCommit: {}
+    resources: {}
+    runPolicy: Serial
+    source:
+      git:
+        uri: https://github.com/openshift/httpd-ex.git
+      type: Git
+    strategy:
+      sourceStrategy:
+        from:
+          kind: ImageStreamTag
+          name: httpd:2.4
+          namespace: openshift
+      type: Source
+    triggers:
+    - imageChange: {}
+      type: ImageChange
+    - type: ConfigChange
+    - github:
+        secret: QGlVew4PirMQGb2ofJnnTDGMpx0evfMpAhv4u3bI
+      type: GitHub
+    - generic:
+        secret: c7mtYoHBAQhqNaXWeA4PIe4Q11aGdvO00d1TQSAG
+      type: Generic
   status:
     lastVersion: 0
 - apiVersion: v1
@@ -380,7 +480,7 @@ objects:
           - name: HTTP_BASIC
           - name: API_URL
             value: http://backend.mem-tfrs-dev.svc.cluster.local:8080/api/
-          image: 172.50.0.2:5000/mem-tfrs-tools/client-develop@sha256:0d335a08da8af2a0cfdb6ee4e46f872bb8ad3dd379e4ddb4c3eeb0f2113ad1db
+          image: 172.50.0.2:5000/mem-tfrs-tools/client-develop@sha256:bc1d33a5fc5041c14a897bd2a58fa09969db686f400c2c425ea43a2bc3653842
           imagePullPolicy: IfNotPresent
           livenessProbe:
             failureThreshold: 3
@@ -438,6 +538,107 @@ objects:
 - apiVersion: v1
   kind: DeploymentConfig
   metadata:
+    annotations:
+      description: Defines how to deploy the application server
+      template.alpha.openshift.io/wait-for-ready: "true"
+    creationTimestamp: null
+    generation: 1
+    labels:
+      app: httpd-example
+      template: httpd-example
+    name: httpd-example
+  spec:
+    replicas: 0
+    selector:
+      name: httpd-example
+    strategy:
+      activeDeadlineSeconds: 21600
+      resources: {}
+      rollingParams:
+        intervalSeconds: 1
+        maxSurge: 25%
+        maxUnavailable: 25%
+        timeoutSeconds: 600
+        updatePeriodSeconds: 1
+      type: Rolling
+    template:
+      metadata:
+        creationTimestamp: null
+        labels:
+          name: httpd-example
+        name: httpd-example
+      spec:
+        containers:
+        - image: 172.50.0.2:5000/mem-tfrs-dev/httpd-example@sha256:adfd91fa3cf3291bc99ed841c232e7eb7069fa0feb9436906ec1471a0f8cc6f3
+          imagePullPolicy: IfNotPresent
+          livenessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /
+              port: 8080
+              scheme: HTTP
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 3
+          name: httpd-example
+          ports:
+          - containerPort: 8080
+            protocol: TCP
+          readinessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /
+              port: 8080
+              scheme: HTTP
+            initialDelaySeconds: 3
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 3
+          resources:
+            limits:
+              memory: 512Mi
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+          volumeMounts:
+          - mountPath: /data-old
+            name: volume-ds536
+          - mountPath: /data-new
+            name: volume-te11a
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+        volumes:
+        - name: volume-ds536
+          persistentVolumeClaim:
+            claimName: postgresql-cns
+        - name: volume-te11a
+          persistentVolumeClaim:
+            claimName: postgresql-bypass-cns
+    test: false
+    triggers:
+    - imageChangeParams:
+        automatic: true
+        containerNames:
+        - httpd-example
+        from:
+          kind: ImageStreamTag
+          name: httpd-example:latest
+          namespace: mem-tfrs-dev
+      type: ImageChange
+    - type: ConfigChange
+  status:
+    availableReplicas: 0
+    latestVersion: 0
+    observedGeneration: 0
+    replicas: 0
+    unavailableReplicas: 0
+    updatedReplicas: 0
+- apiVersion: v1
+  kind: DeploymentConfig
+  metadata:
     creationTimestamp: null
     generation: 1
     labels:
@@ -474,7 +675,7 @@ objects:
               secretKeyRef:
                 key: DATABASE_PASSWORD
                 name: tfrs-postgresql
-          image: registry.access.redhat.com/rhscl/postgresql-95-rhel7@sha256:19aacf0c8331df76b67932415bd84abf74ec36fd9d4aef518ad9f6285c4a948a
+          image: registry.access.redhat.com/rhscl/postgresql-95-rhel7@sha256:f90b4ce7c2328e2f38d01e37b3a69cf60f06433df907ecb9432b0934af9624ed
           imagePullPolicy: IfNotPresent
           livenessProbe:
             failureThreshold: 3
@@ -503,7 +704,9 @@ objects:
             timeoutSeconds: 1
           resources:
             limits:
-              memory: 512Mi
+              memory: 2Gi
+            requests:
+              cpu: 500m
           securityContext:
             capabilities: {}
             privileged: false
@@ -512,6 +715,8 @@ objects:
           volumeMounts:
           - mountPath: /var/lib/pgsql/data
             name: postgresql-data
+          - mountPath: /postgresql-backup
+            name: volume-r83io
         dnsPolicy: ClusterFirst
         restartPolicy: Always
         schedulerName: default-scheduler
@@ -521,12 +726,227 @@ objects:
         - name: postgresql-data
           persistentVolumeClaim:
             claimName: postgresql-cns
+        - name: volume-r83io
+          persistentVolumeClaim:
+            claimName: postgresql-backup-cns
     test: false
     triggers:
     - imageChangeParams:
         automatic: true
         containerNames:
         - postgresql
+        from:
+          kind: ImageStreamTag
+          name: postgresql:9.5
+          namespace: openshift
+      type: ImageChange
+    - type: ConfigChange
+  status:
+    availableReplicas: 0
+    latestVersion: 0
+    observedGeneration: 0
+    replicas: 0
+    unavailableReplicas: 0
+    updatedReplicas: 0
+- apiVersion: v1
+  kind: DeploymentConfig
+  metadata:
+    creationTimestamp: null
+    generation: 1
+    labels:
+      app: postgresql-persistent
+      template: postgresql-persistent-template
+    name: postgresql-bypass
+  spec:
+    replicas: 1
+    selector:
+      name: postgresql-bypass
+    strategy:
+      activeDeadlineSeconds: 21600
+      recreateParams:
+        timeoutSeconds: 600
+      resources: {}
+      type: Recreate
+    template:
+      metadata:
+        creationTimestamp: null
+        labels:
+          name: postgresql-bypass
+      spec:
+        containers:
+        - env:
+          - name: POSTGRESQL_DATABASE
+            value: tfrs
+          - name: POSTGRESQL_USER
+            valueFrom:
+              secretKeyRef:
+                key: DATABASE_USER
+                name: tfrs-postgresql
+          - name: POSTGRESQL_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                key: DATABASE_PASSWORD
+                name: tfrs-postgresql
+          image: registry.access.redhat.com/rhscl/postgresql-95-rhel7@sha256:f90b4ce7c2328e2f38d01e37b3a69cf60f06433df907ecb9432b0934af9624ed
+          imagePullPolicy: IfNotPresent
+          livenessProbe:
+            failureThreshold: 3
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            successThreshold: 1
+            tcpSocket:
+              port: 5432
+            timeoutSeconds: 1
+          name: postgresql-bypass
+          ports:
+          - containerPort: 5432
+            protocol: TCP
+          readinessProbe:
+            exec:
+              command:
+              - /bin/sh
+              - -i
+              - -c
+              - psql -h 127.0.0.1 -U $POSTGRESQL_USER -q -d $POSTGRESQL_DATABASE -c
+                'SELECT 1'
+            failureThreshold: 3
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 1
+          resources:
+            limits:
+              cpu: 500m
+              memory: 512Mi
+          securityContext:
+            capabilities: {}
+            privileged: false
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+          volumeMounts:
+          - mountPath: /var/lib/pgsql/data
+            name: postgresql-data-bypass
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+        volumes:
+        - name: postgresql-data-bypass
+          persistentVolumeClaim:
+            claimName: postgresql-bypass-cns
+    test: false
+    triggers:
+    - imageChangeParams:
+        automatic: true
+        containerNames:
+        - postgresql-bypass
+        from:
+          kind: ImageStreamTag
+          name: postgresql:9.5
+          namespace: openshift
+      type: ImageChange
+    - type: ConfigChange
+  status:
+    availableReplicas: 0
+    latestVersion: 0
+    observedGeneration: 0
+    replicas: 0
+    unavailableReplicas: 0
+    updatedReplicas: 0
+- apiVersion: v1
+  kind: DeploymentConfig
+  metadata:
+    creationTimestamp: null
+    generation: 1
+    labels:
+      app: postgresql-persistent
+      template: postgresql-persistent-template
+    name: postgresql-standby
+  spec:
+    replicas: 1
+    revisionHistoryLimit: 10
+    selector:
+      name: postgresql-standby
+    strategy:
+      activeDeadlineSeconds: 21600
+      recreateParams:
+        timeoutSeconds: 600
+      resources: {}
+      type: Recreate
+    template:
+      metadata:
+        creationTimestamp: null
+        labels:
+          name: postgresql-standby
+      spec:
+        containers:
+        - env:
+          - name: POSTGRESQL_DATABASE
+            value: tfrs
+          - name: POSTGRESQL_USER
+            valueFrom:
+              secretKeyRef:
+                key: DATABASE_USER
+                name: tfrs-postgresql
+          - name: POSTGRESQL_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                key: DATABASE_PASSWORD
+                name: tfrs-postgresql
+          image: registry.access.redhat.com/rhscl/postgresql-95-rhel7@sha256:f90b4ce7c2328e2f38d01e37b3a69cf60f06433df907ecb9432b0934af9624ed
+          imagePullPolicy: IfNotPresent
+          livenessProbe:
+            failureThreshold: 3
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            successThreshold: 1
+            tcpSocket:
+              port: 5432
+            timeoutSeconds: 1
+          name: postgresql-standby
+          ports:
+          - containerPort: 5432
+            protocol: TCP
+          readinessProbe:
+            exec:
+              command:
+              - /bin/sh
+              - -i
+              - -c
+              - psql -h 127.0.0.1 -U $POSTGRESQL_USER -q -d $POSTGRESQL_DATABASE -c
+                'SELECT 1'
+            failureThreshold: 3
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 1
+          resources:
+            limits:
+              memory: 512Mi
+          securityContext:
+            capabilities: {}
+            privileged: false
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+          volumeMounts:
+          - mountPath: /var/lib/pgsql/data
+            name: postgresql-data-standby
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+        volumes:
+        - name: postgresql-data-standby
+          persistentVolumeClaim:
+            claimName: postgresql-standby-cns
+    test: false
+    triggers:
+    - imageChangeParams:
+        automatic: true
+        containerNames:
+        - postgresql-standby
         from:
           kind: ImageStreamTag
           name: postgresql:9.5
@@ -551,7 +971,7 @@ objects:
       app: request-logger
     name: request-logger
   spec:
-    replicas: 1
+    replicas: 0
     selector:
       deploymentconfig: request-logger
     strategy:
@@ -572,7 +992,7 @@ objects:
           deploymentconfig: request-logger
       spec:
         containers:
-        - image: 172.50.0.2:5000/mem-tfrs-dev/request-logger@sha256:6a09a8baa58acd905518d5ff502f01d00c32ebead94853b2202db39991b0ccc3
+        - image: 172.50.0.2:5000/mem-tfrs-dev/request-logger@sha256:a6226da1c2150ea1079ee99c562588be59141547159365e72c8c0d1f8d69110e
           imagePullPolicy: Always
           name: request-logger
           ports:
@@ -731,7 +1151,7 @@ objects:
       template: tfrs-app-environment
     name: tfrs
   spec:
-    replicas: 2
+    replicas: 1
     selector:
       name: tfrs
     strategy:
@@ -776,7 +1196,7 @@ objects:
               secretKeyRef:
                 key: DATABASE_PASSWORD
                 name: tfrs-postgresql
-          image: 172.50.0.2:5000/mem-tfrs-tools/tfrs-develop@sha256:bdb8dad04d32184986e3641b65711dfbf3bcc0ffc05a89a6ca63dd43f739c667
+          image: 172.50.0.2:5000/mem-tfrs-tools/tfrs-develop@sha256:7796028de7c24ac8b151b72520579b86535107488f763a4ca702cf7b5f16c844
           imagePullPolicy: IfNotPresent
           livenessProbe:
             failureThreshold: 3
@@ -832,6 +1252,120 @@ objects:
     unavailableReplicas: 0
     updatedReplicas: 0
 - apiVersion: v1
+  kind: DeploymentConfig
+  metadata:
+    annotations:
+      description: Defines how to deploy the application server
+    creationTimestamp: null
+    generation: 1
+    labels:
+      template: tfrs-app-environment
+    name: tfrs-bypass
+  spec:
+    replicas: 1
+    selector:
+      name: tfrs-bypass
+    strategy:
+      activeDeadlineSeconds: 21600
+      recreateParams:
+        mid:
+          execNewPod:
+            command:
+            - /bin/sh
+            - -c
+            - python manage.py migrate
+            containerName: tfrs-bypass-app
+          failurePolicy: Abort
+        timeoutSeconds: 600
+      resources: {}
+      type: Recreate
+    template:
+      metadata:
+        creationTimestamp: null
+        labels:
+          name: tfrs-bypass
+        name: tfrs-bypass
+      spec:
+        containers:
+        - env:
+          - name: DATABASE_SERVICE_NAME
+            value: postgresql-bypass
+          - name: DATABASE_ENGINE
+            value: postgresql
+          - name: DATABASE_NAME
+            value: tfrs
+          - name: APP_CONFIG
+          - name: DJANGO_DEBUG
+            value: "True"
+          - name: BYPASS_HEADER_AUTHENTICATION
+            value: "True"
+          - name: DATABASE_USER
+            valueFrom:
+              secretKeyRef:
+                key: DATABASE_USER
+                name: tfrs-postgresql
+          - name: DATABASE_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                key: DATABASE_PASSWORD
+                name: tfrs-postgresql
+          image: 172.50.0.2:5000/mem-tfrs-tools/tfrs-bypass@sha256:9a3f7138e27abdd286ed7dfb38260914991cb8ef747e3a45a4df38e5992d961e
+          imagePullPolicy: IfNotPresent
+          livenessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /health
+              port: 8080
+              scheme: HTTP
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 3
+          name: tfrs-bypass-app
+          ports:
+          - containerPort: 8080
+            protocol: TCP
+          readinessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /health
+              port: 8080
+              scheme: HTTP
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 3
+          resources:
+            limits:
+              cpu: 250m
+              memory: 256Mi
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+    test: false
+    triggers:
+    - imageChangeParams:
+        automatic: true
+        containerNames:
+        - tfrs-bypass-app
+        from:
+          kind: ImageStreamTag
+          name: tfrs-bypass:dev
+          namespace: mem-tfrs-tools
+      type: ImageChange
+    - type: ConfigChange
+  status:
+    availableReplicas: 0
+    latestVersion: 0
+    observedGeneration: 0
+    replicas: 0
+    unavailableReplicas: 0
+    updatedReplicas: 0
+- apiVersion: v1
   kind: Service
   metadata:
     annotations:
@@ -849,6 +1383,28 @@ objects:
       targetPort: 8080
     selector:
       name: tfrs
+    sessionAffinity: None
+    type: ClusterIP
+  status:
+    loadBalancer: {}
+- apiVersion: v1
+  kind: Service
+  metadata:
+    annotations:
+      description: Exposes and load balances the application pods
+      service.alpha.openshift.io/dependencies: '[{"name": "postgresql", "kind": "Service"}]'
+    creationTimestamp: null
+    labels:
+      template: tfrs-app-environment
+    name: backend-bypass
+  spec:
+    ports:
+    - name: web
+      port: 8080
+      protocol: TCP
+      targetPort: 8080
+    selector:
+      name: tfrs-bypass
     sessionAffinity: None
     type: ClusterIP
   status:
@@ -914,6 +1470,38 @@ objects:
   metadata:
     creationTimestamp: null
     labels:
+      gluster.kubernetes.io/provisioned-for-pvc: postgresql-backup-cns
+    name: glusterfs-dynamic-postgresql-backup-cns
+  spec:
+    ports:
+    - port: 1
+      protocol: TCP
+      targetPort: 1
+    sessionAffinity: None
+    type: ClusterIP
+  status:
+    loadBalancer: {}
+- apiVersion: v1
+  kind: Service
+  metadata:
+    creationTimestamp: null
+    labels:
+      gluster.kubernetes.io/provisioned-for-pvc: postgresql-bypass-cns
+    name: glusterfs-dynamic-postgresql-bypass-cns
+  spec:
+    ports:
+    - port: 1
+      protocol: TCP
+      targetPort: 1
+    sessionAffinity: None
+    type: ClusterIP
+  status:
+    loadBalancer: {}
+- apiVersion: v1
+  kind: Service
+  metadata:
+    creationTimestamp: null
+    labels:
       gluster.kubernetes.io/provisioned-for-pvc: postgresql-cns
     name: glusterfs-dynamic-postgresql-cns
   spec:
@@ -921,6 +1509,44 @@ objects:
     - port: 1
       protocol: TCP
       targetPort: 1
+    sessionAffinity: None
+    type: ClusterIP
+  status:
+    loadBalancer: {}
+- apiVersion: v1
+  kind: Service
+  metadata:
+    creationTimestamp: null
+    labels:
+      gluster.kubernetes.io/provisioned-for-pvc: postgresql-standby-cns
+    name: glusterfs-dynamic-postgresql-standby-cns
+  spec:
+    ports:
+    - port: 1
+      protocol: TCP
+      targetPort: 1
+    sessionAffinity: None
+    type: ClusterIP
+  status:
+    loadBalancer: {}
+- apiVersion: v1
+  kind: Service
+  metadata:
+    annotations:
+      description: Exposes and load balances the application pods
+    creationTimestamp: null
+    labels:
+      app: httpd-example
+      template: httpd-example
+    name: httpd-example
+  spec:
+    ports:
+    - name: web
+      port: 8080
+      protocol: TCP
+      targetPort: 8080
+    selector:
+      name: httpd-example
     sessionAffinity: None
     type: ClusterIP
   status:
@@ -941,6 +1567,26 @@ objects:
       targetPort: 5432
     selector:
       name: postgresql
+    sessionAffinity: None
+    type: ClusterIP
+  status:
+    loadBalancer: {}
+- apiVersion: v1
+  kind: Service
+  metadata:
+    creationTimestamp: null
+    labels:
+      app: postgresql-persistent
+      template: postgresql-persistent-template
+    name: postgresql-bypass
+  spec:
+    ports:
+    - name: postgresql
+      port: 5432
+      protocol: TCP
+      targetPort: 5432
+    selector:
+      name: postgresql-bypass
     sessionAffinity: None
     type: ClusterIP
   status:
@@ -1012,6 +1658,58 @@ objects:
 - apiVersion: v1
   kind: Route
   metadata:
+    annotations:
+      openshift.io/host.generated: "true"
+    creationTimestamp: null
+    name: api-bypass
+  spec:
+    host: api-bypass-mem-tfrs-dev.pathfinder.gov.bc.ca
+    path: /api
+    port:
+      targetPort: web
+    to:
+      kind: Service
+      name: backend-bypass
+      weight: 100
+    wildcardPolicy: None
+  status:
+    ingress:
+    - conditions:
+      - lastTransitionTime: 2018-02-16T23:09:46Z
+        status: "True"
+        type: Admitted
+      host: api-bypass-mem-tfrs-dev.pathfinder.gov.bc.ca
+      routerName: router
+      wildcardPolicy: None
+- apiVersion: v1
+  kind: Route
+  metadata:
+    annotations:
+      openshift.io/host.generated: "true"
+    creationTimestamp: null
+    name: api-internal
+  spec:
+    host: api-internal-mem-tfrs-dev.pathfinder.gov.bc.ca
+    path: /api
+    port:
+      targetPort: web
+    to:
+      kind: Service
+      name: backend
+      weight: 100
+    wildcardPolicy: None
+  status:
+    ingress:
+    - conditions:
+      - lastTransitionTime: 2018-02-15T19:55:47Z
+        status: "True"
+        type: Admitted
+      host: api-internal-mem-tfrs-dev.pathfinder.gov.bc.ca
+      routerName: router
+      wildcardPolicy: None
+- apiVersion: v1
+  kind: Route
+  metadata:
     creationTimestamp: null
     name: caddy-app
   spec:
@@ -1033,6 +1731,33 @@ objects:
         status: "True"
         type: Admitted
       host: tfrs-dev-caddy-proxy.pathfinder.gov.bc.ca
+      routerName: router
+      wildcardPolicy: None
+- apiVersion: v1
+  kind: Route
+  metadata:
+    annotations:
+      openshift.io/host.generated: "true"
+      template.openshift.io/expose-uri: http://{.spec.host}{.spec.path}
+    creationTimestamp: null
+    labels:
+      app: httpd-example
+      template: httpd-example
+    name: httpd-example
+  spec:
+    host: httpd-example-mem-tfrs-dev.pathfinder.gov.bc.ca
+    to:
+      kind: Service
+      name: httpd-example
+      weight: 100
+    wildcardPolicy: None
+  status:
+    ingress:
+    - conditions:
+      - lastTransitionTime: 2018-02-16T22:37:32Z
+        status: "True"
+        type: Admitted
+      host: httpd-example-mem-tfrs-dev.pathfinder.gov.bc.ca
       routerName: router
       wildcardPolicy: None
 - apiVersion: v1
