@@ -4,12 +4,12 @@ items:
   groupNames: null
   kind: RoleBinding
   metadata:
-    creationTimestamp: 2017-01-31T22:12:44Z
+    creationTimestamp: 2017-11-21T23:45:54Z
     name: admin
     namespace: mem-tfrs-test
-    resourceVersion: "269286536"
+    resourceVersion: "355762968"
     selfLink: /oapi/v1/namespaces/mem-tfrs-test/rolebindings/admin
-    uid: 63cbd0e4-e802-11e6-a665-005056832285
+    uid: 1d36c168-cf16-11e7-8fdb-0050568348cc
   roleRef:
     name: admin
   subjects:
@@ -30,12 +30,12 @@ items:
   groupNames: null
   kind: RoleBinding
   metadata:
-    creationTimestamp: 2017-02-23T00:27:20Z
+    creationTimestamp: 2017-11-21T23:45:54Z
     name: edit
     namespace: mem-tfrs-test
-    resourceVersion: "287781110"
+    resourceVersion: "340071098"
     selfLink: /oapi/v1/namespaces/mem-tfrs-test/rolebindings/edit
-    uid: d6a5422b-f95e-11e6-a694-005056832285
+    uid: 1d44bd7a-cf16-11e7-8fdb-0050568348cc
   roleRef:
     name: edit
   subjects:
@@ -55,6 +55,8 @@ items:
   - kind: ServiceAccount
     name: jenkins
     namespace: mem-tfrs-tools
+  - kind: User
+    name: DerekRoberts
   userNames:
   - system:serviceaccount:mem-tfrs-tools:default
   - dmarley
@@ -63,16 +65,17 @@ items:
   - dainetrinidad
   - rstens
   - system:serviceaccount:mem-tfrs-tools:jenkins
+  - DerekRoberts
 - apiVersion: v1
   groupNames: null
   kind: RoleBinding
   metadata:
-    creationTimestamp: 2017-01-31T22:12:44Z
+    creationTimestamp: 2017-11-21T23:45:54Z
     name: system:deployers
     namespace: mem-tfrs-test
-    resourceVersion: "37131835"
+    resourceVersion: "355762970"
     selfLink: /oapi/v1/namespaces/mem-tfrs-test/rolebindings/system%3Adeployers
-    uid: 63d76523-e802-11e6-a665-005056832285
+    uid: 1d20e0c7-cf16-11e7-8fdb-0050568348cc
   roleRef:
     name: system:deployer
   subjects:
@@ -85,12 +88,12 @@ items:
   groupNames: null
   kind: RoleBinding
   metadata:
-    creationTimestamp: 2017-01-31T22:12:44Z
+    creationTimestamp: 2017-11-21T23:45:54Z
     name: system:image-builders
     namespace: mem-tfrs-test
-    resourceVersion: "37131832"
+    resourceVersion: "355762972"
     selfLink: /oapi/v1/namespaces/mem-tfrs-test/rolebindings/system%3Aimage-builders
-    uid: 63d469dc-e802-11e6-a665-005056832285
+    uid: 1d276957-cf16-11e7-8fdb-0050568348cc
   roleRef:
     name: system:image-builder
   subjects:
@@ -104,12 +107,12 @@ items:
   - system:serviceaccounts:mem-tfrs-test
   kind: RoleBinding
   metadata:
-    creationTimestamp: 2017-01-31T22:12:44Z
+    creationTimestamp: 2017-11-21T23:45:54Z
     name: system:image-pullers
     namespace: mem-tfrs-test
-    resourceVersion: "37131831"
+    resourceVersion: "355762973"
     selfLink: /oapi/v1/namespaces/mem-tfrs-test/rolebindings/system%3Aimage-pullers
-    uid: 63d1e43b-e802-11e6-a665-005056832285
+    uid: 1d284fcb-cf16-11e7-8fdb-0050568348cc
   roleRef:
     name: system:image-puller
   subjects:
@@ -120,12 +123,12 @@ items:
   groupNames: null
   kind: RoleBinding
   metadata:
-    creationTimestamp: 2017-02-28T19:00:12Z
+    creationTimestamp: 2017-11-21T23:45:54Z
     name: view
     namespace: mem-tfrs-test
-    resourceVersion: "272020627"
+    resourceVersion: "355762974"
     selfLink: /oapi/v1/namespaces/mem-tfrs-test/rolebindings/view
-    uid: 222edbec-fde8-11e6-b4f5-0050568379a2
+    uid: 1d35be16-cf16-11e7-8fdb-0050568348cc
   roleRef:
     name: view
   subjects:
