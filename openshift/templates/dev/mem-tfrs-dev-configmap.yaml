@@ -21,7 +21,7 @@ items:
     creationTimestamp: 2017-11-29T19:44:00Z
     name: caddyfile
     namespace: mem-tfrs-dev
-    resourceVersion: "276076011"
+    resourceVersion: "355715245"
     selfLink: /api/v1/namespaces/mem-tfrs-dev/configmaps/caddyfile
     uid: a5918f8d-d53d-11e7-9f70-005056832285
 - apiVersion: v1
@@ -47,7 +47,7 @@ items:
     creationTimestamp: 2017-11-10T00:27:11Z
     name: test-config
     namespace: mem-tfrs-dev
-    resourceVersion: "257918684"
+    resourceVersion: "355715246"
     selfLink: /api/v1/namespaces/mem-tfrs-dev/configmaps/test-config
     uid: e49b0bc1-c5ad-11e7-9b13-0050568348cc
 kind: List
