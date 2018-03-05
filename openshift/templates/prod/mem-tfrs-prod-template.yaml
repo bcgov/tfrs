@@ -51,6 +51,8 @@ objects:
   - kind: ServiceAccount
     name: jenkins
     namespace: mem-tfrs-tools
+  - kind: User
+    name: DerekRoberts
   userNames:
   - system:serviceaccount:mem-tfrs-tools:default
   - dmarley
@@ -59,6 +61,7 @@ objects:
   - dainetrinidad
   - rstens
   - system:serviceaccount:mem-tfrs-tools:jenkins
+  - DerekRoberts
 - apiVersion: v1
   groupNames: null
   kind: RoleBinding
@@ -173,7 +176,7 @@ objects:
           - name: HTTP_BASIC
           - name: API_URL
             value: http://backend.mem-tfrs-prod.svc.cluster.local:8080/api/
-          image: 172.50.0.2:5000/mem-tfrs-tools/client@sha256:391ef74b686d0eff42e7c82bb73cba33b8e7a698f866fe777f08cb5a73b9f5b6
+          image: 172.50.0.2:5000/mem-tfrs-tools/client@sha256:0e75d94f2ed0f2cec0d9a1675c069667e9af2f233e0e45babb4adf47d52a3d7d
           imagePullPolicy: IfNotPresent
           livenessProbe:
             failureThreshold: 3
@@ -267,7 +270,7 @@ objects:
               secretKeyRef:
                 key: DATABASE_PASSWORD
                 name: tfrs-postgresql
-          image: registry.access.redhat.com/rhscl/postgresql-95-rhel7@sha256:19aacf0c8331df76b67932415bd84abf74ec36fd9d4aef518ad9f6285c4a948a
+          image: registry.access.redhat.com/rhscl/postgresql-95-rhel7@sha256:f90b4ce7c2328e2f38d01e37b3a69cf60f06433df907ecb9432b0934af9624ed
           imagePullPolicy: IfNotPresent
           livenessProbe:
             failureThreshold: 3
@@ -487,7 +490,7 @@ objects:
               secretKeyRef:
                 key: DATABASE_PASSWORD
                 name: tfrs-postgresql
-          image: 172.50.0.2:5000/mem-tfrs-tools/tfrs@sha256:50ca4b0774b605102043039c8368c2134601ea3e927314080a92ff368b7a5d5c
+          image: 172.50.0.2:5000/mem-tfrs-tools/tfrs@sha256:7bfe24a5a4ede5f301e0a94586f1a9a6abcea33d5162e9362effb3bf66df68dc
           imagePullPolicy: IfNotPresent
           livenessProbe:
             failureThreshold: 3

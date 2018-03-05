@@ -63,19 +63,19 @@ items:
       pv.kubernetes.io/bound-by-controller: "yes"
       volume.beta.kubernetes.io/storage-class: gluster-file
       volume.beta.kubernetes.io/storage-provisioner: kubernetes.io/glusterfs
-    creationTimestamp: 2018-01-10T18:31:42Z
-    name: postgresql-sonarqube-cns
+    creationTimestamp: 2018-02-15T22:54:03Z
+    name: postgresql-sonarqube-data
     namespace: mem-tfrs-tools
-    resourceVersion: "311322996"
-    selfLink: /api/v1/namespaces/mem-tfrs-tools/persistentvolumeclaims/postgresql-sonarqube-cns
-    uid: 814c86b8-f634-11e7-9f70-005056832285
+    resourceVersion: "342338356"
+    selfLink: /api/v1/namespaces/mem-tfrs-tools/persistentvolumeclaims/postgresql-sonarqube-data
+    uid: 1e329a9c-12a3-11e8-b39a-0050568348cc
   spec:
     accessModes:
     - ReadWriteOnce
     resources:
       requests:
         storage: 5Gi
-    volumeName: pvc-814c86b8-f634-11e7-9f70-005056832285
+    volumeName: pvc-1e329a9c-12a3-11e8-b39a-0050568348cc
   status:
     accessModes:
     - ReadWriteOnce
@@ -90,24 +90,24 @@ items:
       pv.kubernetes.io/bound-by-controller: "yes"
       volume.beta.kubernetes.io/storage-class: gluster-file
       volume.beta.kubernetes.io/storage-provisioner: kubernetes.io/glusterfs
-    creationTimestamp: 2018-01-10T18:31:11Z
-    name: sonarqube-data-cns
+    creationTimestamp: 2018-02-15T22:54:03Z
+    name: sonarqube-data
     namespace: mem-tfrs-tools
-    resourceVersion: "311322696"
-    selfLink: /api/v1/namespaces/mem-tfrs-tools/persistentvolumeclaims/sonarqube-data-cns
-    uid: 6eefa34f-f634-11e7-9f70-005056832285
+    resourceVersion: "342338429"
+    selfLink: /api/v1/namespaces/mem-tfrs-tools/persistentvolumeclaims/sonarqube-data
+    uid: 1e33dd23-12a3-11e8-b39a-0050568348cc
   spec:
     accessModes:
     - ReadWriteOnce
     resources:
       requests:
-        storage: 1Gi
-    volumeName: pvc-6eefa34f-f634-11e7-9f70-005056832285
+        storage: 5Gi
+    volumeName: pvc-1e33dd23-12a3-11e8-b39a-0050568348cc
   status:
     accessModes:
     - ReadWriteOnce
     capacity:
-      storage: 1Gi
+      storage: 5Gi
     phase: Bound
 kind: List
 metadata: {}
