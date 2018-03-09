@@ -79,3 +79,6 @@ functional-tests/bin
 .DS_Store
 backend/api/fixtures/test_tfrs_users.json
 frontend/sonar-runner/.gradle
+
+# Gitbook
+_book/
