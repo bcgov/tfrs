@@ -55,7 +55,7 @@ This project is in development.
 To see the status of feature development please refer to the [features](https://github.com/bcgov/tfrs/wiki/features/) page on the project wiki
 
 ### Getting Started (development)
-This project is a Single Page Application with a REST API backend and a JavaScript (React) front-end. You can read more about it [here](docs/README.md)
+This project is a Single Page Application with a REST API backend and a JavaScript (React) front-end. You can read more about it [here](docs/SUMMARY.md)
 
 #### Authentication
 
