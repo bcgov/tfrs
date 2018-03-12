@@ -1,9 +1,9 @@
 ## Build Status
-Develop Branch: 
+Develop Branch:
 - Backend: [![Build Status](https://jenkins-mem-tfrs-tools.pathfinder.gov.bc.ca/buildStatus/icon?job=mem-tfrs-tools-develop-tfrs-pipeline)](https://jenkins-mem-tfrs-tools.pathfinder.gov.bc.ca/me/my-views/view/all/job/mem-tfrs-tools-develop-tfrs-pipeline/)      
 
 Master Branch:
-- Backend: [![Build Status](https://jenkins-mem-tfrs-tools.pathfinder.gov.bc.ca/buildStatus/icon?job=mem-tfrs-tools-master-tfrs-pipeline)](https://jenkins-mem-tfrs-tools.pathfinder.gov.bc.ca/job/mem-tfrs-tools-master-tfrs-pipeline) 
+- Backend: [![Build Status](https://jenkins-mem-tfrs-tools.pathfinder.gov.bc.ca/buildStatus/icon?job=mem-tfrs-tools-master-tfrs-pipeline)](https://jenkins-mem-tfrs-tools.pathfinder.gov.bc.ca/job/mem-tfrs-tools-master-tfrs-pipeline)
 
 ## Development
 
