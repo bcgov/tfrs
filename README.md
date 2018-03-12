@@ -18,7 +18,7 @@ Facilitates online Fuel Reporting and Low Carbon Fuel credit transfers supportin
 - Government awards credits for infrastructure projects
 - Government validates credits from the supply of low carbon fuels
 
-Files in this repository
+** Files in this repository**
 ```
 backend/                   - Backend codebase
 docs/                      - Documentation
@@ -54,18 +54,17 @@ http://schema-spy-mem-tfrs-dev.pathfinder.gov.bc.ca/index.html
 This project is in development.
 To see the status of feature development please refer to the [features](https://github.com/bcgov/tfrs/wiki/features/) page on the project wiki
 
-### Getting Started (development)
-This project is a Single Page Application with a REST API backend and a JavaScript (React) front-end. You can read more about it [here](docs/README.md)
+### Documentation
+You can find project and development documentation in the [docs](/docs/) folder. The docs folder can also run on gitbook if you want to view it nicely formatted.
 
-#### Authentication
+**Running the documentation on gitbook**
 
-This project has implemented authentication via SiteMinder/BCeID. The entire application is protected by SiteMinder. It uses the headers sent by SiteMinder to authenticate a user. You can read more about it [here](docs/auth.md)
-
-#### REST API Server
-[View the README for the backend](backend/README.md)
-
-#### Front-End JavaScript Client
-[View the README for the frontend](frontend/README.md)
+Install gitbook using npm, cd to the folder & run the server
+```bash
+$ npm install gitbook-cli -g
+$ cd docs/
+$ gitbook serve
+```
 
 ### Getting Help or Reporting an Issue
 To report bugs/issues/features requests, please file an [issue](https://github.com/bcgov/tfrs/issues/).
