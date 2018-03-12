@@ -1,7 +1,8 @@
-Introduction
+# Introduction
 
-------------
+
 (TFRS) Transportation Fuels Reporting System
+------------
 
 TFRS facilitates online Fuel Reporting and Low Carbon Fuel credit transfers supporting BC's market-based approach to avoiding lifecycle GHG emissions from transportation fuel.  
 
