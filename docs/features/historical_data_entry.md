@@ -26,6 +26,7 @@ Frontend:
   - Status can't be changed
 - Deleting historical credit transfers
   - A deleted credit transfer should never be processed
+- A button to process all the credit transfers on the historical data entry page
 -----------
 API:
 - Create an end point to process the created credit transfers (all of which should be in 'approved' status). Could be `/api/credit_transfers/batch_process`
