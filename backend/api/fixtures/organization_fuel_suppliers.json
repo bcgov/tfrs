@@ -1,0 +1,442 @@
+[
+  {
+    "fields": {
+      "name": "4-Less Disposal Inc.",
+      "actions_type": 1,
+      "status": 1,
+      "type_id": 2
+    },
+    "model": "api.organization",
+    "pk": 1
+  },
+  {
+    "fields": {
+      "name": "Air Liquide Canada Inc.",
+      "actions_type": 1,
+      "status": 1,
+      "type_id": 2
+    },
+    "model": "api.organization",
+    "pk": 2
+  },
+  {
+    "fields": {
+      "name": "BC Hydro",
+      "actions_type": 1,
+      "status": 1,
+      "type_id": 2
+    },
+    "model": "api.organization",
+    "pk": 3
+  },
+  {
+    "fields": {
+      "name": "BC Transit",
+      "actions_type": 1,
+      "status": 1,
+      "type_id": 2
+    },
+    "model": "api.organization",
+    "pk": 4
+  },
+  {
+    "fields": {
+      "name": "Burden Propane Inc.",
+      "actions_type": 1,
+      "status": 1,
+      "type_id": 2
+    },
+    "model": "api.organization",
+    "pk": 5
+  },
+  {
+    "fields": {
+      "name": "C&N Ethanol Marketing, LLC",
+      "actions_type": 1,
+      "status": 1,
+      "type_id": 2
+    },
+    "model": "api.organization",
+    "pk": 6
+  },
+  {
+    "fields": {
+      "name": "Cal-Gas Inc.",
+      "actions_type": 1,
+      "status": 1,
+      "type_id": 2
+    },
+    "model": "api.organization",
+    "pk": 7
+  },
+  {
+    "fields": {
+      "name": "Canadian Linen & Uniform Service Co.",
+      "actions_type": 1,
+      "status": 1,
+      "type_id": 2
+    },
+    "model": "api.organization",
+    "pk": 8
+  },
+  {
+    "fields": {
+      "name": "Canwest Propane Partnership",
+      "actions_type": 1,
+      "status": 1,
+      "type_id": 2
+    },
+    "model": "api.organization",
+    "pk": 9
+  },
+  {
+    "fields": {
+      "name": "Central Okanagan Public Schools (SD32)",
+      "actions_type": 1,
+      "status": 1,
+      "type_id": 2
+    },
+    "model": "api.organization",
+    "pk": 10
+  },
+  {
+    "fields": {
+      "name": "City of Nanaimo",
+      "actions_type": 1,
+      "status": 1,
+      "type_id": 2
+    },
+    "model": "api.organization",
+    "pk": 11
+  },
+  {
+    "fields": {
+      "name": "City of Surrey",
+      "actions_type": 1,
+      "status": 1,
+      "type_id": 2
+    },
+    "model": "api.organization",
+    "pk": 12
+  },
+  {
+    "fields": {
+      "name": "City of Vancouver",
+      "actions_type": 1,
+      "status": 1,
+      "type_id": 2
+    },
+    "model": "api.organization",
+    "pk": 13
+  },
+  {
+    "fields": {
+      "name": "City of Victoria",
+      "actions_type": 1,
+      "status": 1,
+      "type_id": 2
+    },
+    "model": "api.organization",
+    "pk": 14
+  },
+  {
+    "fields": {
+      "name": "Clean Energy Compression Corp. ",
+      "actions_type": 1,
+      "status": 1,
+      "type_id": 2
+    },
+    "model": "api.organization",
+    "pk": 15
+  },
+  {
+    "fields": {
+      "name": "Clean Energy Fueling Services Corp.",
+      "actions_type": 1,
+      "status": 1,
+      "type_id": 2
+    },
+    "model": "api.organization",
+    "pk": 16
+  },
+  {
+    "fields": {
+      "name": "Coldstar Solutions Inc.",
+      "actions_type": 1,
+      "status": 1,
+      "type_id": 2
+    },
+    "model": "api.organization",
+    "pk": 17
+  },
+  {
+    "fields": {
+      "name": "Consolidated Biofuels Ltd.",
+      "actions_type": 1,
+      "status": 1,
+      "type_id": 2
+    },
+    "model": "api.organization",
+    "pk": 18
+  },
+  {
+    "fields": {
+      "name": "Cowichan Bio-diesel Co-operative",
+      "actions_type": 1,
+      "status": 1,
+      "type_id": 2
+    },
+    "model": "api.organization",
+    "pk": 19
+  },
+  {
+    "fields": {
+      "name": "Disposal Queen Ltd.",
+      "actions_type": 1,
+      "status": 1,
+      "type_id": 2
+    },
+    "model": "api.organization",
+    "pk": 20
+  },
+  {
+    "fields": {
+      "name": "Dolphin Delivery Ltd.",
+      "actions_type": 1,
+      "status": 1,
+      "type_id": 2
+    },
+    "model": "api.organization",
+    "pk": 21
+  },
+  {
+    "fields": {
+      "name": "Eco-Options Energy Co-operative",
+      "actions_type": 1,
+      "status": 1,
+      "type_id": 2
+    },
+    "model": "api.organization",
+    "pk": 22
+  },
+  {
+    "fields": {
+      "name": "Euro Asia Transload Inc.",
+      "actions_type": 1,
+      "status": 1,
+      "type_id": 2
+    },
+    "model": "api.organization",
+    "pk": 23
+  },
+  {
+    "fields": {
+      "name": "Evergreen Industries Ltd.",
+      "actions_type": 1,
+      "status": 1,
+      "type_id": 2
+    },
+    "model": "api.organization",
+    "pk": 24
+  },
+  {
+    "fields": {
+      "name": "Federated Co-operatives Ltd. (FCL)",
+      "actions_type": 1,
+      "status": 1,
+      "type_id": 2
+    },
+    "model": "api.organization",
+    "pk": 25
+  },
+  {
+    "fields": {
+      "name": "Ferus Natural Gas Fuels Inc.",
+      "actions_type": 1,
+      "status": 1,
+      "type_id": 2
+    },
+    "model": "api.organization",
+    "pk": 26
+  },
+  {
+    "fields": {
+      "name": "FortisBC Energy Inc.",
+      "actions_type": 1,
+      "status": 1,
+      "type_id": 2
+    },
+    "model": "api.organization",
+    "pk": 27
+  },
+  {
+    "fields": {
+      "name": "Halton Recycling Ltd. (dba Emterra Environmental)",
+      "actions_type": 1,
+      "status": 1,
+      "type_id": 2
+    },
+    "model": "api.organization",
+    "pk": 28
+  },
+  {
+    "fields": {
+      "name": "HTEC Hydrogen Technology & Energy Corp.",
+      "actions_type": 1,
+      "status": 1,
+      "type_id": 2
+    },
+    "model": "api.organization",
+    "pk": 29
+  },
+  {
+    "fields": {
+      "name": "Husky Oil Operations Ltd.",
+      "actions_type": 1,
+      "status": 1,
+      "type_id": 2
+    },
+    "model": "api.organization",
+    "pk": 30
+  },
+  {
+    "fields": {
+      "name": "Imperial Oil",
+      "actions_type": 1,
+      "status": 1,
+      "type_id": 2
+    },
+    "model": "api.organization",
+    "pk": 31
+  },
+  {
+    "fields": {
+      "name": "Parkland Refining (B.C.) Ltd.",
+      "actions_type": 1,
+      "status": 1,
+      "type_id": 2
+    },
+    "model": "api.organization",
+    "pk": 32
+  },
+  {
+    "fields": {
+      "name": "Pemberton Transport Co. Ltd.",
+      "actions_type": 1,
+      "status": 1,
+      "type_id": 2
+    },
+    "model": "api.organization",
+    "pk": 33
+  },
+  {
+    "fields": {
+      "name": "Powerex Corporation",
+      "actions_type": 1,
+      "status": 1,
+      "type_id": 2
+    },
+    "model": "api.organization",
+    "pk": 34
+  },
+  {
+    "fields": {
+      "name": "Powertech Labs Inc.",
+      "actions_type": 1,
+      "status": 1,
+      "type_id": 2
+    },
+    "model": "api.organization",
+    "pk": 35
+  },
+  {
+    "fields": {
+      "name": "Shell Canada Products",
+      "actions_type": 1,
+      "status": 1,
+      "type_id": 2
+    },
+    "model": "api.organization",
+    "pk": 36
+  },
+  {
+    "fields": {
+      "name": "Smithrite Disposal Limited",
+      "actions_type": 1,
+      "status": 1,
+      "type_id": 2
+    },
+    "model": "api.organization",
+    "pk": 37
+  },
+  {
+    "fields": {
+      "name": "Suncor Energy Products Partnership",
+      "actions_type": 1,
+      "status": 1,
+      "type_id": 2
+    },
+    "model": "api.organization",
+    "pk": 38
+  },
+  {
+    "fields": {
+      "name": "South Coast BC Transportation Authority (Translink)",
+      "actions_type": 1,
+      "status": 1,
+      "type_id": 2
+    },
+    "model": "api.organization",
+    "pk": 39
+  },
+  {
+    "fields": {
+      "name": "Superior Propane",
+      "actions_type": 1,
+      "status": 1,
+      "type_id": 2
+    },
+    "model": "api.organization",
+    "pk": 40
+  },
+  {
+    "fields": {
+      "name": "Super Save Enterprises Ltd.",
+      "actions_type": 1,
+      "status": 1,
+      "type_id": 2
+    },
+    "model": "api.organization",
+    "pk": 41
+  },
+  {
+    "fields": {
+      "name": "United Parcel Services, Inc.",
+      "actions_type": 1,
+      "status": 1,
+      "type_id": 2
+    },
+    "model": "api.organization",
+    "pk": 42
+  },
+  {
+    "fields": {
+      "name": "Waste Connections of Canada Inc.",
+      "actions_type": 1,
+      "status": 1,
+      "type_id": 2
+    },
+    "model": "api.organization",
+    "pk": 43
+  },
+  {
+    "fields": {
+      "name": "Waste Management, Inc.",
+      "actions_type": 1,
+      "status": 1,
+      "type_id": 2
+    },
+    "model": "api.organization",
+    "pk": 44
+  }
+]
