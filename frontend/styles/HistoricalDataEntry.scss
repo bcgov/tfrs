@@ -1,0 +1,40 @@
+@import './variables.scss';
+
+.historical-data-entry {
+  label {
+    display: block;
+    font-weight: normal;
+
+    > div.btn-group {
+      display: block;
+
+      &:after {
+        clear: both;
+        content: "";
+        display: block;
+      }
+    }
+  }
+
+  .btn-group .btn {
+    margin-right: 0;
+  }
+
+  .dollar-per-credit {
+    border: 0;
+    box-shadow: unset;
+    -webkit-box-shadow: unset;
+    font-weight: bold;
+  }
+
+  .main-form {
+    margin-left: -15px;
+    margin-right: -15px;
+  }
+
+  .note {
+    textarea {
+      resize: none;
+    }
+  }
+}
