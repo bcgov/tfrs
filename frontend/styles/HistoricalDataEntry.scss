@@ -16,6 +16,10 @@
     }
   }
 
+  .btn-container {
+    text-align: right;
+  }
+
   .btn-group .btn {
     margin-right: 0;
   }
@@ -36,5 +40,13 @@
     textarea {
       resize: none;
     }
+  }
+}
+
+.historical-data-entry-actions {
+  margin-top: 15px;
+
+  .btn-container {    
+    text-align: right;
   }
 }
