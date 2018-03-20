@@ -41,7 +41,7 @@ class Navbar extends Component {
           <Link id="navbar-settings" to={Routes.SETTINGS}>
             Settings
           </Link>
-          <Link id="navbar-administration" to={Routes.ADMINISTRATION}>
+          <Link id="navbar-administration" to={Routes.HISTORICAL_DATA_ENTRY}>
             Administration
           </Link>
         </div>
