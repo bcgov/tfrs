@@ -5,6 +5,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import numeral from 'numeral';
 
+import * as Lang from '../../../constants/langEnUs';
 import * as NumberFormat from '../../../constants/numeralFormats';
 
 import HistoricalDataEntryFormNote from './HistoricalDataEntryFormNote';
@@ -136,6 +137,19 @@ const HistoricalDataEntryFormDetails = props => (
             note={props.fields.note}
             handleInputChange={props.handleInputChange}
           />
+        </div>
+      </div>
+
+      <div className="row">
+        <div className="col-md-12">
+          <div className="form-group btn-container">
+            <button
+              type="button" 
+              className="btn btn-primary"
+            >
+              {Lang.BTN_ADD_TO_QUEUE}
+            </button>
+          </div>
         </div>
       </div>
     </div>

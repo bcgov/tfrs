@@ -20,7 +20,7 @@ const HistoricalDataTable = (props) => {
   }, {
     id: 'effectiveDate',
     Header: 'Effective Date',
-    accessor: item => item.effectiveDate
+    accessor: item => item.tradeEffectiveDate
   }, {
     id: 'transactionType',
     Header: 'Transaction Type',

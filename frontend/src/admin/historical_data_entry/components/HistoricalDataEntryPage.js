@@ -2,10 +2,15 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 
+import * as Lang from '../../../constants/langEnUs';
 import * as Routes from '../../../constants/routes';
+
 import Loading from '../../../app/components/Loading';
 import HistoricalDataEntryForm from './HistoricalDataEntryForm';
+import HistoricalDataEntryFormButtons from './HistoricalDataEntryFormButtons';
 import HistoricalDataTable from './HistoricalDataTable';
+
+const buttonActions = [Lang.BTN_SAVE_DRAFT, Lang.BTN_COMMIT];
 
 const HistoricalDataEntryPage = (props) => {
   const { isFetching, items } = props.historicalData;
@@ -31,10 +36,10 @@ const HistoricalDataEntryPage = (props) => {
         isEmpty={isEmpty}
       />
       }
-      <div>
-        <button type="button">Cancel</button>
-        <button type="button">Commit</button>
-      </div>
+      <HistoricalDataEntryFormButtons 
+        id={props.id}
+        actions={buttonActions}
+      />
     </div>
   );
 };
@@ -72,6 +77,7 @@ HistoricalDataEntryPage.propTypes = {
     items: PropTypes.arrayOf(PropTypes.shape()).isRequired,
     isFetching: PropTypes.bool.isRequired
   }).isRequired,
+  id: PropTypes.number,
   title: PropTypes.string.isRequired,
   totalValue: PropTypes.number.isRequired,
 };
