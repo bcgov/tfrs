@@ -13,7 +13,7 @@ import HistoricalDataEntryFormNote from './HistoricalDataEntryFormNote';
 const HistoricalDataEntryFormDetails = props => (
   <div className="historical-data-entry-form-details">
     <div className="main-form">
-      <div className="form-row">
+      <div className="row">
         <div className="col-md-6">
           <div className="form-group">
             <label htmlFor="effective-date">Effective Date:
@@ -33,10 +33,10 @@ const HistoricalDataEntryFormDetails = props => (
           <div className="form-group">
             <label htmlFor="transfer-type">Transfer Type:
               <div className="btn-group" role="group">
-                <button type="button" className="btn btn-default">Credit Transfer</button>
-                <button type="button" className="btn btn-default">Part 3 Award</button>
-                <button type="button" className="btn btn-default">Validation</button>
-                <button type="button" className="btn btn-default">Reduction</button>
+                <button type="button" className={`btn btn-default ${(props.fields.transferType == '1') ? 'active' : ''}`} name="transferType" value="1" onClick={props.handleInputChange}>Credit Transfer</button>
+                <button type="button" className={`btn btn-default ${(props.fields.transferType == '5') ? 'active' : ''}`} name="transferType" value="5" onClick={props.handleInputChange}>Part 3 Award</button>
+                <button type="button" className={`btn btn-default ${(props.fields.transferType == '3') ? 'active' : ''}`} name="transferType" value="3" onClick={props.handleInputChange}>Validation</button>
+                <button type="button" className={`btn btn-default ${(props.fields.transferType == '4') ? 'active' : ''}`} name="transferType" value="4" onClick={props.handleInputChange}>Reduction</button>
               </div>
             </label>
           </div>
@@ -116,15 +116,15 @@ const HistoricalDataEntryFormDetails = props => (
 
           <div className="form-group">
             <label htmlFor="dollar-per-credit">...for a total of:
-              <div className="form-control dollar-per-credit">{numeral(props.totalValue).format(NumberFormat.CURRENCY)}</div>
+              <div className="form-control dollar-per-credit">{numeral(props.totalValue).format(NumberFormat.CURRENCY)} *</div>
             </label>
           </div>
 
           <div className="form-group">
-            <label htmlFor="transfer-type">Zero Dollar Reason:
+            <label htmlFor="transfer-type">Zero Dollar Reason: **
               <div className="btn-group" role="group">
-                <button type="button" className="btn btn-default">Affiliate</button>
-                <button type="button" className="btn btn-default">Other</button>
+                <button type="button" className={`btn btn-default ${(props.fields.zeroDollarReason == '1') ? 'active' : ''}`} name="zeroDollarReason" value="1" onClick={props.handleInputChange}>Affiliate</button>
+                <button type="button" className={`btn btn-default ${(props.fields.zeroDollarReason == '2') ? 'active' : ''}`} name="zeroDollarReason" value="2" onClick={props.handleInputChange}>Other</button>
               </div>
             </label>
           </div>
@@ -146,10 +146,20 @@ const HistoricalDataEntryFormDetails = props => (
             <button
               type="button" 
               className="btn btn-primary"
+              onClick={props.handleSubmit}
             >
               {Lang.BTN_ADD_TO_QUEUE}
             </button>
           </div>
+        </div>
+      </div>
+
+      <div className="row">
+        <div className="col-md-12">
+          <div className="form-group">
+            <div>* Does not include GST</div>
+            <div>** Optional if not a Zero Dollar transaction</div>
+            </div>
         </div>
       </div>
     </div>
@@ -167,17 +177,15 @@ HistoricalDataEntryFormDetails.propTypes = {
       name: PropTypes.string,
       id: PropTypes.number
     }),
-    effectiveDate: PropTypes.instanceOf(Date),
+    effectiveDate: PropTypes.string,
     numberOfCredits: PropTypes.string,
     dollarPerCredit: PropTypes.string,
     note: PropTypes.string.isRequired,
-    transferType: PropTypes.shape({
-      name: PropTypes.string,
-      id: PropTypes.number
-    }),
+    transferType: PropTypes.string,
     zeroDollarReason: PropTypes.string
   }).isRequired,
   handleInputChange: PropTypes.func.isRequired,
+  handleSubmit: PropTypes.func.isRequired,
   totalValue: PropTypes.number.isRequired
 };
 

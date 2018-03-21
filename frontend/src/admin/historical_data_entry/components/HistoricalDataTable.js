@@ -16,15 +16,18 @@ import * as Routes from '../../../constants/routes';
 const HistoricalDataTable = (props) => {
   const columns = [{
     Header: 'ID',
-    accessor: 'id'
+    accessor: 'id',
+    className: 'col-id'
   }, {
     id: 'effectiveDate',
     Header: 'Effective Date',
-    accessor: item => item.tradeEffectiveDate
+    accessor: item => item.tradeEffectiveDate,
+    className: 'col-effective-date'
   }, {
     id: 'transactionType',
     Header: 'Transaction Type',
-    accessor: item => item.transactionType
+    accessor: item => item.type.theType,
+    className: 'col-transfer-type'
   }, {
     id: 'creditsFrom',
     Header: 'Credits From',
@@ -43,11 +46,13 @@ const HistoricalDataTable = (props) => {
   }, {
     id: 'numberOfCredits',
     Header: 'Credits',
-    accessor: item => numeral(item.numberOfCredits).format(NumberFormat.INT)
+    accessor: item => numeral(item.numberOfCredits).format(NumberFormat.INT),
+    className: 'col-credits'
   }, {
     id: 'totalvalue',
     Header: 'Price',
-    accessor: item => numeral(item.totalValue).format(NumberFormat.CURRENCY)
+    accessor: item => numeral(item.totalValue).format(NumberFormat.CURRENCY),
+    className: 'col-price'
   }, {
     id: 'zeroReason',
     Header: 'Zero Reason',
@@ -58,8 +63,13 @@ const HistoricalDataTable = (props) => {
     accessor: 'id',
     Cell: (row) => {
       const editUrl = `${Routes.HISTORICAL_DATA_ENTRY}/edit/${row.value}`;
-      return <span><Link to={editUrl}><FontAwesomeIcon icon="edit" /></Link>
-      <a><FontAwesomeIcon icon="trash" /></a></span>;
+      
+      return (
+        <div className="col-actions">
+          <Link className="action" to={editUrl}><FontAwesomeIcon icon="edit" /></Link>
+          <a className="action" data-toggle="modal" data-target="#confirmDelete" onClick={() => props.selectIdForModal(row.value)}><FontAwesomeIcon icon="trash" /></a>
+        </div>
+      );
     }
   }];
 
@@ -84,9 +94,10 @@ const HistoricalDataTable = (props) => {
 };
 
 HistoricalDataTable.propTypes = {
-  items: PropTypes.arrayOf(PropTypes.object).isRequired,
   isEmpty: PropTypes.bool.isRequired,
-  isFetching: PropTypes.bool.isRequired
+  isFetching: PropTypes.bool.isRequired,
+  items: PropTypes.arrayOf(PropTypes.object).isRequired,
+  selectIdForModal: PropTypes.func
 };
 
 export default HistoricalDataTable;

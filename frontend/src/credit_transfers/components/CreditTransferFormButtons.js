@@ -117,7 +117,7 @@ const CreditTransferFormButtons = props => (
               className="btn btn-default"
               data-dismiss="modal"
             >
-              {Lang.APP_CANCEL}
+              {Lang.BTN_APP_CANCEL}
             </button>
             <button
               type="button"

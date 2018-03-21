@@ -21,14 +21,18 @@ class HistoricalDataEntryContainer extends Component {
         creditsFrom: {},
         creditsTo: { id: 0, name: '' },
         dollarPerCredit: '',
+        effectiveDate: '',
         note: '',
-        numberOfCredits: ''
+        numberOfCredits: '',
+        transferType: ''
       },
+      selectedId: 0,
       totalValue: 0
     };
 
     this._handleInputChange = this._handleInputChange.bind(this);
     this._handleSubmit = this._handleSubmit.bind(this);
+    this._selectIdForModal = this._selectIdForModal.bind(this);
   }
 
   _handleInputChange (event) {
@@ -52,17 +56,22 @@ class HistoricalDataEntryContainer extends Component {
     const data = {
       creditsFrom: this.state.fields.creditsFrom.id,
       creditsTo: this.state.fields.creditsTo.id,
-      effectiveDate: null,
+      effectiveDate: this.state.fields.effectiveDate,
       numberOfCredits: parseInt(this.state.fields.numberOfCredits, 10),
       note: this.state.fields.note,
+      transferType: this.state.fields.transferType,
+      zeroDollarReason: this.state.fields.zeroDollarReason
     };
 
-    this.props.addCreditTransfer(data).then(() => {
-      this.props.invalidateCreditTransfers();
-      history.push(Routes.CREDIT_TRANSACTIONS);
-    });
+    console.log(data);
 
     return false;
+  }
+
+  _selectIdForModal (id) {
+    this.setState({
+      selectedId: id
+    });
   }
 
   changeObjectProp (id, name) {
@@ -97,13 +106,15 @@ class HistoricalDataEntryContainer extends Component {
 
   render () {
     return (
-      <HistoricalDataEntryPage 
+      <HistoricalDataEntryPage
         errors={this.props.errors}
         fields={this.state.fields}
         fuelSuppliers={this.props.fuelSuppliers}
         handleInputChange={this._handleInputChange}
         handleSubmit={this._handleSubmit}
         historicalData={this.props.historicalData}
+        selectedId={this.state.selectedId}
+        selectIdForModal={this._selectIdForModal}
         title="Historical Data Entry"
         totalValue={this.state.totalValue}
       />
@@ -129,7 +140,8 @@ HistoricalDataEntryContainer.propTypes = {
       name: PropTypes.string,
       id: PropTypes.number
     })
-  }).isRequired
+  }).isRequired,
+  selectedId: PropTypes.number
 };
 
 const mapStateToProps = state => ({
