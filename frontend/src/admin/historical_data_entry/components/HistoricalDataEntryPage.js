@@ -9,6 +9,7 @@ import Loading from '../../../app/components/Loading';
 import HistoricalDataEntryForm from './HistoricalDataEntryForm';
 import HistoricalDataEntryFormButtons from './HistoricalDataEntryFormButtons';
 import HistoricalDataTable from './HistoricalDataTable';
+import ModalDeleteCreditTransfer from '../../../credit_transfers/components/ModalDeleteCreditTransfer';
 
 const buttonActions = [Lang.BTN_SAVE_DRAFT, Lang.BTN_COMMIT];
 
@@ -34,19 +35,20 @@ const HistoricalDataEntryPage = (props) => {
         items={items}
         isFetching={isFetching}
         isEmpty={isEmpty}
+        selectIdForModal={props.selectIdForModal}
       />
       }
-      <HistoricalDataEntryFormButtons 
-        id={props.id}
-        actions={buttonActions}
+      <HistoricalDataEntryFormButtons actions={buttonActions} />
+
+      <ModalDeleteCreditTransfer 
+        selectedId={props.selectedId}
       />
     </div>
   );
 };
 
 HistoricalDataEntryPage.defaultProps = {
-  title: 'Credit Transfer',
-  id: 0
+  title: 'Credit Transfer'
 };
 
 HistoricalDataEntryPage.propTypes = {
@@ -60,14 +62,11 @@ HistoricalDataEntryPage.propTypes = {
       name: PropTypes.string,
       id: PropTypes.number
     }),
-    effectiveDate: PropTypes.instanceOf(Date),
+    effectiveDate: PropTypes.string,
     numberOfCredits: PropTypes.string,
     dollarPerCredit: PropTypes.string,
     note: PropTypes.string.isRequired,
-    transferType: PropTypes.shape({
-      name: PropTypes.string,
-      id: PropTypes.number
-    }),
+    transferType: PropTypes.string,
     zeroDollarReason: PropTypes.string
   }).isRequired,
   fuelSuppliers: PropTypes.arrayOf(PropTypes.shape()).isRequired,
@@ -77,7 +76,8 @@ HistoricalDataEntryPage.propTypes = {
     items: PropTypes.arrayOf(PropTypes.shape()).isRequired,
     isFetching: PropTypes.bool.isRequired
   }).isRequired,
-  id: PropTypes.number,
+  selectedId: PropTypes.number,
+  selectIdForModal: PropTypes.func,
   title: PropTypes.string.isRequired,
   totalValue: PropTypes.number.isRequired,
 };

@@ -21,6 +21,7 @@ const HistoricalDataEntryForm = props => (
         fuelSuppliers={props.fuelSuppliers}
         fields={props.fields}
         handleInputChange={props.handleInputChange}
+        handleSubmit={props.handleSubmit}
         totalValue={props.totalValue}
       />
       {Object.keys(props.errors).length > 0 &&
@@ -35,7 +36,6 @@ HistoricalDataEntryForm.defaultProps = {
 };
 
 HistoricalDataEntryForm.propTypes = {
-  id: PropTypes.number,
   fuelSuppliers: PropTypes.arrayOf(PropTypes.shape()).isRequired,
   fields: PropTypes.shape({
     creditsFrom: PropTypes.shape({
@@ -46,14 +46,11 @@ HistoricalDataEntryForm.propTypes = {
       name: PropTypes.string,
       id: PropTypes.number
     }),
-    effectiveDate: PropTypes.instanceOf(Date),
-    numberOfCredits: PropTypes.string,
     dollarPerCredit: PropTypes.string,
+    effectiveDate: PropTypes.string,
     note: PropTypes.string.isRequired,
-    transferType: PropTypes.shape({
-      name: PropTypes.string,
-      id: PropTypes.number
-    }),
+    numberOfCredits: PropTypes.string,
+    transferType: PropTypes.string,
     zeroDollarReason: PropTypes.string
   }).isRequired,
   handleInputChange: PropTypes.func.isRequired,

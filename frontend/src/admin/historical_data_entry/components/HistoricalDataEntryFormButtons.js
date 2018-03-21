@@ -34,7 +34,6 @@ HistoricalDataEntryFormButtons.defaultProps = {
 };
 
 HistoricalDataEntryFormButtons.propTypes = {
-  id: PropTypes.number.isRequired,
   actions: PropTypes.arrayOf(PropTypes.string).isRequired
 };
 

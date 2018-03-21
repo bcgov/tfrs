@@ -1,52 +1,73 @@
 @import './variables.scss';
 
-.historical-data-entry {
-  label {
-    display: block;
-    font-weight: normal;
-
-    > div.btn-group {
+.page_historical_data_entry {
+  .historical-data-entry {
+    label {
       display: block;
+      font-weight: normal;
 
-      &:after {
-        clear: both;
-        content: "";
+      > div.btn-group {
         display: block;
+
+        &:after {
+          clear: both;
+          content: "";
+          display: block;
+        }
+      }
+    }
+
+    .btn-container {
+      text-align: right;
+    }
+
+    .btn-group .btn {
+      margin-right: 0;
+    }
+
+    .dollar-per-credit {
+      border: 0;
+      box-shadow: unset;
+      -webkit-box-shadow: unset;
+      font-weight: bold;
+    }
+
+    .main-form {
+      margin-left: -15px;
+      margin-right: -15px;
+    }
+
+    .note {
+      textarea {
+        resize: none;
       }
     }
   }
 
-  .btn-container {
-    text-align: right;
-  }
+  .historical-data-entry-actions {
+    margin-top: 15px;
 
-  .btn-group .btn {
-    margin-right: 0;
-  }
-
-  .dollar-per-credit {
-    border: 0;
-    box-shadow: unset;
-    -webkit-box-shadow: unset;
-    font-weight: bold;
-  }
-
-  .main-form {
-    margin-left: -15px;
-    margin-right: -15px;
-  }
-
-  .note {
-    textarea {
-      resize: none;
+    .btn-container {    
+      text-align: right;
     }
   }
-}
 
-.historical-data-entry-actions {
-  margin-top: 15px;
+  .rt-table {
+    .col-actions {
+      text-align: center;
 
-  .btn-container {    
-    text-align: right;
+      .action {
+        margin-left: 0.5rem;
+        margin-right: 0.5rem;
+      }
+    }
+
+    .col-credits, .col-price {
+      text-align: right;
+    }
+
+    .col-effective-date, .col-id {
+      text-align: center;
+    }
   }
 }
