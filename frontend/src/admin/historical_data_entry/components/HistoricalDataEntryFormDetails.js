@@ -9,6 +9,7 @@ import * as Lang from '../../../constants/langEnUs';
 import * as NumberFormat from '../../../constants/numeralFormats';
 
 import HistoricalDataEntryFormNote from './HistoricalDataEntryFormNote';
+import HistoricalDataEntryFormButtons from './HistoricalDataEntryFormButtons';
 
 const HistoricalDataEntryFormDetails = props => (
   <div className="historical-data-entry-form-details">
@@ -50,6 +51,7 @@ const HistoricalDataEntryFormDetails = props => (
                 value={props.fields.creditsFrom.id}
                 onChange={props.handleInputChange}
                 required="required"
+                disabled={props.fields.transferType == 5}
               >
                 <option key="0" value="" default />
                 {props.fuelSuppliers &&
@@ -100,6 +102,7 @@ const HistoricalDataEntryFormDetails = props => (
 
           <div className="form-group">
             <label htmlFor="dollar-per-credit">Dollar per Credit:
+              { (props.fields.transferType != 5) ?
               <input
                 type="number"
                 data-number-to-fixed="2"
@@ -111,20 +114,27 @@ const HistoricalDataEntryFormDetails = props => (
                 onChange={props.handleInputChange}
                 required="required"
               />
+              : 
+              <div className="form-control dollar-per-credit">None</div>
+              }
             </label>
           </div>
 
           <div className="form-group">
-            <label htmlFor="dollar-per-credit">...for a total of:
+            <label>...for a total of:
+              { (props.fields.transferType != 5) ?
               <div className="form-control dollar-per-credit">{numeral(props.totalValue).format(NumberFormat.CURRENCY)} *</div>
+              :
+              <div className="form-control dollar-per-credit">N/A</div>
+              }
             </label>
           </div>
 
           <div className="form-group">
             <label htmlFor="transfer-type">Zero Dollar Reason: **
               <div className="btn-group" role="group">
-                <button type="button" className={`btn btn-default ${(props.fields.zeroDollarReason == '1') ? 'active' : ''}`} name="zeroDollarReason" value="1" onClick={props.handleInputChange}>Affiliate</button>
-                <button type="button" className={`btn btn-default ${(props.fields.zeroDollarReason == '2') ? 'active' : ''}`} name="zeroDollarReason" value="2" onClick={props.handleInputChange}>Other</button>
+                <button type="button" className={`btn btn-default ${(props.fields.zeroDollarReason == '1') ? 'active' : ''}`} disabled={props.fields.transferType == 5} name="zeroDollarReason" value="1" onClick={props.handleInputChange}>Affiliate</button>
+                <button type="button" className={`btn btn-default ${(props.fields.zeroDollarReason == '2') ? 'active' : ''}`} disabled={props.fields.transferType == 5} name="zeroDollarReason" value="2" onClick={props.handleInputChange}>Other</button>
               </div>
             </label>
           </div>
@@ -142,14 +152,11 @@ const HistoricalDataEntryFormDetails = props => (
 
       <div className="row">
         <div className="col-md-12">
-          <div className="form-group btn-container">
-            <button
-              type="button" 
-              className="btn btn-primary"
-              onClick={props.handleSubmit}
-            >
-              {Lang.BTN_ADD_TO_QUEUE}
-            </button>
+          <div className="form-group">
+            <HistoricalDataEntryFormButtons 
+              actions={props.actions} 
+              handleSubmit={props.handleSubmit}
+            />
           </div>
         </div>
       </div>
@@ -167,6 +174,7 @@ const HistoricalDataEntryFormDetails = props => (
 );
 
 HistoricalDataEntryFormDetails.propTypes = {
+  actions: PropTypes.arrayOf(PropTypes.string).isRequired,
   fuelSuppliers: PropTypes.arrayOf(PropTypes.shape()).isRequired,
   fields: PropTypes.shape({
     creditsFrom: PropTypes.shape({

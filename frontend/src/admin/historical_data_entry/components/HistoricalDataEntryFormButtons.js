@@ -7,26 +7,46 @@ import * as Lang from '../../../constants/langEnUs';
 import history from '../../../app/History';
 
 const HistoricalDataEntryFormButtons = props => (
-  <div className="historical-data-entry-actions">
-    <div className="btn-container">
-      <button
-        type="button"
-        className="btn btn-default"
-        onClick={() => history.goBack()}
-      >
-        {Lang.BTN_APP_CANCEL}
-      </button>
+  <div className="btn-container">
+    {props.actions.includes(Lang.BTN_CANCEL) &&
+    <button
+      type="button"
+      className="btn btn-default"
+      onClick={() => history.goBack()}
+    >
+      {Lang.BTN_APP_CANCEL}
+    </button>
+    }
 
-      {props.actions.includes(Lang.BTN_COMMIT) &&
-      <button
-        type="submit"
-        className="btn btn-primary"
-        onClick={() => {}}
-      >
-        {Lang.BTN_COMMIT}
-      </button>
-      }
-    </div>
+    {props.actions.includes(Lang.BTN_COMMIT) &&
+    <button
+      type="button"
+      className="btn btn-primary"
+      onClick={() => {}}
+    >
+      {Lang.BTN_COMMIT}
+    </button>
+    }
+
+    {props.actions.includes(Lang.BTN_ADD_TO_QUEUE) &&
+    <button
+      type="submit"
+      className="btn btn-primary"
+      onClick={() => props.handleSubmit}
+    >
+      {Lang.BTN_ADD_TO_QUEUE}
+    </button>
+    }
+
+    {props.actions.includes(Lang.BTN_SAVE_DRAFT) &&
+    <button
+      type="submit"
+      className="btn btn-primary"
+      onClick={() => props.handleSubmit}
+    >
+      {Lang.BTN_SAVE_DRAFT}
+    </button>
+    }
   </div>
 );
 

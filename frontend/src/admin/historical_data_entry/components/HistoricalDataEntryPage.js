@@ -11,7 +11,8 @@ import HistoricalDataEntryFormButtons from './HistoricalDataEntryFormButtons';
 import HistoricalDataTable from './HistoricalDataTable';
 import ModalDeleteCreditTransfer from '../../../credit_transfers/components/ModalDeleteCreditTransfer';
 
-const buttonActions = [Lang.BTN_SAVE_DRAFT, Lang.BTN_COMMIT];
+const buttonActions = [Lang.BTN_CANCEL, Lang.BTN_COMMIT];
+const formActions = [Lang.BTN_ADD_TO_QUEUE];
 
 const HistoricalDataEntryPage = (props) => {
   const { isFetching, items } = props.historicalData;
@@ -21,6 +22,7 @@ const HistoricalDataEntryPage = (props) => {
     <div className="page_historical_data_entry">
       <h1>{props.title}</h1>
       <HistoricalDataEntryForm
+        actions={formActions}
         errors={props.errors}
         fuelSuppliers={props.fuelSuppliers}
         fields={props.fields}
@@ -38,7 +40,9 @@ const HistoricalDataEntryPage = (props) => {
         selectIdForModal={props.selectIdForModal}
       />
       }
-      <HistoricalDataEntryFormButtons actions={buttonActions} />
+      <div className="historical-data-entry-actions">
+        <HistoricalDataEntryFormButtons actions={buttonActions} />
+      </div>
 
       <ModalDeleteCreditTransfer 
         selectedId={props.selectedId}
