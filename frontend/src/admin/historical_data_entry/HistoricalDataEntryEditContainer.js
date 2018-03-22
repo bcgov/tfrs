@@ -8,11 +8,15 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import PropTypes from 'prop-types';
 
+import * as Lang from '../../constants/langEnUs';
 import * as Routes from '../../constants/routes';
 import { getFuelSuppliers } from '../../actions/organizationActions';
-import HistoricalDataEntryPage from './components/HistoricalDataEntryPage';
+import { getCreditTransfer } from '../../actions/creditTransfersActions';
+import HistoricalDataEntryForm from './components/HistoricalDataEntryForm';
 
-class HistoricalDataEntryContainer extends Component {
+const buttonActions = [Lang.BTN_CANCEL, Lang.BTN_SAVE_DRAFT];
+
+class HistoricalDataEntryEditContainer extends Component {
   constructor (props) {
     super(props);
     this.state = {
@@ -57,11 +61,13 @@ class HistoricalDataEntryContainer extends Component {
       creditsTo: this.state.fields.creditsTo.id,
       dollarPerCredit: this.state.fields.dollarPerCredit,
       effectiveDate: this.state.fields.effectiveDate,
-      note: this.state.fields.note,
       numberOfCredits: parseInt(this.state.fields.numberOfCredits, 10),
+      note: this.state.fields.note,
       transferType: this.state.fields.transferType,
       zeroDollarReason: this.state.fields.zeroDollarReason
     };
+
+    const { id } = this.props.item;
 
     console.log(data);
 
@@ -84,15 +90,12 @@ class HistoricalDataEntryContainer extends Component {
   }
 
   componentDidMount () {
+    this.loadData(this.props.match.params.id);
     this.props.getFuelSuppliers();
   }
 
   componentWillReceiveProps (props) {
-    const fieldState = { ...this.state.fields };
-
-    this.setState({
-      fields: fieldState
-    });
+    this.loadPropsToFieldState(props);
   }
 
   computeTotalValue (name) {
@@ -104,50 +107,70 @@ class HistoricalDataEntryContainer extends Component {
     }
   }
 
+  loadData (id) {
+    this.props.getCreditTransfer(id);
+  }
+
+  loadPropsToFieldState (props) {
+    if (Object.keys(props.item).length !== 0) {
+      const { item } = props;
+
+      const fieldState = {
+        creditsFrom: item.creditsFrom,
+        creditsTo: item.creditsTo,
+        dollarPerCredit: item.fairMarketValuePerCredit,
+        effectiveDate: (item.tradeEffectiveDate) ? item.tradeEffectiveDate.toString() : '',
+        note: '',
+        numberOfCredits: item.numberOfCredits.toString(),
+        transferType: item.type.id.toString(),
+        zeroDollarReason: item.zeroReason
+      };
+
+      this.setState({
+        fields: fieldState,
+        totalValue: item.totalValue
+      });
+    }
+  }
+
   render () {
     return (
-      <HistoricalDataEntryPage
+      <HistoricalDataEntryForm
+        actions={buttonActions}
         errors={this.props.errors}
-        fields={this.state.fields}
         fuelSuppliers={this.props.fuelSuppliers}
+        fields={this.state.fields}
         handleInputChange={this._handleInputChange}
         handleSubmit={this._handleSubmit}
-        historicalData={this.props.historicalData}
-        selectedId={this.state.selectedId}
-        selectIdForModal={this._selectIdForModal}
-        title="Historical Data Entry"
         totalValue={this.state.totalValue}
       />
     );
   }
 }
 
-HistoricalDataEntryContainer.defaultProps = {
+HistoricalDataEntryEditContainer.defaultProps = {
   errors: {}
 }
 
-HistoricalDataEntryContainer.propTypes = {
+HistoricalDataEntryEditContainer.propTypes = {
   errors: PropTypes.shape({}),
   fuelSuppliers: PropTypes.arrayOf(PropTypes.shape()).isRequired,
+  getCreditTransfer: PropTypes.func.isRequired,
   getFuelSuppliers: PropTypes.func.isRequired,
-  historicalData: PropTypes.shape({
-    items: PropTypes.arrayOf(PropTypes.shape()).isRequired,
-    isFetching: PropTypes.bool.isRequired
-  }).isRequired,
+  isFetching: PropTypes.bool.isRequired,
   selectedId: PropTypes.number
 };
 
 const mapStateToProps = state => ({
   errors: state.rootReducer.creditTransfers.errors,
   fuelSuppliers: state.rootReducer.fuelSuppliersRequest.fuelSuppliers,
-  historicalData: {
-    items: state.rootReducer.creditTransfers.items,
-    isFetching: state.rootReducer.creditTransfers.isFetching
-  }
+  isFetching: state.rootReducer.creditTransfer.isFetching,
+  item: state.rootReducer.creditTransfer.item,
 });
 
 const mapDispatchToProps = dispatch => ({
+  getCreditTransfer: bindActionCreators(getCreditTransfer, dispatch),
   getFuelSuppliers: bindActionCreators(getFuelSuppliers, dispatch)
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(HistoricalDataEntryContainer);
+export default connect(mapStateToProps, mapDispatchToProps)(HistoricalDataEntryEditContainer);

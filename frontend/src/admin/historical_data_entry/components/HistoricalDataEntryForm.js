@@ -9,15 +9,14 @@ import HistoricalDataEntryFormDetails from './HistoricalDataEntryFormDetails';
 
 import * as Lang from '../../../constants/langEnUs';
 
-const buttonActions = [Lang.BTN_SAVE_DRAFT, Lang.BTN_PROPOSE];
-
 const HistoricalDataEntryForm = props => (
   <div className="historical-data-entry">
     <form
       onSubmit={(event, status) =>
         props.handleSubmit(event, '')}
     >
-      <HistoricalDataEntryFormDetails 
+      <HistoricalDataEntryFormDetails
+        actions={props.actions}
         fuelSuppliers={props.fuelSuppliers}
         fields={props.fields}
         handleInputChange={props.handleInputChange}
@@ -36,6 +35,7 @@ HistoricalDataEntryForm.defaultProps = {
 };
 
 HistoricalDataEntryForm.propTypes = {
+  actions: PropTypes.arrayOf(PropTypes.string).isRequired,
   fuelSuppliers: PropTypes.arrayOf(PropTypes.shape()).isRequired,
   fields: PropTypes.shape({
     creditsFrom: PropTypes.shape({

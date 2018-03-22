@@ -85,7 +85,7 @@ const HistoricalDataTable = (props) => {
   return (
     <ReactTable
       data={props.items}
-      defaultPageSize={25}
+      defaultPageSize={10}
       filterable={filterable}
       defaultFilterMethod={filterMethod}
       columns={columns}
