@@ -18,10 +18,30 @@ You may go down this route if you're working on both the api and the front-end c
 The easiest way to have it up and running locally is to setup a web proxy (nginx or apache) in your local machine that has the path `/` pointing to the front-end server and `/api` pointing to the api server.
 
 This project requires authentication via SiteMinder headers. You would need to configure your web proxy to set specific headers:
+
+*Internal/Gov user*
 ```
-proxy_set_header Host            $host;
-proxy_set_header X-Forwarded-For $remote_addr;
-proxy_set_header Sm-UniversalId  "YOUR_USERNAME";
-proxy_set_header Smgov-Userguid  "b5762a7b-87ba-46d0-b050-f4459124f60a";
+proxy_set_header Host                  $host;
+proxy_set_header X-Forwarded-For       $remote_addr;
+proxy_set_header Sm-UniversalId        "YOUR_USERNAME";
+proxy_set_header Smgov-Userguid        "VALID_GUID";
+proxy_set_header Sm-Authdirname        "IDIR";
+proxy_set_header Smgov-USERTYPE        "Internal";
+proxy_set_header Smgov-Useremail       "YOUR_EMAIL";
+proxy_set_header Smgov-UserDisplayName "LAST_NAME, FIRST_NAME MINISTRY:EX";
 ```
+
+*External/Business user*
+```
+proxy_set_header Host                     $host;
+proxy_set_header X-Forwarded-For          $remote_addr;
+proxy_set_header Sm-UniversalId           "YOUR_USERNAME";
+proxy_set_header Smgov-Userguid           "VALID_GUID";
+proxy_set_header Smgov-BusinessLegalName  "BUSINESS_NAME";
+proxy_set_header Smauth-Businesslegalname "BUSINESS_NAME";
+proxy_set_header Smgov-Businessguid       "VALID_GUID";
+proxy_set_header Smgov-Useremail          "YOUR_EMAIL";
+proxy_set_header Smgov-UserDisplayName    "FIRST_NAME LAST_NAME";
+```
+
 It then checks this header against the  `authorization_id` field on `user` table in the database.
