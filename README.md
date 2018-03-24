@@ -18,7 +18,7 @@ Facilitates online Fuel Reporting and Low Carbon Fuel credit transfers supportin
 - Government awards credits for infrastructure projects
 - Government validates credits from the supply of low carbon fuels
 
-Files in this repository
+** Files in this repository**
 ```
 backend/                   - Backend codebase
 docs/                      - Documentation
@@ -45,35 +45,27 @@ Documentation for system data is dynamical generated using Schema Spy:
 http://schema-spy-mem-tfrs-dev.pathfinder.gov.bc.ca/index.html  
 > To learn more about the regulation governing the disclosure of data in this system please read [Renewable and Low Carbon Fuel Requirements Regulation 11.11 \(5\)](http://www.bclaws.ca/EPLibraries/bclaws_new/document/ID/freeside/394_2008#section11.11)
 
-### Code
-- css and js libraries provided as part of the Gov 2.0 Bootstrap Skeleton
-- Django/Python
-- React
-
 ### Project Status
 This project is in development.
 To see the status of feature development please refer to the [features](https://github.com/bcgov/tfrs/wiki/features/) page on the project wiki
 
-### Getting Started (development)
-This project is a Single Page Application with a REST API backend and a JavaScript (React) front-end. You can read more about it [here](docs/SUMMARY.md)
+### Documentation
+You can find project and development documentation in the [docs](/docs/) folder. The docs folder can also run on gitbook if you want to view it nicely formatted.
 
-#### Authentication
+**Running the documentation on gitbook**
 
-This project has implemented authentication via SiteMinder/BCeID. The entire application is protected by SiteMinder. It uses the headers sent by SiteMinder to authenticate a user. You can read more about it [here](docs/auth.md)
-
-#### REST API Server
-[View the README for the backend](backend/README.md)
-
-#### Front-End JavaScript Client
-[View the README for the frontend](frontend/README.md)
+Install gitbook using npm, cd to the folder & run the server
+```bash
+$ npm install gitbook-cli -g
+$ cd docs/
+$ gitbook serve
+```
 
 ### Getting Help or Reporting an Issue
 To report bugs/issues/features requests, please file an [issue](https://github.com/bcgov/tfrs/issues/).
 
 ### How to Contribute
 If you would like to contribute, please see our [contributing](contributing.md) guidelines.
-
-There are also separate and specific contributing guidelines for our [frontend](frontend/contributing.md) and [backend](backend/contributing.md) codebases.
 
 Please note that this project is released with a [Contributor Code of Conduct](code_of_conduct.md). By participating in this project you agree to abide by its terms.
 
