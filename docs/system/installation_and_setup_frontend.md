@@ -1,5 +1,8 @@
 Installation and setup of the Frontend Application
 ------------------------
+
+This instructions works with the current version of nodejs (v9.7.1) & npm (5.6.0) as of 2018-03-22.
+
 ## Local Development
 ```bash
 $ npm install

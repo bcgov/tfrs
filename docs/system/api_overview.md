@@ -10,6 +10,10 @@ This project uses `pip` for managing dependencies. All the package dependencies 
 ### Django
 The project is currently using Django 1.11.
 
+There are currently two apps within the backend source code.
+* `tfrs` - the core app and the entry for all routing. Also contains all the settings
+* `api` - the api app
+
 ### Django Rest Framework
 The project uses the package [Django Rest Framework](http://www.django-rest-framework.org/) to build the API.
 
