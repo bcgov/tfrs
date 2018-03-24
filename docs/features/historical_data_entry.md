@@ -1,7 +1,7 @@
 Historical Data Entry Feature
 --------------------------
 
-**Status: ** *(in progress)*
+**Status:** *(in progress)*
 
 PURPOSE:
 

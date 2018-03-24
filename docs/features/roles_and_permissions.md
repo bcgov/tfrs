@@ -1,7 +1,7 @@
 Roles and Permissions
 --------
 
-**Status: ** *(not yet implemented)*
+**Status:** *(not yet implemented)*
 
 Django has Roles & Permissions built in but it looks like it only applies specifically to models, so my best guess is that we would need a custom implementation of Roles & Permissions
 

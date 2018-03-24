@@ -1,7 +1,7 @@
 Credit Balance Changes
 -----
 
-**Status: ** *(some might already be implemented)*
+**Status:** *(some might already be implemented)*
 
 Most of the features discussed in [controls](controls.md) deal with regular credit transfers (buy and sell).
 

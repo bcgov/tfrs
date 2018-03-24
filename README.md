@@ -45,11 +45,6 @@ Documentation for system data is dynamical generated using Schema Spy:
 http://schema-spy-mem-tfrs-dev.pathfinder.gov.bc.ca/index.html  
 > To learn more about the regulation governing the disclosure of data in this system please read [Renewable and Low Carbon Fuel Requirements Regulation 11.11 \(5\)](http://www.bclaws.ca/EPLibraries/bclaws_new/document/ID/freeside/394_2008#section11.11)
 
-### Code
-- css and js libraries provided as part of the Gov 2.0 Bootstrap Skeleton
-- Django/Python
-- React
-
 ### Project Status
 This project is in development.
 To see the status of feature development please refer to the [features](https://github.com/bcgov/tfrs/wiki/features/) page on the project wiki
@@ -71,8 +66,6 @@ To report bugs/issues/features requests, please file an [issue](https://github.c
 
 ### How to Contribute
 If you would like to contribute, please see our [contributing](contributing.md) guidelines.
-
-There are also separate and specific contributing guidelines for our [frontend](frontend/contributing.md) and [backend](backend/contributing.md) codebases.
 
 Please note that this project is released with a [Contributor Code of Conduct](code_of_conduct.md). By participating in this project you agree to abide by its terms.
 

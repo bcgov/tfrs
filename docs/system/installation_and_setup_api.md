@@ -103,4 +103,4 @@ $ python manage.py loaddata test_credit_trades.json test_organization_fuel_suppl
 ```
 
 ## Contributing
-See our [contributing guidelines](contributing.md)
+See our [contributing guidelines](api_contributing.md)

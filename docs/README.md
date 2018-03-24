@@ -10,3 +10,5 @@ TFRS facilitates online Fuel Reporting and Low Carbon Fuel credit transfers supp
 - Government approves credit transfers and tracks balances
 - Government awards credits for infrastructure projects
 - Government validates credits from the supply of low carbon fuels
+
+*Note: [The Table of Contents is located in the SUMMARY.md file](SUMMARY.md).

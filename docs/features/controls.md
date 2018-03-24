@@ -1,7 +1,7 @@
 Controls
 -----
 
-**Status: ** *(mostly implemented)*
+**Status:** *(mostly implemented)*
 
 "Controls" are Organization-based controls which determine which actions are available to the logged-in user depending on the credit transfer's status.
 
@@ -73,11 +73,13 @@ Here are the buttons that should show up for the actions available to an organiz
 |Recommended for Decision to Declined|Can only be done by a government director|Change status to `declined`|Government-only|
 
 
+
 ## Special controls & labels
 |Case|Reason|Label on UI|
 |---|---|---|---|
 |Proposed to Refused|Cancelled by a respondent|Refused|
 |Proposed to Rescinded|Cancelled by the initiator|Rescinded|
 |Accepted to Rescinded|Cancelled by any party after both have accepted|Rescinded|
+
 
 **Note: if a credit transfer has been `accepted` at any point, it should still show up in the government's list view of credit transfers. This applies to transfers that have been `accepted` and then later on `cancelled` (Rescinded).

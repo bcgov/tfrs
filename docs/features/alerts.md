@@ -1,7 +1,7 @@
 Alerts, Error Messages, etc.
 -------
 
-**Status: ** *(not yet implemented)*
+**Status:** *(not yet implemented)*
 
 
 The application should make extensive use of alerts to inform users of what is currently happening within the system. Bootstrap provides a pre-styled alert box which you may style even further.

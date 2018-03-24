@@ -1,7 +1,7 @@
 TFRS Admin Role
 -----
 
-**Status: ** *(most are not yet implemented)*
+**Status:** *(most are not yet implemented)*
 
 Before implementing the Roles & Permissions fully, it may be wise to implement the TFRS Admin functionality to allow TFRS developers and admin to log into the website & provide the following abilities:
 
