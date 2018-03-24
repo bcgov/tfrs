@@ -76,7 +76,7 @@ Here are the buttons that should show up for the actions available to an organiz
 
 ## Special controls & labels
 |Case|Reason|Label on UI|
-|---|---|---|---|
+|---|---|---|
 |Proposed to Refused|Cancelled by a respondent|Refused|
 |Proposed to Rescinded|Cancelled by the initiator|Rescinded|
 |Accepted to Rescinded|Cancelled by any party after both have accepted|Rescinded|
