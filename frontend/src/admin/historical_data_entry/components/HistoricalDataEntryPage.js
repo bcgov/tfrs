@@ -1,9 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Link } from 'react-router-dom';
 
 import * as Lang from '../../../constants/langEnUs';
-import * as Routes from '../../../constants/routes';
 
 import Loading from '../../../app/components/Loading';
 import HistoricalDataEntryForm from './HistoricalDataEntryForm';
@@ -44,15 +42,11 @@ const HistoricalDataEntryPage = (props) => {
         <HistoricalDataEntryFormButtons actions={buttonActions} />
       </div>
 
-      <ModalDeleteCreditTransfer 
+      <ModalDeleteCreditTransfer
         selectedId={props.selectedId}
       />
     </div>
   );
-};
-
-HistoricalDataEntryPage.defaultProps = {
-  title: 'Credit Transfer'
 };
 
 HistoricalDataEntryPage.propTypes = {
@@ -80,10 +74,10 @@ HistoricalDataEntryPage.propTypes = {
     items: PropTypes.arrayOf(PropTypes.shape()).isRequired,
     isFetching: PropTypes.bool.isRequired
   }).isRequired,
-  selectedId: PropTypes.number,
-  selectIdForModal: PropTypes.func,
+  selectedId: PropTypes.number.isRequired,
+  selectIdForModal: PropTypes.func.isRequired,
   title: PropTypes.string.isRequired,
-  totalValue: PropTypes.number.isRequired,
+  totalValue: PropTypes.number.isRequired
 };
 
 export default HistoricalDataEntryPage;

@@ -9,7 +9,6 @@ import { bindActionCreators } from 'redux';
 import PropTypes from 'prop-types';
 
 import * as Lang from '../../constants/langEnUs';
-import * as Routes from '../../constants/routes';
 import { getFuelSuppliers } from '../../actions/organizationActions';
 import { getCreditTransfer } from '../../actions/creditTransfersActions';
 import HistoricalDataEntryForm from './components/HistoricalDataEntryForm';
@@ -29,19 +28,26 @@ class HistoricalDataEntryEditContainer extends Component {
         numberOfCredits: '',
         transferType: ''
       },
-      selectedId: 0,
       totalValue: 0
     };
 
     this._handleInputChange = this._handleInputChange.bind(this);
     this._handleSubmit = this._handleSubmit.bind(this);
-    this._selectIdForModal = this._selectIdForModal.bind(this);
+  }
+
+  componentDidMount () {
+    this.loadData(this.props.match.params.id);
+    this.props.getFuelSuppliers();
+  }
+
+  componentWillReceiveProps (props) {
+    this.loadPropsToFieldState(props);
   }
 
   _handleInputChange (event) {
     const { value, name } = event.target;
     const fieldState = { ...this.state.fields };
-  
+
     if (typeof fieldState[name] === 'object') {
       this.changeObjectProp(parseInt(value, 10), name);
     } else {
@@ -69,15 +75,10 @@ class HistoricalDataEntryEditContainer extends Component {
 
     const { id } = this.props.item;
 
+    console.log(id);
     console.log(data);
 
     return false;
-  }
-
-  _selectIdForModal (id) {
-    this.setState({
-      selectedId: id
-    });
   }
 
   changeObjectProp (id, name) {
@@ -87,15 +88,6 @@ class HistoricalDataEntryEditContainer extends Component {
     this.setState({
       fields: fieldState
     });
-  }
-
-  componentDidMount () {
-    this.loadData(this.props.match.params.id);
-    this.props.getFuelSuppliers();
-  }
-
-  componentWillReceiveProps (props) {
-    this.loadPropsToFieldState(props);
   }
 
   computeTotalValue (name) {
@@ -150,7 +142,7 @@ class HistoricalDataEntryEditContainer extends Component {
 
 HistoricalDataEntryEditContainer.defaultProps = {
   errors: {}
-}
+};
 
 HistoricalDataEntryEditContainer.propTypes = {
   errors: PropTypes.shape({}),
@@ -158,14 +150,21 @@ HistoricalDataEntryEditContainer.propTypes = {
   getCreditTransfer: PropTypes.func.isRequired,
   getFuelSuppliers: PropTypes.func.isRequired,
   isFetching: PropTypes.bool.isRequired,
-  selectedId: PropTypes.number
+  item: PropTypes.shape({
+    id: PropTypes.number
+  }).isRequired,
+  match: PropTypes.shape({
+    params: PropTypes.shape({
+      id: PropTypes.string.isRequired
+    }).isRequired
+  }).isRequired
 };
 
 const mapStateToProps = state => ({
   errors: state.rootReducer.creditTransfers.errors,
   fuelSuppliers: state.rootReducer.fuelSuppliersRequest.fuelSuppliers,
   isFetching: state.rootReducer.creditTransfer.isFetching,
-  item: state.rootReducer.creditTransfer.item,
+  item: state.rootReducer.creditTransfer.item
 });
 
 const mapDispatchToProps = dispatch => ({

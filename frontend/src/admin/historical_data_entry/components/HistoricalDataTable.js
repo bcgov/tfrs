@@ -6,7 +6,6 @@ import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import ReactTable from 'react-table';
 import 'react-table/react-table.css';
-import moment from 'moment';
 import FontAwesomeIcon from '@fortawesome/react-fontawesome';
 import numeral from 'numeral';
 
@@ -63,11 +62,11 @@ const HistoricalDataTable = (props) => {
     accessor: 'id',
     Cell: (row) => {
       const editUrl = `${Routes.HISTORICAL_DATA_ENTRY}/edit/${row.value}`;
-      
+
       return (
         <div className="col-actions">
           <Link className="action" to={editUrl}><FontAwesomeIcon icon="edit" /></Link>
-          <a className="action" data-toggle="modal" data-target="#confirmDelete" onClick={() => props.selectIdForModal(row.value)}><FontAwesomeIcon icon="trash" /></a>
+          <button className="action" data-toggle="modal" data-target="#confirmDelete" onClick={() => props.selectIdForModal(row.value)}><FontAwesomeIcon icon="trash" /></button>
         </div>
       );
     }
@@ -94,10 +93,8 @@ const HistoricalDataTable = (props) => {
 };
 
 HistoricalDataTable.propTypes = {
-  isEmpty: PropTypes.bool.isRequired,
-  isFetching: PropTypes.bool.isRequired,
   items: PropTypes.arrayOf(PropTypes.object).isRequired,
-  selectIdForModal: PropTypes.func
+  selectIdForModal: PropTypes.func.isRequired
 };
 
 export default HistoricalDataTable;

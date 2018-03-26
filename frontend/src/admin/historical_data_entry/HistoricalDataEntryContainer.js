@@ -8,7 +8,6 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import PropTypes from 'prop-types';
 
-import * as Routes from '../../constants/routes';
 import { getFuelSuppliers } from '../../actions/organizationActions';
 import HistoricalDataEntryPage from './components/HistoricalDataEntryPage';
 
@@ -34,10 +33,22 @@ class HistoricalDataEntryContainer extends Component {
     this._selectIdForModal = this._selectIdForModal.bind(this);
   }
 
+  componentDidMount () {
+    this.props.getFuelSuppliers();
+  }
+
+  componentWillReceiveProps (props) {
+    const fieldState = { ...this.state.fields };
+
+    this.setState({
+      fields: fieldState
+    });
+  }
+
   _handleInputChange (event) {
     const { value, name } = event.target;
     const fieldState = { ...this.state.fields };
-  
+
     if (typeof fieldState[name] === 'object') {
       this.changeObjectProp(parseInt(value, 10), name);
     } else {
@@ -83,18 +94,6 @@ class HistoricalDataEntryContainer extends Component {
     });
   }
 
-  componentDidMount () {
-    this.props.getFuelSuppliers();
-  }
-
-  componentWillReceiveProps (props) {
-    const fieldState = { ...this.state.fields };
-
-    this.setState({
-      fields: fieldState
-    });
-  }
-
   computeTotalValue (name) {
     if (['numberOfCredits', 'dollarPerCredit'].includes(name)) {
       this.setState({
@@ -124,7 +123,7 @@ class HistoricalDataEntryContainer extends Component {
 
 HistoricalDataEntryContainer.defaultProps = {
   errors: {}
-}
+};
 
 HistoricalDataEntryContainer.propTypes = {
   errors: PropTypes.shape({}),
@@ -133,8 +132,7 @@ HistoricalDataEntryContainer.propTypes = {
   historicalData: PropTypes.shape({
     items: PropTypes.arrayOf(PropTypes.shape()).isRequired,
     isFetching: PropTypes.bool.isRequired
-  }).isRequired,
-  selectedId: PropTypes.number
+  }).isRequired
 };
 
 const mapStateToProps = state => ({

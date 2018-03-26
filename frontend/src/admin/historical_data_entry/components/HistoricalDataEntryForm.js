@@ -7,8 +7,6 @@ import PropTypes from 'prop-types';
 import Errors from '../../../app/components/Errors';
 import HistoricalDataEntryFormDetails from './HistoricalDataEntryFormDetails';
 
-import * as Lang from '../../../constants/langEnUs';
-
 const HistoricalDataEntryForm = props => (
   <div className="historical-data-entry">
     <form
@@ -29,10 +27,6 @@ const HistoricalDataEntryForm = props => (
     </form>
   </div>
 );
-
-HistoricalDataEntryForm.defaultProps = {
-  id: 0
-};
 
 HistoricalDataEntryForm.propTypes = {
   actions: PropTypes.arrayOf(PropTypes.string).isRequired,
