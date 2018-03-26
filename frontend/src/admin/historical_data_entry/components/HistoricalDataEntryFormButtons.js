@@ -1,7 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import * as Routes from '../../../constants/routes';
 import * as Lang from '../../../constants/langEnUs';
 
 import history from '../../../app/History';
@@ -51,10 +50,12 @@ const HistoricalDataEntryFormButtons = props => (
 );
 
 HistoricalDataEntryFormButtons.defaultProps = {
+  handleSubmit: null
 };
 
 HistoricalDataEntryFormButtons.propTypes = {
-  actions: PropTypes.arrayOf(PropTypes.string).isRequired
+  actions: PropTypes.arrayOf(PropTypes.string).isRequired,
+  handleSubmit: PropTypes.func
 };
 
 export default HistoricalDataEntryFormButtons;
