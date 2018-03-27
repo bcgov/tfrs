@@ -60,6 +60,35 @@ export const invalidateCreditTransfers = creditTransfers => ({
 });
 
 /*
+ * Approved Credit Transfers
+ */
+export const getApprovedCreditTransfers = () => (dispatch) => {
+  dispatch(getApprovedCreditTransfersRequest());
+  const creditTradeUrl = Routes.BASE_URL + Routes.CREDIT_TRADE_API;
+
+  return axios.get(`${creditTradeUrl}/list_approved`)
+    .then((response) => {
+      dispatch(getCreditTransfersSuccess(response.data));
+    }).catch((error) => {
+      dispatch(getCreditTransfersError(error.response));
+    });
+};
+
+export const getApprovedCreditTransfersIfNeeded = () =>
+  (dispatch, getState) => {
+    if (shouldGetCreditTransfers(getState())) {
+      return dispatch(getApprovedCreditTransfers());
+    }
+
+    return Promise.resolve();
+  };
+
+const getApprovedCreditTransfersRequest = () => ({
+  name: 'GET_APPROVED_CREDIT_TRANSFERS_REQUEST',
+  type: ActionTypes.GET_APPROVED_CREDIT_TRANSFERS
+});
+
+/*
  * Credit Transfer Detail
  */
 export const getCreditTransfer = id => (dispatch) => {

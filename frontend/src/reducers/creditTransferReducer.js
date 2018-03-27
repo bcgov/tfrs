@@ -91,4 +91,37 @@ const creditTransfers = (state = {
   }
 };
 
-export { creditTransfer, creditTransfers };
+const approvedCreditTransfers = (state = {
+  items: [],
+  isFetching: false,
+  success: false,
+  errorMessage: []
+}, action) => {
+  switch (action.type) {
+    case ActionTypes.GET_APPROVED_CREDIT_TRANSFERS:
+      return Object.assign({}, state, {
+        isFetching: true,
+        success: false
+      });
+    case ActionTypes.RECEIVE_APPROVED_CREDIT_TRANSFERS:
+      return Object.assign({}, state, {
+        isFetching: false,
+        success: true,
+        items: action.data
+      });
+    case ActionTypes.ERROR:
+      return Object.assign({}, state, {
+        isFetching: false,
+        success: false,
+        errorMessage: action.errorMessage
+      });
+    case ActionTypes.INVALIDATE_APPROVED_CREDIT_TRANSFERS:
+      return Object.assign({}, state, {
+        didInvalidate: true
+      });
+    default:
+      return state;
+  }
+};
+
+export { creditTransfer, creditTransfers, approvedCreditTransfers };

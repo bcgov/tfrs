@@ -8,6 +8,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import PropTypes from 'prop-types';
 
+import { getApprovedCreditTransfersIfNeeded } from '../../actions/creditTransfersActions';
 import { getFuelSuppliers } from '../../actions/organizationActions';
 import HistoricalDataEntryPage from './components/HistoricalDataEntryPage';
 
@@ -35,6 +36,7 @@ class HistoricalDataEntryContainer extends Component {
 
   componentDidMount () {
     this.props.getFuelSuppliers();
+    this.loadData();
   }
 
   componentWillReceiveProps (props) {
@@ -43,6 +45,10 @@ class HistoricalDataEntryContainer extends Component {
     this.setState({
       fields: fieldState
     });
+  }
+
+  loadData () {
+    this.props.getApprovedCreditTransfersIfNeeded();
   }
 
   _handleInputChange (event) {
@@ -128,6 +134,7 @@ HistoricalDataEntryContainer.defaultProps = {
 HistoricalDataEntryContainer.propTypes = {
   errors: PropTypes.shape({}),
   fuelSuppliers: PropTypes.arrayOf(PropTypes.shape()).isRequired,
+  getApprovedCreditTransfersIfNeeded: PropTypes.func.isRequired,
   getFuelSuppliers: PropTypes.func.isRequired,
   historicalData: PropTypes.shape({
     items: PropTypes.arrayOf(PropTypes.shape()).isRequired,
@@ -145,7 +152,10 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  getFuelSuppliers: bindActionCreators(getFuelSuppliers, dispatch)
+  getFuelSuppliers: bindActionCreators(getFuelSuppliers, dispatch),
+  getApprovedCreditTransfersIfNeeded: () => {
+    dispatch(getApprovedCreditTransfersIfNeeded());
+  }
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(HistoricalDataEntryContainer);
