@@ -7,8 +7,10 @@ from auditable.views import AuditableMixin
 
 from api.models.CreditTrade import CreditTrade
 from api.models.CreditTradeHistory import CreditTradeHistory
+from api.models.CreditTradeStatus import CreditTradeStatus
 
 from api.serializers import CreditTradeCreateSerializer
+from api.serializers import CreditTradeCreateApprovedSerializer
 from api.serializers import CreditTradeUpdateSerializer
 from api.serializers import CreditTradeApproveSerializer
 from api.serializers import CreditTrade2Serializer as CreditTradeSerializer
@@ -16,7 +18,6 @@ from api.serializers import CreditTradeHistory2Serializer \
     as CreditTradeHistorySerializer
 
 from api.services.CreditTradeService import CreditTradeService
-
 
 class CreditTradeViewSet(AuditableMixin, mixins.CreateModelMixin,
                          mixins.RetrieveModelMixin, mixins.UpdateModelMixin,
@@ -92,3 +93,13 @@ class CreditTradeViewSet(AuditableMixin, mixins.CreateModelMixin,
         serializer = self.get_serializer(completed_credit_trade)
 
         return Response(serializer.data, status=status.HTTP_200_OK)
+
+    @list_route(methods=['get'])
+    def list_approved(self, request):
+        status_approved = CreditTradeStatus.objects \
+                                           .get(status="Approved")
+
+        credit_trades = CreditTrade.objects.filter(status_id=status_approved.id)
+        serializer = self.get_serializer(credit_trades, many=True)
+
+        return Response(serializer.data)
