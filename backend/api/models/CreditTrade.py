@@ -76,7 +76,10 @@ class CreditTrade(Auditable):
 
     @property
     def total_value(self):
-        return self.number_of_credits * self.fair_market_value_per_credit
+        if self.fair_market_value_per_credit is None:
+            return None
+        else:
+            return self.number_of_credits * self.fair_market_value_per_credit
 
     @property
     def status_display(self):

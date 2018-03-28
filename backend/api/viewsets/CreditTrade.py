@@ -10,7 +10,6 @@ from api.models.CreditTradeHistory import CreditTradeHistory
 from api.models.CreditTradeStatus import CreditTradeStatus
 
 from api.serializers import CreditTradeCreateSerializer
-from api.serializers import CreditTradeCreateApprovedSerializer
 from api.serializers import CreditTradeUpdateSerializer
 from api.serializers import CreditTradeApproveSerializer
 from api.serializers import CreditTrade2Serializer as CreditTradeSerializer

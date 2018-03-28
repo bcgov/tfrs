@@ -21,8 +21,8 @@ const HistoricalDataEntryFormDetails = props => (
                 type="date"
                 className="form-control"
                 id="effective-date"
-                name="effectiveDate"
-                value={props.fields.effectiveDate}
+                name="tradeEffectiveDate"
+                value={props.fields.tradeEffectiveDate}
                 placeholder="Effective Date"
                 onChange={props.handleInputChange}
                 required="required"
@@ -121,8 +121,8 @@ const HistoricalDataEntryFormDetails = props => (
                 data-number-to-fixed="2"
                 className="form-control"
                 id="dollar-per-credit"
-                name="dollarPerCredit"
-                value={props.fields.dollarPerCredit}
+                name="fairMarketValuePerCredit"
+                value={props.fields.fairMarketValuePerCredit}
                 placeholder="Amount"
                 onChange={props.handleInputChange}
                 required="required"
@@ -204,10 +204,10 @@ HistoricalDataEntryFormDetails.propTypes = {
       name: PropTypes.string,
       id: PropTypes.number
     }),
-    effectiveDate: PropTypes.string,
+    fairMarketValuePerCredit: PropTypes.string,
     numberOfCredits: PropTypes.string,
-    dollarPerCredit: PropTypes.string,
     note: PropTypes.string.isRequired,
+    tradeEffectiveDate: PropTypes.string,
     transferType: PropTypes.string,
     zeroDollarReason: PropTypes.string
   }).isRequired,
