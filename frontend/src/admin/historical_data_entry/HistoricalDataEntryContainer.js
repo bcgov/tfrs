@@ -8,7 +8,8 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import PropTypes from 'prop-types';
 
-import { getApprovedCreditTransfersIfNeeded } from '../../actions/creditTransfersActions';
+import { CREDIT_TRANSFER_STATUS } from '../../constants/values';
+import { addCreditTransfer, getApprovedCreditTransfersIfNeeded, invalidateCreditTransfers } from '../../actions/creditTransfersActions';
 import { getFuelSuppliers } from '../../actions/organizationActions';
 import HistoricalDataEntryPage from './components/HistoricalDataEntryPage';
 
@@ -17,17 +18,19 @@ class HistoricalDataEntryContainer extends Component {
     super(props);
     this.state = {
       fields: {
-        creditsFrom: {},
+        creditsFrom: { id: 0, name: '' },
         creditsTo: { id: 0, name: '' },
-        dollarPerCredit: '',
-        effectiveDate: '',
+        fairMarketValuePerCredit: '',
         note: '',
         numberOfCredits: '',
+        tradeEffectiveDate: '',
         transferType: ''
       },
       selectedId: 0,
       totalValue: 0
     };
+
+    this.oldState = Object.assign({}, this.state);
 
     this._handleInputChange = this._handleInputChange.bind(this);
     this._handleSubmit = this._handleSubmit.bind(this);
@@ -70,17 +73,22 @@ class HistoricalDataEntryContainer extends Component {
 
     // API data structure
     const data = {
-      creditsFrom: this.state.fields.creditsFrom.id,
-      creditsTo: this.state.fields.creditsTo.id,
-      dollarPerCredit: this.state.fields.dollarPerCredit,
-      effectiveDate: this.state.fields.effectiveDate,
+      fairMarketValuePerCredit: this.state.fields.fairMarketValuePerCredit,
+      initiator: this.state.fields.creditsFrom.id,
       note: this.state.fields.note,
       numberOfCredits: parseInt(this.state.fields.numberOfCredits, 10),
-      transferType: this.state.fields.transferType,
+      respondent: this.state.fields.creditsTo.id,
+      status: CREDIT_TRANSFER_STATUS.approved.id,
+      tradeEffectiveDate: this.state.fields.tradeEffectiveDate,
+      type: this.state.fields.transferType,
       zeroDollarReason: this.state.fields.zeroDollarReason
     };
 
-    console.log(data);
+    this.props.addCreditTransfer(data).then(() => {
+      this.props.invalidateCreditTransfers();
+      this.loadData();
+      this.resetState();
+    });
 
     return false;
   }
@@ -101,12 +109,16 @@ class HistoricalDataEntryContainer extends Component {
   }
 
   computeTotalValue (name) {
-    if (['numberOfCredits', 'dollarPerCredit'].includes(name)) {
+    if (['numberOfCredits', 'fairMarketValuePerCredit'].includes(name)) {
       this.setState({
         totalValue:
-          this.state.fields.numberOfCredits * this.state.fields.dollarPerCredit
+          this.state.fields.numberOfCredits * this.state.fields.fairMarketValuePerCredit
       });
     }
+  }
+
+  resetState () {
+    this.setState(this.oldState);
   }
 
   render () {
@@ -132,6 +144,7 @@ HistoricalDataEntryContainer.defaultProps = {
 };
 
 HistoricalDataEntryContainer.propTypes = {
+  addCreditTransfer: PropTypes.func.isRequired,
   errors: PropTypes.shape({}),
   fuelSuppliers: PropTypes.arrayOf(PropTypes.shape()).isRequired,
   getApprovedCreditTransfersIfNeeded: PropTypes.func.isRequired,
@@ -139,7 +152,8 @@ HistoricalDataEntryContainer.propTypes = {
   historicalData: PropTypes.shape({
     items: PropTypes.arrayOf(PropTypes.shape()).isRequired,
     isFetching: PropTypes.bool.isRequired
-  }).isRequired
+  }).isRequired,
+  invalidateCreditTransfers: PropTypes.func.isRequired
 };
 
 const mapStateToProps = state => ({
@@ -152,10 +166,12 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
+  addCreditTransfer: bindActionCreators(addCreditTransfer, dispatch),
   getFuelSuppliers: bindActionCreators(getFuelSuppliers, dispatch),
   getApprovedCreditTransfersIfNeeded: () => {
     dispatch(getApprovedCreditTransfersIfNeeded());
-  }
+  },
+  invalidateCreditTransfers: bindActionCreators(invalidateCreditTransfers, dispatch)
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(HistoricalDataEntryContainer);

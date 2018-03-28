@@ -60,10 +60,10 @@ HistoricalDataEntryPage.propTypes = {
       name: PropTypes.string,
       id: PropTypes.number
     }),
-    effectiveDate: PropTypes.string,
     numberOfCredits: PropTypes.string,
-    dollarPerCredit: PropTypes.string,
+    fairMarketValuePerCredit: PropTypes.string,
     note: PropTypes.string.isRequired,
+    tradeEffectiveDate: PropTypes.string,
     transferType: PropTypes.string,
     zeroDollarReason: PropTypes.string
   }).isRequired,

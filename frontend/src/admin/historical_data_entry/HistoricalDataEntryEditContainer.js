@@ -9,8 +9,15 @@ import { bindActionCreators } from 'redux';
 import PropTypes from 'prop-types';
 
 import * as Lang from '../../constants/langEnUs';
+import * as Routes from '../../constants/routes';
+import { CREDIT_TRANSFER_STATUS } from '../../constants/values';
 import { getFuelSuppliers } from '../../actions/organizationActions';
-import { getCreditTransfer } from '../../actions/creditTransfersActions';
+import {
+  getCreditTransfer,
+  invalidateCreditTransfers,
+  updateCreditTransfer
+} from '../../actions/creditTransfersActions';
+import history from '../../app/History';
 import HistoricalDataEntryForm from './components/HistoricalDataEntryForm';
 
 const buttonActions = [Lang.BTN_CANCEL, Lang.BTN_SAVE_DRAFT];
@@ -22,8 +29,8 @@ class HistoricalDataEntryEditContainer extends Component {
       fields: {
         creditsFrom: {},
         creditsTo: { id: 0, name: '' },
-        dollarPerCredit: '',
-        effectiveDate: '',
+        fairMarketValuePerCredit: '',
+        tradeEffectiveDate: '',
         note: '',
         numberOfCredits: '',
         transferType: ''
@@ -63,20 +70,25 @@ class HistoricalDataEntryEditContainer extends Component {
 
     // API data structure
     const data = {
-      creditsFrom: this.state.fields.creditsFrom.id,
-      creditsTo: this.state.fields.creditsTo.id,
-      dollarPerCredit: this.state.fields.dollarPerCredit,
-      effectiveDate: this.state.fields.effectiveDate,
-      numberOfCredits: parseInt(this.state.fields.numberOfCredits, 10),
+      fairMarketValuePerCredit: (this.state.fields.transferType !== '5') ? this.state.fields.fairMarketValuePerCredit : null,
+      initiator: this.state.fields.creditsFrom.id,
       note: this.state.fields.note,
-      transferType: this.state.fields.transferType,
+      numberOfCredits: parseInt(this.state.fields.numberOfCredits, 10),
+      respondent: this.state.fields.creditsTo.id,
+      status: CREDIT_TRANSFER_STATUS.approved.id,
+      tradeEffectiveDate: this.state.fields.tradeEffectiveDate,
+      type: this.state.fields.transferType,
       zeroDollarReason: this.state.fields.zeroDollarReason
     };
 
     const { id } = this.props.item;
 
-    console.log(id);
-    console.log(data);
+    this.props.updateCreditTransfer(id, data).then((response) => {
+      this.props.invalidateCreditTransfers();
+      history.push(Routes.HISTORICAL_DATA_ENTRY);
+    }, () => {
+      // Failed to update
+    });
 
     return false;
   }
@@ -91,10 +103,10 @@ class HistoricalDataEntryEditContainer extends Component {
   }
 
   computeTotalValue (name) {
-    if (['numberOfCredits', 'dollarPerCredit'].includes(name)) {
+    if (['numberOfCredits', 'fairMarketValuePerCredit'].includes(name)) {
       this.setState({
         totalValue:
-          this.state.fields.numberOfCredits * this.state.fields.dollarPerCredit
+          this.state.fields.numberOfCredits * this.state.fields.fairMarketValuePerCredit
       });
     }
   }
@@ -110,12 +122,12 @@ class HistoricalDataEntryEditContainer extends Component {
       const fieldState = {
         creditsFrom: item.creditsFrom,
         creditsTo: item.creditsTo,
-        dollarPerCredit: item.fairMarketValuePerCredit,
-        effectiveDate: (item.tradeEffectiveDate) ? item.tradeEffectiveDate.toString() : '',
+        fairMarketValuePerCredit: item.fairMarketValuePerCredit,
         note: '',
         numberOfCredits: item.numberOfCredits.toString(),
+        tradeEffectiveDate: (item.tradeEffectiveDate) ? item.tradeEffectiveDate.toString() : '',
         transferType: item.type.id.toString(),
-        zeroDollarReason: item.zeroReason
+        zeroDollarReason: item.zeroDollarReason
       };
 
       this.setState({
@@ -149,6 +161,7 @@ HistoricalDataEntryEditContainer.propTypes = {
   fuelSuppliers: PropTypes.arrayOf(PropTypes.shape()).isRequired,
   getCreditTransfer: PropTypes.func.isRequired,
   getFuelSuppliers: PropTypes.func.isRequired,
+  invalidateCreditTransfers: PropTypes.func.isRequired,
   isFetching: PropTypes.bool.isRequired,
   item: PropTypes.shape({
     id: PropTypes.number
@@ -157,7 +170,8 @@ HistoricalDataEntryEditContainer.propTypes = {
     params: PropTypes.shape({
       id: PropTypes.string.isRequired
     }).isRequired
-  }).isRequired
+  }).isRequired,
+  updateCreditTransfer: PropTypes.func.isRequired
 };
 
 const mapStateToProps = state => ({
@@ -169,7 +183,9 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   getCreditTransfer: bindActionCreators(getCreditTransfer, dispatch),
-  getFuelSuppliers: bindActionCreators(getFuelSuppliers, dispatch)
+  getFuelSuppliers: bindActionCreators(getFuelSuppliers, dispatch),
+  invalidateCreditTransfers: bindActionCreators(invalidateCreditTransfers, dispatch),
+  updateCreditTransfer: bindActionCreators(updateCreditTransfer, dispatch)
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(HistoricalDataEntryEditContainer);

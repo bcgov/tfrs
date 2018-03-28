@@ -64,9 +64,8 @@ export const invalidateCreditTransfers = creditTransfers => ({
  */
 export const getApprovedCreditTransfers = () => (dispatch) => {
   dispatch(getApprovedCreditTransfersRequest());
-  const creditTradeUrl = Routes.BASE_URL + Routes.CREDIT_TRADE_API;
 
-  return axios.get(`${creditTradeUrl}/list_approved`)
+  return axios.get(`${Routes.BASE_URL}${Routes.CREDIT_TRADE_API}/list_approved`)
     .then((response) => {
       dispatch(getCreditTransfersSuccess(response.data));
     }).catch((error) => {
@@ -222,7 +221,7 @@ export const deleteCreditTransfer = data => (dispatch) => {
 };
 
 const deleteCreditTransferRequest = () => ({
-  name: 'UPDATE_CREDIT_TRANSFER',
+  name: 'DELETE_CREDIT_TRANSFER',
   type: ActionTypes.REQUEST
 });
 

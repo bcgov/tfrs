@@ -224,22 +224,24 @@ class UserViewModelSerializer(serializers.ModelSerializer):
                   'user_roles')
 
 
+
 class CreditTradeCreateSerializer(serializers.ModelSerializer):
-
+    #internal users should be able to create a trade with any status
     def validate(self, data):
-        allowed_statuses = list(
-            CreditTradeStatus.objects
-                .filter(status__in=["Draft", "Submitted"])
-                .only('id'))
+        if (self.context['request'].user.organization.id != 1): 
+            allowed_statuses = list(
+                CreditTradeStatus.objects
+                    .filter(status__in=["Draft", "Submitted"])
+                    .only('id'))
 
-        credit_trade_status = data.get('status')
+            credit_trade_status = data.get('status')
 
-        if credit_trade_status not in allowed_statuses:
-            raise serializers.ValidationError({
-                'status': 'Status cannot be `{}` on create. '
-                          'Use `Draft` or `Submitted` instead.'.format(
-                    credit_trade_status.status
-                )})
+            if credit_trade_status not in allowed_statuses:
+                raise serializers.ValidationError({
+                    'status': 'Status cannot be `{}` on create. '
+                            'Use `Draft` or `Submitted` instead.'.format(
+                        credit_trade_status.status
+                    )})
 
         return data
 

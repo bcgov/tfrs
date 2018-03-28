@@ -40,10 +40,10 @@ HistoricalDataEntryForm.propTypes = {
       name: PropTypes.string,
       id: PropTypes.number
     }),
-    dollarPerCredit: PropTypes.string,
-    effectiveDate: PropTypes.string,
+    fairMarketValuePerCredit: PropTypes.string,
     note: PropTypes.string.isRequired,
     numberOfCredits: PropTypes.string,
+    tradeEffectiveDate: PropTypes.string,
     transferType: PropTypes.string,
     zeroDollarReason: PropTypes.string
   }).isRequired,
