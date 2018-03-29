@@ -29,7 +29,7 @@ class CreditTradeHistory(Auditable):
         'CreditTrade',
         related_name='credit_trade_histories',
         null=True,
-        on_delete=models.PROTECT)
+        on_delete=models.SET_NULL)
     user = models.ForeignKey(
         'User', related_name='credit_trade_histories',
         on_delete=models.PROTECT)

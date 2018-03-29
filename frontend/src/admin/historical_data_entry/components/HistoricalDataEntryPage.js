@@ -43,6 +43,7 @@ const HistoricalDataEntryPage = (props) => {
       </div>
 
       <ModalDeleteCreditTransfer
+        deleteCreditTransfer={props.deleteCreditTransfer}
         selectedId={props.selectedId}
       />
     </div>
@@ -50,6 +51,7 @@ const HistoricalDataEntryPage = (props) => {
 };
 
 HistoricalDataEntryPage.propTypes = {
+  deleteCreditTransfer: PropTypes.func.isRequired,
   errors: PropTypes.shape({}).isRequired,
   fields: PropTypes.shape({
     creditsFrom: PropTypes.shape({
