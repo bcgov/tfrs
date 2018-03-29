@@ -9,7 +9,12 @@ import { bindActionCreators } from 'redux';
 import PropTypes from 'prop-types';
 
 import { CREDIT_TRANSFER_STATUS } from '../../constants/values';
-import { addCreditTransfer, getApprovedCreditTransfersIfNeeded, invalidateCreditTransfers } from '../../actions/creditTransfersActions';
+import {
+  addCreditTransfer,
+  deleteCreditTransfer,
+  getApprovedCreditTransfersIfNeeded,
+  invalidateCreditTransfers
+} from '../../actions/creditTransfersActions';
 import { getFuelSuppliers } from '../../actions/organizationActions';
 import HistoricalDataEntryPage from './components/HistoricalDataEntryPage';
 
@@ -32,6 +37,7 @@ class HistoricalDataEntryContainer extends Component {
 
     this.oldState = Object.assign({}, this.state);
 
+    this._deleteCreditTransfer = this._deleteCreditTransfer.bind(this);
     this._handleInputChange = this._handleInputChange.bind(this);
     this._handleSubmit = this._handleSubmit.bind(this);
     this._selectIdForModal = this._selectIdForModal.bind(this);
@@ -52,6 +58,15 @@ class HistoricalDataEntryContainer extends Component {
 
   loadData () {
     this.props.getApprovedCreditTransfersIfNeeded();
+  }
+
+  _deleteCreditTransfer () {
+    const id = this.state.selectedId;
+
+    this.props.deleteCreditTransfer(id).then(() => {
+      this.props.invalidateCreditTransfers();
+      this.loadData();
+    });
   }
 
   _handleInputChange (event) {
@@ -124,9 +139,11 @@ class HistoricalDataEntryContainer extends Component {
   render () {
     return (
       <HistoricalDataEntryPage
+        deleteCreditTransfer={this._deleteCreditTransfer}
         errors={this.props.errors}
         fields={this.state.fields}
         fuelSuppliers={this.props.fuelSuppliers}
+        handleDelete={this._handleDelete}
         handleInputChange={this._handleInputChange}
         handleSubmit={this._handleSubmit}
         historicalData={this.props.historicalData}
@@ -145,6 +162,7 @@ HistoricalDataEntryContainer.defaultProps = {
 
 HistoricalDataEntryContainer.propTypes = {
   addCreditTransfer: PropTypes.func.isRequired,
+  deleteCreditTransfer: PropTypes.func.isRequired,
   errors: PropTypes.shape({}),
   fuelSuppliers: PropTypes.arrayOf(PropTypes.shape()).isRequired,
   getApprovedCreditTransfersIfNeeded: PropTypes.func.isRequired,
@@ -167,6 +185,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   addCreditTransfer: bindActionCreators(addCreditTransfer, dispatch),
+  deleteCreditTransfer: bindActionCreators(deleteCreditTransfer, dispatch),
   getFuelSuppliers: bindActionCreators(getFuelSuppliers, dispatch),
   getApprovedCreditTransfersIfNeeded: () => {
     dispatch(getApprovedCreditTransfersIfNeeded());

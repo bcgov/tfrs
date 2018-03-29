@@ -209,10 +209,11 @@ const updateCreditTransferError = error => ({
 /*
  * Delete credit transfer
  */
-export const deleteCreditTransfer = data => (dispatch) => {
+export const deleteCreditTransfer = id => (dispatch) => {
   dispatch(deleteCreditTransferRequest());
-  axios
-    .post(Routes.BASE_URL + Routes.CREDIT_TRADE_API, data)
+
+  return axios
+    .put(`${Routes.BASE_URL}${Routes.CREDIT_TRADE_API}/${id}/delete`)
     .then((response) => {
       dispatch(deleteCreditTransferSuccess(response.data));
     }).catch((error) => {
@@ -226,7 +227,7 @@ const deleteCreditTransferRequest = () => ({
 });
 
 const deleteCreditTransferSuccess = data => ({
-  name: 'SUCCESS_UPDATE_CREDIT_TRANSFER',
+  name: 'SUCCESS_DELETE_CREDIT_TRANSFER',
   type: ActionTypes.SUCCESS,
   data
 });

@@ -79,9 +79,11 @@ class CreditTradeViewSet(AuditableMixin, mixins.CreateModelMixin,
         return Response(serializer.data)
 
     @detail_route(methods=['put'])
-    def delete(self):
-        """Destroys the specified credit trade"""
-        pass
+    def delete(self, request, pk=None):
+        credit_trade = self.get_object()
+        credit_trade.delete()
+
+        return Response(None)
 
     @detail_route(methods=['put'])
     def approve(self, request, pk=None):
