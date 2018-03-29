@@ -83,7 +83,7 @@ class CreditTradeViewSet(AuditableMixin, mixins.CreateModelMixin,
         credit_trade = self.get_object()
         credit_trade.delete()
 
-        return Response(None)
+        return Response(None, status=status.HTTP_200_OK)
 
     @detail_route(methods=['put'])
     def approve(self, request, pk=None):
@@ -104,3 +104,15 @@ class CreditTradeViewSet(AuditableMixin, mixins.CreateModelMixin,
         serializer = self.get_serializer(credit_trades, many=True)
 
         return Response(serializer.data)
+
+    @list_route(methods=['put'])
+    def batch_process(self, request):
+        status_approved = CreditTradeStatus.objects \
+                                           .get(status="Approved")
+
+        credit_trades = CreditTrade.objects.filter(status_id=status_approved.id)
+
+        for credit_trade in credit_trades:
+            CreditTradeService.approve(credit_trade)
+
+        return Response(None, status=status.HTTP_200_OK)

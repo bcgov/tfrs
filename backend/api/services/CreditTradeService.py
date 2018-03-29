@@ -135,7 +135,8 @@ class CreditTradeService(object):
     def transfer_credits(_from, _to, credit_trade_id, num_of_credits,
                          effective_date):
         from_starting_bal = OrganizationBalance.objects.get(
-            organization_id=_from.id)
+            organization_id=_from.id,
+            expiration_date=None)
 
         to_starting_bal = OrganizationBalance.objects.get(
             organization_id=_to.id,

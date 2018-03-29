@@ -21,7 +21,8 @@ const HistoricalDataEntryFormButtons = props => (
     <button
       type="button"
       className="btn btn-primary"
-      onClick={() => {}}
+      data-toggle="modal"
+      data-target="#confirmProcess"
     >
       {Lang.BTN_COMMIT}
     </button>
@@ -31,7 +32,7 @@ const HistoricalDataEntryFormButtons = props => (
     <button
       type="submit"
       className="btn btn-primary"
-      onClick={() => props.handleSubmit}
+      onClick={props.handleSubmit}
     >
       {Lang.BTN_ADD_TO_QUEUE}
     </button>
@@ -41,7 +42,7 @@ const HistoricalDataEntryFormButtons = props => (
     <button
       type="submit"
       className="btn btn-primary"
-      onClick={() => props.handleSubmit}
+      onClick={props.handleSubmit}
     >
       {Lang.BTN_SAVE_DRAFT}
     </button>
