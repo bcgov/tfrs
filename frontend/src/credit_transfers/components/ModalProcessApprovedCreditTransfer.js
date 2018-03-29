@@ -3,14 +3,14 @@ import PropTypes from 'prop-types';
 
 import * as Lang from '../../constants/langEnUs';
 
-const ModalDeleteCreditTransfer = (props) => {
+const ModalProcessApprovedCreditTransfer = (props) => {
   return (
     <div
       className="modal fade"
-      id="confirmDelete"
+      id="confirmProcess"
       tabIndex="-1"
       role="dialog"
-      aria-labelledby="confirmDeleteLabel"
+      aria-labelledby="confirmProcessLabel"
     >
       <div className="modal-dialog" role="document">
         <div className="modal-content">
@@ -25,13 +25,13 @@ const ModalDeleteCreditTransfer = (props) => {
             </button>
             <h4
               className="modal-title"
-              id="confirmDeleteLabel"
+              id="confirmProcessLabel"
             >
-              Confirm Delete
+              Confirm Process
             </h4>
           </div>
           <div className="modal-body">
-            Are you sure you want to delete this credit transfer?
+            Are you sure you want to commit the approved credit transfers?
           </div>
           <div className="modal-footer">
             <button
@@ -45,9 +45,9 @@ const ModalDeleteCreditTransfer = (props) => {
               type="button"
               className="btn btn-danger"
               data-dismiss="modal"
-              onClick={() => props.deleteCreditTransfer(props.selectedId)}
+              onClick={props.processApprovedCreditTransfers}
             >
-              {Lang.BTN_DELETE}
+              {Lang.BTN_PROCESS}
             </button>
           </div>
         </div>
@@ -56,14 +56,13 @@ const ModalDeleteCreditTransfer = (props) => {
   );
 };
 
-ModalDeleteCreditTransfer.defaultProps = {
-  deleteCreditTransfer: null,
+ModalProcessApprovedCreditTransfer.defaultProps = {
   selectedId: 0
 };
 
-ModalDeleteCreditTransfer.propTypes = {
-  deleteCreditTransfer: PropTypes.func,
+ModalProcessApprovedCreditTransfer.propTypes = {
+  processApprovedCreditTransfers: PropTypes.func.isRequired,
   selectedId: PropTypes.number
 };
 
-export default ModalDeleteCreditTransfer;
+export default ModalProcessApprovedCreditTransfer;

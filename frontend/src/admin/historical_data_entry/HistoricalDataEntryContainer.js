@@ -13,7 +13,8 @@ import {
   addCreditTransfer,
   deleteCreditTransfer,
   getApprovedCreditTransfersIfNeeded,
-  invalidateCreditTransfers
+  invalidateCreditTransfers,
+  processApprovedCreditTransfers
 } from '../../actions/creditTransfersActions';
 import { getFuelSuppliers } from '../../actions/organizationActions';
 import HistoricalDataEntryPage from './components/HistoricalDataEntryPage';
@@ -40,6 +41,7 @@ class HistoricalDataEntryContainer extends Component {
     this._deleteCreditTransfer = this._deleteCreditTransfer.bind(this);
     this._handleInputChange = this._handleInputChange.bind(this);
     this._handleSubmit = this._handleSubmit.bind(this);
+    this._processApprovedCreditTransfers = this._processApprovedCreditTransfers.bind(this);
     this._selectIdForModal = this._selectIdForModal.bind(this);
   }
 
@@ -108,6 +110,13 @@ class HistoricalDataEntryContainer extends Component {
     return false;
   }
 
+  _processApprovedCreditTransfers () {
+    this.props.processApprovedCreditTransfers().then(() => {
+      this.props.invalidateCreditTransfers();
+      this.loadData();
+    });
+  }
+
   _selectIdForModal (id) {
     this.setState({
       selectedId: id
@@ -147,6 +156,7 @@ class HistoricalDataEntryContainer extends Component {
         handleInputChange={this._handleInputChange}
         handleSubmit={this._handleSubmit}
         historicalData={this.props.historicalData}
+        processApprovedCreditTransfers={this._processApprovedCreditTransfers}
         selectedId={this.state.selectedId}
         selectIdForModal={this._selectIdForModal}
         title="Historical Data Entry"
@@ -171,7 +181,8 @@ HistoricalDataEntryContainer.propTypes = {
     items: PropTypes.arrayOf(PropTypes.shape()).isRequired,
     isFetching: PropTypes.bool.isRequired
   }).isRequired,
-  invalidateCreditTransfers: PropTypes.func.isRequired
+  invalidateCreditTransfers: PropTypes.func.isRequired,
+  processApprovedCreditTransfers: PropTypes.func.isRequired
 };
 
 const mapStateToProps = state => ({
@@ -190,7 +201,8 @@ const mapDispatchToProps = dispatch => ({
   getApprovedCreditTransfersIfNeeded: () => {
     dispatch(getApprovedCreditTransfersIfNeeded());
   },
-  invalidateCreditTransfers: bindActionCreators(invalidateCreditTransfers, dispatch)
+  invalidateCreditTransfers: bindActionCreators(invalidateCreditTransfers, dispatch),
+  processApprovedCreditTransfers: bindActionCreators(processApprovedCreditTransfers, dispatch)
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(HistoricalDataEntryContainer);

@@ -237,3 +237,34 @@ const deleteCreditTransferError = error => ({
   type: ActionTypes.ERROR,
   errorMessage: error
 });
+
+/*
+ * Batch Process Approved Credit Transfers
+ */
+export const processApprovedCreditTransfers = () => (dispatch) => {
+  dispatch(processApprovedCreditTransfersRequest());
+  return axios
+    .put(`${Routes.BASE_URL}${Routes.CREDIT_TRADE_API}/batch_process`)
+    .then((response) => {
+      dispatch(processApprovedCreditTransfersSuccess(response.data));
+    }).catch((error) => {
+      dispatch(processApprovedCreditTransfersError(error.response.data));
+    });
+};
+
+const processApprovedCreditTransfersRequest = () => ({
+  name: 'PROCESS_APPROVED_CREDIT_TRANSFERS',
+  type: ActionTypes.PROCESS_APPROVED_CREDIT_TRANSFERS
+});
+
+const processApprovedCreditTransfersSuccess = data => ({
+  name: 'SUCCESS_APPROVED_CREDIT_TRANSFERS',
+  type: ActionTypes.SUCCESS,
+  data
+});
+
+const processApprovedCreditTransfersError = error => ({
+  name: 'ERROR_APPROVED_CREDIT_TRANSFERS',
+  type: ActionTypes.ERROR,
+  errorMessage: error
+});

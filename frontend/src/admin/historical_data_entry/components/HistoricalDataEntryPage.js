@@ -8,6 +8,7 @@ import HistoricalDataEntryForm from './HistoricalDataEntryForm';
 import HistoricalDataEntryFormButtons from './HistoricalDataEntryFormButtons';
 import HistoricalDataTable from './HistoricalDataTable';
 import ModalDeleteCreditTransfer from '../../../credit_transfers/components/ModalDeleteCreditTransfer';
+import ModalProcessApprovedCreditTransfer from '../../../credit_transfers/components/ModalProcessApprovedCreditTransfer';
 
 const buttonActions = [Lang.BTN_CANCEL, Lang.BTN_COMMIT];
 const formActions = [Lang.BTN_ADD_TO_QUEUE];
@@ -46,6 +47,10 @@ const HistoricalDataEntryPage = (props) => {
         deleteCreditTransfer={props.deleteCreditTransfer}
         selectedId={props.selectedId}
       />
+
+      <ModalProcessApprovedCreditTransfer
+        processApprovedCreditTransfers={props.processApprovedCreditTransfers}
+      />
     </div>
   );
 };
@@ -76,6 +81,7 @@ HistoricalDataEntryPage.propTypes = {
     items: PropTypes.arrayOf(PropTypes.shape()).isRequired,
     isFetching: PropTypes.bool.isRequired
   }).isRequired,
+  processApprovedCreditTransfers: PropTypes.func.isRequired,
   selectedId: PropTypes.number.isRequired,
   selectIdForModal: PropTypes.func.isRequired,
   title: PropTypes.string.isRequired,
