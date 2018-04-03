@@ -8,7 +8,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import PropTypes from 'prop-types';
 
-import { CREDIT_TRANSFER_STATUS } from '../../constants/values';
+import { CREDIT_TRANSFER_STATUS, CREDIT_TRANSFER_TYPES, DEFAULT_ORGANIZATION } from '../../constants/values';
 import {
   addCreditTransfer,
   deleteCreditTransfer,
@@ -90,16 +90,23 @@ class HistoricalDataEntryContainer extends Component {
 
     // API data structure
     const data = {
-      fairMarketValuePerCredit: this.state.fields.fairMarketValuePerCredit,
-      initiator: this.state.fields.creditsFrom.id,
+      initiator: (this.state.fields.creditsFrom.id > 0)
+        ? this.state.fields.creditsFrom.id
+        : DEFAULT_ORGANIZATION.id,
       note: this.state.fields.note,
       numberOfCredits: parseInt(this.state.fields.numberOfCredits, 10),
-      respondent: this.state.fields.creditsTo.id,
+      respondent: (this.state.fields.creditsTo.id > 0)
+        ? this.state.fields.creditsTo.id
+        : DEFAULT_ORGANIZATION.id,
       status: CREDIT_TRANSFER_STATUS.approved.id,
       tradeEffectiveDate: this.state.fields.tradeEffectiveDate,
       type: this.state.fields.transferType,
-      zeroDollarReason: this.state.fields.zeroDollarReason
+      zeroReason: this.state.fields.zeroDollarReason
     };
+
+    if (this.state.fields.transferType === CREDIT_TRANSFER_TYPES.sell.id.toString()) {
+      data.fairMarketValuePerCredit = this.state.fields.fairMarketValuePerCredit;
+    }
 
     this.props.addCreditTransfer(data).then(() => {
       this.props.invalidateCreditTransfers();
