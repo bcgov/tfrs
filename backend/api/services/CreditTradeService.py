@@ -85,7 +85,7 @@ class CreditTradeService(object):
             type_id=credit_trade.type.id,
             number_of_credits=credit_trade.number_of_credits,
             fair_market_value_per_credit=credit_trade.fair_market_value_per_credit,
-            zero_reason_id=credit_trade.zero_reason,
+            zero_reason_id=credit_trade.zero_reason.id,
             trade_effective_date=credit_trade.trade_effective_date,
             note=credit_trade.note,
             is_internal_history_record=is_internal_history_record,

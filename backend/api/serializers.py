@@ -289,7 +289,7 @@ class CreditTrade2Serializer(serializers.ModelSerializer):
                   'fair_market_value_per_credit', 'total_value',
                   'zero_reason',
                   'trade_effective_date', 'credits_from', 'credits_to',
-                  'update_timestamp', 'actions')
+                  'update_timestamp', 'actions', 'note')
 
 
 class CreditTradeHistory2Serializer(serializers.ModelSerializer):

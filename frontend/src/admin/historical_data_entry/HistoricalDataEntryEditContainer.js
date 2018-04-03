@@ -123,11 +123,11 @@ class HistoricalDataEntryEditContainer extends Component {
         creditsFrom: item.creditsFrom,
         creditsTo: item.creditsTo,
         fairMarketValuePerCredit: item.fairMarketValuePerCredit,
-        note: '',
+        note: item.note,
         numberOfCredits: item.numberOfCredits.toString(),
         tradeEffectiveDate: (item.tradeEffectiveDate) ? item.tradeEffectiveDate.toString() : '',
         transferType: item.type.id.toString(),
-        zeroDollarReason: item.zeroDollarReason
+        zeroReason: item.zeroDollarReason
       };
 
       this.setState({

@@ -30,6 +30,7 @@ const HistoricalDataEntryForm = props => (
 
 HistoricalDataEntryForm.propTypes = {
   actions: PropTypes.arrayOf(PropTypes.string).isRequired,
+  errors: PropTypes.shape({}).isRequired,
   fuelSuppliers: PropTypes.arrayOf(PropTypes.shape()).isRequired,
   fields: PropTypes.shape({
     creditsFrom: PropTypes.shape({
@@ -49,7 +50,6 @@ HistoricalDataEntryForm.propTypes = {
   }).isRequired,
   handleInputChange: PropTypes.func.isRequired,
   handleSubmit: PropTypes.func.isRequired,
-  errors: PropTypes.shape({}).isRequired,
   totalValue: PropTypes.number.isRequired
 };
 

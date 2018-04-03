@@ -11,6 +11,7 @@ import numeral from 'numeral';
 
 import * as NumberFormat from '../../../constants/numeralFormats';
 import * as Routes from '../../../constants/routes';
+import { ZERO_DOLLAR_REASON } from '../../../constants/values';
 
 const HistoricalDataTable = (props) => {
   const columns = [{
@@ -55,7 +56,21 @@ const HistoricalDataTable = (props) => {
   }, {
     id: 'zeroReason',
     Header: 'Zero Reason',
-    accessor: item => item.zeroReason
+    accessor: item => item.zeroReason,
+    Cell: (row) => {
+      const zeroReason = row.value;
+      let value;
+
+      if (zeroReason && zeroReason.id === ZERO_DOLLAR_REASON.affiliate.id) {
+        value = ZERO_DOLLAR_REASON.affiliate.description;
+      } else if (zeroReason && zeroReason.id === ZERO_DOLLAR_REASON.other.id) {
+        value = ZERO_DOLLAR_REASON.other.description;
+      }
+
+      return (
+        <div>{value}</div>
+      );
+    }
   }, {
     id: 'actions',
     Header: '',
