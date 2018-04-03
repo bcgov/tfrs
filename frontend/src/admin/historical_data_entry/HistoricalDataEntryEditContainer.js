@@ -78,7 +78,7 @@ class HistoricalDataEntryEditContainer extends Component {
       status: CREDIT_TRANSFER_STATUS.approved.id,
       tradeEffectiveDate: this.state.fields.tradeEffectiveDate,
       type: this.state.fields.transferType,
-      zeroDollarReason: this.state.fields.zeroDollarReason
+      zeroReason: this.state.fields.zeroDollarReason
     };
 
     const { id } = this.props.item;
@@ -127,7 +127,7 @@ class HistoricalDataEntryEditContainer extends Component {
         numberOfCredits: item.numberOfCredits.toString(),
         tradeEffectiveDate: (item.tradeEffectiveDate) ? item.tradeEffectiveDate.toString() : '',
         transferType: item.type.id.toString(),
-        zeroReason: item.zeroDollarReason
+        zeroDollarReason: (item.zeroReason) ? item.zeroReason.id.toString() : ''
       };
 
       this.setState({
