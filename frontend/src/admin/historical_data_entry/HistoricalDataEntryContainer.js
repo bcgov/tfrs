@@ -13,6 +13,7 @@ import {
   addCreditTransfer,
   deleteCreditTransfer,
   getApprovedCreditTransfersIfNeeded,
+  invalidateCreditTransfer,
   invalidateCreditTransfers,
   processApprovedCreditTransfers
 } from '../../actions/creditTransfersActions';
@@ -59,6 +60,7 @@ class HistoricalDataEntryContainer extends Component {
   }
 
   loadData () {
+    this.props.invalidateCreditTransfer(); // reset the errors in the form
     this.props.getApprovedCreditTransfersIfNeeded();
   }
 
@@ -188,12 +190,13 @@ HistoricalDataEntryContainer.propTypes = {
     items: PropTypes.arrayOf(PropTypes.shape()).isRequired,
     isFetching: PropTypes.bool.isRequired
   }).isRequired,
+  invalidateCreditTransfer: PropTypes.func.isRequired,
   invalidateCreditTransfers: PropTypes.func.isRequired,
   processApprovedCreditTransfers: PropTypes.func.isRequired
 };
 
 const mapStateToProps = state => ({
-  errors: state.rootReducer.creditTransfers.errors,
+  errors: state.rootReducer.creditTransfer.errors,
   fuelSuppliers: state.rootReducer.fuelSuppliersRequest.fuelSuppliers,
   historicalData: {
     items: state.rootReducer.creditTransfers.items,
@@ -208,6 +211,7 @@ const mapDispatchToProps = dispatch => ({
   getApprovedCreditTransfersIfNeeded: () => {
     dispatch(getApprovedCreditTransfersIfNeeded());
   },
+  invalidateCreditTransfer: bindActionCreators(invalidateCreditTransfer, dispatch),
   invalidateCreditTransfers: bindActionCreators(invalidateCreditTransfers, dispatch),
   processApprovedCreditTransfers: bindActionCreators(processApprovedCreditTransfers, dispatch)
 });

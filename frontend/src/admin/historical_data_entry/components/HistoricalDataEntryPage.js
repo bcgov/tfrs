@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 
 import * as Lang from '../../../constants/langEnUs';
 
+import Errors from '../../../app/components/Errors';
 import Loading from '../../../app/components/Loading';
 import HistoricalDataEntryForm from './HistoricalDataEntryForm';
 import HistoricalDataEntryFormButtons from './HistoricalDataEntryFormButtons';
@@ -20,15 +21,20 @@ const HistoricalDataEntryPage = (props) => {
   return (
     <div className="page_historical_data_entry">
       <h1>{props.title}</h1>
+
+      {Object.keys(props.errors).length > 0 &&
+        <Errors errors={props.errors} />
+      }
+
       <HistoricalDataEntryForm
         actions={formActions}
-        errors={props.errors}
         fuelSuppliers={props.fuelSuppliers}
         fields={props.fields}
         handleInputChange={props.handleInputChange}
         handleSubmit={props.handleSubmit}
         totalValue={props.totalValue}
       />
+
       {isFetching && <Loading />}
       {!isFetching &&
       <HistoricalDataTable
