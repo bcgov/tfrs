@@ -11,7 +11,7 @@ import numeral from 'numeral';
 
 import * as NumberFormat from '../../../constants/numeralFormats';
 import * as Routes from '../../../constants/routes';
-import { ZERO_DOLLAR_REASON } from '../../../constants/values';
+import { CREDIT_TRANSFER_TYPES, ZERO_DOLLAR_REASON } from '../../../constants/values';
 
 const HistoricalDataTable = (props) => {
   const columns = [{
@@ -25,9 +25,30 @@ const HistoricalDataTable = (props) => {
     className: 'col-effective-date'
   }, {
     id: 'transactionType',
-    Header: 'Transaction Type',
-    accessor: item => item.type.theType,
-    className: 'col-transfer-type'
+    Header: 'Type',
+    accessor: item => item.type.id,
+    className: 'col-transfer-type',
+    Cell: (row) => {
+      let value = '';
+
+      switch (row.value) {
+        case CREDIT_TRANSFER_TYPES.validation.id:
+          value = 'Validation';
+          break;
+        case CREDIT_TRANSFER_TYPES.retirement.id:
+          value = 'Reduction';
+          break;
+        case CREDIT_TRANSFER_TYPES.part3Award.id:
+          value = 'Part 3 Award';
+          break;
+        default:
+          value = 'Credit Transfer';
+      }
+
+      return (
+        <div>{value}</div>
+      );
+    }
   }, {
     id: 'creditsFrom',
     Header: 'Credits From',

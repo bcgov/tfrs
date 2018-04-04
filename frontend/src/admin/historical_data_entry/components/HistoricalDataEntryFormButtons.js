@@ -38,13 +38,13 @@ const HistoricalDataEntryFormButtons = props => (
     </button>
     }
 
-    {props.actions.includes(Lang.BTN_SAVE_DRAFT) &&
+    {props.actions.includes(Lang.BTN_SAVE) &&
     <button
       type="submit"
       className="btn btn-primary"
       onClick={props.handleSubmit}
     >
-      {Lang.BTN_SAVE_DRAFT}
+      {Lang.BTN_SAVE}
     </button>
     }
   </div>
