@@ -20,7 +20,7 @@ import {
 import history from '../../app/History';
 import HistoricalDataEntryForm from './components/HistoricalDataEntryForm';
 
-const buttonActions = [Lang.BTN_CANCEL, Lang.BTN_SAVE_DRAFT];
+const buttonActions = [Lang.BTN_CANCEL, Lang.BTN_SAVE];
 
 class HistoricalDataEntryEditContainer extends Component {
   constructor (props) {
