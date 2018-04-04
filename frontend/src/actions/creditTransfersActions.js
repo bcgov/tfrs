@@ -148,12 +148,14 @@ export const invalidateCreditTransfer = creditTransfer => ({
  */
 export const addCreditTransfer = data => (dispatch) => {
   dispatch(addCreditTransferRequest());
+
   return axios
     .post(Routes.BASE_URL + Routes.CREDIT_TRADE_API, data)
     .then((response) => {
       dispatch(addCreditTransferSuccess(response.data));
     }).catch((error) => {
       dispatch(addCreditTransferError(error.response.data));
+      return Promise.reject(error);
     });
 };
 

@@ -4,7 +4,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import Errors from '../../../app/components/Errors';
 import HistoricalDataEntryFormDetails from './HistoricalDataEntryFormDetails';
 
 const HistoricalDataEntryForm = props => (
@@ -21,16 +20,13 @@ const HistoricalDataEntryForm = props => (
         handleSubmit={props.handleSubmit}
         totalValue={props.totalValue}
       />
-      {Object.keys(props.errors).length > 0 &&
-        <Errors errors={props.errors} />
-      }
+
     </form>
   </div>
 );
 
 HistoricalDataEntryForm.propTypes = {
   actions: PropTypes.arrayOf(PropTypes.string).isRequired,
-  errors: PropTypes.shape({}).isRequired,
   fuelSuppliers: PropTypes.arrayOf(PropTypes.shape()).isRequired,
   fields: PropTypes.shape({
     creditsFrom: PropTypes.shape({
