@@ -17,7 +17,9 @@ const HistoricalDataTable = (props) => {
   const columns = [{
     Header: 'ID',
     accessor: 'id',
-    className: 'col-id'
+    className: 'col-id',
+    maxWidth: 35,
+    resizable: false
   }, {
     id: 'effectiveDate',
     Header: 'Effective Date',
@@ -53,7 +55,7 @@ const HistoricalDataTable = (props) => {
     id: 'creditsFrom',
     Header: 'Credits From',
     accessor: item => item.creditsFrom.name,
-    minWidth: 230,
+    minWidth: 200,
     Cell: row => (
       <div>{row.value}</div>
     )
@@ -61,6 +63,7 @@ const HistoricalDataTable = (props) => {
     id: 'creditsTo',
     Header: 'Credits To',
     accessor: item => item.creditsTo.name,
+    minWidth: 200,
     Cell: row => (
       <div>{row.value}</div>
     )
@@ -78,6 +81,7 @@ const HistoricalDataTable = (props) => {
     id: 'zeroReason',
     Header: 'Zero Reason',
     accessor: item => item.zeroReason,
+    className: 'col-zero-reason',
     Cell: (row) => {
       const zeroReason = row.value;
       let value;
