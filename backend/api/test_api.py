@@ -506,35 +506,3 @@ class TestAPI(TestCase):
 
     def test_update_accepted_to_declined(self, **kwargs):
         pass
-
-    def test_can_create_and_get_a_zero_dollar_transaction(self):
-        trades = [{
-            'numberOfCredits': 5,
-            'status': STATUS_DRAFT,
-            'initiator': 2,
-            'respondent': self.fs1_id,
-            'type': self.ct_type_id
-        }, {
-            'numberOfCredits': 5,
-            'status': STATUS_DRAFT,
-            'fairMarketValuePerCredit': 0.00,
-            'initiator': 2,
-            'respondent': self.fs1_id,
-            'type': self.ct_type_id
-        }, {
-            'numberOfCredits': 5,
-            'status': STATUS_DRAFT,
-            'fairMarketValuePerCredit': '0.00',
-            'initiator': 2,
-            'respondent': self.fs1_id,
-            'type': self.ct_type_id}]
-
-        for trade in trades:
-            # Create trade
-            response = fake_api_calls.create_credit_trade_dict(trade)
-            assert status.HTTP_201_CREATED == response.status_code
-            ct_id = json.loads(response.content.decode("utf-8"))['id']
-
-            created_ct = fake_api_calls.get_credit_trade(ct_id)
-            assert status.HTTP_200_OK == created_ct.status_code
-            assert created_ct.json()['totalValue'] == (trade['numberOfCredits'] * 0)
