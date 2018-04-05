@@ -438,15 +438,5 @@
     },
     "model": "api.organization",
     "pk": 45
-  },
-  {
-    "fields": {
-      "name": "TFRS Biz Test",
-      "actions_type": 1,
-      "status": 1,
-      "type_id": 3
-    },
-    "model": "api.organization",
-    "pk": 46
   }
 ]
