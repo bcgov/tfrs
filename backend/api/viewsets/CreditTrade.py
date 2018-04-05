@@ -7,6 +7,7 @@ from auditable.views import AuditableMixin
 
 from api.models.CreditTrade import CreditTrade
 from api.models.CreditTradeHistory import CreditTradeHistory
+from api.models.CreditTradeStatus import CreditTradeStatus
 
 from api.serializers import CreditTradeCreateSerializer
 from api.serializers import CreditTradeUpdateSerializer
@@ -16,7 +17,6 @@ from api.serializers import CreditTradeHistory2Serializer \
     as CreditTradeHistorySerializer
 
 from api.services.CreditTradeService import CreditTradeService
-
 
 class CreditTradeViewSet(AuditableMixin, mixins.CreateModelMixin,
                          mixins.RetrieveModelMixin, mixins.UpdateModelMixin,
@@ -79,9 +79,13 @@ class CreditTradeViewSet(AuditableMixin, mixins.CreateModelMixin,
         return Response(serializer.data)
 
     @detail_route(methods=['put'])
-    def delete(self):
-        """Destroys the specified credit trade"""
-        pass
+    def delete(self, request, pk=None):
+        credit_trade = self.get_object()
+        status_cancelled = CreditTradeStatus.objects.get(status="Cancelled")
+        credit_trade.status = status_cancelled
+        credit_trade.save()
+
+        return Response(None, status=status.HTTP_200_OK)
 
     @detail_route(methods=['put'])
     def approve(self, request, pk=None):
@@ -92,3 +96,25 @@ class CreditTradeViewSet(AuditableMixin, mixins.CreateModelMixin,
         serializer = self.get_serializer(completed_credit_trade)
 
         return Response(serializer.data, status=status.HTTP_200_OK)
+
+    @list_route(methods=['get'])
+    def list_approved(self, request):
+        status_approved = CreditTradeStatus.objects \
+                                           .get(status="Approved")
+
+        credit_trades = CreditTrade.objects.filter(status_id=status_approved.id)
+        serializer = self.get_serializer(credit_trades, many=True)
+
+        return Response(serializer.data)
+
+    @list_route(methods=['put'])
+    def batch_process(self, request):
+        status_approved = CreditTradeStatus.objects \
+                                           .get(status="Approved")
+
+        credit_trades = CreditTrade.objects.filter(status_id=status_approved.id)
+
+        for credit_trade in credit_trades:
+            CreditTradeService.approve(credit_trade)
+
+        return Response(None, status=status.HTTP_200_OK)

@@ -1,10 +1,12 @@
 """
     REST API Documentation for the NRS TFRS Credit Trading Application
 
-    The Transportation Fuels Reporting System is being designed to streamline compliance reporting for transportation fuel suppliers in accordance with the Renewable & Low Carbon Fuel Requirements Regulation.
+    The Transportation Fuels Reporting System is being designed to streamline
+    compliance reporting for transportation fuel suppliers in accordance with
+    the Renewable & Low Carbon Fuel Requirements Regulation.
 
     OpenAPI spec version: v1
-        
+
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
@@ -101,8 +103,8 @@ class CurrentUserViewModelSerializer(serializers.ModelSerializer):
     class Meta:
         model = CurrentUserViewModel
         fields = (
-        'id', 'first_name', 'last_name', 'email', 'active', 'user_roles',
-        'sm_authorization_id', 'sm_authorization_directory')
+            'id', 'first_name', 'last_name', 'email', 'active', 'user_roles',
+            'sm_authorization_id', 'sm_authorization_directory')
 
 
 class OrganizationSerializer(serializers.ModelSerializer):
@@ -188,6 +190,7 @@ class RoleViewModelSerializer(serializers.ModelSerializer):
 
 class UserSerializer(serializers.ModelSerializer):
     organization = OrganizationSerializer(read_only=True)
+
     class Meta:
         model = User
         fields = (
@@ -225,21 +228,40 @@ class UserViewModelSerializer(serializers.ModelSerializer):
 
 
 class CreditTradeCreateSerializer(serializers.ModelSerializer):
-
+    # internal users should be able to create a trade with any status
     def validate(self, data):
-        allowed_statuses = list(
-            CreditTradeStatus.objects
+        if (self.context['request'].user.organization.id != 1):
+            allowed_statuses = list(
+                CreditTradeStatus.objects
                 .filter(status__in=["Draft", "Submitted"])
                 .only('id'))
 
-        credit_trade_status = data.get('status')
+            credit_trade_status = data.get('status')
 
-        if credit_trade_status not in allowed_statuses:
-            raise serializers.ValidationError({
-                'status': 'Status cannot be `{}` on create. '
-                          'Use `Draft` or `Submitted` instead.'.format(
-                    credit_trade_status.status
-                )})
+            if credit_trade_status not in allowed_statuses:
+                raise serializers.ValidationError({
+                    'status': 'Status cannot be `{}` on create. '
+                    'Use `Draft` or `Submitted` instead.'.format(
+                        credit_trade_status.status
+                    )})
+
+        if (data.get('fair_market_value_per_credit') == 0 and
+                data.get('zero_reason') is None):
+            allowed_types = list(
+                CreditTradeType.objects
+                .filter(the_type__in=[
+                    "Credit Validation", "Credit Retirement", "Part 3 Award"
+                ])
+                .only('id')
+            )
+
+            credit_trade_type = data.get('type')
+
+            if credit_trade_type not in allowed_types:
+                raise serializers.ValidationError({
+                    'zeroDollarReason': 'Zero Dollar Reason is required '
+                    'for Credit Transfers with 0 Dollar per Credit'
+                })
 
         return data
 
@@ -287,7 +309,7 @@ class CreditTrade2Serializer(serializers.ModelSerializer):
                   'fair_market_value_per_credit', 'total_value',
                   'zero_reason',
                   'trade_effective_date', 'credits_from', 'credits_to',
-                  'update_timestamp', 'actions')
+                  'update_timestamp', 'actions', 'note')
 
 
 class CreditTradeHistory2Serializer(serializers.ModelSerializer):
