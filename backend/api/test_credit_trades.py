@@ -131,13 +131,14 @@ class TestCreditTrades(TestCase):
             content_type='application/json',
             data=json.dumps(payload))
 
-        print(response.content)
         assert response.status_code == status.HTTP_201_CREATED
 
     # As a government user, I should be able to add an approved
     # credit transfer with 0 fair market value:
     # If the type is 'Sell', Fair Market Value needs to be greater than 0
     # or zero dollar reason must be provided
+    # This tests if we try to submit a 0 dollar credit transaction with no 
+    # reason
     def test_government_user_add_credit_transfer(self):
         credit_trade_status, created = CreditTradeStatus.objects.get_or_create(
             status='Approved')
@@ -162,10 +163,19 @@ class TestCreditTrades(TestCase):
             content_type='application/json',
             data=json.dumps(payload))
 
-        print(response.content)
-
         # 400 since zero reason was set to None
         assert response.status_code == status.HTTP_400_BAD_REQUEST
+
+    # As a government user, I should be able to add an approved
+    # credit transfer with 0 fair market value:
+    # If the type is 'Sell', Fair Market Value needs to be greater than 0
+    # or zero dollar reason must be provided
+    def test_government_user_add_credit_transfer(self):
+        credit_trade_status, created = CreditTradeStatus.objects.get_or_create(
+            status='Approved')
+
+        credit_trade_type, created = CreditTradeType.objects.get_or_create(
+            the_type='Sell')
 
         credit_trade_zero_reason, created = CreditTradeZeroReason.objects \
             .get_or_create(reason='Other', display_order=2)
@@ -186,8 +196,6 @@ class TestCreditTrades(TestCase):
             '/api/credit_trades',
             content_type='application/json',
             data=json.dumps(payload))
-
-        print(response.content)
 
         # 400 since zero reason was set to None
         assert response.status_code == status.HTTP_201_CREATED

@@ -81,7 +81,9 @@ class CreditTradeViewSet(AuditableMixin, mixins.CreateModelMixin,
     @detail_route(methods=['put'])
     def delete(self, request, pk=None):
         credit_trade = self.get_object()
-        credit_trade.delete()
+        status_cancelled = CreditTradeStatus.objects.get(status="Cancelled")
+        credit_trade.status = status_cancelled
+        credit_trade.save()
 
         return Response(None, status=status.HTTP_200_OK)
 
