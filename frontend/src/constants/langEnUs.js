@@ -8,4 +8,7 @@ export const BTN_CT_CANCEL = 'Cancel';
 export const BTN_RESCIND = 'Rescind';
 export const BTN_REFUSE = 'Refuse';
 export const BTN_DELETE = 'Delete';
-
+export const BTN_COMMIT = 'Commit';
+export const BTN_ADD_TO_QUEUE = 'Add to Queue';
+export const BTN_PROCESS = 'Confirm';
+export const BTN_SAVE = 'Save';

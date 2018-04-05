@@ -25,6 +25,8 @@ import CreditTransactionsContainer from './credit_transfers/CreditTransactionsCo
 import CreditTransferAddContainer from './credit_transfers/CreditTransferAddContainer';
 import CreditTransferEditContainer from './credit_transfers/CreditTransferEditContainer';
 import CreditTransferViewContainer from './credit_transfers/CreditTransferViewContainer';
+import HistoricalDataEntryContainer from './admin/historical_data_entry/HistoricalDataEntryContainer';
+import HistoricalDataEntryEditContainer from './admin/historical_data_entry/HistoricalDataEntryEditContainer';
 
 import { getLoggedInUser } from './actions/userActions';
 
@@ -143,6 +145,15 @@ ReactDOM.render(
             <Route
               path={Routes.CREDIT_TRANSACTION_EDIT}
               component={withRouter(CreditTransferEditContainer)}
+            />
+            <Route
+              exact
+              path={Routes.HISTORICAL_DATA_ENTRY}
+              component={withRouter(HistoricalDataEntryContainer)}
+            />
+            <Route
+              path={Routes.HISTORICAL_DATA_ENTRY_EDIT}
+              component={withRouter(HistoricalDataEntryEditContainer)}
             />
             <Route component={NotFound} />
 

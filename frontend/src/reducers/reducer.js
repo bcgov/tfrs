@@ -75,6 +75,7 @@ const rootReducer = combineReducers({
   [ReducerTypes.UPDATE_CREDIT_TRANSFER]: createReducer(genericRequest, ReducerTypes.UPDATE_CREDIT_TRANSFER),
   [ReducerTypes.DELETE_CREDIT_TRANSFER]: createReducer(genericRequest, ReducerTypes.DELETE_CREDIT_TRANSFER),
   [ReducerTypes.GET_CREDIT_TRANSFERS]: createReducer(genericRequest, ReducerTypes.GET_CREDIT_TRANSFERS),
+  [ReducerTypes.GET_APPROVED_CREDIT_TRANSFERS]: createReducer(genericRequest, ReducerTypes.GET_APPROVED_CREDIT_TRANSFERS),
   [ReducerTypes.ORGANIZATION_ACTION_TYPE]: createReducer(genericRequest, ReducerTypes.ORGANIZATION_ACTION_TYPE),
   [ReducerTypes.ORGANIZATION_ACTION_TYPES]: createReducer(genericRequest, ReducerTypes.ORGANIZATION_ACTION_TYPES),
   [ReducerTypes.ORGANIZATION_STATUSES]: createReducer(genericRequest, ReducerTypes.ORGANIZATION_STATUSES),
