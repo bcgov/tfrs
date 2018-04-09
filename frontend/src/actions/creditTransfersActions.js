@@ -60,6 +60,34 @@ export const invalidateCreditTransfers = creditTransfers => ({
 });
 
 /*
+ * Approved Credit Transfers
+ */
+export const getApprovedCreditTransfers = () => (dispatch) => {
+  dispatch(getApprovedCreditTransfersRequest());
+
+  return axios.get(`${Routes.BASE_URL}${Routes.CREDIT_TRADE_API}/list_approved`)
+    .then((response) => {
+      dispatch(getCreditTransfersSuccess(response.data));
+    }).catch((error) => {
+      dispatch(getCreditTransfersError(error.response));
+    });
+};
+
+export const getApprovedCreditTransfersIfNeeded = () =>
+  (dispatch, getState) => {
+    if (shouldGetCreditTransfers(getState())) {
+      return dispatch(getApprovedCreditTransfers());
+    }
+
+    return Promise.resolve();
+  };
+
+const getApprovedCreditTransfersRequest = () => ({
+  name: 'GET_APPROVED_CREDIT_TRANSFERS_REQUEST',
+  type: ActionTypes.GET_APPROVED_CREDIT_TRANSFERS
+});
+
+/*
  * Credit Transfer Detail
  */
 export const getCreditTransfer = id => (dispatch) => {
@@ -120,12 +148,14 @@ export const invalidateCreditTransfer = creditTransfer => ({
  */
 export const addCreditTransfer = data => (dispatch) => {
   dispatch(addCreditTransferRequest());
+
   return axios
     .post(Routes.BASE_URL + Routes.CREDIT_TRADE_API, data)
     .then((response) => {
       dispatch(addCreditTransferSuccess(response.data));
     }).catch((error) => {
       dispatch(addCreditTransferError(error.response.data));
+      return Promise.reject(error);
     });
 };
 
@@ -181,10 +211,11 @@ const updateCreditTransferError = error => ({
 /*
  * Delete credit transfer
  */
-export const deleteCreditTransfer = data => (dispatch) => {
+export const deleteCreditTransfer = id => (dispatch) => {
   dispatch(deleteCreditTransferRequest());
-  axios
-    .post(Routes.BASE_URL + Routes.CREDIT_TRADE_API, data)
+
+  return axios
+    .put(`${Routes.BASE_URL}${Routes.CREDIT_TRADE_API}/${id}/delete`)
     .then((response) => {
       dispatch(deleteCreditTransferSuccess(response.data));
     }).catch((error) => {
@@ -193,18 +224,49 @@ export const deleteCreditTransfer = data => (dispatch) => {
 };
 
 const deleteCreditTransferRequest = () => ({
-  name: 'UPDATE_CREDIT_TRANSFER',
+  name: 'DELETE_CREDIT_TRANSFER',
   type: ActionTypes.REQUEST
 });
 
 const deleteCreditTransferSuccess = data => ({
-  name: 'SUCCESS_UPDATE_CREDIT_TRANSFER',
+  name: 'SUCCESS_DELETE_CREDIT_TRANSFER',
   type: ActionTypes.SUCCESS,
   data
 });
 
 const deleteCreditTransferError = error => ({
   name: 'ERROR_ADD_CREDIT_TRANSFER',
+  type: ActionTypes.ERROR,
+  errorMessage: error
+});
+
+/*
+ * Batch Process Approved Credit Transfers
+ */
+export const processApprovedCreditTransfers = () => (dispatch) => {
+  dispatch(processApprovedCreditTransfersRequest());
+  return axios
+    .put(`${Routes.BASE_URL}${Routes.CREDIT_TRADE_API}/batch_process`)
+    .then((response) => {
+      dispatch(processApprovedCreditTransfersSuccess(response.data));
+    }).catch((error) => {
+      dispatch(processApprovedCreditTransfersError(error.response.data));
+    });
+};
+
+const processApprovedCreditTransfersRequest = () => ({
+  name: 'PROCESS_APPROVED_CREDIT_TRANSFERS',
+  type: ActionTypes.PROCESS_APPROVED_CREDIT_TRANSFERS
+});
+
+const processApprovedCreditTransfersSuccess = data => ({
+  name: 'SUCCESS_APPROVED_CREDIT_TRANSFERS',
+  type: ActionTypes.SUCCESS,
+  data
+});
+
+const processApprovedCreditTransfersError = error => ({
+  name: 'ERROR_APPROVED_CREDIT_TRANSFERS',
   type: ActionTypes.ERROR,
   errorMessage: error
 });

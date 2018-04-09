@@ -80,4 +80,20 @@ export const COMPLIANCE_YEAR_START = 1975;
 
 export const DEFAULT_INITIATOR = 'BC Government';
 
+export const DEFAULT_ORGANIZATION = {
+  id: 1,
+  name: 'Government of British Columbia'
+};
+
 export const ADD_COMMAS_REGEX = /\B(?=(\d{3})+(?!\d))/g;
+
+export const ZERO_DOLLAR_REASON = {
+  affiliate: {
+    id: 1,
+    description: 'Affiliate'
+  },
+  other: {
+    id: 2,
+    description: 'Other'
+  }
+};

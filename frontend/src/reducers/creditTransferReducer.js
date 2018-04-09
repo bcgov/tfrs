@@ -51,7 +51,8 @@ const creditTransfer = (state = {
       });
     case ActionTypes.INVALIDATE_CREDIT_TRANSFER:
       return Object.assign({}, state, {
-        didInvalidate: true
+        didInvalidate: true,
+        errors: {}
       });
     default:
       return state;
