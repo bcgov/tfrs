@@ -38,6 +38,7 @@ node('maven') {
 
 }
 
+/****
 node('bddstack') {
 
 	stage('FT on Dev') {
@@ -49,9 +50,9 @@ node('bddstack') {
                 echo ">> FT_LOG_LEVEL=${FT_LOG_LEVEL}"
                 sh './gradlew --debug --stacktrace chromeHeadlessTest'
 	    } finally {
-		archiveArtifacts allowEmptyArchive: true, artifacts: 'build/reports/**/*'
-                archiveArtifacts allowEmptyArchive: true, artifacts: 'build/test-results/**/*'
-                junit 'build/test-results/**/*.xml'
+		archiveArtifacts allowEmptyArchive: true, artifacts: 'build/reports/ * * / *'
+                archiveArtifacts allowEmptyArchive: true, artifacts: 'build/test-results/ * * / *'
+                junit 'build/test-results/ * * / *.xml'
                 publishHTML (target: [
                             allowMissing: false,
                             alwaysLinkToLastBuild: false,
@@ -72,3 +73,4 @@ node('bddstack') {
         }
     }
 }
+****/
