@@ -186,14 +186,37 @@ class CreditTradeService(object):
     @staticmethod
     def validate_credits(credit_trades):
         errors = []
+        temp_storage = []
 
         for credit_trade in credit_trades:
-            starting_bal = OrganizationBalance.objects.get(
-                organization_id=credit_trade.credits_from.id,
-                expiration_date=None)
+            starting_balance = None
 
-            credits_remaining = starting_bal.validated_credits - \
+            if len(temp_storage) > 0:
+                for balance in temp_storage:
+                    if balance["id"] == credit_trade.credits_from.id:
+                        starting_balance = balance["credits"]
+
+            if starting_balance is None:
+                try:  # if balance hasn't been populated, get from the database
+                    organization_balance = OrganizationBalance.objects.get(
+                        organization_id=credit_trade.credits_from.id,
+                        expiration_date=None)
+
+                    starting_balance = organization_balance.validated_credits
+                except OrganizationBalance.DoesNotExist:
+                    starting_balance = 0
+
+            credits_remaining = starting_balance - \
                 credit_trade.number_of_credits
+
+            # store the balance as we might need to check as we might need this later
+            # if we only retrieve from the database, then we won't get an accurate
+            # count as at some point the balance might not be enough for the succeeding
+            # transfers
+            temp_storage.append({
+                "id": credit_trade.credits_from.id,
+                "credits": credits_remaining
+            })
 
             if credits_remaining < 0:
                 errors.append(
@@ -202,5 +225,5 @@ class CreditTradeService(object):
                     "`{}` has insufficient credits.".
                     format(credit_trade.id, credit_trade.credits_from.name))
 
-        if errors:
+        if len(errors) > 0:
             raise PositiveIntegerException(errors)
