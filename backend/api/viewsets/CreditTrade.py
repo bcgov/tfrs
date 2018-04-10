@@ -18,6 +18,7 @@ from api.serializers import CreditTradeHistory2Serializer \
 
 from api.services.CreditTradeService import CreditTradeService
 
+
 class CreditTradeViewSet(AuditableMixin, mixins.CreateModelMixin,
                          mixins.RetrieveModelMixin, mixins.UpdateModelMixin,
                          mixins.ListModelMixin, viewsets.GenericViewSet):
@@ -53,7 +54,8 @@ class CreditTradeViewSet(AuditableMixin, mixins.CreateModelMixin,
         for the currently authenticated user.
         """
         user = self.request.user
-        return CreditTradeService.get_organization_credit_trades(user.organization)
+        return CreditTradeService.get_organization_credit_trades(
+            user.organization)
 
     def perform_create(self, serializer):
         credit_trade = serializer.save()
@@ -102,7 +104,8 @@ class CreditTradeViewSet(AuditableMixin, mixins.CreateModelMixin,
         status_approved = CreditTradeStatus.objects \
                                            .get(status="Approved")
 
-        credit_trades = CreditTrade.objects.filter(status_id=status_approved.id)
+        credit_trades = CreditTrade.objects.filter(
+            status_id=status_approved.id)
         serializer = self.get_serializer(credit_trades, many=True)
 
         return Response(serializer.data)
@@ -112,7 +115,8 @@ class CreditTradeViewSet(AuditableMixin, mixins.CreateModelMixin,
         status_approved = CreditTradeStatus.objects \
                                            .get(status="Approved")
 
-        credit_trades = CreditTrade.objects.filter(status_id=status_approved.id)
+        credit_trades = CreditTrade.objects.filter(
+            status_id=status_approved.id)
 
         CreditTradeService.validate_credits(credit_trades)
 

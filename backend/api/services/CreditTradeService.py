@@ -7,6 +7,7 @@ from api.models.CreditTrade import CreditTrade
 from api.exceptions import PositiveIntegerException
 from django.core.exceptions import ValidationError
 from django.db.models import Q
+from django.db import transaction
 
 import datetime
 
@@ -137,6 +138,7 @@ class CreditTradeService(object):
         return credit_trade
 
     @staticmethod
+    @transaction.non_atomic_requests()
     def transfer_credits(_from, _to, credit_trade_id, num_of_credits,
                          effective_date):
         from_starting_bal, created = OrganizationBalance.objects.get_or_create(
