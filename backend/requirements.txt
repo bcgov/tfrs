@@ -7,9 +7,7 @@ django-filter==1.0.2
 djangorestframework==3.7.7
 djangorestframework-bulk==0.2.1
 djangorestframework-camel-case==0.2.0
-##gunicorn==19.4.5
 gunicorn>=19.7.0
-gevent>=1.2.2
 Markdown==2.6.8
 psycopg2-binary>=2.7.1
 whitenoise==3.0
