@@ -31,24 +31,24 @@ const HistoricalDataTable = (props) => {
     accessor: item => item.type.id,
     className: 'col-transfer-type',
     Cell: (row) => {
-      let value = '';
+      let content = '';
 
       switch (row.value) {
         case CREDIT_TRANSFER_TYPES.validation.id:
-          value = 'Validation';
+          content = 'Validation';
           break;
         case CREDIT_TRANSFER_TYPES.retirement.id:
-          value = 'Reduction';
+          content = 'Reduction';
           break;
         case CREDIT_TRANSFER_TYPES.part3Award.id:
-          value = 'Part 3 Award';
+          content = 'Part 3 Award';
           break;
         default:
-          value = 'Credit Transfer';
+          content = 'Credit Transfer';
       }
 
       return (
-        <div>{value}</div>
+        <div>{content}</div>
       );
     }
   }, {
@@ -56,17 +56,38 @@ const HistoricalDataTable = (props) => {
     Header: 'Credits From',
     accessor: item => item.creditsFrom.name,
     minWidth: 200,
-    Cell: row => (
-      <div>{row.value}</div>
-    )
+    Cell: (row) => {
+      let content;
+
+      if (row.original.type.id !== CREDIT_TRANSFER_TYPES.part3Award.id &&
+        row.original.type.id !== CREDIT_TRANSFER_TYPES.validation.id) {
+        content = row.value;
+      } else {
+        content = 'N/A';
+      }
+
+      return (
+        <div>{content}</div>
+      );
+    }
   }, {
     id: 'creditsTo',
     Header: 'Credits To',
     accessor: item => item.creditsTo.name,
     minWidth: 200,
-    Cell: row => (
-      <div>{row.value}</div>
-    )
+    Cell: (row) => {
+      let content;
+
+      if (row.original.type.id !== CREDIT_TRANSFER_TYPES.retirement.id) {
+        content = row.value;
+      } else {
+        content = 'N/A';
+      }
+
+      return (
+        <div>{content}</div>
+      );
+    }
   }, {
     id: 'numberOfCredits',
     Header: 'Credits',
@@ -76,7 +97,21 @@ const HistoricalDataTable = (props) => {
     id: 'totalvalue',
     Header: 'Price',
     accessor: item => numeral(item.totalValue).format(NumberFormat.CURRENCY),
-    className: 'col-price'
+    className: 'col-price',
+    Cell: (row) => {
+      let content;
+
+      if (row.original.type.id === CREDIT_TRANSFER_TYPES.buy.id ||
+        row.original.type.id === CREDIT_TRANSFER_TYPES.sell.id) {
+        content = row.value;
+      } else {
+        content = 'N/A';
+      }
+
+      return (
+        <div>{content}</div>
+      );
+    }
   }, {
     id: 'zeroReason',
     Header: 'Zero Reason',
@@ -84,16 +119,16 @@ const HistoricalDataTable = (props) => {
     className: 'col-zero-reason',
     Cell: (row) => {
       const zeroReason = row.value;
-      let value;
+      let content;
 
       if (zeroReason && zeroReason.id === ZERO_DOLLAR_REASON.affiliate.id) {
-        value = ZERO_DOLLAR_REASON.affiliate.description;
+        content = ZERO_DOLLAR_REASON.affiliate.description;
       } else if (zeroReason && zeroReason.id === ZERO_DOLLAR_REASON.other.id) {
-        value = ZERO_DOLLAR_REASON.other.description;
+        content = ZERO_DOLLAR_REASON.other.description;
       }
 
       return (
-        <div>{value}</div>
+        <div>{content}</div>
       );
     }
   }, {
@@ -124,7 +159,7 @@ const HistoricalDataTable = (props) => {
   return (
     <ReactTable
       data={props.items}
-      defaultPageSize={10}
+      defaultPageSize={5}
       filterable={filterable}
       defaultFilterMethod={filterMethod}
       columns={columns}

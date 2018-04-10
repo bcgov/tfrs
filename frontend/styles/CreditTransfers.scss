@@ -243,3 +243,11 @@
   max-height: 500px;
   overflow: auto;
 }
+
+.page_credit_transactions {
+  .rt-table {
+    .col-credits, .col-date, .col-id, .col-price, .col-total {
+      text-align: right;
+    }
+  }
+}

@@ -139,21 +139,23 @@ class CreditTradeService(object):
     @staticmethod
     def transfer_credits(_from, _to, credit_trade_id, num_of_credits,
                          effective_date):
-        from_starting_bal = OrganizationBalance.objects.get(
+        from_starting_bal, created = OrganizationBalance.objects.get_or_create(
             organization_id=_from.id,
-            expiration_date=None)
+            expiration_date=None,
+            defaults={'validated_credits': 0})
 
-        to_starting_bal = OrganizationBalance.objects.get(
+        to_starting_bal, created = OrganizationBalance.objects.get_or_create(
             organization_id=_to.id,
-            expiration_date=None)
+            expiration_date=None,
+            defaults={'validated_credits': 0})
 
         # Compute for end balance
         from_credits = from_starting_bal.validated_credits - num_of_credits
         to_credits = to_starting_bal.validated_credits + num_of_credits
 
-        if 0 > from_credits:
+        if from_credits < 0:
             raise PositiveIntegerException("Can't complete transaction,"
-                                           "insufficient credits")
+                                           "`{}` has insufficient credits".format(_from.name))
 
         # Update old balance effective date
         from_starting_bal.expiration_date = effective_date
@@ -180,3 +182,25 @@ class CreditTradeService(object):
 
         from_new_bal.save()
         to_new_bal.save()
+
+    @staticmethod
+    def validate_credits(credit_trades):
+        errors = []
+
+        for credit_trade in credit_trades:
+            starting_bal = OrganizationBalance.objects.get(
+                organization_id=credit_trade.credits_from.id,
+                expiration_date=None)
+
+            credits_remaining = starting_bal.validated_credits - \
+                credit_trade.number_of_credits
+
+            if credits_remaining < 0:
+                errors.append(
+                    "[ID: {}] "
+                    "Can't complete transaction,"
+                    "`{}` has insufficient credits.".
+                    format(credit_trade.id, credit_trade.credits_from.name))
+
+        if errors:
+            raise PositiveIntegerException(errors)

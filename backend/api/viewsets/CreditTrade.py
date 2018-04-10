@@ -114,7 +114,10 @@ class CreditTradeViewSet(AuditableMixin, mixins.CreateModelMixin,
 
         credit_trades = CreditTrade.objects.filter(status_id=status_approved.id)
 
+        CreditTradeService.validate_credits(credit_trades)
+
         for credit_trade in credit_trades:
+            credit_trade.update_user_id = request.user.id
             CreditTradeService.approve(credit_trade)
 
         return Response(None, status=status.HTTP_200_OK)
