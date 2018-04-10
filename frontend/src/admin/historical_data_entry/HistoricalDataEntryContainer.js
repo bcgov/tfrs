@@ -8,13 +8,13 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import PropTypes from 'prop-types';
 
-import { CREDIT_TRANSFER_STATUS, CREDIT_TRANSFER_TYPES, DEFAULT_ORGANIZATION } from '../../constants/values';
 import {
   addCreditTransfer,
   deleteCreditTransfer,
   getApprovedCreditTransfersIfNeeded,
   invalidateCreditTransfer,
   invalidateCreditTransfers,
+  prepareCreditTransfer,
   processApprovedCreditTransfers
 } from '../../actions/creditTransfersActions';
 import { getFuelSuppliers } from '../../actions/organizationActions';
@@ -90,25 +90,7 @@ class HistoricalDataEntryContainer extends Component {
   _handleSubmit (event, status) {
     event.preventDefault();
 
-    // API data structure
-    const data = {
-      initiator: (this.state.fields.creditsFrom.id > 0)
-        ? this.state.fields.creditsFrom.id
-        : DEFAULT_ORGANIZATION.id,
-      note: this.state.fields.note,
-      numberOfCredits: parseInt(this.state.fields.numberOfCredits, 10),
-      respondent: (this.state.fields.creditsTo.id > 0)
-        ? this.state.fields.creditsTo.id
-        : DEFAULT_ORGANIZATION.id,
-      status: CREDIT_TRANSFER_STATUS.approved.id,
-      tradeEffectiveDate: this.state.fields.tradeEffectiveDate,
-      type: this.state.fields.transferType,
-      zeroReason: this.state.fields.zeroDollarReason
-    };
-
-    if (this.state.fields.transferType === CREDIT_TRANSFER_TYPES.sell.id.toString()) {
-      data.fairMarketValuePerCredit = this.state.fields.fairMarketValuePerCredit;
-    }
+    const data = this.props.prepareCreditTransfer(this.state.fields);
 
     this.props.addCreditTransfer(data).then(() => {
       this.props.invalidateCreditTransfers();
@@ -157,8 +139,9 @@ class HistoricalDataEntryContainer extends Component {
   render () {
     return (
       <HistoricalDataEntryPage
+        addErrors={this.props.addErrors}
+        commitErrors={this.props.commitErrors}
         deleteCreditTransfer={this._deleteCreditTransfer}
-        errors={this.props.errors}
         fields={this.state.fields}
         fuelSuppliers={this.props.fuelSuppliers}
         handleDelete={this._handleDelete}
@@ -176,13 +159,15 @@ class HistoricalDataEntryContainer extends Component {
 }
 
 HistoricalDataEntryContainer.defaultProps = {
-  errors: {}
+  addErrors: {},
+  commitErrors: {}
 };
 
 HistoricalDataEntryContainer.propTypes = {
   addCreditTransfer: PropTypes.func.isRequired,
+  addErrors: PropTypes.shape({}),
+  commitErrors: PropTypes.shape({}),
   deleteCreditTransfer: PropTypes.func.isRequired,
-  errors: PropTypes.shape({}),
   fuelSuppliers: PropTypes.arrayOf(PropTypes.shape()).isRequired,
   getApprovedCreditTransfersIfNeeded: PropTypes.func.isRequired,
   getFuelSuppliers: PropTypes.func.isRequired,
@@ -192,11 +177,13 @@ HistoricalDataEntryContainer.propTypes = {
   }).isRequired,
   invalidateCreditTransfer: PropTypes.func.isRequired,
   invalidateCreditTransfers: PropTypes.func.isRequired,
+  prepareCreditTransfer: PropTypes.func.isRequired,
   processApprovedCreditTransfers: PropTypes.func.isRequired
 };
 
 const mapStateToProps = state => ({
-  errors: state.rootReducer.creditTransfer.errors,
+  addErrors: state.rootReducer.creditTransfer.errors,
+  commitErrors: state.rootReducer.creditTransfers.errors,
   fuelSuppliers: state.rootReducer.fuelSuppliersRequest.fuelSuppliers,
   historicalData: {
     items: state.rootReducer.creditTransfers.items,
@@ -213,6 +200,7 @@ const mapDispatchToProps = dispatch => ({
   },
   invalidateCreditTransfer: bindActionCreators(invalidateCreditTransfer, dispatch),
   invalidateCreditTransfers: bindActionCreators(invalidateCreditTransfers, dispatch),
+  prepareCreditTransfer: fields => prepareCreditTransfer(fields),
   processApprovedCreditTransfers: bindActionCreators(processApprovedCreditTransfers, dispatch)
 });
 
