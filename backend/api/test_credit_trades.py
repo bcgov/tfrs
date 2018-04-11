@@ -144,7 +144,7 @@ class TestCreditTrades(TestCase):
     # credit transfer with 0 fair market value:
     # If the type is 'Sell', Fair Market Value needs to be greater than 0
     # or zero dollar reason must be provided
-    # This tests if we try to submit a 0 dollar credit transaction with no 
+    # This tests if we try to submit a 0 dollar credit transaction with no
     # reason
     def test_government_user_add_credit_transfer(self):
         credit_trade_status, created = CreditTradeStatus.objects.get_or_create(
