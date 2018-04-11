@@ -11,6 +11,7 @@ from api.models.CreditTradeStatus import CreditTradeStatus
 from api.models.CreditTradeType import CreditTradeType
 from api.models.CreditTradeZeroReason import CreditTradeZeroReason
 from api.models.Organization import Organization
+from api.models.OrganizationBalance import OrganizationBalance
 from api.models.User import User
 
 from api.services.CreditTradeService import CreditTradeService
@@ -312,7 +313,7 @@ class TestCreditTrades(TestCase):
     # insufficient funds
     # This test is similar to the one above, but should succeed as we're going
     # to allocate the right amount of credits this time
-    def test_validate_credit_complex(self):
+    def test_validate_credit_success(self):
         credit_trade_status, created = CreditTradeStatus.objects.get_or_create(
             status='Approved')
 
@@ -373,3 +374,68 @@ class TestCreditTrades(TestCase):
 
         # no exceptions should be raised
         CreditTradeService.validate_credits(credit_trades)
+
+    # As a government user, I should be able to process all the approved
+    # credit transfers
+    # This test is similar to the one above, but a functional test to check
+    # if the commit actually works
+    def test_batch_process(self):
+        credit_trade_status, created = CreditTradeStatus.objects.get_or_create(
+            status='Approved')
+
+        credit_trade_type, created = CreditTradeType.objects.get_or_create(
+            the_type='Sell')
+
+        credit_trade_zero_reason, created = CreditTradeZeroReason.objects \
+            .get_or_create(reason='Other', display_order=2)
+
+        from_organization = Organization.objects.create(
+            name="Test 1",
+            actions_type_id=1,
+            status_id=1)
+        to_organization = Organization.objects.create(
+            name="Test 2",
+            actions_type_id=1,
+            status_id=1)
+
+        CreditTrade.objects.create(status=credit_trade_status,
+                                   initiator=self.gov_user.organization,
+                                   respondent=from_organization,
+                                   type=credit_trade_type,
+                                   number_of_credits=1000,
+                                   fair_market_value_per_credit=0,
+                                   zero_reason=credit_trade_zero_reason,
+                                   trade_effective_date=datetime.datetime
+                                   .today().strftime('%Y-%m-%d'))
+
+        CreditTrade.objects.create(status=credit_trade_status,
+                                   initiator=from_organization,
+                                   respondent=to_organization,
+                                   type=credit_trade_type,
+                                   number_of_credits=500,
+                                   fair_market_value_per_credit=0,
+                                   zero_reason=credit_trade_zero_reason,
+                                   trade_effective_date=datetime.datetime
+                                   .today().strftime('%Y-%m-%d'))
+
+        CreditTrade.objects.create(status=credit_trade_status,
+                                   initiator=from_organization,
+                                   respondent=to_organization,
+                                   type=credit_trade_type,
+                                   number_of_credits=400,
+                                   fair_market_value_per_credit=0,
+                                   zero_reason=credit_trade_zero_reason,
+                                   trade_effective_date=datetime.datetime
+                                   .today().strftime('%Y-%m-%d'))
+
+        credit_trades = CreditTrade.objects.filter(
+            status_id=credit_trade_status.id)
+
+        response = self.gov_client.put('/api/credit_trades/batch_process')
+        assert response.status_code == status.HTTP_200_OK
+
+        organization_balance = OrganizationBalance.objects.get(
+            organization_id=from_organization.id,
+            expiration_date=None)
+
+        assert organization_balance.validated_credits == 100
