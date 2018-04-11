@@ -148,6 +148,7 @@ const CreditTransferTable = (props) => {
       data={props.items}
       defaultPageSize={15}
       filterable={filterable}
+      pageSizeOptions={[5, 10, 15, 20, 25, 50, 100]}
       defaultFilterMethod={filterMethod}
       columns={columns}
     />
