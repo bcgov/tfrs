@@ -2,6 +2,7 @@ import axios from 'axios';
 
 import * as ActionTypes from '../constants/actionTypes';
 import * as Routes from '../constants/routes';
+import { CREDIT_TRANSFER_STATUS, CREDIT_TRANSFER_TYPES, DEFAULT_ORGANIZATION } from '../constants/values';
 
 /*
  * Credit Transfers
@@ -14,6 +15,57 @@ export const getCreditTransfers = () => (dispatch) => {
     }).catch((error) => {
       dispatch(getCreditTransfersError(error.response));
     });
+};
+
+export const prepareCreditTransfer = (fields) => {
+  // API data structure
+  const data = {
+    initiator: (fields.creditsFrom.id > 0)
+      ? fields.creditsFrom.id
+      : DEFAULT_ORGANIZATION.id,
+    note: fields.note,
+    numberOfCredits: parseInt(fields.numberOfCredits, 10),
+    respondent: (fields.creditsTo.id > 0)
+      ? fields.creditsTo.id
+      : DEFAULT_ORGANIZATION.id,
+    status: CREDIT_TRANSFER_STATUS.approved.id,
+    tradeEffectiveDate: fields.tradeEffectiveDate,
+    type: fields.transferType,
+    zeroReason: fields.zeroDollarReason
+  };
+
+  switch (fields.transferType) {
+    case CREDIT_TRANSFER_TYPES.part3Award.id.toString():
+    case CREDIT_TRANSFER_TYPES.validation.id.toString():
+      data.initiator = DEFAULT_ORGANIZATION.id;
+      data.respondent = fields.creditsTo.id;
+
+      break;
+    case CREDIT_TRANSFER_TYPES.retirement.id.toString():
+      data.initiator = DEFAULT_ORGANIZATION.id;
+      data.respondent = fields.creditsFrom.id;
+
+      break;
+    default:
+      data.initiator = (fields.creditsFrom.id > 0)
+        ? fields.creditsFrom.id
+        : DEFAULT_ORGANIZATION.id;
+
+      data.respondent = (fields.creditsTo.id > 0)
+        ? fields.creditsTo.id
+        : DEFAULT_ORGANIZATION.id;
+  }
+
+  if (fields.transferType === CREDIT_TRANSFER_TYPES.sell.id.toString()) {
+    data.fairMarketValuePerCredit = fields.fairMarketValuePerCredit;
+  }
+
+  if (fields.transferType !== CREDIT_TRANSFER_TYPES.sell.id.toString() ||
+    parseFloat(fields.fairMarketValuePerCredit) > 0) {
+    data.zeroReason = '';
+  }
+
+  return data;
 };
 
 export const shouldGetCreditTransfers = (state) => {
@@ -188,6 +240,7 @@ export const updateCreditTransfer = (id, data) => (dispatch) => {
       dispatch(updateCreditTransferSuccess(response.data));
     }).catch((error) => {
       dispatch(updateCreditTransferError(error.response.data));
+      return Promise.reject(error);
     });
 };
 
@@ -251,6 +304,7 @@ export const processApprovedCreditTransfers = () => (dispatch) => {
       dispatch(processApprovedCreditTransfersSuccess(response.data));
     }).catch((error) => {
       dispatch(processApprovedCreditTransfersError(error.response.data));
+      return Promise.reject(error);
     });
 };
 
@@ -267,6 +321,6 @@ const processApprovedCreditTransfersSuccess = data => ({
 
 const processApprovedCreditTransfersError = error => ({
   name: 'ERROR_APPROVED_CREDIT_TRANSFERS',
-  type: ActionTypes.ERROR,
+  type: ActionTypes.COMMIT_ERRORS,
   errorMessage: error
 });
