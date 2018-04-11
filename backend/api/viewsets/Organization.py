@@ -90,7 +90,5 @@ class OrganizationViewSet(AuditableMixin, viewsets.ModelViewSet):
             type=OrganizationType.objects.get(type="Part3FuelSupplier")) \
             .order_by('lower_name')
 
-        print fuel_suppliers
-
         serializer = self.get_serializer(fuel_suppliers, many=True)
         return Response(serializer.data)
