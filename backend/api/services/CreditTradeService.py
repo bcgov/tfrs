@@ -191,36 +191,31 @@ class CreditTradeService(object):
         temp_storage = []
 
         for credit_trade in credit_trades:
-            starting_balance = None
+            from_starting_index, from_starting_balance = CreditTradeService. \
+                get_temp_balance(temp_storage, credit_trade.credits_from.id)
 
-            if len(temp_storage) > 0:
-                for balance in temp_storage:
-                    if balance["id"] == credit_trade.credits_from.id:
-                        starting_balance = balance["credits"]
+            to_starting_index, to_starting_balance = CreditTradeService. \
+                get_temp_balance(temp_storage, credit_trade.credits_to.id)
 
-            if starting_balance is None:
-                try:  # if balance hasn't been populated, get from the database
-                    organization_balance = OrganizationBalance.objects.get(
-                        organization_id=credit_trade.credits_from.id,
-                        expiration_date=None)
-
-                    starting_balance = organization_balance.validated_credits
-                except OrganizationBalance.DoesNotExist:
-                    starting_balance = 0
-
-            credits_remaining = starting_balance - \
+            from_credits_remaining = from_starting_balance - \
                 credit_trade.number_of_credits
 
-            # store the balance as we might need to check as we might need this later
-            # if we only retrieve from the database, then we won't get an accurate
-            # count as at some point the balance might not be enough for the succeeding
-            # transfers
-            temp_storage.append({
-                "id": credit_trade.credits_from.id,
-                "credits": credits_remaining
-            })
+            to_credits_remaining = to_starting_balance + \
+                credit_trade.number_of_credits
 
-            if credits_remaining < 0:
+            CreditTradeService.update_temp_balance(
+                temp_storage,
+                from_starting_index,
+                from_credits_remaining,
+                credit_trade.credits_from.id)
+
+            CreditTradeService.update_temp_balance(
+                temp_storage,
+                to_starting_index,
+                to_credits_remaining,
+                credit_trade.credits_to.id)
+
+            if from_credits_remaining < 0:
                 errors.append(
                     "[ID: {}] "
                     "Can't complete transaction,"
@@ -229,3 +224,36 @@ class CreditTradeService(object):
 
         if len(errors) > 0:
             raise PositiveIntegerException(errors)
+
+    @staticmethod
+    def get_temp_balance(storage, id):
+        starting_balance = None
+        index = None
+
+        if len(storage) > 0:
+            for balance_index, balance in enumerate(storage):
+                if balance["id"] == id:
+                    starting_balance = balance["credits"]
+                    index = balance_index
+
+        if starting_balance is None:
+            try:  # if balance hasn't been populated, get from the database
+                organization_balance = OrganizationBalance.objects.get(
+                    organization_id=id,
+                    expiration_date=None)
+
+                starting_balance = organization_balance.validated_credits
+            except OrganizationBalance.DoesNotExist:
+                starting_balance = 0
+
+        return index, starting_balance
+
+    @staticmethod
+    def update_temp_balance(storage, index, credits, id):
+        if index is None:
+            storage.append({
+                "id": id,
+                "credits": credits
+            })
+        else:
+            storage[index]["credits"] = credits
