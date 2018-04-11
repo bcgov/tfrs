@@ -105,7 +105,7 @@ const HistoricalDataTable = (props) => {
         row.original.type.id === CREDIT_TRANSFER_TYPES.sell.id) {
         content = row.value;
       } else {
-        content = 'N/A';
+        content = '';
       }
 
       return (
