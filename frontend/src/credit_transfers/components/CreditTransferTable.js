@@ -146,7 +146,7 @@ const CreditTransferTable = (props) => {
   return (
     <ReactTable
       data={props.items}
-      defaultPageSize={25}
+      defaultPageSize={15}
       filterable={filterable}
       defaultFilterMethod={filterMethod}
       columns={columns}

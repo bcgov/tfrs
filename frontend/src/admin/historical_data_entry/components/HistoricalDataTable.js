@@ -135,6 +135,7 @@ const HistoricalDataTable = (props) => {
     id: 'actions',
     Header: '',
     accessor: 'id',
+    filterable: false,
     Cell: (row) => {
       const editUrl = `${Routes.HISTORICAL_DATA_ENTRY}/edit/${row.value}`;
 
