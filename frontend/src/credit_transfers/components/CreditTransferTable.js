@@ -25,22 +25,45 @@ const CreditTransferTable = (props) => {
     id: 'creditsFrom',
     Header: 'Credits From',
     accessor: item => item.creditsFrom.name,
-    minWidth: 230,
-    Cell: row => (
-      <div>{row.value}</div>
-    )
+    minWidth: 200,
+    Cell: (row) => {
+      let content;
+
+      if (row.original.type.id !== CREDIT_TRANSFER_TYPES.part3Award.id &&
+        row.original.type.id !== CREDIT_TRANSFER_TYPES.validation.id) {
+        content = row.value;
+      } else {
+        content = 'N/A';
+      }
+
+      return (
+        <div>{content}</div>
+      );
+    }
   }, {
     id: 'creditsTo',
     Header: 'Credits To',
     accessor: item => item.creditsTo.name,
-    Cell: row => (
-      <div>{row.value}</div>
-    )
+    minWidth: 200,
+    Cell: (row) => {
+      let content;
+
+      if (row.original.type.id !== CREDIT_TRANSFER_TYPES.retirement.id) {
+        content = row.value;
+      } else {
+        content = 'N/A';
+      }
+
+      return (
+        <div>{content}</div>
+      );
+    }
   }, {
     id: 'transactionType',
     Header: 'Transaction Type',
     accessor: item => item.type.id,
     className: 'col-transfer-type',
+    minWidth: 125,
     Cell: (row) => {
       let value = '';
 
@@ -66,18 +89,19 @@ const CreditTransferTable = (props) => {
     id: 'numberOfCredits',
     Header: 'Quantity of Credits',
     className: 'col-credits',
-    accessor: item => numeral(item.numberOfCredits).format(NumberFormat.INT)
+    accessor: item => numeral(item.numberOfCredits).format(NumberFormat.INT),
+    minWidth: 100
   }, {
     id: 'fairMarketValuePerCredit',
     Header: 'Value Per Credit',
     className: 'col-price',
     accessor: item => numeral(item.fairMarketValuePerCredit).format(NumberFormat.CURRENCY),
+    minWidth: 100,
     Cell: (row) => {
-      const creditTrade = row.row;
       let content = '';
 
-      if (creditTrade.transactionType === CREDIT_TRANSFER_TYPES.buy.id ||
-         creditTrade.transactionType === CREDIT_TRANSFER_TYPES.sell.id) {
+      if (row.original.type.id === CREDIT_TRANSFER_TYPES.buy.id ||
+         row.original.type.id === CREDIT_TRANSFER_TYPES.sell.id) {
         content = row.value;
       }
 
@@ -89,7 +113,8 @@ const CreditTransferTable = (props) => {
     id: 'status',
     Header: 'Status',
     accessor: item => item.status.status,
-    minWidth: 150
+    className: 'col-status',
+    minWidth: 125
   }, {
     id: 'updateTimestamp',
     Header: 'Last Updated On',
@@ -100,6 +125,9 @@ const CreditTransferTable = (props) => {
     id: 'actions',
     Header: '',
     accessor: 'id',
+    filterable: false,
+    className: 'col-actions',
+    minWidth: 50,
     Cell: (row) => {
       const viewUrl = `${Routes.CREDIT_TRANSACTIONS}/view/${row.value}`;
       return <Link to={viewUrl}><FontAwesomeIcon icon="eye" /></Link>;
