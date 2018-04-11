@@ -12,15 +12,18 @@ import numeral from 'numeral';
 
 import * as NumberFormat from '../../constants/numeralFormats';
 import * as Routes from '../../constants/routes';
+import { CREDIT_TRANSFER_TYPES } from '../../constants/values';
 
 const CreditTransferTable = (props) => {
   const columns = [{
     Header: 'ID',
     accessor: 'id',
-    maxWidth: 35
+    className: 'col-id',
+    resizable: false,
+    width: 35
   }, {
     id: 'creditsFrom',
-    Header: 'From',
+    Header: 'Credits From',
     accessor: item => item.creditsFrom.name,
     minWidth: 230,
     Cell: row => (
@@ -28,23 +31,60 @@ const CreditTransferTable = (props) => {
     )
   }, {
     id: 'creditsTo',
-    Header: 'To',
+    Header: 'Credits To',
     accessor: item => item.creditsTo.name,
     Cell: row => (
       <div>{row.value}</div>
     )
   }, {
+    id: 'transactionType',
+    Header: 'Transaction Type',
+    accessor: item => item.type.id,
+    className: 'col-transfer-type',
+    Cell: (row) => {
+      let value = '';
+
+      switch (row.value) {
+        case CREDIT_TRANSFER_TYPES.validation.id:
+          value = 'Validation';
+          break;
+        case CREDIT_TRANSFER_TYPES.retirement.id:
+          value = 'Reduction';
+          break;
+        case CREDIT_TRANSFER_TYPES.part3Award.id:
+          value = 'Part 3 Award';
+          break;
+        default:
+          value = 'Credit Transfer';
+      }
+
+      return (
+        <div>{value}</div>
+      );
+    }
+  }, {
     id: 'numberOfCredits',
-    Header: 'Credits',
+    Header: 'Quantity of Credits',
+    className: 'col-credits',
     accessor: item => numeral(item.numberOfCredits).format(NumberFormat.INT)
   }, {
     id: 'fairMarketValuePerCredit',
     Header: 'Value Per Credit',
-    accessor: item => numeral(item.fairMarketValuePerCredit).format(NumberFormat.DECIMAL)
-  }, {
-    id: 'totalvalue',
-    Header: 'Total Amount',
-    accessor: item => numeral(item.totalValue).format(NumberFormat.CURRENCY)
+    className: 'col-price',
+    accessor: item => numeral(item.fairMarketValuePerCredit).format(NumberFormat.CURRENCY),
+    Cell: (row) => {
+      const creditTrade = row.row;
+      let content = '';
+
+      if (creditTrade.transactionType === CREDIT_TRANSFER_TYPES.buy.id ||
+         creditTrade.transactionType === CREDIT_TRANSFER_TYPES.sell.id) {
+        content = row.value;
+      }
+
+      return (
+        <div>{content}</div>
+      );
+    }
   }, {
     id: 'status',
     Header: 'Status',
@@ -53,6 +93,7 @@ const CreditTransferTable = (props) => {
   }, {
     id: 'updateTimestamp',
     Header: 'Last Updated On',
+    className: 'col-date',
     accessor: item => moment(item.updateTimestamp).format('LL'),
     minWidth: 150
   }, {
