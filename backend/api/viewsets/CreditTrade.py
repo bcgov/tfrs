@@ -105,7 +105,7 @@ class CreditTradeViewSet(AuditableMixin, mixins.CreateModelMixin,
                                            .get(status="Approved")
 
         credit_trades = CreditTrade.objects.filter(
-            status_id=status_approved.id)
+            status_id=status_approved.id).order_by('id')
         serializer = self.get_serializer(credit_trades, many=True)
 
         return Response(serializer.data)
@@ -116,7 +116,7 @@ class CreditTradeViewSet(AuditableMixin, mixins.CreateModelMixin,
                                            .get(status="Approved")
 
         credit_trades = CreditTrade.objects.filter(
-            status_id=status_approved.id)
+            status_id=status_approved.id).order_by('id')
 
         CreditTradeService.validate_credits(credit_trades)
 
