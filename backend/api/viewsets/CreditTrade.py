@@ -124,4 +124,4 @@ class CreditTradeViewSet(AuditableMixin, mixins.CreateModelMixin,
             credit_trade.update_user_id = request.user.id
             CreditTradeService.approve(credit_trade)
 
-        return Response(None, status=status.HTTP_200_OK)
+        return Response({"message": "Approved Credit Transfers have been processed."}, status=status.HTTP_200_OK)
