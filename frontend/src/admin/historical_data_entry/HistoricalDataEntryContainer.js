@@ -141,6 +141,7 @@ class HistoricalDataEntryContainer extends Component {
       <HistoricalDataEntryPage
         addErrors={this.props.addErrors}
         commitErrors={this.props.commitErrors}
+        commitMessage={this.props.commitMessage}
         deleteCreditTransfer={this._deleteCreditTransfer}
         fields={this.state.fields}
         fuelSuppliers={this.props.fuelSuppliers}
@@ -160,13 +161,15 @@ class HistoricalDataEntryContainer extends Component {
 
 HistoricalDataEntryContainer.defaultProps = {
   addErrors: {},
-  commitErrors: {}
+  commitErrors: {},
+  commitMessage: ''
 };
 
 HistoricalDataEntryContainer.propTypes = {
   addCreditTransfer: PropTypes.func.isRequired,
   addErrors: PropTypes.shape({}),
   commitErrors: PropTypes.shape({}),
+  commitMessage: PropTypes.string,
   deleteCreditTransfer: PropTypes.func.isRequired,
   fuelSuppliers: PropTypes.arrayOf(PropTypes.shape()).isRequired,
   getApprovedCreditTransfersIfNeeded: PropTypes.func.isRequired,
@@ -184,6 +187,7 @@ HistoricalDataEntryContainer.propTypes = {
 const mapStateToProps = state => ({
   addErrors: state.rootReducer.creditTransfer.errors,
   commitErrors: state.rootReducer.creditTransfers.errors,
+  commitMessage: state.rootReducer.creditTransfers.message,
   fuelSuppliers: state.rootReducer.fuelSuppliersRequest.fuelSuppliers,
   historicalData: {
     items: state.rootReducer.creditTransfers.items,

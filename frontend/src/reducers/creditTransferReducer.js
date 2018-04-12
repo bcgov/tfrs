@@ -17,7 +17,7 @@ const creditTransfer = (state = {
       return Object.assign({}, state, {
         isFetching: false,
         didInvalidate: true,
-        item: {} //action.data
+        item: {} // action.data
       });
     case ActionTypes.UPDATE_CREDIT_TRANSFER:
       return Object.assign({}, state, {
@@ -94,6 +94,13 @@ const creditTransfers = (state = {
       return Object.assign({}, state, {
         didInvalidate: true,
         errors: {}
+      });
+    case ActionTypes.SUCCESS:
+      return Object.assign({}, state, {
+        didInvalidate: true,
+        isFetching: false,
+        success: true,
+        message: action.message
       });
     default:
       return state;
