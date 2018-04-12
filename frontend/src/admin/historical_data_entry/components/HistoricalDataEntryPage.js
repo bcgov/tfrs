@@ -22,12 +22,9 @@ const HistoricalDataEntryPage = (props) => {
     <div className="page_historical_data_entry">
       <h1>{props.title}</h1>
 
-      {Object.keys(props.errors).length > 0 &&
-        <Errors errors={props.errors} />
-      }
-
       <HistoricalDataEntryForm
         actions={formActions}
+        errors={props.addErrors}
         fuelSuppliers={props.fuelSuppliers}
         fields={props.fields}
         handleInputChange={props.handleInputChange}
@@ -36,6 +33,10 @@ const HistoricalDataEntryPage = (props) => {
       />
 
       {isFetching && <Loading />}
+      {!isFetching &&
+      Object.keys(props.commitErrors).length > 0 &&
+        <Errors errors={props.commitErrors} />
+      }
       {!isFetching &&
       <HistoricalDataTable
         fuelSuppliers={props.fuelSuppliers}
@@ -62,8 +63,9 @@ const HistoricalDataEntryPage = (props) => {
 };
 
 HistoricalDataEntryPage.propTypes = {
+  addErrors: PropTypes.shape({}).isRequired,
+  commitErrors: PropTypes.shape({}).isRequired,
   deleteCreditTransfer: PropTypes.func.isRequired,
-  errors: PropTypes.shape({}).isRequired,
   fields: PropTypes.shape({
     creditsFrom: PropTypes.shape({
       name: PropTypes.string,

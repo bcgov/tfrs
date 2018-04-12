@@ -84,8 +84,11 @@ class OrganizationViewSet(AuditableMixin, viewsets.ModelViewSet):
 
     @list_route(methods=['get'])
     def fuel_suppliers(self, request):
-        fuel_suppliers = Organization.objects.filter(
-            type=OrganizationType.objects.get(type="Part3FuelSupplier"))
+        fuel_suppliers = Organization.objects.extra(
+            select={'lower_name': 'lower(name)'}) \
+            .filter(
+            type=OrganizationType.objects.get(type="Part3FuelSupplier")) \
+            .order_by('lower_name')
 
         serializer = self.get_serializer(fuel_suppliers, many=True)
         return Response(serializer.data)

@@ -4,10 +4,17 @@ import json
 from django.test import TestCase, Client
 from rest_framework import status
 
+from api.exceptions import PositiveIntegerException
+
+from api.models.CreditTrade import CreditTrade
 from api.models.CreditTradeStatus import CreditTradeStatus
 from api.models.CreditTradeType import CreditTradeType
 from api.models.CreditTradeZeroReason import CreditTradeZeroReason
+from api.models.Organization import Organization
+from api.models.OrganizationBalance import OrganizationBalance
 from api.models.User import User
+
+from api.services.CreditTradeService import CreditTradeService
 
 # Credit Trade Statuses
 STATUS_DRAFT = 1
@@ -137,7 +144,7 @@ class TestCreditTrades(TestCase):
     # credit transfer with 0 fair market value:
     # If the type is 'Sell', Fair Market Value needs to be greater than 0
     # or zero dollar reason must be provided
-    # This tests if we try to submit a 0 dollar credit transaction with no 
+    # This tests if we try to submit a 0 dollar credit transaction with no
     # reason
     def test_government_user_add_credit_transfer(self):
         credit_trade_status, created = CreditTradeStatus.objects.get_or_create(
@@ -199,3 +206,236 @@ class TestCreditTrades(TestCase):
 
         # 400 since zero reason was set to None
         assert response.status_code == status.HTTP_201_CREATED
+
+    # As a government user, I should be able to validate approved credit
+    # transfers:
+    # It should raise an exception if it sees any fuel suppliers with
+    # insufficient funds
+    def test_validate_credit(self):
+        credit_trade_status, created = CreditTradeStatus.objects.get_or_create(
+            status='Approved')
+
+        credit_trade_type, created = CreditTradeType.objects.get_or_create(
+            the_type='Sell')
+
+        credit_trade_zero_reason, created = CreditTradeZeroReason.objects \
+            .get_or_create(reason='Other', display_order=2)
+
+        CreditTrade.objects.create(status=credit_trade_status,
+                                   initiator=self.user_2.organization,
+                                   respondent=self.user_3.organization,
+                                   type=credit_trade_type,
+                                   number_of_credits=1000000000,
+                                   fair_market_value_per_credit=0,
+                                   zero_reason=credit_trade_zero_reason,
+                                   trade_effective_date=datetime.datetime
+                                   .today().strftime('%Y-%m-%d'))
+
+        credit_trades = CreditTrade.objects.filter(
+            status_id=credit_trade_status.id)
+
+        with self.assertRaises(PositiveIntegerException):
+            CreditTradeService.validate_credits(credit_trades)
+
+    # As a government user, I should be able to validate approved credit
+    # transfers:
+    # It should raise an exception if it sees any fuel suppliers with
+    # insufficient funds
+    # This is a slightly more complex test where we have multi credit trades
+    # with new organizations that bounces the number of credits up and down
+    def test_validate_credit_complex(self):
+        credit_trade_status, created = CreditTradeStatus.objects.get_or_create(
+            status='Approved')
+
+        credit_trade_type, created = CreditTradeType.objects.get_or_create(
+            the_type='Sell')
+
+        credit_trade_zero_reason, created = CreditTradeZeroReason.objects \
+            .get_or_create(reason='Other', display_order=2)
+
+        from_organization = Organization.objects.create(
+            name="Test 1",
+            actions_type_id=1,
+            status_id=1)
+        to_organization = Organization.objects.create(
+            name="Test 2",
+            actions_type_id=1,
+            status_id=1)
+
+        # Award Test 1 with 1000 credits (new organizations start
+        # with 0 credits)
+        # (Please note in most cases we should use a different type
+        # but to reduce the number of things to keep track, lets just
+        # transfer from organization: 1 (BC Government))
+        CreditTrade.objects.create(status=credit_trade_status,
+                                   initiator=self.gov_user.organization,
+                                   respondent=from_organization,
+                                   type=credit_trade_type,
+                                   number_of_credits=1000,
+                                   fair_market_value_per_credit=0,
+                                   zero_reason=credit_trade_zero_reason,
+                                   trade_effective_date=datetime.datetime
+                                   .today().strftime('%Y-%m-%d'))
+
+        # Transfer 500 from Test 1 to Test 2
+        CreditTrade.objects.create(status=credit_trade_status,
+                                   initiator=from_organization,
+                                   respondent=to_organization,
+                                   type=credit_trade_type,
+                                   number_of_credits=500,
+                                   fair_market_value_per_credit=0,
+                                   zero_reason=credit_trade_zero_reason,
+                                   trade_effective_date=datetime.datetime
+                                   .today().strftime('%Y-%m-%d'))
+
+        # Transfer 700 from Test 1 to Test 2
+        CreditTrade.objects.create(status=credit_trade_status,
+                                   initiator=from_organization,
+                                   respondent=to_organization,
+                                   type=credit_trade_type,
+                                   number_of_credits=700,
+                                   fair_market_value_per_credit=0,
+                                   zero_reason=credit_trade_zero_reason,
+                                   trade_effective_date=datetime.datetime
+                                   .today().strftime('%Y-%m-%d'))
+
+        credit_trades = CreditTrade.objects.filter(
+            status_id=credit_trade_status.id)
+
+        # this should now raise an exception since we tried transferring
+        # 1200 credits when only 1000 are available
+        with self.assertRaises(PositiveIntegerException):
+            CreditTradeService.validate_credits(credit_trades)
+
+    # As a government user, I should be able to validate approved credit
+    # transfers:
+    # It should raise an exception if it sees any fuel suppliers with
+    # insufficient funds
+    # This test is similar to the one above, but should succeed as we're going
+    # to allocate the right amount of credits this time
+    def test_validate_credit_success(self):
+        credit_trade_status, created = CreditTradeStatus.objects.get_or_create(
+            status='Approved')
+
+        credit_trade_type, created = CreditTradeType.objects.get_or_create(
+            the_type='Sell')
+
+        credit_trade_zero_reason, created = CreditTradeZeroReason.objects \
+            .get_or_create(reason='Other', display_order=2)
+
+        from_organization = Organization.objects.create(
+            name="Test 1",
+            actions_type_id=1,
+            status_id=1)
+        to_organization = Organization.objects.create(
+            name="Test 2",
+            actions_type_id=1,
+            status_id=1)
+
+        # Award Test 1 with 1000 credits (new organizations start
+        # with 0 credits)
+        # (Please note in most cases we should use a different type
+        # but to reduce the number of things to keep track, lets just
+        # transfer from organization: 1 (BC Government))
+        CreditTrade.objects.create(status=credit_trade_status,
+                                   initiator=self.gov_user.organization,
+                                   respondent=from_organization,
+                                   type=credit_trade_type,
+                                   number_of_credits=1000,
+                                   fair_market_value_per_credit=0,
+                                   zero_reason=credit_trade_zero_reason,
+                                   trade_effective_date=datetime.datetime
+                                   .today().strftime('%Y-%m-%d'))
+
+        # Transfer 500 from Test 1 to Test 2
+        CreditTrade.objects.create(status=credit_trade_status,
+                                   initiator=from_organization,
+                                   respondent=to_organization,
+                                   type=credit_trade_type,
+                                   number_of_credits=500,
+                                   fair_market_value_per_credit=0,
+                                   zero_reason=credit_trade_zero_reason,
+                                   trade_effective_date=datetime.datetime
+                                   .today().strftime('%Y-%m-%d'))
+
+        # Transfer 300 from Test 1 to Test 2
+        CreditTrade.objects.create(status=credit_trade_status,
+                                   initiator=from_organization,
+                                   respondent=to_organization,
+                                   type=credit_trade_type,
+                                   number_of_credits=500,
+                                   fair_market_value_per_credit=0,
+                                   zero_reason=credit_trade_zero_reason,
+                                   trade_effective_date=datetime.datetime
+                                   .today().strftime('%Y-%m-%d'))
+
+        credit_trades = CreditTrade.objects.filter(
+            status_id=credit_trade_status.id)
+
+        # no exceptions should be raised
+        CreditTradeService.validate_credits(credit_trades)
+
+    # As a government user, I should be able to process all the approved
+    # credit transfers
+    # This test is similar to the one above, but a functional test to check
+    # if the commit actually works
+    def test_batch_process(self):
+        credit_trade_status, created = CreditTradeStatus.objects.get_or_create(
+            status='Approved')
+
+        credit_trade_type, created = CreditTradeType.objects.get_or_create(
+            the_type='Sell')
+
+        credit_trade_zero_reason, created = CreditTradeZeroReason.objects \
+            .get_or_create(reason='Other', display_order=2)
+
+        from_organization = Organization.objects.create(
+            name="Test 1",
+            actions_type_id=1,
+            status_id=1)
+        to_organization = Organization.objects.create(
+            name="Test 2",
+            actions_type_id=1,
+            status_id=1)
+
+        CreditTrade.objects.create(status=credit_trade_status,
+                                   initiator=self.gov_user.organization,
+                                   respondent=from_organization,
+                                   type=credit_trade_type,
+                                   number_of_credits=1000,
+                                   fair_market_value_per_credit=0,
+                                   zero_reason=credit_trade_zero_reason,
+                                   trade_effective_date=datetime.datetime
+                                   .today().strftime('%Y-%m-%d'))
+
+        CreditTrade.objects.create(status=credit_trade_status,
+                                   initiator=from_organization,
+                                   respondent=to_organization,
+                                   type=credit_trade_type,
+                                   number_of_credits=500,
+                                   fair_market_value_per_credit=0,
+                                   zero_reason=credit_trade_zero_reason,
+                                   trade_effective_date=datetime.datetime
+                                   .today().strftime('%Y-%m-%d'))
+
+        CreditTrade.objects.create(status=credit_trade_status,
+                                   initiator=from_organization,
+                                   respondent=to_organization,
+                                   type=credit_trade_type,
+                                   number_of_credits=400,
+                                   fair_market_value_per_credit=0,
+                                   zero_reason=credit_trade_zero_reason,
+                                   trade_effective_date=datetime.datetime
+                                   .today().strftime('%Y-%m-%d'))
+
+        credit_trades = CreditTrade.objects.filter(
+            status_id=credit_trade_status.id)
+
+        response = self.gov_client.put('/api/credit_trades/batch_process')
+        assert response.status_code == status.HTTP_200_OK
+
+        organization_balance = OrganizationBalance.objects.get(
+            organization_id=from_organization.id,
+            expiration_date=None)
+
+        assert organization_balance.validated_credits == 100

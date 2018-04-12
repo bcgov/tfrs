@@ -10,11 +10,11 @@ import PropTypes from 'prop-types';
 
 import * as Lang from '../../constants/langEnUs';
 import * as Routes from '../../constants/routes';
-import { CREDIT_TRANSFER_STATUS } from '../../constants/values';
 import { getFuelSuppliers } from '../../actions/organizationActions';
 import {
   getCreditTransfer,
   invalidateCreditTransfers,
+  prepareCreditTransfer,
   updateCreditTransfer
 } from '../../actions/creditTransfersActions';
 import history from '../../app/History';
@@ -33,7 +33,8 @@ class HistoricalDataEntryEditContainer extends Component {
         tradeEffectiveDate: '',
         note: '',
         numberOfCredits: '',
-        transferType: ''
+        transferType: '',
+        zeroDollarReason: ''
       },
       totalValue: 0
     };
@@ -68,19 +69,7 @@ class HistoricalDataEntryEditContainer extends Component {
   _handleSubmit (event, status) {
     event.preventDefault();
 
-    // API data structure
-    const data = {
-      fairMarketValuePerCredit: (this.state.fields.transferType !== '5') ? this.state.fields.fairMarketValuePerCredit : null,
-      initiator: this.state.fields.creditsFrom.id,
-      note: this.state.fields.note,
-      numberOfCredits: parseInt(this.state.fields.numberOfCredits, 10),
-      respondent: this.state.fields.creditsTo.id,
-      status: CREDIT_TRANSFER_STATUS.approved.id,
-      tradeEffectiveDate: this.state.fields.tradeEffectiveDate,
-      type: this.state.fields.transferType,
-      zeroReason: this.state.fields.zeroDollarReason
-    };
-
+    const data = this.props.prepareCreditTransfer(this.state.fields);
     const { id } = this.props.item;
 
     this.props.updateCreditTransfer(id, data).then((response) => {
@@ -171,11 +160,12 @@ HistoricalDataEntryEditContainer.propTypes = {
       id: PropTypes.string.isRequired
     }).isRequired
   }).isRequired,
+  prepareCreditTransfer: PropTypes.func.isRequired,
   updateCreditTransfer: PropTypes.func.isRequired
 };
 
 const mapStateToProps = state => ({
-  errors: state.rootReducer.creditTransfers.errors,
+  errors: state.rootReducer.creditTransfer.errors,
   fuelSuppliers: state.rootReducer.fuelSuppliersRequest.fuelSuppliers,
   isFetching: state.rootReducer.creditTransfer.isFetching,
   item: state.rootReducer.creditTransfer.item
@@ -185,6 +175,7 @@ const mapDispatchToProps = dispatch => ({
   getCreditTransfer: bindActionCreators(getCreditTransfer, dispatch),
   getFuelSuppliers: bindActionCreators(getFuelSuppliers, dispatch),
   invalidateCreditTransfers: bindActionCreators(invalidateCreditTransfers, dispatch),
+  prepareCreditTransfer: fields => prepareCreditTransfer(fields),
   updateCreditTransfer: bindActionCreators(updateCreditTransfer, dispatch)
 });
 

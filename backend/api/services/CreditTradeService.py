@@ -7,6 +7,7 @@ from api.models.CreditTrade import CreditTrade
 from api.exceptions import PositiveIntegerException
 from django.core.exceptions import ValidationError
 from django.db.models import Q
+from django.db import transaction
 
 import datetime
 
@@ -137,23 +138,26 @@ class CreditTradeService(object):
         return credit_trade
 
     @staticmethod
+    @transaction.non_atomic_requests()
     def transfer_credits(_from, _to, credit_trade_id, num_of_credits,
                          effective_date):
-        from_starting_bal = OrganizationBalance.objects.get(
+        from_starting_bal, created = OrganizationBalance.objects.get_or_create(
             organization_id=_from.id,
-            expiration_date=None)
+            expiration_date=None,
+            defaults={'validated_credits': 0})
 
-        to_starting_bal = OrganizationBalance.objects.get(
+        to_starting_bal, created = OrganizationBalance.objects.get_or_create(
             organization_id=_to.id,
-            expiration_date=None)
+            expiration_date=None,
+            defaults={'validated_credits': 0})
 
         # Compute for end balance
         from_credits = from_starting_bal.validated_credits - num_of_credits
         to_credits = to_starting_bal.validated_credits + num_of_credits
 
-        if 0 > from_credits:
+        if from_credits < 0:
             raise PositiveIntegerException("Can't complete transaction,"
-                                           "insufficient credits")
+                                           "`{}` has insufficient credits".format(_from.name))
 
         # Update old balance effective date
         from_starting_bal.expiration_date = effective_date
@@ -180,3 +184,76 @@ class CreditTradeService(object):
 
         from_new_bal.save()
         to_new_bal.save()
+
+    @staticmethod
+    def validate_credits(credit_trades):
+        errors = []
+        temp_storage = []
+
+        for credit_trade in credit_trades:
+            from_starting_index, from_starting_balance = CreditTradeService. \
+                get_temp_balance(temp_storage, credit_trade.credits_from.id)
+
+            to_starting_index, to_starting_balance = CreditTradeService. \
+                get_temp_balance(temp_storage, credit_trade.credits_to.id)
+
+            from_credits_remaining = from_starting_balance - \
+                credit_trade.number_of_credits
+
+            to_credits_remaining = to_starting_balance + \
+                credit_trade.number_of_credits
+
+            CreditTradeService.update_temp_balance(
+                temp_storage,
+                from_starting_index,
+                from_credits_remaining,
+                credit_trade.credits_from.id)
+
+            CreditTradeService.update_temp_balance(
+                temp_storage,
+                to_starting_index,
+                to_credits_remaining,
+                credit_trade.credits_to.id)
+
+            if from_credits_remaining < 0:
+                errors.append(
+                    "[ID: {}] "
+                    "Can't complete transaction,"
+                    "`{}` has insufficient credits.".
+                    format(credit_trade.id, credit_trade.credits_from.name))
+
+        if len(errors) > 0:
+            raise PositiveIntegerException(errors)
+
+    @staticmethod
+    def get_temp_balance(storage, id):
+        starting_balance = None
+        index = None
+
+        if len(storage) > 0:
+            for balance_index, balance in enumerate(storage):
+                if balance["id"] == id:
+                    starting_balance = balance["credits"]
+                    index = balance_index
+
+        if starting_balance is None:
+            try:  # if balance hasn't been populated, get from the database
+                organization_balance = OrganizationBalance.objects.get(
+                    organization_id=id,
+                    expiration_date=None)
+
+                starting_balance = organization_balance.validated_credits
+            except OrganizationBalance.DoesNotExist:
+                starting_balance = 0
+
+        return index, starting_balance
+
+    @staticmethod
+    def update_temp_balance(storage, index, credits, id):
+        if index is None:
+            storage.append({
+                "id": id,
+                "credits": credits
+            })
+        else:
+            storage[index]["credits"] = credits
