@@ -6,7 +6,7 @@ const Footer = props => (
   <div id="footer" role="contentinfo">
     <img
       className="back-to-top"
-      src="./assets/images/back-to-top.png"
+      src="/assets/images/back-to-top.png"
       alt="Back to top"
       title="Back to top"
     />
