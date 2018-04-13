@@ -57,17 +57,15 @@ const HistoricalDataTable = (props) => {
     accessor: item => item.creditsFrom.name,
     minWidth: 200,
     Cell: (row) => {
-      let content;
-
-      if (row.original.type.id !== CREDIT_TRANSFER_TYPES.part3Award.id &&
-        row.original.type.id !== CREDIT_TRANSFER_TYPES.validation.id) {
-        content = row.value;
-      } else {
-        content = 'N/A';
+      if (row.original.type.id === CREDIT_TRANSFER_TYPES.part3Award.id ||
+        row.original.type.id === CREDIT_TRANSFER_TYPES.validation.id) {
+        return (
+          <div className="greyed-out">N/A</div>
+        );
       }
 
       return (
-        <div>{content}</div>
+        <div>{row.value}</div>
       );
     }
   }, {
@@ -76,16 +74,14 @@ const HistoricalDataTable = (props) => {
     accessor: item => item.creditsTo.name,
     minWidth: 200,
     Cell: (row) => {
-      let content;
-
-      if (row.original.type.id !== CREDIT_TRANSFER_TYPES.retirement.id) {
-        content = row.value;
-      } else {
-        content = 'N/A';
+      if (row.original.type.id === CREDIT_TRANSFER_TYPES.retirement.id) {
+        return (
+          <div className="greyed-out">N/A</div>
+        );
       }
 
       return (
-        <div>{content}</div>
+        <div>{row.value}</div>
       );
     }
   }, {
@@ -99,17 +95,16 @@ const HistoricalDataTable = (props) => {
     accessor: item => numeral(item.totalValue).format(NumberFormat.CURRENCY),
     className: 'col-price',
     Cell: (row) => {
-      let content;
-
-      if (row.original.type.id === CREDIT_TRANSFER_TYPES.buy.id ||
-        row.original.type.id === CREDIT_TRANSFER_TYPES.sell.id) {
-        content = row.value;
-      } else {
-        content = '';
+      if (row.original.type.id === CREDIT_TRANSFER_TYPES.part3Award.id ||
+        row.original.type.id === CREDIT_TRANSFER_TYPES.retirement.id ||
+        row.original.type.id === CREDIT_TRANSFER_TYPES.validation.id) {
+        return (
+          <div>-</div>
+        );
       }
 
       return (
-        <div>{content}</div>
+        <div>{row.value}</div>
       );
     }
   }, {
@@ -142,7 +137,14 @@ const HistoricalDataTable = (props) => {
       return (
         <div className="col-actions">
           <Link className="action" to={editUrl}><FontAwesomeIcon icon="edit" /></Link>
-          <button className="action" data-toggle="modal" data-target="#confirmDelete" onClick={() => props.selectIdForModal(row.value)}><FontAwesomeIcon icon="trash" /></button>
+          <button
+            className="action"
+            data-toggle="modal"
+            data-target="#confirmDelete"
+            onClick={() => props.selectIdForModal(row.value)}
+          >
+            <FontAwesomeIcon icon="trash" />
+          </button>
         </div>
       );
     }
