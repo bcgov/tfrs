@@ -56,7 +56,7 @@ const CreditTransferTable = (props) => {
     }
   }, {
     id: 'transactionType',
-    Header: 'Transaction Type',
+    Header: 'Type',
     accessor: item => item.type.id,
     className: 'col-transfer-type',
     minWidth: 125,
