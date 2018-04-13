@@ -245,6 +245,14 @@
 }
 
 .page_credit_transactions {
+  .credit_balance {
+    float: right;
+  }
+
+  .right-toolbar-container .actions-container {
+    margin-bottom: 1rem;
+  }
+
   .rt-table {
     .col-credits, .col-date, .col-id, .col-price, .col-total {
       text-align: right;

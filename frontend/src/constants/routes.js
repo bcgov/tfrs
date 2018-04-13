@@ -8,6 +8,7 @@ export const CREDIT_TRANSACTION_DETAILS = '/credit_transactions/view/:id';
 
 export const HISTORICAL_DATA_ENTRY = '/admin/historical_data_entry';
 export const HISTORICAL_DATA_ENTRY_EDIT = '/admin/historical_data_entry/edit/:id';
+export const LOGOUT = '/logout';
 
 export const ORGANIZATIONS = '/organizations';
 export const ADMINISTRATION = '/administration';

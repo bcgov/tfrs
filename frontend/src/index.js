@@ -155,6 +155,16 @@ ReactDOM.render(
               path={Routes.HISTORICAL_DATA_ENTRY_EDIT}
               component={withRouter(HistoricalDataEntryEditContainer)}
             />
+            <Route
+              path={Routes.LOGOUT}
+              component={() => {
+                if (window.location.host === 'lowcarbonfuels.gov.bc.ca') {
+                  window.location = 'https://logon.gov.bc.ca/clp-cgi/logoff.cgi';
+                } else {
+                  window.location = 'https://logontest.gov.bc.ca/clp-cgi/logoff.cgi';
+                }
+              }}
+            />
             <Route component={NotFound} />
 
           </Switch>
