@@ -91,7 +91,10 @@ const config = {
   // We have to manually add the Hot Replacement plugin when running
   // from Node
   plugins: [
-    new Webpack.HotModuleReplacementPlugin()
+    new Webpack.HotModuleReplacementPlugin(),
+    new Webpack.DefinePlugin({
+      __LOGOUT_URL__: JSON.stringify('https://logontest.gov.bc.ca/clp-cgi/logoff.cgi')
+    })
   ]
 };
 
