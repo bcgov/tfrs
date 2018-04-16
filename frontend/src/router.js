@@ -7,6 +7,8 @@ import history from './app/History';
 
 /* global __LOGOUT_URL__ */
 import * as Routes from './constants/routes';
+import CREDIT_TRANSACTIONS from './constants/routes/CreditTransactions';
+import HISTORICAL_DATA_ENTRY from './constants/routes/HistoricalDataEntry';
 import CreditTransactionsContainer from './credit_transfers/CreditTransactionsContainer';
 import CreditTransferAddContainer from './credit_transfers/CreditTransferAddContainer';
 import CreditTransferEditContainer from './credit_transfers/CreditTransferEditContainer';
@@ -37,29 +39,29 @@ const Router = props => (
         />
         <Route
           exact
-          path={Routes.CREDIT_TRANSACTIONS}
+          path={CREDIT_TRANSACTIONS.LIST}
           component={withRouter(CreditTransactionsContainer)}
         />
         <Route
-          path={Routes.CREDIT_TRANSACTION_DETAILS}
+          path={CREDIT_TRANSACTIONS.DETAILS}
           component={withRouter(CreditTransferViewContainer)}
         />
         <Route
           exact
-          path={Routes.CREDIT_TRANSACTIONS_ADD}
+          path={CREDIT_TRANSACTIONS.ADD}
           component={withRouter(CreditTransferAddContainer)}
         />
         <Route
-          path={Routes.CREDIT_TRANSACTION_EDIT}
+          path={CREDIT_TRANSACTIONS.EDIT}
           component={withRouter(CreditTransferEditContainer)}
         />
         <Route
           exact
-          path={Routes.HISTORICAL_DATA_ENTRY}
+          path={HISTORICAL_DATA_ENTRY.LIST}
           component={withRouter(HistoricalDataEntryContainer)}
         />
         <Route
-          path={Routes.HISTORICAL_DATA_ENTRY_EDIT}
+          path={HISTORICAL_DATA_ENTRY.EDIT}
           component={withRouter(HistoricalDataEntryEditContainer)}
         />
         <Route

@@ -7,7 +7,7 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
 
-import * as Routes from '../constants/routes';
+import CREDIT_TRANSACTIONS from '../constants/routes/CreditTransactions';
 import history from '../app/History';
 
 import {
@@ -61,7 +61,7 @@ class CreditTransferViewContainer extends Component {
 
     this.props.updateCreditTransfer(id, data).then(() => {
       this.props.invalidateCreditTransfer();
-      history.push(Routes.CREDIT_TRANSACTIONS);
+      history.push(CREDIT_TRANSACTIONS.LIST);
     }, () => {
       // Failed to update
     });

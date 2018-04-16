@@ -11,7 +11,7 @@ import FontAwesomeIcon from '@fortawesome/react-fontawesome';
 import numeral from 'numeral';
 
 import * as NumberFormat from '../../constants/numeralFormats';
-import * as Routes from '../../constants/routes';
+import CREDIT_TRANSACTIONS from '../../constants/routes/CreditTransactions';
 import { CREDIT_TRANSFER_TYPES } from '../../constants/values';
 
 const CreditTransferTable = (props) => {
@@ -126,7 +126,8 @@ const CreditTransferTable = (props) => {
     className: 'col-actions',
     minWidth: 50,
     Cell: (row) => {
-      const viewUrl = `${Routes.CREDIT_TRANSACTIONS}/view/${row.value}`;
+      const viewUrl = CREDIT_TRANSACTIONS.DETAILS.replace(':id', row.value);
+
       return <Link to={viewUrl}><FontAwesomeIcon icon="eye" /></Link>;
     }
   }];

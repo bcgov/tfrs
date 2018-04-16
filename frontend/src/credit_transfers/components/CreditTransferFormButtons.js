@@ -1,9 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import * as Routes from '../../constants/routes';
 import * as Lang from '../../constants/langEnUs';
-
+import CREDIT_TRANSACTIONS from '../../constants/routes/CreditTransactions';
 import { CREDIT_TRANSFER_STATUS } from '../../constants/values';
 import history from '../../app/History';
 
@@ -31,7 +30,7 @@ const CreditTransferFormButtons = props => (
       <button
         type="button"
         className="btn btn-default"
-        onClick={() => history.push(Routes.CREDIT_TRANSACTION_EDIT.replace(':id', props.id))}
+        onClick={() => history.push(CREDIT_TRANSACTIONS.EDIT.replace(':id', props.id))}
       >
         {Lang.BTN_EDIT_DRAFT}
       </button>
