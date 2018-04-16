@@ -8,7 +8,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import PropTypes from 'prop-types';
 
-import * as Routes from '../constants/routes';
+import CREDIT_TRANSACTIONS from '../constants/routes/CreditTransactions';
 import history from '../app/History';
 import { getFuelSuppliers } from '../actions/organizationActions';
 import { getLoggedInUser } from '../actions/userActions';
@@ -119,7 +119,7 @@ class CreditTransferAddContainer extends Component {
 
     this.props.addCreditTransfer(data).then(() => {
       this.props.invalidateCreditTransfers();
-      history.push(Routes.CREDIT_TRANSACTIONS);
+      history.push(CREDIT_TRANSACTIONS.LIST);
     });
 
     return false;

@@ -10,7 +10,7 @@ import FontAwesomeIcon from '@fortawesome/react-fontawesome';
 import numeral from 'numeral';
 
 import * as NumberFormat from '../../../constants/numeralFormats';
-import * as Routes from '../../../constants/routes';
+import HISTORICAL_DATA_ENTRY from '../../../constants/routes/HistoricalDataEntry';
 import { CREDIT_TRANSFER_TYPES, ZERO_DOLLAR_REASON } from '../../../constants/values';
 
 const HistoricalDataTable = (props) => {
@@ -132,7 +132,7 @@ const HistoricalDataTable = (props) => {
     accessor: 'id',
     filterable: false,
     Cell: (row) => {
-      const editUrl = `${Routes.HISTORICAL_DATA_ENTRY}/edit/${row.value}`;
+      const editUrl = HISTORICAL_DATA_ENTRY.EDIT.replace(':id', row.value);
 
       return (
         <div className="col-actions">

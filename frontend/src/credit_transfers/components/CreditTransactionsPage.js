@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import numeral from 'numeral';
 
 import * as NumberFormat from '../../constants/numeralFormats';
-import * as Routes from '../../constants/routes';
+import CREDIT_TRANSACTIONS from '../../constants/routes/CreditTransactions';
 import { DEFAULT_ORGANIZATION } from '../../constants/values';
 import history from '../../app/History';
 import Loading from '../../app/components/Loading';
@@ -25,7 +25,7 @@ const CreditTransactionsPage = (props) => {
             <button
               className="btn btn-primary"
               type="button"
-              onClick={() => history.push(Routes.CREDIT_TRANSACTIONS_ADD)}
+              onClick={() => history.push(CREDIT_TRANSACTIONS.ADD)}
             >
               Propose Trade
             </button>

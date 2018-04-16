@@ -4,6 +4,8 @@ import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 
 import * as Routes from '../../constants/routes';
+import CREDIT_TRANSACTIONS from '../../constants/routes/CreditTransactions';
+import HISTORICAL_DATA_ENTRY from '../../constants/routes/HistoricalDataEntry';
 import { DEFAULT_ORGANIZATION } from '../../constants/values';
 
 class Navbar extends Component {
@@ -39,7 +41,7 @@ class Navbar extends Component {
               Fuel Suppliers
             </Link>
           }
-          <Link id="navbar-credit-transactions" to={Routes.CREDIT_TRANSACTIONS}>
+          <Link id="navbar-credit-transactions" to={CREDIT_TRANSACTIONS.LIST}>
             Credit Transactions
           </Link>
           {this.props.loggedInUser.organization &&
@@ -56,7 +58,7 @@ class Navbar extends Component {
           }
           {this.props.loggedInUser.organization &&
             this.props.loggedInUser.organization.id === DEFAULT_ORGANIZATION.id &&
-            <Link id="navbar-administration" to={Routes.HISTORICAL_DATA_ENTRY}>
+            <Link id="navbar-administration" to={HISTORICAL_DATA_ENTRY.LIST}>
               Administration
             </Link>
           }
@@ -97,7 +99,7 @@ class Navbar extends Component {
           <li>
             <Link
               id="collapse-navbar-credit-transactions"
-              to={Routes.CREDIT_TRANSACTIONS}
+              to={CREDIT_TRANSACTIONS.LIST}
             >
             Credit Transactions
             </Link>
@@ -126,7 +128,7 @@ class Navbar extends Component {
           <li>
             <Link
               id="collapse-navbar-administration"
-              to={Routes.HISTORICAL_DATA_ENTRY}
+              to={HISTORICAL_DATA_ENTRY.LIST}
             >
               Administration
             </Link>

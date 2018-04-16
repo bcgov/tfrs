@@ -1,13 +1,6 @@
 // Page Routes
 
 export const HOME = '/';
-export const CREDIT_TRANSACTIONS = '/credit_transactions';
-export const CREDIT_TRANSACTIONS_ADD = '/credit_transactions/add';
-export const CREDIT_TRANSACTION_EDIT = '/credit_transactions/edit/:id';
-export const CREDIT_TRANSACTION_DETAILS = '/credit_transactions/view/:id';
-
-export const HISTORICAL_DATA_ENTRY = '/admin/historical_data_entry';
-export const HISTORICAL_DATA_ENTRY_EDIT = '/admin/historical_data_entry/edit/:id';
 export const LOGOUT = '/logout';
 
 export const ORGANIZATIONS = '/organizations';
