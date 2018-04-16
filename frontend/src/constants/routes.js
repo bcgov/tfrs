@@ -23,7 +23,7 @@ export const SETTINGS = '/settings';
 export const CREDIT_TRANSFER_DETAILS = '/credit_transfer/:id';
 
 // API Routes
-export const BASE_URL = location.protocol + '//' + window.location.host + '/api';
+export const BASE_URL = `${window.location.protocol}//${window.location.host}/api`;
 
 export const ORGANIZATIONS_API = '/organizations';
 export const ORGANIZATION_ACTION_TYPES = '/organizationactionstypes';

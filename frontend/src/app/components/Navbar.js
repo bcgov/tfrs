@@ -73,7 +73,7 @@ class Navbar extends Component {
         className="collapse navbar-collapse"
         role="navigation"
       >
-        <a id="navigation-anchor" />
+        <a id="navigation-anchor" href="#navigation-anchor"><span>Navigation Bar</span></a>
         <ul className="nav navbar-nav">
           {this.props.loggedInUser.organization &&
           this.props.loggedInUser.organization.id === DEFAULT_ORGANIZATION.id &&
@@ -154,7 +154,6 @@ class Navbar extends Component {
                   <ul>
                     <li aria-label="Keyboard Tab Skip">
                       <a
-                        accessKey="0"
                         href="#main-content-anchor"
                         aria-label="Skip to main content"
                       >
@@ -163,7 +162,6 @@ class Navbar extends Component {
                     </li>
                     <li aria-label="Keyboard Tab Skip">
                       <a
-                        accessKey="0"
                         href="#navigation-anchor"
                         aria-label="Skip to navigation"
                       >
@@ -172,7 +170,6 @@ class Navbar extends Component {
                     </li>
                     <li aria-label="Keyboard Tab Skip">
                       <a
-                        accessKey="0"
                         href="http://gov.bc.ca/webaccessibility/"
                         aria-label="Accessibility Statement"
                       >
@@ -189,7 +186,7 @@ class Navbar extends Component {
                   aria-expanded="true"
                   aria-label="Burger Navigation"
                 >
-                  <img src="/assets/images/menu-open-mobile.png" />
+                  <img src="/assets/images/menu-open-mobile.png" alt="menu" />
                 </button>
               </div>
               <div className="col-sm-6 col-md-6 col-lg-6 hidden-xs">
