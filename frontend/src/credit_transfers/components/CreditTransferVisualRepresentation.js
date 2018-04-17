@@ -16,7 +16,7 @@ const CreditTransferVisualRepresentation = props => (
     </div>
     <div className="col-sm-4 col-md-2">
       <div className="arrow">
-        <div>{props.numberOfCredits} credit{props.numberOfCredits > 2 && 's'}</div>
+        <div>{numeral(props.numberOfCredits).format(NumberFormat.INT)} credit{props.numberOfCredits > 2 && 's'}</div>
         <FontAwesomeIcon icon="exchange-alt" size="6x" />
         <div>{numeral(props.totalValue).format(NumberFormat.CURRENCY)}</div>
       </div>

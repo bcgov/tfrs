@@ -97,16 +97,19 @@ class CreditTransferViewContainer extends Component {
 
     return (
       <CreditTransferDetails
-        id={item.id}
+        buttonActions={buttonActions}
+        changeStatus={this._changeStatus}
         creditsFrom={item.creditsFrom}
         creditsTo={item.creditsTo}
-        numberOfCredits={item.numberOfCredits}
         fairMarketValuePerCredit={item.fairMarketValuePerCredit}
-        totalValue={item.totalValue}
+        id={item.id}
         isFetching={isFetching}
+        note={item.note}
+        numberOfCredits={item.numberOfCredits}
+        status={item.status}
+        totalValue={item.totalValue}
+        tradeEffectiveDate={item.tradeEffectiveDate}
         tradeType={item.type}
-        changeStatus={this._changeStatus}
-        buttonActions={buttonActions}
       />
     );
   }
@@ -136,6 +139,13 @@ CreditTransferViewContainer.propTypes = {
   getCreditTransferIfNeeded: PropTypes.func.isRequired,
   deleteCreditTransfer: PropTypes.func.isRequired,
   isFetching: PropTypes.bool.isRequired,
+  loggedInUser: PropTypes.shape({
+    displayName: PropTypes.string,
+    organization: PropTypes.shape({
+      name: PropTypes.string,
+      id: PropTypes.number
+    })
+  }).isRequired,
   match: PropTypes.shape({
     params: PropTypes.shape({
       id: PropTypes.string.isRequired

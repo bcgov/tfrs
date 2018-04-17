@@ -13,6 +13,7 @@ import numeral from 'numeral';
 import * as NumberFormat from '../../constants/numeralFormats';
 import CREDIT_TRANSACTIONS from '../../constants/routes/CreditTransactions';
 import { CREDIT_TRANSFER_TYPES } from '../../constants/values';
+import CreditTransferType from '../../credit_transfers/components/CreditTransferType';
 
 const CreditTransferTable = (props) => {
   const columns = [{
@@ -60,27 +61,9 @@ const CreditTransferTable = (props) => {
     accessor: item => item.type.id,
     className: 'col-transfer-type',
     minWidth: 125,
-    Cell: (row) => {
-      let value = '';
-
-      switch (row.value) {
-        case CREDIT_TRANSFER_TYPES.validation.id:
-          value = 'Validation';
-          break;
-        case CREDIT_TRANSFER_TYPES.retirement.id:
-          value = 'Reduction';
-          break;
-        case CREDIT_TRANSFER_TYPES.part3Award.id:
-          value = 'Part 3 Award';
-          break;
-        default:
-          value = 'Credit Transfer';
-      }
-
-      return (
-        <div>{value}</div>
-      );
-    }
+    Cell: row => (
+      <CreditTransferType type={row.value} />
+    )
   }, {
     id: 'numberOfCredits',
     Header: 'Quantity of Credits',
