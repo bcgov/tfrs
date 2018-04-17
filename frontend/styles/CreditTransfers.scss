@@ -249,5 +249,13 @@
     .col-credits, .col-date, .col-id, .col-price, .col-total {
       text-align: right;
     }
+
+    .col-status, .col-actions {
+      text-align: center;
+    }
+
+    .greyed-out {
+      color: #CCCCCC;
+    }
   }
 }

@@ -110,7 +110,7 @@ class Navbar extends Component {
                 <div id="logo">
                   <a id="gov-logo" href="http://gov.bc.ca">
                     <img
-                      src="./assets/images/gov3_bc_logo.png"
+                      src="/assets/images/gov3_bc_logo.png"
                       alt="Province of British Columbia"
                       title="Province of British Columbia logo"
                     />
@@ -155,7 +155,7 @@ class Navbar extends Component {
                   aria-expanded="true"
                   aria-label="Burger Navigation"
                 >
-                  <img src="./assets/images/menu-open-mobile.png" />
+                  <img src="/assets/images/menu-open-mobile.png" />
                 </button>
               </div>
               <div className="col-sm-6 col-md-6 col-lg-6 hidden-xs">
