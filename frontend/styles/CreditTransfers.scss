@@ -2,11 +2,6 @@
 @import './mixins.scss';
 
 .credit-transfer {
-
-  .credit-transfer-details {
-    margin-bottom: 4rem;
-  }
-
   .note {
     display: block;
 
@@ -168,7 +163,6 @@
     padding: 2rem;
     border: 1px solid $border-grey;
     border-radius: 5px;
-    margin-bottom: 2rem;
     
     .form-group {
     margin: 0.5rem 0.5rem 0.5rem 0;
@@ -194,9 +188,25 @@
       text-align: right;
     }
   }
+
+  .well {
+    &.transparent {
+      background-color: transparent;
+    }
+  }
 }
 
 .plain-english-phrase {
+
+  .value {
+    font-weight: bold;
+  }
+}
+
+.text-representation {
+  .lowercase {
+    text-transform: lowercase;
+  }
 
   .value {
     font-weight: bold;
@@ -208,7 +218,6 @@
   flex-wrap: wrap;
   align-items: center;
   justify-content: center;
-  margin-top: 3rem;
 
   .col-md-4 {
     text-align: center;
@@ -219,7 +228,8 @@
     margin: 1rem;
     padding: 2rem;
     border-radius: 5px;
-    min-width: 11em;
+    min-width: 15em;
+    text-align: center;
 
     @include mobile {
       text-align: center;
