@@ -316,7 +316,7 @@ const processApprovedCreditTransfersRequest = () => ({
 const processApprovedCreditTransfersSuccess = data => ({
   name: 'SUCCESS_APPROVED_CREDIT_TRANSFERS',
   type: ActionTypes.SUCCESS,
-  data
+  message: data.message
 });
 
 const processApprovedCreditTransfersError = error => ({
