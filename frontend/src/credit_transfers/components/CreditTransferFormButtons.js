@@ -5,6 +5,7 @@ import * as Lang from '../../constants/langEnUs';
 import CREDIT_TRANSACTIONS from '../../constants/routes/CreditTransactions';
 import { CREDIT_TRANSFER_STATUS } from '../../constants/values';
 import history from '../../app/History';
+import ModalDeleteCreditTransfer from './ModalDeleteCreditTransfer';
 
 const CreditTransferFormButtons = props => (
   <div className="credit-transfer-actions">
@@ -82,53 +83,10 @@ const CreditTransferFormButtons = props => (
       }
     </div>
     {props.actions.includes(Lang.BTN_DELETE) &&
-    <div
-      className="modal fade"
-      id="confirmDelete"
-      tabIndex="-1"
-      role="dialog"
-      aria-labelledby="confirmDeleteLabel"
-    >
-      <div className="modal-dialog" role="document">
-        <div className="modal-content">
-          <div className="modal-header">
-            <button
-              type="button"
-              className="close"
-              data-dismiss="modal"
-              aria-label="Close"
-            >
-              <span aria-hidden="true">&times;</span>
-            </button>
-            <h4
-              className="modal-title"
-              id="confirmDeleteLabel"
-            >
-              Confirm Delete
-            </h4>
-          </div>
-          <div className="modal-body">
-            Are you sure you want to delete this credit transfer?
-          </div>
-          <div className="modal-footer">
-            <button
-              type="button"
-              className="btn btn-default"
-              data-dismiss="modal"
-            >
-              {Lang.BTN_APP_CANCEL}
-            </button>
-            <button
-              type="button"
-              className="btn btn-danger"
-              onClick={() => props.deleteCreditTransfer(props.id)}
-            >
-              {Lang.BTN_DELETE}
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
+    <ModalDeleteCreditTransfer
+      deleteCreditTransfer={props.deleteCreditTransfer}
+      selectedId={props.id}
+    />
     }
   </div>
 );

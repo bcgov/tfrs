@@ -24,6 +24,7 @@ class CreditTransferViewContainer extends Component {
   constructor (props) {
     super(props);
     this._changeStatus = this._changeStatus.bind(this);
+    this._deleteCreditTransfer = this._deleteCreditTransfer.bind(this);
   }
 
   componentDidMount () {
@@ -68,8 +69,9 @@ class CreditTransferViewContainer extends Component {
   }
 
   _deleteCreditTransfer (id) {
-    // TODO: Popup notification before delete
-    this.props.deleteCreditTransfer(this.props.item.id);
+    this.props.deleteCreditTransfer(id).then(() => {
+      history.push(CREDIT_TRANSACTIONS.LIST);
+    });
   }
 
   render () {
@@ -101,6 +103,7 @@ class CreditTransferViewContainer extends Component {
         changeStatus={this._changeStatus}
         creditsFrom={item.creditsFrom}
         creditsTo={item.creditsTo}
+        deleteCreditTransfer={this._deleteCreditTransfer}
         fairMarketValuePerCredit={item.fairMarketValuePerCredit}
         id={item.id}
         isFetching={isFetching}

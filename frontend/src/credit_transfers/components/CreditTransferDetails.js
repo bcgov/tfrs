@@ -22,7 +22,7 @@ const CreditTransferDetails = props => (
             <CreditTransferType type={props.tradeType.id} />
           }
         </h1>
-        <CreditTransferProgress status={props.status} />
+        <CreditTransferProgress status={props.status} type={props.tradeType} />
         <div className="credit-transfer-details">
           <div className="main-form">
             <CreditTransferTextRepresentation
@@ -49,9 +49,10 @@ const CreditTransferDetails = props => (
         }
         <form onSubmit={e => e.preventDefault()}>
           <CreditTransferFormButtons
-            id={props.id}
-            changeStatus={props.changeStatus}
             actions={props.buttonActions}
+            changeStatus={props.changeStatus}
+            deleteCreditTransfer={props.deleteCreditTransfer}
+            id={props.id}
           />
         </form>
       </div>
@@ -92,6 +93,7 @@ CreditTransferDetails.propTypes = {
     id: PropTypes.number,
     name: PropTypes.string
   }),
+  deleteCreditTransfer: PropTypes.func.isRequired,
   fairMarketValuePerCredit: PropTypes.oneOfType([
     PropTypes.string,
     PropTypes.number
