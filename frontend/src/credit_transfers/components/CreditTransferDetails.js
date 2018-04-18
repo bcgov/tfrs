@@ -3,10 +3,6 @@
  */
 import React from 'react';
 import PropTypes from 'prop-types';
-import moment from 'moment';
-import numeral from 'numeral';
-
-import * as NumberFormat from '../../constants/numeralFormats';
 
 import Loading from '../../app/components/Loading';
 
