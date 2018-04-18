@@ -19,15 +19,15 @@ export const CREDIT_TRANSFER_STATUS = {
   },
   proposed: {
     id: 2,
-    description: 'Proposed'
+    description: 'Sign 1/2'
   },
   accepted: {
     id: 3,
-    description: 'Accepted'
+    description: 'Sign 2/2'
   },
   recommendedForDecision: {
     id: 4,
-    description: 'Recommended for decision'
+    description: 'Recommended'
   },
   notRecommended: {
     id: 5,

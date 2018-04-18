@@ -64,20 +64,22 @@
     
       .step {
         font-size: 14px;
+        font-weight: bold;
         text-align: center;
-        color: $light-font;
+        color: $medium-font;
         cursor: default;
         margin: 0 3px;
         padding: 8px 10px 8px 30px;
         width: 24%;
         float: left;
         position: relative;
-        background-color: rgba(217, 227, 247, 0.36);
+        background-color: $border-grey;
         -webkit-user-select: none;
         -moz-user-select: none;
         -ms-user-select: none;
         user-select: none; 
         transition: background-color 0.2s ease;
+        white-space: nowrap;
 
         @include mobile {
           width: 100%;
@@ -94,7 +96,7 @@
         height: 0;
         border-top: 19px solid transparent;
         border-bottom: 17px solid transparent;
-        border-left: 17px solid rgba(217, 227, 247, 0.36);	
+        border-left: 17px solid $border-grey;	
         z-index: 2;
         transition: border-color 0.2s ease;
 
@@ -141,20 +143,20 @@
 
       .step.current {
         color: #fff;
-        background-color: #23468c;
+        background-color: $blue;
 
         & ~ .step {
-          background-color: #d9e3f7;
+          background-color: $light-blue;
           color: $medium-font;
 
           &:after {
-            border-left: 17px solid #d9e3f7;	
+            border-left: 17px solid $light-blue;	
           }
         }
       }
 
       .step.current:after {
-        border-left: 17px solid #23468c;	
+        border-left: 17px solid $blue;	
       }
     }
   }

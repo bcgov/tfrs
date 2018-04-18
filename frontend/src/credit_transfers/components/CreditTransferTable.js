@@ -12,7 +12,7 @@ import numeral from 'numeral';
 
 import * as NumberFormat from '../../constants/numeralFormats';
 import CREDIT_TRANSACTIONS from '../../constants/routes/CreditTransactions';
-import { CREDIT_TRANSFER_TYPES } from '../../constants/values';
+import { CREDIT_TRANSFER_STATUS, CREDIT_TRANSFER_TYPES } from '../../constants/values';
 import CreditTransferType from '../../credit_transfers/components/CreditTransferType';
 
 const CreditTransferTable = (props) => {
@@ -92,14 +92,15 @@ const CreditTransferTable = (props) => {
   }, {
     id: 'status',
     Header: 'Status',
-    accessor: item => item.status.status,
+    accessor: item => ((item.status.id === CREDIT_TRANSFER_STATUS.completed.id)
+      ? CREDIT_TRANSFER_STATUS.approved.description : item.status.status),
     className: 'col-status',
     minWidth: 125
   }, {
     id: 'updateTimestamp',
     Header: 'Last Updated On',
     className: 'col-date',
-    accessor: item => moment(item.updateTimestamp).format('LL'),
+    accessor: item => (item.updateTimestamp ? moment(item.updateTimestamp).format('LL') : '-'),
     minWidth: 150
   }, {
     id: 'actions',

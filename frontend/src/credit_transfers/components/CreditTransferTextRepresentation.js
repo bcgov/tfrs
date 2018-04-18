@@ -14,8 +14,11 @@ class CreditTransferTextRepresentation extends Component {
     this.creditsTo = this.props.creditsTo.name;
     this.numberOfCredits = numeral(this.props.numberOfCredits).format(NumberFormat.INT);
     this.totalValue = numeral(this.props.totalValue).format(NumberFormat.CURRENCY);
-    this.tradeEffectiveDate = moment(this.props.tradeEffectiveDate).format('LL');
-    this.tradeStatus = this.props.status.status;
+    this.tradeEffectiveDate = (this.props.tradeEffectiveDate)
+      ? moment(this.props.tradeEffectiveDate).format('LL') : 'approval';
+
+    this.tradeStatus = (this.props.status.id === CREDIT_TRANSFER_STATUS.completed.id)
+      ? CREDIT_TRANSFER_STATUS.approved.description : this.props.status.status;
   }
 
   getBuyAction () {
@@ -28,7 +31,7 @@ class CreditTransferTextRepresentation extends Component {
 
   getSellAction () {
     if (this.props.status.id === CREDIT_TRANSFER_STATUS.completed.id) {
-      return ' sold ';
+      return ' transferred ';
     }
 
     return ' is proposing to sell ';
@@ -60,40 +63,40 @@ class CreditTransferTextRepresentation extends Component {
         return (
           <div className="text-representation">
             A <span className="value">Validation</span> of
-            <span className="value"> {this.numberOfCredits} </span> credit{(this.numberOfCredits > 1) && 's'}
-            for <span className="value"> {this.creditsTo} </span>
-            effective on <span className="value"> {this.tradeEffectiveDate} </span>
-            has been <span className="value lowercase"> {this.tradeStatus}</span>.
+            <span className="value"> {this.numberOfCredits} </span> credit{(this.numberOfCredits > 1) && 's'} for
+            <span className="value"> {this.creditsTo} </span>
+            has been <span className="value lowercase"> {this.tradeStatus} </span>
+            effective on <span className="value"> {this.tradeEffectiveDate}</span>.
           </div>
         );
       case CREDIT_TRANSFER_TYPES.retirement.id:
         return (
           <div className="text-representation">
             A <span className="value">Reduction</span> of
-            <span className="value"> {this.numberOfCredits} </span> credit{(this.numberOfCredits > 1) && 's'}
-            for <span className="value"> {this.creditsFrom} </span>
-            effective on <span className="value"> {this.tradeEffectiveDate} </span>
-            has been <span className="value lowercase"> {this.tradeStatus}</span>.
+            <span className="value"> {this.numberOfCredits} </span> credit{(this.numberOfCredits > 1) && 's'} for
+            <span className="value"> {this.creditsFrom} </span>
+            has been <span className="value lowercase"> {this.tradeStatus} </span>
+            effective on <span className="value"> {this.tradeEffectiveDate}</span>.
           </div>
         );
       case CREDIT_TRANSFER_TYPES.part3Award.id:
         return (
           <div className="text-representation">
             A <span className="value">Part 3 award</span> of
-            <span className="value"> {this.numberOfCredits} </span> credit{(this.numberOfCredits > 1) && 's'}
-            for <span className="value"> {this.creditsTo} </span>
-            effective on <span className="value"> {this.tradeEffectiveDate} </span>
-            has been <span className="value lowercase"> {this.tradeStatus}</span>.
+            <span className="value"> {this.numberOfCredits} </span> credit{(this.numberOfCredits > 1) && 's'} for
+            <span className="value"> {this.creditsTo} </span>
+            has been <span className="value lowercase"> {this.tradeStatus} </span>
+            effective on <span className="value"> {this.tradeEffectiveDate}</span>.
           </div>
         );
       default:
         return (
           <div className="text-representation">
             A credit transfer of
-            <span className="value"> {this.numberOfCredits} </span> credit{(this.numberOfCredits > 1) && 's'}
-            for <span className="value"> {this.creditsTo} </span>
-            effective on <span className="value"> {this.tradeEffectiveDate} </span>
-            has been <span className="value lowercase"> {this.tradeStatus}</span>.
+            <span className="value"> {this.numberOfCredits} </span> credit{(this.numberOfCredits > 1) && 's'} for
+            <span className="value"> {this.creditsTo} </span>
+            has been <span className="value lowercase"> {this.tradeStatus} </span>
+            effective on <span className="value"> {this.tradeEffectiveDate}</span>.
           </div>
         );
     }
