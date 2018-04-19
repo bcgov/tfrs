@@ -141,6 +141,15 @@
         transition: opacity 0.3s ease 0.5s;
       }
 
+      .step.cancelled {
+        color: #fff;
+        background-color: $red;
+      }
+
+      .step.cancelled:after {
+        border-left: 17px solid $red;	
+      }
+
       .step.current {
         color: #fff;
         background-color: $blue;
