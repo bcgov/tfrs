@@ -21,7 +21,7 @@ class CreditTransferTextRepresentation extends Component {
       ? CREDIT_TRANSFER_STATUS.approved.description : this.props.status.status;
   }
 
-  getBuyAction () {
+  _buyAction () {
     if (this.props.status.id === CREDIT_TRANSFER_STATUS.completed.id) {
       return ' bought ';
     }
@@ -29,7 +29,7 @@ class CreditTransferTextRepresentation extends Component {
     return ' is proposing to buy ';
   }
 
-  getSellAction () {
+  _sellAction () {
     if (this.props.status.id === CREDIT_TRANSFER_STATUS.completed.id) {
       return ' transferred ';
     }
@@ -42,7 +42,7 @@ class CreditTransferTextRepresentation extends Component {
       case CREDIT_TRANSFER_TYPES.sell.id:
         return (
           <div className="text-representation">
-            <span className="value">{this.creditsFrom}</span> {this.getSellAction()}
+            <span className="value">{this.creditsFrom}</span> {this._sellAction()}
             <span className="value"> {this.numberOfCredits} </span> credit{(this.numberOfCredits > 1) && 's'} to
             <span className="value"> {this.creditsTo} </span>
             for <span className="value"> {this.totalValue} </span>
@@ -52,7 +52,7 @@ class CreditTransferTextRepresentation extends Component {
       case CREDIT_TRANSFER_TYPES.buy.id:
         return (
           <div className="text-representation">
-            <span className="value">{this.creditsTo}</span> {this.getBuyAction()}
+            <span className="value">{this.creditsTo}</span> {this._buyAction()}
             <span className="value"> {this.numberOfCredits} </span> credit{(this.numberOfCredits > 1) && 's'} from
             <span className="value"> {this.creditsFrom} </span>
             for <span className="value"> {this.totalValue} </span>
