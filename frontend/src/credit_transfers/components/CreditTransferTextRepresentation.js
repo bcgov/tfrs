@@ -22,19 +22,15 @@ class CreditTransferTextRepresentation extends Component {
   }
 
   _buyAction () {
-    if (this.props.status.id === CREDIT_TRANSFER_STATUS.completed.id) {
-      return ' bought ';
-    }
-
-    return ' is proposing to buy ';
+    return (this.props.status.id === CREDIT_TRANSFER_STATUS.completed.id)
+      ? ' bought '
+      : ' is proposing to buy ';
   }
 
   _sellAction () {
-    if (this.props.status.id === CREDIT_TRANSFER_STATUS.completed.id) {
-      return ' transferred ';
-    }
-
-    return ' is proposing to sell ';
+    return (this.props.status.id === CREDIT_TRANSFER_STATUS.completed.id)
+      ? ' transferred '
+      : ' is proposing to sell ';
   }
 
   render () {

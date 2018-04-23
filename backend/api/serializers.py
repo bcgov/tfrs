@@ -190,7 +190,6 @@ class RoleViewModelSerializer(serializers.ModelSerializer):
 
 class UserSerializer(serializers.ModelSerializer):
     organization = OrganizationSerializer(read_only=True)
-    organization_balance = serializers.SerializerMethodField()
 
     class Meta:
         model = User
@@ -198,18 +197,6 @@ class UserSerializer(serializers.ModelSerializer):
             'id', 'first_name', 'last_name', 'email', 'authorization_id',
             'authorization_guid', 'authorization_directory', 'display_name',
             'organization', 'organization_balance')
-
-    def get_organization_balance(self, obj):
-        try:
-            organization_balance = OrganizationBalance.objects.get(
-                organization_id=obj.organization.id,
-                expiration_date=None)
-
-            balance = organization_balance.validated_credits
-        except OrganizationBalance.DoesNotExist:
-            balance = 0
-
-        return balance
 
 
 class UserDetailsViewModelSerializer(serializers.ModelSerializer):
