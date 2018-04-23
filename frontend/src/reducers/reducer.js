@@ -6,7 +6,7 @@ import * as ReducerTypes from '../constants/reducerTypes';
 
 import { creditTransfer, creditTransfers } from './creditTransferReducer';
 import { userRequest, usersRequest } from './userReducer';
-import { organizationRequest, fuelSuppliersRequest } from './organizationReducer';
+import { organizationRequest, organizations, fuelSuppliersRequest } from './organizationReducer';
 
 const genericRequest = (state = {
   isFetching: false,
@@ -97,6 +97,7 @@ const rootReducer = combineReducers({
   creditTransfer,
   creditTransfers,
   organizationRequest,
+  organizations,
   fuelSuppliersRequest,
   routing
 });
