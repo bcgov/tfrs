@@ -27,6 +27,7 @@ import CreditTransferEditContainer from './credit_transfers/CreditTransferEditCo
 import CreditTransferViewContainer from './credit_transfers/CreditTransferViewContainer';
 import HistoricalDataEntryContainer from './admin/historical_data_entry/HistoricalDataEntryContainer';
 import HistoricalDataEntryEditContainer from './admin/historical_data_entry/HistoricalDataEntryEditContainer';
+import OrganizationsContainer from './organizations/OrganizationsContainer';
 
 import { getLoggedInUser } from './actions/userActions';
 
@@ -122,7 +123,7 @@ ReactDOM.render(
             <Route
               exact
               path={Routes.ORGANIZATIONS}
-              component={withRouter(Organizations)}
+              component={withRouter(OrganizationsContainer)}
             />
             <Route
               path={Routes.ORGANIZATION_DETAILS}
