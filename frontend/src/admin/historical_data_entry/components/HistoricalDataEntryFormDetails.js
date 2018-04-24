@@ -101,6 +101,27 @@ const HistoricalDataEntryFormDetails = props => (
             </label>
             }
           </div>
+
+          <div className="form-group">
+            <label htmlFor="compliance-period">Compliance Period:
+              <select
+                className="form-control"
+                id="compliance-period"
+                name="compliancePeriod"
+                value={props.fields.compliancePeriod.id}
+                onChange={props.handleInputChange}
+                required="required"
+              >
+                <option key="0" value="" default />
+                {props.compliancePeriods &&
+                  props.compliancePeriods.map(period => (
+                    <option key={period.id} value={period.id}>
+                      {period.description}
+                    </option>
+                  ))}
+              </select>
+            </label>
+          </div>
         </div>
         <div className="col-md-6">
           <div className="form-group">
@@ -149,7 +170,12 @@ const HistoricalDataEntryFormDetails = props => (
               CREDIT_TRANSFER_TYPES.validation.id.toString(),
               CREDIT_TRANSFER_TYPES.retirement.id.toString()].includes(props.fields.transferType) &&
               <label htmlFor="dollar-per-credit">...for a total of:
-                <div id="dollar-per-credit" className="form-control dollar-per-credit">{numeral(props.totalValue).format(NumberFormat.CURRENCY)} *</div>
+                <div
+                  id="dollar-per-credit"
+                  className="form-control dollar-per-credit"
+                >
+                  {numeral(props.totalValue).format(NumberFormat.CURRENCY)} *
+                </div>
               </label>
             }
             {[CREDIT_TRANSFER_TYPES.part3Award.id.toString(),
@@ -206,8 +232,13 @@ const HistoricalDataEntryFormDetails = props => (
 
 HistoricalDataEntryFormDetails.propTypes = {
   actions: PropTypes.arrayOf(PropTypes.string).isRequired,
+  compliancePeriods: PropTypes.arrayOf(PropTypes.shape()).isRequired,
   fuelSuppliers: PropTypes.arrayOf(PropTypes.shape()).isRequired,
   fields: PropTypes.shape({
+    compliancePeriod: PropTypes.shape({
+      description: PropTypes.string,
+      id: PropTypes.number
+    }),
     creditsFrom: PropTypes.shape({
       name: PropTypes.string,
       id: PropTypes.number
