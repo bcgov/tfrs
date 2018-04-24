@@ -28,6 +28,7 @@ const CreditTransferDetails = props => (
             <CreditTransferTextRepresentation
               creditsFrom={props.creditsFrom}
               creditsTo={props.creditsTo}
+              fairMarketValuePerCredit={props.fairMarketValuePerCredit}
               numberOfCredits={props.numberOfCredits}
               status={props.status}
               tradeEffectiveDate={props.tradeEffectiveDate}
