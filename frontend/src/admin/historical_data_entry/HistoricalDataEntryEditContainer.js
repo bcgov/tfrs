@@ -135,6 +135,7 @@ class HistoricalDataEntryEditContainer extends Component {
       <HistoricalDataEntryForm
         actions={buttonActions}
         compliancePeriods={this.props.compliancePeriods}
+        editMode
         errors={this.props.errors}
         fuelSuppliers={this.props.fuelSuppliers}
         fields={this.state.fields}
