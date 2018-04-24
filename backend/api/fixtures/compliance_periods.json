@@ -24,7 +24,7 @@
         "description": "2012-13",
         "display_order": "3",
         "effective_date": "2012-01-01",
-        "expiration_date": "2013-12-31"
+        "expiration_date": "2013-06-30"
     },
     "model": "api.complianceperiod",
     "pk": "3"
@@ -33,7 +33,7 @@
     "fields": {
         "description": "2013-14",
         "display_order": "4",
-        "effective_date": "2013-01-01",
+        "effective_date": "2013-07-01",
         "expiration_date": "2014-12-31"
     },
     "model": "api.complianceperiod",

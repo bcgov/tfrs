@@ -6,7 +6,8 @@ import * as ReducerTypes from '../constants/reducerTypes';
 
 import { creditTransfer, creditTransfers } from './creditTransferReducer';
 import { userRequest, usersRequest } from './userReducer';
-import { organizationRequest, fuelSuppliersRequest } from './organizationReducer';
+
+import { organizationRequest, organizations, fuelSuppliersRequest } from './organizationReducer';
 import compliancePeriods from './compliancePeriodReducer';
 
 const genericRequest = (state = {
@@ -99,6 +100,7 @@ const rootReducer = combineReducers({
   creditTransfer,
   creditTransfers,
   organizationRequest,
+  organizations,
   fuelSuppliersRequest,
   routing
 });
