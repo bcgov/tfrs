@@ -36,6 +36,14 @@ class OrganizationViewSet(AuditableMixin, viewsets.ModelViewSet):
         else:
             return self.serializer_classes['default']
 
+    def list(self, request):
+        fuel_suppliers = Organization.objects.filter(
+            type=OrganizationType.objects.get(type="Part3FuelSupplier")) \
+            .order_by('id')
+
+        serializer = self.get_serializer(fuel_suppliers, many=True)
+        return Response(serializer.data)
+
     @detail_route(methods=['put'])
     def delete(self, request, pk=None):
         """Destroys the specified organization"""
