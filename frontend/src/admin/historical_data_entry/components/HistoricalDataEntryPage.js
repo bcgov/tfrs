@@ -25,6 +25,7 @@ const HistoricalDataEntryPage = (props) => {
 
       <HistoricalDataEntryForm
         actions={formActions}
+        compliancePeriods={props.compliancePeriods}
         errors={props.addErrors}
         fuelSuppliers={props.fuelSuppliers}
         fields={props.fields}
@@ -70,8 +71,13 @@ HistoricalDataEntryPage.propTypes = {
   addErrors: PropTypes.shape({}).isRequired,
   commitErrors: PropTypes.shape({}).isRequired,
   commitMessage: PropTypes.string.isRequired,
+  compliancePeriods: PropTypes.arrayOf(PropTypes.shape()).isRequired,
   deleteCreditTransfer: PropTypes.func.isRequired,
   fields: PropTypes.shape({
+    compliancePeriod: PropTypes.shape({
+      description: PropTypes.string,
+      id: PropTypes.number
+    }),
     creditsFrom: PropTypes.shape({
       name: PropTypes.string,
       id: PropTypes.number

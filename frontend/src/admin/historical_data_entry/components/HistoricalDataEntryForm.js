@@ -18,6 +18,7 @@ const HistoricalDataEntryForm = props => (
     >
       <HistoricalDataEntryFormDetails
         actions={props.actions}
+        compliancePeriods={props.compliancePeriods}
         fuelSuppliers={props.fuelSuppliers}
         fields={props.fields}
         handleInputChange={props.handleInputChange}
@@ -31,9 +32,14 @@ const HistoricalDataEntryForm = props => (
 
 HistoricalDataEntryForm.propTypes = {
   actions: PropTypes.arrayOf(PropTypes.string).isRequired,
+  compliancePeriods: PropTypes.arrayOf(PropTypes.shape()).isRequired,
   errors: PropTypes.shape({}).isRequired,
   fuelSuppliers: PropTypes.arrayOf(PropTypes.shape()).isRequired,
   fields: PropTypes.shape({
+    compliancePeriod: PropTypes.shape({
+      description: PropTypes.string,
+      id: PropTypes.number
+    }),
     creditsFrom: PropTypes.shape({
       name: PropTypes.string,
       id: PropTypes.number
