@@ -111,8 +111,9 @@ class OrganizationSerializer(serializers.ModelSerializer):
     class Meta:
         model = Organization
         fields = (
-            'id', 'name', 'status', 'actions_type',
-            'create_timestamp', 'type')
+            'id', 'name', 'status', 'status_display', 'actions_type',
+            'actions_type_display', 'create_timestamp', 'type',
+            'organization_balance')
 
 
 class OrganizationActionsTypeSerializer(serializers.ModelSerializer):
