@@ -1,10 +1,12 @@
 """
     REST API Documentation for the NRS TFRS Credit Trading Application
 
-    The Transportation Fuels Reporting System is being designed to streamline compliance reporting for transportation fuel suppliers in accordance with the Renewable & Low Carbon Fuel Requirements Regulation.
+    The Transportation Fuels Reporting System is being designed to streamline
+    compliance reporting for transportation fuel suppliers in accordance with
+    the Renewable & Low Carbon Fuel Requirements Regulation.
 
     OpenAPI spec version: v1
-        
+
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
@@ -59,6 +61,12 @@ class CreditTradeHistory(Auditable):
     trade_effective_date = models.DateField(blank=True, null=True)
     note = models.CharField(max_length=4000, blank=True, null=True)
     is_internal_history_record = models.BooleanField()
+    compliance_period = models.ForeignKey(
+        'CompliancePeriod',
+        related_name='credit_trade_histories',
+        blank=True, null=True,
+        on_delete=models.PROTECT
+    )
 
     class Meta:
         db_table = 'credit_trade_history'
