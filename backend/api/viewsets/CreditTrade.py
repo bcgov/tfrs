@@ -94,7 +94,8 @@ class CreditTradeViewSet(AuditableMixin, mixins.CreateModelMixin,
 
         credit_trade = self.get_object()
 
-        completed_credit_trade = CreditTradeService.approve(credit_trade)
+        completed_credit_trade = CreditTradeService.approve(credit_trade,
+                                                            request.user)
         serializer = self.get_serializer(completed_credit_trade)
 
         return Response(serializer.data, status=status.HTTP_200_OK)
@@ -122,7 +123,8 @@ class CreditTradeViewSet(AuditableMixin, mixins.CreateModelMixin,
 
         for credit_trade in credit_trades:
             credit_trade.update_user_id = request.user.id
-            CreditTradeService.approve(credit_trade)
+            CreditTradeService.approve(credit_trade,
+                                       request.user)
 
         return Response({"message":
                          "Approved Credit Transfers have been processed."},

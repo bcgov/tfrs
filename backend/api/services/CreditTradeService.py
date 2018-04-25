@@ -1,7 +1,10 @@
+from rest_framework import exceptions
+
 from api.models.CreditTradeHistory import CreditTradeHistory
 from api.models.CreditTradeStatus import CreditTradeStatus
 from api.models.Organization import Organization
 from api.models.OrganizationBalance import OrganizationBalance
+from api.models.OrganizationType import OrganizationType
 from api.models.CreditTrade import CreditTrade
 
 from api.exceptions import PositiveIntegerException
@@ -112,7 +115,13 @@ class CreditTradeService(object):
         history.save()
 
     @staticmethod
-    def approve(credit_trade):
+    def approve(credit_trade, user):
+        """Only government users can approve transfers"""
+        gov_org_type = OrganizationType.objects.get(type="Government")
+
+        if user.organization.type_id != gov_org_type.id:
+            raise exceptions.PermissionDenied(
+                'Only Government representatives can use this functionality')
 
         status_approved = CreditTradeStatus.objects.get(status="Approved")
         status_completed = CreditTradeStatus.objects.get(status="Completed")
