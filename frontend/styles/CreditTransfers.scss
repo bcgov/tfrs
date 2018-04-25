@@ -2,11 +2,6 @@
 @import './mixins.scss';
 
 .credit-transfer {
-
-  .credit-transfer-details {
-    margin-bottom: 4rem;
-  }
-
   .note {
     display: block;
 
@@ -69,20 +64,22 @@
     
       .step {
         font-size: 14px;
+        font-weight: bold;
         text-align: center;
-        color: $light-font;
+        color: $medium-font;
         cursor: default;
         margin: 0 3px;
         padding: 8px 10px 8px 30px;
         width: 24%;
         float: left;
         position: relative;
-        background-color: rgba(217, 227, 247, 0.36);
+        background-color: $border-grey;
         -webkit-user-select: none;
         -moz-user-select: none;
         -ms-user-select: none;
         user-select: none; 
         transition: background-color 0.2s ease;
+        white-space: nowrap;
 
         @include mobile {
           width: 100%;
@@ -99,7 +96,7 @@
         height: 0;
         border-top: 19px solid transparent;
         border-bottom: 17px solid transparent;
-        border-left: 17px solid rgba(217, 227, 247, 0.36);	
+        border-left: 17px solid $border-grey;	
         z-index: 2;
         transition: border-color 0.2s ease;
 
@@ -144,22 +141,31 @@
         transition: opacity 0.3s ease 0.5s;
       }
 
+      .step.cancelled {
+        color: #fff;
+        background-color: $red;
+      }
+
+      .step.cancelled:after {
+        border-left: 17px solid $red;	
+      }
+
       .step.current {
         color: #fff;
-        background-color: #23468c;
+        background-color: $blue;
 
         & ~ .step {
-          background-color: #d9e3f7;
+          background-color: $light-blue;
           color: $medium-font;
 
           &:after {
-            border-left: 17px solid #d9e3f7;	
+            border-left: 17px solid $light-blue;	
           }
         }
       }
 
       .step.current:after {
-        border-left: 17px solid #23468c;	
+        border-left: 17px solid $blue;	
       }
     }
   }
@@ -168,7 +174,6 @@
     padding: 2rem;
     border: 1px solid $border-grey;
     border-radius: 5px;
-    margin-bottom: 2rem;
     
     .form-group {
     margin: 0.5rem 0.5rem 0.5rem 0;
@@ -194,9 +199,25 @@
       text-align: right;
     }
   }
+
+  .well {
+    &.transparent {
+      background-color: transparent;
+    }
+  }
 }
 
 .plain-english-phrase {
+
+  .value {
+    font-weight: bold;
+  }
+}
+
+.text-representation {
+  .lowercase {
+    text-transform: lowercase;
+  }
 
   .value {
     font-weight: bold;
@@ -208,7 +229,6 @@
   flex-wrap: wrap;
   align-items: center;
   justify-content: center;
-  margin-top: 3rem;
 
   .col-md-4 {
     text-align: center;
@@ -219,7 +239,8 @@
     margin: 1rem;
     padding: 2rem;
     border-radius: 5px;
-    min-width: 11em;
+    min-width: 15em;
+    text-align: center;
 
     @include mobile {
       text-align: center;
@@ -245,6 +266,14 @@
 }
 
 .page_credit_transactions {
+  .credit_balance {
+    float: right;
+  }
+
+  .right-toolbar-container .actions-container {
+    margin-bottom: 1rem;
+  }
+
   .rt-table {
     .col-credits, .col-date, .col-id, .col-price, .col-total {
       text-align: right;

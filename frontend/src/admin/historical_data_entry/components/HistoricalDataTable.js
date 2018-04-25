@@ -10,8 +10,9 @@ import FontAwesomeIcon from '@fortawesome/react-fontawesome';
 import numeral from 'numeral';
 
 import * as NumberFormat from '../../../constants/numeralFormats';
-import * as Routes from '../../../constants/routes';
+import HISTORICAL_DATA_ENTRY from '../../../constants/routes/HistoricalDataEntry';
 import { CREDIT_TRANSFER_TYPES, ZERO_DOLLAR_REASON } from '../../../constants/values';
+import CreditTransferType from '../../../credit_transfers/components/CreditTransferType';
 
 const HistoricalDataTable = (props) => {
   const columns = [{
@@ -30,27 +31,9 @@ const HistoricalDataTable = (props) => {
     Header: 'Type',
     accessor: item => item.type.id,
     className: 'col-transfer-type',
-    Cell: (row) => {
-      let content = '';
-
-      switch (row.value) {
-        case CREDIT_TRANSFER_TYPES.validation.id:
-          content = 'Validation';
-          break;
-        case CREDIT_TRANSFER_TYPES.retirement.id:
-          content = 'Reduction';
-          break;
-        case CREDIT_TRANSFER_TYPES.part3Award.id:
-          content = 'Part 3 Award';
-          break;
-        default:
-          content = 'Credit Transfer';
-      }
-
-      return (
-        <div>{content}</div>
-      );
-    }
+    Cell: row => (
+      <CreditTransferType type={row.value} />
+    )
   }, {
     id: 'creditsFrom',
     Header: 'Credits From',
@@ -132,7 +115,7 @@ const HistoricalDataTable = (props) => {
     accessor: 'id',
     filterable: false,
     Cell: (row) => {
-      const editUrl = `${Routes.HISTORICAL_DATA_ENTRY}/edit/${row.value}`;
+      const editUrl = HISTORICAL_DATA_ENTRY.EDIT.replace(':id', row.value);
 
       return (
         <div className="col-actions">
