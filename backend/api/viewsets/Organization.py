@@ -37,6 +37,11 @@ class OrganizationViewSet(AuditableMixin, viewsets.ModelViewSet):
             return self.serializer_classes['default']
 
     def list(self, request):
+        """
+        Returns a list of Fuel Suppliers
+        There are two types of organizations: Government and Fuel Suppliers
+        The function needs to separate the organizations based on type
+        """
         fuel_suppliers = Organization.objects.filter(
             type=OrganizationType.objects.get(type="Part3FuelSupplier")) \
             .order_by('id')
