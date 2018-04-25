@@ -9,7 +9,7 @@ import 'react-table/react-table.css';
 import numeral from 'numeral';
 
 import * as NumberFormat from '../../constants/numeralFormats';
-import { CREDIT_TRANSACTION_DETAILS } from '../../constants/routes';
+import CREDIT_TRANSACTIONS from '../../constants/routes/CreditTransactions';
 
 const OrganizationsTable = (props) => {
   const columns = [{
@@ -45,7 +45,7 @@ const OrganizationsTable = (props) => {
   }, {
     accessor: item => item.organizationBalance.creditTradeId,
     Cell: (row) => {
-      const viewUrl = CREDIT_TRANSACTION_DETAILS.replace(':id', row.value);
+      const viewUrl = CREDIT_TRANSACTIONS.DETAILS.replace(':id', row.value);
 
       return <Link to={viewUrl}>{row.value}</Link>;
     },

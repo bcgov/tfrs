@@ -101,6 +101,7 @@ class CreditTransferViewContainer extends Component {
       <CreditTransferDetails
         buttonActions={buttonActions}
         changeStatus={this._changeStatus}
+        compliancePeriod={item.compliancePeriod}
         creditsFrom={item.creditsFrom}
         creditsTo={item.creditsTo}
         deleteCreditTransfer={this._deleteCreditTransfer}
