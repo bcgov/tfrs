@@ -48,7 +48,7 @@ class HistoricalDataEntryContainer extends Component {
     this._selectIdForModal = this._selectIdForModal.bind(this);
   }
 
-  componentDidMount () {
+  componentWillMount () {
     this.loadData();
     this.props.getCompliancePeriods();
     this.props.getFuelSuppliers();
