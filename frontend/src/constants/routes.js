@@ -3,6 +3,7 @@
 export const HOME = '/';
 export const LOGOUT = '/logout';
 
+export const COMPLIANCE_PERIODS = '/compliance_periods';
 export const ORGANIZATIONS = '/organizations';
 export const ADMINISTRATION = '/administration';
 export const ORGANIZATION_DETAILS = '/organizations/:id';

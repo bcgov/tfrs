@@ -10,6 +10,7 @@ import HistoricalDataEntryFormButtons from './HistoricalDataEntryFormButtons';
 import HistoricalDataTable from './HistoricalDataTable';
 import ModalDeleteCreditTransfer from '../../../credit_transfers/components/ModalDeleteCreditTransfer';
 import ModalProcessApprovedCreditTransfer from '../../../credit_transfers/components/ModalProcessApprovedCreditTransfer';
+import SuccessAlert from '../../../app/components/SuccessAlert';
 
 const buttonActions = [Lang.BTN_CANCEL, Lang.BTN_COMMIT];
 const formActions = [Lang.BTN_ADD_TO_QUEUE];
@@ -24,6 +25,7 @@ const HistoricalDataEntryPage = (props) => {
 
       <HistoricalDataEntryForm
         actions={formActions}
+        compliancePeriods={props.compliancePeriods}
         errors={props.addErrors}
         fuelSuppliers={props.fuelSuppliers}
         fields={props.fields}
@@ -36,6 +38,9 @@ const HistoricalDataEntryPage = (props) => {
       {!isFetching &&
       Object.keys(props.commitErrors).length > 0 &&
         <Errors errors={props.commitErrors} />
+      }
+      {!isFetching && props.commitMessage &&
+        <SuccessAlert message={props.commitMessage} />
       }
       {!isFetching &&
       <HistoricalDataTable
@@ -65,8 +70,14 @@ const HistoricalDataEntryPage = (props) => {
 HistoricalDataEntryPage.propTypes = {
   addErrors: PropTypes.shape({}).isRequired,
   commitErrors: PropTypes.shape({}).isRequired,
+  commitMessage: PropTypes.string.isRequired,
+  compliancePeriods: PropTypes.arrayOf(PropTypes.shape()).isRequired,
   deleteCreditTransfer: PropTypes.func.isRequired,
   fields: PropTypes.shape({
+    compliancePeriod: PropTypes.shape({
+      description: PropTypes.string,
+      id: PropTypes.number
+    }),
     creditsFrom: PropTypes.shape({
       name: PropTypes.string,
       id: PropTypes.number
