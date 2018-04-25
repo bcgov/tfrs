@@ -15,18 +15,19 @@ export const getOrganizations = () => (dispatch, getState) => {
 };
 
 const getOrganizationsRequest = () => ({
-  name: ReducerTypes.GET_ORGANIZATIONS,
-  type: ActionTypes.REQUEST
+  name: 'GET_ORGANIZATIONS_REQUEST',
+  type: ActionTypes.GET_CREDIT_TRANSFERS
 });
 
 const getOrganizationsSuccess = organizations => ({
-  name: ReducerTypes.GET_ORGANIZATIONS,
-  type: ActionTypes.SUCCESS,
-  data: organizations
+  name: 'RECEIVE_ORGANIZATIONS_REQUEST',
+  type: ActionTypes.RECEIVE_ORGANIZATIONS,
+  data: organizations,
+  receivedAt: Date.now()
 });
 
 const getOrganizationsError = error => ({
-  name: ReducerTypes.GET_ORGANIZATIONS,
+  name: 'ERROR_ORGANIZATIONS_REQUEST',
   type: ActionTypes.ERROR,
   errorMessage: error
 });
