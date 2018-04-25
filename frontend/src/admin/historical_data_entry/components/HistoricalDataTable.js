@@ -21,6 +21,11 @@ const HistoricalDataTable = (props) => {
     maxWidth: 35,
     resizable: false
   }, {
+    id: 'compliancePeriod',
+    Header: 'Compliance Period',
+    className: 'col-compliance-period',
+    accessor: item => ((item.compliancePeriod) ? item.compliancePeriod.description : null)
+  }, {
     id: 'effectiveDate',
     Header: 'Effective Date',
     accessor: item => item.tradeEffectiveDate,

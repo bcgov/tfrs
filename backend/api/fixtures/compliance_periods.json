@@ -1,0 +1,102 @@
+[
+  {
+      "fields": {
+          "description": "2010",
+          "display_order": "1",
+          "effective_date": "2010-01-01",
+          "expiration_date": "2010-12-31"
+      },
+      "model": "api.complianceperiod",
+      "pk": "1"
+  },
+  {
+    "fields": {
+        "description": "2011",
+        "display_order": "2",
+        "effective_date": "2011-01-01",
+        "expiration_date": "2011-12-31"
+    },
+    "model": "api.complianceperiod",
+    "pk": "2"
+  },
+  {
+    "fields": {
+        "description": "2012-13",
+        "display_order": "3",
+        "effective_date": "2012-01-01",
+        "expiration_date": "2013-06-30"
+    },
+    "model": "api.complianceperiod",
+    "pk": "3"
+  },
+  {
+    "fields": {
+        "description": "2013-14",
+        "display_order": "4",
+        "effective_date": "2013-07-01",
+        "expiration_date": "2014-12-31"
+    },
+    "model": "api.complianceperiod",
+    "pk": "4"
+  },
+  {
+    "fields": {
+        "description": "2015",
+        "display_order": "5",
+        "effective_date": "2015-01-01",
+        "expiration_date": "2015-12-31"
+    },
+    "model": "api.complianceperiod",
+    "pk": "5"
+  },
+  {
+    "fields": {
+        "description": "2016",
+        "display_order": "6",
+        "effective_date": "2016-01-01",
+        "expiration_date": "2016-12-31"
+    },
+    "model": "api.complianceperiod",
+    "pk": "6"
+  },
+  {
+    "fields": {
+        "description": "2017",
+        "display_order": "7",
+        "effective_date": "2017-01-01",
+        "expiration_date": "2017-12-31"
+    },
+    "model": "api.complianceperiod",
+    "pk": "7"
+  },
+  {
+    "fields": {
+        "description": "2018",
+        "display_order": "8",
+        "effective_date": "2018-01-01",
+        "expiration_date": "2018-12-31"
+    },
+    "model": "api.complianceperiod",
+    "pk": "8"
+  },
+  {
+    "fields": {
+        "description": "2019",
+        "display_order": "9",
+        "effective_date": "2019-01-01",
+        "expiration_date": "2019-12-31"
+    },
+    "model": "api.complianceperiod",
+    "pk": "9"
+  },
+  {
+    "fields": {
+        "description": "2020",
+        "display_order": "10",
+        "effective_date": "2020-01-01",
+        "expiration_date": "2020-12-31"
+    },
+    "model": "api.complianceperiod",
+    "pk": "10"
+  }
+]

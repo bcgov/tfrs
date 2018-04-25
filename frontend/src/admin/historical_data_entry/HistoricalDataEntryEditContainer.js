@@ -17,6 +17,7 @@ import {
   prepareCreditTransfer,
   updateCreditTransfer
 } from '../../actions/creditTransfersActions';
+import getCompliancePeriods from '../../actions/compliancePeriodsActions';
 import history from '../../app/History';
 import HistoricalDataEntryForm from './components/HistoricalDataEntryForm';
 
@@ -27,6 +28,7 @@ class HistoricalDataEntryEditContainer extends Component {
     super(props);
     this.state = {
       fields: {
+        compliancePeriod: { id: 0, description: '' },
         creditsFrom: {},
         creditsTo: { id: 0, name: '' },
         fairMarketValuePerCredit: '',
@@ -43,8 +45,9 @@ class HistoricalDataEntryEditContainer extends Component {
     this._handleSubmit = this._handleSubmit.bind(this);
   }
 
-  componentDidMount () {
+  componentWillMount () {
     this.loadData(this.props.match.params.id);
+    this.props.getCompliancePeriods();
     this.props.getFuelSuppliers();
   }
 
@@ -109,6 +112,7 @@ class HistoricalDataEntryEditContainer extends Component {
       const { item } = props;
 
       const fieldState = {
+        compliancePeriod: (item.compliancePeriod) ? item.compliancePeriod : { id: 0 },
         creditsFrom: item.creditsFrom,
         creditsTo: item.creditsTo,
         fairMarketValuePerCredit: item.fairMarketValuePerCredit,
@@ -130,6 +134,8 @@ class HistoricalDataEntryEditContainer extends Component {
     return (
       <HistoricalDataEntryForm
         actions={buttonActions}
+        compliancePeriods={this.props.compliancePeriods}
+        editMode
         errors={this.props.errors}
         fuelSuppliers={this.props.fuelSuppliers}
         fields={this.state.fields}
@@ -146,8 +152,10 @@ HistoricalDataEntryEditContainer.defaultProps = {
 };
 
 HistoricalDataEntryEditContainer.propTypes = {
+  compliancePeriods: PropTypes.arrayOf(PropTypes.shape()).isRequired,
   errors: PropTypes.shape({}),
   fuelSuppliers: PropTypes.arrayOf(PropTypes.shape()).isRequired,
+  getCompliancePeriods: PropTypes.func.isRequired,
   getCreditTransfer: PropTypes.func.isRequired,
   getFuelSuppliers: PropTypes.func.isRequired,
   invalidateCreditTransfers: PropTypes.func.isRequired,
@@ -165,6 +173,7 @@ HistoricalDataEntryEditContainer.propTypes = {
 };
 
 const mapStateToProps = state => ({
+  compliancePeriods: state.rootReducer.compliancePeriods.items,
   errors: state.rootReducer.creditTransfer.errors,
   fuelSuppliers: state.rootReducer.fuelSuppliersRequest.fuelSuppliers,
   isFetching: state.rootReducer.creditTransfer.isFetching,
@@ -173,6 +182,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   getCreditTransfer: bindActionCreators(getCreditTransfer, dispatch),
+  getCompliancePeriods: bindActionCreators(getCompliancePeriods, dispatch),
   getFuelSuppliers: bindActionCreators(getFuelSuppliers, dispatch),
   invalidateCreditTransfers: bindActionCreators(invalidateCreditTransfers, dispatch),
   prepareCreditTransfer: fields => prepareCreditTransfer(fields),

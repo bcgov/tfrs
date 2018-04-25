@@ -90,10 +90,12 @@ class CreditTradeService(object):
             status_id=credit_trade.status.id,
             type_id=credit_trade.type.id,
             number_of_credits=credit_trade.number_of_credits,
-            fair_market_value_per_credit=credit_trade.fair_market_value_per_credit,
+            fair_market_value_per_credit=credit_trade.
+            fair_market_value_per_credit,
             zero_reason_id=zero_reason,
             trade_effective_date=credit_trade.trade_effective_date,
             note=credit_trade.note,
+            compliance_period_id=credit_trade.compliance_period_id,
             is_internal_history_record=is_internal_history_record,
             credit_trade_update_time=credit_trade_update_time,
             create_user=user,
@@ -105,7 +107,8 @@ class CreditTradeService(object):
         try:
             history.full_clean()
         except ValidationError as e:
-            # TODO: Do something based on the errors contained in e.message_dict
+            # TODO: Do something based on the errors contained in
+            # e.message_dict
             # Display them to a user, or handle them programmatically.
             raise ValidationError(e)
 
