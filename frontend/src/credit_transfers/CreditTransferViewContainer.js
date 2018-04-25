@@ -7,7 +7,7 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
 
-import * as Routes from '../constants/routes';
+import CREDIT_TRANSACTIONS from '../constants/routes/CreditTransactions';
 import history from '../app/History';
 
 import {
@@ -24,6 +24,7 @@ class CreditTransferViewContainer extends Component {
   constructor (props) {
     super(props);
     this._changeStatus = this._changeStatus.bind(this);
+    this._deleteCreditTransfer = this._deleteCreditTransfer.bind(this);
   }
 
   componentDidMount () {
@@ -61,15 +62,16 @@ class CreditTransferViewContainer extends Component {
 
     this.props.updateCreditTransfer(id, data).then(() => {
       this.props.invalidateCreditTransfer();
-      history.push(Routes.CREDIT_TRANSACTIONS);
+      history.push(CREDIT_TRANSACTIONS.LIST);
     }, () => {
       // Failed to update
     });
   }
 
   _deleteCreditTransfer (id) {
-    // TODO: Popup notification before delete
-    this.props.deleteCreditTransfer(this.props.item.id);
+    this.props.deleteCreditTransfer(id).then(() => {
+      history.push(CREDIT_TRANSACTIONS.LIST);
+    });
   }
 
   render () {
@@ -97,16 +99,20 @@ class CreditTransferViewContainer extends Component {
 
     return (
       <CreditTransferDetails
-        id={item.id}
+        buttonActions={buttonActions}
+        changeStatus={this._changeStatus}
         creditsFrom={item.creditsFrom}
         creditsTo={item.creditsTo}
-        numberOfCredits={item.numberOfCredits}
+        deleteCreditTransfer={this._deleteCreditTransfer}
         fairMarketValuePerCredit={item.fairMarketValuePerCredit}
-        totalValue={item.totalValue}
+        id={item.id}
         isFetching={isFetching}
+        note={item.note}
+        numberOfCredits={item.numberOfCredits}
+        status={item.status}
+        totalValue={item.totalValue}
+        tradeEffectiveDate={item.tradeEffectiveDate}
         tradeType={item.type}
-        changeStatus={this._changeStatus}
-        buttonActions={buttonActions}
       />
     );
   }
@@ -136,6 +142,13 @@ CreditTransferViewContainer.propTypes = {
   getCreditTransferIfNeeded: PropTypes.func.isRequired,
   deleteCreditTransfer: PropTypes.func.isRequired,
   isFetching: PropTypes.bool.isRequired,
+  loggedInUser: PropTypes.shape({
+    displayName: PropTypes.string,
+    organization: PropTypes.shape({
+      name: PropTypes.string,
+      id: PropTypes.number
+    })
+  }).isRequired,
   match: PropTypes.shape({
     params: PropTypes.shape({
       id: PropTypes.string.isRequired

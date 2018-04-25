@@ -3,36 +3,38 @@
  */
 import React from 'react';
 import PropTypes from 'prop-types';
-import numeral from 'numeral';
-
-import * as NumberFormat from '../../constants/numeralFormats';
 
 import Loading from '../../app/components/Loading';
 
 import CreditTransferProgress from './CreditTransferProgress';
+import CreditTransferTextRepresentation from './CreditTransferTextRepresentation';
 import CreditTransferVisualRepresentation from './CreditTransferVisualRepresentation';
 import CreditTransferFormButtons from './CreditTransferFormButtons';
+import CreditTransferType from './CreditTransferType';
 
 const CreditTransferDetails = props => (
   <div className="credit-transfer">
     {props.isFetching && <Loading />}
     {!props.isFetching &&
       <div>
-        <h1>{props.title}</h1>
-        <CreditTransferProgress />
+        <h1>
+          {props.tradeType.id &&
+            <CreditTransferType type={props.tradeType.id} />
+          }
+        </h1>
+        <CreditTransferProgress status={props.status} type={props.tradeType} />
         <div className="credit-transfer-details">
           <div className="main-form">
-            <span>
-              {`${props.creditsFrom && props.creditsFrom.name} proposes to `}
-              {props.tradeType && props.tradeType.theType.toLowerCase()}
-              &nbsp;{props.numberOfCredits}
-              &nbsp;credit{(props.numberOfCredits > 1) && 's'} to&nbsp;
-              {`${props.creditsTo && props.creditsTo.name} for `}
-              {numeral(props.fairMarketValuePerCredit).format(NumberFormat.CURRENCY)}
-              &nbsp;per credit for a total value of&nbsp;
-              {numeral(props.totalValue).format(NumberFormat.CURRENCY)}
-              &nbsp;effective on Director&apos;s Approval
-            </span>
+            <CreditTransferTextRepresentation
+              creditsFrom={props.creditsFrom}
+              creditsTo={props.creditsTo}
+              fairMarketValuePerCredit={props.fairMarketValuePerCredit}
+              numberOfCredits={props.numberOfCredits}
+              status={props.status}
+              tradeEffectiveDate={props.tradeEffectiveDate}
+              tradeType={props.tradeType}
+              totalValue={props.totalValue}
+            />
           </div>
         </div>
         <CreditTransferVisualRepresentation
@@ -41,12 +43,17 @@ const CreditTransferDetails = props => (
           numberOfCredits={props.numberOfCredits}
           totalValue={props.totalValue}
         />
-        <div>{props.note}</div>
+        {props.note !== '' &&
+          <div className="well transparent">
+            <div>Notes: {props.note}</div>
+          </div>
+        }
         <form onSubmit={e => e.preventDefault()}>
           <CreditTransferFormButtons
-            id={props.id}
-            changeStatus={props.changeStatus}
             actions={props.buttonActions}
+            changeStatus={props.changeStatus}
+            deleteCreditTransfer={props.deleteCreditTransfer}
+            id={props.id}
           />
         </form>
       </div>
@@ -55,55 +62,64 @@ const CreditTransferDetails = props => (
 );
 
 CreditTransferDetails.defaultProps = {
-  title: 'Credit Transfer',
-  id: 0,
-  totalValue: '0',
-  numberOfCredits: '0',
-  fairMarketValuePerCredit: '0',
   creditsFrom: {
     name: '...'
   },
   creditsTo: {
     name: '...'
   },
+  fairMarketValuePerCredit: '0',
+  id: 0,
+  note: '',
+  numberOfCredits: '0',
+  status: {
+    id: 0,
+    status: ''
+  },
+  totalValue: '0',
+  tradeEffectiveDate: '',
   tradeType: {
     theType: 'sell'
   }
 };
 
 CreditTransferDetails.propTypes = {
-  title: PropTypes.string,
-  id: PropTypes.number,
+  buttonActions: PropTypes.arrayOf(PropTypes.string).isRequired,
+  changeStatus: PropTypes.func.isRequired,
   creditsFrom: PropTypes.shape({
-    name: PropTypes.string,
-    id: PropTypes.number
+    id: PropTypes.number,
+    name: PropTypes.string
   }),
   creditsTo: PropTypes.shape({
-    name: PropTypes.string,
-    id: PropTypes.number
+    id: PropTypes.number,
+    name: PropTypes.string
   }),
-  tradeType: PropTypes.shape({
-    name: PropTypes.string,
-    theType: PropTypes.string,
-    id: PropTypes.number
-  }),
-  numberOfCredits: PropTypes.oneOfType([
-    PropTypes.string,
-    PropTypes.number
-  ]),
+  deleteCreditTransfer: PropTypes.func.isRequired,
   fairMarketValuePerCredit: PropTypes.oneOfType([
     PropTypes.string,
     PropTypes.number
   ]),
+  id: PropTypes.number,
+  isFetching: PropTypes.bool.isRequired,
   note: PropTypes.string,
+  numberOfCredits: PropTypes.oneOfType([
+    PropTypes.string,
+    PropTypes.number
+  ]),
+  status: PropTypes.shape({
+    id: PropTypes.number,
+    status: PropTypes.string
+  }),
   totalValue: PropTypes.oneOfType([
     PropTypes.string,
     PropTypes.number
   ]),
-  changeStatus: PropTypes.func.isRequired,
-  buttonActions: PropTypes.arrayOf(PropTypes.string).isRequired,
-  isFetching: PropTypes.bool.isRequired
-
+  tradeEffectiveDate: PropTypes.string,
+  tradeType: PropTypes.shape({
+    id: PropTypes.number,
+    name: PropTypes.string,
+    theType: PropTypes.string
+  })
 };
 
 export default CreditTransferDetails;

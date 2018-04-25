@@ -1,13 +1,7 @@
 // Page Routes
 
 export const HOME = '/';
-export const CREDIT_TRANSACTIONS = '/credit_transactions';
-export const CREDIT_TRANSACTIONS_ADD = '/credit_transactions/add';
-export const CREDIT_TRANSACTION_EDIT = '/credit_transactions/edit/:id';
-export const CREDIT_TRANSACTION_DETAILS = '/credit_transactions/view/:id';
-
-export const HISTORICAL_DATA_ENTRY = '/admin/historical_data_entry';
-export const HISTORICAL_DATA_ENTRY_EDIT = '/admin/historical_data_entry/edit/:id';
+export const LOGOUT = '/logout';
 
 export const ORGANIZATIONS = '/organizations';
 export const ADMINISTRATION = '/administration';
@@ -22,7 +16,7 @@ export const SETTINGS = '/settings';
 export const CREDIT_TRANSFER_DETAILS = '/credit_transfer/:id';
 
 // API Routes
-export const BASE_URL = location.protocol + '//' + window.location.host + '/api';
+export const BASE_URL = `${window.location.protocol}//${window.location.host}/api`;
 
 export const ORGANIZATIONS_API = '/organizations';
 export const ORGANIZATION_ACTION_TYPES = '/organizationactionstypes';
