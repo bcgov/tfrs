@@ -17,6 +17,7 @@ import {
   prepareCreditTransfer,
   processApprovedCreditTransfers
 } from '../../actions/creditTransfersActions';
+import getCompliancePeriods from '../../actions/compliancePeriodsActions';
 import { getFuelSuppliers } from '../../actions/organizationActions';
 import HistoricalDataEntryPage from './components/HistoricalDataEntryPage';
 
@@ -25,6 +26,7 @@ class HistoricalDataEntryContainer extends Component {
     super(props);
     this.state = {
       fields: {
+        compliancePeriod: { id: 0, description: '' },
         creditsFrom: { id: 0, name: '' },
         creditsTo: { id: 0, name: '' },
         fairMarketValuePerCredit: '',
@@ -47,8 +49,9 @@ class HistoricalDataEntryContainer extends Component {
   }
 
   componentDidMount () {
-    this.props.getFuelSuppliers();
     this.loadData();
+    this.props.getCompliancePeriods();
+    this.props.getFuelSuppliers();
   }
 
   componentWillReceiveProps (props) {
@@ -141,6 +144,8 @@ class HistoricalDataEntryContainer extends Component {
       <HistoricalDataEntryPage
         addErrors={this.props.addErrors}
         commitErrors={this.props.commitErrors}
+        commitMessage={this.props.commitMessage}
+        compliancePeriods={this.props.compliancePeriods}
         deleteCreditTransfer={this._deleteCreditTransfer}
         fields={this.state.fields}
         fuelSuppliers={this.props.fuelSuppliers}
@@ -160,16 +165,20 @@ class HistoricalDataEntryContainer extends Component {
 
 HistoricalDataEntryContainer.defaultProps = {
   addErrors: {},
-  commitErrors: {}
+  commitErrors: {},
+  commitMessage: ''
 };
 
 HistoricalDataEntryContainer.propTypes = {
   addCreditTransfer: PropTypes.func.isRequired,
   addErrors: PropTypes.shape({}),
   commitErrors: PropTypes.shape({}),
+  commitMessage: PropTypes.string,
+  compliancePeriods: PropTypes.arrayOf(PropTypes.shape()).isRequired,
   deleteCreditTransfer: PropTypes.func.isRequired,
   fuelSuppliers: PropTypes.arrayOf(PropTypes.shape()).isRequired,
   getApprovedCreditTransfersIfNeeded: PropTypes.func.isRequired,
+  getCompliancePeriods: PropTypes.func.isRequired,
   getFuelSuppliers: PropTypes.func.isRequired,
   historicalData: PropTypes.shape({
     items: PropTypes.arrayOf(PropTypes.shape()).isRequired,
@@ -184,6 +193,8 @@ HistoricalDataEntryContainer.propTypes = {
 const mapStateToProps = state => ({
   addErrors: state.rootReducer.creditTransfer.errors,
   commitErrors: state.rootReducer.creditTransfers.errors,
+  commitMessage: state.rootReducer.creditTransfers.message,
+  compliancePeriods: state.rootReducer.compliancePeriods.items,
   fuelSuppliers: state.rootReducer.fuelSuppliersRequest.fuelSuppliers,
   historicalData: {
     items: state.rootReducer.creditTransfers.items,
@@ -194,10 +205,11 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
   addCreditTransfer: bindActionCreators(addCreditTransfer, dispatch),
   deleteCreditTransfer: bindActionCreators(deleteCreditTransfer, dispatch),
-  getFuelSuppliers: bindActionCreators(getFuelSuppliers, dispatch),
   getApprovedCreditTransfersIfNeeded: () => {
     dispatch(getApprovedCreditTransfersIfNeeded());
   },
+  getCompliancePeriods: bindActionCreators(getCompliancePeriods, dispatch),
+  getFuelSuppliers: bindActionCreators(getFuelSuppliers, dispatch),
   invalidateCreditTransfer: bindActionCreators(invalidateCreditTransfer, dispatch),
   invalidateCreditTransfers: bindActionCreators(invalidateCreditTransfers, dispatch),
   prepareCreditTransfer: fields => prepareCreditTransfer(fields),
