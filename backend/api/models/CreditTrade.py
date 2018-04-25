@@ -1,7 +1,9 @@
 """
     REST API Documentation for the NRS TFRS Credit Trading Application
 
-    The Transportation Fuels Reporting System is being designed to streamline compliance reporting for transportation fuel suppliers in accordance with the Renewable & Low Carbon Fuel Requirements Regulation.
+    The Transportation Fuels Reporting System is being designed to streamline
+    compliance reporting for transportation fuel suppliers in accordance with
+    the Renewable & Low Carbon Fuel Requirements Regulation.
 
     OpenAPI spec version: v1
         
