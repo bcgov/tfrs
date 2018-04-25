@@ -11,7 +11,7 @@ import { getOrganizations } from '../actions/organizationActions';
 import OrganizationsPage from './components/OrganizationsPage';
 
 class OrganizationsContainer extends Component {
-  componentDidMount () {
+  componentWillMount () {
     this.loadData();
   }
 

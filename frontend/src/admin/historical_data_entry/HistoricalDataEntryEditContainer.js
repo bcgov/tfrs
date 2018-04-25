@@ -45,7 +45,7 @@ class HistoricalDataEntryEditContainer extends Component {
     this._handleSubmit = this._handleSubmit.bind(this);
   }
 
-  componentDidMount () {
+  componentWillMount () {
     this.loadData(this.props.match.params.id);
     this.props.getCompliancePeriods();
     this.props.getFuelSuppliers();
