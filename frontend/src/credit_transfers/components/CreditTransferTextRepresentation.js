@@ -10,7 +10,7 @@ class CreditTransferTextRepresentation extends Component {
   constructor (props) {
     super(props);
 
-    this.compliancePeriod = this.props.compliancePeriod.description;
+    this.compliancePeriod = (this.props.compliancePeriod) ? this.props.compliancePeriod.description : '';
     this.creditsFrom = this.props.creditsFrom.name;
     this.creditsTo = this.props.creditsTo.name;
     this.fairMarketValuePerCredit =
