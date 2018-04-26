@@ -7,6 +7,8 @@ from api.models.Organization import Organization
 from api.models.OrganizationType import OrganizationType
 from api.utils import get_firstname_lastname
 from django.conf import settings
+from django.contrib.auth.models import Permission
+from api.models.CreditTrade import CreditTrade
 
 
 class UserAuthentication(authentication.BaseAuthentication):
@@ -40,6 +42,10 @@ class UserAuthentication(authentication.BaseAuthentication):
                     Q(organization_id=gov_organization.id),
                     Q(authorization_guid=header_user_guid) |
                     Q(authorization_id=header_user_id))
+
+                permission = Permission.objects.get(
+                    codename='credit_trade_approve')
+                user.user_permissions.add(permission)
 
             else:
                 user = User.objects.get(
