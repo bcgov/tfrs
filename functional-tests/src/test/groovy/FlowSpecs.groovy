@@ -1,6 +1,5 @@
 import geb.spock.GebReportingSpec
-import pages.app.AccountActivityPage
-import pages.app.AccountActivityPage
+import pages.app.CreditTransactionsPage
 import pages.app.AdministrationPage
 import pages.app.DashboardPage
 import pages.app.FuelSuppliersPage
@@ -39,25 +38,7 @@ class FlowSpecs extends GebReportingSpec {
         then: "I should see #assertPage"
             at assertPage
         where:
-            startPage           | clickLink                     || assertPage
-            DashboardPage       | "navbar-organizations"        || FuelSuppliersPage
-            DashboardPage       | "navbar-account-activity"     || AccountActivityPage
-            DashboardPage       | "navbar-notifications"        || NotificationsPage
-            DashboardPage       | "navbar-settings"             || SettingsPage
-            DashboardPage       | "navbar-administration"       || AdministrationPage
-            FuelSuppliersPage   | "navbar-dashboard"            || DashboardPage
-            AccountActivityPage | "navbar-dashboard"            || DashboardPage
-            NotificationsPage   | "navbar-dashboard"            || DashboardPage
-            SettingsPage        | "navbar-dashboard"            || DashboardPage        
-            AdministrationPage  | "navbar-dashboard"            || DashboardPage
-            DashboardPage       | "navbar-dashboard"            || DashboardPage
-            //Test Externally Linked Pages
-            FuelSuppliersPage   | "footer-home"                 || DashboardPage
-            AccountActivityPage | "footer-about-site"           || DashboardPage
-            DashboardPage       | "footer-about-disclaimer"     || Disclaimer
-            DashboardPage       | "footer-about-privacy"        || Privacy
-            DashboardPage       | "footer-about-accessibility"  || Accessability
-            DashboardPage       | "footer-about-copyright"      || Copyright
-            SettingsPage        | "footer-about-contact"        || DashboardPage
+            startPage                | clickLink                     || assertPage
+            DashboardPage            | "navbar-credit-transactions"  || CreditTransactionsPage
     }
 }
