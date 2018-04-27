@@ -2,9 +2,9 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 const ErrorAlert = props => (
-  <div>
-    <h1>{props.title}</h1>
-    <p>{props.message}</p>
+  <div className="alert alert-danger error-alert" role="alert">
+    <strong> {props.title} </strong>
+    <div>{props.message}</div>
   </div>
 );
 
