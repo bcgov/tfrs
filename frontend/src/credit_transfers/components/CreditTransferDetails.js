@@ -10,7 +10,7 @@ import CreditTransferProgress from './CreditTransferProgress';
 import CreditTransferTextRepresentation from './CreditTransferTextRepresentation';
 import CreditTransferVisualRepresentation from './CreditTransferVisualRepresentation';
 import CreditTransferFormButtons from './CreditTransferFormButtons';
-import CreditTransferType from './CreditTransferType';
+import { getCreditTransferType } from '../../actions/creditTransfersActions';
 
 const CreditTransferDetails = props => (
   <div className="credit-transfer">
@@ -19,7 +19,7 @@ const CreditTransferDetails = props => (
       <div>
         <h1>
           {props.tradeType.id &&
-            <CreditTransferType type={props.tradeType.id} />
+            getCreditTransferType(props.tradeType.id)
           }
         </h1>
         <CreditTransferProgress status={props.status} type={props.tradeType} />
