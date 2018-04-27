@@ -12,14 +12,14 @@ import numeral from 'numeral';
 import * as NumberFormat from '../../../constants/numeralFormats';
 import HISTORICAL_DATA_ENTRY from '../../../constants/routes/HistoricalDataEntry';
 import { CREDIT_TRANSFER_TYPES, ZERO_DOLLAR_REASON } from '../../../constants/values';
-import CreditTransferType from '../../../credit_transfers/components/CreditTransferType';
+import { getCreditTransferType } from '../../../actions/creditTransfersActions';
 
 const HistoricalDataTable = (props) => {
   const columns = [{
     Header: 'ID',
     accessor: 'id',
     className: 'col-id',
-    maxWidth: 35,
+    maxWidth: 50,
     resizable: false
   }, {
     id: 'effectiveDate',
@@ -29,11 +29,8 @@ const HistoricalDataTable = (props) => {
   }, {
     id: 'transactionType',
     Header: 'Type',
-    accessor: item => item.type.id,
-    className: 'col-transfer-type',
-    Cell: row => (
-      <CreditTransferType type={row.value} />
-    )
+    accessor: item => getCreditTransferType(item.type.id),
+    className: 'col-transfer-type'
   }, {
     id: 'creditsFrom',
     Header: 'Credits From',
@@ -47,9 +44,7 @@ const HistoricalDataTable = (props) => {
         );
       }
 
-      return (
-        <div>{row.value}</div>
-      );
+      return row.value;
     }
   }, {
     id: 'creditsTo',
@@ -63,33 +58,30 @@ const HistoricalDataTable = (props) => {
         );
       }
 
-      return (
-        <div>{row.value}</div>
-      );
+      return row.value;
     }
   }, {
     id: 'numberOfCredits',
     Header: 'Credits',
-    accessor: item => numeral(item.numberOfCredits).format(NumberFormat.INT),
-    className: 'col-credits'
+    accessor: item => item.numberOfCredits,
+    className: 'col-credits',
+    Cell: row => numeral(row.value).format(NumberFormat.INT)
   }, {
     id: 'totalvalue',
     Header: 'Price',
-    accessor: item => numeral(item.totalValue).format(NumberFormat.CURRENCY),
-    className: 'col-price',
-    Cell: (row) => {
-      if (row.original.type.id === CREDIT_TRANSFER_TYPES.part3Award.id ||
-        row.original.type.id === CREDIT_TRANSFER_TYPES.retirement.id ||
-        row.original.type.id === CREDIT_TRANSFER_TYPES.validation.id) {
-        return (
-          <div>-</div>
-        );
+    accessor: (item) => {
+      if (item.type.id === CREDIT_TRANSFER_TYPES.part3Award.id ||
+        item.type.id === CREDIT_TRANSFER_TYPES.retirement.id ||
+        item.type.id === CREDIT_TRANSFER_TYPES.validation.id) {
+        return -1; // this is to fix sorting (value can't be negative)
       }
 
-      return (
-        <div>{row.value}</div>
-      );
-    }
+      return parseFloat(item.totalValue);
+    },
+    className: 'col-price',
+    Cell: row => (
+      (row.value === -1) ? '-' : numeral(row.value).format(NumberFormat.CURRENCY)
+    )
   }, {
     id: 'zeroReason',
     Header: 'Zero Reason',
@@ -105,9 +97,7 @@ const HistoricalDataTable = (props) => {
         content = ZERO_DOLLAR_REASON.other.description;
       }
 
-      return (
-        <div>{content}</div>
-      );
+      return content;
     }
   }, {
     id: 'actions',
