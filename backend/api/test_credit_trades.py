@@ -439,3 +439,46 @@ class TestCreditTrades(TestCase):
             expiration_date=None)
 
         assert organization_balance.validated_credits == 100
+
+    # As a government user, I should be able to delete credit transfers
+    # (Not a hard delete, just sets the status to Cancelled)
+    def test_delete(self):
+        approved_status, created = CreditTradeStatus.objects.get_or_create(
+            status='Approved')
+
+        cancelled_status, created = CreditTradeStatus.objects.get_or_create(
+            status='Cancelled')
+
+        credit_trade_type, created = CreditTradeType.objects.get_or_create(
+            the_type='Sell')
+
+        credit_trade_zero_reason, created = CreditTradeZeroReason.objects \
+            .get_or_create(reason='Other', display_order=2)
+
+        from_organization = Organization.objects.create(
+            name="Test 1",
+            actions_type_id=1,
+            status_id=1)
+        to_organization = Organization.objects.create(
+            name="Test 2",
+            actions_type_id=1,
+            status_id=1)
+
+        credit_trade = CreditTrade.objects.create(
+            status=approved_status,
+            initiator=self.gov_user.organization,
+            respondent=from_organization,
+            type=credit_trade_type,
+            number_of_credits=1000,
+            fair_market_value_per_credit=0,
+            zero_reason=credit_trade_zero_reason,
+            trade_effective_date=datetime.datetime.
+            today().strftime('%Y-%m-%d'))
+
+        response = self.gov_client.put('/api/credit_trades/{}/delete'.format(
+            credit_trade.id))
+        assert response.status_code == status.HTTP_200_OK
+
+        credit_trade = CreditTrade.objects.get(id=credit_trade.id)
+
+        assert credit_trade.status_id == cancelled_status.id

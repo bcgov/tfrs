@@ -15,7 +15,7 @@ import CreditTransferFormButtons from './CreditTransferFormButtons';
 
 import * as Lang from '../../constants/langEnUs';
 
-const buttonActions = [Lang.BTN_SAVE_DRAFT, Lang.BTN_PROPOSE];
+const buttonActions = [Lang.BTN_DELETE, Lang.BTN_SAVE_DRAFT, Lang.BTN_SIGN_1_2];
 
 const CreditTransferForm = props => (
   <div className="credit-transfer">
@@ -46,9 +46,10 @@ const CreditTransferForm = props => (
         handleInputChange={props.handleInputChange}
       />
       <CreditTransferFormButtons
-        id={props.id}
-        changeStatus={props.changeStatus}
         actions={buttonActions}
+        changeStatus={props.changeStatus}
+        deleteCreditTransfer={props.deleteCreditTransfer}
+        id={props.id}
       />
     </form>
   </div>
@@ -88,6 +89,7 @@ CreditTransferForm.propTypes = {
     name: PropTypes.string,
     id: PropTypes.number
   }).isRequired,
+  deleteCreditTransfer: PropTypes.func.isRequired,
   totalValue: PropTypes.number.isRequired,
   handleInputChange: PropTypes.func.isRequired,
   handleSubmit: PropTypes.func.isRequired,

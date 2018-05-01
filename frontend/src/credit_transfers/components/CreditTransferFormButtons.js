@@ -11,72 +11,72 @@ const CreditTransferFormButtons = props => (
   <div className="credit-transfer-actions">
     <div className="btn-container">
       <button
-        type="button"
         className="btn btn-default"
         onClick={() => history.goBack()}
+        type="button"
       >
         {Lang.BTN_APP_CANCEL}
       </button>
       {props.actions.includes(Lang.BTN_DELETE) &&
       <button
-        type="button"
         className="btn btn-danger"
-        data-toggle="modal"
         data-target="#confirmDelete"
+        data-toggle="modal"
+        type="button"
       >
         {Lang.BTN_DELETE}
       </button>
       }
       {props.actions.includes(Lang.BTN_EDIT_DRAFT) &&
       <button
-        type="button"
         className="btn btn-default"
         onClick={() => history.push(CREDIT_TRANSACTIONS.EDIT.replace(':id', props.id))}
+        type="button"
       >
         {Lang.BTN_EDIT_DRAFT}
       </button>
       }
       {props.actions.includes(Lang.BTN_SAVE_DRAFT) &&
       <button
-        type="submit"
         className="btn btn-default"
         onClick={() => props.changeStatus(CREDIT_TRANSFER_STATUS.draft)}
+        type="submit"
       >
         {Lang.BTN_SAVE_DRAFT}
       </button>
       }
-      {props.actions.includes(Lang.BTN_PROPOSE) &&
+      {props.actions.includes(Lang.BTN_SIGN_1_2) &&
       <button
-        type="submit"
         className="btn btn-primary"
         onClick={() => props.changeStatus(CREDIT_TRANSFER_STATUS.proposed)}
+        type="submit"
       >
-        {Lang.BTN_PROPOSE}
+        {Lang.BTN_SIGN_1_2}
       </button>
       }
       {props.actions.includes(Lang.BTN_ACCEPT) &&
       <button
-        type="submit"
         className="btn btn-primary"
         onClick={() => props.changeStatus(CREDIT_TRANSFER_STATUS.accepted)}
+        type="submit"
       >
         {Lang.BTN_ACCEPT}
       </button>
       }
       {props.actions.includes(Lang.BTN_REFUSE) &&
       <button
-        type="submit"
         className="btn btn-danger"
         onClick={() => props.changeStatus(CREDIT_TRANSFER_STATUS.refused)}
+        type="submit"
       >
         {Lang.BTN_REFUSE}
       </button>
       }
       {props.actions.includes(Lang.BTN_RESCIND) &&
       <button
-        type="submit"
         className="btn btn-danger"
         onClick={() => props.changeStatus(CREDIT_TRANSFER_STATUS.rescinded)}
+        type="submit"
       >
         {Lang.BTN_RESCIND}
       </button>
@@ -85,6 +85,7 @@ const CreditTransferFormButtons = props => (
     {props.actions.includes(Lang.BTN_DELETE) &&
     <ModalDeleteCreditTransfer
       deleteCreditTransfer={props.deleteCreditTransfer}
+      message="Do you want to delete this draft?"
       selectedId={props.id}
     />
     }
