@@ -8,31 +8,14 @@ import { withRouter } from 'react-router';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 
-import ErrorAlert from './components/ErrorAlert';
+import StatusInterceptor from './components/StatusInterceptor';
 
 const App = (props) => {
   let content;
   if (!props.userRequest.isFetching && props.isAuthenticated) {
     content = props.children;
-  } else if (
-    !props.userRequest.isFetching &&
-    props.userRequest.error.status === 403
-  ) {
-    const message = `Sorry, you are not authenticated to use this application. Please contact your administrator`;
-    content = (
-      <ErrorAlert
-        title="Not authenticated"
-        message={message}
-      />
-    );
-  } else if (!props.userRequest.isFetching) {
-    const message = `An API error occurred`;
-    content = (
-      <ErrorAlert
-        title="Server Error"
-        message={message}
-      />
-    );
+  } else {
+    content = (<StatusInterceptor statusCode={props.userRequest.error.status} />);
   }
 
   return (
