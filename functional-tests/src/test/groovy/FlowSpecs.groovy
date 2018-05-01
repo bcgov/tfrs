@@ -19,7 +19,7 @@ class FlowSpecs extends GebReportingSpec {
 
      def "Login Once"(){
         when: "I go to the Login URL "
-            go "https://logontest.gov.bc.ca/clp-cgi/capBceid/logon.cgi?flags=1101:1,7&TYPE=33554433&REALMOID=06-7a693a2b-07ab-481f-ae38-e9cccc861e78&GUID=&SMAUTHREASON=0&METHOD=GET&SMAGENTNAME=5SlxkAjMjyMfuL59wytntBoF3Ika3c1xW%2bUVeexhRKy8oHb7NkxEL5YuGJpnQIWjoZCSSfSPxRYnEVatgnfxz91irpUOq%2bJ%2f&TARGET=https%3a%2f%2fdev%2elowcarbonfuels%2egov%2ebc%2eca%2f"
+            go "https://logontest.gov.bc.ca/clp-cgi/capBceid/logon.cgi?TARGET=https://dev.lowcarbonfuels.gov.bc.ca/&flags=1101:1,7&toggle=1"
         and: "I log in on the SiteMinder Login page"    
             at LoginPage
             userName.value("Rstens")
@@ -35,8 +35,6 @@ class FlowSpecs extends GebReportingSpec {
     def "Navigate Page from: #startPage, click Link: #clickLink, Assert Page: #assertPage"(){
         when: "I am on #startPage"
             to startPage
-        and: "I click on #clickLink"
-            $("a", id:"$clickLink").click()
         then: "I should see #assertPage"
             at assertPage
         where:
