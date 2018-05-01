@@ -11,7 +11,7 @@ test('prepareCreditTransfer should return the right data for Credit Transfers (S
     },
     note: '',
     numberOfCredits: 100,
-    tradeEffectiveDate: '01/01/2018',
+    tradeEffectiveDate: '2018-01-01',
     transferType: CREDIT_TRANSFER_TYPES.sell.id,
     zeroDollarReason: ''
   });
@@ -22,7 +22,7 @@ test('prepareCreditTransfer should return the right data for Credit Transfers (S
     numberOfCredits: 100,
     respondent: 5,
     status: CREDIT_TRANSFER_STATUS.approved.id,
-    tradeEffectiveDate: '01/01/2018',
+    tradeEffectiveDate: '2018-01-01',
     type: CREDIT_TRANSFER_TYPES.sell.id,
     zeroReason: ''
   }).toEqual(data);
@@ -38,7 +38,7 @@ test('prepareCreditTransfer should return the right data for Part 3 Award', () =
     },
     note: '',
     numberOfCredits: 100,
-    tradeEffectiveDate: '01/01/2018',
+    tradeEffectiveDate: '2018-01-01',
     transferType: CREDIT_TRANSFER_TYPES.part3Award.id,
     zeroDollarReason: ''
   });
@@ -49,7 +49,7 @@ test('prepareCreditTransfer should return the right data for Part 3 Award', () =
     numberOfCredits: 100,
     respondent: 5,
     status: CREDIT_TRANSFER_STATUS.approved.id,
-    tradeEffectiveDate: '01/01/2018',
+    tradeEffectiveDate: '2018-01-01',
     type: CREDIT_TRANSFER_TYPES.part3Award.id,
     zeroReason: ''
   }).toEqual(data);
@@ -65,7 +65,7 @@ test('prepareCreditTransfer should return the right data for Validation', () => 
     },
     note: '',
     numberOfCredits: 100,
-    tradeEffectiveDate: '01/01/2018',
+    tradeEffectiveDate: '2018-01-01',
     transferType: CREDIT_TRANSFER_TYPES.validation.id,
     zeroDollarReason: ''
   });
@@ -76,7 +76,7 @@ test('prepareCreditTransfer should return the right data for Validation', () => 
     numberOfCredits: 100,
     respondent: 5,
     status: CREDIT_TRANSFER_STATUS.approved.id,
-    tradeEffectiveDate: '01/01/2018',
+    tradeEffectiveDate: '2018-01-01',
     type: CREDIT_TRANSFER_TYPES.validation.id,
     zeroReason: ''
   }).toEqual(data);
@@ -92,7 +92,7 @@ test('prepareCreditTransfer should return the right data for Reduction', () => {
     },
     note: '',
     numberOfCredits: 100,
-    tradeEffectiveDate: '01/01/2018',
+    tradeEffectiveDate: '2018-01-01',
     transferType: CREDIT_TRANSFER_TYPES.retirement.id,
     zeroDollarReason: ''
   });
@@ -103,7 +103,7 @@ test('prepareCreditTransfer should return the right data for Reduction', () => {
     numberOfCredits: 100,
     respondent: DEFAULT_ORGANIZATION.id,
     status: CREDIT_TRANSFER_STATUS.approved.id,
-    tradeEffectiveDate: '01/01/2018',
+    tradeEffectiveDate: '2018-01-01',
     type: CREDIT_TRANSFER_TYPES.retirement.id,
     zeroReason: ''
   }).toEqual(data);
