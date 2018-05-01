@@ -33,10 +33,13 @@ class CreditTradeService(object):
                  ~Q(status__id=status_cancelled.id)))
         else:
             # Fuel suppliers
+            status_cancelled = CreditTradeStatus.objects \
+                                                .get(status="Cancelled")
             status_submitted = CreditTradeStatus.objects \
                                                 .get(status="Submitted")
             credit_trades = CreditTrade.objects.filter(
-                Q(initiator=organization) |
+                (Q(initiator=organization) &
+                 ~Q(status__id=status_cancelled.id)) |
                 (Q(respondent=organization) &
                  Q(status__id__gte=status_submitted.id)))
 
@@ -90,7 +93,8 @@ class CreditTradeService(object):
             status_id=credit_trade.status.id,
             type_id=credit_trade.type.id,
             number_of_credits=credit_trade.number_of_credits,
-            fair_market_value_per_credit=credit_trade.fair_market_value_per_credit,
+            fair_market_value_per_credit=credit_trade.
+            fair_market_value_per_credit,
             zero_reason_id=zero_reason,
             trade_effective_date=credit_trade.trade_effective_date,
             note=credit_trade.note,
@@ -105,7 +109,8 @@ class CreditTradeService(object):
         try:
             history.full_clean()
         except ValidationError as e:
-            # TODO: Do something based on the errors contained in e.message_dict
+            # TODO: Do something based on the errors contained in
+            # e.message_dict
             # Display them to a user, or handle them programmatically.
             raise ValidationError(e)
 
@@ -157,7 +162,8 @@ class CreditTradeService(object):
 
         if from_credits < 0:
             raise PositiveIntegerException("Can't complete transaction,"
-                                           "`{}` has insufficient credits".format(_from.name))
+                                           "`{}` has insufficient credits"
+                                           .format(_from.name))
 
         # Update old balance effective date
         from_starting_bal.expiration_date = effective_date

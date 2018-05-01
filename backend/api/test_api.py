@@ -5,6 +5,7 @@ from rest_framework import status
 import datetime
 
 from api import fake_api_calls
+from api.models.CreditTrade import CreditTrade
 
 # Credit Trade Statuses
 STATUS_DRAFT = 1
@@ -208,12 +209,9 @@ class TestAPI(TestCase):
 
         # Update the status to "Cancelled"
         self.test_update(credit_trade_status=STATUS_CANCELLED)
-        response = self.client.get(
-            "{}/{}/history".format(self.test_url, self.credit_trade['id']),
-            content_type='application/json')
 
-        response_data = json.loads(response.content.decode("utf-8"))
-        self.assertTrue(response_data[0]['isInternalHistoryRecord'])
+        credit_trade = CreditTrade.objects.get(id=self.credit_trade['id'])
+        self.assertEqual(credit_trade.status_id, STATUS_CANCELLED)
 
     def test_nested_credit_trade(self):
         response = self.client.get(

@@ -44,6 +44,7 @@ class CreditTransferEditContainer extends Component {
     this._handleInputChange = this._handleInputChange.bind(this);
     this._handleSubmit = this._handleSubmit.bind(this);
     this._changeStatus = this._changeStatus.bind(this);
+    this._deleteCreditTransfer = this._deleteCreditTransfer.bind(this);
   }
 
   componentDidMount () {
@@ -85,6 +86,12 @@ class CreditTransferEditContainer extends Component {
     if (prevProps.match.params.id !== newProps.match.params.id) {
       this.loadData(newProps.match.params.id);
     }
+  }
+
+  _deleteCreditTransfer (id) {
+    this.props.deleteCreditTransfer(id).then(() => {
+      history.push(CREDIT_TRANSACTIONS.LIST);
+    });
   }
 
   _handleInputChange (event) {
@@ -134,11 +141,6 @@ class CreditTransferEditContainer extends Component {
     this.changeObjectProp(status.id, 'tradeStatus');
   }
 
-  _deleteCreditTransfer (id) {
-    // TODO: Popup notification before delete
-    this.props.deleteCreditTransfer(this.props.item.id);
-  }
-
   /*
    * Helper functions
    */
@@ -146,9 +148,7 @@ class CreditTransferEditContainer extends Component {
     const fieldState = { ...this.state.fields };
     if (name === 'respondent') {
       // Populate the dropdown
-      const respondents = this.props.fuelSuppliers.filter((fuelSupplier) => {
-        return fuelSupplier.id === id;
-      });
+      const respondents = this.props.fuelSuppliers.filter(fuelSupplier => (fuelSupplier.id === id));
 
       fieldState.respondent = respondents.length === 1 ? respondents[0] : { id: 0 };
       this.setState({
@@ -214,17 +214,19 @@ class CreditTransferEditContainer extends Component {
     return (
       <div>
         <CreditTransferForm
-          fuelSuppliers={this.props.fuelSuppliers}
-          title="New Credit Transfer"
-          fields={this.state.fields}
-          totalValue={this.state.totalValue}
-          tradeStatus={this.state.tradeStatus}
-          handleInputChange={this._handleInputChange}
-          handleSubmit={this._handleSubmit}
+          changeStatus={this._changeStatus}
           creditsFrom={this.state.creditsFrom}
           creditsTo={this.state.creditsTo}
+          deleteCreditTransfer={this._deleteCreditTransfer}
           errors={this.props.errors}
-          changeStatus={this._changeStatus}
+          fields={this.state.fields}
+          fuelSuppliers={this.props.fuelSuppliers}
+          handleInputChange={this._handleInputChange}
+          handleSubmit={this._handleSubmit}
+          id={item.id}
+          title="New Credit Transfer"
+          totalValue={this.state.totalValue}
+          tradeStatus={this.state.tradeStatus}
         />
       </div>
     );
