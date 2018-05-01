@@ -1,0 +1,12 @@
+[
+  {
+    "fields": {
+      "name": "Vancouver Island Propane Services Ltd.",
+      "actions_type": 1,
+      "status": 1,
+      "type_id": 2
+    },
+    "model": "api.organization",
+    "pk": null
+  }
+]
