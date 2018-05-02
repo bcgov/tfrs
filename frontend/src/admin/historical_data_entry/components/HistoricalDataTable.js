@@ -76,7 +76,7 @@ const HistoricalDataTable = (props) => {
         return -1; // this is to fix sorting (value can't be negative)
       }
 
-      return parseFloat(item.totalValue);
+      return parseFloat(item.totalValue).toFixed(2);
     },
     className: 'col-price',
     Cell: row => (
