@@ -116,7 +116,6 @@ class CreditTradeService(object):
 
     @staticmethod
     def approve(credit_trade):
-
         status_approved = CreditTradeStatus.objects.get(status="Approved")
         status_completed = CreditTradeStatus.objects.get(status="Completed")
 
