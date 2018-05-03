@@ -1,4 +1,4 @@
-from rest_framework import viewsets, permissions, status, mixins
+from rest_framework import viewsets, permissions, status, mixins, exceptions
 from rest_framework.decorators import list_route, detail_route
 from rest_framework.response import Response
 from rest_framework import filters
@@ -91,6 +91,9 @@ class CreditTradeViewSet(AuditableMixin, mixins.CreateModelMixin,
 
     @detail_route(methods=['put'])
     def approve(self, request, pk=None):
+        if not request.user.has_perm('api.credit_trade_approve'):
+            raise exceptions.PermissionDenied(
+                'Only Government representatives can use this functionality')
 
         credit_trade = self.get_object()
 
@@ -112,6 +115,10 @@ class CreditTradeViewSet(AuditableMixin, mixins.CreateModelMixin,
 
     @list_route(methods=['put'])
     def batch_process(self, request):
+        if not request.user.has_perm('api.credit_trade_approve'):
+            raise exceptions.PermissionDenied(
+                'Only Government representatives can use this functionality')
+
         status_approved = CreditTradeStatus.objects \
                                            .get(status="Approved")
 
