@@ -28,7 +28,8 @@ class CreditTradeService(object):
             status_cancelled = CreditTradeStatus.objects \
                                                 .get(status="Cancelled")
             credit_trades = CreditTrade.objects.filter(
-                Q(initiator=organization) |
+                (Q(initiator=organization) &
+                 ~Q(status__id=status_cancelled.id)) |
                 (Q(status__id__gte=status_accepted.id) &
                  ~Q(status__id=status_cancelled.id)))
         else:
