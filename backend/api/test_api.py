@@ -212,8 +212,7 @@ class TestAPI(TestCase):
             "{}/{}/history".format(self.test_url, self.credit_trade['id']),
             content_type='application/json')
 
-        response_data = json.loads(response.content.decode("utf-8"))
-        self.assertTrue(response_data[0]['isInternalHistoryRecord'])
+        assert status.HTTP_404_NOT_FOUND == response.status_code
 
     def test_nested_credit_trade(self):
         response = self.client.get(
