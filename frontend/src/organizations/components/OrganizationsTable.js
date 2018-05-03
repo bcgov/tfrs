@@ -25,11 +25,12 @@ const OrganizationsTable = (props) => {
     id: 'name',
     minWidth: 200
   }, {
-    accessor: item => numeral(item.organizationBalance.validatedCredits).format(NumberFormat.INT),
+    accessor: item => item.organizationBalance.validatedCredits,
     className: 'col-credit-balance',
     Header: 'Credit Balance',
     id: 'creditBalance',
-    minWidth: 100
+    minWidth: 100,
+    Cell: row => numeral(row.value).format(NumberFormat.INT)
   }, {
     accessor: item => item.statusDisplay,
     className: 'col-status-display',
