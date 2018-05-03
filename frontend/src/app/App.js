@@ -14,7 +14,7 @@ const App = (props) => {
   let content;
   if (!props.userRequest.isFetching && props.isAuthenticated) {
     content = props.children;
-  } else {
+  } else if (!props.userRequest.isFetching) {
     content = (<StatusInterceptor statusCode={props.userRequest.error.status} />);
   }
 

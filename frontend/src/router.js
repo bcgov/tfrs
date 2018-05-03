@@ -16,7 +16,7 @@ import CreditTransferViewContainer from './credit_transfers/CreditTransferViewCo
 import HistoricalDataEntryContainer from './admin/historical_data_entry/HistoricalDataEntryContainer';
 import HistoricalDataEntryEditContainer from './admin/historical_data_entry/HistoricalDataEntryEditContainer';
 import NotFound from './components/reusables/NotFound';
-import Organizations from './components/organizations/Organizations';
+import OrganizationsContainer from './organizations/OrganizationsContainer';
 import OrganizationDetails from './components/organizations/OrganizationDetails';
 
 const Router = props => (
@@ -31,7 +31,7 @@ const Router = props => (
         <Route
           exact
           path={Routes.ORGANIZATIONS}
-          component={withRouter(Organizations)}
+          component={withRouter(OrganizationsContainer)}
         />
         <Route
           path={Routes.ORGANIZATION_DETAILS}

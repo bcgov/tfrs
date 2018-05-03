@@ -1,0 +1,26 @@
+@import './variables.scss';
+@import './mixins.scss';
+
+.page_organizations {
+  .ReactTable {
+    .col-actions-type-display {
+      text-align: center;
+    }
+
+    .col-credit-balance {
+      text-align: right;
+    }
+
+    .col-id {
+      text-align: right;
+    }
+
+    .col-last-transaction {
+      text-align: right;
+    }
+
+    .col-status-display {
+      text-align: center;
+    }
+  }
+}

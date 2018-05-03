@@ -36,6 +36,19 @@ class OrganizationViewSet(AuditableMixin, viewsets.ModelViewSet):
         else:
             return self.serializer_classes['default']
 
+    def list(self, request):
+        """
+        Returns a list of Fuel Suppliers
+        There are two types of organizations: Government and Fuel Suppliers
+        The function needs to separate the organizations based on type
+        """
+        fuel_suppliers = Organization.objects.filter(
+            type=OrganizationType.objects.get(type="Part3FuelSupplier")) \
+            .order_by('id')
+
+        serializer = self.get_serializer(fuel_suppliers, many=True)
+        return Response(serializer.data)
+
     @detail_route(methods=['put'])
     def delete(self, request, pk=None):
         """Destroys the specified organization"""
