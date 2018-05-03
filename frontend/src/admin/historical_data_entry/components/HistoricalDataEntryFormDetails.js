@@ -34,10 +34,10 @@ const HistoricalDataEntryFormDetails = props => (
           <div className="form-group">
             <label htmlFor="transfer-type">Transfer Type:
               <div className="btn-group" role="group">
-                <button type="button" className={`btn btn-default ${(props.fields.transferType === CREDIT_TRANSFER_TYPES.sell.id.toString()) ? 'active' : ''}`} name="transferType" value={CREDIT_TRANSFER_TYPES.sell.id} onClick={props.handleInputChange}>Credit Transfer</button>
-                <button type="button" className={`btn btn-default ${(props.fields.transferType === CREDIT_TRANSFER_TYPES.part3Award.id.toString()) ? 'active' : ''}`} name="transferType" value={CREDIT_TRANSFER_TYPES.part3Award.id} onClick={props.handleInputChange}>Part 3 Award</button>
-                <button type="button" className={`btn btn-default ${(props.fields.transferType === CREDIT_TRANSFER_TYPES.validation.id.toString()) ? 'active' : ''}`} name="transferType" value={CREDIT_TRANSFER_TYPES.validation.id} onClick={props.handleInputChange}>Validation</button>
-                <button type="button" className={`btn btn-default ${(props.fields.transferType === CREDIT_TRANSFER_TYPES.retirement.id.toString()) ? 'active' : ''}`} name="transferType" value={CREDIT_TRANSFER_TYPES.retirement.id} onClick={props.handleInputChange}>Reduction</button>
+                <button type="button" disabled={props.editMode} className={`btn btn-default ${(props.fields.transferType === CREDIT_TRANSFER_TYPES.sell.id.toString()) ? 'active' : ''}`} name="transferType" value={CREDIT_TRANSFER_TYPES.sell.id} onClick={props.handleInputChange}>Credit Transfer</button>
+                <button type="button" disabled={props.editMode} className={`btn btn-default ${(props.fields.transferType === CREDIT_TRANSFER_TYPES.part3Award.id.toString()) ? 'active' : ''}`} name="transferType" value={CREDIT_TRANSFER_TYPES.part3Award.id} onClick={props.handleInputChange}>Part 3 Award</button>
+                <button type="button" disabled={props.editMode} className={`btn btn-default ${(props.fields.transferType === CREDIT_TRANSFER_TYPES.validation.id.toString()) ? 'active' : ''}`} name="transferType" value={CREDIT_TRANSFER_TYPES.validation.id} onClick={props.handleInputChange}>Validation</button>
+                <button type="button" disabled={props.editMode} className={`btn btn-default ${(props.fields.transferType === CREDIT_TRANSFER_TYPES.retirement.id.toString()) ? 'active' : ''}`} name="transferType" value={CREDIT_TRANSFER_TYPES.retirement.id} onClick={props.handleInputChange}>Reduction</button>
               </div>
             </label>
           </div>
@@ -79,6 +79,7 @@ const HistoricalDataEntryFormDetails = props => (
             <label htmlFor="credits-to">Credits To:
               <select
                 className="form-control"
+                disabled={props.editMode}
                 id="credits-to"
                 name="creditsTo"
                 value={props.fields.creditsTo.id}
@@ -100,6 +101,27 @@ const HistoricalDataEntryFormDetails = props => (
               <div id="credits-to" className="form-control">N/A</div>
             </label>
             }
+          </div>
+
+          <div className="form-group">
+            <label htmlFor="compliance-period">Compliance Period:
+              <select
+                className="form-control"
+                id="compliance-period"
+                name="compliancePeriod"
+                value={props.fields.compliancePeriod.id}
+                onChange={props.handleInputChange}
+                required="required"
+              >
+                <option key="0" value="" default />
+                {props.compliancePeriods &&
+                  props.compliancePeriods.map(period => (
+                    <option key={period.id} value={period.id}>
+                      {period.description}
+                    </option>
+                  ))}
+              </select>
+            </label>
           </div>
         </div>
         <div className="col-md-6">
@@ -149,7 +171,12 @@ const HistoricalDataEntryFormDetails = props => (
               CREDIT_TRANSFER_TYPES.validation.id.toString(),
               CREDIT_TRANSFER_TYPES.retirement.id.toString()].includes(props.fields.transferType) &&
               <label htmlFor="dollar-per-credit">...for a total of:
-                <div id="dollar-per-credit" className="form-control dollar-per-credit">{numeral(props.totalValue).format(NumberFormat.CURRENCY)} *</div>
+                <div
+                  id="dollar-per-credit"
+                  className="form-control dollar-per-credit"
+                >
+                  {numeral(props.totalValue).format(NumberFormat.CURRENCY)} *
+                </div>
               </label>
             }
             {[CREDIT_TRANSFER_TYPES.part3Award.id.toString(),
@@ -163,7 +190,7 @@ const HistoricalDataEntryFormDetails = props => (
 
           <div className="form-group">
             <label htmlFor="transfer-type">Zero Dollar Reason: **
-              <div className="btn-group" role="group">
+              <div className="btn-group zero-reason" role="group">
                 <button type="button" className={`btn btn-default ${(props.fields.zeroDollarReason === ZERO_DOLLAR_REASON.affiliate.id.toString()) ? 'active' : ''}`} disabled={props.fields.transferType !== CREDIT_TRANSFER_TYPES.sell.id.toString() || parseFloat(props.fields.fairMarketValuePerCredit) > 0} name="zeroDollarReason" value={ZERO_DOLLAR_REASON.affiliate.id} onClick={props.handleInputChange}>Affiliate</button>
                 <button type="button" className={`btn btn-default ${(props.fields.zeroDollarReason === ZERO_DOLLAR_REASON.other.id.toString()) ? 'active' : ''}`} disabled={props.fields.transferType !== CREDIT_TRANSFER_TYPES.sell.id.toString() || parseFloat(props.fields.fairMarketValuePerCredit) > 0} name="zeroDollarReason" value={ZERO_DOLLAR_REASON.other.id} onClick={props.handleInputChange}>Other</button>
               </div>
@@ -206,8 +233,14 @@ const HistoricalDataEntryFormDetails = props => (
 
 HistoricalDataEntryFormDetails.propTypes = {
   actions: PropTypes.arrayOf(PropTypes.string).isRequired,
+  compliancePeriods: PropTypes.arrayOf(PropTypes.shape()).isRequired,
+  editMode: PropTypes.bool.isRequired,
   fuelSuppliers: PropTypes.arrayOf(PropTypes.shape()).isRequired,
   fields: PropTypes.shape({
+    compliancePeriod: PropTypes.shape({
+      description: PropTypes.string,
+      id: PropTypes.number
+    }),
     creditsFrom: PropTypes.shape({
       name: PropTypes.string,
       id: PropTypes.number

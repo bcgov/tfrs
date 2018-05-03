@@ -18,6 +18,8 @@ const HistoricalDataEntryForm = props => (
     >
       <HistoricalDataEntryFormDetails
         actions={props.actions}
+        compliancePeriods={props.compliancePeriods}
+        editMode={props.editMode}
         fuelSuppliers={props.fuelSuppliers}
         fields={props.fields}
         handleInputChange={props.handleInputChange}
@@ -29,11 +31,21 @@ const HistoricalDataEntryForm = props => (
   </div>
 );
 
+HistoricalDataEntryForm.defaultProps = {
+  editMode: false
+};
+
 HistoricalDataEntryForm.propTypes = {
   actions: PropTypes.arrayOf(PropTypes.string).isRequired,
+  compliancePeriods: PropTypes.arrayOf(PropTypes.shape()).isRequired,
+  editMode: PropTypes.bool,
   errors: PropTypes.shape({}).isRequired,
   fuelSuppliers: PropTypes.arrayOf(PropTypes.shape()).isRequired,
   fields: PropTypes.shape({
+    compliancePeriod: PropTypes.shape({
+      description: PropTypes.string,
+      id: PropTypes.number
+    }),
     creditsFrom: PropTypes.shape({
       name: PropTypes.string,
       id: PropTypes.number
