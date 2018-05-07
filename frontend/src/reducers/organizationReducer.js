@@ -23,6 +23,35 @@ const organizationRequest = (state = {
   }
 };
 
+const organizations = (state = {
+  items: [],
+  isFetching: false,
+  success: false,
+  errorMessage: []
+}, action) => {
+  switch (action.type) {
+    case ActionTypes.GET_ORGANIZATIONS:
+      return Object.assign({}, state, {
+        isFetching: true,
+        success: false
+      });
+    case ActionTypes.RECEIVE_ORGANIZATIONS:
+      return Object.assign({}, state, {
+        isFetching: false,
+        success: true,
+        items: action.data
+      });
+    case ActionTypes.ERROR:
+      return Object.assign({}, state, {
+        isFetching: false,
+        success: false,
+        errorMessage: action.errorMessage
+      });
+    default:
+      return state;
+  }
+};
+
 const fuelSuppliersRequest = (state = {
   fuelSuppliers: [],
   success: false,
@@ -51,4 +80,4 @@ const fuelSuppliersRequest = (state = {
   }
 };
 
-export { organizationRequest, fuelSuppliersRequest };
+export { organizationRequest, organizations, fuelSuppliersRequest };

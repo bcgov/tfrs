@@ -10,6 +10,7 @@ class CreditTransferTextRepresentation extends Component {
   constructor (props) {
     super(props);
 
+    this.compliancePeriod = (this.props.compliancePeriod) ? this.props.compliancePeriod.description : '';
     this.creditsFrom = this.props.creditsFrom.name;
     this.creditsTo = this.props.creditsTo.name;
     this.fairMarketValuePerCredit =
@@ -68,7 +69,8 @@ class CreditTransferTextRepresentation extends Component {
             <span className="value"> {this.numberOfCredits} </span>
             credit{(this.numberOfCredits > 1) && 's'} earned by
             <span className="value"> {this.creditsTo} </span>
-            has been <span className="value lowercase"> {this.tradeStatus}</span>,
+            in the <span className="value"> {this.compliancePeriod} </span>
+            compliance period has been <span className="value lowercase"> {this.tradeStatus}</span>,
             effective on <span className="value"> {this.tradeEffectiveDate}</span>.
           </div>
         );
@@ -79,7 +81,8 @@ class CreditTransferTextRepresentation extends Component {
             <span className="value"> {this.numberOfCredits} </span>
             credit{(this.numberOfCredits > 1) && 's'} earned by
             <span className="value"> {this.creditsFrom} </span>
-            has been <span className="value lowercase"> {this.tradeStatus}</span>,
+            in the <span className="value"> {this.compliancePeriod} </span>
+            compliance period has been <span className="value lowercase"> {this.tradeStatus}</span>,
             effective on <span className="value"> {this.tradeEffectiveDate}</span>.
           </div>
         );
@@ -90,7 +93,8 @@ class CreditTransferTextRepresentation extends Component {
             <span className="value"> {this.numberOfCredits} </span>
             credit{(this.numberOfCredits > 1) && 's'} earned by
             <span className="value"> {this.creditsTo} </span> for the completion of a
-            Part 3 Agreement has been <span className="value lowercase"> {this.tradeStatus}</span>,
+            Part 3 Agreement milestone has been
+            <span className="value lowercase"> {this.tradeStatus}</span>,
             effective on <span className="value"> {this.tradeEffectiveDate}</span>.
           </div>
         );
@@ -109,6 +113,9 @@ class CreditTransferTextRepresentation extends Component {
 }
 
 CreditTransferTextRepresentation.defaultProps = {
+  compliancePeriod: {
+    description: ''
+  },
   creditsFrom: {
     name: 'From'
   },
@@ -119,6 +126,10 @@ CreditTransferTextRepresentation.defaultProps = {
 };
 
 CreditTransferTextRepresentation.propTypes = {
+  compliancePeriod: PropTypes.shape({
+    id: PropTypes.number,
+    description: PropTypes.string
+  }),
   creditsFrom: PropTypes.shape({
     name: PropTypes.string,
     id: PropTypes.number
