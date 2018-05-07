@@ -10,6 +10,7 @@ class CreditTransferTextRepresentation extends Component {
   constructor (props) {
     super(props);
 
+    this.compliancePeriod = (this.props.compliancePeriod) ? this.props.compliancePeriod.description : '';
     this.creditsFrom = this.props.creditsFrom.name;
     this.creditsTo = this.props.creditsTo.name;
     this.fairMarketValuePerCredit =
@@ -138,6 +139,9 @@ class CreditTransferTextRepresentation extends Component {
 }
 
 CreditTransferTextRepresentation.defaultProps = {
+  compliancePeriod: {
+    description: ''
+  },
   creditsFrom: {
     name: 'From'
   },
@@ -148,6 +152,10 @@ CreditTransferTextRepresentation.defaultProps = {
 };
 
 CreditTransferTextRepresentation.propTypes = {
+  compliancePeriod: PropTypes.shape({
+    id: PropTypes.number,
+    description: PropTypes.string
+  }),
   creditsFrom: PropTypes.shape({
     name: PropTypes.string,
     id: PropTypes.number
