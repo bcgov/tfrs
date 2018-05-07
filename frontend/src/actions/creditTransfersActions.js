@@ -33,6 +33,9 @@ export const getCreditTransferType = (typeId) => {
 export const prepareCreditTransfer = (fields) => {
   // API data structure
   const data = {
+    compliancePeriod: (fields.compliancePeriod.id > 0)
+      ? fields.compliancePeriod.id
+      : null,
     initiator: (fields.creditsFrom.id > 0)
       ? fields.creditsFrom.id
       : DEFAULT_ORGANIZATION.id,
