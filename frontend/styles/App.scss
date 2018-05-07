@@ -4,11 +4,15 @@
   position: relative;
 
   &:before {
-    font-size: 4rem;
+    font-size: 5rem;
     left: 0;
     position: absolute;
     text-align: center;
-    top: 1.5rem;
-    width: 6rem;
+    top: 50%;
+    -ms-transform: translateY(-50%);
+    -webkit-transform: translateY(-50%);
+    transform: translateY(-50%);
+    width: 8rem;
+
   }
 }
