@@ -6,7 +6,7 @@ class StatusInterceptor extends Component {
     return (
       <div className="alert alert-danger error-alert" role="alert">
         <p>Welcome to the Transportation Fuel Reporting System.</p>
-        <p>It looks like you don't have an account setup yet, or that you are trying to access a page that you do not have permissions to see.</p>
+        <p>It looks like you don&apos;t have an account setup yet, or that you are trying to access a page that you do not have permissions to see.</p>
         <p>You will need to <a href="mailto:lcfrr@gov.bc.ca?subject=Account%20Setup%20for%20TFRS">contact us</a> for help.</p>
       </div>
     );
@@ -16,7 +16,7 @@ class StatusInterceptor extends Component {
     return (
       <div className="alert alert-danger error-alert" role="alert">
         <p>Welcome to the Transportation Fuel Reporting System.</p>
-        <p>It looks like you don't have an account setup yet, or that you are trying to access a page that you do not have permissions to see.</p>
+        <p>It looks like you don&apos;t have an account setup yet, or that you are trying to access a page that you do not have permissions to see.</p>
         <p>You will need to <a href="mailto:lcfrr@gov.bc.ca?subject=Account%20Setup%20for%20TFRS">contact us</a> for help.</p>
       </div>
     );
