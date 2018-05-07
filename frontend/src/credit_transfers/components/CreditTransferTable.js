@@ -23,6 +23,18 @@ const CreditTransferTable = (props) => {
     resizable: false,
     width: 50
   }, {
+    id: 'compliancePeriod',
+    Header: 'Compliance Period',
+    accessor: item => (item.compliancePeriod ? item.compliancePeriod.description : ''),
+    className: 'col-compliance-period',
+    minWidth: 75
+  }, {
+    id: 'transactionType',
+    Header: 'Type',
+    accessor: item => getCreditTransferType(item.type.id),
+    className: 'col-transfer-type',
+    minWidth: 125
+  }, {
     id: 'creditsFrom',
     Header: 'Credits From',
     accessor: item => item.creditsFrom.name,
@@ -51,12 +63,6 @@ const CreditTransferTable = (props) => {
 
       return row.value;
     }
-  }, {
-    id: 'transactionType',
-    Header: 'Type',
-    accessor: item => getCreditTransferType(item.type.id),
-    className: 'col-transfer-type',
-    minWidth: 125
   }, {
     id: 'numberOfCredits',
     Header: 'Quantity of Credits',
@@ -87,13 +93,13 @@ const CreditTransferTable = (props) => {
     accessor: item => ((item.status.id === CREDIT_TRANSFER_STATUS.completed.id)
       ? CREDIT_TRANSFER_STATUS.approved.description : item.status.status),
     className: 'col-status',
-    minWidth: 125
+    minWidth: 100
   }, {
     id: 'updateTimestamp',
     Header: 'Last Updated On',
     className: 'col-date',
     accessor: item => (item.updateTimestamp ? moment(item.updateTimestamp).format('LL') : '-'),
-    minWidth: 150
+    minWidth: 100
   }, {
     id: 'actions',
     Header: '',
