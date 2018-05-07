@@ -111,7 +111,7 @@ class CreditTransferEditContainer extends Component {
       initiator: this.state.fields.initiator.id,
       numberOfCredits: parseInt(this.state.fields.numberOfCredits, 10),
       respondent: this.state.fields.respondent.id,
-      fairMarketValuePerCredit: parseInt(this.state.fields.fairMarketValuePerCredit, 10),
+      fairMarketValuePerCredit: parseFloat(this.state.fields.fairMarketValuePerCredit).toFixed(2),
       note: this.state.fields.note,
       status: this.state.fields.tradeStatus.id,
       type: this.state.fields.tradeType.id,
