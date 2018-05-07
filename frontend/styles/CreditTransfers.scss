@@ -234,12 +234,40 @@
     text-align: center;
   }
 
-  .initiator-container, .arrow, .respondent-container {
+  .arrow {
     display: inline-block;
     margin: 1rem;
     padding: 2rem;
     border-radius: 5px;
     min-width: 15em;
+    text-align: center;
+
+    @include mobile {
+      text-align: center;
+    }
+
+    .fa-arrow-alt-circle-up {
+      -ms-transform: rotate(20deg);
+      -webkit-transform: rotate(20deg);
+      transform: rotate(20deg);
+    }
+
+    .fa-arrow-alt-circle-down {
+      -ms-transform: rotate(-20deg);
+      -webkit-transform: rotate(-20deg);
+      transform: rotate(-20deg);
+    }
+  }
+
+  .initiator-container, .respondent-container {
+    @include flex;
+    align-items: center;
+    border-radius: 5px;
+    justify-content: center;
+    margin: 1rem;
+    min-height: 8rem;
+    min-width: 15em;
+    padding: 2rem;
     text-align: center;
 
     @include mobile {
@@ -252,6 +280,10 @@
 
     .fa {
       font-size: 5rem;
+    }
+
+    .fa-4x {
+      margin: 1rem;
     }
   }
 
