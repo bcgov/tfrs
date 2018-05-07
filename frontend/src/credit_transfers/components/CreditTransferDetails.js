@@ -32,9 +32,9 @@ const CreditTransferDetails = props => (
               fairMarketValuePerCredit={props.fairMarketValuePerCredit}
               numberOfCredits={props.numberOfCredits}
               status={props.status}
+              totalValue={props.totalValue}
               tradeEffectiveDate={props.tradeEffectiveDate}
               tradeType={props.tradeType}
-              totalValue={props.totalValue}
             />
           </div>
         </div>
@@ -43,6 +43,7 @@ const CreditTransferDetails = props => (
           creditsTo={props.creditsTo}
           numberOfCredits={props.numberOfCredits}
           totalValue={props.totalValue}
+          tradeType={props.tradeType}
         />
         {props.note !== '' &&
           <div className="well transparent">
