@@ -1,38 +1,72 @@
-import React from 'react';
+import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import ErrorAlert from './ErrorAlert';
 
-const StatusInterceptor = (props) => {
-  let title = '';
-  let message = '';
-
-  switch (props.statusCode) {
-    case 401:
-      title = 'Not authenticated';
-      message = `Sorry, you are not authenticated to use this application. Please contact your administrator`;
-      break;
-    case 403:
-      title = `You are logged in but do not have permission to access to this content. Please contact your User Manager for help.`;
-      message = `HTTP Status Code: 403 Forbidden.`;
-      break;
-    case 500:
-      title = `You are logged in but there is an API Error, which is preventing access to the project.`;
-      message = `HTTP Status Code: 500 Internal Server Error.`;
-      break;
-    case 502:
-      title = `You are logged in but there is an API Error, which is preventing access to the project.`;
-      message = `HTTP Status Code: 502 Bad Gateway.`;
-      break;
-    default:
-      title = 'Server Error!';
-      message = `An API error occurred`;
+class StatusInterceptor extends Component {
+  _render401Message () {
+    return (
+      <div className="alert alert-danger error-alert" role="alert">
+        <p>Welcome to the Transportation Fuel Reporting System.</p>
+        <p>It looks like you don&apos;t have an account setup yet, or that you are trying to access a page that you do not have permissions to see.</p>
+        <p>You will need to <a href="mailto:lcfrr@gov.bc.ca?subject=Account%20Setup%20for%20TFRS">contact us</a> for help.</p>
+      </div>
+    );
   }
 
-  return (<ErrorAlert title={title} message={message} />);
-};
+  _render403Message () {
+    return (
+      <div className="alert alert-danger error-alert" role="alert">
+        <p>Welcome to the Transportation Fuel Reporting System.</p>
+        <p>It looks like you don&apos;t have an account setup yet, or that you are trying to access a page that you do not have permissions to see.</p>
+        <p>You will need to <a href="mailto:lcfrr@gov.bc.ca?subject=Account%20Setup%20for%20TFRS">contact us</a> for help.</p>
+      </div>
+    );
+  }
+
+  _render500Message () {
+    return (
+      <div className="alert alert-danger error-alert" role="alert">
+        <p>We&apos;re sorry.</p>
+        <p>It looks like our system took an unexpected break. We have been notified and will look into it.</p>
+      </div>
+    );
+  }
+
+  _render502Message () {
+    return (
+      <div className="alert alert-danger error-alert" role="alert">
+      <p>We&apos;re sorry.</p>
+        <p>It looks like our system took an unexpected break. We have been notified and will look into it.</p>
+      </div>
+    );
+  }
+
+  _renderDefaultMessage () {
+    return (
+      <div className="alert alert-danger error-alert" role="alert">
+        <strong>Server Error!</strong>
+        <div>An API error occurred.</div>
+      </div>
+    );
+  }
+
+  render () {
+    switch (this.props.statusCode) {
+      case 401:
+        return this._render401Message();
+      case 403:
+        return this._render403Message();
+      case 500:
+        return this._render500Message();
+      case 502:
+        return this._render502Message();
+      default:
+        return this._renderDefaultMessage();
+    }
+  }
+}
 
 StatusInterceptor.propTypes = {
-  statusCode: PropTypes.string.isRequired
+  statusCode: PropTypes.number.isRequired
 };
 
 export default StatusInterceptor;
