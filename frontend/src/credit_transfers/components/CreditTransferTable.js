@@ -81,7 +81,7 @@ const CreditTransferTable = (props) => {
         return -1; // this is to fix sorting (value can't be negative)
       }
 
-      return parseFloat(item.fairMarketValuePerCredit);
+      return parseFloat(item.fairMarketValuePerCredit).toFixed(2);
     },
     minWidth: 100,
     Cell: row => (
