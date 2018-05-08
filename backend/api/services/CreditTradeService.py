@@ -33,10 +33,13 @@ class CreditTradeService(object):
                  ~Q(status__id=status_cancelled.id)))
         else:
             # Fuel suppliers
+            status_cancelled = CreditTradeStatus.objects \
+                                                .get(status="Cancelled")
             status_submitted = CreditTradeStatus.objects \
                                                 .get(status="Submitted")
             credit_trades = CreditTrade.objects.filter(
-                Q(initiator=organization) |
+                (Q(initiator=organization) &
+                 ~Q(status__id=status_cancelled.id)) |
                 (Q(respondent=organization) &
                  Q(status__id__gte=status_submitted.id)))
 
@@ -159,7 +162,8 @@ class CreditTradeService(object):
 
         if from_credits < 0:
             raise PositiveIntegerException("Can't complete transaction,"
-                                           "`{}` has insufficient credits".format(_from.name))
+                                           "`{}` has insufficient credits"
+                                           .format(_from.name))
 
         # Update old balance effective date
         from_starting_bal.expiration_date = effective_date
