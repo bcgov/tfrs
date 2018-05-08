@@ -15,12 +15,15 @@ import {
   getCreditTransfer,
   deleteCreditTransfer,
   updateCreditTransfer,
-  invalidateCreditTransfers } from '../actions/creditTransfersActions';
+  invalidateCreditTransfer } from '../actions/creditTransfersActions';
 
 import CreditTransferForm from './components/CreditTransferForm';
-
 import { CREDIT_TRANSFER_STATUS } from '../constants/values';
+import ModalDeleteCreditTransfer from './components/ModalDeleteCreditTransfer';
+import ModalSubmitCreditTransfer from './components/ModalSubmitCreditTransfer';
 import * as Lang from '../constants/langEnUs';
+
+const buttonActions = [Lang.BTN_DELETE, Lang.BTN_SAVE_DRAFT, Lang.BTN_SIGN_1_2];
 
 class CreditTransferEditContainer extends Component {
   constructor (props) {
@@ -88,6 +91,10 @@ class CreditTransferEditContainer extends Component {
     }
   }
 
+  _changeStatus (status) {
+    this.changeObjectProp(status.id, 'tradeStatus');
+  }
+
   _deleteCreditTransfer (id) {
     this.props.deleteCreditTransfer(id).then(() => {
       history.push(CREDIT_TRANSACTIONS.LIST);
@@ -120,7 +127,7 @@ class CreditTransferEditContainer extends Component {
       respondent: this.state.fields.respondent.id,
       fairMarketValuePerCredit: parseFloat(this.state.fields.fairMarketValuePerCredit).toFixed(2),
       note: this.state.fields.note,
-      status: this.state.fields.tradeStatus.id,
+      status: status.id,
       type: this.state.fields.tradeType.id,
       tradeEffectiveDate: null
     };
@@ -128,17 +135,13 @@ class CreditTransferEditContainer extends Component {
     const { id } = this.props.item;
 
     this.props.updateCreditTransfer(id, data).then(() => {
-      this.props.invalidateCreditTransfers();
+      this.props.invalidateCreditTransfer();
       history.push(CREDIT_TRANSACTIONS.LIST);
     }, () => {
       // Failed to update
     });
 
     return false;
-  }
-
-  _changeStatus (status) {
-    this.changeObjectProp(status.id, 'tradeStatus');
   }
 
   /*
@@ -198,38 +201,40 @@ class CreditTransferEditContainer extends Component {
   }
 
   render () {
-    const { isFetching, item } = this.props;
-    let buttonActions = [];
+    const { item } = this.props;
 
-    if (!isFetching && item.actions) {
-      // TODO: Add util function to return appropriate actions
-      buttonActions = item.actions.map(action => (
-        action.action
-      ));
-      if (buttonActions.includes(Lang.BTN_SAVE_DRAFT)) {
-        buttonActions.push('Delete');
-      }
-    }
-
-    return (
-      <div>
-        <CreditTransferForm
-          changeStatus={this._changeStatus}
-          creditsFrom={this.state.creditsFrom}
-          creditsTo={this.state.creditsTo}
-          deleteCreditTransfer={this._deleteCreditTransfer}
-          errors={this.props.errors}
-          fields={this.state.fields}
-          fuelSuppliers={this.props.fuelSuppliers}
-          handleInputChange={this._handleInputChange}
-          handleSubmit={this._handleSubmit}
-          id={item.id}
-          title="New Credit Transfer"
-          totalValue={this.state.totalValue}
-          tradeStatus={this.state.tradeStatus}
-        />
-      </div>
-    );
+    return ([
+      <CreditTransferForm
+        buttonActions={buttonActions}
+        changeStatus={this._changeStatus}
+        creditsFrom={this.state.creditsFrom}
+        creditsTo={this.state.creditsTo}
+        errors={this.props.errors}
+        fields={this.state.fields}
+        fuelSuppliers={this.props.fuelSuppliers}
+        handleInputChange={this._handleInputChange}
+        handleSubmit={this._handleSubmit}
+        id={item.id}
+        key="creditTransferForm"
+        title="New Credit Transfer"
+        totalValue={this.state.totalValue}
+        tradeStatus={this.state.tradeStatus}
+      />,
+      <ModalSubmitCreditTransfer
+        key="confirmSubmit"
+        submitCreditTransfer={(event) => {
+          this._handleSubmit(event, CREDIT_TRANSFER_STATUS.proposed);
+        }}
+        message="Do you want to sign and send this document to the other party
+        named in this transfer?"
+      />,
+      <ModalDeleteCreditTransfer
+        key="confirmDelete"
+        deleteCreditTransfer={this._deleteCreditTransfer}
+        message="Do you want to delete this draft?"
+        selectedId={item.id}
+      />
+    ]);
   }
 }
 
@@ -239,7 +244,7 @@ CreditTransferEditContainer.defaultProps = {
 
 CreditTransferEditContainer.propTypes = {
   updateCreditTransfer: PropTypes.func.isRequired,
-  invalidateCreditTransfers: PropTypes.func.isRequired,
+  invalidateCreditTransfer: PropTypes.func.isRequired,
   item: PropTypes.shape({
     id: PropTypes.number,
     creditsFrom: PropTypes.shape({}),
@@ -283,7 +288,7 @@ const mapDispatchToProps = dispatch => ({
   getCreditTransfer: bindActionCreators(getCreditTransfer, dispatch),
   deleteCreditTransfer: bindActionCreators(deleteCreditTransfer, dispatch),
   updateCreditTransfer: bindActionCreators(updateCreditTransfer, dispatch),
-  invalidateCreditTransfers: bindActionCreators(invalidateCreditTransfers, dispatch)
+  invalidateCreditTransfer: bindActionCreators(invalidateCreditTransfer, dispatch)
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(CreditTransferEditContainer);

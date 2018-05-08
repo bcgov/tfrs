@@ -14,9 +14,12 @@ import { getFuelSuppliers } from '../actions/organizationActions';
 import { getLoggedInUser } from '../actions/userActions';
 import { addCreditTransfer, invalidateCreditTransfers } from '../actions/creditTransfersActions';
 
-import { CREDIT_TRANSFER_STATUS } from '../constants/values';
-
 import CreditTransferForm from './components/CreditTransferForm';
+import { CREDIT_TRANSFER_STATUS } from '../constants/values';
+import ModalSubmitCreditTransfer from './components/ModalSubmitCreditTransfer';
+import * as Lang from '../constants/langEnUs';
+
+const buttonActions = [Lang.BTN_SAVE_DRAFT, Lang.BTN_SIGN_1_2];
 
 class CreditTransferAddContainer extends Component {
   constructor (props) {
@@ -28,7 +31,6 @@ class CreditTransferAddContainer extends Component {
         numberOfCredits: '',
         respondent: { id: 0, name: '' },
         fairMarketValuePerCredit: '',
-        tradeStatus: CREDIT_TRANSFER_STATUS.draft,
         note: ''
       },
       creditsFrom: {},
@@ -36,9 +38,9 @@ class CreditTransferAddContainer extends Component {
       totalValue: 0
     };
 
+    this._changeStatus = this._changeStatus.bind(this);
     this._handleInputChange = this._handleInputChange.bind(this);
     this._handleSubmit = this._handleSubmit.bind(this);
-    this._changeStatus = this._changeStatus.bind(this);
   }
 
   componentDidMount () {
@@ -53,6 +55,10 @@ class CreditTransferAddContainer extends Component {
       fields: fieldState,
       creditsFrom: fieldState.initiator
     });
+  }
+
+  _changeStatus (status) {
+    this.changeObjectProp(status.id, 'tradeStatus');
   }
 
   _handleInputChange (event) {
@@ -73,9 +79,7 @@ class CreditTransferAddContainer extends Component {
     const fieldState = { ...this.state.fields };
     if (name === 'respondent') {
       // Populate the dropdown
-      const respondents = this.props.fuelSuppliers.filter((fuelSupplier) => {
-        return fuelSupplier.id === id;
-      });
+      const respondents = this.props.fuelSuppliers.filter(fuelSupplier => (fuelSupplier.id === id));
 
       fieldState.respondent = respondents.length === 1 ? respondents[0] : { id: 0 };
       this.setState({
@@ -112,7 +116,7 @@ class CreditTransferAddContainer extends Component {
       respondent: this.state.fields.respondent.id,
       fairMarketValuePerCredit: parseFloat(this.state.fields.fairMarketValuePerCredit).toFixed(2),
       note: this.state.fields.note,
-      status: this.state.fields.tradeStatus.id,
+      status: status.id,
       type: this.state.fields.tradeType.id,
       tradeEffectiveDate: null
     };
@@ -123,10 +127,6 @@ class CreditTransferAddContainer extends Component {
     });
 
     return false;
-  }
-
-  _changeStatus (status) {
-    this.changeObjectProp(status.id, 'tradeStatus');
   }
 
   changeFromTo (tradeType, initiator, respondent) {
@@ -152,21 +152,30 @@ class CreditTransferAddContainer extends Component {
   }
 
   render () {
-    return (
+    return ([
       <CreditTransferForm
-        fuelSuppliers={this.props.fuelSuppliers}
-        title="New Credit Transfer"
-        fields={this.state.fields}
-        totalValue={this.state.totalValue}
-        tradeStatus={this.state.tradeStatus}
-        handleInputChange={this._handleInputChange}
-        handleSubmit={this._handleSubmit}
+        buttonActions={buttonActions}
+        changeStatus={this._changeStatus}
         creditsFrom={this.state.creditsFrom}
         creditsTo={this.state.creditsTo}
         errors={this.props.errors}
-        changeStatus={this._changeStatus}
+        fields={this.state.fields}
+        fuelSuppliers={this.props.fuelSuppliers}
+        handleInputChange={this._handleInputChange}
+        handleSubmit={this._handleSubmit}
+        key="creditTransferForm"
+        title="New Credit Transfer"
+        totalValue={this.state.totalValue}
+      />,
+      <ModalSubmitCreditTransfer
+        key="confirmSubmit"
+        submitCreditTransfer={(event) => {
+          this._handleSubmit(event, CREDIT_TRANSFER_STATUS.proposed);
+        }}
+        message="Do you want to sign and send this document to the other party
+        named in this transfer?"
       />
-    );
+    ]);
   }
 }
 
