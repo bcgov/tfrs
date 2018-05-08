@@ -8,6 +8,7 @@ class CreditTransferProgress extends Component {
     return (
       <div
         className={`step ${(this.props.status.id === CREDIT_TRANSFER_STATUS.accepted.id) ? 'current' : ''}`}
+        key={CREDIT_TRANSFER_STATUS.accepted.id}
       >
         <span>{CREDIT_TRANSFER_STATUS.accepted.description}</span>
       </div>
@@ -18,6 +19,7 @@ class CreditTransferProgress extends Component {
     return (
       <div
         className={`step ${(this.props.status.id === CREDIT_TRANSFER_STATUS.approved.id || this.props.status.id === CREDIT_TRANSFER_STATUS.completed.id) ? 'current' : ''}`}
+        key={CREDIT_TRANSFER_STATUS.approved.id}
       >
         <span>{CREDIT_TRANSFER_STATUS.approved.description}</span>
       </div>
@@ -28,6 +30,7 @@ class CreditTransferProgress extends Component {
     return (
       <div
         className={`step ${(this.props.status.id === CREDIT_TRANSFER_STATUS.draft.id) ? 'current' : ''}`}
+        key={CREDIT_TRANSFER_STATUS.draft.id}
       >
         <span>{CREDIT_TRANSFER_STATUS.draft.description}</span>
       </div>
@@ -38,6 +41,7 @@ class CreditTransferProgress extends Component {
     return (
       <div
         className={`step ${(this.props.status.id === CREDIT_TRANSFER_STATUS.proposed.id) ? 'current' : ''}`}
+        key={CREDIT_TRANSFER_STATUS.proposed.id}
       >
         <span>{CREDIT_TRANSFER_STATUS.proposed.description}</span>
       </div>
@@ -48,6 +52,7 @@ class CreditTransferProgress extends Component {
     return (
       <div
         className={`step ${(this.props.status.id === CREDIT_TRANSFER_STATUS.recommendedForDecision.id) ? 'current' : ''}`}
+        key={CREDIT_TRANSFER_STATUS.recommendedForDecision.id}
       >
         <span>{CREDIT_TRANSFER_STATUS.recommendedForDecision.description}</span>
       </div>
@@ -58,6 +63,7 @@ class CreditTransferProgress extends Component {
     return (
       <div
         className={`step ${(this.props.status.id === CREDIT_TRANSFER_STATUS.rescinded.id) ? 'cancelled' : ''}`}
+        key={CREDIT_TRANSFER_STATUS.rescinded.id}
       >
         <span>{CREDIT_TRANSFER_STATUS.rescinded.description}</span>
       </div>
