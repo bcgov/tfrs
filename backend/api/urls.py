@@ -28,6 +28,7 @@ from rest_framework.views import APIView
 from . import views
 # custom views
 from . import views_custom
+from .viewsets.CompliancePeriod import CompliancePeriodViewSet
 from .viewsets.CreditTrade import CreditTradeViewSet
 from .viewsets.Organization import OrganizationViewSet
 from .viewsets.User import UserViewSet
@@ -39,6 +40,7 @@ from django.conf import settings
 
 # Create a router and register our views with it.
 router = DefaultRouter(trailing_slash=False)
+router.register(r'compliance_periods', CompliancePeriodViewSet)
 router.register(r'credit_trades', CreditTradeViewSet)
 router.register(r'organizations', OrganizationViewSet)
 router.register(r'users', UserViewSet)

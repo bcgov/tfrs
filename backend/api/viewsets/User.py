@@ -26,9 +26,10 @@ class UserViewSet(AuditableMixin, viewsets.ModelViewSet):
         return Response(serializer.data)
 
     @list_route()
-    def search(self, request, organizations = None, surname = None, includeInactive = None):
+    def search(self, request, organizations=None, surname=None,
+               includeInactive=None):
         result = User.objects.all()
-        if surname != None:
+        if surname is not None:
             result = result.filter(surname__icontains=surname)
 
         serializer = self.get_serializer(result, many=True)

@@ -40,6 +40,7 @@ const CreditTransferForm = props => (
         creditsTo={props.creditsTo}
         numberOfCredits={props.fields.numberOfCredits}
         totalValue={props.totalValue}
+        tradeType={props.fields.tradeType}
       />
       <CreditTransferFormNote
         note={props.fields.note}
