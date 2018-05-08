@@ -5,7 +5,6 @@ import * as Lang from '../../constants/langEnUs';
 import CREDIT_TRANSACTIONS from '../../constants/routes/CreditTransactions';
 import { CREDIT_TRANSFER_STATUS } from '../../constants/values';
 import history from '../../app/History';
-import ModalDeleteCreditTransfer from './ModalDeleteCreditTransfer';
 
 const CreditTransferFormButtons = props => (
   <div className="credit-transfer-actions">
@@ -48,8 +47,9 @@ const CreditTransferFormButtons = props => (
       {props.actions.includes(Lang.BTN_SIGN_1_2) &&
       <button
         className="btn btn-primary"
-        onClick={() => props.changeStatus(CREDIT_TRANSFER_STATUS.proposed)}
-        type="submit"
+        data-target="#confirmSubmit"
+        data-toggle="modal"
+        type="button"
       >
         {Lang.BTN_SIGN_1_2}
       </button>
@@ -82,25 +82,13 @@ const CreditTransferFormButtons = props => (
       </button>
       }
     </div>
-    {props.actions.includes(Lang.BTN_DELETE) &&
-    <ModalDeleteCreditTransfer
-      deleteCreditTransfer={props.deleteCreditTransfer}
-      message="Do you want to delete this draft?"
-      selectedId={props.id}
-    />
-    }
   </div>
 );
 
-CreditTransferFormButtons.defaultProps = {
-  deleteCreditTransfer: () => {}
-};
-
 CreditTransferFormButtons.propTypes = {
-  id: PropTypes.number.isRequired,
+  actions: PropTypes.arrayOf(PropTypes.string).isRequired,
   changeStatus: PropTypes.func.isRequired,
-  deleteCreditTransfer: PropTypes.func,
-  actions: PropTypes.arrayOf(PropTypes.string).isRequired
+  id: PropTypes.number.isRequired
 };
 
 export default CreditTransferFormButtons;

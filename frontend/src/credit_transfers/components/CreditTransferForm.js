@@ -13,10 +13,6 @@ import CreditTransferVisualRepresentation from './CreditTransferVisualRepresenta
 import CreditTransferFormNote from './CreditTransferFormNote';
 import CreditTransferFormButtons from './CreditTransferFormButtons';
 
-import * as Lang from '../../constants/langEnUs';
-
-const buttonActions = [Lang.BTN_DELETE, Lang.BTN_SAVE_DRAFT, Lang.BTN_SIGN_1_2];
-
 const CreditTransferForm = props => (
   <div className="credit-transfer">
     <h1>{props.title}</h1>
@@ -47,9 +43,8 @@ const CreditTransferForm = props => (
         handleInputChange={props.handleInputChange}
       />
       <CreditTransferFormButtons
-        actions={buttonActions}
+        actions={props.buttonActions}
         changeStatus={props.changeStatus}
-        deleteCreditTransfer={props.deleteCreditTransfer}
         id={props.id}
       />
     </form>
@@ -57,14 +52,14 @@ const CreditTransferForm = props => (
 );
 
 CreditTransferForm.defaultProps = {
-  title: 'Credit Transfer',
-  id: 0
+  id: 0,
+  title: 'Credit Transfer'
 };
 
 CreditTransferForm.propTypes = {
-  title: PropTypes.string,
-  id: PropTypes.number,
-  fuelSuppliers: PropTypes.arrayOf(PropTypes.shape()).isRequired,
+  buttonActions: PropTypes.arrayOf(PropTypes.string).isRequired,
+  changeStatus: PropTypes.func.isRequired,
+  errors: PropTypes.shape({}).isRequired,
   fields: PropTypes.shape({
     initiator: PropTypes.shape({
       name: PropTypes.string,
@@ -90,12 +85,12 @@ CreditTransferForm.propTypes = {
     name: PropTypes.string,
     id: PropTypes.number
   }).isRequired,
-  deleteCreditTransfer: PropTypes.func.isRequired,
-  totalValue: PropTypes.number.isRequired,
+  fuelSuppliers: PropTypes.arrayOf(PropTypes.shape()).isRequired,
   handleInputChange: PropTypes.func.isRequired,
   handleSubmit: PropTypes.func.isRequired,
-  changeStatus: PropTypes.func.isRequired,
-  errors: PropTypes.shape({}).isRequired
+  id: PropTypes.number,
+  title: PropTypes.string,
+  totalValue: PropTypes.number.isRequired
 };
 
 export default CreditTransferForm;

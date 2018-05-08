@@ -54,7 +54,6 @@ const CreditTransferDetails = props => (
           <CreditTransferFormButtons
             actions={props.buttonActions}
             changeStatus={props.changeStatus}
-            deleteCreditTransfer={props.deleteCreditTransfer}
             id={props.id}
           />
         </form>
@@ -103,7 +102,6 @@ CreditTransferDetails.propTypes = {
     id: PropTypes.number,
     name: PropTypes.string
   }),
-  deleteCreditTransfer: PropTypes.func.isRequired,
   fairMarketValuePerCredit: PropTypes.oneOfType([
     PropTypes.string,
     PropTypes.number
