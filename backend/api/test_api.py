@@ -54,6 +54,15 @@ class TestAPI(TestCase):
             HTTP_SMGOV_USERDISPLAYNAME='Brad Smith',
             HTTP_SMGOV_USEREMAIL='BradJSmith@cuvox.de',
             HTTP_SM_UNIVERSALID='BSmith')
+
+        self.gov_client = Client(
+            HTTP_SMGOV_USERGUID='c2971372-3a96-4704-9b9c-18e4e9298ee3',
+            HTTP_SMGOV_USERDISPLAYNAME='Test Person',
+            HTTP_SMGOV_USEREMAIL='Test.Person@gov.bc.ca',
+            HTTP_SM_UNIVERSALID='Teperson',
+            HTTP_SMGOV_USERTYPE='Internal',
+            HTTP_SM_AUTHDIRNAME='IDIR')
+
         self.test_url = "/api/credit_trades"
 
         self.test_data_fail = [{
@@ -263,7 +272,12 @@ class TestAPI(TestCase):
             type=2
         )
 
-        response = self.client.put(
+        credit_trade['status'] = STATUS_ACCEPTED
+        updated_response = fake_api_calls.update_credit_trade_dict(
+            credit_trade,
+            credit_trade['id'])
+
+        response = self.gov_client.put(
             "{}/{}/approve".format(self.test_url, credit_trade['id']),
             content_type='application/json')
 

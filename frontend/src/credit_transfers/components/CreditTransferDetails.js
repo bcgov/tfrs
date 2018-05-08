@@ -26,14 +26,15 @@ const CreditTransferDetails = props => (
         <div className="credit-transfer-details">
           <div className="main-form">
             <CreditTransferTextRepresentation
+              compliancePeriod={props.compliancePeriod}
               creditsFrom={props.creditsFrom}
               creditsTo={props.creditsTo}
               fairMarketValuePerCredit={props.fairMarketValuePerCredit}
               numberOfCredits={props.numberOfCredits}
               status={props.status}
+              totalValue={props.totalValue}
               tradeEffectiveDate={props.tradeEffectiveDate}
               tradeType={props.tradeType}
-              totalValue={props.totalValue}
             />
           </div>
         </div>
@@ -42,6 +43,7 @@ const CreditTransferDetails = props => (
           creditsTo={props.creditsTo}
           numberOfCredits={props.numberOfCredits}
           totalValue={props.totalValue}
+          tradeType={props.tradeType}
         />
         {props.note !== '' &&
           <div className="well transparent">
@@ -62,6 +64,9 @@ const CreditTransferDetails = props => (
 );
 
 CreditTransferDetails.defaultProps = {
+  compliancePeriod: {
+    description: ''
+  },
   creditsFrom: {
     name: '...'
   },
@@ -86,6 +91,10 @@ CreditTransferDetails.defaultProps = {
 CreditTransferDetails.propTypes = {
   buttonActions: PropTypes.arrayOf(PropTypes.string).isRequired,
   changeStatus: PropTypes.func.isRequired,
+  compliancePeriod: PropTypes.shape({
+    id: PropTypes.number,
+    description: PropTypes.string
+  }),
   creditsFrom: PropTypes.shape({
     id: PropTypes.number,
     name: PropTypes.string

@@ -23,6 +23,7 @@
 
 from rest_framework import serializers
 
+from .models.CompliancePeriod import CompliancePeriod
 from .models.CreditTrade import CreditTrade
 from .models.CreditTradeHistory import CreditTradeHistory
 from .models.CreditTradeStatus import CreditTradeStatus
@@ -48,13 +49,20 @@ from .models.UserRoleViewModel import UserRoleViewModel
 from .models.UserViewModel import UserViewModel
 
 
+class CompliancePeriodSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CompliancePeriod
+        fields = ('id', 'description', 'effective_date', 'expiration_date',
+                  'display_order')
+
+
 class CreditTradeSerializer(serializers.ModelSerializer):
     class Meta:
         model = CreditTrade
         fields = ('id', 'status', 'initiator', 'respondent',
                   'type', 'number_of_credits',
                   'fair_market_value_per_credit', 'zero_reason',
-                  'trade_effective_date')
+                  'trade_effective_date', 'compliance_period')
 
 
 class CreditTradeHistorySerializer(serializers.ModelSerializer):
@@ -64,7 +72,7 @@ class CreditTradeHistorySerializer(serializers.ModelSerializer):
                   'respondent', 'status', 'type',
                   'number_of_credits', 'fair_market_value_per_credit',
                   'zero_reason', 'trade_effective_date',
-                  'note', 'is_internal_history_record')
+                  'note', 'is_internal_history_record', 'compliance_period')
 
 
 class CreditTradeStatusSerializer(serializers.ModelSerializer):
@@ -111,8 +119,9 @@ class OrganizationSerializer(serializers.ModelSerializer):
     class Meta:
         model = Organization
         fields = (
-            'id', 'name', 'status', 'actions_type',
-            'create_timestamp', 'type')
+            'id', 'name', 'status', 'status_display', 'actions_type',
+            'actions_type_display', 'create_timestamp', 'type',
+            'organization_balance')
 
 
 class OrganizationActionsTypeSerializer(serializers.ModelSerializer):
@@ -318,6 +327,7 @@ class CreditTrade2Serializer(serializers.ModelSerializer):
     credits_from = OrganizationSerializer(read_only=True)
     credits_to = OrganizationSerializer(read_only=True)
     actions = CreditTradeStatusMinSerializer(many=True, read_only=True)
+    compliance_period = CompliancePeriodSerializer(read_only=True)
 
     class Meta:
         model = CreditTrade
@@ -327,7 +337,8 @@ class CreditTrade2Serializer(serializers.ModelSerializer):
                   'fair_market_value_per_credit', 'total_value',
                   'zero_reason',
                   'trade_effective_date', 'credits_from', 'credits_to',
-                  'update_timestamp', 'actions', 'note')
+                  'update_timestamp', 'actions', 'note',
+                  'compliance_period')
 
 
 class CreditTradeHistory2Serializer(serializers.ModelSerializer):

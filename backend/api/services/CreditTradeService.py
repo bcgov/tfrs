@@ -98,6 +98,7 @@ class CreditTradeService(object):
             zero_reason_id=zero_reason,
             trade_effective_date=credit_trade.trade_effective_date,
             note=credit_trade.note,
+            compliance_period_id=credit_trade.compliance_period_id,
             is_internal_history_record=is_internal_history_record,
             credit_trade_update_time=credit_trade_update_time,
             create_user=user,
@@ -118,7 +119,6 @@ class CreditTradeService(object):
 
     @staticmethod
     def approve(credit_trade):
-
         status_approved = CreditTradeStatus.objects.get(status="Approved")
         status_completed = CreditTradeStatus.objects.get(status="Completed")
 
