@@ -32,7 +32,7 @@ const CreditTransferTerms = props => ([
     </div>
   </div>,
 
-  <div className="terms" key="authorized">
+  <div className="terms" key="accurate">
     <div className="check">
       <CheckBox
         field={props.terms.accurate}
