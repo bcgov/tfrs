@@ -200,6 +200,18 @@
     }
   }
 
+  .terms {
+    padding-left: 4rem;
+    position: relative;
+
+    .check {
+      left: 0;
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+    }
+  }
+
   .well {
     &.transparent {
       background-color: transparent;

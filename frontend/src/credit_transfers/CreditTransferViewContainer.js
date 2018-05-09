@@ -26,8 +26,18 @@ import * as Lang from '../constants/langEnUs';
 class CreditTransferViewContainer extends Component {
   constructor (props) {
     super(props);
+
+    this.state = {
+      terms: {
+        accurate: false,
+        authorized: false,
+        regulation: false
+      }
+    };
+
     this._changeStatus = this._changeStatus.bind(this);
     this._deleteCreditTransfer = this._deleteCreditTransfer.bind(this);
+    this._toggleCheck = this._toggleCheck.bind(this);
   }
 
   componentDidMount () {
@@ -77,6 +87,14 @@ class CreditTransferViewContainer extends Component {
     });
   }
 
+  _toggleCheck (key) {
+    const terms = { ...this.state.terms };
+    terms[key] = !terms[key];
+    this.setState({
+      terms
+    });
+  }
+
   render () {
     const { isFetching, item, loggedInUser } = this.props;
     let buttonActions = [];
@@ -115,6 +133,8 @@ class CreditTransferViewContainer extends Component {
         note={item.note}
         numberOfCredits={item.numberOfCredits}
         status={item.status}
+        terms={this.state.terms}
+        toggleCheck={this._toggleCheck}
         totalValue={item.totalValue}
         tradeEffectiveDate={item.tradeEffectiveDate}
         tradeType={item.type}
