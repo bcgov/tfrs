@@ -49,6 +49,7 @@ const CreditTransferFormButtons = props => (
         className="btn btn-primary"
         data-target="#confirmSubmit"
         data-toggle="modal"
+        disabled={props.disabled.BTN_SIGN_1_2}
         type="button"
       >
         {Lang.BTN_SIGN_1_2}
@@ -85,9 +86,18 @@ const CreditTransferFormButtons = props => (
   </div>
 );
 
+CreditTransferFormButtons.defaultProps = {
+  disabled: {
+    BTN_SIGN_1_2: true
+  }
+}
+
 CreditTransferFormButtons.propTypes = {
   actions: PropTypes.arrayOf(PropTypes.string).isRequired,
   changeStatus: PropTypes.func.isRequired,
+  disabled: PropTypes.shape({
+    BTN_SIGN_1_2: PropTypes.bool
+  }),
   id: PropTypes.number.isRequired
 };
 
