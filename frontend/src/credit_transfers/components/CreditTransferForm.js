@@ -12,11 +12,12 @@ import CreditTransferFormDetails from './CreditTransferFormDetails';
 import CreditTransferVisualRepresentation from './CreditTransferVisualRepresentation';
 import CreditTransferFormNote from './CreditTransferFormNote';
 import CreditTransferFormButtons from './CreditTransferFormButtons';
+import CreditTransferTerms from './CreditTransferTerms';
 
 const CreditTransferForm = props => (
   <div className="credit-transfer">
     <h1>{props.title}</h1>
-    <CreditTransferProgress />
+    <CreditTransferProgress status={CREDIT_TRANSFER_STATUS.draft} type={props.fields.tradeType} />
     <form
       className="form-inline"
       onSubmit={(event, status) =>
@@ -28,9 +29,11 @@ const CreditTransferForm = props => (
         totalValue={props.totalValue}
         handleInputChange={props.handleInputChange}
       />
+
       {Object.keys(props.errors).length > 0 &&
         <Errors errors={props.errors} />
       }
+
       <CreditTransferVisualRepresentation
         creditsFrom={props.creditsFrom}
         creditsTo={props.creditsTo}
@@ -38,13 +41,24 @@ const CreditTransferForm = props => (
         totalValue={props.totalValue}
         tradeType={props.fields.tradeType}
       />
+
       <CreditTransferFormNote
         note={props.fields.note}
         handleInputChange={props.handleInputChange}
       />
+
+      <CreditTransferTerms terms={props.terms} toggleCheck={props.toggleCheck} />
+
       <CreditTransferFormButtons
         actions={props.buttonActions}
         changeStatus={props.changeStatus}
+        disabled={
+          {
+            BTN_SIGN_1_2: !props.terms.accurate ||
+                          !props.terms.authorized ||
+                          !props.terms.regulation
+          }
+        }
         id={props.id}
       />
     </form>
@@ -89,7 +103,13 @@ CreditTransferForm.propTypes = {
   handleInputChange: PropTypes.func.isRequired,
   handleSubmit: PropTypes.func.isRequired,
   id: PropTypes.number,
+  terms: PropTypes.shape({
+    accurate: PropTypes.bool,
+    authorized: PropTypes.bool,
+    regulation: PropTypes.bool
+  }).isRequired,
   title: PropTypes.string,
+  toggleCheck: PropTypes.func.isRequired,
   totalValue: PropTypes.number.isRequired
 };
 

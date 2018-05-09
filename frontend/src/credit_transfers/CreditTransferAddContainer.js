@@ -24,7 +24,10 @@ const buttonActions = [Lang.BTN_SAVE_DRAFT, Lang.BTN_SIGN_1_2];
 class CreditTransferAddContainer extends Component {
   constructor (props) {
     super(props);
+
     this.state = {
+      creditsFrom: {},
+      creditsTo: {},
       fields: {
         initiator: {},
         tradeType: { id: 1, name: 'Sell' },
@@ -33,14 +36,18 @@ class CreditTransferAddContainer extends Component {
         fairMarketValuePerCredit: '',
         note: ''
       },
-      creditsFrom: {},
-      creditsTo: {},
+      terms: {
+        accurate: false,
+        authorized: false,
+        regulation: false
+      },
       totalValue: 0
     };
 
     this._changeStatus = this._changeStatus.bind(this);
     this._handleInputChange = this._handleInputChange.bind(this);
     this._handleSubmit = this._handleSubmit.bind(this);
+    this._toggleCheck = this._toggleCheck.bind(this);
   }
 
   componentDidMount () {
@@ -73,6 +80,14 @@ class CreditTransferAddContainer extends Component {
         fields: fieldState
       }, () => this.computeTotalValue(name));
     }
+  }
+
+  _toggleCheck (key) {
+    const terms = { ...this.state.terms };
+    terms[key] = !terms[key];
+    this.setState({
+      terms
+    });
   }
 
   changeObjectProp (id, name) {
@@ -164,7 +179,9 @@ class CreditTransferAddContainer extends Component {
         handleInputChange={this._handleInputChange}
         handleSubmit={this._handleSubmit}
         key="creditTransferForm"
+        terms={this.state.terms}
         title="New Credit Transfer"
+        toggleCheck={this._toggleCheck}
         totalValue={this.state.totalValue}
       />,
       <ModalSubmitCreditTransfer

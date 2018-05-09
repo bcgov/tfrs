@@ -10,8 +10,8 @@ import CreditTransferProgress from './CreditTransferProgress';
 import CreditTransferTextRepresentation from './CreditTransferTextRepresentation';
 import CreditTransferVisualRepresentation from './CreditTransferVisualRepresentation';
 import CreditTransferFormButtons from './CreditTransferFormButtons';
+import CreditTransferTerms from './CreditTransferTerms';
 import { getCreditTransferType } from '../../actions/creditTransfersActions';
-import CheckBox from '../../app/components/CheckBox';
 
 const CreditTransferDetails = props => (
   <div className="credit-transfer">
@@ -52,48 +52,7 @@ const CreditTransferDetails = props => (
           </div>
         }
         <form onSubmit={e => e.preventDefault()}>
-          <div className="form-group terms">
-            <div className="check">
-              <CheckBox
-                field={props.terms.regulation}
-                name="regulation"
-                toggleCheck={props.toggleCheck}
-              />
-            </div>
-            <div>
-              I confirm that records evidencing each matter reported under section 11.11 (2) of the
-              Regulation are available on request.
-            </div>
-          </div>
-
-          <div className="form-group terms">
-            <div className="check">
-              <CheckBox
-                field={props.terms.authorized}
-                name="authorized"
-                toggleCheck={props.toggleCheck}
-              />
-            </div>
-            <div>
-              I confirm that I am an officer or employee of the fuel supplier, and that records
-              evidencing my authority to submit this proposal are available on request.
-            </div>
-          </div>
-
-          <div className="form-group terms">
-            <div className="check">
-              <CheckBox
-                field={props.terms.accurate}
-                name="accurate"
-                toggleCheck={props.toggleCheck}
-              />
-            </div>
-            <div>
-              I certify that the information in this report is true and complete to the best of
-              my knowledge and I understand that the Director may require records evidencing the
-              truth of that information.
-            </div>
-          </div>
+          <CreditTransferTerms terms={props.terms} toggleCheck={props.toggleCheck} />
 
           <CreditTransferFormButtons
             actions={props.buttonActions}
@@ -130,11 +89,6 @@ CreditTransferDetails.defaultProps = {
   status: {
     id: 0,
     status: ''
-  },
-  terms: {
-    accurate: false,
-    authorized: false,
-    regulation: false
   },
   totalValue: '0',
   tradeEffectiveDate: '',
@@ -177,7 +131,7 @@ CreditTransferDetails.propTypes = {
     accurate: PropTypes.bool,
     authorized: PropTypes.bool,
     regulation: PropTypes.bool
-  }),
+  }).isRequired,
   toggleCheck: PropTypes.func.isRequired,
   totalValue: PropTypes.oneOfType([
     PropTypes.string,
