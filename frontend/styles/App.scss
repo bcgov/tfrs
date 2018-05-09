@@ -1,18 +1,16 @@
+@import './mixins.scss';
+
 .error-alert {
   font-size: 1.5rem;
   padding-left: 6rem; /* allocate space for icon */
   position: relative;
 
   &:before {
-    font-size: 5rem;
-    left: 0;
-    position: absolute;
-    text-align: center;
-    top: 50%;
-    -ms-transform: translateY(-50%);
-    -webkit-transform: translateY(-50%);
-    transform: translateY(-50%);
-    width: 8rem;
-
+    @include vertical-middle {
+      font-size: 5rem;
+      left: 0;
+      text-align: center;
+      width: 8rem;
+    }
   }
 }
