@@ -113,7 +113,7 @@ class CreditTransferViewContainer extends Component {
       }
 
       if (buttonActions.includes(Lang.BTN_SAVE_DRAFT)) {
-        buttonActions.push(Lang.BTN_DELETE);
+        buttonActions.push(Lang.BTN_DELETE_DRAFT);
         buttonActions[buttonActions.indexOf(Lang.BTN_SAVE_DRAFT)] = Lang.BTN_EDIT_DRAFT;
         buttonActions[buttonActions.indexOf(Lang.BTN_PROPOSE)] = Lang.BTN_SIGN_1_2;
       }

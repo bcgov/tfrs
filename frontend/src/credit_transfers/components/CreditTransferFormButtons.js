@@ -16,14 +16,14 @@ const CreditTransferFormButtons = props => (
       >
         {Lang.BTN_APP_CANCEL}
       </button>
-      {props.actions.includes(Lang.BTN_DELETE) &&
+      {props.actions.includes(Lang.BTN_DELETE_DRAFT) &&
       <button
         className="btn btn-danger"
         data-target="#confirmDelete"
         data-toggle="modal"
         type="button"
       >
-        {Lang.BTN_DELETE}
+        {Lang.BTN_DELETE_DRAFT}
       </button>
       }
       {props.actions.includes(Lang.BTN_EDIT_DRAFT) &&
@@ -46,7 +46,7 @@ const CreditTransferFormButtons = props => (
       }
       {props.actions.includes(Lang.BTN_SIGN_1_2) &&
       <button
-        className="btn btn-primary"
+        className={`btn ${props.disabled.BTN_SIGN_1_2 ? 'btn-disabled' : 'btn-primary '}`}
         data-target="#confirmSubmit"
         data-toggle="modal"
         disabled={props.disabled.BTN_SIGN_1_2}

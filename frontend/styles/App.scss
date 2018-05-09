@@ -1,4 +1,9 @@
 @import './mixins.scss';
+@import './variables.scss';
+
+.btn-disabled {
+  background-color: $grey;
+}
 
 .error-alert {
   font-size: 1.5rem;
