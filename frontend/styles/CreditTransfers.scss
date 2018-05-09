@@ -206,10 +206,9 @@
     position: relative;
 
     .check {
-      left: 0;
-      position: absolute;
-      top: 50%;
-      transform: translateY(-50%);
+      @include vertical-middle {
+        left: 0;
+      }
     }
   }
 
