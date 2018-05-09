@@ -257,18 +257,6 @@
     @include mobile {
       text-align: center;
     }
-
-    .fa-arrow-alt-circle-up {
-      -ms-transform: rotate(20deg);
-      -webkit-transform: rotate(20deg);
-      transform: rotate(20deg);
-    }
-
-    .fa-arrow-alt-circle-down {
-      -ms-transform: rotate(-20deg);
-      -webkit-transform: rotate(-20deg);
-      transform: rotate(-20deg);
-    }
   }
 
   .initiator-container, .respondent-container {

@@ -42,7 +42,7 @@ const ModalProcessApprovedCreditTransfer = props => (
           </button>
           <button
             type="button"
-            className="btn btn-danger"
+            className="btn btn-primary"
             data-dismiss="modal"
             onClick={props.processApprovedCreditTransfers}
           >

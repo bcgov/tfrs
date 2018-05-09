@@ -23,7 +23,7 @@ import ModalDeleteCreditTransfer from './components/ModalDeleteCreditTransfer';
 import ModalSubmitCreditTransfer from './components/ModalSubmitCreditTransfer';
 import * as Lang from '../constants/langEnUs';
 
-const buttonActions = [Lang.BTN_DELETE, Lang.BTN_SAVE_DRAFT, Lang.BTN_SIGN_1_2];
+const buttonActions = [Lang.BTN_DELETE_DRAFT, Lang.BTN_SAVE_DRAFT, Lang.BTN_SIGN_1_2];
 
 class CreditTransferEditContainer extends Component {
   constructor (props) {
