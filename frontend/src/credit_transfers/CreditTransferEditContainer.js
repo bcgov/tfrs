@@ -30,6 +30,8 @@ class CreditTransferEditContainer extends Component {
     super(props);
 
     this.state = {
+      creditsFrom: {},
+      creditsTo: {},
       fields: {
         initiator: {},
         tradeType: { id: 1, name: 'Sell' },
@@ -39,15 +41,19 @@ class CreditTransferEditContainer extends Component {
         tradeStatus: CREDIT_TRANSFER_STATUS.draft,
         note: ''
       },
-      creditsFrom: {},
-      creditsTo: {},
+      terms: {
+        accurate: false,
+        authorized: false,
+        regulation: false
+      },
       totalValue: 0
     };
 
-    this._handleInputChange = this._handleInputChange.bind(this);
-    this._handleSubmit = this._handleSubmit.bind(this);
     this._changeStatus = this._changeStatus.bind(this);
     this._deleteCreditTransfer = this._deleteCreditTransfer.bind(this);
+    this._handleInputChange = this._handleInputChange.bind(this);
+    this._handleSubmit = this._handleSubmit.bind(this);
+    this._toggleCheck = this._toggleCheck.bind(this);
   }
 
   componentDidMount () {
@@ -144,6 +150,14 @@ class CreditTransferEditContainer extends Component {
     return false;
   }
 
+  _toggleCheck (key) {
+    const terms = { ...this.state.terms };
+    terms[key] = !terms[key];
+    this.setState({
+      terms
+    });
+  }
+
   /*
    * Helper functions
    */
@@ -216,7 +230,9 @@ class CreditTransferEditContainer extends Component {
         handleSubmit={this._handleSubmit}
         id={item.id}
         key="creditTransferForm"
-        title="New Credit Transfer"
+        terms={this.state.terms}
+        title="Edit Credit Transfer"
+        toggleCheck={this._toggleCheck}
         totalValue={this.state.totalValue}
         tradeStatus={this.state.tradeStatus}
       />,

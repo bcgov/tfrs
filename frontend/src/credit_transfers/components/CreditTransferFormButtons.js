@@ -90,7 +90,7 @@ CreditTransferFormButtons.defaultProps = {
   disabled: {
     BTN_SIGN_1_2: true
   }
-}
+};
 
 CreditTransferFormButtons.propTypes = {
   actions: PropTypes.arrayOf(PropTypes.string).isRequired,
