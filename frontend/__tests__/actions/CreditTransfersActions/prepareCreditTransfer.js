@@ -17,6 +17,7 @@ test('prepareCreditTransfer should return the right data for Credit Transfers (S
   });
 
   expect({
+    compliancePeriod: null,
     initiator: 2,
     note: '',
     numberOfCredits: 100,
@@ -44,6 +45,7 @@ test('prepareCreditTransfer should return the right data for Part 3 Award', () =
   });
 
   expect({
+    compliancePeriod: null,
     initiator: DEFAULT_ORGANIZATION.id,
     note: '',
     numberOfCredits: 100,
@@ -71,6 +73,7 @@ test('prepareCreditTransfer should return the right data for Validation', () => 
   });
 
   expect({
+    compliancePeriod: null,
     initiator: DEFAULT_ORGANIZATION.id,
     note: '',
     numberOfCredits: 100,
@@ -98,6 +101,7 @@ test('prepareCreditTransfer should return the right data for Reduction', () => {
   });
 
   expect({
+    compliancePeriod: null,
     initiator: 5,
     note: '',
     numberOfCredits: 100,
