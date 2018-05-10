@@ -13,6 +13,7 @@ import * as NumberFormat from '../../../constants/numeralFormats';
 import HISTORICAL_DATA_ENTRY from '../../../constants/routes/HistoricalDataEntry';
 import { CREDIT_TRANSFER_TYPES, ZERO_DOLLAR_REASON } from '../../../constants/values';
 import { getCreditTransferType } from '../../../actions/creditTransfersActions';
+import filterNumber from '../../../utils/filters';
 
 const HistoricalDataTable = (props) => {
   const columns = [{
@@ -70,7 +71,8 @@ const HistoricalDataTable = (props) => {
     Header: 'Credits',
     accessor: item => item.numberOfCredits,
     className: 'col-credits',
-    Cell: row => numeral(row.value).format(NumberFormat.INT)
+    Cell: row => numeral(row.value).format(NumberFormat.INT),
+    filterMethod: (filter, row) => filterNumber(filter.value, row.numberOfCredits, 0)
   }, {
     id: 'totalvalue',
     Header: 'Price',
@@ -81,12 +83,13 @@ const HistoricalDataTable = (props) => {
         return -1; // this is to fix sorting (value can't be negative)
       }
 
-      return parseFloat(item.totalValue).toFixed(2);
+      return parseFloat(item.totalValue);
     },
     className: 'col-price',
     Cell: row => (
       (row.value === -1) ? '-' : numeral(row.value).format(NumberFormat.CURRENCY)
-    )
+    ),
+    filterMethod: (filter, row) => filterNumber(filter.value, row.totalvalue)
   }, {
     id: 'zeroReason',
     Header: 'Zero Reason',
