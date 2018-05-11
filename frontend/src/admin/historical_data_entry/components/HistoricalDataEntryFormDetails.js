@@ -22,6 +22,7 @@ const HistoricalDataEntryFormDetails = props => (
                 type="date"
                 className="form-control"
                 id="effective-date"
+                max="9999-12-31"
                 name="tradeEffectiveDate"
                 value={props.fields.tradeEffectiveDate}
                 placeholder="Effective Date"
@@ -49,6 +50,7 @@ const HistoricalDataEntryFormDetails = props => (
               <label htmlFor="credits-from">Credits From:
                 <select
                   className="form-control"
+                  disabled={props.editMode}
                   id="credits-from"
                   name="creditsFrom"
                   value={props.fields.creditsFrom.id}
