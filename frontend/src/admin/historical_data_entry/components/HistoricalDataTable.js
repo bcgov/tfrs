@@ -13,6 +13,7 @@ import * as NumberFormat from '../../../constants/numeralFormats';
 import HISTORICAL_DATA_ENTRY from '../../../constants/routes/HistoricalDataEntry';
 import { CREDIT_TRANSFER_TYPES, ZERO_DOLLAR_REASON } from '../../../constants/values';
 import { getCreditTransferType } from '../../../actions/creditTransfersActions';
+import filterNumber from '../../../utils/filters';
 
 const HistoricalDataTable = (props) => {
   const columns = [{
@@ -70,10 +71,12 @@ const HistoricalDataTable = (props) => {
     Header: 'Credits',
     accessor: item => item.numberOfCredits,
     className: 'col-credits',
-    Cell: row => numeral(row.value).format(NumberFormat.INT)
+    Cell: row => numeral(row.value).format(NumberFormat.INT),
+    filterMethod: (filter, row) => filterNumber(filter.value, row.numberOfCredits, 0)
   }, {
-    id: 'totalvalue',
-    Header: 'Price',
+    id: 'fairMarketValuePerCredit',
+    Header: 'Value Per Credit',
+    className: 'col-price',
     accessor: (item) => {
       if (item.type.id === CREDIT_TRANSFER_TYPES.part3Award.id ||
         item.type.id === CREDIT_TRANSFER_TYPES.retirement.id ||
@@ -81,12 +84,13 @@ const HistoricalDataTable = (props) => {
         return -1; // this is to fix sorting (value can't be negative)
       }
 
-      return parseFloat(item.totalValue).toFixed(2);
+      return parseFloat(item.fairMarketValuePerCredit);
     },
-    className: 'col-price',
+    minWidth: 100,
     Cell: row => (
       (row.value === -1) ? '-' : numeral(row.value).format(NumberFormat.CURRENCY)
-    )
+    ),
+    filterMethod: (filter, row) => filterNumber(filter.value, row.fairMarketValuePerCredit)
   }, {
     id: 'zeroReason',
     Header: 'Zero Reason',
