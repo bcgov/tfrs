@@ -16,32 +16,43 @@ class CreditTradeService(object):
 
     @staticmethod
     def get_organization_credit_trades(organization):
-
+        """
+        Fetch the credit transactions with various rules based on the user's
+        organization
+        """
         # Government Organization -- assume OrganizationType id 1 is gov
         gov_org = Organization.objects.get(type=1)
-        # TODO: Is there a better way to optimize this? I would prefer
-        # not to have to do 2 database lookups for the statuses.
         if organization == gov_org:
             # Government
-            status_accepted = CreditTradeStatus.objects \
-                                               .get(status="Accepted")
-            status_cancelled = CreditTradeStatus.objects \
-                                                .get(status="Cancelled")
+            """
+            If organization == Government
+              don't show "Cancelled", "Accepted" transactions
+              don't show "Draft", "Submitted" transactions unless the
+              initiator was government
+              (Please note that government creating drafts and submitted is
+              for testing only, in reality government will not do this)
+            """
             credit_trades = CreditTrade.objects.filter(
-                Q(initiator=organization) |
-                (Q(status__id__gte=status_accepted.id) &
-                 ~Q(status__id=status_cancelled.id)))
+                ~Q(status__status__in=["Cancelled", "Approved"]) &
+                (~Q(status__status__in=["Draft", "Submitted"]) |
+                 Q(initiator=organization))
+            )
         else:
             # Fuel suppliers
-            status_cancelled = CreditTradeStatus.objects \
-                                                .get(status="Cancelled")
-            status_submitted = CreditTradeStatus.objects \
-                                                .get(status="Submitted")
+            """
+            If organization == Fuel Supplier
+              don't show "Cancelled", "Accepted" transactions
+              don't show "Draft" transactions unless the initiator was
+              the fuel supplier
+              show "Submitted" and other transactions where the fuel
+              supplier is the respondent
+            """
             credit_trades = CreditTrade.objects.filter(
-                (Q(initiator=organization) &
-                 ~Q(status__id=status_cancelled.id)) |
-                (Q(respondent=organization) &
-                 Q(status__id__gte=status_submitted.id)))
+                ~Q(status__status__in=["Cancelled", "Approved"]) &
+                ((~Q(status__status__in=["Draft"]) &
+                 Q(respondent=organization)) |
+                 Q(initiator=organization))
+            )
 
         return credit_trades
 
