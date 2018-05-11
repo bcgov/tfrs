@@ -5,6 +5,7 @@ export const BTN_APP_CANCEL = 'Cancel';
 export const BTN_COMMIT = 'Commit';
 export const BTN_CT_CANCEL = 'Cancel';
 export const BTN_DELETE = 'Delete';
+export const BTN_DELETE_DRAFT = 'Delete Draft';
 export const BTN_EDIT_DRAFT = 'Edit Draft';
 export const BTN_NO = 'No';
 export const BTN_PROCESS = 'Confirm';

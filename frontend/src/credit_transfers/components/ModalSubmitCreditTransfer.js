@@ -3,13 +3,13 @@ import PropTypes from 'prop-types';
 
 import * as Lang from '../../constants/langEnUs';
 
-const ModalProcessApprovedCreditTransfer = props => (
+const ModalSubmitCreditTransfer = props => (
   <div
     className="modal fade"
-    id="confirmProcess"
+    id="confirmSubmit"
     tabIndex="-1"
     role="dialog"
-    aria-labelledby="confirmProcessLabel"
+    aria-labelledby="confirmSubmitLabel"
   >
     <div className="modal-dialog" role="document">
       <div className="modal-content">
@@ -24,13 +24,13 @@ const ModalProcessApprovedCreditTransfer = props => (
           </button>
           <h4
             className="modal-title"
-            id="confirmProcessLabel"
+            id="confirmSubmitLabel"
           >
-            Confirm Process
+            Confirm Submission
           </h4>
         </div>
         <div className="modal-body">
-          Are you sure you want to commit the approved credit transfers?
+          {props.message}
         </div>
         <div className="modal-footer">
           <button
@@ -38,15 +38,15 @@ const ModalProcessApprovedCreditTransfer = props => (
             className="btn btn-default"
             data-dismiss="modal"
           >
-            {Lang.BTN_APP_CANCEL}
+            {Lang.BTN_NO}
           </button>
           <button
             type="button"
             className="btn btn-primary"
             data-dismiss="modal"
-            onClick={props.processApprovedCreditTransfers}
+            onClick={props.submitCreditTransfer}
           >
-            {Lang.BTN_PROCESS}
+            {Lang.BTN_YES}
           </button>
         </div>
       </div>
@@ -54,13 +54,14 @@ const ModalProcessApprovedCreditTransfer = props => (
   </div>
 );
 
-ModalProcessApprovedCreditTransfer.defaultProps = {
-  selectedId: 0
+ModalSubmitCreditTransfer.defaultProps = {
+  submitCreditTransfer: null,
+  message: 'Do you want to sign and send this document to the other party named in this transfer?'
 };
 
-ModalProcessApprovedCreditTransfer.propTypes = {
-  processApprovedCreditTransfers: PropTypes.func.isRequired,
-  selectedId: PropTypes.number
+ModalSubmitCreditTransfer.propTypes = {
+  submitCreditTransfer: PropTypes.func,
+  message: PropTypes.string
 };
 
-export default ModalProcessApprovedCreditTransfer;
+export default ModalSubmitCreditTransfer;
