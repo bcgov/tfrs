@@ -10,6 +10,7 @@ import CreditTransferProgress from './CreditTransferProgress';
 import CreditTransferTextRepresentation from './CreditTransferTextRepresentation';
 import CreditTransferVisualRepresentation from './CreditTransferVisualRepresentation';
 import CreditTransferFormButtons from './CreditTransferFormButtons';
+import CreditTransferTerms from './CreditTransferTerms';
 import { getCreditTransferType } from '../../actions/creditTransfersActions';
 
 const CreditTransferDetails = props => (
@@ -51,10 +52,18 @@ const CreditTransferDetails = props => (
           </div>
         }
         <form onSubmit={e => e.preventDefault()}>
+          <CreditTransferTerms terms={props.terms} toggleCheck={props.toggleCheck} />
+
           <CreditTransferFormButtons
             actions={props.buttonActions}
             changeStatus={props.changeStatus}
-            deleteCreditTransfer={props.deleteCreditTransfer}
+            disabled={
+              {
+                BTN_SIGN_1_2: !props.terms.accurate ||
+                              !props.terms.authorized ||
+                              !props.terms.regulation
+              }
+            }
             id={props.id}
           />
         </form>
@@ -103,7 +112,6 @@ CreditTransferDetails.propTypes = {
     id: PropTypes.number,
     name: PropTypes.string
   }),
-  deleteCreditTransfer: PropTypes.func.isRequired,
   fairMarketValuePerCredit: PropTypes.oneOfType([
     PropTypes.string,
     PropTypes.number
@@ -119,6 +127,12 @@ CreditTransferDetails.propTypes = {
     id: PropTypes.number,
     status: PropTypes.string
   }),
+  terms: PropTypes.shape({
+    accurate: PropTypes.bool,
+    authorized: PropTypes.bool,
+    regulation: PropTypes.bool
+  }).isRequired,
+  toggleCheck: PropTypes.func.isRequired,
   totalValue: PropTypes.oneOfType([
     PropTypes.string,
     PropTypes.number

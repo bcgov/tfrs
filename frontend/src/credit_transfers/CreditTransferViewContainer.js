@@ -16,6 +16,9 @@ import {
   updateCreditTransfer,
   invalidateCreditTransfer } from '../actions/creditTransfersActions';
 import CreditTransferDetails from './components/CreditTransferDetails';
+import { CREDIT_TRANSFER_STATUS } from '../constants/values';
+import ModalDeleteCreditTransfer from './components/ModalDeleteCreditTransfer';
+import ModalSubmitCreditTransfer from './components/ModalSubmitCreditTransfer';
 import { getLoggedInUser } from '../actions/userActions';
 
 import * as Lang from '../constants/langEnUs';
@@ -23,8 +26,18 @@ import * as Lang from '../constants/langEnUs';
 class CreditTransferViewContainer extends Component {
   constructor (props) {
     super(props);
+
+    this.state = {
+      terms: {
+        accurate: false,
+        authorized: false,
+        regulation: false
+      }
+    };
+
     this._changeStatus = this._changeStatus.bind(this);
     this._deleteCreditTransfer = this._deleteCreditTransfer.bind(this);
+    this._toggleCheck = this._toggleCheck.bind(this);
   }
 
   componentDidMount () {
@@ -74,6 +87,14 @@ class CreditTransferViewContainer extends Component {
     });
   }
 
+  _toggleCheck (key) {
+    const terms = { ...this.state.terms };
+    terms[key] = !terms[key];
+    this.setState({
+      terms
+    });
+  }
+
   render () {
     const { isFetching, item, loggedInUser } = this.props;
     let buttonActions = [];
@@ -92,30 +113,47 @@ class CreditTransferViewContainer extends Component {
       }
 
       if (buttonActions.includes(Lang.BTN_SAVE_DRAFT)) {
-        buttonActions.push('Delete');
+        buttonActions.push(Lang.BTN_DELETE_DRAFT);
         buttonActions[buttonActions.indexOf(Lang.BTN_SAVE_DRAFT)] = Lang.BTN_EDIT_DRAFT;
+        buttonActions[buttonActions.indexOf(Lang.BTN_PROPOSE)] = Lang.BTN_SIGN_1_2;
       }
     }
 
-    return (
+    return ([
       <CreditTransferDetails
         buttonActions={buttonActions}
         changeStatus={this._changeStatus}
         compliancePeriod={item.compliancePeriod}
         creditsFrom={item.creditsFrom}
         creditsTo={item.creditsTo}
-        deleteCreditTransfer={this._deleteCreditTransfer}
         fairMarketValuePerCredit={item.fairMarketValuePerCredit}
         id={item.id}
         isFetching={isFetching}
+        key="creditTransferDetails"
         note={item.note}
         numberOfCredits={item.numberOfCredits}
         status={item.status}
+        terms={this.state.terms}
+        toggleCheck={this._toggleCheck}
         totalValue={item.totalValue}
         tradeEffectiveDate={item.tradeEffectiveDate}
         tradeType={item.type}
+      />,
+      <ModalSubmitCreditTransfer
+        key="confirmSubmit"
+        submitCreditTransfer={(event) => {
+          this._changeStatus(CREDIT_TRANSFER_STATUS.proposed);
+        }}
+        message="Do you want to sign and send this document to the other party
+        named in this transfer?"
+      />,
+      <ModalDeleteCreditTransfer
+        key="confirmDelete"
+        deleteCreditTransfer={this._deleteCreditTransfer}
+        message="Do you want to delete this draft?"
+        selectedId={item.id}
       />
-    );
+    ]);
   }
 }
 

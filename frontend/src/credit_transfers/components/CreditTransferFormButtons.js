@@ -5,7 +5,6 @@ import * as Lang from '../../constants/langEnUs';
 import CREDIT_TRANSACTIONS from '../../constants/routes/CreditTransactions';
 import { CREDIT_TRANSFER_STATUS } from '../../constants/values';
 import history from '../../app/History';
-import ModalDeleteCreditTransfer from './ModalDeleteCreditTransfer';
 
 const CreditTransferFormButtons = props => (
   <div className="credit-transfer-actions">
@@ -17,14 +16,14 @@ const CreditTransferFormButtons = props => (
       >
         {Lang.BTN_APP_CANCEL}
       </button>
-      {props.actions.includes(Lang.BTN_DELETE) &&
+      {props.actions.includes(Lang.BTN_DELETE_DRAFT) &&
       <button
         className="btn btn-danger"
         data-target="#confirmDelete"
         data-toggle="modal"
         type="button"
       >
-        {Lang.BTN_DELETE}
+        {Lang.BTN_DELETE_DRAFT}
       </button>
       }
       {props.actions.includes(Lang.BTN_EDIT_DRAFT) &&
@@ -47,9 +46,11 @@ const CreditTransferFormButtons = props => (
       }
       {props.actions.includes(Lang.BTN_SIGN_1_2) &&
       <button
-        className="btn btn-primary"
-        onClick={() => props.changeStatus(CREDIT_TRANSFER_STATUS.proposed)}
-        type="submit"
+        className={`btn ${props.disabled.BTN_SIGN_1_2 ? 'btn-disabled' : 'btn-primary '}`}
+        data-target="#confirmSubmit"
+        data-toggle="modal"
+        disabled={props.disabled.BTN_SIGN_1_2}
+        type="button"
       >
         {Lang.BTN_SIGN_1_2}
       </button>
@@ -82,25 +83,22 @@ const CreditTransferFormButtons = props => (
       </button>
       }
     </div>
-    {props.actions.includes(Lang.BTN_DELETE) &&
-    <ModalDeleteCreditTransfer
-      deleteCreditTransfer={props.deleteCreditTransfer}
-      message="Do you want to delete this draft?"
-      selectedId={props.id}
-    />
-    }
   </div>
 );
 
 CreditTransferFormButtons.defaultProps = {
-  deleteCreditTransfer: () => {}
+  disabled: {
+    BTN_SIGN_1_2: true
+  }
 };
 
 CreditTransferFormButtons.propTypes = {
-  id: PropTypes.number.isRequired,
+  actions: PropTypes.arrayOf(PropTypes.string).isRequired,
   changeStatus: PropTypes.func.isRequired,
-  deleteCreditTransfer: PropTypes.func,
-  actions: PropTypes.arrayOf(PropTypes.string).isRequired
+  disabled: PropTypes.shape({
+    BTN_SIGN_1_2: PropTypes.bool
+  }),
+  id: PropTypes.number.isRequired
 };
 
 export default CreditTransferFormButtons;
