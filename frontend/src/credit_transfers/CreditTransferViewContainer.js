@@ -28,13 +28,10 @@ class CreditTransferViewContainer extends Component {
     super(props);
 
     this.state = {
-      terms: {
-        1: false,
-        2: false,
-        3: false
-      }
+      terms: {}
     };
 
+    this._addTerms = this._addTerms.bind(this);
     this._changeStatus = this._changeStatus.bind(this);
     this._deleteCreditTransfer = this._deleteCreditTransfer.bind(this);
     this._toggleCheck = this._toggleCheck.bind(this);
@@ -54,6 +51,12 @@ class CreditTransferViewContainer extends Component {
     this.props.getCreditTransferIfNeeded(id);
   }
 
+  _addTerms (terms) {
+    this.setState({
+      terms
+    });
+  }
+
   _changeStatus (status) {
     const { item } = this.props;
 
@@ -65,11 +68,12 @@ class CreditTransferViewContainer extends Component {
       fairMarketValuePerCredit: item.fairMarketValuePerCredit,
       note: item.note,
       status: status.id,
+      terms: this.state.terms,
       type: item.type.id,
       tradeEffectiveDate: null
     };
 
-    // Update credit transfer (just the status)
+    // Update credit transfer (status and capture the acceptance of terms)
 
     const { id } = this.props.item;
 
@@ -121,6 +125,7 @@ class CreditTransferViewContainer extends Component {
 
     return ([
       <CreditTransferDetails
+        addTerms={this._addTerms}
         buttonActions={buttonActions}
         changeStatus={this._changeStatus}
         compliancePeriod={item.compliancePeriod}
