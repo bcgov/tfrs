@@ -22,8 +22,12 @@ const CheckBox = (props) => {
     />);
 };
 
+CheckBox.defaultProps = {
+  field: false
+};
+
 CheckBox.propTypes = {
-  field: PropTypes.bool.isRequired,
+  field: PropTypes.bool,
   id: PropTypes.number.isRequired,
   toggleCheck: PropTypes.func.isRequired
 };

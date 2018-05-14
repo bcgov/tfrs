@@ -7,8 +7,24 @@ import getSigningAuthorityAssertions from '../../actions/signingAuthorityAsserti
 import CheckBox from '../../app/components/CheckBox';
 
 class CreditTransferTerms extends Component {
+  constructor (props) {
+    super(props);
+
+    this._addTerms = this._addTerms.bind(this);
+  }
+
   componentWillMount () {
     this.props.getSigningAuthorityAssertions();
+    this._addTerms();
+  }
+
+  _addTerms () {
+    const terms = {};
+    this.props.signingAuthorityAssertions.forEach((assertion) => {
+      terms[assertion.id] = false;
+    });
+
+    this.props.addTerms(terms);
   }
 
   render () {
@@ -28,13 +44,10 @@ class CreditTransferTerms extends Component {
 }
 
 CreditTransferTerms.propTypes = {
+  addTerms: PropTypes.func.isRequired,
   getSigningAuthorityAssertions: PropTypes.func.isRequired,
   signingAuthorityAssertions: PropTypes.arrayOf(PropTypes.shape()).isRequired,
-  terms: PropTypes.shape({
-    accurate: PropTypes.bool,
-    authorized: PropTypes.bool,
-    regulation: PropTypes.bool
-  }).isRequired,
+  terms: PropTypes.shape({}).isRequired,
   toggleCheck: PropTypes.func.isRequired
 };
 

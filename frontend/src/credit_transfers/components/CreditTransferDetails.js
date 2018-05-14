@@ -52,16 +52,19 @@ const CreditTransferDetails = props => (
           </div>
         }
         <form onSubmit={e => e.preventDefault()}>
-          <CreditTransferTerms terms={props.terms} toggleCheck={props.toggleCheck} />
+          <CreditTransferTerms
+            addTerms={props.addTerms}
+            terms={props.terms}
+            toggleCheck={props.toggleCheck}
+          />
 
           <CreditTransferFormButtons
             actions={props.buttonActions}
             changeStatus={props.changeStatus}
             disabled={
               {
-                BTN_SIGN_1_2: !props.terms[1] ||
-                              !props.terms[2] ||
-                              !props.terms[3]
+                BTN_SIGN_1_2: Object.values(props.terms).indexOf(false) >= 0 ||
+                Object.keys(props.terms).length === 0
               }
             }
             id={props.id}
@@ -98,6 +101,7 @@ CreditTransferDetails.defaultProps = {
 };
 
 CreditTransferDetails.propTypes = {
+  addTerms: PropTypes.func.isRequired,
   buttonActions: PropTypes.arrayOf(PropTypes.string).isRequired,
   changeStatus: PropTypes.func.isRequired,
   compliancePeriod: PropTypes.shape({
