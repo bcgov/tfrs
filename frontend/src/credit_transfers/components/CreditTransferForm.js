@@ -54,9 +54,9 @@ const CreditTransferForm = props => (
         changeStatus={props.changeStatus}
         disabled={
           {
-            BTN_SIGN_1_2: !props.terms.accurate ||
-                          !props.terms.authorized ||
-                          !props.terms.regulation
+            BTN_SIGN_1_2: !props.terms[1] ||
+                          !props.terms[2] ||
+                          !props.terms[3]
           }
         }
         id={props.id}

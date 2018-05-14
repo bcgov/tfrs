@@ -8,7 +8,7 @@ const CheckBox = (props) => {
     return (
       <FontAwesomeIcon
         icon={faCheckSquare}
-        onClick={() => props.toggleCheck(props.name)}
+        onClick={() => props.toggleCheck(props.id)}
         size="2x"
       />
     );
@@ -17,14 +17,14 @@ const CheckBox = (props) => {
   return (
     <FontAwesomeIcon
       icon={faSquare}
-      onClick={() => props.toggleCheck(props.name)}
+      onClick={() => props.toggleCheck(props.id)}
       size="2x"
     />);
 };
 
 CheckBox.propTypes = {
   field: PropTypes.bool.isRequired,
-  name: PropTypes.string.isRequired,
+  id: PropTypes.number.isRequired,
   toggleCheck: PropTypes.func.isRequired
 };
 

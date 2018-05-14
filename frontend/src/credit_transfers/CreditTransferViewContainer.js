@@ -2,26 +2,26 @@
  * Container component
  * All data handling & manipulation should be handled here.
  */
+import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
 
-import CREDIT_TRANSACTIONS from '../constants/routes/CreditTransactions';
-import history from '../app/History';
-
-import {
-  getCreditTransferIfNeeded,
-  deleteCreditTransfer,
-  updateCreditTransfer,
-  invalidateCreditTransfer } from '../actions/creditTransfersActions';
 import CreditTransferDetails from './components/CreditTransferDetails';
-import { CREDIT_TRANSFER_STATUS } from '../constants/values';
 import ModalDeleteCreditTransfer from './components/ModalDeleteCreditTransfer';
 import ModalSubmitCreditTransfer from './components/ModalSubmitCreditTransfer';
-import { getLoggedInUser } from '../actions/userActions';
 
+import {
+  deleteCreditTransfer,
+  getCreditTransferIfNeeded,
+  invalidateCreditTransfer,
+  updateCreditTransfer
+} from '../actions/creditTransfersActions';
+import { getLoggedInUser } from '../actions/userActions';
+import history from '../app/History';
 import * as Lang from '../constants/langEnUs';
+import CREDIT_TRANSACTIONS from '../constants/routes/CreditTransactions';
+import { CREDIT_TRANSFER_STATUS } from '../constants/values';
 
 class CreditTransferViewContainer extends Component {
   constructor (props) {
@@ -29,9 +29,9 @@ class CreditTransferViewContainer extends Component {
 
     this.state = {
       terms: {
-        accurate: false,
-        authorized: false,
-        regulation: false
+        1: false,
+        2: false,
+        3: false
       }
     };
 
@@ -44,14 +44,14 @@ class CreditTransferViewContainer extends Component {
     this.loadData(this.props.match.params.id);
   }
 
-  loadData (id) {
-    this.props.getCreditTransferIfNeeded(id);
-  }
-
   componentWillReceiveNewProps (prevProps, newProps) {
     if (prevProps.match.params.id !== newProps.match.params.id) {
       this.loadData(newProps.match.params.id);
     }
+  }
+
+  loadData (id) {
+    this.props.getCreditTransferIfNeeded(id);
   }
 
   _changeStatus (status) {
@@ -141,15 +141,15 @@ class CreditTransferViewContainer extends Component {
       />,
       <ModalSubmitCreditTransfer
         key="confirmSubmit"
+        message="Do you want to sign and send this document to the other party
+        named in this transfer?"
         submitCreditTransfer={(event) => {
           this._changeStatus(CREDIT_TRANSFER_STATUS.proposed);
         }}
-        message="Do you want to sign and send this document to the other party
-        named in this transfer?"
       />,
       <ModalDeleteCreditTransfer
-        key="confirmDelete"
         deleteCreditTransfer={this._deleteCreditTransfer}
+        key="confirmDelete"
         message="Do you want to delete this draft?"
         selectedId={item.id}
       />
@@ -158,8 +158,10 @@ class CreditTransferViewContainer extends Component {
 }
 
 CreditTransferViewContainer.propTypes = {
-  updateCreditTransfer: PropTypes.func.isRequired,
+  deleteCreditTransfer: PropTypes.func.isRequired,
+  getCreditTransferIfNeeded: PropTypes.func.isRequired,
   invalidateCreditTransfer: PropTypes.func.isRequired,
+  isFetching: PropTypes.bool.isRequired,
   item: PropTypes.shape({
     id: PropTypes.number,
     creditsFrom: PropTypes.shape({}),
@@ -178,9 +180,6 @@ CreditTransferViewContainer.propTypes = {
     ]),
     actions: PropTypes.arrayOf(PropTypes.shape({}))
   }).isRequired,
-  getCreditTransferIfNeeded: PropTypes.func.isRequired,
-  deleteCreditTransfer: PropTypes.func.isRequired,
-  isFetching: PropTypes.bool.isRequired,
   loggedInUser: PropTypes.shape({
     displayName: PropTypes.string,
     organization: PropTypes.shape({
@@ -192,21 +191,22 @@ CreditTransferViewContainer.propTypes = {
     params: PropTypes.shape({
       id: PropTypes.string.isRequired
     }).isRequired
-  }).isRequired
+  }).isRequired,
+  updateCreditTransfer: PropTypes.func.isRequired
 };
 
 const mapStateToProps = state => ({
-  loggedInUser: state.rootReducer.userRequest.loggedInUser,
+  isFetching: state.rootReducer.creditTransfer.isFetching,
   item: state.rootReducer.creditTransfer.item,
-  isFetching: state.rootReducer.creditTransfer.isFetching
+  loggedInUser: state.rootReducer.userRequest.loggedInUser
 });
 
 const mapDispatchToProps = dispatch => ({
-  getLoggedInUser: bindActionCreators(getLoggedInUser, dispatch),
-  getCreditTransferIfNeeded: bindActionCreators(getCreditTransferIfNeeded, dispatch),
   deleteCreditTransfer: bindActionCreators(deleteCreditTransfer, dispatch),
-  updateCreditTransfer: bindActionCreators(updateCreditTransfer, dispatch),
-  invalidateCreditTransfer: bindActionCreators(invalidateCreditTransfer, dispatch)
+  getCreditTransferIfNeeded: bindActionCreators(getCreditTransferIfNeeded, dispatch),
+  getLoggedInUser: bindActionCreators(getLoggedInUser, dispatch),
+  invalidateCreditTransfer: bindActionCreators(invalidateCreditTransfer, dispatch),
+  updateCreditTransfer: bindActionCreators(updateCreditTransfer, dispatch)
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(CreditTransferViewContainer);

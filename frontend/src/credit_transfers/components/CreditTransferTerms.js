@@ -1,54 +1,35 @@
-import React from 'react';
 import PropTypes from 'prop-types';
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 
+import getSigningAuthorityAssertions from '../../actions/signingAuthorityAssertionsActions';
 import CheckBox from '../../app/components/CheckBox';
 
-const CreditTransferTerms = props => ([
-  <div className="terms" key="regulation">
-    <div className="check">
-      <CheckBox
-        field={props.terms.regulation}
-        name="regulation"
-        toggleCheck={props.toggleCheck}
-      />
-    </div>
-    <div>
-      I confirm that records evidencing each matter reported under section 11.11 (2) of the
-      Regulation are available on request.
-    </div>
-  </div>,
+class CreditTransferTerms extends Component {
+  componentWillMount () {
+    this.props.getSigningAuthorityAssertions();
+  }
 
-  <div className="terms" key="authorized">
-    <div className="check">
-      <CheckBox
-        field={props.terms.authorized}
-        name="authorized"
-        toggleCheck={props.toggleCheck}
-      />
-    </div>
-    <div>
-      I confirm that I am an officer or employee of the fuel supplier, and that records
-      evidencing my authority to submit this proposal are available on request.
-    </div>
-  </div>,
-
-  <div className="terms" key="accurate">
-    <div className="check">
-      <CheckBox
-        field={props.terms.accurate}
-        name="accurate"
-        toggleCheck={props.toggleCheck}
-      />
-    </div>
-    <div>
-      I certify that the information in this report is true and complete to the best of
-      my knowledge and I understand that the Director may require records evidencing the
-      truth of that information.
-    </div>
-  </div>
-]);
+  render () {
+    return this.props.signingAuthorityAssertions.map(assertion => (
+      <div className="terms" key={assertion.id}>
+        <div className="check">
+          <CheckBox
+            field={this.props.terms[assertion.id]}
+            id={assertion.id}
+            toggleCheck={this.props.toggleCheck}
+          />
+        </div>
+        <div>{assertion.description}</div>
+      </div>
+    ));
+  }
+}
 
 CreditTransferTerms.propTypes = {
+  getSigningAuthorityAssertions: PropTypes.func.isRequired,
+  signingAuthorityAssertions: PropTypes.arrayOf(PropTypes.shape()).isRequired,
   terms: PropTypes.shape({
     accurate: PropTypes.bool,
     authorized: PropTypes.bool,
@@ -57,4 +38,13 @@ CreditTransferTerms.propTypes = {
   toggleCheck: PropTypes.func.isRequired
 };
 
-export default CreditTransferTerms;
+const mapStateToProps = state => ({
+  isFetching: state.rootReducer.signingAuthorityAssertions.isFetching,
+  signingAuthorityAssertions: state.rootReducer.signingAuthorityAssertions.items
+});
+
+const mapDispatchToProps = dispatch => ({
+  getSigningAuthorityAssertions: bindActionCreators(getSigningAuthorityAssertions, dispatch)
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(CreditTransferTerms);

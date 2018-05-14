@@ -3,7 +3,6 @@
 export const HOME = '/';
 export const LOGOUT = '/logout';
 
-export const COMPLIANCE_PERIODS = '/compliance_periods';
 export const ORGANIZATIONS = '/organizations';
 export const ADMINISTRATION = '/administration';
 export const ORGANIZATION_DETAILS = '/organizations/:id';
@@ -52,3 +51,6 @@ export const CURRENT_USER = '/users/current';
 // Appended at the end of the route. Ideally this shouldn't be like this,
 // It should be an HTTP DELETE request.
 export const DELETE = '/delete';
+
+export { default as COMPLIANCE_PERIODS } from './routes/CompliancePeriods';
+export { default as SIGNING_AUTHORITY_ASSERTIONS } from './routes/SigningAuthorityAssertions';

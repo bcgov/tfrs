@@ -1,14 +1,10 @@
 import axios from 'axios';
 
-import * as ActionTypes from '../constants/actionTypes';
 import * as Routes from '../constants/routes';
 
-/*
- * Credit Transfers
- */
 const getCompliancePeriods = () => (dispatch) => {
   dispatch(getCompliancePeriodsRequest());
-  return axios.get(Routes.BASE_URL + Routes.COMPLIANCE_PERIODS)
+  return axios.get(Routes.BASE_URL + Routes.COMPLIANCE_PERIODS.LIST)
     .then((response) => {
       dispatch(getCompliancePeriodsSuccess(response.data));
     }).catch((error) => {
