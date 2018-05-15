@@ -139,6 +139,7 @@ class CreditTransferAddContainer extends Component {
       fairMarketValuePerCredit: parseFloat(this.state.fields.fairMarketValuePerCredit).toFixed(2),
       note: this.state.fields.note,
       status: status.id,
+      terms: this.state.fields.terms,
       type: this.state.fields.tradeType.id,
       tradeEffectiveDate: null
     };

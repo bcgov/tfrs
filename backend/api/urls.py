@@ -34,6 +34,8 @@ from .viewsets.CreditTrade import CreditTradeViewSet
 from .viewsets.Organization import OrganizationViewSet
 from .viewsets.SigningAuthorityAssertion \
     import SigningAuthorityAssertionViewSet
+from .viewsets.SigningAuthorityConfirmation \
+    import SigningAuthorityConfirmationViewSet
 from .viewsets.User import UserViewSet
 
 from rest_framework.documentation import include_docs_urls
@@ -48,6 +50,8 @@ router.register(r'credit_trades', CreditTradeViewSet)
 router.register(r'organizations', OrganizationViewSet)
 router.register(r'signing_authority_assertions',
                 SigningAuthorityAssertionViewSet)
+router.register(r'signing_authority_confirmations',
+                SigningAuthorityConfirmationViewSet)
 router.register(r'users', UserViewSet)
 
 
