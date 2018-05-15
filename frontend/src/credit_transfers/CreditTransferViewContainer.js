@@ -28,10 +28,12 @@ class CreditTransferViewContainer extends Component {
     super(props);
 
     this.state = {
-      terms: {}
+      fields: {
+        terms: []
+      }
     };
 
-    this._addTerms = this._addTerms.bind(this);
+    this._addToFields = this._addToFields.bind(this);
     this._changeStatus = this._changeStatus.bind(this);
     this._deleteCreditTransfer = this._deleteCreditTransfer.bind(this);
     this._toggleCheck = this._toggleCheck.bind(this);
@@ -51,9 +53,12 @@ class CreditTransferViewContainer extends Component {
     this.props.getCreditTransferIfNeeded(id);
   }
 
-  _addTerms (terms) {
+  _addToFields (value) {
+    const fieldState = { ...this.state.fields };
+    fieldState.terms.push(value);
+
     this.setState({
-      terms
+      fields: fieldState
     });
   }
 
@@ -62,13 +67,13 @@ class CreditTransferViewContainer extends Component {
 
     // API data structure
     const data = {
+      fields: this.state.fields,
       initiator: item.initiator.id,
       numberOfCredits: item.numberOfCredits,
       respondent: item.respondent.id,
       fairMarketValuePerCredit: item.fairMarketValuePerCredit,
       note: item.note,
       status: status.id,
-      terms: this.state.terms,
       type: item.type.id,
       tradeEffectiveDate: null
     };
@@ -92,10 +97,12 @@ class CreditTransferViewContainer extends Component {
   }
 
   _toggleCheck (key) {
-    const terms = { ...this.state.terms };
-    terms[key] = !terms[key];
+    const fieldState = { ...this.state.fields };
+    const index = fieldState.terms.findIndex(term => term.id === key);
+    fieldState.terms[index].value = !fieldState.terms[index].value;
+
     this.setState({
-      terms
+      fields: fieldState
     });
   }
 
@@ -125,20 +132,20 @@ class CreditTransferViewContainer extends Component {
 
     return ([
       <CreditTransferDetails
-        addTerms={this._addTerms}
+        addToFields={this._addToFields}
         buttonActions={buttonActions}
         changeStatus={this._changeStatus}
         compliancePeriod={item.compliancePeriod}
         creditsFrom={item.creditsFrom}
         creditsTo={item.creditsTo}
         fairMarketValuePerCredit={item.fairMarketValuePerCredit}
+        fields={this.state.fields}
         id={item.id}
         isFetching={isFetching}
         key="creditTransferDetails"
         note={item.note}
         numberOfCredits={item.numberOfCredits}
         status={item.status}
-        terms={this.state.terms}
         toggleCheck={this._toggleCheck}
         totalValue={item.totalValue}
         tradeEffectiveDate={item.tradeEffectiveDate}
