@@ -1,7 +1,7 @@
 def result = 0;
 
 stage('Unit Test') {
-    podTemplate(label: "python-${env.BUILD_TAG}", name: "python-${env.BUILD_TAG}", serviceAccount: 'jenkins', cloud: 'openshift',
+    podTemplate(label: "python-develop-${env.BUILD_NUMBER}", name: "python-develop-${env.BUILD_NUMBER}", serviceAccount: 'jenkins', cloud: 'openshift',
         containers: [
             containerTemplate(
                 name: 'jnlp',
@@ -16,7 +16,7 @@ stage('Unit Test') {
             )
         ]
     ){
-        node("python-${env.BUILD_TAG}") {
+        node("python-develop-${env.BUILD_NUMBER}") {
             
             checkout scm
             dir('backend') {
