@@ -17,6 +17,7 @@ import {
   invalidateCreditTransfer,
   updateCreditTransfer
 } from '../actions/creditTransfersActions';
+import addSigningAuthorityConfirmation from '../actions/signingAuthorityConfirmationsActions';
 import { getLoggedInUser } from '../actions/userActions';
 import history from '../app/History';
 import * as Lang from '../constants/langEnUs';
@@ -67,18 +68,17 @@ class CreditTransferViewContainer extends Component {
 
     // API data structure
     const data = {
-      fields: this.state.fields,
       initiator: item.initiator.id,
-      numberOfCredits: item.numberOfCredits,
-      respondent: item.respondent.id,
       fairMarketValuePerCredit: item.fairMarketValuePerCredit,
       note: item.note,
+      numberOfCredits: item.numberOfCredits,
+      respondent: item.respondent.id,
       status: status.id,
-      type: item.type.id,
-      tradeEffectiveDate: null
+      tradeEffectiveDate: null,
+      type: item.type.id
     };
 
-    // Update credit transfer (status and capture the acceptance of terms)
+    // Update credit transfer (status only)
 
     const { id } = this.props.item;
 
@@ -87,6 +87,12 @@ class CreditTransferViewContainer extends Component {
       history.push(CREDIT_TRANSACTIONS.LIST);
     }, () => {
       // Failed to update
+    });
+
+    // Capture the acceptance of terms
+    this.props.addSigningAuthorityConfirmation({
+      assertions: this.state.fields.terms,
+      credit_trade: id
     });
   }
 
@@ -170,6 +176,7 @@ class CreditTransferViewContainer extends Component {
 }
 
 CreditTransferViewContainer.propTypes = {
+  addSigningAuthorityConfirmation: PropTypes.func.isRequired,
   deleteCreditTransfer: PropTypes.func.isRequired,
   getCreditTransferIfNeeded: PropTypes.func.isRequired,
   invalidateCreditTransfer: PropTypes.func.isRequired,
@@ -214,6 +221,7 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
+  addSigningAuthorityConfirmation: bindActionCreators(addSigningAuthorityConfirmation, dispatch),
   deleteCreditTransfer: bindActionCreators(deleteCreditTransfer, dispatch),
   getCreditTransferIfNeeded: bindActionCreators(getCreditTransferIfNeeded, dispatch),
   getLoggedInUser: bindActionCreators(getLoggedInUser, dispatch),
