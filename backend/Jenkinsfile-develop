@@ -5,7 +5,7 @@ stage('Unit Test') {
         containers: [
             containerTemplate(
                 name: 'jnlp',
-                image: 'docker-registry.default.svc:5000/openshift/jenkins-slave-pythion-rhel7',
+                image: 'docker-registry.default.svc:5000/openshift/jenkins-slave-python-rhel7',
                 resourceRequestCpu: '500m',
                 resourceLimitCpu: '1000m',
                 resourceRequestMemory: '2Gi',
