@@ -2,11 +2,10 @@
  * Container component
  * All data handling & manipulation should be handled here.
  */
-
+import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import PropTypes from 'prop-types';
 
 import CREDIT_TRANSACTIONS from '../constants/routes/CreditTransactions';
 import history from '../app/History';
