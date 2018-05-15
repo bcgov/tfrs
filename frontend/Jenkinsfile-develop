@@ -54,7 +54,7 @@ stage('FT on Dev') {
             )
         ]
     ) {
-    node('bddstack-develop-${env.BUILD_NUMBER}') {
+    node("bddstack-develop-${env.BUILD_NUMBER}") {
 
         echo "checking out source"
         echo "Build: ${BUILD_ID}"
