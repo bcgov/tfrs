@@ -38,9 +38,24 @@ node('maven') {
 
 }
 
-node('bddstack') {
+stage('FT on Dev') {
+    podTemplate(label: "bddstack-develop-${env.BUILD_NUMBER}", name: "bddstack-develop-${env.BUILD_NUMBER}", serviceAccount: 'jenkins', cloud: 'openshift',
+        containers: [
+            containerTemplate(
+                name: 'jnlp',
+                image: 'docker-registry.default.svc:5000/jenkins-slave-bddstack',
+                resourceRequestCpu: '500m',
+                resourceLimitCpu: '1000m',
+                resourceRequestMemory: '2Gi',
+                resourceLimitMemory: '4Gi',
+                workingDir: '/home/jenkins',
+                command: '',
+                args: '${computer.jnlpmac} ${computer.name}'
+            )
+        ]
+    ) {
+    node('bddstack-develop-${env.BUILD_NUMBER}') {
 
-	stage('FT on Dev') {
         echo "checking out source"
         echo "Build: ${BUILD_ID}"
         checkout scm
@@ -68,7 +83,8 @@ node('bddstack') {
                             reportFiles: 'index.html',
                             reportName: "Full Test Report"
                         ])        
-	    }
-        }
-    }
-}
+	    } //end of finally
+        } //end of dir
+    } //end of node
+    } //end of podTemplate 
+} //end of stage
