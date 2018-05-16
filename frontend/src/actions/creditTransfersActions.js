@@ -17,10 +17,23 @@ export const getCreditTransfers = () => (dispatch) => {
     });
 };
 
+export const getCreditTransferType = (typeId) => {
+  switch (typeId) {
+    case CREDIT_TRANSFER_TYPES.validation.id:
+      return 'Validation';
+    case CREDIT_TRANSFER_TYPES.retirement.id:
+      return 'Reduction';
+    case CREDIT_TRANSFER_TYPES.part3Award.id:
+      return 'Part 3 Award';
+    default:
+      return 'Credit Transfer';
+  }
+};
+
 export const prepareCreditTransfer = (fields) => {
   // API data structure
   const data = {
-    compliancePeriod: (fields.compliancePeriod.id > 0)
+    compliancePeriod: (fields.compliancePeriod && fields.compliancePeriod.id > 0)
       ? fields.compliancePeriod.id
       : null,
     initiator: (fields.creditsFrom.id > 0)

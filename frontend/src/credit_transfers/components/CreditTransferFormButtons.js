@@ -1,9 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import * as Routes from '../../constants/routes';
 import * as Lang from '../../constants/langEnUs';
-
+import CREDIT_TRANSACTIONS from '../../constants/routes/CreditTransactions';
 import { CREDIT_TRANSFER_STATUS } from '../../constants/values';
 import history from '../../app/History';
 
@@ -11,138 +10,95 @@ const CreditTransferFormButtons = props => (
   <div className="credit-transfer-actions">
     <div className="btn-container">
       <button
-        type="button"
         className="btn btn-default"
         onClick={() => history.goBack()}
+        type="button"
       >
         {Lang.BTN_APP_CANCEL}
       </button>
-      {props.actions.includes(Lang.BTN_DELETE) &&
+      {props.actions.includes(Lang.BTN_DELETE_DRAFT) &&
       <button
-        type="button"
         className="btn btn-danger"
-        data-toggle="modal"
         data-target="#confirmDelete"
+        data-toggle="modal"
+        type="button"
       >
-        {Lang.BTN_DELETE}
+        {Lang.BTN_DELETE_DRAFT}
       </button>
       }
       {props.actions.includes(Lang.BTN_EDIT_DRAFT) &&
       <button
-        type="button"
         className="btn btn-default"
-        onClick={() => history.push(Routes.CREDIT_TRANSACTION_EDIT.replace(':id', props.id))}
+        onClick={() => history.push(CREDIT_TRANSACTIONS.EDIT.replace(':id', props.id))}
+        type="button"
       >
         {Lang.BTN_EDIT_DRAFT}
       </button>
       }
       {props.actions.includes(Lang.BTN_SAVE_DRAFT) &&
       <button
-        type="submit"
         className="btn btn-default"
         onClick={() => props.changeStatus(CREDIT_TRANSFER_STATUS.draft)}
+        type="submit"
       >
         {Lang.BTN_SAVE_DRAFT}
       </button>
       }
-      {props.actions.includes(Lang.BTN_PROPOSE) &&
+      {props.actions.includes(Lang.BTN_SIGN_1_2) &&
       <button
-        type="submit"
-        className="btn btn-primary"
-        onClick={() => props.changeStatus(CREDIT_TRANSFER_STATUS.proposed)}
+        className={`btn ${props.disabled.BTN_SIGN_1_2 ? 'btn-disabled' : 'btn-primary '}`}
+        data-target="#confirmSubmit"
+        data-toggle="modal"
+        disabled={props.disabled.BTN_SIGN_1_2}
+        type="button"
       >
-        {Lang.BTN_PROPOSE}
+        {Lang.BTN_SIGN_1_2}
       </button>
       }
       {props.actions.includes(Lang.BTN_ACCEPT) &&
       <button
-        type="submit"
         className="btn btn-primary"
         onClick={() => props.changeStatus(CREDIT_TRANSFER_STATUS.accepted)}
+        type="submit"
       >
         {Lang.BTN_ACCEPT}
       </button>
       }
       {props.actions.includes(Lang.BTN_REFUSE) &&
       <button
-        type="submit"
         className="btn btn-danger"
         onClick={() => props.changeStatus(CREDIT_TRANSFER_STATUS.refused)}
+        type="submit"
       >
         {Lang.BTN_REFUSE}
       </button>
       }
       {props.actions.includes(Lang.BTN_RESCIND) &&
       <button
-        type="submit"
         className="btn btn-danger"
         onClick={() => props.changeStatus(CREDIT_TRANSFER_STATUS.rescinded)}
+        type="submit"
       >
         {Lang.BTN_RESCIND}
       </button>
       }
     </div>
-    {props.actions.includes(Lang.BTN_DELETE) &&
-    <div
-      className="modal fade"
-      id="confirmDelete"
-      tabIndex="-1"
-      role="dialog"
-      aria-labelledby="confirmDeleteLabel"
-    >
-      <div className="modal-dialog" role="document">
-        <div className="modal-content">
-          <div className="modal-header">
-            <button
-              type="button"
-              className="close"
-              data-dismiss="modal"
-              aria-label="Close"
-            >
-              <span aria-hidden="true">&times;</span>
-            </button>
-            <h4
-              className="modal-title"
-              id="confirmDeleteLabel"
-            >
-              Confirm Delete
-            </h4>
-          </div>
-          <div className="modal-body">
-            Are you sure you want to delete this credit transfer?
-          </div>
-          <div className="modal-footer">
-            <button
-              type="button"
-              className="btn btn-default"
-              data-dismiss="modal"
-            >
-              {Lang.BTN_APP_CANCEL}
-            </button>
-            <button
-              type="button"
-              className="btn btn-danger"
-              onClick={() => props.deleteCreditTransfer(props.id)}
-            >
-              {Lang.BTN_DELETE}
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
-    }
   </div>
 );
 
 CreditTransferFormButtons.defaultProps = {
-  deleteCreditTransfer: () => {}
+  disabled: {
+    BTN_SIGN_1_2: true
+  }
 };
 
 CreditTransferFormButtons.propTypes = {
-  id: PropTypes.number.isRequired,
+  actions: PropTypes.arrayOf(PropTypes.string).isRequired,
   changeStatus: PropTypes.func.isRequired,
-  deleteCreditTransfer: PropTypes.func,
-  actions: PropTypes.arrayOf(PropTypes.string).isRequired
+  disabled: PropTypes.shape({
+    BTN_SIGN_1_2: PropTypes.bool
+  }),
+  id: PropTypes.number.isRequired
 };
 
 export default CreditTransferFormButtons;

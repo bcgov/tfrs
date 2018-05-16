@@ -8,37 +8,46 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import PropTypes from 'prop-types';
 
-import * as Routes from '../constants/routes';
+import CREDIT_TRANSACTIONS from '../constants/routes/CreditTransactions';
 import history from '../app/History';
 import { getFuelSuppliers } from '../actions/organizationActions';
 import { getLoggedInUser } from '../actions/userActions';
 import { addCreditTransfer, invalidateCreditTransfers } from '../actions/creditTransfersActions';
 
-import { CREDIT_TRANSFER_STATUS } from '../constants/values';
-
 import CreditTransferForm from './components/CreditTransferForm';
+import { CREDIT_TRANSFER_STATUS } from '../constants/values';
+import ModalSubmitCreditTransfer from './components/ModalSubmitCreditTransfer';
+import * as Lang from '../constants/langEnUs';
+
+const buttonActions = [Lang.BTN_SAVE_DRAFT, Lang.BTN_SIGN_1_2];
 
 class CreditTransferAddContainer extends Component {
   constructor (props) {
     super(props);
+
     this.state = {
+      creditsFrom: {},
+      creditsTo: {},
       fields: {
         initiator: {},
         tradeType: { id: 1, name: 'Sell' },
         numberOfCredits: '',
         respondent: { id: 0, name: '' },
         fairMarketValuePerCredit: '',
-        tradeStatus: CREDIT_TRANSFER_STATUS.draft,
         note: ''
       },
-      creditsFrom: {},
-      creditsTo: {},
+      terms: {
+        accurate: false,
+        authorized: false,
+        regulation: false
+      },
       totalValue: 0
     };
 
+    this._changeStatus = this._changeStatus.bind(this);
     this._handleInputChange = this._handleInputChange.bind(this);
     this._handleSubmit = this._handleSubmit.bind(this);
-    this._changeStatus = this._changeStatus.bind(this);
+    this._toggleCheck = this._toggleCheck.bind(this);
   }
 
   componentDidMount () {
@@ -55,6 +64,10 @@ class CreditTransferAddContainer extends Component {
     });
   }
 
+  _changeStatus (status) {
+    this.changeObjectProp(status.id, 'tradeStatus');
+  }
+
   _handleInputChange (event) {
     const { value, name } = event.target;
     const fieldState = { ...this.state.fields };
@@ -69,13 +82,19 @@ class CreditTransferAddContainer extends Component {
     }
   }
 
+  _toggleCheck (key) {
+    const terms = { ...this.state.terms };
+    terms[key] = !terms[key];
+    this.setState({
+      terms
+    });
+  }
+
   changeObjectProp (id, name) {
     const fieldState = { ...this.state.fields };
     if (name === 'respondent') {
       // Populate the dropdown
-      const respondents = this.props.fuelSuppliers.filter((fuelSupplier) => {
-        return fuelSupplier.id === id;
-      });
+      const respondents = this.props.fuelSuppliers.filter(fuelSupplier => (fuelSupplier.id === id));
 
       fieldState.respondent = respondents.length === 1 ? respondents[0] : { id: 0 };
       this.setState({
@@ -110,23 +129,19 @@ class CreditTransferAddContainer extends Component {
       initiator: this.state.fields.initiator.id,
       numberOfCredits: parseInt(this.state.fields.numberOfCredits, 10),
       respondent: this.state.fields.respondent.id,
-      fairMarketValuePerCredit: parseInt(this.state.fields.fairMarketValuePerCredit, 10),
+      fairMarketValuePerCredit: parseFloat(this.state.fields.fairMarketValuePerCredit).toFixed(2),
       note: this.state.fields.note,
-      status: this.state.fields.tradeStatus.id,
+      status: status.id,
       type: this.state.fields.tradeType.id,
       tradeEffectiveDate: null
     };
 
     this.props.addCreditTransfer(data).then(() => {
       this.props.invalidateCreditTransfers();
-      history.push(Routes.CREDIT_TRANSACTIONS);
+      history.push(CREDIT_TRANSACTIONS.LIST);
     });
 
     return false;
-  }
-
-  _changeStatus (status) {
-    this.changeObjectProp(status.id, 'tradeStatus');
   }
 
   changeFromTo (tradeType, initiator, respondent) {
@@ -152,21 +167,32 @@ class CreditTransferAddContainer extends Component {
   }
 
   render () {
-    return (
+    return ([
       <CreditTransferForm
-        fuelSuppliers={this.props.fuelSuppliers}
-        title="New Credit Transfer"
-        fields={this.state.fields}
-        totalValue={this.state.totalValue}
-        tradeStatus={this.state.tradeStatus}
-        handleInputChange={this._handleInputChange}
-        handleSubmit={this._handleSubmit}
+        buttonActions={buttonActions}
+        changeStatus={this._changeStatus}
         creditsFrom={this.state.creditsFrom}
         creditsTo={this.state.creditsTo}
         errors={this.props.errors}
-        changeStatus={this._changeStatus}
+        fields={this.state.fields}
+        fuelSuppliers={this.props.fuelSuppliers}
+        handleInputChange={this._handleInputChange}
+        handleSubmit={this._handleSubmit}
+        key="creditTransferForm"
+        terms={this.state.terms}
+        title="New Credit Transfer"
+        toggleCheck={this._toggleCheck}
+        totalValue={this.state.totalValue}
+      />,
+      <ModalSubmitCreditTransfer
+        key="confirmSubmit"
+        submitCreditTransfer={(event) => {
+          this._handleSubmit(event, CREDIT_TRANSFER_STATUS.proposed);
+        }}
+        message="Do you want to sign and send this document to the other party
+        named in this transfer?"
       />
-    );
+    ]);
   }
 }
 

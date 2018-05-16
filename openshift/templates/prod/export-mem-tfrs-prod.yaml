@@ -1,6 +1,0 @@
-oc export all -o yaml -n mem-tfrs-prod > mem-tfrs-prod-project.yaml
-oc get rolebindings -o yaml --export=true -n mem-tfrs-prod > mem-tfrs-prod-rolebindings.yaml
-oc get serviceaccount -o yaml --export=true -n mem-tfrs-prod > mem-tfrs-prod-serviceaccount.yaml
-oc get pvc -o yaml --export=true -n mem-tfrs-prod > mem-tfrs-prod-pvc.yaml
-oc get configmap -o yaml --export=true  -n mem-tfrs-prod > mem-tfrs-prod-configmap.yaml
-oc export configmap,rolebinding,pvc,bc,dc,service,route -o yaml --as-template=mem-tfrs-prod -n mem-tfrs-prod > mem-tfrs-prod-template.yaml

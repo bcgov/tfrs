@@ -205,7 +205,7 @@ class UserSerializer(serializers.ModelSerializer):
         fields = (
             'id', 'first_name', 'last_name', 'email', 'authorization_id',
             'authorization_guid', 'authorization_directory', 'display_name',
-            'organization')
+            'organization', 'organization_balance')
 
 
 class UserDetailsViewModelSerializer(serializers.ModelSerializer):

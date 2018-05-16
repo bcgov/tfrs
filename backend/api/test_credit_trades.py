@@ -81,7 +81,7 @@ class TestCreditTrades(TestCase):
     # I'm the respondent, if the status is "submitted" or greater
     def test_initiator_should_see_appropriate_credit_trades(self):
         response = self.fs_client_1.get('/api/credit_trades')
-        assert response.status_code == status.HTTP_200_OK
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
 
         fs_credit_trades = response.json()
         for ct in fs_credit_trades:
@@ -91,7 +91,7 @@ class TestCreditTrades(TestCase):
             elif (ct['respondent']['id'] == self.user_1.organization.id and
                   ct['status']['id'] >= STATUS_SUBMITTED):
                 correct_view = True
-            assert correct_view is True
+            self.assertTrue(correct_view)
 
     # As a government user, I should see all credit trades where:
     # I'm the initiator, regardless of status
@@ -100,7 +100,7 @@ class TestCreditTrades(TestCase):
     def test_government_user_should_see_appropriate_credit_trades(self):
         response = self.gov_client.get('/api/credit_trades')
         print(response.content)
-        assert response.status_code == status.HTTP_200_OK
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
 
         gov_credit_trades = response.json()
         for ct in gov_credit_trades:
@@ -110,7 +110,7 @@ class TestCreditTrades(TestCase):
             elif ct['status']['id'] >= STATUS_ACCEPTED and \
                     ct['status']['id'] != STATUS_CANCELLED:
                 correct_view = True
-            assert correct_view is True
+            self.assertTrue(correct_view)
 
     # As a government user, I should be able to add an approved
     # credit transfer
@@ -138,7 +138,7 @@ class TestCreditTrades(TestCase):
             content_type='application/json',
             data=json.dumps(payload))
 
-        assert response.status_code == status.HTTP_201_CREATED
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
     # As a government user, I should be able to add an approved
     # credit transfer with 0 fair market value:
@@ -171,7 +171,7 @@ class TestCreditTrades(TestCase):
             data=json.dumps(payload))
 
         # 400 since zero reason was set to None
-        assert response.status_code == status.HTTP_400_BAD_REQUEST
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
     # As a government user, I should be able to add an approved
     # credit transfer with 0 fair market value:
@@ -205,7 +205,7 @@ class TestCreditTrades(TestCase):
             data=json.dumps(payload))
 
         # 400 since zero reason was set to None
-        assert response.status_code == status.HTTP_201_CREATED
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
     # As a government user, I should be able to validate approved credit
     # transfers:
@@ -438,4 +438,48 @@ class TestCreditTrades(TestCase):
             organization_id=from_organization.id,
             expiration_date=None)
 
-        assert organization_balance.validated_credits == 100
+        self.assertEqual(organization_balance.validated_credits, 100)
+
+    # As a government user, I should be able to delete credit transfers
+    # (Not a hard delete, just sets the status to Cancelled)
+    def test_delete(self):
+        approved_status, created = CreditTradeStatus.objects.get_or_create(
+            status='Approved')
+
+        cancelled_status, created = CreditTradeStatus.objects.get_or_create(
+            status='Cancelled')
+
+        credit_trade_type, created = CreditTradeType.objects.get_or_create(
+            the_type='Sell')
+
+        credit_trade_zero_reason, created = CreditTradeZeroReason.objects \
+            .get_or_create(reason='Other', display_order=2)
+
+        from_organization = Organization.objects.create(
+            name="Test 1",
+            actions_type_id=1,
+            status_id=1)
+        to_organization = Organization.objects.create(
+            name="Test 2",
+            actions_type_id=1,
+            status_id=1)
+
+        credit_trade = CreditTrade.objects.create(
+            status=approved_status,
+            initiator=self.gov_user.organization,
+            respondent=from_organization,
+            type=credit_trade_type,
+            number_of_credits=1000,
+            fair_market_value_per_credit=0,
+            zero_reason=credit_trade_zero_reason,
+            trade_effective_date=datetime.datetime.
+            today().strftime('%Y-%m-%d'))
+
+        response = self.gov_client.put('/api/credit_trades/{}/delete'.format(
+            credit_trade.id))
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        credit_trade = CreditTrade.objects.get(id=credit_trade.id)
+
+        self.assertEqual(credit_trade.status_id, cancelled_status.id)
