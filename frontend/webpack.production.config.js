@@ -63,6 +63,9 @@ const config = {
     }
   },
   plugins: [
+    new Webpack.DefinePlugin({
+      __LOGOUT_URL__: JSON.stringify('https://logon.gov.bc.ca/clp-cgi/logoff.cgi')
+    }),
     new Webpack.optimize.UglifyJsPlugin({
       compress: {
         warnings: false

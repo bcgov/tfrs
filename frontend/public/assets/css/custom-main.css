@@ -167,6 +167,13 @@ button.env-button-custom {
 }
 
 
+/* anchors need content for screen readers */
+
+#navbar #navigation-anchor span {
+    display: none;
+}
+
+
 /* adjust spacing for small screens */
 
 @media (max-width: 767px) {
