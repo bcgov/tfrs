@@ -10,7 +10,7 @@ class StatusInterceptor extends Component {
           a page that you do not have permissions to see.
         </p>
         <p>You will need to
-          <a href="mailto:lcfrr@gov.bc.ca?subject=Account%20Setup%20for%20TFRS">contact us</a>
+          <a href="mailto:lcfrr@gov.bc.ca?subject=Account%20Setup%20for%20TFRS"> contact us </a>
           for help.
         </p>
       </div>
@@ -25,7 +25,7 @@ class StatusInterceptor extends Component {
           a page that you do not have permissions to see.
         </p>
         <p>You will need to
-          <a href="mailto:lcfrr@gov.bc.ca?subject=Account%20Setup%20for%20TFRS">contact us</a>
+          <a href="mailto:lcfrr@gov.bc.ca?subject=Account%20Setup%20for%20TFRS"> contact us </a>
           for help.
         </p>
       </div>
