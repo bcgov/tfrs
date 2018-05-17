@@ -16,7 +16,8 @@ class SigningAuthorityConfirmationViewSet(AuditableMixin,
                                           mixins.CreateModelMixin,
                                           viewsets.GenericViewSet):
     """
-    This viewset automatically provides `create`
+    This viewset automatically provides `list`, `create`, `retrieve`,
+    `update` and `destroy` actions.
     """
     permission_classes = (permissions.AllowAny,)
     http_method_names = ['post']
@@ -25,16 +26,3 @@ class SigningAuthorityConfirmationViewSet(AuditableMixin,
     ordering_fields = '__all__'
     ordering = ('display_order',)
     serializer_class = SigningAuthorityConfirmationSerializer
-
-    @list_route(methods=['post'])
-    def sign(self, request):
-        for assertion in request.data['assertions']:
-            confirmation = SigningAuthorityConfirmation(
-                credit_trade_id=request.data['credit_trade'],
-                has_accepted=assertion['value'],
-                signing_authority_assertion_id=assertion['id']
-            )
-
-            confirmation.save()
-
-        return Response(None, status=status.HTTP_200_OK)

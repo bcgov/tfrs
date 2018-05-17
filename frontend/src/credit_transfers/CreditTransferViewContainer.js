@@ -17,7 +17,10 @@ import {
   invalidateCreditTransfer,
   updateCreditTransfer
 } from '../actions/creditTransfersActions';
-import addSigningAuthorityConfirmation from '../actions/signingAuthorityConfirmationsActions';
+import {
+  addSigningAuthorityConfirmation,
+  prepareSigningAuthorityConfirmations
+} from '../actions/signingAuthorityConfirmationsActions';
 import { getLoggedInUser } from '../actions/userActions';
 import history from '../app/History';
 import * as Lang from '../constants/langEnUs';
@@ -89,11 +92,18 @@ class CreditTransferViewContainer extends Component {
       // Failed to update
     });
 
-    // Capture the acceptance of terms
-    this.props.addSigningAuthorityConfirmation({
-      assertions: this.state.fields.terms,
-      credit_trade: id
-    });
+    // if it's being proposed or accepted capture the acceptance of the terms
+    if ([
+      CREDIT_TRANSFER_STATUS.accepted.id,
+      CREDIT_TRANSFER_STATUS.proposed.id
+    ].includes(status.id)) {
+      const assertions = this.props.prepareSigningAuthorityConfirmations(
+        id,
+        this.state.fields.terms
+      );
+
+      this.props.addSigningAuthorityConfirmation(assertions);
+    }
   }
 
   _deleteCreditTransfer (id) {
@@ -114,25 +124,33 @@ class CreditTransferViewContainer extends Component {
 
   render () {
     const { isFetching, item, loggedInUser } = this.props;
-    let buttonActions = [];
+    let availableActions = [];
+    const buttonActions = [];
 
     if (!isFetching && item.actions) {
       // TODO: Add util function to return appropriate actions
-      buttonActions = item.actions.map(action => (
+      availableActions = item.actions.map(action => (
         action.action
       ));
 
-      if (item.initiator.id === loggedInUser.organization.id) {
-        // Current user is the initiator
-        buttonActions[buttonActions.indexOf(Lang.BTN_CT_CANCEL)] = Lang.BTN_RESCIND;
-      } else {
-        buttonActions[buttonActions.indexOf(Lang.BTN_CT_CANCEL)] = Lang.BTN_REFUSE;
+      if (item.respondent.id === loggedInUser.organization.id) {
+        if (availableActions.includes(Lang.BTN_ACCEPT)) {
+          buttonActions.push(Lang.BTN_SIGN_2_2);
+        }
+
+        if (availableActions.includes(Lang.BTN_CT_CANCEL)) {
+          buttonActions.push(Lang.BTN_REFUSE);
+        }
+      } else if (item.initiator.id === loggedInUser.organization.id) {
+        if (availableActions.includes(Lang.BTN_CT_CANCEL)) {
+          buttonActions.push(Lang.BTN_RESCIND);
+        }
       }
 
-      if (buttonActions.includes(Lang.BTN_SAVE_DRAFT)) {
+      if (availableActions.includes(Lang.BTN_SAVE_DRAFT)) {
         buttonActions.push(Lang.BTN_DELETE_DRAFT);
-        buttonActions[buttonActions.indexOf(Lang.BTN_SAVE_DRAFT)] = Lang.BTN_EDIT_DRAFT;
-        buttonActions[buttonActions.indexOf(Lang.BTN_PROPOSE)] = Lang.BTN_SIGN_1_2;
+        buttonActions.push(Lang.BTN_EDIT_DRAFT);
+        buttonActions.push(Lang.BTN_SIGN_1_2);
       }
     }
 
@@ -158,6 +176,31 @@ class CreditTransferViewContainer extends Component {
         tradeType={item.type}
       />,
       <ModalSubmitCreditTransfer
+        id="confirmAccept"
+        key="confirmAccept"
+        message="Do you want to accept this transfer?"
+        submitCreditTransfer={(event) => {
+          this._changeStatus(CREDIT_TRANSFER_STATUS.accepted);
+        }}
+      />,
+      <ModalSubmitCreditTransfer
+        id="confirmRefuse"
+        key="confirmRefuse"
+        message="Do you want to refuse this transfer?"
+        submitCreditTransfer={(event) => {
+          this._changeStatus(CREDIT_TRANSFER_STATUS.refused);
+        }}
+      />,
+      <ModalSubmitCreditTransfer
+        id="confirmRescind"
+        key="confirmRescind"
+        message="Do you want to rescind this transfer?"
+        submitCreditTransfer={(event) => {
+          this._changeStatus(CREDIT_TRANSFER_STATUS.rescinded);
+        }}
+      />,
+      <ModalSubmitCreditTransfer
+        id="confirmSubmit"
         key="confirmSubmit"
         message="Do you want to sign and send this document to the other party
         named in this transfer?"
@@ -211,6 +254,7 @@ CreditTransferViewContainer.propTypes = {
       id: PropTypes.string.isRequired
     }).isRequired
   }).isRequired,
+  prepareSigningAuthorityConfirmations: PropTypes.func.isRequired,
   updateCreditTransfer: PropTypes.func.isRequired
 };
 
@@ -226,6 +270,8 @@ const mapDispatchToProps = dispatch => ({
   getCreditTransferIfNeeded: bindActionCreators(getCreditTransferIfNeeded, dispatch),
   getLoggedInUser: bindActionCreators(getLoggedInUser, dispatch),
   invalidateCreditTransfer: bindActionCreators(invalidateCreditTransfer, dispatch),
+  prepareSigningAuthorityConfirmations: (creditTradeId, terms) =>
+    prepareSigningAuthorityConfirmations(creditTradeId, terms),
   updateCreditTransfer: bindActionCreators(updateCreditTransfer, dispatch)
 });
 

@@ -2,7 +2,20 @@ import axios from 'axios';
 
 import * as Routes from '../constants/routes';
 
-const addSigningAuthorityConfirmation = data => (dispatch) => {
+export const prepareSigningAuthorityConfirmations = (creditTradeId, terms) => {
+  const data = [];
+  terms.forEach((term) => {
+    data.push({
+      creditTrade: creditTradeId,
+      hasAccepted: term.value,
+      signingAuthorityAssertion: term.id
+    });
+  });
+
+  return data;
+};
+
+export const addSigningAuthorityConfirmation = data => (dispatch) => {
   dispatch(addSigningAuthorityConfirmationRequest());
 
   return axios
@@ -31,5 +44,3 @@ const addSigningAuthorityConfirmationError = error => ({
   type: 'ERROR',
   errorMessage: error
 });
-
-export default addSigningAuthorityConfirmation;
