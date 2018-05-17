@@ -6,7 +6,7 @@ import * as Lang from '../../constants/langEnUs';
 const ModalSubmitCreditTransfer = props => (
   <div
     className="modal fade"
-    id="confirmSubmit"
+    id={props.id}
     tabIndex="-1"
     role="dialog"
     aria-labelledby="confirmSubmitLabel"
@@ -60,6 +60,7 @@ ModalSubmitCreditTransfer.defaultProps = {
 };
 
 ModalSubmitCreditTransfer.propTypes = {
+  id: PropTypes.string.isRequired,
   submitCreditTransfer: PropTypes.func,
   message: PropTypes.string
 };
