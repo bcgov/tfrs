@@ -15,6 +15,7 @@ class CreditTransferTerms extends Component {
     let content = [(
       <h3 className="terms-header" key="header">Signing Authority Declaration</h3>
     )];
+
     content = content.concat(this.props.signingAuthorityAssertions.map(assertion => (
       <div className="terms" key={assertion.id}>
         <div className="check">

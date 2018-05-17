@@ -23,6 +23,7 @@ import {
 } from '../actions/signingAuthorityConfirmationsActions';
 import { getLoggedInUser } from '../actions/userActions';
 import history from '../app/History';
+import Modal from '../app/components/Modal';
 import * as Lang from '../constants/langEnUs';
 import CREDIT_TRANSACTIONS from '../constants/routes/CreditTransactions';
 import { CREDIT_TRANSFER_STATUS } from '../constants/values';
@@ -40,6 +41,11 @@ class CreditTransferViewContainer extends Component {
     this._addToFields = this._addToFields.bind(this);
     this._changeStatus = this._changeStatus.bind(this);
     this._deleteCreditTransfer = this._deleteCreditTransfer.bind(this);
+    this._modalAccept = this._modalAccept.bind(this);
+    this._modalDelete = this._modalDelete.bind(this);
+    this._modalRefuse = this._modalRefuse.bind(this);
+    this._modalRescind = this._modalRescind.bind(this);
+    this._modalSubmit = this._modalSubmit.bind(this);
     this._toggleCheck = this._toggleCheck.bind(this);
   }
 
@@ -112,6 +118,65 @@ class CreditTransferViewContainer extends Component {
     });
   }
 
+  _modalAccept () {
+    return (
+      <Modal
+        handleSubmit={(event) => {
+          this._changeStatus(CREDIT_TRANSFER_STATUS.accepted);
+        }}
+        id="confirmAccept"
+        key="confirmAccept"
+      >
+        Do you want to accept this transfer?
+      </Modal>
+    );
+  }
+
+  _modalDelete (item) {
+    return (
+      <ModalDeleteCreditTransfer handleSubmit={() => this._deleteCreditTransfer(item.id)} />
+    );
+  }
+
+  _modalRefuse () {
+    return (
+      <Modal
+        handleSubmit={(event) => {
+          this._changeStatus(CREDIT_TRANSFER_STATUS.refused);
+        }}
+        id="confirmRefuse"
+        key="confirmRefuse"
+      >
+      Do you want to refuse this transfer?
+      </Modal>
+    );
+  }
+
+  _modalRescind () {
+    return (
+      <Modal
+        handleSubmit={(event) => {
+          this._changeStatus(CREDIT_TRANSFER_STATUS.rescinded);
+        }}
+        id="confirmRescind"
+        key="confirmRescind"
+      >
+        Do you want to rescind this transfer?
+      </Modal>
+    );
+  }
+
+  _modalSubmit (item) {
+    return (
+      <ModalSubmitCreditTransfer
+        handleSubmit={(event) => {
+          this._changeStatus(CREDIT_TRANSFER_STATUS.proposed);
+        }}
+        item={item}
+      />
+    );
+  }
+
   _toggleCheck (key) {
     const fieldState = { ...this.state.fields };
     const index = fieldState.terms.findIndex(term => term.id === key);
@@ -126,35 +191,7 @@ class CreditTransferViewContainer extends Component {
     const { isFetching, item, loggedInUser } = this.props;
     let availableActions = [];
     const buttonActions = [];
-
-    if (!isFetching && item.actions) {
-      // TODO: Add util function to return appropriate actions
-      availableActions = item.actions.map(action => (
-        action.action
-      ));
-
-      if (item.respondent.id === loggedInUser.organization.id) {
-        if (availableActions.includes(Lang.BTN_ACCEPT)) {
-          buttonActions.push(Lang.BTN_SIGN_2_2);
-        }
-
-        if (availableActions.includes(Lang.BTN_CT_CANCEL)) {
-          buttonActions.push(Lang.BTN_REFUSE);
-        }
-      } else if (item.initiator.id === loggedInUser.organization.id) {
-        if (availableActions.includes(Lang.BTN_CT_CANCEL)) {
-          buttonActions.push(Lang.BTN_RESCIND);
-        }
-      }
-
-      if (availableActions.includes(Lang.BTN_SAVE_DRAFT)) {
-        buttonActions.push(Lang.BTN_DELETE_DRAFT);
-        buttonActions.push(Lang.BTN_EDIT_DRAFT);
-        buttonActions.push(Lang.BTN_SIGN_1_2);
-      }
-    }
-
-    return ([
+    const content = [(
       <CreditTransferDetails
         addToFields={this._addToFields}
         buttonActions={buttonActions}
@@ -174,47 +211,46 @@ class CreditTransferViewContainer extends Component {
         totalValue={item.totalValue}
         tradeEffectiveDate={item.tradeEffectiveDate}
         tradeType={item.type}
-      />,
-      <ModalSubmitCreditTransfer
-        id="confirmAccept"
-        key="confirmAccept"
-        message="Do you want to accept this transfer?"
-        submitCreditTransfer={(event) => {
-          this._changeStatus(CREDIT_TRANSFER_STATUS.accepted);
-        }}
-      />,
-      <ModalSubmitCreditTransfer
-        id="confirmRefuse"
-        key="confirmRefuse"
-        message="Do you want to refuse this transfer?"
-        submitCreditTransfer={(event) => {
-          this._changeStatus(CREDIT_TRANSFER_STATUS.refused);
-        }}
-      />,
-      <ModalSubmitCreditTransfer
-        id="confirmRescind"
-        key="confirmRescind"
-        message="Do you want to rescind this transfer?"
-        submitCreditTransfer={(event) => {
-          this._changeStatus(CREDIT_TRANSFER_STATUS.rescinded);
-        }}
-      />,
-      <ModalSubmitCreditTransfer
-        id="confirmSubmit"
-        key="confirmSubmit"
-        message="Do you want to sign and send this document to the other party
-        named in this transfer?"
-        submitCreditTransfer={(event) => {
-          this._changeStatus(CREDIT_TRANSFER_STATUS.proposed);
-        }}
-      />,
-      <ModalDeleteCreditTransfer
-        deleteCreditTransfer={this._deleteCreditTransfer}
-        key="confirmDelete"
-        message="Do you want to delete this draft?"
-        selectedId={item.id}
       />
-    ]);
+    )];
+
+    if (!isFetching && item.actions) {
+      // TODO: Add util function to return appropriate actions
+      availableActions = item.actions.map(action => (
+        action.action
+      ));
+
+      if (item.respondent.id === loggedInUser.organization.id) {
+        if (availableActions.includes(Lang.BTN_ACCEPT)) {
+          buttonActions.push(Lang.BTN_SIGN_2_2);
+        }
+
+        if (availableActions.includes(Lang.BTN_CT_CANCEL)) {
+          buttonActions.push(Lang.BTN_REFUSE);
+        }
+
+        content.push(this._modalAccept());
+        content.push(this._modalRefuse());
+        content.push(this._modalRescind());
+      } else if (item.initiator.id === loggedInUser.organization.id) {
+        if (availableActions.includes(Lang.BTN_CT_CANCEL)) {
+          buttonActions.push(Lang.BTN_RESCIND);
+        }
+
+        content.push(this._modalRescind());
+      }
+
+      if (availableActions.includes(Lang.BTN_SAVE_DRAFT)) {
+        buttonActions.push(Lang.BTN_DELETE_DRAFT);
+        buttonActions.push(Lang.BTN_EDIT_DRAFT);
+        buttonActions.push(Lang.BTN_SIGN_1_2);
+
+        content.push(this._modalSubmit(item));
+        content.push(this._modalDelete(item));
+      }
+    }
+
+    return content;
   }
 }
 
