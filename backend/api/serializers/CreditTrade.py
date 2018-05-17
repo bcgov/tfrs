@@ -24,6 +24,7 @@ from rest_framework import serializers
 
 from api.models.CreditTrade import CreditTrade
 from api.models.CreditTradeStatus import CreditTradeStatus
+from api.models.CreditTradeType import CreditTradeType
 
 from .CreditTradeStatus import CreditTradeStatusMinSerializer
 from .CreditTradeType import CreditTradeTypeSerializer
