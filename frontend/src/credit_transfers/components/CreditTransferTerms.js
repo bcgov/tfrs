@@ -12,7 +12,10 @@ class CreditTransferTerms extends Component {
   }
 
   render () {
-    return this.props.signingAuthorityAssertions.map(assertion => (
+    let content = [(
+      <h3 className="terms-header" key="header">Signing Authority Declaration</h3>
+    )];
+    content = content.concat(this.props.signingAuthorityAssertions.map(assertion => (
       <div className="terms" key={assertion.id}>
         <div className="check">
           <CheckBox
@@ -24,7 +27,9 @@ class CreditTransferTerms extends Component {
         </div>
         <div>{assertion.description}</div>
       </div>
-    ));
+    )));
+
+    return content;
   }
 }
 
