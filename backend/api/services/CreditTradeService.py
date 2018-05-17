@@ -27,21 +27,28 @@ class CreditTradeService(object):
                                                .get(status="Accepted")
             status_cancelled = CreditTradeStatus.objects \
                                                 .get(status="Cancelled")
+
             credit_trades = CreditTrade.objects.filter(
-                Q(initiator=organization) |
-                (Q(status__id__gte=status_accepted.id) &
-                 ~Q(status__id=status_cancelled.id)))
+                ~Q(status__id=status_cancelled.id) &
+                (Q(initiator=organization) |
+                 Q(status__id__gte=status_accepted.id))
+                )
         else:
             # Fuel suppliers
             status_cancelled = CreditTradeStatus.objects \
                                                 .get(status="Cancelled")
             status_submitted = CreditTradeStatus.objects \
                                                 .get(status="Submitted")
+            status_cancelled = CreditTradeStatus.objects \
+                                                .get(status="Cancelled")
+
             credit_trades = CreditTrade.objects.filter(
-                (Q(initiator=organization) &
-                 ~Q(status__id=status_cancelled.id)) |
-                (Q(respondent=organization) &
-                 Q(status__id__gte=status_submitted.id)))
+                ~Q(status__id=status_cancelled.id) &
+                (Q(initiator=organization) |
+                 (Q(respondent=organization) &
+                  Q(status__id__gte=status_submitted.id))
+                 )
+                )
 
         return credit_trades
 
