@@ -7,8 +7,9 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
-import CREDIT_TRANSACTIONS from '../constants/routes/CreditTransactions';
-import history from '../app/History';
+import CreditTransferForm from './components/CreditTransferForm';
+import ModalDeleteCreditTransfer from './components/ModalDeleteCreditTransfer';
+import ModalSubmitCreditTransfer from './components/ModalSubmitCreditTransfer';
 
 import { getFuelSuppliers } from '../actions/organizationActions';
 import {
@@ -21,10 +22,9 @@ import {
   addSigningAuthorityConfirmation,
   prepareSigningAuthorityConfirmations
 } from '../actions/signingAuthorityConfirmationsActions';
-import CreditTransferForm from './components/CreditTransferForm';
+import history from '../app/History';
+import CREDIT_TRANSACTIONS from '../constants/routes/CreditTransactions';
 import { CREDIT_TRANSFER_STATUS } from '../constants/values';
-import ModalDeleteCreditTransfer from './components/ModalDeleteCreditTransfer';
-import ModalSubmitCreditTransfer from './components/ModalSubmitCreditTransfer';
 import * as Lang from '../constants/langEnUs';
 
 const buttonActions = [Lang.BTN_DELETE_DRAFT, Lang.BTN_SAVE_DRAFT, Lang.BTN_SIGN_1_2];
@@ -261,20 +261,19 @@ class CreditTransferEditContainer extends Component {
         tradeStatus={this.state.tradeStatus}
       />,
       <ModalSubmitCreditTransfer
-        id="confirmSubmit"
-        key="confirmSubmit"
-        submitCreditTransfer={(event) => {
+        handleSubmit={(event) => {
           this._handleSubmit(event, CREDIT_TRANSFER_STATUS.proposed);
         }}
-        message="Do you want to sign and send this document to the other party
-        named in this transfer?"
+        item={
+          {
+            creditsFrom: this.state.creditsFrom,
+            creditsTo: this.state.creditsTo,
+            fairMarketValuePerCredit: item.fairMarketValuePerCredit,
+            numberOfCredits: item.numberOfCredits
+          }
+        }
       />,
-      <ModalDeleteCreditTransfer
-        key="confirmDelete"
-        deleteCreditTransfer={this._deleteCreditTransfer}
-        message="Do you want to delete this draft?"
-        selectedId={item.id}
-      />
+      <ModalDeleteCreditTransfer handleSubmit={() => this._deleteCreditTransfer(item.id)} />
     ]);
   }
 }

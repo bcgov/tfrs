@@ -9,6 +9,7 @@ import { bindActionCreators } from 'redux';
 
 import CreditTransferForm from './components/CreditTransferForm';
 import ModalSubmitCreditTransfer from './components/ModalSubmitCreditTransfer';
+
 import { getFuelSuppliers } from '../actions/organizationActions';
 import { getLoggedInUser } from '../actions/userActions';
 import { addCreditTransfer, invalidateCreditTransfers } from '../actions/creditTransfersActions';
@@ -206,13 +207,17 @@ class CreditTransferAddContainer extends Component {
         totalValue={this.state.totalValue}
       />,
       <ModalSubmitCreditTransfer
-        id="confirmSubmit"
-        key="confirmSubmit"
-        submitCreditTransfer={(event) => {
+        handleSubmit={(event) => {
           this._handleSubmit(event, CREDIT_TRANSFER_STATUS.proposed);
         }}
-        message="Do you want to sign and send this document to the other party
-        named in this transfer?"
+        item={
+          {
+            creditsFrom: this.state.creditsFrom,
+            creditsTo: this.state.creditsTo,
+            fairMarketValuePerCredit: this.state.fields.fairMarketValuePerCredit,
+            numberOfCredits: this.state.fields.numberOfCredits
+          }
+        }
       />
     ]);
   }

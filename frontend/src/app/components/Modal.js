@@ -3,13 +3,13 @@ import PropTypes from 'prop-types';
 
 import * as Lang from '../../constants/langEnUs';
 
-const ModalProcessApprovedCreditTransfer = props => (
+const Modal = props => (
   <div
     className="modal fade"
-    id="confirmProcess"
+    id={props.id}
     tabIndex="-1"
     role="dialog"
-    aria-labelledby="confirmProcessLabel"
+    aria-labelledby="confirmSubmitLabel"
   >
     <div className="modal-dialog" role="document">
       <div className="modal-content">
@@ -24,13 +24,13 @@ const ModalProcessApprovedCreditTransfer = props => (
           </button>
           <h4
             className="modal-title"
-            id="confirmProcessLabel"
+            id="confirmSubmitLabel"
           >
-            Confirm Process
+            {props.title}
           </h4>
         </div>
         <div className="modal-body">
-          Are you sure you want to commit the approved credit transfers?
+          {props.children}
         </div>
         <div className="modal-footer">
           <button
@@ -38,15 +38,15 @@ const ModalProcessApprovedCreditTransfer = props => (
             className="btn btn-default"
             data-dismiss="modal"
           >
-            {Lang.BTN_APP_CANCEL}
+            {props.cancelLabel}
           </button>
           <button
             type="button"
             className="btn btn-primary"
             data-dismiss="modal"
-            onClick={props.processApprovedCreditTransfers}
+            onClick={props.handleSubmit}
           >
-            {Lang.BTN_PROCESS}
+            {props.confirmLabel}
           </button>
         </div>
       </div>
@@ -54,13 +54,23 @@ const ModalProcessApprovedCreditTransfer = props => (
   </div>
 );
 
-ModalProcessApprovedCreditTransfer.defaultProps = {
-  selectedId: 0
+Modal.defaultProps = {
+  cancelLabel: Lang.BTN_NO,
+  confirmLabel: Lang.BTN_YES,
+  handleSubmit: null,
+  title: 'Confirmation'
 };
 
-ModalProcessApprovedCreditTransfer.propTypes = {
-  processApprovedCreditTransfers: PropTypes.func.isRequired,
-  selectedId: PropTypes.number
+Modal.propTypes = {
+  cancelLabel: PropTypes.string,
+  children: PropTypes.oneOfType([
+    PropTypes.arrayOf(PropTypes.node),
+    PropTypes.node
+  ]).isRequired,
+  confirmLabel: PropTypes.string,
+  handleSubmit: PropTypes.func,
+  id: PropTypes.string.isRequired,
+  title: PropTypes.string
 };
 
-export default ModalProcessApprovedCreditTransfer;
+export default Modal;

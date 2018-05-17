@@ -8,8 +8,7 @@ import Loading from '../../../app/components/Loading';
 import HistoricalDataEntryForm from './HistoricalDataEntryForm';
 import HistoricalDataEntryFormButtons from './HistoricalDataEntryFormButtons';
 import HistoricalDataTable from './HistoricalDataTable';
-import ModalDeleteCreditTransfer from '../../../credit_transfers/components/ModalDeleteCreditTransfer';
-import ModalProcessApprovedCreditTransfer from '../../../credit_transfers/components/ModalProcessApprovedCreditTransfer';
+import Modal from '../../../app/components/Modal';
 import SuccessAlert from '../../../app/components/SuccessAlert';
 
 const buttonActions = [Lang.BTN_CANCEL, Lang.BTN_COMMIT];
@@ -55,14 +54,21 @@ const HistoricalDataEntryPage = (props) => {
         <HistoricalDataEntryFormButtons actions={buttonActions} />
       </div>
 
-      <ModalDeleteCreditTransfer
-        deleteCreditTransfer={props.deleteCreditTransfer}
-        selectedId={props.selectedId}
-      />
+      <Modal
+        handleSubmit={() => props.deleteCreditTransfer(props.selectedId)}
+        id="confirmDelete"
+        title="Confirm Delete"
+      >
+        Do you want to delete this credit transfer?
+      </Modal>
 
-      <ModalProcessApprovedCreditTransfer
-        processApprovedCreditTransfers={props.processApprovedCreditTransfers}
-      />
+      <Modal
+        handleSubmit={props.processApprovedCreditTransfers}
+        id="confirmProcess"
+        title="Confirm Process"
+      >
+        Are you sure you want to commit the approved credit transfers?
+      </Modal>
     </div>
   );
 };
