@@ -57,6 +57,7 @@
 
 }
 
+/****
 stage('FT on Dev') {
     podTemplate(label: "develop-frontend-bddstack-${env.BUILD_NUMBER}", name: "develop-frontend-bddstack-${env.BUILD_NUMBER}", serviceAccount: 'jenkins', cloud: 'openshift',
         containers: [
@@ -83,9 +84,9 @@ stage('FT on Dev') {
                 echo ">> FT_LOG_LEVEL=${FT_LOG_LEVEL}"
                 sh './gradlew --debug --stacktrace chromeHeadlessTest'
 	    } finally {
-		archiveArtifacts allowEmptyArchive: true, artifacts: 'build/reports/**/*'
-                archiveArtifacts allowEmptyArchive: true, artifacts: 'build/test-results/**/*'
-                junit 'build/test-results/**/*.xml'
+		archiveArtifacts allowEmptyArchive: true, artifacts: 'build/reports/ * * / * '
+                archiveArtifacts allowEmptyArchive: true, artifacts: 'build/test-results/ * * / * '
+                junit 'build/test-results/ * * / * .xml'
                 publishHTML (target: [
                             allowMissing: false,
                             alwaysLinkToLastBuild: false,
@@ -107,3 +108,4 @@ stage('FT on Dev') {
     } //end of node
     } //end of podTemplate 
 } //end of stage
+****/
