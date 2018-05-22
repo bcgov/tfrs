@@ -10,6 +10,7 @@ import CreditTransferProgress from './CreditTransferProgress';
 import CreditTransferTextRepresentation from './CreditTransferTextRepresentation';
 import CreditTransferVisualRepresentation from './CreditTransferVisualRepresentation';
 import CreditTransferFormButtons from './CreditTransferFormButtons';
+import CreditTransferTerms from './CreditTransferTerms';
 import { getCreditTransferType } from '../../actions/creditTransfersActions';
 
 const CreditTransferDetails = props => (
@@ -51,10 +52,21 @@ const CreditTransferDetails = props => (
           </div>
         }
         <form onSubmit={e => e.preventDefault()}>
+          <CreditTransferTerms
+            addToFields={props.addToFields}
+            fields={props.fields}
+            toggleCheck={props.toggleCheck}
+          />
+
           <CreditTransferFormButtons
             actions={props.buttonActions}
             changeStatus={props.changeStatus}
-            deleteCreditTransfer={props.deleteCreditTransfer}
+            disabled={
+              {
+                BTN_SIGN_1_2: props.fields.terms.findIndex(term => term.value === false) >= 0 ||
+                props.fields.terms.length === 0
+              }
+            }
             id={props.id}
           />
         </form>
@@ -89,6 +101,7 @@ CreditTransferDetails.defaultProps = {
 };
 
 CreditTransferDetails.propTypes = {
+  addToFields: PropTypes.func.isRequired,
   buttonActions: PropTypes.arrayOf(PropTypes.string).isRequired,
   changeStatus: PropTypes.func.isRequired,
   compliancePeriod: PropTypes.shape({
@@ -103,11 +116,13 @@ CreditTransferDetails.propTypes = {
     id: PropTypes.number,
     name: PropTypes.string
   }),
-  deleteCreditTransfer: PropTypes.func.isRequired,
   fairMarketValuePerCredit: PropTypes.oneOfType([
     PropTypes.string,
     PropTypes.number
   ]),
+  fields: PropTypes.shape({
+    terms: PropTypes.array
+  }).isRequired,
   id: PropTypes.number,
   isFetching: PropTypes.bool.isRequired,
   note: PropTypes.string,
@@ -119,6 +134,7 @@ CreditTransferDetails.propTypes = {
     id: PropTypes.number,
     status: PropTypes.string
   }),
+  toggleCheck: PropTypes.func.isRequired,
   totalValue: PropTypes.oneOfType([
     PropTypes.string,
     PropTypes.number
