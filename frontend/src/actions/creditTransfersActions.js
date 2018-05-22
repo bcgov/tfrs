@@ -221,6 +221,7 @@ export const addCreditTransfer = data => (dispatch) => {
     .post(Routes.BASE_URL + Routes.CREDIT_TRADE_API, data)
     .then((response) => {
       dispatch(addCreditTransferSuccess(response.data));
+      return Promise.resolve(response);
     }).catch((error) => {
       dispatch(addCreditTransferError(error.response.data));
       return Promise.reject(error);
@@ -254,6 +255,7 @@ export const updateCreditTransfer = (id, data) => (dispatch) => {
     .put(`${Routes.BASE_URL}${Routes.CREDIT_TRADE_API}/${id}`, data)
     .then((response) => {
       dispatch(updateCreditTransferSuccess(response.data));
+      return Promise.resolve(response);
     }).catch((error) => {
       dispatch(updateCreditTransferError(error.response.data));
       return Promise.reject(error);

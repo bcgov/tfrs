@@ -8,8 +8,7 @@ from django.db.models import Q
 import datetime
 
 from api.models.SigningAuthorityAssertion import SigningAuthorityAssertion
-from api.serializers.SigningAuthorityAssertion \
-  import SigningAuthorityAssertionSerializer
+from api.serializers import SigningAuthorityAssertionSerializer
 
 
 class SigningAuthorityAssertionViewSet(AuditableMixin, mixins.ListModelMixin,

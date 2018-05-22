@@ -4,14 +4,15 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import Loading from '../../app/components/Loading';
-
+import CreditTransferFormButtons from './CreditTransferFormButtons';
 import CreditTransferProgress from './CreditTransferProgress';
+import CreditTransferTerms from './CreditTransferTerms';
 import CreditTransferTextRepresentation from './CreditTransferTextRepresentation';
 import CreditTransferVisualRepresentation from './CreditTransferVisualRepresentation';
-import CreditTransferFormButtons from './CreditTransferFormButtons';
-import CreditTransferTerms from './CreditTransferTerms';
+
 import { getCreditTransferType } from '../../actions/creditTransfersActions';
+import Loading from '../../app/components/Loading';
+import * as Lang from '../../constants/langEnUs';
 
 const CreditTransferDetails = props => (
   <div className="credit-transfer">
@@ -52,11 +53,14 @@ const CreditTransferDetails = props => (
           </div>
         }
         <form onSubmit={e => e.preventDefault()}>
+          {(props.buttonActions.includes(Lang.BTN_SIGN_1_2) ||
+          props.buttonActions.includes(Lang.BTN_SIGN_2_2)) &&
           <CreditTransferTerms
             addToFields={props.addToFields}
             fields={props.fields}
             toggleCheck={props.toggleCheck}
           />
+          }
 
           <CreditTransferFormButtons
             actions={props.buttonActions}
@@ -64,6 +68,8 @@ const CreditTransferDetails = props => (
             disabled={
               {
                 BTN_SIGN_1_2: props.fields.terms.findIndex(term => term.value === false) >= 0 ||
+                props.fields.terms.length === 0,
+                BTN_SIGN_2_2: props.fields.terms.findIndex(term => term.value === false) >= 0 ||
                 props.fields.terms.length === 0
               }
             }

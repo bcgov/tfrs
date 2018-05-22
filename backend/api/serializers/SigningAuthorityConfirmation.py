@@ -7,6 +7,7 @@
 
     OpenAPI spec version: v1
 
+
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
     You may obtain a copy of the License at
@@ -19,30 +20,13 @@
     See the License for the specific language governing permissions and
     limitations under the License.
 """
+from rest_framework import serializers
 
-from .CompliancePeriod import *
-from .CreditTrade import *
-from .CreditTradeHistory import *
-from .CreditTradeStatus import *
-from .CreditTradeType import *
-from .CreditTradeZeroReason import *
-from .CurrentUserViewModel import *
-from .Organization import *
-from .OrganizationActionsType import *
-from .OrganizationAttachment import *
-from .OrganizationBalance import *
-from .OrganizationHistory import *
-from .OrganizationStatus import *
-from .Permission import *
-from .PermissionViewModel import *
-from .Role import *
-from .RolePermission import *
-from .RolePermissionViewModel import *
-from .RoleViewModel import *
-from .SigningAuthorityAssertion import *
-from .SigningAuthorityConfirmation import *
-from .User import *
-from .UserDetailsViewModel import *
-from .UserRole import *
-from .UserRoleViewModel import *
-from .UserViewModel import *
+from api.models.SigningAuthorityConfirmation \
+  import SigningAuthorityConfirmation
+
+
+class SigningAuthorityConfirmationSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = SigningAuthorityConfirmation
+        fields = '__all__'

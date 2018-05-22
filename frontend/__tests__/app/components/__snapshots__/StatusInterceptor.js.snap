@@ -16,7 +16,7 @@ exports[`StatusInterceptor should display the proper message for 401 errors 1`] 
     <a
       href="mailto:lcfrr@gov.bc.ca?subject=Account%20Setup%20for%20TFRS"
     >
-      contact us
+       contact us 
     </a>
     for help.
   </p>
@@ -39,7 +39,7 @@ exports[`StatusInterceptor should display the proper message for 403 errors 1`] 
     <a
       href="mailto:lcfrr@gov.bc.ca?subject=Account%20Setup%20for%20TFRS"
     >
-      contact us
+       contact us 
     </a>
     for help.
   </p>

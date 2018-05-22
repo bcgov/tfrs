@@ -7,10 +7,13 @@ class CheckBox extends Component {
   constructor (props) {
     super(props);
 
-    props.addToFields({
-      id: props.id,
-      value: false
-    });
+    // sometimes we might re-render so best to check and make sure we're not duplicating
+    if (!this.props.fields.find(field => field.id === this.props.id)) {
+      props.addToFields({
+        id: props.id,
+        value: false
+      });
+    }
   }
 
   render () {
