@@ -1,16 +1,16 @@
-const compliancePeriods = (state = {
+const signingAuthorityAssertions = (state = {
   items: [],
   isFetching: false,
   success: false,
   errorMessage: []
 }, action) => {
   switch (action.type) {
-    case 'GET_COMPLIANCE_PERIODS':
+    case 'GET_SIGNING_AUTHORITY_ASSERTIONS':
       return Object.assign({}, state, {
         isFetching: true,
         success: false
       });
-    case 'RECEIVE_COMPLIANCE_PERIODS':
+    case 'RECEIVE_SIGNING_AUTHORITY_ASSERTIONS':
       return Object.assign({}, state, {
         isFetching: false,
         success: true,
@@ -27,4 +27,4 @@ const compliancePeriods = (state = {
   }
 };
 
-export default compliancePeriods;
+export default signingAuthorityAssertions;

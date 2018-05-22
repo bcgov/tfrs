@@ -2,11 +2,10 @@
  * Container component
  * All data handling & manipulation should be handled here.
  */
-
+import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import PropTypes from 'prop-types';
 
 import CREDIT_TRANSACTIONS from '../constants/routes/CreditTransactions';
 import history from '../app/History';
@@ -29,21 +28,18 @@ class CreditTransferAddContainer extends Component {
       creditsFrom: {},
       creditsTo: {},
       fields: {
+        fairMarketValuePerCredit: '',
         initiator: {},
-        tradeType: { id: 1, name: 'Sell' },
+        note: '',
         numberOfCredits: '',
         respondent: { id: 0, name: '' },
-        fairMarketValuePerCredit: '',
-        note: ''
-      },
-      terms: {
-        accurate: false,
-        authorized: false,
-        regulation: false
+        terms: [],
+        tradeType: { id: 1, name: 'Sell' }
       },
       totalValue: 0
     };
 
+    this._addToFields = this._addToFields.bind(this);
     this._changeStatus = this._changeStatus.bind(this);
     this._handleInputChange = this._handleInputChange.bind(this);
     this._handleSubmit = this._handleSubmit.bind(this);
@@ -61,6 +57,15 @@ class CreditTransferAddContainer extends Component {
     this.setState({
       fields: fieldState,
       creditsFrom: fieldState.initiator
+    });
+  }
+
+  _addToFields (value) {
+    const fieldState = { ...this.state.fields };
+    fieldState.terms.push(value);
+
+    this.setState({
+      fields: fieldState
     });
   }
 
@@ -83,10 +88,12 @@ class CreditTransferAddContainer extends Component {
   }
 
   _toggleCheck (key) {
-    const terms = { ...this.state.terms };
-    terms[key] = !terms[key];
+    const fieldState = { ...this.state.fields };
+    const index = fieldState.terms.findIndex(term => term.id === key);
+    fieldState.terms[index].value = !fieldState.terms[index].value;
+
     this.setState({
-      terms
+      fields: fieldState
     });
   }
 
@@ -169,6 +176,7 @@ class CreditTransferAddContainer extends Component {
   render () {
     return ([
       <CreditTransferForm
+        addToFields={this._addToFields}
         buttonActions={buttonActions}
         changeStatus={this._changeStatus}
         creditsFrom={this.state.creditsFrom}

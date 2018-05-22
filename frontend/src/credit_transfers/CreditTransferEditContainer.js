@@ -2,9 +2,9 @@
  * Container component
  * All data handling & manipulation should be handled here.
  */
+import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
 
 import CREDIT_TRANSACTIONS from '../constants/routes/CreditTransactions';
@@ -38,17 +38,14 @@ class CreditTransferEditContainer extends Component {
         numberOfCredits: '',
         respondent: { id: 0, name: '' },
         fairMarketValuePerCredit: '',
+        terms: [],
         tradeStatus: CREDIT_TRANSFER_STATUS.draft,
         note: ''
-      },
-      terms: {
-        accurate: false,
-        authorized: false,
-        regulation: false
       },
       totalValue: 0
     };
 
+    this._addToFields = this._addToFields.bind(this);
     this._changeStatus = this._changeStatus.bind(this);
     this._deleteCreditTransfer = this._deleteCreditTransfer.bind(this);
     this._handleInputChange = this._handleInputChange.bind(this);
@@ -74,12 +71,13 @@ class CreditTransferEditContainer extends Component {
       const { item } = props;
       const fieldState = {
         initiator: item.initiator,
-        tradeType: item.type,
+        fairMarketValuePerCredit: item.fairMarketValuePerCredit,
+        note: '',
         numberOfCredits: item.numberOfCredits.toString(),
         respondent: item.respondent,
-        fairMarketValuePerCredit: item.fairMarketValuePerCredit,
+        terms: this.state.fields.terms,
         tradeStatus: item.status,
-        note: ''
+        tradeType: item.type
       };
 
       this.setState({
@@ -95,6 +93,15 @@ class CreditTransferEditContainer extends Component {
     if (prevProps.match.params.id !== newProps.match.params.id) {
       this.loadData(newProps.match.params.id);
     }
+  }
+
+  _addToFields (value) {
+    const fieldState = { ...this.state.fields };
+    fieldState.terms.push(value);
+
+    this.setState({
+      fields: fieldState
+    });
   }
 
   _changeStatus (status) {
@@ -151,10 +158,12 @@ class CreditTransferEditContainer extends Component {
   }
 
   _toggleCheck (key) {
-    const terms = { ...this.state.terms };
-    terms[key] = !terms[key];
+    const fieldState = { ...this.state.fields };
+    const index = fieldState.terms.findIndex(term => term.id === key);
+    fieldState.terms[index].value = !fieldState.terms[index].value;
+
     this.setState({
-      terms
+      fields: fieldState
     });
   }
 
@@ -219,6 +228,7 @@ class CreditTransferEditContainer extends Component {
 
     return ([
       <CreditTransferForm
+        addToFields={this._addToFields}
         buttonActions={buttonActions}
         changeStatus={this._changeStatus}
         creditsFrom={this.state.creditsFrom}

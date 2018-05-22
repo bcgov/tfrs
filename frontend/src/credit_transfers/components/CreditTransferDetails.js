@@ -52,16 +52,19 @@ const CreditTransferDetails = props => (
           </div>
         }
         <form onSubmit={e => e.preventDefault()}>
-          <CreditTransferTerms terms={props.terms} toggleCheck={props.toggleCheck} />
+          <CreditTransferTerms
+            addToFields={props.addToFields}
+            fields={props.fields}
+            toggleCheck={props.toggleCheck}
+          />
 
           <CreditTransferFormButtons
             actions={props.buttonActions}
             changeStatus={props.changeStatus}
             disabled={
               {
-                BTN_SIGN_1_2: !props.terms.accurate ||
-                              !props.terms.authorized ||
-                              !props.terms.regulation
+                BTN_SIGN_1_2: props.fields.terms.findIndex(term => term.value === false) >= 0 ||
+                props.fields.terms.length === 0
               }
             }
             id={props.id}
@@ -98,6 +101,7 @@ CreditTransferDetails.defaultProps = {
 };
 
 CreditTransferDetails.propTypes = {
+  addToFields: PropTypes.func.isRequired,
   buttonActions: PropTypes.arrayOf(PropTypes.string).isRequired,
   changeStatus: PropTypes.func.isRequired,
   compliancePeriod: PropTypes.shape({
@@ -116,6 +120,9 @@ CreditTransferDetails.propTypes = {
     PropTypes.string,
     PropTypes.number
   ]),
+  fields: PropTypes.shape({
+    terms: PropTypes.array
+  }).isRequired,
   id: PropTypes.number,
   isFetching: PropTypes.bool.isRequired,
   note: PropTypes.string,
@@ -127,11 +134,6 @@ CreditTransferDetails.propTypes = {
     id: PropTypes.number,
     status: PropTypes.string
   }),
-  terms: PropTypes.shape({
-    accurate: PropTypes.bool,
-    authorized: PropTypes.bool,
-    regulation: PropTypes.bool
-  }).isRequired,
   toggleCheck: PropTypes.func.isRequired,
   totalValue: PropTypes.oneOfType([
     PropTypes.string,
