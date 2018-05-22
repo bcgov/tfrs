@@ -443,8 +443,8 @@ class TestCreditTrades(TestCase):
     # As a government user, I should be able to delete credit transfers
     # (Not a hard delete, just sets the status to Cancelled)
     def test_delete(self):
-        approved_status, created = CreditTradeStatus.objects.get_or_create(
-            status='Approved')
+        completed_status, created = CreditTradeStatus.objects.get_or_create(
+            status='Completed')
 
         cancelled_status, created = CreditTradeStatus.objects.get_or_create(
             status='Cancelled')
@@ -465,7 +465,7 @@ class TestCreditTrades(TestCase):
             status_id=1)
 
         credit_trade = CreditTrade.objects.create(
-            status=approved_status,
+            status=completed_status,
             initiator=self.gov_user.organization,
             respondent=from_organization,
             type=credit_trade_type,
@@ -483,3 +483,216 @@ class TestCreditTrades(TestCase):
         credit_trade = CreditTrade.objects.get(id=credit_trade.id)
 
         self.assertEqual(credit_trade.status_id, cancelled_status.id)
+
+    # As a government user
+    # I shouldn't see drafts unless I'm the initiator
+    # I shouldn't see cancelled transfers as they're considered (deleted)
+    # I shouldn't see approved transfers as they're the intermediate step
+    # before being completed
+    def test_get_organization_credit_trades_gov(self):
+        approved_status, created = CreditTradeStatus.objects.get_or_create(
+            status='Approved')
+
+        completed_status, created = CreditTradeStatus.objects.get_or_create(
+            status='Completed')
+
+        cancelled_status, created = CreditTradeStatus.objects.get_or_create(
+            status='Cancelled')
+
+        draft_status, created = CreditTradeStatus.objects.get_or_create(
+            status='Draft')
+
+        credit_trade_type, created = CreditTradeType.objects.get_or_create(
+            the_type='Sell')
+
+        from_organization = Organization.objects.create(
+            name="Test 1",
+            actions_type_id=1,
+            status_id=1)
+        to_organization = Organization.objects.create(
+            name="Test 2",
+            actions_type_id=1,
+            status_id=1)
+
+        # the function shouldn't see this as it's only a draft and the
+        # initiator is not government
+        draft_credit_trade = CreditTrade.objects.create(
+            status=draft_status,
+            initiator=from_organization,
+            respondent=to_organization,
+            type=credit_trade_type,
+            number_of_credits=1000,
+            fair_market_value_per_credit=1,
+            zero_reason=None,
+            trade_effective_date=datetime.datetime.
+            today().strftime('%Y-%m-%d'))
+
+        # the function should see this as it's a draft from the government
+        draft_credit_trade_from_gov = CreditTrade.objects.create(
+            status=draft_status,
+            initiator=self.gov_user.organization,
+            respondent=to_organization,
+            type=credit_trade_type,
+            number_of_credits=1000,
+            fair_market_value_per_credit=1,
+            zero_reason=None,
+            trade_effective_date=datetime.datetime.
+            today().strftime('%Y-%m-%d'))
+
+        # the function shouldn't see this as it's approved
+        approved_credit_trade = CreditTrade.objects.create(
+            status=approved_status,
+            initiator=from_organization,
+            respondent=to_organization,
+            type=credit_trade_type,
+            number_of_credits=1000,
+            fair_market_value_per_credit=1,
+            zero_reason=None,
+            trade_effective_date=datetime.datetime.
+            today().strftime('%Y-%m-%d'))
+
+        # the function should see this as it's completed
+        completed_credit_trade = CreditTrade.objects.create(
+            status=completed_status,
+            initiator=from_organization,
+            respondent=to_organization,
+            type=credit_trade_type,
+            number_of_credits=1000,
+            fair_market_value_per_credit=1,
+            zero_reason=None,
+            trade_effective_date=datetime.datetime.
+            today().strftime('%Y-%m-%d'))
+
+        credit_trades = CreditTradeService.get_organization_credit_trades(
+            self.gov_user.organization
+        )
+
+        self.assertNotIn(draft_credit_trade, credit_trades)
+        self.assertIn(draft_credit_trade_from_gov, credit_trades)
+        self.assertNotIn(approved_credit_trade, credit_trades)
+        self.assertIn(completed_credit_trade, credit_trades)
+
+    # As a fuel supplier
+    # I shouldn't see drafts unless I'm the initiator
+    # I shouldn't see cancelled transfers as they're considered (deleted)
+    # I shouldn't see approved transfers as they're the intermediate step
+    # before being completed
+    # I shouldn't see submitted transfers unless I'm involved somehow
+    def test_get_organization_credit_trades_fuel_supplier(self):
+        approved_status, created = CreditTradeStatus.objects.get_or_create(
+            status='Approved')
+
+        completed_status, created = CreditTradeStatus.objects.get_or_create(
+            status='Completed')
+
+        cancelled_status, created = CreditTradeStatus.objects.get_or_create(
+            status='Cancelled')
+
+        draft_status, created = CreditTradeStatus.objects.get_or_create(
+            status='Draft')
+
+        submitted_status, created = CreditTradeStatus.objects.get_or_create(
+            status='Submitted')
+
+        credit_trade_type, created = CreditTradeType.objects.get_or_create(
+            the_type='Sell')
+
+        test_organization_1 = Organization.objects.create(
+            name="Test 1",
+            actions_type_id=1,
+            status_id=1)
+        test_organization_2 = Organization.objects.create(
+            name="Test 2",
+            actions_type_id=1,
+            status_id=1)
+        test_organization_3 = Organization.objects.create(
+            name="Test 3",
+            actions_type_id=1,
+            status_id=1)
+
+        # the function shouldn't see this as it's only a draft and the
+        # initiator is not fuel_supplier
+        # (even though the fuel supplier is the respondent)
+        draft_credit_trade = CreditTrade.objects.create(
+            status=draft_status,
+            initiator=test_organization_2,
+            respondent=test_organization_1,
+            type=credit_trade_type,
+            number_of_credits=1000,
+            fair_market_value_per_credit=1,
+            zero_reason=None,
+            trade_effective_date=datetime.datetime.
+            today().strftime('%Y-%m-%d'))
+
+        # the function should see this as it's a draft from the fuel supplier
+        draft_credit_trade_from_fuel_supplier = CreditTrade.objects.create(
+            status=draft_status,
+            initiator=test_organization_1,
+            respondent=test_organization_2,
+            type=credit_trade_type,
+            number_of_credits=1000,
+            fair_market_value_per_credit=1,
+            zero_reason=None,
+            trade_effective_date=datetime.datetime.
+            today().strftime('%Y-%m-%d'))
+
+        # the function shouldn't see this as it's a submitted transaction
+        # not involving the fuel supplier
+        submitted_credit_trade = CreditTrade.objects.create(
+            status=submitted_status,
+            initiator=test_organization_2,
+            respondent=test_organization_3,
+            type=credit_trade_type,
+            number_of_credits=1000,
+            fair_market_value_per_credit=1,
+            zero_reason=None,
+            trade_effective_date=datetime.datetime.
+            today().strftime('%Y-%m-%d'))
+
+        # the function should see this as it's a submitted transaction
+        # involving the fuel supplier
+        submitted_credit_trade_as_respondent = CreditTrade.objects.create(
+            status=submitted_status,
+            initiator=test_organization_2,
+            respondent=test_organization_1,
+            type=credit_trade_type,
+            number_of_credits=1000,
+            fair_market_value_per_credit=1,
+            zero_reason=None,
+            trade_effective_date=datetime.datetime.
+            today().strftime('%Y-%m-%d'))
+
+        # the function shouldn't see this as it's approved
+        approved_credit_trade = CreditTrade.objects.create(
+            status=approved_status,
+            initiator=test_organization_1,
+            respondent=test_organization_2,
+            type=credit_trade_type,
+            number_of_credits=1000,
+            fair_market_value_per_credit=1,
+            zero_reason=None,
+            trade_effective_date=datetime.datetime.
+            today().strftime('%Y-%m-%d'))
+
+        # the function should see this as it's completed
+        completed_credit_trade = CreditTrade.objects.create(
+            status=completed_status,
+            initiator=test_organization_1,
+            respondent=test_organization_2,
+            type=credit_trade_type,
+            number_of_credits=1000,
+            fair_market_value_per_credit=1,
+            zero_reason=None,
+            trade_effective_date=datetime.datetime.
+            today().strftime('%Y-%m-%d'))
+
+        credit_trades = CreditTradeService.get_organization_credit_trades(
+            test_organization_1
+        )
+
+        self.assertNotIn(draft_credit_trade, credit_trades)
+        self.assertIn(draft_credit_trade_from_fuel_supplier, credit_trades)
+        self.assertNotIn(submitted_credit_trade, credit_trades)
+        self.assertIn(submitted_credit_trade_as_respondent, credit_trades)
+        self.assertNotIn(approved_credit_trade, credit_trades)
+        self.assertIn(completed_credit_trade, credit_trades)
