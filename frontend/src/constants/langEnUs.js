@@ -15,4 +15,5 @@ export const BTN_RESCIND = 'Rescind';
 export const BTN_SAVE = 'Save';
 export const BTN_SAVE_DRAFT = 'Save Draft';
 export const BTN_SIGN_1_2 = 'Sign 1/2';
+export const BTN_SIGN_2_2 = 'Sign 2/2';
 export const BTN_YES = 'Yes';

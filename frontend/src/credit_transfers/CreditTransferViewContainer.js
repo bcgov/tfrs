@@ -17,8 +17,13 @@ import {
   invalidateCreditTransfer,
   updateCreditTransfer
 } from '../actions/creditTransfersActions';
+import {
+  addSigningAuthorityConfirmation,
+  prepareSigningAuthorityConfirmations
+} from '../actions/signingAuthorityConfirmationsActions';
 import { getLoggedInUser } from '../actions/userActions';
 import history from '../app/History';
+import Modal from '../app/components/Modal';
 import * as Lang from '../constants/langEnUs';
 import CREDIT_TRANSACTIONS from '../constants/routes/CreditTransactions';
 import { CREDIT_TRANSFER_STATUS } from '../constants/values';
@@ -36,6 +41,11 @@ class CreditTransferViewContainer extends Component {
     this._addToFields = this._addToFields.bind(this);
     this._changeStatus = this._changeStatus.bind(this);
     this._deleteCreditTransfer = this._deleteCreditTransfer.bind(this);
+    this._modalAccept = this._modalAccept.bind(this);
+    this._modalDelete = this._modalDelete.bind(this);
+    this._modalRefuse = this._modalRefuse.bind(this);
+    this._modalRescind = this._modalRescind.bind(this);
+    this._modalSubmit = this._modalSubmit.bind(this);
     this._toggleCheck = this._toggleCheck.bind(this);
   }
 
@@ -67,18 +77,17 @@ class CreditTransferViewContainer extends Component {
 
     // API data structure
     const data = {
-      fields: this.state.fields,
       initiator: item.initiator.id,
-      numberOfCredits: item.numberOfCredits,
-      respondent: item.respondent.id,
       fairMarketValuePerCredit: item.fairMarketValuePerCredit,
       note: item.note,
+      numberOfCredits: item.numberOfCredits,
+      respondent: item.respondent.id,
       status: status.id,
-      type: item.type.id,
-      tradeEffectiveDate: null
+      tradeEffectiveDate: null,
+      type: item.type.id
     };
 
-    // Update credit transfer (status and capture the acceptance of terms)
+    // Update credit transfer (status only)
 
     const { id } = this.props.item;
 
@@ -88,12 +97,84 @@ class CreditTransferViewContainer extends Component {
     }, () => {
       // Failed to update
     });
+
+    // if it's being proposed or accepted capture the acceptance of the terms
+    if ([
+      CREDIT_TRANSFER_STATUS.accepted.id,
+      CREDIT_TRANSFER_STATUS.proposed.id
+    ].includes(status.id)) {
+      const assertions = this.props.prepareSigningAuthorityConfirmations(
+        id,
+        this.state.fields.terms
+      );
+
+      this.props.addSigningAuthorityConfirmation(assertions);
+    }
   }
 
   _deleteCreditTransfer (id) {
     this.props.deleteCreditTransfer(id).then(() => {
       history.push(CREDIT_TRANSACTIONS.LIST);
     });
+  }
+
+  _modalAccept () {
+    return (
+      <Modal
+        handleSubmit={(event) => {
+          this._changeStatus(CREDIT_TRANSFER_STATUS.accepted);
+        }}
+        id="confirmAccept"
+        key="confirmAccept"
+      >
+        Do you want to accept this transfer?
+      </Modal>
+    );
+  }
+
+  _modalDelete (item) {
+    return (
+      <ModalDeleteCreditTransfer handleSubmit={() => this._deleteCreditTransfer(item.id)} />
+    );
+  }
+
+  _modalRefuse () {
+    return (
+      <Modal
+        handleSubmit={(event) => {
+          this._changeStatus(CREDIT_TRANSFER_STATUS.refused);
+        }}
+        id="confirmRefuse"
+        key="confirmRefuse"
+      >
+      Do you want to refuse this transfer?
+      </Modal>
+    );
+  }
+
+  _modalRescind () {
+    return (
+      <Modal
+        handleSubmit={(event) => {
+          this._changeStatus(CREDIT_TRANSFER_STATUS.rescinded);
+        }}
+        id="confirmRescind"
+        key="confirmRescind"
+      >
+        Do you want to rescind this transfer?
+      </Modal>
+    );
+  }
+
+  _modalSubmit (item) {
+    return (
+      <ModalSubmitCreditTransfer
+        handleSubmit={(event) => {
+          this._changeStatus(CREDIT_TRANSFER_STATUS.proposed);
+        }}
+        item={item}
+      />
+    );
   }
 
   _toggleCheck (key) {
@@ -108,29 +189,9 @@ class CreditTransferViewContainer extends Component {
 
   render () {
     const { isFetching, item, loggedInUser } = this.props;
-    let buttonActions = [];
-
-    if (!isFetching && item.actions) {
-      // TODO: Add util function to return appropriate actions
-      buttonActions = item.actions.map(action => (
-        action.action
-      ));
-
-      if (item.initiator.id === loggedInUser.organization.id) {
-        // Current user is the initiator
-        buttonActions[buttonActions.indexOf(Lang.BTN_CT_CANCEL)] = Lang.BTN_RESCIND;
-      } else {
-        buttonActions[buttonActions.indexOf(Lang.BTN_CT_CANCEL)] = Lang.BTN_REFUSE;
-      }
-
-      if (buttonActions.includes(Lang.BTN_SAVE_DRAFT)) {
-        buttonActions.push(Lang.BTN_DELETE_DRAFT);
-        buttonActions[buttonActions.indexOf(Lang.BTN_SAVE_DRAFT)] = Lang.BTN_EDIT_DRAFT;
-        buttonActions[buttonActions.indexOf(Lang.BTN_PROPOSE)] = Lang.BTN_SIGN_1_2;
-      }
-    }
-
-    return ([
+    let availableActions = [];
+    const buttonActions = [];
+    const content = [(
       <CreditTransferDetails
         addToFields={this._addToFields}
         buttonActions={buttonActions}
@@ -150,26 +211,51 @@ class CreditTransferViewContainer extends Component {
         totalValue={item.totalValue}
         tradeEffectiveDate={item.tradeEffectiveDate}
         tradeType={item.type}
-      />,
-      <ModalSubmitCreditTransfer
-        key="confirmSubmit"
-        message="Do you want to sign and send this document to the other party
-        named in this transfer?"
-        submitCreditTransfer={(event) => {
-          this._changeStatus(CREDIT_TRANSFER_STATUS.proposed);
-        }}
-      />,
-      <ModalDeleteCreditTransfer
-        deleteCreditTransfer={this._deleteCreditTransfer}
-        key="confirmDelete"
-        message="Do you want to delete this draft?"
-        selectedId={item.id}
       />
-    ]);
+    )];
+
+    if (!isFetching && item.actions) {
+      // TODO: Add util function to return appropriate actions
+      availableActions = item.actions.map(action => (
+        action.action
+      ));
+
+      if (item.respondent.id === loggedInUser.organization.id) {
+        if (availableActions.includes(Lang.BTN_ACCEPT)) {
+          buttonActions.push(Lang.BTN_SIGN_2_2);
+        }
+
+        if (availableActions.includes(Lang.BTN_CT_CANCEL)) {
+          buttonActions.push(Lang.BTN_REFUSE);
+        }
+
+        content.push(this._modalAccept());
+        content.push(this._modalRefuse());
+        content.push(this._modalRescind());
+      } else if (item.initiator.id === loggedInUser.organization.id) {
+        if (availableActions.includes(Lang.BTN_CT_CANCEL)) {
+          buttonActions.push(Lang.BTN_RESCIND);
+        }
+
+        content.push(this._modalRescind());
+      }
+
+      if (availableActions.includes(Lang.BTN_SAVE_DRAFT)) {
+        buttonActions.push(Lang.BTN_DELETE_DRAFT);
+        buttonActions.push(Lang.BTN_EDIT_DRAFT);
+        buttonActions.push(Lang.BTN_SIGN_1_2);
+
+        content.push(this._modalSubmit(item));
+        content.push(this._modalDelete(item));
+      }
+    }
+
+    return content;
   }
 }
 
 CreditTransferViewContainer.propTypes = {
+  addSigningAuthorityConfirmation: PropTypes.func.isRequired,
   deleteCreditTransfer: PropTypes.func.isRequired,
   getCreditTransferIfNeeded: PropTypes.func.isRequired,
   invalidateCreditTransfer: PropTypes.func.isRequired,
@@ -204,6 +290,7 @@ CreditTransferViewContainer.propTypes = {
       id: PropTypes.string.isRequired
     }).isRequired
   }).isRequired,
+  prepareSigningAuthorityConfirmations: PropTypes.func.isRequired,
   updateCreditTransfer: PropTypes.func.isRequired
 };
 
@@ -214,10 +301,13 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
+  addSigningAuthorityConfirmation: bindActionCreators(addSigningAuthorityConfirmation, dispatch),
   deleteCreditTransfer: bindActionCreators(deleteCreditTransfer, dispatch),
   getCreditTransferIfNeeded: bindActionCreators(getCreditTransferIfNeeded, dispatch),
   getLoggedInUser: bindActionCreators(getLoggedInUser, dispatch),
   invalidateCreditTransfer: bindActionCreators(invalidateCreditTransfer, dispatch),
+  prepareSigningAuthorityConfirmations: (creditTradeId, terms) =>
+    prepareSigningAuthorityConfirmations(creditTradeId, terms),
   updateCreditTransfer: bindActionCreators(updateCreditTransfer, dispatch)
 });
 

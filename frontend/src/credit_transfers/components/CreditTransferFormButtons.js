@@ -55,29 +55,33 @@ const CreditTransferFormButtons = props => (
         {Lang.BTN_SIGN_1_2}
       </button>
       }
-      {props.actions.includes(Lang.BTN_ACCEPT) &&
-      <button
-        className="btn btn-primary"
-        onClick={() => props.changeStatus(CREDIT_TRANSFER_STATUS.accepted)}
-        type="submit"
-      >
-        {Lang.BTN_ACCEPT}
-      </button>
-      }
       {props.actions.includes(Lang.BTN_REFUSE) &&
       <button
         className="btn btn-danger"
-        onClick={() => props.changeStatus(CREDIT_TRANSFER_STATUS.refused)}
-        type="submit"
+        data-target="#confirmRefuse"
+        data-toggle="modal"
+        type="button"
       >
         {Lang.BTN_REFUSE}
+      </button>
+      }
+      {props.actions.includes(Lang.BTN_SIGN_2_2) &&
+      <button
+        className="btn btn-primary"
+        data-target="#confirmAccept"
+        data-toggle="modal"
+        disabled={props.disabled.BTN_SIGN_2_2}
+        type="button"
+      >
+        {Lang.BTN_SIGN_2_2}
       </button>
       }
       {props.actions.includes(Lang.BTN_RESCIND) &&
       <button
         className="btn btn-danger"
-        onClick={() => props.changeStatus(CREDIT_TRANSFER_STATUS.rescinded)}
-        type="submit"
+        data-target="#confirmRescind"
+        data-toggle="modal"
+        type="button"
       >
         {Lang.BTN_RESCIND}
       </button>
@@ -88,7 +92,8 @@ const CreditTransferFormButtons = props => (
 
 CreditTransferFormButtons.defaultProps = {
   disabled: {
-    BTN_SIGN_1_2: true
+    BTN_SIGN_1_2: true,
+    BTN_SIGN_2_2: true
   }
 };
 
@@ -96,7 +101,8 @@ CreditTransferFormButtons.propTypes = {
   actions: PropTypes.arrayOf(PropTypes.string).isRequired,
   changeStatus: PropTypes.func.isRequired,
   disabled: PropTypes.shape({
-    BTN_SIGN_1_2: PropTypes.bool
+    BTN_SIGN_1_2: PropTypes.bool,
+    BTN_SIGN_2_2: PropTypes.bool
   }),
   id: PropTypes.number.isRequired
 };
