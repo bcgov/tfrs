@@ -300,13 +300,24 @@
 .page_credit_transactions {
   .credit_balance {
     float: right;
+    max-width: 50%;
+    text-align: right;
+
+    @include  mobile {
+      float: none;
+      font-size: 1.5rem;
+      max-width: 100%;
+      text-align: left;
+    }
   }
 
   .right-toolbar-container .actions-container {
     margin-bottom: 1rem;
   }
 
-  .rt-table {
+  .ReactTable {
+    clear: both;
+
     .col-credits, .col-date, .col-id, .col-price, .col-total {
       text-align: right;
     }

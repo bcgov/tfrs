@@ -132,5 +132,5 @@ class CreditTradeViewSet(AuditableMixin, mixins.CreateModelMixin,
             CreditTradeService.approve(credit_trade)
 
         return Response({"message":
-                         "Approved Credit Transfers have been processed."},
+                         "Approved Credit Transactions have been processed."},
                         status=status.HTTP_200_OK)

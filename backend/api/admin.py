@@ -38,6 +38,9 @@ from .models.Permission import Permission
 from .models.Role import Role
 from .models.RolePermission import RolePermission
 
+from .models.SigningAuthorityAssertion import SigningAuthorityAssertion
+from .models.SigningAuthorityConfirmation import SigningAuthorityConfirmation
+
 from .models.User import User
 
 from .models.UserRole import UserRole

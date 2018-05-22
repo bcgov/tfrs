@@ -9,6 +9,7 @@ import { userRequest, usersRequest } from './userReducer';
 
 import { organizationRequest, organizations, fuelSuppliersRequest } from './organizationReducer';
 import compliancePeriods from './compliancePeriodReducer';
+import signingAuthorityAssertions from './signingAuthorityAssertionReducer';
 
 const genericRequest = (state = {
   isFetching: false,
@@ -101,6 +102,7 @@ const rootReducer = combineReducers({
   creditTransfers,
   organizationRequest,
   organizations,
+  signingAuthorityAssertions,
   fuelSuppliersRequest,
   routing
 });
