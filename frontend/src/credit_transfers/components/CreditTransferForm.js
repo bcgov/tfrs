@@ -12,15 +12,12 @@ import CreditTransferFormDetails from './CreditTransferFormDetails';
 import CreditTransferVisualRepresentation from './CreditTransferVisualRepresentation';
 import CreditTransferFormNote from './CreditTransferFormNote';
 import CreditTransferFormButtons from './CreditTransferFormButtons';
-
-import * as Lang from '../../constants/langEnUs';
-
-const buttonActions = [Lang.BTN_DELETE, Lang.BTN_SAVE_DRAFT, Lang.BTN_SIGN_1_2];
+import CreditTransferTerms from './CreditTransferTerms';
 
 const CreditTransferForm = props => (
   <div className="credit-transfer">
     <h1>{props.title}</h1>
-    <CreditTransferProgress />
+    <CreditTransferProgress status={CREDIT_TRANSFER_STATUS.draft} type={props.fields.tradeType} />
     <form
       className="form-inline"
       onSubmit={(event, status) =>
@@ -32,9 +29,11 @@ const CreditTransferForm = props => (
         totalValue={props.totalValue}
         handleInputChange={props.handleInputChange}
       />
+
       {Object.keys(props.errors).length > 0 &&
         <Errors errors={props.errors} />
       }
+
       <CreditTransferVisualRepresentation
         creditsFrom={props.creditsFrom}
         creditsTo={props.creditsTo}
@@ -42,14 +41,27 @@ const CreditTransferForm = props => (
         totalValue={props.totalValue}
         tradeType={props.fields.tradeType}
       />
+
       <CreditTransferFormNote
         note={props.fields.note}
         handleInputChange={props.handleInputChange}
       />
+
+      <CreditTransferTerms
+        addToFields={props.addToFields}
+        fields={props.fields}
+        toggleCheck={props.toggleCheck}
+      />
+
       <CreditTransferFormButtons
-        actions={buttonActions}
+        actions={props.buttonActions}
         changeStatus={props.changeStatus}
-        deleteCreditTransfer={props.deleteCreditTransfer}
+        disabled={
+          {
+            BTN_SIGN_1_2: props.fields.terms.findIndex(term => term.value === false) >= 0 ||
+            props.fields.terms.length === 0
+          }
+        }
         id={props.id}
       />
     </form>
@@ -57,14 +69,15 @@ const CreditTransferForm = props => (
 );
 
 CreditTransferForm.defaultProps = {
-  title: 'Credit Transfer',
-  id: 0
+  id: 0,
+  title: 'Credit Transfer'
 };
 
 CreditTransferForm.propTypes = {
-  title: PropTypes.string,
-  id: PropTypes.number,
-  fuelSuppliers: PropTypes.arrayOf(PropTypes.shape()).isRequired,
+  addToFields: PropTypes.func.isRequired,
+  buttonActions: PropTypes.arrayOf(PropTypes.string).isRequired,
+  changeStatus: PropTypes.func.isRequired,
+  errors: PropTypes.shape({}).isRequired,
   fields: PropTypes.shape({
     initiator: PropTypes.shape({
       name: PropTypes.string,
@@ -74,6 +87,7 @@ CreditTransferForm.propTypes = {
       name: PropTypes.string,
       id: PropTypes.number
     }),
+    terms: PropTypes.array,
     tradeType: PropTypes.shape({
       name: PropTypes.string,
       id: PropTypes.number
@@ -90,12 +104,13 @@ CreditTransferForm.propTypes = {
     name: PropTypes.string,
     id: PropTypes.number
   }).isRequired,
-  deleteCreditTransfer: PropTypes.func.isRequired,
-  totalValue: PropTypes.number.isRequired,
+  fuelSuppliers: PropTypes.arrayOf(PropTypes.shape()).isRequired,
   handleInputChange: PropTypes.func.isRequired,
   handleSubmit: PropTypes.func.isRequired,
-  changeStatus: PropTypes.func.isRequired,
-  errors: PropTypes.shape({}).isRequired
+  id: PropTypes.number,
+  title: PropTypes.string,
+  toggleCheck: PropTypes.func.isRequired,
+  totalValue: PropTypes.number.isRequired
 };
 
 export default CreditTransferForm;

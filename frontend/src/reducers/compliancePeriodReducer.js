@@ -1,5 +1,3 @@
-import * as ActionTypes from '../constants/actionTypes';
-
 const compliancePeriods = (state = {
   items: [],
   isFetching: false,

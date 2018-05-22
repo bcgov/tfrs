@@ -2,37 +2,45 @@
  * Container component
  * All data handling & manipulation should be handled here.
  */
+import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
 
-import CREDIT_TRANSACTIONS from '../constants/routes/CreditTransactions';
-import history from '../app/History';
+import CreditTransferDetails from './components/CreditTransferDetails';
+import ModalDeleteCreditTransfer from './components/ModalDeleteCreditTransfer';
+import ModalSubmitCreditTransfer from './components/ModalSubmitCreditTransfer';
 
 import {
-  getCreditTransferIfNeeded,
   deleteCreditTransfer,
-  updateCreditTransfer,
-  invalidateCreditTransfer } from '../actions/creditTransfersActions';
-import CreditTransferDetails from './components/CreditTransferDetails';
+  getCreditTransferIfNeeded,
+  invalidateCreditTransfer,
+  updateCreditTransfer
+} from '../actions/creditTransfersActions';
 import { getLoggedInUser } from '../actions/userActions';
-
+import history from '../app/History';
 import * as Lang from '../constants/langEnUs';
+import CREDIT_TRANSACTIONS from '../constants/routes/CreditTransactions';
+import { CREDIT_TRANSFER_STATUS } from '../constants/values';
 
 class CreditTransferViewContainer extends Component {
   constructor (props) {
     super(props);
+
+    this.state = {
+      fields: {
+        terms: []
+      }
+    };
+
+    this._addToFields = this._addToFields.bind(this);
     this._changeStatus = this._changeStatus.bind(this);
     this._deleteCreditTransfer = this._deleteCreditTransfer.bind(this);
+    this._toggleCheck = this._toggleCheck.bind(this);
   }
 
   componentDidMount () {
     this.loadData(this.props.match.params.id);
-  }
-
-  loadData (id) {
-    this.props.getCreditTransferIfNeeded(id);
   }
 
   componentWillReceiveNewProps (prevProps, newProps) {
@@ -41,11 +49,25 @@ class CreditTransferViewContainer extends Component {
     }
   }
 
+  loadData (id) {
+    this.props.getCreditTransferIfNeeded(id);
+  }
+
+  _addToFields (value) {
+    const fieldState = { ...this.state.fields };
+    fieldState.terms.push(value);
+
+    this.setState({
+      fields: fieldState
+    });
+  }
+
   _changeStatus (status) {
     const { item } = this.props;
 
     // API data structure
     const data = {
+      fields: this.state.fields,
       initiator: item.initiator.id,
       numberOfCredits: item.numberOfCredits,
       respondent: item.respondent.id,
@@ -56,7 +78,7 @@ class CreditTransferViewContainer extends Component {
       tradeEffectiveDate: null
     };
 
-    // Update credit transfer (just the status)
+    // Update credit transfer (status and capture the acceptance of terms)
 
     const { id } = this.props.item;
 
@@ -71,6 +93,16 @@ class CreditTransferViewContainer extends Component {
   _deleteCreditTransfer (id) {
     this.props.deleteCreditTransfer(id).then(() => {
       history.push(CREDIT_TRANSACTIONS.LIST);
+    });
+  }
+
+  _toggleCheck (key) {
+    const fieldState = { ...this.state.fields };
+    const index = fieldState.terms.findIndex(term => term.id === key);
+    fieldState.terms[index].value = !fieldState.terms[index].value;
+
+    this.setState({
+      fields: fieldState
     });
   }
 
@@ -92,36 +124,56 @@ class CreditTransferViewContainer extends Component {
       }
 
       if (buttonActions.includes(Lang.BTN_SAVE_DRAFT)) {
-        buttonActions.push('Delete');
+        buttonActions.push(Lang.BTN_DELETE_DRAFT);
         buttonActions[buttonActions.indexOf(Lang.BTN_SAVE_DRAFT)] = Lang.BTN_EDIT_DRAFT;
+        buttonActions[buttonActions.indexOf(Lang.BTN_PROPOSE)] = Lang.BTN_SIGN_1_2;
       }
     }
 
-    return (
+    return ([
       <CreditTransferDetails
+        addToFields={this._addToFields}
         buttonActions={buttonActions}
         changeStatus={this._changeStatus}
         compliancePeriod={item.compliancePeriod}
         creditsFrom={item.creditsFrom}
         creditsTo={item.creditsTo}
-        deleteCreditTransfer={this._deleteCreditTransfer}
         fairMarketValuePerCredit={item.fairMarketValuePerCredit}
+        fields={this.state.fields}
         id={item.id}
         isFetching={isFetching}
+        key="creditTransferDetails"
         note={item.note}
         numberOfCredits={item.numberOfCredits}
         status={item.status}
+        toggleCheck={this._toggleCheck}
         totalValue={item.totalValue}
         tradeEffectiveDate={item.tradeEffectiveDate}
         tradeType={item.type}
+      />,
+      <ModalSubmitCreditTransfer
+        key="confirmSubmit"
+        message="Do you want to sign and send this document to the other party
+        named in this transfer?"
+        submitCreditTransfer={(event) => {
+          this._changeStatus(CREDIT_TRANSFER_STATUS.proposed);
+        }}
+      />,
+      <ModalDeleteCreditTransfer
+        deleteCreditTransfer={this._deleteCreditTransfer}
+        key="confirmDelete"
+        message="Do you want to delete this draft?"
+        selectedId={item.id}
       />
-    );
+    ]);
   }
 }
 
 CreditTransferViewContainer.propTypes = {
-  updateCreditTransfer: PropTypes.func.isRequired,
+  deleteCreditTransfer: PropTypes.func.isRequired,
+  getCreditTransferIfNeeded: PropTypes.func.isRequired,
   invalidateCreditTransfer: PropTypes.func.isRequired,
+  isFetching: PropTypes.bool.isRequired,
   item: PropTypes.shape({
     id: PropTypes.number,
     creditsFrom: PropTypes.shape({}),
@@ -140,9 +192,6 @@ CreditTransferViewContainer.propTypes = {
     ]),
     actions: PropTypes.arrayOf(PropTypes.shape({}))
   }).isRequired,
-  getCreditTransferIfNeeded: PropTypes.func.isRequired,
-  deleteCreditTransfer: PropTypes.func.isRequired,
-  isFetching: PropTypes.bool.isRequired,
   loggedInUser: PropTypes.shape({
     displayName: PropTypes.string,
     organization: PropTypes.shape({
@@ -154,21 +203,22 @@ CreditTransferViewContainer.propTypes = {
     params: PropTypes.shape({
       id: PropTypes.string.isRequired
     }).isRequired
-  }).isRequired
+  }).isRequired,
+  updateCreditTransfer: PropTypes.func.isRequired
 };
 
 const mapStateToProps = state => ({
-  loggedInUser: state.rootReducer.userRequest.loggedInUser,
+  isFetching: state.rootReducer.creditTransfer.isFetching,
   item: state.rootReducer.creditTransfer.item,
-  isFetching: state.rootReducer.creditTransfer.isFetching
+  loggedInUser: state.rootReducer.userRequest.loggedInUser
 });
 
 const mapDispatchToProps = dispatch => ({
-  getLoggedInUser: bindActionCreators(getLoggedInUser, dispatch),
-  getCreditTransferIfNeeded: bindActionCreators(getCreditTransferIfNeeded, dispatch),
   deleteCreditTransfer: bindActionCreators(deleteCreditTransfer, dispatch),
-  updateCreditTransfer: bindActionCreators(updateCreditTransfer, dispatch),
-  invalidateCreditTransfer: bindActionCreators(invalidateCreditTransfer, dispatch)
+  getCreditTransferIfNeeded: bindActionCreators(getCreditTransferIfNeeded, dispatch),
+  getLoggedInUser: bindActionCreators(getLoggedInUser, dispatch),
+  invalidateCreditTransfer: bindActionCreators(invalidateCreditTransfer, dispatch),
+  updateCreditTransfer: bindActionCreators(updateCreditTransfer, dispatch)
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(CreditTransferViewContainer);

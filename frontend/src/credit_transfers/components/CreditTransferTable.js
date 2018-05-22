@@ -14,6 +14,7 @@ import * as NumberFormat from '../../constants/numeralFormats';
 import CREDIT_TRANSACTIONS from '../../constants/routes/CreditTransactions';
 import { CREDIT_TRANSFER_STATUS, CREDIT_TRANSFER_TYPES } from '../../constants/values';
 import { getCreditTransferType } from '../../actions/creditTransfersActions';
+import filterNumber from '../../utils/filters';
 
 const CreditTransferTable = (props) => {
   const columns = [{
@@ -69,7 +70,8 @@ const CreditTransferTable = (props) => {
     className: 'col-credits',
     accessor: item => item.numberOfCredits,
     minWidth: 100,
-    Cell: row => numeral(row.value).format(NumberFormat.INT)
+    Cell: row => numeral(row.value).format(NumberFormat.INT),
+    filterMethod: (filter, row) => filterNumber(filter.value, row.numberOfCredits, 0)
   }, {
     id: 'fairMarketValuePerCredit',
     Header: 'Value Per Credit',
@@ -81,12 +83,13 @@ const CreditTransferTable = (props) => {
         return -1; // this is to fix sorting (value can't be negative)
       }
 
-      return parseFloat(item.fairMarketValuePerCredit).toFixed(2);
+      return parseFloat(item.fairMarketValuePerCredit);
     },
     minWidth: 100,
     Cell: row => (
       (row.value === -1) ? '-' : numeral(row.value).format(NumberFormat.CURRENCY)
-    )
+    ),
+    filterMethod: (filter, row) => filterNumber(filter.value, row.fairMarketValuePerCredit)
   }, {
     id: 'status',
     Header: 'Status',

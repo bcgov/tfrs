@@ -5,6 +5,7 @@ import FontAwesomeIcon from '@fortawesome/react-fontawesome';
 
 import * as NumberFormat from '../../constants/numeralFormats';
 import { CREDIT_TRANSFER_TYPES } from '../../constants/values';
+import { getCreditTransferType } from '../../actions/creditTransfersActions';
 
 class CreditTransferVisualRepresentation extends Component {
   _renderPart3Award () {
@@ -13,7 +14,7 @@ class CreditTransferVisualRepresentation extends Component {
         <div className="col-sm-4 col-md-2 col-md-offset-1">
           <div className="respondent-container label-warning">
             <div>
-              { this.props.creditsFrom && this.props.creditsFrom.name }
+              { this.props.creditsTo && this.props.creditsTo.name }
             </div>
           </div>
         </div>
@@ -21,7 +22,7 @@ class CreditTransferVisualRepresentation extends Component {
           <div className="arrow">
             <div>{numeral(this.props.numberOfCredits).format(NumberFormat.INT)} credit{this.props.numberOfCredits > 2 && 's'}</div>
             <FontAwesomeIcon icon="arrow-alt-circle-up" size="4x" />
-            <div>{numeral(this.props.totalValue).format(NumberFormat.CURRENCY)}</div>
+            <div>{getCreditTransferType(this.props.tradeType.id)}</div>
           </div>
         </div>
       </div>
@@ -42,7 +43,7 @@ class CreditTransferVisualRepresentation extends Component {
           <div className="arrow">
             <div>{numeral(this.props.numberOfCredits).format(NumberFormat.INT)} credit{this.props.numberOfCredits > 2 && 's'}</div>
             <FontAwesomeIcon icon="arrow-alt-circle-down" size="4x" />
-            <div>{numeral(this.props.totalValue).format(NumberFormat.CURRENCY)}</div>
+            <div>{getCreditTransferType(this.props.tradeType.id)}</div>
           </div>
         </div>
       </div>

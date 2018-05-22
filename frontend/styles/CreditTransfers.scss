@@ -200,6 +200,18 @@
     }
   }
 
+  .terms {
+    margin-bottom: 15px;
+    padding-left: 4rem;
+    position: relative;
+
+    .check {
+      @include vertical-middle {
+        left: 0;
+      }
+    }
+  }
+
   .well {
     &.transparent {
       background-color: transparent;
@@ -245,18 +257,6 @@
     @include mobile {
       text-align: center;
     }
-
-    .fa-arrow-alt-circle-up {
-      -ms-transform: rotate(20deg);
-      -webkit-transform: rotate(20deg);
-      transform: rotate(20deg);
-    }
-
-    .fa-arrow-alt-circle-down {
-      -ms-transform: rotate(-20deg);
-      -webkit-transform: rotate(-20deg);
-      transform: rotate(-20deg);
-    }
   }
 
   .initiator-container, .respondent-container {
@@ -300,13 +300,24 @@
 .page_credit_transactions {
   .credit_balance {
     float: right;
+    max-width: 50%;
+    text-align: right;
+
+    @include  mobile {
+      float: none;
+      font-size: 1.5rem;
+      max-width: 100%;
+      text-align: left;
+    }
   }
 
   .right-toolbar-container .actions-container {
     margin-bottom: 1rem;
   }
 
-  .rt-table {
+  .ReactTable {
+    clear: both;
+
     .col-credits, .col-date, .col-id, .col-price, .col-total {
       text-align: right;
     }
