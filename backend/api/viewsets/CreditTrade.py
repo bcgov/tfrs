@@ -18,6 +18,8 @@ from api.serializers import CreditTradeHistory2Serializer \
 
 from api.services.CreditTradeService import CreditTradeService
 
+from django.db.models import Q
+
 
 class CreditTradeViewSet(AuditableMixin, mixins.CreateModelMixin,
                          mixins.RetrieveModelMixin, mixins.UpdateModelMixin,
@@ -56,6 +58,15 @@ class CreditTradeViewSet(AuditableMixin, mixins.CreateModelMixin,
         user = self.request.user
         return CreditTradeService.get_organization_credit_trades(
             user.organization)
+
+    def list(self, request):
+        credit_trades = self.get_queryset().filter(
+            ~Q(status__status__in=["Approved"])
+        ).order_by(*self.ordering)
+
+        serializer = self.get_serializer(credit_trades, many=True)
+
+        return Response(serializer.data)
 
     def perform_create(self, serializer):
         credit_trade = serializer.save()
