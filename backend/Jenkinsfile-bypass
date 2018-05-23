@@ -44,7 +44,7 @@ if (result != 0) {
     return
 }
         
-podTemplate(label: "develop-backend-mavenbypass-${env.BUILD_NUMBER}", name: "develop-backend-maven-${env.BUILD_NUMBER}", serviceAccount: 'jenkins', cloud: 'openshift',
+podTemplate(label: "develop-backendbypass-maven-${env.BUILD_NUMBER}", name: "develop-backend-maven-${env.BUILD_NUMBER}", serviceAccount: 'jenkins', cloud: 'openshift',
         containers: [
             containerTemplate(
                 name: 'jnlp',
