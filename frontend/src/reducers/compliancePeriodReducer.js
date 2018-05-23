@@ -1,3 +1,5 @@
+import ActionTypes from '../constants/actionTypes/CompliancePeriods';
+
 const compliancePeriods = (state = {
   items: [],
   isFetching: false,
@@ -5,18 +7,18 @@ const compliancePeriods = (state = {
   errorMessage: []
 }, action) => {
   switch (action.type) {
-    case 'GET_COMPLIANCE_PERIODS':
+    case ActionTypes.GET_COMPLIANCE_PERIODS:
       return Object.assign({}, state, {
         isFetching: true,
         success: false
       });
-    case 'RECEIVE_COMPLIANCE_PERIODS':
+    case ActionTypes.RECEIVE_COMPLIANCE_PERIODS:
       return Object.assign({}, state, {
         isFetching: false,
         success: true,
         items: action.data
       });
-    case 'ERROR':
+    case ActionTypes.ERROR_COMPLIANCE_PERIODS:
       return Object.assign({}, state, {
         isFetching: false,
         success: false,

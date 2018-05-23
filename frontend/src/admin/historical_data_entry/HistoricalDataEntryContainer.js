@@ -49,6 +49,7 @@ class HistoricalDataEntryContainer extends Component {
   }
 
   componentWillMount () {
+    this.props.invalidateCreditTransfers();
     this.loadData();
     this.props.getCompliancePeriods();
     this.props.getFuelSuppliers();
@@ -106,7 +107,6 @@ class HistoricalDataEntryContainer extends Component {
 
   _processApprovedCreditTransfers () {
     this.props.processApprovedCreditTransfers().then(() => {
-      this.props.invalidateCreditTransfers();
       this.loadData();
     });
   }
@@ -192,13 +192,13 @@ HistoricalDataEntryContainer.propTypes = {
 
 const mapStateToProps = state => ({
   addErrors: state.rootReducer.creditTransfer.errors,
-  commitErrors: state.rootReducer.creditTransfers.errors,
-  commitMessage: state.rootReducer.creditTransfers.message,
+  commitErrors: state.rootReducer.approvedCreditTransfers.errors,
+  commitMessage: state.rootReducer.approvedCreditTransfers.message,
   compliancePeriods: state.rootReducer.compliancePeriods.items,
   fuelSuppliers: state.rootReducer.fuelSuppliersRequest.fuelSuppliers,
   historicalData: {
-    items: state.rootReducer.creditTransfers.items,
-    isFetching: state.rootReducer.creditTransfers.isFetching
+    items: state.rootReducer.approvedCreditTransfers.items,
+    isFetching: state.rootReducer.approvedCreditTransfers.isFetching
   }
 });
 

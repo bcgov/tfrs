@@ -52,7 +52,8 @@ const creditTransfer = (state = {
     case ActionTypes.INVALIDATE_CREDIT_TRANSFER:
       return Object.assign({}, state, {
         didInvalidate: true,
-        errors: {}
+        errors: {},
+        message: ''
       });
     default:
       return state;
@@ -77,6 +78,12 @@ const creditTransfers = (state = {
         success: true,
         items: action.data
       });
+    case 'RECEIVE_APPROVED_CREDIT_TRANSFERS':
+      return Object.assign({}, state, {
+        isFetching: false,
+        success: true,
+        items: action.data
+      });
     case ActionTypes.COMMIT_ERRORS:
       return Object.assign({}, state, {
         didInvalidate: true,
@@ -93,7 +100,8 @@ const creditTransfers = (state = {
     case ActionTypes.INVALIDATE_CREDIT_TRANSFERS:
       return Object.assign({}, state, {
         didInvalidate: true,
-        errors: {}
+        errors: {},
+        message: ''
       });
     case ActionTypes.SUCCESS:
       return Object.assign({}, state, {
@@ -107,4 +115,53 @@ const creditTransfers = (state = {
   }
 };
 
-export { creditTransfer, creditTransfers };
+const approvedCreditTransfers = (state = {
+  items: [],
+  isFetching: false,
+  success: false,
+  errorMessage: []
+}, action) => {
+  switch (action.type) {
+    case ActionTypes.GET_CREDIT_TRANSFERS:
+      return Object.assign({}, state, {
+        isFetching: true,
+        success: false
+      });
+    case 'RECEIVE_APPROVED_CREDIT_TRANSFERS':
+      return Object.assign({}, state, {
+        isFetching: false,
+        success: true,
+        items: action.data
+      });
+    case ActionTypes.COMMIT_ERRORS:
+      return Object.assign({}, state, {
+        didInvalidate: true,
+        isFetching: false,
+        success: false,
+        errors: action.errorMessage
+      });
+    case ActionTypes.ERROR:
+      return Object.assign({}, state, {
+        isFetching: false,
+        success: false,
+        errorMessage: action.errorMessage
+      });
+    case ActionTypes.INVALIDATE_CREDIT_TRANSFERS:
+      return Object.assign({}, state, {
+        didInvalidate: true,
+        errors: {},
+        message: ''
+      });
+    case ActionTypes.SUCCESS:
+      return Object.assign({}, state, {
+        didInvalidate: true,
+        isFetching: false,
+        success: true,
+        message: action.message
+      });
+    default:
+      return state;
+  }
+};
+
+export { approvedCreditTransfers, creditTransfer, creditTransfers };
