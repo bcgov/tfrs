@@ -26,14 +26,14 @@ class CreditTradeService(object):
             # Government
             """
             If organization == Government
-              don't show "Cancelled", "Accepted" transactions
+              don't show "Cancelled" transactions
               don't show "Draft", "Submitted" transactions unless the
               initiator was government
               (Please note that government creating drafts and submitted is
               for testing only, in reality government will not do this)
             """
             credit_trades = CreditTrade.objects.filter(
-                ~Q(status__status__in=["Cancelled", "Approved"]) &
+                ~Q(status__status__in=["Cancelled"]) &
                 (~Q(status__status__in=["Draft", "Submitted"]) |
                  Q(initiator=organization))
             )
@@ -41,14 +41,14 @@ class CreditTradeService(object):
             # Fuel suppliers
             """
             If organization == Fuel Supplier
-              don't show "Cancelled", "Accepted" transactions
+              don't show "Cancelled" transactions
               don't show "Draft" transactions unless the initiator was
               the fuel supplier
               show "Submitted" and other transactions where the fuel
               supplier is the respondent
             """
             credit_trades = CreditTrade.objects.filter(
-                ~Q(status__status__in=["Cancelled", "Approved"]) &
+                ~Q(status__status__in=["Cancelled"]) &
                 ((~Q(status__status__in=["Draft"]) &
                  Q(respondent=organization)) |
                  Q(initiator=organization))

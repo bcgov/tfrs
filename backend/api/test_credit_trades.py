@@ -487,12 +487,7 @@ class TestCreditTrades(TestCase):
     # As a government user
     # I shouldn't see drafts unless I'm the initiator
     # I shouldn't see cancelled transfers as they're considered (deleted)
-    # I shouldn't see approved transfers as they're the intermediate step
-    # before being completed
     def test_get_organization_credit_trades_gov(self):
-        approved_status, created = CreditTradeStatus.objects.get_or_create(
-            status='Approved')
-
         completed_status, created = CreditTradeStatus.objects.get_or_create(
             status='Completed')
 
@@ -539,18 +534,6 @@ class TestCreditTrades(TestCase):
             trade_effective_date=datetime.datetime.
             today().strftime('%Y-%m-%d'))
 
-        # the function shouldn't see this as it's approved
-        approved_credit_trade = CreditTrade.objects.create(
-            status=approved_status,
-            initiator=from_organization,
-            respondent=to_organization,
-            type=credit_trade_type,
-            number_of_credits=1000,
-            fair_market_value_per_credit=1,
-            zero_reason=None,
-            trade_effective_date=datetime.datetime.
-            today().strftime('%Y-%m-%d'))
-
         # the function should see this as it's completed
         completed_credit_trade = CreditTrade.objects.create(
             status=completed_status,
@@ -569,19 +552,13 @@ class TestCreditTrades(TestCase):
 
         self.assertNotIn(draft_credit_trade, credit_trades)
         self.assertIn(draft_credit_trade_from_gov, credit_trades)
-        self.assertNotIn(approved_credit_trade, credit_trades)
         self.assertIn(completed_credit_trade, credit_trades)
 
     # As a fuel supplier
     # I shouldn't see drafts unless I'm the initiator
     # I shouldn't see cancelled transfers as they're considered (deleted)
-    # I shouldn't see approved transfers as they're the intermediate step
-    # before being completed
     # I shouldn't see submitted transfers unless I'm involved somehow
     def test_get_organization_credit_trades_fuel_supplier(self):
-        approved_status, created = CreditTradeStatus.objects.get_or_create(
-            status='Approved')
-
         completed_status, created = CreditTradeStatus.objects.get_or_create(
             status='Completed')
 
@@ -662,18 +639,6 @@ class TestCreditTrades(TestCase):
             trade_effective_date=datetime.datetime.
             today().strftime('%Y-%m-%d'))
 
-        # the function shouldn't see this as it's approved
-        approved_credit_trade = CreditTrade.objects.create(
-            status=approved_status,
-            initiator=test_organization_1,
-            respondent=test_organization_2,
-            type=credit_trade_type,
-            number_of_credits=1000,
-            fair_market_value_per_credit=1,
-            zero_reason=None,
-            trade_effective_date=datetime.datetime.
-            today().strftime('%Y-%m-%d'))
-
         # the function should see this as it's completed
         completed_credit_trade = CreditTrade.objects.create(
             status=completed_status,
@@ -694,5 +659,4 @@ class TestCreditTrades(TestCase):
         self.assertIn(draft_credit_trade_from_fuel_supplier, credit_trades)
         self.assertNotIn(submitted_credit_trade, credit_trades)
         self.assertIn(submitted_credit_trade_as_respondent, credit_trades)
-        self.assertNotIn(approved_credit_trade, credit_trades)
         self.assertIn(completed_credit_trade, credit_trades)
