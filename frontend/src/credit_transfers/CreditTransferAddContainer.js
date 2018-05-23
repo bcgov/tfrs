@@ -12,7 +12,7 @@ import ModalSubmitCreditTransfer from './components/ModalSubmitCreditTransfer';
 
 import { getFuelSuppliers } from '../actions/organizationActions';
 import { getLoggedInUser } from '../actions/userActions';
-import { addCreditTransfer, invalidateCreditTransfers } from '../actions/creditTransfersActions';
+import { addCreditTransfer, invalidateCreditTransfer, invalidateCreditTransfers } from '../actions/creditTransfersActions';
 import {
   addSigningAuthorityConfirmation,
   prepareSigningAuthorityConfirmations
@@ -51,6 +51,7 @@ class CreditTransferAddContainer extends Component {
   }
 
   componentDidMount () {
+    this.props.invalidateCreditTransfer();
     this.props.getFuelSuppliers();
   }
 
@@ -162,6 +163,8 @@ class CreditTransferAddContainer extends Component {
       history.push(CREDIT_TRANSACTIONS.LIST);
     });
 
+    this.props.invalidateCreditTransfers();
+
     return false;
   }
 
@@ -218,6 +221,7 @@ class CreditTransferAddContainer extends Component {
             numberOfCredits: this.state.fields.numberOfCredits
           }
         }
+        key="confirmSubmit"
       />
     ]);
   }
@@ -233,6 +237,7 @@ CreditTransferAddContainer.propTypes = {
   errors: PropTypes.shape({}),
   fuelSuppliers: PropTypes.arrayOf(PropTypes.shape()).isRequired,
   getFuelSuppliers: PropTypes.func.isRequired,
+  invalidateCreditTransfer: PropTypes.func.isRequired,
   invalidateCreditTransfers: PropTypes.func.isRequired,
   loggedInUser: PropTypes.shape({
     displayName: PropTypes.string,
@@ -255,6 +260,7 @@ const mapDispatchToProps = dispatch => ({
   addSigningAuthorityConfirmation: bindActionCreators(addSigningAuthorityConfirmation, dispatch),
   getFuelSuppliers: bindActionCreators(getFuelSuppliers, dispatch),
   getLoggedInUser: bindActionCreators(getLoggedInUser, dispatch),
+  invalidateCreditTransfer: bindActionCreators(invalidateCreditTransfer, dispatch),
   invalidateCreditTransfers: bindActionCreators(invalidateCreditTransfers, dispatch),
   prepareSigningAuthorityConfirmations: (creditTradeId, terms) =>
     prepareSigningAuthorityConfirmations(creditTradeId, terms)

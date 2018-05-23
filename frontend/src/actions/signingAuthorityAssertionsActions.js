@@ -1,5 +1,6 @@
 import axios from 'axios';
 
+import ActionTypes from '../constants/actionTypes/SigningAuthorityAssertions';
 import * as Routes from '../constants/routes';
 
 const getSigningAuthorityAssertions = () => (dispatch) => {
@@ -13,20 +14,20 @@ const getSigningAuthorityAssertions = () => (dispatch) => {
 };
 
 const getSigningAuthorityAssertionsRequest = () => ({
-  name: 'GET_SIGNING_AUTHORITY_ASSERTIONS_REQUEST',
-  type: 'GET_SIGNING_AUTHORITY_ASSERTIONS'
+  name: ActionTypes.GET_SIGNING_AUTHORITY_ASSERTIONS_REQUEST,
+  type: ActionTypes.GET_SIGNING_AUTHORITY_ASSERTIONS
 });
 
 const getSigningAuthorityAssertionsSuccess = compliancePeriods => ({
-  name: 'RECEIVE_SIGNING_AUTHORITY_ASSERTIONS_REQUEST',
-  type: 'RECEIVE_SIGNING_AUTHORITY_ASSERTIONS',
+  name: ActionTypes.RECEIVE_SIGNING_AUTHORITY_ASSERTIONS_REQUEST,
+  type: ActionTypes.RECEIVE_SIGNING_AUTHORITY_ASSERTIONS,
   data: compliancePeriods,
   receivedAt: Date.now()
 });
 
 const getSigningAuthorityAssertionsError = error => ({
-  name: 'ERROR_SIGNING_AUTHORITY_ASSERTIONS_REQUEST',
-  type: 'ERROR',
+  name: ActionTypes.ERROR_SIGNING_AUTHORITY_ASSERTIONS_REQUEST,
+  type: ActionTypes.ERROR_SIGNING_AUTHORITY_ASSERTIONS,
   errorMessage: error
 });
 
