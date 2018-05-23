@@ -49,7 +49,7 @@ class CreditTradeService(object):
             """
             credit_trades = CreditTrade.objects.filter(
                 ~Q(status__status__in=["Cancelled"]) &
-                (~Q(status__status__in=["Draft"] &
+                ((~Q(status__status__in=["Draft"]) &
                  Q(respondent=organization)) |
                  Q(initiator=organization))
             )
