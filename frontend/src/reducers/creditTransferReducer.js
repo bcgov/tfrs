@@ -78,12 +78,6 @@ const creditTransfers = (state = {
         success: true,
         items: action.data
       });
-    case 'RECEIVE_APPROVED_CREDIT_TRANSFERS':
-      return Object.assign({}, state, {
-        isFetching: false,
-        success: true,
-        items: action.data
-      });
     case ActionTypes.COMMIT_ERRORS:
       return Object.assign({}, state, {
         didInvalidate: true,
@@ -123,42 +117,48 @@ const approvedCreditTransfers = (state = {
 }, action) => {
   switch (action.type) {
     case ActionTypes.GET_CREDIT_TRANSFERS:
-      return Object.assign({}, state, {
+      return {
+        ...state,
         isFetching: true,
         success: false
-      });
+      };
     case 'RECEIVE_APPROVED_CREDIT_TRANSFERS':
-      return Object.assign({}, state, {
+      return {
+        ...state,
         isFetching: false,
-        success: true,
-        items: action.data
-      });
+        items: action.data,
+        success: true
+      };
     case ActionTypes.COMMIT_ERRORS:
-      return Object.assign({}, state, {
+      return {
+        ...state,
         didInvalidate: true,
+        errors: action.errorMessage,
         isFetching: false,
-        success: false,
-        errors: action.errorMessage
-      });
+        success: false
+      };
     case ActionTypes.ERROR:
-      return Object.assign({}, state, {
+      return {
+        ...state,
+        errorMessage: action.errorMessage,
         isFetching: false,
-        success: false,
-        errorMessage: action.errorMessage
-      });
+        success: false
+      };
     case ActionTypes.INVALIDATE_CREDIT_TRANSFERS:
-      return Object.assign({}, state, {
+      return {
+        ...state,
         didInvalidate: true,
         errors: {},
         message: ''
-      });
+      };
     case ActionTypes.SUCCESS:
-      return Object.assign({}, state, {
+      return {
+        ...state,
         didInvalidate: true,
         isFetching: false,
-        success: true,
-        message: action.message
-      });
+        message: action.message,
+        success: true
+      };
     default:
       return state;
   }
