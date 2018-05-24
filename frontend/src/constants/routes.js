@@ -53,5 +53,6 @@ export const CURRENT_USER = '/users/current';
 export const DELETE = '/delete';
 
 export { default as COMPLIANCE_PERIODS } from './routes/CompliancePeriods';
+export { default as CONTACT_US } from './routes/ContactUs';
 export { default as SIGNING_AUTHORITY_ASSERTIONS } from './routes/SigningAuthorityAssertions';
 export { default as SIGNING_AUTHORITY_CONFIRMATIONS } from './routes/SigningAuthorityConfirmations';

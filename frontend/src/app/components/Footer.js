@@ -36,7 +36,7 @@ const Footer = props => (
                 <a id="footer-about-copyright" href="http://gov.bc.ca/copyright" target="_self">Copyright</a>
               </li>
               <li>
-                <a id="footer-about-contact" href="#" target="_self">Contact Us</a>
+                <a id="footer-about-contact" href="/contact_us" target="_self">Contact Us</a>
               </li>
             </ul>
           </div>
