@@ -7,8 +7,10 @@ import history from './app/History';
 
 /* global __LOGOUT_URL__ */
 import * as Routes from './constants/routes';
+import CONTACT_US from './constants/routes/ContactUs';
 import CREDIT_TRANSACTIONS from './constants/routes/CreditTransactions';
 import HISTORICAL_DATA_ENTRY from './constants/routes/HistoricalDataEntry';
+import ContactUsContainer from './contact_us/ContactUsContainer';
 import CreditTransactionsContainer from './credit_transfers/CreditTransactionsContainer';
 import CreditTransferAddContainer from './credit_transfers/CreditTransferAddContainer';
 import CreditTransferEditContainer from './credit_transfers/CreditTransferEditContainer';
@@ -63,6 +65,10 @@ const Router = props => (
         <Route
           path={HISTORICAL_DATA_ENTRY.EDIT}
           component={withRouter(HistoricalDataEntryEditContainer)}
+        />
+        <Route
+          path={CONTACT_US.LIST}
+          component={withRouter(ContactUsContainer)}
         />
         <Route
           path={Routes.LOGOUT}
