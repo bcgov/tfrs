@@ -9,7 +9,7 @@ import { bindActionCreators } from 'redux';
 import PropTypes from 'prop-types';
 
 import * as Lang from '../../constants/langEnUs';
-import * as Routes from '../../constants/routes';
+import HISTORICAL_DATA_ENTRY from '../../constants/routes/HistoricalDataEntry';
 import { getFuelSuppliers } from '../../actions/organizationActions';
 import {
   getCreditTransfer,
@@ -77,7 +77,7 @@ class HistoricalDataEntryEditContainer extends Component {
 
     this.props.updateCreditTransfer(id, data).then((response) => {
       this.props.invalidateCreditTransfers();
-      history.push(Routes.HISTORICAL_DATA_ENTRY);
+      history.push(HISTORICAL_DATA_ENTRY.LIST);
     }, () => {
       // Failed to update
     });

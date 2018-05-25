@@ -2,43 +2,52 @@
  * Container component
  * All data handling & manipulation should be handled here.
  */
-
+import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import PropTypes from 'prop-types';
 
-import * as Routes from '../constants/routes';
-import history from '../app/History';
+import CreditTransferForm from './components/CreditTransferForm';
+import ModalSubmitCreditTransfer from './components/ModalSubmitCreditTransfer';
+
 import { getFuelSuppliers } from '../actions/organizationActions';
 import { getLoggedInUser } from '../actions/userActions';
 import { addCreditTransfer, invalidateCreditTransfers } from '../actions/creditTransfersActions';
-
+import {
+  addSigningAuthorityConfirmation,
+  prepareSigningAuthorityConfirmations
+} from '../actions/signingAuthorityConfirmationsActions';
+import history from '../app/History';
+import * as Lang from '../constants/langEnUs';
+import CREDIT_TRANSACTIONS from '../constants/routes/CreditTransactions';
 import { CREDIT_TRANSFER_STATUS } from '../constants/values';
 
-import CreditTransferForm from './components/CreditTransferForm';
+const buttonActions = [Lang.BTN_SAVE_DRAFT, Lang.BTN_SIGN_1_2];
 
 class CreditTransferAddContainer extends Component {
   constructor (props) {
     super(props);
+
     this.state = {
-      fields: {
-        initiator: {},
-        tradeType: { id: 1, name: 'Sell' },
-        numberOfCredits: '',
-        respondent: { id: 0, name: '' },
-        fairMarketValuePerCredit: '',
-        tradeStatus: CREDIT_TRANSFER_STATUS.draft,
-        note: ''
-      },
       creditsFrom: {},
       creditsTo: {},
+      fields: {
+        fairMarketValuePerCredit: '',
+        initiator: {},
+        note: '',
+        numberOfCredits: '',
+        respondent: { id: 0, name: '' },
+        terms: [],
+        tradeType: { id: 1, name: 'Sell' }
+      },
       totalValue: 0
     };
 
+    this._addToFields = this._addToFields.bind(this);
+    this._changeStatus = this._changeStatus.bind(this);
     this._handleInputChange = this._handleInputChange.bind(this);
     this._handleSubmit = this._handleSubmit.bind(this);
-    this._changeStatus = this._changeStatus.bind(this);
+    this._toggleCheck = this._toggleCheck.bind(this);
   }
 
   componentDidMount () {
@@ -55,6 +64,19 @@ class CreditTransferAddContainer extends Component {
     });
   }
 
+  _addToFields (value) {
+    const fieldState = { ...this.state.fields };
+    fieldState.terms.push(value);
+
+    this.setState({
+      fields: fieldState
+    });
+  }
+
+  _changeStatus (status) {
+    this.changeObjectProp(status.id, 'tradeStatus');
+  }
+
   _handleInputChange (event) {
     const { value, name } = event.target;
     const fieldState = { ...this.state.fields };
@@ -69,13 +91,21 @@ class CreditTransferAddContainer extends Component {
     }
   }
 
+  _toggleCheck (key) {
+    const fieldState = { ...this.state.fields };
+    const index = fieldState.terms.findIndex(term => term.id === key);
+    fieldState.terms[index].value = !fieldState.terms[index].value;
+
+    this.setState({
+      fields: fieldState
+    });
+  }
+
   changeObjectProp (id, name) {
     const fieldState = { ...this.state.fields };
     if (name === 'respondent') {
       // Populate the dropdown
-      const respondents = this.props.fuelSuppliers.filter((fuelSupplier) => {
-        return fuelSupplier.id === id;
-      });
+      const respondents = this.props.fuelSuppliers.filter(fuelSupplier => (fuelSupplier.id === id));
 
       fieldState.respondent = respondents.length === 1 ? respondents[0] : { id: 0 };
       this.setState({
@@ -107,26 +137,32 @@ class CreditTransferAddContainer extends Component {
 
     // API data structure
     const data = {
+      fairMarketValuePerCredit: parseFloat(this.state.fields.fairMarketValuePerCredit).toFixed(2),
       initiator: this.state.fields.initiator.id,
+      note: this.state.fields.note,
       numberOfCredits: parseInt(this.state.fields.numberOfCredits, 10),
       respondent: this.state.fields.respondent.id,
-      fairMarketValuePerCredit: parseInt(this.state.fields.fairMarketValuePerCredit, 10),
-      note: this.state.fields.note,
-      status: this.state.fields.tradeStatus.id,
-      type: this.state.fields.tradeType.id,
-      tradeEffectiveDate: null
+      status: status.id,
+      tradeEffectiveDate: null,
+      type: this.state.fields.tradeType.id
     };
 
-    this.props.addCreditTransfer(data).then(() => {
+    this.props.addCreditTransfer(data).then((response) => {
+      // if it's being proposed capture the acceptance of the terms
+      if (status.id === CREDIT_TRANSFER_STATUS.proposed.id) {
+        const confirmations = this.props.prepareSigningAuthorityConfirmations(
+          response.data.id,
+          this.state.fields.terms
+        );
+
+        this.props.addSigningAuthorityConfirmation(confirmations);
+      }
+
       this.props.invalidateCreditTransfers();
-      history.push(Routes.CREDIT_TRANSACTIONS);
+      history.push(CREDIT_TRANSACTIONS.LIST);
     });
 
     return false;
-  }
-
-  _changeStatus (status) {
-    this.changeObjectProp(status.id, 'tradeStatus');
   }
 
   changeFromTo (tradeType, initiator, respondent) {
@@ -152,21 +188,38 @@ class CreditTransferAddContainer extends Component {
   }
 
   render () {
-    return (
+    return ([
       <CreditTransferForm
-        fuelSuppliers={this.props.fuelSuppliers}
-        title="New Credit Transfer"
-        fields={this.state.fields}
-        totalValue={this.state.totalValue}
-        tradeStatus={this.state.tradeStatus}
-        handleInputChange={this._handleInputChange}
-        handleSubmit={this._handleSubmit}
+        addToFields={this._addToFields}
+        buttonActions={buttonActions}
+        changeStatus={this._changeStatus}
         creditsFrom={this.state.creditsFrom}
         creditsTo={this.state.creditsTo}
         errors={this.props.errors}
-        changeStatus={this._changeStatus}
+        fields={this.state.fields}
+        fuelSuppliers={this.props.fuelSuppliers}
+        handleInputChange={this._handleInputChange}
+        handleSubmit={this._handleSubmit}
+        key="creditTransferForm"
+        terms={this.state.terms}
+        title="New Credit Transfer"
+        toggleCheck={this._toggleCheck}
+        totalValue={this.state.totalValue}
+      />,
+      <ModalSubmitCreditTransfer
+        handleSubmit={(event) => {
+          this._handleSubmit(event, CREDIT_TRANSFER_STATUS.proposed);
+        }}
+        item={
+          {
+            creditsFrom: this.state.creditsFrom,
+            creditsTo: this.state.creditsTo,
+            fairMarketValuePerCredit: this.state.fields.fairMarketValuePerCredit,
+            numberOfCredits: this.state.fields.numberOfCredits
+          }
+        }
       />
-    );
+    ]);
   }
 }
 
@@ -176,6 +229,9 @@ CreditTransferAddContainer.defaultProps = {
 
 CreditTransferAddContainer.propTypes = {
   addCreditTransfer: PropTypes.func.isRequired,
+  addSigningAuthorityConfirmation: PropTypes.func.isRequired,
+  errors: PropTypes.shape({}),
+  fuelSuppliers: PropTypes.arrayOf(PropTypes.shape()).isRequired,
   getFuelSuppliers: PropTypes.func.isRequired,
   invalidateCreditTransfers: PropTypes.func.isRequired,
   loggedInUser: PropTypes.shape({
@@ -185,21 +241,23 @@ CreditTransferAddContainer.propTypes = {
       id: PropTypes.number
     })
   }).isRequired,
-  fuelSuppliers: PropTypes.arrayOf(PropTypes.shape()).isRequired,
-  errors: PropTypes.shape({})
+  prepareSigningAuthorityConfirmations: PropTypes.func.isRequired
 };
 
 const mapStateToProps = state => ({
-  loggedInUser: state.rootReducer.userRequest.loggedInUser,
+  errors: state.rootReducer.creditTransfer.errors,
   fuelSuppliers: state.rootReducer.fuelSuppliersRequest.fuelSuppliers,
-  errors: state.rootReducer.creditTransfer.errors
+  loggedInUser: state.rootReducer.userRequest.loggedInUser
 });
 
 const mapDispatchToProps = dispatch => ({
+  addCreditTransfer: bindActionCreators(addCreditTransfer, dispatch),
+  addSigningAuthorityConfirmation: bindActionCreators(addSigningAuthorityConfirmation, dispatch),
   getFuelSuppliers: bindActionCreators(getFuelSuppliers, dispatch),
   getLoggedInUser: bindActionCreators(getLoggedInUser, dispatch),
-  addCreditTransfer: bindActionCreators(addCreditTransfer, dispatch),
-  invalidateCreditTransfers: bindActionCreators(invalidateCreditTransfers, dispatch)
+  invalidateCreditTransfers: bindActionCreators(invalidateCreditTransfers, dispatch),
+  prepareSigningAuthorityConfirmations: (creditTradeId, terms) =>
+    prepareSigningAuthorityConfirmations(creditTradeId, terms)
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(CreditTransferAddContainer);

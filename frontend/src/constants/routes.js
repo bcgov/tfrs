@@ -1,15 +1,8 @@
 // Page Routes
 
 export const HOME = '/';
-export const CREDIT_TRANSACTIONS = '/credit_transactions';
-export const CREDIT_TRANSACTIONS_ADD = '/credit_transactions/add';
-export const CREDIT_TRANSACTION_EDIT = '/credit_transactions/edit/:id';
-export const CREDIT_TRANSACTION_DETAILS = '/credit_transactions/view/:id';
+export const LOGOUT = '/logout';
 
-export const HISTORICAL_DATA_ENTRY = '/admin/historical_data_entry';
-export const HISTORICAL_DATA_ENTRY_EDIT = '/admin/historical_data_entry/edit/:id';
-
-export const COMPLIANCE_PERIODS = '/compliance_periods';
 export const ORGANIZATIONS = '/organizations';
 export const ADMINISTRATION = '/administration';
 export const ORGANIZATION_DETAILS = '/organizations/:id';
@@ -23,7 +16,7 @@ export const SETTINGS = '/settings';
 export const CREDIT_TRANSFER_DETAILS = '/credit_transfer/:id';
 
 // API Routes
-export const BASE_URL = location.protocol + '//' + window.location.host + '/api';
+export const BASE_URL = `${window.location.protocol}//${window.location.host}/api`;
 
 export const ORGANIZATIONS_API = '/organizations';
 export const ORGANIZATION_ACTION_TYPES = '/organizationactionstypes';
@@ -58,3 +51,7 @@ export const CURRENT_USER = '/users/current';
 // Appended at the end of the route. Ideally this shouldn't be like this,
 // It should be an HTTP DELETE request.
 export const DELETE = '/delete';
+
+export { default as COMPLIANCE_PERIODS } from './routes/CompliancePeriods';
+export { default as SIGNING_AUTHORITY_ASSERTIONS } from './routes/SigningAuthorityAssertions';
+export { default as SIGNING_AUTHORITY_CONFIRMATIONS } from './routes/SigningAuthorityConfirmations';

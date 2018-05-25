@@ -17,10 +17,23 @@ export const getCreditTransfers = () => (dispatch) => {
     });
 };
 
+export const getCreditTransferType = (typeId) => {
+  switch (typeId) {
+    case CREDIT_TRANSFER_TYPES.validation.id:
+      return 'Validation';
+    case CREDIT_TRANSFER_TYPES.retirement.id:
+      return 'Reduction';
+    case CREDIT_TRANSFER_TYPES.part3Award.id:
+      return 'Part 3 Award';
+    default:
+      return 'Credit Transfer';
+  }
+};
+
 export const prepareCreditTransfer = (fields) => {
   // API data structure
   const data = {
-    compliancePeriod: (fields.compliancePeriod.id > 0)
+    compliancePeriod: (fields.compliancePeriod && fields.compliancePeriod.id > 0)
       ? fields.compliancePeriod.id
       : null,
     initiator: (fields.creditsFrom.id > 0)
@@ -208,6 +221,7 @@ export const addCreditTransfer = data => (dispatch) => {
     .post(Routes.BASE_URL + Routes.CREDIT_TRADE_API, data)
     .then((response) => {
       dispatch(addCreditTransferSuccess(response.data));
+      return Promise.resolve(response);
     }).catch((error) => {
       dispatch(addCreditTransferError(error.response.data));
       return Promise.reject(error);
@@ -241,6 +255,7 @@ export const updateCreditTransfer = (id, data) => (dispatch) => {
     .put(`${Routes.BASE_URL}${Routes.CREDIT_TRADE_API}/${id}`, data)
     .then((response) => {
       dispatch(updateCreditTransferSuccess(response.data));
+      return Promise.resolve(response);
     }).catch((error) => {
       dispatch(updateCreditTransferError(error.response.data));
       return Promise.reject(error);
