@@ -1,0 +1,75 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`StatusInterceptor should display the proper message for 401 errors 1`] = `
+<div
+  className="alert alert-danger error-alert"
+  role="alert"
+>
+  <p>
+    Welcome to the Transportation Fuel Reporting System.
+  </p>
+  <p>
+    It looks like you don't have an account setup yet, or that you are trying to access a page that you do not have permissions to see.
+  </p>
+  <p>
+    You will need to
+    <a
+      href="mailto:lcfrr@gov.bc.ca?subject=Account%20Setup%20for%20TFRS"
+    >
+       contact us 
+    </a>
+    for help.
+  </p>
+</div>
+`;
+
+exports[`StatusInterceptor should display the proper message for 403 errors 1`] = `
+<div
+  className="alert alert-danger error-alert"
+  role="alert"
+>
+  <p>
+    Welcome to the Transportation Fuel Reporting System.
+  </p>
+  <p>
+    It looks like you don't have an account setup yet, or that you are trying to access a page that you do not have permissions to see.
+  </p>
+  <p>
+    You will need to
+    <a
+      href="mailto:lcfrr@gov.bc.ca?subject=Account%20Setup%20for%20TFRS"
+    >
+       contact us 
+    </a>
+    for help.
+  </p>
+</div>
+`;
+
+exports[`StatusInterceptor should display the proper message for 500 errors 1`] = `
+<div
+  className="alert alert-danger error-alert"
+  role="alert"
+>
+  <p>
+    We're sorry.
+  </p>
+  <p>
+    It looks like our system is experiencing some technical difficulties.. We have been notified and will look into it. Please try again later.
+  </p>
+</div>
+`;
+
+exports[`StatusInterceptor should display the proper message for 502 errors 1`] = `
+<div
+  className="alert alert-danger error-alert"
+  role="alert"
+>
+  <p>
+    We're sorry.
+  </p>
+  <p>
+    It looks like our system is experiencing some technical difficulties.. We have been notified and will look into it. Please try again later.
+  </p>
+</div>
+`;

@@ -134,3 +134,7 @@ class CreditTrade(Auditable):
 
     class Meta:
         db_table = 'credit_trade'
+
+        permissions = (
+            ("credit_trade_approve", "Can approve credit transfers"),
+        )

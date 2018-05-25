@@ -1,10 +1,11 @@
 """
     REST API Documentation for the NRS TFRS Credit Trading Application
 
-    The Transportation Fuels Reporting System is being designed to streamline compliance reporting for transportation fuel suppliers in accordance with the Renewable & Low Carbon Fuel Requirements Regulation.
+    The Transportation Fuels Reporting System is being designed to streamline
+    compliance reporting for transportation fuel suppliers in accordance with
+    the Renewable & Low Carbon Fuel Requirements Regulation.
 
     OpenAPI spec version: v1
-        
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
@@ -31,6 +32,10 @@ from . import views_custom
 from .viewsets.CompliancePeriod import CompliancePeriodViewSet
 from .viewsets.CreditTrade import CreditTradeViewSet
 from .viewsets.Organization import OrganizationViewSet
+from .viewsets.SigningAuthorityAssertion \
+    import SigningAuthorityAssertionViewSet
+from .viewsets.SigningAuthorityConfirmation \
+    import SigningAuthorityConfirmationViewSet
 from .viewsets.User import UserViewSet
 
 from rest_framework.documentation import include_docs_urls
@@ -43,6 +48,10 @@ router = DefaultRouter(trailing_slash=False)
 router.register(r'compliance_periods', CompliancePeriodViewSet)
 router.register(r'credit_trades', CreditTradeViewSet)
 router.register(r'organizations', OrganizationViewSet)
+router.register(r'signing_authority_assertions',
+                SigningAuthorityAssertionViewSet)
+router.register(r'signing_authority_confirmations',
+                SigningAuthorityConfirmationViewSet)
 router.register(r'users', UserViewSet)
 
 

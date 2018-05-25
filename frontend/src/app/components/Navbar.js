@@ -4,6 +4,9 @@ import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 
 import * as Routes from '../../constants/routes';
+import CREDIT_TRANSACTIONS from '../../constants/routes/CreditTransactions';
+import HISTORICAL_DATA_ENTRY from '../../constants/routes/HistoricalDataEntry';
+import { DEFAULT_ORGANIZATION } from '../../constants/values';
 
 class Navbar extends Component {
   static updateContainerPadding () {
@@ -26,23 +29,41 @@ class Navbar extends Component {
     const SecondLevelNavigation = (
       <div className="level2Navigation">
         <div className="container">
-          <Link id="navbar-dashboard" to={Routes.HOME}>
-            Dashboard
-          </Link>
-          <Link id="navbar-organizations" to={Routes.ORGANIZATIONS}>
-            Fuel Suppliers
-          </Link>
-          <Link id="navbar-account-activity" to={Routes.CREDIT_TRANSACTIONS}>
+          {this.props.loggedInUser.organization &&
+            this.props.loggedInUser.organization.id === DEFAULT_ORGANIZATION.id &&
+            <Link id="navbar-dashboard" to={Routes.HOME}>
+              Dashboard
+            </Link>
+          }
+          {this.props.loggedInUser.organization &&
+            this.props.loggedInUser.organization.id === DEFAULT_ORGANIZATION.id &&
+            <Link id="navbar-organizations" to={Routes.ORGANIZATIONS}>
+              Fuel Suppliers
+            </Link>
+          }
+          <Link id="navbar-credit-transactions" to={CREDIT_TRANSACTIONS.LIST}>
             Credit Transactions
           </Link>
-          <Link id="navbar-notifications" to={Routes.NOTIFICATIONS}>
-            Notifications
-          </Link>
-          <Link id="navbar-settings" to={Routes.SETTINGS}>
-            Settings
-          </Link>
-          <Link id="navbar-administration" to={Routes.HISTORICAL_DATA_ENTRY}>
-            Administration
+          {this.props.loggedInUser.organization &&
+            this.props.loggedInUser.organization.id === DEFAULT_ORGANIZATION.id &&
+            <Link id="navbar-notifications" to={Routes.NOTIFICATIONS}>
+              Notifications
+            </Link>
+          }
+          {this.props.loggedInUser.organization &&
+            this.props.loggedInUser.organization.id === DEFAULT_ORGANIZATION.id &&
+            <Link id="navbar-settings" to={Routes.SETTINGS}>
+              Settings
+            </Link>
+          }
+          {this.props.loggedInUser.organization &&
+            this.props.loggedInUser.organization.id === DEFAULT_ORGANIZATION.id &&
+            <Link id="navbar-administration" to={HISTORICAL_DATA_ENTRY.LIST}>
+              Administration
+            </Link>
+          }
+          <Link id="navbar-logout" to={Routes.LOGOUT}>
+            Log-out
           </Link>
         </div>
       </div>
@@ -54,13 +75,18 @@ class Navbar extends Component {
         className="collapse navbar-collapse"
         role="navigation"
       >
-        <a id="navigation-anchor" />
+        <a id="navigation-anchor" href="#navigation-anchor"><span>Navigation Bar</span></a>
         <ul className="nav navbar-nav">
+          {this.props.loggedInUser.organization &&
+          this.props.loggedInUser.organization.id === DEFAULT_ORGANIZATION.id &&
           <li>
             <Link id="collapse-navbar-dashboard" to={Routes.HOME}>
               Dashboard
             </Link>
           </li>
+          }
+          {this.props.loggedInUser.organization &&
+          this.props.loggedInUser.organization.id === DEFAULT_ORGANIZATION.id &&
           <li>
             <Link
               id="collapse-navbar-organization"
@@ -69,14 +95,17 @@ class Navbar extends Component {
               Fuel Suppliers
             </Link>
           </li>
+          }
           <li>
             <Link
-              id="collapse-navbar-account-activity"
-              to={Routes.ACCOUNT_ACTIVITY}
+              id="collapse-navbar-credit-transactions"
+              to={CREDIT_TRANSACTIONS.LIST}
             >
-              Account Activity
+            Credit Transactions
             </Link>
           </li>
+          {this.props.loggedInUser.organization &&
+          this.props.loggedInUser.organization.id === DEFAULT_ORGANIZATION.id &&
           <li>
             <Link
               id="collapse-navbar-notifications"
@@ -85,19 +114,26 @@ class Navbar extends Component {
               Notifications
             </Link>
           </li>
+          }
+          {this.props.loggedInUser.organization &&
+          this.props.loggedInUser.organization.id === DEFAULT_ORGANIZATION.id &&
           <li>
             <Link id="collapse-navbar-settings" to={Routes.SETTINGS}>
               Settings
             </Link>
           </li>
+          }
+          {this.props.loggedInUser.organization &&
+          this.props.loggedInUser.organization.id === DEFAULT_ORGANIZATION.id &&
           <li>
             <Link
               id="collapse-navbar-administration"
-              to={Routes.ADMINISTRATION}
+              to={HISTORICAL_DATA_ENTRY.LIST}
             >
               Administration
             </Link>
           </li>
+          }
         </ul>
       </div>);
 
@@ -120,7 +156,6 @@ class Navbar extends Component {
                   <ul>
                     <li aria-label="Keyboard Tab Skip">
                       <a
-                        accessKey="0"
                         href="#main-content-anchor"
                         aria-label="Skip to main content"
                       >
@@ -129,7 +164,6 @@ class Navbar extends Component {
                     </li>
                     <li aria-label="Keyboard Tab Skip">
                       <a
-                        accessKey="0"
                         href="#navigation-anchor"
                         aria-label="Skip to navigation"
                       >
@@ -138,7 +172,6 @@ class Navbar extends Component {
                     </li>
                     <li aria-label="Keyboard Tab Skip">
                       <a
-                        accessKey="0"
                         href="http://gov.bc.ca/webaccessibility/"
                         aria-label="Accessibility Statement"
                       >
@@ -155,7 +188,7 @@ class Navbar extends Component {
                   aria-expanded="true"
                   aria-label="Burger Navigation"
                 >
-                  <img src="/assets/images/menu-open-mobile.png" />
+                  <img src="/assets/images/menu-open-mobile.png" alt="menu" />
                 </button>
               </div>
               <div className="col-sm-6 col-md-6 col-lg-6 hidden-xs">

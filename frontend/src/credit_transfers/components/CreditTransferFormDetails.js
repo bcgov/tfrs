@@ -75,7 +75,6 @@ const CreditTransferFormDetails = props => (
             onChange={props.handleInputChange}
             required="required"
           />
-          <div className="input-group-addon">.00</div>
         </div>
       </div>
       <span>per credit for a total value of </span>

@@ -3,36 +3,41 @@
  */
 import React from 'react';
 import PropTypes from 'prop-types';
-import numeral from 'numeral';
 
-import * as NumberFormat from '../../constants/numeralFormats';
-
-import Loading from '../../app/components/Loading';
-
-import CreditTransferProgress from './CreditTransferProgress';
-import CreditTransferVisualRepresentation from './CreditTransferVisualRepresentation';
 import CreditTransferFormButtons from './CreditTransferFormButtons';
+import CreditTransferProgress from './CreditTransferProgress';
+import CreditTransferTerms from './CreditTransferTerms';
+import CreditTransferTextRepresentation from './CreditTransferTextRepresentation';
+import CreditTransferVisualRepresentation from './CreditTransferVisualRepresentation';
+
+import { getCreditTransferType } from '../../actions/creditTransfersActions';
+import Loading from '../../app/components/Loading';
+import * as Lang from '../../constants/langEnUs';
 
 const CreditTransferDetails = props => (
   <div className="credit-transfer">
     {props.isFetching && <Loading />}
     {!props.isFetching &&
       <div>
-        <h1>{props.title}</h1>
-        <CreditTransferProgress />
+        <h1>
+          {props.tradeType.id &&
+            getCreditTransferType(props.tradeType.id)
+          }
+        </h1>
+        <CreditTransferProgress status={props.status} type={props.tradeType} />
         <div className="credit-transfer-details">
           <div className="main-form">
-            <span>
-              {`${props.creditsFrom && props.creditsFrom.name} proposes to `}
-              {props.tradeType && props.tradeType.theType.toLowerCase()}
-              &nbsp;{props.numberOfCredits}
-              &nbsp;credit{(props.numberOfCredits > 1) && 's'} to&nbsp;
-              {`${props.creditsTo && props.creditsTo.name} for `}
-              {numeral(props.fairMarketValuePerCredit).format(NumberFormat.CURRENCY)}
-              &nbsp;per credit for a total value of&nbsp;
-              {numeral(props.totalValue).format(NumberFormat.CURRENCY)}
-              &nbsp;effective on Director&apos;s Approval
-            </span>
+            <CreditTransferTextRepresentation
+              compliancePeriod={props.compliancePeriod}
+              creditsFrom={props.creditsFrom}
+              creditsTo={props.creditsTo}
+              fairMarketValuePerCredit={props.fairMarketValuePerCredit}
+              numberOfCredits={props.numberOfCredits}
+              status={props.status}
+              totalValue={props.totalValue}
+              tradeEffectiveDate={props.tradeEffectiveDate}
+              tradeType={props.tradeType}
+            />
           </div>
         </div>
         <CreditTransferVisualRepresentation
@@ -40,13 +45,35 @@ const CreditTransferDetails = props => (
           creditsTo={props.creditsTo}
           numberOfCredits={props.numberOfCredits}
           totalValue={props.totalValue}
+          tradeType={props.tradeType}
         />
-        <div>{props.note}</div>
+        {props.note !== '' &&
+          <div className="well transparent">
+            <div>Notes: {props.note}</div>
+          </div>
+        }
         <form onSubmit={e => e.preventDefault()}>
+          {(props.buttonActions.includes(Lang.BTN_SIGN_1_2) ||
+          props.buttonActions.includes(Lang.BTN_SIGN_2_2)) &&
+          <CreditTransferTerms
+            addToFields={props.addToFields}
+            fields={props.fields}
+            toggleCheck={props.toggleCheck}
+          />
+          }
+
           <CreditTransferFormButtons
-            id={props.id}
-            changeStatus={props.changeStatus}
             actions={props.buttonActions}
+            changeStatus={props.changeStatus}
+            disabled={
+              {
+                BTN_SIGN_1_2: props.fields.terms.findIndex(term => term.value === false) >= 0 ||
+                props.fields.terms.length === 0,
+                BTN_SIGN_2_2: props.fields.terms.findIndex(term => term.value === false) >= 0 ||
+                props.fields.terms.length === 0
+              }
+            }
+            id={props.id}
           />
         </form>
       </div>
@@ -55,55 +82,75 @@ const CreditTransferDetails = props => (
 );
 
 CreditTransferDetails.defaultProps = {
-  title: 'Credit Transfer',
-  id: 0,
-  totalValue: '0',
-  numberOfCredits: '0',
-  fairMarketValuePerCredit: '0',
+  compliancePeriod: {
+    description: ''
+  },
   creditsFrom: {
     name: '...'
   },
   creditsTo: {
     name: '...'
   },
+  fairMarketValuePerCredit: '0',
+  id: 0,
+  note: '',
+  numberOfCredits: '0',
+  status: {
+    id: 0,
+    status: ''
+  },
+  totalValue: '0',
+  tradeEffectiveDate: '',
   tradeType: {
     theType: 'sell'
   }
 };
 
 CreditTransferDetails.propTypes = {
-  title: PropTypes.string,
-  id: PropTypes.number,
+  addToFields: PropTypes.func.isRequired,
+  buttonActions: PropTypes.arrayOf(PropTypes.string).isRequired,
+  changeStatus: PropTypes.func.isRequired,
+  compliancePeriod: PropTypes.shape({
+    id: PropTypes.number,
+    description: PropTypes.string
+  }),
   creditsFrom: PropTypes.shape({
-    name: PropTypes.string,
-    id: PropTypes.number
+    id: PropTypes.number,
+    name: PropTypes.string
   }),
   creditsTo: PropTypes.shape({
-    name: PropTypes.string,
-    id: PropTypes.number
+    id: PropTypes.number,
+    name: PropTypes.string
   }),
-  tradeType: PropTypes.shape({
-    name: PropTypes.string,
-    theType: PropTypes.string,
-    id: PropTypes.number
-  }),
-  numberOfCredits: PropTypes.oneOfType([
-    PropTypes.string,
-    PropTypes.number
-  ]),
   fairMarketValuePerCredit: PropTypes.oneOfType([
     PropTypes.string,
     PropTypes.number
   ]),
+  fields: PropTypes.shape({
+    terms: PropTypes.array
+  }).isRequired,
+  id: PropTypes.number,
+  isFetching: PropTypes.bool.isRequired,
   note: PropTypes.string,
+  numberOfCredits: PropTypes.oneOfType([
+    PropTypes.string,
+    PropTypes.number
+  ]),
+  status: PropTypes.shape({
+    id: PropTypes.number,
+    status: PropTypes.string
+  }),
+  toggleCheck: PropTypes.func.isRequired,
   totalValue: PropTypes.oneOfType([
     PropTypes.string,
     PropTypes.number
   ]),
-  changeStatus: PropTypes.func.isRequired,
-  buttonActions: PropTypes.arrayOf(PropTypes.string).isRequired,
-  isFetching: PropTypes.bool.isRequired
-
+  tradeEffectiveDate: PropTypes.string,
+  tradeType: PropTypes.shape({
+    id: PropTypes.number,
+    name: PropTypes.string,
+    theType: PropTypes.string
+  })
 };
 
 export default CreditTransferDetails;

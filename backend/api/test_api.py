@@ -5,6 +5,7 @@ from rest_framework import status
 import datetime
 
 from api import fake_api_calls
+from api.models.CreditTrade import CreditTrade
 
 # Credit Trade Statuses
 STATUS_DRAFT = 1
@@ -53,6 +54,15 @@ class TestAPI(TestCase):
             HTTP_SMGOV_USERDISPLAYNAME='Brad Smith',
             HTTP_SMGOV_USEREMAIL='BradJSmith@cuvox.de',
             HTTP_SM_UNIVERSALID='BSmith')
+
+        self.gov_client = Client(
+            HTTP_SMGOV_USERGUID='c2971372-3a96-4704-9b9c-18e4e9298ee3',
+            HTTP_SMGOV_USERDISPLAYNAME='Test Person',
+            HTTP_SMGOV_USEREMAIL='Test.Person@gov.bc.ca',
+            HTTP_SM_UNIVERSALID='Teperson',
+            HTTP_SMGOV_USERTYPE='Internal',
+            HTTP_SM_AUTHDIRNAME='IDIR')
+
         self.test_url = "/api/credit_trades"
 
         self.test_data_fail = [{
@@ -208,11 +218,9 @@ class TestAPI(TestCase):
 
         # Update the status to "Cancelled"
         self.test_update(credit_trade_status=STATUS_CANCELLED)
-        response = self.client.get(
-            "{}/{}/history".format(self.test_url, self.credit_trade['id']),
-            content_type='application/json')
 
-        self.assertEqual(status.HTTP_404_NOT_FOUND, response.status_code)
+        credit_trade = CreditTrade.objects.get(id=self.credit_trade['id'])
+        self.assertEqual(credit_trade.status_id, STATUS_CANCELLED)
 
     def test_nested_credit_trade(self):
         response = self.client.get(
@@ -264,7 +272,12 @@ class TestAPI(TestCase):
             type=2
         )
 
-        response = self.client.put(
+        credit_trade['status'] = STATUS_ACCEPTED
+        updated_response = fake_api_calls.update_credit_trade_dict(
+            credit_trade,
+            credit_trade['id'])
+
+        response = self.gov_client.put(
             "{}/{}/approve".format(self.test_url, credit_trade['id']),
             content_type='application/json')
 
