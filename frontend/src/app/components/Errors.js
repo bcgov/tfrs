@@ -4,7 +4,16 @@ import PropTypes from 'prop-types';
 const Errors = props => (
   <div className="alert alert-danger">
     <h1>{props.title}</h1>
-    { Object.keys(props.errors).length > 0 &&
+    { typeof (props.errors) === 'string' &&
+      <p>{props.errors}</p>
+    }
+    { typeof (props.errors) === 'object' &&
+      Object.prototype.hasOwnProperty.call(props.errors, 'statusText') &&
+      <p>{props.errors.statusText}</p>
+    }
+    { typeof (props.errors) === 'object' &&
+      !Object.prototype.hasOwnProperty.call(props.errors, 'statusText') &&
+      Object.keys(props.errors).length > 0 &&
       Object.keys(props.errors).map(error => (
         <p key={error}>({error}) {props.errors[error]}</p>
       ))
@@ -17,7 +26,10 @@ Errors.defaultProps = {
 };
 
 Errors.propTypes = {
-  errors: PropTypes.shape({}).isRequired,
+  errors: PropTypes.oneOfType([
+    PropTypes.shape({}),
+    PropTypes.string
+  ]).isRequired,
   title: PropTypes.string
 };
 
