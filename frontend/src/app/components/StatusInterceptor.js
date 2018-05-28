@@ -45,7 +45,7 @@ class StatusInterceptor extends Component {
     return (
       <div className="alert alert-danger error-alert" role="alert">
         <p>We&apos;re sorry.</p>
-        <p>It looks like our system is experiencing some technical difficulties.. We have been
+        <p>It looks like our system is experiencing some technical difficulties. We have been
           notified and will look into it. Please try again later.
         </p>
       </div>
@@ -56,7 +56,7 @@ class StatusInterceptor extends Component {
     return (
       <div className="alert alert-danger error-alert" role="alert">
         <p>We&apos;re sorry.</p>
-        <p>It looks like our system is experiencing some technical difficulties.. We have been
+        <p>It looks like our system is experiencing some technical difficulties. We have been
           notified and will look into it. Please try again later.
         </p>
       </div>
