@@ -12,14 +12,12 @@ import StatusInterceptor from './components/StatusInterceptor';
 
 const App = (props) => {
   let content;
-  if (!props.userRequest.isFetching && props.isAuthenticated) {
+  if (props.errorRequest.hasErrors && props.errorRequest.error.status) {
+    content = <StatusInterceptor statusCode={props.errorRequest.error.status} />;
+  } else if (!props.userRequest.isFetching && props.isAuthenticated) {
     content = props.children;
   } else if (!props.userRequest.isFetching) {
     content = <StatusInterceptor statusCode={props.userRequest.error.status} />;
-  }
-
-  if (props.errorRequest.hasErrors && props.errorRequest.error.status) {
-    content = <StatusInterceptor statusCode={props.errorRequest.error.status} />;
   }
 
   return (
