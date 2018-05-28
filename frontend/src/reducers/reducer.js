@@ -8,6 +8,7 @@ import { creditTransfer, creditTransfers } from './creditTransferReducer';
 import { userRequest, usersRequest } from './userReducer';
 
 import { organizationRequest, organizations, fuelSuppliersRequest } from './organizationReducer';
+import errorRequest from './errorReducer';
 import compliancePeriods from './compliancePeriodReducer';
 import signingAuthorityAssertions from './signingAuthorityAssertionReducer';
 
@@ -104,6 +105,7 @@ const rootReducer = combineReducers({
   organizations,
   signingAuthorityAssertions,
   fuelSuppliersRequest,
+  errorRequest,
   routing
 });
 export default rootReducer;

@@ -254,6 +254,10 @@ class CreditTransferViewContainer extends Component {
   }
 }
 
+CreditTransferViewContainer.defaultProps = {
+  item: {}
+};
+
 CreditTransferViewContainer.propTypes = {
   addSigningAuthorityConfirmation: PropTypes.func.isRequired,
   deleteCreditTransfer: PropTypes.func.isRequired,
@@ -277,7 +281,7 @@ CreditTransferViewContainer.propTypes = {
       PropTypes.number
     ]),
     actions: PropTypes.arrayOf(PropTypes.shape({}))
-  }).isRequired,
+  }),
   loggedInUser: PropTypes.shape({
     displayName: PropTypes.string,
     organization: PropTypes.shape({

@@ -32,6 +32,15 @@ class StatusInterceptor extends Component {
     );
   }
 
+  static render404Message () {
+    return (
+      <div className="alert alert-danger error-alert" role="alert">
+        <p>The requested page could not be found.</p>
+        <p>To trade this page for a valid one click <a href="/">here</a> or learn more about the Renewable and Low Carbon Fuel Requirements Regulation <a href="http://www.gov.bc.ca/lowcarbonfuels/" rel="noopener noreferrer" target="_blank">here</a></p>
+      </div>
+    );
+  }
+
   static render500Message () {
     return (
       <div className="alert alert-danger error-alert" role="alert">
@@ -69,6 +78,8 @@ class StatusInterceptor extends Component {
         return StatusInterceptor.render401Message();
       case 403:
         return StatusInterceptor.render403Message();
+      case 404:
+        return StatusInterceptor.render404Message();
       case 500:
         return StatusInterceptor.render500Message();
       case 502:
