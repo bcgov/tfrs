@@ -134,7 +134,10 @@ class CreditTransferViewContainer extends Component {
 
   _modalDelete (item) {
     return (
-      <ModalDeleteCreditTransfer handleSubmit={() => this._deleteCreditTransfer(item.id)} />
+      <ModalDeleteCreditTransfer
+        handleSubmit={() => this._deleteCreditTransfer(item.id)}
+        key="confirmDelete"
+      />
     );
   }
 
@@ -173,6 +176,7 @@ class CreditTransferViewContainer extends Component {
           this._changeStatus(CREDIT_TRANSFER_STATUS.proposed);
         }}
         item={item}
+        key="confirmSubmit"
       />
     );
   }
@@ -254,6 +258,10 @@ class CreditTransferViewContainer extends Component {
   }
 }
 
+CreditTransferViewContainer.defaultProps = {
+  item: {}
+};
+
 CreditTransferViewContainer.propTypes = {
   addSigningAuthorityConfirmation: PropTypes.func.isRequired,
   deleteCreditTransfer: PropTypes.func.isRequired,
@@ -277,7 +285,7 @@ CreditTransferViewContainer.propTypes = {
       PropTypes.number
     ]),
     actions: PropTypes.arrayOf(PropTypes.shape({}))
-  }).isRequired,
+  }),
   loggedInUser: PropTypes.shape({
     displayName: PropTypes.string,
     organization: PropTypes.shape({

@@ -135,7 +135,7 @@ export const getApprovedCreditTransfers = () => (dispatch) => {
 
   return axios.get(`${Routes.BASE_URL}${Routes.CREDIT_TRADE_API}/list_approved`)
     .then((response) => {
-      dispatch(getCreditTransfersSuccess(response.data));
+      dispatch(getApprovedCreditTransfersSuccess(response.data));
     }).catch((error) => {
       dispatch(getCreditTransfersError(error.response));
     });
@@ -153,6 +153,13 @@ export const getApprovedCreditTransfersIfNeeded = () =>
 const getApprovedCreditTransfersRequest = () => ({
   name: 'GET_APPROVED_CREDIT_TRANSFERS_REQUEST',
   type: ActionTypes.GET_APPROVED_CREDIT_TRANSFERS
+});
+
+const getApprovedCreditTransfersSuccess = creditTransfers => ({
+  name: 'RECEIVE_APPROVED_CREDIT_TRANSFERS_REQUEST',
+  type: 'RECEIVE_APPROVED_CREDIT_TRANSFERS',
+  data: creditTransfers,
+  receivedAt: Date.now()
 });
 
 /*
