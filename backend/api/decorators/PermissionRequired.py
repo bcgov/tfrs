@@ -7,7 +7,6 @@
 
     OpenAPI spec version: v1
 
-
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
     You may obtain a copy of the License at
@@ -20,20 +19,21 @@
     See the License for the specific language governing permissions and
     limitations under the License.
 """
-from rest_framework import serializers
 
-from api.models.User import User
-from .Organization import OrganizationSerializer
-from .UserRole import UserRoleSerializer
+from rest_framework import exceptions
 
 
-class UserSerializer(serializers.ModelSerializer):
-    organization = OrganizationSerializer(read_only=True)
-    user_role = UserRoleSerializer(read_only=True)
+def permission_required(permission):
+    def wrapper(func):
+        def wrapped(self, request, *args, **kwargs):
+            if not request.user.user_role.permissions.filter(
+                permission__code=permission
+            ):
+                raise exceptions.PermissionDenied(
+                  'You do not have sufficient authorization to use this '
+                  'functionality.'
+                )
 
-    class Meta:
-        model = User
-        fields = (
-            'id', 'first_name', 'last_name', 'email', 'authorization_id',
-            'authorization_guid', 'authorization_directory', 'display_name',
-            'organization', 'organization_balance', 'user_role')
+            return func(self, request, *args, **kwargs)
+        return wrapped
+    return wrapper

@@ -23,9 +23,12 @@
 from rest_framework import serializers
 
 from api.models.RolePermission import RolePermission
+from .Permission import PermissionSerializer
 
 
 class RolePermissionSerializer(serializers.ModelSerializer):
+    permission = PermissionSerializer(read_only=True)
+
     class Meta:
         model = RolePermission
         fields = ('id', 'role', 'permission')

@@ -6,7 +6,7 @@
     the Renewable & Low Carbon Fuel Requirements Regulation.
 
     OpenAPI spec version: v1
-    
+
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
@@ -24,15 +24,19 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.core.validators import RegexValidator
+from django.forms.models import model_to_dict
 
 from .OrganizationBalance import OrganizationBalance
+from .UserRole import UserRole
 
 from auditable.models import Auditable
 
 
 class User(AbstractUser, Auditable):
     phone_regex = RegexValidator(regex=r'^\+?1?\d{9,15}$',
-                                 message="Phone number must be entered in the format: '+999999999'. Up to 15 digits allowed.")
+                                 message="Phone number must be entered in the"
+                                 "format: '+999999999'. Up to 15 digits"
+                                 "allowed.")
 
     password = models.CharField(max_length=128, blank=True, null=True)
     email = email = models.EmailField(blank=True, null=True)
@@ -69,6 +73,14 @@ class User(AbstractUser, Auditable):
             balance = 0
 
         return balance
+
+    @property
+    def user_role(self):
+        user_role = UserRole.objects.select_related('role').get(
+            user_id=self.id
+        )
+
+        return user_role
 
     class Meta:
         db_table = 'user'

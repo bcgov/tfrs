@@ -23,9 +23,12 @@
 from rest_framework import serializers
 
 from api.models.UserRole import UserRole
+from .Role import RoleSerializer
 
 
 class UserRoleSerializer(serializers.ModelSerializer):
+    role = RoleSerializer(read_only=True)
+
     class Meta:
         model = UserRole
         fields = ('id', 'user', 'role')
