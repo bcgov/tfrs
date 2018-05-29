@@ -80,6 +80,8 @@ node("master-backend-maven-${env.BUILD_NUMBER}") {
     
     stage('Deploy to Prod') {
         input "Deploy to Prod?"
+        input "Deploy to Prod? Please confirm again."
+        input "Deploy to Prod? This is the last confirmation required."
         echo "Deploying to Prod: ${BUILD_ID}"
         openshiftTag destStream: 'tfrs', verbose: 'true', destTag: 'prod', srcStream: 'tfrs', srcTag: "${IMAGE_HASH}"
         openshiftVerifyDeployment depCfg: 'tfrs', namespace: 'mem-tfrs-prod', replicaCount: 1, verbose: 'false'
