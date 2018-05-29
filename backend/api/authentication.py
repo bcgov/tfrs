@@ -7,8 +7,6 @@ from api.models.Organization import Organization
 from api.models.OrganizationType import OrganizationType
 from api.utils import get_firstname_lastname
 from django.conf import settings
-from django.contrib.auth.models import Permission
-from api.models.CreditTrade import CreditTrade
 
 
 class UserAuthentication(authentication.BaseAuthentication):
@@ -18,9 +16,10 @@ class UserAuthentication(authentication.BaseAuthentication):
         if settings.BYPASS_AUTH:
             return (User.objects.first(), None)
 
-
-        header_username = request.META.get('HTTP_SMAUTH_USER', request.META.get(
-            'HTTP_SMAUTH_UNIVERSALID'))
+        header_username = request.META.get('HTTP_SMAUTH_USER',
+                                           request.META.get(
+                                               'HTTP_SMAUTH_UNIVERSALID'
+                                           ))
         header_user_guid = uuid.UUID(request.META.get('HTTP_SMAUTH_USERGUID'))
         header_user_dir = request.META.get('HTTP_SMAUTH_DIRNAME')
         header_user_id = request.META.get('HTTP_SMAUTH_UNIVERSALID').lower()
@@ -30,7 +29,9 @@ class UserAuthentication(authentication.BaseAuthentication):
         header_user_type = request.META.get('HTTP_SMAUTH_USERTYPE', 'Business')
 
         if not header_user_guid and not header_user_id:
-            raise exceptions.AuthenticationFailed('No SiteMinder headers found')
+            raise exceptions.AuthenticationFailed(
+                'No SiteMinder headers found'
+            )
 
         try:
             gov_organization = Organization.objects.get(
@@ -42,10 +43,6 @@ class UserAuthentication(authentication.BaseAuthentication):
                     Q(organization_id=gov_organization.id),
                     Q(authorization_guid=header_user_guid) |
                     Q(authorization_id=header_user_id))
-
-                permission = Permission.objects.get(
-                    codename='credit_trade_approve')
-                user.user_permissions.add(permission)
 
             else:
                 user = User.objects.get(
@@ -68,7 +65,8 @@ class UserAuthentication(authentication.BaseAuthentication):
                     'Invalid user identifier. '
                     'Please contact your administrator.')
 
-            username = "_".join([header_user_type.lower(), header_username.lower()])
+            username = "_".join([header_user_type.lower(),
+                                header_username.lower()])
             user.username = user.username if user.username else username
             user.authorization_email = header_user_email
             user.authorization_id = header_user_id
