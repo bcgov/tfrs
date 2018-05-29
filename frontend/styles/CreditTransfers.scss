@@ -257,37 +257,10 @@
     border-radius: 5px;
     min-width: 15em;
     text-align: center;
+
     @include mobile {
       text-align: center;
     }
-    svg[data-icon="exchange-alt"] {
-      position: relative;
-      animation: mymove-in 2s;
-      animation-fill-mode: forwards;
-      &[data-icon="arrow-alt-circle-up"] {
-        animation: mymove-up 2s;
-        animation-fill-mode: forwards;
-      }
-      &[data-icon="arrow-alt-circle-down"] {
-        animation: mymove-down 2s;
-        animation-fill-mode: forwards;
-      }
-    }
-  }
-
-  @keyframes mymove-in {
-    from {opacity: 0;}
-    to {opacity: 1;}
-  }
-
-  @keyframes mymove-up {
-    from {top: 10px; opacity: 0;}
-    to {top: 0px; opacity: 1;}
-  }
-
-  @keyframes mymove-down {
-    from {top: -10px; opacity: 0;}
-    to {top: 0px; opacity: 1;}
   }
 
   .initiator-container, .respondent-container {
