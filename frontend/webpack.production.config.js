@@ -1,4 +1,5 @@
 const Webpack = require('webpack');
+const packageJson = require('./package.json');
 const path = require('path');
 
 const nodeModulesPath = path.resolve(__dirname, 'node_modules');
@@ -64,7 +65,8 @@ const config = {
   },
   plugins: [
     new Webpack.DefinePlugin({
-      __LOGOUT_URL__: JSON.stringify('https://logon.gov.bc.ca/clp-cgi/logoff.cgi')
+      __LOGOUT_URL__: JSON.stringify('https://logon.gov.bc.ca/clp-cgi/logoff.cgi'),
+      __VERSION__: JSON.stringify(packageJson.version)
     }),
     new Webpack.optimize.UglifyJsPlugin({
       compress: {
