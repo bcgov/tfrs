@@ -2,6 +2,8 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import * as Routes from '../../constants/routes';
 
+/* global __VERSION__ */
+
 const Footer = props => (
   <div id="footer" role="contentinfo">
     <img
@@ -36,9 +38,12 @@ const Footer = props => (
                 <a id="footer-about-copyright" href="http://gov.bc.ca/copyright" target="_self">Copyright</a>
               </li>
               <li>
-                <a id="footer-about-contact" href="#" target="_self">Contact Us</a>
+                <a id="footer-about-contact" href="/contact_us" target="_self">Contact Us</a>
               </li>
             </ul>
+            <div id="footer-about-version" className="inline">
+              v{__VERSION__}
+            </div>
           </div>
         </div>
       </div>
