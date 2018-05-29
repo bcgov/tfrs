@@ -102,7 +102,7 @@ class CreditTradeViewSet(AuditableMixin, mixins.CreateModelMixin,
         return Response(None, status=status.HTTP_200_OK)
 
     @detail_route(methods=['put'])
-    @permission_required('credit_trade_approve')
+    @permission_required('APPROVE_TRANSFER')
     def approve(self, request, pk=None):
         credit_trade = self.get_object()
 
@@ -112,7 +112,7 @@ class CreditTradeViewSet(AuditableMixin, mixins.CreateModelMixin,
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     @list_route(methods=['get'])
-    @permission_required('credit_trade_approve')
+    @permission_required('VIEW_APPROVED_CREDIT_TRANSFERS')
     def list_approved(self, request):
         status_approved = CreditTradeStatus.objects \
                                            .get(status="Approved")
@@ -124,7 +124,7 @@ class CreditTradeViewSet(AuditableMixin, mixins.CreateModelMixin,
         return Response(serializer.data)
 
     @list_route(methods=['put'])
-    @permission_required('credit_trade_approve')
+    @permission_required('APPROVE_TRANSFER')
     def batch_process(self, request):
         status_approved = CreditTradeStatus.objects \
                                            .get(status="Approved")
