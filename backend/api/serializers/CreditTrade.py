@@ -132,7 +132,6 @@ class CreditTrade2Serializer(serializers.ModelSerializer):
     zero_reason = CreditTradeZeroReasonSerializer(read_only=True)
     credits_from = OrganizationSerializer(read_only=True)
     credits_to = OrganizationSerializer(read_only=True)
-    # actions = CreditTradeStatusMinSerializer(many=True, read_only=True)
     actions = serializers.SerializerMethodField()
     compliance_period = CompliancePeriodSerializer(read_only=True)
 
