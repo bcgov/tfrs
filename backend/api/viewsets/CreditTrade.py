@@ -1,9 +1,13 @@
+from django.db.models import Q
+
 from rest_framework import viewsets, permissions, status, mixins
 from rest_framework.decorators import list_route, detail_route
 from rest_framework.response import Response
 from rest_framework import filters
 
 from auditable.views import AuditableMixin
+
+from api.decorators import permission_required
 
 from api.models.CreditTrade import CreditTrade
 from api.models.CreditTradeHistory import CreditTradeHistory
@@ -17,9 +21,6 @@ from api.serializers import CreditTradeHistory2Serializer \
     as CreditTradeHistorySerializer
 
 from api.services.CreditTradeService import CreditTradeService
-
-from api.decorators import permission_required
-from django.db.models import Q
 
 
 class CreditTradeViewSet(AuditableMixin, mixins.CreateModelMixin,
