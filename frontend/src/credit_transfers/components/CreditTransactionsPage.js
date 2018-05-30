@@ -26,7 +26,7 @@ class CreditTransactionsPage extends Component {
 
       const uniqueOrganizations = !isFetching ? Array.from(new Set(items.flatMap((item) => {return [item.creditsFrom.name, item.creditsTo.name];}))).sort(): [];
 
-      let preFilteredItems = this.state.filterOrganization != 'all' ? items.filter(
+      let preFilteredItems = this.state.filterOrganization !== 'all' ? items.filter(
           item => {
             return item.creditsFrom.name === (this.state.filterOrganization) ||
             item.creditsTo.name === (this.state.filterOrganization)
