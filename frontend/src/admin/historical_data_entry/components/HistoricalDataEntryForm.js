@@ -39,7 +39,10 @@ HistoricalDataEntryForm.propTypes = {
   actions: PropTypes.arrayOf(PropTypes.string).isRequired,
   compliancePeriods: PropTypes.arrayOf(PropTypes.shape()).isRequired,
   editMode: PropTypes.bool,
-  errors: PropTypes.shape({}).isRequired,
+  errors: PropTypes.oneOfType([
+    PropTypes.shape({}),
+    PropTypes.string
+  ]).isRequired,
   fuelSuppliers: PropTypes.arrayOf(PropTypes.shape()).isRequired,
   fields: PropTypes.shape({
     compliancePeriod: PropTypes.shape({

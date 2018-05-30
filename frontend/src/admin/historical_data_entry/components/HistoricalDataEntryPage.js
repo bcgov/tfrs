@@ -74,7 +74,10 @@ const HistoricalDataEntryPage = (props) => {
 };
 
 HistoricalDataEntryPage.propTypes = {
-  addErrors: PropTypes.shape({}).isRequired,
+  addErrors: PropTypes.oneOfType([
+    PropTypes.shape({}),
+    PropTypes.string
+  ]).isRequired,
   commitErrors: PropTypes.shape({}).isRequired,
   commitMessage: PropTypes.string.isRequired,
   compliancePeriods: PropTypes.arrayOf(PropTypes.shape()).isRequired,

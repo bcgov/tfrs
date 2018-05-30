@@ -171,7 +171,10 @@ HistoricalDataEntryContainer.defaultProps = {
 
 HistoricalDataEntryContainer.propTypes = {
   addCreditTransfer: PropTypes.func.isRequired,
-  addErrors: PropTypes.shape({}),
+  addErrors: PropTypes.oneOfType([
+    PropTypes.shape({}),
+    PropTypes.string
+  ]),
   commitErrors: PropTypes.shape({}),
   commitMessage: PropTypes.string,
   compliancePeriods: PropTypes.arrayOf(PropTypes.shape()).isRequired,
