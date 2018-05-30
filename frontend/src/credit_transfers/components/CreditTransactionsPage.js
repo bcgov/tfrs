@@ -53,7 +53,7 @@ class CreditTransactionsPage extends Component {
             </button>
           }
         </div>
-          {!isFetching &&
+          {(!isFetching && this.props.loggedInUser.organization.id === DEFAULT_ORGANIZATION.id) &&
           <div className="form-group organization_filter">
               <label htmlFor="organizationFilterSelect">Show transactions involving:</label>
             <select id="organizationFilterSelect" className="form-control" onChange={e => this.setState({filterOrganization: e.target.value})}>
