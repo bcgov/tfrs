@@ -342,6 +342,19 @@
     }
   }
 
+  .organization_filter {
+    float: right;
+    max-width: 50%;
+    text-align: right;
+
+    @include  mobile {
+      float: none;
+      max-width: 100%;
+      text-align: left;
+    }
+  }
+
+
   .right-toolbar-container .actions-container {
     margin-bottom: 1rem;
   }
