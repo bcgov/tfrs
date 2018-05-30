@@ -223,9 +223,6 @@ class CreditTransferViewContainer extends Component {
       if (item.respondent.id === loggedInUser.organization.id) {
         if (availableActions.includes(Lang.BTN_ACCEPT)) {
           buttonActions.push(Lang.BTN_SIGN_2_2);
-        }
-
-        if (availableActions.includes(Lang.BTN_CT_CANCEL)) {
           buttonActions.push(Lang.BTN_REFUSE);
         }
 
