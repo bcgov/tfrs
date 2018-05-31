@@ -148,14 +148,19 @@ class CreditTrade2Serializer(serializers.ModelSerializer):
 
     def get_actions(self, obj):
         cur_status = obj.status.status
-        # print self.context.get('request')
         request = self.context.get('request')
-        permissions = request.user.user_role.permissions
 
-        statuses = CreditTradeStatus.objects.all().only('id', 'status')
-        status_dict = {s.status: s for s in statuses}
+        '''
+        If the user doesn't have any roles assigned, treat as though the user
+        doesn't have available permissions
+        '''
+        if request.user.user_role is None:
+            return []
 
         available_statuses = []
+        permissions = request.user.user_role.permissions
+        statuses = CreditTradeStatus.objects.all().only('id', 'status')
+        status_dict = {s.status: s for s in statuses}
 
         if cur_status == "Draft":
             available_statuses.append(status_dict["Draft"])

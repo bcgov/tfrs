@@ -6,6 +6,9 @@ import datetime
 
 from api import fake_api_calls
 from api.models.CreditTrade import CreditTrade
+from api.models.Role import Role
+from api.models.User import User
+from api.models.UserRole import UserRole
 
 # Credit Trade Statuses
 STATUS_DRAFT = 1
@@ -30,6 +33,9 @@ class TestAPI(TestCase):
                 'test_credit_trades.json',
                 'test_organization_fuel_suppliers.json',
                 'test_organization_balances.json',
+                'roles.json',
+                'permissions.json',
+                'roles_permissions.json'
                 ]
 
     def setUp(self):
@@ -55,6 +61,13 @@ class TestAPI(TestCase):
             HTTP_SMGOV_USEREMAIL='BradJSmith@cuvox.de',
             HTTP_SM_UNIVERSALID='BSmith')
 
+        '''
+        Apply a fuel supplier role to the default user
+        '''
+        fs_user = User.objects.get(username='business_bsmith')
+        fs_role = Role.objects.get(name='FSUser')
+        UserRole.objects.create(user_id=fs_user.id, role_id=fs_role.id)
+
         self.gov_client = Client(
             HTTP_SMGOV_USERGUID='c2971372-3a96-4704-9b9c-18e4e9298ee3',
             HTTP_SMGOV_USERDISPLAYNAME='Test Person',
@@ -62,6 +75,13 @@ class TestAPI(TestCase):
             HTTP_SM_UNIVERSALID='Teperson',
             HTTP_SMGOV_USERTYPE='Internal',
             HTTP_SM_AUTHDIRNAME='IDIR')
+
+        '''
+        Apply a government role to Teperson
+        '''
+        gov_user = User.objects.get(username='internal_teperson')
+        gov_role = Role.objects.get(name='GovDirector')
+        UserRole.objects.create(user_id=gov_user.id, role_id=gov_role.id)
 
         self.test_url = "/api/credit_trades"
 
@@ -280,9 +300,6 @@ class TestAPI(TestCase):
         response = self.gov_client.put(
             "{}/{}/approve".format(self.test_url, credit_trade['id']),
             content_type='application/json')
-
-        # print(response.status_code)
-        # print(response.content.decode("utf-8"))
 
         assert status.HTTP_200_OK == response.status_code
 
