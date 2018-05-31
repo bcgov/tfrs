@@ -12,7 +12,9 @@ from api.models.CreditTradeType import CreditTradeType
 from api.models.CreditTradeZeroReason import CreditTradeZeroReason
 from api.models.Organization import Organization
 from api.models.OrganizationBalance import OrganizationBalance
+from api.models.Role import Role
 from api.models.User import User
+from api.models.UserRole import UserRole
 
 from api.services.CreditTradeService import CreditTradeService
 
@@ -39,6 +41,9 @@ class TestCreditTrades(TestCase):
                 'test_credit_trades.json',
                 'test_organization_fuel_suppliers.json',
                 'test_organization_balances.json',
+                'roles.json',
+                'permissions.json',
+                'roles_permissions.json',
                 ]
 
     def setUp(self):
@@ -54,6 +59,15 @@ class TestCreditTrades(TestCase):
             HTTP_SM_UNIVERSALID=self.gov_user.authorization_id,
             HTTP_SMGOV_USERTYPE='Internal',
             HTTP_SM_AUTHDIRNAME='IDIR')
+
+        '''
+        Apply a government role to Teperson
+        '''
+        username = "_".join(['internal',
+                            self.gov_user.authorization_id.lower()])
+        gov_user = User.objects.get(username=username)
+        gov_role = Role.objects.get(name='GovDirector')
+        UserRole.objects.create(user_id=gov_user.id, role_id=gov_role.id)
 
         self.user_1 = User.objects.filter(organization__id=2).first()
         self.fs_client_1 = Client(
