@@ -12,10 +12,12 @@ import StatusInterceptor from './components/StatusInterceptor';
 
 const App = (props) => {
   let content;
-  if (!props.userRequest.isFetching && props.isAuthenticated) {
+  if (props.errorRequest.hasErrors && props.errorRequest.error.status) {
+    content = <StatusInterceptor statusCode={props.errorRequest.error.status} />;
+  } else if (!props.userRequest.isFetching && props.isAuthenticated) {
     content = props.children;
   } else if (!props.userRequest.isFetching) {
-    content = (<StatusInterceptor statusCode={props.userRequest.error.status} />);
+    content = <StatusInterceptor statusCode={props.userRequest.error.status} />;
   }
 
   return (
@@ -31,11 +33,26 @@ const App = (props) => {
   );
 };
 
+App.defaultProps = {
+  errorRequest: {
+    error: {
+    },
+    hasErrors: false
+  }
+};
+
 App.propTypes = {
   children: PropTypes.oneOfType([
     PropTypes.arrayOf(PropTypes.node),
     PropTypes.node
   ]).isRequired,
+  errorRequest: PropTypes.shape({
+    error: PropTypes.shape({
+      status: PropTypes.number,
+      statusText: PropTypes.string
+    }),
+    hasErrors: PropTypes.bool
+  }),
   loggedInUser: PropTypes.shape({
     displayName: PropTypes.string,
     organization: PropTypes.shape({
@@ -53,6 +70,10 @@ App.propTypes = {
 };
 
 export default withRouter(connect(state => ({
+  errorRequest: {
+    error: state.rootReducer.errorRequest.errorMessage,
+    hasErrors: state.rootReducer.errorRequest.hasErrors
+  },
   loggedInUser: state.rootReducer.userRequest.loggedInUser,
   isAuthenticated: state.rootReducer.userRequest.isAuthenticated,
   userRequest: {
