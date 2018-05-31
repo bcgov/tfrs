@@ -8,7 +8,6 @@ import { DEFAULT_ORGANIZATION } from '../../constants/values';
 import history from '../../app/History';
 import Loading from '../../app/components/Loading';
 import CreditTransferTable from './CreditTransferTable';
-import {organization} from "../../sampleData";
 
 class CreditTransactionsPage extends Component {
 
