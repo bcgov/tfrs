@@ -38,8 +38,6 @@ class CreditTransactionsPage extends Component {
 
     let preFilteredItems = items;
 
-    console.log(this.state.filterOrganization);
-
     if (this.state.filterOrganization !== -1) {
       preFilteredItems = items.filter(item =>
         item.creditsFrom.id === (this.state.filterOrganization) ||
