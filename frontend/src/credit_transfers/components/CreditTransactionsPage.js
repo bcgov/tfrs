@@ -13,7 +13,7 @@ class CreditTransactionsPage extends Component {
   constructor (props) {
     super(props);
     this.state = {
-      filterOrganization: 'all'
+      filterOrganization: -1
     };
   }
 
@@ -25,16 +25,25 @@ class CreditTransactionsPage extends Component {
 
     if (!isFetching) {
       uniqueOrganizations = (
-        Array.from(new Set(items.flatMap(item => [item.creditsFrom.name, item.creditsTo.name])))
-      ).sort();
+        Array.from(new Set(items.flatMap(item => [{
+          id: item.creditsFrom.id,
+          name: item.creditsFrom.name
+        }, {
+          id: item.creditsTo.id,
+          name: item.creditsTo.name
+        }])))
+      ).sort((a, b) => a.name.toLowerCase().localeCompare(b.name.toLowerCase()))
+        .reduce((acc, item) => (acc.find(o => o.id === item.id) ? acc : [...acc, item]), []);
     }
 
     let preFilteredItems = items;
 
-    if (this.state.filterOrganization !== 'all') {
+    console.log(this.state.filterOrganization);
+
+    if (this.state.filterOrganization !== -1) {
       preFilteredItems = items.filter(item =>
-        item.creditsFrom.name === (this.state.filterOrganization) ||
-        item.creditsTo.name === (this.state.filterOrganization));
+        item.creditsFrom.id === (this.state.filterOrganization) ||
+        item.creditsTo.id === (this.state.filterOrganization));
     }
 
     return (
@@ -63,13 +72,15 @@ class CreditTransactionsPage extends Component {
               <select
                 id="organizationFilterSelect"
                 className="form-control"
-                onChange={event => this.setState({ filterOrganization: event.target.value })}
+                onChange={event => this.setState({
+                  filterOrganization: parseInt(event.target.value, 10)
+                })}
               >
-                <option value="all">All Organizations</option>
-                {uniqueOrganizations.map(organizationName =>
+                <option value="-1">All Organizations</option>
+                {uniqueOrganizations.map(organization =>
                   (
-                    <option key={organizationName} value={organizationName}>
-                      {organizationName}
+                    <option key={organization.id.toString(10)} value={organization.id.toString(10)}>
+                      {organization.name}
                     </option>
                   ))}
               </select>
