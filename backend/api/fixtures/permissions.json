@@ -5,7 +5,7 @@
             "description": "A minimum permission needed for an authenticated user to access the system.",
             "name": "Login"
         },
-        "model": "api.permissions",
+        "model": "api.permission",
         "pk": "1"
     },
     {
@@ -14,7 +14,7 @@
             "description": "Gives the user System Administration power in the system. Assignment of this permission should go to a very limited set of users an an as needed/backup basis.",
             "name": "System Administrator"
         },
-        "model": "api.permissions",
+        "model": "api.permission",
         "pk": "2"
     },
     {
@@ -23,7 +23,7 @@
             "description": "Gives the user access to the User Management screens",
             "name": "User Management"
         },
-        "model": "api.permissions",
+        "model": "api.permission",
         "pk": "3"
     },
     {
@@ -32,17 +32,8 @@
             "description": "Gives the user access to the Roles and Permissions screens",
             "name": "Roles and Permissions"
         },
-        "model": "api.permissions",
+        "model": "api.permission",
         "pk": "4"
-    },
-    {
-        "fields": {
-            "code": "APPROVE_TRANSFER",
-            "description": "Approve Transfer",
-            "name": "Approve Transfer"
-        },
-        "model": "api.permissions",
-        "pk": "5"
     },
     {
         "fields": {
@@ -50,25 +41,34 @@
             "description": "Add Fuel Supplier User",
             "name": "Add Fuel Supplier User"
         },
-        "model": "api.permissions",
+        "model": "api.permission",
+        "pk": "5"
+    },
+    {
+        "fields": {
+            "code": "VIEW_APPROVED_CREDIT_TRANSFERS",
+            "description": "View Approved Credit Transfers",
+            "name": "View Approved Credit Transfers"
+        },
+        "model": "api.permission",
         "pk": "6"
     },
     {
         "fields": {
-            "code": "AUTHORIZE_TRANSFER",
-            "description": "Authorize Transfer",
-            "name": "Authorize Transfer"
+            "code": "VIEW_CREDIT_TRANSFERS",
+            "description": "View Credit Transfers",
+            "name": "View Credit Transfers"
         },
-        "model": "api.permissions",
+        "model": "api.permission",
         "pk": "7"
     },
     {
         "fields": {
-            "code": "PUBLISH_OPPORTUNITY",
-            "description": "Publish Opportunity",
-            "name": "Publish Opportunity"
+            "code": "VIEW_FUEL_SUPPLIERS",
+            "description": "View Fuel Suppliers",
+            "name": "View Fuel Suppliers"
         },
-        "model": "api.permissions",
+        "model": "api.permission",
         "pk": "8"
     },
     {
@@ -77,25 +77,43 @@
             "description": "Propose Credit Transfer",
             "name": "Propose Credit Transfer"
         },
-        "model": "api.permissions",
+        "model": "api.permission",
         "pk": "9"
     },
     {
         "fields": {
-            "code": "GOV_VIEW",
-            "description": "Gov View",
-            "name": "Gov View"
+            "code": "RESCIND_CREDIT_TRANSFER",
+            "description": "Rescind Credit Transfer",
+            "name": "Rescind Credit Transfer"
         },
-        "model": "api.permissions",
+        "model": "api.permission",
         "pk": "10"
     },
     {
         "fields": {
-            "code": "FUEL_SUP_VIEW",
-            "description": "Fuel Supplier View",
-            "name": "Fuel Supplier View"
+            "code": "ACCEPT_TRANSFER",
+            "description": "Accept/Refuse Credit Transfer",
+            "name": "Accept Credit Transfer"
         },
-        "model": "api.permissions",
+        "model": "api.permission",
         "pk": "11"
+    },
+    {
+        "fields": {
+            "code": "RECOMMEND_TRANSFER",
+            "description": "Recommend/Not Recommend Credit Transfer",
+            "name": "Recommend Credit Transfer"
+        },
+        "model": "api.permission",
+        "pk": "12"
+    },
+    {
+        "fields": {
+            "code": "APPROVE_TRANSFER",
+            "description": "Approve Transfer",
+            "name": "Approve Transfer"
+        },
+        "model": "api.permission",
+        "pk": "13"
     }
 ]

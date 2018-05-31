@@ -223,9 +223,6 @@ class CreditTransferViewContainer extends Component {
       if (item.respondent.id === loggedInUser.organization.id) {
         if (availableActions.includes(Lang.BTN_ACCEPT)) {
           buttonActions.push(Lang.BTN_SIGN_2_2);
-        }
-
-        if (availableActions.includes(Lang.BTN_CT_CANCEL)) {
           buttonActions.push(Lang.BTN_REFUSE);
         }
 
@@ -254,6 +251,10 @@ class CreditTransferViewContainer extends Component {
   }
 }
 
+CreditTransferViewContainer.defaultProps = {
+  item: {}
+};
+
 CreditTransferViewContainer.propTypes = {
   addSigningAuthorityConfirmation: PropTypes.func.isRequired,
   deleteCreditTransfer: PropTypes.func.isRequired,
@@ -277,7 +278,7 @@ CreditTransferViewContainer.propTypes = {
       PropTypes.number
     ]),
     actions: PropTypes.arrayOf(PropTypes.shape({}))
-  }).isRequired,
+  }),
   loggedInUser: PropTypes.shape({
     displayName: PropTypes.string,
     organization: PropTypes.shape({

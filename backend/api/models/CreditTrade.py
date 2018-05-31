@@ -107,34 +107,5 @@ class CreditTrade(Auditable):
 
         return cur_status
 
-    @property
-    def actions(self):
-        """Statuses that can be made for this credit trade"""
-        statuses = CreditTradeStatus.objects.all().only('id', 'status')
-        status_dict = {s.status: s for s in statuses}
-
-        cur_status = self.status.status
-
-        if cur_status == "Draft":
-            return [status_dict["Draft"],
-                    status_dict["Submitted"]]
-        elif cur_status == "Submitted":
-            # Change status to rescind
-            return [status_dict["Accepted"],
-                    status_dict["Cancelled"]]  # Rescind
-        elif cur_status == "Accepted":
-            # Change status to refuse
-            return [status_dict["Cancelled"],  # Refuse
-                    status_dict["Recommended"]]
-        elif cur_status == "Recommended":
-            return [status_dict["Approved"],
-                    status_dict["Declined"]]
-
-        return []
-
     class Meta:
         db_table = 'credit_trade'
-
-        permissions = (
-            ("credit_trade_approve", "Can approve credit transfers"),
-        )

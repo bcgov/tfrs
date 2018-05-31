@@ -1,20 +1,20 @@
 [
     {
         "fields": {
-            "description": "A regular government user in the system.",
-            "is_government_role": true,
-            "name": "GovUser"
-        },
-        "model": "api.roles",
-        "pk": "1"
-    },
-    {
-        "fields": {
             "description": "A System Administrator in the application with User Management and Roles and Permissions access.",
             "is_government_role": true,
             "name": "Admin"
         },
-        "model": "api.roles",
+        "model": "api.role",
+        "pk": "1"
+    },
+    {
+        "fields": {
+            "description": "A regular government user in the system.",
+            "is_government_role": true,
+            "name": "GovUser"
+        },
+        "model": "api.role",
         "pk": "2"
     },
     {
@@ -23,7 +23,7 @@
             "is_government_role": true,
             "name": "GovDirector"
         },
-        "model": "api.roles",
+        "model": "api.role",
         "pk": "3"
     },
     {
@@ -32,7 +32,7 @@
             "is_government_role": false,
             "name": "FSUser"
         },
-        "model": "api.roles",
+        "model": "api.role",
         "pk": "4"
     },
     {
@@ -41,7 +41,7 @@
             "is_government_role": false,
             "name": "FSManager"
         },
-        "model": "api.roles",
+        "model": "api.role",
         "pk": "5"
     },
     {
@@ -50,7 +50,7 @@
             "is_government_role": false,
             "name": "FSAdmin"
         },
-        "model": "api.roles",
+        "model": "api.role",
         "pk": "6"
     },
     {
@@ -59,7 +59,7 @@
             "is_government_role": false,
             "name": "FSNoAccess"
         },
-        "model": "api.roles",
+        "model": "api.role",
         "pk": "7"
     }
 ]
