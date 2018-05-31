@@ -9,6 +9,7 @@ import history from './app/History';
 import * as Routes from './constants/routes';
 import CREDIT_TRANSACTIONS from './constants/routes/CreditTransactions';
 import HISTORICAL_DATA_ENTRY from './constants/routes/HistoricalDataEntry';
+import ORGANIZATIONS from './constants/routes/Organizations';
 import CreditTransactionsContainer from './credit_transfers/CreditTransactionsContainer';
 import CreditTransferAddContainer from './credit_transfers/CreditTransferAddContainer';
 import CreditTransferEditContainer from './credit_transfers/CreditTransferEditContainer';
@@ -17,7 +18,6 @@ import HistoricalDataEntryContainer from './admin/historical_data_entry/Historic
 import HistoricalDataEntryEditContainer from './admin/historical_data_entry/HistoricalDataEntryEditContainer';
 import NotFound from './components/reusables/NotFound';
 import OrganizationsContainer from './organizations/OrganizationsContainer';
-import OrganizationDetails from './components/organizations/OrganizationDetails';
 
 const Router = props => (
   <ConnectedRouter history={history} key={Math.random()}>
@@ -30,12 +30,8 @@ const Router = props => (
         />
         <Route
           exact
-          path={Routes.ORGANIZATIONS}
+          path={ORGANIZATIONS.LIST}
           component={withRouter(OrganizationsContainer)}
-        />
-        <Route
-          path={Routes.ORGANIZATION_DETAILS}
-          component={withRouter(OrganizationDetails)}
         />
         <Route
           exact
