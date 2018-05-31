@@ -40,7 +40,8 @@ class CreditTransactionsPage extends Component {
     return (
       <div className="page_credit_transactions">
         <h3 className="credit_balance">
-        Credit Balance: {numeral(this.props.loggedInUser.organizationBalance).format(NumberFormat.INT)}
+        Credit Balance: {
+            numeral(this.props.loggedInUser.organizationBalance).format(NumberFormat.INT)}
         </h3>
         <h1>{this.props.title}</h1>
         <div className="right-toolbar-container">
