@@ -26,6 +26,8 @@ from .OrganizationActionsType import OrganizationActionsType
 from .OrganizationBalance import OrganizationBalance
 from .OrganizationStatus import OrganizationStatus
 
+from api.managers.OrganizationManager import OrganizationManager
+
 from auditable.models import Auditable
 
 
@@ -44,6 +46,7 @@ class Organization(Auditable):
         related_name='organizations',
         blank=True, null=True,
         on_delete=models.PROTECT)
+    objects = OrganizationManager()
 
     def __str__(self):
         return self.name
