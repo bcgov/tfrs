@@ -36,7 +36,7 @@ class CreditTransferTextRepresentation extends Component {
     return (
       <div className="text-representation">
         <span className="value">{this.creditsTo}</span> {this._buyAction()}
-        <span className="value"> {this.numberOfCredits} </span> credit{(this.numberOfCredits > 1) && 's'} from
+        <span className="value"> {this.numberOfCredits} </span> credit{(this.props.numberOfCredits > 1) && 's'} from
         <span className="value"> {this.creditsFrom} </span>
         for <span className="value"> {this.totalValue} </span>
         effective on <span className="value"> {this.tradeEffectiveDate}</span>.
@@ -48,7 +48,7 @@ class CreditTransferTextRepresentation extends Component {
     return (
       <div className="text-representation">
         A credit transfer of
-        <span className="value"> {this.numberOfCredits} </span> credit{(this.numberOfCredits > 1) && 's'} for
+        <span className="value"> {this.numberOfCredits} </span> credit{(this.props.numberOfCredits > 1) && 's'} for
         <span className="value"> {this.creditsTo} </span>
         has been <span className="value lowercase"> {this.tradeStatus} </span>
         effective on <span className="value"> {this.tradeEffectiveDate}</span>.
@@ -61,7 +61,7 @@ class CreditTransferTextRepresentation extends Component {
       <div className="text-representation">
         An <span className="value">award</span> of
         <span className="value"> {this.numberOfCredits} </span>
-        credit{(this.numberOfCredits > 1) && 's'} earned by
+        credit{(this.props.numberOfCredits > 1) && 's'} earned by
         <span className="value"> {this.creditsTo} </span> for the completion of a
         Part 3 Agreement has been <span className="value lowercase"> {this.tradeStatus}</span>,
         effective on <span className="value"> {this.tradeEffectiveDate}</span>.
@@ -74,7 +74,7 @@ class CreditTransferTextRepresentation extends Component {
       <div className="text-representation">
         A <span className="value">reduction</span> of
         <span className="value"> {this.numberOfCredits} </span>
-        credit{(this.numberOfCredits > 1) && 's'} earned by
+        credit{(this.props.numberOfCredits > 1) && 's'} earned by
         <span className="value"> {this.creditsFrom} </span>
         has been <span className="value lowercase"> {this.tradeStatus}</span>,
         effective on <span className="value"> {this.tradeEffectiveDate}</span>.
@@ -86,7 +86,7 @@ class CreditTransferTextRepresentation extends Component {
     return (
       <div className="text-representation">
         <span className="value">{this.creditsFrom}</span> {this._sellAction()}
-        <span className="value"> {this.numberOfCredits} </span> credit{(this.numberOfCredits > 1) && 's'} to
+        <span className="value"> {this.numberOfCredits} </span> credit{(this.props.numberOfCredits > 1) && 's'} to
         <span className="value"> {this.creditsTo} </span>
         for <span className="value"> {this.fairMarketValuePerCredit} </span> per credit
         for a total value of <span className="value"> {this.totalValue}</span>,
@@ -100,7 +100,7 @@ class CreditTransferTextRepresentation extends Component {
       <div className="text-representation">
         A <span className="value">validation</span> of
         <span className="value"> {this.numberOfCredits} </span>
-        credit{(this.numberOfCredits > 1) && 's'} earned by
+        credit{(this.props.numberOfCredits > 1) && 's'} earned by
         <span className="value"> {this.creditsTo} </span>
         has been <span className="value lowercase"> {this.tradeStatus}</span>,
         effective on <span className="value"> {this.tradeEffectiveDate}</span>.

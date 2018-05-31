@@ -260,16 +260,18 @@
     @include mobile {
       text-align: center;
     }
-    svg[data-icon="exchange-alt"] {
+    svg {
       position: relative;
-      animation: mymove-in 2s;
-      animation-fill-mode: forwards;
+      &[data-icon="exchange-alt"] {
+        animation: mymove-in 1.5s;
+        animation-fill-mode: forwards;
+      }
       &[data-icon="arrow-alt-circle-up"] {
-        animation: mymove-up 2s;
+        animation: mymove-up 1.5s;
         animation-fill-mode: forwards;
       }
       &[data-icon="arrow-alt-circle-down"] {
-        animation: mymove-down 2s;
+        animation: mymove-down 1.5s;
         animation-fill-mode: forwards;
       }
     }
@@ -341,6 +343,19 @@
       text-align: left;
     }
   }
+
+  .organization_filter {
+    float: right;
+    max-width: 50%;
+    text-align: right;
+
+    @include  mobile {
+      float: none;
+      max-width: 100%;
+      text-align: left;
+    }
+  }
+
 
   .right-toolbar-container .actions-container {
     margin-bottom: 1rem;
