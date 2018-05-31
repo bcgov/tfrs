@@ -32,6 +32,13 @@ const Router = props => (
         />
         <Route
           exact
+          path={Routes.LOGOUT}
+          component={() => {
+            window.location = __LOGOUT_URL__;
+          }}
+        />
+        <Route
+          exact
           path={Routes.ORGANIZATIONS}
           component={withRouter(OrganizationsContainer)}
         />
@@ -67,14 +74,9 @@ const Router = props => (
           component={withRouter(HistoricalDataEntryEditContainer)}
         />
         <Route
+          exact
           path={CONTACT_US.LIST}
           component={withRouter(ContactUsContainer)}
-        />
-        <Route
-          path={Routes.LOGOUT}
-          component={() => {
-            window.location = __LOGOUT_URL__;
-          }}
         />
         <Route component={NotFound} />
       </Switch>
