@@ -186,8 +186,8 @@ class CreditTrade2Serializer(serializers.ModelSerializer):
             if permissions.filter(permission__code='RESCIND_CREDIT_TRANSFER'):
                 available_statuses.append(status_dict["Cancelled"])
 
-        elif cur_status == "Recommended":
-            # Allow to approval for recommended transfer
+        elif cur_status == "Recommended" or cur_status == "Not Recommended":
+            # Allow to approval for recommended/not recommended transfer
             if permissions.filter(permission__code='APPROVE_TRANSFER'):
                 available_statuses.append(status_dict["Approved"])
                 available_statuses.append(status_dict["Declined"])
