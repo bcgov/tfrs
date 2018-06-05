@@ -1,10 +1,12 @@
 """
     REST API Documentation for the NRS TFRS Credit Trading Application
 
-    The Transportation Fuels Reporting System is being designed to streamline compliance reporting for transportation fuel suppliers in accordance with the Renewable & Low Carbon Fuel Requirements Regulation.
+    The Transportation Fuels Reporting System is being designed to streamline
+    compliance reporting for transportation fuel suppliers in accordance with
+    the Renewable & Low Carbon Fuel Requirements Regulation.
 
     OpenAPI spec version: v1
-        
+
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
@@ -23,11 +25,21 @@ from django.db import models
 
 from auditable.models import Auditable
 
+from .Permission import Permission
+
 
 class Role(Auditable):
     name = models.CharField(max_length=200)
     description = models.CharField(max_length=1000)
     is_government_role = models.BooleanField(default=False)
+
+    @property
+    def permissions(self):
+        permissions = Permission.objects.filter(
+            role_permissions__role_id=self.id
+        )
+
+        return permissions
 
     # Add effective_date and expiration_date
     class Meta:
