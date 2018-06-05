@@ -75,12 +75,15 @@ class User(AbstractUser, Auditable):
         return balance
 
     @property
-    def user_role(self):
+    def role(self):
         user_role = UserRole.objects.select_related('role').filter(
             user_id=self.id
         ).first()
 
-        return user_role
+        if user_role is None:
+            return None
+
+        return user_role.role
 
     class Meta:
         db_table = 'user'
