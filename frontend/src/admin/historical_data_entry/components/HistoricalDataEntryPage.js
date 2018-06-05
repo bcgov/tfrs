@@ -67,7 +67,7 @@ const HistoricalDataEntryPage = (props) => {
         id="confirmProcess"
         title="Confirm Process"
       >
-        Are you sure you want to commit the approved credit transfers?
+        Are you sure you want to commit the approved credit transactions?
       </Modal>
     </div>
   );
