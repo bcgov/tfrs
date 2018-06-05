@@ -127,7 +127,7 @@ class CreditTransferViewContainer extends Component {
         id="confirmAccept"
         key="confirmAccept"
       >
-        Do you want to accept this transfer?
+        Are you sure you want to accept this transfer?
       </Modal>
     );
   }
@@ -135,6 +135,34 @@ class CreditTransferViewContainer extends Component {
   _modalDelete (item) {
     return (
       <ModalDeleteCreditTransfer handleSubmit={() => this._deleteCreditTransfer(item.id)} />
+    );
+  }
+
+  _modalNotRecommend () {
+    return (
+      <Modal
+        handleSubmit={(event) => {
+          this._changeStatus(CREDIT_TRANSFER_STATUS.notRecommended);
+        }}
+        id="confirmNotRecommend"
+        key="confirmNotRecommend"
+      >
+        Are you sure you want to not recommend approval of this credit transfer proposal?
+      </Modal>
+    );
+  }
+
+  _modalRecommend () {
+    return (
+      <Modal
+        handleSubmit={(event) => {
+          this._changeStatus(CREDIT_TRANSFER_STATUS.recommendedForDecision);
+        }}
+        id="confirmRecommend"
+        key="confirmRecommend"
+      >
+        Are you sure you want to recommend approval of this credit transfer proposal?
+      </Modal>
     );
   }
 
@@ -147,7 +175,7 @@ class CreditTransferViewContainer extends Component {
         id="confirmRefuse"
         key="confirmRefuse"
       >
-      Do you want to refuse this transfer?
+        Are you sure you want to refuse this transfer?
       </Modal>
     );
   }
@@ -161,7 +189,7 @@ class CreditTransferViewContainer extends Component {
         id="confirmRescind"
         key="confirmRescind"
       >
-        Do you want to rescind this transfer?
+        Are you sure you want to rescind this transfer?
       </Modal>
     );
   }
@@ -244,6 +272,14 @@ class CreditTransferViewContainer extends Component {
 
         content.push(this._modalSubmit(item));
         content.push(this._modalDelete(item));
+      }
+
+      if (availableActions.includes(Lang.BTN_RECOMMEND_FOR_DECISION)) {
+        buttonActions.push(Lang.BTN_NOT_RECOMMENDED_FOR_DECISION);
+        buttonActions.push(Lang.BTN_RECOMMEND_FOR_DECISION);
+
+        content.push(this._modalRecommend(item));
+        content.push(this._modalNotRecommend(item));
       }
     }
 

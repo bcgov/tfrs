@@ -304,20 +304,6 @@ class Test_Api_Custom(TestCase):
         self.deleteUser (user.get('id'))
         self.deleteOrganization(organization_id)
 
-
-    def test_organizationsSearchGet(self):
-        organization_id, statusId, actionId = self.createOrganization()
-
-        # do a search
-        testUrl = "/api/organizations/search"
-        response = self.client.get(testUrl)
-        # Check that the response is OK.
-        assert status.HTTP_200_OK == response.status_code
-        # parse the response.
-        jsonString = response.content.decode("utf-8")
-        data = json.loads(jsonString)
-        # Cleanup
-
     def test_rolesIdPermissionsGet(self):
         # create a group.
         role_id = self.createRole()
@@ -411,42 +397,6 @@ class Test_Api_Custom(TestCase):
         # cleanup
         self.deleteUser(user.get('id'))
         self.deleteOrganization(organization_id)
-
-    def test_usersIdRolesGet(self):
-        fsId, _, _= self.createOrganization()
-        user = self.createUser(fsId)
-        role_id = self.createRole()
-
-        url = "/api/users/" + str(user.get('id')) + "/roles"
-        payload = fakedata.UserRoleTestDataCreate()
-        payload['user'] = user.get('id')
-        payload['role'] = role_id
-        jsonString = json.dumps(payload)
-        response = self.client.post(url, content_type='application/json', data=jsonString)
-
-        assert response.status_code == status.HTTP_200_OK
-
-        response = self.client.get(url)
-
-        assert response.status_code == status.HTTP_200_OK
-
-        payload = [fakedata.UserRoleTestDataUpdate()]
-        payload[0]['user'] = user.get('id')
-        payload[0]['role'] = role_id
-        jsonString = json.dumps(payload)
-        response = self.client.put(url, content_type='application/json', data=jsonString)
-
-        assert response.status_code == status.HTTP_200_OK
-
-        jsonString = response.content.decode("utf-8")
-        data = json.loads(jsonString)
-
-        assert data[0]['user'] == user.get('id')
-        assert data[0]['role'] == role_id
-
-        self.deleteRole(role_id)
-        self.deleteUser(user.get('id'))
-        self.deleteOrganization(fsId)
 
     def test_usersSearchGet(self):
         organization_id, statusId, actionId = self.createOrganization()
