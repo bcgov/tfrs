@@ -90,7 +90,7 @@ class CreditTransferTextRepresentation extends Component {
         <span className="value"> {this.creditsTo} </span>
         for <span className="value"> {this.fairMarketValuePerCredit} </span> per credit
         for a total value of <span className="value"> {this.totalValue}</span>,
-        effective <span className="value"> {this.tradeEffectiveDate}</span>.
+        effective on <span className="value"> {this.tradeEffectiveDate}</span>.
       </div>
     );
   }
