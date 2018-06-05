@@ -76,9 +76,9 @@ class User(AbstractUser, Auditable):
 
     @property
     def user_role(self):
-        user_role = UserRole.objects.select_related('role').get(
+        user_role = UserRole.objects.select_related('role').filter(
             user_id=self.id
-        )
+        ).first()
 
         return user_role
 
