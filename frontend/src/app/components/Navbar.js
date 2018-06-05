@@ -31,12 +31,6 @@ class Navbar extends Component {
         <div className="container">
           {this.props.loggedInUser.organization &&
             this.props.loggedInUser.organization.id === DEFAULT_ORGANIZATION.id &&
-            <Link id="navbar-dashboard" to={Routes.HOME}>
-              Dashboard
-            </Link>
-          }
-          {this.props.loggedInUser.organization &&
-            this.props.loggedInUser.organization.id === DEFAULT_ORGANIZATION.id &&
             <Link id="navbar-organizations" to={Routes.ORGANIZATIONS}>
               Fuel Suppliers
             </Link>
@@ -44,18 +38,6 @@ class Navbar extends Component {
           <Link id="navbar-credit-transactions" to={CREDIT_TRANSACTIONS.LIST}>
             Credit Transactions
           </Link>
-          {this.props.loggedInUser.organization &&
-            this.props.loggedInUser.organization.id === DEFAULT_ORGANIZATION.id &&
-            <Link id="navbar-notifications" to={Routes.NOTIFICATIONS}>
-              Notifications
-            </Link>
-          }
-          {this.props.loggedInUser.organization &&
-            this.props.loggedInUser.organization.id === DEFAULT_ORGANIZATION.id &&
-            <Link id="navbar-settings" to={Routes.SETTINGS}>
-              Settings
-            </Link>
-          }
           {this.props.loggedInUser.organization &&
             this.props.loggedInUser.organization.id === DEFAULT_ORGANIZATION.id &&
             <Link id="navbar-administration" to={HISTORICAL_DATA_ENTRY.LIST}>
@@ -80,14 +62,6 @@ class Navbar extends Component {
           {this.props.loggedInUser.organization &&
           this.props.loggedInUser.organization.id === DEFAULT_ORGANIZATION.id &&
           <li>
-            <Link id="collapse-navbar-dashboard" to={Routes.HOME}>
-              Dashboard
-            </Link>
-          </li>
-          }
-          {this.props.loggedInUser.organization &&
-          this.props.loggedInUser.organization.id === DEFAULT_ORGANIZATION.id &&
-          <li>
             <Link
               id="collapse-navbar-organization"
               to={Routes.ORGANIZATIONS}
@@ -104,25 +78,6 @@ class Navbar extends Component {
             Credit Transactions
             </Link>
           </li>
-          {this.props.loggedInUser.organization &&
-          this.props.loggedInUser.organization.id === DEFAULT_ORGANIZATION.id &&
-          <li>
-            <Link
-              id="collapse-navbar-notifications"
-              to={Routes.NOTIFICATIONS}
-            >
-              Notifications
-            </Link>
-          </li>
-          }
-          {this.props.loggedInUser.organization &&
-          this.props.loggedInUser.organization.id === DEFAULT_ORGANIZATION.id &&
-          <li>
-            <Link id="collapse-navbar-settings" to={Routes.SETTINGS}>
-              Settings
-            </Link>
-          </li>
-          }
           {this.props.loggedInUser.organization &&
           this.props.loggedInUser.organization.id === DEFAULT_ORGANIZATION.id &&
           <li>
