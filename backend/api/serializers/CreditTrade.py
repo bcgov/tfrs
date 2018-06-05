@@ -154,41 +154,41 @@ class CreditTrade2Serializer(serializers.ModelSerializer):
         If the user doesn't have any roles assigned, treat as though the user
         doesn't have available permissions
         '''
-        if request.user.user_role is None:
+        if request.user.role is None:
             return []
 
         available_statuses = []
-        permissions = request.user.user_role.permissions
+        permissions = request.user.role.permissions
         statuses = CreditTradeStatus.objects.all().only('id', 'status')
         status_dict = {s.status: s for s in statuses}
 
         if cur_status == "Draft":
             available_statuses.append(status_dict["Draft"])
 
-            if permissions.filter(permission__code='PROPOSE_CREDIT_TRANSFER'):
+            if permissions.filter(code='PROPOSE_CREDIT_TRANSFER'):
                 available_statuses.append(status_dict["Submitted"])
 
         elif cur_status == "Submitted":
             # Allow Accepting of transfers that have been submitted
-            if permissions.filter(permission__code='ACCEPT_TRANSFER'):
+            if permissions.filter(code='ACCEPT_TRANSFER'):
                 available_statuses.append(status_dict["Accepted"])
 
             # Allow to rescind submitted transfer
-            if permissions.filter(permission__code='RESCIND_CREDIT_TRANSFER'):
+            if permissions.filter(code='RESCIND_CREDIT_TRANSFER'):
                 available_statuses.append(status_dict["Cancelled"])
 
         elif cur_status == "Accepted":
             # Allow to recommend for approval for accepted transfer
-            if permissions.filter(permission__code='RECOMMEND_TRANSFER'):
+            if permissions.filter(code='RECOMMEND_TRANSFER'):
                 available_statuses.append(status_dict["Recommended"])
 
             # Allow to rescind submitted transfer
-            if permissions.filter(permission__code='RESCIND_CREDIT_TRANSFER'):
+            if permissions.filter(code='RESCIND_CREDIT_TRANSFER'):
                 available_statuses.append(status_dict["Cancelled"])
 
         elif cur_status == "Recommended" or cur_status == "Not Recommended":
             # Allow to approval for recommended/not recommended transfer
-            if permissions.filter(permission__code='APPROVE_TRANSFER'):
+            if permissions.filter(code='APPROVE_TRANSFER'):
                 available_statuses.append(status_dict["Approved"])
                 available_statuses.append(status_dict["Declined"])
 
