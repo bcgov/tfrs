@@ -8,7 +8,6 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
 import CreditTransferForm from './components/CreditTransferForm';
-import ModalDeleteCreditTransfer from './components/ModalDeleteCreditTransfer';
 import ModalSubmitCreditTransfer from './components/ModalSubmitCreditTransfer';
 
 import { getFuelSuppliers } from '../actions/organizationActions';
@@ -25,6 +24,7 @@ import {
 import history from '../app/History';
 import CREDIT_TRANSACTIONS from '../constants/routes/CreditTransactions';
 import { CREDIT_TRANSFER_STATUS } from '../constants/values';
+import Modal from '../app/components/Modal';
 import * as Lang from '../constants/langEnUs';
 
 const buttonActions = [Lang.BTN_DELETE_DRAFT, Lang.BTN_SAVE_DRAFT, Lang.BTN_SIGN_1_2];
@@ -273,7 +273,13 @@ class CreditTransferEditContainer extends Component {
           }
         }
       />,
-      <ModalDeleteCreditTransfer handleSubmit={() => this._deleteCreditTransfer(item.id)} />
+      <Modal
+        handleSubmit={() => this._deleteCreditTransfer(item.id)}
+        id="confirmDelete"
+        key="confirmDelete"
+      >
+        Are you sure you want to delete this draft?
+      </Modal>
     ]);
   }
 }
