@@ -24,16 +24,16 @@ from rest_framework import serializers
 
 from api.models.User import User
 from .Organization import OrganizationSerializer
-from .UserRole import UserRoleSerializer
+from .Role import RoleSerializer
 
 
 class UserSerializer(serializers.ModelSerializer):
     organization = OrganizationSerializer(read_only=True)
-    user_role = UserRoleSerializer(read_only=True)
+    role = RoleSerializer(read_only=True)
 
     class Meta:
         model = User
         fields = (
             'id', 'first_name', 'last_name', 'email', 'authorization_id',
             'authorization_guid', 'authorization_directory', 'display_name',
-            'organization', 'organization_balance', 'user_role')
+            'organization', 'organization_balance', 'role')
