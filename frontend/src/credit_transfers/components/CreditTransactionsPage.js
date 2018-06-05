@@ -4,7 +4,6 @@ import numeral from 'numeral';
 
 import * as NumberFormat from '../../constants/numeralFormats';
 import CREDIT_TRANSACTIONS from '../../constants/routes/CreditTransactions';
-import { DEFAULT_ORGANIZATION } from '../../constants/values';
 import history from '../../app/History';
 import Loading from '../../app/components/Loading';
 import CreditTransferTable from './CreditTransferTable';
@@ -14,14 +13,17 @@ const CreditTransactionsPage = (props) => {
   const isEmpty = items.length === 0;
   return (
     <div className="page_credit_transactions">
-      <h3 className="credit_balance">
-        Credit Balance: {numeral(props.loggedInUser.organizationBalance).format(NumberFormat.INT)}
-      </h3>
+      {props.loggedInUser.role &&
+        !props.loggedInUser.role.isGovernmentRole &&
+        <h3 className="credit_balance">
+          Credit Balance: {numeral(props.loggedInUser.organizationBalance).format(NumberFormat.INT)}
+        </h3>
+      }
       <h1>{props.title}</h1>
       <div className="right-toolbar-container">
         <div className="actions-container">
-          {props.loggedInUser.organization &&
-            props.loggedInUser.organization.id === DEFAULT_ORGANIZATION.id &&
+          {props.loggedInUser.role &&
+            !props.loggedInUser.role.isGovernmentRole &&
             <button
               className="btn btn-primary"
               type="button"
@@ -55,7 +57,11 @@ CreditTransactionsPage.propTypes = {
       name: PropTypes.string,
       id: PropTypes.number
     }),
-    organizationBalance: PropTypes.number
+    organizationBalance: PropTypes.number,
+    role: PropTypes.shape({
+      id: PropTypes.number,
+      isGovernmentRole: PropTypes.bool
+    })
   }).isRequired,
   title: PropTypes.string.isRequired
 };

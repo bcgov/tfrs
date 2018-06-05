@@ -29,48 +29,30 @@ class Navbar extends Component {
     const SecondLevelNavigation = (
       <div className="level2Navigation">
         <div className="container">
-          {this.props.loggedInUser.userRole &&
-            this.props.loggedInUser.userRole.role.isGovernmentRole &&
-            <Link id="navbar-dashboard" to={Routes.HOME}>
-              Dashboard
-            </Link>
+          {this.props.loggedInUser.role &&
+          this.props.loggedInUser.role.isGovernmentRole &&
+          <Link id="navbar-organizations" to={ORGANIZATIONS.LIST}>
+            Fuel Suppliers
+          </Link>
           }
-          {this.props.loggedInUser.userRole &&
-            this.props.loggedInUser.userRole.role.isGovernmentRole &&
-            <Link id="navbar-organizations" to={ORGANIZATIONS.LIST}>
-              Fuel Suppliers
-            </Link>
-          }
-          {this.props.loggedInUser.userRole &&
-            !this.props.loggedInUser.userRole.role.isGovernmentRole &&
-            <a
-              href={ORGANIZATIONS.BULLETIN}
-              rel="noopener noreferrer"
-              target="_blank"
-            >
-              Fuel Suppliers
-            </a>
+          {this.props.loggedInUser.role &&
+          !this.props.loggedInUser.role.isGovernmentRole &&
+          <a
+            href={ORGANIZATIONS.BULLETIN}
+            rel="noopener noreferrer"
+            target="_blank"
+          >
+            Fuel Suppliers
+          </a>
           }
           <Link id="navbar-credit-transactions" to={CREDIT_TRANSACTIONS.LIST}>
             Credit Transactions
           </Link>
-          {this.props.loggedInUser.userRole &&
-            this.props.loggedInUser.userRole.role.isGovernmentRole &&
-            <Link id="navbar-notifications" to={Routes.NOTIFICATIONS}>
-              Notifications
-            </Link>
-          }
-          {this.props.loggedInUser.userRole &&
-            this.props.loggedInUser.userRole.role.isGovernmentRole &&
-            <Link id="navbar-settings" to={Routes.SETTINGS}>
-              Settings
-            </Link>
-          }
-          {this.props.loggedInUser.userRole &&
-            this.props.loggedInUser.userRole.role.isGovernmentRole &&
-            <Link id="navbar-administration" to={HISTORICAL_DATA_ENTRY.LIST}>
-              Administration
-            </Link>
+          {this.props.loggedInUser.role &&
+          this.props.loggedInUser.role.isGovernmentRole &&
+          <Link id="navbar-administration" to={HISTORICAL_DATA_ENTRY.LIST}>
+            Administration
+          </Link>
           }
           <Link id="navbar-logout" to={Routes.LOGOUT}>
             Log-out
@@ -87,16 +69,8 @@ class Navbar extends Component {
       >
         <a id="navigation-anchor" href="#navigation-anchor"><span>Navigation Bar</span></a>
         <ul className="nav navbar-nav">
-          {this.props.loggedInUser.userRole &&
-          this.props.loggedInUser.userRole.role.isGovernmentRole &&
-          <li>
-            <Link id="collapse-navbar-dashboard" to={Routes.HOME}>
-              Dashboard
-            </Link>
-          </li>
-          }
-          {this.props.loggedInUser.userRole &&
-          this.props.loggedInUser.userRole.role.isGovernmentRole &&
+          {this.props.loggedInUser.role &&
+          this.props.loggedInUser.role.isGovernmentRole &&
           <li>
             <Link
               id="collapse-navbar-organization"
@@ -106,17 +80,17 @@ class Navbar extends Component {
             </Link>
           </li>
           }
-          {this.props.loggedInUser.userRole &&
-            !this.props.loggedInUser.userRole.role.isGovernmentRole &&
-            <li>
-              <a
-                href={ORGANIZATIONS.BULLETIN}
-                rel="noopener noreferrer"
-                target="_blank"
-              >
-                Fuel Suppliers
-              </a>
-            </li>
+          {this.props.loggedInUser.role &&
+          !this.props.loggedInUser.role.isGovernmentRole &&
+          <li>
+            <a
+              href={ORGANIZATIONS.BULLETIN}
+              rel="noopener noreferrer"
+              target="_blank"
+            >
+              Fuel Suppliers
+            </a>
+          </li>
           }
           <li>
             <Link
@@ -126,27 +100,8 @@ class Navbar extends Component {
             Credit Transactions
             </Link>
           </li>
-          {this.props.loggedInUser.userRole &&
-          this.props.loggedInUser.userRole.role.isGovernmentRole &&
-          <li>
-            <Link
-              id="collapse-navbar-notifications"
-              to={Routes.NOTIFICATIONS}
-            >
-              Notifications
-            </Link>
-          </li>
-          }
-          {this.props.loggedInUser.userRole &&
-          this.props.loggedInUser.userRole.role.isGovernmentRole &&
-          <li>
-            <Link id="collapse-navbar-settings" to={Routes.SETTINGS}>
-              Settings
-            </Link>
-          </li>
-          }
-          {this.props.loggedInUser.userRole &&
-          this.props.loggedInUser.userRole.role.isGovernmentRole &&
+          {this.props.loggedInUser.role &&
+          this.props.loggedInUser.role.isGovernmentRole &&
           <li>
             <Link
               id="collapse-navbar-administration"
@@ -246,11 +201,9 @@ Navbar.propTypes = {
       name: PropTypes.string,
       id: PropTypes.number
     }),
-    userRole: PropTypes.shape({
-      role: PropTypes.shape({
-        id: PropTypes.number,
-        isGovernmentRole: PropTypes.bool
-      })
+    role: PropTypes.shape({
+      id: PropTypes.number,
+      isGovernmentRole: PropTypes.bool
     })
   }).isRequired,
   isAuthenticated: PropTypes.bool.isRequired
