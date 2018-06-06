@@ -118,5 +118,13 @@
         },
         "model": "api.userrole",
         "pk": null
+    },
+    {
+        "fields": {
+            "role": "4",
+            "user": "18"
+        },
+        "model": "api.userrole",
+        "pk": null
     }
 ]
