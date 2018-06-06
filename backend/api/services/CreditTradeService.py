@@ -9,8 +9,6 @@ from django.core.exceptions import ValidationError
 from django.db.models import Q
 from django.db import transaction
 
-import datetime
-
 
 class CreditTradeService(object):
 
@@ -137,17 +135,15 @@ class CreditTradeService(object):
         CreditTradeService.create_history(credit_trade)
         credit_trade.save()
 
-        effective_date = datetime.date.today()
         CreditTradeService.transfer_credits(
             credit_trade.credits_from,
             credit_trade.credits_to,
             credit_trade.id,
             credit_trade.number_of_credits,
-            effective_date
+            credit_trade.trade_effective_date
         )
 
         credit_trade.status = status_completed
-        credit_trade.trade_effective_date = effective_date
         CreditTradeService.create_history(credit_trade)
         credit_trade.save()
 
