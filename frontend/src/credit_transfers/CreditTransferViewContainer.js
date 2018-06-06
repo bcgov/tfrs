@@ -201,6 +201,7 @@ class CreditTransferViewContainer extends Component {
           this._changeStatus(CREDIT_TRANSFER_STATUS.proposed);
         }}
         item={item}
+        key="confirmSubmit"
       />
     );
   }
@@ -251,12 +252,18 @@ class CreditTransferViewContainer extends Component {
       if (item.respondent.id === loggedInUser.organization.id) {
         if (availableActions.includes(Lang.BTN_ACCEPT)) {
           buttonActions.push(Lang.BTN_SIGN_2_2);
-          buttonActions.push(Lang.BTN_REFUSE);
+          content.push(this._modalAccept());
         }
 
-        content.push(this._modalAccept());
-        content.push(this._modalRefuse());
-        content.push(this._modalRescind());
+        if (availableActions.includes(Lang.BTN_CT_CANCEL)) {
+          if (item.status.id === CREDIT_TRANSFER_STATUS.proposed.id) {
+            buttonActions.push(Lang.BTN_REFUSE);
+            content.push(this._modalRefuse());
+          } else {
+            buttonActions.push(Lang.BTN_RESCIND);
+            content.push(this._modalRescind());
+          }
+        }
       } else if (item.initiator.id === loggedInUser.organization.id) {
         if (availableActions.includes(Lang.BTN_CT_CANCEL)) {
           buttonActions.push(Lang.BTN_RESCIND);
@@ -268,10 +275,14 @@ class CreditTransferViewContainer extends Component {
       if (availableActions.includes(Lang.BTN_SAVE_DRAFT)) {
         buttonActions.push(Lang.BTN_DELETE_DRAFT);
         buttonActions.push(Lang.BTN_EDIT_DRAFT);
+
+        content.push(this._modalDelete(item));
+      }
+
+      if (availableActions.includes(Lang.BTN_PROPOSE)) {
         buttonActions.push(Lang.BTN_SIGN_1_2);
 
         content.push(this._modalSubmit(item));
-        content.push(this._modalDelete(item));
       }
 
       if (availableActions.includes(Lang.BTN_RECOMMEND_FOR_DECISION)) {

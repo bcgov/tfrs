@@ -7,6 +7,7 @@ import PropTypes from 'prop-types';
 import { CREDIT_TRANSFER_STATUS } from '../../constants/values';
 
 import Errors from '../../app/components/Errors';
+import * as Lang from '../../constants/langEnUs';
 import CreditTransferProgress from './CreditTransferProgress';
 import CreditTransferFormDetails from './CreditTransferFormDetails';
 import CreditTransferVisualRepresentation from './CreditTransferVisualRepresentation';
@@ -47,11 +48,14 @@ const CreditTransferForm = props => (
         handleInputChange={props.handleInputChange}
       />
 
-      <CreditTransferTerms
-        addToFields={props.addToFields}
-        fields={props.fields}
-        toggleCheck={props.toggleCheck}
-      />
+      {(props.buttonActions.includes(Lang.BTN_SIGN_1_2) ||
+        props.buttonActions.includes(Lang.BTN_SIGN_2_2)) &&
+        <CreditTransferTerms
+          addToFields={props.addToFields}
+          fields={props.fields}
+          toggleCheck={props.toggleCheck}
+        />
+      }
 
       <CreditTransferFormButtons
         actions={props.buttonActions}
@@ -108,6 +112,13 @@ CreditTransferForm.propTypes = {
   handleInputChange: PropTypes.func.isRequired,
   handleSubmit: PropTypes.func.isRequired,
   id: PropTypes.number,
+  loggedInUser: PropTypes.shape({
+    hasPermission: PropTypes.func,
+    role: PropTypes.shape({
+      id: PropTypes.number,
+      isGovernmentRole: PropTypes.bool
+    })
+  }).isRequired,
   title: PropTypes.string,
   toggleCheck: PropTypes.func.isRequired,
   totalValue: PropTypes.number.isRequired

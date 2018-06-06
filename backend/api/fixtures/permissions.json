@@ -91,29 +91,47 @@
     },
     {
         "fields": {
-            "code": "ACCEPT_TRANSFER",
-            "description": "Accept/Refuse Credit Transfer",
-            "name": "Accept Credit Transfer"
+            "code": "REFUSE_CREDIT_TRANSFER",
+            "description": "Refuse Credit Transfer",
+            "name": "Refuse Credit Transfer"
         },
         "model": "api.permission",
         "pk": "11"
     },
     {
         "fields": {
-            "code": "RECOMMEND_TRANSFER",
-            "description": "Recommend/Not Recommend Credit Transfer",
-            "name": "Recommend Credit Transfer"
+            "code": "SIGN_CREDIT_TRANSFER",
+            "description": "Sign Credit Transfer",
+            "name": "Sign Credit Transfer"
         },
         "model": "api.permission",
         "pk": "12"
     },
     {
         "fields": {
-            "code": "APPROVE_TRANSFER",
+            "code": "RECOMMEND_CREDIT_TRANSFER",
+            "description": "Recommend/Not Recommend Credit Transfer",
+            "name": "Recommend Credit Transfer"
+        },
+        "model": "api.permission",
+        "pk": "13"
+    },
+    {
+        "fields": {
+            "code": "DECLINE_CREDIT_TRANSFER",
+            "description": "Decline Transfer",
+            "name": "Decline Transfer"
+        },
+        "model": "api.permission",
+        "pk": "14"
+    },
+    {
+        "fields": {
+            "code": "APPROVE_CREDIT_TRANSFER",
             "description": "Approve Transfer",
             "name": "Approve Transfer"
         },
         "model": "api.permission",
-        "pk": "13"
+        "pk": "15"
     }
 ]
