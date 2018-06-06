@@ -37,6 +37,17 @@ class CreditTransferProgress extends Component {
     );
   }
 
+  _addStepNotRecommended () {
+    return (
+      <div
+        className={`step ${(this.props.status.id === CREDIT_TRANSFER_STATUS.notRecommended.id) ? 'cancelled' : ''}`}
+        key={CREDIT_TRANSFER_STATUS.notRecommended.id}
+      >
+        <span>{CREDIT_TRANSFER_STATUS.notRecommended.description}</span>
+      </div>
+    );
+  }
+
   _addStepProposed () {
     return (
       <div
@@ -82,7 +93,13 @@ class CreditTransferProgress extends Component {
 
     view.push(this._addStepProposed());
     view.push(this._addStepAccepted());
-    view.push(this._addStepRecommended());
+
+    if (this.props.status.id === CREDIT_TRANSFER_STATUS.notRecommended.id) {
+      view.push(this._addStepNotRecommended());
+    } else {
+      view.push(this._addStepRecommended());
+    }
+
     view.push(this._addStepCompleted());
 
     return view;
