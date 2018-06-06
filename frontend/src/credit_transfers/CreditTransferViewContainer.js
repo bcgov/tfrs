@@ -8,10 +8,10 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
 import CreditTransferDetails from './components/CreditTransferDetails';
-import ModalDeleteCreditTransfer from './components/ModalDeleteCreditTransfer';
 import ModalSubmitCreditTransfer from './components/ModalSubmitCreditTransfer';
 
 import {
+  approveCreditTransfer,
   deleteCreditTransfer,
   getCreditTransferIfNeeded,
   invalidateCreditTransfer,
@@ -69,6 +69,12 @@ class CreditTransferViewContainer extends Component {
 
     this.setState({
       fields: fieldState
+    });
+  }
+
+  _approveCreditTransfer (id) {
+    this.props.approveCreditTransfer(id).then(() => {
+      history.push(CREDIT_TRANSACTIONS.LIST);
     });
   }
 
@@ -132,9 +138,41 @@ class CreditTransferViewContainer extends Component {
     );
   }
 
+  _modalApprove (item) {
+    return (
+      <Modal
+        handleSubmit={() => this._approveCreditTransfer(item.id)}
+        id="confirmApprove"
+        key="confirmApprove"
+      >
+        Are you sure you want to accept this transfer?
+      </Modal>
+    );
+  }
+
+  _modalDecline (item) {
+    return (
+      <Modal
+        handleSubmit={(event) => {
+          this._changeStatus(CREDIT_TRANSFER_STATUS.declinedForApproval);
+        }}
+        id="confirmDecline"
+        key="confirmDecline"
+      >
+        Are you sure you want to decline this transfer for approval?
+      </Modal>
+    );
+  }
+
   _modalDelete (item) {
     return (
-      <ModalDeleteCreditTransfer handleSubmit={() => this._deleteCreditTransfer(item.id)} />
+      <Modal
+        handleSubmit={() => this._deleteCreditTransfer(item.id)}
+        id="confirmDelete"
+        key="confirmDelete"
+      >
+        Are you sure you want to delete this draft?
+      </Modal>
     );
   }
 
@@ -292,6 +330,18 @@ class CreditTransferViewContainer extends Component {
         content.push(this._modalRecommend(item));
         content.push(this._modalNotRecommend(item));
       }
+
+      if (availableActions.includes(Lang.BTN_DECLINE_FOR_APPROVAL)) {
+        buttonActions.push(Lang.BTN_DECLINE_FOR_APPROVAL);
+
+        content.push(this._modalDecline(item));
+      }
+
+      if (availableActions.includes(Lang.BTN_APPROVE)) {
+        buttonActions.push(Lang.BTN_APPROVE);
+
+        content.push(this._modalApprove(item));
+      }
     }
 
     return content;
@@ -304,6 +354,7 @@ CreditTransferViewContainer.defaultProps = {
 
 CreditTransferViewContainer.propTypes = {
   addSigningAuthorityConfirmation: PropTypes.func.isRequired,
+  approveCreditTransfer: PropTypes.func.isRequired,
   deleteCreditTransfer: PropTypes.func.isRequired,
   getCreditTransferIfNeeded: PropTypes.func.isRequired,
   invalidateCreditTransfer: PropTypes.func.isRequired,
@@ -350,6 +401,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   addSigningAuthorityConfirmation: bindActionCreators(addSigningAuthorityConfirmation, dispatch),
+  approveCreditTransfer: bindActionCreators(approveCreditTransfer, dispatch),
   deleteCreditTransfer: bindActionCreators(deleteCreditTransfer, dispatch),
   getCreditTransferIfNeeded: bindActionCreators(getCreditTransferIfNeeded, dispatch),
   getLoggedInUser: bindActionCreators(getLoggedInUser, dispatch),
