@@ -46,6 +46,7 @@ class Organization(Auditable):
         related_name='organizations',
         blank=True, null=True,
         on_delete=models.PROTECT)
+    objects = OrganizationManager()
 
     def __str__(self):
         return self.name
