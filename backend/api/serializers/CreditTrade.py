@@ -132,7 +132,7 @@ class CreditTrade2Serializer(serializers.ModelSerializer):
     zero_reason = CreditTradeZeroReasonSerializer(read_only=True)
     credits_from = OrganizationSerializer(read_only=True)
     credits_to = OrganizationSerializer(read_only=True)
-    actions = CreditTradeStatusMinSerializer(many=True, read_only=True)
+    actions = serializers.SerializerMethodField()
     compliance_period = CompliancePeriodSerializer(read_only=True)
 
     class Meta:
@@ -145,3 +145,60 @@ class CreditTrade2Serializer(serializers.ModelSerializer):
                   'trade_effective_date', 'credits_from', 'credits_to',
                   'update_timestamp', 'actions', 'note',
                   'compliance_period')
+
+    def get_actions(self, obj):
+        cur_status = obj.status.status
+        request = self.context.get('request')
+
+        '''
+        If the user doesn't have any roles assigned, treat as though the user
+        doesn't have available permissions
+        '''
+        if request.user.role is None:
+            return []
+
+        available_statuses = []
+        permissions = request.user.role.permissions
+        statuses = CreditTradeStatus.objects.all().only('id', 'status')
+        status_dict = {s.status: s for s in statuses}
+
+        if cur_status == "Draft":
+            available_statuses.append(status_dict["Draft"])
+
+            if permissions.filter(code='SIGN_CREDIT_TRANSFER'):
+                available_statuses.append(status_dict["Submitted"])
+
+        elif cur_status == "Submitted":
+            # Allow to accept submitted transfers
+            if permissions.filter(code='SIGN_CREDIT_TRANSFER'):
+                available_statuses.append(status_dict["Accepted"])
+
+            # Allow to rescind submitted transfers
+            if permissions.filter(code='RESCIND_CREDIT_TRANSFER'):
+                available_statuses.append(status_dict["Cancelled"])
+
+            # Allow to refuse submitted transfers
+            if permissions.filter(code='REFUSE_CREDIT_TRANSFER'):
+                available_statuses.append(status_dict["Cancelled"])
+
+        elif cur_status == "Accepted":
+            # Allow to recommend for approval accepted transfers
+            if permissions.filter(code='RECOMMEND_CREDIT_TRANSFER'):
+                available_statuses.append(status_dict["Recommended"])
+
+            # Allow to rescind submitted transfer
+            if permissions.filter(code='RESCIND_CREDIT_TRANSFER'):
+                available_statuses.append(status_dict["Cancelled"])
+
+        elif cur_status == "Recommended" or cur_status == "Not Recommended":
+            # Allow to approval for recommended/not recommended transfer
+            if permissions.filter(code='APPROVE_CREDIT_TRANSFER'):
+                available_statuses.append(status_dict["Approved"])
+
+            # Allow to decline recommended transfers
+            if permissions.filter(code='DECLINE_CREDIT_TRANSFER'):
+                available_statuses.append(status_dict["Declined"])
+
+        serializer = CreditTradeStatusMinSerializer(available_statuses,
+                                                    many=True)
+        return serializer.data

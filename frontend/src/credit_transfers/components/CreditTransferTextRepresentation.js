@@ -18,7 +18,7 @@ class CreditTransferTextRepresentation extends Component {
     this.numberOfCredits = numeral(this.props.numberOfCredits).format(NumberFormat.INT);
     this.totalValue = numeral(this.props.totalValue).format(NumberFormat.CURRENCY);
     this.tradeEffectiveDate = (this.props.tradeEffectiveDate)
-      ? moment(this.props.tradeEffectiveDate).format('LL') : 'approval';
+      ? moment(this.props.tradeEffectiveDate).format('LL') : "on director's approval";
 
     this.tradeStatus = (this.props.status.id === CREDIT_TRANSFER_STATUS.approved.id ||
       this.props.status.id === CREDIT_TRANSFER_STATUS.completed.id)
@@ -39,7 +39,7 @@ class CreditTransferTextRepresentation extends Component {
         <span className="value"> {this.numberOfCredits} </span> credit{(this.props.numberOfCredits > 1) && 's'} from
         <span className="value"> {this.creditsFrom} </span>
         for <span className="value"> {this.totalValue} </span>
-        effective on <span className="value"> {this.tradeEffectiveDate}</span>.
+        effective <span className="value"> {this.tradeEffectiveDate}</span>.
       </div>
     );
   }
@@ -51,7 +51,7 @@ class CreditTransferTextRepresentation extends Component {
         <span className="value"> {this.numberOfCredits} </span> credit{(this.props.numberOfCredits > 1) && 's'} for
         <span className="value"> {this.creditsTo} </span>
         has been <span className="value lowercase"> {this.tradeStatus} </span>
-        effective on <span className="value"> {this.tradeEffectiveDate}</span>.
+        effective <span className="value"> {this.tradeEffectiveDate}</span>.
       </div>
     );
   }
@@ -64,7 +64,7 @@ class CreditTransferTextRepresentation extends Component {
         credit{(this.props.numberOfCredits > 1) && 's'} earned by
         <span className="value"> {this.creditsTo} </span> for the completion of a
         Part 3 Agreement has been <span className="value lowercase"> {this.tradeStatus}</span>,
-        effective on <span className="value"> {this.tradeEffectiveDate}</span>.
+        effective <span className="value"> {this.tradeEffectiveDate}</span>.
       </div>
     );
   }
@@ -77,7 +77,7 @@ class CreditTransferTextRepresentation extends Component {
         credit{(this.props.numberOfCredits > 1) && 's'} earned by
         <span className="value"> {this.creditsFrom} </span>
         has been <span className="value lowercase"> {this.tradeStatus}</span>,
-        effective on <span className="value"> {this.tradeEffectiveDate}</span>.
+        effective <span className="value"> {this.tradeEffectiveDate}</span>.
       </div>
     );
   }
@@ -103,7 +103,7 @@ class CreditTransferTextRepresentation extends Component {
         credit{(this.props.numberOfCredits > 1) && 's'} earned by
         <span className="value"> {this.creditsTo} </span>
         has been <span className="value lowercase"> {this.tradeStatus}</span>,
-        effective on <span className="value"> {this.tradeEffectiveDate}</span>.
+        effective <span className="value"> {this.tradeEffectiveDate}</span>.
       </div>
     );
   }

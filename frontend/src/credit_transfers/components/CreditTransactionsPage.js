@@ -4,7 +4,7 @@ import numeral from 'numeral';
 
 import * as NumberFormat from '../../constants/numeralFormats';
 import CREDIT_TRANSACTIONS from '../../constants/routes/CreditTransactions';
-import { DEFAULT_ORGANIZATION } from '../../constants/values';
+import PERMISSIONS_CREDIT_TRANSACTIONS from '../../constants/permissions/CreditTransactions';
 import history from '../../app/History';
 import Loading from '../../app/components/Loading';
 import CreditTransferTable from './CreditTransferTable';
@@ -46,15 +46,18 @@ class CreditTransactionsPage extends Component {
 
     return (
       <div className="page_credit_transactions">
-        <h3 className="credit_balance">
-        Credit Balance: {
-            numeral(this.props.loggedInUser.organizationBalance).format(NumberFormat.INT)}
-        </h3>
+        {this.props.loggedInUser.role &&
+          !this.props.loggedInUser.role.isGovernmentRole &&
+          <h3 className="credit_balance">
+          Credit Balance: {
+              numeral(this.props.loggedInUser.organizationBalance).format(NumberFormat.INT)}
+          </h3>
+        }
         <h1>{this.props.title}</h1>
         <div className="right-toolbar-container">
           <div className="actions-container">
-            {this.props.loggedInUser.organization &&
-            this.props.loggedInUser.organization.id === DEFAULT_ORGANIZATION.id &&
+            {this.props.loggedInUser.role &&
+            this.props.loggedInUser.hasPermission(PERMISSIONS_CREDIT_TRANSACTIONS.PROPOSE) &&
             <button
               className="btn btn-primary"
               type="button"
@@ -64,7 +67,7 @@ class CreditTransactionsPage extends Component {
             </button>
             }
           </div>
-          {(!isFetching && this.props.loggedInUser.organization.id === DEFAULT_ORGANIZATION.id) &&
+          {(!isFetching && this.props.loggedInUser.role.isGovernmentRole) &&
           <div className="form-group organization_filter">
             <label htmlFor="organizationFilterSelect">Show transactions involving:
               <select
@@ -106,11 +109,16 @@ CreditTransactionsPage.propTypes = {
   }).isRequired,
   loggedInUser: PropTypes.shape({
     displayName: PropTypes.string,
+    hasPermission: PropTypes.func,
     organization: PropTypes.shape({
       name: PropTypes.string,
       id: PropTypes.number
     }),
-    organizationBalance: PropTypes.number
+    organizationBalance: PropTypes.number,
+    role: PropTypes.shape({
+      id: PropTypes.number,
+      isGovernmentRole: PropTypes.bool
+    })
   }).isRequired,
   title: PropTypes.string.isRequired
 };

@@ -8,10 +8,10 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
 import CreditTransferDetails from './components/CreditTransferDetails';
-import ModalDeleteCreditTransfer from './components/ModalDeleteCreditTransfer';
 import ModalSubmitCreditTransfer from './components/ModalSubmitCreditTransfer';
 
 import {
+  approveCreditTransfer,
   deleteCreditTransfer,
   getCreditTransferIfNeeded,
   invalidateCreditTransfer,
@@ -72,6 +72,12 @@ class CreditTransferViewContainer extends Component {
     });
   }
 
+  _approveCreditTransfer (id) {
+    this.props.approveCreditTransfer(id).then(() => {
+      history.push(CREDIT_TRANSACTIONS.LIST);
+    });
+  }
+
   _changeStatus (status) {
     const { item } = this.props;
 
@@ -127,17 +133,74 @@ class CreditTransferViewContainer extends Component {
         id="confirmAccept"
         key="confirmAccept"
       >
-        Do you want to accept this transfer?
+        Are you sure you want to accept this transfer?
+      </Modal>
+    );
+  }
+
+  _modalApprove (item) {
+    return (
+      <Modal
+        handleSubmit={() => this._approveCreditTransfer(item.id)}
+        id="confirmApprove"
+        key="confirmApprove"
+      >
+        Are you sure you want to accept this transfer?
+      </Modal>
+    );
+  }
+
+  _modalDecline (item) {
+    return (
+      <Modal
+        handleSubmit={(event) => {
+          this._changeStatus(CREDIT_TRANSFER_STATUS.declinedForApproval);
+        }}
+        id="confirmDecline"
+        key="confirmDecline"
+      >
+        Are you sure you want to decline this transfer for approval?
       </Modal>
     );
   }
 
   _modalDelete (item) {
     return (
-      <ModalDeleteCreditTransfer
+      <Modal
         handleSubmit={() => this._deleteCreditTransfer(item.id)}
+        id="confirmDelete"
         key="confirmDelete"
-      />
+      >
+        Are you sure you want to delete this draft?
+      </Modal>
+    );
+  }
+
+  _modalNotRecommend () {
+    return (
+      <Modal
+        handleSubmit={(event) => {
+          this._changeStatus(CREDIT_TRANSFER_STATUS.notRecommended);
+        }}
+        id="confirmNotRecommend"
+        key="confirmNotRecommend"
+      >
+        Are you sure you want to not recommend approval of this credit transfer proposal?
+      </Modal>
+    );
+  }
+
+  _modalRecommend () {
+    return (
+      <Modal
+        handleSubmit={(event) => {
+          this._changeStatus(CREDIT_TRANSFER_STATUS.recommendedForDecision);
+        }}
+        id="confirmRecommend"
+        key="confirmRecommend"
+      >
+        Are you sure you want to recommend approval of this credit transfer proposal?
+      </Modal>
     );
   }
 
@@ -150,7 +213,7 @@ class CreditTransferViewContainer extends Component {
         id="confirmRefuse"
         key="confirmRefuse"
       >
-      Do you want to refuse this transfer?
+        Are you sure you want to refuse this transfer?
       </Modal>
     );
   }
@@ -164,7 +227,7 @@ class CreditTransferViewContainer extends Component {
         id="confirmRescind"
         key="confirmRescind"
       >
-        Do you want to rescind this transfer?
+        Are you sure you want to rescind this transfer?
       </Modal>
     );
   }
@@ -227,15 +290,18 @@ class CreditTransferViewContainer extends Component {
       if (item.respondent.id === loggedInUser.organization.id) {
         if (availableActions.includes(Lang.BTN_ACCEPT)) {
           buttonActions.push(Lang.BTN_SIGN_2_2);
+          content.push(this._modalAccept());
         }
 
         if (availableActions.includes(Lang.BTN_CT_CANCEL)) {
-          buttonActions.push(Lang.BTN_REFUSE);
+          if (item.status.id === CREDIT_TRANSFER_STATUS.proposed.id) {
+            buttonActions.push(Lang.BTN_REFUSE);
+            content.push(this._modalRefuse());
+          } else {
+            buttonActions.push(Lang.BTN_RESCIND);
+            content.push(this._modalRescind());
+          }
         }
-
-        content.push(this._modalAccept());
-        content.push(this._modalRefuse());
-        content.push(this._modalRescind());
       } else if (item.initiator.id === loggedInUser.organization.id) {
         if (availableActions.includes(Lang.BTN_CT_CANCEL)) {
           buttonActions.push(Lang.BTN_RESCIND);
@@ -247,10 +313,34 @@ class CreditTransferViewContainer extends Component {
       if (availableActions.includes(Lang.BTN_SAVE_DRAFT)) {
         buttonActions.push(Lang.BTN_DELETE_DRAFT);
         buttonActions.push(Lang.BTN_EDIT_DRAFT);
+
+        content.push(this._modalDelete(item));
+      }
+
+      if (availableActions.includes(Lang.BTN_PROPOSE)) {
         buttonActions.push(Lang.BTN_SIGN_1_2);
 
         content.push(this._modalSubmit(item));
-        content.push(this._modalDelete(item));
+      }
+
+      if (availableActions.includes(Lang.BTN_RECOMMEND_FOR_DECISION)) {
+        buttonActions.push(Lang.BTN_NOT_RECOMMENDED_FOR_DECISION);
+        buttonActions.push(Lang.BTN_RECOMMEND_FOR_DECISION);
+
+        content.push(this._modalRecommend(item));
+        content.push(this._modalNotRecommend(item));
+      }
+
+      if (availableActions.includes(Lang.BTN_DECLINE_FOR_APPROVAL)) {
+        buttonActions.push(Lang.BTN_DECLINE_FOR_APPROVAL);
+
+        content.push(this._modalDecline(item));
+      }
+
+      if (availableActions.includes(Lang.BTN_APPROVE)) {
+        buttonActions.push(Lang.BTN_APPROVE);
+
+        content.push(this._modalApprove(item));
       }
     }
 
@@ -264,6 +354,7 @@ CreditTransferViewContainer.defaultProps = {
 
 CreditTransferViewContainer.propTypes = {
   addSigningAuthorityConfirmation: PropTypes.func.isRequired,
+  approveCreditTransfer: PropTypes.func.isRequired,
   deleteCreditTransfer: PropTypes.func.isRequired,
   getCreditTransferIfNeeded: PropTypes.func.isRequired,
   invalidateCreditTransfer: PropTypes.func.isRequired,
@@ -310,6 +401,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   addSigningAuthorityConfirmation: bindActionCreators(addSigningAuthorityConfirmation, dispatch),
+  approveCreditTransfer: bindActionCreators(approveCreditTransfer, dispatch),
   deleteCreditTransfer: bindActionCreators(deleteCreditTransfer, dispatch),
   getCreditTransferIfNeeded: bindActionCreators(getCreditTransferIfNeeded, dispatch),
   getLoggedInUser: bindActionCreators(getLoggedInUser, dispatch),

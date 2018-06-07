@@ -28,4 +28,4 @@ from api.models.RolePermission import RolePermission
 class RolePermissionSerializer(serializers.ModelSerializer):
     class Meta:
         model = RolePermission
-        fields = ('id', 'role', 'permission')
+        fields = ('id', 'role')

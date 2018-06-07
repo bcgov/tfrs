@@ -1,15 +1,16 @@
-import React, {Component} from 'react';
+import React from 'react';
 import * as Values from '../constants/values';
 import * as ReducerTypes from '../constants/reducerTypes';
 import store from '../store/store';
 
 export const plainEnglishPhrase = (data) => {
-  let tradeStatus = data.status;
-  let tradeRespondent = data.respondent;
-  let tradeInitiator = data.initiator;
-  let tradeType = data.type;
-  let tradeTypePast = getCreditTradeTypePast(data.type);
-  let toFrom = getToFrom(tradeType);
+  const tradeStatus = data.status;
+  const tradeRespondent = data.respondent;
+  const tradeInitiator = data.initiator;
+  const tradeType = data.type;
+  const tradeTypePast = getCreditTradeTypePast(data.type);
+  const toFrom = getToFrom(tradeType);
+
   switch (tradeStatus.id) {
     case Values.STATUS_COMPLETED:
       return (
@@ -20,7 +21,8 @@ export const plainEnglishPhrase = (data) => {
           toFrom={toFrom}
           tradeRespondent={tradeRespondent}
           fairMarketValuePerCredit={data.fairMarketValuePerCredit}
-          tradeEffectiveDate={data.tradeEffectiveDate} />
+          tradeEffectiveDate={data.tradeEffectiveDate}
+        />
       );
     default:
       return (
@@ -31,101 +33,116 @@ export const plainEnglishPhrase = (data) => {
           toFrom={toFrom}
           tradeRespondent={tradeRespondent}
           fairMarketValuePerCredit={data.fairMarketValuePerCredit}
-          tradeEffectiveDate={data.trade_effective_date} />
+          tradeEffectiveDate={data.trade_effective_date}
+        />
       );
-    break;
   }
-}
+};
 
-const getCreditTradeStatus = (tradeStatus) => {
-  let statuses = store.getState().rootReducer[ReducerTypes.CREDIT_TRADE_STATUSES].data;
-  let statusType = statuses.find(function(status) {
-    return status.id === tradeStatus
-  })
+export const getCreditTradeStatus = (tradeStatus) => {
+  const statuses = store.getState().rootReducer[ReducerTypes.CREDIT_TRADE_STATUSES].data;
+  const statusType = statuses.find(status => (status.id === tradeStatus));
   return statusType.status;
-}
+};
 
 const getCreditTradeTypePast = (type) => {
   if (type.theType.includes('Sell')) {
-    return 'sold'
+    return 'sold';
   } else if (type.theType.includes('Buy')) {
-    return 'bought'
+    return 'bought';
   }
-}
+
+  return false;
+};
 
 const getToFrom = (tradeType) => {
-  if (tradeType == 'sell') {
+  if (tradeType === 'sell') {
     return 'credits to';
-  } else if (tradeType == 'buy') {
+  } else if (tradeType === 'buy') {
     return 'credits from';
   }
-}
 
-const PlainEnglishPhrasePast = (props) => {
-  let fairMarketValuePerCredit = addCommas(Number(props.fairMarketValuePerCredit));
-  let totalValue = addCommas((Number(props.numberOfCredits) * Number(props.fairMarketValuePerCredit)));
+  return false;
+};
+
+const PlainEnglishPhrasePast = (item) => {
+  const fairMarketValuePerCredit = addCommas(Number(item.fairMarketValuePerCredit));
+  const totalValue = addCommas((Number(item.numberOfCredits) *
+    Number(item.fairMarketValuePerCredit)));
+
   return (
     <div className="plain-english-phrase">
-      <span className="value">{props.tradeInitiator.name}</span> <span className="value">{props.tradeTypePast}</span> <span className="value">{props.numberOfCredits}</span> {props.toFrom} <span className="value">{props.tradeRespondent.name}</span> for <span className="value">${fairMarketValuePerCredit}</span> per credit for a total value of <span className="value">${totalValue}</span> effective on <span className="value">{props.tradeEffectiveDate}.</span>
+      <span className="value">{item.tradeInitiator.name} </span>
+      <span className="value">{item.tradeTypePast} </span>
+      <span className="value">{item.numberOfCredits} </span>
+      {item.toFrom} <span className="value">{item.tradeRespondent.name} </span>
+      for <span className="value">${fairMarketValuePerCredit} </span>
+      per credit for a total value of <span className="value">${totalValue} </span>
+      effective on <span className="value">{item.tradeEffectiveDate}.</span>
     </div>
-  ) 
-}
+  );
+};
 
-const PlainEnglishPhrase = (props) => {
-  let fairMarketValuePerCredit = addCommas(Number(props.fairMarketValuePerCredit));
-  let totalValue = addCommas((Number(props.numberOfCredits) * Number(props.fairMarketValuePerCredit)));
+const PlainEnglishPhrase = (item) => {
+  const fairMarketValuePerCredit = addCommas(Number(item.fairMarketValuePerCredit));
+  const totalValue = addCommas((Number(item.numberOfCredits) *
+    Number(item.fairMarketValuePerCredit)));
+
   return (
     <div className="plain-english-phrase">
-      <span className="value">{props.tradeInitiator.name}</span> proposes to <span className="value">{props.tradeType.theType.toLowerCase()}</span> <span className="value">{props.numberOfCredits}</span> {props.toFrom} <span className="value">{props.tradeRespondent.name}</span> for <span className="value">${fairMarketValuePerCredit}</span> per credit for a total value of <span className="value">${totalValue}</span> effective on Director's Approval.
+      <span className="value">{item.tradeInitiator.name} </span>
+      proposes to <span className="value">{item.tradeType.theType.toLowerCase()} </span>
+      <span className="value">{item.numberOfCredits} </span>
+      {item.toFrom} <span className="value">{item.tradeRespondent.name} </span>
+      for <span className="value">${fairMarketValuePerCredit} </span>
+      per credit for a total value of <span className="value">${totalValue} </span>
+      effective on Director&apos;s Approval.
     </div>
-  )
-}
+  );
+};
 
 export const getCreditTransferTitle = (data) => {
-  let respondent = data.respondent.name;
-  let tradeType = data.type.theType
-  let toFrom = getToFrom(data.type.theType)
+  const respondent = data.respondent.name;
+  const tradeType = data.type.theType;
+  const toFrom = getToFrom(data.type.theType);
+
   return (
     <CreditTransferTitle
       respondent={respondent}
       tradeType={tradeType}
       tradeEffectiveDate={data.tradeEffectiveDate}
-      toFrom={toFrom} />
-  )
-}
+      toFrom={toFrom}
+    />
+  );
+};
 
-const CreditTransferTitle = (props) => {
-  return (
-    <h1>
-      Credit Transfer - {props.tradeType} {props.toFrom} {props.respondent} {props.tradeEffectiveDate && '- proposed '} {props.tradeEffectiveDate}
-    </h1>
-  )
-}
+const CreditTransferTitle = item => (
+  <h1>
+    Credit Transfer - {item.tradeType} {item.toFrom} {item.respondent} {item.tradeEffectiveDate && '- proposed '} {item.tradeEffectiveDate}
+  </h1>
+);
 
 const addCommas = (number) => {
-  let parts = number.toFixed(2).toString().split('.');
+  const parts = number.toFixed(2).toString().split('.');
   parts[0] = parts[0].replace(Values.ADD_COMMAS_REGEX, ',');
   return parts.join('.');
-}
+};
 
 export const plainEnglishPhraseString = (data) => {
-  let tradeStatus = data.status;
-  let tradeRespondent = data.respondent;
-  let tradeInitiator = data.initiator;
-  let tradeType = data.type
-  let tradeTypePast = getCreditTradeTypePast(data.type);
-  let toFrom = getToFrom(tradeType);
-  let fairMarketValuePerCredit = addCommas(Number(data.fairMarketValuePerCredit));
-  let totalValue = addCommas((Number(data.numberOfCredits) * Number(data.fairMarketValuePerCredit)));
+  const tradeStatus = data.status;
+  const tradeRespondent = data.respondent;
+  const tradeInitiator = data.initiator;
+  const tradeType = data.type;
+  const tradeTypePast = getCreditTradeTypePast(data.type);
+  const toFrom = getToFrom(tradeType);
+  const fairMarketValuePerCredit = addCommas(Number(data.fairMarketValuePerCredit));
+  const totalValue = addCommas((Number(data.numberOfCredits) *
+    Number(data.fairMarketValuePerCredit)));
+
   switch (tradeStatus) {
     case Values.STATUS_COMPLETED:
-      return (
-        tradeInitiator + ' ' + tradeTypePast + ' ' +  data.numberOfCredits + ' ' + toFrom + ' ' + tradeRespondent + ' for $' + fairMarketValuePerCredit + ' per credit for a total value of $' + totalValue + ' effective on ' + data.tradeEffectiveDate + '.'
-      );
+      return (`${tradeInitiator} ${tradeTypePast} ${data.numberOfCredits} ${toFrom} ${tradeRespondent} for $${fairMarketValuePerCredit} per credit for a total value of $${totalValue} effective on ${data.tradeEffectiveDate}.`);
     default:
-      return (
-        tradeInitiator + ' proposes to ' + tradeType + ' ' +  data.numberOfCredits + ' ' + toFrom + ' ' + tradeRespondent + ' for $' + fairMarketValuePerCredit + ' per credit for a total value of $' + totalValue + " effective on Director's Approval."
-      );
-    break;
+      return (`${tradeInitiator} proposes to ${tradeType} ${data.numberOfCredits} ${toFrom} ${tradeRespondent} for $${fairMarketValuePerCredit} per credit for a total value of $${totalValue} effective on Director's Approval.`);
   }
-}
+};

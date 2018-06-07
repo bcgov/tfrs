@@ -7,7 +7,6 @@
 
     OpenAPI spec version: v1
 
-
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
     You may obtain a copy of the License at
@@ -20,17 +19,5 @@
     See the License for the specific language governing permissions and
     limitations under the License.
 """
-from rest_framework import serializers
 
-from api.models.Role import Role
-
-from .Permission import PermissionSerializer
-
-
-class RoleSerializer(serializers.ModelSerializer):
-    permissions = PermissionSerializer(read_only=True, many=True)
-
-    class Meta:
-        model = Role
-        fields = ('id', 'name', 'description', 'is_government_role',
-                  'permissions')
+from .PermissionRequired import *

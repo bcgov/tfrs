@@ -20,9 +20,8 @@ import {
 import history from '../app/History';
 import * as Lang from '../constants/langEnUs';
 import CREDIT_TRANSACTIONS from '../constants/routes/CreditTransactions';
+import PERMISSIONS_CREDIT_TRANSACTIONS from '../constants/permissions/CreditTransactions';
 import { CREDIT_TRANSFER_STATUS } from '../constants/values';
-
-const buttonActions = [Lang.BTN_SAVE_DRAFT, Lang.BTN_SIGN_1_2];
 
 class CreditTransferAddContainer extends Component {
   constructor (props) {
@@ -191,6 +190,12 @@ class CreditTransferAddContainer extends Component {
   }
 
   render () {
+    const buttonActions = [Lang.BTN_SAVE_DRAFT];
+
+    if (this.props.loggedInUser.hasPermission(PERMISSIONS_CREDIT_TRANSACTIONS.SIGN)) {
+      buttonActions.push(Lang.BTN_SIGN_1_2);
+    }
+
     return ([
       <CreditTransferForm
         addToFields={this._addToFields}
@@ -204,6 +209,7 @@ class CreditTransferAddContainer extends Component {
         handleInputChange={this._handleInputChange}
         handleSubmit={this._handleSubmit}
         key="creditTransferForm"
+        loggedInUser={this.props.loggedInUser}
         terms={this.state.terms}
         title="New Credit Transfer"
         toggleCheck={this._toggleCheck}
@@ -241,6 +247,7 @@ CreditTransferAddContainer.propTypes = {
   invalidateCreditTransfers: PropTypes.func.isRequired,
   loggedInUser: PropTypes.shape({
     displayName: PropTypes.string,
+    hasPermission: PropTypes.func,
     organization: PropTypes.shape({
       name: PropTypes.string,
       id: PropTypes.number
