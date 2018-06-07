@@ -40,7 +40,7 @@ class CreditTransferProgress extends Component {
   _addStepNotRecommended () {
     return (
       <div
-        className={`step ${(this.props.status.id === CREDIT_TRANSFER_STATUS.notRecommended.id) ? 'current' : ''}`}
+        className={`step ${(this.props.status.id === CREDIT_TRANSFER_STATUS.notRecommended.id) ? 'cancelled' : ''}`}
         key={CREDIT_TRANSFER_STATUS.notRecommended.id}
       >
         <span>{CREDIT_TRANSFER_STATUS.notRecommended.description}</span>

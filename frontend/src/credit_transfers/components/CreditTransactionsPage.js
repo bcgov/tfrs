@@ -4,6 +4,7 @@ import numeral from 'numeral';
 
 import * as NumberFormat from '../../constants/numeralFormats';
 import CREDIT_TRANSACTIONS from '../../constants/routes/CreditTransactions';
+import PERMISSIONS_CREDIT_TRANSACTIONS from '../../constants/permissions/CreditTransactions';
 import history from '../../app/History';
 import Loading from '../../app/components/Loading';
 import CreditTransferTable from './CreditTransferTable';
@@ -11,6 +12,7 @@ import CreditTransferTable from './CreditTransferTable';
 const CreditTransactionsPage = (props) => {
   const { isFetching, items } = props.creditTransfers;
   const isEmpty = items.length === 0;
+
   return (
     <div className="page_credit_transactions">
       {props.loggedInUser.role &&
@@ -23,7 +25,7 @@ const CreditTransactionsPage = (props) => {
       <div className="right-toolbar-container">
         <div className="actions-container">
           {props.loggedInUser.role &&
-            !props.loggedInUser.role.isGovernmentRole &&
+            props.loggedInUser.hasPermission(PERMISSIONS_CREDIT_TRANSACTIONS.PROPOSE) &&
             <button
               className="btn btn-primary"
               type="button"
@@ -53,6 +55,7 @@ CreditTransactionsPage.propTypes = {
   }).isRequired,
   loggedInUser: PropTypes.shape({
     displayName: PropTypes.string,
+    hasPermission: PropTypes.func,
     organization: PropTypes.shape({
       name: PropTypes.string,
       id: PropTypes.number

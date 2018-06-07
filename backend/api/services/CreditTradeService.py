@@ -147,7 +147,6 @@ class CreditTradeService(object):
         )
 
         credit_trade.status = status_completed
-        credit_trade.trade_effective_date = effective_date
         CreditTradeService.create_history(credit_trade)
         credit_trade.save()
 

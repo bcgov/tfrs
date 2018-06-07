@@ -418,8 +418,8 @@ class TestAPI(TestCase):
             if ct['status'] == STATUS_DRAFT:
                 statuses = [a['status'] for a in new_ct.json()['actions']]
                 actions = [a['action'] for a in new_ct.json()['actions']]
-                assert sorted(["Draft", "Submitted"]) == sorted(statuses)
-                assert sorted(["Save Draft", "Propose"]) == sorted(actions)
+                assert sorted(["Draft"]) == sorted(statuses)
+                assert sorted(["Save Draft"]) == sorted(actions)
 
     def test_create_other_statuses_fail(self, **kwargs):
         credit_trades = [{
