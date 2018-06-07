@@ -26,13 +26,10 @@ from rest_framework import exceptions
 def permission_required(permission):
     def wrapper(func):
         def wrapped(self, request, *args, **kwargs):
-            if request.user.role is None or \
-               not request.user.role.permissions.filter(
-                   code=permission
-               ):
+            if not request.user.has_perm(permission):
                 raise exceptions.PermissionDenied(
-                  'You do not have sufficient authorization to use this '
-                  'functionality.'
+                    'You do not have sufficient authorization to use this '
+                    'functionality.'
                 )
 
             return func(self, request, *args, **kwargs)
