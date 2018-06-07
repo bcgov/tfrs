@@ -1,38 +1,51 @@
 import * as ActionTypes from '../constants/actionTypes';
 
 const userRequest = (state = {
-  isFetching: false,
-  requestStarted: false,
-  serverError: false,
+  error: {},
   isAuthenticated: false,
+  isFetching: false,
   loggedInUser: {},
-  error: {}
+  requestStarted: false,
+  serverError: false
 }, action) => {
-  console.log('switch', action.type, action.errorData);
   switch (action.type) {
     case ActionTypes.GET_LOGGED_IN_USER:
-      return Object.assign({}, state, {
+      return {
+        ...state,
+        isAuthenticated: false,
         isFetching: true,
-        requestStarted: true,
-        isAuthenticated: false,
-        loggedInUser: {}
-      });
-    case ActionTypes.RECEIVE_LOGGED_IN_USER:
-      return Object.assign({}, state, {
-        isFetching: false,
-        requestStarted: true,
-        isAuthenticated: true,
-        loggedInUser: action.data
-      });
-    case ActionTypes.ERROR_LOGGED_IN_USER:
-      return Object.assign({}, state, {
-        isFetching: false,
-        requestStarted: true,
-        isAuthenticated: false,
-        serverError: true,
         loggedInUser: {},
-        error: action.errorData
-      });
+        requestStarted: true
+      };
+    case ActionTypes.RECEIVE_LOGGED_IN_USER:
+      return {
+        ...state,
+        isAuthenticated: true,
+        isFetching: false,
+        loggedInUser: {
+          ...action.data,
+          hasPermission: (permissionCode) => {
+            if (action.data.role) {
+              return action.data.role.permissions.find(permission => (
+                permission.code === permissionCode
+              ));
+            }
+
+            return false;
+          }
+        },
+        requestStarted: true
+      };
+    case ActionTypes.ERROR_LOGGED_IN_USER:
+      return {
+        ...state,
+        error: action.errorData,
+        isAuthenticated: false,
+        isFetching: false,
+        loggedInUser: {},
+        requestStarted: true,
+        serverError: true
+      };
     default:
       return state;
   }
@@ -45,22 +58,25 @@ const usersRequest = (state = {
 }, action) => {
   switch (action.type) {
     case ActionTypes.GET_CREDIT_TRANSFERS:
-      return Object.assign({}, state, {
+      return {
+        ...state,
         isFetching: true,
         success: false
-      });
+      };
     case ActionTypes.RECEIVE_CREDIT_TRANSFERS:
-      return Object.assign({}, state, {
+      return {
+        ...state,
         isFetching: false,
-        success: true,
-        items: action.data
-      });
+        items: action.data,
+        success: true
+      };
     case ActionTypes.ERROR:
-      return Object.assign({}, state, {
+      return {
+        ...state,
+        error: action.errorData,
         isFetching: false,
-        success: false,
-        error: action.errorData
-      });
+        success: false
+      };
     default:
       return state;
   }

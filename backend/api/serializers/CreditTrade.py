@@ -165,21 +165,25 @@ class CreditTrade2Serializer(serializers.ModelSerializer):
         if cur_status == "Draft":
             available_statuses.append(status_dict["Draft"])
 
-            if permissions.filter(code='PROPOSE_CREDIT_TRANSFER'):
+            if permissions.filter(code='SIGN_CREDIT_TRANSFER'):
                 available_statuses.append(status_dict["Submitted"])
 
         elif cur_status == "Submitted":
-            # Allow Accepting of transfers that have been submitted
-            if permissions.filter(code='ACCEPT_TRANSFER'):
+            # Allow to accept submitted transfers
+            if permissions.filter(code='SIGN_CREDIT_TRANSFER'):
                 available_statuses.append(status_dict["Accepted"])
 
-            # Allow to rescind submitted transfer
+            # Allow to rescind submitted transfers
             if permissions.filter(code='RESCIND_CREDIT_TRANSFER'):
                 available_statuses.append(status_dict["Cancelled"])
 
+            # Allow to refuse submitted transfers
+            if permissions.filter(code='REFUSE_CREDIT_TRANSFER'):
+                available_statuses.append(status_dict["Cancelled"])
+
         elif cur_status == "Accepted":
-            # Allow to recommend for approval for accepted transfer
-            if permissions.filter(code='RECOMMEND_TRANSFER'):
+            # Allow to recommend for approval accepted transfers
+            if permissions.filter(code='RECOMMEND_CREDIT_TRANSFER'):
                 available_statuses.append(status_dict["Recommended"])
 
             # Allow to rescind submitted transfer
@@ -188,8 +192,11 @@ class CreditTrade2Serializer(serializers.ModelSerializer):
 
         elif cur_status == "Recommended" or cur_status == "Not Recommended":
             # Allow to approval for recommended/not recommended transfer
-            if permissions.filter(code='APPROVE_TRANSFER'):
+            if permissions.filter(code='APPROVE_CREDIT_TRANSFER'):
                 available_statuses.append(status_dict["Approved"])
+
+            # Allow to decline recommended transfers
+            if permissions.filter(code='DECLINE_CREDIT_TRANSFER'):
                 available_statuses.append(status_dict["Declined"])
 
         serializer = CreditTradeStatusMinSerializer(available_statuses,

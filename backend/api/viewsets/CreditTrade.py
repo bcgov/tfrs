@@ -22,6 +22,8 @@ from api.serializers import CreditTradeHistory2Serializer \
 
 from api.services.CreditTradeService import CreditTradeService
 
+import datetime
+
 
 class CreditTradeViewSet(AuditableMixin, mixins.CreateModelMixin,
                          mixins.RetrieveModelMixin, mixins.UpdateModelMixin,
@@ -103,9 +105,10 @@ class CreditTradeViewSet(AuditableMixin, mixins.CreateModelMixin,
         return Response(None, status=status.HTTP_200_OK)
 
     @detail_route(methods=['put'])
-    @permission_required('APPROVE_TRANSFER')
+    @permission_required('APPROVE_CREDIT_TRANSFER')
     def approve(self, request, pk=None):
         credit_trade = self.get_object()
+        credit_trade.trade_effective_date = datetime.date.today()
 
         completed_credit_trade = CreditTradeService.approve(credit_trade)
         serializer = self.get_serializer(completed_credit_trade)
@@ -125,7 +128,7 @@ class CreditTradeViewSet(AuditableMixin, mixins.CreateModelMixin,
         return Response(serializer.data)
 
     @list_route(methods=['put'])
-    @permission_required('APPROVE_TRANSFER')
+    @permission_required('APPROVE_CREDIT_TRANSFER')
     def batch_process(self, request):
         status_approved = CreditTradeStatus.objects \
                                            .get(status="Approved")

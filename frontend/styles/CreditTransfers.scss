@@ -84,88 +84,97 @@
         @include mobile {
           width: 100%;
         }
-      }
 
-      .step:after,
-      .step:before {
-        content: " ";
-        position: absolute;
-        top: 0;
-        right: -17px;
-        width: 0;
-        height: 0;
-        border-top: 19px solid transparent;
-        border-bottom: 17px solid transparent;
-        border-left: 17px solid $border-grey;	
-        z-index: 2;
-        transition: border-color 0.2s ease;
-
-        @include mobile {
-          content: none;
-        }
-      }
-
-      .step:before {
-        right: auto;
-        left: 0;
-        border-left: 17px solid #fff;	
-        z-index: 0;
-      }
-
-      .step:first-child:before {
-        border: none;
-      }
-
-      .step:first-child {
-        border-top-left-radius: 4px;
-        border-bottom-left-radius: 4px;
-      }
-
-      .step span {
-        position: relative;
-      }
-
-      .step span:before {
-        opacity: 0;
-        content: "✔";
-        position: absolute;
-        top: -2px;
-        left: -20px;
-      }
-
-      .step.done span:before {
-        opacity: 1;
-        -webkit-transition: opacity 0.3s ease 0.5s;
-        -moz-transition: opacity 0.3s ease 0.5s;
-        -ms-transition: opacity 0.3s ease 0.5s;
-        transition: opacity 0.3s ease 0.5s;
-      }
-
-      .step.cancelled {
-        color: #fff;
-        background-color: $red;
-      }
-
-      .step.cancelled:after {
-        border-left: 17px solid $red;	
-      }
-
-      .step.current {
-        color: #fff;
-        background-color: $blue;
-
-        & ~ .step {
-          background-color: $light-blue;
-          color: $medium-font;
-
-          &:after {
-            border-left: 17px solid $light-blue;	
+        &:after,
+        &:before {
+          content: " ";
+          position: absolute;
+          top: 0;
+          right: -17px;
+          width: 0;
+          height: 0;
+          border-top: 19px solid transparent;
+          border-bottom: 17px solid transparent;
+          border-left: 17px solid $border-grey;	
+          z-index: 2;
+          transition: border-color 0.2s ease;
+  
+          @include mobile {
+            content: none;
           }
         }
-      }
+  
+        &:before {
+          right: auto;
+          left: 0;
+          border-left: 17px solid #fff;	
+          z-index: 0;
+        }
 
-      .step.current:after {
-        border-left: 17px solid $blue;	
+        &:first-child {
+          border-top-left-radius: 4px;
+          border-bottom-left-radius: 4px;
+
+          &:first-child:before {
+            border: none;
+          }  
+        }
+
+        span {
+          position: relative;
+
+          &:before {
+            opacity: 0;
+            content: "✔";
+            position: absolute;
+            top: -2px;
+            left: -20px;
+          }
+        }
+
+        &.done span:before {
+          opacity: 1;
+          -webkit-transition: opacity 0.3s ease 0.5s;
+          -moz-transition: opacity 0.3s ease 0.5s;
+          -ms-transition: opacity 0.3s ease 0.5s;
+          transition: opacity 0.3s ease 0.5s;
+        }
+
+        &.cancelled {
+          color: #fff;
+          background-color: $red;
+
+          &:after {
+            border-left: 17px solid $red;	
+          }
+  
+          & ~ .step {
+            background-color: $light-red;
+            color: $medium-font;
+  
+            &:after {
+              border-left: 17px solid $light-red;	
+            }
+          }
+        }
+
+        &.current {
+          color: #fff;
+          background-color: $blue;
+  
+          &:after {
+            border-left: 17px solid $blue;
+          }
+  
+          & ~ .step {
+            background-color: $light-blue;
+            color: $medium-font;
+  
+            &:after {
+              border-left: 17px solid $light-blue;	
+            }
+          }
+        }
       }
     }
   }

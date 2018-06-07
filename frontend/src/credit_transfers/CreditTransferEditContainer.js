@@ -27,8 +27,6 @@ import { CREDIT_TRANSFER_STATUS } from '../constants/values';
 import Modal from '../app/components/Modal';
 import * as Lang from '../constants/langEnUs';
 
-const buttonActions = [Lang.BTN_DELETE_DRAFT, Lang.BTN_SAVE_DRAFT, Lang.BTN_SIGN_1_2];
-
 class CreditTransferEditContainer extends Component {
   constructor (props) {
     super(props);
@@ -238,7 +236,24 @@ class CreditTransferEditContainer extends Component {
   }
 
   render () {
-    const { item } = this.props;
+    let availableActions = [];
+    const buttonActions = [Lang.BTN_SAVE_DRAFT];
+    const { isFetching, item } = this.props;
+
+    if (!isFetching && item.actions) {
+      // TODO: Add util function to return appropriate actions
+      availableActions = item.actions.map(action => (
+        action.action
+      ));
+
+      if (availableActions.includes(Lang.BTN_SAVE_DRAFT)) {
+        buttonActions.push(Lang.BTN_DELETE_DRAFT);
+      }
+
+      if (availableActions.includes(Lang.BTN_PROPOSE)) {
+        buttonActions.push(Lang.BTN_SIGN_1_2);
+      }
+    }
 
     return ([
       <CreditTransferForm
