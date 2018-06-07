@@ -85,5 +85,13 @@ class User(AbstractUser, Auditable):
 
         return user_role.role
 
+    def has_perm(self, permission):
+        if self.role is None or not self.role.permissions.filter(
+            code=permission
+        ):
+            return False
+        else:
+            return True
+
     class Meta:
         db_table = 'user'
