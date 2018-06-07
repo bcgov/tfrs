@@ -1,0 +1,22 @@
+@import './variables.scss';
+@import './mixins.scss';
+
+.page_contact_us {
+  > h1 {
+    margin-bottom: 5rem;
+  }
+
+  > h3 {
+    font-weight: bold;
+    margin-bottom: 2rem;
+  }
+
+  > p {
+    font-size: 1.5rem;
+    margin-bottom: 2rem;
+  }
+
+  a {
+    text-decoration: underline;
+  }
+}

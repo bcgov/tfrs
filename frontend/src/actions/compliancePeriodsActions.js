@@ -1,5 +1,6 @@
 import axios from 'axios';
 
+import ActionTypes from '../constants/actionTypes/CompliancePeriods';
 import * as Routes from '../constants/routes';
 
 const getCompliancePeriods = () => (dispatch) => {
@@ -13,20 +14,20 @@ const getCompliancePeriods = () => (dispatch) => {
 };
 
 const getCompliancePeriodsRequest = () => ({
-  name: 'GET_COMPLIANCE_PERIODS_REQUEST',
-  type: 'GET_COMPLIANCE_PERIODS'
+  name: ActionTypes.GET_COMPLIANCE_PERIODS_REQUEST,
+  type: ActionTypes.GET_COMPLIANCE_PERIODS
 });
 
 const getCompliancePeriodsSuccess = compliancePeriods => ({
-  name: 'RECEIVE_COMPLIANCE_PERIODS_REQUEST',
-  type: 'RECEIVE_COMPLIANCE_PERIODS',
+  name: ActionTypes.RECEIVE_COMPLIANCE_PERIODS_REQUEST,
+  type: ActionTypes.RECEIVE_COMPLIANCE_PERIODS,
   data: compliancePeriods,
   receivedAt: Date.now()
 });
 
 const getCompliancePeriodsError = error => ({
-  name: 'ERROR_COMPLIANCE_PERIODS_REQUEST',
-  type: 'ERROR',
+  name: ActionTypes.ERROR_COMPLIANCE_PERIODS_REQUEST,
+  type: ActionTypes.ERROR_COMPLIANCE_PERIODS,
   errorMessage: error
 });
 
