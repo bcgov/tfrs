@@ -56,6 +56,7 @@ class CreditTransferEditContainer extends Component {
   }
 
   componentDidMount () {
+    this.props.invalidateCreditTransfer();
     this.loadData(this.props.match.params.id);
     this.props.getFuelSuppliers();
   }
@@ -287,6 +288,7 @@ class CreditTransferEditContainer extends Component {
             numberOfCredits: item.numberOfCredits
           }
         }
+        key="confirmSubmit"
       />,
       <Modal
         handleSubmit={() => this._deleteCreditTransfer(item.id)}

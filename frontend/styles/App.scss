@@ -1,6 +1,19 @@
 @import './mixins.scss';
 @import './variables.scss';
 
+#footerAdminLinks {
+  color: $white;
+  text-align: right;
+
+  div {
+    padding: 12px 10px;
+  }
+
+  ul {
+    float: left;
+  }
+}
+
 .btn-disabled {
   background-color: $grey;
 }
