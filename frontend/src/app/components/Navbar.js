@@ -191,7 +191,7 @@ class Navbar extends Component {
                   <img src="/assets/images/menu-open-mobile.png" alt="menu" />
                 </button>
               </div>
-              <div className="col-sm-6 col-md-6 col-lg-6 hidden-xs">
+              <div className="col-sm-5 col-md-6 col-lg-6 hidden-xs">
                 <div className="bcgov-title">
                   <h1>Transportation Fuels Reporting System</h1>
                 </div>
