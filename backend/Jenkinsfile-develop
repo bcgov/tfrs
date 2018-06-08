@@ -96,6 +96,14 @@ node("develop-backend-maven-${env.BUILD_NUMBER}") {
         openshiftTag destStream: 'tfrs-develop', verbose: 'true', destTag: 'dev', srcStream: 'tfrs-develop', srcTag: "${IMAGE_HASH}"
         openshiftVerifyDeployment depCfg: 'tfrs', namespace: 'mem-tfrs-dev', replicaCount: 1, verbose: 'false'
     }
+    
+    stage('Refresh SchemaSpy') {
+        echo "Refreshing SchemaSpy for Dev Database"
+        openshiftScale depCfg: 'schema-spy', namespace: 'mem-tfrs-dev', replicaCount: 0, verbose: 'false', verifyReplicaCount: 'true'
+        sh 'sleep 5s'
+        openshiftScale depCfg: 'schema-spy', namespace: 'mem-tfrs-dev', replicaCount: 1, verbose: 'false', verifyReplicaCount: 'true'
+        sh 'sleep 10s'
+    }    
 
 } //endo of node
 } //end of podTemplate

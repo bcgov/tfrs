@@ -7,9 +7,12 @@ import history from './app/History';
 
 /* global __LOGOUT_URL__ */
 import * as Routes from './constants/routes';
+import CONTACT_US from './constants/routes/ContactUs';
 import CREDIT_TRANSACTIONS from './constants/routes/CreditTransactions';
 import HISTORICAL_DATA_ENTRY from './constants/routes/HistoricalDataEntry';
 import ORGANIZATIONS from './constants/routes/Organizations';
+
+import ContactUsContainer from './contact_us/ContactUsContainer';
 import CreditTransactionsContainer from './credit_transfers/CreditTransactionsContainer';
 import CreditTransferAddContainer from './credit_transfers/CreditTransferAddContainer';
 import CreditTransferEditContainer from './credit_transfers/CreditTransferEditContainer';
@@ -27,6 +30,13 @@ const Router = props => (
           exact
           path={Routes.HOME}
           component={withRouter(CreditTransactionsContainer)}
+        />
+        <Route
+          exact
+          path={Routes.LOGOUT}
+          component={() => {
+            window.location = __LOGOUT_URL__;
+          }}
         />
         <Route
           exact
@@ -61,10 +71,9 @@ const Router = props => (
           component={withRouter(HistoricalDataEntryEditContainer)}
         />
         <Route
-          path={Routes.LOGOUT}
-          component={() => {
-            window.location = __LOGOUT_URL__;
-          }}
+          exact
+          path={CONTACT_US.DETAILS}
+          component={withRouter(ContactUsContainer)}
         />
         <Route component={NotFound} />
       </Switch>
