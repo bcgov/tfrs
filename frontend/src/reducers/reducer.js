@@ -4,7 +4,7 @@ import { combineReducers } from 'redux';
 import * as ActionTypes from '../constants/actionTypes';
 import * as ReducerTypes from '../constants/reducerTypes';
 
-import { creditTransfer, creditTransfers } from './creditTransferReducer';
+import { approvedCreditTransfers, creditTransfer, creditTransfers } from './creditTransferReducer';
 import { userRequest, usersRequest } from './userReducer';
 
 import { organizationRequest, organizations, fuelSuppliersRequest } from './organizationReducer';
@@ -99,6 +99,7 @@ const rootReducer = combineReducers({
   userRequest,
   usersRequest,
   compliancePeriods,
+  approvedCreditTransfers,
   creditTransfer,
   creditTransfers,
   organizationRequest,
