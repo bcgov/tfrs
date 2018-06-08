@@ -1,5 +1,6 @@
 import axios from 'axios';
 
+import ActionTypes from '../constants/actionTypes/SigningAuthorityConfirmations';
 import * as Routes from '../constants/routes';
 
 export const prepareSigningAuthorityConfirmations = (creditTradeId, terms) => {
@@ -29,18 +30,18 @@ export const addSigningAuthorityConfirmation = data => (dispatch) => {
 };
 
 const addSigningAuthorityConfirmationRequest = () => ({
-  name: 'ADD_SIGNING_AUTHORITY_CONFIRMATION_REQUEST',
-  type: 'ADD_SIGNING_AUTHORITY_CONFIRMATION'
+  name: ActionTypes.ADD_SIGNING_AUTHORITY_CONFIRMATION_REQUEST,
+  type: ActionTypes.ADD_SIGNING_AUTHORITY_CONFIRMATION
 });
 
 const addSigningAuthorityConfirmationSuccess = data => ({
-  name: 'SUCCESS_ADD_SIGNING_AUTHORITY_CONFIRMATION_SUCCESS',
-  type: 'SUCCESS_ADD_SIGNING_AUTHORITY_CONFIRMATION_SUCCESS',
+  name: ActionTypes.SUCCESS_ADD_SIGNING_AUTHORITY_CONFIRMATION_SUCCESS,
+  type: ActionTypes.SUCCESS_ADD_SIGNING_AUTHORITY_CONFIRMATION_SUCCESS,
   data
 });
 
 const addSigningAuthorityConfirmationError = error => ({
-  name: 'ERROR_ADD_SIGNING_AUTHORITY_CONFIRMATION',
-  type: 'ERROR',
+  name: ActionTypes.ERROR_ADD_SIGNING_AUTHORITY_CONFIRMATION,
+  type: ActionTypes.ERROR_ADD_SIGNING_AUTHORITY_CONFIRMATION,
   errorMessage: error
 });
