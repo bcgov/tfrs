@@ -1,4 +1,5 @@
 const express = require('express');
+const fallback = require('express-history-api-fallback')
 const httpProxy = require('http-proxy');
 const path = require('path');
 const bundle = require('./server/webpackServer.js');
@@ -18,6 +19,8 @@ if (!isProduction) {
       target: 'http://localhost:8080'
     });
   });
+
+  app.use(fallback('index.html', { root: publicPath } ));
 }
 
 app.use(express.static(publicPath));
