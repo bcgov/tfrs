@@ -1,3 +1,5 @@
+import ActionTypes from '../constants/actionTypes/SigningAuthorityAssertions';
+
 const signingAuthorityAssertions = (state = {
   items: [],
   isFetching: false,
@@ -5,23 +7,26 @@ const signingAuthorityAssertions = (state = {
   errorMessage: []
 }, action) => {
   switch (action.type) {
-    case 'GET_SIGNING_AUTHORITY_ASSERTIONS':
-      return Object.assign({}, state, {
+    case ActionTypes.GET_SIGNING_AUTHORITY_ASSERTIONS:
+      return {
+        ...state,
         isFetching: true,
         success: false
-      });
-    case 'RECEIVE_SIGNING_AUTHORITY_ASSERTIONS':
-      return Object.assign({}, state, {
+      };
+    case ActionTypes.RECEIVE_SIGNING_AUTHORITY_ASSERTIONS:
+      return {
+        ...state,
         isFetching: false,
-        success: true,
-        items: action.data
-      });
-    case 'ERROR':
-      return Object.assign({}, state, {
+        items: action.data,
+        success: true
+      };
+    case ActionTypes.ERROR_SIGNING_AUTHORITY_ASSERTIONS:
+      return {
+        ...state,
+        errorMessage: action.errorMessage,
         isFetching: false,
-        success: false,
-        errorMessage: action.errorMessage
-      });
+        success: false
+      };
     default:
       return state;
   }

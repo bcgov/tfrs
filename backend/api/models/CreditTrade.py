@@ -52,7 +52,8 @@ class CreditTrade(Auditable):
     fair_market_value_per_credit = models.DecimalField(
         null=True, blank=True, max_digits=999,
         decimal_places=2,
-        default=Decimal('0.00'))
+        default=Decimal('0.00'),
+        validators=[validators.CreditTradeFairMarketValueValidator])
     zero_reason = models.ForeignKey(
         'CreditTradeZeroReason',
         related_name='credit_trades',

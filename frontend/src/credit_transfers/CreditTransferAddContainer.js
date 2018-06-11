@@ -162,6 +162,8 @@ class CreditTransferAddContainer extends Component {
       history.push(CREDIT_TRANSACTIONS.LIST);
     });
 
+    this.props.invalidateCreditTransfers();
+
     return false;
   }
 
@@ -225,6 +227,7 @@ class CreditTransferAddContainer extends Component {
             numberOfCredits: this.state.fields.numberOfCredits
           }
         }
+        key="confirmSubmit"
       />
     ]);
   }
