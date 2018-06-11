@@ -133,7 +133,8 @@ class CreditTransferViewContainer extends Component {
         id="confirmAccept"
         key="confirmAccept"
       >
-        Are you sure you want to accept this transfer?
+        Are you sure you want to sign and send this Credit Transfer
+        Proposal to the Low Carbon Fuels Branch?
       </Modal>
     );
   }
@@ -145,7 +146,7 @@ class CreditTransferViewContainer extends Component {
         id="confirmApprove"
         key="confirmApprove"
       >
-        Are you sure you want to accept this transfer?
+      Are you sure you want to approve this credit transfer proposal?
       </Modal>
     );
   }
@@ -159,7 +160,7 @@ class CreditTransferViewContainer extends Component {
         id="confirmDecline"
         key="confirmDecline"
       >
-        Are you sure you want to decline this transfer for approval?
+        Are you sure you want to decline to approve this credit transfer proposal?
       </Modal>
     );
   }
