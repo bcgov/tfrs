@@ -99,35 +99,44 @@ class CreditTradeCreateSerializer(serializers.ModelSerializer):
 class CreditTradeUpdateSerializer(serializers.ModelSerializer):
     def validate(self, data):
         request = self.context['request']
-
         available_statuses = []
 
+        if self.instance.status.status in [
+            "Approved", "Cancelled", "Completed", "Declined"
+        ]:
+            raise serializers.ValidationError({
+                'readOnly': "Cannot update a transaction that's already "
+                "been `{}`.".format(self.instance.status.status)
+            })
+
         if request.user.has_perm('APPROVE_CREDIT_TRANSFER'):
-            available_statuses.append('Approved')
+            available_statuses.append("Approved")
 
         if request.user.has_perm('DECLINE_CREDIT_TRANSFER'):
-            available_statuses.append('Declined')
+            available_statuses.append("Declined")
 
-        if request.user.has_perm('PROPOSE_CREDIT_TRANSFER'):
-            available_statuses.append('Draft')
+        if request.user.has_perm('PROPOSE_CREDIT_TRANSFER') and \
+           self.instance.status.status == "Draft":
+            available_statuses.append("Draft")
 
-        if request.user.has_perm('RECOMMEND_CREDIT_TRANSFER'):
-            available_statuses.append('Recommended')
-            available_statuses.append('Not Recommended')
+        if request.user.has_perm('RECOMMEND_CREDIT_TRANSFER') and \
+           self.instance.status.status == "Accepted":
+            available_statuses.append("Recommended")
+            available_statuses.append("Not Recommended")
 
         if request.user.has_perm('REFUSE_CREDIT_TRANSFER') and \
            data.get('respondent') == request.user.organization:
-            available_statuses.append('Cancelled')
+            available_statuses.append("Cancelled")
 
         if request.user.has_perm('RESCIND_CREDIT_TRANSFER'):
-            available_statuses.append('Cancelled')
+            available_statuses.append("Cancelled")
 
         if request.user.has_perm('SIGN_CREDIT_TRANSFER'):
             if data.get('initiator') == request.user.organization:
-                available_statuses.append('Submitted')
+                available_statuses.append("Submitted")
 
             if data.get('respondent') == request.user.organization:
-                available_statuses.append('Accepted')
+                available_statuses.append("Accepted")
 
         allowed_statuses = list(
             CreditTradeStatus.objects
@@ -138,8 +147,8 @@ class CreditTradeUpdateSerializer(serializers.ModelSerializer):
 
         if credit_trade_status not in allowed_statuses:
             raise serializers.ValidationError({
-                'invalidStatus': "You do not have permission to set statuses "
-                "to `{}`.".format(credit_trade_status.status)
+                'invalidStatus': "You do not have permission to set the "
+                "status to `{}`.".format(credit_trade_status.status)
             })
 
         if (data.get('fair_market_value_per_credit') == 0 and
@@ -168,6 +177,27 @@ class CreditTradeUpdateSerializer(serializers.ModelSerializer):
 
 
 class CreditTradeApproveSerializer(serializers.ModelSerializer):
+    def validate(self, data):
+        print self
+        request = self.context['request']
+        available_statuses = []
+
+        if self.instance.status.status in [
+            "Approved", "Cancelled", "Completed", "Declined"
+        ]:
+            raise serializers.ValidationError({
+                'readOnly': "Cannot approve a transaction that's already "
+                "been `{}`.".format(self.instance.status.status)
+            })
+
+        if not request.user.has_perm('APPROVE_CREDIT_TRANSFER'):
+            raise serializers.ValidationError({
+                'invalidStatus': "You do not have permission approve "
+                "transactions"
+            })
+
+        return data
+
     class Meta:
         model = CreditTrade
         fields = ('id', 'trade_effective_date', 'note',)
