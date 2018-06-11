@@ -266,6 +266,7 @@ class CreditTransferViewContainer extends Component {
         compliancePeriod={item.compliancePeriod}
         creditsFrom={item.creditsFrom}
         creditsTo={item.creditsTo}
+        errors={this.props.errors}
         fairMarketValuePerCredit={item.fairMarketValuePerCredit}
         fields={this.state.fields}
         id={item.id}
@@ -349,6 +350,7 @@ class CreditTransferViewContainer extends Component {
 }
 
 CreditTransferViewContainer.defaultProps = {
+  errors: {},
   item: {}
 };
 
@@ -356,6 +358,7 @@ CreditTransferViewContainer.propTypes = {
   addSigningAuthorityConfirmation: PropTypes.func.isRequired,
   approveCreditTransfer: PropTypes.func.isRequired,
   deleteCreditTransfer: PropTypes.func.isRequired,
+  errors: PropTypes.shape({}),
   getCreditTransferIfNeeded: PropTypes.func.isRequired,
   invalidateCreditTransfer: PropTypes.func.isRequired,
   isFetching: PropTypes.bool.isRequired,
@@ -394,6 +397,7 @@ CreditTransferViewContainer.propTypes = {
 };
 
 const mapStateToProps = state => ({
+  errors: state.rootReducer.creditTransfer.errors,
   isFetching: state.rootReducer.creditTransfer.isFetching,
   item: state.rootReducer.creditTransfer.item,
   loggedInUser: state.rootReducer.userRequest.loggedInUser
