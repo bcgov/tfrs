@@ -18,28 +18,27 @@ import filterNumber from '../../utils/filters';
 
 const CreditTransferTable = (props) => {
   const columns = [{
-    Header: 'ID',
     accessor: 'id',
     className: 'col-id',
+    Header: 'ID',
     resizable: false,
     width: 50
   }, {
-    id: 'compliancePeriod',
-    Header: 'Compliance Period',
     accessor: item => (item.compliancePeriod ? item.compliancePeriod.description : ''),
     className: 'col-compliance-period',
+    Header: 'Compliance Period',
+    id: 'compliancePeriod',
     minWidth: 75
   }, {
-    id: 'transactionType',
-    Header: 'Type',
     accessor: item => getCreditTransferType(item.type.id),
     className: 'col-transfer-type',
+    Header: 'Type',
+    id: 'transactionType',
     minWidth: 125
   }, {
-    id: 'creditsFrom',
-    Header: 'Credits From',
-    accessor: item => item.creditsFrom.name,
-    minWidth: 200,
+    accessor: item => ([
+      CREDIT_TRANSFER_TYPES.part3Award.id, CREDIT_TRANSFER_TYPES.validation.id
+    ].includes(item.type.id) ? '' : item.creditsFrom.name),
     Cell: (row) => {
       if (row.original.type.id === CREDIT_TRANSFER_TYPES.part3Award.id ||
         row.original.type.id === CREDIT_TRANSFER_TYPES.validation.id) {
@@ -49,12 +48,12 @@ const CreditTransferTable = (props) => {
       }
 
       return row.value;
-    }
+    },
+    Header: 'Credits From',
+    id: 'creditsFrom',
+    minWidth: 200
   }, {
-    id: 'creditsTo',
-    Header: 'Credits To',
-    accessor: item => item.creditsTo.name,
-    minWidth: 200,
+    accessor: item => ((item.type.id === CREDIT_TRANSFER_TYPES.retirement.id) ? '' : item.creditsTo.name),
     Cell: (row) => {
       if (row.original.type.id === CREDIT_TRANSFER_TYPES.retirement.id) {
         return (
@@ -63,19 +62,19 @@ const CreditTransferTable = (props) => {
       }
 
       return row.value;
-    }
+    },
+    Header: 'Credits To',
+    id: 'creditsTo',
+    minWidth: 200
   }, {
-    id: 'numberOfCredits',
-    Header: 'Quantity of Credits',
-    className: 'col-credits',
     accessor: item => item.numberOfCredits,
-    minWidth: 100,
+    className: 'col-credits',
     Cell: row => numeral(row.value).format(NumberFormat.INT),
-    filterMethod: (filter, row) => filterNumber(filter.value, row.numberOfCredits, 0)
+    filterMethod: (filter, row) => filterNumber(filter.value, row.numberOfCredits, 0),
+    Header: 'Quantity of Credits',
+    id: 'numberOfCredits',
+    minWidth: 100
   }, {
-    id: 'fairMarketValuePerCredit',
-    Header: 'Value Per Credit',
-    className: 'col-price',
     accessor: (item) => {
       if (item.type.id === CREDIT_TRANSFER_TYPES.part3Award.id ||
         item.type.id === CREDIT_TRANSFER_TYPES.retirement.id ||
@@ -85,36 +84,39 @@ const CreditTransferTable = (props) => {
 
       return parseFloat(item.fairMarketValuePerCredit);
     },
-    minWidth: 100,
     Cell: row => (
       (row.value === -1) ? '-' : numeral(row.value).format(NumberFormat.CURRENCY)
     ),
-    filterMethod: (filter, row) => filterNumber(filter.value, row.fairMarketValuePerCredit)
+    className: 'col-price',
+    filterMethod: (filter, row) => filterNumber(filter.value, row.fairMarketValuePerCredit),
+    Header: 'Value Per Credit',
+    id: 'fairMarketValuePerCredit',
+    minWidth: 100
   }, {
-    id: 'status',
-    Header: 'Status',
     accessor: item => ((item.status.id === CREDIT_TRANSFER_STATUS.completed.id)
       ? CREDIT_TRANSFER_STATUS.approved.description : item.status.status),
     className: 'col-status',
+    Header: 'Status',
+    id: 'status',
     minWidth: 100
   }, {
-    id: 'updateTimestamp',
-    Header: 'Last Updated On',
-    className: 'col-date',
     accessor: item => (item.updateTimestamp ? moment(item.updateTimestamp).format('LL') : '-'),
+    className: 'col-date',
+    Header: 'Last Updated On',
+    id: 'updateTimestamp',
     minWidth: 100
   }, {
-    id: 'actions',
-    Header: '',
     accessor: 'id',
-    filterable: false,
-    className: 'col-actions',
-    minWidth: 50,
     Cell: (row) => {
       const viewUrl = CREDIT_TRANSACTIONS.DETAILS.replace(':id', row.value);
 
       return <Link to={viewUrl}><FontAwesomeIcon icon="eye" /></Link>;
-    }
+    },
+    className: 'col-actions',
+    filterable: false,
+    Header: '',
+    id: 'actions',
+    minWidth: 50
   }];
 
   const filterMethod = (filter, row, column) => {
@@ -130,6 +132,13 @@ const CreditTransferTable = (props) => {
     <ReactTable
       data={props.items}
       defaultPageSize={15}
+      defaultSorted={[{
+        id: 'creditsFrom',
+        desc: false
+      }, {
+        id: 'creditsTo',
+        desc: false
+      }]}
       filterable={filterable}
       pageSizeOptions={[5, 10, 15, 20, 25, 50, 100]}
       defaultFilterMethod={filterMethod}
