@@ -178,7 +178,6 @@ class CreditTradeUpdateSerializer(serializers.ModelSerializer):
 
 class CreditTradeApproveSerializer(serializers.ModelSerializer):
     def validate(self, data):
-        print self
         request = self.context['request']
         available_statuses = []
 
