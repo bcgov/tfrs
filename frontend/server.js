@@ -1,4 +1,5 @@
 const express = require('express');
+const fallback = require('express-history-api-fallback')
 const httpProxy = require('http-proxy');
 const path = require('path');
 const bundle = require('./server/webpackServer.js');
@@ -10,6 +11,9 @@ const proxy = httpProxy.createProxyServer();
 const app = express();
 const publicPath = path.resolve(__dirname, 'public');
 
+app.use(express.static(publicPath));
+
+
 if (!isProduction) {
   bundle();
 
@@ -18,9 +22,10 @@ if (!isProduction) {
       target: 'http://localhost:8080'
     });
   });
+
+  app.use(fallback('index.html', { root: publicPath } ));
 }
 
-app.use(express.static(publicPath));
 
 proxy.on('error', (e) => {
   console.log('Could not connect to proxy please try again');
