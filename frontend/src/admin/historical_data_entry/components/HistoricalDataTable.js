@@ -145,6 +145,10 @@ const HistoricalDataTable = (props) => {
     <ReactTable
       data={props.items}
       defaultPageSize={5}
+      defaultSorted={[{
+        id: 'id',
+        desc: true
+      }]}
       filterable={filterable}
       defaultFilterMethod={filterMethod}
       columns={columns}
