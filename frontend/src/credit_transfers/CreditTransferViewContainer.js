@@ -133,7 +133,8 @@ class CreditTransferViewContainer extends Component {
         id="confirmAccept"
         key="confirmAccept"
       >
-        Are you sure you want to accept this transfer?
+        Are you sure you want to sign and send this Credit Transfer
+        Proposal to the Low Carbon Fuels Branch?
       </Modal>
     );
   }
@@ -145,7 +146,7 @@ class CreditTransferViewContainer extends Component {
         id="confirmApprove"
         key="confirmApprove"
       >
-        Are you sure you want to accept this transfer?
+      Are you sure you want to approve this credit transfer proposal?
       </Modal>
     );
   }
@@ -159,7 +160,7 @@ class CreditTransferViewContainer extends Component {
         id="confirmDecline"
         key="confirmDecline"
       >
-        Are you sure you want to decline this transfer for approval?
+        Are you sure you want to decline to approve this credit transfer proposal?
       </Modal>
     );
   }
@@ -266,6 +267,7 @@ class CreditTransferViewContainer extends Component {
         compliancePeriod={item.compliancePeriod}
         creditsFrom={item.creditsFrom}
         creditsTo={item.creditsTo}
+        errors={this.props.errors}
         fairMarketValuePerCredit={item.fairMarketValuePerCredit}
         fields={this.state.fields}
         id={item.id}
@@ -349,6 +351,7 @@ class CreditTransferViewContainer extends Component {
 }
 
 CreditTransferViewContainer.defaultProps = {
+  errors: {},
   item: {}
 };
 
@@ -356,6 +359,7 @@ CreditTransferViewContainer.propTypes = {
   addSigningAuthorityConfirmation: PropTypes.func.isRequired,
   approveCreditTransfer: PropTypes.func.isRequired,
   deleteCreditTransfer: PropTypes.func.isRequired,
+  errors: PropTypes.shape({}),
   getCreditTransferIfNeeded: PropTypes.func.isRequired,
   invalidateCreditTransfer: PropTypes.func.isRequired,
   isFetching: PropTypes.bool.isRequired,
@@ -394,6 +398,7 @@ CreditTransferViewContainer.propTypes = {
 };
 
 const mapStateToProps = state => ({
+  errors: state.rootReducer.creditTransfer.errors,
   isFetching: state.rootReducer.creditTransfer.isFetching,
   item: state.rootReducer.creditTransfer.item,
   loggedInUser: state.rootReducer.userRequest.loggedInUser

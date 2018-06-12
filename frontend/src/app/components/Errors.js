@@ -2,8 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 const Errors = props => (
-  <div className="alert alert-danger">
-    <h1>{props.title}</h1>
+  <div className="alert alert-danger error-alert" role="alert">
+    <p>{props.title}</p>
     { typeof (props.errors) === 'string' &&
       <p>{props.errors}</p>
     }
@@ -15,7 +15,7 @@ const Errors = props => (
       !Object.prototype.hasOwnProperty.call(props.errors, 'statusText') &&
       Object.keys(props.errors).length > 0 &&
       Object.keys(props.errors).map(error => (
-        <p key={error}>({error}) {props.errors[error]}</p>
+        <p key={error}>{props.errors[error]}</p>
       ))
     }
   </div>
