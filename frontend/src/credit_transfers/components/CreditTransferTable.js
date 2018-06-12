@@ -93,9 +93,8 @@ const CreditTransferTable = (props) => {
   }, {
     id: 'status',
     Header: 'Status',
-    accessor: item => ((item.status.id === CREDIT_TRANSFER_STATUS.completed.id)
-      ? CREDIT_TRANSFER_STATUS.approved.description : (Object.entries(CREDIT_TRANSFER_STATUS)
-        .find(([key, value]) => (value.id === item.status.id)))[1].description),
+    accessor: item => (Object.entries(CREDIT_TRANSFER_STATUS).find(([, value]) =>
+      (value.id === item.status.id))[1].description),
     className: 'col-status',
     minWidth: 100
   }, {
