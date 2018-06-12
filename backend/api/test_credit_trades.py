@@ -107,13 +107,62 @@ class TestCreditTrades(TestCase):
                 correct_view = True
             self.assertTrue(correct_view)
 
+    # As a fuel supplier, I should be able to refuse credit transfers where:
+    # I'm the respondent
+    def test_respondent_can_refuse_credit_trades(self):
+        # Assign FSManager role to user 1
+        role = Role.objects.get(name='FSManager')
+        UserRole.objects.create(user_id=self.user_1.id, role_id=role.id)
+
+        refused_status, created = CreditTradeStatus.objects.get_or_create(
+            status='Refused')
+
+        submitted_status, created = CreditTradeStatus.objects.get_or_create(
+            status='Submitted')
+
+        credit_trade_type, created = CreditTradeType.objects.get_or_create(
+            the_type='Sell')
+
+        credit_trade = CreditTrade.objects.create(
+            status=submitted_status,
+            initiator=self.user_2.organization,
+            respondent=self.user_1.organization,
+            type=credit_trade_type,
+            number_of_credits=100,
+            fair_market_value_per_credit=1,
+            zero_reason=None,
+            trade_effective_date=datetime.datetime.today().strftime('%Y-%m-%d')
+        )
+
+        payload = {
+            'fairMarketValuePerCredit':
+                credit_trade.fair_market_value_per_credit,
+            'initiator': credit_trade.initiator_id,
+            'numberOfCredits': credit_trade.number_of_credits,
+            'respondent': credit_trade.respondent_id,
+            'status': refused_status.id,
+            'tradeEffectiveDate': credit_trade.trade_effective_date,
+            'type': credit_trade.type_id,
+            'zeroReason': credit_trade.zero_reason_id
+        }
+
+        response = self.fs_client_1.put(
+            '/api/credit_trades/{}'.format(
+                credit_trade.id
+            ),
+            content_type='application/json',
+            data=json.dumps(payload))
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        credit_trade = CreditTrade.objects.get(id=credit_trade.id)
+        self.assertEqual(credit_trade.status, refused_status)
+
     # As a government user, I should see all credit trades where:
     # I'm the initiator, regardless of status
     # Government will never be the respondent
     # All other credit trades that have the status "Accepted" or greater
     def test_government_user_should_see_appropriate_credit_trades(self):
         response = self.gov_client.get('/api/credit_trades')
-        print(response.content)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
         gov_credit_trades = response.json()

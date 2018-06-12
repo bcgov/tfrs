@@ -13,6 +13,22 @@
   .credit-transfer-progress-bar {
     padding: 1rem 0rem 1rem 0rem;
 
+    &.pvr .step {
+      width: 33%;
+
+      @include mobile {
+        width: 100%;
+      }      
+    }
+
+    .step {
+      width: 24%;
+
+      @include mobile {
+        width: 100%;
+      }
+    }
+
     @include mobile {
       padding: 1rem 0;
     }
@@ -70,7 +86,6 @@
         cursor: default;
         margin: 0 3px;
         padding: 8px 10px 8px 30px;
-        width: 24%;
         float: left;
         position: relative;
         background-color: $border-grey;
@@ -80,10 +95,6 @@
         user-select: none; 
         transition: background-color 0.2s ease;
         white-space: nowrap;
-
-        @include mobile {
-          width: 100%;
-        }
 
         &:after,
         &:before {
@@ -152,7 +163,7 @@
         }
 
         &.cancelled {
-          color: #fff;
+          color: $white;
           background-color: $red;
 
           &:after {
@@ -170,7 +181,7 @@
         }
 
         &.current {
-          color: #fff;
+          color: $white;
           background-color: $blue;
 
           &:after {
@@ -184,6 +195,15 @@
             &:after {
               border-left: 17px solid $light-blue;
             }
+          }
+        }
+
+        &.danger {
+          color: $white;
+          background-color: $red;
+
+          &:after {
+            border-left: 17px solid $red;
           }
         }
       }
