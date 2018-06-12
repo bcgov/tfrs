@@ -74,6 +74,10 @@ const OrganizationsTable = (props) => {
     <ReactTable
       data={props.items}
       defaultPageSize={15}
+      defaultSorted={[{
+        id: 'name',
+        desc: false
+      }]}
       filterable={filterable}
       pageSizeOptions={[5, 10, 15, 20, 25, 50, 100]}
       defaultFilterMethod={filterMethod}
