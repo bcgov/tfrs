@@ -110,6 +110,9 @@ class CreditTradeViewSet(AuditableMixin, mixins.CreateModelMixin,
         credit_trade = self.get_object()
         credit_trade.trade_effective_date = datetime.date.today()
 
+        serializer = self.get_serializer(credit_trade, data=request.data)
+        serializer.is_valid(raise_exception=True)
+
         completed_credit_trade = CreditTradeService.approve(credit_trade)
         serializer = self.get_serializer(completed_credit_trade)
 

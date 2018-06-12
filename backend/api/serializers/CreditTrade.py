@@ -43,22 +43,33 @@ class CreditTradeSerializer(serializers.ModelSerializer):
 
 
 class CreditTradeCreateSerializer(serializers.ModelSerializer):
-    # internal users should be able to create a trade with any status
     def validate(self, data):
-        if (self.context['request'].user.organization.id != 1):
-            allowed_statuses = list(
-                CreditTradeStatus.objects
-                .filter(status__in=["Draft", "Submitted"])
-                .only('id'))
+        request = self.context['request']
 
-            credit_trade_status = data.get('status')
+        available_statuses = []
 
-            if credit_trade_status not in allowed_statuses:
-                raise serializers.ValidationError({
-                    'status': 'Status cannot be `{}` on create. '
-                    'Use `Draft` or `Submitted` instead.'.format(
-                        credit_trade_status.status
-                    )})
+        if request.user.has_perm('APPROVE_CREDIT_TRANSFER'):
+            available_statuses.append('Approved')
+
+        if request.user.has_perm('PROPOSE_CREDIT_TRANSFER'):
+            available_statuses.append('Draft')
+
+        if request.user.has_perm('SIGN_CREDIT_TRANSFER') and \
+           data.get('initiator') == request.user.organization:
+                available_statuses.append('Submitted')
+
+        allowed_statuses = list(
+            CreditTradeStatus.objects
+            .filter(status__in=available_statuses)
+            .only('id'))
+
+        credit_trade_status = data.get('status')
+
+        if credit_trade_status not in allowed_statuses:
+            raise serializers.ValidationError({
+                'invalidStatus': "You do not have permission to set statuses "
+                "to `{}`.".format(credit_trade_status.status)
+            })
 
         if (data.get('fair_market_value_per_credit') == 0 and
                 data.get('zero_reason') is None):
@@ -74,8 +85,8 @@ class CreditTradeCreateSerializer(serializers.ModelSerializer):
 
             if credit_trade_type not in allowed_types:
                 raise serializers.ValidationError({
-                    'zeroDollarReason': 'Zero Dollar Reason is required '
-                    'for Credit Transfers with 0 Dollar per Credit'
+                    'zeroDollarReason': "Zero Dollar Reason is required "
+                    "for Credit Transfers with 0 Dollar per Credit"
                 })
 
         return data
@@ -86,8 +97,60 @@ class CreditTradeCreateSerializer(serializers.ModelSerializer):
 
 
 class CreditTradeUpdateSerializer(serializers.ModelSerializer):
-
     def validate(self, data):
+        request = self.context['request']
+        available_statuses = []
+
+        if self.instance.status.status in [
+            "Approved", "Cancelled", "Completed", "Declined"
+        ]:
+            raise serializers.ValidationError({
+                'readOnly': "Cannot update a transaction that's already "
+                "been `{}`.".format(self.instance.status.status)
+            })
+
+        if request.user.has_perm('APPROVE_CREDIT_TRANSFER'):
+            available_statuses.append("Approved")
+
+        if request.user.has_perm('DECLINE_CREDIT_TRANSFER'):
+            available_statuses.append("Declined")
+
+        if request.user.has_perm('PROPOSE_CREDIT_TRANSFER') and \
+           self.instance.status.status == "Draft":
+            available_statuses.append("Draft")
+
+        if request.user.has_perm('RECOMMEND_CREDIT_TRANSFER') and \
+           self.instance.status.status == "Accepted":
+            available_statuses.append("Recommended")
+            available_statuses.append("Not Recommended")
+
+        if request.user.has_perm('REFUSE_CREDIT_TRANSFER') and \
+           data.get('respondent') == request.user.organization:
+            available_statuses.append("Cancelled")
+
+        if request.user.has_perm('RESCIND_CREDIT_TRANSFER'):
+            available_statuses.append("Cancelled")
+
+        if request.user.has_perm('SIGN_CREDIT_TRANSFER'):
+            if data.get('initiator') == request.user.organization:
+                available_statuses.append("Submitted")
+
+            if data.get('respondent') == request.user.organization:
+                available_statuses.append("Accepted")
+
+        allowed_statuses = list(
+            CreditTradeStatus.objects
+            .filter(status__in=available_statuses)
+            .only('id'))
+
+        credit_trade_status = data.get('status')
+
+        if credit_trade_status not in allowed_statuses:
+            raise serializers.ValidationError({
+                'invalidStatus': "You do not have permission to set the "
+                "status to `{}`.".format(credit_trade_status.status)
+            })
+
         if (data.get('fair_market_value_per_credit') == 0 and
                 data.get('zero_reason') is None):
             allowed_types = list(
@@ -114,6 +177,26 @@ class CreditTradeUpdateSerializer(serializers.ModelSerializer):
 
 
 class CreditTradeApproveSerializer(serializers.ModelSerializer):
+    def validate(self, data):
+        request = self.context['request']
+        available_statuses = []
+
+        if self.instance.status.status in [
+            "Approved", "Cancelled", "Completed", "Declined"
+        ]:
+            raise serializers.ValidationError({
+                'readOnly': "Cannot approve a transaction that's already "
+                "been `{}`.".format(self.instance.status.status)
+            })
+
+        if not request.user.has_perm('APPROVE_CREDIT_TRANSFER'):
+            raise serializers.ValidationError({
+                'invalidStatus': "You do not have permission approve "
+                "transactions"
+            })
+
+        return data
+
     class Meta:
         model = CreditTrade
         fields = ('id', 'trade_effective_date', 'note',)
@@ -158,45 +241,44 @@ class CreditTrade2Serializer(serializers.ModelSerializer):
             return []
 
         available_statuses = []
-        permissions = request.user.role.permissions
         statuses = CreditTradeStatus.objects.all().only('id', 'status')
         status_dict = {s.status: s for s in statuses}
 
         if cur_status == "Draft":
             available_statuses.append(status_dict["Draft"])
 
-            if permissions.filter(code='SIGN_CREDIT_TRANSFER'):
+            if request.user.has_perm('SIGN_CREDIT_TRANSFER'):
                 available_statuses.append(status_dict["Submitted"])
 
         elif cur_status == "Submitted":
             # Allow to accept submitted transfers
-            if permissions.filter(code='SIGN_CREDIT_TRANSFER'):
+            if request.user.has_perm('SIGN_CREDIT_TRANSFER'):
                 available_statuses.append(status_dict["Accepted"])
 
             # Allow to rescind submitted transfers
-            if permissions.filter(code='RESCIND_CREDIT_TRANSFER'):
+            if request.user.has_perm('RESCIND_CREDIT_TRANSFER'):
                 available_statuses.append(status_dict["Cancelled"])
 
             # Allow to refuse submitted transfers
-            if permissions.filter(code='REFUSE_CREDIT_TRANSFER'):
+            if request.user.has_perm('REFUSE_CREDIT_TRANSFER'):
                 available_statuses.append(status_dict["Cancelled"])
 
         elif cur_status == "Accepted":
             # Allow to recommend for approval accepted transfers
-            if permissions.filter(code='RECOMMEND_CREDIT_TRANSFER'):
+            if request.user.has_perm('RECOMMEND_CREDIT_TRANSFER'):
                 available_statuses.append(status_dict["Recommended"])
 
             # Allow to rescind submitted transfer
-            if permissions.filter(code='RESCIND_CREDIT_TRANSFER'):
+            if request.user.has_perm('RESCIND_CREDIT_TRANSFER'):
                 available_statuses.append(status_dict["Cancelled"])
 
         elif cur_status == "Recommended" or cur_status == "Not Recommended":
             # Allow to approval for recommended/not recommended transfer
-            if permissions.filter(code='APPROVE_CREDIT_TRANSFER'):
+            if request.user.has_perm('APPROVE_CREDIT_TRANSFER'):
                 available_statuses.append(status_dict["Approved"])
 
             # Allow to decline recommended transfers
-            if permissions.filter(code='DECLINE_CREDIT_TRANSFER'):
+            if request.user.has_perm('DECLINE_CREDIT_TRANSFER'):
                 available_statuses.append(status_dict["Declined"])
 
         serializer = CreditTradeStatusMinSerializer(available_statuses,

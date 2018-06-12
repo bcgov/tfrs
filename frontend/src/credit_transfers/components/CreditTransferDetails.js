@@ -11,6 +11,7 @@ import CreditTransferTextRepresentation from './CreditTransferTextRepresentation
 import CreditTransferVisualRepresentation from './CreditTransferVisualRepresentation';
 
 import { getCreditTransferType } from '../../actions/creditTransfersActions';
+import Errors from '../../app/components/Errors';
 import Loading from '../../app/components/Loading';
 import * as Lang from '../../constants/langEnUs';
 
@@ -40,6 +41,9 @@ const CreditTransferDetails = props => (
             />
           </div>
         </div>
+        {Object.keys(props.errors).length > 0 &&
+          <Errors errors={props.errors} />
+        }
         <CreditTransferVisualRepresentation
           creditsFrom={props.creditsFrom}
           creditsTo={props.creditsTo}
@@ -91,6 +95,7 @@ CreditTransferDetails.defaultProps = {
   creditsTo: {
     name: '...'
   },
+  errors: {},
   fairMarketValuePerCredit: '0',
   id: 0,
   note: '',
@@ -122,6 +127,7 @@ CreditTransferDetails.propTypes = {
     id: PropTypes.number,
     name: PropTypes.string
   }),
+  errors: PropTypes.shape({}),
   fairMarketValuePerCredit: PropTypes.oneOfType([
     PropTypes.string,
     PropTypes.number
