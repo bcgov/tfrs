@@ -11,6 +11,9 @@ const proxy = httpProxy.createProxyServer();
 const app = express();
 const publicPath = path.resolve(__dirname, 'public');
 
+app.use(express.static(publicPath));
+
+
 if (!isProduction) {
   bundle();
 
@@ -23,7 +26,6 @@ if (!isProduction) {
   app.use(fallback('index.html', { root: publicPath } ));
 }
 
-app.use(express.static(publicPath));
 
 proxy.on('error', (e) => {
   console.log('Could not connect to proxy please try again');
