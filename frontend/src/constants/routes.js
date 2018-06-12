@@ -9,7 +9,7 @@ export const NOTIFICATIONS = '/notifications';
 export const SETTINGS = '/settings';
 
 // API Routes
-export const BASE_URL = `${window.location.protocol}//${window.location.host}/api-business`;
+export const BASE_URL = `${window.location.protocol}//${window.location.host}/api`;
 
 export const ORGANIZATIONS_API = '/organizations';
 export const ORGANIZATION_ACTION_TYPES = '/organizationactionstypes';
