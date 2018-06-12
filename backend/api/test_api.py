@@ -6,6 +6,7 @@ import datetime
 
 from api import fake_api_calls
 from api.models.CreditTrade import CreditTrade
+from api.models.OrganizationBalance import OrganizationBalance
 from api.models.Role import Role
 from api.models.User import User
 from api.models.UserRole import UserRole
@@ -46,6 +47,22 @@ class TestAPI(TestCase):
         self.fs1_id, self.fs1_status_id, self.fs1_action_type_id = (
             fake_api_calls.create_organization())
         self.user_id = fake_api_calls.create_user(self.fs1_id)
+        resp_user = User.objects.get(id=self.user_id)
+        resp_user.authorization_guid = 'e46435c1-7d69-489f-9dde-83005cd77744'
+        resp_user.save()
+
+        '''
+        Apply a fuel supplier role to the default user
+        '''
+        fs_user = User.objects.get(username='business_bsmith')
+        fs_role = Role.objects.get(name='FSManager')
+        UserRole.objects.create(user_id=fs_user.id, role_id=fs_role.id)
+
+        '''
+        Apply a fuel supplier role to the respondent user
+        '''
+        fs_role = Role.objects.get(name='FSManager')
+        UserRole.objects.create(user_id=resp_user.id, role_id=fs_role.id)
 
         self.credit_trade = fake_api_calls.create_credit_trade(
             initiator=2,
@@ -61,13 +78,6 @@ class TestAPI(TestCase):
             HTTP_SMGOV_USEREMAIL='BradJSmith@cuvox.de',
             HTTP_SM_UNIVERSALID='BSmith')
 
-        '''
-        Apply a fuel supplier role to the default user
-        '''
-        fs_user = User.objects.get(username='business_bsmith')
-        fs_role = Role.objects.get(name='FSUser')
-        UserRole.objects.create(user_id=fs_user.id, role_id=fs_role.id)
-
         self.gov_client = Client(
             HTTP_SMGOV_USERGUID='c2971372-3a96-4704-9b9c-18e4e9298ee3',
             HTTP_SMGOV_USERDISPLAYNAME='Test Person',
@@ -75,6 +85,11 @@ class TestAPI(TestCase):
             HTTP_SM_UNIVERSALID='Teperson',
             HTTP_SMGOV_USERTYPE='Internal',
             HTTP_SM_AUTHDIRNAME='IDIR')
+
+        self.respondent_client = Client(
+            HTTP_SMGOV_USERGUID='e46435c1-7d69-489f-9dde-83005cd77744',
+            HTTP_SMGOV_USERDISPLAYNAME=resp_user.display_name,
+            HTTP_SMGOV_USEREMAIL=resp_user.email)
 
         '''
         Apply a government role to Teperson
@@ -214,15 +229,29 @@ class TestAPI(TestCase):
     # TODO: possibly move the next set of tests to another file;
     # They test the business logic & not the API itself.
     def test_is_internal_history_false(self):
-        data = [STATUS_SUBMITTED, STATUS_ACCEPTED]
-        for ct_status in data:
-            self.test_update(credit_trade_status=ct_status)
-            # TODO: Change this to /id/propose and /id/accept
-            response = self.client.get(
-                "{}/{}/history".format(self.test_url, self.credit_trade['id']),
-                content_type='application/json')
-            response_data = json.loads(response.content.decode("utf-8"))
-            self.assertFalse(response_data[0]['isInternalHistoryRecord'])
+        self.test_update(credit_trade_status=STATUS_SUBMITTED)
+
+        data = {
+            'number_of_credits': 4,
+            'status': STATUS_ACCEPTED,
+            'initiator': 2,
+            'respondent': self.fs1_id,
+            'type': self.ct_type_id,
+            'fair_market_value_per_credit': 1
+        }
+
+        response = self.respondent_client.put(
+            "{}/{}".format(self.test_url, self.credit_trade['id']),
+            content_type='application/json',
+            data=json.dumps(data))
+
+        # self.test_update(credit_trade_status=STATUS_ACCEPTED)
+        # TODO: Change this to /id/propose and /id/accept
+        response = self.client.get(
+            "{}/{}/history".format(self.test_url, self.credit_trade['id']),
+            content_type='application/json')
+        response_data = json.loads(response.content.decode("utf-8"))
+        self.assertFalse(response_data[0]['isInternalHistoryRecord'])
 
     def test_is_internal_history_draft(self):
         # Initially created credit trade is "Draft"
@@ -278,7 +307,10 @@ class TestAPI(TestCase):
     def test_approved_buy(self, **kwargs):
         # get fuel supplier balance for fs 1
         initiator_bal = fake_api_calls.get_organization_balance(id=2)
-        respondent_bal = fake_api_calls.get_organization_balance(id=3)
+        respondent_bal, created = OrganizationBalance.objects.get_or_create(
+            organization_id=self.fs1_id,
+            expiration_date=None,
+            defaults={'validated_credits': 10000})
 
         num_of_credits = 50
 
@@ -287,15 +319,28 @@ class TestAPI(TestCase):
             status=STATUS_SUBMITTED,
             fair_market_value_per_credit=1000,
             initiator=2,
-            respondent=3,
+            respondent=self.fs1_id,
             number_of_credits=num_of_credits,
             type=2
         )
 
-        credit_trade['status'] = STATUS_ACCEPTED
-        updated_response = fake_api_calls.update_credit_trade_dict(
-            credit_trade,
-            credit_trade['id'])
+        data = {
+            'number_of_credits': num_of_credits,
+            'status': STATUS_ACCEPTED,
+            'initiator': 2,
+            'respondent': self.fs1_id,
+            'type': 2,
+            'fair_market_value_per_credit': 1000
+        }
+
+        resp_user = User.objects.get(id=self.user_id)
+        resp_user.organization_id = self.fs1_id
+        resp_user.save()
+
+        response = self.respondent_client.put(
+            "{}/{}".format(self.test_url, credit_trade['id']),
+            content_type='application/json',
+            data=json.dumps(data))
 
         response = self.gov_client.put(
             "{}/{}/approve".format(self.test_url, credit_trade['id']),
@@ -306,10 +351,12 @@ class TestAPI(TestCase):
         # TODO: Make sure two credit histories are created
 
         initiator_bal_after = fake_api_calls.get_organization_balance(id=2)
-        respondent_bal_after = fake_api_calls.get_organization_balance(id=3)
+        respondent_bal_after = fake_api_calls.get_organization_balance(
+            id=self.fs1_id
+        )
 
         init_final_bal = initiator_bal['validatedCredits'] + num_of_credits
-        resp_final_bal = respondent_bal['validatedCredits'] - num_of_credits
+        resp_final_bal = respondent_bal.validated_credits - num_of_credits
 
         ct_completed = self.client.get(
             "{}/{}".format(self.test_url, credit_trade['id']),
@@ -418,8 +465,9 @@ class TestAPI(TestCase):
             if ct['status'] == STATUS_DRAFT:
                 statuses = [a['status'] for a in new_ct.json()['actions']]
                 actions = [a['action'] for a in new_ct.json()['actions']]
-                assert sorted(["Draft"]) == sorted(statuses)
-                assert sorted(["Save Draft"]) == sorted(actions)
+
+                assert sorted(["Draft", "Submitted"]) == sorted(statuses)
+                assert sorted(["Save Draft", "Propose"]) == sorted(actions)
 
     def test_create_other_statuses_fail(self, **kwargs):
         credit_trades = [{
@@ -428,18 +476,16 @@ class TestAPI(TestCase):
                     'status': STATUS_ACCEPTED,
                     'respondent': self.fs1_id,
                     'type': self.ct_type_id },
-                'error': {"status": ["Status cannot be "
-                                     "`Accepted` on create. "
-                                     "Use `Draft` or `Submitted` instead."]}
+                'error': {"invalidStatus": ["You do not have permission to set"
+                                            " statuses to `Accepted`."]}
             }, {
                 'data': {
                     'numberOfCredits': 1,
                     'status': STATUS_RECOMMENDED,
                     'respondent': self.fs1_id,
                     'type': self.ct_type_id},
-                'error': {"status": ["Status cannot be "
-                                     "`Recommended` on create. "
-                                     "Use `Draft` or `Submitted` instead."]}
+                'error': {"invalidStatus": ["You do not have permission to set"
+                                            " statuses to `Recommended`."]}
 
             }, {
                 'data': {
@@ -447,36 +493,32 @@ class TestAPI(TestCase):
                     'status': STATUS_APPROVED,
                     'respondent': self.fs1_id,
                     'type': self.ct_type_id},
-                'error': {"status": ["Status cannot be "
-                                     "`Approved` on create. "
-                                     "Use `Draft` or `Submitted` instead."]}
+                'error': {"invalidStatus": ["You do not have permission to set"
+                                            " statuses to `Approved`."]}
             }, {
                 'data': {
                     'numberOfCredits': 1,
                     'status': STATUS_COMPLETED,
                     'respondent': self.fs1_id,
                     'type': self.ct_type_id},
-                'error': {"status": ["Status cannot be "
-                                     "`Completed` on create. "
-                                     "Use `Draft` or `Submitted` instead."]}
+                'error': {"invalidStatus": ["You do not have permission to set"
+                                            " statuses to `Completed`."]}
             }, {
                 'data': {
                     'numberOfCredits': 1,
                     'status': STATUS_CANCELLED,
                     'respondent': self.fs1_id,
                     'type': self.ct_type_id},
-                'error': {"status": ["Status cannot be "
-                                     "`Cancelled` on create. "
-                                     "Use `Draft` or `Submitted` instead."]}
+                'error': {"invalidStatus": ["You do not have permission to set"
+                                            " statuses to `Cancelled`."]}
             }, {
                 'data': {
                     'numberOfCredits': 1,
                     'status': STATUS_DECLINED,
                     'respondent': self.fs1_id,
                     'type': self.ct_type_id},
-                'error': {"status": ["Status cannot be "
-                                     "`Declined` on create. "
-                                     "Use `Draft` or `Submitted` instead."]}
+                'error': {"invalidStatus": ["You do not have permission to set"
+                                            " statuses to `Declined`."]}
             }]
 
         for tests in credit_trades:

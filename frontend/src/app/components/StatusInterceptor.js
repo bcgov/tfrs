@@ -66,8 +66,8 @@ class StatusInterceptor extends Component {
   static renderDefaultMessage () {
     return (
       <div className="alert alert-danger error-alert" role="alert">
-        <strong>Server Error!</strong>
-        <div>An API error occurred.</div>
+        <p>Server Error!</p>
+        <p>An API error occurred.</p>
       </div>
     );
   }
