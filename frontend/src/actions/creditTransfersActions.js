@@ -330,6 +330,7 @@ export const approveCreditTransfer = id => (dispatch) => {
       dispatch(approveCreditTransferSuccess(response.data));
     }).catch((error) => {
       dispatch(approveCreditTransferError(error.response.data));
+      return Promise.reject(error);
     });
 };
 
