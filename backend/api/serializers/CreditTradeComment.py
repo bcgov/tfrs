@@ -22,26 +22,15 @@
 """
 from rest_framework import serializers
 
-from api.models.User import User
-from .Organization import OrganizationSerializer,OrganizationMinSerializer
-from .Role import RoleSerializer
+from api.models.CreditTradeComment import CreditTradeComment
+
+from .User import UserMinSerializer
 
 
-class UserSerializer(serializers.ModelSerializer):
-    organization = OrganizationSerializer(read_only=True)
-    role = RoleSerializer(read_only=True)
-
-    class Meta:
-        model = User
-        fields = (
-            'id', 'first_name', 'last_name', 'email', 'authorization_id',
-            'authorization_guid', 'authorization_directory', 'display_name',
-            'organization', 'organization_balance', 'role')
-
-class UserMinSerializer(serializers.ModelSerializer):
-    organization = OrganizationMinSerializer(read_only=True)
+class CreditTradeCommentSerializer(serializers.ModelSerializer):
+    create_user = UserMinSerializer(read_only=True)
 
     class Meta:
-        model = User
+        model = CreditTradeComment
         fields = (
-            'id', 'first_name', 'last_name', 'display_name', 'organization')
+            'id', 'comment', 'privileged_access', 'create_timestamp', 'update_timestamp', 'create_user')
