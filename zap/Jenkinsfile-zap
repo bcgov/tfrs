@@ -20,6 +20,7 @@ stage('ZAP Security Scan') {
             echo "Build: ${BUILD_ID}"
             checkout scm
             dir('zap') {
+                sh 'sleep 3m'
                 def retVal = sh returnStatus: true, script: '/zap/zap-x.sh -last_scan_report /home/jenkins/workspace/mem-tfrs-tools-zap-pipeline/zap/index.html -session /home/jenkins/workspace/mem-tfrs-tools-zap-pipeline/zap/TFRS -cmd'
                 publishHTML([allowMissing: false, alwaysLinkToLastBuild: false, keepAll: true, reportDir: '/home/jenkins/workspace/mem-tfrs-tools-zap-pipeline/zap', reportFiles: 'index.html', reportName: 'ZAP Full Scan', reportTitles: 'ZAP Full Scan'])
                 echo "Return value is: ${retVal}"
