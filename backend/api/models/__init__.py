@@ -119,3 +119,4 @@
 #
 
 from . import User
+from . import CreditTradeComment

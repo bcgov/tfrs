@@ -32,3 +32,8 @@ class OrganizationSerializer(serializers.ModelSerializer):
             'id', 'name', 'status', 'status_display', 'actions_type',
             'actions_type_display', 'create_timestamp', 'type',
             'organization_balance')
+
+class OrganizationMinSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Organization
+        fields = ('id', 'name', 'type')
