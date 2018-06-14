@@ -26,10 +26,15 @@ class CreditTransferTextRepresentation extends Component {
   }
 
   _buyAction () {
-    return (this.props.status.id === CREDIT_TRANSFER_STATUS.approved.id ||
-      this.props.status.id === CREDIT_TRANSFER_STATUS.completed.id)
-      ? ' bought '
-      : ' is proposing to buy ';
+    switch (this.props.status.id) {
+      case CREDIT_TRANSFER_STATUS.approved.id:
+      case CREDIT_TRANSFER_STATUS.completed.id:
+        return ' bought ';
+      case CREDIT_TRANSFER_STATUS.refused.id:
+        return ' proposed to buy ';
+      default:
+        return ' is proposing to buy ';
+    }
   }
 
   _renderBuy () {
@@ -39,7 +44,12 @@ class CreditTransferTextRepresentation extends Component {
         <span className="value"> {this.numberOfCredits} </span> credit{(this.props.numberOfCredits > 1) && 's'} from
         <span className="value"> {this.creditsFrom} </span>
         for <span className="value"> {this.totalValue} </span>
-        effective <span className="value"> {this.tradeEffectiveDate}</span>.
+        {this.props.status.id === CREDIT_TRANSFER_STATUS.refused.id &&
+          <span>. <span className="value"> {this.creditsTo} </span> refused the proposal.</span>
+        }
+        {this.props.status.id !== CREDIT_TRANSFER_STATUS.refused.id &&
+          <span>, effective <span className="value"> {this.tradeEffectiveDate}</span>.</span>
+        }
       </div>
     );
   }
@@ -89,8 +99,13 @@ class CreditTransferTextRepresentation extends Component {
         <span className="value"> {this.numberOfCredits} </span> credit{(this.props.numberOfCredits > 1) && 's'} to
         <span className="value"> {this.creditsTo} </span>
         for <span className="value"> {this.fairMarketValuePerCredit} </span> per credit
-        for a total value of <span className="value"> {this.totalValue}</span>,
-        effective <span className="value"> {this.tradeEffectiveDate}</span>.
+        for a total value of <span className="value"> {this.totalValue}</span>
+        {this.props.status.id === CREDIT_TRANSFER_STATUS.refused.id &&
+          <span>. <span className="value"> {this.creditsTo} </span> refused the proposal.</span>
+        }
+        {this.props.status.id !== CREDIT_TRANSFER_STATUS.refused.id &&
+          <span>, effective <span className="value"> {this.tradeEffectiveDate}</span>.</span>
+        }
       </div>
     );
   }
@@ -109,10 +124,15 @@ class CreditTransferTextRepresentation extends Component {
   }
 
   _sellAction () {
-    return (this.props.status.id === CREDIT_TRANSFER_STATUS.approved.id ||
-      this.props.status.id === CREDIT_TRANSFER_STATUS.completed.id)
-      ? ' sold '
-      : ' is proposing to sell ';
+    switch (this.props.status.id) {
+      case CREDIT_TRANSFER_STATUS.approved.id:
+      case CREDIT_TRANSFER_STATUS.completed.id:
+        return ' sold ';
+      case CREDIT_TRANSFER_STATUS.refused.id:
+        return ' proposed to sell ';
+      default:
+        return ' is proposing to sell ';
+    }
   }
 
   render () {

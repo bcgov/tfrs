@@ -13,6 +13,22 @@
   .credit-transfer-progress-bar {
     padding: 1rem 0rem 1rem 0rem;
 
+    &.pvr .step {
+      width: 33%;
+
+      @include mobile {
+        width: 100%;
+      }      
+    }
+
+    .step {
+      width: 24%;
+
+      @include mobile {
+        width: 100%;
+      }
+    }
+
     @include mobile {
       padding: 1rem 0;
     }
@@ -70,7 +86,6 @@
         cursor: default;
         margin: 0 3px;
         padding: 8px 10px 8px 30px;
-        width: 24%;
         float: left;
         position: relative;
         background-color: $border-grey;
@@ -81,9 +96,6 @@
         transition: background-color 0.2s ease;
         white-space: nowrap;
 
-        @include mobile {
-          width: 100%;
-        }
         &:after,
         &:before {
           content: " ";
@@ -97,83 +109,103 @@
           border-left: 17px solid $border-grey;	
           z-index: 2;
           transition: border-color 0.2s ease;
+
           @include mobile {
             content: none;
           }
         }
-      }
 
-      .step:before {
-        right: auto;
-        left: 0;
-        border-left: 17px solid #fff;	
-        z-index: 0;
-      }
-
-      .step:first-child:before {
-        border: none;
-      }
-
-      .step:first-child {
-        border-top-left-radius: 4px;
-        border-bottom-left-radius: 4px;
-      }
-
-      .step:last-child {
-        border-top-right-radius: 4px;
-        border-bottom-right-radius: 4px; 
-        &:after {
-          border-top: none;
-          border-bottom: none;
-          border-left: none;
+        &:before {
+          right: auto;
+          left: 0;
+          border-left: 17px solid #fff;
+          z-index: 0;
         }
-      }
 
-      .step span {
-        position: relative;
-      }
+        &:first-child {
+          border-top-left-radius: 4px;
+          border-bottom-left-radius: 4px;
 
-      .step span:before {
-        opacity: 0;
-        content: "✔";
-        position: absolute;
-        top: -2px;
-        left: -20px;
-      }
-
-      .step.done span:before {
-        opacity: 1;
-        -webkit-transition: opacity 0.3s ease 0.5s;
-        -moz-transition: opacity 0.3s ease 0.5s;
-        -ms-transition: opacity 0.3s ease 0.5s;
-        transition: opacity 0.3s ease 0.5s;
-      }
-
-      .step.cancelled {
-        color: #fff;
-        background-color: $red;
-      }
-
-      .step.cancelled:after {
-        border-left: 17px solid $red;	
-      }
-
-      .step.current {
-        color: #fff;
-        background-color: $blue;
-
-        & ~ .step {
-          background-color: $light-blue;
-          color: $medium-font;
-
-          &:after {
-            border-left: 17px solid $light-blue;	
+          &:first-child:before {
+            border: none;
           }
         }
-      }
 
-      .step.current:after {
-        border-left: 17px solid $blue;	
+        &:last-child {
+          border-top-right-radius: 4px;
+          border-bottom-right-radius: 4px;
+
+          &:after {
+            border-top: none;
+            border-bottom: none;
+            border-left: none;
+          }
+        }
+
+        span {
+          position: relative;
+
+          &:before {
+            opacity: 0;
+            content: "✔";
+            position: absolute;
+            top: -2px;
+            left: -20px;
+          }
+        }
+
+        &.done span:before {
+          opacity: 1;
+          -webkit-transition: opacity 0.3s ease 0.5s;
+          -moz-transition: opacity 0.3s ease 0.5s;
+          -ms-transition: opacity 0.3s ease 0.5s;
+          transition: opacity 0.3s ease 0.5s;
+        }
+
+        &.cancelled {
+          color: $white;
+          background-color: $red;
+
+          &:after {
+            border-left: 17px solid $red;
+          }
+
+          & ~ .step {
+            background-color: $light-red;
+            color: $medium-font;
+
+            &:after {
+              border-left: 17px solid $light-red;
+            }
+          }
+        }
+
+        &.current {
+          color: $white;
+          background-color: $blue;
+
+          &:after {
+            border-left: 17px solid $blue;
+          }
+
+          & ~ .step {
+            background-color: $light-blue;
+            color: $medium-font;
+
+            &:after {
+              border-left: 17px solid $light-blue;
+            }
+          }
+        }
+
+        &.danger {
+          color: $white;
+          background-color: $red;
+
+          &:after {
+            border-left: 17px solid $red;
+          }
+        }
       }
     }
   }
@@ -265,6 +297,7 @@
     border-radius: 5px;
     min-width: 15em;
     text-align: center;
+
     @include mobile {
       text-align: center;
     }

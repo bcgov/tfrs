@@ -1,9 +1,13 @@
-from rest_framework import viewsets, permissions, status, mixins, exceptions
+from django.db.models import Q
+
+from rest_framework import viewsets, permissions, status, mixins
 from rest_framework.decorators import list_route, detail_route
 from rest_framework.response import Response
 from rest_framework import filters
 
 from auditable.views import AuditableMixin
+
+from api.decorators import permission_required
 
 from api.models.CreditTrade import CreditTrade
 from api.models.CreditTradeHistory import CreditTradeHistory
@@ -18,7 +22,7 @@ from api.serializers import CreditTradeHistory2Serializer \
 
 from api.services.CreditTradeService import CreditTradeService
 
-from django.db.models import Q
+import datetime
 
 
 class CreditTradeViewSet(AuditableMixin, mixins.CreateModelMixin,
@@ -101,12 +105,13 @@ class CreditTradeViewSet(AuditableMixin, mixins.CreateModelMixin,
         return Response(None, status=status.HTTP_200_OK)
 
     @detail_route(methods=['put'])
+    @permission_required('APPROVE_CREDIT_TRANSFER')
     def approve(self, request, pk=None):
-        if not request.user.has_perm('api.credit_trade_approve'):
-            raise exceptions.PermissionDenied(
-                'Only Government representatives can use this functionality')
-
         credit_trade = self.get_object()
+        credit_trade.trade_effective_date = datetime.date.today()
+
+        serializer = self.get_serializer(credit_trade, data=request.data)
+        serializer.is_valid(raise_exception=True)
 
         completed_credit_trade = CreditTradeService.approve(credit_trade)
         serializer = self.get_serializer(completed_credit_trade)
@@ -114,6 +119,7 @@ class CreditTradeViewSet(AuditableMixin, mixins.CreateModelMixin,
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     @list_route(methods=['get'])
+    @permission_required('VIEW_APPROVED_CREDIT_TRANSFERS')
     def list_approved(self, request):
         status_approved = CreditTradeStatus.objects \
                                            .get(status="Approved")
@@ -125,11 +131,8 @@ class CreditTradeViewSet(AuditableMixin, mixins.CreateModelMixin,
         return Response(serializer.data)
 
     @list_route(methods=['put'])
+    @permission_required('APPROVE_CREDIT_TRANSFER')
     def batch_process(self, request):
-        if not request.user.has_perm('api.credit_trade_approve'):
-            raise exceptions.PermissionDenied(
-                'Only Government representatives can use this functionality')
-
         status_approved = CreditTradeStatus.objects \
                                            .get(status="Approved")
 

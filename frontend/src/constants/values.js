@@ -39,19 +39,19 @@ export const CREDIT_TRANSFER_STATUS = {
   },
   completed: {
     id: 7,
-    description: 'Completed'
+    description: 'Approved' /* changed from 'Completed' because the difference is not relevant to the user */
   },
   rescinded: {
     id: 8,
     description: 'Rescinded'
   },
-  refused: {
-    id: 8,
-    description: 'Refused'
-  },
   declinedForApproval: {
     id: 9,
-    description: 'Declined for approval'
+    description: 'Declined'
+  },
+  refused: {
+    id: 10,
+    description: 'Refused'
   }
 };
 

@@ -3,17 +3,10 @@
 export const HOME = '/';
 export const LOGOUT = '/logout';
 
-export const ORGANIZATIONS = '/organizations';
-export const ADMINISTRATION = '/administration';
-export const ORGANIZATION_DETAILS = '/organizations/:id';
-export const CREDIT_TRANSFER = '/credit_transfer/';
-export const NOT_FOUND = '/404';
-
 // Deprecated pages
 export const ACCOUNT_ACTIVITY = '/account-activity';
 export const NOTIFICATIONS = '/notifications';
 export const SETTINGS = '/settings';
-export const CREDIT_TRANSFER_DETAILS = '/credit_transfer/:id';
 
 // API Routes
 export const BASE_URL = `${window.location.protocol}//${window.location.host}/api`;

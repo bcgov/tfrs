@@ -15,6 +15,7 @@ class TestAuthentication(TestCase):
                 'organization_government.json',
                 'organization_balance_gov.json',
                 'credit_trade_statuses.json',
+                'credit_trade_statuses_refused.json',
                 'organization_actions_types.json',
                 'organization_statuses.json',
                 'credit_trade_types.json',
@@ -232,9 +233,11 @@ class TestAuthentication(TestCase):
 
         request = self.factory.get('/')
 
-        # Will throw error on this line on authentication.py:
-        # header_user_guid = uuid.UUID(request.META.get('HTTP_SMAUTH_USERGUID'))
-        # raise TypeError('one of the hex, bytes, bytes_le, fields, '
+        '''
+        Will throw error on this line on authentication.py:
+        header_user_guid = uuid.UUID(request.META.get('HTTP_SMAUTH_USERGUID'))
+        raise TypeError('one of the hex, bytes, bytes_le, fields, '
+        '''
 
         with self.assertRaises(TypeError):
             user, auth = self.userauth.authenticate(request)

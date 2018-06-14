@@ -12,7 +12,9 @@ from api.models.CreditTradeType import CreditTradeType
 from api.models.CreditTradeZeroReason import CreditTradeZeroReason
 from api.models.Organization import Organization
 from api.models.OrganizationBalance import OrganizationBalance
+from api.models.Role import Role
 from api.models.User import User
+from api.models.UserRole import UserRole
 
 from api.services.CreditTradeService import CreditTradeService
 
@@ -32,6 +34,7 @@ class TestCreditTrades(TestCase):
                 'organization_government.json',
                 'organization_balance_gov.json',
                 'credit_trade_statuses.json',
+                'credit_trade_statuses_refused.json',
                 'organization_actions_types.json',
                 'organization_statuses.json',
                 'test_users.json',
@@ -39,6 +42,9 @@ class TestCreditTrades(TestCase):
                 'test_credit_trades.json',
                 'test_organization_fuel_suppliers.json',
                 'test_organization_balances.json',
+                'roles.json',
+                'permissions.json',
+                'roles_permissions.json',
                 ]
 
     def setUp(self):
@@ -54,6 +60,15 @@ class TestCreditTrades(TestCase):
             HTTP_SM_UNIVERSALID=self.gov_user.authorization_id,
             HTTP_SMGOV_USERTYPE='Internal',
             HTTP_SM_AUTHDIRNAME='IDIR')
+
+        '''
+        Apply a government role to Teperson
+        '''
+        username = "_".join(['internal',
+                            self.gov_user.authorization_id.lower()])
+        gov_user = User.objects.get(username=username)
+        gov_role = Role.objects.get(name='GovDirector')
+        UserRole.objects.create(user_id=gov_user.id, role_id=gov_role.id)
 
         self.user_1 = User.objects.filter(organization__id=2).first()
         self.fs_client_1 = Client(
@@ -93,13 +108,62 @@ class TestCreditTrades(TestCase):
                 correct_view = True
             self.assertTrue(correct_view)
 
+    # As a fuel supplier, I should be able to refuse credit transfers where:
+    # I'm the respondent
+    def test_respondent_can_refuse_credit_trades(self):
+        # Assign FSManager role to user 1
+        role = Role.objects.get(name='FSManager')
+        UserRole.objects.create(user_id=self.user_1.id, role_id=role.id)
+
+        refused_status, created = CreditTradeStatus.objects.get_or_create(
+            status='Refused')
+
+        submitted_status, created = CreditTradeStatus.objects.get_or_create(
+            status='Submitted')
+
+        credit_trade_type, created = CreditTradeType.objects.get_or_create(
+            the_type='Sell')
+
+        credit_trade = CreditTrade.objects.create(
+            status=submitted_status,
+            initiator=self.user_2.organization,
+            respondent=self.user_1.organization,
+            type=credit_trade_type,
+            number_of_credits=100,
+            fair_market_value_per_credit=1,
+            zero_reason=None,
+            trade_effective_date=datetime.datetime.today().strftime('%Y-%m-%d')
+        )
+
+        payload = {
+            'fairMarketValuePerCredit':
+                credit_trade.fair_market_value_per_credit,
+            'initiator': credit_trade.initiator_id,
+            'numberOfCredits': credit_trade.number_of_credits,
+            'respondent': credit_trade.respondent_id,
+            'status': refused_status.id,
+            'tradeEffectiveDate': credit_trade.trade_effective_date,
+            'type': credit_trade.type_id,
+            'zeroReason': credit_trade.zero_reason_id
+        }
+
+        response = self.fs_client_1.put(
+            '/api/credit_trades/{}'.format(
+                credit_trade.id
+            ),
+            content_type='application/json',
+            data=json.dumps(payload))
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        credit_trade = CreditTrade.objects.get(id=credit_trade.id)
+        self.assertEqual(credit_trade.status, refused_status)
+
     # As a government user, I should see all credit trades where:
     # I'm the initiator, regardless of status
     # Government will never be the respondent
     # All other credit trades that have the status "Accepted" or greater
     def test_government_user_should_see_appropriate_credit_trades(self):
         response = self.gov_client.get('/api/credit_trades')
-        print(response.content)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
         gov_credit_trades = response.json()
@@ -314,6 +378,9 @@ class TestCreditTrades(TestCase):
     # This test is similar to the one above, but should succeed as we're going
     # to allocate the right amount of credits this time
     def test_validate_credit_success(self):
+
+        credit_trades = []
+
         credit_trade_status, created = CreditTradeStatus.objects.get_or_create(
             status='Approved')
 
@@ -337,7 +404,7 @@ class TestCreditTrades(TestCase):
         # (Please note in most cases we should use a different type
         # but to reduce the number of things to keep track, lets just
         # transfer from organization: 1 (BC Government))
-        CreditTrade.objects.create(status=credit_trade_status,
+        credit_trades.append(CreditTrade.objects.create(status=credit_trade_status,
                                    initiator=self.gov_user.organization,
                                    respondent=from_organization,
                                    type=credit_trade_type,
@@ -345,10 +412,10 @@ class TestCreditTrades(TestCase):
                                    fair_market_value_per_credit=0,
                                    zero_reason=credit_trade_zero_reason,
                                    trade_effective_date=datetime.datetime
-                                   .today().strftime('%Y-%m-%d'))
+                                   .today().strftime('%Y-%m-%d')))
 
         # Transfer 500 from Test 1 to Test 2
-        CreditTrade.objects.create(status=credit_trade_status,
+        credit_trades.append(CreditTrade.objects.create(status=credit_trade_status,
                                    initiator=from_organization,
                                    respondent=to_organization,
                                    type=credit_trade_type,
@@ -356,21 +423,18 @@ class TestCreditTrades(TestCase):
                                    fair_market_value_per_credit=0,
                                    zero_reason=credit_trade_zero_reason,
                                    trade_effective_date=datetime.datetime
-                                   .today().strftime('%Y-%m-%d'))
+                                   .today().strftime('%Y-%m-%d')))
 
         # Transfer 300 from Test 1 to Test 2
-        CreditTrade.objects.create(status=credit_trade_status,
+        credit_trades.append(CreditTrade.objects.create(status=credit_trade_status,
                                    initiator=from_organization,
                                    respondent=to_organization,
                                    type=credit_trade_type,
-                                   number_of_credits=500,
+                                   number_of_credits=300,
                                    fair_market_value_per_credit=0,
                                    zero_reason=credit_trade_zero_reason,
                                    trade_effective_date=datetime.datetime
-                                   .today().strftime('%Y-%m-%d'))
-
-        credit_trades = CreditTrade.objects.filter(
-            status_id=credit_trade_status.id)
+                                   .today().strftime('%Y-%m-%d')))
 
         # no exceptions should be raised
         CreditTradeService.validate_credits(credit_trades)

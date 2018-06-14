@@ -3,6 +3,8 @@ from rest_framework import viewsets, permissions, status, mixins
 from rest_framework.decorators import list_route, detail_route
 from rest_framework.response import Response
 
+from api.decorators import permission_required
+
 from api.models.Organization import Organization
 from api.models.OrganizationBalance import OrganizationBalance
 from api.models.OrganizationHistory import OrganizationHistory
@@ -36,6 +38,7 @@ class OrganizationViewSet(AuditableMixin, viewsets.ModelViewSet):
         else:
             return self.serializer_classes['default']
 
+    @permission_required('VIEW_FUEL_SUPPLIERS')
     def list(self, request):
         """
         Returns a list of Fuel Suppliers
