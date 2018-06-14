@@ -328,6 +328,9 @@ class TestCreditTrades(TestCase):
     # This test is similar to the one above, but should succeed as we're going
     # to allocate the right amount of credits this time
     def test_validate_credit_success(self):
+
+        credit_trades = []
+
         credit_trade_status, created = CreditTradeStatus.objects.get_or_create(
             status='Approved')
 
@@ -351,7 +354,7 @@ class TestCreditTrades(TestCase):
         # (Please note in most cases we should use a different type
         # but to reduce the number of things to keep track, lets just
         # transfer from organization: 1 (BC Government))
-        CreditTrade.objects.create(status=credit_trade_status,
+        credit_trades.append(CreditTrade.objects.create(status=credit_trade_status,
                                    initiator=self.gov_user.organization,
                                    respondent=from_organization,
                                    type=credit_trade_type,
@@ -359,10 +362,10 @@ class TestCreditTrades(TestCase):
                                    fair_market_value_per_credit=0,
                                    zero_reason=credit_trade_zero_reason,
                                    trade_effective_date=datetime.datetime
-                                   .today().strftime('%Y-%m-%d'))
+                                   .today().strftime('%Y-%m-%d')))
 
         # Transfer 500 from Test 1 to Test 2
-        CreditTrade.objects.create(status=credit_trade_status,
+        credit_trades.append(CreditTrade.objects.create(status=credit_trade_status,
                                    initiator=from_organization,
                                    respondent=to_organization,
                                    type=credit_trade_type,
@@ -370,21 +373,18 @@ class TestCreditTrades(TestCase):
                                    fair_market_value_per_credit=0,
                                    zero_reason=credit_trade_zero_reason,
                                    trade_effective_date=datetime.datetime
-                                   .today().strftime('%Y-%m-%d'))
+                                   .today().strftime('%Y-%m-%d')))
 
         # Transfer 300 from Test 1 to Test 2
-        CreditTrade.objects.create(status=credit_trade_status,
+        credit_trades.append(CreditTrade.objects.create(status=credit_trade_status,
                                    initiator=from_organization,
                                    respondent=to_organization,
                                    type=credit_trade_type,
-                                   number_of_credits=500,
+                                   number_of_credits=300,
                                    fair_market_value_per_credit=0,
                                    zero_reason=credit_trade_zero_reason,
                                    trade_effective_date=datetime.datetime
-                                   .today().strftime('%Y-%m-%d'))
-
-        credit_trades = CreditTrade.objects.filter(
-            status_id=credit_trade_status.id)
+                                   .today().strftime('%Y-%m-%d')))
 
         # no exceptions should be raised
         CreditTradeService.validate_credits(credit_trades)
