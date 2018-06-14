@@ -1,9 +1,11 @@
-from auditable.views import AuditableMixin
-from rest_framework import viewsets, permissions, status, mixins
+from django.db.models import Sum
+
+from rest_framework import viewsets, permissions
 from rest_framework.decorators import list_route, detail_route
 from rest_framework.response import Response
 
 from api.decorators import permission_required
+from auditable.views import AuditableMixin
 
 from api.models.Organization import Organization
 from api.models.OrganizationBalance import OrganizationBalance
@@ -39,7 +41,7 @@ class OrganizationViewSet(AuditableMixin, viewsets.ModelViewSet):
             return self.serializer_classes['default']
 
     @permission_required('VIEW_FUEL_SUPPLIERS')
-    def list(self, request):
+    def list(self, request, *args, **kwargs):
         """
         Returns a list of Fuel Suppliers
         There are two types of organizations: Government and Fuel Suppliers
@@ -74,6 +76,17 @@ class OrganizationViewSet(AuditableMixin, viewsets.ModelViewSet):
 
         return Response(serializer.data)
 
+    @list_route(methods=['get'])
+    def total_balance(self, request, pk=None):
+        validated_credits = OrganizationBalance.objects.filter(
+            expiration_date=None,
+            organization__type=OrganizationType.objects.get(
+                type="Part3FuelSupplier")
+            ).aggregate(
+                validated_credits=Sum('validated_credits'))
+
+        return Response(validated_credits)
+
     @detail_route()
     def balance(self, request, pk=None):
         """
@@ -102,8 +115,8 @@ class OrganizationViewSet(AuditableMixin, viewsets.ModelViewSet):
     def fuel_suppliers(self, request):
         fuel_suppliers = Organization.objects.extra(
             select={'lower_name': 'lower(name)'}) \
-            .filter(
-            type=OrganizationType.objects.get(type="Part3FuelSupplier")) \
+            .filter(type=OrganizationType.objects.get(
+                type="Part3FuelSupplier")) \
             .order_by('lower_name')
 
         serializer = self.get_serializer(fuel_suppliers, many=True)

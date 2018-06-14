@@ -26,9 +26,22 @@ from api.models.Organization import Organization
 
 
 class OrganizationSerializer(serializers.ModelSerializer):
+    """
+    Serializer for the Fuel Supplier
+    Loads most of the fields and the balance for the Fuel Supplier
+    """
     class Meta:
         model = Organization
-        fields = (
-            'id', 'name', 'status', 'status_display', 'actions_type',
-            'actions_type_display', 'create_timestamp', 'type',
-            'organization_balance')
+        fields = ('id', 'name', 'status', 'status_display', 'actions_type',
+                  'actions_type_display', 'create_timestamp', 'type',
+                  'organization_balance')
+
+
+class OrganizationMinSerializer(serializers.ModelSerializer):
+    """
+    Minium Serializer for the Fuel Supplier
+    Only Loads the id and name for the basic requirements
+    """
+    class Meta:
+        model = Organization
+        fields = ('id', 'name')
