@@ -15,6 +15,7 @@ class TestAuthentication(TestCase):
                 'organization_government.json',
                 'organization_balance_gov.json',
                 'credit_trade_statuses.json',
+                'credit_trade_statuses_refused.json',
                 'organization_actions_types.json',
                 'organization_statuses.json',
                 'credit_trade_types.json',

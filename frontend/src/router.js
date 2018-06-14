@@ -35,7 +35,7 @@ const Router = props => (
           exact
           path={Routes.LOGOUT}
           component={() => {
-            window.location = __LOGOUT_URL__;
+            window.location = `${__LOGOUT_URL__}?returl=${window.location.origin}`;
           }}
         />
         <Route
