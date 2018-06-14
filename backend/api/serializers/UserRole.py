@@ -28,4 +28,4 @@ from api.models.UserRole import UserRole
 class UserRoleSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserRole
-        fields = ('id', 'user', 'role')
+        fields = ('id', 'user')

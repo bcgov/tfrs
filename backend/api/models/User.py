@@ -6,7 +6,7 @@
     the Renewable & Low Carbon Fuel Requirements Regulation.
 
     OpenAPI spec version: v1
-    
+
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
@@ -27,6 +27,7 @@ from django.core.validators import RegexValidator
 import django.contrib.auth.validators
 
 from .OrganizationBalance import OrganizationBalance
+from .UserRole import UserRole
 
 from auditable.models import Auditable
 
@@ -34,7 +35,9 @@ from auditable.models import Auditable
 class User(AbstractUser, Auditable):
     username = models.CharField(error_messages={'unique': 'A user with that username already exists.'}, help_text='Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only.', max_length=150, unique=True, validators=[django.contrib.auth.validators.UnicodeUsernameValidator()], verbose_name='username')
     phone_regex = RegexValidator(regex=r'^\+?1?\d{9,15}$',
-                                 message="Phone number must be entered in the format: '+999999999'. Up to 15 digits allowed.")
+                                 message="Phone number must be entered in the"
+                                 "format: '+999999999'. Up to 15 digits"
+                                 "allowed.")
 
     password = models.CharField(max_length=128, blank=True, null=True)
     email = email = models.EmailField(blank=True, null=True)
@@ -71,6 +74,25 @@ class User(AbstractUser, Auditable):
             balance = 0
 
         return balance
+
+    @property
+    def role(self):
+        user_role = UserRole.objects.select_related('role').filter(
+            user_id=self.id
+        ).first()
+
+        if user_role is None:
+            return None
+
+        return user_role.role
+
+    def has_perm(self, permission):
+        if self.role is None or not self.role.permissions.filter(
+            code=permission
+        ):
+            return False
+        else:
+            return True
 
     class Meta:
         db_table = 'user'

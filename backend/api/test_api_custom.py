@@ -1,10 +1,11 @@
 """
     REST API Documentation for the NRS TFRS Credit Trading Application
 
-    The Transportation Fuels Reporting System is being designed to streamline compliance reporting for transportation fuel suppliers in accordance with the Renewable & Low Carbon Fuel Requirements Regulation.
+    The Transportation Fuels Reporting System is being designed to streamline
+    compliance reporting for transportation fuel suppliers in accordance with
+    the Renewable & Low Carbon Fuel Requirements Regulation.
 
     OpenAPI spec version: v1
-        
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
@@ -39,6 +40,7 @@ class Test_Api_Custom(TestCase):
                 'organization_government.json',
                 'organization_balance_gov.json',
                 'credit_trade_statuses.json',
+                'credit_trade_statuses_refused.json',
                 'organization_actions_types.json',
                 'organization_statuses.json',
                 'credit_trade_types.json',
@@ -244,8 +246,6 @@ class Test_Api_Custom(TestCase):
         createdId = data['id']
         return createdId, typeId, statusId
 
-        return createdId
-
     def deleteRole(self, role_id):
         deleteUrl = "/api/roles/" + str(role_id) + "/delete"
         response = self.client.post(deleteUrl)
@@ -303,20 +303,6 @@ class Test_Api_Custom(TestCase):
         assert status.HTTP_200_OK == response.status_code
         self.deleteUser (user.get('id'))
         self.deleteOrganization(organization_id)
-
-
-    def test_organizationsSearchGet(self):
-        organization_id, statusId, actionId = self.createOrganization()
-
-        # do a search
-        testUrl = "/api/organizations/search"
-        response = self.client.get(testUrl)
-        # Check that the response is OK.
-        assert status.HTTP_200_OK == response.status_code
-        # parse the response.
-        jsonString = response.content.decode("utf-8")
-        data = json.loads(jsonString)
-        # Cleanup
 
     def test_rolesIdPermissionsGet(self):
         # create a group.
@@ -411,42 +397,6 @@ class Test_Api_Custom(TestCase):
         # cleanup
         self.deleteUser(user.get('id'))
         self.deleteOrganization(organization_id)
-
-    def test_usersIdRolesGet(self):
-        fsId, _, _= self.createOrganization()
-        user = self.createUser(fsId)
-        role_id = self.createRole()
-
-        url = "/api/users/" + str(user.get('id')) + "/roles"
-        payload = fakedata.UserRoleTestDataCreate()
-        payload['user'] = user.get('id')
-        payload['role'] = role_id
-        jsonString = json.dumps(payload)
-        response = self.client.post(url, content_type='application/json', data=jsonString)
-
-        assert response.status_code == status.HTTP_200_OK
-
-        response = self.client.get(url)
-
-        assert response.status_code == status.HTTP_200_OK
-
-        payload = [fakedata.UserRoleTestDataUpdate()]
-        payload[0]['user'] = user.get('id')
-        payload[0]['role'] = role_id
-        jsonString = json.dumps(payload)
-        response = self.client.put(url, content_type='application/json', data=jsonString)
-
-        assert response.status_code == status.HTTP_200_OK
-
-        jsonString = response.content.decode("utf-8")
-        data = json.loads(jsonString)
-
-        assert data[0]['user'] == user.get('id')
-        assert data[0]['role'] == role_id
-
-        self.deleteRole(role_id)
-        self.deleteUser(user.get('id'))
-        self.deleteOrganization(fsId)
 
     def test_usersSearchGet(self):
         organization_id, statusId, actionId = self.createOrganization()

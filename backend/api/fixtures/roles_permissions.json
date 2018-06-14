@@ -1,0 +1,218 @@
+[
+    {
+        "fields": {
+            "permission": "6",
+            "role": "2"
+        },
+        "model": "api.rolepermission",
+        "pk": null
+    },
+    {
+        "fields": {
+            "permission": "7",
+            "role": "2"
+        },
+        "model": "api.rolepermission",
+        "pk": null
+    },
+    {
+        "fields": {
+            "permission": "8",
+            "role": "2"
+        },
+        "model": "api.rolepermission",
+        "pk": null
+    },
+    {
+        "fields": {
+            "permission": "10",
+            "role": "2"
+        },
+        "model": "api.rolepermission",
+        "pk": null
+    },
+    {
+        "fields": {
+            "permission": "11",
+            "role": "2"
+        },
+        "model": "api.rolepermission",
+        "pk": null
+    },
+    {
+        "fields": {
+            "permission": "12",
+            "role": "2"
+        },
+        "model": "api.rolepermission",
+        "pk": null
+    },
+    {
+        "fields": {
+            "permission": "13",
+            "role": "2"
+        },
+        "model": "api.rolepermission",
+        "pk": null
+    },
+    {
+        "fields": {
+            "permission": "14",
+            "role": "2"
+        },
+        "model": "api.rolepermission",
+        "pk": null
+    },
+    {
+        "fields": {
+            "permission": "6",
+            "role": "3"
+        },
+        "model": "api.rolepermission",
+        "pk": null
+    },
+    {
+        "fields": {
+            "permission": "7",
+            "role": "3"
+        },
+        "model": "api.rolepermission",
+        "pk": null
+    },
+    {
+        "fields": {
+            "permission": "8",
+            "role": "3"
+        },
+        "model": "api.rolepermission",
+        "pk": null
+    },
+    {
+        "fields": {
+            "permission": "9",
+            "role": "3"
+        },
+        "model": "api.rolepermission",
+        "pk": null
+    },
+    {
+        "fields": {
+            "permission": "10",
+            "role": "3"
+        },
+        "model": "api.rolepermission",
+        "pk": null
+    },
+    {
+        "fields": {
+            "permission": "11",
+            "role": "3"
+        },
+        "model": "api.rolepermission",
+        "pk": null
+    },
+    {
+        "fields": {
+            "permission": "12",
+            "role": "3"
+        },
+        "model": "api.rolepermission",
+        "pk": null
+    },
+    {
+        "fields": {
+            "permission": "13",
+            "role": "3"
+        },
+        "model": "api.rolepermission",
+        "pk": null
+    },
+    {
+        "fields": {
+            "permission": "14",
+            "role": "3"
+        },
+        "model": "api.rolepermission",
+        "pk": null
+    },
+    {
+        "fields": {
+            "permission": "15",
+            "role": "3"
+        },
+        "model": "api.rolepermission",
+        "pk": null
+    },
+    {
+        "fields": {
+            "permission": "7",
+            "role": "4"
+        },
+        "model": "api.rolepermission",
+        "pk": null
+    },
+    {
+        "fields": {
+            "permission": "9",
+            "role": "4"
+        },
+        "model": "api.rolepermission",
+        "pk": null
+    },
+    {
+        "fields": {
+            "permission": "10",
+            "role": "4"
+        },
+        "model": "api.rolepermission",
+        "pk": null
+    },
+    {
+        "fields": {
+            "permission": "11",
+            "role": "4"
+        },
+        "model": "api.rolepermission",
+        "pk": null
+    },
+    {
+        "fields": {
+            "permission": "7",
+            "role": "5"
+        },
+        "model": "api.rolepermission",
+        "pk": null
+    },
+    {
+        "fields": {
+            "permission": "9",
+            "role": "5"
+        },
+        "model": "api.rolepermission",
+        "pk": null
+    },
+    {
+        "fields": {
+            "permission": "10",
+            "role": "5"
+        },
+        "model": "api.rolepermission",
+        "pk": null
+    },
+    {
+        "fields": {
+            "permission": "11",
+            "role": "5"
+        },
+        "model": "api.rolepermission",
+        "pk": null
+    },
+    {
+        "fields": {
+            "permission": "12",
+            "role": "5"
+        },
+        "model": "api.rolepermission",
+        "pk": null
+    }
+]

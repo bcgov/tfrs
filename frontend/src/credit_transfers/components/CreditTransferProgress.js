@@ -37,6 +37,17 @@ class CreditTransferProgress extends Component {
     );
   }
 
+  _addStepNotRecommended () {
+    return (
+      <div
+        className={`step ${(this.props.status.id === CREDIT_TRANSFER_STATUS.notRecommended.id) ? 'cancelled' : ''}`}
+        key={CREDIT_TRANSFER_STATUS.notRecommended.id}
+      >
+        <span>{CREDIT_TRANSFER_STATUS.notRecommended.description}</span>
+      </div>
+    );
+  }
+
   _addStepProposed () {
     return (
       <div
@@ -55,6 +66,17 @@ class CreditTransferProgress extends Component {
         key={CREDIT_TRANSFER_STATUS.recommendedForDecision.id}
       >
         <span>{CREDIT_TRANSFER_STATUS.recommendedForDecision.description}</span>
+      </div>
+    );
+  }
+
+  _addStepRefused () {
+    return (
+      <div
+        className={`step ${(this.props.status.id === CREDIT_TRANSFER_STATUS.refused.id) ? 'danger' : ''}`}
+        key={CREDIT_TRANSFER_STATUS.refused.id}
+      >
+        <span>{CREDIT_TRANSFER_STATUS.refused.description}</span>
       </div>
     );
   }
@@ -81,8 +103,19 @@ class CreditTransferProgress extends Component {
     view.push(this._addStepDraft());
 
     view.push(this._addStepProposed());
-    view.push(this._addStepAccepted());
-    view.push(this._addStepRecommended());
+
+    if (this.props.status.id === CREDIT_TRANSFER_STATUS.refused.id) {
+      view.push(this._addStepRefused());
+    } else {
+      view.push(this._addStepAccepted());
+    }
+
+    if (this.props.status.id === CREDIT_TRANSFER_STATUS.notRecommended.id) {
+      view.push(this._addStepNotRecommended());
+    } else {
+      view.push(this._addStepRecommended());
+    }
+
     view.push(this._addStepCompleted());
 
     return view;
@@ -104,14 +137,23 @@ class CreditTransferProgress extends Component {
   }
 
   render () {
+    if ([
+      CREDIT_TRANSFER_TYPES.buy.id,
+      CREDIT_TRANSFER_TYPES.sell.id
+    ].includes(this.props.type.id)) {
+      return (
+        <div className="credit-transfer-progress-bar">
+          <div className="arrow-steps clearfix">
+            {this._renderCreditTransfer()}
+          </div>
+        </div>
+      );
+    }
+
     return (
-      <div className="credit-transfer-progress-bar">
+      <div className="credit-transfer-progress-bar pvr">
         <div className="arrow-steps clearfix">
-          {[CREDIT_TRANSFER_TYPES.buy.id, CREDIT_TRANSFER_TYPES.sell.id]
-            .includes(this.props.type.id)
-            ? this._renderCreditTransfer()
-            : this._renderGovernmentTransfer()
-          }
+          {this._renderGovernmentTransfer()}
         </div>
       </div>
     );

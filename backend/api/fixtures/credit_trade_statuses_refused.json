@@ -1,0 +1,11 @@
+[{
+  "fields": {
+      "description": "The Credit Transfer has been refused by the Respondent.",
+      "display_order": "9",
+      "effective_date": "2017-01-01",
+      "expiration_date": null,
+      "status": "Refused"
+  },
+  "model": "api.credittradestatus",
+  "pk": "10"
+}]

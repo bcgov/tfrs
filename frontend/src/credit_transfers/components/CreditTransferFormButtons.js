@@ -86,6 +86,46 @@ const CreditTransferFormButtons = props => (
         {Lang.BTN_RESCIND}
       </button>
       }
+      {props.actions.includes(Lang.BTN_NOT_RECOMMENDED_FOR_DECISION) &&
+      <button
+        className="btn btn-danger"
+        data-target="#confirmNotRecommend"
+        data-toggle="modal"
+        type="button"
+      >
+        {Lang.BTN_NOT_RECOMMENDED_FOR_DECISION}
+      </button>
+      }
+      {props.actions.includes(Lang.BTN_RECOMMEND_FOR_DECISION) &&
+      <button
+        className="btn btn-primary"
+        data-target="#confirmRecommend"
+        data-toggle="modal"
+        type="button"
+      >
+        {Lang.BTN_RECOMMEND_FOR_DECISION}
+      </button>
+      }
+      {props.actions.includes(Lang.BTN_DECLINE_FOR_APPROVAL) &&
+      <button
+        className="btn btn-danger"
+        data-target="#confirmDecline"
+        data-toggle="modal"
+        type="button"
+      >
+        {Lang.BTN_DECLINE_FOR_APPROVAL}
+      </button>
+      }
+      {props.actions.includes(Lang.BTN_APPROVE) &&
+      <button
+        className="btn btn-primary"
+        data-target="#confirmApprove"
+        data-toggle="modal"
+        type="button"
+      >
+        {Lang.BTN_APPROVE}
+      </button>
+      }
     </div>
   </div>
 );

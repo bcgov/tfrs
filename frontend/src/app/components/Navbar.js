@@ -6,7 +6,7 @@ import { connect } from 'react-redux';
 import * as Routes from '../../constants/routes';
 import CREDIT_TRANSACTIONS from '../../constants/routes/CreditTransactions';
 import HISTORICAL_DATA_ENTRY from '../../constants/routes/HistoricalDataEntry';
-import { DEFAULT_ORGANIZATION } from '../../constants/values';
+import ORGANIZATIONS from '../../constants/routes/Organizations';
 
 class Navbar extends Component {
   static updateContainerPadding () {
@@ -29,38 +29,30 @@ class Navbar extends Component {
     const SecondLevelNavigation = (
       <div className="level2Navigation">
         <div className="container">
-          {this.props.loggedInUser.organization &&
-            this.props.loggedInUser.organization.id === DEFAULT_ORGANIZATION.id &&
-            <Link id="navbar-dashboard" to={Routes.HOME}>
-              Dashboard
-            </Link>
+          {this.props.loggedInUser.role &&
+          this.props.loggedInUser.role.isGovernmentRole &&
+          <Link id="navbar-organizations" to={ORGANIZATIONS.LIST}>
+            Fuel Suppliers
+          </Link>
           }
-          {this.props.loggedInUser.organization &&
-            this.props.loggedInUser.organization.id === DEFAULT_ORGANIZATION.id &&
-            <Link id="navbar-organizations" to={Routes.ORGANIZATIONS}>
-              Fuel Suppliers
-            </Link>
+          {this.props.loggedInUser.role &&
+          !this.props.loggedInUser.role.isGovernmentRole &&
+          <a
+            href={ORGANIZATIONS.BULLETIN}
+            rel="noopener noreferrer"
+            target="_blank"
+          >
+            Fuel Suppliers
+          </a>
           }
           <Link id="navbar-credit-transactions" to={CREDIT_TRANSACTIONS.LIST}>
             Credit Transactions
           </Link>
-          {this.props.loggedInUser.organization &&
-            this.props.loggedInUser.organization.id === DEFAULT_ORGANIZATION.id &&
-            <Link id="navbar-notifications" to={Routes.NOTIFICATIONS}>
-              Notifications
-            </Link>
-          }
-          {this.props.loggedInUser.organization &&
-            this.props.loggedInUser.organization.id === DEFAULT_ORGANIZATION.id &&
-            <Link id="navbar-settings" to={Routes.SETTINGS}>
-              Settings
-            </Link>
-          }
-          {this.props.loggedInUser.organization &&
-            this.props.loggedInUser.organization.id === DEFAULT_ORGANIZATION.id &&
-            <Link id="navbar-administration" to={HISTORICAL_DATA_ENTRY.LIST}>
-              Administration
-            </Link>
+          {this.props.loggedInUser.role &&
+          this.props.loggedInUser.role.isGovernmentRole &&
+          <Link id="navbar-administration" to={HISTORICAL_DATA_ENTRY.LIST}>
+            Administration
+          </Link>
           }
           <Link id="navbar-logout" to={Routes.LOGOUT}>
             Log-out
@@ -77,23 +69,27 @@ class Navbar extends Component {
       >
         <a id="navigation-anchor" href="#navigation-anchor"><span>Navigation Bar</span></a>
         <ul className="nav navbar-nav">
-          {this.props.loggedInUser.organization &&
-          this.props.loggedInUser.organization.id === DEFAULT_ORGANIZATION.id &&
-          <li>
-            <Link id="collapse-navbar-dashboard" to={Routes.HOME}>
-              Dashboard
-            </Link>
-          </li>
-          }
-          {this.props.loggedInUser.organization &&
-          this.props.loggedInUser.organization.id === DEFAULT_ORGANIZATION.id &&
+          {this.props.loggedInUser.role &&
+          this.props.loggedInUser.role.isGovernmentRole &&
           <li>
             <Link
               id="collapse-navbar-organization"
-              to={Routes.ORGANIZATIONS}
+              to={ORGANIZATIONS.LIST}
             >
               Fuel Suppliers
             </Link>
+          </li>
+          }
+          {this.props.loggedInUser.role &&
+          !this.props.loggedInUser.role.isGovernmentRole &&
+          <li>
+            <a
+              href={ORGANIZATIONS.BULLETIN}
+              rel="noopener noreferrer"
+              target="_blank"
+            >
+              Fuel Suppliers
+            </a>
           </li>
           }
           <li>
@@ -104,27 +100,8 @@ class Navbar extends Component {
             Credit Transactions
             </Link>
           </li>
-          {this.props.loggedInUser.organization &&
-          this.props.loggedInUser.organization.id === DEFAULT_ORGANIZATION.id &&
-          <li>
-            <Link
-              id="collapse-navbar-notifications"
-              to={Routes.NOTIFICATIONS}
-            >
-              Notifications
-            </Link>
-          </li>
-          }
-          {this.props.loggedInUser.organization &&
-          this.props.loggedInUser.organization.id === DEFAULT_ORGANIZATION.id &&
-          <li>
-            <Link id="collapse-navbar-settings" to={Routes.SETTINGS}>
-              Settings
-            </Link>
-          </li>
-          }
-          {this.props.loggedInUser.organization &&
-          this.props.loggedInUser.organization.id === DEFAULT_ORGANIZATION.id &&
+          {this.props.loggedInUser.role &&
+          this.props.loggedInUser.role.isGovernmentRole &&
           <li>
             <Link
               id="collapse-navbar-administration"
@@ -223,6 +200,10 @@ Navbar.propTypes = {
     organization: PropTypes.shape({
       name: PropTypes.string,
       id: PropTypes.number
+    }),
+    role: PropTypes.shape({
+      id: PropTypes.number,
+      isGovernmentRole: PropTypes.bool
     })
   }).isRequired,
   isAuthenticated: PropTypes.bool.isRequired

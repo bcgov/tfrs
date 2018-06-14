@@ -49,4 +49,6 @@ class CreditTradeStatus(Auditable):
         elif self.status == 'Approved':
             return 'Approve'
         elif self.status == 'Declined':
-            return 'Decline for approval'
+            return 'Decline to Approve'
+        elif self.status == 'Refused':
+            return 'Refuse'
