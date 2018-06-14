@@ -41,7 +41,6 @@ class CreditTradeSerializer(serializers.ModelSerializer):
                   'type', 'number_of_credits',
                   'fair_market_value_per_credit', 'zero_reason',
                   'trade_effective_date', 'compliance_period')
-        read_only_fields = ('comments')
 
 
 class CreditTradeCreateSerializer(serializers.ModelSerializer):
@@ -57,30 +56,30 @@ class CreditTradeCreateSerializer(serializers.ModelSerializer):
             available_statuses.append('Draft')
 
         if request.user.has_perm('SIGN_CREDIT_TRANSFER') and \
-                data.get('initiator') == request.user.organization:
-            available_statuses.append('Submitted')
+           data.get('initiator') == request.user.organization:
+                available_statuses.append('Submitted')
 
         allowed_statuses = list(
             CreditTradeStatus.objects
-                .filter(status__in=available_statuses)
-                .only('id'))
+            .filter(status__in=available_statuses)
+            .only('id'))
 
         credit_trade_status = data.get('status')
 
         if credit_trade_status not in allowed_statuses:
             raise serializers.ValidationError({
                 'invalidStatus': "You do not have permission to set statuses "
-                                 "to `{}`.".format(credit_trade_status.status)
+                "to `{}`.".format(credit_trade_status.status)
             })
 
         if (data.get('fair_market_value_per_credit') == 0 and
                 data.get('zero_reason') is None):
             allowed_types = list(
                 CreditTradeType.objects
-                    .filter(the_type__in=[
+                .filter(the_type__in=[
                     "Credit Validation", "Credit Retirement", "Part 3 Award"
                 ])
-                    .only('id')
+                .only('id')
             )
 
             credit_trade_type = data.get('type')
@@ -88,7 +87,7 @@ class CreditTradeCreateSerializer(serializers.ModelSerializer):
             if credit_trade_type not in allowed_types:
                 raise serializers.ValidationError({
                     'zeroDollarReason': "Zero Dollar Reason is required "
-                                        "for Credit Transfers with 0 Dollar per Credit"
+                    "for Credit Transfers with 0 Dollar per Credit"
                 })
 
         return data
@@ -108,7 +107,7 @@ class CreditTradeUpdateSerializer(serializers.ModelSerializer):
         ]:
             raise serializers.ValidationError({
                 'readOnly': "Cannot update a transaction that's already "
-                            "been `{}`.".format(self.instance.status.status)
+                "been `{}`.".format(self.instance.status.status)
             })
 
         if request.user.has_perm('APPROVE_CREDIT_TRANSFER'):
@@ -118,22 +117,17 @@ class CreditTradeUpdateSerializer(serializers.ModelSerializer):
             available_statuses.append("Declined")
 
         if request.user.has_perm('PROPOSE_CREDIT_TRANSFER') and \
-                self.instance.status.status == "Draft":
+           self.instance.status.status == "Draft":
             available_statuses.append("Draft")
 
         if request.user.has_perm('RECOMMEND_CREDIT_TRANSFER') and \
-                self.instance.status.status == "Accepted":
+           self.instance.status.status == "Accepted":
             available_statuses.append("Recommended")
             available_statuses.append("Not Recommended")
 
         if request.user.has_perm('REFUSE_CREDIT_TRANSFER') and \
-<<<<<<< HEAD
            data.get('respondent') == request.user.organization:
             available_statuses.append("Refused")
-=======
-                data.get('respondent') == request.user.organization:
-            available_statuses.append("Cancelled")
->>>>>>> Working on Credit Trade Permissions
 
         if request.user.has_perm('RESCIND_CREDIT_TRANSFER'):
             available_statuses.append("Cancelled")
@@ -147,25 +141,25 @@ class CreditTradeUpdateSerializer(serializers.ModelSerializer):
 
         allowed_statuses = list(
             CreditTradeStatus.objects
-                .filter(status__in=available_statuses)
-                .only('id'))
+            .filter(status__in=available_statuses)
+            .only('id'))
 
         credit_trade_status = data.get('status')
 
         if credit_trade_status not in allowed_statuses:
             raise serializers.ValidationError({
                 'invalidStatus': "You do not have permission to set the "
-                                 "status to `{}`.".format(credit_trade_status.status)
+                "status to `{}`.".format(credit_trade_status.status)
             })
 
         if (data.get('fair_market_value_per_credit') == 0 and
                 data.get('zero_reason') is None):
             allowed_types = list(
                 CreditTradeType.objects
-                    .filter(the_type__in=[
+                .filter(the_type__in=[
                     "Credit Validation", "Credit Retirement", "Part 3 Award"
                 ])
-                    .only('id')
+                .only('id')
             )
 
             credit_trade_type = data.get('type')
@@ -173,7 +167,7 @@ class CreditTradeUpdateSerializer(serializers.ModelSerializer):
             if credit_trade_type not in allowed_types:
                 raise serializers.ValidationError({
                     'zeroDollarReason': 'Zero Dollar Reason is required '
-                                        'for Credit Transfers with 0 Dollar per Credit'
+                    'for Credit Transfers with 0 Dollar per Credit'
                 })
 
         return data
@@ -193,13 +187,13 @@ class CreditTradeApproveSerializer(serializers.ModelSerializer):
         ]:
             raise serializers.ValidationError({
                 'readOnly': "Cannot approve a transaction that's already "
-                            "been `{}`.".format(self.instance.status.status)
+                "been `{}`.".format(self.instance.status.status)
             })
 
         if not request.user.has_perm('APPROVE_CREDIT_TRANSFER'):
             raise serializers.ValidationError({
                 'invalidStatus': "You do not have permission approve "
-                                 "transactions"
+                "transactions"
             })
 
         return data
@@ -303,7 +297,7 @@ class CreditTrade2Serializer(serializers.ModelSerializer):
         if request.user.role is None:
             return []
 
-        if request.user.has_perm('APPROVE_CREDIT_TRANSFER'):
+        if request.user.has_perm('VIEW_PRIVILEGED_COMMENTS'):
             comments = obj.comments
         else:
             comments = obj.unprivileged_comments

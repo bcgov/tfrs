@@ -33,4 +33,7 @@ class CreditTradeCommentSerializer(serializers.ModelSerializer):
     class Meta:
         model = CreditTradeComment
         fields = (
-            'id', 'comment', 'privileged_access', 'create_timestamp', 'update_timestamp', 'create_user')
+            'id', 'credit_trade', 'comment', 'privileged_access', 'create_timestamp',
+            'update_timestamp', 'create_user')
+
+        read_only_fields = ('id', 'create_timestamp', 'update_timestamp', 'create_user')

@@ -29,7 +29,7 @@ class CreditTradeComment(Auditable):
     credit_trade = models.ForeignKey(
         'CreditTrade',
         related_name='credit_trade_comments',
-        null=True,
+        null=False,
         on_delete=models.PROTECT)
 
     comment = models.CharField(max_length=4000, blank=True, null=True)
