@@ -55,15 +55,18 @@ class OrganizationViewSet(AuditableMixin, viewsets.ModelViewSet):
         return Response(serializer.data)
 
     @detail_route(methods=['put'])
+    @permission_required('DELETE_FUEL_SUPPLIER')
     def delete(self, request, pk=None):
         """Destroys the specified organization"""
         return self.destroy(request, pk=pk)
 
     @list_route(methods=['get'])
+    @permission_required('VIEW_FUEL_SUPPLIERS')
     def search(self, request):
         return self.list(request)
 
     @detail_route()
+    @permission_required('VIEW_FUEL_SUPPLIERS')
     def history(self, request, pk=None):
         """
         Get the organization history
@@ -77,6 +80,7 @@ class OrganizationViewSet(AuditableMixin, viewsets.ModelViewSet):
         return Response(serializer.data)
 
     @list_route(methods=['get'])
+    @permission_required('VIEW_FUEL_SUPPLIERS')
     def total_balance(self, request, pk=None):
         validated_credits = OrganizationBalance.objects.filter(
             expiration_date=None,
@@ -88,6 +92,7 @@ class OrganizationViewSet(AuditableMixin, viewsets.ModelViewSet):
         return Response(validated_credits)
 
     @detail_route()
+    @permission_required('VIEW_FUEL_SUPPLIERS')
     def balance(self, request, pk=None):
         """
         Get the organization balance
@@ -112,6 +117,7 @@ class OrganizationViewSet(AuditableMixin, viewsets.ModelViewSet):
         return Response([user.display_name for user in users])
 
     @list_route(methods=['get'])
+    @permission_required('VIEW_FUEL_SUPPLIERS')
     def fuel_suppliers(self, request):
         fuel_suppliers = Organization.objects.extra(
             select={'lower_name': 'lower(name)'}) \
