@@ -133,11 +133,8 @@ const CreditTransferTable = (props) => {
       data={props.items}
       defaultPageSize={15}
       defaultSorted={[{
-        id: 'creditsFrom',
-        desc: false
-      }, {
-        id: 'creditsTo',
-        desc: false
+        id: 'id',
+        desc: true
       }]}
       filterable={filterable}
       pageSizeOptions={[5, 10, 15, 20, 25, 50, 100]}
