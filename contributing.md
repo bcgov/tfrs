@@ -10,3 +10,12 @@ All contributors retain the original copyright to their stuff, but by contributi
 
 **IMPORTANT**
 There are separate and specific contributing guidelines for our [frontend](frontend/contributing.md) and [backend](backend/contributing.md) codebases.
+
+| [Frontend](frontend/contributing.md) - **_JavaScript/React_**| [Backend](backend/contributing.md) - **_Django/Python_**|
+| --- | --- |
+| [Sonarqube Bug List](https://sonarqube-mem-tfrs-tools.pathfinder.gov.bc.ca/project/issues?id=tfrs-frontend&resolved=false&types=BUG) | [Sonarqube Bug List](https://sonarqube-mem-tfrs-tools.pathfinder.gov.bc.ca/project/issues?id=tfrs-backend&resolved=false&types=BUG) |   
+| [Sonarqube Code Smells](https://sonarqube-mem-tfrs-tools.pathfinder.gov.bc.ca/project/issues?facetMode=effort&id=tfrs-frontend&resolved=false&types=CODE_SMELL) | [Sonarqube Code Smells](https://sonarqube-mem-tfrs-tools.pathfinder.gov.bc.ca/project/issues?facetMode=effort&id=tfrs-backend&resolved=false&types=CODE_SMELL) |  
+| [Sonarqube Untested Code](https://sonarqube-mem-tfrs-tools.pathfinder.gov.bc.ca/component_measures?id=tfrs-frontend&metric=uncovered_lines) | [Sonarqube Untested Code](https://sonarqube-mem-tfrs-tools.pathfinder.gov.bc.ca/component_measures?id=tfrs-backend&metric=uncovered_lines) |   
+| [Sonarqube Duplications](https://sonarqube-mem-tfrs-tools.pathfinder.gov.bc.ca/component_measures?id=tfrs-frontend&metric=duplicated_lines_density) | [Sonarqube Duplications](https://sonarqube-mem-tfrs-tools.pathfinder.gov.bc.ca/component_measures?id=tfrs-backend&metric=duplicated_lines_density) |   
+| [Trello User Stories]() |  [Trello User Stories]() | 
+| | [Snyk Vulnerability](https://snyk.io/org/bcgov/project/ff10e340-b5ec-43e2-95b2-417bddc08e51/) |
