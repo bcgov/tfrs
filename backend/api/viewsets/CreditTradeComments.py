@@ -10,7 +10,8 @@ from django.db.models import Q
 import datetime
 
 from api.models.CreditTradeComment import CreditTradeComment
-from api.serializers import CreditTradeCommentSerializer
+from api.serializers.CreditTradeComment import CreditTradeCommentSerializer,\
+    CreditTradeCommentUpdateSerializer
 
 
 class CreditTradeCommentsViewSet(AuditableMixin, mixins.RetrieveModelMixin, mixins.CreateModelMixin,
@@ -22,4 +23,16 @@ class CreditTradeCommentsViewSet(AuditableMixin, mixins.RetrieveModelMixin, mixi
     filter_backends = (filters.OrderingFilter,)
     ordering_fields = '__all__'
     ordering = ('create_timestamp',)
+
     serializer_class = CreditTradeCommentSerializer
+
+    serializer_classes = {
+        'default': CreditTradeCommentSerializer,
+        'update': CreditTradeCommentUpdateSerializer
+    }
+
+    def get_serializer_class(self):
+        if self.action in list(self.serializer_classes.keys()):
+            return self.serializer_classes[self.action]
+        else:
+            return self.serializer_classes['default']
