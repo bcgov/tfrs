@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """
     REST API Documentation for the NRS TFRS Credit Trading Application
 
@@ -23,6 +24,7 @@ import json
 import logging
 from django.test import TestCase
 from django.test import Client
+from rest_framework import status
 import django
 
 
@@ -85,54 +87,54 @@ class Test_Api_Comments(TestCase):
         django.setup()
 
     def test_comments_list_returns_404(self):
-        listUrl = "/api/comments/"
-        response = self.fs_client_1.get(listUrl)
+        list_url = "/api/comments/"
+        response = self.fs_client_1.get(list_url)
         # Check that the response is 404.
         assert status.HTTP_404_NOT_FOUND == response.status_code
 
     def test_get_unprivileged_as_owner(self):
-        cUrl = "/api/comments/1"
-        response = self.fs_client_1.get(cUrl)
+        c_url = "/api/comments/1"
+        response = self.fs_client_1.get(c_url)
         logging.debug(response.content.decode("utf-8"))
-        assert status.HTTP_200_OK == response.status_code
+        assert status.is_success(response.status_code)
 
     def test_get_privileged_as_owner(self):
-        cUrl = "/api/comments/2"
-        response = self.fs_client_1.get(cUrl)
+        c_url = "/api/comments/2"
+        response = self.fs_client_1.get(c_url)
         logging.debug(response.content.decode("utf-8"))
-        assert status.HTTP_200_OK == response.status_code
+        assert status.is_success(response.status_code)
 
     def test_get_unprivileged_as_gov(self):
-        cUrl = "/api/comments/1"
-        response = self.gov_client.get(cUrl)
+        c_url = "/api/comments/1"
+        response = self.gov_client.get(c_url)
         logging.debug(response.content.decode("utf-8"))
-        assert status.HTTP_200_OK == response.status_code
+        assert status.is_success(response.status_code)
 
     def test_get_privileged_as_gov(self):
-        cUrl = "/api/comments/2"
-        response = self.gov_client.get(cUrl)
+        c_url = "/api/comments/2"
+        response = self.gov_client.get(c_url)
         logging.debug(response.content.decode("utf-8"))
-        assert status.HTTP_200_OK == response.status_code
+        assert status.is_success(response.status_code)
 
     def test_get_unprivileged_as_other(self):
-        cUrl = "/api/comments/3"
-        response = self.fs_client_1.get(cUrl)
+        c_url = "/api/comments/3"
+        response = self.fs_client_1.get(c_url)
         assert status.HTTP_403_FORBIDDEN == response.status_code
 
     def test_get_as_other_fs(self):
-        cUrl = "/api/comments/1"
-        response = self.fs_client_2.get(cUrl)
+        c_url = "/api/comments/1"
+        response = self.fs_client_2.get(c_url)
         assert status.HTTP_403_FORBIDDEN == response.status_code
 
     def test_get_privileged_as_other(self):
-        cUrl = "/api/comments/4"
-        response = self.fs_client_1.get(cUrl)
+        c_url = "/api/comments/4"
+        response = self.fs_client_1.get(c_url)
         assert status.HTTP_403_FORBIDDEN == response.status_code
 
     def test_get_credit_trade_as_fs(self):
-        cUrl = "/api/credit_trades/200"
-        response = self.fs_client_1.get(cUrl)
-        assert status.HTTP_200_OK == response.status_code
+        c_url = "/api/credit_trades/200"
+        response = self.fs_client_1.get(c_url)
+        assert status.is_success(response.status_code)
 
         json_string = response.content.decode("utf-8")
         data = json.loads(json_string)
@@ -142,10 +144,10 @@ class Test_Api_Comments(TestCase):
             assert c['privilegedAccess'] is False
 
     def test_get_credit_trade_as_gov(self):
-        cUrl = "/api/credit_trades/200"
-        response = self.gov_client.get(cUrl)
+        c_url = "/api/credit_trades/200"
+        response = self.gov_client.get(c_url)
         logging.debug(response)
-        assert status.HTTP_200_OK == response.status_code
+        assert status.is_success(response.status_code)
 
         json_string = response.content.decode("utf-8")
         data = json.loads(json_string)
@@ -160,90 +162,195 @@ class Test_Api_Comments(TestCase):
         assert priv_count > 0
 
     def test_post_as_gov(self):
-        cUrl = "/api/credit_trades/200"
-        response = self.gov_client.get(cUrl)
+        c_url = "/api/credit_trades/200"
+        response = self.gov_client.get(c_url)
         logging.debug(response)
-        assert status.HTTP_200_OK == response.status_code
+        assert status.is_success(response.status_code)
 
         json_string = response.content.decode("utf-8")
         data = json.loads(json_string)
 
-        #figure out how many comments there are
+        # figure out how many comments there are
         orig_len = len(data['comments'])
 
-        cUrl = "/api/comments"
+        c_url = "/api/comments"
         test_data = {
             "comment": "generated comment 1",
             "creditTrade": 200,
             "privilegedAccess": False
         }
-        response = self.gov_client.post(cUrl, content_type='application/json',
+        response = self.gov_client.post(c_url, content_type='application/json',
                                         data=json.dumps(test_data))
         logging.debug(response)
-        assert status.HTTP_201_CREATED == response.status_code
+        assert status.is_success(response.status_code)
         test_data = {
             "comment": "generated comment 2",
             "creditTrade": 200,
             "privilegedAccess": True
         }
-        response = self.gov_client.post(cUrl, content_type='application/json',
+        response = self.gov_client.post(c_url, content_type='application/json',
                                         data=json.dumps(test_data))
         logging.debug(response)
-        assert status.HTTP_201_CREATED == response.status_code
+        assert status.is_success(response.status_code)
 
-        cUrl = "/api/credit_trades/200"
-        response = self.gov_client.get(cUrl)
+        c_url = "/api/credit_trades/200"
+        response = self.gov_client.get(c_url)
         logging.debug(response)
-        assert status.HTTP_200_OK == response.status_code
+        assert status.is_success(response.status_code)
 
         json_string = response.content.decode("utf-8")
         data = json.loads(json_string)
 
-        #expect two more
+        # expect two more
         assert len(data['comments']) == orig_len+2
 
     def test_invalid_post_as_gov(self):
-        cUrl = "/api/comments"
+        c_url = "/api/comments"
         test_data = {
             "comment": "badref comment",
-            "creditTrade": 200000, #nonexisten
+            "creditTrade": 200000, #nonexistent
             "privilegedAccess": False
         }
-        response = self.gov_client.post(cUrl, content_type='application/json',
+        response = self.gov_client.post(c_url, content_type='application/json',
                                         data=json.dumps(test_data))
         logging.debug(response)
-        assert status.HTTP_400_BAD_REQUEST == response.status_code
+        assert status.is_client_error(response.status_code)
 
         test_data = {
             "comment": "noref comment",
             "privilegedAccess": False
         }
-        response = self.gov_client.post(cUrl, content_type='application/json',
+        response = self.gov_client.post(c_url, content_type='application/json',
                                         data=json.dumps(test_data))
         logging.debug(response)
-        assert status.HTTP_400_BAD_REQUEST == response.status_code
+        assert status.is_client_error(response.status_code)
 
         test_data = {
             "comment": "nullref comment",
             "creditTrade": None,
             "privilegedAccess": False
         }
-        response = self.gov_client.post(cUrl, content_type='application/json',
+        response = self.gov_client.post(c_url, content_type='application/json',
                                         data=json.dumps(test_data))
         logging.debug(response)
-        assert status.HTTP_400_BAD_REQUEST == response.status_code
+        assert status.is_client_error(response.status_code)
 
     def test_put_as_gov(self):
-        cUrl = "/api/comments/1"
+        valid_strings = ["", "updated comment", u"update with emojis \U0001F525\U0001F525",
+                         "update with escape\r\n chars and \"quotes\"", u"zero-width\u200Bspace",
+                         u"Chinese characters \u4E2D\u56FD", "RLM \u200F and LRM \u200E!"]
+
+        for test_string in valid_strings:
+            c_url = "/api/comments/1"
+            test_data = {
+                "comment": test_string,
+                "creditTrade": 200,
+                "privilegedAccess": True
+            }
+            response = self.gov_client.put(c_url, content_type='application/json',
+                                           data=json.dumps(test_data))
+            logging.debug(response)
+            assert status.is_success(response.status_code)
+
+            response = self.gov_client.get(c_url)
+            logging.debug(u"validating that response comment is expected: '{}'".format(test_string))
+            logging.debug(response.content.decode("utf-8"))
+            assert status.is_success(response.status_code)
+            assert json.loads(response.content.decode("utf-8"))['comment'] == test_string
+
+    def test_put_as_gov_clobber_ro(self):
+        c_url = "/api/comments/1"
+        test_data = {
+            "comment": "updated comment with clobbered ro values",
+            "id": 90,
+            "creditTrade": None,
+            "privilegedAccess": True
+        }
+        response = self.gov_client.put(c_url, content_type='application/json',
+                                       data=json.dumps(test_data))
+        logging.debug(response)
+        assert status.is_success(response.status_code)
+
+        response = self.gov_client.get(c_url)
+        logging.debug(response.content.decode("utf-8"))
+        assert status.is_success(response.status_code)
+        assert json.loads(response.content.decode("utf-8"))['comment'] == \
+            "updated comment with clobbered ro values"
+        assert json.loads(response.content.decode("utf-8"))['id'] == 1
+        assert json.loads(response.content.decode("utf-8"))['creditTrade'] == 200
+
+    def test_put_as_fs_valid(self):
+        c_url = "/api/comments/1"
         test_data = {
             "comment": "updated comment 1",
             "creditTrade": 200,
+            "privilegedAccess": False
+        }
+        response = self.fs_client_1.put(c_url, content_type='application/json',
+                                        data=json.dumps(test_data))
+        logging.debug(response)
+        assert status.is_success(response.status_code)
+
+    def test_put_as_fs_invalid_trade(self):
+        c_url = "/api/comments/1"
+        test_data = {
+            "comment": "updated comment 1",
+            "creditTrade": 201,
+            "privilegedAccess": False
+        }
+        response = self.fs_client_1.put(c_url, content_type='application/json',
+                                        data=json.dumps(test_data))
+        logging.debug(response)
+        assert status.is_success(response.status_code)
+
+    def test_put_as_fs_invalid(self):
+        # User 400 doesn't own this comment
+        c_url = "/api/comments/3"
+        test_data = {
+            "comment": "updated comment 3",
+            "creditTrade": 200,
             "privilegedAccess": True
         }
-        response = self.gov_client.put(cUrl, content_type='application/json',
-                                       data=json.dumps(test_data))
+        response = self.fs_client_1.put(c_url, content_type='application/json',
+                                        data=json.dumps(test_data))
         logging.debug(response)
-        assert status.HTTP_200_OK == response.status_code
+        assert status.HTTP_403_FORBIDDEN == response.status_code
 
-if __name__ == '__main__':
-    unittest.main()
+    def test_post_as_fs_valid(self):
+        c_url = "/api/comments"
+        test_data = {
+            "comment": "generated comment",
+            "creditTrade": 200,
+            "privilegedAccess": False
+        }
+        response = self.gov_client.post(c_url, content_type='application/json',
+                                        data=json.dumps(test_data))
+        logging.debug(response)
+        assert status.is_success(response.status_code)
+
+    def test_post_as_fs_invalid_privileged(self):
+        # This user doesn't have permission to create a privileged comment
+        c_url = "/api/comments"
+        test_data = {
+            "comment": "generated comment",
+            "creditTrade": 200,
+            "privilegedAccess": True
+        }
+        response = self.fs_client_1.post(c_url, content_type='application/json',
+                                        data=json.dumps(test_data))
+        logging.debug(response)
+        assert status.HTTP_403_FORBIDDEN == response.status_code
+
+    def test_post_as_fs_invalid_wrong_org(self):
+        # This user is not a party to credit_trade 200
+        c_url = "/api/comments"
+        test_data = {
+            "comment": "generated comment",
+            "creditTrade": 200,
+            "privilegedAccess": False
+        }
+        response = self.fs_client_2.post(c_url, content_type='application/json',
+                                         data=json.dumps(test_data))
+        logging.debug(response)
+        assert status.HTTP_403_FORBIDDEN == response.status_code
+
