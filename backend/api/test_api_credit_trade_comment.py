@@ -236,7 +236,7 @@ class Test_Api_Comments(TestCase):
         assert status.is_client_error(response.status_code)
 
     def test_put_as_gov(self):
-        valid_strings = ["", "updated comment", u"update with emojis \U0001F525\U0001F525",
+        valid_strings = [None, "", "updated comment", u"update with emojis \U0001F525\U0001F525",
                          "update with escape\r\n chars and \"quotes\"", u"zero-width\u200Bspace",
                          u"Chinese characters \u4E2D\u56FD", "RLM \u200F and LRM \u200E!"]
 
