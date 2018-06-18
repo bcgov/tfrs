@@ -214,37 +214,5 @@
         },
         "model": "api.rolepermission",
         "pk": null
-    },
-    {
-        "fields": {
-            "permission": "16",
-            "role": "2"
-        },
-        "model": "api.rolepermission",
-        "pk": null
-    },
-    {
-        "fields": {
-            "permission": "16",
-            "role": "3"
-        },
-        "model": "api.rolepermission",
-        "pk": null
-    },
-    {
-        "fields": {
-            "permission": "17",
-            "role": "2"
-        },
-        "model": "api.rolepermission",
-        "pk": null
-    },
-    {
-        "fields": {
-            "permission": "17",
-            "role": "3"
-        },
-        "model": "api.rolepermission",
-        "pk": null
     }
 ]
