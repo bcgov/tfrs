@@ -58,6 +58,7 @@ class Test_Api_Comments(TestCase):
                 'roles.json',
                 'permissions.json',
                 'roles_permissions.json',
+                'roles_permissions_v0.3.0.json'
                 ]
 
     def setUp(self):
