@@ -4,14 +4,13 @@ from rest_framework import viewsets, permissions
 from rest_framework.decorators import list_route, detail_route
 from rest_framework.response import Response
 
-from api.decorators import permission_required
 from auditable.views import AuditableMixin
 
+from api.decorators import permission_required
 from api.models.Organization import Organization
 from api.models.OrganizationBalance import OrganizationBalance
 from api.models.OrganizationHistory import OrganizationHistory
 from api.models.OrganizationType import OrganizationType
-
 from api.serializers import OrganizationSerializer
 from api.serializers import OrganizationBalanceSerializer
 from api.serializers import OrganizationHistorySerializer
@@ -55,7 +54,7 @@ class OrganizationViewSet(AuditableMixin, viewsets.ModelViewSet):
         return Response(serializer.data)
 
     @detail_route(methods=['put'])
-    @permission_required('DELETE_FUEL_SUPPLIER')
+    @permission_required('VIEW_FUEL_SUPPLIERS')
     def delete(self, request, pk=None):
         """Destroys the specified organization"""
         return self.destroy(request, pk=pk)
@@ -78,18 +77,6 @@ class OrganizationViewSet(AuditableMixin, viewsets.ModelViewSet):
         serializer = self.get_serializer(history, many=True)
 
         return Response(serializer.data)
-
-    @list_route(methods=['get'])
-    @permission_required('VIEW_FUEL_SUPPLIERS')
-    def total_balance(self, request, pk=None):
-        validated_credits = OrganizationBalance.objects.filter(
-            expiration_date=None,
-            organization__type=OrganizationType.objects.get(
-                type="Part3FuelSupplier")
-            ).aggregate(
-                validated_credits=Sum('validated_credits'))
-
-        return Response(validated_credits)
 
     @detail_route()
     @permission_required('VIEW_FUEL_SUPPLIERS')

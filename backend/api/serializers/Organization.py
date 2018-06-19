@@ -30,11 +30,25 @@ class OrganizationSerializer(serializers.ModelSerializer):
     Serializer for the Fuel Supplier
     Loads most of the fields and the balance for the Fuel Supplier
     """
+    organization_balance = serializers.SerializerMethodField()
+
     class Meta:
         model = Organization
         fields = ('id', 'name', 'status', 'status_display', 'actions_type',
                   'actions_type_display', 'create_timestamp', 'type',
                   'organization_balance')
+
+    def get_organization_balance(self, obj):
+        """
+        Only show the credit balance if the logged in user has permission
+        to view fuel suppliers
+        """
+        request = self.context.get('request')
+
+        if not request.user.has_perm('VIEW_FUEL_SUPPLIERS'):
+            return None
+
+        return obj.organization_balance
 
 
 class OrganizationMinSerializer(serializers.ModelSerializer):
