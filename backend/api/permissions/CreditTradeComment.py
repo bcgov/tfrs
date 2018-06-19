@@ -10,8 +10,7 @@ class CreditTradeCommentPermissions(permissions.BasePermission):
             return True
 
         # Need this information to make a decision
-        if not (request.data.has_key('privileged_access') and
-                request.data.has_key('credit_trade')):
+        if not (('privileged_access' in request.data) and ('credit_trade' in request.data)):
             return False
 
         credit_trade = request.data['credit_trade']
