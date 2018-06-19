@@ -1,6 +1,7 @@
 import axios from 'axios';
 
 import ActionTypes from '../constants/actionTypes/SigningAuthorityAssertions';
+import ReducerTypes from '../constants/reducerTypes/SigningAuthorityAssertions';
 import * as Routes from '../constants/routes';
 
 const getSigningAuthorityAssertions = () => (dispatch) => {
@@ -13,22 +14,22 @@ const getSigningAuthorityAssertions = () => (dispatch) => {
     });
 };
 
+const getSigningAuthorityAssertionsError = error => ({
+  name: ReducerTypes.ERROR_SIGNING_AUTHORITY_ASSERTIONS_REQUEST,
+  type: ActionTypes.ERROR_SIGNING_AUTHORITY_ASSERTIONS,
+  errorMessage: error
+});
+
 const getSigningAuthorityAssertionsRequest = () => ({
-  name: ActionTypes.GET_SIGNING_AUTHORITY_ASSERTIONS_REQUEST,
+  name: ReducerTypes.GET_SIGNING_AUTHORITY_ASSERTIONS_REQUEST,
   type: ActionTypes.GET_SIGNING_AUTHORITY_ASSERTIONS
 });
 
 const getSigningAuthorityAssertionsSuccess = compliancePeriods => ({
-  name: ActionTypes.RECEIVE_SIGNING_AUTHORITY_ASSERTIONS_REQUEST,
+  name: ReducerTypes.RECEIVE_SIGNING_AUTHORITY_ASSERTIONS_REQUEST,
   type: ActionTypes.RECEIVE_SIGNING_AUTHORITY_ASSERTIONS,
   data: compliancePeriods,
   receivedAt: Date.now()
-});
-
-const getSigningAuthorityAssertionsError = error => ({
-  name: ActionTypes.ERROR_SIGNING_AUTHORITY_ASSERTIONS_REQUEST,
-  type: ActionTypes.ERROR_SIGNING_AUTHORITY_ASSERTIONS,
-  errorMessage: error
 });
 
 export default getSigningAuthorityAssertions;

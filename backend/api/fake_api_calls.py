@@ -166,23 +166,6 @@ def create_credit_trade(**kwargs):
     return response_data
 
 
-def get_organization_balance(**kwargs):
-
-    fs_id = kwargs.get("id", create_organization())
-    response = client.get("/api/organizations/{}/balance".format(fs_id))
-    assert status.HTTP_200_OK == response.status_code
-    response_data = json.loads(response.content.decode("utf-8"))
-    return response_data
-
-
-def get_fuel_suppliers(**kwargs):
-
-    response = client.get("/api/organizations/fuel_suppliers")
-    assert status.HTTP_200_OK == response.status_code
-    response_data = json.loads(response.content.decode("utf-8"))
-    return response_data
-
-
 def create_credit_trade_dict(data):
     response = client.post(
         '/api/credit_trades',
