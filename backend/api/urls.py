@@ -37,6 +37,7 @@ from .viewsets.SigningAuthorityAssertion \
 from .viewsets.SigningAuthorityConfirmation \
     import SigningAuthorityConfirmationViewSet
 from .viewsets.User import UserViewSet
+from .viewsets.CreditTradeComments import CreditTradeCommentsViewSet
 
 from rest_framework.documentation import include_docs_urls
 
@@ -47,6 +48,7 @@ from django.conf import settings
 router = DefaultRouter(trailing_slash=False)
 router.register(r'compliance_periods', CompliancePeriodViewSet)
 router.register(r'credit_trades', CreditTradeViewSet)
+router.register(r'comments', CreditTradeCommentsViewSet)
 router.register(r'organizations', OrganizationViewSet)
 router.register(r'signing_authority_assertions',
                 SigningAuthorityAssertionViewSet)

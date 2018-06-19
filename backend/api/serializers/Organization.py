@@ -58,4 +58,4 @@ class OrganizationMinSerializer(serializers.ModelSerializer):
     """
     class Meta:
         model = Organization
-        fields = ('id', 'name')
+        fields = ('id', 'name', 'type')
