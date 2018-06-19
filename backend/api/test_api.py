@@ -37,8 +37,7 @@ class TestAPI(TestCase):
                 'test_organization_balances.json',
                 'roles.json',
                 'permissions.json',
-                'roles_permissions.json'
-                ]
+                'roles_permissions.json']
 
     def setUp(self):
 
@@ -52,16 +51,12 @@ class TestAPI(TestCase):
         resp_user.authorization_guid = 'e46435c1-7d69-489f-9dde-83005cd77744'
         resp_user.save()
 
-        '''
-        Apply a fuel supplier role to the default user
-        '''
+        # Apply a fuel supplier role to the default user
         fs_user = User.objects.get(username='business_bsmith')
         fs_role = Role.objects.get(name='FSManager')
         UserRole.objects.create(user_id=fs_user.id, role_id=fs_role.id)
 
-        '''
-        Apply a fuel supplier role to the respondent user
-        '''
+        # Apply a fuel supplier role to the respondent user
         fs_role = Role.objects.get(name='FSManager')
         UserRole.objects.create(user_id=resp_user.id, role_id=fs_role.id)
 
@@ -92,9 +87,7 @@ class TestAPI(TestCase):
             HTTP_SMGOV_USERDISPLAYNAME=resp_user.display_name,
             HTTP_SMGOV_USEREMAIL=resp_user.email)
 
-        '''
-        Apply a government role to Teperson
-        '''
+        # Apply a government role to Teperson
         gov_user = User.objects.get(username='internal_teperson')
         gov_role = Role.objects.get(name='GovDirector')
         UserRole.objects.create(user_id=gov_user.id, role_id=gov_role.id)
@@ -301,13 +294,16 @@ class TestAPI(TestCase):
                 response_data['status']))
 
     def test_get_fuel_suppliers_only(self):
-        response_data = fake_api_calls.get_fuel_suppliers()
+        response = self.gov_client.get("/api/organizations/fuel_suppliers")
+        response_data = json.loads(response.content.decode("utf-8"))
         for r in response_data:
             assert r['type'] == 2
 
-    def test_approved_buy(self, **kwargs):
+    def test_approved_buy(self):
         # get fuel supplier balance for fs 1
-        initiator_bal = fake_api_calls.get_organization_balance(id=2)
+        initiator_bal = OrganizationBalance.objects.get(
+            organization_id=2,
+            expiration_date=None)
         respondent_bal, created = OrganizationBalance.objects.get_or_create(
             organization_id=self.fs1_id,
             expiration_date=None,
@@ -351,12 +347,15 @@ class TestAPI(TestCase):
 
         # TODO: Make sure two credit histories are created
 
-        initiator_bal_after = fake_api_calls.get_organization_balance(id=2)
-        respondent_bal_after = fake_api_calls.get_organization_balance(
-            id=self.fs1_id
-        )
+        initiator_bal_after = OrganizationBalance.objects.get(
+            organization_id=2,
+            expiration_date=None)
 
-        init_final_bal = initiator_bal['validatedCredits'] + num_of_credits
+        respondent_bal_after = OrganizationBalance.objects.get(
+            organization_id=self.fs1_id,
+            expiration_date=None)
+
+        init_final_bal = initiator_bal.validated_credits + num_of_credits
         resp_final_bal = respondent_bal.validated_credits - num_of_credits
 
         ct_completed = self.client.get(
@@ -374,14 +373,18 @@ class TestAPI(TestCase):
                          STATUS_COMPLETED)
 
         # Effective date should be today
-        self.assertEqual(initiator_bal_after['effectiveDate'], today)
-        self.assertEqual(respondent_bal_after['effectiveDate'], today)
+        self.assertEqual(
+            initiator_bal_after.effective_date.strftime('%Y-%m-%d'),
+            today)
+        self.assertEqual(
+            respondent_bal_after.effective_date.strftime('%Y-%m-%d'),
+            today)
 
         # Credits should be subtracted/added
         self.assertEqual(init_final_bal,
-                         initiator_bal_after['validatedCredits'])
+                         initiator_bal_after.validated_credits)
         self.assertEqual(resp_final_bal,
-                         respondent_bal_after['validatedCredits'])
+                         respondent_bal_after.validated_credits)
 
     def test_approved_sell(self, **kwargs):
         pass
@@ -421,9 +424,8 @@ class TestAPI(TestCase):
         #         self.test_update(**test['data'])
 
         # self.test_update(credit_trade_status=STATUS_APPROVED)
-        """Test that no other fields are changed, except for notes, 
-        effective date & status"""
-
+        # Test that no other fields are changed, except for notes,
+        # effective date & status
 
         # don't care where it comes from (ignore previous status)
         # status is "Approved"
@@ -441,20 +443,20 @@ class TestAPI(TestCase):
         # pass
 
     # Test transitions of statuses
-    def test_create_draft_or_proposed(self, **kwargs):
+    def test_create_draft_or_proposed(self):
         credit_trades = [{
-                'numberOfCredits': 1,
-                'status': STATUS_DRAFT,
-                'initiator': 2,
-                'respondent': self.fs1_id,
-                'type': self.ct_type_id
-            }, {
-                'numberOfCredits': 1,
-                'status': STATUS_SUBMITTED,
-                'initiator': 2,
-                'respondent': self.fs1_id,
-                'type': self.ct_type_id
-            }]
+            'numberOfCredits': 1,
+            'status': STATUS_DRAFT,
+            'initiator': 2,
+            'respondent': self.fs1_id,
+            'type': self.ct_type_id
+        }, {
+            'numberOfCredits': 1,
+            'status': STATUS_SUBMITTED,
+            'initiator': 2,
+            'respondent': self.fs1_id,
+            'type': self.ct_type_id
+        }]
 
         for ct in credit_trades:
             response = fake_api_calls.create_credit_trade_dict(ct)
@@ -470,57 +472,58 @@ class TestAPI(TestCase):
                 assert sorted(["Draft", "Submitted"]) == sorted(statuses)
                 assert sorted(["Save Draft", "Propose"]) == sorted(actions)
 
-    def test_create_other_statuses_fail(self, **kwargs):
+    def test_create_other_statuses_fail(self):
         credit_trades = [{
-                'data': {
-                    'numberOfCredits': 1,
-                    'status': STATUS_ACCEPTED,
-                    'respondent': self.fs1_id,
-                    'type': self.ct_type_id },
-                'error': {"invalidStatus": ["You do not have permission to set"
-                                            " statuses to `Accepted`."]}
-            }, {
-                'data': {
-                    'numberOfCredits': 1,
-                    'status': STATUS_RECOMMENDED,
-                    'respondent': self.fs1_id,
-                    'type': self.ct_type_id},
-                'error': {"invalidStatus": ["You do not have permission to set"
-                                            " statuses to `Recommended`."]}
+            'data': {
+                'numberOfCredits': 1,
+                'status': STATUS_ACCEPTED,
+                'respondent': self.fs1_id,
+                'type': self.ct_type_id
+            },
+            'error': {"invalidStatus": ["You do not have permission to set"
+                                        " statuses to `Accepted`."]}
+        }, {
+            'data': {
+                'numberOfCredits': 1,
+                'status': STATUS_RECOMMENDED,
+                'respondent': self.fs1_id,
+                'type': self.ct_type_id},
+            'error': {"invalidStatus": ["You do not have permission to set"
+                                        " statuses to `Recommended`."]}
 
-            }, {
-                'data': {
-                    'numberOfCredits': 1,
-                    'status': STATUS_APPROVED,
-                    'respondent': self.fs1_id,
-                    'type': self.ct_type_id},
-                'error': {"invalidStatus": ["You do not have permission to set"
-                                            " statuses to `Approved`."]}
-            }, {
-                'data': {
-                    'numberOfCredits': 1,
-                    'status': STATUS_COMPLETED,
-                    'respondent': self.fs1_id,
-                    'type': self.ct_type_id},
-                'error': {"invalidStatus": ["You do not have permission to set"
-                                            " statuses to `Completed`."]}
-            }, {
-                'data': {
-                    'numberOfCredits': 1,
-                    'status': STATUS_CANCELLED,
-                    'respondent': self.fs1_id,
-                    'type': self.ct_type_id},
-                'error': {"invalidStatus": ["You do not have permission to set"
-                                            " statuses to `Cancelled`."]}
-            }, {
-                'data': {
-                    'numberOfCredits': 1,
-                    'status': STATUS_DECLINED,
-                    'respondent': self.fs1_id,
-                    'type': self.ct_type_id},
-                'error': {"invalidStatus": ["You do not have permission to set"
-                                            " statuses to `Declined`."]}
-            }]
+        }, {
+            'data': {
+                'numberOfCredits': 1,
+                'status': STATUS_APPROVED,
+                'respondent': self.fs1_id,
+                'type': self.ct_type_id},
+            'error': {"invalidStatus": ["You do not have permission to set"
+                                        " statuses to `Approved`."]}
+        }, {
+            'data': {
+                'numberOfCredits': 1,
+                'status': STATUS_COMPLETED,
+                'respondent': self.fs1_id,
+                'type': self.ct_type_id},
+            'error': {"invalidStatus": ["You do not have permission to set"
+                                        " statuses to `Completed`."]}
+        }, {
+            'data': {
+                'numberOfCredits': 1,
+                'status': STATUS_CANCELLED,
+                'respondent': self.fs1_id,
+                'type': self.ct_type_id},
+            'error': {"invalidStatus": ["You do not have permission to set"
+                                        " statuses to `Cancelled`."]}
+        }, {
+            'data': {
+                'numberOfCredits': 1,
+                'status': STATUS_DECLINED,
+                'respondent': self.fs1_id,
+                'type': self.ct_type_id},
+            'error': {"invalidStatus": ["You do not have permission to set"
+                                        " statuses to `Declined`."]}
+        }]
 
         for tests in credit_trades:
             response = fake_api_calls.create_credit_trade_dict(tests['data'])

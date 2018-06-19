@@ -9,44 +9,112 @@ import { bindActionCreators } from 'redux';
 import PropTypes from 'prop-types';
 
 import { getCreditTransfersIfNeeded } from '../actions/creditTransfersActions';
+import { getOrganization } from '../actions/organizationActions';
 import { getLoggedInUser } from '../actions/userActions';
 import CreditTransactionsPage from './components/CreditTransactionsPage';
 
-// import CreditTransferList from './components/CreditTransferList';
-
 class CreditTransactionsContainer extends Component {
+  constructor (props) {
+    super(props);
+    this.state = {
+      filterOrganization: -1
+    };
+  }
+
   componentDidMount () {
     this.loadData();
+
+    this._selectOrganization = this._selectOrganization.bind(this);
   }
 
   loadData () {
     this.props.getCreditTransfersIfNeeded();
   }
 
+  _getCreditTransfers () {
+    if (this.state.filterOrganization !== -1) {
+      const preFilteredItems = this.props.creditTransfers.items.filter(item =>
+        item.creditsFrom.id === (this.state.filterOrganization) ||
+        item.creditsTo.id === (this.state.filterOrganization));
+
+      return {
+        items: preFilteredItems,
+        isFetching: this.props.creditTransfers.isFetching
+      };
+    }
+
+    return this.props.creditTransfers;
+  }
+
+  _getUniqueOrganizations () {
+    return (
+      Array.from(new Set(this.props.creditTransfers.items.flatMap(item => [{
+        id: item.creditsFrom.id,
+        name: item.creditsFrom.name
+      }, {
+        id: item.creditsTo.id,
+        name: item.creditsTo.name
+      }])))
+    ).sort((a, b) => a.name.toLowerCase().localeCompare(b.name.toLowerCase()))
+      .reduce((acc, item) => (acc.find(o => o.id === item.id) ? acc : [...acc, item]), []);
+  }
+
+  _selectedOrganization () {
+    if (this.state.filterOrganization === -1) {
+      return false;
+    }
+
+    return this.props.organization;
+  }
+
+  _selectOrganization (organizationId) {
+    if (organizationId !== -1) {
+      this.props.getOrganization(organizationId);
+    }
+
+    this.setState({
+      filterOrganization: organizationId
+    });
+  }
+
   render () {
     return (
       <CreditTransactionsPage
-        title="Credit Transactions"
-        creditTransfers={this.props.creditTransfers}
+        creditTransfers={this._getCreditTransfers()}
         loggedInUser={this.props.loggedInUser}
+        organization={this._selectedOrganization()}
+        organizations={this._getUniqueOrganizations()}
+        selectOrganization={this._selectOrganization}
+        title="Credit Transactions"
       />
     );
   }
 }
 
+CreditTransactionsContainer.defaultProps = {
+  organization: null
+};
+
 CreditTransactionsContainer.propTypes = {
-  getCreditTransfersIfNeeded: PropTypes.func.isRequired,
   creditTransfers: PropTypes.shape({
     items: PropTypes.arrayOf(PropTypes.shape()).isRequired,
     isFetching: PropTypes.bool.isRequired
   }).isRequired,
+  getCreditTransfersIfNeeded: PropTypes.func.isRequired,
+  getOrganization: PropTypes.func.isRequired,
   loggedInUser: PropTypes.shape({
     displayName: PropTypes.string,
     organization: PropTypes.shape({
       name: PropTypes.string,
       id: PropTypes.number
     })
-  }).isRequired
+  }).isRequired,
+  organization: PropTypes.shape({
+    name: PropTypes.string,
+    organizationBalance: PropTypes.shape({
+      validatedCredits: PropTypes.number
+    })
+  })
 };
 
 const mapStateToProps = state => ({
@@ -54,14 +122,16 @@ const mapStateToProps = state => ({
     items: state.rootReducer.creditTransfers.items,
     isFetching: state.rootReducer.creditTransfers.isFetching
   },
-  loggedInUser: state.rootReducer.userRequest.loggedInUser
+  loggedInUser: state.rootReducer.userRequest.loggedInUser,
+  organization: state.rootReducer.organizationRequest.fuelSupplier
 });
 
 const mapDispatchToProps = dispatch => ({
   getCreditTransfersIfNeeded: () => {
     dispatch(getCreditTransfersIfNeeded());
   },
-  getLoggedInUser: bindActionCreators(getLoggedInUser, dispatch)
+  getLoggedInUser: bindActionCreators(getLoggedInUser, dispatch),
+  getOrganization: bindActionCreators(getOrganization, dispatch)
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(CreditTransactionsContainer);

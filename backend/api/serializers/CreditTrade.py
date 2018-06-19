@@ -31,7 +31,7 @@ from .CreditTradeStatus import CreditTradeStatusMinSerializer
 from .CreditTradeType import CreditTradeTypeSerializer
 from .CreditTradeZeroReason import CreditTradeZeroReasonSerializer
 from .CompliancePeriod import CompliancePeriodSerializer
-from .Organization import OrganizationSerializer
+from .Organization import OrganizationMinSerializer
 
 
 class CreditTradeSerializer(serializers.ModelSerializer):
@@ -57,7 +57,7 @@ class CreditTradeCreateSerializer(serializers.ModelSerializer):
 
         if request.user.has_perm('SIGN_CREDIT_TRANSFER') and \
            data.get('initiator') == request.user.organization:
-                available_statuses.append('Submitted')
+            available_statuses.append('Submitted')
 
         allowed_statuses = list(
             CreditTradeStatus.objects
@@ -69,7 +69,7 @@ class CreditTradeCreateSerializer(serializers.ModelSerializer):
         if credit_trade_status not in allowed_statuses:
             raise serializers.ValidationError({
                 'invalidStatus': "You do not have permission to set statuses "
-                "to `{}`.".format(credit_trade_status.status)
+                                 "to `{}`.".format(credit_trade_status.status)
             })
 
         if (data.get('fair_market_value_per_credit') == 0 and
@@ -87,7 +87,8 @@ class CreditTradeCreateSerializer(serializers.ModelSerializer):
             if credit_trade_type not in allowed_types:
                 raise serializers.ValidationError({
                     'zeroDollarReason': "Zero Dollar Reason is required "
-                    "for Credit Transfers with 0 Dollar per Credit"
+                                        "for Credit Transfers with 0 Dollar "
+                                        "per Credit"
                 })
 
         return data
@@ -103,11 +104,11 @@ class CreditTradeUpdateSerializer(serializers.ModelSerializer):
         available_statuses = []
 
         if self.instance.status.status in [
-            "Approved", "Cancelled", "Completed", "Declined", "Refused"
+                "Approved", "Cancelled", "Completed", "Declined", "Refused"
         ]:
             raise serializers.ValidationError({
                 'readOnly': "Cannot update a transaction that's already "
-                "been `{}`.".format(self.instance.status.status)
+                            "been `{}`.".format(self.instance.status.status)
             })
 
         if request.user.has_perm('APPROVE_CREDIT_TRANSFER'):
@@ -149,7 +150,8 @@ class CreditTradeUpdateSerializer(serializers.ModelSerializer):
         if credit_trade_status not in allowed_statuses:
             raise serializers.ValidationError({
                 'invalidStatus': "You do not have permission to set the "
-                "status to `{}`.".format(credit_trade_status.status)
+                                 "status to `{}`.".format(
+                                     credit_trade_status.status)
             })
 
         if (data.get('fair_market_value_per_credit') == 0 and
@@ -166,8 +168,9 @@ class CreditTradeUpdateSerializer(serializers.ModelSerializer):
 
             if credit_trade_type not in allowed_types:
                 raise serializers.ValidationError({
-                    'zeroDollarReason': 'Zero Dollar Reason is required '
-                    'for Credit Transfers with 0 Dollar per Credit'
+                    'zeroDollarReason': "Zero Dollar Reason is required "
+                                        "for Credit Transfers with 0 Dollar "
+                                        "per Credit"
                 })
 
         return data
@@ -180,20 +183,19 @@ class CreditTradeUpdateSerializer(serializers.ModelSerializer):
 class CreditTradeApproveSerializer(serializers.ModelSerializer):
     def validate(self, data):
         request = self.context['request']
-        available_statuses = []
 
         if self.instance.status.status in [
-            "Approved", "Cancelled", "Completed", "Declined"
+                "Approved", "Cancelled", "Completed", "Declined"
         ]:
             raise serializers.ValidationError({
                 'readOnly': "Cannot approve a transaction that's already "
-                "been `{}`.".format(self.instance.status.status)
+                            "been `{}`.".format(self.instance.status.status)
             })
 
         if not request.user.has_perm('APPROVE_CREDIT_TRANSFER'):
             raise serializers.ValidationError({
                 'invalidStatus': "You do not have permission approve "
-                "transactions"
+                                 "transactions"
             })
 
         return data
@@ -204,18 +206,17 @@ class CreditTradeApproveSerializer(serializers.ModelSerializer):
         read_only_fields = ('status', 'number_of_credits',
                             'type',
                             'fair_market_value_per_credit',
-                            'zero_reason',
-                            )
+                            'zero_reason',)
 
 
 class CreditTrade2Serializer(serializers.ModelSerializer):
     status = CreditTradeStatusMinSerializer(read_only=True)
-    initiator = OrganizationSerializer(read_only=True)
-    respondent = OrganizationSerializer(read_only=True)
+    initiator = OrganizationMinSerializer(read_only=True)
+    respondent = OrganizationMinSerializer(read_only=True)
     type = CreditTradeTypeSerializer(read_only=True)
     zero_reason = CreditTradeZeroReasonSerializer(read_only=True)
-    credits_from = OrganizationSerializer(read_only=True)
-    credits_to = OrganizationSerializer(read_only=True)
+    credits_from = OrganizationMinSerializer(read_only=True)
+    credits_to = OrganizationMinSerializer(read_only=True)
     actions = serializers.SerializerMethodField()
     compliance_period = CompliancePeriodSerializer(read_only=True)
     comments = serializers.SerializerMethodField()
@@ -232,13 +233,13 @@ class CreditTrade2Serializer(serializers.ModelSerializer):
                   'compliance_period', 'comments')
 
     def get_actions(self, obj):
+        """
+        If the user doesn't have any roles assigned, treat as though the user
+        doesn't have available permissions
+        """
         cur_status = obj.status.status
         request = self.context.get('request')
 
-        '''
-        If the user doesn't have any roles assigned, treat as though the user
-        doesn't have available permissions
-        '''
         if request.user.role is None:
             return []
 
