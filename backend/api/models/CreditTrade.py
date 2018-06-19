@@ -24,6 +24,7 @@ from decimal import Decimal
 from django.db import models
 from .CompliancePeriod import CompliancePeriod
 from .CreditTradeStatus import CreditTradeStatus
+from .CreditTradeComment import CreditTradeComment
 
 from auditable.models import Auditable
 from api import validators
@@ -107,6 +108,24 @@ class CreditTrade(Auditable):
             return "Recommended for decision"
 
         return cur_status
+
+    @property
+    def comments(self):
+        comments = CreditTradeComment.objects.filter(
+            credit_trade_id=self.id
+        )
+
+        return comments
+
+    @property
+    def unprivileged_comments(self):
+        comments = CreditTradeComment.objects.filter(
+            credit_trade_id=self.id
+        ).filter(
+            privileged_access=False
+        )
+
+        return comments
 
     class Meta:
         db_table = 'credit_trade'

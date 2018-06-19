@@ -26,6 +26,7 @@ from api.models.CreditTrade import CreditTrade
 from api.models.CreditTradeStatus import CreditTradeStatus
 from api.models.CreditTradeType import CreditTradeType
 
+from .CreditTradeComment import CreditTradeCommentSerializer
 from .CreditTradeStatus import CreditTradeStatusMinSerializer
 from .CreditTradeType import CreditTradeTypeSerializer
 from .CreditTradeZeroReason import CreditTradeZeroReasonSerializer
@@ -217,6 +218,7 @@ class CreditTrade2Serializer(serializers.ModelSerializer):
     credits_to = OrganizationSerializer(read_only=True)
     actions = serializers.SerializerMethodField()
     compliance_period = CompliancePeriodSerializer(read_only=True)
+    comments = serializers.SerializerMethodField()
 
     class Meta:
         model = CreditTrade
@@ -227,7 +229,7 @@ class CreditTrade2Serializer(serializers.ModelSerializer):
                   'zero_reason',
                   'trade_effective_date', 'credits_from', 'credits_to',
                   'update_timestamp', 'actions', 'note',
-                  'compliance_period')
+                  'compliance_period', 'comments')
 
     def get_actions(self, obj):
         cur_status = obj.status.status
@@ -283,4 +285,24 @@ class CreditTrade2Serializer(serializers.ModelSerializer):
 
         serializer = CreditTradeStatusMinSerializer(available_statuses,
                                                     many=True)
+        return serializer.data
+
+    def get_comments(self, obj):
+        request = self.context.get('request')
+
+        '''
+        If the user doesn't have any roles assigned, treat as though the user
+        doesn't have available permissions
+        '''
+        if request.user.role is None:
+            return []
+
+        if request.user.has_perm('VIEW_PRIVILEGED_COMMENTS'):
+            comments = obj.comments
+        else:
+            comments = obj.unprivileged_comments
+
+        serializer = CreditTradeCommentSerializer(comments,
+                                                  many=True)
+
         return serializer.data

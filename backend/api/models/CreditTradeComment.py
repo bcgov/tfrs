@@ -20,28 +20,23 @@
     See the License for the specific language governing permissions and
     limitations under the License.
 """
-from rest_framework import serializers
 
-from api.models.User import User
-from .Organization import OrganizationSerializer,OrganizationMinSerializer
-from .Role import RoleSerializer
+from django.db import models
 
+from auditable.models import Auditable
 
-class UserSerializer(serializers.ModelSerializer):
-    organization = OrganizationSerializer(read_only=True)
-    role = RoleSerializer(read_only=True)
+class CreditTradeComment(Auditable):
+    credit_trade = models.ForeignKey(
+        'CreditTrade',
+        related_name='credit_trade_comments',
+        null=False,
+        on_delete=models.PROTECT)
 
-    class Meta:
-        model = User
-        fields = (
-            'id', 'first_name', 'last_name', 'email', 'authorization_id',
-            'authorization_guid', 'authorization_directory', 'display_name',
-            'organization', 'organization_balance', 'role')
+    comment = models.CharField(max_length=4000, blank=True, null=True)
 
-class UserMinSerializer(serializers.ModelSerializer):
-    organization = OrganizationMinSerializer(read_only=True)
+    ''' require a permission to view '''
+    privileged_access = models.BooleanField(null=False, default=True)
 
     class Meta:
-        model = User
-        fields = (
-            'id', 'first_name', 'last_name', 'display_name', 'organization')
+        db_table = 'credit_trade_comment'
+        ordering = ['create_timestamp']
