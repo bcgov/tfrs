@@ -27,6 +27,7 @@ class TestAPI(TestCase):
                 'organization_government.json',
                 'organization_balance_gov.json',
                 'credit_trade_statuses.json',
+                'credit_trade_statuses_refused.json',
                 'organization_actions_types.json',
                 'organization_statuses.json',
                 'test_users.json',

@@ -103,7 +103,7 @@ class CreditTradeUpdateSerializer(serializers.ModelSerializer):
         available_statuses = []
 
         if self.instance.status.status in [
-                "Approved", "Cancelled", "Completed", "Declined"
+                "Approved", "Cancelled", "Completed", "Declined", "Refused"
         ]:
             raise serializers.ValidationError({
                 'readOnly': "Cannot update a transaction that's already "
@@ -127,7 +127,7 @@ class CreditTradeUpdateSerializer(serializers.ModelSerializer):
 
         if request.user.has_perm('REFUSE_CREDIT_TRANSFER') and \
            data.get('respondent') == request.user.organization:
-            available_statuses.append("Cancelled")
+            available_statuses.append("Refused")
 
         if request.user.has_perm('RESCIND_CREDIT_TRANSFER'):
             available_statuses.append("Cancelled")

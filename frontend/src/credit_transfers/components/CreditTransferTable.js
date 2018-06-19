@@ -93,8 +93,6 @@ const CreditTransferTable = (props) => {
     id: 'fairMarketValuePerCredit',
     minWidth: 100
   }, {
-    id: 'status',
-    Header: 'Status',
     accessor: item => (Object.entries(CREDIT_TRANSFER_STATUS).find(([, value]) =>
       (value.id === item.status.id))[1].description),
     className: 'col-status',
@@ -135,11 +133,8 @@ const CreditTransferTable = (props) => {
       data={props.items}
       defaultPageSize={15}
       defaultSorted={[{
-        id: 'creditsFrom',
-        desc: false
-      }, {
-        id: 'creditsTo',
-        desc: false
+        id: 'id',
+        desc: true
       }]}
       filterable={filterable}
       pageSizeOptions={[5, 10, 15, 20, 25, 50, 100]}
