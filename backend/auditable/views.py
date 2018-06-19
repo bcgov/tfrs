@@ -25,7 +25,7 @@ class AuditableMixin(object,):
     def serialize_object(self, request, data):
         header_user_guid = request.META.get('HTTP_SMAUTH_USERGUID')
         user = User.objects.get(authorization_guid=header_user_guid)
-        data.update({'create_user': user.id,'update_user': user.id})
+        data.update({'create_user': user.id, 'update_user': user.id})
         serializer = self.get_serializer(data=data)
         serializer.is_valid(raise_exception=True)
         self.perform_create(serializer)
@@ -46,14 +46,20 @@ class AuditableMixin(object,):
     def perform_create(self, serializer):
         instance = serializer.save()
 
-
     def update(self, request, *args, **kwargs):
-        partial = kwargs.pop('partial', False)
+        if request.method == 'PATCH':
+            partial = kwargs.pop('partial', True)
+        else:
+            partial = kwargs.pop('partial', False)
+
         instance = self.get_object()
         header_user_guid = request.META.get('HTTP_SMAUTH_USERGUID')
         user = User.objects.get(authorization_guid=header_user_guid)
         request.data.update({'update_user': user.id})
-        serializer = self.get_serializer(instance, data=request.data, partial=partial)
+        print(instance)
+        serializer = self.get_serializer(instance, data=request.data,
+                                         partial=partial)
+        print(serializer)
         serializer.is_valid(raise_exception=True)
         self.perform_update(serializer)
 
