@@ -29,21 +29,22 @@ const CreditTransactionsPage = (props) => {
           props.loggedInUser.role &&
           props.loggedInUser.role.isGovernmentRole &&
           [
-            <h3>
-              Available Credit Market: {
+            !props.organization &&
+            <h3 key="all-organizations-credit-balance">
+              All Organizations Credit Balance: {
                 numeral(1000000000000000 - props.loggedInUser.organizationBalance)
                   .format(NumberFormat.INT)
               }
             </h3>,
             props.organization && props.organization.organizationBalance &&
-            <h3>
+            <h3 key={props.organization.id}>
               {props.organization.name}
               Credit Balance: {
                 numeral(props.organization.organizationBalance.validatedCredits)
                   .format(NumberFormat.INT)
               }
             </h3>,
-            <div className="form-group organization_filter">
+            <div className="form-group organization_filter" key="organization-filter">
               <label htmlFor="organizationFilterSelect">Show transactions involving:
                 <select
                   id="organizationFilterSelect"
@@ -119,12 +120,15 @@ CreditTransactionsPage.propTypes = {
       isGovernmentRole: PropTypes.bool
     })
   }).isRequired,
-  organization: PropTypes.shape({
-    name: PropTypes.string,
-    organizationBalance: PropTypes.shape({
-      validatedCredits: PropTypes.number
+  organization: PropTypes.oneOfType([
+    PropTypes.bool,
+    PropTypes.shape({
+      name: PropTypes.string,
+      organizationBalance: PropTypes.shape({
+        validatedCredits: PropTypes.number
+      })
     })
-  }),
+  ]),
   organizations: PropTypes.arrayOf(PropTypes.shape({
     id: PropTypes.number,
     name: PropTypes.string
