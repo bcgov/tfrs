@@ -93,8 +93,11 @@ const CreditTransferTable = (props) => {
     id: 'fairMarketValuePerCredit',
     minWidth: 100
   }, {
-    accessor: item => (Object.values(CREDIT_TRANSFER_STATUS).find(element =>
-      element.id === item.status.id)).description,
+    accessor: item => (item.rescinded
+      ? CREDIT_TRANSFER_STATUS.rescinded.description
+      : (
+        Object.values(CREDIT_TRANSFER_STATUS).find(element => element.id === item.status.id)
+      ).description),
     className: 'col-status',
     Header: 'Status',
     id: 'status',

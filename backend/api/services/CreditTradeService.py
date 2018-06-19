@@ -112,6 +112,7 @@ class CreditTradeService(object):
             compliance_period_id=credit_trade.compliance_period_id,
             is_internal_history_record=is_internal_history_record,
             credit_trade_update_time=credit_trade_update_time,
+            rescinded=credit_trade.rescinded,
             create_user=user,
             update_user=user,
             user=user
