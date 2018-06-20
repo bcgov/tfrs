@@ -203,7 +203,6 @@ class TestAPI(TestCase):
             "{}/{}".format(self.test_url, credit_trade_id),
             content_type='application/json',
             data=json.dumps(data))
-        print(response.data)
         assert status.HTTP_200_OK == response.status_code
 
     def test_update_create_trade_history(self):

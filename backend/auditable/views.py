@@ -56,10 +56,8 @@ class AuditableMixin(object,):
         header_user_guid = request.META.get('HTTP_SMAUTH_USERGUID')
         user = User.objects.get(authorization_guid=header_user_guid)
         request.data.update({'update_user': user.id})
-        print(instance)
         serializer = self.get_serializer(instance, data=request.data,
                                          partial=partial)
-        print(serializer)
         serializer.is_valid(raise_exception=True)
         self.perform_update(serializer)
 
