@@ -283,6 +283,7 @@ class CreditTransferViewContainer extends Component {
         key="creditTransferDetails"
         note={item.note}
         numberOfCredits={item.numberOfCredits}
+        rescinded={item.rescinded}
         status={item.status}
         toggleCheck={this._toggleCheck}
         totalValue={item.totalValue}
@@ -372,22 +373,23 @@ CreditTransferViewContainer.propTypes = {
   invalidateCreditTransfer: PropTypes.func.isRequired,
   isFetching: PropTypes.bool.isRequired,
   item: PropTypes.shape({
-    id: PropTypes.number,
+    actions: PropTypes.arrayOf(PropTypes.shape({})),
     creditsFrom: PropTypes.shape({}),
     creditsTo: PropTypes.shape({}),
     fairMarketValuePerCredit: PropTypes.oneOfType([
       PropTypes.string,
       PropTypes.number
     ]),
+    id: PropTypes.number,
     numberOfCredits: PropTypes.oneOfType([
       PropTypes.string,
       PropTypes.number
     ]),
+    rescinded: PropTypes.bool,
     totalValue: PropTypes.oneOfType([
       PropTypes.string,
       PropTypes.number
-    ]),
-    actions: PropTypes.arrayOf(PropTypes.shape({}))
+    ])
   }),
   loggedInUser: PropTypes.shape({
     displayName: PropTypes.string,
