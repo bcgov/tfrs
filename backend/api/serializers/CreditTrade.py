@@ -113,6 +113,12 @@ class CreditTradeUpdateSerializer(serializers.ModelSerializer):
         request = self.context['request']
         available_statuses = []
 
+        if self.instance.rescinded:
+            raise serializers.ValidationError({
+                'readOnly': "Cannot update a transaction that's already "
+                            "been rescinded."
+            })
+
         if self.instance.status.status in [
                 "Cancelled", "Completed", "Declined", "Refused"
         ]:
@@ -197,6 +203,12 @@ class CreditTradeApproveSerializer(serializers.ModelSerializer):
     """
     def validate(self, data):
         request = self.context['request']
+
+        if self.instance.rescinded:
+            raise serializers.ValidationError({
+                'readOnly': "Cannot approve a transaction that's already "
+                            "been rescinded."
+            })
 
         if self.instance.status.status in [
                 "Approved", "Cancelled", "Completed", "Declined"
