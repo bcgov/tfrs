@@ -26,7 +26,6 @@ import {
 import { getLoggedInUser } from '../actions/userActions';
 import history from '../app/History';
 import Modal from '../app/components/Modal';
-import ModalExtraConfirm from '../app/components/ModalExtraConfirm';
 import * as Lang from '../constants/langEnUs';
 import CREDIT_TRANSACTIONS from '../constants/routes/CreditTransactions';
 import { CREDIT_TRANSFER_STATUS } from '../constants/values';
@@ -197,20 +196,20 @@ class CreditTransferViewContainer extends Component {
 
   _modalDecline (item) {
     return (
-      <ModalExtraConfirm
+      <Modal
         handleSubmit={(event) => {
           this._changeStatus(CREDIT_TRANSFER_STATUS.declinedForApproval);
         }}
         id="confirmDecline"
         key="confirmDecline"
-        canBypass
+        canBypassExtraConfirm
         extraConfirmText="You have not provided a comment explaining why you to decline to approve
          this credit transfer proposal"
         showExtraConfirm={!this.state.hasCommented}
         extraConfirmType="warning"
       >
         Are you sure you want to decline to approve this credit transfer proposal?
-      </ModalExtraConfirm>
+      </Modal>
     );
   }
 
@@ -228,11 +227,11 @@ class CreditTransferViewContainer extends Component {
 
   _modalNotRecommend () {
     return (
-      <ModalExtraConfirm
+      <Modal
         handleSubmit={(event) => {
           this._changeStatus(CREDIT_TRANSFER_STATUS.notRecommended);
         }}
-        canBypass={false}
+        canBypassExtraConfirm={false}
         extraConfirmText="You must provide an explanatory comment if you are not recommending
           to approve this transfer proposal"
         showExtraConfirm={!this.state.hasCommented}
@@ -241,7 +240,7 @@ class CreditTransferViewContainer extends Component {
         key="confirmNotRecommend"
       >
         Are you sure you want to not recommend approval of this credit transfer proposal?
-      </ModalExtraConfirm>
+      </Modal>
     );
   }
 
