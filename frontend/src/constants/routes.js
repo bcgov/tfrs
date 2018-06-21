@@ -30,6 +30,8 @@ export const CREDIT_TRADE_STATUSES = '/credittradestatuses';
 export const CREDIT_TRADE_TYPES = '/credittradetypes';
 export const CREDIT_TRADE_HISTORIES = '/credittradehistories';
 
+export const COMMENTS_API = '/comments';
+
 export const NOTIFICATION_EVENTS = '/notificationevents';
 export const NOTIFICATIONS_API = '/notifications';
 export const NOTIFICATION_TYPES = '/notificationtypes';
