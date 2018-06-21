@@ -64,6 +64,10 @@ class CreditTradeViewSet(AuditableMixin, mixins.CreateModelMixin,
             user.organization)
 
     def list(self, request, *args, **kwargs):
+        # Explicitly filter out Approved ones in list as we should only
+        # be showing Completed here
+        # Note: Don't add this in the CreditTradeService
+        # IDIR users should still Approved statuses in other areas
         credit_trades = self.get_queryset().filter(
             ~Q(status__status__in=["Approved"])
         ).order_by(*self.ordering)

@@ -1,3 +1,9 @@
+import datetime
+
+from django.core.exceptions import ValidationError
+from django.db.models import Q
+from django.db import transaction
+
 from api.models.CreditTradeHistory import CreditTradeHistory
 from api.models.CreditTradeStatus import CreditTradeStatus
 from api.models.Organization import Organization
@@ -5,11 +11,6 @@ from api.models.OrganizationBalance import OrganizationBalance
 from api.models.CreditTrade import CreditTrade
 
 from api.exceptions import PositiveIntegerException
-from django.core.exceptions import ValidationError
-from django.db.models import Q
-from django.db import transaction
-
-import datetime
 
 
 class CreditTradeService(object):
@@ -23,35 +24,29 @@ class CreditTradeService(object):
         # Government Organization -- assume OrganizationType id 1 is gov
         gov_org = Organization.objects.get(type=1)
         if organization == gov_org:
-            # Government
-            """
-            If organization == Government
-              don't show "Cancelled" transactions
-              don't show "Draft", "Submitted" transactions unless the
-              initiator was government
-              (Please note that government creating drafts and submitted is
-              for testing only, in reality government will not do this)
-            """
+            # If organization == Government
+            #  don't show "Cancelled" transactions
+            #  don't show "Draft", "Submitted" transactions unless the
+            #  initiator was government
+            #  (Please note that government creating drafts and submitted is
+            #  for testing only, in reality government will not do this)
             credit_trades = CreditTrade.objects.filter(
                 ~Q(status__status__in=["Cancelled"]) &
                 (~Q(status__status__in=["Draft", "Submitted"]) |
                  Q(initiator=organization))
             )
         else:
-            # Fuel suppliers
-            """
-            If organization == Fuel Supplier
-              don't show "Cancelled" transactions
-              don't show "Draft" transactions unless the initiator was
-              the fuel supplier
-              show "Submitted" and other transactions where the fuel
-              supplier is the respondent
-            """
+            # If organization == Fuel Supplier
+            #  don't show "Approved" transactions (only show Completed)
+            #   don't show "Cancelled" transactions
+            #   don't show "Draft" transactions unless the initiator was
+            #   the fuel supplier
+            #   show "Submitted" and other transactions where the fuel
+            #   supplier is the respondent
             credit_trades = CreditTrade.objects.filter(
-                ~Q(status__status__in=["Cancelled"]) &
+                ~Q(status__status__in=["Approved", "Cancelled"]) &
                 ((~Q(status__status__in=["Draft"]) &
-                 Q(respondent=organization)) |
-                 Q(initiator=organization))
+                  Q(respondent=organization)) | Q(initiator=organization))
             )
 
         return credit_trades
@@ -121,11 +116,11 @@ class CreditTradeService(object):
         # Validate
         try:
             history.full_clean()
-        except ValidationError as e:
+        except ValidationError as error:
             # TODO: Do something based on the errors contained in
             # e.message_dict
             # Display them to a user, or handle them programmatically.
-            raise ValidationError(e)
+            raise ValidationError(error)
 
         history.save()
 
@@ -157,12 +152,12 @@ class CreditTradeService(object):
     @transaction.non_atomic_requests()
     def transfer_credits(_from, _to, credit_trade_id, num_of_credits,
                          effective_date):
-        from_starting_bal, created = OrganizationBalance.objects.get_or_create(
+        from_starting_bal, _ = OrganizationBalance.objects.get_or_create(
             organization_id=_from.id,
             expiration_date=None,
             defaults={'validated_credits': 0})
 
-        to_starting_bal, created = OrganizationBalance.objects.get_or_create(
+        to_starting_bal, _ = OrganizationBalance.objects.get_or_create(
             organization_id=_to.id,
             expiration_date=None,
             defaults={'validated_credits': 0})
@@ -239,7 +234,7 @@ class CreditTradeService(object):
                     "`{}` has insufficient credits.".
                     format(credit_trade.id, credit_trade.credits_from.name))
 
-        if len(errors) > 0:
+        if errors:
             raise PositiveIntegerException(errors)
 
     @staticmethod

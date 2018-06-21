@@ -113,7 +113,6 @@ class CreditTransferProgress extends Component {
     if (this.props.status.id === CREDIT_TRANSFER_STATUS.draft.id &&
       this.props.rescinded) {
       view.push(CreditTransferProgress.addStepRescinded());
-      return view;
     }
 
     view.push(this._addStepProposed());
@@ -121,7 +120,6 @@ class CreditTransferProgress extends Component {
     if (this.props.status.id === CREDIT_TRANSFER_STATUS.proposed.id &&
       this.props.rescinded) {
       view.push(CreditTransferProgress.addStepRescinded());
-      return view;
     }
 
     if (this.props.status.id === CREDIT_TRANSFER_STATUS.refused.id) {
@@ -134,7 +132,6 @@ class CreditTransferProgress extends Component {
       this.props.status.id === CREDIT_TRANSFER_STATUS.refused.id) &&
       this.props.rescinded) {
       view.push(CreditTransferProgress.addStepRescinded());
-      return view;
     }
 
     if (this.props.status.id === CREDIT_TRANSFER_STATUS.notRecommended.id) {
@@ -147,7 +144,6 @@ class CreditTransferProgress extends Component {
       this.props.status.id === CREDIT_TRANSFER_STATUS.recommendedForDecision.id) &&
       this.props.rescinded) {
       view.push(CreditTransferProgress.addStepRescinded());
-      return view;
     }
 
     view.push(this._addStepCompleted());
