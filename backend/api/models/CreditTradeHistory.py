@@ -67,6 +67,7 @@ class CreditTradeHistory(Auditable):
         blank=True, null=True,
         on_delete=models.PROTECT
     )
+    rescinded = models.BooleanField(default=False)
 
     class Meta:
         db_table = 'credit_trade_history'

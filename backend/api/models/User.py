@@ -26,17 +26,27 @@ from django.contrib.auth.models import AbstractUser
 from django.core.validators import RegexValidator
 import django.contrib.auth.validators
 
+from auditable.models import Auditable
+
 from .OrganizationBalance import OrganizationBalance
 from .UserRole import UserRole
 
-from auditable.models import Auditable
-
 
 class User(AbstractUser, Auditable):
-    username = models.CharField(error_messages={'unique': 'A user with that username already exists.'}, help_text='Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only.', max_length=150, unique=True, validators=[django.contrib.auth.validators.UnicodeUsernameValidator()], verbose_name='username')
+    """
+    User Model
+    """
+    username = models.CharField(
+        error_messages={'unique': "A user with that username already exists."},
+        help_text="Required. 150 characters or fewer. Letters, digits and "
+                  "@/./+/-/_ only.",
+        max_length=150, unique=True,
+        validators=[django.contrib.auth.validators.UnicodeUsernameValidator()],
+        verbose_name='username'
+    )
     phone_regex = RegexValidator(regex=r'^\+?1?\d{9,15}$',
-                                 message="Phone number must be entered in the"
-                                 "format: '+999999999'. Up to 15 digits"
+                                 message="Phone number must be entered in the "
+                                 "format: '+999999999'. Up to 15 digits "
                                  "allowed.")
 
     password = models.CharField(max_length=128, blank=True, null=True)
@@ -64,6 +74,9 @@ class User(AbstractUser, Auditable):
 
     @property
     def organization_balance(self):
+        """
+        Credit Balance of the organization this user belongs to
+        """
         organization_balance = OrganizationBalance.objects.filter(
             organization_id=self.organization.id,
             expiration_date=None).first()
@@ -77,6 +90,9 @@ class User(AbstractUser, Auditable):
 
     @property
     def role(self):
+        """
+        Role applied to the User
+        """
         user_role = UserRole.objects.select_related('role').filter(
             user_id=self.id
         ).first()
@@ -87,12 +103,14 @@ class User(AbstractUser, Auditable):
         return user_role.role
 
     def has_perm(self, permission):
-        if self.role is None or not self.role.permissions.filter(
-            code=permission
-        ):
+        """
+        Helper function to check if the user has the approrpiate permission
+        """
+        if self.role is None or \
+           not self.role.permissions.filter(code=permission):
             return False
-        else:
-            return True
+
+        return True
 
     class Meta:
         db_table = 'user'
