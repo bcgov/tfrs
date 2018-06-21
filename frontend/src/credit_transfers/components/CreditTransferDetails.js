@@ -14,6 +14,9 @@ import { getCreditTransferType } from '../../actions/creditTransfersActions';
 import Errors from '../../app/components/Errors';
 import Loading from '../../app/components/Loading';
 import * as Lang from '../../constants/langEnUs';
+import CreditTransferCommentForm from './CreditTransferCommentForm';
+import CreditTransferComment from './CreditTransferComment';
+import CreditTransferCommentButtons from './CreditTransferCommentButtons';
 
 const CreditTransferDetails = props => (
   <div className="credit-transfer">
@@ -56,6 +59,16 @@ const CreditTransferDetails = props => (
             <div>Notes: {props.note}</div>
           </div>
         }
+        {props.comments.map(c => (
+          <CreditTransferComment comment={c} key={c.id} />
+        ))
+        }
+        {props.isCommenting && <CreditTransferCommentForm
+          saveComment={props.saveComment}
+          cancelComment={props.cancelComment}
+          privilegedAccess={props.willCreatePrivilegedComment}
+        />
+        }
         <form onSubmit={e => e.preventDefault()}>
           {(props.buttonActions.includes(Lang.BTN_SIGN_1_2) ||
           props.buttonActions.includes(Lang.BTN_SIGN_2_2)) &&
@@ -65,10 +78,16 @@ const CreditTransferDetails = props => (
             toggleCheck={props.toggleCheck}
           />
           }
-
+          <CreditTransferCommentButtons
+            canComment={props.canComment}
+            isCommenting={props.isCommenting}
+            addComment={props.addComment}
+          />
           <CreditTransferFormButtons
             actions={props.buttonActions}
             changeStatus={props.changeStatus}
+            addComment={props.addComment}
+            isCommenting={props.isCommenting}
             disabled={
               {
                 BTN_SIGN_1_2: props.fields.terms.findIndex(term => term.value === false) >= 0 ||
@@ -108,7 +127,8 @@ CreditTransferDetails.defaultProps = {
   tradeEffectiveDate: '',
   tradeType: {
     theType: 'sell'
-  }
+  },
+  comments: []
 };
 
 CreditTransferDetails.propTypes = {
@@ -156,7 +176,32 @@ CreditTransferDetails.propTypes = {
     id: PropTypes.number,
     name: PropTypes.string,
     theType: PropTypes.string
-  })
+  }),
+  comments: PropTypes.arrayOf(PropTypes.shape({
+    id: PropTypes.number,
+    createTimestamp: PropTypes.string,
+    updateTimestamp: PropTypes.string,
+    comment: PropTypes.string,
+    privilegedAccess: PropTypes.bool,
+    createUser: PropTypes.shape({
+      id: PropTypes.number,
+      firstName: PropTypes.string,
+      lastName: PropTypes.string,
+      displayName: PropTypes.string,
+      organization: PropTypes.shape({
+        id: PropTypes.number,
+        name: PropTypes.string,
+        type: PropTypes.number
+      })
+    })
+  })),
+  canComment: PropTypes.bool.isRequired,
+  addComment: PropTypes.func.isRequired,
+  cancelComment: PropTypes.func.isRequired,
+  saveComment: PropTypes.func.isRequired,
+  isCommenting: PropTypes.bool.isRequired,
+  hasCommented: PropTypes.bool.isRequired,
+  willCreatePrivilegedComment: PropTypes.bool.isRequired
 };
 
 export default CreditTransferDetails;

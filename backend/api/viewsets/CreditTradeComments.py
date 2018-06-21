@@ -11,7 +11,7 @@ import datetime
 
 from api.models.CreditTradeComment import CreditTradeComment
 from api.serializers.CreditTradeComment import CreditTradeCommentSerializer,\
-    CreditTradeCommentUpdateSerializer
+    CreditTradeCommentUpdateSerializer, CreditTradeCommentCreateSerializer
 
 
 class CreditTradeCommentsViewSet(AuditableMixin, mixins.RetrieveModelMixin, mixins.CreateModelMixin,
@@ -28,7 +28,8 @@ class CreditTradeCommentsViewSet(AuditableMixin, mixins.RetrieveModelMixin, mixi
 
     serializer_classes = {
         'default': CreditTradeCommentSerializer,
-        'update': CreditTradeCommentUpdateSerializer
+        'update': CreditTradeCommentUpdateSerializer,
+        'create': CreditTradeCommentCreateSerializer
     }
 
     def get_serializer_class(self):

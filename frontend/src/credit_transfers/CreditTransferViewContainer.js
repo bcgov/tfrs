@@ -9,13 +9,15 @@ import { bindActionCreators } from 'redux';
 
 import CreditTransferDetails from './components/CreditTransferDetails';
 import ModalSubmitCreditTransfer from './components/ModalSubmitCreditTransfer';
+import CreditTransferUtilityFunctions from './CreditTransferUtilityFunctions';
 
 import {
   approveCreditTransfer,
   deleteCreditTransfer,
   getCreditTransferIfNeeded,
   invalidateCreditTransfer,
-  updateCreditTransfer
+  updateCreditTransfer,
+  addCommentToCreditTransfer
 } from '../actions/creditTransfersActions';
 import {
   addSigningAuthorityConfirmation,
@@ -24,6 +26,7 @@ import {
 import { getLoggedInUser } from '../actions/userActions';
 import history from '../app/History';
 import Modal from '../app/components/Modal';
+import ModalExtraConfirm from '../app/components/ModalExtraConfirm';
 import * as Lang from '../constants/langEnUs';
 import CREDIT_TRANSACTIONS from '../constants/routes/CreditTransactions';
 import { CREDIT_TRANSFER_STATUS } from '../constants/values';
@@ -35,7 +38,9 @@ class CreditTransferViewContainer extends Component {
     this.state = {
       fields: {
         terms: []
-      }
+      },
+      isCommenting: false,
+      hasCommented: false
     };
 
     this._addToFields = this._addToFields.bind(this);
@@ -46,7 +51,13 @@ class CreditTransferViewContainer extends Component {
     this._modalRefuse = this._modalRefuse.bind(this);
     this._modalRescind = this._modalRescind.bind(this);
     this._modalSubmit = this._modalSubmit.bind(this);
+    this._modalNotRecommend = this._modalNotRecommend.bind(this);
+    this._modalDecline = this._modalDecline.bind(this);
     this._toggleCheck = this._toggleCheck.bind(this);
+    this._addComment = this._addComment.bind(this);
+    this._cancelComment = this._cancelComment.bind(this);
+    this._saveComment = this._saveComment.bind(this);
+    this.render = this.render.bind(this);
   }
 
   componentDidMount () {
@@ -124,6 +135,40 @@ class CreditTransferViewContainer extends Component {
     });
   }
 
+  _saveComment (comment) {
+    const { item } = this.props;
+
+    // API data structure
+    const data = {
+      credit_trade: item.id,
+      comment: comment.comment,
+      privilegedAccess: comment.privilegedAccess
+    };
+
+    this.props.addCommentToCreditTransfer(data).then(() => {
+      this.props.invalidateCreditTransfer(this.props.item);
+      this.props.getCreditTransferIfNeeded(this.props.item.id);
+      this.setState({
+        hasCommented: true,
+        isCommenting: false
+      });
+    }, () => {
+      // Failed to update
+    });
+  }
+
+  _addComment () {
+    this.setState({
+      isCommenting: true
+    });
+  }
+
+  _cancelComment () {
+    this.setState({
+      isCommenting: false
+    });
+  }
+
   _modalAccept () {
     return (
       <Modal
@@ -146,22 +191,27 @@ class CreditTransferViewContainer extends Component {
         id="confirmApprove"
         key="confirmApprove"
       >
-      Are you sure you want to approve this credit transfer proposal?
+        Are you sure you want to approve this credit transfer proposal?
       </Modal>
     );
   }
 
   _modalDecline (item) {
     return (
-      <Modal
+      <ModalExtraConfirm
         handleSubmit={(event) => {
           this._changeStatus(CREDIT_TRANSFER_STATUS.declinedForApproval);
         }}
         id="confirmDecline"
         key="confirmDecline"
+        canBypass
+        extraConfirmText="You have not provided a comment explaining why you to decline to approve
+         this credit transfer proposal"
+        showExtraConfirm={!this.state.hasCommented}
+        extraConfirmType="warning"
       >
         Are you sure you want to decline to approve this credit transfer proposal?
-      </Modal>
+      </ModalExtraConfirm>
     );
   }
 
@@ -179,15 +229,20 @@ class CreditTransferViewContainer extends Component {
 
   _modalNotRecommend () {
     return (
-      <Modal
+      <ModalExtraConfirm
         handleSubmit={(event) => {
           this._changeStatus(CREDIT_TRANSFER_STATUS.notRecommended);
         }}
+        canBypass={false}
+        extraConfirmText="You must provide an explanatory comment if you are not recommending
+          to approve this transfer proposal"
+        showExtraConfirm={!this.state.hasCommented}
+        extraConfirmType="error"
         id="confirmNotRecommend"
         key="confirmNotRecommend"
       >
         Are you sure you want to not recommend approval of this credit transfer proposal?
-      </Modal>
+      </ModalExtraConfirm>
     );
   }
 
@@ -280,6 +335,20 @@ class CreditTransferViewContainer extends Component {
         totalValue={item.totalValue}
         tradeEffectiveDate={item.tradeEffectiveDate}
         tradeType={item.type}
+        comments={item.comments}
+        canComment={CreditTransferUtilityFunctions
+          .canComment(this.props.loggedInUser, this.props.item)}
+        addComment={this._addComment}
+        cancelComment={this._cancelComment}
+        saveComment={this._saveComment}
+        isCommenting={this.state.isCommenting}
+        hasCommented={this.state.hasCommented}
+        willCreatePrivilegedComment={
+          CreditTransferUtilityFunctions.willCreatePrivilegedComment(
+            this.props.loggedInUser,
+            this.props.item
+          )
+        }
       />
     )];
 
@@ -331,16 +400,25 @@ class CreditTransferViewContainer extends Component {
 
         content.push(this._modalRecommend(item));
         content.push(this._modalNotRecommend(item));
+
+        // enable commenting
+        buttonActions.push(Lang.BTN_COMMENT);
       }
 
       if (availableActions.includes(Lang.BTN_DECLINE_FOR_APPROVAL)) {
         buttonActions.push(Lang.BTN_DECLINE_FOR_APPROVAL);
 
         content.push(this._modalDecline(item));
+
+        // enable commenting
+        buttonActions.push(Lang.BTN_COMMENT);
       }
 
       if (availableActions.includes(Lang.BTN_APPROVE)) {
         buttonActions.push(Lang.BTN_APPROVE);
+
+        // enable commenting
+        buttonActions.push(Lang.BTN_COMMENT);
 
         content.push(this._modalApprove(item));
       }
@@ -367,6 +445,7 @@ CreditTransferViewContainer.propTypes = {
     id: PropTypes.number,
     creditsFrom: PropTypes.shape({}),
     creditsTo: PropTypes.shape({}),
+    status: PropTypes.shape({}),
     fairMarketValuePerCredit: PropTypes.oneOfType([
       PropTypes.string,
       PropTypes.number
@@ -383,6 +462,7 @@ CreditTransferViewContainer.propTypes = {
   }),
   loggedInUser: PropTypes.shape({
     displayName: PropTypes.string,
+    hasPermission: PropTypes.func,
     organization: PropTypes.shape({
       name: PropTypes.string,
       id: PropTypes.number
@@ -394,7 +474,8 @@ CreditTransferViewContainer.propTypes = {
     }).isRequired
   }).isRequired,
   prepareSigningAuthorityConfirmations: PropTypes.func.isRequired,
-  updateCreditTransfer: PropTypes.func.isRequired
+  updateCreditTransfer: PropTypes.func.isRequired,
+  addCommentToCreditTransfer: PropTypes.func.isRequired
 };
 
 const mapStateToProps = state => ({
@@ -413,7 +494,8 @@ const mapDispatchToProps = dispatch => ({
   invalidateCreditTransfer: bindActionCreators(invalidateCreditTransfer, dispatch),
   prepareSigningAuthorityConfirmations: (creditTradeId, terms) =>
     prepareSigningAuthorityConfirmations(creditTradeId, terms),
-  updateCreditTransfer: bindActionCreators(updateCreditTransfer, dispatch)
+  updateCreditTransfer: bindActionCreators(updateCreditTransfer, dispatch),
+  addCommentToCreditTransfer: bindActionCreators(addCommentToCreditTransfer, dispatch)
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(CreditTransferViewContainer);

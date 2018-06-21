@@ -144,7 +144,9 @@ CreditTransferFormButtons.propTypes = {
     BTN_SIGN_1_2: PropTypes.bool,
     BTN_SIGN_2_2: PropTypes.bool
   }),
-  id: PropTypes.number.isRequired
+  id: PropTypes.number.isRequired,
+  addComment: PropTypes.func.isRequired,
+  isCommenting: PropTypes.bool.isRequired
 };
 
 export default CreditTransferFormButtons;
