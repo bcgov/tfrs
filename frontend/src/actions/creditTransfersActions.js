@@ -400,7 +400,7 @@ export const addCommentToCreditTransfer = data => (dispatch) => {
 };
 
 const addCommentToCreditTransferRequest = () => ({
-  name: 'APPROVE_ADD_COMMENT_TO_CREDIT_TRANSFER',
+  name: 'ADD_COMMENT_TO_CREDIT_TRANSFER_REQUEST',
   type: ActionTypes.REQUEST
 });
 
