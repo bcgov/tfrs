@@ -10,6 +10,21 @@
     }
   }
 
+  .comment-form {
+    .disclosure-notice {
+      margin-top: 5rem;
+    }
+  }
+
+  .comment {
+    .comment-text {
+      text-overflow: ellipsis;
+      overflow: scroll;
+      white-space: pre-wrap;
+      font-weight: bold;
+    }
+  }
+
   .credit-transfer-progress-bar {
     padding: 1rem 0rem 1rem 0rem;
 

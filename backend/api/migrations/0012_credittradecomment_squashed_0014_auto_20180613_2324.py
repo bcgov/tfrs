@@ -9,8 +9,6 @@ import django.db.models.deletion
 
 class Migration(migrations.Migration):
 
-    replaces = [(b'api', '0012_credittradecomment'), (b'api', '0013_auto_20180613_2318'), (b'api', '0014_auto_20180613_2324')]
-
     dependencies = [
         ('api', '0011_auto_20180613_1848'),
     ]

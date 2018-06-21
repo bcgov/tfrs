@@ -382,3 +382,36 @@ const processApprovedCreditTransfersError = error => ({
   type: ActionTypes.COMMIT_ERRORS,
   errorMessage: error
 });
+
+/*
+ * Add comment to credit transfer
+ */
+export const addCommentToCreditTransfer = data => (dispatch) => {
+  dispatch(addCommentToCreditTransferRequest());
+
+  return axios
+    .post(`${Routes.BASE_URL}${Routes.COMMENTS_API}`, data)
+    .then((response) => {
+      dispatch(addCommentToCreditTransferSuccess(response.data));
+    }).catch((error) => {
+      dispatch(addCommentToCreditTransferError(error.response.data));
+      return Promise.reject(error);
+    });
+};
+
+const addCommentToCreditTransferRequest = () => ({
+  name: 'APPROVE_ADD_COMMENT_TO_CREDIT_TRANSFER',
+  type: ActionTypes.REQUEST
+});
+
+const addCommentToCreditTransferSuccess = data => ({
+  name: 'SUCCESS_ADD_COMMENT_TO_CREDIT_TRANSFER',
+  type: ActionTypes.SUCCESS,
+  data
+});
+
+const addCommentToCreditTransferError = error => ({
+  name: 'ERROR_ADD_COMMENT_TO_CREDIT_TRANSFER',
+  type: ActionTypes.ERROR,
+  errorMessage: error
+});
