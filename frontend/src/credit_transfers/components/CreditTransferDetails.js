@@ -28,7 +28,11 @@ const CreditTransferDetails = props => (
             getCreditTransferType(props.tradeType.id)
           }
         </h1>
-        <CreditTransferProgress status={props.status} type={props.tradeType} />
+        <CreditTransferProgress
+          rescinded={props.rescinded}
+          status={props.status}
+          type={props.tradeType}
+        />
         <div className="credit-transfer-details">
           <div className="main-form">
             <CreditTransferTextRepresentation
@@ -119,6 +123,7 @@ CreditTransferDetails.defaultProps = {
   id: 0,
   note: '',
   numberOfCredits: '0',
+  rescinded: false,
   status: {
     id: 0,
     status: ''
@@ -162,6 +167,7 @@ CreditTransferDetails.propTypes = {
     PropTypes.string,
     PropTypes.number
   ]),
+  rescinded: PropTypes.bool,
   status: PropTypes.shape({
     id: PropTypes.number,
     status: PropTypes.string
