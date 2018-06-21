@@ -68,6 +68,7 @@ class CreditTrade(Auditable):
         blank=True, null=True,
         on_delete=models.PROTECT
     )
+    rescinded = models.BooleanField(default=False)
 
     @property
     def credits_from(self):
