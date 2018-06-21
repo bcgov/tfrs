@@ -400,25 +400,16 @@ class CreditTransferViewContainer extends Component {
 
         content.push(this._modalRecommend(item));
         content.push(this._modalNotRecommend(item));
-
-        // enable commenting
-        buttonActions.push(Lang.BTN_COMMENT);
       }
 
       if (availableActions.includes(Lang.BTN_DECLINE_FOR_APPROVAL)) {
         buttonActions.push(Lang.BTN_DECLINE_FOR_APPROVAL);
 
         content.push(this._modalDecline(item));
-
-        // enable commenting
-        buttonActions.push(Lang.BTN_COMMENT);
       }
 
       if (availableActions.includes(Lang.BTN_APPROVE)) {
         buttonActions.push(Lang.BTN_APPROVE);
-
-        // enable commenting
-        buttonActions.push(Lang.BTN_COMMENT);
 
         content.push(this._modalApprove(item));
       }
