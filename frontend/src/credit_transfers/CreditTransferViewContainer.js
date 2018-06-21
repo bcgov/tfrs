@@ -57,7 +57,6 @@ class CreditTransferViewContainer extends Component {
     this._addComment = this._addComment.bind(this);
     this._cancelComment = this._cancelComment.bind(this);
     this._saveComment = this._saveComment.bind(this);
-    this.render = this.render.bind(this);
   }
 
   componentDidMount () {
