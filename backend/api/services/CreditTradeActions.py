@@ -31,7 +31,6 @@ class CreditTradeActions(object):
     Credit Trade Serializer
     """
     __statuses = CreditTradeStatus.objects.all().only('id', 'status')
-    __status_dict = {s.status: s for s in __statuses}
 
     @staticmethod
     def draft(request):
@@ -42,14 +41,16 @@ class CreditTradeActions(object):
         and if the user has enough permission,
         sign the credit transfer
         """
+        status_dict = {s.status: s for s in CreditTradeActions.__statuses}
+
         available_statuses = []
         available_statuses.append(
-            CreditTradeActions.__status_dict["Draft"]
+            status_dict["Draft"]
         )
 
         if request.user.has_perm('SIGN_CREDIT_TRANSFER'):
             available_statuses.append(
-                CreditTradeActions.__status_dict["Submitted"]
+                status_dict["Submitted"]
             )
 
         serializer = CreditTradeStatusMinSerializer(
@@ -66,21 +67,23 @@ class CreditTradeActions(object):
         or rescinding the credit transfer if the user is the initiator
         (provided the user has the right permissions)
         """
+        status_dict = {s.status: s for s in CreditTradeActions.__statuses}
+
         available_statuses = []
         if request.user.has_perm('SIGN_CREDIT_TRANSFER'):
             available_statuses.append(
-                CreditTradeActions.__status_dict["Accepted"]
+                status_dict["Accepted"]
             )
 
         if credit_trade.initiator == request.user.organization:
             if request.user.has_perm('RESCIND_CREDIT_TRANSFER'):
                 available_statuses.append(
-                    CreditTradeActions.__status_dict["Cancelled"]
+                    status_dict["Cancelled"]
                 )
         else:
             if request.user.has_perm('REFUSE_CREDIT_TRANSFER'):
                 available_statuses.append(
-                    CreditTradeActions.__status_dict["Refused"]
+                    status_dict["Refused"]
                 )
 
         serializer = CreditTradeStatusMinSerializer(
@@ -96,15 +99,17 @@ class CreditTradeActions(object):
         and rescinding the credit transfer
         (provided the user has the right permissions)
         """
+        status_dict = {s.status: s for s in CreditTradeActions.__statuses}
+
         available_statuses = []
         if request.user.has_perm('RECOMMEND_CREDIT_TRANSFER'):
             available_statuses.append(
-                CreditTradeActions.__status_dict["Recommended"]
+                status_dict["Recommended"]
             )
 
         if request.user.has_perm('RESCIND_CREDIT_TRANSFER'):
             available_statuses.append(
-                CreditTradeActions.__status_dict["Cancelled"]
+                status_dict["Cancelled"]
             )
 
         serializer = CreditTradeStatusMinSerializer(
@@ -121,20 +126,22 @@ class CreditTradeActions(object):
         and rescinding the credit transfer
         (provided the user has the right permissions)
         """
+        status_dict = {s.status: s for s in CreditTradeActions.__statuses}
+
         available_statuses = []
         if request.user.has_perm('APPROVE_CREDIT_TRANSFER'):
             available_statuses.append(
-                CreditTradeActions.__status_dict["Approved"]
+                status_dict["Approved"]
             )
 
         if request.user.has_perm('DECLINE_CREDIT_TRANSFER'):
             available_statuses.append(
-                CreditTradeActions.__status_dict["Declined"]
+                status_dict["Declined"]
             )
 
         if request.user.has_perm('RESCIND_CREDIT_TRANSFER'):
             available_statuses.append(
-                CreditTradeActions.__status_dict["Cancelled"]
+                status_dict["Cancelled"]
             )
 
         serializer = CreditTradeStatusMinSerializer(
