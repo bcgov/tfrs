@@ -26,6 +26,17 @@ class CreditTransferProgress extends Component {
     );
   }
 
+  _addStepDeclined () {
+    return (
+      <div
+        className={`step ${(this.props.status.id === CREDIT_TRANSFER_STATUS.declinedForApproval.id) ? 'cancelled' : ''}`}
+        key={CREDIT_TRANSFER_STATUS.declinedForApproval.id}
+      >
+        <span>{CREDIT_TRANSFER_STATUS.declinedForApproval.description}</span>
+      </div>
+    );
+  }
+
   _addStepDraft () {
     return (
       <div
@@ -116,7 +127,11 @@ class CreditTransferProgress extends Component {
       view.push(this._addStepRecommended());
     }
 
-    view.push(this._addStepCompleted());
+    if (this.props.status.id === CREDIT_TRANSFER_STATUS.declinedForApproval.id) {
+      view.push(this._addStepDeclined());
+    } else {
+      view.push(this._addStepCompleted());
+    }
 
     return view;
   }
