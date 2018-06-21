@@ -25,6 +25,7 @@ from rest_framework import serializers
 from api.models.CreditTrade import CreditTrade
 from api.models.CreditTradeStatus import CreditTradeStatus
 from api.models.CreditTradeType import CreditTradeType
+from api.services.CreditTradeActions import CreditTradeActions
 
 from .CreditTradeComment import CreditTradeCommentSerializer
 from .CreditTradeStatus import CreditTradeStatusMinSerializer
@@ -274,50 +275,17 @@ class CreditTrade2Serializer(serializers.ModelSerializer):
         if request.user.role is None:
             return []
 
-        available_statuses = []
-        statuses = CreditTradeStatus.objects.all().only('id', 'status')
-        status_dict = {s.status: s for s in statuses}
-
         if cur_status == "Draft":
-            available_statuses.append(status_dict["Draft"])
-
-            if request.user.has_perm('SIGN_CREDIT_TRANSFER'):
-                available_statuses.append(status_dict["Submitted"])
+            return CreditTradeActions.draft(request)
 
         elif cur_status == "Submitted":
-            # Allow to accept submitted transfers
-            if request.user.has_perm('SIGN_CREDIT_TRANSFER'):
-                available_statuses.append(status_dict["Accepted"])
-
-            # Allow to rescind submitted transfers
-            if request.user.has_perm('RESCIND_CREDIT_TRANSFER'):
-                available_statuses.append(status_dict["Cancelled"])
-
-            # Allow to refuse submitted transfers
-            if request.user.has_perm('REFUSE_CREDIT_TRANSFER'):
-                available_statuses.append(status_dict["Cancelled"])
+            return CreditTradeActions.submitted(request, obj)
 
         elif cur_status == "Accepted":
-            # Allow to recommend for approval accepted transfers
-            if request.user.has_perm('RECOMMEND_CREDIT_TRANSFER'):
-                available_statuses.append(status_dict["Recommended"])
-
-            # Allow to rescind submitted transfer
-            if request.user.has_perm('RESCIND_CREDIT_TRANSFER'):
-                available_statuses.append(status_dict["Cancelled"])
+            return CreditTradeActions.accepted(request)
 
         elif cur_status == "Recommended" or cur_status == "Not Recommended":
-            # Allow to approval for recommended/not recommended transfer
-            if request.user.has_perm('APPROVE_CREDIT_TRANSFER'):
-                available_statuses.append(status_dict["Approved"])
-
-            # Allow to decline recommended transfers
-            if request.user.has_perm('DECLINE_CREDIT_TRANSFER'):
-                available_statuses.append(status_dict["Declined"])
-
-        serializer = CreditTradeStatusMinSerializer(available_statuses,
-                                                    many=True)
-        return serializer.data
+            return CreditTradeActions.reviewed(request)
 
     def get_comments(self, obj):
         request = self.context.get('request')

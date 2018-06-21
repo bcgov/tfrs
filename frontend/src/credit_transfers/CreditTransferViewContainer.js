@@ -305,20 +305,19 @@ class CreditTransferViewContainer extends Component {
         }
 
         if (availableActions.includes(Lang.BTN_CT_CANCEL)) {
-          if (item.status.id === CREDIT_TRANSFER_STATUS.proposed.id) {
-            buttonActions.push(Lang.BTN_REFUSE);
-            content.push(this._modalRefuse());
-          } else {
-            buttonActions.push(Lang.BTN_RESCIND);
-            content.push(this._modalRescind());
-          }
+          buttonActions.push(Lang.BTN_RESCIND);
+          content.push(this._modalRescind());
+        }
+
+        if (availableActions.includes(Lang.BTN_REFUSE)) {
+          buttonActions.push(Lang.BTN_REFUSE);
+          content.push(this._modalRefuse());
         }
       } else if (item.initiator.id === loggedInUser.organization.id) {
         if (availableActions.includes(Lang.BTN_CT_CANCEL)) {
           buttonActions.push(Lang.BTN_RESCIND);
+          content.push(this._modalRescind());
         }
-
-        content.push(this._modalRescind());
       }
 
       if (availableActions.includes(Lang.BTN_SAVE_DRAFT)) {

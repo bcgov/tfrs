@@ -30,20 +30,25 @@ const CreditTransactionsPage = (props) => {
           props.loggedInUser.role.isGovernmentRole &&
           [
             !props.organization &&
-            <h3 key="all-organizations-credit-balance">
-              All Organizations Credit Balance: {
-                numeral(1000000000000000 - props.loggedInUser.organizationBalance)
-                  .format(NumberFormat.INT)
-              }
-            </h3>,
+            <div key="all-organizations-credit-balance">
+              <h3>All Organizations</h3>
+              <h3>
+                Credit Balance: {
+                  numeral(1000000000000000 - props.loggedInUser.organizationBalance)
+                    .format(NumberFormat.INT)
+                }
+              </h3>
+            </div>,
             props.organization && props.organization.organizationBalance &&
-            <h3 key={props.organization.id}>
-              {props.organization.name}
-              Credit Balance: {
-                numeral(props.organization.organizationBalance.validatedCredits)
-                  .format(NumberFormat.INT)
-              }
-            </h3>,
+            <div key={props.organization.id}>
+              <h3>{props.organization.name}</h3>
+              <h3>
+                Credit Balance: {
+                  numeral(props.organization.organizationBalance.validatedCredits)
+                    .format(NumberFormat.INT)
+                }
+              </h3>
+            </div>,
             <div className="form-group organization_filter" key="organization-filter">
               <label htmlFor="organizationFilterSelect">Show transactions involving:
                 <select
