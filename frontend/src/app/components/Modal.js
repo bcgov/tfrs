@@ -3,6 +3,18 @@ import PropTypes from 'prop-types';
 
 import * as Lang from '../../constants/langEnUs';
 
+const bootstrapClassFor = (extraConfirmType) => {
+  switch (extraConfirmType) {
+    case 'warning':
+      return 'alert alert-warning';
+    case 'error':
+      return 'alert alert-danger';
+    case 'info':
+    default:
+      return 'alert alert-primary';
+  }
+};
+
 const Modal = props => (
   <div
     className="modal fade"
@@ -30,6 +42,11 @@ const Modal = props => (
           </h4>
         </div>
         <div className="modal-body">
+          {props.showExtraConfirm &&
+          <div className={bootstrapClassFor(props.extraConfirmType)}>
+            {props.extraConfirmText}
+          </div>
+          }
           {props.children}
         </div>
         <div className="modal-footer">
@@ -44,6 +61,7 @@ const Modal = props => (
             type="button"
             className="btn btn-primary"
             data-dismiss="modal"
+            disabled={!((!props.showExtraConfirm) || props.canBypass)}
             onClick={props.handleSubmit}
           >
             {props.confirmLabel}
@@ -58,6 +76,10 @@ Modal.defaultProps = {
   cancelLabel: Lang.BTN_NO,
   confirmLabel: Lang.BTN_YES,
   handleSubmit: null,
+  showExtraConfirm: false,
+  canBypassExtraConfirm: true,
+  extraConfirmType: 'info',
+  extraConfirmText: '',
   title: 'Confirmation'
 };
 
@@ -68,6 +90,12 @@ Modal.propTypes = {
     PropTypes.node
   ]).isRequired,
   confirmLabel: PropTypes.string,
+  showExtraConfirm: PropTypes.bool,
+  extraConfirmText: PropTypes.string,
+  extraConfirmType: PropTypes.oneOf([
+    'info', 'warning', 'error'
+  ]),
+  canBypassExtraConfirm: PropTypes.bool,
   handleSubmit: PropTypes.func,
   id: PropTypes.string.isRequired,
   title: PropTypes.string
