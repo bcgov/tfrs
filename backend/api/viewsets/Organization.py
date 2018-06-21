@@ -14,6 +14,7 @@ from api.models.OrganizationType import OrganizationType
 from api.serializers import OrganizationSerializer
 from api.serializers import OrganizationBalanceSerializer
 from api.serializers import OrganizationHistorySerializer
+from api.serializers import OrganizationMinSerializer
 
 
 class OrganizationViewSet(AuditableMixin, viewsets.ModelViewSet):
@@ -31,6 +32,7 @@ class OrganizationViewSet(AuditableMixin, viewsets.ModelViewSet):
         'balance': OrganizationBalanceSerializer,
         'default': OrganizationSerializer,
         'history': OrganizationHistorySerializer,
+        'fuel_suppliers': OrganizationMinSerializer
     }
 
     def get_serializer_class(self):
@@ -104,7 +106,6 @@ class OrganizationViewSet(AuditableMixin, viewsets.ModelViewSet):
         return Response([user.display_name for user in users])
 
     @list_route(methods=['get'])
-    @permission_required('VIEW_FUEL_SUPPLIERS')
     def fuel_suppliers(self, request):
         fuel_suppliers = Organization.objects.extra(
             select={'lower_name': 'lower(name)'}) \
