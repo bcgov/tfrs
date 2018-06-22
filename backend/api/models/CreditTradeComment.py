@@ -32,7 +32,10 @@ class CreditTradeComment(Auditable):
         null=False,
         on_delete=models.PROTECT)
 
-    comment = models.CharField(max_length=4000, blank=True, null=True)
+    comment = models.CharField(max_length=4000,
+                               blank=True,
+                               null=True,
+                               db_column='credit_trade_comment')
 
     ''' require a permission to view '''
     privileged_access = models.BooleanField(null=False, default=True)
