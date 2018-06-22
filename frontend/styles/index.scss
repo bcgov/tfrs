@@ -1,14 +1,15 @@
 @import './App.scss';
-@import './mixins.scss';
-@import './variables.scss';
-@import './FuelSuppliers.scss';
+@import './ContactUs.scss';
+@import './CreditTransfers.scss';
 @import './Dashboard.scss';
+@import './FuelSuppliers.scss';
+@import './HistoricalDataEntry.scss';
+@import './mixins.scss';
 @import './Notifications.scss';
 @import './Opportunities.scss';
 @import './Organizations.scss';
-@import './CreditTransfers.scss';
-@import './HistoricalDataEntry.scss';
-@import './ContactUs.scss';
+@import './TooltipWhenDisabled.scss';
+@import './variables.scss';
 
 body {
   margin: 0;
@@ -82,7 +83,7 @@ h1 {
 }
 
 .btn-container {
-  .btn + .btn {
+  .btn + .btn, .btn + div {
     margin-left: 0.5rem;
   }
 }

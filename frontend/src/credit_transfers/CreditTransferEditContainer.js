@@ -10,13 +10,14 @@ import { bindActionCreators } from 'redux';
 import CreditTransferForm from './components/CreditTransferForm';
 import ModalSubmitCreditTransfer from './components/ModalSubmitCreditTransfer';
 
-import { getFuelSuppliers } from '../actions/organizationActions';
 import {
   deleteCreditTransfer,
   getCreditTransfer,
   invalidateCreditTransfer,
   updateCreditTransfer
 } from '../actions/creditTransfersActions';
+import { getFuelSuppliers } from '../actions/organizationActions';
+import { getLoggedInUser } from '../actions/userActions';
 import {
   addSigningAuthorityConfirmation,
   prepareSigningAuthorityConfirmations
@@ -120,8 +121,6 @@ class CreditTransferEditContainer extends Component {
   _handleInputChange (event) {
     const { value, name } = event.target;
     const fieldState = { ...this.state.fields };
-
-    // console.log(typeof fieldState[name], value, name);
 
     if (typeof fieldState[name] === 'object') {
       this.changeObjectProp(parseInt(value, 10), name);
@@ -238,7 +237,7 @@ class CreditTransferEditContainer extends Component {
 
   render () {
     let availableActions = [];
-    const buttonActions = [Lang.BTN_SAVE_DRAFT];
+    const buttonActions = [Lang.BTN_SAVE_DRAFT, Lang.BTN_SIGN_1_2];
     const { isFetching, item } = this.props;
 
     if (!isFetching && item.actions) {
@@ -249,10 +248,6 @@ class CreditTransferEditContainer extends Component {
 
       if (availableActions.includes(Lang.BTN_SAVE_DRAFT)) {
         buttonActions.push(Lang.BTN_DELETE_DRAFT);
-      }
-
-      if (availableActions.includes(Lang.BTN_PROPOSE)) {
-        buttonActions.push(Lang.BTN_SIGN_1_2);
       }
     }
 
@@ -270,6 +265,7 @@ class CreditTransferEditContainer extends Component {
         handleSubmit={this._handleSubmit}
         id={item.id}
         key="creditTransferForm"
+        loggedInUser={this.props.loggedInUser}
         terms={this.state.terms}
         title="Edit Credit Transfer"
         toggleCheck={this._toggleCheck}
@@ -332,6 +328,13 @@ CreditTransferEditContainer.propTypes = {
     ]),
     actions: PropTypes.arrayOf(PropTypes.shape({}))
   }).isRequired,
+  loggedInUser: PropTypes.shape({
+    displayName: PropTypes.string,
+    organization: PropTypes.shape({
+      name: PropTypes.string,
+      id: PropTypes.number
+    })
+  }).isRequired,
   match: PropTypes.shape({
     params: PropTypes.shape({
       id: PropTypes.string.isRequired
@@ -345,7 +348,8 @@ const mapStateToProps = state => ({
   errors: state.rootReducer.creditTransfer.errors,
   fuelSuppliers: state.rootReducer.fuelSuppliersRequest.fuelSuppliers,
   isFetching: state.rootReducer.creditTransfer.isFetching,
-  item: state.rootReducer.creditTransfer.item
+  item: state.rootReducer.creditTransfer.item,
+  loggedInUser: state.rootReducer.userRequest.loggedInUser
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -353,6 +357,7 @@ const mapDispatchToProps = dispatch => ({
   deleteCreditTransfer: bindActionCreators(deleteCreditTransfer, dispatch),
   getCreditTransfer: bindActionCreators(getCreditTransfer, dispatch),
   getFuelSuppliers: bindActionCreators(getFuelSuppliers, dispatch),
+  getLoggedInUser: bindActionCreators(getLoggedInUser, dispatch),
   invalidateCreditTransfer: bindActionCreators(invalidateCreditTransfer, dispatch),
   prepareSigningAuthorityConfirmations: (creditTradeId, terms) =>
     prepareSigningAuthorityConfirmations(creditTradeId, terms),
