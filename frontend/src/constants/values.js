@@ -27,11 +27,11 @@ export const CREDIT_TRANSFER_STATUS = {
   },
   recommendedForDecision: {
     id: 4,
-    description: 'Recommended'
+    description: 'Reviewed' /* Whether it's recommended or not, the user shouldn't need to know this */
   },
   notRecommended: {
     id: 5,
-    description: 'Not Recommended'
+    description: 'Reviewed' /* Whether it's recommended or not, the user shouldn't need to know this */
   },
   approved: {
     id: 6,

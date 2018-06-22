@@ -334,6 +334,7 @@ class CreditTransferViewContainer extends Component {
         id={item.id}
         isFetching={isFetching}
         key="creditTransferDetails"
+        loggedInUser={loggedInUser}
         note={item.note}
         numberOfCredits={item.numberOfCredits}
         rescinded={item.rescinded}
@@ -365,8 +366,14 @@ class CreditTransferViewContainer extends Component {
         action.action
       ));
 
+      if (item.status.id === CREDIT_TRANSFER_STATUS.draft.id) {
+        buttonActions.push(Lang.BTN_SIGN_1_2);
+
+        content.push(this._modalSubmit(item));
+      }
+
       if (item.respondent.id === loggedInUser.organization.id) {
-        if (availableActions.includes(Lang.BTN_ACCEPT)) {
+        if (item.status.id === CREDIT_TRANSFER_STATUS.proposed.id) {
           buttonActions.push(Lang.BTN_SIGN_2_2);
           content.push(this._modalAccept());
         }
@@ -392,12 +399,6 @@ class CreditTransferViewContainer extends Component {
         buttonActions.push(Lang.BTN_EDIT_DRAFT);
 
         content.push(this._modalDelete(item));
-      }
-
-      if (availableActions.includes(Lang.BTN_PROPOSE)) {
-        buttonActions.push(Lang.BTN_SIGN_1_2);
-
-        content.push(this._modalSubmit(item));
       }
 
       if (availableActions.includes(Lang.BTN_RECOMMEND_FOR_DECISION)) {
