@@ -293,7 +293,7 @@ class CreditTransferViewContainer extends Component {
   _rescind () {
     // Change the rescinded flag only
     const data = {
-      rescinded: true
+      isRescinded: true
     };
 
     const { id } = this.props.item;
@@ -333,10 +333,10 @@ class CreditTransferViewContainer extends Component {
         fields={this.state.fields}
         id={item.id}
         isFetching={isFetching}
+        isRescinded={item.isRescinded}
         key="creditTransferDetails"
         note={item.note}
         numberOfCredits={item.numberOfCredits}
-        rescinded={item.rescinded}
         status={item.status}
         toggleCheck={this._toggleCheck}
         totalValue={item.totalValue}
@@ -359,7 +359,7 @@ class CreditTransferViewContainer extends Component {
       />
     )];
 
-    if (!isFetching && item.actions && !item.rescinded) {
+    if (!isFetching && item.actions && !item.isRescinded) {
       // TODO: Add util function to return appropriate actions
       availableActions = item.actions.map(action => (
         action.action
@@ -448,11 +448,11 @@ CreditTransferViewContainer.propTypes = {
       PropTypes.number
     ]),
     id: PropTypes.number,
+    isRescinded: PropTypes.bool,
     numberOfCredits: PropTypes.oneOfType([
       PropTypes.string,
       PropTypes.number
     ]),
-    rescinded: PropTypes.bool,
     totalValue: PropTypes.oneOfType([
       PropTypes.string,
       PropTypes.number

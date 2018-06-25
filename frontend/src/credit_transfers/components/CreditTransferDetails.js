@@ -29,7 +29,7 @@ const CreditTransferDetails = props => (
           }
         </h1>
         <CreditTransferProgress
-          rescinded={props.rescinded}
+          isRescinded={props.isRescinded}
           status={props.status}
           type={props.tradeType}
         />
@@ -121,9 +121,9 @@ CreditTransferDetails.defaultProps = {
   errors: {},
   fairMarketValuePerCredit: '0',
   id: 0,
+  isRescinded: false,
   note: '',
   numberOfCredits: '0',
-  rescinded: false,
   status: {
     id: 0,
     status: ''
@@ -162,12 +162,12 @@ CreditTransferDetails.propTypes = {
   }).isRequired,
   id: PropTypes.number,
   isFetching: PropTypes.bool.isRequired,
+  isRescinded: PropTypes.bool,
   note: PropTypes.string,
   numberOfCredits: PropTypes.oneOfType([
     PropTypes.string,
     PropTypes.number
   ]),
-  rescinded: PropTypes.bool,
   status: PropTypes.shape({
     id: PropTypes.number,
     status: PropTypes.string

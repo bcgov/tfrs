@@ -119,7 +119,7 @@ class TestCreditTrades(TestCase):
         )
 
         payload = {
-            'rescinded': True
+            'is_rescinded': True
         }
 
         response = self.fs_client_1.patch(
@@ -130,7 +130,7 @@ class TestCreditTrades(TestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
         updated_credit_trade = CreditTrade.objects.get(id=credit_trade.id)
-        self.assertTrue(updated_credit_trade.rescinded)
+        self.assertTrue(updated_credit_trade.is_rescinded)
 
     def test_rescind_approved_credit_transfer(self):
         """
@@ -165,7 +165,7 @@ class TestCreditTrades(TestCase):
 
         # Respondent 'refused'
         payload = {
-            'rescinded': True
+            'is_rescinded': True
         }
 
         response = self.fs_client_2.patch(
@@ -178,7 +178,7 @@ class TestCreditTrades(TestCase):
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
         updated_credit_trade = CreditTrade.objects.get(id=credit_trade.id)
-        self.assertEqual(updated_credit_trade.rescinded, False)
+        self.assertEqual(updated_credit_trade.is_rescinded, False)
         self.assertEqual(updated_credit_trade.status_id, approved_status.id)
 
     def test_rescind_completed_credit_transfer(self):
@@ -214,7 +214,7 @@ class TestCreditTrades(TestCase):
 
         # Respondent 'refused'
         payload = {
-            'rescinded': True
+            'is_rescinded': True
         }
 
         response = self.fs_client_2.patch(
@@ -227,7 +227,7 @@ class TestCreditTrades(TestCase):
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
         updated_credit_trade = CreditTrade.objects.get(id=credit_trade.id)
-        self.assertEqual(updated_credit_trade.rescinded, False)
+        self.assertEqual(updated_credit_trade.is_rescinded, False)
         self.assertEqual(updated_credit_trade.status_id, completed_status.id)
 
     def test_rescind_refused_credit_transfer(self):
@@ -279,7 +279,7 @@ class TestCreditTrades(TestCase):
 
         # Initiator attempting to 'rescind'
         payload = {
-            'rescinded': True
+            'is_rescinded': True
         }
 
         response = self.fs_client_1.patch(
@@ -292,5 +292,5 @@ class TestCreditTrades(TestCase):
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
         updated_credit_trade = CreditTrade.objects.get(id=credit_trade.id)
-        self.assertEqual(updated_credit_trade.rescinded, False)
+        self.assertEqual(updated_credit_trade.is_rescinded, False)
         self.assertEqual(updated_credit_trade.status_id, refused_status.id)

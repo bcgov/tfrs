@@ -807,3 +807,140 @@ class TestCreditTrades(TestCase):
         self.assertNotIn(submitted_credit_trade, credit_trades)
         self.assertIn(credit_trade_as_respondent, credit_trades)
         self.assertIn(completed_credit_trade, credit_trades)
+
+    def test_sell_with_insufficient_credits(self):
+        """
+        This will test submitting a draft with insufficient credit
+        It should return a Validation Error and tell you that your
+        organization has insufficient credits
+        """
+        draft_status, _ = CreditTradeStatus.objects.get_or_create(
+            status='Draft')
+
+        credit_trade_type, _ = CreditTradeType.objects.get_or_create(
+            the_type='Sell')
+
+        role = Role.objects.get(name='FSManager')
+        UserRole.objects.create(user_id=self.user_1.id, role_id=role.id)
+
+        payload = {
+            'fairMarketValuePerCredit': '1.00',
+            'initiator': self.user_1.organization_id,
+            'numberOfCredits': 100000,
+            'respondent': 3,
+            'status': draft_status.id,
+            'tradeEffectiveDate': datetime.datetime.today().strftime(
+                '%Y-%m-%d'
+            ),
+            'type': credit_trade_type.id,
+            'zeroReason': None
+        }
+
+        response = self.fs_client_1.post(
+            '/api/credit_trades',
+            content_type='application/json',
+            data=json.dumps(payload))
+
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertIn('insufficientCredits', json.loads(response.content))
+
+    def test_sell_update_with_insufficient_credits(self):
+        """
+        This will test proposing a draft that doesn't have sufficient credits
+        This is an edge case. You normally shouldn't be able to create a 
+        record with more number of credits than your organization has.
+        But it can happen if a previous transaction gets in first and
+        you now have less credits than it was.
+        """
+        draft_status, _ = CreditTradeStatus.objects.get_or_create(
+            status='Draft')
+
+        submitted_status, _ = CreditTradeStatus.objects.get_or_create(
+            status='Submitted')
+
+        credit_trade_type, _ = CreditTradeType.objects.get_or_create(
+            the_type='Sell')
+
+        role = Role.objects.get(name='FSManager')
+        UserRole.objects.create(user_id=self.user_1.id, role_id=role.id)
+
+        credit_trade = CreditTrade.objects.create(
+            status=draft_status,
+            initiator=self.user_1.organization,
+            respondent=self.user_2.organization,
+            type=credit_trade_type,
+            number_of_credits=100000,
+            fair_market_value_per_credit=1,
+            zero_reason=None,
+            trade_effective_date=datetime.datetime.today().strftime('%Y-%m-%d')
+        )
+
+        payload = {
+            'status': submitted_status.id
+        }
+
+        response = self.fs_client_1.patch(
+            '/api/credit_trades/{}'.format(
+                credit_trade.id
+            ),
+            content_type='application/json',
+            data=json.dumps(payload))
+
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertIn('insufficientCredits', json.loads(response.content))
+
+    def test_buy_from_org_with_insufficient_credits(self):
+        """
+        This will test two things:
+        1. Propose a Buy from someone with insufficient credits.
+        This should work. As the user proposing to buy from shouldn't be
+        given any information or hint on how much the respondent has.
+        2. Accepting the proposal should show a validation error.
+        """
+        submitted_status, _ = CreditTradeStatus.objects.get_or_create(
+            status='Submitted')
+
+        accepted_status, _ = CreditTradeStatus.objects.get_or_create(
+            status='Accepted')
+
+        credit_trade_type, _ = CreditTradeType.objects.get_or_create(
+            the_type='Buy')
+
+        role = Role.objects.get(name='FSManager')
+        UserRole.objects.create(user_id=self.user_1.id, role_id=role.id)
+        UserRole.objects.create(user_id=self.user_2.id, role_id=role.id)
+
+        payload = {
+            'fairMarketValuePerCredit': '1.00',
+            'initiator': self.user_1.organization_id,
+            'numberOfCredits': 100000,
+            'respondent': self.user_2.organization_id,
+            'status': submitted_status.id,
+            'tradeEffectiveDate': datetime.datetime.today().strftime(
+                '%Y-%m-%d'
+            ),
+            'type': credit_trade_type.id,
+            'zeroReason': None
+        }
+
+        response = self.fs_client_1.post(
+            '/api/credit_trades',
+            content_type='application/json',
+            data=json.dumps(payload))
+
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        credit_trade = json.loads(response.content)
+
+        payload = {
+            'status': accepted_status.id
+        }
+
+        response = self.fs_client_2.patch(
+            '/api/credit_trades/{}'.format(
+                credit_trade['id']
+            ),
+            content_type='application/json',
+            data=json.dumps(payload))
+
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertIn('insufficientCredits', json.loads(response.content))
