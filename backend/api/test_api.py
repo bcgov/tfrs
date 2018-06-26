@@ -3,6 +3,7 @@ from django.test import TestCase, Client
 
 from rest_framework import status
 import datetime
+import logging
 
 from api import fake_api_calls
 from api.models.CreditTrade import CreditTrade
@@ -580,3 +581,62 @@ class TestAPI(TestCase):
 
     def test_update_accepted_to_declined(self, **kwargs):
         pass
+
+    def test_etag_caching_credit_trades_works(self):
+        response = self.client.get('/api/credit_trades')
+        assert status.HTTP_200_OK == response.status_code
+        got_etag = response['ETag']
+        assert len(got_etag) > 32
+
+        response = self.client.get('/api/credit_trades', HTTP_IF_NONE_MATCH='nonsense etag')
+        assert status.HTTP_200_OK == response.status_code
+        got_etag = response['ETag']
+        assert len(got_etag) > 32
+
+        # also get one as somebody else
+        response = self.respondent_client.get('/api/credit_trades')
+        assert status.HTTP_200_OK == response.status_code
+        got_etag_for_respondent = response['ETag']
+        assert len(got_etag_for_respondent) > 32
+
+        # they see different things
+        assert got_etag != got_etag_for_respondent
+
+        response = self.client.get('/api/credit_trades', HTTP_IF_NONE_MATCH=got_etag)
+        assert status.HTTP_304_NOT_MODIFIED == response.status_code
+
+        # create a new credit trade to invalidate the cache (and save the id for later)
+        credit_trades = self.test_data_success
+
+        for tests in credit_trades:
+            response = self.client.post(
+                self.test_url,
+                content_type='application/json',
+                data=json.dumps(tests['data']))
+            created_id = json.loads(response.content.decode("utf-8"))['id']
+            assert status.HTTP_201_CREATED == response.status_code
+
+        # now our etag should be invalid again
+        response = self.client.get('/api/credit_trades', HTTP_IF_NONE_MATCH=got_etag)
+        got_etag = response['ETag']
+        assert status.HTTP_200_OK == response.status_code
+
+        # now good again (but different)
+        response = self.client.get('/api/credit_trades', HTTP_IF_NONE_MATCH=got_etag)
+        assert status.HTTP_304_NOT_MODIFIED == response.status_code
+
+        # now go update that record we created earlier to invalidate the cache a different way
+        response = self.client.patch(
+            '/api/credit_trades/{}'.format(created_id),
+            content_type='application/json',
+            data=json.dumps({"status": STATUS_CANCELLED}))
+        assert status.HTTP_200_OK == response.status_code
+
+        # now our etag should be invalid yet again
+        response = self.client.get('/api/credit_trades', HTTP_IF_NONE_MATCH=got_etag)
+        got_etag = response['ETag']
+        assert status.HTTP_200_OK == response.status_code
+
+        # now good again (but different)
+        response = self.client.get('/api/credit_trades', HTTP_IF_NONE_MATCH=got_etag)
+        assert status.HTTP_304_NOT_MODIFIED == response.status_code
