@@ -196,5 +196,5 @@ class TestCreditTrades(BaseTestCase):
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
         updated = CreditTrade.objects.get(id=credit_trade.id)
-        self.assertEqual(updated.is_rescinded, True)
+        self.assertEqual(updated.is_rescinded, False)
         self.assertEqual(updated.status_id, self.statuses['refused'].id)
