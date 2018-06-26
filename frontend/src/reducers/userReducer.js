@@ -26,9 +26,9 @@ const userRequest = (state = {
           ...action.data,
           hasPermission: (permissionCode) => {
             if (action.data.role) {
-              return action.data.role.permissions.find(permission => (
+              return action.data.role.permissions.findIndex(permission => (
                 permission.code === permissionCode
-              ));
+              )) >= 0;
             }
 
             return false;
