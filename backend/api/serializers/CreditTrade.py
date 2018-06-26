@@ -152,9 +152,8 @@ class CreditTradeUpdateSerializer(serializers.ModelSerializer):
 
         if 'status' in request.data:
             if self.instance.status.status == "Draft":
-                available_statuses.append("Cancelled")
-
                 if request.user.has_perm('PROPOSE_CREDIT_TRANSFER'):
+                    available_statuses.append("Cancelled")
                     available_statuses.append("Draft")
 
             if request.user.has_perm('APPROVE_CREDIT_TRANSFER'):

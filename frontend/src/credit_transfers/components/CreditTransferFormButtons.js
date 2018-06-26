@@ -5,6 +5,7 @@ import * as Lang from '../../constants/langEnUs';
 import CREDIT_TRANSACTIONS from '../../constants/routes/CreditTransactions';
 import { CREDIT_TRANSFER_STATUS } from '../../constants/values';
 import history from '../../app/History';
+import TooltipWhenDisabled from '../../app/components/TooltipWhenDisabled';
 
 const CreditTransferFormButtons = props => (
   <div className="credit-transfer-actions">
@@ -45,15 +46,24 @@ const CreditTransferFormButtons = props => (
       </button>
       }
       {props.actions.includes(Lang.BTN_SIGN_1_2) &&
-      <button
-        className={`btn ${props.disabled.BTN_SIGN_1_2 ? 'btn-disabled' : 'btn-primary '}`}
-        data-target="#confirmSubmit"
-        data-toggle="modal"
+      <TooltipWhenDisabled
         disabled={props.disabled.BTN_SIGN_1_2}
-        type="button"
+        title={props.permissions.BTN_SIGN_1_2
+          ? 'Signing Authority Declaration needs to be accepted'
+          : 'You must be assigned the Signing Authority role in order to sign and send ' +
+          'a Credit Transfer Proposal to another fuel supplier'}
       >
-        {Lang.BTN_SIGN_1_2}
-      </button>
+        <button
+          className={`btn ${props.disabled.BTN_SIGN_1_2 ? 'btn-disabled' : 'btn-primary '}`}
+          data-placement="right"
+          data-target="#confirmSubmit"
+          data-toggle="modal"
+          disabled={props.disabled.BTN_SIGN_1_2}
+          type="button"
+        >
+          {Lang.BTN_SIGN_1_2}
+        </button>
+      </TooltipWhenDisabled>
       }
       {props.actions.includes(Lang.BTN_REFUSE) &&
       <button
@@ -66,15 +76,23 @@ const CreditTransferFormButtons = props => (
       </button>
       }
       {props.actions.includes(Lang.BTN_SIGN_2_2) &&
-      <button
-        className="btn btn-primary"
-        data-target="#confirmAccept"
-        data-toggle="modal"
+      <TooltipWhenDisabled
         disabled={props.disabled.BTN_SIGN_2_2}
-        type="button"
+        title={props.permissions.BTN_SIGN_2_2
+          ? 'Signing Authority Declaration needs to be accepted'
+          : 'You must be assigned the Signing Authority role in order to sign and send ' +
+          'a Credit Transfer Proposal to another fuel supplier'}
       >
-        {Lang.BTN_SIGN_2_2}
-      </button>
+        <button
+          className="btn btn-primary"
+          data-target="#confirmAccept"
+          data-toggle="modal"
+          disabled={props.disabled.BTN_SIGN_2_2}
+          type="button"
+        >
+          {Lang.BTN_SIGN_2_2}
+        </button>
+      </TooltipWhenDisabled>
       }
       {props.actions.includes(Lang.BTN_RESCIND) &&
       <button
@@ -131,22 +149,32 @@ const CreditTransferFormButtons = props => (
 );
 
 CreditTransferFormButtons.defaultProps = {
+  addComment: null,
   disabled: {
     BTN_SIGN_1_2: true,
     BTN_SIGN_2_2: true
+  },
+  isCommenting: false,
+  permissions: {
+    BTN_SIGN_1_2: false,
+    BTN_SIGN_2_2: false
   }
 };
 
 CreditTransferFormButtons.propTypes = {
   actions: PropTypes.arrayOf(PropTypes.string).isRequired,
+  addComment: PropTypes.func,
   changeStatus: PropTypes.func.isRequired,
   disabled: PropTypes.shape({
     BTN_SIGN_1_2: PropTypes.bool,
     BTN_SIGN_2_2: PropTypes.bool
   }),
   id: PropTypes.number.isRequired,
-  addComment: PropTypes.func.isRequired,
-  isCommenting: PropTypes.bool.isRequired
+  isCommenting: PropTypes.bool,
+  permissions: PropTypes.shape({
+    BTN_SIGN_1_2: PropTypes.bool,
+    BTN_SIGN_2_2: PropTypes.bool
+  })
 };
 
 export default CreditTransferFormButtons;

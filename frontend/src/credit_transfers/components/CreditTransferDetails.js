@@ -14,6 +14,7 @@ import { getCreditTransferType } from '../../actions/creditTransfersActions';
 import Errors from '../../app/components/Errors';
 import Loading from '../../app/components/Loading';
 import * as Lang from '../../constants/langEnUs';
+import PERMISSIONS_CREDIT_TRANSACTIONS from '../../constants/permissions/CreditTransactions';
 import CreditTransferCommentForm from './CreditTransferCommentForm';
 import CreditTransferComment from './CreditTransferComment';
 import CreditTransferCommentButtons from './CreditTransferCommentButtons';
@@ -75,7 +76,8 @@ const CreditTransferDetails = props => (
         }
         <form onSubmit={e => e.preventDefault()}>
           {(props.buttonActions.includes(Lang.BTN_SIGN_1_2) ||
-          props.buttonActions.includes(Lang.BTN_SIGN_2_2)) &&
+            props.buttonActions.includes(Lang.BTN_SIGN_2_2)) &&
+          (props.loggedInUser.hasPermission(PERMISSIONS_CREDIT_TRANSACTIONS.SIGN)) &&
           <CreditTransferTerms
             addToFields={props.addToFields}
             fields={props.fields}
@@ -89,9 +91,8 @@ const CreditTransferDetails = props => (
           />
           <CreditTransferFormButtons
             actions={props.buttonActions}
-            changeStatus={props.changeStatus}
             addComment={props.addComment}
-            isCommenting={props.isCommenting}
+            changeStatus={props.changeStatus}
             disabled={
               {
                 BTN_SIGN_1_2: props.fields.terms.findIndex(term => term.value === false) >= 0 ||
@@ -101,6 +102,12 @@ const CreditTransferDetails = props => (
               }
             }
             id={props.id}
+            isCommenting={props.isCommenting}
+            permissions={
+              {
+                BTN_SIGN_1_2: props.loggedInUser.hasPermission(PERMISSIONS_CREDIT_TRANSACTIONS.SIGN)
+              }
+            }
           />
         </form>
       </div>
@@ -124,6 +131,7 @@ CreditTransferDetails.defaultProps = {
   isRescinded: false,
   note: '',
   numberOfCredits: '0',
+  rescinded: false,
   status: {
     id: 0,
     status: ''
@@ -160,6 +168,14 @@ CreditTransferDetails.propTypes = {
   fields: PropTypes.shape({
     terms: PropTypes.array
   }).isRequired,
+  loggedInUser: PropTypes.shape({
+    displayName: PropTypes.string,
+    hasPermission: PropTypes.func,
+    organization: PropTypes.shape({
+      name: PropTypes.string,
+      id: PropTypes.number
+    })
+  }).isRequired,
   id: PropTypes.number,
   isFetching: PropTypes.bool.isRequired,
   isRescinded: PropTypes.bool,
@@ -168,6 +184,7 @@ CreditTransferDetails.propTypes = {
     PropTypes.string,
     PropTypes.number
   ]),
+  rescinded: PropTypes.bool,
   status: PropTypes.shape({
     id: PropTypes.number,
     status: PropTypes.string
