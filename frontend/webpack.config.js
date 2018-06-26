@@ -94,7 +94,8 @@ const config = {
   plugins: [
     new Webpack.HotModuleReplacementPlugin(),
     new Webpack.DefinePlugin({
-      __LOGOUT_URL__: JSON.stringify('https://logontest.gov.bc.ca/clp-cgi/logoff.cgi'),
+      __LOGOUT_TEST_URL__: JSON.stringify('https://logontest.gov.bc.ca/clp-cgi/logoff.cgi'),
+      __LOGOUT_URL__: JSON.stringify('https://logon.gov.bc.ca/clp-cgi/logoff.cgi'),
       __VERSION__: JSON.stringify(packageJson.version)
     })
   ]

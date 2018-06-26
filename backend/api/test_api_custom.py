@@ -23,19 +23,23 @@
 import json
 from django.test import TestCase
 from django.test import Client
-from django.core.files.uploadedfile import SimpleUploadedFile
 import django
 
 from rest_framework import status
 
+from api.models.Role import Role
+from api.models.User import User
+from api.models.UserRole import UserRole
+
 from . import fakedata
 
 
-# Custom API test cases. 
-# If an API operation does not contains generated code then it is tested in this 
-# file.
-#
-class Test_Api_Custom(TestCase):
+class TestApiCustom(TestCase):
+    """
+    Custom API test cases.
+    If an API operation does not contains generated code then it is tested in
+    this file.
+    """
     fixtures = ['organization_types.json',
                 'organization_government.json',
                 'organization_balance_gov.json',
@@ -46,7 +50,9 @@ class Test_Api_Custom(TestCase):
                 'credit_trade_types.json',
                 'test_organization_fuel_suppliers.json',
                 'test_users.json',
-                ]
+                'roles.json',
+                'permissions.json',
+                'roles_permissions.json']
 
     def setUp(self):
         # Every test needs a client.
@@ -56,120 +62,158 @@ class Test_Api_Custom(TestCase):
             HTTP_SMGOV_USEREMAIL='BradJSmith@cuvox.de',
             HTTP_SM_UNIVERSALID='BSmith')
         # needed to setup django
+
+        # Government client for elevated privileges
+        self.gov_client = Client(
+            HTTP_SMGOV_USERGUID='c2971372-3a96-4704-9b9c-18e4e9298ee3',
+            HTTP_SMGOV_USERDISPLAYNAME='Test Person',
+            HTTP_SMGOV_USEREMAIL='Test.Person@gov.bc.ca',
+            HTTP_SM_UNIVERSALID='Teperson',
+            HTTP_SMGOV_USERTYPE='Internal',
+            HTTP_SM_AUTHDIRNAME='IDIR')
+
+        # Apply a government role to Teperson
+        gov_user = User.objects.get(username='internal_teperson')
+        gov_role = Role.objects.get(name='GovDirector')
+        UserRole.objects.create(user_id=gov_user.id, role_id=gov_role.id)
+
         django.setup()
 
     def createOrganizationStatus(self):
-        testUrl = "/api/organization_statuses"
+        """
+        Test Create Organization Status
+        """
+        test_url = "/api/organization_statuses"
         payload = fakedata.OrganizationStatusTestDataCreate()
         payload['effective_date'] = '2017-01-01'
-        jsonString = json.dumps(payload)
-        response = self.client.post(testUrl, content_type='application/json', data=jsonString)
+        json_string = json.dumps(payload)
+        response = self.client.post(test_url, content_type='application/json',
+                                    data=json_string)
         # Check that the response is OK.
         assert status.HTTP_201_CREATED == response.status_code
         # parse the response.
-        jsonString = response.content.decode("utf-8")
-        data = json.loads(jsonString)
-        createdId = data['id']
-        return createdId
+        json_string = response.content.decode("utf-8")
+        data = json.loads(json_string)
+        created_idd = data['id']
+        return created_idd
 
     def createOrganizationActionType(self):
-        testUrl = "/api/organization_actions_types"
+        """
+        Test Create Organization Action Type
+        """
+        test_url = "/api/organization_actions_types"
         payload = fakedata.OrganizationActionsTypeTestDataCreate()
-        jsonString = json.dumps(payload)
-        response = self.client.post(testUrl, content_type='application/json', data=jsonString)
+        json_string = json.dumps(payload)
+        response = self.client.post(test_url, content_type='application/json',
+                                    data=json_string)
         # Check that the response is OK.
         assert status.HTTP_201_CREATED == response.status_code
         # parse the response.
-        jsonString = response.content.decode("utf-8")
-        data = json.loads(jsonString)
-        createdId = data['id']
-        return createdId
+        json_string = response.content.decode("utf-8")
+        data = json.loads(json_string)
+        created_id = data['id']
+        return created_id
 
     def createOrganization(self):
-        statusId = self.createOrganizationStatus()
-        actionsTypeId = self.createOrganizationActionType()
+        """
+        Test Create Organization
+        """
+        status_id = self.createOrganizationStatus()
+        actions_type_id = self.createOrganizationActionType()
 
-        testUrl = "/api/organizations"
+        test_url = "/api/organizations"
         # Create:
         payload = {
-          'name': "Initial",
-          'created_date': '2000-01-01',
-        #   'primaryContact': contactId ,
-        #   'contacts': [contactId],
-          'notes': [],
-          'attachments': [],
-          'history': [],
-          'status': statusId,
-          'actions_type': actionsTypeId,
+            'name': "Initial",
+            'created_date': '2000-01-01',
+            'notes': [],
+            'attachments': [],
+            'history': [],
+            'status': status_id,
+            'actions_type': actions_type_id,
         }
-        jsonString = json.dumps(payload)
-        response = self.client.post(testUrl, content_type='application/json', data=jsonString)
+        json_string = json.dumps(payload)
+        response = self.client.post(test_url, content_type='application/json',
+                                    data=json_string)
         # Check that the response is OK.
         assert status.HTTP_201_CREATED == response.status_code
         # parse the response.
-        jsonString = response.content.decode("utf-8")
-        data = json.loads(jsonString)
-        createdId = data['id']
-        return createdId, statusId, actionsTypeId
+        json_string = response.content.decode("utf-8")
+        data = json.loads(json_string)
+        created_id = data['id']
+        return created_id, status_id, actions_type_id
 
     def createRole(self):
-        testUrl = "/api/roles"
+        """
+        Test Create Role
+        """
+        test_url = "/api/roles"
         # Create:
-        fakeRole = fakedata.RoleTestDataCreate()
+        fake_role = fakedata.RoleTestDataCreate()
         payload = {
-          'name': fakeRole['name'],
-          'description': fakeRole['description']
+            'name': fake_role['name'],
+            'description': fake_role['description']
         }
-        jsonString = json.dumps(payload)
-        response = self.client.post(testUrl, content_type='application/json', data=jsonString)
+        json_string = json.dumps(payload)
+        response = self.client.post(test_url, content_type='application/json',
+                                    data=json_string)
         # Check that the response is OK.
         assert status.HTTP_201_CREATED == response.status_code
         # parse the response.
-        jsonString = response.content.decode("utf-8")
-        data = json.loads(jsonString)
-        createdId = data['id']
-        return createdId
+        json_string = response.content.decode("utf-8")
+        data = json.loads(json_string)
+        created_id = data['id']
+        return created_id
 
     def createPermission(self):
-        testUrl = "/api/permissions"
+        """
+        Test Create Permission
+        """
+        test_url = "/api/permissions"
         # Create:
-        fakePermission = fakedata.PermissionTestDataCreate()
+        fake_permission = fakedata.PermissionTestDataCreate()
         payload = {
-          'code': fakePermission['code'],
-          'name': fakePermission['name'],
-          'description': fakePermission['description']
+            'code': fake_permission['code'],
+            'name': fake_permission['name'],
+            'description': fake_permission['description']
         }
-        jsonString = json.dumps(payload)
-        response = self.client.post(testUrl, content_type='application/json', data=jsonString)
+        json_string = json.dumps(payload)
+        response = self.client.post(test_url, content_type='application/json',
+                                    data=json_string)
         # Check that the response is OK.
         assert status.HTTP_201_CREATED == response.status_code
         # parse the response.
-        jsonString = response.content.decode("utf-8")
-        data = json.loads(jsonString)
-        createdId = data['id']
-        return createdId
+        json_string = response.content.decode("utf-8")
+        data = json.loads(json_string)
+        created_id = data['id']
+        return created_id
 
     def createUser(self, organization_id):
-        testUserUrl = "/api/users"
+        """
+        Test Create User
+        """
+        test_user_url = "/api/users"
         # Create:
-        fakeUser = fakedata.UserTestDataCreate()
+        fake_user = fakedata.UserTestDataCreate()
         payload = {
-          'firstName': fakeUser['first_name'],
-          'lastName':fakeUser['last_name'],
-          'email':fakeUser['email'],
-          'status':'Active',
-          'username': fakeUser['username'],
-          'authorizationGuid':fakeUser['authorization_guid'],
-          'authorizationDirectory':fakeUser['authorization_directory'],
-          'organization': organization_id
+            'firstName': fake_user['first_name'],
+            'lastName': fake_user['last_name'],
+            'email': fake_user['email'],
+            'status': 'Active',
+            'username': fake_user['username'],
+            'authorizationGuid': fake_user['authorization_guid'],
+            'authorizationDirectory': fake_user['authorization_directory'],
+            'organization': organization_id
         }
-        jsonString = json.dumps(payload)
-        response = self.client.post(testUserUrl, content_type='application/json', data=jsonString)
+        json_string = json.dumps(payload)
+        response = self.client.post(test_user_url,
+                                    content_type='application/json',
+                                    data=json_string)
         # Check that the response is OK.
         assert status.HTTP_201_CREATED == response.status_code
         # parse the response.
-        jsonString = response.content.decode("utf-8")
-        data = json.loads(jsonString)
+        json_string = response.content.decode("utf-8")
+        data = json.loads(json_string)
 
         user_headers = {
             'authorizationGuid': data['authorizationGuid'],
@@ -181,153 +225,192 @@ class Test_Api_Custom(TestCase):
         return user_headers
 
     def createCreditTradeType(self):
-        testUrl = "/api/credittradetypes"
+        """
+        Test Create Credit Trade Type
+        """
+        test_url = "/api/credittradetypes"
         payload = fakedata.CreditTradeTypeTestDataCreate()
         payload['expiration_date'] = '2017-01-02'
         payload['effective_date'] = '2017-01-01'
-        jsonString = json.dumps(payload)
-        response = self.client.post(testUrl, content_type='application/json', data=jsonString)
+        json_string = json.dumps(payload)
+        response = self.client.post(test_url, content_type='application/json',
+                                    data=json_string)
         # Check that the response is OK.
         assert status.HTTP_201_CREATED == response.status_code
         # parse the response.
-        jsonString = response.content.decode("utf-8")
-        data = json.loads(jsonString)
-        createdId = data['id']
-        return createdId
+        json_string = response.content.decode("utf-8")
+        data = json.loads(json_string)
+        created_id = data['id']
+        return created_id
 
     def createCreditTradeStatus(self):
-        testUrl = "/api/credittradestatuses"
+        """
+        Test Create Credit Trade Status
+        """
+        test_url = "/api/credittradestatuses"
         payload = fakedata.CreditTradeStatusTestDataCreate()
         payload['effective_date'] = '2017-01-01'
-        jsonString = json.dumps(payload)
-        response = self.client.post(testUrl, content_type='application/json', data=jsonString)
+        json_string = json.dumps(payload)
+        response = self.client.post(test_url, content_type='application/json',
+                                    data=json_string)
         # Check that the response is OK.
         assert status.HTTP_201_CREATED == response.status_code
         # parse the response.
-        jsonString = response.content.decode("utf-8")
-        data = json.loads(jsonString)
-        createdId = data['id']
-        return createdId
+        json_string = response.content.decode("utf-8")
+        data = json.loads(json_string)
+        created_id = data['id']
+        return created_id
 
     def createCreditTrade(self, organization_id, authorization_id):
-        typeId = self.createCreditTradeType()
-        statusId = self.createCreditTradeStatus()
+        """
+        Test Create Credit Trade
+        """
+        type_id = self.createCreditTradeType()
+        status_id = self.createCreditTradeStatus()
 
-        testUrl = "/api/credittrades"
+        test_url = "/api/credittrades"
         payload = {
-          'status':'Active',
-          'initiator':organization_id,
-          'respondent': organization_id,
-          'initiatorLastUpdateBy': authorization_id,
-          'respondentLastUpdatedBy': None,
-          'reviewedRejectedBy': None,
-          'approvedRejectedBy': None,
-          'cancelledBy': None,
-          'tradeExecutionDate': '2017-01-01',
-        #   TODO: replace transactionType
-          'transactionType':'Type',
-          'fairMarketValuePrice': '100.00',
-          'notes':[],
-          'attachments':[],
-          'history':[],
-          'type': typeId,
-          'status': statusId,
-          'respondent': organization_id,
+            'status': 'Active',
+            'initiator': organization_id,
+            'respondent': organization_id,
+            'initiatorLastUpdateBy': authorization_id,
+            'respondentLastUpdatedBy': None,
+            'reviewedRejectedBy': None,
+            'approvedRejectedBy': None,
+            'cancelledBy': None,
+            'tradeExecutionDate': '2017-01-01',
+            # TODO: replace transactionType
+            'transactionType': 'Type',
+            'fairMarketValuePrice': '100.00',
+            'notes': [],
+            'attachments': [],
+            'history': [],
+            'type': type_id,
+            'status': status_id,
+            'respondent': organization_id,
         }
-        fakeCreditTrade = fakedata.CreditTradeTestDataCreate()
-        payload.update(fakeCreditTrade)
-        jsonString = json.dumps(payload)
-        response = self.client.post(testUrl, content_type='application/json', data=jsonString)
+        fake_credit_trade = fakedata.CreditTradeTestDataCreate()
+        payload.update(fake_credit_trade)
+        json_string = json.dumps(payload)
+        response = self.client.post(test_url, content_type='application/json',
+                                    data=json_string)
         # Check that the response is OK.
         assert status.HTTP_201_CREATED == response.status_code
         # parse the response.
-        jsonString = response.content.decode("utf-8")
-        data = json.loads(jsonString)
-        createdId = data['id']
-        return createdId, typeId, statusId
+        json_string = response.content.decode("utf-8")
+        data = json.loads(json_string)
+        created_id = data['id']
+        return created_id, type_id, status_id
 
     def deleteRole(self, role_id):
-        deleteUrl = "/api/roles/" + str(role_id) + "/delete"
-        response = self.client.post(deleteUrl)
+        """
+        Test Delete Role
+        """
+        delete_url = "/api/roles/" + str(role_id) + "/delete"
+        response = self.client.post(delete_url)
         # Check that the response is OK.
         assert status.HTTP_204_NO_CONTENT == response.status_code
 
     def deleteUser(self, authorization_id):
-        deleteUrl = "/api/users/" + str(authorization_id) + "/delete"
-        response = self.client.post(deleteUrl)
+        """
+        Test Delete User
+        """
+        delete_url = "/api/users/" + str(authorization_id) + "/delete"
+        response = self.gov_client.post(delete_url)
         # Check that the response is OK
         assert status.HTTP_204_NO_CONTENT == response.status_code
 
     def deleteOrganization(self, organization_id):
-        deleteUrl = "/api/organizations/" + str(organization_id) + "/delete"
-        response = self.client.put(deleteUrl)
+        """
+        Test Delete Organization
+        """
+        delete_url = "/api/organizations/" + str(organization_id) + "/delete"
+        response = self.gov_client.put(delete_url)
         # Check that the response is OK.
         assert status.HTTP_204_NO_CONTENT == response.status_code
 
     def deleteCreditTrade(self, creditTradeId):
-        deleteUrl = "/api/credittrades/" + str(creditTradeId) + "/delete"
-        response = self.client.post(deleteUrl)
+        """
+        Test Credit Trade
+        """
+        delete_url = "/api/credittrades/" + str(creditTradeId) + "/delete"
+        response = self.client.post(delete_url)
         # Check that the response is OK.
         assert status.HTTP_204_NO_CONTENT == response.status_code
 
     def deletePermission(self, permission_id):
-        deleteUrl = "/api/permissions/" + str(permission_id) + "/delete"
-        response = self.client.post(deleteUrl)
+        """
+        Test Delete Permission
+        """
+        delete_url = "/api/permissions/" + str(permission_id) + "/delete"
+        response = self.client.post(delete_url)
         # Check that the response is OK.
         assert status.HTTP_204_NO_CONTENT == response.status_code
 
     def test_credittradesSearchGet(self):
-        fsId, _, _ = self.createOrganization()
-        user = self.createUser(fsId)
-        credId, credTypeId, _ = self.createCreditTrade(fsId, user.get('id'))
+        """
+        Test Search Credit Trade
+        """
+        fs_id, _, _ = self.createOrganization()
+        user = self.createUser(fs_id)
+        cred_id, *_ = self.createCreditTrade(fs_id,
+                                             user.get('id'))
 
-        testUrl = "/api/credittrades/search"
-        response = self.client.get(testUrl)
+        test_url = "/api/credittrades/search"
+        response = self.client.get(test_url)
         assert status.HTTP_200_OK == response.status_code
 
-        jsonString = response.content.decode("utf-8")
-        data = json.loads(jsonString)
+        json_string = response.content.decode("utf-8")
+        data = json.loads(json_string)
         assert len(data) == 1
 
-        self.deleteCreditTrade(credId)
+        self.deleteCreditTrade(cred_id)
         self.deleteUser(user.get('id'))
-        self.deleteOrganization(fsId)
+        self.deleteOrganization(fs_id)
 
     def test_usersCurrentGet(self):
-        organization_id, statusId, actionId = self.createOrganization()
+        """
+        Test Get Logged-in User
+        """
+        organization_id, *_ = self.createOrganization()
         user = self.createUser(organization_id)
 
-        testUrl="/api/users/current"
+        test_url = "/api/users/current"
         # List:
-        response = self.client.get(testUrl)
+        response = self.client.get(test_url)
         assert status.HTTP_200_OK == response.status_code
-        self.deleteUser (user.get('id'))
+        self.deleteUser(user.get('id'))
         self.deleteOrganization(organization_id)
 
     def test_rolesIdPermissionsGet(self):
+        """
+        Test Get Role Permissions
+        """
         # create a group.
         role_id = self.createRole()
         # create a permission.
         permission_id = self.createPermission()
 
-        rolePermissionUrl = "/api/roles/" + str(role_id) + "/permissions"
+        role_permission_url = "/api/roles/" + str(role_id) + "/permissions"
         # create a new group membership.
-        payload = {'role':role_id, 'permission':permission_id}
-        jsonString = json.dumps(payload)
-        response = self.client.post(rolePermissionUrl,content_type='application/json', data=jsonString)
+        payload = {'role': role_id, 'permission': permission_id}
+        json_string = json.dumps(payload)
+        response = self.client.post(role_permission_url,
+                                    content_type='application/json',
+                                    data=json_string)
         assert status.HTTP_200_OK == response.status_code
-        jsonString = response.content.decode("utf-8")
-        data = json.loads(jsonString)
-        rolePermissionId = data['id']
+        json_string = response.content.decode("utf-8")
 
         # test the get
-        response = self.client.get(rolePermissionUrl)
+        response = self.client.get(role_permission_url)
         assert status.HTTP_200_OK == response.status_code
 
         # test the put.  This will also delete the RolePermission.
         payload = []
-        jsonString = json.dumps(payload)
-        response = self.client.put(rolePermissionUrl,content_type='application/json', data=jsonString)
+        json_string = json.dumps(payload)
+        response = self.client.put(role_permission_url,
+                                   content_type='application/json',
+                                   data=json_string)
         assert status.HTTP_200_OK == response.status_code
 
         # cleanup
@@ -336,11 +419,14 @@ class Test_Api_Custom(TestCase):
         self.deletePermission(permission_id)
 
     def test_rolesIdUsersGet(self):
+        """
+        Test Get User Roles
+        """
         role_id = self.createRole()
-        organization_id, statusId, actionId = self.createOrganization()
+        organization_id, *_ = self.createOrganization()
         user = self.createUser(organization_id)
 
-        userRoleUrl = "/api/users/" + str(user.get('id')) + "/roles"
+        user_role_url = "/api/users/" + str(user.get('id')) + "/roles"
         # create a new UserRole.
         payload = {
             'effective_date': '2000-01-01',
@@ -348,27 +434,30 @@ class Test_Api_Custom(TestCase):
             'user': user.get('id'),
             'role': role_id
         }
-        jsonString = json.dumps(payload)
-        response = self.client.post(userRoleUrl,content_type='application/json', data=jsonString)
+        json_string = json.dumps(payload)
+        response = self.client.post(user_role_url,
+                                    content_type='application/json',
+                                    data=json_string)
         assert status.HTTP_200_OK == response.status_code
 
         # test the get
-        response = self.client.get(userRoleUrl)
+        response = self.client.get(user_role_url)
         assert status.HTTP_200_OK == response.status_code
 
-        testUrl = "/api/roles/" + str(role_id)
+        test_url = "/api/roles/" + str(role_id)
         # get the users in the group.
-        response = self.client.get(testUrl)
+        response = self.client.get(test_url)
         # Check that the response is OK.
         assert status.HTTP_200_OK == response.status_code
         # parse the response.
-        jsonString = response.content.decode("utf-8")
-        data = json.loads(jsonString)
+        json_string = response.content.decode("utf-8")
 
         # test the PUT - this will clear the user role map.
         payload = []
-        jsonString = json.dumps(payload)
-        response = self.client.put(userRoleUrl,content_type='application/json', data=jsonString)
+        json_string = json.dumps(payload)
+        response = self.client.put(user_role_url,
+                                   content_type='application/json',
+                                   data=json_string)
         assert status.HTTP_200_OK == response.status_code
 
         # cleanup
@@ -377,8 +466,11 @@ class Test_Api_Custom(TestCase):
         self.deleteOrganization(organization_id)
 
     def test_usersIdPermissionsGet(self):
+        """
+        Test Get User Permissions
+        """
         # create a user.
-        organization_id, statusId, actionId = self.createOrganization()
+        organization_id, _, _ = self.createOrganization()
         user = self.createUser(organization_id)
 
         # create a credit trade
@@ -386,12 +478,12 @@ class Test_Api_Custom(TestCase):
         # notificationEventId = self.createUser(organization_id)
 
         # assign permissions to the user.
-        #TODO add that.
+        # TODO add that.
 
-        userPermissionUrl = "/api/users/" + str(user.get('id')) + "/permissions"
+        permission_url = "/api/users/" + str(user.get('id')) + "/permissions"
 
         # test the Get
-        response = self.client.get(userPermissionUrl)
+        response = self.client.get(permission_url)
         assert status.HTTP_200_OK == response.status_code
 
         # cleanup
@@ -399,51 +491,52 @@ class Test_Api_Custom(TestCase):
         self.deleteOrganization(organization_id)
 
     def test_usersSearchGet(self):
-        organization_id, statusId, actionId = self.createOrganization()
+        """
+        Test Search Users
+        """
+        organization_id, *_ = self.createOrganization()
         user = self.createUser(organization_id)
 
         # do a search
-        testUrl = "/api/users/search"
-        response = self.client.get(testUrl)
+        test_url = "/api/users/search"
+        response = self.client.get(test_url)
         # Check that the response is OK.
         assert status.HTTP_200_OK == response.status_code
-        # parse the response.
-        jsonString = response.content.decode("utf-8")
-        data = json.loads(jsonString)
+
         # Cleanup
         self.deleteUser(user.get('id'))
         self.deleteOrganization(organization_id)
 
     def test_createCreditTradeNegativeNumberOfCredits(self):
-        fsId, _, _ = self.createOrganization()
-        user = self.createUser(fsId)
-        typeId = self.createCreditTradeType()
-        statusId = self.createCreditTradeStatus()
+        """
+        Test Create Credit Trade with Negative Number of Credits
+        """
+        fs_id, _, _ = self.createOrganization()
+        user = self.createUser(fs_id)
+        type_id = self.createCreditTradeType()
+        status_id = self.createCreditTradeStatus()
 
-        testUrl = "/api/credittrades"
+        test_url = "/api/credittrades"
         payload = {
-          'status': statusId,
-          'type': typeId,
-          'fairMarketValuePrice': '100.00',
-          'historySet':[],
-          'initiator': fsId,
-          'respondent': fsId,
-          'trade_effective_date': '2017-01-01',
+            'status': status_id,
+            'type': type_id,
+            'fairMarketValuePrice': '100.00',
+            'historySet': [],
+            'initiator': fs_id,
+            'respondent': fs_id,
+            'trade_effective_date': '2017-01-01',
         }
-        fakeCreditTrade = fakedata.CreditTradeTestDataCreate()
-        payload.update(fakeCreditTrade)
+        fake_credit_trade = fakedata.CreditTradeTestDataCreate()
+        payload.update(fake_credit_trade)
         payload['number_of_credits'] = -1
-        jsonString = json.dumps(payload)
-        response = self.client.post(testUrl, content_type='application/json', data=jsonString)
+        json_string = json.dumps(payload)
+        response = self.client.post(test_url, content_type='application/json',
+                                    data=json_string)
         # Check that the response is OK.
         assert status.HTTP_422_UNPROCESSABLE_ENTITY == response.status_code
 
         self.deleteUser(user.get('id'))
-        self.deleteOrganization(fsId)
+        self.deleteOrganization(fs_id)
 
 if __name__ == '__main__':
     unittest.main()
-
-
-
-

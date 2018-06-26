@@ -1,3 +1,4 @@
+import datetime
 from django.db.models import Q
 
 from rest_framework import viewsets, permissions, status, mixins
@@ -22,8 +23,7 @@ from api.serializers import CreditTradeHistory2Serializer \
 
 from api.services.CreditTradeService import CreditTradeService
 
-import datetime
-
+import hashlib
 
 class CreditTradeViewSet(AuditableMixin, mixins.CreateModelMixin,
                          mixins.RetrieveModelMixin, mixins.UpdateModelMixin,
@@ -34,25 +34,26 @@ class CreditTradeViewSet(AuditableMixin, mixins.CreateModelMixin,
     """
 
     permission_classes = (permissions.AllowAny,)
-    http_method_names = ['get', 'post', 'put']
+    http_method_names = ['get', 'post', 'put', 'patch']
     queryset = CreditTrade.objects.all()
     filter_backends = (filters.OrderingFilter,)
     ordering_fields = '__all__'
     ordering = ('-id',)
     serializer_class = CreditTradeSerializer
     serializer_classes = {
+        'approve': CreditTradeApproveSerializer,
         'create': CreditTradeCreateSerializer,
-        'update': CreditTradeUpdateSerializer,
         'default': CreditTradeSerializer,
         'history': CreditTradeHistorySerializer,
-        'approve': CreditTradeApproveSerializer,
+        'partial_update': CreditTradeUpdateSerializer,
+        'update': CreditTradeUpdateSerializer
     }
 
     def get_serializer_class(self):
         if self.action in list(self.serializer_classes.keys()):
             return self.serializer_classes[self.action]
-        else:
-            return self.serializer_classes['default']
+
+        return self.serializer_classes['default']
 
     def get_queryset(self):
         """
@@ -63,14 +64,44 @@ class CreditTradeViewSet(AuditableMixin, mixins.CreateModelMixin,
         return CreditTradeService.get_organization_credit_trades(
             user.organization)
 
-    def list(self, request):
+    def list(self, request, *args, **kwargs):
+        # Explicitly filter out Approved ones in list as we should only
+        # be showing Completed here
+        # Note: Don't add this in the CreditTradeService
+        # IDIR users should still Approved statuses in other areas
         credit_trades = self.get_queryset().filter(
             ~Q(status__status__in=["Approved"])
         ).order_by(*self.ordering)
 
+        # For hash computation
+        most_recent_updated_credit_trade = self.get_queryset().exclude(
+            Q(update_timestamp=None))\
+            .order_by('-update_timestamp').first()
+
+        most_recent_created_credit_trade = self.get_queryset().exclude(
+            Q(create_timestamp=None)) \
+            .order_by('-create_timestamp').first()
+
+        digest = hashlib.sha256()
+        # you could use anything here (like perhaps the PID or startup time
+        digest.update(b'salt')
+        digest.update(most_recent_updated_credit_trade.update_timestamp.isoformat()
+                      .encode('utf-8') if most_recent_updated_credit_trade is not None else b'')
+        digest.update(most_recent_created_credit_trade.create_timestamp.isoformat()
+                      .encode('utf-8') if most_recent_created_credit_trade is not None else b'')
+        etag = 'W/"{}"'.format(digest.hexdigest())
+
+        # Browser has an up-to-date copy
+        if 'HTTP_IF_NONE_MATCH' in request.META and etag == request.META['HTTP_IF_NONE_MATCH']:
+            response = Response(status=status.HTTP_304_NOT_MODIFIED)
+            response['ETag'] = etag
+            return response
+
         serializer = self.get_serializer(credit_trades, many=True)
 
-        return Response(serializer.data)
+        response = Response(serializer.data)
+        response['ETag'] = etag
+        return response
 
     def perform_create(self, serializer):
         credit_trade = serializer.save()
@@ -79,10 +110,6 @@ class CreditTradeViewSet(AuditableMixin, mixins.CreateModelMixin,
     def perform_update(self, serializer):
         credit_trade = serializer.save()
         CreditTradeService.create_history(credit_trade, False)
-
-    @list_route(methods=['post'])
-    def bulk(self):
-        pass
 
     @detail_route()
     def history(self, request, pk=None):
@@ -97,6 +124,9 @@ class CreditTradeViewSet(AuditableMixin, mixins.CreateModelMixin,
 
     @detail_route(methods=['put'])
     def delete(self, request, pk=None):
+        """
+        Marks the Credit Trade as Cancelled
+        """
         credit_trade = self.get_object()
         status_cancelled = CreditTradeStatus.objects.get(status="Cancelled")
         credit_trade.status = status_cancelled
@@ -107,6 +137,11 @@ class CreditTradeViewSet(AuditableMixin, mixins.CreateModelMixin,
     @detail_route(methods=['put'])
     @permission_required('APPROVE_CREDIT_TRANSFER')
     def approve(self, request, pk=None):
+        """
+        Marks the Credit Trade as Approved
+        Transfers the Credits
+        Then, marks the Credit Trade as Completed
+        """
         credit_trade = self.get_object()
         credit_trade.trade_effective_date = datetime.date.today()
 
@@ -121,6 +156,9 @@ class CreditTradeViewSet(AuditableMixin, mixins.CreateModelMixin,
     @list_route(methods=['get'])
     @permission_required('VIEW_APPROVED_CREDIT_TRANSFERS')
     def list_approved(self, request):
+        """
+        Returns a list of Approved Credit Trades only
+        """
         status_approved = CreditTradeStatus.objects \
                                            .get(status="Approved")
 
@@ -133,6 +171,9 @@ class CreditTradeViewSet(AuditableMixin, mixins.CreateModelMixin,
     @list_route(methods=['put'])
     @permission_required('APPROVE_CREDIT_TRANSFER')
     def batch_process(self, request):
+        """
+        Call the approve function on multiple Credit Trades
+        """
         status_approved = CreditTradeStatus.objects \
                                            .get(status="Approved")
 

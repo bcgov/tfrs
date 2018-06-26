@@ -1,7 +1,9 @@
-import React, { Component } from 'react';
+import FontAwesomeIcon from '@fortawesome/react-fontawesome';
 import PropTypes from 'prop-types';
-import { Link } from 'react-router-dom';
+import React, { Component } from 'react';
+import { DropdownButton, MenuItem } from 'react-bootstrap';
 import { connect } from 'react-redux';
+import { Link } from 'react-router-dom';
 
 import * as Routes from '../../constants/routes';
 import CREDIT_TRANSACTIONS from '../../constants/routes/CreditTransactions';
@@ -35,15 +37,26 @@ class Navbar extends Component {
             Fuel Suppliers
           </Link>
           }
-          {this.props.loggedInUser.role &&
-          !this.props.loggedInUser.role.isGovernmentRole &&
-          <a
-            href={ORGANIZATIONS.BULLETIN}
-            rel="noopener noreferrer"
-            target="_blank"
-          >
-            Fuel Suppliers
-          </a>
+          {(!this.props.loggedInUser.role ||
+          !this.props.loggedInUser.role.isGovernmentRole) &&
+          [
+            <a
+              href={ORGANIZATIONS.BULLETIN}
+              key="bulletin"
+              rel="noopener noreferrer"
+              target="_blank"
+            >
+              Fuel Suppliers
+            </a>,
+            <a
+              href={ORGANIZATIONS.CREDIT_MARKET_REPORT}
+              key="credit-market-report"
+              rel="noopener noreferrer"
+              target="_blank"
+            >
+              Credit Market Report
+            </a>
+          ]
           }
           <Link id="navbar-credit-transactions" to={CREDIT_TRANSACTIONS.LIST}>
             Credit Transactions
@@ -54,9 +67,6 @@ class Navbar extends Component {
             Administration
           </Link>
           }
-          <Link id="navbar-logout" to={Routes.LOGOUT}>
-            Log-out
-          </Link>
         </div>
       </div>
     );
@@ -80,17 +90,28 @@ class Navbar extends Component {
             </Link>
           </li>
           }
-          {this.props.loggedInUser.role &&
-          !this.props.loggedInUser.role.isGovernmentRole &&
-          <li>
-            <a
-              href={ORGANIZATIONS.BULLETIN}
-              rel="noopener noreferrer"
-              target="_blank"
-            >
-              Fuel Suppliers
-            </a>
-          </li>
+          {(!this.props.loggedInUser.role ||
+          !this.props.loggedInUser.role.isGovernmentRole) &&
+          [
+            <li key="bulletin">
+              <a
+                href={ORGANIZATIONS.BULLETIN}
+                rel="noopener noreferrer"
+                target="_blank"
+              >
+                Fuel Suppliers
+              </a>
+            </li>,
+            <li key="credit-market-report">
+              <a
+                href={ORGANIZATIONS.CREDIT_MARKET_REPORT}
+                rel="noopener noreferrer"
+                target="_blank"
+              >
+                Credit Market Report
+              </a>
+            </li>
+          ]
           }
           <li>
             <Link
@@ -111,6 +132,11 @@ class Navbar extends Component {
             </Link>
           </li>
           }
+          <li>
+            <Link id="navbar-logout" to={Routes.LOGOUT}>
+              Log Out
+            </Link>
+          </li>
         </ul>
       </div>);
 
@@ -175,7 +201,23 @@ class Navbar extends Component {
               </div>
               <div className="col-sm-4 col-md-4 col-lg-4 hidden-xs">
                 <div className="pull-right">
-                  <h5 id="display_name">{this.props.loggedInUser.displayName}</h5>
+                  <h5 id="display_name">
+                    {this.props.loggedInUser.displayName &&
+                      <DropdownButton
+                        className="display-name-button"
+                        id="display-name-button"
+                        pullRight
+                        title={this.props.loggedInUser.displayName}
+                      >
+                        <MenuItem className="dropdown-menu-caret" header>
+                          <FontAwesomeIcon icon="caret-up" size="2x" />
+                        </MenuItem>
+                        <MenuItem href={Routes.LOGOUT}>
+                          <FontAwesomeIcon icon="sign-out-alt" /> Log Out
+                        </MenuItem>
+                      </DropdownButton>
+                    }
+                  </h5>
                   <span id="user_organization">
                     {this.props.loggedInUser.organization &&
                       this.props.loggedInUser.organization.name}

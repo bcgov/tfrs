@@ -1,23 +1,25 @@
-import * as ActionTypes from '../constants/actionTypes';
+import ActionTypes from '../constants/actionTypes/Organizations';
 
 const organizationRequest = (state = {
-  isFetching: false,
   didInvalidate: false,
-  fuelSupplier: {}
+  fuelSupplier: {},
+  isFetching: false
 }, action) => {
   switch (action.type) {
     case ActionTypes.GET_ORGANIZATION:
-      return Object.assign({}, state, {
-        isFetching: true,
-        fuelSupplier: {},
-        didInvalidate: false
-      });
-    case ActionTypes.RECEIVE_ORGANIZATION:
-      return Object.assign({}, state, {
-        isFetching: false,
+      return {
+        ...state,
         didInvalidate: false,
-        fuelSupplier: action.data
-      });
+        fuelSupplier: {},
+        isFetching: true
+      };
+    case ActionTypes.RECEIVE_ORGANIZATION:
+      return {
+        ...state,
+        didInvalidate: false,
+        fuelSupplier: action.data,
+        isFetching: false
+      };
     default:
       return state;
   }
@@ -31,22 +33,25 @@ const organizations = (state = {
 }, action) => {
   switch (action.type) {
     case ActionTypes.GET_ORGANIZATIONS:
-      return Object.assign({}, state, {
+      return {
+        ...state,
         isFetching: true,
         success: false
-      });
+      };
     case ActionTypes.RECEIVE_ORGANIZATIONS:
-      return Object.assign({}, state, {
+      return {
+        ...state,
         isFetching: false,
-        success: true,
-        items: action.data
-      });
-    case ActionTypes.ERROR:
-      return Object.assign({}, state, {
+        items: action.data,
+        success: true
+      };
+    case ActionTypes.ERROR_ORGANIZATIONS:
+      return {
+        ...state,
+        errorMessage: action.errorMessage,
         isFetching: false,
-        success: false,
-        errorMessage: action.errorMessage
-      });
+        success: false
+      };
     default:
       return state;
   }
@@ -59,22 +64,25 @@ const fuelSuppliersRequest = (state = {
 }, action) => {
   switch (action.type) {
     case ActionTypes.GET_FUEL_SUPPLIERS:
-      return Object.assign({}, state, {
+      return {
+        ...state,
         isFetching: true,
         success: false
-      });
+      };
     case ActionTypes.RECEIVE_FUEL_SUPPLIERS:
-      return Object.assign({}, state, {
+      return {
+        ...state,
+        fuelSuppliers: action.data,
         isFetching: false,
-        success: true,
-        fuelSuppliers: action.data
-      });
-    case ActionTypes.ERROR:
-      return Object.assign({}, state, {
+        success: true
+      };
+    case ActionTypes.ERROR_FUEL_SUPPLIERS:
+      return {
+        ...state,
+        errorMessage: action.errorMessage,
         isFetching: false,
-        success: false,
-        errorMessage: action.errorMessage
-      });
+        success: false
+      };
     default:
       return state;
   }

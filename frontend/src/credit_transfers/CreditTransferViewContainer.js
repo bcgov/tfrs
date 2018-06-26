@@ -9,13 +9,15 @@ import { bindActionCreators } from 'redux';
 
 import CreditTransferDetails from './components/CreditTransferDetails';
 import ModalSubmitCreditTransfer from './components/ModalSubmitCreditTransfer';
+import CreditTransferUtilityFunctions from './CreditTransferUtilityFunctions';
 
 import {
   approveCreditTransfer,
   deleteCreditTransfer,
   getCreditTransferIfNeeded,
   invalidateCreditTransfer,
-  updateCreditTransfer
+  addCommentToCreditTransfer,
+  partialUpdateCreditTransfer
 } from '../actions/creditTransfersActions';
 import {
   addSigningAuthorityConfirmation,
@@ -35,7 +37,9 @@ class CreditTransferViewContainer extends Component {
     this.state = {
       fields: {
         terms: []
-      }
+      },
+      isCommenting: false,
+      hasCommented: false
     };
 
     this._addToFields = this._addToFields.bind(this);
@@ -46,7 +50,12 @@ class CreditTransferViewContainer extends Component {
     this._modalRefuse = this._modalRefuse.bind(this);
     this._modalRescind = this._modalRescind.bind(this);
     this._modalSubmit = this._modalSubmit.bind(this);
+    this._modalNotRecommend = this._modalNotRecommend.bind(this);
+    this._modalDecline = this._modalDecline.bind(this);
     this._toggleCheck = this._toggleCheck.bind(this);
+    this._addComment = this._addComment.bind(this);
+    this._cancelComment = this._cancelComment.bind(this);
+    this._saveComment = this._saveComment.bind(this);
   }
 
   componentDidMount () {
@@ -60,6 +69,7 @@ class CreditTransferViewContainer extends Component {
   }
 
   loadData (id) {
+    this.props.invalidateCreditTransfer();
     this.props.getCreditTransferIfNeeded(id);
   }
 
@@ -79,25 +89,16 @@ class CreditTransferViewContainer extends Component {
   }
 
   _changeStatus (status) {
-    const { item } = this.props;
-
-    // API data structure
+    // Update the Status only
     const data = {
-      initiator: item.initiator.id,
-      fairMarketValuePerCredit: item.fairMarketValuePerCredit,
-      note: item.note,
-      numberOfCredits: item.numberOfCredits,
-      respondent: item.respondent.id,
-      status: status.id,
-      tradeEffectiveDate: null,
-      type: item.type.id
+      status: status.id
     };
 
     // Update credit transfer (status only)
 
     const { id } = this.props.item;
 
-    this.props.updateCreditTransfer(id, data).then(() => {
+    this.props.partialUpdateCreditTransfer(id, data).then(() => {
       this.props.invalidateCreditTransfer();
       history.push(CREDIT_TRANSACTIONS.LIST);
     }, () => {
@@ -124,6 +125,40 @@ class CreditTransferViewContainer extends Component {
     });
   }
 
+  _saveComment (comment) {
+    const { item } = this.props;
+
+    // API data structure
+    const data = {
+      credit_trade: item.id,
+      comment: comment.comment,
+      privilegedAccess: comment.privilegedAccess
+    };
+
+    this.props.addCommentToCreditTransfer(data).then(() => {
+      this.props.invalidateCreditTransfer(this.props.item);
+      this.props.getCreditTransferIfNeeded(this.props.item.id);
+      this.setState({
+        hasCommented: true,
+        isCommenting: false
+      });
+    }, () => {
+      // Failed to update
+    });
+  }
+
+  _addComment () {
+    this.setState({
+      isCommenting: true
+    });
+  }
+
+  _cancelComment () {
+    this.setState({
+      isCommenting: false
+    });
+  }
+
   _modalAccept () {
     return (
       <Modal
@@ -146,7 +181,7 @@ class CreditTransferViewContainer extends Component {
         id="confirmApprove"
         key="confirmApprove"
       >
-      Are you sure you want to approve this credit transfer proposal?
+        Are you sure you want to approve this credit transfer proposal?
       </Modal>
     );
   }
@@ -159,6 +194,11 @@ class CreditTransferViewContainer extends Component {
         }}
         id="confirmDecline"
         key="confirmDecline"
+        canBypassExtraConfirm
+        extraConfirmText="You have not provided a comment explaining why you to decline to approve
+         this credit transfer proposal"
+        showExtraConfirm={!this.state.hasCommented}
+        extraConfirmType="warning"
       >
         Are you sure you want to decline to approve this credit transfer proposal?
       </Modal>
@@ -183,6 +223,11 @@ class CreditTransferViewContainer extends Component {
         handleSubmit={(event) => {
           this._changeStatus(CREDIT_TRANSFER_STATUS.notRecommended);
         }}
+        canBypassExtraConfirm={false}
+        extraConfirmText="You must provide an explanatory comment if you are not recommending
+          to approve this transfer proposal"
+        showExtraConfirm={!this.state.hasCommented}
+        extraConfirmType="error"
         id="confirmNotRecommend"
         key="confirmNotRecommend"
       >
@@ -223,7 +268,7 @@ class CreditTransferViewContainer extends Component {
     return (
       <Modal
         handleSubmit={(event) => {
-          this._changeStatus(CREDIT_TRANSFER_STATUS.rescinded);
+          this._rescind();
         }}
         id="confirmRescind"
         key="confirmRescind"
@@ -243,6 +288,22 @@ class CreditTransferViewContainer extends Component {
         key="confirmSubmit"
       />
     );
+  }
+
+  _rescind () {
+    // Change the rescinded flag only
+    const data = {
+      rescinded: true
+    };
+
+    const { id } = this.props.item;
+
+    this.props.partialUpdateCreditTransfer(id, data).then(() => {
+      this.props.invalidateCreditTransfer();
+      history.push(CREDIT_TRANSACTIONS.LIST);
+    }, () => {
+      // Failed to update
+    });
   }
 
   _toggleCheck (key) {
@@ -273,43 +334,64 @@ class CreditTransferViewContainer extends Component {
         id={item.id}
         isFetching={isFetching}
         key="creditTransferDetails"
+        loggedInUser={loggedInUser}
         note={item.note}
         numberOfCredits={item.numberOfCredits}
+        rescinded={item.rescinded}
         status={item.status}
         toggleCheck={this._toggleCheck}
         totalValue={item.totalValue}
         tradeEffectiveDate={item.tradeEffectiveDate}
         tradeType={item.type}
+        comments={item.comments}
+        canComment={CreditTransferUtilityFunctions
+          .canComment(this.props.loggedInUser, this.props.item)}
+        addComment={this._addComment}
+        cancelComment={this._cancelComment}
+        saveComment={this._saveComment}
+        isCommenting={this.state.isCommenting}
+        hasCommented={this.state.hasCommented}
+        willCreatePrivilegedComment={
+          CreditTransferUtilityFunctions.willCreatePrivilegedComment(
+            this.props.loggedInUser,
+            this.props.item
+          )
+        }
       />
     )];
 
-    if (!isFetching && item.actions) {
+    if (!isFetching && item.actions && !item.rescinded) {
       // TODO: Add util function to return appropriate actions
       availableActions = item.actions.map(action => (
         action.action
       ));
 
+      if (item.status.id === CREDIT_TRANSFER_STATUS.draft.id) {
+        buttonActions.push(Lang.BTN_SIGN_1_2);
+
+        content.push(this._modalSubmit(item));
+      }
+
       if (item.respondent.id === loggedInUser.organization.id) {
-        if (availableActions.includes(Lang.BTN_ACCEPT)) {
+        if (item.status.id === CREDIT_TRANSFER_STATUS.proposed.id) {
           buttonActions.push(Lang.BTN_SIGN_2_2);
           content.push(this._modalAccept());
         }
 
         if (availableActions.includes(Lang.BTN_CT_CANCEL)) {
-          if (item.status.id === CREDIT_TRANSFER_STATUS.proposed.id) {
-            buttonActions.push(Lang.BTN_REFUSE);
-            content.push(this._modalRefuse());
-          } else {
-            buttonActions.push(Lang.BTN_RESCIND);
-            content.push(this._modalRescind());
-          }
+          buttonActions.push(Lang.BTN_RESCIND);
+          content.push(this._modalRescind());
+        }
+
+        if (availableActions.includes(Lang.BTN_REFUSE)) {
+          buttonActions.push(Lang.BTN_REFUSE);
+          content.push(this._modalRefuse());
         }
       } else if (item.initiator.id === loggedInUser.organization.id) {
         if (availableActions.includes(Lang.BTN_CT_CANCEL)) {
           buttonActions.push(Lang.BTN_RESCIND);
+          content.push(this._modalRescind());
         }
-
-        content.push(this._modalRescind());
       }
 
       if (availableActions.includes(Lang.BTN_SAVE_DRAFT)) {
@@ -317,12 +399,6 @@ class CreditTransferViewContainer extends Component {
         buttonActions.push(Lang.BTN_EDIT_DRAFT);
 
         content.push(this._modalDelete(item));
-      }
-
-      if (availableActions.includes(Lang.BTN_PROPOSE)) {
-        buttonActions.push(Lang.BTN_SIGN_1_2);
-
-        content.push(this._modalSubmit(item));
       }
 
       if (availableActions.includes(Lang.BTN_RECOMMEND_FOR_DECISION)) {
@@ -364,25 +440,28 @@ CreditTransferViewContainer.propTypes = {
   invalidateCreditTransfer: PropTypes.func.isRequired,
   isFetching: PropTypes.bool.isRequired,
   item: PropTypes.shape({
-    id: PropTypes.number,
+    actions: PropTypes.arrayOf(PropTypes.shape({})),
     creditsFrom: PropTypes.shape({}),
     creditsTo: PropTypes.shape({}),
+    status: PropTypes.shape({}),
     fairMarketValuePerCredit: PropTypes.oneOfType([
       PropTypes.string,
       PropTypes.number
     ]),
+    id: PropTypes.number,
     numberOfCredits: PropTypes.oneOfType([
       PropTypes.string,
       PropTypes.number
     ]),
+    rescinded: PropTypes.bool,
     totalValue: PropTypes.oneOfType([
       PropTypes.string,
       PropTypes.number
-    ]),
-    actions: PropTypes.arrayOf(PropTypes.shape({}))
+    ])
   }),
   loggedInUser: PropTypes.shape({
     displayName: PropTypes.string,
+    hasPermission: PropTypes.func,
     organization: PropTypes.shape({
       name: PropTypes.string,
       id: PropTypes.number
@@ -394,7 +473,8 @@ CreditTransferViewContainer.propTypes = {
     }).isRequired
   }).isRequired,
   prepareSigningAuthorityConfirmations: PropTypes.func.isRequired,
-  updateCreditTransfer: PropTypes.func.isRequired
+  addCommentToCreditTransfer: PropTypes.func.isRequired,
+  partialUpdateCreditTransfer: PropTypes.func.isRequired
 };
 
 const mapStateToProps = state => ({
@@ -413,7 +493,8 @@ const mapDispatchToProps = dispatch => ({
   invalidateCreditTransfer: bindActionCreators(invalidateCreditTransfer, dispatch),
   prepareSigningAuthorityConfirmations: (creditTradeId, terms) =>
     prepareSigningAuthorityConfirmations(creditTradeId, terms),
-  updateCreditTransfer: bindActionCreators(updateCreditTransfer, dispatch)
+  addCommentToCreditTransfer: bindActionCreators(addCommentToCreditTransfer, dispatch),
+  partialUpdateCreditTransfer: bindActionCreators(partialUpdateCreditTransfer, dispatch)
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(CreditTransferViewContainer);

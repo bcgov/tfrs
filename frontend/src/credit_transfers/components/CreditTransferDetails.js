@@ -13,7 +13,10 @@ import CreditTransferVisualRepresentation from './CreditTransferVisualRepresenta
 import { getCreditTransferType } from '../../actions/creditTransfersActions';
 import Errors from '../../app/components/Errors';
 import Loading from '../../app/components/Loading';
-import * as Lang from '../../constants/langEnUs';
+import PERMISSIONS_CREDIT_TRANSACTIONS from '../../constants/permissions/CreditTransactions';
+import CreditTransferCommentForm from './CreditTransferCommentForm';
+import CreditTransferComment from './CreditTransferComment';
+import CreditTransferCommentButtons from './CreditTransferCommentButtons';
 
 const CreditTransferDetails = props => (
   <div className="credit-transfer">
@@ -25,7 +28,11 @@ const CreditTransferDetails = props => (
             getCreditTransferType(props.tradeType.id)
           }
         </h1>
-        <CreditTransferProgress status={props.status} type={props.tradeType} />
+        <CreditTransferProgress
+          rescinded={props.rescinded}
+          status={props.status}
+          type={props.tradeType}
+        />
         <div className="credit-transfer-details">
           <div className="main-form">
             <CreditTransferTextRepresentation
@@ -56,18 +63,33 @@ const CreditTransferDetails = props => (
             <div>Notes: {props.note}</div>
           </div>
         }
+        {props.comments.map(c => (
+          <CreditTransferComment comment={c} key={c.id} />
+        ))
+        }
+        {props.isCommenting && <CreditTransferCommentForm
+          saveComment={props.saveComment}
+          cancelComment={props.cancelComment}
+          privilegedAccess={props.willCreatePrivilegedComment}
+        />
+        }
+
         <form onSubmit={e => e.preventDefault()}>
-          {(props.buttonActions.includes(Lang.BTN_SIGN_1_2) ||
-          props.buttonActions.includes(Lang.BTN_SIGN_2_2)) &&
+          {(props.loggedInUser.hasPermission(PERMISSIONS_CREDIT_TRANSACTIONS.SIGN)) &&
           <CreditTransferTerms
             addToFields={props.addToFields}
             fields={props.fields}
             toggleCheck={props.toggleCheck}
           />
           }
-
+          <CreditTransferCommentButtons
+            canComment={props.canComment}
+            isCommenting={props.isCommenting}
+            addComment={props.addComment}
+          />
           <CreditTransferFormButtons
             actions={props.buttonActions}
+            addComment={props.addComment}
             changeStatus={props.changeStatus}
             disabled={
               {
@@ -78,6 +100,12 @@ const CreditTransferDetails = props => (
               }
             }
             id={props.id}
+            isCommenting={props.isCommenting}
+            permissions={
+              {
+                BTN_SIGN_1_2: props.loggedInUser.hasPermission(PERMISSIONS_CREDIT_TRANSACTIONS.SIGN)
+              }
+            }
           />
         </form>
       </div>
@@ -100,6 +128,7 @@ CreditTransferDetails.defaultProps = {
   id: 0,
   note: '',
   numberOfCredits: '0',
+  rescinded: false,
   status: {
     id: 0,
     status: ''
@@ -108,7 +137,8 @@ CreditTransferDetails.defaultProps = {
   tradeEffectiveDate: '',
   tradeType: {
     theType: 'sell'
-  }
+  },
+  comments: []
 };
 
 CreditTransferDetails.propTypes = {
@@ -135,6 +165,14 @@ CreditTransferDetails.propTypes = {
   fields: PropTypes.shape({
     terms: PropTypes.array
   }).isRequired,
+  loggedInUser: PropTypes.shape({
+    displayName: PropTypes.string,
+    hasPermission: PropTypes.func,
+    organization: PropTypes.shape({
+      name: PropTypes.string,
+      id: PropTypes.number
+    })
+  }).isRequired,
   id: PropTypes.number,
   isFetching: PropTypes.bool.isRequired,
   note: PropTypes.string,
@@ -142,6 +180,7 @@ CreditTransferDetails.propTypes = {
     PropTypes.string,
     PropTypes.number
   ]),
+  rescinded: PropTypes.bool,
   status: PropTypes.shape({
     id: PropTypes.number,
     status: PropTypes.string
@@ -156,7 +195,32 @@ CreditTransferDetails.propTypes = {
     id: PropTypes.number,
     name: PropTypes.string,
     theType: PropTypes.string
-  })
+  }),
+  comments: PropTypes.arrayOf(PropTypes.shape({
+    id: PropTypes.number,
+    createTimestamp: PropTypes.string,
+    updateTimestamp: PropTypes.string,
+    comment: PropTypes.string,
+    privilegedAccess: PropTypes.bool,
+    createUser: PropTypes.shape({
+      id: PropTypes.number,
+      firstName: PropTypes.string,
+      lastName: PropTypes.string,
+      displayName: PropTypes.string,
+      organization: PropTypes.shape({
+        id: PropTypes.number,
+        name: PropTypes.string,
+        type: PropTypes.number
+      })
+    })
+  })),
+  canComment: PropTypes.bool.isRequired,
+  addComment: PropTypes.func.isRequired,
+  cancelComment: PropTypes.func.isRequired,
+  saveComment: PropTypes.func.isRequired,
+  isCommenting: PropTypes.bool.isRequired,
+  hasCommented: PropTypes.bool.isRequired,
+  willCreatePrivilegedComment: PropTypes.bool.isRequired
 };
 
 export default CreditTransferDetails;
