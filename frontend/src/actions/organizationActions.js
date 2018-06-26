@@ -1,38 +1,10 @@
 import axios from 'axios';
 
-import * as ActionTypes from '../constants/actionTypes';
-import * as ReducerTypes from '../constants/reducerTypes';
+import ActionTypes from '../constants/actionTypes/Organizations';
+import ReducerTypes from '../constants/reducerTypes/Organizations';
 import * as Routes from '../constants/routes';
 
-export const getOrganizations = () => (dispatch, getState) => {
-  dispatch(getOrganizationsRequest());
-  axios.get(Routes.BASE_URL + Routes.ORGANIZATIONS_API)
-    .then((response) => {
-      dispatch(getOrganizationsSuccess(response.data));
-    }).catch((error) => {
-      dispatch(getOrganizationsError(error.response));
-    });
-};
-
-const getOrganizationsRequest = () => ({
-  name: 'GET_ORGANIZATIONS_REQUEST',
-  type: ActionTypes.GET_CREDIT_TRANSFERS
-});
-
-const getOrganizationsSuccess = organizations => ({
-  name: 'RECEIVE_ORGANIZATIONS_REQUEST',
-  type: ActionTypes.RECEIVE_ORGANIZATIONS,
-  data: organizations,
-  receivedAt: Date.now()
-});
-
-const getOrganizationsError = error => ({
-  name: 'ERROR_ORGANIZATIONS_REQUEST',
-  type: ActionTypes.ERROR,
-  errorMessage: error
-});
-
-export const getFuelSuppliers = () => (dispatch, getState) => {
+const getFuelSuppliers = () => (dispatch, getState) => {
   dispatch(getFuelSuppliersRequest());
   axios.get(Routes.BASE_URL + Routes.ORGANIZATIONS_FUEL_SUPPLIERS)
     .then((response) => {
@@ -42,474 +14,111 @@ export const getFuelSuppliers = () => (dispatch, getState) => {
     });
 };
 
+const getFuelSuppliersError = error => ({
+  errorMessage: error,
+  name: ReducerTypes.ERROR_FUEL_SUPPLIERS_REQUEST,
+  type: ActionTypes.ERROR_FUEL_SUPPLIERS
+});
+
 const getFuelSuppliersRequest = () => ({
-  name: ReducerTypes.GET_ORGANIZATIONS_FUEL_SUPPLIERS,
+  name: ReducerTypes.GET_FUEL_SUPPLIERS_REQUEST,
   type: ActionTypes.GET_FUEL_SUPPLIERS
 });
 
 const getFuelSuppliersSuccess = fuelSuppliers => ({
-  name: ReducerTypes.GET_ORGANIZATIONS_FUEL_SUPPLIERS,
-  type: ActionTypes.RECEIVE_FUEL_SUPPLIERS,
-  data: fuelSuppliers
+  data: fuelSuppliers,
+  name: ReducerTypes.RECEIVE_FUEL_SUPPLIERS_REQUEST,
+  type: ActionTypes.RECEIVE_FUEL_SUPPLIERS
 });
 
-const getFuelSuppliersError = (error) => ({
-  name: ReducerTypes.GET_ORGANIZATIONS_FUEL_SUPPLIERS,
-  type: ActionTypes.ERROR,
-  errorMessage: error
-});
-
-export const searchOrganizations = (name, city) => (dispatch) => {
-}
-
-const searchOrganizationsRequest = () => {
-  return {
-    name: ReducerTypes.GET_ORGANIZATIONS,
-    type: ActionTypes.REQUEST,
-  }
-}
-
-const searchOrganizationsSuccess = (organizations) => {
-  return {
-    name: ReducerTypes.SEARCH_ORGANIZATIONS,
-    type: ActionTypes.SUCCESS,
-    data: organizations,
-  }
-}
-
-const searchOrganizationsError = (error) => {
-  return {
-    name: ReducerTypes.GET_ORGANIZATIONS,
-    type: ActionTypes.ERROR,
-    errorMessage: error
-  }
-}
-
-export const searchOrganizationsReset = () => {
-  return {
-    name: ReducerTypes.SEARCH_ORGANIZATIONS,
-    type: ActionTypes.RESET,
-  }
-}
-
-export const addOrganization = (id) => (dispatch) => {
-  console.log(id)
-  dispatch(addOrganizationSuccess());
-}
-
-const addOrganizationSuccess = () => {
-  return {
-    name: ReducerTypes.ADD_ORGANIZATION,
-    type: ActionTypes.SUCCESS,
-  }
-}
-
-export const getOrganization = (id) => (dispatch) => {
+const getOrganization = id => (dispatch) => {
   dispatch(getOrganizationRequest());
-  axios.get(Routes.BASE_URL + Routes.ORGANIZATIONS_API + '/' + id)
-  .then((response) => {  
-    dispatch(getOrganizationSuccess(response.data));
-  }).catch((error) => {
-    dispatch(getOrganizationError(error.response))
-  })
-}
+  axios.get(`${Routes.BASE_URL}${Routes.ORGANIZATIONS_API}/${id}`)
+    .then((response) => {
+      dispatch(getOrganizationSuccess(response.data));
+    }).catch((error) => {
+      dispatch(getOrganizationError(error.response));
+    });
+};
 
-const getOrganizationRequest = () => {
-  return {
-    name: ReducerTypes.GET_ORGANIZATION,
-    type: ActionTypes.REQUEST,
-  }
-}
+const getOrganizationError = error => ({
+  errorMessage: error,
+  name: ReducerTypes.ERROR_ORGANIZATION_REQUEST,
+  type: ActionTypes.ERROR_ORGANIZATION
+});
 
-const getOrganizationSuccess = (organization) => {
-  return {
-    name: ReducerTypes.GET_ORGANIZATION,
-    type: ActionTypes.SUCCESS,
-    data: organization,
-  }
-}
+const getOrganizationRequest = () => ({
+  name: ReducerTypes.GET_ORGANIZATION_REQUEST,
+  type: ActionTypes.GET_ORGANIZATION
+});
 
-const getOrganizationError = (error) => {
-  return {
-    name: ReducerTypes.GET_ORGANIZATION,
-    type: ActionTypes.ERROR,
-    errorMessage: error
-  }
-}
+const getOrganizationSuccess = organization => ({
+  data: organization,
+  name: ReducerTypes.RECEIVE_ORGANIZATIONS_REQUEST,
+  receivedAt: Date.now(),
+  type: ActionTypes.RECEIVE_ORGANIZATION
+});
 
-export const addContact = (data) => (dispatch) => {
-  dispatch(addContactRequest());
-  axios.post(Routes.BASE_URL + Routes.ORGANIZATION_CONTACTS, {
-    organizationFK: data.organizationFK,
-    surname: data.contactSurname,
-    givenName: data.contactGivenName,
-    mobilePhoneNumber: data.contactCellPhone,
-    workPhoneNumber: data.contactWorkPhone,
-    emailAddress: data.contactEmail,
-  })
-  .then((response) => {
-    dispatch(addContactSuccess());
-    dispatch(getOrganizationContacts());
-  }).catch((error) => {
-    dispatch(addContactError(error.response));
-  })
-}
+const getOrganizations = () => (dispatch, getState) => {
+  dispatch(getOrganizationsRequest());
+  axios.get(Routes.BASE_URL + Routes.ORGANIZATIONS_API)
+    .then((response) => {
+      dispatch(getOrganizationsSuccess(response.data));
+    }).catch((error) => {
+      dispatch(getOrganizationsError(error.response));
+    });
+};
 
-const addContactRequest = () => {
-  return {
-    name: ReducerTypes.ADD_CONTACT,
-    type: ActionTypes.REQUEST,
-  }
-}
+const getOrganizationsError = error => ({
+  errorMessage: error,
+  name: ReducerTypes.ERROR_ORGANIZATIONS_REQUEST,
+  type: ActionTypes.ERROR_ORGANIZATIONS
+});
 
-const addContactSuccess = () => {
-  return {
-    name: ReducerTypes.ADD_CONTACT,
-    type: ActionTypes.SUCCESS,
-  }
-}
+const getOrganizationsRequest = () => ({
+  name: ReducerTypes.GET_ORGANIZATIONS_REQUEST,
+  type: ActionTypes.GET_ORGANIZATIONS
+});
 
-const addContactError = (error) => {
-  return {
-    name: ReducerTypes.ADD_CONTACT,
-    type: ActionTypes.ERROR,
-    errorMessage: error
-  }
-}
+const getOrganizationsSuccess = organizations => ({
+  data: organizations,
+  name: ReducerTypes.RECEIVE_ORGANIZATIONS_REQUEST,
+  receivedAt: Date.now(),
+  type: ActionTypes.RECEIVE_ORGANIZATIONS
+});
 
-export const addContactReset = () => {
-  return {
-    name: ReducerTypes.ADD_CONTACT,
-    type: ActionTypes.RESET,
-  }
-}
+const searchOrganizations = (name, city) => (dispatch) => {
+  dispatch(searchOrganizationsRequest());
+  axios.get(Routes.BASE_URL + Routes.SEARCH_ORGANIZATIONS)
+    .then((response) => {
+      dispatch(searchOrganizationsSuccess(response.data));
+    }).catch((error) => {
+      dispatch(searchOrganizationsError(error.response));
+    });
+};
 
-export const deleteContact = (id) => (dispatch) => {
-  dispatch(deleteContactRequest());
-  axios.post(Routes.BASE_URL + Routes.ORGANIZATION_CONTACTS + '/' + id + Routes.DELETE)
-  .then((response) => {
-    dispatch(deleteContactSuccess());
-    dispatch(getOrganizationContacts());
-  }).catch((error) => {
-    dispatch(deleteContactError(error.response));
-  })
-}
+const searchOrganizationsError = error => ({
+  errorMessage: error,
+  name: ReducerTypes.SEARCH_ORGANIZATIONS_REQUEST,
+  type: ActionTypes.ERROR_ORGANIZATIONS
+});
 
-const deleteContactRequest = () => {
-  return {
-    name: ReducerTypes.DELETE_CONTACT,
-    type: ActionTypes.REQUEST,
-  }
-}
+const searchOrganizationsRequest = () => ({
+  name: ReducerTypes.GET_ORGANIZATIONS_REQUEST,
+  type: ActionTypes.GET_ORGANIZATIONS
+});
 
-const deleteContactSuccess = () => {
-  return {
-    name: ReducerTypes.DELETE_CONTACT,
-    type: ActionTypes.SUCCESS,
-  }
-}
+const searchOrganizationsReset = () => ({
+  name: ReducerTypes.SEARCH_ORGANIZATIONS_REQUEST,
+  type: ActionTypes.RESET_ORGANIZATIONS_SEARCH
+});
 
-const deleteContactError = (error) => {
-  return {
-    name: ReducerTypes.DELETE_CONTACT,
-    type: ActionTypes.ERROR,
-    errorMessage: error
-  }
-}
+const searchOrganizationsSuccess = organizations => ({
+  data: organizations,
+  name: ReducerTypes.SEARCH_ORGANIZATIONS_REQUEST,
+  type: ActionTypes.RECEIVE_ORGANIZATIONS
+});
 
-export const deleteContactReset = () => {
-  return {
-    name: ReducerTypes.DELETE_CONTACT,
-    type: ActionTypes.RESET,
-  }
-}
-
-export const verifyID = (id) => (dispatch) => {
-  dispatch(verifyIDReset());
-}
-
-const verifyIDSuccess = () => {
-  return {
-    name: ReducerTypes.VERIFY_ID,
-    type: ActionTypes.SUCCESS,
-  }
-}
-
-const verifyIDError = (error) => {
-  return {
-    name: ReducerTypes.VERIFY_ID,
-    type: ActionTypes.ERROR,
-    errorMessage: error,
-  }
-}
-
-export const verifyIDReset = () => {
-  return {
-    name: ReducerTypes.VERIFY_ID,
-    type: ActionTypes.RESET,
-  }
-}
-
-export const getOrganizationActionTypes = () => (dispatch, getState) => {
-  dispatch(getOrganizationActionTypesRequest());
-  axios.get(Routes.BASE_URL + Routes.ORGANIZATION_ACTION_TYPES)
-  .then((response) => {
-    dispatch(getOrganizationActionTypesSuccess(response.data));
-  }).catch((error) => {
-    dispatch(getOrganizationActionTypesError(error.response))
-  })
-}
-
-const getOrganizationActionTypesRequest = () => {
-  return {
-    name: ReducerTypes.ORGANIZATION_ACTION_TYPES,
-    type: ActionTypes.REQUEST,
-  }
-}
-
-const getOrganizationActionTypesSuccess = (organizations) => {
-  return {
-    name: ReducerTypes.ORGANIZATION_ACTION_TYPES,
-    type: ActionTypes.SUCCESS,
-    data: organizations,
-  }
-}
-
-const getOrganizationActionTypesError = (error) => {
-  return {
-    name: ReducerTypes.ORGANIZATION_ACTION_TYPES,
-    type: ActionTypes.ERROR,
-    errorMessage: error
-  }
-}
-
-export const getOrganizationActionType = (id) => (dispatch) => {
-  dispatch(getOrganizationActionTypeRequest());
-  axios.get(Routes.BASE_URL + Routes.ORGANIZATION_ACTION_TYPES + id)
-  .then((response) => {
-    dispatch(getOrganizationActionTypeSuccess(response.data));
-  }).catch((error) => {
-    dispatch(getOrganizationActionTypeError(error.response))
-  })
-}
-
-const getOrganizationActionTypeRequest = () => {
-  return {
-    name: ReducerTypes.ORGANIZATION_ACTION_TYPE,
-    type: ActionTypes.REQUEST,
-  }
-}
-
-const getOrganizationActionTypeSuccess = (organizations) => {
-  return {
-    name: ReducerTypes.ORGANIZATION_ACTION_TYPE,
-    type: ActionTypes.SUCCESS,
-    data: organizations,
-  }
-}
-
-const getOrganizationActionTypeError = (error) => {
-  return {
-    name: ReducerTypes.ORGANIZATION_ACTION_TYPE,
-    type: ActionTypes.ERROR,
-    errorMessage: error
-  }
-}
-
-export const getOrganizationStatuses = () => (dispatch) => {
-  dispatch(getOrganizationStatusesRequest());
-  axios.get(Routes.BASE_URL + Routes.ORGANIZATION_STATUSES)
-  .then((response) => {
-    dispatch(getOrganizationStatusesSuccess(response.data));
-  }).catch((error) => {
-    dispatch(getOrganizationStatusesError(error.response))
-  })
-}
-
-const getOrganizationStatusesRequest = () => {
-  return {
-    name: ReducerTypes.ORGANIZATION_STATUSES,
-    type: ActionTypes.REQUEST,
-  }
-}
-
-const getOrganizationStatusesSuccess = (organizations) => {
-  return {
-    name: ReducerTypes.ORGANIZATION_STATUSES,
-    type: ActionTypes.SUCCESS,
-    data: organizations,
-  }
-}
-
-const getOrganizationStatusesError = (error) => {
-  return {
-    name: ReducerTypes.ORGANIZATION_STATUSES,
-    type: ActionTypes.ERROR,
-    errorMessage: error
-  }
-}
-
-export const getOrganizationStatus = (id) => (dispatch) => {
-  dispatch(getOrganizationStatusRequest());
-  axios.get(Routes.BASE_URL + Routes.ORGANIZATION_STATUSES + '/' + id)
-  .then((response) => {
-    dispatch(getOrganizationStatusSuccess(response.data));
-  }).catch((error) => {
-    dispatch(getOrganizationStatusError(error.response))
-  })
-}
-
-const getOrganizationStatusRequest = () => {
-  return {
-    name: ReducerTypes.ORGANIZATION_STATUS,
-    type: ActionTypes.REQUEST,
-  }
-}
-
-const getOrganizationStatusSuccess = (organizations) => {
-  return {
-    name: ReducerTypes.ORGANIZATION_STATUS,
-    type: ActionTypes.SUCCESS,
-    data: organizations,
-  }
-}
-
-const getOrganizationStatusError = (error) => {
-  return {
-    name: ReducerTypes.ORGANIZATION_STATUS,
-    type: ActionTypes.ERROR,
-    errorMessage: error
-  }
-}
-
-export const getOrganizationTypes = () => (dispatch) => {
-  dispatch(getOrganizationTypesRequest());
-  axios.get(Routes.BASE_URL + Routes.ORGANIZATION_TYPES)
-  .then((response) => {
-    dispatch(getOrganizationTypesSuccess(response.data));
-  }).catch((error) => {
-    dispatch(getOrganizationTypesError(error.response))
-  })
-}
-
-const getOrganizationTypesRequest = () => {
-  return {
-    name: ReducerTypes.ORGANIZATION_TYPES,
-    type: ActionTypes.REQUEST,
-  }
-}
-
-const getOrganizationTypesSuccess = (organizations) => {
-  return {
-    name: ReducerTypes.ORGANIZATION_TYPES,
-    type: ActionTypes.SUCCESS,
-    data: organizations,
-  }
-}
-
-const getOrganizationTypesError = (error) => {
-  return {
-    name: ReducerTypes.ORGANIZATION_TYPES,
-    type: ActionTypes.ERROR,
-    errorMessage: error
-  }
-}
-
-export const getOrganizationType = (id) => (dispatch) => {
-  dispatch(getOrganizationTypeRequest());
-  axios.get(Routes.BASE_URL + Routes.ORGANIZATION_TYPES + '/' + id)
-  .then((response) => {
-    dispatch(getOrganizationTypeSuccess(response.data));
-  }).catch((error) => {
-    dispatch(getOrganizationTypeError(error.response))
-  })
-}
-
-const getOrganizationTypeRequest = () => {
-  return {
-    name: ReducerTypes.ORGANIZATION_TYPE,
-    type: ActionTypes.REQUEST,
-  }
-}
-
-const getOrganizationTypeSuccess = (organizations) => {
-  return {
-    name: ReducerTypes.ORGANIZATION_TYPE,
-    type: ActionTypes.SUCCESS,
-    data: organizations,
-  }
-}
-
-const getOrganizationTypeError = (error) => {
-  return {
-    name: ReducerTypes.ORGANIZATION_TYPE,
-    type: ActionTypes.ERROR,
-    errorMessage: error
-  }
-}
-
-export const getOrganizationContacts = () => (dispatch) => {
-  dispatch(getOrganizationContactsRequest());
-  axios.get(Routes.BASE_URL + Routes.ORGANIZATION_CONTACTS)
-  .then((response) => {
-    dispatch(getOrganizationContactsSuccess(response.data));
-  }).catch((error) => {
-    dispatch(getOrganizationContactsError(error.response))
-  })
-}
-
-const getOrganizationContactsRequest = () => {
-  return {
-    name: ReducerTypes.ORGANIZATION_CONTACTS,
-    type: ActionTypes.REQUEST,
-  }
-}
-
-const getOrganizationContactsSuccess = (contacts) => {
-  return {
-    name: ReducerTypes.ORGANIZATION_CONTACTS,
-    type: ActionTypes.SUCCESS,
-    data: contacts,
-  }
-}
-
-const getOrganizationContactsError = (error) => {
-  return {
-    name: ReducerTypes.ORGANIZATION_CONTACTS,
-    type: ActionTypes.ERROR,
-    errorMessage: error
-  }
-}
-
-export const getOrganizationAttachments = () => (dispatch) => {
-  dispatch(getOrganizationAttachmentsRequest());
-  axios.get(Routes.BASE_URL + Routes.ORGANIZATION_ATTACHMENTS)
-  .then((response) => {
-    dispatch(getOrganizationAttachmentsSuccess(response.data));
-  }).catch((error) => {
-    dispatch(getOrganizationAttachmentsError(error.response))
-  })
-}
-
-const getOrganizationAttachmentsRequest = () => {
-  return {
-    name: ReducerTypes.ORGANIZATION_ATTACHMENTS,
-    type: ActionTypes.REQUEST,
-  }
-}
-
-const getOrganizationAttachmentsSuccess = (attachments) => {
-  return {
-    name: ReducerTypes.ORGANIZATION_ATTACHMENTS,
-    type: ActionTypes.SUCCESS,
-    data: attachments,
-  }
-}
-
-const getOrganizationAttachmentsError = (error) => {
-  return {
-    name: ReducerTypes.ORGANIZATION_ATTACHMENTS,
-    type: ActionTypes.ERROR,
-    errorMessage: error
-  }
-}
+export {
+  getFuelSuppliers, getOrganization, getOrganizations, searchOrganizations, searchOrganizationsReset
+};

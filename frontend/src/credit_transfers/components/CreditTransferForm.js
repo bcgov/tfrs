@@ -7,7 +7,7 @@ import PropTypes from 'prop-types';
 import { CREDIT_TRANSFER_STATUS } from '../../constants/values';
 
 import Errors from '../../app/components/Errors';
-import * as Lang from '../../constants/langEnUs';
+import PERMISSIONS_CREDIT_TRANSACTIONS from '../../constants/permissions/CreditTransactions';
 import CreditTransferProgress from './CreditTransferProgress';
 import CreditTransferFormDetails from './CreditTransferFormDetails';
 import CreditTransferVisualRepresentation from './CreditTransferVisualRepresentation';
@@ -48,8 +48,7 @@ const CreditTransferForm = props => (
         handleInputChange={props.handleInputChange}
       />
 
-      {(props.buttonActions.includes(Lang.BTN_SIGN_1_2) ||
-        props.buttonActions.includes(Lang.BTN_SIGN_2_2)) &&
+      {(props.loggedInUser.hasPermission(PERMISSIONS_CREDIT_TRANSACTIONS.SIGN)) &&
         <CreditTransferTerms
           addToFields={props.addToFields}
           fields={props.fields}
@@ -64,6 +63,11 @@ const CreditTransferForm = props => (
           {
             BTN_SIGN_1_2: props.fields.terms.findIndex(term => term.value === false) >= 0 ||
             props.fields.terms.length === 0
+          }
+        }
+        permissions={
+          {
+            BTN_SIGN_1_2: props.loggedInUser.hasPermission(PERMISSIONS_CREDIT_TRANSACTIONS.SIGN)
           }
         }
         id={props.id}

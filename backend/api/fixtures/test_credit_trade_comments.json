@@ -1,0 +1,174 @@
+[
+  {
+    "fields": {
+      "authorization_guid": "6c239bc5-5f08-4ddd-855a-b3bf39096937",
+      "email": "test_fs@test.com",
+      "username": "fs1",
+      "authorization_id": "fs1",
+      "display_name": "Test FS",
+      "first_name": "Test",
+      "last_name": "FS",
+      "organization_id": 2
+    },
+    "model": "api.user",
+    "pk": 400
+  },
+  {
+    "fields": {
+      "role": "4",
+      "user": "400"
+    },
+    "model": "api.userrole",
+    "pk": null
+  },
+  {
+    "fields": {
+      "authorization_guid": "935bebdb-de2a-4839-a4da-d87635cffbb3",
+      "email": "gov_privileged@test.com",
+      "username": "gov_priv",
+      "authorization_id": "gov_priv",
+      "display_name": "Gov",
+      "first_name": "Gov",
+      "last_name": "Gov",
+      "organization_id": 1
+    },
+    "model": "api.user",
+    "pk": 401
+  },
+  {
+    "fields": {
+      "role": "2",
+      "user": "401"
+    },
+    "model": "api.userrole",
+    "pk": null
+  },
+  {
+    "fields": {
+      "role": "3",
+      "user": "401"
+    },
+    "model": "api.userrole",
+    "pk": null
+  },
+  {
+    "fields": {
+      "authorization_guid": "10385306-8e74-4ad5-8cc1-003bc50fbefd",
+      "email": "gov_unprivileged@test.com",
+      "username": "gov_unpriv",
+      "authorization_id": "gov_unpriv",
+      "display_name": "Gov",
+      "first_name": "Gov",
+      "last_name": "Gov",
+      "organization_id": 1
+    },
+    "model": "api.user",
+    "pk": 402
+  },
+  {
+    "fields": {
+      "authorization_guid": "1dfbe008-d321-4a1f-912d-ecca36730895",
+      "email": "test_fs2@test.com",
+      "username": "fs2",
+      "authorization_id": "fs2",
+      "display_name": "Test FS",
+      "first_name": "Test",
+      "last_name": "FS",
+      "organization_id": 4
+    },
+    "model": "api.user",
+    "pk": 403
+  },
+  {
+    "fields": {
+      "role": "4",
+      "user": "403"
+    },
+    "model": "api.userrole",
+    "pk": null
+  },
+  {
+    "model": "api.credittrade",
+    "pk": 200,
+    "fields": {
+      "create_timestamp": null,
+      "create_user": null,
+      "update_timestamp": null,
+      "update_user": null,
+      "status": 3,
+      "initiator": 2,
+      "respondent": 3,
+      "type": 2,
+      "number_of_credits": 1000,
+      "fair_market_value_per_credit": "20.00",
+      "zero_reason": null,
+      "trade_effective_date": "2017-08-07",
+      "note": null
+    }
+  },
+  {
+    "model": "api.credittradecomment",
+    "pk": 1,
+    "fields": {
+      "create_timestamp": null,
+      "create_user": 400,
+      "update_timestamp": null,
+      "update_user": null,
+      "credit_trade": 200,
+      "privileged_access": false,
+      "comment": "Test Comment 1"
+    }
+  },
+  {
+    "model": "api.credittradecomment",
+    "pk": 2,
+    "fields": {
+      "create_timestamp": null,
+      "create_user": 400,
+      "update_timestamp": null,
+      "update_user": null,
+      "credit_trade": 200,
+      "privileged_access": true,
+      "comment": "Test Comment (privileged)"
+    }
+  },
+  {
+    "model": "api.credittradecomment",
+    "pk": 3,
+    "fields": {
+      "create_timestamp": null,
+      "create_user": 401,
+      "update_timestamp": null,
+      "update_user": null,
+      "credit_trade": 200,
+      "privileged_access": false,
+      "comment": "Test Comment 4 (belongs to user 401)"
+    }
+  },
+  {
+    "model": "api.credittradecomment",
+    "pk": 4,
+    "fields": {
+      "create_timestamp": null,
+      "create_user": 401,
+      "update_timestamp": null,
+      "update_user": null,
+      "credit_trade": 200,
+      "privileged_access": true,
+      "comment": "Test Comment 4 (privileged, belongs to user 401)"
+    }
+  },
+  {
+    "model": "api.credittradecomment",
+    "pk": 5,
+    "fields": {
+      "create_timestamp": null,
+      "create_user": 403,
+      "update_timestamp": null,
+      "update_user": null,
+      "credit_trade": 200,
+      "privileged_access": false,
+      "comment": "Test Comment 1 (belongs to user 403)"
+    }
+  }
+]

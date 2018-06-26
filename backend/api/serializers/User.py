@@ -23,7 +23,7 @@
 from rest_framework import serializers
 
 from api.models.User import User
-from .Organization import OrganizationSerializer
+from .Organization import OrganizationSerializer,OrganizationMinSerializer
 from .Role import RoleSerializer
 
 
@@ -37,3 +37,11 @@ class UserSerializer(serializers.ModelSerializer):
             'id', 'first_name', 'last_name', 'email', 'authorization_id',
             'authorization_guid', 'authorization_directory', 'display_name',
             'organization', 'organization_balance', 'role')
+
+class UserMinSerializer(serializers.ModelSerializer):
+    organization = OrganizationMinSerializer(read_only=True)
+
+    class Meta:
+        model = User
+        fields = (
+            'id', 'first_name', 'last_name', 'display_name', 'organization')

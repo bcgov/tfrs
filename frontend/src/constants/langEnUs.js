@@ -21,3 +21,19 @@ export const BTN_SAVE_DRAFT = 'Save Draft';
 export const BTN_SIGN_1_2 = 'Sign 1/2';
 export const BTN_SIGN_2_2 = 'Sign 2/2';
 export const BTN_YES = 'Yes';
+
+export const BTN_COMMENT = 'Comment';
+export const BTN_CANCEL_COMMENT = 'Cancel';
+export const BTN_SAVE_COMMENT = 'Save Comment';
+export const TEXT_COMMENT_PLACEHOLDER = 'Use this field to communicate relevant details';
+export const TEXT_COMMENT_PLACEHOLDER_PRIVILEGED = 'Use this field to provide background for ' +
+                                                   'recommendations or decisions';
+export const TEXT_COMMENT_DISCLOSURE = 'Information entered in this comment field will be ' +
+                                       'visible to both parties of the transaction and ' +
+                                       'government analysts.';
+export const TEXT_COMMENT_DISCLOSURE_PRIVILEGED = 'Information entered in this comment field ' +
+                                                  'will be visible only to government users and ' +
+                                                  'not shared with fuel suppliers';
+export const TEXT_ADD_COMMENT_HEADING = 'Adding Comment';
+export const TEXT_VISIBLE_TO_GOV = 'Visible to government analysts';
+export const TEXT_VISIBLE_TO_ALL = 'Visible to both parties and government analysts';

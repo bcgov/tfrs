@@ -1,0 +1,18 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`TooltipWhenDisabled should display properly 1`] = `
+<div
+  className="overlay-trigger"
+  onBlur={[Function]}
+  onClick={null}
+  onFocus={[Function]}
+  onMouseOut={[Function]}
+  onMouseOver={[Function]}
+>
+  <button
+    type="button"
+  >
+    Test Button
+  </button>
+</div>
+`;
