@@ -12,12 +12,12 @@ import ModalSubmitCreditTransfer from './components/ModalSubmitCreditTransfer';
 import CreditTransferUtilityFunctions from './CreditTransferUtilityFunctions';
 
 import {
+  addCommentToCreditTransfer,
   approveCreditTransfer,
   deleteCreditTransfer,
   getCreditTransferIfNeeded,
   invalidateCreditTransfer,
-  addCommentToCreditTransfer,
-  partialUpdateCreditTransfer
+  updateCreditTransfer
 } from '../actions/creditTransfersActions';
 import {
   addSigningAuthorityConfirmation,
@@ -89,16 +89,26 @@ class CreditTransferViewContainer extends Component {
   }
 
   _changeStatus (status) {
+    const { item } = this.props;
+
     // Update the Status only
     const data = {
-      status: status.id
+      initiator: item.initiator.id,
+      fairMarketValuePerCredit: item.fairMarketValuePerCredit,
+      isRescinded: item.isRescinded,
+      note: item.note,
+      numberOfCredits: item.numberOfCredits,
+      respondent: item.respondent.id,
+      status: status.id,
+      tradeEffectiveDate: null,
+      type: item.type.id
     };
 
     // Update credit transfer (status only)
 
     const { id } = this.props.item;
 
-    this.props.partialUpdateCreditTransfer(id, data).then(() => {
+    this.props.updateCreditTransfer(id, data).then(() => {
       this.props.invalidateCreditTransfer();
       history.push(CREDIT_TRANSACTIONS.LIST);
     }, () => {
@@ -292,13 +302,24 @@ class CreditTransferViewContainer extends Component {
 
   _rescind () {
     // Change the rescinded flag only
+    const { item } = this.props;
+
+    // Update the Status only
     const data = {
-      isRescinded: true
+      initiator: item.initiator.id,
+      fairMarketValuePerCredit: item.fairMarketValuePerCredit,
+      isRescinded: true,
+      note: item.note,
+      numberOfCredits: item.numberOfCredits,
+      respondent: item.respondent.id,
+      status: item.status.id,
+      tradeEffectiveDate: null,
+      type: item.type.id
     };
 
     const { id } = this.props.item;
 
-    this.props.partialUpdateCreditTransfer(id, data).then(() => {
+    this.props.updateCreditTransfer(id, data).then(() => {
       this.props.invalidateCreditTransfer();
       history.push(CREDIT_TRANSACTIONS.LIST);
     }, () => {
@@ -476,7 +497,7 @@ CreditTransferViewContainer.propTypes = {
   }).isRequired,
   prepareSigningAuthorityConfirmations: PropTypes.func.isRequired,
   addCommentToCreditTransfer: PropTypes.func.isRequired,
-  partialUpdateCreditTransfer: PropTypes.func.isRequired
+  updateCreditTransfer: PropTypes.func.isRequired
 };
 
 const mapStateToProps = state => ({
@@ -496,7 +517,7 @@ const mapDispatchToProps = dispatch => ({
   prepareSigningAuthorityConfirmations: (creditTradeId, terms) =>
     prepareSigningAuthorityConfirmations(creditTradeId, terms),
   addCommentToCreditTransfer: bindActionCreators(addCommentToCreditTransfer, dispatch),
-  partialUpdateCreditTransfer: bindActionCreators(partialUpdateCreditTransfer, dispatch)
+  updateCreditTransfer: bindActionCreators(updateCreditTransfer, dispatch)
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(CreditTransferViewContainer);

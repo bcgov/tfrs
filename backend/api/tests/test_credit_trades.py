@@ -648,10 +648,19 @@ class TestCreditTrades(BaseTestCase):
         )
 
         payload = {
-            'status': self.statuses['submitted'].id
+            'initiator': credit_trade.initiator_id,
+            'is_rescinded': credit_trade.is_rescinded,
+            'fair_market_value_per_credit':
+            credit_trade.fair_market_value_per_credit,
+            'note': credit_trade.note,
+            'number_of_credits': credit_trade.number_of_credits,
+            'respondent': credit_trade.respondent_id,
+            'status': self.statuses['submitted'].id,
+            'trade_effective_date': credit_trade.trade_effective_date,
+            'type': credit_trade.type_id
         }
 
-        response = self.clients['fuel_supplier_1'].patch(
+        response = self.clients['fuel_supplier_1'].put(
             '/api/credit_trades/{}'.format(
                 credit_trade.id
             ),
@@ -691,10 +700,19 @@ class TestCreditTrades(BaseTestCase):
         credit_trade = json.loads(response.content)
 
         payload = {
-            'status': self.statuses['accepted'].id
+            'initiator': credit_trade['initiator'],
+            'is_rescinded': credit_trade['isRescinded'],
+            'fair_market_value_per_credit':
+            credit_trade['fairMarketValuePerCredit'],
+            'note': credit_trade['note'],
+            'number_of_credits': credit_trade['numberOfCredits'],
+            'respondent': credit_trade['respondent'],
+            'status': self.statuses['accepted'].id,
+            'trade_effective_date': credit_trade['tradeEffectiveDate'],
+            'type': credit_trade['type']
         }
 
-        response = self.clients['fuel_supplier_2'].patch(
+        response = self.clients['fuel_supplier_2'].put(
             '/api/credit_trades/{}'.format(
                 credit_trade['id']
             ),
