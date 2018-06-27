@@ -1,6 +1,70 @@
 [
   {
     "fields": {
+      "description": "A more prod-like (less elevated) government director role",
+      "is_government_role": true,
+      "name": "ProdlikeDirector"
+    },
+    "model": "api.role"
+  },
+  {
+    "fields": {
+      "permission": ["LOGIN"],
+      "role": ["ProdlikeDirector"]
+    },
+    "model": "api.rolepermission",
+    "pk": null
+  },
+  {
+    "fields": {
+      "permission": ["APPROVE_CREDIT_TRANSFER"],
+      "role": ["ProdlikeDirector"]
+    },
+    "model": "api.rolepermission",
+    "pk": null
+  },
+  {
+    "fields": {
+      "permission": ["DECLINE_CREDIT_TRANSFER"],
+      "role": ["ProdlikeDirector"]
+    },
+    "model": "api.rolepermission",
+    "pk": null
+  },
+  {
+    "fields": {
+      "permission": ["VIEW_CREDIT_TRANSFERS"],
+      "role": ["ProdlikeDirector"]
+    },
+    "model": "api.rolepermission",
+    "pk": null
+  },
+  {
+    "fields": {
+      "permission": ["VIEW_APPROVED_CREDIT_TRANSFERS"],
+      "role": ["ProdlikeDirector"]
+    },
+    "model": "api.rolepermission",
+    "pk": null
+  },
+  {
+    "fields": {
+      "permission": ["VIEW_PRIVILEGED_COMMENTS"],
+      "role": ["ProdlikeDirector"]
+    },
+    "model": "api.rolepermission",
+    "pk": null
+  },
+  {
+    "fields": {
+      "permission": ["EDIT_PRIVILEGED_COMMENTS"],
+      "role": ["ProdlikeDirector"]
+    },
+    "model": "api.rolepermission",
+    "pk": null
+  },
+  {
+    "fields": {
       "authorization_guid": "6c239bc5-5f08-4ddd-855a-b3bf39096937",
       "email": "fs_air_liquide@test.com",
       "username": "fs_air_liquide",
@@ -59,7 +123,7 @@
   },
   {
     "fields": {
-      "role": ["GovDirector"],
+      "role": ["ProdlikeDirector"],
       "user": ["gov_director"]
     },
     "model": "api.userrole",
