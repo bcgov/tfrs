@@ -38,7 +38,7 @@ class CreditTradeHistorySerializer(serializers.ModelSerializer):
                   'number_of_credits', 'fair_market_value_per_credit',
                   'zero_reason', 'trade_effective_date',
                   'note', 'is_internal_history_record', 'compliance_period',
-                  'rescinded')
+                  'is_rescinded')
 
 
 class CreditTradeHistory2Serializer(serializers.ModelSerializer):

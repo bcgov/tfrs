@@ -1,4 +1,5 @@
 import datetime
+import hashlib
 from django.db.models import Q
 
 from rest_framework import viewsets, permissions, status, mixins
@@ -23,7 +24,6 @@ from api.serializers import CreditTradeHistory2Serializer \
 
 from api.services.CreditTradeService import CreditTradeService
 
-import hashlib
 
 class CreditTradeViewSet(AuditableMixin, mixins.CreateModelMixin,
                          mixins.RetrieveModelMixin, mixins.UpdateModelMixin,

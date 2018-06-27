@@ -13,6 +13,7 @@ import CreditTransferVisualRepresentation from './CreditTransferVisualRepresenta
 import { getCreditTransferType } from '../../actions/creditTransfersActions';
 import Errors from '../../app/components/Errors';
 import Loading from '../../app/components/Loading';
+import * as Lang from '../../constants/langEnUs';
 import PERMISSIONS_CREDIT_TRANSACTIONS from '../../constants/permissions/CreditTransactions';
 import CreditTransferCommentForm from './CreditTransferCommentForm';
 import CreditTransferComment from './CreditTransferComment';
@@ -29,7 +30,7 @@ const CreditTransferDetails = props => (
           }
         </h1>
         <CreditTransferProgress
-          rescinded={props.rescinded}
+          isRescinded={props.isRescinded}
           status={props.status}
           type={props.tradeType}
         />
@@ -73,9 +74,10 @@ const CreditTransferDetails = props => (
           privilegedAccess={props.willCreatePrivilegedComment}
         />
         }
-
         <form onSubmit={e => e.preventDefault()}>
-          {(props.loggedInUser.hasPermission(PERMISSIONS_CREDIT_TRANSACTIONS.SIGN)) &&
+          {(props.buttonActions.includes(Lang.BTN_SIGN_1_2) ||
+            props.buttonActions.includes(Lang.BTN_SIGN_2_2)) &&
+          (props.loggedInUser.hasPermission(PERMISSIONS_CREDIT_TRANSACTIONS.SIGN)) &&
           <CreditTransferTerms
             addToFields={props.addToFields}
             fields={props.fields}
@@ -126,6 +128,7 @@ CreditTransferDetails.defaultProps = {
   errors: {},
   fairMarketValuePerCredit: '0',
   id: 0,
+  isRescinded: false,
   note: '',
   numberOfCredits: '0',
   rescinded: false,
@@ -175,6 +178,7 @@ CreditTransferDetails.propTypes = {
   }).isRequired,
   id: PropTypes.number,
   isFetching: PropTypes.bool.isRequired,
+  isRescinded: PropTypes.bool,
   note: PropTypes.string,
   numberOfCredits: PropTypes.oneOfType([
     PropTypes.string,
