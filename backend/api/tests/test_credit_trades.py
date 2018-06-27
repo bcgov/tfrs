@@ -699,7 +699,7 @@ class TestCreditTrades(BaseTestCase):
             data=json.dumps(payload))
 
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        credit_trade = json.loads(response.content)
+        credit_trade = json.loads(response.content.decode('utf-8'))
 
         payload = {
             'initiator': credit_trade['initiator'],
