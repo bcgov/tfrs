@@ -25,27 +25,38 @@ from django.db import models
 
 from auditable.models import Auditable
 
+from .CreditTrade import CreditTrade
+from .CreditTradeStatus import CreditTradeStatus
+from .CreditTradeType import CreditTradeType
+from .CreditTradeZeroReason import CreditTradeZeroReason
+from .CompliancePeriod import CompliancePeriod
+from .Organization import Organization
+from .User import User
+
 
 class CreditTradeHistory(Auditable):
+    """
+    History of changes for the Credit Trades table
+    """
     credit_trade = models.ForeignKey(
-        'CreditTrade',
+        CreditTrade,
         related_name='credit_trade_histories',
         null=True,
         on_delete=models.PROTECT)
     user = models.ForeignKey(
-        'User', related_name='credit_trade_histories',
+        User, related_name='credit_trade_histories',
         on_delete=models.PROTECT)
     credit_trade_update_time = models.DateTimeField()
     respondent = models.ForeignKey(
-        'Organization',
+        Organization,
         related_name='credit_trade_histories',
         on_delete=models.PROTECT)
     status = models.ForeignKey(
-        'CreditTradeStatus',
+        CreditTradeStatus,
         related_name='credit_trade_histories',
         on_delete=models.PROTECT)
     type = models.ForeignKey(
-        'CreditTradeType',
+        CreditTradeType,
         related_name='credit_trade_histories',
         on_delete=models.PROTECT)
     number_of_credits = models.IntegerField()
@@ -54,7 +65,7 @@ class CreditTradeHistory(Auditable):
         decimal_places=2,
         default=None)
     zero_reason = models.ForeignKey(
-        'CreditTradeZeroReason',
+        CreditTradeZeroReason,
         related_name='credit_trade_histories',
         blank=True, null=True,
         on_delete=models.PROTECT)
@@ -62,12 +73,12 @@ class CreditTradeHistory(Auditable):
     note = models.CharField(max_length=4000, blank=True, null=True)
     is_internal_history_record = models.BooleanField()
     compliance_period = models.ForeignKey(
-        'CompliancePeriod',
+        CompliancePeriod,
         related_name='credit_trade_histories',
         blank=True, null=True,
         on_delete=models.PROTECT
     )
-    rescinded = models.BooleanField(default=False)
+    is_rescinded = models.BooleanField(default=False)
 
     class Meta:
         db_table = 'credit_trade_history'

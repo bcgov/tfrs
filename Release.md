@@ -1,5 +1,14 @@
 # Release Notes
 
+## [0.3.1]
+- Comment System
+
+## [0.3.0]
+- Fuel Suppliers Link
+- Added buttons to update the status of a credit transaction
+- Added Roles and Permissions
+- Added Dropdown for Government Users to filter Organizations
+
 ## [0.2.0]
 ### Added
 - Credit Balance in the Credit Transactions Page

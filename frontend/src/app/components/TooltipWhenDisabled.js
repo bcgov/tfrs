@@ -5,7 +5,7 @@ import { OverlayTrigger, Tooltip } from 'react-bootstrap';
 class TooltipWhenDisabled extends Component {
   _renderDisabled () {
     return (
-      <OverlayTrigger placement="right" overlay={this._tooltip()}>
+      <OverlayTrigger placement="top" overlay={this._tooltip()}>
         <div className="overlay-trigger">
           {this.props.children}
         </div>

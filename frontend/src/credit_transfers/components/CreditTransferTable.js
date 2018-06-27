@@ -22,19 +22,19 @@ const CreditTransferTable = (props) => {
     className: 'col-id',
     Header: 'ID',
     resizable: false,
-    width: 50
+    width: 45
   }, {
     accessor: item => (item.compliancePeriod ? item.compliancePeriod.description : ''),
     className: 'col-compliance-period',
     Header: 'Compliance Period',
     id: 'compliancePeriod',
-    minWidth: 75
+    minWidth: 45
   }, {
     accessor: item => getCreditTransferType(item.type.id),
     className: 'col-transfer-type',
     Header: 'Type',
     id: 'transactionType',
-    minWidth: 125
+    minWidth: 110
   }, {
     accessor: item => ([
       CREDIT_TRANSFER_TYPES.part3Award.id, CREDIT_TRANSFER_TYPES.validation.id
@@ -51,7 +51,7 @@ const CreditTransferTable = (props) => {
     },
     Header: 'Credits From',
     id: 'creditsFrom',
-    minWidth: 200
+    minWidth: 190
   }, {
     accessor: item => ((item.type.id === CREDIT_TRANSFER_TYPES.retirement.id) ? '' : item.creditsTo.name),
     Cell: (row) => {
@@ -65,7 +65,7 @@ const CreditTransferTable = (props) => {
     },
     Header: 'Credits To',
     id: 'creditsTo',
-    minWidth: 200
+    minWidth: 190
   }, {
     accessor: item => item.numberOfCredits,
     className: 'col-credits',
@@ -73,7 +73,7 @@ const CreditTransferTable = (props) => {
     filterMethod: (filter, row) => filterNumber(filter.value, row.numberOfCredits, 0),
     Header: 'Quantity of Credits',
     id: 'numberOfCredits',
-    minWidth: 100
+    minWidth: 75
   }, {
     accessor: (item) => {
       if (item.type.id === CREDIT_TRANSFER_TYPES.part3Award.id ||
@@ -91,9 +91,9 @@ const CreditTransferTable = (props) => {
     filterMethod: (filter, row) => filterNumber(filter.value, row.fairMarketValuePerCredit),
     Header: 'Value Per Credit',
     id: 'fairMarketValuePerCredit',
-    minWidth: 100
+    minWidth: 65
   }, {
-    accessor: item => (item.rescinded
+    accessor: item => (item.isRescinded
       ? CREDIT_TRANSFER_STATUS.rescinded.description
       : (
         Object.values(CREDIT_TRANSFER_STATUS).find(element => element.id === item.status.id)
@@ -101,13 +101,13 @@ const CreditTransferTable = (props) => {
     className: 'col-status',
     Header: 'Status',
     id: 'status',
-    minWidth: 100
+    minWidth: 80
   }, {
-    accessor: item => (item.updateTimestamp ? moment(item.updateTimestamp).format('LL') : '-'),
+    accessor: item => (item.updateTimestamp ? moment(item.updateTimestamp).format('YYYY-MM-DD') : '-'),
     className: 'col-date',
     Header: 'Last Updated On',
     id: 'updateTimestamp',
-    minWidth: 100
+    minWidth: 95
   }, {
     accessor: 'id',
     Cell: (row) => {
@@ -119,7 +119,7 @@ const CreditTransferTable = (props) => {
     filterable: false,
     Header: '',
     id: 'actions',
-    minWidth: 50
+    minWidth: 25
   }];
 
   const filterMethod = (filter, row, column) => {
