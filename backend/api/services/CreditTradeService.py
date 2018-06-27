@@ -14,7 +14,9 @@ from api.exceptions import PositiveIntegerException
 
 
 class CreditTradeService(object):
-
+    """
+    Helper functions for Credit Trades
+    """
     @staticmethod
     def get_organization_credit_trades(organization):
         """
@@ -107,7 +109,7 @@ class CreditTradeService(object):
             compliance_period_id=credit_trade.compliance_period_id,
             is_internal_history_record=is_internal_history_record,
             credit_trade_update_time=credit_trade_update_time,
-            rescinded=credit_trade.rescinded,
+            is_rescinded=credit_trade.is_rescinded,
             create_user=user,
             update_user=user,
             user=user
@@ -126,6 +128,13 @@ class CreditTradeService(object):
 
     @staticmethod
     def approve(credit_trade):
+        """
+        Sets the Credit Transfer to Approved
+        Transfers the credits between the organizations
+        Sets the Credit Transfer to Completed
+        Note: The reason why it does an update to the status twice is to
+        generate the appropriate history
+        """
         status_approved = CreditTradeStatus.objects.get(status="Approved")
         status_completed = CreditTradeStatus.objects.get(status="Completed")
 
@@ -152,6 +161,10 @@ class CreditTradeService(object):
     @transaction.non_atomic_requests()
     def transfer_credits(_from, _to, credit_trade_id, num_of_credits,
                          effective_date):
+        """
+        Make the appropriate addition and reduction to the credits for the
+        organizations Involved
+        """
         from_starting_bal, _ = OrganizationBalance.objects.get_or_create(
             organization_id=_from.id,
             expiration_date=None,
@@ -199,6 +212,10 @@ class CreditTradeService(object):
 
     @staticmethod
     def validate_credits(credit_trades):
+        """
+        Checks and makes sure that the organizations have enough credit
+        balance
+        """
         errors = []
         temp_storage = []
 
@@ -238,20 +255,26 @@ class CreditTradeService(object):
             raise PositiveIntegerException(errors)
 
     @staticmethod
-    def get_temp_balance(storage, id):
+    def get_temp_balance(storage, organization_id):
+        """
+        Gets the credits of an organization stored in a temporary list
+        This allows us to simulate credit transfers without actually
+        needing to write to the database. (e.g. Lets us find out if
+        the organization has enough credits to do the transfer)
+        """
         starting_balance = None
         index = None
 
-        if len(storage) > 0:
+        if storage:
             for balance_index, balance in enumerate(storage):
-                if balance["id"] == id:
+                if balance["id"] == organization_id:
                     starting_balance = balance["credits"]
                     index = balance_index
 
         if starting_balance is None:
             try:  # if balance hasn't been populated, get from the database
                 organization_balance = OrganizationBalance.objects.get(
-                    organization_id=id,
+                    organization_id=organization_id,
                     expiration_date=None)
 
                 starting_balance = organization_balance.validated_credits
@@ -261,11 +284,15 @@ class CreditTradeService(object):
         return index, starting_balance
 
     @staticmethod
-    def update_temp_balance(storage, index, credits, id):
+    def update_temp_balance(storage, index, num_of_credits, organization_id):
+        """
+        Update the temporary list that contains the credits for the
+        organizations
+        """
         if index is None:
             storage.append({
-                "id": id,
-                "credits": credits
+                "id": organization_id,
+                "credits": num_of_credits
             })
         else:
-            storage[index]["credits"] = credits
+            storage[index]["credits"] = num_of_credits

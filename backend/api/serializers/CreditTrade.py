@@ -45,7 +45,7 @@ class CreditTradeSerializer(serializers.ModelSerializer):
                   'type', 'number_of_credits',
                   'fair_market_value_per_credit', 'zero_reason',
                   'trade_effective_date', 'compliance_period',
-                  'rescinded')
+                  'is_rescinded')
 
 
 class CreditTradeCreateSerializer(serializers.ModelSerializer):
@@ -80,6 +80,8 @@ class CreditTradeCreateSerializer(serializers.ModelSerializer):
                                  "to `{}`.".format(credit_trade_status.status)
             })
 
+        credit_trade_type = data.get('type')
+
         if (data.get('fair_market_value_per_credit') == 0 and
                 data.get('zero_reason') is None):
             allowed_types = list(
@@ -90,13 +92,33 @@ class CreditTradeCreateSerializer(serializers.ModelSerializer):
                 .only('id')
             )
 
-            credit_trade_type = data.get('type')
-
             if credit_trade_type not in allowed_types:
                 raise serializers.ValidationError({
                     'zeroDollarReason': "Zero Dollar Reason is required "
                                         "for Credit Transfers with 0 "
                                         "Dollar per Credit"
+                })
+
+        # If the initiator is 'selling', make sure that the organization
+        # has enough credits
+        sell_type = CreditTradeType.objects.get(the_type="Sell")
+        draft_propose_statuses = list(
+            CreditTradeStatus.objects
+            .filter(status__in=["Draft", "Submitted"])
+            .only('id'))
+
+        if credit_trade_type == sell_type and \
+           data.get('initiator') == request.user.organization and \
+           credit_trade_status in draft_propose_statuses:
+
+            balance = request.user.organization.organization_balance[
+                'validated_credits']
+
+            if balance < data.get('number_of_credits'):
+                raise serializers.ValidationError({
+                    'insufficientCredits': "{} does not have enough credits "
+                                           "for the proposal.".format(
+                                               request.user.organization.name)
                 })
 
         return data
@@ -114,7 +136,7 @@ class CreditTradeUpdateSerializer(serializers.ModelSerializer):
         request = self.context['request']
         available_statuses = []
 
-        if self.instance.rescinded:
+        if self.instance.is_rescinded:
             raise serializers.ValidationError({
                 'readOnly': "Cannot update a transaction that's already "
                             "been rescinded."
@@ -130,17 +152,15 @@ class CreditTradeUpdateSerializer(serializers.ModelSerializer):
 
         if 'status' in request.data:
             if self.instance.status.status == "Draft":
-                available_statuses.append("Cancelled")
+                if request.user.has_perm('PROPOSE_CREDIT_TRANSFER'):
+                    available_statuses.append("Cancelled")
+                    available_statuses.append("Draft")
 
             if request.user.has_perm('APPROVE_CREDIT_TRANSFER'):
                 available_statuses.append("Approved")
 
             if request.user.has_perm('DECLINE_CREDIT_TRANSFER'):
                 available_statuses.append("Declined")
-
-            if request.user.has_perm('PROPOSE_CREDIT_TRANSFER') and \
-               self.instance.status.status == "Draft":
-                available_statuses.append("Draft")
 
             if request.user.has_perm('RECOMMEND_CREDIT_TRANSFER') and \
                self.instance.status.status == "Accepted":
@@ -191,6 +211,45 @@ class CreditTradeUpdateSerializer(serializers.ModelSerializer):
                                         "Dollar per Credit"
                 })
 
+        # If the type is a sell, make sure that the organization
+        # selling has enough credits, before they try to save the draft
+        # or propose
+        # If the type is buy, make sure the organization the credit is
+        # coming from has enough credits before they can accept the proposal
+        balance = request.user.organization.organization_balance[
+            'validated_credits']
+
+        buy_sell_type = CreditTradeType.objects.filter(
+            the_type__in=["Buy", "Sell"]
+        ).only('id')
+
+        if 'type' in data:
+            credit_trade_type = data.get('type')
+        else:
+            credit_trade_type = self.instance.type
+
+        if 'number_of_credits' in data:
+            number_of_credits = data.get('number_of_credits')
+        else:
+            number_of_credits = self.instance.number_of_credits
+
+        accepted_status = CreditTradeStatus.objects.get(status="Accepted")
+        draft_propose_statuses = list(
+            CreditTradeStatus.objects
+            .filter(status__in=["Draft", "Submitted"])
+            .only('id'))
+
+        if credit_trade_type in buy_sell_type and balance < number_of_credits:
+            if (self.instance.initiator == request.user.organization and
+                    credit_trade_status in draft_propose_statuses) or \
+                (self.instance.respondent == request.user.organization and
+                 credit_trade_status == accepted_status):
+                raise serializers.ValidationError({
+                    'insufficientCredits': "{} does not have enough credits "
+                                           "for the proposal.".format(
+                                               request.user.organization.name)
+                })
+
         return data
 
     class Meta:
@@ -205,7 +264,7 @@ class CreditTradeApproveSerializer(serializers.ModelSerializer):
     def validate(self, data):
         request = self.context['request']
 
-        if self.instance.rescinded:
+        if self.instance.is_rescinded:
             raise serializers.ValidationError({
                 'readOnly': "Cannot approve a transaction that's already "
                             "been rescinded."
@@ -260,7 +319,7 @@ class CreditTrade2Serializer(serializers.ModelSerializer):
                   'zero_reason',
                   'trade_effective_date', 'credits_from', 'credits_to',
                   'update_timestamp', 'actions', 'note',
-                  'compliance_period', 'comments', 'rescinded')
+                  'compliance_period', 'comments', 'is_rescinded')
 
     def get_actions(self, obj):
         """

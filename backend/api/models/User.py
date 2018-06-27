@@ -30,6 +30,7 @@ from auditable.models import Auditable
 
 from .OrganizationBalance import OrganizationBalance
 from .UserRole import UserRole
+
 from api.managers.UserManager import UserManager
 
 

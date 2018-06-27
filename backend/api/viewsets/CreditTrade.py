@@ -1,4 +1,3 @@
-import datetime
 from django.db.models import Q
 
 from rest_framework import viewsets, permissions, status, mixins
@@ -72,9 +71,35 @@ class CreditTradeViewSet(AuditableMixin, mixins.CreateModelMixin,
             ~Q(status__status__in=["Approved"])
         ).order_by(*self.ordering)
 
+        # For hash computation
+        most_recent_updated_credit_trade = self.get_queryset().exclude(
+            Q(update_timestamp=None))\
+            .order_by('-update_timestamp').first()
+
+        most_recent_created_credit_trade = self.get_queryset().exclude(
+            Q(create_timestamp=None)) \
+            .order_by('-create_timestamp').first()
+
+        digest = hashlib.sha256()
+        # you could use anything here (like perhaps the PID or startup time
+        digest.update(b'salt')
+        digest.update(most_recent_updated_credit_trade.update_timestamp.isoformat()
+                      .encode('utf-8') if most_recent_updated_credit_trade is not None else b'')
+        digest.update(most_recent_created_credit_trade.create_timestamp.isoformat()
+                      .encode('utf-8') if most_recent_created_credit_trade is not None else b'')
+        etag = 'W/"{}"'.format(digest.hexdigest())
+
+        # Browser has an up-to-date copy
+        if 'HTTP_IF_NONE_MATCH' in request.META and etag == request.META['HTTP_IF_NONE_MATCH']:
+            response = Response(status=status.HTTP_304_NOT_MODIFIED)
+            response['ETag'] = etag
+            return response
+
         serializer = self.get_serializer(credit_trades, many=True)
 
-        return Response(serializer.data)
+        response = Response(serializer.data)
+        response['ETag'] = etag
+        return response
 
     def perform_create(self, serializer):
         credit_trade = serializer.save()
