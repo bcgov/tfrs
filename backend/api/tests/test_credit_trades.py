@@ -626,7 +626,8 @@ class TestCreditTrades(BaseTestCase):
             data=json.dumps(payload))
 
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-        self.assertIn('insufficientCredits', json.loads(response.content))
+        self.assertIn('insufficientCredits',
+                      json.loads(response.content.decode('utf-8')))
 
     def test_sell_update_with_insufficient_credits(self):
         """
@@ -668,7 +669,8 @@ class TestCreditTrades(BaseTestCase):
             data=json.dumps(payload))
 
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-        self.assertIn('insufficientCredits', json.loads(response.content))
+        self.assertIn('insufficientCredits',
+                      json.loads(response.content.decode('utf-8')))
 
     def test_buy_from_org_with_insufficient_credits(self):
         """
@@ -720,4 +722,5 @@ class TestCreditTrades(BaseTestCase):
             data=json.dumps(payload))
 
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-        self.assertIn('insufficientCredits', json.loads(response.content))
+        self.assertIn('insufficientCredits',
+                      json.loads(response.content.decode('utf-8')))
