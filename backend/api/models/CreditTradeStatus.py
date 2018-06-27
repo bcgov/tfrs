@@ -22,6 +22,8 @@
 from django.db import models
 
 from auditable.models import Auditable
+from api.managers.CreditTradeStatusManager import CreditTradeStatusManager
+
 
 
 class CreditTradeStatus(Auditable):
@@ -30,6 +32,11 @@ class CreditTradeStatus(Auditable):
     effective_date = models.DateField(blank=True, null=True)
     expiration_date = models.DateField(blank=True, null=True)
     display_order = models.IntegerField()
+
+    objects = CreditTradeStatusManager()
+
+    def natural_key(self):
+        return (self.status,)
 
     class Meta:
         db_table = 'credit_trade_status'

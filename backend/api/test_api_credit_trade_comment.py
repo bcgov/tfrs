@@ -24,27 +24,25 @@ import json
 import logging
 from django.test import TestCase
 from django.test import Client
-from rest_framework import status
+from collections import defaultdict
+from itertools import product
 import django
 
-
 from rest_framework import status
 
-from . import fakedata
-from .serializers import CreditTradeStatusSerializer
-from .serializers import CreditTradeTypeSerializer
-from .serializers import CreditTradeZeroReasonSerializer
-from .serializers import OrganizationActionsTypeSerializer
-from .serializers import OrganizationStatusSerializer
-from .serializers import PermissionSerializer
-from .serializers import RoleSerializer
-from .serializers import UserSerializer
-
+from .models.User import User
+from .models.CreditTradeComment import CreditTradeComment
+from .models.CreditTradeStatus import CreditTradeStatus
+from .models.CreditTradeType import CreditTradeType
+from .models.Organization import Organization
+from .models.CreditTrade import CreditTrade
 
 '''
 Test Credit Trade Comments and related permissions
 '''
-class Test_Api_Comments(TestCase):
+
+
+class TestAPIComments(TestCase):
     fixtures = ['organization_types.json',
                 'organization_government.json',
                 'organization_balance_gov.json',
@@ -54,166 +52,247 @@ class Test_Api_Comments(TestCase):
                 'credit_trade_types.json',
                 'test_organization_fuel_suppliers.json',
                 'test_organization_balances.json',
-                'test_credit_trade_comments.json',
                 'roles.json',
                 'permissions.json',
                 'roles_permissions.json',
-                'roles_permissions_v0.3.0.json'
+                'roles_permissions_v0.3.0.json',
+                'test_credit_trade_comments.json',
                 ]
 
+    users = ['fs_husky', 'fs_air_liquide', 'fs_shell', 'gov_director', 'gov_analyst']
+
     def setUp(self):
+        self.clients = dict()
 
-        # Every test needs a client.
-
-        self.fs_client_1 = Client(
-            HTTP_SMGOV_USERGUID='6c239bc5-5f08-4ddd-855a-b3bf39096937',
-            HTTP_SMAUTH_USERDISPLAYNAME='Test FS',
-            HTTP_SMGOV_USEREMAIL='test_fs@test.com',
-            HTTP_SM_UNIVERSALID='fs1')
-
-        self.fs_client_2 = Client(
-            HTTP_SMGOV_USERGUID='1dfbe008-d321-4a1f-912d-ecca36730895',
-            HTTP_SMAUTH_USERDISPLAYNAME='Test FS2',
-            HTTP_SMGOV_USEREMAIL='test_fs2@test.com',
-            HTTP_SM_UNIVERSALID='fs12')
-
-        self.gov_client = Client(
-            HTTP_SMGOV_USERGUID='935bebdb-de2a-4839-a4da-d87635cffbb3',
-            HTTP_SMAUTH_USERDISPLAYNAME='Gov',
-            HTTP_SMGOV_USEREMAIL='gov_privileged@test.com',
-            HTTP_SM_UNIVERSALID='gov',
-            HTTP_SMGOV_USERTYPE='Internal',
-            HTTP_SM_AUTHDIRNAME='IDIR')
+        for username in TestAPIComments.users:
+            user = User.objects.get_by_natural_key(username)
+            self.clients[username] = Client(
+                HTTP_SMGOV_USERGUID=str(user.authorization_guid),
+                HTTP_SMAUTH_USERDISPLAYNAME=str(user.display_name),
+                HTTP_SMGOV_USEREMAIL=str(user.authorization_email),
+                HTTP_SM_UNIVERSALID=str(user.authorization_id),
+                HTTP_SM_AUTHDIRNAME=('IDIR' if user.organization.id == 1 else 'BCeID'),
+                HTTP_SMGOV_USERTYPE=('Internal' if user.organization.id == 1 else '')
+            )
 
         django.setup()
 
     def test_comments_list_returns_404(self):
         list_url = "/api/comments/"
-        response = self.fs_client_1.get(list_url)
+        response = self.clients['fs_air_liquide'].get(list_url)
         # Check that the response is 404.
         assert status.HTTP_404_NOT_FOUND == response.status_code
 
-    def test_get_unprivileged_as_owner(self):
-        c_url = "/api/comments/1"
-        response = self.fs_client_1.get(c_url)
-        logging.debug(response.content.decode("utf-8"))
-        assert status.is_success(response.status_code)
+    def test_comment_retrieval_permissions(self):
 
-    def test_get_privileged_as_owner(self):
-        c_url = "/api/comments/2"
-        response = self.fs_client_1.get(c_url)
-        logging.debug(response.content.decode("utf-8"))
-        assert status.is_success(response.status_code)
+        # From the test fixtures
+        all_comments = [1, 2, 3, 4, 5]
+        all_users = self.users
 
-    def test_get_unprivileged_as_gov(self):
-        c_url = "/api/comments/1"
-        response = self.gov_client.get(c_url)
-        logging.debug(response.content.decode("utf-8"))
-        assert status.is_success(response.status_code)
+        expected_results = defaultdict(lambda: {'status': status.HTTP_403_FORBIDDEN,
+                                                'reason': "Default response is no access"})
 
-    def test_get_privileged_as_gov(self):
-        c_url = "/api/comments/2"
-        response = self.gov_client.get(c_url)
-        logging.debug(response.content.decode("utf-8"))
-        assert status.is_success(response.status_code)
+        # Expected successes
+        expected_results[(1, 'fs_air_liquide')] = {'status': status.HTTP_200_OK,
+                                                   'reason': "Access by owner"}
+        expected_results[(2, 'fs_air_liquide')] = {'status': status.HTTP_200_OK,
+                                                   'reason': "Access by owner"}
+        expected_results[(5, 'fs_shell')] = {'status': status.HTTP_200_OK,
+                                             'reason': "Access by owner"}
+        expected_results[(1, 'gov_analyst')] = {'status': status.HTTP_200_OK,
+                                                'reason': "Access by government analyst"}
+        expected_results[(2, 'gov_analyst')] = {'status': status.HTTP_200_OK,
+                                                'reason': "Access by government analyst"}
+        expected_results[(3, 'gov_analyst')] = {'status': status.HTTP_200_OK,
+                                                'reason': "Access by government analyst"}
+        expected_results[(4, 'gov_analyst')] = {'status': status.HTTP_200_OK,
+                                                'reason': "Access by government analyst"}
+        expected_results[(5, 'gov_analyst')] = {'status': status.HTTP_200_OK,
+                                                'reason': "Access by government analyst"}
+        expected_results[(1, 'gov_director')] = {'status': status.HTTP_200_OK,
+                                                 'reason': "Access by government director"}
+        expected_results[(2, 'gov_director')] = {'status': status.HTTP_200_OK,
+                                                 'reason': "Access by government director"}
+        expected_results[(3, 'gov_director')] = {'status': status.HTTP_200_OK,
+                                                 'reason': "Access by government director"}
+        expected_results[(4, 'gov_director')] = {'status': status.HTTP_200_OK,
+                                                 'reason': "Access by government director"}
+        expected_results[(5, 'gov_director')] = {'status': status.HTTP_200_OK,
+                                                 'reason': "Access by government director"}
 
-    def test_get_unprivileged_as_other(self):
-        c_url = "/api/comments/3"
-        response = self.fs_client_1.get(c_url)
-        assert status.HTTP_403_FORBIDDEN == response.status_code
+        for (user, comment) in product(all_users, all_comments):
+            expected_status = expected_results[(comment, user)]['status']
+            reason = expected_results[(comment, user)]['reason']
 
-    def test_get_as_other_fs(self):
-        c_url = "/api/comments/1"
-        response = self.fs_client_2.get(c_url)
-        assert status.HTTP_403_FORBIDDEN == response.status_code
+            with self.subTest(user=user, comment_id=comment, expected_status=expected_status, reason=reason):
+                c_url = "/api/comments/{}".format(comment)
+                response = self.clients[user].get(c_url)
+                logging.debug(response.content.decode("utf-8"))
+                self.assertEqual(response.status_code, expected_status)
 
-    def test_get_privileged_as_other(self):
-        c_url = "/api/comments/4"
-        response = self.fs_client_1.get(c_url)
-        assert status.HTTP_403_FORBIDDEN == response.status_code
+    def test_credit_trade_retrieval_filtering(self):
 
-    def test_get_credit_trade_as_fs(self):
-        c_url = "/api/credit_trades/200"
-        response = self.fs_client_1.get(c_url)
-        assert status.is_success(response.status_code)
+        # From the test fixtures
+        all_credit_trades = [200]
+        all_users = self.users
 
-        json_string = response.content.decode("utf-8")
-        data = json.loads(json_string)
-        comments = data['comments']
+        expected_results = defaultdict(lambda: {'status': status.HTTP_404_NOT_FOUND,
+                                                'response_contains_no_privileged_comments': True,
+                                                'reason': "Default response is no access "
+                                                          "(and don't even confirm it exists)"})
 
-        for c in comments:
-            assert c['privilegedAccess'] is False
+        expected_results[(200, 'fs_husky')] = {'status': status.HTTP_200_OK,
+                                                     'response_contains_no_privileged_comments': True,
+                                                     'reason': "Access by initiator"}
+        expected_results[(200, 'fs_air_liquide')] = {'status': status.HTTP_200_OK,
+                                                     'response_contains_no_privileged_comments': True,
+                                                     'reason': "Access by respondent"}
+        expected_results[(200, 'gov_director')] = {'status': status.HTTP_200_OK,
+                                                     'response_contains_no_privileged_comments': False,
+                                                     'reason': "Access by government analyst"}
+        expected_results[(200, 'gov_analyst')] = {'status': status.HTTP_200_OK,
+                                                     'response_contains_no_privileged_comments': False,
+                                                     'reason': "Access by government director"}
 
-    def test_get_credit_trade_as_gov(self):
-        c_url = "/api/credit_trades/200"
-        response = self.gov_client.get(c_url)
-        logging.debug(response)
-        assert status.is_success(response.status_code)
+        for (user, trade) in product(all_users, all_credit_trades):
+            expected_status = expected_results[(trade, user)]['status']
+            expect_response_contains_no_privileged_comments =  expected_results[(trade, user)]['response_contains_no_privileged_comments']
+            reason = expected_results[(trade, user)]['reason']
 
-        json_string = response.content.decode("utf-8")
-        data = json.loads(json_string)
-        comments = data['comments']
-        priv_count = 0
+            with self.subTest(user=user, trade_id=trade, expected_status=expected_status, expect_response_contains_no_privileged_comments=expect_response_contains_no_privileged_comments, reason=reason):
+                c_url = "/api/credit_trades/{}".format(trade)
+                response = self.clients[user].get(c_url)
+                logging.debug(response.content.decode("utf-8"))
+                self.assertEqual(response.status_code, expected_status)
 
-        #check that atleast one is a privileged comment
-        for c in comments:
-            if c['privilegedAccess']:
-                priv_count += 1
+                if status.is_success(response.status_code):
+                    json_string = response.content.decode("utf-8")
+                    data = json.loads(json_string)
+                    comments = data['comments']
 
-        assert priv_count > 0
+                    for c in comments:
+                        if expect_response_contains_no_privileged_comments:
+                            assert c['privilegedAccess'] is False
 
-    def test_post_as_gov(self):
-        c_url = "/api/credit_trades/200"
-        response = self.gov_client.get(c_url)
-        logging.debug(response)
-        assert status.is_success(response.status_code)
+    def test_comment_posting_permissions(self):
+        # From the test fixtures
+        all_users = self.users
 
-        json_string = response.content.decode("utf-8")
-        data = json.loads(json_string)
+        all_statuses = [s.status for s in CreditTradeStatus.objects.all()]
 
-        # figure out how many comments there are
-        orig_len = len(data['comments'])
+        initiating_organization = Organization.objects.get_by_natural_key("Husky Oil Ltd.")
+        responding_organization = Organization.objects.get_by_natural_key("Shell Canada Products")
 
-        c_url = "/api/comments"
-        test_data = {
-            "comment": "generated comment 1",
-            "creditTrade": 200,
-            "privilegedAccess": False
-        }
-        response = self.gov_client.post(c_url, content_type='application/json',
-                                        data=json.dumps(test_data))
-        logging.debug(response)
-        assert status.is_success(response.status_code)
-        test_data = {
-            "comment": "generated comment 2",
-            "creditTrade": 200,
-            "privilegedAccess": True
-        }
-        response = self.gov_client.post(c_url, content_type='application/json',
-                                        data=json.dumps(test_data))
-        logging.debug(response)
-        assert status.is_success(response.status_code)
+        created_trades = []
 
-        c_url = "/api/credit_trades/200"
-        response = self.gov_client.get(c_url)
-        logging.debug(response)
-        assert status.is_success(response.status_code)
+        # Create test data for this test -- one trade with each possible status
+        for (ct_status, rescinded) in product(all_statuses, [True, False]):
+            trade = CreditTrade()
+            trade.initiator = initiating_organization
+            trade.respondent = responding_organization
+            trade.type = CreditTradeType.objects.get_by_natural_key("Buy")
+            trade.status = CreditTradeStatus.objects.get_by_natural_key(ct_status)
+            trade.fair_market_value_per_credit = 20.0
+            trade.number_of_credits = 500
+            trade.rescinded = rescinded
+            trade.save()
+            trade.refresh_from_db()
+            logging.debug("created credit trade {}".format(trade.id))
+            created_trades.append({
+                'status': ct_status,
+                'rescinded': rescinded,
+                'id': trade.id
+            })
 
-        json_string = response.content.decode("utf-8")
-        data = json.loads(json_string)
+        expected_results = defaultdict(lambda: {'status': status.HTTP_403_FORBIDDEN,
+                                                'reason': "Default response is no access"})
 
-        # expect two more
-        assert len(data['comments']) == orig_len+2
+        # These are the exceptions
+        # Key is (status, rescinded_flag, username, creating_privileged_comment)
+        expected_results['Draft', False, 'fs_husky', False] = {'status': status.HTTP_201_CREATED,
+                                                               'reason': 'Initiator can comment in Draft'}
+        expected_results['Draft', True, 'fs_husky', False] = {'status': status.HTTP_201_CREATED,
+                                                               'reason': 'Initiator can comment in Draft'}
+        expected_results['Submitted', False, 'fs_shell', False] = {'status': status.HTTP_201_CREATED,
+                                                                'reason': 'Respondent can comment in Submitted(Signed1/2)'}
+        expected_results['Submitted', True, 'fs_shell', False] = {'status': status.HTTP_201_CREATED,
+                                                                   'reason': 'Respondent can comment in Submitted(Signed1/2)'}
+        expected_results['Accepted', False, 'gov_analyst', False] = {'status': status.HTTP_201_CREATED,
+                                                                  'reason': 'Analyst can comment in Accepted(Signed2/2)'}
+        expected_results['Accepted', False, 'gov_analyst', True] = {'status': status.HTTP_201_CREATED,
+                                                                     'reason': 'Analyst can comment in Accepted(Signed2/2)'}
+        expected_results['Accepted', True, 'gov_analyst', False] = {'status': status.HTTP_201_CREATED,
+                                                                     'reason': 'Analyst can comment in Accepted(Signed2/2)'}
+        expected_results['Accepted', True, 'gov_analyst', True] = {'status': status.HTTP_201_CREATED,
+                                                                'reason': 'Analyst can comment in Accepted(Signed2/2)'}
+        expected_results['Recommended', False, 'gov_analyst', False] = {'status': status.HTTP_201_CREATED,
+                                                                     'reason': 'Analyst can comment in Recommended'}
+        expected_results['Recommended', False, 'gov_analyst', True] = {'status': status.HTTP_201_CREATED,
+                                                                        'reason': 'Analyst can comment in Recommended'}
+        expected_results['Not Recommended', False, 'gov_analyst', False] = {'status': status.HTTP_201_CREATED,
+                                                                        'reason': 'Analyst can comment in Not Recommended'}
+        expected_results['Not Recommended', False, 'gov_analyst', True] = {'status': status.HTTP_201_CREATED,
+                                                                   'reason': 'Analyst can comment in Not Recommended'}
+        expected_results['Recommended', True, 'gov_analyst', False] = {'status': status.HTTP_201_CREATED,
+                                                                        'reason': 'Analyst can comment in Recommended'}
+        expected_results['Recommended', True, 'gov_analyst', True] = {'status': status.HTTP_201_CREATED,
+                                                                       'reason': 'Analyst can comment in Recommended'}
+        expected_results['Not Recommended', True, 'gov_analyst', False] = {'status': status.HTTP_201_CREATED,
+                                                                            'reason': 'Analyst can comment in Not Recommended'}
+        expected_results['Not Recommended', True, 'gov_analyst', True] = {'status': status.HTTP_201_CREATED,
+                                                                           'reason': 'Analyst can comment in Not Recommended'}
+        expected_results['Recommended', False, 'gov_director', False] = {'status': status.HTTP_201_CREATED,
+                                                                        'reason': 'Director can comment in Recommended'}
+        expected_results['Recommended', False, 'gov_director', True] = {'status': status.HTTP_201_CREATED,
+                                                                       'reason': 'Director can comment in Recommended'}
+        expected_results['Not Recommended', False, 'gov_director', False] = {'status': status.HTTP_201_CREATED,
+                                                                            'reason': 'Director can comment in Not Recommended'}
+        expected_results['Not Recommended', False, 'gov_director', True] = {'status': status.HTTP_201_CREATED,
+                                                                           'reason': 'Director can comment in Not Recommended'}
+        expected_results['Recommended', True, 'gov_director', False] = {'status': status.HTTP_201_CREATED,
+                                                                       'reason': 'Director can comment in Recommended'}
+        expected_results['Recommended', True, 'gov_director', True] = {'status': status.HTTP_201_CREATED,
+                                                                      'reason': 'Director can comment in Recommended'}
+        expected_results['Not Recommended', True, 'gov_director', False] = {'status': status.HTTP_201_CREATED,
+                                                                           'reason': 'Director can comment in Not Recommended'}
+        expected_results['Not Recommended', True, 'gov_director', True] = {'status': status.HTTP_201_CREATED,
+                                                                          'reason': 'Director can comment in Not Recommended'}
 
-    def test_invalid_post_as_gov(self):
+        for (c, user, privileged) in product(created_trades, all_users, [True, False]):
+            expected_result = expected_results[(c['status'], c['rescinded'], user, privileged)]
+
+            with self.subTest("Test posting comment",
+                              credit_trade_id=c['id'],
+                              credit_trade_status=c['status'],
+                              credit_trade_is_rescinded=c['rescinded'],
+                              as_user=user,
+                              user_in_initiator_org=True if user == 'fs_husky' else False,
+                              user_in_respondent_org=True if user == 'fs_shell' else False,
+                              creating_privilged_comment=privileged,
+                              expected_result=expected_result['status'],
+                              reason=expected_result['reason']):
+                c_url = "/api/comments"
+                test_data = {
+                    "comment": "generated comment",
+                    "creditTrade": c['id'],
+                    "privilegedAccess": privileged
+                }
+                response = self.clients[user].post(c_url, content_type='application/json',
+                                                   data=json.dumps(test_data))
+                logging.debug(json.loads(response.content.decode('utf-8')))
+                self.assertEquals(response.status_code,expected_result['status'])
+
+
+
+    def test_invalid_post(self):
         c_url = "/api/comments"
         test_data = {
             "comment": "badref comment",
-            "creditTrade": 200000, #nonexistent
+            "creditTrade": 200000,  # nonexistent
             "privilegedAccess": False
         }
-        response = self.gov_client.post(c_url, content_type='application/json',
-                                        data=json.dumps(test_data))
+        response = self.clients['gov_director'].post(c_url, content_type='application/json',
+                                                 data=json.dumps(test_data))
         logging.debug(response)
         assert status.is_client_error(response.status_code)
 
@@ -221,8 +300,8 @@ class Test_Api_Comments(TestCase):
             "comment": "noref comment",
             "privilegedAccess": False
         }
-        response = self.gov_client.post(c_url, content_type='application/json',
-                                        data=json.dumps(test_data))
+        response = self.clients['gov_director'].post(c_url, content_type='application/json',
+                                                 data=json.dumps(test_data))
         logging.debug(response)
         assert status.is_client_error(response.status_code)
 
@@ -231,8 +310,8 @@ class Test_Api_Comments(TestCase):
             "creditTrade": None,
             "privilegedAccess": False
         }
-        response = self.gov_client.post(c_url, content_type='application/json',
-                                        data=json.dumps(test_data))
+        response = self.clients['gov_director'].post(c_url, content_type='application/json',
+                                                 data=json.dumps(test_data))
         logging.debug(response)
         assert status.is_client_error(response.status_code)
 
@@ -245,15 +324,15 @@ class Test_Api_Comments(TestCase):
             c_url = "/api/comments/1"
             test_data = {
                 "comment": test_string,
-                "creditTrade": 200,
+                "creditTrade": status.HTTP_200_OK,
                 "privilegedAccess": True
             }
-            response = self.gov_client.put(c_url, content_type='application/json',
-                                           data=json.dumps(test_data))
+            response = self.clients['gov_director'].put(c_url, content_type='application/json',
+                                                    data=json.dumps(test_data))
             logging.debug(response)
             assert status.is_success(response.status_code)
 
-            response = self.gov_client.get(c_url)
+            response = self.clients['gov_director'].get(c_url)
             logging.debug(u"validating that response comment is expected: '{}'".format(test_string))
             logging.debug(response.content.decode("utf-8"))
             assert status.is_success(response.status_code)
@@ -267,16 +346,16 @@ class Test_Api_Comments(TestCase):
             "creditTrade": None,
             "privilegedAccess": True
         }
-        response = self.gov_client.put(c_url, content_type='application/json',
-                                       data=json.dumps(test_data))
+        response = self.clients['gov_director'].put(c_url, content_type='application/json',
+                                                data=json.dumps(test_data))
         logging.debug(response)
         assert status.is_success(response.status_code)
 
-        response = self.gov_client.get(c_url)
+        response = self.clients['gov_director'].get(c_url)
         logging.debug(response.content.decode("utf-8"))
         assert status.is_success(response.status_code)
         assert json.loads(response.content.decode("utf-8"))['comment'] == \
-            "updated comment with clobbered ro values"
+               "updated comment with clobbered ro values"
         assert json.loads(response.content.decode("utf-8"))['id'] == 1
         assert json.loads(response.content.decode("utf-8"))['creditTrade'] == 200
 
@@ -284,11 +363,11 @@ class Test_Api_Comments(TestCase):
         c_url = "/api/comments/1"
         test_data = {
             "comment": "updated comment 1",
-            "creditTrade": 200,
+            "creditTrade": status.HTTP_200_OK,
             "privilegedAccess": False
         }
-        response = self.fs_client_1.put(c_url, content_type='application/json',
-                                        data=json.dumps(test_data))
+        response = self.clients['fs_air_liquide'].put(c_url, content_type='application/json',
+                                           data=json.dumps(test_data))
         logging.debug(response)
         assert status.is_success(response.status_code)
 
@@ -299,8 +378,8 @@ class Test_Api_Comments(TestCase):
             "creditTrade": 201,
             "privilegedAccess": False
         }
-        response = self.fs_client_1.put(c_url, content_type='application/json',
-                                        data=json.dumps(test_data))
+        response = self.clients['fs_air_liquide'].put(c_url, content_type='application/json',
+                                           data=json.dumps(test_data))
         logging.debug(response)
         assert status.is_success(response.status_code)
 
@@ -309,49 +388,11 @@ class Test_Api_Comments(TestCase):
         c_url = "/api/comments/3"
         test_data = {
             "comment": "updated comment 3",
-            "creditTrade": 200,
+            "creditTrade": status.HTTP_200_OK,
             "privilegedAccess": True
         }
-        response = self.fs_client_1.put(c_url, content_type='application/json',
-                                        data=json.dumps(test_data))
-        logging.debug(response)
-        assert status.HTTP_403_FORBIDDEN == response.status_code
-
-    def test_post_as_fs_valid(self):
-        c_url = "/api/comments"
-        test_data = {
-            "comment": "generated comment",
-            "creditTrade": 200,
-            "privilegedAccess": False
-        }
-        response = self.gov_client.post(c_url, content_type='application/json',
-                                        data=json.dumps(test_data))
-        logging.debug(response)
-        assert status.is_success(response.status_code)
-
-    def test_post_as_fs_invalid_privileged(self):
-        # This user doesn't have permission to create a privileged comment
-        c_url = "/api/comments"
-        test_data = {
-            "comment": "generated comment",
-            "creditTrade": 200,
-            "privilegedAccess": True
-        }
-        response = self.fs_client_1.post(c_url, content_type='application/json',
-                                        data=json.dumps(test_data))
-        logging.debug(response)
-        assert status.HTTP_403_FORBIDDEN == response.status_code
-
-    def test_post_as_fs_invalid_wrong_org(self):
-        # This user is not a party to credit_trade 200
-        c_url = "/api/comments"
-        test_data = {
-            "comment": "generated comment",
-            "creditTrade": 200,
-            "privilegedAccess": False
-        }
-        response = self.fs_client_2.post(c_url, content_type='application/json',
-                                         data=json.dumps(test_data))
+        response = self.clients['fs_air_liquide'].put(c_url, content_type='application/json',
+                                           data=json.dumps(test_data))
         logging.debug(response)
         assert status.HTTP_403_FORBIDDEN == response.status_code
 

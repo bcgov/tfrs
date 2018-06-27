@@ -21,13 +21,27 @@ class CreditTradeCommentPermissions(permissions.BasePermission):
         using CreditTradeService logic
         '''
         found = CreditTradeService.get_organization_credit_trades(request.user.organization)\
-            .filter(id=credit_trade).exists()
+            .filter(id=credit_trade).first()
 
-        if found:
-            if privileged_access:
-                return request.user.has_perm('EDIT_PRIVILEGED_COMMENTS')
-            else:
-                return True
+        if not found:
+            return False
+
+        is_initiator = found.initiator.id == request.user.organization.id
+        is_respondent = found.respondent.id == request.user.organization.id
+        is_government = request.user.organization.id == 1
+
+        if is_initiator:
+            return found.status.status in ['Draft'] and not privileged_access
+
+        if is_respondent:
+            return found.status.status in ['Submitted'] and not privileged_access
+
+        if is_government and request.user.has_perm('RECOMMEND_CREDIT_TRANSFER'):
+            return found.status.status in ['Accepted', 'Recommended', 'Not Recommended']
+
+        if is_government and \
+                (request.user.has_perm('APPROVE_CREDIT_TRANSFER') or request.user.has_perm('DECLINE_CREDIT_TRANSFER')):
+                return found.status.status in ['Recommended', 'Not Recommended']
 
         return False
 

@@ -26,10 +26,10 @@ from django.db import models
 from auditable.models import Auditable
 
 from .Permission import Permission
-
+from api.managers.RoleManager import RoleManager
 
 class Role(Auditable):
-    name = models.CharField(max_length=200)
+    name = models.CharField(max_length=200, unique=True)
     description = models.CharField(max_length=1000)
     is_government_role = models.BooleanField(default=False)
 
@@ -40,6 +40,11 @@ class Role(Auditable):
         )
 
         return permissions
+
+    objects = RoleManager()
+
+    def natural_key(self):
+        return (self.name,)
 
     # Add effective_date and expiration_date
     class Meta:
