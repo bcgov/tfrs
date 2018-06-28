@@ -25,14 +25,17 @@ from rest_framework import serializers
 from api.models.CreditTrade import CreditTrade
 from api.models.CreditTradeStatus import CreditTradeStatus
 from api.models.CreditTradeType import CreditTradeType
+from api.models.User import User
 from api.services.CreditTradeActions import CreditTradeActions
 
 from .CreditTradeComment import CreditTradeCommentSerializer
+from .CreditTradeHistory import CreditTradeHistoryReviewedSerializer
 from .CreditTradeStatus import CreditTradeStatusMinSerializer
 from .CreditTradeType import CreditTradeTypeSerializer
 from .CreditTradeZeroReason import CreditTradeZeroReasonSerializer
 from .CompliancePeriod import CompliancePeriodSerializer
 from .Organization import OrganizationMinSerializer
+from .User import UserMinSerializer
 
 
 class CreditTradeSerializer(serializers.ModelSerializer):
@@ -126,6 +129,31 @@ class CreditTradeCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = CreditTrade
         fields = '__all__'
+
+
+class CreditTradeListSerializer(serializers.ModelSerializer):
+    """
+    Serializer for Lists
+    Should have less data being eager loaded compared to
+    CreditTrade2Serializer, since we expect multiple records
+    returned
+    """
+    compliance_period = CompliancePeriodSerializer(read_only=True)
+    credits_from = OrganizationMinSerializer(read_only=True)
+    credits_to = OrganizationMinSerializer(read_only=True)
+    initiator = OrganizationMinSerializer(read_only=True)
+    respondent = OrganizationMinSerializer(read_only=True)
+    status = CreditTradeStatusMinSerializer(read_only=True)
+    type = CreditTradeTypeSerializer(read_only=True)
+    zero_reason = CreditTradeZeroReasonSerializer(read_only=True)
+
+    class Meta:
+        model = CreditTrade
+        fields = ('id', 'compliance_period', 'credits_from', 'credits_to',
+                  'fair_market_value_per_credit', 'initiator',
+                  'is_rescinded', 'number_of_credits', 'respondent',
+                  'status', 'total_value', 'trade_effective_date', 'type',
+                  'update_timestamp', 'zero_reason')
 
 
 class CreditTradeUpdateSerializer(serializers.ModelSerializer):
@@ -309,6 +337,8 @@ class CreditTrade2Serializer(serializers.ModelSerializer):
     actions = serializers.SerializerMethodField()
     compliance_period = CompliancePeriodSerializer(read_only=True)
     comments = serializers.SerializerMethodField()
+    reviewed = serializers.SerializerMethodField()
+    signatures = serializers.SerializerMethodField()
 
     class Meta:
         model = CreditTrade
@@ -319,7 +349,8 @@ class CreditTrade2Serializer(serializers.ModelSerializer):
                   'zero_reason',
                   'trade_effective_date', 'credits_from', 'credits_to',
                   'update_timestamp', 'actions', 'note',
-                  'compliance_period', 'comments', 'is_rescinded')
+                  'compliance_period', 'comments', 'is_rescinded',
+                  'signatures', 'reviewed')
 
     def get_actions(self, obj):
         """
@@ -346,6 +377,8 @@ class CreditTrade2Serializer(serializers.ModelSerializer):
         elif cur_status == "Recommended" or cur_status == "Not Recommended":
             return CreditTradeActions.reviewed(request)
 
+        return []
+
     def get_comments(self, obj):
         request = self.context.get('request')
 
@@ -363,3 +396,21 @@ class CreditTrade2Serializer(serializers.ModelSerializer):
                                                   many=True)
 
         return serializer.data
+
+    def get_reviewed(self, obj):
+        serializer = CreditTradeHistoryReviewedSerializer(obj.reviewed)
+
+        return serializer.data
+
+    def get_signatures(self, obj):
+        signatures = []
+        for signature in obj.signatures:
+            user = User.objects.get(id=signature['create_user_id'])
+            serializer = UserMinSerializer(user, read_only=True)
+
+            signatures.append({
+                'user': serializer.data,
+                'create_timestamp': signature['timestamp']
+            })
+
+        return signatures

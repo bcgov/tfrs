@@ -24,10 +24,12 @@ from rest_framework import serializers
 
 from api.models.CreditTradeHistory import CreditTradeHistory
 
-from .CreditTradeStatus import CreditTradeStatusSerializer
+from .CreditTradeStatus import CreditTradeStatusSerializer, \
+                               CreditTradeStatusMinSerializer
 from .CreditTradeType import CreditTradeTypeSerializer
 from .CreditTradeZeroReason import CreditTradeZeroReasonSerializer
 from .Organization import OrganizationSerializer
+from .User import UserMinSerializer
 
 
 class CreditTradeHistorySerializer(serializers.ModelSerializer):
@@ -57,3 +59,12 @@ class CreditTradeHistoryCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = CreditTradeHistory
         fields = '__all__'
+
+
+class CreditTradeHistoryReviewedSerializer(serializers.ModelSerializer):
+    status = CreditTradeStatusMinSerializer(read_only=True)
+    user = UserMinSerializer(read_only=True)
+
+    class Meta:
+        model = CreditTradeHistory
+        fields = ('user', 'status', 'credit_trade_update_time')

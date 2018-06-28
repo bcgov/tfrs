@@ -22,15 +22,20 @@
 """
 from decimal import Decimal
 from django.db import models
+from django.db.models import Count
+from django.db.models import Max
+from django.db.models import Q
 from api import validators
 from auditable.models import Auditable
 
 from .CompliancePeriod import CompliancePeriod
 from .CreditTradeComment import CreditTradeComment
+from .CreditTradeHistory import CreditTradeHistory
 from .CreditTradeStatus import CreditTradeStatus
 from .CreditTradeType import CreditTradeType
 from .CreditTradeZeroReason import CreditTradeZeroReason
 from .Organization import Organization
+from .SigningAuthorityConfirmation import SigningAuthorityConfirmation
 
 
 class CreditTrade(Auditable):
@@ -159,6 +164,41 @@ class CreditTrade(Auditable):
         )
 
         return comments
+
+    @property
+    def signatures(self):
+        """
+        Fetches all the user id's that have signed the credit trade
+        This will check if the user has signed all 3 of the
+        confirmations. But will not count any duplicates
+        (Note: The additional values_list is to just ensure we only
+        get the id so it makes it easier to serialize)
+        """
+        signatures = SigningAuthorityConfirmation.objects.values(
+            'create_user_id'
+        ).annotate(
+            cnt=Count('signing_authority_assertion_id', distinct=True),
+            timestamp=Max('create_timestamp')
+        ).filter(
+            credit_trade_id=self.id,
+            has_accepted=True,
+            cnt__gte=3
+        )
+
+        return signatures
+
+    @property
+    def reviewed(self):
+        """
+        Shows the signatures to the involved parties
+        Shows whether it's recommended or not to government users
+        """
+        reviewed = CreditTradeHistory.objects.filter(
+            Q(status__status__in=["Not Recommended", "Recommended"]),
+            credit_trade_id=self.id
+        ).order_by('-update_timestamp').first()
+
+        return reviewed
 
     class Meta:
         db_table = 'credit_trade'
