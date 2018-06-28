@@ -26,6 +26,7 @@ from api.models.CreditTrade import CreditTrade
 from api.models.CreditTradeStatus import CreditTradeStatus
 from api.models.CreditTradeType import CreditTradeType
 from api.services.CreditTradeActions import CreditTradeActions
+from api.services.CreditTradeCommentActions import CreditTradeCommentActions
 
 from .CreditTradeComment import CreditTradeCommentSerializer
 from .CreditTradeStatus import CreditTradeStatusMinSerializer
@@ -307,6 +308,7 @@ class CreditTrade2Serializer(serializers.ModelSerializer):
     credits_from = OrganizationMinSerializer(read_only=True)
     credits_to = OrganizationMinSerializer(read_only=True)
     actions = serializers.SerializerMethodField()
+    comment_actions = serializers.SerializerMethodField()
     compliance_period = CompliancePeriodSerializer(read_only=True)
     comments = serializers.SerializerMethodField()
 
@@ -318,7 +320,7 @@ class CreditTrade2Serializer(serializers.ModelSerializer):
                   'fair_market_value_per_credit', 'total_value',
                   'zero_reason',
                   'trade_effective_date', 'credits_from', 'credits_to',
-                  'update_timestamp', 'actions', 'note',
+                  'update_timestamp', 'actions', 'comment_actions', 'note',
                   'compliance_period', 'comments', 'is_rescinded')
 
     def get_actions(self, obj):
@@ -346,11 +348,18 @@ class CreditTrade2Serializer(serializers.ModelSerializer):
         elif cur_status == "Recommended" or cur_status == "Not Recommended":
             return CreditTradeActions.reviewed(request)
 
+    def get_comment_actions(self, obj):
+        """Attach available commenting actions"""
+        request = self.context.get('request')
+        return CreditTradeCommentActions.available_comment_actions(request, obj)
+
     def get_comments(self, obj):
         request = self.context.get('request')
 
-        # If the user doesn't have any roles assigned, treat as though the user
-        # doesn't have available permissions
+        """
+        If the user doesn't have any roles assigned, treat as though the user
+        doesn't have available permissions
+        """
         if request.user.role is None:
             return []
 

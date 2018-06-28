@@ -71,7 +71,7 @@ const CreditTransferDetails = props => (
         {props.isCommenting && <CreditTransferCommentForm
           saveComment={props.saveComment}
           cancelComment={props.cancelComment}
-          privilegedAccess={props.willCreatePrivilegedComment}
+          isCreatingPrivilegedComment={props.isCreatingPrivilegedComment}
         />
         }
         <form onSubmit={e => e.preventDefault()}>
@@ -88,6 +88,7 @@ const CreditTransferDetails = props => (
             canComment={props.canComment}
             isCommenting={props.isCommenting}
             addComment={props.addComment}
+            canCreatePrivilegedComment={props.canCreatePrivilegedComment}
           />
           <CreditTransferFormButtons
             actions={props.buttonActions}
@@ -224,7 +225,8 @@ CreditTransferDetails.propTypes = {
   saveComment: PropTypes.func.isRequired,
   isCommenting: PropTypes.bool.isRequired,
   hasCommented: PropTypes.bool.isRequired,
-  willCreatePrivilegedComment: PropTypes.bool.isRequired
+  canCreatePrivilegedComment: PropTypes.bool.isRequired,
+  isCreatingPrivilegedComment: PropTypes.bool.isRequired
 };
 
 export default CreditTransferDetails;

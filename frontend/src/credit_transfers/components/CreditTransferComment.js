@@ -4,7 +4,7 @@ import FontAwesomeIcon from '@fortawesome/react-fontawesome';
 import * as Lang from '../../constants/langEnUs';
 
 const CreditTransferComment = props => (
-  <div className="comment panel panel-info">
+  <div className={`comment panel ${props.comment.privilegedAccess ? 'panel-primary' : 'panel-info'}`}>
     <div className="panel-heading">
       <div className="row">
         <div className="col-xs-6">

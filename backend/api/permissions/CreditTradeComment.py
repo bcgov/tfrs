@@ -1,10 +1,33 @@
+"""
+    REST API Documentation for the NRS TFRS Credit Trading Application
+
+    The Transportation Fuels Reporting System is being designed to streamline
+    compliance reporting for transportation fuel suppliers in accordance with
+    the Renewable & Low Carbon Fuel Requirements Regulation.
+
+    OpenAPI spec version: v1
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+"""
+
 from rest_framework import permissions
 from api.services.CreditTradeService import CreditTradeService
 
 class CreditTradeCommentPermissions(permissions.BasePermission):
+    """Used by Viewset to check permissions for API requests"""
 
-    # When an object does not yet exist (POST)
     def has_permission(self, request, view):
+        """Check permissions When an object does not yet exist (POST)"""
         # Fallback to has_object_permission unless it's a POST
         if request.method != 'POST':
             return True
@@ -16,10 +39,8 @@ class CreditTradeCommentPermissions(permissions.BasePermission):
         credit_trade = request.data['credit_trade']
         privileged_access = request.data['privileged_access']
 
-        '''
-        Check if the user is a party to this credit_trade (or Government)
-        using CreditTradeService logic
-        '''
+        # Check if the user is a party to this credit_trade (or Government)
+        # using CreditTradeService logic
         found = CreditTradeService.get_organization_credit_trades(request.user.organization)\
             .filter(id=credit_trade).first()
 
@@ -39,14 +60,12 @@ class CreditTradeCommentPermissions(permissions.BasePermission):
         if is_government and request.user.has_perm('RECOMMEND_CREDIT_TRANSFER'):
             return found.status.status in ['Accepted', 'Recommended', 'Not Recommended']
 
-        if is_government and \
-                (request.user.has_perm('APPROVE_CREDIT_TRANSFER') or request.user.has_perm('DECLINE_CREDIT_TRANSFER')):
-                return found.status.status in ['Recommended', 'Not Recommended']
+        return found.status.status in ['Recommended', 'Not Recommended'] if\
+            is_government and (request.user.has_perm('APPROVE_CREDIT_TRANSFER')
+                               or request.user.has_perm('DECLINE_CREDIT_TRANSFER')) else False
 
-        return False
-
-    # Used when an object exists (PUT, GET)
     def has_object_permission(self, request, view, obj):
+        """Check permissions When an object does exist (PUT, GET)"""
 
         # Users can always see and edit their own comments
         if obj.create_user == request.user:
@@ -57,25 +76,21 @@ class CreditTradeCommentPermissions(permissions.BasePermission):
                 request.method in permissions.SAFE_METHODS:
             return True
 
-        '''
-        Government roles can always view comments
-        and can view or edit privileged comments with correct permission
-        '''
+        # Government roles can always view comments
+        # and can view or edit privileged comments with correct permission
         if request.user.role is not None and request.user.role.is_government_role:
 
             # read
             if request.method in permissions.SAFE_METHODS:
                 if obj.privileged_access:
                     return request.user.has_perm('VIEW_PRIVILEGED_COMMENTS')
-                else:
-                    return True
+                return True
 
             # write
             if request.method not in permissions.SAFE_METHODS:
                 if obj.privileged_access:
                     return request.user.has_perm('EDIT_PRIVILEGED_COMMENTS')
-                else:
-                    return True
+                return True
 
         # not authorized
         return False

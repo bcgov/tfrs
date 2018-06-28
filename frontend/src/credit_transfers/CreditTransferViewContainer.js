@@ -39,6 +39,7 @@ class CreditTransferViewContainer extends Component {
         terms: []
       },
       isCommenting: false,
+      isCreatingPrivilegedComment: false,
       hasCommented: false
     };
 
@@ -150,22 +151,25 @@ class CreditTransferViewContainer extends Component {
       this.props.getCreditTransferIfNeeded(this.props.item.id);
       this.setState({
         hasCommented: true,
-        isCommenting: false
+        isCommenting: false,
+        isCreatingPrivilegedComment: true
       });
     }, () => {
       // Failed to update
     });
   }
 
-  _addComment () {
+  _addComment (privileged = false) {
     this.setState({
-      isCommenting: true
+      isCommenting: true,
+      isCreatingPrivilegedComment: privileged
     });
   }
 
   _cancelComment () {
     this.setState({
-      isCommenting: false
+      isCommenting: false,
+      isCreatingPrivilegedComment: false
     });
   }
 
@@ -372,9 +376,10 @@ class CreditTransferViewContainer extends Component {
         cancelComment={this._cancelComment}
         saveComment={this._saveComment}
         isCommenting={this.state.isCommenting}
+        isCreatingPrivilegedComment={this.state.isCreatingPrivilegedComment}
         hasCommented={this.state.hasCommented}
-        willCreatePrivilegedComment={
-          CreditTransferUtilityFunctions.willCreatePrivilegedComment(
+        canCreatePrivilegedComment={
+          CreditTransferUtilityFunctions.canCreatePrivilegedComment(
             this.props.loggedInUser,
             this.props.item
           )
@@ -463,6 +468,7 @@ CreditTransferViewContainer.propTypes = {
   isFetching: PropTypes.bool.isRequired,
   item: PropTypes.shape({
     actions: PropTypes.arrayOf(PropTypes.shape({})),
+    commentActions: PropTypes.arrayOf(PropTypes.string),
     creditsFrom: PropTypes.shape({}),
     creditsTo: PropTypes.shape({}),
     status: PropTypes.shape({}),
