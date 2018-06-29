@@ -27,6 +27,7 @@ from api.models.CreditTradeStatus import CreditTradeStatus
 from api.models.CreditTradeType import CreditTradeType
 from api.models.User import User
 from api.services.CreditTradeActions import CreditTradeActions
+from api.services.CreditTradeCommentActions import CreditTradeCommentActions
 
 from .CreditTradeComment import CreditTradeCommentSerializer
 from .CreditTradeHistory import CreditTradeHistoryReviewedSerializer
