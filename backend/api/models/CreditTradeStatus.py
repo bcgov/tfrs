@@ -45,7 +45,7 @@ class CreditTradeStatus(Auditable):
         elif self.status == 'Cancelled':
             return 'Cancel'
         elif self.status == 'Recommended':
-            return 'Recommend for Decision'
+            return 'Recommend for Approval'
         elif self.status == 'Approved':
             return 'Approve'
         elif self.status == 'Declined':
