@@ -50,7 +50,8 @@ class BaseTestCase(TestCase):
                 'test_organization_balances.json',
                 'roles.json',
                 'permissions.json',
-                'roles_permissions.json']
+                'roles_permissions.json',
+                'signing_authority_assertions.json']
 
     def setUp(self):
         """
@@ -134,6 +135,9 @@ class BaseTestCase(TestCase):
             'cancelled': CreditTradeStatus.objects.get(status='Cancelled'),
             'completed': CreditTradeStatus.objects.get(status='Completed'),
             'draft': CreditTradeStatus.objects.get(status='Draft'),
+            'not_recommended':
+            CreditTradeStatus.objects.get(status='Not Recommended'),
+            'recommended': CreditTradeStatus.objects.get(status='Recommended'),
             'refused': CreditTradeStatus.objects.get(status='Refused'),
             'submitted': CreditTradeStatus.objects.get(status='Submitted')
         }

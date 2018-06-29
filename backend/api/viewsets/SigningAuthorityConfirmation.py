@@ -1,11 +1,6 @@
-from rest_framework import viewsets, permissions, status, mixins, exceptions
-from rest_framework.decorators import list_route, detail_route
-from rest_framework.response import Response
-from rest_framework import filters
+from rest_framework import filters, mixins, permissions, viewsets
 
 from auditable.views import AuditableMixin
-from django.db.models import Q
-import datetime
 
 from api.models.SigningAuthorityConfirmation \
   import SigningAuthorityConfirmation

@@ -89,14 +89,6 @@
     },
     {
         "fields": {
-            "permission": "9",
-            "role": "3"
-        },
-        "model": "api.rolepermission",
-        "pk": null
-    },
-    {
-        "fields": {
             "permission": "10",
             "role": "3"
         },

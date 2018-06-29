@@ -28,6 +28,7 @@ from rest_framework import status
 from api.exceptions import PositiveIntegerException
 from api.models.CreditTrade import CreditTrade
 from api.models.OrganizationBalance import OrganizationBalance
+from api.models.SigningAuthorityAssertion import SigningAuthorityAssertion
 from api.services.CreditTradeService import CreditTradeService
 from api.tests.base_test_case import BaseTestCase
 
@@ -724,3 +725,152 @@ class TestCreditTrades(BaseTestCase):
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertIn('insufficientCredits',
                       json.loads(response.content.decode('utf-8')))
+
+    def test_signing_history(self):
+        """
+        This will test if the signatures and reviewed attributes for the
+        credit trades are present depending on the status of the trade
+        """
+        # Request for Fuel Supplier 1 to propose a trade
+        payload = {
+            'fairMarketValuePerCredit': '1.00',
+            'initiator': self.users['fuel_supplier_1'].organization_id,
+            'numberOfCredits': 1,
+            'respondent': self.users['fuel_supplier_2'].organization_id,
+            'status': self.statuses['submitted'].id,
+            'tradeEffectiveDate': datetime.datetime.today().strftime(
+                '%Y-%m-%d'
+            ),
+            'type': self.credit_trade_types['sell'].id,
+            'zeroReason': None
+        }
+
+        response = self.clients['fuel_supplier_1'].post(
+            '/api/credit_trades',
+            content_type='application/json',
+            data=json.dumps(payload))
+
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        credit_trade = json.loads(response.content.decode('utf-8'))
+
+        # Request for Fuel Supplier 1 to sign the proposal
+        payload = []
+
+        assertions = SigningAuthorityAssertion.objects.all()
+        for assertion in assertions:
+            payload.append({
+                'creditTrade': credit_trade['id'],
+                'hasAccepted': True,
+                'signingAuthorityAssertion': assertion.id
+            })
+
+        response = self.clients['fuel_supplier_1'].post(
+            '/api/signing_authority_confirmations',
+            content_type='application/json',
+            data=json.dumps(payload))
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+
+        # Check and see if the signature is present
+        response = self.clients['fuel_supplier_1'].get(
+            '/api/credit_trades/{}'.format(
+                credit_trade['id']
+            ), content_type='application/json')
+
+        credit_trade = json.loads(response.content.decode('utf-8'))
+
+        # We should see the signature from the user proposing
+        self.assertEqual(credit_trade['signatures'][0]['user']['id'],
+                         self.users['fuel_supplier_1'].id)
+
+        # Fuel Supplier 2 accepts the proposal
+        payload = {
+            'initiator': credit_trade['initiator']['id'],
+            'is_rescinded': credit_trade['isRescinded'],
+            'fair_market_value_per_credit':
+            credit_trade['fairMarketValuePerCredit'],
+            'note': credit_trade['note'],
+            'number_of_credits': credit_trade['numberOfCredits'],
+            'respondent': credit_trade['respondent']['id'],
+            'status': self.statuses['accepted'].id,
+            'trade_effective_date': credit_trade['tradeEffectiveDate'],
+            'type': credit_trade['type']['id']
+        }
+
+        response = self.clients['fuel_supplier_2'].put(
+            '/api/credit_trades/{}'.format(
+                credit_trade['id']
+            ),
+            content_type='application/json',
+            data=json.dumps(payload))
+
+        # Request for Fuel Supplier 2 to sign the proposal
+        payload = []
+
+        assertions = SigningAuthorityAssertion.objects.all()
+        for assertion in assertions:
+            payload.append({
+                'creditTrade': credit_trade['id'],
+                'hasAccepted': True,
+                'signingAuthorityAssertion': assertion.id
+            })
+
+        response = self.clients['fuel_supplier_2'].post(
+            '/api/signing_authority_confirmations',
+            content_type='application/json',
+            data=json.dumps(payload))
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+
+        # Check if the signatures are present
+        response = self.clients['fuel_supplier_1'].get(
+            '/api/credit_trades/{}'.format(
+                credit_trade['id']
+            ), content_type='application/json')
+
+        credit_trade = json.loads(response.content.decode('utf-8'))
+
+        # We should see the signature from the user proposing
+        self.assertEqual(credit_trade['signatures'][0]['user']['id'],
+                         self.users['fuel_supplier_1'].id)
+        # and the user that accepted
+        self.assertEqual(credit_trade['signatures'][1]['user']['id'],
+                         self.users['fuel_supplier_2'].id)
+
+        # Gov User recommends a decision for the proposal
+        payload = {
+            'initiator': credit_trade['initiator']['id'],
+            'is_rescinded': credit_trade['isRescinded'],
+            'fair_market_value_per_credit':
+            credit_trade['fairMarketValuePerCredit'],
+            'note': credit_trade['note'],
+            'number_of_credits': credit_trade['numberOfCredits'],
+            'respondent': credit_trade['respondent']['id'],
+            'status': self.statuses['recommended'].id,
+            'trade_effective_date': credit_trade['tradeEffectiveDate'],
+            'type': credit_trade['type']['id']
+        }
+
+        response = self.clients['gov'].put(
+            '/api/credit_trades/{}'.format(
+                credit_trade['id']
+            ),
+            content_type='application/json',
+            data=json.dumps(payload))
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        # Check and see if the signature is present
+        response = self.clients['gov'].get(
+            '/api/credit_trades/{}'.format(
+                credit_trade['id']
+            ), content_type='application/json')
+
+        credit_trade = json.loads(response.content.decode('utf-8'))
+
+        # We should see the signature from the user proposing
+        self.assertEqual(credit_trade['signatures'][0]['user']['id'],
+                         self.users['fuel_supplier_1'].id)
+        # and the user that accepted
+        self.assertEqual(credit_trade['signatures'][1]['user']['id'],
+                         self.users['fuel_supplier_2'].id)
+
+        self.assertEqual(credit_trade['reviewed']['status']['id'],
+                         self.statuses['recommended'].id)

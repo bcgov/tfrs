@@ -364,6 +364,8 @@ class CreditTransferViewContainer extends Component {
         note={item.note}
         numberOfCredits={item.numberOfCredits}
         rescinded={item.rescinded}
+        reviewed={item.reviewed}
+        signatures={item.signatures}
         status={item.status}
         toggleCheck={this._toggleCheck}
         totalValue={item.totalValue}
@@ -483,6 +485,25 @@ CreditTransferViewContainer.propTypes = {
       PropTypes.number
     ]),
     rescinded: PropTypes.bool,
+    reviewed: PropTypes.shape({
+      status: PropTypes.shape({
+        id: PropTypes.number,
+        status: PropTypes.string
+      }),
+      user: PropTypes.shape({
+        displayName: PropTypes.string,
+        firstName: PropTypes.string,
+        id: PropTypes.number,
+        lastName: PropTypes.string
+      })
+    }),
+    signatures: PropTypes.arrayOf(PropTypes.shape({
+      displayName: PropTypes.string,
+      firstName: PropTypes.string,
+      id: PropTypes.number,
+      lastName: PropTypes.string,
+      organization: PropTypes.shape()
+    })),
     totalValue: PropTypes.oneOfType([
       PropTypes.string,
       PropTypes.number

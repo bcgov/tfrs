@@ -13,12 +13,13 @@ from api.models.CreditTrade import CreditTrade
 from api.models.CreditTradeHistory import CreditTradeHistory
 from api.models.CreditTradeStatus import CreditTradeStatus
 
-from api.serializers import CreditTradeCreateSerializer
-from api.serializers import CreditTradeUpdateSerializer
-from api.serializers import CreditTradeApproveSerializer
 from api.serializers import CreditTrade2Serializer as CreditTradeSerializer
+from api.serializers import CreditTradeApproveSerializer
+from api.serializers import CreditTradeCreateSerializer
 from api.serializers import CreditTradeHistory2Serializer \
     as CreditTradeHistorySerializer
+from api.serializers import CreditTradeListSerializer
+from api.serializers import CreditTradeUpdateSerializer
 
 from api.services.CreditTradeService import CreditTradeService
 
@@ -45,6 +46,8 @@ class CreditTradeViewSet(AuditableMixin, mixins.CreateModelMixin,
         'create': CreditTradeCreateSerializer,
         'default': CreditTradeSerializer,
         'history': CreditTradeHistorySerializer,
+        'list': CreditTradeListSerializer,
+        'list_approved': CreditTradeListSerializer,
         'partial_update': CreditTradeUpdateSerializer,
         'update': CreditTradeUpdateSerializer
     }

@@ -14,10 +14,12 @@ import { getCreditTransferType } from '../../actions/creditTransfersActions';
 import Errors from '../../app/components/Errors';
 import Loading from '../../app/components/Loading';
 import * as Lang from '../../constants/langEnUs';
+import { CREDIT_TRANSFER_STATUS, CREDIT_TRANSFER_TYPES } from '../../constants/values';
 import PERMISSIONS_CREDIT_TRANSACTIONS from '../../constants/permissions/CreditTransactions';
 import CreditTransferCommentForm from './CreditTransferCommentForm';
 import CreditTransferComment from './CreditTransferComment';
 import CreditTransferCommentButtons from './CreditTransferCommentButtons';
+import CreditTransferSigningHistory from './CreditTransferSigningHistory';
 
 const CreditTransferDetails = props => (
   <div className="credit-transfer">
@@ -90,6 +92,14 @@ const CreditTransferDetails = props => (
             addComment={props.addComment}
             canCreatePrivilegedComment={props.canCreatePrivilegedComment}
           />
+          {(props.tradeType.id === CREDIT_TRANSFER_TYPES.sell.id ||
+          props.tradeType.id === CREDIT_TRANSFER_TYPES.buy.id) &&
+          props.status.id !== CREDIT_TRANSFER_STATUS.draft.id &&
+            <CreditTransferSigningHistory
+              reviewed={props.reviewed}
+              signatures={props.signatures}
+            />
+          }
           <CreditTransferFormButtons
             actions={props.buttonActions}
             addComment={props.addComment}
@@ -133,6 +143,8 @@ CreditTransferDetails.defaultProps = {
   note: '',
   numberOfCredits: '0',
   rescinded: false,
+  reviewed: {},
+  signatures: [],
   status: {
     id: 0,
     status: ''
@@ -186,6 +198,25 @@ CreditTransferDetails.propTypes = {
     PropTypes.number
   ]),
   rescinded: PropTypes.bool,
+  reviewed: PropTypes.shape({
+    status: PropTypes.shape({
+      id: PropTypes.number,
+      status: PropTypes.string
+    }),
+    user: PropTypes.shape({
+      displayName: PropTypes.string,
+      firstName: PropTypes.string,
+      id: PropTypes.number,
+      lastName: PropTypes.string
+    })
+  }),
+  signatures: PropTypes.arrayOf(PropTypes.shape({
+    displayName: PropTypes.string,
+    firstName: PropTypes.string,
+    id: PropTypes.number,
+    lastName: PropTypes.string,
+    organization: PropTypes.shape()
+  })),
   status: PropTypes.shape({
     id: PropTypes.number,
     status: PropTypes.string
