@@ -27,6 +27,9 @@ from api.models.SigningAuthorityConfirmation \
 
 
 class SigningAuthorityConfirmationSerializer(serializers.ModelSerializer):
+    """
+    Default Serializer for SigningAuthorityConfirmation
+    """
     class Meta:
         model = SigningAuthorityConfirmation
         fields = '__all__'
