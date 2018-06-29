@@ -20,11 +20,9 @@
     See the License for the specific language governing permissions and
     limitations under the License.
 """
-from rest_framework import serializers
-from collections import defaultdict
-from enum import Enum, auto
 
-import pdb
+from api.permissions.CreditTradeComment import CreditTradeCommentPermissions
+# from enum import Enum, auto
 
 
 class CreditTradeCommentActions(object):
@@ -32,52 +30,17 @@ class CreditTradeCommentActions(object):
     Provide available commenting actions to simplify frontend presentation logic
     """
 
-    class _Relationship(Enum):
-        Initiator = auto()
-        Respondent = auto()
-        GovernmentAnalyst = auto()
-        GovernmentDirector = auto()
+
 
     @staticmethod
     def available_comment_actions(request, trade):
-        action_mapping = defaultdict(lambda: [])
-        is_government = request.user.organization.id == 1
+        available_actions = []
 
-        action_mapping[('Draft', False, CreditTradeCommentActions._Relationship.Initiator)] \
-            = ['ADD_COMMENT']
+        if CreditTradeCommentPermissions.user_can_comment(request.user, trade, False):
+            available_actions.append('ADD_COMMENT')
 
-        action_mapping[('Recommended', True, CreditTradeCommentActions._Relationship.Initiator)] \
-            = ['ADD_COMMENT']
+        if CreditTradeCommentPermissions.user_can_comment(request.user, trade, True):
+            available_actions.append('ADD_PRIVILEGED_COMMENT')
 
-        action_mapping[('Submitted', False, CreditTradeCommentActions._Relationship.Respondent)] \
-            = ['ADD_COMMENT']
-
-        action_mapping[('Accepted', False, CreditTradeCommentActions._Relationship.GovernmentAnalyst)] \
-            = ['ADD_COMMENT', 'ADD_PRIVILEGED_COMMENT']
-        action_mapping[('Recommended', False, CreditTradeCommentActions._Relationship.GovernmentAnalyst)] \
-            = ['ADD_COMMENT', 'ADD_PRIVILEGED_COMMENT']
-        action_mapping[('Not Recommended', False, CreditTradeCommentActions._Relationship.GovernmentAnalyst)] \
-            = ['ADD_COMMENT', 'ADD_PRIVILEGED_COMMENT']
-
-        action_mapping[('Recommended', False, CreditTradeCommentActions._Relationship.GovernmentDirector)] \
-            = ['ADD_COMMENT', 'ADD_PRIVILEGED_COMMENT']
-        action_mapping[('Not Recommended', False, CreditTradeCommentActions._Relationship.GovernmentDirector)] \
-            = ['ADD_COMMENT', 'ADD_PRIVILEGED_COMMENT']
-
-        if trade.initiator.id == request.user.organization.id:
-            relationship = CreditTradeCommentActions._Relationship.Initiator
-        if trade.respondent.id == request.user.organization.id:
-            relationship = CreditTradeCommentActions._Relationship.Respondent
-        if is_government and request.user.has_perm('RECOMMEND_CREDIT_TRANSFER'):
-            relationship = CreditTradeCommentActions._Relationship.GovernmentAnalyst
-        if is_government and (request.user.has_perm('APPROVE_CREDIT_TRANSFER')
-                              or request.user.has_perm('DECLINE_CREDIT_TRANSFER')):
-                relationship = CreditTradeCommentActions._Relationship.GovernmentDirector
-
-        return action_mapping[(
-            trade.status.status,
-            trade.is_rescinded,
-            relationship
-            )]
-
+        return available_actions
 

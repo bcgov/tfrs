@@ -62,6 +62,7 @@ class TestAPIComments(TestCase):
         'permissions.json',
         'roles_permissions.json',
         'roles_permissions_v0.3.0.json',
+        'test_prodlike_government_users_and_roles.json',
         'test_credit_trade_comments.json'
     ]
 
@@ -102,62 +103,62 @@ class TestAPIComments(TestCase):
                                                 'reason': "Default response is no access"})
 
         # Expected successes
-        expected_results[(1, 'fs_air_liquide')] = {
+        expected_results[((1, 'fs_air_liquide'))] = {
             'status': status.HTTP_200_OK,
             'reason': "Access by owner"
         }
-        expected_results[(2, 'fs_air_liquide')] = {
+        expected_results[((2, 'fs_air_liquide'))] = {
             'status': status.HTTP_200_OK,
             'reason': "Access by owner"
         }
-        expected_results[(5, 'fs_shell')] = {
+        expected_results[((5, 'fs_shell'))] = {
             'status': status.HTTP_200_OK,
             'reason': "Access by owner"
         }
-        expected_results[(1, 'gov_analyst')] = {
+        expected_results[((1, 'gov_analyst'))] = {
             'status': status.HTTP_200_OK,
             'reason': "Access by government analyst"
         }
-        expected_results[(2, 'gov_analyst')] = {
+        expected_results[((2, 'gov_analyst'))] = {
             'status': status.HTTP_200_OK,
             'reason': "Access by government analyst"
         }
-        expected_results[(3, 'gov_analyst')] = {
+        expected_results[((3, 'gov_analyst'))] = {
             'status': status.HTTP_200_OK,
             'reason': "Access by government analyst"
         }
-        expected_results[(4, 'gov_analyst')] = {
+        expected_results[((4, 'gov_analyst'))] = {
             'status': status.HTTP_200_OK,
             'reason': "Access by government analyst"
         }
-        expected_results[(5, 'gov_analyst')] = {
+        expected_results[((5, 'gov_analyst'))] = {
             'status': status.HTTP_200_OK,
             'reason': "Access by government analyst"
         }
-        expected_results[(1, 'gov_director')] = {
+        expected_results[((1, 'gov_director'))] = {
             'status': status.HTTP_200_OK,
             'reason': "Access by government director"
         }
-        expected_results[(2, 'gov_director')] = {
+        expected_results[((2, 'gov_director'))] = {
             'status': status.HTTP_200_OK,
             'reason': "Access by government director"
         }
-        expected_results[(3, 'gov_director')] = {
+        expected_results[((3, 'gov_director'))] = {
             'status': status.HTTP_200_OK,
             'reason': "Access by government director"
         }
-        expected_results[(4, 'gov_director')] = {
+        expected_results[((4, 'gov_director'))] = {
             'status': status.HTTP_200_OK,
             'reason': "Access by government director"
         }
-        expected_results[(5, 'gov_director')] = {
+        expected_results[((5, 'gov_director'))] = {
             'status': status.HTTP_200_OK,
             'reason': "Access by government director"
         }
 
         for (user, comment) in product(all_users, all_comments):
-            expected_status = expected_results[(comment, user)]['status']
-            reason = expected_results[(comment, user)]['reason']
+            expected_status = expected_results[((comment, user))]['status']
+            reason = expected_results[((comment, user))]['reason']
 
             with self.subTest(user=user,
                               comment_id=comment,
@@ -181,32 +182,32 @@ class TestAPIComments(TestCase):
             'reason': "Default response is no access (and don't even confirm it exists)"
         })
 
-        expected_results[(200, 'fs_husky')] = {
+        expected_results[((200, 'fs_husky'))] = {
             'status': status.HTTP_200_OK,
             'response_contains_no_privileged_comments': True,
             'reason': "Access by initiator"
         }
-        expected_results[(200, 'fs_air_liquide')] = {
+        expected_results[((200, 'fs_air_liquide'))] = {
             'status': status.HTTP_200_OK,
             'response_contains_no_privileged_comments': True,
             'reason': "Access by respondent"
         }
-        expected_results[(200, 'gov_director')] = {
+        expected_results[((200, 'gov_director'))] = {
             'status': status.HTTP_200_OK,
             'response_contains_no_privileged_comments': False,
             'reason': "Access by government analyst"
         }
-        expected_results[(200, 'gov_analyst')] = {
+        expected_results[((200, 'gov_analyst'))] = {
             'status': status.HTTP_200_OK,
             'response_contains_no_privileged_comments': False,
             'reason': "Access by government director"
         }
 
         for (user, trade) in product(all_users, all_credit_trades):
-            expected_status = expected_results[(trade, user)]['status']
-            expect_only_unprivileged = expected_results[(trade, user)][
+            expected_status = expected_results[((trade, user))]['status']
+            expect_only_unprivileged = expected_results[((trade, user))][
                 'response_contains_no_privileged_comments']
-            reason = expected_results[(trade, user)]['reason']
+            reason = expected_results[((trade, user))]['reason']
 
             with self.subTest(user=user, trade_id=trade, expected_status=expected_status,
                               expect_filtered=expect_only_unprivileged,
@@ -224,37 +225,57 @@ class TestAPIComments(TestCase):
                         if expect_only_unprivileged:
                             assert comment['privilegedAccess'] is False
 
-    def test_comment_post_permissions(self):
-        """Test that Credit Trade Comment POST permissions function correctly"""
-
-        # From the test fixtures
-        all_users = self.users
+    @staticmethod
+    def create_possible_credit_trades(initiating_organization, responding_organization):
+        """Used to setup test data for exhaustive trials """
+        created_trades = []
 
         all_statuses = [s.status for s in CreditTradeStatus.objects.all()]
+
+        # Certain combinations of (status,rescinded) are not logical
+        impossible_states = [
+            ('Draft', True),
+            ('Cancelled', True),
+            ('Approved', True),
+            ('Declined', True),
+            ('Completed', True),
+        ]
+
+        # Create test data for this test -- one trade with each possible status
+        for (ct_status, rescinded) in product(all_statuses, [True, False]):
+            if (ct_status, rescinded) not in impossible_states:
+                trade = CreditTrade()
+                trade.initiator = initiating_organization
+                trade.respondent = responding_organization
+                trade.type = CreditTradeType.objects.get_by_natural_key("Buy")
+                trade.status = CreditTradeStatus.objects.get_by_natural_key(ct_status)
+                trade.fair_market_value_per_credit = 20.0
+                trade.number_of_credits = 500
+                trade.is_rescinded = rescinded
+                trade.save()
+                trade.refresh_from_db()
+                logging.debug("created credit trade %s", trade.id)
+                created_trades.append({
+                    'status': ct_status,
+                    'rescinded': rescinded,
+                    'id': trade.id
+                })
+
+        return created_trades
+
+    def test_comment_post_permissions(self):
+        """Test that Credit Trade Comment POST permissions function correctly"""
 
         initiating_organization = Organization.objects.get_by_natural_key("Husky Oil Ltd.")
         responding_organization = Organization.objects.get_by_natural_key("Shell Canada Products")
 
-        created_trades = []
+        created_trades = TestAPIComments.create_possible_credit_trades(
+            initiating_organization,
+            responding_organization
+        )
 
-        # Create test data for this test -- one trade with each possible status
-        for (ct_status, rescinded) in product(all_statuses, [True, False]):
-            trade = CreditTrade()
-            trade.initiator = initiating_organization
-            trade.respondent = responding_organization
-            trade.type = CreditTradeType.objects.get_by_natural_key("Buy")
-            trade.status = CreditTradeStatus.objects.get_by_natural_key(ct_status)
-            trade.fair_market_value_per_credit = 20.0
-            trade.number_of_credits = 500
-            trade.rescinded = rescinded
-            trade.save()
-            trade.refresh_from_db()
-            logging.debug("created credit trade %s", trade.id)
-            created_trades.append({
-                'status': ct_status,
-                'rescinded': rescinded,
-                'id': trade.id
-            })
+        # From the test fixtures
+        all_users = self.users
 
         # Test that all activities not explicitly allowed are prevented
         expected_results = defaultdict(lambda: {
@@ -265,117 +286,147 @@ class TestAPIComments(TestCase):
 
         # These are the exceptions
         # Key is (status, rescinded_flag, username, creating_privileged_comment)
-        expected_results['Draft', False, 'fs_husky', False] = \
+        expected_results[('Draft', False, 'fs_husky', False)] = \
             {
                 'status': status.HTTP_201_CREATED,
                 'reason': 'Initiator can comment in Draft'
             }
-        expected_results['Submitted', False, 'fs_shell', False] = \
+        expected_results[('Submitted', True, 'fs_husky', False)] = \
+            {
+                'status': status.HTTP_201_CREATED,
+                'reason': 'Initiator can comment in Submitted (Signed 1/2) if rescinded'
+            }
+        expected_results[('Accepted', True, 'fs_husky', False)] = \
+            {
+                'status': status.HTTP_201_CREATED,
+                'reason': 'Initiator can comment in Accepted (Signed 2/2) if rescinded'
+            }
+        expected_results[('Recommended', True, 'fs_husky', False)] = \
+            {
+                'status': status.HTTP_201_CREATED,
+                'reason': 'Initiator can comment in Recommended if rescinded'
+            }
+        expected_results[('Not Recommended', True, 'fs_husky', False)] = \
+            {
+                'status': status.HTTP_201_CREATED,
+                'reason': 'Initiator can comment in Not Recommended if rescinded'
+            }
+        expected_results[('Submitted', False, 'fs_shell', False)] = \
             {
                 'status': status.HTTP_201_CREATED,
                 'reason': 'Respondent can comment in Submitted (Signed 1/2)'
             }
-        expected_results['Submitted', True, 'fs_shell', False] = \
+        expected_results[('Accepted', True, 'fs_shell', False)] = \
             {
                 'status': status.HTTP_201_CREATED,
-                'reason': 'Respondent can comment in Submitted (Signed 1/2)'
+                'reason': 'Respondent can comment in Submitted (Signed 2/2) if rescinded'
             }
-        expected_results['Accepted', False, 'gov_analyst', False] = \
+        expected_results[('Recommended', True, 'fs_shell', False)] = \
+            {
+                'status': status.HTTP_201_CREATED,
+                'reason': 'Respondent can comment in Recommended if rescinded'
+            }
+        expected_results[('Not Recommended', True, 'fs_shell', False)] = \
+            {
+                'status': status.HTTP_201_CREATED,
+                'reason': 'Respondent can comment in Not Recommended if rescinded'
+            }
+        expected_results[('Accepted', False, 'gov_analyst', False)] = \
             {
                 'status': status.HTTP_201_CREATED,
                 'reason': 'Analyst can comment in Accepted (Signed 2/2)'
             }
-        expected_results['Accepted', False, 'gov_analyst', True] = \
+        expected_results[('Accepted', False, 'gov_analyst', True)] = \
             {
                 'status': status.HTTP_201_CREATED,
                 'reason': 'Analyst can comment in Accepted (Signed2/2)'
             }
-        expected_results['Accepted', True, 'gov_analyst', False] = \
+        expected_results[('Accepted', True, 'gov_analyst', False)] = \
             {
                 'status': status.HTTP_201_CREATED,
                 'reason': 'Analyst can comment in Accepted (Signed 2/2)'
             }
-        expected_results['Accepted', True, 'gov_analyst', True] = \
+        expected_results[('Accepted', True, 'gov_analyst', True)] = \
             {
                 'status': status.HTTP_201_CREATED,
                 'reason': 'Analyst can comment in Accepted (Signed 2/2)'
             }
-        expected_results['Recommended', False, 'gov_analyst', False] = \
+        expected_results[('Recommended', False, 'gov_analyst', False)] = \
             {
                 'status': status.HTTP_201_CREATED,
                 'reason': 'Analyst can comment in Recommended'
             }
-        expected_results['Recommended', False, 'gov_analyst', True] = \
+        expected_results[('Recommended', False, 'gov_analyst', True)] = \
             {
                 'status': status.HTTP_201_CREATED,
                 'reason': 'Analyst can comment in Recommended'
             }
-        expected_results['Not Recommended', False, 'gov_analyst', False] = \
+        expected_results[('Not Recommended', False, 'gov_analyst', False)] = \
             {
                 'status': status.HTTP_201_CREATED,
                 'reason': 'Analyst can comment in Not Recommended'
             }
-        expected_results['Not Recommended', False, 'gov_analyst', True] = \
+        expected_results[('Not Recommended', False, 'gov_analyst', True)] = \
             {
                 'status': status.HTTP_201_CREATED,
                 'reason': 'Analyst can comment in Not Recommended'
             }
-        expected_results['Recommended', True, 'gov_analyst', False] = \
+        expected_results[('Recommended', True, 'gov_analyst', False)] = \
             {
                 'status': status.HTTP_201_CREATED,
                 'reason': 'Analyst can comment in Recommended'
             }
-        expected_results['Recommended', True, 'gov_analyst', True] = \
+        expected_results[('Recommended', True, 'gov_analyst', True)] = \
             {
                 'status': status.HTTP_201_CREATED,
                 'reason': 'Analyst can comment in Recommended'
             }
-        expected_results['Not Recommended', True, 'gov_analyst', False] = \
+        expected_results[('Not Recommended', True, 'gov_analyst', False)] = \
             {
                 'status': status.HTTP_201_CREATED,
                 'reason': 'Analyst can comment in Not Recommended'
             }
-        expected_results['Not Recommended', True, 'gov_analyst', True] = \
+        expected_results[('Not Recommended', True, 'gov_analyst', True)] = \
             {
                 'status': status.HTTP_201_CREATED,
                 'reason': 'Analyst can comment in Not Recommended'
             }
-        expected_results['Recommended', False, 'gov_director', False] = \
+        expected_results[('Recommended', False, 'gov_director', False)] = \
             {
                 'status': status.HTTP_201_CREATED,
                 'reason': 'Director can comment in Recommended'
             }
-        expected_results['Recommended', False, 'gov_director', True] = \
+        expected_results[('Recommended', False, 'gov_director', True)] = \
             {
                 'status': status.HTTP_201_CREATED,
                 'reason': 'Director can comment in Recommended'
             }
-        expected_results['Not Recommended', False, 'gov_director', False] = \
+        expected_results[('Not Recommended', False, 'gov_director', False)] = \
             {
                 'status': status.HTTP_201_CREATED,
                 'reason': 'Director can comment in Not Recommended'
             }
-        expected_results['Not Recommended', False, 'gov_director', True] = \
+        expected_results[('Not Recommended', False, 'gov_director', True)] = \
             {
                 'status': status.HTTP_201_CREATED,
                 'reason': 'Director can comment in Not Recommended'
             }
-        expected_results['Recommended', True, 'gov_director', False] = \
+        expected_results[('Recommended', True, 'gov_director', False)] = \
             {
                 'status': status.HTTP_201_CREATED,
                 'reason': 'Director can comment in Recommended'
             }
-        expected_results['Recommended', True, 'gov_director', True] = \
+        expected_results[('Recommended', True, 'gov_director', True)] = \
             {
                 'status': status.HTTP_201_CREATED,
                 'reason': 'Director can comment in Recommended'
             }
-        expected_results['Not Recommended', True, 'gov_director', False] = \
+        expected_results[('Not Recommended', True, 'gov_director', False)] = \
             {
                 'status': status.HTTP_201_CREATED,
                 'reason': 'Director can comment in Not Recommended'
             }
-        expected_results['Not Recommended', True, 'gov_director', True] = \
+        expected_results[('Not Recommended', True, 'gov_director', True)] = \
             {
                 'status': status.HTTP_201_CREATED,
                 'reason': 'Director can comment in Not Recommended'
@@ -390,24 +441,6 @@ class TestAPIComments(TestCase):
                     privileged
                 )
             ]
-
-            # with self.subTest("Test commentActions are correct",
-            #                   credit_trade_id=trade['id'],
-            #                   credit_trade_status=trade['status'],
-            #                   credit_trade_is_rescinded=trade['rescinded'],
-            #                   expected_actions=expected_result['actions'],
-            #                   as_user=user,
-            #                   user_in_initiator_org=True if user == 'fs_husky' else False,
-            #                   user_in_respondent_org=True if user == 'fs_shell' else False):
-            #
-            #     # First check that 'commentActions' is correct (impacts frontend rendering only)
-            #     response = self.clients[user].get("/api/credit_trades/{}".format(trade['id']))
-            #     if status.is_success(response.status_code):
-            #         self.assertEqual(
-            #             expected_result['actions'],
-            #             json.loads(response.content.decode('utf-8'))['commentActions']
-            #         )
-
             with self.subTest("Test posting comment",
                               credit_trade_id=trade['id'],
                               credit_trade_status=trade['status'],

@@ -23,8 +23,79 @@
 from rest_framework import permissions
 from api.services.CreditTradeService import CreditTradeService
 
+from collections import defaultdict
+from enum import Enum, auto
+
+
 class CreditTradeCommentPermissions(permissions.BasePermission):
     """Used by Viewset to check permissions for API requests"""
+
+    class _Relationship(Enum):
+        Initiator = auto()
+        Respondent = auto()
+        GovernmentAnalyst = auto()
+        GovernmentDirector = auto()
+
+    action_mapping = defaultdict(lambda: False)
+    # Key (Relationship, Status, Rescinded?, Privileged?)
+
+    action_mapping[(_Relationship.Initiator, 'Draft', False, False)] = True
+    action_mapping[(_Relationship.Initiator, 'Submitted', True, False)] = True
+    action_mapping[(_Relationship.Initiator, 'Accepted', True, False)] = True
+    action_mapping[(_Relationship.Initiator, 'Recommended', True, False)] = True
+    action_mapping[(_Relationship.Initiator, 'Not Recommended', True, False)] = True
+
+    action_mapping[(_Relationship.Respondent, 'Submitted', False, False)] = True
+    action_mapping[(_Relationship.Respondent, 'Accepted', True, False)] = True
+    action_mapping[(_Relationship.Respondent, 'Recommended', True, False)] = True
+    action_mapping[(_Relationship.Respondent, 'Not Recommended', True, False)] = True
+
+    action_mapping[(_Relationship.GovernmentAnalyst, 'Accepted', False, False)] = True
+    action_mapping[(_Relationship.GovernmentAnalyst, 'Recommended', False, False)] = True
+    action_mapping[(_Relationship.GovernmentAnalyst, 'Not Recommended', False, False)] = True
+    action_mapping[(_Relationship.GovernmentAnalyst, 'Accepted', True, False)] = True
+    action_mapping[(_Relationship.GovernmentAnalyst, 'Recommended', True, False)] = True
+    action_mapping[(_Relationship.GovernmentAnalyst, 'Not Recommended', True, False)] = True
+    action_mapping[(_Relationship.GovernmentAnalyst, 'Accepted', False, True)] = True
+    action_mapping[(_Relationship.GovernmentAnalyst, 'Recommended', False, True)] = True
+    action_mapping[(_Relationship.GovernmentAnalyst, 'Not Recommended', False, True)] = True
+    action_mapping[(_Relationship.GovernmentAnalyst, 'Accepted', True, True)] = True
+    action_mapping[(_Relationship.GovernmentAnalyst, 'Recommended', True, True)] = True
+    action_mapping[(_Relationship.GovernmentAnalyst, 'Not Recommended', True, True)] = True
+
+    action_mapping[(_Relationship.GovernmentDirector, 'Recommended', False, False)] = True
+    action_mapping[(_Relationship.GovernmentDirector, 'Not Recommended', False, False)] = True
+    action_mapping[(_Relationship.GovernmentDirector, 'Recommended', True, False)] = True
+    action_mapping[(_Relationship.GovernmentDirector, 'Not Recommended', True, False)] = True
+    action_mapping[(_Relationship.GovernmentDirector, 'Recommended', False, True)] = True
+    action_mapping[(_Relationship.GovernmentDirector, 'Not Recommended', False, True)] = True
+    action_mapping[(_Relationship.GovernmentDirector, 'Recommended', True, True)] = True
+    action_mapping[(_Relationship.GovernmentDirector, 'Not Recommended', True, True)] = True
+
+    @staticmethod
+    def user_can_comment(user, credit_trade, privileged):
+        """
+        This functionality is also used by CreditTradeCommentActions.
+
+        (Which is used by the serializer to to present available options to the user. DRY.)
+        """
+        is_government = user.organization.id == 1
+
+        if credit_trade.initiator.id == user.organization.id:
+            relationship = CreditTradeCommentPermissions._Relationship.Initiator
+        if credit_trade.respondent.id == user.organization.id:
+            relationship = CreditTradeCommentPermissions._Relationship.Respondent
+        if is_government and user.has_perm('RECOMMEND_CREDIT_TRANSFER'):
+            relationship = CreditTradeCommentPermissions._Relationship.GovernmentAnalyst
+        if is_government and (user.has_perm('APPROVE_CREDIT_TRANSFER') or user.has_perm('DECLINE_CREDIT_TRANSFER')):
+            relationship = CreditTradeCommentPermissions._Relationship.GovernmentDirector
+
+        return CreditTradeCommentPermissions.action_mapping[(
+            relationship,
+            credit_trade.status.status,
+            credit_trade.is_rescinded,
+            privileged
+        )]
 
     def has_permission(self, request, view):
         """Check permissions When an object does not yet exist (POST)"""
@@ -41,28 +112,17 @@ class CreditTradeCommentPermissions(permissions.BasePermission):
 
         # Check if the user is a party to this credit_trade (or Government)
         # using CreditTradeService logic
-        found = CreditTradeService.get_organization_credit_trades(request.user.organization)\
+        found = CreditTradeService.get_organization_credit_trades(request.user.organization) \
             .filter(id=credit_trade).first()
 
         if not found:
             return False
 
-        is_initiator = found.initiator.id == request.user.organization.id
-        is_respondent = found.respondent.id == request.user.organization.id
-        is_government = request.user.organization.id == 1
-
-        if is_initiator:
-            return found.status.status in ['Draft'] and not privileged_access
-
-        if is_respondent:
-            return found.status.status in ['Submitted'] and not privileged_access
-
-        if is_government and request.user.has_perm('RECOMMEND_CREDIT_TRANSFER'):
-            return found.status.status in ['Accepted', 'Recommended', 'Not Recommended']
-
-        return found.status.status in ['Recommended', 'Not Recommended'] if\
-            is_government and (request.user.has_perm('APPROVE_CREDIT_TRANSFER')
-                               or request.user.has_perm('DECLINE_CREDIT_TRANSFER')) else False
+        return CreditTradeCommentPermissions.user_can_comment(
+            request.user,
+            found,
+            privileged_access
+        )
 
     def has_object_permission(self, request, view, obj):
         """Check permissions When an object does exist (PUT, GET)"""
