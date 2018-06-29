@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import FontAwesomeIcon from '@fortawesome/react-fontawesome';
 import * as Lang from '../../constants/langEnUs';
+import LocalTimestamp from '../../app/components/LocalTimestamp';
 
 const CreditTransferComment = props => (
   <div className={`comment panel ${props.comment.privilegedAccess ? 'panel-primary' : 'panel-info'}`}>
@@ -12,7 +13,7 @@ const CreditTransferComment = props => (
           {props.comment.createUser.organization.name}
         </div>
         <div className="col-xs-6 text-right">
-          <span className="align-middle">{props.comment.updateTimestamp}</span>
+          <LocalTimestamp iso8601Date={props.comment.updateTimestamp} />
         </div>
       </div>
     </div>

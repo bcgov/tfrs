@@ -22,15 +22,11 @@
 """
 
 from api.permissions.CreditTradeComment import CreditTradeCommentPermissions
-# from enum import Enum, auto
-
 
 class CreditTradeCommentActions(object):
     """
     Provide available commenting actions to simplify frontend presentation logic
     """
-
-
 
     @staticmethod
     def available_comment_actions(request, trade):

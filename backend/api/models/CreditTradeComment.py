@@ -25,7 +25,9 @@ from django.db import models
 
 from auditable.models import Auditable
 
+
 class CreditTradeComment(Auditable):
+
     credit_trade = models.ForeignKey(
         'CreditTrade',
         related_name='credit_trade_comments',
@@ -37,7 +39,7 @@ class CreditTradeComment(Auditable):
                                null=True,
                                db_column='credit_trade_comment')
 
-    ''' require a permission to view '''
+    # require a permission to view
     privileged_access = models.BooleanField(null=False, default=True)
 
     class Meta:

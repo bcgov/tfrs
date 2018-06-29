@@ -19,12 +19,11 @@
     See the License for the specific language governing permissions and
     limitations under the License.
 """
+from collections import defaultdict
+from enum import Enum, auto
 
 from rest_framework import permissions
 from api.services.CreditTradeService import CreditTradeService
-
-from collections import defaultdict
-from enum import Enum, auto
 
 
 class CreditTradeCommentPermissions(permissions.BasePermission):
@@ -37,6 +36,7 @@ class CreditTradeCommentPermissions(permissions.BasePermission):
         GovernmentDirector = auto()
 
     action_mapping = defaultdict(lambda: False)
+
     # Key (Relationship, Status, Rescinded?, Privileged?)
 
     action_mapping[(_Relationship.Initiator, 'Draft', False, False)] = True
@@ -81,13 +81,16 @@ class CreditTradeCommentPermissions(permissions.BasePermission):
         """
         is_government = user.organization.id == 1
 
+        relationship = None
+
         if credit_trade.initiator.id == user.organization.id:
             relationship = CreditTradeCommentPermissions._Relationship.Initiator
         if credit_trade.respondent.id == user.organization.id:
             relationship = CreditTradeCommentPermissions._Relationship.Respondent
         if is_government and user.has_perm('RECOMMEND_CREDIT_TRANSFER'):
             relationship = CreditTradeCommentPermissions._Relationship.GovernmentAnalyst
-        if is_government and (user.has_perm('APPROVE_CREDIT_TRANSFER') or user.has_perm('DECLINE_CREDIT_TRANSFER')):
+        if is_government and (user.has_perm('APPROVE_CREDIT_TRANSFER')
+                              or user.has_perm('DECLINE_CREDIT_TRANSFER')):
             relationship = CreditTradeCommentPermissions._Relationship.GovernmentDirector
 
         return CreditTradeCommentPermissions.action_mapping[(

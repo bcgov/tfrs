@@ -39,3 +39,5 @@ export const TEXT_ADD_COMMENT_HEADING = 'Adding Comment';
 export const TEXT_ADD_INTERNAL_COMMENT_HEADING = 'Adding Government-Internal Comment';
 export const TEXT_VISIBLE_TO_GOV = 'Visible to government';
 export const TEXT_VISIBLE_TO_ALL = 'Visible to both fuel suppliers and government';
+export const TEXT_COMMENT_DIRTY = 'You are currently editing a comment. Save or Cancel before ' +
+                                  'performing other actions';
