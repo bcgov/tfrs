@@ -11,8 +11,7 @@ class SigningAuthorityConfirmationViewSet(AuditableMixin,
                                           mixins.CreateModelMixin,
                                           viewsets.GenericViewSet):
     """
-    This viewset automatically provides `list`, `create`, `retrieve`,
-    `update` and `destroy` actions.
+    This viewset mixin automatically provides `create`
     """
     permission_classes = (permissions.AllowAny,)
     http_method_names = ['post']

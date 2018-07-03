@@ -215,12 +215,15 @@ class TestApiCustom(TestCase):
         json_string = response.content.decode("utf-8")
         data = json.loads(json_string)
 
+        id = data['id']
+        user = User.objects.get(id=id)
+
         user_headers = {
-            'authorizationGuid': data['authorizationGuid'],
-            'displayName': data['displayName'],
-            'email': data['email'],
-            'username': data['email'],
-            'id': data['id']
+            'authorizationGuid': user.authorization_guid,
+            'displayName': user.display_name,
+            'email': user.email,
+            'username': user.username,
+            'id': id
         }
         return user_headers
 

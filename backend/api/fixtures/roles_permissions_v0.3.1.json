@@ -1,0 +1,26 @@
+[
+  {
+    "fields": {
+      "permission": ["LOGIN"],
+      "role": ["Admin"]
+    },
+    "model": "api.rolepermission",
+    "pk": null
+  },
+  {
+    "fields": {
+      "permission": ["USER_MANAGEMENT"],
+      "role": ["Admin"]
+    },
+    "model": "api.rolepermission",
+    "pk": null
+  },
+  {
+    "fields": {
+      "permission": ["ROLES_AND_PERMISSIONS"],
+      "role": ["Admin"]
+    },
+    "model": "api.rolepermission",
+    "pk": null
+  }
+]

@@ -85,12 +85,12 @@ class TestAPIComments(TestCase):
 
         django.setup()
 
-    def test_comments_list_returns_404(self):
+    def test_comments_list_returns_client_error(self):
         """Test that listing comments is not a valid action"""
-        list_url = "/api/comments/"
+        list_url = "/api/comments"
         response = self.clients['fs_air_liquide'].get(list_url)
         # Check that the response is 404.
-        assert status.HTTP_404_NOT_FOUND == response.status_code
+        assert status.is_client_error(response.status_code)
 
     def test_comment_get_permissions(self):
         """Test that Credit Trade Comment GET permissions function correctly in all cases"""
@@ -622,4 +622,4 @@ class TestAPIComments(TestCase):
 
             data=json.dumps(test_data))
         logging.debug(response)
-        assert status.HTTP_403_FORBIDDEN == response.status_code
+        assert status.is_client_error(response.status_code)
