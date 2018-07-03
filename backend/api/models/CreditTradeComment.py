@@ -25,17 +25,24 @@ from django.db import models
 
 from auditable.models import Auditable
 
+
 class CreditTradeComment(Auditable):
+
     credit_trade = models.ForeignKey(
         'CreditTrade',
         related_name='credit_trade_comments',
         null=False,
         on_delete=models.PROTECT)
 
-    comment = models.CharField(max_length=4000, blank=True, null=True)
+    comment = models.CharField(max_length=4000,
+                               blank=True,
+                               null=True,
+                               db_column='credit_trade_comment')
 
-    ''' require a permission to view '''
-    privileged_access = models.BooleanField(null=False, default=True)
+    # require a permission to view
+    privileged_access = models.BooleanField(null=False,
+                                            default=True,
+                                            db_column='is_privileged_access')
 
     class Meta:
         db_table = 'credit_trade_comment'

@@ -25,7 +25,9 @@ class CreditTransferCommentForm extends Component {
   render () {
     return (
       <div className="comment-form well transparent row">
-        <h2>{Lang.TEXT_ADD_COMMENT_HEADING}</h2>
+        <h2>{this.props.isCreatingPrivilegedComment ? Lang.TEXT_ADD_INTERNAL_COMMENT_HEADING
+          : Lang.TEXT_ADD_COMMENT_HEADING}
+        </h2>
         <div className="form-group note col-xs-8">
           <form onSubmit={e => e.preventDefault()}>
             <label htmlFor="comment">Comment:
@@ -34,8 +36,10 @@ class CreditTransferCommentForm extends Component {
                 rows="5"
                 name="comment"
                 ref={(input) => { this.commentField = input; }}
-                placeholder={this.props.privilegedAccess ? Lang.TEXT_COMMENT_PLACEHOLDER_PRIVILEGED
-                  : Lang.TEXT_COMMENT_PLACEHOLDER}
+                placeholder={
+                  this.props.isCreatingPrivilegedComment
+                    ? Lang.TEXT_COMMENT_PLACEHOLDER_PRIVILEGED
+                    : Lang.TEXT_COMMENT_PLACEHOLDER}
                 onChange={this.handleInputChange('comment')}
                 value={this.state.comment}
               />
@@ -54,7 +58,7 @@ class CreditTransferCommentForm extends Component {
               type="button"
               onClick={() => this.props.saveComment({
                 comment: this.state.comment,
-                privilegedAccess: this.props.privilegedAccess
+                privilegedAccess: this.props.isCreatingPrivilegedComment
               })}
             >
               {Lang.BTN_SAVE_COMMENT}
@@ -62,10 +66,15 @@ class CreditTransferCommentForm extends Component {
           </div>
         </div>
         <div className="col-xs-4">
-          <div className="panel panel-info disclosure-notice">
+          <div className={
+            `panel disclosure-notice
+             ${this.props.isCreatingPrivilegedComment ? 'panel-primary' : 'panel-info'}`
+          }
+
+          >
             <div className="panel-heading">Disclosure Notice</div>
             <div className="panel-body">
-              {this.props.privilegedAccess ? Lang.TEXT_COMMENT_DISCLOSURE_PRIVILEGED
+              {this.props.isCreatingPrivilegedComment ? Lang.TEXT_COMMENT_DISCLOSURE_PRIVILEGED
                 : Lang.TEXT_COMMENT_DISCLOSURE}
             </div>
           </div>
@@ -76,13 +85,12 @@ class CreditTransferCommentForm extends Component {
 }
 
 CreditTransferCommentForm.defaultProps = {
-  comment: '',
-  privilegedAccess: true
+  comment: ''
 };
 
 CreditTransferCommentForm.propTypes = {
   comment: PropTypes.string,
-  privilegedAccess: PropTypes.bool,
+  isCreatingPrivilegedComment: PropTypes.bool.isRequired,
   saveComment: PropTypes.func.isRequired,
   cancelComment: PropTypes.func.isRequired
 };

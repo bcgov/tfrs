@@ -31,6 +31,8 @@ from auditable.models import Auditable
 from .OrganizationBalance import OrganizationBalance
 from .UserRole import UserRole
 
+from api.managers.UserManager import UserManager
+
 
 class User(AbstractUser, Auditable):
     """
@@ -111,6 +113,11 @@ class User(AbstractUser, Auditable):
             return False
 
         return True
+
+    objects = UserManager()
+
+    def natural_key(self):
+        return (self.username,)
 
     class Meta:
         db_table = 'user'

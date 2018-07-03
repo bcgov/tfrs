@@ -28,13 +28,19 @@ const CreditTransferFormButtons = props => (
       </button>
       }
       {props.actions.includes(Lang.BTN_EDIT_DRAFT) &&
-      <button
-        className="btn btn-default"
-        onClick={() => history.push(CREDIT_TRANSACTIONS.EDIT.replace(':id', props.id))}
-        type="button"
+      <TooltipWhenDisabled
+        disabled={props.isCommenting}
+        title={Lang.TEXT_COMMENT_DIRTY}
       >
-        {Lang.BTN_EDIT_DRAFT}
-      </button>
+        <button
+          className="btn btn-default"
+          disabled={props.isCommenting}
+          onClick={() => history.push(CREDIT_TRANSACTIONS.EDIT.replace(':id', props.id))}
+          type="button"
+        >
+          {Lang.BTN_EDIT_DRAFT}
+        </button>
+      </TooltipWhenDisabled>
       }
       {props.actions.includes(Lang.BTN_SAVE_DRAFT) &&
       <button
@@ -66,22 +72,28 @@ const CreditTransferFormButtons = props => (
       </TooltipWhenDisabled>
       }
       {props.actions.includes(Lang.BTN_REFUSE) &&
-      <button
-        className="btn btn-danger"
-        data-target="#confirmRefuse"
-        data-toggle="modal"
-        type="button"
+      <TooltipWhenDisabled
+        disabled={props.isCommenting}
+        title={Lang.TEXT_COMMENT_DIRTY}
       >
-        {Lang.BTN_REFUSE}
-      </button>
+        <button
+          className="btn btn-danger"
+          disabled={props.isCommenting}
+          data-target="#confirmRefuse"
+          data-toggle="modal"
+          type="button"
+        >
+          {Lang.BTN_REFUSE}
+        </button>
+      </TooltipWhenDisabled>
       }
       {props.actions.includes(Lang.BTN_SIGN_2_2) &&
       <TooltipWhenDisabled
-        disabled={props.disabled.BTN_SIGN_2_2}
-        title={props.permissions.BTN_SIGN_2_2
+        disabled={props.isCommenting || props.disabled.BTN_SIGN_2_2}
+        title={props.isCommenting ? Lang.TEXT_COMMENT_DIRTY : (props.permissions.BTN_SIGN_2_2
           ? 'Signing Authority Declaration needs to be accepted'
           : 'You must be assigned the Signing Authority role in order to sign and send ' +
-          'a Credit Transfer Proposal to another fuel supplier'}
+          'a Credit Transfer Proposal to another fuel supplier')}
       >
         <button
           className="btn btn-primary"
@@ -105,44 +117,68 @@ const CreditTransferFormButtons = props => (
       </button>
       }
       {props.actions.includes(Lang.BTN_NOT_RECOMMENDED_FOR_DECISION) &&
-      <button
-        className="btn btn-danger"
-        data-target="#confirmNotRecommend"
-        data-toggle="modal"
-        type="button"
+      <TooltipWhenDisabled
+        disabled={props.isCommenting}
+        title={Lang.TEXT_COMMENT_DIRTY}
       >
-        {Lang.BTN_NOT_RECOMMENDED_FOR_DECISION}
-      </button>
+        <button
+          className="btn btn-danger"
+          disabled={props.isCommenting}
+          data-target="#confirmNotRecommend"
+          data-toggle="modal"
+          type="button"
+        >
+          {Lang.BTN_NOT_RECOMMENDED_FOR_DECISION}
+        </button>
+      </TooltipWhenDisabled>
       }
       {props.actions.includes(Lang.BTN_RECOMMEND_FOR_DECISION) &&
-      <button
-        className="btn btn-primary"
-        data-target="#confirmRecommend"
-        data-toggle="modal"
-        type="button"
+      <TooltipWhenDisabled
+        disabled={props.isCommenting}
+        title={Lang.TEXT_COMMENT_DIRTY}
       >
-        {Lang.BTN_RECOMMEND_FOR_DECISION}
-      </button>
+        <button
+          className="btn btn-primary"
+          disabled={props.isCommenting}
+          data-target="#confirmRecommend"
+          data-toggle="modal"
+          type="button"
+        >
+          {Lang.BTN_RECOMMEND_FOR_DECISION}
+        </button>
+      </TooltipWhenDisabled>
       }
       {props.actions.includes(Lang.BTN_DECLINE_FOR_APPROVAL) &&
-      <button
-        className="btn btn-danger"
-        data-target="#confirmDecline"
-        data-toggle="modal"
-        type="button"
+      <TooltipWhenDisabled
+        disabled={props.isCommenting}
+        title={Lang.TEXT_COMMENT_DIRTY}
       >
-        {Lang.BTN_DECLINE_FOR_APPROVAL}
-      </button>
+        <button
+          className="btn btn-danger"
+          disabled={props.isCommenting}
+          data-target="#confirmDecline"
+          data-toggle="modal"
+          type="button"
+        >
+          {Lang.BTN_DECLINE_FOR_APPROVAL}
+        </button>
+      </TooltipWhenDisabled>
       }
       {props.actions.includes(Lang.BTN_APPROVE) &&
-      <button
-        className="btn btn-primary"
-        data-target="#confirmApprove"
-        data-toggle="modal"
-        type="button"
+      <TooltipWhenDisabled
+        disabled={props.isCommenting}
+        title={Lang.TEXT_COMMENT_DIRTY}
       >
-        {Lang.BTN_APPROVE}
-      </button>
+        <button
+          className="btn btn-primary"
+          disabled={props.isCommenting}
+          data-target="#confirmApprove"
+          data-toggle="modal"
+          type="button"
+        >
+          {Lang.BTN_APPROVE}
+        </button>
+      </TooltipWhenDisabled>
       }
     </div>
   </div>

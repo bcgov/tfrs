@@ -43,10 +43,12 @@ const CreditTransferForm = props => (
         tradeType={props.fields.tradeType}
       />
 
-      <CreditTransferFormNote
+      {/* TODO A comprehensive deprecation is pending */}
+      <span>You will have the opportunity to create comments after saving a draft</span>
+      {false && <CreditTransferFormNote
         note={props.fields.note}
         handleInputChange={props.handleInputChange}
-      />
+      />}
 
       {(props.loggedInUser.hasPermission(PERMISSIONS_CREDIT_TRANSACTIONS.SIGN)) &&
         <CreditTransferTerms
