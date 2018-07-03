@@ -19,7 +19,7 @@
   .comment {
     .comment-text {
       text-overflow: ellipsis;
-      overflow: scroll;
+      overflow: auto;
       white-space: pre-wrap;
       font-weight: bold;
     }

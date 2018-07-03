@@ -4,4 +4,10 @@
   button {
     pointer-events: none;
   }
+  .btn:last-child {
+    margin-left: 0.5em;
+  }
+  .btn:first-child {
+    margin-left: 0.5em;
+  }
 }

@@ -21,31 +21,22 @@
     limitations under the License.
 """
 
-from django.db import models
+from api.permissions.CreditTradeComment import CreditTradeCommentPermissions
 
-from auditable.models import Auditable
+class CreditTradeCommentActions(object):
+    """
+    Provide available commenting actions to simplify frontend presentation logic
+    """
 
-from .Permission import Permission
-from api.managers.RoleManager import RoleManager
+    @staticmethod
+    def available_comment_actions(request, trade):
+        available_actions = []
 
-class Role(Auditable):
-    name = models.CharField(max_length=200, unique=True)
-    description = models.CharField(max_length=1000)
-    is_government_role = models.BooleanField(default=False)
+        if CreditTradeCommentPermissions.user_can_comment(request.user, trade, False):
+            available_actions.append('ADD_COMMENT')
 
-    @property
-    def permissions(self):
-        permissions = Permission.objects.filter(
-            role_permissions__role_id=self.id
-        )
+        if CreditTradeCommentPermissions.user_can_comment(request.user, trade, True):
+            available_actions.append('ADD_PRIVILEGED_COMMENT')
 
-        return permissions
+        return available_actions
 
-    objects = RoleManager()
-
-    def natural_key(self):
-        return (self.name,)
-
-    # Add effective_date and expiration_date
-    class Meta:
-        db_table = 'role'

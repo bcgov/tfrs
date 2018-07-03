@@ -24,6 +24,8 @@
 from django.db import models
 
 from auditable.models import Auditable
+from api.managers.CreditTradeTypeManager import CreditTradeTypeManager
+
 
 
 class CreditTradeType(Auditable):
@@ -33,6 +35,11 @@ class CreditTradeType(Auditable):
     expiration_date = models.DateField(blank=True, null=True)
     display_order = models.IntegerField()
     is_gov_only_type = models.BooleanField()
+
+    objects = CreditTradeTypeManager()
+
+    def natural_key(self):
+        return (self.the_type,)
 
     class Meta:
         db_table = 'credit_trade_type'
