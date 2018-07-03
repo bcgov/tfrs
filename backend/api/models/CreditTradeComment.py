@@ -40,7 +40,9 @@ class CreditTradeComment(Auditable):
                                db_column='credit_trade_comment')
 
     # require a permission to view
-    privileged_access = models.BooleanField(null=False, default=True, db_column='is_privileged_access')
+    privileged_access = models.BooleanField(null=False,
+                                            default=True,
+                                            db_column='is_privileged_access')
 
     class Meta:
         db_table = 'credit_trade_comment'
