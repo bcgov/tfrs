@@ -20,7 +20,7 @@
     limitations under the License.
 """
 from collections import defaultdict
-from enum import Enum
+from enum import Enum, auto
 
 from rest_framework import permissions
 from api.services.CreditTradeService import CreditTradeService
@@ -30,10 +30,10 @@ class CreditTradeCommentPermissions(permissions.BasePermission):
     """Used by Viewset to check permissions for API requests"""
 
     class _Relationship(Enum):
-        Initiator = 1
-        Respondent = 2
-        GovernmentAnalyst = 3
-        GovernmentDirector = 4
+        Initiator = auto()
+        Respondent = auto()
+        GovernmentAnalyst = auto()
+        GovernmentDirector = auto()
 
     action_mapping = defaultdict(lambda: False)
 
