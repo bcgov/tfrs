@@ -45,7 +45,8 @@ class OrganizationSerializer(serializers.ModelSerializer):
         """
         request = self.context.get('request')
 
-        if not request.user.has_perm('VIEW_FUEL_SUPPLIERS'):
+        if not request.user.has_perm('VIEW_FUEL_SUPPLIERS') and \
+            request.user.organization.id != obj.id:
             return None
 
         return obj.organization_balance
