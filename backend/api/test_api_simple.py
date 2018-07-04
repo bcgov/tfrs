@@ -20,6 +20,8 @@
 """
 
 import json
+import unittest
+
 from django.test import TestCase
 from django.test import Client
 import django
@@ -55,7 +57,13 @@ class Test_Api_Simple(TestCase):
                 'credit_trade_types.json',
                 'test_organization_fuel_suppliers.json',
                 'test_users.json',
-                ]
+                'roles.json',
+                'permissions.json',
+                'roles_permissions.json',
+                'roles_permissions_v0.3.0.json',
+                'roles_permissions_v0.3.1.json',
+                'test_fakedata_permissions_assignment.json',
+                'test_prodlike_government_users_and_roles.json']
 
     def setUp(self):
         # Every test needs a client.
@@ -667,6 +675,7 @@ class Test_Api_Simple(TestCase):
     #     print(response.content.decode("utf-8"))
     #     assert status.HTTP_201_CREATED == response.status_code
 
+    @unittest.skip("deprecated")
     def test_usersGet(self):
         # Test Create and List operations.
         testUrl = "/api/users"
@@ -692,6 +701,7 @@ class Test_Api_Simple(TestCase):
         # Check that the response is OK.
         assert status.HTTP_204_NO_CONTENT == response.status_code
 
+    @unittest.skip("deprecated")
     def test_usersIdDeletePost(self):
         # Test Retrieve and Update operations.
         testUrl = "/api/users/(?P<id>[0-9]+)/delete"
@@ -712,6 +722,7 @@ class Test_Api_Simple(TestCase):
         # Check that the response is OK.
         assert status.HTTP_204_NO_CONTENT == response.status_code
 
+    @unittest.skip("deprecated")
     def test_usersIdGet(self):
         # Test Retrieve and Update operations.
         testUrl = "/api/users/(?P<id>[0-9]+)"

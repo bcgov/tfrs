@@ -1,4 +1,6 @@
 import json
+import pdb
+
 from rest_framework import status
 from . import fakedata
 from django.test import Client
@@ -50,6 +52,7 @@ def create_credit_trade_status():
 
 
 def create_organization_status():
+    pdb.set_trace()
     test_url = "/api/organization_statuses"
     payload = fakedata.OrganizationStatusTestDataCreate()
     payload['effective_date'] = '2017-01-01'
@@ -82,8 +85,10 @@ def create_organization_action_type():
 
 
 def create_organization():
-    status_id = 1 # Active
-    action_type_id = 1 # buy and sell
+    pdb.set_trace()
+
+    status_id = 1  # Active
+    action_type_id = 1  # buy and sell
 
     test_url = "/api/organizations"
     # Create:
@@ -138,7 +143,6 @@ def create_user(organization_id):
 
 
 def create_credit_trade(**kwargs):
-
     body = {
         "number_of_credits": kwargs.get("number_of_credits", 2),
         "fair_market_value_per_credit": kwargs.get("fair_market_value_per_credit", 1),
@@ -156,9 +160,10 @@ def create_credit_trade(**kwargs):
     # client_with_user = Client(HTTP_SM_USER_ID=user_id)
 
     response = client.post("/api/credit_trades",
-                                     content_type='application/json',
-                                     data=json.dumps(body))
-    # print(response.status_code)
+                           content_type='application/json',
+                           data=json.dumps(body))
+    print('response code: {}'.format(response.status_code))
+    print('had sent:\n{}'.format(json.dumps(body)))
     # print(response.content.decode("utf-8"))
 
     assert status.HTTP_201_CREATED == response.status_code

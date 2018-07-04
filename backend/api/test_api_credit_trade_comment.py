@@ -62,6 +62,7 @@ class TestAPIComments(TestCase):
         'permissions.json',
         'roles_permissions.json',
         'roles_permissions_v0.3.0.json',
+        'roles_permissions_v0.3.1.json',
         'test_prodlike_government_users_and_roles.json',
         'test_credit_trade_comments.json'
     ]

@@ -1,0 +1,78 @@
+[
+  {
+    "fields": {
+      "permission": [
+        "LOGIN"
+      ],
+      "role": [
+        "GovDirector"
+      ]
+    },
+    "model": "api.rolepermission",
+    "pk": null
+  },
+  {
+    "fields": {
+      "permission": [
+        "VIEW_COMPLIANCE_PERIODS"
+      ],
+      "role": [
+        "GovDirector"
+      ]
+    },
+    "model": "api.rolepermission",
+    "pk": null
+  },
+  {
+    "fields": {
+      "permission": [
+        "EDIT_COMPLIANCE_PERIODS"
+      ],
+      "role": [
+        "GovDirector"
+      ]
+    },
+    "model": "api.rolepermission",
+    "pk": null
+  },
+  {
+    "fields": {
+      "permission": [
+        "VIEW_PRIVILEGED_COMMENTS"
+      ],
+      "role": [
+        "GovDirector"
+      ]
+    },
+    "model": "api.rolepermission",
+    "pk": null
+  },
+  {
+    "fields": {
+      "permission": [
+        "EDIT_PRIVILEGED_COMMENTS"
+      ],
+      "role": [
+        "GovDirector"
+      ]
+    },
+    "model": "api.rolepermission",
+    "pk": null
+  },
+  {
+    "fields": {
+      "permission": ["EDIT_FUEL_SUPPLIERS"],
+      "role": ["GovDirector"]
+    },
+    "model": "api.rolepermission",
+    "pk": null
+  },
+  {
+    "fields": {
+      "permission": ["USER_MANAGEMENT"],
+      "role": ["GovDirector"]
+    },
+    "model": "api.rolepermission",
+    "pk": null
+  }
+]

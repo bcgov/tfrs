@@ -67,7 +67,6 @@ class CreditTradeViewSet(AuditableMixin, mixins.CreateModelMixin,
         return CreditTradeService.get_organization_credit_trades(
             user.organization)
 
-    def list(self, request, *args, **kwargs):
         # Explicitly filter out Approved ones in list as we should only
         # be showing Completed here
         # Note: Don't add this in the CreditTradeService

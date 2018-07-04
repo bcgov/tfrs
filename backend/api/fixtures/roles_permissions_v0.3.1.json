@@ -22,5 +22,56 @@
     },
     "model": "api.rolepermission",
     "pk": null
+  },
+  {
+    "fields": {
+      "code": "VIEW_COMPLIANCE_PERIODS",
+      "description": "Gives the user access to view compliance periods",
+      "name": "View Compliance Periods"
+    },
+    "model": "api.permission",
+    "pk": 18
+  },
+  {
+    "fields": {
+      "code": "EDIT_COMPLIANCE_PERIODS",
+      "description": "Gives the user access to edit compliance periods",
+      "name": "Edit Compliance Periods"
+    },
+    "model": "api.permission",
+    "pk": 19
+  },
+  {
+    "fields": {
+      "permission": ["VIEW_COMPLIANCE_PERIODS"],
+      "role": ["Admin"]
+    },
+    "model": "api.rolepermission",
+    "pk": null
+  },
+  {
+    "fields": {
+      "permission": ["EDIT_COMPLIANCE_PERIODS"],
+      "role": ["Admin"]
+    },
+    "model": "api.rolepermission",
+    "pk": null
+  },
+  {
+    "fields": {
+      "code": "EDIT_FUEL_SUPPLIERS",
+      "description": "Gives the user access to create and update fuel suppliers",
+      "name": "Edit Fuel Suppliers Periods"
+    },
+    "model": "api.permission",
+    "pk": 20
+  },
+  {
+    "fields": {
+      "permission": ["EDIT_FUEL_SUPPLIERS"],
+      "role": ["Admin"]
+    },
+    "model": "api.rolepermission",
+    "pk": null
   }
 ]

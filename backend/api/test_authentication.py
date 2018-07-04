@@ -21,7 +21,13 @@ class TestAuthentication(TestCase):
                 'credit_trade_types.json',
                 'test_organization_fuel_suppliers.json',
                 'test_users.json',
-                ]
+                'roles.json',
+                'permissions.json',
+                'roles_permissions.json',
+                'roles_permissions_v0.3.0.json',
+                'roles_permissions_v0.3.1.json',
+                'test_fakedata_permissions_assignment.json',
+                'test_prodlike_government_users_and_roles.json']
 
     def setUp(self):
         self.userauth = UserAuthentication()

@@ -52,7 +52,11 @@ class TestApiCustom(TestCase):
                 'test_users.json',
                 'roles.json',
                 'permissions.json',
-                'roles_permissions.json']
+                'roles_permissions.json',
+                'roles_permissions_v0.3.0.json',
+                'roles_permissions_v0.3.1.json',
+                'test_fakedata_permissions_assignment.json',
+                'test_prodlike_government_users_and_roles.json']
 
     def setUp(self):
         # Every test needs a client.
@@ -136,7 +140,7 @@ class TestApiCustom(TestCase):
         response = self.client.post(test_url, content_type='application/json',
                                     data=json_string)
         # Check that the response is OK.
-        assert status.HTTP_201_CREATED == response.status_code
+        self.assertEqual(status.HTTP_201_CREATED, response.status_code)
         # parse the response.
         json_string = response.content.decode("utf-8")
         data = json.loads(json_string)
@@ -158,7 +162,7 @@ class TestApiCustom(TestCase):
         response = self.client.post(test_url, content_type='application/json',
                                     data=json_string)
         # Check that the response is OK.
-        assert status.HTTP_201_CREATED == response.status_code
+        self.assertEqual(status.HTTP_201_CREATED, response.status_code)
         # parse the response.
         json_string = response.content.decode("utf-8")
         data = json.loads(json_string)
@@ -181,7 +185,7 @@ class TestApiCustom(TestCase):
         response = self.client.post(test_url, content_type='application/json',
                                     data=json_string)
         # Check that the response is OK.
-        assert status.HTTP_201_CREATED == response.status_code
+        self.assertEqual(status.HTTP_201_CREATED, response.status_code)
         # parse the response.
         json_string = response.content.decode("utf-8")
         data = json.loads(json_string)
@@ -210,7 +214,7 @@ class TestApiCustom(TestCase):
                                     content_type='application/json',
                                     data=json_string)
         # Check that the response is OK.
-        assert status.HTTP_201_CREATED == response.status_code
+        self.assertEqual(status.HTTP_201_CREATED, response.status_code)
         # parse the response.
         json_string = response.content.decode("utf-8")
         data = json.loads(json_string)
@@ -225,6 +229,8 @@ class TestApiCustom(TestCase):
             'username': user.username,
             'id': id
         }
+
+        print("user headers:\n{}".format(json.dumps(user_headers)))
         return user_headers
 
     def createCreditTradeType(self):
@@ -239,11 +245,12 @@ class TestApiCustom(TestCase):
         response = self.client.post(test_url, content_type='application/json',
                                     data=json_string)
         # Check that the response is OK.
-        assert status.HTTP_201_CREATED == response.status_code
+        self.assertEqual(status.HTTP_201_CREATED, response.status_code)
         # parse the response.
         json_string = response.content.decode("utf-8")
         data = json.loads(json_string)
         created_id = data['id']
+        print("create ctype:\n{}".format(json.dumps(data)))
         return created_id
 
     def createCreditTradeStatus(self):
@@ -257,11 +264,12 @@ class TestApiCustom(TestCase):
         response = self.client.post(test_url, content_type='application/json',
                                     data=json_string)
         # Check that the response is OK.
-        assert status.HTTP_201_CREATED == response.status_code
+        self.assertEqual(status.HTTP_201_CREATED, response.status_code)
         # parse the response.
         json_string = response.content.decode("utf-8")
         data = json.loads(json_string)
         created_id = data['id']
+        print("create ctstatus:\n{}".format(json.dumps(data)))
         return created_id
 
     def createCreditTrade(self, organization_id, authorization_id):
@@ -298,11 +306,13 @@ class TestApiCustom(TestCase):
         response = self.client.post(test_url, content_type='application/json',
                                     data=json_string)
         # Check that the response is OK.
-        assert status.HTTP_201_CREATED == response.status_code
+        self.assertEqual(status.HTTP_201_CREATED, response.status_code)
         # parse the response.
         json_string = response.content.decode("utf-8")
         data = json.loads(json_string)
         created_id = data['id']
+        print("create ct:\n{}".format(json.dumps(data)))
+
         return created_id, type_id, status_id
 
     def deleteRole(self, role_id):

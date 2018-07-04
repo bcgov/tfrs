@@ -6,9 +6,13 @@ import datetime
 import logging
 
 from api import fake_api_calls
+from api.models.CreditTradeStatus import CreditTradeStatus
+from api.models.Organization import Organization
+from api.models.Permission import Permission
 from api.models.CreditTrade import CreditTrade
 from api.models.OrganizationBalance import OrganizationBalance
 from api.models.Role import Role
+from api.models.RolePermission import RolePermission
 from api.models.User import User
 from api.models.UserRole import UserRole
 
@@ -38,7 +42,12 @@ class TestAPI(TestCase):
                 'test_organization_balances.json',
                 'roles.json',
                 'permissions.json',
-                'roles_permissions.json']
+                'users_roles.json',
+                'roles_permissions.json',
+                'roles_permissions_v0.3.0.json',
+                'roles_permissions_v0.3.1.json',
+                'test_fakedata_permissions_assignment.json',
+                'test_prodlike_government_users_and_roles.json']
 
     def setUp(self):
 
@@ -62,18 +71,21 @@ class TestAPI(TestCase):
         UserRole.objects.create(user_id=resp_user.id, role_id=fs_role.id)
 
         self.credit_trade = fake_api_calls.create_credit_trade(
-            initiator=2,
+            initiator=Organization.objects.get_by_natural_key("Air Liquide Canada Inc.").id,
             respondent=self.fs1_id,
             type=self.ct_type_id,
-            status=STATUS_DRAFT,
-            user_id=self.user_id,
+            status=CreditTradeStatus.objects.get_by_natural_key('Draft').id,
+            user_id=self.user_id
         )
 
         self.client = Client(
             HTTP_SMGOV_USERGUID='c9804c52-05f1-4a6a-9d24-332d9d8be2a9',
             HTTP_SMGOV_USERDISPLAYNAME='Brad Smith',
             HTTP_SMGOV_USEREMAIL='BradJSmith@cuvox.de',
-            HTTP_SM_UNIVERSALID='BSmith')
+            HTTP_SM_UNIVERSALID='BSmith',
+            HTTP_SMGOV_USERTYPE='Internal',
+            HTTP_SM_AUTHDIRNAME='IDIR'
+        )
 
         self.gov_client = Client(
             HTTP_SMGOV_USERGUID='c2971372-3a96-4704-9b9c-18e4e9298ee3',
@@ -88,10 +100,22 @@ class TestAPI(TestCase):
             HTTP_SMGOV_USERDISPLAYNAME=resp_user.display_name,
             HTTP_SMGOV_USEREMAIL=resp_user.email)
 
-        # Apply a government role to Teperson
+        # Apply a superadmin role to Teperson
         gov_user = User.objects.get(username='internal_teperson')
-        gov_role = Role.objects.get(name='GovDirector')
-        UserRole.objects.create(user_id=gov_user.id, role_id=gov_role.id)
+
+        created_role = Role()
+        created_role.name = 'Test Superadmin'
+        created_role.is_government_role = True
+        created_role.save()
+        created_role.refresh_from_db()
+
+        for permission in Permission.objects.all():
+            rp = RolePermission()
+            rp.role = created_role
+            rp.permission = permission
+            rp.save()
+
+        UserRole.objects.create(user_id=gov_user.id, role_id=created_role.id)
 
         self.test_url = "/api/credit_trades"
 
@@ -131,7 +155,6 @@ class TestAPI(TestCase):
 
         response_data = json.loads(response.content.decode("utf-8"))
 
-        HTTP_SMGOV_USERGUID = 'c9804c52-05f1-4a6a-9d24-332d9d8be2a9'
         HTTP_SMGOV_USERDISPLAYNAME = 'Brad Smith'
         HTTP_SMGOV_USEREMAIL = 'BradJSmith@cuvox.de'
         HTTP_SM_UNIVERSALID = 'BSmith'
@@ -158,7 +181,7 @@ class TestAPI(TestCase):
         credit_trades = self.test_data_success
 
         for tests in credit_trades:
-            response = self.client.post(
+            response = self.gov_client.post(
                 self.test_url,
                 content_type='application/json',
                 data=json.dumps(tests['data']))
@@ -169,7 +192,7 @@ class TestAPI(TestCase):
         credit_trades = self.test_data_success
 
         for tests in credit_trades:
-            response = self.client.post(
+            response = self.gov_client.post(
                 self.test_url,
                 content_type='application/json',
                 data=json.dumps(tests['data']))
@@ -199,7 +222,7 @@ class TestAPI(TestCase):
             'fair_market_value_per_credit': fair_market_value
         }
 
-        response = self.client.put(
+        response = self.gov_client.put(
             "{}/{}".format(self.test_url, credit_trade_id),
             content_type='application/json',
             data=json.dumps(data))
@@ -209,7 +232,7 @@ class TestAPI(TestCase):
         self.test_update(num_of_credits=1)
         self.test_update(num_of_credits=2)
 
-        response = self.client.get(
+        response = self.gov_client.get(
             "{}/{}/history".format(self.test_url, self.credit_trade['id']),
             content_type='application/json')
 
@@ -437,7 +460,6 @@ class TestAPI(TestCase):
         # fuel supplier loses credits
         # OrganizationBalance record created, effective data = transaction create time
         #   end data is None
-
 
         # pass
 

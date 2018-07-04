@@ -5,7 +5,8 @@
       "is_government_role": true,
       "name": "ProdlikeDirector"
     },
-    "model": "api.role"
+    "model": "api.role",
+    "pk": 8
   },
   {
     "fields": {
@@ -32,9 +33,45 @@
     "pk": null
   },
   {
+  "fields": {
+    "permission": [
+      "DECLINE_CREDIT_TRANSFER"
+    ],
+    "role": [
+      "ProdlikeDirector"
+    ]
+  },
+  "model": "api.rolepermission",
+  "pk": null
+},
+  {
     "fields": {
       "permission": [
-        "DECLINE_CREDIT_TRANSFER"
+        "VIEW_COMPLIANCE_PERIODS"
+      ],
+      "role": [
+        "ProdlikeDirector"
+      ]
+    },
+    "model": "api.rolepermission",
+    "pk": null
+  },
+  {
+    "fields": {
+      "permission": [
+        "EDIT_COMPLIANCE_PERIODS"
+      ],
+      "role": [
+        "ProdlikeDirector"
+      ]
+    },
+    "model": "api.rolepermission",
+    "pk": null
+  },
+  {
+    "fields": {
+      "permission": [
+        "VIEW_FUEL_SUPPLIERS"
       ],
       "role": [
         "ProdlikeDirector"
@@ -97,7 +134,8 @@
       "is_government_role": true,
       "name": "ProdlikeAnalyst"
     },
-    "model": "api.role"
+    "model": "api.role",
+    "pk": 9
   },
   {
     "fields": {
@@ -163,6 +201,30 @@
     "fields": {
       "permission": [
         "EDIT_PRIVILEGED_COMMENTS"
+      ],
+      "role": [
+        "ProdlikeAnalyst"
+      ]
+    },
+    "model": "api.rolepermission",
+    "pk": null
+  },
+  {
+    "fields": {
+      "permission": [
+        "VIEW_COMPLIANCE_PERIODS"
+      ],
+      "role": [
+        "ProdlikeAnalyst"
+      ]
+    },
+    "model": "api.rolepermission",
+    "pk": null
+  },
+  {
+    "fields": {
+      "permission": [
+        "VIEW_FUEL_SUPPLIERS"
       ],
       "role": [
         "ProdlikeAnalyst"

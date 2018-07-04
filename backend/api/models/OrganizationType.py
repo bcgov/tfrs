@@ -22,6 +22,8 @@
 from django.db import models
 
 from auditable.models import Auditable
+from api.managers.OrganizationTypeManager import OrganizationTypeManager
+
 
 
 class OrganizationType(Auditable):
@@ -33,6 +35,11 @@ class OrganizationType(Auditable):
 
     def __str__(self):
         return self.type
+
+    objects = OrganizationTypeManager()
+
+    def natural_key(self):
+        return (self.type,)
 
     class Meta:
         db_table = 'organization_type'
