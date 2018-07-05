@@ -53,11 +53,11 @@ const CreditTransferFormButtons = props => (
       }
       {props.actions.includes(Lang.BTN_SIGN_1_2) &&
       <TooltipWhenDisabled
-        disabled={props.disabled.BTN_SIGN_1_2}
-        title={props.permissions.BTN_SIGN_1_2
+        disabled={props.isCommenting || props.disabled.BTN_SIGN_1_2}
+        title={props.isCommenting ? Lang.TEXT_COMMENT_DIRTY : (props.permissions.BTN_SIGN_1_2
           ? 'Signing Authority Declaration needs to be accepted'
           : 'You must be assigned the Signing Authority role in order to sign and send ' +
-          'a Credit Transfer Proposal to another fuel supplier'}
+          'a Credit Transfer Proposal to another fuel supplier')}
       >
         <button
           className={`btn ${props.disabled.BTN_SIGN_1_2 ? 'btn-disabled' : 'btn-primary '}`}
