@@ -213,8 +213,10 @@ class CreditTradeUpdateSerializer(serializers.ModelSerializer):
                 .only('id'))
 
             credit_trade_status = data.get('status')
+            is_rescinded = data.get('is_rescinded')
 
-            if credit_trade_status not in allowed_statuses:
+            if (credit_trade_status not in allowed_statuses and not
+                    is_rescinded):
                 raise serializers.ValidationError({
                     'invalidStatus': "You do not have permission to set the "
                                      "status to `{}`.".format(
@@ -405,6 +407,13 @@ class CreditTrade2Serializer(serializers.ModelSerializer):
         return serializer.data
 
     def get_reviewed(self, obj):
+        request = self.context.get('request')
+
+        # only show this to government users
+        if (request.user.role is None or
+                not request.user.role.is_government_role):
+            return {}
+
         serializer = CreditTradeHistoryReviewedSerializer(obj.reviewed)
 
         return serializer.data
