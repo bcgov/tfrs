@@ -59,30 +59,6 @@
   {
     "fields": {
       "permission": [
-        "EDIT_COMPLIANCE_PERIODS"
-      ],
-      "role": [
-        "ProdlikeDirector"
-      ]
-    },
-    "model": "api.rolepermission",
-    "pk": null
-  },
-  {
-    "fields": {
-      "permission": [
-        "VIEW_FUEL_SUPPLIERS"
-      ],
-      "role": [
-        "ProdlikeDirector"
-      ]
-    },
-    "model": "api.rolepermission",
-    "pk": null
-  },
-  {
-    "fields": {
-      "permission": [
         "VIEW_CREDIT_TRANSFERS"
       ],
       "role": [
@@ -201,30 +177,6 @@
     "fields": {
       "permission": [
         "EDIT_PRIVILEGED_COMMENTS"
-      ],
-      "role": [
-        "ProdlikeAnalyst"
-      ]
-    },
-    "model": "api.rolepermission",
-    "pk": null
-  },
-  {
-    "fields": {
-      "permission": [
-        "VIEW_COMPLIANCE_PERIODS"
-      ],
-      "role": [
-        "ProdlikeAnalyst"
-      ]
-    },
-    "model": "api.rolepermission",
-    "pk": null
-  },
-  {
-    "fields": {
-      "permission": [
-        "VIEW_FUEL_SUPPLIERS"
       ],
       "role": [
         "ProdlikeAnalyst"

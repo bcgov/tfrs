@@ -61,6 +61,18 @@
   },
   {
     "fields": {
+      "permission": [
+        "PROPOSE_CREDIT_TRANSFER"
+      ],
+      "role": [
+        "GovDirector"
+      ]
+    },
+    "model": "api.rolepermission",
+    "pk": null
+  },
+  {
+    "fields": {
       "permission": ["EDIT_FUEL_SUPPLIERS"],
       "role": ["GovDirector"]
     },

@@ -1,5 +1,4 @@
 import json
-import pdb
 
 from rest_framework import status
 from . import fakedata
@@ -52,7 +51,6 @@ def create_credit_trade_status():
 
 
 def create_organization_status():
-    pdb.set_trace()
     test_url = "/api/organization_statuses"
     payload = fakedata.OrganizationStatusTestDataCreate()
     payload['effective_date'] = '2017-01-01'
@@ -85,8 +83,6 @@ def create_organization_action_type():
 
 
 def create_organization():
-    pdb.set_trace()
-
     status_id = 1  # Active
     action_type_id = 1  # buy and sell
 
@@ -164,6 +160,7 @@ def create_credit_trade(**kwargs):
                            data=json.dumps(body))
     print('response code: {}'.format(response.status_code))
     print('had sent:\n{}'.format(json.dumps(body)))
+    print('got back: {}'.format(response.content.decode('utf-8')))
     # print(response.content.decode("utf-8"))
 
     assert status.HTTP_201_CREATED == response.status_code
