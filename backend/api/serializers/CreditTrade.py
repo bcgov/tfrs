@@ -28,6 +28,7 @@ from api.models.CreditTradeType import CreditTradeType
 from api.models.User import User
 from api.services.CreditTradeActions import CreditTradeActions
 from api.services.CreditTradeCommentActions import CreditTradeCommentActions
+from api.services.CreditTradeService import CreditTradeService
 
 from .CreditTradeComment import CreditTradeCommentSerializer
 from .CreditTradeHistory import CreditTradeHistoryReviewedSerializer
@@ -180,32 +181,8 @@ class CreditTradeUpdateSerializer(serializers.ModelSerializer):
             })
 
         if 'status' in request.data:
-            if self.instance.status.status == "Draft":
-                if request.user.has_perm('PROPOSE_CREDIT_TRANSFER'):
-                    available_statuses.append("Cancelled")
-                    available_statuses.append("Draft")
-
-            if request.user.has_perm('APPROVE_CREDIT_TRANSFER'):
-                available_statuses.append("Approved")
-
-            if request.user.has_perm('DECLINE_CREDIT_TRANSFER'):
-                available_statuses.append("Declined")
-
-            if request.user.has_perm('RECOMMEND_CREDIT_TRANSFER') and \
-               self.instance.status.status == "Accepted":
-                available_statuses.append("Recommended")
-                available_statuses.append("Not Recommended")
-
-            if request.user.has_perm('REFUSE_CREDIT_TRANSFER') and \
-               self.instance.respondent == request.user.organization:
-                available_statuses.append("Refused")
-
-            if request.user.has_perm('SIGN_CREDIT_TRANSFER'):
-                if self.instance.initiator == request.user.organization:
-                    available_statuses.append("Submitted")
-
-                if self.instance.respondent == request.user.organization:
-                    available_statuses.append("Accepted")
+            available_statuses = CreditTradeService.get_allowed_statuses(
+                self.instance, request)
 
             allowed_statuses = list(
                 CreditTradeStatus.objects
