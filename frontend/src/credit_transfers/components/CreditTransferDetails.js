@@ -95,7 +95,7 @@ const CreditTransferDetails = props => (
           {(props.tradeType.id === CREDIT_TRANSFER_TYPES.sell.id ||
           props.tradeType.id === CREDIT_TRANSFER_TYPES.buy.id) &&
           props.status.id !== CREDIT_TRANSFER_STATUS.draft.id &&
-          (props.signatures.length > 0 || props.history.length > 0) &&
+          (props.history.length > 0 || props.signatures.length > 0) &&
             <CreditTransferSigningHistory
               history={props.history}
               signatures={props.signatures}
