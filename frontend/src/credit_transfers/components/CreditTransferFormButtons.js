@@ -93,7 +93,7 @@ const CreditTransferFormButtons = props => (
         title={props.isCommenting ? Lang.TEXT_COMMENT_DIRTY : (props.permissions.BTN_SIGN_2_2
           ? 'Signing Authority Declaration needs to be accepted'
           : 'You must be assigned the Signing Authority role in order to sign and send ' +
-          'a Credit Transfer Proposal to another fuel supplier')}
+          'a Credit Transfer Proposal to the Low Carbon Fuels Branch')}
       >
         <button
           className="btn btn-primary"

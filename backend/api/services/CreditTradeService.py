@@ -296,3 +296,47 @@ class CreditTradeService(object):
             })
         else:
             storage[index]["credits"] = num_of_credits
+
+    @staticmethod
+    def get_allowed_statuses(credit_trade, request):
+        """
+        This is used for validation.
+        This will return a list of statuses that the credit trade can be
+        updated to.
+        e.g. Draft -> Proposed
+        Proposed -> Accepted, Rejected
+        """
+        allowed_statuses = []
+
+        if credit_trade.status.status == "Draft":
+            if request.user.has_perm('PROPOSE_CREDIT_TRANSFER'):
+                allowed_statuses.append("Cancelled")
+                allowed_statuses.append("Draft")
+
+            if (request.user.has_perm('SIGN_CREDIT_TRANSFER') and
+                    credit_trade.initiator == request.user.organization):
+                allowed_statuses.append("Submitted")
+
+        elif (credit_trade.status.status == "Submitted" and
+              credit_trade.respondent == request.user.organization):
+            if request.user.has_perm('REFUSE_CREDIT_TRANSFER'):
+                allowed_statuses.append("Refused")
+
+            if request.user.has_perm('SIGN_CREDIT_TRANSFER'):
+                allowed_statuses.append("Accepted")
+
+        elif credit_trade.status.status == "Accepted":
+            if request.user.has_perm('RECOMMEND_CREDIT_TRANSFER'):
+                allowed_statuses.append("Recommended")
+                allowed_statuses.append("Not Recommended")
+
+        elif credit_trade.status.status in [
+                "Not Recommended", "Recommended"
+        ]:
+            if request.user.has_perm('APPROVE_CREDIT_TRANSFER'):
+                allowed_statuses.append("Approved")
+
+            if request.user.has_perm('DECLINE_CREDIT_TRANSFER'):
+                allowed_statuses.append("Declined")
+
+        return allowed_statuses

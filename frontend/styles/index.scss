@@ -116,8 +116,13 @@ h1 {
 }
 
 .btn-container {
-  .btn + .btn, .btn + div {
+  .btn + .btn, .btn + div, div + div {
     margin-left: 0.5rem;
+    margin-right: 0.3rem;
+  }
+
+  div:last-child {
+    margin-right: 0;
   }
 }
 
