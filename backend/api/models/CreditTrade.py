@@ -21,6 +21,7 @@
     limitations under the License.
 """
 from decimal import Decimal
+from typing import List
 from django.db import models
 from django.db.models import Count
 from django.db.models import Max
@@ -187,18 +188,21 @@ class CreditTrade(Auditable):
 
         return signatures
 
-    @property
-    def reviewed(self):
+    def get_history(self, statuses: List):
         """
-        Shows the signatures to the involved parties
-        Shows whether it's recommended or not to government users
+        Instead of being a property this fetches the history based on the
+        statuses that's needed
+        For example government users would want to see the following:
+        Signed, Accepted, Recommended, Not Recommended and Completed.
+        So we pass ["Submitted", "Accepted", "Recommended", "Not Recommended",
+        "Completed"]
         """
-        reviewed = CreditTradeHistory.objects.filter(
-            Q(status__status__in=["Not Recommended", "Recommended"]),
+        history = CreditTradeHistory.objects.filter(
+            Q(status__status__in=statuses) | Q(is_rescinded=True),
             credit_trade_id=self.id
-        ).order_by('-update_timestamp').first()
+        ).order_by('update_timestamp')
 
-        return reviewed
+        return history
 
     class Meta:
         db_table = 'credit_trade'
