@@ -15,73 +15,6 @@ client = Client(
 STATUS_DRAFT = 1
 
 
-def create_credit_trade_type():
-    test_url = "/api/credittradetypes"
-    payload = fakedata.CreditTradeTypeTestDataCreate()
-    payload['expiration_date'] = '2017-01-02'
-    payload['effective_date'] = '2017-01-01'
-
-    response = client.post(
-        test_url,
-        content_type='application/json',
-        data=json.dumps(payload))
-
-    # Check that the response is OK.
-    assert status.HTTP_201_CREATED == response.status_code
-    # parse the response.
-    data = json.loads(response.content.decode("utf-8"))
-    created_id = data['id']
-    return created_id
-
-
-def create_credit_trade_status():
-    test_url = "/api/credittradestatuses"
-    payload = fakedata.CreditTradeStatusTestDataCreate()
-    payload['effective_date'] = '2017-01-01'
-    response = client.post(
-        test_url,
-        content_type='application/json',
-        data=json.dumps(payload))
-    # Check that the response is OK.
-    assert status.HTTP_201_CREATED == response.status_code
-    # parse the response.
-    data = json.loads(response.content.decode("utf-8"))
-    created_id = data['id']
-    return created_id
-
-
-def create_organization_status():
-    test_url = "/api/organization_statuses"
-    payload = fakedata.OrganizationStatusTestDataCreate()
-    payload['effective_date'] = '2017-01-01'
-    response = client.post(
-        test_url,
-        content_type='application/json',
-        data=json.dumps(payload))
-    # Check that the response is OK.
-    assert status.HTTP_201_CREATED == response.status_code
-    # parse the response.
-    data = json.loads(response.content.decode("utf-8"))
-    created_id = data['id']
-    return created_id
-
-
-def create_organization_action_type():
-    test_url = "/api/organization_actions_types"
-    payload = fakedata.OrganizationActionsTypeTestDataCreate()
-    response = client.post(
-        test_url,
-        content_type='application/json',
-        data=json.dumps(payload))
-    # print(json.loads(response.content.decode("utf-8")))
-    # Check that the response is OK.
-    assert status.HTTP_201_CREATED == response.status_code
-    # parse the response.
-    data = json.loads(response.content.decode("utf-8"))
-    created_id = data['id']
-    return created_id
-
-
 def create_organization():
     status_id = 1  # Active
     action_type_id = 1  # buy and sell
@@ -166,31 +99,3 @@ def create_credit_trade(**kwargs):
     assert status.HTTP_201_CREATED == response.status_code
     response_data = json.loads(response.content.decode("utf-8"))
     return response_data
-
-
-def create_credit_trade_dict(data):
-    response = client.post(
-        '/api/credit_trades',
-        content_type='application/json',
-        data=json.dumps(data))
-
-    return response
-
-
-def update_credit_trade_dict(data, id):
-    response = client.put(
-        '/api/credit_trades/{}'.format(id),
-        content_type='application/json',
-        data=json.dumps(data))
-
-    return response
-
-
-def get_credit_trade(id):
-    response = client.get('/api/credit_trades/{}'.format(id))
-    return response
-
-
-def get_credit_trades():
-    response = client.get('/api/credit_trades')
-    return response

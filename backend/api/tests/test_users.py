@@ -7,7 +7,6 @@
 
     OpenAPI spec version: v1
 
-
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
     You may obtain a copy of the License at
@@ -21,27 +20,28 @@
     limitations under the License.
 """
 
-from django.db import models
+import json
 
-from auditable.models import Auditable
+from rest_framework import status
 
-class OrganizationBalance(Auditable):
-    """
-    Credit Trade Balance for the Fuel Supplier
-    """
-    organization = models.ForeignKey(
-        'Organization',
-        related_name='balances',
-        on_delete=models.CASCADE)
-    validated_credits = models.BigIntegerField()
-    effective_date = models.DateField(blank=True, null=True)
-    expiration_date = models.DateField(blank=True, null=True)
+from api.tests.base_test_case import BaseTestCase
 
-    credit_trade = models.ForeignKey(
-        'CreditTrade',
-        related_name='balances',
-        blank=True, null=True,
-        on_delete=models.PROTECT)
 
-    class Meta:
-        db_table = 'organization_balance'
+class TestUsers(BaseTestCase):
+    """Test /api/users"""
+
+    def test_current_user(self):
+        """Test that current user endpoint returns expected data"""
+
+        for user in self.users.values():
+
+            response = self.clients[user.username].get('/api/users/current')
+            self.assertEqual(response.status_code, status.HTTP_200_OK)
+            response_data = json.loads(response.content.decode("utf-8"))
+
+            self.assertEqual(response_data['authorizationId'], user.authorization_id)
+            self.assertEqual(response_data['email'], user.email)
+            #self.assertEqual(response_data['displayName'], user.display_name)
+
+            # don't want to leak GUID
+            self.assertNotIn('authorizationGuid', response_data)

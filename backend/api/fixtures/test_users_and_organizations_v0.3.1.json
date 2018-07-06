@@ -1,0 +1,167 @@
+[
+  {
+    "fields": {
+      "name": "Test Org 1",
+      "actions_type": [
+        "Buy And Sell"
+      ],
+      "status": [
+        "Active"
+      ],
+      "type": [
+        "Part3FuelSupplier"
+      ]
+    },
+    "model": "api.organization",
+    "pk": null
+  },
+  {
+    "fields": {
+      "name": "Test Org 2",
+      "actions_type": [
+        "Buy And Sell"
+      ],
+      "status": [
+        "Active"
+      ],
+      "type": [
+        "Part3FuelSupplier"
+      ]
+    },
+    "model": "api.organization",
+    "pk": null
+  },
+  {
+    "fields": {
+      "name": "Test Org 3",
+      "actions_type": [
+        "Buy And Sell"
+      ],
+      "status": [
+        "Active"
+      ],
+      "type": [
+        "Part3FuelSupplier"
+      ]
+    },
+    "model": "api.organization",
+    "pk": null
+  },
+  {
+    "fields": {
+      "authorization_guid": "33eba826-5e03-4140-92b5-379be817638a",
+      "email": "fuel_supplier_1@test.com",
+      "username": "fs_user_1",
+      "authorization_id": "fs_user_1",
+      "display_name": "Fuel Supplier User 1",
+      "first_name": "Fuel",
+      "last_name": "Supplier 1",
+      "organization": [
+        "Test Org 1"
+      ]
+    },
+    "model": "api.user",
+    "pk": null
+  },
+  {
+    "fields": {
+      "role": [
+        "FSManager"
+      ],
+      "user": [
+        "fs_user_1"
+      ]
+    },
+    "model": "api.userrole",
+    "pk": null
+  },
+  {
+    "fields": {
+      "authorization_guid": "7f945204-9a22-4e0f-96d1-4bda5794254d",
+      "email": "fuel_supplier_2@test.com",
+      "username": "fs_user_2",
+      "authorization_id": "fs_user_2",
+      "display_name": "Fuel Supplier User 2",
+      "first_name": "Fuel",
+      "last_name": "Supplier 2",
+      "organization": [
+        "Test Org 2"
+      ]
+    },
+    "model": "api.user",
+    "pk": null
+  },
+  {
+    "fields": {
+      "role": [
+        "FSManager"
+      ],
+      "user": [
+        "fs_user_2"
+      ]
+    },
+    "model": "api.userrole",
+    "pk": null
+  },
+  {
+    "fields": {
+      "authorization_guid": "d21f817b-f123-443a-b383-4982ac749015",
+      "email": "fuel_supplier_3@test.com",
+      "username": "fs_user_3",
+      "authorization_id": "fs_user_3",
+      "display_name": "Fuel Supplier User 3",
+      "first_name": "Fuel",
+      "last_name": "Supplier 3",
+      "organization": [
+        "Test Org 3"
+      ]
+    },
+    "model": "api.user",
+    "pk": null
+  },
+  {
+    "fields": {
+      "role": [
+        "FSManager"
+      ],
+      "user": [
+        "fs_user_3"
+      ]
+    },
+    "model": "api.userrole",
+    "pk": null
+  },
+  {
+    "fields": {
+      "credit_trade": null,
+      "effective_date": "2017-04-01",
+      "expiration_date": null,
+      "organization": ["Test Org 1"],
+      "validated_credits": "100000"
+    },
+    "model": "api.organizationbalance",
+    "pk": 30
+  },
+  {
+    "fields": {
+      "credit_trade": null,
+      "effective_date": "2017-04-01",
+      "expiration_date": null,
+      "organization": ["Test Org 2"],
+      "validated_credits": "100000"
+    },
+    "model": "api.organizationbalance",
+    "pk": 31
+  },
+  {
+    "fields": {
+      "credit_trade": null,
+      "effective_date": "2017-04-01",
+      "expiration_date": null,
+      "organization": ["Test Org 3"],
+      "validated_credits": "100000"
+    },
+    "model": "api.organizationbalance",
+    "pk": 32
+  }
+]

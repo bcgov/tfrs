@@ -30,6 +30,7 @@ from api.models.OrganizationType import OrganizationType
 from api.models.OrganizationStatus import OrganizationStatus
 from api.models.CompliancePeriod import CompliancePeriod
 
+
 class DataCreationUtilities(object):
     """Utilities for creating short-lived test models"""
 

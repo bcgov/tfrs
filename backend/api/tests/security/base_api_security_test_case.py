@@ -27,48 +27,9 @@ from django.test import Client
 import django
 
 from api.models.User import User
+from api.tests.base_test_case import BaseTestCase
 
 
-class BaseAPISecurityTestCase(TestCase):
-    """
-    Common functionality for testing API security
-    """
-
-    fixtures = [
-        'organization_types.json',
-        'organization_government.json',
-        'organization_balance_gov.json',
-        'credit_trade_statuses.json',
-        'credit_trade_statuses_refused.json',
-        'organization_actions_types.json',
-        'organization_statuses.json',
-        'credit_trade_types.json',
-        'test_organization_fuel_suppliers.json',
-        'test_organization_balances.json',
-        'roles.json',
-        'permissions.json',
-        'roles_permissions.json',
-        'roles_permissions_v0.3.0.json',
-        'roles_permissions_v0.3.1.json',
-        'test_prodlike_government_users_and_roles.json',
-        'test_credit_trade_comments.json'
-    ]
-
-    users = ['fs_husky', 'gov_director', 'gov_analyst', 'gov_admin']
-
-    def setUp(self):
-        """Configure test clients"""
-        self.clients = dict()
-
-        for username in BaseAPISecurityTestCase.users:
-            user = User.objects.get_by_natural_key(username)
-            self.clients[username] = Client(
-                HTTP_SMGOV_USERGUID=str(user.authorization_guid),
-                HTTP_SMAUTH_USERDISPLAYNAME=str(user.display_name),
-                HTTP_SMGOV_USEREMAIL=str(user.authorization_email),
-                HTTP_SM_UNIVERSALID=str(user.authorization_id),
-                HTTP_SM_AUTHDIRNAME=('IDIR' if user.organization.id == 1 else 'BCeID'),
-                HTTP_SMGOV_USERTYPE=('Internal' if user.organization.id == 1 else '')
-            )
-
-        django.setup()
+class BaseAPISecurityTestCase(BaseTestCase):
+    """Security-specific convenience methods go here"""
+    pass
