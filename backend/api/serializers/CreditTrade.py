@@ -372,7 +372,7 @@ class CreditTrade2Serializer(serializers.ModelSerializer):
     comment_actions = serializers.SerializerMethodField()
     compliance_period = CompliancePeriodSerializer(read_only=True)
     comments = serializers.SerializerMethodField()
-    reviewed = serializers.SerializerMethodField()
+    history = serializers.SerializerMethodField()
     signatures = serializers.SerializerMethodField()
 
     class Meta:
@@ -385,7 +385,7 @@ class CreditTrade2Serializer(serializers.ModelSerializer):
                   'trade_effective_date', 'credits_from', 'credits_to',
                   'update_timestamp', 'actions', 'comment_actions', 'note',
                   'compliance_period', 'comments', 'is_rescinded',
-                  'signatures', 'reviewed')
+                  'signatures', 'history')
 
     def get_actions(self, obj):
         """
@@ -437,15 +437,22 @@ class CreditTrade2Serializer(serializers.ModelSerializer):
 
         return serializer.data
 
-    def get_reviewed(self, obj):
+    def get_history(self, obj):
         request = self.context.get('request')
 
-        # only show this to government users
+        # if the user is not a government user we should limit what we show
+        # so no recommended/not recommended
         if (request.user.role is None or
                 not request.user.role.is_government_role):
-            return {}
+            history = obj.get_history(["Accepted", "Completed", "Declined",
+                                       "Refused", "Submitted"])
+        else:
+            history = obj.get_history(["Accepted", "Completed", "Declined",
+                                       "Not Recommended", "Recommended",
+                                       "Refused", "Submitted"])
 
-        serializer = CreditTradeHistoryReviewedSerializer(obj.reviewed)
+        serializer = CreditTradeHistoryReviewedSerializer(history,
+                                                          many=True)
 
         return serializer.data
 

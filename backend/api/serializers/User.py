@@ -24,7 +24,17 @@ from rest_framework import serializers
 
 from api.models.User import User
 from .Organization import OrganizationSerializer, OrganizationMinSerializer
-from .Role import RoleSerializer
+from .Role import RoleSerializer, RoleMinSerializer
+
+
+class MemberSerializer(serializers.ModelSerializer):
+    role = RoleMinSerializer(read_only=True)
+
+    class Meta:
+        model = User
+        fields = (
+            'id', 'first_name', 'last_name', 'display_name', 'email', 'phone',
+            'role', 'is_active')
 
 
 class UserSerializer(serializers.ModelSerializer):

@@ -95,9 +95,9 @@ const CreditTransferDetails = props => (
           {(props.tradeType.id === CREDIT_TRANSFER_TYPES.sell.id ||
           props.tradeType.id === CREDIT_TRANSFER_TYPES.buy.id) &&
           props.status.id !== CREDIT_TRANSFER_STATUS.draft.id &&
-          (props.signatures.length > 0 || props.reviewed.user) &&
+          (props.history.length > 0 || props.signatures.length > 0) &&
             <CreditTransferSigningHistory
-              reviewed={props.reviewed}
+              history={props.history}
               signatures={props.signatures}
             />
           }
@@ -142,12 +142,12 @@ CreditTransferDetails.defaultProps = {
   },
   errors: {},
   fairMarketValuePerCredit: '0',
+  history: [],
   id: 0,
   isRescinded: false,
   note: '',
   numberOfCredits: '0',
   rescinded: false,
-  reviewed: {},
   signatures: [],
   status: {
     id: 0,
@@ -193,16 +193,7 @@ CreditTransferDetails.propTypes = {
       id: PropTypes.number
     })
   }).isRequired,
-  id: PropTypes.number,
-  isFetching: PropTypes.bool.isRequired,
-  isRescinded: PropTypes.bool,
-  note: PropTypes.string,
-  numberOfCredits: PropTypes.oneOfType([
-    PropTypes.string,
-    PropTypes.number
-  ]),
-  rescinded: PropTypes.bool,
-  reviewed: PropTypes.shape({
+  history: PropTypes.arrayOf(PropTypes.shape({
     status: PropTypes.shape({
       id: PropTypes.number,
       status: PropTypes.string
@@ -213,7 +204,16 @@ CreditTransferDetails.propTypes = {
       id: PropTypes.number,
       lastName: PropTypes.string
     })
-  }),
+  })),
+  id: PropTypes.number,
+  isFetching: PropTypes.bool.isRequired,
+  isRescinded: PropTypes.bool,
+  note: PropTypes.string,
+  numberOfCredits: PropTypes.oneOfType([
+    PropTypes.string,
+    PropTypes.number
+  ]),
+  rescinded: PropTypes.bool,
   signatures: PropTypes.arrayOf(PropTypes.shape({
     displayName: PropTypes.string,
     firstName: PropTypes.string,

@@ -1,6 +1,17 @@
 @import './variables.scss';
 @import './mixins.scss';
 
+.page_organization {
+  .credit_balance {
+    float: right;
+  }
+
+  .status {
+    font-size: 1.5rem;
+    margin-bottom: 2rem;
+  }
+}
+
 .page_organizations {
   .ReactTable {
     .col-actions-type-display {

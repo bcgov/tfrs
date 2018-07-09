@@ -67,4 +67,4 @@ class CreditTradeHistoryReviewedSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = CreditTradeHistory
-        fields = ('user', 'status', 'credit_trade_update_time')
+        fields = ('user', 'status', 'is_rescinded', 'credit_trade_update_time')
