@@ -31,6 +31,26 @@ const getFuelSuppliersSuccess = fuelSuppliers => ({
   type: ActionTypes.RECEIVE_FUEL_SUPPLIERS
 });
 
+const getMyOrganization = () => (dispatch) => {
+  dispatch(getOrganizationRequest());
+  axios.get(`${Routes.BASE_URL}${Routes.ORGANIZATIONS_API}/mine`)
+    .then((response) => {
+      dispatch(getOrganizationSuccess(response.data));
+    }).catch((error) => {
+      dispatch(getOrganizationError(error.response));
+    });
+};
+
+const getMyOrganizationMembers = () => (dispatch) => {
+  dispatch(getOrganizationMembersRequest());
+  axios.get(`${Routes.BASE_URL}${Routes.ORGANIZATIONS_API}/members`)
+    .then((response) => {
+      dispatch(getOrganizationMembersSuccess(response.data));
+    }).catch((error) => {
+      dispatch(getOrganizationMembersError(error.response));
+    });
+};
+
 const getOrganization = id => (dispatch) => {
   dispatch(getOrganizationRequest());
   axios.get(`${Routes.BASE_URL}${Routes.ORGANIZATIONS_API}/${id}`)
@@ -45,6 +65,23 @@ const getOrganizationError = error => ({
   errorMessage: error,
   name: ReducerTypes.ERROR_ORGANIZATION_REQUEST,
   type: ActionTypes.ERROR_ORGANIZATION
+});
+
+const getOrganizationMembersError = error => ({
+  errorMessage: error,
+  name: ReducerTypes.ERROR_MEMBERS_REQUEST,
+  type: ActionTypes.ERROR_MEMBERS
+});
+
+const getOrganizationMembersRequest = () => ({
+  name: ReducerTypes.GET_MEMBERS_REQUEST,
+  type: ActionTypes.GET_MEMBERS
+});
+
+const getOrganizationMembersSuccess = users => ({
+  data: users,
+  name: ReducerTypes.RECEIVE_MEMBERS_REQUEST,
+  type: ActionTypes.RECEIVE_MEMBERS
 });
 
 const getOrganizationRequest = () => ({
@@ -120,5 +157,6 @@ const searchOrganizationsSuccess = organizations => ({
 });
 
 export {
-  getFuelSuppliers, getOrganization, getOrganizations, searchOrganizations, searchOrganizationsReset
+  getFuelSuppliers, getMyOrganization, getMyOrganizationMembers, getOrganization, getOrganizations,
+  searchOrganizations, searchOrganizationsReset
 };

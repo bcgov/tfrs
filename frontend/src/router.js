@@ -21,6 +21,7 @@ import HistoricalDataEntryContainer from './admin/historical_data_entry/Historic
 import HistoricalDataEntryEditContainer from './admin/historical_data_entry/HistoricalDataEntryEditContainer';
 import NotFound from './components/reusables/NotFound';
 import OrganizationsContainer from './organizations/OrganizationsContainer';
+import OrganizationsViewContainer from './organizations/OrganizationViewContainer';
 
 const Router = props => (
   <ConnectedRouter history={history} key={Math.random()}>
@@ -47,6 +48,11 @@ const Router = props => (
           exact
           path={ORGANIZATIONS.LIST}
           component={withRouter(OrganizationsContainer)}
+        />
+        <Route
+          exact
+          path={ORGANIZATIONS.DETAILS}
+          component={withRouter(OrganizationsViewContainer)}
         />
         <Route
           exact

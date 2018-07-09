@@ -34,3 +34,9 @@ class RoleSerializer(serializers.ModelSerializer):
         model = Role
         fields = ('id', 'name', 'description', 'is_government_role',
                   'permissions')
+
+
+class RoleMinSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Role
+        fields = ('id', 'name', 'description')

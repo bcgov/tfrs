@@ -1,5 +1,37 @@
 import ActionTypes from '../constants/actionTypes/Organizations';
 
+const organizationMembers = (state = {
+  users: [],
+  isFetching: false,
+  success: false,
+  errorMessage: []
+}, action) => {
+  switch (action.type) {
+    case ActionTypes.GET_MEMBERS:
+      return {
+        ...state,
+        isFetching: true,
+        success: false
+      };
+    case ActionTypes.RECEIVE_MEMBERS:
+      return {
+        ...state,
+        users: action.data,
+        isFetching: false,
+        success: true
+      };
+    case ActionTypes.ERROR_MEMBERS:
+      return {
+        ...state,
+        errorMessage: action.errorMessage,
+        isFetching: false,
+        success: false
+      };
+    default:
+      return state;
+  }
+};
+
 const organizationRequest = (state = {
   didInvalidate: false,
   fuelSupplier: {},
@@ -88,4 +120,4 @@ const fuelSuppliersRequest = (state = {
   }
 };
 
-export { organizationRequest, organizations, fuelSuppliersRequest };
+export { organizationMembers, organizationRequest, organizations, fuelSuppliersRequest };
