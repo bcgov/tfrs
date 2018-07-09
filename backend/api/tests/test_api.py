@@ -1,3 +1,28 @@
+# -*- coding: utf-8 -*-
+# pylint: disable=no-member
+"""
+    REST API Documentation for the NRS TFRS Credit Trading Application
+
+    The Transportation Fuels Reporting System is being designed to streamline compliance reporting
+    for transportation fuel suppliers in accordance with the Renewable & Low Carbon Fuel
+    Requirements Regulation.
+
+    OpenAPI spec version: v1
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+"""
+
+
 import json
 from collections import defaultdict
 from enum import Enum
@@ -588,98 +613,5 @@ class TestAPI(BaseTestCase):
     #     self.assertTrue(
     #         set(credit_trade_status).issubset(
     #             response_data['status']))
-    #
-    # def test_get_fuel_suppliers_only(self):
-    #     response =self.clients['gov_analyst'].get("/api/organizations/fuel_suppliers")
-    #     response_data = json.loads(response.content.decode("utf-8"))
-    #     for r in response_data:
-    #         assert r['type'] == 2
-    #
-    # def test_approved_buy(self):
-    #     # get fuel supplier balance for fs 1
-    #     initiator_bal = OrganizationBalance.objects.get(
-    #         organization_id=2,
-    #         expiration_date=None)
-    #     respondent_bal, created = OrganizationBalance.objects.get_or_create(
-    #         organization_id=self.users['fs_user_1'].organization.id,
-    #         expiration_date=None,
-    #         defaults={'validated_credits': 10000})
-    #
-    #     num_of_credits = 50
-    #
-    #     credit_trade = fake_api_calls.create_credit_trade(
-    #         user_id=self.user_id,
-    #         status=self.statuses['submitted'].id,
-    #         fair_market_value_per_credit=1000,
-    #         initiator=2,
-    #         respondent=self.users['fs_user_1'].organization.id,
-    #         number_of_credits=num_of_credits,
-    #         type=2
-    #     )
-    #
-    #     data = {
-    #         'number_of_credits': num_of_credits,
-    #         'status': self.statuses['accepted'].id,
-    #         'initiator': 2,
-    #         'respondent': self.users['fs_user_1'].organization.id,
-    #         'type': 2,
-    #         'fair_market_value_per_credit': 1000
-    #     }
-    #
-    #     resp_user = User.objects.get(id=self.user_id)
-    #     resp_user.organization_id = self.users['fs_user_1'].organization.id
-    #     resp_user.save()
-    #
-    #     response = self.respondent_client.put(
-    #         "{}/{}".format(self.test_url, credit_trade['id']),
-    #         content_type='application/json',
-    #         data=json.dumps(data))
-    #
-    #     response =self.clients['gov_analyst'].put(
-    #         "{}/{}/approve".format(self.test_url, credit_trade['id']),
-    #         content_type='application/json')
-    #
-    #     self.assertEqual(response.status_code, status.HTTP_200_OK)
-    #
-    #     # TODO: Make sure two credit histories are created
-    #
-    #     initiator_bal_after = OrganizationBalance.objects.get(
-    #         organization_id=2,
-    #         expiration_date=None)
-    #
-    #     respondent_bal_after = OrganizationBalance.objects.get(
-    #         organization_id=self.users['fs_user_1'].organization.id,
-    #         expiration_date=None)
-    #
-    #     init_final_bal = initiator_bal.validated_credits + num_of_credits
-    #     resp_final_bal = respondent_bal.validated_credits - num_of_credits
-    #
-    #     ct_completed =self.clients['fs_user_1'].get(
-    #         "{}/{}".format(self.test_url, credit_trade['id']),
-    #         content_type='application/json')
-    #
-    #     completed_response = json.loads(
-    #         ct_completed.content.decode("utf-8"))
-    #
-    #     # response_data should have status == completed
-    #     today = datetime.datetime.today().strftime('%Y-%m-%d')
-    #
-    #     # Status of Credit Trade should be 'completed'
-    #     self.assertEqual(completed_response['status']['id'],
-    #                      self.statuses['completed'].id)
-    #
-    #     # Effective date should be today
-    #     self.assertEqual(
-    #         initiator_bal_after.effective_date.strftime('%Y-%m-%d'),
-    #         today)
-    #     self.assertEqual(
-    #         respondent_bal_after.effective_date.strftime('%Y-%m-%d'),
-    #         today)
-    #
-    #     # Credits should be subtracted/added
-    #     self.assertEqual(init_final_bal,
-    #                      initiator_bal_after.validated_credits)
-    #     self.assertEqual(resp_final_bal,
-    #                      respondent_bal_after.validated_credits)
     #
 

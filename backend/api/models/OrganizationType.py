@@ -25,7 +25,6 @@ from auditable.models import Auditable
 from api.managers.OrganizationTypeManager import OrganizationTypeManager
 
 
-
 class OrganizationType(Auditable):
     type = models.CharField(max_length=25, unique=True)
     description = models.CharField(max_length=1000, blank=True, null=True)
