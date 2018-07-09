@@ -28,6 +28,7 @@ from api.models.CreditTradeType import CreditTradeType
 from api.models.User import User
 from api.services.CreditTradeActions import CreditTradeActions
 from api.services.CreditTradeCommentActions import CreditTradeCommentActions
+from api.services.CreditTradeService import CreditTradeService
 
 from .CreditTradeComment import CreditTradeCommentSerializer
 from .CreditTradeHistory import CreditTradeHistoryReviewedSerializer
@@ -179,46 +180,51 @@ class CreditTradeUpdateSerializer(serializers.ModelSerializer):
                             "been `{}`.".format(self.instance.status.status)
             })
 
+        # if status is being modified, make sure the next state is valid
         if 'status' in request.data:
-            if self.instance.status.status == "Draft":
-                if request.user.has_perm('PROPOSE_CREDIT_TRANSFER'):
-                    available_statuses.append("Cancelled")
-                    available_statuses.append("Draft")
-
-            if request.user.has_perm('APPROVE_CREDIT_TRANSFER'):
-                available_statuses.append("Approved")
-
-            if request.user.has_perm('DECLINE_CREDIT_TRANSFER'):
-                available_statuses.append("Declined")
-
-            if request.user.has_perm('RECOMMEND_CREDIT_TRANSFER') and \
-               self.instance.status.status == "Accepted":
-                available_statuses.append("Recommended")
-                available_statuses.append("Not Recommended")
-
-            if request.user.has_perm('REFUSE_CREDIT_TRANSFER') and \
-               self.instance.respondent == request.user.organization:
-                available_statuses.append("Refused")
-
-            if request.user.has_perm('SIGN_CREDIT_TRANSFER'):
-                if self.instance.initiator == request.user.organization:
-                    available_statuses.append("Submitted")
-
-                if self.instance.respondent == request.user.organization:
-                    available_statuses.append("Accepted")
-
-            allowed_statuses = list(
-                CreditTradeStatus.objects
-                .filter(status__in=available_statuses)
-                .only('id'))
-
             credit_trade_status = data.get('status')
 
-            if credit_trade_status not in allowed_statuses:
+            if data.get('is_rescinded') is False:
+                available_statuses = CreditTradeService.get_allowed_statuses(
+                    self.instance, request)
+
+                allowed_statuses = list(
+                    CreditTradeStatus.objects
+                    .filter(status__in=available_statuses)
+                    .only('id'))
+
+                if credit_trade_status not in allowed_statuses:
+                    raise serializers.ValidationError({
+                        'invalidStatus': "You do not have permission to set "
+                                         "the status to `{}`.".format(
+                                             credit_trade_status.status)
+                    })
+
+            if (credit_trade_status != self.instance.status and
+                    data.get('is_rescinded') is True):
                 raise serializers.ValidationError({
-                    'invalidStatus': "You do not have permission to set the "
-                                     "status to `{}`.".format(
-                                         credit_trade_status.status)
+                    'invalidStatus': "Cannot update status and rescind at the "
+                                     "same time."
+                })
+
+        if data.get('is_rescinded') is True:
+            if request.user.organization not in [
+                    self.instance.initiator, self.instance.respondent]:
+                raise serializers.ValidationError({
+                    'forbidden': "Cannot rescind unless organization is part "
+                                 "of the proposal."
+                })
+
+            if self.instance.status.status == 'Draft':
+                raise serializers.ValidationError({
+                    'forbidden': "Cannot rescind a draft"
+                })
+
+            if (self.instance.status.status == 'Submitted' and
+                    self.instance.respondent == request.user.organization):
+                raise serializers.ValidationError({
+                    'forbidden': "Cannot rescind a proposed trade when you're "
+                                 " the respondent"
                 })
 
         if (data.get('fair_market_value_per_credit') == 0 and
@@ -405,6 +411,13 @@ class CreditTrade2Serializer(serializers.ModelSerializer):
         return serializer.data
 
     def get_reviewed(self, obj):
+        request = self.context.get('request')
+
+        # only show this to government users
+        if (request.user.role is None or
+                not request.user.role.is_government_role):
+            return {}
+
         serializer = CreditTradeHistoryReviewedSerializer(obj.reviewed)
 
         return serializer.data
