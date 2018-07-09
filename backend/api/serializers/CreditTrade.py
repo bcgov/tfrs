@@ -60,6 +60,21 @@ class CreditTradeCreateSerializer(serializers.ModelSerializer):
     def validate(self, data):
         request = self.context['request']
 
+        # no user should be allowed to create a rescinded proposal
+        if data.get('is_rescinded') is True:
+            raise serializers.ValidationError({
+                'invalidStatus': "You cannot create a rescinded proposal"
+            })
+
+        # if the user creating the proposal is not the initiator.
+        # they should be a government user
+        if data.get('initiator') != request.user.organization and \
+                not request.user.role.is_government_role:
+            raise serializers.ValidationError({
+                'invalidStatus': "You cannot create a proposal for another "
+                                 "organization."
+            })
+
         available_statuses = []
 
         if request.user.has_perm('APPROVE_CREDIT_TRANSFER'):
@@ -179,6 +194,18 @@ class CreditTradeUpdateSerializer(serializers.ModelSerializer):
                 'readOnly': "Cannot update a transaction that's already "
                             "been `{}`.".format(self.instance.status.status)
             })
+
+        # if the user is the respondent, they really shouldn't be modifying
+        # other fields. So check if those have changed
+        if self.instance.respondent == request.user.organization:
+            data['fair_market_value_per_credit'] = \
+            self.instance.fair_market_value_per_credit
+
+            data['number_of_credits'] = \
+            self.instance.number_of_credits
+
+            data['zero_reason_id'] = \
+            self.instance.zero_reason_id
 
         # if status is being modified, make sure the next state is valid
         if 'status' in request.data:
