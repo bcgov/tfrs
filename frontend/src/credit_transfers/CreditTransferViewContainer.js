@@ -356,6 +356,7 @@ class CreditTransferViewContainer extends Component {
         errors={this.props.errors}
         fairMarketValuePerCredit={item.fairMarketValuePerCredit}
         fields={this.state.fields}
+        history={item.history}
         id={item.id}
         isFetching={isFetching}
         isRescinded={item.isRescinded}
@@ -364,7 +365,6 @@ class CreditTransferViewContainer extends Component {
         note={item.note}
         numberOfCredits={item.numberOfCredits}
         rescinded={item.rescinded}
-        reviewed={item.reviewed}
         signatures={item.signatures}
         status={item.status}
         toggleCheck={this._toggleCheck}
@@ -478,14 +478,7 @@ CreditTransferViewContainer.propTypes = {
       PropTypes.string,
       PropTypes.number
     ]),
-    id: PropTypes.number,
-    isRescinded: PropTypes.bool,
-    numberOfCredits: PropTypes.oneOfType([
-      PropTypes.string,
-      PropTypes.number
-    ]),
-    rescinded: PropTypes.bool,
-    reviewed: PropTypes.shape({
+    history: PropTypes.arrayOf(PropTypes.shape({
       status: PropTypes.shape({
         id: PropTypes.number,
         status: PropTypes.string
@@ -496,7 +489,14 @@ CreditTransferViewContainer.propTypes = {
         id: PropTypes.number,
         lastName: PropTypes.string
       })
-    }),
+    })),
+    id: PropTypes.number,
+    isRescinded: PropTypes.bool,
+    numberOfCredits: PropTypes.oneOfType([
+      PropTypes.string,
+      PropTypes.number
+    ]),
+    rescinded: PropTypes.bool,
     signatures: PropTypes.arrayOf(PropTypes.shape({
       displayName: PropTypes.string,
       firstName: PropTypes.string,
