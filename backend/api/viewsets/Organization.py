@@ -11,6 +11,8 @@ from api.models.Organization import Organization
 from api.models.OrganizationBalance import OrganizationBalance
 from api.models.OrganizationHistory import OrganizationHistory
 from api.models.OrganizationType import OrganizationType
+from api.models.User import User
+from api.serializers import MemberSerializer
 from api.serializers import OrganizationSerializer
 from api.serializers import OrganizationBalanceSerializer
 from api.serializers import OrganizationHistorySerializer
@@ -32,7 +34,8 @@ class OrganizationViewSet(AuditableMixin, viewsets.ModelViewSet):
         'balance': OrganizationBalanceSerializer,
         'default': OrganizationSerializer,
         'history': OrganizationHistorySerializer,
-        'fuel_suppliers': OrganizationMinSerializer
+        'fuel_suppliers': OrganizationMinSerializer,
+        'members': MemberSerializer
     }
 
     def get_serializer_class(self):
@@ -114,4 +117,30 @@ class OrganizationViewSet(AuditableMixin, viewsets.ModelViewSet):
             .order_by('lower_name')
 
         serializer = self.get_serializer(fuel_suppliers, many=True)
+        return Response(serializer.data)
+
+    @list_route(methods=['get'])
+    def mine(self, request):
+        """
+        Provides a shortcut to retrieve the logged-in user's
+        organization.
+        We can extend this later on to add more details about the
+        organization such as address, phone, etc
+        """
+        organization = Organization.objects.get(
+            id=request.user.organization_id)
+
+        serializer = self.get_serializer(organization)
+        return Response(serializer.data)
+
+    @list_route(methods=['get'])
+    def members(self, request):
+        """
+        Returns a list of users that belongs to the
+        logged-in user's organization.
+        """
+        users = User.objects.filter(
+            organization_id=request.user.organization_id)
+
+        serializer = self.get_serializer(users, many=True)
         return Response(serializer.data)
