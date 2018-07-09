@@ -142,7 +142,6 @@ class TestAPI(BaseTestCase):
         expected_result[('draft', 'submitted')] = True
         expected_result[('draft', 'cancelled')] = True
         expected_result[('draft', 'draft')] = True
-        expected_result[('submitted', 'submitted')] = True
 
         for (initial_status, next_status) in product(self.statuses.keys(), self.statuses.keys()):
             sc = _StateTransition()
