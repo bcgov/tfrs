@@ -871,6 +871,15 @@ class TestCreditTrades(BaseTestCase):
         # and the user that accepted
         self.assertEqual(credit_trade['signatures'][1]['user']['id'],
                          self.users['fuel_supplier_2'].id)
+        
+        # first entry should be submitted
+        self.assertEqual(credit_trade['history'][0]['status']['id'],
+                         self.statuses['submitted'].id)
 
-        self.assertEqual(credit_trade['reviewed']['status']['id'],
+        # second entry should be submitted
+        self.assertEqual(credit_trade['history'][1]['status']['id'],
+                         self.statuses['accepted'].id)
+
+        # third entry should be recommended
+        self.assertEqual(credit_trade['history'][2]['status']['id'],
                          self.statuses['recommended'].id)

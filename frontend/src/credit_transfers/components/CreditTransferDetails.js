@@ -117,7 +117,10 @@ const CreditTransferDetails = props => (
             isCommenting={props.isCommenting}
             permissions={
               {
-                BTN_SIGN_1_2: props.loggedInUser.hasPermission(PERMISSIONS_CREDIT_TRANSACTIONS.SIGN)
+                BTN_SIGN_1_2:
+                props.loggedInUser.hasPermission(PERMISSIONS_CREDIT_TRANSACTIONS.SIGN),
+                BTN_SIGN_2_2:
+                props.loggedInUser.hasPermission(PERMISSIONS_CREDIT_TRANSACTIONS.SIGN)
               }
             }
           />

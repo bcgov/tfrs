@@ -48,6 +48,13 @@ class Navbar extends Component {
             >
               Fuel Suppliers
             </a>,
+            <Link
+              id="navbar-credit-transactions"
+              key="company-details"
+              to={ORGANIZATIONS.DETAILS}
+            >
+              Company Details
+            </Link>,
             <a
               href={ORGANIZATIONS.CREDIT_MARKET_REPORT}
               key="credit-market-report"
@@ -101,6 +108,14 @@ class Navbar extends Component {
               >
                 Fuel Suppliers
               </a>
+            </li>,
+            <li key="company-details">
+              <Link
+                id="navbar-credit-transactions"
+                to={ORGANIZATIONS.DETAILS}
+              >
+                Company Details
+              </Link>,
             </li>,
             <li key="credit-market-report">
               <a
