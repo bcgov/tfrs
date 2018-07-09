@@ -2,74 +2,25 @@ from django.test import TestCase, Client, RequestFactory
 from rest_framework import exceptions
 from django.conf import settings
 
-from .authentication import UserAuthentication
-from .models.User import User
-from .models.Organization import Organization
-from .models.OrganizationStatus import OrganizationStatus
-from .models.OrganizationActionsType import OrganizationActionsType
-from .models.OrganizationType import OrganizationType
+from api.authentication import UserAuthentication
+from .base_test_case import BaseTestCase
+from api.models.User import User
+from api.models.Organization import Organization
+from api.models.OrganizationStatus import OrganizationStatus
+from api.models.OrganizationActionsType import OrganizationActionsType
+from api.models.OrganizationType import OrganizationType
 
 
-class TestAuthentication(TestCase):
-    fixtures = ['organization_types.json',
-                'organization_government.json',
-                'organization_balance_gov.json',
-                'credit_trade_statuses.json',
-                'credit_trade_statuses_refused.json',
-                'organization_actions_types.json',
-                'organization_statuses.json',
-                'credit_trade_types.json',
-                'test_organization_fuel_suppliers.json',
-                'test_users.json',
-                'roles.json',
-                'permissions.json',
-                'roles_permissions.json',
-                'roles_permissions_v0.3.0.json',
-                'roles_permissions_v0.3.1.json',
-                'test_fakedata_permissions_assignment.json',
-                'test_prodlike_government_users_and_roles.json']
+class TestAuthentication(BaseTestCase):
 
     def setUp(self):
         self.userauth = UserAuthentication()
         self.factory = RequestFactory()
         settings.DEBUG = False
-        pass
+        super().setUp()
 
     def tearDown(self):
         settings.BYPASS_AUTH = False
-
-    def test_user_has_mapping(self):
-        # Return user
-        request = self.factory.get('/')
-        display_name = 'Brad Smith'
-        request.META = {
-            'HTTP_SMAUTH_USERGUID': 'c9804c52-05f1-4a6a-9d24-332d9d8be2a9',
-            'HTTP_SMAUTH_USERDISPLAYNAME': display_name,
-            'HTTP_SMAUTH_USEREMAIL': 'BradJSmith@cuvox.de',
-            'HTTP_SMAUTH_UNIVERSALID': 'BSmith',
-        }
-
-        user, auth = self.userauth.authenticate(request)
-        # print(user)
-        # print(user.display_name)
-
-        assert user is not None
-        assert user.display_name == display_name
-
-    def test_user_has_mapping_uuid_formatted_and_matched(self):
-        # Return user
-        request = self.factory.get('/')
-        display_name = 'Brad Smith'
-        request.META = {
-            'HTTP_SMAUTH_USERGUID': 'C9804C5205F14A6A9D24332D9D8BE2A9',
-            'HTTP_SMAUTH_USERDISPLAYNAME': display_name,
-            'HTTP_SMAUTH_USEREMAIL': 'BradJSmith@cuvox.de',
-            'HTTP_SMAUTH_UNIVERSALID': 'BSmith',
-        }
-
-        user, auth = self.userauth.authenticate(request)
-        assert user is not None
-        assert user.display_name == display_name
 
     def test_user_first_login_valid(self):
         # Create mapping by updating the user model
@@ -231,8 +182,9 @@ class TestAuthentication(TestCase):
         request = self.factory.get('/')
 
         user, auth = self.userauth.authenticate(request)
+
         # First user in the database
-        assert user.username == 'business_bsmith'
+        assert user.username == User.objects.first().username
 
     def test_bypass_auth_error(self):
         settings.BYPASS_AUTH = False

@@ -1,8 +1,10 @@
 from django.test import TestCase
-from . import utils
+from api import utils
 
 
 class TestUtils(TestCase):
+    fixtures = []
+
     valid_names = [
         {'display_name': 'Dane Toe',
          'user_type': 'Business',
@@ -35,9 +37,6 @@ class TestUtils(TestCase):
              'last_name': "Toe"}
          },
     ]
-
-    def setUp(self):
-        pass
 
     def test_names(self):
         for name in self.valid_names:

@@ -118,18 +118,23 @@ class TestAPI(BaseTestCase):
                               ):
                 self.check_state_change(sc)
 
-    def test_initial_status_changes(self) -> list:
+    def test_credit_trade_creation(self) -> list:
         to_check = []
         expected_result = defaultdict(lambda: False)
 
-        expected_result['draft'] = True
-        expected_result['submitted'] = True
+        expected_result[_StateTransition.UserRelationship.INITIATOR, 'draft', False] = True
+        expected_result[_StateTransition.UserRelationship.INITIATOR, 'submitted', False] = True
+        expected_result[_StateTransition.UserRelationship.GOVERNMENT_DIRECTOR, 'approved', False] = True
 
-        for trade_status in self.statuses.keys():
+        for (relationship, trade_status, rescinded) in product(
+                _StateTransition.UserRelationship,
+                self.statuses.keys(),
+                [True, False]):
             sc = _StateTransition()
             sc.next_state_id = self.statuses[trade_status].id
-            sc.next_state_user_relationship = _StateTransition.UserRelationship.INITIATOR
-            sc.expect_state_change_to_be_valid = expected_result[trade_status]
+            sc.next_state_user_relationship = relationship
+            sc.next_state_rescinded_flag = rescinded
+            sc.expect_state_change_to_be_valid = expected_result[relationship, trade_status, rescinded]
             to_check.append(sc)
 
         self.check_all(to_check)
@@ -411,6 +416,71 @@ class TestAPI(BaseTestCase):
             to_check.append(sc)
 
         self.check_all(to_check)
+
+    def test_third_party_status_changes(self) -> list:
+        to_check = []
+
+        expected_result = defaultdict(lambda: False)
+
+        for (initial_status, next_status) in product(self.statuses.keys(), self.statuses.keys()):
+            sc = _StateTransition()
+            sc.initial_state_id = self.statuses[initial_status].id
+            sc.next_state_id = self.statuses[next_status].id
+            sc.next_state_user_relationship = _StateTransition.UserRelationship.THIRD_PARTY
+            sc.expect_state_change_to_be_valid = expected_result[(initial_status, next_status)]
+            to_check.append(sc)
+
+        self.check_all(to_check)
+
+    def test_third_party_status_changes_initially_rescinded(self) -> list:
+        to_check = []
+
+        expected_result = defaultdict(lambda: False)
+
+        for (initial_status, next_status) in product(self.statuses.keys(), self.statuses.keys()):
+            sc = _StateTransition()
+            sc.initial_state_id = self.statuses[initial_status].id
+            sc.initial_state_rescinded_flag = True
+            sc.next_state_id = self.statuses[next_status].id
+            sc.next_state_user_relationship = _StateTransition.UserRelationship.THIRD_PARTY
+            sc.expect_state_change_to_be_valid = expected_result[(initial_status, next_status)]
+            to_check.append(sc)
+
+        self.check_all(to_check)
+
+    def test_third_party_status_changes_finally_rescinded(self) -> list:
+        to_check = []
+
+        expected_result = defaultdict(lambda: False)
+
+        for (initial_status, next_status) in product(self.statuses.keys(), self.statuses.keys()):
+            sc = _StateTransition()
+            sc.initial_state_id = self.statuses[initial_status].id
+            sc.next_state_id = self.statuses[next_status].id
+            sc.next_state_user_relationship = _StateTransition.UserRelationship.THIRD_PARTY
+            sc.expect_state_change_to_be_valid = expected_result[(initial_status, next_status)]
+            sc.next_state_rescinded_flag = True
+            to_check.append(sc)
+
+        self.check_all(to_check)
+
+    def test_third_party_director_status_changes_unrescind(self) -> list:
+        to_check = []
+
+        expected_result = defaultdict(lambda: False)
+
+        for (initial_status, next_status) in product(self.statuses.keys(), self.statuses.keys()):
+            sc = _StateTransition()
+            sc.initial_state_id = self.statuses[initial_status].id
+            sc.initial_state_rescinded_flag = True
+            sc.next_state_id = self.statuses[next_status].id
+            sc.next_state_user_relationship = _StateTransition.UserRelationship.THIRD_PARTY
+            sc.expect_state_change_to_be_valid = expected_result[(initial_status, next_status)]
+            sc.next_state_rescinded_flag = False
+            to_check.append(sc)
+
+        self.check_all(to_check)
+
 
 
     # Todo incorporate

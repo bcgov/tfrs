@@ -68,18 +68,18 @@ class ClientLoggingMetaclass(type):
                         data = kw[data_param[1].name] if data_param[1].name in kw else 'N/A'
 
                 logging.debug(
-                    '--------\n'
+                    '\n--------\n'
                     'network exchange details:\n'
                     '--------\n'
                     '{} request for {}\n'
+                    'response status {}\n'
                     '--request payload--\n{}\n'
-                    '--response status {}--\n'
                     '--response body--\n{}\n'
                     '--------\n'.format(
-                        name,
+                        str(name).upper(),
                         args[path_param[0]] if path_param is not None else 'N/A',
-                        data,
                         results.status_code,
+                        data,
                         results.content.decode('utf-8')
                     ))
             except (KeyError, AttributeError):
