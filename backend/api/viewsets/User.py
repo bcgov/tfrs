@@ -45,6 +45,3 @@ class UserViewSet(AuditableMixin, viewsets.GenericViewSet, mixins.CreateModelMix
         serializer = self.get_serializer(result, many=True)
         return Response(serializer.data)
 
-    @list_route(methods=['post'])
-    def bulk(self):
-        pass

@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+# pylint: disable=no-member,invalid-name
 """
     REST API Documentation for the NRS TFRS Credit Trading Application
 

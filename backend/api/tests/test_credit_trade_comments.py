@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# pylint: disable=no-member
+# pylint: disable=no-member,invalid-name
 """
     REST API Documentation for the NRS TFRS Credit Trading Application
 
@@ -23,20 +23,15 @@
 """
 
 import json
-import logging
 
 from collections import defaultdict
 from itertools import product
 
 from rest_framework import status
 
-from api.tests.base_test_case import BaseTestCase
-from api.models.User import User
-
-from api.models.CreditTradeStatus import CreditTradeStatus
-from api.models.CreditTradeType import CreditTradeType
 from api.models.Organization import Organization
-from api.models.CreditTrade import CreditTrade
+from .data_creation_utilities import DataCreationUtilities
+from .base_test_case import BaseTestCase
 
 
 class TestAPIComments(BaseTestCase):
@@ -190,51 +185,13 @@ class TestAPIComments(BaseTestCase):
                         if expect_only_unprivileged:
                             assert comment['privilegedAccess'] is False
 
-    @staticmethod
-    def create_possible_credit_trades(initiating_organization, responding_organization):
-        """Used to setup test data for exhaustive trials """
-        created_trades = []
-
-        all_statuses = [s.status for s in CreditTradeStatus.objects.all()]
-
-        # Certain combinations of (status,rescinded) are not logical
-        impossible_states = [
-            ('Draft', True),
-            ('Cancelled', True),
-            ('Approved', True),
-            ('Declined', True),
-            ('Completed', True),
-        ]
-
-        # Create test data for this test -- one trade with each possible status
-        for (ct_status, rescinded) in product(all_statuses, [True, False]):
-            if (ct_status, rescinded) not in impossible_states:
-                trade = CreditTrade()
-                trade.initiator = initiating_organization
-                trade.respondent = responding_organization
-                trade.type = CreditTradeType.objects.get_by_natural_key("Buy")
-                trade.status = CreditTradeStatus.objects.get_by_natural_key(ct_status)
-                trade.fair_market_value_per_credit = 20.0
-                trade.number_of_credits = 500
-                trade.is_rescinded = rescinded
-                trade.save()
-                trade.refresh_from_db()
-                logging.debug("created credit trade %s", trade.id)
-                created_trades.append({
-                    'status': ct_status,
-                    'rescinded': rescinded,
-                    'id': trade.id
-                })
-
-        return created_trades
-
     def test_comment_post_permissions(self):
         """Test that Credit Trade Comment POST permissions function correctly"""
 
         initiating_organization = Organization.objects.get_by_natural_key("Husky Oil Ltd.")
         responding_organization = Organization.objects.get_by_natural_key("Shell Canada Products")
 
-        created_trades = TestAPIComments.create_possible_credit_trades(
+        created_trades = DataCreationUtilities.create_possible_credit_trades(
             initiating_organization,
             responding_organization
         )
@@ -574,6 +531,5 @@ class TestAPIComments(BaseTestCase):
         response = self.clients['fs_air_liquide'].put(
             c_url,
             content_type='application/json',
-
             data=json.dumps(test_data))
         assert status.is_client_error(response.status_code)

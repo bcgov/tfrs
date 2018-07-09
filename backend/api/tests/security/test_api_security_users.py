@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+# pylint: disable=no-member,invalid-name
 """
     REST API Documentation for the NRS TFRS Credit Trading Application
 
@@ -29,9 +30,9 @@ from collections import defaultdict
 from rest_framework import status
 
 from api.models.User import User
+from api.tests.data_creation_utilities import DataCreationUtilities
 
 from .base_api_security_test_case import BaseAPISecurityTestCase
-from .data_creation_utilities import DataCreationUtilities
 
 
 class TestUsersAPI(BaseAPISecurityTestCase):

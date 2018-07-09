@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+# pylint: disable=no-member,invalid-name
 """
     REST API Documentation for the NRS TFRS Credit Trading Application
 
@@ -31,6 +33,7 @@ from api.models.OrganizationBalance import OrganizationBalance
 from api.models.SigningAuthorityAssertion import SigningAuthorityAssertion
 from api.services.CreditTradeService import CreditTradeService
 from api.tests.base_test_case import BaseTestCase
+from api.tests.data_creation_utilities import DataCreationUtilities
 
 
 class TestCreditTradeOperations(BaseTestCase):
@@ -39,12 +42,22 @@ class TestCreditTradeOperations(BaseTestCase):
     status changes and checking permissions when those
     status changes happen
     """
+
+    extra_fixtures = ['test_credit_trades.json']
+
     def test_initiator_should_see_appropriate_credit_trades(self):
         """
         As a fuel supplier, I should see all credit trades where:
         I'm the initiator, regardless of status
         I'm the respondent, if the status is "submitted" or greater
         """
+
+        # setup some test data
+        DataCreationUtilities.create_possible_credit_trades(
+            self.users['fs_user_1'].organization,
+            self.users['fs_user_2'].organization
+        )
+
         response = self.clients['fs_user_1'].get('/api/credit_trades')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 

@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+# pylint: disable=no-member,invalid-name
 """
     REST API Documentation for the NRS TFRS Credit Trading Application
 
@@ -32,8 +33,9 @@ from api.models.OrganizationActionsType import OrganizationActionsType
 from api.models.OrganizationType import OrganizationType
 from api.models.OrganizationStatus import OrganizationStatus
 
+from api.tests.data_creation_utilities import DataCreationUtilities
+
 from .base_api_security_test_case import BaseAPISecurityTestCase
-from .data_creation_utilities import DataCreationUtilities
 
 
 class TestOrganizationsAPI(BaseAPISecurityTestCase):

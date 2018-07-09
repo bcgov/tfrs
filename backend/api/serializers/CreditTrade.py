@@ -377,7 +377,7 @@ class CreditTrade2Serializer(serializers.ModelSerializer):
 
     class Meta:
         model = CreditTrade
-        fields = ('id', 'status', 'status_display',
+        fields = ('id', 'status',
                   'initiator', 'respondent',
                   'type', 'number_of_credits',
                   'fair_market_value_per_credit', 'total_value',

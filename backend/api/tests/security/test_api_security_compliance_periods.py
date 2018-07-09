@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+# pylint: disable=no-member,invalid-name
 """
     REST API Documentation for the NRS TFRS Credit Trading Application
 
@@ -28,10 +29,9 @@ from collections import defaultdict
 
 from rest_framework import status
 
-from api.models.User import User
+from api.tests.data_creation_utilities import DataCreationUtilities
 
 from .base_api_security_test_case import BaseAPISecurityTestCase
-from .data_creation_utilities import DataCreationUtilities
 
 
 class TestCompliancePeriodsAPI(BaseAPISecurityTestCase):
@@ -118,8 +118,8 @@ class TestCompliancePeriodsAPI(BaseAPISecurityTestCase):
                                                       ' compliance periods'}
 
         expected_results[('gov_director',)] = {'status': status.HTTP_201_CREATED,
-                                            'reason': 'Director should have create access for'
-                                                      ' compliance periods'}
+                                               'reason': 'Director should have create access for'
+                                                         ' compliance periods'}
 
         for index, user in enumerate(all_users):
             with self.subTest(user=user,
@@ -176,61 +176,6 @@ class TestCompliancePeriodsAPI(BaseAPISecurityTestCase):
         expected_results[('gov_director',)] = {'status': status.HTTP_200_OK,
                                                'reason': 'Director should have update access for'
                                                          ' compliance periods'}
-        for index, user in enumerate(all_users):
-            with self.subTest(user=user,
-                              expected_status=expected_results[(user,)]['status'],
-                              reason=expected_results[(user,)]['reason']):
-                cp_that_exists = DataCreationUtilities.create_compliance_period()
-
-                payload = {
-                    'description': 'Updated CP {0!s}'.format(uuid.uuid4()),
-                    'display_order': 1
-                }
-
-                response = self.clients[user].put(
-                    url.format(cp_that_exists['id']),
-                    content_type='application/json',
-                    data=json.dumps(payload)
-
-                )
-                logging.debug(response)
-
-                self.assertEqual(response.status_code, expected_results[(user,)]['status'], "PUT")
-
-                payload = {
-                    'description': 'Patched CP {0!s}'.format(uuid.uuid4())
-                    }
-
-                response = self.clients[user].patch(
-                    url.format(cp_that_exists['id']),
-                    content_type='application/json',
-                    data=json.dumps(payload)
-
-                )
-                logging.debug(response)
-
-                self.assertEqual(response.status_code, expected_results[(user,)]['status'], "PATCH")
-
-    def test_put(self):
-        """
-        Test that updating compliance periods is not a valid action
-         unless you have an appropriate role
-        """
-        url = "/api/compliance_periods/{0!s}"
-
-        all_users = self.users
-
-        expected_results = defaultdict(lambda: {'status': status.HTTP_403_FORBIDDEN,
-                                                'reason': "Default response should be no access"})
-
-        expected_results[('gov_admin',)] = {'status': status.HTTP_200_OK,
-                                            'reason': 'Admin should have update access for'
-                                                      ' compliance periods'}
-
-        expected_results[('gov_director',)] = {'status': status.HTTP_200_OK,
-                                               'reason': 'Director should have update access for'
-                                                         ' compliance periods'}
-
         for index, user in enumerate(all_users):
             with self.subTest(user=user,
                               expected_status=expected_results[(user,)]['status'],

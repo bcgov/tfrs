@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# pylint: disable=no-member
+# pylint: disable=no-member,invalid-name
 """
     REST API Documentation for the NRS TFRS Credit Trading Application
 
@@ -21,8 +21,13 @@
     See the License for the specific language governing permissions and
     limitations under the License.
 """
+import logging
 import uuid
+from itertools import product
 
+from api.models.CreditTrade import CreditTrade
+from api.models.CreditTradeStatus import CreditTradeStatus
+from api.models.CreditTradeType import CreditTradeType
 from api.models.OrganizationActionsType import OrganizationActionsType
 from api.models.User import User
 from api.models.Organization import Organization
@@ -35,7 +40,7 @@ class DataCreationUtilities(object):
     """Utilities for creating short-lived test models"""
 
     @staticmethod
-    def create_test_user():
+    def create_test_user() -> dict:
         """Create a test fuel supplier user"""
         user = User()
         user.authorization_guid = str(uuid.uuid4())
@@ -60,7 +65,7 @@ class DataCreationUtilities(object):
         }
 
     @staticmethod
-    def create_test_organization():
+    def create_test_organization() -> dict:
         """Create a test fuel supplier"""
         org = Organization()
         org.status = OrganizationStatus.objects.get_by_natural_key('Active')
@@ -77,7 +82,7 @@ class DataCreationUtilities(object):
         }
 
     @staticmethod
-    def create_compliance_period():
+    def create_compliance_period() -> dict:
         """Create a test compliance period"""
         cp = CompliancePeriod()
         cp.description = 'Compliance Period {0!s}'.format(uuid.uuid4())
@@ -89,3 +94,44 @@ class DataCreationUtilities(object):
         return {
             'id': cp.id
         }
+
+    @staticmethod
+    def create_possible_credit_trades(
+            initiating_organization: Organization,
+            responding_organization: Organization) -> list:
+        """Used to setup test data for exhaustive trials """
+        created_trades = []
+
+        all_statuses = [s.status for s in CreditTradeStatus.objects.all()]
+
+        # Certain combinations of (status,rescinded) are not logical
+        impossible_states = [
+            ('Draft', True),
+            ('Cancelled', True),
+            ('Approved', True),
+            ('Declined', True),
+            ('Completed', True),
+            ('Refused', True)
+        ]
+
+        # Create test data for this test -- one trade with each possible status
+        for (ct_status, rescinded) in product(all_statuses, [True, False]):
+            if (ct_status, rescinded) not in impossible_states:
+                trade = CreditTrade()
+                trade.initiator = initiating_organization
+                trade.respondent = responding_organization
+                trade.type = CreditTradeType.objects.get_by_natural_key("Buy")
+                trade.status = CreditTradeStatus.objects.get_by_natural_key(ct_status)
+                trade.fair_market_value_per_credit = 20.0
+                trade.number_of_credits = 500
+                trade.is_rescinded = rescinded
+                trade.save()
+                trade.refresh_from_db()
+                logging.debug("created credit trade %s", trade.id)
+                created_trades.append({
+                    'status': ct_status,
+                    'rescinded': rescinded,
+                    'id': trade.id
+                })
+
+        return created_trades

@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+# pylint: disable=no-member,invalid-name,duplicate-code
 """
     REST API Documentation for the NRS TFRS Credit Trading Application
 
@@ -67,16 +69,20 @@ class BaseTestCase(TestCase):
         'gov_admin'
     ]
 
+    # For use in child classes
     extra_fixtures = None
     extra_usernames = None
 
     @classmethod
     def setUpClass(cls):
+        """Load any extra fixtures that child classes have declared"""
         if cls.extra_fixtures is not None:
             cls.fixtures = cls.fixtures + cls.extra_fixtures
         super().setUpClass()
 
     def __init__(self, *args, **kwargs):
+        """Add any extra usernames that child classes have declared to our list of clients"""
+
         if self.extra_usernames is not None:
             self.usernames = self.usernames + self.extra_usernames
 
@@ -94,11 +100,13 @@ class BaseTestCase(TestCase):
         self.clients = dict(map(lambda user:
                                 (user.username, LoggingClient(
                                     HTTP_SMGOV_USERGUID=str(user.authorization_guid),
-                                    HTTP_SMAUTH_USERDISPLAYNAME=str(user.display_name),
+                                    HTTP_SMGOV_USERDISPLAYNAME=str(user.display_name),
                                     HTTP_SMGOV_USEREMAIL=str(user.authorization_email),
                                     HTTP_SM_UNIVERSALID=str(user.authorization_id),
-                                    HTTP_SM_AUTHDIRNAME=('IDIR' if user.organization.id == 1 else 'BCeID'),
-                                    HTTP_SMGOV_USERTYPE=('Internal' if user.organization.id == 1 else '')
+                                    HTTP_SM_AUTHDIRNAME=\
+                                    'IDIR' if user.organization.id == 1 else 'BCeID',
+                                    HTTP_SMGOV_USERTYPE=\
+                                    'Internal' if user.organization.id == 1 else 'Business'
                                 )), self.users.values()))
 
         from_organization = Organization.objects.get_by_natural_key("Test Org 1")

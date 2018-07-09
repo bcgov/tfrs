@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+# pylint: disable=no-member,invalid-name
 """
     REST API Documentation for the NRS TFRS Credit Trading Application
 
@@ -24,24 +26,31 @@ import json
 
 from rest_framework import status
 
-from api.tests.base_test_case import BaseTestCase
+from .base_test_case import BaseTestCase
 
 
 class TestUsers(BaseTestCase):
     """Test /api/users"""
 
     def test_current_user(self):
-        """Test that current user endpoint returns expected data"""
+        """Test that current user endpoint returns expected data for client"""
 
         for user in self.users.values():
+            with self.subTest("evaluating current user endpoint for client",
+                              user=user.username,
+                              first_name=user.first_name,
+                              last_name=user.last_name,
+                              display_name=user.display_name,
+                              email=user.email,
+                              authorization_id=user.authorization_id):
 
-            response = self.clients[user.username].get('/api/users/current')
-            self.assertEqual(response.status_code, status.HTTP_200_OK)
-            response_data = json.loads(response.content.decode("utf-8"))
+                response = self.clients[user.username].get('/api/users/current')
+                self.assertEqual(response.status_code, status.HTTP_200_OK)
+                response_data = json.loads(response.content.decode("utf-8"))
 
-            self.assertEqual(response_data['authorizationId'], user.authorization_id)
-            self.assertEqual(response_data['email'], user.email)
-            #self.assertEqual(response_data['displayName'], user.display_name)
+                self.assertEqual(response_data['authorizationId'], user.authorization_id, "Authid")
+                self.assertEqual(response_data['email'], user.email, "Email")
+                self.assertEqual(response_data['displayName'], user.display_name, "Display Name")
 
-            # don't want to leak GUID
-            self.assertNotIn('authorizationGuid', response_data)
+                # don't want to leak GUID
+                self.assertNotIn('authorizationGuid', response_data, "GUID")

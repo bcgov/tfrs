@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# pylint: disable=no-member
+# pylint: disable=no-member,invalid-name
 """
     REST API Documentation for the NRS TFRS Credit Trading Application
 
@@ -27,12 +27,15 @@ import json
 from rest_framework import status
 
 from api.models.OrganizationBalance import OrganizationBalance
-from api.tests.base_test_case import BaseTestCase
+from .base_test_case import BaseTestCase
 
 
 class TestCreditTradeFlow(BaseTestCase):
+    """Test complex credit trade scenarios"""
 
     def test_approved_buy(self):
+        """Test a normal BUY workflow"""
+
         fs1user = self.users['fs_user_1']
         fs2user = self.users['fs_user_2']
 
@@ -70,7 +73,7 @@ class TestCreditTradeFlow(BaseTestCase):
 
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
-        id = json.loads(response.content.decode('utf-8'))['id']
+        ct_id = json.loads(response.content.decode('utf-8'))['id']
 
         # accept
 
@@ -87,7 +90,7 @@ class TestCreditTradeFlow(BaseTestCase):
         }
 
         response = self.clients[fs2user.username].put(
-            '/api/credit_trades/{}'.format(id),
+            '/api/credit_trades/{}'.format(ct_id),
             content_type='application/json',
             data=json.dumps(payload)
         )
@@ -97,15 +100,13 @@ class TestCreditTradeFlow(BaseTestCase):
         # approve
 
         response = self.clients['gov_director'].put(
-            "/api/credit_trades/{}/approve".format(id),
+            "/api/credit_trades/{}/approve".format(ct_id),
             content_type='application/json')
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
-        # TODO: Make sure two credit histories are created
-
         ct_completed = self.clients['fs_user_1'].get(
-            '/api/credit_trades/{}'.format(id),
+            '/api/credit_trades/{}'.format(ct_id),
             content_type='application/json')
 
         completed_response = json.loads(
@@ -144,10 +145,10 @@ class TestCreditTradeFlow(BaseTestCase):
                          respondent_bal_after.validated_credits)
 
     def test_respondent_cannot_modify_the_trade(self):
+        """Validate that a respondent cannot modify the deal by manipulating the PUT"""
+
         fs1user = self.users['fs_user_1']
         fs2user = self.users['fs_user_2']
-
-        # Todo also check other fields that should be immutable
 
         # submit
 
@@ -171,7 +172,7 @@ class TestCreditTradeFlow(BaseTestCase):
 
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
-        id = json.loads(response.content.decode('utf-8'))['id']
+        ct_id = json.loads(response.content.decode('utf-8'))['id']
 
         # I am altering the deal. Pray I do not alter it further.
 
@@ -188,7 +189,7 @@ class TestCreditTradeFlow(BaseTestCase):
         }
 
         response = self.clients[fs2user.username].put(
-            '/api/credit_trades/{}'.format(id),
+            '/api/credit_trades/{}'.format(ct_id),
             content_type='application/json',
             data=json.dumps(payload)
         )
@@ -196,7 +197,7 @@ class TestCreditTradeFlow(BaseTestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
         ct_accepted = self.clients['fs_user_1'].get(
-            '/api/credit_trades/{}'.format(id),
+            '/api/credit_trades/{}'.format(ct_id),
             content_type='application/json')
 
         accepted_response = json.loads(

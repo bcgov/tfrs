@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+# pylint: disable=no-member,invalid-name
 """
     REST API Documentation for the NRS TFRS Credit Trading Application
 
@@ -25,7 +27,7 @@ import json
 
 from rest_framework import status
 
-from api.tests.base_test_case import BaseTestCase
+from .base_test_case import BaseTestCase
 
 
 class TestCreditTradesCaching(BaseTestCase):
@@ -67,7 +69,8 @@ class TestCreditTradesCaching(BaseTestCase):
         got_etag = response['ETag']
         self.assertGreater(len(got_etag), 32)
 
-        response = self.clients['gov_analyst'].get('/api/credit_trades', HTTP_IF_NONE_MATCH='nonsense etag')
+        response = self.clients['gov_analyst']\
+            .get('/api/credit_trades', HTTP_IF_NONE_MATCH='nonsense etag')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         got_etag = response['ETag']
         self.assertGreater(len(got_etag), 32)
@@ -81,23 +84,22 @@ class TestCreditTradesCaching(BaseTestCase):
         # they see different things
         self.assertNotEqual(got_etag_for_fs1, got_etag)
 
-        response = self.clients['gov_analyst'].get('/api/credit_trades', HTTP_IF_NONE_MATCH=got_etag)
+        response = self.clients['gov_analyst']\
+            .get('/api/credit_trades', HTTP_IF_NONE_MATCH=got_etag)
         self.assertEqual(response.status_code, status.HTTP_304_NOT_MODIFIED)
 
         # create a new credit trade to invalidate the cache (and save the id for later)
 
-        payload = {
-            'fairMarketValuePerCredit': '1.00',
-            'initiator': self.users['fs_user_1'].organization.id,
-            'numberOfCredits': 1,
-            'respondent': self.users['fs_user_2'].organization.id,
-            'status': self.statuses['submitted'].id,
-            'tradeEffectiveDate': datetime.datetime.today().strftime(
-                '%Y-%m-%d'
-            ),
-            'type': self.credit_trade_types['sell'].id,
-            'zeroReason': None
-        }
+        payload = {'fairMarketValuePerCredit': '1.00',
+                   'initiator': self.users['fs_user_1'].organization.id,
+                   'numberOfCredits': 1,
+                   'respondent': self.users['fs_user_2'].organization.id,
+                   'status': self.statuses['submitted'].id,
+                   'tradeEffectiveDate': datetime.datetime.today().strftime(
+                       '%Y-%m-%d'
+                   ),
+                   'type': self.credit_trade_types['sell'].id,
+                   'zeroReason': None}
 
         response = self.clients['fs_user_1'].post(
             '/api/credit_trades',
@@ -108,17 +110,17 @@ class TestCreditTradesCaching(BaseTestCase):
         created_id = json.loads(response.content.decode('utf-8'))['id']
 
         payload = {
-                'fairMarketValuePerCredit': '1.00',
-                'initiator': self.users['fs_user_1'].organization.id,
-                'numberOfCredits': 1,
-                'respondent': self.users['fs_user_2'].organization.id,
-                'status': self.statuses['accepted'].id,
-                'tradeEffectiveDate': datetime.datetime.today().strftime(
-                    '%Y-%m-%d'
-                ),
-                'type': self.credit_trade_types['sell'].id,
-                'zeroReason': None
-            }
+            'fairMarketValuePerCredit': '1.00',
+            'initiator': self.users['fs_user_1'].organization.id,
+            'numberOfCredits': 1,
+            'respondent': self.users['fs_user_2'].organization.id,
+            'status': self.statuses['accepted'].id,
+            'tradeEffectiveDate': datetime.datetime.today().strftime(
+                '%Y-%m-%d'
+            ),
+            'type': self.credit_trade_types['sell'].id,
+            'zeroReason': None
+        }
 
         response = self.clients['fs_user_2'].put(
             '/api/credit_trades/{}'.format(created_id),
@@ -128,12 +130,14 @@ class TestCreditTradesCaching(BaseTestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
         # now our etag should be invalid again
-        response = self.clients['gov_analyst'].get('/api/credit_trades', HTTP_IF_NONE_MATCH=got_etag)
+        response = self.clients['gov_analyst']\
+            .get('/api/credit_trades', HTTP_IF_NONE_MATCH=got_etag)
         got_etag = response['ETag']
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
         # now good again (but different)
-        response = self.clients['gov_analyst'].get('/api/credit_trades', HTTP_IF_NONE_MATCH=got_etag)
+        response = self.clients['gov_analyst']\
+            .get('/api/credit_trades', HTTP_IF_NONE_MATCH=got_etag)
         self.assertEqual(response.status_code, status.HTTP_304_NOT_MODIFIED)
 
         # now go update that record we created earlier to invalidate the cache a different way
@@ -145,10 +149,12 @@ class TestCreditTradesCaching(BaseTestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
         # now our etag should be invalid yet again
-        response = self.clients['gov_analyst'].get('/api/credit_trades', HTTP_IF_NONE_MATCH=got_etag)
+        response = self.clients['gov_analyst']\
+            .get('/api/credit_trades', HTTP_IF_NONE_MATCH=got_etag)
         got_etag = response['ETag']
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
         # now good again (but different)
-        response = self.clients['gov_analyst'].get('/api/credit_trades', HTTP_IF_NONE_MATCH=got_etag)
+        response = self.clients['gov_analyst']\
+            .get('/api/credit_trades', HTTP_IF_NONE_MATCH=got_etag)
         self.assertEqual(response.status_code, status.HTTP_304_NOT_MODIFIED)

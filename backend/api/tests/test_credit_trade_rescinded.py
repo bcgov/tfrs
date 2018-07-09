@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+# pylint: disable=no-member,invalid-name
 """
     REST API Documentation for the NRS TFRS Credit Trading Application
 
@@ -26,13 +28,14 @@ import json
 from rest_framework import status
 
 from api.models.CreditTrade import CreditTrade
-from api.tests.base_test_case import BaseTestCase
+from .base_test_case import BaseTestCase
 
 
-class TestCreditTrades(BaseTestCase):
+class TestCreditTradeRescind(BaseTestCase):
     """
     This will test all credit trade related to the rescinded status
     """
+
     def test_rescind_credit_transfer(self):
         """
         As a fuel supplier

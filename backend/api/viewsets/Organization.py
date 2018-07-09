@@ -65,20 +65,6 @@ class OrganizationViewSet(AuditableMixin, viewsets.GenericViewSet, mixins.Create
 
     @detail_route()
     @permission_required('VIEW_FUEL_SUPPLIERS')
-    def history(self, request, pk=None):
-        """
-        Get the organization history
-        """
-        organization = self.get_object()
-        history = OrganizationHistory.objects.filter(
-            organization=organization)
-
-        serializer = self.get_serializer(history, many=True)
-
-        return Response(serializer.data)
-
-    @detail_route()
-    @permission_required('VIEW_FUEL_SUPPLIERS')
     def balance(self, request, pk=None):
         """
         Get the organization balance
