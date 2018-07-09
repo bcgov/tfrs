@@ -152,7 +152,7 @@ class TestCreditTradeFlow(BaseTestCase):
         # submit
 
         payload = {
-            'fairMarketValuePerCredit': 1000,
+            'fairMarketValuePerCredit': 1000.0,
             'initiator': fs1user.organization.id,
             'numberOfCredits': 100,
             'respondent': fs2user.organization.id,
@@ -176,7 +176,7 @@ class TestCreditTradeFlow(BaseTestCase):
         # I am altering the deal. Pray I do not alter it further.
 
         payload = {
-            'fairMarketValuePerCredit': 750,  # <---
+            'fairMarketValuePerCredit': 750.0,  # <---
             'initiator': fs1user.organization.id,
             'numberOfCredits': 100,
             'respondent': fs2user.organization.id,
@@ -207,5 +207,5 @@ class TestCreditTradeFlow(BaseTestCase):
                          self.statuses['accepted'].id)
 
         # fairMarketValuePerCredit should not have changed
-        self.assertEqual(accepted_response['fairMarketValuePerCredit'],
-                         1000)
+        self.assertEqual(float(accepted_response['fairMarketValuePerCredit']),
+                         1000.0)
