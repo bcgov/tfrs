@@ -17,7 +17,7 @@ class CompliancePeriodViewSet(AuditableMixin, mixins.CreateModelMixin,
                               mixins.ListModelMixin, viewsets.GenericViewSet):
     """
     This viewset automatically provides `list`, `create`, `retrieve`,
-    `update` and `destroy` actions.
+    and `update` actions.
     """
 
     permission_classes = (CompliancePeriodPermissions,)

@@ -26,48 +26,31 @@ import json
 import datetime
 
 from collections import defaultdict
-from enum import Enum
 from itertools import product
 
 from rest_framework import status
 
 from api.models.CreditTradeStatus import CreditTradeStatus
 from api.models.CreditTrade import CreditTrade
+from api.tests.mixins.credit_trade_relationship import CreditTradeRelationshipMixin
 
 from .base_test_case import BaseTestCase
 
 
-class _StateTransition:
-    """Internal helper class to model the potential status transitions to test"""
-
-    class UserRelationship(Enum):
-        """Enumerates the ways in which a client (user) can be related to a credit trade"""
-        INITIATOR = 1
-        RESPONDENT = 2
-        THIRD_PARTY = 3
-        GOVERNMENT_ANALYST = 4
-        GOVERNMENT_DIRECTOR = 5
-
-    initial_state_id = None
-    initial_state_rescinded_flag = False
-
-    next_state_id = None
-    next_state_rescinded_flag = False
-    next_state_user_relationship = None
-
-    expect_state_change_to_be_valid = False
-
-
-class TestAPI(BaseTestCase):
+class TestCreditTradeStatuses(BaseTestCase, CreditTradeRelationshipMixin):
     """Exhaustively test all possible credit trade status transitions from all possible parties"""
 
-    user_map = {
-        _StateTransition.UserRelationship.INITIATOR: 'fs_user_1',
-        _StateTransition.UserRelationship.RESPONDENT: 'fs_user_2',
-        _StateTransition.UserRelationship.THIRD_PARTY: 'fs_user_3',
-        _StateTransition.UserRelationship.GOVERNMENT_ANALYST: 'gov_analyst',
-        _StateTransition.UserRelationship.GOVERNMENT_DIRECTOR: 'gov_director'
-    }
+    class _StateTransition:
+        """Internal helper class to model the potential status transitions to test"""
+
+        initial_state_id = None
+        initial_state_rescinded_flag = False
+
+        next_state_id = None
+        next_state_rescinded_flag = False
+        next_state_user_relationship = None
+
+        expect_state_change_to_be_valid = False
 
     def check_state_change(self, state_change: _StateTransition):
         """
@@ -77,10 +60,9 @@ class TestAPI(BaseTestCase):
         """
 
         initiator_org = \
-            self.users[self.user_map[_StateTransition.UserRelationship.INITIATOR]].organization
+            self.users[self.user_map[TestCreditTradeStatuses.UserRelationship.INITIATOR]].organization
         respondent_org = \
-            self.users[self.user_map[_StateTransition.UserRelationship.RESPONDENT]].organization
-
+            self.users[self.user_map[TestCreditTradeStatuses.UserRelationship.RESPONDENT]].organization
 
         payload = {
             'fairMarketValuePerCredit': 1,
@@ -108,9 +90,9 @@ class TestAPI(BaseTestCase):
                 fair_market_value_per_credit=1,
                 number_of_credits=1,
                 initiator_id=self.users
-                [self.user_map[_StateTransition.UserRelationship.INITIATOR]].organization.id,
+                [self.user_map[TestCreditTradeStatuses.UserRelationship.INITIATOR]].organization.id,
                 respondent_id=self.users
-                [self.user_map[_StateTransition.UserRelationship.RESPONDENT]].organization.id,
+                [self.user_map[TestCreditTradeStatuses.UserRelationship.RESPONDENT]].organization.id,
                 trade_effective_date=datetime.datetime.today(),
                 type_id=self.credit_trade_types['sell'].id,
                 status_id=state_change.initial_state_id,
@@ -134,15 +116,15 @@ class TestAPI(BaseTestCase):
         """Construct a subtest context for each item in the list"""
         for sch in to_check:
             with self.subTest(
-                "Testing state transition",
-                initial_state=CreditTradeStatus.objects.get(
-                    id=sch.initial_state_id
-                ).status if sch.initial_state_id is not None else None,
-                initial_state_is_rescinded=sch.initial_state_rescinded_flag,
-                next_state=CreditTradeStatus.objects.get(id=sch.next_state_id).status,
-                next_state_is_rescinded=sch.next_state_rescinded_flag,
-                next_state_user_relationship=sch.next_state_user_relationship,
-                expected_to_be_valid=sch.expect_state_change_to_be_valid
+                    "Testing state transition",
+                    initial_state=CreditTradeStatus.objects.get(
+                        id=sch.initial_state_id
+                    ).status if sch.initial_state_id is not None else None,
+                    initial_state_is_rescinded=sch.initial_state_rescinded_flag,
+                    next_state=CreditTradeStatus.objects.get(id=sch.next_state_id).status,
+                    next_state_is_rescinded=sch.next_state_rescinded_flag,
+                    next_state_user_relationship=sch.next_state_user_relationship,
+                    expected_to_be_valid=sch.expect_state_change_to_be_valid
             ):
                 self.check_state_change(sch)
 
@@ -151,23 +133,26 @@ class TestAPI(BaseTestCase):
         to_check = []
         expected_result = defaultdict(lambda: False)
 
-        expected_result[_StateTransition.UserRelationship.INITIATOR, 'draft', False] \
-            = True
-        expected_result[_StateTransition.UserRelationship.INITIATOR, 'submitted', False] \
-            = True
-        expected_result[_StateTransition.UserRelationship.GOVERNMENT_DIRECTOR, 'approved', False] \
-            = True
+        expected_result[
+            (TestCreditTradeStatuses.UserRelationship.INITIATOR, 'draft', False)
+        ] = True
+        expected_result[
+            (TestCreditTradeStatuses.UserRelationship.INITIATOR, 'submitted', False)
+        ] = True
+        expected_result[
+            (TestCreditTradeStatuses.UserRelationship.GOVERNMENT_DIRECTOR, 'approved', False)
+        ] = True
 
         for (relationship, trade_status, rescinded) in product(
-                _StateTransition.UserRelationship,
+                TestCreditTradeStatuses.UserRelationship,
                 self.statuses.keys(),
                 [True, False]):
-            sch = _StateTransition()
+            sch = TestCreditTradeStatuses._StateTransition()
             sch.next_state_id = self.statuses[trade_status].id
             sch.next_state_user_relationship = relationship
             sch.next_state_rescinded_flag = rescinded
             sch.expect_state_change_to_be_valid = \
-                expected_result[relationship, trade_status, rescinded]
+                expected_result[(relationship, trade_status, rescinded)]
             to_check.append(sch)
 
         self.check_all(to_check)
@@ -183,10 +168,10 @@ class TestAPI(BaseTestCase):
         expected_result[('draft', 'draft')] = True
 
         for (initial_status, next_status) in product(self.statuses.keys(), self.statuses.keys()):
-            sch = _StateTransition()
+            sch = TestCreditTradeStatuses._StateTransition()
             sch.initial_state_id = self.statuses[initial_status].id
             sch.next_state_id = self.statuses[next_status].id
-            sch.next_state_user_relationship = _StateTransition.UserRelationship.INITIATOR
+            sch.next_state_user_relationship = TestCreditTradeStatuses.UserRelationship.INITIATOR
             sch.expect_state_change_to_be_valid = expected_result[(initial_status, next_status)]
             to_check.append(sch)
 
@@ -200,11 +185,11 @@ class TestAPI(BaseTestCase):
         expected_result = defaultdict(lambda: False)
 
         for (initial_status, next_status) in product(self.statuses.keys(), self.statuses.keys()):
-            sch = _StateTransition()
+            sch = TestCreditTradeStatuses._StateTransition()
             sch.initial_state_id = self.statuses[initial_status].id
             sch.initial_state_rescinded_flag = True
             sch.next_state_id = self.statuses[next_status].id
-            sch.next_state_user_relationship = _StateTransition.UserRelationship.INITIATOR
+            sch.next_state_user_relationship = TestCreditTradeStatuses.UserRelationship.INITIATOR
             sch.expect_state_change_to_be_valid = expected_result[(initial_status, next_status)]
             to_check.append(sch)
 
@@ -222,10 +207,10 @@ class TestAPI(BaseTestCase):
         expected_result[('not_recommended', 'not_recommended')] = True
 
         for (initial_status, next_status) in product(self.statuses.keys(), self.statuses.keys()):
-            sch = _StateTransition()
+            sch = TestCreditTradeStatuses._StateTransition()
             sch.initial_state_id = self.statuses[initial_status].id
             sch.next_state_id = self.statuses[next_status].id
-            sch.next_state_user_relationship = _StateTransition.UserRelationship.INITIATOR
+            sch.next_state_user_relationship = TestCreditTradeStatuses.UserRelationship.INITIATOR
             sch.expect_state_change_to_be_valid = expected_result[(initial_status, next_status)]
             sch.next_state_rescinded_flag = True
             to_check.append(sch)
@@ -240,11 +225,11 @@ class TestAPI(BaseTestCase):
         expected_result = defaultdict(lambda: False)
 
         for (initial_status, next_status) in product(self.statuses.keys(), self.statuses.keys()):
-            sch = _StateTransition()
+            sch = TestCreditTradeStatuses._StateTransition()
             sch.initial_state_id = self.statuses[initial_status].id
             sch.initial_state_rescinded_flag = True
             sch.next_state_id = self.statuses[next_status].id
-            sch.next_state_user_relationship = _StateTransition.UserRelationship.INITIATOR
+            sch.next_state_user_relationship = TestCreditTradeStatuses.UserRelationship.INITIATOR
             sch.expect_state_change_to_be_valid = expected_result[(initial_status, next_status)]
             sch.next_state_rescinded_flag = False
             to_check.append(sch)
@@ -262,10 +247,10 @@ class TestAPI(BaseTestCase):
         expected_result[('submitted', 'refused')] = True
 
         for (initial_status, next_status) in product(self.statuses.keys(), self.statuses.keys()):
-            sch = _StateTransition()
+            sch = TestCreditTradeStatuses._StateTransition()
             sch.initial_state_id = self.statuses[initial_status].id
             sch.next_state_id = self.statuses[next_status].id
-            sch.next_state_user_relationship = _StateTransition.UserRelationship.RESPONDENT
+            sch.next_state_user_relationship = TestCreditTradeStatuses.UserRelationship.RESPONDENT
             sch.expect_state_change_to_be_valid = expected_result[(initial_status, next_status)]
             to_check.append(sch)
 
@@ -279,11 +264,11 @@ class TestAPI(BaseTestCase):
         expected_result = defaultdict(lambda: False)
 
         for (initial_status, next_status) in product(self.statuses.keys(), self.statuses.keys()):
-            sch = _StateTransition()
+            sch = TestCreditTradeStatuses._StateTransition()
             sch.initial_state_id = self.statuses[initial_status].id
             sch.initial_state_rescinded_flag = True
             sch.next_state_id = self.statuses[next_status].id
-            sch.next_state_user_relationship = _StateTransition.UserRelationship.RESPONDENT
+            sch.next_state_user_relationship = TestCreditTradeStatuses.UserRelationship.RESPONDENT
             sch.expect_state_change_to_be_valid = expected_result[(initial_status, next_status)]
             to_check.append(sch)
 
@@ -300,10 +285,10 @@ class TestAPI(BaseTestCase):
         expected_result[('not_recommended', 'not_recommended')] = True
 
         for (initial_status, next_status) in product(self.statuses.keys(), self.statuses.keys()):
-            sch = _StateTransition()
+            sch = TestCreditTradeStatuses._StateTransition()
             sch.initial_state_id = self.statuses[initial_status].id
             sch.next_state_id = self.statuses[next_status].id
-            sch.next_state_user_relationship = _StateTransition.UserRelationship.RESPONDENT
+            sch.next_state_user_relationship = TestCreditTradeStatuses.UserRelationship.RESPONDENT
             sch.expect_state_change_to_be_valid = expected_result[(initial_status, next_status)]
             sch.next_state_rescinded_flag = True
             to_check.append(sch)
@@ -318,11 +303,11 @@ class TestAPI(BaseTestCase):
         expected_result = defaultdict(lambda: False)
 
         for (initial_status, next_status) in product(self.statuses.keys(), self.statuses.keys()):
-            sch = _StateTransition()
+            sch = TestCreditTradeStatuses._StateTransition()
             sch.initial_state_id = self.statuses[initial_status].id
             sch.initial_state_rescinded_flag = True
             sch.next_state_id = self.statuses[next_status].id
-            sch.next_state_user_relationship = _StateTransition.UserRelationship.RESPONDENT
+            sch.next_state_user_relationship = TestCreditTradeStatuses.UserRelationship.RESPONDENT
             sch.expect_state_change_to_be_valid = expected_result[(initial_status, next_status)]
             sch.next_state_rescinded_flag = False
             to_check.append(sch)
@@ -340,10 +325,11 @@ class TestAPI(BaseTestCase):
         expected_result[('accepted', 'not_recommended')] = True
 
         for (initial_status, next_status) in product(self.statuses.keys(), self.statuses.keys()):
-            sch = _StateTransition()
+            sch = TestCreditTradeStatuses._StateTransition()
             sch.initial_state_id = self.statuses[initial_status].id
             sch.next_state_id = self.statuses[next_status].id
-            sch.next_state_user_relationship = _StateTransition.UserRelationship.GOVERNMENT_ANALYST
+            sch.next_state_user_relationship = \
+                TestCreditTradeStatuses.UserRelationship.GOVERNMENT_ANALYST
             sch.expect_state_change_to_be_valid = expected_result[(initial_status, next_status)]
             to_check.append(sch)
 
@@ -357,11 +343,12 @@ class TestAPI(BaseTestCase):
         expected_result = defaultdict(lambda: False)
 
         for (initial_status, next_status) in product(self.statuses.keys(), self.statuses.keys()):
-            sch = _StateTransition()
+            sch = TestCreditTradeStatuses._StateTransition()
             sch.initial_state_id = self.statuses[initial_status].id
             sch.initial_state_rescinded_flag = True
             sch.next_state_id = self.statuses[next_status].id
-            sch.next_state_user_relationship = _StateTransition.UserRelationship.GOVERNMENT_ANALYST
+            sch.next_state_user_relationship = \
+                TestCreditTradeStatuses.UserRelationship.GOVERNMENT_ANALYST
             sch.expect_state_change_to_be_valid = expected_result[(initial_status, next_status)]
             to_check.append(sch)
 
@@ -375,10 +362,11 @@ class TestAPI(BaseTestCase):
         expected_result = defaultdict(lambda: False)
 
         for (initial_status, next_status) in product(self.statuses.keys(), self.statuses.keys()):
-            sch = _StateTransition()
+            sch = TestCreditTradeStatuses._StateTransition()
             sch.initial_state_id = self.statuses[initial_status].id
             sch.next_state_id = self.statuses[next_status].id
-            sch.next_state_user_relationship = _StateTransition.UserRelationship.GOVERNMENT_ANALYST
+            sch.next_state_user_relationship = \
+                TestCreditTradeStatuses.UserRelationship.GOVERNMENT_ANALYST
             sch.expect_state_change_to_be_valid = expected_result[(initial_status, next_status)]
             sch.next_state_rescinded_flag = True
             to_check.append(sch)
@@ -393,11 +381,12 @@ class TestAPI(BaseTestCase):
         expected_result = defaultdict(lambda: False)
 
         for (initial_status, next_status) in product(self.statuses.keys(), self.statuses.keys()):
-            sch = _StateTransition()
+            sch = TestCreditTradeStatuses._StateTransition()
             sch.initial_state_id = self.statuses[initial_status].id
             sch.initial_state_rescinded_flag = True
             sch.next_state_id = self.statuses[next_status].id
-            sch.next_state_user_relationship = _StateTransition.UserRelationship.GOVERNMENT_ANALYST
+            sch.next_state_user_relationship = \
+                TestCreditTradeStatuses.UserRelationship.GOVERNMENT_ANALYST
             sch.expect_state_change_to_be_valid = expected_result[(initial_status, next_status)]
             sch.next_state_rescinded_flag = False
             to_check.append(sch)
@@ -417,10 +406,11 @@ class TestAPI(BaseTestCase):
         expected_result[('not_recommended', 'declined')] = True
 
         for (initial_status, next_status) in product(self.statuses.keys(), self.statuses.keys()):
-            sch = _StateTransition()
+            sch = TestCreditTradeStatuses._StateTransition()
             sch.initial_state_id = self.statuses[initial_status].id
             sch.next_state_id = self.statuses[next_status].id
-            sch.next_state_user_relationship = _StateTransition.UserRelationship.GOVERNMENT_DIRECTOR
+            sch.next_state_user_relationship = \
+                TestCreditTradeStatuses.UserRelationship.GOVERNMENT_DIRECTOR
             sch.expect_state_change_to_be_valid = expected_result[(initial_status, next_status)]
             to_check.append(sch)
 
@@ -434,11 +424,12 @@ class TestAPI(BaseTestCase):
         expected_result = defaultdict(lambda: False)
 
         for (initial_status, next_status) in product(self.statuses.keys(), self.statuses.keys()):
-            sch = _StateTransition()
+            sch = TestCreditTradeStatuses._StateTransition()
             sch.initial_state_id = self.statuses[initial_status].id
             sch.initial_state_rescinded_flag = True
             sch.next_state_id = self.statuses[next_status].id
-            sch.next_state_user_relationship = _StateTransition.UserRelationship.GOVERNMENT_DIRECTOR
+            sch.next_state_user_relationship = \
+                TestCreditTradeStatuses.UserRelationship.GOVERNMENT_DIRECTOR
             sch.expect_state_change_to_be_valid = expected_result[(initial_status, next_status)]
             to_check.append(sch)
 
@@ -452,10 +443,11 @@ class TestAPI(BaseTestCase):
         expected_result = defaultdict(lambda: False)
 
         for (initial_status, next_status) in product(self.statuses.keys(), self.statuses.keys()):
-            sch = _StateTransition()
+            sch = TestCreditTradeStatuses._StateTransition()
             sch.initial_state_id = self.statuses[initial_status].id
             sch.next_state_id = self.statuses[next_status].id
-            sch.next_state_user_relationship = _StateTransition.UserRelationship.GOVERNMENT_DIRECTOR
+            sch.next_state_user_relationship = \
+                TestCreditTradeStatuses.UserRelationship.GOVERNMENT_DIRECTOR
             sch.expect_state_change_to_be_valid = expected_result[(initial_status, next_status)]
             sch.next_state_rescinded_flag = True
             to_check.append(sch)
@@ -470,11 +462,12 @@ class TestAPI(BaseTestCase):
         expected_result = defaultdict(lambda: False)
 
         for (initial_status, next_status) in product(self.statuses.keys(), self.statuses.keys()):
-            sch = _StateTransition()
+            sch = TestCreditTradeStatuses._StateTransition()
             sch.initial_state_id = self.statuses[initial_status].id
             sch.initial_state_rescinded_flag = True
             sch.next_state_id = self.statuses[next_status].id
-            sch.next_state_user_relationship = _StateTransition.UserRelationship.GOVERNMENT_DIRECTOR
+            sch.next_state_user_relationship = \
+                TestCreditTradeStatuses.UserRelationship.GOVERNMENT_DIRECTOR
             sch.expect_state_change_to_be_valid = expected_result[(initial_status, next_status)]
             sch.next_state_rescinded_flag = False
             to_check.append(sch)
@@ -489,10 +482,10 @@ class TestAPI(BaseTestCase):
         expected_result = defaultdict(lambda: False)
 
         for (initial_status, next_status) in product(self.statuses.keys(), self.statuses.keys()):
-            sch = _StateTransition()
+            sch = TestCreditTradeStatuses._StateTransition()
             sch.initial_state_id = self.statuses[initial_status].id
             sch.next_state_id = self.statuses[next_status].id
-            sch.next_state_user_relationship = _StateTransition.UserRelationship.THIRD_PARTY
+            sch.next_state_user_relationship = TestCreditTradeStatuses.UserRelationship.THIRD_PARTY
             sch.expect_state_change_to_be_valid = expected_result[(initial_status, next_status)]
             to_check.append(sch)
 
@@ -506,11 +499,11 @@ class TestAPI(BaseTestCase):
         expected_result = defaultdict(lambda: False)
 
         for (initial_status, next_status) in product(self.statuses.keys(), self.statuses.keys()):
-            sch = _StateTransition()
+            sch = TestCreditTradeStatuses._StateTransition()
             sch.initial_state_id = self.statuses[initial_status].id
             sch.initial_state_rescinded_flag = True
             sch.next_state_id = self.statuses[next_status].id
-            sch.next_state_user_relationship = _StateTransition.UserRelationship.THIRD_PARTY
+            sch.next_state_user_relationship = TestCreditTradeStatuses.UserRelationship.THIRD_PARTY
             sch.expect_state_change_to_be_valid = expected_result[(initial_status, next_status)]
             to_check.append(sch)
 
@@ -524,10 +517,10 @@ class TestAPI(BaseTestCase):
         expected_result = defaultdict(lambda: False)
 
         for (initial_status, next_status) in product(self.statuses.keys(), self.statuses.keys()):
-            sch = _StateTransition()
+            sch = TestCreditTradeStatuses._StateTransition()
             sch.initial_state_id = self.statuses[initial_status].id
             sch.next_state_id = self.statuses[next_status].id
-            sch.next_state_user_relationship = _StateTransition.UserRelationship.THIRD_PARTY
+            sch.next_state_user_relationship = TestCreditTradeStatuses.UserRelationship.THIRD_PARTY
             sch.expect_state_change_to_be_valid = expected_result[(initial_status, next_status)]
             sch.next_state_rescinded_flag = True
             to_check.append(sch)
@@ -542,11 +535,11 @@ class TestAPI(BaseTestCase):
         expected_result = defaultdict(lambda: False)
 
         for (initial_status, next_status) in product(self.statuses.keys(), self.statuses.keys()):
-            sch = _StateTransition()
+            sch = TestCreditTradeStatuses._StateTransition()
             sch.initial_state_id = self.statuses[initial_status].id
             sch.initial_state_rescinded_flag = True
             sch.next_state_id = self.statuses[next_status].id
-            sch.next_state_user_relationship = _StateTransition.UserRelationship.THIRD_PARTY
+            sch.next_state_user_relationship = TestCreditTradeStatuses.UserRelationship.THIRD_PARTY
             sch.expect_state_change_to_be_valid = expected_result[(initial_status, next_status)]
             sch.next_state_rescinded_flag = False
             to_check.append(sch)
