@@ -1,6 +1,7 @@
 import axios from 'axios';
 
 import ActionTypes from '../constants/actionTypes/CompliancePeriods';
+import ReducerTypes from '../constants/reducerTypes/CompliancePeriods';
 import * as Routes from '../constants/routes';
 
 const getCompliancePeriods = () => (dispatch) => {
@@ -14,20 +15,20 @@ const getCompliancePeriods = () => (dispatch) => {
 };
 
 const getCompliancePeriodsRequest = () => ({
-  name: ActionTypes.GET_COMPLIANCE_PERIODS_REQUEST,
+  name: ReducerTypes.GET_COMPLIANCE_PERIODS_REQUEST,
   type: ActionTypes.GET_COMPLIANCE_PERIODS
 });
 
 const getCompliancePeriodsSuccess = compliancePeriods => ({
-  name: ActionTypes.RECEIVE_COMPLIANCE_PERIODS_REQUEST,
+  name: ReducerTypes.RECEIVE_COMPLIANCE_PERIODS_REQUEST,
   type: ActionTypes.RECEIVE_COMPLIANCE_PERIODS,
   data: compliancePeriods,
   receivedAt: Date.now()
 });
 
 const getCompliancePeriodsError = error => ({
-  name: ActionTypes.ERROR_COMPLIANCE_PERIODS_REQUEST,
-  type: ActionTypes.ERROR_COMPLIANCE_PERIODS,
+  name: ReducerTypes.ERROR_COMPLIANCE_PERIODS_REQUEST,
+  type: ActionTypes.ERROR,
   errorMessage: error
 });
 

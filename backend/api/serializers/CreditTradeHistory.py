@@ -28,8 +28,7 @@ from .CreditTradeStatus import CreditTradeStatusSerializer, \
                                CreditTradeStatusMinSerializer
 from .CreditTradeType import CreditTradeTypeSerializer
 from .CreditTradeZeroReason import CreditTradeZeroReasonSerializer
-from .Organization import OrganizationSerializer
-from .User import UserMinSerializer
+from .Organization import OrganizationSerializer, OrganizationMinSerializer
 
 
 class CreditTradeHistorySerializer(serializers.ModelSerializer):
@@ -61,10 +60,40 @@ class CreditTradeHistoryCreateSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
+class CreditTradeHistoryMinSerializer(serializers.ModelSerializer):
+    fuel_supplier = serializers.SerializerMethodField()
+    status_id = serializers.SerializerMethodField()
+    type = CreditTradeTypeSerializer(read_only=True)
+
+    class Meta:
+        model = CreditTradeHistory
+        fields = ('id', 'credit_trade_id', 'fuel_supplier', 'is_rescinded',
+                  'status_id', 'type', 'credit_trade_update_time')
+
+    def get_fuel_supplier(self, obj):
+        """
+        Returns the fuel supplier of the opposite end to give more
+        context for the credit trade
+        """
+        if obj.credit_trade.type.id in [1, 3, 5]:
+            return obj.credit_trade.initiator.name
+
+        return obj.credit_trade.respondent.name
+
+    def get_status_id(self, obj):
+        if obj.is_rescinded is True:
+            return None
+
+        return obj.status_id
+
+
 class CreditTradeHistoryReviewedSerializer(serializers.ModelSerializer):
+    from .User import UserMinSerializer
+
     status = CreditTradeStatusMinSerializer(read_only=True)
     user = UserMinSerializer(read_only=True)
 
     class Meta:
         model = CreditTradeHistory
-        fields = ('user', 'status', 'is_rescinded', 'credit_trade_update_time')
+        fields = ('credit_trade', 'user', 'status', 'is_rescinded',
+                  'credit_trade_update_time')

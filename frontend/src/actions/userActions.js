@@ -1,10 +1,10 @@
 import axios from 'axios';
 
-import * as ActionTypes from '../constants/actionTypes';
-import * as ReducerTypes from '../constants/reducerTypes';
+import ActionTypes from '../constants/actionTypes/Users';
+import ReducerTypes from '../constants/reducerTypes/Users';
 import * as Routes from '../constants/routes';
 
-export const getUsers = () => (dispatch) => {
+const getUsers = () => (dispatch) => {
   dispatch(getUsersRequest());
   axios.get(Routes.BASE_URL + Routes.USERS)
     .then((response) => {
@@ -14,7 +14,7 @@ export const getUsers = () => (dispatch) => {
     });
 };
 
-export const getLoggedInUser = () => (dispatch) => {
+const getLoggedInUser = () => (dispatch) => {
   dispatch(getLoggedInUserRequest());
   axios.get(Routes.BASE_URL + Routes.CURRENT_USER)
     .then((response) => {
@@ -44,157 +44,51 @@ const getLoggedInUserError = error => ({
   errorData: error
 });
 
-const getUsersRequest = () => {
-  return {
-    name: ReducerTypes.USERS,
-    type: ActionTypes.REQUEST,
-  }
-}
+const getUser = id => (dispatch) => {
+  dispatch(getUserRequest());
+  axios.get(`${Routes.BASE_URL}${Routes.USERS}/${id}`)
+    .then((response) => {
+      dispatch(getUserSuccess(response.data));
+    }).catch((error) => {
+      dispatch(getUserError(error.response));
+    });
+};
 
-const getUsersSuccess = (contacts) => {
-  return {
-    name: ReducerTypes.USERS,
-    type: ActionTypes.SUCCESS,
-    data: contacts,
-  }
-}
+const getUserError = error => ({
+  errorMessage: error,
+  name: ReducerTypes.ERROR_USER_REQUEST,
+  type: ActionTypes.ERROR
+});
 
-const getUsersError = (error) => {
-  return {
-    name: ReducerTypes.USERS,
-    type: ActionTypes.ERROR,
-    errorMessage: error
-  }
-}
+const getUserRequest = () => ({
+  name: ReducerTypes.GET_USER_REQUEST,
+  type: ActionTypes.GET_USER
+});
 
-export const getPermissions = () => (dispatch) => {
-  dispatch(getPermissionsRequest());
-  axios.get(Routes.BASE_URL + Routes.PERMISSIONS)
-  .then((response) => {
-    dispatch(getPermissionsSuccess(response.data));
-  }).catch((error) => {
-    dispatch(getPermissionsError(error.response))
-  })
-}
+const getUserSuccess = user => ({
+  name: ReducerTypes.RECEIVE_USER_REQUEST,
+  type: ActionTypes.RECEIVE_USER,
+  data: user,
+  receivedAt: Date.now()
+});
 
-const getPermissionsRequest = () => {
-  return {
-    name: ReducerTypes.PERMISSIONS,
-    type: ActionTypes.REQUEST,
-  }
-}
+const getUsersRequest = () => ({
+  name: ReducerTypes.GET_USERS_REQUEST,
+  type: ActionTypes.GET_USERS
+});
 
-const getPermissionsSuccess = (permissions) => {
-  return {
-    name: ReducerTypes.PERMISSIONS,
-    type: ActionTypes.SUCCESS,
-    data: contacts,
-  }
-}
+const getUsersSuccess = contacts => ({
+  name: ReducerTypes.GET_USERS_REQUEST,
+  type: ActionTypes.SUCCESS,
+  data: contacts
+});
 
-const getPermissionsError = (error) => {
-  return {
-    name: ReducerTypes.PERMISSIONS,
-    type: ActionTypes.ERROR,
-    errorMessage: error
-  }
-}
+const getUsersError = error => ({
+  name: ReducerTypes.GET_USERS_REQUEST,
+  type: ActionTypes.ERROR,
+  errorMessage: error
+});
 
-export const getRolePermissions = () => (dispatch) => {
-  dispatch(getRolePermissionsRequest());
-  axios.get(Routes.BASE_URL + Routes.ROLE_PERMISSIONS)
-  .then((response) => {
-    dispatch(getRolePermissionsSuccess(response.data));
-  }).catch((error) => {
-    dispatch(getRolePermissionsError(error.response))
-  })
-}
-
-const getRolePermissionsRequest = () => {
-  return {
-    name: ReducerTypes.ROLE_PERMISSIONS,
-    type: ActionTypes.REQUEST,
-  }
-}
-
-const getRolePermissionsSuccess = (rolePermissions) => {
-  return {
-    name: ReducerTypes.ROLE_PERMISSIONS,
-    type: ActionTypes.SUCCESS,
-    data: rolePermissions,
-  }
-}
-
-const getRolePermissionsError = (error) => {
-  return {
-    name: ReducerTypes.ROLE_PERMISSIONS,
-    type: ActionTypes.ERROR,
-    errorMessage: error
-  }
-}
-
-export const getRoles = () => (dispatch) => {
-  dispatch(getRolesRequest());
-  axios.get(Routes.BASE_URL + Routes.ROLES)
-  .then((response) => {
-    dispatch(getRolesSuccess(response.data));
-  }).catch((error) => {
-    dispatch(getRolesError(error.response))
-  })
-}
-
-const getRolesRequest = () => {
-  return {
-    name: ReducerTypes.ROLES,
-    type: ActionTypes.REQUEST,
-  }
-}
-
-const getRolesSuccess = (roles) => {
-  return {
-    name: ReducerTypes.ROLES,
-    type: ActionTypes.SUCCESS,
-    data: roles,
-  }
-}
-
-const getRolesError = (error) => {
-  return {
-    name: ReducerTypes.ROLES,
-    type: ActionTypes.ERROR,
-    errorMessage: error
-  }
-}
-
-export const getUserRoles = () => (dispatch) => {
-  dispatch(getUserRolesRequest());
-  axios.get(Routes.BASE_URL + Routes.USER_ROLES)
-  .then((response) => {
-    dispatch(getUserRolesSuccess(response.data));
-  }).catch((error) => {
-    dispatch(getUserRolesError(error.response))
-  })
-}
-
-const getUserRolesRequest = () => {
-  return {
-    name: ReducerTypes.USER_ROLES,
-    type: ActionTypes.REQUEST,
-  }
-}
-
-const getUserRolesSuccess = (userRoles) => {
-  return {
-    name: ReducerTypes.USER_ROLES,
-    type: ActionTypes.SUCCESS,
-    data: userRoles,
-  }
-}
-
-const getUserRolesError = (error) => {
-  return {
-    name: ReducerTypes.USER_ROLES,
-    type: ActionTypes.ERROR,
-    errorMessage: error
-  }
-}
+export {
+  getUsers, getLoggedInUser, getUser
+};

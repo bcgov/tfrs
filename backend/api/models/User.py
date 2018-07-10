@@ -27,11 +27,11 @@ from django.core.validators import RegexValidator
 import django.contrib.auth.validators
 
 from auditable.models import Auditable
+from api.managers.UserManager import UserManager
 
+from .CreditTradeHistory import CreditTradeHistory
 from .OrganizationBalance import OrganizationBalance
 from .UserRole import UserRole
-
-from api.managers.UserManager import UserManager
 
 
 class User(AbstractUser, Auditable):
@@ -74,6 +74,9 @@ class User(AbstractUser, Auditable):
     authorization_email = models.EmailField(blank=True, null=True)
     display_name = models.CharField(max_length=500, blank=True, null=True)
 
+    def __str__(self):
+        return str(self.id)
+
     @property
     def organization_balance(self):
         """
@@ -103,6 +106,17 @@ class User(AbstractUser, Auditable):
             return None
 
         return user_role.role
+
+    def get_history(self, filters):
+        """
+        Helper function to get the user's activity.
+        Filters are to be restricted based on the user's role.
+        """
+        history = CreditTradeHistory.objects.filter(
+            filters, user_id=self.id
+        ).order_by('-update_timestamp')
+
+        return history
 
     def has_perm(self, permission):
         """

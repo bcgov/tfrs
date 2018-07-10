@@ -2,6 +2,10 @@
 @import './mixins.scss';
 
 .page_organization {
+  .col-status {
+    text-align: center;
+  }
+
   .credit_balance {
     float: right;
   }
@@ -14,24 +18,12 @@
 
 .page_organizations {
   .ReactTable {
-    .col-actions-type-display {
+    .col-actions-type-display, .col-status-display {
       text-align: center;
     }
 
-    .col-credit-balance {
+    .col-credit-balance, .col-id, .col-last-transaction {
       text-align: right;
-    }
-
-    .col-id {
-      text-align: right;
-    }
-
-    .col-last-transaction {
-      text-align: right;
-    }
-
-    .col-status-display {
-      text-align: center;
     }
   }
 }
