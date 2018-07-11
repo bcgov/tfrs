@@ -1,6 +1,9 @@
 # dependencies
 /node_modules
 
+# jest coverage data
+/coverage
+
 # misc
 .DS_Store
 .env

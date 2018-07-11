@@ -20,11 +20,11 @@
     "moment": "^2.20.1",
     "numeral": "^2.0.6",
     "path": "^0.12.7",
-    "prop-types": "^15.5.8",
-    "react": "^16.x.x",
+    "prop-types": "^15.6.2",
+    "react": "^16.4.1",
     "react-bootstrap": "^0.31.1",
     "react-bootstrap-table": "^4.3.1",
-    "react-dom": "^16.x.x",
+    "react-dom": "^16.4.1",
     "react-input-mask": "^1.1.1",
     "react-intl": "^2.4.0",
     "react-redux": "^5.0.4",
@@ -32,7 +32,7 @@
     "react-router-dom": "^4.1.2",
     "react-router-redux": "^5.0.0-alpha.9",
     "react-table": "^6.7.6",
-    "react-text-mask": "^5.1.0",
+    "react-text-mask": "^5.4.2",
     "redux": "^3.6.0",
     "redux-logger": "^3.0.1",
     "redux-thunk": "^2.2.0",
@@ -41,24 +41,24 @@
   "devDependencies": {
     "babel-core": "^6.24.1",
     "babel-jest": "^22.4.3",
-    "babel-loader": "^7.0.0",
+    "babel-loader": "^7.1.5",
     "babel-plugin-transform-object-rest-spread": "^6.26.0",
-    "babel-preset-airbnb": "^2.4.0",
+    "babel-preset-airbnb": "^2.5.1",
     "babel-preset-env": "^1.6.1",
     "babel-preset-react": "^6.24.1",
     "css-loader": "^0.28.8",
     "eslint": "^4.15.0",
     "eslint-config-airbnb-standard": "^1.6.6",
-    "eslint-plugin-import": "^2.11.0",
-    "eslint-plugin-jsx-a11y": "^6.0.3",
+    "eslint-plugin-import": "^2.13.0",
+    "eslint-plugin-jsx-a11y": "^6.1.0",
     "eslint-plugin-node": "^6.0.1",
     "eslint-plugin-promise": "^3.7.0",
-    "eslint-plugin-react": "^7.7.0",
+    "eslint-plugin-react": "^7.10.0",
     "eslint-plugin-standard": "^3.0.1",
     "jest": "^22.4.3",
-    "node-sass": "^4.5.2",
+    "node-sass": "^4.9.2",
     "react-scripts": "^0.9.5",
-    "react-test-renderer": "^16.3.2",
+    "react-test-renderer": "^16.4.1",
     "sass-loader": "^6.0.3",
     "style-loader": "^0.16.1",
     "webpack-dev-server": "^2.10.1"
@@ -67,6 +67,19 @@
     "start": "node server",
     "production": "NODE_ENV=production webpack -p --config webpack.production.config.js",
     "build": "webpack",
-    "test": "jest"
+    "test": "jest --coverage"
+  },
+  "jest": {
+    "collectCoverageFrom": [
+      "src/**/*.{js,jsx}"
+    ],
+    "coverageThreshold": {
+      "global": {
+        "branches": 90,
+        "functions": 90,
+        "lines": 90,
+        "statements": -50
+      }
+    }
   }
 }
