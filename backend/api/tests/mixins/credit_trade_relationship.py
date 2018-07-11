@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+# pylint: disable=no-member,invalid-name,duplicate-code
 """
     REST API Documentation for the NRS TFRS Credit Trading Application
 
@@ -6,7 +8,6 @@
     the Renewable & Low Carbon Fuel Requirements Regulation.
 
     OpenAPI spec version: v1
-
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
@@ -20,13 +21,24 @@
     See the License for the specific language governing permissions and
     limitations under the License.
 """
-from rest_framework import serializers
-
-from api.models.UserRoleViewModel import UserRoleViewModel
+from enum import Enum
 
 
-class UserRoleViewModelSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = UserRoleViewModel
-        fields = ('id', 'effective_date', 'expiration_date', 'role_id',
-                  'authorization_id')
+class CreditTradeRelationshipMixin(object):
+    """Mixin to provide user mapping for related parties to credit transactions"""
+
+    class UserRelationship(Enum):
+        """Enumerates the ways in which a client (user) can be related to a credit trade"""
+        INITIATOR = 1
+        RESPONDENT = 2
+        THIRD_PARTY = 3
+        GOVERNMENT_ANALYST = 4
+        GOVERNMENT_DIRECTOR = 5
+
+    user_map = {
+        UserRelationship.INITIATOR: 'fs_user_1',
+        UserRelationship.RESPONDENT: 'fs_user_2',
+        UserRelationship.THIRD_PARTY: 'fs_user_3',
+        UserRelationship.GOVERNMENT_ANALYST: 'gov_analyst',
+        UserRelationship.GOVERNMENT_DIRECTOR: 'gov_director'
+    }

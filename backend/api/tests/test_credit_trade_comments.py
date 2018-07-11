@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# pylint: disable=no-member
+# pylint: disable=no-member,invalid-name
 """
     REST API Documentation for the NRS TFRS Credit Trading Application
 
@@ -23,81 +23,43 @@
 """
 
 import json
-import logging
+
 from collections import defaultdict
 from itertools import product
 
-from django.test import TestCase
-from django.test import Client
-
-import django
-
 from rest_framework import status
 
-from .models.User import User
-
-from .models.CreditTradeStatus import CreditTradeStatus
-from .models.CreditTradeType import CreditTradeType
-from .models.Organization import Organization
-from .models.CreditTrade import CreditTrade
+from api.models.Organization import Organization
+from .data_creation_utilities import DataCreationUtilities
+from .base_test_case import BaseTestCase
 
 
-class TestAPIComments(TestCase):
+class TestAPIComments(BaseTestCase):
     """
     Test Credit Trade Comments actions and permissions
     """
 
-    fixtures = [
-        'organization_types.json',
-        'organization_government.json',
-        'organization_balance_gov.json',
-        'credit_trade_statuses.json',
-        'credit_trade_statuses_refused.json',
-        'organization_actions_types.json',
-        'organization_statuses.json',
-        'credit_trade_types.json',
-        'test_organization_fuel_suppliers.json',
-        'test_organization_balances.json',
-        'roles.json',
-        'permissions.json',
-        'roles_permissions.json',
-        'roles_permissions_v0.3.0.json',
-        'test_prodlike_government_users_and_roles.json',
+    extra_fixtures = [
         'test_credit_trade_comments.json'
     ]
 
-    users = ['fs_husky', 'fs_air_liquide', 'fs_shell', 'gov_director', 'gov_analyst']
+    extra_usernames = ['fs_air_liquide', 'fs_shell', 'fs_husky']
 
-    def setUp(self):
-        """Configure test clients"""
-        self.clients = dict()
+    tested_users = ['gov_analyst', 'gov_director'] + extra_usernames
 
-        for username in TestAPIComments.users:
-            user = User.objects.get_by_natural_key(username)
-            self.clients[username] = Client(
-                HTTP_SMGOV_USERGUID=str(user.authorization_guid),
-                HTTP_SMAUTH_USERDISPLAYNAME=str(user.display_name),
-                HTTP_SMGOV_USEREMAIL=str(user.authorization_email),
-                HTTP_SM_UNIVERSALID=str(user.authorization_id),
-                HTTP_SM_AUTHDIRNAME=('IDIR' if user.organization.id == 1 else 'BCeID'),
-                HTTP_SMGOV_USERTYPE=('Internal' if user.organization.id == 1 else '')
-            )
-
-        django.setup()
-
-    def test_comments_list_returns_404(self):
+    def test_comments_list_returns_client_error(self):
         """Test that listing comments is not a valid action"""
-        list_url = "/api/comments/"
+        list_url = "/api/comments"
         response = self.clients['fs_air_liquide'].get(list_url)
         # Check that the response is 404.
-        assert status.HTTP_404_NOT_FOUND == response.status_code
+        assert status.is_client_error(response.status_code)
 
     def test_comment_get_permissions(self):
         """Test that Credit Trade Comment GET permissions function correctly in all cases"""
 
         # From the test fixtures
         all_comments = [1, 2, 3, 4, 5]
-        all_users = self.users
+        all_users = self.tested_users
 
         expected_results = defaultdict(lambda: {'status': status.HTTP_403_FORBIDDEN,
                                                 'reason': "Default response is no access"})
@@ -166,7 +128,6 @@ class TestAPIComments(TestCase):
                               reason=reason):
                 c_url = "/api/comments/{}".format(comment)
                 response = self.clients[user].get(c_url)
-                logging.debug(response.content.decode("utf-8"))
                 self.assertEqual(response.status_code, expected_status)
 
     def test_comment_filtering(self):
@@ -174,7 +135,7 @@ class TestAPIComments(TestCase):
 
         # From the test fixtures
         all_credit_trades = [200]
-        all_users = self.users
+        all_users = self.tested_users
 
         expected_results = defaultdict(lambda: {
             'status': status.HTTP_404_NOT_FOUND,
@@ -213,7 +174,6 @@ class TestAPIComments(TestCase):
                               expect_filtered=expect_only_unprivileged,
                               reason=reason):
                 response = self.clients[user].get("/api/credit_trades/{}".format(trade))
-                logging.debug(response.content.decode("utf-8"))
                 self.assertEqual(response.status_code, expected_status)
 
                 if status.is_success(response.status_code):
@@ -225,57 +185,19 @@ class TestAPIComments(TestCase):
                         if expect_only_unprivileged:
                             assert comment['privilegedAccess'] is False
 
-    @staticmethod
-    def create_possible_credit_trades(initiating_organization, responding_organization):
-        """Used to setup test data for exhaustive trials """
-        created_trades = []
-
-        all_statuses = [s.status for s in CreditTradeStatus.objects.all()]
-
-        # Certain combinations of (status,rescinded) are not logical
-        impossible_states = [
-            ('Draft', True),
-            ('Cancelled', True),
-            ('Approved', True),
-            ('Declined', True),
-            ('Completed', True),
-        ]
-
-        # Create test data for this test -- one trade with each possible status
-        for (ct_status, rescinded) in product(all_statuses, [True, False]):
-            if (ct_status, rescinded) not in impossible_states:
-                trade = CreditTrade()
-                trade.initiator = initiating_organization
-                trade.respondent = responding_organization
-                trade.type = CreditTradeType.objects.get_by_natural_key("Buy")
-                trade.status = CreditTradeStatus.objects.get_by_natural_key(ct_status)
-                trade.fair_market_value_per_credit = 20.0
-                trade.number_of_credits = 500
-                trade.is_rescinded = rescinded
-                trade.save()
-                trade.refresh_from_db()
-                logging.debug("created credit trade %s", trade.id)
-                created_trades.append({
-                    'status': ct_status,
-                    'rescinded': rescinded,
-                    'id': trade.id
-                })
-
-        return created_trades
-
     def test_comment_post_permissions(self):
         """Test that Credit Trade Comment POST permissions function correctly"""
 
         initiating_organization = Organization.objects.get_by_natural_key("Husky Oil Ltd.")
         responding_organization = Organization.objects.get_by_natural_key("Shell Canada Products")
 
-        created_trades = TestAPIComments.create_possible_credit_trades(
+        created_trades = DataCreationUtilities.create_possible_credit_trades(
             initiating_organization,
             responding_organization
         )
 
         # From the test fixtures
-        all_users = self.users
+        all_users = self.tested_users
 
         # Test that all activities not explicitly allowed are prevented
         expected_results = defaultdict(lambda: {
@@ -460,7 +382,6 @@ class TestAPIComments(TestCase):
                         "creditTrade": trade['id'],
                         "privilegedAccess": privileged
                     }))
-                logging.debug("response: %s", json.loads(response.content.decode('utf-8')))
                 self.assertEqual(response.status_code, expected_result['status'])
 
     def test_invalid_post(self):
@@ -477,7 +398,6 @@ class TestAPIComments(TestCase):
             content_type='application/json',
             data=json.dumps(test_data)
         )
-        logging.debug(response)
         assert status.is_client_error(response.status_code)
 
         test_data = {
@@ -489,7 +409,6 @@ class TestAPIComments(TestCase):
             content_type='application/json',
             data=json.dumps(test_data)
         )
-        logging.debug(response)
         assert status.is_client_error(response.status_code)
 
         test_data = {
@@ -502,7 +421,6 @@ class TestAPIComments(TestCase):
             content_type='application/json',
             data=json.dumps(test_data)
         )
-        logging.debug(response)
         assert status.is_client_error(response.status_code)
 
     def test_put_as_gov(self):
@@ -524,12 +442,10 @@ class TestAPIComments(TestCase):
                 content_type='application/json',
                 data=json.dumps(test_data)
             )
-            logging.debug(response)
             assert status.is_success(response.status_code)
 
             response = self.clients['gov_director'].get(c_url)
-            logging.debug(u"validating that response comment is expected: '%s'", test_string)
-            logging.debug(response.content.decode("utf-8"))
+
             assert status.is_success(response.status_code)
             assert json.loads(response.content.decode("utf-8"))['comment'] == test_string
 
@@ -551,11 +467,9 @@ class TestAPIComments(TestCase):
             content_type='application/json',
             data=json.dumps(test_data)
         )
-        logging.debug(response)
         assert status.is_success(response.status_code)
 
         response = self.clients['gov_director'].get(c_url)
-        logging.debug(response.content.decode("utf-8"))
         assert status.is_success(response.status_code)
         self.assertEqual(
             json.loads(response.content.decode("utf-8"))['comment'],
@@ -584,7 +498,6 @@ class TestAPIComments(TestCase):
             content_type='application/json',
             data=json.dumps(test_data)
         )
-        logging.debug(response)
         assert status.is_success(response.status_code)
 
     def test_put_as_fs_invalid_trade(self):
@@ -601,7 +514,6 @@ class TestAPIComments(TestCase):
             content_type='application/json',
             data=json.dumps(test_data)
         )
-        logging.debug(response)
         assert status.is_success(response.status_code)
 
     def test_put_as_fs_invalid(self):
@@ -619,7 +531,5 @@ class TestAPIComments(TestCase):
         response = self.clients['fs_air_liquide'].put(
             c_url,
             content_type='application/json',
-
             data=json.dumps(test_data))
-        logging.debug(response)
-        assert status.HTTP_403_FORBIDDEN == response.status_code
+        assert status.is_client_error(response.status_code)

@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+# pylint: disable=no-member,invalid-name,duplicate-code
 """
     REST API Documentation for the NRS TFRS Credit Trading Application
 
@@ -26,98 +28,89 @@ from api.models.CreditTradeStatus import CreditTradeStatus
 from api.models.CreditTradeType import CreditTradeType
 from api.models.CreditTradeZeroReason import CreditTradeZeroReason
 from api.models.Organization import Organization
-from api.models.Role import Role
 from api.models.User import User
-from api.models.UserRole import UserRole
+from api.tests.logging_client import LoggingClient
 
 
 class BaseTestCase(TestCase):
     """
     Base Test class that we can use to setup the initial data
     """
-    fixtures = ['organization_types.json',
-                'organization_government.json',
-                'organization_balance_gov.json',
-                'credit_trade_statuses.json',
-                'credit_trade_statuses_refused.json',
-                'credit_trade_zero_reason.json',
-                'organization_actions_types.json',
-                'organization_statuses.json',
-                'test_users.json',
-                'credit_trade_types.json',
-                'test_credit_trades.json',
-                'test_organization_fuel_suppliers.json',
-                'test_organization_balances.json',
-                'roles.json',
-                'permissions.json',
-                'roles_permissions.json',
-                'signing_authority_assertions.json']
+
+    fixtures = [
+        'organization_types.json',
+        'organization_government.json',
+        'organization_balance_gov.json',
+        'credit_trade_statuses.json',
+        'credit_trade_statuses_refused.json',
+        'organization_actions_types.json',
+        'organization_statuses.json',
+        'credit_trade_types.json',
+        'credit_trade_zero_reason.json',
+        'test_organization_fuel_suppliers.json',
+        'test_organization_balances.json',
+        'roles.json',
+        'permissions.json',
+        'roles_permissions.json',
+        'roles_permissions_v0.3.0.json',
+        'roles_permissions_v0.3.1.json',
+        'signing_authority_assertions.json',
+        'test_prodlike_government_users_and_roles.json',
+        'test_prodlike_government_users_and_roles_v0.3.1.json',
+        'test_users_and_organizations_v0.3.1.json'
+    ]
+
+    usernames = [
+        'fs_user_1',
+        'fs_user_2',
+        'fs_user_3',
+        'gov_director',
+        'gov_analyst',
+        'gov_admin'
+    ]
+
+    # For use in child classes
+    extra_fixtures = None
+    extra_usernames = None
+
+    @classmethod
+    def setUpClass(cls):
+        """Load any extra fixtures that child classes have declared"""
+        if cls.extra_fixtures is not None:
+            cls.fixtures = cls.fixtures + cls.extra_fixtures
+        super().setUpClass()
+
+    def __init__(self, *args, **kwargs):
+        """Add any extra usernames that child classes have declared to our list of clients"""
+
+        if self.extra_usernames is not None:
+            self.usernames = self.usernames + self.extra_usernames
+
+        super().__init__(*args, **kwargs)
 
     def setUp(self):
-        """
-        This should get called as the test runs
-        """
+        """Configure test clients"""
         super().setUp()
 
-        # Initialize Foreign keys
-        gov_user = User.objects.filter(organization__id=1).first()
-        gov_client = Client(
-            HTTP_SMGOV_USERGUID=str(gov_user.authorization_guid),
-            HTTP_SMGOV_USERDISPLAYNAME=gov_user.display_name,
-            HTTP_SMGOV_USEREMAIL=gov_user.email,
-            HTTP_SM_UNIVERSALID=gov_user.authorization_id,
-            HTTP_SMGOV_USERTYPE='Internal',
-            HTTP_SM_AUTHDIRNAME='IDIR')
+        self.users = dict(map(
+            lambda u: (u, User.objects.get_by_natural_key(u)),
+            self.usernames
+        ))
 
-        # Apply a government role to Teperson
-        gov_role = Role.objects.get(name='GovDirector')
-        UserRole.objects.create(user_id=gov_user.id, role_id=gov_role.id)
+        self.clients = dict(map(lambda user:
+                                (user.username, LoggingClient(
+                                    HTTP_SMGOV_USERGUID=str(user.authorization_guid),
+                                    HTTP_SMGOV_USERDISPLAYNAME=str(user.display_name),
+                                    HTTP_SMGOV_USEREMAIL=str(user.authorization_email),
+                                    HTTP_SM_UNIVERSALID=str(user.authorization_id),
+                                    HTTP_SM_AUTHDIRNAME=\
+                                    'IDIR' if user.organization.id == 1 else 'BCeID',
+                                    HTTP_SMGOV_USERTYPE=\
+                                    'Internal' if user.organization.id == 1 else 'Business'
+                                )), self.users.values()))
 
-        fs_user_1 = User.objects.filter(organization__id=2).first()
-        fs_client_1 = Client(
-            HTTP_SMGOV_USERGUID=str(fs_user_1.authorization_guid),
-            HTTP_SMGOV_USERDISPLAYNAME=fs_user_1.display_name,
-            HTTP_SMGOV_USEREMAIL=fs_user_1.email,
-            HTTP_SM_UNIVERSALID=fs_user_1.authorization_id)
-
-        fs_user_2 = User.objects.filter(organization__id=3).first()
-        fs_client_2 = Client(
-            HTTP_SMGOV_USERGUID=str(fs_user_2.authorization_guid),
-            HTTP_SMGOV_USERDISPLAYNAME=fs_user_2.display_name,
-            HTTP_SMGOV_USEREMAIL=fs_user_2.email,
-            HTTP_SM_UNIVERSALID=fs_user_2.authorization_id)
-
-        fs_user_3 = User.objects.filter(organization__id=4).first()
-        fs_client_3 = Client(
-            HTTP_SMGOV_USERGUID=str(fs_user_3.authorization_guid),
-            HTTP_SMGOV_USERDISPLAYNAME=fs_user_3.display_name,
-            HTTP_SMGOV_USEREMAIL=fs_user_3.email,
-            HTTP_SM_UNIVERSALID=fs_user_3.authorization_id)
-
-        # Attach signing authority roles to User 1 and User 2
-        manager_role = Role.objects.get(name='FSManager')
-        UserRole.objects.create(user_id=fs_user_1.id,
-                                role_id=manager_role.id)
-
-        UserRole.objects.create(user_id=fs_user_2.id,
-                                role_id=manager_role.id)
-
-        from_organization = Organization.objects.create(
-            name="Test 1",
-            actions_type_id=1,
-            status_id=1)
-
-        to_organization = Organization.objects.create(
-            name="Test 2",
-            actions_type_id=1,
-            status_id=1)
-
-        self.clients = {
-            'gov': gov_client,
-            'fuel_supplier_1': fs_client_1,
-            'fuel_supplier_2': fs_client_2,
-            'fuel_supplier_3': fs_client_3,
-        }
+        from_organization = Organization.objects.get_by_natural_key("Test Org 1")
+        to_organization = Organization.objects.get_by_natural_key("Test Org 2")
 
         self.credit_trade_types = {
             'buy': CreditTradeType.objects.get(the_type='Buy'),
@@ -136,17 +129,10 @@ class BaseTestCase(TestCase):
             'completed': CreditTradeStatus.objects.get(status='Completed'),
             'draft': CreditTradeStatus.objects.get(status='Draft'),
             'not_recommended':
-            CreditTradeStatus.objects.get(status='Not Recommended'),
+                CreditTradeStatus.objects.get(status='Not Recommended'),
             'recommended': CreditTradeStatus.objects.get(status='Recommended'),
             'refused': CreditTradeStatus.objects.get(status='Refused'),
             'submitted': CreditTradeStatus.objects.get(status='Submitted')
-        }
-
-        self.users = {
-            'gov': gov_user,
-            'fuel_supplier_1': fs_user_1,
-            'fuel_supplier_2': fs_user_2,
-            'fuel_supplier_3': fs_user_3
         }
 
         self.zero_reason = {

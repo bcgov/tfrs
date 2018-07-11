@@ -25,7 +25,6 @@ from django.db import models
 
 from auditable.models import Auditable
 
-
 class OrganizationBalance(Auditable):
     """
     Credit Trade Balance for the Fuel Supplier
@@ -37,6 +36,7 @@ class OrganizationBalance(Auditable):
     validated_credits = models.BigIntegerField()
     effective_date = models.DateField(blank=True, null=True)
     expiration_date = models.DateField(blank=True, null=True)
+
     credit_trade = models.ForeignKey(
         'CreditTrade',
         related_name='balances',

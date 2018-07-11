@@ -5,7 +5,8 @@
       "is_government_role": true,
       "name": "ProdlikeDirector"
     },
-    "model": "api.role"
+    "model": "api.role",
+    "pk": 8
   },
   {
     "fields": {
@@ -32,9 +33,21 @@
     "pk": null
   },
   {
+  "fields": {
+    "permission": [
+      "DECLINE_CREDIT_TRANSFER"
+    ],
+    "role": [
+      "ProdlikeDirector"
+    ]
+  },
+  "model": "api.rolepermission",
+  "pk": null
+},
+  {
     "fields": {
       "permission": [
-        "DECLINE_CREDIT_TRANSFER"
+        "VIEW_COMPLIANCE_PERIODS"
       ],
       "role": [
         "ProdlikeDirector"
@@ -97,7 +110,8 @@
       "is_government_role": true,
       "name": "ProdlikeAnalyst"
     },
-    "model": "api.role"
+    "model": "api.role",
+    "pk": 9
   },
   {
     "fields": {
@@ -222,6 +236,34 @@
       ],
       "user": [
         "gov_analyst"
+      ]
+    },
+    "model": "api.userrole",
+    "pk": null
+  },
+  {
+    "fields": {
+      "authorization_guid": "2c04e271-6fc2-4822-b231-7cd3dc7e9ec3",
+      "email": "gov_admin@test.com",
+      "username": "gov_admin",
+      "authorization_id": "gov_admin",
+      "display_name": "Gov Admin",
+      "first_name": "Gov",
+      "last_name": "Admin",
+      "organization": [
+        "Government Of British Columbia"
+      ]
+    },
+    "model": "api.user",
+    "pk": null
+  },
+  {
+    "fields": {
+      "role": [
+        "Admin"
+      ],
+      "user": [
+        "gov_admin"
       ]
     },
     "model": "api.userrole",

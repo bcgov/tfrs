@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+# pylint: disable=no-member,invalid-name
 """
     REST API Documentation for the NRS TFRS Credit Trading Application
 
@@ -31,21 +33,32 @@ from api.models.OrganizationBalance import OrganizationBalance
 from api.models.SigningAuthorityAssertion import SigningAuthorityAssertion
 from api.services.CreditTradeService import CreditTradeService
 from api.tests.base_test_case import BaseTestCase
+from api.tests.data_creation_utilities import DataCreationUtilities
 
 
-class TestCreditTrades(BaseTestCase):
+class TestCreditTradeOperations(BaseTestCase):
     """
     This will test all credit trade related things such as:
     status changes and checking permissions when those
     status changes happen
     """
+
+    extra_fixtures = ['test_credit_trades.json']
+
     def test_initiator_should_see_appropriate_credit_trades(self):
         """
         As a fuel supplier, I should see all credit trades where:
         I'm the initiator, regardless of status
         I'm the respondent, if the status is "submitted" or greater
         """
-        response = self.clients['fuel_supplier_1'].get('/api/credit_trades')
+
+        # setup some test data
+        DataCreationUtilities.create_possible_credit_trades(
+            self.users['fs_user_1'].organization,
+            self.users['fs_user_2'].organization
+        )
+
+        response = self.clients['fs_user_1'].get('/api/credit_trades')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
         fs_credit_trades = response.json()
@@ -53,54 +66,15 @@ class TestCreditTrades(BaseTestCase):
             correct_view = False
 
             if credit_trade['initiator']['id'] == \
-               self.users['fuel_supplier_1'].organization.id:
+               self.users['fs_user_1'].organization.id:
                 correct_view = True
             elif (credit_trade['respondent']['id'] ==
-                  self.users['fuel_supplier_1'].organization.id and
+                  self.users['fs_user_1'].organization.id and
                   credit_trade['status']['id'] >=
                   self.statuses['submitted'].id):
                 correct_view = True
 
             self.assertTrue(correct_view)
-
-    def test_respondent_can_refuse_credit_trades(self):
-        """
-        As a fuel supplier, I should be able to refuse credit transfers where:
-        I'm the respondent
-        """
-        credit_trade = CreditTrade.objects.create(
-            status=self.statuses['submitted'],
-            initiator=self.users['fuel_supplier_2'].organization,
-            respondent=self.users['fuel_supplier_1'].organization,
-            type=self.credit_trade_types['sell'],
-            number_of_credits=100,
-            fair_market_value_per_credit=1,
-            zero_reason=None,
-            trade_effective_date=datetime.datetime.today().strftime('%Y-%m-%d')
-        )
-
-        payload = {
-            'fairMarketValuePerCredit':
-                credit_trade.fair_market_value_per_credit,
-            'initiator': credit_trade.initiator_id,
-            'numberOfCredits': credit_trade.number_of_credits,
-            'respondent': credit_trade.respondent_id,
-            'status': self.statuses['refused'].id,
-            'tradeEffectiveDate': credit_trade.trade_effective_date,
-            'type': credit_trade.type_id,
-            'zeroReason': credit_trade.zero_reason_id
-        }
-
-        response = self.clients['fuel_supplier_1'].put(
-            '/api/credit_trades/{}'.format(
-                credit_trade.id
-            ),
-            content_type='application/json',
-            data=json.dumps(payload))
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-
-        credit_trade = CreditTrade.objects.get(id=credit_trade.id)
-        self.assertEqual(credit_trade.status, self.statuses['refused'])
 
     def test_government_user_should_see_appropriate_credit_trades(self):
         """
@@ -109,7 +83,7 @@ class TestCreditTrades(BaseTestCase):
         Government will never be the respondent
         All other credit trades that have the status "Accepted" or greater
         """
-        response = self.clients['gov'].get('/api/credit_trades')
+        response = self.clients['gov_analyst'].get('/api/credit_trades')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
         gov_credit_trades = response.json()
@@ -117,7 +91,7 @@ class TestCreditTrades(BaseTestCase):
             correct_view = False
 
             if credit_trade['initiator']['id'] == \
-               self.users['gov'].organization.id:
+               self.users['gov_analyst'].organization.id:
                 correct_view = True
 
             elif (credit_trade['status']['id'] >=
@@ -145,7 +119,7 @@ class TestCreditTrades(BaseTestCase):
             'zeroReason': None
         }
 
-        response = self.clients['gov'].post(
+        response = self.clients['gov_director'].post(
             '/api/credit_trades',
             content_type='application/json',
             data=json.dumps(payload))
@@ -174,7 +148,7 @@ class TestCreditTrades(BaseTestCase):
             'zeroReason': None
         }
 
-        response = self.clients['gov'].post(
+        response = self.clients['gov_analyst'].post(
             '/api/credit_trades',
             content_type='application/json',
             data=json.dumps(payload))
@@ -202,7 +176,7 @@ class TestCreditTrades(BaseTestCase):
             'zeroReason': self.zero_reason['other'].id
         }
 
-        response = self.clients['gov'].post(
+        response = self.clients['gov_director'].post(
             '/api/credit_trades',
             content_type='application/json',
             data=json.dumps(payload))
@@ -219,8 +193,8 @@ class TestCreditTrades(BaseTestCase):
         """
         CreditTrade.objects.create(
             status=self.statuses['approved'],
-            initiator=self.users['fuel_supplier_2'].organization,
-            respondent=self.users['fuel_supplier_3'].organization,
+            initiator=self.users['fs_user_2'].organization,
+            respondent=self.users['fs_user_3'].organization,
             type=self.credit_trade_types['sell'],
             number_of_credits=1000000000,
             fair_market_value_per_credit=0,
@@ -246,17 +220,18 @@ class TestCreditTrades(BaseTestCase):
         trades with new organizations that bounces the number of credits
         up and down
         """
-        # Award Test 1 with 1000 credits (new organizations start
-        # with 0 credits)
-        # (Please note in most cases we should use a different type
-        # but to reduce the number of things to keep track, lets just
-        # transfer from organization: 1 (BC Government))
+
+        initial_balance = OrganizationBalance.objects.get(
+            organization_id=self.organizations['from'].id,
+            expiration_date=None).validated_credits
+
+        # Transfer initial balance from Test 1 to Test 2
         CreditTrade.objects.create(
             status=self.statuses['approved'],
-            initiator=self.users['gov'].organization,
-            respondent=self.organizations['from'],
+            initiator=self.organizations['from'],
+            respondent=self.organizations['to'],
             type=self.credit_trade_types['sell'],
-            number_of_credits=1000,
+            number_of_credits=initial_balance,
             fair_market_value_per_credit=0,
             zero_reason=self.zero_reason['other'],
             trade_effective_date=datetime.datetime.today().strftime(
@@ -264,27 +239,13 @@ class TestCreditTrades(BaseTestCase):
             )
         )
 
-        # Transfer 500 from Test 1 to Test 2
+        # Transfer 1 from Test 1 to Test 2
         CreditTrade.objects.create(
             status=self.statuses['approved'],
             initiator=self.organizations['from'],
             respondent=self.organizations['to'],
             type=self.credit_trade_types['sell'],
-            number_of_credits=500,
-            fair_market_value_per_credit=0,
-            zero_reason=self.zero_reason['other'],
-            trade_effective_date=datetime.datetime.today().strftime(
-                '%Y-%m-%d'
-            )
-        )
-
-        # Transfer 700 from Test 1 to Test 2
-        CreditTrade.objects.create(
-            status=self.statuses['approved'],
-            initiator=self.organizations['from'],
-            respondent=self.organizations['to'],
-            type=self.credit_trade_types['sell'],
-            number_of_credits=700,
+            number_of_credits=1,
             fair_market_value_per_credit=0,
             zero_reason=self.zero_reason['other'],
             trade_effective_date=datetime.datetime.today().strftime(
@@ -319,7 +280,7 @@ class TestCreditTrades(BaseTestCase):
         credit_trades.append(
             CreditTrade.objects.create(
                 status=self.statuses['approved'],
-                initiator=self.users['gov'].organization,
+                initiator=self.users['gov_analyst'].organization,
                 respondent=self.organizations['from'],
                 type=self.credit_trade_types['sell'],
                 number_of_credits=1000,
@@ -373,9 +334,13 @@ class TestCreditTrades(BaseTestCase):
         This test is similar to the one above, but a functional test to check
         if the commit actually works
         """
+        initial_balance = OrganizationBalance.objects.get(
+            organization_id=self.organizations['from'].id,
+            expiration_date=None).validated_credits
+
         CreditTrade.objects.create(
             status=self.statuses['approved'],
-            initiator=self.users['gov'].organization,
+            initiator=self.users['gov_director'].organization,
             respondent=self.organizations['from'],
             type=self.credit_trade_types['sell'],
             number_of_credits=1000,
@@ -412,14 +377,14 @@ class TestCreditTrades(BaseTestCase):
             )
         )
 
-        response = self.clients['gov'].put('/api/credit_trades/batch_process')
-        assert response.status_code == status.HTTP_200_OK
+        response = self.clients['gov_director'].put('/api/credit_trades/batch_process')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
 
         organization_balance = OrganizationBalance.objects.get(
             organization_id=self.organizations['from'].id,
             expiration_date=None)
 
-        self.assertEqual(organization_balance.validated_credits, 100)
+        self.assertEqual(organization_balance.validated_credits-initial_balance, 100)
 
     def test_delete(self):
         """
@@ -428,7 +393,7 @@ class TestCreditTrades(BaseTestCase):
         """
         credit_trade = CreditTrade.objects.create(
             status=self.statuses['approved'],
-            initiator=self.users['gov'].organization,
+            initiator=self.users['gov_analyst'].organization,
             respondent=self.organizations['from'],
             type=self.credit_trade_types['sell'],
             number_of_credits=1000,
@@ -439,7 +404,7 @@ class TestCreditTrades(BaseTestCase):
             )
         )
 
-        response = self.clients['gov'].put(
+        response = self.clients['gov_analyst'].put(
             '/api/credit_trades/{}/delete'.format(credit_trade.id)
         )
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -449,7 +414,7 @@ class TestCreditTrades(BaseTestCase):
 
         # Trying to access this page should now result in a 404 as it's now
         # been cancelled
-        response = self.clients['gov'].get(
+        response = self.clients['gov_analyst'].get(
             '/api/credit_trades/{}'.format(credit_trade.id)
         )
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
@@ -478,7 +443,7 @@ class TestCreditTrades(BaseTestCase):
         # the function should see this as it's a draft from the government
         draft_credit_trade_from_gov = CreditTrade.objects.create(
             status=self.statuses['draft'],
-            initiator=self.users['gov'].organization,
+            initiator=self.users['gov_analyst'].organization,
             respondent=self.organizations['to'],
             type=self.credit_trade_types['sell'],
             number_of_credits=1000,
@@ -504,7 +469,7 @@ class TestCreditTrades(BaseTestCase):
         )
 
         credit_trades = CreditTradeService.get_organization_credit_trades(
-            self.users['gov'].organization
+            self.users['gov_analyst'].organization
         )
 
         self.assertNotIn(draft_credit_trade, credit_trades)
@@ -553,7 +518,7 @@ class TestCreditTrades(BaseTestCase):
         submitted_credit_trade = CreditTrade.objects.create(
             status=self.statuses['submitted'],
             initiator=self.organizations['to'],
-            respondent=self.users['fuel_supplier_3'].organization,
+            respondent=self.users['fs_user_3'].organization,
             type=self.credit_trade_types['sell'],
             number_of_credits=1000,
             fair_market_value_per_credit=1,
@@ -610,8 +575,8 @@ class TestCreditTrades(BaseTestCase):
         """
         payload = {
             'fairMarketValuePerCredit': '1.00',
-            'initiator': self.users['fuel_supplier_1'].organization_id,
-            'numberOfCredits': 100000,
+            'initiator': self.users['fs_user_1'].organization_id,
+            'numberOfCredits': 200000,
             'respondent': 3,
             'status': self.statuses['draft'].id,
             'tradeEffectiveDate': datetime.datetime.today().strftime(
@@ -621,7 +586,7 @@ class TestCreditTrades(BaseTestCase):
             'zeroReason': None
         }
 
-        response = self.clients['fuel_supplier_1'].post(
+        response = self.clients['fs_user_1'].post(
             '/api/credit_trades',
             content_type='application/json',
             data=json.dumps(payload))
@@ -640,10 +605,10 @@ class TestCreditTrades(BaseTestCase):
         """
         credit_trade = CreditTrade.objects.create(
             status=self.statuses['draft'],
-            initiator=self.users['fuel_supplier_1'].organization,
-            respondent=self.users['fuel_supplier_2'].organization,
+            initiator=self.users['fs_user_1'].organization,
+            respondent=self.users['fs_user_2'].organization,
             type=self.credit_trade_types['sell'],
-            number_of_credits=100000,
+            number_of_credits=200000,
             fair_market_value_per_credit=1,
             zero_reason=None,
             trade_effective_date=datetime.datetime.today().strftime('%Y-%m-%d')
@@ -662,7 +627,7 @@ class TestCreditTrades(BaseTestCase):
             'type': credit_trade.type_id
         }
 
-        response = self.clients['fuel_supplier_1'].put(
+        response = self.clients['fs_user_1'].put(
             '/api/credit_trades/{}'.format(
                 credit_trade.id
             ),
@@ -683,9 +648,9 @@ class TestCreditTrades(BaseTestCase):
         """
         payload = {
             'fairMarketValuePerCredit': '1.00',
-            'initiator': self.users['fuel_supplier_1'].organization_id,
-            'numberOfCredits': 100000,
-            'respondent': self.users['fuel_supplier_2'].organization_id,
+            'initiator': self.users['fs_user_1'].organization_id,
+            'numberOfCredits': 200000,
+            'respondent': self.users['fs_user_2'].organization_id,
             'status': self.statuses['submitted'].id,
             'tradeEffectiveDate': datetime.datetime.today().strftime(
                 '%Y-%m-%d'
@@ -694,7 +659,7 @@ class TestCreditTrades(BaseTestCase):
             'zeroReason': None
         }
 
-        response = self.clients['fuel_supplier_1'].post(
+        response = self.clients['fs_user_1'].post(
             '/api/credit_trades',
             content_type='application/json',
             data=json.dumps(payload))
@@ -715,7 +680,7 @@ class TestCreditTrades(BaseTestCase):
             'type': credit_trade['type']
         }
 
-        response = self.clients['fuel_supplier_2'].put(
+        response = self.clients['fs_user_2'].put(
             '/api/credit_trades/{}'.format(
                 credit_trade['id']
             ),
@@ -734,9 +699,9 @@ class TestCreditTrades(BaseTestCase):
         # Request for Fuel Supplier 1 to propose a trade
         payload = {
             'fairMarketValuePerCredit': '1.00',
-            'initiator': self.users['fuel_supplier_1'].organization_id,
+            'initiator': self.users['fs_user_1'].organization_id,
             'numberOfCredits': 1,
-            'respondent': self.users['fuel_supplier_2'].organization_id,
+            'respondent': self.users['fs_user_2'].organization_id,
             'status': self.statuses['submitted'].id,
             'tradeEffectiveDate': datetime.datetime.today().strftime(
                 '%Y-%m-%d'
@@ -745,7 +710,7 @@ class TestCreditTrades(BaseTestCase):
             'zeroReason': None
         }
 
-        response = self.clients['fuel_supplier_1'].post(
+        response = self.clients['fs_user_1'].post(
             '/api/credit_trades',
             content_type='application/json',
             data=json.dumps(payload))
@@ -764,14 +729,14 @@ class TestCreditTrades(BaseTestCase):
                 'signingAuthorityAssertion': assertion.id
             })
 
-        response = self.clients['fuel_supplier_1'].post(
+        response = self.clients['fs_user_1'].post(
             '/api/signing_authority_confirmations',
             content_type='application/json',
             data=json.dumps(payload))
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
         # Check and see if the signature is present
-        response = self.clients['fuel_supplier_1'].get(
+        response = self.clients['fs_user_1'].get(
             '/api/credit_trades/{}'.format(
                 credit_trade['id']
             ), content_type='application/json')
@@ -780,7 +745,7 @@ class TestCreditTrades(BaseTestCase):
 
         # We should see the signature from the user proposing
         self.assertEqual(credit_trade['signatures'][0]['user']['id'],
-                         self.users['fuel_supplier_1'].id)
+                         self.users['fs_user_1'].id)
 
         # Fuel Supplier 2 accepts the proposal
         payload = {
@@ -796,7 +761,7 @@ class TestCreditTrades(BaseTestCase):
             'type': credit_trade['type']['id']
         }
 
-        response = self.clients['fuel_supplier_2'].put(
+        response = self.clients['fs_user_2'].put(
             '/api/credit_trades/{}'.format(
                 credit_trade['id']
             ),
@@ -814,14 +779,14 @@ class TestCreditTrades(BaseTestCase):
                 'signingAuthorityAssertion': assertion.id
             })
 
-        response = self.clients['fuel_supplier_2'].post(
+        response = self.clients['fs_user_2'].post(
             '/api/signing_authority_confirmations',
             content_type='application/json',
             data=json.dumps(payload))
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
         # Check if the signatures are present
-        response = self.clients['fuel_supplier_1'].get(
+        response = self.clients['fs_user_1'].get(
             '/api/credit_trades/{}'.format(
                 credit_trade['id']
             ), content_type='application/json')
@@ -830,10 +795,10 @@ class TestCreditTrades(BaseTestCase):
 
         # We should see the signature from the user proposing
         self.assertEqual(credit_trade['signatures'][0]['user']['id'],
-                         self.users['fuel_supplier_1'].id)
+                         self.users['fs_user_1'].id)
         # and the user that accepted
         self.assertEqual(credit_trade['signatures'][1]['user']['id'],
-                         self.users['fuel_supplier_2'].id)
+                         self.users['fs_user_2'].id)
 
         # Gov User recommends a decision for the proposal
         payload = {
@@ -849,7 +814,7 @@ class TestCreditTrades(BaseTestCase):
             'type': credit_trade['type']['id']
         }
 
-        response = self.clients['gov'].put(
+        response = self.clients['gov_analyst'].put(
             '/api/credit_trades/{}'.format(
                 credit_trade['id']
             ),
@@ -858,7 +823,7 @@ class TestCreditTrades(BaseTestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
         # Check and see if the signature is present
-        response = self.clients['gov'].get(
+        response = self.clients['gov_analyst'].get(
             '/api/credit_trades/{}'.format(
                 credit_trade['id']
             ), content_type='application/json')
@@ -867,10 +832,10 @@ class TestCreditTrades(BaseTestCase):
 
         # We should see the signature from the user proposing
         self.assertEqual(credit_trade['signatures'][0]['user']['id'],
-                         self.users['fuel_supplier_1'].id)
+                         self.users['fs_user_1'].id)
         # and the user that accepted
         self.assertEqual(credit_trade['signatures'][1]['user']['id'],
-                         self.users['fuel_supplier_2'].id)
+                         self.users['fs_user_2'].id)
 
         # first entry should be submitted
         self.assertEqual(credit_trade['history'][0]['status']['id'],

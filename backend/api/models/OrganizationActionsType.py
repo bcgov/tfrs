@@ -22,6 +22,7 @@
 from django.db import models
 
 from auditable.models import Auditable
+from api.managers.OrganizationActionsTypeManager import OrganizationActionsTypeManager
 
 
 class OrganizationActionsType(Auditable):
@@ -30,6 +31,11 @@ class OrganizationActionsType(Auditable):
     effective_date = models.DateField(blank=True, null=True)
     expiration_date = models.DateField(blank=True, null=True)
     display_order = models.IntegerField()
+
+    objects = OrganizationActionsTypeManager()
+
+    def natural_key(self):
+        return (self.the_type,)
 
     class Meta:
         db_table = 'organization_actions_type'
