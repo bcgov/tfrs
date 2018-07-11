@@ -5,7 +5,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import FontAwesomeIcon from '@fortawesome/react-fontawesome';
 import { Link } from 'react-router-dom';
-import moment from 'moment';
 import ReactTable from 'react-table';
 import 'react-table/react-table.css';
 
@@ -13,6 +12,15 @@ import CREDIT_TRANSACTIONS from '../../constants/routes/CreditTransactions';
 import { CREDIT_TRANSFER_STATUS } from '../../constants/values';
 
 const UserHistoryTable = (props) => {
+  const formatter = new Intl.DateTimeFormat('en-CA', {
+    year: 'numeric',
+    month: 'numeric',
+    day: 'numeric',
+    hour: 'numeric',
+    minute: 'numeric',
+    timeZoneName: 'short'
+  });
+
   const columns = [{
     accessor: 'id',
     className: 'col-id',
@@ -39,7 +47,7 @@ const UserHistoryTable = (props) => {
   }, {
     accessor: item => item.creditTradeId,
     className: 'col-id',
-    Header: 'Credit Trade',
+    Header: 'Transaction ID',
     id: 'creditTradeId',
     resizable: false,
     width: 100
@@ -56,12 +64,19 @@ const UserHistoryTable = (props) => {
     id: 'actions',
     width: 30
   }, {
-    accessor: item => (item.creditTradeUpdateTime
-      ? moment(item.creditTradeUpdateTime).format('YYYY-MM-DD') : '-'),
-    className: 'col-date',
-    Header: 'Date',
+    accessor: (item) => {
+      if (item.creditTradeUpdateTime) {
+        const ts = Date.parse(item.creditTradeUpdateTime);
+
+        return formatter.format(ts);
+      }
+
+      return '-';
+    },
+    className: 'col-timestamp',
+    Header: 'Timestamp',
     id: 'updateTimestamp',
-    minWidth: 50
+    minWidth: 75
   }, {
     accessor: item => item.fuelSupplier.name,
     Header: 'Fuel Supplier',
