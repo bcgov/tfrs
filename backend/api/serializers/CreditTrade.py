@@ -20,6 +20,7 @@
     See the License for the specific language governing permissions and
     limitations under the License.
 """
+from django.forms.models import model_to_dict
 from rest_framework import serializers
 
 from api.models.CreditTrade import CreditTrade
@@ -196,16 +197,21 @@ class CreditTradeUpdateSerializer(serializers.ModelSerializer):
             })
 
         # if the user is the respondent, they really shouldn't be modifying
-        # other fields. So check if those have changed
+        # other fields. So reset those to be sure that they weren't changed
         if self.instance.respondent == request.user.organization:
-            data['fair_market_value_per_credit'] = \
-            self.instance.fair_market_value_per_credit
-
-            data['number_of_credits'] = \
-            self.instance.number_of_credits
-
-            data['zero_reason_id'] = \
-            self.instance.zero_reason_id
+            data = {
+                'compliance_period': self.instance.compliance_period,
+                'fair_market_value_per_credit':
+                self.instance.fair_market_value_per_credit,
+                'initiator': self.instance.initiator,
+                'is_rescinded': bool(data.get('is_rescinded')),
+                'number_of_credits': self.instance.number_of_credits,
+                'respondent': self.instance.respondent,
+                'status': data.get('status'),
+                'type': self.instance.type,
+                'update_user': request.user,
+                'zero_reason': self.instance.zero_reason
+            }
 
         # if status is being modified, make sure the next state is valid
         if 'status' in request.data:
