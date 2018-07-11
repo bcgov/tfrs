@@ -28,7 +28,7 @@ from .CreditTradeStatus import CreditTradeStatusSerializer, \
                                CreditTradeStatusMinSerializer
 from .CreditTradeType import CreditTradeTypeSerializer
 from .CreditTradeZeroReason import CreditTradeZeroReasonSerializer
-from .Organization import OrganizationSerializer
+from .Organization import OrganizationMinSerializer
 from .User import UserMinSerializer
 
 
@@ -45,8 +45,8 @@ class CreditTradeHistorySerializer(serializers.ModelSerializer):
 
 class CreditTradeHistory2Serializer(serializers.ModelSerializer):
     status = CreditTradeStatusSerializer(read_only=True)
-    initiator = OrganizationSerializer(read_only=True)
-    respondent = OrganizationSerializer(read_only=True)
+    initiator = OrganizationMinSerializer(read_only=True)
+    respondent = OrganizationMinSerializer(read_only=True)
     type = CreditTradeTypeSerializer(read_only=True)
     zero_reason = CreditTradeZeroReasonSerializer(read_only=True)
 

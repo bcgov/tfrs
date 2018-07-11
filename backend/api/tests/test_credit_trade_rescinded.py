@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+# pylint: disable=no-member,invalid-name
 """
     REST API Documentation for the NRS TFRS Credit Trading Application
 
@@ -26,13 +28,14 @@ import json
 from rest_framework import status
 
 from api.models.CreditTrade import CreditTrade
-from api.tests.base_test_case import BaseTestCase
+from .base_test_case import BaseTestCase
 
 
-class TestCreditTrades(BaseTestCase):
+class TestCreditTradeRescind(BaseTestCase):
     """
     This will test all credit trade related to the rescinded status
     """
+
     def test_rescind_credit_transfer(self):
         """
         As a fuel supplier
@@ -42,8 +45,8 @@ class TestCreditTrades(BaseTestCase):
         """
         credit_trade = CreditTrade.objects.create(
             status=self.statuses['submitted'],
-            initiator=self.users['fuel_supplier_1'].organization,
-            respondent=self.users['fuel_supplier_2'].organization,
+            initiator=self.users['fs_user_1'].organization,
+            respondent=self.users['fs_user_2'].organization,
             type=self.credit_trade_types['sell'],
             number_of_credits=1000,
             fair_market_value_per_credit=1,
@@ -66,7 +69,7 @@ class TestCreditTrades(BaseTestCase):
             'type': credit_trade.type_id
         }
 
-        response = self.clients['fuel_supplier_1'].put(
+        response = self.clients['fs_user_1'].put(
             '/api/credit_trades/{}'.format(credit_trade.id),
             content_type='application/json',
             data=json.dumps(payload)
@@ -88,8 +91,8 @@ class TestCreditTrades(BaseTestCase):
         """
         credit_trade = CreditTrade.objects.create(
             status=self.statuses['approved'],
-            initiator=self.users['fuel_supplier_1'].organization,
-            respondent=self.users['fuel_supplier_2'].organization,
+            initiator=self.users['fs_user_1'].organization,
+            respondent=self.users['fs_user_2'].organization,
             type=self.credit_trade_types['sell'],
             number_of_credits=1000,
             fair_market_value_per_credit=1,
@@ -112,7 +115,7 @@ class TestCreditTrades(BaseTestCase):
             'type': credit_trade.type_id
         }
 
-        response = self.clients['fuel_supplier_2'].put(
+        response = self.clients['fs_user_2'].put(
             '/api/credit_trades/{}'.format(credit_trade.id),
             content_type='application/json',
             data=json.dumps(payload)
@@ -136,8 +139,8 @@ class TestCreditTrades(BaseTestCase):
         """
         credit_trade = CreditTrade.objects.create(
             status=self.statuses['completed'],
-            initiator=self.users['fuel_supplier_1'].organization,
-            respondent=self.users['fuel_supplier_2'].organization,
+            initiator=self.users['fs_user_1'].organization,
+            respondent=self.users['fs_user_2'].organization,
             type=self.credit_trade_types['sell'],
             number_of_credits=1000,
             fair_market_value_per_credit=1,
@@ -160,7 +163,7 @@ class TestCreditTrades(BaseTestCase):
             'type': credit_trade.type_id
         }
 
-        response = self.clients['fuel_supplier_2'].put(
+        response = self.clients['fs_user_2'].put(
             '/api/credit_trades/{}'.format(credit_trade.id),
             content_type='application/json',
             data=json.dumps(payload)
@@ -184,8 +187,8 @@ class TestCreditTrades(BaseTestCase):
         """
         credit_trade = CreditTrade.objects.create(
             status=self.statuses['submitted'],
-            initiator=self.users['fuel_supplier_1'].organization,
-            respondent=self.users['fuel_supplier_2'].organization,
+            initiator=self.users['fs_user_1'].organization,
+            respondent=self.users['fs_user_2'].organization,
             type=self.credit_trade_types['sell'],
             number_of_credits=1000,
             fair_market_value_per_credit=1,
@@ -209,7 +212,7 @@ class TestCreditTrades(BaseTestCase):
             'type': credit_trade.type_id
         }
 
-        response = self.clients['fuel_supplier_2'].put(
+        response = self.clients['fs_user_2'].put(
             '/api/credit_trades/{}'.format(credit_trade.id),
             content_type='application/json',
             data=json.dumps(payload)
@@ -230,7 +233,7 @@ class TestCreditTrades(BaseTestCase):
             'type': credit_trade.type_id
         }
 
-        response = self.clients['fuel_supplier_1'].put(
+        response = self.clients['fs_user_1'].put(
             '/api/credit_trades/{}'.format(credit_trade.id),
             content_type='application/json',
             data=json.dumps(payload)

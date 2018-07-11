@@ -31,7 +31,7 @@ class CreditTradeViewSet(AuditableMixin, mixins.CreateModelMixin,
                          mixins.ListModelMixin, viewsets.GenericViewSet):
     """
     This viewset automatically provides `list`, `create`, `retrieve`,
-    `update` and `destroy` actions.
+    and `update` actions.
     """
 
     permission_classes = (permissions.AllowAny,)
@@ -113,17 +113,6 @@ class CreditTradeViewSet(AuditableMixin, mixins.CreateModelMixin,
     def perform_update(self, serializer):
         credit_trade = serializer.save()
         CreditTradeService.create_history(credit_trade, False)
-
-    @detail_route()
-    def history(self, request, pk=None):
-        """
-        Get the credit trade history
-        """
-        credit_trade = self.get_object()
-        history = CreditTradeHistory.objects.filter(credit_trade=credit_trade)
-        serializer = self.get_serializer(history, many=True)
-
-        return Response(serializer.data)
 
     @detail_route(methods=['put'])
     def delete(self, request, pk=None):

@@ -77,7 +77,7 @@ class CreditTradeService(object):
         if (new_status.status == 'Draft' or
                 (not is_new and
                  new_status.status == 'Cancelled' and
-                 previous_history.status.status == 'Draft')):
+                 (previous_history is None or previous_history.status.status == 'Draft'))):
             is_internal_history_record = True
 
         credit_trade_update_time = (

@@ -1,5 +1,6 @@
 from rest_framework import filters, mixins, permissions, viewsets
 
+from api.permissions.SigningAuthorityConfirmation import SigningAuthorityConfirmationPermissions
 from auditable.views import AuditableMixin
 
 from api.models.SigningAuthorityConfirmation \
@@ -11,10 +12,9 @@ class SigningAuthorityConfirmationViewSet(AuditableMixin,
                                           mixins.CreateModelMixin,
                                           viewsets.GenericViewSet):
     """
-    This viewset automatically provides `list`, `create`, `retrieve`,
-    `update` and `destroy` actions.
+    This viewset mixin automatically provides `create`
     """
-    permission_classes = (permissions.AllowAny,)
+    permission_classes = (SigningAuthorityConfirmationPermissions,)
     http_method_names = ['post']
     queryset = SigningAuthorityConfirmation.objects.all()
     filter_backends = (filters.OrderingFilter,)

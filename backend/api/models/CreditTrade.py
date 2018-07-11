@@ -123,25 +123,6 @@ class CreditTrade(Auditable):
         return self.number_of_credits * self.fair_market_value_per_credit
 
     @property
-    def status_display(self):
-        """
-        Display text for the status in a user-friendly way
-        """
-        cur_status = self.status.status
-        if cur_status == "Cancelled":
-            # If this was cancelled by the initiator, it's "Rescinded"
-            # If it was cancelled by the respondent, it's "Refused"
-            # If it was cancelled by the respondent after accepting,
-            #   it's "Rescinded"
-            return "Cancelled"
-        elif cur_status == "Declined":
-            return "Declined for approval"
-        elif cur_status == "Recommended":
-            return "Recommended for decision"
-
-        return cur_status
-
-    @property
     def comments(self):
         """
         Comments that are only viewable for roles that have a

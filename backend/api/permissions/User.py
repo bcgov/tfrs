@@ -7,7 +7,6 @@
 
     OpenAPI spec version: v1
 
-
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
     You may obtain a copy of the License at
@@ -20,13 +19,31 @@
     See the License for the specific language governing permissions and
     limitations under the License.
 """
-from rest_framework import serializers
 
-from api.models.UserDetailsViewModel import UserDetailsViewModel
+from rest_framework import permissions
 
 
-class UserDetailsViewModelSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = UserDetailsViewModel
-        fields = (
-            'id', 'first_name', 'last_name', 'email', 'active', 'permissions')
+class UserPermissions(permissions.BasePermission):
+    """Used by Viewset to check permissions for API requests"""
+
+    def has_permission(self, request, view):
+        """Check permissions When an object does not yet exist (POST)"""
+
+        # Fallback to has_object_permission unless it's a POST
+        if request.method != 'POST':
+            return True
+
+        return request.user.has_perm('USER_MANAGEMENT')
+
+    def has_object_permission(self, request, view, obj):
+        """Check permissions When an object does exist (PUT, GET)"""
+
+        if request.user.has_perm('USER_MANAGEMENT'):
+            return True
+
+        # Users can always see and edit themselves
+        if obj.id == request.user.id:
+            return True
+
+        # not authorized
+        return False
