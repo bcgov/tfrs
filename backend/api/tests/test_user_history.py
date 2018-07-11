@@ -39,9 +39,9 @@ class TestUserHistory(BaseTestCase):
         super().setUp()
         payload = {
             'fairMarketValuePerCredit': '10.00',
-            'initiator': self.users['fuel_supplier_1'].organization_id,
+            'initiator': self.users['fs_user_1'].organization_id,
             'numberOfCredits': 1,
-            'respondent': self.users['fuel_supplier_2'].organization_id,
+            'respondent': self.users['fs_user_2'].organization_id,
             'status': self.statuses['submitted'].id,
             'tradeEffectiveDate': datetime.datetime.today().strftime(
                 '%Y-%m-%d'
@@ -50,7 +50,7 @@ class TestUserHistory(BaseTestCase):
         }
 
         # Propose a trade
-        self.clients['fuel_supplier_1'].post(
+        self.clients['fs_user_1'].post(
             '/api/credit_trades',
             content_type='application/json',
             data=json.dumps(payload))
@@ -58,8 +58,8 @@ class TestUserHistory(BaseTestCase):
         # Accept a proposal
         credit_trade = CreditTrade.objects.create(
             status=self.statuses['submitted'],
-            initiator=self.users['fuel_supplier_2'].organization,
-            respondent=self.users['fuel_supplier_1'].organization,
+            initiator=self.users['fs_user_2'].organization,
+            respondent=self.users['fs_user_1'].organization,
             type=self.credit_trade_types['sell'],
             number_of_credits=10,
             fair_market_value_per_credit=1,
@@ -80,7 +80,7 @@ class TestUserHistory(BaseTestCase):
             'type': credit_trade.type.id
         }
 
-        self.clients['fuel_supplier_1'].put(
+        self.clients['fs_user_1'].put(
             '/api/credit_trades/{}'.format(
                 credit_trade.id
             ),
@@ -99,7 +99,7 @@ class TestUserHistory(BaseTestCase):
             'type': credit_trade.type.id
         }
 
-        self.clients['gov'].put(
+        self.clients['gov_director'].put(
             '/api/credit_trades/{}'.format(
                 credit_trade.id
             ),
@@ -119,7 +119,7 @@ class TestUserHistory(BaseTestCase):
             'type': credit_trade.type.id
         }
 
-        self.clients['fuel_supplier_1'].put(
+        self.clients['fs_user_1'].put(
             '/api/credit_trades/{}'.format(
                 credit_trade.id
             ),
@@ -129,8 +129,8 @@ class TestUserHistory(BaseTestCase):
         # Refuse a proposal
         credit_trade = CreditTrade.objects.create(
             status=self.statuses['submitted'],
-            initiator=self.users['fuel_supplier_2'].organization,
-            respondent=self.users['fuel_supplier_1'].organization,
+            initiator=self.users['fs_user_2'].organization,
+            respondent=self.users['fs_user_1'].organization,
             type=self.credit_trade_types['sell'],
             number_of_credits=10,
             fair_market_value_per_credit=1,
@@ -151,7 +151,7 @@ class TestUserHistory(BaseTestCase):
             'type': credit_trade.type.id
         }
 
-        self.clients['fuel_supplier_1'].put(
+        self.clients['fs_user_1'].put(
             '/api/credit_trades/{}'.format(
                 credit_trade.id
             ),
@@ -163,9 +163,9 @@ class TestUserHistory(BaseTestCase):
         As a fuel supplier, I should the activities I was involved with:
         I should see Accepted, Refused, Submitted and Rescinded proposals
         """
-        response = self.clients['fuel_supplier_1'].get(
+        response = self.clients['fs_user_1'].get(
             '/api/users/{}'.format(
-                self.users['fuel_supplier_1']
+                self.users['fs_user_1']
             )
         )
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -190,21 +190,21 @@ class TestUserHistory(BaseTestCase):
                 # make sure we don't see any entries that our organization is
                 # not a part of
                 if credit_trade.initiator.id == \
-                    self.users['fuel_supplier_1'].organization.id or \
+                    self.users['fs_user_1'].organization.id or \
                     credit_trade.respondent.id == \
-                        self.users['fuel_supplier_1'].organization.id:
+                        self.users['fs_user_1'].organization.id:
                     correct_view = True
 
             self.assertTrue(correct_view)
 
     def test_user_history_as_government_user(self):
         """
-        As a government user, I can view the activities of a person:
+        As a government admin, I can view the activities of a person:
         I should not see submitted and refused proposals
         """
-        response = self.clients['gov'].get(
+        response = self.clients['gov_admin'].get(
             '/api/users/{}'.format(
-                self.users['fuel_supplier_1']
+                self.users['fs_user_1']
             )
         )
         self.assertEqual(response.status_code, status.HTTP_200_OK)

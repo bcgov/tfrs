@@ -39,15 +39,15 @@ class MemberSerializer(serializers.ModelSerializer):
 
 
 class UserSerializer(serializers.ModelSerializer):
-    organization = OrganizationSerializer(read_only=True)
+    organization = OrganizationMinSerializer(read_only=True)
     role = RoleSerializer(read_only=True)
 
     class Meta:
         model = User
         fields = (
             'id', 'first_name', 'last_name', 'email', 'authorization_id',
-            'authorization_guid', 'authorization_directory', 'display_name',
-            'organization', 'organization_balance', 'role')
+            'username', 'authorization_directory', 'display_name',
+            'organization', 'role')
 
 
 class UserMinSerializer(serializers.ModelSerializer):

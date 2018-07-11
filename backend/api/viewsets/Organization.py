@@ -1,6 +1,6 @@
 from django.db.models import Sum
 
-from rest_framework import viewsets, permissions
+from rest_framework import viewsets, permissions, mixins
 from rest_framework.decorators import list_route, detail_route
 from rest_framework.response import Response
 
@@ -17,16 +17,19 @@ from api.serializers import OrganizationSerializer
 from api.serializers import OrganizationBalanceSerializer
 from api.serializers import OrganizationHistorySerializer
 from api.serializers import OrganizationMinSerializer
+from api.permissions.OrganizationPermissions import OrganizationPermissions
 
 
-class OrganizationViewSet(AuditableMixin, viewsets.ModelViewSet):
+class OrganizationViewSet(AuditableMixin, viewsets.GenericViewSet, mixins.CreateModelMixin,
+                          mixins.ListModelMixin, mixins.UpdateModelMixin,
+                          mixins.RetrieveModelMixin):
     """
     This viewset automatically provides `list`, `create`, `retrieve`,
-    `update` and `destroy` actions.
+    and `update`  actions.
     """
 
-    permission_classes = (permissions.AllowAny,)
-    # http_method_names = ['get', 'post', 'put']
+    permission_classes = (OrganizationPermissions,)
+    http_method_names = ['get', 'post', 'put', 'patch']
     queryset = Organization.objects.all()
     serializer_class = OrganizationSerializer
 
@@ -58,30 +61,10 @@ class OrganizationViewSet(AuditableMixin, viewsets.ModelViewSet):
         serializer = self.get_serializer(fuel_suppliers, many=True)
         return Response(serializer.data)
 
-    @detail_route(methods=['put'])
-    @permission_required('VIEW_FUEL_SUPPLIERS')
-    def delete(self, request, pk=None):
-        """Destroys the specified organization"""
-        return self.destroy(request, pk=pk)
-
     @list_route(methods=['get'])
     @permission_required('VIEW_FUEL_SUPPLIERS')
     def search(self, request):
         return self.list(request)
-
-    @detail_route()
-    @permission_required('VIEW_FUEL_SUPPLIERS')
-    def history(self, request, pk=None):
-        """
-        Get the organization history
-        """
-        organization = self.get_object()
-        history = OrganizationHistory.objects.filter(
-            organization=organization)
-
-        serializer = self.get_serializer(history, many=True)
-
-        return Response(serializer.data)
 
     @detail_route()
     @permission_required('VIEW_FUEL_SUPPLIERS')
@@ -98,11 +81,11 @@ class OrganizationViewSet(AuditableMixin, viewsets.ModelViewSet):
 
         return Response(serializer.data)
 
+    @permission_required('VIEW_FUEL_SUPPLIERS')
     @detail_route()
     def users(self, request, pk=None):
         """
-        Returns a list of all the group names that the given
-        user belongs to.
+        Returns a list of all the users within the given organization
         """
         organization = self.get_object()
         users = organization.users.all()
@@ -113,7 +96,7 @@ class OrganizationViewSet(AuditableMixin, viewsets.ModelViewSet):
         fuel_suppliers = Organization.objects.extra(
             select={'lower_name': 'lower(name)'}) \
             .filter(type=OrganizationType.objects.get(
-                type="Part3FuelSupplier")) \
+            type="Part3FuelSupplier")) \
             .order_by('lower_name')
 
         serializer = self.get_serializer(fuel_suppliers, many=True)

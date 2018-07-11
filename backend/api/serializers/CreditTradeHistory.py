@@ -28,7 +28,7 @@ from .CreditTradeStatus import CreditTradeStatusSerializer, \
                                CreditTradeStatusMinSerializer
 from .CreditTradeType import CreditTradeTypeSerializer
 from .CreditTradeZeroReason import CreditTradeZeroReasonSerializer
-from .Organization import OrganizationSerializer, OrganizationMinSerializer
+from .Organization import OrganizationMinSerializer
 
 
 class CreditTradeHistorySerializer(serializers.ModelSerializer):
@@ -44,8 +44,8 @@ class CreditTradeHistorySerializer(serializers.ModelSerializer):
 
 class CreditTradeHistory2Serializer(serializers.ModelSerializer):
     status = CreditTradeStatusSerializer(read_only=True)
-    initiator = OrganizationSerializer(read_only=True)
-    respondent = OrganizationSerializer(read_only=True)
+    initiator = OrganizationMinSerializer(read_only=True)
+    respondent = OrganizationMinSerializer(read_only=True)
     type = CreditTradeTypeSerializer(read_only=True)
     zero_reason = CreditTradeZeroReasonSerializer(read_only=True)
 
@@ -61,6 +61,13 @@ class CreditTradeHistoryCreateSerializer(serializers.ModelSerializer):
 
 
 class CreditTradeHistoryMinSerializer(serializers.ModelSerializer):
+    """
+    Credit History Serializer in perspective of the User
+    - What was the Credit Trade associated with the entry
+    - Which fuel supplier involved
+    - Was it rescinded
+    - What type of Credit Trade was it
+    """
     fuel_supplier = serializers.SerializerMethodField()
     status_id = serializers.SerializerMethodField()
     type = CreditTradeTypeSerializer(read_only=True)
@@ -95,6 +102,12 @@ class CreditTradeHistoryMinSerializer(serializers.ModelSerializer):
 
 
 class CreditTradeHistoryReviewedSerializer(serializers.ModelSerializer):
+    """
+    Credit Trade History Serializer in perspective of the Credit Trade
+    - Who signed the credit trade
+    - What status was it updated to
+    - Was the proposal rescinded
+    """
     from .User import UserMinSerializer
 
     status = CreditTradeStatusMinSerializer(read_only=True)

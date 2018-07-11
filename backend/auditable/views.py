@@ -8,20 +8,6 @@ from api.models.User import User
 
 class AuditableMixin(object,):
 
-    def audit(self, request):
-        header_user_guid = request.META.get('HTTP_SMAUTH_USERGUID')
-        user = User.objects.get(authorization_guid=header_user_guid)
-
-        if self.action == 'create':
-            request.data.update({
-                'create_user': user.id
-            })
-
-        request.data.update({
-            'update_user': user.id
-        })
-        return request
-
     def serialize_object(self, request, data):
         header_user_guid = request.META.get('HTTP_SMAUTH_USERGUID')
         user = User.objects.get(authorization_guid=header_user_guid)

@@ -26,7 +26,6 @@ from .CreditTradeHistory import *
 from .CreditTradeStatus import *
 from .CreditTradeType import *
 from .CreditTradeZeroReason import *
-from .CurrentUserViewModel import *
 from .Organization import *
 from .OrganizationActionsType import *
 from .OrganizationAttachment import *
@@ -34,15 +33,9 @@ from .OrganizationBalance import *
 from .OrganizationHistory import *
 from .OrganizationStatus import *
 from .Permission import *
-from .PermissionViewModel import *
 from .Role import *
 from .RolePermission import *
-from .RolePermissionViewModel import *
-from .RoleViewModel import *
 from .SigningAuthorityAssertion import *
 from .SigningAuthorityConfirmation import *
 from .User import *
-from .UserDetailsViewModel import *
 from .UserRole import *
-from .UserRoleViewModel import *
-from .UserViewModel import *

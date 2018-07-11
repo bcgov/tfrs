@@ -3,6 +3,7 @@ from rest_framework.decorators import list_route, detail_route
 from rest_framework.response import Response
 from rest_framework import filters
 
+from api.permissions.CompliancePeriod import CompliancePeriodPermissions
 from auditable.views import AuditableMixin
 
 from api.models.CompliancePeriod import CompliancePeriod
@@ -16,11 +17,11 @@ class CompliancePeriodViewSet(AuditableMixin, mixins.CreateModelMixin,
                               mixins.ListModelMixin, viewsets.GenericViewSet):
     """
     This viewset automatically provides `list`, `create`, `retrieve`,
-    `update` and `destroy` actions.
+    and `update` actions.
     """
 
-    permission_classes = (permissions.AllowAny,)
-    http_method_names = ['get', 'post', 'put']
+    permission_classes = (CompliancePeriodPermissions,)
+    http_method_names = ['get', 'post', 'put', 'patch']
     queryset = CompliancePeriod.objects.all()
     filter_backends = (filters.OrderingFilter,)
     ordering_fields = '__all__'

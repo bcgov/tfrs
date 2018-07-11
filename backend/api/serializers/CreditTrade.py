@@ -20,6 +20,7 @@
     See the License for the specific language governing permissions and
     limitations under the License.
 """
+from django.forms.models import model_to_dict
 from rest_framework import serializers
 
 from api.models.CreditTrade import CreditTrade
@@ -58,6 +59,21 @@ class CreditTradeCreateSerializer(serializers.ModelSerializer):
     """
     def validate(self, data):
         request = self.context['request']
+
+        # no user should be allowed to create a rescinded proposal
+        if data.get('is_rescinded') is True:
+            raise serializers.ValidationError({
+                'invalidStatus': "You cannot create a rescinded proposal"
+            })
+
+        # if the user creating the proposal is not the initiator.
+        # they should be a government user
+        if data.get('initiator') != request.user.organization and \
+                not request.user.role.is_government_role:
+            raise serializers.ValidationError({
+                'invalidStatus': "You cannot create a proposal for another "
+                                 "organization."
+            })
 
         available_statuses = []
 
@@ -178,6 +194,23 @@ class CreditTradeUpdateSerializer(serializers.ModelSerializer):
                 'readOnly': "Cannot update a transaction that's already "
                             "been `{}`.".format(self.instance.status.status)
             })
+
+        # if the user is the respondent, they really shouldn't be modifying
+        # other fields. So reset those to be sure that they weren't changed
+        if self.instance.respondent == request.user.organization:
+            data = {
+                'compliance_period': self.instance.compliance_period,
+                'fair_market_value_per_credit':
+                self.instance.fair_market_value_per_credit,
+                'initiator': self.instance.initiator,
+                'is_rescinded': bool(data.get('is_rescinded')),
+                'number_of_credits': self.instance.number_of_credits,
+                'respondent': self.instance.respondent,
+                'status': data.get('status'),
+                'type': self.instance.type,
+                'update_user': request.user,
+                'zero_reason': self.instance.zero_reason
+            }
 
         # if status is being modified, make sure the next state is valid
         if 'status' in request.data:
@@ -349,7 +382,7 @@ class CreditTrade2Serializer(serializers.ModelSerializer):
 
     class Meta:
         model = CreditTrade
-        fields = ('id', 'status', 'status_display',
+        fields = ('id', 'status',
                   'initiator', 'respondent',
                   'type', 'number_of_credits',
                   'fair_market_value_per_credit', 'total_value',

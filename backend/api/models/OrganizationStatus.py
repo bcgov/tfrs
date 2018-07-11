@@ -22,7 +22,7 @@
 from django.db import models
 
 from auditable.models import Auditable
-
+from api.managers.OrganizationStatusManager import OrganizationStatusManager
 
 class OrganizationStatus(Auditable):
     status = models.CharField(max_length=25, unique=True)
@@ -30,6 +30,11 @@ class OrganizationStatus(Auditable):
     effective_date = models.DateField(blank=True, null=True)
     expiration_date = models.DateField(blank=True, null=True)
     display_order = models.IntegerField()
+
+    objects = OrganizationStatusManager()
+
+    def natural_key(self):
+        return (self.status,)
 
     class Meta:
         db_table = 'organization_status'
