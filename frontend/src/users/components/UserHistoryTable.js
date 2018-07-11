@@ -63,7 +63,7 @@ const UserHistoryTable = (props) => {
     id: 'updateTimestamp',
     minWidth: 50
   }, {
-    accessor: item => item.fuelSupplier,
+    accessor: item => item.fuelSupplier.name,
     Header: 'Fuel Supplier',
     id: 'fuelSupplier',
     minWidth: 100

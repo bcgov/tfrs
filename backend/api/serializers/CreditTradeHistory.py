@@ -76,11 +76,18 @@ class CreditTradeHistoryMinSerializer(serializers.ModelSerializer):
         context for the credit trade
         """
         if obj.credit_trade.type.id in [1, 3, 5]:
-            return obj.credit_trade.initiator.name
+            fuel_supplier = obj.credit_trade.initiator
+        else:
+            fuel_supplier = obj.credit_trade.respondent
 
-        return obj.credit_trade.respondent.name
+        serializer = OrganizationMinSerializer(fuel_supplier, read_only=True)
+        return serializer.data
 
     def get_status_id(self, obj):
+        """
+        Returns the status_id unless it's rescinded.
+        This is to hide the review information from non-government users
+        """
         if obj.is_rescinded is True:
             return None
 
