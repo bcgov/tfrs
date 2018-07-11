@@ -78,22 +78,6 @@ class User(AbstractUser, Auditable):
         return str(self.id)
 
     @property
-    def organization_balance(self):
-        """
-        Credit Balance of the organization this user belongs to
-        """
-        organization_balance = OrganizationBalance.objects.filter(
-            organization_id=self.organization.id,
-            expiration_date=None).first()
-
-        if organization_balance:
-            balance = organization_balance.validated_credits
-        else:
-            balance = 0
-
-        return balance
-
-    @property
     def role(self):
         """
         Role applied to the User

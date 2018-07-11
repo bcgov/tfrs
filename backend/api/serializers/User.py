@@ -39,7 +39,7 @@ class MemberSerializer(serializers.ModelSerializer):
 
 
 class UserSerializer(serializers.ModelSerializer):
-    organization = OrganizationMinSerializer(read_only=True)
+    organization = OrganizationSerializer(read_only=True)
     role = RoleSerializer(read_only=True)
 
     class Meta:
