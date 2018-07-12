@@ -27,10 +27,14 @@ from auditable.models import Auditable
 
 
 class CompliancePeriod(Auditable):
-    description = models.CharField(max_length=1000, blank=True, null=True)
-    display_order = models.IntegerField()
-    effective_date = models.DateField(blank=True, null=True)
-    expiration_date = models.DateField(blank=True, null=True)
+    description = models.CharField(max_length=1000, blank=True, null=True,
+                                   db_comment='Displayed name')
+
+    display_order = models.IntegerField(db_comment='Relative rank in display sorting order')
+    effective_date = models.DateField(blank=True, null=True, db_comment='Not valid before')
+    expiration_date = models.DateField(blank=True, null=True, db_comment='Not valid after')
 
     class Meta:
         db_table = 'compliance_period'
+
+    db_table_comment = 'Compliance Periods'

@@ -25,13 +25,22 @@ from auditable.models import Auditable
 from api.managers.CreditTradeStatusManager import CreditTradeStatusManager
 
 
-
 class CreditTradeStatus(Auditable):
-    status = models.CharField(max_length=25, blank=True, null=True, unique=True)
-    description = models.CharField(max_length=4000, blank=True, null=True)
-    effective_date = models.DateField(blank=True, null=True)
-    expiration_date = models.DateField(blank=True, null=True)
-    display_order = models.IntegerField()
+    status = models.CharField(
+        max_length=25,
+        blank=True,
+        null=True,
+        unique=True,
+        db_comment='Status enumeration. This determines visibility and possible actions'
+                   'for credit transfers. Natural key.'
+    )
+    description = models.CharField(max_length=4000,
+                                   blank=True,
+                                   null=True,
+                                   db_comment='Displayed name')
+    display_order = models.IntegerField(db_comment='Relative rank in display sorting order')
+    effective_date = models.DateField(blank=True, null=True, db_comment='Not valid before')
+    expiration_date = models.DateField(blank=True, null=True, db_comment='Not valid after')
 
     objects = CreditTradeStatusManager()
 
@@ -59,3 +68,6 @@ class CreditTradeStatus(Auditable):
             return 'Decline to Approve'
         elif self.status == 'Refused':
             return 'Refuse'
+
+    db_table_comment = 'Possible states that a credit transfer may be in.' \
+                       ' Application logic is couplied tightly to this table.'

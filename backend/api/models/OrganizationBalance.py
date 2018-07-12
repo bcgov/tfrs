@@ -33,9 +33,12 @@ class OrganizationBalance(Auditable):
         'Organization',
         related_name='balances',
         on_delete=models.CASCADE)
-    validated_credits = models.BigIntegerField()
-    effective_date = models.DateField(blank=True, null=True)
-    expiration_date = models.DateField(blank=True, null=True)
+    validated_credits = models.BigIntegerField(
+        db_comment='Validated LCF credits during validity period'
+    )
+
+    effective_date = models.DateField(blank=True, null=True, db_comment='Not valid before')
+    expiration_date = models.DateField(blank=True, null=True, db_comment='Not valid after')
 
     credit_trade = models.ForeignKey(
         'CreditTrade',
@@ -45,3 +48,5 @@ class OrganizationBalance(Auditable):
 
     class Meta:
         db_table = 'organization_balance'
+
+    db_table_comment = 'Possible rationales for a zero-valued credit transfer'

@@ -28,10 +28,15 @@ from auditable.models import Auditable
 from .Permission import Permission
 from api.managers.RoleManager import RoleManager
 
+
 class Role(Auditable):
-    name = models.CharField(max_length=200, unique=True)
-    description = models.CharField(max_length=1000)
-    is_government_role = models.BooleanField(default=False)
+    name = models.CharField(max_length=200, unique=True, db_comment='Role code. Natural key.')
+    description = models.CharField(
+        max_length=1000,
+        db_comment='Descriptive text explaining this role.')
+    is_government_role = models.BooleanField(
+        default=False,
+        db_comment='Flag. True if this is a government role (eg. Analyst, Administrator)')
 
     @property
     def permissions(self):
