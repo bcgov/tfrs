@@ -45,5 +45,10 @@ class UserPermissions(permissions.BasePermission):
         if obj.id == request.user.id:
             return True
 
+        # Users should be able to see other users from within their
+        # organization
+        if obj.organization == request.user.organization:
+            return True
+
         # not authorized
         return False
