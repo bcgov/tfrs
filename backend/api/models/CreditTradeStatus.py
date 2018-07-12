@@ -32,7 +32,7 @@ class CreditTradeStatus(Auditable):
         null=True,
         unique=True,
         db_comment='Status enumeration. This determines visibility and possible actions'
-                   'for credit transfers. Natural key.'
+                   ' for credit transfers. Natural key.'
     )
     description = models.CharField(max_length=4000,
                                    blank=True,

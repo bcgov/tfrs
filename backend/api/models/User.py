@@ -28,9 +28,8 @@ import django.contrib.auth.validators
 
 from auditable.models import Auditable
 from api.managers.UserManager import UserManager
-from db_comments.model_mixins import DBComments
+from .CreditTradeHistory import CreditTradeHistory
 
-from .OrganizationBalance import OrganizationBalance
 from .UserRole import UserRole
 
 
