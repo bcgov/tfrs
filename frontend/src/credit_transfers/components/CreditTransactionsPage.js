@@ -21,7 +21,8 @@ const CreditTransactionsPage = (props) => {
           !props.loggedInUser.role.isGovernmentRole &&
           <h3>
             Credit Balance: {
-              numeral(props.loggedInUser.organizationBalance).format(NumberFormat.INT)
+              numeral(props.loggedInUser.organization.organizationBalance.validatedCredits)
+                .format(NumberFormat.INT)
             }
           </h3>
         }
@@ -34,7 +35,8 @@ const CreditTransactionsPage = (props) => {
               <h3>All Organizations</h3>
               <h3>
                 Credit Balance: {
-                  numeral(1000000000000000 - props.loggedInUser.organizationBalance)
+                  numeral(1000000000000000 -
+                    props.loggedInUser.organization.organizationBalance.validatedCredits)
                     .format(NumberFormat.INT)
                 }
               </h3>
@@ -117,9 +119,11 @@ CreditTransactionsPage.propTypes = {
     hasPermission: PropTypes.func,
     organization: PropTypes.shape({
       id: PropTypes.number,
-      name: PropTypes.string
+      name: PropTypes.string,
+      organizationBalance: PropTypes.shape({
+        validatedCredits: PropTypes.number
+      })
     }),
-    organizationBalance: PropTypes.number,
     role: PropTypes.shape({
       id: PropTypes.number,
       isGovernmentRole: PropTypes.bool

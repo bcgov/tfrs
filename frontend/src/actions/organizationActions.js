@@ -64,7 +64,7 @@ const getOrganization = id => (dispatch) => {
 const getOrganizationError = error => ({
   errorMessage: error,
   name: ReducerTypes.ERROR_ORGANIZATION_REQUEST,
-  type: ActionTypes.ERROR_ORGANIZATION
+  type: ActionTypes.ERROR
 });
 
 const getOrganizationMembersError = error => ({
@@ -109,7 +109,7 @@ const getOrganizations = () => (dispatch, getState) => {
 const getOrganizationsError = error => ({
   errorMessage: error,
   name: ReducerTypes.ERROR_ORGANIZATIONS_REQUEST,
-  type: ActionTypes.ERROR_ORGANIZATIONS
+  type: ActionTypes.ERROR
 });
 
 const getOrganizationsRequest = () => ({
@@ -137,7 +137,7 @@ const searchOrganizations = (name, city) => (dispatch) => {
 const searchOrganizationsError = error => ({
   errorMessage: error,
   name: ReducerTypes.SEARCH_ORGANIZATIONS_REQUEST,
-  type: ActionTypes.ERROR_ORGANIZATIONS
+  type: ActionTypes.ERROR
 });
 
 const searchOrganizationsRequest = () => ({

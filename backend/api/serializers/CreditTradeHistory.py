@@ -29,7 +29,6 @@ from .CreditTradeStatus import CreditTradeStatusSerializer, \
 from .CreditTradeType import CreditTradeTypeSerializer
 from .CreditTradeZeroReason import CreditTradeZeroReasonSerializer
 from .Organization import OrganizationMinSerializer
-from .User import UserMinSerializer
 
 
 class CreditTradeHistorySerializer(serializers.ModelSerializer):
@@ -61,10 +60,60 @@ class CreditTradeHistoryCreateSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
+class CreditTradeHistoryMinSerializer(serializers.ModelSerializer):
+    """
+    Credit History Serializer in perspective of the User
+    - What was the Credit Trade associated with the entry
+    - Which fuel supplier involved
+    - Was it rescinded
+    - What type of Credit Trade was it
+    """
+    fuel_supplier = serializers.SerializerMethodField()
+    status_id = serializers.SerializerMethodField()
+    type = CreditTradeTypeSerializer(read_only=True)
+
+    class Meta:
+        model = CreditTradeHistory
+        fields = ('id', 'credit_trade_id', 'fuel_supplier', 'is_rescinded',
+                  'status_id', 'type', 'credit_trade_update_time')
+
+    def get_fuel_supplier(self, obj):
+        """
+        Returns the fuel supplier of the opposite end to give more
+        context for the credit trade
+        """
+        if obj.credit_trade.type.id in [1, 3, 5]:
+            fuel_supplier = obj.credit_trade.initiator
+        else:
+            fuel_supplier = obj.credit_trade.respondent
+
+        serializer = OrganizationMinSerializer(fuel_supplier, read_only=True)
+        return serializer.data
+
+    def get_status_id(self, obj):
+        """
+        Returns the status_id unless it's rescinded.
+        This is to hide the review information from non-government users
+        """
+        if obj.is_rescinded is True:
+            return None
+
+        return obj.status_id
+
+
 class CreditTradeHistoryReviewedSerializer(serializers.ModelSerializer):
+    """
+    Credit Trade History Serializer in perspective of the Credit Trade
+    - Who signed the credit trade
+    - What status was it updated to
+    - Was the proposal rescinded
+    """
+    from .User import UserMinSerializer
+
     status = CreditTradeStatusMinSerializer(read_only=True)
     user = UserMinSerializer(read_only=True)
 
     class Meta:
         model = CreditTradeHistory
-        fields = ('user', 'status', 'is_rescinded', 'credit_trade_update_time')
+        fields = ('credit_trade', 'user', 'status', 'is_rescinded',
+                  'credit_trade_update_time')

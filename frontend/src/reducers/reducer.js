@@ -5,7 +5,7 @@ import * as ActionTypes from '../constants/actionTypes';
 import * as ReducerTypes from '../constants/reducerTypes';
 
 import { approvedCreditTransfers, creditTransfer, creditTransfers } from './creditTransferReducer';
-import { userRequest, usersRequest } from './userReducer';
+import { userRequest, userViewRequest } from './userReducer';
 
 import { organizationRequest, organizations, organizationMembers, fuelSuppliersRequest } from './organizationReducer';
 import errorRequest from './errorReducer';
@@ -97,7 +97,7 @@ const rootReducer = combineReducers({
   [ReducerTypes.CREDIT_TRADE_STATUSES]: createReducer(genericRequest, ReducerTypes.CREDIT_TRADE_STATUSES),
   [ReducerTypes.CREDIT_TRADE_TYPES]: createReducer(genericRequest, ReducerTypes.CREDIT_TRADE_TYPES),
   userRequest,
-  usersRequest,
+  userViewRequest,
   compliancePeriods,
   approvedCreditTransfers,
   creditTransfer,

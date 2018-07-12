@@ -16,7 +16,7 @@ const getSigningAuthorityAssertions = () => (dispatch) => {
 
 const getSigningAuthorityAssertionsError = error => ({
   name: ReducerTypes.ERROR_SIGNING_AUTHORITY_ASSERTIONS_REQUEST,
-  type: ActionTypes.ERROR_SIGNING_AUTHORITY_ASSERTIONS,
+  type: ActionTypes.ERROR,
   errorMessage: error
 });
 

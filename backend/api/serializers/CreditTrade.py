@@ -32,7 +32,6 @@ from api.services.CreditTradeCommentActions import CreditTradeCommentActions
 from api.services.CreditTradeService import CreditTradeService
 
 from .CreditTradeComment import CreditTradeCommentSerializer
-from .CreditTradeHistory import CreditTradeHistoryReviewedSerializer
 from .CreditTradeStatus import CreditTradeStatusMinSerializer
 from .CreditTradeType import CreditTradeTypeSerializer
 from .CreditTradeZeroReason import CreditTradeZeroReasonSerializer
@@ -444,6 +443,7 @@ class CreditTrade2Serializer(serializers.ModelSerializer):
         return serializer.data
 
     def get_history(self, obj):
+        from .CreditTradeHistory import CreditTradeHistoryReviewedSerializer
         request = self.context.get('request')
 
         # if the user is not a government user we should limit what we show

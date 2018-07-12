@@ -20,7 +20,7 @@ const addSigningAuthorityConfirmation = data => (dispatch) => {
 const addSigningAuthorityConfirmationError = error => ({
   errorMessage: error,
   name: ReducerTypes.ERROR_ADD_SIGNING_AUTHORITY_CONFIRMATION_REQUEST,
-  type: ActionTypes.ERROR_ADD_SIGNING_AUTHORITY_CONFIRMATION
+  type: ActionTypes.ERROR
 });
 
 const addSigningAuthorityConfirmationRequest = () => ({

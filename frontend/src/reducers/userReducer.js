@@ -1,4 +1,4 @@
-import * as ActionTypes from '../constants/actionTypes';
+import ActionTypes from '../constants/actionTypes/Users';
 
 const userRequest = (state = {
   error: {},
@@ -6,7 +6,8 @@ const userRequest = (state = {
   isFetching: false,
   loggedInUser: {},
   requestStarted: false,
-  serverError: false
+  serverError: false,
+  user: {}
 }, action) => {
   switch (action.type) {
     case ActionTypes.GET_LOGGED_IN_USER:
@@ -51,35 +52,39 @@ const userRequest = (state = {
   }
 };
 
-const usersRequest = (state = {
-  items: [],
-  success: false,
-  error: []
+const userViewRequest = (state = {
+  error: {},
+  isFetching: false,
+  serverError: false,
+  user: {}
 }, action) => {
   switch (action.type) {
-    case ActionTypes.GET_CREDIT_TRANSFERS:
+    case ActionTypes.GET_USER:
       return {
         ...state,
+        isAuthenticated: false,
         isFetching: true,
-        success: false
+        user: {}
       };
-    case ActionTypes.RECEIVE_CREDIT_TRANSFERS:
+    case ActionTypes.RECEIVE_USER:
       return {
         ...state,
         isFetching: false,
-        items: action.data,
-        success: true
+        user: {
+          ...action.data
+        }
       };
-    case ActionTypes.ERROR:
+    case ActionTypes.ERROR_USER:
       return {
         ...state,
         error: action.errorData,
         isFetching: false,
-        success: false
+        serverError: true,
+        user: {}
       };
     default:
       return state;
   }
 };
 
-export { userRequest, usersRequest };
+export { userRequest, userViewRequest };
