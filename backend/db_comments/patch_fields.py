@@ -49,7 +49,7 @@ class PatchedField(Field):
          Otherwise just return the comment"""
 
         if isinstance(self, ForeignKey):
-            # This has to be done after all models are instantiated (which is why
+            # This has to be done after all models are loaded (which is why
             # it's not done in the constructor)
             try:
                 remote_class = self.related_model
