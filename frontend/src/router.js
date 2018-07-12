@@ -11,6 +11,7 @@ import CONTACT_US from './constants/routes/ContactUs';
 import CREDIT_TRANSACTIONS from './constants/routes/CreditTransactions';
 import HISTORICAL_DATA_ENTRY from './constants/routes/HistoricalDataEntry';
 import ORGANIZATIONS from './constants/routes/Organizations';
+import USERS from './constants/routes/Users';
 
 import ContactUsContainer from './contact_us/ContactUsContainer';
 import CreditTransactionsContainer from './credit_transfers/CreditTransactionsContainer';
@@ -22,6 +23,7 @@ import HistoricalDataEntryEditContainer from './admin/historical_data_entry/Hist
 import NotFound from './components/reusables/NotFound';
 import OrganizationsContainer from './organizations/OrganizationsContainer';
 import OrganizationsViewContainer from './organizations/OrganizationViewContainer';
+import UserViewContainer from './users/UserViewContainer';
 
 const Router = props => (
   <ConnectedRouter history={history} key={Math.random()}>
@@ -80,6 +82,10 @@ const Router = props => (
         <Route
           path={HISTORICAL_DATA_ENTRY.EDIT}
           component={withRouter(HistoricalDataEntryEditContainer)}
+        />
+        <Route
+          path={USERS.DETAILS}
+          component={withRouter(UserViewContainer)}
         />
         <Route
           exact

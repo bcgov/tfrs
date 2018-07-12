@@ -1,0 +1,22 @@
+@import './variables.scss';
+@import './mixins.scss';
+
+.page_user {
+  > div {
+    > div + div {
+      margin-top: 1rem;
+    }
+  }
+
+  .col-action, .col-actions, .col-type {
+    text-align: center;
+  }
+
+  .col-id {
+    text-align: right;
+  }
+
+  .user_history {
+    margin-top: 3rem;
+  }
+}

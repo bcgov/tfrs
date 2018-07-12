@@ -17,6 +17,22 @@
   },
   {
     "fields": {
+      "permission": ["USER_MANAGEMENT"],
+      "role": ["GovDirector"]
+    },
+    "model": "api.rolepermission",
+    "pk": null
+  },
+  {
+    "fields": {
+      "permission": ["USER_MANAGEMENT"],
+      "role": ["GovUser"]
+    },
+    "model": "api.rolepermission",
+    "pk": null
+  },
+  {
+    "fields": {
       "permission": ["ROLES_AND_PERMISSIONS"],
       "role": ["Admin"]
     },
@@ -51,6 +67,22 @@
   },
   {
     "fields": {
+      "permission": ["VIEW_COMPLIANCE_PERIODS"],
+      "role": ["GovDirector"]
+    },
+    "model": "api.rolepermission",
+    "pk": null
+  },
+  {
+    "fields": {
+      "permission": ["VIEW_COMPLIANCE_PERIODS"],
+      "role": ["GovUser"]
+    },
+    "model": "api.rolepermission",
+    "pk": null
+  },
+  {
+    "fields": {
       "permission": ["EDIT_COMPLIANCE_PERIODS"],
       "role": ["Admin"]
     },
@@ -70,6 +102,30 @@
     "fields": {
       "permission": ["EDIT_FUEL_SUPPLIERS"],
       "role": ["Admin"]
+    },
+    "model": "api.rolepermission",
+    "pk": null
+  },
+  {
+    "fields": {
+      "permission": ["EDIT_FUEL_SUPPLIERS"],
+      "role": ["Admin"]
+    },
+    "model": "api.rolepermission",
+    "pk": null
+  },
+  {
+    "fields": {
+      "permission": ["EDIT_FUEL_SUPPLIERS"],
+      "role": ["GovDirector"]
+    },
+    "model": "api.rolepermission",
+    "pk": null
+  },
+  {
+    "fields": {
+      "permission": ["EDIT_FUEL_SUPPLIERS"],
+      "role": ["GovUser"]
     },
     "model": "api.rolepermission",
     "pk": null

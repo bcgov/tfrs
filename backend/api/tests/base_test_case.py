@@ -22,7 +22,7 @@
     limitations under the License.
 """
 
-from django.test import TestCase, Client
+from django.test import TestCase
 
 from api.models.CreditTradeStatus import CreditTradeStatus
 from api.models.CreditTradeType import CreditTradeType
@@ -81,7 +81,10 @@ class BaseTestCase(TestCase):
         super().setUpClass()
 
     def __init__(self, *args, **kwargs):
-        """Add any extra usernames that child classes have declared to our list of clients"""
+        """
+        Add any extra usernames that child classes have declared to our
+        list of clients
+        """
 
         if self.extra_usernames is not None:
             self.usernames = self.usernames + self.extra_usernames
@@ -97,20 +100,24 @@ class BaseTestCase(TestCase):
             self.usernames
         ))
 
-        self.clients = dict(map(lambda user:
-                                (user.username, LoggingClient(
-                                    HTTP_SMGOV_USERGUID=str(user.authorization_guid),
-                                    HTTP_SMGOV_USERDISPLAYNAME=str(user.display_name),
-                                    HTTP_SMGOV_USEREMAIL=str(user.authorization_email),
-                                    HTTP_SM_UNIVERSALID=str(user.authorization_id),
-                                    HTTP_SM_AUTHDIRNAME=\
-                                    'IDIR' if user.organization.id == 1 else 'BCeID',
-                                    HTTP_SMGOV_USERTYPE=\
-                                    'Internal' if user.organization.id == 1 else 'Business'
-                                )), self.users.values()))
+        self.clients = dict(
+            map(lambda user: (
+                user.username,
+                LoggingClient(
+                    HTTP_SMGOV_USERGUID=str(user.authorization_guid),
+                    HTTP_SMGOV_USERDISPLAYNAME=str(user.display_name),
+                    HTTP_SMGOV_USEREMAIL=str(user.authorization_email),
+                    HTTP_SM_UNIVERSALID=str(user.authorization_id),
+                    HTTP_SM_AUTHDIRNAME='IDIR' if user.organization.id == 1
+                    else 'BCeID',
+                    HTTP_SMGOV_USERTYPE='Internal' if user.organization.id == 1
+                    else 'Business'
+                )), self.users.values()))
 
-        from_organization = Organization.objects.get_by_natural_key("Test Org 1")
-        to_organization = Organization.objects.get_by_natural_key("Test Org 2")
+        from_organization = Organization.objects.get_by_natural_key(
+            "Test Org 1")
+        to_organization = Organization.objects.get_by_natural_key(
+            "Test Org 2")
 
         self.credit_trade_types = {
             'buy': CreditTradeType.objects.get(the_type='Buy'),

@@ -32,3 +32,9 @@ class CreditTradeTypeSerializer(serializers.ModelSerializer):
             'id', 'the_type', 'description', 'effective_date',
             'expiration_date',
             'display_order', 'is_gov_only_type')
+
+
+class CreditTradeTypeMinSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CreditTradeType
+        fields = ('id', 'the_type')

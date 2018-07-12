@@ -4,9 +4,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import ReactTable from 'react-table';
+import FontAwesomeIcon from '@fortawesome/react-fontawesome';
+import { Link } from 'react-router-dom';
 import 'react-table/react-table.css';
 
 import ROLES from '../../constants/roles';
+import USERS from '../../constants/routes/Users';
 
 const OrganizationMembersTable = (props) => {
   const columns = [{
@@ -41,7 +44,15 @@ const OrganizationMembersTable = (props) => {
     id: 'status',
     minWidth: 100
   }, {
-    accessor: null,
+    accessor: item => item.id,
+    Cell: (row) => {
+      const viewUrl = USERS.DETAILS.replace(':id', row.value);
+
+      return <Link to={viewUrl}><FontAwesomeIcon icon="eye" /></Link>;
+    },
+    className: 'col-actions',
+    filterable: false,
+    Header: '',
     id: 'actions',
     minWidth: 100
   }];
