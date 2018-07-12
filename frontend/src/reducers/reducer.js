@@ -9,6 +9,7 @@ import { userRequest, userViewRequest } from './userReducer';
 
 import { organizationRequest, organizations, organizationMembers, fuelSuppliersRequest } from './organizationReducer';
 import errorRequest from './errorReducer';
+import creditTransfersHistory from './creditTransfersHistoryReducer';
 import compliancePeriods from './compliancePeriodReducer';
 import signingAuthorityAssertions from './signingAuthorityAssertionReducer';
 
@@ -99,6 +100,7 @@ const rootReducer = combineReducers({
   userRequest,
   userViewRequest,
   compliancePeriods,
+  creditTransfersHistory,
   approvedCreditTransfers,
   creditTransfer,
   creditTransfers,

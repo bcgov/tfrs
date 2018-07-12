@@ -19,36 +19,30 @@
     See the License for the specific language governing permissions and
     limitations under the License.
 """
-from rest_framework import viewsets, mixins
-from rest_framework import filters
-
-from api.models.CreditTradeComment import CreditTradeComment
-from api.permissions.CreditTradeComment import CreditTradeCommentPermissions
-from api.serializers.CreditTradeComment import CreditTradeCommentSerializer,\
-    CreditTradeCommentUpdateSerializer, CreditTradeCommentCreateSerializer
+from rest_framework import filters, mixins, permissions, viewsets
 
 from auditable.views import AuditableMixin
 
+from api.models.CreditTradeHistory import CreditTradeHistory
+from api.permissions.CreditTradeHistory import CreditTradeHistoryPermissions
+from api.serializers import CreditTradeHistorySerializer, \
+    CreditTradeHistoryReviewedSerializer
 
-class CreditTradeCommentsViewSet(AuditableMixin,
-                                 mixins.RetrieveModelMixin,
-                                 mixins.CreateModelMixin,
-                                 mixins.UpdateModelMixin,
-                                 viewsets.GenericViewSet):
 
-    permission_classes = (CreditTradeCommentPermissions,)
-    http_method_names = ['get', 'put', 'post']
-    queryset = CreditTradeComment.objects.all()
+class CreditTradeHistoryViewSet(AuditableMixin, mixins.ListModelMixin,
+                                viewsets.GenericViewSet):
+    """
+    This viewset automatically provides `list`
+    """
+    permission_classes = (CreditTradeHistoryPermissions,)
+    http_method_names = ['get']
+    queryset = CreditTradeHistory.objects.all()
     filter_backends = (filters.OrderingFilter,)
     ordering_fields = '__all__'
-    ordering = ('create_timestamp',)
-
-    serializer_class = CreditTradeCommentSerializer
-
+    ordering = ('-update_timestamp', '-create_timestamp', '-id',)
+    serializer_class = CreditTradeHistorySerializer
     serializer_classes = {
-        'default': CreditTradeCommentSerializer,
-        'update': CreditTradeCommentUpdateSerializer,
-        'create': CreditTradeCommentCreateSerializer
+        'list': CreditTradeHistoryReviewedSerializer
     }
 
     def get_serializer_class(self):
@@ -56,3 +50,13 @@ class CreditTradeCommentsViewSet(AuditableMixin,
             return self.serializer_classes[self.action]
 
         return self.serializer_classes['default']
+
+    def get_queryset(self):
+        """
+        This view should return the credit trade history for all users
+        of the same organization as the logged-in user
+        """
+        user = self.request.user
+        return CreditTradeHistory.objects.filter(
+            user__organization_id=user.organization_id
+        )
