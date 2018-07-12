@@ -49,4 +49,5 @@ class OrganizationBalance(Auditable):
     class Meta:
         db_table = 'organization_balance'
 
-    db_table_comment = 'Possible rationales for a zero-valued credit transfer'
+    db_table_comment = 'Represents an organization\'s credit balance for a range of time'
+
