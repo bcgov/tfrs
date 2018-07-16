@@ -10,6 +10,7 @@ import PropTypes from 'prop-types';
 
 import getCreditTransfersHistory from '../../actions/creditTransferHistoryActions';
 import CreditTradeHistoryPage from './components/CreditTradeHistoryPage';
+import AdminTabs from '../components/AdminTabs';
 
 class CreditTradeHistoryContainer extends Component {
   componentWillMount () {
@@ -21,11 +22,13 @@ class CreditTradeHistoryContainer extends Component {
   }
 
   render () {
-    return (
+    return ([
+      <AdminTabs active="user-activity" key="nav" />,
       <CreditTradeHistoryPage
         data={this.props.historicalData}
+        key="page"
       />
-    );
+    ]);
   }
 }
 
