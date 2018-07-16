@@ -49,7 +49,7 @@ INSTALLED_APPS = (
     'django_extensions',
     'rest_framework',
     'tfrs',
-    'api',
+    'api.app.APIAppConfig',
     'corsheaders',
     'django_nose',
 )

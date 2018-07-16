@@ -26,11 +26,15 @@ from api.managers.OrganizationTypeManager import OrganizationTypeManager
 
 
 class OrganizationType(Auditable):
-    type = models.CharField(max_length=25, unique=True)
-    description = models.CharField(max_length=1000, blank=True, null=True)
-    effective_date = models.DateField(blank=True, null=True)
-    expiration_date = models.DateField(blank=True, null=True)
-    display_order = models.IntegerField(blank=True, null=True)
+    type = models.CharField(max_length=25,
+                            unique=True,
+                            db_comment='Organization type enumeration. Natural key.')
+    description = models.CharField(max_length=1000, blank=True, null=True,
+                                   db_comment='Displayed name')
+    display_order = models.IntegerField(blank=True, null=True,
+                                        db_comment='Relative rank in display sorting order')
+    effective_date = models.DateField(blank=True, null=True, db_comment='Not valid before')
+    expiration_date = models.DateField(blank=True, null=True, db_comment='Not valid after')
 
     def __str__(self):
         return self.type
@@ -42,3 +46,6 @@ class OrganizationType(Auditable):
 
     class Meta:
         db_table = 'organization_type'
+
+    db_table_comment = 'Possible types of organization.' \
+                       'Used to differentiate available actions and displays'

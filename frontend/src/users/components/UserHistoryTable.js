@@ -22,6 +22,13 @@ const UserHistoryTable = (props) => {
   });
 
   const columns = [{
+    accessor: 'id',
+    className: 'col-id',
+    Header: 'ID',
+    resizable: false,
+    show: false,
+    width: 50
+  }, {
     accessor: item => (item.isRescinded
       ? CREDIT_TRANSFER_STATUS.rescinded.description
       : (
