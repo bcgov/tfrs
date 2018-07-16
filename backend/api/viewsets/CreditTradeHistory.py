@@ -19,7 +19,7 @@
     See the License for the specific language governing permissions and
     limitations under the License.
 """
-from rest_framework import filters, mixins, permissions, viewsets
+from rest_framework import filters, mixins, viewsets
 
 from auditable.views import AuditableMixin
 
