@@ -27,7 +27,6 @@ from auditable.models import Auditable
 
 
 class CreditTradeComment(Auditable):
-
     credit_trade = models.ForeignKey(
         'CreditTrade',
         related_name='credit_trade_comments',
@@ -37,13 +36,19 @@ class CreditTradeComment(Auditable):
     comment = models.CharField(max_length=4000,
                                blank=True,
                                null=True,
-                               db_column='credit_trade_comment')
+                               db_column='credit_trade_comment',
+                               db_comment='Text of the comment')
 
     # require a permission to view
-    privileged_access = models.BooleanField(null=False,
-                                            default=True,
-                                            db_column='is_privileged_access')
+    privileged_access = models.BooleanField(
+        null=False,
+        default=True,
+        db_column='is_privileged_access',
+        db_comment='Flag. True if this is for internal government viewing only.'
+    )
 
     class Meta:
         db_table = 'credit_trade_comment'
         ordering = ['create_timestamp']
+
+    db_table_comment = 'User comments on credit transfers'

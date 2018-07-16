@@ -28,7 +28,7 @@ from .OrganizationBalance import OrganizationBalance
 
 
 class Organization(Auditable):
-    name = models.CharField(max_length=500)
+    name = models.CharField(max_length=500, db_comment='Organization\'s legal name')
     status = models.ForeignKey(
         'OrganizationStatus',
         related_name='organizations',

@@ -28,9 +28,8 @@ import django.contrib.auth.validators
 
 from auditable.models import Auditable
 from api.managers.UserManager import UserManager
-
 from .CreditTradeHistory import CreditTradeHistory
-from .OrganizationBalance import OrganizationBalance
+
 from .UserRole import UserRole
 
 
@@ -44,21 +43,22 @@ class User(AbstractUser, Auditable):
                   "@/./+/-/_ only.",
         max_length=150, unique=True,
         validators=[django.contrib.auth.validators.UnicodeUsernameValidator()],
-        verbose_name='username'
+        verbose_name='username',
+        db_comment='Login Username'
     )
     phone_regex = RegexValidator(regex=r'^\+?1?\d{9,15}$',
                                  message="Phone number must be entered in the "
                                  "format: '+999999999'. Up to 15 digits "
                                  "allowed.")
 
-    password = models.CharField(max_length=128, blank=True, null=True)
-    email = email = models.EmailField(blank=True, null=True)
+    password = models.CharField(max_length=128, blank=True, null=True, db_comment='Password hash')
+    email = models.EmailField(blank=True, null=True, db_comment='Primary email address')
 
-    title = models.CharField(max_length=100, blank=True, null=True)
+    title = models.CharField(max_length=100, blank=True, null=True, db_comment='Professional Title')
     phone = models.CharField(validators=[phone_regex], max_length=17,
-                             blank=True, null=True)
+                             blank=True, null=True, db_comment='Primary phone number')
     cell_phone = models.CharField(validators=[phone_regex], max_length=17,
-                                  blank=True, null=True)
+                                  blank=True, null=True, db_comment='Mobile phone number')
     organization = models.ForeignKey(
         'Organization',
         related_name='users',
@@ -67,12 +67,17 @@ class User(AbstractUser, Auditable):
     expiration_date = models.DateField(blank=True, null=True)
 
     # Siteminder headers
-    authorization_id = models.CharField(max_length=500, blank=True, null=True)
-    authorization_guid = models.UUIDField(unique=True, default=None, null=True)
+    authorization_id = models.CharField(max_length=500, blank=True, null=True,
+                                        db_comment='Siteminder Header')
+    authorization_guid = models.UUIDField(unique=True, default=None, null=True,
+                                          db_comment='Siteminder Header.'
+                                                     'GUID used for authentication')
     authorization_directory = models.CharField(max_length=100, blank=True,
-                                               null=True)
-    authorization_email = models.EmailField(blank=True, null=True)
-    display_name = models.CharField(max_length=500, blank=True, null=True)
+                                               null=True,
+                                               db_comment='Siteminder Header (normally IDIR or BCeID)')
+    authorization_email = models.EmailField(blank=True, null=True, db_comment='Siteminder Header')
+    display_name = models.CharField(max_length=500, blank=True, null=True,
+                                    db_comment='Siteminder Header (Displayed name for user)')
 
     def __str__(self):
         return str(self.id)
@@ -107,7 +112,7 @@ class User(AbstractUser, Auditable):
         Helper function to check if the user has the approrpiate permission
         """
         if self.role is None or \
-           not self.role.permissions.filter(code=permission):
+                not self.role.permissions.filter(code=permission):
             return False
 
         return True
@@ -119,3 +124,16 @@ class User(AbstractUser, Auditable):
 
     class Meta:
         db_table = 'user'
+
+    # Supplemental mapping for base class
+    db_column_supplemental_comments = {
+        'first_name': 'Django field. First name (retrieved from Siteminder',
+        'last_name': 'Django field. Last name (retrieved from Siteminder)',
+        'is_staff': 'Django field. Flag. True if staff user.',
+        'is_superuser': 'Django field. Flag. True if superuser.',
+        'is_active': 'Django field. True if can login.',
+        'date_joined': 'Django field. Date account created.',
+        'last_login': 'Django field. Last login time.',
+    }
+
+    db_table_comment = 'Users who may access the application'

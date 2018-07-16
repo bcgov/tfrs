@@ -27,9 +27,13 @@ from api.managers.PermissionManager import PermissionManager
 
 
 class Permission(Auditable):
-    code = models.CharField(max_length=100, unique=True)
-    name = models.CharField(max_length=100)
-    description = models.CharField(max_length=1000)
+    code = models.CharField(max_length=100,
+                            unique=True,
+                            db_comment='Permission code. Natural key.')
+    name = models.CharField(max_length=100, db_comment='Permission text name')
+    description = models.CharField(
+        max_length=1000,
+        db_comment='Descriptive text explaining this permission')
 
     objects = PermissionManager()
 

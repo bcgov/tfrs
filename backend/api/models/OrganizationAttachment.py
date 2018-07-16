@@ -20,6 +20,7 @@
 """
 
 from django.db import models
+
 from auditable.models import Auditable
 
 
@@ -28,10 +29,16 @@ class OrganizationAttachment(Auditable):
         'Organization',
         related_name='attachments',
         on_delete=models.CASCADE)
-    file_name = models.CharField(max_length=250, blank=True, null=True)
-    file_location = models.CharField(max_length=2000, blank=True, null=True)
-    description = models.CharField(max_length=4000, blank=True, null=True)
-    compliance_year = models.CharField(max_length=25, blank=True, null=True)
+    file_name = models.CharField(max_length=250, blank=True, null=True,
+                                 db_comment='Name of attached file')
+    file_location = models.CharField(max_length=2000, blank=True, null=True,
+                                     db_comment='Reference to location of file (eg. URL)')
+    description = models.CharField(max_length=4000, blank=True, null=True,
+                                   db_comment='Description of the file')
+    compliance_year = models.CharField(max_length=25, blank=True, null=True,
+                                       db_comment='Associated compliance year')
 
     class Meta:
         db_table = 'organization_attachment'
+
+    db_table_comment = 'A record of file attachments and references to their storage locations'
