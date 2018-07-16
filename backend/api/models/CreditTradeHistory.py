@@ -42,7 +42,8 @@ class CreditTradeHistory(Auditable):
     respondent = models.ForeignKey(
         'Organization',
         related_name='credit_trade_histories',
-        on_delete=models.PROTECT)
+        on_delete=models.PROTECT,
+        db_comment='fk: responding organization id')
     status = models.ForeignKey(
         'CreditTradeStatus',
         related_name='credit_trade_histories',
@@ -51,16 +52,20 @@ class CreditTradeHistory(Auditable):
         'CreditTradeType',
         related_name='credit_trade_histories',
         on_delete=models.PROTECT)
-    number_of_credits = models.IntegerField()
+    number_of_credits = models.IntegerField(
+        db_comment='Number of credits to be transferred on approval'
+    )
     fair_market_value_per_credit = models.DecimalField(
         null=True, blank=True, max_digits=999,
         decimal_places=2,
-        default=None)
+        default=None,
+        db_comment='Value of each credit being transferred')
     zero_reason = models.ForeignKey(
         'CreditTradeZeroReason',
         related_name='credit_trade_histories',
         blank=True, null=True,
-        on_delete=models.PROTECT)
+        on_delete=models.PROTECT,
+        db_comment='Rationale for zero-valued transfer')
     trade_effective_date = models.DateField(blank=True, null=True)
     note = models.CharField(max_length=4000, blank=True, null=True)
     is_internal_history_record = models.BooleanField()
@@ -70,8 +75,13 @@ class CreditTradeHistory(Auditable):
         blank=True, null=True,
         on_delete=models.PROTECT
     )
-    is_rescinded = models.BooleanField(default=False)
+    is_rescinded = models.BooleanField(
+        default=False,
+        db_comment='Flag. True if the trade was rescinded before completion by either party.'
+    )
 
     class Meta:
         db_table = 'credit_trade_history'
         ordering = ['-create_timestamp']
+
+    db_table_comment = 'Maintains a history of credit transfer state changes'

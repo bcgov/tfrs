@@ -26,11 +26,18 @@ from api.managers.OrganizationActionsTypeManager import OrganizationActionsTypeM
 
 
 class OrganizationActionsType(Auditable):
-    the_type = models.CharField(max_length=25, unique=True)
-    description = models.CharField(max_length=1000, blank=True, null=True)
-    effective_date = models.DateField(blank=True, null=True)
-    expiration_date = models.DateField(blank=True, null=True)
-    display_order = models.IntegerField()
+    the_type = models.CharField(max_length=25,
+                                unique=True,
+                                db_comment='Type enumeration. . Natural key.')
+    description = models.CharField(
+        max_length=1000,
+        blank=True,
+        null=True,
+        db_comment='Displayed name'
+    )
+    display_order = models.IntegerField(db_comment='Relative rank in display sorting order')
+    effective_date = models.DateField(blank=True, null=True, db_comment='Not valid before')
+    expiration_date = models.DateField(blank=True, null=True, db_comment='Not valid after')
 
     objects = OrganizationActionsTypeManager()
 
@@ -39,3 +46,6 @@ class OrganizationActionsType(Auditable):
 
     class Meta:
         db_table = 'organization_actions_type'
+
+    db_table_comment = 'Actions that an organization may take'
+

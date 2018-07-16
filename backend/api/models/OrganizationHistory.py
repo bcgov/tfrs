@@ -29,7 +29,10 @@ class OrganizationHistory(Auditable):
         'Organization',
         related_name='history',
         on_delete=models.CASCADE)
-    history_text = models.CharField(max_length=1000)
+
+    history_text = models.CharField(max_length=1000,
+                                    db_comment='Details for this history entry')
 
     class Meta:
         db_table = 'organization_history'
+

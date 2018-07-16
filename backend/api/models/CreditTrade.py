@@ -56,32 +56,48 @@ class CreditTrade(Auditable):
     respondent = models.ForeignKey(
         Organization,
         related_name='respondent_credit_trades',
-        on_delete=models.PROTECT)
+        on_delete=models.PROTECT,
+        db_comment='fk: responding organization id')
     type = models.ForeignKey(
         CreditTradeType,
         related_name='credit_trades',
         on_delete=models.PROTECT)
     number_of_credits = models.IntegerField(
-        validators=[validators.CreditTradeNumberOfCreditsValidator])
+        validators=[validators.CreditTradeNumberOfCreditsValidator],
+        db_comment='Number of credits to be transferred on approval')
     fair_market_value_per_credit = models.DecimalField(
         null=True, blank=True, max_digits=999,
         decimal_places=2,
         default=Decimal('0.00'),
-        validators=[validators.CreditTradeFairMarketValueValidator])
+        validators=[validators.CreditTradeFairMarketValueValidator],
+        db_comment='Value of each credit being transferred')
     zero_reason = models.ForeignKey(
         CreditTradeZeroReason,
         related_name='credit_trades',
+        blank=True,
+        null=True,
+        on_delete=models.PROTECT,
+        db_comment='Rationale for zero-valued transfer')
+    trade_effective_date = models.DateField(
         blank=True, null=True,
-        on_delete=models.PROTECT)
-    trade_effective_date = models.DateField(blank=True, null=True)
-    note = models.CharField(max_length=4000, blank=True, null=True)
+        db_comment='Date on which this transfer will become effective if approved'
+    )
+    note = models.CharField(
+        max_length=4000,
+        blank=True,
+        null=True,
+        db_comment='Notes. Soon to be deprecated.'
+    )
     compliance_period = models.ForeignKey(
         CompliancePeriod,
         related_name='credit_trades',
         blank=True, null=True,
         on_delete=models.PROTECT
     )
-    is_rescinded = models.BooleanField(default=False)
+    is_rescinded = models.BooleanField(
+        default=False,
+        db_comment='Flag. True if the trade was rescinded before completion by either party.'
+    )
 
     @property
     def credits_from(self):
@@ -187,3 +203,5 @@ class CreditTrade(Auditable):
 
     class Meta:
         db_table = 'credit_trade'
+
+    db_table_comment = 'All Credit Transfers'

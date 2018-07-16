@@ -25,12 +25,16 @@ from auditable.models import Auditable
 from api.managers.OrganizationStatusManager import OrganizationStatusManager
 
 class OrganizationStatus(Auditable):
-    status = models.CharField(max_length=25, unique=True)
-    description = models.CharField(max_length=1000, blank=True, null=True)
-    effective_date = models.DateField(blank=True, null=True)
-    expiration_date = models.DateField(blank=True, null=True)
-    display_order = models.IntegerField()
-
+    status = models.CharField(max_length=25,
+                              unique=True,
+                              db_comment='Status enumeration. Natural key.')
+    description = models.CharField(max_length=1000,
+                                   blank=True,
+                                   null=True,
+                                   db_comment='Displayed name')
+    display_order = models.IntegerField(db_comment='Relative rank in display sorting order')
+    effective_date = models.DateField(blank=True, null=True, db_comment='Not valid before')
+    expiration_date = models.DateField(blank=True, null=True, db_comment='Not valid after')
     objects = OrganizationStatusManager()
 
     def natural_key(self):
@@ -38,3 +42,6 @@ class OrganizationStatus(Auditable):
 
     class Meta:
         db_table = 'organization_status'
+
+    db_table_comment = 'Possible statuses an organization may be in' \
+                       ' (ex. Active, Inactive, Archived)'

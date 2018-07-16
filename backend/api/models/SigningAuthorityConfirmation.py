@@ -26,7 +26,9 @@ from auditable.models import Auditable
 
 
 class SigningAuthorityConfirmation(Auditable):
-    has_accepted = models.BooleanField()
+    has_accepted = models.BooleanField(
+        db_comment='Flag. True if the associated confirmation was accepted.'
+    )
     credit_trade = models.ForeignKey(
         'CreditTrade',
         related_name='confirmations',
@@ -38,3 +40,6 @@ class SigningAuthorityConfirmation(Auditable):
 
     class Meta:
         db_table = 'signing_authority_confirmation'
+
+    db_table_comment = 'An audit of assertions having been accepted'
+
