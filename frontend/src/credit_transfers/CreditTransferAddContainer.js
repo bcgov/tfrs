@@ -32,7 +32,6 @@ class CreditTransferAddContainer extends Component {
       fields: {
         fairMarketValuePerCredit: '',
         initiator: {},
-        note: '',
         numberOfCredits: '',
         respondent: { id: 0, name: '' },
         terms: [],
