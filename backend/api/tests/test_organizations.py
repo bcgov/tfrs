@@ -24,6 +24,7 @@
 
 import json
 
+from api.models.OrganizationAddress import OrganizationAddress
 from api.models.OrganizationType import OrganizationType
 from .base_test_case import BaseTestCase
 
@@ -32,12 +33,35 @@ class TestOrganizations(BaseTestCase):
     """Tests for the organizations endpoint"""
 
     def test_get_fuel_suppliers_only(self):
-        """Test that organizations fuel suppliers endpoint returns only fuel suppliers"""
-
-        response = self.clients['gov_analyst'].get("/api/organizations/fuel_suppliers")
+        """
+        Test that organizations fuel suppliers endpoint returns only fuel
+        suppliers
+        """
+        response = self.clients['gov_analyst'].get(
+            "/api/organizations/fuel_suppliers")
         response_data = json.loads(response.content.decode("utf-8"))
+
         for fs in response_data:
             self.assertEqual(
                 fs['type'],
-                OrganizationType.objects.get_by_natural_key("Part3FuelSupplier").id
+                OrganizationType.objects.get_by_natural_key(
+                    "Part3FuelSupplier").id
             )
+
+    def test_get_organization_address(self):
+        """
+        Test that the organization loads the address properly
+        """
+        OrganizationAddress.objects.create(
+            address_line_1="Test Address 1",
+            city="Test City",
+            organization_id=self.users['fs_user_1'].organization.id
+        )
+
+        response = self.clients['fs_user_1'].get("/api/organizations/mine")
+        response_data = json.loads(response.content.decode("utf-8"))
+
+        self.assertEqual("Test Address 1",
+                         response_data['organizationAddress']['addressLine_1'])
+        self.assertEqual("Test City",
+                         response_data['organizationAddress']['city'])

@@ -22,15 +22,16 @@
 """
 from rest_framework import serializers
 
-from api.models.OrganizationStatus import OrganizationStatus
+from api.models.OrganizationAddress import OrganizationAddress
 
 
-class OrganizationStatusSerializer(serializers.ModelSerializer):
+class OrganizationAddressSerializer(serializers.ModelSerializer):
     """
-    Sets of statuses an Organization can have such as Active and Archived
+    Address Serializer that loads all the fields that useful for
+    displaying.
     """
     class Meta:
-        model = OrganizationStatus
+        model = OrganizationAddress
         fields = (
-            'id', 'status', 'description', 'effective_date', 'expiration_date',
-            'display_order')
+            'id', 'address_line_1', 'address_line_2', 'address_line_3',
+            'city', 'postal_code', 'state', 'county', 'country')

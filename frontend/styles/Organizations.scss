@@ -10,9 +10,20 @@
     float: right;
   }
 
-  .status {
+  .address, .status {
     font-size: 1.5rem;
     margin-bottom: 2rem;
+
+    dd {
+      margin-left: 80px;
+    }
+
+    dt {
+      font-weight: normal;
+      text-align: left;
+      width: 80px;
+    }
+    
   }
 }
 

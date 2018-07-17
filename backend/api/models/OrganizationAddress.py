@@ -38,11 +38,11 @@ class OrganizationAddress(Auditable):
         default=False,
         db_comment="Flag. True if the address it the main location."
     )
-    line_1 = models.CharField(
+    address_line_1 = models.CharField(
         max_length=500, blank=True, null=True, db_comment="Address Line 1")
-    line_2 = models.CharField(
+    address_line_2 = models.CharField(
         max_length=100, blank=True, null=True, db_comment="Address Line 2")
-    line_3 = models.CharField(
+    address_line_3 = models.CharField(
         max_length=100, blank=True, null=True, db_comment="Address Line 3")
     city = models.CharField(
         max_length=100, blank=True, null=True, db_comment="City")
@@ -57,6 +57,12 @@ class OrganizationAddress(Auditable):
     other = models.CharField(
         max_length=100, blank=True, null=True,
         db_comment="Other Address Details")
+    effective_date = models.DateField(
+        blank=True, null=True,
+        db_comment='When the organization moved into this address')
+    expiration_date = models.DateField(
+        blank=True, null=True,
+        db_comment='When the organization moved out of this address')
 
     class Meta:
         db_table = 'organization_address'
