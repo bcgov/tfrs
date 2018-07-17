@@ -4,6 +4,7 @@ from rest_framework.response import Response
 from rest_framework import filters
 
 from api.permissions.CreditTradeComment import CreditTradeCommentPermissions
+from api.services.CreditTradeCommentActions import CreditTradeCommentService
 
 from auditable.views import AuditableMixin
 from django.db.models import Q
@@ -37,3 +38,8 @@ class CreditTradeCommentsViewSet(AuditableMixin, mixins.RetrieveModelMixin, mixi
             return self.serializer_classes[self.action]
         else:
             return self.serializer_classes['default']
+
+    def perform_create(self, serializer):
+        comment = serializer.save()
+        CreditTradeCommentService.associate_history(comment)
+        comment.save()

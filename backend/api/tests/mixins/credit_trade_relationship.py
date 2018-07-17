@@ -22,6 +22,7 @@
     limitations under the License.
 """
 import json
+import logging
 import typing
 from collections import namedtuple, defaultdict
 from enum import Enum
@@ -55,7 +56,6 @@ class CreditTradeRelationshipMixin(object):
 
 
 class CreditTradeFlowHooksMixin(object):
-
     ChangeRecord = namedtuple('ChangeRecord', [
         'trade_id',
         'requesting_username',
@@ -68,7 +68,8 @@ class CreditTradeFlowHooksMixin(object):
 
     PreChangeRecord = namedtuple('PreChangeRecord', [
         'trade_id',
-        'current_status'
+        'current_status',
+        'rescinded'
     ])
 
     StatusChange = namedtuple('StatusChange', [
@@ -78,6 +79,8 @@ class CreditTradeFlowHooksMixin(object):
     ])
 
     def _sensible_status_changes(self, current_status, rescinded):
+        """Return a list of valid potential status changes for a given starting state"""
+
         status_changes = defaultdict(lambda: [])
 
         status_changes[('Draft', False)] = [
@@ -85,25 +88,25 @@ class CreditTradeFlowHooksMixin(object):
             self.StatusChange(self.UserRelationship.INITIATOR, 'Cancelled', False)
         ]
         status_changes[('Submitted', False)] = [
-            self.StatusChange(self.UserRelationship.INITIATOR, 'Submitted', True), # rescind
+            self.StatusChange(self.UserRelationship.INITIATOR, 'Submitted', True),  # rescind
             self.StatusChange(self.UserRelationship.RESPONDENT, 'Accepted', False),
             self.StatusChange(self.UserRelationship.RESPONDENT, 'Refused', False)
         ]
         status_changes[('Accepted', False)] = [
-            self.StatusChange(self.UserRelationship.INITIATOR, 'Accepted', True), # rescind
-            self.StatusChange(self.UserRelationship.RESPONDENT, 'Accepted', True), # rescind
+            self.StatusChange(self.UserRelationship.INITIATOR, 'Accepted', True),  # rescind
+            self.StatusChange(self.UserRelationship.RESPONDENT, 'Accepted', True),  # rescind
             self.StatusChange(self.UserRelationship.GOVERNMENT_ANALYST, 'Recommended', False),
             self.StatusChange(self.UserRelationship.GOVERNMENT_ANALYST, 'Not Recommended', False)
         ]
         status_changes[('Recommended', False)] = [
-            self.StatusChange(self.UserRelationship.INITIATOR, 'Recommended', True), # rescind
-            self.StatusChange(self.UserRelationship.RESPONDENT, 'Recommended', True), # rescind
+            self.StatusChange(self.UserRelationship.INITIATOR, 'Recommended', True),  # rescind
+            self.StatusChange(self.UserRelationship.RESPONDENT, 'Recommended', True),  # rescind
             self.StatusChange(self.UserRelationship.GOVERNMENT_DIRECTOR, 'Approved', False),
             self.StatusChange(self.UserRelationship.GOVERNMENT_DIRECTOR, 'Declined', False)
         ]
         status_changes[('Not Recommended', False)] = [
-            self.StatusChange(self.UserRelationship.INITIATOR, 'Not Recommended', True), # rescind
-            self.StatusChange(self.UserRelationship.RESPONDENT, 'Not Recommended', True), # rescind
+            self.StatusChange(self.UserRelationship.INITIATOR, 'Not Recommended', True),  # rescind
+            self.StatusChange(self.UserRelationship.RESPONDENT, 'Not Recommended', True),  # rescind
             self.StatusChange(self.UserRelationship.GOVERNMENT_DIRECTOR, 'Approved', False),
             self.StatusChange(self.UserRelationship.GOVERNMENT_DIRECTOR, 'Declined', False)
         ]
@@ -111,13 +114,16 @@ class CreditTradeFlowHooksMixin(object):
         return status_changes[(current_status, rescinded)]
 
     def _path_builder(self, node, path=[], valid_paths=[]):
+        """Recursively build an array of valid paths through the status tree"""
+
         s = self._sensible_status_changes(node.status, node.rescinded)
 
         is_leaf = not s
+
         path = path + [node]
 
         if is_leaf:
-            valid_paths.append(path)
+            valid_paths.append(path)  # end of the line
 
         for branch in s:
             self._path_builder(branch, path, valid_paths)
@@ -125,9 +131,25 @@ class CreditTradeFlowHooksMixin(object):
         return valid_paths
 
     def check_credit_trade_workflow(self,
-                                    before_change_callback: Callable[[PreChangeRecord], None] = lambda: None,
-                                    after_change_callback: Callable[[ChangeRecord], None] = lambda: None,
-                                    path_end_callback: Callable[[], None] = lambda: None):
+                                    before_change_callback: Callable[[PreChangeRecord], None]
+                                    = lambda x: None,
+                                    after_change_callback: Callable[[ChangeRecord], None]
+                                    = lambda x: None,
+                                    path_end_callback: Callable[[], None]
+                                    = lambda: None):
+        """Evaluate all normal status paths through the application via REST API as appropriate users
+
+        with callbacks for tests:
+
+        before_change_callback called just before a status change.
+            Initial status and trade_id may be None
+
+        after_change_callback called after a change
+            data_before_request can be None if this was a creation
+
+        path_end_callback called when this pathway is done
+            (another will begin unless this was the last)
+        """
 
         initiating_org = self.users[
             self.user_map[
@@ -149,11 +171,18 @@ class CreditTradeFlowHooksMixin(object):
             'zeroReason': None
         }
 
-        valid_paths = (self._path_builder(self.StatusChange(self.UserRelationship.INITIATOR, 'Draft', False)))
+        valid_paths = (self._path_builder(
+            self.StatusChange(self.UserRelationship.INITIATOR, 'Draft', False)
+        ))
 
         for path in valid_paths:
-            print('\n'.join(['{} sets status to {} and rescinded to {}'
-                            .format(c.relationship, c.status, c.rescinded) for c in path]))
+            logging.debug('evaluating path: {}'.format(
+                '\n'.join(
+                    [
+                        '{} sets status to {} and rescinded to {}'.format(
+                            c.relationship, c.status, c.rescinded) for c in path
+                    ]
+                )))
 
             trade_id = None
             response_data = None
@@ -162,7 +191,12 @@ class CreditTradeFlowHooksMixin(object):
 
                 before_change_callback(self.PreChangeRecord(
                     trade_id,
-                    CreditTrade.objects.filter(id=trade_id).first() if trade_id else None
+                    CreditTrade.objects.filter(
+                        id=trade_id
+                    ).first().status.status if trade_id else None,
+                    CreditTrade.objects.filter(
+                        id=trade_id
+                    ).first().is_rescinded if trade_id else None
                 ))
 
                 payload['status'] = CreditTradeStatus.objects.get_by_natural_key(node.status).id

@@ -45,7 +45,7 @@ class CreditTradeComment(Auditable):
                                             db_column='is_privileged_access')
 
     # For tracking the status at the point in time the comment was made
-    trade_history = models.ForeignKey(
+    trade_history_at_creation = models.ForeignKey(
         'CreditTradeHistory',
         related_name='credit_trade_comments',
         null=True,
