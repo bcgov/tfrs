@@ -22,6 +22,7 @@
 import inspect
 import pkgutil
 import sys
+from collections import namedtuple
 
 from django.apps import AppConfig
 from django.db.models.signals import post_migrate
@@ -99,10 +100,14 @@ def get_all_model_classes():
 
     classes = set()
 
-    for sub_module in pkgutil.walk_packages(
+    ModuleInfo = namedtuple('ModuleInfo', ['module_finder', 'name', 'ispkg'])
+
+    for (module_finder, name, ispkg) in pkgutil.walk_packages(
             api.models.__path__,
             prefix='api.models.'
     ):
+
+        sub_module = ModuleInfo(module_finder,name,ispkg)
 
         if sub_module.name in sys.modules:
             # we're already loaded (probably as a dependency of another)
