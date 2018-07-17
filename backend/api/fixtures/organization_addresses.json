@@ -1,0 +1,818 @@
+[
+  {
+    "fields": {
+      "organization": ["4-Less Disposal Inc."],
+      "primary": true,
+      "line_1": "829 McCurdy Place",
+      "line_2": "",
+      "line_3": "",
+      "city": "Kelowna",
+      "postal_code": "V1X 8C8",
+      "state": "BC",
+      "county": "",
+      "country": "Canada",
+      "other": null
+    },
+    "model": "api.organizationaddress",
+    "pk": null
+  },
+  {
+    "fields": {
+      "organization": ["Air Liquide Canada Inc."],
+      "primary": true,
+      "line_1": "1250 Rene-Levesque Blvd. West",
+      "line_2": "Suite 1700",
+      "line_3": "",
+      "city": "Montreal",
+      "postal_code": "H3B 5E6",
+      "state": "QC",
+      "county": "",
+      "country": "Canada",
+      "other": null
+    },
+    "model": "api.organizationaddress",
+    "pk": null
+  },
+  {
+    "fields": {
+      "organization": ["BC Hydro"],
+      "primary": true,
+      "line_1": "333 Dunsmuir Street",
+      "line_2": "",
+      "line_3": "",
+      "city": "Vancouver",
+      "postal_code": "V6B 5R3",
+      "state": "BC",
+      "county": "",
+      "country": "Canada",
+      "other": null
+    },
+    "model": "api.organizationaddress",
+    "pk": null
+  },
+  {
+    "fields": {
+      "organization": ["BC Transit"],
+      "primary": true,
+      "line_1": "520 Gorge Rd East",
+      "line_2": "",
+      "line_3": "",
+      "city": "Victoria",
+      "postal_code": "V8W 9T5",
+      "state": "BC",
+      "county": "",
+      "country": "Canada",
+      "other": null
+    },
+    "model": "api.organizationaddress",
+    "pk": null
+  },
+  {
+    "fields": {
+      "organization": ["Burden Propane Inc."],
+      "primary": true,
+      "line_1": "P.O. Box 294",
+      "line_2": "",
+      "line_3": "",
+      "city": "Harrison Hot Springs",
+      "postal_code": "V0M 1K0",
+      "state": "BC",
+      "county": "",
+      "country": "Canada",
+      "other": null
+    },
+    "model": "api.organizationaddress",
+    "pk": null
+  },
+  {
+    "fields": {
+      "organization": ["C&N Ethanol Marketing, LLC"],
+      "primary": true,
+      "line_1": "107 Elm Street",
+      "line_2": "Four Samford Plaza",
+      "line_3": "",
+      "city": "Stamford",
+      "postal_code": "06902",
+      "state": "Connecticut",
+      "county": "",
+      "country": "United States",
+      "other": null
+    },
+    "model": "api.organizationaddress",
+    "pk": null
+  },
+  {
+    "fields": {
+    "organization": ["Cal-Gas Inc."],
+      "primary": true,
+      "line_1": "440 - 2nd Avenue S.W.",
+      "line_2": "1700",
+      "line_3": "",
+      "city": "Calgary",
+      "postal_code": "T2P 5E9",
+      "state": "AB",
+      "county": "",
+      "country": "Canada",
+      "other": null
+    },
+    "model": "api.organizationaddress",
+    "pk": null
+  },
+  {
+    "fields": {
+      "organization": ["Canadian Linen & Uniform Service Co."],
+      "primary": true,
+      "line_1": "2750 Gilmore Avenue",
+      "line_2": "",
+      "line_3": "",
+      "city": "Burnaby",
+      "postal_code": "V5C 4T9",
+      "state": "BC",
+      "county": "",
+      "country": "Canada",
+      "other": null
+    },
+    "model": "api.organizationaddress",
+    "pk": null
+  },
+  {
+    "fields": {
+      "organization": ["Canwest Propane Partnership"],
+      "primary": true,
+      "line_1": "440 - 2nd Avenue S.W.",
+      "line_2": "1700",
+      "line_3": "",
+      "city": "Calgary",
+      "postal_code": "T2P 5E9",
+      "state": "AB",
+      "county": "",
+      "country": "Canada",
+      "other": null
+    },
+    "model": "api.organizationaddress",
+    "pk": null
+  },
+  {
+    "fields": {
+      "organization": ["Central Okanagan Public Schools (SD32)"],
+      "primary": true,
+      "line_1": "1940 Underhill Street",
+      "line_2": "",
+      "line_3": "",
+      "city": "Kelowna",
+      "postal_code": "V1X 5X7",
+      "state": "BC",
+      "county": "",
+      "country": "Canada",
+      "other": null
+    },
+    "model": "api.organizationaddress",
+    "pk": null
+  },
+  {
+    "fields": {
+      "organization": ["City of Nanaimo"],
+      "primary": true,
+      "line_1": "455 Wallace Street",
+      "line_2": "",
+      "line_3": "",
+      "city": "Nanaimo",
+      "postal_code": "V9R 5J6",
+      "state": "BC",
+      "county": "",
+      "country": "Canada",
+      "other": null
+    },
+    "model": "api.organizationaddress",
+    "pk": null
+  },
+  {
+    "fields": {
+      "organization": ["City of Surrey"],
+      "primary": true,
+      "line_1": "6651 - 148 Street",
+      "line_2": "",
+      "line_3": "",
+      "city": "Surrey",
+      "postal_code": "V3S 3C7",
+      "state": "BC",
+      "county": "",
+      "country": "Canada",
+      "other": null
+    },
+    "model": "api.organizationaddress",
+    "pk": null
+  },
+  {
+    "fields": {
+      "organization": ["City of Vancouver"],
+      "primary": true,
+      "line_1": "453 West 12th Avenue",
+      "line_2": "",
+      "line_3": "",
+      "city": "Vancouver",
+      "postal_code": "V5Y 1V4",
+      "state": "BC",
+      "county": "",
+      "country": "Canada",
+      "other": null
+    },
+    "model": "api.organizationaddress",
+    "pk": null
+  },
+  {
+    "fields": {
+      "organization": ["City of Victoria"],
+      "primary": true,
+      "line_1": "31 Cenntenial Square",
+      "line_2": "",
+      "line_3": "",
+      "city": "Victoria",
+      "postal_code": "V8W 1P6",
+      "state": "BC",
+      "county": "",
+      "country": "Canada",
+      "other": null
+    },
+    "model": "api.organizationaddress",
+    "pk": null
+  },
+  {
+    "fields": {
+      "organization": ["Clean Energy Compression Corp. "],
+      "primary": true,
+      "line_1": "43676 Progress Way",
+      "line_2": "",
+      "line_3": "",
+      "city": "Chilliwack",
+      "postal_code": "V9B 5X6",
+      "state": "BC",
+      "county": "",
+      "country": "Canada",
+      "other": null
+    },
+    "model": "api.organizationaddress",
+    "pk": null
+  },
+  {
+    "fields": {
+      "organization": ["Clean Energy Fueling Services Corp."],
+      "primary": true,
+      "line_1": "43676 Progress Way",
+      "line_2": "",
+      "line_3": "",
+      "city": "Chilliwack",
+      "postal_code": "V9B 5X6",
+      "state": "BC",
+      "county": "",
+      "country": "Canada",
+      "other": null
+    },
+    "model": "api.organizationaddress",
+    "pk": null
+  },
+  {
+    "fields": {
+      "organization": ["Coldstar Solutions Inc."],
+      "primary": true,
+      "line_1": "937 Dunford Avenue",
+      "line_2": "Unit 101",
+      "line_3": "",
+      "city": "Victoria",
+      "postal_code": "V6B 2S4",
+      "state": "BC",
+      "county": "",
+      "country": "Canada",
+      "other": null
+    },
+    "model": "api.organizationaddress",
+    "pk": null
+  },
+  {
+    "fields": {
+      "organization": ["Consolidated Biofuels Ltd."],
+      "primary": true,
+      "line_1": "7651 Vantage Way",
+      "line_2": "",
+      "line_3": "",
+      "city": "Delta",
+      "postal_code": "V4G 1A6",
+      "state": "BC",
+      "county": "",
+      "country": "Canada",
+      "other": null
+    },
+    "model": "api.organizationaddress",
+    "pk": null
+  },
+  {
+    "fields": {
+      "organization": ["Cowichan Bio-diesel Co-operative"],
+      "primary": true,
+      "line_1": "55 Station Street",
+      "line_2": "2",
+      "line_3": "",
+      "city": "Duncan",
+      "postal_code": "V9L 1M2",
+      "state": "BC",
+      "county": "",
+      "country": "Canada",
+      "other": null
+    },
+    "model": "api.organizationaddress",
+    "pk": null
+  },
+  {
+    "fields": {
+      "organization": ["Disposal Queen Ltd."],
+      "primary": true,
+      "line_1": "1918 167 Street",
+      "line_2": "",
+      "line_3": "",
+      "city": "Surrey",
+      "postal_code": "V5Z 9R4",
+      "state": "BC",
+      "county": "",
+      "country": "Canada",
+      "other": null
+    },
+    "model": "api.organizationaddress",
+    "pk": null
+  },
+  {
+    "fields": {
+      "organization": ["Dolphin Delivery Ltd."],
+      "primary": true,
+      "line_1": "4201 Lozells Avenue",
+      "line_2": "",
+      "line_3": "",
+      "city": "Burnaby",
+      "postal_code": "V5A 2Z4",
+      "state": "BC",
+      "county": "",
+      "country": "Canada",
+      "other": null
+    },
+    "model": "api.organizationaddress",
+    "pk": null
+  },
+  {
+    "fields": {
+      "organization": ["Eco-Options Energy Co-operative"],
+      "primary": true,
+      "line_1": "14470 Marine Drive",
+      "line_2": "",
+      "line_3": "",
+      "city": "White Rock",
+      "postal_code": "V4B 1B3",
+      "state": "BC",
+      "county": "",
+      "country": "Canada",
+      "other": null
+    },
+    "model": "api.organizationaddress",
+    "pk": null
+  },
+  {
+    "fields": {
+      "organization": ["Elbow River Marketing Ltd."],
+      "primary": true,
+      "line_1": "335 8th Avenue S.W.",
+      "line_2": "1500",
+      "line_3": "",
+      "city": "Calgary",
+      "postal_code": "T2P 1C9",
+      "state": "AB",
+      "county": "",
+      "country": "Canada",
+      "other": null
+    },
+    "model": "api.organizationaddress",
+    "pk": null
+  },
+  {
+    "fields": {
+      "organization": ["Euro Asia Transload Inc."],
+      "primary": true,
+      "line_1": "16108 Blundell Road",
+      "line_2": "",
+      "line_3": "",
+      "city": "Richmond",
+      "postal_code": "V6W 0A2",
+      "state": "BC",
+      "county": "",
+      "country": "Canada",
+      "other": null
+    },
+    "model": "api.organizationaddress",
+    "pk": null
+  },
+  {
+    "fields": {
+      "organization": ["Evergreen Industries Ltd."],
+      "primary": true,
+      "line_1": "1045 Dunford Avenue",
+      "line_2": "",
+      "line_3": "",
+      "city": "Langford",
+      "postal_code": "V9B 2S4",
+      "state": "BC",
+      "county": "",
+      "country": "Canada",
+      "other": null
+    },
+    "model": "api.organizationaddress",
+    "pk": null
+  },
+  {
+    "fields": {
+      "organization": ["Federated Co-operatives Ltd. (FCL)"],
+      "primary": true,
+      "line_1": "401 – 22nd St. East",
+      "line_2": "",
+      "line_3": "",
+      "city": "Saskatoon",
+      "postal_code": "S7K 0H2",
+      "state": "SK",
+      "county": "",
+      "country": "Canada",
+      "other": null
+    },
+    "model": "api.organizationaddress",
+    "pk": null
+  },
+  {
+    "fields": {
+      "organization": ["Ferus Natural Gas Fuels Inc."],
+      "primary": true,
+      "line_1": "401 - 9 Avenue S.W.",
+      "line_2": "1220",
+      "line_3": "",
+      "city": "Calgary",
+      "postal_code": "T2P 3C5",
+      "state": "AB",
+      "county": "",
+      "country": "Canada",
+      "other": null
+    },
+    "model": "api.organizationaddress",
+    "pk": null
+  },
+  {
+    "fields": {
+      "organization": ["FortisBC Energy Inc."],
+      "primary": true,
+      "line_1": "16705 Fraser Hwy",
+      "line_2": "",
+      "line_3": "",
+      "city": "Surrey",
+      "postal_code": "V4N 0E8",
+      "state": "BC",
+      "county": "",
+      "country": "Canada",
+      "other": null
+    },
+    "model": "api.organizationaddress",
+    "pk": null
+  },
+  {
+    "fields": {
+      "organization": ["Halton Recycling Ltd. (dba Emterra Environmental)"],
+      "primary": true,
+      "line_1": "6362 148th Street",
+      "line_2": "",
+      "line_3": "",
+      "city": "Surrey",
+      "postal_code": "V3C 3C4",
+      "state": "BC",
+      "county": "",
+      "country": "Canada",
+      "other": null
+    },
+    "model": "api.organizationaddress",
+    "pk": null
+  },
+  {
+    "fields": {
+      "organization": ["HTEC Hydrogen Technology & Energy Corp."],
+      "primary": true,
+      "line_1": "315 Mountain Hwy",
+      "line_2": "",
+      "line_3": "",
+      "city": "North Vancouver",
+      "postal_code": "V7J 2K7",
+      "state": "BC",
+      "county": "",
+      "country": "Canada",
+      "other": null
+    },
+    "model": "api.organizationaddress",
+    "pk": null
+  },
+  {
+    "fields": {
+      "organization": ["Husky Oil Operations Ltd."],
+      "primary": true,
+      "line_1": "707 8th Avenue S.W.",
+      "line_2": "Box 6525 Station D",
+      "line_3": "",
+      "city": "Calgary",
+      "postal_code": "T2P 3G7",
+      "state": "AB",
+      "county": "",
+      "country": "Canada",
+      "other": null
+    },
+    "model": "api.organizationaddress",
+    "pk": null
+  },
+  {
+    "fields": {
+      "organization": ["Imperial Oil"],
+      "primary": true,
+      "line_1": "505 Quarry Park Blvd. S.E.",
+      "line_2": "",
+      "line_3": "",
+      "city": "Calgary",
+      "postal_code": "T2C 5N1",
+      "state": "AB",
+      "county": "",
+      "country": "Canada",
+      "other": null
+    },
+    "model": "api.organizationaddress",
+    "pk": null
+  },
+  {
+    "fields": {
+      "organization": ["Parkland Fuel Corporation"],
+      "primary": true,
+      "line_1": "333 96th Ave N.E.",
+      "line_2": "6302",
+      "line_3": "",
+      "city": "Calgary",
+      "postal_code": "T3K 0S3",
+      "state": "AB",
+      "county": "",
+      "country": "Canada",
+      "other": null
+    },
+    "model": "api.organizationaddress",
+    "pk": null
+  },
+  {
+    "fields": {
+      "organization": ["Parkland Refining (B.C.) Ltd."],
+      "primary": true,
+      "line_1": "355 North Willingdon Avenue",
+      "line_2": "",
+      "line_3": "",
+      "city": "Burnaby",
+      "postal_code": "V5C 1X4",
+      "state": "BC",
+      "county": "",
+      "country": "Canada",
+      "other": null
+    },
+    "model": "api.organizationaddress",
+    "pk": null
+  },
+  {
+    "fields": {
+      "organization": ["Pemberton Transport Co. Ltd."],
+      "primary": true,
+      "line_1": "7850 Venture Street",
+      "line_2": "",
+      "line_3": "",
+      "city": "Burnaby",
+      "postal_code": "V5A 1V3",
+      "state": "BC",
+      "county": "",
+      "country": "Canada",
+      "other": null
+    },
+    "model": "api.organizationaddress",
+    "pk": null
+  },
+  {
+    "fields": {
+      "organization": ["Powerex Corporation"],
+      "primary": true,
+      "line_1": "666 Burrard Street",
+      "line_2": "Suite 1300",
+      "line_3": "",
+      "city": "Vancouver",
+      "postal_code": "V6C 2X8",
+      "state": "BC",
+      "county": "",
+      "country": "Canada",
+      "other": null
+    },
+    "model": "api.organizationaddress",
+    "pk": null
+  },
+  {
+    "fields": {
+      "organization": ["Powertech Labs Inc."],
+      "primary": true,
+      "line_1": "12388 88th Avenue",
+      "line_2": "",
+      "line_3": "",
+      "city": "Surrey",
+      "postal_code": "V3W 7R7",
+      "state": "BC",
+      "county": "",
+      "country": "Canada",
+      "other": null
+    },
+    "model": "api.organizationaddress",
+    "pk": null
+  },
+  {
+    "fields": {
+      "organization": ["Shell Canada Products"],
+      "primary": true,
+      "line_1": "400, 4th Avenue S.W.",
+      "line_2": "",
+      "line_3": "",
+      "city": "Calgary",
+      "postal_code": "T2P 2H5",
+      "state": "AB",
+      "county": "",
+      "country": "Canada",
+      "other": null
+    },
+    "model": "api.organizationaddress",
+    "pk": null
+  },
+  {
+    "fields": {
+      "organization": ["Smithrite Disposal Limited"],
+      "primary": true,
+      "line_1": "70 Golden Drive",
+      "line_2": "",
+      "line_3": "",
+      "city": "Coquitlam",
+      "postal_code": "V3K 6B5",
+      "state": "BC",
+      "county": "",
+      "country": "Canada",
+      "other": null
+    },
+    "model": "api.organizationaddress",
+    "pk": null
+  },
+  {
+    "fields": {
+      "organization": ["South Coast BC Transportation Authority (Translink)"],
+      "primary": true,
+      "line_1": "400 – 287 Nelson’s Court",
+      "line_2": "",
+      "line_3": "",
+      "city": "New Westminster",
+      "postal_code": "V3L 0E7",
+      "state": "BC",
+      "county": "",
+      "country": "Canada",
+      "other": null
+    },
+    "model": "api.organizationaddress",
+    "pk": null
+  },
+  {
+    "fields": {
+      "organization": ["Suncor Energy Products Partnership"],
+      "primary": true,
+      "line_1": "2489 North Sheridan Way",
+      "line_2": "",
+      "line_3": "",
+      "city": "Mississauga",
+      "postal_code": "L5K 1A8",
+      "state": "ON",
+      "county": "",
+      "country": "Canada",
+      "other": null
+    },
+    "model": "api.organizationaddress",
+    "pk": null
+  },
+  {
+    "fields": {
+      "organization": ["Super Save Enterprises Ltd."],
+      "primary": true,
+      "line_1": "19395 Langley Bypass",
+      "line_2": "",
+      "line_3": "",
+      "city": "Surrey",
+      "postal_code": "V3S 6K1",
+      "state": "BC",
+      "county": "",
+      "country": "Canada",
+      "other": null
+    },
+    "model": "api.organizationaddress",
+    "pk": null
+  },
+  {
+    "fields": {
+      "organization": ["Superior Propane"],
+      "primary": true,
+      "line_1": "10128 Nordel Court",
+      "line_2": "",
+      "line_3": "",
+      "city": "Delta",
+      "postal_code": "V4G 1J7",
+      "state": "BC",
+      "county": "",
+      "country": "Canada",
+      "other": null
+    },
+    "model": "api.organizationaddress",
+    "pk": null
+  },
+  {
+    "fields": {
+      "organization": ["Teck Coal Limited"],
+      "primary": true,
+      "line_1": "421 Pine Avenue",
+      "line_2": "BAG 2000",
+      "line_3": "",
+      "city": "Sparwood",
+      "postal_code": "V0B 2G0",
+      "state": "BC",
+      "county": "",
+      "country": "Canada",
+      "other": null
+    },
+    "model": "api.organizationaddress",
+    "pk": null
+  },
+  {
+    "fields": {
+      "organization": ["United Parcel Services, Inc."],
+      "primary": true,
+      "line_1": "1930 Derry Road East",
+      "line_2": "",
+      "line_3": "",
+      "city": "Mississauga",
+      "postal_code": "L5S 1E2",
+      "state": "ON",
+      "county": "",
+      "country": "Canada",
+      "other": null
+    },
+    "model": "api.organizationaddress",
+    "pk": null
+  },
+  {
+    "fields": {
+      "organization": ["Vancouver Island Propane Services Ltd."],
+      "primary": true,
+      "line_1": "1375 Hastings Street",
+      "line_2": "",
+      "line_3": "",
+      "city": "Victoria",
+      "postal_code": "V8Z 2W5",
+      "state": "BC",
+      "county": "",
+      "country": "Canada",
+      "other": null
+    },
+    "model": "api.organizationaddress",
+    "pk": null
+  },
+  {
+    "fields": {
+      "organization": ["Waste Connections of Canada Inc."],
+      "primary": true,
+      "line_1": "25 Fawcett Road",
+      "line_2": "",
+      "line_3": "",
+      "city": "Coquitlam",
+      "postal_code": "V3K 6V2",
+      "state": "BC",
+      "county": "",
+      "country": "Canada",
+      "other": null
+    },
+    "model": "api.organizationaddress",
+    "pk": null
+  },
+  {
+    "fields": {
+      "organization": ["Waste Management, Inc."],
+      "primary": true,
+      "line_1": "2330 United Blvd",
+      "line_2": "",
+      "line_3": "",
+      "city": "Coquitlam",
+      "postal_code": "V3K 6S1",
+      "state": "BC",
+      "county": "",
+      "country": "Canada",
+      "other": null
+    },
+    "model": "api.organizationaddress",
+    "pk": null
+  }
+]
