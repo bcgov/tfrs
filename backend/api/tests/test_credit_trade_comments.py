@@ -30,11 +30,12 @@ from itertools import product
 from rest_framework import status
 
 from api.models.Organization import Organization
+from api.tests.mixins.credit_trade_relationship import CreditTradeRelationshipMixin, CreditTradeFlowHooksMixin
 from .data_creation_utilities import DataCreationUtilities
 from .base_test_case import BaseTestCase
 
 
-class TestAPIComments(BaseTestCase):
+class TestAPIComments(BaseTestCase, CreditTradeRelationshipMixin, CreditTradeFlowHooksMixin):
     """
     Test Credit Trade Comments actions and permissions
     """
@@ -373,7 +374,6 @@ class TestAPIComments(BaseTestCase):
                               creating_privileged_comment=privileged,
                               expected_result=expected_result['status'],
                               reason=expected_result['reason']):
-
                 # check permissions on POST
                 response = self.clients[user].post(
                     "/api/comments", content_type='application/json',
@@ -533,3 +533,42 @@ class TestAPIComments(BaseTestCase):
             content_type='application/json',
             data=json.dumps(test_data))
         assert status.is_client_error(response.status_code)
+
+    def test_individual_comment_actions(self):
+        """ Test that users can edit comments on a credit trade before the status changes """
+
+        def check_after(cr: self.ChangeRecord):
+            print(cr.trade_id)
+            print(cr.requesting_username)
+            # c_url = "/api/comments"
+            # test_data = {
+            #     "comment": "original comment",
+            #     "creditTrade": cr.trade_id,
+            #     "privilegedAccess": False
+            # }
+            #
+            # response = self.clients[self.user_map[self.UserRelationship.INITIATOR]].post(
+            #     c_url,
+            #     content_type='application/json',
+            #     data=json.dumps(test_data)
+            # )
+            #
+            # self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+
+        CreditTradeFlowHooksMixin.check_credit_trade_workflow(
+            self,
+            after_change_callback=check_after
+        )
+
+        assert False
+
+
+    #trade['id']
+
+        # need a credit trade in each valid state
+        # need to create a comment on it
+        # validate that the comment has EDIT_COMMENT action
+        # validate that it can be edited and reflects the new data
+        # for all other users: validate CANNOT edit
+        # on state change: valid CANNOT edit
+        pass

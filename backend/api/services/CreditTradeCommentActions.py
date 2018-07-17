@@ -20,8 +20,9 @@
     See the License for the specific language governing permissions and
     limitations under the License.
 """
-
+from api.models import CreditTrade, CreditTradeComment
 from api.permissions.CreditTradeComment import CreditTradeCommentPermissions
+
 
 class CreditTradeCommentActions(object):
     """
@@ -29,7 +30,7 @@ class CreditTradeCommentActions(object):
     """
 
     @staticmethod
-    def available_comment_actions(request, trade):
+    def available_comment_actions(request, trade: CreditTrade):
         available_actions = []
 
         if CreditTradeCommentPermissions.user_can_comment(request.user, trade, False):
@@ -40,3 +41,11 @@ class CreditTradeCommentActions(object):
 
         return available_actions
 
+    @staticmethod
+    def available_individual_comment_actions(request, comment: CreditTradeComment):
+        available_actions = []
+
+        if CreditTradeCommentPermissions.user_can_edit_comment(request.user, comment):
+            available_actions = ['EDIT_COMMENT']
+
+        return available_actions

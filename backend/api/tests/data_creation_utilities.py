@@ -117,21 +117,39 @@ class DataCreationUtilities(object):
         # Create test data for this test -- one trade with each possible status
         for (ct_status, rescinded) in product(all_statuses, [True, False]):
             if (ct_status, rescinded) not in impossible_states:
-                trade = CreditTrade()
-                trade.initiator = initiating_organization
-                trade.respondent = responding_organization
-                trade.type = CreditTradeType.objects.get_by_natural_key("Buy")
-                trade.status = CreditTradeStatus.objects.get_by_natural_key(ct_status)
-                trade.fair_market_value_per_credit = 20.0
-                trade.number_of_credits = 500
-                trade.is_rescinded = rescinded
-                trade.save()
-                trade.refresh_from_db()
-                logging.debug("created credit trade %s", trade.id)
-                created_trades.append({
-                    'status': ct_status,
-                    'rescinded': rescinded,
-                    'id': trade.id
-                })
+                created_trades.append(
+                    DataCreationUtilities.create_credit_trade(
+                        initiating_organization=initiating_organization,
+                        responding_organization=responding_organization,
+                        status=CreditTradeStatus.objects.get_by_natural_key(ct_status),
+                        is_rescinded=rescinded
+                    )
+                )
 
         return created_trades
+
+    @staticmethod
+    def create_credit_trade(
+            initiating_organization: Organization,
+            responding_organization: Organization,
+            status: CreditTradeStatus,
+            is_rescinded: bool) -> dict:
+        """Create a single credit trade"""
+
+        trade = CreditTrade()
+        trade.initiator = initiating_organization
+        trade.respondent = responding_organization
+        trade.type = CreditTradeType.objects.get_by_natural_key("Buy")
+        trade.status = status
+        trade.fair_market_value_per_credit = 20.0
+        trade.number_of_credits = 500
+        trade.is_rescinded = is_rescinded
+        trade.save()
+        trade.refresh_from_db()
+        logging.debug("created credit trade %s", trade.id)
+
+        return {
+            'status': status.status,
+            'rescinded': is_rescinded,
+            'id': trade.id
+        }

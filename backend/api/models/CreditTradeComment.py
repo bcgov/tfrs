@@ -44,6 +44,14 @@ class CreditTradeComment(Auditable):
                                             default=True,
                                             db_column='is_privileged_access')
 
+    # For tracking the status at the point in time the comment was made
+    trade_history = models.ForeignKey(
+        'CreditTradeHistory',
+        related_name='credit_trade_comments',
+        null=True,
+        on_delete=models.PROTECT
+    )
+
     class Meta:
         db_table = 'credit_trade_comment'
         ordering = ['create_timestamp']

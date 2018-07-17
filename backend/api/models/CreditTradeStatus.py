@@ -25,7 +25,6 @@ from auditable.models import Auditable
 from api.managers.CreditTradeStatusManager import CreditTradeStatusManager
 
 
-
 class CreditTradeStatus(Auditable):
     status = models.CharField(max_length=25, blank=True, null=True, unique=True)
     description = models.CharField(max_length=4000, blank=True, null=True)

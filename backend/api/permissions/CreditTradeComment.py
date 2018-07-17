@@ -23,6 +23,8 @@ from collections import defaultdict
 from enum import Enum
 
 from rest_framework import permissions
+
+from api.models import CreditTradeComment
 from api.services.CreditTradeService import CreditTradeService
 
 
@@ -100,8 +102,14 @@ class CreditTradeCommentPermissions(permissions.BasePermission):
             privileged
         )]
 
+    @staticmethod
+    def user_can_edit_comment(user, comment: CreditTradeComment):
+        if user.id != comment.create_user.id:
+            return False
+
     def has_permission(self, request, view):
         """Check permissions When an object does not yet exist (POST)"""
+
         # Fallback to has_object_permission unless it's a POST
         if request.method != 'POST':
             return True
