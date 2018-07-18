@@ -29,7 +29,7 @@ def run(fallback_user_id=None):
 
         comment = CreditTradeComment()
         comment.credit_trade = ct
-        comment.privileged_access = True
+        comment.privileged_access = False
 
         comment.create_user = ct.create_user
         comment.create_timestamp = ct.create_timestamp
