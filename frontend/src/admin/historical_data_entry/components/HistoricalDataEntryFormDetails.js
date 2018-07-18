@@ -8,7 +8,6 @@ import numeral from 'numeral';
 import * as NumberFormat from '../../../constants/numeralFormats';
 
 import { CREDIT_TRANSFER_TYPES, ZERO_DOLLAR_REASON } from '../../../constants/values';
-import HistoricalDataEntryFormNote from './HistoricalDataEntryFormNote';
 import HistoricalDataEntryFormButtons from './HistoricalDataEntryFormButtons';
 
 const HistoricalDataEntryFormDetails = props => (
@@ -201,14 +200,6 @@ const HistoricalDataEntryFormDetails = props => (
         </div>
       </div>
 
-      <div className="row">
-        <div className="col-md-12">
-          <HistoricalDataEntryFormNote
-            note={props.fields.note}
-            handleInputChange={props.handleInputChange}
-          />
-        </div>
-      </div>
 
       <div className="row">
         <div className="col-md-12">
@@ -253,7 +244,6 @@ HistoricalDataEntryFormDetails.propTypes = {
     }),
     fairMarketValuePerCredit: PropTypes.string,
     numberOfCredits: PropTypes.string,
-    note: PropTypes.string.isRequired,
     tradeEffectiveDate: PropTypes.string,
     transferType: PropTypes.string,
     zeroDollarReason: PropTypes.string

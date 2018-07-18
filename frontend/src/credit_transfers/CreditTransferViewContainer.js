@@ -97,7 +97,6 @@ class CreditTransferViewContainer extends Component {
       initiator: item.initiator.id,
       fairMarketValuePerCredit: item.fairMarketValuePerCredit,
       isRescinded: item.isRescinded,
-      note: item.note,
       numberOfCredits: item.numberOfCredits,
       respondent: item.respondent.id,
       status: status.id,
@@ -313,7 +312,6 @@ class CreditTransferViewContainer extends Component {
       initiator: item.initiator.id,
       fairMarketValuePerCredit: item.fairMarketValuePerCredit,
       isRescinded: true,
-      note: item.note,
       numberOfCredits: item.numberOfCredits,
       respondent: item.respondent.id,
       status: item.status.id,
@@ -362,7 +360,6 @@ class CreditTransferViewContainer extends Component {
         isRescinded={item.isRescinded}
         key="creditTransferDetails"
         loggedInUser={loggedInUser}
-        note={item.note}
         numberOfCredits={item.numberOfCredits}
         rescinded={item.rescinded}
         signatures={item.signatures}

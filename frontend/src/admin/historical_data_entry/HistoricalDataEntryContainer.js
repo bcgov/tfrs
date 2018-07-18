@@ -30,7 +30,6 @@ class HistoricalDataEntryContainer extends Component {
         creditsFrom: { id: 0, name: '' },
         creditsTo: { id: 0, name: '' },
         fairMarketValuePerCredit: '',
-        note: '',
         numberOfCredits: '',
         tradeEffectiveDate: '',
         transferType: ''

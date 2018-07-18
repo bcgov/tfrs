@@ -137,7 +137,6 @@ class CreditTransferAddContainer extends Component {
     const data = {
       fairMarketValuePerCredit: parseFloat(this.state.fields.fairMarketValuePerCredit).toFixed(2),
       initiator: this.state.fields.initiator.id,
-      note: this.state.fields.note,
       numberOfCredits: parseInt(this.state.fields.numberOfCredits, 10),
       respondent: this.state.fields.respondent.id,
       status: status.id,

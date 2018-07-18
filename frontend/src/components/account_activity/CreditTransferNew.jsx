@@ -24,7 +24,6 @@ class CreditTransferNew extends Component {
         numberOfCredits: 0,
         respondent: null,
         fairMarketValuePerCredit: 0.00,
-        note: ""
       }
     };
   }
@@ -41,8 +40,7 @@ class CreditTransferNew extends Component {
         typeId: CREDIT_TRANSFER_TYPES.buy.id,
         numberOfCredits: 0,
         respondent: null,
-        fairMarketValuePerCredit: 0.00,
-        note: ""
+        fairMarketValuePerCredit: 0.00
       }
     };
   }
@@ -70,13 +68,11 @@ class CreditTransferNew extends Component {
     const numberOfCredits = this.creditTransfer.numberOfCredits.value;
     const respondent = this.respondent.value;
     const valuePerCredit = this.valuePerCredit.value;
-    const note = this.note.value;
     const data = {
       initiator: initiator,
       numberOfCredits: numberOfCredits,
       respondent: respondent,
       valuePerCredit: valuePerCredit,
-      note: note,
       status: status.id,
       creditTradeTypeFK: creditTradeTypeFK
     }
@@ -164,15 +160,6 @@ class CreditTransferNew extends Component {
               <div>{this.props.addCreditTransferError}</div>
             </div>
             }
-            <div className="form-group note">
-              <label htmlFor="comment">Note:</label>
-              <textarea
-                className="form-control"
-                rows="5"
-                id="note"
-                ref={(input) => this.note = input}>
-              </textarea>
-            </div>
             <div className="btn-container">
               <button
                 type="button"

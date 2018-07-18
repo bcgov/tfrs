@@ -97,7 +97,6 @@ HistoricalDataEntryPage.propTypes = {
     }),
     numberOfCredits: PropTypes.string,
     fairMarketValuePerCredit: PropTypes.string,
-    note: PropTypes.string.isRequired,
     tradeEffectiveDate: PropTypes.string,
     transferType: PropTypes.string,
     zeroDollarReason: PropTypes.string

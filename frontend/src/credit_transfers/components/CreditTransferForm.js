@@ -101,7 +101,6 @@ CreditTransferForm.propTypes = {
     }),
     numberOfCredits: PropTypes.string,
     fairMarketValuePerCredit: PropTypes.string,
-    note: PropTypes.string.isRequired
   }).isRequired,
   creditsTo: PropTypes.shape({
     name: PropTypes.string,

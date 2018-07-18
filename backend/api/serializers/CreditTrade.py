@@ -146,6 +146,7 @@ class CreditTradeCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = CreditTrade
         fields = '__all__'
+        read_only_fields = ('note',)
 
 
 class CreditTradeListSerializer(serializers.ModelSerializer):
@@ -322,6 +323,7 @@ class CreditTradeUpdateSerializer(serializers.ModelSerializer):
     class Meta:
         model = CreditTrade
         fields = '__all__'
+        read_only_fields = ('note',)
 
 
 class CreditTradeApproveSerializer(serializers.ModelSerializer):
@@ -355,7 +357,7 @@ class CreditTradeApproveSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = CreditTrade
-        fields = ('id', 'trade_effective_date', 'note',)
+        fields = ('id', 'trade_effective_date')
         read_only_fields = ('status', 'number_of_credits',
                             'type',
                             'fair_market_value_per_credit',
@@ -388,7 +390,7 @@ class CreditTrade2Serializer(serializers.ModelSerializer):
                   'fair_market_value_per_credit', 'total_value',
                   'zero_reason',
                   'trade_effective_date', 'credits_from', 'credits_to',
-                  'update_timestamp', 'actions', 'comment_actions', 'note',
+                  'update_timestamp', 'actions', 'comment_actions',
                   'compliance_period', 'comments', 'is_rescinded',
                   'signatures', 'history')
 

@@ -78,14 +78,12 @@ class CreditTransfer extends Component {
   }
 
   handleUpdate(status) {
-    const note = this.note.value;
     const data = {
       id: this.props.data.id,
       initiator: this.props.data.initiator,
       numberOfCredits: this.props.data.numberOfCredits,
       respondent: this.props.data.respondent,
       fairMarketValuePerCredit: this.props.data.fairMarketValuePerCredit,
-      note: note,
       status: status,
       type: this.props.data.type,
       tradeEffectiveDate: this.props.data.trade_effective_date,
@@ -102,7 +100,6 @@ class CreditTransfer extends Component {
     const respondentId = this.respondentId.value;
     const fairMarketValuePerCredit = this.fairMarketValuePerCredit.value;
     // const status = status;
-    const note = this.note.value;
     const id = this.props.match.params.id;
     const data = {
       id: id,
@@ -110,7 +107,6 @@ class CreditTransfer extends Component {
       numberOfCredits: numberOfCredits,
       respondent: respondentId,
       fairMarketValuePerCredit: fairMarketValuePerCredit,
-      note: note,
       status: status,
       type: typeId
     }
@@ -211,15 +207,6 @@ class CreditTransfer extends Component {
                 </div>
                 }
                 <CreditTransferVisualRepresentation data={this.props.data} />
-              <div className="form-group note">
-                <label htmlFor="comment">Note:</label>
-                <textarea 
-                  className="form-control" 
-                  rows="5" 
-                  id="note"
-                  ref={(input) => this.note = input}>
-                </textarea>
-              </div>
               { (this.props.data.status.id === Values.STATUS_NEW || this.props.data.status.status == 'Draft') && 
                 <div className="btn-container">
                   <button 
