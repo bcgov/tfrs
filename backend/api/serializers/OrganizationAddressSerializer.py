@@ -20,36 +20,18 @@
     See the License for the specific language governing permissions and
     limitations under the License.
 """
+from rest_framework import serializers
 
-from django.db import models
-
-from auditable.models import Auditable
+from api.models.OrganizationAddress import OrganizationAddress
 
 
-class OrganizationBalance(Auditable):
+class OrganizationAddressSerializer(serializers.ModelSerializer):
     """
-    Credit Trade Balance for the Fuel Supplier
+    Address Serializer that loads all the fields that useful for
+    displaying.
     """
-    organization = models.ForeignKey(
-        'Organization',
-        related_name='balances',
-        on_delete=models.CASCADE)
-    validated_credits = models.BigIntegerField(
-        db_comment='Validated LCF credits during validity period'
-    )
-
-    effective_date = models.DateField(
-        blank=True, null=True, db_comment='Not valid before')
-    expiration_date = models.DateField(
-        blank=True, null=True, db_comment='Not valid after')
-
-    credit_trade = models.ForeignKey(
-        'CreditTrade',
-        related_name='balances',
-        blank=True, null=True,
-        on_delete=models.PROTECT)
-
     class Meta:
-        db_table = 'organization_balance'
-
-    db_table_comment = 'Represents an organization\'s credit balance for a range of time'
+        model = OrganizationAddress
+        fields = (
+            'id', 'address_line_1', 'address_line_2', 'address_line_3',
+            'city', 'postal_code', 'state', 'county', 'country')
