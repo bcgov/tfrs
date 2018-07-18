@@ -1,12 +1,13 @@
 # coding: utf-8
-
 """
     REST API Documentation for the NRS TFRS Credit Trading Application
 
-    The Transportation Fuels Reporting System is being designed to streamline compliance reporting for transportation fuel suppliers in accordance with the Renewable & Low Carbon Fuel Requirements Regulation.
+    The Transportation Fuels Reporting System is being designed to streamline
+    compliance reporting for transportation fuel suppliers in accordance with
+    the Renewable & Low Carbon Fuel Requirements Regulation.
 
     OpenAPI spec version: v1
-        
+
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
@@ -22,104 +23,77 @@
 """
 from db_comments.patch_fields import patch_fields
 
+from . import User
+from . import CreditTradeComment
+from . import OrganizationAddress
+
 patch_fields()
+
 
 # from __future__ import absolute_import
 
 # import models into model package
-#try:
-#     from . import CreditTrade  
-#except:
+# try:
+#     from . import CreditTrade
+# except:
 #     import CreditTrade
-#try:
-#     from . import CreditTradeHistory  
-#except:
+# try:
+#     from . import CreditTradeHistory
+# except:
 #     import CreditTradeHistory
-#try:
-#     from . import CreditTradeStatus  
-#except:
+# try:
+#     from . import CreditTradeStatus
+# except:
 #     import CreditTradeStatus
-#try:
-#     from . import CreditTradeType  
-#except:
+# try:
+#     from . import CreditTradeType
+# except:
 #     import CreditTradeType
-#try:
-#     from . import CreditTradeZeroReason  
-#except:
+# try:
+#     from . import CreditTradeZeroReason
+# except:
 #     import CreditTradeZeroReason
-#try:
-#     from . import CurrentUserViewModel  
-#except:
+# try:
+#     from . import CurrentUserViewModel
+# except:
 #     import CurrentUserViewModel
-#try:
-#     from . import Organization  
-#except:
+# try:
+#     from . import Organization
+# except:
 #     import Organization
-#try:
-#     from . import OrganizationActionsType  
-#except:
+# try:
+#     from . import OrganizationActionsType
+# except:
 #     import OrganizationActionsType
-#try:
-#     from . import OrganizationAttachment  
-#except:
+# try:
+#     from . import OrganizationAttachment
+# except:
 #     import OrganizationAttachment
-#try:
-#     from . import OrganizationBalance  
-#except:
+#  try:
+#     from . import OrganizationBalance
+# except:
 #     import OrganizationBalance
-#try:
-#     from . import OrganizationHistory  
-#except:
+# try:
+#     from . import OrganizationHistory
+# except:
 #     import OrganizationHistory
-#try:
-#     from . import OrganizationStatus  
-#except:
+# try:
+#     from . import OrganizationStatus
+# except:
 #     import OrganizationStatus
-#try:
-#     from . import Permission  
-#except:
+# try:
+#     from . import Permission
+# except:
 #     import Permission
-#try:
-#     from . import PermissionViewModel  
-#except:
-#     import PermissionViewModel
-#try:
-#     from . import Role  
-#except:
+# try:
+#     from . import Role
+# except:
 #     import Role
-#try:
-#     from . import RolePermission  
-#except:
+# try:
+#     from . import RolePermission
+# except:
 #     import RolePermission
-#try:
-#     from . import RolePermissionViewModel  
-#except:
-#     import RolePermissionViewModel
-#try:
-#     from . import RoleViewModel  
-#except:
-#     import RoleViewModel
-#try:
-#     from . import User  
-#except:
+# try:
+#     from . import User
+# except:
 #     import User
-#try:
-#     from . import UserDetailsViewModel  
-#except:
-#     import UserDetailsViewModel
-#try:
-#     from . import UserRole  
-#except:
-#     import UserRole
-#try:
-#     from . import UserRoleViewModel  
-#except:
-#     import UserRoleViewModel
-#try:
-#     from . import UserViewModel  
-#except:
-#     import UserViewModel
-#
-
-from . import User
-from . import CreditTradeComment

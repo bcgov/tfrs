@@ -26,6 +26,9 @@ from api.models.OrganizationStatus import OrganizationStatus
 
 
 class OrganizationStatusSerializer(serializers.ModelSerializer):
+    """
+    Sets of statuses an Organization can have such as Active and Archived
+    """
     class Meta:
         model = OrganizationStatus
         fields = (
