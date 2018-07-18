@@ -190,17 +190,18 @@ class TestCreditTradeHistory(BaseTestCase):
         response = self.clients['gov_admin'].get(
             '/api/credit_trades_history')
 
-        # We should see a record from the government analyst
-        self.assertIn('"id":' + str(self.users['gov_analyst'].id),
-                      response.content.decode('utf-8'))
+        response_data = json.loads(response.content.decode("utf-8"))
+        for history in response_data:
+            # The user ID should belong to the government users
+            self.assertIn(
+                history['user']['id'],
+                [self.users['gov_analyst'].id,
+                 self.users['gov_director'].id,
+                 self.users['gov_admin'].id])
 
-        # We should see a record from the government director
-        self.assertIn('"id":' + str(self.users['gov_director'].id),
-                      response.content.decode('utf-8'))
-
-        # We should not see a record from the fuel suppliers
-        self.assertNotIn('"id":' + str(self.users['fs_user_1'].id),
-                         response.content.decode('utf-8'))
-
-        self.assertNotIn('"id":' + str(self.users['fs_user_2'].id),
-                         response.content.decode('utf-8'))
+            # none of the fuel supplier history should show up
+            self.assertNotIn(
+                history['user']['id'],
+                [self.users['fs_user_1'].id,
+                 self.users['fs_user_2'].id,
+                 self.users['fs_user_3'].id])
