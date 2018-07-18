@@ -107,11 +107,15 @@ class CreditTradeCommentPermissions(permissions.BasePermission):
         if user.id != comment.create_user.id:
             return False
 
-        current_status = comment.credit_trade.status.id
-        status_at_creation = comment.trade_history_at_creation.status.id if \
-            comment.trade_history_at_creation is not None else None
+        history = comment.trade_history_at_creation
 
-        return current_status == status_at_creation
+        current_status = comment.credit_trade.status.id
+        status_at_creation = history.status.id if history is not None else None
+
+        current_rescinded = comment.credit_trade.is_rescinded
+        rescinded_at_creation = history.is_rescinded if history is not None else None
+
+        return (current_status, current_rescinded) == (status_at_creation, rescinded_at_creation)
 
     def has_permission(self, request, view):
         """Check permissions When an object does not yet exist (POST)"""

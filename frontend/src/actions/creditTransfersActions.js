@@ -429,3 +429,36 @@ const addCommentToCreditTransferError = error => ({
   type: ActionTypes.ERROR,
   errorMessage: error
 });
+
+/*
+ * Update comment on credit transfer
+ */
+export const updateCommentOnCreditTransfer = (id, data) => (dispatch) => {
+  dispatch(updateCommentOnCreditTransferRequest());
+
+  return axios
+    .put(`${Routes.BASE_URL}${Routes.COMMENTS_API}/${id}`, data)
+    .then((response) => {
+      dispatch(updateCommentOnCreditTransferSuccess(response.data));
+    }).catch((error) => {
+      dispatch(updateCommentOnCreditTransferError(error.response.data));
+      return Promise.reject(error);
+    });
+};
+
+const updateCommentOnCreditTransferRequest = () => ({
+  name: 'UPDATE_COMMENT_ON_CREDIT_TRANSFER_REQUEST',
+  type: ActionTypes.REQUEST
+});
+
+const updateCommentOnCreditTransferSuccess = data => ({
+  name: 'SUCCESS_UPDATE_COMMENT_ON_CREDIT_TRANSFER',
+  type: ActionTypes.SUCCESS,
+  data
+});
+
+const updateCommentOnCreditTransferError = error => ({
+  name: 'ERROR_UPDATE_COMMENT_ON_CREDIT_TRANSFER',
+  type: ActionTypes.ERROR,
+  errorMessage: error
+});

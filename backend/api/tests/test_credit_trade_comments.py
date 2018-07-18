@@ -595,6 +595,9 @@ class TestAPIComments(BaseTestCase, CreditTradeRelationshipMixin, CreditTradeFlo
                                       comment_id=comment.id,
                                       creating_user_relationship=comment.creating_user_relationship):
 
+                        logging.debug('verifying comment {} as {}'.format(
+                            cr.trade_id, comment.creating_user_relationship))
+
                         response = self.clients[self.user_map[comment.creating_user_relationship]].get(
                             '/api/comments/{}'.format(comment.id)
                         )
@@ -613,7 +616,10 @@ class TestAPIComments(BaseTestCase, CreditTradeRelationshipMixin, CreditTradeFlo
                                   comment_id=comment.id,
                                   creating_user_relationship=comment.creating_user_relationship):
 
-                    response = self.clients[self.user_map[cr.relationship]].get(
+                    logging.debug('verifying comment {} as {}'.format(
+                        cr.trade_id, comment.creating_user_relationship))
+
+                    response = self.clients[self.user_map[comment.creating_user_relationship]].get(
                         '/api/comments/{}'.format(comment.id)
                     )
                     self.assertTrue(status.is_success(response.status_code))
