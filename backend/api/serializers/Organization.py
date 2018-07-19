@@ -23,6 +23,7 @@
 from rest_framework import serializers
 
 from api.models.Organization import Organization
+from .OrganizationAddressSerializer import OrganizationAddressSerializer
 
 
 class OrganizationSerializer(serializers.ModelSerializer):
@@ -30,13 +31,30 @@ class OrganizationSerializer(serializers.ModelSerializer):
     Serializer for the Fuel Supplier
     Loads most of the fields and the balance for the Fuel Supplier
     """
+    organization_address = serializers.SerializerMethodField()
     organization_balance = serializers.SerializerMethodField()
 
     class Meta:
         model = Organization
         fields = ('id', 'name', 'status', 'status_display', 'actions_type',
                   'actions_type_display', 'create_timestamp', 'type',
-                  'organization_balance')
+                  'organization_balance', 'organization_address')
+
+    def get_organization_address(self, obj):
+        """
+        Shows the organization address
+        """
+        from api.models.OrganizationAddress import OrganizationAddress
+
+        organization_address = OrganizationAddress.objects.filter(
+            organization_id=obj.id).first()
+
+        if organization_address is None:
+            return None
+
+        serializer = OrganizationAddressSerializer(organization_address,
+                                                   read_only=True)
+        return serializer.data
 
     def get_organization_balance(self, obj):
         """
@@ -46,7 +64,7 @@ class OrganizationSerializer(serializers.ModelSerializer):
         request = self.context.get('request')
 
         if not request.user.has_perm('VIEW_FUEL_SUPPLIERS') and \
-            request.user.organization.id != obj.id:
+                request.user.organization.id != obj.id:
             return None
 
         return obj.organization_balance

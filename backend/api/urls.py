@@ -19,11 +19,13 @@
     See the License for the specific language governing permissions and
     limitations under the License.
 """
-
 from django.conf.urls import url, include
+from rest_framework.documentation import include_docs_urls
+from rest_framework.routers import DefaultRouter
 
 from .viewsets.CompliancePeriod import CompliancePeriodViewSet
 from .viewsets.CreditTrade import CreditTradeViewSet
+from .viewsets.CreditTradeHistory import CreditTradeHistoryViewSet
 from .viewsets.Organization import OrganizationViewSet
 from .viewsets.SigningAuthorityAssertion \
     import SigningAuthorityAssertionViewSet
@@ -32,28 +34,24 @@ from .viewsets.SigningAuthorityConfirmation \
 from .viewsets.User import UserViewSet
 from .viewsets.CreditTradeComments import CreditTradeCommentsViewSet
 
-from rest_framework.documentation import include_docs_urls
-
-from rest_framework.routers import DefaultRouter
-from django.conf import settings
-
 # Create a router and register our views with it.
-router = DefaultRouter(trailing_slash=False)
-router.register(r'compliance_periods', CompliancePeriodViewSet)
-router.register(r'credit_trades', CreditTradeViewSet)
-router.register(r'comments', CreditTradeCommentsViewSet)
-router.register(r'organizations', OrganizationViewSet)
-router.register(r'signing_authority_assertions',
+ROUTER = DefaultRouter(trailing_slash=False)
+ROUTER.register(r'compliance_periods', CompliancePeriodViewSet)
+ROUTER.register(r'credit_trades', CreditTradeViewSet)
+ROUTER.register(r'credit_trades_history', CreditTradeHistoryViewSet)
+ROUTER.register(r'comments', CreditTradeCommentsViewSet)
+ROUTER.register(r'organizations', OrganizationViewSet)
+ROUTER.register(r'signing_authority_assertions',
                 SigningAuthorityAssertionViewSet)
-router.register(r'signing_authority_confirmations',
+ROUTER.register(r'signing_authority_confirmations',
                 SigningAuthorityConfirmationViewSet)
-router.register(r'users', UserViewSet)
+ROUTER.register(r'users', UserViewSet)
 
 
 urlpatterns = [
     # Swagger documentation
     url(r'^doc/', include_docs_urls(title='TFRS API Documentation')),
-    url(r'^', include(router.urls))
+    url(r'^', include(ROUTER.urls))
 ]
 
-urlpatterns += router.urls
+urlpatterns += ROUTER.urls

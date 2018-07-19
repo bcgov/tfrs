@@ -475,3 +475,19 @@ class CreditTrade2Serializer(serializers.ModelSerializer):
             })
 
         return signatures
+
+
+class CreditTradeMinSerializer(serializers.ModelSerializer):
+    """
+    Credit Trade Serializer with just the basic information
+    """
+    status = CreditTradeStatusMinSerializer(read_only=True)
+    initiator = OrganizationMinSerializer(read_only=True)
+    respondent = OrganizationMinSerializer(read_only=True)
+    type = CreditTradeTypeSerializer(read_only=True)
+
+    class Meta:
+        model = CreditTrade
+        fields = ('id', 'status', 'initiator', 'respondent', 'type',
+                  'number_of_credits', 'fair_market_value_per_credit',
+                  'is_rescinded')

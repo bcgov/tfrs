@@ -20,6 +20,7 @@ import {
 import getCompliancePeriods from '../../actions/compliancePeriodsActions';
 import { getFuelSuppliers } from '../../actions/organizationActions';
 import HistoricalDataEntryPage from './components/HistoricalDataEntryPage';
+import AdminTabs from '../components/AdminTabs';
 
 class HistoricalDataEntryContainer extends Component {
   constructor (props) {
@@ -140,7 +141,8 @@ class HistoricalDataEntryContainer extends Component {
   }
 
   render () {
-    return (
+    return ([
+      <AdminTabs key="nav" active="historical-data" />,
       <HistoricalDataEntryPage
         addErrors={this.props.addErrors}
         commitErrors={this.props.commitErrors}
@@ -153,13 +155,14 @@ class HistoricalDataEntryContainer extends Component {
         handleInputChange={this._handleInputChange}
         handleSubmit={this._handleSubmit}
         historicalData={this.props.historicalData}
+        key="page"
         processApprovedCreditTransfers={this._processApprovedCreditTransfers}
         selectedId={this.state.selectedId}
         selectIdForModal={this._selectIdForModal}
         title="Historical Data Entry"
         totalValue={this.state.totalValue}
       />
-    );
+    ]);
   }
 }
 
