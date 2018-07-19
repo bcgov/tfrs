@@ -14,6 +14,7 @@ import ORGANIZATIONS from './constants/routes/Organizations';
 import USERS from './constants/routes/Users';
 
 import ContactUsContainer from './contact_us/ContactUsContainer';
+import CreditTransactionAddContainer from './credit_transfers/CreditTransactionAddContainer';
 import CreditTransactionsContainer from './credit_transfers/CreditTransactionsContainer';
 import CreditTransferAddContainer from './credit_transfers/CreditTransferAddContainer';
 import CreditTransferEditContainer from './credit_transfers/CreditTransferEditContainer';
@@ -69,6 +70,11 @@ const Router = props => (
           exact
           path={CREDIT_TRANSACTIONS.ADD}
           component={withRouter(CreditTransferAddContainer)}
+        />
+        <Route
+          exact
+          path={CREDIT_TRANSACTIONS.ADD_PVR}
+          component={withRouter(CreditTransactionAddContainer)}
         />
         <Route
           path={CREDIT_TRANSACTIONS.EDIT}

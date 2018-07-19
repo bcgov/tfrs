@@ -1,0 +1,23 @@
+.credit-transaction {
+  .btn-container {
+    text-align: right;
+  }
+
+  .main-form {
+    margin-left: -15px;
+    margin-right: -15px;
+
+    label {
+      font-weight: normal;
+      width: 100%;
+    }
+
+    .btn-group {
+      display: block;
+
+      .btn {
+        margin-right: 0;
+      }
+    }
+  }
+}
