@@ -33,7 +33,6 @@ class HistoricalDataEntryEditContainer extends Component {
         creditsTo: { id: 0, name: '' },
         fairMarketValuePerCredit: '',
         tradeEffectiveDate: '',
-        note: '',
         numberOfCredits: '',
         transferType: '',
         zeroDollarReason: ''
@@ -116,7 +115,6 @@ class HistoricalDataEntryEditContainer extends Component {
         creditsFrom: item.creditsFrom,
         creditsTo: item.creditsTo,
         fairMarketValuePerCredit: item.fairMarketValuePerCredit,
-        note: item.note,
         numberOfCredits: item.numberOfCredits.toString(),
         tradeEffectiveDate: (item.tradeEffectiveDate) ? item.tradeEffectiveDate.toString() : '',
         transferType: item.type.id.toString(),

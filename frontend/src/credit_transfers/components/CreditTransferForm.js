@@ -11,7 +11,6 @@ import PERMISSIONS_CREDIT_TRANSACTIONS from '../../constants/permissions/CreditT
 import CreditTransferProgress from './CreditTransferProgress';
 import CreditTransferFormDetails from './CreditTransferFormDetails';
 import CreditTransferVisualRepresentation from './CreditTransferVisualRepresentation';
-import CreditTransferFormNote from './CreditTransferFormNote';
 import CreditTransferFormButtons from './CreditTransferFormButtons';
 import CreditTransferTerms from './CreditTransferTerms';
 
@@ -43,12 +42,7 @@ const CreditTransferForm = props => (
         tradeType={props.fields.tradeType}
       />
 
-      {/* TODO A comprehensive deprecation is pending */}
       <span>You will have the opportunity to create comments after saving a draft</span>
-      {false && <CreditTransferFormNote
-        note={props.fields.note}
-        handleInputChange={props.handleInputChange}
-      />}
 
       {(props.loggedInUser.hasPermission(PERMISSIONS_CREDIT_TRANSACTIONS.SIGN)) &&
         <CreditTransferTerms
@@ -107,7 +101,6 @@ CreditTransferForm.propTypes = {
     }),
     numberOfCredits: PropTypes.string,
     fairMarketValuePerCredit: PropTypes.string,
-    note: PropTypes.string.isRequired
   }).isRequired,
   creditsTo: PropTypes.shape({
     name: PropTypes.string,

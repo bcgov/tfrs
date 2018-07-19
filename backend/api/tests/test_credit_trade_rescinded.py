@@ -61,7 +61,6 @@ class TestCreditTradeRescind(BaseTestCase):
             'is_rescinded': True,
             'fair_market_value_per_credit':
             credit_trade.fair_market_value_per_credit,
-            'note': credit_trade.note,
             'number_of_credits': credit_trade.number_of_credits,
             'respondent': credit_trade.respondent_id,
             'status': credit_trade.status_id,
@@ -107,7 +106,6 @@ class TestCreditTradeRescind(BaseTestCase):
             'is_rescinded': True,
             'fair_market_value_per_credit':
             credit_trade.fair_market_value_per_credit,
-            'note': credit_trade.note,
             'number_of_credits': credit_trade.number_of_credits,
             'respondent': credit_trade.respondent_id,
             'status': credit_trade.status_id,
@@ -155,7 +153,6 @@ class TestCreditTradeRescind(BaseTestCase):
             'is_rescinded': True,
             'fair_market_value_per_credit':
             credit_trade.fair_market_value_per_credit,
-            'note': credit_trade.note,
             'number_of_credits': credit_trade.number_of_credits,
             'respondent': credit_trade.respondent_id,
             'status': credit_trade.status_id,
@@ -204,7 +201,6 @@ class TestCreditTradeRescind(BaseTestCase):
             'is_rescinded': credit_trade.is_rescinded,
             'fair_market_value_per_credit':
             credit_trade.fair_market_value_per_credit,
-            'note': credit_trade.note,
             'number_of_credits': credit_trade.number_of_credits,
             'respondent': credit_trade.respondent_id,
             'status': self.statuses['refused'].id,
@@ -225,7 +221,6 @@ class TestCreditTradeRescind(BaseTestCase):
             'is_rescinded': True,
             'fair_market_value_per_credit':
             credit_trade.fair_market_value_per_credit,
-            'note': credit_trade.note,
             'number_of_credits': credit_trade.number_of_credits,
             'respondent': credit_trade.respondent_id,
             'status': self.statuses['refused'].id,

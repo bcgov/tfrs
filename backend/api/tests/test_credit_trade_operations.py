@@ -619,7 +619,6 @@ class TestCreditTradeOperations(BaseTestCase):
             'is_rescinded': credit_trade.is_rescinded,
             'fair_market_value_per_credit':
             credit_trade.fair_market_value_per_credit,
-            'note': credit_trade.note,
             'number_of_credits': credit_trade.number_of_credits,
             'respondent': credit_trade.respondent_id,
             'status': self.statuses['submitted'].id,
@@ -672,7 +671,6 @@ class TestCreditTradeOperations(BaseTestCase):
             'is_rescinded': credit_trade['isRescinded'],
             'fair_market_value_per_credit':
             credit_trade['fairMarketValuePerCredit'],
-            'note': credit_trade['note'],
             'number_of_credits': credit_trade['numberOfCredits'],
             'respondent': credit_trade['respondent'],
             'status': self.statuses['accepted'].id,
@@ -753,7 +751,6 @@ class TestCreditTradeOperations(BaseTestCase):
             'is_rescinded': credit_trade['isRescinded'],
             'fair_market_value_per_credit':
             credit_trade['fairMarketValuePerCredit'],
-            'note': credit_trade['note'],
             'number_of_credits': credit_trade['numberOfCredits'],
             'respondent': credit_trade['respondent']['id'],
             'status': self.statuses['accepted'].id,
@@ -806,7 +803,6 @@ class TestCreditTradeOperations(BaseTestCase):
             'is_rescinded': credit_trade['isRescinded'],
             'fair_market_value_per_credit':
             credit_trade['fairMarketValuePerCredit'],
-            'note': credit_trade['note'],
             'number_of_credits': credit_trade['numberOfCredits'],
             'respondent': credit_trade['respondent']['id'],
             'status': self.statuses['recommended'].id,

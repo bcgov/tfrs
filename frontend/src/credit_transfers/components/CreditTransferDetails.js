@@ -61,11 +61,6 @@ const CreditTransferDetails = props => (
           totalValue={props.totalValue}
           tradeType={props.tradeType}
         />
-        {props.note !== '' &&
-          <div className="well transparent">
-            <div>Notes: {props.note}</div>
-          </div>
-        }
         {props.comments.map(c => (
           <CreditTransferComment comment={c} key={c.id} />
         ))
@@ -145,7 +140,6 @@ CreditTransferDetails.defaultProps = {
   history: [],
   id: 0,
   isRescinded: false,
-  note: '',
   numberOfCredits: '0',
   rescinded: false,
   signatures: [],
@@ -208,7 +202,6 @@ CreditTransferDetails.propTypes = {
   id: PropTypes.number,
   isFetching: PropTypes.bool.isRequired,
   isRescinded: PropTypes.bool,
-  note: PropTypes.string,
   numberOfCredits: PropTypes.oneOfType([
     PropTypes.string,
     PropTypes.number

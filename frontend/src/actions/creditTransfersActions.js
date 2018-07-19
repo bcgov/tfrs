@@ -39,7 +39,6 @@ export const prepareCreditTransfer = (fields) => {
     initiator: (fields.creditsFrom.id > 0)
       ? fields.creditsFrom.id
       : DEFAULT_ORGANIZATION.id,
-    note: fields.note,
     numberOfCredits: parseInt(fields.numberOfCredits, 10),
     respondent: (fields.creditsTo.id > 0)
       ? fields.creditsTo.id

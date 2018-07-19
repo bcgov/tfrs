@@ -43,7 +43,6 @@ class CreditTransferEditContainer extends Component {
         fairMarketValuePerCredit: '',
         terms: [],
         tradeStatus: CREDIT_TRANSFER_STATUS.draft,
-        note: ''
       },
       totalValue: 0
     };
@@ -76,7 +75,6 @@ class CreditTransferEditContainer extends Component {
       const fieldState = {
         initiator: item.initiator,
         fairMarketValuePerCredit: item.fairMarketValuePerCredit,
-        note: '',
         numberOfCredits: item.numberOfCredits.toString(),
         respondent: item.respondent,
         terms: this.state.fields.terms,
@@ -139,7 +137,6 @@ class CreditTransferEditContainer extends Component {
     const data = {
       fairMarketValuePerCredit: parseFloat(this.state.fields.fairMarketValuePerCredit).toFixed(2),
       initiator: this.state.fields.initiator.id,
-      note: this.state.fields.note,
       numberOfCredits: parseInt(this.state.fields.numberOfCredits, 10),
       respondent: this.state.fields.respondent.id,
       status: status.id,
