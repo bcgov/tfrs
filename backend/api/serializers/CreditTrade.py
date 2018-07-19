@@ -438,7 +438,8 @@ class CreditTrade2Serializer(serializers.ModelSerializer):
             comments = obj.unprivileged_comments
 
         serializer = CreditTradeCommentSerializer(comments,
-                                                  many=True)
+                                                  many=True,
+                                                  context={'request': request})
 
         return serializer.data
 

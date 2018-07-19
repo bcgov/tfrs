@@ -3,6 +3,18 @@ import PropTypes from 'prop-types';
 import * as Lang from '../../constants/langEnUs';
 
 class CreditTransferCommentForm extends Component {
+  static titleText (props) {
+    if (props.isEditingExistingComment) {
+      return Lang.TEXT_EDIT_COMMENT_HEADING;
+    }
+
+    if (props.isCreatingPrivilegedComment) {
+      return Lang.TEXT_ADD_INTERNAL_COMMENT_HEADING;
+    }
+
+    return Lang.TEXT_ADD_COMMENT_HEADING;
+  }
+
   constructor (props) {
     super(props);
     this.state = {
@@ -25,8 +37,8 @@ class CreditTransferCommentForm extends Component {
   render () {
     return (
       <div className="comment-form well transparent row">
-        <h2>{this.props.isCreatingPrivilegedComment ? Lang.TEXT_ADD_INTERNAL_COMMENT_HEADING
-          : Lang.TEXT_ADD_COMMENT_HEADING}
+        <h2>
+          {CreditTransferCommentForm.titleText(this.props)}
         </h2>
         <div className="form-group note col-xs-8">
           <form onSubmit={e => e.preventDefault()}>
@@ -58,7 +70,8 @@ class CreditTransferCommentForm extends Component {
               type="button"
               onClick={() => this.props.saveComment({
                 comment: this.state.comment,
-                privilegedAccess: this.props.isCreatingPrivilegedComment
+                privilegedAccess: this.props.isCreatingPrivilegedComment,
+                id: this.props.id
               })}
             >
               {Lang.BTN_SAVE_COMMENT}
@@ -85,12 +98,16 @@ class CreditTransferCommentForm extends Component {
 }
 
 CreditTransferCommentForm.defaultProps = {
-  comment: ''
+  comment: '',
+  isEditingExistingComment: false,
+  id: null
 };
 
 CreditTransferCommentForm.propTypes = {
   comment: PropTypes.string,
+  id: PropTypes.number,
   isCreatingPrivilegedComment: PropTypes.bool.isRequired,
+  isEditingExistingComment: PropTypes.bool,
   saveComment: PropTypes.func.isRequired,
   cancelComment: PropTypes.func.isRequired
 };

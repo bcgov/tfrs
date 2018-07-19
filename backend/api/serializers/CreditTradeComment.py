@@ -23,20 +23,29 @@
 from rest_framework import serializers
 
 from api.models.CreditTradeComment import CreditTradeComment
+from api.services.CreditTradeCommentActions import CreditTradeCommentActions
 
 from .User import UserMinSerializer
 
 
 class CreditTradeCommentSerializer(serializers.ModelSerializer):
     create_user = UserMinSerializer(read_only=True)
+    actions = serializers.SerializerMethodField()
 
     class Meta:
         model = CreditTradeComment
         fields = (
             'id', 'credit_trade', 'comment', 'privileged_access', 'create_timestamp',
-            'update_timestamp', 'create_user')
+            'update_timestamp', 'create_user', 'actions')
 
         read_only_fields = ('id', 'create_timestamp', 'update_timestamp', 'create_user')
+
+    def get_actions(self, obj):
+        """Attach available commenting actions"""
+
+        request = self.context.get('request')
+        assert request is not None
+        return CreditTradeCommentActions.available_individual_comment_actions(request, obj)
 
 
 class CreditTradeCommentUpdateSerializer(serializers.ModelSerializer):
@@ -59,7 +68,8 @@ class CreditTradeCommentUpdateSerializer(serializers.ModelSerializer):
 class CreditTradeCommentCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = CreditTradeComment
-        fields = ('id', 'credit_trade', 'comment', 'privileged_access', 'create_user', 'update_user')
+        fields = ('id', 'credit_trade', 'comment', 'privileged_access', 'create_user',
+                  'update_user')
         read_only_fields = ('id',)
 
 

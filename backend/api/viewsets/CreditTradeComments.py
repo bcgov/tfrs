@@ -26,6 +26,7 @@ from api.models.CreditTradeComment import CreditTradeComment
 from api.permissions.CreditTradeComment import CreditTradeCommentPermissions
 from api.serializers.CreditTradeComment import CreditTradeCommentSerializer,\
     CreditTradeCommentUpdateSerializer, CreditTradeCommentCreateSerializer
+from api.services.CreditTradeCommentActions import CreditTradeCommentService
 
 from auditable.views import AuditableMixin
 
@@ -54,5 +55,10 @@ class CreditTradeCommentsViewSet(AuditableMixin,
     def get_serializer_class(self):
         if self.action in list(self.serializer_classes.keys()):
             return self.serializer_classes[self.action]
+        else:
+            return self.serializer_classes['default']
 
-        return self.serializer_classes['default']
+    def perform_create(self, serializer):
+        comment = serializer.save()
+        CreditTradeCommentService.associate_history(comment)
+        comment.save()

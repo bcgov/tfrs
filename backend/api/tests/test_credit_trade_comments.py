@@ -23,18 +23,20 @@
 """
 
 import json
+import logging
 
-from collections import defaultdict
+from collections import defaultdict, namedtuple
 from itertools import product
 
 from rest_framework import status
 
 from api.models.Organization import Organization
+from api.tests.mixins.credit_trade_relationship import CreditTradeRelationshipMixin, CreditTradeFlowHooksMixin
 from .data_creation_utilities import DataCreationUtilities
 from .base_test_case import BaseTestCase
 
 
-class TestAPIComments(BaseTestCase):
+class TestAPIComments(BaseTestCase, CreditTradeRelationshipMixin, CreditTradeFlowHooksMixin):
     """
     Test Credit Trade Comments actions and permissions
     """
@@ -373,7 +375,6 @@ class TestAPIComments(BaseTestCase):
                               creating_privileged_comment=privileged,
                               expected_result=expected_result['status'],
                               reason=expected_result['reason']):
-
                 # check permissions on POST
                 response = self.clients[user].post(
                     "/api/comments", content_type='application/json',
@@ -533,3 +534,101 @@ class TestAPIComments(BaseTestCase):
             content_type='application/json',
             data=json.dumps(test_data))
         assert status.is_client_error(response.status_code)
+
+    def test_individual_comment_actions(self):
+        """ Test that users can edit comments on a credit trade before the status changes
+        but not after.
+        """
+
+        ToCheck = namedtuple('ToCheck',
+                             ['status', 'rescinded', 'relationship', 'create_privileged'])
+        CreatedComment = namedtuple('CreatedComment', ['id', 'creating_user_relationship'])
+
+        to_check = [
+            ToCheck('Draft', False, self.UserRelationship.INITIATOR, False),
+            ToCheck('Submitted', False, self.UserRelationship.RESPONDENT, False),
+            ToCheck('Accepted', False, self.UserRelationship.GOVERNMENT_ANALYST, False),
+            ToCheck('Accepted', False, self.UserRelationship.GOVERNMENT_ANALYST, True),
+            ToCheck('Recommended', False, self.UserRelationship.GOVERNMENT_DIRECTOR, False),
+            ToCheck('Not Recommended', False, self.UserRelationship.GOVERNMENT_DIRECTOR, False),
+            ToCheck('Recommended', False, self.UserRelationship.GOVERNMENT_DIRECTOR, True),
+            ToCheck('Not Recommended', False, self.UserRelationship.GOVERNMENT_DIRECTOR, True),
+        ]
+
+        comments_to_check = []
+
+        def check_before(cr: self.PreChangeRecord):
+            comments_to_check.clear()
+
+            if cr.trade_id:
+
+                # Create comments
+                for comment_action in to_check:
+                    if comment_action.status == cr.current_status and comment_action.rescinded == cr.rescinded:
+                        logging.debug('posting comment to {} as {}'.format(
+                            cr.trade_id, comment_action.relationship))
+
+                        response = self.clients[self.user_map[comment_action.relationship]].post(
+                            "/api/comments",
+                            content_type='application/json',
+                            data=json.dumps(
+                                {
+                                    "comment": "original comment",
+                                    "creditTrade": cr.trade_id,
+                                    "privilegedAccess": comment_action.create_privileged
+                                }
+                            )
+                        )
+
+                        response_data = json.loads(response.content.decode('utf-8'))
+
+                        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+
+                        comments_to_check.append(CreatedComment(response_data['id'],
+                                                                comment_action.relationship))
+
+                # Assert that for each comment we created, the creator can edit the comment
+                # until the status changes
+                for comment in comments_to_check:
+                    with self.subTest("Validating that comment can be edited by the creator"
+                                      " until the trade status changes",
+                                      comment_id=comment.id,
+                                      creating_user_relationship=comment.creating_user_relationship):
+
+                        logging.debug('verifying comment {} as {}'.format(
+                            cr.trade_id, comment.creating_user_relationship))
+
+                        response = self.clients[self.user_map[comment.creating_user_relationship]].get(
+                            '/api/comments/{}'.format(comment.id)
+                        )
+                        self.assertTrue(status.is_success(response.status_code))
+                        response_data = json.loads(response.content.decode('utf-8'))
+
+                        self.assertIn('EDIT_COMMENT', response_data['actions'])
+
+        def check_after(cr: self.ChangeRecord):
+            self.assertTrue(status.is_success(cr.response_code))
+
+            # Assert that for each comment we created, the creator can edit the comment
+            # until the status changes
+            for comment in comments_to_check:
+                with self.subTest("Validating that comment cannot be edited after the trade status changes",
+                                  comment_id=comment.id,
+                                  creating_user_relationship=comment.creating_user_relationship):
+
+                    logging.debug('verifying comment {} as {}'.format(
+                        cr.trade_id, comment.creating_user_relationship))
+
+                    response = self.clients[self.user_map[comment.creating_user_relationship]].get(
+                        '/api/comments/{}'.format(comment.id)
+                    )
+                    self.assertTrue(status.is_success(response.status_code))
+                    response_data = json.loads(response.content.decode('utf-8'))
+
+                    self.assertNotIn('EDIT_COMMENT', response_data['actions'])
+
+        CreditTradeFlowHooksMixin.check_credit_trade_workflow(
+            self,
+            before_change_callback=check_before,
+            after_change_callback=check_after        )
+

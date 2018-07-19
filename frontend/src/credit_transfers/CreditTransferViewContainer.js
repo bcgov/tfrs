@@ -13,6 +13,7 @@ import CreditTransferUtilityFunctions from './CreditTransferUtilityFunctions';
 
 import {
   addCommentToCreditTransfer,
+  updateCommentOnCreditTransfer,
   approveCreditTransfer,
   deleteCreditTransfer,
   getCreditTransferIfNeeded,
@@ -146,17 +147,34 @@ class CreditTransferViewContainer extends Component {
       privilegedAccess: comment.privilegedAccess
     };
 
-    this.props.addCommentToCreditTransfer(data).then(() => {
-      this.props.invalidateCreditTransfer(this.props.item);
-      this.props.getCreditTransferIfNeeded(this.props.item.id);
-      this.setState({
-        hasCommented: true,
-        isCommenting: false,
-        isCreatingPrivilegedComment: true
-      });
-    }, () => {
-      // Failed to update
-    });
+    switch (comment.id) {
+      case null:
+        this.props.addCommentToCreditTransfer(data).then(() => {
+          this.props.invalidateCreditTransfer(this.props.item);
+          this.props.getCreditTransferIfNeeded(this.props.item.id);
+          this.setState({
+            hasCommented: true,
+            isCommenting: false,
+            isCreatingPrivilegedComment: true
+          });
+        }, () => {
+        // Failed to update
+        });
+        break;
+      default:
+        // we are saving a pre-existing comment
+        this.props.updateCommentOnCreditTransfer(comment.id, data).then(() => {
+          this.props.invalidateCreditTransfer(this.props.item);
+          this.props.getCreditTransferIfNeeded(this.props.item.id);
+          this.setState({
+            hasCommented: true,
+            isCommenting: false,
+            isCreatingPrivilegedComment: true
+          });
+        }, () => {
+          // Failed to update
+        });
+    }
   }
 
   _addComment (privileged = false) {
@@ -524,6 +542,7 @@ CreditTransferViewContainer.propTypes = {
   }).isRequired,
   prepareSigningAuthorityConfirmations: PropTypes.func.isRequired,
   addCommentToCreditTransfer: PropTypes.func.isRequired,
+  updateCommentOnCreditTransfer: PropTypes.func.isRequired,
   updateCreditTransfer: PropTypes.func.isRequired
 };
 
@@ -544,6 +563,7 @@ const mapDispatchToProps = dispatch => ({
   prepareSigningAuthorityConfirmations: (creditTradeId, terms) =>
     prepareSigningAuthorityConfirmations(creditTradeId, terms),
   addCommentToCreditTransfer: bindActionCreators(addCommentToCreditTransfer, dispatch),
+  updateCommentOnCreditTransfer: bindActionCreators(updateCommentOnCreditTransfer, dispatch),
   updateCreditTransfer: bindActionCreators(updateCreditTransfer, dispatch)
 });
 
