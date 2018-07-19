@@ -49,5 +49,6 @@ export const DELETE = '/delete';
 
 export { default as COMPLIANCE_PERIODS } from './routes/CompliancePeriods';
 export { default as CONTACT_US } from './routes/ContactUs';
+export { default as CREDIT_TRANSACTIONS_HISTORY } from './routes/CreditTransactionsHistory';
 export { default as SIGNING_AUTHORITY_ASSERTIONS } from './routes/SigningAuthorityAssertions';
 export { default as SIGNING_AUTHORITY_CONFIRMATIONS } from './routes/SigningAuthorityConfirmations';
