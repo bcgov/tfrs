@@ -26,6 +26,7 @@ from api.models.CreditTradeComment import CreditTradeComment
 from api.permissions.CreditTradeComment import CreditTradeCommentPermissions
 from api.serializers.CreditTradeComment import CreditTradeCommentSerializer,\
     CreditTradeCommentUpdateSerializer, CreditTradeCommentCreateSerializer
+from api.services.CreditTradeCommentActions import CreditTradeCommentService
 
 from auditable.views import AuditableMixin
 
