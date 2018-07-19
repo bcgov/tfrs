@@ -1,3 +1,6 @@
+import datetime
+import hashlib
+
 from django.db.models import Q
 
 from rest_framework import viewsets, permissions, status, mixins
@@ -10,7 +13,6 @@ from auditable.views import AuditableMixin
 from api.decorators import permission_required
 
 from api.models.CreditTrade import CreditTrade
-from api.models.CreditTradeHistory import CreditTradeHistory
 from api.models.CreditTradeStatus import CreditTradeStatus
 
 from api.serializers import CreditTrade2Serializer as CreditTradeSerializer
@@ -23,8 +25,6 @@ from api.serializers import CreditTradeUpdateSerializer
 
 from api.services.CreditTradeService import CreditTradeService
 
-import hashlib
-import datetime
 
 class CreditTradeViewSet(AuditableMixin, mixins.CreateModelMixin,
                          mixins.RetrieveModelMixin, mixins.UpdateModelMixin,
