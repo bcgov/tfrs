@@ -366,7 +366,7 @@ class CreditTrade2Serializer(serializers.ModelSerializer):
     """
     Credit Trade Serializer with the eager loading
     """
-    status = CreditTradeStatusMinSerializer(read_only=True)
+    status = serializers.SerializerMethodField()
     initiator = OrganizationMinSerializer(read_only=True)
     respondent = OrganizationMinSerializer(read_only=True)
     type = CreditTradeTypeSerializer(read_only=True)
@@ -464,6 +464,9 @@ class CreditTrade2Serializer(serializers.ModelSerializer):
         return serializer.data
 
     def get_signatures(self, obj):
+        """
+        Returns all the users that have signed the credit trade
+        """
         signatures = []
         for signature in obj.signatures:
             user = User.objects.get(id=signature['create_user_id'])
@@ -475,6 +478,31 @@ class CreditTrade2Serializer(serializers.ModelSerializer):
             })
 
         return signatures
+
+    def get_status(self, obj):
+        """
+        Should just return the status, but with an exception for
+        non-government users when the status is Recommended or
+        Not Recommended
+        """
+        request = self.context.get('request')
+
+        if (obj.status.status == 'Recommended' or
+                obj.status.status == 'Not Recommended') and \
+            (request.user.role is None or
+             not request.user.role.is_government_role):
+            recommended = CreditTradeStatus.objects.get(status="Recommended")
+
+            return {
+                'id': recommended.id,
+                'status': 'Reviewed'
+            }
+
+        serializer = CreditTradeStatusMinSerializer(
+            obj.status,
+            read_only=True)
+
+        return serializer.data
 
 
 class CreditTradeMinSerializer(serializers.ModelSerializer):
