@@ -31,6 +31,7 @@ from auditable.models import Auditable
 from api.managers.UserManager import UserManager
 
 from .CreditTradeHistory import CreditTradeHistory
+from .Permission import Permission
 from .Role import Role
 from .UserRole import UserRole
 
@@ -89,6 +90,18 @@ class User(AbstractUser, Auditable):
 
     def __str__(self):
         return str(self.id)
+
+    @property
+    def permissions(self):
+        """
+        Permissions that the user has based on the roles applied
+        """
+        if self.roles is None:
+            return None
+
+        return Permission.objects.distinct().filter(
+            Q(role_permissions__role__in=self.roles)
+        ).order_by('id')
 
     @property
     def roles(self):

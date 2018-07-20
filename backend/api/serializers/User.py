@@ -25,21 +25,17 @@ from rest_framework import exceptions, serializers
 
 from api.models.User import User
 from .Organization import OrganizationSerializer, OrganizationMinSerializer
-from .Role import RoleSerializer, RoleMinSerializer
-
-
-class MemberSerializer(serializers.ModelSerializer):
-    roles = RoleMinSerializer(many=True, read_only=True)
-
-    class Meta:
-        model = User
-        fields = (
-            'id', 'first_name', 'last_name', 'display_name', 'email', 'phone',
-            'roles', 'is_active')
+from .Permission import PermissionSerializer
+from .Role import RoleSerializer
 
 
 class UserSerializer(serializers.ModelSerializer):
+    """
+    Serializer for the full details of the User and what permissions
+    the user has
+    """
     organization = OrganizationSerializer(read_only=True)
+    permissions = PermissionSerializer(many=True, read_only=True)
     roles = RoleSerializer(many=True, read_only=True)
 
     class Meta:
@@ -47,16 +43,21 @@ class UserSerializer(serializers.ModelSerializer):
         fields = (
             'id', 'first_name', 'last_name', 'email', 'authorization_id',
             'username', 'authorization_directory', 'display_name',
-            'organization', 'roles')
+            'organization', 'roles', 'is_government_user', 'permissions')
 
 
 class UserMinSerializer(serializers.ModelSerializer):
+    """
+    Serializer for display information for the User
+    """
     organization = OrganizationMinSerializer(read_only=True)
+    roles = RoleSerializer(many=True, read_only=True)
 
     class Meta:
         model = User
         fields = (
-            'id', 'first_name', 'last_name', 'display_name', 'organization')
+            'id', 'first_name', 'last_name', 'display_name', 'email', 'phone',
+            'roles', 'is_active', 'organization')
 
 
 class UserViewSerializer(serializers.ModelSerializer):
@@ -66,7 +67,7 @@ class UserViewSerializer(serializers.ModelSerializer):
     """
     history = serializers.SerializerMethodField()
     organization = OrganizationMinSerializer(read_only=True)
-    roles = RoleMinSerializer(many=True, read_only=True)
+    roles = RoleSerializer(many=True, read_only=True)
 
     class Meta:
         model = User
