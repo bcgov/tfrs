@@ -69,7 +69,7 @@ class CreditTradeCreateSerializer(serializers.ModelSerializer):
         # if the user creating the proposal is not the initiator.
         # they should be a government user
         if data.get('initiator') != request.user.organization and \
-                not request.user.role.is_government_role:
+                not request.user.is_government_user:
             raise serializers.ValidationError({
                 'invalidStatus': "You cannot create a proposal for another "
                                  "organization."
@@ -402,7 +402,7 @@ class CreditTrade2Serializer(serializers.ModelSerializer):
 
         # If the user doesn't have any roles assigned, treat as though the user
         # doesn't have available permissions
-        if request.user.role is None:
+        if request.user.roles is None:
             return []
 
         if cur_status == "Draft":
@@ -429,7 +429,7 @@ class CreditTrade2Serializer(serializers.ModelSerializer):
 
         # If the user doesn't have any roles assigned, treat as though the user
         # doesn't have available permissions
-        if request.user.role is None:
+        if request.user.roles is None:
             return []
 
         if request.user.has_perm('VIEW_PRIVILEGED_COMMENTS'):
@@ -449,8 +449,8 @@ class CreditTrade2Serializer(serializers.ModelSerializer):
 
         # if the user is not a government user we should limit what we show
         # so no recommended/not recommended
-        if (request.user.role is None or
-                not request.user.role.is_government_role):
+        if (request.user.roles is None or
+                not request.user.is_government_user):
             history = obj.get_history(["Accepted", "Completed", "Declined",
                                        "Refused", "Submitted"])
         else:

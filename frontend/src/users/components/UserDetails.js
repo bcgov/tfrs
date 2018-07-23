@@ -5,7 +5,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import Loading from '../../app/components/Loading';
-import ROLES from '../../constants/roles';
+import roleName from '../../utils/translate';
 
 import UserHistoryTable from './UserHistoryTable';
 
@@ -37,10 +37,9 @@ const UserDetails = props => (
         <div>Status:
           <strong> {props.user.details.isActive ? 'Active' : 'Inactive'}</strong>
         </div>
-        {props.user.details.role &&
+        {props.user.details.roles &&
           <div>Role:
-            <strong> {Object.values(ROLES).find(element => element.id ===
-            props.user.details.role.id).description}
+            <strong> {props.user.details.roles.map(role => roleName(role)).join(', ')}
             </strong>
           </div>
         }
@@ -70,9 +69,9 @@ UserDetails.propTypes = {
         name: PropTypes.string
       }),
       phone: PropTypes.string,
-      role: PropTypes.shape({
+      roles: PropTypes.arrayOf(PropTypes.shape({
         id: PropTypes.number
-      })
+      }))
     }),
     errors: PropTypes.shape({}),
     isFetching: PropTypes.bool.isRequired

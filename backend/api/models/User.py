@@ -22,6 +22,7 @@
 """
 
 from django.db import models
+from django.db.models import Q
 from django.contrib.auth.models import AbstractUser
 from django.core.validators import RegexValidator
 import django.contrib.auth.validators
@@ -30,6 +31,8 @@ from auditable.models import Auditable
 from api.managers.UserManager import UserManager
 
 from .CreditTradeHistory import CreditTradeHistory
+from .Permission import Permission
+from .Role import Role
 from .UserRole import UserRole
 
 
@@ -89,18 +92,20 @@ class User(AbstractUser, Auditable):
         return str(self.id)
 
     @property
-    def role(self):
+    def permissions(self):
         """
-        Role applied to the User
+        Permissions that the user has based on the roles applied
         """
-        user_role = UserRole.objects.select_related('role').filter(
-            user_id=self.id
-        ).first()
+        return Permission.objects.distinct().filter(
+            Q(role_permissions__role__in=self.roles)
+        ).order_by('id')
 
-        if user_role is None:
-            return None
-
-        return user_role.role
+    @property
+    def roles(self):
+        """
+        Roles applied to the User
+        """
+        return Role.objects.filter(user_roles__user_id=self.id)
 
     def get_history(self, filters):
         """
@@ -117,11 +122,21 @@ class User(AbstractUser, Auditable):
         """
         Helper function to check if the user has the approrpiate permission
         """
-        if self.role is None or \
-                not self.role.permissions.filter(code=permission):
+        if not self.roles.filter(
+                Q(role_permissions__permission__code=permission)):
             return False
 
         return True
+
+    @property
+    def is_government_user(self):
+        """
+        Does this user have a government role?
+        """
+        if self.roles.filter(Q(is_government_role=True)):
+            return True
+
+        return False
 
     objects = UserManager()
 
