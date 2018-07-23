@@ -31,8 +31,7 @@ class Navbar extends Component {
     const SecondLevelNavigation = (
       <div className="level2Navigation">
         <div className="container">
-          {this.props.loggedInUser.roles &&
-          this.props.loggedInUser.isGovernmentUser &&
+          {this.props.loggedInUser.isGovernmentUser &&
           <NavLink
             activeClassName="active"
             id="navbar-organizations"
@@ -41,8 +40,7 @@ class Navbar extends Component {
             Fuel Suppliers
           </NavLink>
           }
-          {(!this.props.loggedInUser.roles ||
-          !this.props.loggedInUser.isGovernmentUser) &&
+          {!this.props.loggedInUser.isGovernmentUser &&
           [
             <a
               href={ORGANIZATIONS.BULLETIN}
@@ -77,8 +75,7 @@ class Navbar extends Component {
           >
             Credit Transactions
           </NavLink>
-          {this.props.loggedInUser.roles &&
-          this.props.loggedInUser.isGovernmentUser &&
+          {this.props.loggedInUser.isGovernmentUser &&
           <NavLink
             activeClassName="active"
             exact={false}
@@ -100,8 +97,7 @@ class Navbar extends Component {
       >
         <a id="navigation-anchor" href="#navigation-anchor"><span>Navigation Bar</span></a>
         <ul className="nav navbar-nav">
-          {this.props.loggedInUser.roles &&
-          this.props.loggedInUser.isGovernmentUser &&
+          {this.props.loggedInUser.isGovernmentUser &&
           <li>
             <NavLink
               id="collapse-navbar-organization"
@@ -111,8 +107,7 @@ class Navbar extends Component {
             </NavLink>
           </li>
           }
-          {(!this.props.loggedInUser.roles ||
-          !this.props.loggedInUser.isGovernmentUser) &&
+          {!this.props.loggedInUser.isGovernmentUser &&
           [
             <li key="bulletin">
               <a
@@ -150,8 +145,7 @@ class Navbar extends Component {
             Credit Transactions
             </NavLink>
           </li>
-          {this.props.loggedInUser.roles &&
-          this.props.loggedInUser.isGovernmentUser &&
+          {this.props.loggedInUser.isGovernmentUser &&
           <li>
             <NavLink
               id="collapse-navbar-administration"

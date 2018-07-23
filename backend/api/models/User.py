@@ -96,9 +96,6 @@ class User(AbstractUser, Auditable):
         """
         Permissions that the user has based on the roles applied
         """
-        if self.roles is None:
-            return None
-
         return Permission.objects.distinct().filter(
             Q(role_permissions__role__in=self.roles)
         ).order_by('id')
@@ -125,9 +122,8 @@ class User(AbstractUser, Auditable):
         """
         Helper function to check if the user has the approrpiate permission
         """
-        if self.roles is None or \
-                not self.roles.filter(
-                        Q(role_permissions__permission__code=permission)):
+        if not self.roles.filter(
+                Q(role_permissions__permission__code=permission)):
             return False
 
         return True
