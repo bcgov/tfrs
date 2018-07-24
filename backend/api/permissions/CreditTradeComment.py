@@ -160,7 +160,7 @@ class CreditTradeCommentPermissions(permissions.BasePermission):
 
         # Government roles can always view comments
         # and can view or edit privileged comments with correct permission
-        if request.user.roles and request.user.is_government_user:
+        if request.user.is_government_user:
             # read
             if request.method in permissions.SAFE_METHODS:
                 if obj.privileged_access:
