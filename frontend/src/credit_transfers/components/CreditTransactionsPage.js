@@ -27,6 +27,7 @@ const CreditTransactionsPage = (props) => {
           </h3>
         }
         {!isFetching &&
+          props.loggedInUser.roles &&
           props.loggedInUser.isGovernmentUser &&
           [
             !props.organization &&
@@ -79,7 +80,8 @@ const CreditTransactionsPage = (props) => {
       <h1>{props.title}</h1>
       <div className="right-toolbar-container">
         <div className="actions-container">
-          {props.loggedInUser.hasPermission(PERMISSIONS_CREDIT_TRANSACTIONS.PROPOSE) &&
+          {props.loggedInUser.roles &&
+          props.loggedInUser.hasPermission(PERMISSIONS_CREDIT_TRANSACTIONS.PROPOSE) &&
             <button
               className="btn btn-primary"
               type="button"
