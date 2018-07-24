@@ -64,6 +64,7 @@ class CreditTradeCommentPermissions(permissions.BasePermission):
     action_mapping[(_Relationship.GovernmentAnalyst, 'Accepted', True, True)] = True
     action_mapping[(_Relationship.GovernmentAnalyst, 'Recommended', True, True)] = True
     action_mapping[(_Relationship.GovernmentAnalyst, 'Not Recommended', True, True)] = True
+    action_mapping[(_Relationship.GovernmentAnalyst, 'Approved', False, True)] = True
 
     action_mapping[(_Relationship.GovernmentDirector, 'Recommended', False, False)] = True
     action_mapping[(_Relationship.GovernmentDirector, 'Not Recommended', False, False)] = True
@@ -73,6 +74,7 @@ class CreditTradeCommentPermissions(permissions.BasePermission):
     action_mapping[(_Relationship.GovernmentDirector, 'Not Recommended', False, True)] = True
     action_mapping[(_Relationship.GovernmentDirector, 'Recommended', True, True)] = True
     action_mapping[(_Relationship.GovernmentDirector, 'Not Recommended', True, True)] = True
+    action_mapping[(_Relationship.GovernmentDirector, 'Approved', False, True)] = True
 
     @staticmethod
     def user_can_comment(user, credit_trade, privileged):
@@ -152,15 +154,15 @@ class CreditTradeCommentPermissions(permissions.BasePermission):
         if obj.create_user == request.user:
             return True
 
-        # And see but not edit those from their others in their own organization
+        # And see but not edit those from their others in their own
+        # organization
         if obj.create_user.organization == request.user.organization and \
                 request.method in permissions.SAFE_METHODS:
             return True
 
         # Government roles can always view comments
         # and can view or edit privileged comments with correct permission
-        if request.user.role is not None and request.user.role.is_government_role:
-
+        if request.user.is_government_user:
             # read
             if request.method in permissions.SAFE_METHODS:
                 if obj.privileged_access:

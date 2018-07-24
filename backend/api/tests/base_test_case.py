@@ -57,7 +57,8 @@ class BaseTestCase(TestCase):
         'signing_authority_assertions.json',
         'test_prodlike_government_users_and_roles.json',
         'test_prodlike_government_users_and_roles_v0.3.1.json',
-        'test_users_and_organizations_v0.3.1.json'
+        'test_users_and_organizations_v0.3.1.json',
+        'test_users_multiple_roles.json'
     ]
 
     usernames = [
@@ -66,7 +67,8 @@ class BaseTestCase(TestCase):
         'fs_user_3',
         'gov_director',
         'gov_analyst',
-        'gov_admin'
+        'gov_admin',
+        'gov_multi_role'
     ]
 
     # For use in child classes

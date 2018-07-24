@@ -9,11 +9,11 @@ from api.models.Organization import Organization
 from api.models.OrganizationBalance import OrganizationBalance
 from api.models.OrganizationType import OrganizationType
 from api.models.User import User
-from api.serializers import MemberSerializer
 from api.serializers import OrganizationSerializer
 from api.serializers import OrganizationBalanceSerializer
 from api.serializers import OrganizationHistorySerializer
 from api.serializers import OrganizationMinSerializer
+from api.serializers import UserMinSerializer
 from api.permissions.OrganizationPermissions import OrganizationPermissions
 
 
@@ -35,7 +35,7 @@ class OrganizationViewSet(AuditableMixin, viewsets.GenericViewSet,
         'default': OrganizationSerializer,
         'history': OrganizationHistorySerializer,
         'fuel_suppliers': OrganizationMinSerializer,
-        'members': MemberSerializer
+        'members': UserMinSerializer
     }
 
     def get_serializer_class(self):

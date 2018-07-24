@@ -45,27 +45,38 @@ class TestCompliancePeriodsAPI(BaseAPISecurityTestCase):
         url = "/api/compliance_periods"
 
         all_users = self.users
-        expected_results = defaultdict(lambda: {'status': status.HTTP_403_FORBIDDEN,
-                                                'reason': "Default response should be no access"})
+        expected_results = defaultdict(lambda: {
+            'status': status.HTTP_403_FORBIDDEN,
+            'reason': "Default response should be no access"})
 
-        expected_results[('gov_admin',)] = {'status': status.HTTP_200_OK,
-                                            'reason': 'should have read access'
-                                                      ' to compliance periods'}
+        expected_results[('gov_admin',)] = {
+            'status': status.HTTP_200_OK,
+            'reason': 'should have read access to compliance periods'}
 
-        expected_results[('gov_analyst',)] = {'status': status.HTTP_200_OK,
-                                              'reason': 'should have read access to'
-                                                        ' compliance periods'}
+        expected_results[('gov_analyst',)] = {
+            'status': status.HTTP_200_OK,
+            'reason': 'should have read access to compliance periods'}
 
-        expected_results[('gov_director',)] = {'status': status.HTTP_200_OK,
-                                               'reason': 'should have read access to'
-                                                         ' compliance periods'}
+        expected_results[('gov_director',)] = {
+            'status': status.HTTP_200_OK,
+            'reason': 'should have read access to compliance periods'}
+
+        expected_results[('gov_multi_role',)] = {
+            'status': status.HTTP_200_OK,
+            'reason': 'should have read access to compliance periods'}
+
         for user in all_users:
-            with self.subTest(user=user,
-                              expected_status=expected_results[(user,)]['status'],
-                              reason=expected_results[(user,)]['reason']):
+            with self.subTest(
+                user=user,
+                expected_status=expected_results[(user,)]['status'],
+                reason=expected_results[(user,)]['reason']
+            ):
                 response = self.clients[user].get(url)
                 logging.debug(response.content.decode('utf-8'))
-                self.assertEqual(response.status_code, expected_results[(user,)]['status'])
+
+                self.assertEqual(
+                    response.status_code,
+                    expected_results[(user,)]['status'])
 
     def test_get_by_id(self):
         """Test that getting another user directly is not a valid action
@@ -77,20 +88,25 @@ class TestCompliancePeriodsAPI(BaseAPISecurityTestCase):
 
         cp_that_exists = DataCreationUtilities.create_compliance_period()
 
-        expected_results = defaultdict(lambda: {'status': status.HTTP_403_FORBIDDEN,
-                                                'reason': "Default response should be no access"})
+        expected_results = defaultdict(lambda: {
+            'status': status.HTTP_403_FORBIDDEN,
+            'reason': "Default response should be no access"})
 
-        expected_results[('gov_admin',)] = {'status': status.HTTP_200_OK,
-                                            'reason': 'should have read access'
-                                                      ' to compliance periods'}
+        expected_results[('gov_admin',)] = {
+            'status': status.HTTP_200_OK,
+            'reason': 'should have read access to compliance periods'}
 
-        expected_results[('gov_analyst',)] = {'status': status.HTTP_200_OK,
-                                              'reason': 'should have read access'
-                                                        ' to compliance periods'}
+        expected_results[('gov_analyst',)] = {
+            'status': status.HTTP_200_OK,
+            'reason': 'should have read access to compliance periods'}
 
-        expected_results[('gov_director',)] = {'status': status.HTTP_200_OK,
-                                               'reason': 'should have read access'
-                                                         ' to compliance periods'}
+        expected_results[('gov_director',)] = {
+            'status': status.HTTP_200_OK,
+            'reason': 'should have read access to compliance periods'}
+
+        expected_results[('gov_multi_role',)] = {
+            'status': status.HTTP_200_OK,
+            'reason': 'should have read access to compliance periods'}
 
         for user in all_users:
             with self.subTest(user=user,
@@ -110,52 +126,75 @@ class TestCompliancePeriodsAPI(BaseAPISecurityTestCase):
 
         all_users = self.users
 
-        expected_results = defaultdict(lambda: {'status': status.HTTP_403_FORBIDDEN,
-                                                'reason': "Default response should be no access"})
+        expected_results = defaultdict(lambda: {
+            'status': status.HTTP_403_FORBIDDEN,
+            'reason': "Default response should be no access"})
 
-        expected_results[('gov_admin',)] = {'status': status.HTTP_201_CREATED,
-                                            'reason': 'Admin should have create access for'
-                                                      ' compliance periods'}
+        expected_results[('gov_admin',)] = {
+            'status': status.HTTP_201_CREATED,
+            'reason': 'Admin should have create access for compliance periods'}
 
-        expected_results[('gov_director',)] = {'status': status.HTTP_201_CREATED,
-                                               'reason': 'Director should have create access for'
-                                                         ' compliance periods'}
+        expected_results[('gov_director',)] = {
+            'status': status.HTTP_201_CREATED,
+            'reason': 'Director should have create access for compliance '
+                      'periods'}
 
-        for index, user in enumerate(all_users):
-            with self.subTest(user=user,
-                              expected_status=expected_results[(user,)]['status'],
-                              reason=expected_results[(user,)]['reason']):
+        expected_results[('gov_multi_role',)] = {
+            'status': status.HTTP_201_CREATED,
+            'reason': 'Multi Role should have create access for compliance '
+                      'periods'}
+
+        for _index, user in enumerate(all_users):
+            with self.subTest(
+                user=user,
+                expected_status=expected_results[(user,)]['status'],
+                reason=expected_results[(user,)]['reason']
+            ):
                 payload = {
                     'description': 'Posted CP {0!s}'.format(uuid.uuid4()),
                     'display_order': 1
                 }
 
-                response = self.clients[user].post(url,
-                                                   content_type='application/json',
-                                                   data=json.dumps(payload))
+                response = self.clients[user].post(
+                    url,
+                    content_type='application/json',
+                    data=json.dumps(payload))
 
                 logging.debug(response.content.decode('utf-8'))
-                self.assertEqual(response.status_code, expected_results[(user,)]['status'])
+                self.assertEqual(
+                    response.status_code,
+                    expected_results[(user,)]['status'])
 
     def test_delete(self):
-        """Test that deleting compliance periods is not a semantically valid action"""
+        """
+        Test that deleting compliance periods is not a semantically valid
+        action
+        """
 
         url = "/api/compliance_periods/{0!s}"
 
         all_users = self.users
 
-        expected_results = defaultdict(lambda: {'status': [status.HTTP_405_METHOD_NOT_ALLOWED,
-                                                           status.HTTP_403_FORBIDDEN],
-                                                'reason': "Default response should be no access"})
+        expected_results = defaultdict(lambda: {
+            'status': [
+                status.HTTP_405_METHOD_NOT_ALLOWED,
+                status.HTTP_403_FORBIDDEN
+            ],
+            'reason': "Default response should be no access"})
 
         for user in all_users:
-            with self.subTest(user=user,
-                              expected_statuses=expected_results[(user,)]['status'],
-                              reason=expected_results[(user,)]['reason']):
+            with self.subTest(
+                user=user,
+                expected_statuses=expected_results[(user,)]['status'],
+                reason=expected_results[(user,)]['reason']
+            ):
                 cp_that_exists = DataCreationUtilities.create_compliance_period()
-                response = self.clients[user].delete(url.format(cp_that_exists['id']))
+                response = self.clients[user].delete(
+                    url.format(cp_that_exists['id']))
                 logging.debug(response)
-                self.assertIn(response.status_code, expected_results[(user,)]['status'])
+                self.assertIn(
+                    response.status_code,
+                    expected_results[(user,)]['status'])
 
     def test_put(self):
         """
@@ -166,20 +205,30 @@ class TestCompliancePeriodsAPI(BaseAPISecurityTestCase):
 
         all_users = self.users
 
-        expected_results = defaultdict(lambda: {'status': status.HTTP_403_FORBIDDEN,
-                                                'reason': "Default response should be no access"})
+        expected_results = defaultdict(lambda: {
+            'status': status.HTTP_403_FORBIDDEN,
+            'reason': "Default response should be no access"})
 
-        expected_results[('gov_admin',)] = {'status': status.HTTP_200_OK,
-                                            'reason': 'Admin should have update access for'
-                                                      ' compliance periods'}
+        expected_results[('gov_admin',)] = {
+            'status': status.HTTP_200_OK,
+            'reason': 'Admin should have update access for compliance periods'}
 
-        expected_results[('gov_director',)] = {'status': status.HTTP_200_OK,
-                                               'reason': 'Director should have update access for'
-                                                         ' compliance periods'}
-        for index, user in enumerate(all_users):
-            with self.subTest(user=user,
-                              expected_status=expected_results[(user,)]['status'],
-                              reason=expected_results[(user,)]['reason']):
+        expected_results[('gov_director',)] = {
+            'status': status.HTTP_200_OK,
+            'reason': 'Director should have update access for compliance '
+                      ' periods'}
+
+        expected_results[('gov_multi_role',)] = {
+            'status': status.HTTP_200_OK,
+            'reason': 'Multi Role should have update access for compliance '
+                      ' periods'}
+
+        for _index, user in enumerate(all_users):
+            with self.subTest(
+                user=user,
+                expected_status=expected_results[(user,)]['status'],
+                reason=expected_results[(user,)]['reason']
+            ):
                 cp_that_exists = DataCreationUtilities.create_compliance_period()
 
                 payload = {
@@ -195,7 +244,10 @@ class TestCompliancePeriodsAPI(BaseAPISecurityTestCase):
                 )
                 logging.debug(response)
 
-                self.assertEqual(response.status_code, expected_results[(user,)]['status'], "PUT")
+                self.assertEqual(
+                    response.status_code,
+                    expected_results[(user,)]['status'],
+                    "PUT")
 
                 payload = {
                     'description': 'Patched CP {0!s}'.format(uuid.uuid4())
@@ -209,4 +261,7 @@ class TestCompliancePeriodsAPI(BaseAPISecurityTestCase):
                 )
                 logging.debug(response)
 
-                self.assertEqual(response.status_code, expected_results[(user,)]['status'], "PATCH")
+                self.assertEqual(
+                    response.status_code,
+                    expected_results[(user,)]['status'],
+                    "PATCH")

@@ -28,15 +28,9 @@ from .Permission import PermissionSerializer
 
 
 class RoleSerializer(serializers.ModelSerializer):
-    permissions = PermissionSerializer(read_only=True, many=True)
-
+    """
+    Serializer for the Role used for displaying in the front-end
+    """
     class Meta:
         model = Role
-        fields = ('id', 'name', 'description', 'is_government_role',
-                  'permissions')
-
-
-class RoleMinSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Role
-        fields = ('id', 'name', 'description')
+        fields = ('id', 'name', 'description', 'is_government_role')

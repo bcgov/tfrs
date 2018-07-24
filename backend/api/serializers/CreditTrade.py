@@ -73,7 +73,7 @@ class CreditTradeCreateSerializer(serializers.ModelSerializer):
         # if the user creating the proposal is not the initiator.
         # they should be a government user
         if data.get('initiator') != request.user.organization and \
-                not request.user.role.is_government_role:
+                not request.user.is_government_user:
             raise serializers.ValidationError({
                 'invalidStatus': "You cannot create a proposal for another "
                                  "organization."
@@ -436,7 +436,7 @@ class CreditTrade2Serializer(serializers.ModelSerializer):
 
         # If the user doesn't have any roles assigned, treat as though the user
         # doesn't have available permissions
-        if request.user.role is None:
+        if not request.user.roles:
             return []
 
         if cur_status == "Draft":
@@ -463,7 +463,7 @@ class CreditTrade2Serializer(serializers.ModelSerializer):
 
         # If the user doesn't have any roles assigned, treat as though the user
         # doesn't have available permissions
-        if request.user.role is None:
+        if not request.user.roles:
             return []
 
         if request.user.has_perm('VIEW_PRIVILEGED_COMMENTS'):
@@ -483,8 +483,7 @@ class CreditTrade2Serializer(serializers.ModelSerializer):
 
         # if the user is not a government user we should limit what we show
         # so no recommended/not recommended
-        if (request.user.role is None or
-                not request.user.role.is_government_role):
+        if not request.user.is_government_user:
             history = obj.get_history(["Accepted", "Completed", "Declined",
                                        "Refused", "Submitted"])
         else:
@@ -522,9 +521,8 @@ class CreditTrade2Serializer(serializers.ModelSerializer):
         request = self.context.get('request')
 
         if (obj.status.status == 'Recommended' or
-            obj.status.status == 'Not Recommended') and \
-                (request.user.role is None or
-                 not request.user.role.is_government_role):
+                obj.status.status == 'Not Recommended') and \
+            (not request.user.is_government_user):
             recommended = CreditTradeStatus.objects.get(status="Recommended")
 
             return {

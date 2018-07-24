@@ -126,11 +126,7 @@ CreditTransferForm.propTypes = {
   handleSubmit: PropTypes.func.isRequired,
   id: PropTypes.number,
   loggedInUser: PropTypes.shape({
-    hasPermission: PropTypes.func,
-    role: PropTypes.shape({
-      id: PropTypes.number,
-      isGovernmentRole: PropTypes.bool
-    })
+    hasPermission: PropTypes.func
   }).isRequired,
   title: PropTypes.string,
   toggleCheck: PropTypes.func.isRequired,

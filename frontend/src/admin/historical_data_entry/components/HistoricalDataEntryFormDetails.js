@@ -204,7 +204,7 @@ const HistoricalDataEntryFormDetails = props => (
       <div className="row">
         <div className="col-md-12">
           <HistoricalDataEntryFormNote
-            note={props.fields.note}
+            comment={props.fields.comment}
             handleInputChange={props.handleInputChange}
           />
         </div>
@@ -239,6 +239,7 @@ HistoricalDataEntryFormDetails.propTypes = {
   editMode: PropTypes.bool.isRequired,
   fuelSuppliers: PropTypes.arrayOf(PropTypes.shape()).isRequired,
   fields: PropTypes.shape({
+    comment: PropTypes.string.isRequired,
     compliancePeriod: PropTypes.shape({
       description: PropTypes.string,
       id: PropTypes.number
@@ -253,7 +254,6 @@ HistoricalDataEntryFormDetails.propTypes = {
     }),
     fairMarketValuePerCredit: PropTypes.string,
     numberOfCredits: PropTypes.string,
-    note: PropTypes.string.isRequired,
     tradeEffectiveDate: PropTypes.string,
     transferType: PropTypes.string,
     zeroDollarReason: PropTypes.string
