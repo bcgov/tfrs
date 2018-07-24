@@ -89,7 +89,7 @@ class UserViewSerializer(serializers.ModelSerializer):
 
         # if the user is not a government user we should limit what we show
         # so no recommended/not recommended
-        if (request.user.roles is None or not request.user.is_government_user):
+        if (not request.user.is_government_user):
             if request.user.organization != obj.organization:
                 raise exceptions.PermissionDenied(
                     'You do not have sufficient authorization to use this '
