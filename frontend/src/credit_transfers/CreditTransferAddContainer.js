@@ -36,7 +36,8 @@ class CreditTransferAddContainer extends Component {
         numberOfCredits: '',
         respondent: { id: 0, name: '' },
         terms: [],
-        tradeType: { id: 1, name: 'Sell' }
+        tradeType: { id: 1, name: 'Sell' },
+        zeroDollarReason: {id: null, name: '' }
       },
       totalValue: 0
     };
@@ -143,8 +144,14 @@ class CreditTransferAddContainer extends Component {
       respondent: this.state.fields.respondent.id,
       status: status.id,
       tradeEffectiveDate: null,
-      type: this.state.fields.tradeType.id
+      type: this.state.fields.tradeType.id,
+      zeroReason: (this.state.fields.zeroDollarReason != null &&
+        this.state.fields.zeroDollarReason.id) || null
     };
+
+    if (data.fairMarketValuePerCredit > 0) {
+      data.zeroReason = null;
+    }
 
     this.props.addCreditTransfer(data).then((response) => {
       // if it's being proposed capture the acceptance of the terms

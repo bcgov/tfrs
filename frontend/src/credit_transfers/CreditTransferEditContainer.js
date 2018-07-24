@@ -81,7 +81,8 @@ class CreditTransferEditContainer extends Component {
         respondent: item.respondent,
         terms: this.state.fields.terms,
         tradeStatus: item.status,
-        tradeType: item.type
+        tradeType: item.type,
+        zeroDollarReason: item.zeroReason
       };
 
       this.setState({
@@ -144,8 +145,14 @@ class CreditTransferEditContainer extends Component {
       respondent: this.state.fields.respondent.id,
       status: status.id,
       tradeEffectiveDate: null,
-      type: this.state.fields.tradeType.id
+      type: this.state.fields.tradeType.id,
+      zeroReason: (this.state.fields.zeroDollarReason != null &&
+        this.state.fields.zeroDollarReason.id) || null
     };
+
+    if (data.fairMarketValuePerCredit > 0) {
+      data.zeroReason = null;
+    }
 
     const { id } = this.props.item;
 
@@ -258,6 +265,7 @@ class CreditTransferEditContainer extends Component {
         changeStatus={this._changeStatus}
         creditsFrom={this.state.creditsFrom}
         creditsTo={this.state.creditsTo}
+        zeroDollarReason={this.state.zeroDollarReason}
         errors={this.props.errors}
         fields={this.state.fields}
         fuelSuppliers={this.props.fuelSuppliers}
@@ -318,6 +326,10 @@ CreditTransferEditContainer.propTypes = {
       PropTypes.string,
       PropTypes.number
     ]),
+    zeroReason: PropTypes.shape({
+      id: PropTypes.number,
+      reason: PropTypes.string
+    }),
     numberOfCredits: PropTypes.oneOfType([
       PropTypes.string,
       PropTypes.number
