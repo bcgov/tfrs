@@ -38,22 +38,9 @@ class BaseTestCase(TestCase):
     """
 
     fixtures = [
-        'organization_types.json',
-        'organization_government.json',
-        'organization_balance_gov.json',
-        'credit_trade_statuses.json',
-        'credit_trade_statuses_refused.json',
-        'organization_actions_types.json',
-        'organization_statuses.json',
-        'credit_trade_types.json',
-        'credit_trade_zero_reason.json',
+        'core_data.json',
         'test_organization_fuel_suppliers.json',
         'test_organization_balances.json',
-        'roles.json',
-        'permissions.json',
-        'roles_permissions.json',
-        'roles_permissions_v0.3.0.json',
-        'roles_permissions_v0.3.1.json',
         'signing_authority_assertions.json',
         'test_prodlike_government_users_and_roles.json',
         'test_prodlike_government_users_and_roles_v0.3.1.json',
