@@ -1,4 +1,4 @@
-import * as ActionTypes from '../constants/actionTypes';
+import ActionTypes from '../constants/actionTypes/CreditTransfers';
 
 const creditTransfer = (state = {
   isFetching: false,
@@ -122,7 +122,7 @@ const approvedCreditTransfers = (state = {
         isFetching: true,
         success: false
       };
-    case 'RECEIVE_APPROVED_CREDIT_TRANSFERS':
+    case ActionTypes.RECEIVE_APPROVED_CREDIT_TRANSFERS:
       return {
         ...state,
         isFetching: false,
