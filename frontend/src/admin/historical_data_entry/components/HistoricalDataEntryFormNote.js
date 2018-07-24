@@ -3,13 +3,13 @@ import PropTypes from 'prop-types';
 
 const HistoricalDataEntryFormNote = props => (
   <div className="form-group note">
-    <label htmlFor="note">Note:
+    <label htmlFor="comment">Note:
       <textarea
         className="form-control"
         rows="5"
-        id="note"
-        name="note"
-        value={props.note}
+        id="comment"
+        name="comment"
+        value={props.comment}
         onChange={props.handleInputChange}
       />
     </label>
@@ -17,7 +17,7 @@ const HistoricalDataEntryFormNote = props => (
 );
 
 HistoricalDataEntryFormNote.propTypes = {
-  note: PropTypes.string.isRequired,
+  comment: PropTypes.string.isRequired,
   handleInputChange: PropTypes.func.isRequired
 };
 

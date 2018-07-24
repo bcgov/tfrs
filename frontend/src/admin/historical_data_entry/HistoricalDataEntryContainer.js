@@ -9,6 +9,7 @@ import { bindActionCreators } from 'redux';
 import PropTypes from 'prop-types';
 
 import {
+  addCommentToCreditTransfer,
   addCreditTransfer,
   deleteCreditTransfer,
   getApprovedCreditTransfersIfNeeded,
@@ -27,11 +28,11 @@ class HistoricalDataEntryContainer extends Component {
     super(props);
     this.state = {
       fields: {
+        comment: '',
         compliancePeriod: { id: 0, description: '' },
         creditsFrom: { id: 0, name: '' },
         creditsTo: { id: 0, name: '' },
         fairMarketValuePerCredit: '',
-        note: '',
         numberOfCredits: '',
         tradeEffectiveDate: '',
         transferType: ''
@@ -96,8 +97,13 @@ class HistoricalDataEntryContainer extends Component {
     event.preventDefault();
 
     const data = this.props.prepareCreditTransfer(this.state.fields);
+    const { comment } = this.state.fields;
 
-    this.props.addCreditTransfer(data).then(() => {
+    this.props.addCreditTransfer(data).then((response) => {
+      if (comment !== '') {
+        this._saveComment(response.data.id, comment);
+      }
+
       this.props.invalidateCreditTransfers();
       this.loadData();
       this.resetState();
@@ -110,6 +116,17 @@ class HistoricalDataEntryContainer extends Component {
     this.props.processApprovedCreditTransfers().then(() => {
       this.loadData();
     });
+  }
+
+  _saveComment (id, comment) {
+    // API data structure
+    const data = {
+      creditTrade: id,
+      comment,
+      privilegedAccess: true
+    };
+
+    return this.props.addCommentToCreditTransfer(data);
   }
 
   _selectIdForModal (id) {
@@ -173,6 +190,7 @@ HistoricalDataEntryContainer.defaultProps = {
 };
 
 HistoricalDataEntryContainer.propTypes = {
+  addCommentToCreditTransfer: PropTypes.func.isRequired,
   addCreditTransfer: PropTypes.func.isRequired,
   addErrors: PropTypes.oneOfType([
     PropTypes.shape({}),
@@ -209,6 +227,7 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
+  addCommentToCreditTransfer: bindActionCreators(addCommentToCreditTransfer, dispatch),
   addCreditTransfer: bindActionCreators(addCreditTransfer, dispatch),
   deleteCreditTransfer: bindActionCreators(deleteCreditTransfer, dispatch),
   getApprovedCreditTransfersIfNeeded: () => {

@@ -45,6 +45,7 @@ HistoricalDataEntryForm.propTypes = {
   ]).isRequired,
   fuelSuppliers: PropTypes.arrayOf(PropTypes.shape()).isRequired,
   fields: PropTypes.shape({
+    comment: PropTypes.string.isRequired,
     compliancePeriod: PropTypes.shape({
       description: PropTypes.string,
       id: PropTypes.number
@@ -58,7 +59,6 @@ HistoricalDataEntryForm.propTypes = {
       id: PropTypes.number
     }),
     fairMarketValuePerCredit: PropTypes.string,
-    note: PropTypes.string.isRequired,
     numberOfCredits: PropTypes.string,
     tradeEffectiveDate: PropTypes.string,
     transferType: PropTypes.string,
