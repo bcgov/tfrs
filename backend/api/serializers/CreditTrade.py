@@ -449,7 +449,7 @@ class CreditTrade2Serializer(serializers.ModelSerializer):
 
         # if the user is not a government user we should limit what we show
         # so no recommended/not recommended
-        if (not request.user.is_government_user):
+        if not request.user.is_government_user:
             history = obj.get_history(["Accepted", "Completed", "Declined",
                                        "Refused", "Submitted"])
         else:
