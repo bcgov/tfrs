@@ -83,6 +83,7 @@ HistoricalDataEntryPage.propTypes = {
   compliancePeriods: PropTypes.arrayOf(PropTypes.shape()).isRequired,
   deleteCreditTransfer: PropTypes.func.isRequired,
   fields: PropTypes.shape({
+    comment: PropTypes.string.isRequired,
     compliancePeriod: PropTypes.shape({
       description: PropTypes.string,
       id: PropTypes.number
@@ -97,7 +98,6 @@ HistoricalDataEntryPage.propTypes = {
     }),
     numberOfCredits: PropTypes.string,
     fairMarketValuePerCredit: PropTypes.string,
-    note: PropTypes.string.isRequired,
     tradeEffectiveDate: PropTypes.string,
     transferType: PropTypes.string,
     zeroDollarReason: PropTypes.string
