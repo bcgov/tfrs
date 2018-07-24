@@ -315,6 +315,11 @@ class TestAPIComments(BaseTestCase, CreditTradeRelationshipMixin, CreditTradeFlo
                 'status': status.HTTP_201_CREATED,
                 'reason': 'Analyst can comment in Not Recommended'
             }
+        expected_results[('Approved', False, 'gov_analyst', True)] = \
+            {
+                'status': status.HTTP_201_CREATED,
+                'reason': 'Director can comment in Not Recommended'
+            }
         expected_results[('Recommended', False, 'gov_director', False)] = \
             {
                 'status': status.HTTP_201_CREATED,
@@ -351,6 +356,11 @@ class TestAPIComments(BaseTestCase, CreditTradeRelationshipMixin, CreditTradeFlo
                 'reason': 'Director can comment in Not Recommended'
             }
         expected_results[('Not Recommended', True, 'gov_director', True)] = \
+            {
+                'status': status.HTTP_201_CREATED,
+                'reason': 'Director can comment in Not Recommended'
+            }
+        expected_results[('Approved', False, 'gov_director', True)] = \
             {
                 'status': status.HTTP_201_CREATED,
                 'reason': 'Director can comment in Not Recommended'
