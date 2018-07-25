@@ -10,7 +10,7 @@ import PropTypes from 'prop-types';
 import { getMyOrganization, getMyOrganizationMembers } from '../actions/organizationActions';
 import OrganizationDetails from './components/OrganizationDetails';
 
-class OrganizationMineContainer extends Component {
+class MyOrganizationContainer extends Component {
   componentWillMount () {
     this.loadData();
   }
@@ -30,7 +30,7 @@ class OrganizationMineContainer extends Component {
   }
 }
 
-OrganizationMineContainer.propTypes = {
+MyOrganizationContainer.propTypes = {
   getMyOrganization: PropTypes.func.isRequired,
   getMyOrganizationMembers: PropTypes.func.isRequired,
   myOrganization: PropTypes.shape({
@@ -79,4 +79,4 @@ const mapDispatchToProps = dispatch => ({
   }
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(OrganizationMineContainer);
+export default connect(mapStateToProps, mapDispatchToProps)(MyOrganizationContainer);

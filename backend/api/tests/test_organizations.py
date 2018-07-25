@@ -24,6 +24,8 @@
 
 import json
 
+from rest_framework import status
+
 from api.models.OrganizationAddress import OrganizationAddress
 from api.models.OrganizationType import OrganizationType
 from .base_test_case import BaseTestCase
@@ -65,3 +67,78 @@ class TestOrganizations(BaseTestCase):
                          response_data['organizationAddress']['addressLine_1'])
         self.assertEqual("Test City",
                          response_data['organizationAddress']['city'])
+
+    def test_get_organization_users(self):
+        """
+        Test that the organization loads users properly
+        """
+        # View the organization that fs_user_1 belongs to
+        response = self.clients['gov_analyst'].get(
+            "/api/organizations/{}/users".format(
+                self.users['fs_user_1'].organization.id)
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        response_data = json.loads(response.content.decode("utf-8"))
+
+        user_found = False
+
+        for user in response_data:
+            if self.users['fs_user_1'].id == user['id']:
+                user_found = True
+
+        self.assertTrue(user_found)
+
+    def test_get_organization(self):
+        """
+        Test that the organization details load properly
+        """
+        # View the organization that fs_user_1 belongs to
+        response = self.clients['gov_analyst'].get(
+            "/api/organizations/{}".format(
+                self.users['fs_user_1'].organization.id)
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        response_data = json.loads(response.content.decode("utf-8"))
+
+        self.assertEqual(
+            response_data['id'],
+            self.users['fs_user_1'].organization.id)
+
+    def test_get_organization_users(self):
+        """
+        Test that the organization loads users properly
+        """
+        # View the organization that fs_user_1 belongs to
+        response = self.clients['gov_analyst'].get(
+            "/api/organizations/{}/users".format(
+                self.users['fs_user_1'].organization.id)
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        response_data = json.loads(response.content.decode("utf-8"))
+
+        user_found = False
+
+        for user in response_data:
+            if self.users['fs_user_1'].id == user['id']:
+                user_found = True
+
+        self.assertTrue(user_found)
+
+    def test_get_organization_users_as_fuel_supplier(self):
+        """
+        Test that users without permission to view fuel suppliers
+        gets a 403 when trying to view users for an organization
+        """
+        # View the organization that fs_user_1 belongs to
+        response = self.clients['fs_user_2'].get(
+            "/api/organizations/{}/users".format(
+                self.users['fs_user_1'].organization.id)
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)

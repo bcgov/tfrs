@@ -24,7 +24,7 @@ import HistoricalDataEntryContainer from './admin/historical_data_entry/Historic
 import HistoricalDataEntryEditContainer from './admin/historical_data_entry/HistoricalDataEntryEditContainer';
 import NotFound from './components/reusables/NotFound';
 import OrganizationsContainer from './organizations/OrganizationsContainer';
-import OrganizationsMineContainer from './organizations/OrganizationMineContainer';
+import MyOrganizationContainer from './organizations/MyOrganizationContainer';
 import OrganizationViewContainer from './organizations/OrganizationViewContainer';
 import UserViewContainer from './users/UserViewContainer';
 
@@ -61,7 +61,7 @@ const Router = props => (
         <Route
           exact
           path={ORGANIZATIONS.MINE}
-          component={withRouter(OrganizationsMineContainer)}
+          component={withRouter(MyOrganizationContainer)}
         />
         <Route
           exact

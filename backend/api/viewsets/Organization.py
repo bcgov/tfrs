@@ -124,7 +124,7 @@ class OrganizationViewSet(AuditableMixin, viewsets.GenericViewSet,
         serializer = self.get_serializer(users, many=True)
         return Response(serializer.data)
 
-    @detail_route()
+    @detail_route(methods=['get'])
     @permission_required('VIEW_FUEL_SUPPLIERS')
     def users(self, request, pk=None):
         """
