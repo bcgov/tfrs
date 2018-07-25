@@ -68,28 +68,6 @@ class TestOrganizations(BaseTestCase):
         self.assertEqual("Test City",
                          response_data['organizationAddress']['city'])
 
-    def test_get_organization_users(self):
-        """
-        Test that the organization loads users properly
-        """
-        # View the organization that fs_user_1 belongs to
-        response = self.clients['gov_analyst'].get(
-            "/api/organizations/{}/users".format(
-                self.users['fs_user_1'].organization.id)
-        )
-
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-
-        response_data = json.loads(response.content.decode("utf-8"))
-
-        user_found = False
-
-        for user in response_data:
-            if self.users['fs_user_1'].id == user['id']:
-                user_found = True
-
-        self.assertTrue(user_found)
-
     def test_get_organization(self):
         """
         Test that the organization details load properly
