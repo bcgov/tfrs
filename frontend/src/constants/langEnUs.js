@@ -26,6 +26,8 @@ export const BTN_COMMENT = 'Add Comment';
 export const BTN_COMMENT_PRIVILEGED = 'Add Internal Comment';
 export const BTN_CANCEL_COMMENT = 'Cancel';
 export const BTN_SAVE_COMMENT = 'Save Comment';
+export const BTN_EDIT_COMMENT = 'Edit Comment';
+
 export const TEXT_COMMENT_PLACEHOLDER = 'Use this field to communicate relevant details';
 export const TEXT_COMMENT_PLACEHOLDER_PRIVILEGED = 'Use this field to provide background for ' +
                                                    'recommendations or decisions';
@@ -36,6 +38,7 @@ export const TEXT_COMMENT_DISCLOSURE_PRIVILEGED = 'Information entered in this c
                                                   'will be visible only to government users and ' +
                                                   'not shared with fuel suppliers';
 export const TEXT_ADD_COMMENT_HEADING = 'Adding Comment';
+export const TEXT_EDIT_COMMENT_HEADING = 'Editing Comment';
 export const TEXT_ADD_INTERNAL_COMMENT_HEADING = 'Adding Government-Internal Comment';
 export const TEXT_VISIBLE_TO_GOV = 'Visible to government';
 export const TEXT_VISIBLE_TO_ALL = 'Visible to both fuel suppliers and government';

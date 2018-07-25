@@ -9,6 +9,7 @@ import history from './app/History';
 import * as Routes from './constants/routes';
 import CONTACT_US from './constants/routes/ContactUs';
 import CREDIT_TRANSACTIONS from './constants/routes/CreditTransactions';
+import CREDIT_TRANSACTIONS_HISTORY from './constants/routes/CreditTransactionsHistory';
 import HISTORICAL_DATA_ENTRY from './constants/routes/HistoricalDataEntry';
 import ORGANIZATIONS from './constants/routes/Organizations';
 import USERS from './constants/routes/Users';
@@ -16,6 +17,7 @@ import USERS from './constants/routes/Users';
 import ContactUsContainer from './contact_us/ContactUsContainer';
 import CreditTransactionAddContainer from './credit_transfers/CreditTransactionAddContainer';
 import CreditTransactionsContainer from './credit_transfers/CreditTransactionsContainer';
+import CreditTransactionsHistory from './admin/credit_trade_history/CreditTradeHistoryContainer';
 import CreditTransferAddContainer from './credit_transfers/CreditTransferAddContainer';
 import CreditTransferEditContainer from './credit_transfers/CreditTransferEditContainer';
 import CreditTransferViewContainer from './credit_transfers/CreditTransferViewContainer';
@@ -97,6 +99,11 @@ const Router = props => (
           exact
           path={CONTACT_US.DETAILS}
           component={withRouter(ContactUsContainer)}
+        />
+        <Route
+          exact
+          path={CREDIT_TRANSACTIONS_HISTORY.LIST}
+          component={withRouter(CreditTransactionsHistory)}
         />
         <Route component={NotFound} />
       </Switch>

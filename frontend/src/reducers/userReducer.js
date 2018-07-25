@@ -26,8 +26,8 @@ const userRequest = (state = {
         loggedInUser: {
           ...action.data,
           hasPermission: (permissionCode) => {
-            if (action.data.role) {
-              return action.data.role.permissions.findIndex(permission => (
+            if (action.data.permissions) {
+              return action.data.permissions.findIndex(permission => (
                 permission.code === permissionCode
               )) >= 0;
             }

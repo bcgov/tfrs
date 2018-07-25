@@ -22,14 +22,17 @@
 """
 
 from django.db import models
+from django.db.models import Q
 from django.contrib.auth.models import AbstractUser
 from django.core.validators import RegexValidator
 import django.contrib.auth.validators
 
 from auditable.models import Auditable
 from api.managers.UserManager import UserManager
-from .CreditTradeHistory import CreditTradeHistory
 
+from .CreditTradeHistory import CreditTradeHistory
+from .Permission import Permission
+from .Role import Role
 from .UserRole import UserRole
 
 
@@ -46,55 +49,63 @@ class User(AbstractUser, Auditable):
         verbose_name='username',
         db_comment='Login Username'
     )
-    phone_regex = RegexValidator(regex=r'^\+?1?\d{9,15}$',
-                                 message="Phone number must be entered in the "
-                                 "format: '+999999999'. Up to 15 digits "
-                                 "allowed.")
+    phone_regex = RegexValidator(
+        regex=r'^\+?1?\d{9,15}$',
+        message="Phone number must be entered in the "
+                "format: '+999999999'. Up to 15 digits allowed.")
 
-    password = models.CharField(max_length=128, blank=True, null=True, db_comment='Password hash')
-    email = models.EmailField(blank=True, null=True, db_comment='Primary email address')
+    password = models.CharField(
+        max_length=128, blank=True, null=True, db_comment='Password hash')
+    email = models.EmailField(
+        blank=True, null=True, db_comment='Primary email address')
 
-    title = models.CharField(max_length=100, blank=True, null=True, db_comment='Professional Title')
-    phone = models.CharField(validators=[phone_regex], max_length=17,
-                             blank=True, null=True, db_comment='Primary phone number')
-    cell_phone = models.CharField(validators=[phone_regex], max_length=17,
-                                  blank=True, null=True, db_comment='Mobile phone number')
+    title = models.CharField(
+        max_length=100, blank=True, null=True, db_comment='Professional Title')
+    phone = models.CharField(
+        validators=[phone_regex], max_length=17, blank=True, null=True,
+        db_comment='Primary phone number')
+    cell_phone = models.CharField(
+        validators=[phone_regex], max_length=17, blank=True, null=True,
+        db_comment='Mobile phone number')
     organization = models.ForeignKey(
-        'Organization',
-        related_name='users',
-        blank=True, null=True, on_delete=models.SET_NULL)
+        'Organization', related_name='users', blank=True, null=True,
+        on_delete=models.SET_NULL)
     effective_date = models.DateField(auto_now_add=True, blank=True, null=True)
     expiration_date = models.DateField(blank=True, null=True)
 
     # Siteminder headers
-    authorization_id = models.CharField(max_length=500, blank=True, null=True,
-                                        db_comment='Siteminder Header')
-    authorization_guid = models.UUIDField(unique=True, default=None, null=True,
-                                          db_comment='Siteminder Header.'
-                                                     'GUID used for authentication')
-    authorization_directory = models.CharField(max_length=100, blank=True,
-                                               null=True,
-                                               db_comment='Siteminder Header (normally IDIR or BCeID)')
-    authorization_email = models.EmailField(blank=True, null=True, db_comment='Siteminder Header')
-    display_name = models.CharField(max_length=500, blank=True, null=True,
-                                    db_comment='Siteminder Header (Displayed name for user)')
+    authorization_id = models.CharField(
+        max_length=500, blank=True, null=True, db_comment='Siteminder Header')
+    authorization_guid = models.UUIDField(
+        unique=True, default=None, null=True,
+        db_comment='Siteminder Header. GUID used for authentication')
+    authorization_directory = models.CharField(
+        max_length=100, blank=True, null=True,
+        db_comment='Siteminder Header (normally IDIR or BCeID)')
+    authorization_email = models.EmailField(
+        blank=True, null=True, db_comment='Siteminder Header')
+    display_name = models.CharField(
+        max_length=500, blank=True, null=True,
+        db_comment='Siteminder Header (Displayed name for user)')
 
     def __str__(self):
         return str(self.id)
 
     @property
-    def role(self):
+    def permissions(self):
         """
-        Role applied to the User
+        Permissions that the user has based on the roles applied
         """
-        user_role = UserRole.objects.select_related('role').filter(
-            user_id=self.id
-        ).first()
+        return Permission.objects.distinct().filter(
+            Q(role_permissions__role__in=self.roles)
+        ).order_by('id')
 
-        if user_role is None:
-            return None
-
-        return user_role.role
+    @property
+    def roles(self):
+        """
+        Roles applied to the User
+        """
+        return Role.objects.filter(user_roles__user_id=self.id)
 
     def get_history(self, filters):
         """
@@ -111,11 +122,21 @@ class User(AbstractUser, Auditable):
         """
         Helper function to check if the user has the approrpiate permission
         """
-        if self.role is None or \
-                not self.role.permissions.filter(code=permission):
+        if not self.roles.filter(
+                Q(role_permissions__permission__code=permission)):
             return False
 
         return True
+
+    @property
+    def is_government_user(self):
+        """
+        Does this user have a government role?
+        """
+        if self.roles.filter(Q(is_government_role=True)):
+            return True
+
+        return False
 
     objects = UserManager()
 

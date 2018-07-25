@@ -8,8 +8,8 @@ import FontAwesomeIcon from '@fortawesome/react-fontawesome';
 import { Link } from 'react-router-dom';
 import 'react-table/react-table.css';
 
-import ROLES from '../../constants/roles';
 import USERS from '../../constants/routes/Users';
+import roleName from '../../utils/translate';
 
 const OrganizationMembersTable = (props) => {
   const columns = [{
@@ -17,14 +17,14 @@ const OrganizationMembersTable = (props) => {
     className: 'col-name',
     Header: 'Name',
     id: 'name',
-    minWidth: 200
+    minWidth: 150
   }, {
-    accessor: item => item.role &&
-      Object.values(ROLES).find(element => element.id === item.role.id).description,
+    accessor: item => item.roles &&
+      item.roles.map(role => roleName(role)).join(', '),
     className: 'col-role',
     Header: 'Role',
     id: 'role',
-    minWidth: 150
+    minWidth: 200
   }, {
     accessor: item => item.email,
     className: 'col-status-display',

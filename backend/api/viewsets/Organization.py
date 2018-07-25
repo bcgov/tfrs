@@ -1,6 +1,4 @@
-from django.db.models import Sum
-
-from rest_framework import viewsets, permissions, mixins
+from rest_framework import viewsets, mixins
 from rest_framework.decorators import list_route, detail_route
 from rest_framework.response import Response
 
@@ -9,20 +7,19 @@ from auditable.views import AuditableMixin
 from api.decorators import permission_required
 from api.models.Organization import Organization
 from api.models.OrganizationBalance import OrganizationBalance
-from api.models.OrganizationHistory import OrganizationHistory
 from api.models.OrganizationType import OrganizationType
 from api.models.User import User
-from api.serializers import MemberSerializer
 from api.serializers import OrganizationSerializer
 from api.serializers import OrganizationBalanceSerializer
 from api.serializers import OrganizationHistorySerializer
 from api.serializers import OrganizationMinSerializer
+from api.serializers import UserMinSerializer
 from api.permissions.OrganizationPermissions import OrganizationPermissions
 
 
-class OrganizationViewSet(AuditableMixin, viewsets.GenericViewSet, mixins.CreateModelMixin,
-                          mixins.ListModelMixin, mixins.UpdateModelMixin,
-                          mixins.RetrieveModelMixin):
+class OrganizationViewSet(AuditableMixin, viewsets.GenericViewSet,
+                          mixins.CreateModelMixin, mixins.ListModelMixin,
+                          mixins.UpdateModelMixin, mixins.RetrieveModelMixin):
     """
     This viewset automatically provides `list`, `create`, `retrieve`,
     and `update`  actions.
@@ -38,14 +35,14 @@ class OrganizationViewSet(AuditableMixin, viewsets.GenericViewSet, mixins.Create
         'default': OrganizationSerializer,
         'history': OrganizationHistorySerializer,
         'fuel_suppliers': OrganizationMinSerializer,
-        'members': MemberSerializer
+        'members': UserMinSerializer
     }
 
     def get_serializer_class(self):
         if self.action in list(self.serializer_classes.keys()):
             return self.serializer_classes[self.action]
-        else:
-            return self.serializer_classes['default']
+
+        return self.serializer_classes['default']
 
     @permission_required('VIEW_FUEL_SUPPLIERS')
     def list(self, request, *args, **kwargs):
@@ -64,6 +61,9 @@ class OrganizationViewSet(AuditableMixin, viewsets.GenericViewSet, mixins.Create
     @list_route(methods=['get'])
     @permission_required('VIEW_FUEL_SUPPLIERS')
     def search(self, request):
+        """
+        Returns a list of organization based on a search term provided
+        """
         return self.list(request)
 
     @detail_route()
@@ -93,10 +93,15 @@ class OrganizationViewSet(AuditableMixin, viewsets.GenericViewSet, mixins.Create
 
     @list_route(methods=['get'])
     def fuel_suppliers(self, request):
+        """
+        Returns a list of organizations that's marked as fuel suppliers
+        (Most should be returned, but as an example, government is not
+        going to be included here.)
+        """
         fuel_suppliers = Organization.objects.extra(
             select={'lower_name': 'lower(name)'}) \
             .filter(type=OrganizationType.objects.get(
-            type="Part3FuelSupplier")) \
+                type="Part3FuelSupplier")) \
             .order_by('lower_name')
 
         serializer = self.get_serializer(fuel_suppliers, many=True)

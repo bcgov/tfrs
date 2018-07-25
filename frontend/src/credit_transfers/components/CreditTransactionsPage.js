@@ -17,8 +17,8 @@ const CreditTransactionsPage = (props) => {
   return (
     <div className="page_credit_transactions">
       <div className="credit_balance">
-        {props.loggedInUser.role &&
-          !props.loggedInUser.role.isGovernmentRole &&
+        {props.loggedInUser.roles &&
+          !props.loggedInUser.isGovernmentUser &&
           <h3>
             Credit Balance: {
               numeral(props.loggedInUser.organization.organizationBalance.validatedCredits)
@@ -27,8 +27,7 @@ const CreditTransactionsPage = (props) => {
           </h3>
         }
         {!isFetching &&
-          props.loggedInUser.role &&
-          props.loggedInUser.role.isGovernmentRole &&
+          props.loggedInUser.isGovernmentUser &&
           [
             !props.organization &&
             <div key="all-organizations-credit-balance">
@@ -80,8 +79,7 @@ const CreditTransactionsPage = (props) => {
       <h1>{props.title}</h1>
       <div className="right-toolbar-container">
         <div className="actions-container">
-          {props.loggedInUser.role &&
-          props.loggedInUser.hasPermission(PERMISSIONS_CREDIT_TRANSACTIONS.PROPOSE) &&
+          {props.loggedInUser.hasPermission(PERMISSIONS_CREDIT_TRANSACTIONS.PROPOSE) &&
             <button
               className="btn btn-primary"
               type="button"
@@ -127,6 +125,7 @@ CreditTransactionsPage.propTypes = {
   loggedInUser: PropTypes.shape({
     displayName: PropTypes.string,
     hasPermission: PropTypes.func,
+    isGovernmentUser: PropTypes.bool,
     organization: PropTypes.shape({
       id: PropTypes.number,
       name: PropTypes.string,
@@ -134,10 +133,9 @@ CreditTransactionsPage.propTypes = {
         validatedCredits: PropTypes.number
       })
     }),
-    role: PropTypes.shape({
-      id: PropTypes.number,
-      isGovernmentRole: PropTypes.bool
-    })
+    roles: PropTypes.arrayOf(PropTypes.shape({
+      id: PropTypes.number
+    }))
   }).isRequired,
   organization: PropTypes.oneOfType([
     PropTypes.bool,

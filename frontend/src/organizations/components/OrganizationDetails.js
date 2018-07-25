@@ -27,8 +27,25 @@ const OrganizationDetails = props => (
         <h1>
           {props.organization.details.name}
         </h1>
+        {props.organization.details.organizationAddress &&
+          <div className="address">
+            <dl className="dl-horizontal">
+              <dt>Address:</dt>
+              <dd>{props.organization.details.organizationAddress.addressLine_1}</dd>
+              <dt />
+              <dd>{props.organization.details.organizationAddress.addressLine_2}</dd>
+              <dt />
+              <dd>{props.organization.details.organizationAddress.addressLine_3}</dd>
+              <dt />
+              <dd>{`${props.organization.details.organizationAddress.city}, ${props.organization.details.organizationAddress.postalCode}, ${props.organization.details.organizationAddress.country}`}</dd>
+            </dl>
+          </div>
+        }
         <div className="status">
-          Status: {props.organization.details.statusDisplay}
+          <dl className="dl-horizontal">
+            <dt>Status:</dt>
+            <dd>{props.organization.details.statusDisplay}</dd>
+          </dl>
         </div>
         <h2>Users</h2>
         {props.members.isFetching && <Loading />}
@@ -58,6 +75,15 @@ OrganizationDetails.propTypes = {
     details: PropTypes.shape({
       id: PropTypes.number,
       name: PropTypes.string,
+      organizationAddress: PropTypes.shape({
+        addressLine_1: PropTypes.string,
+        addressLine_2: PropTypes.string,
+        addressLine_3: PropTypes.string,
+        city: PropTypes.string,
+        postalCode: PropTypes.string,
+        state: PropTypes.string,
+        country: PropTypes.string
+      }),
       organizationBalance: PropTypes.shape({
         validatedCredits: PropTypes.number
       }),

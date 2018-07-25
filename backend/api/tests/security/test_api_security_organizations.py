@@ -49,42 +49,64 @@ class TestOrganizationsAPI(BaseAPISecurityTestCase):
         url = "/api/organizations"
 
         all_users = self.users
-        expected_results = defaultdict(lambda: {'status': status.HTTP_403_FORBIDDEN,
-                                                'reason': "Default response should be no access"})
+        expected_results = defaultdict(lambda: {
+            'status': status.HTTP_403_FORBIDDEN,
+            'reason': "Default response should be no access"})
 
-        expected_results[('gov_director',)] = {'status': status.HTTP_200_OK,
-                                               'reason': 'Director should have read access to orgs'}
+        expected_results[('gov_director',)] = {
+            'status': status.HTTP_200_OK,
+            'reason': 'Director should have read access to orgs'}
 
-        expected_results[('gov_analyst',)] = {'status': status.HTTP_200_OK,
-                                              'reason': 'Analyst should have read access to orgs'}
+        expected_results[('gov_analyst',)] = {
+            'status': status.HTTP_200_OK,
+            'reason': 'Analyst should have read access to orgs'}
+
+        expected_results[('gov_multi_role',)] = {
+            'status': status.HTTP_200_OK,
+            'reason': 'Multi Role should have read access to orgs'}
 
         for user in all_users:
-            with self.subTest(user=user,
-                              expected_status=expected_results[(user,)]['status'],
-                              reason=expected_results[(user,)]['reason']):
+            with self.subTest(
+                user=user,
+                expected_status=expected_results[(user,)]['status'],
+                reason=expected_results[(user,)]['reason']
+            ):
                 response = self.clients[user].get(url)
                 logging.debug(response.content.decode('utf-8'))
-                self.assertEqual(response.status_code, expected_results[(user,)]['status'])
+                self.assertEqual(
+                    response.status_code,
+                    expected_results[(user,)]['status'])
 
     def test_delete(self):
-        """Test that deleting organizations is not a semantically valid action"""
+        """
+        Test that deleting organizations is not a semantically valid action
+        """
 
         url = "/api/organizations/{0!s}"
 
         all_users = self.users
 
-        expected_results = defaultdict(lambda: {'status': [status.HTTP_405_METHOD_NOT_ALLOWED,
-                                                           status.HTTP_403_FORBIDDEN],
-                                                'reason': "Default response should be no access"})
+        expected_results = defaultdict(lambda: {
+            'status': [
+                status.HTTP_405_METHOD_NOT_ALLOWED,
+                status.HTTP_403_FORBIDDEN
+            ],
+            'reason': "Default response should be no access"})
 
         for user in all_users:
-            with self.subTest(user=user,
-                              expected_statuses=expected_results[(user,)]['status'],
-                              reason=expected_results[(user,)]['reason']):
+            with self.subTest(
+                user=user,
+                expected_statuses=expected_results[(user,)]['status'],
+                reason=expected_results[(user,)]['reason']
+            ):
                 org_that_exists = DataCreationUtilities.create_test_organization()
-                response = self.clients[user].delete(url.format(org_that_exists['id']))
+                response = self.clients[user].delete(
+                    url.format(org_that_exists['id']))
                 logging.debug(response)
-                self.assertIn(response.status_code, expected_results[(user,)]['status'])
+
+                self.assertIn(
+                    response.status_code,
+                    expected_results[(user,)]['status'])
 
     def test_post(self):
         """
@@ -96,16 +118,20 @@ class TestOrganizationsAPI(BaseAPISecurityTestCase):
 
         all_users = self.users
 
-        expected_results = defaultdict(lambda: {'status': status.HTTP_403_FORBIDDEN,
-                                                'reason': "Default response should be no access"})
+        expected_results = defaultdict(lambda: {
+            'status': status.HTTP_403_FORBIDDEN,
+            'reason': "Default response should be no access"})
 
-        expected_results[('gov_admin',)] = {'status': status.HTTP_201_CREATED,
-                                            'reason': 'Admin should have create access for orgs'}
+        expected_results[('gov_admin',)] = {
+            'status': status.HTTP_201_CREATED,
+            'reason': 'Admin should have create access for orgs'}
 
         for index, user in enumerate(all_users):
-            with self.subTest(user=user,
-                              expected_status=expected_results[(user,)]['status'],
-                              reason=expected_results[(user,)]['reason']):
+            with self.subTest(
+                user=user,
+                expected_status=expected_results[(user,)]['status'],
+                reason=expected_results[(user,)]['reason']
+            ):
                 payload = {
                     'status': OrganizationStatus.objects.get_by_natural_key('Active').id,
                     'type': OrganizationType.objects.get_by_natural_key('Part3FuelSupplier').id,
@@ -113,9 +139,10 @@ class TestOrganizationsAPI(BaseAPISecurityTestCase):
                     'actions_type': OrganizationActionsType.objects.get_by_natural_key('Buy And Sell').id
                 }
 
-                response = self.clients[user].post(url,
-                                                   content_type='application/json',
-                                                   data=json.dumps(payload))
+                response = self.clients[user].post(
+                    url,
+                    content_type='application/json',
+                    data=json.dumps(payload))
 
                 logging.debug(response.content.decode('utf-8'))
                 self.assertEqual(response.status_code, expected_results[(user,)]['status'])
@@ -130,16 +157,20 @@ class TestOrganizationsAPI(BaseAPISecurityTestCase):
 
         all_users = self.users
 
-        expected_results = defaultdict(lambda: {'status': status.HTTP_403_FORBIDDEN,
-                                                'reason': "Default response should be no access"})
+        expected_results = defaultdict(lambda: {
+            'status': status.HTTP_403_FORBIDDEN,
+            'reason': "Default response should be no access"})
 
-        expected_results[('gov_admin',)] = {'status': status.HTTP_200_OK,
-                                            'reason': 'Admin should have write access for orgs'}
+        expected_results[('gov_admin',)] = {
+            'status': status.HTTP_200_OK,
+            'reason': 'Admin should have write access for orgs'}
 
-        for index, user in enumerate(all_users):
-            with self.subTest(user=user,
-                              expected_status=expected_results[(user,)]['status'],
-                              reason=expected_results[(user,)]['reason']):
+        for _index, user in enumerate(all_users):
+            with self.subTest(
+                user=user,
+                expected_status=expected_results[(user,)]['status'],
+                reason=expected_results[(user,)]['reason']
+            ):
                 org_that_exists = DataCreationUtilities.create_test_organization()
 
                 payload = {
@@ -157,7 +188,10 @@ class TestOrganizationsAPI(BaseAPISecurityTestCase):
                 )
                 logging.debug(response)
 
-                self.assertEqual(response.status_code, expected_results[(user,)]['status'], "PUT")
+                self.assertEqual(
+                    response.status_code,
+                    expected_results[(user,)]['status'],
+                    "PUT")
 
                 payload = {
                     'name': 'Patched org {}'.format(str(uuid.uuid4())),
@@ -171,4 +205,7 @@ class TestOrganizationsAPI(BaseAPISecurityTestCase):
                 )
                 logging.debug(response)
 
-                self.assertEqual(response.status_code, expected_results[(user,)]['status'], "PATCH")
+                self.assertEqual(
+                    response.status_code,
+                    expected_results[(user,)]['status'],
+                    "PATCH")

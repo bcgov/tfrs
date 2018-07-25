@@ -69,7 +69,7 @@ class CreditTradeCreateSerializer(serializers.ModelSerializer):
         # if the user creating the proposal is not the initiator.
         # they should be a government user
         if data.get('initiator') != request.user.organization and \
-                not request.user.role.is_government_role:
+                not request.user.is_government_user:
             raise serializers.ValidationError({
                 'invalidStatus': "You cannot create a proposal for another "
                                  "organization."
@@ -366,7 +366,7 @@ class CreditTrade2Serializer(serializers.ModelSerializer):
     """
     Credit Trade Serializer with the eager loading
     """
-    status = CreditTradeStatusMinSerializer(read_only=True)
+    status = serializers.SerializerMethodField()
     initiator = OrganizationMinSerializer(read_only=True)
     respondent = OrganizationMinSerializer(read_only=True)
     type = CreditTradeTypeSerializer(read_only=True)
@@ -402,7 +402,7 @@ class CreditTrade2Serializer(serializers.ModelSerializer):
 
         # If the user doesn't have any roles assigned, treat as though the user
         # doesn't have available permissions
-        if request.user.role is None:
+        if not request.user.roles:
             return []
 
         if cur_status == "Draft":
@@ -429,7 +429,7 @@ class CreditTrade2Serializer(serializers.ModelSerializer):
 
         # If the user doesn't have any roles assigned, treat as though the user
         # doesn't have available permissions
-        if request.user.role is None:
+        if not request.user.roles:
             return []
 
         if request.user.has_perm('VIEW_PRIVILEGED_COMMENTS'):
@@ -438,7 +438,8 @@ class CreditTrade2Serializer(serializers.ModelSerializer):
             comments = obj.unprivileged_comments
 
         serializer = CreditTradeCommentSerializer(comments,
-                                                  many=True)
+                                                  many=True,
+                                                  context={'request': request})
 
         return serializer.data
 
@@ -448,8 +449,7 @@ class CreditTrade2Serializer(serializers.ModelSerializer):
 
         # if the user is not a government user we should limit what we show
         # so no recommended/not recommended
-        if (request.user.role is None or
-                not request.user.role.is_government_role):
+        if not request.user.is_government_user:
             history = obj.get_history(["Accepted", "Completed", "Declined",
                                        "Refused", "Submitted"])
         else:
@@ -463,6 +463,9 @@ class CreditTrade2Serializer(serializers.ModelSerializer):
         return serializer.data
 
     def get_signatures(self, obj):
+        """
+        Returns all the users that have signed the credit trade
+        """
         signatures = []
         for signature in obj.signatures:
             user = User.objects.get(id=signature['create_user_id'])
@@ -474,3 +477,43 @@ class CreditTrade2Serializer(serializers.ModelSerializer):
             })
 
         return signatures
+
+    def get_status(self, obj):
+        """
+        Should just return the status, but with an exception for
+        non-government users when the status is Recommended or
+        Not Recommended
+        """
+        request = self.context.get('request')
+
+        if (obj.status.status == 'Recommended' or
+                obj.status.status == 'Not Recommended') and \
+            (not request.user.is_government_user):
+            recommended = CreditTradeStatus.objects.get(status="Recommended")
+
+            return {
+                'id': recommended.id,
+                'status': 'Reviewed'
+            }
+
+        serializer = CreditTradeStatusMinSerializer(
+            obj.status,
+            read_only=True)
+
+        return serializer.data
+
+
+class CreditTradeMinSerializer(serializers.ModelSerializer):
+    """
+    Credit Trade Serializer with just the basic information
+    """
+    status = CreditTradeStatusMinSerializer(read_only=True)
+    initiator = OrganizationMinSerializer(read_only=True)
+    respondent = OrganizationMinSerializer(read_only=True)
+    type = CreditTradeTypeSerializer(read_only=True)
+
+    class Meta:
+        model = CreditTrade
+        fields = ('id', 'status', 'initiator', 'respondent', 'type',
+                  'number_of_credits', 'fair_market_value_per_credit',
+                  'is_rescinded')

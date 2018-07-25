@@ -1,6 +1,7 @@
 import axios from 'axios';
 
-import * as ActionTypes from '../constants/actionTypes';
+import ActionTypes from '../constants/actionTypes/CreditTransfers';
+import ReducerTypes from '../constants/reducerTypes/CreditTransfers';
 import * as Routes from '../constants/routes';
 import { CREDIT_TRANSFER_STATUS, CREDIT_TRANSFER_TYPES, DEFAULT_ORGANIZATION } from '../constants/values';
 
@@ -39,7 +40,6 @@ export const prepareCreditTransfer = (fields) => {
     initiator: (fields.creditsFrom.id > 0)
       ? fields.creditsFrom.id
       : DEFAULT_ORGANIZATION.id,
-    note: fields.note,
     numberOfCredits: parseInt(fields.numberOfCredits, 10),
     respondent: (fields.creditsTo.id > 0)
       ? fields.creditsTo.id
@@ -105,19 +105,19 @@ export const getCreditTransfersIfNeeded = () =>
   };
 
 const getCreditTransfersRequest = () => ({
-  name: 'GET_CREDIT_TRANSFERS_REQUEST',
+  name: ReducerTypes.GET_CREDIT_TRANSFERS_REQUEST,
   type: ActionTypes.GET_CREDIT_TRANSFERS
 });
 
 const getCreditTransfersSuccess = creditTransfers => ({
-  name: 'RECEIVE_CREDIT_TRANSFERS_REQUEST',
+  name: ReducerTypes.RECEIVE_CREDIT_TRANSFERS_REQUEST,
   type: ActionTypes.RECEIVE_CREDIT_TRANSFERS,
   data: creditTransfers,
   receivedAt: Date.now()
 });
 
 const getCreditTransfersError = error => ({
-  name: 'ERROR_CREDIT_TRANSFERS_REQUEST',
+  name: ReducerTypes.ERROR_CREDIT_TRANSFERS_REQUEST,
   type: ActionTypes.ERROR,
   errorMessage: error
 });
@@ -151,13 +151,13 @@ export const getApprovedCreditTransfersIfNeeded = () =>
   };
 
 const getApprovedCreditTransfersRequest = () => ({
-  name: 'GET_APPROVED_CREDIT_TRANSFERS_REQUEST',
+  name: ReducerTypes.GET_APPROVED_CREDIT_TRANSFERS_REQUEST,
   type: ActionTypes.GET_APPROVED_CREDIT_TRANSFERS
 });
 
 const getApprovedCreditTransfersSuccess = creditTransfers => ({
-  name: 'RECEIVE_APPROVED_CREDIT_TRANSFERS_REQUEST',
-  type: 'RECEIVE_APPROVED_CREDIT_TRANSFERS',
+  name: ReducerTypes.RECEIVE_APPROVED_CREDIT_TRANSFERS_REQUEST,
+  type: ActionTypes.RECEIVE_APPROVED_CREDIT_TRANSFERS,
   data: creditTransfers,
   receivedAt: Date.now()
 });
@@ -196,19 +196,19 @@ export const getCreditTransferIfNeeded = id =>
   };
 
 const getCreditTransferRequest = () => ({
-  name: 'GET_CREDIT_TRANSFER_REQUEST',
+  name: ReducerTypes.GET_CREDIT_TRANSFER_REQUEST,
   type: ActionTypes.GET_CREDIT_TRANSFER
 });
 
 const getCreditTransferSuccess = creditTransfer => ({
-  name: 'RECEIVE_CREDIT_TRANSFER_REQUEST',
+  name: ReducerTypes.RECEIVE_CREDIT_TRANSFER_REQUEST,
   type: ActionTypes.RECEIVE_CREDIT_TRANSFER,
   data: creditTransfer,
   receivedAt: Date.now()
 });
 
 const getCreditTransferError = error => ({
-  name: 'ERROR_CREDIT_TRANSFER_REQUEST',
+  name: ReducerTypes.ERROR_CREDIT_TRANSFER_REQUEST,
   type: ActionTypes.ERROR,
   errorMessage: error
 });
@@ -236,18 +236,18 @@ export const addCreditTransfer = data => (dispatch) => {
 };
 
 const addCreditTransferRequest = () => ({
-  name: 'ADD_CREDIT_TRANSFER',
+  name: ReducerTypes.ADD_CREDIT_TRANSFER_REQUEST,
   type: ActionTypes.ADD_CREDIT_TRANSFER
 });
 
 const addCreditTransferSuccess = data => ({
-  name: 'SUCCESS_ADD_CREDIT_TRANSFER',
+  name: ReducerTypes.SUCCESS_ADD_CREDIT_TRANSFER,
   type: ActionTypes.SUCCESS_ADD_CREDIT_TRANSFER,
   data
 });
 
 const addCreditTransferError = error => ({
-  name: 'ERROR_ADD_CREDIT_TRANSFER',
+  name: ReducerTypes.ERROR_ADD_CREDIT_TRANSFER,
   type: ActionTypes.ERROR,
   errorMessage: error
 });
@@ -284,18 +284,18 @@ export const partialUpdateCreditTransfer = (id, data) => (dispatch) => {
 };
 
 const updateCreditTransferRequest = () => ({
-  name: 'UPDATE_CREDIT_TRANSFER',
+  name: ReducerTypes.UPDATE_CREDIT_TRANSFER_REQUEST,
   type: ActionTypes.REQUEST
 });
 
 const updateCreditTransferSuccess = data => ({
-  name: 'SUCCESS_UPDATE_CREDIT_TRANSFER',
+  name: ReducerTypes.SUCCESS_UPDATE_CREDIT_TRANSFER_REQUEST,
   type: ActionTypes.SUCCESS,
   data
 });
 
 const updateCreditTransferError = error => ({
-  name: 'ERROR_ADD_CREDIT_TRANSFER',
+  name: ReducerTypes.ERROR_ADD_CREDIT_TRANSFER_REQUEST,
   type: ActionTypes.ERROR,
   errorMessage: error
 });
@@ -316,18 +316,18 @@ export const deleteCreditTransfer = id => (dispatch) => {
 };
 
 const deleteCreditTransferRequest = () => ({
-  name: 'DELETE_CREDIT_TRANSFER',
+  name: ReducerTypes.DELETE_CREDIT_TRANSFER_REQUEST,
   type: ActionTypes.REQUEST
 });
 
 const deleteCreditTransferSuccess = data => ({
-  name: 'SUCCESS_DELETE_CREDIT_TRANSFER',
+  name: ReducerTypes.SUCCESS_DELETE_CREDIT_TRANSFER,
   type: ActionTypes.SUCCESS,
   data
 });
 
 const deleteCreditTransferError = error => ({
-  name: 'ERROR_ADD_CREDIT_TRANSFER',
+  name: ReducerTypes.ERROR_ADD_CREDIT_TRANSFER,
   type: ActionTypes.ERROR,
   errorMessage: error
 });
@@ -349,18 +349,18 @@ export const approveCreditTransfer = id => (dispatch) => {
 };
 
 const approveCreditTransferRequest = () => ({
-  name: 'APPROVE_CREDIT_TRANSFER',
+  name: ReducerTypes.APPROVE_CREDIT_TRANSFER,
   type: ActionTypes.REQUEST
 });
 
 const approveCreditTransferSuccess = data => ({
-  name: 'SUCCESS_APPROVE_CREDIT_TRANSFER',
+  name: ReducerTypes.SUCCESS_APPROVE_CREDIT_TRANSFER,
   type: ActionTypes.SUCCESS,
   data
 });
 
 const approveCreditTransferError = error => ({
-  name: 'ERROR_APPROVE_CREDIT_TRANSFER',
+  name: ReducerTypes.ERROR_APPROVE_CREDIT_TRANSFER,
   type: ActionTypes.ERROR,
   errorMessage: error
 });
@@ -381,18 +381,18 @@ export const processApprovedCreditTransfers = () => (dispatch) => {
 };
 
 const processApprovedCreditTransfersRequest = () => ({
-  name: 'PROCESS_APPROVED_CREDIT_TRANSFERS',
+  name: ReducerTypes.PROCESS_APPROVED_CREDIT_TRANSFERS,
   type: ActionTypes.PROCESS_APPROVED_CREDIT_TRANSFERS
 });
 
 const processApprovedCreditTransfersSuccess = data => ({
-  name: 'SUCCESS_APPROVED_CREDIT_TRANSFERS',
+  name: ReducerTypes.SUCCESS_APPROVED_CREDIT_TRANSFERS,
   type: ActionTypes.SUCCESS,
   message: data.message
 });
 
 const processApprovedCreditTransfersError = error => ({
-  name: 'ERROR_APPROVED_CREDIT_TRANSFERS',
+  name: ReducerTypes.ERROR_APPROVED_CREDIT_TRANSFERS,
   type: ActionTypes.COMMIT_ERRORS,
   errorMessage: error
 });
@@ -414,18 +414,51 @@ export const addCommentToCreditTransfer = data => (dispatch) => {
 };
 
 const addCommentToCreditTransferRequest = () => ({
-  name: 'ADD_COMMENT_TO_CREDIT_TRANSFER_REQUEST',
+  name: ReducerTypes.ADD_COMMENT_TO_CREDIT_TRANSFER_REQUEST,
   type: ActionTypes.REQUEST
 });
 
 const addCommentToCreditTransferSuccess = data => ({
-  name: 'SUCCESS_ADD_COMMENT_TO_CREDIT_TRANSFER',
+  name: ReducerTypes.SUCCESS_ADD_COMMENT_TO_CREDIT_TRANSFER,
   type: ActionTypes.SUCCESS,
   data
 });
 
 const addCommentToCreditTransferError = error => ({
-  name: 'ERROR_ADD_COMMENT_TO_CREDIT_TRANSFER',
+  name: ReducerTypes.ERROR_ADD_COMMENT_TO_CREDIT_TRANSFER,
+  type: ActionTypes.ERROR,
+  errorMessage: error
+});
+
+/*
+ * Update comment on credit transfer
+ */
+export const updateCommentOnCreditTransfer = (id, data) => (dispatch) => {
+  dispatch(updateCommentOnCreditTransferRequest());
+
+  return axios
+    .put(`${Routes.BASE_URL}${Routes.COMMENTS_API}/${id}`, data)
+    .then((response) => {
+      dispatch(updateCommentOnCreditTransferSuccess(response.data));
+    }).catch((error) => {
+      dispatch(updateCommentOnCreditTransferError(error.response.data));
+      return Promise.reject(error);
+    });
+};
+
+const updateCommentOnCreditTransferRequest = () => ({
+  name: ReducerTypes.UPDATE_COMMENT_ON_CREDIT_TRANSFER_REQUEST,
+  type: ActionTypes.REQUEST
+});
+
+const updateCommentOnCreditTransferSuccess = data => ({
+  name: ReducerTypes.SUCCESS_UPDATE_COMMENT_ON_CREDIT_TRANSFER,
+  type: ActionTypes.SUCCESS,
+  data
+});
+
+const updateCommentOnCreditTransferError = error => ({
+  name: ReducerTypes.ERROR_UPDATE_COMMENT_ON_CREDIT_TRANSFER,
   type: ActionTypes.ERROR,
   errorMessage: error
 });

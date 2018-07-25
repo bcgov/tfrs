@@ -12,9 +12,11 @@ import * as Lang from '../../constants/langEnUs';
 import HISTORICAL_DATA_ENTRY from '../../constants/routes/HistoricalDataEntry';
 import { getFuelSuppliers } from '../../actions/organizationActions';
 import {
+  addCommentToCreditTransfer,
   getCreditTransfer,
   invalidateCreditTransfers,
   prepareCreditTransfer,
+  updateCommentOnCreditTransfer,
   updateCreditTransfer
 } from '../../actions/creditTransfersActions';
 import getCompliancePeriods from '../../actions/compliancePeriodsActions';
@@ -28,13 +30,13 @@ class HistoricalDataEntryEditContainer extends Component {
     super(props);
     this.state = {
       fields: {
+        comment: '',
         compliancePeriod: { id: 0, description: '' },
         creditsFrom: {},
         creditsTo: { id: 0, name: '' },
         fairMarketValuePerCredit: '',
-        tradeEffectiveDate: '',
-        note: '',
         numberOfCredits: '',
+        tradeEffectiveDate: '',
         transferType: '',
         zeroDollarReason: ''
       },
@@ -69,20 +71,40 @@ class HistoricalDataEntryEditContainer extends Component {
     }
   }
 
-  _handleSubmit (event, status) {
+  _handleSubmit (event) {
     event.preventDefault();
 
     const data = this.props.prepareCreditTransfer(this.state.fields);
     const { id } = this.props.item;
+    const { comment } = this.state.fields;
 
-    this.props.updateCreditTransfer(id, data).then((response) => {
+    this.props.updateCreditTransfer(id, data).then(() => {
+      if (comment !== '') {
+        this._saveComment(comment);
+      }
+
       this.props.invalidateCreditTransfers();
       history.push(HISTORICAL_DATA_ENTRY.LIST);
-    }, () => {
-      // Failed to update
     });
 
     return false;
+  }
+
+  _saveComment (comment) {
+    const { item } = this.props;
+    // API data structure
+    const data = {
+      creditTrade: this.props.item.id,
+      comment,
+      privilegedAccess: true
+    };
+
+    if (item.comments.length > 0) {
+      // we only allow one comment per entry in the Historical Data Entry
+      return this.props.updateCommentOnCreditTransfer(item.comments[0].id, data);
+    }
+
+    return this.props.addCommentToCreditTransfer(data);
   }
 
   changeObjectProp (id, name) {
@@ -112,11 +134,12 @@ class HistoricalDataEntryEditContainer extends Component {
       const { item } = props;
 
       const fieldState = {
+        // we only allow one comment per entry in the Historical Data Entry
+        comment: (item.comments.length > 0) ? item.comments[0].comment : '',
         compliancePeriod: (item.compliancePeriod) ? item.compliancePeriod : { id: 0 },
         creditsFrom: item.creditsFrom,
         creditsTo: item.creditsTo,
         fairMarketValuePerCredit: item.fairMarketValuePerCredit,
-        note: item.note,
         numberOfCredits: item.numberOfCredits.toString(),
         tradeEffectiveDate: (item.tradeEffectiveDate) ? item.tradeEffectiveDate.toString() : '',
         transferType: item.type.id.toString(),
@@ -152,6 +175,7 @@ HistoricalDataEntryEditContainer.defaultProps = {
 };
 
 HistoricalDataEntryEditContainer.propTypes = {
+  addCommentToCreditTransfer: PropTypes.func.isRequired,
   compliancePeriods: PropTypes.arrayOf(PropTypes.shape()).isRequired,
   errors: PropTypes.shape({}),
   fuelSuppliers: PropTypes.arrayOf(PropTypes.shape()).isRequired,
@@ -169,6 +193,7 @@ HistoricalDataEntryEditContainer.propTypes = {
     }).isRequired
   }).isRequired,
   prepareCreditTransfer: PropTypes.func.isRequired,
+  updateCommentOnCreditTransfer: PropTypes.func.isRequired,
   updateCreditTransfer: PropTypes.func.isRequired
 };
 
@@ -181,11 +206,13 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
+  addCommentToCreditTransfer: bindActionCreators(addCommentToCreditTransfer, dispatch),
   getCreditTransfer: bindActionCreators(getCreditTransfer, dispatch),
   getCompliancePeriods: bindActionCreators(getCompliancePeriods, dispatch),
   getFuelSuppliers: bindActionCreators(getFuelSuppliers, dispatch),
   invalidateCreditTransfers: bindActionCreators(invalidateCreditTransfers, dispatch),
   prepareCreditTransfer: fields => prepareCreditTransfer(fields),
+  updateCommentOnCreditTransfer: bindActionCreators(updateCommentOnCreditTransfer, dispatch),
   updateCreditTransfer: bindActionCreators(updateCreditTransfer, dispatch)
 });
 

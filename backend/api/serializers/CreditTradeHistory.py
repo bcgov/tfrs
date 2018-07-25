@@ -108,8 +108,9 @@ class CreditTradeHistoryReviewedSerializer(serializers.ModelSerializer):
     - What status was it updated to
     - Was the proposal rescinded
     """
+    from .CreditTrade import CreditTradeMinSerializer
     from .User import UserMinSerializer
-
+    credit_trade = CreditTradeMinSerializer(read_only=True)
     status = CreditTradeStatusMinSerializer(read_only=True)
     user = UserMinSerializer(read_only=True)
 

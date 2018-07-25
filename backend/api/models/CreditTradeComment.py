@@ -47,6 +47,14 @@ class CreditTradeComment(Auditable):
         db_comment='Flag. True if this is for internal government viewing only.'
     )
 
+    # For tracking the status at the point in time the comment was made
+    trade_history_at_creation = models.ForeignKey(
+        'CreditTradeHistory',
+        related_name='credit_trade_comments',
+        null=True,
+        on_delete=models.PROTECT
+    )
+
     class Meta:
         db_table = 'credit_trade_comment'
         ordering = ['create_timestamp']

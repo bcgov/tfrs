@@ -67,7 +67,7 @@ const CreditTransferDetails = props => (
           </div>
         }
         {props.comments.map(c => (
-          <CreditTransferComment comment={c} key={c.id} />
+          <CreditTransferComment comment={c} key={c.id} saveComment={props.saveComment} />
         ))
         }
         {props.isCommenting && <CreditTransferCommentForm

@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { DropdownButton, MenuItem } from 'react-bootstrap';
 import { connect } from 'react-redux';
-import { Link } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 
 import * as Routes from '../../constants/routes';
 import CREDIT_TRANSACTIONS from '../../constants/routes/CreditTransactions';
@@ -31,14 +31,16 @@ class Navbar extends Component {
     const SecondLevelNavigation = (
       <div className="level2Navigation">
         <div className="container">
-          {this.props.loggedInUser.role &&
-          this.props.loggedInUser.role.isGovernmentRole &&
-          <Link id="navbar-organizations" to={ORGANIZATIONS.LIST}>
+          {this.props.loggedInUser.isGovernmentUser &&
+          <NavLink
+            activeClassName="active"
+            id="navbar-organizations"
+            to={ORGANIZATIONS.LIST}
+          >
             Fuel Suppliers
-          </Link>
+          </NavLink>
           }
-          {(!this.props.loggedInUser.role ||
-          !this.props.loggedInUser.role.isGovernmentRole) &&
+          {!this.props.loggedInUser.isGovernmentUser &&
           [
             <a
               href={ORGANIZATIONS.BULLETIN}
@@ -48,13 +50,14 @@ class Navbar extends Component {
             >
               Fuel Suppliers
             </a>,
-            <Link
+            <NavLink
+              activeClassName="active"
               id="navbar-credit-transactions"
               key="company-details"
               to={ORGANIZATIONS.DETAILS}
             >
               Company Details
-            </Link>,
+            </NavLink>,
             <a
               href={ORGANIZATIONS.CREDIT_MARKET_REPORT}
               key="credit-market-report"
@@ -65,14 +68,22 @@ class Navbar extends Component {
             </a>
           ]
           }
-          <Link id="navbar-credit-transactions" to={CREDIT_TRANSACTIONS.LIST}>
+          <NavLink
+            activeClassName="active"
+            id="navbar-credit-transactions"
+            to={CREDIT_TRANSACTIONS.LIST}
+          >
             Credit Transactions
-          </Link>
-          {this.props.loggedInUser.role &&
-          this.props.loggedInUser.role.isGovernmentRole &&
-          <Link id="navbar-administration" to={HISTORICAL_DATA_ENTRY.LIST}>
+          </NavLink>
+          {this.props.loggedInUser.isGovernmentUser &&
+          <NavLink
+            activeClassName="active"
+            exact={false}
+            id="navbar-administration"
+            to={HISTORICAL_DATA_ENTRY.LIST}
+          >
             Administration
-          </Link>
+          </NavLink>
           }
         </div>
       </div>
@@ -86,19 +97,17 @@ class Navbar extends Component {
       >
         <a id="navigation-anchor" href="#navigation-anchor"><span>Navigation Bar</span></a>
         <ul className="nav navbar-nav">
-          {this.props.loggedInUser.role &&
-          this.props.loggedInUser.role.isGovernmentRole &&
+          {this.props.loggedInUser.isGovernmentUser &&
           <li>
-            <Link
+            <NavLink
               id="collapse-navbar-organization"
               to={ORGANIZATIONS.LIST}
             >
               Fuel Suppliers
-            </Link>
+            </NavLink>
           </li>
           }
-          {(!this.props.loggedInUser.role ||
-          !this.props.loggedInUser.role.isGovernmentRole) &&
+          {!this.props.loggedInUser.isGovernmentUser &&
           [
             <li key="bulletin">
               <a
@@ -110,12 +119,12 @@ class Navbar extends Component {
               </a>
             </li>,
             <li key="company-details">
-              <Link
+              <NavLink
                 id="navbar-credit-transactions"
                 to={ORGANIZATIONS.DETAILS}
               >
                 Company Details
-              </Link>,
+              </NavLink>,
             </li>,
             <li key="credit-market-report">
               <a
@@ -129,28 +138,27 @@ class Navbar extends Component {
           ]
           }
           <li>
-            <Link
+            <NavLink
               id="collapse-navbar-credit-transactions"
               to={CREDIT_TRANSACTIONS.LIST}
             >
             Credit Transactions
-            </Link>
+            </NavLink>
           </li>
-          {this.props.loggedInUser.role &&
-          this.props.loggedInUser.role.isGovernmentRole &&
+          {this.props.loggedInUser.isGovernmentUser &&
           <li>
-            <Link
+            <NavLink
               id="collapse-navbar-administration"
               to={HISTORICAL_DATA_ENTRY.LIST}
             >
               Administration
-            </Link>
+            </NavLink>
           </li>
           }
           <li>
-            <Link id="navbar-logout" to={Routes.LOGOUT}>
+            <NavLink id="navbar-logout" to={Routes.LOGOUT}>
               Log Out
-            </Link>
+            </NavLink>
           </li>
         </ul>
       </div>);
@@ -254,14 +262,14 @@ class Navbar extends Component {
 Navbar.propTypes = {
   loggedInUser: PropTypes.shape({
     displayName: PropTypes.string,
+    isGovernmentUser: PropTypes.bool,
     organization: PropTypes.shape({
       name: PropTypes.string,
       id: PropTypes.number
     }),
-    role: PropTypes.shape({
-      id: PropTypes.number,
-      isGovernmentRole: PropTypes.bool
-    })
+    roles: PropTypes.arrayOf(PropTypes.shape({
+      id: PropTypes.number
+    }))
   }).isRequired,
   isAuthenticated: PropTypes.bool.isRequired
 };
@@ -270,4 +278,6 @@ Navbar.propTypes = {
 export default connect(state => ({
   loggedInUser: state.rootReducer.userRequest.loggedInUser,
   isAuthenticated: state.rootReducer.userRequest.isAuthenticated
-}))(Navbar);
+}), null, null, {
+  pure: false
+})(Navbar);
