@@ -21,6 +21,7 @@
     See the License for the specific language governing permissions and
     limitations under the License.
 """
+import logging
 
 from django.test import TestCase
 
@@ -134,3 +135,6 @@ class BaseTestCase(TestCase):
         self.zero_reason = {
             'other': CreditTradeZeroReason.objects.get(reason='Other')
         }
+
+        logger = logging.getLogger('django.request')
+        logger.setLevel(logging.ERROR)
