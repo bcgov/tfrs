@@ -4,8 +4,9 @@ import ActionTypes from '../constants/actionTypes/Organizations';
 import ReducerTypes from '../constants/reducerTypes/Organizations';
 import * as Routes from '../constants/routes';
 
-const getFuelSuppliers = () => (dispatch, getState) => {
+const getFuelSuppliers = () => (dispatch) => {
   dispatch(getFuelSuppliersRequest());
+
   axios.get(Routes.BASE_URL + Routes.ORGANIZATIONS_FUEL_SUPPLIERS)
     .then((response) => {
       dispatch(getFuelSuppliersSuccess(response.data));
@@ -33,6 +34,7 @@ const getFuelSuppliersSuccess = fuelSuppliers => ({
 
 const getMyOrganization = () => (dispatch) => {
   dispatch(getOrganizationRequest());
+
   axios.get(`${Routes.BASE_URL}${Routes.ORGANIZATIONS_API}/mine`)
     .then((response) => {
       dispatch(getOrganizationSuccess(response.data));
@@ -43,6 +45,7 @@ const getMyOrganization = () => (dispatch) => {
 
 const getMyOrganizationMembers = () => (dispatch) => {
   dispatch(getOrganizationMembersRequest());
+
   axios.get(`${Routes.BASE_URL}${Routes.ORGANIZATIONS_API}/members`)
     .then((response) => {
       dispatch(getOrganizationMembersSuccess(response.data));
@@ -53,6 +56,7 @@ const getMyOrganizationMembers = () => (dispatch) => {
 
 const getOrganization = id => (dispatch) => {
   dispatch(getOrganizationRequest());
+
   axios.get(`${Routes.BASE_URL}${Routes.ORGANIZATIONS_API}/${id}`)
     .then((response) => {
       dispatch(getOrganizationSuccess(response.data));
@@ -66,6 +70,16 @@ const getOrganizationError = error => ({
   name: ReducerTypes.ERROR_ORGANIZATION_REQUEST,
   type: ActionTypes.ERROR
 });
+
+const getOrganizationMembers = id => (dispatch) => {
+  dispatch(getOrganizationMembersRequest());
+  axios.get(`${Routes.BASE_URL}${Routes.ORGANIZATIONS_API}/${id}/users`)
+    .then((response) => {
+      dispatch(getOrganizationMembersSuccess(response.data));
+    }).catch((error) => {
+      dispatch(getOrganizationMembersError(error.response));
+    });
+};
 
 const getOrganizationMembersError = error => ({
   errorMessage: error,
@@ -126,6 +140,7 @@ const getOrganizationsSuccess = organizations => ({
 
 const searchOrganizations = (name, city) => (dispatch) => {
   dispatch(searchOrganizationsRequest());
+
   axios.get(Routes.BASE_URL + Routes.SEARCH_ORGANIZATIONS)
     .then((response) => {
       dispatch(searchOrganizationsSuccess(response.data));
@@ -157,6 +172,6 @@ const searchOrganizationsSuccess = organizations => ({
 });
 
 export {
-  getFuelSuppliers, getMyOrganization, getMyOrganizationMembers, getOrganization, getOrganizations,
-  searchOrganizations, searchOrganizationsReset
+  getFuelSuppliers, getMyOrganization, getMyOrganizationMembers, getOrganization,
+  getOrganizationMembers, getOrganizations, searchOrganizations, searchOrganizationsReset
 };

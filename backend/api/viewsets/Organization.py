@@ -35,7 +35,8 @@ class OrganizationViewSet(AuditableMixin, viewsets.GenericViewSet,
         'default': OrganizationSerializer,
         'history': OrganizationHistorySerializer,
         'fuel_suppliers': OrganizationMinSerializer,
-        'members': UserMinSerializer
+        'members': UserMinSerializer,
+        'users': UserMinSerializer
     }
 
     def get_serializer_class(self):
@@ -81,16 +82,6 @@ class OrganizationViewSet(AuditableMixin, viewsets.GenericViewSet,
 
         return Response(serializer.data)
 
-    @permission_required('VIEW_FUEL_SUPPLIERS')
-    @detail_route()
-    def users(self, request, pk=None):
-        """
-        Returns a list of all the users within the given organization
-        """
-        organization = self.get_object()
-        users = organization.users.all()
-        return Response([user.display_name for user in users])
-
     @list_route(methods=['get'])
     def fuel_suppliers(self, request):
         """
@@ -129,6 +120,21 @@ class OrganizationViewSet(AuditableMixin, viewsets.GenericViewSet,
         """
         users = User.objects.filter(
             organization_id=request.user.organization_id)
+
+        serializer = self.get_serializer(users, many=True)
+        return Response(serializer.data)
+
+    @detail_route()
+    @permission_required('VIEW_FUEL_SUPPLIERS')
+    def users(self, request, pk=None):
+        """
+        Returns a list of users that belongs to the
+        organization with the matching ID
+        """
+        organization = self.get_object()
+
+        users = User.objects.filter(
+            organization_id=organization.id)
 
         serializer = self.get_serializer(users, many=True)
         return Response(serializer.data)
