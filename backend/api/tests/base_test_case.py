@@ -22,6 +22,7 @@
     limitations under the License.
 """
 import logging
+import sys
 
 from django.test import TestCase
 
@@ -39,14 +40,11 @@ class BaseTestCase(TestCase):
     """
 
     fixtures = [
-        'core_data.json',
-        'test_organization_fuel_suppliers.json',
-        'test_organization_balances.json',
-        'signing_authority_assertions.json',
-        'test_prodlike_government_users_and_roles.json',
-        'test_prodlike_government_users_and_roles_v0.3.1.json',
-        'test_users_and_organizations_v0.3.1.json',
-        'test_users_multiple_roles.json'
+        'test/test_organization_fuel_suppliers.json',
+        'test/test_organization_balances.json',
+        'test/test_prodlike_government_users_and_roles.json',
+        'test/test_users_and_organizations_v0.3.1.json',
+        'test/test_users_multiple_roles.json'
     ]
 
     usernames = [
@@ -136,5 +134,6 @@ class BaseTestCase(TestCase):
             'other': CreditTradeZeroReason.objects.get(reason='Other')
         }
 
-        logger = logging.getLogger('django.request')
-        logger.setLevel(logging.ERROR)
+        logging.getLogger('django.request').setLevel(logging.ERROR)
+        logging.getLogger('api.tests').setLevel(logging.DEBUG)
+        logging.basicConfig(stream=sys.stdout, level=logging.DEBUG)

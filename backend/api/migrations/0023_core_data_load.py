@@ -1,10 +1,22 @@
+from datetime import datetime
+
 from django.db import migrations, IntegrityError
 from django.db.migrations import RunPython
 
 
 def create_initial_data(apps, schema_editor):
+    """Load initial data (previously stored in fixtures)
+    This is for core (essential) data only -- operational data should be inserted with scripts
+
+    This script is designed to look for existing data and add any missing elements, without
+    disrupting existing data, or load a database from nothing (as for testing)
+
+    It is idempotent and irreversible
+    """
     db_alias = schema_editor.connection.alias
 
+    # By retrieving the models via apps.get_model, we get one appropriately versioned
+    # for this migration (so this shouldn't ever need to be maintained if fields change)
     permission = apps.get_model("api", "Permission")
     ct_status = apps.get_model("api", "CreditTradeStatus")
     ct_type = apps.get_model("api", "CreditTradeType")
@@ -16,6 +28,8 @@ def create_initial_data(apps, schema_editor):
     org = apps.get_model("api", "Organization")
     org_balance = apps.get_model("api", "OrganizationBalance")
     role_permission = apps.get_model("api", "RolePermission")
+    signing_authority_assertion = apps.get_model("api", "SigningAuthorityAssertion")
+    compliance_period = apps.get_model("api", "CompliancePeriod")
 
     permissions = [
         permission(code='LOGIN', name='LOGIN',
@@ -236,14 +250,10 @@ def create_initial_data(apps, schema_editor):
         role_permission(role=role.objects.using(db_alias).get(name='GovDirector'),
                         permission=permission.objects.using(db_alias).get(code='DECLINE_CREDIT_TRANSFER')),
         role_permission(role=role.objects.using(db_alias).get(name='GovDirector'),
-                        # permission=permission.objects.using(db_alias).get(code='EDIT_FUEL_SUPPLIERS')),
-        # role_permission(role=role.objects.using(db_alias).get(name='GovDirector'),
+                        permission=permission.objects.using(db_alias).get(code='EDIT_FUEL_SUPPLIERS')),
+        role_permission(role=role.objects.using(db_alias).get(name='GovDirector'),
                         permission=permission.objects.using(db_alias).get(code='EDIT_PRIVILEGED_COMMENTS')),
         role_permission(role=role.objects.using(db_alias).get(name='GovDirector'),
-        #                 permission=permission.objects.using(db_alias).get(code='RESCIND_CREDIT_TRANSFER')),
-        # role_permission(role=role.objects.using(db_alias).get(name='GovDirector'),
-        #                        permission=permission.objects.using(db_alias).get(code='USER_MANAGEMENT')),
-        #        role_permission(role=role.objects.using(db_alias).get(name='GovDirector'),
                         permission=permission.objects.using(db_alias).get(code='VIEW_APPROVED_CREDIT_TRANSFERS')),
         role_permission(role=role.objects.using(db_alias).get(name='GovDirector'),
                         permission=permission.objects.using(db_alias).get(code='VIEW_COMPLIANCE_PERIODS')),
@@ -258,16 +268,14 @@ def create_initial_data(apps, schema_editor):
         role_permission(role=role.objects.using(db_alias).get(name='GovUser'),
                         permission=permission.objects.using(db_alias).get(code='LOGIN')),
         role_permission(role=role.objects.using(db_alias).get(name='GovUser'),
-                        # permission=permission.objects.using(db_alias).get(code='EDIT_FUEL_SUPPLIERS')),
-        # role_permission(role=role.objects.using(db_alias).get(name='GovUser'),
+                        permission=permission.objects.using(db_alias).get(code='EDIT_FUEL_SUPPLIERS')),
+        role_permission(role=role.objects.using(db_alias).get(name='GovUser'),
                         permission=permission.objects.using(db_alias).get(code='EDIT_PRIVILEGED_COMMENTS')),
         role_permission(role=role.objects.using(db_alias).get(name='GovUser'),
                         permission=permission.objects.using(db_alias).get(code='RECOMMEND_CREDIT_TRANSFER')),
         role_permission(role=role.objects.using(db_alias).get(name='GovUser'),
                         permission=permission.objects.using(db_alias).get(code='RESCIND_CREDIT_TRANSFER')),
         role_permission(role=role.objects.using(db_alias).get(name='GovUser'),
-        #                 permission=permission.objects.using(db_alias).get(code='USER_MANAGEMENT')),
-        # role_permission(role=role.objects.using(db_alias).get(name='GovUser'),
                         permission=permission.objects.using(db_alias).get(code='VIEW_APPROVED_CREDIT_TRANSFERS')),
         role_permission(role=role.objects.using(db_alias).get(name='GovUser'),
                         permission=permission.objects.using(db_alias).get(code='VIEW_COMPLIANCE_PERIODS')),
@@ -283,8 +291,6 @@ def create_initial_data(apps, schema_editor):
         if not role_permission.objects.using(db_alias).filter(role=role.objects.using(db_alias).get(name=new_role_permission.role.name),
                                                               permission=permission.objects.using(db_alias).get(code=new_role_permission.permission.code)).exists():
             role_permission.objects.using(db_alias).bulk_create([new_role_permission])
-            print('assigning new role_permission {}:{}'.format(new_role_permission.role.name,
-                                                               new_role_permission.permission.code))
         else:
             print('skipping existing role<->permission {}:{}'.format(new_role_permission.role.name,
                                                                      new_role_permission.permission.code))
@@ -308,17 +314,30 @@ def create_initial_data(apps, schema_editor):
     else:
         print('skipped creating existing government organization')
 
+    if not compliance_period.objects.using(db_alias).all():
+        compliance_period.objects.using(db_alias).create(
+            display_order=1,
+            effective_date=datetime.today().strftime('%Y-%m-%d'),
+            expiration_date=None,
+            description="Auto-generated initial compliance period"
+        )
 
-def reverse_migration(apps, schema_editor):
-    pass
+    if not signing_authority_assertion.objects.using(db_alias).all():
+        signing_authority_assertion.objects.using(db_alias).create(
+            display_order=1,
+            effective_date=datetime.today().strftime('%Y-%m-%d'),
+            expiration_date=None,
+            description="Auto-generated initial signing authority assertion"
+        )
 
 
 class Migration(migrations.Migration):
+
     dependencies = [
         ('api', '0022_audit_tables'),
     ]
 
     operations = [
         # This is a one-way trip
-        RunPython(create_initial_data, reverse_migration)
+        RunPython(create_initial_data, reverse_code=None)
     ]

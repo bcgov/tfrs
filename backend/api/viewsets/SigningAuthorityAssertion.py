@@ -19,7 +19,8 @@
     See the License for the specific language governing permissions and
     limitations under the License.
 """
-import datetime
+from datetime import datetime
+
 from rest_framework import filters, mixins, permissions, viewsets
 from django.db.models import Q
 
@@ -47,8 +48,5 @@ class SigningAuthorityAssertionViewSet(AuditableMixin, mixins.ListModelMixin,
         This view should return a list of all the assertions that don't have
         an expiration date
         """
-        expiration_date = datetime.date.today()
-        return SigningAuthorityAssertion.objects.filter(
-            Q(expiration_date__gte=expiration_date) |
-            Q(expiration_date=None)
-        )
+        return SigningAuthorityAssertion.objects.get_active_as_of_date(datetime.today())
+
