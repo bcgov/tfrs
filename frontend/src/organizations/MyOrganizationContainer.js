@@ -6,46 +6,34 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { bindActionCreators } from 'redux';
 
-import { getOrganization, getOrganizationMembers } from '../actions/organizationActions';
+import { getMyOrganization, getMyOrganizationMembers } from '../actions/organizationActions';
 import OrganizationDetails from './components/OrganizationDetails';
 
-class OrganizationViewContainer extends Component {
-  componentDidMount () {
-    this.loadData(this.props.match.params.id);
+class MyOrganizationContainer extends Component {
+  componentWillMount () {
+    this.loadData();
   }
 
-  componentWillReceiveNewProps (prevProps, newProps) {
-    if (prevProps.match.params.id !== newProps.match.params.id) {
-      this.loadData(newProps.match.params.id);
-    }
-  }
-
-  loadData (id) {
-    this.props.getOrganization(id);
-    this.props.getOrganizationMembers(id);
+  loadData () {
+    this.props.getMyOrganization();
+    this.props.getMyOrganizationMembers();
   }
 
   render () {
     return (
       <OrganizationDetails
-        members={this.props.organizationMembers}
-        organization={this.props.organization}
+        members={this.props.myOrganizationMembers}
+        organization={this.props.myOrganization}
       />
     );
   }
 }
 
-OrganizationViewContainer.propTypes = {
-  getOrganization: PropTypes.func.isRequired,
-  getOrganizationMembers: PropTypes.func.isRequired,
-  match: PropTypes.shape({
-    params: PropTypes.shape({
-      id: PropTypes.string.isRequired
-    }).isRequired
-  }).isRequired,
-  organization: PropTypes.shape({
+MyOrganizationContainer.propTypes = {
+  getMyOrganization: PropTypes.func.isRequired,
+  getMyOrganizationMembers: PropTypes.func.isRequired,
+  myOrganization: PropTypes.shape({
     details: PropTypes.shape({
       id: PropTypes.number,
       name: PropTypes.string,
@@ -56,7 +44,7 @@ OrganizationViewContainer.propTypes = {
     }),
     isFetching: PropTypes.bool
   }).isRequired,
-  organizationMembers: PropTypes.shape({
+  myOrganizationMembers: PropTypes.shape({
     isFetching: PropTypes.bool,
     users: PropTypes.arrayOf(PropTypes.shape({
       email: PropTypes.string,
@@ -72,19 +60,23 @@ OrganizationViewContainer.propTypes = {
 };
 
 const mapStateToProps = state => ({
-  organization: {
+  myOrganization: {
     details: state.rootReducer.organizationRequest.fuelSupplier,
     isFetching: state.rootReducer.organizationRequest.isFetching
   },
-  organizationMembers: {
+  myOrganizationMembers: {
     isFetching: state.rootReducer.organizationMembers.isFetching,
     users: state.rootReducer.organizationMembers.users
   }
 });
 
 const mapDispatchToProps = dispatch => ({
-  getOrganization: bindActionCreators(getOrganization, dispatch),
-  getOrganizationMembers: bindActionCreators(getOrganizationMembers, dispatch)
+  getMyOrganization: () => {
+    dispatch(getMyOrganization());
+  },
+  getMyOrganizationMembers: () => {
+    dispatch(getMyOrganizationMembers());
+  }
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(OrganizationViewContainer);
+export default connect(mapStateToProps, mapDispatchToProps)(MyOrganizationContainer);

@@ -35,6 +35,13 @@ class Navbar extends Component {
           <NavLink
             activeClassName="active"
             id="navbar-organizations"
+            isActive={(match, location) => {
+              if (match || location.pathname.indexOf('/users/view/') >= 0) {
+                return true;
+              }
+
+              return false;
+            }}
             to={ORGANIZATIONS.LIST}
           >
             Fuel Suppliers
@@ -53,8 +60,15 @@ class Navbar extends Component {
             <NavLink
               activeClassName="active"
               id="navbar-credit-transactions"
+              isActive={(match, location) => {
+                if (match || location.pathname.indexOf('/users/view/') >= 0) {
+                  return true;
+                }
+
+                return false;
+              }}
               key="company-details"
-              to={ORGANIZATIONS.DETAILS}
+              to={ORGANIZATIONS.MINE}
             >
               Company Details
             </NavLink>,
@@ -78,8 +92,14 @@ class Navbar extends Component {
           {this.props.loggedInUser.isGovernmentUser &&
           <NavLink
             activeClassName="active"
-            exact={false}
             id="navbar-administration"
+            isActive={(match, location) => {
+              if (location.pathname.indexOf('/admin/') >= 0) {
+                return true;
+              }
+
+              return false;
+            }}
             to={HISTORICAL_DATA_ENTRY.LIST}
           >
             Administration
@@ -101,6 +121,13 @@ class Navbar extends Component {
           <li>
             <NavLink
               id="collapse-navbar-organization"
+              isActive={(match, location) => {
+                if (match || location.pathname.indexOf('/users/view/') >= 0) {
+                  return true;
+                }
+
+                return false;
+              }}
               to={ORGANIZATIONS.LIST}
             >
               Fuel Suppliers
@@ -121,7 +148,14 @@ class Navbar extends Component {
             <li key="company-details">
               <NavLink
                 id="navbar-credit-transactions"
-                to={ORGANIZATIONS.DETAILS}
+                isActive={(match, location) => {
+                  if (match || location.pathname.indexOf('/users/view/') >= 0) {
+                    return true;
+                  }
+
+                  return false;
+                }}
+                to={ORGANIZATIONS.MINE}
               >
                 Company Details
               </NavLink>,
@@ -149,6 +183,13 @@ class Navbar extends Component {
           <li>
             <NavLink
               id="collapse-navbar-administration"
+              isActive={(match, location) => {
+                if (location.pathname.indexOf('/admin/') >= 0) {
+                  return true;
+                }
+
+                return false;
+              }}
               to={HISTORICAL_DATA_ENTRY.LIST}
             >
               Administration
