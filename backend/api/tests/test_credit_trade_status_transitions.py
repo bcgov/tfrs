@@ -140,6 +140,9 @@ class TestCreditTradeStatuses(BaseTestCase, CreditTradeRelationshipMixin):
             (TestCreditTradeStatuses.UserRelationship.INITIATOR, 'submitted', False)
         ] = True
         expected_result[
+            (TestCreditTradeStatuses.UserRelationship.GOVERNMENT_ANALYST, 'recommended', False)
+        ] = True
+        expected_result[
             (TestCreditTradeStatuses.UserRelationship.GOVERNMENT_DIRECTOR, 'approved', False)
         ] = True
 

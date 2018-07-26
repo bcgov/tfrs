@@ -13,7 +13,7 @@ import { getOrganization } from '../actions/organizationActions';
 import { getLoggedInUser } from '../actions/userActions';
 import CreditTransactionsPage from './components/CreditTransactionsPage';
 
-class CreditTransactionsContainer extends Component {
+class GovernmentTransferContainer extends Component {
   constructor (props) {
     super(props);
     this.state = {
@@ -91,11 +91,11 @@ class CreditTransactionsContainer extends Component {
   }
 }
 
-CreditTransactionsContainer.defaultProps = {
+GovernmentTransferContainer.defaultProps = {
   organization: null
 };
 
-CreditTransactionsContainer.propTypes = {
+GovernmentTransferContainer.propTypes = {
   creditTransfers: PropTypes.shape({
     items: PropTypes.arrayOf(PropTypes.shape()).isRequired,
     isFetching: PropTypes.bool.isRequired
@@ -134,4 +134,4 @@ const mapDispatchToProps = dispatch => ({
   getOrganization: bindActionCreators(getOrganization, dispatch)
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(CreditTransactionsContainer);
+export default connect(mapStateToProps, mapDispatchToProps)(GovernmentTransferContainer);

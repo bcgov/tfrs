@@ -1,0 +1,8 @@
+[{
+  "fields": {
+    "permission": ["PROPOSE_PVR"],
+    "role": ["GovUser"]
+  },
+  "model": "api.rolepermission",
+  "pk": null
+}]

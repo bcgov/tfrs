@@ -7,28 +7,32 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
-import CreditTransactionForm from './components/CreditTransactionForm';
+import GovernmentTransferForm from './components/GovernmentTransferForm';
 import Modal from '../app/components/Modal';
-
-import { getFuelSuppliers } from '../actions/organizationActions';
-import { addCreditTransfer, invalidateCreditTransfer, invalidateCreditTransfers } from '../actions/creditTransfersActions';
 import history from '../app/History';
-import CREDIT_TRANSACTIONS from '../constants/routes/CreditTransactions';
-import { CREDIT_TRANSFER_STATUS } from '../constants/values';
 
-class CreditTransactionAddContainer extends Component {
+import getCompliancePeriods from '../actions/compliancePeriodsActions';
+import { getFuelSuppliers } from '../actions/organizationActions';
+import {
+  addCommentToCreditTransfer,
+  addCreditTransfer,
+  invalidateCreditTransfer,
+  invalidateCreditTransfers
+} from '../actions/creditTransfersActions';
+import CREDIT_TRANSACTIONS from '../constants/routes/CreditTransactions';
+import { CREDIT_TRANSFER_STATUS, DEFAULT_ORGANIZATION } from '../constants/values';
+
+class GovernmentTransferAddContainer extends Component {
   constructor (props) {
     super(props);
 
     this.state = {
       fields: {
-        fairMarketValuePerCredit: '',
-        initiator: {},
-        note: '',
+        comment: '',
+        compliancePeriod: {},
         numberOfCredits: '',
-        respondent: { id: 0, name: '' },
-        terms: [],
-        tradeType: { }
+        respondent: {},
+        transferType: ''
       }
     };
 
@@ -38,6 +42,7 @@ class CreditTransactionAddContainer extends Component {
 
   componentDidMount () {
     this.props.invalidateCreditTransfer();
+    this.props.getCompliancePeriods();
     this.props.getFuelSuppliers();
   }
 
@@ -63,6 +68,44 @@ class CreditTransactionAddContainer extends Component {
     }
   }
 
+  _handleSubmit (event, status) {
+    event.preventDefault();
+
+    const { comment } = this.state.fields;
+
+    // API data structure
+    const data = {
+      compliancePeriod: this.state.fields.compliancePeriod.id,
+      initiator: DEFAULT_ORGANIZATION.id,
+      numberOfCredits: parseInt(this.state.fields.numberOfCredits, 10),
+      respondent: this.state.fields.respondent.id,
+      status: status.id,
+      type: this.state.fields.transferType
+    };
+
+    this.props.addCreditTransfer(data).then((response) => {
+      if (comment !== '') {
+        this._saveComment(response.data.id, comment);
+      }
+
+      this.props.invalidateCreditTransfers();
+      history.push(CREDIT_TRANSACTIONS.LIST);
+    });
+
+    return false;
+  }
+
+  _saveComment (id, comment) {
+    // API data structure
+    const data = {
+      creditTrade: id,
+      comment,
+      privilegedAccess: true
+    };
+
+    return this.props.addCommentToCreditTransfer(data);
+  }
+
   changeObjectProp (id, name) {
     const fieldState = { ...this.state.fields };
 
@@ -72,34 +115,10 @@ class CreditTransactionAddContainer extends Component {
     });
   }
 
-  _handleSubmit (event, status) {
-    event.preventDefault();
-
-    // API data structure
-    const data = {
-      fairMarketValuePerCredit: parseFloat(this.state.fields.fairMarketValuePerCredit).toFixed(2),
-      initiator: this.state.fields.initiator.id,
-      note: this.state.fields.note,
-      numberOfCredits: parseInt(this.state.fields.numberOfCredits, 10),
-      respondent: this.state.fields.respondent.id,
-      status: status.id,
-      tradeEffectiveDate: null,
-      type: this.state.fields.tradeType.id
-    };
-
-    this.props.addCreditTransfer(data).then((response) => {
-      this.props.invalidateCreditTransfers();
-      history.push(CREDIT_TRANSACTIONS.LIST);
-    });
-
-    this.props.invalidateCreditTransfers();
-
-    return false;
-  }
-
   render () {
     return ([
-      <CreditTransactionForm
+      <GovernmentTransferForm
+        compliancePeriods={this.props.compliancePeriods}
         errors={this.props.errors}
         fields={this.state.fields}
         fuelSuppliers={this.props.fuelSuppliers}
@@ -110,10 +129,10 @@ class CreditTransactionAddContainer extends Component {
       />,
       <Modal
         handleSubmit={(event) => {
-          this._handleSubmit(event, CREDIT_TRANSFER_STATUS.proposed);
+          this._handleSubmit(event, CREDIT_TRANSFER_STATUS.recommendedForDecision);
         }}
-        id="confirmCreate"
-        key="confirmCreate"
+        id="confirmRecommend"
+        key="confirmRecommend"
       >
         Are you sure you want to recommend this transaction?
       </Modal>
@@ -121,37 +140,35 @@ class CreditTransactionAddContainer extends Component {
   }
 }
 
-CreditTransactionAddContainer.defaultProps = {
+GovernmentTransferAddContainer.defaultProps = {
   errors: {}
 };
 
-CreditTransactionAddContainer.propTypes = {
+GovernmentTransferAddContainer.propTypes = {
+  addCommentToCreditTransfer: PropTypes.func.isRequired,
   addCreditTransfer: PropTypes.func.isRequired,
+  compliancePeriods: PropTypes.arrayOf(PropTypes.shape()).isRequired,
   errors: PropTypes.shape({}),
   fuelSuppliers: PropTypes.arrayOf(PropTypes.shape()).isRequired,
+  getCompliancePeriods: PropTypes.func.isRequired,
   getFuelSuppliers: PropTypes.func.isRequired,
   invalidateCreditTransfer: PropTypes.func.isRequired,
-  invalidateCreditTransfers: PropTypes.func.isRequired,
-  loggedInUser: PropTypes.shape({
-    displayName: PropTypes.string,
-    organization: PropTypes.shape({
-      name: PropTypes.string,
-      id: PropTypes.number
-    })
-  }).isRequired
+  invalidateCreditTransfers: PropTypes.func.isRequired
 };
 
 const mapStateToProps = state => ({
+  compliancePeriods: state.rootReducer.compliancePeriods.items,
   errors: state.rootReducer.creditTransfer.errors,
-  fuelSuppliers: state.rootReducer.fuelSuppliersRequest.fuelSuppliers,
-  loggedInUser: state.rootReducer.userRequest.loggedInUser
+  fuelSuppliers: state.rootReducer.fuelSuppliersRequest.fuelSuppliers
 });
 
 const mapDispatchToProps = dispatch => ({
+  addCommentToCreditTransfer: bindActionCreators(addCommentToCreditTransfer, dispatch),
   addCreditTransfer: bindActionCreators(addCreditTransfer, dispatch),
+  getCompliancePeriods: bindActionCreators(getCompliancePeriods, dispatch),
   getFuelSuppliers: bindActionCreators(getFuelSuppliers, dispatch),
   invalidateCreditTransfer: bindActionCreators(invalidateCreditTransfer, dispatch),
   invalidateCreditTransfers: bindActionCreators(invalidateCreditTransfers, dispatch)
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(CreditTransactionAddContainer);
+export default connect(mapStateToProps, mapDispatchToProps)(GovernmentTransferAddContainer);

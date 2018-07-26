@@ -10,7 +10,8 @@ def run():
             "REFUSE_CREDIT_TRANSFER",
             "SIGN_CREDIT_TRANSFER",
             "DECLINE_CREDIT_TRANSFER",
-            "APPROVE_CREDIT_TRANSFER"
+            "APPROVE_CREDIT_TRANSFER",
+            "PROPOSE_CREDIT_TRANSFER"
         ],
         role__name="GovUser")
 
@@ -24,7 +25,8 @@ def run():
         permission__code__in=[
             "REFUSE_CREDIT_TRANSFER",
             "SIGN_CREDIT_TRANSFER",
-            "RECOMMEND_CREDIT_TRANSFER"
+            "RECOMMEND_CREDIT_TRANSFER",
+            "PROPOSE_CREDIT_TRANSFER"
         ],
         role__name="GovDirector")
 

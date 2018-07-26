@@ -88,15 +88,14 @@ const CreditTransactionsPage = (props) => {
               Propose Trade
             </button>
           }
-          {props.loggedInUser.role &&
-            props.loggedInUser.hasPermission(PERMISSIONS_CREDIT_TRANSACTIONS.ADD_PVR) &&
-              <button
-                className="btn btn-primary"
-                type="button"
-                onClick={() => history.push(CREDIT_TRANSACTIONS.ADD_PVR)}
-              >
-                New Credit Transaction
-              </button>
+          {props.loggedInUser.hasPermission(PERMISSIONS_CREDIT_TRANSACTIONS.PROPOSE_PVR) &&
+            <button
+              className="btn btn-primary"
+              type="button"
+              onClick={() => history.push(CREDIT_TRANSACTIONS.ADD_PVR)}
+            >
+              New Transfer
+            </button>
           }
         </div>
       </div>

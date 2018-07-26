@@ -42,6 +42,15 @@ const CreditTransferFormButtons = props => (
         </button>
       </TooltipWhenDisabled>
       }
+      {props.actions.includes(Lang.BTN_EDIT_PVR_DRAFT) &&
+        <button
+          className="btn btn-default"
+          onClick={() => history.push(CREDIT_TRANSACTIONS.EDIT_PVR.replace(':id', props.id))}
+          type="button"
+        >
+          {Lang.BTN_EDIT_DRAFT}
+        </button>
+      }
       {props.actions.includes(Lang.BTN_SAVE_DRAFT) &&
       <button
         className="btn btn-default"

@@ -6,7 +6,7 @@ import PropTypes from 'prop-types';
 
 import { CREDIT_TRANSFER_TYPES } from '../../constants/values';
 
-const CreditTransactionFormDetails = props => (
+const GovernmentTransferFormDetails = props => (
   <div className="credit-transaction-details">
     <div className="main-form">
       <div className="row">
@@ -61,6 +61,29 @@ const CreditTransactionFormDetails = props => (
       </div>
 
       <div className="row">
+        <div className="form-group col-md-6">
+          <label htmlFor="compliance-period">Compliance Period:
+            <select
+              className="form-control"
+              id="compliance-period"
+              name="compliancePeriod"
+              value={props.fields.compliancePeriod.id}
+              onChange={props.handleInputChange}
+              required="required"
+            >
+              <option key="0" value="" default />
+              {props.compliancePeriods &&
+                props.compliancePeriods.map(period => (
+                  <option key={period.id} value={period.id}>
+                    {period.description}
+                  </option>
+                ))}
+            </select>
+          </label>
+        </div>
+      </div>
+
+      <div className="row">
         <div className="form-group col-md-12">
           <label htmlFor="comment">Note:
             <textarea
@@ -78,10 +101,15 @@ const CreditTransactionFormDetails = props => (
   </div>
 );
 
-CreditTransactionFormDetails.propTypes = {
+GovernmentTransferFormDetails.propTypes = {
+  compliancePeriods: PropTypes.arrayOf(PropTypes.shape()).isRequired,
   fuelSuppliers: PropTypes.arrayOf(PropTypes.shape()).isRequired,
   fields: PropTypes.shape({
     comment: PropTypes.string,
+    compliancePeriod: PropTypes.shape({
+      description: PropTypes.string,
+      id: PropTypes.number
+    }),
     initiator: PropTypes.shape({
       name: PropTypes.string,
       id: PropTypes.number
@@ -96,4 +124,4 @@ CreditTransactionFormDetails.propTypes = {
   handleInputChange: PropTypes.func.isRequired
 };
 
-export default CreditTransactionFormDetails;
+export default GovernmentTransferFormDetails;

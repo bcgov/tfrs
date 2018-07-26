@@ -20,9 +20,12 @@ class CreditTransferTextRepresentation extends Component {
     this.tradeEffectiveDate = (this.props.tradeEffectiveDate)
       ? moment(this.props.tradeEffectiveDate).format('LL') : "on director's approval";
 
-    this.tradeStatus = (this.props.status.id === CREDIT_TRANSFER_STATUS.approved.id ||
-      this.props.status.id === CREDIT_TRANSFER_STATUS.completed.id)
-      ? CREDIT_TRANSFER_STATUS.approved.description : this.props.status.status;
+    if (this.props.status.id === CREDIT_TRANSFER_STATUS.draft.id) {
+      this.tradeStatus = 'Drafted';
+    } else {
+      this.tradeStatus = Object.values(CREDIT_TRANSFER_STATUS).find(element =>
+        element.id === this.props.status.id).description;
+    }
   }
 
   _buyAction () {

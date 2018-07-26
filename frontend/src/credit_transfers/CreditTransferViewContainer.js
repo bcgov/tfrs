@@ -29,7 +29,7 @@ import history from '../app/History';
 import Modal from '../app/components/Modal';
 import * as Lang from '../constants/langEnUs';
 import CREDIT_TRANSACTIONS from '../constants/routes/CreditTransactions';
-import { CREDIT_TRANSFER_STATUS } from '../constants/values';
+import { CREDIT_TRANSFER_STATUS, CREDIT_TRANSFER_TYPES } from '../constants/values';
 
 class CreditTransferViewContainer extends Component {
   constructor (props) {
@@ -88,6 +88,108 @@ class CreditTransferViewContainer extends Component {
     this.props.approveCreditTransfer(id).then(() => {
       history.push(CREDIT_TRANSACTIONS.LIST);
     });
+  }
+
+  _buildPVRContent (availableActions) {
+    const { item } = this.props;
+    const buttonActions = [];
+    const content = [];
+
+    if (availableActions.includes(Lang.BTN_SAVE_DRAFT)) {
+      buttonActions.push(Lang.BTN_DELETE_DRAFT);
+      buttonActions.push(Lang.BTN_EDIT_PVR_DRAFT);
+
+      content.push(this._modalDelete(item));
+    }
+
+    if (availableActions.includes(Lang.BTN_RECOMMEND_FOR_DECISION)) {
+      buttonActions.push(Lang.BTN_RECOMMEND_FOR_DECISION);
+
+      content.push(this._modalRecommend(item));
+    }
+
+    if (availableActions.includes(Lang.BTN_DECLINE_FOR_APPROVAL)) {
+      buttonActions.push(Lang.BTN_DECLINE_FOR_APPROVAL);
+
+      content.push(this._modalDecline(item));
+    }
+
+    if (availableActions.includes(Lang.BTN_APPROVE)) {
+      buttonActions.push(Lang.BTN_APPROVE);
+
+      content.push(this._modalApprove(item));
+    }
+
+    return {
+      buttonActions,
+      content
+    };
+  }
+
+  _buildTransferContent (availableActions) {
+    const { item, loggedInUser } = this.props;
+    const buttonActions = [];
+    const content = [];
+
+    if (item.status.id === CREDIT_TRANSFER_STATUS.draft.id) {
+      buttonActions.push(Lang.BTN_SIGN_1_2);
+
+      content.push(this._modalSubmit(item));
+    }
+
+    if (item.respondent.id === loggedInUser.organization.id) {
+      if (item.status.id === CREDIT_TRANSFER_STATUS.proposed.id) {
+        buttonActions.push(Lang.BTN_SIGN_2_2);
+        content.push(this._modalAccept());
+      }
+
+      if (availableActions.includes(Lang.BTN_CT_CANCEL)) {
+        buttonActions.push(Lang.BTN_RESCIND);
+        content.push(this._modalRescind());
+      }
+
+      if (availableActions.includes(Lang.BTN_REFUSE)) {
+        buttonActions.push(Lang.BTN_REFUSE);
+        content.push(this._modalRefuse());
+      }
+    } else if (item.initiator.id === loggedInUser.organization.id) {
+      if (availableActions.includes(Lang.BTN_CT_CANCEL)) {
+        buttonActions.push(Lang.BTN_RESCIND);
+        content.push(this._modalRescind());
+      }
+    }
+
+    if (availableActions.includes(Lang.BTN_SAVE_DRAFT)) {
+      buttonActions.push(Lang.BTN_DELETE_DRAFT);
+      buttonActions.push(Lang.BTN_EDIT_DRAFT);
+
+      content.push(this._modalDelete(item));
+    }
+
+    if (availableActions.includes(Lang.BTN_RECOMMEND_FOR_DECISION)) {
+      buttonActions.push(Lang.BTN_NOT_RECOMMENDED_FOR_DECISION);
+      buttonActions.push(Lang.BTN_RECOMMEND_FOR_DECISION);
+
+      content.push(this._modalRecommend(item));
+      content.push(this._modalNotRecommend(item));
+    }
+
+    if (availableActions.includes(Lang.BTN_DECLINE_FOR_APPROVAL)) {
+      buttonActions.push(Lang.BTN_DECLINE_FOR_APPROVAL);
+
+      content.push(this._modalDecline(item));
+    }
+
+    if (availableActions.includes(Lang.BTN_APPROVE)) {
+      buttonActions.push(Lang.BTN_APPROVE);
+
+      content.push(this._modalApprove(item));
+    }
+
+    return {
+      buttonActions,
+      content
+    };
   }
 
   _changeStatus (status) {
@@ -362,50 +464,8 @@ class CreditTransferViewContainer extends Component {
   render () {
     const { isFetching, item, loggedInUser } = this.props;
     let availableActions = [];
-    const buttonActions = [];
-    const content = [(
-      <CreditTransferDetails
-        addToFields={this._addToFields}
-        buttonActions={buttonActions}
-        changeStatus={this._changeStatus}
-        compliancePeriod={item.compliancePeriod}
-        creditsFrom={item.creditsFrom}
-        creditsTo={item.creditsTo}
-        errors={this.props.errors}
-        fairMarketValuePerCredit={item.fairMarketValuePerCredit}
-        fields={this.state.fields}
-        history={item.history}
-        id={item.id}
-        isFetching={isFetching}
-        isRescinded={item.isRescinded}
-        key="creditTransferDetails"
-        loggedInUser={loggedInUser}
-        note={item.note}
-        numberOfCredits={item.numberOfCredits}
-        rescinded={item.rescinded}
-        signatures={item.signatures}
-        status={item.status}
-        toggleCheck={this._toggleCheck}
-        totalValue={item.totalValue}
-        tradeEffectiveDate={item.tradeEffectiveDate}
-        tradeType={item.type}
-        comments={item.comments}
-        canComment={CreditTransferUtilityFunctions
-          .canComment(this.props.loggedInUser, this.props.item)}
-        addComment={this._addComment}
-        cancelComment={this._cancelComment}
-        saveComment={this._saveComment}
-        isCommenting={this.state.isCommenting}
-        isCreatingPrivilegedComment={this.state.isCreatingPrivilegedComment}
-        hasCommented={this.state.hasCommented}
-        canCreatePrivilegedComment={
-          CreditTransferUtilityFunctions.canCreatePrivilegedComment(
-            this.props.loggedInUser,
-            this.props.item
-          )
-        }
-      />
-    )];
+    let buttonActions = [];
+    let content = [];
 
     if (!isFetching && item.actions && !item.isRescinded) {
       // TODO: Add util function to return appropriate actions
@@ -413,61 +473,54 @@ class CreditTransferViewContainer extends Component {
         action.action
       ));
 
-      if (item.status.id === CREDIT_TRANSFER_STATUS.draft.id) {
-        buttonActions.push(Lang.BTN_SIGN_1_2);
-
-        content.push(this._modalSubmit(item));
-      }
-
-      if (item.respondent.id === loggedInUser.organization.id) {
-        if (item.status.id === CREDIT_TRANSFER_STATUS.proposed.id) {
-          buttonActions.push(Lang.BTN_SIGN_2_2);
-          content.push(this._modalAccept());
-        }
-
-        if (availableActions.includes(Lang.BTN_CT_CANCEL)) {
-          buttonActions.push(Lang.BTN_RESCIND);
-          content.push(this._modalRescind());
-        }
-
-        if (availableActions.includes(Lang.BTN_REFUSE)) {
-          buttonActions.push(Lang.BTN_REFUSE);
-          content.push(this._modalRefuse());
-        }
-      } else if (item.initiator.id === loggedInUser.organization.id) {
-        if (availableActions.includes(Lang.BTN_CT_CANCEL)) {
-          buttonActions.push(Lang.BTN_RESCIND);
-          content.push(this._modalRescind());
-        }
-      }
-
-      if (availableActions.includes(Lang.BTN_SAVE_DRAFT)) {
-        buttonActions.push(Lang.BTN_DELETE_DRAFT);
-        buttonActions.push(Lang.BTN_EDIT_DRAFT);
-
-        content.push(this._modalDelete(item));
-      }
-
-      if (availableActions.includes(Lang.BTN_RECOMMEND_FOR_DECISION)) {
-        buttonActions.push(Lang.BTN_NOT_RECOMMENDED_FOR_DECISION);
-        buttonActions.push(Lang.BTN_RECOMMEND_FOR_DECISION);
-
-        content.push(this._modalRecommend(item));
-        content.push(this._modalNotRecommend(item));
-      }
-
-      if (availableActions.includes(Lang.BTN_DECLINE_FOR_APPROVAL)) {
-        buttonActions.push(Lang.BTN_DECLINE_FOR_APPROVAL);
-
-        content.push(this._modalDecline(item));
-      }
-
-      if (availableActions.includes(Lang.BTN_APPROVE)) {
-        buttonActions.push(Lang.BTN_APPROVE);
-
-        content.push(this._modalApprove(item));
+      if ([CREDIT_TRANSFER_TYPES.buy.id, CREDIT_TRANSFER_TYPES.sell.id].includes(item.type.id)) {
+        ({ buttonActions, content } = this._buildTransferContent(availableActions));
+      } else {
+        ({ buttonActions, content } = this._buildPVRContent(availableActions));
       }
     }
+
+    content.push(<CreditTransferDetails
+      addToFields={this._addToFields}
+      buttonActions={buttonActions}
+      changeStatus={this._changeStatus}
+      compliancePeriod={item.compliancePeriod}
+      creditsFrom={item.creditsFrom}
+      creditsTo={item.creditsTo}
+      errors={this.props.errors}
+      fairMarketValuePerCredit={item.fairMarketValuePerCredit}
+      fields={this.state.fields}
+      history={item.history}
+      id={item.id}
+      isFetching={isFetching}
+      isRescinded={item.isRescinded}
+      key="creditTransferDetails"
+      loggedInUser={loggedInUser}
+      note={item.note}
+      numberOfCredits={item.numberOfCredits}
+      rescinded={item.rescinded}
+      signatures={item.signatures}
+      status={item.status}
+      toggleCheck={this._toggleCheck}
+      totalValue={item.totalValue}
+      tradeEffectiveDate={item.tradeEffectiveDate}
+      tradeType={item.type}
+      comments={item.comments}
+      canComment={CreditTransferUtilityFunctions
+        .canComment(this.props.loggedInUser, this.props.item)}
+      addComment={this._addComment}
+      cancelComment={this._cancelComment}
+      saveComment={this._saveComment}
+      isCommenting={this.state.isCommenting}
+      isCreatingPrivilegedComment={this.state.isCreatingPrivilegedComment}
+      hasCommented={this.state.hasCommented}
+      canCreatePrivilegedComment={
+        CreditTransferUtilityFunctions.canCreatePrivilegedComment(
+          this.props.loggedInUser,
+          this.props.item
+        )
+      }
+    />);
 
     return content;
   }

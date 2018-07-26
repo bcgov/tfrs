@@ -9,6 +9,7 @@ export const BTN_DECLINE_FOR_APPROVAL = 'Decline to Approve';
 export const BTN_DELETE = 'Delete';
 export const BTN_DELETE_DRAFT = 'Delete Draft';
 export const BTN_EDIT_DRAFT = 'Edit Draft';
+export const BTN_EDIT_PVR_DRAFT = 'Edit PVR';
 export const BTN_NO = 'No';
 export const BTN_NOT_RECOMMENDED_FOR_DECISION = 'Not Recommended for Approval';
 export const BTN_PROCESS = 'Confirm';

@@ -5,6 +5,28 @@ import moment from 'moment';
 import { CREDIT_TRANSFER_STATUS } from '../../../src/constants/values';
 
 class CreditTransferSigningHistory extends Component {
+  _renderAccepted (history) {
+    const userIndex = this.props.signatures.findIndex(signature => (
+      signature.user.id === history.user.id));
+
+    if (userIndex >= 0) {
+      return (<strong>Signed 2/2</strong>);
+    }
+
+    return (<strong>Accepted</strong>);
+  }
+
+  _renderSubmitted (history) {
+    const userIndex = this.props.signatures.findIndex(signature => (
+      signature.user.id === history.user.id));
+
+    if (userIndex >= 0) {
+      return (<strong>Signed 1/2</strong>);
+    }
+
+    return (<strong>Proposed</strong>);
+  }
+
   static renderCompleted () {
     return (<strong className="text-success">Approved</strong>);
   }
@@ -41,28 +63,6 @@ class CreditTransferSigningHistory extends Component {
 
   static renderRescinded () {
     return (<strong className="text-danger">Rescinded</strong>);
-  }
-
-  _renderAccepted (history) {
-    const userIndex = this.props.signatures.findIndex(signature => (
-      signature.user.id === history.user.id));
-
-    if (userIndex >= 0) {
-      return (<strong>Signed 2/2</strong>);
-    }
-
-    return (<strong>Accepted</strong>);
-  }
-
-  _renderSubmitted (history) {
-    const userIndex = this.props.signatures.findIndex(signature => (
-      signature.user.id === history.user.id));
-
-    if (userIndex >= 0) {
-      return (<strong>Signed 1/2</strong>);
-    }
-
-    return (<strong>Proposed</strong>);
   }
 
   render () {

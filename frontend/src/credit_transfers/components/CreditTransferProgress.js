@@ -160,7 +160,12 @@ class CreditTransferProgress extends Component {
 
     view.push(this._addStepDraft());
     view.push(this._addStepReviewed());
-    view.push(this._addStepCompleted());
+
+    if (this.props.status.id === CREDIT_TRANSFER_STATUS.declinedForApproval.id) {
+      view.push(this._addStepDeclined());
+    } else {
+      view.push(this._addStepCompleted());
+    }
 
     return view;
   }
@@ -186,7 +191,9 @@ class CreditTransferProgress extends Component {
 
     return (
       <div className="credit-transfer-progress-bar pvr">
-        <div className="arrow-steps clearfix">
+        <div className={`arrow-steps clearfix
+          ${(this.props.status.id === CREDIT_TRANSFER_STATUS.declinedForApproval.id) ? 'negative' : ''}`}
+        >
           {this._renderGovernmentTransfer()}
         </div>
       </div>

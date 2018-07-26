@@ -15,8 +15,9 @@ import ORGANIZATIONS from './constants/routes/Organizations';
 import USERS from './constants/routes/Users';
 
 import ContactUsContainer from './contact_us/ContactUsContainer';
-import CreditTransactionAddContainer from './credit_transfers/CreditTransactionAddContainer';
-import CreditTransactionsContainer from './credit_transfers/CreditTransactionsContainer';
+import GovernmentTransferAddContainer from './credit_transfers/GovernmentTransferAddContainer';
+import GovernmentTransferEditContainer from './credit_transfers/GovernmentTransferEditContainer';
+import GovernmentTransferContainer from './credit_transfers/GovernmentTransferContainer';
 import CreditTransactionsHistory from './admin/credit_trade_history/CreditTradeHistoryContainer';
 import CreditTransferAddContainer from './credit_transfers/CreditTransferAddContainer';
 import CreditTransferEditContainer from './credit_transfers/CreditTransferEditContainer';
@@ -35,7 +36,7 @@ const Router = props => (
         <Route
           exact
           path={Routes.HOME}
-          component={withRouter(CreditTransactionsContainer)}
+          component={withRouter(GovernmentTransferContainer)}
         />
         <Route
           exact
@@ -62,7 +63,7 @@ const Router = props => (
         <Route
           exact
           path={CREDIT_TRANSACTIONS.LIST}
-          component={withRouter(CreditTransactionsContainer)}
+          component={withRouter(GovernmentTransferContainer)}
         />
         <Route
           path={CREDIT_TRANSACTIONS.DETAILS}
@@ -76,11 +77,15 @@ const Router = props => (
         <Route
           exact
           path={CREDIT_TRANSACTIONS.ADD_PVR}
-          component={withRouter(CreditTransactionAddContainer)}
+          component={withRouter(GovernmentTransferAddContainer)}
         />
         <Route
           path={CREDIT_TRANSACTIONS.EDIT}
           component={withRouter(CreditTransferEditContainer)}
+        />
+        <Route
+          path={CREDIT_TRANSACTIONS.EDIT_PVR}
+          component={withRouter(GovernmentTransferEditContainer)}
         />
         <Route
           exact

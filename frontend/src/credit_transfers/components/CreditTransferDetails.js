@@ -14,7 +14,7 @@ import { getCreditTransferType } from '../../actions/creditTransfersActions';
 import Errors from '../../app/components/Errors';
 import Loading from '../../app/components/Loading';
 import * as Lang from '../../constants/langEnUs';
-import { CREDIT_TRANSFER_STATUS, CREDIT_TRANSFER_TYPES } from '../../constants/values';
+import { CREDIT_TRANSFER_STATUS } from '../../constants/values';
 import PERMISSIONS_CREDIT_TRANSACTIONS from '../../constants/permissions/CreditTransactions';
 import CreditTransferCommentForm from './CreditTransferCommentForm';
 import CreditTransferComment from './CreditTransferComment';
@@ -61,11 +61,6 @@ const CreditTransferDetails = props => (
           totalValue={props.totalValue}
           tradeType={props.tradeType}
         />
-        {props.note !== '' &&
-          <div className="well transparent">
-            <div>Notes: {props.note}</div>
-          </div>
-        }
         {props.comments.map(c => (
           <CreditTransferComment comment={c} key={c.id} saveComment={props.saveComment} />
         ))
@@ -92,9 +87,7 @@ const CreditTransferDetails = props => (
             addComment={props.addComment}
             canCreatePrivilegedComment={props.canCreatePrivilegedComment}
           />
-          {(props.tradeType.id === CREDIT_TRANSFER_TYPES.sell.id ||
-          props.tradeType.id === CREDIT_TRANSFER_TYPES.buy.id) &&
-          props.status.id !== CREDIT_TRANSFER_STATUS.draft.id &&
+          {props.status.id !== CREDIT_TRANSFER_STATUS.draft.id &&
           (props.history.length > 0 || props.signatures.length > 0) &&
             <CreditTransferSigningHistory
               history={props.history}

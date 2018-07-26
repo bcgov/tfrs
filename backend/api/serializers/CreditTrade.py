@@ -80,8 +80,12 @@ class CreditTradeCreateSerializer(serializers.ModelSerializer):
         if request.user.has_perm('APPROVE_CREDIT_TRANSFER'):
             available_statuses.append('Approved')
 
-        if request.user.has_perm('PROPOSE_CREDIT_TRANSFER'):
+        if request.user.has_perm('PROPOSE_CREDIT_TRANSFER') or \
+                request.user.has_perm('PROPOSE_PVR'):
             available_statuses.append('Draft')
+
+        if request.user.has_perm('RECOMMEND_CREDIT_TRANSFER'):
+            available_statuses.append('Recommended')
 
         if request.user.has_perm('SIGN_CREDIT_TRANSFER') and \
            data.get('initiator') == request.user.organization:
@@ -216,7 +220,7 @@ class CreditTradeUpdateSerializer(serializers.ModelSerializer):
         if 'status' in request.data:
             credit_trade_status = data.get('status')
 
-            if data.get('is_rescinded') is False:
+            if not data.get('is_rescinded') is True:
                 available_statuses = CreditTradeService.get_allowed_statuses(
                     self.instance, request)
 
@@ -406,7 +410,7 @@ class CreditTrade2Serializer(serializers.ModelSerializer):
             return []
 
         if cur_status == "Draft":
-            return CreditTradeActions.draft(request)
+            return CreditTradeActions.draft(request, obj)
 
         elif cur_status == "Submitted":
             return CreditTradeActions.submitted(request, obj)
