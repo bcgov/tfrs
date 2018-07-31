@@ -85,8 +85,8 @@ const CreditTransactionsPage = (props) => {
               type="button"
               onClick={() => history.push(CREDIT_TRANSACTIONS.ADD)}
             >
-              {!props.loggedInUser.isGovernmentUser && 'Propose Trade'}
-              {props.loggedInUser.isGovernmentUser && 'New Transfer'}
+              {!props.loggedInUser.isGovernmentUser && 'New Transfer'}
+              {props.loggedInUser.isGovernmentUser && 'New Credit Transaction'}
             </button>
           }
         </div>
