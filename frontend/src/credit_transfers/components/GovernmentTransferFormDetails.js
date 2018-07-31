@@ -13,9 +13,9 @@ const GovernmentTransferFormDetails = props => (
         <div className="form-group col-md-6">
           <label htmlFor="transfer-type">Transfer Type:
             <div className="btn-group" role="group">
-              <button type="button" className={`btn btn-default ${(props.fields.transferType === CREDIT_TRANSFER_TYPES.part3Award.id.toString()) ? 'active' : ''}`} name="transferType" value={CREDIT_TRANSFER_TYPES.part3Award.id} onClick={props.handleInputChange}>Part 3 Award</button>
-              <button type="button" className={`btn btn-default ${(props.fields.transferType === CREDIT_TRANSFER_TYPES.validation.id.toString()) ? 'active' : ''}`} name="transferType" value={CREDIT_TRANSFER_TYPES.validation.id} onClick={props.handleInputChange}>Validation</button>
-              <button type="button" className={`btn btn-default ${(props.fields.transferType === CREDIT_TRANSFER_TYPES.retirement.id.toString()) ? 'active' : ''}`} name="transferType" value={CREDIT_TRANSFER_TYPES.retirement.id} onClick={props.handleInputChange}>Reduction</button>
+              <button type="button" className={`btn btn-default ${(props.fields.tradeType.id === CREDIT_TRANSFER_TYPES.part3Award.id) ? 'active' : ''}`} name="tradeType" value={CREDIT_TRANSFER_TYPES.part3Award.id} onClick={props.handleInputChange}>Part 3 Award</button>
+              <button type="button" className={`btn btn-default ${(props.fields.tradeType.id === CREDIT_TRANSFER_TYPES.validation.id) ? 'active' : ''}`} name="tradeType" value={CREDIT_TRANSFER_TYPES.validation.id} onClick={props.handleInputChange}>Validation</button>
+              <button type="button" className={`btn btn-default ${(props.fields.tradeType.id === CREDIT_TRANSFER_TYPES.retirement.id) ? 'active' : ''}`} name="tradeType" value={CREDIT_TRANSFER_TYPES.retirement.id} onClick={props.handleInputChange}>Reduction</button>
             </div>
           </label>
         </div>
@@ -119,7 +119,9 @@ GovernmentTransferFormDetails.propTypes = {
       name: PropTypes.string,
       id: PropTypes.number
     }),
-    transferType: PropTypes.string
+    tradeType: PropTypes.shape({
+      id: PropTypes.number
+    })
   }).isRequired,
   handleInputChange: PropTypes.func.isRequired
 };

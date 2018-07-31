@@ -80,8 +80,7 @@ class CreditTradeCreateSerializer(serializers.ModelSerializer):
         if request.user.has_perm('APPROVE_CREDIT_TRANSFER'):
             available_statuses.append('Approved')
 
-        if request.user.has_perm('PROPOSE_CREDIT_TRANSFER') or \
-                request.user.has_perm('PROPOSE_PVR'):
+        if request.user.has_perm('PROPOSE_CREDIT_TRANSFER'):
             available_statuses.append('Draft')
 
         if request.user.has_perm('RECOMMEND_CREDIT_TRANSFER'):

@@ -45,7 +45,7 @@ const CreditTransferFormButtons = props => (
       {props.actions.includes(Lang.BTN_EDIT_PVR_DRAFT) &&
         <button
           className="btn btn-default"
-          onClick={() => history.push(CREDIT_TRANSACTIONS.EDIT_PVR.replace(':id', props.id))}
+          onClick={() => history.push(CREDIT_TRANSACTIONS.EDIT.replace(':id', props.id))}
           type="button"
         >
           {Lang.BTN_EDIT_DRAFT}

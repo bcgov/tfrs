@@ -1,9 +1,0 @@
-[{
-  "fields": {
-      "code": "PROPOSE_PVR",
-      "description": "Propose Part Awards, Validations, Retirements",
-      "name": "Propose Credit Transaction"
-  },
-  "model": "api.permission",
-  "pk": null
-}]

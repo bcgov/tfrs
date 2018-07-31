@@ -7,12 +7,19 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
+import Modal from '../app/components/Modal';
 import CreditTransferForm from './components/CreditTransferForm';
+import GovernmentTransferForm from './components/GovernmentTransferForm';
 import ModalSubmitCreditTransfer from './components/ModalSubmitCreditTransfer';
 
 import { getFuelSuppliers } from '../actions/organizationActions';
 import { getLoggedInUser } from '../actions/userActions';
-import { addCreditTransfer, invalidateCreditTransfer, invalidateCreditTransfers } from '../actions/creditTransfersActions';
+import {
+  addCommentToCreditTransfer,
+  addCreditTransfer,
+  invalidateCreditTransfer,
+  invalidateCreditTransfers
+} from '../actions/creditTransfersActions';
 import {
   addSigningAuthorityConfirmation,
   prepareSigningAuthorityConfirmations
@@ -20,26 +27,42 @@ import {
 import history from '../app/History';
 import * as Lang from '../constants/langEnUs';
 import CREDIT_TRANSACTIONS from '../constants/routes/CreditTransactions';
-import { CREDIT_TRANSFER_STATUS } from '../constants/values';
+import { CREDIT_TRANSFER_STATUS, CREDIT_TRANSFER_TYPES } from '../constants/values';
 
 class CreditTransferAddContainer extends Component {
   constructor (props) {
     super(props);
 
-    this.state = {
-      creditsFrom: {},
-      creditsTo: {},
-      fields: {
-        fairMarketValuePerCredit: '',
-        initiator: {},
-        note: '',
-        numberOfCredits: '',
-        respondent: { id: 0, name: '' },
-        terms: [],
-        tradeType: { id: 1, name: 'Sell' }
-      },
-      totalValue: 0
-    };
+    if (props.loggedInUser.isGovernmentUser) {
+      this.state = {
+        fields: {
+          comment: '',
+          compliancePeriod: {},
+          numberOfCredits: '',
+          respondent: {},
+          tradeType: {
+            id: CREDIT_TRANSFER_TYPES.part3Award.id
+          }
+        }
+      };
+    } else {
+      this.state = {
+        creditsFrom: {},
+        creditsTo: {},
+        fields: {
+          fairMarketValuePerCredit: '',
+          initiator: {},
+          note: '',
+          numberOfCredits: '',
+          respondent: { id: 0, name: '' },
+          terms: [],
+          tradeType: {
+            id: CREDIT_TRANSFER_TYPES.sell.id
+          }
+        },
+        totalValue: 0
+      };
+    }
 
     this._addToFields = this._addToFields.bind(this);
     this._changeStatus = this._changeStatus.bind(this);
@@ -76,64 +99,7 @@ class CreditTransferAddContainer extends Component {
     this.changeObjectProp(status.id, 'tradeStatus');
   }
 
-  _handleInputChange (event) {
-    const { value, name } = event.target;
-    const fieldState = { ...this.state.fields };
-
-    if (typeof fieldState[name] === 'object') {
-      this.changeObjectProp(parseInt(value, 10), name);
-    } else {
-      fieldState[name] = value;
-      this.setState({
-        fields: fieldState
-      }, () => this.computeTotalValue(name));
-    }
-  }
-
-  _toggleCheck (key) {
-    const fieldState = { ...this.state.fields };
-    const index = fieldState.terms.findIndex(term => term.id === key);
-    fieldState.terms[index].value = !fieldState.terms[index].value;
-
-    this.setState({
-      fields: fieldState
-    });
-  }
-
-  changeObjectProp (id, name) {
-    const fieldState = { ...this.state.fields };
-    if (name === 'respondent') {
-      // Populate the dropdown
-      const respondents = this.props.fuelSuppliers.filter(fuelSupplier => (fuelSupplier.id === id));
-
-      fieldState.respondent = respondents.length === 1 ? respondents[0] : { id: 0 };
-      this.setState({
-        fields: fieldState
-      }, () => this.changeFromTo(
-        this.state.fields.tradeType,
-        this.state.fields.initiator,
-        this.state.fields.respondent
-      ));
-    } else if (name === 'tradeType') {
-      fieldState[name] = { id: id || 0 };
-      this.setState({
-        fields: fieldState
-      }, () => this.changeFromTo(
-        this.state.fields.tradeType,
-        this.state.fields.initiator,
-        this.state.fields.respondent
-      ));
-    } else {
-      fieldState[name] = { id: id || 0 };
-      this.setState({
-        fields: fieldState
-      });
-    }
-  }
-
-  _handleSubmit (event, status) {
-    event.preventDefault();
-
+  _creditTransferSubmit (status) {
     // API data structure
     const data = {
       fairMarketValuePerCredit: parseFloat(this.state.fields.fairMarketValuePerCredit).toFixed(2),
@@ -160,35 +126,60 @@ class CreditTransferAddContainer extends Component {
       this.props.invalidateCreditTransfers();
       history.push(CREDIT_TRANSACTIONS.LIST);
     });
+  }
 
-    this.props.invalidateCreditTransfers();
+  _governmentTransferSubmit (status) {
+    const { comment } = this.state.fields;
+
+    // API data structure
+    const data = {
+      compliancePeriod: this.state.fields.compliancePeriod.id,
+      initiator: this.state.fields.initiator.id,
+      numberOfCredits: parseInt(this.state.fields.numberOfCredits, 10),
+      respondent: this.state.fields.respondent.id,
+      status: status.id,
+      type: this.state.fields.tradeType.id
+    };
+
+    this.props.addCreditTransfer(data).then((response) => {
+      if (comment !== '') {
+        this._saveComment(response.data.id, comment);
+      }
+
+      this.props.invalidateCreditTransfers();
+      history.push(CREDIT_TRANSACTIONS.LIST);
+    });
+  }
+
+  _handleInputChange (event) {
+    const { value, name } = event.target;
+    const fieldState = { ...this.state.fields };
+
+    if (typeof fieldState[name] === 'object') {
+      this.changeObjectProp(parseInt(value, 10), name);
+    } else {
+      fieldState[name] = value;
+      this.setState({
+        fields: fieldState
+      }, () => this.computeTotalValue(name));
+    }
+  }
+
+  _handleSubmit (event, status) {
+    event.preventDefault();
+
+    // Government Transfer Submit
+    if ([CREDIT_TRANSFER_TYPES.buy.id, CREDIT_TRANSFER_TYPES.sell.id]
+      .indexOf(this.state.fields.tradeType.id) < 0) {
+      this._governmentTransferSubmit(status);
+    } else { // Credit Transfer Submit
+      this._creditTransferSubmit(status);
+    }
 
     return false;
   }
 
-  changeFromTo (tradeType, initiator, respondent) {
-    // Change the creditsFrom and creditsTo according to the trade type
-    let creditsFrom = initiator;
-    let creditsTo = respondent;
-    if (tradeType.id === 2) {
-      creditsFrom = respondent;
-      creditsTo = initiator;
-    }
-
-    this.setState({ creditsFrom, creditsTo });
-  }
-
-  computeTotalValue (name) {
-    // Compute the total value when the fields change
-    if (['numberOfCredits', 'fairMarketValuePerCredit'].includes(name)) {
-      this.setState({
-        totalValue:
-          this.state.fields.numberOfCredits * this.state.fields.fairMarketValuePerCredit
-      });
-    }
-  }
-
-  render () {
+  _renderCreditTransfer () {
     const buttonActions = [Lang.BTN_SAVE_DRAFT, Lang.BTN_SIGN_1_2];
 
     return ([
@@ -226,6 +217,112 @@ class CreditTransferAddContainer extends Component {
       />
     ]);
   }
+
+  _renderGovernmentTransfer () {
+    return ([
+      <GovernmentTransferForm
+        errors={this.props.errors}
+        fields={this.state.fields}
+        fuelSuppliers={this.props.fuelSuppliers}
+        handleInputChange={this._handleInputChange}
+        handleSubmit={this._handleSubmit}
+        key="creditTransferForm"
+        title="New Credit Transaction"
+      />,
+      <Modal
+        handleSubmit={(event) => {
+          this._handleSubmit(event, CREDIT_TRANSFER_STATUS.recommendedForDecision);
+        }}
+        id="confirmRecommend"
+        key="confirmRecommend"
+      >
+        Are you sure you want to recommend this transaction?
+      </Modal>
+    ]);
+  }
+
+  _saveComment (id, comment) {
+    // API data structure
+    const data = {
+      creditTrade: id,
+      comment,
+      privilegedAccess: true
+    };
+
+    return this.props.addCommentToCreditTransfer(data);
+  }
+
+  _toggleCheck (key) {
+    const fieldState = { ...this.state.fields };
+    const index = fieldState.terms.findIndex(term => term.id === key);
+    fieldState.terms[index].value = !fieldState.terms[index].value;
+
+    this.setState({
+      fields: fieldState
+    });
+  }
+
+  changeFromTo (tradeType, initiator, respondent) {
+    // Change the creditsFrom and creditsTo according to the trade type
+    let creditsFrom = initiator;
+    let creditsTo = respondent;
+    if (tradeType.id === 2) {
+      creditsFrom = respondent;
+      creditsTo = initiator;
+    }
+
+    this.setState({ creditsFrom, creditsTo });
+  }
+
+  changeObjectProp (id, name) {
+    const fieldState = { ...this.state.fields };
+
+    if (name === 'respondent') {
+      // Populate the dropdown
+      const respondents = this.props.fuelSuppliers.filter(fuelSupplier => (fuelSupplier.id === id));
+
+      fieldState.respondent = respondents.length === 1 ? respondents[0] : { id: 0 };
+      this.setState({
+        fields: fieldState
+      }, () => this.changeFromTo(
+        this.state.fields.tradeType,
+        this.state.fields.initiator,
+        this.state.fields.respondent
+      ));
+    } else if (name === 'tradeType') {
+      fieldState[name] = { id: id || 0 };
+      this.setState({
+        fields: fieldState
+      }, () => this.changeFromTo(
+        this.state.fields.tradeType,
+        this.state.fields.initiator,
+        this.state.fields.respondent
+      ));
+    } else {
+      fieldState[name] = { id: id || 0 };
+      this.setState({
+        fields: fieldState
+      });
+    }
+  }
+
+  computeTotalValue (name) {
+    // Compute the total value when the fields change
+    if (['numberOfCredits', 'fairMarketValuePerCredit'].includes(name)) {
+      this.setState({
+        totalValue:
+          this.state.fields.numberOfCredits * this.state.fields.fairMarketValuePerCredit
+      });
+    }
+  }
+
+  render () {
+    if (this.props.loggedInUser.isGovernmentUser) {
+      return this._renderGovernmentTransfer();
+    }
+
+    return this._renderCreditTransfer();
+  }
 }
 
 CreditTransferAddContainer.defaultProps = {
@@ -233,6 +330,7 @@ CreditTransferAddContainer.defaultProps = {
 };
 
 CreditTransferAddContainer.propTypes = {
+  addCommentToCreditTransfer: PropTypes.func.isRequired,
   addCreditTransfer: PropTypes.func.isRequired,
   addSigningAuthorityConfirmation: PropTypes.func.isRequired,
   errors: PropTypes.shape({}),
@@ -242,6 +340,7 @@ CreditTransferAddContainer.propTypes = {
   invalidateCreditTransfers: PropTypes.func.isRequired,
   loggedInUser: PropTypes.shape({
     displayName: PropTypes.string,
+    isGovernmentUser: PropTypes.bool,
     organization: PropTypes.shape({
       name: PropTypes.string,
       id: PropTypes.number
@@ -257,6 +356,7 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
+  addCommentToCreditTransfer: bindActionCreators(addCommentToCreditTransfer, dispatch),
   addCreditTransfer: bindActionCreators(addCreditTransfer, dispatch),
   addSigningAuthorityConfirmation: bindActionCreators(addSigningAuthorityConfirmation, dispatch),
   getFuelSuppliers: bindActionCreators(getFuelSuppliers, dispatch),

@@ -1,6 +1,6 @@
 [{
   "fields": {
-    "permission": ["PROPOSE_PVR"],
+    "permission": ["PROPOSE_CREDIT_TRANSFER"],
     "role": ["GovUser"]
   },
   "model": "api.rolepermission",
