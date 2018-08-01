@@ -157,6 +157,16 @@ const CreditTransferFormButtons = props => (
         </button>
       </TooltipWhenDisabled>
       }
+      {props.actions.includes(Lang.BTN_RETURN_TO_DRAFT) &&
+        <button
+          className="btn btn-warning"
+          data-target="#confirmReturn"
+          data-toggle="modal"
+          type="button"
+        >
+          Return to Draft
+        </button>
+      }
       {props.actions.includes(Lang.BTN_DECLINE_FOR_APPROVAL) &&
       <TooltipWhenDisabled
         disabled={props.isCommenting}

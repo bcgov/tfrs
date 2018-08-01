@@ -44,20 +44,21 @@ class CreditTransferViewContainer extends Component {
       hasCommented: false
     };
 
+    this._addComment = this._addComment.bind(this);
     this._addToFields = this._addToFields.bind(this);
+    this._cancelComment = this._cancelComment.bind(this);
     this._changeStatus = this._changeStatus.bind(this);
     this._deleteCreditTransfer = this._deleteCreditTransfer.bind(this);
     this._modalAccept = this._modalAccept.bind(this);
+    this._modalDecline = this._modalDecline.bind(this);
     this._modalDelete = this._modalDelete.bind(this);
+    this._modalNotRecommend = this._modalNotRecommend.bind(this);
     this._modalRefuse = this._modalRefuse.bind(this);
     this._modalRescind = this._modalRescind.bind(this);
+    this._modalReturn = this._modalReturn.bind(this);
     this._modalSubmit = this._modalSubmit.bind(this);
-    this._modalNotRecommend = this._modalNotRecommend.bind(this);
-    this._modalDecline = this._modalDecline.bind(this);
-    this._toggleCheck = this._toggleCheck.bind(this);
-    this._addComment = this._addComment.bind(this);
-    this._cancelComment = this._cancelComment.bind(this);
     this._saveComment = this._saveComment.bind(this);
+    this._toggleCheck = this._toggleCheck.bind(this);
   }
 
   componentDidMount () {
@@ -105,13 +106,15 @@ class CreditTransferViewContainer extends Component {
     if (availableActions.includes(Lang.BTN_RECOMMEND_FOR_DECISION)) {
       buttonActions.push(Lang.BTN_RECOMMEND_FOR_DECISION);
 
-      content.push(this._modalRecommend(item));
+      content.push(this._modalRecommend());
     }
 
     if (availableActions.includes(Lang.BTN_DECLINE_FOR_APPROVAL)) {
+      buttonActions.push(Lang.BTN_RETURN_TO_DRAFT);
       buttonActions.push(Lang.BTN_DECLINE_FOR_APPROVAL);
 
-      content.push(this._modalDecline(item));
+      content.push(this._modalReturn());
+      content.push(this._modalDecline());
     }
 
     if (availableActions.includes(Lang.BTN_APPROVE)) {
@@ -170,14 +173,14 @@ class CreditTransferViewContainer extends Component {
       buttonActions.push(Lang.BTN_NOT_RECOMMENDED_FOR_DECISION);
       buttonActions.push(Lang.BTN_RECOMMEND_FOR_DECISION);
 
-      content.push(this._modalRecommend(item));
-      content.push(this._modalNotRecommend(item));
+      content.push(this._modalRecommend());
+      content.push(this._modalNotRecommend());
     }
 
     if (availableActions.includes(Lang.BTN_DECLINE_FOR_APPROVAL)) {
       buttonActions.push(Lang.BTN_DECLINE_FOR_APPROVAL);
 
-      content.push(this._modalDecline(item));
+      content.push(this._modalDecline());
     }
 
     if (availableActions.includes(Lang.BTN_APPROVE)) {
@@ -320,7 +323,7 @@ class CreditTransferViewContainer extends Component {
     );
   }
 
-  _modalDecline (item) {
+  _modalDecline () {
     return (
       <Modal
         handleSubmit={(event) => {
@@ -408,6 +411,20 @@ class CreditTransferViewContainer extends Component {
         key="confirmRescind"
       >
         Are you sure you want to rescind this transfer?
+      </Modal>
+    );
+  }
+
+  _modalReturn () {
+    return (
+      <Modal
+        handleSubmit={(event) => {
+          this._changeStatus(CREDIT_TRANSFER_STATUS.draft);
+        }}
+        id="confirmReturn"
+        key="confirmReturn"
+      >
+        Are you sure you want to send this transfer back to draft?
       </Modal>
     );
   }
