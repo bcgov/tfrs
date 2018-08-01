@@ -44,9 +44,10 @@ class CreditTradeActions(object):
         status_dict = {s.status: s for s in CreditTradeActions.__statuses}
 
         available_statuses = []
-        available_statuses.append(
-            status_dict["Draft"]
-        )
+        if request.user.has_perm('PROPOSE_CREDIT_TRANSFER'):
+            available_statuses.append(
+                status_dict["Draft"]
+            )
 
         if request.user.has_perm('SIGN_CREDIT_TRANSFER'):
             available_statuses.append(

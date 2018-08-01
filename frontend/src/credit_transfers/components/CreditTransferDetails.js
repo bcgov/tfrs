@@ -14,7 +14,7 @@ import { getCreditTransferType } from '../../actions/creditTransfersActions';
 import Errors from '../../app/components/Errors';
 import Loading from '../../app/components/Loading';
 import * as Lang from '../../constants/langEnUs';
-import { CREDIT_TRANSFER_STATUS } from '../../constants/values';
+import { CREDIT_TRANSFER_STATUS, CREDIT_TRANSFER_TYPES } from '../../constants/values';
 import PERMISSIONS_CREDIT_TRANSACTIONS from '../../constants/permissions/CreditTransactions';
 import CreditTransferCommentForm from './CreditTransferCommentForm';
 import CreditTransferComment from './CreditTransferComment';
@@ -100,6 +100,11 @@ const CreditTransferDetails = props => (
             changeStatus={props.changeStatus}
             disabled={
               {
+                BTN_RECOMMEND: [
+                  CREDIT_TRANSFER_TYPES.validation.id,
+                  CREDIT_TRANSFER_TYPES.retirement.id,
+                  CREDIT_TRANSFER_TYPES.part3Award.id].includes(props.tradeType.id) &&
+                  props.comments.length === 0,
                 BTN_SIGN_1_2: props.fields.terms.findIndex(term => term.value === false) >= 0 ||
                 props.fields.terms.length === 0,
                 BTN_SIGN_2_2: props.fields.terms.findIndex(term => term.value === false) >= 0 ||
