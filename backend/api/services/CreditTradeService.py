@@ -352,4 +352,8 @@ class CreditTradeService(object):
                 ]:
                     allowed_statuses.append("Draft")
 
+        elif credit_trade.status.status == "Approved":
+            if request.user.has_perm('APPROVE_CREDIT_TRANSFER'):
+                allowed_statuses.append("Approved")
+
         return allowed_statuses
