@@ -9,6 +9,7 @@ import { CREDIT_TRANSFER_STATUS } from '../../constants/values';
 
 import getCompliancePeriods from '../../actions/compliancePeriodsActions';
 import Errors from '../../app/components/Errors';
+import TooltipWhenDisabled from '../../app/components/TooltipWhenDisabled';
 import GovernmentTransferFormDetails from './GovernmentTransferFormDetails';
 import history from '../../app/History';
 import * as Lang from '../../constants/langEnUs';
@@ -51,14 +52,21 @@ class GovernmentTransferForm extends Component {
             >
               {Lang.BTN_SAVE_DRAFT}
             </button>
-            <button
-              className="btn btn-primary"
-              data-target="#confirmRecommend"
-              data-toggle="modal"
-              type="button"
+            <TooltipWhenDisabled
+              disabled={this.props.fields.comment.length === 0}
+              title={Lang.TEXT_COMMENT_REQUIRED}
             >
-              {Lang.BTN_RECOMMEND_FOR_DECISION}
-            </button>
+              <button
+                className={`btn ${this.props.fields.comment.length === 0
+                  ? 'btn-disabled' : 'btn-primary '}`}
+                data-target="#confirmRecommend"
+                data-toggle="modal"
+                disabled={this.props.fields.comment.length === 0}
+                type="button"
+              >
+                {Lang.BTN_RECOMMEND_FOR_DECISION}
+              </button>
+            </TooltipWhenDisabled>
           </div>
         </form>
       </div>
@@ -74,7 +82,9 @@ GovernmentTransferForm.defaultProps = {
 GovernmentTransferForm.propTypes = {
   compliancePeriods: PropTypes.arrayOf(PropTypes.shape()).isRequired,
   errors: PropTypes.shape({}).isRequired,
-  fields: PropTypes.shape({}).isRequired,
+  fields: PropTypes.shape({
+    comment: PropTypes.string
+  }).isRequired,
   fuelSuppliers: PropTypes.arrayOf(PropTypes.shape()).isRequired,
   getCompliancePeriods: PropTypes.func.isRequired,
   handleInputChange: PropTypes.func.isRequired,

@@ -15,7 +15,6 @@ import ORGANIZATIONS from './constants/routes/Organizations';
 import USERS from './constants/routes/Users';
 
 import ContactUsContainer from './contact_us/ContactUsContainer';
-import GovernmentTransferEditContainer from './credit_transfers/GovernmentTransferEditContainer';
 import CreditTransactionsContainer from './credit_transfers/CreditTransactionsContainer';
 import CreditTransactionsHistory from './admin/credit_trade_history/CreditTradeHistoryContainer';
 import CreditTransferAddContainer from './credit_transfers/CreditTransferAddContainer';

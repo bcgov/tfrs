@@ -45,3 +45,5 @@ export const TEXT_VISIBLE_TO_GOV = 'Visible to government';
 export const TEXT_VISIBLE_TO_ALL = 'Visible to both fuel suppliers and government';
 export const TEXT_COMMENT_DIRTY = 'You are currently editing a comment. Save or Cancel before ' +
                                   'performing other actions';
+export const TEXT_COMMENT_REQUIRED = 'Comment is required before a credit transaction can ' +
+                                     'be recommended';
