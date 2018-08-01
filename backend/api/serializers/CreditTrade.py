@@ -289,9 +289,13 @@ class CreditTradeUpdateSerializer(serializers.ModelSerializer):
         balance = request.user.organization.organization_balance[
             'validated_credits']
 
-        buy_sell_type = CreditTradeType.objects.filter(
-            the_type__in=["Buy", "Sell"]
-        ).only('id')
+        buy_type = CreditTradeType.objects.get(
+            the_type="Buy"
+        )
+
+        sell_type = CreditTradeType.objects.get(
+            the_type="Sell"
+        )
 
         if 'type' in data:
             credit_trade_type = data.get('type')
@@ -309,11 +313,13 @@ class CreditTradeUpdateSerializer(serializers.ModelSerializer):
             .filter(status__in=["Draft", "Submitted"])
             .only('id'))
 
-        if credit_trade_type in buy_sell_type and balance < number_of_credits:
-            if (self.instance.initiator == request.user.organization and
-                    credit_trade_status in draft_propose_statuses) or \
-                (self.instance.respondent == request.user.organization and
-                 credit_trade_status == accepted_status):
+        if (self.instance.initiator == request.user.organization and
+                credit_trade_status in draft_propose_statuses and
+                credit_trade_type == sell_type) or \
+            (self.instance.respondent == request.user.organization and
+             credit_trade_status == accepted_status and
+             credit_trade_type == buy_type):
+            if balance < number_of_credits:
                 raise serializers.ValidationError({
                     'insufficientCredits': "{} does not have enough credits "
                                            "for the proposal.".format(
