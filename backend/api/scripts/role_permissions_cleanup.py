@@ -23,6 +23,7 @@ def run():
     director_permissions = RolePermission.objects.filter(
         permission__code__in=[
             "REFUSE_CREDIT_TRANSFER",
+            "RESCIND_CREDIT_TRANSFER",
             "SIGN_CREDIT_TRANSFER",
             "RECOMMEND_CREDIT_TRANSFER",
             "PROPOSE_CREDIT_TRANSFER"
