@@ -6,6 +6,11 @@ module.exports = {
       "components": [ "Link" ],
       "specialLink": [ "to" ]
     }],
+    "jsx-a11y/label-has-for": [ 2, {
+      "required": {
+        "every": [ "id" ]
+      }
+    }],
     "no-underscore-dangle": ["error", {
       "allowAfterThis": true
     }],

@@ -1,6 +1,7 @@
 @import './AdminTabs.scss';
 @import './App.scss';
 @import './ContactUs.scss';
+@import './CreditTransactions.scss';
 @import './CreditTransfers.scss';
 @import './Dashboard.scss';
 @import './FuelSuppliers.scss';
@@ -124,7 +125,7 @@ h1 {
     margin-right: 0.3rem;
   }
 
-  div:last-child {
+  .btn:last-child, div:last-child {
     margin-right: 0;
   }
 }

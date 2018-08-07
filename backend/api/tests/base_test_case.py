@@ -54,6 +54,7 @@ class BaseTestCase(TestCase):
         'roles_permissions.json',
         'roles_permissions_v0.3.0.json',
         'roles_permissions_v0.3.1.json',
+        'roles_permissions_pvr.json',
         'signing_authority_assertions.json',
         'test_prodlike_government_users_and_roles.json',
         'test_prodlike_government_users_and_roles_v0.3.1.json',

@@ -22,7 +22,7 @@ const OrganizationMembersTable = (props) => {
     accessor: item => item.roles &&
       item.roles.map(role => roleName(role)).join(', '),
     className: 'col-role',
-    Header: 'Role',
+    Header: 'Role(s)',
     id: 'role',
     minWidth: 200
   }, {
