@@ -8,6 +8,7 @@ import FontAwesomeIcon from '@fortawesome/react-fontawesome';
 import { Link } from 'react-router-dom';
 import 'react-table/react-table.css';
 
+import { USERS as ADMIN_USERS } from '../../constants/routes/Admin';
 import USERS from '../../constants/routes/Users';
 import roleName from '../../utils/translate';
 
@@ -46,7 +47,11 @@ const OrganizationMembersTable = (props) => {
   }, {
     accessor: item => item.id,
     Cell: (row) => {
-      const viewUrl = USERS.DETAILS.replace(':id', row.value);
+      let viewUrl = USERS.DETAILS.replace(':id', row.value);
+
+      if (document.location.pathname.indexOf('/admin/') >= 0) {
+        viewUrl = ADMIN_USERS.DETAILS.replace(':id', row.value);
+      }
 
       return <Link to={viewUrl}><FontAwesomeIcon icon="eye" /></Link>;
     },
