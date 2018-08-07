@@ -164,7 +164,7 @@ const CreditTransferFormButtons = props => (
           data-toggle="modal"
           type="button"
         >
-          Return to Draft
+          {Lang.BTN_RETURN_TO_DRAFT}
         </button>
       }
       {props.actions.includes(Lang.BTN_DECLINE_FOR_APPROVAL) &&

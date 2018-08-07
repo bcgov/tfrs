@@ -432,7 +432,7 @@ class CreditTransferViewContainer extends Component {
         id="confirmReturn"
         key="confirmReturn"
       >
-        Are you sure you want to send this transfer back to draft?
+        Are you sure you want to send this transfer back to the analyst?
       </Modal>
     );
   }
