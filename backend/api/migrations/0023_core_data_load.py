@@ -268,6 +268,8 @@ def create_initial_data(apps, schema_editor):
         role_permission(role=role.objects.using(db_alias).get(name='GovUser'),
                         permission=permission.objects.using(db_alias).get(code='LOGIN')),
         role_permission(role=role.objects.using(db_alias).get(name='GovUser'),
+                        permission=permission.objects.using(db_alias).get(code='PROPOSE_CREDIT_TRANSFER')),
+        role_permission(role=role.objects.using(db_alias).get(name='GovUser'),
                         permission=permission.objects.using(db_alias).get(code='EDIT_FUEL_SUPPLIERS')),
         role_permission(role=role.objects.using(db_alias).get(name='GovUser'),
                         permission=permission.objects.using(db_alias).get(code='EDIT_PRIVILEGED_COMMENTS')),

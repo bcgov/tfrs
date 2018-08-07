@@ -145,6 +145,9 @@ class TestCreditTradeStatuses(BaseTestCase, CreditTradeRelationshipMixin):
         expected_result[
             (TestCreditTradeStatuses.UserRelationship.GOVERNMENT_DIRECTOR, 'approved', False)
         ] = True
+        expected_result[
+            (TestCreditTradeStatuses.UserRelationship.GOVERNMENT_ANALYST, 'draft', False)
+        ] = True
 
         for (relationship, trade_status, rescinded) in product(
                 TestCreditTradeStatuses.UserRelationship,
