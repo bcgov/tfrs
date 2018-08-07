@@ -53,6 +53,7 @@ class CreditTransferViewContainer extends Component {
     this._modalDecline = this._modalDecline.bind(this);
     this._modalDelete = this._modalDelete.bind(this);
     this._modalNotRecommend = this._modalNotRecommend.bind(this);
+    this._modalPullBack = this._modalPullBack.bind(this);
     this._modalRefuse = this._modalRefuse.bind(this);
     this._modalRescind = this._modalRescind.bind(this);
     this._modalReturn = this._modalReturn.bind(this);
@@ -101,6 +102,11 @@ class CreditTransferViewContainer extends Component {
       buttonActions.push(Lang.BTN_EDIT_PVR_DRAFT);
 
       content.push(this._modalDelete(item));
+    }
+
+    if (availableActions.includes(Lang.BTN_CT_CANCEL)) {
+      buttonActions.push(Lang.BTN_PULL_BACK);
+      content.push(this._modalPullBack());
     }
 
     if (availableActions.includes(Lang.BTN_RECOMMEND_FOR_DECISION)) {
@@ -375,6 +381,20 @@ class CreditTransferViewContainer extends Component {
         Are you sure you want to not recommend approval of this credit
         {[CREDIT_TRANSFER_TYPES.buy.id, CREDIT_TRANSFER_TYPES.sell.id].indexOf(item.type.id) >= 0
           ? ' transfer proposal' : ' transaction'}?
+      </Modal>
+    );
+  }
+
+  _modalPullBack () {
+    return (
+      <Modal
+        handleSubmit={(event) => {
+          this._changeStatus(CREDIT_TRANSFER_STATUS.draft);
+        }}
+        id="confirmPullBack"
+        key="confirmPullBack"
+      >
+        Are you sure you want to pull this transfer back?
       </Modal>
     );
   }
