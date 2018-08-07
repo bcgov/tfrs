@@ -111,7 +111,7 @@ class TestOrganizationsAPI(BaseAPISecurityTestCase):
     def test_post(self):
         """
         Test that posting new organizations is not a valid action
-        unless you have an admin role
+        unless you have have the analyst, admin, or director role
         """
 
         url = "/api/organizations"
@@ -125,6 +125,18 @@ class TestOrganizationsAPI(BaseAPISecurityTestCase):
         expected_results[('gov_admin',)] = {
             'status': status.HTTP_201_CREATED,
             'reason': 'Admin should have create access for orgs'}
+
+        expected_results[('gov_analyst',)] = {
+            'status': status.HTTP_201_CREATED,
+            'reason': 'Analyst should have create access for orgs'}
+
+        expected_results[('gov_director',)] = {
+            'status': status.HTTP_201_CREATED,
+            'reason': 'Director should have create access for orgs'}
+
+        expected_results[('gov_multi_role',)] = {
+            'status': status.HTTP_201_CREATED,
+            'reason': 'Gov Multi-role should have create access for orgs'}
 
         for index, user in enumerate(all_users):
             with self.subTest(
@@ -164,6 +176,18 @@ class TestOrganizationsAPI(BaseAPISecurityTestCase):
         expected_results[('gov_admin',)] = {
             'status': status.HTTP_200_OK,
             'reason': 'Admin should have write access for orgs'}
+
+        expected_results[('gov_analyst',)] = {
+            'status': status.HTTP_200_OK,
+            'reason': 'Analyst should have write access for orgs'}
+
+        expected_results[('gov_director',)] = {
+            'status': status.HTTP_200_OK,
+            'reason': 'Director should have write access for orgs'}
+
+        expected_results[('gov_multi_role',)] = {
+            'status': status.HTTP_200_OK,
+            'reason': 'Gov Multi-role should have write access for orgs'}
 
         for _index, user in enumerate(all_users):
             with self.subTest(
