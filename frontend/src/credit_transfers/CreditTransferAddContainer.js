@@ -236,7 +236,7 @@ class CreditTransferAddContainer extends Component {
         id="confirmRecommend"
         key="confirmRecommend"
       >
-        Are you sure you want to recommend this transaction?
+        Are you sure you want to recommend approval of this credit transaction?
       </Modal>
     ]);
   }

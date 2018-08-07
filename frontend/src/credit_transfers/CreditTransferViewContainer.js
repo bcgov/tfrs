@@ -106,7 +106,7 @@ class CreditTransferViewContainer extends Component {
     if (availableActions.includes(Lang.BTN_RECOMMEND_FOR_DECISION)) {
       buttonActions.push(Lang.BTN_RECOMMEND_FOR_DECISION);
 
-      content.push(this._modalRecommend());
+      content.push(this._modalRecommend(item));
     }
 
     if (availableActions.includes(Lang.BTN_DECLINE_FOR_APPROVAL)) {
@@ -114,7 +114,7 @@ class CreditTransferViewContainer extends Component {
       buttonActions.push(Lang.BTN_DECLINE_FOR_APPROVAL);
 
       content.push(this._modalReturn());
-      content.push(this._modalDecline());
+      content.push(this._modalDecline(item));
     }
 
     if (availableActions.includes(Lang.BTN_APPROVE)) {
@@ -173,14 +173,14 @@ class CreditTransferViewContainer extends Component {
       buttonActions.push(Lang.BTN_NOT_RECOMMENDED_FOR_DECISION);
       buttonActions.push(Lang.BTN_RECOMMEND_FOR_DECISION);
 
-      content.push(this._modalRecommend());
-      content.push(this._modalNotRecommend());
+      content.push(this._modalRecommend(item));
+      content.push(this._modalNotRecommend(item));
     }
 
     if (availableActions.includes(Lang.BTN_DECLINE_FOR_APPROVAL)) {
       buttonActions.push(Lang.BTN_DECLINE_FOR_APPROVAL);
 
-      content.push(this._modalDecline());
+      content.push(this._modalDecline(item));
     }
 
     if (availableActions.includes(Lang.BTN_APPROVE)) {
@@ -318,12 +318,14 @@ class CreditTransferViewContainer extends Component {
         id="confirmApprove"
         key="confirmApprove"
       >
-        Are you sure you want to approve this credit transfer proposal?
+        Are you sure you want to approve this credit
+        {[CREDIT_TRANSFER_TYPES.buy.id, CREDIT_TRANSFER_TYPES.sell.id].indexOf(item.type.id) >= 0
+          ? ' transfer proposal' : ' transaction'}?
       </Modal>
     );
   }
 
-  _modalDecline () {
+  _modalDecline (item) {
     return (
       <Modal
         handleSubmit={(event) => {
@@ -337,7 +339,9 @@ class CreditTransferViewContainer extends Component {
         showExtraConfirm={!this.state.hasCommented}
         extraConfirmType="warning"
       >
-        Are you sure you want to decline to approve this credit transfer proposal?
+        Are you sure you want to decline to approve this credit
+        {[CREDIT_TRANSFER_TYPES.buy.id, CREDIT_TRANSFER_TYPES.sell.id].indexOf(item.type.id) >= 0
+          ? ' transfer proposal' : ' transaction'}?
       </Modal>
     );
   }
@@ -354,7 +358,7 @@ class CreditTransferViewContainer extends Component {
     );
   }
 
-  _modalNotRecommend () {
+  _modalNotRecommend (item) {
     return (
       <Modal
         handleSubmit={(event) => {
@@ -368,12 +372,14 @@ class CreditTransferViewContainer extends Component {
         id="confirmNotRecommend"
         key="confirmNotRecommend"
       >
-        Are you sure you want to not recommend approval of this credit transfer proposal?
+        Are you sure you want to not recommend approval of this credit
+        {[CREDIT_TRANSFER_TYPES.buy.id, CREDIT_TRANSFER_TYPES.sell.id].indexOf(item.type.id) >= 0
+          ? ' transfer proposal' : ' transaction'}?
       </Modal>
     );
   }
 
-  _modalRecommend () {
+  _modalRecommend (item) {
     return (
       <Modal
         handleSubmit={(event) => {
@@ -382,7 +388,9 @@ class CreditTransferViewContainer extends Component {
         id="confirmRecommend"
         key="confirmRecommend"
       >
-        Are you sure you want to recommend approval of this credit transfer proposal?
+        Are you sure you want to recommend approval of this credit
+        {[CREDIT_TRANSFER_TYPES.buy.id, CREDIT_TRANSFER_TYPES.sell.id].indexOf(item.type.id) >= 0
+          ? ' transfer proposal' : ' transaction'}?
       </Modal>
     );
   }
