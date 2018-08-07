@@ -42,6 +42,15 @@ const CreditTransferFormButtons = props => (
         </button>
       </TooltipWhenDisabled>
       }
+      {props.actions.includes(Lang.BTN_EDIT_PVR_DRAFT) &&
+        <button
+          className="btn btn-default"
+          onClick={() => history.push(CREDIT_TRANSACTIONS.EDIT.replace(':id', props.id))}
+          type="button"
+        >
+          {Lang.BTN_EDIT_DRAFT}
+        </button>
+      }
       {props.actions.includes(Lang.BTN_SAVE_DRAFT) &&
       <button
         className="btn btn-default"
@@ -134,12 +143,12 @@ const CreditTransferFormButtons = props => (
       }
       {props.actions.includes(Lang.BTN_RECOMMEND_FOR_DECISION) &&
       <TooltipWhenDisabled
-        disabled={props.isCommenting}
-        title={Lang.TEXT_COMMENT_DIRTY}
+        disabled={props.isCommenting || props.disabled.BTN_RECOMMEND}
+        title={props.isCommenting ? Lang.TEXT_COMMENT_DIRTY : Lang.TEXT_COMMENT_REQUIRED}
       >
         <button
-          className="btn btn-primary"
-          disabled={props.isCommenting}
+          className={`btn ${props.disabled.BTN_RECOMMEND ? 'btn-disabled' : 'btn-primary '}`}
+          disabled={props.isCommenting || props.disabled.BTN_RECOMMEND}
           data-target="#confirmRecommend"
           data-toggle="modal"
           type="button"
@@ -147,6 +156,16 @@ const CreditTransferFormButtons = props => (
           {Lang.BTN_RECOMMEND_FOR_DECISION}
         </button>
       </TooltipWhenDisabled>
+      }
+      {props.actions.includes(Lang.BTN_RETURN_TO_DRAFT) &&
+        <button
+          className="btn btn-warning"
+          data-target="#confirmReturn"
+          data-toggle="modal"
+          type="button"
+        >
+          {Lang.BTN_RETURN_TO_DRAFT}
+        </button>
       }
       {props.actions.includes(Lang.BTN_DECLINE_FOR_APPROVAL) &&
       <TooltipWhenDisabled
@@ -187,6 +206,7 @@ const CreditTransferFormButtons = props => (
 CreditTransferFormButtons.defaultProps = {
   addComment: null,
   disabled: {
+    BTN_RECOMMEND: false,
     BTN_SIGN_1_2: true,
     BTN_SIGN_2_2: true
   },
@@ -202,6 +222,7 @@ CreditTransferFormButtons.propTypes = {
   addComment: PropTypes.func,
   changeStatus: PropTypes.func.isRequired,
   disabled: PropTypes.shape({
+    BTN_RECOMMEND: PropTypes.bool,
     BTN_SIGN_1_2: PropTypes.bool,
     BTN_SIGN_2_2: PropTypes.bool
   }),

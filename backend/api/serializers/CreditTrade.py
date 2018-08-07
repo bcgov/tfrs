@@ -83,6 +83,9 @@ class CreditTradeCreateSerializer(serializers.ModelSerializer):
         if request.user.has_perm('PROPOSE_CREDIT_TRANSFER'):
             available_statuses.append('Draft')
 
+        if request.user.has_perm('RECOMMEND_CREDIT_TRANSFER'):
+            available_statuses.append('Recommended')
+
         if request.user.has_perm('SIGN_CREDIT_TRANSFER') and \
            data.get('initiator') == request.user.organization:
             available_statuses.append('Submitted')
@@ -216,7 +219,7 @@ class CreditTradeUpdateSerializer(serializers.ModelSerializer):
         if 'status' in request.data:
             credit_trade_status = data.get('status')
 
-            if data.get('is_rescinded') is False:
+            if not data.get('is_rescinded') is True:
                 available_statuses = CreditTradeService.get_allowed_statuses(
                     self.instance, request)
 
@@ -286,9 +289,13 @@ class CreditTradeUpdateSerializer(serializers.ModelSerializer):
         balance = request.user.organization.organization_balance[
             'validated_credits']
 
-        buy_sell_type = CreditTradeType.objects.filter(
-            the_type__in=["Buy", "Sell"]
-        ).only('id')
+        buy_type = CreditTradeType.objects.get(
+            the_type="Buy"
+        )
+
+        sell_type = CreditTradeType.objects.get(
+            the_type="Sell"
+        )
 
         if 'type' in data:
             credit_trade_type = data.get('type')
@@ -306,11 +313,13 @@ class CreditTradeUpdateSerializer(serializers.ModelSerializer):
             .filter(status__in=["Draft", "Submitted"])
             .only('id'))
 
-        if credit_trade_type in buy_sell_type and balance < number_of_credits:
-            if (self.instance.initiator == request.user.organization and
-                    credit_trade_status in draft_propose_statuses) or \
-                (self.instance.respondent == request.user.organization and
-                 credit_trade_status == accepted_status):
+        if (self.instance.initiator == request.user.organization and
+                credit_trade_status in draft_propose_statuses and
+                credit_trade_type == sell_type) or \
+            (self.instance.respondent == request.user.organization and
+             credit_trade_status == accepted_status and
+             credit_trade_type == buy_type):
+            if balance < number_of_credits:
                 raise serializers.ValidationError({
                     'insufficientCredits': "{} does not have enough credits "
                                            "for the proposal.".format(
@@ -406,7 +415,7 @@ class CreditTrade2Serializer(serializers.ModelSerializer):
             return []
 
         if cur_status == "Draft":
-            return CreditTradeActions.draft(request)
+            return CreditTradeActions.draft(request, obj)
 
         elif cur_status == "Submitted":
             return CreditTradeActions.submitted(request, obj)

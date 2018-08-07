@@ -33,7 +33,7 @@ class CreditTradeActions(object):
     __statuses = CreditTradeStatus.objects.all().only('id', 'status')
 
     @staticmethod
-    def draft(request):
+    def draft(request, credit_trade):
         """
         When the status is draft
         available actions should be:
@@ -44,13 +44,24 @@ class CreditTradeActions(object):
         status_dict = {s.status: s for s in CreditTradeActions.__statuses}
 
         available_statuses = []
-        available_statuses.append(
-            status_dict["Draft"]
-        )
+        if request.user.has_perm('PROPOSE_CREDIT_TRANSFER'):
+            available_statuses.append(
+                status_dict["Draft"]
+            )
 
         if request.user.has_perm('SIGN_CREDIT_TRANSFER'):
             available_statuses.append(
                 status_dict["Submitted"]
+            )
+
+        if request.user.has_perm('RECOMMEND_CREDIT_TRANSFER') and \
+                credit_trade.type.the_type in [
+                        "Credit Validation",
+                        "Credit Retirement",
+                        "Part 3 Award"
+                ]:
+            available_statuses.append(
+                status_dict["Recommended"]
             )
 
         serializer = CreditTradeStatusMinSerializer(
