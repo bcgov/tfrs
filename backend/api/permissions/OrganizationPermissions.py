@@ -37,12 +37,16 @@ class OrganizationPermissions(permissions.BasePermission):
 
     def has_object_permission(self, request, view, obj):
         """Check permissions When an object does exist (PUT, GET)"""
-
         if request.user.has_perm('EDIT_FUEL_SUPPLIERS'):
             return True
 
         # Users can always see themselves
-        if obj.id == request.user.id and request.method in permissions.SAFE_METHODS:
+        if obj.id == request.user.id and \
+                request.method in permissions.SAFE_METHODS:
+            return True
+
+        if request.method == 'GET' and \
+                request.user.has_perm('VIEW_FUEL_SUPPLIERS'):
             return True
 
         # not authorized

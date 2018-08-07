@@ -29,6 +29,10 @@
 
 .page_organizations {
   .ReactTable {
+    a {
+      font-weight: bold;
+    }
+
     .col-actions-type-display, .col-status-display {
       text-align: center;
     }

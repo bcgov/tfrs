@@ -10,6 +10,7 @@ import numeral from 'numeral';
 
 import * as NumberFormat from '../../constants/numeralFormats';
 import CREDIT_TRANSACTIONS from '../../constants/routes/CreditTransactions';
+import ORGANIZATIONS from '../../constants/routes/Organizations';
 
 const OrganizationsTable = (props) => {
   const columns = [{
@@ -23,7 +24,12 @@ const OrganizationsTable = (props) => {
     className: 'col-name',
     Header: 'Company Name',
     id: 'name',
-    minWidth: 200
+    minWidth: 200,
+    Cell: (row) => {
+      const viewUrl = ORGANIZATIONS.DETAILS.replace(':id', row.original.id);
+
+      return <Link to={viewUrl}>{row.value}</Link>;
+    }
   }, {
     accessor: item => item.organizationBalance.validatedCredits,
     Cell: row => numeral(row.value).format(NumberFormat.INT),
