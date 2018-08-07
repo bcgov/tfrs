@@ -18,7 +18,7 @@
   {
     "fields": {
       "role": [
-        "ProdlikeAnalyst"
+        "GovUser"
       ],
       "user": [
         "gov_multi_role"
@@ -30,7 +30,7 @@
   {
     "fields": {
       "role": [
-        "ProdlikeDirector"
+        "GovDirector"
       ],
       "user": [
         "gov_multi_role"

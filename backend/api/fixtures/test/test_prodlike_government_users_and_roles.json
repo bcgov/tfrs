@@ -1,0 +1,86 @@
+[
+  {
+    "fields": {
+      "authorization_guid": "935bebdb-de2a-4839-a4da-d87635cffbb3",
+      "email": "gov_director@test.com",
+      "username": "gov_director",
+      "authorization_id": "gov_director",
+      "display_name": "Gov Director",
+      "first_name": "Gov",
+      "last_name": "Gov",
+      "organization": [
+        "Government Of British Columbia"
+      ]
+    },
+    "model": "api.user",
+    "pk": null
+  },
+  {
+    "fields": {
+      "role": [
+        "GovDirector"
+      ],
+      "user": [
+        "gov_director"
+      ]
+    },
+    "model": "api.userrole",
+    "pk": null
+  },
+  {
+    "fields": {
+      "authorization_guid": "10385306-8e74-4ad5-8cc1-003bc50fbefd",
+      "email": "gov_analyst@test.com",
+      "username": "gov_analyst",
+      "authorization_id": "gov_analyst",
+      "display_name": "Gov Analyst",
+      "first_name": "Gov",
+      "last_name": "Gov",
+      "organization": [
+        "Government Of British Columbia"
+      ]
+    },
+    "model": "api.user",
+    "pk": null
+  },
+  {
+    "fields": {
+      "role": [
+        "GovUser"
+      ],
+      "user": [
+        "gov_analyst"
+      ]
+    },
+    "model": "api.userrole",
+    "pk": null
+  },
+  {
+    "fields": {
+      "authorization_guid": "2c04e271-6fc2-4822-b231-7cd3dc7e9ec3",
+      "email": "gov_admin@test.com",
+      "username": "gov_admin",
+      "authorization_id": "gov_admin",
+      "display_name": "Gov Admin",
+      "first_name": "Gov",
+      "last_name": "Admin",
+      "organization": [
+        "Government Of British Columbia"
+      ]
+    },
+    "model": "api.user",
+    "pk": null
+  },
+  {
+    "fields": {
+      "role": [
+        "Admin"
+      ],
+      "user": [
+        "gov_admin"
+      ]
+    },
+    "model": "api.userrole",
+    "pk": null
+  }
+]

@@ -42,7 +42,7 @@ class TestAPIComments(BaseTestCase, CreditTradeRelationshipMixin, CreditTradeFlo
     """
 
     extra_fixtures = [
-        'test_credit_trade_comments.json'
+        'test/test_credit_trade_comments.json'
     ]
 
     extra_usernames = ['fs_air_liquide', 'fs_shell', 'fs_husky']

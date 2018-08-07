@@ -7,6 +7,7 @@
 
     OpenAPI spec version: v1
 
+
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
     You may obtain a copy of the License at
@@ -19,25 +20,21 @@
     See the License for the specific language governing permissions and
     limitations under the License.
 """
+from datetime import date
 
 from django.db import models
-
-from api.managers.SigningAuthorityAssertionManager import SigningAuthorityAssertionManager
-from auditable.models import Auditable
+from django.db.models import Q
 
 
-class SigningAuthorityAssertion(Auditable):
-    description = models.CharField(max_length=4000,
-                                   blank=True,
-                                   null=True,
-                                   db_comment='Displayed name')
-    display_order = models.IntegerField(db_comment='Relative rank in display sorting order')
-    effective_date = models.DateField(blank=True, null=True, db_comment='Not valid before')
-    expiration_date = models.DateField(blank=True, null=True, db_comment='Not valid after')
+class SigningAuthorityAssertionManager(models.Manager):
 
-    objects = SigningAuthorityAssertionManager()
+    def get_active_as_of_date(self, as_of: date):
+        result = self.filter(
+            Q(expiration_date__gte=as_of) | Q(expiration_date=None)
+        )
+        result = result.filter(
+            effective_date__lte=as_of
+        )
+        return result
 
-    class Meta:
-        db_table = 'signing_authority_assertion'
 
-    db_table_comment = 'Assertions that signing authorities must accept to sign a transfer'

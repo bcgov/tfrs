@@ -1,8 +1,0 @@
-[{
-  "fields": {
-    "permission": ["PROPOSE_CREDIT_TRANSFER"],
-    "role": ["GovUser"]
-  },
-  "model": "api.rolepermission",
-  "pk": null
-}]

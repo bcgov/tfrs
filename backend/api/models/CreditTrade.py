@@ -37,6 +37,7 @@ from .CreditTradeType import CreditTradeType
 from .CreditTradeZeroReason import CreditTradeZeroReason
 from .Organization import Organization
 from .SigningAuthorityConfirmation import SigningAuthorityConfirmation
+from .SigningAuthorityAssertion import SigningAuthorityAssertion
 
 
 class CreditTrade(Auditable):
@@ -167,23 +168,34 @@ class CreditTrade(Auditable):
     def signatures(self):
         """
         Fetches all the user id's that have signed the credit trade
-        This will check if the user has signed all 3 of the
+        This will check if the user has signed all of the active
         confirmations. But will not count any duplicates
         (Note: The additional values_list is to just ensure we only
         get the id so it makes it easier to serialize)
         """
         signatures = SigningAuthorityConfirmation.objects.values(
             'create_user_id'
-        ).annotate(
-            cnt=Count('signing_authority_assertion_id', distinct=True),
-            timestamp=Max('create_timestamp')
         ).filter(
             credit_trade_id=self.id,
             has_accepted=True,
-            cnt__gte=3
+        ).annotate(
+            cnt=Count('signing_authority_assertion_id', distinct=True),
+            timestamp=Max('create_timestamp')
         )
 
-        return signatures
+        aggregate_signatures = signatures.aggregate(
+            timestamp=Max('create_timestamp')
+        )
+
+        signing_date = aggregate_signatures['timestamp']\
+            .date() if aggregate_signatures['timestamp'] is not None else None
+
+        # Figure out how many were required on the date it was signed
+        required_count = SigningAuthorityAssertion.objects.get_active_as_of_date(
+            signing_date
+        ).count() if signing_date is not None else 0
+
+        return signatures.filter(cnt=required_count)
 
     def get_history(self, statuses: List):
         """

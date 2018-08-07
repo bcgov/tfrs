@@ -120,7 +120,7 @@ class User(AbstractUser, Auditable):
 
     def has_perm(self, permission):
         """
-        Helper function to check if the user has the approrpiate permission
+        Helper function to check if the user has the appropriate permission
         """
         if not self.roles.filter(
                 Q(role_permissions__permission__code=permission)):
