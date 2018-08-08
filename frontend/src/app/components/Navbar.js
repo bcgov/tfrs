@@ -6,8 +6,8 @@ import { connect } from 'react-redux';
 import { NavLink } from 'react-router-dom';
 
 import * as Routes from '../../constants/routes';
+import { HISTORICAL_DATA_ENTRY } from '../../constants/routes/Admin';
 import CREDIT_TRANSACTIONS from '../../constants/routes/CreditTransactions';
-import HISTORICAL_DATA_ENTRY from '../../constants/routes/HistoricalDataEntry';
 import ORGANIZATIONS from '../../constants/routes/Organizations';
 
 class Navbar extends Component {
@@ -36,7 +36,8 @@ class Navbar extends Component {
             activeClassName="active"
             id="navbar-organizations"
             isActive={(match, location) => {
-              if (match || location.pathname.indexOf('/users/view/') >= 0) {
+              if (match || (location.pathname.indexOf('/users/view/') >= 0 &&
+                location.pathname.indexOf('/admin/') < 0)) {
                 return true;
               }
 
