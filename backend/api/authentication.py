@@ -50,6 +50,13 @@ class UserAuthentication(authentication.BaseAuthentication):
                     Q(authorization_guid=header_user_guid) |
                     Q(authorization_id=header_user_id))
 
+            # Has the user been marked as inactive?
+            if not user.is_active:
+                raise exceptions.AuthenticationFailed(
+                    'Your account has not been activated.'
+                    'Please contact your representative.'
+                )
+
             # First time logging in, map the GUID to the user and set
             # fname & lname
             if user.authorization_guid is None:
@@ -66,7 +73,7 @@ class UserAuthentication(authentication.BaseAuthentication):
                     'Please contact your administrator.')
 
             username = "_".join([header_user_type.lower(),
-                                header_username.lower()])
+                                 header_username.lower()])
             user.username = user.username if user.username else username
             user.authorization_email = header_user_email
             user.authorization_id = header_user_id
