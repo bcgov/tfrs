@@ -136,7 +136,9 @@ class CreditTradeFlowHooksMixin(object):
                                     after_change_callback: Callable[[ChangeRecord], None]
                                     = lambda x: None,
                                     path_end_callback: Callable[[], None]
-                                    = lambda: None):
+                                    = lambda: None,
+                                    modify_request_payload: Callable[[dict], None]
+                                    = lambda x: None):
         """Evaluate all normal status paths through the application via REST API as appropriate users
 
         with callbacks for tests:
@@ -201,6 +203,8 @@ class CreditTradeFlowHooksMixin(object):
 
                 payload['status'] = CreditTradeStatus.objects.get_by_natural_key(node.status).id
                 payload['is_rescinded'] = node.rescinded
+
+                modify_request_payload(payload)
 
                 if not trade_id:
                     response = self.clients[self.user_map[node.relationship]].post(

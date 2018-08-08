@@ -13,6 +13,7 @@ import CreditTransferFormDetails from './CreditTransferFormDetails';
 import CreditTransferVisualRepresentation from './CreditTransferVisualRepresentation';
 import CreditTransferFormButtons from './CreditTransferFormButtons';
 import CreditTransferTerms from './CreditTransferTerms';
+import CreditTransferCommentForm from './CreditTransferCommentForm';
 
 const CreditTransferForm = props => (
   <div className="credit-transfer">
@@ -34,6 +35,14 @@ const CreditTransferForm = props => (
         <Errors errors={props.errors} />
       }
 
+      {props.id === 0 && <CreditTransferCommentForm
+        saveComment={props.saveComment}
+        cancelComment={props.cancelComment}
+        isCommentingOnUnsavedCreditTransfer
+        isCreatingPrivilegedComment={false}
+      />
+      }
+
       <CreditTransferVisualRepresentation
         creditsFrom={props.creditsFrom}
         creditsTo={props.creditsTo}
@@ -41,7 +50,6 @@ const CreditTransferForm = props => (
         totalValue={props.totalValue}
         tradeType={props.fields.tradeType}
       />
-
       {/* TODO A comprehensive deprecation is pending */}
       <span>You will have the opportunity to create comments after saving a draft</span>
 

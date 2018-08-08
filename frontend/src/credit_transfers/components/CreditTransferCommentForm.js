@@ -58,24 +58,28 @@ class CreditTransferCommentForm extends Component {
             </label>
           </form>
           <div className="text-right">
-            <button
-              className="btn btn-default"
-              type="button"
-              onClick={() => this.props.cancelComment()}
-            >
-              {Lang.BTN_CANCEL_COMMENT}
-            </button>
-            <button
-              className="btn btn-primary"
-              type="button"
-              onClick={() => this.props.saveComment({
-                comment: this.state.comment,
-                privilegedAccess: this.props.isCreatingPrivilegedComment,
-                id: this.props.id
-              })}
-            >
-              {Lang.BTN_SAVE_COMMENT}
-            </button>
+            {this.props.isCommentingOnUnsavedCreditTransfer ||
+              <div>
+                <button
+                  className="btn btn-default"
+                  type="button"
+                  onClick={() => this.props.cancelComment()}
+                >
+                  {Lang.BTN_CANCEL_COMMENT}
+                </button>
+                <button
+                  className="btn btn-primary"
+                  type="button"
+                  onClick={() => this.props.saveComment({
+                    comment: this.state.comment,
+                    privilegedAccess: this.props.isCreatingPrivilegedComment,
+                    id: this.props.id
+                  })}
+                >
+                  {Lang.BTN_SAVE_COMMENT}
+                </button>
+              </div>
+            }
           </div>
         </div>
         <div className="col-xs-4">
@@ -100,16 +104,20 @@ class CreditTransferCommentForm extends Component {
 CreditTransferCommentForm.defaultProps = {
   comment: '',
   isEditingExistingComment: false,
-  id: null
+  isCommentingOnUnsavedCreditTransfer: false,
+  id: null,
+  saveComment: null,
+  cancelComment: null
 };
 
 CreditTransferCommentForm.propTypes = {
-  comment: PropTypes.string,
+  comment: PropTypes.string,  
   id: PropTypes.number,
   isCreatingPrivilegedComment: PropTypes.bool.isRequired,
   isEditingExistingComment: PropTypes.bool,
-  saveComment: PropTypes.func.isRequired,
-  cancelComment: PropTypes.func.isRequired
+  isCommentingOnUnsavedCreditTransfer: PropTypes.bool,
+  saveComment: PropTypes.func,
+  cancelComment: PropTypes.func
 };
 
 export default CreditTransferCommentForm;
