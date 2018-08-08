@@ -345,12 +345,15 @@ class CreditTradeService(object):
             if request.user.has_perm('DECLINE_CREDIT_TRANSFER'):
                 allowed_statuses.append("Declined")
 
-                if credit_trade.type.the_type in [
-                        "Credit Validation",
-                        "Credit Retirement",
-                        "Part 3 Award"
-                ]:
-                    allowed_statuses.append("Draft")
+            if (credit_trade.type.the_type in [
+                    "Credit Validation",
+                    "Credit Retirement",
+                    "Part 3 Award"
+            ] and (
+                request.user.has_perm('DECLINE_CREDIT_TRANSFER') or
+                request.user.has_perm('RESCIND_CREDIT_TRANSFER')
+            )):
+                allowed_statuses.append("Draft")
 
         elif credit_trade.status.status == "Approved":
             if request.user.has_perm('APPROVE_CREDIT_TRANSFER'):
