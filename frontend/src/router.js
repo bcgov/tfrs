@@ -7,24 +7,24 @@ import history from './app/History';
 
 /* global __LOGOUT_URL__, __LOGOUT_TEST_URL__ */
 import * as Routes from './constants/routes';
+import { CREDIT_TRANSACTIONS_HISTORY, HISTORICAL_DATA_ENTRY, USERS as ADMIN_USERS } from './constants/routes/Admin';
 import CONTACT_US from './constants/routes/ContactUs';
 import CREDIT_TRANSACTIONS from './constants/routes/CreditTransactions';
-import CREDIT_TRANSACTIONS_HISTORY from './constants/routes/CreditTransactionsHistory';
-import HISTORICAL_DATA_ENTRY from './constants/routes/HistoricalDataEntry';
 import ORGANIZATIONS from './constants/routes/Organizations';
 import USERS from './constants/routes/Users';
 
+import CreditTransactionsHistory from './admin/credit_trade_history/CreditTradeHistoryContainer';
+import HistoricalDataEntryContainer from './admin/historical_data_entry/HistoricalDataEntryContainer';
+import HistoricalDataEntryEditContainer from './admin/historical_data_entry/HistoricalDataEntryEditContainer';
+import UsersContainer from './admin/users/UsersContainer';
+import NotFound from './components/reusables/NotFound';
 import ContactUsContainer from './contact_us/ContactUsContainer';
 import CreditTransactionsContainer from './credit_transfers/CreditTransactionsContainer';
-import CreditTransactionsHistory from './admin/credit_trade_history/CreditTradeHistoryContainer';
 import CreditTransferAddContainer from './credit_transfers/CreditTransferAddContainer';
 import CreditTransferEditContainer from './credit_transfers/CreditTransferEditContainer';
 import CreditTransferViewContainer from './credit_transfers/CreditTransferViewContainer';
-import HistoricalDataEntryContainer from './admin/historical_data_entry/HistoricalDataEntryContainer';
-import HistoricalDataEntryEditContainer from './admin/historical_data_entry/HistoricalDataEntryEditContainer';
-import NotFound from './components/reusables/NotFound';
-import OrganizationsContainer from './organizations/OrganizationsContainer';
 import MyOrganizationContainer from './organizations/MyOrganizationContainer';
+import OrganizationsContainer from './organizations/OrganizationsContainer';
 import OrganizationViewContainer from './organizations/OrganizationViewContainer';
 import UserViewContainer from './users/UserViewContainer';
 
@@ -103,6 +103,15 @@ const Router = props => (
           exact
           path={CREDIT_TRANSACTIONS_HISTORY.LIST}
           component={withRouter(CreditTransactionsHistory)}
+        />
+        <Route
+          exact
+          path={ADMIN_USERS.LIST}
+          component={withRouter(UsersContainer)}
+        />
+        <Route
+          path={ADMIN_USERS.DETAILS}
+          component={withRouter(UserViewContainer)}
         />
         <Route component={NotFound} />
       </Switch>

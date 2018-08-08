@@ -8,7 +8,7 @@ const CreditTradeHistoryPage = (props) => {
   const { isFetching, items } = props.data;
 
   return (
-    <div className="page_historical_data_entry">
+    <div className="page_user_activity">
       <h1>User Activity</h1>
 
       {isFetching && <Loading />}
