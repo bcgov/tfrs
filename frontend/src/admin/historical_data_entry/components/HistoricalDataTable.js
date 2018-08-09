@@ -10,7 +10,7 @@ import FontAwesomeIcon from '@fortawesome/react-fontawesome';
 import numeral from 'numeral';
 
 import * as NumberFormat from '../../../constants/numeralFormats';
-import HISTORICAL_DATA_ENTRY from '../../../constants/routes/HistoricalDataEntry';
+import { HISTORICAL_DATA_ENTRY } from '../../../constants/routes/Admin';
 import { CREDIT_TRANSFER_TYPES, ZERO_DOLLAR_REASON } from '../../../constants/values';
 import { getCreditTransferType } from '../../../actions/creditTransfersActions';
 import filterNumber from '../../../utils/filters';

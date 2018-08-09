@@ -3,8 +3,9 @@
 """
     REST API Documentation for the NRS TFRS Credit Trading Application
 
-    The Transportation Fuels Reporting System is being designed to streamline compliance reporting
-    for transportation fuel suppliers in accordance with the Renewable & Low Carbon Fuel
+    The Transportation Fuels Reporting System is being designed to streamline
+    compliance reporting for transportation fuel suppliers in accordance with
+    the Renewable & Low Carbon Fuel
     Requirements Regulation.
 
     OpenAPI spec version: v1
@@ -35,9 +36,9 @@ from api.models.OrganizationType import OrganizationType
 
 from .base_test_case import BaseTestCase
 
+
 class TestAuthentication(BaseTestCase):
     """Tests for authentication module"""
-
 
     def setUp(self):
         """Prepare test resources"""
@@ -57,7 +58,7 @@ class TestAuthentication(BaseTestCase):
         # (authorization_guid = sm header guid)
         new_user = User.objects.create(authorization_id='testuser')
 
-        assert new_user.authorization_guid is None
+        self.assertIsNone(new_user.authorization_guid)
 
         display_name = 'Test User'
         userguid = '05fa1e10-08e1-454c-b1a3-cee38e825d47'
@@ -70,12 +71,12 @@ class TestAuthentication(BaseTestCase):
         }
 
         # authenticate should match authorization_id and create the user
-        user, auth = self.userauth.authenticate(request)
+        user, _auth = self.userauth.authenticate(request)
 
-        assert user is not None
-        assert user.display_name == display_name
-        assert new_user.authorization_id == user.authorization_id
-        assert str(user.authorization_guid) == userguid
+        self.assertIsNotNone(user)
+        self.assertEqual(user.display_name, display_name)
+        self.assertEqual(new_user.authorization_id, user.authorization_id)
+        self.assertEqual(str(user.authorization_guid), userguid)
 
     def test_user_first_login_idir(self):
         """Test IDIR user first login"""
@@ -100,13 +101,13 @@ class TestAuthentication(BaseTestCase):
         }
 
         # authenticate should match authorization_id and create the user
-        user, auth = self.userauth.authenticate(request)
+        user, _auth = self.userauth.authenticate(request)
 
-        assert user is not None
-        assert user.display_name == display_name
-        assert new_user.authorization_id == user.authorization_id
-        assert str(user.authorization_guid) == userguid
-        assert gov_organization.id == user.organization.id
+        self.assertIsNotNone(user)
+        self.assertEqual(user.display_name, display_name)
+        self.assertEqual(new_user.authorization_id, user.authorization_id)
+        self.assertEqual(str(user.authorization_guid), userguid)
+        self.assertEqual(gov_organization.id, user.organization.id)
 
     def test_user_first_login_idir_invalid(self):
         """Test IDIR user with no application account can't login"""
@@ -127,10 +128,12 @@ class TestAuthentication(BaseTestCase):
         }
 
         with self.assertRaises(exceptions.AuthenticationFailed):
-            user, auth = self.userauth.authenticate(request)
+            _user, _auth = self.userauth.authenticate(request)
 
     def test_user_same_username_external_internal(self):
-        """Test external and internal users can have the same authorization id"""
+        """
+        Test external and internal users can have the same authorization id
+        """
 
         gov_organization = Organization.objects.get(
             type=OrganizationType.objects.get(type="Government"))
@@ -164,10 +167,10 @@ class TestAuthentication(BaseTestCase):
             'HTTP_SMAUTH_USERTYPE': 'Internal'
         }
 
-        user1, auth = self.userauth.authenticate(request)
-        assert user1.organization.id == gov_organization.id
-        assert user1.username == "internal_tuser"
-        assert user1.authorization_id == new_user1.authorization_id
+        user1, _auth = self.userauth.authenticate(request)
+        self.assertEqual(user1.organization.id, gov_organization.id)
+        self.assertEqual(user1.username, "internal_tuser")
+        self.assertEqual(user1.authorization_id, new_user1.authorization_id)
 
         request.META = {
             'HTTP_SMAUTH_USERGUID': userguid2,
@@ -178,10 +181,10 @@ class TestAuthentication(BaseTestCase):
             'HTTP_SMAUTH_USERTYPE': 'Business'
         }
 
-        user2, auth = self.userauth.authenticate(request)
-        assert user2.organization.id == external_organization.id
-        assert user2.username == "business_tuser"
-        assert user2.authorization_id == new_user2.authorization_id
+        user2, _auth = self.userauth.authenticate(request)
+        self.assertEqual(user2.organization.id, external_organization.id)
+        self.assertEqual(user2.username, "business_tuser")
+        self.assertEqual(user2.authorization_id, new_user2.authorization_id)
 
     def test_bypass_auth(self):
         """Test bypassing authentication"""
@@ -189,10 +192,10 @@ class TestAuthentication(BaseTestCase):
 
         request = self.factory.get('/')
 
-        user, auth = self.userauth.authenticate(request)
+        user, _auth = self.userauth.authenticate(request)
 
         # First user in the database
-        assert user.username == User.objects.first().username
+        self.assertEqual(user.username, User.objects.first().username)
 
     def test_bypass_auth_error(self):
         """Test bypassing authentication disabled throws error"""
@@ -206,3 +209,29 @@ class TestAuthentication(BaseTestCase):
 
         with self.assertRaises(TypeError):
             self.userauth.authenticate(request)
+
+    def test_inactive_user_login(self):
+        """Test inactive BCeID login"""
+
+        # Create mapping by updating the user model
+        # (authorization_guid = sm header guid)
+        new_user = User.objects.create(
+            authorization_id='testuser',
+            is_active=False
+        )
+
+        self.assertIsNone(new_user.authorization_guid)
+
+        display_name = 'Test User'
+        userguid = '05fa1e10-08e1-454c-b1a3-cee38e825d47'
+        request = self.factory.get('/')
+        request.META = {
+            'HTTP_SMAUTH_USERGUID': userguid,
+            'HTTP_SMAUTH_USERDISPLAYNAME': display_name,
+            'HTTP_SMAUTH_USEREMAIL': 'TestUser@testcompany.ca',
+            'HTTP_SMAUTH_UNIVERSALID': 'TestUser',
+        }
+
+        # authenticate should match authorization_id and create the user
+        with self.assertRaises(exceptions.AuthenticationFailed):
+            _user, _auth = self.userauth.authenticate(request)

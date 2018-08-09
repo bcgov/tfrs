@@ -157,6 +157,16 @@ const CreditTransferFormButtons = props => (
         </button>
       </TooltipWhenDisabled>
       }
+      {props.actions.includes(Lang.BTN_PULL_BACK) &&
+        <button
+          className="btn btn-danger"
+          data-target="#confirmPullBack"
+          data-toggle="modal"
+          type="button"
+        >
+          {Lang.BTN_PULL_BACK}
+        </button>
+      }
       {props.actions.includes(Lang.BTN_RETURN_TO_DRAFT) &&
         <button
           className="btn btn-warning"
