@@ -36,6 +36,7 @@ class CreditTransferAddContainer extends Component {
     if (props.loggedInUser.isGovernmentUser) {
       this.state = {
         fields: {
+          comment: null,
           compliancePeriod: {},
           numberOfCredits: '',
           respondent: {},
@@ -70,6 +71,7 @@ class CreditTransferAddContainer extends Component {
     this._changeStatus = this._changeStatus.bind(this);
     this._handleInputChange = this._handleInputChange.bind(this);
     this._handleSubmit = this._handleSubmit.bind(this);
+    this._handleCommentChanged = this._handleCommentChanged.bind(this);
     this._toggleCheck = this._toggleCheck.bind(this);
   }
 
@@ -107,6 +109,7 @@ class CreditTransferAddContainer extends Component {
       fairMarketValuePerCredit: parseFloat(this.state.fields.fairMarketValuePerCredit).toFixed(2),
       initiator: this.state.fields.initiator.id,
       note: this.state.fields.note,
+      comment: this.state.comment,
       numberOfCredits: parseInt(this.state.fields.numberOfCredits, 10),
       respondent: this.state.fields.respondent.id,
       status: status.id,
@@ -187,6 +190,12 @@ class CreditTransferAddContainer extends Component {
     return false;
   }
 
+  _handleCommentChanged (comment) {
+    this.setState({
+      comment: comment
+    });
+  }
+
   _renderCreditTransfer () {
     const buttonActions = [Lang.BTN_SAVE_DRAFT, Lang.BTN_SIGN_1_2];
 
@@ -202,6 +211,7 @@ class CreditTransferAddContainer extends Component {
         fuelSuppliers={this.props.fuelSuppliers}
         handleInputChange={this._handleInputChange}
         handleSubmit={this._handleSubmit}
+        handleCommentChanged={this._handleCommentChanged}
         key="creditTransferForm"
         loggedInUser={this.props.loggedInUser}
         terms={this.state.terms}

@@ -13,6 +13,7 @@ import CreditTransferFormDetails from './CreditTransferFormDetails';
 import CreditTransferVisualRepresentation from './CreditTransferVisualRepresentation';
 import CreditTransferFormButtons from './CreditTransferFormButtons';
 import CreditTransferTerms from './CreditTransferTerms';
+import CreditTransferCommentForm from './CreditTransferCommentForm';
 
 const CreditTransferForm = props => (
   <div className="credit-transfer">
@@ -28,7 +29,15 @@ const CreditTransferForm = props => (
         fields={props.fields}
         totalValue={props.totalValue}
         handleInputChange={props.handleInputChange}
-      />
+      >
+        {props.id === 0 && <CreditTransferCommentForm
+          isCommentingOnUnsavedCreditTransfer
+          isCreatingPrivilegedComment={false}
+          handleCommentChanged={props.handleCommentChanged}
+          embedded
+        />
+        }
+      </CreditTransferFormDetails>
 
       {Object.keys(props.errors).length > 0 &&
         <Errors errors={props.errors} />
@@ -41,9 +50,6 @@ const CreditTransferForm = props => (
         totalValue={props.totalValue}
         tradeType={props.fields.tradeType}
       />
-
-      {/* TODO A comprehensive deprecation is pending */}
-      <span>You will have the opportunity to create comments after saving a draft</span>
 
       {(props.loggedInUser.hasPermission(PERMISSIONS_CREDIT_TRANSACTIONS.SIGN)) &&
         <CreditTransferTerms
@@ -78,7 +84,8 @@ const CreditTransferForm = props => (
 
 CreditTransferForm.defaultProps = {
   id: 0,
-  title: 'Credit Transfer'
+  title: 'Credit Transfer',
+  handleCommentChanged: null
 };
 
 CreditTransferForm.propTypes = {
@@ -119,6 +126,7 @@ CreditTransferForm.propTypes = {
   fuelSuppliers: PropTypes.arrayOf(PropTypes.shape()).isRequired,
   handleInputChange: PropTypes.func.isRequired,
   handleSubmit: PropTypes.func.isRequired,
+  handleCommentChanged: PropTypes.func,
   id: PropTypes.number,
   loggedInUser: PropTypes.shape({
     hasPermission: PropTypes.func

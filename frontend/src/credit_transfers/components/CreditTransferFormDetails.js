@@ -120,6 +120,10 @@ class CreditTransferFormDetails extends Component {
   }
 }
 
+CreditTransferFormDetails.defaultProps = {
+  children: null
+};
+
 CreditTransferFormDetails.propTypes = {
   fuelSuppliers: PropTypes.arrayOf(PropTypes.shape()).isRequired,
   fields: PropTypes.shape({
@@ -143,7 +147,11 @@ CreditTransferFormDetails.propTypes = {
     })
   }).isRequired,
   totalValue: PropTypes.number.isRequired,
-  handleInputChange: PropTypes.func.isRequired
+  handleInputChange: PropTypes.func.isRequired,
+  children: PropTypes.oneOfType([
+    PropTypes.arrayOf(PropTypes.node),
+    PropTypes.node
+  ])
 };
 
 export default CreditTransferFormDetails;
