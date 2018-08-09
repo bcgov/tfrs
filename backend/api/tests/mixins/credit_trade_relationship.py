@@ -69,7 +69,8 @@ class CreditTradeFlowHooksMixin(object):
     PreChangeRecord = namedtuple('PreChangeRecord', [
         'trade_id',
         'current_status',
-        'rescinded'
+        'rescinded',
+        'status_change'
     ])
 
     StatusChange = namedtuple('StatusChange', [
@@ -198,7 +199,8 @@ class CreditTradeFlowHooksMixin(object):
                     ).first().status.status if trade_id else None,
                     CreditTrade.objects.filter(
                         id=trade_id
-                    ).first().is_rescinded if trade_id else None
+                    ).first().is_rescinded if trade_id else None,
+                    node
                 ))
 
                 payload['status'] = CreditTradeStatus.objects.get_by_natural_key(node.status).id
@@ -221,7 +223,7 @@ class CreditTradeFlowHooksMixin(object):
 
                 previous_response_data = response_data
                 response_data = json.loads(response.content.decode('utf-8'))
-                trade_id = response_data['id']
+                trade_id = response_data['id'] if 'id' in response_data else trade_id
 
                 after_change_callback(self.ChangeRecord(
                     trade_id,

@@ -153,7 +153,9 @@ class CreditTradeCreateSerializer(serializers.ModelSerializer):
     def save(self, **kwargs):
         super().save(**kwargs)
 
-        if 'comment' in self.validated_data:
+        if 'comment' in self.validated_data \
+                and self.validated_data['comment'] is not None\
+                and len(self.validated_data['comment'].strip()) > 0:
             comment = CreditTradeComment(
                 credit_trade=self.instance,
                 comment=self.validated_data['comment'],
@@ -178,7 +180,7 @@ class CreditTradeCreateSerializer(serializers.ModelSerializer):
                   'create_user', 'update_user',
                   'compliance_period', 'is_rescinded', 'comment')
 
-    comment = serializers.CharField(max_length=4000, allow_blank=False, required=False)
+    comment = serializers.CharField(max_length=4000, allow_null=True, allow_blank=True, required=False)
 
 
 class CreditTradeListSerializer(serializers.ModelSerializer):
@@ -342,6 +344,13 @@ class CreditTradeUpdateSerializer(serializers.ModelSerializer):
         else:
             number_of_credits = self.instance.number_of_credits
 
+        previous_state = CreditTrade.objects.get(id=self.instance.id)
+
+        if 'comment' in data and data['comment'] is not None and len(data['comment'].strip()) > 0:
+            if 'ADD_COMMENT' not in CreditTradeCommentActions.\
+                    available_comment_actions(request, previous_state):
+                raise serializers.ValidationError('Cannot add a comment in this state')
+
         accepted_status = CreditTradeStatus.objects.get(status="Accepted")
         draft_propose_statuses = list(
             CreditTradeStatus.objects
@@ -366,7 +375,9 @@ class CreditTradeUpdateSerializer(serializers.ModelSerializer):
     def save(self, **kwargs):
         super().save(**kwargs)
 
-        if 'comment' in self.validated_data:
+        if 'comment' in self.validated_data \
+                and self.validated_data['comment'] is not None \
+                and len(self.validated_data['comment'].strip()) > 0:
             comment = CreditTradeComment(
                 credit_trade=self.instance,
                 comment=self.validated_data['comment'],
@@ -391,7 +402,7 @@ class CreditTradeUpdateSerializer(serializers.ModelSerializer):
                   'create_user', 'update_user',
                   'compliance_period', 'is_rescinded', 'comment')
 
-    comment = serializers.CharField(max_length=4000, allow_blank=False, required=False)
+    comment = serializers.CharField(max_length=4000, allow_null=True, allow_blank=True, required=False)
 
 
 class CreditTradeApproveSerializer(serializers.ModelSerializer):
