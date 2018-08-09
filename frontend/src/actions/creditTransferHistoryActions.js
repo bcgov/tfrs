@@ -3,13 +3,14 @@ import axios from 'axios';
 import ActionTypes from '../constants/actionTypes/CreditTransactionsHistory';
 import ReducerTypes from '../constants/reducerTypes/CreditTransactionsHistory';
 import * as Routes from '../constants/routes';
+import { CREDIT_TRANSACTIONS_HISTORY } from '../constants/routes/Admin';
 
 /*
  * Credit Transfers History
  */
 const getCreditTransfersHistory = () => (dispatch) => {
   dispatch(getCreditTransfersRequest());
-  return axios.get(Routes.BASE_URL + Routes.CREDIT_TRANSACTIONS_HISTORY.API)
+  return axios.get(Routes.BASE_URL + CREDIT_TRANSACTIONS_HISTORY.API)
     .then((response) => {
       dispatch(getCreditTransfersHistorySuccess(response.data));
     }).catch((error) => {

@@ -21,6 +21,8 @@
     See the License for the specific language governing permissions and
     limitations under the License.
 """
+import logging
+import sys
 
 from django.test import TestCase
 
@@ -38,27 +40,11 @@ class BaseTestCase(TestCase):
     """
 
     fixtures = [
-        'organization_types.json',
-        'organization_government.json',
-        'organization_balance_gov.json',
-        'credit_trade_statuses.json',
-        'credit_trade_statuses_refused.json',
-        'organization_actions_types.json',
-        'organization_statuses.json',
-        'credit_trade_types.json',
-        'credit_trade_zero_reason.json',
-        'test_organization_fuel_suppliers.json',
-        'test_organization_balances.json',
-        'roles.json',
-        'permissions.json',
-        'roles_permissions.json',
-        'roles_permissions_v0.3.0.json',
-        'roles_permissions_v0.3.1.json',
-        'signing_authority_assertions.json',
-        'test_prodlike_government_users_and_roles.json',
-        'test_prodlike_government_users_and_roles_v0.3.1.json',
-        'test_users_and_organizations_v0.3.1.json',
-        'test_users_multiple_roles.json'
+        'test/test_organization_fuel_suppliers.json',
+        'test/test_organization_balances.json',
+        'test/test_prodlike_government_users_and_roles.json',
+        'test/test_users_and_organizations_v0.3.1.json',
+        'test/test_users_multiple_roles.json'
     ]
 
     usernames = [
@@ -148,3 +134,7 @@ class BaseTestCase(TestCase):
             'other': CreditTradeZeroReason.objects.get(reason='Other'),
             'affiliate': CreditTradeZeroReason.objects.get(reason='Internal')
         }
+
+        logging.getLogger('django.request').setLevel(logging.ERROR)
+        logging.getLogger('api.tests').setLevel(logging.DEBUG)
+        logging.basicConfig(stream=sys.stdout, level=logging.DEBUG)

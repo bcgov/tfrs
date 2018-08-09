@@ -9,7 +9,6 @@ test('prepareCreditTransfer should return the right data for Credit Transfers (S
     creditsTo: {
       id: 5
     },
-    note: '',
     numberOfCredits: 100,
     tradeEffectiveDate: '2018-01-01',
     transferType: CREDIT_TRANSFER_TYPES.sell.id,
@@ -19,7 +18,6 @@ test('prepareCreditTransfer should return the right data for Credit Transfers (S
   expect({
     compliancePeriod: null,
     initiator: 2,
-    note: '',
     numberOfCredits: 100,
     respondent: 5,
     status: CREDIT_TRANSFER_STATUS.approved.id,
@@ -37,7 +35,6 @@ test('prepareCreditTransfer should return the right data for Part 3 Award', () =
     creditsTo: {
       id: 5
     },
-    note: '',
     numberOfCredits: 100,
     tradeEffectiveDate: '2018-01-01',
     transferType: CREDIT_TRANSFER_TYPES.part3Award.id,
@@ -47,7 +44,6 @@ test('prepareCreditTransfer should return the right data for Part 3 Award', () =
   expect({
     compliancePeriod: null,
     initiator: DEFAULT_ORGANIZATION.id,
-    note: '',
     numberOfCredits: 100,
     respondent: 5,
     status: CREDIT_TRANSFER_STATUS.approved.id,
@@ -65,7 +61,6 @@ test('prepareCreditTransfer should return the right data for Validation', () => 
     creditsTo: {
       id: 5
     },
-    note: '',
     numberOfCredits: 100,
     tradeEffectiveDate: '2018-01-01',
     transferType: CREDIT_TRANSFER_TYPES.validation.id,
@@ -75,7 +70,6 @@ test('prepareCreditTransfer should return the right data for Validation', () => 
   expect({
     compliancePeriod: null,
     initiator: DEFAULT_ORGANIZATION.id,
-    note: '',
     numberOfCredits: 100,
     respondent: 5,
     status: CREDIT_TRANSFER_STATUS.approved.id,
@@ -93,7 +87,6 @@ test('prepareCreditTransfer should return the right data for Reduction', () => {
     creditsTo: {
       id: 0
     },
-    note: '',
     numberOfCredits: 100,
     tradeEffectiveDate: '2018-01-01',
     transferType: CREDIT_TRANSFER_TYPES.retirement.id,
@@ -103,7 +96,6 @@ test('prepareCreditTransfer should return the right data for Reduction', () => {
   expect({
     compliancePeriod: null,
     initiator: 5,
-    note: '',
     numberOfCredits: 100,
     respondent: DEFAULT_ORGANIZATION.id,
     status: CREDIT_TRANSFER_STATUS.approved.id,

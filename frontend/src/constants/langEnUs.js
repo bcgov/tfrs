@@ -9,13 +9,16 @@ export const BTN_DECLINE_FOR_APPROVAL = 'Decline to Approve';
 export const BTN_DELETE = 'Delete';
 export const BTN_DELETE_DRAFT = 'Delete Draft';
 export const BTN_EDIT_DRAFT = 'Edit Draft';
+export const BTN_EDIT_PVR_DRAFT = 'Edit PVR';
 export const BTN_NO = 'No';
 export const BTN_NOT_RECOMMENDED_FOR_DECISION = 'Not Recommended for Approval';
 export const BTN_PROCESS = 'Confirm';
 export const BTN_PROPOSE = 'Propose';
+export const BTN_PULL_BACK = 'Pull Back';
 export const BTN_REFUSE = 'Refuse';
 export const BTN_RECOMMEND_FOR_DECISION = 'Recommend for Approval';
 export const BTN_RESCIND = 'Rescind';
+export const BTN_RETURN_TO_DRAFT = 'Return to Analyst';
 export const BTN_SAVE = 'Save';
 export const BTN_SAVE_DRAFT = 'Save Draft';
 export const BTN_SIGN_1_2 = 'Sign 1/2';
@@ -44,3 +47,5 @@ export const TEXT_VISIBLE_TO_GOV = 'Visible to government';
 export const TEXT_VISIBLE_TO_ALL = 'Visible to both fuel suppliers and government';
 export const TEXT_COMMENT_DIRTY = 'You are currently editing a comment. Save or Cancel before ' +
                                   'performing other actions';
+export const TEXT_COMMENT_REQUIRED = 'Comment is required before a credit transaction can ' +
+                                     'be recommended';

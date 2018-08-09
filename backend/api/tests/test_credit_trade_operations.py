@@ -43,7 +43,7 @@ class TestCreditTradeOperations(BaseTestCase):
     status changes happen
     """
 
-    extra_fixtures = ['test_credit_trades.json']
+    extra_fixtures = ['test/test_credit_trades.json']
 
     def test_initiator_should_see_appropriate_credit_trades(self):
         """
@@ -733,6 +733,7 @@ class TestCreditTradeOperations(BaseTestCase):
             '/api/signing_authority_confirmations',
             content_type='application/json',
             data=json.dumps(payload))
+
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
         # Check and see if the signature is present

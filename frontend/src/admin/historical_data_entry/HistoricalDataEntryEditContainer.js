@@ -9,7 +9,7 @@ import { bindActionCreators } from 'redux';
 import PropTypes from 'prop-types';
 
 import * as Lang from '../../constants/langEnUs';
-import HISTORICAL_DATA_ENTRY from '../../constants/routes/HistoricalDataEntry';
+import { HISTORICAL_DATA_ENTRY } from '../../constants/routes/Admin';
 import { getFuelSuppliers } from '../../actions/organizationActions';
 import {
   addCommentToCreditTransfer,

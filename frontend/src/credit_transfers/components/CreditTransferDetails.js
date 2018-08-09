@@ -62,11 +62,6 @@ const CreditTransferDetails = props => (
           totalValue={props.totalValue}
           tradeType={props.tradeType}
         />
-        {props.note !== '' &&
-          <div className="well transparent">
-            <div>Notes: {props.note}</div>
-          </div>
-        }
         {props.comments.map(c => (
           <CreditTransferComment comment={c} key={c.id} saveComment={props.saveComment} />
         ))
@@ -93,9 +88,7 @@ const CreditTransferDetails = props => (
             addComment={props.addComment}
             canCreatePrivilegedComment={props.canCreatePrivilegedComment}
           />
-          {(props.tradeType.id === CREDIT_TRANSFER_TYPES.sell.id ||
-          props.tradeType.id === CREDIT_TRANSFER_TYPES.buy.id) &&
-          props.status.id !== CREDIT_TRANSFER_STATUS.draft.id &&
+          {props.status.id !== CREDIT_TRANSFER_STATUS.draft.id &&
           (props.history.length > 0 || props.signatures.length > 0) &&
             <CreditTransferSigningHistory
               history={props.history}
@@ -108,6 +101,11 @@ const CreditTransferDetails = props => (
             changeStatus={props.changeStatus}
             disabled={
               {
+                BTN_RECOMMEND: [
+                  CREDIT_TRANSFER_TYPES.validation.id,
+                  CREDIT_TRANSFER_TYPES.retirement.id,
+                  CREDIT_TRANSFER_TYPES.part3Award.id].includes(props.tradeType.id) &&
+                  props.comments.length === 0,
                 BTN_SIGN_1_2: props.fields.terms.findIndex(term => term.value === false) >= 0 ||
                 props.fields.terms.length === 0,
                 BTN_SIGN_2_2: props.fields.terms.findIndex(term => term.value === false) >= 0 ||

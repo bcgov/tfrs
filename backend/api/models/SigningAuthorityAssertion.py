@@ -22,6 +22,7 @@
 
 from django.db import models
 
+from api.managers.SigningAuthorityAssertionManager import SigningAuthorityAssertionManager
 from auditable.models import Auditable
 
 
@@ -33,6 +34,8 @@ class SigningAuthorityAssertion(Auditable):
     display_order = models.IntegerField(db_comment='Relative rank in display sorting order')
     effective_date = models.DateField(blank=True, null=True, db_comment='Not valid before')
     expiration_date = models.DateField(blank=True, null=True, db_comment='Not valid after')
+
+    objects = SigningAuthorityAssertionManager()
 
     class Meta:
         db_table = 'signing_authority_assertion'

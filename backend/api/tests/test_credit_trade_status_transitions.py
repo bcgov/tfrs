@@ -140,7 +140,13 @@ class TestCreditTradeStatuses(BaseTestCase, CreditTradeRelationshipMixin):
             (TestCreditTradeStatuses.UserRelationship.INITIATOR, 'submitted', False)
         ] = True
         expected_result[
+            (TestCreditTradeStatuses.UserRelationship.GOVERNMENT_ANALYST, 'recommended', False)
+        ] = True
+        expected_result[
             (TestCreditTradeStatuses.UserRelationship.GOVERNMENT_DIRECTOR, 'approved', False)
+        ] = True
+        expected_result[
+            (TestCreditTradeStatuses.UserRelationship.GOVERNMENT_ANALYST, 'draft', False)
         ] = True
 
         for (relationship, trade_status, rescinded) in product(
@@ -404,6 +410,7 @@ class TestCreditTradeStatuses(BaseTestCase, CreditTradeRelationshipMixin):
         expected_result[('recommended', 'declined')] = True
         expected_result[('not_recommended', 'approved')] = True
         expected_result[('not_recommended', 'declined')] = True
+        expected_result[('approved', 'approved')] = True
 
         for (initial_status, next_status) in product(self.statuses.keys(), self.statuses.keys()):
             sch = TestCreditTradeStatuses._StateTransition()
