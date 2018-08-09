@@ -1,7 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
+import FontAwesomeIcon from '@fortawesome/react-fontawesome';
 import Loading from '../../app/components/Loading';
+import ORGANIZATIONS from '../../constants/routes/Organizations';
 import OrganizationsTable from './OrganizationsTable';
 
 const OrganizationsPage = (props) => {
@@ -10,6 +12,15 @@ const OrganizationsPage = (props) => {
   return (
     <div className="page_organizations">
       <h1>{props.title}</h1>
+      <div className="actions-container">
+        <button
+          className="btn btn-success"
+          type="button"
+          onClick={() => (document.location = ORGANIZATIONS.EXPORT)}
+        >
+          <FontAwesomeIcon icon="table" /> Download as Spreadsheet
+        </button>
+      </div>
       {isFetching && <Loading />}
       {!isFetching &&
       <OrganizationsTable

@@ -4,7 +4,6 @@ import FontAwesomeIcon from '@fortawesome/react-fontawesome';
 import * as Lang from '../../constants/langEnUs';
 import LocalTimestamp from '../../app/components/LocalTimestamp';
 import CreditTransferCommentForm from './CreditTransferCommentForm';
-import { CREDIT_TRANSFER_STATUS } from '../../constants/values';
 
 class CreditTransferComment extends Component {
   constructor (props) {

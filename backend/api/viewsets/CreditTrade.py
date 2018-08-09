@@ -2,6 +2,8 @@ import datetime
 import hashlib
 
 from django.db.models import Q
+from django.http import HttpResponse
+from django.shortcuts import get_object_or_404
 
 from rest_framework import viewsets, permissions, status, mixins
 from rest_framework.decorators import list_route, detail_route
@@ -14,6 +16,8 @@ from api.decorators import permission_required
 
 from api.models.CreditTrade import CreditTrade
 from api.models.CreditTradeStatus import CreditTradeStatus
+from api.models.Organization import Organization
+from api.models.OrganizationType import OrganizationType
 
 from api.serializers import CreditTrade2Serializer as CreditTradeSerializer
 from api.serializers import CreditTradeApproveSerializer
@@ -24,6 +28,7 @@ from api.serializers import CreditTradeListSerializer
 from api.serializers import CreditTradeUpdateSerializer
 
 from api.services.CreditTradeService import CreditTradeService
+from api.services.SpreadSheetBuilder import SpreadSheetBuilder
 
 
 class CreditTradeViewSet(AuditableMixin, mixins.CreateModelMixin,
@@ -67,11 +72,18 @@ class CreditTradeViewSet(AuditableMixin, mixins.CreateModelMixin,
         return CreditTradeService.get_organization_credit_trades(
             user.organization)
 
+    @permission_required('VIEW_CREDIT_TRANSFERS')
     def list(self, request, *args, **kwargs):
+        """
+        Shows the credit transfers for the current organization.
+        Government users will see all transfers that are marked accepted
+        and up.
+        """
         # Explicitly filter out Approved ones in list as we should only
         # be showing Completed here
-        # Note: Don't add this in the CreditTradeService
-        # IDIR users should still Approved statuses in other areas
+        # Note: We did not update the CreditTradeService found in
+        # get_queryset as we have other API that uses the same service call,
+        # but want the Approved transfers included (such as list_approved)
         credit_trades = self.get_queryset().filter(
             ~Q(status__status__in=["Approved"])
         ).order_by(*self.ordering)
@@ -181,3 +193,47 @@ class CreditTradeViewSet(AuditableMixin, mixins.CreateModelMixin,
         return Response({"message":
                          "Approved Credit Transactions have been processed."},
                         status=status.HTTP_200_OK)
+
+    @list_route(methods=['get'])
+    @permission_required('VIEW_CREDIT_TRANSFERS')
+    def xls(self, request):
+        """
+        Exports the credit transfers and organizations table
+        as a spreadsheet
+        """
+        response = HttpResponse(content_type='application/ms-excel')
+        response['Content-Disposition'] = (
+            'attachment; filename="{}.xls"'.format(
+                datetime.datetime.now().strftime(
+                    "credit_transfers_%Y-%m-%d_%H-%M-%S")
+            ))
+
+        credit_trades = self.get_queryset().filter(
+            ~Q(status__status__in=["Approved"])
+        ).order_by(*self.ordering)
+
+        # Allow filter by organization (for government users only)
+        if (request.user.is_government_user and
+                request.query_params.get('organization_id') is not None):
+            organization = get_object_or_404(
+                Organization,
+                pk=request.query_params.get('organization_id'))
+            credit_trades = credit_trades.filter(
+                Q(initiator=organization) | Q(respondent=organization)
+            )
+
+        workbook = SpreadSheetBuilder()
+        workbook.add_credit_transfers(credit_trades)
+
+        if request.user.is_government_user:
+            fuel_suppliers = Organization.objects.extra(
+                select={'lower_name': 'lower(name)'}) \
+                .filter(type=OrganizationType.objects.get(
+                    type="Part3FuelSupplier")) \
+                .order_by('lower_name')
+
+            workbook.add_fuel_suppliers(fuel_suppliers)
+
+        workbook.save(response)
+
+        return response
