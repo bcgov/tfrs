@@ -43,7 +43,7 @@ class CreditTransferAddContainer extends Component {
           tradeType: {
             id: CREDIT_TRANSFER_TYPES.part3Award.id
           },
-          zeroDollarReason: {id: null, name: '' }
+          zeroDollarReason: { id: null, name: '' }
         }
       };
     } else {
@@ -60,10 +60,10 @@ class CreditTransferAddContainer extends Component {
           terms: [],
           tradeType: {
             id: CREDIT_TRANSFER_TYPES.sell.id
-          }
+          },
+          zeroDollarReason: { id: null, name: '' }
         },
-        totalValue: 0,
-        zeroDollarReason: {id: null, name: '' }
+        totalValue: 0
       };
     }
 
@@ -192,7 +192,7 @@ class CreditTransferAddContainer extends Component {
 
   _handleCommentChanged (comment) {
     this.setState({
-      comment: comment
+      comment
     });
   }
 

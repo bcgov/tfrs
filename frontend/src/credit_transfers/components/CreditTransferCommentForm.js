@@ -4,10 +4,6 @@ import * as Lang from '../../constants/langEnUs';
 
 class CreditTransferCommentForm extends Component {
   static titleText (props) {
-    if (props.isCommentingOnUnsavedCreditTransfer) {
-      return Lang.TEXT_ADD_INITIAL_COMMENT;
-    }
-
     if (props.isEditingExistingComment) {
       return Lang.TEXT_EDIT_COMMENT_HEADING;
     }

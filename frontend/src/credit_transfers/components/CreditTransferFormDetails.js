@@ -91,30 +91,31 @@ class CreditTransferFormDetails extends Component {
           <span>per credit for a total value of </span>
           <span>{numeral(this.props.totalValue).format(NumberFormat.CURRENCY)}</span>
           <span> effective on Director&apos;s Approval</span>
-        </div>
-        {this.enableZeroReason() &&
-        <div className="zero-reason-form">
-          <span>This trade has a value of zero dollars because:</span>
-          <br />
-          <div className="form-group">
-            <div className="btn-group zero-reason" role="group" id="zero-dollar-reason">
-              {Object.values(ZERO_DOLLAR_REASON).map(zd => (
-                <button
-                  key={zd.description}
-                  type="button"
-                  className={`btn btn-default ${(this.props.fields.zeroDollarReason != null &&
+          {this.enableZeroReason() &&
+          <div className="zero-reason-form">
+            <span>This trade has a value of zero dollars because:</span>
+            <br />
+            <div className="form-group">
+              <div className="btn-group zero-reason" role="group" id="zero-dollar-reason">
+                {Object.values(ZERO_DOLLAR_REASON).map(zd => (
+                  <button
+                    key={zd.description}
+                    type="button"
+                    className={`btn btn-default ${(this.props.fields.zeroDollarReason &&
                       this.props.fields.zeroDollarReason.id === zd.id) ? 'active' : ''}`}
-                  value={zd.id}
-                  name="zeroDollarReason"
-                  onClick={this.props.handleInputChange}
-                >
-                  {zd.formButtonDescription}
-                </button>
-              ))}
+                    value={zd.id}
+                    name="zeroDollarReason"
+                    onClick={this.props.handleInputChange}
+                  >
+                    {zd.formButtonDescription}
+                  </button>
+                ))}
+              </div>
             </div>
           </div>
+          }
+          {this.props.children}
         </div>
-        }
       </div>
     );
   }

@@ -45,7 +45,8 @@ class CreditTransferEditContainer extends Component {
           respondent: {},
           tradeType: {
             id: CREDIT_TRANSFER_TYPES.part3Award.id
-          }
+          },
+          zeroDollarReason: { id: null, name: '' }
         }
       };
     } else {
@@ -61,7 +62,8 @@ class CreditTransferEditContainer extends Component {
           terms: [],
           tradeType: {
             id: CREDIT_TRANSFER_TYPES.sell.id
-          }
+          },
+          zeroDollarReason: { id: null, name: '' }
         },
         totalValue: 0
       };
@@ -192,6 +194,16 @@ class CreditTransferEditContainer extends Component {
   _handleInputChange (event) {
     const { value, name } = event.target;
     const fieldState = { ...this.state.fields };
+
+    if (name === 'zeroDollarReason') {
+      fieldState[name] = {
+        id: parseInt(value, 10)
+      };
+      this.setState({
+        fields: fieldState
+      });
+      return;
+    }
 
     if (typeof fieldState[name] === 'object') {
       this.changeObjectProp(parseInt(value, 10), name);
@@ -368,6 +380,7 @@ class CreditTransferEditContainer extends Component {
    */
   changeObjectProp (id, name) {
     const fieldState = { ...this.state.fields };
+
     if (name === 'respondent') {
       // Populate the dropdown
       const respondents = this.props.fuelSuppliers.filter(fuelSupplier => (fuelSupplier.id === id));
