@@ -37,36 +37,24 @@ class CreditTransferEditContainer extends Component {
   constructor (props) {
     super(props);
 
-    if (props.loggedInUser.isGovernmentUser) {
-      this.state = {
-        fields: {
-          comment: '',
-          compliancePeriod: {},
-          numberOfCredits: '',
-          respondent: {},
-          tradeType: {
-            id: CREDIT_TRANSFER_TYPES.part3Award.id
-          }
+    this.state = {
+      creditsFrom: {},
+      creditsTo: {},
+      fields: {
+        comment: '',
+        compliancePeriod: {},
+        fairMarketValuePerCredit: '',
+        initiator: {},
+        note: '',
+        numberOfCredits: '',
+        respondent: { id: 0, name: '' },
+        terms: [],
+        tradeType: {
+          id: CREDIT_TRANSFER_TYPES.sell.id
         }
-      };
-    } else {
-      this.state = {
-        creditsFrom: {},
-        creditsTo: {},
-        fields: {
-          fairMarketValuePerCredit: '',
-          initiator: {},
-          note: '',
-          numberOfCredits: '',
-          respondent: { id: 0, name: '' },
-          terms: [],
-          tradeType: {
-            id: CREDIT_TRANSFER_TYPES.sell.id
-          }
-        },
-        totalValue: 0
-      };
-    }
+      },
+      totalValue: 0
+    };
 
     this._addToFields = this._addToFields.bind(this);
     this._changeStatus = this._changeStatus.bind(this);
