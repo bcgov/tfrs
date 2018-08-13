@@ -28,6 +28,7 @@ import history from '../app/History';
 import * as Lang from '../constants/langEnUs';
 import CREDIT_TRANSACTIONS from '../constants/routes/CreditTransactions';
 import { CREDIT_TRANSFER_STATUS, CREDIT_TRANSFER_TYPES } from '../constants/values';
+import toastr from '../utils/toastr';
 
 class CreditTransferAddContainer extends Component {
   constructor (props) {
@@ -124,7 +125,8 @@ class CreditTransferAddContainer extends Component {
       }
 
       this.props.invalidateCreditTransfers();
-      history.push(CREDIT_TRANSACTIONS.LIST);
+      history.push(CREDIT_TRANSACTIONS.HIGHLIGHT.replace(':id', response.data.id));
+      toastr.creditTransactionSuccess(status.id, data);
     });
   }
 
@@ -147,7 +149,8 @@ class CreditTransferAddContainer extends Component {
       }
 
       this.props.invalidateCreditTransfers();
-      history.push(CREDIT_TRANSACTIONS.LIST);
+      history.push(CREDIT_TRANSACTIONS.HIGHLIGHT.replace(':id', response.data.id));
+      toastr.creditTransactionSuccess(status.id, data);
     });
   }
 
@@ -219,8 +222,11 @@ class CreditTransferAddContainer extends Component {
   }
 
   _renderGovernmentTransfer () {
+    const buttonActions = [Lang.BTN_SAVE_DRAFT, Lang.BTN_RECOMMEND_FOR_DECISION];
+
     return ([
       <GovernmentTransferForm
+        actions={buttonActions}
         errors={this.props.errors}
         fields={this.state.fields}
         fuelSuppliers={this.props.fuelSuppliers}

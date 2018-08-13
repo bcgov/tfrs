@@ -94,6 +94,7 @@ const CreditTransactionsPage = (props) => {
       {isFetching && <Loading />}
       {!isFetching &&
       <CreditTransferTable
+        highlight={props.highlight}
         items={items}
         isFetching={isFetching}
         isEmpty={isEmpty}
@@ -104,6 +105,7 @@ const CreditTransactionsPage = (props) => {
 };
 
 CreditTransactionsPage.defaultProps = {
+  highlight: null,
   organization: null,
   organizations: []
 };
@@ -113,6 +115,7 @@ CreditTransactionsPage.propTypes = {
     items: PropTypes.arrayOf(PropTypes.shape()).isRequired,
     isFetching: PropTypes.bool.isRequired
   }).isRequired,
+  highlight: PropTypes.string,
   loggedInUser: PropTypes.shape({
     displayName: PropTypes.string,
     hasPermission: PropTypes.func,

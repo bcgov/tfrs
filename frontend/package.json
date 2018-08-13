@@ -28,6 +28,7 @@
     "react-input-mask": "^1.1.1",
     "react-intl": "^2.4.0",
     "react-redux": "^5.0.4",
+    "react-redux-toastr": "^7.4.0",
     "react-router": "^4.1.1",
     "react-router-dom": "^4.1.2",
     "react-router-redux": "^5.0.0-alpha.9",

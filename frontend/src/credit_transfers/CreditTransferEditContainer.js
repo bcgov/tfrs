@@ -31,6 +31,7 @@ import history from '../app/History';
 import * as Lang from '../constants/langEnUs';
 import CREDIT_TRANSACTIONS from '../constants/routes/CreditTransactions';
 import { CREDIT_TRANSFER_STATUS, CREDIT_TRANSFER_TYPES } from '../constants/values';
+import toastr from '../utils/toastr';
 
 class CreditTransferEditContainer extends Component {
   constructor (props) {
@@ -147,7 +148,8 @@ class CreditTransferEditContainer extends Component {
       }
 
       this.props.invalidateCreditTransfer();
-      history.push(CREDIT_TRANSACTIONS.LIST);
+      history.push(CREDIT_TRANSACTIONS.HIGHLIGHT.replace(':id', id));
+      toastr.creditTransactionSuccess(status.id, this.props.item);
     }, () => {
       // Failed to update
     });
@@ -158,6 +160,7 @@ class CreditTransferEditContainer extends Component {
   _deleteCreditTransfer (id) {
     this.props.deleteCreditTransfer(id).then(() => {
       history.push(CREDIT_TRANSACTIONS.LIST);
+      toastr.creditTransactionSuccess(CREDIT_TRANSFER_STATUS.deleted.id, this.props.item);
     });
   }
 
@@ -177,7 +180,8 @@ class CreditTransferEditContainer extends Component {
     this.props.updateCreditTransfer(id, data).then((response) => {
       this._saveComment(comment);
 
-      history.push(CREDIT_TRANSACTIONS.LIST);
+      history.push(CREDIT_TRANSACTIONS.HIGHLIGHT.replace(':id', id));
+      toastr.creditTransactionSuccess(status.id, this.props.item);
     });
 
     return false;
@@ -273,8 +277,14 @@ class CreditTransferEditContainer extends Component {
   }
 
   _renderGovernmentTransfer () {
+    const buttonActions = [
+      Lang.BTN_DELETE_DRAFT, Lang.BTN_SAVE_DRAFT, Lang.BTN_RECOMMEND_FOR_DECISION];
+
+    const { item } = this.props;
+
     return ([
       <GovernmentTransferForm
+        actions={buttonActions}
         errors={this.props.errors}
         fields={this.state.fields}
         fuelSuppliers={this.props.fuelSuppliers}
@@ -291,6 +301,13 @@ class CreditTransferEditContainer extends Component {
         key="confirmRecommend"
       >
         Are you sure you want to recommend approval of this credit transaction?
+      </Modal>,
+      <Modal
+        handleSubmit={() => this._deleteCreditTransfer(item.id)}
+        id="confirmDelete"
+        key="confirmDelete"
+      >
+        Are you sure you want to delete this draft?
       </Modal>
     ]);
   }
