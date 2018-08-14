@@ -80,9 +80,14 @@ const CreditTransferFormDetails = props => (
       <span>per credit for a total value of </span>
       <span>{numeral(props.totalValue).format(NumberFormat.CURRENCY)}</span>
       <span> effective on Director&apos;s Approval</span>
+      {props.children}
     </div>
   </div>
 );
+
+CreditTransferFormDetails.defaultProps = {
+  children: null
+};
 
 CreditTransferFormDetails.propTypes = {
   fuelSuppliers: PropTypes.arrayOf(PropTypes.shape()).isRequired,
@@ -103,7 +108,11 @@ CreditTransferFormDetails.propTypes = {
     fairMarketValuePerCredit: PropTypes.string
   }).isRequired,
   totalValue: PropTypes.number.isRequired,
-  handleInputChange: PropTypes.func.isRequired
+  handleInputChange: PropTypes.func.isRequired,
+  children: PropTypes.oneOfType([
+    PropTypes.arrayOf(PropTypes.node),
+    PropTypes.node
+  ])
 };
 
 export default CreditTransferFormDetails;

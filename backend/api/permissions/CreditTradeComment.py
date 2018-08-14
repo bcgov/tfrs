@@ -24,7 +24,8 @@ from enum import Enum
 
 from rest_framework import permissions
 
-from api.models import CreditTradeComment
+from api.models.CreditTradeComment import CreditTradeComment
+from api.models.CreditTradeStatus import CreditTradeStatus
 from api.services.CreditTradeService import CreditTradeService
 
 
@@ -118,6 +119,9 @@ class CreditTradeCommentPermissions(permissions.BasePermission):
 
         current_rescinded = comment.credit_trade.is_rescinded
         rescinded_at_creation = history.is_rescinded if history is not None else None
+
+        if current_status == CreditTradeStatus.objects.get_by_natural_key('Draft').id:
+            return True
 
         return (current_status, current_rescinded) == (status_at_creation, rescinded_at_creation)
 

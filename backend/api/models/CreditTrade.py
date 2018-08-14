@@ -213,6 +213,14 @@ class CreditTrade(Auditable):
 
         return history
 
+    @property
+    def comment(self):
+        return self._comment
+
+    @comment.setter
+    def comment(self, comment):
+        self._comment = comment
+
     class Meta:
         db_table = 'credit_trade'
 

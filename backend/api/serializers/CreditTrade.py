@@ -20,10 +20,13 @@
     See the License for the specific language governing permissions and
     limitations under the License.
 """
+from datetime import datetime
+
 from django.forms.models import model_to_dict
 from rest_framework import serializers
 
 from api.models.CreditTrade import CreditTrade
+from api.models.CreditTradeComment import CreditTradeComment
 from api.models.CreditTradeStatus import CreditTradeStatus
 from api.models.CreditTradeType import CreditTradeType
 from api.models.User import User
@@ -58,6 +61,7 @@ class CreditTradeCreateSerializer(serializers.ModelSerializer):
     Serializer used when creating a Credit Trade
     """
     def validate(self, data):
+
         request = self.context['request']
 
         # no user should be allowed to create a rescinded proposal
@@ -146,9 +150,39 @@ class CreditTradeCreateSerializer(serializers.ModelSerializer):
 
         return data
 
+    def save(self, **kwargs):
+        super().save(**kwargs)
+
+        request = self.context['request']
+
+        if 'comment' in self.validated_data \
+                and self.validated_data['comment'] is not None\
+                and len(self.validated_data['comment'].strip()) > 0:
+            comment = CreditTradeComment(
+                credit_trade=self.instance,
+                comment=self.validated_data['comment'],
+                create_user=request.user,
+                update_user=request.user,
+                create_timestamp=datetime.now(),
+                privileged_access=False
+            )
+            comment.save()
+
+        return self.instance
+
     class Meta:
         model = CreditTrade
-        fields = '__all__'
+        fields = ('id', 'status',
+                  'initiator', 'respondent',
+                  'type', 'number_of_credits',
+                  'fair_market_value_per_credit', 'total_value',
+                  'zero_reason',
+                  'trade_effective_date',
+                  'update_timestamp', 'note',
+                  'create_user', 'update_user',
+                  'compliance_period', 'is_rescinded', 'comment')
+
+    comment = serializers.CharField(max_length=4000, allow_null=True, allow_blank=True, required=False)
 
 
 class CreditTradeListSerializer(serializers.ModelSerializer):
@@ -201,6 +235,7 @@ class CreditTradeUpdateSerializer(serializers.ModelSerializer):
         # if the user is the respondent, they really shouldn't be modifying
         # other fields. So reset those to be sure that they weren't changed
         if self.instance.respondent == request.user.organization:
+            orig_data = data
             data = {
                 'compliance_period': self.instance.compliance_period,
                 'fair_market_value_per_credit':
@@ -214,6 +249,10 @@ class CreditTradeUpdateSerializer(serializers.ModelSerializer):
                 'update_user': request.user,
                 'zero_reason': self.instance.zero_reason
             }
+
+            # Preserve the comment, if they are making one
+            if 'comment' in orig_data:
+                data['comment'] = orig_data['comment']
 
         # if status is being modified, make sure the next state is valid
         if 'status' in request.data:
@@ -307,6 +346,13 @@ class CreditTradeUpdateSerializer(serializers.ModelSerializer):
         else:
             number_of_credits = self.instance.number_of_credits
 
+        previous_state = CreditTrade.objects.get(id=self.instance.id)
+
+        if 'comment' in data and data['comment'] is not None and len(data['comment'].strip()) > 0:
+            if 'ADD_COMMENT' not in CreditTradeCommentActions.\
+                    available_comment_actions(request, previous_state):
+                raise serializers.ValidationError('Cannot add a comment in this state')
+
         accepted_status = CreditTradeStatus.objects.get(status="Accepted")
         draft_propose_statuses = list(
             CreditTradeStatus.objects
@@ -328,9 +374,39 @@ class CreditTradeUpdateSerializer(serializers.ModelSerializer):
 
         return data
 
+    def save(self, **kwargs):
+        super().save(**kwargs)
+
+        request = self.context['request']
+
+        if 'comment' in self.validated_data \
+                and self.validated_data['comment'] is not None \
+                and len(self.validated_data['comment'].strip()) > 0:
+            comment = CreditTradeComment(
+                credit_trade=self.instance,
+                comment=self.validated_data['comment'],
+                create_user=request.user,
+                update_user=request.user,
+                create_timestamp=datetime.now(),
+                privileged_access=False
+            )
+            comment.save()
+
+        return self.instance
+
     class Meta:
         model = CreditTrade
-        fields = '__all__'
+        fields = ('id', 'status',
+                  'initiator', 'respondent',
+                  'type', 'number_of_credits',
+                  'fair_market_value_per_credit', 'total_value',
+                  'zero_reason',
+                  'trade_effective_date',
+                  'update_timestamp', 'note',
+                  'create_user', 'update_user',
+                  'compliance_period', 'is_rescinded', 'comment')
+
+    comment = serializers.CharField(max_length=4000, allow_null=True, allow_blank=True, required=False)
 
 
 class CreditTradeApproveSerializer(serializers.ModelSerializer):
