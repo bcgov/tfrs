@@ -74,7 +74,7 @@ class CreditTransferComment extends Component {
           </div>
           <div className="row">
             <div className="col-xs-11">
-              {this.props.comment.actions.includes('EDIT_COMMENT') &&
+              {!this.props.isReadOnly && this.props.comment.actions.includes('EDIT_COMMENT') &&
               <button
                 className="btn btn-primary"
                 onClick={() => this._beginEdit()}
@@ -97,6 +97,11 @@ class CreditTransferComment extends Component {
   }
 }
 
+CreditTransferComment.defaultProps = {
+  isReadOnly: false,
+  saveComment: () => {}
+};
+
 CreditTransferComment.propTypes = {
   comment: PropTypes.shape({
     id: PropTypes.number,
@@ -117,7 +122,8 @@ CreditTransferComment.propTypes = {
     }),
     actions: PropTypes.arrayOf(PropTypes.string)
   }).isRequired,
-  saveComment: PropTypes.func.isRequired
+  saveComment: PropTypes.func,
+  isReadOnly: PropTypes.bool
 };
 
 export default CreditTransferComment;

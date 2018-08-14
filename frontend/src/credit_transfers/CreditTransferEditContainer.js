@@ -266,6 +266,7 @@ class CreditTransferEditContainer extends Component {
         toggleCheck={this._toggleCheck}
         totalValue={this.state.totalValue}
         tradeStatus={this.state.tradeStatus}
+        comments={this.props.item.comments}
       />,
       <ModalSubmitCreditTransfer
         handleSubmit={(event) => {
@@ -340,7 +341,8 @@ class CreditTransferEditContainer extends Component {
       respondent: item.respondent,
       terms: this.state.fields.terms,
       tradeStatus: item.status,
-      tradeType: item.type
+      tradeType: item.type,
+      zeroDollarReason: item.zeroReason
     };
 
     this.setState({
@@ -357,7 +359,8 @@ class CreditTransferEditContainer extends Component {
       compliancePeriod: (item.compliancePeriod) ? item.compliancePeriod : { id: 0 },
       numberOfCredits: item.numberOfCredits.toString(),
       respondent: item.respondent,
-      tradeType: item.type
+      tradeType: item.type,
+      zeroDollarReason: item.zeroReason
     };
 
     this.setState({
@@ -481,6 +484,10 @@ CreditTransferEditContainer.propTypes = {
       PropTypes.string,
       PropTypes.number
     ]),
+    comments: PropTypes.arrayOf(PropTypes.shape({
+      id: PropTypes.number,
+      comment: PropTypes.string
+    })),
     actions: PropTypes.arrayOf(PropTypes.shape({}))
   }).isRequired,
   loggedInUser: PropTypes.shape({

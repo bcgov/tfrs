@@ -104,13 +104,18 @@ class CreditTradeCreateSerializer(serializers.ModelSerializer):
 
         credit_trade_status = data.get('status')
 
+        will_create_a_comment = True if 'comment' in data \
+                                        and data['comment'] is not None \
+                                        and len(data['comment'].strip()) > 0 else False
+
         if credit_trade_status.status == 'Submitted':
             zero_reason = data.get('zero_reason')
             if zero_reason is not None and zero_reason.reason == 'Other':
-                raise serializers.ValidationError({
-                    'forbidden': "Cannot propose a trade with zero-reason 'Other' without"
-                                 " creating an explanatory comment'"
-                })
+                if not will_create_a_comment:
+                    serializers.ValidationError({
+                        'forbidden': "Cannot propose a trade with zero-reason 'Other' without"
+                                     " creating an explanatory comment'"
+                    })
 
         if credit_trade_status not in allowed_statuses:
             raise serializers.ValidationError({
@@ -296,13 +301,17 @@ class CreditTradeUpdateSerializer(serializers.ModelSerializer):
                                      "same time."
                 })
 
+            will_create_a_comment = True if 'comment' in data \
+                and data['comment'] is not None \
+                and len(data['comment'].strip()) > 0 else False
+
             if credit_trade_status.status == 'Submitted':
                 zero_reason = data.get('zero_reason')
                 if zero_reason is not None and zero_reason.reason == 'Other':
-                    if not CreditTradeComment.objects.filter(
+                    if not (will_create_a_comment or CreditTradeComment.objects.filter(
                                 credit_trade_id=self.instance.id,
                                 create_user__organization=request.user.organization
-                            ).exists():
+                            ).exists()):
                         raise serializers.ValidationError({
                             'forbidden': "Cannot propose a trade with zero-reason 'Other' without"
                                          " creating an explanatory comment'"

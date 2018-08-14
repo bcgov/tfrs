@@ -14,6 +14,7 @@ import CreditTransferVisualRepresentation from './CreditTransferVisualRepresenta
 import CreditTransferFormButtons from './CreditTransferFormButtons';
 import CreditTransferTerms from './CreditTransferTerms';
 import CreditTransferCommentForm from './CreditTransferCommentForm';
+import CreditTransferComment from './CreditTransferComment';
 
 const CreditTransferForm = props => (
   <div className="credit-transfer">
@@ -37,6 +38,12 @@ const CreditTransferForm = props => (
           embedded
         />
         }
+        {props.id === 0 || <span>Save your transfer to add or modify comments</span>}
+        {props.comments.map(c => (
+          <CreditTransferComment comment={c} key={c.id} isReadOnly />
+        ))
+        }
+
       </CreditTransferFormDetails>
 
       {Object.keys(props.errors).length > 0 &&
@@ -85,7 +92,8 @@ const CreditTransferForm = props => (
 CreditTransferForm.defaultProps = {
   id: 0,
   title: 'Credit Transfer',
-  handleCommentChanged: null
+  handleCommentChanged: null,
+  comments: []
 };
 
 CreditTransferForm.propTypes = {
@@ -93,6 +101,10 @@ CreditTransferForm.propTypes = {
   buttonActions: PropTypes.arrayOf(PropTypes.string).isRequired,
   changeStatus: PropTypes.func.isRequired,
   errors: PropTypes.shape({}).isRequired,
+  comments: PropTypes.arrayOf(PropTypes.shape({
+    id: PropTypes.number,
+    comment: PropTypes.string
+  })),
   fields: PropTypes.shape({
     initiator: PropTypes.shape({
       name: PropTypes.string,
