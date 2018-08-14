@@ -30,6 +30,9 @@ const toastr = {
       case CREDIT_TRANSFER_STATUS.declinedForApproval.id:
         reduxToastr.success('Success!', `${text} declined.`);
         break;
+      case CREDIT_TRANSFER_STATUS.notRecommended.id:
+        reduxToastr.success('Success!', `${text} not recommended.`);
+        break;
       case CREDIT_TRANSFER_STATUS.proposed.id:
         reduxToastr.success('Success!', `${text} submitted.`);
         break;
