@@ -173,7 +173,7 @@ class CreditTradeViewSet(AuditableMixin, mixins.CreateModelMixin,
         return Response(serializer.data)
 
     @list_route(methods=['put'])
-    @permission_required('APPROVE_CREDIT_TRANSFER')
+    @permission_required('USE_HISTORICAL_DATA_ENTRY')
     def batch_process(self, request):
         """
         Call the approve function on multiple Credit Trades

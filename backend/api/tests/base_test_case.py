@@ -44,7 +44,8 @@ class BaseTestCase(TestCase):
         'test/test_organization_balances.json',
         'test/test_prodlike_government_users_and_roles.json',
         'test/test_users_and_organizations_v0.3.1.json',
-        'test/test_users_multiple_roles.json'
+        'test/test_users_multiple_roles.json',
+        'test/test_historical_data_entry_permissions.json'
     ]
 
     usernames = [

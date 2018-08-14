@@ -77,7 +77,8 @@ class CreditTradeCreateSerializer(serializers.ModelSerializer):
 
         available_statuses = []
 
-        if request.user.has_perm('APPROVE_CREDIT_TRANSFER'):
+        if request.user.has_perm('APPROVE_CREDIT_TRANSFER') or \
+                request.user.has_perm('USE_HISTORICAL_DATA_ENTRY'):
             available_statuses.append('Approved')
 
         if request.user.has_perm('PROPOSE_CREDIT_TRANSFER'):
