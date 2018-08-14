@@ -69,6 +69,10 @@ const Router = props => (
           component={withRouter(CreditTransactionsContainer)}
         />
         <Route
+          path={CREDIT_TRANSACTIONS.HIGHLIGHT}
+          component={withRouter(CreditTransactionsContainer)}
+        />
+        <Route
           path={CREDIT_TRANSACTIONS.DETAILS}
           component={withRouter(CreditTransferViewContainer)}
         />
