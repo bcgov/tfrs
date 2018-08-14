@@ -1,3 +1,7 @@
+import datetime
+
+from django.http import HttpResponse
+
 from rest_framework import viewsets, mixins
 from rest_framework.decorators import list_route, detail_route
 from rest_framework.response import Response
@@ -15,6 +19,8 @@ from api.serializers import OrganizationHistorySerializer
 from api.serializers import OrganizationMinSerializer
 from api.serializers import UserMinSerializer
 from api.permissions.OrganizationPermissions import OrganizationPermissions
+
+from api.services.SpreadSheetBuilder import SpreadSheetBuilder
 
 
 class OrganizationViewSet(AuditableMixin, viewsets.GenericViewSet,
@@ -138,3 +144,28 @@ class OrganizationViewSet(AuditableMixin, viewsets.GenericViewSet,
 
         serializer = self.get_serializer(users, many=True)
         return Response(serializer.data)
+
+    @list_route(methods=['get'])
+    @permission_required('VIEW_FUEL_SUPPLIERS')
+    def xls(self, request):
+        """
+        Exports the Fuel Suppliers as a spreadsheet
+        """
+        response = HttpResponse(content_type='application/ms-excel')
+        response['Content-Disposition'] = (
+            'attachment; filename="{}.xls"'.format(
+                datetime.datetime.now().strftime(
+                    "organizations_%Y-%m-%d_%H-%M-%S")
+            ))
+
+        fuel_suppliers = Organization.objects.extra(
+            select={'lower_name': 'lower(name)'}) \
+            .filter(type=OrganizationType.objects.get(
+                type="Part3FuelSupplier")) \
+            .order_by('lower_name')
+
+        workbook = SpreadSheetBuilder()
+        workbook.add_fuel_suppliers(fuel_suppliers)
+        workbook.save(response)
+
+        return response

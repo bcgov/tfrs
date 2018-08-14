@@ -111,12 +111,22 @@ class TestOrganizations(BaseTestCase):
     def test_get_organization_users_as_fuel_supplier(self):
         """
         Test that users without permission to view fuel suppliers
-        gets a 403 when trying to view users for an organization
+        get a 403 when trying to view users for an organization
         """
         # View the organization that fs_user_1 belongs to
         response = self.clients['fs_user_2'].get(
             "/api/organizations/{}/users".format(
                 self.users['fs_user_1'].organization.id)
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+    def test_export_as_fuel_supplier(self):
+        """
+        Test that fuel supplier users can't download the spreadsheet
+        """
+        response = self.clients['fs_user_1'].get(
+            "/api/organizations/xls"
         )
 
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)

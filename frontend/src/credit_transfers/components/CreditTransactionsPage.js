@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import numeral from 'numeral';
 
+import FontAwesomeIcon from '@fortawesome/react-fontawesome';
 import * as NumberFormat from '../../constants/numeralFormats';
 import PERMISSIONS_CREDIT_TRANSACTIONS from '../../constants/permissions/CreditTransactions';
 import CREDIT_TRANSACTIONS from '../../constants/routes/CreditTransactions';
@@ -89,6 +90,21 @@ const CreditTransactionsPage = (props) => {
               {props.loggedInUser.isGovernmentUser && 'New Credit Transaction'}
             </button>
           }
+          <button
+            className="btn btn-success"
+            type="button"
+            onClick={() => {
+              let url = CREDIT_TRANSACTIONS.EXPORT;
+
+              if (props.organization) {
+                url += `?organization_id=${props.organization.id}`;
+              }
+
+              document.location = url;
+            }}
+          >
+            <FontAwesomeIcon icon="table" /> Download as Spreadsheet
+          </button>
         </div>
       </div>
       {isFetching && <Loading />}
