@@ -108,11 +108,12 @@ class CreditTradeCreateSerializer(serializers.ModelSerializer):
                                         and data['comment'] is not None \
                                         and len(data['comment'].strip()) > 0 else False
 
-        if credit_trade_status.status == 'Submitted':
+        if credit_trade_status.id == CreditTradeStatus.objects.get(status='Submitted').id:
             zero_reason = data.get('zero_reason')
-            if zero_reason is not None and zero_reason.reason == 'Other':
+
+            if zero_reason is not None and zero_reason in CreditTradeZeroReason.objects.filter(reason='Other'):
                 if not will_create_a_comment:
-                    serializers.ValidationError({
+                    raise serializers.ValidationError({
                         'forbidden': "Cannot propose a trade with zero-reason 'Other' without"
                                      " creating an explanatory comment'"
                     })
