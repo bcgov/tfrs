@@ -41,9 +41,9 @@ export const CREDIT_TRANSFER_STATUS = {
     id: 7,
     description: 'Approved' /* changed from 'Completed' because the difference is not relevant to the user */
   },
-  rescinded: {
+  deleted: {
     id: 8,
-    description: 'Rescinded'
+    description: 'Deleted'
   },
   declinedForApproval: {
     id: 9,
@@ -52,6 +52,10 @@ export const CREDIT_TRANSFER_STATUS = {
   refused: {
     id: 10,
     description: 'Refused'
+  },
+  rescinded: {
+    id: 11,
+    description: 'Rescinded'
   }
 };
 

@@ -30,6 +30,7 @@ import Modal from '../app/components/Modal';
 import * as Lang from '../constants/langEnUs';
 import CREDIT_TRANSACTIONS from '../constants/routes/CreditTransactions';
 import { CREDIT_TRANSFER_STATUS, CREDIT_TRANSFER_TYPES } from '../constants/values';
+import toastr from '../utils/toastr';
 
 class CreditTransferViewContainer extends Component {
   constructor (props) {
@@ -88,7 +89,8 @@ class CreditTransferViewContainer extends Component {
 
   _approveCreditTransfer (id) {
     this.props.approveCreditTransfer(id).then(() => {
-      history.push(CREDIT_TRANSACTIONS.LIST);
+      history.push(CREDIT_TRANSACTIONS.HIGHLIGHT.replace(':id', id));
+      toastr.creditTransactionSuccess(CREDIT_TRANSFER_STATUS.approved.id, this.props.item);
     });
   }
 
@@ -223,7 +225,8 @@ class CreditTransferViewContainer extends Component {
 
     this.props.updateCreditTransfer(id, data).then(() => {
       this.props.invalidateCreditTransfer();
-      history.push(CREDIT_TRANSACTIONS.LIST);
+      history.push(CREDIT_TRANSACTIONS.HIGHLIGHT.replace(':id', id));
+      toastr.creditTransactionSuccess(status.id, item);
     }, () => {
       // Failed to update
     });
@@ -243,8 +246,12 @@ class CreditTransferViewContainer extends Component {
   }
 
   _deleteCreditTransfer (id) {
+    const { item } = this.props;
+
     this.props.deleteCreditTransfer(id).then(() => {
+      this.props.invalidateCreditTransfer();
       history.push(CREDIT_TRANSACTIONS.LIST);
+      toastr.creditTransactionSuccess(CREDIT_TRANSFER_STATUS.deleted.id, item);
     });
   }
 
@@ -491,6 +498,8 @@ class CreditTransferViewContainer extends Component {
     this.props.updateCreditTransfer(id, data).then(() => {
       this.props.invalidateCreditTransfer();
       history.push(CREDIT_TRANSACTIONS.LIST);
+
+      toastr.creditTransactionSuccess(CREDIT_TRANSFER_STATUS.rescinded.id, item);
     }, () => {
       // Failed to update
     });

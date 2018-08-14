@@ -12,6 +12,7 @@ import { getCreditTransfersIfNeeded } from '../actions/creditTransfersActions';
 import { getOrganization } from '../actions/organizationActions';
 import { getLoggedInUser } from '../actions/userActions';
 import CreditTransactionsPage from './components/CreditTransactionsPage';
+import CREDIT_TRANSACTIONS from '../constants/routes/CreditTransactions';
 
 class CreditTransactionsContainer extends Component {
   constructor (props) {
@@ -22,9 +23,17 @@ class CreditTransactionsContainer extends Component {
   }
 
   componentDidMount () {
+    this.clearUrl();
     this.loadData();
 
     this._selectOrganization = this._selectOrganization.bind(this);
+  }
+
+  clearUrl () {
+    // Update the URL so it doesn't show the URL with the highlight
+    if (this.props.match.params.id) {
+      window.history.replaceState({}, 'Credit Transactions', CREDIT_TRANSACTIONS.LIST);
+    }
   }
 
   loadData () {
@@ -81,6 +90,7 @@ class CreditTransactionsContainer extends Component {
     return (
       <CreditTransactionsPage
         creditTransfers={this._getCreditTransfers()}
+        highlight={this.props.match.params.id}
         loggedInUser={this.props.loggedInUser}
         organization={this._selectedOrganization()}
         organizations={this._getUniqueOrganizations()}
@@ -92,6 +102,11 @@ class CreditTransactionsContainer extends Component {
 }
 
 CreditTransactionsContainer.defaultProps = {
+  match: {
+    params: {
+      id: null
+    }
+  },
   organization: null
 };
 
@@ -109,6 +124,11 @@ CreditTransactionsContainer.propTypes = {
       id: PropTypes.number
     })
   }).isRequired,
+  match: PropTypes.shape({
+    params: PropTypes.shape({
+      id: PropTypes.string
+    })
+  }),
   organization: PropTypes.shape({
     name: PropTypes.string,
     organizationBalance: PropTypes.shape({
