@@ -77,8 +77,12 @@ class CreditTransferTextRepresentation extends Component {
         credit{(this.props.numberOfCredits > 1) && 's'} earned by
         <span className="value"> {this.creditsTo} </span> for the completion of a
         Part 3 Agreement milestone(s) has been
-        <span className="value lowercase"> {this.tradeStatus}</span>,
-        effective <span className="value"> {this.tradeEffectiveDate}</span>.
+        <span className="value lowercase"> {this.tradeStatus}</span>
+        {this.props.status.id === CREDIT_TRANSFER_STATUS.completed.id &&
+          <span>, effective
+            <span className="value"> {this.tradeEffectiveDate}</span>
+          </span>
+        }.
       </div>
     );
   }
@@ -90,8 +94,12 @@ class CreditTransferTextRepresentation extends Component {
         <span className="value"> {this.numberOfCredits} </span>
         credit{(this.props.numberOfCredits > 1) && 's'} earned by
         <span className="value"> {this.creditsFrom} </span>
-        has been <span className="value lowercase"> {this.tradeStatus}</span>,
-        effective <span className="value"> {this.tradeEffectiveDate}</span>.
+        has been <span className="value lowercase"> {this.tradeStatus}</span>
+        {this.props.status.id === CREDIT_TRANSFER_STATUS.completed.id &&
+          <span>, effective
+            <span className="value"> {this.tradeEffectiveDate}</span>
+          </span>
+        }.
       </div>
     );
   }
@@ -121,8 +129,12 @@ class CreditTransferTextRepresentation extends Component {
         <span className="value"> {this.numberOfCredits} </span>
         credit{(this.props.numberOfCredits > 1) && 's'} earned by
         <span className="value"> {this.creditsTo} </span>
-        has been <span className="value lowercase"> {this.tradeStatus}</span>,
-        effective <span className="value"> {this.tradeEffectiveDate}</span>.
+        has been <span className="value lowercase"> {this.tradeStatus}</span>
+        {this.props.status.id === CREDIT_TRANSFER_STATUS.completed.id &&
+          <span>, effective
+            <span className="value"> {this.tradeEffectiveDate}</span>
+          </span>
+        }.
       </div>
     );
   }

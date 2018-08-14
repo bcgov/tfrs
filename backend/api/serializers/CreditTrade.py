@@ -424,7 +424,7 @@ class CreditTrade2Serializer(serializers.ModelSerializer):
             return CreditTradeActions.accepted(request)
 
         elif cur_status == "Recommended" or cur_status == "Not Recommended":
-            return CreditTradeActions.reviewed(request)
+            return CreditTradeActions.reviewed(request, obj)
 
         return []
 

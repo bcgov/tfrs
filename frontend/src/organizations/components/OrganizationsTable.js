@@ -14,12 +14,6 @@ import ORGANIZATIONS from '../../constants/routes/Organizations';
 
 const OrganizationsTable = (props) => {
   const columns = [{
-    accessor: 'id',
-    className: 'col-id',
-    Header: 'ID',
-    resizable: false,
-    width: 35
-  }, {
     accessor: item => item.name,
     className: 'col-name',
     Header: 'Company Name',
