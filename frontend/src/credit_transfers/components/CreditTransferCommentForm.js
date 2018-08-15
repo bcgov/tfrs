@@ -39,7 +39,8 @@ class CreditTransferCommentForm extends Component {
 
   _renderTextArea () {
     return (
-      <label htmlFor="comment">Comment:
+      <label htmlFor="comment">
+        {this.props.isEditingExistingComment ? 'Edit Comment:' : 'Add New Comment:'}
         <textarea
           className="form-control"
           rows="5"
