@@ -70,7 +70,7 @@ class CreditTransferCommentForm extends Component {
               : <form onSubmit={e => e.preventDefault()}>{this._renderTextArea()}</form>
           }
           <div className="text-right">
-            {this.props.isCommentingOnUnsavedCreditTransfer ||
+            {this.props.embedded ||
               <div>
                 <button
                   className="btn btn-default"

@@ -31,13 +31,12 @@ const CreditTransferForm = props => (
         totalValue={props.totalValue}
         handleInputChange={props.handleInputChange}
       >
-        {props.id === 0 && <CreditTransferCommentForm
-          isCommentingOnUnsavedCreditTransfer
+        <CreditTransferCommentForm
+          isCommentingOnUnsavedCreditTransfer={props.id === 0}
           isCreatingPrivilegedComment={false}
           handleCommentChanged={props.handleCommentChanged}
           embedded
         />
-        }
         {props.id === 0 || <span>Save your transfer to add or modify comments</span>}
         {props.comments.map(c => (
           <CreditTransferComment comment={c} key={c.id} isReadOnly />
