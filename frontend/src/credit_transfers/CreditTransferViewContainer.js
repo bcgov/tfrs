@@ -319,7 +319,7 @@ class CreditTransferViewContainer extends Component {
         key="confirmAccept"
       >
         Are you sure you want to sign and send this Credit Transfer
-        Proposal to the Low Carbon Fuels Branch?
+        Proposal to the Government of British Columbia?
       </Modal>
     );
   }
