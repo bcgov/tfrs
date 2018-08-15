@@ -309,6 +309,12 @@ class CreditTradeService(object):
         """
         allowed_statuses = []
 
+        # Non-government users can never make changes to government only
+        # transactions
+        if credit_trade.type.is_gov_only_type and \
+                not request.user.is_government_user:
+            return allowed_statuses
+
         if credit_trade.status.status == "Draft":
             if request.user.has_perm('PROPOSE_CREDIT_TRANSFER'):
                 allowed_statuses.append("Cancelled")
@@ -318,9 +324,7 @@ class CreditTradeService(object):
                     credit_trade.initiator == request.user.organization):
                 allowed_statuses.append("Submitted")
 
-            if (credit_trade.type.the_type in [
-                    "Credit Validation", "Credit Retirement", "Part 3 Award"
-                ] and
+            if (credit_trade.type.is_gov_only_type and
                     request.user.has_perm('RECOMMEND_CREDIT_TRANSFER')):
                 allowed_statuses.append("Recommended")
 
@@ -346,18 +350,15 @@ class CreditTradeService(object):
             if request.user.has_perm('DECLINE_CREDIT_TRANSFER'):
                 allowed_statuses.append("Declined")
 
-            if (credit_trade.type.the_type in [
-                    "Credit Validation",
-                    "Credit Retirement",
-                    "Part 3 Award"
-            ] and (
-                request.user.has_perm('DECLINE_CREDIT_TRANSFER') or
-                request.user.has_perm('RESCIND_CREDIT_TRANSFER')
+            if (credit_trade.type.is_gov_only_type and (
+                    request.user.has_perm('DECLINE_CREDIT_TRANSFER') or
+                    request.user.has_perm('RESCIND_CREDIT_TRANSFER')
             )):
                 allowed_statuses.append("Draft")
 
         elif credit_trade.status.status == "Approved":
-            if request.user.has_perm('APPROVE_CREDIT_TRANSFER'):
+            if request.user.has_perm('APPROVE_CREDIT_TRANSFER') or \
+                    request.user.has_perm('USE_HISTORICAL_DATA_ENTRY'):
                 allowed_statuses.append("Approved")
 
         return allowed_statuses

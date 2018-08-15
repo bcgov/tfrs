@@ -128,7 +128,7 @@ class CreditTradeActions(object):
         return serializer.data
 
     @staticmethod
-    def reviewed(request):
+    def reviewed(request, credit_trade):
         """
         When the status is recommended or not recommended
         available actions should be:
@@ -140,20 +140,23 @@ class CreditTradeActions(object):
         status_dict = {s.status: s for s in CreditTradeActions.__statuses}
 
         available_statuses = []
-        if request.user.has_perm('APPROVE_CREDIT_TRANSFER'):
-            available_statuses.append(
-                status_dict["Approved"]
-            )
 
-        if request.user.has_perm('DECLINE_CREDIT_TRANSFER'):
-            available_statuses.append(
-                status_dict["Declined"]
-            )
+        if not credit_trade.type.is_gov_only_type or \
+                request.user.is_government_user:
+            if request.user.has_perm('APPROVE_CREDIT_TRANSFER'):
+                available_statuses.append(
+                    status_dict["Approved"]
+                )
 
-        if request.user.has_perm('RESCIND_CREDIT_TRANSFER'):
-            available_statuses.append(
-                status_dict["Cancelled"]
-            )
+            if request.user.has_perm('DECLINE_CREDIT_TRANSFER'):
+                available_statuses.append(
+                    status_dict["Declined"]
+                )
+
+            if request.user.has_perm('RESCIND_CREDIT_TRANSFER'):
+                available_statuses.append(
+                    status_dict["Cancelled"]
+                )
 
         serializer = CreditTradeStatusMinSerializer(
             available_statuses, many=True)
