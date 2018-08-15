@@ -70,7 +70,8 @@ const CreditTransferForm = props => (
         changeStatus={props.changeStatus}
         disabled={
           {
-            BTN_SIGN_1_2: props.fields.terms.findIndex(term => term.value === false) >= 0 ||
+            BTN_SIGN_1_2: !props.fields.terms ||
+            props.fields.terms.findIndex(term => term.value === false) >= 0 ||
             props.fields.terms.length === 0
           }
         }

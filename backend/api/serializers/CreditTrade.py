@@ -175,14 +175,16 @@ class CreditTradeCreateSerializer(serializers.ModelSerializer):
     def save(self, **kwargs):
         super().save(**kwargs)
 
+        request = self.context['request']
+
         if 'comment' in self.validated_data \
                 and self.validated_data['comment'] is not None\
                 and len(self.validated_data['comment'].strip()) > 0:
             comment = CreditTradeComment(
                 credit_trade=self.instance,
                 comment=self.validated_data['comment'],
-                create_user=self.context['request'].user,
-                update_user=self.context['request'].user,
+                create_user=request.user,
+                update_user=request.user,
                 create_timestamp=datetime.now(),
                 privileged_access=False
             )
@@ -417,14 +419,16 @@ class CreditTradeUpdateSerializer(serializers.ModelSerializer):
     def save(self, **kwargs):
         super().save(**kwargs)
 
+        request = self.context['request']
+
         if 'comment' in self.validated_data \
                 and self.validated_data['comment'] is not None \
                 and len(self.validated_data['comment'].strip()) > 0:
             comment = CreditTradeComment(
                 credit_trade=self.instance,
                 comment=self.validated_data['comment'],
-                create_user=self.context['request'].user,
-                update_user=self.context['request'].user,
+                create_user=request.user,
+                update_user=request.user,
                 create_timestamp=datetime.now(),
                 privileged_access=False
             )

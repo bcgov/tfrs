@@ -1,6 +1,7 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 import { IntlProvider } from 'react-intl';
-import PropTypes from 'prop-types';
+import ReduxToastr from 'react-redux-toastr';
 
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
@@ -23,6 +24,15 @@ const App = (props) => {
   return (
     <IntlProvider locale="en-CA">
       <div className="App">
+        <ReduxToastr
+          closeOnToastrClick
+          newesetOnTop={false}
+          position="top-center"
+          preventDuplicates
+          progressBar
+          transitionIn="fadeIn"
+          transitionOut="fadeOut"
+        />
         <Navbar loggedInUser={props.loggedInUser} />
         <div id="main" className="template container">
           {content}
