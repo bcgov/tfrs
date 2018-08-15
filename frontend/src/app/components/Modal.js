@@ -61,7 +61,7 @@ const Modal = props => (
             type="button"
             className="btn btn-primary"
             data-dismiss="modal"
-            disabled={!((!props.showExtraConfirm) || props.canBypass)}
+            disabled={!((!props.showExtraConfirm) || props.canBypassExtraConfirm)}
             onClick={props.handleSubmit}
           >
             {props.confirmLabel}
