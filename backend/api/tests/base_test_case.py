@@ -131,7 +131,8 @@ class BaseTestCase(TestCase):
         }
 
         self.zero_reason = {
-            'other': CreditTradeZeroReason.objects.get(reason='Other')
+            'other': CreditTradeZeroReason.objects.get(reason='Other'),
+            'affiliate': CreditTradeZeroReason.objects.get(reason='Internal')
         }
 
         logging.getLogger('django.request').setLevel(logging.ERROR)

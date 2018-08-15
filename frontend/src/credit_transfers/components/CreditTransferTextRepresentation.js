@@ -4,9 +4,10 @@ import moment from 'moment';
 import numeral from 'numeral';
 
 import * as NumberFormat from '../../constants/numeralFormats';
-import { CREDIT_TRANSFER_STATUS, CREDIT_TRANSFER_TYPES } from '../../constants/values';
+import { CREDIT_TRANSFER_STATUS, CREDIT_TRANSFER_TYPES, ZERO_DOLLAR_REASON } from '../../constants/values';
 
 class CreditTransferTextRepresentation extends Component {
+
   constructor (props) {
     super(props);
 
@@ -118,6 +119,17 @@ class CreditTransferTextRepresentation extends Component {
         {this.props.status.id !== CREDIT_TRANSFER_STATUS.refused.id &&
           <span>, effective <span className="value"> {this.tradeEffectiveDate}</span>.</span>
         }
+        {this.props.zeroDollarReason != null &&
+          <div className="zero-reason">
+            <span>This credit transfer has zero-value per-credit because:
+              <span className="value">
+                {Object.values(ZERO_DOLLAR_REASON)
+                  .find(zd => zd.id === this.props.zeroDollarReason.id)
+                  .textRepresentationDescription}
+              </span>
+            </span>
+          </div>
+        }
       </div>
     );
   }
@@ -184,7 +196,8 @@ CreditTransferTextRepresentation.defaultProps = {
   creditsTo: {
     name: 'To'
   },
-  tradeEffectiveDate: ''
+  tradeEffectiveDate: '',
+  zeroDollarReason: null
 };
 
 CreditTransferTextRepresentation.propTypes = {
@@ -221,7 +234,11 @@ CreditTransferTextRepresentation.propTypes = {
     id: PropTypes.number,
     name: PropTypes.string,
     theType: PropTypes.string
-  }).isRequired
+  }).isRequired,
+  zeroDollarReason: PropTypes.shape({
+    id: PropTypes.number,
+    reason: PropTypes.string
+  })
 };
 
 export default CreditTransferTextRepresentation;

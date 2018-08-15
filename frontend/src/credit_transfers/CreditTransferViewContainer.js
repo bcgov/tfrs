@@ -216,7 +216,8 @@ class CreditTransferViewContainer extends Component {
       respondent: item.respondent.id,
       status: status.id,
       tradeEffectiveDate: null,
-      type: item.type.id
+      type: item.type.id,
+      zeroReason: (item.zeroReason && item.zeroReason.id) || null
     };
 
     // Update credit transfer (status only)
@@ -490,7 +491,8 @@ class CreditTransferViewContainer extends Component {
       respondent: item.respondent.id,
       status: item.status.id,
       tradeEffectiveDate: null,
-      type: item.type.id
+      type: item.type.id,
+      zeroReason: (item.zeroReason && item.zeroReason.id) || null
     };
 
     const { id } = this.props.item;
@@ -555,6 +557,7 @@ class CreditTransferViewContainer extends Component {
       rescinded={item.rescinded}
       signatures={item.signatures}
       status={item.status}
+      zeroDollarReason={item.zeroReason}
       toggleCheck={this._toggleCheck}
       totalValue={item.totalValue}
       tradeEffectiveDate={item.tradeEffectiveDate}
@@ -603,6 +606,10 @@ CreditTransferViewContainer.propTypes = {
       PropTypes.string,
       PropTypes.number
     ]),
+    zeroReason: PropTypes.shape({
+      id: PropTypes.number,
+      reason: PropTypes.string
+    }),
     history: PropTypes.arrayOf(PropTypes.shape({
       status: PropTypes.shape({
         id: PropTypes.number,
