@@ -261,17 +261,6 @@ class CreditTransferAddContainer extends Component {
     ]);
   }
 
-  _saveComment (id, comment) {
-    // API data structure
-    const data = {
-      creditTrade: id,
-      comment,
-      privilegedAccess: true
-    };
-
-    return this.props.addCommentToCreditTransfer(data);
-  }
-
   _toggleCheck (key) {
     const fieldState = { ...this.state.fields };
     const index = fieldState.terms.findIndex(term => term.id === key);
