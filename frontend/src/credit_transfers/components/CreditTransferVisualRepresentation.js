@@ -62,7 +62,7 @@ class CreditTransferVisualRepresentation extends Component {
         </div>
         <div className="col-sm-4 col-md-2">
           <div className="arrow">
-            <div>{numeral(this.props.numberOfCredits).format(NumberFormat.INT)} credit{this.props.numberOfCredits > 2 && 's'}</div>
+            <div>{numeral(this.props.numberOfCredits).format(NumberFormat.INT)} credit{this.props.numberOfCredits > 1 && 's'}</div>
             <FontAwesomeIcon icon="exchange-alt" size="6x" />
             <div>{numeral(this.props.totalValue).format(NumberFormat.CURRENCY)}</div>
           </div>

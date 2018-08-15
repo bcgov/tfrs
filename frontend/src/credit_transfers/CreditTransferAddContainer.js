@@ -43,7 +43,8 @@ class CreditTransferAddContainer extends Component {
           respondent: {},
           tradeType: {
             id: CREDIT_TRANSFER_TYPES.part3Award.id
-          }
+          },
+          zeroDollarReason: { id: null, name: '' }
         }
       };
     } else {
@@ -60,7 +61,8 @@ class CreditTransferAddContainer extends Component {
           terms: [],
           tradeType: {
             id: CREDIT_TRANSFER_TYPES.sell.id
-          }
+          },
+          zeroDollarReason: { id: null, name: '' }
         },
         totalValue: 0
       };
@@ -113,8 +115,14 @@ class CreditTransferAddContainer extends Component {
       respondent: this.state.fields.respondent.id,
       status: status.id,
       tradeEffectiveDate: null,
-      type: this.state.fields.tradeType.id
+      type: this.state.fields.tradeType.id,
+      zeroReason: (this.state.fields.zeroDollarReason != null &&
+        this.state.fields.zeroDollarReason.id) || null
     };
+
+    if (data.fairMarketValuePerCredit > 0) {
+      data.zeroReason = null;
+    }
 
     this.props.addCreditTransfer(data).then((response) => {
       // if it's being proposed capture the acceptance of the terms
@@ -187,7 +195,7 @@ class CreditTransferAddContainer extends Component {
 
   _handleCommentChanged (comment) {
     this.setState({
-      comment: comment
+      comment
     });
   }
 

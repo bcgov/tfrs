@@ -43,7 +43,8 @@ class CreditTransferCommentForm extends Component {
 
   _renderTextArea () {
     return (
-      <label htmlFor="comment">Comment:
+      <label htmlFor="comment">
+        {this.props.isEditingExistingComment ? 'Edit Comment:' : 'Add New Comment:'}
         <textarea
           className="form-control"
           rows="5"
@@ -74,7 +75,7 @@ class CreditTransferCommentForm extends Component {
               : <form onSubmit={e => e.preventDefault()}>{this._renderTextArea()}</form>
           }
           <div className="text-right">
-            {this.props.isCommentingOnUnsavedCreditTransfer ||
+            {this.props.embedded ||
               <div>
                 <button
                   className="btn btn-default"

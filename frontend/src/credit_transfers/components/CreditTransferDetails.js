@@ -48,6 +48,7 @@ const CreditTransferDetails = props => (
               totalValue={props.totalValue}
               tradeEffectiveDate={props.tradeEffectiveDate}
               tradeType={props.tradeType}
+              zeroDollarReason={props.zeroDollarReason}
             />
           </div>
         </div>
@@ -138,6 +139,9 @@ CreditTransferDetails.defaultProps = {
   creditsTo: {
     name: '...'
   },
+  zeroDollarReason: {
+    id: null
+  },
   errors: {},
   fairMarketValuePerCredit: '0',
   history: [],
@@ -180,6 +184,10 @@ CreditTransferDetails.propTypes = {
     PropTypes.string,
     PropTypes.number
   ]),
+  zeroDollarReason: PropTypes.shape({
+    id: PropTypes.number,
+    reason: PropTypes.string
+  }),
   fields: PropTypes.shape({
     terms: PropTypes.array
   }).isRequired,

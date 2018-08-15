@@ -94,10 +94,14 @@ export const ADD_COMMAS_REGEX = /\B(?=(\d{3})+(?!\d))/g;
 export const ZERO_DOLLAR_REASON = {
   affiliate: {
     id: 1,
-    description: 'Affiliate'
+    description: 'Affiliate',
+    formButtonDescription: 'Transfer to Affiliated Organization',
+    textRepresentationDescription: 'it is a transfer of credits between affiliated organizations'
   },
   other: {
     id: 2,
-    description: 'Other'
+    description: 'Other',
+    formButtonDescription: 'Other Reason',
+    textRepresentationDescription: 'a reason should be specified in the comments'
   }
 };
