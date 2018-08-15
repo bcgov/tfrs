@@ -109,7 +109,8 @@ class BaseTestCase(TestCase):
 
         self.credit_trade_types = {
             'buy': CreditTradeType.objects.get(the_type='Buy'),
-            'sell': CreditTradeType.objects.get(the_type='Sell')
+            'sell': CreditTradeType.objects.get(the_type='Sell'),
+            'part3award': CreditTradeType.objects.get(the_type='Part 3 Award')
         }
 
         self.organizations = {

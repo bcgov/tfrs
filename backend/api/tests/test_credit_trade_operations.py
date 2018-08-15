@@ -849,3 +849,168 @@ class TestCreditTradeOperations(BaseTestCase):
         # third entry should be recommended
         self.assertEqual(credit_trade['history'][2]['status']['id'],
                          self.statuses['recommended'].id)
+
+    def test_fuel_supplier_should_see_reviewed_transfers_as_accepted(self):
+        """
+        As a fuel supplier, I should see recommended and not
+        recommended as accepted
+        """
+
+        # setup some test data
+        recommended_credit_trade = CreditTrade.objects.create(
+            status=self.statuses['recommended'],
+            initiator=self.users['fs_user_1'].organization,
+            respondent=self.users['fs_user_2'].organization,
+            type=self.credit_trade_types['sell'],
+            number_of_credits=1,
+            fair_market_value_per_credit=1,
+            zero_reason=None,
+            trade_effective_date=datetime.datetime.today().strftime(
+                '%Y-%m-%d'
+            )
+        )
+
+        response = self.clients['fs_user_1'].get('/api/credit_trades')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        credit_trades = response.json()
+
+        correct_view = True
+        for credit_trade in credit_trades:
+            if credit_trade['id'] == \
+               recommended_credit_trade.id:
+                if credit_trade['status']['id'] == \
+                        self.statuses['recommended'].id:
+                    correct_view = False
+
+        self.assertTrue(correct_view)
+
+        response = self.clients['fs_user_1'].get(
+            '/api/credit_trades/{}'.format(recommended_credit_trade.id)
+        )
+
+        credit_trade = json.loads(response.content.decode('utf-8'))
+        self.assertEqual(
+            credit_trade['status']['id'], self.statuses['accepted'].id
+        )
+
+    def test_gov_user_should_see_reviewed_transfers_properly(self):
+        """
+        As a government user, I should see recommended and not recommended
+        properly (and not as accepted like a fuel supplier)
+        """
+
+        # setup some test data
+        recommended_credit_trade = CreditTrade.objects.create(
+            status=self.statuses['recommended'],
+            initiator=self.users['fs_user_1'].organization,
+            respondent=self.users['fs_user_2'].organization,
+            type=self.credit_trade_types['sell'],
+            number_of_credits=1,
+            fair_market_value_per_credit=1,
+            zero_reason=None,
+            trade_effective_date=datetime.datetime.today().strftime(
+                '%Y-%m-%d'
+            )
+        )
+
+        response = self.clients['gov_analyst'].get('/api/credit_trades')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        credit_trades = response.json()
+
+        correct_view = True
+        for credit_trade in credit_trades:
+            if credit_trade['id'] == \
+               recommended_credit_trade.id:
+                if credit_trade['status']['id'] == \
+                        self.statuses['accepted'].id:
+                    correct_view = False
+
+        self.assertTrue(correct_view)
+
+        response = self.clients['gov_analyst'].get(
+            '/api/credit_trades/{}'.format(recommended_credit_trade.id)
+        )
+
+        credit_trade = json.loads(response.content.decode('utf-8'))
+        self.assertEqual(
+            credit_trade['status']['id'], self.statuses['recommended'].id
+        )
+
+    def test_fuel_supplier_shouldnt_see_recommended_pvr(self):
+        """
+        As a fuel supplier, I shouldnt see recommended PVRs
+        """
+
+        # setup some test data
+        recommended_credit_trade = CreditTrade.objects.create(
+            status=self.statuses['recommended'],
+            initiator=self.users['gov_analyst'].organization,
+            respondent=self.users['fs_user_1'].organization,
+            type=self.credit_trade_types['part3award'],
+            number_of_credits=1,
+            fair_market_value_per_credit=1,
+            zero_reason=None,
+            trade_effective_date=datetime.datetime.today().strftime(
+                '%Y-%m-%d'
+            )
+        )
+
+        response = self.clients['fs_user_1'].get('/api/credit_trades')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        credit_trades = response.json()
+
+        correct_view = True
+        for credit_trade in credit_trades:
+            if credit_trade['id'] == \
+                    recommended_credit_trade.id:
+                correct_view = False
+
+        self.assertTrue(correct_view)
+
+        response = self.clients['fs_user_1'].get(
+            '/api/credit_trades/{}'.format(recommended_credit_trade.id)
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+
+    def test_gov_user_should_see_recommended_pvr(self):
+        """
+        As a government user, I should see recommended PVRs
+        without problems
+        """
+
+        # setup some test data
+        recommended_credit_trade = CreditTrade.objects.create(
+            status=self.statuses['recommended'],
+            initiator=self.users['gov_analyst'].organization,
+            respondent=self.users['fs_user_1'].organization,
+            type=self.credit_trade_types['part3award'],
+            number_of_credits=1,
+            fair_market_value_per_credit=1,
+            zero_reason=None,
+            trade_effective_date=datetime.datetime.today().strftime(
+                '%Y-%m-%d'
+            )
+        )
+
+        response = self.clients['gov_analyst'].get('/api/credit_trades')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        credit_trades = response.json()
+
+        correct_view = False
+        for credit_trade in credit_trades:
+            if credit_trade['id'] == \
+                    recommended_credit_trade.id:
+                correct_view = True
+
+        self.assertTrue(correct_view)
+
+        response = self.clients['gov_analyst'].get(
+            '/api/credit_trades/{}'.format(recommended_credit_trade.id)
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)

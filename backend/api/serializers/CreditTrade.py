@@ -164,9 +164,33 @@ class CreditTradeListSerializer(serializers.ModelSerializer):
     credits_to = OrganizationMinSerializer(read_only=True)
     initiator = OrganizationMinSerializer(read_only=True)
     respondent = OrganizationMinSerializer(read_only=True)
-    status = CreditTradeStatusMinSerializer(read_only=True)
+    status = serializers.SerializerMethodField()
     type = CreditTradeTypeSerializer(read_only=True)
     zero_reason = CreditTradeZeroReasonSerializer(read_only=True)
+
+    def get_status(self, obj):
+        """
+        Should just return the status, but with an exception for
+        non-government users when the status is Recommended or
+        Not Recommended
+        """
+        request = self.context.get('request')
+
+        if ((obj.status.status == 'Recommended' or
+             obj.status.status == 'Not Recommended') and
+                not request.user.is_government_user):
+            accepted = CreditTradeStatus.objects.get(status="Accepted")
+
+            return {
+                'id': accepted.id,
+                'status': accepted.status
+            }
+
+        serializer = CreditTradeStatusMinSerializer(
+            obj.status,
+            read_only=True)
+
+        return serializer.data
 
     class Meta:
         model = CreditTrade
@@ -496,14 +520,14 @@ class CreditTrade2Serializer(serializers.ModelSerializer):
         """
         request = self.context.get('request')
 
-        if (obj.status.status == 'Recommended' or
-                obj.status.status == 'Not Recommended') and \
-            (not request.user.is_government_user):
-            recommended = CreditTradeStatus.objects.get(status="Recommended")
+        if ((obj.status.status == 'Recommended' or
+             obj.status.status == 'Not Recommended') and
+                not request.user.is_government_user):
+            accepted = CreditTradeStatus.objects.get(status="Accepted")
 
             return {
-                'id': recommended.id,
-                'status': 'Reviewed'
+                'id': accepted.id,
+                'status': accepted.status
             }
 
         serializer = CreditTradeStatusMinSerializer(
