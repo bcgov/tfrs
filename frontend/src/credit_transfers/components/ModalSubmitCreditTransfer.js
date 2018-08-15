@@ -15,7 +15,8 @@ const ModalSubmitCreditTransfer = props => (
     <p>
       Credits From: {props.item.creditsFrom.name} <br />
       Credits To: {props.item.creditsTo.name} <br />
-      Quantity of credits to be transferred: {props.item.numberOfCredits} <br />
+      Quantity of credits to be transferred: {
+        numeral(props.item.numberOfCredits).format(NumberFormat.INT)} <br />
       Value per credit: {numeral(props.item.fairMarketValuePerCredit).format(NumberFormat.CURRENCY)}
     </p>
     <p>
