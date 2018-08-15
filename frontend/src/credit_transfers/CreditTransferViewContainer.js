@@ -353,6 +353,31 @@ class CreditTransferViewContainer extends Component {
         showExtraConfirm={!this.state.hasCommented}
         extraConfirmType="warning"
       >
+        <div className="alert alert-warning">
+          <p>
+            Under section 11.11 (3) of the Regulation, the Director may decline to approve a
+            proposed transfer if the Director:
+          </p>
+          <dl>
+            <dt>(a)</dt>
+            <dd>
+              considers the intent of the transfer is to avoid compliance with the Act or
+              Regulation, or
+            </dd>
+            <dt>(b)</dt>
+            <dd>
+              is not satisfied that the transferor or transferee will be able to comply with the
+              low carbon fuel requirement (section 6 of the Act)
+            </dd>
+          </dl>
+          <p>
+            This statutory decision is appealable, and you are strongly encouraged to add a comment
+            that provides an explanation as to why the proposed transfer is being declined. The
+            comment will be visible to both Part 3 fuel suppliers involved in the proposed
+            transfer.
+          </p>
+        </div>
+
         Are you sure you want to decline to approve this credit
         {[CREDIT_TRANSFER_TYPES.buy.id, CREDIT_TRANSFER_TYPES.sell.id].indexOf(item.type.id) >= 0
           ? ' transfer proposal' : ' transaction'}?
