@@ -7,6 +7,7 @@ const CREDIT_TRANSACTIONS = {
   EDIT: `${BASE_PATH}/edit/:id`,
   EXPORT: `${API}/xls`,
   DETAILS: `${BASE_PATH}/view/:id`,
+  HIGHLIGHT: `${BASE_PATH}/highlight/:id`,
   LIST: BASE_PATH
 };
 

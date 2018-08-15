@@ -249,6 +249,11 @@
     }
   }
 
+  .zero-reason-form {
+    @extend .main-form;
+    margin: 1rem 0 0 0;
+  }
+
   .note {
     display: block;
     padding: 3rem 0 1rem 0;
@@ -307,6 +312,10 @@
 
   .value {
     font-weight: bold;
+  }
+
+  .zero-reason {
+    margin: 1rem 0 0 0;
   }
 }
 
@@ -428,6 +437,10 @@
 
     .col-status, .col-actions {
       text-align: center;
+    }
+
+    .highlight {
+      background-color: $yellow;
     }
 
     .greyed-out {

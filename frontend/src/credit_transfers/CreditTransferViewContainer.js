@@ -30,6 +30,7 @@ import Modal from '../app/components/Modal';
 import * as Lang from '../constants/langEnUs';
 import CREDIT_TRANSACTIONS from '../constants/routes/CreditTransactions';
 import { CREDIT_TRANSFER_STATUS, CREDIT_TRANSFER_TYPES } from '../constants/values';
+import toastr from '../utils/toastr';
 
 class CreditTransferViewContainer extends Component {
   constructor (props) {
@@ -88,7 +89,8 @@ class CreditTransferViewContainer extends Component {
 
   _approveCreditTransfer (id) {
     this.props.approveCreditTransfer(id).then(() => {
-      history.push(CREDIT_TRANSACTIONS.LIST);
+      history.push(CREDIT_TRANSACTIONS.HIGHLIGHT.replace(':id', id));
+      toastr.creditTransactionSuccess(CREDIT_TRANSFER_STATUS.approved.id, this.props.item);
     });
   }
 
@@ -214,7 +216,8 @@ class CreditTransferViewContainer extends Component {
       respondent: item.respondent.id,
       status: status.id,
       tradeEffectiveDate: null,
-      type: item.type.id
+      type: item.type.id,
+      zeroReason: (item.zeroReason && item.zeroReason.id) || null
     };
 
     // Update credit transfer (status only)
@@ -223,7 +226,8 @@ class CreditTransferViewContainer extends Component {
 
     this.props.updateCreditTransfer(id, data).then(() => {
       this.props.invalidateCreditTransfer();
-      history.push(CREDIT_TRANSACTIONS.LIST);
+      history.push(CREDIT_TRANSACTIONS.HIGHLIGHT.replace(':id', id));
+      toastr.creditTransactionSuccess(status.id, item);
     }, () => {
       // Failed to update
     });
@@ -243,8 +247,12 @@ class CreditTransferViewContainer extends Component {
   }
 
   _deleteCreditTransfer (id) {
+    const { item } = this.props;
+
     this.props.deleteCreditTransfer(id).then(() => {
+      this.props.invalidateCreditTransfer();
       history.push(CREDIT_TRANSACTIONS.LIST);
+      toastr.creditTransactionSuccess(CREDIT_TRANSFER_STATUS.deleted.id, item);
     });
   }
 
@@ -312,7 +320,7 @@ class CreditTransferViewContainer extends Component {
         key="confirmAccept"
       >
         Are you sure you want to sign and send this Credit Transfer
-        Proposal to the Low Carbon Fuels Branch?
+        Proposal to the Government of British Columbia?
       </Modal>
     );
   }
@@ -483,7 +491,8 @@ class CreditTransferViewContainer extends Component {
       respondent: item.respondent.id,
       status: item.status.id,
       tradeEffectiveDate: null,
-      type: item.type.id
+      type: item.type.id,
+      zeroReason: (item.zeroReason && item.zeroReason.id) || null
     };
 
     const { id } = this.props.item;
@@ -491,6 +500,8 @@ class CreditTransferViewContainer extends Component {
     this.props.updateCreditTransfer(id, data).then(() => {
       this.props.invalidateCreditTransfer();
       history.push(CREDIT_TRANSACTIONS.LIST);
+
+      toastr.creditTransactionSuccess(CREDIT_TRANSFER_STATUS.rescinded.id, item);
     }, () => {
       // Failed to update
     });
@@ -546,6 +557,7 @@ class CreditTransferViewContainer extends Component {
       rescinded={item.rescinded}
       signatures={item.signatures}
       status={item.status}
+      zeroDollarReason={item.zeroReason}
       toggleCheck={this._toggleCheck}
       totalValue={item.totalValue}
       tradeEffectiveDate={item.tradeEffectiveDate}
@@ -594,6 +606,10 @@ CreditTransferViewContainer.propTypes = {
       PropTypes.string,
       PropTypes.number
     ]),
+    zeroReason: PropTypes.shape({
+      id: PropTypes.number,
+      reason: PropTypes.string
+    }),
     history: PropTypes.arrayOf(PropTypes.shape({
       status: PropTypes.shape({
         id: PropTypes.number,

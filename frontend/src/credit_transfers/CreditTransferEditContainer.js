@@ -31,6 +31,7 @@ import history from '../app/History';
 import * as Lang from '../constants/langEnUs';
 import CREDIT_TRANSACTIONS from '../constants/routes/CreditTransactions';
 import { CREDIT_TRANSFER_STATUS, CREDIT_TRANSFER_TYPES } from '../constants/values';
+import toastr from '../utils/toastr';
 
 class CreditTransferEditContainer extends Component {
   constructor (props) {
@@ -45,7 +46,8 @@ class CreditTransferEditContainer extends Component {
           respondent: {},
           tradeType: {
             id: CREDIT_TRANSFER_TYPES.part3Award.id
-          }
+          },
+          zeroDollarReason: { id: null, name: '' }
         }
       };
     } else {
@@ -53,6 +55,7 @@ class CreditTransferEditContainer extends Component {
         creditsFrom: {},
         creditsTo: {},
         fields: {
+          comment: '',
           fairMarketValuePerCredit: '',
           initiator: {},
           note: '',
@@ -61,7 +64,8 @@ class CreditTransferEditContainer extends Component {
           terms: [],
           tradeType: {
             id: CREDIT_TRANSFER_TYPES.sell.id
-          }
+          },
+          zeroDollarReason: { id: null, name: '' }
         },
         totalValue: 0
       };
@@ -72,6 +76,7 @@ class CreditTransferEditContainer extends Component {
     this._deleteCreditTransfer = this._deleteCreditTransfer.bind(this);
     this._handleInputChange = this._handleInputChange.bind(this);
     this._handleSubmit = this._handleSubmit.bind(this);
+    this._handleCommentChanged = this._handleCommentChanged.bind(this);
     this._toggleCheck = this._toggleCheck.bind(this);
   }
 
@@ -126,12 +131,19 @@ class CreditTransferEditContainer extends Component {
       fairMarketValuePerCredit: parseFloat(this.state.fields.fairMarketValuePerCredit).toFixed(2),
       initiator: this.state.fields.initiator.id,
       note: this.state.fields.note,
+      comment: this.state.comment,
       numberOfCredits: parseInt(this.state.fields.numberOfCredits, 10),
       respondent: this.state.fields.respondent.id,
       status: status.id,
       tradeEffectiveDate: null,
-      type: this.state.fields.tradeType.id
+      type: this.state.fields.tradeType.id,
+      zeroReason: (this.state.fields.zeroDollarReason != null &&
+        this.state.fields.zeroDollarReason.id) || null
     };
+
+    if (data.fairMarketValuePerCredit > 0) {
+      data.zeroReason = null;
+    }
 
     const { id } = this.props.item;
 
@@ -147,7 +159,8 @@ class CreditTransferEditContainer extends Component {
       }
 
       this.props.invalidateCreditTransfer();
-      history.push(CREDIT_TRANSACTIONS.LIST);
+      history.push(CREDIT_TRANSACTIONS.HIGHLIGHT.replace(':id', id));
+      toastr.creditTransactionSuccess(status.id, this.props.item);
     }, () => {
       // Failed to update
     });
@@ -158,6 +171,7 @@ class CreditTransferEditContainer extends Component {
   _deleteCreditTransfer (id) {
     this.props.deleteCreditTransfer(id).then(() => {
       history.push(CREDIT_TRANSACTIONS.LIST);
+      toastr.creditTransactionSuccess(CREDIT_TRANSFER_STATUS.deleted.id, this.props.item);
     });
   }
 
@@ -177,7 +191,8 @@ class CreditTransferEditContainer extends Component {
     this.props.updateCreditTransfer(id, data).then((response) => {
       this._saveComment(comment);
 
-      history.push(CREDIT_TRANSACTIONS.LIST);
+      history.push(CREDIT_TRANSACTIONS.HIGHLIGHT.replace(':id', id));
+      toastr.creditTransactionSuccess(status.id, this.props.item);
     });
 
     return false;
@@ -186,6 +201,16 @@ class CreditTransferEditContainer extends Component {
   _handleInputChange (event) {
     const { value, name } = event.target;
     const fieldState = { ...this.state.fields };
+
+    if (name === 'zeroDollarReason') {
+      fieldState[name] = {
+        id: parseInt(value, 10)
+      };
+      this.setState({
+        fields: fieldState
+      });
+      return;
+    }
 
     if (typeof fieldState[name] === 'object') {
       this.changeObjectProp(parseInt(value, 10), name);
@@ -211,6 +236,13 @@ class CreditTransferEditContainer extends Component {
     return false;
   }
 
+  _handleCommentChanged (comment) {
+    this.setState({
+      comment
+    });
+  }
+
+
   _renderCreditTransfer () {
     let availableActions = [];
     const buttonActions = [Lang.BTN_SAVE_DRAFT, Lang.BTN_SIGN_1_2];
@@ -234,11 +266,13 @@ class CreditTransferEditContainer extends Component {
         changeStatus={this._changeStatus}
         creditsFrom={this.state.creditsFrom}
         creditsTo={this.state.creditsTo}
+        zeroDollarReason={this.state.zeroDollarReason}
         errors={this.props.errors}
         fields={this.state.fields}
         fuelSuppliers={this.props.fuelSuppliers}
         handleInputChange={this._handleInputChange}
         handleSubmit={this._handleSubmit}
+        handleCommentChanged={this._handleCommentChanged}
         id={item.id}
         key="creditTransferForm"
         loggedInUser={this.props.loggedInUser}
@@ -247,6 +281,7 @@ class CreditTransferEditContainer extends Component {
         toggleCheck={this._toggleCheck}
         totalValue={this.state.totalValue}
         tradeStatus={this.state.tradeStatus}
+        comments={this.props.item.comments}
       />,
       <ModalSubmitCreditTransfer
         handleSubmit={(event) => {
@@ -273,8 +308,14 @@ class CreditTransferEditContainer extends Component {
   }
 
   _renderGovernmentTransfer () {
+    const buttonActions = [
+      Lang.BTN_DELETE_DRAFT, Lang.BTN_SAVE_DRAFT, Lang.BTN_RECOMMEND_FOR_DECISION];
+
+    const { item } = this.props;
+
     return ([
       <GovernmentTransferForm
+        actions={buttonActions}
         errors={this.props.errors}
         fields={this.state.fields}
         fuelSuppliers={this.props.fuelSuppliers}
@@ -291,6 +332,13 @@ class CreditTransferEditContainer extends Component {
         key="confirmRecommend"
       >
         Are you sure you want to recommend approval of this credit transaction?
+      </Modal>,
+      <Modal
+        handleSubmit={() => this._deleteCreditTransfer(item.id)}
+        id="confirmDelete"
+        key="confirmDelete"
+      >
+        Are you sure you want to delete this draft?
       </Modal>
     ]);
   }
@@ -321,7 +369,8 @@ class CreditTransferEditContainer extends Component {
       respondent: item.respondent,
       terms: this.state.fields.terms,
       tradeStatus: item.status,
-      tradeType: item.type
+      tradeType: item.type,
+      zeroDollarReason: item.zeroReason
     };
 
     this.setState({
@@ -338,7 +387,8 @@ class CreditTransferEditContainer extends Component {
       compliancePeriod: (item.compliancePeriod) ? item.compliancePeriod : { id: 0 },
       numberOfCredits: item.numberOfCredits.toString(),
       respondent: item.respondent,
-      tradeType: item.type
+      tradeType: item.type,
+      zeroDollarReason: item.zeroReason
     };
 
     this.setState({
@@ -361,6 +411,7 @@ class CreditTransferEditContainer extends Component {
    */
   changeObjectProp (id, name) {
     const fieldState = { ...this.state.fields };
+
     if (name === 'respondent') {
       // Populate the dropdown
       const respondents = this.props.fuelSuppliers.filter(fuelSupplier => (fuelSupplier.id === id));
@@ -449,6 +500,10 @@ CreditTransferEditContainer.propTypes = {
       PropTypes.string,
       PropTypes.number
     ]),
+    zeroReason: PropTypes.shape({
+      id: PropTypes.number,
+      reason: PropTypes.string
+    }),
     numberOfCredits: PropTypes.oneOfType([
       PropTypes.string,
       PropTypes.number
@@ -457,6 +512,10 @@ CreditTransferEditContainer.propTypes = {
       PropTypes.string,
       PropTypes.number
     ]),
+    comments: PropTypes.arrayOf(PropTypes.shape({
+      id: PropTypes.number,
+      comment: PropTypes.string
+    })),
     actions: PropTypes.arrayOf(PropTypes.shape({}))
   }).isRequired,
   loggedInUser: PropTypes.shape({

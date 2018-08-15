@@ -140,6 +140,9 @@ const CreditTransferTable = (props) => {
         desc: true
       }]}
       filterable={filterable}
+      getTrProps={(state, rowInfo) => ({
+        className: (rowInfo && rowInfo.row.id.toString() === props.highlight) ? 'highlight' : null
+      })}
       pageSizeOptions={[5, 10, 15, 20, 25, 50, 100]}
       defaultFilterMethod={filterMethod}
       columns={columns}
@@ -147,7 +150,12 @@ const CreditTransferTable = (props) => {
   );
 };
 
+CreditTransferTable.defaultProps = {
+  highlight: null
+};
+
 CreditTransferTable.propTypes = {
+  highlight: PropTypes.string,
   items: PropTypes.arrayOf(PropTypes.object).isRequired,
   isEmpty: PropTypes.bool.isRequired,
   isFetching: PropTypes.bool.isRequired

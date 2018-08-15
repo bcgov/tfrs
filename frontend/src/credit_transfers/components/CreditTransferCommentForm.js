@@ -4,6 +4,10 @@ import * as Lang from '../../constants/langEnUs';
 
 class CreditTransferCommentForm extends Component {
   static titleText (props) {
+    if (props.isCommentingOnUnsavedCreditTransfer) {
+      return Lang.TEXT_ADD_INITIAL_COMMENT;
+    }
+
     if (props.isEditingExistingComment) {
       return Lang.TEXT_EDIT_COMMENT_HEADING;
     }
@@ -31,51 +35,68 @@ class CreditTransferCommentForm extends Component {
       this.setState({
         [prop]: e.target.value
       });
+      if (this.props.handleCommentChanged != null && prop === 'comment') {
+        this.props.handleCommentChanged(e.target.value);
+      }
     };
+  }
+
+  _renderTextArea () {
+    return (
+      <label htmlFor="comment">
+        {this.props.isEditingExistingComment ? 'Edit Comment:' : 'Add New Comment:'}
+        <textarea
+          className="form-control"
+          rows="5"
+          name="comment"
+          ref={(input) => { this.commentField = input; }}
+          placeholder={
+            this.props.isCreatingPrivilegedComment
+              ? Lang.TEXT_COMMENT_PLACEHOLDER_PRIVILEGED
+              : Lang.TEXT_COMMENT_PLACEHOLDER}
+          onChange={this.handleInputChange('comment')}
+          value={this.state.comment}
+        />
+      </label>
+    );
   }
 
   render () {
     return (
-      <div className="comment-form well transparent row">
+      <div className={`comment-form row ${this.props.embedded ? '' : 'well transparent'}`}>
+        {this.props.embedded ||
         <h2>
           {CreditTransferCommentForm.titleText(this.props)}
         </h2>
-        <div className="form-group note col-xs-8">
-          <form onSubmit={e => e.preventDefault()}>
-            <label htmlFor="comment">Comment:
-              <textarea
-                className="form-control"
-                rows="5"
-                name="comment"
-                ref={(input) => { this.commentField = input; }}
-                placeholder={
-                  this.props.isCreatingPrivilegedComment
-                    ? Lang.TEXT_COMMENT_PLACEHOLDER_PRIVILEGED
-                    : Lang.TEXT_COMMENT_PLACEHOLDER}
-                onChange={this.handleInputChange('comment')}
-                value={this.state.comment}
-              />
-            </label>
-          </form>
+        }
+        <div className={`note col-xs-8 ${this.props.embedded ? '' : 'form-group'}`}>
+          {
+            this.props.embedded ? this._renderTextArea()
+              : <form onSubmit={e => e.preventDefault()}>{this._renderTextArea()}</form>
+          }
           <div className="text-right">
-            <button
-              className="btn btn-default"
-              type="button"
-              onClick={() => this.props.cancelComment()}
-            >
-              {Lang.BTN_CANCEL_COMMENT}
-            </button>
-            <button
-              className="btn btn-primary"
-              type="button"
-              onClick={() => this.props.saveComment({
-                comment: this.state.comment,
-                privilegedAccess: this.props.isCreatingPrivilegedComment,
-                id: this.props.id
-              })}
-            >
-              {Lang.BTN_SAVE_COMMENT}
-            </button>
+            {this.props.embedded ||
+              <div>
+                <button
+                  className="btn btn-default"
+                  type="button"
+                  onClick={() => this.props.cancelComment()}
+                >
+                  {Lang.BTN_CANCEL_COMMENT}
+                </button>
+                <button
+                  className="btn btn-primary"
+                  type="button"
+                  onClick={() => this.props.saveComment({
+                    comment: this.state.comment,
+                    privilegedAccess: this.props.isCreatingPrivilegedComment,
+                    id: this.props.id
+                  })}
+                >
+                  {Lang.BTN_SAVE_COMMENT}
+                </button>
+              </div>
+            }
           </div>
         </div>
         <div className="col-xs-4">
@@ -100,7 +121,12 @@ class CreditTransferCommentForm extends Component {
 CreditTransferCommentForm.defaultProps = {
   comment: '',
   isEditingExistingComment: false,
-  id: null
+  isCommentingOnUnsavedCreditTransfer: false,
+  id: null,
+  saveComment: null,
+  cancelComment: null,
+  embedded: false,
+  handleCommentChanged: null
 };
 
 CreditTransferCommentForm.propTypes = {
@@ -108,8 +134,11 @@ CreditTransferCommentForm.propTypes = {
   id: PropTypes.number,
   isCreatingPrivilegedComment: PropTypes.bool.isRequired,
   isEditingExistingComment: PropTypes.bool,
-  saveComment: PropTypes.func.isRequired,
-  cancelComment: PropTypes.func.isRequired
+  isCommentingOnUnsavedCreditTransfer: PropTypes.bool,
+  embedded: PropTypes.bool,
+  saveComment: PropTypes.func,
+  cancelComment: PropTypes.func,
+  handleCommentChanged: PropTypes.func
 };
 
 export default CreditTransferCommentForm;

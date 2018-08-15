@@ -28,6 +28,7 @@ import history from '../app/History';
 import * as Lang from '../constants/langEnUs';
 import CREDIT_TRANSACTIONS from '../constants/routes/CreditTransactions';
 import { CREDIT_TRANSFER_STATUS, CREDIT_TRANSFER_TYPES } from '../constants/values';
+import toastr from '../utils/toastr';
 
 class CreditTransferAddContainer extends Component {
   constructor (props) {
@@ -36,17 +37,19 @@ class CreditTransferAddContainer extends Component {
     if (props.loggedInUser.isGovernmentUser) {
       this.state = {
         fields: {
-          comment: '',
+          comment: null,
           compliancePeriod: {},
           numberOfCredits: '',
           respondent: {},
           tradeType: {
             id: CREDIT_TRANSFER_TYPES.part3Award.id
-          }
+          },
+          zeroDollarReason: { id: null, name: '' }
         }
       };
     } else {
       this.state = {
+        comment: null,
         creditsFrom: {},
         creditsTo: {},
         fields: {
@@ -58,7 +61,8 @@ class CreditTransferAddContainer extends Component {
           terms: [],
           tradeType: {
             id: CREDIT_TRANSFER_TYPES.sell.id
-          }
+          },
+          zeroDollarReason: { id: null, name: '' }
         },
         totalValue: 0
       };
@@ -68,6 +72,7 @@ class CreditTransferAddContainer extends Component {
     this._changeStatus = this._changeStatus.bind(this);
     this._handleInputChange = this._handleInputChange.bind(this);
     this._handleSubmit = this._handleSubmit.bind(this);
+    this._handleCommentChanged = this._handleCommentChanged.bind(this);
     this._toggleCheck = this._toggleCheck.bind(this);
   }
 
@@ -105,12 +110,19 @@ class CreditTransferAddContainer extends Component {
       fairMarketValuePerCredit: parseFloat(this.state.fields.fairMarketValuePerCredit).toFixed(2),
       initiator: this.state.fields.initiator.id,
       note: this.state.fields.note,
+      comment: this.state.comment,
       numberOfCredits: parseInt(this.state.fields.numberOfCredits, 10),
       respondent: this.state.fields.respondent.id,
       status: status.id,
       tradeEffectiveDate: null,
-      type: this.state.fields.tradeType.id
+      type: this.state.fields.tradeType.id,
+      zeroReason: (this.state.fields.zeroDollarReason != null &&
+        this.state.fields.zeroDollarReason.id) || null
     };
+
+    if (data.fairMarketValuePerCredit > 0) {
+      data.zeroReason = null;
+    }
 
     this.props.addCreditTransfer(data).then((response) => {
       // if it's being proposed capture the acceptance of the terms
@@ -124,7 +136,8 @@ class CreditTransferAddContainer extends Component {
       }
 
       this.props.invalidateCreditTransfers();
-      history.push(CREDIT_TRANSACTIONS.LIST);
+      history.push(CREDIT_TRANSACTIONS.HIGHLIGHT.replace(':id', response.data.id));
+      toastr.creditTransactionSuccess(status.id, data);
     });
   }
 
@@ -147,7 +160,8 @@ class CreditTransferAddContainer extends Component {
       }
 
       this.props.invalidateCreditTransfers();
-      history.push(CREDIT_TRANSACTIONS.LIST);
+      history.push(CREDIT_TRANSACTIONS.HIGHLIGHT.replace(':id', response.data.id));
+      toastr.creditTransactionSuccess(status.id, data);
     });
   }
 
@@ -179,6 +193,12 @@ class CreditTransferAddContainer extends Component {
     return false;
   }
 
+  _handleCommentChanged (comment) {
+    this.setState({
+      comment
+    });
+  }
+
   _renderCreditTransfer () {
     const buttonActions = [Lang.BTN_SAVE_DRAFT, Lang.BTN_SIGN_1_2];
 
@@ -194,6 +214,7 @@ class CreditTransferAddContainer extends Component {
         fuelSuppliers={this.props.fuelSuppliers}
         handleInputChange={this._handleInputChange}
         handleSubmit={this._handleSubmit}
+        handleCommentChanged={this._handleCommentChanged}
         key="creditTransferForm"
         loggedInUser={this.props.loggedInUser}
         terms={this.state.terms}
@@ -219,8 +240,11 @@ class CreditTransferAddContainer extends Component {
   }
 
   _renderGovernmentTransfer () {
+    const buttonActions = [Lang.BTN_SAVE_DRAFT, Lang.BTN_RECOMMEND_FOR_DECISION];
+
     return ([
       <GovernmentTransferForm
+        actions={buttonActions}
         errors={this.props.errors}
         fields={this.state.fields}
         fuelSuppliers={this.props.fuelSuppliers}

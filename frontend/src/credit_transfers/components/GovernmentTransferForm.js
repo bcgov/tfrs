@@ -46,12 +46,25 @@ class GovernmentTransferForm extends Component {
             >
               {Lang.BTN_APP_CANCEL}
             </button>
+            {this.props.actions.includes(Lang.BTN_DELETE_DRAFT) &&
+            <button
+              className="btn btn-danger"
+              data-target="#confirmDelete"
+              data-toggle="modal"
+              type="button"
+            >
+              {Lang.BTN_DELETE_DRAFT}
+            </button>
+            }
+            {this.props.actions.includes(Lang.BTN_SAVE_DRAFT) &&
             <button
               className="btn btn-default"
               type="submit"
             >
               {Lang.BTN_SAVE_DRAFT}
             </button>
+            }
+            {this.props.actions.includes(Lang.BTN_RECOMMEND_FOR_DECISION) &&
             <TooltipWhenDisabled
               disabled={this.props.fields.comment.length === 0}
               title={Lang.TEXT_COMMENT_REQUIRED}
@@ -67,6 +80,7 @@ class GovernmentTransferForm extends Component {
                 {Lang.BTN_RECOMMEND_FOR_DECISION}
               </button>
             </TooltipWhenDisabled>
+            }
           </div>
         </form>
       </div>
@@ -80,6 +94,7 @@ GovernmentTransferForm.defaultProps = {
 };
 
 GovernmentTransferForm.propTypes = {
+  actions: PropTypes.arrayOf(PropTypes.string).isRequired,
   compliancePeriods: PropTypes.arrayOf(PropTypes.shape()).isRequired,
   errors: PropTypes.shape({}).isRequired,
   fields: PropTypes.shape({

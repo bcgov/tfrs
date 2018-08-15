@@ -41,9 +41,9 @@ export const CREDIT_TRANSFER_STATUS = {
     id: 7,
     description: 'Approved' /* changed from 'Completed' because the difference is not relevant to the user */
   },
-  rescinded: {
+  deleted: {
     id: 8,
-    description: 'Rescinded'
+    description: 'Deleted'
   },
   declinedForApproval: {
     id: 9,
@@ -52,6 +52,10 @@ export const CREDIT_TRANSFER_STATUS = {
   refused: {
     id: 10,
     description: 'Refused'
+  },
+  rescinded: {
+    id: 11,
+    description: 'Rescinded'
   }
 };
 
@@ -90,10 +94,14 @@ export const ADD_COMMAS_REGEX = /\B(?=(\d{3})+(?!\d))/g;
 export const ZERO_DOLLAR_REASON = {
   affiliate: {
     id: 1,
-    description: 'Affiliate'
+    description: 'Affiliate',
+    formButtonDescription: 'Transfer to Affiliated Organization',
+    textRepresentationDescription: 'it is a transfer of credits between affiliated organizations'
   },
   other: {
     id: 2,
-    description: 'Other'
+    description: 'Other',
+    formButtonDescription: 'Other Reason',
+    textRepresentationDescription: 'a reason should be specified in the comments'
   }
 };

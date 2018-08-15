@@ -850,6 +850,51 @@ class TestCreditTradeOperations(BaseTestCase):
         self.assertEqual(credit_trade['history'][2]['status']['id'],
                          self.statuses['recommended'].id)
 
+    def test_government_cannot_see_refused_trades(self):
+        """Verify that government users cannot see trades in status 'Refused'"""
+
+        ct = CreditTrade(
+            status=self.statuses['refused'],
+            type=self.credit_trade_types['buy'],
+            initiator=self.users['fs_user_1'].organization,
+            respondent=self.users['fs_user_2'].organization,
+            fair_market_value_per_credit=1,
+            number_of_credits=10
+        )
+        ct.save()
+
+        self.assertNotEqual(ct.id, 0)
+
+        with self.subTest("Initiator can see refused trade"):
+            response = self.clients['fs_user_1'].get('/api/credit_trades/{}'.format(ct.id))
+            self.assertTrue(status.is_success(response.status_code))
+
+        with self.subTest("Respondent can see refused trade"):
+            response = self.clients['fs_user_2'].get('/api/credit_trades/{}'.format(ct.id))
+            self.assertTrue(status.is_success(response.status_code))
+
+        with self.subTest("Third-party cannot see refused trade"):
+            response = self.clients['fs_user_3'].get('/api/credit_trades/{}'.format(ct.id))
+            self.assertFalse(status.is_success(response.status_code))
+
+        with self.subTest("Government analyst cannot see refused trade"):
+            response = self.clients['gov_analyst'].get('/api/credit_trades/{}'.format(ct.id))
+            self.assertFalse(status.is_success(response.status_code))
+
+            response = self.clients['gov_analyst'].get('/api/credit_trades')
+            self.assertTrue(status.is_success(response.status_code))
+            data = json.loads(response.content.decode('utf-8'))
+            self.assertFalse(any(trade['id'] == ct.id for trade in data))
+
+        with self.subTest("Government director cannot see refused trade"):
+            response = self.clients['gov_director'].get('/api/credit_trades/{}'.format(ct.id))
+            self.assertFalse(status.is_success(response.status_code))
+
+            response = self.clients['gov_director'].get('/api/credit_trades')
+            self.assertTrue(status.is_success(response.status_code))
+            data = json.loads(response.content.decode('utf-8'))
+            self.assertFalse(any(trade['id'] == ct.id for trade in data))
+
     def test_fuel_supplier_should_see_reviewed_transfers_as_accepted(self):
         """
         As a fuel supplier, I should see recommended and not

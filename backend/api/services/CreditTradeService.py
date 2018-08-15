@@ -28,13 +28,14 @@ class CreditTradeService(object):
         if organization == gov_org:
             # If organization == Government
             #  don't show "Cancelled" transactions
+            #  don't show "Refused" transactions
             #  don't show "Draft", "Submitted" transactions unless the
             #  initiator was government
             #  (Please note that government creating drafts and submitted is
             #  for testing only, in reality government will not do this)
             credit_trades = CreditTrade.objects.filter(
                 ~Q(status__status__in=["Cancelled"]) &
-                (~Q(status__status__in=["Draft", "Submitted"]) |
+                (~Q(status__status__in=["Draft", "Submitted", "Refused"]) |
                  Q(initiator=organization))
             )
         else:

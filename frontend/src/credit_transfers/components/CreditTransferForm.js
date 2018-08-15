@@ -13,6 +13,8 @@ import CreditTransferFormDetails from './CreditTransferFormDetails';
 import CreditTransferVisualRepresentation from './CreditTransferVisualRepresentation';
 import CreditTransferFormButtons from './CreditTransferFormButtons';
 import CreditTransferTerms from './CreditTransferTerms';
+import CreditTransferCommentForm from './CreditTransferCommentForm';
+import CreditTransferComment from './CreditTransferComment';
 
 const CreditTransferForm = props => (
   <div className="credit-transfer">
@@ -28,7 +30,20 @@ const CreditTransferForm = props => (
         fields={props.fields}
         totalValue={props.totalValue}
         handleInputChange={props.handleInputChange}
-      />
+      >
+        <CreditTransferCommentForm
+          isCommentingOnUnsavedCreditTransfer={props.id === 0}
+          isCreatingPrivilegedComment={false}
+          handleCommentChanged={props.handleCommentChanged}
+          embedded
+        />
+        {props.comments.length > 0 && <span>Save your transfer to modify existing comments</span>}
+        {props.comments.map(c => (
+          <CreditTransferComment comment={c} key={c.id} isReadOnly />
+        ))
+        }
+
+      </CreditTransferFormDetails>
 
       {Object.keys(props.errors).length > 0 &&
         <Errors errors={props.errors} />
@@ -41,9 +56,6 @@ const CreditTransferForm = props => (
         totalValue={props.totalValue}
         tradeType={props.fields.tradeType}
       />
-
-      {/* TODO A comprehensive deprecation is pending */}
-      <span>You will have the opportunity to create comments after saving a draft</span>
 
       {(props.loggedInUser.hasPermission(PERMISSIONS_CREDIT_TRANSACTIONS.SIGN)) &&
         <CreditTransferTerms
@@ -58,7 +70,8 @@ const CreditTransferForm = props => (
         changeStatus={props.changeStatus}
         disabled={
           {
-            BTN_SIGN_1_2: props.fields.terms.findIndex(term => term.value === false) >= 0 ||
+            BTN_SIGN_1_2: !props.fields.terms ||
+            props.fields.terms.findIndex(term => term.value === false) >= 0 ||
             props.fields.terms.length === 0
           }
         }
@@ -78,7 +91,9 @@ const CreditTransferForm = props => (
 
 CreditTransferForm.defaultProps = {
   id: 0,
-  title: 'Credit Transfer'
+  title: 'Credit Transfer',
+  handleCommentChanged: null,
+  comments: []
 };
 
 CreditTransferForm.propTypes = {
@@ -86,6 +101,10 @@ CreditTransferForm.propTypes = {
   buttonActions: PropTypes.arrayOf(PropTypes.string).isRequired,
   changeStatus: PropTypes.func.isRequired,
   errors: PropTypes.shape({}).isRequired,
+  comments: PropTypes.arrayOf(PropTypes.shape({
+    id: PropTypes.number,
+    comment: PropTypes.string
+  })),
   fields: PropTypes.shape({
     initiator: PropTypes.shape({
       name: PropTypes.string,
@@ -102,6 +121,10 @@ CreditTransferForm.propTypes = {
     }),
     numberOfCredits: PropTypes.string,
     fairMarketValuePerCredit: PropTypes.string,
+    zeroDollarReason: PropTypes.shape({
+      reason: PropTypes.string,
+      id: PropTypes.number
+    }),
     note: PropTypes.string.isRequired
   }).isRequired,
   creditsTo: PropTypes.shape({
@@ -115,6 +138,7 @@ CreditTransferForm.propTypes = {
   fuelSuppliers: PropTypes.arrayOf(PropTypes.shape()).isRequired,
   handleInputChange: PropTypes.func.isRequired,
   handleSubmit: PropTypes.func.isRequired,
+  handleCommentChanged: PropTypes.func,
   id: PropTypes.number,
   loggedInUser: PropTypes.shape({
     hasPermission: PropTypes.func

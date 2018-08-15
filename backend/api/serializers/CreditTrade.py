@@ -20,12 +20,16 @@
     See the License for the specific language governing permissions and
     limitations under the License.
 """
+from datetime import datetime
+
 from django.forms.models import model_to_dict
 from rest_framework import serializers
 
 from api.models.CreditTrade import CreditTrade
+from api.models.CreditTradeComment import CreditTradeComment
 from api.models.CreditTradeStatus import CreditTradeStatus
 from api.models.CreditTradeType import CreditTradeType
+from api.models.CreditTradeZeroReason import CreditTradeZeroReason
 from api.models.User import User
 from api.services.CreditTradeActions import CreditTradeActions
 from api.services.CreditTradeCommentActions import CreditTradeCommentActions
@@ -44,6 +48,7 @@ class CreditTradeSerializer(serializers.ModelSerializer):
     """
     Default Serializer for Credit Trade
     """
+
     class Meta:
         model = CreditTrade
         fields = ('id', 'status', 'initiator', 'respondent',
@@ -57,7 +62,9 @@ class CreditTradeCreateSerializer(serializers.ModelSerializer):
     """
     Serializer used when creating a Credit Trade
     """
+
     def validate(self, data):
+
         request = self.context['request']
 
         # no user should be allowed to create a rescinded proposal
@@ -88,15 +95,29 @@ class CreditTradeCreateSerializer(serializers.ModelSerializer):
             available_statuses.append('Recommended')
 
         if request.user.has_perm('SIGN_CREDIT_TRANSFER') and \
-           data.get('initiator') == request.user.organization:
+                data.get('initiator') == request.user.organization:
             available_statuses.append('Submitted')
 
         allowed_statuses = list(
             CreditTradeStatus.objects
-            .filter(status__in=available_statuses)
-            .only('id'))
+                .filter(status__in=available_statuses)
+                .only('id'))
 
         credit_trade_status = data.get('status')
+
+        will_create_a_comment = True if 'comment' in data \
+                                        and data['comment'] is not None \
+                                        and len(data['comment'].strip()) > 0 else False
+
+        if credit_trade_status.id == CreditTradeStatus.objects.get(status='Submitted').id:
+            zero_reason = data.get('zero_reason')
+
+            if zero_reason is not None and zero_reason in CreditTradeZeroReason.objects.filter(reason='Other'):
+                if not will_create_a_comment:
+                    raise serializers.ValidationError({
+                        'forbidden': "Cannot propose a trade with zero-reason 'Other' without"
+                                     " creating an explanatory comment'"
+                    })
 
         if credit_trade_status not in allowed_statuses:
             raise serializers.ValidationError({
@@ -108,12 +129,12 @@ class CreditTradeCreateSerializer(serializers.ModelSerializer):
 
         if (data.get('fair_market_value_per_credit') == 0 and
                 data.get('zero_reason') is None):
+
             allowed_types = list(
-                CreditTradeType.objects
-                .filter(the_type__in=[
-                    "Credit Validation", "Credit Retirement", "Part 3 Award"
-                ])
-                .only('id')
+                CreditTradeType.objects.filter(
+                    the_type__in=["Credit Validation", "Credit Retirement", "Part 3 Award"]).only(
+                    'id'
+                )
             )
 
             if credit_trade_type not in allowed_types:
@@ -123,17 +144,22 @@ class CreditTradeCreateSerializer(serializers.ModelSerializer):
                                         "Dollar per Credit"
                 })
 
+        if data.get('fair_market_value_per_credit') > 0 and data.get('zero_reason') is not None:
+            raise serializers.ValidationError(
+                {'zeroDollarReason': 'Zero dollar reason supplied but this trade has a '
+                                     'non-zero value-per-credit'})
+
         # If the initiator is 'selling', make sure that the organization
         # has enough credits
         sell_type = CreditTradeType.objects.get(the_type="Sell")
         draft_propose_statuses = list(
             CreditTradeStatus.objects
-            .filter(status__in=["Draft", "Submitted"])
-            .only('id'))
+                .filter(status__in=["Draft", "Submitted"])
+                .only('id'))
 
         if credit_trade_type == sell_type and \
-           data.get('initiator') == request.user.organization and \
-           credit_trade_status in draft_propose_statuses:
+                data.get('initiator') == request.user.organization and \
+                credit_trade_status in draft_propose_statuses:
 
             balance = request.user.organization.organization_balance[
                 'validated_credits']
@@ -142,14 +168,44 @@ class CreditTradeCreateSerializer(serializers.ModelSerializer):
                 raise serializers.ValidationError({
                     'insufficientCredits': "{} does not have enough credits "
                                            "for the proposal.".format(
-                                               request.user.organization.name)
+                        request.user.organization.name)
                 })
 
         return data
 
+    def save(self, **kwargs):
+        super().save(**kwargs)
+
+        request = self.context['request']
+
+        if 'comment' in self.validated_data \
+                and self.validated_data['comment'] is not None\
+                and len(self.validated_data['comment'].strip()) > 0:
+            comment = CreditTradeComment(
+                credit_trade=self.instance,
+                comment=self.validated_data['comment'],
+                create_user=request.user,
+                update_user=request.user,
+                create_timestamp=datetime.now(),
+                privileged_access=False
+            )
+            comment.save()
+
+        return self.instance
+
     class Meta:
         model = CreditTrade
-        fields = '__all__'
+        fields = ('id', 'status',
+                  'initiator', 'respondent',
+                  'type', 'number_of_credits',
+                  'fair_market_value_per_credit', 'total_value',
+                  'zero_reason',
+                  'trade_effective_date',
+                  'update_timestamp', 'note',
+                  'create_user', 'update_user',
+                  'compliance_period', 'is_rescinded', 'comment')
+
+    comment = serializers.CharField(max_length=4000, allow_null=True, allow_blank=True, required=False)
 
 
 class CreditTradeListSerializer(serializers.ModelSerializer):
@@ -205,6 +261,7 @@ class CreditTradeUpdateSerializer(serializers.ModelSerializer):
     """
     Serializer for Updating the Credit Trade
     """
+
     def validate(self, data):
         request = self.context['request']
         available_statuses = []
@@ -216,7 +273,7 @@ class CreditTradeUpdateSerializer(serializers.ModelSerializer):
             })
 
         if self.instance.status.status in [
-                "Cancelled", "Completed", "Declined", "Refused"
+            "Cancelled", "Completed", "Declined", "Refused"
         ]:
             raise serializers.ValidationError({
                 'readOnly': "Cannot update a transaction that's already "
@@ -226,10 +283,11 @@ class CreditTradeUpdateSerializer(serializers.ModelSerializer):
         # if the user is the respondent, they really shouldn't be modifying
         # other fields. So reset those to be sure that they weren't changed
         if self.instance.respondent == request.user.organization:
+            orig_data = data
             data = {
                 'compliance_period': self.instance.compliance_period,
                 'fair_market_value_per_credit':
-                self.instance.fair_market_value_per_credit,
+                    self.instance.fair_market_value_per_credit,
                 'initiator': self.instance.initiator,
                 'is_rescinded': bool(data.get('is_rescinded')),
                 'number_of_credits': self.instance.number_of_credits,
@@ -239,6 +297,10 @@ class CreditTradeUpdateSerializer(serializers.ModelSerializer):
                 'update_user': request.user,
                 'zero_reason': self.instance.zero_reason
             }
+
+            # Preserve the comment, if they are making one
+            if 'comment' in orig_data:
+                data['comment'] = orig_data['comment']
 
         # if status is being modified, make sure the next state is valid
         if 'status' in request.data:
@@ -250,14 +312,14 @@ class CreditTradeUpdateSerializer(serializers.ModelSerializer):
 
                 allowed_statuses = list(
                     CreditTradeStatus.objects
-                    .filter(status__in=available_statuses)
-                    .only('id'))
+                        .filter(status__in=available_statuses)
+                        .only('id'))
 
                 if credit_trade_status not in allowed_statuses:
                     raise serializers.ValidationError({
                         'invalidStatus': "You do not have permission to set "
                                          "the status to `{}`.".format(
-                                             credit_trade_status.status)
+                            credit_trade_status.status)
                     })
 
             if (credit_trade_status != self.instance.status and
@@ -267,9 +329,25 @@ class CreditTradeUpdateSerializer(serializers.ModelSerializer):
                                      "same time."
                 })
 
+            will_create_a_comment = True if 'comment' in data \
+                and data['comment'] is not None \
+                and len(data['comment'].strip()) > 0 else False
+
+            if credit_trade_status.status == 'Submitted':
+                zero_reason = data.get('zero_reason')
+                if zero_reason is not None and zero_reason.reason == 'Other':
+                    if not (will_create_a_comment or CreditTradeComment.objects.filter(
+                                credit_trade_id=self.instance.id,
+                                create_user__organization=request.user.organization
+                            ).exists()):
+                        raise serializers.ValidationError({
+                            'forbidden': "Cannot propose a trade with zero-reason 'Other' without"
+                                         " creating an explanatory comment'"
+                        })
+
         if data.get('is_rescinded') is True:
-            if request.user.organization not in [
-                    self.instance.initiator, self.instance.respondent]:
+            if request.user.organization not in [self.instance.initiator,
+                                                 self.instance.respondent]:
                 raise serializers.ValidationError({
                     'forbidden': "Cannot rescind unless organization is part "
                                  "of the proposal."
@@ -287,15 +365,18 @@ class CreditTradeUpdateSerializer(serializers.ModelSerializer):
                                  " the respondent"
                 })
 
-        if (data.get('fair_market_value_per_credit') == 0 and
-                data.get('zero_reason') is None):
-            allowed_types = list(
-                CreditTradeType.objects
-                .filter(the_type__in=[
-                    "Credit Validation", "Credit Retirement", "Part 3 Award"
-                ])
-                .only('id')
-            )
+        if data.get('fair_market_value_per_credit') is not None and \
+                data.get('fair_market_value_per_credit') > 0 and \
+                data.get('zero_reason') is not None:
+            raise serializers.ValidationError(
+                {'zeroDollarReason': 'Zero dollar reason supplied but this trade has a '
+                                     'non-zero value-per-credit'})
+
+        if data.get('fair_market_value_per_credit') == 0 and data.get('zero_reason') is None:
+            allowed_types = list(CreditTradeType.objects.filter(the_type__in=[
+                "Credit Validation", "Credit Retirement", "Part 3 Award"
+            ]).only('id')
+                                 )
 
             credit_trade_type = data.get('type')
 
@@ -332,11 +413,18 @@ class CreditTradeUpdateSerializer(serializers.ModelSerializer):
         else:
             number_of_credits = self.instance.number_of_credits
 
+        previous_state = CreditTrade.objects.get(id=self.instance.id)
+
+        if 'comment' in data and data['comment'] is not None and len(data['comment'].strip()) > 0:
+            if 'ADD_COMMENT' not in CreditTradeCommentActions.\
+                    available_comment_actions(request, previous_state):
+                raise serializers.ValidationError('Cannot add a comment in this state')
+
         accepted_status = CreditTradeStatus.objects.get(status="Accepted")
         draft_propose_statuses = list(
             CreditTradeStatus.objects
-            .filter(status__in=["Draft", "Submitted"])
-            .only('id'))
+                .filter(status__in=["Draft", "Submitted"])
+                .only('id'))
 
         if (self.instance.initiator == request.user.organization and
                 credit_trade_status in draft_propose_statuses and
@@ -348,20 +436,51 @@ class CreditTradeUpdateSerializer(serializers.ModelSerializer):
                 raise serializers.ValidationError({
                     'insufficientCredits': "{} does not have enough credits "
                                            "for the proposal.".format(
-                                               request.user.organization.name)
+                        request.user.organization.name)
                 })
 
         return data
 
+    def save(self, **kwargs):
+        super().save(**kwargs)
+
+        request = self.context['request']
+
+        if 'comment' in self.validated_data \
+                and self.validated_data['comment'] is not None \
+                and len(self.validated_data['comment'].strip()) > 0:
+            comment = CreditTradeComment(
+                credit_trade=self.instance,
+                comment=self.validated_data['comment'],
+                create_user=request.user,
+                update_user=request.user,
+                create_timestamp=datetime.now(),
+                privileged_access=False
+            )
+            comment.save()
+
+        return self.instance
+
     class Meta:
         model = CreditTrade
-        fields = '__all__'
+        fields = ('id', 'status',
+                  'initiator', 'respondent',
+                  'type', 'number_of_credits',
+                  'fair_market_value_per_credit', 'total_value',
+                  'zero_reason',
+                  'trade_effective_date',
+                  'update_timestamp', 'note',
+                  'create_user', 'update_user',
+                  'compliance_period', 'is_rescinded', 'comment')
+
+    comment = serializers.CharField(max_length=4000, allow_null=True, allow_blank=True, required=False)
 
 
 class CreditTradeApproveSerializer(serializers.ModelSerializer):
     """
     Serializer for Approving the Credit Trade
     """
+
     def validate(self, data):
         request = self.context['request']
 
@@ -372,7 +491,7 @@ class CreditTradeApproveSerializer(serializers.ModelSerializer):
             })
 
         if self.instance.status.status in [
-                "Approved", "Cancelled", "Completed", "Declined"
+            "Approved", "Cancelled", "Completed", "Declined"
         ]:
             raise serializers.ValidationError({
                 'readOnly': "Cannot approve a transaction that's already "
