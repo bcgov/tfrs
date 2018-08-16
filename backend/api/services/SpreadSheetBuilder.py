@@ -12,7 +12,7 @@ class SpreadSheetBuilder(object):
         """
         Adds a spreadsheet for credit transfers
         """
-        worksheet = self.workbook.add_sheet("Credit Transfers")
+        worksheet = self.workbook.add_sheet("Credit Transactions")
         row_index = 0
 
         columns = [
