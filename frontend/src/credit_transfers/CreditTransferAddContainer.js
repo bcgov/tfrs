@@ -37,7 +37,7 @@ class CreditTransferAddContainer extends Component {
     if (props.loggedInUser.isGovernmentUser) {
       this.state = {
         fields: {
-          comment: null,
+          comment: '',
           compliancePeriod: {},
           numberOfCredits: '',
           respondent: {},
@@ -142,23 +142,19 @@ class CreditTransferAddContainer extends Component {
   }
 
   _governmentTransferSubmit (status) {
-    const { comment } = this.state.fields;
-
     // API data structure
     const data = {
+      comment: this.state.fields.comment,
       compliancePeriod: this.state.fields.compliancePeriod.id,
       initiator: this.state.fields.initiator.id,
       numberOfCredits: parseInt(this.state.fields.numberOfCredits, 10),
       respondent: this.state.fields.respondent.id,
       status: status.id,
-      type: this.state.fields.tradeType.id
+      type: this.state.fields.tradeType.id,
+      zeroDollarReason: null
     };
 
     this.props.addCreditTransfer(data).then((response) => {
-      if (comment !== '') {
-        this._saveComment(response.data.id, comment);
-      }
-
       this.props.invalidateCreditTransfers();
       history.push(CREDIT_TRANSACTIONS.HIGHLIGHT.replace(':id', response.data.id));
       toastr.creditTransactionSuccess(status.id, data);
@@ -263,17 +259,6 @@ class CreditTransferAddContainer extends Component {
         Are you sure you want to recommend approval of this credit transaction?
       </Modal>
     ]);
-  }
-
-  _saveComment (id, comment) {
-    // API data structure
-    const data = {
-      creditTrade: id,
-      comment,
-      privilegedAccess: true
-    };
-
-    return this.props.addCommentToCreditTransfer(data);
   }
 
   _toggleCheck (key) {

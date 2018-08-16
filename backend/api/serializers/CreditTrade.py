@@ -144,7 +144,9 @@ class CreditTradeCreateSerializer(serializers.ModelSerializer):
                                         "Dollar per Credit"
                 })
 
-        if data.get('fair_market_value_per_credit') > 0 and data.get('zero_reason') is not None:
+        if data.get('fair_market_value_per_credit') is not None and \
+                data.get('fair_market_value_per_credit') > 0 and \
+                data.get('zero_reason') is not None:
             raise serializers.ValidationError(
                 {'zeroDollarReason': 'Zero dollar reason supplied but this trade has a '
                                      'non-zero value-per-credit'})
