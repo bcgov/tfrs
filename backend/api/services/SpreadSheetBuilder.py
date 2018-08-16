@@ -12,7 +12,7 @@ class SpreadSheetBuilder(object):
         """
         Adds a spreadsheet for credit transfers
         """
-        worksheet = self.workbook.add_sheet("Credit Transfers")
+        worksheet = self.workbook.add_sheet("Credit Transactions")
         row_index = 0
 
         columns = [
@@ -43,7 +43,7 @@ class SpreadSheetBuilder(object):
                                 credit_trade.compliance_period.description)
 
             if credit_trade.type:
-                worksheet.write(row_index, 2, credit_trade.type.the_type)
+                worksheet.write(row_index, 2, credit_trade.type.friendly_name)
 
             if credit_trade.type.the_type not in [
                     "Credit Validation", "Part 3 Award"]:
@@ -60,7 +60,7 @@ class SpreadSheetBuilder(object):
                                 credit_trade.fair_market_value_per_credit,
                                 value_format)
 
-            worksheet.write(row_index, 7, credit_trade.status.status)
+            worksheet.write(row_index, 7, credit_trade.status.friendly_name)
             worksheet.write(row_index, 8, credit_trade.trade_effective_date,
                             date_format)
 

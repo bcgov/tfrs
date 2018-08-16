@@ -2,7 +2,7 @@
     REST API Documentation for the NRS TFRS Credit Trading Application
 
     The Transportation Fuels Reporting System is being designed to streamline
-    compliance reporting for transportation fuel suppliers in accordance with 
+    compliance reporting for transportation fuel suppliers in accordance with
     the Renewable & Low Carbon Fuel Requirements Regulation.
 
     OpenAPI spec version: v1
@@ -28,6 +28,10 @@ from api.managers.CreditTradeTypeManager import CreditTradeTypeManager
 
 
 class CreditTradeType(Auditable):
+    """
+    Holds the different types of Credit Trades and if they're only usable
+    by government users only
+    """
     the_type = models.CharField(
         max_length=25,
         blank=True,
@@ -35,20 +39,43 @@ class CreditTradeType(Auditable):
         unique=True,
         db_comment='Type enumeration'
     )
-    description = models.CharField(max_length=1000, blank=True, null=True, db_comment='Displayed name')
-    display_order = models.IntegerField(db_comment='Relative rank in display sorting order')
-    effective_date = models.DateField(blank=True, null=True, db_comment='Not valid before')
-    expiration_date = models.DateField(blank=True, null=True, db_comment='Not valid after')
+    description = models.CharField(
+        max_length=1000, blank=True, null=True, db_comment='Displayed name')
+    display_order = models.IntegerField(
+        db_comment='Relative rank in display sorting order')
+    effective_date = models.DateField(
+        blank=True, null=True, db_comment='Not valid before')
+    expiration_date = models.DateField(
+        blank=True, null=True, db_comment='Not valid after')
     is_gov_only_type = models.BooleanField(
-        db_comment='Flag. True if only government users can create this type of transfer.'
+        db_comment='Flag. True if only government users can create this type '
+                   'of transfer.'
     )
 
     objects = CreditTradeTypeManager()
 
     def natural_key(self):
+        """
+        Allows type 'description' (Sell, Buy, etc) to be used to identify
+        a row in the table
+        """
         return (self.the_type,)
 
     class Meta:
         db_table = 'credit_trade_type'
 
     db_table_comment = 'Possible types of transfer'
+
+    @property
+    def friendly_name(self):
+        """
+        Front-end language for the Credit Trade Type
+        """
+        if self.the_type in ["Buy", "Sell"]:
+            return "Credit Transfer"
+        elif self.the_type == "Credit Retirement":
+            return "Reduction"
+        elif self.the_type == "Credit Validation":
+            return "Validation"
+
+        return self.the_type
