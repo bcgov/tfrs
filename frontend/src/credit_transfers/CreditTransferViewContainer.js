@@ -227,7 +227,14 @@ class CreditTransferViewContainer extends Component {
     this.props.updateCreditTransfer(id, data).then(() => {
       this.props.invalidateCreditTransfer();
       history.push(CREDIT_TRANSACTIONS.HIGHLIGHT.replace(':id', id));
-      toastr.creditTransactionSuccess(status.id, item);
+
+      if (
+        item.actions.findIndex(action => (action.action === Lang.BTN_DECLINE_FOR_APPROVAL)) >= 0
+      ) {
+        toastr.creditTransactionSuccess(status.id, item, 'Returned to Analyst.');
+      } else {
+        toastr.creditTransactionSuccess(status.id, item);
+      }
     }, () => {
       // Failed to update
     });
@@ -332,9 +339,9 @@ class CreditTransferViewContainer extends Component {
         id="confirmApprove"
         key="confirmApprove"
       >
-        Are you sure you want to approve this credit
+        Are you sure you want to approve this Credit
         {[CREDIT_TRANSFER_TYPES.buy.id, CREDIT_TRANSFER_TYPES.sell.id].indexOf(item.type.id) >= 0
-          ? ' transfer proposal' : ' transaction'}?
+          ? ' Transfer Proposal' : ' Transaction'}?
       </Modal>
     );
   }
@@ -349,13 +356,13 @@ class CreditTransferViewContainer extends Component {
         key="confirmDecline"
         canBypassExtraConfirm
         extraConfirmText="You have not provided a comment explaining why you to decline to approve
-         this credit transfer proposal"
+         this Credit Transfer Proposal"
         showExtraConfirm={!this.state.hasCommented}
         extraConfirmType="warning"
       >
-        Are you sure you want to decline to approve this credit
+        Are you sure you want to decline to approve this Credit
         {[CREDIT_TRANSFER_TYPES.buy.id, CREDIT_TRANSFER_TYPES.sell.id].indexOf(item.type.id) >= 0
-          ? ' transfer proposal' : ' transaction'}?
+          ? ' Transfer Proposal' : ' Transaction'}?
       </Modal>
     );
   }
@@ -380,15 +387,15 @@ class CreditTransferViewContainer extends Component {
         }}
         canBypassExtraConfirm={false}
         extraConfirmText="You must provide an explanatory comment if you are not recommending
-          to approve this transfer proposal"
+          to approve this Credit Transfer Proposal"
         showExtraConfirm={!this.state.hasCommented}
         extraConfirmType="error"
         id="confirmNotRecommend"
         key="confirmNotRecommend"
       >
-        Are you sure you want to not recommend approval of this credit
+        Are you sure you want to not recommend approval of this Credit
         {[CREDIT_TRANSFER_TYPES.buy.id, CREDIT_TRANSFER_TYPES.sell.id].indexOf(item.type.id) >= 0
-          ? ' transfer proposal' : ' transaction'}?
+          ? ' Transfer Proposal' : ' Transaction'}?
       </Modal>
     );
   }
@@ -416,9 +423,9 @@ class CreditTransferViewContainer extends Component {
         id="confirmRecommend"
         key="confirmRecommend"
       >
-        Are you sure you want to recommend approval of this credit
+        Are you sure you want to recommend approval of this Credit
         {[CREDIT_TRANSFER_TYPES.buy.id, CREDIT_TRANSFER_TYPES.sell.id].indexOf(item.type.id) >= 0
-          ? ' transfer proposal' : ' transaction'}?
+          ? ' Transfer Proposal' : ' Transaction'}?
       </Modal>
     );
   }
@@ -499,7 +506,7 @@ class CreditTransferViewContainer extends Component {
 
     this.props.updateCreditTransfer(id, data).then(() => {
       this.props.invalidateCreditTransfer();
-      history.push(CREDIT_TRANSACTIONS.LIST);
+      history.push(CREDIT_TRANSACTIONS.HIGHLIGHT.replace(':id', id));
 
       toastr.creditTransactionSuccess(CREDIT_TRANSFER_STATUS.rescinded.id, item);
     }, () => {

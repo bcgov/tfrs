@@ -2,12 +2,17 @@ import { toastr as reduxToastr } from 'react-redux-toastr';
 import { CREDIT_TRANSFER_STATUS, CREDIT_TRANSFER_TYPES } from '../constants/values';
 
 const toastr = {
-  creditTransactionSuccess: (statusId, item) => {
+  creditTransactionSuccess: (statusId, item, message = '') => {
     let text = 'Credit Transaction';
 
     if ([CREDIT_TRANSFER_TYPES.buy.id, CREDIT_TRANSFER_TYPES.sell.id]
       .indexOf(item.type.id) >= 0) {
-      text = 'Credit Transfer proposal';
+      text = 'Credit Transfer Proposal';
+    }
+
+    if (message !== '') { // message is only used to override
+      reduxToastr.success('Success!', message);
+      return;
     }
 
     switch (statusId) {
