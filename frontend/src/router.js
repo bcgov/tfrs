@@ -17,7 +17,7 @@ import CreditTransactionsHistory from './admin/credit_trade_history/CreditTradeH
 import HistoricalDataEntryContainer from './admin/historical_data_entry/HistoricalDataEntryContainer';
 import HistoricalDataEntryEditContainer from './admin/historical_data_entry/HistoricalDataEntryEditContainer';
 import UsersContainer from './admin/users/UsersContainer';
-import NotFound from './components/reusables/NotFound';
+import NotFound from './app/components/NotFound';
 import ContactUsContainer from './contact_us/ContactUsContainer';
 import CreditTransactionsContainer from './credit_transfers/CreditTransactionsContainer';
 import CreditTransferAddContainer from './credit_transfers/CreditTransferAddContainer';
