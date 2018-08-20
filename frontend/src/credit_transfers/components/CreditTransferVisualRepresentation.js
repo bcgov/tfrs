@@ -50,6 +50,30 @@ class CreditTransferVisualRepresentation extends Component {
     );
   }
 
+  _creditTransferIcon () {
+    if (Number(this.props.numberOfCredits) === 0) {
+      return { icon: 'minus', className: '' };
+    }
+
+    if (this.props.totalValue === 0.0) {
+      if (this.props.tradeType.id === CREDIT_TRANSFER_TYPES.buy.id) {
+        return { icon: 'arrow-left', className: '' };
+      }
+      if (this.props.tradeType.id === CREDIT_TRANSFER_TYPES.sell.id) {
+        return { icon: 'arrow-left', className: 'fa-flip-horizontal' };
+      }
+    }
+
+    if (this.props.tradeType.id === CREDIT_TRANSFER_TYPES.buy.id) {
+      return { icon: 'exchange-alt', className: '' };
+    }
+    if (this.props.tradeType.id === CREDIT_TRANSFER_TYPES.sell.id) {
+      return { icon: 'exchange-alt', className: '' };
+    }
+
+    return '';
+  }
+
   _renderCreditTransfer () {
     return (
       <div className="row visual-representation">
@@ -62,9 +86,16 @@ class CreditTransferVisualRepresentation extends Component {
         </div>
         <div className="col-sm-4 col-md-2">
           <div className="arrow">
+            {(Number(this.props.numberOfCredits) > 0) &&
             <div>{numeral(this.props.numberOfCredits).format(NumberFormat.INT)} credit{this.props.numberOfCredits > 1 && 's'}</div>
-            <FontAwesomeIcon icon="exchange-alt" size="6x" />
-            <div>{numeral(this.props.totalValue).format(NumberFormat.CURRENCY)}</div>
+            }
+            <FontAwesomeIcon
+              icon={this._creditTransferIcon().icon}
+              className={this._creditTransferIcon().className}
+              size="6x"
+            />
+            {Number(this.props.totalValue) > 0 &&
+            <div>{numeral(this.props.totalValue).format(NumberFormat.CURRENCY)}</div>}
           </div>
         </div>
         <div className="col-sm-4 col-md-3">
@@ -98,7 +129,8 @@ CreditTransferVisualRepresentation.defaultProps = {
   creditsTo: {
     name: 'To'
   },
-  numberOfCredits: ''
+  numberOfCredits: '',
+  zeroDollarReason: null
 };
 
 CreditTransferVisualRepresentation.propTypes = {
@@ -122,7 +154,11 @@ CreditTransferVisualRepresentation.propTypes = {
     id: PropTypes.number,
     name: PropTypes.string,
     theType: PropTypes.string
-  }).isRequired
+  }).isRequired,
+  zeroDollarReason: PropTypes.shape({
+    id: PropTypes.number,
+    reason: PropTypes.string
+  })
 };
 
 export default CreditTransferVisualRepresentation;
