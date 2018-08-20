@@ -93,17 +93,17 @@ class HistoricalDataEntryContainer extends Component {
     }
   }
 
-  _handleSubmit (event, status) {
+  _handleSubmit (event) {
     event.preventDefault();
 
     const data = this.props.prepareCreditTransfer(this.state.fields);
     const { comment } = this.state.fields;
 
-    this.props.addCreditTransfer(data).then((response) => {
-      if (comment !== '') {
-        this._saveComment(response.data.id, comment);
-      }
+    if (comment !== '') {
+      data.comment = comment;
+    }
 
+    this.props.addCreditTransfer(data).then((response) => {
       this.props.invalidateCreditTransfers();
       this.loadData();
       this.resetState();
@@ -116,17 +116,6 @@ class HistoricalDataEntryContainer extends Component {
     this.props.processApprovedCreditTransfers().then(() => {
       this.loadData();
     });
-  }
-
-  _saveComment (id, comment) {
-    // API data structure
-    const data = {
-      creditTrade: id,
-      comment,
-      privilegedAccess: true
-    };
-
-    return this.props.addCommentToCreditTransfer(data);
   }
 
   _selectIdForModal (id) {

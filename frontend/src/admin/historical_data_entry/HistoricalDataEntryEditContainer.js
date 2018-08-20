@@ -96,7 +96,7 @@ class HistoricalDataEntryEditContainer extends Component {
     const data = {
       creditTrade: this.props.item.id,
       comment,
-      privilegedAccess: true
+      privilegedAccess: false
     };
 
     if (item.comments.length > 0) {
