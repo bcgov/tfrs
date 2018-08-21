@@ -48,7 +48,8 @@ class CreditTransferEditContainer extends Component {
             id: CREDIT_TRANSFER_TYPES.part3Award.id
           },
           zeroDollarReason: { id: null, name: '' }
-        }
+        },
+        submitted: false
       };
     } else {
       this.state = {
@@ -67,6 +68,7 @@ class CreditTransferEditContainer extends Component {
           },
           zeroDollarReason: { id: null, name: '' }
         },
+        submitted: false,
         totalValue: 0
       };
     }
@@ -225,6 +227,8 @@ class CreditTransferEditContainer extends Component {
   _handleSubmit (event, status) {
     event.preventDefault();
 
+    this.state.submitted = true;
+
     // Government Transfer Submit
     if ([CREDIT_TRANSFER_TYPES.buy.id, CREDIT_TRANSFER_TYPES.sell.id]
       .indexOf(this.state.fields.tradeType.id) < 0) {
@@ -241,7 +245,6 @@ class CreditTransferEditContainer extends Component {
       comment
     });
   }
-
 
   _renderCreditTransfer () {
     let availableActions = [];
@@ -361,17 +364,25 @@ class CreditTransferEditContainer extends Component {
   }
 
   _setCreditTransferState (item) {
-    const fieldState = {
-      initiator: item.initiator,
-      fairMarketValuePerCredit: item.fairMarketValuePerCredit,
-      note: '',
-      numberOfCredits: item.numberOfCredits.toString(),
-      respondent: item.respondent,
-      terms: this.state.fields.terms,
-      tradeStatus: item.status,
-      tradeType: item.type,
-      zeroDollarReason: item.zeroReason
-    };
+    let fieldState = {};
+
+    if (this.state.submitted) {
+      fieldState = {
+        ...this.state.fields
+      };
+    } else {
+      fieldState = {
+        initiator: item.initiator,
+        fairMarketValuePerCredit: item.fairMarketValuePerCredit,
+        note: '',
+        numberOfCredits: item.numberOfCredits.toString(),
+        respondent: item.respondent,
+        terms: this.state.fields.terms,
+        tradeStatus: item.status,
+        tradeType: item.type,
+        zeroDollarReason: item.zeroReason
+      };
+    }
 
     this.setState({
       fields: fieldState,
@@ -382,14 +393,22 @@ class CreditTransferEditContainer extends Component {
   }
 
   _setGovernmentTransferState (item) {
-    const fieldState = {
-      comment: (item.comments.length > 0) ? item.comments[0].comment : '',
-      compliancePeriod: (item.compliancePeriod) ? item.compliancePeriod : { id: 0 },
-      numberOfCredits: item.numberOfCredits.toString(),
-      respondent: item.respondent,
-      tradeType: item.type,
-      zeroDollarReason: item.zeroReason
-    };
+    let fieldState = {};
+
+    if (this.state.submitted) {
+      fieldState = {
+        ...this.state.fields
+      };
+    } else {
+      fieldState = {
+        comment: (item.comments.length > 0) ? item.comments[0].comment : '',
+        compliancePeriod: (item.compliancePeriod) ? item.compliancePeriod : { id: 0 },
+        numberOfCredits: item.numberOfCredits.toString(),
+        respondent: item.respondent,
+        tradeType: item.type,
+        zeroDollarReason: item.zeroReason
+      };
+    }
 
     this.setState({
       fields: fieldState
@@ -538,6 +557,7 @@ CreditTransferEditContainer.propTypes = {
 
 const mapStateToProps = state => ({
   errors: state.rootReducer.creditTransfer.errors,
+  fields: state.rootReducer.creditTransfer.fields,
   fuelSuppliers: state.rootReducer.fuelSuppliersRequest.fuelSuppliers,
   isFetching: state.rootReducer.creditTransfer.isFetching,
   item: state.rootReducer.creditTransfer.item,

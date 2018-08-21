@@ -35,41 +35,44 @@ class CreditTradeCommentSerializer(serializers.ModelSerializer):
     class Meta:
         model = CreditTradeComment
         fields = (
-            'id', 'credit_trade', 'comment', 'privileged_access', 'create_timestamp',
-            'update_timestamp', 'create_user', 'actions')
+            'id', 'credit_trade', 'comment', 'privileged_access',
+            'create_timestamp', 'update_timestamp', 'create_user', 'actions')
 
-        read_only_fields = ('id', 'create_timestamp', 'update_timestamp', 'create_user')
+        read_only_fields = (
+            'id', 'create_timestamp', 'update_timestamp', 'create_user')
 
     def get_actions(self, obj):
         """Attach available commenting actions"""
 
         request = self.context.get('request')
-        assert request is not None
-        return CreditTradeCommentActions.available_individual_comment_actions(request, obj)
+
+        return CreditTradeCommentActions.available_individual_comment_actions(
+            request, obj)
 
 
 class CreditTradeCommentUpdateSerializer(serializers.ModelSerializer):
-    create_user = UserMinSerializer(read_only=True)
-
     """
-    Identical to above except that credit_trade and privileged_access are also read_only.
+    Identical to above except that credit_trade and privileged_access are also
+    read_only.
     Used for update operations (like PUT)
     """
+    create_user = UserMinSerializer(read_only=True)
+
     class Meta:
         model = CreditTradeComment
         fields = (
-            'id', 'credit_trade', 'comment', 'privileged_access', 'create_timestamp',
-            'update_timestamp', 'create_user', 'update_user')
+            'id', 'credit_trade', 'comment', 'privileged_access',
+            'create_timestamp', 'update_timestamp', 'create_user',
+            'update_user')
 
-        read_only_fields = ('id', 'create_timestamp', 'create_user', 'credit_trade',
-                            'privileged_access')
+        read_only_fields = ('id', 'create_timestamp', 'create_user',
+                            'credit_trade', 'privileged_access')
 
 
 class CreditTradeCommentCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = CreditTradeComment
-        fields = ('id', 'credit_trade', 'comment', 'privileged_access', 'create_user',
-                  'update_user')
+        fields = ('id', 'credit_trade', 'comment', 'privileged_access',
+                  'create_user', 'update_user')
+
         read_only_fields = ('id',)
-
-

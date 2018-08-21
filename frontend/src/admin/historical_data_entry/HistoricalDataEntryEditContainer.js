@@ -40,6 +40,7 @@ class HistoricalDataEntryEditContainer extends Component {
         transferType: '',
         zeroDollarReason: ''
       },
+      submitted: false,
       totalValue: 0
     };
 
@@ -73,6 +74,8 @@ class HistoricalDataEntryEditContainer extends Component {
 
   _handleSubmit (event) {
     event.preventDefault();
+
+    this.state.submitted = true;
 
     const data = this.props.prepareCreditTransfer(this.state.fields);
     const { id } = this.props.item;
@@ -133,18 +136,26 @@ class HistoricalDataEntryEditContainer extends Component {
     if (Object.keys(props.item).length !== 0) {
       const { item } = props;
 
-      const fieldState = {
-        // we only allow one comment per entry in the Historical Data Entry
-        comment: (item.comments.length > 0) ? item.comments[0].comment : '',
-        compliancePeriod: (item.compliancePeriod) ? item.compliancePeriod : { id: 0 },
-        creditsFrom: item.creditsFrom,
-        creditsTo: item.creditsTo,
-        fairMarketValuePerCredit: item.fairMarketValuePerCredit,
-        numberOfCredits: item.numberOfCredits.toString(),
-        tradeEffectiveDate: (item.tradeEffectiveDate) ? item.tradeEffectiveDate.toString() : '',
-        transferType: item.type.id.toString(),
-        zeroDollarReason: (item.zeroReason) ? item.zeroReason.id.toString() : ''
-      };
+      let fieldState = {};
+
+      if (this.state.submitted) {
+        fieldState = {
+          ...this.state.fields
+        };
+      } else {
+        fieldState = {
+          // we only allow one comment per entry in the Historical Data Entry
+          comment: (item.comments.length > 0) ? item.comments[0].comment : '',
+          compliancePeriod: (item.compliancePeriod) ? item.compliancePeriod : { id: 0 },
+          creditsFrom: item.creditsFrom,
+          creditsTo: item.creditsTo,
+          fairMarketValuePerCredit: item.fairMarketValuePerCredit,
+          numberOfCredits: item.numberOfCredits.toString(),
+          tradeEffectiveDate: (item.tradeEffectiveDate) ? item.tradeEffectiveDate.toString() : '',
+          transferType: item.type.id.toString(),
+          zeroDollarReason: (item.zeroReason) ? item.zeroReason.id.toString() : ''
+        };
+      }
 
       this.setState({
         fields: fieldState,
