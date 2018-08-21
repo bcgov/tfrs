@@ -66,7 +66,7 @@ class CreditTradeCommentUpdateSerializer(serializers.ModelSerializer):
             'update_user')
 
         read_only_fields = ('id', 'create_timestamp', 'create_user',
-                            'credit_trade', 'privileged_access')
+                            'credit_trade')
 
 
 class CreditTradeCommentCreateSerializer(serializers.ModelSerializer):
