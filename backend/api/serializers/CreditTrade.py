@@ -354,15 +354,14 @@ class CreditTradeUpdateSerializer(serializers.ModelSerializer):
                 data.get('fair_market_value_per_credit') > 0 and \
                 data.get('zero_reason') is not None:
             raise serializers.ValidationError(
-                {'zeroDollarReason': 'Zero dollar reason supplied but this '
-                                     'trade has a non-zero value-per-credit'})
+                {'zeroDollarReason': "Zero dollar reason supplied but this "
+                                     "trade has a non-zero value-per-credit"})
 
         if data.get('fair_market_value_per_credit') == 0 and \
                 data.get('zero_reason') is None:
             allowed_types = list(CreditTradeType.objects.filter(the_type__in=[
                 "Credit Validation", "Credit Retirement", "Part 3 Award"
-            ]).only('id')
-                                 )
+            ]).only('id'))
 
             credit_trade_type = data.get('type')
 
