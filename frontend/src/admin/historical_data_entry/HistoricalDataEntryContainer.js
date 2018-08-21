@@ -99,7 +99,7 @@ class HistoricalDataEntryContainer extends Component {
     const data = this.props.prepareCreditTransfer(this.state.fields);
     const { comment } = this.state.fields;
 
-    if (comment !== '') {
+    if (comment.length > 0) {
       data.comment = comment;
     }
 
