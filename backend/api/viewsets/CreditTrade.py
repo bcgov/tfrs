@@ -16,7 +16,7 @@ from rest_framework.decorators import list_route, detail_route
 from rest_framework.response import Response
 from rest_framework import filters
 
-from api.notifications.notifications import NotificationService, AMQPNotificationService
+from api.notifications.notifications import AMQPNotificationService
 from auditable.views import AuditableMixin
 
 from api.decorators import permission_required
@@ -128,12 +128,11 @@ class CreditTradeViewSet(AuditableMixin, mixins.CreateModelMixin,
     def perform_create(self, serializer):
         credit_trade = serializer.save()
         CreditTradeService.create_history(credit_trade, True)
-        # loop = asyncio.new_event_loop()
-        # loop.run_until_complete(asyncio.wait([
-        #     NotificationService.send_notification('credit trade {} created'.format(credit_trade.id)),
-        # ]))
-        # loop.close()
-        AMQPNotificationService.send_notification('credit trade {} created'.format(credit_trade.id))
+        AMQPNotificationService.send_notification(
+            'credit trade {} created'.format(credit_trade.id),
+            None,
+            related_credit_trade=credit_trade,
+            is_global=True)
 
     def perform_update(self, serializer):
         credit_trade = serializer.save()

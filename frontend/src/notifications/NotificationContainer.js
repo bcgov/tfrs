@@ -7,33 +7,32 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
 import NotificationsPage from './components/NotificationsPage';
+import {bindActionCreators} from "redux";
+import {updateCreditTransfer} from "../actions/creditTransfersActions";
+import getNotifications from "../actions/notificationActions";
 
 class NotificationContainer extends Component {
-  componentWillMount () {
-  }
-
   render () {
     return (
       <NotificationsPage
-        lastMessage={this.props.lastMessage}
-        messages={this.props.messages}
+        notifications={this.props.notifications}
+        isFetching={this.props.isFetching}
       />
     );
   }
 }
 
 NotificationContainer.defaultProps = {
-  lastMessage: null
 };
 
 NotificationContainer.propTypes = {
-  lastMessage: PropTypes.string,
-  messages: PropTypes.arrayOf(PropTypes.string).isRequired
+  notifications: PropTypes.arrayOf(PropTypes.object).isRequired,
+  isFetching: PropTypes.bool.isRequired
 };
 
 const mapStateToProps = state => ({
-  lastMessage: state.rootReducer.notificationsReducer.lastMessage,
-  messages: state.rootReducer.notificationsReducer.messages
+  notifications: state.rootReducer.notificationsReducer.notifications,
+  isFetching: state.rootReducer.notificationsReducer.fetching
 });
 
 const mapDispatchToProps = dispatch => ({

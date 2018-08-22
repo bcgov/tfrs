@@ -112,6 +112,8 @@ class Navbar extends Component {
             to={Routes.NOTIFICATIONS.LIST}
           >
             Notifications
+            {this.props.unreadNotificationsCount != null &&
+            <span> [{this.props.unreadNotificationsCount}]</span>}
           </NavLink>
         </div>
       </div>
@@ -307,6 +309,9 @@ class Navbar extends Component {
     );
   }
 }
+Navbar.defaultProps = {
+  unreadNotificationsCount: null
+};
 
 Navbar.propTypes = {
   loggedInUser: PropTypes.shape({
@@ -320,7 +325,8 @@ Navbar.propTypes = {
       id: PropTypes.number
     }))
   }).isRequired,
-  isAuthenticated: PropTypes.bool.isRequired
+  isAuthenticated: PropTypes.bool.isRequired,
+  unreadNotificationsCount: PropTypes.number
 };
 
 // export default Navbar;

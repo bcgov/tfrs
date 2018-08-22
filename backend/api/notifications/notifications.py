@@ -1,117 +1,88 @@
 import json
-import uuid
-from datetime import datetime
+from typing import List
 
 import pika
-from asgiref.sync import async_to_sync
-from channels.generic.websocket import JsonWebsocketConsumer
-from channels.layers import get_channel_layer
-from django.core.serializers.json import DjangoJSONEncoder
+from amqp import AMQPError
+from django.db import transaction
+
+from api.models.NotificationMessage import NotificationMessage
+from api.models.User import User
+from api.models.CreditTrade import CreditTrade
+from api.models.Organization import Organization
+from api.models.Role import Role
+from tfrs.settings import AMQP_CONNECTION_PARAMETERS
 
 
 class AMQPNotificationService:
 
     @staticmethod
-    def send_notification(message: str):
-        parameters = pika.ConnectionParameters()
-        connection = pika.BlockingConnection(parameters)
-        channel = connection.channel()
-        channel.confirm_delivery()
-        channel.exchange_declare(exchange='notifications',
-                                 durable=True,
-                                 auto_delete=False,
-                                 exchange_type='fanout')
-
-        channel.basic_publish(exchange='notifications',
-                              routing_key='global',
-                              body=json.dumps({
-                                  'message': message
-                              }),
-                              properties=pika.BasicProperties(content_type='application/json',
-                                                              delivery_mode=1),
-                              mandatory=True)
-
-
-class NotificationService:
+    def __determine_message_recipients(is_global: bool = False,
+                                       interested_organization: Organization = None,
+                                       interested_roles: List[Role] = None):
+        return User.objects.all()
 
     @staticmethod
-    async def send_notification(message):
-        print('calling group send')
-        channel = get_channel_layer()
-        await channel.group_send(
-            'global',
-            {
-                'type': 'notification.event',
-                'notification': json.dumps({
-                    'id': uuid.uuid4(),
-                    'message': message
-                },
-                    sort_keys=True,
-                    indent=1,
-                    cls=DjangoJSONEncoder
-                )
-            }
-        )
+    @transaction.atomic
+    def send_notification(message: str,
+                          interested_organization: Organization,
+                          interested_roles: List[Role] = [],
+                          related_credit_trade: CreditTrade = None,
+                          related_organization: Organization = None,
+                          is_error: bool = False,
+                          is_warning: bool = False,
+                          is_global: bool = False,
+                          originating_user: User = None):
 
+        if (interested_roles is None or len(interested_roles) == 0) and not is_global:
+            raise InvalidNotificationArguments('interested_roles is required'
+                                               ' if this is not a global notification')
+        if interested_organization is None and not is_global:
+            raise InvalidNotificationArguments('interested_organization is required'
+                                               ' if this is not a global notification')
+        if message is None or len(message) == 0:
+            raise InvalidNotificationArguments('msg is required')
 
-class NotificationDispatch(JsonWebsocketConsumer):
-    groups = []
-
-    def connect(self):
-        self.accept('tfrs-notification-v1')
-
-        # subscribe to organization channel, user channel, and global channel
-
-        self.groups = [
-            'global',
-            'organization_{}'.format(self.scope["user"].organization.id),
-            'user_{}'.format(self.scope["user"].id)
-        ]
-
-        for group_name in self.groups:
-            async_to_sync(self.channel_layer.group_add)(
-                group_name,
-                self.channel_name
+        for recipient in AMQPNotificationService.__determine_message_recipients(
+                is_global=is_global,
+                interested_roles=interested_roles,
+                interested_organization=interested_organization
+        ):
+            notification = NotificationMessage(
+                user=recipient,
+                originating_user=originating_user,
+                related_credit_trade=related_credit_trade,
+                related_organization=related_organization,
+                message=message,
+                is_error=is_error,
+                is_warning=is_warning
             )
+            notification.save()
 
-        self.send_json(
-            {
-                'status': 'SUBSCRIBED',
-                'at': datetime.today(),
-                'user': self.scope["user"].display_name,
-                'organization': self.scope["user"].organization.name
-            }
-        )
+        try:
+            parameters = AMQP_CONNECTION_PARAMETERS
+            connection = pika.BlockingConnection(parameters)
+            channel = connection.channel()
+            channel.confirm_delivery()
+            channel.exchange_declare(exchange='notifications',
+                                     durable=True,
+                                     auto_delete=False,
+                                     exchange_type='fanout')
 
-    def disconnect(self, close_code):
-        for group_name in self.groups:
-            print('disconnecting from {}'.format(group_name))
-            async_to_sync(self.channel_layer.group_discard)(group_name, self.channel_name)
+            channel.basic_publish(exchange='notifications',
+                                  routing_key='global',
+                                  body=json.dumps({
+                                      'message': 'notification'
+                                  }),
+                                  properties=pika.BasicProperties(content_type='application/json',
+                                                                  delivery_mode=1),
+                                  mandatory=True)
+        except AMQPError as error:
+            raise NotificationDeliveryFailure(error)
 
-    def receive_json(self, content, **kwargs):
-        pass
 
-    def notification_event(self, event):
-        """ received an event from one of our channels """
+class InvalidNotificationArguments(Exception):
+    pass
 
-        print('received global notification')
 
-        print(event)
-
-        self.send_json(
-            {
-                'status': 'NOTIFICATION_RECEIVED',
-                'at': datetime.today(),
-                'user': self.scope["user"].display_name,
-                'organization': self.scope["user"].organization.name,
-                'notification': json.loads(event['notification'])
-            }
-        )
-
-    def encode_json(cls, content):
-        return json.dumps(
-            content,
-            sort_keys=True,
-            indent=1,
-            cls=DjangoJSONEncoder
-        )
+class NotificationDeliveryFailure(Exception):
+    pass

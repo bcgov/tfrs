@@ -32,7 +32,7 @@ if (!isProduction) {
 
 io.on('connect', (socket) => {
   socket.join('global');
-  socket.emit('action', { type: 'server_notify', message: 'connected' });
+  socket.emit('action', { type: 'SERVER_INITIATED_NOTIFICATION_RELOAD', message: 'connected' });
 });
 
 proxy.on('error', (e) => {

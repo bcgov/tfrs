@@ -13,6 +13,9 @@ https://docs.djangoproject.com/en/1.8/ref/settings/
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
 
+from pika import ConnectionParameters, PlainCredentials
+from . import amqp
+
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 
@@ -40,7 +43,6 @@ BYPASS_AUTH = os.getenv('BYPASS_HEADER_AUTHENTICATION', False)
 # Application definition
 
 INSTALLED_APPS = (
-    'channels',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -106,8 +108,7 @@ TEMPLATES = [
     },
 ]
 
-#WSGI_APPLICATION = 'wsgi.application'
-ASGI_APPLICATION = 'api.routing.application'
+WSGI_APPLICATION = 'wsgi.application'
 TEST_RUNNER = 'django_nose.NoseTestSuiteRunner'
 
 # Database
@@ -122,14 +123,14 @@ DATABASES = {
     'default': database.config()
 }
 
-CHANNEL_LAYERS = {
-    'default': {
-        'BACKEND': 'channels_redis.core.RedisChannelLayer',
-        'CONFIG': {
-            "hosts": [('127.0.0.1', 6379)],
-        },
-    },
-}
+AMQP = amqp.config()
+
+AMQP_CONNECTION_PARAMETERS = ConnectionParameters(
+    host=AMQP['HOST'],
+    port=AMQP['PORT'],
+    virtual_host=AMQP['VHOST'],
+    credentials=PlainCredentials(AMQP['USER'], AMQP['PASSWORD'])
+)
 
 # Internationalization
 # https://docs.djangoproject.com/en/1.8/topics/i18n/
