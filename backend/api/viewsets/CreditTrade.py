@@ -1,12 +1,6 @@
 import datetime
 import hashlib
-import json
-import uuid
-import asyncio
 
-from asgiref.sync import async_to_sync
-from channels.layers import get_channel_layer
-from django.core.serializers.json import DjangoJSONEncoder
 from django.db.models import Q
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404

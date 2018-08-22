@@ -2,8 +2,8 @@ import json
 from typing import List
 
 import pika
-from amqp import AMQPError
 from django.db import transaction
+from pika.exceptions import AMQPError
 
 from api.models.NotificationMessage import NotificationMessage
 from api.models.User import User

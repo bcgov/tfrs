@@ -7,12 +7,13 @@ import io from 'socket.io-client';
 import thunk from 'redux-thunk';
 import rootReducer from '../reducers/reducer';
 import getNotifications from '../actions/notificationActions';
+import { SOCKETIO_URL } from '../constants/routes';
 
 const middleware = routerMiddleware(history);
 
 const loggerMiddleware = createLogger();
 
-const socket = io('http://localhost:3000');
+const socket = io(SOCKETIO_URL);
 const socketIoMiddleware = createSocketIoMiddleware(socket, 'socketio/');
 
 const store = process.env.NODE_ENV !== 'production' ? createStore(
@@ -40,17 +41,17 @@ const store = process.env.NODE_ENV !== 'production' ? createStore(
   )
 );
 
-let subscriptionProcessing = false;
+let subscription_processing = false;
 
 store.subscribe(() => {
   const state = store.getState();
-  if (!subscriptionProcessing) {
-    subscriptionProcessing = true;
+  if (!subscription_processing) {
+    subscription_processing = true;
 
-    if (state.rootReducer.notificationsReducer.serverInitiatedReloadRequested) {
+    if (state.rootReducer.notificationsReducer.serverInitiatedReloadRequested === true) {
       store.dispatch(getNotifications());
     }
-    subscriptionProcessing = false;
+    subscription_processing = false;
   }
 });
 

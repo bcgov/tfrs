@@ -41,7 +41,9 @@
     "redux-thunk": "^2.2.0",
     "socket.io": "^2.1.1",
     "webpack": "^3.10.0",
-    "socket.io-client": "latest"
+    "socket.io-client": "latest",
+    "socket.io-client": "latest",
+    "socket.io-middleware": "^0.2.1"
   },
   "devDependencies": {
     "babel-core": "^6.24.1",

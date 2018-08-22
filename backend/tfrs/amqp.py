@@ -4,7 +4,7 @@ import os
 def config():
     return {
         'ENGINE': 'rabbitmq',
-        'VHOST': '/',
+        'VHOST': os.getenv('RABBITMQ_VHOST', '/'),
         'USER': os.getenv('RABBITMQ_USER', 'guest'),
         'PASSWORD': os.getenv('RABBITMQ_PASSWORD', 'guest'),
         'HOST': os.getenv('RABBITMQ_HOST', 'localhost'),
