@@ -8,6 +8,7 @@
     "@fortawesome/fontawesome-free-regular": "^5.0.12",
     "@fortawesome/fontawesome-free-solid": "^5.0.6",
     "@fortawesome/react-fontawesome": "0.0.19",
+    "amqp": "^0.2.7",
     "axios": "^0.16.2",
     "babel-polyfill": "^6.26.0",
     "body-parser": "^1.17.1",
@@ -36,8 +37,11 @@
     "react-text-mask": "^5.4.2",
     "redux": "^3.6.0",
     "redux-logger": "^3.0.1",
+    "redux-socket.io": "^1.4.0",
     "redux-thunk": "^2.2.0",
-    "webpack": "^3.10.0"
+    "socket.io": "^2.1.1",
+    "webpack": "^3.10.0",
+    "socket.io-client": "latest"
   },
   "devDependencies": {
     "babel-core": "^6.24.1",

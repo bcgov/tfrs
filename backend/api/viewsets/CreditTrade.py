@@ -1,6 +1,12 @@
 import datetime
 import hashlib
+import json
+import uuid
+import asyncio
 
+from asgiref.sync import async_to_sync
+from channels.layers import get_channel_layer
+from django.core.serializers.json import DjangoJSONEncoder
 from django.db.models import Q
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
@@ -10,6 +16,7 @@ from rest_framework.decorators import list_route, detail_route
 from rest_framework.response import Response
 from rest_framework import filters
 
+from api.notifications.notifications import NotificationService, AMQPNotificationService
 from auditable.views import AuditableMixin
 
 from api.decorators import permission_required
@@ -121,6 +128,12 @@ class CreditTradeViewSet(AuditableMixin, mixins.CreateModelMixin,
     def perform_create(self, serializer):
         credit_trade = serializer.save()
         CreditTradeService.create_history(credit_trade, True)
+        # loop = asyncio.new_event_loop()
+        # loop.run_until_complete(asyncio.wait([
+        #     NotificationService.send_notification('credit trade {} created'.format(credit_trade.id)),
+        # ]))
+        # loop.close()
+        AMQPNotificationService.send_notification('credit trade {} created'.format(credit_trade.id))
 
     def perform_update(self, serializer):
         credit_trade = serializer.save()

@@ -24,3 +24,4 @@ export { default as COMPLIANCE_PERIODS } from './routes/CompliancePeriods';
 export { default as CONTACT_US } from './routes/ContactUs';
 export { default as SIGNING_AUTHORITY_ASSERTIONS } from './routes/SigningAuthorityAssertions';
 export { default as SIGNING_AUTHORITY_CONFIRMATIONS } from './routes/SigningAuthorityConfirmations';
+export { default as NOTIFICATIONS } from './routes/Notifications';

@@ -106,6 +106,13 @@ class Navbar extends Component {
             Administration
           </NavLink>
           }
+          <NavLink
+            activeClassName="active"
+            id="navbar-notifications"
+            to={Routes.NOTIFICATIONS.LIST}
+          >
+            Notifications
+          </NavLink>
         </div>
       </div>
     );
