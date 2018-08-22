@@ -54,8 +54,7 @@ const creditTransfer = (state = {
         ...state,
         didInvalidate: true,
         isFetching: false,
-        errors: action.errorMessage,
-        fields: action.data
+        errors: action.errorMessage
       };
     case ActionTypes.INVALIDATE_CREDIT_TRANSFER:
       return {

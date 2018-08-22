@@ -1,6 +1,8 @@
 .credit-transaction {
-  .btn-container {
-    text-align: right;
+  .credit-transfer-actions {
+    .btn-container {
+      text-align: right;
+    }  
   }
 
   .main-form {
@@ -18,6 +20,11 @@
       .btn {
         margin-right: 0;
       }
+    }
+
+    .note {
+      margin: 0;
+      padding: 0;
     }
   }
 }
