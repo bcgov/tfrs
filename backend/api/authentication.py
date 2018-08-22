@@ -1,4 +1,5 @@
 import uuid
+from django.conf import settings
 from django.db.models import Q
 from rest_framework import authentication
 from rest_framework import exceptions
@@ -6,10 +7,13 @@ from api.models.User import User
 from api.models.Organization import Organization
 from api.models.OrganizationType import OrganizationType
 from api.utils import get_firstname_lastname
-from django.conf import settings
 
 
 class UserAuthentication(authentication.BaseAuthentication):
+    """
+    Class that handles whether the user is suppoed to be authenticated
+    or rejected.
+    """
     def authenticate(self, request):
 
         # Bypass auth env variable
