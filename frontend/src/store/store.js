@@ -41,17 +41,17 @@ const store = process.env.NODE_ENV !== 'production' ? createStore(
   )
 );
 
-let subscription_processing = false;
+let subscriptionProcessing = false;
 
 store.subscribe(() => {
   const state = store.getState();
-  if (!subscription_processing) {
-    subscription_processing = true;
+  if (!subscriptionProcessing) {
+    subscriptionProcessing = true;
 
     if (state.rootReducer.notificationsReducer.serverInitiatedReloadRequested === true) {
       store.dispatch(getNotifications());
     }
-    subscription_processing = false;
+    subscriptionProcessing = false;
   }
 });
 

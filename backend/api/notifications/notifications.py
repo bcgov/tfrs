@@ -1,4 +1,5 @@
 import json
+from enum import Enum
 from typing import List
 
 import pika
@@ -11,6 +12,18 @@ from api.models.CreditTrade import CreditTrade
 from api.models.Organization import Organization
 from api.models.Role import Role
 from tfrs.settings import AMQP_CONNECTION_PARAMETERS
+
+
+class NotificationChannel(Enum):
+    IN_APP = "In-Application"
+    SMS = "SMS"
+    EMAIL = "Email"
+
+
+class NotificationType(Enum):
+    CREDIT_TRADE_CREATED = "Credit Trade Created"
+    CREDIT_TRADE_SIGNED_1OF2 = "Credit Trade Signed 1/2"
+    CREDIT_TRADE_SIGNED_2OF2 = "Credit Trade Signed 2/2"
 
 
 class AMQPNotificationService:
@@ -28,6 +41,7 @@ class AMQPNotificationService:
                           interested_roles: List[Role] = [],
                           related_credit_trade: CreditTrade = None,
                           related_organization: Organization = None,
+                          related_user: User = None,
                           is_error: bool = False,
                           is_warning: bool = False,
                           is_global: bool = False,
@@ -52,6 +66,7 @@ class AMQPNotificationService:
                 originating_user=originating_user,
                 related_credit_trade=related_credit_trade,
                 related_organization=related_organization,
+                related_user=related_user,
                 message=message,
                 is_error=is_error,
                 is_warning=is_warning

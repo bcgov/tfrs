@@ -29,6 +29,7 @@ from . import OrganizationAddress
 
 patch_fields()
 
+from . import NotificationSubscription
 
 # from __future__ import absolute_import
 

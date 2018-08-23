@@ -51,10 +51,17 @@ class NotificationMessage(Auditable):
         on_delete=models.PROTECT,
         null=True)
 
+    related_user = models.ForeignKey(
+        User,
+        on_delete=models.PROTECT,
+        related_name='notification_related_user',
+        null=True)
+
     originating_user = models.ForeignKey(
         User,
         on_delete=models.PROTECT,
         null=True,
+        related_name='notification_originating_user',
         db_comment='The (possibly NULL) user that caused this notification to be created'
     )
 
