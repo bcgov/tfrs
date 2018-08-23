@@ -26,6 +26,7 @@ import CreditTransferViewContainer from './credit_transfers/CreditTransferViewCo
 import MyOrganizationContainer from './organizations/MyOrganizationContainer';
 import OrganizationsContainer from './organizations/OrganizationsContainer';
 import OrganizationViewContainer from './organizations/OrganizationViewContainer';
+import SettingsContainer from './settings/SettingsContainer';
 import UserViewContainer from './users/UserViewContainer';
 
 const Router = props => (
@@ -48,6 +49,11 @@ const Router = props => (
 
             window.location = logoutUrl;
           }}
+        />
+        <Route
+          exact
+          path={Routes.SETTINGS}
+          component={withRouter(SettingsContainer)}
         />
         <Route
           exact

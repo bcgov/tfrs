@@ -2,6 +2,7 @@
 
 export const HOME = '/';
 export const LOGOUT = '/logout';
+export const SETTINGS = '/settings';
 
 // API Routes
 export const BASE_URL = `${window.location.protocol}//${window.location.host}/api`;
