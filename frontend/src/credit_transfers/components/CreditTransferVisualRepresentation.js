@@ -64,14 +64,13 @@ class CreditTransferVisualRepresentation extends Component {
       }
     }
 
-    if (this.props.tradeType.id === CREDIT_TRANSFER_TYPES.buy.id) {
-      return { icon: 'exchange-alt', className: '' };
+    switch (this.props.tradeType.id) {
+      case CREDIT_TRANSFER_TYPES.buy.id:
+      case CREDIT_TRANSFER_TYPES.sell.id:
+        return { icon: 'exchange-alt', className: '' };
+      default:
+        return { icon: 'minus', className: '' };
     }
-    if (this.props.tradeType.id === CREDIT_TRANSFER_TYPES.sell.id) {
-      return { icon: 'exchange-alt', className: '' };
-    }
-
-    return '';
   }
 
   _renderCreditTransfer () {
