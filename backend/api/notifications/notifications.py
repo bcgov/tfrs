@@ -14,12 +14,6 @@ from api.models.Role import Role
 from tfrs.settings import AMQP_CONNECTION_PARAMETERS
 
 
-class NotificationChannel(Enum):
-    IN_APP = "In-Application"
-    SMS = "SMS"
-    EMAIL = "Email"
-
-
 class NotificationType(Enum):
     CREDIT_TRADE_CREATED = "Credit Trade Created"
     CREDIT_TRADE_SIGNED_1OF2 = "Credit Trade Signed 1/2"

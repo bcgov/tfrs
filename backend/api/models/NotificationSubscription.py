@@ -23,8 +23,9 @@
 
 from django.db import models
 
+from api.models.NotificationChannel import NotificationChannel
 from api.models.User import User
-from api.notifications.notifications import NotificationType, NotificationChannel
+from api.notifications.notifications import NotificationType
 from auditable.models import Auditable
 
 
@@ -46,11 +47,11 @@ class NotificationSubscription(Auditable):
                                          null=False,
                                          blank=False)
 
-    channel = models.CharField(db_comment='The channel (delivery-mode) for this subscription',
-                               choices=[(d, d.value) for d in NotificationChannel],
-                               max_length=64,
-                               null=False,
-                               blank=False)
+    channel = models.ForeignKey(
+        NotificationChannel,
+        on_delete=models.CASCADE,
+        null=False
+    )
 
     enabled = models.BooleanField(db_comment='Enable subscription',
                                   null=False)

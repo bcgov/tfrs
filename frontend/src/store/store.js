@@ -6,7 +6,7 @@ import createSocketIoMiddleware from 'redux-socket.io';
 import io from 'socket.io-client';
 import thunk from 'redux-thunk';
 import rootReducer from '../reducers/reducer';
-import getNotifications from '../actions/notificationActions';
+import { getNotifications } from '../actions/notificationActions';
 import { SOCKETIO_URL } from '../constants/routes';
 
 const middleware = routerMiddleware(history);

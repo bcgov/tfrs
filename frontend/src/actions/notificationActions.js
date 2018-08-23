@@ -32,4 +32,32 @@ const getNotificationsSuccess = notifications => ({
   type: ActionTypes.RECEIVE_NOTIFICATIONS
 });
 
-export default getNotifications;
+const changeNotificationReadStatus = (id, isRead) => (dispatch) => {
+  dispatch(changeNotificationStatusRequest());
+
+  axios.put(`${Routes.BASE_URL}${Routes.NOTIFICATIONS_API}/${id}`, { isRead })
+    .then((response) => {
+      dispatch(changeNotificationStatusSuccess(response.data));
+    }).catch((error) => {
+      dispatch(changeNotificationReadStatusError(error.response));
+    });
+};
+
+const changeNotificationReadStatusError = error => ({
+  errorMessage: error,
+  name: ReducerTypes.ERROR_NOTIFICATION_REQUEST,
+  type: ActionTypes.ERROR
+});
+
+const changeNotificationStatusRequest = () => ({
+  name: ReducerTypes.POST_CHANGE_NOTIFICATION_READ_STATUS,
+  type: ActionTypes.POST_CHANGE_NOTIFICATION_READ_STATUS
+});
+
+const changeNotificationStatusSuccess = notification => ({
+  data: notification,
+  name: ReducerTypes.RECEIVE_CHANGE_NOTIFICATION_READ_STATUS,
+  type: ActionTypes.RECEIVE_CHANGE_NOTIFICATION_READ_STATUS
+});
+
+export { getNotifications, changeNotificationReadStatus };

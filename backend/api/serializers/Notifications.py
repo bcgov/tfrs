@@ -50,6 +50,13 @@ class NotificationMessageSerializer(serializers.ModelSerializer):
     Default Serializer for Notification Message
     """
 
+    def __init__(self, *args, **kwargs):
+        super(NotificationMessageSerializer, self).__init__(*args, **kwargs)
+
+        # mark all fields except is_read as read_only
+        for field_name in set(self.fields.keys()) - {'is_read'}:
+            self.fields[field_name].read_only = True
+
     class Meta:
         model = NotificationMessage
         fields = '__all__'

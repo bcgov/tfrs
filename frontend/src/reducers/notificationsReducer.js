@@ -27,6 +27,19 @@ const notificationsReducer = (state = {
         notifications: action.data,
         success: true
       };
+    case ActionTypes.POST_CHANGE_NOTIFICATION_READ_STATUS:
+      return {
+        ...state,
+        //fetching: true
+      };
+    case ActionTypes.RECEIVE_CHANGE_NOTIFICATION_READ_STATUS:
+      return {
+        ...state,
+       // fetching: false,
+        success: true,
+        notifications: state.notifications.map(n =>
+          (n.id === action.data.id ? action.data : n))
+      };
     case ActionTypes.ERROR:
       return {
         ...state,

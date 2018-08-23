@@ -7,9 +7,8 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
 import NotificationsPage from './components/NotificationsPage';
-import {bindActionCreators} from "redux";
-import {updateCreditTransfer} from "../actions/creditTransfersActions";
-import getNotifications from "../actions/notificationActions";
+import { bindActionCreators } from 'redux';
+import { changeNotificationReadStatus } from '../actions/notificationActions';
 
 class NotificationContainer extends Component {
   render () {
@@ -17,6 +16,7 @@ class NotificationContainer extends Component {
       <NotificationsPage
         notifications={this.props.notifications}
         isFetching={this.props.isFetching}
+        changeReadStatus={this.props.changeReadStatus}
       />
     );
   }
@@ -27,7 +27,8 @@ NotificationContainer.defaultProps = {
 
 NotificationContainer.propTypes = {
   notifications: PropTypes.arrayOf(PropTypes.object).isRequired,
-  isFetching: PropTypes.bool.isRequired
+  isFetching: PropTypes.bool.isRequired,
+  changeReadStatus: PropTypes.func.isRequired
 };
 
 const mapStateToProps = state => ({
@@ -36,6 +37,7 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
+  changeReadStatus: bindActionCreators(changeNotificationReadStatus, dispatch)
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(NotificationContainer);

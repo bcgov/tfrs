@@ -30,6 +30,7 @@ from . import OrganizationAddress
 patch_fields()
 
 from . import NotificationSubscription
+from . import NotificationChannel
 
 # from __future__ import absolute_import
 

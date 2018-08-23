@@ -8,6 +8,7 @@ from rest_framework.renderers import JSONRenderer
 from rest_framework.response import Response
 
 from api.models.NotificationMessage import NotificationMessage
+from api.permissions.Notifications import NotificationPermissions
 from api.serializers.Notifications import NotificationMessageSerializer
 from auditable.views import AuditableMixin
 
@@ -33,8 +34,12 @@ class NotificationTokenSerializer(serializers.Serializer):
 
 class NotificationViewSet(AuditableMixin,
                           mixins.ListModelMixin,
+                          mixins.UpdateModelMixin,
+                          mixins.RetrieveModelMixin,
                           viewsets.GenericViewSet):
 
+    permission_classes = (NotificationPermissions,)
+    http_method_names = ['get', 'put', 'post']
     serializer_class = NotificationMessageSerializer
     queryset = NotificationMessage.objects.all()
     ordering = ('-id',)
