@@ -61,6 +61,7 @@ const CreditTransferDetails = props => (
           numberOfCredits={props.numberOfCredits}
           totalValue={props.totalValue}
           tradeType={props.tradeType}
+          zeroDollarReason={props.zeroDollarReason}
         />
         {props.comments.map(c => (
           <CreditTransferComment comment={c} key={c.id} saveComment={props.saveComment} />
