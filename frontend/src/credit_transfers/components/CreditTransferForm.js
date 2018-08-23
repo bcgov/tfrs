@@ -15,6 +15,7 @@ import CreditTransferFormButtons from './CreditTransferFormButtons';
 import CreditTransferTerms from './CreditTransferTerms';
 import CreditTransferCommentForm from './CreditTransferCommentForm';
 import CreditTransferComment from './CreditTransferComment';
+import CreditTransferTextRepresentation from "./CreditTransferTextRepresentation";
 
 const CreditTransferForm = props => (
   <div className="credit-transfer">
@@ -55,6 +56,7 @@ const CreditTransferForm = props => (
         numberOfCredits={props.fields.numberOfCredits}
         totalValue={props.totalValue}
         tradeType={props.fields.tradeType}
+        zeroDollarReason={props.zeroDollarReason}
       />
 
       {(props.loggedInUser.hasPermission(PERMISSIONS_CREDIT_TRANSACTIONS.SIGN)) &&
@@ -93,7 +95,10 @@ CreditTransferForm.defaultProps = {
   id: 0,
   title: 'Credit Transfer',
   handleCommentChanged: null,
-  comments: []
+  comments: [],
+  zeroDollarReason: {
+    id: null
+  }
 };
 
 CreditTransferForm.propTypes = {
@@ -105,6 +110,10 @@ CreditTransferForm.propTypes = {
     id: PropTypes.number,
     comment: PropTypes.string
   })),
+  zeroDollarReason: PropTypes.shape({
+    id: PropTypes.number,
+    reason: PropTypes.string
+  }),
   fields: PropTypes.shape({
     initiator: PropTypes.shape({
       name: PropTypes.string,

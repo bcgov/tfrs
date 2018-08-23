@@ -247,6 +247,7 @@ class CreditTransferAddContainer extends Component {
         handleSubmit={this._handleSubmit}
         handleCommentChanged={this._handleCommentChanged}
         key="creditTransferForm"
+        zeroDollarReason={this.state.fields.zeroDollarReason}
         loggedInUser={this.props.loggedInUser}
         terms={this.state.terms}
         title="New Credit Transfer"
