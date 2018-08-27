@@ -5,19 +5,60 @@ from typing import List
 import pika
 from django.db import transaction
 from pika.exceptions import AMQPError
+from rest_framework import serializers
 
+from api.models.NotificationChannel import NotificationChannel
 from api.models.NotificationMessage import NotificationMessage
+from api.models.NotificationSubscription import NotificationSubscription
 from api.models.User import User
 from api.models.CreditTrade import CreditTrade
 from api.models.Organization import Organization
 from api.models.Role import Role
+from api.notifications.notification_types import NotificationType
 from tfrs.settings import AMQP_CONNECTION_PARAMETERS
 
 
-class NotificationType(Enum):
-    CREDIT_TRADE_CREATED = "Credit Trade Created"
-    CREDIT_TRADE_SIGNED_1OF2 = "Credit Trade Signed 1/2"
-    CREDIT_TRADE_SIGNED_2OF2 = "Credit Trade Signed 2/2"
+class EffectiveSubscription(object):
+    def __init__(self, channel, notification_type, subscribed):
+        self.channel = channel
+        self.notification_type = notification_type
+        self.subscribed = subscribed
+
+
+class EffectiveSubscriptionSerializer(serializers.Serializer):
+    channel = serializers.SerializerMethodField()
+    notification_type = serializers.SerializerMethodField()
+
+    subscribed = serializers.BooleanField()
+
+
+    def get_notification_type(self, obj):
+        data = obj.notification_type.name
+        return data
+
+
+    def get_channel(self, obj):
+        data = obj.channel.channel
+        return data
+
+class EffectiveSubscriptionUpdateSerializer(serializers.Serializer):
+    channel = serializers.CharField()
+    notification_type = serializers.CharField()
+    subscribed = serializers.BooleanField()
+
+
+    def validate(self, data):
+        try:
+            data['notification_type'] = NotificationType[data.get('notification_type')]
+        except KeyError:
+            raise serializers.ValidationError({'notification_type': 'Notification Type invalid'})
+
+        try:
+            data['channel'] = NotificationChannel.objects.get(channel=data.get('channel'))
+        except NotificationChannel.DoesNotExist:
+            raise serializers.ValidationError({'channel': 'Channel does not exist'})
+
+        return data
 
 
 class AMQPNotificationService:
@@ -27,6 +68,45 @@ class AMQPNotificationService:
                                        interested_organization: Organization = None,
                                        interested_roles: List[Role] = None):
         return User.objects.all()
+
+    @staticmethod
+    def compute_effective_subscriptions(user: User) -> List[EffectiveSubscription]:
+        all_channels = NotificationChannel.objects.all()
+        user_subscriptions = NotificationSubscription.objects.filter(user_id=user.id)
+        all_notification_types = NotificationType
+
+        effective_subscriptions = []
+
+        for channel in all_channels:
+            for notification_type in all_notification_types:
+                subscription = user_subscriptions.filter(channel=channel,notification_type=notification_type).first()
+                is_subscribed = subscription.enabled if subscription else channel.subscribe_by_default
+                effective_subscriptions.append(
+                    EffectiveSubscription(channel=channel,
+                                          notification_type=notification_type,
+                                          subscribed=is_subscribed)
+                )
+        return effective_subscriptions
+
+    @staticmethod
+    def update_subscription(user: User, channel: NotificationChannel, notification_type: NotificationType, subscribed: bool):
+        existing_subscription = NotificationSubscription.objects.filter(
+            user_id=user.id,
+            channel=channel,
+            notification_type=notification_type)
+
+        if existing_subscription.exists():
+            existing_subscription.first().enabled = subscribed
+            existing_subscription.save()
+        else:
+            NotificationSubscription(
+                user=user,
+                channel=channel,
+                notification_type=notification_type,
+                enabled=subscribed
+            ).save()
+
+
 
     @staticmethod
     @transaction.atomic

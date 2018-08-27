@@ -21,9 +21,9 @@ def create_notification_channels(apps, schema_editor):
     channel = apps.get_model("api", "NotificationChannel")
 
     channel.objects.using(db_alias).bulk_create([
-        channel(channel=NotificationChannel.AvailableChannels.IN_APP, enabled=True, subscribe_by_default=True),
-        channel(channel=NotificationChannel.AvailableChannels.SMS, enabled=False, subscribe_by_default=False),
-        channel(channel=NotificationChannel.AvailableChannels.EMAIL, enabled=True, subscribe_by_default=False)
+        channel(channel=NotificationChannel.AvailableChannels.IN_APP.name, enabled=True, subscribe_by_default=True),
+        channel(channel=NotificationChannel.AvailableChannels.SMS.name, enabled=False, subscribe_by_default=False),
+        channel(channel=NotificationChannel.AvailableChannels.EMAIL.name, enabled=True, subscribe_by_default=False)
     ])
 
 
@@ -39,10 +39,9 @@ def delete_notification_channels(apps, schema_editor):
     channel = apps.get_model("api", "NotificationChannel")
 
     channel.objects.using(db_alias).filter(
-        permission__code="USE_HISTORICAL_DATA_ENTRY",
-        channel__in=[NotificationChannel.AvailableChannels.IN_APP,
-                     NotificationChannel.AvailableChannels.SMS,
-                     NotificationChannel.AvailableChannels.EMAIL]
+        channel__in=[NotificationChannel.AvailableChannels.IN_APP.name,
+                     NotificationChannel.AvailableChannels.SMS.name,
+                     NotificationChannel.AvailableChannels.EMAIL.name]
     ).delete()
 
 
@@ -99,7 +98,7 @@ class Migration(migrations.Migration):
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('create_timestamp', models.DateTimeField(auto_now_add=True, null=True)),
                 ('update_timestamp', models.DateTimeField(auto_now=True, null=True)),
-                ('notification_type', models.CharField(choices=[(api.notifications.notifications.NotificationType('Credit Trade Created'), 'Credit Trade Created'), (api.notifications.notifications.NotificationType('Credit Trade Signed 1/2'), 'Credit Trade Signed 1/2'), (api.notifications.notifications.NotificationType('Credit Trade Signed 2/2'), 'Credit Trade Signed 2/2')], max_length=128)),
+                ('notification_type', models.CharField(choices=[(api.notifications.notification_types.NotificationType('Credit Transfer Proposal Created'), 'Credit Transfer Proposal Created'), (api.notifications.notification_types.NotificationType('Credit Transfer Proposal Signed 1/2'), 'Credit Transfer Proposal Signed 1/2'), (api.notifications.notification_types.NotificationType('Credit Transfer Proposal Signed 2/2'), 'Credit Transfer Proposal Signed 2/2'), (api.notifications.notification_types.NotificationType('Credit Transfer Proposal Refused'), 'Credit Transfer Proposal Refused'), (api.notifications.notification_types.NotificationType('Credit Transfer Proposal Accepted'), 'Credit Transfer Proposal Accepted'), (api.notifications.notification_types.NotificationType('Credit Transfer Proposal Recommended For Approval'), 'Credit Transfer Proposal Recommended For Approval'), (api.notifications.notification_types.NotificationType('Credit Transfer Proposal Recommended For Declination'), 'Credit Transfer Proposal Recommended For Declination'), (api.notifications.notification_types.NotificationType('Credit Transfer Proposal Declined'), 'Credit Transfer Proposal Declined'), (api.notifications.notification_types.NotificationType('Credit Transfer Proposal Approved'), 'Credit Transfer Proposal Approved'), (api.notifications.notification_types.NotificationType('Credit Transfer Proposal Rescinded'), 'Credit Transfer Proposal Rescinded'), (api.notifications.notification_types.NotificationType('Credit Transfer Proposal Comment Created Or Updated'), 'Credit Transfer Proposal Comment Created Or Updated'), (api.notifications.notification_types.NotificationType('Credit Transfer Proposal Internal Comment Created Or Updated'), 'Credit Transfer Proposal Internal Comment Created Or Updated')], max_length=128)),
                 ('enabled', models.BooleanField()),
                 ('channel', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='api.NotificationChannel')),
                 ('create_user', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, related_name='api_notificationsubscription_CREATE_USER', to=settings.AUTH_USER_MODEL)),
@@ -110,6 +109,10 @@ class Migration(migrations.Migration):
                 'db_table': 'notification_subscription',
             },
             bases=(models.Model, db_comments.model_mixins.DBComments),
+        ),
+        migrations.AlterUniqueTogether(
+            name='notificationsubscription',
+            unique_together=set([('user', 'channel', 'notification_type')]),
         ),
         RunPython(create_notification_channels, delete_notification_channels)
     ]

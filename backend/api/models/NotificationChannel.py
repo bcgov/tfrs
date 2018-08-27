@@ -36,7 +36,7 @@ class NotificationChannel(Auditable):
         EMAIL = "Email"
 
     channel = models.CharField(db_comment='The unique channel ID (delivery-mode) for this subscription',
-                               choices=[(d, d.value) for d in AvailableChannels],
+                               choices=[(d, d.name) for d in AvailableChannels],
                                max_length=64,
                                null=False,
                                blank=False,

@@ -25,7 +25,7 @@ from django.db import models
 
 from api.models.NotificationChannel import NotificationChannel
 from api.models.User import User
-from api.notifications.notifications import NotificationType
+from api.notifications.notification_types import NotificationType
 from auditable.models import Auditable
 
 
@@ -58,5 +58,6 @@ class NotificationSubscription(Auditable):
 
     class Meta:
         db_table = 'notification_subscription'
+        unique_together = ('user', 'channel', 'notification_type')
 
     db_table_comment = "Represents a user's subscription to notification events"
