@@ -24,6 +24,7 @@ import CreditTransferAddContainer from './credit_transfers/CreditTransferAddCont
 import CreditTransferEditContainer from './credit_transfers/CreditTransferEditContainer';
 import CreditTransferViewContainer from './credit_transfers/CreditTransferViewContainer';
 import MyOrganizationContainer from './organizations/MyOrganizationContainer';
+import NotificationsContainer from  './notifications/NotificationsContainer';
 import OrganizationsContainer from './organizations/OrganizationsContainer';
 import OrganizationViewContainer from './organizations/OrganizationViewContainer';
 import SettingsContainer from './settings/SettingsContainer';
@@ -49,6 +50,11 @@ const Router = props => (
 
             window.location = logoutUrl;
           }}
+        />
+        <Route
+          exact
+          path={Routes.NOTIFICATIONS}
+          component={withRouter(NotificationsContainer)}
         />
         <Route
           exact

@@ -2,6 +2,7 @@
 
 export const HOME = '/';
 export const LOGOUT = '/logout';
+export const NOTIFICATIONS = '/notifications';
 export const SETTINGS = '/settings';
 
 // API Routes

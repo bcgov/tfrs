@@ -116,7 +116,12 @@ class CreditTransferEditContainer extends Component {
 
   _addToFields (value) {
     const fieldState = { ...this.state.fields };
-    fieldState.terms.push(value);
+
+    const found = this.state.fields.terms.find(term => term.id === value.id);
+
+    if (!found) {
+      fieldState.terms.push(value);
+    }
 
     this.setState({
       fields: fieldState

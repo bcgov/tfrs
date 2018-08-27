@@ -32,6 +32,15 @@ class Navbar extends Component {
     const SecondLevelNavigation = (
       <div className="level2Navigation">
         <div className="container">
+          <div className="notifications">
+            <NavLink
+              activeClassName="active"
+              id="navbar-notifications"
+              to={Routes.NOTIFICATIONS}
+            >
+              <span className="number">0</span> <FontAwesomeIcon icon="bell" />
+            </NavLink>
+          </div>
           {this.props.loggedInUser.isGovernmentUser &&
           <NavLink
             activeClassName="active"

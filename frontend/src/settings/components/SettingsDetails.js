@@ -3,6 +3,8 @@
  */
 import React from 'react';
 import { Link } from 'react-router-dom';
+import PropTypes from 'prop-types';
+
 import NotificationsCreditTransactionsTable from './NotificationsCreditTransactionsTable';
 import CREDIT_TRANSFER_NOTIFICATIONS from '../../constants/settings/notificationsCreditTransfers';
 import GOVERNMENT_TRANSFER_NOTIFICATIONS from '../../constants/settings/notificationsGovernmentTransfers';
@@ -21,16 +23,35 @@ const SettingsDetails = props => (
     <div className="settings-notifications">
       <h3>Credit Transfers</h3>
 
-      <NotificationsCreditTransactionsTable items={CREDIT_TRANSFER_NOTIFICATIONS} />
+      <NotificationsCreditTransactionsTable
+        addToFields={props.addToFields}
+        fields={props.fields.settings.notifications}
+        items={CREDIT_TRANSFER_NOTIFICATIONS}
+        toggleCheck={props.toggleCheck}
+        type="credit-transfer"
+      />
 
       <h3>Credit Transactions (Part 3 Awards, Validations, Reductions)</h3>
 
-      <NotificationsCreditTransactionsTable items={GOVERNMENT_TRANSFER_NOTIFICATIONS} />
+      <NotificationsCreditTransactionsTable
+        addToFields={props.addToFields}
+        fields={props.fields.settings.notifications}
+        items={GOVERNMENT_TRANSFER_NOTIFICATIONS}
+        toggleCheck={props.toggleCheck}
+        type="government-transfer"
+      />
     </div>
   </div>
 );
 
 SettingsDetails.propTypes = {
+  addToFields: PropTypes.func.isRequired,
+  fields: PropTypes.shape({
+    settings: PropTypes.shape({
+      notifications: PropTypes.arrayOf(PropTypes.object).isRequired
+    }).isRequired
+  }).isRequired,
+  toggleCheck: PropTypes.func.isRequired
 };
 
 export default SettingsDetails;

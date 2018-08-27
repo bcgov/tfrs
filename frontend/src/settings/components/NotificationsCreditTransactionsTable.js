@@ -16,12 +16,16 @@ const NotificationsCreditTransactionsTable = (props) => {
     headerClassName: 'col-action',
     id: 'action'
   }, {
+    accessor: item => (item.key),
     Cell: row => (
       <CheckBox
-        addToFields={(field) => { }}
-        fields={[]}
-        id={1}
-        toggleCheck={() => {}}
+        addToFields={props.addToFields}
+        field="email"
+        fields={props.fields}
+        id={row.value}
+        toggleCheck={props.toggleCheck}
+        type={props.type}
+        value
       />
     ),
     className: 'col-email',
@@ -29,12 +33,16 @@ const NotificationsCreditTransactionsTable = (props) => {
     id: 'email',
     sortable: false
   }, {
+    accessor: item => (item.key),
     Cell: row => (
       <CheckBox
-        addToFields={(field) => { }}
-        fields={[]}
-        id={1}
-        toggleCheck={() => {}}
+        addToFields={props.addToFields}
+        field="sms"
+        fields={props.fields}
+        id={row.value}
+        toggleCheck={props.toggleCheck}
+        type={props.type}
+        value
       />
     ),
     className: 'col-sms',
@@ -42,17 +50,21 @@ const NotificationsCreditTransactionsTable = (props) => {
     id: 'sms',
     sortable: false
   }, {
+    accessor: item => (item.key),
     Cell: row => (
       <CheckBox
-        addToFields={(field) => { }}
-        fields={[]}
-        id={1}
-        toggleCheck={() => {}}
+        addToFields={props.addToFields}
+        field="inapp"
+        fields={props.fields}
+        id={row.value}
+        toggleCheck={props.toggleCheck}
+        type={props.type}
+        value
       />
     ),
-    className: 'col-sms',
+    className: 'col-in-app',
     Header: 'Receive In-App Notification',
-    id: 'sms',
+    id: 'in-app',
     sortable: false
   }];
 
@@ -66,7 +78,11 @@ const NotificationsCreditTransactionsTable = (props) => {
 };
 
 NotificationsCreditTransactionsTable.propTypes = {
-  items: PropTypes.arrayOf(PropTypes.object).isRequired
+  addToFields: PropTypes.func.isRequired,
+  fields: PropTypes.arrayOf(PropTypes.object).isRequired,
+  items: PropTypes.arrayOf(PropTypes.object).isRequired,
+  toggleCheck: PropTypes.func.isRequired,
+  type: PropTypes.string.isRequired
 };
 
 export default NotificationsCreditTransactionsTable;
