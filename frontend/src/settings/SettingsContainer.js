@@ -5,9 +5,13 @@
 
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 import PropTypes from 'prop-types';
 
 import SettingsDetails from './components/SettingsDetails';
+import { getLoggedInUser } from '../actions/userActions';
+import CREDIT_TRANSFER_NOTIFICATIONS from '../constants/settings/notificationsCreditTransfers';
+import GOVERNMENT_TRANSFER_NOTIFICATIONS from '../constants/settings/notificationsGovernmentTransfers';
 
 class SettingsContainer extends Component {
   constructor (props) {
@@ -22,6 +26,7 @@ class SettingsContainer extends Component {
     };
 
     this._addToFields = this._addToFields.bind(this);
+    this._handleSubmit = this._handleSubmit.bind(this);
     this._toggleCheck = this._toggleCheck.bind(this);
   }
 
@@ -52,6 +57,32 @@ class SettingsContainer extends Component {
     });
   }
 
+  _handleSubmit (event, status) {
+    event.preventDefault();
+
+    const data = [];
+
+    this.state.fields.settings.notifications.forEach((notification) => {
+      let notificationCodes;
+      if (notification.type === 'credit-transfer') {
+        notificationCodes = CREDIT_TRANSFER_NOTIFICATIONS;
+      } else {
+        notificationCodes = GOVERNMENT_TRANSFER_NOTIFICATIONS;
+      }
+
+      const notificationType = notificationCodes.find(notificationCode =>
+        (notificationCode.key === notification.id)).code;
+
+      data.push({
+        notificationType,
+        channel: String(notification.field).toUpperCase(),
+        subscribed: notification.value
+      });
+    });
+
+    return false;
+  }
+
   _toggleCheck (id, fields) {
     const fieldState = { ...this.state.fields };
     const index = fieldState.settings.notifications.findIndex(state => (
@@ -70,6 +101,8 @@ class SettingsContainer extends Component {
       <SettingsDetails
         addToFields={this._addToFields}
         fields={this.state.fields}
+        handleSubmit={this._handleSubmit}
+        loggedInUser={this.props.loggedInUser}
         toggleCheck={this._toggleCheck}
       />
     );
@@ -77,12 +110,15 @@ class SettingsContainer extends Component {
 }
 
 SettingsContainer.propTypes = {
+  loggedInUser: PropTypes.shape({}).isRequired
 };
 
 const mapStateToProps = state => ({
+  loggedInUser: state.rootReducer.userRequest.loggedInUser
 });
 
 const mapDispatchToProps = dispatch => ({
+  getLoggedInUser: bindActionCreators(getLoggedInUser, dispatch)
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(SettingsContainer);

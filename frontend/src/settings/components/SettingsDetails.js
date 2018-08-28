@@ -9,6 +9,7 @@ import NotificationsCreditTransactionsTable from './NotificationsCreditTransacti
 import CREDIT_TRANSFER_NOTIFICATIONS from '../../constants/settings/notificationsCreditTransfers';
 import GOVERNMENT_TRANSFER_NOTIFICATIONS from '../../constants/settings/notificationsGovernmentTransfers';
 import * as Routes from '../../constants/routes';
+import * as Lang from '../../constants/langEnUs';
 
 const SettingsDetails = props => (
   <div className="page_settings">
@@ -26,7 +27,11 @@ const SettingsDetails = props => (
       <NotificationsCreditTransactionsTable
         addToFields={props.addToFields}
         fields={props.fields.settings.notifications}
-        items={CREDIT_TRANSFER_NOTIFICATIONS}
+        items={CREDIT_TRANSFER_NOTIFICATIONS.filter(notification =>
+          (props.loggedInUser.isGovernmentUser
+            ? notification.recipients.includes('government')
+            : notification.recipients.includes('fuel_supplier')
+          ))}
         toggleCheck={props.toggleCheck}
         type="credit-transfer"
       />
@@ -36,10 +41,24 @@ const SettingsDetails = props => (
       <NotificationsCreditTransactionsTable
         addToFields={props.addToFields}
         fields={props.fields.settings.notifications}
-        items={GOVERNMENT_TRANSFER_NOTIFICATIONS}
+        items={GOVERNMENT_TRANSFER_NOTIFICATIONS.filter(notification =>
+          (props.loggedInUser.isGovernmentUser
+            ? notification.recipients.includes('government')
+            : notification.recipients.includes('fuel_supplier')
+          ))}
         toggleCheck={props.toggleCheck}
         type="government-transfer"
       />
+
+      <div className="btn-container">
+        <button
+          className="btn btn-primary"
+          onClick={props.handleSubmit}
+          type="button"
+        >
+          {Lang.BTN_SAVE}
+        </button>
+      </div>
     </div>
   </div>
 );
@@ -50,6 +69,10 @@ SettingsDetails.propTypes = {
     settings: PropTypes.shape({
       notifications: PropTypes.arrayOf(PropTypes.object).isRequired
     }).isRequired
+  }).isRequired,
+  handleSubmit: PropTypes.func.isRequired,
+  loggedInUser: PropTypes.shape({
+    isGovernmentUser: PropTypes.bool
   }).isRequired,
   toggleCheck: PropTypes.func.isRequired
 };
