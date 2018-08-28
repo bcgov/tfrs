@@ -1,0 +1,7 @@
+FROM nginx:1.15-alpine
+COPY nginx.conf /etc/nginx/nginx.conf
+RUN apk update
+RUN apk add git
+RUN apk add bash
+ADD https://github.com/vishnubob/wait-for-it/compare/master...HEAD /dev/null
+RUN git clone https://github.com/vishnubob/wait-for-it.git /wfi
