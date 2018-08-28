@@ -87,21 +87,22 @@ class NotificationViewSet(AuditableMixin,
 
     @list_route(methods=['post'])
     def update_subscription(self, request):
-        serializer = self.get_serializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        updated_subscription = serializer.validated_data
 
-        print('updating subscription for channel {} and type {} to be {}'.format(
-            updated_subscription['channel'],
-            updated_subscription['notification_type'],
-            updated_subscription['subscribed']
-        ))
+        if isinstance(request.data, list):
+            serializer = self.get_serializer(data=request.data, many=True)
+            serializer.is_valid(raise_exception=True)
+            updated_subscriptions = serializer.validated_data
+        else:
+            serializer = self.get_serializer(data=request.data)
+            serializer.is_valid(raise_exception=True)
+            updated_subscriptions = [serializer.validated_data]
 
-        AMQPNotificationService.update_subscription(
-            user=request.user,
-            channel=updated_subscription['channel'],
-            notification_type=updated_subscription['notification_type'],
-            subscribed=updated_subscription['subscribed']
-        )
+        for subscription in updated_subscriptions:
+            AMQPNotificationService.update_subscription(
+                user=request.user,
+                channel=subscription['channel'],
+                notification_type=subscription['notification_type'],
+                subscribed=subscription['subscribed']
+            )
 
         return Response(None, status=status.HTTP_200_OK)

@@ -1,4 +1,5 @@
 import datetime
+from collections import defaultdict, namedtuple
 
 from django.core.exceptions import ValidationError
 from django.db.models import Q
@@ -11,12 +12,15 @@ from api.models.OrganizationBalance import OrganizationBalance
 from api.models.CreditTrade import CreditTrade
 
 from api.exceptions import PositiveIntegerException
+from api.notifications.notification_types import NotificationType
+from api.notifications.notifications import AMQPNotificationService
 
 
 class CreditTradeService(object):
     """
     Helper functions for Credit Trades
     """
+
     @staticmethod
     def get_organization_credit_trades(organization):
         """
@@ -47,16 +51,16 @@ class CreditTradeService(object):
             #   show "Submitted" and other transactions where the fuel
             #   supplier is the respondent
             credit_trades = CreditTrade.objects.filter((
-                (
-                    (~Q(status__status__in=[
-                        "Approved", "Cancelled"]) &
-                     Q(type__is_gov_only_type=False)) |
-                    (Q(status__status__in=[
-                        "Completed", "Declined"]) &
-                     Q(type__is_gov_only_type=True))
-                ) &
-                ((~Q(status__status__in=["Draft"]) &
-                  Q(respondent=organization)) | Q(initiator=organization))
+                    (
+                            (~Q(status__status__in=[
+                                "Approved", "Cancelled"]) &
+                             Q(type__is_gov_only_type=False)) |
+                            (Q(status__status__in=[
+                                "Completed", "Declined"]) &
+                             Q(type__is_gov_only_type=True))
+                    ) &
+                    ((~Q(status__status__in=["Draft"]) &
+                      Q(respondent=organization)) | Q(initiator=organization))
             ))
 
         return credit_trades
@@ -110,7 +114,7 @@ class CreditTradeService(object):
             type_id=credit_trade.type.id,
             number_of_credits=credit_trade.number_of_credits,
             fair_market_value_per_credit=credit_trade.
-            fair_market_value_per_credit,
+                fair_market_value_per_credit,
             zero_reason_id=zero_reason,
             trade_effective_date=credit_trade.trade_effective_date,
             note=credit_trade.note,
@@ -235,10 +239,10 @@ class CreditTradeService(object):
                 get_temp_balance(temp_storage, credit_trade.credits_to.id)
 
             from_credits_remaining = from_starting_balance - \
-                credit_trade.number_of_credits
+                                     credit_trade.number_of_credits
 
             to_credits_remaining = to_starting_balance + \
-                credit_trade.number_of_credits
+                                   credit_trade.number_of_credits
 
             CreditTradeService.update_temp_balance(
                 temp_storage,
@@ -257,7 +261,7 @@ class CreditTradeService(object):
                     "[ID: {}] "
                     "Can't complete transaction,"
                     "`{}` has insufficient credits.".
-                    format(credit_trade.id, credit_trade.credits_from.name))
+                        format(credit_trade.id, credit_trade.credits_from.name))
 
         if errors:
             raise PositiveIntegerException(errors)
@@ -349,7 +353,7 @@ class CreditTradeService(object):
                 allowed_statuses.append("Not Recommended")
 
         elif credit_trade.status.status in [
-                "Not Recommended", "Recommended"
+            "Not Recommended", "Recommended"
         ]:
             if request.user.has_perm('APPROVE_CREDIT_TRANSFER'):
                 allowed_statuses.append("Approved")
@@ -369,3 +373,73 @@ class CreditTradeService(object):
                 allowed_statuses.append("Approved")
 
         return allowed_statuses
+
+    @staticmethod
+    def dispatch_notifications(previous_status: CreditTradeStatus, credit_trade: CreditTrade):
+        notification_map = defaultdict(lambda: [])
+        government = Organization.objects.filter(type__type='Government').first()
+
+        StatusChange = namedtuple('StatusChange', ['new_status'])
+        ResultingNotification = namedtuple('ResultingNotification', ['recipient', 'notification_type'])
+
+        notification_map[StatusChange('Draft')] = [
+            ResultingNotification(credit_trade.initiator, NotificationType.CREDIT_TRANSFER_CREATED)
+        ]
+        notification_map[StatusChange('Submitted')] = [
+            ResultingNotification(credit_trade.initiator, NotificationType.CREDIT_TRANSFER_SIGNED_1OF2),
+            ResultingNotification(credit_trade.respondent, NotificationType.CREDIT_TRANSFER_SIGNED_1OF2)
+        ]
+        notification_map[StatusChange('Accepted')] = [
+            ResultingNotification(credit_trade.initiator, NotificationType.CREDIT_TRANSFER_SIGNED_2OF2),
+            ResultingNotification(credit_trade.respondent, NotificationType.CREDIT_TRANSFER_SIGNED_2OF2),
+            ResultingNotification(government, NotificationType.CREDIT_TRANSFER_SIGNED_2OF2),
+        ]
+        notification_map[StatusChange('Refused')] = [
+            ResultingNotification(credit_trade.initiator, NotificationType.CREDIT_TRANSFER_PROPOSAL_REFUSED),
+            ResultingNotification(credit_trade.respondent, NotificationType.CREDIT_TRANSFER_PROPOSAL_REFUSED)
+        ]
+        notification_map[StatusChange('Recommended')] = [
+            ResultingNotification(government, NotificationType.CREDIT_TRANSFER_RECOMMENDED_FOR_APPROVAL),
+        ]
+
+        notification_map[StatusChange('Not Recommended')] = [
+            ResultingNotification(government, NotificationType.CREDIT_TRANSFER_RECOMMENDED_FOR_DECLINATION),
+        ]
+
+
+        # figure this out. /approve method?
+
+        notification_map[StatusChange('Completed')] = [
+            ResultingNotification(credit_trade.initiator, NotificationType.CREDIT_TRANSFER_APPROVED),
+            ResultingNotification(credit_trade.respondent, NotificationType.CREDIT_TRANSFER_APPROVED),
+            ResultingNotification(government, NotificationType.CREDIT_TRANSFER_APPROVED),
+        ]
+
+        notification_map[StatusChange('Declined')] = [
+            ResultingNotification(credit_trade.initiator, NotificationType.CREDIT_TRANSFER_DECLINED),
+            ResultingNotification(credit_trade.respondent, NotificationType.CREDIT_TRANSFER_DECLINED),
+            ResultingNotification(government, NotificationType.CREDIT_TRANSFER_DECLINED),
+        ]
+
+        # handle rescinded
+
+        # handle comments
+
+        # tests
+
+        # subscriptions do something
+
+        # language
+
+        notifications_to_send = notification_map[
+            StatusChange(
+                credit_trade.status.status
+            )
+        ]
+
+        for notification in notifications_to_send:
+            AMQPNotificationService.send_notification(
+                interested_organization=notification.recipient,
+                message=notification.notification_type.name,
+                related_credit_trade=credit_trade
+            )

@@ -14,3 +14,11 @@ class NotificationType(Enum):
     CREDIT_TRANSFER_RESCINDED = "Credit Transfer Proposal Rescinded"
     CREDIT_TRANSFER_COMMENT = "Credit Transfer Proposal Comment Created Or Updated"
     CREDIT_TRANSFER_INTERNAL_COMMENT = "Credit Transfer Proposal Internal Comment Created Or Updated"
+
+    PVR_CREATED = "PVR Created"
+    PVR_RECOMMENDED_FOR_APPROVAL = "PVR Recommended For Approval"
+    PVR_PULLED_BACK = "PVR Pulled Back"
+    PVR_DECLINED = "PVR Declined"
+    PVR_APPROVED = "PVR Approved"
+    PVR_COMMENT = "PVR Comment Created Or Updated"
+    PVR_INTERNAL_COMMENT = "PVR Internal Comment Created Or Updated"

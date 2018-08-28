@@ -46,7 +46,6 @@ class EffectiveSubscriptionUpdateSerializer(serializers.Serializer):
     notification_type = serializers.CharField()
     subscribed = serializers.BooleanField()
 
-
     def validate(self, data):
         try:
             data['notification_type'] = NotificationType[data.get('notification_type')]
@@ -66,8 +65,18 @@ class AMQPNotificationService:
     @staticmethod
     def __determine_message_recipients(is_global: bool = False,
                                        interested_organization: Organization = None,
-                                       interested_roles: List[Role] = None):
-        return User.objects.all()
+                                       interested_roles: List[Role] = None) -> List[User]:
+
+        if is_global:
+            return User.objects.all()
+
+        if interested_organization is not None:
+            users = User.objects.filter(organization=interested_organization)
+            # if interested_roles is not None:
+            #     users = users.filter(role__in=interested_roles)
+            return users.all()
+
+        return []
 
     @staticmethod
     def compute_effective_subscriptions(user: User) -> List[EffectiveSubscription]:
@@ -96,8 +105,9 @@ class AMQPNotificationService:
             notification_type=notification_type)
 
         if existing_subscription.exists():
-            existing_subscription.first().enabled = subscribed
-            existing_subscription.save()
+            existing = existing_subscription.first()
+            existing.enabled = subscribed
+            existing.save()
         else:
             NotificationSubscription(
                 user=user,
@@ -105,7 +115,6 @@ class AMQPNotificationService:
                 notification_type=notification_type,
                 enabled=subscribed
             ).save()
-
 
 
     @staticmethod
@@ -121,9 +130,7 @@ class AMQPNotificationService:
                           is_global: bool = False,
                           originating_user: User = None):
 
-        if (interested_roles is None or len(interested_roles) == 0) and not is_global:
-            raise InvalidNotificationArguments('interested_roles is required'
-                                               ' if this is not a global notification')
+
         if interested_organization is None and not is_global:
             raise InvalidNotificationArguments('interested_organization is required'
                                                ' if this is not a global notification')

@@ -122,15 +122,14 @@ class CreditTradeViewSet(AuditableMixin, mixins.CreateModelMixin,
     def perform_create(self, serializer):
         credit_trade = serializer.save()
         CreditTradeService.create_history(credit_trade, True)
-        AMQPNotificationService.send_notification(
-            'credit trade {} created'.format(credit_trade.id),
-            None,
-            related_credit_trade=credit_trade,
-            is_global=True)
+        CreditTradeService.dispatch_notifications(None, credit_trade)
 
     def perform_update(self, serializer):
         credit_trade = serializer.save()
         CreditTradeService.create_history(credit_trade, False)
+
+        previous_status = self.get_object().status
+        CreditTradeService.dispatch_notifications(previous_status, credit_trade)
 
     @detail_route(methods=['put'])
     def delete(self, request, pk=None):
@@ -154,12 +153,16 @@ class CreditTradeViewSet(AuditableMixin, mixins.CreateModelMixin,
         """
         credit_trade = self.get_object()
         credit_trade.trade_effective_date = datetime.date.today()
+        previous_status = credit_trade.status
 
         serializer = self.get_serializer(credit_trade, data=request.data)
         serializer.is_valid(raise_exception=True)
 
         completed_credit_trade = CreditTradeService.approve(credit_trade)
         serializer = self.get_serializer(completed_credit_trade)
+
+        CreditTradeService.dispatch_notifications(previous_status,
+                                                  completed_credit_trade)
 
         return Response(serializer.data, status=status.HTTP_200_OK)
 
