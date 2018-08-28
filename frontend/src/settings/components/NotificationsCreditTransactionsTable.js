@@ -54,7 +54,7 @@ const NotificationsCreditTransactionsTable = (props) => {
     Cell: row => (
       <CheckBox
         addToFields={props.addToFields}
-        field="inapp"
+        field="in_app"
         fields={props.fields}
         id={row.value}
         toggleCheck={props.toggleCheck}
