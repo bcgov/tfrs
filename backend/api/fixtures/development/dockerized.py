@@ -50,9 +50,9 @@ class DockerEnvironment(OperationalDataScript):
     @transaction.atomic
     def run(self):
 
-        Organization(name=self._orgs[0], actions_type=OrganizationActionsType.objects.get_by_natural_key("Buy And Sell"), type=OrganizationType.objects.get_by_natural_key("Part3FuelSupplier"), status=OrganizationStatus.objects.get_by_natural_key('Active')).save()
-        Organization(name=self._orgs[1], actions_type=OrganizationActionsType.objects.get_by_natural_key("Buy And Sell"), type=OrganizationType.objects.get_by_natural_key("Part3FuelSupplier"), status=OrganizationStatus.objects.get_by_natural_key('Active')).save()
-        Organization(name=self._orgs[2], actions_type=OrganizationActionsType.objects.get_by_natural_key("Buy And Sell"), type=OrganizationType.objects.get_by_natural_key("Part3FuelSupplier"), status=OrganizationStatus.objects.get_by_natural_key('Active')).save()
+        Organization(name=self._orgs[0], actions_type=OrganizationActionsType.objects.get_by_natural_key("Buy And Sell"), type=OrganizationType.objects.get_by_natural_key("Part3FuelSupplier"), status=OrganizationStatus.objects.get_by_natural_key('Active'), id=2).save()
+        Organization(name=self._orgs[1], actions_type=OrganizationActionsType.objects.get_by_natural_key("Buy And Sell"), type=OrganizationType.objects.get_by_natural_key("Part3FuelSupplier"), status=OrganizationStatus.objects.get_by_natural_key('Active'), id=3).save()
+        Organization(name=self._orgs[2], actions_type=OrganizationActionsType.objects.get_by_natural_key("Buy And Sell"), type=OrganizationType.objects.get_by_natural_key("Part3FuelSupplier"), status=OrganizationStatus.objects.get_by_natural_key('Active'), id=4).save()
 
         OrganizationBalance(organization=Organization.objects.get_by_natural_key(self._orgs[0]), credit_trade=None, validated_credits=100000, effective_date=datetime.today().strftime('%Y-%m-%d')).save()
         OrganizationBalance(organization=Organization.objects.get_by_natural_key(self._orgs[1]), credit_trade=None, validated_credits=100000, effective_date=datetime.today().strftime('%Y-%m-%d')).save()
