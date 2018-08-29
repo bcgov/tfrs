@@ -1,0 +1,55 @@
+version: '3'
+
+services:
+    db:
+        build:
+            dockerfile: Dockerfile-postgres
+            context: ./postgres
+        expose:
+            - 5432
+    django:
+        environment:
+          - DATABASE_NAME=tfrs
+          - DATABASE_USER=tfrs
+          - DATABASE_PASSWORD=development_only
+          - DATABASE_ENGINE=postgresql
+          - DATABASE_SERVICE_NAME=postgresql
+          - POSTGRESQL_SERVICE_HOST=db
+          - POSTGRESQL_SERVICE_PORT=5432
+        depends_on:
+            - db
+        build:
+            dockerfile: Dockerfile-django
+            context: ./backend
+        command: '/wfi/wait-for-it.sh -t 120 db:5432 -- bash -c "python3 manage.py makemigrations && python3 manage.py migrate && python3 manage.py load_ops_data api/fixtures/development/dockerized.py && python3 manage.py runserver 0.0.0.0:8000"'
+        expose:
+            - 8000
+        volumes:
+            - shared:/shared
+    node:
+        build:
+            dockerfile: Dockerfile-node
+            context: ./frontend
+        command: 'yarn start'
+        expose:
+            - 3000
+    nginx:
+        depends_on:
+            - django
+            - node
+        build:
+            dockerfile: Dockerfile-nginx
+            context: ./nginx
+        ports:
+            - 5001:10920
+            - 5002:10921
+            - 5003:10922
+            - 5004:10923
+            - 5005:10924
+            - 5006:10925
+            - 5000:10000
+        volumes:
+            - shared:/shared
+        command: 'bash -c "/wfi/wait-for-it.sh -t 120 django:8000 && /wfi/wait-for-it.sh -t 120 node:3000 && cat /tfrs/ready.txt && nginx -g \"daemon off;\""'
+volumes:
+    shared:
