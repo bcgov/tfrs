@@ -71,8 +71,7 @@ class CreditTransferCommentForm extends Component {
         }
         <div className={`note col-xs-8 ${this.props.embedded ? '' : 'form-group'}`}>
           {
-            this.props.embedded ? this._renderTextArea()
-              : <form onSubmit={e => e.preventDefault()}>{this._renderTextArea()}</form>
+            this._renderTextArea()
           }
           <div className="text-right">
             {this.props.embedded ||
