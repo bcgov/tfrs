@@ -62,6 +62,7 @@ class GovernmentTransferForm extends Component {
                 onClick={() => history.goBack()}
                 type="button"
               >
+                <FontAwesomeIcon icon="arrow-circle-left" />
                 {Lang.BTN_APP_CANCEL}
               </button>
               {this.props.actions.includes(Lang.BTN_DELETE_DRAFT) &&
