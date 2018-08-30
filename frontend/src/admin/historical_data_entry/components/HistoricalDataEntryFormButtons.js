@@ -13,8 +13,7 @@ const HistoricalDataEntryFormButtons = props => (
       className="btn btn-default"
       onClick={() => history.goBack()}
     >
-      <FontAwesomeIcon icon="arrow-circle-left" />
-      {Lang.BTN_APP_CANCEL}
+      <FontAwesomeIcon icon="arrow-circle-left" /> {Lang.BTN_APP_CANCEL}
     </button>
     }
 
