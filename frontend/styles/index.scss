@@ -11,6 +11,7 @@
 @import './Notifications.scss';
 @import './Opportunities.scss';
 @import './Organizations.scss';
+@import './Settings.scss';
 @import './TooltipWhenDisabled.scss';
 @import './User.scss';
 @import './variables.scss';
@@ -165,118 +166,20 @@ table {
   border-bottom-width: 0 !important;
 }
 
-.table-bordered {
-  thead {
-    background-color: rgba(0, 51, 102, 0.80);
-    color: white;
-    font-size: larger;
-  }
-}
-
 .table-bordered > tbody > tr > td {
   border-bottom: none;
 }
 
-.table-bordered > tbody > tr {
-  &:nth-child(even) {
-    background-color: #f4f6f9;
+.modal {
+  .note {
+    width: 100%;
+    resize: none;
+  }
+
+  .alert-success {
+    margin: 1rem 0 0 0;
   }
 }
-
-
-.account-activity-table, 
-.fuel-suppliers-table, 
-.our-opportunities-table, 
-.open-opportunities-table, 
-.correspondence-table, 
-.history-table {
-  margin-top: 1rem;
-  margin-bottom: 1rem;
-
-  .header {
-    padding: 0;
-  }
-
-  .right-toolbar-container { 
-    float: right;
-
-    @include tablet {
-      float: none;
-    }
-
-    .checkbox {
-      display: inline-block;
-      margin: 0 1rem 0 3rem;
-    }
-
-    .actions-container {
-      display: inline-block;
-
-      @include mobile {
-        margin-bottom: 0.5rem;
-      }
-    }
-  }
-
-  .react-bs-table .table-bordered {
-      min-width: 700px;
-    }
-  }
-
-  .proposal-description {
-    width: 50%;
-    white-space: pre-wrap;
-  }
-
-  .actions {
-    white-space: pre-wrap;
-  }
-
-  .simple-btn {
-    background: none;
-    border: none;
-    color: $link-color;
-    padding: 0.5rem;
-  
-    &:hover {
-      color: $link-color-hover;
-    }
-  }
-
-  .counter-btn {
-    display: inline-block;
-    padding: 0.5rem;
-  }
-
-  .recent-account-activity-container {
-    margin: 0.5rem 0;
-
-    h2 {
-      display: inline-block;
-      margin: 0;
-    }
-
-    .view-all {
-      float: right;
-    
-      @include mobile {
-        display: block;
-        float: none;
-      }
-    }
-  }
-
-  .modal {
-
-    .note {
-      width: 100%;
-      resize: none;
-    }
-
-    .alert-success {
-      margin: 1rem 0 0 0;
-    }
-  }
 
 .react-bs-table .table-bordered > tbody > tr > td {
   white-space: pre-wrap;
@@ -286,5 +189,3 @@ table {
 .react-bs-table-bordered {
   margin: 1em 0;
 }
-
-
