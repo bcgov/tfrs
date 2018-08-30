@@ -91,8 +91,8 @@ class CreditTransferVisualRepresentation extends Component {
               className={this._creditTransferIcon().className}
               size="6x"
             />
-            {` ${Number(this.props.totalValue) > 0 &&
-            <div>{numeral(this.props.totalValue).format(NumberFormat.CURRENCY)}</div>}`}
+            ${Number(this.props.totalValue) > 0 &&
+            <div>{numeral(this.props.totalValue).format(NumberFormat.CURRENCY)}</div>}
           </div>
         </div>
         <div className="col-sm-4 col-md-3">
