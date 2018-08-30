@@ -10,6 +10,7 @@ import 'react-table/react-table.css';
 
 import CREDIT_TRANSACTIONS from '../../constants/routes/CreditTransactions';
 import { CREDIT_TRANSFER_STATUS } from '../../constants/values';
+import { getCreditTransferType } from '../../actions/creditTransfersActions';
 
 const UserHistoryTable = (props) => {
   const formatter = new Intl.DateTimeFormat('en-CA', {
@@ -39,7 +40,7 @@ const UserHistoryTable = (props) => {
     id: 'action',
     minWidth: 75
   }, {
-    accessor: item => item.type.theType,
+    accessor: item => getCreditTransferType(item.type.id),
     className: 'col-type',
     Header: 'Transaction Type',
     id: 'creditType',
