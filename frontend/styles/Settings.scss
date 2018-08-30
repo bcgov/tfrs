@@ -1,0 +1,50 @@
+@import './variables.scss';
+@import './mixins.scss';
+
+.page_settings {
+  .settings-notifications {
+    border-bottom: 1px solid $border-grey;
+    border-left: 1px solid $border-grey;
+    border-right: 1px solid $border-grey;
+    padding: 0.5rem 1.5rem 1.5rem;
+
+    h3 {
+      margin: 2rem 0 1rem;
+    }
+
+    .btn-container {
+      margin-top: 1rem;
+      text-align: right;
+    }
+
+    .pagination-bottom {
+      display: none;
+    }
+  
+    .rt-td {
+      &.col-action {
+        align-self: center;
+      }
+  
+      &.col-in-app, &.col-email, &.col-sms {
+        font-size: 1rem;
+        text-align: center;
+      }
+    }
+  
+    .rt-th {
+      background-color: $grey;
+      font-weight: bold;
+  
+      &.col-action {
+        text-align: left;
+      }
+    }
+  
+    .rt-tr {
+      &.-odd {
+        background-color: $background-grey;
+      }
+    }
+  }
+}

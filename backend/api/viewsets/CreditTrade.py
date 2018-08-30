@@ -28,6 +28,7 @@ from api.serializers import CreditTradeListSerializer
 from api.serializers import CreditTradeUpdateSerializer
 
 from api.services.CreditTradeService import CreditTradeService
+from api.services.NotificationService import NotificationService
 from api.services.SpreadSheetBuilder import SpreadSheetBuilder
 
 
@@ -121,10 +122,12 @@ class CreditTradeViewSet(AuditableMixin, mixins.CreateModelMixin,
     def perform_create(self, serializer):
         credit_trade = serializer.save()
         CreditTradeService.create_history(credit_trade, True)
+        NotificationService.send(credit_trade)
 
     def perform_update(self, serializer):
         credit_trade = serializer.save()
         CreditTradeService.create_history(credit_trade, False)
+        NotificationService.send(credit_trade)
 
     @detail_route(methods=['put'])
     def delete(self, request, pk=None):
