@@ -58,7 +58,8 @@ class CreditTrade(Auditable):
         Organization,
         related_name='respondent_credit_trades',
         on_delete=models.PROTECT,
-        db_comment='fk: reference to the organization that will respond to the credit transfer proposal')
+        db_comment='fk: reference to the organization that will respond to the'
+           ' credit transfer proposal')
     type = models.ForeignKey(
         CreditTradeType,
         related_name='credit_trades',
