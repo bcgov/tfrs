@@ -1,0 +1,11 @@
+FROM python:3.5-jessie
+ENV PYTHONUNBUFFERED 1
+RUN mkdir /app
+WORKDIR /app
+ADD requirements.txt /app/
+RUN pip install -r requirements.txt
+RUN apt-get update
+RUN apt-get install git
+ADD https://github.com/vishnubob/wait-for-it/compare/master...HEAD /dev/null
+RUN git clone https://github.com/vishnubob/wait-for-it.git /wfi
+ADD . /app/

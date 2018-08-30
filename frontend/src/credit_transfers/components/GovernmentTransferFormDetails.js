@@ -85,23 +85,22 @@ const GovernmentTransferFormDetails = props => (
 
       <div className="row">
         <div className="form-group col-md-12">
-          <label htmlFor="comment">Note:
-            <textarea
-              className="form-control"
-              rows="5"
-              id="comment"
-              name="comment"
-              value={props.fields.comment}
-              onChange={props.handleInputChange}
-            />
-          </label>
+          {props.children}
         </div>
       </div>
     </div>
   </div>
 );
 
+GovernmentTransferFormDetails.defaultProps = {
+  children: null
+};
+
 GovernmentTransferFormDetails.propTypes = {
+  children: PropTypes.oneOfType([
+    PropTypes.arrayOf(PropTypes.node),
+    PropTypes.node
+  ]),
   compliancePeriods: PropTypes.arrayOf(PropTypes.shape()).isRequired,
   fuelSuppliers: PropTypes.arrayOf(PropTypes.shape()).isRequired,
   fields: PropTypes.shape({

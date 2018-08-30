@@ -125,10 +125,6 @@ CreditTransferFormDetails.defaultProps = {
   children: null
 };
 
-CreditTransferFormDetails.defaultProps = {
-  children: null
-};
-
 CreditTransferFormDetails.propTypes = {
   fuelSuppliers: PropTypes.arrayOf(PropTypes.shape()).isRequired,
   fields: PropTypes.shape({

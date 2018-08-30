@@ -13,8 +13,7 @@ const HistoricalDataEntryForm = props => (
       <Errors errors={props.errors} />
     }
     <form
-      onSubmit={(event, status) =>
-        props.handleSubmit(event, '')}
+      onSubmit={event => props.handleSubmit(event)}
     >
       <HistoricalDataEntryFormDetails
         actions={props.actions}
