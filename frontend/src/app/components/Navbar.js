@@ -5,6 +5,7 @@ import { DropdownButton, MenuItem } from 'react-bootstrap';
 import { connect } from 'react-redux';
 import { NavLink } from 'react-router-dom';
 
+import history from '../../app/History';
 import * as Routes from '../../constants/routes';
 import { HISTORICAL_DATA_ENTRY } from '../../constants/routes/Admin';
 import CREDIT_TRANSACTIONS from '../../constants/routes/CreditTransactions';
@@ -31,6 +32,15 @@ class Navbar extends Component {
     const SecondLevelNavigation = (
       <div className="level2Navigation">
         <div className="container">
+          <div className="notifications">
+            <NavLink
+              activeClassName="active"
+              id="navbar-notifications"
+              to={Routes.NOTIFICATIONS}
+            >
+              <span className="number">0</span> <FontAwesomeIcon icon="bell" />
+            </NavLink>
+          </div>
           {this.props.loggedInUser.isGovernmentUser &&
           <NavLink
             activeClassName="active"
@@ -198,6 +208,11 @@ class Navbar extends Component {
           </li>
           }
           <li>
+            <NavLink id="navbar-settings" to={Routes.SETTINGS}>
+              Settings
+            </NavLink>
+          </li>
+          <li>
             <NavLink id="navbar-logout" to={Routes.LOGOUT}>
               Log Out
             </NavLink>
@@ -276,6 +291,11 @@ class Navbar extends Component {
                       >
                         <MenuItem className="dropdown-menu-caret" header>
                           <FontAwesomeIcon icon="caret-up" size="2x" />
+                        </MenuItem>
+                        <MenuItem onClick={() => {
+                          history.push(Routes.SETTINGS);
+                        }}>
+                          <FontAwesomeIcon icon="cog" /> Settings
                         </MenuItem>
                         <MenuItem href={Routes.LOGOUT}>
                           <FontAwesomeIcon icon="sign-out-alt" /> Log Out
