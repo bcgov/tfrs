@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import * as Lang from '../../../constants/langEnUs';
 
 import history from '../../../app/History';
+import FontAwesomeIcon from '@fortawesome/react-fontawesome';
 
 const HistoricalDataEntryFormButtons = props => (
   <div className="btn-container">
