@@ -128,7 +128,7 @@ const HistoricalDataTable = (props) => {
             <FontAwesomeIcon icon="trash" />
           </button>
         </div>
-      );b
+      );
     }
   }];
 
