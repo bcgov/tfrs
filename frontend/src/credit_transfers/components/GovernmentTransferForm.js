@@ -5,6 +5,8 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
+import FontAwesomeIcon from '@fortawesome/react-fontawesome';
+
 import { CREDIT_TRANSFER_STATUS } from '../../constants/values';
 
 import getCompliancePeriods from '../../actions/compliancePeriodsActions';
