@@ -9,9 +9,9 @@ import { bindActionCreators } from 'redux';
 import PropTypes from 'prop-types';
 
 import SettingsDetails from './components/SettingsDetails';
-import { getLoggedInUser } from '../actions/userActions';
 import CREDIT_TRANSFER_NOTIFICATIONS from '../constants/settings/notificationsCreditTransfers';
 import GOVERNMENT_TRANSFER_NOTIFICATIONS from '../constants/settings/notificationsGovernmentTransfers';
+import { getSubscriptions } from '../actions/notificationActions';
 
 class SettingsContainer extends Component {
   constructor (props) {
@@ -35,6 +35,7 @@ class SettingsContainer extends Component {
   }
 
   loadData () {
+    this.props.getSubscriptions();
   }
 
   _addToFields (value) {
@@ -110,6 +111,7 @@ class SettingsContainer extends Component {
 }
 
 SettingsContainer.propTypes = {
+  getSubscriptions: PropTypes.func.isRequired,
   loggedInUser: PropTypes.shape({}).isRequired
 };
 
@@ -118,7 +120,7 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  getLoggedInUser: bindActionCreators(getLoggedInUser, dispatch)
+  getSubscriptions: bindActionCreators(getSubscriptions, dispatch)
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(SettingsContainer);

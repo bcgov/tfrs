@@ -7,7 +7,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
-import SettingsDetails from './components/NotificationsDetails';
+import NotificationsDetails from './components/NotificationsDetails';
 
 class NotificationsContainer extends Component {
   componentWillMount () {
@@ -19,7 +19,7 @@ class NotificationsContainer extends Component {
 
   render () {
     return (
-      <SettingsDetails />
+      <NotificationsDetails />
     );
   }
 }
