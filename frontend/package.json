@@ -37,7 +37,7 @@
     "redux": "^3.6.0",
     "redux-logger": "^3.0.1",
     "redux-thunk": "^2.2.0",
-    "webpack": "^3.10.0"
+    "webpack": "^4.17.1"
   },
   "devDependencies": {
     "babel-core": "^6.24.1",
@@ -62,10 +62,12 @@
     "react-test-renderer": "^16.4.1",
     "sass-loader": "^6.0.3",
     "style-loader": "^0.16.1",
-    "webpack-dev-server": "^2.10.1"
+    "webpack-cli": "^3.1.0",
+    "webpack-dev-server": "^3.1.7"
   },
   "scripts": {
     "start": "node server",
+    "start:docker": "webpack-dev-server --hot --watch --info-verbosity verbose --config webpack.docker.config.js --host 0.0.0.0 --public localhost",
     "production": "NODE_ENV=production webpack -p --config webpack.production.config.js",
     "build": "webpack",
     "test": "jest --coverage"
