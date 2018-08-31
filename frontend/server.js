@@ -13,19 +13,17 @@ const publicPath = path.resolve(__dirname, 'public');
 
 app.use(express.static(publicPath));
 
-
 if (!isProduction) {
   bundle();
 
   app.all('/build/*', (req, res) => {
     proxy.web(req, res, {
-      target: 'http://localhost:8080'
+      target: 'http://localhost:8090'
     });
   });
 
   app.use(fallback('index.html', { root: publicPath } ));
 }
-
 
 proxy.on('error', (e) => {
   console.log('Could not connect to proxy please try again');

@@ -97,6 +97,13 @@ class DockerEnvironment(OperationalDataScript):
                        '\t\tproxy_set_header X-Forwarded-For $remote_addr;\n' \
                        '\t\tproxy_pass http://node:3000/;\n' \
                        '\t}}\n' \
+                       '\tlocation /sockjs-node/ {{\n' \
+                       '\t\tproxy_http_version 1.1;\n' \
+                       '\t\tproxy_set_header Upgrade $http_upgrade;\n' \
+                       '\t\tproxy_set_header Connection "Upgrade";\n' \
+                       '\t\tproxy_set_header Host $host;\n' \
+                       '\t\tproxy_pass http://node:3000/sockjs-node/;\n' \
+                       '\t}}\n' \
                        '}}\n\n'.format(
                            port=self._portbase+i,
                            user=User.objects.get(username=username),

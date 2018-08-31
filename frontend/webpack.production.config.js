@@ -10,6 +10,7 @@ const mainPath = path.resolve(__dirname, 'src', 'index.js');
 // plugsin.imageminMozjpeg = require('imagemin-mozjpeg');
 
 const config = {
+  mode: 'production',
   entry: [
     // Polyfill for Object.assign on IE11, etc
     'babel-polyfill',
@@ -25,7 +26,7 @@ const config = {
     extensions: ['.js', '.jsx']
   },
   module: {
-    loaders: [
+    rules: [
       {
         test: /\.jsx?$/,
         loader: 'babel-loader',
@@ -63,16 +64,14 @@ const config = {
         'Origin, X-Requested-With, Content-Type, Accept'
     }
   },
+  optimization: {
+    minimize: true
+  },
   plugins: [
     new Webpack.DefinePlugin({
       __LOGOUT_TEST_URL__: JSON.stringify('https://logontest.gov.bc.ca/clp-cgi/logoff.cgi'),
       __LOGOUT_URL__: JSON.stringify('https://logon.gov.bc.ca/clp-cgi/logoff.cgi'),
       __VERSION__: JSON.stringify(packageJson.version)
-    }),
-    new Webpack.optimize.UglifyJsPlugin({
-      compress: {
-        warnings: false
-      }
     })
   ]
 };
