@@ -18,7 +18,7 @@ const OrganizationsPage = (props) => {
           type="button"
           onClick={() => (document.location = ORGANIZATIONS.EXPORT)}
         >
-          <FontAwesomeIcon icon="table" /> Download as Spreadsheet
+          Download <FontAwesomeIcon icon="file-excel" />
         </button>
       </div>
       {isFetching && <Loading />}

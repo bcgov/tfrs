@@ -15,7 +15,6 @@ import CreditTransferFormButtons from './CreditTransferFormButtons';
 import CreditTransferTerms from './CreditTransferTerms';
 import CreditTransferCommentForm from './CreditTransferCommentForm';
 import CreditTransferComment from './CreditTransferComment';
-import CreditTransferTextRepresentation from "./CreditTransferTextRepresentation";
 
 const CreditTransferForm = props => (
   <div className="credit-transfer">

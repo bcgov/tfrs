@@ -22,7 +22,6 @@ const HistoricalDataEntryForm = props => (
         fuelSuppliers={props.fuelSuppliers}
         fields={props.fields}
         handleInputChange={props.handleInputChange}
-        handleSubmit={props.handleSubmit}
         totalValue={props.totalValue}
       />
 

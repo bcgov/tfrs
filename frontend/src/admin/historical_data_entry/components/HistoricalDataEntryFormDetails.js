@@ -19,15 +19,15 @@ const HistoricalDataEntryFormDetails = props => (
           <div className="form-group">
             <label htmlFor="effective-date">Effective Date:
               <input
-                type="date"
                 className="form-control"
                 id="effective-date"
                 max="9999-12-31"
                 name="tradeEffectiveDate"
-                value={props.fields.tradeEffectiveDate}
-                placeholder="Effective Date"
                 onChange={props.handleInputChange}
+                placeholder="Effective Date"
                 required="required"
+                type="date"
+                value={props.fields.tradeEffectiveDate}
               />
             </label>
           </div>
@@ -130,13 +130,15 @@ const HistoricalDataEntryFormDetails = props => (
           <div className="form-group">
             <label htmlFor="number-of-credits">Number of Credits:
               <input
-                type="number"
                 className="form-control"
                 id="number-of-credits"
+                min="0"
                 name="numberOfCredits"
-                value={props.fields.numberOfCredits}
                 onChange={props.handleInputChange}
                 required="required"
+                step="1"
+                type="number"
+                value={props.fields.numberOfCredits}
               />
             </label>
           </div>
@@ -215,7 +217,6 @@ const HistoricalDataEntryFormDetails = props => (
           <div className="form-group">
             <HistoricalDataEntryFormButtons
               actions={props.actions}
-              handleSubmit={props.handleSubmit}
             />
           </div>
         </div>
@@ -259,7 +260,6 @@ HistoricalDataEntryFormDetails.propTypes = {
     zeroDollarReason: PropTypes.string
   }).isRequired,
   handleInputChange: PropTypes.func.isRequired,
-  handleSubmit: PropTypes.func.isRequired,
   totalValue: PropTypes.number.isRequired
 };
 
