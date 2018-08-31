@@ -124,10 +124,6 @@ class CreditTransferAddContainer extends Component {
   }
 
   _creditTransferSubmit (status) {
-    if (!this._validateForm()) {
-      return false;
-    }
-
     // API data structure
     const data = {
       fairMarketValuePerCredit: parseFloat(this.state.fields.fairMarketValuePerCredit).toFixed(2),
@@ -167,10 +163,6 @@ class CreditTransferAddContainer extends Component {
   }
 
   _governmentTransferSubmit (status) {
-    if (!this._validateForm()) {
-      return false;
-    }
-
     const { comment } = this.state.fields;
     const { isCreatingPrivilegedComment } = this.state;
 
@@ -222,6 +214,10 @@ class CreditTransferAddContainer extends Component {
 
   _handleSubmit (event, status) {
     event.preventDefault();
+
+    if (!this._validateForm()) {
+      return false;
+    }
 
     // Government Transfer Submit
     if ([CREDIT_TRANSFER_TYPES.buy.id, CREDIT_TRANSFER_TYPES.sell.id]
