@@ -49,7 +49,8 @@ class CreditTransferAddContainer extends Component {
         },
         isCommenting: false,
         isCreatingPrivilegedComment: false,
-        hasCommented: false
+        hasCommented: false,
+        validationErrors: {}
       };
     } else {
       this.state = {
@@ -68,7 +69,8 @@ class CreditTransferAddContainer extends Component {
           },
           zeroDollarReason: { id: null, name: '' }
         },
-        totalValue: 0
+        totalValue: 0,
+        validationErrors: {}
       };
     }
 
@@ -122,6 +124,10 @@ class CreditTransferAddContainer extends Component {
   }
 
   _creditTransferSubmit (status) {
+    if (!this._validateForm()) {
+      return false;
+    }
+
     // API data structure
     const data = {
       fairMarketValuePerCredit: parseFloat(this.state.fields.fairMarketValuePerCredit).toFixed(2),
@@ -156,9 +162,15 @@ class CreditTransferAddContainer extends Component {
       history.push(CREDIT_TRANSACTIONS.HIGHLIGHT.replace(':id', response.data.id));
       toastr.creditTransactionSuccess(status.id, data);
     });
+
+    return true;
   }
 
   _governmentTransferSubmit (status) {
+    if (!this._validateForm()) {
+      return false;
+    }
+
     const { comment } = this.state.fields;
     const { isCreatingPrivilegedComment } = this.state;
 
@@ -180,6 +192,8 @@ class CreditTransferAddContainer extends Component {
       history.push(CREDIT_TRANSACTIONS.HIGHLIGHT.replace(':id', response.data.id));
       toastr.creditTransactionSuccess(status.id, data);
     });
+
+    return true;
   }
 
   _handleCommentChanged (comment) {
@@ -258,6 +272,7 @@ class CreditTransferAddContainer extends Component {
         title="New Credit Transfer"
         toggleCheck={this._toggleCheck}
         totalValue={this.state.totalValue}
+        validationErrors={this.state.validationErrors}
       />,
       <ModalSubmitCreditTransfer
         handleSubmit={(event) => {
@@ -296,6 +311,7 @@ class CreditTransferAddContainer extends Component {
         isCreatingPrivilegedComment={this.state.isCreatingPrivilegedComment}
         key="creditTransferForm"
         title="New Credit Transaction"
+        validationErrors={this.state.validationErrors}
       />,
       <Modal
         handleSubmit={(event) => {
@@ -317,6 +333,22 @@ class CreditTransferAddContainer extends Component {
     this.setState({
       fields: fieldState
     });
+  }
+
+  _validateForm () {
+    const { numberOfCredits } = this.state.fields;
+
+    if (numberOfCredits % 1 !== 0) {
+      this.setState({
+        validationErrors: {
+          invalidNumberOfCredits: "Number of Credits can't have decimals."
+        }
+      });
+
+      return false;
+    }
+
+    return true;
   }
 
   changeFromTo (tradeType, initiator, respondent) {
@@ -383,7 +415,8 @@ class CreditTransferAddContainer extends Component {
 }
 
 CreditTransferAddContainer.defaultProps = {
-  errors: {}
+  errors: {},
+  validationErrors: {}
 };
 
 CreditTransferAddContainer.propTypes = {
@@ -404,7 +437,8 @@ CreditTransferAddContainer.propTypes = {
       id: PropTypes.number
     })
   }).isRequired,
-  prepareSigningAuthorityConfirmations: PropTypes.func.isRequired
+  prepareSigningAuthorityConfirmations: PropTypes.func.isRequired,
+  validationErrors: PropTypes.shape()
 };
 
 const mapStateToProps = state => ({
