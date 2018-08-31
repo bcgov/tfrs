@@ -21,7 +21,7 @@ services:
         build:
             dockerfile: Dockerfile-django
             context: ./backend
-        command: '/wfi/wait-for-it.sh -t 120 db:5432 -- bash -c "python3 manage.py makemigrations && python3 manage.py migrate && python3 manage.py load_ops_data api/fixtures/development/dockerized.py && python3 manage.py runserver 0.0.0.0:8000"'
+        command: '/wfi/wait-for-it.sh -t 600 db:5432 -- bash -c "python3 manage.py makemigrations && python3 manage.py migrate && python3 manage.py load_ops_data api/fixtures/development/dockerized.py && python3 manage.py runserver 0.0.0.0:8000"'
         expose:
             - 8000
         volumes:
@@ -50,6 +50,6 @@ services:
             - 5000:10000
         volumes:
             - shared:/shared
-        command: 'bash -c "/wfi/wait-for-it.sh -t 120 django:8000 && /wfi/wait-for-it.sh -t 120 node:3000 && cat /tfrs/ready.txt && nginx -g \"daemon off;\""'
+        command: 'bash -c "/wfi/wait-for-it.sh -t 600 django:8000 && /wfi/wait-for-it.sh -t 600 node:3000 && cat /tfrs/ready.txt && nginx -g \"daemon off;\""'
 volumes:
     shared:
