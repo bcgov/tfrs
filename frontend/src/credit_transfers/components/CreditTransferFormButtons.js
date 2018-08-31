@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
+import FontAwesomeIcon from '@fortawesome/react-fontawesome';
 import * as Lang from '../../constants/langEnUs';
 import CREDIT_TRANSACTIONS from '../../constants/routes/CreditTransactions';
 import { CREDIT_TRANSFER_STATUS } from '../../constants/values';
@@ -15,7 +16,7 @@ const CreditTransferFormButtons = props => (
         onClick={() => history.goBack()}
         type="button"
       >
-        {Lang.BTN_APP_CANCEL}
+        <FontAwesomeIcon icon="arrow-circle-left" /> {Lang.BTN_APP_CANCEL}
       </button>
       {props.actions.includes(Lang.BTN_DELETE_DRAFT) &&
       <button
@@ -24,7 +25,7 @@ const CreditTransferFormButtons = props => (
         data-toggle="modal"
         type="button"
       >
-        {Lang.BTN_DELETE_DRAFT}
+        <FontAwesomeIcon icon="minus-circle" /> {Lang.BTN_DELETE_DRAFT}
       </button>
       }
       {props.actions.includes(Lang.BTN_EDIT_DRAFT) &&
@@ -38,7 +39,7 @@ const CreditTransferFormButtons = props => (
           onClick={() => history.push(CREDIT_TRANSACTIONS.EDIT.replace(':id', props.id))}
           type="button"
         >
-          {Lang.BTN_EDIT_DRAFT}
+          <FontAwesomeIcon icon="edit" /> {Lang.BTN_EDIT_DRAFT}
         </button>
       </TooltipWhenDisabled>
       }
@@ -48,7 +49,7 @@ const CreditTransferFormButtons = props => (
           onClick={() => history.push(CREDIT_TRANSACTIONS.EDIT.replace(':id', props.id))}
           type="button"
         >
-          {Lang.BTN_EDIT_DRAFT}
+          <FontAwesomeIcon icon="edit" /> {Lang.BTN_EDIT_DRAFT}
         </button>
       }
       {props.actions.includes(Lang.BTN_SAVE_DRAFT) &&
@@ -57,7 +58,7 @@ const CreditTransferFormButtons = props => (
         onClick={() => props.changeStatus(CREDIT_TRANSFER_STATUS.draft)}
         type="submit"
       >
-        {Lang.BTN_SAVE_DRAFT}
+        <FontAwesomeIcon icon="save" /> {Lang.BTN_SAVE_DRAFT}
       </button>
       }
       {props.actions.includes(Lang.BTN_SIGN_1_2) &&
@@ -76,7 +77,7 @@ const CreditTransferFormButtons = props => (
           disabled={props.disabled.BTN_SIGN_1_2}
           type="button"
         >
-          {Lang.BTN_SIGN_1_2}
+          <FontAwesomeIcon icon="pen-fancy" /> {Lang.BTN_SIGN_1_2}
         </button>
       </TooltipWhenDisabled>
       }
@@ -92,7 +93,7 @@ const CreditTransferFormButtons = props => (
           data-toggle="modal"
           type="button"
         >
-          {Lang.BTN_REFUSE}
+          <FontAwesomeIcon icon="ban" /> {Lang.BTN_REFUSE}
         </button>
       </TooltipWhenDisabled>
       }
@@ -111,7 +112,7 @@ const CreditTransferFormButtons = props => (
           disabled={props.disabled.BTN_SIGN_2_2}
           type="button"
         >
-          {Lang.BTN_SIGN_2_2}
+          <FontAwesomeIcon icon="pen-fancy" /> {Lang.BTN_SIGN_2_2}
         </button>
       </TooltipWhenDisabled>
       }
@@ -122,7 +123,7 @@ const CreditTransferFormButtons = props => (
         data-toggle="modal"
         type="button"
       >
-        {Lang.BTN_RESCIND}
+        <FontAwesomeIcon icon="undo" /> {Lang.BTN_RESCIND}
       </button>
       }
       {props.actions.includes(Lang.BTN_NOT_RECOMMENDED_FOR_DECISION) &&
@@ -164,7 +165,7 @@ const CreditTransferFormButtons = props => (
           data-toggle="modal"
           type="button"
         >
-          {Lang.BTN_PULL_BACK}
+          <FontAwesomeIcon icon="hand-rock" /> {Lang.BTN_PULL_BACK}
         </button>
       }
       {props.actions.includes(Lang.BTN_RETURN_TO_DRAFT) &&

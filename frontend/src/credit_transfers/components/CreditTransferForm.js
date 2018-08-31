@@ -31,17 +31,6 @@ const CreditTransferForm = props => (
         totalValue={props.totalValue}
         handleInputChange={props.handleInputChange}
       >
-        <CreditTransferCommentForm
-          isCommentingOnUnsavedCreditTransfer={props.id === 0}
-          isCreatingPrivilegedComment={false}
-          handleCommentChanged={props.handleCommentChanged}
-          embedded
-        />
-        {props.comments.length > 0 && <span>Save your transfer to modify existing comments</span>}
-        {props.comments.map(c => (
-          <CreditTransferComment comment={c} key={c.id} isReadOnly />
-        ))
-        }
 
       </CreditTransferFormDetails>
 
@@ -64,6 +53,19 @@ const CreditTransferForm = props => (
           fields={props.fields}
           toggleCheck={props.toggleCheck}
         />
+      }
+
+      <CreditTransferCommentForm
+        isCommentingOnUnsavedCreditTransfer={props.id === 0}
+        isCreatingPrivilegedComment={false}
+        handleCommentChanged={props.handleCommentChanged}
+        embedded
+      />
+      {props.comments.length > 0 && <h3 className="comments-header">Comments</h3>}
+      {props.comments.length > 0 && <span>Save your transfer to modify existing comments</span>}
+      {props.comments.map(c => (
+        <CreditTransferComment comment={c} key={c.id} isReadOnly />
+      ))
       }
 
       <CreditTransferFormButtons

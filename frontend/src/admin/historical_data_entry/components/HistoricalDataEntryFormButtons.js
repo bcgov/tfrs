@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import * as Lang from '../../../constants/langEnUs';
 
 import history from '../../../app/History';
+import FontAwesomeIcon from '@fortawesome/react-fontawesome';
 
 const HistoricalDataEntryFormButtons = props => (
   <div className="btn-container">
@@ -13,7 +14,7 @@ const HistoricalDataEntryFormButtons = props => (
       className="btn btn-default"
       onClick={() => history.goBack()}
     >
-      {Lang.BTN_APP_CANCEL}
+      <FontAwesomeIcon icon="arrow-circle-left" /> {Lang.BTN_APP_CANCEL}
     </button>
     }
 

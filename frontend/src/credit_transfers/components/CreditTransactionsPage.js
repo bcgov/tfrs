@@ -86,12 +86,13 @@ const CreditTransactionsPage = (props) => {
               type="button"
               onClick={() => history.push(CREDIT_TRANSACTIONS.ADD)}
             >
-              {!props.loggedInUser.isGovernmentUser && 'New Transfer'}
-              {props.loggedInUser.isGovernmentUser && 'New Credit Transaction'}
+              <FontAwesomeIcon icon="plus-circle" /> 
+              {!props.loggedInUser.isGovernmentUser && ' New Transfer'}
+              {props.loggedInUser.isGovernmentUser && ' New Credit Transaction'}
             </button>
           }
           <button
-            className="btn btn-success"
+            className="btn btn-info"
             type="button"
             onClick={() => {
               let url = CREDIT_TRANSACTIONS.EXPORT;
