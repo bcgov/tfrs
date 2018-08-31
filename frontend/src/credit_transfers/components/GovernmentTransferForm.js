@@ -5,6 +5,8 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
+import FontAwesomeIcon from '@fortawesome/react-fontawesome';
+
 import { CREDIT_TRANSFER_STATUS } from '../../constants/values';
 
 import getCompliancePeriods from '../../actions/compliancePeriodsActions';
@@ -62,7 +64,7 @@ class GovernmentTransferForm extends Component {
                 onClick={() => history.goBack()}
                 type="button"
               >
-                {Lang.BTN_APP_CANCEL}
+                <FontAwesomeIcon icon="arrow-circle-left" /> {Lang.BTN_APP_CANCEL}
               </button>
               {this.props.actions.includes(Lang.BTN_DELETE_DRAFT) &&
               <button

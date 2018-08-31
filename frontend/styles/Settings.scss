@@ -2,6 +2,26 @@
 @import './mixins.scss';
 
 .page_settings {
+  .info-alert {
+    background-color: transparent;
+    border: none;
+    color: unset;
+    font-size: 1.5rem;
+    margin: 0;
+    padding-left: 3rem; /* allocate space for icon */
+    position: relative;
+
+    &:before {
+      color: $blue;
+      @include vertical-middle {
+        font-size: 2.5rem;
+        left: 0;
+        text-align: center;
+        width: 6rem;
+      }
+    }
+  }
+
   .settings-notifications {
     border-bottom: 1px solid $border-grey;
     border-left: 1px solid $border-grey;

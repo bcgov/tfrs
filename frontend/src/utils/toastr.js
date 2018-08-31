@@ -5,8 +5,8 @@ const toastr = {
   creditTransactionSuccess: (statusId, item, message = '') => {
     let text = 'Credit Transaction';
 
-    if ([CREDIT_TRANSFER_TYPES.buy.id, CREDIT_TRANSFER_TYPES.sell.id]
-      .indexOf(item.type.id) >= 0) {
+    if ([CREDIT_TRANSFER_TYPES.buy.id, CREDIT_TRANSFER_TYPES.sell.id].indexOf(item.type.id) >= 0 ||
+        [CREDIT_TRANSFER_TYPES.buy.id, CREDIT_TRANSFER_TYPES.sell.id].indexOf(item.type) >= 0) {
       text = 'Credit Transfer Proposal';
     }
 

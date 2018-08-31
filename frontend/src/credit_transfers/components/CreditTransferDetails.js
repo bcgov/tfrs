@@ -63,16 +63,6 @@ const CreditTransferDetails = props => (
           tradeType={props.tradeType}
           zeroDollarReason={props.zeroDollarReason}
         />
-        {props.comments.map(c => (
-          <CreditTransferComment comment={c} key={c.id} saveComment={props.saveComment} />
-        ))
-        }
-        {props.isCommenting && <CreditTransferCommentForm
-          saveComment={props.saveComment}
-          cancelComment={props.cancelComment}
-          isCreatingPrivilegedComment={props.isCreatingPrivilegedComment}
-        />
-        }
         <form onSubmit={e => e.preventDefault()}>
           {(props.buttonActions.includes(Lang.BTN_SIGN_1_2) ||
             props.buttonActions.includes(Lang.BTN_SIGN_2_2)) &&
@@ -83,19 +73,31 @@ const CreditTransferDetails = props => (
             toggleCheck={props.toggleCheck}
           />
           }
+          {props.status.id !== CREDIT_TRANSFER_STATUS.draft.id &&
+          (props.history.length > 0 || props.signatures.length > 0) &&
+          <CreditTransferSigningHistory
+            history={props.history}
+            signatures={props.signatures}
+          />
+          }
+          {props.comments.length > 0 && <h3 className="comments-header">Comments</h3>}
+          {props.comments.map(c => (
+            <CreditTransferComment comment={c} key={c.id} saveComment={props.saveComment} />
+          ))
+          }
+          {props.isCommenting && <CreditTransferCommentForm
+            saveComment={props.saveComment}
+            cancelComment={props.cancelComment}
+            isCreatingPrivilegedComment={props.isCreatingPrivilegedComment}
+          />
+          }
           <CreditTransferCommentButtons
             canComment={props.canComment}
             isCommenting={props.isCommenting}
             addComment={props.addComment}
             canCreatePrivilegedComment={props.canCreatePrivilegedComment}
           />
-          {props.status.id !== CREDIT_TRANSFER_STATUS.draft.id &&
-          (props.history.length > 0 || props.signatures.length > 0) &&
-            <CreditTransferSigningHistory
-              history={props.history}
-              signatures={props.signatures}
-            />
-          }
+
           <CreditTransferFormButtons
             actions={props.buttonActions}
             addComment={props.addComment}
