@@ -1,10 +1,11 @@
 import ActionTypes from '../constants/actionTypes/Notifications';
 
 const notifications = (state = {
-  items: [],
+  errorMessage: [],
   isFetching: false,
-  success: false,
-  errorMessage: []
+  items: [],
+  serverInitiatedReloadRequested: false,
+  success: false
 }, action) => {
   switch (action.type) {
     case ActionTypes.GET_NOTIFICATIONS:
@@ -33,6 +34,11 @@ const notifications = (state = {
         didInvalidate: true,
         errors: {},
         message: ''
+      };
+    case ActionTypes.SERVER_INITIATED_NOTIFICATION_RELOAD:
+      return {
+        ...state,
+        serverInitiatedReloadRequested: true
       };
     case ActionTypes.SUCCESS:
       return {
