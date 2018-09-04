@@ -315,7 +315,7 @@ class TestAPIComments(BaseTestCase, CreditTradeRelationshipMixin, CreditTradeFlo
                 'status': status.HTTP_201_CREATED,
                 'reason': 'Analyst can comment in Not Recommended'
             }
-        expected_results[('Approved', False, 'gov_analyst', True)] = \
+        expected_results[('Approved', False, 'gov_analyst', False)] = \
             {
                 'status': status.HTTP_201_CREATED,
                 'reason': 'Director can comment in Not Recommended'

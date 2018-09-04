@@ -1,17 +1,13 @@
+@import './variables.scss';
+@import './mixins.scss';
 
-.notifications {
-
-  .form-group.form-group-sm.react-bs-table-search-form {
-    float: right;
+.page_notifications {
+  .col-actions, .col-mark {
+    text-align: center;
   }
 
-  .row {
-    margin: 0 -15px;
-  }
-
-  .react-bs-table {
-    max-height: 500px;
-    overflow: auto;
+  .col-credit-trade, .col-date, .col-notification, .col-organization, .col-user {
+    text-align: left;
   }
 }
 

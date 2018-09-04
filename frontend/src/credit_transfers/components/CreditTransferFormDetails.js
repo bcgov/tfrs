@@ -11,7 +11,8 @@ import { CREDIT_TRANSFER_TYPES, ZERO_DOLLAR_REASON } from '../../constants/value
 class CreditTransferFormDetails extends Component {
   enableZeroReason () {
     return (
-      this.props.fields.tradeType.id === CREDIT_TRANSFER_TYPES.sell.id &&
+      (this.props.fields.tradeType.id === CREDIT_TRANSFER_TYPES.sell.id ||
+      this.props.fields.tradeType.id === CREDIT_TRANSFER_TYPES.buy.id) &&
       this.props.fields.fairMarketValuePerCredit !== null &&
       parseFloat(this.props.fields.fairMarketValuePerCredit) === 0
     );
@@ -120,10 +121,6 @@ class CreditTransferFormDetails extends Component {
     );
   }
 }
-
-CreditTransferFormDetails.defaultProps = {
-  children: null
-};
 
 CreditTransferFormDetails.defaultProps = {
   children: null

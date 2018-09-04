@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import * as Lang from "../../constants/langEnUs";
+import * as Lang from '../../constants/langEnUs';
 
 const CreditTransferCommentButtons = props => (
   <div className="btn-container">

@@ -1,6 +1,31 @@
 .level2Navigation .container, #navbar {
+  a {
+    border-bottom: 1px solid transparent;
+    text-decoration: none;
+  }
+
   .active {
-    font-weight: bold;
-    text-decoration: underline;
+    border-bottom: 1px solid $white;
+  }
+
+  .notifications {
+    float: right;
+
+    #navbar-notifications {
+      font-size: 2rem;
+      font-weight: normal;
+      padding: 0.5rem 0;
+      text-decoration: none;
+
+      &.active {
+        border-bottom: 1px solid $white;
+      }
+
+      .number {
+        display: inline-block;
+        font-size: 1.5rem;
+        vertical-align: middle;
+      }
+    }
   }
 }

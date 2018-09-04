@@ -55,8 +55,8 @@ class CreditTradeCommentsViewSet(AuditableMixin,
     def get_serializer_class(self):
         if self.action in list(self.serializer_classes.keys()):
             return self.serializer_classes[self.action]
-        else:
-            return self.serializer_classes['default']
+
+        return self.serializer_classes['default']
 
     def perform_create(self, serializer):
         comment = serializer.save()

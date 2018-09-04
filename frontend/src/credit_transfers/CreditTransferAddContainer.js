@@ -26,6 +26,7 @@ import {
 } from '../actions/signingAuthorityConfirmationsActions';
 import history from '../app/History';
 import * as Lang from '../constants/langEnUs';
+import COMMENTS from '../constants/permissions/Comments';
 import CREDIT_TRANSACTIONS from '../constants/routes/CreditTransactions';
 import { CREDIT_TRANSFER_STATUS, CREDIT_TRANSFER_TYPES } from '../constants/values';
 import toastr from '../utils/toastr';
@@ -45,14 +46,17 @@ class CreditTransferAddContainer extends Component {
             id: CREDIT_TRANSFER_TYPES.part3Award.id
           },
           zeroDollarReason: { id: null, name: '' }
-        }
+        },
+        isCommenting: false,
+        isCreatingPrivilegedComment: false,
+        hasCommented: false
       };
     } else {
       this.state = {
-        comment: null,
         creditsFrom: {},
         creditsTo: {},
         fields: {
+          comment: null,
           fairMarketValuePerCredit: '',
           initiator: {},
           note: '',
@@ -68,6 +72,7 @@ class CreditTransferAddContainer extends Component {
       };
     }
 
+    this._addComment = this._addComment.bind(this);
     this._addToFields = this._addToFields.bind(this);
     this._changeStatus = this._changeStatus.bind(this);
     this._handleInputChange = this._handleInputChange.bind(this);
@@ -91,9 +96,21 @@ class CreditTransferAddContainer extends Component {
     });
   }
 
+  _addComment (privileged = false) {
+    this.setState({
+      isCommenting: true,
+      isCreatingPrivilegedComment: privileged
+    });
+  }
+
   _addToFields (value) {
     const fieldState = { ...this.state.fields };
-    fieldState.terms.push(value);
+
+    const found = this.state.fields.terms.find(term => term.id === value.id);
+
+    if (!found) {
+      fieldState.terms.push(value);
+    }
 
     this.setState({
       fields: fieldState
@@ -110,7 +127,7 @@ class CreditTransferAddContainer extends Component {
       fairMarketValuePerCredit: parseFloat(this.state.fields.fairMarketValuePerCredit).toFixed(2),
       initiator: this.state.fields.initiator.id,
       note: this.state.fields.note,
-      comment: this.state.comment,
+      comment: this.state.fields.comment,
       numberOfCredits: parseInt(this.state.fields.numberOfCredits, 10),
       respondent: this.state.fields.respondent.id,
       status: status.id,
@@ -142,9 +159,11 @@ class CreditTransferAddContainer extends Component {
   }
 
   _governmentTransferSubmit (status) {
+    const { comment } = this.state.fields;
+    const { isCreatingPrivilegedComment } = this.state;
+
     // API data structure
     const data = {
-      comment: this.state.fields.comment,
       compliancePeriod: this.state.fields.compliancePeriod.id,
       initiator: this.state.fields.initiator.id,
       numberOfCredits: parseInt(this.state.fields.numberOfCredits, 10),
@@ -155,9 +174,21 @@ class CreditTransferAddContainer extends Component {
     };
 
     this.props.addCreditTransfer(data).then((response) => {
+      this._saveComment(response.data.id, comment, isCreatingPrivilegedComment);
+
       this.props.invalidateCreditTransfers();
       history.push(CREDIT_TRANSACTIONS.HIGHLIGHT.replace(':id', response.data.id));
       toastr.creditTransactionSuccess(status.id, data);
+    });
+  }
+
+  _handleCommentChanged (comment) {
+    const fieldState = { ...this.state.fields };
+
+    fieldState.comment = comment;
+
+    this.setState({
+      fields: fieldState
     });
   }
 
@@ -189,10 +220,19 @@ class CreditTransferAddContainer extends Component {
     return false;
   }
 
-  _handleCommentChanged (comment) {
-    this.setState({
-      comment
-    });
+  _saveComment (id, comment, privileged = false) {
+    // API data structure
+    const data = {
+      creditTrade: id,
+      comment,
+      privilegedAccess: privileged
+    };
+
+    if (comment.length > 0) {
+      return this.props.addCommentToCreditTransfer(data);
+    }
+
+    return false;
   }
 
   _renderCreditTransfer () {
@@ -212,6 +252,7 @@ class CreditTransferAddContainer extends Component {
         handleSubmit={this._handleSubmit}
         handleCommentChanged={this._handleCommentChanged}
         key="creditTransferForm"
+        zeroDollarReason={this.state.fields.zeroDollarReason}
         loggedInUser={this.props.loggedInUser}
         terms={this.state.terms}
         title="New Credit Transfer"
@@ -241,11 +282,18 @@ class CreditTransferAddContainer extends Component {
     return ([
       <GovernmentTransferForm
         actions={buttonActions}
+        addComment={this._addComment}
+        canComment
+        canCreatePrivilegedComment={this.props.loggedInUser.hasPermission(COMMENTS.EDIT_PRIVILEGED)}
         errors={this.props.errors}
         fields={this.state.fields}
         fuelSuppliers={this.props.fuelSuppliers}
+        handleCommentChanged={this._handleCommentChanged}
         handleInputChange={this._handleInputChange}
         handleSubmit={this._handleSubmit}
+        hasCommented={this.state.hasCommented}
+        isCommenting={this.state.isCommenting}
+        isCreatingPrivilegedComment={this.state.isCreatingPrivilegedComment}
         key="creditTransferForm"
         title="New Credit Transaction"
       />,
@@ -349,6 +397,7 @@ CreditTransferAddContainer.propTypes = {
   invalidateCreditTransfers: PropTypes.func.isRequired,
   loggedInUser: PropTypes.shape({
     displayName: PropTypes.string,
+    hasPermission: PropTypes.func,
     isGovernmentUser: PropTypes.bool,
     organization: PropTypes.shape({
       name: PropTypes.string,
