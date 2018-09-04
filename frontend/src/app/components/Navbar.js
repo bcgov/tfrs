@@ -38,7 +38,10 @@ class Navbar extends Component {
               id="navbar-notifications"
               to={Routes.NOTIFICATIONS}
             >
-              <span className="number">0</span> <FontAwesomeIcon icon="bell" />
+              {this.props.unreadNotificationsCount != null &&
+              <span className="number">{this.props.unreadNotificationsCount} </span>
+              }
+              <FontAwesomeIcon icon="bell" />
             </NavLink>
           </div>
           {this.props.loggedInUser.isGovernmentUser &&
@@ -321,7 +324,12 @@ class Navbar extends Component {
   }
 }
 
+Navbar.defaultProps = {
+  unreadNotificationsCount: null
+};
+
 Navbar.propTypes = {
+  isAuthenticated: PropTypes.bool.isRequired,
   loggedInUser: PropTypes.shape({
     displayName: PropTypes.string,
     isGovernmentUser: PropTypes.bool,
@@ -333,7 +341,7 @@ Navbar.propTypes = {
       id: PropTypes.number
     }))
   }).isRequired,
-  isAuthenticated: PropTypes.bool.isRequired
+  unreadNotificationsCount: PropTypes.number
 };
 
 // export default Navbar;
