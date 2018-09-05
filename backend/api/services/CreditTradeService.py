@@ -421,15 +421,6 @@ class CreditTradeService(object):
             ResultingNotification(government, NotificationType.CREDIT_TRANSFER_DECLINED),
         ]
 
-        # handle rescinded
-
-        # handle comments
-
-        # tests
-
-        # subscriptions do something
-
-        # language
 
         notifications_to_send = notification_map[
             StatusChange(
