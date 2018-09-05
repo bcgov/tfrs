@@ -1,10 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import FontAwesomeIcon from '@fortawesome/react-fontawesome';
 
 import * as Lang from '../../../constants/langEnUs';
 
 import history from '../../../app/History';
-import FontAwesomeIcon from '@fortawesome/react-fontawesome';
 
 const HistoricalDataEntryFormButtons = props => (
   <div className="btn-container">
@@ -33,7 +33,6 @@ const HistoricalDataEntryFormButtons = props => (
     <button
       type="submit"
       className="btn btn-primary"
-      onClick={props.handleSubmit}
     >
       {Lang.BTN_ADD_TO_QUEUE}
     </button>
@@ -43,7 +42,6 @@ const HistoricalDataEntryFormButtons = props => (
     <button
       type="submit"
       className="btn btn-primary"
-      onClick={props.handleSubmit}
     >
       {Lang.BTN_SAVE}
     </button>
@@ -52,12 +50,10 @@ const HistoricalDataEntryFormButtons = props => (
 );
 
 HistoricalDataEntryFormButtons.defaultProps = {
-  handleSubmit: null
 };
 
 HistoricalDataEntryFormButtons.propTypes = {
-  actions: PropTypes.arrayOf(PropTypes.string).isRequired,
-  handleSubmit: PropTypes.func
+  actions: PropTypes.arrayOf(PropTypes.string).isRequired
 };
 
 export default HistoricalDataEntryFormButtons;

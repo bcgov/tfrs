@@ -12,6 +12,10 @@ const HistoricalDataEntryForm = props => (
     {Object.keys(props.errors).length > 0 &&
       <Errors errors={props.errors} />
     }
+
+    {Object.keys(props.validationErrors).length > 0 &&
+      <Errors errors={props.validationErrors} />
+    }
     <form
       onSubmit={event => props.handleSubmit(event)}
     >
@@ -22,7 +26,6 @@ const HistoricalDataEntryForm = props => (
         fuelSuppliers={props.fuelSuppliers}
         fields={props.fields}
         handleInputChange={props.handleInputChange}
-        handleSubmit={props.handleSubmit}
         totalValue={props.totalValue}
       />
 
@@ -31,7 +34,8 @@ const HistoricalDataEntryForm = props => (
 );
 
 HistoricalDataEntryForm.defaultProps = {
-  editMode: false
+  editMode: false,
+  validationErrors: {}
 };
 
 HistoricalDataEntryForm.propTypes = {
@@ -65,7 +69,8 @@ HistoricalDataEntryForm.propTypes = {
   }).isRequired,
   handleInputChange: PropTypes.func.isRequired,
   handleSubmit: PropTypes.func.isRequired,
-  totalValue: PropTypes.number.isRequired
+  totalValue: PropTypes.number.isRequired,
+  validationErrors: PropTypes.shape({})
 };
 
 export default HistoricalDataEntryForm;

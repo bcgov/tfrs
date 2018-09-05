@@ -18,7 +18,7 @@ class CreditTransferTextRepresentation extends Component {
     this.numberOfCredits = numeral(this.props.numberOfCredits).format(NumberFormat.INT);
     this.totalValue = numeral(this.props.totalValue).format(NumberFormat.CURRENCY);
     this.tradeEffectiveDate = (this.props.tradeEffectiveDate)
-      ? moment(this.props.tradeEffectiveDate).format('LL') : "on director's approval";
+      ? moment(this.props.tradeEffectiveDate).format('LL') : "on Director's approval";
 
     if (this.props.status.id === CREDIT_TRANSFER_STATUS.draft.id) {
       this.tradeStatus = 'Drafted';
@@ -46,7 +46,7 @@ class CreditTransferTextRepresentation extends Component {
         <span className="value">{this.creditsTo}</span> {this._buyAction()}
         <span className="value"> {this.numberOfCredits} </span> credit{(this.props.numberOfCredits > 1) && 's'} from
         <span className="value"> {this.creditsFrom} </span>
-        for <span className="value"> {this.totalValue} </span>
+        for <span className="value"> {this.totalValue}</span>
         {this.props.status.id === CREDIT_TRANSFER_STATUS.refused.id &&
           <span>. <span className="value"> {this.creditsTo} </span> refused the proposal.</span>
         }

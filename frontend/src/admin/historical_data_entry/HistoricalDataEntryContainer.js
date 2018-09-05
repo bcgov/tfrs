@@ -96,6 +96,10 @@ class HistoricalDataEntryContainer extends Component {
   _handleSubmit (event) {
     event.preventDefault();
 
+    if (!this._validateForm()) {
+      return false;
+    }
+
     const data = this.props.prepareCreditTransfer(this.state.fields);
     const { comment } = this.state.fields;
 
@@ -122,6 +126,22 @@ class HistoricalDataEntryContainer extends Component {
     this.setState({
       selectedId: id
     });
+  }
+
+  _validateForm () {
+    const { numberOfCredits } = this.state.fields;
+
+    if (numberOfCredits % 1 !== 0) {
+      this.setState({
+        validationErrors: {
+          invalidNumberOfCredits: "Number of Credits can't have decimals."
+        }
+      });
+
+      return false;
+    }
+
+    return true;
   }
 
   changeObjectProp (id, name) {
@@ -167,6 +187,7 @@ class HistoricalDataEntryContainer extends Component {
         selectIdForModal={this._selectIdForModal}
         title="Historical Data Entry"
         totalValue={this.state.totalValue}
+        validationErrors={this.state.validationErrors}
       />
     ]);
   }
