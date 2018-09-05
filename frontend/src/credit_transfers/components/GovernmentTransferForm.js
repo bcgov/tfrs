@@ -7,16 +7,15 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import FontAwesomeIcon from '@fortawesome/react-fontawesome';
 
-import { CREDIT_TRANSFER_STATUS } from '../../constants/values';
-
 import getCompliancePeriods from '../../actions/compliancePeriodsActions';
 import Errors from '../../app/components/Errors';
 import TooltipWhenDisabled from '../../app/components/TooltipWhenDisabled';
-import GovernmentTransferFormDetails from './GovernmentTransferFormDetails';
 import history from '../../app/History';
 import * as Lang from '../../constants/langEnUs';
+import { CREDIT_TRANSFER_STATUS } from '../../constants/values';
 import CreditTransferCommentButtons from './CreditTransferCommentButtons';
 import CreditTransferCommentForm from './CreditTransferCommentForm';
+import GovernmentTransferFormDetails from './GovernmentTransferFormDetails';
 
 class GovernmentTransferForm extends Component {
   componentDidMount () {
@@ -57,6 +56,10 @@ class GovernmentTransferForm extends Component {
             <Errors errors={this.props.errors} />
           }
 
+          {Object.keys(this.props.validationErrors).length > 0 &&
+            <Errors errors={this.props.validationErrors} />
+          }
+
           <div className="credit-transfer-actions">
             <div className="btn-container">
               <button
@@ -73,7 +76,7 @@ class GovernmentTransferForm extends Component {
                 data-toggle="modal"
                 type="button"
               >
-                {Lang.BTN_DELETE_DRAFT}
+                <FontAwesomeIcon icon="minus-circle" /> {Lang.BTN_DELETE_DRAFT}
               </button>
               }
               {this.props.actions.includes(Lang.BTN_SAVE_DRAFT) &&
@@ -81,7 +84,7 @@ class GovernmentTransferForm extends Component {
                 className="btn btn-default"
                 type="submit"
               >
-                {Lang.BTN_SAVE_DRAFT}
+                <FontAwesomeIcon icon="save" /> {Lang.BTN_SAVE_DRAFT}
               </button>
               }
               {this.props.actions.includes(Lang.BTN_RECOMMEND_FOR_DECISION) &&
@@ -112,7 +115,8 @@ class GovernmentTransferForm extends Component {
 GovernmentTransferForm.defaultProps = {
   handleCommentChanged: null,
   id: 0,
-  title: 'New Credit Transaction'
+  title: 'New Credit Transaction',
+  validationErrors: {}
 };
 
 GovernmentTransferForm.propTypes = {
@@ -133,7 +137,8 @@ GovernmentTransferForm.propTypes = {
   id: PropTypes.number,
   isCreatingPrivilegedComment: PropTypes.bool.isRequired,
   isCommenting: PropTypes.bool.isRequired,
-  title: PropTypes.string
+  title: PropTypes.string,
+  validationErrors: PropTypes.shape({})
 };
 
 const mapStateToProps = state => ({

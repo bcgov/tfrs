@@ -104,7 +104,7 @@ const CreditTransactionsPage = (props) => {
               document.location = url;
             }}
           >
-            <FontAwesomeIcon icon="table" /> Download as Spreadsheet
+            Download <FontAwesomeIcon icon="file-excel" />
           </button>
         </div>
       </div>
