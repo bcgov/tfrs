@@ -2,7 +2,6 @@
 
 export const HOME = '/';
 export const LOGOUT = '/logout';
-export const NOTIFICATIONS = '/notifications';
 export const SETTINGS = '/settings';
 
 // API Routes
@@ -22,7 +21,6 @@ export const CURRENT_USER = '/users/current';
 // It should be an HTTP DELETE request.
 export const DELETE = '/delete';
 export const NOTIFICATIONS_API = '/notifications';
-
 
 export { default as COMPLIANCE_PERIODS } from './routes/CompliancePeriods';
 export { default as CONTACT_US } from './routes/ContactUs';

@@ -8,6 +8,7 @@
     "@fortawesome/fontawesome-free-regular": "^5.0.12",
     "@fortawesome/fontawesome-free-solid": "^5.0.6",
     "@fortawesome/react-fontawesome": "0.0.19",
+    "amqp": "^0.2.7",
     "axios": "^0.16.2",
     "babel-polyfill": "^6.26.0",
     "body-parser": "^1.17.1",
@@ -36,8 +37,12 @@
     "react-text-mask": "^5.4.2",
     "redux": "^3.6.0",
     "redux-logger": "^3.0.1",
+    "redux-socket.io": "^1.4.0",
     "redux-thunk": "^2.2.0",
-    "webpack": "^4.17.1"
+    "socket.io": "^2.1.1",
+    "webpack": "^4.17.1",
+    "socket.io-client": "latest",
+    "socket.io-middleware": "^0.2.1"
   },
   "devDependencies": {
     "babel-core": "^6.24.1",
@@ -67,7 +72,7 @@
   },
   "scripts": {
     "start": "node server",
-    "start:docker": "webpack-dev-server --hot --watch --info-verbosity verbose --config webpack.docker.config.js --host 0.0.0.0 --public localhost",
+    "start:docker": "node server-docker.js",
     "production": "NODE_ENV=production webpack -p --config webpack.production.config.js",
     "build": "webpack",
     "test": "jest --coverage"
