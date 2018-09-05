@@ -6,13 +6,12 @@ import PropTypes from 'prop-types';
 import ReactTable from 'react-table';
 import 'react-table/react-table.css';
 import FontAwesomeIcon from '@fortawesome/react-fontawesome';
-import { faSquare } from '@fortawesome/fontawesome-free-regular';
 
 const NotificationsTable = (props) => {
   const columns = [{
     accessor: item => item.id,
     Cell: row => (
-      <FontAwesomeIcon icon={faSquare} />
+      <FontAwesomeIcon icon={['far', 'square']} />
     ),
     className: 'col-mark',
     Header: 'Mark',

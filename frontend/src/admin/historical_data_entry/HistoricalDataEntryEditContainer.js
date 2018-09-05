@@ -41,7 +41,8 @@ class HistoricalDataEntryEditContainer extends Component {
         zeroDollarReason: ''
       },
       submitted: false,
-      totalValue: 0
+      totalValue: 0,
+      validationErrors: {}
     };
 
     this._handleInputChange = this._handleInputChange.bind(this);
@@ -74,6 +75,10 @@ class HistoricalDataEntryEditContainer extends Component {
 
   _handleSubmit (event) {
     event.preventDefault();
+
+    if (!this._validateForm()) {
+      return false;
+    }
 
     this.setState({
       submitted: true
@@ -110,6 +115,22 @@ class HistoricalDataEntryEditContainer extends Component {
     }
 
     return this.props.addCommentToCreditTransfer(data);
+  }
+
+  _validateForm () {
+    const { numberOfCredits } = this.state.fields;
+
+    if (numberOfCredits % 1 !== 0) {
+      this.setState({
+        validationErrors: {
+          invalidNumberOfCredits: "Number of Credits can't have decimals."
+        }
+      });
+
+      return false;
+    }
+
+    return true;
   }
 
   changeObjectProp (id, name) {
@@ -170,6 +191,7 @@ class HistoricalDataEntryEditContainer extends Component {
         handleInputChange={this._handleInputChange}
         handleSubmit={this._handleSubmit}
         totalValue={this.state.totalValue}
+        validationErrors={this.state.validationErrors}
       />
     );
   }

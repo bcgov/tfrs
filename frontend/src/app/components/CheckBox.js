@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import FontAwesomeIcon from '@fortawesome/react-fontawesome';
-import { faSquare, faCheckSquare } from '@fortawesome/fontawesome-free-regular';
 
 class CheckBox extends Component {
   constructor (props) {
@@ -42,7 +41,7 @@ class CheckBox extends Component {
     if (checkbox && checkbox.value) {
       return (
         <FontAwesomeIcon
-          icon={faCheckSquare}
+          icon={['far', 'check-square']}
           onClick={() => this.props.toggleCheck(this.props.id, {
             field: this.props.field,
             type: this.props.type
@@ -54,7 +53,7 @@ class CheckBox extends Component {
 
     return (
       <FontAwesomeIcon
-        icon={faSquare}
+        icon={['far', 'square']}
         onClick={() => this.props.toggleCheck(this.props.id, {
           field: this.props.field,
           type: this.props.type
