@@ -44,7 +44,6 @@ class NotificationViewSet(AuditableMixin,
 
     permission_classes = (NotificationPermissions,)
     http_method_names = ['get', 'put', 'post']
-    #serializer_class = NotificationMessageSerializer
     serializer_classes = {
         'update_subscription': EffectiveSubscriptionUpdateSerializer,
         'default': NotificationMessageSerializer,
@@ -75,15 +74,6 @@ class NotificationViewSet(AuditableMixin,
         data = AMQPNotificationService.compute_effective_subscriptions(user)
         serializer = EffectiveSubscriptionSerializer(data, many=True)
         return Response(serializer.data)
-
-        # self.channel.basic_publish(exchange='tokens',
-        #                            routing_key='tokens',
-        #                            body=JSONRenderer().render(serializer.data),
-        #                            properties=pika.BasicProperties(content_type='application/json',
-        #                                                            delivery_mode=1),
-        #                            mandatory=True)
-
-        #return Response(serializer.data)
 
     @list_route(methods=['post'])
     def update_subscription(self, request):
