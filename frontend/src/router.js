@@ -24,11 +24,11 @@ import CreditTransferAddContainer from './credit_transfers/CreditTransferAddCont
 import CreditTransferEditContainer from './credit_transfers/CreditTransferEditContainer';
 import CreditTransferViewContainer from './credit_transfers/CreditTransferViewContainer';
 import MyOrganizationContainer from './organizations/MyOrganizationContainer';
-import NotificationsContainer from  './notifications/NotificationsContainer';
 import OrganizationsContainer from './organizations/OrganizationsContainer';
 import OrganizationViewContainer from './organizations/OrganizationViewContainer';
 import SettingsContainer from './settings/SettingsContainer';
 import UserViewContainer from './users/UserViewContainer';
+import NotificationContainer from './notifications/NotificationContainer';
 
 const Router = props => (
   <ConnectedRouter history={history} key={Math.random()}>
@@ -50,11 +50,6 @@ const Router = props => (
 
             window.location = logoutUrl;
           }}
-        />
-        <Route
-          exact
-          path={Routes.NOTIFICATIONS}
-          component={withRouter(NotificationsContainer)}
         />
         <Route
           exact
@@ -128,6 +123,11 @@ const Router = props => (
         <Route
           path={ADMIN_USERS.DETAILS}
           component={withRouter(UserViewContainer)}
+        />
+        <Route
+          exact
+          path={Routes.NOTIFICATIONS.LIST}
+          component={withRouter(NotificationContainer)}
         />
         <Route component={NotFound} />
       </Switch>

@@ -54,9 +54,9 @@ class DockerEnvironment(OperationalDataScript):
         Organization(name=self._orgs[1], actions_type=OrganizationActionsType.objects.get_by_natural_key("Buy And Sell"), type=OrganizationType.objects.get_by_natural_key("Part3FuelSupplier"), status=OrganizationStatus.objects.get_by_natural_key('Active'), id=3).save()
         Organization(name=self._orgs[2], actions_type=OrganizationActionsType.objects.get_by_natural_key("Buy And Sell"), type=OrganizationType.objects.get_by_natural_key("Part3FuelSupplier"), status=OrganizationStatus.objects.get_by_natural_key('Active'), id=4).save()
 
-        OrganizationBalance(organization=Organization.objects.get_by_natural_key(self._orgs[0]), credit_trade=None, validated_credits=100000, effective_date=datetime.today().strftime('%Y-%m-%d')).save()
-        OrganizationBalance(organization=Organization.objects.get_by_natural_key(self._orgs[1]), credit_trade=None, validated_credits=100000, effective_date=datetime.today().strftime('%Y-%m-%d')).save()
-        OrganizationBalance(organization=Organization.objects.get_by_natural_key(self._orgs[2]), credit_trade=None, validated_credits=100000, effective_date=datetime.today().strftime('%Y-%m-%d')).save()
+        OrganizationBalance(organization=Organization.objects.get_by_natural_key(self._orgs[0]), credit_trade=None, validated_credits=1000, effective_date=datetime.today().strftime('%Y-%m-%d')).save()
+        OrganizationBalance(organization=Organization.objects.get_by_natural_key(self._orgs[1]), credit_trade=None, validated_credits=1000, effective_date=datetime.today().strftime('%Y-%m-%d')).save()
+        OrganizationBalance(organization=Organization.objects.get_by_natural_key(self._orgs[2]), credit_trade=None, validated_credits=1000, effective_date=datetime.today().strftime('%Y-%m-%d')).save()
 
         User(email='fs1@email.com', authorization_guid=uuid.uuid4(), username='fs1', authorization_id='fs1', first_name='FS1', last_name='Supplier', display_name='Fuel Supplier', authorization_directory='BCeID', organization=Organization.objects.get_by_natural_key(self._orgs[0])).save()
         User(email='fs2@email.com', authorization_guid=uuid.uuid4(), username='fs2', authorization_id='fs2', first_name='FS2', last_name='Supplier', display_name='Another Fuel Supplier', authorization_directory='BCeID', organization=Organization.objects.get_by_natural_key(self._orgs[1])).save()
@@ -103,6 +103,13 @@ class DockerEnvironment(OperationalDataScript):
                        '\t\tproxy_set_header Connection "Upgrade";\n' \
                        '\t\tproxy_set_header Host $host;\n' \
                        '\t\tproxy_pass http://node:3000/sockjs-node/;\n' \
+                       '\t}}\n' \
+                       '\tlocation /socket.io/ {{\n' \
+                       '\t\tproxy_http_version 1.1;\n' \
+                       '\t\tproxy_set_header Upgrade $http_upgrade;\n' \
+                       '\t\tproxy_set_header Connection "Upgrade";\n' \
+                       '\t\tproxy_set_header Host $host;\n' \
+                       '\t\tproxy_pass http://node:3000/socket.io/;\n' \
                        '\t}}\n' \
                        '}}\n\n'.format(
                            port=self._portbase+i,
