@@ -43,7 +43,8 @@
     "socket.io": "^2.1.1",
     "webpack": "^4.17.1",
     "socket.io-client": "latest",
-    "socket.io-middleware": "^0.2.1"
+    "socket.io-middleware": "^0.2.1",
+    "snyk": "^1.94.0"
   },
   "devDependencies": {
     "babel-core": "^6.26.3",
@@ -82,7 +83,9 @@
     "start:docker": "node server-docker.js",
     "production": "NODE_ENV=production webpack -p --config webpack.production.config.js",
     "build": "webpack",
-    "test": "jest --coverage"
+    "test": "jest --coverage",
+    "snyk-protect": "snyk protect",
+    "prepare": "npm run snyk-protect"
   },
   "jest": {
     "collectCoverageFrom": [
@@ -96,5 +99,6 @@
         "statements": -50
       }
     }
-  }
+  },
+  "snyk": true
 }
