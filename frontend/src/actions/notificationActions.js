@@ -3,14 +3,11 @@ import axios from 'axios';
 import ActionTypes from '../constants/actionTypes/Notifications';
 import ReducerTypes from '../constants/reducerTypes/Notifications';
 import * as Routes from '../constants/routes';
-import NOTIFICATIONS from '../constants/routes/Notifications';
 
-/*
- * Get Notifications
- */
-export const getNotifications = () => (dispatch) => {
+const getNotifications = () => (dispatch) => {
   dispatch(getNotificationsRequest());
-  return axios.get(Routes.BASE_URL + NOTIFICATIONS.API)
+
+  axios.get(Routes.BASE_URL + Routes.NOTIFICATIONS.LIST)
     .then((response) => {
       dispatch(getNotificationsSuccess(response.data));
     }).catch((error) => {
@@ -18,85 +15,49 @@ export const getNotifications = () => (dispatch) => {
     });
 };
 
+const getNotificationsError = error => ({
+  errorMessage: error,
+  name: ReducerTypes.ERROR_NOTIFICATION_REQUEST,
+  type: ActionTypes.ERROR
+});
+
 const getNotificationsRequest = () => ({
-  name: ReducerTypes.GET_NOTIFICATIONS_REQUEST,
+  name: ReducerTypes.GET_NOTIFICATIONS,
   type: ActionTypes.GET_NOTIFICATIONS
 });
 
 const getNotificationsSuccess = notifications => ({
+  data: notifications,
   name: ReducerTypes.RECEIVE_NOTIFICATIONS_REQUEST,
-  type: ActionTypes.RECEIVE_NOTIFICATIONS,
-  data: notifications,
-  receivedAt: Date.now()
+  type: ActionTypes.RECEIVE_NOTIFICATIONS
 });
 
-const getNotificationsError = error => ({
-  name: ReducerTypes.ERROR_NOTIFICATIONS_REQUEST,
-  type: ActionTypes.ERROR,
-  errorMessage: error
-});
+const changeNotificationReadStatus = (id, isRead) => (dispatch) => {
+  dispatch(changeNotificationStatusRequest());
 
-/*
- * Get Effective Subscriptions
- */
-export const getSubscriptions = () => (dispatch) => {
-  dispatch(getSubscriptionsRequest());
-  return axios.get(`${Routes.BASE_URL}${NOTIFICATIONS.SUBSCRIPTIONS_API}`)
+  axios.put(`${Routes.BASE_URL}${Routes.NOTIFICATIONS_API}/${id}`, { isRead })
     .then((response) => {
-      dispatch(getSubscriptionsSuccess(response.data));
+      dispatch(changeNotificationStatusSuccess(response.data));
     }).catch((error) => {
-      dispatch(getSubscriptionsError(error.response));
+      dispatch(changeNotificationReadStatusError(error.response));
     });
 };
 
-const getSubscriptionsRequest = () => ({
-  name: ReducerTypes.GET_SUBSCRIPTIONS_REQUEST,
-  type: ActionTypes.GET_SUBSCRIPTIONS
+const changeNotificationReadStatusError = error => ({
+  errorMessage: error,
+  name: ReducerTypes.ERROR_NOTIFICATION_REQUEST,
+  type: ActionTypes.ERROR
 });
 
-const getSubscriptionsSuccess = notifications => ({
-  name: ReducerTypes.RECEIVE_SUBSCRIPTIONS_REQUEST,
-  type: ActionTypes.RECEIVE_SUBSCRIPTIONS,
-  data: notifications,
-  receivedAt: Date.now()
+const changeNotificationStatusRequest = () => ({
+  name: ReducerTypes.POST_CHANGE_NOTIFICATION_READ_STATUS,
+  type: ActionTypes.POST_CHANGE_NOTIFICATION_READ_STATUS
 });
 
-const getSubscriptionsError = error => ({
-  name: ReducerTypes.ERROR_SUBSCRIPTIONS_REQUEST,
-  type: ActionTypes.ERROR,
-  errorMessage: error
+const changeNotificationStatusSuccess = notification => ({
+  data: notification,
+  name: ReducerTypes.RECEIVE_CHANGE_NOTIFICATION_READ_STATUS,
+  type: ActionTypes.RECEIVE_CHANGE_NOTIFICATION_READ_STATUS
 });
 
-/*
- * Update Subscriptions
- */
-export const updateSubscriptions = data => (dispatch) => {
-  dispatch(updateSubscriptionsRequest());
-
-  return axios
-    .put(`${Routes.BASE_URL}${Routes.SUBSCRIPTIONS_API}`, data)
-    .then((response) => {
-      dispatch(updateSubscriptionsSuccess(response.data));
-      return Promise.resolve(response);
-    }).catch((error) => {
-      dispatch(updateSubscriptionsError(error.response.data));
-      return Promise.reject(error);
-    });
-};
-
-const updateSubscriptionsRequest = () => ({
-  name: ReducerTypes.UPDATE_SUBSCRIPTIONS_REQUEST,
-  type: ActionTypes.REQUEST
-});
-
-const updateSubscriptionsSuccess = data => ({
-  name: ReducerTypes.SUCCESS_UPDATE_SUBSCRIPTIONS_REQUEST,
-  type: ActionTypes.SUCCESS,
-  data
-});
-
-const updateSubscriptionsError = error => ({
-  name: ReducerTypes.ERROR_UPDATE_SUBSCRIPTIONS_REQUEST,
-  type: ActionTypes.ERROR,
-  errorMessage: error
-});
+export { getNotifications, changeNotificationReadStatus };

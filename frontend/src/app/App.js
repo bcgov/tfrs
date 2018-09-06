@@ -33,7 +33,10 @@ const App = (props) => {
           transitionIn="fadeIn"
           transitionOut="fadeOut"
         />
-        <Navbar loggedInUser={props.loggedInUser} />
+        <Navbar
+          loggedInUser={props.loggedInUser}
+          unreadNotificationsCount={props.unreadNotificationsCount}
+        />
         <div id="main" className="template container">
           {content}
         </div>
@@ -48,7 +51,8 @@ App.defaultProps = {
     error: {
     },
     hasErrors: false
-  }
+  },
+  unreadNotificationsCount: null
 };
 
 App.propTypes = {
@@ -76,7 +80,8 @@ App.propTypes = {
       status: PropTypes.number
     }).isRequired,
     isFetching: PropTypes.bool.isRequired
-  }).isRequired
+  }).isRequired,
+  unreadNotificationsCount: PropTypes.number
 };
 
 export default withRouter(connect(state => ({
@@ -89,5 +94,8 @@ export default withRouter(connect(state => ({
   userRequest: {
     error: state.rootReducer.userRequest.error,
     isFetching: state.rootReducer.userRequest.isFetching
-  }
+  },
+  unreadNotificationsCount: state.rootReducer.notificationsReducer.isFetching
+    ? null
+    : state.rootReducer.notificationsReducer.notifications.filter(n => !n.isRead).length
 }))(App));

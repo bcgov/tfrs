@@ -1,11 +1,10 @@
 const Webpack = require('webpack');
-const packageJson = require('./package.json');
 const path = require('path');
+const packageJson = require('./package.json');
 
 const nodeModulesPath = path.resolve(__dirname, 'node_modules');
 const buildPath = path.resolve(__dirname, 'public', 'build');
 const mainPath = path.resolve(__dirname, 'src', 'index.js');
-console.log('using docker');
 
 const config = {
   entry: [
@@ -67,23 +66,12 @@ const config = {
       }
     ]
   },
-  devServer: {
-    contentBase: path.join(__dirname, 'public'),
-    publicPath: '/build/',
-    historyApiFallback: true,
-    port: 3000,
-    compress: true
-  },
-  watch: true,
-  watchOptions: {
-    ignored: ['node_modules'],
-    poll: 1500
-  },
   devtool: 'source-map', // 'source-map', // debug
   plugins: [
     new Webpack.DefinePlugin({
       __VERSION__: JSON.stringify(packageJson.version)
-    })
+    }),
+    new Webpack.HotModuleReplacementPlugin()
   ]
 };
 

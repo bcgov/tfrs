@@ -7,7 +7,7 @@ from api.models.Organization import Organization
 from api.models.OrganizationBalance import OrganizationBalance
 
 
-class LoadOrganizationAddresses(OperationalDataScript):
+class LoadOrganizationBalances(OperationalDataScript):
 
     comment = 'Set a zero-balance for all organizations with no existing balance objects'
 
@@ -26,4 +26,4 @@ class LoadOrganizationAddresses(OperationalDataScript):
                                     effective_date=datetime.today().strftime('%Y-%m-%d')).save()
 
 
-script_class = LoadOrganizationAddresses
+script_class = LoadOrganizationBalances

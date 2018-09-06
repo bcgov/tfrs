@@ -47,8 +47,8 @@ def create_db_comments(table_name, table_comment, column_comments=None):
                     cursor.execute(
                         'comment on column "{}"."{}" is %s'.format(table_name, column), [comment]
                     )
-                except ProgrammingError:
-                    print(_exception_message)
+                except ProgrammingError as e:
+                    print('{} -- {}'.format(_exception_message, e))
 
 
 def create_db_comments_from_models(models):
@@ -71,8 +71,8 @@ def create_db_comments_from_models(models):
                     cursor.execute(
                         'comment on table "{}" is %s'.format(table), [table_comment]
                     )
-                except ProgrammingError:
-                    print(_exception_message)
+                except ProgrammingError as e:
+                    print('{} -- {}'.format(_exception_message, e))
 
             if column_comments is not None:
                 for column, comment in column_comments.items():
@@ -81,5 +81,5 @@ def create_db_comments_from_models(models):
                             cursor.execute(
                                 'comment on column "{}"."{}" is %s'.format(table, column), [comment]
                             )
-                    except ProgrammingError:
-                        print(_exception_message)
+                    except ProgrammingError as e:
+                        print('{} -- {}'.format(_exception_message, e))
