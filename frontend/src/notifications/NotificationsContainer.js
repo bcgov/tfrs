@@ -22,6 +22,7 @@ class NotificationsContainer extends Component {
     };
 
     this._addToFields = this._addToFields.bind(this);
+    this._changeReadStatus = this._changeReadStatus.bind(this);
     this._toggleCheck = this._toggleCheck.bind(this);
   }
 
@@ -44,6 +45,27 @@ class NotificationsContainer extends Component {
     });
   }
 
+  _changeReadStatus (value) {
+    const selected = this.state.fields.notifications.filter(notification => (notification.value));
+    debugger;
+
+    // API data structure
+    // const data = {
+    //   compliancePeriod: this.state.fields.compliancePeriod.id,
+    //   numberOfCredits: parseInt(this.state.fields.numberOfCredits, 10),
+    //   respondent: this.state.fields.respondent.id,
+    //   status: status.id,
+    //   type: this.state.fields.tradeType.id
+    // };
+
+    // this.props.updateCreditTransfer(id, data).then((response) => {
+    //   this._saveComment(comment, isCreatingPrivilegedComment);
+
+    //   history.push(CREDIT_TRANSACTIONS.HIGHLIGHT.replace(':id', id));
+    //   toastr.creditTransactionSuccess(status.id, this.props.item);
+    // });
+  }
+
   _toggleCheck (key) {
     const fieldState = { ...this.state.fields };
     const index = fieldState.notifications.findIndex(notification => notification.id === key);
@@ -58,7 +80,7 @@ class NotificationsContainer extends Component {
     return (
       <NotificationsDetails
         addToFields={this._addToFields}
-        changeReadStatus={this.props.updateNotificationReadStatus}
+        changeReadStatus={this._changeReadStatus}
         fields={this.state.fields}
         items={this.props.items}
         isFetching={this.props.isFetching}

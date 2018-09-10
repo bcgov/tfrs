@@ -2,19 +2,74 @@
 @import './mixins.scss';
 
 .page_notifications {
+  .actions-container {
+    float: right;
+    margin-bottom: 1rem;
+
+    .btn-group .btn {
+      margin: 0;
+    }
+
+    .dropdown-menu {
+      button {
+        background: none;
+        border: none;
+        clear: both;
+        display: block;
+        margin: 0;
+        padding: 3px 20px;
+        text-align: left;
+        white-space: nowrap;
+        width: 100%;
+
+        &:hover {
+          background-color: $background-grey;
+        }
+      }
+    }
+  }
+
   .col-actions {
+    align-self: center;
+    font-size: 1.75rem;
     text-align: center;
+
+    .fa-folder-open {
+      cursor: pointer;
+    }
+  }
+
+  .col-credit-trade {
+    align-self: center;
+    text-align: center;
+  }
+
+  .col-date, .col-notification, .col-organization, .col-user {
+    align-self: center;
+    text-align: left;
   }
 
   .col-mark {
     text-align: center;
 
     .fa-square, .fa-check-square {
+      align-self: center;
       cursor: pointer;
+      font-size: 2.5rem;
     }
   }
 
-  .col-credit-trade, .col-date, .col-notification, .col-organization, .col-user {
-    text-align: left;
+  .ReactTable {
+    clear: both;
+  }
+
+  .rt-tr {
+    &.-odd {
+      background-color: $background-grey;
+    }
+  }
+
+  .unread {
+    font-weight: bold;
   }
 }

@@ -1,17 +1,14 @@
 import base64
 import random
-import pika
-import json
 from django.http import HttpResponse
 
 from rest_framework import viewsets, serializers, mixins, status
 from rest_framework.decorators import list_route
-from rest_framework.renderers import JSONRenderer
 from rest_framework.response import Response
 
 from api.models.NotificationMessage import NotificationMessage
-from api.notifications.notifications import AMQPNotificationService, EffectiveSubscriptionSerializer, \
-    EffectiveSubscriptionUpdateSerializer
+from api.notifications.notifications import AMQPNotificationService, \
+    EffectiveSubscriptionSerializer, EffectiveSubscriptionUpdateSerializer
 from api.permissions.Notifications import NotificationPermissions
 from api.serializers.Notifications import NotificationMessageSerializer
 from auditable.views import AuditableMixin
