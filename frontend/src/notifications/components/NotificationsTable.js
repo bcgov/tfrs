@@ -7,13 +7,23 @@ import ReactTable from 'react-table';
 import 'react-table/react-table.css';
 import FontAwesomeIcon from '@fortawesome/react-fontawesome';
 
+import LocalTimestamp from '../../app/components/LocalTimestamp';
+
+import CheckBox from '../../app/components/CheckBox';
+
 const NotificationsTable = (props) => {
   const columns = [{
     accessor: item => item.id,
     Cell: row => (
-      <FontAwesomeIcon icon={['far', 'square']} />
+      <CheckBox
+        addToFields={props.addToFields}
+        fields={props.fields.notifications}
+        id={row.value}
+        toggleCheck={props.toggleCheck}
+      />
     ),
     className: 'col-mark',
+    filterable: false,
     Header: 'Mark',
     id: 'mark',
     width: 50
@@ -64,20 +74,26 @@ const NotificationsTable = (props) => {
 
   return (
     <ReactTable
+      columns={columns}
       data={props.items}
-      defaultPageSize={5}
+      defaultPageSize={15}
       defaultSorted={[{
         id: 'date',
         desc: true
       }]}
       filterable={filterable}
-      columns={columns}
+      pageSizeOptions={[5, 10, 15, 20, 25, 50, 100]}
     />
   );
 };
 
 NotificationsTable.propTypes = {
-  items: PropTypes.arrayOf(PropTypes.object).isRequired
+  addToFields: PropTypes.func.isRequired,
+  fields: PropTypes.shape({
+    notifications: PropTypes.array
+  }).isRequired,
+  items: PropTypes.arrayOf(PropTypes.object).isRequired,
+  toggleCheck: PropTypes.func.isRequired
 };
 
 export default NotificationsTable;

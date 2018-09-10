@@ -12,6 +12,19 @@ import { updateNotificationReadStatus } from '../actions/notificationActions';
 import NotificationsDetails from './components/NotificationsDetails';
 
 class NotificationsContainer extends Component {
+  constructor (props) {
+    super(props);
+
+    this.state = {
+      fields: {
+        notifications: []
+      }
+    };
+
+    this._addToFields = this._addToFields.bind(this);
+    this._toggleCheck = this._toggleCheck.bind(this);
+  }
+
   componentWillMount () {
     this.loadData();
   }
@@ -19,12 +32,37 @@ class NotificationsContainer extends Component {
   loadData () {
   }
 
+  _addToFields (value) {
+    const fieldState = { ...this.state.fields };
+
+    if (value) {
+      fieldState.notifications.push(value);
+    }
+
+    this.setState({
+      fields: fieldState
+    });
+  }
+
+  _toggleCheck (key) {
+    const fieldState = { ...this.state.fields };
+    const index = fieldState.notifications.findIndex(notification => notification.id === key);
+    fieldState.notifications[index].value = !fieldState.notifications[index].value;
+
+    this.setState({
+      fields: fieldState
+    });
+  }
+
   render () {
     return (
       <NotificationsDetails
+        addToFields={this._addToFields}
+        changeReadStatus={this.props.updateNotificationReadStatus}
+        fields={this.state.fields}
         items={this.props.items}
         isFetching={this.props.isFetching}
-        changeReadStatus={this.props.updateNotificationReadStatus}
+        toggleCheck={this._toggleCheck}
       />
     );
   }

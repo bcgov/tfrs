@@ -12,6 +12,7 @@ const notifications = (state = {
       return {
         ...state,
         isFetching: true,
+        serverInitiatedReloadRequested: false,
         success: false
       };
     case ActionTypes.RECEIVE_NOTIFICATIONS:
