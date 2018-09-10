@@ -3,14 +3,14 @@ import axios from 'axios';
 import ActionTypes from '../constants/actionTypes/Notifications';
 import ReducerTypes from '../constants/reducerTypes/Notifications';
 import * as Routes from '../constants/routes';
-import NOTIFICATIONS from '../constants/routes/Notifications';
 
 /*
  * Get Notifications
  */
 const getNotifications = () => (dispatch) => {
   dispatch(getNotificationsRequest());
-  return axios.get(Routes.BASE_URL + NOTIFICATIONS.API)
+
+  axios.get(Routes.BASE_URL + Routes.NOTIFICATIONS.LIST)
     .then((response) => {
       dispatch(getNotificationsSuccess(response.data));
     }).catch((error) => {
@@ -18,53 +18,21 @@ const getNotifications = () => (dispatch) => {
     });
 };
 
+const getNotificationsError = error => ({
+  errorMessage: error,
+  name: ReducerTypes.ERROR_NOTIFICATION_REQUEST,
+  type: ActionTypes.ERROR
+});
+
 const getNotificationsRequest = () => ({
-  name: ReducerTypes.GET_NOTIFICATIONS_REQUEST,
+  name: ReducerTypes.GET_NOTIFICATIONS,
   type: ActionTypes.GET_NOTIFICATIONS
 });
 
 const getNotificationsSuccess = notifications => ({
+  data: notifications,
   name: ReducerTypes.RECEIVE_NOTIFICATIONS_REQUEST,
-  type: ActionTypes.RECEIVE_NOTIFICATIONS,
-  data: notifications,
-  receivedAt: Date.now()
-});
-
-const getNotificationsError = error => ({
-  name: ReducerTypes.ERROR_NOTIFICATIONS_REQUEST,
-  type: ActionTypes.ERROR,
-  errorMessage: error
-});
-
-/*
- * Get Effective Subscriptions
- */
-export const getSubscriptions = () => (dispatch) => {
-  dispatch(getSubscriptionsRequest());
-  return axios.get(`${Routes.BASE_URL}${NOTIFICATIONS.SUBSCRIPTIONS_API}`)
-    .then((response) => {
-      dispatch(getSubscriptionsSuccess(response.data));
-    }).catch((error) => {
-      dispatch(getSubscriptionsError(error.response));
-    });
-};
-
-const getSubscriptionsRequest = () => ({
-  name: ReducerTypes.GET_SUBSCRIPTIONS_REQUEST,
-  type: ActionTypes.GET_SUBSCRIPTIONS
-});
-
-const getSubscriptionsSuccess = notifications => ({
-  name: ReducerTypes.RECEIVE_SUBSCRIPTIONS_REQUEST,
-  type: ActionTypes.RECEIVE_SUBSCRIPTIONS,
-  data: notifications,
-  receivedAt: Date.now()
-});
-
-const getSubscriptionsError = error => ({
-  name: ReducerTypes.ERROR_SUBSCRIPTIONS_REQUEST,
-  type: ActionTypes.ERROR,
-  errorMessage: error
+  type: ActionTypes.RECEIVE_NOTIFICATIONS
 });
 
 /*
@@ -120,10 +88,10 @@ const updateSubscriptionsRequest = () => ({
   type: ActionTypes.REQUEST
 });
 
-const updateSubscriptionsSuccess = data => ({
+const updateSubscriptionsSuccess = notification => ({
+  data: notification,
   name: ReducerTypes.SUCCESS_UPDATE_SUBSCRIPTIONS_REQUEST,
-  type: ActionTypes.SUCCESS,
-  data
+  type: ActionTypes.SUCCESS
 });
 
 const updateSubscriptionsError = error => ({

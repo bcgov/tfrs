@@ -12,6 +12,7 @@ import errorRequest from './errorReducer';
 import creditTransfersHistory from './creditTransfersHistoryReducer';
 import compliancePeriods from './compliancePeriodReducer';
 import signingAuthorityAssertions from './signingAuthorityAssertionReducer';
+import notificationReducer from './notificationReducer';
 
 const genericRequest = (state = {
   isFetching: false,
@@ -110,6 +111,7 @@ const rootReducer = combineReducers({
   signingAuthorityAssertions,
   fuelSuppliersRequest,
   errorRequest,
-  routing
+  routing,
+  notificationReducer
 });
 export default rootReducer;

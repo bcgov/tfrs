@@ -96,7 +96,7 @@ const PlainEnglishPhrase = (item) => {
       {item.toFrom} <span className="value">{item.tradeRespondent.name} </span>
       for <span className="value">${fairMarketValuePerCredit} </span>
       per credit for a total value of <span className="value">${totalValue} </span>
-      effective on Director&apos;s Approval.
+      effective on Director&apos;s approval.
     </div>
   );
 };
@@ -143,6 +143,6 @@ export const plainEnglishPhraseString = (data) => {
     case Values.STATUS_COMPLETED:
       return (`${tradeInitiator} ${tradeTypePast} ${data.numberOfCredits} ${toFrom} ${tradeRespondent} for $${fairMarketValuePerCredit} per credit for a total value of $${totalValue} effective on ${data.tradeEffectiveDate}.`);
     default:
-      return (`${tradeInitiator} proposes to ${tradeType} ${data.numberOfCredits} ${toFrom} ${tradeRespondent} for $${fairMarketValuePerCredit} per credit for a total value of $${totalValue} effective on Director's Approval.`);
+      return (`${tradeInitiator} proposes to ${tradeType} ${data.numberOfCredits} ${toFrom} ${tradeRespondent} for $${fairMarketValuePerCredit} per credit for a total value of $${totalValue} effective on Director's approval.`);
   }
 };

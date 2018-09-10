@@ -29,6 +29,14 @@ class Navbar extends Component {
   }
 
   render () {
+    const dataAttrs = {};
+    if (this.props.unreadNotificationsCount > 0 && this.props.unreadNotificationsCount < 1000) {
+      dataAttrs['data-unread-count'] = this.props.unreadNotificationsCount;
+    }
+    if (this.props.unreadNotificationsCount > 1000) {
+      dataAttrs['data-unread-count'] = '∞';
+    }
+
     const SecondLevelNavigation = (
       <div className="level2Navigation">
         <div className="container">
@@ -36,7 +44,7 @@ class Navbar extends Component {
             <NavLink
               activeClassName="active"
               id="navbar-notifications"
-              to={Routes.NOTIFICATIONS}
+              to={Routes.NOTIFICATIONS.LIST}
             >
               {this.props.unreadNotificationsCount != null &&
               <span className="number">{this.props.unreadNotificationsCount} </span>
@@ -297,7 +305,8 @@ class Navbar extends Component {
                         </MenuItem>
                         <MenuItem onClick={() => {
                           history.push(Routes.SETTINGS);
-                        }}>
+                        }}
+                        >
                           <FontAwesomeIcon icon="cog" /> Settings
                         </MenuItem>
                         <MenuItem href={Routes.LOGOUT}>
@@ -323,6 +332,9 @@ class Navbar extends Component {
     );
   }
 }
+Navbar.defaultProps = {
+  unreadNotificationsCount: null
+};
 
 Navbar.defaultProps = {
   unreadNotificationsCount: null

@@ -31,6 +31,7 @@ const HistoricalDataEntryPage = (props) => {
         handleInputChange={props.handleInputChange}
         handleSubmit={props.handleSubmit}
         totalValue={props.totalValue}
+        validationErrors={props.validationErrors}
       />
 
       {isFetching && <Loading />}
@@ -73,6 +74,10 @@ const HistoricalDataEntryPage = (props) => {
   );
 };
 
+HistoricalDataEntryPage.defaultProps = {
+  validationErrors: {}
+};
+
 HistoricalDataEntryPage.propTypes = {
   addErrors: PropTypes.oneOfType([
     PropTypes.shape({}),
@@ -113,7 +118,8 @@ HistoricalDataEntryPage.propTypes = {
   selectedId: PropTypes.number.isRequired,
   selectIdForModal: PropTypes.func.isRequired,
   title: PropTypes.string.isRequired,
-  totalValue: PropTypes.number.isRequired
+  totalValue: PropTypes.number.isRequired,
+  validationErrors: PropTypes.shape({})
 };
 
 export default HistoricalDataEntryPage;
