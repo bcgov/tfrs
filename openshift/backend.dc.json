@@ -1,0 +1,271 @@
+{
+    "kind": "Template",
+    "apiVersion": "v1",
+    "metadata": {
+        "name": "backend",
+        "creationTimestamp": null
+    },
+    "labels": {
+        "template": "tfrs-backend-template"
+    },
+    "parameters": [
+        {
+            "name": "NAME_SUFFIX",
+            "displayName": "Name Suffix",
+            "description": "A suffix appended to all objects",
+            "required": true
+        },
+        {
+            "name": "ENV_NAME",
+            "required": true
+        },
+        {
+            "description": "The name of the OpenShift Service exposed for the database.",
+            "displayName": "Database Service Name",
+            "name": "DATABASE_SERVICE_NAME",
+            "required": true
+        }
+    ],
+    "objects": [
+        {
+            "kind": "ImageStream",
+            "apiVersion": "v1",
+            "metadata": {
+                "name": "backend${NAME_SUFFIX}",
+                "creationTimestamp": null,
+                "labels": {
+                    "base-name":"backend"
+                },
+                "annotations": {
+                    "description": "Keeps track of changes in the application image"
+                }
+            },
+            "spec": {
+                "lookupPolicy": {
+                    "local": false
+                }
+            }
+        },
+        {
+            "kind": "Service",
+            "apiVersion": "v1",
+            "metadata": {
+                "name": "backend${NAME_SUFFIX}"
+            },
+            "spec": {
+                "ports": [
+                    {
+                        "name": "web",
+                        "protocol": "TCP",
+                        "port": 8080,
+                        "targetPort": 8080
+                    }
+                ],
+                "selector": {
+                    "name": "backend${NAME_SUFFIX}"
+                },
+                "type": "ClusterIP",
+                "sessionAffinity": "None"
+            },
+            "status": {
+                "loadBalancer": {}
+            }
+        },
+        {
+            "kind": "Route",
+            "apiVersion": "v1",
+            "metadata": {
+                "name": "frontend${NAME_SUFFIX}",
+                "creationTimestamp": null,
+                "labels": {
+                    "frontend": "true"
+                },
+                "annotations": { }
+            },
+            "spec": {
+                "host": "",
+                "path": "/api",
+                "to": {
+                    "kind": "Service",
+                    "name": "backend${NAME_SUFFIX}",
+                    "weight": 100
+                },
+                "port": {
+                    "targetPort": "web"
+                },
+                "tls": {
+                    "termination": "edge"
+                },
+                "wildcardPolicy": "None"
+            }
+        },
+        {
+            "kind": "DeploymentConfig",
+            "apiVersion": "v1",
+            "metadata": {
+                "name": "backend${NAME_SUFFIX}",
+                "generation": 1,
+                "creationTimestamp": null,
+                "annotations": {
+                    "description": "Defines how to deploy the application server"
+                }
+            },
+            "spec": {
+                "strategy": {
+                    "type": "Recreate",
+                    "recreateParams": {
+                        "timeoutSeconds": 600,
+                        "mid": {
+                            "failurePolicy": "Abort",
+                            "execNewPod": {
+                                "command": [
+                                    "/bin/sh",
+                                    "-c",
+                                    "python manage.py migrate"
+                                ],
+                                "containerName": "backend-app${NAME_SUFFIX}"
+                            }
+                        }
+                    },
+                    "resources": {},
+                    "activeDeadlineSeconds": 21600
+                },
+                "triggers": [
+                    {
+                        "type": "ImageChange",
+                        "imageChangeParams": {
+                            "automatic": true,
+                            "containerNames": [
+                                "backend-app${NAME_SUFFIX}"
+                            ],
+                            "from": {
+                                "kind": "ImageStreamTag",
+                                "name": "backend${NAME_SUFFIX}:${ENV_NAME}"
+                            }
+                        }
+                    },
+                    {
+                        "type": "ConfigChange"
+                    }
+                ],
+                "replicas": 1,
+                "test": false,
+                "selector": {
+                    "name": "backend${NAME_SUFFIX}"
+                },
+                "template": {
+                    "metadata": {
+                        "name": "backend${NAME_SUFFIX}",
+                        "creationTimestamp": null,
+                        "labels": {
+                            "name": "backend${NAME_SUFFIX}"
+                        }
+                    },
+                    "spec": {
+                        "containers": [
+                            {
+                                "name": "backend-app${NAME_SUFFIX}",
+                                "image": " ",
+                                "ports": [
+                                    {
+                                        "containerPort": 8080,
+                                        "protocol": "TCP"
+                                    }
+                                ],
+                                "env": [
+                                    {
+                                        "name": "DATABASE_SERVICE_NAME",
+                                        "value": "${DATABASE_SERVICE_NAME}"
+                                    },
+                                    {
+                                        "name": "DATABASE_ENGINE",
+                                        "value": "postgresql"
+                                    },
+                                    {
+                                        "name": "DATABASE_NAME",
+                                        "valueFrom": {
+                                            "secretKeyRef": {
+                                                "name": "${DATABASE_SERVICE_NAME}",
+                                                "key": "database-name"
+                                            }
+                                        }
+                                    },
+                                    {
+                                        "name": "APP_CONFIG",
+                                        "value": "/opt/app-root/src/gunicorn.cfg"
+                                    },
+                                    {
+                                        "name": "DJANGO_DEBUG",
+                                        "value": "True"
+                                    },
+                                    {
+                                        "name": "DATABASE_USER",
+                                        "valueFrom": {
+                                            "secretKeyRef": {
+                                                "name": "${DATABASE_SERVICE_NAME}",
+                                                "key": "database-user"
+                                            }
+                                        }
+                                    },
+                                    {
+                                        "name": "DATABASE_PASSWORD",
+                                        "valueFrom": {
+                                            "secretKeyRef": {
+                                                "name": "${DATABASE_SERVICE_NAME}",
+                                                "key": "database-password"
+                                            }
+                                        }
+                                    }
+                                ],
+                                "resources": {
+                                    "limits": {
+                                        "cpu": "500m",
+                                        "memory": "1Gi"
+                                    },
+                                    "requests": {
+                                        "cpu": "400m",
+                                        "memory": "512Mi"
+                                    }
+                                },
+                                "livenessProbe": {
+                                    "httpGet": {
+                                        "path": "/health",
+                                        "port": 8080,
+                                        "scheme": "HTTP"
+                                    },
+                                    "initialDelaySeconds": 30,
+                                    "timeoutSeconds": 3,
+                                    "periodSeconds": 10,
+                                    "successThreshold": 1,
+                                    "failureThreshold": 3
+                                },
+                                "readinessProbe": {
+                                    "httpGet": {
+                                        "path": "/health",
+                                        "port": 8080,
+                                        "scheme": "HTTP"
+                                    },
+                                    "initialDelaySeconds": 30,
+                                    "timeoutSeconds": 3,
+                                    "periodSeconds": 10,
+                                    "successThreshold": 1,
+                                    "failureThreshold": 3
+                                },
+                                "terminationMessagePath": "/dev/termination-log",
+                                "terminationMessagePolicy": "File",
+                                "imagePullPolicy": "IfNotPresent"
+                            }
+                        ],
+                        "restartPolicy": "Always",
+                        "terminationGracePeriodSeconds": 30,
+                        "dnsPolicy": "ClusterFirst",
+                        "securityContext": {},
+                        "schedulerName": "default-scheduler"
+                    }
+                }
+            },
+            "status": {
+            }
+        }
+    ]
+}
