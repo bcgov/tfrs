@@ -18,13 +18,13 @@ const NotificationsTable = (props) => {
     id: 'mark',
     width: 50
   }, {
-    accessor: item => item.notification,
+    accessor: item => item.message,
     className: 'col-notification',
     Header: 'Notification',
     headerClassName: 'col-notification',
     id: 'notification'
   }, {
-    accessor: item => item.date,
+    accessor: item => item.createTimestamp,
     className: 'col-date',
     Header: 'Date',
     headerClassName: 'col-date',
@@ -36,13 +36,13 @@ const NotificationsTable = (props) => {
     headerClassName: 'col-user',
     id: 'user'
   }, {
-    accessor: item => item.creditTrade,
+    accessor: item => item.relatedCreditTrade,
     className: 'col-credit-trade',
     Header: 'Credit Trade',
     headerClassName: 'col-credit-trade',
     id: 'creditTrade'
   }, {
-    accessor: item => item.organization,
+    accessor: item => item.relatedOrganization,
     className: 'col-organization',
     Header: 'Organization',
     headerClassName: 'col-organization',

@@ -29,29 +29,19 @@ class Navbar extends Component {
   }
 
   render () {
-    const dataAttrs = {};
+    let unreadCount = 0;
+
     if (this.props.unreadNotificationsCount > 0 && this.props.unreadNotificationsCount < 1000) {
-      dataAttrs['data-unread-count'] = this.props.unreadNotificationsCount;
+      unreadCount = this.props.unreadNotificationsCount;
     }
+
     if (this.props.unreadNotificationsCount > 1000) {
-      dataAttrs['data-unread-count'] = '∞';
+      unreadCount = '∞';
     }
 
     const SecondLevelNavigation = (
       <div className="level2Navigation">
         <div className="container">
-          <div className="notifications">
-            <NavLink
-              activeClassName="active"
-              id="navbar-notifications"
-              to={Routes.NOTIFICATIONS.LIST}
-            >
-              {this.props.unreadNotificationsCount != null &&
-              <span className="number">{this.props.unreadNotificationsCount} </span>
-              }
-              <FontAwesomeIcon icon="bell" />
-            </NavLink>
-          </div>
           {this.props.loggedInUser.isGovernmentUser &&
           <NavLink
             activeClassName="active"
@@ -127,6 +117,16 @@ class Navbar extends Component {
             Administration
           </NavLink>
           }
+          <NavLink
+            activeClassName="active"
+            id="navbar-notifications"
+            to={Routes.NOTIFICATIONS.LIST}
+          >
+            <span className="fa-layers">
+              <FontAwesomeIcon icon="bell" />
+              <span className="fa-layers-counter">{unreadCount}</span>
+            </span>
+          </NavLink>
         </div>
       </div>
     );
