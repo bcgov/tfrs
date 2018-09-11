@@ -13,7 +13,7 @@ const NotificationsDetails = props => (
       <div className="btn-group">
         <button
           className="btn btn-primary"
-          onClick={() => props.changeReadStatus('read')}
+          onClick={() => props.updateNotifications({ isRead: true })}
           type="button"
         >
           <FontAwesomeIcon icon={['far', 'check-square']} /> Mark as Read
@@ -24,12 +24,19 @@ const NotificationsDetails = props => (
         </button>
         <ul className="dropdown-menu">
           <li>
-            <button type="button">
+            <button
+              onClick={() => props.updateNotifications({ isRead: false })}
+              type="button"
+            >
               <FontAwesomeIcon icon={['far', 'square']} /> Mark as Unread
             </button>
           </li>
           <li>
-            <button type="button">
+            <button
+              data-toggle="modal"
+              data-target="#confirmArchive"
+              type="button"
+            >
               <FontAwesomeIcon icon="folder-open" /> Archive
             </button>
           </li>
@@ -43,6 +50,7 @@ const NotificationsDetails = props => (
       addToFields={props.addToFields}
       fields={props.fields}
       items={props.items}
+      selectIdForModal={props.selectIdForModal}
       toggleCheck={props.toggleCheck}
     />
   </div>
@@ -50,14 +58,15 @@ const NotificationsDetails = props => (
 
 NotificationsDetails.propTypes = {
   addToFields: PropTypes.func.isRequired,
-  changeReadStatus: PropTypes.func.isRequired,
   fields: PropTypes.shape({
     notifications: PropTypes.array
   }).isRequired,
   isFetching: PropTypes.bool.isRequired,
   items: PropTypes.arrayOf(PropTypes.shape({
   })).isRequired,
-  toggleCheck: PropTypes.func.isRequired
+  selectIdForModal: PropTypes.func.isRequired,
+  toggleCheck: PropTypes.func.isRequired,
+  updateNotifications: PropTypes.func.isRequired
 };
 
 export default NotificationsDetails;

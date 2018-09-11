@@ -8,8 +8,9 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import PropTypes from 'prop-types';
 
-import { updateNotificationReadStatus } from '../actions/notificationActions';
+import { updateNotifications } from '../actions/notificationActions';
 import NotificationsDetails from './components/NotificationsDetails';
+import Modal from '../app/components/Modal';
 
 class NotificationsContainer extends Component {
   constructor (props) {
@@ -22,21 +23,16 @@ class NotificationsContainer extends Component {
     };
 
     this._addToFields = this._addToFields.bind(this);
-    this._changeReadStatus = this._changeReadStatus.bind(this);
+    this._selectIdForModal = this._selectIdForModal.bind(this);
     this._toggleCheck = this._toggleCheck.bind(this);
-  }
-
-  componentWillMount () {
-    this.loadData();
-  }
-
-  loadData () {
+    this._updateNotifications = this._updateNotifications.bind(this);
   }
 
   _addToFields (value) {
     const fieldState = { ...this.state.fields };
 
-    if (value) {
+    if (value &&
+      fieldState.notifications.findIndex(notification => (notification.id === value.id)) < 0) {
       fieldState.notifications.push(value);
     }
 
@@ -45,25 +41,10 @@ class NotificationsContainer extends Component {
     });
   }
 
-  _changeReadStatus (value) {
-    const selected = this.state.fields.notifications.filter(notification => (notification.value));
-    debugger;
-
-    // API data structure
-    // const data = {
-    //   compliancePeriod: this.state.fields.compliancePeriod.id,
-    //   numberOfCredits: parseInt(this.state.fields.numberOfCredits, 10),
-    //   respondent: this.state.fields.respondent.id,
-    //   status: status.id,
-    //   type: this.state.fields.tradeType.id
-    // };
-
-    // this.props.updateCreditTransfer(id, data).then((response) => {
-    //   this._saveComment(comment, isCreatingPrivilegedComment);
-
-    //   history.push(CREDIT_TRANSACTIONS.HIGHLIGHT.replace(':id', id));
-    //   toastr.creditTransactionSuccess(status.id, this.props.item);
-    // });
+  _selectIdForModal (id) {
+    this.setState({
+      selectedId: id
+    });
   }
 
   _toggleCheck (key) {
@@ -76,24 +57,82 @@ class NotificationsContainer extends Component {
     });
   }
 
+  _updateNotification (id, value) {
+    const data = {
+      ids: [id],
+      ...value
+    };
+
+    return this._updateNotificationsStatuses(data);
+  }
+
+  _updateNotifications (value) {
+    const data = {
+      ids: this.state.fields.notifications
+        .filter(notification => (notification.value))
+        .map(notification => notification.id),
+      ...value
+    };
+
+    if (data.ids.length === 0) {
+      return false;
+    }
+
+    return this._updateNotificationsStatuses(data);
+  }
+
+  _updateNotificationsStatuses (data) {
+    return this.props.updateNotifications(data).then(() => {
+      const fieldState = { // reset checkboxes to unchecked
+        ...this.state.fields,
+        notifications: this.state.fields.notifications.map(notification => ({
+          ...notification,
+          value: false
+        }))
+      };
+
+      this.setState({
+        fields: fieldState
+      });
+    });
+  }
+
   render () {
-    return (
+    return ([
       <NotificationsDetails
         addToFields={this._addToFields}
-        changeReadStatus={this._changeReadStatus}
         fields={this.state.fields}
-        items={this.props.items}
         isFetching={this.props.isFetching}
+        items={this.props.items}
+        key="notification-details"
+        selectIdForModal={this._selectIdForModal}
         toggleCheck={this._toggleCheck}
-      />
-    );
+        updateNotifications={this._updateNotifications}
+      />,
+      <Modal
+        handleSubmit={() => this._updateNotifications({ isArchived: true })}
+        id="confirmArchive"
+        key="modal"
+        title="Confirm Archive"
+      >
+        Are you sure you want to archive the selected notifications?
+      </Modal>,
+      <Modal
+        handleSubmit={() => this._updateNotification(this.state.selectedId, { isArchived: true })}
+        id="confirmArchiveSingle"
+        key="modal-single"
+        title="Confirm Archive"
+      >
+        Are you sure you want to archive this notification?
+      </Modal>
+    ]);
   }
 }
 
 NotificationsContainer.propTypes = {
   items: PropTypes.arrayOf(PropTypes.shape()).isRequired,
   isFetching: PropTypes.bool.isRequired,
-  updateNotificationReadStatus: PropTypes.func.isRequired
+  updateNotifications: PropTypes.func.isRequired
 };
 
 const mapStateToProps = state => ({
@@ -102,7 +141,7 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  updateNotificationReadStatus: bindActionCreators(updateNotificationReadStatus, dispatch)
+  updateNotifications: bindActionCreators(updateNotifications, dispatch)
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(NotificationsContainer);

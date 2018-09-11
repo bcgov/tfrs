@@ -52,3 +52,12 @@ class NotificationMessageSerializer(serializers.ModelSerializer):
     class Meta:
         model = NotificationMessage
         fields = '__all__'
+
+
+class NotificationMessageUpdateSerializer(serializers.ModelSerializer):
+    """
+    Update Serializer for Notification Message
+    """
+    class Meta:
+        model = NotificationMessage
+        fields = '__all__'

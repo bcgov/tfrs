@@ -57,7 +57,10 @@ class NotificationViewSet(AuditableMixin,
 
     def get_queryset(self):
         user = self.request.user
-        return NotificationMessage.objects.filter(user=user).all()
+        return NotificationMessage.objects.filter(
+            is_archived=False,
+            user=user
+        ).all()
 
     @list_route(methods=['get'])
     def subscribe(self, request):
@@ -71,6 +74,34 @@ class NotificationViewSet(AuditableMixin,
         data = AMQPNotificationService.compute_effective_subscriptions(user)
         serializer = EffectiveSubscriptionSerializer(data, many=True)
         return Response(serializer.data)
+
+    @list_route(methods=['put'])
+    def statuses(self, request):
+        """
+        Expects an array of id's
+        Updates the notifications to read or unread
+        """
+        data = request.data
+
+        if 'ids' not in data:
+            return Response(None, status=status.HTTP_400_BAD_REQUEST)
+
+        notifications = NotificationMessage.objects.filter(
+            id__in=data['ids'])
+
+        if 'is_archived' in data:
+            notifications.update(
+                is_archived=data['is_archived']
+            )
+
+        if 'is_read' in data:
+            notifications.update(
+                is_read=data['is_read']
+            )
+
+        serializer = self.get_serializer(notifications, many=True)
+
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
     @list_route(methods=['post'])
     def update_subscription(self, request):

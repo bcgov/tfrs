@@ -46,8 +46,13 @@ const notifications = (state = {
         ...state,
         didInvalidate: true,
         isFetching: false,
-        success: true,
-        message: action.message
+        items: state.items.map(notification => (
+          action.data.find(updated => ( // refresh the fields of the items displayed
+            updated.id === notification.id
+          )) || notification
+        )).filter(notification => (!notification.isArchived)), // only show unarchived
+        message: action.message,
+        success: true
       };
     default:
       return state;

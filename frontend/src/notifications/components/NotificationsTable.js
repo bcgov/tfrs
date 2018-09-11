@@ -65,7 +65,12 @@ const NotificationsTable = (props) => {
     accessor: 'id',
     Cell: row => (
       <div className="col-actions">
-        <FontAwesomeIcon icon="folder-open" />
+        <FontAwesomeIcon
+          data-toggle="modal"
+          data-target="#confirmArchiveSingle"
+          icon="folder-open"
+          onClick={() => props.selectIdForModal(row.value)}
+        />
       </div>
     ),
     filterable: false,
@@ -87,7 +92,7 @@ const NotificationsTable = (props) => {
       }]}
       filterable={filterable}
       getTrProps={(state, rowInfo) => ({
-        className: (rowInfo && !rowInfo.row.isRead) ? 'unread' : null
+        className: (rowInfo && rowInfo.original.isRead) ? 'read' : 'unread'
       })}
       pageSizeOptions={[5, 10, 15, 20, 25, 50, 100]}
     />
@@ -100,6 +105,7 @@ NotificationsTable.propTypes = {
     notifications: PropTypes.array
   }).isRequired,
   items: PropTypes.arrayOf(PropTypes.object).isRequired,
+  selectIdForModal: PropTypes.func.isRequired,
   toggleCheck: PropTypes.func.isRequired
 };
 
