@@ -11,7 +11,8 @@ import { CREDIT_TRANSFER_TYPES, ZERO_DOLLAR_REASON } from '../../constants/value
 class CreditTransferFormDetails extends Component {
   enableZeroReason () {
     return (
-      this.props.fields.tradeType.id === CREDIT_TRANSFER_TYPES.sell.id &&
+      (this.props.fields.tradeType.id === CREDIT_TRANSFER_TYPES.sell.id ||
+      this.props.fields.tradeType.id === CREDIT_TRANSFER_TYPES.buy.id) &&
       this.props.fields.fairMarketValuePerCredit !== null &&
       parseFloat(this.props.fields.fairMarketValuePerCredit) === 0
     );
@@ -39,13 +40,15 @@ class CreditTransferFormDetails extends Component {
           </div>
           <div className="form-group">
             <input
-              type="number"
               className="form-control"
               id="number-of-credits"
+              min="0"
               name="numberOfCredits"
-              value={this.props.fields.numberOfCredits}
               onChange={this.props.handleInputChange}
               required="required"
+              step="1"
+              type="number"
+              value={this.props.fields.numberOfCredits}
             />
           </div>
           <span>
@@ -90,7 +93,7 @@ class CreditTransferFormDetails extends Component {
           </div>
           <span>per credit for a total value of </span>
           <span>{numeral(this.props.totalValue).format(NumberFormat.CURRENCY)}</span>
-          <span> effective on Director&apos;s Approval</span>
+          <span> effective on Director&apos;s approval</span>
           {this.enableZeroReason() &&
           <div className="zero-reason-form">
             <span>This trade has a value of zero dollars because:</span>

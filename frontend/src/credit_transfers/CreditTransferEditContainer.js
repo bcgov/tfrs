@@ -38,44 +38,27 @@ class CreditTransferEditContainer extends Component {
   constructor (props) {
     super(props);
 
-    if (props.loggedInUser.isGovernmentUser) {
-      this.state = {
-        fields: {
-          comment: '',
-          compliancePeriod: {},
-          numberOfCredits: '',
-          respondent: {},
-          tradeType: {
-            id: CREDIT_TRANSFER_TYPES.part3Award.id
-          },
-          zeroDollarReason: { id: null, name: '' }
+    this.state = {
+      creditsFrom: {},
+      creditsTo: {},
+      fields: {
+        comment: '',
+        compliancePeriod: {},
+        fairMarketValuePerCredit: '',
+        initiator: {},
+        note: '',
+        numberOfCredits: '',
+        respondent: { id: 0, name: '' },
+        terms: [],
+        tradeType: {
+          id: CREDIT_TRANSFER_TYPES.sell.id
         },
-        isCommenting: false,
-        isCreatingPrivilegedComment: false,
-        hasCommented: false,
-        submitted: false
-      };
-    } else {
-      this.state = {
-        creditsFrom: {},
-        creditsTo: {},
-        fields: {
-          comment: '',
-          fairMarketValuePerCredit: '',
-          initiator: {},
-          note: '',
-          numberOfCredits: '',
-          respondent: { id: 0, name: '' },
-          terms: [],
-          tradeType: {
-            id: CREDIT_TRANSFER_TYPES.sell.id
-          },
-          zeroDollarReason: { id: null, name: '' }
-        },
-        submitted: false,
-        totalValue: 0
-      };
-    }
+        zeroDollarReason: { id: null, name: '' }
+      },
+      submitted: false,
+      totalValue: 0,
+      validationErrors: {}
+    };
 
     this._addComment = this._addComment.bind(this);
     this._addToFields = this._addToFields.bind(this);
@@ -245,6 +228,10 @@ class CreditTransferEditContainer extends Component {
   _handleSubmit (event, status) {
     event.preventDefault();
 
+    if (!this._validateForm()) {
+      return false;
+    }
+
     this.setState({
       submitted: true
     });
@@ -291,15 +278,15 @@ class CreditTransferEditContainer extends Component {
         addToFields={this._addToFields}
         buttonActions={buttonActions}
         changeStatus={this._changeStatus}
+        comments={this.props.item.comments}
         creditsFrom={this.state.creditsFrom}
         creditsTo={this.state.creditsTo}
-        zeroDollarReason={this.state.zeroDollarReason}
         errors={this.props.errors}
         fields={this.state.fields}
         fuelSuppliers={this.props.fuelSuppliers}
+        handleCommentChanged={this._handleCommentChanged}
         handleInputChange={this._handleInputChange}
         handleSubmit={this._handleSubmit}
-        handleCommentChanged={this._handleCommentChanged}
         id={item.id}
         key="creditTransferForm"
         loggedInUser={this.props.loggedInUser}
@@ -308,7 +295,8 @@ class CreditTransferEditContainer extends Component {
         toggleCheck={this._toggleCheck}
         totalValue={this.state.totalValue}
         tradeStatus={this.state.tradeStatus}
-        comments={this.props.item.comments}
+        validationErrors={this.state.validationErrors}
+        zeroDollarReason={this.state.zeroDollarReason}
       />,
       <ModalSubmitCreditTransfer
         handleSubmit={(event) => {
@@ -357,6 +345,7 @@ class CreditTransferEditContainer extends Component {
         isCreatingPrivilegedComment={this.state.isCreatingPrivilegedComment}
         key="creditTransferForm"
         title="Edit Credit Transaction"
+        validationErrors={this.state.validationErrors}
       />,
       <Modal
         handleSubmit={(event) => {
@@ -454,6 +443,22 @@ class CreditTransferEditContainer extends Component {
     });
   }
 
+  _validateForm () {
+    const { numberOfCredits } = this.state.fields;
+
+    if (numberOfCredits % 1 !== 0) {
+      this.setState({
+        validationErrors: {
+          invalidNumberOfCredits: "Number of Credits can't have decimals."
+        }
+      });
+
+      return false;
+    }
+
+    return true;
+  }
+
   /*
    * Helper functions
    */
@@ -527,7 +532,8 @@ class CreditTransferEditContainer extends Component {
 }
 
 CreditTransferEditContainer.defaultProps = {
-  errors: {}
+  errors: {},
+  validationErrors: {}
 };
 
 CreditTransferEditContainer.propTypes = {
@@ -582,7 +588,8 @@ CreditTransferEditContainer.propTypes = {
   }).isRequired,
   prepareSigningAuthorityConfirmations: PropTypes.func.isRequired,
   updateCommentOnCreditTransfer: PropTypes.func.isRequired,
-  updateCreditTransfer: PropTypes.func.isRequired
+  updateCreditTransfer: PropTypes.func.isRequired,
+  validationErrors: PropTypes.shape()
 };
 
 const mapStateToProps = state => ({

@@ -13,6 +13,9 @@ https://docs.djangoproject.com/en/1.8/ref/settings/
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
 
+from pika import ConnectionParameters, PlainCredentials
+from . import amqp
+
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 
@@ -108,7 +111,6 @@ TEMPLATES = [
 WSGI_APPLICATION = 'wsgi.application'
 TEST_RUNNER = 'django_nose.NoseTestSuiteRunner'
 
-
 # Database
 # https://docs.djangoproject.com/en/1.8/ref/settings/#databases
 
@@ -121,6 +123,14 @@ DATABASES = {
     'default': database.config()
 }
 
+AMQP = amqp.config()
+
+AMQP_CONNECTION_PARAMETERS = ConnectionParameters(
+    host=AMQP['HOST'],
+    port=AMQP['PORT'],
+    virtual_host=AMQP['VHOST'],
+    credentials=PlainCredentials(AMQP['USER'], AMQP['PASSWORD'])
+)
 
 # Internationalization
 # https://docs.djangoproject.com/en/1.8/topics/i18n/
@@ -140,9 +150,9 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.8/howto/static-files/
 
 # We don't use this anywhere
-STATICFILES_DIRS = (
-   os.path.join(BASE_DIR, "assets"),
-)
+# STATICFILES_DIRS = (
+#    os.path.join(BASE_DIR, "assets"),
+# )
 
 STATIC_URL = '/api/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')

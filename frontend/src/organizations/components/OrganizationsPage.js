@@ -14,11 +14,11 @@ const OrganizationsPage = (props) => {
       <h1>{props.title}</h1>
       <div className="actions-container">
         <button
-          className="btn btn-success"
+          className="btn btn-info"
           type="button"
           onClick={() => (document.location = ORGANIZATIONS.EXPORT)}
         >
-          <FontAwesomeIcon icon="table" /> Download as Spreadsheet
+          Download <FontAwesomeIcon icon="file-excel" />
         </button>
       </div>
       {isFetching && <Loading />}

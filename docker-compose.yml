@@ -16,23 +16,52 @@ services:
           - DATABASE_SERVICE_NAME=postgresql
           - POSTGRESQL_SERVICE_HOST=db
           - POSTGRESQL_SERVICE_PORT=5432
+          - RABBITMQ_VHOST=/tfrs
+          - RABBITMQ_USER=rabbitmq
+          - RABBITMQ_PASSWORD=rabbitmq
+          - RABBITMQ_HOST=rabbit
+          - RABBITMQ_PORT=5672
         depends_on:
             - db
         build:
             dockerfile: Dockerfile-django
             context: ./backend
-        command: '/wfi/wait-for-it.sh -t 120 db:5432 -- bash -c "python3 manage.py makemigrations && python3 manage.py migrate && python3 manage.py load_ops_data api/fixtures/development/dockerized.py && python3 manage.py runserver 0.0.0.0:8000"'
+        command: >
+                bash -c
+                "/wfi/wait-for-it.sh -t 14400 rabbit:5672 &&
+                /wfi/wait-for-it.sh -t 14400 db:5432 &&
+                pip install -q -r requirements.txt &&
+                python3 manage.py makemigrations &&
+                python3 manage.py migrate &&
+                python3 manage.py load_ops_data api/fixtures/development/dockerized.py &&
+                python3 manage.py runserver 0.0.0.0:8000"
         expose:
             - 8000
         volumes:
             - shared:/shared
+            - ./backend:/app
     node:
         build:
             dockerfile: Dockerfile-node
             context: ./frontend
-        command: 'yarn start'
+        command: >
+                bash -c
+                "npm install &&
+                /wfi/wait-for-it.sh rabbit:5672 -t 14400 &&
+                npm run start:docker"
+        depends_on:
+            - rabbit
         expose:
             - 3000
+        environment:
+            - RABBITMQ_VHOST=/tfrs
+            - RABBITMQ_USER=rabbitmq
+            - RABBITMQ_PASSWORD=rabbitmq
+            - RABBITMQ_HOST=rabbit
+            - RABBITMQ_PORT=5672
+        volumes:
+            - ./frontend:/app
+            - node_modules:/app/node_modules
     nginx:
         depends_on:
             - django
@@ -50,6 +79,22 @@ services:
             - 5000:10000
         volumes:
             - shared:/shared
-        command: 'bash -c "/wfi/wait-for-it.sh -t 120 django:8000 && /wfi/wait-for-it.sh -t 120 node:3000 && cat /tfrs/ready.txt && nginx -g \"daemon off;\""'
+        command: >
+                bash -c
+                "/wfi/wait-for-it.sh -t 14400 django:8000 &&
+                /wfi/wait-for-it.sh -t 14400 node:3000 &&
+                cat /tfrs/ready.txt &&
+                nginx -g \"daemon off;\""
+    rabbit:
+        image: rabbitmq:3.7-management
+        hostname: "rabbit"
+        environment:
+            - RABBITMQ_DEFAULT_USER=rabbitmq
+            - RABBITMQ_DEFAULT_PASS=rabbitmq
+            - RABBITMQ_DEFAULT_VHOST=/tfrs
+        ports:
+            - "15672:15672"
+            - "5672:5672"
 volumes:
     shared:
+    node_modules:

@@ -41,7 +41,7 @@ const config = {
     extensions: ['.js', '.jsx']
   },
   module: {
-    loaders: [
+    rules: [
       // I highly recommend using the babel-loader as it gives you
       // ES6/7 syntax and JSX transpiling out of the box
       {

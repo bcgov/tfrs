@@ -14,3 +14,33 @@
     overflow: auto;
   }
 }
+
+.notification-table {
+
+  .read {
+  }
+
+  .unread {
+    font-weight: bold;
+  }
+
+}
+
+.fa-stack.unread-badge[data-unread-count]:after{
+  position:absolute;
+  left: 2px;
+  bottom: 2px;
+  content: attr(data-unread-count);
+
+  font-size: 8px;
+  padding:.6em;
+  border-radius:999px;
+  line-height: 6px;
+
+  color: white;
+  background:rgba(255,0,0,.85);
+  text-align:center;
+  min-width:2em;
+
+  font-weight:bold;
+}

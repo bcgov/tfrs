@@ -15,7 +15,6 @@ import CreditTransferFormButtons from './CreditTransferFormButtons';
 import CreditTransferTerms from './CreditTransferTerms';
 import CreditTransferCommentForm from './CreditTransferCommentForm';
 import CreditTransferComment from './CreditTransferComment';
-import CreditTransferTextRepresentation from "./CreditTransferTextRepresentation";
 
 const CreditTransferForm = props => (
   <div className="credit-transfer">
@@ -31,23 +30,14 @@ const CreditTransferForm = props => (
         fields={props.fields}
         totalValue={props.totalValue}
         handleInputChange={props.handleInputChange}
-      >
-        <CreditTransferCommentForm
-          isCommentingOnUnsavedCreditTransfer={props.id === 0}
-          isCreatingPrivilegedComment={false}
-          handleCommentChanged={props.handleCommentChanged}
-          embedded
-        />
-        {props.comments.length > 0 && <span>Save your transfer to modify existing comments</span>}
-        {props.comments.map(c => (
-          <CreditTransferComment comment={c} key={c.id} isReadOnly />
-        ))
-        }
-
-      </CreditTransferFormDetails>
+      />
 
       {Object.keys(props.errors).length > 0 &&
         <Errors errors={props.errors} />
+      }
+
+      {Object.keys(props.validationErrors).length > 0 &&
+        <Errors errors={props.validationErrors} />
       }
 
       <CreditTransferVisualRepresentation
@@ -65,6 +55,19 @@ const CreditTransferForm = props => (
           fields={props.fields}
           toggleCheck={props.toggleCheck}
         />
+      }
+
+      <CreditTransferCommentForm
+        isCommentingOnUnsavedCreditTransfer={props.id === 0}
+        isCreatingPrivilegedComment={false}
+        handleCommentChanged={props.handleCommentChanged}
+        embedded
+      />
+      {props.comments.length > 0 && <h3 className="comments-header">Comments</h3>}
+      {props.comments.length > 0 && <span>Save your transfer to modify existing comments</span>}
+      {props.comments.map(c => (
+        <CreditTransferComment comment={c} key={c.id} isReadOnly />
+      ))
       }
 
       <CreditTransferFormButtons
@@ -92,10 +95,11 @@ const CreditTransferForm = props => (
 );
 
 CreditTransferForm.defaultProps = {
-  id: 0,
-  title: 'Credit Transfer',
   handleCommentChanged: null,
+  id: 0,
   comments: [],
+  title: 'Credit Transfer',
+  validationErrors: {},
   zeroDollarReason: {
     id: null
   }
@@ -154,7 +158,8 @@ CreditTransferForm.propTypes = {
   }).isRequired,
   title: PropTypes.string,
   toggleCheck: PropTypes.func.isRequired,
-  totalValue: PropTypes.number.isRequired
+  totalValue: PropTypes.number.isRequired,
+  validationErrors: PropTypes.shape({})
 };
 
 export default CreditTransferForm;

@@ -29,6 +29,14 @@ class Navbar extends Component {
   }
 
   render () {
+    const dataAttrs = {};
+    if (this.props.unreadNotificationsCount > 0 && this.props.unreadNotificationsCount < 1000) {
+      dataAttrs['data-unread-count'] = this.props.unreadNotificationsCount;
+    }
+    if (this.props.unreadNotificationsCount > 1000) {
+      dataAttrs['data-unread-count'] = '∞';
+    }
+
     const SecondLevelNavigation = (
       <div className="level2Navigation">
         <div className="container">
@@ -36,9 +44,11 @@ class Navbar extends Component {
             <NavLink
               activeClassName="active"
               id="navbar-notifications"
-              to={Routes.NOTIFICATIONS}
+              to={Routes.NOTIFICATIONS.LIST}
             >
-              <span className="number">0</span> <FontAwesomeIcon icon="bell" />
+              <span className="fa-stack unread-badge" {...dataAttrs}>
+                <i className="fa fa-bell" />
+              </span>
             </NavLink>
           </div>
           {this.props.loggedInUser.isGovernmentUser &&
@@ -294,7 +304,8 @@ class Navbar extends Component {
                         </MenuItem>
                         <MenuItem onClick={() => {
                           history.push(Routes.SETTINGS);
-                        }}>
+                        }}
+                        >
                           <FontAwesomeIcon icon="cog" /> Settings
                         </MenuItem>
                         <MenuItem href={Routes.LOGOUT}>
@@ -320,6 +331,9 @@ class Navbar extends Component {
     );
   }
 }
+Navbar.defaultProps = {
+  unreadNotificationsCount: null
+};
 
 Navbar.propTypes = {
   loggedInUser: PropTypes.shape({
@@ -333,7 +347,8 @@ Navbar.propTypes = {
       id: PropTypes.number
     }))
   }).isRequired,
-  isAuthenticated: PropTypes.bool.isRequired
+  isAuthenticated: PropTypes.bool.isRequired,
+  unreadNotificationsCount: PropTypes.number
 };
 
 // export default Navbar;

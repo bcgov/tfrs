@@ -21,8 +21,7 @@ class CreditTransferVisualRepresentation extends Component {
         <div className="col-sm-4 col-md-5">
           <div className="arrow">
             <div>{numeral(this.props.numberOfCredits).format(NumberFormat.INT)} credit{this.props.numberOfCredits > 1 && 's'}</div>
-            <FontAwesomeIcon icon="arrow-alt-circle-up" size="4x" />
-            <div>{getCreditTransferType(this.props.tradeType.id)}</div>
+            <FontAwesomeIcon icon="arrow-alt-circle-up" size="4x" /> <div>{getCreditTransferType(this.props.tradeType.id)}</div>
           </div>
         </div>
       </div>
@@ -42,8 +41,7 @@ class CreditTransferVisualRepresentation extends Component {
         <div className="col-sm-4 col-md-5">
           <div className="arrow">
             <div>{numeral(this.props.numberOfCredits).format(NumberFormat.INT)} credit{this.props.numberOfCredits > 2 && 's'}</div>
-            <FontAwesomeIcon icon="arrow-alt-circle-down" size="4x" />
-            <div>{getCreditTransferType(this.props.tradeType.id)}</div>
+            <FontAwesomeIcon icon="arrow-alt-circle-down" size="4x" /> <div>{getCreditTransferType(this.props.tradeType.id)}</div>
           </div>
         </div>
       </div>

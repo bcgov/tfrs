@@ -48,13 +48,15 @@ const GovernmentTransferFormDetails = props => (
         <div className="form-group col-md-6">
           <label htmlFor="number-of-credits">Number of Credits:
             <input
-              type="number"
               className="form-control"
               id="number-of-credits"
+              min="0"
               name="numberOfCredits"
-              value={props.fields.numberOfCredits}
               onChange={props.handleInputChange}
               required="required"
+              step="1"
+              type="number"
+              value={props.fields.numberOfCredits}
             />
           </label>
         </div>

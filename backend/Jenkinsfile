@@ -80,9 +80,13 @@ node("master-backend-maven-${env.BUILD_NUMBER}") {
     
     stage('Refresh SchemaSpy Test') {
         echo "Refreshing SchemaSpy for Test Database"
-        openshiftScale depCfg: 'schema-spy', namespace: 'mem-tfrs-test', replicaCount: 0, verbose: 'false', verifyReplicaCount: 'true'
+        openshiftScale depCfg: 'schema-spy-public', namespace: 'mem-tfrs-test', replicaCount: 0, verbose: 'false', verifyReplicaCount: 'true'
         sh 'sleep 5s'
-        openshiftScale depCfg: 'schema-spy', namespace: 'mem-tfrs-test', replicaCount: 1, verbose: 'false', verifyReplicaCount: 'true'
+        openshiftScale depCfg: 'schema-spy-public', namespace: 'mem-tfrs-test', replicaCount: 1, verbose: 'false', verifyReplicaCount: 'true'
+        sh 'sleep 10s'
+        openshiftScale depCfg: 'schema-spy-audit', namespace: 'mem-tfrs-test', replicaCount: 0, verbose: 'false', verifyReplicaCount: 'true'
+        sh 'sleep 5s'
+        openshiftScale depCfg: 'schema-spy-audit', namespace: 'mem-tfrs-test', replicaCount: 1, verbose: 'false', verifyReplicaCount: 'true'
         sh 'sleep 10s'
     }    
     
@@ -97,9 +101,13 @@ node("master-backend-maven-${env.BUILD_NUMBER}") {
     
     stage('Refresh SchemaSpy Prod') {
         echo "Refreshing SchemaSpy for Test Database"
-        openshiftScale depCfg: 'schema-spy', namespace: 'mem-tfrs-prod', replicaCount: 0, verbose: 'false', verifyReplicaCount: 'true'
+        openshiftScale depCfg: 'schema-spy-public', namespace: 'mem-tfrs-prod', replicaCount: 0, verbose: 'false', verifyReplicaCount: 'true'
         sh 'sleep 5s'
-        openshiftScale depCfg: 'schema-spy', namespace: 'mem-tfrs-prod', replicaCount: 1, verbose: 'false', verifyReplicaCount: 'true'
+        openshiftScale depCfg: 'schema-spy-public', namespace: 'mem-tfrs-prod', replicaCount: 1, verbose: 'false', verifyReplicaCount: 'true'
+        sh 'sleep 10s'
+        openshiftScale depCfg: 'schema-spy-audit', namespace: 'mem-tfrs-prod', replicaCount: 0, verbose: 'false', verifyReplicaCount: 'true'
+        sh 'sleep 5s'
+        openshiftScale depCfg: 'schema-spy-audit', namespace: 'mem-tfrs-prod', replicaCount: 1, verbose: 'false', verifyReplicaCount: 'true'
         sh 'sleep 10s'
     }    
 
