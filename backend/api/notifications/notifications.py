@@ -18,6 +18,29 @@ from api.notifications.notification_types import NotificationType
 from tfrs.settings import AMQP_CONNECTION_PARAMETERS
 
 
+def send_amqp_notification():
+    try:
+        parameters = AMQP_CONNECTION_PARAMETERS
+        connection = pika.BlockingConnection(parameters)
+        channel = connection.channel()
+        channel.confirm_delivery()
+        channel.exchange_declare(exchange='notifications',
+                                 durable=True,
+                                 auto_delete=False,
+                                 exchange_type='fanout')
+
+        channel.basic_publish(exchange='notifications',
+                              routing_key='global',
+                              body=json.dumps({
+                                  'message': 'notification'
+                              }),
+                              properties=pika.BasicProperties(content_type='application/json',
+                                                              delivery_mode=1),
+                              mandatory=True)
+    except AMQPError as error:
+        raise NotificationDeliveryFailure(error)
+
+
 class EffectiveSubscription(object):
     def __init__(self, channel, notification_type, subscribed):
         self.channel = channel
@@ -154,26 +177,7 @@ class AMQPNotificationService:
             )
             notification.save()
 
-        try:
-            parameters = AMQP_CONNECTION_PARAMETERS
-            connection = pika.BlockingConnection(parameters)
-            channel = connection.channel()
-            channel.confirm_delivery()
-            channel.exchange_declare(exchange='notifications',
-                                     durable=True,
-                                     auto_delete=False,
-                                     exchange_type='fanout')
-
-            channel.basic_publish(exchange='notifications',
-                                  routing_key='global',
-                                  body=json.dumps({
-                                      'message': 'notification'
-                                  }),
-                                  properties=pika.BasicProperties(content_type='application/json',
-                                                                  delivery_mode=1),
-                                  mandatory=True)
-        except AMQPError as error:
-            raise NotificationDeliveryFailure(error)
+        send_amqp_notification()
 
 
 class InvalidNotificationArguments(Exception):
