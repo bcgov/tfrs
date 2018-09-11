@@ -1,11 +1,11 @@
-const API = '/api/notifications';
+const API = '/notifications';
 const BASE_PATH = '/notifications';
 
 const NOTIFICATIONS = {
   API,
   DETAILS: `${BASE_PATH}/:id`,
   LIST: `${BASE_PATH}`,
-  SUBSCRIPTIONS_API: `${BASE_PATH}/subscriptions`,
+  SUBSCRIPTIONS: `${API}/subscriptions`,
   UPDATE: `${API}/statuses`
 };
 

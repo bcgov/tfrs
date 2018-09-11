@@ -90,7 +90,7 @@ const subscriptions = (state = {
       return {
         ...state,
         didInvalidate: true,
-        errors: {},
+        errorMessage: [],
         message: ''
       };
     case ActionTypes.SUCCESS:

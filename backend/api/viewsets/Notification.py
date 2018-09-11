@@ -69,7 +69,7 @@ class NotificationViewSet(AuditableMixin,
         return Response(serializer.data)
 
     @list_route(methods=['get'])
-    def effective_subscriptions(self, request):
+    def subscriptions(self, request):
         user = request.user
         data = AMQPNotificationService.compute_effective_subscriptions(user)
         serializer = EffectiveSubscriptionSerializer(data, many=True)
