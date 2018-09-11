@@ -23,6 +23,7 @@
 """
 import logging
 import sys
+from unittest import mock
 
 from django.test import TestCase
 
@@ -79,9 +80,16 @@ class BaseTestCase(TestCase):
 
         super().__init__(*args, **kwargs)
 
+    def tearDown(self):
+        super().tearDown()
+        self.patcher.stop()
+
     def setUp(self):
         """Configure test clients"""
         super().setUp()
+
+        self.patcher = mock.patch('api.notifications.notifications.send_amqp_notification')
+        self.patcher.start()
 
         self.users = dict(map(
             lambda u: (u, User.objects.get_by_natural_key(u)),
@@ -139,3 +147,5 @@ class BaseTestCase(TestCase):
         logging.getLogger('django.request').setLevel(logging.ERROR)
         logging.getLogger('api.tests').setLevel(logging.DEBUG)
         logging.basicConfig(stream=sys.stdout, level=logging.DEBUG)
+
+
