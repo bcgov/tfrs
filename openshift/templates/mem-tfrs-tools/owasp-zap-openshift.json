@@ -1,0 +1,91 @@
+{
+    "kind": "Template",
+    "apiVersion": "v1",
+    "metadata": {
+        "name": "owasp-zap-openshift",
+        "creationTimestamp": null
+    },
+    "objects": [
+        {
+            "kind": "BuildConfig",
+            "apiVersion": "v1",
+            "metadata": {
+                "name": "owasp-zap-openshift",
+                "creationTimestamp": null,
+                "labels": {
+                    "role": "jenkins-slave"
+                },
+                "annotations": {
+                    "openshift.io/generated-by": "OpenShiftNewBuild"
+                }
+            },
+            "spec": {
+                "triggers": [],
+                "runPolicy": "Serial",
+                "source": {
+                    "type": "Git",
+                    "git": {
+                        "uri": "https://github.com/rht-labs/owasp-zap-openshift.git"
+                    }
+                },
+                "strategy": {
+                    "type": "Docker",
+                    "dockerStrategy": {
+                        "from": {
+                            "kind": "ImageStreamTag",
+                            "namespace": "openshift",
+                            "name": "centos:centos7"
+                        }
+                    }
+                },
+                "output": {
+                    "to": {
+                        "kind": "ImageStreamTag",
+                        "namespace": "mem-tfrs-tools",
+                        "name": "owasp-zap-openshift:latest"
+                    }
+                },
+                "resources": {},
+                "postCommit": {},
+                "nodeSelector": null,
+                "successfulBuildsHistoryLimit": 5,
+                "failedBuildsHistoryLimit": 5
+            },
+            "status": {
+                "lastVersion": 0
+            }
+        },
+        {
+            "kind": "ImageStream",
+            "apiVersion": "v1",
+            "metadata": {
+                "name": "owasp-zap-openshift",
+                "generation": 1,
+                "creationTimestamp": null
+            },
+            "spec": {
+                "lookupPolicy": {
+                    "local": false
+                },
+                "tags": [
+                    {
+                        "name": "latest",
+                        "annotations": null,
+                        "from": {
+                            "kind": "DockerImage",
+                            "name": "docker-registry.default.svc:5000/mem-tfrs-tools/owasp-zap-openshift:latest"
+                        },
+                        "generation": null,
+                        "importPolicy": {},
+                        "referencePolicy": {
+                            "type": ""
+                        }
+                    }
+                ]
+            },
+            "status": {
+                "dockerImageRepository": ""
+            }
+        }
+    ]
+}

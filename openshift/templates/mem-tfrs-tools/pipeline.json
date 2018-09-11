@@ -1,0 +1,186 @@
+{
+    "kind": "Template",
+    "apiVersion": "v1",
+    "metadata": {
+        "name": "pipeline",
+        "creationTimestamp": null
+    },
+    "objects": [
+        {
+            "kind": "BuildConfig",
+            "apiVersion": "v1",
+            "metadata": {
+                "name": "develop-client-pipeline",
+                "creationTimestamp": null,
+                "labels": {
+                    "app": "develop-client-pipeline",
+                    "name": "develop-client-pipeline",
+                    "template": "develop-client-pipeline"
+                }
+            },
+            "spec": {
+                "triggers": [
+                    {
+                        "type": "GitHub",
+                        "github": {
+                            "secret": "52bb2cb14fcd26c5"
+                        }
+                    }
+                ],
+                "runPolicy": "Parallel",
+                "source": {
+                    "type": "Git",
+                    "git": {
+                        "uri": "https://github.com/bcgov/tfrs.git",
+                        "ref": "master"
+                    }
+                },
+                "strategy": {
+                    "type": "JenkinsPipeline",
+                    "jenkinsPipelineStrategy": {
+                        "jenkinsfilePath": "frontend/Jenkinsfile-develop"
+                    }
+                },
+                "output": {},
+                "resources": {},
+                "postCommit": {},
+                "nodeSelector": {}
+            },
+            "status": {
+                "lastVersion": 0
+            }
+        },
+        {
+            "kind": "BuildConfig",
+            "apiVersion": "v1",
+            "metadata": {
+                "name": "develop-tfrs-pipeline",
+                "creationTimestamp": null,
+                "labels": {
+                    "app": "develop-tfrs-pipeline",
+                    "name": "develop-tfrs-pipeline",
+                    "template": "develop-tfrs-pipeline"
+                }
+            },
+            "spec": {
+                "triggers": [
+                    {
+                        "type": "GitHub",
+                        "github": {
+                            "secret": "ea1e1dc777dea4bb"
+                        }
+                    }
+                ],
+                "runPolicy": "Parallel",
+                "source": {
+                    "type": "Git",
+                    "git": {
+                        "uri": "https://github.com/bcgov/tfrs.git",
+                        "ref": "master"
+                    }
+                },
+                "strategy": {
+                    "type": "JenkinsPipeline",
+                    "jenkinsPipelineStrategy": {
+                        "jenkinsfilePath": "backend/Jenkinsfile-develop"
+                    }
+                },
+                "output": {},
+                "resources": {},
+                "postCommit": {},
+                "nodeSelector": {}
+            },
+            "status": {
+                "lastVersion": 0
+            }
+        },
+        {
+            "kind": "BuildConfig",
+            "apiVersion": "v1",
+            "metadata": {
+                "name": "master-client-pipeline",
+                "creationTimestamp": null,
+                "labels": {
+                    "app": "master-client-pipeline",
+                    "name": "master-client-pipeline",
+                    "template": "master-client-pipeline"
+                }
+            },
+            "spec": {
+                "triggers": [
+                    {
+                        "type": "GitHub",
+                        "github": {
+                            "secret": "802a78d1c8a98727"
+                        }
+                    }
+                ],
+                "runPolicy": "Parallel",
+                "source": {
+                    "type": "Git",
+                    "git": {
+                        "uri": "https://github.com/bcgov/tfrs.git",
+                        "ref": "v1.0.2"
+                    }
+                },
+                "strategy": {
+                    "type": "JenkinsPipeline",
+                    "jenkinsPipelineStrategy": {
+                        "jenkinsfilePath": "frontend/Jenkinsfile"
+                    }
+                },
+                "output": {},
+                "resources": {},
+                "postCommit": {},
+                "nodeSelector": {}
+            },
+            "status": {
+                "lastVersion": 0
+            }
+        },
+        {
+            "kind": "BuildConfig",
+            "apiVersion": "v1",
+            "metadata": {
+                "name": "master-tfrs-pipeline",
+                "creationTimestamp": null,
+                "labels": {
+                    "app": "master-tfrs-pipeline",
+                    "name": "master-tfrs-pipeline",
+                    "template": "master-tfrs-pipeline"
+                }
+            },
+            "spec": {
+                "triggers": [
+                    {
+                        "type": "GitHub",
+                        "github": {
+                            "secret": "e4fa4a15ca71d597"
+                        }
+                    }
+                ],
+                "runPolicy": "Parallel",
+                "source": {
+                    "type": "Git",
+                    "git": {
+                        "uri": "https://github.com/bcgov/tfrs.git",
+                        "ref": "v1.0.2"
+                    }
+                },
+                "strategy": {
+                    "type": "JenkinsPipeline",
+                    "jenkinsPipelineStrategy": {
+                        "jenkinsfilePath": "backend/Jenkinsfile"
+                    }
+                },
+                "output": {},
+                "resources": {},
+                "postCommit": {},
+                "nodeSelector": {}
+            },
+            "status": {
+                "lastVersion": 0
+            }
+        }
+    ]
+}
