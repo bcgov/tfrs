@@ -1,0 +1,3 @@
+oc export bc/request-logger  dc/postgresql dc/client dc/request-logger dc/schema-spy-audit dc/schema-spy-public dc/tfrs --as-template='dev' --output=json > dev.json
+oc export service/schema-spy-public service/schema-spy-audit service/request-logger service/client service/backend service/postgresql  --as-template='dev-service' --output=json > dev-service.json
+oc export route/schema-spy-public route/schema-spy-audit route/api route/main route/sminfo  --as-template='dev-route' --output=json > dev-route.json

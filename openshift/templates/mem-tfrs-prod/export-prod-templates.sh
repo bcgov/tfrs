@@ -1,0 +1,3 @@
+oc export dc/postgresql dc/client dc/schema-spy-audit dc/schema-spy-public dc/tfrs --as-template='prod' --output=json > prod.json
+oc export service/schema-spy-public service/schema-spy-audit service/request-logger service/client service/backend service/postgresql  --as-template='prod-service' --output=json > test-service.json
+oc export route/schema-spy-public route/schema-spy-audit route/api route/main route/sminfo  --as-template='prod-route' --output=json > test-route.json
