@@ -40,7 +40,7 @@ export const TEXT_COMMENT_DISCLOSURE = 'Information entered in this comment fiel
 export const TEXT_COMMENT_DISCLOSURE_PRIVILEGED = 'Information entered in this comment field ' +
                                                   'will be visible only to government users and ' +
                                                   'not shared with fuel suppliers';
-export const TEXT_ADD_COMMENT_HEADING = 'Adding Comment';
+export const TEXT_ADD_COMMENT_HEADING = 'Add Comment Form';
 export const TEXT_EDIT_COMMENT_HEADING = 'Editing Comment';
 export const TEXT_ADD_INTERNAL_COMMENT_HEADING = 'Adding Government-Internal Comment';
 export const TEXT_VISIBLE_TO_GOV = 'Visible to government';

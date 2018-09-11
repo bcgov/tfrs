@@ -44,7 +44,7 @@ class CreditTransferCommentForm extends Component {
   _renderTextArea () {
     return (
       <label htmlFor="comment">
-        {this.props.isEditingExistingComment ? 'Edit Comment:' : 'Add New Comment:'}
+        {this.props.isEditingExistingComment ? 'Edit Comment:' : 'Your Comment:'}
         <textarea
           className="form-control"
           rows="5"
@@ -63,7 +63,7 @@ class CreditTransferCommentForm extends Component {
 
   render () {
     return (
-      <div className={`comment-form row ${this.props.embedded ? '' : 'well transparent'}`}>
+      <div className={`comment-form row ${this.props.embedded ? '' : 'well'}`}>
         {this.props.embedded ||
         <h2>
           {CreditTransferCommentForm.titleText(this.props)}
@@ -98,17 +98,17 @@ class CreditTransferCommentForm extends Component {
             }
           </div>
         </div>
-        <div className="col-xs-4">
+        <div className="col-xs-4 notice">
           <div className={
             `panel disclosure-notice
              ${this.props.isCreatingPrivilegedComment ? 'panel-primary' : 'panel-info'}`
           }
 
           >
-            <div className="panel-heading">Disclosure Notice</div>
-            <div className="panel-body">
-              {this.props.isCreatingPrivilegedComment ? Lang.TEXT_COMMENT_DISCLOSURE_PRIVILEGED
-                : Lang.TEXT_COMMENT_DISCLOSURE}
+            <div class="alert alert-warning">
+              <h4 class="alert-heading">Disclosure Notice</h4>
+              <p>{this.props.isCreatingPrivilegedComment ? Lang.TEXT_COMMENT_DISCLOSURE_PRIVILEGED
+                : Lang.TEXT_COMMENT_DISCLOSURE}</p>
             </div>
           </div>
         </div>
