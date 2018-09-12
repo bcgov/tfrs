@@ -37,7 +37,7 @@ stage('Unit Test') {
     } //end of node
     } //end of podTemplate
 } //end of stage
-        
+
 echo "result is ${result}"
 if (result != 0) {
     echo "[FAILURE] Unit Test stage failed"
@@ -63,7 +63,7 @@ podTemplate(label: "master-backend-maven-${env.BUILD_NUMBER}", name: "master-bac
 node("master-backend-maven-${env.BUILD_NUMBER}") {
     
     stage('Build') {
-        openshiftBuild bldCfg: 'tfrs', showBuildLogs: 'true'
+        openshiftBuild bldCfg: 'tfrs-prod', showBuildLogs: 'true'
         echo ">> Getting Image Hash"
         IMAGE_HASH = sh (
             script: 'oc get istag tfrs:latest -o template --template="{{.image.dockerImageReference}}"|awk -F ":" \'{print $3}\'',
@@ -71,26 +71,6 @@ node("master-backend-maven-${env.BUILD_NUMBER}") {
         echo ">> IMAGE_HASH: $IMAGE_HASH"
     }
 
-    stage('Deploy to Test') {
-        input "Deploy to Test?"
-        echo "Deploying to Test: ${BUILD_ID}"
-        openshiftTag destStream: 'tfrs', verbose: 'true', destTag: 'test', srcStream: 'tfrs', srcTag: "${IMAGE_HASH}"
-        openshiftVerifyDeployment depCfg: 'tfrs', namespace: 'mem-tfrs-test', replicaCount: 1, verbose: 'false'
-    }
-    
-    stage('Refresh SchemaSpy Test') {
-        echo "Refreshing SchemaSpy for Test Database"
-        openshiftScale depCfg: 'schema-spy-public', namespace: 'mem-tfrs-test', replicaCount: 0, verbose: 'false', verifyReplicaCount: 'true'
-        sh 'sleep 5s'
-        openshiftScale depCfg: 'schema-spy-public', namespace: 'mem-tfrs-test', replicaCount: 1, verbose: 'false', verifyReplicaCount: 'true'
-        sh 'sleep 10s'
-        openshiftScale depCfg: 'schema-spy-audit', namespace: 'mem-tfrs-test', replicaCount: 0, verbose: 'false', verifyReplicaCount: 'true'
-        sh 'sleep 5s'
-        openshiftScale depCfg: 'schema-spy-audit', namespace: 'mem-tfrs-test', replicaCount: 1, verbose: 'false', verifyReplicaCount: 'true'
-        sh 'sleep 10s'
-    }    
-    
-    /**** stop master pipeline go to prod environment
     stage('Deploy to Prod') {
         input "Deploy to Prod?"
         input "Deploy to Prod? Please confirm again."
@@ -102,16 +82,11 @@ node("master-backend-maven-${env.BUILD_NUMBER}") {
     
     stage('Refresh SchemaSpy Prod') {
         echo "Refreshing SchemaSpy for Test Database"
-        openshiftScale depCfg: 'schema-spy-public', namespace: 'mem-tfrs-prod', replicaCount: 0, verbose: 'false', verifyReplicaCount: 'true'
+        openshiftScale depCfg: 'schema-spy', namespace: 'mem-tfrs-prod', replicaCount: 0, verbose: 'false', verifyReplicaCount: 'true'
         sh 'sleep 5s'
-        openshiftScale depCfg: 'schema-spy-public', namespace: 'mem-tfrs-prod', replicaCount: 1, verbose: 'false', verifyReplicaCount: 'true'
+        openshiftScale depCfg: 'schema-spy', namespace: 'mem-tfrs-prod', replicaCount: 1, verbose: 'false', verifyReplicaCount: 'true'
         sh 'sleep 10s'
-        openshiftScale depCfg: 'schema-spy-audit', namespace: 'mem-tfrs-prod', replicaCount: 0, verbose: 'false', verifyReplicaCount: 'true'
-        sh 'sleep 5s'
-        openshiftScale depCfg: 'schema-spy-audit', namespace: 'mem-tfrs-prod', replicaCount: 1, verbose: 'false', verifyReplicaCount: 'true'
-        sh 'sleep 10s'
-    }    
-    ****/
+    }   
 
-} //end of node
+} //endo of node
 } //end of podTemplate

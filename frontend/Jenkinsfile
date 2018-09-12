@@ -33,13 +33,16 @@ node("master-frontend-maven-${env.BUILD_NUMBER}") {
         openshiftTag destStream: 'client', verbose: 'true', destTag: 'test', srcStream: 'client', srcTag: "${IMAGE_HASH}"
         openshiftVerifyDeployment depCfg: 'client', namespace: 'mem-tfrs-test', replicaCount: 1, verbose: 'false'
     }
-	
+
+	/**** stop master pipeline go to prod environment
     stage('Deploy on Prod') {
 	 input "Deploy to Prod?"
         echo "Deploying to Prod..."
         openshiftTag destStream: 'client', verbose: 'true', destTag: 'prod', srcStream: 'client', srcTag: "${IMAGE_HASH}"
         openshiftVerifyDeployment depCfg: 'client', namespace: 'mem-tfrs-prod', replicaCount: 1, verbose: 'false'
     }	
+    ****/
+
 } //end of node
 
 } //end of podTemplate
