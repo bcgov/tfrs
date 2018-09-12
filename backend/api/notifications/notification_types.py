@@ -17,6 +17,7 @@ class NotificationType(Enum):
 
     PVR_CREATED = "PVR Created"
     PVR_RECOMMENDED_FOR_APPROVAL = "PVR Recommended For Approval"
+    PVR_RESCINDED = "PVR Rescinded"
     PVR_PULLED_BACK = "PVR Pulled Back"
     PVR_DECLINED = "PVR Declined"
     PVR_APPROVED = "PVR Approved"

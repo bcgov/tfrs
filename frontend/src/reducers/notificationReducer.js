@@ -41,7 +41,7 @@ const notifications = (state = {
         ...state,
         serverInitiatedReloadRequested: true
       };
-    case ActionTypes.SUCCESS:
+    case ActionTypes.SUCCESS_NOTIFICATIONS:
       return {
         ...state,
         didInvalidate: true,

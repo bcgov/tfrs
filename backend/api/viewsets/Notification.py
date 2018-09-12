@@ -105,7 +105,9 @@ class NotificationViewSet(AuditableMixin,
 
     @list_route(methods=['post'])
     def update_subscription(self, request):
-
+        """
+        Updates the User's subscriptions to specified notification types
+        """
         if isinstance(request.data, list):
             serializer = self.get_serializer(data=request.data, many=True)
             serializer.is_valid(raise_exception=True)

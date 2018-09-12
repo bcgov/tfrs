@@ -94,7 +94,7 @@ const updateNotificationsRequest = () => ({
 const updateNotificationsSuccess = notification => ({
   data: notification,
   name: ReducerTypes.SUCCESS_UPDATE_NOTIFICATION_READ_STATUS_REQUEST,
-  type: ActionTypes.SUCCESS
+  type: ActionTypes.SUCCESS_NOTIFICATIONS
 });
 
 /*
@@ -104,7 +104,7 @@ const updateSubscriptions = data => (dispatch) => {
   dispatch(updateSubscriptionsRequest());
 
   return axios
-    .put(`${Routes.BASE_URL}${Routes.SUBSCRIPTIONS_API}`, data)
+    .post(Routes.BASE_URL + Routes.NOTIFICATIONS.UPDATE_SUBSCRIPTIONS, data)
     .then((response) => {
       dispatch(updateSubscriptionsSuccess(response.data));
       return Promise.resolve(response);
