@@ -105,8 +105,8 @@ class CreditTransferCommentForm extends Component {
           }
 
           >
-            <div class="alert alert-warning">
-              <h4 class="alert-heading">Disclosure Notice</h4>
+            <div className="alert alert-warning">
+              <h4 className="alert-heading">Disclosure Notice</h4>
               <p>{this.props.isCreatingPrivilegedComment ? Lang.TEXT_COMMENT_DISCLOSURE_PRIVILEGED
                 : Lang.TEXT_COMMENT_DISCLOSURE}</p>
             </div>
