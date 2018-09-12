@@ -1,13 +1,20 @@
-package pages.app
+package pages
 
-import geb.Page
-import extensions.ReactJSAware
+class CreditTransactionsPage extends BaseAppPage {
+  static at = { isReactReady() && pageTitle.text() == "Credit Transactions" }
+  static url = "/credit_transactions"
+  static content = {
+    pageTitle { $("#main .page_credit_transactions h1") }
 
-class CreditTransactionsPage extends Page implements ReactJSAware {
-    static at = { reactReady && title == "TFRS" && $(".page_credit_transactions h1").text() == "Credit Transactions" }
-    static url = "/credit_transactions"
+    newTransferButton { $("#credit-transfer-new-transfer") }
+  }
 
-    static content = {
-            header { $(".page_credit_transactions h1").text() }
-    }
+  /**
+   * Parse the credit balance string into an integer containing only the number of credits.
+   * @return credit balance value
+   * @throws NumberFormatException if the parsed credit balance string fails to be casted to an Integer.
+   */
+  Integer getCreditBalance() {
+    return creditBalance.text().replace(/[^0-9]/, "") as Integer
+  }
 }

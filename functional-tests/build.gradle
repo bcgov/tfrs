@@ -12,14 +12,18 @@ ext {
     drivers = ["firefox", "firefoxHeadless", "chrome", "chromeHeadless","ie","edge","safari"]
 
     ext {
-        groovyVersion = '2.4.12'
-        gebVersion = '2.0'
-        seleniumVersion = '3.6.0'
-        chromeDriverVersion = '2.36'
-        geckoDriverVersion = '0.18.0'
-        ieDriverVersion = '3.6'
-        edgeDriverVersion = seleniumVersion
-        safariDriverVersion = seleniumVersion
+        groovyVersion = '2.4.15'
+        gebVersion = '2.2'
+        seleniumVersion = '3.14.0'
+        chromeDriverVersion = '2.41'
+        geckoDriverVersion = '0.21.0'
+        ieDriverVersion = '3.14.0'
+        edgeDriverVersion = '3.14.0'
+        safariDriverVersion = '3.14.0'
+
+        spockCoreVersion = '1.1-groovy-2.4'
+        spockReportsVersion = '1.6.0'
+        slf4jApiVersion = '1.7.25'
     }
 }
 
@@ -32,7 +36,7 @@ repositories {
 dependencies {
     // If using Spock, need to depend on geb-spock
     testCompile "org.gebish:geb-spock:$gebVersion"
-    testCompile("org.spockframework:spock-core:1.1-groovy-2.4") {
+    testCompile("org.spockframework:spock-core:$spockCoreVersion") {
         exclude group: "org.codehaus.groovy"
     }
     testCompile "org.codehaus.groovy:groovy-all:$groovyVersion"
@@ -51,12 +55,12 @@ dependencies {
     testCompile "org.seleniumhq.selenium:selenium-edge-driver:$seleniumVersion"
 
     // Spock reports
-    testCompile( 'com.athaydes:spock-reports:1.4.0' ) {
+    testCompile( "com.athaydes:spock-reports:$spockReportsVersion" ) {
         transitive = false // this avoids affecting your version of Groovy/Spock
     }
     // if you don't already have slf4j-api and an implementation of it in the classpath, add this!
-    testCompile 'org.slf4j:slf4j-api:1.7.13'
-    testCompile 'org.slf4j:slf4j-simple:1.7.13'
+    testCompile "org.slf4j:slf4j-api:$slf4jApiVersion"
+    testCompile "org.slf4j:slf4j-simple:$slf4jApiVersion"
 }
 
 webdriverBinaries {
@@ -103,10 +107,9 @@ tasks.withType(Test) {
     }
     systemProperty 'com.athaydes.spockframework.report.outputDir', 'build/reports/spock'
     systemProperty 'com.athaydes.spockframework.report.internal.HtmlReportCreator.inlineCss', false
-    systemProperty 'com.athaydes.spockframework.report.projectName',"TFRS" 
+    systemProperty 'com.athaydes.spockframework.report.projectName',"TFRS"
 }
 
 tasks.withType(GroovyCompile) {
     groovyOptions.forkOptions.memoryMaximumSize = '256m'
 }
-

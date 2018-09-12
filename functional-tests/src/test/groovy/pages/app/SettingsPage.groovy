@@ -1,12 +1,10 @@
-package pages.app
+package pages
 
-import geb.Page
-import extensions.ReactJSAware
-
-class SettingsPage extends Page implements ReactJSAware {
-    static at = { reactReady && title == "TFRS" && $("h2").text() == "Notification Settings" }
-    static url = "#/settings"
-    static content = {
-        
-    }
+// TODO
+class SettingsPage extends BaseAppPage {
+  static at = { isReactReady() && pageTitle.text() == "Notification Settings" }
+  static url = "/settings"
+  static content = {
+    pageTitle { }
+  }
 }

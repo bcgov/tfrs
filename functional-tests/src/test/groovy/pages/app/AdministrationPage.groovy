@@ -1,12 +1,10 @@
-package pages.app
+package pages
 
-import geb.Page
-import extensions.ReactJSAware
-
-class AdministrationPage extends Page implements ReactJSAware {
-    static at = { reactReady && title == "TFRS" && $("h1")[1].text() == "Administration"  }
-    static url = "#/administration"
-    static content = {
-        
-    }
+// TODO
+class AdministrationPage extends BaseAppPage {
+  static at = { reactReady && pageTitle.text() == "Administration"  }
+  static url = "/administration"
+  static content = {
+    pageTitle { }
+  }
 }

@@ -240,7 +240,7 @@ class Navbar extends Component {
             <div id="header-main-row" className="row">
               <div className="col-sm-3 col-md-2 col-lg-2 header-main-left">
                 <div id="logo">
-                  <a id="gov-logo" href="http://gov.bc.ca">
+                  <a href="http://gov.bc.ca">
                     <img
                       src="/assets/images/gov3_bc_logo.png"
                       alt="Province of British Columbia"

@@ -70,6 +70,7 @@ const CreditTransferFormButtons = props => (
           'a Credit Transfer Proposal to another fuel supplier')}
       >
         <button
+          id="credit-transfer-sign"
           className={`btn ${props.disabled.BTN_SIGN_1_2 ? 'btn-disabled' : 'btn-primary '}`}
           data-placement="right"
           data-target="#confirmSubmit"
@@ -106,6 +107,7 @@ const CreditTransferFormButtons = props => (
           'a Credit Transfer Proposal to the Low Carbon Fuels Branch')}
       >
         <button
+          id="credit-transfer-accept"
           className="btn btn-primary"
           data-target="#confirmAccept"
           data-toggle="modal"
@@ -148,6 +150,7 @@ const CreditTransferFormButtons = props => (
         title={props.isCommenting ? Lang.TEXT_COMMENT_DIRTY : Lang.TEXT_COMMENT_REQUIRED}
       >
         <button
+          id="credit-transfer-recommend"
           className={`btn ${props.disabled.BTN_RECOMMEND ? 'btn-disabled' : 'btn-primary '}`}
           disabled={props.isCommenting || props.disabled.BTN_RECOMMEND}
           data-target="#confirmRecommend"
@@ -200,6 +203,7 @@ const CreditTransferFormButtons = props => (
         title={Lang.TEXT_COMMENT_DIRTY}
       >
         <button
+          id="credit-transfer-approve"
           className="btn btn-primary"
           disabled={props.isCommenting}
           data-target="#confirmApprove"
