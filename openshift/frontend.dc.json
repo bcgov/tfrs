@@ -1,0 +1,225 @@
+{
+    "kind": "Template",
+    "apiVersion": "v1",
+    "metadata": {
+        "name": "frontend",
+        "creationTimestamp": null
+    },
+    "labels": {
+        "template": "tfrs-frontend-template"
+    },
+    "parameters": [
+        {
+            "name": "NAME_SUFFIX",
+            "displayName": "Name Suffix",
+            "description": "A suffix appended to all objects",
+            "required": true
+        },
+        {
+            "name": "ENV_NAME",
+            "required": true
+        }
+    ],
+    "objects": [
+        {
+            "kind": "ImageStream",
+            "apiVersion": "v1",
+            "metadata": {
+                "name": "frontend${NAME_SUFFIX}",
+                "creationTimestamp": null,
+                "labels": {
+                    "base-name":"frontend"
+                },
+                "annotations": {
+                    "description": "Keeps track of changes in the application image"
+                }
+            },
+            "spec": {
+                "lookupPolicy": {
+                    "local": false
+                }
+            }
+        },
+        {
+            "kind": "Service",
+            "apiVersion": "v1",
+            "metadata": {
+                "name": "frontend${NAME_SUFFIX}"
+            },
+            "spec": {
+                "ports": [
+                    {
+                        "name": "web",
+                        "protocol": "TCP",
+                        "port": 8080,
+                        "targetPort": 8080
+                    }
+                ],
+                "selector": {
+                    "name": "frontend${NAME_SUFFIX}"
+                },
+                "type": "ClusterIP",
+                "sessionAffinity": "None"
+            },
+            "status": {
+                "loadBalancer": {}
+            }
+        },
+        {
+            "kind": "Route",
+            "apiVersion": "v1",
+            "metadata": {
+                "name": "frontend${NAME_SUFFIX}",
+                "creationTimestamp": null,
+                "labels": {
+                    "frontend": "true"
+                },
+                "annotations": { }
+            },
+            "spec": {
+                "host": "",
+                "to": {
+                    "kind": "Service",
+                    "name": "frontend${NAME_SUFFIX}",
+                    "weight": 100
+                },
+                "port": {
+                    "targetPort": "web"
+                },
+                "tls": {
+                    "termination": "edge"
+                },
+                "wildcardPolicy": "None"
+            }
+        },
+        {
+            "kind": "DeploymentConfig",
+            "apiVersion": "v1",
+            "metadata": {
+                "name": "frontend${NAME_SUFFIX}",
+                "generation": 1,
+                "creationTimestamp": null,
+                "annotations": {
+                    "description": "Defines how to deploy the application server"
+                }
+            },
+            "spec": {
+                "strategy": {
+                    "type": "Recreate",
+                    "recreateParams": {
+                        "timeoutSeconds": 600
+                    },
+                    "resources": {},
+                    "activeDeadlineSeconds": 21600
+                },
+                "triggers": [
+                    {
+                        "type": "ImageChange",
+                        "imageChangeParams": {
+                            "automatic": true,
+                            "containerNames": [
+                                "frontend"
+                            ],
+                            "from": {
+                                "kind": "ImageStreamTag",
+                                "name": "frontend${NAME_SUFFIX}:${ENV_NAME}"
+                            }
+                        }
+                    },
+                    {
+                        "type": "ConfigChange"
+                    }
+                ],
+                "replicas": 1,
+                "test": false,
+                "selector": {
+                    "name": "frontend${NAME_SUFFIX}"
+                },
+                "template": {
+                    "metadata": {
+                        "name": "frontend${NAME_SUFFIX}",
+                        "creationTimestamp": null,
+                        "labels": {
+                            "name": "frontend${NAME_SUFFIX}"
+                        }
+                    },
+                    "spec": {
+                        "containers": [
+                            {
+                                "name": "frontend",
+                                "image": " ",
+                                "ports": [
+                                    {
+                                        "containerPort": 3000,
+                                        "protocol": "TCP"
+                                    }
+                                ],
+                                "env": [
+                                    {
+                                        "name": "RealIpFrom"
+                                    },
+                                    {
+                                        "name": "AdditionalRealIpFromRules"
+                                    },
+                                    {
+                                        "name": "IpFilterRules"
+                                    },
+                                    {
+                                        "name": "HTTP_BASIC"
+                                    },
+                                    {
+                                        "name": "API_URL",
+                                        "value": "http://backend${NAME_SUFFIX}-mem-tfrs-dev.svc.cluster.local:8080/api/"
+                                    }
+                                ],
+                                "resources": {
+                                    "limits": {
+                                        "cpu": "125m",
+                                        "memory": "250Mi"
+                                    },
+                                    "requests": {
+                                        "memory": "200Mi"
+                                    }
+                                },
+                                "livenessProbe": {
+                                    "httpGet": {
+                                        "path": "/",
+                                        "port": 8080,
+                                        "scheme": "HTTP"
+                                    },
+                                    "initialDelaySeconds": 20,
+                                    "timeoutSeconds": 3,
+                                    "periodSeconds": 10,
+                                    "successThreshold": 1,
+                                    "failureThreshold": 3
+                                },
+                                "readinessProbe": {
+                                    "httpGet": {
+                                        "path": "/",
+                                        "port": 8080,
+                                        "scheme": "HTTP"
+                                    },
+                                    "initialDelaySeconds": 10,
+                                    "timeoutSeconds": 3,
+                                    "periodSeconds": 10,
+                                    "successThreshold": 1,
+                                    "failureThreshold": 3
+                                },
+                                "terminationMessagePath": "/dev/termination-log",
+                                "terminationMessagePolicy": "File",
+                                "imagePullPolicy": "IfNotPresent"
+                            }
+                        ],
+                        "restartPolicy": "Always",
+                        "terminationGracePeriodSeconds": 30,
+                        "dnsPolicy": "ClusterFirst",
+                        "securityContext": {},
+                        "schedulerName": "default-scheduler"
+                    }
+                }
+            },
+            "status": {
+            }
+        }
+    ]
+}

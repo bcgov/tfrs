@@ -1,0 +1,401 @@
+{
+    "kind": "Template",
+    "apiVersion": "v1",
+    "metadata": {
+        "name": "jenkins",
+        "creationTimestamp": null
+    },
+    "objects": [
+        {
+            "kind": "BuildConfig",
+            "apiVersion": "v1",
+            "metadata": {
+                "name": "jenkins",
+                "creationTimestamp": null,
+                "labels": {
+                    "build": "jenkins"
+                },
+                "annotations": {
+                    "openshift.io/generated-by": "OpenShiftNewBuild"
+                }
+            },
+            "spec": {
+                "triggers": [
+                    {
+                        "type": "ConfigChange"
+                    },
+                    {
+                        "type": "ImageChange",
+                        "imageChange": {}
+                    }
+                ],
+                "runPolicy": "Serial",
+                "source": {
+                    "type": "Git",
+                    "git": {
+                        "uri": "https://github.com/BCDevOps/openshift-components.git"
+                    },
+                    "contextDir": "cicd/jenkins"
+                },
+                "strategy": {
+                    "type": "Source",
+                    "sourceStrategy": {
+                        "from": {
+                            "kind": "ImageStreamTag",
+                            "namespace": "mem-tfrs-tools",
+                            "name": "jenkins-2-rhel7:v3.9"
+                        }
+                    }
+                },
+                "output": {
+                    "to": {
+                        "kind": "ImageStreamTag",
+                        "name": "jenkins:latest"
+                    }
+                },
+                "resources": {},
+                "postCommit": {},
+                "nodeSelector": null,
+                "successfulBuildsHistoryLimit": 5,
+                "failedBuildsHistoryLimit": 5
+            },
+            "status": {
+                "lastVersion": 0
+            }
+        },
+        {
+            "kind": "DeploymentConfig",
+            "apiVersion": "v1",
+            "metadata": {
+                "name": "jenkins",
+                "generation": 1,
+                "creationTimestamp": null,
+                "labels": {
+                    "app": "jenkins-ephemeral",
+                    "template": "jenkins-ephemeral-template"
+                },
+                "annotations": {
+                    "openshift.io/generated-by": "OpenShiftNewApp",
+                    "template.alpha.openshift.io/wait-for-ready": "true"
+                }
+            },
+            "spec": {
+                "strategy": {
+                    "type": "Recreate",
+                    "recreateParams": {
+                        "timeoutSeconds": 600
+                    },
+                    "resources": {},
+                    "activeDeadlineSeconds": 21600
+                },
+                "triggers": [
+                    {
+                        "type": "ImageChange",
+                        "imageChangeParams": {
+                            "automatic": true,
+                            "containerNames": [
+                                "jenkins"
+                            ],
+                            "from": {
+                                "kind": "ImageStreamTag",
+                                "namespace": "mem-tfrs-tools",
+                                "name": "jenkins:latest"
+                            }
+                        }
+                    },
+                    {
+                        "type": "ConfigChange"
+                    }
+                ],
+                "replicas": 1,
+                "revisionHistoryLimit": 10,
+                "test": false,
+                "selector": {
+                    "name": "jenkins"
+                },
+                "template": {
+                    "metadata": {
+                        "creationTimestamp": null,
+                        "labels": {
+                            "name": "jenkins"
+                        },
+                        "annotations": {
+                            "openshift.io/generated-by": "OpenShiftNewApp"
+                        }
+                    },
+                    "spec": {
+                        "volumes": [
+                            {
+                                "name": "jenkins-data",
+                                "persistentVolumeClaim": {
+                                    "claimName": "jenkins-newpipeline"
+                                }
+                            }
+                        ],
+                        "containers": [
+                            {
+                                "name": "jenkins",
+                                "image": "docker-registry.default.svc:5000/mem-tfrs-tools/jenkins@sha256:a4a52031b04b8d1758ae36312bd255e312b0826adc05d462349de1f0114e8ada",
+                                "env": [
+                                    {
+                                        "name": "OPENSHIFT_ENABLE_OAUTH",
+                                        "value": "true"
+                                    },
+                                    {
+                                        "name": "OPENSHIFT_ENABLE_REDIRECT_PROMPT",
+                                        "value": "true"
+                                    },
+                                    {
+                                        "name": "KUBERNETES_MASTER",
+                                        "value": "https://kubernetes.default:443"
+                                    },
+                                    {
+                                        "name": "KUBERNETES_TRUST_CERTIFICATES",
+                                        "value": "true"
+                                    },
+                                    {
+                                        "name": "JENKINS_SERVICE_NAME",
+                                        "value": "jenkins"
+                                    },
+                                    {
+                                        "name": "JNLP_SERVICE_NAME",
+                                        "value": "jenkins-jnlp"
+                                    },
+                                    {
+                                        "name": "_OVERRIDE_PV_PLUGINS_WITH_IMAGE_PLUGINS",
+                                        "value": "true"
+                                    },
+                                    {
+                                        "name": "OPENSHIFT_JENKINS_JVM_ARCH",
+                                        "value": "x86_64"
+                                    },
+                                    {
+                                        "name": "JAVA_OPTS",
+                                        "value": "-XX:MaxMetaspaceSize=512m -Dhudson.model.DirectoryBrowserSupport.CSP="
+                                    },
+                                    {
+                                        "name": "_OVERRIDE_PV_CONFIG_WITH_IMAGE_CONFIG",
+                                        "value": "false"
+                                    },
+                                    {
+                                        "name": "INSTALL_PLUGINS",
+                                        "value": "embeddable-build-status:1.9"
+                                    }
+                                ],
+                                "resources": {
+                                    "limits": {
+                                        "cpu": "3",
+                                        "memory": "6Gi"
+                                    },
+                                    "requests": {
+                                        "cpu": "1",
+                                        "memory": "1Gi"
+                                    }
+                                },
+                                "volumeMounts": [
+                                    {
+                                        "name": "jenkins-data",
+                                        "mountPath": "/var/lib/jenkins"
+                                    }
+                                ],
+                                "livenessProbe": {
+                                    "httpGet": {
+                                        "path": "/login",
+                                        "port": 8080,
+                                        "scheme": "HTTP"
+                                    },
+                                    "initialDelaySeconds": 420,
+                                    "timeoutSeconds": 240,
+                                    "periodSeconds": 360,
+                                    "successThreshold": 1,
+                                    "failureThreshold": 2
+                                },
+                                "readinessProbe": {
+                                    "httpGet": {
+                                        "path": "/login",
+                                        "port": 8080,
+                                        "scheme": "HTTP"
+                                    },
+                                    "initialDelaySeconds": 3,
+                                    "timeoutSeconds": 240,
+                                    "periodSeconds": 10,
+                                    "successThreshold": 1,
+                                    "failureThreshold": 3
+                                },
+                                "terminationMessagePath": "/dev/termination-log",
+                                "terminationMessagePolicy": "File",
+                                "imagePullPolicy": "IfNotPresent",
+                                "securityContext": {
+                                    "capabilities": {},
+                                    "privileged": false
+                                }
+                            }
+                        ],
+                        "restartPolicy": "Always",
+                        "terminationGracePeriodSeconds": 30,
+                        "dnsPolicy": "ClusterFirst",
+                        "serviceAccountName": "jenkins",
+                        "serviceAccount": "jenkins",
+                        "securityContext": {},
+                        "schedulerName": "default-scheduler"
+                    }
+                }
+            },
+            "status": {
+                "latestVersion": 0,
+                "observedGeneration": 0,
+                "replicas": 0,
+                "updatedReplicas": 0,
+                "availableReplicas": 0,
+                "unavailableReplicas": 0
+            }
+        },
+        {
+            "kind": "ImageStream",
+            "apiVersion": "v1",
+            "metadata": {
+                "name": "jenkins",
+                "generation": 1,
+                "creationTimestamp": null
+            },
+            "spec": {
+                "lookupPolicy": {
+                    "local": false
+                },
+                "tags": [
+                    {
+                        "name": "latest",
+                        "annotations": null,
+                        "from": {
+                            "kind": "DockerImage",
+                            "name": "docker-registry.default.svc:5000/mem-tfrs-tools/jenkins:latest"
+                        },
+                        "generation": null,
+                        "importPolicy": {},
+                        "referencePolicy": {
+                            "type": ""
+                        }
+                    }
+                ]
+            },
+            "status": {
+                "dockerImageRepository": ""
+            }
+        },
+        {
+            "kind": "Service",
+            "apiVersion": "v1",
+            "metadata": {
+                "name": "jenkins",
+                "creationTimestamp": null,
+                "labels": {
+                    "app": "jenkins-ephemeral",
+                    "template": "jenkins-ephemeral-template"
+                },
+                "annotations": {
+                    "openshift.io/generated-by": "OpenShiftNewApp",
+                    "service.alpha.openshift.io/dependencies": "[{\"name\": \"jenkins-jnlp\", \"namespace\": \"\", \"kind\": \"Service\"}]",
+                    "service.openshift.io/infrastructure": "true"
+                }
+            },
+            "spec": {
+                "ports": [
+                    {
+                        "name": "web",
+                        "protocol": "TCP",
+                        "port": 80,
+                        "targetPort": 8080
+                    }
+                ],
+                "selector": {
+                    "name": "jenkins"
+                },
+                "type": "ClusterIP",
+                "sessionAffinity": "None"
+            },
+            "status": {
+                "loadBalancer": {}
+            }
+        },
+        {
+            "kind": "Service",
+            "apiVersion": "v1",
+            "metadata": {
+                "name": "jenkins-jnlp",
+                "creationTimestamp": null,
+                "labels": {
+                    "app": "jenkins-ephemeral",
+                    "template": "jenkins-ephemeral-template"
+                },
+                "annotations": {
+                    "openshift.io/generated-by": "OpenShiftNewApp"
+                }
+            },
+            "spec": {
+                "ports": [
+                    {
+                        "name": "agent",
+                        "protocol": "TCP",
+                        "port": 50000,
+                        "targetPort": 50000
+                    }
+                ],
+                "selector": {
+                    "name": "jenkins"
+                },
+                "type": "ClusterIP",
+                "sessionAffinity": "None"
+            },
+            "status": {
+                "loadBalancer": {}
+            }
+        },
+        {
+            "kind": "Route",
+            "apiVersion": "v1",
+            "metadata": {
+                "name": "jenkins",
+                "creationTimestamp": null,
+                "labels": {
+                    "app": "jenkins-ephemeral",
+                    "template": "jenkins-ephemeral-template"
+                },
+                "annotations": {
+                    "haproxy.router.openshift.io/timeout": "4m",
+                    "openshift.io/generated-by": "OpenShiftNewApp",
+                    "openshift.io/host.generated": "true",
+                    "template.openshift.io/expose-uri": "http://{.spec.host}{.spec.path}"
+                }
+            },
+            "spec": {
+                "host": "jenkins-mem-tfrs-tools.pathfinder.gov.bc.ca",
+                "to": {
+                    "kind": "Service",
+                    "name": "jenkins",
+                    "weight": 100
+                },
+                "tls": {
+                    "termination": "edge",
+                    "insecureEdgeTerminationPolicy": "Redirect"
+                },
+                "wildcardPolicy": "None"
+            },
+            "status": {
+                "ingress": [
+                    {
+                        "host": "jenkins-mem-tfrs-tools.pathfinder.gov.bc.ca",
+                        "routerName": "router",
+                        "conditions": [
+                            {
+                                "type": "Admitted",
+                                "status": "True",
+                                "lastTransitionTime": "2018-05-15T19:33:00Z"
+                            }
+                        ],
+                        "wildcardPolicy": "None"
+                    }
+                ]
+            }
+        }
+    ]
+}

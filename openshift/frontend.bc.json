@@ -1,0 +1,195 @@
+{
+    "kind": "Template",
+    "apiVersion": "v1",
+    "metadata": {
+        "name": "frontend-bc",
+        "creationTimestamp": null
+    },
+    "labels": {
+        "template": "tfrs-frontend-template"
+    },
+    "parameters": [
+        {
+          "name": "NAME_SUFFIX",
+          "displayName": "Name Suffix",
+          "description": "A suffix appended to all objects",
+          "required": true
+        },
+        {
+          "name": "SOURCE_REPOSITORY_URL",
+          "required": true
+        },
+        {
+          "name": "ENV_NAME",
+          "required": true
+        }
+      ],
+    "objects": [
+        {
+            "kind": "ImageStream",
+            "apiVersion": "v1",
+            "metadata": {
+                "name": "frontend-angular-app${NAME_SUFFIX}",
+                "generation": 1,
+                "creationTimestamp": null,
+                "labels": {
+                    "base-name":"frontend-angular-app"
+                }
+            },
+            "spec": {
+                "lookupPolicy": {
+                    "local": false
+                },
+                "tags": [ ]
+            }
+        },
+        {
+            "kind": "ImageStream",
+            "apiVersion": "v1",
+            "metadata": {
+                "name": "frontend${NAME_SUFFIX}",
+                "creationTimestamp": null,
+                "labels": {
+                    "base-name":"frontend"
+                },
+                "annotations": {
+                    "description": "Keeps track of changes in the frontend image"
+                }
+            },
+            "spec": {
+                "lookupPolicy": {
+                    "local": false
+                },
+                "tags": [ ]
+            }
+        },
+        {
+            "kind": "BuildConfig",
+            "apiVersion": "v1",
+            "metadata": {
+                "name": "frontend-angular-app-build${NAME_SUFFIX}",
+                "creationTimestamp": null,
+                "labels": {
+                    "base-name":"frontend"
+                }
+            },
+            "spec": {
+                "triggers": [
+                    {
+                        "type": "ConfigChange"
+                    },
+                    {
+                        "type": "ImageChange",
+                        "imageChange": {}
+                    }
+                ],
+                "runPolicy": "Serial",
+                "source": {
+                    "type": "Git",
+                    "git": {
+                        "uri": "${SOURCE_REPOSITORY_URL}",
+                        "ref": "master"
+                    },
+                    "contextDir": "frontend"
+                },
+                "strategy": {
+                    "type": "Source",
+                    "sourceStrategy": {
+                        "from": {
+                            "kind": "ImageStreamTag",
+                            "namespace": "openshift",
+                            "name": "nodejs:6"
+                        }
+                    }
+                },
+                "output": {
+                    "to": {
+                        "kind": "ImageStreamTag",
+                        "name": "frontend-angular-app${NAME_SUFFIX}:${ENV_NAME}"
+                    }
+                },
+                "resources": {
+                    "limits": {
+                        "cpu": "1",
+                        "memory": "4Gi"
+                    },
+                    "requests": {
+                        "memory": "2Gi"
+                    }
+                },
+                "postCommit": {},
+                "nodeSelector": null
+            },
+            "status": {
+                "lastVersion": 0
+            }
+        },
+        {
+            "kind": "BuildConfig",
+            "apiVersion": "v1",
+            "metadata": {
+                "name": "frontend${NAME_SUFFIX}",
+                "creationTimestamp": null,
+                "annotations": {
+                    "description": "Defines how to build the frontend image"
+                }
+            },
+            "spec": {
+                "triggers": [
+                    {
+                        "type": "ImageChange",
+                        "imageChange": {}
+                    },
+                    {
+                        "type": "ConfigChange"
+                    }
+                ],
+                "runPolicy": "Serial",
+                "source": {
+                    "type": "Dockerfile",
+                    "dockerfile": "FROM frontend-angular-app${NAME_SUFFIX}:${ENV_NAME}\nCOPY * /tmp/app/dist/\nCMD  /usr/libexec/s2i/run",
+                    "images": [
+                        {
+                            "from": {
+                                "kind": "ImageStreamTag",
+                                "name": "frontend-angular-app${NAME_SUFFIX}:${ENV_NAME}"
+                            },
+                            "paths": [
+                                {
+                                    "sourcePath": "/opt/app-root/src/public/.",
+                                    "destinationDir": "tmp"
+                                }
+                            ]
+                        }
+                    ]
+                },
+                "strategy": {
+                    "type": "Docker",
+                    "dockerStrategy": {
+                        "from": {
+                            "kind": "ImageStreamTag",
+                            "name": "nginx-runtime:latest"
+                        }
+                    }
+                },
+                "output": {
+                    "to": {
+                        "kind": "ImageStreamTag",
+                        "name": "frontend${NAME_SUFFIX}:${ENV_NAME}"
+                    }
+                },
+                "resources": {
+                    "limits": {
+                        "cpu": "2",
+                        "memory": "4Gi"
+                    }
+                },
+                "postCommit": {},
+                "nodeSelector": null
+            },
+            "status": {
+                "lastVersion": 0
+            }
+        }
+    ]
+}
