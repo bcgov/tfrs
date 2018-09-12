@@ -4,12 +4,14 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import ReactTable from 'react-table';
+import { Link } from 'react-router-dom';
 import 'react-table/react-table.css';
 import FontAwesomeIcon from '@fortawesome/react-fontawesome';
 import moment from 'moment';
 
 import CheckBox from '../../app/components/CheckBox';
 import NOTIFICATION_TYPES from '../../constants/notificationTypes';
+import CREDIT_TRANSACTIONS from '../../constants/routes/CreditTransactions';
 
 const NotificationsTable = (props) => {
   const columns = [{
@@ -29,6 +31,11 @@ const NotificationsTable = (props) => {
     width: 50
   }, {
     accessor: item => NOTIFICATION_TYPES[item.message],
+    Cell: (row) => {
+      const viewUrl = CREDIT_TRANSACTIONS.DETAILS.replace(':id', row.original.relatedCreditTrade);
+
+      return <Link to={viewUrl}>{row.value}</Link>;
+    },
     className: 'col-notification',
     Header: 'Notification',
     headerClassName: 'col-notification',
@@ -49,8 +56,13 @@ const NotificationsTable = (props) => {
     width: 150
   }, {
     accessor: item => item.relatedCreditTrade,
+    Cell: (row) => {
+      const viewUrl = CREDIT_TRANSACTIONS.DETAILS.replace(':id', row.value);
+
+      return <Link to={viewUrl}>{row.value}</Link>;
+    },
     className: 'col-credit-trade',
-    Header: 'Credit Trade',
+    Header: 'Transaction ID',
     headerClassName: 'col-credit-trade',
     id: 'creditTrade',
     width: 100
