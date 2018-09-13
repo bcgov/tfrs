@@ -95,7 +95,7 @@ export default withRouter(connect(state => ({
     error: state.rootReducer.userRequest.error,
     isFetching: state.rootReducer.userRequest.isFetching
   },
-  unreadNotificationsCount: state.rootReducer.notificationsReducer.isFetching
+  unreadNotificationsCount: state.rootReducer.notifications.isFetching
     ? null
-    : state.rootReducer.notificationsReducer.notifications.filter(n => !n.isRead).length
+    : state.rootReducer.notifications.items.filter(n => !n.isRead).length
 }))(App));

@@ -5,6 +5,7 @@ import FontAwesomeIcon from '@fortawesome/react-fontawesome';
 import Loading from '../../app/components/Loading';
 import ORGANIZATIONS from '../../constants/routes/Organizations';
 import OrganizationsTable from './OrganizationsTable';
+import * as Routes from '../../constants/routes';
 
 const OrganizationsPage = (props) => {
   const { isFetching, items } = props.organizations;
@@ -16,7 +17,7 @@ const OrganizationsPage = (props) => {
         <button
           className="btn btn-info"
           type="button"
-          onClick={() => (document.location = ORGANIZATIONS.EXPORT)}
+          onClick={() => (document.location = Routes.BASE_URL + ORGANIZATIONS.EXPORT)}
         >
           Download <FontAwesomeIcon icon="file-excel" />
         </button>

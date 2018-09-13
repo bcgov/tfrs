@@ -20,35 +20,16 @@
     See the License for the specific language governing permissions and
     limitations under the License.
 """
-from datetime import datetime
-
-from django.forms.models import model_to_dict
 from rest_framework import serializers
 
-from api.models.CreditTrade import CreditTrade
-from api.models.CreditTradeComment import CreditTradeComment
-from api.models.CreditTradeStatus import CreditTradeStatus
-from api.models.CreditTradeType import CreditTradeType
-from api.models.CreditTradeZeroReason import CreditTradeZeroReason
 from api.models.NotificationMessage import NotificationMessage
-from api.models.User import User
-from api.services.CreditTradeActions import CreditTradeActions
-from api.services.CreditTradeCommentActions import CreditTradeCommentActions
-from api.services.CreditTradeService import CreditTradeService
-
-from .CreditTradeComment import CreditTradeCommentSerializer
-from .CreditTradeStatus import CreditTradeStatusMinSerializer
-from .CreditTradeType import CreditTradeTypeSerializer
-from .CreditTradeZeroReason import CreditTradeZeroReasonSerializer
-from .CompliancePeriod import CompliancePeriodSerializer
-from .Organization import OrganizationMinSerializer
-from .User import UserMinSerializer
 
 
 class NotificationMessageSerializer(serializers.ModelSerializer):
     """
     Default Serializer for Notification Message
     """
+    user = serializers.SerializerMethodField()
 
     def __init__(self, *args, **kwargs):
         super(NotificationMessageSerializer, self).__init__(*args, **kwargs)
@@ -57,6 +38,26 @@ class NotificationMessageSerializer(serializers.ModelSerializer):
         for field_name in set(self.fields.keys()) - {'is_read'}:
             self.fields[field_name].read_only = True
 
+    def get_user(self, obj):
+        """
+        Returns the name of the user associated with the notification.
+        Not using a serializer as we only need the id and the display name.
+        """
+        return {
+            "id": obj.user.id,
+            "first_name": obj.user.first_name,
+            "last_name": obj.user.last_name
+        }
+
+    class Meta:
+        model = NotificationMessage
+        fields = '__all__'
+
+
+class NotificationMessageUpdateSerializer(serializers.ModelSerializer):
+    """
+    Update Serializer for Notification Message
+    """
     class Meta:
         model = NotificationMessage
         fields = '__all__'
