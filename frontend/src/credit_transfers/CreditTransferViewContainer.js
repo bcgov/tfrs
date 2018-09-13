@@ -207,7 +207,7 @@ class CreditTransferViewContainer extends Component {
     };
   }
 
-  _changeStatus (status) {
+  _changeStatus (status, successMessage = '') {
     const { item } = this.props;
 
     // Update the Status only
@@ -232,13 +232,7 @@ class CreditTransferViewContainer extends Component {
       this.props.invalidateCreditTransfer();
       history.push(CREDIT_TRANSACTIONS.HIGHLIGHT.replace(':id', id));
 
-      if (
-        item.actions.findIndex(action => (action.action === Lang.BTN_DECLINE_FOR_APPROVAL)) >= 0
-      ) {
-        toastr.creditTransactionSuccess(status.id, item, 'Returned to Analyst.');
-      } else {
-        toastr.creditTransactionSuccess(status.id, item);
-      }
+      toastr.creditTransactionSuccess(status.id, item, successMessage);
     }, () => {
       // Failed to update
     });
@@ -345,7 +339,7 @@ class CreditTransferViewContainer extends Component {
       >
         Are you sure you want to approve this Credit
         {[CREDIT_TRANSFER_TYPES.buy.id, CREDIT_TRANSFER_TYPES.sell.id].indexOf(item.type.id) >= 0
-          ? ' Transfer Proposal' : ' Transaction'}?
+          ? ' Transfer Proposal' : ' transaction'}?
       </Modal>
     );
   }
@@ -391,7 +385,7 @@ class CreditTransferViewContainer extends Component {
 
         Are you sure you want to decline to approve this Credit
         {[CREDIT_TRANSFER_TYPES.buy.id, CREDIT_TRANSFER_TYPES.sell.id].indexOf(item.type.id) >= 0
-          ? ' Transfer Proposal' : ' Transaction'}?
+          ? ' Transfer Proposal' : ' transaction'}?
       </Modal>
     );
   }
@@ -424,7 +418,7 @@ class CreditTransferViewContainer extends Component {
       >
         Are you sure you want to not recommend approval of this Credit
         {[CREDIT_TRANSFER_TYPES.buy.id, CREDIT_TRANSFER_TYPES.sell.id].indexOf(item.type.id) >= 0
-          ? ' Transfer Proposal' : ' Transaction'}?
+          ? ' Transfer Proposal' : ' transaction'}?
       </Modal>
     );
   }
@@ -433,12 +427,14 @@ class CreditTransferViewContainer extends Component {
     return (
       <Modal
         handleSubmit={(event) => {
-          this._changeStatus(CREDIT_TRANSFER_STATUS.draft);
+          this._changeStatus(CREDIT_TRANSFER_STATUS.draft, 'Recalled as draft.');
         }}
         id="confirmPullBack"
         key="confirmPullBack"
       >
-        Are you sure you want to pull this transfer back?
+        Are you sure you want to recall this credit transaction? <br />
+        This will return the transaction to a draft state where
+        it will no longer be visible to the Director.
       </Modal>
     );
   }
@@ -454,7 +450,7 @@ class CreditTransferViewContainer extends Component {
       >
         Are you sure you want to recommend approval of this Credit
         {[CREDIT_TRANSFER_TYPES.buy.id, CREDIT_TRANSFER_TYPES.sell.id].indexOf(item.type.id) >= 0
-          ? ' Transfer Proposal' : ' Transaction'}?
+          ? ' Transfer Proposal' : ' transaction'}?
       </Modal>
     );
   }
@@ -491,12 +487,12 @@ class CreditTransferViewContainer extends Component {
     return (
       <Modal
         handleSubmit={(event) => {
-          this._changeStatus(CREDIT_TRANSFER_STATUS.draft);
+          this._changeStatus(CREDIT_TRANSFER_STATUS.draft, 'Returned to Analyst.');
         }}
         id="confirmReturn"
         key="confirmReturn"
       >
-        Are you sure you want to send this transfer back to the analyst?
+        Are you sure you want to return this credit transaction to the Government Analyst?
       </Modal>
     );
   }

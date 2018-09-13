@@ -202,7 +202,7 @@ class CreditTradeViewSet(AuditableMixin, mixins.CreateModelMixin,
             CreditTradeService.approve(credit_trade)
 
         return Response({"message":
-                         "Approved Credit Transactions have been processed."},
+                         "Approved credit transactions have been processed."},
                         status=status.HTTP_200_OK)
 
     @list_route(methods=['get'])
@@ -216,7 +216,7 @@ class CreditTradeViewSet(AuditableMixin, mixins.CreateModelMixin,
         response['Content-Disposition'] = (
             'attachment; filename="{}.xls"'.format(
                 datetime.datetime.now().strftime(
-                    "credit_transfers_%Y-%m-%d_%H-%M-%S")
+                    "credit_transfers_%Y-%m-%d")
             ))
 
         credit_trades = self.get_queryset().filter(
