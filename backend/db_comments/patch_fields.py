@@ -53,14 +53,20 @@ class PatchedField(Field):
             # it's not done in the constructor)
             try:
                 remote_class = self.related_model
-                remote_table = self.related_model.db_table_name()\
+                remote_table = self.related_model.db_table_name() \
                     if hasattr(self.related_model, 'db_table_name') else None
 
-                return 'Foreign key to:\nclass: {}\ntable: {}\nadditional comments: {}'.format(
-                    remote_class,
-                    remote_table,
-                    self._db_comment
+                if self._db_comment is not None:
+                    return 'Reference to primary key (id) of table {},' \
+                           ' with additional comment: {}'.format(
+                        remote_table,
+                        self._db_comment
+                    )
+
+                return 'Reference to primary key (id) of table {}'.format(
+                    remote_table
                 )
+
             except:
                 # something somewhere up the chain is catching exceptions and silently failing
                 logging.error('caught an exception while attaching comments to a foreign key.'
