@@ -48,7 +48,7 @@ store.subscribe(() => {
   if (!subscriptionProcessing) {
     subscriptionProcessing = true;
 
-    if (state.rootReducer.notificationsReducer.serverInitiatedReloadRequested === true) {
+    if (state.rootReducer.notifications.serverInitiatedReloadRequested === true) {
       store.dispatch(getNotifications());
     }
     subscriptionProcessing = false;

@@ -1,46 +1,75 @@
+@import './variables.scss';
+@import './mixins.scss';
 
-.notifications {
-
-  .form-group.form-group-sm.react-bs-table-search-form {
+.page_notifications {
+  .actions-container {
     float: right;
+    margin-bottom: 1rem;
+
+    .btn-group .btn {
+      margin: 0;
+    }
+
+    .dropdown-menu {
+      button {
+        background: none;
+        border: none;
+        clear: both;
+        display: block;
+        margin: 0;
+        padding: 3px 20px;
+        text-align: left;
+        white-space: nowrap;
+        width: 100%;
+
+        &:hover {
+          background-color: $background-grey;
+        }
+      }
+    }
   }
 
-  .row {
-    margin: 0 -15px;
+  .col-actions {
+    align-self: center;
+    font-size: 1.75rem;
+    text-align: center;
+
+    .fa-folder-open {
+      cursor: pointer;
+    }
   }
 
-  .react-bs-table {
-    max-height: 500px;
-    overflow: auto;
+  .col-credit-trade {
+    align-self: center;
+    text-align: center;
   }
-}
 
-.notification-table {
+  .col-date, .col-notification, .col-organization, .col-user {
+    align-self: center;
+    text-align: left;
+  }
 
-  .read {
+  .col-mark {
+    text-align: center;
+
+    .fa-square, .fa-check-square {
+      align-self: center;
+      cursor: pointer;
+      font-size: 2.5rem;
+    }
+  }
+
+  .ReactTable {
+    clear: both;
+  }
+
+  .rt-tr {
+    &.-odd {
+      background-color: $background-grey;
+    }
   }
 
   .unread {
     font-weight: bold;
   }
-
-}
-
-.fa-stack.unread-badge[data-unread-count]:after{
-  position:absolute;
-  left: 2px;
-  bottom: 2px;
-  content: attr(data-unread-count);
-
-  font-size: 8px;
-  padding:.6em;
-  border-radius:999px;
-  line-height: 6px;
-
-  color: white;
-  background:rgba(255,0,0,.85);
-  text-align:center;
-  min-width:2em;
-
-  font-weight:bold;
 }

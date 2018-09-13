@@ -1,4 +1,4 @@
-const API = '/api/credit_trades';
+const API = '/credit_trades';
 const BASE_PATH = '/credit_transactions';
 
 const CREDIT_TRANSACTIONS = {

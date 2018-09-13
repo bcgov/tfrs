@@ -9,9 +9,8 @@ import { bindActionCreators } from 'redux';
 import PropTypes from 'prop-types';
 
 import SettingsDetails from './components/SettingsDetails';
-import CREDIT_TRANSFER_NOTIFICATIONS from '../constants/settings/notificationsCreditTransfers';
-import GOVERNMENT_TRANSFER_NOTIFICATIONS from '../constants/settings/notificationsGovernmentTransfers';
-import { getSubscriptions } from '../actions/notificationActions';
+import { getSubscriptions, updateSubscriptions } from '../actions/notificationActions';
+import toastr from '../utils/toastr';
 
 class SettingsContainer extends Component {
   constructor (props) {
@@ -26,6 +25,7 @@ class SettingsContainer extends Component {
     };
 
     this._addToFields = this._addToFields.bind(this);
+    this._getSubscription = this._getSubscription.bind(this);
     this._handleSubmit = this._handleSubmit.bind(this);
     this._toggleCheck = this._toggleCheck.bind(this);
   }
@@ -49,7 +49,7 @@ class SettingsContainer extends Component {
         id: value.id,
         field: value.field,
         type: value.type,
-        value: value.value
+        value: this._getSubscription(value.field.toUpperCase(), value.id)
       });
     }
 
@@ -58,27 +58,33 @@ class SettingsContainer extends Component {
     });
   }
 
+  _getSubscription (channel, code) {
+    const subscriptionStatus = this.props.subscriptions.items.find(subscription => (
+      subscription.channel === channel && subscription.notificationType === code
+    ));
+
+    if (subscriptionStatus) {
+      return subscriptionStatus.subscribed;
+    }
+
+    return false;
+  }
+
   _handleSubmit (event, status) {
     event.preventDefault();
 
     const data = [];
 
     this.state.fields.settings.notifications.forEach((notification) => {
-      let notificationCodes;
-      if (notification.type === 'credit-transfer') {
-        notificationCodes = CREDIT_TRANSFER_NOTIFICATIONS;
-      } else {
-        notificationCodes = GOVERNMENT_TRANSFER_NOTIFICATIONS;
-      }
-
-      const notificationType = notificationCodes.find(notificationCode =>
-        (notificationCode.key === notification.id)).code;
-
       data.push({
-        notificationType,
+        notificationType: notification.id,
         channel: String(notification.field).toUpperCase(),
         subscribed: notification.value
       });
+    });
+
+    this.props.updateSubscriptions(data).then((response) => {
+      toastr.subscriptionsSuccess();
     });
 
     return false;
@@ -104,6 +110,7 @@ class SettingsContainer extends Component {
         fields={this.state.fields}
         handleSubmit={this._handleSubmit}
         loggedInUser={this.props.loggedInUser}
+        subscriptions={this.props.subscriptions}
         toggleCheck={this._toggleCheck}
       />
     );
@@ -112,15 +119,27 @@ class SettingsContainer extends Component {
 
 SettingsContainer.propTypes = {
   getSubscriptions: PropTypes.func.isRequired,
-  loggedInUser: PropTypes.shape({}).isRequired
+  loggedInUser: PropTypes.shape({}).isRequired,
+  subscriptions: PropTypes.shape({
+    isFetching: PropTypes.bool,
+    items: PropTypes.arrayOf(PropTypes.shape()),
+    success: PropTypes.bool
+  }).isRequired,
+  updateSubscriptions: PropTypes.func.isRequired
 };
 
 const mapStateToProps = state => ({
-  loggedInUser: state.rootReducer.userRequest.loggedInUser
+  loggedInUser: state.rootReducer.userRequest.loggedInUser,
+  subscriptions: {
+    isFetching: state.rootReducer.subscriptions.isFetching,
+    items: state.rootReducer.subscriptions.items,
+    success: state.rootReducer.subscriptions.success
+  }
 });
 
 const mapDispatchToProps = dispatch => ({
-  getSubscriptions: bindActionCreators(getSubscriptions, dispatch)
+  getSubscriptions: bindActionCreators(getSubscriptions, dispatch),
+  updateSubscriptions: bindActionCreators(updateSubscriptions, dispatch)
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(SettingsContainer);
