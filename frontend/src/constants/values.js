@@ -96,12 +96,12 @@ export const ZERO_DOLLAR_REASON = {
     id: 1,
     description: 'Affiliate',
     formButtonDescription: 'Transfer to Affiliated Organization',
-    textRepresentationDescription: 'it is a transfer of credits between affiliated organizations'
+    textRepresentationDescription: ' it is a transfer between affiliated organizations.'
   },
   other: {
     id: 2,
     description: 'Other',
     formButtonDescription: 'Other Reason',
-    textRepresentationDescription: 'a reason should be specified in the comments'
+    textRepresentationDescription: ' reason specified in comments.'
   }
 };

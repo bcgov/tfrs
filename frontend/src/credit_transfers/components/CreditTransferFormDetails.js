@@ -96,7 +96,9 @@ class CreditTransferFormDetails extends Component {
           <span> effective on Director&apos;s approval</span>
           {this.enableZeroReason() &&
           <div className="zero-reason-form">
-            <span>This trade has a value of zero dollars because:</span>
+            <span>
+              This credit transfer has a fair market value of zero dollars per credit because:
+            </span>
             <br />
             <div className="form-group">
               <div className="btn-group zero-reason" role="group" id="zero-dollar-reason">
