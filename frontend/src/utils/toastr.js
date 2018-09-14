@@ -53,6 +53,14 @@ const toastr = {
       default:
         reduxToastr.success('Success!', `${text} saved.`);
     }
+  },
+  subscriptionsSuccess: (message = '') => {
+    if (message !== '') { // message is only used to override
+      reduxToastr.success('Success!', message);
+      return;
+    }
+
+    reduxToastr.success('Success!', 'Subscriptions updated.');
   }
 };
 

@@ -12,7 +12,7 @@ class CreditTransferVisualRepresentation extends Component {
     return (
       <div className="row visual-representation">
         <div className="col-sm-4 col-md-2 col-md-offset-1">
-          <div className="respondent-container label-warning">
+          <div className="respondent-container">
             <div>
               { this.props.creditsTo && this.props.creditsTo.name }
             </div>
@@ -32,10 +32,10 @@ class CreditTransferVisualRepresentation extends Component {
     return (
       <div className="row visual-representation">
         <div className="col-sm-4 col-md-2 col-md-offset-1">
-          <div className="initiator-container label-success">
+          <div className="initiator-container">
             <div>
-              { this.props.creditsFrom && this.props.creditsFrom.name }
-            </div>
+                { this.props.creditsFrom && this.props.creditsFrom.name }
+              </div>
           </div>
         </div>
         <div className="col-sm-4 col-md-5">
@@ -75,7 +75,7 @@ class CreditTransferVisualRepresentation extends Component {
     return (
       <div className="row visual-representation">
         <div className="col-sm-4 col-md-2 col-md-offset-1">
-          <div className="initiator-container label-success">
+          <div className="initiator-container">
             <div>
               { this.props.creditsFrom && this.props.creditsFrom.name }
             </div>
@@ -96,7 +96,7 @@ class CreditTransferVisualRepresentation extends Component {
           </div>
         </div>
         <div className="col-sm-4 col-md-3">
-          <div className="respondent-container label-warning">
+          <div className="respondent-container">
             <div>{this.props.creditsTo.name}</div>
           </div>
         </div>

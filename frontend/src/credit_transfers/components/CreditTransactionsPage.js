@@ -11,6 +11,8 @@ import history from '../../app/History';
 import Loading from '../../app/components/Loading';
 import CreditTransferTable from './CreditTransferTable';
 
+import * as Routes from '../../constants/routes';
+
 const CreditTransactionsPage = (props) => {
   const { isFetching, items } = props.creditTransfers;
   const isEmpty = items.length === 0;
@@ -95,7 +97,7 @@ const CreditTransactionsPage = (props) => {
             className="btn btn-info"
             type="button"
             onClick={() => {
-              let url = CREDIT_TRANSACTIONS.EXPORT;
+              let url = Routes.BASE_URL + CREDIT_TRANSACTIONS.EXPORT;
 
               if (props.organization) {
                 url += `?organization_id=${props.organization.id}`;
@@ -104,7 +106,7 @@ const CreditTransactionsPage = (props) => {
               document.location = url;
             }}
           >
-            Download <FontAwesomeIcon icon="file-excel" />
+            <FontAwesomeIcon icon="file-excel" /> Download as .xls
           </button>
         </div>
       </div>

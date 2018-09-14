@@ -16,7 +16,7 @@ const NotificationsCreditTransactionsTable = (props) => {
     headerClassName: 'col-action',
     id: 'action'
   }, {
-    accessor: item => (item.key),
+    accessor: item => (item.code),
     Cell: row => (
       <CheckBox
         addToFields={props.addToFields}
@@ -33,7 +33,7 @@ const NotificationsCreditTransactionsTable = (props) => {
     id: 'email',
     sortable: false
   }, {
-    accessor: item => (item.key),
+    accessor: item => (item.code),
     Cell: row => (
       <CheckBox
         addToFields={props.addToFields}
@@ -50,7 +50,7 @@ const NotificationsCreditTransactionsTable = (props) => {
     id: 'sms',
     sortable: false
   }, {
-    accessor: item => (item.key),
+    accessor: item => (item.code),
     Cell: row => (
       <CheckBox
         addToFields={props.addToFields}
