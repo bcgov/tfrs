@@ -130,8 +130,10 @@ class CreditTradeViewSet(AuditableMixin, mixins.CreateModelMixin,
         CreditTradeService.create_history(credit_trade, False)
         NotificationService.send(credit_trade)
 
-        previous_status = self.get_object().status
-        CreditTradeService.dispatch_notifications(previous_status, credit_trade)
+        status_cancelled = CreditTradeStatus.objects.get(status="Cancelled")
+
+        if serializer.data['status'] != status_cancelled.id:
+            CreditTradeService.dispatch_notifications(self.get_object().status, credit_trade)
 
     @detail_route(methods=['put'])
     def delete(self, request, pk=None):
