@@ -9,3 +9,4 @@ oc export bc/develop-client-pipeline bc/develop-tfrs-pipeline bc/master-client-p
 oc export imagestream/schema-spy bc/schema-spy --as-template='schema-spy' --output=json > schema-spy.json
 oc export imagestream/request-logger bc/request-logger --as-template='request-logger' --output=json > request-logger.json
 oc export dc/postgresql-sonarqube dc/sonarqube service/postgresql-sonarqube service/sonarqube route/sonarqube --as-template='sonarqube' --output=json > sonarqube.json
+oc export bc/client-prod-angular-app-build bc/client-prod bc/tfrs-prod bc/prod-client-pipeline bc/prod-tfrs-pipeline --as-template='prod-build-pipeline' --output=json > prod-build-pipeline.json
