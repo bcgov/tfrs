@@ -352,11 +352,6 @@ class CreditTransferViewContainer extends Component {
         }}
         id="confirmDecline"
         key="confirmDecline"
-        canBypassExtraConfirm
-        extraConfirmText="You have not provided a comment explaining why you to decline to approve
-         this Credit Transfer Proposal"
-        showExtraConfirm={!this.state.hasCommented}
-        extraConfirmType="warning"
       >
         <div className="alert alert-warning">
           <p>
