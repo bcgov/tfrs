@@ -3,7 +3,7 @@ import { CREDIT_TRANSFER_STATUS, CREDIT_TRANSFER_TYPES } from '../constants/valu
 
 const toastr = {
   creditTransactionSuccess: (statusId, item, message = '') => {
-    let text = 'Credit Transaction';
+    let text = 'Credit transaction';
 
     if ([CREDIT_TRANSFER_TYPES.buy.id, CREDIT_TRANSFER_TYPES.sell.id].indexOf(item.type.id) >= 0 ||
         [CREDIT_TRANSFER_TYPES.buy.id, CREDIT_TRANSFER_TYPES.sell.id].indexOf(item.type) >= 0) {
@@ -39,7 +39,7 @@ const toastr = {
         reduxToastr.success('Success!', `${text} not recommended.`);
         break;
       case CREDIT_TRANSFER_STATUS.proposed.id:
-        reduxToastr.success('Success!', `${text} submitted.`);
+        reduxToastr.success('Success!', `${text} sent.`);
         break;
       case CREDIT_TRANSFER_STATUS.recommendedForDecision.id:
         reduxToastr.success('Success!', `${text} recommended.`);
