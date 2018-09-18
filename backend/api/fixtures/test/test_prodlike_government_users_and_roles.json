@@ -9,7 +9,7 @@
       "first_name": "Gov",
       "last_name": "Gov",
       "organization": [
-        "Government Of British Columbia"
+        "Government of British Columbia"
       ]
     },
     "model": "api.user",
@@ -37,7 +37,7 @@
       "first_name": "Gov",
       "last_name": "Gov",
       "organization": [
-        "Government Of British Columbia"
+        "Government of British Columbia"
       ]
     },
     "model": "api.user",
@@ -65,7 +65,7 @@
       "first_name": "Gov",
       "last_name": "Admin",
       "organization": [
-        "Government Of British Columbia"
+        "Government of British Columbia"
       ]
     },
     "model": "api.user",
