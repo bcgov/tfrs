@@ -28,7 +28,7 @@ import OrganizationsContainer from './organizations/OrganizationsContainer';
 import OrganizationViewContainer from './organizations/OrganizationViewContainer';
 import SettingsContainer from './settings/SettingsContainer';
 import UserViewContainer from './users/UserViewContainer';
-import NotificationContainer from './notifications/NotificationContainer';
+import NotificationsContainer from './notifications/NotificationsContainer';
 
 const Router = props => (
   <ConnectedRouter history={history} key={Math.random()}>
@@ -127,7 +127,7 @@ const Router = props => (
         <Route
           exact
           path={Routes.NOTIFICATIONS.LIST}
-          component={withRouter(NotificationContainer)}
+          component={withRouter(NotificationsContainer)}
         />
         <Route component={NotFound} />
       </Switch>

@@ -11,6 +11,7 @@ const config = {
   // Makes sure errors in console map to the correct file
   // and line numbe
   // devtool: 'eval',
+  mode: 'development',
   entry: [
     // Polyfill for Object.assign on IE11, etc
     'babel-polyfill',

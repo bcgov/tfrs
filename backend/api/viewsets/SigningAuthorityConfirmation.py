@@ -1,11 +1,11 @@
 from rest_framework import filters, mixins, permissions, viewsets
 
-from api.permissions.SigningAuthorityConfirmation import SigningAuthorityConfirmationPermissions
-from auditable.views import AuditableMixin
-
+from api.permissions.SigningAuthorityConfirmation \
+  import SigningAuthorityConfirmationPermissions
 from api.models.SigningAuthorityConfirmation \
   import SigningAuthorityConfirmation
 from api.serializers import SigningAuthorityConfirmationSerializer
+from auditable.views import AuditableMixin
 
 
 class SigningAuthorityConfirmationViewSet(AuditableMixin,

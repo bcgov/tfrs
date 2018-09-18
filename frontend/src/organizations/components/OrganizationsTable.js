@@ -11,6 +11,7 @@ import numeral from 'numeral';
 import * as NumberFormat from '../../constants/numeralFormats';
 import CREDIT_TRANSACTIONS from '../../constants/routes/CreditTransactions';
 import ORGANIZATIONS from '../../constants/routes/Organizations';
+import ORGANIZATION_STATUSES from '../../constants/organizationStatuses';
 
 const OrganizationsTable = (props) => {
   const columns = [{
@@ -32,7 +33,8 @@ const OrganizationsTable = (props) => {
     id: 'creditBalance',
     minWidth: 100
   }, {
-    accessor: item => item.statusDisplay,
+    accessor: item => Object.values(ORGANIZATION_STATUSES)
+      .find(element => element.id === item.status).description,
     className: 'col-status-display',
     Header: 'Status',
     id: 'status',

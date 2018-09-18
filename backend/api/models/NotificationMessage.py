@@ -90,6 +90,12 @@ class NotificationMessage(Auditable):
         db_comment="Flag. True if this conveys information about an error"
     )
 
+    is_archived = models.BooleanField(
+        default=False,
+        null=False,
+        db_comment="Flag. True if this message has been archived"
+    )
+
     class Meta:
         db_table = 'notification_message'
 

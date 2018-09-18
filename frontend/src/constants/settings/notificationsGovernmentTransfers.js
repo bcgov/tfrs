@@ -1,36 +1,36 @@
 const GOVERNMENT_TRANSFER_NOTIFICATIONS = [{
   id: 1,
-  code: 'GOVERNMENT_TRANSFER_CREATED',
+  code: 'PVR_CREATED',
   description: 'Save Draft',
   key: 'draft',
   recipients: ['government']
 }, {
   id: 4,
-  code: 'GOVERNMENT_TRANSFER_RECOMMENDED_FOR_APPROVAL',
-  description: 'Recommend Approce',
+  code: 'PVR_RECOMMENDED_FOR_APPROVAL',
+  description: 'Recommend Approve',
   key: 'recommended',
   recipients: ['government']
 }, {
   id: 11,
-  code: 'GOVERNMENT_TRANSFER_RESCINDED',
+  code: 'PVR_RESCINDED',
   description: 'Rescind',
   key: 'rescinded',
   recipients: ['government']
 }, {
   id: 7,
-  code: 'GOVERNMENT_TRANSFER_APPROVED',
+  code: 'PVR_APPROVED',
   description: 'Approve',
   key: 'approved',
   recipients: ['fuel_supplier', 'government']
 }, {
   id: 9,
-  code: 'GOVERNMENT_TRANSFER_DECLINED',
+  code: 'PVR_DECLINED',
   description: 'Decline',
   key: 'declined',
   recipients: ['fuel_supplier', 'government']
 }, {
   id: 1,
-  code: 'GOVERNMENT_TRANSFER_CREATED',
+  code: 'PVR_PULLED_BACK',
   description: 'Return to Analyst',
   key: 'return_to_analyst',
   recipients: ['government']

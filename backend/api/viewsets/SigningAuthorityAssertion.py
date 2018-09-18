@@ -49,4 +49,3 @@ class SigningAuthorityAssertionViewSet(AuditableMixin, mixins.ListModelMixin,
         an expiration date
         """
         return SigningAuthorityAssertion.objects.get_active_as_of_date(datetime.today())
-
