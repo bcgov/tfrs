@@ -81,6 +81,7 @@
   "scripts": {
     "start": "node server",
     "start:docker": "node server-docker.js",
+    "start:notifications": "node server-notifications.js",
     "production": "NODE_ENV=production webpack -p --config webpack.production.config.js",
     "build": "webpack",
     "test": "jest --coverage",
