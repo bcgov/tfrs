@@ -27,6 +27,8 @@ from collections import namedtuple
 
 from rest_framework import status
 
+from api.models.CompliancePeriod import CompliancePeriod
+from api.models.CreditTrade import CreditTrade
 from api.models.OrganizationBalance import OrganizationBalance
 from .base_test_case import BaseTestCase
 
@@ -144,6 +146,16 @@ class TestCreditTradeFlow(BaseTestCase):
                          initiator_bal_after.validated_credits)
         self.assertEqual(resp_final_bal,
                          respondent_bal_after.validated_credits)
+
+        compliance_period = CompliancePeriod.objects.filter(
+            effective_date__lte=today,
+            expiration_date__gte=today
+        ).first()
+
+        credit_trade = CreditTrade.objects.get(id=ct_id)
+
+        self.assertEqual(
+            credit_trade.compliance_period_id, compliance_period.id)
 
     def test_respondent_cannot_modify_the_trade(self):
         """Validate that a respondent cannot modify the deal by manipulating the PUT"""
