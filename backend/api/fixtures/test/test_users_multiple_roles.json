@@ -9,7 +9,7 @@
       "first_name": "Multi",
       "last_name": "Role",
       "organization": [
-        "Government Of British Columbia"
+        "Government of British Columbia"
       ]
     },
     "model": "api.user",
