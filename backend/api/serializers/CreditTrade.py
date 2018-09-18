@@ -117,9 +117,10 @@ class CreditTradeCreateSerializer(serializers.ModelSerializer):
                             reason='Other'):
                 if not will_create_a_comment:
                     raise serializers.ValidationError({
-                        'forbidden': "Cannot propose a trade with zero-reason "
-                                     "'Other' without creating an explanatory "
-                                     "comment'"
+                        'forbidden': "Please provide an explanation in the "
+                                     "comments as to why the Credit Transfer "
+                                     "Proposal has a fair market value of zero "
+                                     "dollars per credit."
                     })
 
         if credit_trade_status not in allowed_statuses:
