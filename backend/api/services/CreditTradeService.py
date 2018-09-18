@@ -5,6 +5,7 @@ from django.core.exceptions import ValidationError
 from django.db.models import Q
 from django.db import transaction
 
+from api.models.CompliancePeriod import CompliancePeriod
 from api.models.CreditTradeHistory import CreditTradeHistory
 from api.models.CreditTradeStatus import CreditTradeStatus
 from api.models.Organization import Organization
@@ -294,6 +295,21 @@ class CreditTradeService(object):
                 starting_balance = 0
 
         return index, starting_balance
+
+    @staticmethod
+    def get_compliance_period_id(credit_trade):
+        """
+        Gets the compliance period the effective date falls under
+        """
+        compliance_period = CompliancePeriod.objects.filter(
+            effective_date__lte=credit_trade.trade_effective_date,
+            expiration_date__gte=credit_trade.trade_effective_date
+        ).first()
+
+        if compliance_period is None:
+            return None
+
+        return compliance_period.id
 
     @staticmethod
     def update_temp_balance(storage, index, num_of_credits, organization_id):
