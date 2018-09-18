@@ -8,7 +8,7 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('api', '0028_government_of_bc_rename'),
+        ('api', '0027_auto_20180827_1414'),
     ]
 
     operations = [

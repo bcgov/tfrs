@@ -37,7 +37,7 @@ class Migration(migrations.Migration):
     Attaches the functions for the migrations
     """
     dependencies = [
-        ('api', '0027_auto_20180827_1414'),
+        ('api', '0028_notificationmessage_is_archived'),
     ]
 
     operations = [
