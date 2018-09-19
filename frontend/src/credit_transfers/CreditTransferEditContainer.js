@@ -134,7 +134,7 @@ class CreditTransferEditContainer extends Component {
       initiator: this.state.fields.initiator.id,
       note: this.state.fields.note,
       comment: this.state.fields.comment,
-      numberOfCredits: parseInt(this.state.fields.numberOfCredits, 10),
+      numberOfCredits: this.state.fields.numberOfCredits,
       respondent: this.state.fields.respondent.id,
       status: status.id,
       tradeEffectiveDate: null,
@@ -185,7 +185,7 @@ class CreditTransferEditContainer extends Component {
     // API data structure
     const data = {
       compliancePeriod: this.state.fields.compliancePeriod.id,
-      numberOfCredits: parseInt(this.state.fields.numberOfCredits, 10),
+      numberOfCredits: this.state.fields.numberOfCredits,
       respondent: this.state.fields.respondent.id,
       status: status.id,
       type: this.state.fields.tradeType.id
@@ -227,10 +227,6 @@ class CreditTransferEditContainer extends Component {
 
   _handleSubmit (event, status) {
     event.preventDefault();
-
-    if (!this._validateForm()) {
-      return false;
-    }
 
     this.setState({
       submitted: true
@@ -441,22 +437,6 @@ class CreditTransferEditContainer extends Component {
     this.setState({
       fields: fieldState
     });
-  }
-
-  _validateForm () {
-    const { numberOfCredits } = this.state.fields;
-
-    if (numberOfCredits % 1 !== 0) {
-      this.setState({
-        validationErrors: {
-          invalidNumberOfCredits: "Number of Credits can't have decimals."
-        }
-      });
-
-      return false;
-    }
-
-    return true;
   }
 
   /*
