@@ -124,7 +124,9 @@ class Navbar extends Component {
           >
             <span className="fa-layers">
               <FontAwesomeIcon icon="bell" />
-              <span className="fa-layers-counter">{unreadCount}</span>
+              {unreadCount > 0 &&
+                <span className="fa-layers-counter">{unreadCount}</span>
+              }
             </span>
           </NavLink>
         </div>
