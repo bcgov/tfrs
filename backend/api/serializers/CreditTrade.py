@@ -146,9 +146,10 @@ class CreditTradeCreateSerializer(serializers.ModelSerializer):
 
             if credit_trade_type not in allowed_types:
                 raise serializers.ValidationError({
-                    'zeroDollarReason': "Zero Dollar Reason is required "
-                                        "for Credit Transfers with 0 "
-                                        "Dollar per Credit"
+                    'zeroDollarReason': "Please select a reason as to "
+                                        "why the Credit Transfer Proposal "
+                                        "has a fair market value of zero "
+                                        "dollars per credit. "
                 })
 
         if data.get('fair_market_value_per_credit') is not None and \
@@ -392,9 +393,10 @@ class CreditTradeUpdateSerializer(serializers.ModelSerializer):
 
             if credit_trade_type not in allowed_types:
                 raise serializers.ValidationError({
-                    'zeroDollarReason': "Zero Dollar Reason is required "
-                                        "for Credit Transfers with 0 "
-                                        "Dollar per Credit"
+                    'zeroDollarReason': "Please select a reason as to "
+                                        "why the Credit Transfer Proposal "
+                                        "has a fair market value of zero "
+                                        "dollars per credit. "
                 })
 
         # If the type is a sell, make sure that the organization
