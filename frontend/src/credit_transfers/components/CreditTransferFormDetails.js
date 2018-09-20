@@ -7,6 +7,7 @@ import numeral from 'numeral';
 
 import * as NumberFormat from '../../constants/numeralFormats';
 import { CREDIT_TRANSFER_TYPES, ZERO_DOLLAR_REASON } from '../../constants/values';
+import FairMarketValueInput from '../../app/components/FairMarketValueInput';
 
 class CreditTransferFormDetails extends Component {
   enableZeroReason () {
@@ -76,20 +77,10 @@ class CreditTransferFormDetails extends Component {
           </div>
           <span>for </span>
           <div className="form-group">
-            <div className="input-group">
-              <span className="input-group-addon">$</span>
-              <input
-                type="number"
-                data-number-to-fixed="2"
-                className="form-control"
-                id="value-per-credit"
-                name="fairMarketValuePerCredit"
-                value={this.props.fields.fairMarketValuePerCredit}
-                placeholder="Amount"
-                onChange={this.props.handleInputChange}
-                required="required"
-              />
-            </div>
+            <FairMarketValueInput
+              handleInputChange={this.props.handleInputChange}
+              value={this.props.fields.fairMarketValuePerCredit}
+            />
           </div>
           <span>per credit for a total value of </span>
           <span>{numeral(this.props.totalValue).format(NumberFormat.CURRENCY)}</span>
