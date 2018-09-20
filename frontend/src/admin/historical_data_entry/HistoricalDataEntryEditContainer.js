@@ -76,10 +76,6 @@ class HistoricalDataEntryEditContainer extends Component {
   _handleSubmit (event) {
     event.preventDefault();
 
-    if (!this._validateForm()) {
-      return false;
-    }
-
     this.setState({
       submitted: true
     });
@@ -115,22 +111,6 @@ class HistoricalDataEntryEditContainer extends Component {
     }
 
     return this.props.addCommentToCreditTransfer(data);
-  }
-
-  _validateForm () {
-    const { numberOfCredits } = this.state.fields;
-
-    if (numberOfCredits % 1 !== 0) {
-      this.setState({
-        validationErrors: {
-          invalidNumberOfCredits: "Number of Credits can't have decimals."
-        }
-      });
-
-      return false;
-    }
-
-    return true;
   }
 
   changeObjectProp (id, name) {
