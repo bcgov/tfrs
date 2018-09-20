@@ -1,5 +1,6 @@
 const Webpack = require('webpack');
 const packageJson = require('./package.json');
+const Dotenv = require('dotenv-webpack');
 const path = require('path');
 
 const nodeModulesPath = path.resolve(__dirname, 'node_modules');
@@ -93,6 +94,9 @@ const config = {
   // We have to manually add the Hot Replacement plugin when running
   // from Node
   plugins: [
+    new Dotenv({
+      path: '../.env'
+    }),
     new Webpack.HotModuleReplacementPlugin(),
     new Webpack.DefinePlugin({
       __LOGOUT_TEST_URL__: JSON.stringify('https://logontest.gov.bc.ca/clp-cgi/logoff.cgi'),
