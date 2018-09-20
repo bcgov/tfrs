@@ -7,6 +7,7 @@ import numeral from 'numeral';
 
 import * as NumberFormat from '../../../constants/numeralFormats';
 
+import FairMarketValueInput from '../../../app/components/FairMarketValueInput';
 import { CREDIT_TRANSFER_TYPES, ZERO_DOLLAR_REASON } from '../../../constants/values';
 import HistoricalDataEntryFormNote from './HistoricalDataEntryFormNote';
 import HistoricalDataEntryFormButtons from './HistoricalDataEntryFormButtons';
@@ -33,7 +34,7 @@ const HistoricalDataEntryFormDetails = props => (
           </div>
 
           <div className="form-group">
-            <label htmlFor="transfer-type">Transfer Type:
+            <label htmlFor="transfer-type">Transaction Type:
               <div className="btn-group" role="group">
                 <button type="button" disabled={props.editMode} className={`btn btn-default ${(props.fields.transferType === CREDIT_TRANSFER_TYPES.sell.id.toString()) ? 'active' : ''}`} name="transferType" value={CREDIT_TRANSFER_TYPES.sell.id} onClick={props.handleInputChange}>Credit Transfer</button>
                 <button type="button" disabled={props.editMode} className={`btn btn-default ${(props.fields.transferType === CREDIT_TRANSFER_TYPES.part3Award.id.toString()) ? 'active' : ''}`} name="transferType" value={CREDIT_TRANSFER_TYPES.part3Award.id} onClick={props.handleInputChange}>Part 3 Award</button>
@@ -44,10 +45,10 @@ const HistoricalDataEntryFormDetails = props => (
           </div>
 
           <div className="form-group">
-            {![CREDIT_TRANSFER_TYPES.part3Award.id.toString(),
-              CREDIT_TRANSFER_TYPES.validation.id.toString()]
-              .includes(props.fields.transferType) &&
-              <label htmlFor="credits-from">Credits From:
+            <label htmlFor="credits-from">Credits From:
+              {![CREDIT_TRANSFER_TYPES.part3Award.id.toString(),
+                CREDIT_TRANSFER_TYPES.validation.id.toString()]
+                .includes(props.fields.transferType) &&
                 <select
                   className="form-control"
                   disabled={props.editMode}
@@ -65,20 +66,18 @@ const HistoricalDataEntryFormDetails = props => (
                       </option>
                     ))}
                 </select>
-              </label>
-            }
-            {[CREDIT_TRANSFER_TYPES.part3Award.id.toString(),
-              CREDIT_TRANSFER_TYPES.validation.id.toString()]
-              .includes(props.fields.transferType) &&
-              <label htmlFor="credits-from">Credits From:
+              }
+              {[CREDIT_TRANSFER_TYPES.part3Award.id.toString(),
+                CREDIT_TRANSFER_TYPES.validation.id.toString()]
+                .includes(props.fields.transferType) &&
                 <div id="credits-from" className="form-control">N/A</div>
-              </label>
-            }
+              }
+            </label>
           </div>
 
           <div className="form-group">
-            {props.fields.transferType !== CREDIT_TRANSFER_TYPES.retirement.id.toString() &&
             <label htmlFor="credits-to">Credits To:
+              {props.fields.transferType !== CREDIT_TRANSFER_TYPES.retirement.id.toString() &&
               <select
                 className="form-control"
                 disabled={props.editMode}
@@ -96,13 +95,11 @@ const HistoricalDataEntryFormDetails = props => (
                     </option>
                   ))}
               </select>
-            </label>
-            }
-            {props.fields.transferType === CREDIT_TRANSFER_TYPES.retirement.id.toString() &&
-            <label htmlFor="credits-to">Credits To:
+              }
+              {props.fields.transferType === CREDIT_TRANSFER_TYPES.retirement.id.toString() &&
               <div id="credits-to" className="form-control">N/A</div>
+              }
             </label>
-            }
           </div>
 
           <div className="form-group">
@@ -144,56 +141,49 @@ const HistoricalDataEntryFormDetails = props => (
           </div>
 
           <div className="form-group">
-            {![CREDIT_TRANSFER_TYPES.part3Award.id.toString(),
-              CREDIT_TRANSFER_TYPES.validation.id.toString(),
-              CREDIT_TRANSFER_TYPES.retirement.id.toString()].includes(props.fields.transferType) &&
-              <label htmlFor="dollar-per-credit">Dollar per Credit:
-                <input
-                  type="number"
-                  data-number-to-fixed="2"
-                  className="form-control"
-                  id="dollar-per-credit"
-                  name="fairMarketValuePerCredit"
+            <label htmlFor="value-per-credit">Dollar per Credit:
+              {![CREDIT_TRANSFER_TYPES.part3Award.id.toString(),
+                CREDIT_TRANSFER_TYPES.validation.id.toString(),
+                CREDIT_TRANSFER_TYPES.retirement.id.toString()
+              ].includes(props.fields.transferType) &&
+                <FairMarketValueInput
+                  handleInputChange={props.handleInputChange}
                   value={props.fields.fairMarketValuePerCredit}
-                  placeholder="Amount"
-                  onChange={props.handleInputChange}
-                  required="required"
                 />
-              </label>
-            }
-            {[CREDIT_TRANSFER_TYPES.part3Award.id.toString(),
-              CREDIT_TRANSFER_TYPES.validation.id.toString(),
-              CREDIT_TRANSFER_TYPES.retirement.id.toString()].includes(props.fields.transferType) &&
-              <label htmlFor="dollar-per-credit">Dollar per Credit:
+              }
+              {[CREDIT_TRANSFER_TYPES.part3Award.id.toString(),
+                CREDIT_TRANSFER_TYPES.validation.id.toString(),
+                CREDIT_TRANSFER_TYPES.retirement.id.toString()
+              ].includes(props.fields.transferType) &&
                 <div className="form-control dollar-per-credit">None</div>
-              </label>
-            }
+              }
+            </label>
           </div>
 
           <div className="form-group">
-            {![CREDIT_TRANSFER_TYPES.part3Award.id.toString(),
-              CREDIT_TRANSFER_TYPES.validation.id.toString(),
-              CREDIT_TRANSFER_TYPES.retirement.id.toString()].includes(props.fields.transferType) &&
-              <label htmlFor="dollar-per-credit">...for a total of:
+            <label htmlFor="dollar-per-credit">For a total of:
+              {![CREDIT_TRANSFER_TYPES.part3Award.id.toString(),
+                CREDIT_TRANSFER_TYPES.validation.id.toString(),
+                CREDIT_TRANSFER_TYPES.retirement.id.toString()
+              ].includes(props.fields.transferType) &&
                 <div
                   id="dollar-per-credit"
                   className="form-control dollar-per-credit"
                 >
-                  {numeral(props.totalValue).format(NumberFormat.CURRENCY)} *
+                  {numeral(props.totalValue).format(NumberFormat.CURRENCY)}
                 </div>
-              </label>
-            }
-            {[CREDIT_TRANSFER_TYPES.part3Award.id.toString(),
-              CREDIT_TRANSFER_TYPES.validation.id.toString(),
-              CREDIT_TRANSFER_TYPES.retirement.id.toString()].includes(props.fields.transferType) &&
-              <label htmlFor="dollar-per-credit">...for a total of:
+              }
+              {[CREDIT_TRANSFER_TYPES.part3Award.id.toString(),
+                CREDIT_TRANSFER_TYPES.validation.id.toString(),
+                CREDIT_TRANSFER_TYPES.retirement.id.toString()
+              ].includes(props.fields.transferType) &&
                 <div className="form-control dollar-per-credit">N/A</div>
-              </label>
-            }
+              }
+            </label>
           </div>
 
           <div className="form-group">
-            <label htmlFor="transfer-type">Zero Dollar Reason: **
+            <label htmlFor="transfer-type">Zero Dollar Reason: *
               <div className="btn-group zero-reason" role="group">
                 <button type="button" className={`btn btn-default ${(props.fields.zeroDollarReason === ZERO_DOLLAR_REASON.affiliate.id.toString()) ? 'active' : ''}`} disabled={props.fields.transferType !== CREDIT_TRANSFER_TYPES.sell.id.toString() || parseFloat(props.fields.fairMarketValuePerCredit) > 0} name="zeroDollarReason" value={ZERO_DOLLAR_REASON.affiliate.id} onClick={props.handleInputChange}>Affiliate</button>
                 <button type="button" className={`btn btn-default ${(props.fields.zeroDollarReason === ZERO_DOLLAR_REASON.other.id.toString()) ? 'active' : ''}`} disabled={props.fields.transferType !== CREDIT_TRANSFER_TYPES.sell.id.toString() || parseFloat(props.fields.fairMarketValuePerCredit) > 0} name="zeroDollarReason" value={ZERO_DOLLAR_REASON.other.id} onClick={props.handleInputChange}>Other</button>
@@ -225,8 +215,7 @@ const HistoricalDataEntryFormDetails = props => (
       <div className="row">
         <div className="col-md-12">
           <div className="form-group">
-            <div>* Does not include GST</div>
-            <div>** Optional if not a Zero Dollar transaction</div>
+            <div>* Optional if not a Zero Dollar transaction</div>
           </div>
         </div>
       </div>
