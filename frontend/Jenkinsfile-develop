@@ -39,17 +39,17 @@
         echo "Building Frontend..."
 	    openshiftBuild bldCfg: 'client-develop-angular-app-build', showBuildLogs: 'true'
         openshiftBuild bldCfg: 'client-develop', showBuildLogs: 'true'
-        echo ">> Getting Image Hash"
+        echo ">> Getting Image Hash for frontend"
         IMAGE_HASH_FRONTEND = sh (
             script: 'oc get istag client-develop:latest -o template --template="{{.image.dockerImageReference}}"|awk -F ":" \'{print $3}\'',
  	            returnStdout: true).trim()
         echo ">> IMAGE_HASH_FRONTEND: $IMAGE_HASH_FRONTEND"
-    
+
         echo "Building Notification..."
-	    openshiftBuild bldCfg: 'notification-develop', showBuildLogs: 'true'
-        echo ">> Getting Image Hash"
+	    openshiftBuild bldCfg: 'notification-server-develop', showBuildLogs: 'true'
+        echo ">> Getting Image Hash for notification server"
         IMAGE_HASH_NOTIFICATION = sh (
-            script: 'oc get istag notification-develop:latest -o template --template="{{.image.dockerImageReference}}"|awk -F ":" \'{print $3}\'',
+            script: 'oc get istag notification-server-develop:latest -o template --template="{{.image.dockerImageReference}}"|awk -F ":" \'{print $3}\'',
  	            returnStdout: true).trim()
         echo ">> IMAGE_HASH_NOTIFICATION: $IMAGE_HASH_NOTIFICATION"
     }
@@ -59,10 +59,10 @@
         openshiftTag destStream: 'client-develop', verbose: 'true', destTag: 'dev', srcStream: 'client-develop', srcTag: "${IMAGE_HASH_FRONTEND}"
         sh 'sleep 10s'
 	    openshiftVerifyDeployment depCfg: 'client', namespace: 'mem-tfrs-dev', replicaCount: 1, verbose: 'false'
-        
-        openshiftTag destStream: 'notification-develop', verbose: 'true', destTag: 'dev', srcStream: 'notification-develop', srcTag: "${IMAGE_HASH_NOTIFICATION}"
+
+        openshiftTag destStream: 'notification-server-develop', verbose: 'true', destTag: 'dev', srcStream: 'notification-server-develop', srcTag: "${IMAGE_HASH_NOTIFICATION}"
         sh 'sleep 10s'
-	    openshiftVerifyDeployment depCfg: 'notification', namespace: 'mem-tfrs-dev', replicaCount: 1, verbose: 'false'
+	    openshiftVerifyDeployment depCfg: 'notification-server', namespace: 'mem-tfrs-dev', replicaCount: 1, verbose: 'false'
     }
 
     } //end of node
