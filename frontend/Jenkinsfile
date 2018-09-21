@@ -17,28 +17,40 @@ podTemplate(label: "master-frontend-maven-${env.BUILD_NUMBER}", name: "master-fr
 node("master-frontend-maven-${env.BUILD_NUMBER}") {
 	
     stage('Build') {
-        echo "Building..."
-	openshiftBuild bldCfg: 'client-angular-app-build', showBuildLogs: 'true'
+        echo "Building Frontend..."
+	    openshiftBuild bldCfg: 'client-angular-app-build', showBuildLogs: 'true'
         openshiftBuild bldCfg: 'client', showBuildLogs: 'true'
         echo ">> Getting Image Hash"
-        IMAGE_HASH = sh (
+        IMAGE_HASH_FRONTEND = sh (
             script: 'oc get istag client:latest -o template --template="{{.image.dockerImageReference}}"|awk -F ":" \'{print $3}\'',
  	            returnStdout: true).trim()
-        echo ">> IMAGE_HASH: $IMAGE_HASH"
+        echo ">> IMAGE_HASH_FRONTEND: $IMAGE_HASH_FRONTEND"
+
+        echo "Building Notification..."
+	    openshiftBuild bldCfg: 'notification', showBuildLogs: 'true'
+        echo ">> Getting Image Hash"
+        IMAGE_HASH_NOTIFICATION = sh (
+            script: 'oc get istag notification:latest -o template --template="{{.image.dockerImageReference}}"|awk -F ":" \'{print $3}\'',
+ 	            returnStdout: true).trim()
+        echo ">> IMAGE_HASH_NOTIFICATION: $IMAGE_HASH_NOTIFICATION"
     }
 
     stage('Deploy on Test') {
-	input "Deploy to Test?"
+	    input "Deploy to Test?"
         echo "Deploying to Test..."
-        openshiftTag destStream: 'client', verbose: 'true', destTag: 'test', srcStream: 'client', srcTag: "${IMAGE_HASH}"
+        openshiftTag destStream: 'client', verbose: 'true', destTag: 'test', srcStream: 'client', srcTag: "${IMAGE_HASH_FRONTEND}"
         openshiftVerifyDeployment depCfg: 'client', namespace: 'mem-tfrs-test', replicaCount: 1, verbose: 'false'
+        openshiftTag destStream: 'notification', verbose: 'true', destTag: 'test', srcStream: 'notification', srcTag: "${IMAGE_HASH_NOTIFICATION}"
+        openshiftVerifyDeployment depCfg: 'notification', namespace: 'mem-tfrs-test', replicaCount: 1, verbose: 'false'
     }
 	
     stage('Deploy on Prod') {
 	 input "Deploy to Prod?"
         echo "Deploying to Prod..."
-        openshiftTag destStream: 'client', verbose: 'true', destTag: 'prod', srcStream: 'client', srcTag: "${IMAGE_HASH}"
+        openshiftTag destStream: 'client', verbose: 'true', destTag: 'prod', srcStream: 'client', srcTag: "${IMAGE_HASH_FRONTEND}"
         openshiftVerifyDeployment depCfg: 'client', namespace: 'mem-tfrs-prod', replicaCount: 1, verbose: 'false'
+        openshiftTag destStream: 'notification', verbose: 'true', destTag: 'prod', srcStream: 'notification', srcTag: "${IMAGE_HASH_NOTIFICATION}"
+        openshiftVerifyDeployment depCfg: 'notification', namespace: 'mem-tfrs-prod', replicaCount: 1, verbose: 'false'
     }	
 } //end of node
 
