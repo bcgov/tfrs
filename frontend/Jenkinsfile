@@ -40,8 +40,10 @@ node("master-frontend-maven-${env.BUILD_NUMBER}") {
 	    input "Deploy to Test?"
         echo "Deploying to Test..."
         openshiftTag destStream: 'client', verbose: 'true', destTag: 'test', srcStream: 'client', srcTag: "${IMAGE_HASH_FRONTEND}"
+        sh 'sleep 10s'
         openshiftVerifyDeployment depCfg: 'client', namespace: 'mem-tfrs-test', replicaCount: 1, verbose: 'false'
         openshiftTag destStream: 'notification-server', verbose: 'true', destTag: 'test', srcStream: 'notification-server', srcTag: "${IMAGE_HASH_NOTIFICATION}"
+        sh 'sleep 10s'
         openshiftVerifyDeployment depCfg: 'notification-server', namespace: 'mem-tfrs-test', replicaCount: 1, verbose: 'false'
     }
 	
@@ -49,8 +51,10 @@ node("master-frontend-maven-${env.BUILD_NUMBER}") {
 	    input "Deploy to Prod?"
         echo "Deploying to Prod..."
         openshiftTag destStream: 'client', verbose: 'true', destTag: 'prod', srcStream: 'client', srcTag: "${IMAGE_HASH_FRONTEND}"
+        sh 'sleep 10s'
         openshiftVerifyDeployment depCfg: 'client', namespace: 'mem-tfrs-prod', replicaCount: 1, verbose: 'false'
         openshiftTag destStream: 'notification-server', verbose: 'true', destTag: 'prod', srcStream: 'notification-server', srcTag: "${IMAGE_HASH_NOTIFICATION}"
+        sh 'sleep 10s'
         openshiftVerifyDeployment depCfg: 'notification-server', namespace: 'mem-tfrs-prod', replicaCount: 1, verbose: 'false'
     }	
 } //end of node
