@@ -5,8 +5,8 @@ import geb.Module
 /**
  * Contains objects and methods for interacting with modal pages.
  *
- * Due to the nature of modal windows opening without a url change, and often with some delay for a smoother user experience, it is important to call #isOpen() once before interacting with the modal in any way.
- * Likewise, call #isClosed() once after all modal interactions, one of which should close the modal, to ensure the modal has fully closed.
+ * Due to the nature of modal windows opening without a url change, and often with some delay for a smoother user experience, it is important to call isOpen() once before interacting with the modal in any way.
+ * Likewise, call isClosed() once after all modal interactions, one of which should close the modal, to ensure the modal has fully closed.
  */
 class ModalModule extends Module {
   static content = {

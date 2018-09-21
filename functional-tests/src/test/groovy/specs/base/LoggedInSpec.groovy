@@ -24,7 +24,9 @@ abstract class LoggedInSpec extends GebReportingSpec implements Login, Utils {
   abstract String getPassword()
 
   /**
-   * Setup that runs before each test
+   * Setup that runs before each test.
+   *
+   * Logs the specified user in.
    */
   void setup() {
     login(getUsername(), getPassword())
@@ -32,6 +34,8 @@ abstract class LoggedInSpec extends GebReportingSpec implements Login, Utils {
 
   /**
    * Cleanup that runs after each test.
+   *
+   * Clears and restarts the browser, the next test will open in a new browser.
    */
   void cleanup() {
     clearAndResetBrowser()

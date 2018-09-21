@@ -20,6 +20,8 @@ class ExternalLinkPage extends Page {
   private def simpleName
 
     /**
+     * Constructor.
+     *
      * @param String windowTitleRegex a regex string that is uniquely contained within the target window title.
      * @param String urlRegex a regex string that will be asserted is contained in the target window url.
      *
