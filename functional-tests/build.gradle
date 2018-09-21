@@ -3,6 +3,7 @@ import org.apache.tools.ant.taskdefs.condition.Os
 plugins {
     id "idea"
     id "groovy"
+    id "codenarc"
     id "com.energizedwork.webdriver-binaries" version "1.0"
     id "com.energizedwork.idea-base" version "1.2"
 }
@@ -99,6 +100,16 @@ test {
     enabled = false
 }
 
+codenarc {
+    toolVersion = '1.2.1'
+    reportFormat = 'html'
+}
+
+codenarcTest {
+    ignoreFailures = true
+    configFile = file("${projectDir}/codenarc.properties")
+}
+
 tasks.withType(Test) {
     maxHeapSize = "1g"
     jvmArgs '-XX:MaxMetaspaceSize=128m'
@@ -112,4 +123,15 @@ tasks.withType(Test) {
 
 tasks.withType(GroovyCompile) {
     groovyOptions.forkOptions.memoryMaximumSize = '256m'
+}
+
+sourceSets {
+    test {
+        groovy {
+            srcDirs = ["src/test/groovy"]
+        }
+        resources {
+            srcDirs = ["src/test/resources"]
+        }
+    }
 }

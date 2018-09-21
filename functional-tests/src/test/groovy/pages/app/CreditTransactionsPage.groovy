@@ -1,12 +1,12 @@
 package pages
 
 class CreditTransactionsPage extends BaseAppPage {
-  static at = { isReactReady() && pageTitle.text() == "Credit Transactions" }
-  static url = "/credit_transactions"
+  static at = { isReactReady() && pageTitle.text() == 'Credit Transactions' }
+  static url = '/credit_transactions'
   static content = {
-    pageTitle { $("#main .page_credit_transactions h1") }
+    pageTitle { $('#main .page_credit_transactions h1') }
 
-    newTransferButton { $("#credit-transfer-new-transfer") }
+    newTransferButton { $('#credit-transfer-new-transfer') }
   }
 
   /**
@@ -15,6 +15,6 @@ class CreditTransactionsPage extends BaseAppPage {
    * @throws NumberFormatException if the parsed credit balance string fails to be casted to an Integer.
    */
   Integer getCreditBalance() {
-    return creditBalance.text().replace(/[^0-9]/, "") as Integer
+    creditBalance.text().replace(/[^0-9]/, '') as Integer
   }
 }

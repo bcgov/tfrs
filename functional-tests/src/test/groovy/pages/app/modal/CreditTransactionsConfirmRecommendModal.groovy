@@ -1,13 +1,13 @@
 package pages
 
 class CreditTransactionsConfirmRecommendModal extends BaseAppPage {
-  static at = { pageTitle.text() == "Confirmation" }
+  static at = { pageTitle.text() == 'Confirmation' }
   static content = {
-    modalSelector { $("#confirmRecommend") }
+    modalSelector { $('#confirmRecommend') }
 
-    pageTitle { modalSelector.$(".modal-header h4") }
+    pageTitle { modalSelector.$('.modal-header h4') }
 
-    yesButton { modalSelector.$("#modal-yes") }
+    yesButton { modalSelector.$('#modal-yes') }
   }
 
   /**
@@ -15,7 +15,7 @@ class CreditTransactionsConfirmRecommendModal extends BaseAppPage {
    * Clicks the 'Yes' button.
    * Waits for the modal window to close.
    */
-  def recommendCreditTransaction() {
+  void recommendCreditTransaction() {
     modalModule.isOpen(modalSelector)
     yesButton.click()
     modalModule.isClosed()

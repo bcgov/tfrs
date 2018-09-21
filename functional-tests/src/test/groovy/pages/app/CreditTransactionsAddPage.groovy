@@ -1,23 +1,23 @@
 package pages
 
 class CreditTransactionsAddPage extends BaseAppPage {
-  static at = { isReactReady() && pageTitle.text() == "New Credit Transfer" }
-  static url = "/credit_transactions/add"
+  static at = { isReactReady() && pageTitle.text() == 'New Credit Transfer' }
+  static url = '/credit_transactions/add'
   static content = {
-    pageTitle { $("#main .credit-transfer h1") }
+    pageTitle { $('#main .credit-transfer h1') }
 
-    transactionTypeDropdown { $("#proposal-type") }
-    numberOfCreditsField { $("#number-of-credits") }
-    respondentField { $("#respondent") }
-    pricePerCreditField { $("#value-per-credit") }
-    commentField { $("#credit-transfer-comment") }
+    transactionTypeDropdown { $('#proposal-type') }
+    numberOfCreditsField { $('#number-of-credits') }
+    respondentField { $('#respondent') }
+    pricePerCreditField { $('#value-per-credit') }
+    commentField { $('#credit-transfer-comment') }
 
-    termsCheckboxes { $("#credit-transfer-term") }
-    signButton { $("#credit-transfer-sign") }
+    termsCheckboxes { $('#credit-transfer-term') }
+    signButton { $('#credit-transfer-sign') }
   }
 
   void setTransactionType(String type) {
-    transactionTypeDropdown.$("option", text: type).click()
+    transactionTypeDropdown.$('option', text:type).click()
   }
 
   void setNumberOfCredits(int credits) {
@@ -25,7 +25,7 @@ class CreditTransactionsAddPage extends BaseAppPage {
   }
 
   void setRespondent(String respondent) {
-    respondentField.$("option", text: respondent).click()
+    respondentField.$('option', text:respondent).click()
   }
 
   void setPricePerCredit(int price) {

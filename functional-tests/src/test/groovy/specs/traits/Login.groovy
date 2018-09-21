@@ -1,7 +1,5 @@
 package traits
 
-import traits.Users
-
 import pages.LoginPage
 import pages.HomePage
 
@@ -16,7 +14,7 @@ trait Login implements Users {
    * @param username the login username
    * @param password the login password
    */
-  def login(String username, String password) {
+  void login(String username, String password) {
     to LoginPage
 
     usernameField.value(username)
@@ -27,37 +25,37 @@ trait Login implements Users {
     at HomePage
   }
 
-  def logInAsSendingFuelSupplier() {
-    if (getBaseUrl() =~ "localhost") {
-      setBaseUrl("http://localhost:5001/")
-      go()
+  void logInAsSendingFuelSupplier() {
+    if (getBaseUrl() =~ 'localhost') {
+      setBaseUrl('http://localhost:5001/')
+      to HomePage
     } else {
       login(getSendingFuelSupplier())
     }
   }
 
-  def logInAsReceivingFuelSupplier() {
-    if (getBaseUrl() =~ "localhost") {
-      setBaseUrl("http://localhost:5002/")
-      go()
+  void logInAsReceivingFuelSupplier() {
+    if (getBaseUrl() =~ 'localhost') {
+      setBaseUrl('http://localhost:5002/')
+      to HomePage
     } else {
       login(getReceivingFuelSupplier())
     }
   }
 
-  def logInAsAnalyst() {
-    if (getBaseUrl() =~ "localhost") {
-      setBaseUrl("http://localhost:5004/")
-      go()
+  void logInAsAnalyst() {
+    if (getBaseUrl() =~ 'localhost') {
+      setBaseUrl('http://localhost:5004/')
+      to HomePage
     } else {
       login(getAnalyst())
     }
   }
 
-  def logInAsDirector() {
-    if (getBaseUrl() =~ "localhost") {
-      setBaseUrl("http://localhost:5005/")
-      go()
+  void logInAsDirector() {
+    if (getBaseUrl() =~ 'localhost') {
+      setBaseUrl('http://localhost:5005/')
+      to HomePage
     } else {
       login(getDirector())
     }

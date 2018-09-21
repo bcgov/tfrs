@@ -13,7 +13,7 @@ import modules.FooterModule
  *
  * All pages should extend this page.
  */
-class BaseAppPage extends Page implements ReactJSAware{
+class BaseAppPage extends Page implements ReactJSAware {
   static content = {
     headerModule { module(HeaderModule) }
     modalModule { module(ModalModule) }

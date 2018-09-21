@@ -3,7 +3,6 @@ package pages
 import org.openqa.selenium.NoSuchWindowException
 
 import geb.Page
-import geb.Browser
 
 /**
  * Generic page that represents an external page.
@@ -14,38 +13,36 @@ import geb.Browser
  *   at new ExternalLinkPage('Fuel Info', 'gov\\.bc\\.ca\\/fuelfacts')
  */
 class ExternalLinkPage extends Page {
-  private def windowTitleRegex
-  private def urlRegex
-
-  private def simpleName
-
-    /**
-     * Constructor.
-     *
-     * @param String windowTitleRegex a regex string that is uniquely contained within the target window title.
-     * @param String urlRegex a regex string that will be asserted is contained in the target window url.
-     *
-     * Example:
-     *   The urlRegex 'someMinistry\\.gov\\.bc' would match 'www.someMinistry.gov.bc.ca/otherParameters'
-     */
-    ExternalLinkPage(windowTitleRegex, urlRegex, simpleName="ExternalLinkPage") {
-      this.windowTitleRegex = windowTitleRegex.trim()
-      this.urlRegex = urlRegex.trim()
-
-      this.simpleName = simpleName
-    }
-
   static at = {
-    def result
+    Boolean result
 
     // covers a rare issue where the main thread can sometimes hang indefinitely when dealing with multiple windows.
     // with a separate thread, if it hangs, the test will fail but the remaining test execution can continue.
-    def thread = Thread.start {
+    Thread thread = Thread.start {
       result = foundTargetWindow()
     }
     thread.join()
 
     result == true
+  }
+
+  private final String windowTitleRegex
+  private final String urlRegex
+  private final String simpleName
+
+  /**
+   * Constructor.
+   *
+   * @param String windowTitleRegex a regex string that is uniquely contained within the target window title.
+   * @param String urlRegex a regex string that will be asserted is contained in the target window url.
+   *
+   * Example:
+   *   The urlRegex 'someMinistry\\.gov\\.bc' would match 'www.someMinistry.gov.bc.ca/otherParameters'
+   */
+  ExternalLinkPage(String windowTitleRegex, String urlRegex, String simpleName='ExternalLinkPage') {
+    this.windowTitleRegex = windowTitleRegex.trim()
+    this.urlRegex = urlRegex.trim()
+    this.simpleName = simpleName
   }
 
   /**
@@ -66,7 +63,8 @@ class ExternalLinkPage extends Page {
     } catch (NoSuchWindowException e) {
       /**
        * Unable to find a window based on title.
-       * Either the expected title is incorrect, or the window is rendering a pdf, which depending on the browser type may not have a window title.
+       * Either the expected title is incorrect, or the window is rendering a pdf, which depending on the browser type
+       *  may not have a window title.
        * Loop through all open windows and try to find the expected window based on url only.
        *
        * Note: Chrome currently does not expose a window title when rendering PDFs.
@@ -89,7 +87,7 @@ class ExternalLinkPage extends Page {
    * Returns true if multiple windows (or tabs) are open, false otherwise.
    */
   Boolean shouldCloseWindow() {
-    return browser.getAvailableWindows().size() > 1
+    browser.getAvailableWindows().size() > 1
   }
 
   /**
@@ -98,6 +96,6 @@ class ExternalLinkPage extends Page {
    *  - Calling getSimpleName() on an instance of a class throws an exception.
    */
   String getSimpleName() {
-    return simpleName
+    simpleName
   }
 }

@@ -10,7 +10,7 @@ trait Utils {
    * Clears the browser and closes it.
    * The next spec to run will open a fresh browser instance.
    */
-  def clearAndResetBrowser() {
+  void clearAndResetBrowser() {
     resetBrowser()
     CachingDriverFactory.clearCacheAndQuitDriver()
   }

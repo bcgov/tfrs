@@ -7,15 +7,15 @@ import geb.Module
  */
 class HeaderModule extends Module {
   static content = {
-    bcLogo { $("#logo") }
+    bcLogo { $('#logo') }
 
-    usernameButton { $("#display-name-button") }
-    userOrganization { $("#user_organization") }
+    usernameButton { $('#display-name-button') }
+    userOrganization { $('#user_organization') }
 
-    notificationButton { $("#navbar-notifications") }
-    notificationCountIcon { $("#navbar-notifications").$("span.fa-layers-counter") }
+    notificationButton { $('#navbar-notifications') }
+    notificationCountIcon { $('#navbar-notifications').$('span.fa-layers-counter') }
 
-    headerNavigationBar { $("#header #header-main .navigationRibbon .level2Navigation .container") }
+    headerNavigationBar { $('#header #header-main .navigationRibbon .level2Navigation .container') }
   }
 
   /**
@@ -23,7 +23,7 @@ class HeaderModule extends Module {
    * @param [text:'header link text'] the displayed text of the header menu anchor tag.
    */
   void clickMenuItem(Map<String, Object> itemSelector) {
-    headerNavigationBar.$(itemSelector, "a").click()
+    headerNavigationBar.$(itemSelector, 'a').click()
   }
 
   /**
@@ -32,6 +32,6 @@ class HeaderModule extends Module {
    * @throws NumberFormatException if the parsed notification count string fails to be casted to an Integer.
    */
   Integer getNotificationCount() {
-    return notificationCountIcon.text().replace(/[^0-9]/, "") as Integer
+    notificationCountIcon.text().replace(/[^0-9]/, '') as Integer
   }
 }

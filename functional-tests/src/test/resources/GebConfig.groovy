@@ -98,7 +98,7 @@ baseNavigatorWaiting = true
 
 // Allows for setting you baseurl in an environment variable.
 // This is particularly handy for development and the pipeline
-def env = System.getenv()
+Map env = System.getenv()
 baseUrl = env['BASEURL']
 if (!baseUrl) {
   baseUrl = "https://dev.lowcarbonfuels.gov.bc.ca/"

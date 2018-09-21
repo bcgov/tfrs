@@ -7,7 +7,7 @@ import geb.Module
  */
 class FooterModule extends Module {
   static content = {
-    footerBar { $("#footer #footerAdminLinks") }
+    footerBar { $('#footer #footerAdminLinks') }
   }
 
   /**
@@ -15,6 +15,6 @@ class FooterModule extends Module {
    * @param [text:'footer link text'] the displayed text of the footer menu anchor tag.
    */
   void clickMenuItem(Map<String, Object> itemSelector) {
-    footerBar.$(itemSelector, "a").click()
+    footerBar.$(itemSelector, 'a').click()
   }
 }
