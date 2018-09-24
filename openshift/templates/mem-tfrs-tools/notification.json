@@ -1,0 +1,264 @@
+{
+    "kind": "Template",
+    "apiVersion": "v1",
+    "metadata": {
+        "name": "notification",
+        "creationTimestamp": null
+    },
+    "objects": [
+        {
+            "kind": "ImageStream",
+            "apiVersion": "v1",
+            "metadata": {
+                "name": "rabbitmq-tfrs",
+                "generation": 1,
+                "creationTimestamp": null
+            },
+            "spec": {
+                "lookupPolicy": {
+                    "local": false
+                },
+                "tags": [
+                    {
+                        "name": "latest",
+                        "annotations": null,
+                        "from": {
+                            "kind": "DockerImage",
+                            "name": "docker-registry.default.svc:5000/mem-tfrs-tools/rabbitmq-tfrs:latest"
+                        },
+                        "generation": null,
+                        "importPolicy": {},
+                        "referencePolicy": {
+                            "type": ""
+                        }
+                    }
+                ]
+            },
+            "status": {
+                "dockerImageRepository": ""
+            }
+        },
+        {
+            "kind": "ImageStream",
+            "apiVersion": "v1",
+            "metadata": {
+                "name": "notification-server",
+                "generation": 1,
+                "creationTimestamp": null
+            },
+            "spec": {
+                "lookupPolicy": {
+                    "local": false
+                },
+                "tags": [
+                    {
+                        "name": "latest",
+                        "annotations": null,
+                        "from": {
+                            "kind": "DockerImage",
+                            "name": "docker-registry.default.svc:5000/mem-tfrs-tools/notification-server:latest"
+                        },
+                        "generation": null,
+                        "importPolicy": {},
+                        "referencePolicy": {
+                            "type": ""
+                        }
+                    }
+                ]
+            },
+            "status": {
+                "dockerImageRepository": ""
+            }
+        },
+        {
+            "kind": "ImageStream",
+            "apiVersion": "v1",
+            "metadata": {
+                "name": "notification-server-develop",
+                "generation": 2,
+                "creationTimestamp": null
+            },
+            "spec": {
+                "lookupPolicy": {
+                    "local": false
+                },
+                "tags": [
+                    {
+                        "name": "dev",
+                        "annotations": null,
+                        "from": {
+                            "kind": "DockerImage",
+                            "name": "docker-registry.default.svc:5000/mem-tfrs-tools/notification-server-develop:dev"
+                        },
+                        "generation": 2,
+                        "importPolicy": {},
+                        "referencePolicy": {
+                            "type": "Source"
+                        }
+                    },
+                    {
+                        "name": "latest",
+                        "annotations": null,
+                        "from": {
+                            "kind": "DockerImage",
+                            "name": "docker-registry.default.svc:5000/mem-tfrs-tools/notification-server-develop:latest"
+                        },
+                        "generation": null,
+                        "importPolicy": {},
+                        "referencePolicy": {
+                            "type": ""
+                        }
+                    }
+                ]
+            },
+            "status": {
+                "dockerImageRepository": ""
+            }
+        },
+        {
+            "kind": "BuildConfig",
+            "apiVersion": "v1",
+            "metadata": {
+                "name": "rabbitmq-tfrs",
+                "creationTimestamp": null
+            },
+            "spec": {
+                "triggers": [],
+                "runPolicy": "Serial",
+                "source": {
+                    "type": "Dockerfile",
+                    "dockerfile": "FROM rabbitmq:3.7.7-management\nRUN apt-get update\nRUN apt-get install -y gettext-base\nARG ADMIN_PASSWORD\nARG TFRS_PASSWORD\nRUN echo \"H4sICHQioFsCA2RlZmluaXRpb25zLnN0cmlwcGVkLmpzb24AtVLLasMwELz7K4zpqQQXWtpAb4FQ6KEP4kIPpZiNLUsCWzLSKmkx/vdKwrYgNukpF4FmdjWzs+qiOE4U7Pcc8wNRmkuRPMbJXbpO18nKkUZb2GJf9hLHnT8tLKAhrhLKhgtf6eEWtD5KVTrqarN9eX7N3zdZ9vm224YiBppxQXOoqVQcWeOqBxPjA/lYpBnc3j+EZgSqJ2GuUQFKlXi2Xy17xMpOsGzx42mXXcrhYMqe3z7JA5Maz0R5432eNLVENVy7vSx0ut3MB/Q64cEJL6SoODXKi6XXgTjaEWegIlAO2GK4o/bJB7iQ+JQH+SkYCErO5Cgk8ooXgD60f53hb+vbKhDSYMBLYxdeOwqVIRMMBmVekpp41xXUOnBcIFEC6hkBipqGCL/9rg8jRX30B3tV1p2CAwAA\" | base64 -d | gunzip - | envsubst \u003e /etc/rabbitmq/definitions.json"
+                },
+                "strategy": {
+                    "type": "Docker",
+                    "dockerStrategy": {
+                        "env": [
+                            {
+                                "name": "ADMIN_PASSWORD",
+                                "valueFrom": {
+                                    "secretKeyRef": {
+                                        "name": "rabbitmq",
+                                        "key": "password"
+                                    }
+                                }
+                            },
+                            {
+                                "name": "TFRS_PASSWORD",
+                                "valueFrom": {
+                                    "secretKeyRef": {
+                                        "name": "rabbitmq",
+                                        "key": "password"
+                                    }
+                                }
+                            }
+                        ]
+                    }
+                },
+                "output": {
+                    "to": {
+                        "kind": "ImageStreamTag",
+                        "name": "rabbitmq-tfrs:latest"
+                    }
+                },
+                "resources": {},
+                "postCommit": {},
+                "nodeSelector": null
+            },
+            "status": {
+                "lastVersion": 0
+            }
+        },
+        {
+            "kind": "BuildConfig",
+            "apiVersion": "v1",
+            "metadata": {
+                "name": "notification-server",
+                "creationTimestamp": null,
+                "labels": {
+                    "build": "notification-server"
+                }
+            },
+            "spec": {
+                "triggers": [],
+                "runPolicy": "Serial",
+                "source": {
+                    "type": "Git",
+                    "git": {
+                        "uri": "https://github.com/bcgov/tfrs.git",
+                        "ref": "v1.0.7"
+                    },
+                    "contextDir": "frontend"
+                },
+                "strategy": {
+                    "type": "Source",
+                    "sourceStrategy": {
+                        "from": {
+                            "kind": "ImageStreamTag",
+                            "namespace": "openshift",
+                            "name": "nodejs:8"
+                        }
+                    }
+                },
+                "output": {
+                    "to": {
+                        "kind": "ImageStreamTag",
+                        "name": "notification-server:latest"
+                    }
+                },
+                "resources": {},
+                "postCommit": {},
+                "nodeSelector": null
+            },
+            "status": {
+                "lastVersion": 0
+            }
+        },
+        {
+            "kind": "BuildConfig",
+            "apiVersion": "v1",
+            "metadata": {
+                "name": "notification-server-develop",
+                "creationTimestamp": null,
+                "labels": {
+                    "build": "notification-server-develop"
+                }
+            },
+            "spec": {
+                "triggers": [],
+                "runPolicy": "Serial",
+                "source": {
+                    "type": "Git",
+                    "git": {
+                        "uri": "https://github.com/bcgov/tfrs.git",
+                        "ref": "master"
+                    },
+                    "contextDir": "frontend"
+                },
+                "strategy": {
+                    "type": "Source",
+                    "sourceStrategy": {
+                        "from": {
+                            "kind": "ImageStreamTag",
+                            "namespace": "openshift",
+                            "name": "nodejs:8"
+                        }
+                    }
+                },
+                "output": {
+                    "to": {
+                        "kind": "ImageStreamTag",
+                        "name": "notification-server-develop:latest"
+                    }
+                },
+                "resources": {},
+                "postCommit": {},
+                "nodeSelector": null,
+                "successfulBuildsHistoryLimit": 5,
+                "failedBuildsHistoryLimit": 5
+            },
+            "status": {
+                "lastVersion": 0
+            }
+        }
+    ]
+}
