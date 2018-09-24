@@ -93,8 +93,48 @@ services:
             - RABBITMQ_DEFAULT_PASS=rabbitmq
             - RABBITMQ_DEFAULT_VHOST=/tfrs
         ports:
-            - "15672:15672"
-            - "5672:5672"
+            - 15672:15672
+            - 5672:5672
+    mailslurper:
+        build:
+            context: https://github.com/mailslurper/mailslurper.git
+        ports:
+            - 8080:8080
+            - 8085:8085
+    postgres_keycloak:
+        image: postgres
+        volumes:
+          - postgres_keycloak_data:/var/lib/postgresql/data
+        environment:
+          POSTGRES_DB: keycloak
+          POSTGRES_USER: keycloak
+          POSTGRES_PASSWORD: keycloak
+    keycloak:
+        image: jboss/keycloak
+        environment:
+          DB_VENDOR: POSTGRES
+          DB_ADDR: postgres_keycloak
+          DB_DATABASE: keycloak
+          DB_USER: keycloak
+          DB_PASSWORD: keycloak
+          KEYCLOAK_USER: admin
+          KEYCLOAK_PASSWORD: admin
+        ports:
+          - 8888:8080
+        depends_on:
+          - postgres_keycloak
+    minio:
+      image: minio/minio
+      volumes:
+        - minio_data:/export
+      environment:
+        MINIO_ACCESS_KEY: 296e92217fa3479aaf9cc9641fdb6e0a
+        MINIO_SECRET_KEY: 778eecb24d7743b5a1b56bbf36a29d62
+      ports:
+        - 9000:9000
+      command: "server /export"
 volumes:
     shared:
     node_modules:
+    postgres_keycloak_data:
+    minio_data:

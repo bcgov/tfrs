@@ -61,7 +61,9 @@ class CreditTradeCreateSerializer(serializers.ModelSerializer):
     """
     Serializer used when creating a Credit Trade
     """
+
     def validate(self, data):
+
         request = self.context['request']
 
         # no user should be allowed to create a rescinded proposal
@@ -144,10 +146,9 @@ class CreditTradeCreateSerializer(serializers.ModelSerializer):
 
             if credit_trade_type not in allowed_types:
                 raise serializers.ValidationError({
-                    'zeroDollarReason': "Please select a reason as to "
-                                        "why the Credit Transfer Proposal "
-                                        "has a fair market value of zero "
-                                        "dollars per credit. "
+                    'zeroDollarReason': "Zero Dollar Reason is required "
+                                        "for Credit Transfers with 0 "
+                                        "Dollar per Credit"
                 })
 
         if data.get('fair_market_value_per_credit') is not None and \
@@ -211,31 +212,6 @@ class CreditTradeCreateSerializer(serializers.ModelSerializer):
                   'update_timestamp', 'note',
                   'create_user', 'update_user',
                   'compliance_period', 'is_rescinded', 'comment')
-        extra_kwargs = {
-            'compliance_period': {
-                'error_messages': {
-                    'does_not_exist': "Please specify the Compliance Period in "
-                                      "which the transaction relates."
-                }
-            },
-            'fair_market_value_per_credit': {
-                'error_messages': {
-                    'invalid': "Value per credit needs to be a valid."
-                }
-            },
-            'number_of_credits': {
-                'error_messages': {
-                    'null': "Number of Credits can't be null.",
-                    'invalid': "Number of Credits must be a whole number."
-                }
-            },
-            'respondent': {
-                'error_messages': {
-                    'does_not_exist': "Please specify the company involved in "
-                                      "the transaction."
-                }
-            }
-        }
 
     comment = serializers.CharField(
         max_length=4000, allow_null=True, allow_blank=True, required=False)
@@ -416,10 +392,9 @@ class CreditTradeUpdateSerializer(serializers.ModelSerializer):
 
             if credit_trade_type not in allowed_types:
                 raise serializers.ValidationError({
-                    'zeroDollarReason': "Please select a reason as to "
-                                        "why the Credit Transfer Proposal "
-                                        "has a fair market value of zero "
-                                        "dollars per credit. "
+                    'zeroDollarReason': "Zero Dollar Reason is required "
+                                        "for Credit Transfers with 0 "
+                                        "Dollar per Credit"
                 })
 
         # If the type is a sell, make sure that the organization
@@ -510,31 +485,6 @@ class CreditTradeUpdateSerializer(serializers.ModelSerializer):
                   'update_timestamp', 'note',
                   'create_user', 'update_user',
                   'compliance_period', 'is_rescinded', 'comment')
-        extra_kwargs = {
-            'compliance_period': {
-                'error_messages': {
-                    'does_not_exist': "Please specify the Compliance Period in "
-                                      "which the transaction relates."
-                }
-            },
-            'fair_market_value_per_credit': {
-                'error_messages': {
-                    'invalid': "Value per credit needs to be a valid."
-                }
-            },
-            'number_of_credits': {
-                'error_messages': {
-                    'null': "Number of Credits can't be null.",
-                    'invalid': "Number of Credits must be a whole number."
-                }
-            },
-            'respondent': {
-                'error_messages': {
-                    'does_not_exist': "Please specify the company involved in "
-                                      "the transaction."
-                }
-            }
-        }
 
     comment = serializers.CharField(
         max_length=4000, allow_null=True, allow_blank=True, required=False)
