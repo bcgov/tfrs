@@ -5,6 +5,12 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Overlay, Tooltip } from 'react-bootstrap';
 
+import {
+  TEXT_ERROR_MAX_DECIMALS,
+  TEXT_ERROR_MULTIPLE_DOTS,
+  TEXT_ERROR_NEGATIVE_VALUE
+} from '../../constants/langEnUs';
+
 class fairMarketValueInput extends Component {
   constructor (props, context) {
     super(props, context);
@@ -14,18 +20,28 @@ class fairMarketValueInput extends Component {
 
     this.state = {
       currentValue: null,
-      showTooltip: false
+      showTooltip: false,
+      tooltipMessage: ''
     };
   }
 
   handleInputChange (event) {
     const { value } = event.target;
     let showTooltip = false;
+    let tooltipMessage = '';
 
     if (value === '' && (event.nativeEvent.data === '.' ||
       event.nativeEvent.inputType === 'insertFromPaste')) { // prevent multiple dots
       this.target.value = this.state.currentValue;
       showTooltip = true;
+      tooltipMessage = TEXT_ERROR_MULTIPLE_DOTS;
+    }
+
+    if (event.target.value.indexOf('-') >= 0 &&
+      event.nativeEvent.inputType === 'insertFromPaste') {
+      this.target.value = this.state.currentValue;
+      showTooltip = true;
+      tooltipMessage = TEXT_ERROR_NEGATIVE_VALUE;
     }
 
     const parsed = value.split('.');
@@ -33,11 +49,13 @@ class fairMarketValueInput extends Component {
     if (parsed.length > 1 && parsed[1].length > 2) { // prevent more than 2 decimal places
       this.target.value = this.state.currentValue;
       showTooltip = true;
+      tooltipMessage = TEXT_ERROR_MAX_DECIMALS;
     }
 
     this.setState({
       currentValue: event.target.value,
-      showTooltip
+      showTooltip,
+      tooltipMessage
     });
 
     this.props.handleInputChange(event);
@@ -51,7 +69,18 @@ class fairMarketValueInput extends Component {
       event.preventDefault();
 
       this.setState({
-        showTooltip: true
+        showTooltip: true,
+        tooltipMessage: TEXT_ERROR_MULTIPLE_DOTS
+      });
+    }
+
+    // prevent adding another dot when one already exists
+    if (event.key === '-') {
+      event.preventDefault();
+
+      this.setState({
+        showTooltip: true,
+        tooltipMessage: TEXT_ERROR_NEGATIVE_VALUE
       });
     }
   }
@@ -64,6 +93,7 @@ class fairMarketValueInput extends Component {
           className="form-control"
           data-number-to-fixed="2"
           id="value-per-credit"
+          min="0"
           name="fairMarketValuePerCredit"
           onChange={this.handleInputChange}
           onKeyPress={this.patternMatch}
@@ -82,8 +112,12 @@ class fairMarketValueInput extends Component {
           show={this.state.showTooltip}
           target={this.target}
         >
-          <Tooltip placement="top" className="in" id="tooltip-right">
-          Amount cannot contain more than 2 decimal places
+          <Tooltip
+            className={`in ${!this.state.showTooltip ? 'hidden' : ''}`}
+            id="tooltip-right"
+            placement="top"
+          >
+            {this.state.tooltipMessage}
           </Tooltip>
         </Overlay>
       </div>
