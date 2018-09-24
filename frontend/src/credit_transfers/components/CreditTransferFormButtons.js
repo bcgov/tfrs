@@ -169,6 +169,7 @@ const CreditTransferFormButtons = props => (
         </button>
       }
       {props.actions.includes(Lang.BTN_RETURN_TO_DRAFT) &&
+      !props.actions.includes(Lang.BTN_PULL_BACK) &&
         <button
           className="btn btn-warning"
           data-target="#confirmReturn"
