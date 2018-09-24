@@ -197,6 +197,7 @@ class Navbar extends Component {
           }
           <li>
             <NavLink
+              activeClassName="active"
               id="collapse-navbar-credit-transactions"
               to={CREDIT_TRANSACTIONS.LIST}
             >
@@ -220,6 +221,18 @@ class Navbar extends Component {
             </NavLink>
           </li>
           }
+          <li>
+            <NavLink
+              activeClassName="active"
+              id="navbar-notifications"
+              to={Routes.NOTIFICATIONS.LIST}
+            >
+                Notifications
+              {unreadCount > 0 &&
+                <span> ({unreadCount})</span>
+              }
+            </NavLink>
+          </li>
           <li>
             <NavLink id="navbar-settings" to={Routes.SETTINGS}>
               Settings
