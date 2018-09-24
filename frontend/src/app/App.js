@@ -29,7 +29,6 @@ const App = (props) => {
           newesetOnTop={false}
           position="top-center"
           preventDuplicates
-          progressBar
           transitionIn="fadeIn"
           transitionOut="fadeOut"
         />

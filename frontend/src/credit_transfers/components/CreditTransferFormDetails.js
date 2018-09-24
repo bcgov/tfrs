@@ -7,6 +7,7 @@ import numeral from 'numeral';
 
 import * as NumberFormat from '../../constants/numeralFormats';
 import { CREDIT_TRANSFER_TYPES, ZERO_DOLLAR_REASON } from '../../constants/values';
+import FairMarketValueInput from '../../app/components/FairMarketValueInput';
 
 class CreditTransferFormDetails extends Component {
   enableZeroReason () {
@@ -76,27 +77,19 @@ class CreditTransferFormDetails extends Component {
           </div>
           <span>for </span>
           <div className="form-group">
-            <div className="input-group">
-              <span className="input-group-addon">$</span>
-              <input
-                type="number"
-                data-number-to-fixed="2"
-                className="form-control"
-                id="value-per-credit"
-                name="fairMarketValuePerCredit"
-                value={this.props.fields.fairMarketValuePerCredit}
-                placeholder="Amount"
-                onChange={this.props.handleInputChange}
-                required="required"
-              />
-            </div>
+            <FairMarketValueInput
+              handleInputChange={this.props.handleInputChange}
+              value={this.props.fields.fairMarketValuePerCredit}
+            />
           </div>
           <span>per credit for a total value of </span>
           <span>{numeral(this.props.totalValue).format(NumberFormat.CURRENCY)}</span>
           <span> effective on Director&apos;s approval</span>
           {this.enableZeroReason() &&
           <div className="zero-reason-form">
-            <span>This trade has a value of zero dollars because:</span>
+            <span>
+              This credit transfer has a fair market value of zero dollars per credit because:
+            </span>
             <br />
             <div className="form-group">
               <div className="btn-group zero-reason" role="group" id="zero-dollar-reason">

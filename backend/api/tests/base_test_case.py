@@ -41,6 +41,7 @@ class BaseTestCase(TestCase):
     """
 
     fixtures = [
+        'test/test_compliance_periods.json',
         'test/test_organization_fuel_suppliers.json',
         'test/test_organization_balances.json',
         'test/test_prodlike_government_users_and_roles.json',

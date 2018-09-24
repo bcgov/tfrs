@@ -43,6 +43,8 @@ const CreditTransferDetails = props => (
               creditsFrom={props.creditsFrom}
               creditsTo={props.creditsTo}
               fairMarketValuePerCredit={props.fairMarketValuePerCredit}
+              history={props.history}
+              isRescinded={props.isRescinded}
               numberOfCredits={props.numberOfCredits}
               status={props.status}
               totalValue={props.totalValue}

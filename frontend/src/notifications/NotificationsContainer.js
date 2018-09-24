@@ -50,7 +50,15 @@ class NotificationsContainer extends Component {
   _toggleCheck (key) {
     const fieldState = { ...this.state.fields };
     const index = fieldState.notifications.findIndex(notification => notification.id === key);
-    fieldState.notifications[index].value = !fieldState.notifications[index].value;
+
+    if (index < 0) {
+      fieldState.notifications.push({
+        id: key,
+        value: true
+      });
+    } else {
+      fieldState.notifications[index].value = !fieldState.notifications[index].value;
+    }
 
     this.setState({
       fields: fieldState

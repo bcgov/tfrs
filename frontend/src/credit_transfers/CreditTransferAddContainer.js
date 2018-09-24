@@ -39,7 +39,7 @@ class CreditTransferAddContainer extends Component {
       this.state = {
         fields: {
           comment: '',
-          compliancePeriod: {},
+          compliancePeriod: { id: 0 },
           numberOfCredits: '',
           respondent: {},
           tradeType: {
@@ -130,7 +130,7 @@ class CreditTransferAddContainer extends Component {
       initiator: this.state.fields.initiator.id,
       note: this.state.fields.note,
       comment: this.state.fields.comment,
-      numberOfCredits: parseInt(this.state.fields.numberOfCredits, 10),
+      numberOfCredits: this.state.fields.numberOfCredits,
       respondent: this.state.fields.respondent.id,
       status: status.id,
       tradeEffectiveDate: null,
@@ -170,7 +170,7 @@ class CreditTransferAddContainer extends Component {
     const data = {
       compliancePeriod: this.state.fields.compliancePeriod.id,
       initiator: this.state.fields.initiator.id,
-      numberOfCredits: parseInt(this.state.fields.numberOfCredits, 10),
+      numberOfCredits: this.state.fields.numberOfCredits,
       respondent: this.state.fields.respondent.id,
       status: status.id,
       type: this.state.fields.tradeType.id,
@@ -214,10 +214,6 @@ class CreditTransferAddContainer extends Component {
 
   _handleSubmit (event, status) {
     event.preventDefault();
-
-    if (!this._validateForm()) {
-      return false;
-    }
 
     // Government Transfer Submit
     if ([CREDIT_TRANSFER_TYPES.buy.id, CREDIT_TRANSFER_TYPES.sell.id]
@@ -329,22 +325,6 @@ class CreditTransferAddContainer extends Component {
     this.setState({
       fields: fieldState
     });
-  }
-
-  _validateForm () {
-    const { numberOfCredits } = this.state.fields;
-
-    if (numberOfCredits % 1 !== 0) {
-      this.setState({
-        validationErrors: {
-          invalidNumberOfCredits: "Number of Credits can't have decimals."
-        }
-      });
-
-      return false;
-    }
-
-    return true;
   }
 
   changeFromTo (tradeType, initiator, respondent) {
