@@ -1,6 +1,7 @@
 import base64
 import random
-from django.http import HttpResponse
+
+from django.views.decorators.cache import never_cache
 
 from rest_framework import viewsets, serializers, mixins, status
 from rest_framework.decorators import list_route
@@ -18,12 +19,12 @@ class NotificationToken(object):
 
     @staticmethod
     def __generate_token():
-        t = bytearray
+        token = bytearray
         rand = random.SystemRandom()
 
-        t = bytes([rand.getrandbits(8) for x in range(48)])
+        token = bytes([rand.getrandbits(8) for x in range(48)])
 
-        return base64.encodebytes(t).decode('utf-8')
+        return base64.encodebytes(token).decode('utf-8')
 
     def __init__(self, token=None):
         self.token = token or NotificationToken.__generate_token()
@@ -61,6 +62,14 @@ class NotificationViewSet(AuditableMixin,
             is_archived=False,
             user=user
         ).all()
+
+    @never_cache
+    def list(self, request, *args, **kwargs):
+        """
+        Lists all the notifications for the current user.
+        Note: no-cache decorator applied to prevent caching by IE
+        """
+        return super().list(self, request, *args, **kwargs)
 
     @list_route(methods=['get'])
     def subscribe(self, request):
