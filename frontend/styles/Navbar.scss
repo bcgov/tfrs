@@ -1,4 +1,4 @@
-.level2Navigation .container, #navbar {
+.level2Navigation .container {
   position: relative;
 
   a {
@@ -32,5 +32,11 @@
     .fa-layers-counter {
       font-size: 4rem;
     }
+  }
+}
+
+.navbar-nav {
+  .active {
+    background-color: rgba(255, 255, 255, 0.2);
   }
 }
