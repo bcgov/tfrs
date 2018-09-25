@@ -58,6 +58,7 @@ const Modal = props => (
             {props.cancelLabel}
           </button>
           <button
+            id="modal-yes"
             type="button"
             className="btn btn-primary"
             data-dismiss="modal"

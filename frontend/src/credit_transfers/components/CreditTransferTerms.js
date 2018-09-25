@@ -18,7 +18,7 @@ class CreditTransferTerms extends Component {
 
     content = content.concat(this.props.signingAuthorityAssertions.map(assertion => (
       <div className="terms" key={assertion.id}>
-        <div className="check">
+        <div id="credit-transfer-term" className="check">
           <CheckBox
             addToFields={this.props.addToFields}
             fields={this.props.fields.terms}
