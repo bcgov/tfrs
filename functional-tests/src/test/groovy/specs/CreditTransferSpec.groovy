@@ -26,7 +26,7 @@ class CreditTransferSpec extends LoggedInSpec {
       to CreditTransactionsAddPage
       setTransactionType('Buy')
       setNumberOfCredits(1000)
-      setRespondent('Fuel Supplier 2')
+      setRespondent(getReceivingFuelSupplier().org)
       setPricePerCredit(2)
       checkTerms()
       addComment('Log in as the sending fuel supplier and initiate a new credit transfer')
