@@ -46,6 +46,7 @@ class CreditTransferCommentForm extends Component {
       <label htmlFor="comment">
         {this.props.isEditingExistingComment ? 'Edit Comment:' : 'Your Comment:'}
         <textarea
+          id="credit-transfer-comment"
           className="form-control"
           rows="5"
           name="comment"
@@ -84,6 +85,7 @@ class CreditTransferCommentForm extends Component {
                   {Lang.BTN_CANCEL_COMMENT}
                 </button>
                 <button
+                  id="credit-transfer-save-comment"
                   className="btn btn-primary"
                   type="button"
                   onClick={() => this.props.saveComment({
