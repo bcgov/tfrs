@@ -33,7 +33,9 @@ class CreditTransactionsAddPage extends BaseAppPage {
   }
 
   void checkTerms() {
-    termsCheckboxes.click()
+    termsCheckboxes.each { element ->
+      element.click()
+    }
   }
 
   void addComment(String comment) {
