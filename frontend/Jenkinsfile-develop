@@ -35,7 +35,7 @@
         }
     }
 
-    stage('Build') {
+    stage('Build Frontend') {
         echo "Building Frontend..."
 	    openshiftBuild bldCfg: 'client-develop-angular-app-build', showBuildLogs: 'true'
         openshiftBuild bldCfg: 'client-develop', showBuildLogs: 'true'
@@ -44,7 +44,9 @@
             script: 'oc get istag client-develop:latest -o template --template="{{.image.dockerImageReference}}"|awk -F ":" \'{print $3}\'',
  	            returnStdout: true).trim()
         echo ">> IMAGE_HASH_FRONTEND: $IMAGE_HASH_FRONTEND"
-
+    }
+    
+    stage('Build Notification Server') {
         echo "Building Notification..."
 	    openshiftBuild bldCfg: 'notification-server-develop', showBuildLogs: 'true'
         echo ">> Getting Image Hash for notification server"
