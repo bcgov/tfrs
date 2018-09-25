@@ -9,17 +9,31 @@ import { withRouter } from 'react-router';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 
+import userManager from '../store/oidc-usermanager';
+
 import StatusInterceptor from './components/StatusInterceptor';
+import {Button} from "react-bootstrap";
 
 const App = (props) => {
   let content;
-  if (props.errorRequest.hasErrors && props.errorRequest.error.status) {
-    content = <StatusInterceptor statusCode={props.errorRequest.error.status} />;
-  } else if (!props.userRequest.isFetching && props.isAuthenticated) {
-    content = props.children;
-  } else if (!props.userRequest.isFetching) {
-    content = <StatusInterceptor statusCode={props.userRequest.error.status} />;
-  }
+  // if (props.errorRequest.hasErrors && props.errorRequest.error.status) {
+  //   content = <StatusInterceptor statusCode={props.errorRequest.error.status} />;
+  // } else if (!props.userRequest.isFetching && props.isAuthenticated) {
+     content = props.children;
+  // } else if (!props.userRequest.isFetching) {
+  //   content = <StatusInterceptor statusCode={props.userRequest.error.status} />;
+  // }
+
+
+  if (props.loggedInUser || props.location.pathname === '/authCallback') {
+
+      content = props.children;
+    } else {
+      content = <p>{props.loggedInUser}<a target="#" onClick={(ev) => {
+        ev.preventDefault();
+        userManager.signinRedirect();
+      }}>Sign in</a></p>;
+    }
 
   return (
     <IntlProvider locale="en-CA">
@@ -72,7 +86,7 @@ App.propTypes = {
       name: PropTypes.string,
       id: PropTypes.number
     })
-  }).isRequired,
+  }),
   isAuthenticated: PropTypes.bool.isRequired,
   userRequest: PropTypes.shape({
     error: PropTypes.shape({
@@ -80,7 +94,8 @@ App.propTypes = {
     }).isRequired,
     isFetching: PropTypes.bool.isRequired
   }).isRequired,
-  unreadNotificationsCount: PropTypes.number
+  unreadNotificationsCount: PropTypes.number,
+  inLoginFlow: PropTypes.bool.isRequired
 };
 
 export default withRouter(connect(state => ({
@@ -88,13 +103,14 @@ export default withRouter(connect(state => ({
     error: state.rootReducer.errorRequest.errorMessage,
     hasErrors: state.rootReducer.errorRequest.hasErrors
   },
-  loggedInUser: state.rootReducer.userRequest.loggedInUser,
-  isAuthenticated: state.rootReducer.userRequest.isAuthenticated,
+  loggedInUser: state.oidc.user,
+  isAuthenticated: state.oidc.user != null,
   userRequest: {
     error: state.rootReducer.userRequest.error,
     isFetching: state.rootReducer.userRequest.isFetching
   },
   unreadNotificationsCount: state.rootReducer.notifications.isFetching
     ? null
-    : state.rootReducer.notifications.items.filter(n => !n.isRead).length
+    : state.rootReducer.notifications.items.filter(n => !n.isRead).length,
+  inLoginFlow: state.oidc.isLoadingUser
 }))(App));

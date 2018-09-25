@@ -16,11 +16,17 @@ const loggerMiddleware = createLogger();
 const socket = io(SOCKETIO_URL);
 const socketIoMiddleware = createSocketIoMiddleware(socket, 'socketio/');
 
+import { createUserManager, loadUser, processSilentRenew, reducer as OIDCReducer } from 'redux-oidc';
+import userManager from "./oidc-usermanager";
+
+
+
 const store = process.env.NODE_ENV !== 'production' ? createStore(
   combineReducers({
     rootReducer,
     routing: routerReducer,
-    toastr: toastrReducer
+    toastr: toastrReducer,
+    oidc: OIDCReducer
   }),
   applyMiddleware(
     thunk,
@@ -32,7 +38,8 @@ const store = process.env.NODE_ENV !== 'production' ? createStore(
   combineReducers({
     rootReducer,
     routing: routerReducer,
-    toastr: toastrReducer
+    toastr: toastrReducer,
+    oidc: OIDCReducer
   }),
   applyMiddleware(
     thunk,
@@ -54,5 +61,8 @@ store.subscribe(() => {
     subscriptionProcessing = false;
   }
 });
+
+loadUser(store, userManager);
+processSilentRenew();
 
 export default store;

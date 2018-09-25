@@ -29,15 +29,23 @@ import OrganizationViewContainer from './organizations/OrganizationViewContainer
 import SettingsContainer from './settings/SettingsContainer';
 import UserViewContainer from './users/UserViewContainer';
 import NotificationsContainer from './notifications/NotificationsContainer';
+import AuthCallback from "./app/AuthCallback";
 
 const Router = props => (
   <ConnectedRouter history={history} key={Math.random()}>
-    <App>
-      <Switch>
+<App>
+    <Switch>
+    <Route
+      exact
+      path='/authCallback'
+      component={withRouter(AuthCallback)}
+    />
         <Route
           exact
           path={Routes.HOME}
-          component={withRouter(CreditTransactionsContainer)}
+          component={withRouter(CreditTransactionsContainer)
+          }
+
         />
         <Route
           exact
@@ -130,8 +138,8 @@ const Router = props => (
           component={withRouter(NotificationsContainer)}
         />
         <Route component={NotFound} />
-      </Switch>
-    </App>
+    </Switch>
+</App>
   </ConnectedRouter>
 );
 

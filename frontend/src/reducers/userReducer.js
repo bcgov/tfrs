@@ -59,6 +59,11 @@ const userViewRequest = (state = {
   user: {}
 }, action) => {
   switch (action.type) {
+    case "redux-oidc/USER_FOUND":
+      return {
+        ...state,
+        oidcUser: {...action.data, hasPermission: (code) => { return true; }}
+      };
     case ActionTypes.GET_USER:
       return {
         ...state,
