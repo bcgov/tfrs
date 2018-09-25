@@ -27,7 +27,7 @@ node("master-frontend-maven-${env.BUILD_NUMBER}") {
         echo ">> IMAGE_HASH_FRONTEND: $IMAGE_HASH_FRONTEND"
     }
     stage('Build Notification') {
-        echo "Building Notification..."
+        echo "Building Notification Server ..."
 	    openshiftBuild bldCfg: 'notification-server', showBuildLogs: 'true'
         echo ">> Getting Image Hash"
         IMAGE_HASH_NOTIFICATION = sh (
