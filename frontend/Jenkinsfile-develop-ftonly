@@ -1,4 +1,16 @@
 stage('FT on Dev') {
+    environment {
+    	SUPPLIER_ONE_USERNAME='jlepitzki'
+	SUPPLIER_ONE_PASSWORD=credentials('SUPPLIER_ONE_PASSWORD')
+	SUPPLIER_TWO_USERNAME='justin.wakelam'
+	SUPPLIER_TWO_PASSWORD=credentials('SUPPLIER_TWO_PASSWORD')
+	SUPPLIER_TWO_ORG='TFRS IMBeing Green'
+	ANALYST_USERNAME='jlepitz'
+	ANALYST_PASSWORD=credentials('ANALYST_PASSWORD')
+	DIRECTOR_USERNAME='jlepitz'
+	DIRECTOR_PASSWORD=credentials('DIRECTOR_PASSWORD')
+    }
+    
     podTemplate(label: "develop-frontend-bddstack-${env.BUILD_NUMBER}", name: "develop-frontend-bddstack-${env.BUILD_NUMBER}", serviceAccount: 'jenkins', cloud: 'openshift',
         containers: [
             containerTemplate(
