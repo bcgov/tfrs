@@ -6,18 +6,18 @@ package traits
 trait Users {
   Map env = System.getenv()
   Map getSendingFuelSupplier() {
-    [env['FANTASTIC_USERNAME'], env['FT_PASSWORD']]
+    [username:env['SUPPLIER_ONE_USERNAME'], password:env['SUPPLIER_ONE_PASSWORD']]
   }
 
   Map getReceivingFuelSupplier() {
-    [env['GREEN_USERNAME'], env['FT_PASSWORD']]
+    [username:env['SUPPLIER_TWO_USERNAME'], password:env['SUPPLIER_TWO_PASSWORD'], org:env['SUPPLIER_TWO_ORG']]
   }
 
   Map getAnalyst() {
-    [env['ANALYST_USERNAME'], env['FT_PASSWORD']]
+    [username:env['ANALYST_USERNAME'], password:env['ANALYST_PASSWORD']]
   }
 
   Map getDirector() {
-    [env['DIRECTOR_USERNAME'], env['FT_PASSWORD']]
+    [username:env['DIRECTOR_USERNAME'], password:env['DIRECTOR_PASSWORD']]
   }
 }
