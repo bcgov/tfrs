@@ -14,11 +14,11 @@ trait Login implements Users {
    * @param username the login username
    * @param password the login password
    */
-  void login(String username, String password) {
+  void login(Map user) {
     to LoginPage
 
-    usernameField.value(username)
-    passwordField.value(password)
+    usernameField.value(user.username)
+    passwordField.value(user.password)
 
     continueButton.click()
 
