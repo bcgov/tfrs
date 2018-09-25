@@ -35,27 +35,41 @@
         }
     }
 
-    stage('Build') {
-        echo "Building..."
-	openshiftBuild bldCfg: 'client-develop-angular-app-build', showBuildLogs: 'true'
+    stage('Build Frontend') {
+        echo "Building Frontend..."
+	    openshiftBuild bldCfg: 'client-develop-angular-app-build', showBuildLogs: 'true'
         openshiftBuild bldCfg: 'client-develop', showBuildLogs: 'true'
-        echo ">> Getting Image Hash"
-        IMAGE_HASH = sh (
+        echo ">> Getting Image Hash for frontend"
+        IMAGE_HASH_FRONTEND = sh (
             script: 'oc get istag client-develop:latest -o template --template="{{.image.dockerImageReference}}"|awk -F ":" \'{print $3}\'',
  	            returnStdout: true).trim()
-        echo ">> IMAGE_HASH: $IMAGE_HASH"
+        echo ">> IMAGE_HASH_FRONTEND: $IMAGE_HASH_FRONTEND"
+    }
+
+    stage('Build Notification Server') {
+        echo "Building Notification Server ..."
+	    openshiftBuild bldCfg: 'notification-server-develop', showBuildLogs: 'true'
+        echo ">> Getting Image Hash for notification server"
+        IMAGE_HASH_NOTIFICATION = sh (
+            script: 'oc get istag notification-server-develop:latest -o template --template="{{.image.dockerImageReference}}"|awk -F ":" \'{print $3}\'',
+ 	            returnStdout: true).trim()
+        echo ">> IMAGE_HASH_NOTIFICATION: $IMAGE_HASH_NOTIFICATION"
     }
 
     stage('Deploy on Dev') {
         echo "Deploying to dev..."
-        openshiftTag destStream: 'client-develop', verbose: 'true', destTag: 'dev', srcStream: 'client-develop', srcTag: "${IMAGE_HASH}"
+        openshiftTag destStream: 'client-develop', verbose: 'true', destTag: 'dev', srcStream: 'client-develop', srcTag: "${IMAGE_HASH_FRONTEND}"
         sh 'sleep 10s'
-	openshiftVerifyDeployment depCfg: 'client', namespace: 'mem-tfrs-dev', replicaCount: 1, verbose: 'false'
+	    openshiftVerifyDeployment depCfg: 'client', namespace: 'mem-tfrs-dev', replicaCount: 1, verbose: 'false'
+
+        openshiftTag destStream: 'notification-server-develop', verbose: 'true', destTag: 'dev', srcStream: 'notification-server-develop', srcTag: "${IMAGE_HASH_NOTIFICATION}"
+        sh 'sleep 10s'
+	    openshiftVerifyDeployment depCfg: 'notification-server', namespace: 'mem-tfrs-dev', replicaCount: 1, verbose: 'false'
     }
 
-}
+    } //end of node
 
-}
+} //end of podTemplate
 
 /****
 stage('FT on Dev') {
