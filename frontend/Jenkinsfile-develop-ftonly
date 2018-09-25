@@ -19,6 +19,7 @@ stage('FT on Dev') {
         echo "checking out source"
         echo "Build: ${BUILD_ID}"
         checkout scm
+	sh 'sleep 10m'
         dir('functional-tests') {
 	    try {   
                 echo ">> FT_LOG_LEVEL=${FT_LOG_LEVEL}"
