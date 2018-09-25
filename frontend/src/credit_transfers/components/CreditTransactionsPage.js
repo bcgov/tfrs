@@ -13,6 +13,8 @@ import CreditTransferTable from './CreditTransferTable';
 
 import * as Routes from '../../constants/routes';
 
+import * as Lang from '../../constants/langEnUs';
+
 const CreditTransactionsPage = (props) => {
   const { isFetching, items } = props.creditTransfers;
   const isEmpty = items.length === 0;
@@ -84,13 +86,14 @@ const CreditTransactionsPage = (props) => {
         <div className="actions-container">
           {props.loggedInUser.hasPermission(PERMISSIONS_CREDIT_TRANSACTIONS.PROPOSE) &&
             <button
+              id="credit-transfer-new-transfer"
               className="btn btn-primary"
               type="button"
               onClick={() => history.push(CREDIT_TRANSACTIONS.ADD)}
             >
-              <FontAwesomeIcon icon="plus-circle" /> 
-              {!props.loggedInUser.isGovernmentUser && ' New Transfer'}
-              {props.loggedInUser.isGovernmentUser && ' New Credit Transaction'}
+              <FontAwesomeIcon icon="plus-circle" />
+              {!props.loggedInUser.isGovernmentUser && ` ${Lang.BTN_NEW_TRANSFER}`}
+              {props.loggedInUser.isGovernmentUser && ` ${Lang.BTN_NEW_CREDIT_TRANSACTION}`}
             </button>
           }
           <button

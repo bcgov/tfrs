@@ -7,6 +7,7 @@ const CreditTransferCommentButtons = props => (
   <div className="btn-container">
     {(props.canComment && !props.isCommenting) &&
     <button
+      id="credit-transfer-add-comment"
       className="btn btn-info"
       onClick={() => props.addComment()}
       disabled={props.isCommenting}
@@ -17,6 +18,7 @@ const CreditTransferCommentButtons = props => (
     }
     {(props.canCreatePrivilegedComment && !props.isCommenting) &&
     <button
+      id="credit-transfer-add-internal-comment"
       className="btn btn-primary"
       onClick={() => props.addComment(true)}
       disabled={props.isCommenting}
