@@ -27,7 +27,8 @@ from django.test import RequestFactory
 from django.conf import settings
 from rest_framework import exceptions
 
-from api.authentication import UserAuthentication
+from api.keycloak_authentication import UserAuthentication
+import jwt
 from api.models.User import User
 from api.models.Organization import Organization
 from api.models.OrganizationStatus import OrganizationStatus
@@ -40,198 +41,59 @@ from .base_test_case import BaseTestCase
 class TestAuthentication(BaseTestCase):
     """Tests for authentication module"""
 
+    fixtures = [
+        'test/test_compliance_periods.json',
+        'test/test_organization_fuel_suppliers.json',
+        'test/test_organization_balances.json',
+        'test/test_prodlike_government_users_and_roles.json',
+        'test/test_users_and_organizations_v0.3.1.json',
+        'test/test_users_multiple_roles.json'
+    ]
+
     def setUp(self):
         """Prepare test resources"""
-        self.userauth = UserAuthentication()
         self.factory = RequestFactory()
-        settings.DEBUG = False
+        self.userauth = UserAuthentication()
         super().setUp()
 
-    def tearDown(self):
-        """Restore settings"""
-        settings.BYPASS_AUTH = False
+    def test_jwt_invalid_token(self):
+        """Test invalid token"""
 
-    def test_user_first_login_valid(self):
-        """Test BCeID user first login"""
-
-        # Create mapping by updating the user model
-        # (authorization_guid = sm header guid)
-        new_user = User.objects.create(authorization_id='testuser')
-
-        self.assertIsNone(new_user.authorization_guid)
-
-        display_name = 'Test User'
-        userguid = '05fa1e10-08e1-454c-b1a3-cee38e825d47'
         request = self.factory.get('/')
         request.META = {
-            'HTTP_SMAUTH_USERGUID': userguid,
-            'HTTP_SMAUTH_USERDISPLAYNAME': display_name,
-            'HTTP_SMAUTH_USEREMAIL': 'TestUser@testcompany.ca',
-            'HTTP_SMAUTH_UNIVERSALID': 'TestUser',
-        }
-
-        # authenticate should match authorization_id and create the user
-        user, _auth = self.userauth.authenticate(request)
-
-        self.assertIsNotNone(user)
-        self.assertEqual(user.display_name, display_name)
-        self.assertEqual(new_user.authorization_id, user.authorization_id)
-        self.assertEqual(str(user.authorization_guid), userguid)
-
-    def test_user_first_login_idir(self):
-        """Test IDIR user first login"""
-
-        # Create mapping by updating the user model
-        # (authorization_guid = sm header guid)
-        gov_organization = Organization.objects.get(
-            type=OrganizationType.objects.get(type="Government"))
-        new_user = User.objects.create(authorization_id='tuser',
-                                       organization=gov_organization)
-
-        display_name = 'Test User'
-        userguid = 'af2a7728-1228-4aea-9461-b0464cba8fa1'
-        request = self.factory.get('/')
-        request.META = {
-            'HTTP_SMAUTH_USERGUID': userguid,
-            'HTTP_SMAUTH_USERDISPLAYNAME': display_name,
-            'HTTP_SMAUTH_USEREMAIL': 'TestUser@testcompany.ca',
-            'HTTP_SMAUTH_UNIVERSALID': 'TUSER',
-            'HTTP_SMAUTH_DIRNAME': 'IDIR',
-            'HTTP_SMAUTH_USERTYPE': 'Internal'
-        }
-
-        # authenticate should match authorization_id and create the user
-        user, _auth = self.userauth.authenticate(request)
-
-        self.assertIsNotNone(user)
-        self.assertEqual(user.display_name, display_name)
-        self.assertEqual(new_user.authorization_id, user.authorization_id)
-        self.assertEqual(str(user.authorization_guid), userguid)
-        self.assertEqual(gov_organization.id, user.organization.id)
-
-    def test_user_first_login_idir_invalid(self):
-        """Test IDIR user with no application account can't login"""
-
-        # User can login through siteminder, but their user id doesn't
-        # exist in the database, so they can't log in to the app.
-
-        display_name = 'Test User'
-        userguid = 'af2a7728-1228-4aea-9461-b0464cba8fa1'
-        request = self.factory.get('/')
-        request.META = {
-            'HTTP_SMAUTH_USERGUID': userguid,
-            'HTTP_SMAUTH_USERDISPLAYNAME': display_name,
-            'HTTP_SMAUTH_USEREMAIL': 'TestUser@testcompany.ca',
-            'HTTP_SMAUTH_UNIVERSALID': 'TUSER',
-            'HTTP_SMAUTH_DIRNAME': 'IDIR',
-            'HTTP_SMAUTH_USERTYPE': 'Internal'
+            'HTTP_AUTHORIZATION': 'garbage'
         }
 
         with self.assertRaises(exceptions.AuthenticationFailed):
             _user, _auth = self.userauth.authenticate(request)
 
-    def test_user_same_username_external_internal(self):
-        """
-        Test external and internal users can have the same authorization id
-        """
-
-        gov_organization = Organization.objects.get(
-            type=OrganizationType.objects.get(type="Government"))
-
-        org_status = OrganizationStatus.objects.get(pk=1)
-        org_actions_type = OrganizationActionsType.objects.get(pk=1)
-        org_type = OrganizationType.objects.get(pk=2)
-
-        external_organization = Organization.objects.create(
-            name="Test", status=org_status, actions_type=org_actions_type,
-            type=org_type)
-
-        new_user1 = User.objects.create(authorization_id='tuser',
-                                        username="internal_tuser",
-                                        organization=gov_organization)
-
-        new_user2 = User.objects.create(authorization_id='tuser',
-                                        username="business_tuser",
-                                        organization=external_organization)
-
-        userguid1 = 'af2a7728-1228-4aea-9461-b0464cba8fa1'
-        userguid2 = '05fa1e10-08e1-454c-b1a3-cee38e825d47'
-
-        request = self.factory.get('/')
-        request.META = {
-            'HTTP_SMAUTH_USERGUID': userguid1,
-            'HTTP_SMAUTH_USERDISPLAYNAME': "Test User",
-            'HTTP_SMAUTH_USEREMAIL': 'TestUser@gov.bc.ca',
-            'HTTP_SMAUTH_UNIVERSALID': 'TUSER',
-            'HTTP_SMAUTH_DIRNAME': 'IDIR',
-            'HTTP_SMAUTH_USERTYPE': 'Internal'
-        }
-
-        user1, _auth = self.userauth.authenticate(request)
-        self.assertEqual(user1.organization.id, gov_organization.id)
-        self.assertEqual(user1.username, "internal_tuser")
-        self.assertEqual(user1.authorization_id, new_user1.authorization_id)
-
-        request.META = {
-            'HTTP_SMAUTH_USERGUID': userguid2,
-            'HTTP_SMAUTH_USERDISPLAYNAME': "Test User",
-            'HTTP_SMAUTH_USEREMAIL': 'TestUser@testcompany.ca',
-            'HTTP_SMAUTH_UNIVERSALID': 'TUSER',
-            'HTTP_SMAUTH_DIRNAME': 'CAP TBCEID',
-            'HTTP_SMAUTH_USERTYPE': 'Business'
-        }
-
-        user2, _auth = self.userauth.authenticate(request)
-        self.assertEqual(user2.organization.id, external_organization.id)
-        self.assertEqual(user2.username, "business_tuser")
-        self.assertEqual(user2.authorization_id, new_user2.authorization_id)
-
-    def test_bypass_auth(self):
-        """Test bypassing authentication"""
-        settings.BYPASS_AUTH = True
+    def test_jwt_no_token(self):
+        """Test no token"""
 
         request = self.factory.get('/')
 
-        user, _auth = self.userauth.authenticate(request)
-
-        # First user in the database
-        self.assertEqual(user.username, User.objects.first().username)
-
-    def test_bypass_auth_error(self):
-        """Test bypassing authentication disabled throws error"""
-        settings.BYPASS_AUTH = False
-
-        request = self.factory.get('/')
-
-        # Will throw error on this line on authentication.py:
-        # header_user_guid = uuid.UUID(request.META.get('HTTP_SMAUTH_USERGUID'))
-        # raise TypeError('one of the hex, bytes, bytes_le, fields, '
-
-        with self.assertRaises(TypeError):
-            self.userauth.authenticate(request)
-
-    def test_inactive_user_login(self):
-        """Test inactive BCeID login"""
-
-        # Create mapping by updating the user model
-        # (authorization_guid = sm header guid)
-        new_user = User.objects.create(
-            authorization_id='testuser',
-            is_active=False
-        )
-
-        self.assertIsNone(new_user.authorization_guid)
-
-        display_name = 'Test User'
-        userguid = '05fa1e10-08e1-454c-b1a3-cee38e825d47'
-        request = self.factory.get('/')
-        request.META = {
-            'HTTP_SMAUTH_USERGUID': userguid,
-            'HTTP_SMAUTH_USERDISPLAYNAME': display_name,
-            'HTTP_SMAUTH_USEREMAIL': 'TestUser@testcompany.ca',
-            'HTTP_SMAUTH_UNIVERSALID': 'TestUser',
-        }
-
-        # authenticate should match authorization_id and create the user
         with self.assertRaises(exceptions.AuthenticationFailed):
             _user, _auth = self.userauth.authenticate(request)
+
+    def test_jwt_valid_token(self):
+        request = self.factory.get('/')
+
+        payload = {
+            'user_id': 'fs_user_3',
+            'iss': 'tfrs-test',
+            'aud': 'tfrs-app'
+        }
+        key = self.private_key
+
+        request.META = {
+            'HTTP_AUTHORIZATION': 'Bearer {}'.format(
+                jwt.encode(payload,
+                           key,
+                           algorithm='RS256'
+                           ).decode('utf-8')
+            )
+        }
+
+        print (request.META['HTTP_AUTHORIZATION'])
+
+        _user, _auth = self.userauth.authenticate(request)
