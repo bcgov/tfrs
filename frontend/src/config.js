@@ -1,0 +1,18 @@
+/*
+ Used to track feature configuration, injected via
+  Webpack (from environment variables or similar)
+*/
+
+
+let CONFIG = {
+  KEYCLOAK: {
+    ENABLED: __INJECTED_CONFIG.KEYCLOAK.ENABLED,
+    AUTHORITY: __INJECTED_CONFIG.KEYCLOAK.AUTHORITY,
+    CLIENT_ID: __INJECTED_CONFIG.KEYCLOAK.CLIENT_ID,
+    CALLBACK_URL: __INJECTED_CONFIG.KEYCLOAK.CALLBACK_URL,
+    POST_LOGOUT_URL: __INJECTED_CONFIG.KEYCLOAK.POST_LOGOUT_URL
+  }
+};
+
+export default CONFIG;
+
