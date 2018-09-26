@@ -15,6 +15,7 @@ import os
 
 from pika import ConnectionParameters, PlainCredentials
 from . import amqp
+from . import keycloak
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -60,6 +61,7 @@ INSTALLED_APPS = (
 MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',
     'corsheaders.middleware.CorsMiddleware',
+    'api.middleware.SMUserMiddleware',  # this can go away when Siteminder is removed
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -67,9 +69,7 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.middleware.security.SecurityMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware',
-    'api.middleware.SMUserMiddleware',
-)
+    'whitenoise.middleware.WhiteNoiseMiddleware')
 
 # Auth User
 AUTH_USER_MODEL = 'api.User'
@@ -77,7 +77,8 @@ AUTH_USER_MODEL = 'api.User'
 REST_FRAMEWORK = {
 #   'DEFAULT_AUTHENTICATION_CLASSES': ('rest_framework.permissions.AllowAny',),
 # User authentication is commented out here to allow tests to pass, remove comment to re-enable
-    'DEFAULT_AUTHENTICATION_CLASSES': ('api.authentication.UserAuthentication',),
+    'DEFAULT_AUTHENTICATION_CLASSES': ('api.keycloak_authentication.UserAuthentication',
+                                       'api.sm_authentication.UserAuthentication'),
     'DEFAULT_PERMISSION_CLASSES': ('rest_framework.permissions.IsAuthenticated',),
     # 'EXCEPTION_HANDLER': 'core.exceptions.exception_handler',
     'DEFAULT_RENDERER_CLASSES': (
@@ -131,6 +132,8 @@ AMQP_CONNECTION_PARAMETERS = ConnectionParameters(
     virtual_host=AMQP['VHOST'],
     credentials=PlainCredentials(AMQP['USER'], AMQP['PASSWORD'])
 )
+
+KEYCLOAK = keycloak.config()
 
 # Internationalization
 # https://docs.djangoproject.com/en/1.8/topics/i18n/
