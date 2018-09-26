@@ -21,6 +21,12 @@ services:
           - RABBITMQ_PASSWORD=rabbitmq
           - RABBITMQ_HOST=rabbit
           - RABBITMQ_PORT=5672
+          - KEYCLOAK_ENABLED=True
+          - KEYCLOAK_AUDIENCE=tfrs-app
+          - KEYCLOAK_CLIENT_ID=tfrs-app
+          - KEYCLOAK_REALM=http://localhost:8888/auth/realms/tfrs
+          - KEYCLOAK_ISSUER=http://localhost:8888/auth/realms/tfrs
+          - KEYCLOAK_CERTS_URL=http://keycloak:8080/auth/realms/tfrs/protocol/openid-connect/certs
         depends_on:
             - db
         build:

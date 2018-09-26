@@ -1,13 +1,10 @@
 import {createUserManager} from "redux-oidc";
-
-import store from './store';
-import {getLoggedInUser} from "../actions/userActions";
-import {AxiosInstance as axios} from "axios";
+import CONFIG from '../config';
 
 const settings = {
-  authority: 'http://localhost:8888/auth/realms/tfrs',
-  client_id: 'tfrs-app',
-  redirect_uri: 'http://localhost:5001/authCallback'
+  authority: CONFIG.KEYCLOAK.AUTHORITY,
+  client_id: CONFIG.KEYCLOAK.CLIENT_ID,
+  redirect_uri: CONFIG.KEYCLOAK.CALLBACK_URL
 };
 
 const userManager = createUserManager(settings);

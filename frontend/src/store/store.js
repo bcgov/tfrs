@@ -18,7 +18,7 @@ const socketIoMiddleware = createSocketIoMiddleware(socket, 'socketio/');
 
 import { createUserManager, loadUser, processSilentRenew, reducer as OIDCReducer } from 'redux-oidc';
 import userManager from "./oidc-usermanager";
-
+import CONFIG from '../config';
 
 
 const store = process.env.NODE_ENV !== 'production' ? createStore(
@@ -62,7 +62,10 @@ store.subscribe(() => {
   }
 });
 
-loadUser(store, userManager);
-processSilentRenew();
+
+if (CONFIG.KEYCLOAK.ENABLED) {
+  loadUser(store, userManager);
+  processSilentRenew();
+}
 
 export default store;

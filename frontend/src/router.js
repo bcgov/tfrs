@@ -30,22 +30,22 @@ import SettingsContainer from './settings/SettingsContainer';
 import UserViewContainer from './users/UserViewContainer';
 import NotificationsContainer from './notifications/NotificationsContainer';
 import AuthCallback from "./app/AuthCallback";
+import CONFIG from './config';
 
 const Router = props => (
   <ConnectedRouter history={history} key={Math.random()}>
 <App>
     <Switch>
-    <Route
-      exact
-      path='/authCallback'
-      component={withRouter(AuthCallback)}
-    />
+      {CONFIG.KEYCLOAK.ENABLED && <Route
+        exact
+        path='/authCallback'
+        component={withRouter(AuthCallback)}
+      />}
         <Route
           exact
           path={Routes.HOME}
           component={withRouter(CreditTransactionsContainer)
           }
-
         />
         <Route
           exact

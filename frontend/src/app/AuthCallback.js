@@ -12,7 +12,7 @@ class AuthCallback extends React.Component {
         successCallback={this.props.success}
         errorCallback={this.props.error}
       >
-        <div>Stand by...</div>
+        <div>Authentication complete. Redirecting.</div>
       </CallbackComponent>
     );
   }

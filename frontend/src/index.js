@@ -13,13 +13,34 @@ import '../styles/index.scss';
 import { OidcProvider } from "redux-oidc";
 import userManager from "./store/oidc-usermanager";
 
-//store.dispatch(getLoggedInUser());
+import CONFIG from './config';
 
-ReactDOM.render(
+if (CONFIG.KEYCLOAK.ENABLED) {
+
+  // Inject the keycloak provider
+
+  ReactDOM.render(
     <Provider store={store}>
       <OidcProvider store={store} userManager={userManager}>
         <Router />
       </OidcProvider>
     </Provider>,
-  document.getElementById('root')
-);
+    document.getElementById('root')
+  );
+
+
+} else {
+  //Keycloak is off -- old behaviour
+
+  store.dispatch(getLoggedInUser());
+
+  ReactDOM.render(
+    <Provider store={store}>
+      <Router />
+    </Provider>,
+    document.getElementById('root')
+  );
+
+
+
+}
