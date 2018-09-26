@@ -1,13 +1,41 @@
-node('bddstack') {
+stage('FT on Dev') {
+    environment {
+    	SUPPLIER_ONE_USERNAME='jlepitzki'
+	SUPPLIER_ONE_PASSWORD=credentials('SUPPLIER_ONE_PASSWORD')
+	SUPPLIER_TWO_USERNAME='justin.wakelam'
+	SUPPLIER_TWO_PASSWORD=credentials('SUPPLIER_TWO_PASSWORD')
+	SUPPLIER_TWO_ORG='TFRS IMBeing Green'
+	ANALYST_USERNAME='jlepitz'
+	ANALYST_PASSWORD=credentials('ANALYST_PASSWORD')
+	DIRECTOR_USERNAME='jlepitz'
+	DIRECTOR_PASSWORD=credentials('DIRECTOR_PASSWORD')
+    }
+    
+    podTemplate(label: "develop-frontend-bddstack-${env.BUILD_NUMBER}", name: "develop-frontend-bddstack-${env.BUILD_NUMBER}", serviceAccount: 'jenkins', cloud: 'openshift',
+        containers: [
+            containerTemplate(
+                name: 'jnlp',
+                image: '172.50.0.2:5000/mem-tfrs-tools/bddstack-tfrs:latest',
+                resourceRequestCpu: '500m',
+                resourceLimitCpu: '1000m',
+                resourceRequestMemory: '2Gi',
+                resourceLimitMemory: '4Gi',
+                workingDir: '/home/jenkins',
+                command: '',
+                args: '${computer.jnlpmac} ${computer.name}'
+            )
+        ]
+    ) {
+    node("develop-frontend-bddstack-${env.BUILD_NUMBER}") {
 
-	stage('FT on Dev') {
-      checkout scm
-      dir('functional-tests') {
+        echo "checking out source"
+        echo "Build: ${BUILD_ID}"
+        checkout scm
+        dir('functional-tests') {
 	    try {   
-                echo ">> FT_LOG_LEVEL=${FT_LOG_LEVEL}"
                 sh './gradlew --debug --stacktrace chromeHeadlessTest'
 	    } finally {
-		     archiveArtifacts allowEmptyArchive: true, artifacts: 'build/reports/**/*'
+		archiveArtifacts allowEmptyArchive: true, artifacts: 'build/reports/**/*'
                 archiveArtifacts allowEmptyArchive: true, artifacts: 'build/test-results/**/*'
                 junit 'build/test-results/**/*.xml'
                 publishHTML (target: [
@@ -26,7 +54,8 @@ node('bddstack') {
                             reportFiles: 'index.html',
                             reportName: "Full Test Report"
                         ])        
-	    }
-      }
-  }
-}
+	    } //end of finally
+        } //end of dir
+    } //end of node
+    } //end of podTemplate 
+} //end of stage
