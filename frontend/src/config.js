@@ -1,14 +1,16 @@
 /*
- Used to track feature configuration, defaults here and also injected via
+ Used to track feature configuration, injected via
   Webpack (from environment variables or similar)
 */
 
+
 let CONFIG = {
   KEYCLOAK: {
-    ENABLED: true,
-    AUTHORITY: 'http://localhost:8888/auth/realms/tfrs',
-    CLIENT_ID: 'tfrs-app',
-    CALLBACK_URL: 'http://localhost:5001/authCallback'
+    ENABLED: __INJECTED_CONFIG.KEYCLOAK.ENABLED,
+    AUTHORITY: __INJECTED_CONFIG.KEYCLOAK.AUTHORITY,
+    CLIENT_ID: __INJECTED_CONFIG.KEYCLOAK.CLIENT_ID,
+    CALLBACK_URL: __INJECTED_CONFIG.KEYCLOAK.CALLBACK_URL,
+    POST_LOGOUT_URL: __INJECTED_CONFIG.KEYCLOAK.POST_LOGOUT_URL
   }
 };
 

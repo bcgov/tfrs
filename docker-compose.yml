@@ -21,7 +21,7 @@ services:
           - RABBITMQ_PASSWORD=rabbitmq
           - RABBITMQ_HOST=rabbit
           - RABBITMQ_PORT=5672
-          - KEYCLOAK_ENABLED=True
+          - KEYCLOAK_ENABLED=False
           - KEYCLOAK_AUDIENCE=tfrs-app
           - KEYCLOAK_CLIENT_ID=tfrs-app
           - KEYCLOAK_REALM=http://localhost:8888/auth/realms/tfrs
@@ -65,6 +65,13 @@ services:
             - RABBITMQ_PASSWORD=rabbitmq
             - RABBITMQ_HOST=rabbit
             - RABBITMQ_PORT=5672
+            - KEYCLOAK_ENABLED=False
+            - KEYCLOAK_AUTHORITY=http://localhost:8888/auth/realms/tfrs
+            - KEYCLOAK_CLIENT_ID=tfrs-app
+            - KEYCLOAK_REALM=http://localhost:8888/auth/realms/tfrs
+            - KEYCLOAK_ISSUER=http://localhost:8888/auth/realms/tfrs
+            - KEYCLOAK_CALLBACK_URL=http://localhost:5001/authCallback
+            - KEYCLOAK_POST_LOGOUT_URL=http://localhost:5001/
         volumes:
             - ./frontend:/app
             - node_modules:/app/node_modules

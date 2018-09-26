@@ -20,9 +20,6 @@ const getLoggedInUser = () => (dispatch) => {
   dispatch(getLoggedInUserRequest());
   axios.get(Routes.BASE_URL + Routes.CURRENT_USER)
     .then((response) => {
-      // localStorage.setItem('isAuthenticated', true);
-      // localStorage.setItem('loggedInUser', response.data);
-
       dispatch(getLoggedInUserSuccess(response.data));
     }).catch((error) => {
       dispatch(getLoggedInUserError(error.response));
@@ -32,7 +29,9 @@ const getLoggedInUser = () => (dispatch) => {
 const signUserOut = () => (dispatch) => {
   if (CONFIG.KEYCLOAK.ENABLED) {
     userManager.removeUser().then(() => {
-      return userManager.signoutRedirect().then(() => {
+      return userManager.signoutRedirect({
+        post_logout_redirect_uri: CONFIG.KEYCLOAK.POST_LOGOUT_URL
+      }).then(() => {
         dispatch(signUserOutAction());
       });
     });
