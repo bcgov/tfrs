@@ -3,6 +3,8 @@ import axios from 'axios';
 import ActionTypes from '../constants/actionTypes/Users';
 import ReducerTypes from '../constants/reducerTypes/Users';
 import * as Routes from '../constants/routes';
+import userManager from '../store/oidc-usermanager';
+import CONFIG from '../config';
 
 const getUsers = () => (dispatch) => {
   dispatch(getUsersRequest());
@@ -26,6 +28,23 @@ const getLoggedInUser = () => (dispatch) => {
       dispatch(getLoggedInUserError(error.response));
     });
 };
+
+const signUserOut = () => (dispatch) => {
+  if (CONFIG.KEYCLOAK.ENABLED) {
+    userManager.removeUser().then(() => {
+      return userManager.signoutRedirect().then(() => {
+        dispatch(signUserOutAction());
+      });
+    });
+  } else {
+    dispatch(signUserOutAction());
+  }
+};
+
+const signUserOutAction = () => ({
+  name: ReducerTypes.SIGN_USER_OUT,
+  type: ActionTypes.SIGN_USER_OUT
+});
 
 const getLoggedInUserRequest = () => ({
   name: ReducerTypes.GET_LOGGED_IN_USER,
@@ -89,6 +108,4 @@ const getUsersError = error => ({
   errorMessage: error
 });
 
-export {
-  getUsers, getLoggedInUser, getUser
-};
+export { getUsers, getLoggedInUser, getUser, signUserOut };

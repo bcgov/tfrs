@@ -10,6 +10,7 @@ import * as Routes from '../../constants/routes';
 import { HISTORICAL_DATA_ENTRY } from '../../constants/routes/Admin';
 import CREDIT_TRANSACTIONS from '../../constants/routes/CreditTransactions';
 import ORGANIZATIONS from '../../constants/routes/Organizations';
+import { signUserOut } from '../../actions/userActions';
 
 class Navbar extends Component {
   static updateContainerPadding () {
@@ -324,7 +325,8 @@ class Navbar extends Component {
                         >
                           <FontAwesomeIcon icon="cog" /> Settings
                         </MenuItem>
-                        <MenuItem href={Routes.LOGOUT}>
+                        {/*todo propagate correctly when not using keycloak, and copy this behaviour to gov user*/}
+                        <MenuItem onClick={(e) => { e.preventDefault(); this.props.dispatch(signUserOut()); }} href={Routes.LOGOUT}>
                           <FontAwesomeIcon icon="sign-out-alt" /> Log Out
                         </MenuItem>
                       </DropdownButton>

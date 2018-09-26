@@ -12,19 +12,12 @@ const getNotifications = () => (dispatch) => {
   dispatch(getNotificationsRequest());
 
 
-  userManager.getUser().then((user) => {
-    console.log(user);
-    axios.defaults.headers.common['Authorization'] =
-      'Bearer ' + user.id_token;
-
     axios.get(Routes.BASE_URL + Routes.NOTIFICATIONS.LIST)
       .then((response) => {
         dispatch(getNotificationsSuccess(response.data));
       }).catch((error) => {
       dispatch(getNotificationsError(error.response));
     });
-
-  });
 
 
 };
