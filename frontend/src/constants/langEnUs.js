@@ -51,3 +51,7 @@ export const TEXT_COMMENT_DIRTY = 'You are currently editing a comment. Save or 
                                   'performing other actions';
 export const TEXT_COMMENT_REQUIRED = 'Comment is required before a credit transaction can ' +
                                      'be recommended';
+
+export const TEXT_ERROR_MAX_DECIMALS = 'Cannot add more decimals.';
+export const TEXT_ERROR_MULTIPLE_DOTS = 'Multiple dots are not allowed.';
+export const TEXT_ERROR_NEGATIVE_VALUE = 'Negative values are not allowed.';
