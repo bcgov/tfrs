@@ -16,6 +16,10 @@ class UserAuthentication(authentication.BaseAuthentication):
     """
     def authenticate(self, request):
 
+        if settings.KEYCLOAK['ENABLED']:
+            # fall through
+            return None
+
         # Bypass auth env variable
         if settings.BYPASS_AUTH:
             return (User.objects.first(), None)

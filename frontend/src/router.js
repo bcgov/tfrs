@@ -29,22 +29,32 @@ import OrganizationViewContainer from './organizations/OrganizationViewContainer
 import SettingsContainer from './settings/SettingsContainer';
 import UserViewContainer from './users/UserViewContainer';
 import NotificationsContainer from './notifications/NotificationsContainer';
+import AuthCallback from './app/AuthCallback';
+import CONFIG from './config';
+import userManager from './store/oidc-usermanager';
+import {signUserOut} from "./actions/userActions";
 
 const Router = props => (
   <ConnectedRouter history={history} key={Math.random()}>
     <App>
       <Switch>
+        {CONFIG.KEYCLOAK.ENABLED && <Route
+          exact
+          path="/authCallback"
+          component={withRouter(AuthCallback)}
+        />}
         <Route
           exact
           path={Routes.HOME}
-          component={withRouter(CreditTransactionsContainer)}
+          component={withRouter(CreditTransactionsContainer)
+          }
         />
         <Route
           exact
           path={Routes.LOGOUT}
           component={() => {
             const logoutUrl = (window.location.host === 'dev.lowcarbonfuels.gov.bc.ca' ||
-            window.location.host === 'test.lowcarbonfuels.gov.bc.ca')
+                  window.location.host === 'test.lowcarbonfuels.gov.bc.ca')
               ? `${__LOGOUT_TEST_URL__}?returl=${window.location.origin}`
               : `${__LOGOUT_URL__}?returl=${window.location.origin}`;
 

@@ -12,8 +12,11 @@ from pathlib import Path
 from django.core.wsgi import get_wsgi_application
 from dotenv import load_dotenv
 
-ENV = Path('..') / '.env'
-load_dotenv(dotenv_path=ENV)
+try:
+    ENV = Path('..') / '.env'
+    load_dotenv(dotenv_path=ENV)
+except TypeError:
+    pass  # path doesn't exist. no cause for alarm.
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "tfrs.settings")
 
