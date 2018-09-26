@@ -11,9 +11,18 @@ import Footer from './components/Footer';
 
 import StatusInterceptor from './components/StatusInterceptor';
 
+import CONFIG from '../config';
+
+import KeycloakAwareApp from './KeycloakAwareApp';
+
 const App = (props) => {
+  if (CONFIG.KEYCLOAK.ENABLED) {
+    return <KeycloakAwareApp>{props.children}</KeycloakAwareApp>;
+  }
+
   let content;
-  if (props.errorRequest.hasErrors && props.errorRequest.error.status) {
+
+  if (props.errorRequest.hasErrors && props.errorRequest.error && props.errorRequest.error.status) {
     content = <StatusInterceptor statusCode={props.errorRequest.error.status} />;
   } else if (!props.userRequest.isFetching && props.isAuthenticated) {
     content = props.children;

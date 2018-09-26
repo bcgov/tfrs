@@ -221,8 +221,7 @@ class TestUsersAPI(BaseAPISecurityTestCase):
 
     def test_put_or_patch_on_self(self):
         """
-        Test that put/patch on users is not a semantically valid action
-        This will probably change in future versions
+        Test that put/patch on self is a semantically valid action
         """
         url = "/api/users/{0!s}"
 
@@ -245,7 +244,7 @@ class TestUsersAPI(BaseAPISecurityTestCase):
                     'last_name': 'Pilot',
                     'email': 'test_pilot_{0!s}@test.com'.format(index),
                     'authorization_id': 'test_pilot_{0!s}'.format(index),
-                    'username': 'test_pilot_{0!s}'.format(index),
+                    'username': user,
                     'authorization_guid': str(uuid.uuid4()),
                     'authorization_directory': 'IDIR',
                     'display_name': 'Canary'

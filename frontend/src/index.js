@@ -10,12 +10,34 @@ import { getLoggedInUser } from './actions/userActions';
 import Router from './router';
 
 import '../styles/index.scss';
+import { OidcProvider } from 'redux-oidc';
+import userManager from './store/oidc-usermanager';
 
-store.dispatch(getLoggedInUser());
+import CONFIG from './config';
+import configureAxios from "./store/authorizationInterceptor";
 
-ReactDOM.render(
-  <Provider store={store}>
-    <Router />
-  </Provider>,
-  document.getElementById('root')
-);
+if (CONFIG.KEYCLOAK.ENABLED) {
+  // Inject the keycloak provider
+
+  configureAxios();
+
+  ReactDOM.render(
+    <Provider store={store}>
+      <OidcProvider store={store} userManager={userManager}>
+        <Router />
+      </OidcProvider>
+    </Provider>,
+    document.getElementById('root')
+  );
+} else {
+  // Keycloak is off -- old behaviour
+
+  store.dispatch(getLoggedInUser());
+
+  ReactDOM.render(
+    <Provider store={store}>
+      <Router />
+    </Provider>,
+    document.getElementById('root')
+  );
+}
