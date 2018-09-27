@@ -37,11 +37,11 @@ const NotificationsTable = (props) => {
       return (
         <button
           type="button"
-          onClick={() =>
-            props.updateNotification(row.original.id, { isRead: true }).then(() => {
-              history.push(viewUrl);
-            })
-          }
+          onClick={() => {
+            props.updateNotification(row.original.id, { isRead: true });
+
+            history.push(viewUrl);
+          }}
         >
           {row.value}
         </button>
@@ -73,11 +73,11 @@ const NotificationsTable = (props) => {
       return (
         <button
           type="button"
-          onClick={() =>
-            props.updateNotification(row.original.id, { isRead: true }).then(() => {
-              history.push(viewUrl);
-            })
-          }
+          onClick={() => {
+            props.updateNotification(row.original.id, { isRead: true });
+
+            history.push(viewUrl);
+          }}
         >
           {row.value}
         </button>
