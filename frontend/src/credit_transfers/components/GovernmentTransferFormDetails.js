@@ -4,6 +4,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
+import InputWithTooltip from '../../app/components/InputWithTooltip';
 import { CREDIT_TRANSFER_TYPES } from '../../constants/values';
 
 const GovernmentTransferFormDetails = props => (
@@ -47,15 +48,13 @@ const GovernmentTransferFormDetails = props => (
       <div className="row">
         <div className="form-group col-md-6">
           <label htmlFor="number-of-credits">Number of Credits:
-            <input
-              className="form-control"
+            <InputWithTooltip
+              handleInputChange={props.handleInputChange}
               id="number-of-credits"
               min="0"
               name="numberOfCredits"
-              onChange={props.handleInputChange}
-              required="required"
+              required
               step="1"
-              type="number"
               value={props.fields.numberOfCredits}
             />
           </label>
