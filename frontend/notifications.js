@@ -7,7 +7,7 @@ const password = process.env.RABBITMQ_PASSWORD || 'guest';
 const amqpHost = process.env.RABBITMQ_HOST || 'localhost';
 const amqpPort = process.env.RABBITMQ_PORT || 5672;
 
-const connect = function (io) {
+const connect = (io) => {
   const connection = amqp.createConnection({
     host: amqpHost,
     port: amqpPort,

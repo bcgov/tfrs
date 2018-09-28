@@ -13,6 +13,7 @@
     "axios": "^0.16.2",
     "babel-polyfill": "^6.26.0",
     "body-parser": "^1.17.1",
+    "dotenv-webpack": "^1.5.7",
     "eslint-plugin-jest": "^21.15.1",
     "express": "^4.15.2",
     "express-history-api-fallback": "^2.2.1",
@@ -21,6 +22,7 @@
     "isomorphic-fetch": "^2.2.1",
     "moment": "^2.20.1",
     "numeral": "^2.0.6",
+    "oidc-client": "^1.4.1",
     "path": "^0.12.7",
     "prop-types": "^15.6.2",
     "react": "^16.4.1",
@@ -38,12 +40,14 @@
     "react-text-mask": "^5.4.2",
     "redux": "^3.6.0",
     "redux-logger": "^3.0.1",
+    "redux-oidc": "^3.0.0",
     "redux-socket.io": "^1.4.0",
     "redux-thunk": "^2.2.0",
+    "snyk": "^1.95.3",
     "socket.io": "^2.1.1",
-    "webpack": "^4.17.1",
     "socket.io-client": "latest",
-    "socket.io-middleware": "^0.2.1"
+    "socket.io-middleware": "^0.2.1",
+    "webpack": "^4.17.1"
   },
   "devDependencies": {
     "babel-core": "^6.26.3",
@@ -80,9 +84,12 @@
   "scripts": {
     "start": "node server",
     "start:docker": "node server-docker.js",
+    "start:notifications": "node server-notifications.js",
     "production": "NODE_ENV=production webpack -p --config webpack.production.config.js",
     "build": "webpack",
-    "test": "jest --coverage"
+    "test": "jest --coverage",
+    "snyk-protect": "snyk protect",
+    "prepare": "npm run snyk-protect"
   },
   "jest": {
     "collectCoverageFrom": [
@@ -96,5 +103,6 @@
         "statements": -50
       }
     }
-  }
+  },
+  "snyk": true
 }

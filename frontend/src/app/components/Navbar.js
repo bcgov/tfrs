@@ -10,6 +10,8 @@ import * as Routes from '../../constants/routes';
 import { HISTORICAL_DATA_ENTRY } from '../../constants/routes/Admin';
 import CREDIT_TRANSACTIONS from '../../constants/routes/CreditTransactions';
 import ORGANIZATIONS from '../../constants/routes/Organizations';
+import { signUserOut } from '../../actions/userActions';
+import CONFIG from '../../config';
 
 class Navbar extends Component {
   static updateContainerPadding () {
@@ -29,28 +31,19 @@ class Navbar extends Component {
   }
 
   render () {
-    const dataAttrs = {};
+    let unreadCount = 0;
+
     if (this.props.unreadNotificationsCount > 0 && this.props.unreadNotificationsCount < 1000) {
-      dataAttrs['data-unread-count'] = this.props.unreadNotificationsCount;
+      unreadCount = this.props.unreadNotificationsCount;
     }
+
     if (this.props.unreadNotificationsCount > 1000) {
-      dataAttrs['data-unread-count'] = '∞';
+      unreadCount = '∞';
     }
 
     const SecondLevelNavigation = (
       <div className="level2Navigation">
         <div className="container">
-          <div className="notifications">
-            <NavLink
-              activeClassName="active"
-              id="navbar-notifications"
-              to={Routes.NOTIFICATIONS.LIST}
-            >
-              <span className="fa-stack unread-badge" {...dataAttrs}>
-                <i className="fa fa-bell" />
-              </span>
-            </NavLink>
-          </div>
           {this.props.loggedInUser.isGovernmentUser &&
           <NavLink
             activeClassName="active"
@@ -126,6 +119,18 @@ class Navbar extends Component {
             Administration
           </NavLink>
           }
+          <NavLink
+            activeClassName="active"
+            id="navbar-notifications"
+            to={Routes.NOTIFICATIONS.LIST}
+          >
+            <span className="fa-layers">
+              <FontAwesomeIcon icon="bell" />
+              {unreadCount > 0 &&
+                <span className="fa-layers-counter">{unreadCount}</span>
+              }
+            </span>
+          </NavLink>
         </div>
       </div>
     );
@@ -194,6 +199,7 @@ class Navbar extends Component {
           }
           <li>
             <NavLink
+              activeClassName="active"
               id="collapse-navbar-credit-transactions"
               to={CREDIT_TRANSACTIONS.LIST}
             >
@@ -218,14 +224,35 @@ class Navbar extends Component {
           </li>
           }
           <li>
+            <NavLink
+              activeClassName="active"
+              id="navbar-notifications"
+              to={Routes.NOTIFICATIONS.LIST}
+            >
+                Notifications
+              {unreadCount > 0 &&
+                <span> ({unreadCount})</span>
+              }
+            </NavLink>
+          </li>
+          <li>
             <NavLink id="navbar-settings" to={Routes.SETTINGS}>
               Settings
             </NavLink>
           </li>
           <li>
-            <NavLink id="navbar-logout" to={Routes.LOGOUT}>
+            {CONFIG.KEYCLOAK.ENABLED && <NavLink
+              id="navbar-logout"
+              onClick={(e) => { e.preventDefault(); this.props.dispatch(signUserOut()); }}
+              to={Routes.LOGOUT}>
               Log Out
             </NavLink>
+            }
+            {CONFIG.KEYCLOAK.ENABLED || <NavLink id="navbar-logout" to={Routes.LOGOUT}>
+              Log Out
+            </NavLink>
+            }
+
           </li>
         </ul>
       </div>);
@@ -237,7 +264,7 @@ class Navbar extends Component {
             <div id="header-main-row" className="row">
               <div className="col-sm-3 col-md-2 col-lg-2 header-main-left">
                 <div id="logo">
-                  <a id="gov-logo" href="http://gov.bc.ca">
+                  <a href="http://gov.bc.ca">
                     <img
                       src="/assets/images/gov3_bc_logo.png"
                       alt="Province of British Columbia"
@@ -308,9 +335,17 @@ class Navbar extends Component {
                         >
                           <FontAwesomeIcon icon="cog" /> Settings
                         </MenuItem>
+                        {CONFIG.KEYCLOAK.ENABLED &&
+                        <MenuItem onClick={(e) => { e.preventDefault(); this.props.dispatch(signUserOut()); }}>
+                          <FontAwesomeIcon icon="sign-out-alt" /> Log Out
+                        </MenuItem>
+                          }
+                        {CONFIG.KEYCLOAK.ENABLED ||
                         <MenuItem href={Routes.LOGOUT}>
                           <FontAwesomeIcon icon="sign-out-alt" /> Log Out
                         </MenuItem>
+                        }
+
                       </DropdownButton>
                     }
                   </h5>
@@ -335,7 +370,12 @@ Navbar.defaultProps = {
   unreadNotificationsCount: null
 };
 
+Navbar.defaultProps = {
+  unreadNotificationsCount: null
+};
+
 Navbar.propTypes = {
+  isAuthenticated: PropTypes.bool.isRequired,
   loggedInUser: PropTypes.shape({
     displayName: PropTypes.string,
     isGovernmentUser: PropTypes.bool,
@@ -347,7 +387,6 @@ Navbar.propTypes = {
       id: PropTypes.number
     }))
   }).isRequired,
-  isAuthenticated: PropTypes.bool.isRequired,
   unreadNotificationsCount: PropTypes.number
 };
 

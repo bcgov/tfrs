@@ -69,7 +69,19 @@ const config = {
   devtool: 'source-map', // 'source-map', // debug
   plugins: [
     new Webpack.DefinePlugin({
-      __VERSION__: JSON.stringify(packageJson.version)
+      __VERSION__: JSON.stringify(packageJson.version),
+      __INJECTED_CONFIG: {
+        KEYCLOAK: {
+          ENABLED: process.env.KEYCLOAK_ENABLED &&
+            (process.env.KEYCLOAK_ENABLED.toLowerCase() === 'true'),
+          AUTHORITY: JSON.stringify(process.env.KEYCLOAK_AUTHORITY || 'unconfigured'),
+          CLIENT_ID: JSON.stringify(process.env.KEYCLOAK_CLIENT_ID || 'unconfigured'),
+          REALM: JSON.stringify(process.env.KEYCLOAK_REALM || 'unconfigured'),
+          ISSUE: JSON.stringify(process.env.KEYCLOAK_ISSUER || 'unconfigured'),
+          CALLBACK_URL: JSON.stringify(process.env.KEYCLOAK_CALLBACK_URL || 'unconfigured'),
+          POST_LOGOUT_URL: JSON.stringify(process.env.KEYCLOAK_POST_LOGOUT_URL || 'unconfigured')
+        }
+      }
     }),
     new Webpack.HotModuleReplacementPlugin()
   ]

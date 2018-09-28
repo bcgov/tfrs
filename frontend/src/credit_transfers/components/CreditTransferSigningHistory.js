@@ -70,11 +70,22 @@ class CreditTransferSigningHistory extends Component {
       <div>
         <h3 className="signing-authority-header" key="header">Transaction History</h3>
         {this.props.history.length > 0 &&
-        this.props.history.map((history) => {
+        this.props.history.map((history, index, arr) => {
           let action;
           if (history.isRescinded) {
             action = CreditTransferSigningHistory.renderRescinded();
           } else {
+            if ([ // if the next history entry is also recommended/not recommended, don't show it
+              CREDIT_TRANSFER_STATUS.notRecommended.id,
+              CREDIT_TRANSFER_STATUS.recommendedForDecision.id
+            ].includes(history.status.id) &&
+            (index + 1) < arr.length && [
+              CREDIT_TRANSFER_STATUS.notRecommended.id,
+              CREDIT_TRANSFER_STATUS.recommendedForDecision.id
+            ].includes(arr[index + 1].status.id)) {
+              return false;
+            }
+
             switch (history.status.id) {
               case CREDIT_TRANSFER_STATUS.accepted.id:
                 action = this._renderAccepted(history);

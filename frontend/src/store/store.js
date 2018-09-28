@@ -9,6 +9,11 @@ import rootReducer from '../reducers/reducer';
 import { getNotifications } from '../actions/notificationActions';
 import { SOCKETIO_URL } from '../constants/routes';
 
+import { createUserManager, loadUser, processSilentRenew, reducer as OIDCReducer } from 'redux-oidc';
+import userManager from './oidc-usermanager';
+import CONFIG from '../config';
+import { getLoggedInUser } from '../actions/userActions';
+
 const middleware = routerMiddleware(history);
 
 const loggerMiddleware = createLogger();
@@ -20,7 +25,8 @@ const store = process.env.NODE_ENV !== 'production' ? createStore(
   combineReducers({
     rootReducer,
     routing: routerReducer,
-    toastr: toastrReducer
+    toastr: toastrReducer,
+    oidc: OIDCReducer
   }),
   applyMiddleware(
     thunk,
@@ -32,7 +38,8 @@ const store = process.env.NODE_ENV !== 'production' ? createStore(
   combineReducers({
     rootReducer,
     routing: routerReducer,
-    toastr: toastrReducer
+    toastr: toastrReducer,
+    oidc: OIDCReducer
   }),
   applyMiddleware(
     thunk,
@@ -48,11 +55,25 @@ store.subscribe(() => {
   if (!subscriptionProcessing) {
     subscriptionProcessing = true;
 
-    if (state.rootReducer.notificationsReducer.serverInitiatedReloadRequested === true) {
+    if (state.rootReducer.notifications.serverInitiatedReloadRequested === true) {
       store.dispatch(getNotifications());
     }
+
+    if (CONFIG.KEYCLOAK.ENABLED) {
+      if (state.oidc.user &&
+        !state.rootReducer.userRequest.isFetching &&
+        !state.rootReducer.userRequest.isAuthenticated) {
+        store.dispatch(getLoggedInUser());
+      }
+    }
+
     subscriptionProcessing = false;
   }
 });
+
+if (CONFIG.KEYCLOAK.ENABLED) {
+  loadUser(store, userManager);
+  processSilentRenew();
+}
 
 export default store;

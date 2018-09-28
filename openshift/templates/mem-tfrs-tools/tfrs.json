@@ -11,7 +11,7 @@
             "apiVersion": "v1",
             "metadata": {
                 "name": "tfrs",
-                "generation": 137,
+                "generation": 145,
                 "creationTimestamp": null
             },
             "spec": {
@@ -39,7 +39,7 @@
                             "kind": "DockerImage",
                             "name": "docker-registry.default.svc:5000/mem-tfrs-tools/tfrs:prod"
                         },
-                        "generation": 130,
+                        "generation": 138,
                         "importPolicy": {},
                         "referencePolicy": {
                             "type": "Source"
@@ -52,7 +52,7 @@
                             "kind": "DockerImage",
                             "name": "docker-registry.default.svc:5000/mem-tfrs-tools/tfrs:test"
                         },
-                        "generation": 137,
+                        "generation": 145,
                         "importPolicy": {},
                         "referencePolicy": {
                             "type": "Source"
@@ -89,7 +89,7 @@
                     "type": "Git",
                     "git": {
                         "uri": "https://github.com/bcgov/tfrs.git",
-                        "ref": "v1.0.2"
+                        "ref": "v1.0.7"
                     },
                     "contextDir": "backend"
                 },

@@ -11,7 +11,7 @@ const GovernmentTransferFormDetails = props => (
     <div className="main-form">
       <div className="row">
         <div className="form-group col-md-6">
-          <label htmlFor="transfer-type">Transfer Type:
+          <label htmlFor="transfer-type">Transaction Type:
             <div className="btn-group" role="group">
               <button type="button" className={`btn btn-default ${(props.fields.tradeType.id === CREDIT_TRANSFER_TYPES.part3Award.id) ? 'active' : ''}`} name="tradeType" value={CREDIT_TRANSFER_TYPES.part3Award.id} onClick={props.handleInputChange}>Part 3 Award</button>
               <button type="button" className={`btn btn-default ${(props.fields.tradeType.id === CREDIT_TRANSFER_TYPES.validation.id) ? 'active' : ''}`} name="tradeType" value={CREDIT_TRANSFER_TYPES.validation.id} onClick={props.handleInputChange}>Validation</button>

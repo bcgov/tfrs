@@ -1,5 +1,6 @@
 # Visual Studio
 .vs/
+.vscode/
 
 # Django
 db.sqlite3
@@ -17,6 +18,7 @@ __pycache__/
 
 # Distribution / packaging
 .Python
+.env
 env/
 build/
 develop-eggs/
@@ -82,3 +84,8 @@ frontend/sonar-runner/.gradle
 
 # Gitbook
 _book/
+
+# Sonar settings
+backend/sonar-runner/.settings/
+frontend/sonar-runner/.settings/
+sonar-runner/.settings/

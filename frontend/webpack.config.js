@@ -1,5 +1,6 @@
 const Webpack = require('webpack');
 const packageJson = require('./package.json');
+const Dotenv = require('dotenv-webpack');
 const path = require('path');
 
 const nodeModulesPath = path.resolve(__dirname, 'node_modules');
@@ -11,6 +12,7 @@ const config = {
   // Makes sure errors in console map to the correct file
   // and line numbe
   // devtool: 'eval',
+  mode: 'development',
   entry: [
     // Polyfill for Object.assign on IE11, etc
     'babel-polyfill',
@@ -92,11 +94,26 @@ const config = {
   // We have to manually add the Hot Replacement plugin when running
   // from Node
   plugins: [
+    new Dotenv({
+      path: '../.env'
+    }),
     new Webpack.HotModuleReplacementPlugin(),
     new Webpack.DefinePlugin({
       __LOGOUT_TEST_URL__: JSON.stringify('https://logontest.gov.bc.ca/clp-cgi/logoff.cgi'),
       __LOGOUT_URL__: JSON.stringify('https://logon.gov.bc.ca/clp-cgi/logoff.cgi'),
-      __VERSION__: JSON.stringify(packageJson.version)
+      __VERSION__: JSON.stringify(packageJson.version),
+      __INJECTED_CONFIG: {
+        KEYCLOAK: {
+          ENABLED: process.env.KEYCLOAK_ENABLED &&
+            (process.env.KEYCLOAK_ENABLED.toLowerCase() === 'true'),
+          AUTHORITY: JSON.stringify(process.env.KEYCLOAK_AUTHORITY || 'unconfigured'),
+          CLIENT_ID: JSON.stringify(process.env.KEYCLOAK_CLIENT_ID || 'unconfigured'),
+          REALM: JSON.stringify(process.env.KEYCLOAK_REALM || 'unconfigured'),
+          ISSUE: JSON.stringify(process.env.KEYCLOAK_ISSUER || 'unconfigured'),
+          CALLBACK_URL: JSON.stringify(process.env.KEYCLOAK_CALLBACK_URL || 'unconfigured'),
+          POST_LOGOUT_URL: JSON.stringify(process.env.KEYCLOAK_POST_LOGOUT_URL || 'unconfigured')
+        }
+      }
     })
   ]
 };

@@ -9,8 +9,7 @@ from api.models.User import User
 class AuditableMixin(object,):
 
     def serialize_object(self, request, data):
-        header_user_guid = request.META.get('HTTP_SMAUTH_USERGUID')
-        user = User.objects.get(authorization_guid=header_user_guid)
+        user = request.user
         data.update({'create_user': user.id, 'update_user': user.id})
         serializer = self.get_serializer(data=data)
         serializer.is_valid(raise_exception=True)
@@ -39,8 +38,7 @@ class AuditableMixin(object,):
             partial = kwargs.pop('partial', False)
 
         instance = self.get_object()
-        header_user_guid = request.META.get('HTTP_SMAUTH_USERGUID')
-        user = User.objects.get(authorization_guid=header_user_guid)
+        user = request.user
         request.data.update({'update_user': user.id})
         serializer = self.get_serializer(instance, data=request.data,
                                          partial=partial)
