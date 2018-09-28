@@ -168,7 +168,7 @@ const CreditTransferFormButtons = props => (
           data-toggle="modal"
           type="button"
         >
-          <FontAwesomeIcon icon="hand-rock" /> {Lang.BTN_PULL_BACK}
+          <FontAwesomeIcon icon="undo-alt" /> {Lang.BTN_PULL_BACK}
         </button>
       }
       {props.actions.includes(Lang.BTN_RETURN_TO_DRAFT) &&
