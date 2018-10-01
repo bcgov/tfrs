@@ -2,6 +2,10 @@
 @import './mixins.scss';
 
 .page_organization {
+  .actions-container {
+    margin-bottom: 1rem;
+  }
+
   .col-status {
     text-align: center;
   }

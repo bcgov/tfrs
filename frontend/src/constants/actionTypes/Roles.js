@@ -1,0 +1,6 @@
+export default {
+  ERROR: 'ERROR',
+  GET_ROLES: 'GET_ROLES',
+  RECEIVE_ROLES: 'RECEIVE_ROLES',
+  SUCCESS: 'SUCCESS'
+};

@@ -17,6 +17,7 @@ import CreditTransactionsHistory from './admin/credit_trade_history/CreditTradeH
 import HistoricalDataEntryContainer from './admin/historical_data_entry/HistoricalDataEntryContainer';
 import HistoricalDataEntryEditContainer from './admin/historical_data_entry/HistoricalDataEntryEditContainer';
 import UsersContainer from './admin/users/UsersContainer';
+import UserAddContainer from './admin/users/UserAddContainer';
 import NotFound from './app/components/NotFound';
 import ContactUsContainer from './contact_us/ContactUsContainer';
 import CreditTransactionsContainer from './credit_transfers/CreditTransactionsContainer';
@@ -31,8 +32,6 @@ import UserViewContainer from './users/UserViewContainer';
 import NotificationsContainer from './notifications/NotificationsContainer';
 import AuthCallback from './app/AuthCallback';
 import CONFIG from './config';
-import userManager from './store/oidc-usermanager';
-import {signUserOut} from "./actions/userActions";
 
 const Router = props => (
   <ConnectedRouter history={history} key={Math.random()}>
@@ -133,6 +132,10 @@ const Router = props => (
         <Route
           path={ADMIN_USERS.DETAILS}
           component={withRouter(UserViewContainer)}
+        />
+        <Route
+          path={ADMIN_USERS.ADD}
+          component={withRouter(UserAddContainer)}
         />
         <Route
           exact
