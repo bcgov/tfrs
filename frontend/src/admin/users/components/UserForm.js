@@ -16,6 +16,8 @@ const UserForm = props => (
       <UserFormDetails
         addToFields={props.addToFields}
         fields={props.fields}
+        fuelSuppliers={props.fuelSuppliers}
+        handleInputChange={props.handleInputChange}
         roles={props.roles}
         toggleCheck={props.toggleCheck}
       />
@@ -31,7 +33,9 @@ const UserForm = props => (
           </button>
           <button
             className="btn btn-primary"
-            type="submit"
+            data-target="#confirmCreate"
+            data-toggle="modal"
+            type="button"
           >
             <FontAwesomeIcon icon="save" /> {Lang.BTN_SAVE_USER}
           </button>
@@ -49,6 +53,8 @@ UserForm.propTypes = {
   fields: PropTypes.shape({
     roles: PropTypes.array
   }).isRequired,
+  fuelSuppliers: PropTypes.arrayOf(PropTypes.shape()).isRequired,
+  handleInputChange: PropTypes.func.isRequired,
   roles: PropTypes.shape().isRequired,
   toggleCheck: PropTypes.func.isRequired
 };

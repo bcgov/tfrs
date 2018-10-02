@@ -3,8 +3,11 @@
  */
 import React from 'react';
 import PropTypes from 'prop-types';
+import Autosuggest from 'react-bootstrap-autosuggest';
 
 import CheckBox from '../../../app/components/CheckBox';
+import FuelSupplierAdapter from '../../../app/components/FuelSupplierAdapter';
+import ORGANIZATION_STATUSES from '../../../constants/organizationStatuses';
 
 const UserFormDetails = props => (
   <div className="user-details">
@@ -12,11 +15,12 @@ const UserFormDetails = props => (
       <div className="row">
         <div className="col-xs-6">
           <div className="form-group">
-            <label htmlFor="number-of-credits">First Name:
+            <label htmlFor="first-name">First Name:
               <input
                 className="form-control"
                 id="first-name"
                 name="firstName"
+                onChange={props.handleInputChange}
                 required="required"
                 type="text"
               />
@@ -28,11 +32,12 @@ const UserFormDetails = props => (
       <div className="row">
         <div className="col-xs-6">
           <div className="form-group">
-            <label htmlFor="number-of-credits">Last Name:
+            <label htmlFor="last-name">Last Name:
               <input
                 className="form-control"
                 id="last-name"
                 name="lastName"
+                onChange={props.handleInputChange}
                 required="required"
                 type="text"
               />
@@ -44,11 +49,12 @@ const UserFormDetails = props => (
       <div className="row">
         <div className="col-xs-6">
           <div className="form-group">
-            <label htmlFor="number-of-credits">BCeID:
+            <label htmlFor="bceid">BCeID:
               <input
                 className="form-control"
                 id="bceid"
                 name="bceid"
+                onChange={props.handleInputChange}
                 required="required"
                 type="text"
               />
@@ -60,7 +66,7 @@ const UserFormDetails = props => (
       <div className="row">
         <div className="col-xs-6">
           <div className="form-group">
-            <label htmlFor="number-of-credits">Work Phone:
+            <label htmlFor="work-phone">Work Phone:
               <input
                 className="form-control"
                 id="work-phone"
@@ -75,11 +81,12 @@ const UserFormDetails = props => (
       <div className="row">
         <div className="col-xs-6">
           <div className="form-group">
-            <label htmlFor="number-of-credits">Mobile Phone:
+            <label htmlFor="mobile-phone">Mobile Phone:
               <input
                 className="form-control"
                 id="mobile-phone"
                 name="mobilePhone"
+                onChange={props.handleInputChange}
                 type="text"
               />
             </label>
@@ -90,11 +97,12 @@ const UserFormDetails = props => (
       <div className="row">
         <div className="col-xs-6">
           <div className="form-group">
-            <label htmlFor="number-of-credits">Email:
+            <label htmlFor="email">Email:
               <input
                 className="form-control"
                 id="email"
                 name="email"
+                onChange={props.handleInputChange}
                 type="text"
               />
             </label>
@@ -106,12 +114,24 @@ const UserFormDetails = props => (
         <div className="col-xs-6">
           <div className="form-group">
             <label htmlFor="number-of-credits">Fuel Supplier:
-              <input
-                className="form-control"
-                id="organization"
+              <Autosuggest
+                datalist={props.fuelSuppliers}
+                datalistOnly
+                itemAdapter={new FuelSupplierAdapter()}
+                itemValuePropName="name"
                 name="organization"
-                required="required"
+                onChange={(selected) => {
+                  props.handleInputChange({
+                    target: {
+                      name: 'organization',
+                      value: selected.id
+                    }
+                  });
+                }}
+                placeholder="Select an Organization..."
+                required
                 type="text"
+                valueIsItem
               />
             </label>
           </div>
@@ -126,10 +146,12 @@ const UserFormDetails = props => (
                 className="form-control"
                 id="status"
                 name="status"
+                onChange={props.handleInputChange}
                 required="required"
               >
-                <option>Active</option>
-                <option>Inactive</option>
+                {Object.values(ORGANIZATION_STATUSES).map(status => (
+                  <option key={status.id} value={status.id}>{status.description}</option>
+                ))}
               </select>
             </label>
           </div>
@@ -146,7 +168,7 @@ const UserFormDetails = props => (
         <div className="row roles">
           {props.roles &&
             props.roles.items.map(role => (
-              <div className="col-xs-3 checkbox-group" key={role.id}>
+              <div className="col-xs-4 checkbox-group" key={role.id}>
                 <CheckBox
                   addToFields={props.addToFields}
                   className="checkbox"
@@ -172,6 +194,8 @@ UserFormDetails.propTypes = {
   fields: PropTypes.shape({
     roles: PropTypes.array
   }).isRequired,
+  fuelSuppliers: PropTypes.arrayOf(PropTypes.shape()).isRequired,
+  handleInputChange: PropTypes.func.isRequired,
   roles: PropTypes.shape({
     items: PropTypes.arrayOf(PropTypes.shape()).isRequired,
     isFetching: PropTypes.bool.isRequired
