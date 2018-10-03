@@ -82,7 +82,7 @@
                         "containers": [
                             {
                                 "name": "postgresql",
-                                "image": "registry.access.redhat.com/rhscl/postgresql-95-rhel7@sha256:f90b4ce7c2328e2f38d01e37b3a69cf60f06433df907ecb9432b0934af9624ed",
+                                "image": "docker-registry.default.svc:5000/openshift/postgresql@sha256:f90b4ce7c2328e2f38d01e37b3a69cf60f06433df907ecb9432b0934af9624ed",
                                 "ports": [
                                     {
                                         "containerPort": 5432,

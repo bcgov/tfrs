@@ -33,6 +33,8 @@ objects:
       spec:
         containers:
         - env:
+          - name: TESTENV
+            value: audit
           - name: DATABASE_SERVICE_NAME
             value: postgresql
           - name: POSTGRESQL_DATABASE

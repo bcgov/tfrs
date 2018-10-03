@@ -176,7 +176,7 @@
                         "containers": [
                             {
                                 "name": "notification-server",
-                                "image": "docker-registry.default.svc:5000/mem-tfrs-tools/notification-server-develop@sha256:8c46584bdcfc242768a9f296b41e716d5a46f4219e3d4c4a993dfe7e47695302",
+                                "image": "172.50.0.2:5000/mem-tfrs-tools/notification-server-develop@sha256:a38f6d3c820f7cdc611ffbc1b67a4c023b1f88c0dbdf181ca10b3deb526371b9",
                                 "ports": [
                                     {
                                         "containerPort": 3000,
@@ -306,11 +306,11 @@
             "kind": "Route",
             "apiVersion": "v1",
             "metadata": {
-                "name": "notification-server",
+                "name": "dev-lowcarbonfuels-notification",
                 "creationTimestamp": null
             },
             "spec": {
-                "host": "dev-lowcarbonfuels.pathfinder.bcgov",
+                "host": "dev-lowcarbonfuels.pathfinder.gov.bc.ca",
                 "path": "/socket.io",
                 "to": {
                     "kind": "Service",
@@ -325,13 +325,13 @@
             "status": {
                 "ingress": [
                     {
-                        "host": "dev-lowcarbonfuels.pathfinder.bcgov",
+                        "host": "dev-lowcarbonfuels.pathfinder.gov.bc.ca",
                         "routerName": "router",
                         "conditions": [
                             {
                                 "type": "Admitted",
                                 "status": "True",
-                                "lastTransitionTime": "2018-09-21T18:38:55Z"
+                                "lastTransitionTime": "2018-09-28T21:04:47Z"
                             }
                         ],
                         "wildcardPolicy": "None"
