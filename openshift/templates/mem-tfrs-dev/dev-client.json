@@ -62,10 +62,19 @@
                         }
                     },
                     "spec": {
+                        "volumes": [
+                            {
+                                "name": "keycloak-config-data",
+                                "configMap": {
+                                    "name": "keycloak-config",
+                                    "defaultMode": 420
+                                }
+                            }
+                        ],
                         "containers": [
                             {
                                 "name": "client",
-                                "image": "docker-registry.default.svc:5000/mem-tfrs-tools/client-develop@sha256:bf47c726fda8c9aaa9df7d5db671a2f7132c819b23b5588b36c831a00abbf776",
+                                "image": "172.50.0.2:5000/mem-tfrs-tools/client-develop@sha256:f3b8eca2ae2dc679099609222de7ac4ec343e0d6ac4a4510a1ff321354ff6947",
                                 "ports": [
                                     {
                                         "containerPort": 3000,
@@ -84,6 +93,10 @@
                                     },
                                     {
                                         "name": "HTTP_BASIC"
+                                    },
+                                    {
+                                        "name": "KEYCLOAK_ENABLED",
+                                        "value": "true"
                                     }
                                 ],
                                 "resources": {
@@ -95,6 +108,12 @@
                                         "memory": "200Mi"
                                     }
                                 },
+                                "volumeMounts": [
+                                    {
+                                        "name": "keycloak-config-data",
+                                        "mountPath": "/tmp/app/dist/config"
+                                    }
+                                ],
                                 "livenessProbe": {
                                     "httpGet": {
                                         "path": "/",
@@ -177,15 +196,14 @@
             "kind": "Route",
             "apiVersion": "v1",
             "metadata": {
-                "name": "main",
+                "name": "dev-lowcarbonfuels-frontend",
                 "creationTimestamp": null,
                 "labels": {
                     "template": "tfrs-app-environment"
                 }
             },
             "spec": {
-                "host": "dev-lowcarbonfuels.pathfinder.bcgov",
-                "path": "/",
+                "host": "dev-lowcarbonfuels.pathfinder.gov.bc.ca",
                 "to": {
                     "kind": "Service",
                     "name": "client",
@@ -195,22 +213,20 @@
                     "targetPort": "web"
                 },
                 "tls": {
-                    "termination": "edge",
-                    "certificate": "-----BEGIN CERTIFICATE-----\nMIIEnzCCAysCCQC70lrFEhRTmzANBgkqhkiG9w0BAQUFADCBtDELMAkGA1UEBhMC\nQ0ExGTAXBgNVBAgMEEJyaXRpc2ggQ29sdW1iaWExETAPBgNVBAcMCFZpY3Rvcmlh\nMTcwNQYDVQQKDC5Hb3Zlcm5tZW50IG9mIHRoZSBQcm92aW5jZSBvZiBCcml0aXNo\nIENvbHVtYmlhMRAwDgYDVQQLDAdGTE5ST1JEMSwwKgYDVQQDDCNkZXYtbG93Y2Fy\nYm9uZnVlbHMucGF0aGZpbmRlci5iY2dvdjAgFw0xODAzMjcxOTU1MDVaGA8yMTE4\nMDMwMzE5NTUwNVowgbQxCzAJBgNVBAYTAkNBMRkwFwYDVQQIDBBCcml0aXNoIENv\nbHVtYmlhMREwDwYDVQQHDAhWaWN0b3JpYTE3MDUGA1UECgwuR292ZXJubWVudCBv\nZiB0aGUgUHJvdmluY2Ugb2YgQnJpdGlzaCBDb2x1bWJpYTEQMA4GA1UECwwHRkxO\nUk9SRDEsMCoGA1UEAwwjZGV2LWxvd2NhcmJvbmZ1ZWxzLnBhdGhmaW5kZXIuYmNn\nb3YwggF9MA0GCSqGSIb3DQEBAQUAA4IBagAwggFlAoIBXAG9/eTOOvWECOKFcCiZ\nJbdNEviEXFTwxkaeL8c8QAO6hO1gPJ4IesJZIduB+fURxMuqG0alSAhMqxHpbNPh\nylPbI2mq1OfCztfvZfyxN5eH8Jnp0B2vJ3qBRTbtWIYgXdFtGAKUd4ZFA37p87zu\nUn5GdIpnSJITwnmhlVLMMIMo2Xz1frlOqsTTlGR2hLGsam/dggH3zRrKW8GDWWGJ\nMTOSCGJj+m0wwFQDk6Ln8qVmzlUEIbDzbQo4YWVBZB8/SP6noH+4TnCcGUGMh5vE\nwQYLlUf4e1ZqQ6oTSMDn96IFoQQD2ggZv9zmclue25oh0+PVUEO1mxTrR22M7CVX\nWDvWjzoCs1SL2/QXF1trT2KVtr7Dng4mMxnn4Z8Fu54hQ4dMw7bxYGc+LhVF1ozZ\nEv0xp7Fh0vpRsPWg0XyvTU9S371OC7jLEQvtIyiWyjObeeJZieVKt3EGAzfB/QID\nAQABMA0GCSqGSIb3DQEBBQUAA4IBXQAABX/H8Wqh6hN+0ik8od69SGULG/dMpuvD\n1Q70m4lv3T6g3mkO1x9MrRyOJSQf7QqDRDd8aIphDTE+fEd1LkTtFOQ/K1RK+ZEK\nQB8KbV8XsygQ6s7lmx3xCSEuwoCc0gMLuxqw841RW8lTxqWDlEnvcYQxQWcw+NQ+\nKy0pEr3leuIO5LZ2fi7Fi/8Ezf8Ef6rUX3JZ0M26wQExFNAUbHN7x5cPOtgXwQxy\nzEi6O5+yaxnf+PXfM8kcQAChQN3z6pc3Nlv9Xcp2Spu16hRsWxFcDminsM6/9PuJ\n6Li1JSPsXFfuqgkQFRrDZSWvRbS85h+F6/RC9x14fDBw33kQAJyr/yK+0YAZbBfR\nfdnQzLTpYFIBs5tvZv+zGjzVSa+rYhbrhFPrkXxjPzEKiecBQ0aiuRLXfbxtBpT6\nrNuhviM2pnmk9lxV3DNPIUH85n3FVM7arGJ5i9lUtf+UI9A=\n-----END CERTIFICATE-----",
-                    "key": "-----BEGIN RSA PRIVATE KEY-----\n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\nQD9lYXa3wU4mqnSvawaJ+g==\n-----END RSA PRIVATE KEY-----"
+                    "termination": "edge"
                 },
                 "wildcardPolicy": "None"
             },
             "status": {
                 "ingress": [
                     {
-                        "host": "dev-lowcarbonfuels.pathfinder.bcgov",
+                        "host": "dev-lowcarbonfuels.pathfinder.gov.bc.ca",
                         "routerName": "router",
                         "conditions": [
                             {
                                 "type": "Admitted",
                                 "status": "True",
-                                "lastTransitionTime": "2018-04-17T18:49:22Z"
+                                "lastTransitionTime": "2018-09-28T21:03:50Z"
                             }
                         ],
                         "wildcardPolicy": "None"
