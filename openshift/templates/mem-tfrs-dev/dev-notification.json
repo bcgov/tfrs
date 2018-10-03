@@ -306,11 +306,11 @@
             "kind": "Route",
             "apiVersion": "v1",
             "metadata": {
-                "name": "notification-server",
+                "name": "dev-lowcarbonfuels-notification",
                 "creationTimestamp": null
             },
             "spec": {
-                "host": "dev-lowcarbonfuels.pathfinder.bcgov",
+                "host": "dev-lowcarbonfuels.pathfinder.gov.bc.ca",
                 "path": "/socket.io",
                 "to": {
                     "kind": "Service",
@@ -325,13 +325,13 @@
             "status": {
                 "ingress": [
                     {
-                        "host": "dev-lowcarbonfuels.pathfinder.bcgov",
+                        "host": "dev-lowcarbonfuels.pathfinder.gov.bc.ca",
                         "routerName": "router",
                         "conditions": [
                             {
                                 "type": "Admitted",
                                 "status": "True",
-                                "lastTransitionTime": "2018-09-21T18:38:55Z"
+                                "lastTransitionTime": "2018-09-28T21:04:47Z"
                             }
                         ],
                         "wildcardPolicy": "None"
