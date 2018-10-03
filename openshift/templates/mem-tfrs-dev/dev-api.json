@@ -76,7 +76,7 @@
                         "containers": [
                             {
                                 "name": "tfrs-app",
-                                "image": "docker-registry.default.svc:5000/mem-tfrs-tools/tfrs-develop@sha256:7d816abb7c8f6bb6237049c066999766c286c9486960d7f928f2016f43b52e8e",
+                                "image": "172.50.0.2:5000/mem-tfrs-tools/tfrs-develop@sha256:4bb94ba0589dc48a8de10ab1f10a7b2bc29fb53b6bb207b34a95cf29f1396d74",
                                 "ports": [
                                     {
                                         "containerPort": 8080,
@@ -84,6 +84,22 @@
                                     }
                                 ],
                                 "env": [
+                                    {
+                                        "name": "KEYCLOAK_ISSUER",
+                                        "value": "https://sso-dev.pathfinder.gov.bc.ca/auth/realms/tfrs-dev"
+                                    },
+                                    {
+                                        "name": "KEYCLOAK_AUDIENCE",
+                                        "value": "tfrs-dev"
+                                    },
+                                    {
+                                        "name": "KEYCLOAK_CERTS_URL",
+                                        "value": "https://sso-dev.pathfinder.gov.bc.ca/auth/realms/tfrs-dev/protocol/openid-connect/certs"
+                                    },
+                                    {
+                                        "name": "KEYCLOAK_CLIENT_ID",
+                                        "value": "tfrs-dev"
+                                    },
                                     {
                                         "name": "DATABASE_SERVICE_NAME",
                                         "value": "postgresql"
@@ -138,6 +154,14 @@
                                                 "key": "DATABASE_PASSWORD"
                                             }
                                         }
+                                    },
+                                    {
+                                        "name": "KEYCLOAK_ENABLED",
+                                        "value": "True"
+                                    },
+                                    {
+                                        "name": "KEYCLOAK_REALM",
+                                        "value": "https://sso-dev.pathfinder.gov.bc.ca/auth/realms/tfrs-dev"
                                     }
                                 ],
                                 "resources": {

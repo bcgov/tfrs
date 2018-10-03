@@ -4,3 +4,4 @@ oc export bc/request-logger   dc/request-logger service/request-logger route/smi
 oc export dc/tfrs service/backend route/api  --as-template='dev-api' --output=json > dev-api.json
 oc export dc/client service/client route/main --as-template='dev-client' --output=json > dev-client.json
 oc export statefulset/rabbitmq dc/notification-server service/rabbit service/notification-server route/notification-server --as-template='dev-notification' --output=json > dev-notification.json
+oc export configmap/keycloak-config --as-template='dev-keycloak' --output=json > dev-keycloak.json
