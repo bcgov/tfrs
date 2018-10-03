@@ -9,6 +9,8 @@ import geb.Page
  * This external page may overwrite the current window, or be opened in a new window or tab.
  * Use a new instance of this class as the parameter to an 'at' call.
  *
+ * Note: This currently only works when running the tests in headful mode (not headless)!
+ *
  * Example:
  *   at new ExternalLinkPage('Fuel Info', 'gov\\.bc\\.ca\\/fuelfacts')
  */
