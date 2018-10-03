@@ -4,16 +4,14 @@ import geb.Page
 
 class LoginPage extends Page {
   static at = {
-    title == 'Government of British Columbia' &&
-    browser.getCurrentUrl() =~ 'logontest\\.gov\\.bc\\.ca' &&
-    pageTitle.text() == 'Log in to dev.lowcarbonfuels.gov.bc.ca'
+    title.trim() == 'Log in to Transportation Fuels Reporting System' &&
+    pageTitle.text().trim() == 'TRANSPORTATION FUELS REPORTING SYSTEM'
   }
-  static url = '/' // when not logged in will be redirected to the external gov login page
   static content = {
-    pageTitle { $('#login-to') }
+    pageTitle { $('#kc-header-wrapper') }
 
-    usernameField { $('#user') }
+    usernameField { $('#username') }
     passwordField { $('#password') }
-    continueButton { $('input', type:'submit', value:'Continue') }
+    logInButton { $('input', type:'submit', value:'Log in') }
   }
 }
