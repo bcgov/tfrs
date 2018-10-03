@@ -101,7 +101,7 @@ baseNavigatorWaiting = true
 Map env = System.getenv()
 baseUrl = env['BASEURL']
 if (!baseUrl) {
-  baseUrl = "https://dev.lowcarbonfuels.gov.bc.ca/"
+  baseUrl = "https://dev-lowcarbonfuels.pathfinder.gov.bc.ca/"
 }
 
 println "--------------------------------------"
