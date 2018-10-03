@@ -1,14 +1,11 @@
 package specs
 
-import geb.spock.GebReportingSpec
-
 import traits.Login
-import traits.Utils
 
 /**
  * Base spec for tests that require being logged in.
  */
-abstract class LoggedInSpec extends GebReportingSpec implements Login, Utils {
+abstract class LoggedInSpec extends BaseSpec implements Login {
   /**
    * Cleanup that runs after each test.
    *

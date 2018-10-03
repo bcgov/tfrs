@@ -20,44 +20,24 @@ trait Login implements Users {
     usernameField.value(user.username)
     passwordField.value(user.password)
 
-    continueButton.click()
+    logInButton.click()
 
     at HomePage
   }
 
   void logInAsSendingFuelSupplier() {
-    if (getBaseUrl() =~ 'localhost') {
-      setBaseUrl('http://localhost:5001/')
-      to HomePage
-    } else {
-      login(getSendingFuelSupplier())
-    }
+    login(getSendingFuelSupplier())
   }
 
   void logInAsReceivingFuelSupplier() {
-    if (getBaseUrl() =~ 'localhost') {
-      setBaseUrl('http://localhost:5002/')
-      to HomePage
-    } else {
-      login(getReceivingFuelSupplier())
-    }
+    login(getReceivingFuelSupplier())
   }
 
   void logInAsAnalyst() {
-    if (getBaseUrl() =~ 'localhost') {
-      setBaseUrl('http://localhost:5004/')
-      to HomePage
-    } else {
-      login(getAnalyst())
-    }
+    login(getAnalyst())
   }
 
   void logInAsDirector() {
-    if (getBaseUrl() =~ 'localhost') {
-      setBaseUrl('http://localhost:5005/')
-      to HomePage
-    } else {
-      login(getDirector())
-    }
+    login(getDirector())
   }
 }
