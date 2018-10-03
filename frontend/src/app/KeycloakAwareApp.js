@@ -1,6 +1,4 @@
 import StatusInterceptor from './components/StatusInterceptor';
-import CONFIG from '../config';
-import { getLoggedInUser } from '../actions/userActions';
 import { IntlProvider } from 'react-intl';
 import ReduxToastr from 'react-redux-toastr';
 import Navbar from './components/Navbar';

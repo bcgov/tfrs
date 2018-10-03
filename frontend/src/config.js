@@ -1,16 +1,22 @@
 /*
- Used to track feature configuration, injected via
-  Webpack (from environment variables or similar)
+ Used to track feature configuration
 */
+
+let get_config = (value, def) =>{
+  if (global.tfrs_config) {
+    return global.tfrs_config[value] || def;
+  }
+  return def;
+};
 
 
 let CONFIG = {
   KEYCLOAK: {
-    ENABLED: __INJECTED_CONFIG.KEYCLOAK.ENABLED,
-    AUTHORITY: __INJECTED_CONFIG.KEYCLOAK.AUTHORITY,
-    CLIENT_ID: __INJECTED_CONFIG.KEYCLOAK.CLIENT_ID,
-    CALLBACK_URL: __INJECTED_CONFIG.KEYCLOAK.CALLBACK_URL,
-    POST_LOGOUT_URL: __INJECTED_CONFIG.KEYCLOAK.POST_LOGOUT_URL
+    ENABLED: get_config("keycloak.enabled", false),
+    AUTHORITY: get_config("keycloak.authority","unconfigured"),
+    CLIENT_ID: get_config("keycloak.client_id", "unconfigured"),
+    CALLBACK_URL: get_config("keycloak.callback_url", "unconfigured"),
+    POST_LOGOUT_URL: get_config("keycloak.post_logout_url", "unconfigured")
   }
 };
 

@@ -31,8 +31,6 @@ import UserViewContainer from './users/UserViewContainer';
 import NotificationsContainer from './notifications/NotificationsContainer';
 import AuthCallback from './app/AuthCallback';
 import CONFIG from './config';
-import userManager from './store/oidc-usermanager';
-import {signUserOut} from "./actions/userActions";
 
 const Router = props => (
   <ConnectedRouter history={history} key={Math.random()}>
