@@ -11,7 +11,7 @@ import * as Lang from '../../../constants/langEnUs';
 
 const UserForm = props => (
   <div className="page_admin_user">
-    <h1>New User</h1>
+    <h1>{props.title}</h1>
     <form>
       <UserFormDetails
         addToFields={props.addToFields}
@@ -33,7 +33,7 @@ const UserForm = props => (
           </button>
           <button
             className="btn btn-primary"
-            data-target="#confirmCreate"
+            data-target="#confirmSubmit"
             data-toggle="modal"
             type="button"
           >
@@ -56,6 +56,7 @@ UserForm.propTypes = {
   fuelSuppliers: PropTypes.arrayOf(PropTypes.shape()).isRequired,
   handleInputChange: PropTypes.func.isRequired,
   roles: PropTypes.shape().isRequired,
+  title: PropTypes.string.isRequired,
   toggleCheck: PropTypes.func.isRequired
 };
 

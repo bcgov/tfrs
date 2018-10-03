@@ -48,11 +48,22 @@ class RoleViewSet(AuditableMixin, mixins.ListModelMixin,
         This view should return a list of all the assertions that don't have
         an expiration date
         """
-        user = self.request.user
+        # TODO: Enable this in the future and get rid of the last return
+        # user = self.request.user
 
-        if user.has_perm('ASSIGN_GOVERNMENT_ROLES'):
-            return Role.objects.all()
+        # if user.has_perm('ASSIGN_GOVERNMENT_ROLES') and \
+        #         user.has_perm('ASSIGN_FS_ROLES'):
+        #     return Role.objects.all()
 
-        return Role.objects.filter(
-            is_government_role=False
-        )
+        # if user.has_perm('ASSIGN_GOVERNMENT_ROLES'):
+        #     return Role.objects.filter(
+        #         is_government_role=True
+        #     )
+
+        # if user.has_perm('ASSIGN_FS_ROLES'):
+        #     return Role.objects.filter(
+        #         is_government_role=False
+        #     )
+
+        # return Role.objects.none()
+        return Role.objects.all()

@@ -7,15 +7,18 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
+import { getUser } from '../../actions/userActions';
 import Modal from '../../app/components/Modal';
 import history from '../../app/History';
+import Loading from '../../app/components/Loading';
 import { getFuelSuppliers } from '../../actions/organizationActions';
 import getRoles from '../../actions/roleActions';
 import UserForm from './components/UserForm';
-import { USERS } from '../../constants/routes/Admin';
+import USERS from '../../constants/routes/Users';
+import { USERS as ADMIN_USERS } from '../../constants/routes/Admin';
 import toastr from '../../utils/toastr';
 
-class UserAddContainer extends Component {
+class UserEditContainer extends Component {
   constructor (props) {
     super(props);
 
@@ -39,13 +42,47 @@ class UserAddContainer extends Component {
     this._toggleCheck = this._toggleCheck.bind(this);
   }
 
-  componentDidMount () {
-    this.loadData();
+  componentWillMount () {
+    this.loadData(this.props.match.params.id);
   }
 
-  loadData () {
+  componentWillReceiveProps (props) {
+    this.loadPropsToFieldState(props);
+  }
+
+  componentWillReceiveNewProps (prevProps, newProps) {
+    if (prevProps.match.params.id !== newProps.match.params.id) {
+      this.loadData(newProps.match.params.id);
+    }
+  }
+
+  loadData (id) {
+    this.props.getUser(id);
     this.props.getFuelSuppliers();
     this.props.getRoles();
+  }
+
+  loadPropsToFieldState (props) {
+    if (!props.user.isFetching) {
+      const fieldState = {
+        firstName: props.user.details.firstName || '',
+        lastName: props.user.details.lastName || '',
+        bceid: props.user.details.authorizationId || '',
+        email: props.user.details.email || '',
+        organization: props.user.details.organization || null,
+        mobilePhone: props.user.details.cellPhone || '',
+        status: props.user.details.isActive ? 'active' : 'inactive',
+        workPhone: props.user.details.phone || '',
+        roles: props.user.details.roles.map(role => ({
+          id: role.id,
+          value: true
+        }))
+      };
+
+      this.setState({
+        fields: fieldState
+      });
+    }
   }
 
   _addToFields (value) {
@@ -90,13 +127,21 @@ class UserAddContainer extends Component {
 
         return false;
       }),
-      status: this.state.fields.status === 'active'
+      status: this.state.fields.status
     };
+
+    const { id } = this.props.user.details;
 
     console.log(data);
 
-    history.push(USERS.LIST);
-    toastr.userSuccess('User created.');
+    let viewUrl = USERS.DETAILS.replace(':id', id);
+
+    if (document.location.pathname.indexOf('/admin/') >= 0) {
+      viewUrl = ADMIN_USERS.DETAILS.replace(':id', id);
+    }
+
+    history.push(viewUrl);
+    toastr.userSuccess();
 
     return true;
   }
@@ -129,6 +174,10 @@ class UserAddContainer extends Component {
   }
 
   render () {
+    if (this.props.user.isFetching) {
+      return <Loading />;
+    }
+
     return ([
       <UserForm
         addToFields={this._addToFields}
@@ -137,7 +186,7 @@ class UserAddContainer extends Component {
         handleInputChange={this._handleInputChange}
         key="userForm"
         roles={this.props.roles}
-        title="New User"
+        title="Edit User"
         toggleCheck={this._toggleCheck}
       />,
       <Modal
@@ -147,30 +196,54 @@ class UserAddContainer extends Component {
         id="confirmSubmit"
         key="confirmSubmit"
       >
-        Are you sure you want to add this user?
+        Are you sure you want to update this user?
       </Modal>
     ]);
   }
 }
 
-UserAddContainer.defaultProps = {
+UserEditContainer.defaultProps = {
+  user: {
+    details: {},
+    error: {},
+    isFetching: true
+  }
 };
 
-UserAddContainer.propTypes = {
+UserEditContainer.propTypes = {
   fuelSuppliers: PropTypes.arrayOf(PropTypes.shape()).isRequired,
   getFuelSuppliers: PropTypes.func.isRequired,
   getRoles: PropTypes.func.isRequired,
-  roles: PropTypes.shape().isRequired
+  getUser: PropTypes.func.isRequired,
+  match: PropTypes.shape({
+    params: PropTypes.shape({
+      id: PropTypes.string.isRequired
+    }).isRequired
+  }).isRequired,
+  roles: PropTypes.shape().isRequired,
+  user: PropTypes.shape({
+    details: PropTypes.shape({
+      id: PropTypes.number
+    }),
+    error: PropTypes.shape({}),
+    isFetching: PropTypes.bool
+  })
 };
 
 const mapStateToProps = state => ({
   fuelSuppliers: state.rootReducer.fuelSuppliersRequest.fuelSuppliers,
-  roles: state.rootReducer.roles
+  roles: state.rootReducer.roles,
+  user: {
+    details: state.rootReducer.userViewRequest.user,
+    error: state.rootReducer.userViewRequest.error,
+    isFetching: state.rootReducer.userViewRequest.isFetching
+  }
 });
 
 const mapDispatchToProps = dispatch => ({
   getFuelSuppliers: bindActionCreators(getFuelSuppliers, dispatch),
-  getRoles: bindActionCreators(getRoles, dispatch)
+  getRoles: bindActionCreators(getRoles, dispatch),
+  getUser: bindActionCreators(getUser, dispatch)
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(UserAddContainer);
+export default connect(mapStateToProps, mapDispatchToProps)(UserEditContainer);
