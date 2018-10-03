@@ -23,7 +23,7 @@ ext {
         safariDriverVersion = '3.14.0'
 
         spockCoreVersion = '1.1-groovy-2.4'
-        spockReportsVersion = '1.6.0'
+        spockReportsVersion = '1.6.1'
         slf4jApiVersion = '1.7.25'
     }
 }
