@@ -7,7 +7,7 @@ import numeral from 'numeral';
 
 import * as NumberFormat from '../../../constants/numeralFormats';
 
-import FairMarketValueInput from '../../../app/components/FairMarketValueInput';
+import InputWithTooltip from '../../../app/components/InputWithTooltip';
 import { CREDIT_TRANSFER_TYPES, ZERO_DOLLAR_REASON } from '../../../constants/values';
 import HistoricalDataEntryFormNote from './HistoricalDataEntryFormNote';
 import HistoricalDataEntryFormButtons from './HistoricalDataEntryFormButtons';
@@ -126,15 +126,13 @@ const HistoricalDataEntryFormDetails = props => (
         <div className="col-md-6">
           <div className="form-group">
             <label htmlFor="number-of-credits">Number of Credits:
-              <input
-                className="form-control"
+              <InputWithTooltip
+                handleInputChange={props.handleInputChange}
                 id="number-of-credits"
                 min="0"
                 name="numberOfCredits"
-                onChange={props.handleInputChange}
-                required="required"
+                required
                 step="1"
-                type="number"
                 value={props.fields.numberOfCredits}
               />
             </label>
@@ -146,8 +144,16 @@ const HistoricalDataEntryFormDetails = props => (
                 CREDIT_TRANSFER_TYPES.validation.id.toString(),
                 CREDIT_TRANSFER_TYPES.retirement.id.toString()
               ].includes(props.fields.transferType) &&
-                <FairMarketValueInput
+                <InputWithTooltip
+                  dataNumberToFixed={2}
                   handleInputChange={props.handleInputChange}
+                  id="value-per-credit"
+                  min="0"
+                  name="fairMarketValuePerCredit"
+                  placeholder="Amount"
+                  required
+                  showDollarSymbol
+                  step="0.01"
                   value={props.fields.fairMarketValuePerCredit}
                 />
               }
