@@ -4,12 +4,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import ReactTable from 'react-table';
-import { Link } from 'react-router-dom';
 import 'react-table/react-table.css';
 import FontAwesomeIcon from '@fortawesome/react-fontawesome';
 import moment from 'moment';
 
 import CheckBox from '../../app/components/CheckBox';
+import history from '../../app/History';
 import NOTIFICATION_TYPES from '../../constants/notificationTypes';
 import CREDIT_TRANSACTIONS from '../../constants/routes/CreditTransactions';
 
@@ -34,7 +34,18 @@ const NotificationsTable = (props) => {
     Cell: (row) => {
       const viewUrl = CREDIT_TRANSACTIONS.DETAILS.replace(':id', row.original.relatedCreditTrade);
 
-      return <Link to={viewUrl}>{row.value}</Link>;
+      return (
+        <button
+          type="button"
+          onClick={() => {
+            props.updateNotification(row.original.id, { isRead: true });
+
+            history.push(viewUrl);
+          }}
+        >
+          {row.value}
+        </button>
+      );
     },
     className: 'col-notification',
     Header: 'Notification',
@@ -59,7 +70,18 @@ const NotificationsTable = (props) => {
     Cell: (row) => {
       const viewUrl = CREDIT_TRANSACTIONS.DETAILS.replace(':id', row.value);
 
-      return <Link to={viewUrl}>{row.value}</Link>;
+      return (
+        <button
+          type="button"
+          onClick={() => {
+            props.updateNotification(row.original.id, { isRead: true });
+
+            history.push(viewUrl);
+          }}
+        >
+          {row.value}
+        </button>
+      );
     },
     className: 'col-credit-trade',
     Header: 'Transaction ID',
@@ -118,7 +140,8 @@ NotificationsTable.propTypes = {
   }).isRequired,
   items: PropTypes.arrayOf(PropTypes.object).isRequired,
   selectIdForModal: PropTypes.func.isRequired,
-  toggleCheck: PropTypes.func.isRequired
+  toggleCheck: PropTypes.func.isRequired,
+  updateNotification: PropTypes.func.isRequired
 };
 
 export default NotificationsTable;
