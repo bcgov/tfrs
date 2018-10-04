@@ -345,7 +345,6 @@ class Navbar extends Component {
                           <FontAwesomeIcon icon="sign-out-alt" /> Log Out
                         </MenuItem>
                         }
-
                       </DropdownButton>
                     }
                   </h5>
