@@ -3,7 +3,8 @@ const persistTargetPathReducer = (state = {
 }, action) => {
   switch (action.type) {
     case 'redux-oidc/LOADING_USER':
-      if (action.currentRoute.location && !(action.currentRoute.location.pathname.match(/.*?authCallback/))) {
+      if (action.currentRoute.location &&
+        !(action.currentRoute.location.pathname.match(/.*?authCallback/))) {
         return {
           ...state,
           target: action.currentRoute.location.pathname
