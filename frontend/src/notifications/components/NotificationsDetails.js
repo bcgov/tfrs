@@ -52,6 +52,7 @@ const NotificationsDetails = props => (
       items={props.items}
       selectIdForModal={props.selectIdForModal}
       toggleCheck={props.toggleCheck}
+      updateNotification={props.updateNotification}
     />
   </div>
 );
@@ -66,6 +67,7 @@ NotificationsDetails.propTypes = {
   })).isRequired,
   selectIdForModal: PropTypes.func.isRequired,
   toggleCheck: PropTypes.func.isRequired,
+  updateNotification: PropTypes.func.isRequired,
   updateNotifications: PropTypes.func.isRequired
 };
 
