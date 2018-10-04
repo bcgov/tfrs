@@ -47,7 +47,7 @@ class CreditTransferTextRepresentation extends Component {
         <span className="value"> {this.numberOfCredits} </span> credit{(this.props.numberOfCredits > 1) && 's'} from
         <span className="value"> {this.creditsFrom} </span>
         for <span className="value"> {this.totalValue}</span>
-        {this._statusText()}
+        {this._statusText(this.props.creditsFrom)}
         {this.props.zeroDollarReason != null &&
         <div className="zero-reason">
           <span>This credit transfer has zero-value per-credit because:
@@ -118,7 +118,7 @@ class CreditTransferTextRepresentation extends Component {
         <span className="value"> {this.creditsTo} </span>
         for <span className="value"> {this.fairMarketValuePerCredit} </span> per credit
         for a total value of <span className="value"> {this.totalValue}</span>
-        {this._statusText()}
+        {this._statusText(this.props.creditsTo)}
         {this.props.zeroDollarReason != null &&
           <div className="zero-reason">
             <span>This credit transfer has zero-value per-credit because:
@@ -180,13 +180,13 @@ class CreditTransferTextRepresentation extends Component {
     }
   }
 
-  _statusText () {
+  _statusText (respondent) {
     if (this.props.isRescinded) {
       return <span>. {this._rescindedBy()}</span>;
     }
 
     if (this.props.status.id === CREDIT_TRANSFER_STATUS.refused.id) {
-      return <span>. <span className="value"> {this.props.creditsFrom.name} </span> refused the proposal.</span>;
+      return <span>. <span className="value"> {respondent.name} </span> refused the proposal.</span>;
     }
 
     if (this.props.status.id === CREDIT_TRANSFER_STATUS.declinedForApproval.id) {
