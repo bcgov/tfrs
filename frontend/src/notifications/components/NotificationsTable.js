@@ -102,7 +102,7 @@ const NotificationsTable = (props) => {
         <FontAwesomeIcon
           data-toggle="modal"
           data-target="#confirmArchiveSingle"
-          icon="folder-open"
+          icon="archive"
           onClick={() => props.selectIdForModal(row.value)}
         />
       </div>
