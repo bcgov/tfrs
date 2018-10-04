@@ -105,6 +105,7 @@ services:
             - RABBITMQ_DEFAULT_USER=rabbitmq
             - RABBITMQ_DEFAULT_PASS=rabbitmq
             - RABBITMQ_DEFAULT_VHOST=/tfrs
+            - RABBITMQ_SERVER_ADDITIONAL_ERL_ARGS=-rabbit log_levels [{connection,error}]
         ports:
             - 15672:15672
             - 5672:5672
@@ -132,6 +133,8 @@ services:
           DB_PASSWORD: keycloak
           KEYCLOAK_USER: admin
           KEYCLOAK_PASSWORD: admin
+          KEYCLOAK_LOGLEVEL: WARN
+          ROOT_LOGLEVEL: WARN
         ports:
           - 8888:8080
         depends_on:

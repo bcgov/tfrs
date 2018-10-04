@@ -4,7 +4,6 @@ import CONFIG from '../config';
 
 function configureAxios () {
   if (CONFIG.KEYCLOAK) {
-    console.log('adding token to request');
 
     axios.interceptors.request.use((config) => {
       const loadconfig = async () => {
