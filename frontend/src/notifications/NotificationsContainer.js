@@ -25,6 +25,7 @@ class NotificationsContainer extends Component {
     this._addToFields = this._addToFields.bind(this);
     this._selectIdForModal = this._selectIdForModal.bind(this);
     this._toggleCheck = this._toggleCheck.bind(this);
+    this._updateNotification = this._updateNotification.bind(this);
     this._updateNotifications = this._updateNotifications.bind(this);
   }
 
@@ -115,6 +116,7 @@ class NotificationsContainer extends Component {
         key="notification-details"
         selectIdForModal={this._selectIdForModal}
         toggleCheck={this._toggleCheck}
+        updateNotification={this._updateNotification}
         updateNotifications={this._updateNotifications}
       />,
       <Modal

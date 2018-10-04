@@ -61,6 +61,16 @@
 
   .ReactTable {
     clear: both;
+
+    button {
+      background: none;
+      border: none;
+      color: $blue;
+
+      &:hover {
+        text-decoration: underline;
+      }
+    }
   }
 
   .rt-tr {
