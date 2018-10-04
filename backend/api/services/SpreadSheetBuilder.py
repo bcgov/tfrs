@@ -72,6 +72,7 @@ class SpreadSheetBuilder(object):
             worksheet.write(row_index, 9, comment, comment_format)
 
         # set the widths for the columns that we expect to be longer
+        worksheet.col(2).width = 3500
         worksheet.col(3).width = 7500
         worksheet.col(4).width = 7500
         worksheet.col(5).width = 4500

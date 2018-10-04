@@ -226,7 +226,7 @@ class CreditTradeCreateSerializer(serializers.ModelSerializer):
             'number_of_credits': {
                 'error_messages': {
                     'null': "Number of Credits can't be null.",
-                    'invalid': "Number of Credits must be a whole number."
+                    'invalid': "Please enter at least 1 credit."
                 }
             },
             'respondent': {
@@ -374,9 +374,10 @@ class CreditTradeUpdateSerializer(serializers.ModelSerializer):
                                 create_user__organization=request.user.organization
                             ).exists()):
                         raise serializers.ValidationError({
-                            'forbidden': "Cannot propose a trade with "
-                                         "zero-reason 'Other' without "
-                                         "creating an explanatory comment"
+                            'forbidden': "Please provide an explanation in "
+                                         "the comments as to why the Credit "
+                                         "Transfer Proposal has a fair market "
+                                         "value of zero dollars per credit."
                         })
 
         if data.get('is_rescinded') is True:
@@ -513,8 +514,8 @@ class CreditTradeUpdateSerializer(serializers.ModelSerializer):
         extra_kwargs = {
             'compliance_period': {
                 'error_messages': {
-                    'does_not_exist': "Please specify the Compliance Period in "
-                                      "which the transaction relates."
+                    'does_not_exist': "Please specify the Compliance Period "
+                                      "in which the transaction relates."
                 }
             },
             'fair_market_value_per_credit': {
@@ -525,7 +526,7 @@ class CreditTradeUpdateSerializer(serializers.ModelSerializer):
             'number_of_credits': {
                 'error_messages': {
                     'null': "Number of Credits can't be null.",
-                    'invalid': "Number of Credits must be a whole number."
+                    'invalid': "Please enter at least 1 credit."
                 }
             },
             'respondent': {
