@@ -1,6 +1,6 @@
 coreapi==2.3.3
 cryptography==2.3.1
-Django==1.11.13
+Django==1.11.15
 django-cors-headers==2.1.0
 django-debug-toolbar==1.5
 django-extensions==1.7.7
