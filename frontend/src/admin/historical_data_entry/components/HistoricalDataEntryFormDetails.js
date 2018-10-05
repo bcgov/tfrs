@@ -16,7 +16,7 @@ const HistoricalDataEntryFormDetails = props => (
   <div className="historical-data-entry-form-details">
     <div className="main-form">
       <div className="row">
-        <div className="col-md-6">
+        <div className="col-sm-6">
           <div className="form-group">
             <label htmlFor="effective-date">Effective Date:
               <input
@@ -123,7 +123,7 @@ const HistoricalDataEntryFormDetails = props => (
             </label>
           </div>
         </div>
-        <div className="col-md-6">
+        <div className="col-sm-6">
           <div className="form-group">
             <label htmlFor="number-of-credits">Number of Credits:
               <InputWithTooltip
@@ -200,7 +200,7 @@ const HistoricalDataEntryFormDetails = props => (
       </div>
 
       <div className="row">
-        <div className="col-md-12">
+        <div className="col-sm-12">
           <HistoricalDataEntryFormNote
             comment={props.fields.comment}
             handleInputChange={props.handleInputChange}
@@ -209,7 +209,7 @@ const HistoricalDataEntryFormDetails = props => (
       </div>
 
       <div className="row">
-        <div className="col-md-12">
+        <div className="col-sm-12">
           <div className="form-group">
             <HistoricalDataEntryFormButtons
               actions={props.actions}
@@ -219,7 +219,7 @@ const HistoricalDataEntryFormDetails = props => (
       </div>
 
       <div className="row">
-        <div className="col-md-12">
+        <div className="col-sm-12">
           <div className="form-group">
             <div>* Optional if not a Zero Dollar transaction</div>
           </div>

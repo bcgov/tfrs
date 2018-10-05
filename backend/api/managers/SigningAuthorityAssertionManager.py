@@ -36,5 +36,3 @@ class SigningAuthorityAssertionManager(models.Manager):
             effective_date__lte=as_of
         )
         return result
-
-
