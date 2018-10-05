@@ -11,7 +11,9 @@ const HISTORICAL_DATA_ENTRY = {
 };
 
 const USERS = {
+  ADD: `${BASE_PATH}/users/add`,
   DETAILS: `${BASE_PATH}/users/view/:id`,
+  EDIT: `${BASE_PATH}/users/edit/:id`,
   LIST: `${BASE_PATH}/users`
 };
 

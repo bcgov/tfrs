@@ -17,6 +17,8 @@ import CreditTransactionsHistory from './admin/credit_trade_history/CreditTradeH
 import HistoricalDataEntryContainer from './admin/historical_data_entry/HistoricalDataEntryContainer';
 import HistoricalDataEntryEditContainer from './admin/historical_data_entry/HistoricalDataEntryEditContainer';
 import UsersContainer from './admin/users/UsersContainer';
+import UserAddContainer from './admin/users/UserAddContainer';
+import UserEditContainer from './admin/users/UserEditContainer';
 import NotFound from './app/components/NotFound';
 import ContactUsContainer from './contact_us/ContactUsContainer';
 import CreditTransactionsContainer from './credit_transfers/CreditTransactionsContainer';
@@ -110,8 +112,16 @@ const Router = props => (
           component={withRouter(HistoricalDataEntryEditContainer)}
         />
         <Route
+          path={USERS.ADD}
+          component={withRouter(UserAddContainer)}
+        />
+        <Route
           path={USERS.DETAILS}
           component={withRouter(UserViewContainer)}
+        />
+        <Route
+          path={USERS.EDIT}
+          component={withRouter(UserEditContainer)}
         />
         <Route
           exact
@@ -131,6 +141,14 @@ const Router = props => (
         <Route
           path={ADMIN_USERS.DETAILS}
           component={withRouter(UserViewContainer)}
+        />
+        <Route
+          path={ADMIN_USERS.ADD}
+          component={withRouter(UserAddContainer)}
+        />
+        <Route
+          path={ADMIN_USERS.EDIT}
+          component={withRouter(UserEditContainer)}
         />
         <Route
           exact

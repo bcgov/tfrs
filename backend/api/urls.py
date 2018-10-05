@@ -28,6 +28,7 @@ from .viewsets.CompliancePeriod import CompliancePeriodViewSet
 from .viewsets.CreditTrade import CreditTradeViewSet
 from .viewsets.CreditTradeHistory import CreditTradeHistoryViewSet
 from .viewsets.Organization import OrganizationViewSet
+from .viewsets.Role import RoleViewSet
 from .viewsets.SigningAuthorityAssertion \
     import SigningAuthorityAssertionViewSet
 from .viewsets.SigningAuthorityConfirmation \
@@ -42,6 +43,7 @@ ROUTER.register(r'credit_trades', CreditTradeViewSet)
 ROUTER.register(r'credit_trades_history', CreditTradeHistoryViewSet)
 ROUTER.register(r'comments', CreditTradeCommentsViewSet)
 ROUTER.register(r'organizations', OrganizationViewSet)
+ROUTER.register(r'roles', RoleViewSet)
 ROUTER.register(r'signing_authority_assertions',
                 SigningAuthorityAssertionViewSet)
 ROUTER.register(r'signing_authority_confirmations',

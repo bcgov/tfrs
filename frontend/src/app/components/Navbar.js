@@ -49,7 +49,7 @@ class Navbar extends Component {
             activeClassName="active"
             id="navbar-organizations"
             isActive={(match, location) => {
-              if (match || (location.pathname.indexOf('/users/view/') >= 0 &&
+              if (match || (location.pathname.indexOf('/users/') === 0 &&
                 location.pathname.indexOf('/admin/') < 0)) {
                 return true;
               }
@@ -75,7 +75,7 @@ class Navbar extends Component {
               activeClassName="active"
               id="navbar-credit-transactions"
               isActive={(match, location) => {
-                if (match || location.pathname.indexOf('/users/view/') >= 0) {
+                if (match || location.pathname.indexOf('/users/') === 0) {
                   return true;
                 }
 
@@ -148,7 +148,7 @@ class Navbar extends Component {
             <NavLink
               id="collapse-navbar-organization"
               isActive={(match, location) => {
-                if (match || location.pathname.indexOf('/users/view/') >= 0) {
+                if (match || location.pathname.indexOf('/users/') === 0) {
                   return true;
                 }
 
@@ -175,7 +175,7 @@ class Navbar extends Component {
               <NavLink
                 id="navbar-credit-transactions"
                 isActive={(match, location) => {
-                  if (match || location.pathname.indexOf('/users/view/') >= 0) {
+                  if (match || location.pathname.indexOf('/users/') === 0) {
                     return true;
                   }
 
@@ -241,14 +241,17 @@ class Navbar extends Component {
             </NavLink>
           </li>
           <li>
-            {CONFIG.KEYCLOAK.ENABLED && <NavLink
+            {CONFIG.KEYCLOAK.ENABLED &&
+            <NavLink
               id="navbar-logout"
               onClick={(e) => { e.preventDefault(); this.props.dispatch(signUserOut()); }}
-              to={Routes.LOGOUT}>
+              to={Routes.LOGOUT}
+            >
               Log Out
             </NavLink>
             }
-            {CONFIG.KEYCLOAK.ENABLED || <NavLink id="navbar-logout" to={Routes.LOGOUT}>
+            {CONFIG.KEYCLOAK.ENABLED ||
+            <NavLink id="navbar-logout" to={Routes.LOGOUT}>
               Log Out
             </NavLink>
             }
@@ -336,10 +339,13 @@ class Navbar extends Component {
                           <FontAwesomeIcon icon="cog" /> Settings
                         </MenuItem>
                         {CONFIG.KEYCLOAK.ENABLED &&
-                        <MenuItem onClick={(e) => { e.preventDefault(); this.props.dispatch(signUserOut()); }}>
+                        <MenuItem onClick={(e) => {
+                          e.preventDefault(); this.props.dispatch(signUserOut());
+                        }}
+                        >
                           <FontAwesomeIcon icon="sign-out-alt" /> Log Out
                         </MenuItem>
-                          }
+                        }
                         {CONFIG.KEYCLOAK.ENABLED ||
                         <MenuItem href={Routes.LOGOUT}>
                           <FontAwesomeIcon icon="sign-out-alt" /> Log Out
@@ -366,15 +372,14 @@ class Navbar extends Component {
     );
   }
 }
-Navbar.defaultProps = {
-  unreadNotificationsCount: null
-};
 
 Navbar.defaultProps = {
+  dispatch: null,
   unreadNotificationsCount: null
 };
 
 Navbar.propTypes = {
+  dispatch: PropTypes.func,
   isAuthenticated: PropTypes.bool.isRequired,
   loggedInUser: PropTypes.shape({
     displayName: PropTypes.string,
