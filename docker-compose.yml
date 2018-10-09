@@ -21,7 +21,7 @@ services:
           - RABBITMQ_PASSWORD=rabbitmq
           - RABBITMQ_HOST=rabbit
           - RABBITMQ_PORT=5672
-          - KEYCLOAK_ENABLED=False
+          - KEYCLOAK_ENABLED=True
           - KEYCLOAK_AUDIENCE=tfrs-app
           - KEYCLOAK_CLIENT_ID=tfrs-app
           - KEYCLOAK_REALM=http://localhost:8888/auth/realms/tfrs
@@ -123,7 +123,10 @@ services:
           POSTGRES_USER: keycloak
           POSTGRES_PASSWORD: keycloak
     keycloak:
-        image: jboss/keycloak
+        build:
+            context: ./keycloak
+            dockerfile: Dockerfile-keycloak
+        command: -Dkeycloak.migration.action=import -Dkeycloak.migration.provider=singleFile -Dkeycloak.migration.file=/tmp/realm.json -Dkeycloak.migration.strategy=IGNORE_EXISTING
         environment:
           DB_VENDOR: POSTGRES
           DB_ADDR: postgres_keycloak
