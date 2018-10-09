@@ -13,11 +13,17 @@ def update_permissions(apps, schema_editor):
     role = apps.get_model("api", "Role")
     role_permission = apps.get_model("api", "RolePermission")
 
-    role_permission.objects.using(db_alias).filter(
-        permission__code="EDIT_FUEL_SUPPLIERS",
-        role__name__in=["GovDirector", "GovUser"]).delete()
+    permission.objects.using(db_alias).create(
+        code='EDIT_FUEL_SUPPLIER_USERS',
+        name="Edit Fuel Supplier Users' Information"
+    )
 
     role_permission.objects.using(db_alias).bulk_create([
+        role_permission(
+            role=role.objects.using(db_alias).get(name='Admin'),
+            permission=permission.objects.using(db_alias).get(
+                code='EDIT_FUEL_SUPPLIER_USERS')
+        ),
         role_permission(
             role=role.objects.using(db_alias).get(name='Admin'),
             permission=permission.objects.using(db_alias).get(
@@ -44,29 +50,20 @@ def revert_permissions(apps, schema_editor):
     db_alias = schema_editor.connection.alias
 
     permission = apps.get_model("api", "Permission")
-    role = apps.get_model("api", "Role")
     role_permission = apps.get_model("api", "RolePermission")
-
-    role_permission.objects.using(db_alias).bulk_create([
-        role_permission(
-            role=role.objects.using(db_alias).get(name='GovUser'),
-            permission=permission.objects.using(db_alias).get(
-                code='EDIT_FUEL_SUPPLIERS')
-        ),
-        role_permission(
-            role=role.objects.using(db_alias).get(name='GovDirector'),
-            permission=permission.objects.using(db_alias).get(
-                code='EDIT_FUEL_SUPPLIERS')
-        )
-    ])
 
     role_permission.objects.using(db_alias).filter(
         permission__code__in=[
+            "EDIT_FUEL_SUPPLIER_USERS",
             "VIEW_APPROVED_CREDIT_TRANSFERS",
             "VIEW_CREDIT_TRANSFERS",
             "VIEW_FUEL_SUPPLIERS"
         ],
         role__name="Admin").delete()
+
+    permission.objects.using(db_alias).filter(
+        code="EDIT_FUEL_SUPPLIER_USERS"
+    ).delete()
 
 
 class Migration(migrations.Migration):
