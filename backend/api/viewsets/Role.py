@@ -22,7 +22,7 @@
 from datetime import datetime
 
 from rest_framework import filters, mixins, permissions, viewsets
-from django.db.models import Q
+from rest_framework.response import Response
 
 from auditable.views import AuditableMixin
 
@@ -48,22 +48,40 @@ class RoleViewSet(AuditableMixin, mixins.ListModelMixin,
         This view should return a list of all the assertions that don't have
         an expiration date
         """
-        # TODO: Enable this in the future and get rid of the last return
-        # user = self.request.user
+        user = self.request.user
 
-        # if user.has_perm('ASSIGN_GOVERNMENT_ROLES') and \
-        #         user.has_perm('ASSIGN_FS_ROLES'):
-        #     return Role.objects.all()
+        if user.has_perm('ASSIGN_GOVERNMENT_ROLES') and \
+                user.has_perm('ASSIGN_FS_ROLES'):
+            return Role.objects.all()
 
-        # if user.has_perm('ASSIGN_GOVERNMENT_ROLES'):
-        #     return Role.objects.filter(
-        #         is_government_role=True
-        #     )
+        if user.has_perm('ASSIGN_GOVERNMENT_ROLES'):
+            return Role.objects.filter(
+                is_government_role=True
+            )
 
-        # if user.has_perm('ASSIGN_FS_ROLES'):
-        #     return Role.objects.filter(
-        #         is_government_role=False
-        #     )
+        if user.has_perm('ASSIGN_FS_ROLES'):
+            return Role.objects.filter(
+                is_government_role=False
+            )
 
-        # return Role.objects.none()
-        return Role.objects.all()
+        return Role.objects.none()
+
+    def list(self, request, *args, **kwargs):
+        fuel_supplier_roles_only = self.request.query_params.get(
+            'fuel_supplier_roles_only'
+        )
+
+        government_roles_only = self.request.query_params.get(
+            'government_roles_only'
+        )
+
+        result = self.get_queryset()
+
+        if fuel_supplier_roles_only:
+            result = result.filter(is_government_role=False)
+
+        if government_roles_only:
+            result = result.filter(is_government_role=True)
+
+        serializer = self.get_serializer(result, many=True)
+        return Response(serializer.data)
