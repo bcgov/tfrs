@@ -45,7 +45,16 @@ class UserAddContainer extends Component {
 
   loadData () {
     this.props.getFuelSuppliers();
-    this.props.getRoles();
+
+    if (document.location.pathname.indexOf('/admin/') >= 0) {
+      this.props.getRoles({
+        government_roles_only: true
+      });
+    } else {
+      this.props.getRoles({
+        fuel_supplier_roles_only: true
+      });
+    }
   }
 
   _addToFields (value) {
