@@ -22,7 +22,7 @@ const UsersPage = props => (
       </h1>
       <div className="right-toolbar-container">
         <div className="actions-container">
-          {props.loggedInUser.hasPermission(PERMISSIONS_USERS.EDIT_FUEL_SUPPLIERS) &&
+          {props.loggedInUser.hasPermission(PERMISSIONS_USERS.EDIT_FUEL_SUPPLIER_USERS) &&
           <div className="btn-group">
             <button
               id="new-user"

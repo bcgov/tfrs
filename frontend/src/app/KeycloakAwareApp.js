@@ -56,7 +56,6 @@ class KeycloakAwareApp extends React.Component {
         </IntlProvider>
       );
     } else if (this.props.keycloak.isFetching && this.props.location.pathname === '/authCallback') {
-      console.log('returning authcallback');
       return (this.props.children);
     }
     // we're not logged in and not in the process of logging in. trigger one.

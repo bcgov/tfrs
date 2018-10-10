@@ -3,9 +3,9 @@
 """
     REST API Documentation for the NRS TFRS Credit Trading Application
 
-    The Transportation Fuels Reporting System is being designed to streamline compliance reporting
-    for transportation fuel suppliers in accordance with the Renewable & Low Carbon Fuel
-    Requirements Regulation.
+    The Transportation Fuels Reporting System is being designed to streamline
+    compliance reporting for transportation fuel suppliers in accordance with
+    the Renewable & Low Carbon Fuel Requirements Regulation.
 
     OpenAPI spec version: v1
 
@@ -53,6 +53,10 @@ class TestOrganizationsAPI(BaseAPISecurityTestCase):
             'status': status.HTTP_403_FORBIDDEN,
             'reason': "Default response should be no access"})
 
+        expected_results[('gov_admin',)] = {
+            'status': status.HTTP_200_OK,
+            'reason': 'Admin should have read access to orgs'}
+
         expected_results[('gov_director',)] = {
             'status': status.HTTP_200_OK,
             'reason': 'Director should have read access to orgs'}
@@ -67,9 +71,9 @@ class TestOrganizationsAPI(BaseAPISecurityTestCase):
 
         for user in all_users:
             with self.subTest(
-                user=user,
-                expected_status=expected_results[(user,)]['status'],
-                reason=expected_results[(user,)]['reason']
+                    user=user,
+                    expected_status=expected_results[(user,)]['status'],
+                    reason=expected_results[(user,)]['reason']
             ):
                 response = self.clients[user].get(url)
                 logging.debug(response.content.decode('utf-8'))
@@ -95,11 +99,12 @@ class TestOrganizationsAPI(BaseAPISecurityTestCase):
 
         for user in all_users:
             with self.subTest(
-                user=user,
-                expected_statuses=expected_results[(user,)]['status'],
-                reason=expected_results[(user,)]['reason']
+                    user=user,
+                    expected_statuses=expected_results[(user,)]['status'],
+                    reason=expected_results[(user,)]['reason']
             ):
-                org_that_exists = DataCreationUtilities.create_test_organization()
+                org_that_exists = DataCreationUtilities. \
+                    create_test_organization()
                 response = self.clients[user].delete(
                     url.format(org_that_exists['id']))
                 logging.debug(response)
@@ -138,11 +143,11 @@ class TestOrganizationsAPI(BaseAPISecurityTestCase):
             'status': status.HTTP_201_CREATED,
             'reason': 'Gov Multi-role should have create access for orgs'}
 
-        for index, user in enumerate(all_users):
+        for _index, user in enumerate(all_users):
             with self.subTest(
-                user=user,
-                expected_status=expected_results[(user,)]['status'],
-                reason=expected_results[(user,)]['reason']
+                    user=user,
+                    expected_status=expected_results[(user,)]['status'],
+                    reason=expected_results[(user,)]['reason']
             ):
                 payload = {
                     'status': OrganizationStatus.objects.get_by_natural_key('Active').id,
@@ -191,9 +196,9 @@ class TestOrganizationsAPI(BaseAPISecurityTestCase):
 
         for _index, user in enumerate(all_users):
             with self.subTest(
-                user=user,
-                expected_status=expected_results[(user,)]['status'],
-                reason=expected_results[(user,)]['reason']
+                    user=user,
+                    expected_status=expected_results[(user,)]['status'],
+                    reason=expected_results[(user,)]['reason']
             ):
                 org_that_exists = DataCreationUtilities.create_test_organization()
 
