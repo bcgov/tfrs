@@ -16,6 +16,7 @@ import os
 from pika import ConnectionParameters, PlainCredentials
 from . import amqp
 from . import keycloak
+from . import email
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -134,6 +135,8 @@ AMQP_CONNECTION_PARAMETERS = ConnectionParameters(
 )
 
 KEYCLOAK = keycloak.config()
+
+EMAIL = email.config()
 
 # Internationalization
 # https://docs.djangoproject.com/en/1.8/topics/i18n/

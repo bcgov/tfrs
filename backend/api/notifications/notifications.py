@@ -15,7 +15,7 @@ from api.models.CreditTrade import CreditTrade
 from api.models.Organization import Organization
 from api.models.Role import Role
 from api.notifications.notification_types import NotificationType
-from tfrs.settings import AMQP_CONNECTION_PARAMETERS
+from tfrs.settings import AMQP_CONNECTION_PARAMETERS, EMAIL
 
 
 def send_amqp_notification():
@@ -47,6 +47,12 @@ class EffectiveSubscription(object):
         self.notification_type = notification_type
         self.subscribed = subscribed
 
+    def __eq__(self, other):
+        return (self.channel == other.channel and
+                self.subscribed == other.subscribed and
+                self.notification_type == other.notification_type)
+
+
 
 class EffectiveSubscriptionSerializer(serializers.Serializer):
     channel = serializers.SerializerMethodField()
@@ -63,6 +69,7 @@ class EffectiveSubscriptionSerializer(serializers.Serializer):
     def get_channel(self, obj):
         data = obj.channel.channel
         return data
+
 
 class EffectiveSubscriptionUpdateSerializer(serializers.Serializer):
     channel = serializers.CharField()
@@ -100,6 +107,30 @@ class AMQPNotificationService:
             return users.all()
 
         return []
+
+    @staticmethod
+    def send_email_for_notification(notification: NotificationMessage):
+
+        if not EMAIL['ENABLED']:
+            return
+
+        email_recipient = notification.user.email
+        from email.message import EmailMessage
+        import smtplib
+        msg = EmailMessage()
+        msg.set_content('You have received a new notification in TFRS.\nPlease sign in to view it.')
+        msg['Subject'] = 'TFRS Notification'
+        msg['From'] = EMAIL['FROM_ADDRESS']
+        msg['To'] = email_recipient
+
+        print(msg.as_string())
+
+        with smtplib.SMTP(host=EMAIL['SMTP_SERVER_HOST'],
+                          port=EMAIL['SMTP_SERVER_PORT']) as server:
+            server.send_message(msg)
+
+        print('sending notification to {}'.format(email_recipient))
+
 
     @staticmethod
     def compute_effective_subscriptions(user: User) -> List[EffectiveSubscription]:
@@ -151,6 +182,7 @@ class AMQPNotificationService:
                           is_error: bool = False,
                           is_warning: bool = False,
                           is_global: bool = False,
+                          notification_type: NotificationType = None,
                           originating_user: User = None):
 
 
@@ -176,6 +208,14 @@ class AMQPNotificationService:
                 is_warning=is_warning
             )
             notification.save()
+
+            effective_subscriptions = AMQPNotificationService.compute_effective_subscriptions(recipient)
+            target_subscription = EffectiveSubscription(channel=NotificationChannel.objects.get(channel='EMAIL'),
+                                                        notification_type=notification_type,
+                                                        subscribed=True)
+
+            if target_subscription in effective_subscriptions:
+                AMQPNotificationService.send_email_for_notification(notification)
 
         send_amqp_notification()
 
