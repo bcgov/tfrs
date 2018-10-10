@@ -26,7 +26,7 @@ from rest_framework import exceptions, serializers
 from api.models.User import User
 from .Organization import OrganizationSerializer, OrganizationMinSerializer
 from .Permission import PermissionSerializer
-from .Role import RoleSerializer
+from .Role import RoleMinSerializer
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -36,7 +36,7 @@ class UserSerializer(serializers.ModelSerializer):
     """
     organization = OrganizationSerializer(read_only=True)
     permissions = PermissionSerializer(many=True, read_only=True)
-    roles = RoleSerializer(many=True, read_only=True)
+    roles = RoleMinSerializer(many=True, read_only=True)
 
     class Meta:
         model = User
@@ -51,7 +51,7 @@ class UserMinSerializer(serializers.ModelSerializer):
     Serializer for display information for the User
     """
     organization = OrganizationMinSerializer(read_only=True)
-    roles = RoleSerializer(many=True, read_only=True)
+    roles = RoleMinSerializer(many=True, read_only=True)
 
     class Meta:
         model = User
@@ -67,7 +67,7 @@ class UserViewSerializer(serializers.ModelSerializer):
     """
     history = serializers.SerializerMethodField()
     organization = OrganizationMinSerializer(read_only=True)
-    roles = RoleSerializer(many=True, read_only=True)
+    roles = RoleMinSerializer(many=True, read_only=True)
 
     class Meta:
         model = User

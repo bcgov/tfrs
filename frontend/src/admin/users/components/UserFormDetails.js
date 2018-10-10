@@ -3,6 +3,8 @@
  */
 import React from 'react';
 import PropTypes from 'prop-types';
+import FontAwesomeIcon from '@fortawesome/react-fontawesome';
+import { OverlayTrigger, Tooltip } from 'react-bootstrap';
 import Autosuggest from 'react-bootstrap-autosuggest';
 
 import CheckBox from '../../../app/components/CheckBox';
@@ -177,6 +179,22 @@ const UserFormDetails = props => (
                   toggleCheck={props.toggleCheck}
                 />
                 <span className="text">{role.description}</span>
+                <OverlayTrigger
+                  placement="top"
+                  overlay={(
+                    <Tooltip id={`tooltip-${role.id}`} placement="top">
+                      {role.permissions &&
+                        role.permissions.map(permission => (
+                          <div className="permission" key={permission.id}>{permission.name}</div>
+                        ))
+                      }
+                    </Tooltip>
+                  )}
+                >
+                  <div className="overlay-trigger">
+                    <FontAwesomeIcon icon="user-lock" />
+                  </div>
+                </OverlayTrigger>
               </div>
             ))
           }

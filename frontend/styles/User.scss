@@ -18,6 +18,10 @@
           vertical-align: middle;
         }
 
+        .fa-key, .fa-user-lock {
+          margin-left: 0.5rem;
+        }
+
         .text {
           display: inline-block;
           margin-left: 0.5rem;
@@ -50,4 +54,8 @@
   .user_history {
     margin-top: 3rem;
   }
+}
+
+.tooltip .permission {
+  text-align: left;
 }
