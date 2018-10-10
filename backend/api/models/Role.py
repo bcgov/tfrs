@@ -61,7 +61,7 @@ class Role(Auditable):
         """
         permissions = Permission.objects.filter(
             role_permissions__role_id=self.id
-        )
+        ).distinct()
 
         return permissions
 
