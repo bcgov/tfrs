@@ -21,7 +21,7 @@ services:
           - RABBITMQ_PASSWORD=rabbitmq
           - RABBITMQ_HOST=rabbit
           - RABBITMQ_PORT=5672
-          - KEYCLOAK_ENABLED=False
+          - KEYCLOAK_ENABLED=True
           - KEYCLOAK_AUDIENCE=tfrs-app
           - KEYCLOAK_CLIENT_ID=tfrs-app
           - KEYCLOAK_REALM=http://localhost:8888/auth/realms/tfrs
@@ -105,6 +105,7 @@ services:
             - RABBITMQ_DEFAULT_USER=rabbitmq
             - RABBITMQ_DEFAULT_PASS=rabbitmq
             - RABBITMQ_DEFAULT_VHOST=/tfrs
+            - RABBITMQ_SERVER_ADDITIONAL_ERL_ARGS=-rabbit log_levels [{connection,error}]
         ports:
             - 15672:15672
             - 5672:5672
@@ -123,7 +124,10 @@ services:
           POSTGRES_USER: keycloak
           POSTGRES_PASSWORD: keycloak
     keycloak:
-        image: jboss/keycloak
+        build:
+            context: ./keycloak
+            dockerfile: Dockerfile-keycloak
+        command: -Dkeycloak.migration.action=import -Dkeycloak.migration.provider=singleFile -Dkeycloak.migration.file=/tmp/realm.json -Dkeycloak.migration.strategy=IGNORE_EXISTING
         environment:
           DB_VENDOR: POSTGRES
           DB_ADDR: postgres_keycloak
@@ -132,6 +136,8 @@ services:
           DB_PASSWORD: keycloak
           KEYCLOAK_USER: admin
           KEYCLOAK_PASSWORD: admin
+          KEYCLOAK_LOGLEVEL: WARN
+          ROOT_LOGLEVEL: WARN
         ports:
           - 8888:8080
         depends_on:
