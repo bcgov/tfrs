@@ -57,7 +57,7 @@ const OrganizationMembersTable = (props) => {
         viewUrl = ADMIN_USERS.DETAILS.replace(':id', row.value);
       }
 
-      if (props.loggedInUser.hasPermission(PERMISSIONS_USERS.EDIT_FUEL_SUPPLIERS)) {
+      if (props.loggedInUser.hasPermission(PERMISSIONS_USERS.EDIT_FUEL_SUPPLIER_USERS)) {
         return ([
           <Link to={viewUrl} key="view"><FontAwesomeIcon icon="eye" /></Link>,
           <Link to={editUrl} key="edit"><FontAwesomeIcon icon="pencil-alt" /></Link>
