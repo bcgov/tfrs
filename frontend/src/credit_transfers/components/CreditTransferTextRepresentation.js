@@ -156,7 +156,7 @@ class CreditTransferTextRepresentation extends Component {
 
     if (rescindedBy) {
       return [
-        <span key="rescinded-by" className="value"> ${rescindedBy.user.organization.name} </span>,
+        <span key="rescinded-by" className="value"> {rescindedBy.user.organization.name} </span>,
         <span key="rescinded-by-text">rescinded the proposal.</span>
       ];
     }
