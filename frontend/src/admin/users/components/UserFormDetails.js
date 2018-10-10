@@ -3,7 +3,6 @@
  */
 import React from 'react';
 import PropTypes from 'prop-types';
-import FontAwesomeIcon from '@fortawesome/react-fontawesome';
 import { OverlayTrigger, Tooltip } from 'react-bootstrap';
 import Autosuggest from 'react-bootstrap-autosuggest';
 
@@ -178,26 +177,32 @@ const UserFormDetails = props => (
                   id={role.id}
                   toggleCheck={props.toggleCheck}
                 />
-                <span className="text">{role.description}</span>
                 <OverlayTrigger
                   placement="top"
                   overlay={(
                     <Tooltip id={`tooltip-${role.id}`} placement="top">
-                      {role.permissions &&
-                        role.permissions.map(permission => (
-                          <div className="permission" key={permission.id}>{permission.name}</div>
-                        ))
-                      }
+                      <ul>
+                        <div className="heading">This role will have the ability to:</div>
+                        {role.permissions &&
+                          role.permissions.map(permission => (
+                            <li className="permission" key={permission.id}>{permission.name}</li>
+                          ))
+                        }
+                      </ul>
                     </Tooltip>
                   )}
                 >
-                  <div className="overlay-trigger">
-                    <FontAwesomeIcon icon="user-lock" />
-                  </div>
+                  <span className="text">{role.description}</span>
                 </OverlayTrigger>
               </div>
             ))
           }
+        </div>
+      </div>
+
+      <div className="row">
+        <div className="col-sm-12">
+        * Hover over the roles to view the permissions available to that role.
         </div>
       </div>
     </div>
