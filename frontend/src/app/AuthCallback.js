@@ -5,12 +5,25 @@ import history from '../app/History';
 import userManager from '../store/oidc-usermanager';
 
 class AuthCallback extends React.Component {
+
+  constructor() {
+    super();
+    this.success = this.success.bind(this);
+  }
+
+  success(user) {
+    const target = this.props.targetPath;
+    history.push(target);
+  }
+
+  error(e)  {}
+
   render() {
     return (
       <CallbackComponent
         userManager={userManager}
-        successCallback={this.props.success}
-        errorCallback={this.props.error}
+        successCallback={this.success}
+        errorCallback={this.error}
       >
         <div>Authentication complete. Redirecting.</div>
       </CallbackComponent>
@@ -20,23 +33,14 @@ class AuthCallback extends React.Component {
 
 const mapStateToProps = state => {
   return {
-    //todo: state.todos[0]
+    targetPath: state.targetPath.target
   }
-}
-
+};
 
 const mapDispatchToProps = dispatch => {
   return {
-    success: (user) => {
-      history.push('/');
-    }
-    ,
-    error: (e) => {
-      console.error(e);
-    }
   }
-}
-
+};
 
 export default connect(
   mapStateToProps,
