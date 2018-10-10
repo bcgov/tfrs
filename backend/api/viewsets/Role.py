@@ -30,8 +30,8 @@ from api.models.Role import Role
 from api.serializers import RoleSerializer
 
 
-class RoleViewSet(AuditableMixin, mixins.ListModelMixin,
-                  viewsets.GenericViewSet):
+class RoleViewSet(AuditableMixin, viewsets.GenericViewSet,
+                  mixins.ListModelMixin, mixins.RetrieveModelMixin):
     """
     This viewset automatically provides `list`
     """
