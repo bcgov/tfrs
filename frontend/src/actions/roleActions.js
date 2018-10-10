@@ -4,10 +4,12 @@ import ActionTypes from '../constants/actionTypes/Roles';
 import ReducerTypes from '../constants/reducerTypes/Roles';
 import * as Routes from '../constants/routes';
 
-const getRoles = () => (dispatch) => {
+const getRoles = params => (dispatch) => {
   dispatch(getRolesRequest());
 
-  axios.get(Routes.BASE_URL + Routes.ROLES.API)
+  axios.get(Routes.BASE_URL + Routes.ROLES.API, {
+    params
+  })
     .then((response) => {
       dispatch(getRolesSuccess(response.data));
     }).catch((error) => {
