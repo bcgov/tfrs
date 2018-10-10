@@ -6,7 +6,7 @@ package traits
 trait Users {
   Map env = System.getenv()
   Map getSendingFuelSupplier() {
-    [username:env['SUPPLIER_ONE_USERNAME'], password:env['SUPPLIER_ONE_PASSWORD']]
+    [username:env['SUPPLIER_ONE_USERNAME'], password:env['SUPPLIER_ONE_PASSWORD'], org:env['SUPPLIER_ONE_ORG']]
   }
 
   Map getReceivingFuelSupplier() {
