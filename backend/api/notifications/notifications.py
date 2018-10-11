@@ -123,13 +123,9 @@ class AMQPNotificationService:
         msg['From'] = EMAIL['FROM_ADDRESS']
         msg['To'] = email_recipient
 
-        print(msg.as_string())
-
         with smtplib.SMTP(host=EMAIL['SMTP_SERVER_HOST'],
                           port=EMAIL['SMTP_SERVER_PORT']) as server:
             server.send_message(msg)
-
-        print('sending notification to {}'.format(email_recipient))
 
 
     @staticmethod
