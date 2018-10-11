@@ -59,7 +59,16 @@ class UserEditContainer extends Component {
   loadData (id) {
     this.props.getUser(id);
     this.props.getFuelSuppliers();
-    this.props.getRoles();
+
+    if (document.location.pathname.indexOf('/admin/') >= 0) {
+      this.props.getRoles({
+        government_roles_only: true
+      });
+    } else {
+      this.props.getRoles({
+        fuel_supplier_roles_only: true
+      });
+    }
   }
 
   loadPropsToFieldState (props) {
