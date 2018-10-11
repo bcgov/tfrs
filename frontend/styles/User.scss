@@ -18,6 +18,10 @@
           vertical-align: middle;
         }
 
+        .fa-key, .fa-user-lock {
+          margin-left: 0.5rem;
+        }
+
         .text {
           display: inline-block;
           margin-left: 0.5rem;
@@ -49,5 +53,29 @@
 
   .user_history {
     margin-top: 3rem;
+  }
+}
+
+.tooltip {
+  .tooltip-inner {
+    max-width: 500px;
+  }
+
+  .heading {
+    margin-bottom: 1rem;
+    text-align: left;
+  }
+
+  .permission {
+    font-weight: bold;
+    margin: 0;
+    text-align: left;
+  }
+  
+  ul {
+    list-style-position: inside;
+    list-style-type: square;
+    margin: 0.5rem 0;
+    padding: 0 0.5rem;
   }
 }
