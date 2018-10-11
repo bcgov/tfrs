@@ -70,7 +70,7 @@ class SettingsContainer extends Component {
     return false;
   }
 
-  _handleSubmit (event, status) {
+  _handleSubmit (event) {
     event.preventDefault();
 
     const data = [];
@@ -83,7 +83,7 @@ class SettingsContainer extends Component {
       });
     });
 
-    this.props.updateSubscriptions(data).then((response) => {
+    this.props.updateSubscriptions(data).then(() => {
       toastr.subscriptionsSuccess();
     });
 
