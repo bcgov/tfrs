@@ -481,5 +481,6 @@ class CreditTradeService(object):
             AMQPNotificationService.send_notification(
                 interested_organization=notification.recipient,
                 message=notification.notification_type.name,
+                notification_type=notification.notification_type,
                 related_credit_trade=credit_trade
             )
