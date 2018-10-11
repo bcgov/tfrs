@@ -71,6 +71,7 @@ class UserAddContainer extends Component {
   }
 
   _handleInputChange (event) {
+    console.log(event);
     const { value, name } = event.target;
     const fieldState = { ...this.state.fields };
 

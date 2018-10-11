@@ -294,8 +294,52 @@ class CreditTradeUpdateSerializer(serializers.ModelSerializer):
     """
     Serializer for Updating the Credit Trade
     """
+    def __init__(self, *args, **kwargs):
+        """
+        This is to allow us to simulate a partial update.
+        This will need to be updated when we finally allow PATCH in our system.
+        """
+        super(CreditTradeUpdateSerializer, self).__init__(*args, **kwargs)
+        data = kwargs.get('data')
+
+        if 'compliance_period' not in data and self.instance.compliance_period:
+            data['compliance_period'] = self.instance.compliance_period
+
+        if 'fair_market_value_per_credit' not in data:
+            data['fair_market_value_per_credit'] = \
+                self.instance.fair_market_value_per_credit
+
+        if 'initiator' not in data:
+            data['initiator'] = self.instance.initiator.id
+
+        if 'note' not in data:
+            data['note'] = self.instance.note
+
+        if 'number_of_credits' not in data:
+            data['number_of_credits'] = self.instance.number_of_credits
+
+        if 'respondent' not in data:
+            data['respondent'] = self.instance.respondent.id
+
+        if 'status' not in data:
+            data['status'] = self.instance.status.id
+
+        if 'trade_effective_date' not in data:
+            data['trade_effective_date'] = self.instance.trade_effective_date
+
+        if 'type' not in data:
+            data['type'] = self.instance.type.id
+
+        if 'zero_reason' not in data and self.instance.zero_reason:
+            data['zero_reason'] = self.instance.zero_reason.id
 
     def validate(self, data):
+        """
+        Makes sure that the status the credit trade is being updated to
+        is valid.
+        There are certain states that should lock a credit trade from being
+        modified.
+        """
         request = self.context['request']
         available_statuses = []
 

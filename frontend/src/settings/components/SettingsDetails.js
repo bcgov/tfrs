@@ -39,7 +39,7 @@ const SettingsDetails = props => (
         <Loading />
       }
 
-      {props.subscriptions.success && [
+      {!props.subscriptions.isFetching && props.subscriptions.success && [
         <h3 key="header-credit-transactions">
           Credit Transfers
         </h3>,
