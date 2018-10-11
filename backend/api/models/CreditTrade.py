@@ -59,7 +59,7 @@ class CreditTrade(Auditable):
         related_name='respondent_credit_trades',
         on_delete=models.PROTECT,
         db_comment='fk: reference to the organization that will respond to the'
-           ' credit transfer proposal')
+                   ' credit transfer proposal')
     type = models.ForeignKey(
         CreditTradeType,
         related_name='credit_trades',
@@ -82,7 +82,8 @@ class CreditTrade(Auditable):
         db_comment='Rationale for zero-valued transfer')
     trade_effective_date = models.DateField(
         blank=True, null=True,
-        db_comment='Date on which this transfer will become effective if approved'
+        db_comment='Date on which this transfer will become effective if '
+                   'approved'
     )
     note = models.CharField(
         max_length=4000,
@@ -98,7 +99,8 @@ class CreditTrade(Auditable):
     )
     is_rescinded = models.BooleanField(
         default=False,
-        db_comment='Flag. True if the trade was rescinded before completion by either party.'
+        db_comment='Flag. True if the trade was rescinded before completion '
+                   'by either party.'
     )
 
     @property
