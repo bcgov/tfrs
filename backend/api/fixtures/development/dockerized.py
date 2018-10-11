@@ -153,6 +153,17 @@ class DockerEnvironment(OperationalDataScript):
             html.write('</ul>')
             html.write('<h2><a target="_blank" href="http://localhost:{port}/">Access TFRS here</a></h2>'.
                        format(port=self._proxied_portbase))
+
+
+            html.write('<h4><a target="_blank" href="http://localhost:8888/">'
+                       'Keycloak Admin</a></h4>')
+
+            html.write('<h4><a target="_blank" href="http://localhost:8080/">'
+                       'Mailslurper (View sent mails)</a></h4>')
+
+            html.write('<h4><a target="_blank" href="http://localhost:9000/">'
+                       'Minio</a></h4>')
+
             html.write('</body></html>')
 
 
