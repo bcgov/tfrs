@@ -29,7 +29,34 @@ from .Permission import PermissionSerializer
 
 class RoleSerializer(serializers.ModelSerializer):
     """
-    Serializer for the Role used for displaying in the front-end
+    Serializer for the Role used for displaying in the front-end.
+    This includes the permissions for the role
+    """
+    permissions = serializers.SerializerMethodField()
+
+    def get_permissions(self, obj):
+        """
+        Permissions attached to the role.
+        This also handles the sorting for the permissions.
+        """
+        serializer = PermissionSerializer(
+            obj.permissions.order_by('name'),
+            many=True,
+            read_only=True
+        )
+
+        return serializer.data
+
+    class Meta:
+        model = Role
+        fields = ('id', 'name', 'description', 'is_government_role',
+                  'permissions')
+
+
+class RoleMinSerializer(serializers.ModelSerializer):
+    """
+    Serializer for the Role used for displaying in the front-end.
+    This is just going to retrieve the basic information for the role
     """
     class Meta:
         model = Role
