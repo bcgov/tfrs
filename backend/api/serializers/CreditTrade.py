@@ -83,7 +83,7 @@ class CreditTradeCreateSerializer(serializers.ModelSerializer):
 
         if request.user.has_perm('APPROVE_CREDIT_TRANSFER') or \
                 request.user.has_perm('USE_HISTORICAL_DATA_ENTRY'):
-            available_statuses.append('Approved')
+            available_statuses.append('Recorded')
 
         if request.user.has_perm('PROPOSE_CREDIT_TRANSFER'):
             available_statuses.append('Draft')
@@ -306,7 +306,7 @@ class CreditTradeUpdateSerializer(serializers.ModelSerializer):
             })
 
         if self.instance.status.status in [
-                "Cancelled", "Completed", "Declined", "Refused"
+                "Approved", "Cancelled", "Declined", "Refused"
         ]:
             raise serializers.ValidationError({
                 'readOnly': "Cannot update a transaction that's already "
@@ -556,7 +556,7 @@ class CreditTradeApproveSerializer(serializers.ModelSerializer):
             })
 
         if self.instance.status.status in [
-                "Approved", "Cancelled", "Completed", "Declined"
+                "Approved", "Cancelled", "Declined", "Recorded"
         ]:
             raise serializers.ValidationError({
                 'readOnly': "Cannot approve a transaction that's already "
@@ -674,10 +674,10 @@ class CreditTrade2Serializer(serializers.ModelSerializer):
         # if the user is not a government user we should limit what we show
         # so no recommended/not recommended
         if not request.user.is_government_user:
-            history = obj.get_history(["Accepted", "Completed", "Declined",
+            history = obj.get_history(["Accepted", "Approved", "Declined",
                                        "Refused", "Submitted"])
         else:
-            history = obj.get_history(["Accepted", "Completed", "Declined",
+            history = obj.get_history(["Accepted", "Approved", "Declined",
                                        "Not Recommended", "Recommended",
                                        "Refused", "Submitted"])
 

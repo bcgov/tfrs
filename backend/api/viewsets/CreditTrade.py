@@ -26,7 +26,6 @@ from api.serializers import CreditTradeListSerializer
 from api.serializers import CreditTradeUpdateSerializer
 
 from api.services.CreditTradeService import CreditTradeService
-from api.services.NotificationService import NotificationService
 from api.services.SpreadSheetBuilder import SpreadSheetBuilder
 
 
@@ -51,7 +50,7 @@ class CreditTradeViewSet(AuditableMixin, mixins.CreateModelMixin,
         'default': CreditTradeSerializer,
         'history': CreditTradeHistorySerializer,
         'list': CreditTradeListSerializer,
-        'list_approved': CreditTradeListSerializer,
+        'list_recorded': CreditTradeListSerializer,
         'partial_update': CreditTradeUpdateSerializer,
         'update': CreditTradeUpdateSerializer
     }
@@ -82,9 +81,9 @@ class CreditTradeViewSet(AuditableMixin, mixins.CreateModelMixin,
         # be showing Completed here
         # Note: We did not update the CreditTradeService found in
         # get_queryset as we have other API that uses the same service call,
-        # but want the Approved transfers included (such as list_approved)
+        # but want the Approved transfers included (such as list_recorded)
         credit_trades = self.get_queryset().filter(
-            ~Q(status__status__in=["Approved"])
+            ~Q(status__status__in=["Recorded"])
         ).order_by(*self.ordering)
 
         # For hash computation
@@ -99,14 +98,19 @@ class CreditTradeViewSet(AuditableMixin, mixins.CreateModelMixin,
         digest = hashlib.sha256()
         # you could use anything here (like perhaps the PID or startup time
         digest.update(b'salt')
-        digest.update(most_recent_updated_credit_trade.update_timestamp.isoformat()
-                      .encode('utf-8') if most_recent_updated_credit_trade is not None else b'')
-        digest.update(most_recent_created_credit_trade.create_timestamp.isoformat()
-                      .encode('utf-8') if most_recent_created_credit_trade is not None else b'')
+        digest.update(most_recent_updated_credit_trade.update_timestamp
+                      .isoformat()
+                      .encode('utf-8')
+                      if most_recent_updated_credit_trade is not None else b'')
+        digest.update(most_recent_created_credit_trade.create_timestamp
+                      .isoformat()
+                      .encode('utf-8')
+                      if most_recent_created_credit_trade is not None else b'')
         etag = 'W/"{}"'.format(digest.hexdigest())
 
         # Browser has an up-to-date copy
-        if 'HTTP_IF_NONE_MATCH' in request.META and etag == request.META['HTTP_IF_NONE_MATCH']:
+        if 'HTTP_IF_NONE_MATCH' in request.META and etag == \
+                request.META['HTTP_IF_NONE_MATCH']:
             response = Response(status=status.HTTP_304_NOT_MODIFIED)
             response['ETag'] = etag
             return response
@@ -125,7 +129,6 @@ class CreditTradeViewSet(AuditableMixin, mixins.CreateModelMixin,
     def perform_update(self, serializer):
         credit_trade = serializer.save()
         CreditTradeService.create_history(credit_trade, False)
-        NotificationService.send(credit_trade)
 
         status_cancelled = CreditTradeStatus.objects.get(status="Cancelled")
 
@@ -173,12 +176,12 @@ class CreditTradeViewSet(AuditableMixin, mixins.CreateModelMixin,
 
     @list_route(methods=['get'])
     @permission_required('VIEW_APPROVED_CREDIT_TRANSFERS')
-    def list_approved(self, request):
+    def list_recorded(self, request):
         """
-        Returns a list of Approved Credit Trades only
+        Returns a list of Recorded Credit Trades only
         """
         status_approved = CreditTradeStatus.objects \
-                                           .get(status="Approved")
+                                           .get(status="Recorded")
 
         credit_trades = CreditTrade.objects.filter(
             status_id=status_approved.id).order_by('id')
@@ -193,7 +196,7 @@ class CreditTradeViewSet(AuditableMixin, mixins.CreateModelMixin,
         Call the approve function on multiple Credit Trades
         """
         status_approved = CreditTradeStatus.objects \
-                                           .get(status="Approved")
+                                           .get(status="Recorded")
 
         credit_trades = CreditTrade.objects.filter(
             status_id=status_approved.id).order_by('id')
@@ -223,7 +226,7 @@ class CreditTradeViewSet(AuditableMixin, mixins.CreateModelMixin,
             ))
 
         credit_trades = self.get_queryset().filter(
-            ~Q(status__status__in=["Approved"])
+            ~Q(status__status__in=["Recorded"])
         ).order_by(*self.ordering)
 
         # Allow filter by organization (for government users only)
