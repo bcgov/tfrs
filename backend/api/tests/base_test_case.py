@@ -168,11 +168,11 @@ class BaseTestCase(TestCase):
             'accepted': CreditTradeStatus.objects.get(status='Accepted'),
             'approved': CreditTradeStatus.objects.get(status='Approved'),
             'cancelled': CreditTradeStatus.objects.get(status='Cancelled'),
-            'completed': CreditTradeStatus.objects.get(status='Completed'),
             'draft': CreditTradeStatus.objects.get(status='Draft'),
             'not_recommended':
                 CreditTradeStatus.objects.get(status='Not Recommended'),
             'recommended': CreditTradeStatus.objects.get(status='Recommended'),
+            'recorded': CreditTradeStatus.objects.get(status='Recorded'),
             'refused': CreditTradeStatus.objects.get(status='Refused'),
             'submitted': CreditTradeStatus.objects.get(status='Submitted')
         }

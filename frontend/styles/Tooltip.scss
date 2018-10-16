@@ -1,0 +1,35 @@
+@import './variables.scss';
+
+.tooltip {
+  &.danger {
+    .tooltip-arrow {
+      border-top-color: $dark-red !important;
+    }
+  
+    .tooltip-inner {
+      background-color: $dark-red;
+      max-width: 500px;
+    }  
+  }
+
+  .tooltip-arrow {
+    border-top-color: $primary !important;
+  }
+
+  .tooltip-inner {
+    background-color: $primary;
+    max-width: 500px;
+  }
+
+  .heading {
+    margin-bottom: 1rem;
+    text-align: left;
+  }
+
+  ul {
+    list-style-position: inside;
+    list-style-type: square;
+    margin: 0.5rem 0;
+    padding: 0 0.5rem;
+  }
+}

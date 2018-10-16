@@ -31,8 +31,7 @@ class CreditTransferProgress extends Component {
   _addStepCompleted () {
     return (
       <div
-        className={`step ${(this.props.status.id === CREDIT_TRANSFER_STATUS.approved.id ||
-          this.props.status.id === CREDIT_TRANSFER_STATUS.completed.id)
+        className={`step ${(this.props.status.id === CREDIT_TRANSFER_STATUS.approved.id)
           ? 'current' : ''}`}
         key={CREDIT_TRANSFER_STATUS.approved.id}
       >
