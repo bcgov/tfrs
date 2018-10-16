@@ -67,7 +67,7 @@ class CreditTradeCommentPermissions(permissions.BasePermission):
     action_mapping[(_Relationship.GovernmentAnalyst, 'Not Recommended', True, True)] = True
     action_mapping[(_Relationship.GovernmentAnalyst, 'Draft', False, False)] = True
     action_mapping[(_Relationship.GovernmentAnalyst, 'Draft', False, True)] = True
-    action_mapping[(_Relationship.GovernmentAnalyst, 'Approved', False, False)] = True
+    action_mapping[(_Relationship.GovernmentAnalyst, 'Recorded', False, False)] = True
 
     action_mapping[(_Relationship.GovernmentDirector, 'Recommended', False, False)] = True
     action_mapping[(_Relationship.GovernmentDirector, 'Not Recommended', False, False)] = True
@@ -78,7 +78,7 @@ class CreditTradeCommentPermissions(permissions.BasePermission):
     action_mapping[(_Relationship.GovernmentDirector, 'Recommended', True, True)] = True
     action_mapping[(_Relationship.GovernmentDirector, 'Not Recommended', True, True)] = True
     action_mapping[(_Relationship.GovernmentDirector, 'Draft', False, True)] = True
-    action_mapping[(_Relationship.GovernmentDirector, 'Approved', False, True)] = True
+    action_mapping[(_Relationship.GovernmentDirector, 'Recorded', False, True)] = True
 
     @staticmethod
     def user_can_comment(user, credit_trade, privileged):

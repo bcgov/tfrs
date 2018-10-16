@@ -103,7 +103,7 @@ class TestCreditTradeOperations(BaseTestCase):
 
     def test_government_user_add_credit_transfer(self):
         """
-        As a government user, I should be able to add an approved
+        As a government user, I should be able to add an recorded
         credit transfer
         """
         payload = {
@@ -111,7 +111,7 @@ class TestCreditTradeOperations(BaseTestCase):
             'initiator': 2,
             'numberOfCredits': 1,
             'respondent': 3,
-            'status': self.statuses['approved'].id,
+            'status': self.statuses['recorded'].id,
             'tradeEffectiveDate': datetime.datetime.today().strftime(
                 '%Y-%m-%d'
             ),
@@ -126,9 +126,9 @@ class TestCreditTradeOperations(BaseTestCase):
 
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
-    def test_government_user_add_approved_zero_credit_transfer(self):
+    def test_government_user_add_recorded_zero_credit_transfer(self):
         """
-        As a government user, I should be able to add an approved
+        As a government user, I should be able to add an recorded
         credit transfer with 0 fair market value:
         If the type is 'Sell', Fair Market Value needs to be greater than 0
         or zero dollar reason must be provided
@@ -140,7 +140,7 @@ class TestCreditTradeOperations(BaseTestCase):
             'initiator': 2,
             'numberOfCredits': 1,
             'respondent': 3,
-            'status': self.statuses['approved'].id,
+            'status': self.statuses['recorded'].id,
             'tradeEffectiveDate': datetime.datetime.today().strftime(
                 '%Y-%m-%d'
             ),
@@ -156,9 +156,9 @@ class TestCreditTradeOperations(BaseTestCase):
         # 400 since zero reason was set to None
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
-    def test_government_user_add_approved_valid_zero_credit_transfer(self):
+    def test_government_user_add_recorded_valid_zero_credit_transfer(self):
         """
-        As a government user, I should be able to add an approved
+        As a government user, I should be able to add an recorded
         credit transfer with 0 fair market value:
         If the type is 'Sell', Fair Market Value needs to be greater than 0
         or zero dollar reason must be provided
@@ -168,7 +168,7 @@ class TestCreditTradeOperations(BaseTestCase):
             'initiator': 2,
             'numberOfCredits': 1,
             'respondent': 3,
-            'status': self.statuses['approved'].id,
+            'status': self.statuses['recorded'].id,
             'tradeEffectiveDate': datetime.datetime.today().strftime(
                 '%Y-%m-%d'
             ),
@@ -186,13 +186,13 @@ class TestCreditTradeOperations(BaseTestCase):
 
     def test_validate_credit(self):
         """
-        As a government user, I should be able to validate approved credit
+        As a government user, I should be able to validate recorded credit
         transfers:
         It should raise an exception if it sees any fuel suppliers with
         insufficient funds
         """
         CreditTrade.objects.create(
-            status=self.statuses['approved'],
+            status=self.statuses['recorded'],
             initiator=self.users['fs_user_2'].organization,
             respondent=self.users['fs_user_3'].organization,
             type=self.credit_trade_types['sell'],
@@ -205,14 +205,14 @@ class TestCreditTradeOperations(BaseTestCase):
         )
 
         credit_trades = CreditTrade.objects.filter(
-            status_id=self.statuses['approved'].id)
+            status_id=self.statuses['recorded'].id)
 
         with self.assertRaises(PositiveIntegerException):
             CreditTradeService.validate_credits(credit_trades)
 
     def test_validate_credit_complex(self):
         """
-        As a government user, I should be able to validate approved credit
+        As a government user, I should be able to validate recorded credit
         transfers:
         It should raise an exception if it sees any fuel suppliers with
         insufficient funds
@@ -227,7 +227,7 @@ class TestCreditTradeOperations(BaseTestCase):
 
         # Transfer initial balance from Test 1 to Test 2
         CreditTrade.objects.create(
-            status=self.statuses['approved'],
+            status=self.statuses['recorded'],
             initiator=self.organizations['from'],
             respondent=self.organizations['to'],
             type=self.credit_trade_types['sell'],
@@ -241,7 +241,7 @@ class TestCreditTradeOperations(BaseTestCase):
 
         # Transfer 1 from Test 1 to Test 2
         CreditTrade.objects.create(
-            status=self.statuses['approved'],
+            status=self.statuses['recorded'],
             initiator=self.organizations['from'],
             respondent=self.organizations['to'],
             type=self.credit_trade_types['sell'],
@@ -254,7 +254,7 @@ class TestCreditTradeOperations(BaseTestCase):
         )
 
         credit_trades = CreditTrade.objects.filter(
-            status_id=self.statuses['approved'].id)
+            status_id=self.statuses['recorded'].id)
 
         # this should now raise an exception since we tried transferring
         # 1200 credits when only 1000 are available
@@ -279,7 +279,7 @@ class TestCreditTradeOperations(BaseTestCase):
         # transfer from organization: 1 (BC Government))
         credit_trades.append(
             CreditTrade.objects.create(
-                status=self.statuses['approved'],
+                status=self.statuses['recorded'],
                 initiator=self.users['gov_analyst'].organization,
                 respondent=self.organizations['from'],
                 type=self.credit_trade_types['sell'],
@@ -295,7 +295,7 @@ class TestCreditTradeOperations(BaseTestCase):
         # Transfer 500 from Test 1 to Test 2
         credit_trades.append(
             CreditTrade.objects.create(
-                status=self.statuses['approved'],
+                status=self.statuses['recorded'],
                 initiator=self.organizations['from'],
                 respondent=self.organizations['to'],
                 type=self.credit_trade_types['sell'],
@@ -311,7 +311,7 @@ class TestCreditTradeOperations(BaseTestCase):
         # Transfer 300 from Test 1 to Test 2
         credit_trades.append(
             CreditTrade.objects.create(
-                status=self.statuses['approved'],
+                status=self.statuses['recorded'],
                 initiator=self.organizations['from'],
                 respondent=self.organizations['to'],
                 type=self.credit_trade_types['sell'],
@@ -329,7 +329,7 @@ class TestCreditTradeOperations(BaseTestCase):
 
     def test_batch_process(self):
         """
-        As a government user, I should be able to process all the approved
+        As a government user, I should be able to process all the recorded
         credit transfers
         This test is similar to the one above, but a functional test to check
         if the commit actually works
@@ -339,7 +339,7 @@ class TestCreditTradeOperations(BaseTestCase):
             expiration_date=None).validated_credits
 
         CreditTrade.objects.create(
-            status=self.statuses['approved'],
+            status=self.statuses['recorded'],
             initiator=self.users['gov_director'].organization,
             respondent=self.organizations['from'],
             type=self.credit_trade_types['sell'],
@@ -352,7 +352,7 @@ class TestCreditTradeOperations(BaseTestCase):
         )
 
         CreditTrade.objects.create(
-            status=self.statuses['approved'],
+            status=self.statuses['recorded'],
             initiator=self.organizations['from'],
             respondent=self.organizations['to'],
             type=self.credit_trade_types['sell'],
@@ -365,7 +365,7 @@ class TestCreditTradeOperations(BaseTestCase):
         )
 
         CreditTrade.objects.create(
-            status=self.statuses['approved'],
+            status=self.statuses['recorded'],
             initiator=self.organizations['from'],
             respondent=self.organizations['to'],
             type=self.credit_trade_types['sell'],
@@ -392,7 +392,7 @@ class TestCreditTradeOperations(BaseTestCase):
         (Not a hard delete, just sets the status to Cancelled)
         """
         credit_trade = CreditTrade.objects.create(
-            status=self.statuses['approved'],
+            status=self.statuses['recorded'],
             initiator=self.users['gov_analyst'].organization,
             respondent=self.organizations['from'],
             type=self.credit_trade_types['sell'],
@@ -454,9 +454,9 @@ class TestCreditTradeOperations(BaseTestCase):
             )
         )
 
-        # the function should see this as it's completed
-        completed_credit_trade = CreditTrade.objects.create(
-            status=self.statuses['completed'],
+        # the function should see this as it's approved
+        approved_credit_trade = CreditTrade.objects.create(
+            status=self.statuses['approved'],
             initiator=self.organizations['from'],
             respondent=self.organizations['to'],
             type=self.credit_trade_types['sell'],
@@ -474,7 +474,7 @@ class TestCreditTradeOperations(BaseTestCase):
 
         self.assertNotIn(draft_credit_trade, credit_trades)
         self.assertIn(draft_credit_trade_from_gov, credit_trades)
-        self.assertIn(completed_credit_trade, credit_trades)
+        self.assertIn(approved_credit_trade, credit_trades)
 
     def test_get_organization_credit_trades_fuel_supplier(self):
         """
@@ -543,9 +543,9 @@ class TestCreditTradeOperations(BaseTestCase):
             )
         )
 
-        # the function should see this as it's completed
-        completed_credit_trade = CreditTrade.objects.create(
-            status=self.statuses['completed'],
+        # the function should see this as it's approved
+        approved_credit_trade = CreditTrade.objects.create(
+            status=self.statuses['approved'],
             initiator=self.organizations['from'],
             respondent=self.organizations['to'],
             type=self.credit_trade_types['sell'],
@@ -565,7 +565,7 @@ class TestCreditTradeOperations(BaseTestCase):
         self.assertIn(draft_from_fuel_supplier, credit_trades)
         self.assertNotIn(submitted_credit_trade, credit_trades)
         self.assertIn(credit_trade_as_respondent, credit_trades)
-        self.assertIn(completed_credit_trade, credit_trades)
+        self.assertIn(approved_credit_trade, credit_trades)
 
     def test_sell_with_insufficient_credits(self):
         """

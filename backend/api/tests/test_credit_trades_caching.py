@@ -46,7 +46,7 @@ class TestCreditTradesCaching(BaseTestCase):
             'initiator': self.users['gov_director'].organization.id,
             'numberOfCredits': 1,
             'respondent': self.users['fs_user_2'].organization.id,
-            'status': self.statuses['approved'].id,
+            'status': self.statuses['recorded'].id,
             'tradeEffectiveDate': datetime.datetime.today().strftime(
                 '%Y-%m-%d'
             ),
