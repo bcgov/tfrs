@@ -1,10 +1,9 @@
 import json
-from enum import Enum
 from typing import List
 
 import pika
-from django.db import transaction
 from pika.exceptions import AMQPError
+from django.db import transaction
 from rest_framework import serializers
 
 from api.models.NotificationChannel import NotificationChannel

@@ -54,10 +54,10 @@ class CreditTradeService(object):
             credit_trades = CreditTrade.objects.filter((
                 (
                     (~Q(status__status__in=[
-                        "Approved", "Cancelled"]) &
+                        "Recorded", "Cancelled"]) &
                      Q(type__is_gov_only_type=False)) |
                     (Q(status__status__in=[
-                        "Completed", "Declined"]) &
+                        "Approved", "Declined"]) &
                      Q(type__is_gov_only_type=True))
                     ) &
                 ((~Q(status__status__in=["Draft"]) &
@@ -142,18 +142,10 @@ class CreditTradeService(object):
     @staticmethod
     def approve(credit_trade):
         """
-        Sets the Credit Transfer to Approved
         Transfers the credits between the organizations
-        Sets the Credit Transfer to Completed
-        Note: The reason why it does an update to the status twice is to
-        generate the appropriate history
+        Sets the Credit Transfer to Approved
         """
         status_approved = CreditTradeStatus.objects.get(status="Approved")
-        status_completed = CreditTradeStatus.objects.get(status="Completed")
-
-        credit_trade.status = status_approved
-        CreditTradeService.create_history(credit_trade)
-        credit_trade.save()
 
         effective_date = datetime.date.today()
         CreditTradeService.transfer_credits(
@@ -164,7 +156,7 @@ class CreditTradeService(object):
             effective_date
         )
 
-        credit_trade.status = status_completed
+        credit_trade.status = status_approved
         CreditTradeService.create_history(credit_trade)
         credit_trade.save()
 
@@ -383,10 +375,10 @@ class CreditTradeService(object):
             )):
                 allowed_statuses.append("Draft")
 
-        elif credit_trade.status.status == "Approved":
+        elif credit_trade.status.status == "Recorded":
             if request.user.has_perm('APPROVE_CREDIT_TRANSFER') or \
                     request.user.has_perm('USE_HISTORICAL_DATA_ENTRY'):
-                allowed_statuses.append("Approved")
+                allowed_statuses.append("Recorded")
 
         return allowed_statuses
 
@@ -447,7 +439,7 @@ class CreditTradeService(object):
 
         # figure this out. /approve method?
 
-        notification_map[StatusChange('Completed')] = [
+        notification_map[StatusChange('Approved')] = [
             ResultingNotification(
                 credit_trade.initiator,
                 NotificationType.CREDIT_TRANSFER_APPROVED),

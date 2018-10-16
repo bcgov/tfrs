@@ -110,7 +110,7 @@ class DataCreationUtilities(object):
             ('Cancelled', True),
             ('Approved', True),
             ('Declined', True),
-            ('Completed', True),
+            ('Recorded', True),
             ('Refused', True)
         ]
 

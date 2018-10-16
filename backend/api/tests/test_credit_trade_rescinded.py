@@ -80,17 +80,17 @@ class TestCreditTradeRescind(BaseTestCase):
         updated_credit_trade = CreditTrade.objects.get(id=credit_trade.id)
         self.assertTrue(updated_credit_trade.is_rescinded)
 
-    def test_rescind_approved_credit_transfer(self):
+    def test_rescind_recorded_credit_transfer(self):
         """
         As a fuel supplier
         When I submit a credit transfer proposal
-        And the proposal had been 'Approved'
+        And the proposal had been 'Recorded'
         And I try to rescind the proposal (through a hack)
         Then I should get an error message since I shouldn't see
-        approved proposals
+        recorded proposals
         """
         credit_trade = CreditTrade.objects.create(
-            status=self.statuses['approved'],
+            status=self.statuses['recorded'],
             initiator=self.users['fs_user_1'].organization,
             respondent=self.users['fs_user_2'].organization,
             type=self.credit_trade_types['sell'],
@@ -126,19 +126,19 @@ class TestCreditTradeRescind(BaseTestCase):
 
         updated = CreditTrade.objects.get(id=credit_trade.id)
         self.assertEqual(updated.is_rescinded, False)
-        self.assertEqual(updated.status_id, self.statuses['approved'].id)
+        self.assertEqual(updated.status_id, self.statuses['recorded'].id)
 
-    def test_rescind_completed_credit_transfer(self):
+    def test_rescind_approved_credit_transfer(self):
         """
         As a fuel supplier
         When I submit a credit transfer proposal
-        And the proposal had been 'Completed'
+        And the proposal had been 'Approved'
         And I try to rescind the proposal (through a hack)
         Then I should get an error message since the proposal
-        was already completed
+        was already approved
         """
         credit_trade = CreditTrade.objects.create(
-            status=self.statuses['completed'],
+            status=self.statuses['approved'],
             initiator=self.users['fs_user_1'].organization,
             respondent=self.users['fs_user_2'].organization,
             type=self.credit_trade_types['sell'],
@@ -169,12 +169,12 @@ class TestCreditTradeRescind(BaseTestCase):
             data=json.dumps(payload)
         )
         # Should return a validation error as the proposal has already been
-        # completed
+        # approved
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
         updated = CreditTrade.objects.get(id=credit_trade.id)
         self.assertEqual(updated.is_rescinded, False)
-        self.assertEqual(updated.status_id, self.statuses['completed'].id)
+        self.assertEqual(updated.status_id, self.statuses['approved'].id)
 
     def test_rescind_refused_credit_transfer(self):
         """

@@ -27,7 +27,7 @@ class CreditTransferSigningHistory extends Component {
     return (<strong>Proposed</strong>);
   }
 
-  static renderCompleted () {
+  static renderApproved () {
     return (<strong className="text-success">Approved</strong>);
   }
 
@@ -91,8 +91,8 @@ class CreditTransferSigningHistory extends Component {
                 action = this._renderAccepted(history);
                 break;
 
-              case CREDIT_TRANSFER_STATUS.completed.id:
-                action = CreditTransferSigningHistory.renderCompleted();
+              case CREDIT_TRANSFER_STATUS.approved.id:
+                action = CreditTransferSigningHistory.renderApproved();
                 break;
 
               case CREDIT_TRANSFER_STATUS.declinedForApproval.id:
