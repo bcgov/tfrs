@@ -103,6 +103,15 @@ class CreditTradeService(object):
             if is_new
             else credit_trade.update_user)
 
+        role_id = None
+
+        if user.roles.filter(name="GovDirector").exists():
+            role_id = user.roles.get(name="GovDirector").id
+        elif user.roles.filter(name="GovDeputyDirector").exists():
+            role_id = user.roles.get(name="GovDeputyDirector").id
+        else:
+            role_id = user.roles.first().id
+
         zero_reason = None
 
         if credit_trade.zero_reason is not None:
@@ -125,7 +134,8 @@ class CreditTradeService(object):
             is_rescinded=credit_trade.is_rescinded,
             create_user=user,
             update_user=user,
-            user=user
+            user=user,
+            user_role_id=role_id
         )
 
         # Validate
