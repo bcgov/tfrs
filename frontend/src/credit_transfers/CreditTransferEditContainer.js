@@ -55,10 +55,10 @@ class CreditTransferEditContainer extends Component {
         },
         zeroDollarReason: { id: null, name: '' }
       },
-      submitted: false,
       totalValue: 0,
       validationErrors: {}
     };
+    this.submitted = false;
 
     this._addComment = this._addComment.bind(this);
     this._addToFields = this._addToFields.bind(this);
@@ -228,9 +228,7 @@ class CreditTransferEditContainer extends Component {
   _handleSubmit (event, status) {
     event.preventDefault();
 
-    this.setState({
-      submitted: true
-    });
+    this.submitted = true;
 
     // Government Transfer Submit
     if ([CREDIT_TRANSFER_TYPES.buy.id, CREDIT_TRANSFER_TYPES.sell.id]
@@ -384,7 +382,7 @@ class CreditTransferEditContainer extends Component {
   }
 
   _setCreditTransferState (item) {
-    if (!this.state.submitted) {
+    if (!this.submitted) {
       const fieldState = {
         initiator: item.initiator,
         fairMarketValuePerCredit: item.fairMarketValuePerCredit,
@@ -407,7 +405,7 @@ class CreditTransferEditContainer extends Component {
   }
 
   _setGovernmentTransferState (item) {
-    if (!this.state.submitted) {
+    if (!this.submitted) {
       const fieldState = {
         comment: (item.comments.length > 0) ? item.comments[0].comment : '',
         compliancePeriod: item.compliancePeriod ? item.compliancePeriod : { id: 0 },

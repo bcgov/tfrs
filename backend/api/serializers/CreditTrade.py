@@ -679,7 +679,7 @@ class CreditTrade2Serializer(serializers.ModelSerializer):
         else:
             history = obj.get_history(["Accepted", "Approved", "Declined",
                                        "Not Recommended", "Recommended",
-                                       "Refused", "Submitted"])
+                                       "Recorded", "Refused", "Submitted"])
 
         serializer = CreditTradeHistoryReviewedSerializer(history,
                                                           many=True)
