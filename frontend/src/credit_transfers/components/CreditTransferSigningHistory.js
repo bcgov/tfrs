@@ -45,9 +45,9 @@ class CreditTransferSigningHistory extends Component {
     }
 
     return (
-      <p key={history.creditTradeUpdateTime}>
+      <p key={history.createTimestamp}>
         <strong className="text-success">Approved </strong>
-        on {moment(history.creditTradeUpdateTime).format('LL')} by the
+        on {moment(history.createTimestamp).format('LL')} by the
         <strong> {roleDisplay} </strong> under the
         <em> Greenhouse Gas Reduction (Renewable and Low Carbon Fuel Requirements) Act</em>
       </p>
