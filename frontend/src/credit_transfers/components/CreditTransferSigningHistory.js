@@ -22,6 +22,36 @@ class CreditTransferSigningHistory extends Component {
     return (<strong>Accepted</strong>);
   }
 
+  _renderApproved (history) {
+    let roleDisplay = history.userRole.description;
+
+    if (history.userRole.name === 'GovDeputyDirector' ||
+        history.userRole.name === 'GovDirector') {
+      roleDisplay = roleDisplay.replace('Government ', '');
+    }
+
+    // if "recorded" status was found, this means this credit trade
+    // was from the historical data entry
+    // don't show the name and just put in "the {role}" instead
+
+    return (
+      <p key={history.createTimestamp}>
+        <strong className="text-success">Approved </strong>
+        on {moment(history.createTimestamp).format('LL')} by
+        {CreditTransferSigningHistory.recordedFound(this.props.history) &&
+          (history.userRole.name === 'GovDirector' ||
+          history.userRole.name === 'GovDeputyDirector') &&
+          <span> the </span>
+        }
+        {!CreditTransferSigningHistory.recordedFound(this.props.history) &&
+          <strong> {history.user.firstName} {history.user.lastName},</strong>
+        }
+        <strong> {roleDisplay} </strong> under the
+        <em> Greenhouse Gas Reduction (Renewable and Low Carbon Fuel Requirements) Act</em>
+      </p>
+    );
+  }
+
   _renderSubmitted (history) {
     const userIndex = this.props.signatures.findIndex(signature => (
       signature.user.id === history.user.id));
@@ -31,27 +61,6 @@ class CreditTransferSigningHistory extends Component {
     }
 
     return (<strong>Proposed</strong>);
-  }
-
-  static renderApproved () {
-    return (<strong className="text-success">Approved</strong>);
-  }
-
-  static renderDirectorApproved (history) {
-    let roleDisplay = 'Deputy Director';
-
-    if (history.user.roles.find(role => (role.name === 'GovDirector'))) {
-      roleDisplay = 'Director';
-    }
-
-    return (
-      <p key={history.createTimestamp}>
-        <strong className="text-success">Approved </strong>
-        on {moment(history.createTimestamp).format('LL')} by the
-        <strong> {roleDisplay} </strong> under the
-        <em> Greenhouse Gas Reduction (Renewable and Low Carbon Fuel Requirements) Act</em>
-      </p>
-    );
   }
 
   static renderDeclined () {
@@ -127,20 +136,7 @@ class CreditTransferSigningHistory extends Component {
                 break;
 
               case CREDIT_TRANSFER_STATUS.approved.id:
-                // if "recorded" status was found, this means this credit trade
-                // was from the historical data entry
-                // we have to render the output slightly differently
-                // (approvals are only made by either director, if for some reason
-                // this isn't true. use the default rendering)
-                if (CreditTransferSigningHistory.recordedFound(arr) &&
-                  history.user.roles.find(role => (
-                    role.name === 'GovDirector' || role.name === 'GovDeputyDirector'
-                  ))) {
-                  return CreditTransferSigningHistory.renderDirectorApproved(history);
-                }
-
-                action = CreditTransferSigningHistory.renderApproved();
-                break;
+                return this._renderApproved(history);
 
               case CREDIT_TRANSFER_STATUS.declinedForApproval.id:
                 action = CreditTransferSigningHistory.renderDeclined();
