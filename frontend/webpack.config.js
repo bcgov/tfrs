@@ -6,6 +6,8 @@ const path = require('path');
 const nodeModulesPath = path.resolve(__dirname, 'node_modules');
 const buildPath = path.resolve(__dirname, 'public', 'build');
 const mainPath = path.resolve(__dirname, 'src', 'index.js');
+const tokenRenewalPath = path.resolve(__dirname, 'src', 'tokenRenewal.js');
+
 console.log('using dev');
 
 const config = {
@@ -13,19 +15,27 @@ const config = {
   // and line numbe
   // devtool: 'eval',
   mode: 'development',
-  entry: [
-    // Polyfill for Object.assign on IE11, etc
-    'babel-polyfill',
+  entry: {
+    bundle: [
+      // Polyfill for Object.assign on IE11, etc
+      'babel-polyfill',
 
-    // For hot style updates
-    'webpack/hot/dev-server',
+      // For hot style updates
+      'webpack/hot/dev-server',
 
-    // The script refreshing the browser on none hot updates
-    'webpack-dev-server/client?http://localhost:8080',
+      // The script refreshing the browser on none hot updates
+      'webpack-dev-server/client?http://localhost:8080',
 
-    // Our application
-    mainPath
-  ],
+      // Our application
+      mainPath
+    ],
+    tokenRenewal: [
+      'babel-polyfill',
+      tokenRenewalPath
+    ]
+  }
+  ,
+
   output: {
     // We need to give Webpack a path. It does not actually need it,
     // because files are kept in memory in webpack-dev-server, but an
@@ -33,7 +43,7 @@ const config = {
     // as that points to where the files will eventually be bundled
     // in production
     path: buildPath,
-    filename: 'bundle.js',
+    filename: '[name].js',
 
     // Everything related to Webpack should go through a build path,
     // localhost:3000/build. That makes proxying easier to handle
@@ -99,9 +109,9 @@ const config = {
     }),
     new Webpack.HotModuleReplacementPlugin(),
     new Webpack.DefinePlugin({
-      __LOGOUT_TEST_URL__: JSON.stringify('https://logontest.gov.bc.ca/clp-cgi/logoff.cgi'),
-      __LOGOUT_URL__: JSON.stringify('https://logon.gov.bc.ca/clp-cgi/logoff.cgi'),
-      __VERSION__: JSON.stringify(packageJson.version)
+        __LOGOUT_TEST_URL__: JSON.stringify('https://logontest.gov.bc.ca/clp-cgi/logoff.cgi'),
+        __LOGOUT_URL__: JSON.stringify('https://logon.gov.bc.ca/clp-cgi/logoff.cgi'),
+        __VERSION__: JSON.stringify(packageJson.version)
       }
     )
   ]
