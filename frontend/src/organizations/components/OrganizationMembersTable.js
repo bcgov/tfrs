@@ -12,7 +12,6 @@ import 'react-table/react-table.css';
 import { USERS as ADMIN_USERS } from '../../constants/routes/Admin';
 import PERMISSIONS_USERS from '../../constants/permissions/Users';
 import USERS from '../../constants/routes/Users';
-import roleName from '../../utils/translate';
 
 const OrganizationMembersTable = (props) => {
   const columns = [{
@@ -23,7 +22,7 @@ const OrganizationMembersTable = (props) => {
     minWidth: 150
   }, {
     accessor: item => item.roles &&
-      item.roles.map(role => roleName(role)).join(', '),
+      item.roles.map(role => role.description).join(', '),
     className: 'col-role',
     Header: 'Role(s)',
     id: 'role',
