@@ -5,7 +5,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import Loading from '../../app/components/Loading';
-import roleName from '../../utils/translate';
 
 import UserHistoryTable from './UserHistoryTable';
 
@@ -39,7 +38,7 @@ const UserDetails = props => (
         </div>
         {props.user.details.roles &&
           <div>Role:
-            <strong> {props.user.details.roles.map(role => roleName(role)).join(', ')}
+            <strong> {props.user.details.roles.map(role => role.description).join(', ')}
             </strong>
           </div>
         }

@@ -131,7 +131,6 @@ const UserFormDetails = props => (
                   });
                 }}
                 placeholder="Select an Organization..."
-                required
                 type="text"
                 value={props.fields.organization}
                 valueIsItem
