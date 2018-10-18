@@ -5,19 +5,25 @@ const path = require('path');
 const nodeModulesPath = path.resolve(__dirname, 'node_modules');
 const buildPath = path.resolve(__dirname, 'public', 'build');
 const mainPath = path.resolve(__dirname, 'src', 'index.js');
+const tokenRenewalPath = path.resolve(__dirname, 'src', 'tokenRenewal.js');
 
 const config = {
   mode: 'production',
-  entry: [
-    // Polyfill for Object.assign on IE11, etc
-    'babel-polyfill',
-
-    mainPath
-  ],
+  entry: { bundle: [
+      // Polyfill for Object.assign on IE11, etc
+      'babel-polyfill',
+      mainPath
+    ],
+    tokenRenewal: [
+      'babel-polyfill',
+      tokenRenewalPath
+    ]
+  }
+  ,
   output: {
-    path: buildPath,
-    filename: 'bundle.js',
-    publicPath: '/build/'
+    filename: "[name].js",
+    publicPath: '/build/',
+    path: buildPath
   },
   resolve: {
     extensions: ['.js', '.jsx']
