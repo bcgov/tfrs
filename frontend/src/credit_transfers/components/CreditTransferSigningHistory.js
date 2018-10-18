@@ -89,14 +89,8 @@ class CreditTransferSigningHistory extends Component {
     );
   }
 
-  static renderRecorded (history) {
-    return (
-      <p key={history.createTimestamp}>
-        <strong> Recorded</strong> on
-        {` ${moment(history.createTimestamp).format('LL')}`} by
-        <strong> {history.user.firstName} {history.user.lastName}</strong>
-      </p>
-    );
+  static renderRecorded () {
+    return (<strong>Recorded</strong>);
   }
 
   static renderRefused () {
@@ -155,7 +149,8 @@ class CreditTransferSigningHistory extends Component {
                 break;
 
               case CREDIT_TRANSFER_STATUS.recorded.id:
-                return CreditTransferSigningHistory.renderRecorded(history);
+                action = CreditTransferSigningHistory.renderRecorded(history);
+                break;
 
               case CREDIT_TRANSFER_STATUS.refused.id:
                 action = CreditTransferSigningHistory.renderRefused();
@@ -167,10 +162,11 @@ class CreditTransferSigningHistory extends Component {
           }
 
           return (
-            <p key={history.creditTradeUpdateTime}>{action} by
+            <p key={history.createTimestamp}>{action} <span> on </span>
+              {moment(history.createTimestamp).format('LL')}
+              <span> by </span>
               <strong> {history.user.firstName} {history.user.lastName}</strong> of
               <strong> {history.user.organization.name} </strong>
-              on {moment(history.creditTradeUpdateTime).format('LL')}
             </p>
           );
         })}
