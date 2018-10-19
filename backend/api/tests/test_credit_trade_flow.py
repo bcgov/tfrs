@@ -108,16 +108,16 @@ class TestCreditTradeFlow(BaseTestCase):
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
-        ct_completed = self.clients['fs_user_1'].get(
+        ct_approved = self.clients['fs_user_1'].get(
             '/api/credit_trades/{}'.format(ct_id),
             content_type='application/json')
 
-        completed_response = json.loads(
-            ct_completed.content.decode("utf-8"))
+        approved_response = json.loads(
+            ct_approved.content.decode("utf-8"))
 
-        # Status of Credit Trade should be 'completed'
-        self.assertEqual(completed_response['status']['id'],
-                         self.statuses['completed'].id)
+        # Status of Credit Trade should be 'approved'
+        self.assertEqual(approved_response['status']['id'],
+                         self.statuses['approved'].id)
 
         initiator_bal_after = OrganizationBalance.objects.get(
             organization_id=fs1user.organization.id,

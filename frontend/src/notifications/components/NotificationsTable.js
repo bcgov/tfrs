@@ -99,12 +99,16 @@ const NotificationsTable = (props) => {
     accessor: 'id',
     Cell: row => (
       <div className="col-actions">
-        <FontAwesomeIcon
-          data-toggle="modal"
-          data-target="#confirmArchiveSingle"
-          icon="archive"
+        <button
           onClick={() => props.selectIdForModal(row.value)}
-        />
+          type="button"
+        >
+          <FontAwesomeIcon
+            data-toggle="modal"
+            data-target="#confirmArchiveSingle"
+            icon="archive"
+          />
+        </button>
       </div>
     ),
     filterable: false,

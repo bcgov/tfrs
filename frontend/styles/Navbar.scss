@@ -1,3 +1,5 @@
+@import './variables.scss';
+
 .level2Navigation .container {
   position: relative;
 
@@ -7,7 +9,7 @@
   }
 
   .active {
-    border-bottom: 1px solid $white;
+    border-bottom: 1px solid $yellow;
   }
 
   #navbar-notifications {
@@ -22,7 +24,7 @@
     width: 5rem;
 
     &.active {
-      border-bottom: 1px solid $white;
+      border-bottom: 1px solid $yellow;
     }
 
     &:after {
@@ -30,6 +32,7 @@
     }
 
     .fa-layers-counter {
+      background-color: $red;
       font-size: 4rem;
     }
   }
