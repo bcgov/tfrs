@@ -5,6 +5,12 @@ import moment from 'moment';
 import { CREDIT_TRANSFER_STATUS } from '../../../src/constants/values';
 
 class CreditTransferSigningHistory extends Component {
+  static recordedFound (histories) {
+    return histories.find(history => (
+      history.status.id === CREDIT_TRANSFER_STATUS.recorded.id
+    ));
+  }
+
   _renderAccepted (history) {
     const userIndex = this.props.signatures.findIndex(signature => (
       signature.user.id === history.user.id));
@@ -16,6 +22,36 @@ class CreditTransferSigningHistory extends Component {
     return (<strong>Accepted</strong>);
   }
 
+  _renderApproved (history) {
+    let roleDisplay = history.userRole.description;
+
+    if (history.userRole.name === 'GovDeputyDirector' ||
+        history.userRole.name === 'GovDirector') {
+      roleDisplay = roleDisplay.replace('Government ', '');
+    }
+
+    // if "recorded" status was found, this means this credit trade
+    // was from the historical data entry
+    // don't show the name and just put in "the {role}" instead
+
+    return (
+      <p key={history.createTimestamp}>
+        <strong className="text-success">Approved </strong>
+        on {moment(history.createTimestamp).format('LL')} by
+        {CreditTransferSigningHistory.recordedFound(this.props.history) &&
+          (history.userRole.name === 'GovDirector' ||
+          history.userRole.name === 'GovDeputyDirector') &&
+          <span> the </span>
+        }
+        {!CreditTransferSigningHistory.recordedFound(this.props.history) &&
+          <strong> {history.user.firstName} {history.user.lastName},</strong>
+        }
+        <strong> {roleDisplay} </strong> under the
+        <em> Greenhouse Gas Reduction (Renewable and Low Carbon Fuel Requirements) Act</em>
+      </p>
+    );
+  }
+
   _renderSubmitted (history) {
     const userIndex = this.props.signatures.findIndex(signature => (
       signature.user.id === history.user.id));
@@ -25,10 +61,6 @@ class CreditTransferSigningHistory extends Component {
     }
 
     return (<strong>Proposed</strong>);
-  }
-
-  static renderCompleted () {
-    return (<strong className="text-success">Approved</strong>);
   }
 
   static renderDeclined () {
@@ -57,6 +89,10 @@ class CreditTransferSigningHistory extends Component {
     );
   }
 
+  static renderRecorded () {
+    return (<strong>Recorded</strong>);
+  }
+
   static renderRefused () {
     return (<strong className="text-danger">Refused</strong>);
   }
@@ -77,11 +113,13 @@ class CreditTransferSigningHistory extends Component {
           } else {
             if ([ // if the next history entry is also recommended/not recommended, don't show it
               CREDIT_TRANSFER_STATUS.notRecommended.id,
-              CREDIT_TRANSFER_STATUS.recommendedForDecision.id
+              CREDIT_TRANSFER_STATUS.recommendedForDecision.id,
+              CREDIT_TRANSFER_STATUS.recorded.id
             ].includes(history.status.id) &&
             (index + 1) < arr.length && [
               CREDIT_TRANSFER_STATUS.notRecommended.id,
-              CREDIT_TRANSFER_STATUS.recommendedForDecision.id
+              CREDIT_TRANSFER_STATUS.recommendedForDecision.id,
+              CREDIT_TRANSFER_STATUS.recorded.id
             ].includes(arr[index + 1].status.id)) {
               return false;
             }
@@ -91,9 +129,8 @@ class CreditTransferSigningHistory extends Component {
                 action = this._renderAccepted(history);
                 break;
 
-              case CREDIT_TRANSFER_STATUS.completed.id:
-                action = CreditTransferSigningHistory.renderCompleted();
-                break;
+              case CREDIT_TRANSFER_STATUS.approved.id:
+                return this._renderApproved(history);
 
               case CREDIT_TRANSFER_STATUS.declinedForApproval.id:
                 action = CreditTransferSigningHistory.renderDeclined();
@@ -111,6 +148,10 @@ class CreditTransferSigningHistory extends Component {
                 action = CreditTransferSigningHistory.renderRecommended();
                 break;
 
+              case CREDIT_TRANSFER_STATUS.recorded.id:
+                action = CreditTransferSigningHistory.renderRecorded(history);
+                break;
+
               case CREDIT_TRANSFER_STATUS.refused.id:
                 action = CreditTransferSigningHistory.renderRefused();
                 break;
@@ -121,10 +162,11 @@ class CreditTransferSigningHistory extends Component {
           }
 
           return (
-            <p key={history.creditTradeUpdateTime}>{action} by
-              <strong> {` ${history.user.firstName} ${history.user.lastName}`}</strong> of
+            <p key={history.createTimestamp}>{action} <span> on </span>
+              {moment(history.createTimestamp).format('LL')}
+              <span> by </span>
+              <strong> {history.user.firstName} {history.user.lastName}</strong> of
               <strong> {history.user.organization.name} </strong>
-              on {moment(history.creditTradeUpdateTime).format('LL')}
             </p>
           );
         })}

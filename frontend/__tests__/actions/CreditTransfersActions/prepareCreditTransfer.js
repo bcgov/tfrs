@@ -20,7 +20,7 @@ test('prepareCreditTransfer should return the right data for Credit Transfers (S
     initiator: 2,
     numberOfCredits: 100,
     respondent: 5,
-    status: CREDIT_TRANSFER_STATUS.approved.id,
+    status: CREDIT_TRANSFER_STATUS.recorded.id,
     tradeEffectiveDate: '2018-01-01',
     type: CREDIT_TRANSFER_TYPES.sell.id,
     zeroReason: ''
@@ -46,7 +46,7 @@ test('prepareCreditTransfer should return the right data for Part 3 Award', () =
     initiator: DEFAULT_ORGANIZATION.id,
     numberOfCredits: 100,
     respondent: 5,
-    status: CREDIT_TRANSFER_STATUS.approved.id,
+    status: CREDIT_TRANSFER_STATUS.recorded.id,
     tradeEffectiveDate: '2018-01-01',
     type: CREDIT_TRANSFER_TYPES.part3Award.id,
     zeroReason: ''
@@ -72,7 +72,7 @@ test('prepareCreditTransfer should return the right data for Validation', () => 
     initiator: DEFAULT_ORGANIZATION.id,
     numberOfCredits: 100,
     respondent: 5,
-    status: CREDIT_TRANSFER_STATUS.approved.id,
+    status: CREDIT_TRANSFER_STATUS.recorded.id,
     tradeEffectiveDate: '2018-01-01',
     type: CREDIT_TRANSFER_TYPES.validation.id,
     zeroReason: ''
@@ -98,7 +98,7 @@ test('prepareCreditTransfer should return the right data for Reduction', () => {
     initiator: 5,
     numberOfCredits: 100,
     respondent: DEFAULT_ORGANIZATION.id,
-    status: CREDIT_TRANSFER_STATUS.approved.id,
+    status: CREDIT_TRANSFER_STATUS.recorded.id,
     tradeEffectiveDate: '2018-01-01',
     type: CREDIT_TRANSFER_TYPES.retirement.id,
     zeroReason: ''

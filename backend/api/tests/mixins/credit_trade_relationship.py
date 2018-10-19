@@ -21,25 +21,28 @@
     See the License for the specific language governing permissions and
     limitations under the License.
 """
+import datetime
 import json
 import logging
-import typing
-from collections import namedtuple, defaultdict
-from enum import Enum
 from typing import Callable
 
-import datetime
+from collections import namedtuple, defaultdict
+from enum import Enum
 
 from api.models.CreditTrade import CreditTrade
 from api.models.CreditTradeStatus import CreditTradeStatus
-from api.tests.data_creation_utilities import DataCreationUtilities
 
 
 class CreditTradeRelationshipMixin(object):
-    """Mixin to provide user mapping for related parties to credit transactions"""
+    """
+    Mixin to provide user mapping for related parties to credit transactions
+    """
 
     class UserRelationship(Enum):
-        """Enumerates the ways in which a client (user) can be related to a credit trade"""
+        """
+        Enumerates the ways in which a client (user) can be related to a
+        credit trade
+        """
         INITIATOR = 1
         RESPONDENT = 2
         THIRD_PARTY = 3
@@ -80,42 +83,64 @@ class CreditTradeFlowHooksMixin(object):
     ])
 
     def _sensible_status_changes(self, current_status, rescinded):
-        """Return a list of valid potential status changes for a given starting state"""
+        """
+        Return a list of valid potential status changes for a given starting
+        state
+        """
 
         status_changes = defaultdict(lambda: [])
 
         status_changes[('Draft', False)] = [
-            self.StatusChange(self.UserRelationship.INITIATOR, 'Submitted', False),
-            self.StatusChange(self.UserRelationship.INITIATOR, 'Cancelled', False)
+            self.StatusChange(self.UserRelationship.INITIATOR,
+                              'Submitted', False),
+            self.StatusChange(self.UserRelationship.INITIATOR,
+                              'Cancelled', False)
         ]
         status_changes[('Submitted', False)] = [
-            self.StatusChange(self.UserRelationship.INITIATOR, 'Submitted', True),  # rescind
-            self.StatusChange(self.UserRelationship.RESPONDENT, 'Accepted', False),
-            self.StatusChange(self.UserRelationship.RESPONDENT, 'Refused', False)
+            self.StatusChange(self.UserRelationship.INITIATOR,
+                              'Submitted', True),  # rescind
+            self.StatusChange(self.UserRelationship.RESPONDENT,
+                              'Accepted', False),
+            self.StatusChange(self.UserRelationship.RESPONDENT,
+                              'Refused', False)
         ]
         status_changes[('Accepted', False)] = [
-            self.StatusChange(self.UserRelationship.INITIATOR, 'Accepted', True),  # rescind
-            self.StatusChange(self.UserRelationship.RESPONDENT, 'Accepted', True),  # rescind
-            self.StatusChange(self.UserRelationship.GOVERNMENT_ANALYST, 'Recommended', False),
-            self.StatusChange(self.UserRelationship.GOVERNMENT_ANALYST, 'Not Recommended', False)
+            self.StatusChange(self.UserRelationship.INITIATOR,
+                              'Accepted', True),  # rescind
+            self.StatusChange(self.UserRelationship.RESPONDENT,
+                              'Accepted', True),  # rescind
+            self.StatusChange(self.UserRelationship.GOVERNMENT_ANALYST,
+                              'Recommended', False),
+            self.StatusChange(self.UserRelationship.GOVERNMENT_ANALYST,
+                              'Not Recommended', False)
         ]
         status_changes[('Recommended', False)] = [
-            self.StatusChange(self.UserRelationship.INITIATOR, 'Recommended', True),  # rescind
-            self.StatusChange(self.UserRelationship.RESPONDENT, 'Recommended', True),  # rescind
-            self.StatusChange(self.UserRelationship.GOVERNMENT_DIRECTOR, 'Approved', False),
-            self.StatusChange(self.UserRelationship.GOVERNMENT_DIRECTOR, 'Declined', False)
+            self.StatusChange(self.UserRelationship.INITIATOR,
+                              'Recommended', True),  # rescind
+            self.StatusChange(self.UserRelationship.RESPONDENT,
+                              'Recommended', True),  # rescind
+            self.StatusChange(self.UserRelationship.GOVERNMENT_DIRECTOR,
+                              'Approved', False),
+            self.StatusChange(self.UserRelationship.GOVERNMENT_DIRECTOR,
+                              'Declined', False)
         ]
         status_changes[('Not Recommended', False)] = [
-            self.StatusChange(self.UserRelationship.INITIATOR, 'Not Recommended', True),  # rescind
-            self.StatusChange(self.UserRelationship.RESPONDENT, 'Not Recommended', True),  # rescind
-            self.StatusChange(self.UserRelationship.GOVERNMENT_DIRECTOR, 'Approved', False),
-            self.StatusChange(self.UserRelationship.GOVERNMENT_DIRECTOR, 'Declined', False)
+            self.StatusChange(self.UserRelationship.INITIATOR,
+                              'Not Recommended', True),  # rescind
+            self.StatusChange(self.UserRelationship.RESPONDENT,
+                              'Not Recommended', True),  # rescind
+            self.StatusChange(self.UserRelationship.GOVERNMENT_DIRECTOR,
+                              'Approved', False),
+            self.StatusChange(self.UserRelationship.GOVERNMENT_DIRECTOR,
+                              'Declined', False)
         ]
 
         return status_changes[(current_status, rescinded)]
 
     def _path_builder(self, node, path=[], valid_paths=[]):
-        """Recursively build an array of valid paths through the status tree"""
+        """
+        Recursively build an array of valid paths through the status tree
+        """
 
         s = self._sensible_status_changes(node.status, node.rescinded)
 
@@ -131,16 +156,16 @@ class CreditTradeFlowHooksMixin(object):
 
         return valid_paths
 
-    def check_credit_trade_workflow(self,
-                                    before_change_callback: Callable[[PreChangeRecord], None]
-                                    = lambda x: None,
-                                    after_change_callback: Callable[[ChangeRecord], None]
-                                    = lambda x: None,
-                                    path_end_callback: Callable[[], None]
-                                    = lambda: None,
-                                    modify_request_payload: Callable[[dict], None]
-                                    = lambda x: None):
-        """Evaluate all normal status paths through the application via REST API as appropriate users
+    def check_credit_trade_workflow(
+            self,
+            before_change_callback: Callable[[PreChangeRecord], None] = lambda x: None,
+            after_change_callback: Callable[[ChangeRecord], None] = lambda x: None,
+            path_end_callback: Callable[[], None] = lambda: None,
+            modify_request_payload: Callable[[dict], None] = lambda x: None
+    ):
+        """
+        Evaluate all normal status paths through the application via
+        REST API as appropriate users
 
         with callbacks for tests:
 
