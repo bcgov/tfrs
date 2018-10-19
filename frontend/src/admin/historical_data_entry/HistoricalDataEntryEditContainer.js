@@ -28,6 +28,7 @@ const buttonActions = [Lang.BTN_CANCEL, Lang.BTN_SAVE];
 class HistoricalDataEntryEditContainer extends Component {
   constructor (props) {
     super(props);
+
     this.state = {
       fields: {
         comment: '',
@@ -40,10 +41,10 @@ class HistoricalDataEntryEditContainer extends Component {
         transferType: '',
         zeroDollarReason: ''
       },
-      submitted: false,
       totalValue: 0,
       validationErrors: {}
     };
+    this.submitted = false;
 
     this._handleInputChange = this._handleInputChange.bind(this);
     this._handleSubmit = this._handleSubmit.bind(this);
@@ -76,9 +77,7 @@ class HistoricalDataEntryEditContainer extends Component {
   _handleSubmit (event) {
     event.preventDefault();
 
-    this.setState({
-      submitted: true
-    });
+    this.submitted = true;
 
     const data = this.props.prepareCreditTransfer(this.state.fields);
     const { id } = this.props.item;
@@ -136,7 +135,7 @@ class HistoricalDataEntryEditContainer extends Component {
   }
 
   loadPropsToFieldState (props) {
-    if (Object.keys(props.item).length !== 0 && !this.state.submitted) {
+    if (Object.keys(props.item).length !== 0 && !this.submitted) {
       const { item } = props;
 
       const fieldState = {

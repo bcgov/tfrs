@@ -205,9 +205,9 @@ class CreditTrade(Auditable):
         Instead of being a property this fetches the history based on the
         statuses that's needed
         For example government users would want to see the following:
-        Signed, Accepted, Recommended, Not Recommended and Completed.
+        Signed, Accepted, Recommended, Not Recommended and Approved.
         So we pass ["Submitted", "Accepted", "Recommended", "Not Recommended",
-        "Completed"]
+        "Approved"]
         """
         history = CreditTradeHistory.objects.filter(
             Q(status__status__in=statuses) | Q(is_rescinded=True),
