@@ -44,7 +44,7 @@ export const prepareCreditTransfer = (fields) => {
     respondent: (fields.creditsTo.id > 0)
       ? fields.creditsTo.id
       : DEFAULT_ORGANIZATION.id,
-    status: CREDIT_TRANSFER_STATUS.approved.id,
+    status: CREDIT_TRANSFER_STATUS.recorded.id,
     tradeEffectiveDate: fields.tradeEffectiveDate,
     type: fields.transferType,
     zeroReason: fields.zeroDollarReason
@@ -133,7 +133,7 @@ export const invalidateCreditTransfers = creditTransfers => ({
 export const getApprovedCreditTransfers = () => (dispatch) => {
   dispatch(getApprovedCreditTransfersRequest());
 
-  return axios.get(`${Routes.BASE_URL}${Routes.CREDIT_TRADE_API}/list_approved`)
+  return axios.get(`${Routes.BASE_URL}${Routes.CREDIT_TRADE_API}/list_recorded`)
     .then((response) => {
       dispatch(getApprovedCreditTransfersSuccess(response.data));
     }).catch((error) => {

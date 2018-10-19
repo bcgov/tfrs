@@ -56,26 +56,8 @@
   }
 }
 
-.tooltip {
-  .tooltip-inner {
-    max-width: 500px;
-  }
-
-  .heading {
-    margin-bottom: 1rem;
-    text-align: left;
-  }
-
-  .permission {
-    font-weight: bold;
-    margin: 0;
-    text-align: left;
-  }
-  
-  ul {
-    list-style-position: inside;
-    list-style-type: square;
-    margin: 0.5rem 0;
-    padding: 0 0.5rem;
-  }
+.tooltip .permission {
+  font-weight: bold;
+  margin: 0;
+  text-align: left;
 }

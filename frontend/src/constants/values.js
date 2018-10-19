@@ -33,13 +33,13 @@ export const CREDIT_TRANSFER_STATUS = {
     id: 5,
     description: 'Reviewed' /* Whether it's recommended or not, the user doesn't need to know this */
   },
-  approved: {
+  recorded: {
     id: 6,
-    description: 'Approved'
+    description: 'Recorded'
   },
-  completed: {
+  approved: {
     id: 7,
-    description: 'Approved' /* changed from 'Completed' because the difference is not relevant to the user */
+    description: 'Approved'
   },
   deleted: {
     id: 8,

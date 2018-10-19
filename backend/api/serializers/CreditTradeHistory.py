@@ -109,12 +109,16 @@ class CreditTradeHistoryReviewedSerializer(serializers.ModelSerializer):
     - Was the proposal rescinded
     """
     from .CreditTrade import CreditTradeMinSerializer
+    from .Role import RoleMinSerializer
     from .User import UserMinSerializer
+
     credit_trade = CreditTradeMinSerializer(read_only=True)
     status = CreditTradeStatusMinSerializer(read_only=True)
     user = UserMinSerializer(read_only=True)
+    user_role = RoleMinSerializer(read_only=True)
 
     class Meta:
         model = CreditTradeHistory
         fields = ('credit_trade', 'user', 'status', 'is_rescinded',
-                  'credit_trade_update_time')
+                  'create_timestamp', 'credit_trade_update_time',
+                  'user_role')
