@@ -48,7 +48,8 @@ const NotificationsCreditTransactionsTable = (props) => {
     className: 'col-sms',
     Header: 'Receive SMS Notification',
     id: 'sms',
-    sortable: false
+    sortable: false,
+    show: false
   }, {
     accessor: item => (item.code),
     Cell: row => (
