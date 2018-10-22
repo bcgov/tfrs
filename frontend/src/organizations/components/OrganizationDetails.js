@@ -3,11 +3,15 @@
  */
 import React from 'react';
 import PropTypes from 'prop-types';
+import FontAwesomeIcon from '@fortawesome/react-fontawesome';
 import numeral from 'numeral';
 
 import Loading from '../../app/components/Loading';
+import history from '../../app/History';
+import * as Lang from '../../constants/langEnUs';
 import * as NumberFormat from '../../constants/numeralFormats';
 import OrganizationMembersTable from './OrganizationMembersTable';
+import USERS from '../../constants/routes/Users';
 
 const OrganizationDetails = props => (
   <div className="page_organization">
@@ -47,6 +51,20 @@ const OrganizationDetails = props => (
             <dd>{props.organization.details.statusDisplay}</dd>
           </dl>
         </div>
+
+        <div className="right-toolbar-container">
+          <div className="actions-container">
+            <button
+              id="new-user"
+              className="btn btn-primary"
+              onClick={() => history.push(USERS.ADD)}
+              type="button"
+            >
+              <FontAwesomeIcon icon="plus-circle" /> {Lang.BTN_NEW_USER}
+            </button>
+          </div>
+        </div>
+
         <h2>Users</h2>
         {props.members.isFetching && <Loading />}
         {!props.members.isFetching && props.members &&

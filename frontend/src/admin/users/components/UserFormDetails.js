@@ -116,25 +116,37 @@ const UserFormDetails = props => (
         <div className="col-sm-6">
           <div className="form-group">
             <label htmlFor="number-of-credits">Fuel Supplier:
-              <Autosuggest
-                datalist={props.fuelSuppliers}
-                datalistOnly
-                itemAdapter={new FuelSupplierAdapter()}
-                itemValuePropName="name"
-                name="organization"
-                onChange={(selected) => {
-                  props.handleInputChange({
-                    target: {
-                      name: 'organization',
-                      value: selected
-                    }
-                  });
-                }}
-                placeholder="Select an Organization..."
-                type="text"
-                value={props.fields.organization}
-                valueIsItem
-              />
+              {props.loggedInUser.isGovernmentUser &&
+                <Autosuggest
+                  datalist={props.fuelSuppliers}
+                  datalistOnly
+                  itemAdapter={new FuelSupplierAdapter()}
+                  itemValuePropName="name"
+                  name="organization"
+                  onChange={(selected) => {
+                    props.handleInputChange({
+                      target: {
+                        name: 'organization',
+                        value: selected
+                      }
+                    });
+                  }}
+                  placeholder="Select an Organization..."
+                  type="text"
+                  value={props.fields.organization}
+                  valueIsItem
+                />
+              }
+              {!props.loggedInUser.isGovernmentUser &&
+                <div
+                  className="form-control read-only"
+                  id="organization"
+                  name="organization"
+                  type="text"
+                >
+                  {props.loggedInUser.organization.name}
+                </div>
+              }
             </label>
           </div>
         </div>
@@ -229,6 +241,13 @@ UserFormDetails.propTypes = {
   }).isRequired,
   fuelSuppliers: PropTypes.arrayOf(PropTypes.shape()).isRequired,
   handleInputChange: PropTypes.func.isRequired,
+  loggedInUser: PropTypes.shape({
+    isGovernmentUser: PropTypes.bool,
+    organization: PropTypes.shape({
+      id: PropTypes.number,
+      name: PropTypes.string
+    })
+  }).isRequired,
   roles: PropTypes.shape({
     items: PropTypes.arrayOf(PropTypes.shape()).isRequired,
     isFetching: PropTypes.bool.isRequired

@@ -145,6 +145,7 @@ class UserAddContainer extends Component {
         fuelSuppliers={this.props.fuelSuppliers}
         handleInputChange={this._handleInputChange}
         key="userForm"
+        loggedInUser={this.props.loggedInUser}
         roles={this.props.roles}
         title="New User"
         toggleCheck={this._toggleCheck}
@@ -169,11 +170,14 @@ UserAddContainer.propTypes = {
   fuelSuppliers: PropTypes.arrayOf(PropTypes.shape()).isRequired,
   getFuelSuppliers: PropTypes.func.isRequired,
   getRoles: PropTypes.func.isRequired,
+  loggedInUser: PropTypes.shape({
+  }).isRequired,
   roles: PropTypes.shape().isRequired
 };
 
 const mapStateToProps = state => ({
   fuelSuppliers: state.rootReducer.fuelSuppliersRequest.fuelSuppliers,
+  loggedInUser: state.rootReducer.userRequest.loggedInUser,
   roles: state.rootReducer.roles
 });
 
