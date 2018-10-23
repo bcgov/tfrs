@@ -15,7 +15,7 @@ class TooltipWhenDisabled extends Component {
 
   _tooltip () {
     return (
-      <Tooltip id="tooltip">
+      <Tooltip className="danger" id="tooltip">
         {this.props.title}
       </Tooltip>
     );

@@ -77,7 +77,15 @@ class CreditTradeHistory(Auditable):
     )
     is_rescinded = models.BooleanField(
         default=False,
-        db_comment='Flag. True if the trade was rescinded before completion by either party.'
+        db_comment='Flag. True if the trade was rescinded before completion '
+                   'by either party.'
+    )
+    user_role = models.ForeignKey(
+        'Role',
+        related_name='roles',
+        blank=True, null=True,
+        on_delete=models.SET_NULL,
+        db_comment='Role of the user that made the change.'
     )
 
     class Meta:

@@ -88,12 +88,14 @@ class CreditTradeStatus(Auditable):
             return "Signed 2/2"
         elif self.status == "Cancelled":
             return "Deleted"
-        elif self.status == "Completed":
+        elif self.status == "Approved":
             return "Approved"
         elif self.status in ["Not Recommended", "Recommended"]:
             return "Reviewed"
+        elif self.status == "Recorded":
+            return "Recorded"
         elif self.status == "Refused":
-            return "Refuse"
+            return "Refused"
         elif self.status == "Submitted":
             return "Signed 1/2"
 

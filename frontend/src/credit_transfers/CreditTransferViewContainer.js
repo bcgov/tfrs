@@ -508,18 +508,9 @@ class CreditTransferViewContainer extends Component {
     // Change the rescinded flag only
     const { item } = this.props;
 
-    // Update the Status only
+    // Update the isRescinded field only
     const data = {
-      initiator: item.initiator.id,
-      fairMarketValuePerCredit: item.fairMarketValuePerCredit,
-      isRescinded: true,
-      note: item.note,
-      numberOfCredits: item.numberOfCredits,
-      respondent: item.respondent.id,
-      status: item.status.id,
-      tradeEffectiveDate: null,
-      type: item.type.id,
-      zeroReason: (item.zeroReason && item.zeroReason.id) || null
+      isRescinded: true
     };
 
     const { id } = this.props.item;

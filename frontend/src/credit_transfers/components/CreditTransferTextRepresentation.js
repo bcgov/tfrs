@@ -31,7 +31,6 @@ class CreditTransferTextRepresentation extends Component {
   _buyAction () {
     switch (this.props.status.id) {
       case CREDIT_TRANSFER_STATUS.approved.id:
-      case CREDIT_TRANSFER_STATUS.completed.id:
         return ' bought ';
       case CREDIT_TRANSFER_STATUS.refused.id:
         return ' proposed to buy ';
@@ -84,7 +83,7 @@ class CreditTransferTextRepresentation extends Component {
         <span className="value"> {this.creditsTo} </span> for the completion of a
         Part 3 Agreement milestone(s) has been
         <span className="value lowercase"> {this.tradeStatus}</span>
-        {this.props.status.id === CREDIT_TRANSFER_STATUS.completed.id &&
+        {this.props.status.id === CREDIT_TRANSFER_STATUS.approved.id &&
           <span>, effective
             <span className="value"> {this.tradeEffectiveDate}</span>
           </span>
@@ -101,7 +100,7 @@ class CreditTransferTextRepresentation extends Component {
         credit{(this.props.numberOfCredits > 1) && 's'} earned by
         <span className="value"> {this.creditsFrom} </span>
         has been <span className="value lowercase"> {this.tradeStatus}</span>
-        {this.props.status.id === CREDIT_TRANSFER_STATUS.completed.id &&
+        {this.props.status.id === CREDIT_TRANSFER_STATUS.approved.id &&
           <span>, effective
             <span className="value"> {this.tradeEffectiveDate}</span>
           </span>
@@ -142,7 +141,7 @@ class CreditTransferTextRepresentation extends Component {
         credit{(this.props.numberOfCredits > 1) && 's'} earned by
         <span className="value"> {this.creditsTo} </span>
         has been <span className="value lowercase"> {this.tradeStatus}</span>
-        {this.props.status.id === CREDIT_TRANSFER_STATUS.completed.id &&
+        {this.props.status.id === CREDIT_TRANSFER_STATUS.approved.id &&
           <span>, effective
             <span className="value"> {this.tradeEffectiveDate}</span>
           </span>
@@ -171,7 +170,6 @@ class CreditTransferTextRepresentation extends Component {
 
     switch (this.props.status.id) {
       case CREDIT_TRANSFER_STATUS.approved.id:
-      case CREDIT_TRANSFER_STATUS.completed.id:
         return ' sold ';
       case CREDIT_TRANSFER_STATUS.refused.id:
         return ' proposed to sell ';

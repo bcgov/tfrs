@@ -48,7 +48,7 @@ class TestCreditTradeHistory(BaseTestCase):
             'initiator': fs1user.organization.id,
             'numberOfCredits': 100,
             'respondent': fs2user.organization.id,
-            'status': self.statuses['approved'].id,
+            'status': self.statuses['recorded'].id,
             'tradeEffectiveDate': datetime.datetime.today().strftime(
                 '%Y-%m-%d'),
             'type': self.credit_trade_types['buy'].id,
