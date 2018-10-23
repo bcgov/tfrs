@@ -5,12 +5,19 @@ from django.db.migrations import RunPython
 def update_permissions(apps, schema_editor):
     """
     Updates the permissions for FS Admin User
+    Also add an s to User
     """
     db_alias = schema_editor.connection.alias
 
     permission = apps.get_model('api', "Permission")
     role = apps.get_model('api', "Role")
     role_permission = apps.get_model('api', "RolePermission")
+
+    role.objects.using(db_alias).filter(
+        name="FSAdmin"
+    ).update(
+        description="Managing Users"
+    )
 
     role_permission.objects.using(db_alias).bulk_create([
         role_permission(
@@ -43,6 +50,7 @@ def revert_permissions(apps, schema_editor):
     """
     db_alias = schema_editor.connection.alias
 
+    role = apps.get_model('api', "Role")
     role_permission = apps.get_model('api', "RolePermission")
 
     role_permission.objects.using(db_alias).filter(
@@ -53,6 +61,12 @@ def revert_permissions(apps, schema_editor):
             "VIEW_CREDIT_TRANSFERS"
         ],
         role__name="FSAdmin").delete()
+
+    role.objects.using(db_alias).filter(
+        name="FSAdmin"
+    ).update(
+        description="Managing User"
+    )
 
 
 class Migration(migrations.Migration):
