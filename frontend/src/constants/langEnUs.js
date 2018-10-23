@@ -10,6 +10,9 @@ export const BTN_DELETE = 'Delete';
 export const BTN_DELETE_DRAFT = 'Delete Draft';
 export const BTN_EDIT_DRAFT = 'Edit Draft';
 export const BTN_EDIT_PVR_DRAFT = 'Edit PVR';
+export const BTN_NEW_USER = 'New User';
+export const BTN_NEW_TRANSFER = 'New Transfer';
+export const BTN_NEW_CREDIT_TRANSACTION = 'New Credit Transaction';
 export const BTN_NO = 'No';
 export const BTN_NOT_RECOMMENDED_FOR_DECISION = 'Not Recommended for Approval';
 export const BTN_PROCESS = 'Confirm';
@@ -21,6 +24,7 @@ export const BTN_RESCIND = 'Rescind';
 export const BTN_RETURN_TO_DRAFT = 'Return to Analyst';
 export const BTN_SAVE = 'Save';
 export const BTN_SAVE_DRAFT = 'Save Draft';
+export const BTN_SAVE_USER = 'Save User';
 export const BTN_SIGN_1_2 = 'Sign 1 of 2';
 export const BTN_SIGN_2_2 = 'Sign 2 of 2';
 export const BTN_YES = 'Yes';
@@ -40,7 +44,7 @@ export const TEXT_COMMENT_DISCLOSURE = 'Information entered in this comment fiel
 export const TEXT_COMMENT_DISCLOSURE_PRIVILEGED = 'Information entered in this comment field ' +
                                                   'will be visible only to government users and ' +
                                                   'not shared with fuel suppliers';
-export const TEXT_ADD_COMMENT_HEADING = 'Adding Comment';
+export const TEXT_ADD_COMMENT_HEADING = 'Add Comment Form';
 export const TEXT_EDIT_COMMENT_HEADING = 'Editing Comment';
 export const TEXT_ADD_INTERNAL_COMMENT_HEADING = 'Adding Government-Internal Comment';
 export const TEXT_VISIBLE_TO_GOV = 'Visible to government';
@@ -49,3 +53,9 @@ export const TEXT_COMMENT_DIRTY = 'You are currently editing a comment. Save or 
                                   'performing other actions';
 export const TEXT_COMMENT_REQUIRED = 'Comment is required before a credit transaction can ' +
                                      'be recommended';
+
+export const TEXT_ERROR_INVALID_CHARACTER = 'Non-numeric characters are not allowed.';
+export const TEXT_ERROR_MAX_DECIMALS = 'Cannot add more decimals.';
+export const TEXT_ERROR_MULTIPLE_DOTS = 'Multiple dots are not allowed.';
+export const TEXT_ERROR_NEGATIVE_VALUE = 'Negative values are not allowed.';
+export const TEXT_ERROR_NO_DECIMALS = 'Decimals are not allowed.';

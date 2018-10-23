@@ -1,6 +1,41 @@
 @import './variables.scss';
 @import './mixins.scss';
 
+.page_admin_user {
+  label {
+    display: block;
+  }
+
+  .main-form {
+    margin-left: -15px;
+    margin-right: -15px;
+
+    .roles {
+      .checkbox-group {
+        margin-bottom: 1rem;
+
+        .fa-check-square, .fa-square {
+          vertical-align: middle;
+        }
+
+        .fa-key, .fa-user-lock {
+          margin-left: 0.5rem;
+        }
+
+        .text {
+          display: inline-block;
+          margin-left: 0.5rem;
+          vertical-align: middle;
+        }
+      }
+    }
+  }
+
+  .btn-container {
+    text-align: right;
+  }
+}
+
 .page_user {
   > div {
     > div + div {
@@ -19,4 +54,10 @@
   .user_history {
     margin-top: 3rem;
   }
+}
+
+.tooltip .permission {
+  font-weight: bold;
+  margin: 0;
+  text-align: left;
 }

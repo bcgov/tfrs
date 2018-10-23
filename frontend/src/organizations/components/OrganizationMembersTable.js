@@ -2,6 +2,7 @@
  * Presentational component
  */
 import React from 'react';
+import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import ReactTable from 'react-table';
 import FontAwesomeIcon from '@fortawesome/react-fontawesome';
@@ -9,8 +10,8 @@ import { Link } from 'react-router-dom';
 import 'react-table/react-table.css';
 
 import { USERS as ADMIN_USERS } from '../../constants/routes/Admin';
+import PERMISSIONS_USERS from '../../constants/permissions/Users';
 import USERS from '../../constants/routes/Users';
-import roleName from '../../utils/translate';
 
 const OrganizationMembersTable = (props) => {
   const columns = [{
@@ -21,7 +22,7 @@ const OrganizationMembersTable = (props) => {
     minWidth: 150
   }, {
     accessor: item => item.roles &&
-      item.roles.map(role => roleName(role)).join(', '),
+      item.roles.map(role => role.description).join(', '),
     className: 'col-role',
     Header: 'Role(s)',
     id: 'role',
@@ -47,13 +48,22 @@ const OrganizationMembersTable = (props) => {
   }, {
     accessor: item => item.id,
     Cell: (row) => {
+      let editUrl = USERS.EDIT.replace(':id', row.value);
       let viewUrl = USERS.DETAILS.replace(':id', row.value);
 
       if (document.location.pathname.indexOf('/admin/') >= 0) {
+        editUrl = ADMIN_USERS.EDIT.replace(':id', row.value);
         viewUrl = ADMIN_USERS.DETAILS.replace(':id', row.value);
       }
 
-      return <Link to={viewUrl}><FontAwesomeIcon icon="eye" /></Link>;
+      if (props.loggedInUser.hasPermission(PERMISSIONS_USERS.EDIT_FUEL_SUPPLIER_USERS)) {
+        return ([
+          <Link to={viewUrl} key="view"><FontAwesomeIcon icon="eye" /></Link>,
+          <Link to={editUrl} key="edit"><FontAwesomeIcon icon="pencil-alt" /></Link>
+        ]);
+      }
+
+      return <Link to={viewUrl} key="view"><FontAwesomeIcon icon="eye" /></Link>;
     },
     className: 'col-actions',
     filterable: false,
@@ -97,7 +107,14 @@ OrganizationMembersTable.propTypes = {
     role: PropTypes.shape({
       id: PropTypes.number
     })
-  })).isRequired
+  })).isRequired,
+  loggedInUser: PropTypes.shape({
+    hasPermission: PropTypes.func
+  }).isRequired
 };
 
-export default OrganizationMembersTable;
+const mapStateToProps = state => ({
+  loggedInUser: state.rootReducer.userRequest.loggedInUser
+});
+
+export default connect(mapStateToProps)(OrganizationMembersTable);

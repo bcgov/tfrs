@@ -1,17 +1,15 @@
 import base64
 import random
-import pika
-import json
-from django.http import HttpResponse
+
+from django.views.decorators.cache import never_cache
 
 from rest_framework import viewsets, serializers, mixins, status
 from rest_framework.decorators import list_route
-from rest_framework.renderers import JSONRenderer
 from rest_framework.response import Response
 
 from api.models.NotificationMessage import NotificationMessage
-from api.notifications.notifications import AMQPNotificationService, EffectiveSubscriptionSerializer, \
-    EffectiveSubscriptionUpdateSerializer
+from api.notifications.notifications import AMQPNotificationService, \
+    EffectiveSubscriptionSerializer, EffectiveSubscriptionUpdateSerializer
 from api.permissions.Notifications import NotificationPermissions
 from api.serializers.Notifications import NotificationMessageSerializer
 from auditable.views import AuditableMixin
@@ -21,12 +19,12 @@ class NotificationToken(object):
 
     @staticmethod
     def __generate_token():
-        t = bytearray
+        token = bytearray
         rand = random.SystemRandom()
 
-        t = bytes([rand.getrandbits(8) for x in range(48)])
+        token = bytes([rand.getrandbits(8) for x in range(48)])
 
-        return base64.encodebytes(t).decode('utf-8')
+        return base64.encodebytes(token).decode('utf-8')
 
     def __init__(self, token=None):
         self.token = token or NotificationToken.__generate_token()
@@ -60,7 +58,18 @@ class NotificationViewSet(AuditableMixin,
 
     def get_queryset(self):
         user = self.request.user
-        return NotificationMessage.objects.filter(user=user).all()
+        return NotificationMessage.objects.filter(
+            is_archived=False,
+            user=user
+        ).all()
+
+    @never_cache
+    def list(self, request, *args, **kwargs):
+        """
+        Lists all the notifications for the current user.
+        Note: no-cache decorator applied to prevent caching by IE
+        """
+        return super().list(self, request, *args, **kwargs)
 
     @list_route(methods=['get'])
     def subscribe(self, request):
@@ -69,15 +78,45 @@ class NotificationViewSet(AuditableMixin,
         return Response(serializer.data)
 
     @list_route(methods=['get'])
-    def effective_subscriptions(self, request):
+    def subscriptions(self, request):
         user = request.user
         data = AMQPNotificationService.compute_effective_subscriptions(user)
         serializer = EffectiveSubscriptionSerializer(data, many=True)
         return Response(serializer.data)
 
+    @list_route(methods=['put'])
+    def statuses(self, request):
+        """
+        Expects an array of id's
+        Updates the notifications to read or unread
+        """
+        data = request.data
+
+        if 'ids' not in data:
+            return Response(None, status=status.HTTP_400_BAD_REQUEST)
+
+        notifications = NotificationMessage.objects.filter(
+            id__in=data['ids'])
+
+        if 'is_archived' in data:
+            notifications.update(
+                is_archived=data['is_archived']
+            )
+
+        if 'is_read' in data:
+            notifications.update(
+                is_read=data['is_read']
+            )
+
+        serializer = self.get_serializer(notifications, many=True)
+
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
     @list_route(methods=['post'])
     def update_subscription(self, request):
-
+        """
+        Updates the User's subscriptions to specified notification types
+        """
         if isinstance(request.data, list):
             serializer = self.get_serializer(data=request.data, many=True)
             serializer.is_valid(raise_exception=True)

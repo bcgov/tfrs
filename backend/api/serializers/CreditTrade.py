@@ -61,9 +61,7 @@ class CreditTradeCreateSerializer(serializers.ModelSerializer):
     """
     Serializer used when creating a Credit Trade
     """
-
     def validate(self, data):
-
         request = self.context['request']
 
         # no user should be allowed to create a rescinded proposal
@@ -85,7 +83,7 @@ class CreditTradeCreateSerializer(serializers.ModelSerializer):
 
         if request.user.has_perm('APPROVE_CREDIT_TRANSFER') or \
                 request.user.has_perm('USE_HISTORICAL_DATA_ENTRY'):
-            available_statuses.append('Approved')
+            available_statuses.append('Recorded')
 
         if request.user.has_perm('PROPOSE_CREDIT_TRANSFER'):
             available_statuses.append('Draft')
@@ -117,9 +115,10 @@ class CreditTradeCreateSerializer(serializers.ModelSerializer):
                             reason='Other'):
                 if not will_create_a_comment:
                     raise serializers.ValidationError({
-                        'forbidden': "Cannot propose a trade with zero-reason "
-                                     "'Other' without creating an explanatory "
-                                     "comment'"
+                        'forbidden': "Please provide an explanation in the "
+                                     "comments as to why the Credit Transfer "
+                                     "Proposal has a fair market value of zero "
+                                     "dollars per credit."
                     })
 
         if credit_trade_status not in allowed_statuses:
@@ -145,9 +144,10 @@ class CreditTradeCreateSerializer(serializers.ModelSerializer):
 
             if credit_trade_type not in allowed_types:
                 raise serializers.ValidationError({
-                    'zeroDollarReason': "Zero Dollar Reason is required "
-                                        "for Credit Transfers with 0 "
-                                        "Dollar per Credit"
+                    'zeroDollarReason': "Please select a reason as to "
+                                        "why the Credit Transfer Proposal "
+                                        "has a fair market value of zero "
+                                        "dollars per credit. "
                 })
 
         if data.get('fair_market_value_per_credit') is not None and \
@@ -211,6 +211,31 @@ class CreditTradeCreateSerializer(serializers.ModelSerializer):
                   'update_timestamp', 'note',
                   'create_user', 'update_user',
                   'compliance_period', 'is_rescinded', 'comment')
+        extra_kwargs = {
+            'compliance_period': {
+                'error_messages': {
+                    'does_not_exist': "Please specify the Compliance Period in "
+                                      "which the transaction relates."
+                }
+            },
+            'fair_market_value_per_credit': {
+                'error_messages': {
+                    'invalid': "Value per credit needs to be a valid."
+                }
+            },
+            'number_of_credits': {
+                'error_messages': {
+                    'null': "Number of Credits can't be null.",
+                    'invalid': "Please enter at least 1 credit."
+                }
+            },
+            'respondent': {
+                'error_messages': {
+                    'does_not_exist': "Please specify the company involved in "
+                                      "the transaction."
+                }
+            }
+        }
 
     comment = serializers.CharField(
         max_length=4000, allow_null=True, allow_blank=True, required=False)
@@ -269,8 +294,52 @@ class CreditTradeUpdateSerializer(serializers.ModelSerializer):
     """
     Serializer for Updating the Credit Trade
     """
+    def __init__(self, *args, **kwargs):
+        """
+        This is to allow us to simulate a partial update.
+        This will need to be updated when we finally allow PATCH in our system.
+        """
+        super(CreditTradeUpdateSerializer, self).__init__(*args, **kwargs)
+        data = kwargs.get('data')
+
+        if 'compliance_period' not in data and self.instance.compliance_period:
+            data['compliance_period'] = self.instance.compliance_period
+
+        if 'fair_market_value_per_credit' not in data:
+            data['fair_market_value_per_credit'] = \
+                self.instance.fair_market_value_per_credit
+
+        if 'initiator' not in data:
+            data['initiator'] = self.instance.initiator.id
+
+        if 'note' not in data:
+            data['note'] = self.instance.note
+
+        if 'number_of_credits' not in data:
+            data['number_of_credits'] = self.instance.number_of_credits
+
+        if 'respondent' not in data:
+            data['respondent'] = self.instance.respondent.id
+
+        if 'status' not in data:
+            data['status'] = self.instance.status.id
+
+        if 'trade_effective_date' not in data:
+            data['trade_effective_date'] = self.instance.trade_effective_date
+
+        if 'type' not in data:
+            data['type'] = self.instance.type.id
+
+        if 'zero_reason' not in data and self.instance.zero_reason:
+            data['zero_reason'] = self.instance.zero_reason.id
 
     def validate(self, data):
+        """
+        Makes sure that the status the credit trade is being updated to
+        is valid.
+        There are certain states that should lock a credit trade from being
+        modified.
+        """
         request = self.context['request']
         available_statuses = []
 
@@ -281,7 +350,7 @@ class CreditTradeUpdateSerializer(serializers.ModelSerializer):
             })
 
         if self.instance.status.status in [
-                "Cancelled", "Completed", "Declined", "Refused"
+                "Approved", "Cancelled", "Declined", "Refused"
         ]:
             raise serializers.ValidationError({
                 'readOnly': "Cannot update a transaction that's already "
@@ -349,9 +418,10 @@ class CreditTradeUpdateSerializer(serializers.ModelSerializer):
                                 create_user__organization=request.user.organization
                             ).exists()):
                         raise serializers.ValidationError({
-                            'forbidden': "Cannot propose a trade with "
-                                         "zero-reason 'Other' without "
-                                         "creating an explanatory comment"
+                            'forbidden': "Please provide an explanation in "
+                                         "the comments as to why the Credit "
+                                         "Transfer Proposal has a fair market "
+                                         "value of zero dollars per credit."
                         })
 
         if data.get('is_rescinded') is True:
@@ -391,9 +461,10 @@ class CreditTradeUpdateSerializer(serializers.ModelSerializer):
 
             if credit_trade_type not in allowed_types:
                 raise serializers.ValidationError({
-                    'zeroDollarReason': "Zero Dollar Reason is required "
-                                        "for Credit Transfers with 0 "
-                                        "Dollar per Credit"
+                    'zeroDollarReason': "Please select a reason as to "
+                                        "why the Credit Transfer Proposal "
+                                        "has a fair market value of zero "
+                                        "dollars per credit. "
                 })
 
         # If the type is a sell, make sure that the organization
@@ -484,6 +555,31 @@ class CreditTradeUpdateSerializer(serializers.ModelSerializer):
                   'update_timestamp', 'note',
                   'create_user', 'update_user',
                   'compliance_period', 'is_rescinded', 'comment')
+        extra_kwargs = {
+            'compliance_period': {
+                'error_messages': {
+                    'does_not_exist': "Please specify the Compliance Period "
+                                      "in which the transaction relates."
+                }
+            },
+            'fair_market_value_per_credit': {
+                'error_messages': {
+                    'invalid': "Value per credit needs to be a valid."
+                }
+            },
+            'number_of_credits': {
+                'error_messages': {
+                    'null': "Number of Credits can't be null.",
+                    'invalid': "Please enter at least 1 credit."
+                }
+            },
+            'respondent': {
+                'error_messages': {
+                    'does_not_exist': "Please specify the company involved in "
+                                      "the transaction."
+                }
+            }
+        }
 
     comment = serializers.CharField(
         max_length=4000, allow_null=True, allow_blank=True, required=False)
@@ -504,7 +600,7 @@ class CreditTradeApproveSerializer(serializers.ModelSerializer):
             })
 
         if self.instance.status.status in [
-                "Approved", "Cancelled", "Completed", "Declined"
+                "Approved", "Cancelled", "Declined", "Recorded"
         ]:
             raise serializers.ValidationError({
                 'readOnly': "Cannot approve a transaction that's already "
@@ -622,12 +718,12 @@ class CreditTrade2Serializer(serializers.ModelSerializer):
         # if the user is not a government user we should limit what we show
         # so no recommended/not recommended
         if not request.user.is_government_user:
-            history = obj.get_history(["Accepted", "Completed", "Declined",
+            history = obj.get_history(["Accepted", "Approved", "Declined",
                                        "Refused", "Submitted"])
         else:
-            history = obj.get_history(["Accepted", "Completed", "Declined",
+            history = obj.get_history(["Accepted", "Approved", "Declined",
                                        "Not Recommended", "Recommended",
-                                       "Refused", "Submitted"])
+                                       "Recorded", "Refused", "Submitted"])
 
         serializer = CreditTradeHistoryReviewedSerializer(history,
                                                           many=True)

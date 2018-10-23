@@ -1,0 +1,306 @@
+apiVersion: v1
+kind: Template
+metadata:
+  creationTimestamp: null
+  name: dev-schemaspy--output=json
+objects:
+- apiVersion: v1
+  kind: DeploymentConfig
+  metadata:
+    annotations:
+      description: Defines how to deploy the container.
+    creationTimestamp: null
+    generation: 1
+    labels:
+      template: tfrs-schemaspy-public-template
+    name: schema-spy-audit
+  spec:
+    replicas: 1
+    selector:
+      name: schema-spy-audit
+    strategy:
+      activeDeadlineSeconds: 21600
+      recreateParams:
+        timeoutSeconds: 600
+      resources: {}
+      type: Recreate
+    template:
+      metadata:
+        creationTimestamp: null
+        labels:
+          name: schema-spy-audit
+        name: schema-spy-audit
+      spec:
+        containers:
+        - env:
+          - name: TESTENV
+            value: audit
+          - name: DATABASE_SERVICE_NAME
+            value: postgresql
+          - name: POSTGRESQL_DATABASE
+            value: tfrs
+          - name: POSTGRESQL_USER
+            valueFrom:
+              secretKeyRef:
+                key: DATABASE_USER
+                name: tfrs-postgresql
+          - name: POSTGRESQL_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                key: DATABASE_PASSWORD
+                name: tfrs-postgresql
+          - name: DATABASE_SCHEMA
+            value: tfrs_audit
+          image: docker-registry.default.svc:5000/mem-tfrs-tools/schema-spy@sha256:15963e2ee8916126459a8d8018667d7001d626b188668a2f13428e6e881d24ca
+          imagePullPolicy: IfNotPresent
+          livenessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /
+              port: 8080
+              scheme: HTTP
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 3000
+          name: schema-spy-audit
+          ports:
+          - containerPort: 8080
+            protocol: TCP
+          readinessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /
+              port: 8080
+              scheme: HTTP
+            initialDelaySeconds: 3
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 3000
+          resources:
+            limits:
+              cpu: "1"
+              memory: 1Gi
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+    test: false
+    triggers:
+    - imageChangeParams:
+        automatic: true
+        containerNames:
+        - schema-spy-audit
+        from:
+          kind: ImageStreamTag
+          name: schema-spy:latest
+          namespace: mem-tfrs-tools
+      type: ImageChange
+    - type: ConfigChange
+  status:
+    availableReplicas: 0
+    latestVersion: 0
+    observedGeneration: 0
+    replicas: 0
+    unavailableReplicas: 0
+    updatedReplicas: 0
+- apiVersion: v1
+  kind: DeploymentConfig
+  metadata:
+    annotations:
+      description: Defines how to deploy the container.
+    creationTimestamp: null
+    generation: 1
+    labels:
+      template: schema-spy-public-template
+    name: schema-spy-public
+  spec:
+    replicas: 1
+    selector:
+      name: schema-spy-public
+    strategy:
+      activeDeadlineSeconds: 21600
+      recreateParams:
+        timeoutSeconds: 600
+      resources: {}
+      type: Recreate
+    template:
+      metadata:
+        creationTimestamp: null
+        labels:
+          name: schema-spy-public
+        name: schema-spy-public
+      spec:
+        containers:
+        - env:
+          - name: DATABASE_SERVICE_NAME
+            value: postgresql
+          - name: POSTGRESQL_DATABASE
+            value: tfrs
+          - name: POSTGRESQL_USER
+            valueFrom:
+              secretKeyRef:
+                key: DATABASE_USER
+                name: tfrs-postgresql
+          - name: POSTGRESQL_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                key: DATABASE_PASSWORD
+                name: tfrs-postgresql
+          image: docker-registry.default.svc:5000/mem-tfrs-tools/schema-spy@sha256:15963e2ee8916126459a8d8018667d7001d626b188668a2f13428e6e881d24ca
+          imagePullPolicy: IfNotPresent
+          livenessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /
+              port: 8080
+              scheme: HTTP
+            initialDelaySeconds: 58
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 3000
+          name: schema-spy-public
+          ports:
+          - containerPort: 8080
+            protocol: TCP
+          readinessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /
+              port: 8080
+              scheme: HTTP
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 3000
+          resources:
+            limits:
+              cpu: "1"
+              memory: 1Gi
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+    test: false
+    triggers:
+    - imageChangeParams:
+        automatic: true
+        containerNames:
+        - schema-spy-public
+        from:
+          kind: ImageStreamTag
+          name: schema-spy:latest
+          namespace: mem-tfrs-tools
+      type: ImageChange
+    - type: ConfigChange
+  status:
+    availableReplicas: 0
+    latestVersion: 0
+    observedGeneration: 0
+    replicas: 0
+    unavailableReplicas: 0
+    updatedReplicas: 0
+- apiVersion: v1
+  kind: Service
+  metadata:
+    annotations:
+      description: Exposes and load balances the application pods
+    creationTimestamp: null
+    labels:
+      template: schema-spy-public-template
+    name: schema-spy-public
+  spec:
+    ports:
+    - name: 8080-tcp
+      port: 8080
+      protocol: TCP
+      targetPort: 8080
+    selector:
+      name: schema-spy-public
+    sessionAffinity: None
+    type: ClusterIP
+  status:
+    loadBalancer: {}
+- apiVersion: v1
+  kind: Service
+  metadata:
+    annotations:
+      description: Exposes and load balances the application pods
+    creationTimestamp: null
+    labels:
+      template: tfrs-schemaspy-public-template
+    name: schema-spy-audit
+  spec:
+    ports:
+    - name: 8080-tcp
+      port: 8080
+      protocol: TCP
+      targetPort: 8080
+    selector:
+      name: schema-spy-audit
+    sessionAffinity: None
+    type: ClusterIP
+  status:
+    loadBalancer: {}
+- apiVersion: v1
+  kind: Route
+  metadata:
+    creationTimestamp: null
+    labels:
+      template: schema-spy-public-template
+    name: schema-spy-public
+  spec:
+    host: schema-spy-public-mem-tfrs-dev.pathfinder.gov.bc.ca
+    port:
+      targetPort: 8080-tcp
+    tls:
+      insecureEdgeTerminationPolicy: Allow
+      termination: edge
+    to:
+      kind: Service
+      name: schema-spy-public
+      weight: 100
+    wildcardPolicy: None
+  status:
+    ingress:
+    - conditions:
+      - lastTransitionTime: 2018-08-31T22:38:09Z
+        status: "True"
+        type: Admitted
+      host: schema-spy-public-mem-tfrs-dev.pathfinder.gov.bc.ca
+      routerName: router
+      wildcardPolicy: None
+- apiVersion: v1
+  kind: Route
+  metadata:
+    creationTimestamp: null
+    labels:
+      template: tfrs-schemaspy-public-template
+    name: schema-spy-audit
+  spec:
+    host: schema-spy-audit-mem-tfrs-dev.pathfinder.gov.bc.ca
+    port:
+      targetPort: 8080-tcp
+    tls:
+      insecureEdgeTerminationPolicy: Allow
+      termination: edge
+    to:
+      kind: Service
+      name: schema-spy-audit
+      weight: 100
+    wildcardPolicy: None
+  status:
+    ingress:
+    - conditions:
+      - lastTransitionTime: 2018-08-31T22:29:14Z
+        status: "True"
+        type: Admitted
+      host: schema-spy-audit-mem-tfrs-dev.pathfinder.gov.bc.ca
+      routerName: router
+      wildcardPolicy: None

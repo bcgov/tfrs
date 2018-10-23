@@ -31,7 +31,6 @@ class CreditTransferTextRepresentation extends Component {
   _buyAction () {
     switch (this.props.status.id) {
       case CREDIT_TRANSFER_STATUS.approved.id:
-      case CREDIT_TRANSFER_STATUS.completed.id:
         return ' bought ';
       case CREDIT_TRANSFER_STATUS.refused.id:
         return ' proposed to buy ';
@@ -47,12 +46,7 @@ class CreditTransferTextRepresentation extends Component {
         <span className="value"> {this.numberOfCredits} </span> credit{(this.props.numberOfCredits > 1) && 's'} from
         <span className="value"> {this.creditsFrom} </span>
         for <span className="value"> {this.totalValue}</span>
-        {this.props.status.id === CREDIT_TRANSFER_STATUS.refused.id &&
-          <span>. <span className="value"> {this.creditsTo} </span> refused the proposal.</span>
-        }
-        {this.props.status.id !== CREDIT_TRANSFER_STATUS.refused.id &&
-          <span>, effective <span className="value"> {this.tradeEffectiveDate}</span>.</span>
-        }
+        {this._statusText(this.props.creditsFrom)}
         {this.props.zeroDollarReason != null &&
         <div className="zero-reason">
           <span>This credit transfer has zero-value per-credit because:
@@ -89,7 +83,7 @@ class CreditTransferTextRepresentation extends Component {
         <span className="value"> {this.creditsTo} </span> for the completion of a
         Part 3 Agreement milestone(s) has been
         <span className="value lowercase"> {this.tradeStatus}</span>
-        {this.props.status.id === CREDIT_TRANSFER_STATUS.completed.id &&
+        {this.props.status.id === CREDIT_TRANSFER_STATUS.approved.id &&
           <span>, effective
             <span className="value"> {this.tradeEffectiveDate}</span>
           </span>
@@ -106,7 +100,7 @@ class CreditTransferTextRepresentation extends Component {
         credit{(this.props.numberOfCredits > 1) && 's'} earned by
         <span className="value"> {this.creditsFrom} </span>
         has been <span className="value lowercase"> {this.tradeStatus}</span>
-        {this.props.status.id === CREDIT_TRANSFER_STATUS.completed.id &&
+        {this.props.status.id === CREDIT_TRANSFER_STATUS.approved.id &&
           <span>, effective
             <span className="value"> {this.tradeEffectiveDate}</span>
           </span>
@@ -123,12 +117,7 @@ class CreditTransferTextRepresentation extends Component {
         <span className="value"> {this.creditsTo} </span>
         for <span className="value"> {this.fairMarketValuePerCredit} </span> per credit
         for a total value of <span className="value"> {this.totalValue}</span>
-        {this.props.status.id === CREDIT_TRANSFER_STATUS.refused.id &&
-          <span>. <span className="value"> {this.creditsTo} </span> refused the proposal.</span>
-        }
-        {this.props.status.id !== CREDIT_TRANSFER_STATUS.refused.id &&
-          <span>, effective <span className="value"> {this.tradeEffectiveDate}</span>.</span>
-        }
+        {this._statusText(this.props.creditsTo)}
         {this.props.zeroDollarReason != null &&
           <div className="zero-reason">
             <span>This credit transfer has zero-value per-credit because:
@@ -152,7 +141,7 @@ class CreditTransferTextRepresentation extends Component {
         credit{(this.props.numberOfCredits > 1) && 's'} earned by
         <span className="value"> {this.creditsTo} </span>
         has been <span className="value lowercase"> {this.tradeStatus}</span>
-        {this.props.status.id === CREDIT_TRANSFER_STATUS.completed.id &&
+        {this.props.status.id === CREDIT_TRANSFER_STATUS.approved.id &&
           <span>, effective
             <span className="value"> {this.tradeEffectiveDate}</span>
           </span>
@@ -161,16 +150,47 @@ class CreditTransferTextRepresentation extends Component {
     );
   }
 
+  _rescindedBy () {
+    const rescindedBy = this.props.history.find(history => (history.isRescinded));
+
+    if (rescindedBy) {
+      return [
+        <span key="rescinded-by" className="value"> {rescindedBy.user.organization.name} </span>,
+        <span key="rescinded-by-text">rescinded the proposal.</span>
+      ];
+    }
+
+    return false;
+  }
+
   _sellAction () {
+    if (this.props.isRescinded) {
+      return ' proposed to sell ';
+    }
+
     switch (this.props.status.id) {
       case CREDIT_TRANSFER_STATUS.approved.id:
-      case CREDIT_TRANSFER_STATUS.completed.id:
         return ' sold ';
       case CREDIT_TRANSFER_STATUS.refused.id:
         return ' proposed to sell ';
       default:
         return ' is proposing to sell ';
     }
+  }
+
+  _statusText (respondent) {
+    if (this.props.isRescinded) {
+      return <span>. {this._rescindedBy()}</span>;
+    }
+
+    if (this.props.status.id === CREDIT_TRANSFER_STATUS.refused.id) {
+      return <span>. <span className="value"> {respondent.name} </span> refused the proposal.</span>;
+    }
+
+    if (this.props.status.id === CREDIT_TRANSFER_STATUS.declinedForApproval.id) {
+      return <span>. The proposal was declined.</span>;
+    }
+    return <span>, effective <span className="value"> {this.tradeEffectiveDate}</span>.</span>;
   }
 
   render () {
@@ -206,6 +226,8 @@ CreditTransferTextRepresentation.defaultProps = {
   creditsTo: {
     name: 'To'
   },
+  history: [],
+  isRescinded: false,
   tradeEffectiveDate: '',
   zeroDollarReason: null
 };
@@ -227,6 +249,21 @@ CreditTransferTextRepresentation.propTypes = {
     PropTypes.string,
     PropTypes.number
   ]).isRequired,
+  history: PropTypes.arrayOf(PropTypes.shape({
+    creditTradeUpdateTime: PropTypes.string,
+    isRescinded: PropTypes.bool,
+    status: PropTypes.shape({
+      id: PropTypes.number,
+      status: PropTypes.string
+    }),
+    user: PropTypes.shape({
+      displayName: PropTypes.string,
+      firstName: PropTypes.string,
+      id: PropTypes.number,
+      lastName: PropTypes.string
+    })
+  })),
+  isRescinded: PropTypes.bool,
   numberOfCredits: PropTypes.oneOfType([
     PropTypes.string,
     PropTypes.number

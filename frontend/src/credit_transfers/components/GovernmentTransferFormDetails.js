@@ -4,6 +4,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
+import InputWithTooltip from '../../app/components/InputWithTooltip';
 import { CREDIT_TRANSFER_TYPES } from '../../constants/values';
 
 const GovernmentTransferFormDetails = props => (
@@ -11,7 +12,7 @@ const GovernmentTransferFormDetails = props => (
     <div className="main-form">
       <div className="row">
         <div className="form-group col-md-6">
-          <label htmlFor="transfer-type">Transfer Type:
+          <label htmlFor="transfer-type">Transaction Type:
             <div className="btn-group" role="group">
               <button type="button" className={`btn btn-default ${(props.fields.tradeType.id === CREDIT_TRANSFER_TYPES.part3Award.id) ? 'active' : ''}`} name="tradeType" value={CREDIT_TRANSFER_TYPES.part3Award.id} onClick={props.handleInputChange}>Part 3 Award</button>
               <button type="button" className={`btn btn-default ${(props.fields.tradeType.id === CREDIT_TRANSFER_TYPES.validation.id) ? 'active' : ''}`} name="tradeType" value={CREDIT_TRANSFER_TYPES.validation.id} onClick={props.handleInputChange}>Validation</button>
@@ -47,15 +48,13 @@ const GovernmentTransferFormDetails = props => (
       <div className="row">
         <div className="form-group col-md-6">
           <label htmlFor="number-of-credits">Number of Credits:
-            <input
-              className="form-control"
+            <InputWithTooltip
+              handleInputChange={props.handleInputChange}
               id="number-of-credits"
               min="0"
               name="numberOfCredits"
-              onChange={props.handleInputChange}
-              required="required"
+              required
               step="1"
-              type="number"
               value={props.fields.numberOfCredits}
             />
           </label>

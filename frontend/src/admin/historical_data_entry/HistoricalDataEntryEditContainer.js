@@ -28,6 +28,7 @@ const buttonActions = [Lang.BTN_CANCEL, Lang.BTN_SAVE];
 class HistoricalDataEntryEditContainer extends Component {
   constructor (props) {
     super(props);
+
     this.state = {
       fields: {
         comment: '',
@@ -40,10 +41,10 @@ class HistoricalDataEntryEditContainer extends Component {
         transferType: '',
         zeroDollarReason: ''
       },
-      submitted: false,
       totalValue: 0,
       validationErrors: {}
     };
+    this.submitted = false;
 
     this._handleInputChange = this._handleInputChange.bind(this);
     this._handleSubmit = this._handleSubmit.bind(this);
@@ -76,13 +77,7 @@ class HistoricalDataEntryEditContainer extends Component {
   _handleSubmit (event) {
     event.preventDefault();
 
-    if (!this._validateForm()) {
-      return false;
-    }
-
-    this.setState({
-      submitted: true
-    });
+    this.submitted = true;
 
     const data = this.props.prepareCreditTransfer(this.state.fields);
     const { id } = this.props.item;
@@ -117,22 +112,6 @@ class HistoricalDataEntryEditContainer extends Component {
     return this.props.addCommentToCreditTransfer(data);
   }
 
-  _validateForm () {
-    const { numberOfCredits } = this.state.fields;
-
-    if (numberOfCredits % 1 !== 0) {
-      this.setState({
-        validationErrors: {
-          invalidNumberOfCredits: "Number of Credits can't have decimals."
-        }
-      });
-
-      return false;
-    }
-
-    return true;
-  }
-
   changeObjectProp (id, name) {
     const fieldState = { ...this.state.fields };
 
@@ -156,7 +135,7 @@ class HistoricalDataEntryEditContainer extends Component {
   }
 
   loadPropsToFieldState (props) {
-    if (Object.keys(props.item).length !== 0 && !this.state.submitted) {
+    if (Object.keys(props.item).length !== 0 && !this.submitted) {
       const { item } = props;
 
       const fieldState = {

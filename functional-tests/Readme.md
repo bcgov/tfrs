@@ -1,3 +1,5 @@
+[![Releases](https://img.shields.io/github/release/bcdevops/bddstack.svg)](https://github.com/BCDevOps/BDDStack/releases/tag/1.1)
+
 # BDDStack
 
 ## Description
@@ -20,8 +22,8 @@ The following commands will launch the tests with the individual browsers:
     ./gradlew chromeHeadlessTest //Will run in pipeline as well
     ./gradlew firefoxTest
     ./gradlew firefoxHeadlessTest //Will run in pipeline as well
-    ./gradlew edgeTest
-    ./gradlew ieTest //Read wiki for set up instructions
+    ./gradlew edgeTest //only on windows
+    ./gradlew ieTest //Read wiki for set up instructions, only on windows
     ./gradlew safariTest //Only for MacOS, read wiki for instructions.
     
 To run with all, you can run:
@@ -30,6 +32,22 @@ To run with all, you can run:
 
 Replace `./gradlew` with `gradlew.bat` in the above examples if you're on Windows.
 
+
+## Source-Sets
+
+Gradle source sets
+```
+sourceSets {
+   test {
+       groovy {
+           srcDirs = [‘src/groovy’]
+       }
+       resources {
+           srcDirs = [‘src/resources’]
+       }
+   }
+}
+```
 ## Questions and issues
 
 Please ask questions on our [Slack Channel][slack_channel] and raise issues in [BDDStack issue tracker][issue_tracker].
@@ -45,6 +63,10 @@ Please ask questions on our [Slack Channel][slack_channel] and raise issues in [
 <https://inviqa.com/blog/bdd-guide>
 
 <https://github.com/SeleniumHQ/selenium/wiki>
+
+SourceSets: 
+* <https://docs.gradle.org/current/userguide/java_plugin.html#sec:working_with_java_source_sets>
+* <https://dzone.com/articles/integrating-gatling-into-a-gradle-build-understand>
 
 
 [navunit]: https://github.com/bcgov/navUnit

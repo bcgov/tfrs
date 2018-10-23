@@ -72,8 +72,12 @@ class SpreadSheetBuilder(object):
             worksheet.write(row_index, 9, comment, comment_format)
 
         # set the widths for the columns that we expect to be longer
+        worksheet.col(2).width = 3500
         worksheet.col(3).width = 7500
         worksheet.col(4).width = 7500
+        worksheet.col(5).width = 4500
+        worksheet.col(6).width = 4500
+        worksheet.col(8).width = 3500
         worksheet.col(9).width = 10000
 
     def add_fuel_suppliers(self, fuel_suppliers):
@@ -107,6 +111,8 @@ class SpreadSheetBuilder(object):
 
         # set the widths for the columns that we expect to be longer
         worksheet.col(1).width = 7500
+        worksheet.col(2).width = 3500
+        worksheet.col(4).width = 3500
 
     def save(self, response):
         """

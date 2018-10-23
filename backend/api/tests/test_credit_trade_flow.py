@@ -27,6 +27,8 @@ from collections import namedtuple
 
 from rest_framework import status
 
+from api.models.CompliancePeriod import CompliancePeriod
+from api.models.CreditTrade import CreditTrade
 from api.models.OrganizationBalance import OrganizationBalance
 from .base_test_case import BaseTestCase
 
@@ -106,16 +108,16 @@ class TestCreditTradeFlow(BaseTestCase):
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
-        ct_completed = self.clients['fs_user_1'].get(
+        ct_approved = self.clients['fs_user_1'].get(
             '/api/credit_trades/{}'.format(ct_id),
             content_type='application/json')
 
-        completed_response = json.loads(
-            ct_completed.content.decode("utf-8"))
+        approved_response = json.loads(
+            ct_approved.content.decode("utf-8"))
 
-        # Status of Credit Trade should be 'completed'
-        self.assertEqual(completed_response['status']['id'],
-                         self.statuses['completed'].id)
+        # Status of Credit Trade should be 'approved'
+        self.assertEqual(approved_response['status']['id'],
+                         self.statuses['approved'].id)
 
         initiator_bal_after = OrganizationBalance.objects.get(
             organization_id=fs1user.organization.id,
@@ -144,6 +146,16 @@ class TestCreditTradeFlow(BaseTestCase):
                          initiator_bal_after.validated_credits)
         self.assertEqual(resp_final_bal,
                          respondent_bal_after.validated_credits)
+
+        compliance_period = CompliancePeriod.objects.filter(
+            effective_date__lte=today,
+            expiration_date__gte=today
+        ).first()
+
+        credit_trade = CreditTrade.objects.get(id=ct_id)
+
+        self.assertEqual(
+            credit_trade.compliance_period_id, compliance_period.id)
 
     def test_respondent_cannot_modify_the_trade(self):
         """Validate that a respondent cannot modify the deal by manipulating the PUT"""

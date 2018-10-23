@@ -5,22 +5,25 @@ const path = require('path');
 const nodeModulesPath = path.resolve(__dirname, 'node_modules');
 const buildPath = path.resolve(__dirname, 'public', 'build');
 const mainPath = path.resolve(__dirname, 'src', 'index.js');
-// var plugins = require('webpack-load-plugins')();
-// plugins.ImageminPlugin = require('imagemin-webpack-plugin');
-// plugsin.imageminMozjpeg = require('imagemin-mozjpeg');
+const tokenRenewalPath = path.resolve(__dirname, 'src', 'tokenRenewal.js');
 
 const config = {
   mode: 'production',
-  entry: [
-    // Polyfill for Object.assign on IE11, etc
-    'babel-polyfill',
-
-    mainPath
-  ],
+  entry: { bundle: [
+      // Polyfill for Object.assign on IE11, etc
+      'babel-polyfill',
+      mainPath
+    ],
+    tokenRenewal: [
+      'babel-polyfill',
+      tokenRenewalPath
+    ]
+  }
+  ,
   output: {
-    path: buildPath,
-    filename: 'bundle.js',
-    publicPath: '/build/'
+    filename: "[name].js",
+    publicPath: '/build/',
+    path: buildPath
   },
   resolve: {
     extensions: ['.js', '.jsx']
@@ -56,7 +59,7 @@ const config = {
       }
     ]
   },
-  devServer: {
+    devServer: {
     historyApiFallback: true,
     headers: {
       'Access-Control-Allow-Origin': '*',
@@ -71,7 +74,7 @@ const config = {
     new Webpack.DefinePlugin({
       __LOGOUT_TEST_URL__: JSON.stringify('https://logontest.gov.bc.ca/clp-cgi/logoff.cgi'),
       __LOGOUT_URL__: JSON.stringify('https://logon.gov.bc.ca/clp-cgi/logoff.cgi'),
-      __VERSION__: JSON.stringify(packageJson.version)
+      __VERSION__: JSON.stringify(packageJson.version),
     })
   ]
 };

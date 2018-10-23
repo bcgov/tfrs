@@ -11,9 +11,18 @@ import Footer from './components/Footer';
 
 import StatusInterceptor from './components/StatusInterceptor';
 
+import CONFIG from '../config';
+
+import KeycloakAwareApp from './KeycloakAwareApp';
+
 const App = (props) => {
+  if (CONFIG.KEYCLOAK.ENABLED) {
+    return <KeycloakAwareApp>{props.children}</KeycloakAwareApp>;
+  }
+
   let content;
-  if (props.errorRequest.hasErrors && props.errorRequest.error.status) {
+
+  if (props.errorRequest.hasErrors && props.errorRequest.error && props.errorRequest.error.status) {
     content = <StatusInterceptor statusCode={props.errorRequest.error.status} />;
   } else if (!props.userRequest.isFetching && props.isAuthenticated) {
     content = props.children;
@@ -29,7 +38,6 @@ const App = (props) => {
           newesetOnTop={false}
           position="top-center"
           preventDuplicates
-          progressBar
           transitionIn="fadeIn"
           transitionOut="fadeOut"
         />
@@ -95,7 +103,7 @@ export default withRouter(connect(state => ({
     error: state.rootReducer.userRequest.error,
     isFetching: state.rootReducer.userRequest.isFetching
   },
-  unreadNotificationsCount: state.rootReducer.notificationsReducer.isFetching
+  unreadNotificationsCount: state.rootReducer.notifications.isFetching
     ? null
-    : state.rootReducer.notificationsReducer.notifications.filter(n => !n.isRead).length
+    : state.rootReducer.notifications.items.filter(n => !n.isRead).length
 }))(App));

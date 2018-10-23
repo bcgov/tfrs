@@ -24,31 +24,53 @@
 from django.db import models
 
 from auditable.models import Auditable
+from api.managers.RoleManager import RoleManager
 
 from .Permission import Permission
-from api.managers.RoleManager import RoleManager
 
 
 class Role(Auditable):
-    name = models.CharField(max_length=200, unique=True, db_comment='Role code. Natural key.')
+    """
+    Table that will hold all the available Roles and descriptions
+    """
+    name = models.CharField(
+        max_length=200,
+        unique=True,
+        db_comment="Role code. Natural key."
+    )
+
     description = models.CharField(
         max_length=1000,
-        db_comment='Descriptive text explaining this role.')
+        db_comment="Descriptive text explaining this role."
+    )
+
     is_government_role = models.BooleanField(
         default=False,
-        db_comment='Flag. True if this is a government role (eg. Analyst, Administrator)')
+        db_comment="Flag. True if this is a government role "
+                   "(eg. Analyst, Administrator)"
+    )
+
+    display_order = models.IntegerField(
+        db_comment="Relative rank in display sorting order"
+    )
 
     @property
     def permissions(self):
+        """
+        Permissions associated with the Role
+        """
         permissions = Permission.objects.filter(
             role_permissions__role_id=self.id
-        )
+        ).distinct()
 
         return permissions
 
     objects = RoleManager()
 
     def natural_key(self):
+        """
+        Allows us to match with the role name
+        """
         return (self.name,)
 
     # Add effective_date and expiration_date

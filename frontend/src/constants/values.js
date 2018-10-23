@@ -33,13 +33,13 @@ export const CREDIT_TRANSFER_STATUS = {
     id: 5,
     description: 'Reviewed' /* Whether it's recommended or not, the user doesn't need to know this */
   },
-  approved: {
+  recorded: {
     id: 6,
-    description: 'Approved'
+    description: 'Recorded'
   },
-  completed: {
+  approved: {
     id: 7,
-    description: 'Approved' /* changed from 'Completed' because the difference is not relevant to the user */
+    description: 'Approved'
   },
   deleted: {
     id: 8,
@@ -96,12 +96,12 @@ export const ZERO_DOLLAR_REASON = {
     id: 1,
     description: 'Affiliate',
     formButtonDescription: 'Transfer to Affiliated Organization',
-    textRepresentationDescription: 'it is a transfer of credits between affiliated organizations'
+    textRepresentationDescription: ' it is a transfer between affiliated organizations.'
   },
   other: {
     id: 2,
     description: 'Other',
     formButtonDescription: 'Other Reason',
-    textRepresentationDescription: 'a reason should be specified in the comments'
+    textRepresentationDescription: ' reason specified in comments.'
   }
 };

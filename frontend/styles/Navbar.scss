@@ -1,31 +1,45 @@
-.level2Navigation .container, #navbar {
+@import './variables.scss';
+
+.level2Navigation .container {
+  position: relative;
+
   a {
     border-bottom: 1px solid transparent;
     text-decoration: none;
   }
 
   .active {
-    border-bottom: 1px solid $white;
+    border-bottom: 1px solid $yellow;
   }
 
-  .notifications {
-    float: right;
+  #navbar-notifications {
+    font-size: 2.5rem;
+    font-weight: normal;
+    height: 100%;
+    padding: 0.25rem 0;
+    position: absolute;
+    right: 0;
+    text-decoration: none;
+    top: 0;
+    width: 5rem;
 
-    #navbar-notifications {
-      font-size: 2rem;
-      font-weight: normal;
-      padding: 0.5rem 0;
-      text-decoration: none;
-
-      &.active {
-        border-bottom: 1px solid $white;
-      }
-
-      .number {
-        display: inline-block;
-        font-size: 1.5rem;
-        vertical-align: middle;
-      }
+    &.active {
+      border-bottom: 1px solid $yellow;
     }
+
+    &:after {
+      display: none;
+    }
+
+    .fa-layers-counter {
+      background-color: $red;
+      font-size: 4rem;
+    }
+  }
+}
+
+.navbar-nav {
+  .active {
+    background-color: rgba(255, 255, 255, 0.2);
   }
 }

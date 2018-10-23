@@ -3,9 +3,16 @@
  */
 import React from 'react';
 import PropTypes from 'prop-types';
+import FontAwesomeIcon from '@fortawesome/react-fontawesome';
+import { connect } from 'react-redux';
 
 import Loading from '../../../app/components/Loading';
+import * as Lang from '../../../constants/langEnUs';
 import OrganizationMembersTable from '../../../organizations/components/OrganizationMembersTable';
+import history from '../../../app/History';
+import PERMISSIONS_USERS from '../../../constants/permissions/Users';
+import USERS from '../../../constants/routes/Users';
+import { USERS as ADMIN_USERS } from '../../../constants/routes/Admin';
 
 const UsersPage = props => (
   <div className="page_organization">
@@ -13,6 +20,36 @@ const UsersPage = props => (
       <h1>
         Users
       </h1>
+      <div className="right-toolbar-container">
+        <div className="actions-container">
+          {props.loggedInUser.hasPermission(PERMISSIONS_USERS.EDIT_FUEL_SUPPLIER_USERS) &&
+          <div className="btn-group">
+            <button
+              id="new-user"
+              className="btn btn-primary"
+              onClick={() => history.push(ADMIN_USERS.ADD)}
+              type="button"
+            >
+              <FontAwesomeIcon icon="plus-circle" /> {Lang.BTN_NEW_USER}
+            </button>
+            <button type="button" className="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              <span className="caret" />
+              <span className="sr-only">Toggle Dropdown</span>
+            </button>
+            <ul className="dropdown-menu">
+              <li>
+                <button
+                  onClick={() => history.push(USERS.ADD)}
+                  type="button"
+                >
+                  <FontAwesomeIcon icon="user" /> Add Fuel Supplier User
+                </button>
+              </li>
+            </ul>
+          </div>
+          }
+        </div>
+      </div>
       {props.members.isFetching && <Loading />}
       {!props.members.isFetching && props.members &&
         <OrganizationMembersTable items={props.members.users} />
@@ -22,6 +59,9 @@ const UsersPage = props => (
 );
 
 UsersPage.propTypes = {
+  loggedInUser: PropTypes.shape({
+    hasPermission: PropTypes.func
+  }).isRequired,
   members: PropTypes.shape({
     isFetching: PropTypes.bool,
     users: PropTypes.arrayOf(PropTypes.shape({
@@ -37,4 +77,8 @@ UsersPage.propTypes = {
   }).isRequired
 };
 
-export default UsersPage;
+const mapStateToProps = state => ({
+  loggedInUser: state.rootReducer.userRequest.loggedInUser
+});
+
+export default connect(mapStateToProps)(UsersPage);

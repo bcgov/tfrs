@@ -26,7 +26,7 @@ from rest_framework import exceptions, serializers
 from api.models.User import User
 from .Organization import OrganizationSerializer, OrganizationMinSerializer
 from .Permission import PermissionSerializer
-from .Role import RoleSerializer
+from .Role import RoleMinSerializer
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -36,7 +36,7 @@ class UserSerializer(serializers.ModelSerializer):
     """
     organization = OrganizationSerializer(read_only=True)
     permissions = PermissionSerializer(many=True, read_only=True)
-    roles = RoleSerializer(many=True, read_only=True)
+    roles = RoleMinSerializer(many=True, read_only=True)
 
     class Meta:
         model = User
@@ -51,7 +51,7 @@ class UserMinSerializer(serializers.ModelSerializer):
     Serializer for display information for the User
     """
     organization = OrganizationMinSerializer(read_only=True)
-    roles = RoleSerializer(many=True, read_only=True)
+    roles = RoleMinSerializer(many=True, read_only=True)
 
     class Meta:
         model = User
@@ -67,7 +67,7 @@ class UserViewSerializer(serializers.ModelSerializer):
     """
     history = serializers.SerializerMethodField()
     organization = OrganizationMinSerializer(read_only=True)
-    roles = RoleSerializer(many=True, read_only=True)
+    roles = RoleMinSerializer(many=True, read_only=True)
 
     class Meta:
         model = User
@@ -89,7 +89,7 @@ class UserViewSerializer(serializers.ModelSerializer):
 
         # if the user is not a government user we should limit what we show
         # so no recommended/not recommended
-        if (not request.user.is_government_user):
+        if not request.user.is_government_user:
             if request.user.organization != obj.organization:
                 raise exceptions.PermissionDenied(
                     'You do not have sufficient authorization to use this '
@@ -105,7 +105,7 @@ class UserViewSerializer(serializers.ModelSerializer):
         else:
             history = obj.get_history(
                 Q(status__status__in=[
-                    "Accepted", "Completed", "Declined", "Not Recommended",
+                    "Accepted", "Approved", "Declined", "Not Recommended",
                     "Recommended"
                 ]))
 

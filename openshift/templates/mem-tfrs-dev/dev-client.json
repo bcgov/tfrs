@@ -1,0 +1,238 @@
+{
+    "kind": "Template",
+    "apiVersion": "v1",
+    "metadata": {
+        "name": "dev-client",
+        "creationTimestamp": null
+    },
+    "objects": [
+        {
+            "kind": "DeploymentConfig",
+            "apiVersion": "v1",
+            "metadata": {
+                "name": "client",
+                "generation": 1,
+                "creationTimestamp": null,
+                "labels": {
+                    "template": "tfrs-app-environment"
+                },
+                "annotations": {
+                    "description": "Defines how to deploy the application server"
+                }
+            },
+            "spec": {
+                "strategy": {
+                    "type": "Recreate",
+                    "recreateParams": {
+                        "timeoutSeconds": 600
+                    },
+                    "resources": {},
+                    "activeDeadlineSeconds": 21600
+                },
+                "triggers": [
+                    {
+                        "type": "ImageChange",
+                        "imageChangeParams": {
+                            "automatic": true,
+                            "containerNames": [
+                                "client"
+                            ],
+                            "from": {
+                                "kind": "ImageStreamTag",
+                                "namespace": "mem-tfrs-tools",
+                                "name": "client-develop:dev"
+                            }
+                        }
+                    },
+                    {
+                        "type": "ConfigChange"
+                    }
+                ],
+                "replicas": 2,
+                "test": false,
+                "selector": {
+                    "name": "client"
+                },
+                "template": {
+                    "metadata": {
+                        "name": "client",
+                        "creationTimestamp": null,
+                        "labels": {
+                            "name": "client"
+                        }
+                    },
+                    "spec": {
+                        "volumes": [
+                            {
+                                "name": "keycloak-config-data",
+                                "configMap": {
+                                    "name": "keycloak-config",
+                                    "defaultMode": 420
+                                }
+                            }
+                        ],
+                        "containers": [
+                            {
+                                "name": "client",
+                                "image": "172.50.0.2:5000/mem-tfrs-tools/client-develop@sha256:f3b8eca2ae2dc679099609222de7ac4ec343e0d6ac4a4510a1ff321354ff6947",
+                                "ports": [
+                                    {
+                                        "containerPort": 3000,
+                                        "protocol": "TCP"
+                                    }
+                                ],
+                                "env": [
+                                    {
+                                        "name": "RealIpFrom"
+                                    },
+                                    {
+                                        "name": "AdditionalRealIpFromRules"
+                                    },
+                                    {
+                                        "name": "IpFilterRules"
+                                    },
+                                    {
+                                        "name": "HTTP_BASIC"
+                                    },
+                                    {
+                                        "name": "KEYCLOAK_ENABLED",
+                                        "value": "true"
+                                    }
+                                ],
+                                "resources": {
+                                    "limits": {
+                                        "cpu": "125m",
+                                        "memory": "250Mi"
+                                    },
+                                    "requests": {
+                                        "memory": "200Mi"
+                                    }
+                                },
+                                "volumeMounts": [
+                                    {
+                                        "name": "keycloak-config-data",
+                                        "mountPath": "/tmp/app/dist/config"
+                                    }
+                                ],
+                                "livenessProbe": {
+                                    "httpGet": {
+                                        "path": "/",
+                                        "port": 8080,
+                                        "scheme": "HTTP"
+                                    },
+                                    "initialDelaySeconds": 20,
+                                    "timeoutSeconds": 3,
+                                    "periodSeconds": 10,
+                                    "successThreshold": 1,
+                                    "failureThreshold": 3
+                                },
+                                "readinessProbe": {
+                                    "httpGet": {
+                                        "path": "/",
+                                        "port": 8080,
+                                        "scheme": "HTTP"
+                                    },
+                                    "initialDelaySeconds": 10,
+                                    "timeoutSeconds": 3,
+                                    "periodSeconds": 10,
+                                    "successThreshold": 1,
+                                    "failureThreshold": 3
+                                },
+                                "terminationMessagePath": "/dev/termination-log",
+                                "terminationMessagePolicy": "File",
+                                "imagePullPolicy": "IfNotPresent"
+                            }
+                        ],
+                        "restartPolicy": "Always",
+                        "terminationGracePeriodSeconds": 30,
+                        "dnsPolicy": "ClusterFirst",
+                        "securityContext": {},
+                        "schedulerName": "default-scheduler"
+                    }
+                }
+            },
+            "status": {
+                "latestVersion": 0,
+                "observedGeneration": 0,
+                "replicas": 0,
+                "updatedReplicas": 0,
+                "availableReplicas": 0,
+                "unavailableReplicas": 0
+            }
+        },
+        {
+            "kind": "Service",
+            "apiVersion": "v1",
+            "metadata": {
+                "name": "client",
+                "creationTimestamp": null,
+                "labels": {
+                    "template": "tfrs-app-environment"
+                },
+                "annotations": {
+                    "description": "Exposes and load balances the front end pods"
+                }
+            },
+            "spec": {
+                "ports": [
+                    {
+                        "name": "web",
+                        "protocol": "TCP",
+                        "port": 8080,
+                        "targetPort": 8080
+                    }
+                ],
+                "selector": {
+                    "name": "client"
+                },
+                "type": "ClusterIP",
+                "sessionAffinity": "None"
+            },
+            "status": {
+                "loadBalancer": {}
+            }
+        },
+        {
+            "kind": "Route",
+            "apiVersion": "v1",
+            "metadata": {
+                "name": "dev-lowcarbonfuels-frontend",
+                "creationTimestamp": null,
+                "labels": {
+                    "template": "tfrs-app-environment"
+                }
+            },
+            "spec": {
+                "host": "dev-lowcarbonfuels.pathfinder.gov.bc.ca",
+                "to": {
+                    "kind": "Service",
+                    "name": "client",
+                    "weight": 100
+                },
+                "port": {
+                    "targetPort": "web"
+                },
+                "tls": {
+                    "termination": "edge"
+                },
+                "wildcardPolicy": "None"
+            },
+            "status": {
+                "ingress": [
+                    {
+                        "host": "dev-lowcarbonfuels.pathfinder.gov.bc.ca",
+                        "routerName": "router",
+                        "conditions": [
+                            {
+                                "type": "Admitted",
+                                "status": "True",
+                                "lastTransitionTime": "2018-09-28T21:03:50Z"
+                            }
+                        ],
+                        "wildcardPolicy": "None"
+                    }
+                ]
+            }
+        }
+    ]
+}

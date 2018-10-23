@@ -1,0 +1,5 @@
+const USERS = {
+  EDIT_FUEL_SUPPLIER_USERS: 'EDIT_FUEL_SUPPLIER_USERS'
+};
+
+export default USERS;

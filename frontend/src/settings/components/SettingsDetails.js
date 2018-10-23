@@ -5,6 +5,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 
+import Loading from '../../app/components/Loading';
 import NotificationsCreditTransactionsTable from './NotificationsCreditTransactionsTable';
 import CREDIT_TRANSFER_NOTIFICATIONS from '../../constants/settings/notificationsCreditTransfers';
 import GOVERNMENT_TRANSFER_NOTIFICATIONS from '../../constants/settings/notificationsGovernmentTransfers';
@@ -34,43 +35,51 @@ const SettingsDetails = props => (
     </ul>
 
     <div className="settings-notifications">
-      <h3>Credit Transfers</h3>
+      {(props.subscriptions.isFetching || !props.subscriptions.success) &&
+        <Loading />
+      }
 
-      <NotificationsCreditTransactionsTable
-        addToFields={props.addToFields}
-        fields={props.fields.settings.notifications}
-        items={CREDIT_TRANSFER_NOTIFICATIONS.filter(notification =>
-          (props.loggedInUser.isGovernmentUser
-            ? notification.recipients.includes('government')
-            : notification.recipients.includes('fuel_supplier')
-          ))}
-        toggleCheck={props.toggleCheck}
-        type="credit-transfer"
-      />
-
-      <h3>Credit Transactions (Part 3 Awards, Validations, Reductions)</h3>
-
-      <NotificationsCreditTransactionsTable
-        addToFields={props.addToFields}
-        fields={props.fields.settings.notifications}
-        items={GOVERNMENT_TRANSFER_NOTIFICATIONS.filter(notification =>
-          (props.loggedInUser.isGovernmentUser
-            ? notification.recipients.includes('government')
-            : notification.recipients.includes('fuel_supplier')
-          ))}
-        toggleCheck={props.toggleCheck}
-        type="government-transfer"
-      />
-
-      <div className="btn-container">
-        <button
-          className="btn btn-primary"
-          onClick={props.handleSubmit}
-          type="button"
-        >
-          {Lang.BTN_SAVE}
-        </button>
-      </div>
+      {!props.subscriptions.isFetching && props.subscriptions.success && [
+        <h3 key="header-credit-transactions">
+          Credit Transfers
+        </h3>,
+        <NotificationsCreditTransactionsTable
+          addToFields={props.addToFields}
+          fields={props.fields.settings.notifications}
+          items={CREDIT_TRANSFER_NOTIFICATIONS.filter(notification =>
+            (props.loggedInUser.isGovernmentUser
+              ? notification.recipients.includes('government')
+              : notification.recipients.includes('fuel_supplier')
+            ))}
+          key="table-credit-transactions"
+          toggleCheck={props.toggleCheck}
+          type="credit-transfer"
+        />,
+        <h3 key="header-pvr">
+          Credit Transactions (Part 3 Awards, Validations, Reductions)
+        </h3>,
+        <NotificationsCreditTransactionsTable
+          addToFields={props.addToFields}
+          fields={props.fields.settings.notifications}
+          items={GOVERNMENT_TRANSFER_NOTIFICATIONS.filter(notification =>
+            (props.loggedInUser.isGovernmentUser
+              ? notification.recipients.includes('government')
+              : notification.recipients.includes('fuel_supplier')
+            ))}
+          key="table-pvr"
+          toggleCheck={props.toggleCheck}
+          type="government-transfer"
+        />,
+        <div className="btn-container" key="container-buttons">
+          <button
+            className="btn btn-primary"
+            onClick={props.handleSubmit}
+            type="button"
+          >
+            {Lang.BTN_SAVE}
+          </button>
+        </div>
+      ]}
     </div>
   </div>
 );
@@ -85,6 +94,10 @@ SettingsDetails.propTypes = {
   handleSubmit: PropTypes.func.isRequired,
   loggedInUser: PropTypes.shape({
     isGovernmentUser: PropTypes.bool
+  }).isRequired,
+  subscriptions: PropTypes.shape({
+    isFetching: PropTypes.bool,
+    success: PropTypes.bool
   }).isRequired,
   toggleCheck: PropTypes.func.isRequired
 };

@@ -25,6 +25,8 @@ import logging
 import sys
 from unittest import mock
 
+import jwt
+from cryptography.hazmat.primitives import serialization
 from django.test import TestCase
 
 from api.models.CreditTradeStatus import CreditTradeStatus
@@ -34,6 +36,11 @@ from api.models.Organization import Organization
 from api.models.User import User
 from api.tests.logging_client import LoggingClient
 
+from cryptography.hazmat.backends import default_backend
+from cryptography.hazmat.primitives.asymmetric import rsa
+
+from tfrs import settings
+
 
 class BaseTestCase(TestCase):
     """
@@ -41,6 +48,7 @@ class BaseTestCase(TestCase):
     """
 
     fixtures = [
+        'test/test_compliance_periods.json',
         'test/test_organization_fuel_suppliers.json',
         'test/test_organization_balances.json',
         'test/test_prodlike_government_users_and_roles.json',
@@ -91,6 +99,33 @@ class BaseTestCase(TestCase):
         self.patcher = mock.patch('api.notifications.notifications.send_amqp_notification')
         self.patcher.start()
 
+        # generate a new RSA key
+
+        private_key = rsa.generate_private_key(
+            public_exponent=65537,
+            key_size=2048,
+            backend=default_backend()
+        )
+
+        # override the jwt verification keys for testing
+
+        settings.KEYCLOAK['ENABLED'] = True
+        settings.KEYCLOAK['DOWNLOAD_CERTS'] = False
+        settings.KEYCLOAK['ISSUER'] = 'tfrs-test'
+        settings.KEYCLOAK['AUDIENCE'] = 'tfrs-app'
+        settings.KEYCLOAK['RS256_KEY'] = private_key.public_key().public_bytes(
+            format=serialization.PublicFormat.SubjectPublicKeyInfo,
+            encoding=serialization.Encoding.PEM
+        ).decode('utf-8')
+
+        # the private half, used to sign our jwt (keycloak does this in actual use)
+
+        self.private_key = private_key.private_bytes(
+            format=serialization.PrivateFormat.TraditionalOpenSSL,
+            encryption_algorithm=serialization.NoEncryption(),
+            encoding=serialization.Encoding.PEM
+        ).decode('utf-8')
+
         self.users = dict(map(
             lambda u: (u, User.objects.get_by_natural_key(u)),
             self.usernames
@@ -100,14 +135,17 @@ class BaseTestCase(TestCase):
             map(lambda user: (
                 user.username,
                 LoggingClient(
-                    HTTP_SMGOV_USERGUID=str(user.authorization_guid),
-                    HTTP_SMGOV_USERDISPLAYNAME=str(user.display_name),
-                    HTTP_SMGOV_USEREMAIL=str(user.authorization_email),
-                    HTTP_SM_UNIVERSALID=str(user.authorization_id),
-                    HTTP_SM_AUTHDIRNAME='IDIR' if user.organization.id == 1
-                    else 'BCeID',
-                    HTTP_SMGOV_USERTYPE='Internal' if user.organization.id == 1
-                    else 'Business'
+                    HTTP_AUTHORIZATION='Bearer {}'.format(
+                        jwt.encode(
+                            payload={
+                                'user_id': str(user.username),
+                                'iss': 'tfrs-test',
+                                'aud': 'tfrs-app'
+                            },
+                            key=self.private_key,
+                            algorithm='RS256'
+                        ).decode('utf-8')
+                    )
                 )), self.users.values()))
 
         from_organization = Organization.objects.get_by_natural_key(
@@ -130,11 +168,11 @@ class BaseTestCase(TestCase):
             'accepted': CreditTradeStatus.objects.get(status='Accepted'),
             'approved': CreditTradeStatus.objects.get(status='Approved'),
             'cancelled': CreditTradeStatus.objects.get(status='Cancelled'),
-            'completed': CreditTradeStatus.objects.get(status='Completed'),
             'draft': CreditTradeStatus.objects.get(status='Draft'),
             'not_recommended':
                 CreditTradeStatus.objects.get(status='Not Recommended'),
             'recommended': CreditTradeStatus.objects.get(status='Recommended'),
+            'recorded': CreditTradeStatus.objects.get(status='Recorded'),
             'refused': CreditTradeStatus.objects.get(status='Refused'),
             'submitted': CreditTradeStatus.objects.get(status='Submitted')
         }

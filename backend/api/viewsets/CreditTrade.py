@@ -10,16 +10,13 @@ from rest_framework.decorators import list_route, detail_route
 from rest_framework.response import Response
 from rest_framework import filters
 
-from api.notifications.notifications import AMQPNotificationService
 from auditable.views import AuditableMixin
 
 from api.decorators import permission_required
-
 from api.models.CreditTrade import CreditTrade
 from api.models.CreditTradeStatus import CreditTradeStatus
 from api.models.Organization import Organization
 from api.models.OrganizationType import OrganizationType
-
 from api.serializers import CreditTrade2Serializer as CreditTradeSerializer
 from api.serializers import CreditTradeApproveSerializer
 from api.serializers import CreditTradeCreateSerializer
@@ -29,7 +26,6 @@ from api.serializers import CreditTradeListSerializer
 from api.serializers import CreditTradeUpdateSerializer
 
 from api.services.CreditTradeService import CreditTradeService
-from api.services.NotificationService import NotificationService
 from api.services.SpreadSheetBuilder import SpreadSheetBuilder
 
 
@@ -54,7 +50,7 @@ class CreditTradeViewSet(AuditableMixin, mixins.CreateModelMixin,
         'default': CreditTradeSerializer,
         'history': CreditTradeHistorySerializer,
         'list': CreditTradeListSerializer,
-        'list_approved': CreditTradeListSerializer,
+        'list_recorded': CreditTradeListSerializer,
         'partial_update': CreditTradeUpdateSerializer,
         'update': CreditTradeUpdateSerializer
     }
@@ -85,9 +81,9 @@ class CreditTradeViewSet(AuditableMixin, mixins.CreateModelMixin,
         # be showing Completed here
         # Note: We did not update the CreditTradeService found in
         # get_queryset as we have other API that uses the same service call,
-        # but want the Approved transfers included (such as list_approved)
+        # but want the Approved transfers included (such as list_recorded)
         credit_trades = self.get_queryset().filter(
-            ~Q(status__status__in=["Approved"])
+            ~Q(status__status__in=["Recorded"])
         ).order_by(*self.ordering)
 
         # For hash computation
@@ -102,14 +98,19 @@ class CreditTradeViewSet(AuditableMixin, mixins.CreateModelMixin,
         digest = hashlib.sha256()
         # you could use anything here (like perhaps the PID or startup time
         digest.update(b'salt')
-        digest.update(most_recent_updated_credit_trade.update_timestamp.isoformat()
-                      .encode('utf-8') if most_recent_updated_credit_trade is not None else b'')
-        digest.update(most_recent_created_credit_trade.create_timestamp.isoformat()
-                      .encode('utf-8') if most_recent_created_credit_trade is not None else b'')
+        digest.update(most_recent_updated_credit_trade.update_timestamp
+                      .isoformat()
+                      .encode('utf-8')
+                      if most_recent_updated_credit_trade is not None else b'')
+        digest.update(most_recent_created_credit_trade.create_timestamp
+                      .isoformat()
+                      .encode('utf-8')
+                      if most_recent_created_credit_trade is not None else b'')
         etag = 'W/"{}"'.format(digest.hexdigest())
 
         # Browser has an up-to-date copy
-        if 'HTTP_IF_NONE_MATCH' in request.META and etag == request.META['HTTP_IF_NONE_MATCH']:
+        if 'HTTP_IF_NONE_MATCH' in request.META and etag == \
+                request.META['HTTP_IF_NONE_MATCH']:
             response = Response(status=status.HTTP_304_NOT_MODIFIED)
             response['ETag'] = etag
             return response
@@ -128,10 +129,11 @@ class CreditTradeViewSet(AuditableMixin, mixins.CreateModelMixin,
     def perform_update(self, serializer):
         credit_trade = serializer.save()
         CreditTradeService.create_history(credit_trade, False)
-        NotificationService.send(credit_trade)
 
-        previous_status = self.get_object().status
-        CreditTradeService.dispatch_notifications(previous_status, credit_trade)
+        status_cancelled = CreditTradeStatus.objects.get(status="Cancelled")
+
+        if serializer.data['status'] != status_cancelled.id:
+            CreditTradeService.dispatch_notifications(self.get_object().status, credit_trade)
 
     @detail_route(methods=['put'])
     def delete(self, request, pk=None):
@@ -157,6 +159,10 @@ class CreditTradeViewSet(AuditableMixin, mixins.CreateModelMixin,
         credit_trade.trade_effective_date = datetime.date.today()
         previous_status = credit_trade.status
 
+        if credit_trade.compliance_period_id is None:
+            credit_trade.compliance_period_id = \
+                CreditTradeService.get_compliance_period_id(credit_trade)
+
         serializer = self.get_serializer(credit_trade, data=request.data)
         serializer.is_valid(raise_exception=True)
 
@@ -170,12 +176,12 @@ class CreditTradeViewSet(AuditableMixin, mixins.CreateModelMixin,
 
     @list_route(methods=['get'])
     @permission_required('VIEW_APPROVED_CREDIT_TRANSFERS')
-    def list_approved(self, request):
+    def list_recorded(self, request):
         """
-        Returns a list of Approved Credit Trades only
+        Returns a list of Recorded Credit Trades only
         """
         status_approved = CreditTradeStatus.objects \
-                                           .get(status="Approved")
+                                           .get(status="Recorded")
 
         credit_trades = CreditTrade.objects.filter(
             status_id=status_approved.id).order_by('id')
@@ -190,7 +196,7 @@ class CreditTradeViewSet(AuditableMixin, mixins.CreateModelMixin,
         Call the approve function on multiple Credit Trades
         """
         status_approved = CreditTradeStatus.objects \
-                                           .get(status="Approved")
+                                           .get(status="Recorded")
 
         credit_trades = CreditTrade.objects.filter(
             status_id=status_approved.id).order_by('id')
@@ -202,7 +208,7 @@ class CreditTradeViewSet(AuditableMixin, mixins.CreateModelMixin,
             CreditTradeService.approve(credit_trade)
 
         return Response({"message":
-                         "Approved Credit Transactions have been processed."},
+                         "Approved credit transactions have been processed."},
                         status=status.HTTP_200_OK)
 
     @list_route(methods=['get'])
@@ -216,11 +222,11 @@ class CreditTradeViewSet(AuditableMixin, mixins.CreateModelMixin,
         response['Content-Disposition'] = (
             'attachment; filename="{}.xls"'.format(
                 datetime.datetime.now().strftime(
-                    "credit_transfers_%Y-%m-%d_%H-%M-%S")
+                    "credit_transfers_%Y-%m-%d")
             ))
 
         credit_trades = self.get_queryset().filter(
-            ~Q(status__status__in=["Approved"])
+            ~Q(status__status__in=["Recorded"])
         ).order_by(*self.ordering)
 
         # Allow filter by organization (for government users only)
