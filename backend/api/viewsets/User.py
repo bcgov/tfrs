@@ -6,6 +6,7 @@ from api.decorators import permission_required
 from api.models.User import User
 from api.permissions.User import UserPermissions
 from api.serializers import UserSerializer, UserViewSerializer
+from api.serializers.UserCreationRequestSerializer import UserCreationRequestSerializer
 
 from auditable.views import AuditableMixin
 
@@ -56,3 +57,11 @@ class UserViewSet(AuditableMixin, viewsets.GenericViewSet,
 
         serializer = self.get_serializer(result, many=True)
         return Response(serializer.data)
+
+    @list_route(methods=['post'])
+    @permission_required('USER_MANAGEMENT')
+    def creation_request(self, request):
+        serializer = UserCreationRequestSerializer(data=request.data)
+        print('is valid? {}'.format(serializer.is_valid()))
+        print('validated: {}'.format(serializer.validated_data))
+        return Response(status=201)

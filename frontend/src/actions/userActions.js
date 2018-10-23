@@ -16,6 +16,17 @@ const getUsers = () => (dispatch) => {
     });
 };
 
+const createUser = (payload) => (dispatch) => {
+  dispatch(createUserRequest(payload));
+  axios.post(Routes.BASE_URL + Routes.USERS + '/creation_request', payload)
+    .then((response) => {
+      dispatch(createUserSuccess(response.data));
+    }).catch((error) => {
+    dispatch(createUserError(error.response));
+  });
+};
+
+
 const getLoggedInUser = () => (dispatch) => {
   dispatch(getLoggedInUserRequest());
   axios.get(Routes.BASE_URL + Routes.CURRENT_USER)
@@ -39,6 +50,27 @@ const signUserOut = () => (dispatch) => {
     dispatch(signUserOutAction());
   }
 };
+
+
+
+const createUserRequest = payload => ({
+  name: ReducerTypes.CREATE_USER,
+  type: ActionTypes.CREATE_USER_REQUEST,
+  data: payload
+});
+
+const createUserSuccess = user => ({
+  name: ReducerTypes.CREATE_USER,
+  type: ActionTypes.CREATE_USER_SUCCESS,
+  data: user
+});
+
+const createUserError = error => ({
+  name: ReducerTypes.CREATE_USER,
+  type: ActionTypes.CREATE_USER_ERROR,
+  errorData: error
+});
+
 
 const signUserOutAction = () => ({
   name: ReducerTypes.SIGN_USER_OUT,
@@ -107,4 +139,4 @@ const getUsersError = error => ({
   errorMessage: error
 });
 
-export { getUsers, getLoggedInUser, getUser, signUserOut };
+export { getUsers, getLoggedInUser, createUser, getUser, signUserOut };

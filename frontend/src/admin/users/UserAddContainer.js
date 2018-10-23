@@ -14,6 +14,7 @@ import getRoles from '../../actions/roleActions';
 import UserForm from './components/UserForm';
 import { USERS } from '../../constants/routes/Admin';
 import toastr from '../../utils/toastr';
+import {createUser} from "../../actions/userActions";
 
 class UserAddContainer extends Component {
   constructor (props) {
@@ -102,10 +103,11 @@ class UserAddContainer extends Component {
       status: this.state.fields.status === 'active'
     };
 
-    console.log(data);
+    console.log('firing createUser');
+    this.props.createUser(data);
 
-    history.push(USERS.LIST);
-    toastr.userSuccess('User created.');
+    //history.push(USERS.LIST);
+    //toastr.userSuccess('User created.');
 
     return true;
   }
@@ -169,7 +171,8 @@ UserAddContainer.propTypes = {
   fuelSuppliers: PropTypes.arrayOf(PropTypes.shape()).isRequired,
   getFuelSuppliers: PropTypes.func.isRequired,
   getRoles: PropTypes.func.isRequired,
-  roles: PropTypes.shape().isRequired
+  roles: PropTypes.shape().isRequired,
+  createUser: PropTypes.func.isRequired
 };
 
 const mapStateToProps = state => ({
@@ -179,7 +182,8 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   getFuelSuppliers: bindActionCreators(getFuelSuppliers, dispatch),
-  getRoles: bindActionCreators(getRoles, dispatch)
+  getRoles: bindActionCreators(getRoles, dispatch),
+  createUser: bindActionCreators(createUser, dispatch)
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(UserAddContainer);

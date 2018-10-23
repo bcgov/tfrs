@@ -99,4 +99,39 @@ const userViewRequest = (state = {
   }
 };
 
-export { userRequest, userViewRequest };
+const createUserRequest = (state = {
+  error: {},
+  isFetching: false,
+  serverError: false,
+  user: {}
+}, action) => {
+  switch (action.type) {
+    case ActionTypes.CREATE_USER:
+      return {
+        ...state,
+        isFetching: true,
+        user: {}
+      };
+    case ActionTypes.CREATE_USER_SUCCESS:
+      return {
+        ...state,
+        isFetching: false,
+        serverError: true,
+        user: {
+          ...action.data
+        }
+      };
+    case ActionTypes.CREATE_USER_ERROR:
+      return {
+        ...state,
+        error: action.errorData,
+        isFetching: false,
+        serverError: true,
+        user: {}
+      };
+    default:
+      return state;
+  }
+};
+
+export { userRequest, userViewRequest, createUserRequest };
