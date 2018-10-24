@@ -303,7 +303,7 @@ class CreditTradeUpdateSerializer(serializers.ModelSerializer):
         data = kwargs.get('data')
 
         if 'compliance_period' not in data and self.instance.compliance_period:
-            data['compliance_period'] = self.instance.compliance_period
+            data['compliance_period'] = self.instance.compliance_period.id
 
         if 'fair_market_value_per_credit' not in data:
             data['fair_market_value_per_credit'] = \
