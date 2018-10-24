@@ -2,6 +2,10 @@
 @import './mixins.scss';
 
 .credit-transfer {
+  .alert {
+    margin-top: 1rem;
+  }
+
   .note {
     display: block;
 
@@ -233,10 +237,6 @@
         }
       }
     }
-  }
-
-  .form-inline .alert {
-    margin-top: 1rem;
   }
 
   .main-form {

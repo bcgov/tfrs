@@ -52,6 +52,36 @@ class CreditTransferSigningHistory extends Component {
     );
   }
 
+  _renderDeclined (history) {
+    let roleDisplay = history.userRole.description;
+
+    if (history.userRole.name === 'GovDeputyDirector' ||
+        history.userRole.name === 'GovDirector') {
+      roleDisplay = roleDisplay.replace('Government ', '');
+    }
+
+    // if "recorded" status was found, this means this credit trade
+    // was from the historical data entry
+    // don't show the name and just put in "the {role}" instead
+
+    return (
+      <p key={history.createTimestamp}>
+        <strong className="text-danger">Declined </strong>
+        on {moment(history.createTimestamp).format('LL')} by
+        {CreditTransferSigningHistory.recordedFound(this.props.history) &&
+          (history.userRole.name === 'GovDirector' ||
+          history.userRole.name === 'GovDeputyDirector') &&
+          <span> the </span>
+        }
+        {!CreditTransferSigningHistory.recordedFound(this.props.history) &&
+          <strong> {history.user.firstName} {history.user.lastName},</strong>
+        }
+        <strong> {roleDisplay} </strong> under the
+        <em> Greenhouse Gas Reduction (Renewable and Low Carbon Fuel Requirements) Act</em>
+      </p>
+    );
+  }
+
   _renderSubmitted (history) {
     const userIndex = this.props.signatures.findIndex(signature => (
       signature.user.id === history.user.id));
@@ -61,10 +91,6 @@ class CreditTransferSigningHistory extends Component {
     }
 
     return (<strong>Proposed</strong>);
-  }
-
-  static renderDeclined () {
-    return (<strong className="text-danger">Declined</strong>);
   }
 
   static renderHistory (history) {
@@ -133,8 +159,7 @@ class CreditTransferSigningHistory extends Component {
                 return this._renderApproved(history);
 
               case CREDIT_TRANSFER_STATUS.declinedForApproval.id:
-                action = CreditTransferSigningHistory.renderDeclined();
-                break;
+                return this._renderDeclined(history);
 
               case CREDIT_TRANSFER_STATUS.notRecommended.id:
                 action = CreditTransferSigningHistory.renderNotRecommended();
