@@ -68,7 +68,8 @@ store.subscribe(() => {
     if (CONFIG.KEYCLOAK.ENABLED) {
       if (state.oidc.user &&
         !state.rootReducer.userRequest.isFetching &&
-        !state.rootReducer.userRequest.isAuthenticated) {
+        !state.rootReducer.userRequest.isAuthenticated &&
+        !state.rootReducer.userRequest.serverError) {
         store.dispatch(getLoggedInUser());
       }
     }

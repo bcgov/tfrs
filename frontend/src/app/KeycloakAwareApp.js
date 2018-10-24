@@ -1,30 +1,34 @@
 import StatusInterceptor from './components/StatusInterceptor';
-import { IntlProvider } from 'react-intl';
+import {IntlProvider} from 'react-intl';
 import ReduxToastr from 'react-redux-toastr';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import SigninPage from './SigninPage';
 import PropTypes from 'prop-types';
-import { withRouter } from 'react-router';
+import {withRouter} from 'react-router';
 import connect from 'react-redux/es/connect/connect';
 import React from 'react';
 
 class KeycloakAwareApp extends React.Component {
-  render () {
+  render() {
     let content;
 
     if (this.props.errorRequest.hasErrors &&
       this.props.errorRequest.error &&
       this.props.errorRequest.error.status) {
-      content = <StatusInterceptor statusCode={this.props.errorRequest.error.status} />;
+      content = <StatusInterceptor statusCode={this.props.errorRequest.error.status}/>;
+    } else if (this.props.userRequest.serverError) {
+      content = <StatusInterceptor statusCode={401}/>;
+    } else {
+      content = this.props.children;
     }
-
-    content = this.props.children;
 
     if (this.props.keycloak.user) {
       // we're logged into Keycloak.
 
-      if (!this.props.isAuthenticated && !this.props.userRequest.isFetching) {
+      if (!this.props.isAuthenticated &&
+        !this.props.userRequest.isFetching &&
+        !this.props.userRequest.serverError) {
         // but we're not yet logged into the backend
         return (<p>Authenticating</p>);
       }
@@ -51,17 +55,18 @@ class KeycloakAwareApp extends React.Component {
             <div id="main" className="template container">
               {content}
             </div>
-            <Footer />
+            <Footer/>
           </div>
         </IntlProvider>
       );
     } else if (this.props.keycloak.isFetching && this.props.location.pathname === '/authCallback') {
       return (this.props.children);
     }
+
     // we're not logged in and not in the process of logging in. trigger one.
     return (
       <div className="App">
-        <SigninPage />
+        <SigninPage/>
       </div>
     );
   }
@@ -69,8 +74,7 @@ class KeycloakAwareApp extends React.Component {
 
 KeycloakAwareApp.defaultProps = {
   errorRequest: {
-    error: {
-    },
+    error: {},
     hasErrors: false
   },
   unreadNotificationsCount: null,
@@ -101,7 +105,8 @@ KeycloakAwareApp.propTypes = {
     error: PropTypes.shape({
       status: PropTypes.number
     }).isRequired,
-    isFetching: PropTypes.bool.isRequired
+    isFetching: PropTypes.bool.isRequired,
+    serverError: PropTypes.bool.isRequired
   }).isRequired,
   unreadNotificationsCount: PropTypes.number,
   keycloak: PropTypes.shape({
@@ -119,7 +124,8 @@ export default withRouter(connect(state => ({
   isAuthenticated: state.rootReducer.userRequest.isAuthenticated,
   userRequest: {
     error: state.rootReducer.userRequest.error,
-    isFetching: state.rootReducer.userRequest.isFetching
+    isFetching: state.rootReducer.userRequest.isFetching,
+    serverError: state.rootReducer.userRequest.serverError
   },
   keycloak: {
     user: state.oidc.user,
