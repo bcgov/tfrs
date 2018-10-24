@@ -18,7 +18,7 @@ const getUsers = () => (dispatch) => {
 
 const createUser = (payload) => (dispatch) => {
   dispatch(createUserRequest(payload));
-  axios.post(Routes.BASE_URL + Routes.USERS + '/creation_request', payload)
+  axios.post(Routes.BASE_URL + Routes.USERS, payload)
     .then((response) => {
       dispatch(createUserSuccess(response.data));
     }).catch((error) => {

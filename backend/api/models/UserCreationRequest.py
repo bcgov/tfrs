@@ -48,7 +48,8 @@ class UserCreationRequest(Auditable):
                              unique=True,
                              db_comment='The user to be associated with a Keycloak account')
 
-    created = models.BooleanField(default=False, db_comment='True if this request has been acted on')
+    created = models.BooleanField(default=False,
+                                  db_comment='True if this request has been acted on')
 
     class Meta:
         db_table = 'user_creation_request'

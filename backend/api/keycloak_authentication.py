@@ -6,7 +6,7 @@ from django.conf import settings
 from django.db.models import Q
 from jwt import InvalidTokenError
 from cryptography.hazmat.primitives import serialization
-
+from api.services.KeycloakAPI import map_user
 
 from jwt.algorithms import RSAAlgorithm
 from rest_framework import authentication
@@ -14,10 +14,12 @@ from rest_framework import exceptions
 from api.models.User import User
 import requests
 
+from api.models.UserCreationRequest import UserCreationRequest
+
+
 class UserAuthentication(authentication.BaseAuthentication):
 
-
-    def _get_keys (self):
+    def _get_keys(self):
         """Assemble a list of valid signing public keys we use to verify the token"""
 
         decoded_keys = {}
@@ -43,9 +45,9 @@ class UserAuthentication(authentication.BaseAuthentication):
         for key in keys['keys']:
             print('key: {}'.format(key))
             if key['alg'] in ['RS256', 'RS384', 'RS512']:
-                    decoded_keys[key['kid']] = RSAAlgorithm.from_jwk(json.dumps(key)).public_bytes(
-                        format=serialization.PublicFormat.SubjectPublicKeyInfo,
-                        encoding=serialization.Encoding.PEM).decode('utf-8')
+                decoded_keys[key['kid']] = RSAAlgorithm.from_jwk(json.dumps(key)).public_bytes(
+                    format=serialization.PublicFormat.SubjectPublicKeyInfo,
+                    encoding=serialization.Encoding.PEM).decode('utf-8')
 
         return decoded_keys
 
@@ -101,10 +103,35 @@ class UserAuthentication(authentication.BaseAuthentication):
                 '\n'.join([str(error) for error in token_validation_errors])
             )
 
-        if 'user_id' not in user_token:
-            raise exceptions.AuthenticationFailed('user_id is required in jwt payload')
+        user_found_via_email = None
 
-        username = user_token['user_id']
+        if 'user_id' not in user_token:
+            # try email
+            if 'email' in user_token:
+                qs = UserCreationRequest.objects.filter(
+                    keycloak_email=user_token['email']
+                )
+
+                if not qs.exists():
+                    raise exceptions.AuthenticationFailed('user does not exist')
+
+                ucr = qs.first()
+
+                #print(ucr.keycloak_email)
+                #print(ucr.created)
+
+                #if not ucr.created:
+                    # map the keycloak user
+                map_user(user_token['sub'], ucr.user.username)
+
+                ucr.created = True
+                ucr.save()
+
+                user_found_via_email = ucr.user.username
+            else:
+                raise exceptions.AuthenticationFailed('user_id or email is required in jwt payload')
+
+        username = user_token['user_id'] if 'user_id' in user_token else user_found_via_email
 
         try:
             user = User.objects.get_by_natural_key(username)
@@ -112,4 +139,3 @@ class UserAuthentication(authentication.BaseAuthentication):
             raise exceptions.AuthenticationFailed('user_id "{}" does not exist'.format(username))
 
         return user, None
-

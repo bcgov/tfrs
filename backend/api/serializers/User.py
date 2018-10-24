@@ -22,8 +22,12 @@
 """
 from django.db.models import Q
 from rest_framework import exceptions, serializers
+from rest_framework.relations import PrimaryKeyRelatedField
 
+from api.models.Organization import Organization
+from api.models.Role import Role
 from api.models.User import User
+from api.models.UserRole import UserRole
 from .Organization import OrganizationSerializer, OrganizationMinSerializer
 from .Permission import PermissionSerializer
 from .Role import RoleMinSerializer
@@ -44,6 +48,36 @@ class UserSerializer(serializers.ModelSerializer):
             'id', 'first_name', 'last_name', 'email', 'authorization_id',
             'username', 'authorization_directory', 'display_name',
             'organization', 'roles', 'is_government_user', 'permissions')
+
+
+class UserCreateSerializer(serializers.ModelSerializer):
+    """
+    Serializer for user creation via API
+    """
+    organization = PrimaryKeyRelatedField(queryset=Organization.objects.all())
+    roles = PrimaryKeyRelatedField(queryset=Role.objects.all(), many=True)
+
+    def validate(self, data):
+        data['display_name'] = '{} {}'.format(data['first_name'], data['last_name'])
+        return data
+
+    def create(self, validated_data):
+        roles = validated_data.pop('roles')
+        organization = validated_data.pop('organization')
+
+        user = User.objects.create(**validated_data)
+        user.organization = organization
+        user.save()
+        for role in roles:
+            UserRole.objects.create(user=user, role=role)
+        return user
+
+    class Meta:
+        model = User
+        fields = (
+            'first_name', 'last_name', 'email',
+            'username', 'display_name',
+            'organization', 'roles', 'is_government_user')
 
 
 class UserMinSerializer(serializers.ModelSerializer):
