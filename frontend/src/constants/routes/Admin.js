@@ -10,6 +10,10 @@ const HISTORICAL_DATA_ENTRY = {
   LIST: `${BASE_PATH}/historical_data_entry`
 };
 
+const ROLES = {
+  LIST: `${BASE_PATH}/roles`
+};
+
 const USERS = {
   ADD: `${BASE_PATH}/users/add`,
   DETAILS: `${BASE_PATH}/users/view/:id`,
@@ -20,5 +24,6 @@ const USERS = {
 export {
   CREDIT_TRANSACTIONS_HISTORY,
   HISTORICAL_DATA_ENTRY,
+  ROLES,
   USERS
 };

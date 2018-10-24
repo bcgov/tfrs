@@ -4,6 +4,7 @@
 .page_admin_user {
   label {
     display: block;
+    font-weight: normal;
   }
 
   .main-form {
@@ -24,6 +25,7 @@
 
         .text {
           display: inline-block;
+          font-weight: bold;
           margin-left: 0.5rem;
           vertical-align: middle;
         }
