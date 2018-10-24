@@ -26,7 +26,7 @@ const App = (props) => {
     content = <StatusInterceptor statusCode={props.errorRequest.error.status} />;
   } else if (!props.userRequest.isFetching && props.isAuthenticated) {
     content = props.children;
-  } else if (!props.userRequest.isFetching) {
+  } else if (!props.userRequest.isFetching && props.userRequest.serverError) {
     content = <StatusInterceptor statusCode={props.userRequest.error.status} />;
   }
 
@@ -87,7 +87,8 @@ App.propTypes = {
     error: PropTypes.shape({
       status: PropTypes.number
     }).isRequired,
-    isFetching: PropTypes.bool.isRequired
+    isFetching: PropTypes.bool.isRequired,
+    serverError: PropTypes.bool
   }).isRequired,
   unreadNotificationsCount: PropTypes.number
 };
@@ -101,7 +102,8 @@ export default withRouter(connect(state => ({
   isAuthenticated: state.rootReducer.userRequest.isAuthenticated,
   userRequest: {
     error: state.rootReducer.userRequest.error,
-    isFetching: state.rootReducer.userRequest.isFetching
+    isFetching: state.rootReducer.userRequest.isFetching,
+    serverError: state.rootReducer.userRequest.serverError
   },
   unreadNotificationsCount: state.rootReducer.notifications.isFetching
     ? null
