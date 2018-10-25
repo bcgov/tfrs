@@ -3,7 +3,7 @@ package pages
 class CreditTransactionsConfirmRecommendModal extends BaseAppPage {
   static at = { pageTitle.text() == 'Confirmation' }
   static content = {
-    modalSelector { $('#confirmRecommend') }
+    modalSelector(wait:true) { $('#confirmRecommend') }
 
     pageTitle { modalSelector.$('.modal-header h4') }
 
@@ -13,11 +13,17 @@ class CreditTransactionsConfirmRecommendModal extends BaseAppPage {
   /**
    * Waits for the modal window to open.
    * Clicks the 'Yes' button.
-   * Waits for the modal window to close.
+   *
+   * @param checkClosed enable or disable checking if the modal closed.  This is often necessary if the modal closes
+   *  slowly, and the test needs to wait for it to fully close before continuing.  If the modal triggers a change of
+   *  page, this check should NOT be enabled as the modal reference is now stale, and cannot be accessed.
+   *  (Optional, default: true)
    */
-  void recommendCreditTransaction() {
+  void recommendCreditTransaction(Boolean checkClosed=false) {
     modalModule.isOpen(modalSelector)
     yesButton.click()
-    modalModule.isClosed()
+    if (checkClosed) {
+      modalModule.isClosed()
+    }
   }
 }
