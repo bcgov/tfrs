@@ -51,3 +51,4 @@ class OrganizationType(Auditable):
                        ' which are fuel supplier organization type (BCeID)' \
                        ' and government organization type (IDIR).' \
                        ' Used to differentiate available actions and displays.'
+                       
