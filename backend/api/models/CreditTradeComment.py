@@ -59,4 +59,4 @@ class CreditTradeComment(Auditable):
         db_table = 'credit_trade_comment'
         ordering = ['create_timestamp']
 
-    db_table_comment = 'User comments on credit transfers'
+    db_table_comment = 'Contains all correspondence from fuel suppliers and government (including those with privileged access) related to credit transactions (Credit Transfer, Part 3 Award, Validation, and Reduction).'
