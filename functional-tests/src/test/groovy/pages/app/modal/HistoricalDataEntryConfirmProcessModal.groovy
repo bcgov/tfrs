@@ -1,9 +1,9 @@
 package pages
 
-class CreditTransactionsConfirmApproveModal extends BaseAppPage {
-  static at = { pageTitle.text() == 'Confirmation' }
+class HistoricalDataEntryConfirmProcessModal extends BaseAppPage {
+  static at = { pageTitle.text() == 'Confirm Process' }
   static content = {
-    modalSelector(wait:true) { $('#confirmApprove') }
+    modalSelector(wait:true) { $('#confirmProcess') }
 
     pageTitle { modalSelector.$('.modal-header h4') }
 
@@ -19,7 +19,7 @@ class CreditTransactionsConfirmApproveModal extends BaseAppPage {
    *  page, this check should NOT be enabled as the modal reference is now stale, and cannot be accessed.
    *  (Optional, default: true)
    */
-  void approveCreditTransaction(Boolean checkClosed=false) {
+  void confirmHistoricalDataEntry(Boolean checkClosed=false) {
     modalModule.isOpen(modalSelector)
     yesButton.click()
     if (checkClosed) {

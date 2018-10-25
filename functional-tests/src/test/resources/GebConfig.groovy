@@ -16,10 +16,10 @@ import org.openqa.selenium.remote.DesiredCapabilities
 
 waiting {
   timeout = 20
-  retryInterval = 1
+  retryInterval = 0.5
 }
 
-atCheckWaiting = [20, 1]
+atCheckWaiting = [20, 0.5]
 
 environments {
 
