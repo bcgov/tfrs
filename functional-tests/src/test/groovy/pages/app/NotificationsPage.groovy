@@ -12,18 +12,29 @@ class NotificationsPage extends BaseAppPage {
   }
 
   /**
-   * Return the row credit transfer anchor tag based on link text.
-   * @param linkText link text to match on
-   * @return a non-empty geb navigator if element found, an empty geb navigator otherwise.
+   * Return the row credit transfer button link that matches the provided linkText and which has highest transaction ID.
+   *
+   * @param linkText the notification link text to match on
+   * @return a non-empty geb navigator if element found, null otherwise.
    */
   Navigator getCreditTransferLinkByText(String linkText) {
-    Navigator linkSelector = notificationTable.$('.rt-tbody div').$('a', text:"$linkText")
+    getSortedMatchingRows(linkText)[0]?.$('.col-notification')?.$('button')
+  }
 
-    // covers an odd issue where a selector that should return 1 record instead returns 3
-    if (linkSelector.size() > 1) {
-      return linkSelector[0]
+  /**
+   * Filters unread notifications table rows by the provided linkText, and sorts them in descending order based on the
+   * transaction ID column.
+   *
+   * @param linkText the notification link text to match on.
+   * @return list of filtered, sorted table rows.
+   */
+  List<Navigator> getSortedMatchingRows(String linkText) {
+    waitFor {
+      notificationTable.$('.rt-tbody').children().has('.unread').has('.col-notification button', text: linkText)
+        .sort{
+          a, b ->
+            b.$('.col-credit-trade button').text().toInteger() <=> a.$('.col-credit-trade button').text().toInteger()
+        }
     }
-
-    return linkSelector
   }
 }

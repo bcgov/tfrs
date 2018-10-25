@@ -15,6 +15,6 @@ class CreditTransactionsPage extends BaseAppPage {
    * @throws NumberFormatException if the parsed credit balance string fails to be casted to an Integer.
    */
   Integer getCreditBalance() {
-    creditBalance.text().replace(/[^0-9]/, '') as Integer
+    creditBalance.text().replace(/[^0-9]/, '').toInteger()
   }
 }
