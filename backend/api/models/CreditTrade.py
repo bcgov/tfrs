@@ -227,4 +227,4 @@ class CreditTrade(Auditable):
     class Meta:
         db_table = 'credit_trade'
 
-    db_table_comment = 'All Credit Transfers'
+    db_table_comment = 'Records all Credit Transfer Proposals, from creation to statutory decision (approved or declined).'
