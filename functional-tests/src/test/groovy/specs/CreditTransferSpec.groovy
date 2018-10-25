@@ -39,7 +39,7 @@ class CreditTransferSpec extends LoggedInSpec {
       submitCreditTransaction()
     then: 'The credit transfer is initiated and I am returned to the Credit Transactions page'
       at CreditTransactionsPage
-    and: 'I have 1 notification'
+    and: 'My unread notification count has increased by 1'
       at new ToastModal('Success!', 'Credit Transfer Proposal sent.')
       headerModule.compareNotificationCounts(initialNotificationCount+1)
   }
@@ -60,7 +60,7 @@ class CreditTransferSpec extends LoggedInSpec {
       acceptCreditTransaction()
     then: 'The credit transfer is accepted and I am returned to the Credit Transactions page'
       at CreditTransactionsPage
-    and: 'I have 2 notifications'
+    and: 'My unread notification count has not increased'
       at new ToastModal('Success!', 'Credit Transfer Proposal accepted.')
       headerModule.compareNotificationCounts(initialNotificationCount)
   }
@@ -81,7 +81,7 @@ class CreditTransferSpec extends LoggedInSpec {
       recommendCreditTransaction()
     then: 'The credit transfer is recommended and I am returned to the Credit Transactions page'
       at CreditTransactionsPage
-    and: 'I have 2 notifications'
+    and: 'My unread notification count has not increased'
       at new ToastModal('Success!', 'Credit Transfer Proposal recommended.')
       headerModule.compareNotificationCounts(initialNotificationCount)
   }
@@ -102,7 +102,7 @@ class CreditTransferSpec extends LoggedInSpec {
       approveCreditTransaction()
     then: 'The credit transfer is approved and I am returned to the Credit Transactions page'
       at CreditTransactionsPage
-    and: 'I have 3 notifications'
+    and: 'My unread notification count has not increased'
       at new ToastModal('Success!', 'Credit Transfer Proposal approved.')
       headerModule.compareNotificationCounts(initialNotificationCount)
   }
