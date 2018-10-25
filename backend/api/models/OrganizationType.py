@@ -49,6 +49,4 @@ class OrganizationType(Auditable):
 
     db_table_comment = 'Contains a list of possible organization types,' \
                        ' which are fuel supplier organization type (BCeID)' \
-                       ' and government organization type (IDIR).' \
-                       ' Used to differentiate available actions and displays.'
-                       
+                       ' and government organization type (IDIR). Used to differentiate available actions and displays.'                    
