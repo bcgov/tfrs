@@ -72,6 +72,7 @@ OrganizationViewContainer.propTypes = {
 };
 
 const mapStateToProps = state => ({
+  loggedInUser: state.rootReducer.userRequest.loggedInUser,
   organization: {
     details: state.rootReducer.organizationRequest.fuelSupplier,
     isFetching: state.rootReducer.organizationRequest.isFetching

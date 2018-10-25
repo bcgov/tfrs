@@ -23,6 +23,7 @@ class MyOrganizationContainer extends Component {
   render () {
     return (
       <OrganizationDetails
+        loggedInUser={this.props.loggedInUser}
         members={this.props.myOrganizationMembers}
         organization={this.props.myOrganization}
       />
@@ -33,6 +34,8 @@ class MyOrganizationContainer extends Component {
 MyOrganizationContainer.propTypes = {
   getMyOrganization: PropTypes.func.isRequired,
   getMyOrganizationMembers: PropTypes.func.isRequired,
+  loggedInUser: PropTypes.shape({
+  }).isRequired,
   myOrganization: PropTypes.shape({
     details: PropTypes.shape({
       id: PropTypes.number,
@@ -60,6 +63,7 @@ MyOrganizationContainer.propTypes = {
 };
 
 const mapStateToProps = state => ({
+  loggedInUser: state.rootReducer.userRequest.loggedInUser,
   myOrganization: {
     details: state.rootReducer.organizationRequest.fuelSupplier,
     isFetching: state.rootReducer.organizationRequest.isFetching

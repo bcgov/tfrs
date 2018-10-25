@@ -78,6 +78,7 @@ const CreditTransferDetails = props => (
           {props.status.id !== CREDIT_TRANSFER_STATUS.draft.id &&
           (props.history.length > 0 || props.signatures.length > 0) &&
           <CreditTransferSigningHistory
+            tradeEffectiveDate={props.tradeEffectiveDate}
             history={props.history}
             signatures={props.signatures}
           />
