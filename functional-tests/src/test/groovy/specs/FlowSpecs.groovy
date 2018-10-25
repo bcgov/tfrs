@@ -11,7 +11,7 @@ import spock.lang.Title
 import spock.lang.Narrative
 import spock.lang.Unroll
 
-@Timeout(60)
+@Timeout(300)
 @Title('Flow Tests')
 @Narrative('''
 As a developer, I want to ensure all page links work, have the correct text, and direct to the correct page.
@@ -58,7 +58,6 @@ class FlowSpecs extends LoggedInSpec {
                                                          'www2\\.gov\\.bc\\.ca.*accessibility')
       [ text:'Copyright' ]       || new ExternalLinkPage('Copyright - Province of British Columbia',
                                                          'www2\\.gov\\.bc\\.ca.*copyright')
-      // TODO possible related to same auth redirect issue (see CreditTransferSpec.groovy)
-      // [ text:'Contact Us' ]      || ContactUsPage
+      [ text:'Contact Us' ]      || ContactUsPage
   }
 }

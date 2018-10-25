@@ -6,6 +6,7 @@ from datetime import datetime
 from django.db import transaction
 
 from api.management.data_script import OperationalDataScript
+from api.models.CompliancePeriod import CompliancePeriod
 from api.models.Organization import Organization
 from api.models.OrganizationActionsType import OrganizationActionsType
 from api.models.OrganizationBalance import OrganizationBalance
@@ -48,6 +49,9 @@ class DockerEnvironment(OperationalDataScript):
 
     @transaction.atomic
     def run(self):
+
+        CompliancePeriod(description='2018', display_order=2,
+                         effective_date=datetime.today().strftime('%Y-%m-%d')).save()
 
         Organization(name=self._orgs[0],
                      actions_type=OrganizationActionsType.objects.get_by_natural_key("Buy And Sell"),

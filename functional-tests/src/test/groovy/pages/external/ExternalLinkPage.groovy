@@ -35,8 +35,9 @@ class ExternalLinkPage extends Page {
   /**
    * Constructor.
    *
-   * @param String windowTitleRegex a regex string that is uniquely contained within the target window title.
-   * @param String urlRegex a regex string that will be asserted is contained in the target window url.
+   * @param String windowTitleRegex a regex string that is uniquely contained within the target window title. (required)
+   * @param String urlRegex a regex string that will be asserted is contained in the target window url. (required)
+   * @param String simpleName a string to use in the spock reports for tests utilizing this class. (Optional, default: 'ExternalLinkPage')
    *
    * Example:
    *   The urlRegex 'someMinistry\\.gov\\.bc' would match 'www.someMinistry.gov.bc.ca/otherParameters'
