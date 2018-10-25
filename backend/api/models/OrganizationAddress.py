@@ -39,11 +39,11 @@ class OrganizationAddress(Auditable):
         db_comment="Flag. True if the address it the main location."
     )
     address_line_1 = models.CharField(
-        max_length=500, blank=True, null=True, db_comment="Address Line 1")
+        max_length=500, blank=True, null=True, db_comment="The first line of the organization's address.")
     address_line_2 = models.CharField(
-        max_length=100, blank=True, null=True, db_comment="Address Line 2")
+        max_length=100, blank=True, null=True, db_comment="The second line of the organization's address.")
     address_line_3 = models.CharField(
-        max_length=100, blank=True, null=True, db_comment="Address Line 3")
+        max_length=100, blank=True, null=True, db_comment="The third line of the organization's address.")
     city = models.CharField(
         max_length=100, blank=True, null=True, db_comment="City")
     postal_code = models.CharField(
@@ -59,10 +59,10 @@ class OrganizationAddress(Auditable):
         db_comment="Other Address Details")
     effective_date = models.DateField(
         blank=True, null=True,
-        db_comment='When the organization moved into this address')
+        db_comment='The calendar date the organization address became valid.')
     expiration_date = models.DateField(
         blank=True, null=True,
-        db_comment='When the organization moved out of this address')
+        db_comment='The calendar date the organization address is no longer valid.')
 
     class Meta:
         db_table = 'organization_address'
