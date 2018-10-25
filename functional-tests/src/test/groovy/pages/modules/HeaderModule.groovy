@@ -23,6 +23,7 @@ class HeaderModule extends Module {
 
   /**
    * Clicks header menu anchor tags based on the displayed text.
+   *
    * @param [text:'header link text'] the displayed text of the header menu anchor tag.
    */
   void clickMenuItem(Map<String, Object> itemSelector) {
@@ -35,12 +36,12 @@ class HeaderModule extends Module {
    * Note: When no notifications exist, the notification count selector will not exist.  As a result of this and
    *   the asynchronous notifications request which the existence of notification count depends upon, it is necessary
    *   to wait for some period of time before assuming the notification count is intentionally absent.  Otherwise
-   *   you may get false-positives.  To prove performance, the wait time should be as little as safely possible.
+   *   you may get false-positives.  To improve performance, the wait time should be as little as safely possible.
    *
    * @param int wait how long to wait for the notification count icon to load, before assuming it is not going to.
    *   (optional, default: 2)
    * @return notification count integer
-   * @throws NumberFormatException if the parsed notification count string fails to be casted to an Integer.
+   * @throws NumberFormatException if the parsed notification count string fails to be cast to an Integer.
    */
   Integer getNotificationCount(int wait=2) {
     Integer count = 0
@@ -69,7 +70,7 @@ class HeaderModule extends Module {
    * @return true if the notification counts match.
    * @throws AssertionError if the notification counts fail to match after retrying for the specified time.
    */
-  Boolean compareNotificationCounts(int expectedCount, int wait=2) {
+  Boolean compareNotificationCounts(Integer expectedCount, int wait=2) {
     try {
       waitFor(wait) {
         getNotificationCount() == expectedCount

@@ -7,12 +7,29 @@ import spock.lang.Timeout
 import spock.lang.Title
 import spock.lang.Narrative
 import spock.lang.Stepwise
+import spock.lang.Shared
 
 @Timeout(300)
 @Stepwise
 @Title('Historical Data Entry Test')
 @Narrative('''As an analyst, I want to enter historical data.''')
 class HistoricalDataEntrySpec extends LoggedInSpec {
+
+  @Shared
+  Integer sendingFuelSupplier_initialCreditBalance
+
+  @Shared
+  Integer receivingFuelSupplier_initialCreditBalance
+
+  def setupSpec() {
+    logInAsSendingFuelSupplier()
+    sendingFuelSupplier_initialCreditBalance = getCreditBalance()
+    clearAndResetBrowser()
+
+    logInAsReceivingFuelSupplier()
+    receivingFuelSupplier_initialCreditBalance = getCreditBalance()
+    clearAndResetBrowser()
+  }
 
   // Credit Transfer
   // TODO - Add tests for Zero Dollar Reason? 1. Affiliate 2. Other
@@ -71,7 +88,7 @@ class HistoricalDataEntrySpec extends LoggedInSpec {
     and: 'I populate all required fields for a new historical data entry for a validation'
       to HistoricalDataEntryPage
       setEffectiveDate('10', '10', '2018')
-      setNumberOfCredits(30)
+      setNumberOfCredits(40)
       setTransactionType('Validation')
       setCreditsTo(getReceivingFuelSupplier().org)
       setCompliancePeriod('2018')
@@ -94,9 +111,9 @@ class HistoricalDataEntrySpec extends LoggedInSpec {
     and: 'I populate all required fields for a new historical data entry for a reduction'
       to HistoricalDataEntryPage
       setEffectiveDate('10', '10', '2018')
-      setNumberOfCredits(40)
+      setNumberOfCredits(80)
       setTransactionType('Reduction')
-      setCreditsFrom(getSendingFuelSupplier().org)
+      setCreditsFrom(getReceivingFuelSupplier().org)
       setCompliancePeriod('2018')
       setNote('Log in as an analyst and create a new historical data entry for a reduction')
     when: 'I add the transaction to the queue, commit it, and confirm it'
@@ -107,5 +124,23 @@ class HistoricalDataEntrySpec extends LoggedInSpec {
     then: 'The historical data entry for a credit transfer is initiated and a success alert is displayed'
       page(HistoricalDataEntryPage)
       commitSuccessAlertDisplayed()
+  }
+
+  // Verify credit balances after all 4 above transactions completed
+
+  void 'Log in as the sending fuel supplier and verify my credit balance has decreased'() {
+    given: 'I am logged in as the sending fuel supplier'
+      logInAsSendingFuelSupplier()
+    when: 'I have previously successfully transferred credits to another fuel supplier'
+    then: 'My credit balance is decreased by the amount transferred'
+      compareCreditBalance(sendingFuelSupplier_initialCreditBalance - 10)
+  }
+
+  void 'Log in as the receiving fuel supplier and verify my credit balance was updated correctly'() {
+    given: 'I am logged in as the receiving fuel supplier'
+      logInAsReceivingFuelSupplier()
+    when: 'I have previously successfully been awarded credits, had credits validated, and had credits reduced'
+    then: 'My credit balance was updated correctly based on the amounts transferred, awarded, validated, and reduced'
+      compareCreditBalance(receivingFuelSupplier_initialCreditBalance + 10 + 20 + 40 - 80)
   }
 }
