@@ -11,6 +11,7 @@ const HISTORICAL_DATA_ENTRY = {
 };
 
 const ROLES = {
+  DETAILS: `${BASE_PATH}/roles/view/:id`,
   LIST: `${BASE_PATH}/roles`
 };
 

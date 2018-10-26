@@ -7,7 +7,8 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
-import getRoles from '../../actions/roleActions';
+import { getRoles } from '../../actions/roleActions';
+import AdminTabs from '../components/AdminTabs';
 import RolesPage from './components/RolesPage';
 
 class RolesContainer extends Component {
@@ -29,11 +30,10 @@ class RolesContainer extends Component {
   }
 
   render () {
-    return (
-      <RolesPage
-        roles={this.props.roles}
-      />
-    );
+    return ([
+      <AdminTabs key="nav" active="roles" />,
+      <RolesPage data={this.props.roles} />
+    ]);
   }
 }
 

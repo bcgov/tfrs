@@ -68,3 +68,42 @@
   margin: 0;
   text-align: left;
 }
+
+
+.page_users {
+  .actions-container {
+    margin-bottom: 1rem;
+  }
+
+  #new-user {
+    margin: 0;
+  }
+
+  .dropdown-menu {
+    button {
+      background: none;
+      border: none;
+      clear: both;
+      display: block;
+      margin: 0;
+      padding: 3px 20px;
+      text-align: left;
+      white-space: nowrap;
+      width: 100%;
+
+      &:hover {
+        background-color: $background-grey;
+      }
+    }
+  }
+
+  .col-actions {
+    a {
+      margin: 0 0.5rem;
+    }
+  }
+
+  .col-status {
+    text-align: center;
+  }
+}

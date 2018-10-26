@@ -7,7 +7,12 @@ import history from './app/History';
 
 /* global __LOGOUT_URL__, __LOGOUT_TEST_URL__ */
 import * as Routes from './constants/routes';
-import { CREDIT_TRANSACTIONS_HISTORY, HISTORICAL_DATA_ENTRY, USERS as ADMIN_USERS } from './constants/routes/Admin';
+import {
+  CREDIT_TRANSACTIONS_HISTORY,
+  HISTORICAL_DATA_ENTRY,
+  ROLES,
+  USERS as ADMIN_USERS
+} from './constants/routes/Admin';
 import CONTACT_US from './constants/routes/ContactUs';
 import CREDIT_TRANSACTIONS from './constants/routes/CreditTransactions';
 import ORGANIZATIONS from './constants/routes/Organizations';
@@ -16,6 +21,8 @@ import USERS from './constants/routes/Users';
 import CreditTransactionsHistory from './admin/credit_trade_history/CreditTradeHistoryContainer';
 import HistoricalDataEntryContainer from './admin/historical_data_entry/HistoricalDataEntryContainer';
 import HistoricalDataEntryEditContainer from './admin/historical_data_entry/HistoricalDataEntryEditContainer';
+import RolesContainer from './admin/roles/RolesContainer';
+import RoleViewContainer from './admin/roles/RoleViewContainer';
 import UsersContainer from './admin/users/UsersContainer';
 import UserAddContainer from './admin/users/UserAddContainer';
 import UserEditContainer from './admin/users/UserEditContainer';
@@ -132,6 +139,15 @@ const Router = props => (
           exact
           path={CREDIT_TRANSACTIONS_HISTORY.LIST}
           component={withRouter(CreditTransactionsHistory)}
+        />
+        <Route
+          exact
+          path={ROLES.LIST}
+          component={withRouter(RolesContainer)}
+        />
+        <Route
+          path={ROLES.DETAILS}
+          component={withRouter(RoleViewContainer)}
         />
         <Route
           exact
