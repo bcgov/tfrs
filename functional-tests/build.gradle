@@ -85,7 +85,7 @@ drivers.each { driver ->
          * These local environment variables take precedence over any environment variables set at the system level.
          */
         def envFile = file('.env')
-        if (envFile) {
+        if (envFile.exists()) {
             envFile.readLines().each() {
                 def (key, value) = it.tokenize('=')
                 if (key && value) {
