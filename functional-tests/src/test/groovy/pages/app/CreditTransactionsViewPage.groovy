@@ -31,7 +31,11 @@ class CreditTransactionsViewPage extends BaseAppPage {
   }
 
   void checkTerms() {
-    waitFor { termsCheckboxes.click() }
+    waitFor {
+      termsCheckboxes
+    }.each { element ->
+      element.click()
+    }
   }
 
   void addComment(String comment) {
