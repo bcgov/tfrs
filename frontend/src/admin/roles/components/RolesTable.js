@@ -9,29 +9,31 @@ import FontAwesomeIcon from '@fortawesome/react-fontawesome';
 import 'react-table/react-table.css';
 
 import { ROLES } from '../../../constants/routes/Admin';
+import history from '../../../app/History';
 
 const RolesTable = (props) => {
   const columns = [{
-    Header: 'ID',
     accessor: 'id',
     className: 'col-id',
+    Header: 'ID',
     maxWidth: 50,
     resizable: false
   }, {
-    id: 'role',
+    accessor: item => (item.description),
     Header: 'Role',
-    accessor: item => (item.description)
+    id: 'role'
   }, {
-    id: 'actions',
-    Header: '',
     accessor: 'id',
-    filterable: false,
-    maxWidth: 50,
     Cell: (row) => {
       const viewUrl = ROLES.DETAILS.replace(':id', row.value);
 
-      return <Link to={viewUrl} key="view"><FontAwesomeIcon icon="eye" /></Link>;
-    }
+      return <Link to={viewUrl} key="view"><FontAwesomeIcon icon="box-open" /></Link>;
+    },
+    className: 'col-actions',
+    filterable: false,
+    Header: '',
+    id: 'actions',
+    maxWidth: 50
   }];
 
   const filterMethod = (filter, row, column) => {
@@ -46,11 +48,24 @@ const RolesTable = (props) => {
   return (
     <ReactTable
       data={props.items}
+      defaultFilterMethod={filterMethod}
       defaultSorted={[{
         id: 'role'
       }]}
       filterable={filterable}
-      defaultFilterMethod={filterMethod}
+      getTrProps={(state, row) => {
+        if (row && row.original) {
+          return {
+            onClick: (e) => {
+              const viewUrl = ROLES.DETAILS.replace(':id', row.original.id);
+              history.push(viewUrl);
+            },
+            className: 'clickable'
+          };
+        }
+
+        return {};
+      }}
       columns={columns}
     />
   );

@@ -32,7 +32,7 @@ class RolesContainer extends Component {
   render () {
     return ([
       <AdminTabs key="nav" active="roles" />,
-      <RolesPage data={this.props.roles} />
+      <RolesPage key="roles" data={this.props.roles} />
     ]);
   }
 }

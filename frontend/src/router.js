@@ -141,13 +141,13 @@ const Router = props => (
           component={withRouter(CreditTransactionsHistory)}
         />
         <Route
+          path={ROLES.DETAILS}
+          component={withRouter(RoleViewContainer)}
+        />
+        <Route
           exact
           path={ROLES.LIST}
           component={withRouter(RolesContainer)}
-        />
-        <Route
-          path={ROLES.DETAILS}
-          component={withRouter(RoleViewContainer)}
         />
         <Route
           exact
