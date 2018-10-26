@@ -2,7 +2,7 @@ package pages
 
 class CreditTransactionsViewPage extends BaseAppPage {
   static at = {
-    isReactReady() && getCurrentUrl() =~ /credit_transactions\/view\/[0-9]+$/ && pageTitle.text() == 'Credit Transfer'
+    isReactReady() && getCurrentUrl() =~ /credit_transactions\/view\/[0-9]+$/ && pageTitle.text() == expectedPageTitle
   }
   static content = {
     pageTitle { $('#main .credit-transfer h1') }
@@ -19,8 +19,23 @@ class CreditTransactionsViewPage extends BaseAppPage {
     approveButton(required:false) { $('#credit-transfer-approve') }
   }
 
+  private final String expectedPageTitle
+
+  /**
+   * Constructor.
+   *
+   * @param String expectedPageTitle the expected page title.
+   */
+  CreditTransactionsViewPage(String expectedPageTitle) {
+    this.expectedPageTitle = expectedPageTitle
+  }
+
   void checkTerms() {
-    waitFor { termsCheckboxes.click() }
+    waitFor {
+      termsCheckboxes
+    }.each { element ->
+      element.click()
+    }
   }
 
   void addComment(String comment) {

@@ -1,6 +1,9 @@
 package pages
 
-class CreditTransactionsAddPage extends BaseAppPage {
+/**
+ * Represents the Credit Transactions page when logged in as a fuel supplier
+ */
+class NewCreditTransferPage extends BaseAppPage {
   static at = { isReactReady() && pageTitle.text() == 'New Credit Transfer' }
   static url = '/credit_transactions/add'
   static content = {

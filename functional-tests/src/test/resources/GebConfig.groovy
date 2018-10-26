@@ -16,10 +16,10 @@ import org.openqa.selenium.remote.DesiredCapabilities
 
 waiting {
   timeout = 20
-  retryInterval = 1
+  retryInterval = 0.5
 }
 
-atCheckWaiting = [20, 1]
+atCheckWaiting = [20, 0.5]
 
 environments {
 
@@ -99,14 +99,10 @@ baseNavigatorWaiting = true
 // Allows for setting you baseurl in an environment variable.
 // This is particularly handy for development and the pipeline
 Map env = System.getenv()
-baseUrl = env['BASEURL']
+baseUrl = env['BASE_URL']
 if (!baseUrl) {
   baseUrl = "https://dev-lowcarbonfuels.pathfinder.gov.bc.ca/"
 }
-
-println "--------------------------------------"
-println "BaseURL: ${baseUrl}"
-println "--------------------------------------"
 
 autoClearCookies = true
 autoClearWebStorage = true
