@@ -18,7 +18,9 @@ const userRequest = (state = {
         user: {},
         requestStarted: false,
         serverError: false,
+        loggedInUser: {},
         isFetching: false,
+        isAuthenticated: false,
         error: {}
       };
     case ActionTypes.GET_LOGGED_IN_USER:
