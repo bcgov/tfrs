@@ -19,6 +19,7 @@ trait Utils {
    * Throw an AssertionError with the given message.
    *
    * @param String the exception message to throw. (optional, default: '')
+   * @throws AssertionError
    */
   void fail(String message='') {
     throw new AssertionError(message)
