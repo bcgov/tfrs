@@ -463,7 +463,7 @@ class CreditTradeService(object):
 
         notification_map[StatusChange('Declined')] = [
             ResultingNotification(
-                credit_trade.initiator, 
+                credit_trade.initiator,
                 NotificationType.CREDIT_TRANSFER_DECLINED),
             ResultingNotification(
                 credit_trade.respondent,
@@ -484,5 +484,6 @@ class CreditTradeService(object):
                 interested_organization=notification.recipient,
                 message=notification.notification_type.name,
                 notification_type=notification.notification_type,
-                related_credit_trade=credit_trade
+                related_credit_trade=credit_trade,
+                originating_user=credit_trade.update_user
             )
