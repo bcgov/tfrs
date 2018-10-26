@@ -42,14 +42,16 @@ class UserCreationRequest(Auditable):
                                        unique=True,
                                        db_comment='Keycloak email address to associate on first login')
 
-    user = models.ForeignKey('User',
-                             related_name='creation_request',
-                             on_delete=models.PROTECT,
-                             unique=True,
-                             db_comment='The user to be associated with a Keycloak account')
+    user = models.OneToOneField(
+        'User',
+        related_name='creation_request',
+        on_delete=models.PROTECT,
+        unique=True,
+        db_comment='The user to be associated with a Keycloak account'
+    )
 
-    created = models.BooleanField(default=False,
-                                  db_comment='True if this request has been acted on')
+    is_mapped = models.BooleanField(default=False,
+                                    db_comment='True if this request has been acted on')
 
     class Meta:
         db_table = 'user_creation_request'

@@ -109,16 +109,17 @@ class UserAddContainer extends Component {
 
           return false;
         }),
-        status: this.state.fields.status === 'active'
+        is_active: this.state.fields.status === 'active'
       },
       email: this.state.fields.bceid
     };
 
-    console.log('firing createUser');
-    this.props.createUser(data);
 
-    //history.push(USERS.LIST);
-    //toastr.userSuccess('User created.');
+    this.props.createUser(data).then(() => {
+      history.push(USERS.LIST);
+      toastr.userSuccess('User created.');
+    }).catch(error => {});
+
 
     return true;
   }

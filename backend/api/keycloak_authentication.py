@@ -117,15 +117,11 @@ class UserAuthentication(authentication.BaseAuthentication):
 
                 ucr = qs.first()
 
-                #print(ucr.keycloak_email)
-                #print(ucr.created)
+                if not ucr.is_mapped:
+                    map_user(user_token['sub'], ucr.user.username)
 
-                #if not ucr.created:
-                    # map the keycloak user
-                map_user(user_token['sub'], ucr.user.username)
-
-                ucr.created = True
-                ucr.save()
+                    ucr.is_mapped = True
+                    ucr.save()
 
                 user_found_via_email = ucr.user.username
             else:

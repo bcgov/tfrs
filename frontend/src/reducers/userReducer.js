@@ -99,14 +99,14 @@ const userViewRequest = (state = {
   }
 };
 
-const createUserRequest = (state = {
+const userAdmin = (state = {
   error: {},
   isFetching: false,
   serverError: false,
   user: {}
 }, action) => {
   switch (action.type) {
-    case ActionTypes.CREATE_USER:
+    case ActionTypes.CREATE_USER_REQUEST:
       return {
         ...state,
         isFetching: true,
@@ -129,9 +129,32 @@ const createUserRequest = (state = {
         serverError: true,
         user: {}
       };
+    case ActionTypes.UPDATE_USER_REQUEST:
+      return {
+        ...state,
+        isFetching: true,
+        user: {}
+      };
+    case ActionTypes.UPDATE_USER_SUCCESS:
+      return {
+        ...state,
+        isFetching: false,
+        serverError: true,
+        user: {
+          ...action.data
+        }
+      };
+    case ActionTypes.UPDATE_USER_ERROR:
+      return {
+        ...state,
+        error: action.errorData,
+        isFetching: false,
+        serverError: true,
+        user: {}
+      };
     default:
       return state;
   }
 };
 
-export { userRequest, userViewRequest, createUserRequest };
+export { userRequest, userViewRequest, userAdmin };

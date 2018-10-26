@@ -2,7 +2,7 @@ import { routerReducer as routing } from 'react-router-redux';
 import { combineReducers } from 'redux';
 
 import { approvedCreditTransfers, creditTransfer, creditTransfers } from './creditTransferReducer';
-import { userRequest, userViewRequest, createUserRequest } from './userReducer';
+import { userRequest, userViewRequest, userAdmin } from './userReducer';
 
 import { organizationRequest, organizations, organizationMembers, fuelSuppliersRequest } from './organizationReducer';
 import errorRequest from './errorReducer';
@@ -28,7 +28,7 @@ const rootReducer = combineReducers({
   routing,
   signingAuthorityAssertions,
   subscriptions,
-  createUserRequest,
+  userAdmin,
   userRequest,
   userViewRequest
 });

@@ -80,6 +80,52 @@ class UserCreateSerializer(serializers.ModelSerializer):
             'organization', 'roles', 'is_government_user')
 
 
+class UserUpdateSerializer(serializers.ModelSerializer):
+    """
+    Serializer for display information for the User
+    """
+    organization = OrganizationMinSerializer(read_only=True)
+    roles = PrimaryKeyRelatedField(queryset=Role.objects.all(), many=True)
+
+    def validate(self, data):
+        data['display_name'] = '{} {}'.format(data['first_name'], data['last_name'])
+        return data
+
+    def update(self, instance, validated_data):
+        roles = validated_data.pop('roles')
+
+        role_mappings = UserRole.objects.filter(user=instance)
+        for user_role in role_mappings:
+            if user_role.role not in roles:
+                user_role.delete()
+
+        for role in roles:
+            if not UserRole.objects.filter(user=instance,role=role).exists():
+                UserRole.objects.create(user=instance, role=role)
+
+        instance.first_name = validated_data['first_name']
+        instance.last_name = validated_data['last_name']
+        instance.display_name = validated_data['display_name']
+        instance.email = validated_data['email']
+        instance.phone = validated_data['phone']
+        instance.is_active = validated_data['is_active']
+
+        instance.save()
+
+        return instance
+
+    class Meta:
+        model = User
+        fields = (
+            'first_name', 'last_name', 'display_name', 'email', 'phone',
+            'roles', 'is_active', 'organization'
+        )
+        read_only_fields = (
+            'organization',
+        )
+
+
+
 class UserMinSerializer(serializers.ModelSerializer):
     """
     Serializer for display information for the User

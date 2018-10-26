@@ -18,12 +18,28 @@ const getUsers = () => (dispatch) => {
 
 const createUser = (payload) => (dispatch) => {
   dispatch(createUserRequest(payload));
-  axios.post(Routes.BASE_URL + Routes.USERS, payload)
+  return axios.post(Routes.BASE_URL + Routes.USERS, payload)
     .then((response) => {
       dispatch(createUserSuccess(response.data));
     }).catch((error) => {
     dispatch(createUserError(error.response));
+    throw(error)
   });
+};
+
+
+const updateUser = (id, payload) => (dispatch) => {
+
+  dispatch(updateUserRequest(id));
+
+  return axios.put(Routes.BASE_URL + Routes.USERS + '/' + id, payload)
+    .then((response) => {
+      dispatch(updateUserSuccess(response.data));
+    }).catch((error) => {
+      dispatch(updateUserError(error.response));
+      throw(error); // pass it up the chain
+  });
+
 };
 
 
@@ -54,20 +70,40 @@ const signUserOut = () => (dispatch) => {
 
 
 const createUserRequest = payload => ({
-  name: ReducerTypes.CREATE_USER,
+  name: ReducerTypes.USER_ADMIN,
   type: ActionTypes.CREATE_USER_REQUEST,
   data: payload
 });
 
 const createUserSuccess = user => ({
-  name: ReducerTypes.CREATE_USER,
+  name: ReducerTypes.USER_ADMIN,
   type: ActionTypes.CREATE_USER_SUCCESS,
   data: user
 });
 
 const createUserError = error => ({
-  name: ReducerTypes.CREATE_USER,
+  name: ReducerTypes.USER_ADMIN,
   type: ActionTypes.CREATE_USER_ERROR,
+  errorData: error
+});
+
+
+
+const updateUserRequest = payload => ({
+  name: ReducerTypes.USER_ADMIN,
+  type: ActionTypes.UPDATE_USER_REQUEST,
+  data: payload
+});
+
+const updateUserSuccess = user => ({
+  name: ReducerTypes.USER_ADMIN,
+  type: ActionTypes.UPDATE_USER_SUCCESS,
+  data: user
+});
+
+const updateUserError = error => ({
+  name: ReducerTypes.USER_ADMIN,
+  type: ActionTypes.UPDATE_USER_ERROR,
   errorData: error
 });
 
@@ -139,4 +175,4 @@ const getUsersError = error => ({
   errorMessage: error
 });
 
-export { getUsers, getLoggedInUser, createUser, getUser, signUserOut };
+export { getUsers, getLoggedInUser, createUser, updateUser, getUser, signUserOut };

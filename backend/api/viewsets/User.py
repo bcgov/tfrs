@@ -4,9 +4,8 @@ from rest_framework.response import Response
 
 from api.decorators import permission_required
 from api.models.User import User
-from api.models.UserCreationRequest import UserCreationRequest
 from api.permissions.User import UserPermissions
-from api.serializers import UserSerializer, UserViewSerializer
+from api.serializers import UserSerializer, UserViewSerializer, UserUpdateSerializer
 from api.serializers.UserCreationRequestSerializer import UserCreationRequestSerializer
 
 from auditable.views import AuditableMixin
@@ -26,6 +25,7 @@ class UserViewSet(AuditableMixin, viewsets.GenericViewSet,
     serializer_classes = {
         'default': UserSerializer,
         'retrieve': UserViewSerializer,
+        'update': UserUpdateSerializer,
         'create': UserCreationRequestSerializer
     }
 
