@@ -138,40 +138,7 @@ const getOrganizationsSuccess = organizations => ({
   type: ActionTypes.RECEIVE_ORGANIZATIONS
 });
 
-const searchOrganizations = (name, city) => (dispatch) => {
-  dispatch(searchOrganizationsRequest());
-
-  axios.get(Routes.BASE_URL + Routes.SEARCH_ORGANIZATIONS)
-    .then((response) => {
-      dispatch(searchOrganizationsSuccess(response.data));
-    }).catch((error) => {
-      dispatch(searchOrganizationsError(error.response));
-    });
-};
-
-const searchOrganizationsError = error => ({
-  errorMessage: error,
-  name: ReducerTypes.SEARCH_ORGANIZATIONS_REQUEST,
-  type: ActionTypes.ERROR
-});
-
-const searchOrganizationsRequest = () => ({
-  name: ReducerTypes.GET_ORGANIZATIONS_REQUEST,
-  type: ActionTypes.GET_ORGANIZATIONS
-});
-
-const searchOrganizationsReset = () => ({
-  name: ReducerTypes.SEARCH_ORGANIZATIONS_REQUEST,
-  type: ActionTypes.RESET_ORGANIZATIONS_SEARCH
-});
-
-const searchOrganizationsSuccess = organizations => ({
-  data: organizations,
-  name: ReducerTypes.SEARCH_ORGANIZATIONS_REQUEST,
-  type: ActionTypes.RECEIVE_ORGANIZATIONS
-});
-
 export {
-  getFuelSuppliers, getMyOrganization, getMyOrganizationMembers, getOrganization,
-  getOrganizationMembers, getOrganizations, searchOrganizations, searchOrganizationsReset
+  getFuelSuppliers, getMyOrganization, getMyOrganizationMembers,
+  getOrganization, getOrganizationMembers, getOrganizations
 };

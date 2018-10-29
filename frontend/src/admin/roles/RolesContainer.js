@@ -20,15 +20,6 @@ class RolesContainer extends Component {
     this.props.getRoles();
   }
 
-  changeObjectProp (id, name) {
-    const fieldState = { ...this.state.fields };
-
-    fieldState[name] = { id: id || 0 };
-    this.setState({
-      fields: fieldState
-    });
-  }
-
   render () {
     return ([
       <AdminTabs key="nav" active="roles" />,
