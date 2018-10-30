@@ -14,8 +14,10 @@ import PERMISSIONS_USERS from '../../../constants/permissions/Users';
 import USERS from '../../../constants/routes/Users';
 import { USERS as ADMIN_USERS } from '../../../constants/routes/Admin';
 
-const UsersPage = props => (
-  <div className="page_organization">
+const UsersPage = (props) => {
+  const { isFetching, users } = props.data;
+
+  return (
     <div className="page_users">
       <h1>
         Users
@@ -50,19 +52,19 @@ const UsersPage = props => (
           }
         </div>
       </div>
-      {props.members.isFetching && <Loading />}
-      {!props.members.isFetching && props.members &&
-        <OrganizationMembersTable items={props.members.users} />
+      {isFetching && <Loading />}
+      {!isFetching &&
+        <OrganizationMembersTable items={users} />
       }
     </div>
-  </div>
-);
+  );
+};
 
 UsersPage.propTypes = {
   loggedInUser: PropTypes.shape({
     hasPermission: PropTypes.func
   }).isRequired,
-  members: PropTypes.shape({
+  data: PropTypes.shape({
     isFetching: PropTypes.bool,
     users: PropTypes.arrayOf(PropTypes.shape({
       email: PropTypes.string,
