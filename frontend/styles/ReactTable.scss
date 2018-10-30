@@ -1,0 +1,15 @@
+@import './variables.scss';
+@import './mixins.scss';
+
+.ReactTable {
+  .rt-tr {
+    &.-odd {
+      background-color: $background-grey;
+    }
+
+    &.clickable:hover {
+      background-color: $yellow;
+      cursor: pointer;
+    }
+  }
+}

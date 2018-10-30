@@ -11,6 +11,7 @@ import history from '../../app/History';
 import * as Lang from '../../constants/langEnUs';
 import * as NumberFormat from '../../constants/numeralFormats';
 import OrganizationMembersTable from './OrganizationMembersTable';
+import PERMISSIONS_USERS from '../../constants/permissions/Users';
 import USERS from '../../constants/routes/Users';
 
 const OrganizationDetails = props => (
@@ -54,14 +55,17 @@ const OrganizationDetails = props => (
 
         <div className="right-toolbar-container">
           <div className="actions-container">
-            <button
-              id="new-user"
-              className="btn btn-primary"
-              onClick={() => history.push(USERS.ADD)}
-              type="button"
-            >
-              <FontAwesomeIcon icon="plus-circle" /> {Lang.BTN_NEW_USER}
-            </button>
+            {props.loggedInUser &&
+            props.loggedInUser.hasPermission(PERMISSIONS_USERS.EDIT_FUEL_SUPPLIER_USERS) &&
+              <button
+                id="new-user"
+                className="btn btn-primary"
+                onClick={() => history.push(USERS.ADD)}
+                type="button"
+              >
+                <FontAwesomeIcon icon="plus-circle" /> {Lang.BTN_NEW_USER}
+              </button>
+            }
           </div>
         </div>
 
@@ -75,7 +79,14 @@ const OrganizationDetails = props => (
   </div>
 );
 
+OrganizationDetails.defaultProps = {
+  loggedInUser: null
+};
+
 OrganizationDetails.propTypes = {
+  loggedInUser: PropTypes.shape({
+    hasPermission: PropTypes.func
+  }),
   members: PropTypes.shape({
     isFetching: PropTypes.bool,
     users: PropTypes.arrayOf(PropTypes.shape({

@@ -30,6 +30,7 @@ class OrganizationViewContainer extends Component {
   render () {
     return (
       <OrganizationDetails
+        loggedInUser={this.props.loggedInUser}
         members={this.props.organizationMembers}
         organization={this.props.organization}
       />
@@ -45,6 +46,7 @@ OrganizationViewContainer.propTypes = {
       id: PropTypes.string.isRequired
     }).isRequired
   }).isRequired,
+  loggedInUser: PropTypes.shape().isRequired,
   organization: PropTypes.shape({
     details: PropTypes.shape({
       id: PropTypes.number,
@@ -72,6 +74,7 @@ OrganizationViewContainer.propTypes = {
 };
 
 const mapStateToProps = state => ({
+  loggedInUser: state.rootReducer.userRequest.loggedInUser,
   organization: {
     details: state.rootReducer.organizationRequest.fuelSupplier,
     isFetching: state.rootReducer.organizationRequest.isFetching

@@ -34,30 +34,6 @@
   .credit_balance {
     float: right;
   }
-
-  .page_users {
-    #new-user {
-      margin: 0;
-    }
-
-    .dropdown-menu {
-      button {
-        background: none;
-        border: none;
-        clear: both;
-        display: block;
-        margin: 0;
-        padding: 3px 20px;
-        text-align: left;
-        white-space: nowrap;
-        width: 100%;
-
-        &:hover {
-          background-color: $background-grey;
-        }
-      }
-    }
-  }
 }
 
 .page_organizations {
