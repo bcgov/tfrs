@@ -113,7 +113,7 @@ const CreditTransferTable = (props) => {
     Cell: (row) => {
       const viewUrl = CREDIT_TRANSACTIONS.DETAILS.replace(':id', row.value);
 
-      return <Link to={viewUrl}><FontAwesomeIcon icon="eye" /></Link>;
+      return <Link to={viewUrl}><FontAwesomeIcon icon="box-open" /></Link>;
     },
     className: 'col-actions',
     filterable: false,
