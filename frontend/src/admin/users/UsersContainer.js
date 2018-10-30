@@ -24,8 +24,8 @@ class UsersContainer extends Component {
     return ([
       <AdminTabs key="nav" active="users" />,
       <UsersPage
+        data={this.props.myOrganizationMembers}
         key="page"
-        members={this.props.myOrganizationMembers}
       />
     ]);
   }
