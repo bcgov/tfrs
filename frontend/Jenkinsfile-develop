@@ -1,7 +1,6 @@
 
-    options {
-    	timeout(time: 30, unit: 'MINUTES') 
-    } 
+timeout(30) {
+    //timeout 30 minutes
     podTemplate(label: "develop-frontend-maven-${env.BUILD_NUMBER}", name: "develop-frontend-maven-${env.BUILD_NUMBER}", serviceAccount: 'jenkins', cloud: 'openshift',
         containers: [
             containerTemplate(
@@ -124,4 +123,4 @@ stage('FT on Dev') {
     } //end of node
     } //end of podTemplate 
 } //end of stage
-
+} //timeout
