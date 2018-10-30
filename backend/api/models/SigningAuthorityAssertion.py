@@ -41,5 +41,5 @@ class SigningAuthorityAssertion(Auditable):
         db_table = 'signing_authority_assertion'
 
     db_table_comment = 'Contains a list of valid regulatory statements that must be' \
-    			' confirmed or certified by the officer or employee of the fuel supplier(s)' \
-    			' (i.e. signing authority) prior to signing and submitting a Credit Transfer Proposal, or an Exclusion Report to government for review.'
+                       ' confirmed or certified by the officer or employee of the fuel supplier(s)' \
+                       ' (i.e. signing authority) prior to signing and submitting a Credit Transfer Proposal, or an Exclusion Report to government for review.'

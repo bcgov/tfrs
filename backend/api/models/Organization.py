@@ -74,5 +74,4 @@ class Organization(Auditable):
 
     class Meta:
         db_table = 'organization'
-	
-	db_table_comment = 'Contains a list of all of the recognized Part 3 fuel suppliers, both past and present, as well as an entry for the government which is also considered an organization.'
+        db_table_comment = 'Contains a list of all of the recognized Part 3 fuel suppliers, both past and present, as well as an entry for the government which is also considered an organization.'
