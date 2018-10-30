@@ -115,7 +115,7 @@ const UserFormDetails = props => (
         {document.location.pathname.indexOf('/users/') === 0 &&
         <div className="col-sm-6">
           <div className="form-group">
-            <label htmlFor="number-of-credits">Fuel Supplier:
+            <label htmlFor="organization">Fuel Supplier:
               {props.loggedInUser.isGovernmentUser &&
                 <Autosuggest
                   datalist={props.fuelSuppliers}

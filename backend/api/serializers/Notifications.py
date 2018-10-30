@@ -29,6 +29,7 @@ class NotificationMessageSerializer(serializers.ModelSerializer):
     """
     Default Serializer for Notification Message
     """
+    originating_user = serializers.SerializerMethodField()
     user = serializers.SerializerMethodField()
 
     def __init__(self, *args, **kwargs):
@@ -37,6 +38,20 @@ class NotificationMessageSerializer(serializers.ModelSerializer):
         # mark all fields except is_read as read_only
         for field_name in set(self.fields.keys()) - {'is_read'}:
             self.fields[field_name].read_only = True
+
+    def get_originating_user(self, obj):
+        """
+        Returns the name of the user associated with the notification.
+        Not using a serializer as we only need the id and the display name.
+        """
+        if obj.originating_user is None:
+            return None
+
+        return {
+            "id": obj.originating_user.id,
+            "first_name": obj.originating_user.first_name,
+            "last_name": obj.originating_user.last_name
+        }
 
     def get_user(self, obj):
         """

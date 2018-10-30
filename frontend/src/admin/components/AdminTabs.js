@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { Link } from 'react-router-dom';
 
-import { CREDIT_TRANSACTIONS_HISTORY, HISTORICAL_DATA_ENTRY, USERS } from '../../constants/routes/Admin';
+import { CREDIT_TRANSACTIONS_HISTORY, HISTORICAL_DATA_ENTRY, ROLES, USERS } from '../../constants/routes/Admin';
 
 const AdminTabs = props => (
   <ul className="admin-tabs nav nav-tabs" key="nav" role="tablist">
@@ -19,6 +19,11 @@ const AdminTabs = props => (
     <li role="presentation" className={`${(props.active === 'users') ? 'active' : ''}`}>
       <Link id="navbar-administration" to={USERS.LIST}>
         Users
+      </Link>
+    </li>
+    <li role="presentation" className={`${(props.active === 'roles') ? 'active' : ''}`}>
+      <Link id="navbar-administration" to={ROLES.LIST}>
+        Roles
       </Link>
     </li>
   </ul>
