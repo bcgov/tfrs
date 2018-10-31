@@ -140,6 +140,17 @@ const getUser = id => (dispatch) => {
     });
 };
 
+const getUserByUsername = username => (dispatch) => {
+  dispatch(getUserRequest());
+  axios.get(`${Routes.BASE_URL}${Routes.USERS}/by_username?username=${username}`)
+    .then((response) => {
+      dispatch(getUserSuccess(response.data));
+    }).catch((error) => {
+    dispatch(getUserError(error.response));
+  });
+};
+
+
 const getUserError = error => ({
   errorMessage: error,
   name: ReducerTypes.ERROR_USER_REQUEST,
@@ -175,4 +186,4 @@ const getUsersError = error => ({
   errorMessage: error
 });
 
-export { getUsers, getLoggedInUser, createUser, updateUser, getUser, signUserOut };
+export { getUsers, getLoggedInUser, createUser, updateUser, getUser, getUserByUsername, signUserOut };

@@ -22,7 +22,7 @@
 """
 from django.db.models import Q
 from rest_framework import exceptions, serializers
-from rest_framework.relations import PrimaryKeyRelatedField
+from rest_framework.relations import PrimaryKeyRelatedField, HyperlinkedIdentityField
 
 from api.models.Organization import Organization
 from api.models.Role import Role
@@ -46,7 +46,7 @@ class UserSerializer(serializers.ModelSerializer):
         model = User
         fields = (
             'id', 'first_name', 'last_name', 'email', 'authorization_id',
-            'username', 'authorization_directory', 'display_name',
+            'username', 'authorization_directory', 'display_name', 'is_active',
             'organization', 'roles', 'is_government_user', 'permissions')
 
 
@@ -56,6 +56,7 @@ class UserCreateSerializer(serializers.ModelSerializer):
     """
     organization = PrimaryKeyRelatedField(queryset=Organization.objects.all())
     roles = PrimaryKeyRelatedField(queryset=Role.objects.all(), many=True)
+    id = serializers.ReadOnlyField()
 
     def validate(self, data):
         data['display_name'] = '{} {}'.format(data['first_name'], data['last_name'])
@@ -70,13 +71,14 @@ class UserCreateSerializer(serializers.ModelSerializer):
         user.save()
         for role in roles:
             UserRole.objects.create(user=user, role=role)
+
         return user
 
     class Meta:
         model = User
         fields = (
             'first_name', 'last_name', 'email',
-            'username', 'display_name',
+            'username', 'display_name', 'id',
             'organization', 'roles', 'is_government_user')
 
 
@@ -117,11 +119,11 @@ class UserUpdateSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = (
-            'first_name', 'last_name', 'display_name', 'email', 'phone',
+            'id', 'first_name', 'last_name', 'display_name', 'email', 'phone',
             'roles', 'is_active', 'organization'
         )
         read_only_fields = (
-            'organization',
+            'organization', 'id', 'is_government_user'
         )
 
 

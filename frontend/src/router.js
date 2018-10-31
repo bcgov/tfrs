@@ -120,6 +120,10 @@ const Router = props => (
           component={withRouter(UserViewContainer)}
         />
         <Route
+          path={USERS.DETAILS_BY_USERNAME}
+          component={withRouter(UserViewContainer)}
+        />
+        <Route
           path={USERS.EDIT}
           component={withRouter(UserEditContainer)}
         />
@@ -140,6 +144,10 @@ const Router = props => (
         />
         <Route
           path={ADMIN_USERS.DETAILS}
+          component={withRouter(UserViewContainer)}
+        />
+        <Route
+          path={ADMIN_USERS.DETAILS_BY_USERNAME}
           component={withRouter(UserViewContainer)}
         />
         <Route

@@ -98,6 +98,7 @@ class CreditTradeViewSet(AuditableMixin, mixins.CreateModelMixin,
         digest = hashlib.sha256()
         # you could use anything here (like perhaps the PID or startup time
         digest.update(b'salt')
+        digest.update(request.user.id)
         digest.update(most_recent_updated_credit_trade.update_timestamp
                       .isoformat()
                       .encode('utf-8')

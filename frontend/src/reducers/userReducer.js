@@ -1,5 +1,5 @@
-import ActionTypes from '../constants/actionTypes/Users';
 import {SESSION_TERMINATED, USER_EXPIRED} from 'redux-oidc';
+import ActionTypes from "../constants/actionTypes/Users";
 
 const userRequest = (state = {
   error: {},
@@ -122,9 +122,17 @@ const userAdmin = (state = {
         }
       };
     case ActionTypes.CREATE_USER_ERROR:
+      let error = {
+        ...action.errorData.data
+      };
+      if (action.errorData.data.hasOwnProperty('user')) {
+        error = Object.assign(error, action.errorData.data.user);
+        delete error.user;
+      }
+
       return {
         ...state,
-        error: action.errorData,
+        error,
         isFetching: false,
         serverError: true,
         user: {}
@@ -147,7 +155,7 @@ const userAdmin = (state = {
     case ActionTypes.UPDATE_USER_ERROR:
       return {
         ...state,
-        error: action.errorData,
+        error: action.errorData.data,
         isFetching: false,
         serverError: true,
         user: {}

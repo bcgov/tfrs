@@ -96,7 +96,7 @@ class UserAddContainer extends Component {
     const data = {
       user: {
         cellPhone: this.state.fields.mobilePhone,
-        username: 'gen' + (new Date().getTime()),
+        username: 'user' + (new Date().getTime()),
         email: this.state.fields.email,
         firstName: this.state.fields.firstName,
         lastName: this.state.fields.lastName,
@@ -116,7 +116,7 @@ class UserAddContainer extends Component {
 
 
     this.props.createUser(data).then(() => {
-      history.push(USERS.LIST);
+      history.push(USERS.DETAILS_BY_USERNAME.replace(':username', this.props.createdUsername));
       toastr.userSuccess('User created.');
     }).catch(error => {});
 
@@ -162,6 +162,7 @@ class UserAddContainer extends Component {
         roles={this.props.roles}
         title="New User"
         toggleCheck={this._toggleCheck}
+        errors={this.props.error}
       />,
       <Modal
         handleSubmit={(event) => {
@@ -176,19 +177,26 @@ class UserAddContainer extends Component {
   }
 }
 
-UserAddContainer.defaultProps = {};
+UserAddContainer.defaultProps = {
+  createdUsername: null,
+};
 
 UserAddContainer.propTypes = {
   fuelSuppliers: PropTypes.arrayOf(PropTypes.shape()).isRequired,
   getFuelSuppliers: PropTypes.func.isRequired,
   getRoles: PropTypes.func.isRequired,
   roles: PropTypes.shape().isRequired,
-  createUser: PropTypes.func.isRequired
+  createUser: PropTypes.func.isRequired,
+  createdUsername: PropTypes.string,
+  error: PropTypes.shape({})
 };
 
 const mapStateToProps = state => ({
   fuelSuppliers: state.rootReducer.fuelSuppliersRequest.fuelSuppliers,
-  roles: state.rootReducer.roles
+  roles: state.rootReducer.roles,
+  error: state.rootReducer.userAdmin.error,
+  createdUsername: state.rootReducer.userAdmin.user
+    .hasOwnProperty('user') ? state.rootReducer.userAdmin.user.user.username : null
 });
 
 const mapDispatchToProps = dispatch => ({

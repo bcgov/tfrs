@@ -8,6 +8,7 @@ import FontAwesomeIcon from '@fortawesome/react-fontawesome';
 import UserFormDetails from './UserFormDetails';
 import history from '../../../app/History';
 import * as Lang from '../../../constants/langEnUs';
+import Errors from "../../../app/components/Errors";
 
 const UserForm = props => (
   <div className="page_admin_user">
@@ -21,6 +22,10 @@ const UserForm = props => (
         roles={props.roles}
         toggleCheck={props.toggleCheck}
       />
+
+      {Object.keys(props.errors).length > 0 &&
+      <Errors errors={props.errors} />
+      }
 
       <div className="user-actions">
         <div className="btn-container">
@@ -46,6 +51,7 @@ const UserForm = props => (
 );
 
 UserForm.defaultProps = {
+  errors: []
 };
 
 UserForm.propTypes = {
@@ -57,7 +63,9 @@ UserForm.propTypes = {
   handleInputChange: PropTypes.func.isRequired,
   roles: PropTypes.shape().isRequired,
   title: PropTypes.string.isRequired,
-  toggleCheck: PropTypes.func.isRequired
+  toggleCheck: PropTypes.func.isRequired,
+  errors: PropTypes.arrayOf(PropTypes.shape())
+
 };
 
 export default UserForm;

@@ -48,14 +48,14 @@ const UserFormDetails = props => (
       <div className="row">
         <div className="col-sm-6">
           <div className="form-group">
-            <label htmlFor="bceid">BCeID:
+            <label htmlFor="bceid">BCeID Email Address:
               <input
                 className="form-control"
                 id="bceid"
                 name="bceid"
                 onChange={props.handleInputChange}
                 required="required"
-                type="text"
+                type="email"
                 value={props.fields.bceid}
               />
             </label>
@@ -72,7 +72,7 @@ const UserFormDetails = props => (
                 id="work-phone"
                 name="workPhone"
                 onChange={props.handleInputChange}
-                type="text"
+                type="tel"
                 value={props.fields.workPhone}
               />
             </label>
@@ -86,7 +86,7 @@ const UserFormDetails = props => (
                 id="mobile-phone"
                 name="mobilePhone"
                 onChange={props.handleInputChange}
-                type="text"
+                type="tel"
                 value={props.fields.mobilePhone}
               />
             </label>
@@ -103,7 +103,7 @@ const UserFormDetails = props => (
                 id="email"
                 name="email"
                 onChange={props.handleInputChange}
-                type="text"
+                type="email"
                 value={props.fields.email}
               />
             </label>
