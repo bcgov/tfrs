@@ -43,7 +43,7 @@ const Footer = props => (
             </ul>
             <div id="footer-about-version" className="inline">
               <a
-                href="https://github.com/bcgov/tfrs/releases/latest"
+                href={`https://github.com/bcgov/tfrs/releases/tag/v${__VERSION__}`}
                 key="credit-market-report"
                 rel="noopener noreferrer"
                 target="_blank"
