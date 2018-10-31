@@ -40,11 +40,11 @@ class UserAddContainer extends Component {
     this._toggleCheck = this._toggleCheck.bind(this);
   }
 
-  componentDidMount() {
+  componentDidMount () {
     this.loadData();
   }
 
-  loadData() {
+  loadData () {
     this.props.getFuelSuppliers();
 
     if (document.location.pathname.indexOf('/admin/') >= 0) {
@@ -114,7 +114,6 @@ class UserAddContainer extends Component {
       email: this.state.fields.bceid
     };
 
-
     this.props.createUser(data).then(() => {
       history.push(USERS.DETAILS_BY_USERNAME.replace(':username', this.props.createdUsername));
       toastr.userSuccess('User created.');
@@ -124,8 +123,8 @@ class UserAddContainer extends Component {
     return true;
   }
 
-  _toggleCheck(key) {
-    const fieldState = {...this.state.fields};
+  _toggleCheck (key) {
+    const fieldState = { ...this.state.fields };
     const index = fieldState.roles.findIndex(role => role.id === key);
 
     if (index < 0) {
@@ -159,6 +158,7 @@ class UserAddContainer extends Component {
         fuelSuppliers={this.props.fuelSuppliers}
         handleInputChange={this._handleInputChange}
         key="userForm"
+        loggedInUser={this.props.loggedInUser}
         roles={this.props.roles}
         title="New User"
         toggleCheck={this._toggleCheck}
@@ -178,7 +178,6 @@ class UserAddContainer extends Component {
 }
 
 UserAddContainer.defaultProps = {
-  createdUsername: null,
 };
 
 UserAddContainer.propTypes = {
@@ -188,11 +187,14 @@ UserAddContainer.propTypes = {
   roles: PropTypes.shape().isRequired,
   createUser: PropTypes.func.isRequired,
   createdUsername: PropTypes.string,
-  error: PropTypes.shape({})
+  error: PropTypes.shape({}),
+  loggedInUser: PropTypes.shape({
+  }).isRequired
 };
 
 const mapStateToProps = state => ({
   fuelSuppliers: state.rootReducer.fuelSuppliersRequest.fuelSuppliers,
+  loggedInUser: state.rootReducer.userRequest.loggedInUser,
   roles: state.rootReducer.roles,
   error: state.rootReducer.userAdmin.error,
   createdUsername: state.rootReducer.userAdmin.user

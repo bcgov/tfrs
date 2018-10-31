@@ -35,7 +35,7 @@ const HistoricalDataEntryFormDetails = props => (
 
           <div className="form-group">
             <label htmlFor="transfer-type">Transaction Type:
-              <div className="btn-group" role="group">
+              <div className="btn-group" role="group" id="transaction-type">
                 <button type="button" disabled={props.editMode} className={`btn btn-default ${(props.fields.transferType === CREDIT_TRANSFER_TYPES.sell.id.toString()) ? 'active' : ''}`} name="transferType" value={CREDIT_TRANSFER_TYPES.sell.id} onClick={props.handleInputChange}>Credit Transfer</button>
                 <button type="button" disabled={props.editMode} className={`btn btn-default ${(props.fields.transferType === CREDIT_TRANSFER_TYPES.part3Award.id.toString()) ? 'active' : ''}`} name="transferType" value={CREDIT_TRANSFER_TYPES.part3Award.id} onClick={props.handleInputChange}>Part 3 Award</button>
                 <button type="button" disabled={props.editMode} className={`btn btn-default ${(props.fields.transferType === CREDIT_TRANSFER_TYPES.validation.id.toString()) ? 'active' : ''}`} name="transferType" value={CREDIT_TRANSFER_TYPES.validation.id} onClick={props.handleInputChange}>Validation</button>
@@ -190,7 +190,7 @@ const HistoricalDataEntryFormDetails = props => (
 
           <div className="form-group">
             <label htmlFor="transfer-type">Zero Dollar Reason: *
-              <div className="btn-group zero-reason" role="group">
+              <div className="btn-group zero-reason" role="group" id="zero-dollar-reason">
                 <button type="button" className={`btn btn-default ${(props.fields.zeroDollarReason === ZERO_DOLLAR_REASON.affiliate.id.toString()) ? 'active' : ''}`} disabled={props.fields.transferType !== CREDIT_TRANSFER_TYPES.sell.id.toString() || parseFloat(props.fields.fairMarketValuePerCredit) > 0} name="zeroDollarReason" value={ZERO_DOLLAR_REASON.affiliate.id} onClick={props.handleInputChange}>Affiliate</button>
                 <button type="button" className={`btn btn-default ${(props.fields.zeroDollarReason === ZERO_DOLLAR_REASON.other.id.toString()) ? 'active' : ''}`} disabled={props.fields.transferType !== CREDIT_TRANSFER_TYPES.sell.id.toString() || parseFloat(props.fields.fairMarketValuePerCredit) > 0} name="zeroDollarReason" value={ZERO_DOLLAR_REASON.other.id} onClick={props.handleInputChange}>Other</button>
               </div>

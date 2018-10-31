@@ -1,0 +1,12 @@
+@import './variables.scss';
+@import './mixins.scss';
+
+.page_roles {
+  .col-actions {
+    text-align: center;
+  }
+
+  .col-id {
+    text-align: right;
+  }
+}

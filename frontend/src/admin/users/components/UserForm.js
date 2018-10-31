@@ -19,6 +19,7 @@ const UserForm = props => (
         fields={props.fields}
         fuelSuppliers={props.fuelSuppliers}
         handleInputChange={props.handleInputChange}
+        loggedInUser={props.loggedInUser}
         roles={props.roles}
         toggleCheck={props.toggleCheck}
       />
@@ -61,6 +62,8 @@ UserForm.propTypes = {
   }).isRequired,
   fuelSuppliers: PropTypes.arrayOf(PropTypes.shape()).isRequired,
   handleInputChange: PropTypes.func.isRequired,
+  loggedInUser: PropTypes.shape({
+  }).isRequired,
   roles: PropTypes.shape().isRequired,
   title: PropTypes.string.isRequired,
   toggleCheck: PropTypes.func.isRequired,

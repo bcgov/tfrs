@@ -33,8 +33,10 @@ def send_amqp_notification():
                               body=json.dumps({
                                   'message': 'notification'
                               }),
-                              properties=pika.BasicProperties(content_type='application/json',
-                                                              delivery_mode=1),
+                              properties=pika.BasicProperties(
+                                  content_type='application/json',
+                                  delivery_mode=1
+                              ),
                               mandatory=True)
     except AMQPError as error:
         raise NotificationDeliveryFailure(error)
@@ -52,18 +54,15 @@ class EffectiveSubscription(object):
                 self.notification_type == other.notification_type)
 
 
-
 class EffectiveSubscriptionSerializer(serializers.Serializer):
     channel = serializers.SerializerMethodField()
     notification_type = serializers.SerializerMethodField()
 
     subscribed = serializers.BooleanField()
 
-
     def get_notification_type(self, obj):
         data = obj.notification_type.name
         return data
-
 
     def get_channel(self, obj):
         data = obj.channel.channel
@@ -77,14 +76,20 @@ class EffectiveSubscriptionUpdateSerializer(serializers.Serializer):
 
     def validate(self, data):
         try:
-            data['notification_type'] = NotificationType[data.get('notification_type')]
+            data['notification_type'] = NotificationType[data.get(
+                'notification_type'
+            )]
         except KeyError:
-            raise serializers.ValidationError({'notification_type': 'Notification Type invalid'})
+            raise serializers.ValidationError({
+                'notification_type': 'Notification Type invalid'
+            })
 
         try:
             data['channel'] = NotificationChannel.objects.get(channel=data.get('channel'))
         except NotificationChannel.DoesNotExist:
-            raise serializers.ValidationError({'channel': 'Channel does not exist'})
+            raise serializers.ValidationError({
+                'channel': 'Channel does not exist'
+            })
 
         return data
 
@@ -92,9 +97,11 @@ class EffectiveSubscriptionUpdateSerializer(serializers.Serializer):
 class AMQPNotificationService:
 
     @staticmethod
-    def __determine_message_recipients(is_global: bool = False,
-                                       interested_organization: Organization = None,
-                                       interested_roles: List[Role] = None) -> List[User]:
+    def __determine_message_recipients(
+            is_global: bool = False,
+            interested_organization: Organization = None,
+            interested_roles: List[Role] = None
+    ) -> List[User]:
 
         if is_global:
             return User.objects.all()
@@ -109,7 +116,6 @@ class AMQPNotificationService:
 
     @staticmethod
     def send_email_for_notification(notification: NotificationMessage):
-
         if not EMAIL['ENABLED']:
             return
 
@@ -137,7 +143,10 @@ class AMQPNotificationService:
 
         for channel in all_channels:
             for notification_type in all_notification_types:
-                subscription = user_subscriptions.filter(channel=channel,notification_type=notification_type).first()
+                subscription = user_subscriptions.filter(
+                    channel=channel,
+                    notification_type=notification_type
+                ).first()
                 is_subscribed = subscription.enabled if subscription else channel.subscribe_by_default
                 effective_subscriptions.append(
                     EffectiveSubscription(channel=channel,
@@ -147,7 +156,12 @@ class AMQPNotificationService:
         return effective_subscriptions
 
     @staticmethod
-    def update_subscription(user: User, channel: NotificationChannel, notification_type: NotificationType, subscribed: bool):
+    def update_subscription(
+            user: User,
+            channel: NotificationChannel,
+            notification_type: NotificationType,
+            subscribed: bool
+    ):
         existing_subscription = NotificationSubscription.objects.filter(
             user_id=user.id,
             channel=channel,
@@ -180,7 +194,6 @@ class AMQPNotificationService:
                           notification_type: NotificationType = None,
                           originating_user: User = None):
 
-
         if interested_organization is None and not is_global:
             raise InvalidNotificationArguments('interested_organization is required'
                                                ' if this is not a global notification')
@@ -205,9 +218,11 @@ class AMQPNotificationService:
             notification.save()
 
             effective_subscriptions = AMQPNotificationService.compute_effective_subscriptions(recipient)
-            target_subscription = EffectiveSubscription(channel=NotificationChannel.objects.get(channel='EMAIL'),
-                                                        notification_type=notification_type,
-                                                        subscribed=True)
+            target_subscription = EffectiveSubscription(
+                channel=NotificationChannel.objects.get(channel='EMAIL'),
+                notification_type=notification_type,
+                subscribed=True
+            )
 
             if target_subscription in effective_subscriptions:
                 AMQPNotificationService.send_email_for_notification(notification)

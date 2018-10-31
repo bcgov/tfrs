@@ -214,13 +214,13 @@ class CreditTradeCreateSerializer(serializers.ModelSerializer):
         extra_kwargs = {
             'compliance_period': {
                 'error_messages': {
-                    'does_not_exist': "Please specify the Compliance Period in "
-                                      "which the transaction relates."
+                    'does_not_exist': "Please specify the Compliance Period "
+                                      "in which the transaction relates."
                 }
             },
             'fair_market_value_per_credit': {
                 'error_messages': {
-                    'invalid': "Value per credit needs to be a valid."
+                    'invalid': "Please enter a valid value per credit."
                 }
             },
             'number_of_credits': {
@@ -303,7 +303,7 @@ class CreditTradeUpdateSerializer(serializers.ModelSerializer):
         data = kwargs.get('data')
 
         if 'compliance_period' not in data and self.instance.compliance_period:
-            data['compliance_period'] = self.instance.compliance_period
+            data['compliance_period'] = self.instance.compliance_period.id
 
         if 'fair_market_value_per_credit' not in data:
             data['fair_market_value_per_credit'] = \
@@ -564,7 +564,7 @@ class CreditTradeUpdateSerializer(serializers.ModelSerializer):
             },
             'fair_market_value_per_credit': {
                 'error_messages': {
-                    'invalid': "Value per credit needs to be a valid."
+                    'invalid': "Please enter a valid value per credit."
                 }
             },
             'number_of_credits': {

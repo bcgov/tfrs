@@ -197,6 +197,7 @@ class UserEditContainer extends Component {
         fuelSuppliers={this.props.fuelSuppliers}
         handleInputChange={this._handleInputChange}
         key="userForm"
+        loggedInUser={this.props.loggedInUser}
         roles={this.props.roles}
         title="Edit User"
         toggleCheck={this._toggleCheck}
@@ -233,6 +234,8 @@ UserEditContainer.propTypes = {
       id: PropTypes.string.isRequired
     }).isRequired
   }).isRequired,
+  loggedInUser: PropTypes.shape({
+  }).isRequired,
   roles: PropTypes.shape().isRequired,
   user: PropTypes.shape({
     details: PropTypes.shape({
@@ -246,6 +249,7 @@ UserEditContainer.propTypes = {
 
 const mapStateToProps = state => ({
   fuelSuppliers: state.rootReducer.fuelSuppliersRequest.fuelSuppliers,
+  loggedInUser: state.rootReducer.userRequest.loggedInUser,
   roles: state.rootReducer.roles,
   user: {
     details: state.rootReducer.userViewRequest.user,

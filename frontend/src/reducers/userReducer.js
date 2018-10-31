@@ -13,15 +13,16 @@ const userRequest = (state = {
   switch (action.type) {
     case SESSION_TERMINATED:
     case USER_EXPIRED:
-      return {...state,
-              user: {},
-              requestStarted: false,
-              serverError: false,
-              loggedInUser: {},
-              isFetching: false,
-              isAuthenticated: false,
-              error: {}
-             };
+      return {
+        ...state,
+        user: {},
+        requestStarted: false,
+        serverError: false,
+        loggedInUser: {},
+        isFetching: false,
+        isAuthenticated: false,
+        error: {}
+      };
     case ActionTypes.GET_LOGGED_IN_USER:
       return {
         ...state,

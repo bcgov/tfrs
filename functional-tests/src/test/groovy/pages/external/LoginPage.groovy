@@ -4,14 +4,15 @@ import geb.Page
 
 class LoginPage extends Page {
   static at = {
-    title.trim() == 'Log in to Transportation Fuels Reporting System' &&
-    pageTitle.text().trim() == 'TRANSPORTATION FUELS REPORTING SYSTEM'
+    // Regex being used to temporarily cover the differences between dev and keycloak login pages
+    title.trim() =~ 'Log in to (TFRS|Transportation Fuels Reporting System)' &&
+    pageTitle.text().trim() =~ '(TFRS|TRANSPORTATION FUELS REPORTING SYSTEM)'
   }
   static content = {
     pageTitle { $('#kc-header-wrapper') }
 
     usernameField { $('#username') }
     passwordField { $('#password') }
-    logInButton { $('input', type:'submit', value:'Log in') }
+    logInButton { $('#kc-login') }
   }
 }

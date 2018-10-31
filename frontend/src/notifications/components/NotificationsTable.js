@@ -59,7 +59,7 @@ const NotificationsTable = (props) => {
     id: 'date',
     width: 150
   }, {
-    accessor: item => `${item.user.firstName} ${item.user.lastName}`,
+    accessor: item => (item.originatingUser ? `${item.originatingUser.firstName} ${item.originatingUser.lastName}` : '-'),
     className: 'col-user',
     Header: 'User',
     headerClassName: 'col-user',

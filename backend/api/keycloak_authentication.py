@@ -94,7 +94,6 @@ class UserAuthentication(authentication.BaseAuthentication):
                                         issuer=settings.KEYCLOAK['ISSUER'])
                 break
             except InvalidTokenError as e:
-                print('token validation failed: {}'.format(e))
                 token_validation_errors.append(e)
 
         if not user_token:
