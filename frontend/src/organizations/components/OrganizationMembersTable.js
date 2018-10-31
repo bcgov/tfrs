@@ -9,8 +9,8 @@ import FontAwesomeIcon from '@fortawesome/react-fontawesome';
 import { Link } from 'react-router-dom';
 import 'react-table/react-table.css';
 
+import history from '../../app/History';
 import { USERS as ADMIN_USERS } from '../../constants/routes/Admin';
-import PERMISSIONS_USERS from '../../constants/permissions/Users';
 import USERS from '../../constants/routes/Users';
 
 const OrganizationMembersTable = (props) => {
@@ -48,19 +48,10 @@ const OrganizationMembersTable = (props) => {
   }, {
     accessor: item => item.id,
     Cell: (row) => {
-      let editUrl = USERS.EDIT.replace(':id', row.value);
       let viewUrl = USERS.DETAILS.replace(':id', row.value);
 
       if (document.location.pathname.indexOf('/admin/') >= 0) {
-        editUrl = ADMIN_USERS.EDIT.replace(':id', row.value);
         viewUrl = ADMIN_USERS.DETAILS.replace(':id', row.value);
-      }
-
-      if (props.loggedInUser.hasPermission(PERMISSIONS_USERS.EDIT_FUEL_SUPPLIER_USERS)) {
-        return ([
-          <Link to={viewUrl} key="view"><FontAwesomeIcon icon="box-open" /></Link>,
-          <Link to={editUrl} key="edit"><FontAwesomeIcon icon="pencil-alt" /></Link>
-        ]);
       }
 
       return <Link to={viewUrl} key="view"><FontAwesomeIcon icon="box-open" /></Link>;
@@ -90,6 +81,24 @@ const OrganizationMembersTable = (props) => {
         desc: false
       }]}
       filterable={filterable}
+      getTrProps={(state, row) => {
+        if (row && row.original) {
+          return {
+            onClick: (e) => {
+              let viewUrl = USERS.DETAILS.replace(':id', row.original.id);
+
+              if (document.location.pathname.indexOf('/admin/') >= 0) {
+                viewUrl = ADMIN_USERS.DETAILS.replace(':id', row.original.id);
+              }
+
+              history.push(viewUrl);
+            },
+            className: 'clickable'
+          };
+        }
+
+        return {};
+      }}
       pageSizeOptions={[5, 10, 15, 20, 25, 50, 100]}
       defaultFilterMethod={filterMethod}
       columns={columns}
