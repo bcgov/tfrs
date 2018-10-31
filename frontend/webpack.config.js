@@ -105,7 +105,7 @@ const config = {
   // from Node
   plugins: [
     new Dotenv({
-      path: '../.env'
+      path: '.env'
     }),
     new Webpack.HotModuleReplacementPlugin(),
     new Webpack.DefinePlugin({
