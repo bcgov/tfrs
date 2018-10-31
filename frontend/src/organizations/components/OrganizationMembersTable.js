@@ -58,12 +58,12 @@ const OrganizationMembersTable = (props) => {
 
       if (props.loggedInUser.hasPermission(PERMISSIONS_USERS.EDIT_FUEL_SUPPLIER_USERS)) {
         return ([
-          <Link to={viewUrl} key="view"><FontAwesomeIcon icon="eye" /></Link>,
+          <Link to={viewUrl} key="view"><FontAwesomeIcon icon="box-open" /></Link>,
           <Link to={editUrl} key="edit"><FontAwesomeIcon icon="pencil-alt" /></Link>
         ]);
       }
 
-      return <Link to={viewUrl} key="view"><FontAwesomeIcon icon="eye" /></Link>;
+      return <Link to={viewUrl} key="view"><FontAwesomeIcon icon="box-open" /></Link>;
     },
     className: 'col-actions',
     filterable: false,
