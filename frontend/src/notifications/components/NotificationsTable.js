@@ -57,6 +57,21 @@ const NotificationsTable = (props) => {
     Header: 'Date',
     headerClassName: 'col-date',
     id: 'date',
+    sortMethod: (a, b, desc) => {
+      const value = moment(a).format('YYYY-MM-DD-HH:mm:ss');
+      const previous = moment(b).format('YYYY-MM-DD-HH:mm:ss');
+
+      // Return either 1 or -1 to indicate a sort priority
+      if (value > previous) {
+        return 1;
+      }
+      if (value < previous) {
+        return -1;
+      }
+      // returning 0, undefined or any falsey value will use subsequent sorts or
+      // the index as a tiebreaker
+      return 0;
+    },
     width: 150
   }, {
     accessor: item => (item.originatingUser ? `${item.originatingUser.firstName} ${item.originatingUser.lastName}` : '-'),

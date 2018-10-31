@@ -24,7 +24,7 @@ class GovernmentTransferForm extends Component {
 
   render () {
     return (
-      <div className="credit-transaction">
+      <div className="credit-transaction pvr">
         <h1>{this.props.title}</h1>
         <form
           onSubmit={(event, status) =>

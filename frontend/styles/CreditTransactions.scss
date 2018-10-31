@@ -27,4 +27,26 @@
       padding: 0;
     }
   }
+
+  &.pvr {
+    .comment-form {
+      margin-top: 1rem;
+      padding: 1rem;
+
+      label {
+        margin: 0;
+      }
+
+      .alert, .notice, .notice .panel {
+        margin: 0;
+      }
+
+      #credit-transfer-comment {
+        margin: 0;
+      }
+    }
+    .comment-label {
+      display: none;
+    }
+  }
 }

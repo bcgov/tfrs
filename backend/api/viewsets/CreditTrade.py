@@ -222,7 +222,7 @@ class CreditTradeViewSet(AuditableMixin, mixins.CreateModelMixin,
         response['Content-Disposition'] = (
             'attachment; filename="{}.xls"'.format(
                 datetime.datetime.now().strftime(
-                    "credit_transfers_%Y-%m-%d")
+                    "BC-LCFS_credit_transactions_%Y-%m-%d")
             ))
 
         credit_trades = self.get_queryset().filter(
