@@ -29,7 +29,7 @@ const OrganizationMembersTable = (props) => {
     minWidth: 200
   }, {
     accessor: item => item.email,
-    className: 'col-status-display',
+    className: 'col-email',
     Header: 'Email',
     id: 'email',
     minWidth: 200

@@ -18,7 +18,9 @@ class NotificationsPage extends BaseAppPage {
    * @return a non-empty geb navigator if element found, null otherwise.
    */
   Navigator getCreditTransferLinkByText(String linkText) {
-    getSortedMatchingRows(linkText)[0]?.$('.col-notification')?.$('button')
+    def sortedUnreadMatchingRows = getSortedMatchingRows(linkText)
+    def highestIDUnreadMatchingRow = sortedUnreadMatchingRows[0]
+    return highestIDUnreadMatchingRow?.$('.col-notification')?.$('button')
   }
 
   /**
@@ -30,11 +32,12 @@ class NotificationsPage extends BaseAppPage {
    */
   List<Navigator> getSortedMatchingRows(String linkText) {
     waitFor {
-      notificationTable.$('.rt-tbody').children().has('.unread').has('.col-notification button', text: linkText)
-        .sort{
-          a, b ->
-            b.$('.col-credit-trade button').text().toInteger() <=> a.$('.col-credit-trade button').text().toInteger()
-        }
+      def tableRowsParent = notificationTable.$('.rt-tbody')
+      def unreadMatchingRows = tableRowsParent.children().has('.unread').has('.col-notification button', text: linkText)
+      def sortedUnreadMatchingRows = unreadMatchingRows.sort{ a, b ->
+        b.$('.col-credit-trade button').text().toInteger() <=> a.$('.col-credit-trade button').text().toInteger()
+      }
+      return sortedUnreadMatchingRows
     }
   }
 }
