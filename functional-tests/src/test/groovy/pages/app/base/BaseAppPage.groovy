@@ -2,7 +2,7 @@ package pages
 
 import geb.Page
 
-import extensions.ReactJSAware
+import pages.traits.Utils
 
 import modules.HeaderModule
 import modules.ModalModule
@@ -13,7 +13,7 @@ import modules.FooterModule
  *
  * All pages should extend this page.
  */
-class BaseAppPage extends Page implements ReactJSAware {
+class BaseAppPage extends Page implements Utils {
   static content = {
     headerModule { module(HeaderModule) }
     modalModule { module(ModalModule) }

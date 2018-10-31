@@ -2,7 +2,7 @@ package specs
 
 import geb.spock.GebReportingSpec
 
-import traits.Utils
+import specs.traits.Utils
 
 /**
  * Base spec.

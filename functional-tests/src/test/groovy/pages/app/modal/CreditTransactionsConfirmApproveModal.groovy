@@ -1,7 +1,7 @@
 package pages
 
 class CreditTransactionsConfirmApproveModal extends BaseAppPage {
-  static at = { pageTitle.text() == 'Confirmation' }
+  static at = { isReactReady() && pageTitle.text() == 'Confirmation' }
   static content = {
     modalSelector(wait:true) { $('#confirmApprove') }
 
