@@ -67,7 +67,7 @@ UserForm.propTypes = {
   roles: PropTypes.shape().isRequired,
   title: PropTypes.string.isRequired,
   toggleCheck: PropTypes.func.isRequired,
-  errors: PropTypes.arrayOf(PropTypes.shape())
+  errors: PropTypes.shape()
 
 };
 
