@@ -22,7 +22,7 @@ class ModalModule extends Module {
    * @param a custom modal selector to use instead of the generic default. Necessary if multiple modal windows are
    *  present on the page. (optional)
    */
-  boolean isOpen(Navigator modalSelector=modalWindow) {
+  Boolean isOpen(Navigator modalSelector=modalWindow) {
     waitFor { modalSelector.displayed }
   }
 
@@ -31,7 +31,7 @@ class ModalModule extends Module {
    * @param a custom modal selector to use instead of the generic default. Necessary if multiple modal windows are
    *  present on the page. (optional)
    */
-  boolean isClosed(Navigator modalSelector=modalWindow) {
+  Boolean isClosed(Navigator modalSelector=modalWindow) {
     waitFor { modalSelector*.displayed.every{it == false} }
   }
 }
