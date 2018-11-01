@@ -41,7 +41,7 @@ const SettingsDetails = props => (
 
       {!props.subscriptions.isFetching && props.subscriptions.success && [
         <h3 key="header-credit-transactions">
-          Credit Transfers
+          Credit Transfer Proposals
         </h3>,
         <NotificationsCreditTransactionsTable
           addToFields={props.addToFields}
@@ -56,7 +56,7 @@ const SettingsDetails = props => (
           type="credit-transfer"
         />,
         <h3 key="header-pvr">
-          Credit Transactions (Part 3 Awards, Validations, Reductions)
+          Part 3 Awards, Credit Validations, and Credit Reductions
         </h3>,
         <NotificationsCreditTransactionsTable
           addToFields={props.addToFields}
