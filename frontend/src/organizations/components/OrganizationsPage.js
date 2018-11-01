@@ -19,7 +19,7 @@ const OrganizationsPage = (props) => {
           type="button"
           onClick={() => (document.location = Routes.BASE_URL + ORGANIZATIONS.EXPORT)}
         >
-          Download <FontAwesomeIcon icon="file-excel" />
+          <FontAwesomeIcon icon="file-excel" /> Download as .xls
         </button>
       </div>
       {isFetching && <Loading />}
