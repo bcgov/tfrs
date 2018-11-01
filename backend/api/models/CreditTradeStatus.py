@@ -58,7 +58,7 @@ class CreditTradeStatus(Auditable):
         return (self.status,)
 
     class Meta:
-        db_table = 'Contains a list of statuses that a credit transfer proposal may be in. For example; Approved, Declined, Rescinded, etc. Note: application logic is tightly coupled to this table; therefore, changes to the enumerated values should be done with caution.'
+        db_table = 'credit_trade_status'
 
     @property
     def action(self):
@@ -101,5 +101,9 @@ class CreditTradeStatus(Auditable):
 
         return self.status
 
-    db_table_comment = "Possible states that a credit transfer may be in. " \
-                       "Application logic is couplied tightly to this table."
+    db_table_comment = "Contains a list of statuses that a credit transfer " \
+                       "proposal may be in. For example; Approved, " \
+                       "Declined, Rescinded, etc. Note: application logic " \
+                       "is tightly coupled to this table; therefore, " \
+                       "changes to the enumerated values should be done " \
+                       "with caution."
