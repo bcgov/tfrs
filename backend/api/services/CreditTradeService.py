@@ -395,6 +395,13 @@ class CreditTradeService(object):
     @staticmethod
     def dispatch_notifications(previous_status: CreditTradeStatus,
                                credit_trade: CreditTrade):
+        if credit_trade.type.is_gov_only_type:
+            return CreditTradeService.pvr_notification(credit_trade)
+
+        return CreditTradeService.credit_trade_notification(credit_trade)
+
+    @staticmethod
+    def credit_trade_notification(credit_trade):
         notification_map = defaultdict(lambda: [])
         government = Organization.objects.filter(
             type__type='Government').first()
@@ -446,9 +453,6 @@ class CreditTradeService(object):
                 NotificationType.CREDIT_TRANSFER_RECOMMENDED_FOR_DECLINATION),
         ]
 
-
-        # figure this out. /approve method?
-
         notification_map[StatusChange('Approved')] = [
             ResultingNotification(
                 credit_trade.initiator,
@@ -486,4 +490,55 @@ class CreditTradeService(object):
                 notification_type=notification.notification_type,
                 related_credit_trade=credit_trade,
                 originating_user=credit_trade.update_user
+            )
+
+    @staticmethod
+    def pvr_notification(credit_trade):
+        notification_map = defaultdict(lambda: [])
+        government = Organization.objects.filter(
+            type__type='Government').first()
+
+        StatusChange = namedtuple('StatusChange', ['new_status'])
+        ResultingNotification = namedtuple('ResultingNotification', [
+            'recipient', 'notification_type'])
+
+        notification_map[StatusChange('Draft')] = [
+            ResultingNotification(
+                government,
+                NotificationType.PVR_CREATED)
+        ]
+
+        notification_map[StatusChange('Recommended')] = [
+            ResultingNotification(
+                government,
+                NotificationType.PVR_RECOMMENDED_FOR_APPROVAL),
+        ]
+
+        notification_map[StatusChange('Approved')] = [
+            ResultingNotification(
+                government,
+                NotificationType.PVR_APPROVED),
+        ]
+
+        notification_map[StatusChange('Declined')] = [
+            ResultingNotification(
+                credit_trade.respondent,
+                NotificationType.PVR_DECLINED),
+            ResultingNotification(
+                government,
+                NotificationType.PVR_DECLINED),
+        ]
+
+        notifications_to_send = notification_map[
+            StatusChange(
+                credit_trade.status.status
+            )
+        ]
+
+        for notification in notifications_to_send:
+            AMQPNotificationService.send_notification(
+                interested_organization=notification.recipient,
+                message=notification.notification_type.name,
+                notification_type=notification.notification_type,
+                related_credit_trade=credit_trade
             )

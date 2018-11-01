@@ -9,6 +9,7 @@ import ReactTable from 'react-table';
 import 'react-table/react-table.css';
 
 import { getCreditTransferType } from '../../actions/creditTransfersActions';
+import history from '../../app/History';
 import CREDIT_TRANSACTIONS from '../../constants/routes/CreditTransactions';
 import { CREDIT_TRANSFER_STATUS } from '../../constants/values';
 
@@ -53,18 +54,6 @@ const UserHistoryTable = (props) => {
     resizable: false,
     width: 100
   }, {
-    accessor: item => item.creditTradeId,
-    Cell: (row) => {
-      const viewUrl = CREDIT_TRANSACTIONS.DETAILS.replace(':id', row.value);
-
-      return <Link to={viewUrl}><FontAwesomeIcon icon="box-open" /></Link>;
-    },
-    className: 'col-actions',
-    filterable: false,
-    Header: '',
-    id: 'actions',
-    width: 30
-  }, {
     accessor: (item) => {
       if (item.creditTradeUpdateTime) {
         const ts = Date.parse(item.creditTradeUpdateTime);
@@ -83,6 +72,18 @@ const UserHistoryTable = (props) => {
     Header: 'Fuel Supplier',
     id: 'fuelSupplier',
     minWidth: 100
+  }, {
+    accessor: item => item.creditTradeId,
+    Cell: (row) => {
+      const viewUrl = CREDIT_TRANSACTIONS.DETAILS.replace(':id', row.value);
+
+      return <Link to={viewUrl}><FontAwesomeIcon icon="box-open" /></Link>;
+    },
+    className: 'col-actions',
+    filterable: false,
+    Header: '',
+    id: 'actions',
+    width: 30
   }];
 
   const filterMethod = (filter, row, column) => {
@@ -103,6 +104,19 @@ const UserHistoryTable = (props) => {
         desc: true
       }]}
       filterable={filterable}
+      getTrProps={(state, row) => {
+        if (row && row.original) {
+          return {
+            onClick: (e) => {
+              const viewUrl = CREDIT_TRANSACTIONS.DETAILS.replace(':id', row.original.creditTradeId);
+              history.push(viewUrl);
+            },
+            className: 'clickable'
+          };
+        }
+
+        return {};
+      }}
       pageSizeOptions={[5, 10, 15, 20, 25, 50, 100]}
       defaultFilterMethod={filterMethod}
       columns={columns}

@@ -19,8 +19,6 @@
     See the License for the specific language governing permissions and
     limitations under the License.
 """
-from datetime import datetime
-
 from rest_framework import filters, mixins, permissions, viewsets
 from rest_framework.response import Response
 
