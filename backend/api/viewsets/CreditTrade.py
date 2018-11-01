@@ -127,13 +127,15 @@ class CreditTradeViewSet(AuditableMixin, mixins.CreateModelMixin,
         CreditTradeService.dispatch_notifications(None, credit_trade)
 
     def perform_update(self, serializer):
+        previous_state = self.get_object()
         credit_trade = serializer.save()
         CreditTradeService.create_history(credit_trade, False)
 
         status_cancelled = CreditTradeStatus.objects.get(status="Cancelled")
 
         if serializer.data['status'] != status_cancelled.id:
-            CreditTradeService.dispatch_notifications(self.get_object().status, credit_trade)
+            CreditTradeService.dispatch_notifications(
+                previous_state, credit_trade)
 
     @detail_route(methods=['put'])
     def delete(self, request, pk=None):
@@ -157,7 +159,7 @@ class CreditTradeViewSet(AuditableMixin, mixins.CreateModelMixin,
         """
         credit_trade = self.get_object()
         credit_trade.trade_effective_date = datetime.date.today()
-        previous_status = credit_trade.status
+        previous_state = credit_trade
 
         if credit_trade.compliance_period_id is None:
             credit_trade.compliance_period_id = \
@@ -169,7 +171,7 @@ class CreditTradeViewSet(AuditableMixin, mixins.CreateModelMixin,
         completed_credit_trade = CreditTradeService.approve(credit_trade)
         serializer = self.get_serializer(completed_credit_trade)
 
-        CreditTradeService.dispatch_notifications(previous_status,
+        CreditTradeService.dispatch_notifications(previous_state,
                                                   completed_credit_trade)
 
         return Response(serializer.data, status=status.HTTP_200_OK)
