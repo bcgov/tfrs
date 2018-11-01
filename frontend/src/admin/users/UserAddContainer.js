@@ -3,20 +3,21 @@
  * All data handling & manipulation should be handled here.
  */
 import PropTypes from 'prop-types';
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
+import React, {Component} from 'react';
+import {connect} from 'react-redux';
+import {bindActionCreators} from 'redux';
 
 import Modal from '../../app/components/Modal';
 import history from '../../app/History';
 import { getFuelSuppliers } from '../../actions/organizationActions';
 import { getRoles } from '../../actions/roleActions';
 import UserForm from './components/UserForm';
-import { USERS } from '../../constants/routes/Admin';
+import {USERS} from '../../constants/routes/Admin';
 import toastr from '../../utils/toastr';
+import {createUser} from "../../actions/userActions";
 
 class UserAddContainer extends Component {
-  constructor (props) {
+  constructor(props) {
     super(props);
 
     this.state = {
@@ -50,6 +51,14 @@ class UserAddContainer extends Component {
       this.props.getRoles({
         government_roles_only: true
       });
+      this.setState({
+        fields: {
+          ...this.state.fields,
+          organization: {
+            id: 1
+          }
+        },
+      })
     } else {
       this.props.getRoles({
         fuel_supplier_roles_only: true
@@ -57,8 +66,8 @@ class UserAddContainer extends Component {
     }
   }
 
-  _addToFields (value) {
-    const fieldState = { ...this.state.fields };
+  _addToFields(value) {
+    const fieldState = {...this.state.fields};
 
     if (value &&
       fieldState.roles.findIndex(role => (role.id === value.id)) < 0) {
@@ -70,9 +79,9 @@ class UserAddContainer extends Component {
     });
   }
 
-  _handleInputChange (event) {
-    const { value, name } = event.target;
-    const fieldState = { ...this.state.fields };
+  _handleInputChange(event) {
+    const {value, name} = event.target;
+    const fieldState = {...this.state.fields};
 
     fieldState[name] = value;
     this.setState({
@@ -80,32 +89,36 @@ class UserAddContainer extends Component {
     });
   }
 
-  _handleSubmit (event) {
+  _handleSubmit(event) {
     event.preventDefault();
 
     // API data structure
     const data = {
-      bceid: this.state.fields.bceid,
-      cellPhone: this.state.fields.mobilePhone,
-      email: this.state.fields.email,
-      firstName: this.state.fields.firstName,
-      lastName: this.state.fields.lastName,
-      organization: this.state.fields.organization ? this.state.fields.organization.id : null,
-      phone: this.state.fields.workPhone,
-      roles: this.state.fields.roles.filter(role => role.value).map((role) => {
-        if (role.value) {
-          return role.id;
-        }
+      user: {
+        cellPhone: this.state.fields.mobilePhone,
+        username: 'user' + (new Date().getTime()),
+        email: this.state.fields.email,
+        firstName: this.state.fields.firstName,
+        lastName: this.state.fields.lastName,
+        organization: this.state.fields.organization ? this.state.fields.organization.id : null,
+        phone: this.state.fields.workPhone,
+        roles: this.state.fields.roles.filter(role => role.value).map((role) => {
+          if (role.value) {
+            return role.id;
+          }
 
-        return false;
-      }),
-      status: this.state.fields.status === 'active'
+          return false;
+        }),
+        is_active: this.state.fields.status === 'active'
+      },
+      email: this.state.fields.bceid
     };
 
-    console.log(data);
+    this.props.createUser(data).then(() => {
+      history.push(USERS.DETAILS_BY_USERNAME.replace(':username', this.props.createdUsername));
+      toastr.userSuccess('User created.');
+    }).catch(error => {});
 
-    history.push(USERS.LIST);
-    toastr.userSuccess('User created.');
 
     return true;
   }
@@ -128,16 +141,16 @@ class UserAddContainer extends Component {
     });
   }
 
-  changeObjectProp (id, name) {
-    const fieldState = { ...this.state.fields };
+  changeObjectProp(id, name) {
+    const fieldState = {...this.state.fields};
 
-    fieldState[name] = { id: id || 0 };
+    fieldState[name] = {id: id || 0};
     this.setState({
       fields: fieldState
     });
   }
 
-  render () {
+  render() {
     return ([
       <UserForm
         addToFields={this._addToFields}
@@ -149,6 +162,7 @@ class UserAddContainer extends Component {
         roles={this.props.roles}
         title="New User"
         toggleCheck={this._toggleCheck}
+        errors={this.props.error}
       />,
       <Modal
         handleSubmit={(event) => {
@@ -170,20 +184,27 @@ UserAddContainer.propTypes = {
   fuelSuppliers: PropTypes.arrayOf(PropTypes.shape()).isRequired,
   getFuelSuppliers: PropTypes.func.isRequired,
   getRoles: PropTypes.func.isRequired,
+  roles: PropTypes.shape().isRequired,
+  createUser: PropTypes.func.isRequired,
+  createdUsername: PropTypes.string,
+  error: PropTypes.shape({}),
   loggedInUser: PropTypes.shape({
-  }).isRequired,
-  roles: PropTypes.shape().isRequired
+  }).isRequired
 };
 
 const mapStateToProps = state => ({
   fuelSuppliers: state.rootReducer.fuelSuppliersRequest.fuelSuppliers,
   loggedInUser: state.rootReducer.userRequest.loggedInUser,
-  roles: state.rootReducer.roles
+  roles: state.rootReducer.roles,
+  error: state.rootReducer.userAdmin.error,
+  createdUsername: state.rootReducer.userAdmin.user
+    .hasOwnProperty('user') ? state.rootReducer.userAdmin.user.user.username : null
 });
 
 const mapDispatchToProps = dispatch => ({
   getFuelSuppliers: bindActionCreators(getFuelSuppliers, dispatch),
-  getRoles: bindActionCreators(getRoles, dispatch)
+  getRoles: bindActionCreators(getRoles, dispatch),
+  createUser: bindActionCreators(createUser, dispatch)
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(UserAddContainer);

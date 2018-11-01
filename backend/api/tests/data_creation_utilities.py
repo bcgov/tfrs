@@ -61,7 +61,8 @@ class DataCreationUtilities(object):
         user.refresh_from_db()
 
         return {
-            'id': user.id
+            'id': user.id,
+            'username': user.username
         }
 
     @staticmethod

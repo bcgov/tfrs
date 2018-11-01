@@ -7,22 +7,32 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
-import { getUser } from '../actions/userActions';
+import {getUser, getUserByUsername} from '../actions/userActions';
 import UserDetails from './components/UserDetails';
 
 class UserViewContainer extends Component {
   componentWillMount () {
-    this.loadData(this.props.match.params.id);
+    if (this.props.match.params.id) {
+      this.loadByID(this.props.match.params.id);
+    } else if (this.props.match.params.username) {
+      this.loadByUsername(this.props.match.params.username);
+    }
   }
 
   componentWillReceiveNewProps (prevProps, newProps) {
     if (prevProps.match.params.id !== newProps.match.params.id) {
-      this.loadData(newProps.match.params.id);
+      this.loadByID(newProps.match.params.id);
+    } else if (prevProps.match.params.username !== newProps.match.params.username) {
+      this.loadByUsername(newProps.match.params.username);
     }
   }
 
-  loadData (id) {
+  loadByID (id) {
     this.props.getUser(id);
+  }
+
+  loadByUsername (username) {
+    this.props.getUserByUsername(username);
   }
 
   render () {
@@ -40,17 +50,25 @@ UserViewContainer.defaultProps = {
     details: {},
     error: {},
     isFetching: true
+  },
+  match: {
+    params: {
+      id: null,
+      username: null
+    }
   }
 };
 
 UserViewContainer.propTypes = {
   getUser: PropTypes.func.isRequired,
+  getUserByUsername: PropTypes.func.isRequired,
   loggedInUser: PropTypes.shape({
     hasPermission: PropTypes.func
   }).isRequired,
   match: PropTypes.shape({
     params: PropTypes.shape({
-      id: PropTypes.string.isRequired
+      id: PropTypes.string,
+      username: PropTypes.string
     }).isRequired
   }).isRequired,
   user: PropTypes.shape({
@@ -70,7 +88,8 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  getUser: bindActionCreators(getUser, dispatch)
+  getUser: bindActionCreators(getUser, dispatch),
+  getUserByUsername: bindActionCreators(getUserByUsername, dispatch)
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(UserViewContainer);
