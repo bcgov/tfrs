@@ -48,9 +48,6 @@ const UserDetails = props => (
             <strong> {props.user.details.organization.name}</strong>
           </div>
         }
-        <div>BCeID:
-          <strong> {props.user.details.authorizationId}</strong>
-        </div>
         <div>Email:
           <strong> {props.user.details.email}</strong>
         </div>
