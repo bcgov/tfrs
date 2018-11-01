@@ -41,5 +41,8 @@ class SigningAuthorityConfirmation(Auditable):
     class Meta:
         db_table = 'signing_authority_confirmation'
 
-    db_table_comment = 'An audit of assertions having been accepted'
+    db_table_comment = 'Contains a history of assertions having been accepted by the officer' \
+    			' or employee of the fuel supplier(s) (i.e. signing authority)' \
+    			' of a Credit Transfer Proposal, a Compliance Report,' \
+    			' or an Exclusion Report.'	
 

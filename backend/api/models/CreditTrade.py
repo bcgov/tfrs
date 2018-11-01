@@ -72,7 +72,7 @@ class CreditTrade(Auditable):
         decimal_places=2,
         default=Decimal('0.00'),
         validators=[validators.CreditTradeFairMarketValueValidator],
-        db_comment='Value of each credit being transferred')
+        db_comment='The fair market value of any consideration, in Canadian dollars, per validated credit being transferred.')
     zero_reason = models.ForeignKey(
         CreditTradeZeroReason,
         related_name='credit_trades',
@@ -227,4 +227,4 @@ class CreditTrade(Auditable):
     class Meta:
         db_table = 'credit_trade'
 
-    db_table_comment = 'All Credit Transfers'
+    db_table_comment = 'Records all Credit Transfer Proposals, from creation to statutory decision to approved or decline.'

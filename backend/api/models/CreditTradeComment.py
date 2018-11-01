@@ -37,7 +37,7 @@ class CreditTradeComment(Auditable):
                                blank=True,
                                null=True,
                                db_column='credit_trade_comment',
-                               db_comment='Text of the comment')
+                               db_comment='Contains all comments related to a credit transaction (credit transfer, part 3 award, validation, reduction). Comments may be added by fuel suppliers or government, with some government comments being flagged as internal only.')
 
     # require a permission to view
     privileged_access = models.BooleanField(
@@ -59,4 +59,4 @@ class CreditTradeComment(Auditable):
         db_table = 'credit_trade_comment'
         ordering = ['create_timestamp']
 
-    db_table_comment = 'User comments on credit transfers'
+    db_table_comment = 'Contains all correspondence from fuel suppliers and government (including those with privileged access) related to credit transactions (Credit Transfer, Part 3 Award, Validation, and Reduction).'

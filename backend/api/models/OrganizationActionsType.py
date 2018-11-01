@@ -28,16 +28,16 @@ from api.managers.OrganizationActionsTypeManager import OrganizationActionsTypeM
 class OrganizationActionsType(Auditable):
     the_type = models.CharField(max_length=25,
                                 unique=True,
-                                db_comment='Type enumeration. . Natural key.')
+                                db_comment='Enumerated value to describe the organization actions type.')
     description = models.CharField(
         max_length=1000,
         blank=True,
         null=True,
-        db_comment='Displayed name'
+        db_comment='Description of the organization actions type. This is the displayed name.'
     )
     display_order = models.IntegerField(db_comment='Relative rank in display sorting order')
-    effective_date = models.DateField(blank=True, null=True, db_comment='Not valid before')
-    expiration_date = models.DateField(blank=True, null=True, db_comment='Not valid after')
+    effective_date = models.DateField(blank=True, null=True, db_comment='The calendar date the organization action type value became valid.')
+    expiration_date = models.DateField(blank=True, null=True, db_comment='The calendar date the organization action type value is no longer valid.')
 
     objects = OrganizationActionsTypeManager()
 
@@ -47,5 +47,5 @@ class OrganizationActionsType(Auditable):
     class Meta:
         db_table = 'organization_actions_type'
 
-    db_table_comment = 'Actions that an organization may take'
+    db_table_comment = 'Contains a list of actions that each organization type is permitted to do. Example actions include a fuel supplier organization type being permitted to create a new Credit Transfer Proposal whereas a government organization type is permitted to create a new credit transaction. For example; Part 3 Award, Validation, or Reduction'
 
