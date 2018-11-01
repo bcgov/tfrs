@@ -114,7 +114,6 @@ OrganizationMembersTable.propTypes = {
 };
 
 const mapStateToProps = state => ({
-  loggedInUser: state.rootReducer.userRequest.loggedInUser
 });
 
 export default connect(mapStateToProps)(OrganizationMembersTable);

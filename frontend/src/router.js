@@ -35,6 +35,7 @@ import CreditTransferViewContainer from './credit_transfers/CreditTransferViewCo
 import MyOrganizationContainer from './organizations/MyOrganizationContainer';
 import OrganizationsContainer from './organizations/OrganizationsContainer';
 import OrganizationViewContainer from './organizations/OrganizationViewContainer';
+import OrganizationRolesContainer from './organizations/OrganizationRolesContainer';
 import SettingsContainer from './settings/SettingsContainer';
 import UserViewContainer from './users/UserViewContainer';
 import NotificationsContainer from './notifications/NotificationsContainer';
@@ -86,6 +87,11 @@ const Router = props => (
           exact
           path={ORGANIZATIONS.MINE}
           component={withRouter(MyOrganizationContainer)}
+        />
+        <Route
+          exact
+          path={ORGANIZATIONS.ROLES}
+          component={withRouter(OrganizationRolesContainer)}
         />
         <Route
           exact
