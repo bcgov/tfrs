@@ -208,6 +208,8 @@ class CreditTradeViewSet(AuditableMixin, mixins.CreateModelMixin,
         for credit_trade in credit_trades:
             credit_trade.update_user_id = request.user.id
             CreditTradeService.approve(credit_trade)
+            CreditTradeService.dispatch_notifications(
+                None, credit_trade)
 
         return Response({"message":
                          "Approved credit transactions have been processed."},
