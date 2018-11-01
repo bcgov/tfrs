@@ -3,8 +3,14 @@
  */
 import React from 'react';
 import PropTypes from 'prop-types';
+import FontAwesomeIcon from '@fortawesome/react-fontawesome';
 
 import Loading from '../../app/components/Loading';
+import history from '../../app/History';
+import * as Lang from '../../constants/langEnUs';
+import PERMISSIONS_USERS from '../../constants/permissions/Users';
+import { USERS as ADMIN_USERS } from '../../constants/routes/Admin';
+import USERS from '../../constants/routes/Users';
 
 import UserHistoryTable from './UserHistoryTable';
 
@@ -13,6 +19,27 @@ const UserDetails = props => (
     {props.user.isFetching && <Loading />}
     {!props.user.isFetching &&
       <div>
+        <div className="user_actions">
+          <div className="btn-container">
+            {props.loggedInUser.hasPermission(PERMISSIONS_USERS.EDIT_FUEL_SUPPLIER_USERS) &&
+            <button
+              className="btn btn-primary"
+              onClick={() => {
+                let editUrl = USERS.EDIT.replace(':id', props.user.details.id);
+
+                if (document.location.pathname.indexOf('/admin/') >= 0) {
+                  editUrl = ADMIN_USERS.EDIT.replace(':id', props.user.details.id);
+                }
+
+                history.push(editUrl);
+              }}
+              type="button"
+            >
+              <FontAwesomeIcon icon="pencil-alt" /> {Lang.BTN_EDIT}
+            </button>
+            }
+          </div>
+        </div>
         <h1>
           {`${props.user.details.firstName} ${props.user.details.lastName}`}
         </h1>
@@ -51,6 +78,9 @@ const UserDetails = props => (
 );
 
 UserDetails.propTypes = {
+  loggedInUser: PropTypes.shape({
+    hasPermission: PropTypes.func
+  }).isRequired,
   user: PropTypes.shape({
     details: PropTypes.shape({
       authorizationId: PropTypes.string,

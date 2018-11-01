@@ -49,7 +49,7 @@ class CreditTransferTextRepresentation extends Component {
         {this._statusText(this.props.creditsFrom)}
         {this.props.zeroDollarReason != null &&
         <div className="zero-reason">
-          <span>This credit transfer has zero-value per-credit because:
+          <span>The fair market value per credit is zero because:
             <span className="value">
               {Object.values(ZERO_DOLLAR_REASON)
                 .find(zd => zd.id === this.props.zeroDollarReason.id)
@@ -120,7 +120,7 @@ class CreditTransferTextRepresentation extends Component {
         {this._statusText(this.props.creditsTo)}
         {this.props.zeroDollarReason != null &&
           <div className="zero-reason">
-            <span>This credit transfer has zero-value per-credit because:
+            <span>The fair market value per credit is zero because:
               <span className="value">
                 {Object.values(ZERO_DOLLAR_REASON)
                   .find(zd => zd.id === this.props.zeroDollarReason.id)

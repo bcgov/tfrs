@@ -9,8 +9,8 @@ import {bindActionCreators} from 'redux';
 
 import Modal from '../../app/components/Modal';
 import history from '../../app/History';
-import {getFuelSuppliers} from '../../actions/organizationActions';
-import {getRoles} from '../../actions/roleActions';
+import { getFuelSuppliers } from '../../actions/organizationActions';
+import { getRoles } from '../../actions/roleActions';
 import UserForm from './components/UserForm';
 import {USERS} from '../../constants/routes/Admin';
 import toastr from '../../utils/toastr';

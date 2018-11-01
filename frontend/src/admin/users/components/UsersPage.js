@@ -54,7 +54,10 @@ const UsersPage = (props) => {
       </div>
       {isFetching && <Loading />}
       {!isFetching &&
-        <OrganizationMembersTable items={users} />
+        <OrganizationMembersTable
+          items={users}
+          loggedInUser={props.loggedInUser}
+        />
       }
     </div>
   );

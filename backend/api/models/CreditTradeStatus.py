@@ -36,17 +36,17 @@ class CreditTradeStatus(Auditable):
         blank=True,
         null=True,
         unique=True,
-        db_comment="Status enumeration. This determines visibility and "
-                   "possible actions for credit transfers. Natural key."
+        db_comment="Contains an enumerated value to describe the credit trade status."
+                   "This is a unique natural key."
     )
     description = models.CharField(
-        max_length=4000, blank=True, null=True, db_comment='Displayed name')
+        max_length=4000, blank=True, null=True, db_comment='Description of the credit trade status. This is the displayed name.')
     display_order = models.IntegerField(
         db_comment='Relative rank in display sorting order')
     effective_date = models.DateField(
-        blank=True, null=True, db_comment='Not valid before')
+        blank=True, null=True, db_comment='The calendar date the credit trade status type value became valid.')
     expiration_date = models.DateField(
-        blank=True, null=True, db_comment='Not valid after')
+        blank=True, null=True, db_comment='The calendar date the credit trade status type value is no longer valid.')
 
     objects = CreditTradeStatusManager()
 
@@ -101,5 +101,9 @@ class CreditTradeStatus(Auditable):
 
         return self.status
 
-    db_table_comment = "Possible states that a credit transfer may be in. " \
-                       "Application logic is couplied tightly to this table."
+    db_table_comment = "Contains a list of statuses that a credit transfer " \
+                       "proposal may be in. For example; Approved, " \
+                       "Declined, Rescinded, etc. Note: application logic " \
+                       "is tightly coupled to this table; therefore, " \
+                       "changes to the enumerated values should be done " \
+                       "with caution."

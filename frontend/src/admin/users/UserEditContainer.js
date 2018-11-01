@@ -12,7 +12,7 @@ import Modal from '../../app/components/Modal';
 import history from '../../app/History';
 import Loading from '../../app/components/Loading';
 import { getFuelSuppliers } from '../../actions/organizationActions';
-import getRoles from '../../actions/roleActions';
+import { getRoles } from '../../actions/roleActions';
 import UserForm from './components/UserForm';
 import USERS from '../../constants/routes/Users';
 import { USERS as ADMIN_USERS } from '../../constants/routes/Admin';
