@@ -27,14 +27,14 @@ from api.managers.OrganizationStatusManager import OrganizationStatusManager
 class OrganizationStatus(Auditable):
     status = models.CharField(max_length=25,
                               unique=True,
-                              db_comment='Status enumeration. Natural key.')
+                              db_comment='Enumerated value to describe the organization status.')
     description = models.CharField(max_length=1000,
                                    blank=True,
                                    null=True,
-                                   db_comment='Displayed name')
+                                   db_comment='Description of the organization status. This is the displayed name.')
     display_order = models.IntegerField(db_comment='Relative rank in display sorting order')
-    effective_date = models.DateField(blank=True, null=True, db_comment='Not valid before')
-    expiration_date = models.DateField(blank=True, null=True, db_comment='Not valid after')
+    effective_date = models.DateField(blank=True, null=True, db_comment='The calendar date that the organization status type value became valid.')
+    expiration_date = models.DateField(blank=True, null=True, db_comment='The calendar date that the organization status type value is no longer valid.')
     objects = OrganizationStatusManager()
 
     def natural_key(self):

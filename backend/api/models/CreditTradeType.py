@@ -37,16 +37,16 @@ class CreditTradeType(Auditable):
         blank=True,
         null=True,
         unique=True,
-        db_comment='Type enumeration'
+        db_comment='Enumerated value to describe the credit trade type.'
     )
     description = models.CharField(
-        max_length=1000, blank=True, null=True, db_comment='Displayed name')
+        max_length=1000, blank=True, null=True, db_comment='Description of the credit trade type. This is the displayed name.')
     display_order = models.IntegerField(
         db_comment='Relative rank in display sorting order')
     effective_date = models.DateField(
-        blank=True, null=True, db_comment='Not valid before')
+        blank=True, null=True, db_comment='The calendar date the credit trade type value became valid.')
     expiration_date = models.DateField(
-        blank=True, null=True, db_comment='Not valid after')
+        blank=True, null=True, db_comment='The calendar date the credit trade type value is no longer valid.')
     is_gov_only_type = models.BooleanField(
         db_comment='Flag. True if only government users can create this type '
                    'of transfer.'
@@ -64,7 +64,7 @@ class CreditTradeType(Auditable):
     class Meta:
         db_table = 'credit_trade_type'
 
-    db_table_comment = 'Possible types of transfer'
+    db_table_comment = 'Contains a list of credit transaction types, which are credit transfer, part 3 award, validation and reduction.'
 
     @property
     def friendly_name(self):
