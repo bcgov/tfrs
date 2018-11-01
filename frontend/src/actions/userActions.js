@@ -16,6 +16,33 @@ const getUsers = () => (dispatch) => {
     });
 };
 
+const createUser = (payload) => (dispatch) => {
+  dispatch(createUserRequest(payload));
+  return axios.post(Routes.BASE_URL + Routes.USERS, payload)
+    .then((response) => {
+      dispatch(createUserSuccess(response.data));
+    }).catch((error) => {
+    dispatch(createUserError(error.response));
+    throw(error)
+  });
+};
+
+
+const updateUser = (id, payload) => (dispatch) => {
+
+  dispatch(updateUserRequest(id));
+
+  return axios.put(Routes.BASE_URL + Routes.USERS + '/' + id, payload)
+    .then((response) => {
+      dispatch(updateUserSuccess(response.data));
+    }).catch((error) => {
+      dispatch(updateUserError(error.response));
+      throw(error); // pass it up the chain
+  });
+
+};
+
+
 const getLoggedInUser = () => (dispatch) => {
   dispatch(getLoggedInUserRequest());
   axios.get(Routes.BASE_URL + Routes.CURRENT_USER)
@@ -39,6 +66,47 @@ const signUserOut = () => (dispatch) => {
     dispatch(signUserOutAction());
   }
 };
+
+
+
+const createUserRequest = payload => ({
+  name: ReducerTypes.USER_ADMIN,
+  type: ActionTypes.CREATE_USER_REQUEST,
+  data: payload
+});
+
+const createUserSuccess = user => ({
+  name: ReducerTypes.USER_ADMIN,
+  type: ActionTypes.CREATE_USER_SUCCESS,
+  data: user
+});
+
+const createUserError = error => ({
+  name: ReducerTypes.USER_ADMIN,
+  type: ActionTypes.CREATE_USER_ERROR,
+  errorData: error
+});
+
+
+
+const updateUserRequest = payload => ({
+  name: ReducerTypes.USER_ADMIN,
+  type: ActionTypes.UPDATE_USER_REQUEST,
+  data: payload
+});
+
+const updateUserSuccess = user => ({
+  name: ReducerTypes.USER_ADMIN,
+  type: ActionTypes.UPDATE_USER_SUCCESS,
+  data: user
+});
+
+const updateUserError = error => ({
+  name: ReducerTypes.USER_ADMIN,
+  type: ActionTypes.UPDATE_USER_ERROR,
+  errorData: error
+});
+
 
 const signUserOutAction = () => ({
   name: ReducerTypes.SIGN_USER_OUT,
@@ -71,6 +139,17 @@ const getUser = id => (dispatch) => {
       dispatch(getUserError(error.response));
     });
 };
+
+const getUserByUsername = username => (dispatch) => {
+  dispatch(getUserRequest());
+  axios.get(`${Routes.BASE_URL}${Routes.USERS}/by_username?username=${username}`)
+    .then((response) => {
+      dispatch(getUserSuccess(response.data));
+    }).catch((error) => {
+    dispatch(getUserError(error.response));
+  });
+};
+
 
 const getUserError = error => ({
   errorMessage: error,
@@ -107,4 +186,4 @@ const getUsersError = error => ({
   errorMessage: error
 });
 
-export { getUsers, getLoggedInUser, getUser, signUserOut };
+export { getUsers, getLoggedInUser, createUser, updateUser, getUser, getUserByUsername, signUserOut };

@@ -27,6 +27,10 @@ services:
           - KEYCLOAK_REALM=http://localhost:8888/auth/realms/tfrs
           - KEYCLOAK_ISSUER=http://localhost:8888/auth/realms/tfrs
           - KEYCLOAK_CERTS_URL=http://keycloak:8080/auth/realms/tfrs/protocol/openid-connect/certs
+          - KEYCLOAK_SA_BASEURL=http://keycloak:8080
+          - KEYCLOAK_SA_REALM=tfrs
+          - KEYCLOAK_SA_CLIENT_ID=tfrs-app-sa
+          - KEYCLOAK_SA_CLIENT_SECRET=06dc71d6-1800-4f5d-b7b3-4c4fda226599
           - SMTP_SERVER_HOST=mailslurper
           - SMTP_SERVER_PORT=2500
           - EMAIL_SENDING_ENABLED=True

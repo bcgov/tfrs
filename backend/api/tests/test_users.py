@@ -43,7 +43,6 @@ class TestUsers(BaseTestCase):
                               display_name=user.display_name,
                               email=user.email,
                               authorization_id=user.authorization_id):
-
                 response = self.clients[user.username].get('/api/users/current')
                 self.assertEqual(response.status_code, status.HTTP_200_OK)
                 response_data = json.loads(response.content.decode("utf-8"))
@@ -54,3 +53,43 @@ class TestUsers(BaseTestCase):
 
                 # don't want to leak GUID
                 self.assertNotIn('authorizationGuid', response_data, "GUID")
+
+    def test_get_by_username_as_admin(self):
+        """Test that by_username user endpoint returns expected data for client"""
+
+        for user in self.users.values():
+            with self.subTest("evaluating get_by_username user endpoint as admin",
+                              user=user.username,
+                              first_name=user.first_name,
+                              last_name=user.last_name,
+                              display_name=user.display_name,
+                              email=user.email,
+                              authorization_id=user.authorization_id):
+                response = self.clients['gov_admin'].get('/api/users/by_username?username={}'.format(user.username))
+                self.assertEqual(response.status_code, status.HTTP_200_OK)
+                response_data = json.loads(response.content.decode("utf-8"))
+
+                self.assertEqual(response_data['authorizationId'], user.authorization_id, "Authid")
+                self.assertEqual(response_data['email'], user.email, "Email")
+                self.assertEqual(response_data['displayName'], user.display_name, "Display Name")
+
+                # don't want to leak GUID
+                self.assertNotIn('authorizationGuid', response_data, "GUID")
+
+    def test_create_user(self):
+        """Test that create user endpoint works"""
+        payload = {
+            'email': 'unused_email@email.com',
+            'user': {
+                'first_name': 'firstname',
+                'last_name': 'lastname',
+                'username': 'new_user_1',
+                'organization': 1,
+                'roles': [],
+                'email': 'email@email.com'
+            }
+        }
+        response = self.clients['gov_admin'].post('/api/users',
+                                                  content_type='application/json',
+                                                  data=json.dumps(payload))
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
