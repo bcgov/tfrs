@@ -396,7 +396,6 @@ class CreditTradeService(object):
     def dispatch_notifications(previous_state: CreditTrade,
                                credit_trade: CreditTrade):
         if credit_trade.type.is_gov_only_type:
-<<<<<<< HEAD
             return CreditTradeService.pvr_notification(
                 previous_state, credit_trade)
 
@@ -405,14 +404,6 @@ class CreditTradeService(object):
 
     @staticmethod
     def credit_trade_notification(_previous_state, credit_trade):
-=======
-            return CreditTradeService.pvr_notification(credit_trade)
-
-        return CreditTradeService.credit_trade_notification(credit_trade)
-
-    @staticmethod
-    def credit_trade_notification(credit_trade):
->>>>>>> master
         notification_map = defaultdict(lambda: [])
         government = Organization.objects.filter(
             type__type='Government').first()
@@ -513,14 +504,16 @@ class CreditTradeService(object):
         ResultingNotification = namedtuple('ResultingNotification', [
             'recipient', 'notification_type'])
 
-        if previous_state.status.status == 'Recommended' and \
+        if previous_state and \
+                previous_state.status.status == 'Recommended' and \
                 previous_state.update_user == credit_trade.update_user:
             notification_map[StatusChange('Draft')] = [
                 ResultingNotification(
                     government,
                     NotificationType.PVR_PULLED_BACK)
             ]
-        elif previous_state.status.status == 'Recommended' and \
+        elif previous_state and \
+                previous_state.status.status == 'Recommended' and \
                 previous_state.update_user != credit_trade.update_user:
             notification_map[StatusChange('Draft')] = [
                 ResultingNotification(
