@@ -396,6 +396,7 @@ class CreditTradeService(object):
     def dispatch_notifications(previous_state: CreditTrade,
                                credit_trade: CreditTrade):
         if credit_trade.type.is_gov_only_type:
+<<<<<<< HEAD
             return CreditTradeService.pvr_notification(
                 previous_state, credit_trade)
 
@@ -404,6 +405,14 @@ class CreditTradeService(object):
 
     @staticmethod
     def credit_trade_notification(_previous_state, credit_trade):
+=======
+            return CreditTradeService.pvr_notification(credit_trade)
+
+        return CreditTradeService.credit_trade_notification(credit_trade)
+
+    @staticmethod
+    def credit_trade_notification(credit_trade):
+>>>>>>> master
         notification_map = defaultdict(lambda: [])
         government = Organization.objects.filter(
             type__type='Government').first()
@@ -454,9 +463,6 @@ class CreditTradeService(object):
                 government,
                 NotificationType.CREDIT_TRANSFER_RECOMMENDED_FOR_DECLINATION),
         ]
-
-
-        # figure this out. /approve method?
 
         notification_map[StatusChange('Approved')] = [
             ResultingNotification(

@@ -7,8 +7,9 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
-import { getMyOrganization, getMyOrganizationMembers } from '../actions/organizationActions';
+import { getMyOrganizationMembers } from '../actions/organizationActions';
 import OrganizationDetails from './components/OrganizationDetails';
+import OrganizationMembers from './components/OrganizationMembers';
 
 class MyOrganizationContainer extends Component {
   componentWillMount () {
@@ -16,36 +17,35 @@ class MyOrganizationContainer extends Component {
   }
 
   loadData () {
-    this.props.getMyOrganization();
     this.props.getMyOrganizationMembers();
   }
 
   render () {
-    return (
+    return ([
       <OrganizationDetails
+        key="details"
+        organization={this.props.loggedInUser.organization}
+      />,
+      <OrganizationMembers
+        key="members"
         loggedInUser={this.props.loggedInUser}
         members={this.props.myOrganizationMembers}
-        organization={this.props.myOrganization}
       />
-    );
+    ]);
   }
 }
 
 MyOrganizationContainer.propTypes = {
-  getMyOrganization: PropTypes.func.isRequired,
   getMyOrganizationMembers: PropTypes.func.isRequired,
   loggedInUser: PropTypes.shape({
-  }).isRequired,
-  myOrganization: PropTypes.shape({
-    details: PropTypes.shape({
+    organization: PropTypes.shape({
       id: PropTypes.number,
       name: PropTypes.string,
       organizationBalance: PropTypes.shape({
         validatedCredits: PropTypes.number
       }),
       statusDisplay: PropTypes.string
-    }),
-    isFetching: PropTypes.bool
+    })
   }).isRequired,
   myOrganizationMembers: PropTypes.shape({
     isFetching: PropTypes.bool,
@@ -64,10 +64,6 @@ MyOrganizationContainer.propTypes = {
 
 const mapStateToProps = state => ({
   loggedInUser: state.rootReducer.userRequest.loggedInUser,
-  myOrganization: {
-    details: state.rootReducer.organizationRequest.fuelSupplier,
-    isFetching: state.rootReducer.organizationRequest.isFetching
-  },
   myOrganizationMembers: {
     isFetching: state.rootReducer.organizationMembers.isFetching,
     users: state.rootReducer.organizationMembers.users
@@ -75,9 +71,6 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  getMyOrganization: () => {
-    dispatch(getMyOrganization());
-  },
   getMyOrganizationMembers: () => {
     dispatch(getMyOrganizationMembers());
   }

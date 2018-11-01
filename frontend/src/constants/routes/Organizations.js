@@ -6,7 +6,8 @@ const ORGANIZATIONS = {
   DETAILS: `${BASE_PATH}/view/:id`,
   EXPORT: `${BASE_PATH}/xls`,
   LIST: BASE_PATH,
-  MINE: `${BASE_PATH}/mine`
+  MINE: `${BASE_PATH}/mine`,
+  ROLES: `${BASE_PATH}/roles`
 };
 
 export default ORGANIZATIONS;

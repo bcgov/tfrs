@@ -26,13 +26,13 @@ from auditable.models import Auditable
 
 class CreditTradeZeroReason(Auditable):
     reason = models.CharField(max_length=25,
-                              db_comment='Reason enumeration')
-    description = models.CharField(max_length=1000, db_comment='Displayed name')
+                              db_comment='Enumerated value to describe the credit trade zero reason.')
+    description = models.CharField(max_length=1000, db_comment='Description of the credit trade zero reason. This is the displayed name.')
     display_order = models.IntegerField(db_comment='Relative rank in display sorting order')
-    effective_date = models.DateField(blank=True, null=True, db_comment='Not valid before')
-    expiration_date = models.DateField(blank=True, null=True, db_comment='Not valid after')
+    effective_date = models.DateField(blank=True, null=True, db_comment='The calendar date the credit trade zero reason type value became valid.')
+    expiration_date = models.DateField(blank=True, null=True, db_comment='The calendar date the credit trade zero reason type value is no longer valid.')
 
     class Meta:
         db_table = 'credit_trade_zero_reason'
 
-    db_table_comment = 'Possible rationales for a zero-valued credit transfer'
+    db_table_comment = 'Contains a list of reasons for Credit Transfer Proposals that have a fair market value of zero dollars per credit. For example: the fuel suppliers are affiliated or an "Other" reason. If "Other" is selected, a comment is required explaining why the credits being transferred have a fair market value of zero dollars.'

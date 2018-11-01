@@ -77,6 +77,7 @@ class CreditTradeCommentPermissions(permissions.BasePermission):
     action_mapping[(_Relationship.GovernmentDirector, 'Not Recommended', False, True)] = True
     action_mapping[(_Relationship.GovernmentDirector, 'Recommended', True, True)] = True
     action_mapping[(_Relationship.GovernmentDirector, 'Not Recommended', True, True)] = True
+    action_mapping[(_Relationship.GovernmentDirector, 'Draft', False, False)] = True
     action_mapping[(_Relationship.GovernmentDirector, 'Draft', False, True)] = True
     action_mapping[(_Relationship.GovernmentDirector, 'Recorded', False, True)] = True
 

@@ -28,13 +28,13 @@ from api.managers.OrganizationTypeManager import OrganizationTypeManager
 class OrganizationType(Auditable):
     type = models.CharField(max_length=25,
                             unique=True,
-                            db_comment='Organization type enumeration. Natural key.')
+                            db_comment='Enumerated value to describe the organization type.')
     description = models.CharField(max_length=1000, blank=True, null=True,
-                                   db_comment='Displayed name')
+                                   db_comment='Description of the organization type. This is the displayed name.')
     display_order = models.IntegerField(blank=True, null=True,
                                         db_comment='Relative rank in display sorting order')
-    effective_date = models.DateField(blank=True, null=True, db_comment='Not valid before')
-    expiration_date = models.DateField(blank=True, null=True, db_comment='Not valid after')
+    effective_date = models.DateField(blank=True, null=True, db_comment='The calendar date that the organization type value became valid.')
+    expiration_date = models.DateField(blank=True, null=True, db_comment='The calendar date that the organization type value became is no longer valid.')
 
     def __str__(self):
         return self.type
@@ -47,5 +47,6 @@ class OrganizationType(Auditable):
     class Meta:
         db_table = 'organization_type'
 
-    db_table_comment = 'Possible types of organization.' \
-                       'Used to differentiate available actions and displays'
+    db_table_comment = 'Contains a list of possible organization types,' \
+                       ' which are fuel supplier organization type (BCeID)' \
+                       ' and government organization type (IDIR). Used to differentiate available actions and displays.'                    
