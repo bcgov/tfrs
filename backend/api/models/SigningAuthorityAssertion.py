@@ -30,14 +30,16 @@ class SigningAuthorityAssertion(Auditable):
     description = models.CharField(max_length=4000,
                                    blank=True,
                                    null=True,
-                                   db_comment='Displayed name')
+                                   db_comment='Description of the signing authority assertion statement. This is the displayed name.')
     display_order = models.IntegerField(db_comment='Relative rank in display sorting order')
-    effective_date = models.DateField(blank=True, null=True, db_comment='Not valid before')
-    expiration_date = models.DateField(blank=True, null=True, db_comment='Not valid after')
+    effective_date = models.DateField(blank=True, null=True, db_comment='The calendar date that the signing authority assertion statement became valid.')
+    expiration_date = models.DateField(blank=True, null=True, db_comment='The calendar date that the signing authority assertion statement is no longer valid.')
 
     objects = SigningAuthorityAssertionManager()
 
     class Meta:
         db_table = 'signing_authority_assertion'
 
-    db_table_comment = 'Assertions that signing authorities must accept to sign a transfer'
+    db_table_comment = 'Contains a list of valid regulatory statements that must be' \
+                       ' confirmed or certified by the officer or employee of the fuel supplier(s)' \
+                       ' (i.e. signing authority) prior to signing and submitting a Credit Transfer Proposal, or an Exclusion Report to government for review.'

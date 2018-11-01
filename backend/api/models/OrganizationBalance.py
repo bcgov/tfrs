@@ -35,13 +35,13 @@ class OrganizationBalance(Auditable):
         related_name='balances',
         on_delete=models.CASCADE)
     validated_credits = models.BigIntegerField(
-        db_comment='Validated LCF credits during validity period'
+        db_comment='The actual balance of validated Low Carbon Fuel credits held by a fuel supplier between the effective_date and the expiration_date. If expiration_date is NULL then we assume that it is the current balance.'
     )
 
     effective_date = models.DateField(
-        blank=True, null=True, db_comment='Not valid before')
+        blank=True, null=True, db_comment='The date and time that the referenced credit balance for an organization become valid')
     expiration_date = models.DateField(
-        blank=True, null=True, db_comment='Not valid after')
+        blank=True, null=True, db_comment='The date and time that the referenced credit balance for an organization become invalid (i.e. changed).')
 
     credit_trade = models.ForeignKey(
         'CreditTrade',
@@ -52,4 +52,4 @@ class OrganizationBalance(Auditable):
     class Meta:
         db_table = 'organization_balance'
 
-    db_table_comment = 'Represents an organization\'s credit balance for a range of time'
+    db_table_comment = 'Represents a fuel supplier organization\'s credit balance at a given point in time. The government organization does not have an actual credit balance, but rather one was set artificially high to enable the awarding or validating of credits to fuel suppliers within TFRS.'

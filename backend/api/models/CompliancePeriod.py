@@ -28,13 +28,13 @@ from auditable.models import Auditable
 
 class CompliancePeriod(Auditable):
     description = models.CharField(max_length=1000, blank=True, null=True,
-                                   db_comment='Displayed name')
+                                   db_comment='Description of the compliance period. This is the displayed name.')
 
     display_order = models.IntegerField(db_comment='Relative rank in display sorting order')
-    effective_date = models.DateField(blank=True, null=True, db_comment='Not valid before')
-    expiration_date = models.DateField(blank=True, null=True, db_comment='Not valid after')
+    effective_date = models.DateField(blank=True, null=True, db_comment='The calendar date the compliance period value became valid.')
+    expiration_date = models.DateField(blank=True, null=True, db_comment='The calendar date the compliance period is no longer valid.')
 
     class Meta:
         db_table = 'compliance_period'
 
-    db_table_comment = 'Compliance Periods'
+    db_table_comment = 'Contains a list of valid date ranges for compliance periods, as defined in the Act, for which a credit transaction or submission is associated.'
