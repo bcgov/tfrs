@@ -26,6 +26,7 @@ from db_comments.patch_fields import patch_fields
 from . import User
 from . import CreditTradeComment
 from . import OrganizationAddress
+from . import UserCreationRequest
 
 patch_fields()
 
