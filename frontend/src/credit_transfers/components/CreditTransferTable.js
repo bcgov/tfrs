@@ -10,6 +10,7 @@ import moment from 'moment';
 import FontAwesomeIcon from '@fortawesome/react-fontawesome';
 import numeral from 'numeral';
 
+import history from '../../app/History';
 import * as NumberFormat from '../../constants/numeralFormats';
 import CREDIT_TRANSACTIONS from '../../constants/routes/CreditTransactions';
 import { CREDIT_TRANSFER_STATUS, CREDIT_TRANSFER_TYPES } from '../../constants/values';
@@ -140,9 +141,20 @@ const CreditTransferTable = (props) => {
         desc: true
       }]}
       filterable={filterable}
-      getTrProps={(state, rowInfo) => ({
-        className: (rowInfo && rowInfo.row.id.toString() === props.highlight) ? 'highlight' : null
-      })}
+      getTrProps={(state, row) => {
+        if (row && row.original) {
+          return {
+            onClick: (e) => {
+              const viewUrl = CREDIT_TRANSACTIONS.DETAILS.replace(':id', row.original.id);
+
+              history.push(viewUrl);
+            },
+            className: (row && row.original.id.toString() === props.highlight) ? 'clickable highlight' : 'clickable'
+          };
+        }
+
+        return {};
+      }}
       pageSizeOptions={[5, 10, 15, 20, 25, 50, 100]}
       defaultFilterMethod={filterMethod}
       columns={columns}

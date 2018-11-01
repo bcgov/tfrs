@@ -28,6 +28,7 @@ class UserViewContainer extends Component {
   render () {
     return (
       <UserDetails
+        loggedInUser={this.props.loggedInUser}
         user={this.props.user}
       />
     );
@@ -44,6 +45,9 @@ UserViewContainer.defaultProps = {
 
 UserViewContainer.propTypes = {
   getUser: PropTypes.func.isRequired,
+  loggedInUser: PropTypes.shape({
+    hasPermission: PropTypes.func
+  }).isRequired,
   match: PropTypes.shape({
     params: PropTypes.shape({
       id: PropTypes.string.isRequired
@@ -57,6 +61,7 @@ UserViewContainer.propTypes = {
 };
 
 const mapStateToProps = state => ({
+  loggedInUser: state.rootReducer.userRequest.loggedInUser,
   user: {
     details: state.rootReducer.userViewRequest.user,
     error: state.rootReducer.userViewRequest.error,
