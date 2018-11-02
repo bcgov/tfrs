@@ -1,5 +1,5 @@
 
-timeout(30) {
+
     //timeout 30 minutes
     podTemplate(label: "develop-frontend-maven-${env.BUILD_NUMBER}", name: "develop-frontend-maven-${env.BUILD_NUMBER}", serviceAccount: 'jenkins', cloud: 'openshift',
         containers: [
@@ -39,7 +39,9 @@ timeout(30) {
 
     stage('Build Frontend') {
         echo "Building Frontend..."
+	timeout(30) {
 	    openshiftBuild bldCfg: 'client-develop-angular-app-build', showBuildLogs: 'true'
+	}
         openshiftBuild bldCfg: 'client-develop', showBuildLogs: 'true'
         echo ">> Getting Image Hash for frontend"
         IMAGE_HASH_FRONTEND = sh (
@@ -50,7 +52,9 @@ timeout(30) {
 
     stage('Build Notification Server') {
         echo "Building Notification Server ..."
+	timeout(30) {
 	    openshiftBuild bldCfg: 'notification-server-develop', showBuildLogs: 'true'
+	}
         echo ">> Getting Image Hash for notification server"
         IMAGE_HASH_NOTIFICATION = sh (
             script: 'oc get istag notification-server-develop:latest -o template --template="{{.image.dockerImageReference}}"|awk -F ":" \'{print $3}\'',
@@ -123,4 +127,4 @@ stage('FT on Dev') {
     } //end of node
     } //end of podTemplate 
 } //end of stage
-} //timeout
+
