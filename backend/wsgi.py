@@ -13,7 +13,7 @@ from django.core.wsgi import get_wsgi_application
 from dotenv import load_dotenv
 
 try:
-    ENV = Path('..') / '.env'
+    ENV = '.env'
     load_dotenv(dotenv_path=ENV)
 except TypeError:
     pass  # path doesn't exist. no cause for alarm.
