@@ -7,7 +7,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
-import { getUser } from '../../actions/userActions';
+import { getUser, updateUser } from '../../actions/userActions';
 import Modal from '../../app/components/Modal';
 import history from '../../app/History';
 import Loading from '../../app/components/Loading';
@@ -17,8 +17,6 @@ import UserForm from './components/UserForm';
 import USERS from '../../constants/routes/Users';
 import { USERS as ADMIN_USERS } from '../../constants/routes/Admin';
 import toastr from '../../utils/toastr';
-import {updateUser} from "../../actions/userActions";
-
 
 class UserEditContainer extends Component {
   constructor (props) {
@@ -37,6 +35,8 @@ class UserEditContainer extends Component {
         roles: []
       }
     };
+
+    this.submitted = false;
 
     this._addToFields = this._addToFields.bind(this);
     this._handleInputChange = this._handleInputChange.bind(this);
@@ -74,7 +74,7 @@ class UserEditContainer extends Component {
   }
 
   loadPropsToFieldState (props) {
-    if (!props.user.isFetching) {
+    if (!props.user.isFetching && !this.submitted) {
       const fieldState = {
         firstName: props.user.details.firstName || '',
         lastName: props.user.details.lastName || '',
@@ -122,6 +122,8 @@ class UserEditContainer extends Component {
   _handleSubmit (event) {
     event.preventDefault();
 
+    this.submitted = true;
+
     // API data structure
     const data = {
       cellPhone: this.state.fields.mobilePhone,
@@ -141,8 +143,6 @@ class UserEditContainer extends Component {
 
     const { id } = this.props.user.details;
 
-    console.log(data);
-
     let viewUrl = USERS.DETAILS.replace(':id', id);
 
     if (document.location.pathname.indexOf('/admin/') >= 0) {
@@ -150,10 +150,10 @@ class UserEditContainer extends Component {
     }
 
     this.props.updateUser(id, data).then(() => {
-      //redirect
+      // redirect
       history.push(viewUrl);
       toastr.userSuccess();
-    }).catch(error => {});
+    });
 
     return true;
   }
@@ -201,7 +201,7 @@ class UserEditContainer extends Component {
         roles={this.props.roles}
         title="Edit User"
         toggleCheck={this._toggleCheck}
-        errors={this.props.error}
+        errors={this.props.user.error}
       />,
       <Modal
         handleSubmit={(event) => {
@@ -244,7 +244,7 @@ UserEditContainer.propTypes = {
     error: PropTypes.shape({}),
     isFetching: PropTypes.bool
   }),
-  updateUser: PropTypes.func.isRequired,
+  updateUser: PropTypes.func.isRequired
 };
 
 const mapStateToProps = state => ({

@@ -22,7 +22,11 @@ class UsersContainer extends Component {
 
   render () {
     return ([
-      <AdminTabs key="nav" active="users" />,
+      <AdminTabs
+        active="users"
+        key="nav"
+        loggedInUser={this.props.loggedInUser}
+      />,
       <UsersPage
         data={this.props.myOrganizationMembers}
         key="page"
@@ -33,6 +37,16 @@ class UsersContainer extends Component {
 
 UsersContainer.propTypes = {
   getMyOrganizationMembers: PropTypes.func.isRequired,
+  loggedInUser: PropTypes.shape({
+    organization: PropTypes.shape({
+      id: PropTypes.number,
+      name: PropTypes.string,
+      organizationBalance: PropTypes.shape({
+        validatedCredits: PropTypes.number
+      }),
+      statusDisplay: PropTypes.string
+    })
+  }).isRequired,
   myOrganizationMembers: PropTypes.shape({
     isFetching: PropTypes.bool,
     users: PropTypes.arrayOf(PropTypes.shape({
@@ -49,6 +63,7 @@ UsersContainer.propTypes = {
 };
 
 const mapStateToProps = state => ({
+  loggedInUser: state.rootReducer.userRequest.loggedInUser,
   myOrganizationMembers: {
     isFetching: state.rootReducer.organizationMembers.isFetching,
     users: state.rootReducer.organizationMembers.users

@@ -33,7 +33,7 @@ const GovernmentTransferFormDetails = props => (
               onChange={props.handleInputChange}
               required="required"
             >
-              <option key="0" value="" default />
+              <option key="0" value="" default>Select a Fuel Supplier</option>
               {props.fuelSuppliers &&
                 props.fuelSuppliers.map(organization => (
                   <option key={organization.id} value={organization.id}>

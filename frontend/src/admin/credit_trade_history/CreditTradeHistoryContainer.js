@@ -23,7 +23,11 @@ class CreditTradeHistoryContainer extends Component {
 
   render () {
     return ([
-      <AdminTabs active="user-activity" key="nav" />,
+      <AdminTabs
+        active="user-activity"
+        key="nav"
+        loggedInUser={this.props.loggedInUser}
+      />,
       <CreditTradeHistoryPage
         data={this.props.historicalData}
         key="page"
@@ -44,14 +48,25 @@ CreditTradeHistoryContainer.propTypes = {
   historicalData: PropTypes.shape({
     isFetching: PropTypes.bool,
     items: PropTypes.arrayOf(PropTypes.shape())
-  })
+  }),
+  loggedInUser: PropTypes.shape({
+    organization: PropTypes.shape({
+      id: PropTypes.number,
+      name: PropTypes.string,
+      organizationBalance: PropTypes.shape({
+        validatedCredits: PropTypes.number
+      }),
+      statusDisplay: PropTypes.string
+    })
+  }).isRequired
 };
 
 const mapStateToProps = state => ({
   historicalData: {
     items: state.rootReducer.creditTransfersHistory.items,
     isFetching: state.rootReducer.creditTransfersHistory.isFetching
-  }
+  },
+  loggedInUser: state.rootReducer.userRequest.loggedInUser
 });
 
 const mapDispatchToProps = dispatch => ({
