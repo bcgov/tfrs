@@ -34,6 +34,12 @@ const GOVERNMENT_TRANSFER_NOTIFICATIONS = [{
   description: 'Returned to Analyst',
   key: 'return_to_analyst',
   recipients: ['government']
+}, {
+  id: 1,
+  code: 'PVR_RETURNED_TO_ANALYST',
+  description: 'Returned to Analyst',
+  key: 'return_to_analyst',
+  recipients: ['government']
 }];
 
 export default GOVERNMENT_TRANSFER_NOTIFICATIONS;
