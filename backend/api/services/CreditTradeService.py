@@ -393,15 +393,17 @@ class CreditTradeService(object):
         return allowed_statuses
 
     @staticmethod
-    def dispatch_notifications(previous_status: CreditTradeStatus,
+    def dispatch_notifications(previous_state: CreditTrade,
                                credit_trade: CreditTrade):
         if credit_trade.type.is_gov_only_type:
-            return CreditTradeService.pvr_notification(credit_trade)
+            return CreditTradeService.pvr_notification(
+                previous_state, credit_trade)
 
-        return CreditTradeService.credit_trade_notification(credit_trade)
+        return CreditTradeService.credit_trade_notification(
+            previous_state, credit_trade)
 
     @staticmethod
-    def credit_trade_notification(credit_trade):
+    def credit_trade_notification(_previous_state, credit_trade):
         notification_map = defaultdict(lambda: [])
         government = Organization.objects.filter(
             type__type='Government').first()
@@ -493,7 +495,7 @@ class CreditTradeService(object):
             )
 
     @staticmethod
-    def pvr_notification(credit_trade):
+    def pvr_notification(previous_state, credit_trade):
         notification_map = defaultdict(lambda: [])
         government = Organization.objects.filter(
             type__type='Government').first()
@@ -502,11 +504,28 @@ class CreditTradeService(object):
         ResultingNotification = namedtuple('ResultingNotification', [
             'recipient', 'notification_type'])
 
-        notification_map[StatusChange('Draft')] = [
-            ResultingNotification(
-                government,
-                NotificationType.PVR_CREATED)
-        ]
+        if previous_state and \
+                previous_state.status.status == 'Recommended' and \
+                previous_state.update_user == credit_trade.update_user:
+            notification_map[StatusChange('Draft')] = [
+                ResultingNotification(
+                    government,
+                    NotificationType.PVR_PULLED_BACK)
+            ]
+        elif previous_state and \
+                previous_state.status.status == 'Recommended' and \
+                previous_state.update_user != credit_trade.update_user:
+            notification_map[StatusChange('Draft')] = [
+                ResultingNotification(
+                    government,
+                    NotificationType.PVR_RETURNED_TO_ANALYST)
+            ]
+        else:
+            notification_map[StatusChange('Draft')] = [
+                ResultingNotification(
+                    government,
+                    NotificationType.PVR_CREATED)
+            ]
 
         notification_map[StatusChange('Recommended')] = [
             ResultingNotification(

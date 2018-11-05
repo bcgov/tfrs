@@ -23,3 +23,4 @@ class NotificationType(Enum):
     PVR_APPROVED = "PVR Approved"
     PVR_COMMENT = "PVR Comment Created Or Updated"
     PVR_INTERNAL_COMMENT = "PVR Internal Comment Created Or Updated"
+    PVR_RETURNED_TO_ANALYST = "PVR Returned to Analyst"
