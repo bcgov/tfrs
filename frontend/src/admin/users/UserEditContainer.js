@@ -17,6 +17,8 @@ import UserForm from './components/UserForm';
 import USERS from '../../constants/routes/Users';
 import { USERS as ADMIN_USERS } from '../../constants/routes/Admin';
 import toastr from '../../utils/toastr';
+import {updateUser} from "../../actions/userActions";
+
 
 class UserEditContainer extends Component {
   constructor (props) {
@@ -122,7 +124,6 @@ class UserEditContainer extends Component {
 
     // API data structure
     const data = {
-      bceid: this.state.fields.bceid,
       cellPhone: this.state.fields.mobilePhone,
       email: this.state.fields.email,
       firstName: this.state.fields.firstName,
@@ -133,10 +134,9 @@ class UserEditContainer extends Component {
         if (role.value) {
           return role.id;
         }
-
         return false;
       }),
-      status: this.state.fields.status
+      is_active: this.state.fields.status === 'active'
     };
 
     const { id } = this.props.user.details;
@@ -149,8 +149,11 @@ class UserEditContainer extends Component {
       viewUrl = ADMIN_USERS.DETAILS.replace(':id', id);
     }
 
-    history.push(viewUrl);
-    toastr.userSuccess();
+    this.props.updateUser(id, data).then(() => {
+      //redirect
+      history.push(viewUrl);
+      toastr.userSuccess();
+    }).catch(error => {});
 
     return true;
   }
@@ -198,6 +201,7 @@ class UserEditContainer extends Component {
         roles={this.props.roles}
         title="Edit User"
         toggleCheck={this._toggleCheck}
+        errors={this.props.error}
       />,
       <Modal
         handleSubmit={(event) => {
@@ -239,7 +243,8 @@ UserEditContainer.propTypes = {
     }),
     error: PropTypes.shape({}),
     isFetching: PropTypes.bool
-  })
+  }),
+  updateUser: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => ({
@@ -250,13 +255,15 @@ const mapStateToProps = state => ({
     details: state.rootReducer.userViewRequest.user,
     error: state.rootReducer.userViewRequest.error,
     isFetching: state.rootReducer.userViewRequest.isFetching
-  }
+  },
+  error: state.rootReducer.userAdmin.error
 });
 
 const mapDispatchToProps = dispatch => ({
   getFuelSuppliers: bindActionCreators(getFuelSuppliers, dispatch),
   getRoles: bindActionCreators(getRoles, dispatch),
-  getUser: bindActionCreators(getUser, dispatch)
+  getUser: bindActionCreators(getUser, dispatch),
+  updateUser: bindActionCreators(updateUser, dispatch)
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(UserEditContainer);

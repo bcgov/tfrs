@@ -18,6 +18,7 @@ const ROLES = {
 const USERS = {
   ADD: `${BASE_PATH}/users/add`,
   DETAILS: `${BASE_PATH}/users/view/:id`,
+  DETAILS_BY_USERNAME: `${BASE_PATH}/users/view_by_username/:username`,
   EDIT: `${BASE_PATH}/users/edit/:id`,
   LIST: `${BASE_PATH}/users`
 };

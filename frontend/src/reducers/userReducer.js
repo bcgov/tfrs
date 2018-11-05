@@ -1,5 +1,5 @@
-import { SESSION_TERMINATED, USER_EXPIRED } from 'redux-oidc';
-import ActionTypes from '../constants/actionTypes/Users';
+import {SESSION_TERMINATED, USER_EXPIRED} from 'redux-oidc';
+import ActionTypes from "../constants/actionTypes/Users";
 
 const userRequest = (state = {
   error: {},
@@ -100,4 +100,70 @@ const userViewRequest = (state = {
   }
 };
 
-export { userRequest, userViewRequest };
+const userAdmin = (state = {
+  error: {},
+  isFetching: false,
+  serverError: false,
+  user: {}
+}, action) => {
+  switch (action.type) {
+    case ActionTypes.CREATE_USER_REQUEST:
+      return {
+        ...state,
+        isFetching: true,
+        user: {}
+      };
+    case ActionTypes.CREATE_USER_SUCCESS:
+      return {
+        ...state,
+        isFetching: false,
+        serverError: true,
+        user: {
+          ...action.data
+        }
+      };
+    case ActionTypes.CREATE_USER_ERROR:
+      let error = {
+        ...action.errorData.data
+      };
+      if (action.errorData.data.hasOwnProperty('user')) {
+        error = Object.assign(error, action.errorData.data.user);
+        delete error.user;
+      }
+
+      return {
+        ...state,
+        error,
+        isFetching: false,
+        serverError: true,
+        user: {}
+      };
+    case ActionTypes.UPDATE_USER_REQUEST:
+      return {
+        ...state,
+        isFetching: true,
+        user: {}
+      };
+    case ActionTypes.UPDATE_USER_SUCCESS:
+      return {
+        ...state,
+        isFetching: false,
+        serverError: true,
+        user: {
+          ...action.data
+        }
+      };
+    case ActionTypes.UPDATE_USER_ERROR:
+      return {
+        ...state,
+        error: action.errorData.data,
+        isFetching: false,
+        serverError: true,
+        user: {}
+      };
+    default:
+      return state;
+  }
+};
+
+export { userRequest, userViewRequest, userAdmin };

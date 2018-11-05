@@ -89,6 +89,30 @@ class TestUsersAPI(BaseAPISecurityTestCase):
                 logging.debug(response.content.decode('utf-8'))
                 self.assertEqual(response.status_code, expected_results[(user,)]['status'])
 
+    def test_get_by_username(self):
+        """Test that getting another user directly is not a valid action
+         unless you have an admin role"""
+
+        url = "/api/users/by_username?username={0!s}"
+
+        all_users = self.users
+
+        user_that_exists = DataCreationUtilities.create_test_user()
+
+        expected_results = defaultdict(lambda: {'status': status.HTTP_403_FORBIDDEN,
+                                                'reason': "Default response should be no access"})
+
+        expected_results[('gov_admin',)] = {'status': status.HTTP_200_OK,
+                                            'reason': 'Admin should have read access to users'}
+
+        for user in all_users:
+            with self.subTest(user=user,
+                              expected_status=expected_results[(user,)]['status'],
+                              reason=expected_results[(user,)]['reason']):
+                response = self.clients[user].get(url.format(user_that_exists['username']))
+                logging.debug(response.content.decode('utf-8'))
+                self.assertEqual(response.status_code, expected_results[(user,)]['status'])
+
     def test_search(self):
         """Test that searching users is not a valid action unless you have an admin role"""
         url = "/api/users/search"
@@ -126,14 +150,15 @@ class TestUsersAPI(BaseAPISecurityTestCase):
                               expected_status=expected_results[(user,)]['status'],
                               reason=expected_results[(user,)]['reason']):
                 payload = {
-                    'first_name': 'Test',
-                    'last_name': 'Pilot',
                     'email': 'test_pilot_{0!s}@test.com'.format(index),
-                    'authorization_id': 'test_pilot_{0!s}'.format(index),
-                    'username': 'test_pilot_{0!s}'.format(index),
-                    'authorization_guid': str(uuid.uuid4()),
-                    'authorization_directory': 'IDIR',
-                    'display_name': 'Canary'
+                    'user': {
+                        'first_name': 'Test',
+                        'last_name': 'Pilot',
+                        'email': 'test_pilot_{0!s}@test.com'.format(index),
+                        'username': 'test_pilot_{0!s}'.format(index),
+                        'roles': [],
+                        'organization': 1
+                    }
                 }
 
                 response = self.clients[user].post(url,
@@ -188,11 +213,14 @@ class TestUsersAPI(BaseAPISecurityTestCase):
                     'first_name': 'Test',
                     'last_name': 'Pilot',
                     'email': 'test_pilot_{0!s}@test.com'.format(index),
+                    'phone': '5558675309',
                     'authorization_id': 'test_pilot_{0!s}'.format(index),
                     'username': 'test_pilot_{0!s}'.format(index),
                     'authorization_guid': str(uuid.uuid4()),
                     'authorization_directory': 'IDIR',
-                    'display_name': 'Canary'
+                    'display_name': 'Canary',
+                    'roles': [],
+                    'is_active': True
                 }
 
                 response = self.clients[user].put(
@@ -245,9 +273,12 @@ class TestUsersAPI(BaseAPISecurityTestCase):
                     'email': 'test_pilot_{0!s}@test.com'.format(index),
                     'authorization_id': 'test_pilot_{0!s}'.format(index),
                     'username': user,
+                    'phone': '5558675309',
                     'authorization_guid': str(uuid.uuid4()),
                     'authorization_directory': 'IDIR',
-                    'display_name': 'Canary'
+                    'display_name': 'Canary',
+                    'roles': [],
+                    'is_active': True
                 }
 
                 response = self.clients[user].put(
