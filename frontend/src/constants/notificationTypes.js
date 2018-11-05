@@ -17,7 +17,8 @@ const NOTIFICATION_TYPES = {
   PVR_DECLINED: 'PVR Declined',
   PVR_INTERNAL_COMMENT: 'PVR Internal Comment Created Or Updated',
   PVR_PULLED_BACK: 'PVR Pulled Back',
-  PVR_RECOMMENDED_FOR_APPROVAL: 'PVR Recommended For Approval'
+  PVR_RECOMMENDED_FOR_APPROVAL: 'PVR Recommended For Approval',
+  PVR_RETURNED_TO_ANALYST: 'PVR Returned to Analyst'
 };
 
 export default NOTIFICATION_TYPES;
