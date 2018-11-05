@@ -20,7 +20,7 @@ class NewCreditTransferPage extends BaseAppPage {
   }
 
   void setTransactionType(String type) {
-    transactionTypeDropdown.$('option', text:type).click()
+    waitFor { transactionTypeDropdown.$('option', text:type).click() }
   }
 
   void setNumberOfCredits(int credits) {
@@ -28,7 +28,7 @@ class NewCreditTransferPage extends BaseAppPage {
   }
 
   void setRespondent(String respondent) {
-    respondentField.$('option', text:respondent).click()
+    waitFor { respondentField.$('option', text:respondent).click() }
   }
 
   void setPricePerCredit(int price) {
