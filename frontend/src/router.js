@@ -61,8 +61,8 @@ const Router = props => (
           exact
           path={Routes.LOGOUT}
           component={() => {
-            const logoutUrl = (window.location.host === 'dev.lowcarbonfuels.gov.bc.ca' ||
-                  window.location.host === 'test.lowcarbonfuels.gov.bc.ca')
+            const logoutUrl = (window.location.host === 'dev-lowcarbonfuels.pathfinder.gov.bc.ca' ||
+                  window.location.host === 'test-lowcarbonfuels.pathfinder.gov.bc.ca')
               ? `${__LOGOUT_TEST_URL__}?returl=${window.location.origin}`
               : `${__LOGOUT_URL__}?returl=${window.location.origin}`;
 
