@@ -90,7 +90,8 @@
     "production": "NODE_ENV=production webpack -p --config webpack.production.config.js",
     "build": "webpack",
     "test": "jest --coverage",
-    "snyk-protect": "snyk protect"
+    "snyk-protect": "snyk protect",
+    "preinstall": "echo BASE_PATH=/$BUILD_NUMBER > .env"
   },
   "jest": {
     "collectCoverageFrom": [
