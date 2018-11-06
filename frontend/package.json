@@ -13,7 +13,6 @@
     "axios": "^0.16.2",
     "babel-polyfill": "^6.26.0",
     "body-parser": "^1.17.1",
-    "dotenv-webpack": "^1.5.7",
     "eslint-plugin-jest": "^21.15.1",
     "express": "^4.15.2",
     "express-history-api-fallback": "^2.2.1",
@@ -90,8 +89,7 @@
     "production": "NODE_ENV=production webpack -p --config webpack.production.config.js",
     "build": "webpack",
     "test": "jest --coverage",
-    "snyk-protect": "snyk protect",
-    "preinstall": "echo BASE_PATH=/$BUILD_NUMBER > .env"
+    "snyk-protect": "snyk protect"
   },
   "jest": {
     "collectCoverageFrom": [
