@@ -2,7 +2,7 @@ import createHistory from 'history/createBrowserHistory'; // 'history/createHash
 
 let config = {};
 
-if (process.env.BASE_PATH) {
+if (process.env.BASE_PATH && window.location.host === 'dev-lowcarbonfuels.pathfinder.gov.bc.ca') {
   config = {
     basename: process.env.BASE_PATH
   };
