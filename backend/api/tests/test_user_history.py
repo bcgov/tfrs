@@ -164,15 +164,15 @@ class TestUserHistory(BaseTestCase):
         I should see Accepted, Refused, Submitted and Rescinded proposals
         """
         response = self.clients['fs_user_1'].get(
-            '/api/users/{}'.format(
+            '/api/users/{}/history'.format(
                 self.users['fs_user_1']
             )
         )
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
-        user = response.json()
+        history = response.json()
 
-        for activity in user['history']:
+        for activity in history:
             correct_view = False
             credit_trade = CreditTrade.objects.get(
                 id=activity['creditTradeId']
@@ -203,15 +203,15 @@ class TestUserHistory(BaseTestCase):
         I should not see submitted and refused proposals
         """
         response = self.clients['gov_admin'].get(
-            '/api/users/{}'.format(
+            '/api/users/{}/history'.format(
                 self.users['fs_user_1']
             )
         )
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
-        user = response.json()
+        history = response.json()
 
-        for activity in user['history']:
+        for activity in history:
             correct_view = False
             # make sure that the status is correct and we don't see anything
             # that's not submitted, accepted or refused
