@@ -61,7 +61,7 @@ class CreditTransactionSpec extends LoggedInSpec {
       Integer initialNotificationCount = headerModule.getNotificationCount()
     and: 'I populate all required fields to approve the recommended part 3 award credit transaction'
       to NotificationsPage
-      getCreditTransferLinkByText('Credit Transfer Proposal Recommended For Approval').click()
+      getCreditTransferLinkByText('PVR Recommended For Approval').click()
       page(new CreditTransactionsViewPage('Part 3 Award'))
       addComment('Log in as a Director and approve the part 3 award credit transaction')
       addInternalComment('Log in as a Director and approve the part 3 award credit transaction')
