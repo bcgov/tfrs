@@ -30,11 +30,11 @@ class NewCreditTransactionPage extends BaseAppPage {
   }
 
   void setRespondent(String respondent) {
-    respondentField.$('option', text:respondent).click()
+    waitFor { respondentField.$('option', text:respondent).click() }
   }
 
   void setCompliancePeriod(String period) {
-    compliancePeriodDropdown.$('option', text:period).click()
+    waitFor { compliancePeriodDropdown.$('option', text:period).click() }
   }
 
   void addComment(String comment) {
