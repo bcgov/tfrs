@@ -23,14 +23,17 @@
 from rest_framework import serializers
 
 from api.models.NotificationMessage import NotificationMessage
+from .Organization import OrganizationMinSerializer
+from .User import UserBasicSerializer
 
 
 class NotificationMessageSerializer(serializers.ModelSerializer):
     """
     Default Serializer for Notification Message
     """
-    originating_user = serializers.SerializerMethodField()
-    user = serializers.SerializerMethodField()
+    originating_user = UserBasicSerializer(read_only=True)
+    user = UserBasicSerializer(read_only=True)
+    related_organization = OrganizationMinSerializer(read_only=True)
 
     def __init__(self, *args, **kwargs):
         super(NotificationMessageSerializer, self).__init__(*args, **kwargs)
@@ -38,31 +41,6 @@ class NotificationMessageSerializer(serializers.ModelSerializer):
         # mark all fields except is_read as read_only
         for field_name in set(self.fields.keys()) - {'is_read'}:
             self.fields[field_name].read_only = True
-
-    def get_originating_user(self, obj):
-        """
-        Returns the name of the user associated with the notification.
-        Not using a serializer as we only need the id and the display name.
-        """
-        if obj.originating_user is None:
-            return None
-
-        return {
-            "id": obj.originating_user.id,
-            "first_name": obj.originating_user.first_name,
-            "last_name": obj.originating_user.last_name
-        }
-
-    def get_user(self, obj):
-        """
-        Returns the name of the user associated with the notification.
-        Not using a serializer as we only need the id and the display name.
-        """
-        return {
-            "id": obj.user.id,
-            "first_name": obj.user.first_name,
-            "last_name": obj.user.last_name
-        }
 
     class Meta:
         model = NotificationMessage
