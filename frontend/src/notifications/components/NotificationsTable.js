@@ -104,12 +104,12 @@ const NotificationsTable = (props) => {
     id: 'creditTrade',
     width: 100
   }, {
-    accessor: item => item.relatedOrganization,
+    accessor: item => (item.relatedOrganization ? item.relatedOrganization.name : '-'),
     className: 'col-organization',
     Header: 'Organization',
     headerClassName: 'col-organization',
     id: 'organization',
-    width: 150
+    width: 200
   }, {
     accessor: 'id',
     Cell: row => (
