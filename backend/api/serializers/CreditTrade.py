@@ -296,8 +296,8 @@ class CreditTradeUpdateSerializer(serializers.ModelSerializer):
     """
     def __init__(self, *args, **kwargs):
         """
-        This is to allow us to simulate a partial update.
-        This will need to be updated when we finally allow PATCH in our system.
+        This is to always ensure that we have a status for the credit
+        transfer
         """
         super(CreditTradeUpdateSerializer, self).__init__(*args, **kwargs)
         data = kwargs.get('data')

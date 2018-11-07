@@ -31,8 +31,8 @@ const GOVERNMENT_TRANSFER_NOTIFICATIONS = [{
 }, {
   id: 1,
   code: 'PVR_PULLED_BACK',
-  description: 'Returned to Analyst',
-  key: 'return_to_analyst',
+  description: 'Recalled as draft',
+  key: 'recalled_as_draft',
   recipients: ['government']
 }, {
   id: 1,
