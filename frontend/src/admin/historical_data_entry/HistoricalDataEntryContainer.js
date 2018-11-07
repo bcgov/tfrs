@@ -148,7 +148,11 @@ class HistoricalDataEntryContainer extends Component {
 
   render () {
     return ([
-      <AdminTabs key="nav" active="historical-data" />,
+      <AdminTabs
+        active="historical-data"
+        key="nav"
+        loggedInUser={this.props.loggedInUser}
+      />,
       <HistoricalDataEntryPage
         addErrors={this.props.addErrors}
         commitErrors={this.props.commitErrors}
@@ -200,6 +204,16 @@ HistoricalDataEntryContainer.propTypes = {
   }).isRequired,
   invalidateCreditTransfer: PropTypes.func.isRequired,
   invalidateCreditTransfers: PropTypes.func.isRequired,
+  loggedInUser: PropTypes.shape({
+    organization: PropTypes.shape({
+      id: PropTypes.number,
+      name: PropTypes.string,
+      organizationBalance: PropTypes.shape({
+        validatedCredits: PropTypes.number
+      }),
+      statusDisplay: PropTypes.string
+    })
+  }).isRequired,
   prepareCreditTransfer: PropTypes.func.isRequired,
   processApprovedCreditTransfers: PropTypes.func.isRequired
 };
@@ -213,7 +227,8 @@ const mapStateToProps = state => ({
   historicalData: {
     items: state.rootReducer.approvedCreditTransfers.items,
     isFetching: state.rootReducer.approvedCreditTransfers.isFetching
-  }
+  },
+  loggedInUser: state.rootReducer.userRequest.loggedInUser
 });
 
 const mapDispatchToProps = dispatch => ({

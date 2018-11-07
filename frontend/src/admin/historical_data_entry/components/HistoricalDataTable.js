@@ -129,7 +129,8 @@ const HistoricalDataTable = (props) => {
           </button>
         </div>
       );
-    }
+    },
+    maxWidth: 75
   }];
 
   const filterMethod = (filter, row, column) => {
