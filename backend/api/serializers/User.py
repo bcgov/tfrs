@@ -50,6 +50,16 @@ class UserSerializer(serializers.ModelSerializer):
             'organization', 'roles', 'is_government_user', 'permissions')
 
 
+class UserBasicSerializer(serializers.ModelSerializer):
+    """
+    Serializer for displaying the user's display name
+    """
+    class Meta:
+        model = User
+        fields = (
+            'id', 'first_name', 'last_name', 'display_name')
+
+
 class UserCreateSerializer(serializers.ModelSerializer):
     """
     Serializer for user creation via API
@@ -125,7 +135,6 @@ class UserUpdateSerializer(serializers.ModelSerializer):
         read_only_fields = (
             'organization', 'id', 'is_government_user'
         )
-
 
 
 class UserMinSerializer(serializers.ModelSerializer):
