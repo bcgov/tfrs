@@ -1,22 +1,23 @@
-import { createStore, compose, applyMiddleware, combineReducers } from 'redux';
-import { reducer as toastrReducer } from 'react-redux-toastr';
-import { routerReducer, routerMiddleware } from 'react-router-redux';
-import { createLogger } from 'redux-logger';
+import {createStore, compose, applyMiddleware, combineReducers} from 'redux';
+import {reducer as toastrReducer} from 'react-redux-toastr';
+import {routerReducer, routerMiddleware} from 'react-router-redux';
+import {createLogger} from 'redux-logger';
 import io from 'socket.io-client';
 import thunk from 'redux-thunk';
 import rootReducer from '../reducers/reducer';
-import { getNotifications } from '../actions/notificationActions';
-import { SOCKETIO_URL } from '../constants/routes';
+import {getNotifications} from '../actions/notificationActions';
+import {SOCKETIO_URL} from '../constants/routes';
 
-import createOidcMiddleware, { loadUser, processSilentRenew, reducer as OIDCReducer } from 'redux-oidc';
-import { persistTargetPathReducer } from '../reducers/persistTargetPathReducer';
+import createOidcMiddleware, {loadUser, processSilentRenew, reducer as OIDCReducer} from 'redux-oidc';
+import {persistTargetPathReducer} from '../reducers/persistTargetPathReducer';
 
 import userManager from './oidc-usermanager';
 import CONFIG from '../config';
-import { getLoggedInUser } from '../actions/userActions';
+import {getLoggedInUser} from '../actions/userActions';
 
 import persistState from 'redux-localstorage';
 import createSocketIoMiddleware from 'redux-socket.io';
+import {getReferenceData} from "../actions/referenceDataActions";
 
 const middleware = routerMiddleware(history);
 const oidcMiddleware = createOidcMiddleware(userManager);
@@ -64,6 +65,13 @@ store.subscribe(() => {
     if (state.rootReducer.notifications.serverInitiatedReloadRequested === true) {
       store.dispatch(getNotifications());
     }
+    //
+    // if (state.rootReducer.userRequest.isAuthenticated &&
+    //   !state.rootReducer.referenceData.isFetching &&
+    //   !state.rootReducer.referenceData.success) {
+    //   store.dispatch(getReferenceData());
+    // }
+
 
     if (CONFIG.KEYCLOAK.ENABLED) {
       if (state.oidc.user &&
@@ -73,14 +81,13 @@ store.subscribe(() => {
         store.dispatch(getLoggedInUser());
       }
     }
-
     subscriptionProcessing = false;
   }
 });
 
 if (CONFIG.KEYCLOAK.ENABLED) {
   loadUser(store, userManager);
-  processSilentRenew();
+  //processSilentRenew();
 }
 
 export default store;
