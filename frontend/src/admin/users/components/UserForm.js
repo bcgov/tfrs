@@ -8,7 +8,7 @@ import FontAwesomeIcon from '@fortawesome/react-fontawesome';
 import UserFormDetails from './UserFormDetails';
 import history from '../../../app/History';
 import * as Lang from '../../../constants/langEnUs';
-import Errors from "../../../app/components/Errors";
+import Errors from '../../../app/components/Errors';
 
 const UserForm = props => (
   <div className="page_admin_user">
