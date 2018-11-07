@@ -52,11 +52,11 @@ class HistoricalDataEntryPage extends BaseAppPage {
   }
 
   void setCreditsFrom(String respondentFrom) {
-    creditsFromDropdown.$('option', text:respondentFrom).click()
+    waitFor { creditsFromDropdown.$('option', text:respondentFrom).click() }
   }
 
   void setCreditsTo(String respondentTo) {
-    creditsToDropdown.$('option', text:respondentTo).click()
+    waitFor { creditsToDropdown.$('option', text:respondentTo).click() }
   }
 
   void setZeroDollarReason(String reason) {
@@ -64,7 +64,7 @@ class HistoricalDataEntryPage extends BaseAppPage {
   }
 
   void setCompliancePeriod(String period) {
-    compliancePeriodDropdown.$('option', text:period).click()
+    waitFor { compliancePeriodDropdown.$('option', text:period).click() }
   }
 
   void setNote(String note) {
