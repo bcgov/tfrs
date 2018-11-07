@@ -491,6 +491,7 @@ class CreditTradeService(object):
                 message=notification.notification_type.name,
                 notification_type=notification.notification_type,
                 related_credit_trade=credit_trade,
+                related_organization=credit_trade.respondent,
                 originating_user=credit_trade.update_user
             )
 
@@ -559,5 +560,7 @@ class CreditTradeService(object):
                 interested_organization=notification.recipient,
                 message=notification.notification_type.name,
                 notification_type=notification.notification_type,
-                related_credit_trade=credit_trade
+                related_credit_trade=credit_trade,
+                related_organization=credit_trade.respondent,
+                originating_user=credit_trade.update_user
             )
