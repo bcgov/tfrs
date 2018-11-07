@@ -44,6 +44,7 @@ class HistoricalDataEntryEditContainer extends Component {
       totalValue: 0,
       validationErrors: {}
     };
+
     this.submitted = false;
 
     this._handleInputChange = this._handleInputChange.bind(this);
