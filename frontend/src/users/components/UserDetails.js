@@ -21,7 +21,7 @@ const UserDetails = props => (
       <div>
         <div className="user_actions">
           <div className="btn-container">
-            {props.loggedInUser.hasPermission(PERMISSIONS_USERS.EDIT_FUEL_SUPPLIER_USERS) &&
+            {props.loggedInUser.hasPermission(PERMISSIONS_USERS.USER_MANAGEMENT) &&
             <button
               className="btn btn-primary"
               onClick={() => {

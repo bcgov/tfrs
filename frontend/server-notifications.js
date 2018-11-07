@@ -1,6 +1,7 @@
 const notifications = require('./notifications');
 
 const http = require('http');
+
 const httpServer = http.createServer((req, res) => {
   res.end();
 });
@@ -15,4 +16,3 @@ io.on('connect', (socket) => {
 });
 
 notifications.connect(io);
-
