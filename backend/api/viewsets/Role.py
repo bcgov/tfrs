@@ -48,21 +48,12 @@ class RoleViewSet(AuditableMixin, viewsets.GenericViewSet,
         """
         user = self.request.user
 
-        if user.has_perm('ASSIGN_GOVERNMENT_ROLES') and \
-                user.has_perm('ASSIGN_FS_ROLES'):
+        if user.is_government_user:
             return Role.objects.all()
 
-        if user.has_perm('ASSIGN_GOVERNMENT_ROLES'):
-            return Role.objects.filter(
-                is_government_role=True
-            )
-
-        if user.has_perm('ASSIGN_FS_ROLES'):
-            return Role.objects.filter(
-                is_government_role=False
-            )
-
-        return Role.objects.none()
+        return Role.objects.filter(
+            is_government_role=False
+        )
 
     def list(self, request, *args, **kwargs):
         fuel_supplier_roles_only = self.request.query_params.get(
