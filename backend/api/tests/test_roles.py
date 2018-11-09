@@ -75,11 +75,13 @@ class TestRoles(BaseTestCase):
     def test_get_roles_with_unauthorized(self):
         """
         Test that using an account that doesn't have permission to
-        fetch roles
+        assign roles can still view roles (just not government roles)
         """
-        response = self.clients['gov_director'].get(
+        response = self.clients['fs_user_1'].get(
             "/api/roles"
         )
         response_data = json.loads(response.content.decode("utf-8"))
 
-        self.assertEqual(len(response_data), 0)
+        count = Role.objects.filter(is_government_role=False).count()
+
+        self.assertEqual(len(response_data), count)
