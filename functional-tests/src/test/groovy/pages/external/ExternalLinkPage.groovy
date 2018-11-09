@@ -16,16 +16,16 @@ import geb.Page
  */
 class ExternalLinkPage extends Page {
   static at = {
-    Boolean result
+    Boolean foundExpectedExternalPage
 
     // covers a rare issue where the main thread can sometimes hang indefinitely when dealing with multiple windows.
     // with a separate thread, if it hangs, the test will fail but the remaining test execution can continue.
     Thread thread = Thread.start {
-      result = foundTargetWindow()
+      foundExpectedExternalPage = foundTargetWindow()
     }
     thread.join()
 
-    result == true
+    foundExpectedExternalPage == true
   }
 
   private final String windowTitleRegex
