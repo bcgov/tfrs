@@ -51,10 +51,10 @@ class CreditTransferSpec extends LoggedInSpec {
     and: 'I am shown a success toast popup'
       at new ToastModal('Success!', 'Credit Transfer Proposal sent.')
     and: 'My unread notification count has increased by 1'
-      headerModule.compareNotificationCounts(initialNotificationCount+1)
+      headerModule.getNotificationCount() == initialNotificationCount+1
     and: 'My credit balance has not changed'
       page(HomePage)
-      compareCreditBalance(sendingFuelSupplier_initialCreditBalance)
+      getCreditBalance() == sendingFuelSupplier_initialCreditBalance
   }
 
   void 'Log in as the receiving fuel supplier and accept the credit transfer'() {
@@ -77,10 +77,10 @@ class CreditTransferSpec extends LoggedInSpec {
     and: 'I am shown a success toast popup'
       at new ToastModal('Success!', 'Credit Transfer Proposal accepted.')
     and: 'My unread notification count has not increased'
-      headerModule.compareNotificationCounts(initialNotificationCount)
+      headerModule.getNotificationCount() == initialNotificationCount
     and: 'My credit balance has not changed'
       page(HomePage)
-      compareCreditBalance(sendingFuelSupplier_initialCreditBalance)
+      getCreditBalance() == receivingFuelSupplier_initialCreditBalance
   }
 
   void 'Log in as an analyst and recommend the credit transfer'() {
@@ -102,7 +102,7 @@ class CreditTransferSpec extends LoggedInSpec {
     and: 'I am shown a success toast popup'
       at new ToastModal('Success!', 'Credit Transfer Proposal recommended.')
     and: 'My unread notification count has not increased'
-      headerModule.compareNotificationCounts(initialNotificationCount)
+      headerModule.getNotificationCount() == initialNotificationCount
   }
 
   void 'Log in as a Director and approve the credit transfer'() {
@@ -124,7 +124,7 @@ class CreditTransferSpec extends LoggedInSpec {
     and: 'I am shown a success toast popup'
       at new ToastModal('Success!', 'Credit Transfer Proposal approved.')
     and: 'My unread notification count has not increased'
-      headerModule.compareNotificationCounts(initialNotificationCount)
+      headerModule.getNotificationCount() == initialNotificationCount
   }
 
   void 'Log in as the sending fuel supplier and verify my credit balance has decreased'() {
@@ -132,7 +132,7 @@ class CreditTransferSpec extends LoggedInSpec {
       logInAsSendingFuelSupplier()
     when: 'I have previously successfully transferred credits to another fuel supplier'
     then: 'My credit balance is decreased by the amount transferred'
-      compareCreditBalance(sendingFuelSupplier_initialCreditBalance - 98)
+      getCreditBalance() == sendingFuelSupplier_initialCreditBalance - 98
   }
 
   void 'Log in as the receiving fuel supplier and verify my credit balance has increased'() {
@@ -140,6 +140,6 @@ class CreditTransferSpec extends LoggedInSpec {
       logInAsReceivingFuelSupplier()
     when: 'I have previously successfully been transferred credits from another fuel supplier'
     then: 'My credit balance is increased by the amount transferred'
-      compareCreditBalance(receivingFuelSupplier_initialCreditBalance + 98)
+      getCreditBalance() == receivingFuelSupplier_initialCreditBalance + 98
   }
 }

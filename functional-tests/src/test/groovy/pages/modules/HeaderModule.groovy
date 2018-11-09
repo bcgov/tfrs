@@ -38,47 +38,26 @@ class HeaderModule extends Module {
    *   to wait for some period of time before assuming the notification count is intentionally absent.  Otherwise
    *   you may get false-positives.  To improve performance, the wait time should be as little as safely possible.
    *
-   * @param int wait how long to wait for the notification count icon to load, before assuming it is not going to.
-   *   (optional, default: 2)
+   * @param int wait how long to wait for the async notification request to finish, and the icon to render, before
+   *   assuming it is not going to (if there are no notifications). (optional, default: 3)
    * @return notification count integer
    * @throws NumberFormatException if the parsed notification count string fails to be cast to an Integer.
    */
-  Integer getNotificationCount(int wait=2) {
+  Integer getNotificationCount(int wait=3) {
     Integer count = 0
 
     try {
-      count = waitFor(wait) {
+      // We cant use 'waitFor(3)' in this case because the notification icon may exist, but it may not have been
+      // updated yet by the async notification request which has not yet finished.  So we need to manually enforce a
+      // wait using 'sleep(3000)'
+      sleep(wait * 1000)
+      count = waitFor(0) { // convenient way to cause a predictable exception if this selector never exists.
         notificationButton.$('span.fa-layers-counter')
       }.text().replace(/[^0-9]/, '').toInteger()
     } catch(WaitTimeoutException e) {
-      // ignore because the notification count icon doesn't necessarily always exist
+      // ignore because the notification count icon doesn't necessarily always exist (if there are no notifications)
     }
 
     return count
-  }
-
-  /**
-   * Compare the current notification icon count against the provided expected count.
-   *
-   * Note: When no notifications exist, the notification count selector will not exist.  As a result of this and
-   *   the asynchronous notifications request which the existence of notification count depends upon, it is necessary
-   *   to wait for some period of time before assuming the notification count is intentionally absent.  Otherwise
-   *   you may get false-positives.  To prove performance, the wait time should be as little as safely possible.
-   *
-   * @param expectedCount the expected notification count to assert against.
-   * @param int wait how long to wait for the notification counts to match. (optional, default: 2)
-   * @return true if the notification counts match.
-   * @throws AssertionError if the notification counts fail to match after retrying for the specified time.
-   */
-  Boolean compareNotificationCounts(Integer expectedCount, int wait=2) {
-    try {
-      waitFor(wait) {
-        getNotificationCount() == expectedCount
-      }
-    } catch (WaitTimeoutException e) {
-      fail('The current notification count did not match the expected count.')
-    }
-
-    return true
   }
 }
