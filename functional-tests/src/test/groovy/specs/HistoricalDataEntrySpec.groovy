@@ -133,7 +133,7 @@ class HistoricalDataEntrySpec extends LoggedInSpec {
       logInAsSendingFuelSupplier()
     when: 'I have previously successfully transferred credits to another fuel supplier'
     then: 'My credit balance is decreased by the amount transferred'
-      compareCreditBalance(sendingFuelSupplier_initialCreditBalance - 10)
+      getCreditBalance() == sendingFuelSupplier_initialCreditBalance - 10
   }
 
   void 'Log in as the receiving fuel supplier and verify my credit balance was updated correctly'() {
@@ -141,6 +141,6 @@ class HistoricalDataEntrySpec extends LoggedInSpec {
       logInAsReceivingFuelSupplier()
     when: 'I have previously successfully been awarded credits, had credits validated, and had credits reduced'
     then: 'My credit balance was updated correctly based on the amounts transferred, awarded, validated, and reduced'
-      compareCreditBalance(receivingFuelSupplier_initialCreditBalance + 10 + 20 + 40 - 80)
+      getCreditBalance() == receivingFuelSupplier_initialCreditBalance + 10 + 20 + 40 - 80
   }
 }
