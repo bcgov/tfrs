@@ -23,7 +23,7 @@ class KeycloakAwareApp extends React.Component {
       content = this.props.children;
     }
 
-    if (this.props.keycloak.user) {
+    if (this.props.keycloak.user && !this.props.keycloak.user.expired) {
       // we're logged into Keycloak.
 
       if (!this.props.isAuthenticated &&
@@ -64,11 +64,17 @@ class KeycloakAwareApp extends React.Component {
     }
 
     // we're not logged in and not in the process of logging in. trigger one.
-    return (
-      <div className="App">
-        <SigninPage/>
-      </div>
-    );
+    if ((!this.props.keycloak.user || this.props.keycloak.user.expired) && !this.props.keycloak.isFetching) {
+      console.log('adding signin component');
+      console.log(this.props.keycloak);
+      return (
+        <div className="App">
+          <SigninPage/>
+        </div>
+      )
+    }
+
+    return null;
   }
 }
 

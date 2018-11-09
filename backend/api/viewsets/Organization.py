@@ -16,7 +16,8 @@ from api.models.OrganizationBalance import OrganizationBalance
 from api.models.OrganizationType import OrganizationType
 from api.models.OrganizationActionsType import OrganizationActionsType
 from api.models.User import User
-from api.serializers import OrganizationSerializer, OrganizationActionsTypeSerializer, OrganizationStatusSerializer
+from api.serializers import OrganizationSerializer, OrganizationActionsTypeSerializer, OrganizationStatusSerializer, \
+    OrganizationUpdateSerializer
 from api.serializers import OrganizationBalanceSerializer
 from api.serializers import OrganizationHistorySerializer
 from api.serializers import OrganizationMinSerializer
@@ -48,7 +49,8 @@ class OrganizationViewSet(AuditableMixin, viewsets.GenericViewSet,
         'types': OrganizationTypeSerializer,
         'statuses': OrganizationStatusSerializer,
         'members': UserMinSerializer,
-        'users': UserMinSerializer
+        'users': UserMinSerializer,
+        'update': OrganizationUpdateSerializer
     }
 
     def get_serializer_class(self):

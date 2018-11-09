@@ -23,6 +23,7 @@
 from rest_framework import serializers
 
 from api.models.Organization import Organization
+from api.models.OrganizationAddress import OrganizationAddress
 from .OrganizationAddressSerializer import OrganizationAddressSerializer
 
 
@@ -70,9 +71,56 @@ class OrganizationSerializer(serializers.ModelSerializer):
         return obj.organization_balance
 
 
+class OrganizationUpdateSerializer(serializers.ModelSerializer):
+    address_line_1 = serializers.CharField(allow_null=True, allow_blank=True, required=False)
+    address_line_2 = serializers.CharField(allow_null=True, allow_blank=True, required=False)
+    address_line_3 = serializers.CharField(allow_null=True, allow_blank=True, required=False)
+    city = serializers.CharField(allow_null=True, allow_blank=True, required=False)
+    country = serializers.CharField(allow_null=True, allow_blank=True, required=False)
+    county = serializers.CharField(allow_null=True, allow_blank=True, required=False)
+    state = serializers.CharField(allow_null=True, allow_blank=True, required=False)
+    postal_code = serializers.CharField(allow_null=True, allow_blank=True, required=False)
+
+    def validate(self, attrs):
+        print('ser: {}'.format((attrs)))
+        return attrs
+
+    def update(self, obj, validated_data):
+
+        Organization.objects.filter(id=obj.id).update(
+            name=validated_data['name'],
+            type_id=validated_data['type'],
+            actions_type_id=validated_data['actions_type'],
+            status_id=validated_data['status']
+        )
+
+        OrganizationAddress.objects.filter(organization_id=obj.id).delete()
+
+        OrganizationAddress.objects.create(
+            organization=obj,
+            address_line_1=validated_data['address_line_1'],
+            address_line_2=validated_data['address_line_2'],
+            address_line_3=validated_data['address_line_3'],
+            city=validated_data['city'],
+            country=validated_data['country'],
+            state=validated_data['state'],
+            county=validated_data['county'],
+            postal_code=validated_data['postal_code'],
+            primary=True
+        )
+        return obj
+
+    class Meta:
+        model = Organization
+        fields = ('id', 'name', 'type', 'status', 'actions_type',
+                  'address_line_1', 'address_line_2', 'address_line_3',
+                  'city', 'county', 'country', 'state', 'postal_code')
+        read_only_fields = ('id',)
+
+
 class OrganizationMinSerializer(serializers.ModelSerializer):
     """
-    Minium Serializer for the Fuel Supplier
+    Minimum Serializer for the Fuel Supplier
     Only Loads the id and name for the basic requirements
     """
     class Meta:

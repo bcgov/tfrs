@@ -15,7 +15,7 @@ const getReferenceData = () => (dispatch) => {
     )
   ).then(
     dispatch(getReferenceDataSuccess(referenceData))
-  ).catch(
+  ).catch( error =>
     dispatch(getReferenceDataError(error.response))
   );
 

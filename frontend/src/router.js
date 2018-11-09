@@ -41,7 +41,6 @@ import UserViewContainer from './users/UserViewContainer';
 import NotificationsContainer from './notifications/NotificationsContainer';
 import AuthCallback from './app/AuthCallback';
 import CONFIG from './config';
-import OrganizationAddContainer from "./organizations/OrganizationAddContainer";
 import OrganizationEditContainer from "./organizations/OrganizationEditContainer";
 
 const Router = props => (
@@ -98,11 +97,11 @@ const Router = props => (
         <Route
           exact
           path={ORGANIZATIONS.ADD}
-          component={withRouter(OrganizationAddContainer)}
+          render={ (props) => <OrganizationEditContainer {...props} mode={'add'}/> }
         />
         <Route
           path={ORGANIZATIONS.EDIT}
-          component={withRouter(OrganizationEditContainer)}
+          render={ (props) => <OrganizationEditContainer {...props} mode={'edit'}/> }
         />
         <Route
           exact

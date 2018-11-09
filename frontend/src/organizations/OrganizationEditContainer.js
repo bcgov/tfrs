@@ -3,27 +3,42 @@
  * All data handling & manipulation should be handled here.
  */
 
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
+import React, {Component} from 'react';
+import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
-import { bindActionCreators } from 'redux';
+import {bindActionCreators} from 'redux';
 
 import {getOrganization, getOrganizationMembers, updateOrganization} from '../actions/organizationActions';
 import Loading from '../app/components/Loading';
 import OrganizationDetails from './components/OrganizationDetails';
 import OrganizationMembers from './components/OrganizationMembers';
 import OrganizationEditForm from "./components/OrganizationEditForm";
+import history from "../app/History";
+import toastr from "../utils/toastr";
+import {USERS as ADMIN_USERS} from "../constants/routes/Admin";
+import ORGANIZATION from "../constants/routes/Organizations";
+import Errors from "../app/components/Errors";
 
 class OrganizationEditContainer extends Component {
 
 
-  constructor (props) {
+  constructor(props) {
     super(props);
 
     this.state = {
       fields: {
         name: '',
-        country: ''
+        addressLine1: '',
+        addressLine2: '',
+        addressLine3: '',
+        city: '',
+        postalCode: '',
+        state: '',
+        county: '',
+        country: '',
+        type: '2',
+        actionsType: '1',
+        status: '1'
       },
       validationErrors: {}
     };
@@ -33,37 +48,43 @@ class OrganizationEditContainer extends Component {
     this._handleSubmit = this._handleSubmit.bind(this);
   }
 
-  componentDidMount () {
+  componentDidMount() {
+    if (this.props.mode === 'add')
+      return;
+
     this.loadData(this.props.match.params.id);
   }
 
-  componentWillReceiveNewProps (prevProps, newProps) {
+  componentWillReceiveNewProps(prevProps, newProps) {
     if (prevProps.match.params.id !== newProps.match.params.id) {
       this.loadData(newProps.match.params.id);
     }
   }
+
   componentWillReceiveProps(props) {
+    if (props.mode === 'add')
+      return;
+
     this.loadPropsToFieldState(props);
   }
 
-  loadPropsToFieldState (props) {
+  loadPropsToFieldState(props) {
     if (Object.keys(props.organization.details).length !== 0 && !this.submitted) {
       const org = props.organization.details;
       let addr = {};
 
       if (org.organizationAddress != null) {
         addr = {
-            ...org.organizationAddress
-          };
+          ...org.organizationAddress
+        };
       }
 
-      console.log('got new props');
-      console.log(props);
       this.setState({
         fields: {
           name: props.organization.details.name,
           status: props.organization.details.status,
           actionsType: props.organization.details.actionsType,
+          type: props.organization.details.type,
           ...addr
         }
       });
@@ -71,70 +92,68 @@ class OrganizationEditContainer extends Component {
     }
   }
 
-  loadData (id) {
+  loadData(id) {
     this.props.getOrganization(id);
   }
 
-  _handleInputChange (event) {
-    const { value, name } = event.target;
-    const fieldState = { ...this.state.fields };
+  _handleInputChange(event) {
+    const {value, name} = event.target;
+    const fieldState = {...this.state.fields};
 
-    if (typeof fieldState[name] === 'object') {
-      this.changeObjectProp(parseInt(value, 10), name);
-    } else {
-      fieldState[name] = value;
-      this.setState({
-        fields: fieldState
-      });
-    }
+    fieldState[name] = value;
+    this.setState({
+      fields: fieldState
+    });
   }
 
-  _handleSubmit (event) {
+  _handleSubmit(event) {
     event.preventDefault();
 
     const data = {
       ...this.state.fields
     };
-    this.props.updateOrganization(data, this.props.match.params.id)
 
-    //
-    // const data = this.props.prepareCreditTransfer(this.state.fields);
-    // const { comment } = this.state.fields;
-    //
-    // if (comment.length > 0) {
-    //   data.comment = comment;
-    // }
-    //
-    // this.props.addCreditTransfer(data).then((response) => {
-    //   this.props.invalidateCreditTransfers();
-    //   this.loadData();
-    //   this.resetState();
-    // });
+    const viewUrl = ORGANIZATION.DETAILS.replace(':id', this.props.match.params.id);
+
+
+    this.props.updateOrganization(data, this.props.match.params.id).then(() => {
+      history.push(viewUrl);
+      toastr.organizationSuccess();
+    });
 
     return false;
   }
 
-  render () {
-    const {isFetching} = this.props.organization;
-    return (
-      <div>
-      {isFetching && <Loading/>}
-      {isFetching || <OrganizationEditForm
-        fields={this.state.fields}
-        handleInputChange={this._handleInputChange}
-        handleSubmit={this._handleSubmit}
-      />}
-      </div>
-    )
+  render() {
+    const isFetching = this.props.organization.isFetching ||
+      this.props.referenceData.isFetching;
+    if (isFetching) {
+      return (<Loading/>);
+    }
+
+    switch (this.props.mode) {
+      case 'add':
+        return (<p>add mode</p>);
+      case 'gov_edit':
+      case 'edit':
+        return (<OrganizationEditForm
+          fields={this.state.fields}
+          handleInputChange={this._handleInputChange}
+          referenceData={this.props.referenceData}
+          handleSubmit={this._handleSubmit}
+        />);
+      default:
+        return (<div/>);
+    }
   }
 }
 
 OrganizationEditContainer.propTypes = {
   match: PropTypes.shape({
     params: PropTypes.shape({
-      id: PropTypes.string.isRequired
-    }).isRequired
-  }).isRequired,
+      id: PropTypes.string
+    })
+  }),
   organization: PropTypes.shape({
     details: PropTypes.shape({
       id: PropTypes.number,
@@ -142,18 +161,45 @@ OrganizationEditContainer.propTypes = {
       organizationBalance: PropTypes.shape({
         validatedCredits: PropTypes.number
       }),
-      statusDisplay: PropTypes.string
+      status: PropTypes.string,
+      type: PropTypes.string,
+      actionsType: PropTypes.string
     }),
     isFetching: PropTypes.bool
-  }).isRequired,
+  }),
+  referenceData: PropTypes.shape({
+    organizationTypes: PropTypes.arrayOf(
+      PropTypes.shape({
+        type: PropTypes.string,
+        id: PropTypes.number
+      })),
+    organizationActionsTypes: PropTypes.arrayOf(
+      PropTypes.shape({
+        the_type: PropTypes.string,
+        id: PropTypes.number
+      })),
+    organizationStatuses: PropTypes.arrayOf(
+      PropTypes.shape({
+        status: PropTypes.string,
+        id: PropTypes.number
+      })),
+    isFetching: PropTypes.bool
+  }),
   updateOrganization: PropTypes.func.isRequired,
-  getOrganization: PropTypes.func.isRequired
+  getOrganization: PropTypes.func.isRequired,
+  mode: PropTypes.oneOf(['add', 'edit', 'admin_edit'])
 };
 
 const mapStateToProps = state => ({
   organization: {
     details: state.rootReducer.organizationRequest.fuelSupplier,
     isFetching: state.rootReducer.organizationRequest.isFetching
+  },
+  referenceData: {
+    organizationTypes: state.rootReducer.referenceData.data.organizationTypes,
+    organizationStatuses: state.rootReducer.referenceData.data.organizationStatuses,
+    organizationActionsTypes: state.rootReducer.referenceData.data.organizationActionsTypes,
+    isFetching: state.rootReducer.referenceData.isFetching
   }
 });
 

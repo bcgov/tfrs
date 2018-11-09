@@ -20,7 +20,6 @@ import createSocketIoMiddleware from 'redux-socket.io';
 import {getReferenceData} from "../actions/referenceDataActions";
 
 const middleware = routerMiddleware(history);
-const oidcMiddleware = createOidcMiddleware(userManager);
 
 const socket = io(SOCKETIO_URL);
 const socketIoMiddleware = createSocketIoMiddleware(socket, 'socketio/');
@@ -41,7 +40,6 @@ const combinedReducers = (state = {}, action) => {
 let allMiddleware = [
   thunk,
   socketIoMiddleware,
-  oidcMiddleware,
   middleware
 ];
 
@@ -65,29 +63,22 @@ store.subscribe(() => {
     if (state.rootReducer.notifications.serverInitiatedReloadRequested === true) {
       store.dispatch(getNotifications());
     }
-    //
-    // if (state.rootReducer.userRequest.isAuthenticated &&
-    //   !state.rootReducer.referenceData.isFetching &&
-    //   !state.rootReducer.referenceData.success) {
-    //   store.dispatch(getReferenceData());
-    // }
-
 
     if (CONFIG.KEYCLOAK.ENABLED) {
-      if (state.oidc.user &&
+      if (state.oidc.user && !state.oidc.user.expired &&
         !state.rootReducer.userRequest.isFetching &&
         !state.rootReducer.userRequest.isAuthenticated &&
         !state.rootReducer.userRequest.serverError) {
         store.dispatch(getLoggedInUser());
       }
     }
+
     subscriptionProcessing = false;
   }
 });
 
 if (CONFIG.KEYCLOAK.ENABLED) {
   loadUser(store, userManager);
-  //processSilentRenew();
 }
 
 export default store;

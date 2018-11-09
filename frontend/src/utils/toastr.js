@@ -69,6 +69,14 @@ const toastr = {
     }
 
     reduxToastr.success('Success!', 'User updated.');
+  },
+  organizationSuccess: (message = '') => {
+    if (message !== '') { // message is only used to override
+      reduxToastr.success('Success!', message);
+      return;
+    }
+
+    reduxToastr.success('Success!', 'Organization updated.');
   }
 };
 

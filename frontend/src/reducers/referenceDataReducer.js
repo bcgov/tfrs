@@ -17,9 +17,9 @@ const referenceData = (state = {
       case ActionTypes.RECEIVE_REFERENCE_DATA:
         return {
           ...state,
-          ...action.data,
           isFetching: false,
-          success: true
+          success: true,
+          data: action.data
         };
       case ActionTypes.ERROR_RECEIVE_REFERENCE_DATA:
         return {
