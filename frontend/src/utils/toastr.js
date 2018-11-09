@@ -60,7 +60,7 @@ const toastr = {
       return;
     }
 
-    reduxToastr.success('Success!', 'Subscriptions updated.');
+    reduxToastr.success('Success!', 'Notifications updated.');
   },
   userSuccess: (message = '') => {
     if (message !== '') { // message is only used to override
