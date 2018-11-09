@@ -52,7 +52,7 @@ class CreditTransactionSpec extends LoggedInSpec {
     and: 'My unread notification count has increased by 1'
       at new ToastModal('Success!', 'Credit transaction recommended.')
       page(HomePage)
-      headerModule.compareNotificationCounts(initialNotificationCount+1)
+      headerModule.getNotificationCount() == initialNotificationCount+1
   }
 
   void 'Log in as a Director and approve the part 3 award credit transaction'() {
@@ -74,7 +74,7 @@ class CreditTransactionSpec extends LoggedInSpec {
     and: 'My unread notification count has increased by 1'
       at new ToastModal('Success!', 'Credit transaction approved.')
       page(HomePage)
-      headerModule.compareNotificationCounts(initialNotificationCount+1)
+      headerModule.getNotificationCount() == initialNotificationCount
   }
 
   // Validation
@@ -99,7 +99,7 @@ class CreditTransactionSpec extends LoggedInSpec {
     and: 'My unread notification count has increased by 1'
       at new ToastModal('Success!', 'Credit transaction recommended.')
       page(HomePage)
-      headerModule.compareNotificationCounts(initialNotificationCount+1)
+      headerModule.getNotificationCount() == initialNotificationCount+1
   }
 
   void 'Log in as a Director and approve the validation credit transaction'() {
@@ -108,7 +108,7 @@ class CreditTransactionSpec extends LoggedInSpec {
       Integer initialNotificationCount = headerModule.getNotificationCount()
     and: 'I populate all required fields to approve the recommended validation credit transaction'
       to NotificationsPage
-      getCreditTransferLinkByText('Credit Transfer Proposal Recommended For Approval').click()
+      getCreditTransferLinkByText('PVR Recommended For Approval').click()
       page(new CreditTransactionsViewPage('Validation'))
       addComment('Log in as a Director and approve the validation credit transaction')
       addInternalComment('Log in as a Director and approve the validation credit transaction')
@@ -121,7 +121,7 @@ class CreditTransactionSpec extends LoggedInSpec {
     and: 'My unread notification count has increased by 1'
       at new ToastModal('Success!', 'Credit transaction approved.')
       page(HomePage)
-      headerModule.compareNotificationCounts(initialNotificationCount+1)
+      headerModule.getNotificationCount() == initialNotificationCount
   }
 
   // Reduction
@@ -146,7 +146,7 @@ class CreditTransactionSpec extends LoggedInSpec {
     and: 'My unread notification count has increased by 1'
       at new ToastModal('Success!', 'Credit transaction recommended.')
       page(HomePage)
-      headerModule.compareNotificationCounts(initialNotificationCount+1)
+      headerModule.getNotificationCount() == initialNotificationCount+1
   }
 
   void 'Log in as a Director and approve the reduction credit transaction'() {
@@ -155,7 +155,7 @@ class CreditTransactionSpec extends LoggedInSpec {
       Integer initialNotificationCount = headerModule.getNotificationCount()
     and: 'I populate all required fields to approve the recommended reduction credit transaction'
       to NotificationsPage
-      getCreditTransferLinkByText('Credit Transfer Proposal Recommended For Approval').click()
+      getCreditTransferLinkByText('PVR Recommended For Approval').click()
       page(new CreditTransactionsViewPage('Reduction'))
       addComment('Log in as a Director and approve the reduction credit transaction')
       addInternalComment('Log in as a Director and approve the reduction credit transaction')
@@ -168,7 +168,7 @@ class CreditTransactionSpec extends LoggedInSpec {
     and: 'My unread notification count has increased by 1'
       at new ToastModal('Success!', 'Credit transaction approved.')
       page(HomePage)
-      headerModule.compareNotificationCounts(initialNotificationCount+1)
+      headerModule.getNotificationCount() == initialNotificationCount
   }
 
   // Verify credit balance after all 3 above transactions completed
@@ -178,6 +178,6 @@ class CreditTransactionSpec extends LoggedInSpec {
       logInAsReceivingFuelSupplier()
     when: 'I have previously successfully been awarded credits, had credits validated, and had credits reduced'
     then: 'My credit balance was updated correctly based on the amounts awarded, validated, and reduced'
-      compareCreditBalance(receivingFuelSupplier_initialCreditBalance + 11 + 22 - 44)
+      getCreditBalance() == receivingFuelSupplier_initialCreditBalance + 11 + 22 - 44
   }
 }
