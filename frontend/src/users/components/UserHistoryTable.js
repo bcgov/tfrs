@@ -4,19 +4,19 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import FontAwesomeIcon from '@fortawesome/react-fontawesome';
-import {Link} from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import ReactTable from 'react-table';
 import 'react-table/react-table.css';
 import axios from 'axios';
 
-import {getCreditTransferType} from '../../actions/creditTransfersActions';
+import { getCreditTransferType } from '../../actions/creditTransfersActions';
 import history from '../../app/History';
 import CREDIT_TRANSACTIONS from '../../constants/routes/CreditTransactions';
-import {CREDIT_TRANSFER_STATUS} from '../../constants/values';
+import { CREDIT_TRANSFER_STATUS } from '../../constants/values';
 import * as Routes from '../../constants/routes';
 
 class UserHistoryTable extends React.Component {
-  constructor() {
+  constructor () {
     super();
     this.state = {
       data: [],
@@ -26,8 +26,8 @@ class UserHistoryTable extends React.Component {
     this.fetch = this.fetch.bind(this);
   }
 
-  fetch(state, instance) {
-    this.setState({loading: true});
+  fetch (state, instance) {
+    this.setState({ loading: true });
 
     const offset = state.page * state.pageSize;
     const limit = state.pageSize;
@@ -37,16 +37,14 @@ class UserHistoryTable extends React.Component {
     const sortDirection = state.sorted[0].desc ? '-' : '';
 
     new Promise((resolve, reject) =>
-      axios.get(
-        `${Routes.BASE_URL}${Routes.USERS}/${id}/history`, {
-          params: {
-            limit,
-            offset,
-            sort_by: sortBy,
-            sort_direction: sortDirection
-          }
+      axios.get(`${Routes.BASE_URL}${Routes.USERS}/${id}/history`, {
+        params: {
+          limit,
+          offset,
+          sort_by: sortBy,
+          sort_direction: sortDirection
         }
-      ).then(response =>
+      }).then(response =>
         resolve({
           rows: response.data,
           pages: Math.ceil(parseInt(response.headers['x-total-count'], 10) / state.pageSize)
@@ -59,7 +57,7 @@ class UserHistoryTable extends React.Component {
     });
   }
 
-  render() {
+  render () {
     const formatter = new Intl.DateTimeFormat('en-CA', {
       year: 'numeric',
       month: 'numeric',
@@ -124,7 +122,7 @@ class UserHistoryTable extends React.Component {
       Cell: (row) => {
         const viewUrl = CREDIT_TRANSACTIONS.DETAILS.replace(':id', row.value);
 
-        return <Link to={viewUrl}><FontAwesomeIcon icon="box-open"/></Link>;
+        return <Link to={viewUrl}><FontAwesomeIcon icon="box-open" /></Link>;
       },
       className: 'col-actions',
       filterable: false,
@@ -133,7 +131,7 @@ class UserHistoryTable extends React.Component {
       width: 30
     }];
 
-    const {data, pages, loading} = this.state;
+    const { data, pages, loading } = this.state;
 
     return (
       <ReactTable

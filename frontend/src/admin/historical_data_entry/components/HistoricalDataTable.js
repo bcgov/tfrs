@@ -144,6 +144,7 @@ const HistoricalDataTable = (props) => {
 
   return (
     <ReactTable
+      className="searchable"
       data={props.items}
       defaultPageSize={5}
       defaultSorted={[{

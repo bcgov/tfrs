@@ -15,6 +15,12 @@ const Permissions = (props) => {
     id: 'description',
     Header: 'Description',
     accessor: item => (item.description)
+  }, {
+    className: 'col-actions',
+    filterable: false,
+    Header: '',
+    id: 'actions',
+    width: 50
   }];
 
   const filterMethod = (filter, row, column) => {
@@ -28,6 +34,7 @@ const Permissions = (props) => {
 
   return (
     <ReactTable
+      className="searchable"
       data={props.items}
       defaultSorted={[{
         id: 'permission'

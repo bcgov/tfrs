@@ -134,6 +134,7 @@ const CreditTransferTable = (props) => {
 
   return (
     <ReactTable
+      className="searchable"
       data={props.items}
       defaultPageSize={15}
       defaultSorted={[{
