@@ -9,13 +9,14 @@ const getReferenceData = () => (dispatch) => {
 
   let referenceData = {};
   Promise.all(
-    Object.keys(Routes.REFERENCE_DATA_API_ENDPOINTS).map( stateName =>
+    Object.keys(Routes.REFERENCE_DATA_API_ENDPOINTS).map(stateName =>
       axios.get(Routes.BASE_URL + Routes.REFERENCE_DATA_API_ENDPOINTS[stateName]).then((response =>
-      referenceData[stateName] = response.data))
+        referenceData[stateName] = response.data))
     )
-  ).then(
-    dispatch(getReferenceDataSuccess(referenceData))
-  ).catch( error =>
+  ).then(() => {
+      dispatch(getReferenceDataSuccess(referenceData));
+    }
+  ).catch(error =>
     dispatch(getReferenceDataError(error.response))
   );
 
@@ -38,4 +39,4 @@ const getReferenceDataError = error => ({
   errorMessage: error
 });
 
-export { getReferenceData };
+export {getReferenceData};

@@ -8,7 +8,12 @@ import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 import {bindActionCreators} from 'redux';
 
-import {getOrganization, getOrganizationMembers, updateOrganization} from '../actions/organizationActions';
+import {
+  addOrganization,
+  getOrganization,
+  getOrganizationMembers,
+  updateOrganization
+} from '../actions/organizationActions';
 import Loading from '../app/components/Loading';
 import OrganizationDetails from './components/OrganizationDetails';
 import OrganizationMembers from './components/OrganizationMembers';
@@ -27,7 +32,7 @@ class OrganizationEditContainer extends Component {
 
     this.state = {
       fields: {
-        name: '',
+        name: 'New Fuel Supplier',
         addressLine1: '',
         addressLine2: '',
         addressLine3: '',
@@ -45,8 +50,11 @@ class OrganizationEditContainer extends Component {
     this.submitted = false;
 
     this._handleInputChange = this._handleInputChange.bind(this);
-    this._handleSubmit = this._handleSubmit.bind(this);
+    this._handleCreate = this._handleCreate.bind(this);
+    this._handleUpdate = this._handleUpdate.bind(this);
+
   }
+
 
   componentDidMount() {
     if (this.props.mode === 'add')
@@ -106,7 +114,7 @@ class OrganizationEditContainer extends Component {
     });
   }
 
-  _handleSubmit(event) {
+  _handleUpdate(event) {
     event.preventDefault();
 
     const data = {
@@ -124,23 +132,47 @@ class OrganizationEditContainer extends Component {
     return false;
   }
 
+  _handleCreate(event) {
+    event.preventDefault();
+
+    const data = {
+      ...this.state.fields
+    };
+
+    this.props.addOrganization(data).then((response) => {
+      const viewUrl = ORGANIZATION.DETAILS.replace(':id', response.data.id);
+      history.push(viewUrl);
+      toastr.organizationSuccess();
+    });
+
+    return false;
+  }
+
+
   render() {
     const isFetching = this.props.organization.isFetching ||
-      this.props.referenceData.isFetching;
+      this.props.referenceData.isFetching ||
+      !this.props.referenceData.isSuccessful;
+
     if (isFetching) {
       return (<Loading/>);
     }
 
     switch (this.props.mode) {
       case 'add':
-        return (<p>add mode</p>);
+      return (<OrganizationEditForm
+        fields={this.state.fields}
+        handleInputChange={this._handleInputChange}
+        referenceData={this.props.referenceData}
+        handleSubmit={this._handleCreate}
+      />);
       case 'gov_edit':
       case 'edit':
         return (<OrganizationEditForm
           fields={this.state.fields}
           handleInputChange={this._handleInputChange}
           referenceData={this.props.referenceData}
-          handleSubmit={this._handleSubmit}
+          handleSubmit={this._handleUpdate}
         />);
       default:
         return (<div/>);
@@ -187,25 +219,34 @@ OrganizationEditContainer.propTypes = {
   }),
   updateOrganization: PropTypes.func.isRequired,
   getOrganization: PropTypes.func.isRequired,
+  addOrganization: PropTypes.func.isRequired,
   mode: PropTypes.oneOf(['add', 'edit', 'admin_edit'])
 };
 
-const mapStateToProps = state => ({
-  organization: {
-    details: state.rootReducer.organizationRequest.fuelSupplier,
-    isFetching: state.rootReducer.organizationRequest.isFetching
-  },
-  referenceData: {
-    organizationTypes: state.rootReducer.referenceData.data.organizationTypes,
-    organizationStatuses: state.rootReducer.referenceData.data.organizationStatuses,
-    organizationActionsTypes: state.rootReducer.referenceData.data.organizationActionsTypes,
-    isFetching: state.rootReducer.referenceData.isFetching
+const mapStateToProps = state => {
+  console.log('msp');
+  console.log(state.rootReducer.referenceData.success);
+  console.log(state.rootReducer.referenceData.data.organizationTypes);
+
+  return {
+    organization: {
+      details: state.rootReducer.organizationRequest.fuelSupplier,
+      isFetching: state.rootReducer.organizationRequest.isFetching
+    },
+    referenceData: {
+      organizationTypes: state.rootReducer.referenceData.data.organizationTypes,
+      organizationStatuses: state.rootReducer.referenceData.data.organizationStatuses,
+      organizationActionsTypes: state.rootReducer.referenceData.data.organizationActionsTypes,
+      isFetching: state.rootReducer.referenceData.isFetching,
+      isSuccessful: state.rootReducer.referenceData.success
+    }
   }
-});
+};
 
 const mapDispatchToProps = dispatch => ({
   getOrganization: bindActionCreators(getOrganization, dispatch),
-  updateOrganization: bindActionCreators(updateOrganization, dispatch)
+  updateOrganization: bindActionCreators(updateOrganization, dispatch),
+  addOrganization: bindActionCreators(addOrganization, dispatch)
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(OrganizationEditContainer);

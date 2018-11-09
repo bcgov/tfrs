@@ -4,7 +4,8 @@ import ReducerTypes from "../constants/reducerTypes/ReferenceData";
 const referenceData = (state = {
   isFetching: false,
   success: false,
-  errorMessage: []
+  errorMessage: [],
+  data: {}
 }, action) => {
   if (action.name === ReducerTypes.REFERENCE_DATA) {
     switch (action.type) {
