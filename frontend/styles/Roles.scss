@@ -1,6 +1,13 @@
 @import './variables.scss';
 @import './mixins.scss';
 
+.page_role {
+  .btn-container {
+    margin-top: 20px;
+    text-align: right;
+  }
+}
+
 .page_roles {
   .col-actions {
     text-align: center;
