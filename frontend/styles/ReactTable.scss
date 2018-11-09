@@ -2,6 +2,32 @@
 @import './mixins.scss';
 
 .ReactTable {
+  &.searchable {
+    .-filters {
+      .rt-th:last-child {
+        position: relative;
+        
+        &:before {
+          font-family: 'FontAwesome';
+          position: absolute;
+          content: "\f002";
+          left: 50%;
+          top: 50%;
+          transform: translate(-50%, -50%);
+        }
+      }
+    }
+  }
+
+  .-filters .rt-th input[type=text] {
+    border-color: $border-grey;
+  }
+
+  .-header .rt-th {
+    border-color: $border-grey;
+    outline: none;
+  }
+
   .rt-tr {
     &.-odd {
       background-color: $background-grey;
@@ -11,5 +37,9 @@
       background-color: $yellow;
       cursor: pointer;
     }
+  }
+
+  .col-actions {
+    text-align: center;
   }
 }

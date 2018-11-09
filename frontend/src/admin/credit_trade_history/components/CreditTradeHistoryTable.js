@@ -8,6 +8,7 @@ import ReactTable from 'react-table';
 import 'react-table/react-table.css';
 import axios from 'axios';
 
+import history from '../../../app/History';
 import CREDIT_TRANSACTIONS from '../../../constants/routes/CreditTransactions';
 import { CREDIT_TRANSFER_STATUS } from '../../../constants/values';
 import * as Routes from '../../../constants/routes';
@@ -94,18 +95,6 @@ class CreditTradeHistoryTable extends React.Component {
       resizable: false,
       width: 100
     }, {
-      accessor: item => item.creditTrade.id,
-      Cell: (row) => {
-        const viewUrl = CREDIT_TRANSACTIONS.DETAILS.replace(':id', row.value);
-
-        return <Link to={viewUrl}><FontAwesomeIcon icon="box-open" /></Link>;
-      },
-      className: 'col-actions',
-      filterable: false,
-      Header: '',
-      id: 'actions',
-      width: 30
-    }, {
       accessor: item => item.creditTrade.initiator.name,
       className: 'col-initiator',
       Header: 'Initiator',
@@ -131,6 +120,18 @@ class CreditTradeHistoryTable extends React.Component {
       Header: 'Timestamp',
       id: 'updateTimestamp',
       minWidth: 75
+    }, {
+      accessor: item => item.creditTrade.id,
+      Cell: (row) => {
+        const viewUrl = CREDIT_TRANSACTIONS.DETAILS.replace(':id', row.value);
+
+        return <Link to={viewUrl}><FontAwesomeIcon icon="box-open" /></Link>;
+      },
+      className: 'col-actions',
+      filterable: false,
+      Header: '',
+      id: 'actions',
+      width: 30
     }];
 
     const { data, pages, loading } = this.state;
@@ -143,6 +144,19 @@ class CreditTradeHistoryTable extends React.Component {
           desc: true
         }]}
         filterable={false}
+        getTrProps={(state, row) => {
+          if (row && row.original) {
+            return {
+              onClick: (e) => {
+                const viewUrl = CREDIT_TRANSACTIONS.DETAILS.replace(':id', row.original.creditTrade.id);
+                history.push(viewUrl);
+              },
+              className: 'clickable'
+            };
+          }
+
+          return {};
+        }}
         manual
         data={data}
         pages={pages}

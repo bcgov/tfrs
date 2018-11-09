@@ -47,6 +47,7 @@ const RolesTable = (props) => {
 
   return (
     <ReactTable
+      className="searchable"
       data={props.items}
       defaultFilterMethod={filterMethod}
       defaultSorted={[{
