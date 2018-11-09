@@ -7,11 +7,10 @@ let config = {};
 let build = null;
 
 if (Object.keys(global).includes('__BUILD_NUMBER__')) {
-    build = __BUILD_NUMBER__;
+  build = __BUILD_NUMBER__;
 }
 
 if (build && window.location.host === 'dev-lowcarbonfuels.pathfinder.gov.bc.ca') {
-  console.log(__BUILD_NUMBER__);
   config = {
     basename: `/${__BUILD_NUMBER__}`
   };
