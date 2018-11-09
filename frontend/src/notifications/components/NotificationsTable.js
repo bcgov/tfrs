@@ -136,6 +136,7 @@ const NotificationsTable = (props) => {
 
   return (
     <ReactTable
+      className="searchable"
       columns={columns}
       data={props.items}
       defaultPageSize={15}

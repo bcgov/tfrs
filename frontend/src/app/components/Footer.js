@@ -6,12 +6,14 @@ import * as Routes from '../../constants/routes';
 
 const Footer = props => (
   <div id="footer" role="contentinfo">
-    <img
-      className="back-to-top"
-      src="/assets/images/back-to-top.png"
-      alt="Back to top"
-      title="Back to top"
-    />
+    <a href="#top">
+      <img
+        className="back-to-top"
+        src="/assets/images/back-to-top.png"
+        alt="Back to top"
+        title="Back to top"
+      />
+    </a>
     <div id="footerWrapper">
       <div id="footerAdminSection">
         <div id="footerAdminLinksContainer" className="container">

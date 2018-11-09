@@ -57,10 +57,10 @@ const OrganizationsTable = (props) => {
     id: 'lastTransaction',
     minWidth: 75
   }, {
-    accessor: null,
-    Header: 'Pending Actions',
-    id: 'pendingActions',
-    minWidth: 75
+    className: 'col-actions',
+    filterable: false,
+    id: 'actions',
+    width: 50
   }];
 
   const filterMethod = (filter, row, column) => {
@@ -74,6 +74,7 @@ const OrganizationsTable = (props) => {
 
   return (
     <ReactTable
+      className="searchable"
       data={props.items}
       defaultPageSize={15}
       defaultSorted={[{
