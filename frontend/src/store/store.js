@@ -1,25 +1,25 @@
-import { createStore, compose, applyMiddleware, combineReducers } from 'redux';
-import { reducer as toastrReducer } from 'react-redux-toastr';
-import { routerReducer, routerMiddleware } from 'react-router-redux';
-import { createLogger } from 'redux-logger';
+import {createStore, compose, applyMiddleware, combineReducers} from 'redux';
+import {reducer as toastrReducer} from 'react-redux-toastr';
+import {routerReducer, routerMiddleware} from 'react-router-redux';
+import {createLogger} from 'redux-logger';
 import io from 'socket.io-client';
 import thunk from 'redux-thunk';
 import rootReducer from '../reducers/reducer';
-import { getNotifications } from '../actions/notificationActions';
-import { SOCKETIO_URL } from '../constants/routes';
+import {getNotifications} from '../actions/notificationActions';
+import {SOCKETIO_URL} from '../constants/routes';
 
-import createOidcMiddleware, { loadUser, processSilentRenew, reducer as OIDCReducer } from 'redux-oidc';
-import { persistTargetPathReducer } from '../reducers/persistTargetPathReducer';
+import createOidcMiddleware, {loadUser, processSilentRenew, reducer as OIDCReducer} from 'redux-oidc';
+import {persistTargetPathReducer} from '../reducers/persistTargetPathReducer';
 
 import userManager from './oidc-usermanager';
 import CONFIG from '../config';
-import { getLoggedInUser } from '../actions/userActions';
+import {getLoggedInUser} from '../actions/userActions';
 
 import persistState from 'redux-localstorage';
 import createSocketIoMiddleware from 'redux-socket.io';
+import {getReferenceData} from "../actions/referenceDataActions";
 
 const middleware = routerMiddleware(history);
-const oidcMiddleware = createOidcMiddleware(userManager);
 
 const socket = io(SOCKETIO_URL);
 const socketIoMiddleware = createSocketIoMiddleware(socket, 'socketio/');
@@ -40,7 +40,6 @@ const combinedReducers = (state = {}, action) => {
 let allMiddleware = [
   thunk,
   socketIoMiddleware,
-  oidcMiddleware,
   middleware
 ];
 
@@ -66,7 +65,7 @@ store.subscribe(() => {
     }
 
     if (CONFIG.KEYCLOAK.ENABLED) {
-      if (state.oidc.user &&
+      if (state.oidc.user && !state.oidc.user.expired &&
         !state.rootReducer.userRequest.isFetching &&
         !state.rootReducer.userRequest.isAuthenticated &&
         !state.rootReducer.userRequest.serverError) {
@@ -80,7 +79,6 @@ store.subscribe(() => {
 
 if (CONFIG.KEYCLOAK.ENABLED) {
   loadUser(store, userManager);
-  processSilentRenew();
 }
 
 export default store;
