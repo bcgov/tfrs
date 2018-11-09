@@ -23,20 +23,4 @@ class HomePage extends BaseAppPage {
   Integer getCreditBalance() {
     creditBalanceString.text().replaceAll(/[^0-9]/, '').toInteger()
   }
-
-  /**
-   * Compare the current credit balance amount against the provided expected amount.
-   *
-   * @param expectedBalance the expected credit balance to assert against.
-   * @return true if the credit balances match.
-   * @throws AssertionError if the credit balances fail to match.
-   */
-  Boolean compareCreditBalance(Integer expectedBalance) {
-    try {
-      getCreditBalance() == expectedBalance
-    } catch (WaitTimeoutException e) {
-      fail('The current credit balance does not match the expected credit balance.')
-    }
-    return true
-  }
 }
