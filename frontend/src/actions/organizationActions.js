@@ -144,6 +144,7 @@ const addOrganization = (data) => (dispatch) => {
   return axios.post(`${Routes.BASE_URL}${Routes.ORGANIZATIONS_API}`, data)
     .then((response) => {
       dispatch(addOrganizationSuccess(response.data));
+      return response.data.id;
     }).catch((error) => {
     dispatch(addOrganizationError(error.response));
   });

@@ -33,20 +33,21 @@ class OrganizationEditContainer extends Component {
     this.state = {
       fields: {
         name: 'New Fuel Supplier',
-        addressLine1: '',
-        addressLine2: '',
-        addressLine3: '',
+        addressLine_1: '',
+        addressLine_2: '',
+        addressLine_3: '',
         city: '',
         postalCode: '',
         state: '',
         county: '',
         country: '',
-        type: '2',
-        actionsType: '1',
-        status: '1'
+        type: 2,
+        actionsType: 1,
+        status: 1
       },
       validationErrors: {}
     };
+
     this.submitted = false;
 
     this._handleInputChange = this._handleInputChange.bind(this);
@@ -107,8 +108,14 @@ class OrganizationEditContainer extends Component {
   _handleInputChange(event) {
     const {value, name} = event.target;
     const fieldState = {...this.state.fields};
+    const numericFields = ['type', 'actionsType', 'status'];
 
-    fieldState[name] = value;
+    if (numericFields.includes(name)) {
+      fieldState[name] = parseInt(value, 10);
+    } else {
+      fieldState[name] = value;
+    }
+
     this.setState({
       fields: fieldState
     });
@@ -118,11 +125,23 @@ class OrganizationEditContainer extends Component {
     event.preventDefault();
 
     const data = {
-      ...this.state.fields
+      name: this.state.fields.name,
+      type: this.state.fields.type,
+      actionsType: this.state.fields.actionsType,
+      status: this.state.fields.status,
+      organizationAddress: {
+        addressLine_1: this.state.fields.addressLine_1,
+        addressLine_2: this.state.fields.addressLine_2,
+        addressLine_3: this.state.fields.addressLine_3,
+        city: this.state.fields.city,
+        postalCode: this.state.fields.postalCode,
+        state: this.state.fields.state,
+        county: this.state.fields.county,
+        country: this.state.fields.country
+      }
     };
 
     const viewUrl = ORGANIZATION.DETAILS.replace(':id', this.props.match.params.id);
-
 
     this.props.updateOrganization(data, this.props.match.params.id).then(() => {
       history.push(viewUrl);
@@ -136,11 +155,24 @@ class OrganizationEditContainer extends Component {
     event.preventDefault();
 
     const data = {
-      ...this.state.fields
+      name: this.state.fields.name,
+      type: this.state.fields.type,
+      actionsType: this.state.fields.actionsType,
+      status: this.state.fields.status,
+      organizationAddress: {
+        addressLine_1: this.state.fields.addressLine_1,
+        addressLine_2: this.state.fields.addressLine_2,
+        addressLine_3: this.state.fields.addressLine_3,
+        city: this.state.fields.city,
+        postalCode: this.state.fields.postalCode,
+        state: this.state.fields.state,
+        county: this.state.fields.county,
+        country: this.state.fields.country
+      }
     };
 
-    this.props.addOrganization(data).then((response) => {
-      const viewUrl = ORGANIZATION.DETAILS.replace(':id', response.data.id);
+    this.props.addOrganization(data).then((id) => {
+      const viewUrl = ORGANIZATION.DETAILS.replace(':id', id);
       history.push(viewUrl);
       toastr.organizationSuccess();
     });
@@ -160,12 +192,13 @@ class OrganizationEditContainer extends Component {
 
     switch (this.props.mode) {
       case 'add':
-      return (<OrganizationEditForm
-        fields={this.state.fields}
-        handleInputChange={this._handleInputChange}
-        referenceData={this.props.referenceData}
-        handleSubmit={this._handleCreate}
-      />);
+        return (<OrganizationEditForm
+          fields={this.state.fields}
+          handleInputChange={this._handleInputChange}
+          referenceData={this.props.referenceData}
+          handleSubmit={this._handleCreate}
+          mode={this.props.mode}
+        />);
       case 'gov_edit':
       case 'edit':
         return (<OrganizationEditForm
@@ -173,6 +206,7 @@ class OrganizationEditContainer extends Component {
           handleInputChange={this._handleInputChange}
           referenceData={this.props.referenceData}
           handleSubmit={this._handleUpdate}
+          mode={this.props.mode}
         />);
       default:
         return (<div/>);
@@ -193,9 +227,9 @@ OrganizationEditContainer.propTypes = {
       organizationBalance: PropTypes.shape({
         validatedCredits: PropTypes.number
       }),
-      status: PropTypes.string,
-      type: PropTypes.string,
-      actionsType: PropTypes.string
+      status: PropTypes.number,
+      type: PropTypes.number,
+      actionsType: PropTypes.number
     }),
     isFetching: PropTypes.bool
   }),
@@ -224,10 +258,6 @@ OrganizationEditContainer.propTypes = {
 };
 
 const mapStateToProps = state => {
-  console.log('msp');
-  console.log(state.rootReducer.referenceData.success);
-  console.log(state.rootReducer.referenceData.data.organizationTypes);
-
   return {
     organization: {
       details: state.rootReducer.organizationRequest.fuelSupplier,

@@ -1,5 +1,6 @@
 import datetime
 
+from django.db.models import Q
 from django.http import HttpResponse
 
 from rest_framework import viewsets, mixins
@@ -17,7 +18,7 @@ from api.models.OrganizationType import OrganizationType
 from api.models.OrganizationActionsType import OrganizationActionsType
 from api.models.User import User
 from api.serializers import OrganizationSerializer, OrganizationActionsTypeSerializer, OrganizationStatusSerializer, \
-    OrganizationUpdateSerializer
+    OrganizationUpdateSerializer, OrganizationCreateSerializer
 from api.serializers import OrganizationBalanceSerializer
 from api.serializers import OrganizationHistorySerializer
 from api.serializers import OrganizationMinSerializer
@@ -50,7 +51,8 @@ class OrganizationViewSet(AuditableMixin, viewsets.GenericViewSet,
         'statuses': OrganizationStatusSerializer,
         'members': UserMinSerializer,
         'users': UserMinSerializer,
-        'update': OrganizationUpdateSerializer
+        'update': OrganizationUpdateSerializer,
+        'create': OrganizationCreateSerializer
     }
 
     def get_serializer_class(self):
@@ -143,6 +145,8 @@ class OrganizationViewSet(AuditableMixin, viewsets.GenericViewSet,
         """
             Reference data for UI
         """
+
+        #.filter(~Q(id=1))
         types = OrganizationType.objects.all()
 
         serializer = self.get_serializer(types,

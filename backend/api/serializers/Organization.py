@@ -20,10 +20,15 @@
     See the License for the specific language governing permissions and
     limitations under the License.
 """
+from django.core.exceptions import ValidationError
 from rest_framework import serializers
+from rest_framework.relations import PrimaryKeyRelatedField
 
 from api.models.Organization import Organization
+from api.models.OrganizationActionsType import OrganizationActionsType
 from api.models.OrganizationAddress import OrganizationAddress
+from api.models.OrganizationStatus import OrganizationStatus
+from api.models.OrganizationType import OrganizationType
 from .OrganizationAddressSerializer import OrganizationAddressSerializer
 
 
@@ -71,51 +76,78 @@ class OrganizationSerializer(serializers.ModelSerializer):
         return obj.organization_balance
 
 
-class OrganizationUpdateSerializer(serializers.ModelSerializer):
-    address_line_1 = serializers.CharField(allow_null=True, allow_blank=True, required=False)
-    address_line_2 = serializers.CharField(allow_null=True, allow_blank=True, required=False)
-    address_line_3 = serializers.CharField(allow_null=True, allow_blank=True, required=False)
-    city = serializers.CharField(allow_null=True, allow_blank=True, required=False)
-    country = serializers.CharField(allow_null=True, allow_blank=True, required=False)
-    county = serializers.CharField(allow_null=True, allow_blank=True, required=False)
-    state = serializers.CharField(allow_null=True, allow_blank=True, required=False)
-    postal_code = serializers.CharField(allow_null=True, allow_blank=True, required=False)
+class OrganizationCreateSerializer(serializers.ModelSerializer):
+
+    organization_address = OrganizationAddressSerializer(allow_null=True)
+    actions_type = PrimaryKeyRelatedField(queryset=OrganizationActionsType.objects.all())
+    status = PrimaryKeyRelatedField(queryset=OrganizationStatus.objects.all())
+    type = PrimaryKeyRelatedField(queryset=OrganizationType.objects.all())
+
 
     def validate(self, attrs):
-        print('ser: {}'.format((attrs)))
+        type = attrs['type']
+
+        if type.id == 1:
+            raise ValidationError('Cannot create government orgs')
+
         return attrs
+
+    def create(self, validated_data):
+
+        obj = Organization.objects.create(
+            name=validated_data['name'],
+            type=validated_data['type'],
+            actions_type=validated_data['actions_type'],
+            status=validated_data['status']
+        )
+
+        addr = validated_data.pop('organization_address')
+
+        OrganizationAddress.objects.create(
+            organization=obj,
+            primary=True,
+            **addr
+        )
+
+        return obj
+
+    class Meta:
+        model = Organization
+        fields = ('id', 'name', 'type', 'status', 'actions_type',
+                  'organization_address')
+        read_only_fields = ('id',)
+
+
+class OrganizationUpdateSerializer(serializers.ModelSerializer):
+
+    organization_address = OrganizationAddressSerializer(allow_null=True)
+    actions_type = PrimaryKeyRelatedField(queryset=OrganizationActionsType.objects.all())
+    status = PrimaryKeyRelatedField(queryset=OrganizationStatus.objects.all())
+    type = PrimaryKeyRelatedField(queryset=OrganizationType.objects.all())
 
     def update(self, obj, validated_data):
 
         Organization.objects.filter(id=obj.id).update(
             name=validated_data['name'],
-            type_id=validated_data['type'],
-            actions_type_id=validated_data['actions_type'],
-            status_id=validated_data['status']
+            actions_type=validated_data['actions_type'],
+            status=validated_data['status']
         )
 
-        OrganizationAddress.objects.filter(organization_id=obj.id).delete()
+        addr = validated_data.pop('organization_address')
 
+        OrganizationAddress.objects.filter(organization_id=obj.id).delete()
         OrganizationAddress.objects.create(
             organization=obj,
-            address_line_1=validated_data['address_line_1'],
-            address_line_2=validated_data['address_line_2'],
-            address_line_3=validated_data['address_line_3'],
-            city=validated_data['city'],
-            country=validated_data['country'],
-            state=validated_data['state'],
-            county=validated_data['county'],
-            postal_code=validated_data['postal_code'],
-            primary=True
+            primary=True,
+            **addr
         )
         return obj
 
     class Meta:
         model = Organization
         fields = ('id', 'name', 'type', 'status', 'actions_type',
-                  'address_line_1', 'address_line_2', 'address_line_3',
-                  'city', 'county', 'country', 'state', 'postal_code')
-        read_only_fields = ('id',)
+                  'organization_address')
+        read_only_fields = ('id', 'type')
 
 
 class OrganizationMinSerializer(serializers.ModelSerializer):

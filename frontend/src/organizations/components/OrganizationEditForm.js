@@ -30,6 +30,7 @@ const OrganizationEditForm = props => (
         </div>
       </div>
 
+      {props.mode === "add" &&
       <div className="row">
         <div className="col-sm-6">
           <div className="form-group">
@@ -41,13 +42,14 @@ const OrganizationEditForm = props => (
                 onChange={props.handleInputChange}
                 value={props.fields.type}
               >
-                {props.referenceData.organizationTypes.map(
+                {props.referenceData.organizationTypes.filter(t => (t.id !== 1)).map(
                   t => (<option key={t.id} value={t.id}>{t['type']}</option>))}
               </select>
             </label>
           </div>
         </div>
       </div>
+      }
 
       <div className="row">
         <div className="col-sm-6">
@@ -96,7 +98,7 @@ const OrganizationEditForm = props => (
                 id="organization-address-line-1"
                 name="addressLine_1"
                 onChange={props.handleInputChange}
-                value={props.fields.addressLine_1}
+                value={props.fields.addressLine_1 || ''}
               />
             </label>
           </div>
@@ -113,7 +115,7 @@ const OrganizationEditForm = props => (
                 id="organization-address-line-2"
                 name="addressLine_2"
                 onChange={props.handleInputChange}
-                value={props.fields.addressLine_2}
+                value={props.fields.addressLine_2 || ''}
               />
             </label>
           </div>
@@ -130,7 +132,7 @@ const OrganizationEditForm = props => (
                 id="organization-address-line-3"
                 name="addressLine_3"
                 onChange={props.handleInputChange}
-                value={props.fields.addressLine_3}
+                value={props.fields.addressLine_3 || ''}
               />
             </label>
           </div>
@@ -147,7 +149,7 @@ const OrganizationEditForm = props => (
                 id="organization-city"
                 name="city"
                 onChange={props.handleInputChange}
-                value={props.fields.city}
+                value={props.fields.city || ''}
               />
             </label>
           </div>
@@ -163,7 +165,7 @@ const OrganizationEditForm = props => (
                 id="organization-postal-code"
                 name="postalCode"
                 onChange={props.handleInputChange}
-                value={props.fields.postalCode}
+                value={props.fields.postalCode || ''}
               />
             </label>
           </div>
@@ -179,7 +181,7 @@ const OrganizationEditForm = props => (
                 id="organization-county"
                 name="county"
                 onChange={props.handleInputChange}
-                value={props.fields.county}
+                value={props.fields.county || ''}
               />
             </label>
           </div>
@@ -195,7 +197,7 @@ const OrganizationEditForm = props => (
                 id="organization-state"
                 name="state"
                 onChange={props.handleInputChange}
-                value={props.fields.state}
+                value={props.fields.state || ''}
               />
             </label>
           </div>
@@ -211,7 +213,7 @@ const OrganizationEditForm = props => (
                 id="organization-country"
                 name="country"
                 onChange={props.handleInputChange}
-                value={props.fields.country}
+                value={props.fields.country || ''}
               />
             </label>
           </div>
@@ -241,13 +243,14 @@ OrganizationEditForm.propTypes = {
     state: PropTypes.string,
     country: PropTypes.string,
     county: PropTypes.string,
-    actionsType: PropTypes.string,
-    status: PropTypes.string,
-    type: PropTypes.string
+    actionsType: PropTypes.number,
+    status: PropTypes.number,
+    type: PropTypes.number
   }),
   handleInputChange: PropTypes.func.isRequired,
   handleSubmit: PropTypes.func.isRequired,
-  referenceData: PropTypes.object
+  referenceData: PropTypes.object,
+  mode: PropTypes.oneOf(['add', 'edit', 'admin_edit'])
 };
 
 export default OrganizationEditForm;

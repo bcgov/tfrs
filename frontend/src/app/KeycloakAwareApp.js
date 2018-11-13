@@ -65,8 +65,6 @@ class KeycloakAwareApp extends React.Component {
 
     // we're not logged in and not in the process of logging in. trigger one.
     if ((!this.props.keycloak.user || this.props.keycloak.user.expired) && !this.props.keycloak.isFetching) {
-      console.log('adding signin component');
-      console.log(this.props.keycloak);
       return (
         <div className="App">
           <SigninPage/>
