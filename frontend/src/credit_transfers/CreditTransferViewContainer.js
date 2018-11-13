@@ -18,6 +18,7 @@ import {
   deleteCreditTransfer,
   getCreditTransferIfNeeded,
   invalidateCreditTransfer,
+  partialUpdateCreditTransfer,
   updateCreditTransfer
 } from '../actions/creditTransfersActions';
 import {
@@ -212,23 +213,14 @@ class CreditTransferViewContainer extends Component {
 
     // Update the Status only
     const data = {
-      initiator: item.initiator.id,
-      fairMarketValuePerCredit: item.fairMarketValuePerCredit,
-      isRescinded: item.isRescinded,
-      note: item.note,
-      numberOfCredits: item.numberOfCredits,
-      respondent: item.respondent.id,
-      status: status.id,
-      tradeEffectiveDate: null,
-      type: item.type.id,
-      zeroReason: (item.zeroReason && item.zeroReason.id) || null
+      status: status.id
     };
 
     // Update credit transfer (status only)
 
     const { id } = this.props.item;
 
-    this.props.updateCreditTransfer(id, data).then(() => {
+    this.props.partialUpdateCreditTransfer(id, data).then(() => {
       this.props.invalidateCreditTransfer();
       history.push(CREDIT_TRANSACTIONS.HIGHLIGHT.replace(':id', id));
 
@@ -515,7 +507,7 @@ class CreditTransferViewContainer extends Component {
 
     const { id } = this.props.item;
 
-    this.props.updateCreditTransfer(id, data).then(() => {
+    this.props.partialUpdateCreditTransfer(id, data).then(() => {
       this.props.invalidateCreditTransfer();
       history.push(CREDIT_TRANSACTIONS.HIGHLIGHT.replace(':id', id));
 
@@ -674,6 +666,7 @@ CreditTransferViewContainer.propTypes = {
   }).isRequired,
   prepareSigningAuthorityConfirmations: PropTypes.func.isRequired,
   addCommentToCreditTransfer: PropTypes.func.isRequired,
+  partialUpdateCreditTransfer: PropTypes.func.isRequired,
   updateCommentOnCreditTransfer: PropTypes.func.isRequired,
   updateCreditTransfer: PropTypes.func.isRequired
 };
@@ -695,6 +688,7 @@ const mapDispatchToProps = dispatch => ({
   prepareSigningAuthorityConfirmations: (creditTradeId, terms) =>
     prepareSigningAuthorityConfirmations(creditTradeId, terms),
   addCommentToCreditTransfer: bindActionCreators(addCommentToCreditTransfer, dispatch),
+  partialUpdateCreditTransfer: bindActionCreators(partialUpdateCreditTransfer, dispatch),
   updateCommentOnCreditTransfer: bindActionCreators(updateCommentOnCreditTransfer, dispatch),
   updateCreditTransfer: bindActionCreators(updateCreditTransfer, dispatch)
 });

@@ -60,7 +60,7 @@ const OrganizationMembersTable = (props) => {
     filterable: false,
     Header: '',
     id: 'actions',
-    minWidth: 100
+    maxWidth: 50
   }];
 
   const filterMethod = (filter, row, column) => {
@@ -74,6 +74,7 @@ const OrganizationMembersTable = (props) => {
 
   return (
     <ReactTable
+      className="searchable"
       data={props.items}
       defaultPageSize={15}
       defaultSorted={[{

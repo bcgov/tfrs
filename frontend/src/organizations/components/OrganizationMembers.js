@@ -29,7 +29,7 @@ const OrganizationMembers = (props) => {
       <div className="right-toolbar-container">
         <div className="actions-container">
           {props.loggedInUser &&
-          props.loggedInUser.hasPermission(PERMISSIONS_USERS.EDIT_FUEL_SUPPLIER_USERS) &&
+          props.loggedInUser.hasPermission(PERMISSIONS_USERS.USER_MANAGEMENT) &&
             <button
               id="new-user"
               className="btn btn-primary"

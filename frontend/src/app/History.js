@@ -2,9 +2,17 @@ import createHistory from 'history/createBrowserHistory'; // 'history/createHash
 
 let config = {};
 
-if (process.env.BASE_PATH) {
+/* global __BUILD_NUMBER__ */
+
+let build = null;
+
+if (Object.keys(global).includes('__BUILD_NUMBER__')) {
+  build = __BUILD_NUMBER__;
+}
+
+if (build && window.location.host === 'dev-lowcarbonfuels.pathfinder.gov.bc.ca') {
   config = {
-    basename: process.env.BASE_PATH
+    basename: `/${__BUILD_NUMBER__}`
   };
 }
 

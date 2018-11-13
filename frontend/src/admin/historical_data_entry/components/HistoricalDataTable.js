@@ -129,7 +129,8 @@ const HistoricalDataTable = (props) => {
           </button>
         </div>
       );
-    }
+    },
+    maxWidth: 75
   }];
 
   const filterMethod = (filter, row, column) => {
@@ -143,6 +144,7 @@ const HistoricalDataTable = (props) => {
 
   return (
     <ReactTable
+      className="searchable"
       data={props.items}
       defaultPageSize={5}
       defaultSorted={[{

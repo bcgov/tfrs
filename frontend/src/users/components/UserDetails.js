@@ -21,7 +21,7 @@ const UserDetails = props => (
       <div>
         <div className="user_actions">
           <div className="btn-container">
-            {props.loggedInUser.hasPermission(PERMISSIONS_USERS.EDIT_FUEL_SUPPLIER_USERS) &&
+            {props.loggedInUser.hasPermission(PERMISSIONS_USERS.USER_MANAGEMENT) &&
             <button
               className="btn btn-primary"
               onClick={() => {
@@ -68,8 +68,8 @@ const UserDetails = props => (
         }
         <div className="user_history">
           <h3>User Activity</h3>
-          {props.user.details.history &&
-            <UserHistoryTable items={props.user.details.history} />
+          {props.user.details.id &&
+            <UserHistoryTable userId={props.user.details.id} />
           }
         </div>
       </div>
@@ -87,7 +87,6 @@ UserDetails.propTypes = {
       cellPhone: PropTypes.string,
       email: PropTypes.string,
       firstName: PropTypes.string,
-      history: PropTypes.arrayOf(PropTypes.shape()),
       id: PropTypes.number,
       isActive: PropTypes.bool,
       lastName: PropTypes.string,

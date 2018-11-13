@@ -17,32 +17,27 @@ const getUsers = () => (dispatch) => {
     });
 };
 
-const createUser = (payload) => (dispatch) => {
+const createUser = payload => (dispatch) => {
   dispatch(createUserRequest(payload));
   return axios.post(Routes.BASE_URL + Routes.USERS, payload)
     .then((response) => {
       dispatch(createUserSuccess(response.data));
     }).catch((error) => {
-    dispatch(createUserError(error.response));
-    throw(error)
-  });
+      dispatch(createUserError(error.response));
+      throw (error);
+    });
 };
 
-
 const updateUser = (id, payload) => (dispatch) => {
-
   dispatch(updateUserRequest(id));
-
-  return axios.put(Routes.BASE_URL + Routes.USERS + '/' + id, payload)
+  return axios.put(`${Routes.BASE_URL}${Routes.USERS}/${id}`, payload)
     .then((response) => {
       dispatch(updateUserSuccess(response.data));
     }).catch((error) => {
       dispatch(updateUserError(error.response));
-      throw(error); // pass it up the chain
-  });
-
+      throw (error); // pass it up the chain
+    });
 };
-
 
 const getLoggedInUser = () => (dispatch) => {
   dispatch(getLoggedInUserRequest());
@@ -70,8 +65,6 @@ const signUserOut = () => (dispatch) => {
   }
 };
 
-
-
 const createUserRequest = payload => ({
   name: ReducerTypes.USER_ADMIN,
   type: ActionTypes.CREATE_USER_REQUEST,
@@ -90,8 +83,6 @@ const createUserError = error => ({
   errorData: error
 });
 
-
-
 const updateUserRequest = payload => ({
   name: ReducerTypes.USER_ADMIN,
   type: ActionTypes.UPDATE_USER_REQUEST,
@@ -109,7 +100,6 @@ const updateUserError = error => ({
   type: ActionTypes.UPDATE_USER_ERROR,
   errorData: error
 });
-
 
 const signUserOutAction = () => ({
   name: ReducerTypes.SIGN_USER_OUT,
@@ -149,10 +139,9 @@ const getUserByUsername = username => (dispatch) => {
     .then((response) => {
       dispatch(getUserSuccess(response.data));
     }).catch((error) => {
-    dispatch(getUserError(error.response));
-  });
+      dispatch(getUserError(error.response));
+    });
 };
-
 
 const getUserError = error => ({
   errorMessage: error,
@@ -189,4 +178,7 @@ const getUsersError = error => ({
   errorMessage: error
 });
 
-export { getUsers, getLoggedInUser, createUser, updateUser, getUser, getUserByUsername, signUserOut };
+export {
+  getUsers, getLoggedInUser, createUser, updateUser, getUser, getUserByUsername,
+  signUserOut
+};
