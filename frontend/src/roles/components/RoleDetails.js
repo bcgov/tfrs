@@ -3,9 +3,12 @@
  */
 import React from 'react';
 import PropTypes from 'prop-types';
+import FontAwesomeIcon from '@fortawesome/react-fontawesome';
 
-import Loading from '../../app/components/Loading';
 import PermissionsTable from './PermissionsTable';
+import Loading from '../../app/components/Loading';
+import history from '../../app/History';
+import * as Lang from '../../constants/langEnUs';
 
 const RoleDetails = props => (
   <div className="page_role">
@@ -22,6 +25,15 @@ const RoleDetails = props => (
             items={props.role.details.permissions}
           />
           }
+        </div>
+        <div className="btn-container">
+          <button
+            className="btn btn-default"
+            onClick={() => history.goBack()}
+            type="button"
+          >
+            <FontAwesomeIcon icon="arrow-circle-left" /> {Lang.BTN_APP_CANCEL}
+          </button>
         </div>
       </div>
     }
