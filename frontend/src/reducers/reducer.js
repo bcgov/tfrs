@@ -10,6 +10,7 @@ import compliancePeriods from './compliancePeriodReducer';
 import { roleRequest, roles } from './roleReducer';
 import signingAuthorityAssertions from './signingAuthorityAssertionReducer';
 import { notifications, subscriptions } from './notificationReducer';
+import {referenceData} from "./referenceDataReducer";
 
 const rootReducer = combineReducers({
   approvedCreditTransfers,
@@ -22,6 +23,7 @@ const rootReducer = combineReducers({
   organizationMembers,
   organizationRequest,
   organizations,
+  referenceData,
   roleRequest,
   roles,
   routing,

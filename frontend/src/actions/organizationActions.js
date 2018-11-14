@@ -138,7 +138,71 @@ const getOrganizationsSuccess = organizations => ({
   type: ActionTypes.RECEIVE_ORGANIZATIONS
 });
 
+const addOrganization = (data) => (dispatch) => {
+  dispatch(addOrganizationRequest(data));
+
+  return axios.post(`${Routes.BASE_URL}${Routes.ORGANIZATIONS_API}`, data)
+    .then((response) => {
+      dispatch(addOrganizationSuccess(response.data));
+      return response.data.id;
+    }).catch((error) => {
+    dispatch(addOrganizationError(error.response));
+  });
+};
+
+const addOrganizationError = error => ({
+  errorMessage: error,
+  name: ReducerTypes.ERROR_ADD_ORGANIZATION_REQUEST,
+  type: ActionTypes.ADD_ORGANIZATION
+});
+
+const addOrganizationRequest = (payload) => ({
+  name: ReducerTypes.ADD_ORGANIZATION_REQUEST,
+  type: ActionTypes.ADD_ORGANIZATION,
+  data: payload
+});
+
+const addOrganizationSuccess = response => ({
+  data: response,
+  name: ReducerTypes.SUCCESS_ADD_ORGANIZATION_REQUEST,
+  type: ActionTypes.ADD_ORGANIZATION
+});
+
+
+const updateOrganization = (data, id) => (dispatch) => {
+  dispatch(updateOrganizationRequest({id, data}));
+
+  return axios.put(`${Routes.BASE_URL}${Routes.ORGANIZATIONS_API}/${id}`, data)
+    .then((response) => {
+      dispatch(updateOrganizationSuccess(response.data));
+    }).catch((error) => {
+      dispatch(updateOrganizationError(error.response));
+    });
+};
+
+const updateOrganizationError = error => ({
+  errorMessage: error,
+  name: ReducerTypes.ERROR_UPDATE_ORGANIZATION_REQUEST,
+  type: ActionTypes.UPDATE_ORGANIZATION
+});
+
+const updateOrganizationRequest = (payload) => ({
+  name: ReducerTypes.UPDATE_ORGANIZATION_REQUEST,
+  type: ActionTypes.UPDATE_ORGANIZATION,
+  data: payload
+});
+
+const updateOrganizationSuccess = response => ({
+  data: response,
+  name: ReducerTypes.SUCCESS_UPDATE_ORGANIZATION_REQUEST,
+  type: ActionTypes.UPDATE_ORGANIZATION
+});
+
+
+
+
 export {
   getFuelSuppliers, getMyOrganization, getMyOrganizationMembers,
-  getOrganization, getOrganizationMembers, getOrganizations
+  getOrganization, getOrganizationMembers, getOrganizations,
+  addOrganization, updateOrganization
 };

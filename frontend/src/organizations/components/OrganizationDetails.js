@@ -6,36 +6,48 @@ import PropTypes from 'prop-types';
 import numeral from 'numeral';
 
 import * as NumberFormat from '../../constants/numeralFormats';
+import history from "../../app/History";
+import ORGANIZATIONS from "../../constants/routes/Organizations";
+import FontAwesomeIcon from "@fortawesome/react-fontawesome";
 
 const OrganizationDetails = props => (
   <div className="page_organization">
     <div>
       <div className="credit_balance">
         {props.organization.organizationBalance &&
-          <h3>
-            Credit Balance: {
-              numeral(props.organization.organizationBalance.validatedCredits)
-                .format(NumberFormat.INT)
-            }
-          </h3>
+        <h3>
+          Credit Balance: {
+          numeral(props.organization.organizationBalance.validatedCredits)
+            .format(NumberFormat.INT)
+        }
+        </h3>
         }
       </div>
       <h1>
         {props.organization.name}
       </h1>
+      <div className="actions-container">
+        <button
+          className="btn btn-info"
+          type="button"
+          onClick={() => history.push(ORGANIZATIONS.EDIT.replace(':id', props.organization.id))}
+        >
+          <FontAwesomeIcon icon="edit"/> Edit
+        </button>
+      </div>
       {props.organization.organizationAddress &&
-        <div className="address">
-          <dl className="dl-horizontal">
-            <dt>Address:</dt>
-            <dd>{props.organization.organizationAddress.addressLine_1}</dd>
-            <dt />
-            <dd>{props.organization.organizationAddress.addressLine_2}</dd>
-            <dt />
-            <dd>{props.organization.organizationAddress.addressLine_3}</dd>
-            <dt />
-            <dd>{`${props.organization.organizationAddress.city}, ${props.organization.organizationAddress.postalCode}, ${props.organization.organizationAddress.country}`}</dd>
-          </dl>
-        </div>
+      <div className="address">
+        <dl className="dl-horizontal">
+          <dt>Address:</dt>
+          <dd>{props.organization.organizationAddress.addressLine_1}</dd>
+          <dt/>
+          <dd>{props.organization.organizationAddress.addressLine_2}</dd>
+          <dt/>
+          <dd>{props.organization.organizationAddress.addressLine_3}</dd>
+          <dt/>
+          <dd>{`${props.organization.organizationAddress.city}, ${props.organization.organizationAddress.postalCode}, ${props.organization.organizationAddress.country}`}</dd>
+        </dl>
+      </div>
       }
       <div className="status">
         <dl className="dl-horizontal">
@@ -47,8 +59,7 @@ const OrganizationDetails = props => (
   </div>
 );
 
-OrganizationDetails.defaultProps = {
-};
+OrganizationDetails.defaultProps = {};
 
 OrganizationDetails.propTypes = {
   organization: PropTypes.shape({
