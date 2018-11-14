@@ -13,6 +13,7 @@ const UserProfileDetails = props => (
 
     <UserForm
       addToFields={props.addToFields}
+      errors={props.errors}
       fields={props.fields}
       handleInputChange={props.handleInputChange}
       loggedInUser={props.loggedInUser}
@@ -21,8 +22,16 @@ const UserProfileDetails = props => (
   </div>
 );
 
+UserProfileDetails.defaultProps = {
+  errors: null
+};
+
 UserProfileDetails.propTypes = {
   addToFields: PropTypes.func.isRequired,
+  errors: PropTypes.oneOfType([
+    PropTypes.shape({}),
+    PropTypes.string
+  ]),
   fields: PropTypes.shape({
   }).isRequired,
   handleInputChange: PropTypes.func.isRequired,

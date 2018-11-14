@@ -11,7 +11,6 @@ import PropTypes from 'prop-types';
 import { updateUser } from '../actions/userActions';
 import Modal from '../app/components/Modal';
 import UserProfileDetails from './components/UserProfileDetails';
-import USERS from '../constants/routes/Users';
 import toastr from '../utils/toastr';
 
 class UserProfileContainer extends Component {
@@ -38,25 +37,20 @@ class UserProfileContainer extends Component {
     this._handleInputChange = this._handleInputChange.bind(this);
   }
 
-  componentWillReceiveProps (props) {
-    this.loadPropsToFieldState(props);
+  componentDidMount () {
+    this.loadData();
   }
 
-  loadPropsToFieldState (props) {
+  loadData () {
     if (!this.submitted) {
       const fieldState = {
-        firstName: props.loggedInUser.firstName || '',
-        lastName: props.loggedInUser.lastName || '',
-        bceid: props.loggedInUser.authorizationId || '',
-        email: props.loggedInUser.email || '',
-        organization: props.loggedInUser.organization || null,
-        mobilePhone: props.loggedInUser.cellPhone || '',
-        status: props.loggedInUser.isActive ? 'active' : 'inactive',
-        workPhone: props.loggedInUser.phone || '',
-        roles: props.loggedInUser.roles.map(role => ({
-          id: role.id,
-          value: true
-        }))
+        firstName: this.props.loggedInUser.firstName || '',
+        lastName: this.props.loggedInUser.lastName || '',
+        bceid: this.props.loggedInUser.authorizationId || '',
+        email: this.props.loggedInUser.email || '',
+        mobilePhone: this.props.loggedInUser.cellPhone || '',
+        status: this.props.loggedInUser.isActive ? 'active' : 'inactive',
+        workPhone: this.props.loggedInUser.phone || ''
       };
 
       this.setState({
@@ -115,6 +109,7 @@ class UserProfileContainer extends Component {
     return ([
       <UserProfileDetails
         addToFields={this._addToFields}
+        errors={this.props.errors}
         fields={this.state.fields}
         handleInputChange={this._handleInputChange}
         key="userForm"
@@ -134,14 +129,30 @@ class UserProfileContainer extends Component {
   }
 }
 
+UserProfileContainer.defaultProps = {
+  errors: null
+};
+
 UserProfileContainer.propTypes = {
+  errors: PropTypes.oneOfType([
+    PropTypes.shape({}),
+    PropTypes.string
+  ]),
   loggedInUser: PropTypes.shape({
-    id: PropTypes.number.isRequired
+    authorizationId: PropTypes.string.isRequired,
+    cellPhone: PropTypes.string,
+    email: PropTypes.string.isRequired,
+    firstName: PropTypes.string.isRequired,
+    id: PropTypes.number.isRequired,
+    isActive: PropTypes.bool.isRequired,
+    lastName: PropTypes.string.isRequired,
+    phone: PropTypes.string
   }).isRequired,
   updateUser: PropTypes.func.isRequired
 };
 
 const mapStateToProps = state => ({
+  errors: state.rootReducer.userAdmin.error,
   loggedInUser: state.rootReducer.userRequest.loggedInUser
 });
 
