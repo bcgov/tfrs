@@ -74,6 +74,15 @@ const UserDetails = props => (
         </div>
       </div>
     }
+    <div className="btn-container">
+      <button
+        className="btn btn-default"
+        onClick={() => history.goBack()}
+        type="button"
+      >
+        <FontAwesomeIcon icon="arrow-circle-left" /> {Lang.BTN_APP_CANCEL}
+      </button>
+    </div>
   </div>
 );
 
