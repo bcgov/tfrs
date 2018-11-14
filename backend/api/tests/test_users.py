@@ -121,6 +121,9 @@ class TestUsers(BaseTestCase):
         user = User.objects.get(id=self.users['fs_user_1'].id)
 
         self.assertEqual(user.first_name, 'firstname')
+        self.assertEqual(user.last_name, 'lastname')
+        self.assertEqual(user.email, 'email@email.com')
         self.assertEqual(user.phone, '123456788')
+        self.assertEqual(user.cell_phone, '123456789')
         self.assertNotEqual(user.username, 'new_user_1')
         self.assertNotEqual(user.authorization_id, 'new_user_auth_1')
