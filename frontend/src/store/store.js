@@ -17,6 +17,7 @@ import {getLoggedInUser} from '../actions/userActions';
 
 import persistState from 'redux-localstorage';
 import createSocketIoMiddleware from 'redux-socket.io';
+import {getReferenceData} from "../actions/referenceDataActions";
 
 const middleware = routerMiddleware(history);
 
