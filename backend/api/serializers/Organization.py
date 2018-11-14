@@ -20,9 +20,15 @@
     See the License for the specific language governing permissions and
     limitations under the License.
 """
+from django.core.exceptions import ValidationError
 from rest_framework import serializers
+from rest_framework.relations import PrimaryKeyRelatedField
 
 from api.models.Organization import Organization
+from api.models.OrganizationActionsType import OrganizationActionsType
+from api.models.OrganizationAddress import OrganizationAddress
+from api.models.OrganizationStatus import OrganizationStatus
+from api.models.OrganizationType import OrganizationType
 from .OrganizationAddressSerializer import OrganizationAddressSerializer
 
 
@@ -70,9 +76,83 @@ class OrganizationSerializer(serializers.ModelSerializer):
         return obj.organization_balance
 
 
+class OrganizationCreateSerializer(serializers.ModelSerializer):
+
+    organization_address = OrganizationAddressSerializer(allow_null=True)
+    actions_type = PrimaryKeyRelatedField(queryset=OrganizationActionsType.objects.all())
+    status = PrimaryKeyRelatedField(queryset=OrganizationStatus.objects.all())
+    type = PrimaryKeyRelatedField(queryset=OrganizationType.objects.all())
+
+
+    def validate(self, attrs):
+        type = attrs['type']
+
+        if type.id == 1:
+            raise ValidationError('Cannot create government orgs')
+
+        return attrs
+
+    def create(self, validated_data):
+
+        obj = Organization.objects.create(
+            name=validated_data['name'],
+            type=validated_data['type'],
+            actions_type=validated_data['actions_type'],
+            status=validated_data['status']
+        )
+
+        addr = validated_data.pop('organization_address')
+
+        OrganizationAddress.objects.create(
+            organization=obj,
+            primary=True,
+            **addr
+        )
+
+        return obj
+
+    class Meta:
+        model = Organization
+        fields = ('id', 'name', 'type', 'status', 'actions_type',
+                  'organization_address')
+        read_only_fields = ('id',)
+
+
+class OrganizationUpdateSerializer(serializers.ModelSerializer):
+
+    organization_address = OrganizationAddressSerializer(allow_null=True)
+    actions_type = PrimaryKeyRelatedField(queryset=OrganizationActionsType.objects.all())
+    status = PrimaryKeyRelatedField(queryset=OrganizationStatus.objects.all())
+    type = PrimaryKeyRelatedField(queryset=OrganizationType.objects.all())
+
+    def update(self, obj, validated_data):
+
+        Organization.objects.filter(id=obj.id).update(
+            name=validated_data['name'],
+            actions_type=validated_data['actions_type'],
+            status=validated_data['status']
+        )
+
+        addr = validated_data.pop('organization_address')
+
+        OrganizationAddress.objects.filter(organization_id=obj.id).delete()
+        OrganizationAddress.objects.create(
+            organization=obj,
+            primary=True,
+            **addr
+        )
+        return obj
+
+    class Meta:
+        model = Organization
+        fields = ('id', 'name', 'type', 'status', 'actions_type',
+                  'organization_address')
+        read_only_fields = ('id', 'type')
+
+
 class OrganizationMinSerializer(serializers.ModelSerializer):
     """
-    Minium Serializer for the Fuel Supplier
+    Minimum Serializer for the Fuel Supplier
     Only Loads the id and name for the basic requirements
     """
     class Meta:
