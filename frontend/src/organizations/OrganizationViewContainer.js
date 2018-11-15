@@ -9,9 +9,7 @@ import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
 
 import { getOrganization, getOrganizationMembers } from '../actions/organizationActions';
-import Loading from '../app/components/Loading';
-import OrganizationDetails from './components/OrganizationDetails';
-import OrganizationMembers from './components/OrganizationMembers';
+import OrganizationPage from './components/OrganizationPage';
 
 class OrganizationViewContainer extends Component {
   componentDidMount () {
@@ -30,22 +28,13 @@ class OrganizationViewContainer extends Component {
   }
 
   render () {
-    const { isFetching } = this.props.organization;
-    if (isFetching) {
-      return <Loading />;
-    }
-
-    return ([
-      <OrganizationDetails
-        key="details"
-        organization={this.props.organization.details}
-      />,
-      <OrganizationMembers
-        key="members"
+    return (
+      <OrganizationPage
         loggedInUser={this.props.loggedInUser}
         members={this.props.organizationMembers}
+        organization={this.props.organization}
       />
-    ]);
+    );
   }
 }
 

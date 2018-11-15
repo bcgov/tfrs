@@ -22,27 +22,13 @@
 """
 from rest_framework import serializers
 
-from api.models.OrganizationAddress import OrganizationAddress
+from api.models.OrganizationType import OrganizationType
 
 
-class OrganizationAddressSerializer(serializers.ModelSerializer):
-    """
-    Address Serializer that loads all the fields that useful for
-    displaying.
-    """
-
-    def create(self, validated_data):
-        organization = validated_data.pop('organization')
-
-        addr = OrganizationAddress.objects.create(**validated_data,
-                                                  primary=True)
-        addr.organization = validated_data['organization']
-        addr.save()
-
-        return addr
-
+class OrganizationTypeSerializer(serializers.ModelSerializer):
     class Meta:
-        model = OrganizationAddress
+        model = OrganizationType
         fields = (
-            'id', 'address_line_1', 'address_line_2', 'address_line_3',
-            'city', 'postal_code', 'state', 'county', 'country')
+            'id', 'type', 'description', 'effective_date',
+            'expiration_date',
+            'display_order')

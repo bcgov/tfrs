@@ -5,6 +5,7 @@ import ReducerTypes from '../constants/reducerTypes/Users';
 import * as Routes from '../constants/routes';
 import userManager from '../store/oidc-usermanager';
 import CONFIG from '../config';
+import {getReferenceData} from "./referenceDataActions";
 
 const getUsers = () => (dispatch) => {
   dispatch(getUsersRequest());
@@ -45,6 +46,8 @@ const getLoggedInUser = () => (dispatch) => {
       dispatch(getLoggedInUserSuccess(response.data));
     }).catch((error) => {
       dispatch(getLoggedInUserError(error.response));
+    }).then(() => {
+      dispatch(getReferenceData());
     });
 };
 
