@@ -80,6 +80,10 @@ const Router = props => (
           component={withRouter(OrganizationsContainer)}
         />
         <Route
+          path={ORGANIZATIONS.ADD_USER}
+          component={withRouter(UserAddContainer)}
+        />
+        <Route
           path={ORGANIZATIONS.DETAILS}
           component={withRouter(OrganizationViewContainer)}
         />
