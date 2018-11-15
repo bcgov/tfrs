@@ -16,12 +16,6 @@ class OrganizationViewContainer extends Component {
     this.loadData(this.props.match.params.id);
   }
 
-  componentWillReceiveNewProps (prevProps, newProps) {
-    if (prevProps.match.params.id !== newProps.match.params.id) {
-      this.loadData(newProps.match.params.id);
-    }
-  }
-
   loadData (id) {
     this.props.getOrganization(id);
     this.props.getOrganizationMembers(id);
