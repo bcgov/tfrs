@@ -12,7 +12,6 @@ import CREDIT_TRANSACTIONS from '../../constants/routes/CreditTransactions';
 import ORGANIZATIONS from '../../constants/routes/Organizations';
 import { signUserOut } from '../../actions/userActions';
 import CONFIG from '../../config';
-import SessionTimer from "./SessionTimer";
 
 class Navbar extends Component {
   static updateContainerPadding () {
