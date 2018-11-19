@@ -141,8 +141,6 @@ const UserFormDetails = props => (
                 <div
                   className="form-control read-only"
                   id="organization"
-                  name="organization"
-                  type="text"
                 >
                   {props.loggedInUser.organization.name}
                 </div>
