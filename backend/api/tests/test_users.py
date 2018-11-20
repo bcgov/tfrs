@@ -27,6 +27,7 @@ import json
 from rest_framework import status
 
 from .base_test_case import BaseTestCase
+from api.models.User import User
 
 
 class TestUsers(BaseTestCase):
@@ -93,3 +94,36 @@ class TestUsers(BaseTestCase):
                                                   content_type='application/json',
                                                   data=json.dumps(payload))
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+
+    def test_update_self(self):
+        """Test that updating self works"""
+
+        payload = {
+            'first_name': 'firstname',
+            'last_name': 'lastname',
+            'email': 'email@email.com',
+            'cell_phone': '123456789',
+            'phone': '123456788',
+            'username': 'new_user_1',
+            'authorization_id': 'new_user_auth_1'
+        }
+
+        user = User.objects.get(id=self.users['fs_user_1'].id)
+
+        response = self.clients['fs_user_1'].patch(
+            '/api/users/{}'.format(user.id),
+            content_type='application/json',
+            data=json.dumps(payload))
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        # not all fields should've been updated
+        user = User.objects.get(id=self.users['fs_user_1'].id)
+
+        self.assertEqual(user.first_name, 'firstname')
+        self.assertEqual(user.last_name, 'lastname')
+        self.assertEqual(user.email, 'email@email.com')
+        self.assertEqual(user.phone, '123456788')
+        self.assertEqual(user.cell_phone, '123456789')
+        self.assertNotEqual(user.username, 'new_user_1')
+        self.assertNotEqual(user.authorization_id, 'new_user_auth_1')

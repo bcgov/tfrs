@@ -14,6 +14,10 @@
   }
 }
 
+.capitalized {
+  text-transform: capitalize;
+}
+
 .btn-disabled {
   background-color: $grey;
 }
