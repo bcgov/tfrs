@@ -27,6 +27,7 @@ class DockerEnvironment(OperationalDataScript):
                   'fs3',
                   'analyst',
                   'director',
+                  'tfrsadmin',
                   'admin']
 
     _orgs = ['Fuel Supplier 1', 'Fuel Supplier 2', 'Fuel Supplier 3']
@@ -90,8 +91,8 @@ class DockerEnvironment(OperationalDataScript):
         User(email='director@email.com', authorization_guid=uuid.uuid4(), username='director',
              authorization_id='director', first_name='Director', last_name='Government', display_name='(Director)',
              authorization_directory='IDIR', organization=Organization.objects.get(id=1)).save()
-        User(email='admin@email.com', authorization_guid=uuid.uuid4(), username='tfrsadmin', authorization_id='admin',
-             first_name='Admin', last_name='Government', display_name='(Admin)', authorization_directory='IDIR',
+        User(email='tfrsadmin@email.com', authorization_guid=uuid.uuid4(), username='tfrsadmin', authorization_id='tfrsadmin',
+             first_name='TfrsAdmin', last_name='Government', display_name='(TfrsAdmin)', authorization_directory='IDIR',
              organization=Organization.objects.get(id=1)).save()
 
         UserRole(user=User.objects.get(username='fs1'), role=Role.objects.get_by_natural_key('FSManager')).save()

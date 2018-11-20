@@ -34,6 +34,7 @@ const UserDetails = props => (
                 history.push(editUrl);
               }}
               type="button"
+              id="edit-user"
             >
               <FontAwesomeIcon icon="pencil-alt" /> {Lang.BTN_EDIT}
             </button>

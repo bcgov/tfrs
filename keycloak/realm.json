@@ -408,6 +408,37 @@
     "notBefore" : 0,
     "groups" : [ ]
   }, {
+    "id" : "019be0f4-e129-4149-a0e6-d2f25ce90b94",
+    "createdTimestamp" : 1542660526892,
+    "username" : "tfrsadmin",
+    "enabled" : true,
+    "totp" : false,
+    "emailVerified" : true,
+    "email" : "tfrsadmin@test.com",
+    "attributes" : {
+      "user_id" : [ "tfrsadmin" ]
+    },
+    "credentials" : [ {
+      "type" : "password",
+      "hashedSaltedValue" : "ZpbNJ2sYyo/9uZaJqADONLqVByIfs6DAMYFBsdLTkhR+aBZXkYiwKN+1mu5XWIGK3+2gmH8DiNx+0oBOTT67LA==",
+      "salt" : "qyqRuMXXbhiheLa/d6eDpw==",
+      "hashIterations" : 27500,
+      "counter" : 0,
+      "algorithm" : "pbkdf2-sha256",
+      "digits" : 0,
+      "period" : 0,
+      "createdDate" : 1542660558719,
+      "config" : { }
+    } ],
+    "disableableCredentialTypes" : [ "password" ],
+    "requiredActions" : [ ],
+    "realmRoles" : [ "offline_access", "uma_authorization" ],
+    "clientRoles" : {
+      "account" : [ "view-profile", "manage-account" ]
+    },
+    "notBefore" : 0,
+    "groups" : [ ]
+  }, {
     "id" : "fd47acae-4ed4-4373-a2bf-1ec83f849c00",
     "createdTimestamp" : 1539104835577,
     "username" : "service-account-tfrs-app-sa",

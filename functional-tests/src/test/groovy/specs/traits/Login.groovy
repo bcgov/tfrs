@@ -1,4 +1,4 @@
-package traits
+package specs.traits
 
 import pages.LoginPage
 import pages.HomePage
@@ -33,11 +33,19 @@ trait Login implements Users {
     login(getReceivingFuelSupplier())
   }
 
+  void logInAsSendingFuelSupplierAdmin() {
+    login(getFuelSupplierAdmin())
+  }
+
   void logInAsAnalyst() {
     login(getAnalyst())
   }
 
   void logInAsDirector() {
     login(getDirector())
+  }
+
+  void logInAsAdmin() {
+    login(getAdmin())
   }
 }
