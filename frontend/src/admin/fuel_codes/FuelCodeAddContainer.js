@@ -7,9 +7,48 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
+import FuelCodeForm from './components/FuelCodeForm';
+
 class FuelCodeAddContainer extends Component {
   constructor (props) {
     super(props);
+
+    this.state = {
+      fields: {
+        applicationDate: '',
+        approvalDate: '',
+        carbonIntensity: '',
+        company: '',
+        effectiveDate: '',
+        expiryDate: '',
+        facilityLocation: '',
+        facilityNameplate: '',
+        feedstock: '',
+        feedstockLocation: '',
+        feedstockMiscellaneous: '',
+        feedstockTransportMode: '',
+        formerCompanyName: '',
+        fuel: '',
+        fuelCode: '',
+        fuelTransportMode: ''
+      }
+    };
+
+    this._addToFields = this._addToFields.bind(this);
+  }
+
+  _addToFields (value) {
+    const fieldState = { ...this.state.fields };
+
+    const found = this.state.fields.terms.find(term => term.id === value.id);
+
+    if (!found) {
+      fieldState.terms.push(value);
+    }
+
+    this.setState({
+      fields: fieldState
+    });
   }
 
   render () {
@@ -17,14 +56,15 @@ class FuelCodeAddContainer extends Component {
       <FuelCodeForm
         addToFields={this._addToFields}
         fields={this.state.fields}
-        title="New Fuel Code"
         errors={this.props.error}
+        title="New Fuel Code"
       />
     );
   }
 }
 
 FuelCodeAddContainer.defaultProps = {
+  error: {}
 };
 
 FuelCodeAddContainer.propTypes = {
