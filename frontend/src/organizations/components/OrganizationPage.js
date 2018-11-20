@@ -23,6 +23,7 @@ const OrganizationPage = (props) => {
           key="members"
           loggedInUser={props.loggedInUser}
           members={props.members}
+          organizationId={details.id}
         />,
         <div
           className="btn-container"
