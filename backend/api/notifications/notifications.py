@@ -127,30 +127,40 @@ class AMQPNotificationService:
         bcgov_cid = make_msgid()
         msg.add_alternative("""\
         <html>
-        <head></head>
+        <head>
+        <style type="text/css">
+        td {{
+        padding: 15px 8px 15px 8px;
+        }}
+        </style>
+        </head>
         <body>
-        <div style="background: #003366;
-        color: #ffffff;
-        padding: 8px 15px 8px 15px;
-        border-bottom: 2px solid #fcba19;">
-        <img
-        width="155" height="52"
-        alt="Government of British Columbia Logo"
-        style="float: left; padding-right: 15px;"
-        src="cid:{bcgov_cid}"/>
-        <h2 style="font-weight: 400; font-size: 24px; font-family: sans-serif;">
+        <table style="width: 100%; font-family: sans-serif; border-collapse: collapse; border: 2px solid #003366;">
+        <tbody>
+        <tr style="background: #003366; font-size: 24px; color: white;">
+        <td width="185"
+        style="text-align: right">
+        <img alt="Government of British Columbia" width="155" height="52" src="cid:{bcgov_cid}"/>
+        </td>
+        <td style="font-weight: 400;">
         Transportation Fuels Reporting System
-        </h2>
-        </div>
-        <div style="border: 2px solid #ddd;
-            padding: 15px;
-            min-height: 75%;
-            font-weight: bold;
-            font-family: sans-serif
-        ">
-        <p>You have received a new notification in TFRS.</p>
-        <p>Please <a href="https://lowcarbonfuels.gov.bc.ca">sign in</a> to view it.</p>
-        </div>
+        </td>
+        </tr>
+        <tr style="min-height: 400px'">
+        <td colspan="2"
+        style="font-weight: bold;
+        border-top: 4px solid #fcba19;
+        font-size: 13px;
+        line-height: 20px;
+        padding-top: 20px;
+        padding-bottom: 20px;">
+        <p style="margin-left: 20px;">You have received a new notification in TFRS.</p>
+        <p style="margin-left: 20px;">Please <a href="https://lowcarbonfuels.gov.bc.ca">sign in</a>
+        to view it.</p>
+        </td>
+        </tr>
+        </tbody>
+        </table>
         </body>
         </html>
         """.format(bcgov_cid=bcgov_cid[1:-1]), subtype='html')
