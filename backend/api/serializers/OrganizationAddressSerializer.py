@@ -30,6 +30,17 @@ class OrganizationAddressSerializer(serializers.ModelSerializer):
     Address Serializer that loads all the fields that useful for
     displaying.
     """
+
+    def create(self, validated_data):
+        organization = validated_data.pop('organization')
+
+        addr = OrganizationAddress.objects.create(**validated_data,
+                                                  primary=True)
+        addr.organization = validated_data['organization']
+        addr.save()
+
+        return addr
+
     class Meta:
         model = OrganizationAddress
         fields = (

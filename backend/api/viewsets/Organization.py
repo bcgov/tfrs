@@ -1,19 +1,24 @@
 import datetime
 
+from django.db.models import Q
 from django.http import HttpResponse
 
 from rest_framework import viewsets, mixins
 from rest_framework.decorators import list_route, detail_route
 from rest_framework.response import Response
 
+from api.models.OrganizationStatus import OrganizationStatus
+from api.serializers.OrganizationType import OrganizationTypeSerializer
 from auditable.views import AuditableMixin
 
 from api.decorators import permission_required
 from api.models.Organization import Organization
 from api.models.OrganizationBalance import OrganizationBalance
 from api.models.OrganizationType import OrganizationType
+from api.models.OrganizationActionsType import OrganizationActionsType
 from api.models.User import User
-from api.serializers import OrganizationSerializer
+from api.serializers import OrganizationSerializer, OrganizationActionsTypeSerializer, OrganizationStatusSerializer, \
+    OrganizationUpdateSerializer, OrganizationCreateSerializer
 from api.serializers import OrganizationBalanceSerializer
 from api.serializers import OrganizationHistorySerializer
 from api.serializers import OrganizationMinSerializer
@@ -41,8 +46,13 @@ class OrganizationViewSet(AuditableMixin, viewsets.GenericViewSet,
         'default': OrganizationSerializer,
         'history': OrganizationHistorySerializer,
         'fuel_suppliers': OrganizationMinSerializer,
+        'actions_types': OrganizationActionsTypeSerializer,
+        'types': OrganizationTypeSerializer,
+        'statuses': OrganizationStatusSerializer,
         'members': UserMinSerializer,
-        'users': UserMinSerializer
+        'users': UserMinSerializer,
+        'update': OrganizationUpdateSerializer,
+        'create': OrganizationCreateSerializer
     }
 
     def get_serializer_class(self):
@@ -102,6 +112,47 @@ class OrganizationViewSet(AuditableMixin, viewsets.GenericViewSet,
             .order_by('lower_name')
 
         serializer = self.get_serializer(fuel_suppliers, many=True)
+        return Response(serializer.data)
+
+    @list_route(methods=['get'])
+    def actions_types(self, request):
+        """
+            Reference Data for UI
+        """
+        actions_types = OrganizationActionsType.objects.all()
+
+        serializer = self.get_serializer(actions_types,
+                                         read_only=True,
+                                         many=True)
+
+        return Response(serializer.data)
+
+    @list_route(methods=['get'])
+    def statuses(self, request):
+        """
+            Reference data for UI
+        """
+        statuses = OrganizationStatus.objects.all()
+
+        serializer = self.get_serializer(statuses,
+                                         read_only=True,
+                                         many=True)
+
+        return Response(serializer.data)
+
+    @list_route(methods=['get'])
+    def types(self, request):
+        """
+            Reference data for UI
+        """
+
+        #.filter(~Q(id=1))
+        types = OrganizationType.objects.all()
+
+        serializer = self.get_serializer(types,
+                                         read_only=True,
+                                         many=True)
+
         return Response(serializer.data)
 
     @list_route(methods=['get'])

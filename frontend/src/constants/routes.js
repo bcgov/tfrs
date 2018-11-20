@@ -3,6 +3,7 @@
 export const HOME = '/';
 export const LOGOUT = '/logout';
 export const SETTINGS = '/settings';
+export const SETTINGS_PROFILE = '/settings/profile';
 
 // API Routes
 export const BASE_URL = `${window.location.protocol}//${window.location.host}/api`;
@@ -13,6 +14,13 @@ export const ORGANIZATIONS_FUEL_SUPPLIERS = '/organizations/fuel_suppliers';
 
 export const CREDIT_TRADE_API = '/credit_trades';
 export const COMMENTS_API = '/comments';
+
+// to add additional reference data, just add the endpoint and desired state name here
+export const REFERENCE_DATA_API_ENDPOINTS = {
+  organizationTypes: '/organizations/types',
+  organizationActionsTypes: '/organizations/actions_types',
+  organizationStatuses: '/organizations/statuses'
+};
 
 export const USERS = '/users';
 export const CURRENT_USER = '/users/current';

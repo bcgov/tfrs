@@ -49,8 +49,9 @@ class CreditTransactionSpec extends LoggedInSpec {
       recommendCreditTransaction()
     then: 'The part 3 award credit transaction is initiated and I am returned to the Credit Transactions page'
       at CreditTransactionsPage
-    and: 'My unread notification count has increased by 1'
+    and: 'I am shown a success toast popup'
       at new ToastModal('Success!', 'Credit transaction recommended.')
+    and: 'My unread notification count has increased by 1'
       page(HomePage)
       headerModule.getNotificationCount() == initialNotificationCount+1
   }
@@ -71,8 +72,9 @@ class CreditTransactionSpec extends LoggedInSpec {
       approveCreditTransaction()
     then: 'The part 3 award credit transaction is accepted and I am returned to the Credit Transactions page'
       at CreditTransactionsPage
-    and: 'My unread notification count has increased by 1'
+    and: 'I am shown a success toast popup'
       at new ToastModal('Success!', 'Credit transaction approved.')
+    and: 'My unread notification count has increased by 1'
       page(HomePage)
       headerModule.getNotificationCount() == initialNotificationCount
   }
@@ -96,8 +98,9 @@ class CreditTransactionSpec extends LoggedInSpec {
       recommendCreditTransaction()
     then: 'The validation credit transaction is initiated and I am returned to the Credit Transactions page'
       at CreditTransactionsPage
-    and: 'My unread notification count has increased by 1'
+    and: 'I am shown a success toast popup'
       at new ToastModal('Success!', 'Credit transaction recommended.')
+    and: 'My unread notification count has increased by 1'
       page(HomePage)
       headerModule.getNotificationCount() == initialNotificationCount+1
   }
@@ -118,8 +121,9 @@ class CreditTransactionSpec extends LoggedInSpec {
       approveCreditTransaction()
     then: 'The validation credit transaction is accepted and I am returned to the Credit Transactions page'
       at CreditTransactionsPage
-    and: 'My unread notification count has increased by 1'
+    and: 'I am shown a success toast popup'
       at new ToastModal('Success!', 'Credit transaction approved.')
+    and: 'My unread notification count has increased by 1'
       page(HomePage)
       headerModule.getNotificationCount() == initialNotificationCount
   }
@@ -143,8 +147,9 @@ class CreditTransactionSpec extends LoggedInSpec {
       recommendCreditTransaction()
     then: 'The reduction credit transaction is initiated and I am returned to the Credit Transactions page'
       at CreditTransactionsPage
-    and: 'My unread notification count has increased by 1'
+    and: 'I am shown a success toast popup'
       at new ToastModal('Success!', 'Credit transaction recommended.')
+    and: 'My unread notification count has increased by 1'
       page(HomePage)
       headerModule.getNotificationCount() == initialNotificationCount+1
   }
@@ -165,8 +170,9 @@ class CreditTransactionSpec extends LoggedInSpec {
       approveCreditTransaction()
     then: 'The reduction credit transaction is accepted and I am returned to the Credit Transactions page'
       at CreditTransactionsPage
-    and: 'My unread notification count has increased by 1'
+    and: 'I am shown a success toast popup'
       at new ToastModal('Success!', 'Credit transaction approved.')
+    and: 'My unread notification count has increased by 1'
       page(HomePage)
       headerModule.getNotificationCount() == initialNotificationCount
   }
