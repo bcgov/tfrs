@@ -48,7 +48,7 @@ const UserFormDetails = props => (
       <div className="row">
         <div className="col-sm-6">
           <div className="form-group">
-            <label htmlFor="bceid">BCeID Email Address:
+            <label htmlFor="bceid">BCeID:
               {props.editPrimaryFields &&
                 <input
                   className="form-control"
