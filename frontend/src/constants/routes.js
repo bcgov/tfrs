@@ -3,6 +3,7 @@
 export const HOME = '/';
 export const LOGOUT = '/logout';
 export const SETTINGS = '/settings';
+export const SETTINGS_PROFILE = '/settings/profile';
 
 // API Routes
 export const BASE_URL = `${window.location.protocol}//${window.location.host}/api`;
