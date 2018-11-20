@@ -153,7 +153,10 @@ class TestOrganizationsAPI(BaseAPISecurityTestCase):
                     'status': OrganizationStatus.objects.get_by_natural_key('Active').id,
                     'type': OrganizationType.objects.get_by_natural_key('Part3FuelSupplier').id,
                     'name': 'Posted org {}'.format(str(uuid.uuid4())),
-                    'actions_type': OrganizationActionsType.objects.get_by_natural_key('Buy And Sell').id
+                    'actions_type': OrganizationActionsType.objects.get_by_natural_key('Buy And Sell').id,
+                    'organization_address': {
+                        'address_line_1': 'AL1'
+                    }
                 }
 
                 response = self.clients[user].post(
@@ -206,7 +209,10 @@ class TestOrganizationsAPI(BaseAPISecurityTestCase):
                     'status': OrganizationStatus.objects.get_by_natural_key('Active').id,
                     'type': OrganizationType.objects.get_by_natural_key('Part3FuelSupplier').id,
                     'name': 'Updated org {}'.format(str(uuid.uuid4())),
-                    'actions_type': OrganizationActionsType.objects.get_by_natural_key('Buy And Sell').id
+                    'actions_type': OrganizationActionsType.objects.get_by_natural_key('Buy And Sell').id,
+                    'organization_address': {
+                        'address_line_1': 'AL1'
+                    }
                 }
 
                 response = self.clients[user].put(

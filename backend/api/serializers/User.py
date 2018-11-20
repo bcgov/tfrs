@@ -21,8 +21,8 @@
     limitations under the License.
 """
 from django.db.models import Q
-from rest_framework import exceptions, serializers
-from rest_framework.relations import PrimaryKeyRelatedField, HyperlinkedIdentityField
+from rest_framework import serializers
+from rest_framework.relations import PrimaryKeyRelatedField
 
 from api.models.Organization import Organization
 from api.models.Role import Role
@@ -47,7 +47,8 @@ class UserSerializer(serializers.ModelSerializer):
         fields = (
             'id', 'first_name', 'last_name', 'email', 'authorization_id',
             'username', 'authorization_directory', 'display_name', 'is_active',
-            'organization', 'roles', 'is_government_user', 'permissions')
+            'organization', 'roles', 'is_government_user', 'permissions',
+            'phone', 'cell_phone')
 
 
 class UserBasicSerializer(serializers.ModelSerializer):
@@ -100,27 +101,43 @@ class UserUpdateSerializer(serializers.ModelSerializer):
     roles = PrimaryKeyRelatedField(queryset=Role.objects.all(), many=True)
 
     def validate(self, data):
-        data['display_name'] = '{} {}'.format(data['first_name'], data['last_name'])
+        data['display_name'] = '{} {}'.format(
+            data.get('first_name'), data.get('last_name'))
         return data
 
     def update(self, instance, validated_data):
-        roles = validated_data.pop('roles')
+        request = self.context.get('request')
 
-        role_mappings = UserRole.objects.filter(user=instance)
-        for user_role in role_mappings:
-            if user_role.role not in roles:
-                user_role.delete()
+        if request.user.has_perm('USER_MANAGEMENT'):
+            if 'roles' in validated_data:
+                roles = validated_data.pop('roles')
 
-        for role in roles:
-            if not UserRole.objects.filter(user=instance,role=role).exists():
-                UserRole.objects.create(user=instance, role=role)
+                role_mappings = UserRole.objects.filter(user=instance)
+                for user_role in role_mappings:
+                    if user_role.role not in roles:
+                        user_role.delete()
 
-        instance.first_name = validated_data['first_name']
-        instance.last_name = validated_data['last_name']
-        instance.display_name = validated_data['display_name']
-        instance.email = validated_data['email']
-        instance.phone = validated_data['phone']
-        instance.is_active = validated_data['is_active']
+                for role in roles:
+                    if not UserRole.objects.filter(
+                            user=instance,
+                            role=role).exists():
+                        UserRole.objects.create(user=instance, role=role)
+
+            instance.is_active = validated_data.get(
+                'is_active', instance.is_active)
+
+        instance.first_name = validated_data.get(
+            'first_name', instance.first_name)
+        instance.last_name = validated_data.get(
+            'last_name', instance.last_name)
+        instance.display_name = validated_data.get(
+            'display_name', instance.display_name)
+        instance.email = validated_data.get(
+            'email', instance.email)
+        instance.cell_phone = validated_data.get(
+            'cell_phone', instance.cell_phone)
+        instance.phone = validated_data.get(
+            'phone', instance.phone)
 
         instance.save()
 
@@ -130,7 +147,7 @@ class UserUpdateSerializer(serializers.ModelSerializer):
         model = User
         fields = (
             'id', 'first_name', 'last_name', 'display_name', 'email', 'phone',
-            'roles', 'is_active', 'organization'
+            'roles', 'is_active', 'organization', 'cell_phone'
         )
         read_only_fields = (
             'organization', 'id', 'is_government_user'
