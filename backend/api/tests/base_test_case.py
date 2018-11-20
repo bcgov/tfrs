@@ -185,5 +185,3 @@ class BaseTestCase(TestCase):
         logging.getLogger('django.request').setLevel(logging.ERROR)
         logging.getLogger('api.tests').setLevel(logging.DEBUG)
         logging.basicConfig(stream=sys.stdout, level=logging.DEBUG)
-
-

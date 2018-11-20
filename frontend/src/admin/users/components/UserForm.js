@@ -16,6 +16,7 @@ const UserForm = props => (
     <form>
       <UserFormDetails
         addToFields={props.addToFields}
+        editPrimaryFields={props.editPrimaryFields}
         fields={props.fields}
         fuelSuppliers={props.fuelSuppliers}
         handleInputChange={props.handleInputChange}
@@ -53,23 +54,27 @@ const UserForm = props => (
 );
 
 UserForm.defaultProps = {
-  errors: []
+  editPrimaryFields: false,
+  errors: {},
+  fuelSuppliers: null,
+  roles: null,
+  toggleCheck: null
 };
 
 UserForm.propTypes = {
   addToFields: PropTypes.func.isRequired,
+  editPrimaryFields: PropTypes.bool,
+  errors: PropTypes.shape(),
   fields: PropTypes.shape({
     roles: PropTypes.array
   }).isRequired,
-  fuelSuppliers: PropTypes.arrayOf(PropTypes.shape()).isRequired,
+  fuelSuppliers: PropTypes.arrayOf(PropTypes.shape()),
   handleInputChange: PropTypes.func.isRequired,
   loggedInUser: PropTypes.shape({
   }).isRequired,
-  roles: PropTypes.shape().isRequired,
+  roles: PropTypes.shape(),
   title: PropTypes.string.isRequired,
-  toggleCheck: PropTypes.func.isRequired,
-  errors: PropTypes.shape()
-
+  toggleCheck: PropTypes.func
 };
 
 export default UserForm;

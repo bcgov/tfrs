@@ -2,39 +2,31 @@
  * Presentational component
  */
 import React from 'react';
-import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 
 import Loading from '../../app/components/Loading';
 import NotificationsCreditTransactionsTable from './NotificationsCreditTransactionsTable';
 import CREDIT_TRANSFER_NOTIFICATIONS from '../../constants/settings/notificationsCreditTransfers';
 import GOVERNMENT_TRANSFER_NOTIFICATIONS from '../../constants/settings/notificationsGovernmentTransfers';
-import * as Routes from '../../constants/routes';
 import * as Lang from '../../constants/langEnUs';
+import SettingsTabs from './SettingsTabs';
 
 const SettingsDetails = props => (
   <div className="page_settings">
-    <h1>Settings</h1>
+    <SettingsTabs active="notifications" />
 
-    <div className="alert alert-info info-alert">
-      <p>
-        NOTE: The section below controls whether or not notifications are sent to you
-        for various options by the system.
-      </p>
-      <p>
-        Simply use the checkboxes to select which notifications you would like to receive.
-      </p>
-    </div>
-
-    <ul className="nav nav-tabs" key="nav" role="tablist">
-      <li role="presentation" className="active">
-        <Link id="navbar-administration" to={Routes.SETTINGS}>
-          Notifications
-        </Link>
-      </li>
-    </ul>
+    <h1>Notifications</h1>
 
     <div className="settings-notifications">
+      <div className="alert alert-info info-alert">
+        <p>
+          NOTE: The section below controls whether or not notifications are sent to you
+          for various options by the system.
+        </p>
+        <p>
+          Simply use the checkboxes to select which notifications you would like to receive.
+        </p>
+      </div>
       {(props.subscriptions.isFetching || !props.subscriptions.success) &&
         <Loading />
       }
