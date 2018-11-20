@@ -130,6 +130,9 @@ class UserAuthentication(authentication.BaseAuthentication):
 
         try:
             user = User.objects.get_by_natural_key(username)
+
+            if not user.is_active:
+                raise exceptions.AuthenticationFailed('user_id "{}" does not exist'.format(username))
         except User.DoesNotExist:
             raise exceptions.AuthenticationFailed('user_id "{}" does not exist'.format(username))
 
