@@ -9,7 +9,7 @@ import { bindActionCreators } from 'redux';
 
 import Modal from '../../app/components/Modal';
 import history from '../../app/History';
-import { getFuelSuppliers } from '../../actions/organizationActions';
+import { getFuelSuppliers, getOrganization } from '../../actions/organizationActions';
 import { getRoles } from '../../actions/roleActions';
 import UserForm from './components/UserForm';
 import { USERS } from '../../constants/routes/Admin';
@@ -44,8 +44,23 @@ class UserAddContainer extends Component {
     this.loadData();
   }
 
+  componentWillReceiveProps (nextProps) {
+    if (nextProps.organization.id !== this.props.organization.id) {
+      this.setState({
+        fields: {
+          ...this.state.fields,
+          organization: nextProps.organization
+        }
+      });
+    }
+  }
+
   loadData () {
-    this.props.getFuelSuppliers();
+    if (this.props.match.params.organizationId) {
+      this.props.getOrganization(this.props.match.params.organizationId);
+    } else {
+      this.props.getFuelSuppliers();
+    }
 
     if (document.location.pathname.indexOf('/admin/') >= 0) {
       this.props.getRoles({
@@ -180,19 +195,37 @@ class UserAddContainer extends Component {
 
 UserAddContainer.defaultProps = {
   createdUsername: null,
-  error: null
+  error: {},
+  match: {
+    params: {
+      organizationId: null
+    }
+  },
+  organization: {
+    id: null
+  }
 };
 
 UserAddContainer.propTypes = {
   fuelSuppliers: PropTypes.arrayOf(PropTypes.shape()).isRequired,
   getFuelSuppliers: PropTypes.func.isRequired,
+  getOrganization: PropTypes.func.isRequired,
   getRoles: PropTypes.func.isRequired,
   roles: PropTypes.shape().isRequired,
   createUser: PropTypes.func.isRequired,
   createdUsername: PropTypes.string,
   error: PropTypes.shape({}),
   loggedInUser: PropTypes.shape({
-  }).isRequired
+  }).isRequired,
+  match: PropTypes.shape({
+    params: PropTypes.shape({
+      organizationId: PropTypes.string
+    })
+  }),
+  organization: PropTypes.shape({
+    id: PropTypes.number,
+    name: PropTypes.string
+  })
 };
 
 const mapStateToProps = state => ({
@@ -201,11 +234,13 @@ const mapStateToProps = state => ({
   roles: state.rootReducer.roles,
   error: state.rootReducer.userAdmin.error,
   createdUsername: state.rootReducer.userAdmin.user
-    .hasOwnProperty('user') ? state.rootReducer.userAdmin.user.user.username : null
+    .hasOwnProperty('user') ? state.rootReducer.userAdmin.user.user.username : null,
+  organization: state.rootReducer.organizationRequest.fuelSupplier
 });
 
 const mapDispatchToProps = dispatch => ({
   getFuelSuppliers: bindActionCreators(getFuelSuppliers, dispatch),
+  getOrganization: bindActionCreators(getOrganization, dispatch),
   getRoles: bindActionCreators(getRoles, dispatch),
   createUser: bindActionCreators(createUser, dispatch)
 });
