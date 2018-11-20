@@ -37,10 +37,12 @@ import OrganizationsContainer from './organizations/OrganizationsContainer';
 import OrganizationViewContainer from './organizations/OrganizationViewContainer';
 import OrganizationRolesContainer from './organizations/OrganizationRolesContainer';
 import SettingsContainer from './settings/SettingsContainer';
+import UserProfileContainer from './settings/UserProfileContainer';
 import UserViewContainer from './users/UserViewContainer';
 import NotificationsContainer from './notifications/NotificationsContainer';
 import AuthCallback from './app/AuthCallback';
 import CONFIG from './config';
+import OrganizationEditContainer from "./organizations/OrganizationEditContainer";
 
 const Router = props => (
   <ConnectedRouter history={history} key={Math.random()}>
@@ -76,6 +78,11 @@ const Router = props => (
         />
         <Route
           exact
+          path={Routes.SETTINGS_PROFILE}
+          component={withRouter(UserProfileContainer)}
+        />
+        <Route
+          exact
           path={ORGANIZATIONS.LIST}
           component={withRouter(OrganizationsContainer)}
         />
@@ -96,6 +103,15 @@ const Router = props => (
           exact
           path={ORGANIZATIONS.ROLES}
           component={withRouter(OrganizationRolesContainer)}
+        />
+        <Route
+          exact
+          path={ORGANIZATIONS.ADD}
+          render={ (props) => <OrganizationEditContainer {...props} mode={'add'}/> }
+        />
+        <Route
+          path={ORGANIZATIONS.EDIT}
+          render={ (props) => <OrganizationEditContainer {...props} mode={'edit'}/> }
         />
         <Route
           exact

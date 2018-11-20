@@ -6,6 +6,8 @@ import Loading from '../../app/components/Loading';
 import ORGANIZATIONS from '../../constants/routes/Organizations';
 import OrganizationsTable from './OrganizationsTable';
 import * as Routes from '../../constants/routes';
+import history from '../../app/History';
+
 
 const OrganizationsPage = (props) => {
   const { isFetching, items } = props.organizations;
@@ -21,6 +23,14 @@ const OrganizationsPage = (props) => {
         >
           <FontAwesomeIcon icon="file-excel" /> Download as .xls
         </button>
+        <button
+          className="btn btn-info"
+          type="button"
+          onClick={() => history.push(ORGANIZATIONS.ADD) }
+        >
+          <FontAwesomeIcon icon="plus" /> Create Organization
+        </button>
+
       </div>
       {isFetching && <Loading />}
       {!isFetching &&

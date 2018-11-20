@@ -66,6 +66,7 @@ class UserAddContainer extends Component {
       this.props.getRoles({
         government_roles_only: true
       });
+
       this.setState({
         fields: {
           ...this.state.fields,
@@ -168,6 +169,7 @@ class UserAddContainer extends Component {
     return ([
       <UserForm
         addToFields={this._addToFields}
+        editPrimaryFields
         fields={this.state.fields}
         fuelSuppliers={this.props.fuelSuppliers}
         handleInputChange={this._handleInputChange}

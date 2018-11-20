@@ -48,16 +48,23 @@ const UserFormDetails = props => (
       <div className="row">
         <div className="col-sm-6">
           <div className="form-group">
-            <label htmlFor="bceid">BCeID Email Address:
-              <input
-                className="form-control"
-                id="bceid"
-                name="bceid"
-                onChange={props.handleInputChange}
-                required="required"
-                type="email"
-                value={props.fields.bceid}
-              />
+            <label htmlFor="bceid">BCeID:
+              {props.editPrimaryFields &&
+                <input
+                  className="form-control"
+                  id="bceid"
+                  name="bceid"
+                  onChange={props.handleInputChange}
+                  required="required"
+                  type="email"
+                  value={props.fields.bceid}
+                />
+              }
+              {!props.editPrimaryFields &&
+                <span className="form-control read-only">
+                  {props.fields.bceid}
+                </span>
+              }
             </label>
           </div>
         </div>
@@ -112,10 +119,11 @@ const UserFormDetails = props => (
       </div>
 
       <div className="row">
-        {document.location.pathname.indexOf('/admin/users/add') < 0 &&
+        {props.fuelSuppliers &&
+        document.location.pathname.indexOf('/admin/users/add') < 0 &&
         <div className="col-sm-6">
           <div className="form-group">
-            <label htmlFor="organization">Fuel Supplier:
+            <label htmlFor="organization" id="organization">Fuel Supplier:
               {props.loggedInUser.isGovernmentUser &&
               document.location.pathname.indexOf('/users/add') === 0 &&
                 <Autosuggest
@@ -152,7 +160,6 @@ const UserFormDetails = props => (
               {!props.loggedInUser.isGovernmentUser &&
                 <div
                   className="form-control read-only"
-                  id="organization"
                   name="organization"
                   type="text"
                 >
@@ -166,32 +173,40 @@ const UserFormDetails = props => (
         <div className="col-sm-6">
           <div className="form-group">
             <label htmlFor="status">Status:
-              <select
-                className="form-control"
-                id="status"
-                name="status"
-                onChange={props.handleInputChange}
-                required="required"
-                value={props.fields.status}
-              >
-                <option value="active">Active</option>
-                <option value="inactive">Inactive</option>
-              </select>
+              {props.editPrimaryFields &&
+                <select
+                  className="form-control"
+                  id="status"
+                  name="status"
+                  onChange={props.handleInputChange}
+                  required="required"
+                  value={props.fields.status}
+                >
+                  <option value="active">Active</option>
+                  <option value="inactive">Inactive</option>
+                </select>
+              }
+              {!props.editPrimaryFields &&
+                <div className="form-control read-only capitalized">
+                  {props.fields.status}
+                </div>
+              }
             </label>
           </div>
         </div>
       </div>
 
-      <div className="form-group">
-        <div className="row">
-          <div className="col-sm-6">
-            <label htmlFor="status">Role(s):</label>
+      {props.editPrimaryFields &&
+      props.roles &&
+        <div className="form-group">
+          <div className="row">
+            <div className="col-sm-6">
+              <label htmlFor="status">Role(s):</label>
+            </div>
           </div>
-        </div>
 
-        <div className="row roles">
-          {props.roles &&
-            props.roles.items.map(role => (
+          <div className="row roles" id="user-roles">
+            {props.roles.items.map(role => (
               <div className="col-sm-4 checkbox-group" key={role.id}>
                 <CheckBox
                   addToFields={props.addToFields}
@@ -219,24 +234,29 @@ const UserFormDetails = props => (
                 </OverlayTrigger>
               </div>
             ))
-          }
-        </div>
-      </div>
+            }
+          </div>
 
-      <div className="row">
-        <div className="col-sm-12">
-        * Hover over the roles to view the permissions available to that role.
+          <div className="row">
+            <div className="col-sm-12">
+            * Hover over the roles to view the permissions available to that role.
+            </div>
+          </div>
         </div>
-      </div>
+      }
     </div>
   </div>
 );
 
 UserFormDetails.defaultProps = {
+  fuelSuppliers: null,
+  roles: null,
+  toggleCheck: null
 };
 
 UserFormDetails.propTypes = {
   addToFields: PropTypes.func.isRequired,
+  editPrimaryFields: PropTypes.bool.isRequired,
   fields: PropTypes.shape({
     bceid: PropTypes.string,
     email: PropTypes.string,
@@ -251,7 +271,7 @@ UserFormDetails.propTypes = {
     status: PropTypes.string,
     workPhone: PropTypes.string
   }).isRequired,
-  fuelSuppliers: PropTypes.arrayOf(PropTypes.shape()).isRequired,
+  fuelSuppliers: PropTypes.arrayOf(PropTypes.shape()),
   handleInputChange: PropTypes.func.isRequired,
   loggedInUser: PropTypes.shape({
     isGovernmentUser: PropTypes.bool,
@@ -263,8 +283,8 @@ UserFormDetails.propTypes = {
   roles: PropTypes.shape({
     items: PropTypes.arrayOf(PropTypes.shape()).isRequired,
     isFetching: PropTypes.bool.isRequired
-  }).isRequired,
-  toggleCheck: PropTypes.func.isRequired
+  }),
+  toggleCheck: PropTypes.func
 };
 
 export default UserFormDetails;

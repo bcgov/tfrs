@@ -6,5 +6,17 @@ class CompanyDetailsPage extends BaseAppPage {
   static url = '/organizations/mine'
   static content = {
     pageTitle { $('#main .page_organization h1') }
+
+    newUserButton { $('#new-user') }
+
+    usersTable(wait:2) { $('.ReactTable') }
+  }
+
+  void clickNewUserButton() {
+    newUserButton.click()
+  }
+
+  void clickUserRow(String usersName) {
+    usersTable.$('.rt-tbody').$('.clickable').has('.col-name', text:usersName).click()
   }
 }
