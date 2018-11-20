@@ -120,11 +120,12 @@ const UserFormDetails = props => (
 
       <div className="row">
         {props.fuelSuppliers &&
-        document.location.pathname.indexOf('/users/') === 0 &&
+        document.location.pathname.indexOf('/admin/users/add') < 0 &&
         <div className="col-sm-6">
           <div className="form-group">
             <label htmlFor="organization" id="organization">Fuel Supplier:
               {props.loggedInUser.isGovernmentUser &&
+              document.location.pathname.indexOf('/users/add') === 0 &&
                 <Autosuggest
                   datalist={props.fuelSuppliers}
                   datalistOnly
@@ -144,6 +145,17 @@ const UserFormDetails = props => (
                   value={props.fields.organization}
                   valueIsItem
                 />
+              }
+              {props.fields.organization &&
+              document.location.pathname.indexOf('/organizations/view') >= 0 &&
+                <div
+                  className="form-control read-only"
+                  id="organization"
+                  name="organization"
+                  type="text"
+                >
+                  {props.fields.organization.name}
+                </div>
               }
               {!props.loggedInUser.isGovernmentUser &&
                 <div
