@@ -2,7 +2,9 @@ package pages
 
 class CreditTransactionsViewPage extends BaseAppPage {
   static at = {
-    isReactReady() && getCurrentUrl() =~ /credit_transactions\/view\/[0-9]+$/ && pageTitle.text() == expectedPageTitle
+    isReactReady() &&
+    browser.getCurrentUrl() =~ /credit_transactions\/view\/[0-9]+$/ &&
+    pageTitle.text() == expectedPageTitle
   }
   static content = {
     pageTitle { $('#main .credit-transfer h1') }

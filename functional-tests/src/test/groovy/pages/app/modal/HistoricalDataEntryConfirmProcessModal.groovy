@@ -1,7 +1,7 @@
 package pages
 
 class HistoricalDataEntryConfirmProcessModal extends BaseAppPage {
-  static at = { pageTitle.text() == 'Confirm Process' }
+  static at = { isReactReady() && pageTitle.text() == 'Confirm Process' }
   static content = {
     modalSelector(wait:true) { $('#confirmProcess') }
 
