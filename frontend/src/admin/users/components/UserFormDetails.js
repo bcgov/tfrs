@@ -115,7 +115,7 @@ const UserFormDetails = props => (
         {document.location.pathname.indexOf('/users/') === 0 &&
         <div className="col-sm-6">
           <div className="form-group">
-            <label htmlFor="organization">Fuel Supplier:
+            <label htmlFor="organization" id="organization">Fuel Supplier:
               {props.loggedInUser.isGovernmentUser &&
                 <Autosuggest
                   datalist={props.fuelSuppliers}
@@ -140,7 +140,6 @@ const UserFormDetails = props => (
               {!props.loggedInUser.isGovernmentUser &&
                 <div
                   className="form-control read-only"
-                  id="organization"
                 >
                   {props.loggedInUser.organization.name}
                 </div>
@@ -175,7 +174,7 @@ const UserFormDetails = props => (
           </div>
         </div>
 
-        <div className="row roles">
+        <div className="row roles" id="user-roles">
           {props.roles &&
             props.roles.items.map(role => (
               <div className="col-sm-4 checkbox-group" key={role.id}>

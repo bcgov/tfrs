@@ -3,7 +3,7 @@ package specs
 import pages.HomePage
 import pages.NewCreditTransferPage
 import pages.CreditTransactionsPage
-import pages.CreditTransactionsConfirmSubmitModal
+import pages.ConfirmSubmitModal
 import pages.NotificationsPage
 import pages.CreditTransactionsViewPage
 import pages.CreditTransactionsConfirmAcceptModal
@@ -44,8 +44,8 @@ class CreditTransferSpec extends LoggedInSpec {
       addComment('Log in as the sending fuel supplier and initiate a new credit transfer')
     when: 'I sign 1 of 2 and submit the transfer'
       signCreditTransfer()
-      page(CreditTransactionsConfirmSubmitModal)
-      submitCreditTransaction()
+      page(ConfirmSubmitModal)
+      clickYesButton()
     then: 'The credit transfer is initiated and I am returned to the Credit Transactions page'
       at CreditTransactionsPage
     and: 'I am shown a success toast popup'

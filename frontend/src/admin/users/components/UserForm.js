@@ -42,6 +42,7 @@ const UserForm = props => (
             data-target="#confirmSubmit"
             data-toggle="modal"
             type="button"
+            id="save-user"
           >
             <FontAwesomeIcon icon="save" /> {Lang.BTN_SAVE_USER}
           </button>

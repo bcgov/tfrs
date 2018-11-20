@@ -1,7 +1,7 @@
 package pages
 
-class CreditTransactionsConfirmSubmitModal extends BaseAppPage {
-  static at = { pageTitle.text() == 'Confirmation' }
+class ConfirmSubmitModal extends BaseAppPage {
+  static at = { isReactReady() && pageTitle.text() == 'Confirmation' }
   static content = {
     modalSelector(wait:true) { $('#confirmSubmit') }
 
@@ -19,7 +19,7 @@ class CreditTransactionsConfirmSubmitModal extends BaseAppPage {
    *  page, this check should NOT be enabled as the modal reference is now stale, and cannot be accessed.
    *  (Optional, default: true)
    */
-  void submitCreditTransaction(Boolean checkClosed=false) {
+  void clickYesButton(Boolean checkClosed=false) {
     modalModule.isOpen(modalSelector)
     yesButton.click()
     if (checkClosed) {
