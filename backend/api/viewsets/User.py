@@ -5,8 +5,11 @@ from rest_framework.response import Response
 from api.decorators import permission_required, exceptions
 from api.models.User import User
 from api.permissions.User import UserPermissions
-from api.serializers import UserSerializer, UserViewSerializer, UserUpdateSerializer, CreditTradeHistoryMinSerializer, Q
-from api.serializers.UserCreationRequestSerializer import UserCreationRequestSerializer
+from api.serializers \
+    import UserSerializer, UserViewSerializer, UserUpdateSerializer, \
+        CreditTradeHistoryMinSerializer, Q
+from api.serializers.UserCreationRequestSerializer \
+    import UserCreationRequestSerializer
 from auditable.views import AuditableMixin
 
 
@@ -26,7 +29,8 @@ class UserViewSet(AuditableMixin, viewsets.GenericViewSet,
         'retrieve': UserViewSerializer,
         'by_username': UserViewSerializer,
         'update': UserUpdateSerializer,
-        'create': UserCreationRequestSerializer
+        'create': UserCreationRequestSerializer,
+        'partial_update': UserUpdateSerializer
     }
 
     column_sort_mappings = {
@@ -153,4 +157,4 @@ class UserViewSet(AuditableMixin, viewsets.GenericViewSet,
 
     def perform_create(self, serializer):
         serializer.is_valid(raise_exception=True)
-        ucr = serializer.save()
+        serializer.save()

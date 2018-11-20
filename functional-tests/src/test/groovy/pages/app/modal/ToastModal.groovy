@@ -7,7 +7,7 @@ package pages
  *   at new ToastModal('Success!', 'Credit Transfer Proposal sent.')
  */
 class ToastModal extends BaseAppPage {
-  static at = { verifyToastContent() }
+  static at = { isReactReady() && verifyToastContent() }
   static content = {
     // TODO is it possible to add an ID to this third-party component? is it even necessary?
     modalSelector(wait:true) { $('.toastr') }
