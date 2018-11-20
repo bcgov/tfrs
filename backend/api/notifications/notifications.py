@@ -176,7 +176,6 @@ class AMQPNotificationService:
                           port=EMAIL['SMTP_SERVER_PORT']) as server:
             server.send_message(msg)
 
-
     @staticmethod
     def compute_effective_subscriptions(user: User) -> List[EffectiveSubscription]:
         all_channels = NotificationChannel.objects.all()
