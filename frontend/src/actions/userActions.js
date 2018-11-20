@@ -30,7 +30,7 @@ const createUser = payload => (dispatch) => {
 
 const updateUser = (id, payload) => (dispatch) => {
   dispatch(updateUserRequest(id));
-  return axios.put(`${Routes.BASE_URL}${Routes.USERS}/${id}`, payload)
+  return axios.patch(`${Routes.BASE_URL}${Routes.USERS}/${id}`, payload)
     .then((response) => {
       dispatch(updateUserSuccess(response.data));
     }).catch((error) => {
