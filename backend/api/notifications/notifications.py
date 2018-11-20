@@ -1,4 +1,5 @@
 import json
+from email.utils import make_msgid
 from typing import List
 
 import pika
@@ -15,7 +16,6 @@ from api.models.Organization import Organization
 from api.models.Role import Role
 from api.notifications.notification_types import NotificationType
 from tfrs.settings import AMQP_CONNECTION_PARAMETERS, EMAIL
-
 
 def send_amqp_notification():
     try:
@@ -124,6 +124,40 @@ class AMQPNotificationService:
         import smtplib
         msg = EmailMessage()
         msg.set_content('You have received a new notification in TFRS.\nPlease sign in to view it.')
+        bcgov_cid = make_msgid()
+        msg.add_alternative("""\
+        <html>
+        <head></head>
+        <body>
+        <div style="background: #003366;
+        color: #ffffff;
+        padding: 8px 15px 8px 15px;
+        border-bottom: 2px solid #fcba19;">
+        <img
+        width="155" height="52"
+        alt="Government of British Columbia Logo"
+        style="float: left; padding-right: 15px;"
+        src="cid:{bcgov_cid}"/>
+        <h2 style="font-weight: 400; font-size: 24px; font-family: sans-serif;">
+        Transportation Fuels Reporting System
+        </h2>
+        </div>
+        <div style="border: 2px solid #ddd;
+            padding: 15px;
+            min-height: 75%;
+            font-weight: bold;
+            font-family: sans-serif
+        ">
+        <p>You have received a new notification in TFRS.</p>
+        <p>Please <a href="https://lowcarbonfuels.gov.bc.ca">sign in</a> to view it.</p>
+        </div>
+        </body>
+        </html>
+        """.format(bcgov_cid=bcgov_cid[1:-1]), subtype='html')
+
+        with open('assets/bcgov.png', 'rb') as image:
+            msg.get_payload()[1].add_related(image.read(), 'image', 'png', cid=bcgov_cid)
+
         msg['Subject'] = 'TFRS Notification'
         msg['From'] = EMAIL['FROM_ADDRESS']
         msg['To'] = email_recipient
