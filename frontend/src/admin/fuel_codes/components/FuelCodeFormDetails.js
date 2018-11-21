@@ -11,24 +11,24 @@ const FuelCodeFormDetails = props => (
         <div className="col-sm-6">
           <div className="form-group">
             <label htmlFor="fuel-code">Low Carbon Fuel Code:
-              <span
-                className="form-control read-only"
-                id="fuel-code-prefix"
+              <div
+                className="input-group"
               >
-                BCLCF
-              </span>
-              <input
-                className="form-control"
-                id="fuel-code"
-                name="fuelCode"
-                onChange={props.handleInputChange}
-                required="required"
-                type="text"
-                value={props.fields.fuelCode}
-              />
+                <span className="input-group-addon">BCLCF</span>
+                <input
+                  className="form-control"
+                  id="fuel-code"
+                  name="fuelCode"
+                  onChange={props.handleInputChange}
+                  required="required"
+                  type="text"
+                  value={props.fields.fuelCode}
+                />
+              </div>
             </label>
           </div>
         </div>
+
         <div className="col-sm-6">
           <div className="form-group">
             <label htmlFor="company">Company:
@@ -62,16 +62,20 @@ const FuelCodeFormDetails = props => (
             </label>
           </div>
         </div>
+      </div>
+
+      <div className="row">
         <div className="col-sm-6">
           <div className="form-group">
             <label htmlFor="application-date">Application Date:
               <input
                 className="form-control"
                 id="application-date"
+                max="9999-12-31"
                 name="applicationDate"
                 onChange={props.handleInputChange}
                 required="required"
-                type="text"
+                type="date"
                 value={props.fields.applicationDate}
               />
             </label>
@@ -86,10 +90,11 @@ const FuelCodeFormDetails = props => (
               <input
                 className="form-control"
                 id="effective-date"
+                max="9999-12-31"
                 name="effectiveDate"
                 onChange={props.handleInputChange}
                 required="required"
-                type="text"
+                type="date"
                 value={props.fields.effectiveDate}
               />
             </label>
@@ -101,10 +106,11 @@ const FuelCodeFormDetails = props => (
               <input
                 className="form-control"
                 id="expiry-date"
+                max="9999-12-31"
                 name="expiryDate"
                 onChange={props.handleInputChange}
                 required="required"
-                type="text"
+                type="date"
                 value={props.fields.expiryDate}
               />
             </label>
@@ -128,6 +134,9 @@ const FuelCodeFormDetails = props => (
             </label>
           </div>
         </div>
+      </div>
+
+      <div className="row">
         <div className="col-sm-6">
           <div className="form-group">
             <label htmlFor="feedstock">Feedstock:
@@ -250,23 +259,27 @@ const FuelCodeFormDetails = props => (
             <input
               className="form-control"
               id="former-company-name"
-              name="formerCompanyName"
+              name="formerCompany"
               onChange={props.handleInputChange}
               required="required"
               type="text"
-              value={props.fields.formerCompanyName}
+              value={props.fields.formerCompany}
             />
           </label>
         </div>
+      </div>
+
+      <div className="row">
         <div className="col-sm-6">
           <label htmlFor="approval-date">Approval Date:
             <input
               className="form-control"
               id="approval-date"
+              max="9999-12-31"
               name="approvalDate"
               onChange={props.handleInputChange}
               required="required"
-              type="text"
+              type="date"
               value={props.fields.approvalDate}
             />
           </label>
@@ -294,7 +307,7 @@ FuelCodeFormDetails.propTypes = {
     feedstockLocation: PropTypes.string,
     feedstockMiscellaneous: PropTypes.string,
     feedstockTransportMode: PropTypes.string,
-    formerCompanyName: PropTypes.string,
+    formerCompany: PropTypes.string,
     fuel: PropTypes.string,
     fuelCode: PropTypes.string,
     fuelTransportMode: PropTypes.string

@@ -27,6 +27,7 @@ from . import User
 from . import CreditTradeComment
 from . import OrganizationAddress
 from . import UserCreationRequest
+from . import FuelCode
 
 patch_fields()
 

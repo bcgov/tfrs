@@ -7,6 +7,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
+import AdminTabs from '../components/AdminTabs';
 import FuelCodeForm from './components/FuelCodeForm';
 
 class FuelCodeAddContainer extends Component {
@@ -52,14 +53,20 @@ class FuelCodeAddContainer extends Component {
   }
 
   render () {
-    return (
+    return ([
+      <AdminTabs
+        active="fuel-codes"
+        key="nav"
+        loggedInUser={this.props.loggedInUser}
+      />,
       <FuelCodeForm
         addToFields={this._addToFields}
-        fields={this.state.fields}
         errors={this.props.error}
+        fields={this.state.fields}
+        key="form"
         title="New Fuel Code"
       />
-    );
+    ]);
   }
 }
 
@@ -68,10 +75,21 @@ FuelCodeAddContainer.defaultProps = {
 };
 
 FuelCodeAddContainer.propTypes = {
-  error: PropTypes.shape({})
+  error: PropTypes.shape({}),
+  loggedInUser: PropTypes.shape({
+    organization: PropTypes.shape({
+      id: PropTypes.number,
+      name: PropTypes.string,
+      organizationBalance: PropTypes.shape({
+        validatedCredits: PropTypes.number
+      }),
+      statusDisplay: PropTypes.string
+    })
+  }).isRequired
 };
 
 const mapStateToProps = state => ({
+  loggedInUser: state.rootReducer.userRequest.loggedInUser
 });
 
 const mapDispatchToProps = dispatch => ({
