@@ -193,6 +193,7 @@ class UserEditContainer extends Component {
     return ([
       <UserForm
         addToFields={this._addToFields}
+        editPrimaryFields
         fields={this.state.fields}
         fuelSuppliers={this.props.fuelSuppliers}
         handleInputChange={this._handleInputChange}

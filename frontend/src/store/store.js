@@ -1,15 +1,13 @@
-import { applyMiddleware, compose, createStore } from 'redux';
-import { reducer as toastrReducer } from 'react-redux-toastr';
-import { routerMiddleware, routerReducer } from 'react-router-redux';
-import { createLogger } from 'redux-logger';
-import io from 'socket.io-client';
-import thunk from 'redux-thunk';
-
-import { loadUser, reducer as OIDCReducer } from 'redux-oidc';
-
-import persistState from 'redux-localstorage';
-import createSocketIoMiddleware from 'redux-socket.io';
 import createSagaMiddleware from 'redux-saga';
+import { createStore, compose, applyMiddleware } from 'redux';
+import persistState from 'redux-localstorage';
+import { createLogger } from 'redux-logger';
+import { loadUser, reducer as OIDCReducer } from 'redux-oidc';
+import { routerReducer, routerMiddleware } from 'react-router-redux';
+import createSocketIoMiddleware from 'redux-socket.io';
+import thunk from 'redux-thunk';
+import { reducer as toastrReducer } from 'react-redux-toastr';
+import io from 'socket.io-client';
 
 import rootReducer from '../reducers/reducer';
 import { getNotifications } from '../actions/notificationActions';

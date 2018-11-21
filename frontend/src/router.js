@@ -37,6 +37,7 @@ import OrganizationsContainer from './organizations/OrganizationsContainer';
 import OrganizationViewContainer from './organizations/OrganizationViewContainer';
 import OrganizationRolesContainer from './organizations/OrganizationRolesContainer';
 import SettingsContainer from './settings/SettingsContainer';
+import UserProfileContainer from './settings/UserProfileContainer';
 import UserViewContainer from './users/UserViewContainer';
 import NotificationsContainer from './notifications/NotificationsContainer';
 import AuthCallback from './app/AuthCallback';
@@ -77,8 +78,17 @@ const Router = props => (
         />
         <Route
           exact
+          path={Routes.SETTINGS_PROFILE}
+          component={withRouter(UserProfileContainer)}
+        />
+        <Route
+          exact
           path={ORGANIZATIONS.LIST}
           component={withRouter(OrganizationsContainer)}
+        />
+        <Route
+          path={ORGANIZATIONS.ADD_USER}
+          component={withRouter(UserAddContainer)}
         />
         <Route
           path={ORGANIZATIONS.DETAILS}

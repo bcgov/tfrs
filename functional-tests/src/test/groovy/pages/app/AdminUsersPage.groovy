@@ -1,12 +1,14 @@
 package pages
 
-class CompanyDetailsPage extends BaseAppPage {
-  // page title text is dynamic, but should match the user organization
-  static at = { isReactReady() && pageTitle.text() == headerModule.userOrganization.text() }
-  static url = '/organizations/mine'
-  static content = {
-    pageTitle { $('#main .page_organization h1') }
+import org.openqa.selenium.Keys
 
+class AdminUsersPage extends BaseAppPage {
+  static at = { isReactReady() && pageTitle.text() == 'Users' }
+  static url = '/admin/users'
+  static content = {
+    pageTitle { $('#main .page_users h1') }
+
+    // TODO add selector for button carat to select 'Add Fuel Supplier User'?
     newUserButton { $('#new-user') }
 
     usersTable(wait:2) { $('.ReactTable') }
