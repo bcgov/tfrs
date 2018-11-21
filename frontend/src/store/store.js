@@ -1,3 +1,4 @@
+import createSagaMiddleware from 'redux-saga';
 import { createStore, compose, applyMiddleware } from 'redux';
 import persistState from 'redux-localstorage';
 import { createLogger } from 'redux-logger';
@@ -17,10 +18,10 @@ import { persistTargetPathReducer } from '../reducers/persistTargetPathReducer';
 import userManager from './oidc-usermanager';
 import CONFIG from '../config';
 import { getLoggedInUser } from '../actions/userActions';
-
-/* global history */
+import sessionTimeoutSaga from "./sessionTimeout";
 
 const middleware = routerMiddleware(history);
+const sagaMiddleware = createSagaMiddleware();
 
 const socket = io(SOCKETIO_URL);
 const socketIoMiddleware = createSocketIoMiddleware(socket, 'socketio/');
@@ -41,6 +42,7 @@ const combinedReducers = (state = {}, action) => {
 const allMiddleware = [
   thunk,
   socketIoMiddleware,
+  sagaMiddleware,
   middleware
 ];
 
@@ -77,6 +79,8 @@ store.subscribe(() => {
     subscriptionProcessing = false;
   }
 });
+
+sagaMiddleware.run(sessionTimeoutSaga);
 
 if (CONFIG.KEYCLOAK.ENABLED) {
   loadUser(store, userManager);

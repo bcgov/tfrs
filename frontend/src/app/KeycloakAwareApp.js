@@ -8,6 +8,7 @@ import PropTypes from 'prop-types';
 import {withRouter} from 'react-router';
 import connect from 'react-redux/es/connect/connect';
 import React from 'react';
+import SessionTimer from "./components/SessionTimer";
 
 class KeycloakAwareApp extends React.Component {
   render() {
@@ -53,6 +54,7 @@ class KeycloakAwareApp extends React.Component {
               unreadNotificationsCount={this.props.unreadNotificationsCount}
             />
             <div id="main" className="template container">
+              <SessionTimer/>
               {content}
             </div>
             <Footer/>
