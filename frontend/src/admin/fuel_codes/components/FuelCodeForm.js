@@ -13,11 +13,12 @@ import Errors from '../../../app/components/Errors';
 const FuelCodeForm = props => (
   <div className="page_admin_fuel_code">
     <h1>{props.title}</h1>
-    <form>
+    <form
+      onSubmit={event => props.handleSubmit(event)}
+    >
       <FuelCodeFormDetails
         addToFields={props.addToFields}
         fields={props.fields}
-        fuelSuppliers={props.fuelSuppliers}
         handleInputChange={props.handleInputChange}
       />
 
@@ -36,8 +37,7 @@ const FuelCodeForm = props => (
           </button>
           <button
             className="btn btn-default"
-            onClick={() => history.goBack()}
-            type="button"
+            type="submit"
           >
             <FontAwesomeIcon icon="save" /> {Lang.BTN_SAVE_DRAFT}
           </button>
@@ -65,8 +65,8 @@ FuelCodeForm.propTypes = {
   fields: PropTypes.shape({
     roles: PropTypes.array
   }).isRequired,
-  fuelSuppliers: PropTypes.arrayOf(PropTypes.shape()).isRequired,
-  handleInputChange: PropTypes.func.isRequired,  
+  handleInputChange: PropTypes.func.isRequired,
+  handleSubmit: PropTypes.func.isRequired,
   title: PropTypes.string.isRequired
 };
 
