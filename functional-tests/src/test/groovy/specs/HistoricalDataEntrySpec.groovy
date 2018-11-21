@@ -3,13 +3,11 @@ package specs
 import pages.HistoricalDataEntryPage
 import pages.HistoricalDataEntryConfirmProcessModal
 
-import spock.lang.Timeout
 import spock.lang.Title
 import spock.lang.Narrative
 import spock.lang.Stepwise
 import spock.lang.Shared
 
-@Timeout(300)
 @Stepwise
 @Title('Historical Data Entry Test')
 @Narrative('''As an analyst, I want to enter historical data.''')

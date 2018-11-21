@@ -20,7 +20,7 @@ class HistoricalDataEntryPage extends BaseAppPage {
 
     addToQueueButton { $('button', type:'submit', text:'Add to Queue') }
 
-    queueTable { $('.ReactTable') }
+    queueTable(wait:true) { $('.ReactTable') }
 
     commitButton { $('button', type:'button', text:'Commit') }
 
