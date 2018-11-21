@@ -10,7 +10,8 @@ import compliancePeriods from './compliancePeriodReducer';
 import { roleRequest, roles } from './roleReducer';
 import signingAuthorityAssertions from './signingAuthorityAssertionReducer';
 import { notifications, subscriptions } from './notificationReducer';
-import {referenceData} from "./referenceDataReducer";
+import { referenceData } from './referenceDataReducer';
+import sessionTimeout from './sessionTimeoutReducer';
 
 const rootReducer = combineReducers({
   approvedCreditTransfers,
@@ -27,6 +28,7 @@ const rootReducer = combineReducers({
   roleRequest,
   roles,
   routing,
+  sessionTimeout,
   signingAuthorityAssertions,
   subscriptions,
   userAdmin,
