@@ -3,31 +3,26 @@
  * All data handling & manipulation should be handled here.
  */
 
-import React, {Component} from 'react';
-import {connect} from 'react-redux';
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import {bindActionCreators} from 'redux';
+import { bindActionCreators } from 'redux';
 
 import {
   addOrganization,
   getOrganization,
-  getOrganizationMembers,
   updateOrganization
 } from '../actions/organizationActions';
 import Loading from '../app/components/Loading';
-import OrganizationDetails from './components/OrganizationDetails';
-import OrganizationMembers from './components/OrganizationMembers';
-import OrganizationEditForm from "./components/OrganizationEditForm";
-import history from "../app/History";
-import toastr from "../utils/toastr";
-import {USERS as ADMIN_USERS} from "../constants/routes/Admin";
-import ORGANIZATION from "../constants/routes/Organizations";
-import Errors from "../app/components/Errors";
+import OrganizationEditForm from './components/OrganizationEditForm';
+import history from '../app/History';
+import toastr from '../utils/toastr';
+import ORGANIZATION from '../constants/routes/Organizations';
+import Modal from '../app/components/Modal';
+import { CREDIT_TRANSFER_STATUS } from '../constants/values';
 
 class OrganizationEditContainer extends Component {
-
-
-  constructor(props) {
+  constructor (props) {
     super(props);
 
     this.state = {
@@ -53,31 +48,21 @@ class OrganizationEditContainer extends Component {
     this._handleInputChange = this._handleInputChange.bind(this);
     this._handleCreate = this._handleCreate.bind(this);
     this._handleUpdate = this._handleUpdate.bind(this);
-
   }
 
-
-  componentDidMount() {
-    if (this.props.mode === 'add')
-      return;
+  componentDidMount () {
+    if (this.props.mode === 'add') { return; }
 
     this.loadData(this.props.match.params.id);
   }
 
-  componentWillReceiveNewProps(prevProps, newProps) {
-    if (prevProps.match.params.id !== newProps.match.params.id) {
-      this.loadData(newProps.match.params.id);
-    }
-  }
-
-  componentWillReceiveProps(props) {
-    if (props.mode === 'add')
-      return;
+  componentWillReceiveProps (props) {
+    if (props.mode === 'add') { return; }
 
     this.loadPropsToFieldState(props);
   }
 
-  loadPropsToFieldState(props) {
+  loadPropsToFieldState (props) {
     if (Object.keys(props.organization.details).length !== 0 && !this.submitted) {
       const org = props.organization.details;
       let addr = {};
@@ -97,17 +82,26 @@ class OrganizationEditContainer extends Component {
           ...addr
         }
       });
-
     }
   }
 
-  loadData(id) {
-    this.props.getOrganization(id);
+  _modalConfirm () {
+    return (
+      <Modal
+        handleSubmit={(event) => {
+          this._handleCreate();
+        }}
+        id="confirmFuelSupplierAdd"
+        key="confirmFuelSupplierAdd"
+      >
+        Are you sure you want to add this Fuel Supplier?
+      </Modal>
+    );
   }
 
-  _handleInputChange(event) {
-    const {value, name} = event.target;
-    const fieldState = {...this.state.fields};
+  _handleInputChange (event) {
+    const { value, name } = event.target;
+    const fieldState = { ...this.state.fields };
     const numericFields = ['type', 'actionsType', 'status'];
 
     if (numericFields.includes(name)) {
@@ -121,7 +115,7 @@ class OrganizationEditContainer extends Component {
     });
   }
 
-  _handleUpdate(event) {
+  _handleUpdate (event) {
     event.preventDefault();
 
     const data = {
@@ -151,9 +145,7 @@ class OrganizationEditContainer extends Component {
     return false;
   }
 
-  _handleCreate(event) {
-    event.preventDefault();
-
+  _handleCreate () {
     const data = {
       name: this.state.fields.name,
       type: this.state.fields.type,
@@ -180,25 +172,25 @@ class OrganizationEditContainer extends Component {
     return false;
   }
 
-
-  render() {
+  render () {
     const isFetching = this.props.organization.isFetching ||
       this.props.referenceData.isFetching ||
       !this.props.referenceData.isSuccessful;
 
     if (isFetching) {
-      return (<Loading/>);
+      return (<Loading />);
     }
 
     switch (this.props.mode) {
       case 'add':
-        return (<OrganizationEditForm
+        return ([<OrganizationEditForm
           fields={this.state.fields}
           handleInputChange={this._handleInputChange}
           referenceData={this.props.referenceData}
-          handleSubmit={this._handleCreate}
+          handleSubmit={() => { $('#confirmFuelSupplierAdd').modal('show'); }}
           mode={this.props.mode}
-        />);
+        />,
+        this._modalConfirm()]);
       case 'gov_edit':
       case 'edit':
         return (<OrganizationEditForm
@@ -209,10 +201,16 @@ class OrganizationEditContainer extends Component {
           mode={this.props.mode}
         />);
       default:
-        return (<div/>);
+        return (<div />);
     }
   }
 }
+
+OrganizationEditContainer.defaultProps = {
+  match: null,
+  organization: null,
+  referenceData: null
+};
 
 OrganizationEditContainer.propTypes = {
   match: PropTypes.shape({
@@ -234,44 +232,40 @@ OrganizationEditContainer.propTypes = {
     isFetching: PropTypes.bool
   }),
   referenceData: PropTypes.shape({
-    organizationTypes: PropTypes.arrayOf(
-      PropTypes.shape({
-        type: PropTypes.string,
-        id: PropTypes.number
-      })),
-    organizationActionsTypes: PropTypes.arrayOf(
-      PropTypes.shape({
-        the_type: PropTypes.string,
-        id: PropTypes.number
-      })),
-    organizationStatuses: PropTypes.arrayOf(
-      PropTypes.shape({
-        status: PropTypes.string,
-        id: PropTypes.number
-      })),
-    isFetching: PropTypes.bool
+    organizationTypes: PropTypes.arrayOf(PropTypes.shape({
+      type: PropTypes.string,
+      id: PropTypes.number
+    })),
+    organizationActionsTypes: PropTypes.arrayOf(PropTypes.shape({
+      the_type: PropTypes.string,
+      id: PropTypes.number
+    })),
+    organizationStatuses: PropTypes.arrayOf(PropTypes.shape({
+      status: PropTypes.string,
+      id: PropTypes.number
+    })),
+    isFetching: PropTypes.bool,
+    isSuccessful: PropTypes.bool
   }),
   updateOrganization: PropTypes.func.isRequired,
   getOrganization: PropTypes.func.isRequired,
   addOrganization: PropTypes.func.isRequired,
-  mode: PropTypes.oneOf(['add', 'edit', 'admin_edit'])
+  mode: PropTypes.oneOf(['add', 'edit', 'admin_edit']).isRequired
 };
 
-const mapStateToProps = state => {
-  return {
-    organization: {
-      details: state.rootReducer.organizationRequest.fuelSupplier,
-      isFetching: state.rootReducer.organizationRequest.isFetching
-    },
-    referenceData: {
-      organizationTypes: state.rootReducer.referenceData.data.organizationTypes,
-      organizationStatuses: state.rootReducer.referenceData.data.organizationStatuses,
-      organizationActionsTypes: state.rootReducer.referenceData.data.organizationActionsTypes,
-      isFetching: state.rootReducer.referenceData.isFetching,
-      isSuccessful: state.rootReducer.referenceData.success
-    }
+const mapStateToProps = state => ({
+  organization: {
+    details: state.rootReducer.organizationRequest.fuelSupplier,
+    isFetching: state.rootReducer.organizationRequest.isFetching
+  },
+  referenceData: {
+    organizationTypes: state.rootReducer.referenceData.data.organizationTypes,
+    organizationStatuses: state.rootReducer.referenceData.data.organizationStatuses,
+    organizationActionsTypes: state.rootReducer.referenceData.data.organizationActionsTypes,
+    isFetching: state.rootReducer.referenceData.isFetching,
+    isSuccessful: state.rootReducer.referenceData.success
   }
-};
+});
 
 const mapDispatchToProps = dispatch => ({
   getOrganization: bindActionCreators(getOrganization, dispatch),
