@@ -11,13 +11,11 @@ import pages.CreditTransactionsConfirmRecommendModal
 import pages.CreditTransactionsConfirmApproveModal
 import pages.ToastModal
 
-import spock.lang.Timeout
 import spock.lang.Title
 import spock.lang.Narrative
 import spock.lang.Stepwise
 import spock.lang.Shared
 
-@Timeout(300)
 @Stepwise
 @Title('Credit Transfer Test')
 @Narrative('''As a fuel supplier, I want to transfer credits to another fuel supplier.''')
