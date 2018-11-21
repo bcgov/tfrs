@@ -11,7 +11,7 @@ class AdminUsersPage extends BaseAppPage {
     // TODO add selector for button carat to select 'Add Fuel Supplier User'?
     newUserButton { $('#new-user') }
 
-    usersTable(wait:2) { $('.ReactTable') }
+    usersTable(wait:true) { $('.ReactTable') }
   }
 
   void clickNewUserButton() {
@@ -20,5 +20,15 @@ class AdminUsersPage extends BaseAppPage {
 
   void clickUserRow(String usersName) {
     usersTable.$('.rt-tbody').$('.clickable').has('.col-name', text:usersName).click()
+  }
+
+  void clickNewFuelSupplierUserButton() {
+    newUserButton.siblings('button').click()
+    interact {
+      waitFor {
+        // Wait for the dropdown to populate and click it
+        moveToElement(newUserButton.siblings('.dropdown-menu')).click()
+      }
+    }
   }
 }

@@ -9,13 +9,11 @@ import pages.CreditTransactionsViewPage
 import pages.ToastModal
 import pages.HomePage
 
-import spock.lang.Timeout
 import spock.lang.Title
 import spock.lang.Narrative
 import spock.lang.Stepwise
 import spock.lang.Shared
 
-@Timeout(300)
 @Stepwise
 @Title('Credit Transaction Test')
 @Narrative('''As an analyst, I want to award, validate, and reduce credits for fuel suppliers.''')
