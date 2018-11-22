@@ -112,12 +112,6 @@ services:
         ports:
             - 15672:15672
             - 5672:5672
-    mailslurper:
-        build:
-            context: https://github.com/mailslurper/mailslurper.git
-        ports:
-            - 8080:8080
-            - 8085:8085
     postgres_keycloak:
         image: postgres
         volumes:
