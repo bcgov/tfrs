@@ -11,7 +11,7 @@ import spock.lang.Title
 import spock.lang.Narrative
 import spock.lang.Unroll
 
-@Timeout(300)
+@Timeout(60)
 @Title('Flow Tests')
 @Narrative('''
 As a developer, I want to ensure all page links work, have the correct text, and direct to the correct page.

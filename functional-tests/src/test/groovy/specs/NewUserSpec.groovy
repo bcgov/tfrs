@@ -11,16 +11,14 @@ import pages.ConfirmSubmitModal
 import pages.UserProfilePage
 import pages.ToastModal
 
-import spock.lang.Timeout
 import spock.lang.Title
 import spock.lang.Narrative
 import spock.lang.Stepwise
 import spock.lang.Shared
 
-@Timeout(300)
 @Stepwise
 @Title('New User Tests')
-@Narrative('''As a user, I want to create new users.''')
+@Narrative('''As a user, I want to create and update users.''')
 class NewUserSpec extends LoggedInSpec {
 
   @Shared
@@ -40,8 +38,8 @@ class NewUserSpec extends LoggedInSpec {
       setFirstName(senderFirstName)
       setLastName(senderLastName)
       setBCeIDEmail(makeUnique('newSender@fakeeemail.com'))
-      setWorkPhone('1234567890')
-      setMobilePhone('1234567891')
+      setWorkPhone('2505551234')
+      setMobilePhone('2505551235')
       setEmail('newSender@fakeeemail.com')
       setStatus('Active')
       checkUserRoleCheckboxByText('Credit Transfers')
@@ -70,8 +68,8 @@ class NewUserSpec extends LoggedInSpec {
       setFirstName("${senderFirstName}Edit")
       setLastName("${senderLastName}Edit")
       setBCeIDEmail(makeUnique('newSenderEdit@fakeeemail.com'))
-      setWorkPhone('9234567890')
-      setMobilePhone('9234567891')
+      setWorkPhone('6045551235')
+      setMobilePhone('6045551235')
       setEmail('newSenderEdit@fakeeemail.com')
       setStatus('Inactive')
       checkUserRoleCheckboxByText('Credit Transfers')
@@ -106,10 +104,9 @@ class NewUserSpec extends LoggedInSpec {
       setFirstName(receiverFirstName)
       setLastName(receiverLastName)
       setBCeIDEmail(makeUnique('newReceiver@fakeeemail.com'))
-      setWorkPhone('3214567892')
-      setMobilePhone('3214567893')
+      setWorkPhone('2505551236')
+      setMobilePhone('2505551237')
       setEmail('newReceiver@fakeeemail.com')
-      setOrganization(getReceivingFuelSupplier().org)
       setStatus('Inactive')
       checkUserRoleCheckboxByText('Credit Transfers')
       checkUserRoleCheckboxByText('Signing Authority')
@@ -140,10 +137,9 @@ class NewUserSpec extends LoggedInSpec {
       setFirstName("${receiverFirstName}Edit")
       setLastName("${receiverLastName}Edit")
       setBCeIDEmail(makeUnique('newReceiverEdit@fakeeemail.com'))
-      setWorkPhone('9214567892')
-      setMobilePhone('9214567893')
+      setWorkPhone('6045551236')
+      setMobilePhone('6045551237')
       setEmail('newReceiverEdit@fakeeemail.com')
-      setOrganization(getReceivingFuelSupplier().org)
       setStatus('Active')
       checkUserRoleCheckboxByText('Guest')
     when: 'I save and submit the user'
@@ -173,8 +169,8 @@ class NewUserSpec extends LoggedInSpec {
       setFirstName(adminFirstName)
       setLastName(adminLastName)
       setBCeIDEmail(makeUnique('newAdmin@fakeeemail.com'))
-      setWorkPhone('3216547894')
-      setMobilePhone('3216547895')
+      setWorkPhone('2505551238')
+      setMobilePhone('2505551239')
       setEmail('newAdmin@fakeeemail.com')
       setStatus('Active')
       checkUserRoleCheckboxByText('Administrator')
@@ -203,8 +199,8 @@ class NewUserSpec extends LoggedInSpec {
       setFirstName("${adminFirstName}Edit")
       setLastName("${adminLastName}Edit")
       setBCeIDEmail(makeUnique('newAdminEdit@fakeeemail.com'))
-      setWorkPhone('9216547894')
-      setMobilePhone('9216547895')
+      setWorkPhone('6045551238')
+      setMobilePhone('6045551239')
       setEmail('newAdminEdit@fakeeemail.com')
       setStatus('Inactive')
       checkUserRoleCheckboxByText('Government Deputy Director')
@@ -217,5 +213,40 @@ class NewUserSpec extends LoggedInSpec {
       at new UserProfilePage("${adminFirstName}Edit ${adminLastName}Edit")
     and: 'I am shown a success toast popup'
       at new ToastModal('Success!', 'User updated.')
+  }
+
+  @Shared
+  String adminFuelSupplierFirstName = makeUnique('AdminFuelSupplier')
+
+  @Shared
+  String adminFuelSupplierLastName = makeUnique('Lastname')
+
+  void 'Log in as an Admin and add a new fuel supplier user via Administration page'() {
+    given: 'I am logged in as an Admin'
+      logInAsAdmin()
+      to AdminUsersPage
+    and: 'I click the New user button'
+      clickNewFuelSupplierUserButton()
+      at AddUserPage
+    and: 'I populate all required fields to create a new user'
+      setFirstName(adminFuelSupplierFirstName)
+      setLastName(adminFuelSupplierLastName)
+      setBCeIDEmail(makeUnique('newAdminFuelSupplier@fakeeemail.com'))
+      setWorkPhone('2505551230')
+      setMobilePhone('2505551231')
+      setEmail('newAdminFuelSupplier@fakeeemail.com')
+      setOrganization(getSendingFuelSupplier().org)
+      setStatus('Active')
+      checkUserRoleCheckboxByText('Managing Users')
+      checkUserRoleCheckboxByText('Credit Transfers')
+      checkUserRoleCheckboxByText('Guest')
+    when: 'I save and submit the user'
+      clickSaveUserButton()
+      page(ConfirmSubmitModal)
+      clickYesButton()
+    then: 'The user is created and I am taken to the user profile page'
+      at new UserProfilePage("$adminFuelSupplierFirstName $adminFuelSupplierLastName")
+    and: 'I am shown a success toast popup'
+      at new ToastModal('Success!', 'User created.')
   }
 }
