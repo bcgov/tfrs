@@ -11,7 +11,7 @@ class OrganizationsViewPage extends BaseAppPage {
 
     newUserButton { $('#new-user') }
 
-    usersTable(wait:2) { $('.ReactTable') }
+    usersTable(wait:true) { $('.ReactTable') }
   }
 
   private final String expectedPageTitle

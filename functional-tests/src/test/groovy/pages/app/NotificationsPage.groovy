@@ -8,7 +8,7 @@ class NotificationsPage extends BaseAppPage {
   static content = {
     pageTitle { $('#main .page_notifications h1') }
 
-    notificationTable { $('.ReactTable') }
+    notificationTable(wait:true) { $('.ReactTable') }
   }
 
   /**
