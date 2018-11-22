@@ -1,5 +1,5 @@
-import {SESSION_TERMINATED, USER_EXPIRED} from 'redux-oidc';
-import ActionTypes from "../constants/actionTypes/Users";
+import { SESSION_TERMINATED, USER_EXPIRED } from 'redux-oidc';
+import ActionTypes from '../constants/actionTypes/Users';
 
 const userRequest = (state = {
   error: {},
@@ -107,11 +107,18 @@ const userAdmin = (state = {
   user: {}
 }, action) => {
   switch (action.type) {
+    case ActionTypes.CLEAR_ERROR:
+      return {
+        ...state,
+        serverError: false,
+        error: {}
+      };
     case ActionTypes.CREATE_USER_REQUEST:
       return {
         ...state,
         isFetching: true,
-        user: {}
+        user: {},
+        error: {}
       };
     case ActionTypes.CREATE_USER_SUCCESS:
       return {
@@ -120,13 +127,14 @@ const userAdmin = (state = {
         serverError: true,
         user: {
           ...action.data
-        }
+        },
+        error: {}
       };
-    case ActionTypes.CREATE_USER_ERROR:
+    case ActionTypes.CREATE_USER_ERROR: {
       let error = {
         ...action.errorData.data
       };
-      if (action.errorData.data.hasOwnProperty('user')) {
+      if (Object.prototype.hasOwnProperty.call(action.errorData.data, 'user')) {
         error = Object.assign(error, action.errorData.data.user);
         delete error.user;
       }
@@ -138,11 +146,13 @@ const userAdmin = (state = {
         serverError: true,
         user: {}
       };
+    }
     case ActionTypes.UPDATE_USER_REQUEST:
       return {
         ...state,
         isFetching: true,
-        user: {}
+        user: {},
+        error: {}
       };
     case ActionTypes.UPDATE_USER_SUCCESS:
       return {
@@ -151,7 +161,8 @@ const userAdmin = (state = {
         serverError: true,
         user: {
           ...action.data
-        }
+        },
+        error: {}
       };
     case ActionTypes.UPDATE_USER_ERROR:
       return {
