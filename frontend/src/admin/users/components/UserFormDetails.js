@@ -48,8 +48,8 @@ const UserFormDetails = props => (
       <div className="row">
         <div className="col-sm-6">
           <div className="form-group">
-            <label htmlFor="bceid">BCeID:
-              {props.editPrimaryFields &&
+            {props.editPrimaryFields &&
+              <label htmlFor="bceid">BCeID Email Address:
                 <input
                   className="form-control"
                   id="bceid"
@@ -59,13 +59,15 @@ const UserFormDetails = props => (
                   type="email"
                   value={props.fields.bceid}
                 />
-              }
-              {!props.editPrimaryFields &&
+              </label>
+            }
+            {!props.editPrimaryFields &&
+              <label htmlFor="bceid">BCeID:
                 <span className="form-control read-only">
                   {props.fields.bceid}
                 </span>
-              }
-            </label>
+              </label>
+            }
           </div>
         </div>
       </div>
@@ -147,12 +149,9 @@ const UserFormDetails = props => (
                 />
               }
               {props.fields.organization &&
-              document.location.pathname.indexOf('/organizations/view') >= 0 &&
+              document.location.pathname.indexOf('/users') >= 0 &&
                 <div
                   className="form-control read-only"
-                  id="organization"
-                  name="organization"
-                  type="text"
                 >
                   {props.fields.organization.name}
                 </div>
@@ -160,8 +159,6 @@ const UserFormDetails = props => (
               {!props.loggedInUser.isGovernmentUser &&
                 <div
                   className="form-control read-only"
-                  name="organization"
-                  type="text"
                 >
                   {props.loggedInUser.organization.name}
                 </div>

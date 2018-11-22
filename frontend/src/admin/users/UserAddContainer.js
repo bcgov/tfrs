@@ -14,7 +14,7 @@ import { getRoles } from '../../actions/roleActions';
 import UserForm from './components/UserForm';
 import { USERS } from '../../constants/routes/Admin';
 import toastr from '../../utils/toastr';
-import { createUser } from '../../actions/userActions';
+import { clearUsersRequestError, createUser } from '../../actions/userActions';
 
 class UserAddContainer extends Component {
   constructor (props) {
@@ -41,6 +41,7 @@ class UserAddContainer extends Component {
   }
 
   componentDidMount () {
+    this.props.clearUsersRequestError();
     this.loadData();
   }
 
@@ -207,6 +208,7 @@ UserAddContainer.defaultProps = {
 };
 
 UserAddContainer.propTypes = {
+  clearUsersRequestError: PropTypes.func.isRequired,
   fuelSuppliers: PropTypes.arrayOf(PropTypes.shape()).isRequired,
   getFuelSuppliers: PropTypes.func.isRequired,
   getOrganization: PropTypes.func.isRequired,
@@ -242,6 +244,7 @@ const mapDispatchToProps = dispatch => ({
   getFuelSuppliers: bindActionCreators(getFuelSuppliers, dispatch),
   getOrganization: bindActionCreators(getOrganization, dispatch),
   getRoles: bindActionCreators(getRoles, dispatch),
+  clearUsersRequestError: bindActionCreators(clearUsersRequestError, dispatch),
   createUser: bindActionCreators(createUser, dispatch)
 });
 

@@ -5,7 +5,7 @@ import ReducerTypes from '../constants/reducerTypes/Users';
 import * as Routes from '../constants/routes';
 import userManager from '../store/oidc-usermanager';
 import CONFIG from '../config';
-import {getReferenceData} from "./referenceDataActions";
+import { getReferenceData } from './referenceDataActions';
 
 const getUsers = () => (dispatch) => {
   dispatch(getUsersRequest());
@@ -178,7 +178,16 @@ const getUsersError = error => ({
   errorMessage: error
 });
 
+const clearUsersRequestError = () => (dispatch) => {
+  dispatch(clearUserErrorRequest());
+};
+
+const clearUserErrorRequest = () => ({
+  name: ReducerTypes.CLEAR_ERROR_REQUEST,
+  type: ActionTypes.CLEAR_ERROR
+});
+
 export {
   getUsers, getLoggedInUser, createUser, updateUser, getUser, getUserByUsername,
-  signUserOut
+  signUserOut, clearUsersRequestError
 };
