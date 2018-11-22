@@ -107,7 +107,7 @@ class NewUserSpec extends LoggedInSpec {
       setWorkPhone('2505551236')
       setMobilePhone('2505551237')
       setEmail('newReceiver@fakeeemail.com')
-      setStatus('Inactive')
+      setStatus('Active')
       checkUserRoleCheckboxByText('Credit Transfers')
       checkUserRoleCheckboxByText('Signing Authority')
     when: 'I save and submit the user'
@@ -140,7 +140,7 @@ class NewUserSpec extends LoggedInSpec {
       setWorkPhone('6045551236')
       setMobilePhone('6045551237')
       setEmail('newReceiverEdit@fakeeemail.com')
-      setStatus('Active')
+      setStatus('Inactive')
       checkUserRoleCheckboxByText('Guest')
     when: 'I save and submit the user'
       clickSaveUserButton()
@@ -236,7 +236,7 @@ class NewUserSpec extends LoggedInSpec {
       setMobilePhone('2505551231')
       setEmail('newAdminFuelSupplier@fakeeemail.com')
       setOrganization(getSendingFuelSupplier().org)
-      setStatus('Active')
+      setStatus('Inactive')
       checkUserRoleCheckboxByText('Managing Users')
       checkUserRoleCheckboxByText('Credit Transfers')
       checkUserRoleCheckboxByText('Guest')
