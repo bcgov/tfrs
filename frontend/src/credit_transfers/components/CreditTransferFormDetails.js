@@ -45,6 +45,7 @@ class CreditTransferFormDetails extends Component {
               id="number-of-credits"
               min="0"
               name="numberOfCredits"
+              placeholder="Quantity of Credits"
               required
               step="1"
               value={this.props.fields.numberOfCredits}
@@ -81,7 +82,7 @@ class CreditTransferFormDetails extends Component {
               id="value-per-credit"
               min="0"
               name="fairMarketValuePerCredit"
-              placeholder="Amount"
+              placeholder="Fair Market Value"
               required
               showDollarSymbol
               step="0.01"

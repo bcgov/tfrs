@@ -9,8 +9,8 @@ import { bindActionCreators } from 'redux';
 
 import { getUser, updateUser } from '../../actions/userActions';
 import Modal from '../../app/components/Modal';
-import history from '../../app/History';
 import Loading from '../../app/components/Loading';
+import history from '../../app/History';
 import { getFuelSuppliers } from '../../actions/organizationActions';
 import { getRoles } from '../../actions/roleActions';
 import UserForm from './components/UserForm';
@@ -193,7 +193,7 @@ class UserEditContainer extends Component {
     return ([
       <UserForm
         addToFields={this._addToFields}
-        editPrimaryFields
+        editPrimaryFields={false}
         fields={this.state.fields}
         fuelSuppliers={this.props.fuelSuppliers}
         handleInputChange={this._handleInputChange}
@@ -236,6 +236,8 @@ UserEditContainer.propTypes = {
     }).isRequired
   }).isRequired,
   loggedInUser: PropTypes.shape({
+    isGovernmentUser: PropTypes.bool,
+    hasPermission: PropTypes.func
   }).isRequired,
   roles: PropTypes.shape().isRequired,
   user: PropTypes.shape({
