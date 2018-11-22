@@ -1,4 +1,5 @@
 import json
+from email.utils import make_msgid
 from typing import List
 
 import pika
@@ -15,7 +16,6 @@ from api.models.Organization import Organization
 from api.models.Role import Role
 from api.notifications.notification_types import NotificationType
 from tfrs.settings import AMQP_CONNECTION_PARAMETERS, EMAIL
-
 
 def send_amqp_notification():
     try:
@@ -124,6 +124,50 @@ class AMQPNotificationService:
         import smtplib
         msg = EmailMessage()
         msg.set_content('You have received a new notification in TFRS.\nPlease sign in to view it.')
+        bcgov_cid = make_msgid()
+        msg.add_alternative("""\
+        <html>
+        <head>
+        <style type="text/css">
+        td {{
+        padding: 15px 8px 15px 8px;
+        }}
+        </style>
+        </head>
+        <body>
+        <table style="width: 100%; font-family: sans-serif; border-collapse: collapse; border: 2px solid #003366;">
+        <tbody>
+        <tr style="background: #003366; font-size: 24px; color: white;">
+        <td width="185"
+        style="text-align: right">
+        <img alt="Government of British Columbia" width="155" height="52" src="cid:{bcgov_cid}"/>
+        </td>
+        <td style="font-weight: 400;">
+        Transportation Fuels Reporting System
+        </td>
+        </tr>
+        <tr style="min-height: 400px'">
+        <td colspan="2"
+        style="font-weight: bold;
+        border-top: 4px solid #fcba19;
+        font-size: 13px;
+        line-height: 20px;
+        padding-top: 20px;
+        padding-bottom: 20px;">
+        <p style="margin-left: 20px;">You have received a new notification in TFRS.</p>
+        <p style="margin-left: 20px;">Please <a href="https://lowcarbonfuels.gov.bc.ca">sign in</a>
+        to view it.</p>
+        </td>
+        </tr>
+        </tbody>
+        </table>
+        </body>
+        </html>
+        """.format(bcgov_cid=bcgov_cid[1:-1]), subtype='html')
+
+        with open('assets/bcgov.png', 'rb') as image:
+            msg.get_payload()[1].add_related(image.read(), 'image', 'png', cid=bcgov_cid)
+
         msg['Subject'] = 'TFRS Notification'
         msg['From'] = EMAIL['FROM_ADDRESS']
         msg['To'] = email_recipient
@@ -131,7 +175,6 @@ class AMQPNotificationService:
         with smtplib.SMTP(host=EMAIL['SMTP_SERVER_HOST'],
                           port=EMAIL['SMTP_SERVER_PORT']) as server:
             server.send_message(msg)
-
 
     @staticmethod
     def compute_effective_subscriptions(user: User) -> List[EffectiveSubscription]:
