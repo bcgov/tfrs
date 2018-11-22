@@ -29,7 +29,13 @@ class OrganizationsViewPage extends BaseAppPage {
     newUserButton.click()
   }
 
+  void setUserNameFilter(String usersName) {
+    // Get the filters header row, and get the input field of its first child (first column).
+    usersTable.$('.-filters').$('.rt-th')[0].$('input').value(usersName)
+  }
+
   void clickUserRow(String usersName) {
+    setUserNameFilter(usersName)
     usersTable.$('.rt-tbody').$('.clickable').has('.col-name', text:usersName).click()
   }
 }
