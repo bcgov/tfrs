@@ -8,7 +8,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import PropTypes from 'prop-types';
 
-import { updateUser } from '../actions/userActions';
+import { clearUsersRequestError, updateUser } from '../actions/userActions';
 import Modal from '../app/components/Modal';
 import UserProfileDetails from './components/UserProfileDetails';
 import toastr from '../utils/toastr';
@@ -38,6 +38,7 @@ class UserProfileContainer extends Component {
   }
 
   componentDidMount () {
+    this.props.clearUsersRequestError();
     this.loadData();
   }
 
@@ -130,10 +131,11 @@ class UserProfileContainer extends Component {
 }
 
 UserProfileContainer.defaultProps = {
-  errors: null
+  errors: {}
 };
 
 UserProfileContainer.propTypes = {
+  clearUsersRequestError: PropTypes.func.isRequired,
   errors: PropTypes.oneOfType([
     PropTypes.shape({}),
     PropTypes.string
@@ -157,6 +159,7 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
+  clearUsersRequestError: bindActionCreators(clearUsersRequestError, dispatch),
   updateUser: bindActionCreators(updateUser, dispatch)
 });
 
