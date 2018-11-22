@@ -145,8 +145,6 @@ class OrganizationViewSet(AuditableMixin, viewsets.GenericViewSet,
         """
             Reference data for UI
         """
-
-        #.filter(~Q(id=1))
         types = OrganizationType.objects.all()
 
         serializer = self.get_serializer(types,
