@@ -16,9 +16,11 @@ import {
 import CONTACT_US from './constants/routes/ContactUs';
 import CREDIT_TRANSACTIONS from './constants/routes/CreditTransactions';
 import ORGANIZATIONS from './constants/routes/Organizations';
+import SECURE_DOCUMENT_UPLOAD from './constants/routes/SecureDocumentUpload';
 import USERS from './constants/routes/Users';
 
-import CreditTransactionsHistory from './admin/credit_trade_history/CreditTradeHistoryContainer';
+import CreditTransactionsHistoryContainer from './admin/credit_trade_history/CreditTradeHistoryContainer';
+import CreditTransactionRequestsContainer from './secure_document_upload/CreditTransactionRequestsContainer';
 import HistoricalDataEntryContainer from './admin/historical_data_entry/HistoricalDataEntryContainer';
 import HistoricalDataEntryEditContainer from './admin/historical_data_entry/HistoricalDataEntryEditContainer';
 import RolesContainer from './admin/roles/RolesContainer';
@@ -168,7 +170,7 @@ const Router = props => (
         <Route
           exact
           path={CREDIT_TRANSACTIONS_HISTORY.LIST}
-          component={withRouter(CreditTransactionsHistory)}
+          component={withRouter(CreditTransactionsHistoryContainer)}
         />
         <Route
           path={ROLES.DETAILS}
@@ -204,6 +206,11 @@ const Router = props => (
           exact
           path={Routes.NOTIFICATIONS.LIST}
           component={withRouter(NotificationsContainer)}
+        />
+        <Route
+          exact
+          path={SECURE_DOCUMENT_UPLOAD.LIST}
+          component={withRouter(CreditTransactionRequestsContainer)}
         />
         <Route component={NotFound} />
       </Switch>

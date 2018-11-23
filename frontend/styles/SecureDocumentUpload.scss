@@ -1,0 +1,20 @@
+@import './variables.scss';
+@import './mixins.scss';
+
+.page_credit_transaction_requests {
+  .right-toolbar-container .actions-container {
+    margin-bottom: 1rem;
+  }
+
+  .ReactTable {
+    clear: both;
+
+    .col-date, .col-id {
+      text-align: right;
+    }
+
+    .col-status, .col-actions {
+      text-align: center;
+    }
+  }
+}
