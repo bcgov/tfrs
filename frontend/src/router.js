@@ -21,6 +21,7 @@ import USERS from './constants/routes/Users';
 
 import CreditTransactionsHistoryContainer from './admin/credit_trade_history/CreditTradeHistoryContainer';
 import CreditTransactionRequestsContainer from './secure_document_upload/CreditTransactionRequestsContainer';
+import CreditTransactionRequestAddContainer from './secure_document_upload/CreditTransactionRequestAddContainer';
 import HistoricalDataEntryContainer from './admin/historical_data_entry/HistoricalDataEntryContainer';
 import HistoricalDataEntryEditContainer from './admin/historical_data_entry/HistoricalDataEntryEditContainer';
 import RolesContainer from './admin/roles/RolesContainer';
@@ -44,7 +45,7 @@ import UserViewContainer from './users/UserViewContainer';
 import NotificationsContainer from './notifications/NotificationsContainer';
 import AuthCallback from './app/AuthCallback';
 import CONFIG from './config';
-import OrganizationEditContainer from "./organizations/OrganizationEditContainer";
+import OrganizationEditContainer from './organizations/OrganizationEditContainer';
 
 const Router = props => (
   <ConnectedRouter history={history} key={Math.random()}>
@@ -211,6 +212,11 @@ const Router = props => (
           exact
           path={SECURE_DOCUMENT_UPLOAD.LIST}
           component={withRouter(CreditTransactionRequestsContainer)}
+        />
+        <Route
+          exact
+          path={SECURE_DOCUMENT_UPLOAD.ADD}
+          component={withRouter(CreditTransactionRequestAddContainer)}
         />
         <Route component={NotFound} />
       </Switch>

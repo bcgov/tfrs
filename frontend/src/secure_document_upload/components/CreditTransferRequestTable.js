@@ -24,15 +24,20 @@ const CreditTransferRequestTable = (props) => {
     id: 'organization',
     minWidth: 100
   }, {
-    className: 'col-document-name',
-    Header: 'Document Name',
-    id: 'documentName',
+    className: 'col-milestone-id',
+    Header: 'Milestone ID',
+    id: 'milestoneID',
     minWidth: 100
   }, {
-    className: 'col-document-description',
-    Header: 'Description',
-    id: 'description',
-    minWidth: 150
+    className: 'col-agreement-name',
+    Header: 'Agreement Name',
+    id: 'agreementName',
+    minWidth: 100
+  }, {
+    className: 'col-attachment',
+    Header: 'Attachment',
+    id: 'attachment',
+    minWidth: 100
   }, {
     className: 'col-status',
     Header: 'Status',

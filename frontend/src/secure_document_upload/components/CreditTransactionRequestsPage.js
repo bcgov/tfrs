@@ -1,8 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-
 import FontAwesomeIcon from '@fortawesome/react-fontawesome';
+
+import SECURE_DOCUMENT_UPLOAD from '../../constants/routes/SecureDocumentUpload';
 import Loading from '../../app/components/Loading';
+import history from '../../app/History';
 import CreditTransferRequestTable from './CreditTransferRequestTable';
 
 const CreditTransactionRequestsPage = (props) => {
@@ -20,6 +22,7 @@ const CreditTransactionRequestsPage = (props) => {
           <button
             id="credit-transfer-new-transfer"
             className="btn btn-primary"
+            onClick={() => history.push(SECURE_DOCUMENT_UPLOAD.ADD)}
             type="button"
           >
             <FontAwesomeIcon icon="plus-circle" /> New Request
