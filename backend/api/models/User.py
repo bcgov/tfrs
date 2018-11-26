@@ -33,7 +33,6 @@ from api.managers.UserManager import UserManager
 from .CreditTradeHistory import CreditTradeHistory
 from .Permission import Permission
 from .Role import Role
-from .UserRole import UserRole
 
 
 class User(AbstractUser, Auditable):
