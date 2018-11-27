@@ -27,6 +27,8 @@ from . import User
 from . import CreditTradeComment
 from . import OrganizationAddress
 from . import UserCreationRequest
+from . import Document
+from . import DocumentHistory
 
 patch_fields()
 
