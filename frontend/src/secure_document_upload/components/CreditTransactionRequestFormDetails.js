@@ -4,6 +4,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import Dropzone from 'react-dropzone';
+import FontAwesomeIcon from '@fortawesome/react-fontawesome';
 
 import InputWithTooltip from '../../app/components/InputWithTooltip';
 import { CREDIT_TRANSFER_TYPES } from '../../constants/values';
@@ -109,12 +110,17 @@ class CreditTransactionRequestFormDetails extends Component {
 
             <div className="col-md-6">
               <div className="row">
-                <div className="form-group col-md-12 dropzone">
+                <div className="form-group col-md-12">
                   <label htmlFor="comment">Attachments:
                     <Dropzone
+                      activeClassName="is-dragover"
+                      className="dropzone"
                       onDrop={this.onDrop}
                     >
-                      Drop files here, or click to select files to upload.
+                      <FontAwesomeIcon icon="upload" size="2x" />
+                      <div>
+                        Drop files here, or click to select files to upload.
+                      </div>
                     </Dropzone>
                   </label>
                 </div>

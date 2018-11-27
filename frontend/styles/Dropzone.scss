@@ -1,0 +1,21 @@
+@import './variables.scss';
+
+.dropzone {
+  border: 2px dashed $border-grey;
+  cursor: pointer;
+  padding: 2rem;
+  text-align: center;
+
+  &:hover {
+    background-color: $background-grey;
+  }
+
+  &.is-dragover {
+    background-color: $background-grey;
+    border-style: solid;
+  }
+
+  svg {
+    margin-bottom: 1rem;
+  }
+}
