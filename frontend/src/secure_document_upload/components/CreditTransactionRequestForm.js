@@ -21,7 +21,7 @@ class CreditTransactionRequestForm extends Component {
 
   render () {
     return (
-      <div className="credit-transaction pvr">
+      <div className="credit-transaction-requests">
         <h1>{this.props.title}</h1>
         <form
           onSubmit={(event, status) =>
@@ -37,7 +37,7 @@ class CreditTransactionRequestForm extends Component {
             <Errors errors={this.props.errors} />
           }
 
-          <div className="credit-transfer-actions">
+          <div className="credit-transaction-requests-actions">
             <div className="btn-container">
               <button
                 className="btn btn-default"
@@ -59,6 +59,14 @@ class CreditTransactionRequestForm extends Component {
                 type="submit"
               >
                 <FontAwesomeIcon icon="save" /> {Lang.BTN_SAVE_DRAFT}
+              </button>
+              <button
+                className="btn btn-primary"
+                data-target="#confirmSubmit"
+                data-toggle="modal"
+                type="button"
+              >
+                <FontAwesomeIcon icon="upload" /> Submit
               </button>
             </div>
           </div>

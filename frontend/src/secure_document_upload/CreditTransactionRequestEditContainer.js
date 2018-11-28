@@ -11,11 +11,11 @@ import Modal from '../app/components/Modal';
 import CreditTransactionRequestForm from './components/CreditTransactionRequestForm';
 
 import history from '../app/History';
-import { addDocumentUpload } from '../actions/documentUploads';
+import { updateDocumentUpload } from '../actions/documentUploads';
 import SECURE_DOCUMENT_UPLOAD from '../constants/routes/SecureDocumentUpload';
 import toastr from '../utils/toastr';
 
-class CreditTransactionRequestAddContainer extends Component {
+class CreditTransactionRequestEditContainer extends Component {
   constructor (props) {
     super(props);
 
@@ -35,9 +35,7 @@ class CreditTransactionRequestAddContainer extends Component {
   }
 
   componentDidMount () {
-  }
-
-  componentWillReceiveProps (props) {
+    this.loadData(this.props.match.params.id);
   }
 
   changeObjectProp (id, name) {
@@ -47,6 +45,9 @@ class CreditTransactionRequestAddContainer extends Component {
     this.setState({
       fields: fieldState
     });
+  }
+
+  loadData (id) {
   }
 
   _handleInputChange (event) {
@@ -67,6 +68,8 @@ class CreditTransactionRequestAddContainer extends Component {
   _handleSubmit (event, status) {
     event.preventDefault();
 
+    const { id } = this.props.item;
+
     // API data structure
     const data = {
       agreementName: this.state.fields.agreementName,
@@ -76,7 +79,7 @@ class CreditTransactionRequestAddContainer extends Component {
       milestoneId: this.state.fields.milestoneId
     };
 
-    this.props.addDocumentUpload(data).then((response) => {
+    this.props.updateDocumentUpload(data, id).then((response) => {
       history.push(SECURE_DOCUMENT_UPLOAD.LIST);
       toastr.documentUpload('Draft saved.');
     });
@@ -104,19 +107,18 @@ class CreditTransactionRequestAddContainer extends Component {
         id="confirmSubmit"
         key="confirmSubmit"
       >
-        Are you sure you want to add this request?
+        Are you sure you want to update this request?
       </Modal>
     ]);
   }
 }
 
-CreditTransactionRequestAddContainer.defaultProps = {
+CreditTransactionRequestEditContainer.defaultProps = {
   errors: {},
   validationErrors: {}
 };
 
-CreditTransactionRequestAddContainer.propTypes = {
-  addDocumentUpload: PropTypes.func.isRequired,
+CreditTransactionRequestEditContainer.propTypes = {
   errors: PropTypes.shape({}),
   loggedInUser: PropTypes.shape({
     displayName: PropTypes.string,
@@ -127,6 +129,12 @@ CreditTransactionRequestAddContainer.propTypes = {
       id: PropTypes.number
     })
   }).isRequired,
+  match: PropTypes.shape({
+    params: PropTypes.shape({
+      id: PropTypes.string.isRequired
+    }).isRequired
+  }).isRequired,
+  updateDocumentUpload: PropTypes.func.isRequired,
   validationErrors: PropTypes.shape()
 };
 
@@ -136,7 +144,7 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  addDocumentUpload: bindActionCreators(addDocumentUpload, dispatch)
+  updateDocumentUpload: bindActionCreators(updateDocumentUpload, dispatch)
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(CreditTransactionRequestAddContainer);
+export default connect(mapStateToProps, mapDispatchToProps)(CreditTransactionRequestEditContainer);

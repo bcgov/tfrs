@@ -22,6 +22,7 @@ import USERS from './constants/routes/Users';
 import CreditTransactionsHistoryContainer from './admin/credit_trade_history/CreditTradeHistoryContainer';
 import CreditTransactionRequestsContainer from './secure_document_upload/CreditTransactionRequestsContainer';
 import CreditTransactionRequestAddContainer from './secure_document_upload/CreditTransactionRequestAddContainer';
+import CreditTransactionRequestEditContainer from './secure_document_upload/CreditTransactionRequestEditContainer';
 import HistoricalDataEntryContainer from './admin/historical_data_entry/HistoricalDataEntryContainer';
 import HistoricalDataEntryEditContainer from './admin/historical_data_entry/HistoricalDataEntryEditContainer';
 import RolesContainer from './admin/roles/RolesContainer';
@@ -217,6 +218,10 @@ const Router = props => (
           exact
           path={SECURE_DOCUMENT_UPLOAD.ADD}
           component={withRouter(CreditTransactionRequestAddContainer)}
+        />
+        <Route
+          path={SECURE_DOCUMENT_UPLOAD.EDIT}
+          component={withRouter(CreditTransactionRequestEditContainer)}
         />
         <Route component={NotFound} />
       </Switch>
