@@ -20,31 +20,12 @@
 """
 
 from django.contrib import admin
-from .models.CreditTrade import CreditTrade
-from .models.CreditTradeHistory import CreditTradeHistory
+
 from .models.CreditTradeStatus import CreditTradeStatus
 from .models.CreditTradeType import CreditTradeType
-from .models.CreditTradeZeroReason import CreditTradeZeroReason
-
 from .models.Organization import Organization
 from .models.OrganizationType import OrganizationType
-from .models.OrganizationActionsType import OrganizationActionsType
-from .models.OrganizationAttachment import OrganizationAttachment
-from .models.OrganizationBalance import OrganizationBalance
-from .models.OrganizationHistory import OrganizationHistory
-from .models.OrganizationStatus import OrganizationStatus
-from .models.Permission import Permission
-
-from .models.Role import Role
-from .models.RolePermission import RolePermission
-
-from .models.SigningAuthorityAssertion import SigningAuthorityAssertion
-from .models.SigningAuthorityConfirmation import SigningAuthorityConfirmation
-
 from .models.User import User
-
-from .models.UserRole import UserRole
-
 
 # admin.site.register(CreditTrade)
 # admin.site.register(CreditTradeHistory)

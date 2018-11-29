@@ -7,7 +7,6 @@
 
     OpenAPI spec version: v1
 
-
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
     You may obtain a copy of the License at
@@ -20,14 +19,17 @@
     See the License for the specific language governing permissions and
     limitations under the License.
 """
-from rest_framework import serializers
 
-from api.models.OrganizationAttachment import OrganizationAttachment
+from rest_framework import permissions
 
 
-class OrganizationAttachmentSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = OrganizationAttachment
-        fields = (
-            'id', 'organization', 'file_name', 'file_location', 'description',
-            'compliance_year')
+class DocumentPermissions(permissions.BasePermission):
+    """Used by Viewset to check permissions for API requests"""
+
+    def has_permission(self, request, view):
+        return True
+
+    def has_object_permission(self, request, view, obj):
+        """Check permissions When an object does exist (PUT, GET)"""
+
+        return obj.user.id == request.user.id

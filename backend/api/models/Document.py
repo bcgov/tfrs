@@ -20,67 +20,16 @@
     See the License for the specific language governing permissions and
     limitations under the License.
 """
-from decimal import Decimal
-from typing import List
-from django.db import models
-from django.db.models import Count
-from django.db.models import Max
-from django.db.models import Q
-from api import validators
+from api.models.mixins.AttachmentData import AttachmentData
+from api.models.mixins.DocumentData import DocumentData
 from auditable.models import Auditable
 
-from .CompliancePeriod import CompliancePeriod
-from .CreditTradeComment import CreditTradeComment
-from .CreditTradeHistory import CreditTradeHistory
-from .CreditTradeStatus import CreditTradeStatus
-from .CreditTradeType import CreditTradeType
-from .CreditTradeZeroReason import CreditTradeZeroReason
-from .Organization import Organization
-from .SigningAuthorityConfirmation import SigningAuthorityConfirmation
-from .SigningAuthorityAssertion import SigningAuthorityAssertion
 
-
-class Document(Auditable):
+class Document(Auditable, DocumentData, AttachmentData):
     """
     Holds the credit trade proposal information between the
     organizations
     """
-    title = models.CharField(
-    )
-
-    url = models.URLField()
-
-    status = models.ForeignKey(
-        CreditTradeStatus,
-        related_name='credit_trades',
-        on_delete=models.PROTECT)
-
-    type = models.ForeignKey(
-        CreditTradeType,
-        related_name='credit_trades',
-        on_delete=models.PROTECT)
-
-    # @property
-    # def comments(self):
-    #     """
-    #     Comments that are only viewable for roles that have a
-    #     specific permission
-    #     """
-    #     comments = CreditTradeComment.objects.filter(
-    #         credit_trade_id=self.id
-    #     )
-    #
-    #     return comments
-
-    #
-    # def get_history(self, statuses: List):
-    #     history = CreditTradeHistory.objects.filter(
-    #         Q(status__status__in=statuses) | Q(is_rescinded=True),
-    #         credit_trade_id=self.id
-    #     ).order_by('update_timestamp')
-    #
-    #     return history
-
     class Meta:
         db_table = 'document'
 

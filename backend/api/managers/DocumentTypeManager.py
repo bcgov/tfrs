@@ -20,35 +20,10 @@
     See the License for the specific language governing permissions and
     limitations under the License.
 """
+
 from django.db import models
 
-from api.managers.DocumentStatusManager import DocumentStatusManager
-from api.models.mixins.DisplayOrder import DisplayOrder
-from api.models.mixins.EffectiveDates import EffectiveDates
-from auditable.models import Auditable
 
-
-class DocumentStatus(Auditable, DisplayOrder, EffectiveDates):
-
-    status = models.CharField(
-        max_length=25,
-        blank=True,
-        null=True,
-        unique=True,
-        db_comment="Contains an enumerated value to describe the document status."
-                   "This is a unique natural key."
-    )
-
-    objects = DocumentStatusManager()
-
-    def natural_key(self):
-        """
-        Allows type 'status' to be used to identify
-        a row in the table
-        """
-        return (self.status,)
-
-    class Meta:
-        db_table = 'document_status'
-
-    db_table_comment = ''
+class DocumentTypeManager(models.Manager):
+    def get_by_natural_key(self, the_type):
+        return self.get(the_type=the_type)

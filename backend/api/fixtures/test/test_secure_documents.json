@@ -1,0 +1,36 @@
+[
+  {
+      "fields": {
+          "title": "Test Document 1",
+          "url": "http://test.com/td1",
+          "type": ["Evidence"],
+          "status": ["Draft"],
+          "creating_organization": "3"
+      },
+      "model": "api.document",
+      "pk": null
+  },
+  {
+    "fields": {
+      "title": "Test Document 2",
+      "url": "http://test.com/td2",
+      "type": ["Application"],
+      "status": ["Draft"],
+      "creating_organization": "3"
+    },
+    "model": "api.document",
+    "pk": null
+  }
+  ,
+  {
+    "fields": {
+      "title": "Test Document 3",
+      "url": "http://test.com/td3",
+      "type": ["Evidence"],
+      "status": ["Submitted"],
+      "creating_organization": "2"
+    },
+    "model": "api.document",
+    "pk": null
+  }
+]

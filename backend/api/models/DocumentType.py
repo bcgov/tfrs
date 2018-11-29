@@ -23,39 +23,37 @@
 
 from django.db import models
 
+from api.managers.DocumentTypeManager import DocumentTypeManager
+from api.models.DocumentCategory import DocumentCategory
+from api.models.mixins.EffectiveDates import EffectiveDates
 from auditable.models import Auditable
-from api.managers.CreditTradeTypeManager import CreditTradeTypeManager
 
 
-class DocumentType(Auditable):
+class DocumentType(Auditable, EffectiveDates):
 
     """
     Holds the different types of Credit Trades and if they're only usable
     by government users only
     """
     the_type = models.CharField(
-        max_length=25,
+        max_length=100,
         blank=True,
         null=True,
         unique=True,
-        db_comment='Enumerated value to describe the document type.'
+        db_comment='Short descriptive name of the document type.'
     )
 
     description = models.CharField(
         max_length=1000, blank=True, null=True, db_comment='Description of '
                                                            'the document type. This is the displayed name.')
-    display_order = models.IntegerField(
-        db_comment='Relative rank in display sorting order')
-    effective_date = models.DateField(
-        blank=True, null=True, db_comment='The calendar date the credit trade type value became valid.')
-    expiration_date = models.DateField(
-        blank=True, null=True, db_comment='The calendar date the credit trade type value is no longer valid.')
-    is_gov_only_type = models.BooleanField(
-        db_comment='Flag. True if only government users can create this type '
-                   'of transfer.'
-    )
 
-    #objects = CreditTradeTypeManager()
+    category = models.ForeignKey(DocumentCategory,
+                                 blank=False,
+                                 null=False,
+                                 unique=False,
+                                 related_name='types')
+
+    objects = DocumentTypeManager()
 
     def natural_key(self):
         """
@@ -68,17 +66,3 @@ class DocumentType(Auditable):
         db_table = 'document_type'
 
     db_table_comment = 'Contains a list of document types.'
-
-    @property
-    def friendly_name(self):
-        """
-        Front-end language for the Credit Trade Type
-        """
-        if self.the_type in ["Buy", "Sell"]:
-            return "Credit Transfer"
-        elif self.the_type == "Credit Retirement":
-            return "Reduction"
-        elif self.the_type == "Credit Validation":
-            return "Validation"
-
-        return self.the_type

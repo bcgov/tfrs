@@ -20,41 +20,16 @@
     See the License for the specific language governing permissions and
     limitations under the License.
 """
-from django.db import models
+from rest_framework import serializers
 
-from api.models.Document import Document
-from api.models.Role import Role
-from api.models.User import User
-from api.models.mixins.DocumentData import DocumentData
-from auditable.models import Auditable
+from api.models.DocumentCategory import DocumentCategory
+from api.serializers.DocumentType import DocumentTypeSerializer
 
 
-class DocumentHistory(Auditable, DocumentData):
-    """
-    Holds the credit trade proposal information between the
-    organizations
-    """
-    document = models.ForeignKey(
-        Document,
-        related_name='history_entries',
-        on_delete=models.PROTECT,
-        null=False
-    )
-
-    modifying_user = models.ForeignKey(
-        User,
-        related_name='users',
-        on_delete=models.PROTECT,
-        null=False)
-
-    modifying_user_role = models.ForeignKey(
-        Role,
-        related_name='role',
-        on_delete=models.PROTECT,
-        null=False
-    )
+class DocumentCategorySerializer(serializers.ModelSerializer):
+    types = DocumentTypeSerializer(many=True,read_only=True)
 
     class Meta:
-        db_table = 'document_history'
-
-    db_table_comment = ''
+        model = DocumentCategory
+        fields = (
+            'id', 'name', 'types')
