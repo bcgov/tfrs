@@ -9,7 +9,8 @@ import { bindActionCreators } from 'redux';
 import PropTypes from 'prop-types';
 
 import CreditTransactionRequestsPage from './components/CreditTransactionRequestsPage';
-import CREDIT_TRANSACTIONS from '../constants/routes/CreditTransactions';
+
+import { getDocumentUploads } from '../actions/documentUploads';
 
 class CreditTransactionRequestsContainer extends Component {
   constructor (props) {
@@ -23,6 +24,7 @@ class CreditTransactionRequestsContainer extends Component {
   }
 
   loadData () {
+    this.props.getDocumentUploads();
   }
 
   render () {
@@ -38,12 +40,16 @@ CreditTransactionRequestsContainer.defaultProps = {
 };
 
 CreditTransactionRequestsContainer.propTypes = {
+  getDocumentUploads: PropTypes.func.isRequired,
+  items: PropTypes.arrayOf(PropTypes.shape).isRequired
 };
 
 const mapStateToProps = state => ({
+  items: state.rootReducer.documentUploads.items
 });
 
 const mapDispatchToProps = dispatch => ({
+  getDocumentUploads: bindActionCreators(getDocumentUploads, dispatch)
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(CreditTransactionRequestsContainer);

@@ -10,8 +10,8 @@ import { bindActionCreators } from 'redux';
 import Modal from '../app/components/Modal';
 import CreditTransactionRequestForm from './components/CreditTransactionRequestForm';
 
+import { getDocumentUpload, updateDocumentUpload } from '../actions/documentUploads';
 import history from '../app/History';
-import { updateDocumentUpload } from '../actions/documentUploads';
 import SECURE_DOCUMENT_UPLOAD from '../constants/routes/SecureDocumentUpload';
 import toastr from '../utils/toastr';
 
@@ -48,6 +48,7 @@ class CreditTransactionRequestEditContainer extends Component {
   }
 
   loadData (id) {
+    this.props.getDocumentUpload(id);
   }
 
   _handleInputChange (event) {
@@ -120,6 +121,10 @@ CreditTransactionRequestEditContainer.defaultProps = {
 
 CreditTransactionRequestEditContainer.propTypes = {
   errors: PropTypes.shape({}),
+  getDocumentUpload: PropTypes.func.isRequired,
+  item: PropTypes.shape({
+    id: PropTypes.number
+  }).isRequired,
   loggedInUser: PropTypes.shape({
     displayName: PropTypes.string,
     hasPermission: PropTypes.func,
@@ -140,10 +145,12 @@ CreditTransactionRequestEditContainer.propTypes = {
 
 const mapStateToProps = state => ({
   errors: state.rootReducer.creditTransfer.errors,
+  item: state.rootReducer.documentUpload.item,
   loggedInUser: state.rootReducer.userRequest.loggedInUser
 });
 
 const mapDispatchToProps = dispatch => ({
+  getDocumentUpload: bindActionCreators(getDocumentUpload, dispatch),
   updateDocumentUpload: bindActionCreators(updateDocumentUpload, dispatch)
 });
 
