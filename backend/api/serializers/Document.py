@@ -24,6 +24,8 @@ from rest_framework import serializers
 
 from api.models.Document import Document
 from api.serializers import OrganizationMinSerializer
+from api.serializers.DocumentStatus import DocumentStatusSerializer
+from api.serializers.DocumentType import DocumentTypeSerializer
 
 
 class DocumentSerializer(serializers.ModelSerializer):
@@ -32,26 +34,35 @@ class DocumentSerializer(serializers.ModelSerializer):
     """
 
     creating_organization = OrganizationMinSerializer(read_only=True)
+    type = DocumentTypeSerializer(read_only=True)
+    status = DocumentStatusSerializer(read_only=True)
 
     class Meta:
         model = Document
         fields = (
             'id', 'title', 'url',
             'create_timestamp', 'update_timestamp', 'create_user',
-            'update_user', 'organization')
+            'update_user', 'creating_organization',
+            'status', 'type', 'mime_type', 'size')
 
         read_only_fields = ('id', 'create_timestamp', 'create_user',
                             'update_timestamp', 'update_user', 'url',
-                            'title', 'creating_organization')
+                            'title', 'creating_organization',
+                            'status', 'type', 'mime_type', 'size')
 
 
 class DocumentMinSerializer(serializers.ModelSerializer):
     creating_organization = OrganizationMinSerializer(read_only=True)
+    type = DocumentTypeSerializer(read_only=True)
+    status = DocumentStatusSerializer(read_only=True)
 
     """
     Minimal Serializer for Documents
     """
+
     class Meta:
         model = Document
-        fields = 'id', 'title', 'url', 'creating_organization'
-        read_only_fields = ('id', 'title', 'url', 'creating_organization')
+        fields = ('id', 'title', 'url', 'creating_organization', 'status',
+                  'type', 'mime_type', 'size')
+        read_only_fields = ('id', 'title', 'url', 'creating_organization',
+                            'status', 'type')

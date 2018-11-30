@@ -20,6 +20,9 @@ def create_initial_data(apps, schema_editor):
     doc_status = apps.get_model("api", "DocumentStatus")
     doc_type = apps.get_model("api", "DocumentType")
     doc_cat = apps.get_model("api", "DocumentCategory")
+    role = apps.get_model("api", "Role")
+    permission = apps.get_model("api", "Permission")
+    role_permission = apps.get_model("api", "RolePermission")
 
     doc_statuses = [
         doc_status(status='Draft',
@@ -68,6 +71,62 @@ def create_initial_data(apps, schema_editor):
             doc_type.objects.using(db_alias).bulk_create([new_doc_type])
         else:
             print('skipping existing document type {}'.format(new_doc_type.the_type))
+
+    permissions = [
+        permission(code='DOCUMENTS_CREATE_DRAFT', name='Submit draft documents',
+                   description='Submit secure documents with draft status'),
+        permission(code='DOCUMENTS_SUBMIT', name='Submit documents',
+                   description='Submit secure documents'),
+        permission(code='DOCUMENTS_GOVERNMENT_REVIEW', name='Review documents',
+                   description='Government can accept documents for review'),
+        permission(code='DOCUMENTS_VIEW', name='View documents',
+                   description='View secure documents'),
+    ]
+
+    for new_permission in permissions:
+        if not permission.objects.using(db_alias).filter(code=new_permission.code).exists():
+            permission.objects.using(db_alias).bulk_create([new_permission])
+        else:
+            print('skipping existing permission {}'.format(new_permission.code))
+
+    roles = [
+        role(name='FSDoc', description='A Fuel Supplier user with authority to view documents and submit drafts',
+             is_government_role=True, display_order=10),
+        role(name='FSDocSubmit', description='A Fuel Supplier user with authority to submit documents',
+             is_government_role=False, display_order=11)
+    ]
+
+    for new_role in roles:
+        if not role.objects.using(db_alias).filter(name=new_role.name).exists():
+            role.objects.using(db_alias).bulk_create([new_role])
+        else:
+            print('skipping existing role {}'.format(new_role.name))
+
+    role_permissions = [
+        role_permission(role=role.objects.using(db_alias).get(name='FSDoc'),
+                        permission=permission.objects.using(db_alias).get(code='DOCUMENTS_VIEW')),
+        role_permission(role=role.objects.using(db_alias).get(name='FSDoc'),
+                        permission=permission.objects.using(db_alias).get(code='DOCUMENTS_CREATE_DRAFT')),
+        role_permission(role=role.objects.using(db_alias).get(name='FSDocSubmit'),
+                        permission=permission.objects.using(db_alias).get(code='DOCUMENTS_VIEW')),
+        role_permission(role=role.objects.using(db_alias).get(name='FSDocSubmit'),
+                        permission=permission.objects.using(db_alias).get(code='DOCUMENTS_CREATE_DRAFT')),
+        role_permission(role=role.objects.using(db_alias).get(name='FSDocSubmit'),
+                        permission=permission.objects.using(db_alias).get(code='DOCUMENTS_SUBMIT')),
+        role_permission(role=role.objects.using(db_alias).get(name='GovUser'),
+                        permission=permission.objects.using(db_alias).get(code='DOCUMENTS_VIEW')),
+        role_permission(role=role.objects.using(db_alias).get(name='GovUser'),
+                        permission=permission.objects.using(db_alias).get(code='DOCUMENTS_GOVERNMENT_REVIEW'))
+    ]
+
+    for new_role_permission in role_permissions:
+        if not role_permission.objects.using(db_alias).filter(
+                role=role.objects.using(db_alias).get(name=new_role_permission.role.name),
+                permission=permission.objects.using(db_alias).get(code=new_role_permission.permission.code)).exists():
+            role_permission.objects.using(db_alias).bulk_create([new_role_permission])
+        else:
+            print('skipping existing role<->permission {}:{}'.format(new_role_permission.role.name,
+                                                                     new_role_permission.permission.code))
 
 
 class Migration(migrations.Migration):

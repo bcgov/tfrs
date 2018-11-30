@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/1.8/ref/settings/
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
+import sys
 
 from pika import ConnectionParameters, PlainCredentials
 from . import amqp
@@ -38,6 +39,9 @@ DEBUG = os.getenv('DJANGO_DEBUG', 'True') == 'True'
 
 # SECURITY WARNING: never set this on in production
 BYPASS_AUTH = os.getenv('BYPASS_HEADER_AUTHENTICATION', False)
+
+TESTING = 'test' in sys.argv
+
 
 # ALLOWED_HOSTS = ['*']
 
@@ -150,6 +154,10 @@ USE_I18N = True
 USE_L10N = True
 
 USE_TZ = True
+
+DOCUMENTS_API = {
+    'ENABLED': bool(os.getenv('DOCUMENTS_API_ENABLED', 'False').lower() in ['true', 1]),
+}
 
 
 # Static files (CSS, JavaScript, Images)

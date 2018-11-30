@@ -1,14 +1,38 @@
 [
   {
+    "fields": {
+      "role": [
+        "FSDoc"
+      ],
+      "user": [
+        "fs_user_1"
+      ]
+    },
+    "model": "api.userrole",
+    "pk": null
+  },
+  {
+    "fields": {
+      "role": [
+        "FSDocSubmit"
+      ],
+      "user": [
+        "fs_user_2"
+      ]
+    },
+    "model": "api.userrole",
+    "pk": null
+  },
+  {
       "fields": {
           "title": "Test Document 1",
           "url": "http://test.com/td1",
           "type": ["Evidence"],
           "status": ["Draft"],
-          "creating_organization": "3"
+          "creating_organization": "500"
       },
       "model": "api.document",
-      "pk": null
+      "pk": "1"
   },
   {
     "fields": {
@@ -16,10 +40,10 @@
       "url": "http://test.com/td2",
       "type": ["Application"],
       "status": ["Draft"],
-      "creating_organization": "3"
+      "creating_organization": "500"
     },
     "model": "api.document",
-    "pk": null
+    "pk": "2"
   }
   ,
   {
@@ -28,9 +52,9 @@
       "url": "http://test.com/td3",
       "type": ["Evidence"],
       "status": ["Submitted"],
-      "creating_organization": "2"
+      "creating_organization": "500"
     },
     "model": "api.document",
-    "pk": null
+    "pk": "3"
   }
 ]

@@ -27,9 +27,23 @@ class DocumentPermissions(permissions.BasePermission):
     """Used by Viewset to check permissions for API requests"""
 
     def has_permission(self, request, view):
+
+        print('request obj {}'.format(hasattr(request, 'reference_data')))
+        # For list
+        if not request.user.has_perm('DOCUMENTS_VIEW'):
+            return False
+
         return True
 
     def has_object_permission(self, request, view, obj):
         """Check permissions When an object does exist (PUT, GET)"""
 
-        return obj.user.id == request.user.id
+        if not request.user.has_perm('DOCUMENTS_VIEW'):
+            return False
+
+        is_government = request.user.organization.id == 1
+
+        if is_government and obj.status.status is not 'Draft':
+            return True
+
+        return obj.creating_organization.id == request.user.organization.id
