@@ -1,5 +1,6 @@
 import json
 import uuid
+from time import sleep
 
 import jwt
 from django.conf import settings
