@@ -3,7 +3,8 @@ import userManager from '../store/oidc-usermanager';
 
 class SigninPage extends React.Component {
   componentWillMount () {
-    userManager.signinRedirect();
+    console.log('redirect fired');
+   // userManager.signinRedirect();
   }
 
   render () {

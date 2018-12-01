@@ -11,6 +11,7 @@ import React from 'react';
 import SessionTimer from "./components/SessionTimer";
 
 class KeycloakAwareApp extends React.Component {
+
   render() {
     let content;
 
@@ -66,9 +67,12 @@ class KeycloakAwareApp extends React.Component {
     }
 
     // we're not logged in and not in the process of logging in. trigger one.
-
+    //
     if ((!this.props.keycloak.user || this.props.keycloak.user.expired)
       && !this.props.keycloak.isFetching) {
+
+      console.log('to signin');
+      console.log(this.props);
 
       return (
         <div className="App">
