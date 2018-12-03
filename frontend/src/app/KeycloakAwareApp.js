@@ -71,9 +71,6 @@ class KeycloakAwareApp extends React.Component {
     if ((!this.props.keycloak.user || this.props.keycloak.user.expired)
       && !this.props.keycloak.isFetching) {
 
-      console.log('to signin');
-      console.log(this.props);
-
       return (
         <div className="App">
           <SigninPage/>

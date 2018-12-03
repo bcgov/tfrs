@@ -13,13 +13,13 @@ class AuthCallback extends React.Component {
   }
 
   success(user) {
-    console.log('success registered, pushing target');
     const target = this.props.targetPath;
     history.push(target);
 
   }
 
-  error(e)  {}
+  error(e)  {
+  }
 
   render() {
     return (

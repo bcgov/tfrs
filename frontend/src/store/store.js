@@ -89,7 +89,6 @@ if (CONFIG.KEYCLOAK.ENABLED) {
       userManager.signinRedirect();
     }
   }).catch((reason) => {
-    console.log('cannot load user');
   });
 }
 
