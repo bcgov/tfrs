@@ -7,7 +7,6 @@ const settings = {
   redirect_uri: CONFIG.KEYCLOAK.CALLBACK_URL,
   automaticSilentRenew: true,
   silent_redirect_uri: `${window.location.protocol}//${window.location.hostname}${window.location.port ? `:${window.location.port}` : ''}/token_renew.html`,
-  post_logout_redirect_uri: `${window.location.protocol}//${window.location.hostname}${window.location.port ? `:${window.location.port}` : ''}/`,
   response_type: 'token id_token'
 };
 
