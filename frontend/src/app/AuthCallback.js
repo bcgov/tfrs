@@ -3,6 +3,7 @@ import { connect } from "react-redux";
 import { CallbackComponent } from "redux-oidc";
 import history from '../app/History';
 import userManager from '../store/oidc-usermanager';
+import {bindActionCreators} from "redux";
 
 class AuthCallback extends React.Component {
 
@@ -14,9 +15,11 @@ class AuthCallback extends React.Component {
   success(user) {
     const target = this.props.targetPath;
     history.push(target);
+
   }
 
-  error(e)  {}
+  error(e)  {
+  }
 
   render() {
     return (
