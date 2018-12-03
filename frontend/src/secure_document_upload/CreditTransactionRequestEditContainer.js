@@ -10,7 +10,7 @@ import { bindActionCreators } from 'redux';
 import Modal from '../app/components/Modal';
 import CreditTransactionRequestForm from './components/CreditTransactionRequestForm';
 
-import { getDocumentUpload, updateDocumentUpload } from '../actions/documentUploads';
+import { deleteDocumentUpload, getDocumentUpload, updateDocumentUpload } from '../actions/documentUploads';
 import history from '../app/History';
 import SECURE_DOCUMENT_UPLOAD from '../constants/routes/SecureDocumentUpload';
 import toastr from '../utils/toastr';
@@ -51,6 +51,13 @@ class CreditTransactionRequestEditContainer extends Component {
     this.props.getDocumentUpload(id);
   }
 
+  _deleteCreditTransferRequest (id) {
+    this.props.deleteDocumentUpload(id).then(() => {
+      history.push(SECURE_DOCUMENT_UPLOAD.LIST);
+      toastr.documentUpload('Draft deleted.');
+    });
+  }
+
   _handleInputChange (event) {
     const { value, name } = event.target;
     const fieldState = { ...this.state.fields };
@@ -89,9 +96,12 @@ class CreditTransactionRequestEditContainer extends Component {
   }
 
   render () {
+    const { item } = this.props;
+
     return ([
       <CreditTransactionRequestForm
         addToFields={this._addToFields}
+        edit
         errors={this.props.errors}
         fields={this.state.fields}
         handleInputChange={this._handleInputChange}
@@ -109,6 +119,13 @@ class CreditTransactionRequestEditContainer extends Component {
         key="confirmSubmit"
       >
         Are you sure you want to update this request?
+      </Modal>,
+      <Modal
+        handleSubmit={() => this._deleteCreditTransferRequest(item.id)}
+        id="confirmDelete"
+        key="confirmDelete"
+      >
+        Are you sure you want to delete this draft?
       </Modal>
     ]);
   }
@@ -120,6 +137,7 @@ CreditTransactionRequestEditContainer.defaultProps = {
 };
 
 CreditTransactionRequestEditContainer.propTypes = {
+  deleteDocumentUpload: PropTypes.func.isRequired,
   errors: PropTypes.shape({}),
   getDocumentUpload: PropTypes.func.isRequired,
   item: PropTypes.shape({
@@ -150,6 +168,7 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
+  deleteDocumentUpload: bindActionCreators(deleteDocumentUpload, dispatch),
   getDocumentUpload: bindActionCreators(getDocumentUpload, dispatch),
   updateDocumentUpload: bindActionCreators(updateDocumentUpload, dispatch)
 });

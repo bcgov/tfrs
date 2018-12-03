@@ -46,14 +46,16 @@ class CreditTransactionRequestForm extends Component {
               >
                 <FontAwesomeIcon icon="arrow-circle-left" /> {Lang.BTN_APP_CANCEL}
               </button>
-              <button
-                className="btn btn-danger"
-                data-target="#confirmDelete"
-                data-toggle="modal"
-                type="button"
-              >
-                <FontAwesomeIcon icon="minus-circle" /> {Lang.BTN_DELETE_DRAFT}
-              </button>
+              {this.props.edit &&
+                <button
+                  className="btn btn-danger"
+                  data-target="#confirmDelete"
+                  data-toggle="modal"
+                  type="button"
+                >
+                  <FontAwesomeIcon icon="minus-circle" /> {Lang.BTN_DELETE_DRAFT}
+                </button>
+              }
               <button
                 className="btn btn-default"
                 type="submit"
@@ -77,12 +79,14 @@ class CreditTransactionRequestForm extends Component {
 }
 
 CreditTransactionRequestForm.defaultProps = {
+  edit: false,
   id: 0,
   title: 'New Credit Transaction Request'
 };
 
 CreditTransactionRequestForm.propTypes = {
   compliancePeriods: PropTypes.arrayOf(PropTypes.shape()).isRequired,
+  edit: PropTypes.bool,
   errors: PropTypes.shape({}).isRequired,
   fields: PropTypes.shape({
     comment: PropTypes.string

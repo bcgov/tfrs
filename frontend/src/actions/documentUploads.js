@@ -60,6 +60,35 @@ const getDocumentUploadRequestError = error => ({
   errorMessage: error
 });
 
+const deleteDocumentUpload = id => (dispatch) => {
+  dispatch(deleteDocumentUploadRequest());
+
+  return axios
+    .delete(`${Routes.BASE_URL}${Routes.SECURE_DOCUMENT_UPLOAD.API}/${id}`)
+    .then((response) => {
+      dispatch(deleteDocumentUploadRequestSuccess(response.data));
+    }).catch((error) => {
+      dispatch(deleteDocumentUploadRequestError(error.response.data));
+    });
+};
+
+const deleteDocumentUploadRequest = () => ({
+  name: ReducerTypes.DELETE_DOCUMENT_UPLOAD_REQUEST,
+  type: ActionTypes.REQUEST
+});
+
+const deleteDocumentUploadRequestSuccess = data => ({
+  name: ReducerTypes.SUCCESS_DELETE_DOCUMENT_UPLOAD,
+  type: ActionTypes.SUCCESS,
+  data
+});
+
+const deleteDocumentUploadRequestError = error => ({
+  name: ReducerTypes.ERROR_DELETE_DOCUMENT_UPLOAD,
+  type: ActionTypes.ERROR,
+  errorMessage: error
+});
+
 const addDocumentUpload = data => (dispatch) => {
   dispatch(addDocumentUploadRequest());
 
@@ -122,6 +151,7 @@ const updateDocumentUploadSuccess = response => ({
 
 export {
   addDocumentUpload,
+  deleteDocumentUpload,
   getDocumentUpload,
   getDocumentUploads,
   updateDocumentUpload
