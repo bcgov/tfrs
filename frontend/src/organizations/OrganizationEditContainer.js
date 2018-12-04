@@ -22,7 +22,7 @@ class OrganizationEditContainer extends Component {
 
     this.state = {
       fields: {
-        name: 'New Fuel Supplier',
+        name: '',
         addressLine_1: '',
         addressLine_2: '',
         addressLine_3: '',

@@ -22,6 +22,7 @@ const OrganizationEditForm = props => (
                 className="form-control"
                 id="organization-name"
                 name="name"
+                placeholder="Fuel Supplier Name"
                 onChange={props.handleInputChange}
                 value={props.fields.name}
               />

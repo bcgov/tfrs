@@ -1,4 +1,4 @@
-const API = '/secure_document_upload';
+const API = '/documents';
 const BASE_PATH = '/secure_document_upload';
 
 const SECURE_DOCUMENT_UPLOAD = {
