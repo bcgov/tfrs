@@ -14,8 +14,9 @@ import history from '../../app/History';
 import { getFuelSuppliers } from '../../actions/organizationActions';
 import { getRoles } from '../../actions/roleActions';
 import UserForm from './components/UserForm';
-import USERS from '../../constants/routes/Users';
+import PERMISSIONS_USERS from '../../constants/permissions/Users';
 import { USERS as ADMIN_USERS } from '../../constants/routes/Admin';
+import USERS from '../../constants/routes/Users';
 import toastr from '../../utils/toastr';
 
 class UserEditContainer extends Component {
@@ -193,7 +194,7 @@ class UserEditContainer extends Component {
     return ([
       <UserForm
         addToFields={this._addToFields}
-        editPrimaryFields={false}
+        editPrimaryFields={this.props.loggedInUser.hasPermission(PERMISSIONS_USERS.USER_MANAGEMENT)}
         fields={this.state.fields}
         fuelSuppliers={this.props.fuelSuppliers}
         handleInputChange={this._handleInputChange}

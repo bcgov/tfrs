@@ -52,10 +52,12 @@ class HistoricalDataEntryPage extends BaseAppPage {
   }
 
   void setCreditsFrom(String respondentFrom) {
+    respondentFrom = respondentFrom.replace("\"", "")
     waitFor { creditsFromDropdown.$('option', text:respondentFrom).click() }
   }
 
   void setCreditsTo(String respondentTo) {
+    respondentTo = respondentTo.replace("\"", "")
     waitFor { creditsToDropdown.$('option', text:respondentTo).click() }
   }
 
