@@ -3,7 +3,6 @@ import axios from 'axios';
 import ActionTypes from '../constants/actionTypes/Notifications';
 import ReducerTypes from '../constants/reducerTypes/Notifications';
 import * as Routes from '../constants/routes';
-import userManager from "../store/oidc-usermanager";
 
 /*
  * Get Notifications
@@ -11,15 +10,12 @@ import userManager from "../store/oidc-usermanager";
 const getNotifications = () => (dispatch) => {
   dispatch(getNotificationsRequest());
 
-
-    axios.get(Routes.BASE_URL + Routes.NOTIFICATIONS.LIST)
-      .then((response) => {
-        dispatch(getNotificationsSuccess(response.data));
-      }).catch((error) => {
+  axios.get(Routes.BASE_URL + Routes.NOTIFICATIONS.LIST)
+    .then((response) => {
+      dispatch(getNotificationsSuccess(response.data));
+    }).catch((error) => {
       dispatch(getNotificationsError(error.response));
     });
-
-
 };
 
 const getNotificationsError = error => ({
