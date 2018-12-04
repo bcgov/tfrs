@@ -30,6 +30,7 @@ class NewCreditTransactionPage extends BaseAppPage {
   }
 
   void setRespondent(String respondent) {
+    respondent = respondent.replace("\"", "")
     waitFor { respondentField.$('option', text:respondent).click() }
   }
 

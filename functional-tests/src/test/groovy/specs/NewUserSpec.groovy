@@ -67,7 +67,6 @@ class NewUserSpec extends LoggedInSpec {
     and: 'I update all fields of the existing user'
       setFirstName("${senderFirstName}Edit")
       setLastName("${senderLastName}Edit")
-      setBCeIDEmail(makeUnique('newSenderEdit@fakeeemail.com'))
       setWorkPhone('6045551235')
       setMobilePhone('6045551235')
       setEmail('newSenderEdit@fakeeemail.com')
@@ -136,7 +135,6 @@ class NewUserSpec extends LoggedInSpec {
     and: 'I update all fields of the existing user'
       setFirstName("${receiverFirstName}Edit")
       setLastName("${receiverLastName}Edit")
-      setBCeIDEmail(makeUnique('newReceiverEdit@fakeeemail.com'))
       setWorkPhone('6045551236')
       setMobilePhone('6045551237')
       setEmail('newReceiverEdit@fakeeemail.com')
@@ -198,7 +196,6 @@ class NewUserSpec extends LoggedInSpec {
     and: 'I update all fields of the existing user'
       setFirstName("${adminFirstName}Edit")
       setLastName("${adminLastName}Edit")
-      setBCeIDEmail(makeUnique('newAdminEdit@fakeeemail.com'))
       setWorkPhone('6045551238')
       setMobilePhone('6045551239')
       setEmail('newAdminEdit@fakeeemail.com')

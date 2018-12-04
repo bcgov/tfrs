@@ -58,6 +58,7 @@ class EditUserPage extends BaseAppPage {
   // Note: This function is not always callable as the organization field, depending on the workflow, may be pre-set
   // and therefore can not be set or changed.
   void setOrganization(String organization) {
+    organization = organization.replace("\"", "")
     // Enter the name of the organization in the search
     organizationField.$('input').value(organization)
     interact {
