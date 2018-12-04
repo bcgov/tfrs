@@ -2,9 +2,8 @@ import axios from 'axios';
 import userManager from './oidc-usermanager';
 import CONFIG from '../config';
 
-function configureAxios() {
+function configureAxios () {
   if (CONFIG.KEYCLOAK) {
-
     axios.interceptors.request.use((config) => {
       const loadconfig = async () => {
         const user = await userManager.getUser();
