@@ -4,7 +4,9 @@ import React, { Component } from 'react';
 import { DropdownButton, MenuItem } from 'react-bootstrap';
 import { connect } from 'react-redux';
 import { NavLink } from 'react-router-dom';
+import { bindActionCreators } from 'redux';
 
+import { getNotifications } from '../../actions/notificationActions';
 import history from '../../app/History';
 import * as Routes from '../../constants/routes';
 import { HISTORICAL_DATA_ENTRY } from '../../constants/routes/Admin';
@@ -22,6 +24,7 @@ class Navbar extends Component {
   }
 
   componentDidMount () {
+    this.props.getNotifications(); // ensure that the notifications are up-to-date
     Navbar.updateContainerPadding();
     window.addEventListener('resize', () => Navbar.updateContainerPadding());
   }
@@ -379,6 +382,7 @@ Navbar.defaultProps = {
 
 Navbar.propTypes = {
   dispatch: PropTypes.func,
+  getNotifications: PropTypes.func.isRequired,
   isAuthenticated: PropTypes.bool.isRequired,
   loggedInUser: PropTypes.shape({
     displayName: PropTypes.string,
@@ -394,10 +398,14 @@ Navbar.propTypes = {
   unreadNotificationsCount: PropTypes.number
 };
 
+const mapDispatchToProps = dispatch => ({
+  getNotifications: bindActionCreators(getNotifications, dispatch)
+});
+
 // export default Navbar;
 export default connect(state => ({
   loggedInUser: state.rootReducer.userRequest.loggedInUser,
   isAuthenticated: state.rootReducer.userRequest.isAuthenticated
-}), null, null, {
+}), mapDispatchToProps, null, {
   pure: false
 })(Navbar);
