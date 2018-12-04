@@ -15,6 +15,7 @@ class OrganizationsPage extends BaseAppPage {
   }
 
   void selectCompanyByText(String companyName) {
+    companyName = companyName.replace("\"", "")
     setCompanyNameFilter(companyName)
     companiesTable.$('.rt-tbody').$('a', text:companyName).click()
   }

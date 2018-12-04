@@ -35,8 +35,8 @@ const UserFormDetails = props => (
                 className="form-control"
                 id="last-name"
                 name="lastName"
-                onChange={props.handleInputChange}
                 required="required"
+                onChange={props.handleInputChange}
                 type="text"
                 value={props.fields.lastName}
               />
@@ -48,7 +48,7 @@ const UserFormDetails = props => (
       <div className="row">
         <div className="col-sm-6">
           <div className="form-group">
-            {props.editPrimaryFields &&
+            {props.isAdding &&
               <label htmlFor="bceid">BCeID Email Address:
                 <input
                   className="form-control"
@@ -61,7 +61,7 @@ const UserFormDetails = props => (
                 />
               </label>
             }
-            {!props.editPrimaryFields &&
+            {!props.isAdding &&
               <label htmlFor="bceid">BCeID:
                 <span className="form-control read-only">
                   {props.fields.bceid}
@@ -122,7 +122,7 @@ const UserFormDetails = props => (
 
       <div className="row">
         {props.fuelSuppliers &&
-        document.location.pathname.indexOf('/admin/users/add') < 0 &&
+        document.location.pathname.indexOf('/admin/users/') < 0 &&
         <div className="col-sm-6">
           <div className="form-group">
             <label htmlFor="organization" id="organization">Fuel Supplier:
@@ -149,7 +149,9 @@ const UserFormDetails = props => (
                 />
               }
               {props.fields.organization &&
-              document.location.pathname.indexOf('/users') >= 0 &&
+              props.loggedInUser.isGovernmentUser &&
+              (document.location.pathname.indexOf('/users/edit') === 0 ||
+              document.location.pathname.indexOf('/organizations/view/') === 0) &&
                 <div
                   className="form-control read-only"
                 >
@@ -270,7 +272,9 @@ UserFormDetails.propTypes = {
   }).isRequired,
   fuelSuppliers: PropTypes.arrayOf(PropTypes.shape()),
   handleInputChange: PropTypes.func.isRequired,
+  isAdding: PropTypes.bool.isRequired,
   loggedInUser: PropTypes.shape({
+    hasPermission: PropTypes.func,
     isGovernmentUser: PropTypes.bool,
     organization: PropTypes.shape({
       id: PropTypes.number,
