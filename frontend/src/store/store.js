@@ -46,7 +46,7 @@ const allMiddleware = [
   middleware
 ];
 
-if (process.env.NODE_ENV !== 'production') {
+if (CONFIG.DEBUG.ENABLED) {
   allMiddleware.push(createLogger());
 }
 
@@ -83,7 +83,13 @@ store.subscribe(() => {
 sagaMiddleware.run(sessionTimeoutSaga);
 
 if (CONFIG.KEYCLOAK.ENABLED) {
-  loadUser(store, userManager);
+  loadUser(store, userManager).then(user => {
+    if (user == null &&
+      store.getState().routing.location.pathname !== "/authCallback") {
+      userManager.signinRedirect();
+    }
+  }).catch((reason) => {
+  });
 }
 
 export default store;
