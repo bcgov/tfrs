@@ -4,12 +4,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import { getCreditTransferType } from '../../actions/creditTransfersActions';
-import Errors from '../../app/components/Errors';
 import Loading from '../../app/components/Loading';
-import * as Lang from '../../constants/langEnUs';
-import { CREDIT_TRANSFER_STATUS, CREDIT_TRANSFER_TYPES } from '../../constants/values';
-import PERMISSIONS_CREDIT_TRANSACTIONS from '../../constants/permissions/CreditTransactions';
 
 const CreditTransactionRequestDetails = props => (
   <div className="credit-transaction-details">

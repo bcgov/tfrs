@@ -94,7 +94,7 @@ class CreditTransactionRequestAddContainer extends Component {
         handleSubmit={this._handleSubmit}
         key="creditTransactionForm"
         loggedInUser={this.props.loggedInUser}
-        title="New Credit Transaction Request"
+        title="New P3A Application Submission"
         validationErrors={this.state.validationErrors}
       />,
       <Modal

@@ -56,6 +56,13 @@ class CreditTransactionRequestFormDetails extends Component {
           <div className="col-md-6">
             <div className="row main-form">
               <div className="form-group col-md-12">
+                <label htmlFor="">Attachment Category:
+                  <input className="form-control" />
+                </label>
+              </div>
+            </div>
+            <div className="row main-form">
+              <div className="form-group col-md-12">
                 <label htmlFor="compliance-period">Compliance Period:
                   <select
                     className="form-control"
@@ -77,12 +84,13 @@ class CreditTransactionRequestFormDetails extends Component {
 
               <div className="row">
                 <div className="form-group col-md-12">
-                  <label htmlFor="milestone-id">Milestone ID:
+                  <label htmlFor="milestone-id">Milestone:
                     <input
                       className="form-control"
                       id="milestone-id"
                       name="milestoneId"
                       onChange={this.props.handleInputChange}
+                      placeholder="Record section of agreement containing milestone"
                       required="required"
                       type="text"
                       value={this.props.fields.milestoneId}
@@ -93,7 +101,7 @@ class CreditTransactionRequestFormDetails extends Component {
 
               <div className="row">
                 <div className="form-group col-md-12">
-                  <label htmlFor="agreement-name">Agreement Name:
+                  <label htmlFor="agreement-name">Part 3 Agreement Name:
                     <input
                       className="form-control"
                       id="agreement-name"
@@ -115,6 +123,7 @@ class CreditTransactionRequestFormDetails extends Component {
                       className="form-control"
                       rows="5"
                       name="comment"
+                      placeholder="Provide an explanation of your Part 3 award milestone completion"
                     />
                   </label>
                 </div>
@@ -123,6 +132,19 @@ class CreditTransactionRequestFormDetails extends Component {
           </div>
 
           <div className="col-md-6">
+            <div className="row main-form">
+              <div className="form-group col-md-12">
+                <label htmlFor="">Attachment Type:
+                  <div className="btn-group" role="group" id="transaction-type">
+                    <button type="button" className="btn btn-default" name="transferType" onClick={this.props.handleInputChange}>P3A Application</button>
+                    <button type="button" className="btn btn-default" name="transferType" onClick={this.props.handleInputChange}>P3A Milestone Evidence</button>
+                    <button type="button" className="btn btn-default" name="transferType" onClick={this.props.handleInputChange}>Fuel Supply Records</button>
+                    <button type="button" className="btn btn-default" name="transferType" onClick={this.props.handleInputChange}>Other</button>
+                  </div>
+                </label>
+              </div>
+            </div>
+
             <div className="row main-form">
               <div className="form-group col-md-12">
                 <label htmlFor="comment">Attachments:

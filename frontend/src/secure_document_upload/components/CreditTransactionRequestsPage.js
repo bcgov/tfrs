@@ -25,7 +25,7 @@ const CreditTransactionRequestsPage = (props) => {
             onClick={() => history.push(SECURE_DOCUMENT_UPLOAD.ADD)}
             type="button"
           >
-            <FontAwesomeIcon icon="plus-circle" /> New Request
+            <FontAwesomeIcon icon="plus-circle" /> New Submission
           </button>
         </div>
       </div>
