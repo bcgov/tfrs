@@ -172,6 +172,18 @@ class UserEditContainer extends Component {
       fieldState.roles[index].value = !fieldState.roles[index].value;
     }
 
+    // search for duplicates and get rid of them. they should be very unlikely, but just in case
+    const indexesFound = [];
+    fieldState.roles.forEach((role) => {
+      if (role.id === key) {
+        indexesFound.push(role);
+      }
+    });
+
+    if (indexesFound.length > 1) {
+      fieldState.roles.splice(index, 1);
+    }
+
     this.setState({
       fields: fieldState
     });

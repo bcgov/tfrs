@@ -48,10 +48,6 @@ class User(AbstractUser, Auditable):
         verbose_name='username',
         db_comment='Login Username'
     )
-    phone_regex = RegexValidator(
-        regex=r'^\+?1?\d{9,15}$',
-        message="Phone number must be entered in the "
-                "format: '+999999999'. Up to 15 digits allowed.")
 
     password = models.CharField(
         max_length=128, blank=True, null=True, db_comment='Password hash')
@@ -61,10 +57,10 @@ class User(AbstractUser, Auditable):
     title = models.CharField(
         max_length=100, blank=True, null=True, db_comment='Professional Title')
     phone = models.CharField(
-        validators=[phone_regex], max_length=17, blank=True, null=True,
+        max_length=17, blank=True, null=True,
         db_comment='Primary phone number')
     cell_phone = models.CharField(
-        validators=[phone_regex], max_length=17, blank=True, null=True,
+        max_length=17, blank=True, null=True,
         db_comment='Mobile phone number')
     organization = models.ForeignKey(
         'Organization', related_name='users', blank=True, null=True,
