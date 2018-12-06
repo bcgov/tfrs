@@ -84,6 +84,7 @@ class SettingsContainer extends Component {
     });
 
     this.props.updateSubscriptions(data).then(() => {
+      this.props.getSubscriptions(); // update the subscriptions
       toastr.subscriptionsSuccess();
     });
 
