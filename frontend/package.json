@@ -1,6 +1,6 @@
 {
   "name": "tfrs",
-  "version": "1.2.0",
+  "version": "1.2.2",
   "private": true,
   "dependencies": {
     "@fortawesome/fontawesome": "^1.1.8",
@@ -42,7 +42,7 @@
     "redux": "^3.6.0",
     "redux-localstorage": "^0.4.1",
     "redux-logger": "^3.0.1",
-    "redux-oidc": "^3.0.0",
+    "redux-oidc": "^3.1.0",
     "redux-saga": "^0.16.2",
     "redux-socket.io": "^1.4.0",
     "redux-thunk": "^2.2.0",

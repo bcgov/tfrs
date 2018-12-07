@@ -18,7 +18,7 @@ import { persistTargetPathReducer } from '../reducers/persistTargetPathReducer';
 import userManager from './oidc-usermanager';
 import CONFIG from '../config';
 import { getLoggedInUser } from '../actions/userActions';
-import sessionTimeoutSaga from "./sessionTimeout";
+import sessionTimeoutSaga from './sessionTimeout';
 
 const middleware = routerMiddleware(history);
 const sagaMiddleware = createSagaMiddleware();
@@ -46,7 +46,7 @@ const allMiddleware = [
   middleware
 ];
 
-if (process.env.NODE_ENV !== 'production') {
+if (CONFIG.DEBUG.ENABLED) {
   allMiddleware.push(createLogger());
 }
 
@@ -83,7 +83,12 @@ store.subscribe(() => {
 sagaMiddleware.run(sessionTimeoutSaga);
 
 if (CONFIG.KEYCLOAK.ENABLED) {
-  loadUser(store, userManager);
+  loadUser(store, userManager).then((user) => {
+    if (user == null && store.getState().routing.location.pathname !== '/authCallback') {
+      userManager.signinRedirect();
+    }
+  }).catch((reason) => {
+  });
 }
 
 export default store;

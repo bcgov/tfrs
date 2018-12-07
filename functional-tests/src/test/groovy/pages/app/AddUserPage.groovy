@@ -51,6 +51,7 @@ class AddUserPage extends BaseAppPage {
   // and therefore can not be set or changed.
   void setOrganization(String organization) {
     // Enter the name of the organization in the search
+    organization = organization.replace("\"", "")
     organizationField.$('input').value(organization)
     interact {
       waitFor {

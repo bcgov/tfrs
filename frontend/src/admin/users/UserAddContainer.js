@@ -174,6 +174,7 @@ class UserAddContainer extends Component {
         fields={this.state.fields}
         fuelSuppliers={this.props.fuelSuppliers}
         handleInputChange={this._handleInputChange}
+        isAdding
         key="userForm"
         loggedInUser={this.props.loggedInUser}
         roles={this.props.roles}
