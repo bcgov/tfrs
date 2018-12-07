@@ -22,6 +22,8 @@ class CreditTransactionRequestAddContainer extends Component {
     this.state = {
       fields: {
         agreementName: '',
+        attachmentCategory: '',
+        attachmentType: props.match.params.type ? props.match.params.type : 'other',
         comment: '',
         compliancePeriod: { id: 0, description: '' },
         files: [],
@@ -126,6 +128,11 @@ CreditTransactionRequestAddContainer.propTypes = {
       name: PropTypes.string,
       id: PropTypes.number
     })
+  }).isRequired,
+  match: PropTypes.shape({
+    params: PropTypes.shape({
+      id: PropTypes.string.isRequired
+    }).isRequired
   }).isRequired,
   validationErrors: PropTypes.shape()
 };

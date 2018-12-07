@@ -134,12 +134,12 @@ class CreditTransactionRequestFormDetails extends Component {
           <div className="col-md-6">
             <div className="row main-form">
               <div className="form-group col-md-12">
-                <label htmlFor="">Attachment Type:
-                  <div className="btn-group" role="group" id="transaction-type">
-                    <button type="button" className="btn btn-default" name="transferType" onClick={this.props.handleInputChange}>P3A Application</button>
-                    <button type="button" className="btn btn-default" name="transferType" onClick={this.props.handleInputChange}>P3A Milestone Evidence</button>
-                    <button type="button" className="btn btn-default" name="transferType" onClick={this.props.handleInputChange}>Fuel Supply Records</button>
-                    <button type="button" className="btn btn-default" name="transferType" onClick={this.props.handleInputChange}>Other</button>
+                <label htmlFor="attachment-type">Attachment Type:
+                  <div className="btn-group" role="group" id="attachment-type">
+                    <button type="button" className={`btn btn-default ${(this.props.fields.attachmentType === 'application') ? 'active' : ''}`} name="attachmentType" value="application" onClick={this.props.handleInputChange}>P3A Application</button>
+                    <button type="button" className={`btn btn-default ${(this.props.fields.attachmentType === 'evidence') ? 'active' : ''}`} name="attachmentType" value="evidence" onClick={this.props.handleInputChange}>P3A Milestone Evidence</button>
+                    <button type="button" className={`btn btn-default ${(this.props.fields.attachmentType === 'records') ? 'active' : ''}`} name="attachmentType" value="records" onClick={this.props.handleInputChange}>Fuel Supply Records</button>
+                    <button type="button" className={`btn btn-default ${(this.props.fields.attachmentType === 'other') ? 'active' : ''}`} name="attachmentType" value="other" onClick={this.props.handleInputChange}>Other</button>
                   </div>
                 </label>
               </div>
@@ -203,6 +203,7 @@ CreditTransactionRequestFormDetails.propTypes = {
   compliancePeriods: PropTypes.arrayOf(PropTypes.shape()).isRequired,
   fields: PropTypes.shape({
     agreementName: PropTypes.string,
+    attachmentType: PropTypes.string,
     compliancePeriod: PropTypes.shape({
       description: PropTypes.string,
       id: PropTypes.number

@@ -217,7 +217,6 @@ const Router = props => (
             component={withRouter(CreditTransactionRequestsContainer)}
           />,
           <Route
-            exact
             key="secure_document_upload_add"
             path={SECURE_DOCUMENT_UPLOAD.ADD}
             component={withRouter(CreditTransactionRequestAddContainer)}
