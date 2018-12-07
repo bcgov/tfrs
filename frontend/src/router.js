@@ -111,11 +111,11 @@ const Router = props => (
         <Route
           exact
           path={ORGANIZATIONS.ADD}
-          render={ (props) => <OrganizationEditContainer {...props} mode={'add'}/> }
+          render={properties => <OrganizationEditContainer {...properties} mode="add" />}
         />
         <Route
           path={ORGANIZATIONS.EDIT}
-          render={ (props) => <OrganizationEditContainer {...props} mode={'edit'}/> }
+          render={properties => <OrganizationEditContainer {...properties} mode="edit" />}
         />
         <Route
           exact
@@ -209,20 +209,25 @@ const Router = props => (
           path={Routes.NOTIFICATIONS.LIST}
           component={withRouter(NotificationsContainer)}
         />
-        <Route
-          exact
-          path={SECURE_DOCUMENT_UPLOAD.LIST}
-          component={withRouter(CreditTransactionRequestsContainer)}
-        />
-        <Route
-          exact
-          path={SECURE_DOCUMENT_UPLOAD.ADD}
-          component={withRouter(CreditTransactionRequestAddContainer)}
-        />
-        <Route
-          path={SECURE_DOCUMENT_UPLOAD.EDIT}
-          component={withRouter(CreditTransactionRequestEditContainer)}
-        />
+        {CONFIG.SECURE_DOCUMENT_UPLOAD.ENABLED && [
+          <Route
+            exact
+            key="secure_document_upload_list"
+            path={SECURE_DOCUMENT_UPLOAD.LIST}
+            component={withRouter(CreditTransactionRequestsContainer)}
+          />,
+          <Route
+            exact
+            key="secure_document_upload_add"
+            path={SECURE_DOCUMENT_UPLOAD.ADD}
+            component={withRouter(CreditTransactionRequestAddContainer)}
+          />,
+          <Route
+            key="secure_document_upload_edit"
+            path={SECURE_DOCUMENT_UPLOAD.EDIT}
+            component={withRouter(CreditTransactionRequestEditContainer)}
+          />
+        ]}
         <Route component={NotFound} />
       </Switch>
     </App>

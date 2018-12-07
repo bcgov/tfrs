@@ -107,6 +107,7 @@ class Navbar extends Component {
           >
             Credit Transactions
           </NavLink>
+          {CONFIG.SECURE_DOCUMENT_UPLOAD.ENABLED &&
           <NavLink
             activeClassName="active"
             id="navbar-secure-document-upload"
@@ -114,6 +115,7 @@ class Navbar extends Component {
           >
             Secure Document Upload
           </NavLink>
+          }
           {this.props.loggedInUser.isGovernmentUser &&
           <NavLink
             activeClassName="active"
@@ -217,6 +219,7 @@ class Navbar extends Component {
             Credit Transactions
             </NavLink>
           </li>
+          {CONFIG.SECURE_DOCUMENT_UPLOAD.ENABLED &&
           <li>
             <NavLink
               activeClassName="active"
@@ -226,6 +229,7 @@ class Navbar extends Component {
               Secure Document Upload
             </NavLink>
           </li>
+          }
           {this.props.loggedInUser.isGovernmentUser &&
           <li>
             <NavLink
@@ -366,7 +370,7 @@ class Navbar extends Component {
                           <FontAwesomeIcon icon="sign-out-alt" /> Log Out
                         </MenuItem>
                         }
-                        {CONFIG.KEYCLOAK.ENABLED ||
+                        {!CONFIG.KEYCLOAK.ENABLED &&
                         <MenuItem href={Routes.LOGOUT}>
                           <FontAwesomeIcon icon="sign-out-alt" /> Log Out
                         </MenuItem>
