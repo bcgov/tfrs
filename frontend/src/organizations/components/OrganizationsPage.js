@@ -24,6 +24,7 @@ const OrganizationsPage = (props) => {
           <FontAwesomeIcon icon="file-excel" /> Download as .xls
         </button>
         <button
+          id="create-organization"
           className="btn btn-info"
           type="button"
           onClick={() => history.push(ORGANIZATIONS.ADD) }
