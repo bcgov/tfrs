@@ -13,11 +13,11 @@ ext {
     drivers = ["firefox", "firefoxHeadless", "chrome", "chromeHeadless","ie","edge","safari"]
 
     ext {
-        groovyVersion = '2.5'
+        groovyVersion = '2.5.1' // Updating this past 2.5.1 causes spock reports to fail the test execution
         gebVersion = '2.2'
         seleniumVersion = '3.141.59'
         chromeDriverVersion = '2.44'
-        geckoDriverVersion = '0.21.0'
+        geckoDriverVersion = '0.22.0'
         ieDriverVersion = '3.14.0'
         edgeDriverVersion = '3.14.0'
         safariDriverVersion = '3.14.0'
