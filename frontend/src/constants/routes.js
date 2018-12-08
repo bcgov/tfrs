@@ -36,3 +36,4 @@ export { default as ROLES } from './routes/Roles';
 export { default as SIGNING_AUTHORITY_ASSERTIONS } from './routes/SigningAuthorityAssertions';
 export { default as SIGNING_AUTHORITY_CONFIRMATIONS } from './routes/SigningAuthorityConfirmations';
 export { default as NOTIFICATIONS } from './routes/Notifications';
+export { default as SECURE_DOCUMENT_UPLOAD } from './routes/SecureDocumentUpload';
