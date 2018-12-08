@@ -75,14 +75,14 @@ class CreditTransferFormDetails extends Component {
             </select>
           </div>
           <span>for </span>
-          <div className="form-group">
+          <div className="form-group fair-market-value">
             <InputWithTooltip
               dataNumberToFixed={2}
               handleInputChange={this.props.handleInputChange}
               id="value-per-credit"
               min="0"
               name="fairMarketValuePerCredit"
-              placeholder="Fair Market Value"
+              placeholder="The fair market value of any consideration, in CAD"
               required
               showDollarSymbol
               step="0.01"
