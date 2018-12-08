@@ -253,6 +253,10 @@
     }
   }
 
+  .fair-market-value .form-control {
+    width: 375px;
+  }
+
   .zero-reason-form {
     @extend .main-form;
     margin: 1rem 0 0 0;
