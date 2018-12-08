@@ -2,7 +2,7 @@ package specs
 
 import pages.CompanyDetailsPage
 import pages.OrganizationsPage
-import pages.OrganizationsViewPage
+import pages.OrganizationViewPage
 import pages.AddUserPage
 import pages.EditUserPage
 import pages.AdminUsersPage
@@ -17,9 +17,9 @@ import spock.lang.Stepwise
 import spock.lang.Shared
 
 @Stepwise
-@Title('New User Tests')
+@Title('Users Add/Edit Tests')
 @Narrative('''As a user, I want to create and update users.''')
-class NewUserSpec extends LoggedInSpec {
+class UserSpecs extends LoggedInSpec {
 
   @Shared
   String senderFirstName = makeUnique('Sender')
@@ -94,8 +94,8 @@ class NewUserSpec extends LoggedInSpec {
       logInAsAdmin()
       to OrganizationsPage
     and: 'I select the organization to add a new user'
-      selectCompanyByText(getReceivingFuelSupplier().org)
-      at new OrganizationsViewPage(getReceivingFuelSupplier().org)
+      selectCompanyByName(getReceivingFuelSupplier().org)
+      at new OrganizationViewPage(getReceivingFuelSupplier().org)
     and: 'I click the New user button'
       clickNewUserButton()
       at AddUserPage
@@ -124,8 +124,8 @@ class NewUserSpec extends LoggedInSpec {
       logInAsAdmin()
       to OrganizationsPage
     and: 'I select the organization to update an existing user'
-      selectCompanyByText(getReceivingFuelSupplier().org)
-      at new OrganizationsViewPage(getReceivingFuelSupplier().org)
+      selectCompanyByName(getReceivingFuelSupplier().org)
+      at new OrganizationViewPage(getReceivingFuelSupplier().org)
     and: 'I click the existing user row from the table of users'
       clickUserRow("$receiverFirstName $receiverLastName")
       at new UserProfilePage("$receiverFirstName $receiverLastName")
