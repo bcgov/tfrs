@@ -55,13 +55,13 @@ const signUserOut = () => (dispatch) => {
   if (CONFIG.KEYCLOAK.ENABLED) {
     userManager.clearStaleState();
 
-    userManager.removeUser().then(() => {
-      return userManager.signoutRedirect({
+    userManager.removeUser().then(() => (
+      userManager.signoutRedirect({
         post_logout_redirect_uri: CONFIG.KEYCLOAK.POST_LOGOUT_URL
       }).then(() => {
         dispatch(signUserOutAction());
-      });
-    });
+      })
+    ));
   } else {
     dispatch(signUserOutAction());
   }

@@ -16,9 +16,13 @@ import {
 import CONTACT_US from './constants/routes/ContactUs';
 import CREDIT_TRANSACTIONS from './constants/routes/CreditTransactions';
 import ORGANIZATIONS from './constants/routes/Organizations';
+import SECURE_DOCUMENT_UPLOAD from './constants/routes/SecureDocumentUpload';
 import USERS from './constants/routes/Users';
 
-import CreditTransactionsHistory from './admin/credit_trade_history/CreditTradeHistoryContainer';
+import CreditTransactionsHistoryContainer from './admin/credit_trade_history/CreditTradeHistoryContainer';
+import CreditTransactionRequestsContainer from './secure_document_upload/CreditTransactionRequestsContainer';
+import CreditTransactionRequestAddContainer from './secure_document_upload/CreditTransactionRequestAddContainer';
+import CreditTransactionRequestEditContainer from './secure_document_upload/CreditTransactionRequestEditContainer';
 import HistoricalDataEntryContainer from './admin/historical_data_entry/HistoricalDataEntryContainer';
 import HistoricalDataEntryEditContainer from './admin/historical_data_entry/HistoricalDataEntryEditContainer';
 import RolesContainer from './admin/roles/RolesContainer';
@@ -42,7 +46,7 @@ import UserViewContainer from './users/UserViewContainer';
 import NotificationsContainer from './notifications/NotificationsContainer';
 import AuthCallback from './app/AuthCallback';
 import CONFIG from './config';
-import OrganizationEditContainer from "./organizations/OrganizationEditContainer";
+import OrganizationEditContainer from './organizations/OrganizationEditContainer';
 
 const Router = props => (
   <ConnectedRouter history={history} key={Math.random()}>
@@ -107,11 +111,11 @@ const Router = props => (
         <Route
           exact
           path={ORGANIZATIONS.ADD}
-          render={ (props) => <OrganizationEditContainer {...props} mode={'add'}/> }
+          render={properties => <OrganizationEditContainer {...properties} mode="add" />}
         />
         <Route
           path={ORGANIZATIONS.EDIT}
-          render={ (props) => <OrganizationEditContainer {...props} mode={'edit'}/> }
+          render={properties => <OrganizationEditContainer {...properties} mode="edit" />}
         />
         <Route
           exact
@@ -168,7 +172,7 @@ const Router = props => (
         <Route
           exact
           path={CREDIT_TRANSACTIONS_HISTORY.LIST}
-          component={withRouter(CreditTransactionsHistory)}
+          component={withRouter(CreditTransactionsHistoryContainer)}
         />
         <Route
           path={ROLES.DETAILS}
@@ -205,6 +209,24 @@ const Router = props => (
           path={Routes.NOTIFICATIONS.LIST}
           component={withRouter(NotificationsContainer)}
         />
+        {CONFIG.SECURE_DOCUMENT_UPLOAD.ENABLED && [
+          <Route
+            exact
+            key="secure_document_upload_list"
+            path={SECURE_DOCUMENT_UPLOAD.LIST}
+            component={withRouter(CreditTransactionRequestsContainer)}
+          />,
+          <Route
+            key="secure_document_upload_add"
+            path={SECURE_DOCUMENT_UPLOAD.ADD}
+            component={withRouter(CreditTransactionRequestAddContainer)}
+          />,
+          <Route
+            key="secure_document_upload_edit"
+            path={SECURE_DOCUMENT_UPLOAD.EDIT}
+            component={withRouter(CreditTransactionRequestEditContainer)}
+          />
+        ]}
         <Route component={NotFound} />
       </Switch>
     </App>

@@ -1,0 +1,42 @@
+@import './variables.scss';
+@import './mixins.scss';
+
+.page_secure_document_upload {
+  #new-submission {
+    margin: 0;
+  }
+
+  .dropdown-menu {
+    button {
+      background: none;
+      border: none;
+      clear: both;
+      display: block;
+      margin: 0;
+      padding: 3px 20px;
+      text-align: left;
+      white-space: nowrap;
+      width: 100%;
+
+      &:hover {
+        background-color: $background-grey;
+      }
+    }
+  }
+
+  .right-toolbar-container .actions-container {
+    margin-bottom: 1rem;
+  }
+
+  .ReactTable {
+    clear: both;
+
+    .col-date, .col-id {
+      text-align: right;
+    }
+
+    .col-status, .col-actions {
+      text-align: center;
+    }
+  }
+}

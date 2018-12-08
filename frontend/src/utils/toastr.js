@@ -54,6 +54,14 @@ const toastr = {
         reduxToastr.success('Success!', `${text} saved.`);
     }
   },
+  documentUpload: (message = '') => {
+    if (message !== '') { // message is only used to override
+      reduxToastr.success('Success!', message);
+      return;
+    }
+
+    reduxToastr.success('Success!', 'Document uploaded.');
+  },
   subscriptionsSuccess: (message = '') => {
     if (message !== '') { // message is only used to override
       reduxToastr.success('Success!', message);
