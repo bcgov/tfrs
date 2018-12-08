@@ -6,5 +6,6 @@ window.tfrs_config = {
   'keycloak.client_id': 'tfrs-app',
   'keycloak.callback_url': 'http://localhost:5001/authCallback',
   'keycloak.post_logout_url': 'http://localhost:5001/',
-  'debug.enabled': true
+  'debug.enabled': true,
+  'secure_document_upload.enabled': true
 };
