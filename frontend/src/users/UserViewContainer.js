@@ -7,7 +7,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
-import {getUser, getUserByUsername} from '../actions/userActions';
+import { getUser, getUserByUsername } from '../actions/userActions';
 import UserDetails from './components/UserDetails';
 
 class UserViewContainer extends Component {

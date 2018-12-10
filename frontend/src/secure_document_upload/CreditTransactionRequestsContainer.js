@@ -30,7 +30,7 @@ class CreditTransactionRequestsContainer extends Component {
   render () {
     return (
       <CreditTransactionRequestsPage
-        title="Secure Document Upload"
+        title="Secure Document Upload Submissions"
       />
     );
   }

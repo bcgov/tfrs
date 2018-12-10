@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
+import { OidcProvider } from 'redux-oidc';
 
 import store from './store/store';
 
@@ -10,11 +11,10 @@ import { getLoggedInUser } from './actions/userActions';
 import Router from './router';
 
 import '../styles/index.scss';
-import { OidcProvider } from 'redux-oidc';
-import userManager from './store/oidc-usermanager';
 
 import CONFIG from './config';
-import configureAxios from "./store/authorizationInterceptor";
+import configureAxios from './store/authorizationInterceptor';
+import userManager from './store/oidc-usermanager';
 
 if (CONFIG.KEYCLOAK.ENABLED) {
   // Inject the keycloak provider

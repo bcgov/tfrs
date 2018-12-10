@@ -3,25 +3,26 @@ import uuid
 from time import sleep
 
 import jwt
-from django.conf import settings
-from django.db.models import Q
-from jwt import InvalidTokenError
-from cryptography.hazmat.primitives import serialization
-from api.services.KeycloakAPI import map_user
 
+from jwt import InvalidTokenError
 from jwt.algorithms import RSAAlgorithm
+import requests
 from rest_framework import authentication
 from rest_framework import exceptions
-from api.models.User import User
-import requests
+from django.conf import settings
+from cryptography.hazmat.primitives import serialization
 
+from api.models.User import User
 from api.models.UserCreationRequest import UserCreationRequest
+from api.services.KeycloakAPI import map_user
 
 
 class UserAuthentication(authentication.BaseAuthentication):
 
     def _get_keys(self):
-        """Assemble a list of valid signing public keys we use to verify the token"""
+        """
+        Assemble a list of valid signing public keys we use to verify the token
+        """
 
         decoded_keys = {}
 
@@ -38,7 +39,8 @@ class UserAuthentication(authentication.BaseAuthentication):
         response = requests.get(settings.KEYCLOAK['CERTS_URL'], timeout=5)
 
         if not response:
-            raise RuntimeError('keys not available from {}'.format(settings.KEYCLOAK['CERTS_URL']))
+            raise RuntimeError('keys not available from {}'.format(
+                settings.KEYCLOAK['CERTS_URL']))
 
         keys = response.json()
         decoded_keys = {}
@@ -85,17 +87,18 @@ class UserAuthentication(authentication.BaseAuthentication):
         keys = self._get_keys().items()
 
         if len(keys) == 0:
-            raise exceptions.AuthenticationFailed('no keys available for verification')
+            raise exceptions.AuthenticationFailed(
+                'no keys available for verification')
 
-        for kid, key in keys:
+        for _kid, key in keys:
             try:
                 user_token = jwt.decode(token,
                                         key=str(key),
                                         audience=settings.KEYCLOAK['AUDIENCE'],
                                         issuer=settings.KEYCLOAK['ISSUER'])
                 break
-            except InvalidTokenError as e:
-                token_validation_errors.append(e)
+            except InvalidTokenError as error:
+                token_validation_errors.append(error)
 
         if not user_token:
             raise exceptions.AuthenticationFailed(
@@ -108,24 +111,25 @@ class UserAuthentication(authentication.BaseAuthentication):
         if 'user_id' not in user_token:
             # try email
             if 'email' in user_token:
-                qs = UserCreationRequest.objects.filter(
+                creation_request = UserCreationRequest.objects.filter(
                     keycloak_email=user_token['email']
                 )
 
-                if not qs.exists():
+                if not creation_request.exists():
                     raise exceptions.AuthenticationFailed('user does not exist')
 
-                ucr = qs.first()
+                user_creation_request = creation_request.first()
 
-                if not ucr.is_mapped:
-                    map_user(user_token['sub'], ucr.user.username)
+                if not user_creation_request.is_mapped:
+                    map_user(user_token['sub'], user_creation_request.user.username)
 
-                    ucr.is_mapped = True
-                    ucr.save()
+                    user_creation_request.is_mapped = True
+                    user_creation_request.save()
 
-                user_found_via_email = ucr.user.username
+                user_found_via_email = user_creation_request.user.username
             else:
-                raise exceptions.AuthenticationFailed('user_id or email is required in jwt payload')
+                raise exceptions.AuthenticationFailed(
+                    'user_id or email is required in jwt payload')
 
         username = user_token['user_id'] if 'user_id' in user_token else user_found_via_email
 

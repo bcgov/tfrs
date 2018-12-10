@@ -22,7 +22,7 @@ class OrganizationsViewPage extends BaseAppPage {
    * @param String expectedPageTitle the expected page title.
    */
   OrganizationsViewPage(String expectedPageTitle) {
-    this.expectedPageTitle = expectedPageTitle
+    this.expectedPageTitle = expectedPageTitle.replace("\"", "")
   }
 
   void clickNewUserButton() {

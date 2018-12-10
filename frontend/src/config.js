@@ -20,7 +20,7 @@ const CONFIG = {
     ENABLED: getConfig('debug.enabled', false)
   },
   SECURE_DOCUMENT_UPLOAD: {
-   ENABLED: getConfig('secure_document_upload.enabled', false)
+    ENABLED: getConfig('secure_document_upload.enabled', false)
   }
 };
 
