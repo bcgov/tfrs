@@ -25,7 +25,7 @@ class NewUserSpec extends LoggedInSpec {
   String senderFirstName = makeUnique('Sender')
 
   @Shared
-  String senderLastName = makeUnique('Lastname')
+  String senderLastName = makeUnique('Last')
 
   void 'Log in as a Fuel Supplier Admin and add a new fuel supplier user'() {
     given: 'I am logged in as a Fuel Supplier Admin'
@@ -87,7 +87,7 @@ class NewUserSpec extends LoggedInSpec {
   String receiverFirstName = makeUnique('Receiver')
 
   @Shared
-  String receiverLastName = makeUnique('Lastname')
+  String receiverLastName = makeUnique('Last')
 
   void 'Log in as an Admin and add a new fuel supplier user'() {
     given: 'I am logged in as an Admin'
@@ -154,7 +154,7 @@ class NewUserSpec extends LoggedInSpec {
   String adminFirstName = makeUnique('Admin')
 
   @Shared
-  String adminLastName = makeUnique('Lastname')
+  String adminLastName = makeUnique('Last')
 
   void 'Log in as an Admin and add a new admin user'() {
     given: 'I am logged in as an Admin'
@@ -216,7 +216,7 @@ class NewUserSpec extends LoggedInSpec {
   String adminFuelSupplierFirstName = makeUnique('AdminFuelSupplier')
 
   @Shared
-  String adminFuelSupplierLastName = makeUnique('Lastname')
+  String adminFuelSupplierLastName = makeUnique('Last')
 
   void 'Log in as an Admin and add a new fuel supplier user via Administration page'() {
     given: 'I am logged in as an Admin'
