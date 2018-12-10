@@ -98,6 +98,7 @@ const CreditTransactionsPage = (props) => {
           }
           <button
             className="btn btn-info"
+            id="download-credit-transfers"
             type="button"
             onClick={(e) => {
               const element = e.target;
