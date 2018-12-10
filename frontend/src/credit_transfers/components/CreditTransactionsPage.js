@@ -1,8 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import numeral from 'numeral';
-
 import FontAwesomeIcon from '@fortawesome/react-fontawesome';
+
 import * as NumberFormat from '../../constants/numeralFormats';
 import PERMISSIONS_CREDIT_TRANSACTIONS from '../../constants/permissions/CreditTransactions';
 import CREDIT_TRANSACTIONS from '../../constants/routes/CreditTransactions';
@@ -10,9 +10,9 @@ import { DEFAULT_ORGANIZATION } from '../../constants/values';
 import history from '../../app/History';
 import Loading from '../../app/components/Loading';
 import CreditTransferTable from './CreditTransferTable';
+import { download } from '../../utils/functions';
 
 import * as Routes from '../../constants/routes';
-
 import * as Lang from '../../constants/langEnUs';
 
 const CreditTransactionsPage = (props) => {
@@ -99,17 +99,20 @@ const CreditTransactionsPage = (props) => {
           <button
             className="btn btn-info"
             type="button"
-            onClick={() => {
-              let url = Routes.BASE_URL + CREDIT_TRANSACTIONS.EXPORT;
+            onClick={(e) => {
+              const element = e.target;
+              const original = element.innerHTML;
 
-              if (props.organization) {
-                url += `?organization_id=${props.organization.id}`;
-              }
+              element.firstChild.textContent = ' Downloading...';
 
-              document.location = url;
+              return download(Routes.BASE_URL + CREDIT_TRANSACTIONS.EXPORT, {
+                organization_id: props.organization.id
+              }).then(() => {
+                element.innerHTML = original;
+              });
             }}
           >
-            <FontAwesomeIcon icon="file-excel" /> Download as .xls
+            <FontAwesomeIcon icon="file-excel" /> <span>Download as .xls</span>
           </button>
         </div>
       </div>
@@ -137,6 +140,7 @@ CreditTransactionsPage.propTypes = {
     items: PropTypes.arrayOf(PropTypes.shape()).isRequired,
     isFetching: PropTypes.bool.isRequired
   }).isRequired,
+  handleDownload: PropTypes.func.isRequired,
   highlight: PropTypes.string,
   loggedInUser: PropTypes.shape({
     displayName: PropTypes.string,
