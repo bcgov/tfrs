@@ -7,7 +7,6 @@
 
     OpenAPI spec version: v1
 
-
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
     You may obtain a copy of the License at
@@ -21,19 +20,30 @@
     limitations under the License.
 """
 
-from django.db import models
-
-from api.models.mixins.DisplayOrder import DisplayOrder
-from api.models.mixins.EffectiveDates import EffectiveDates
-from auditable.models import Auditable
+from rest_framework import permissions
 
 
-class CompliancePeriod(Auditable, DisplayOrder, EffectiveDates):
-    description = models.CharField(max_length=1000, blank=True, null=True,
-                                   db_comment='Description of the compliance period. This is the displayed name.')
+class DocumentPermissions(permissions.BasePermission):
+    """Used by Viewset to check permissions for API requests"""
 
-    class Meta:
-        db_table = 'compliance_period'
+    def has_permission(self, request, view):
 
-    db_table_comment = 'Contains a list of valid date ranges for compliance periods, as defined in the Act,' \
-                       'for which a credit transaction or submission is associated.'
+        print('request obj {}'.format(hasattr(request, 'reference_data')))
+        # For list
+        if not request.user.has_perm('DOCUMENTS_VIEW'):
+            return False
+
+        return True
+
+    def has_object_permission(self, request, view, obj):
+        """Check permissions When an object does exist (PUT, GET)"""
+
+        if not request.user.has_perm('DOCUMENTS_VIEW'):
+            return False
+
+        is_government = request.user.organization.id == 1
+
+        if is_government and obj.status.status is not 'Draft':
+            return True
+
+        return obj.creating_organization.id == request.user.organization.id

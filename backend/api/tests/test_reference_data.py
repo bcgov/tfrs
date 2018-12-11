@@ -34,7 +34,9 @@ class TestReferenceData(BaseTestCase):
         reference_data_endpoints = [
             '/api/organizations/actions_types',
             '/api/organizations/types',
-            '/api/organizations/statuses'
+            '/api/organizations/statuses',
+            '/api/documents/categories',
+            '/api/documents/statuses'
         ]
 
         for client_name, client in self.clients.items():
