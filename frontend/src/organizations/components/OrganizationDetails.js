@@ -28,6 +28,7 @@ const OrganizationDetails = props => (
       </h1>
       <div className="actions-container">
         <button
+          id="edit-organization"
           className="btn btn-info"
           type="button"
           onClick={() => history.push(ORGANIZATIONS.EDIT.replace(':id', props.organization.id))}

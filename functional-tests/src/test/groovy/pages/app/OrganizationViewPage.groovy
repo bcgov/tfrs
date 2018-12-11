@@ -1,6 +1,6 @@
 package pages
 
-class OrganizationsViewPage extends BaseAppPage {
+class OrganizationViewPage extends BaseAppPage {
   static at = {
     isReactReady() &&
     browser.getCurrentUrl() =~ /organizations\/view\/[0-9]+$/ &&
@@ -8,6 +8,8 @@ class OrganizationsViewPage extends BaseAppPage {
   }
   static content = {
     pageTitle { $('#main .page_organization h1') }
+
+    editButton { $('#edit-organization')}
 
     newUserButton { $('#new-user') }
 
@@ -21,8 +23,12 @@ class OrganizationsViewPage extends BaseAppPage {
    *
    * @param String expectedPageTitle the expected page title.
    */
-  OrganizationsViewPage(String expectedPageTitle) {
+  OrganizationViewPage(String expectedPageTitle) {
     this.expectedPageTitle = expectedPageTitle.replace("\"", "")
+  }
+
+  void clickEditButton() {
+    editButton.click()
   }
 
   void clickNewUserButton() {
