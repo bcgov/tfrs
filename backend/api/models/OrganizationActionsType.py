@@ -21,11 +21,13 @@
 
 from django.db import models
 
+from api.models.mixins.DisplayOrder import DisplayOrder
+from api.models.mixins.EffectiveDates import EffectiveDates
 from auditable.models import Auditable
 from api.managers.OrganizationActionsTypeManager import OrganizationActionsTypeManager
 
 
-class OrganizationActionsType(Auditable):
+class OrganizationActionsType(Auditable, DisplayOrder, EffectiveDates):
     the_type = models.CharField(max_length=25,
                                 unique=True,
                                 db_comment='Enumerated value to describe the organization actions type.')
@@ -35,9 +37,6 @@ class OrganizationActionsType(Auditable):
         null=True,
         db_comment='Description of the organization actions type. This is the displayed name.'
     )
-    display_order = models.IntegerField(db_comment='Relative rank in display sorting order')
-    effective_date = models.DateField(blank=True, null=True, db_comment='The calendar date the organization action type value became valid.')
-    expiration_date = models.DateField(blank=True, null=True, db_comment='The calendar date the organization action type value is no longer valid.')
 
     objects = OrganizationActionsTypeManager()
 

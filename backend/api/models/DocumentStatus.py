@@ -20,20 +20,35 @@
     See the License for the specific language governing permissions and
     limitations under the License.
 """
-
 from django.db import models
 
+from api.managers.DocumentStatusManager import DocumentStatusManager
 from api.models.mixins.DisplayOrder import DisplayOrder
 from api.models.mixins.EffectiveDates import EffectiveDates
 from auditable.models import Auditable
 
 
-class CompliancePeriod(Auditable, DisplayOrder, EffectiveDates):
-    description = models.CharField(max_length=1000, blank=True, null=True,
-                                   db_comment='Description of the compliance period. This is the displayed name.')
+class DocumentStatus(Auditable, DisplayOrder, EffectiveDates):
+
+    status = models.CharField(
+        max_length=25,
+        blank=True,
+        null=True,
+        unique=True,
+        db_comment="Contains an enumerated value to describe the document status."
+                   "This is a unique natural key."
+    )
+
+    objects = DocumentStatusManager()
+
+    def natural_key(self):
+        """
+        Allows type 'status' to be used to identify
+        a row in the table
+        """
+        return (self.status,)
 
     class Meta:
-        db_table = 'compliance_period'
+        db_table = 'document_status'
 
-    db_table_comment = 'Contains a list of valid date ranges for compliance periods, as defined in the Act,' \
-                       'for which a credit transaction or submission is associated.'
+    db_table_comment = ''

@@ -21,20 +21,18 @@
 
 from django.db import models
 
+from api.models.mixins.DisplayOrder import DisplayOrder
+from api.models.mixins.EffectiveDates import EffectiveDates
 from auditable.models import Auditable
 from api.managers.OrganizationTypeManager import OrganizationTypeManager
 
 
-class OrganizationType(Auditable):
+class OrganizationType(Auditable, DisplayOrder, EffectiveDates):
     type = models.CharField(max_length=25,
                             unique=True,
                             db_comment='Enumerated value to describe the organization type.')
     description = models.CharField(max_length=1000, blank=True, null=True,
                                    db_comment='Description of the organization type. This is the displayed name.')
-    display_order = models.IntegerField(blank=True, null=True,
-                                        db_comment='Relative rank in display sorting order')
-    effective_date = models.DateField(blank=True, null=True, db_comment='The calendar date that the organization type value became valid.')
-    expiration_date = models.DateField(blank=True, null=True, db_comment='The calendar date that the organization type value became is no longer valid.')
 
     def __str__(self):
         return self.type

@@ -22,11 +22,13 @@
 
 from django.db import models
 
+from api.models.mixins.DisplayOrder import DisplayOrder
+from api.models.mixins.EffectiveDates import EffectiveDates
 from auditable.models import Auditable
 from api.managers.CreditTradeStatusManager import CreditTradeStatusManager
 
 
-class CreditTradeStatus(Auditable):
+class CreditTradeStatus(Auditable, DisplayOrder, EffectiveDates):
     """
     Possible states that a credit transfer may be in.
     Application logic is couplied tightly to this table.
@@ -41,12 +43,6 @@ class CreditTradeStatus(Auditable):
     )
     description = models.CharField(
         max_length=4000, blank=True, null=True, db_comment='Description of the credit trade status. This is the displayed name.')
-    display_order = models.IntegerField(
-        db_comment='Relative rank in display sorting order')
-    effective_date = models.DateField(
-        blank=True, null=True, db_comment='The calendar date the credit trade status type value became valid.')
-    expiration_date = models.DateField(
-        blank=True, null=True, db_comment='The calendar date the credit trade status type value is no longer valid.')
 
     objects = CreditTradeStatusManager()
 
