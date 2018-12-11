@@ -12,7 +12,7 @@ import AdminTabs from '../components/AdminTabs';
 import UsersPage from './components/UsersPage';
 
 class UsersContainer extends Component {
-  componentWillMount () {
+  componentDidMount () {
     this.loadData();
   }
 

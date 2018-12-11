@@ -7,7 +7,7 @@ import getSigningAuthorityAssertions from '../../actions/signingAuthorityAsserti
 import CheckBox from '../../app/components/CheckBox';
 
 class CreditTransferTerms extends Component {
-  componentWillMount () {
+  componentDidMount () {
     this.props.getSigningAuthorityAssertions();
   }
 
