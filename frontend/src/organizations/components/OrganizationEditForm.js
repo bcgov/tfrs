@@ -219,6 +219,7 @@ const OrganizationEditForm = props => (
       </div>
     </div>
     <button
+      id="save-organization"
       type="submit"
       className="btn btn-primary"
       onClick={e => props.handleSubmit(e)}
