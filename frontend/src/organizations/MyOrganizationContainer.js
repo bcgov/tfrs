@@ -12,7 +12,7 @@ import OrganizationDetails from './components/OrganizationDetails';
 import OrganizationMembers from './components/OrganizationMembers';
 
 class MyOrganizationContainer extends Component {
-  componentWillMount () {
+  componentDidMount () {
     this.loadData();
   }
 
