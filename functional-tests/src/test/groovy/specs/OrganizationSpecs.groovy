@@ -61,6 +61,7 @@ class OrganizationSpecs extends LoggedInSpec {
       clickEditButton()
       at new OrganizationEditPage()
     and: 'I populate all required fields to create a new organization'
+      sleep(3000)
       setNameField("${organizationName}Edit")
       setActionsType('An Organization not currently permitted to either Buy and Sell Low Carbon Credits.')
       setStatus('The Fuel Supplier is an active participant in the Low Carbon Credits trading market.')
