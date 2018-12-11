@@ -11,7 +11,7 @@ import { getRole } from '../../actions/roleActions';
 import RoleDetails from '../../roles/components/RoleDetails';
 
 class RoleViewContainer extends Component {
-  componentWillMount () {
+  componentDidMount () {
     this.loadData(this.props.match.params.id);
   }
 

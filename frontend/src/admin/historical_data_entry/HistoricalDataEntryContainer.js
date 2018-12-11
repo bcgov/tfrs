@@ -50,7 +50,7 @@ class HistoricalDataEntryContainer extends Component {
     this._selectIdForModal = this._selectIdForModal.bind(this);
   }
 
-  componentWillMount () {
+  componentDidMount () {
     this.props.invalidateCreditTransfers();
     this.loadData();
     this.props.getCompliancePeriods();
