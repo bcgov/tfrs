@@ -28,6 +28,7 @@ class OrganizationSpecs extends LoggedInSpec {
       clickCreateOrganizationButton()
       at OrganizationAddPage
     and: 'I populate all required fields to create a new organization'
+      sleep(5000)
       setNameField(organizationName)
       setType('A Part 3 Fuel Supplier who can do credit transfers')
       setActionsType('An Organization permitted to only to Sell Low Carbon Credits.')

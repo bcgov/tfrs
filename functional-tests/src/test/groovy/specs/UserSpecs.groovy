@@ -35,6 +35,7 @@ class UserSpecs extends LoggedInSpec {
       clickNewUserButton()
       at AddUserPage
     and: 'I populate all required fields to create a new user'
+      sleep(5000)
       setFirstName(senderFirstName)
       setLastName(senderLastName)
       setBCeIDEmail(makeUnique('newSender@fakeeemail.com'))
@@ -65,6 +66,7 @@ class UserSpecs extends LoggedInSpec {
       clickEditButton()
       at EditUserPage
     and: 'I update all fields of the existing user'
+      sleep(5000)
       setFirstName("${senderFirstName}Edit")
       setLastName("${senderLastName}Edit")
       setWorkPhone('6045551235')
@@ -100,6 +102,7 @@ class UserSpecs extends LoggedInSpec {
       clickNewUserButton()
       at AddUserPage
     and: 'I populate all required fields to create a new user'
+      sleep(5000)
       setFirstName(receiverFirstName)
       setLastName(receiverLastName)
       setBCeIDEmail(makeUnique('newReceiver@fakeeemail.com'))
@@ -165,6 +168,7 @@ class UserSpecs extends LoggedInSpec {
       clickNewUserButton()
       at AddAdminUserPage
     and: 'I populate all required fields to create a new user'
+      sleep(5000)
       setFirstName(adminFirstName)
       setLastName(adminLastName)
       setBCeIDEmail(makeUnique('newAdmin@fakeeemail.com'))
@@ -228,6 +232,7 @@ class UserSpecs extends LoggedInSpec {
       clickNewFuelSupplierUserButton()
       at AddUserPage
     and: 'I populate all required fields to create a new user'
+      sleep(5000)
       setFirstName(adminFuelSupplierFirstName)
       setLastName(adminFuelSupplierLastName)
       setBCeIDEmail(makeUnique('newAdminFuelSupplier@fakeeemail.com'))
