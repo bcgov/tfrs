@@ -28,7 +28,6 @@ from .CreditTradeType import *
 from .CreditTradeZeroReason import *
 from .Organization import *
 from .OrganizationActionsType import *
-from .OrganizationAttachment import *
 from .OrganizationBalance import *
 from .OrganizationHistory import *
 from .OrganizationStatus import *

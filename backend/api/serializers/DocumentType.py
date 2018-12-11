@@ -20,20 +20,13 @@
     See the License for the specific language governing permissions and
     limitations under the License.
 """
+from rest_framework import serializers
 
-from django.db import models
-
-from api.models.mixins.DisplayOrder import DisplayOrder
-from api.models.mixins.EffectiveDates import EffectiveDates
-from auditable.models import Auditable
+from api.models.CreditTradeType import CreditTradeType
+from api.models.DocumentType import DocumentType
 
 
-class CompliancePeriod(Auditable, DisplayOrder, EffectiveDates):
-    description = models.CharField(max_length=1000, blank=True, null=True,
-                                   db_comment='Description of the compliance period. This is the displayed name.')
-
+class DocumentTypeSerializer(serializers.ModelSerializer):
     class Meta:
-        db_table = 'compliance_period'
-
-    db_table_comment = 'Contains a list of valid date ranges for compliance periods, as defined in the Act,' \
-                       'for which a credit transaction or submission is associated.'
+        model = DocumentType
+        fields = ('the_type',)

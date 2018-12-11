@@ -21,16 +21,15 @@
 
 from django.db import models
 
+from api.models.mixins.DisplayOrder import DisplayOrder
+from api.models.mixins.EffectiveDates import EffectiveDates
 from auditable.models import Auditable
 
 
-class CreditTradeZeroReason(Auditable):
+class CreditTradeZeroReason(Auditable, DisplayOrder, EffectiveDates):
     reason = models.CharField(max_length=25,
                               db_comment='Enumerated value to describe the credit trade zero reason.')
     description = models.CharField(max_length=1000, db_comment='Description of the credit trade zero reason. This is the displayed name.')
-    display_order = models.IntegerField(db_comment='Relative rank in display sorting order')
-    effective_date = models.DateField(blank=True, null=True, db_comment='The calendar date the credit trade zero reason type value became valid.')
-    expiration_date = models.DateField(blank=True, null=True, db_comment='The calendar date the credit trade zero reason type value is no longer valid.')
 
     class Meta:
         db_table = 'credit_trade_zero_reason'
