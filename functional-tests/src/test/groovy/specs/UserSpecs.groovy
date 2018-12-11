@@ -2,7 +2,7 @@ package specs
 
 import pages.CompanyDetailsPage
 import pages.OrganizationsPage
-import pages.OrganizationsViewPage
+import pages.OrganizationViewPage
 import pages.AddUserPage
 import pages.EditUserPage
 import pages.AdminUsersPage
@@ -17,15 +17,15 @@ import spock.lang.Stepwise
 import spock.lang.Shared
 
 @Stepwise
-@Title('New User Tests')
+@Title('Users Add/Edit Tests')
 @Narrative('''As a user, I want to create and update users.''')
-class NewUserSpec extends LoggedInSpec {
+class UserSpecs extends LoggedInSpec {
 
   @Shared
   String senderFirstName = makeUnique('Sender')
 
   @Shared
-  String senderLastName = makeUnique('Lastname')
+  String senderLastName = makeUnique('Last')
 
   void 'Log in as a Fuel Supplier Admin and add a new fuel supplier user'() {
     given: 'I am logged in as a Fuel Supplier Admin'
@@ -87,15 +87,15 @@ class NewUserSpec extends LoggedInSpec {
   String receiverFirstName = makeUnique('Receiver')
 
   @Shared
-  String receiverLastName = makeUnique('Lastname')
+  String receiverLastName = makeUnique('Last')
 
   void 'Log in as an Admin and add a new fuel supplier user'() {
     given: 'I am logged in as an Admin'
       logInAsAdmin()
       to OrganizationsPage
     and: 'I select the organization to add a new user'
-      selectCompanyByText(getReceivingFuelSupplier().org)
-      at new OrganizationsViewPage(getReceivingFuelSupplier().org)
+      selectCompanyByName(getReceivingFuelSupplier().org)
+      at new OrganizationViewPage(getReceivingFuelSupplier().org)
     and: 'I click the New user button'
       clickNewUserButton()
       at AddUserPage
@@ -124,8 +124,8 @@ class NewUserSpec extends LoggedInSpec {
       logInAsAdmin()
       to OrganizationsPage
     and: 'I select the organization to update an existing user'
-      selectCompanyByText(getReceivingFuelSupplier().org)
-      at new OrganizationsViewPage(getReceivingFuelSupplier().org)
+      selectCompanyByName(getReceivingFuelSupplier().org)
+      at new OrganizationViewPage(getReceivingFuelSupplier().org)
     and: 'I click the existing user row from the table of users'
       clickUserRow("$receiverFirstName $receiverLastName")
       at new UserProfilePage("$receiverFirstName $receiverLastName")
@@ -154,7 +154,7 @@ class NewUserSpec extends LoggedInSpec {
   String adminFirstName = makeUnique('Admin')
 
   @Shared
-  String adminLastName = makeUnique('Lastname')
+  String adminLastName = makeUnique('Last')
 
   void 'Log in as an Admin and add a new admin user'() {
     given: 'I am logged in as an Admin'
@@ -216,7 +216,7 @@ class NewUserSpec extends LoggedInSpec {
   String adminFuelSupplierFirstName = makeUnique('AdminFuelSupplier')
 
   @Shared
-  String adminFuelSupplierLastName = makeUnique('Lastname')
+  String adminFuelSupplierLastName = makeUnique('Last')
 
   void 'Log in as an Admin and add a new fuel supplier user via Administration page'() {
     given: 'I am logged in as an Admin'

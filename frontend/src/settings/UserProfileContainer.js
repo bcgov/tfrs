@@ -8,7 +8,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import PropTypes from 'prop-types';
 
-import { clearUsersRequestError, updateUser } from '../actions/userActions';
+import { clearUsersRequestError, getLoggedInUser, updateUser } from '../actions/userActions';
 import Modal from '../app/components/Modal';
 import UserProfileDetails from './components/UserProfileDetails';
 import toastr from '../utils/toastr';
@@ -100,6 +100,7 @@ class UserProfileContainer extends Component {
     const { id } = this.props.loggedInUser;
 
     this.props.updateUser(id, data).then(() => {
+      this.props.getLoggedInUser(); // update the session for the logged in user
       toastr.userSuccess();
     });
 
@@ -140,6 +141,7 @@ UserProfileContainer.propTypes = {
     PropTypes.shape({}),
     PropTypes.string
   ]),
+  getLoggedInUser: PropTypes.func.isRequired,
   loggedInUser: PropTypes.shape({
     authorizationId: PropTypes.string.isRequired,
     cellPhone: PropTypes.string,
@@ -160,6 +162,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   clearUsersRequestError: bindActionCreators(clearUsersRequestError, dispatch),
+  getLoggedInUser: bindActionCreators(getLoggedInUser, dispatch),
   updateUser: bindActionCreators(updateUser, dispatch)
 });
 

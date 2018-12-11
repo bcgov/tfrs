@@ -22,6 +22,7 @@ const OrganizationEditForm = props => (
                 className="form-control"
                 id="organization-name"
                 name="name"
+                placeholder="Fuel Supplier Name"
                 onChange={props.handleInputChange}
                 value={props.fields.name}
               />
@@ -218,6 +219,7 @@ const OrganizationEditForm = props => (
       </div>
     </div>
     <button
+      id="save-organization"
       type="submit"
       className="btn btn-primary"
       onClick={e => props.handleSubmit(e)}
