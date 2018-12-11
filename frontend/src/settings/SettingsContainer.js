@@ -30,7 +30,7 @@ class SettingsContainer extends Component {
     this._toggleCheck = this._toggleCheck.bind(this);
   }
 
-  componentWillMount () {
+  componentDidMount () {
     this.loadData();
   }
 
