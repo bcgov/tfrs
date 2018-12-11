@@ -22,12 +22,14 @@
 """
 from rest_framework import serializers
 
-from api.models.OrganizationAttachment import OrganizationAttachment
+from api.models.DocumentCategory import DocumentCategory
+from api.serializers.DocumentType import DocumentTypeSerializer
 
 
-class OrganizationAttachmentSerializer(serializers.ModelSerializer):
+class DocumentCategorySerializer(serializers.ModelSerializer):
+    types = DocumentTypeSerializer(many=True,read_only=True)
+
     class Meta:
-        model = OrganizationAttachment
+        model = DocumentCategory
         fields = (
-            'id', 'organization', 'file_name', 'file_location', 'description',
-            'compliance_year')
+            'id', 'name', 'types')

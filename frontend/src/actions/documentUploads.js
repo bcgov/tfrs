@@ -6,7 +6,7 @@ import * as Routes from '../constants/routes';
 
 const getDocumentUploads = () => (dispatch) => {
   dispatch(getDocumentUploadRequests());
-  return axios.get(Routes.BASE_URL + Routes.SECURE_DOCUMENT_UPLOAD.LIST)
+  return axios.get(Routes.BASE_URL + Routes.SECURE_DOCUMENT_UPLOAD.API)
     .then((response) => {
       dispatch(getDocumentUploadRequestsSuccess(response.data));
     }).catch((error) => {

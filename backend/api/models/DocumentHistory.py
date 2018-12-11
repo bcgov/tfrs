@@ -20,20 +20,41 @@
     See the License for the specific language governing permissions and
     limitations under the License.
 """
-
 from django.db import models
 
-from api.models.mixins.DisplayOrder import DisplayOrder
-from api.models.mixins.EffectiveDates import EffectiveDates
+from api.models.Document import Document
+from api.models.Role import Role
+from api.models.User import User
+from api.models.mixins.DocumentData import DocumentData
 from auditable.models import Auditable
 
 
-class CompliancePeriod(Auditable, DisplayOrder, EffectiveDates):
-    description = models.CharField(max_length=1000, blank=True, null=True,
-                                   db_comment='Description of the compliance period. This is the displayed name.')
+class DocumentHistory(Auditable, DocumentData):
+    """
+    Holds the credit trade proposal information between the
+    organizations
+    """
+    document = models.ForeignKey(
+        Document,
+        related_name='history_entries',
+        on_delete=models.PROTECT,
+        null=False
+    )
+
+    modifying_user = models.ForeignKey(
+        User,
+        related_name='users',
+        on_delete=models.PROTECT,
+        null=False)
+
+    modifying_user_role = models.ForeignKey(
+        Role,
+        related_name='role',
+        on_delete=models.PROTECT,
+        null=False
+    )
 
     class Meta:
-        db_table = 'compliance_period'
+        db_table = 'document_history'
 
-    db_table_comment = 'Contains a list of valid date ranges for compliance periods, as defined in the Act,' \
-                       'for which a credit transaction or submission is associated.'
+    db_table_comment = ''

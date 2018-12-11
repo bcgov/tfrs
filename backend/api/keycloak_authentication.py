@@ -1,4 +1,7 @@
 import json
+import uuid
+from time import sleep
+
 import jwt
 
 from jwt import InvalidTokenError
@@ -56,7 +59,6 @@ class UserAuthentication(authentication.BaseAuthentication):
 
         if not settings.KEYCLOAK['ENABLED']:
             # fall through
-            print('nyan')
             return None
 
         auth = request.META.get('HTTP_AUTHORIZATION', None)

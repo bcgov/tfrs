@@ -23,33 +23,37 @@
 
 from django.db import models
 
-from api.models.mixins.DisplayOrder import DisplayOrder
+from api.managers.DocumentTypeManager import DocumentTypeManager
+from api.models.DocumentCategory import DocumentCategory
 from api.models.mixins.EffectiveDates import EffectiveDates
 from auditable.models import Auditable
-from api.managers.CreditTradeTypeManager import CreditTradeTypeManager
 
 
-class CreditTradeType(Auditable, DisplayOrder, EffectiveDates):
+class DocumentType(Auditable, EffectiveDates):
+
     """
     Holds the different types of Credit Trades and if they're only usable
     by government users only
     """
     the_type = models.CharField(
-        max_length=25,
+        max_length=100,
         blank=True,
         null=True,
         unique=True,
-        db_comment='Enumerated value to describe the credit trade type.'
+        db_comment='Short descriptive name of the document type.'
     )
+
     description = models.CharField(
-        max_length=1000, blank=True, null=True, db_comment='Description of the credit trade type. This is the displayed name.')
+        max_length=1000, blank=True, null=True, db_comment='Description of '
+                                                           'the document type. This is the displayed name.')
 
-    is_gov_only_type = models.BooleanField(
-        db_comment='Flag. True if only government users can create this type '
-                   'of transfer.'
-    )
+    category = models.ForeignKey(DocumentCategory,
+                                 blank=False,
+                                 null=False,
+                                 unique=False,
+                                 related_name='types')
 
-    objects = CreditTradeTypeManager()
+    objects = DocumentTypeManager()
 
     def natural_key(self):
         """
@@ -59,20 +63,6 @@ class CreditTradeType(Auditable, DisplayOrder, EffectiveDates):
         return (self.the_type,)
 
     class Meta:
-        db_table = 'credit_trade_type'
+        db_table = 'document_type'
 
-    db_table_comment = 'Contains a list of credit transaction types, which are credit transfer, part 3 award, validation and reduction.'
-
-    @property
-    def friendly_name(self):
-        """
-        Front-end language for the Credit Trade Type
-        """
-        if self.the_type in ["Buy", "Sell"]:
-            return "Credit Transfer"
-        elif self.the_type == "Credit Retirement":
-            return "Reduction"
-        elif self.the_type == "Credit Validation":
-            return "Validation"
-
-        return self.the_type
+    db_table_comment = 'Contains a list of document types.'
