@@ -11,7 +11,7 @@ import { getUser, getUserByUsername } from '../actions/userActions';
 import UserDetails from './components/UserDetails';
 
 class UserViewContainer extends Component {
-  componentWillMount () {
+  componentDidMount () {
     if (this.props.match.params.id) {
       this.loadByID(this.props.match.params.id);
     } else if (this.props.match.params.username) {
