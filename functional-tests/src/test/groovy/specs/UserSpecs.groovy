@@ -133,7 +133,7 @@ class UserSpecs extends LoggedInSpec {
       clickEditButton()
       at EditUserPage
     and: 'I update all fields of the existing user'
-      sleep(3000)
+      sleep(5000)
       setFirstName("${receiverFirstName}Edit")
       setLastName("${receiverLastName}Edit")
       setWorkPhone('6045551236')
@@ -195,7 +195,7 @@ class UserSpecs extends LoggedInSpec {
       clickEditButton()
       at EditUserPage
     and: 'I update all fields of the existing user'
-      sleep(3000)
+      sleep(5000)
       setFirstName("${adminFirstName}Edit")
       setLastName("${adminLastName}Edit")
       setWorkPhone('6045551238')
