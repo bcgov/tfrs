@@ -22,4 +22,28 @@ const download = (url, params = {}) => (
   })
 );
 
-export { arrayMove, download };
+const validateFiles = files => (
+  files.filter((file) => {
+    switch (file.type) {
+      case 'application/msoutlook':
+      case 'application/pdf':
+      case 'application/vnd.openxmlformats-officedocument.presentationml.presentation':
+      case 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet':
+      case 'image/gif':
+      case 'image/jpg':
+      case 'image/jpeg':
+      case 'image/png':
+      case 'text/csv':
+      case 'text/plain':
+        return file.type;
+      default:
+        if (file.name.split('.').pop() === 'xls' || file.name.split('.').pop() === 'ppt') {
+          return file;
+        }
+
+        return false;
+    }
+  })
+);
+
+export { arrayMove, download, validateFiles };
