@@ -10,7 +10,7 @@ import PropTypes from 'prop-types';
 
 import CreditTransactionRequestsPage from './components/CreditTransactionRequestsPage';
 
-import { getDocumentUploads } from '../actions/documentUploads';
+import {getDocumentUploads, getDocumentUploadURL} from '../actions/documentUploads';
 
 class CreditTransactionRequestsContainer extends Component {
   constructor (props) {
@@ -31,6 +31,7 @@ class CreditTransactionRequestsContainer extends Component {
     return (
       <CreditTransactionRequestsPage
         title="Secure Document Upload Submissions"
+        requestURL={this.props.requestURL}
       />
     );
   }
@@ -41,6 +42,7 @@ CreditTransactionRequestsContainer.defaultProps = {
 
 CreditTransactionRequestsContainer.propTypes = {
   getDocumentUploads: PropTypes.func.isRequired,
+  requestURL: PropTypes.func.isRequired,
   items: PropTypes.arrayOf(PropTypes.shape).isRequired
 };
 
@@ -49,7 +51,8 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  getDocumentUploads: bindActionCreators(getDocumentUploads, dispatch)
+  getDocumentUploads: bindActionCreators(getDocumentUploads, dispatch),
+  requestURL: bindActionCreators(getDocumentUploadURL, dispatch),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(CreditTransactionRequestsContainer);

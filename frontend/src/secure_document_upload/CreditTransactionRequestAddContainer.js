@@ -11,9 +11,10 @@ import Modal from '../app/components/Modal';
 import CreditTransactionRequestForm from './components/CreditTransactionRequestForm';
 
 import history from '../app/History';
-import { addDocumentUpload } from '../actions/documentUploads';
+import {addDocumentUpload, getDocumentUploadURL} from '../actions/documentUploads';
 import SECURE_DOCUMENT_UPLOAD from '../constants/routes/SecureDocumentUpload';
 import toastr from '../utils/toastr';
+import axios from 'axios';
 
 class CreditTransactionRequestAddContainer extends Component {
   constructor (props) {
@@ -78,10 +79,32 @@ class CreditTransactionRequestAddContainer extends Component {
       milestoneId: this.state.fields.milestoneId
     };
 
-    this.props.addDocumentUpload(data).then((response) => {
-      history.push(SECURE_DOCUMENT_UPLOAD.LIST);
-      toastr.documentUpload('Draft saved.');
-    });
+    Object.keys(this.state.fields.files).forEach(
+      (file) => {
+
+        const reader = new FileReader();
+        reader.onload = () => {
+          const blob = reader.result;
+
+          this.props.requestURL().then(response => {
+            console.log(response.data);
+            axios.put(
+              response.data,
+              blob
+            )
+          })
+        };
+        // reader.onabort = () =>
+        // reader.onerror = () =>
+
+        reader.readAsBinaryString(this.state.fields.files[file]);
+      }
+    );
+
+    // this.props.addDocumentUpload(data).then((response) => {
+    //   history.push(SECURE_DOCUMENT_UPLOAD.LIST);
+    //   toastr.documentUpload('Draft saved.');
+    // });
 
     return true;
   }
@@ -134,7 +157,8 @@ CreditTransactionRequestAddContainer.propTypes = {
       id: PropTypes.string.isRequired
     }).isRequired
   }).isRequired,
-  validationErrors: PropTypes.shape()
+  validationErrors: PropTypes.shape(),
+  requestURL: PropTypes.func.isRequired
 };
 
 const mapStateToProps = state => ({
@@ -143,7 +167,9 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  addDocumentUpload: bindActionCreators(addDocumentUpload, dispatch)
+  addDocumentUpload: bindActionCreators(addDocumentUpload, dispatch),
+  requestURL: bindActionCreators(getDocumentUploadURL, dispatch)
+
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(CreditTransactionRequestAddContainer);

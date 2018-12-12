@@ -268,7 +268,7 @@ class Navbar extends Component {
             {CONFIG.KEYCLOAK.ENABLED &&
             <NavLink
               id="navbar-logout"
-              onClick={(e) => { e.preventDefault(); this.props.dispatch(signUserOut()); }}
+              onClick={(e) => { e.preventDefault(); signUserOut(); }}
               to={Routes.LOGOUT}
             >
               Log Out
@@ -364,7 +364,7 @@ class Navbar extends Component {
                         </MenuItem>
                         {CONFIG.KEYCLOAK.ENABLED &&
                         <MenuItem onClick={(e) => {
-                          e.preventDefault(); this.props.dispatch(signUserOut());
+                          e.preventDefault(); signUserOut();
                         }}
                         >
                           <FontAwesomeIcon icon="sign-out-alt" /> Log Out
@@ -397,12 +397,10 @@ class Navbar extends Component {
 }
 
 Navbar.defaultProps = {
-  dispatch: null,
   unreadNotificationsCount: null
 };
 
 Navbar.propTypes = {
-  dispatch: PropTypes.func,
   getNotifications: PropTypes.func.isRequired,
   isAuthenticated: PropTypes.bool.isRequired,
   loggedInUser: PropTypes.shape({
@@ -416,11 +414,13 @@ Navbar.propTypes = {
       id: PropTypes.number
     }))
   }).isRequired,
-  unreadNotificationsCount: PropTypes.number
+  unreadNotificationsCount: PropTypes.number,
+  signUserOut: PropTypes.func.isRequired
 };
 
 const mapDispatchToProps = dispatch => ({
-  getNotifications: bindActionCreators(getNotifications, dispatch)
+  getNotifications: bindActionCreators(getNotifications, dispatch),
+  signUserOut: bindActionCreators(signUserOut, dispatch)
 });
 
 // export default Navbar;

@@ -1,9 +1,13 @@
 import base64
 import random
+import uuid
+from datetime import timedelta
 from functools import wraps
 
 from django.db.models import Q
+from django.http import HttpResponse
 from django.views.decorators.cache import never_cache
+from minio import Minio
 
 from rest_framework import viewsets, serializers, mixins, status
 from rest_framework.decorators import list_route
@@ -24,7 +28,7 @@ from api.serializers.DocumentCategory import DocumentCategorySerializer
 from api.serializers.DocumentStatus import DocumentStatusSerializer
 from api.serializers.Notifications import NotificationMessageSerializer
 from auditable.views import AuditableMixin
-
+from tfrs.settings import MINIO
 
 class DocumentViewSet(AuditableMixin,
                       mixins.ListModelMixin,
@@ -32,7 +36,7 @@ class DocumentViewSet(AuditableMixin,
                       viewsets.GenericViewSet):
 
     permission_classes = (DocumentPermissions,)
-    http_method_names = ['get']
+    http_method_names = ['get', 'post']
 
     serializer_classes = {
         'default': DocumentSerializer,
@@ -88,7 +92,19 @@ class DocumentViewSet(AuditableMixin,
             Q(creating_organization__id=user.organization.id)
         ).all()
 
-    # def list(self, request, *args, **kwargs):
+    @list_route(methods=['post'])
+    def generate_upload_url(self, request):
+        minio = Minio(MINIO['ENDPOINT'],
+                      access_key=MINIO['ACCESS_KEY'],
+                      secret_key=MINIO['SECRET_KEY'],
+                      secure=MINIO['USE_SSL'])
+        url = minio.presigned_put_object(bucket_name=MINIO['BUCKET_NAME'],
+                                         object_name=uuid.uuid4().hex,
+                                         expires=timedelta(hours=2))
+
+        return HttpResponse(url)
+
+# def list(self, request, *args, **kwargs):
     #     """
     #     Lists all the documents.
     #     """

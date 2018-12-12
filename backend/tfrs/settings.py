@@ -15,6 +15,8 @@ import os
 import sys
 
 from pika import ConnectionParameters, PlainCredentials
+
+from . import minio
 from . import amqp
 from . import keycloak
 from . import email
@@ -141,6 +143,8 @@ AMQP_CONNECTION_PARAMETERS = ConnectionParameters(
 KEYCLOAK = keycloak.config()
 
 EMAIL = email.config()
+
+MINIO = minio.config()
 
 # Internationalization
 # https://docs.djangoproject.com/en/1.8/topics/i18n/
