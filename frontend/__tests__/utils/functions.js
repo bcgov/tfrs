@@ -1,4 +1,4 @@
-import arrayMove from '../../src/utils/functions';
+import { arrayMove } from '../../src/utils/functions';
 
 test('Array Move to actually function as expected', () => {
   const arr = [1, 2, 3, 4, 5];

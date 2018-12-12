@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-
 import FontAwesomeIcon from '@fortawesome/react-fontawesome';
+
 import * as Lang from '../../constants/langEnUs';
 import CREDIT_TRANSACTIONS from '../../constants/routes/CreditTransactions';
 import { CREDIT_TRANSFER_STATUS } from '../../constants/values';

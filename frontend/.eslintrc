@@ -1,4 +1,7 @@
 {
+  "env": {
+    "browser": true
+  },
   "extends": ["airbnb-standard"],
   "rules": {
     "jsx-a11y/anchor-is-valid": [ "error", {

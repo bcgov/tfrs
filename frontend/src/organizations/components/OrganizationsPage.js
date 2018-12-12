@@ -7,7 +7,7 @@ import ORGANIZATIONS from '../../constants/routes/Organizations';
 import OrganizationsTable from './OrganizationsTable';
 import * as Routes from '../../constants/routes';
 import history from '../../app/History';
-
+import { download } from '../../utils/functions';
 
 const OrganizationsPage = (props) => {
   const { isFetching, items } = props.organizations;
@@ -17,21 +17,29 @@ const OrganizationsPage = (props) => {
       <h1>{props.title}</h1>
       <div className="actions-container">
         <button
-          className="btn btn-info"
+          className="btn btn-primary"
           type="button"
-          onClick={() => (document.location = Routes.BASE_URL + ORGANIZATIONS.EXPORT)}
+          onClick={() => history.push(ORGANIZATIONS.ADD)}
         >
-          <FontAwesomeIcon icon="file-excel" /> Download as .xls
+          <FontAwesomeIcon icon="plus-circle" /> Create Organization
         </button>
         <button
           id="create-organization"
           className="btn btn-info"
           type="button"
-          onClick={() => history.push(ORGANIZATIONS.ADD) }
-        >
-          <FontAwesomeIcon icon="plus" /> Create Organization
-        </button>
+          onClick={(e) => {
+            const element = e.target;
+            const original = element.innerHTML;
 
+            element.firstChild.textContent = ' Downloading...';
+
+            return download(Routes.BASE_URL + ORGANIZATIONS.EXPORT).then(() => {
+              element.innerHTML = original;
+            });
+          }}
+        >
+          <FontAwesomeIcon icon="file-excel" /> <span>Download as .xls</span>
+        </button>
       </div>
       {isFetching && <Loading />}
       {!isFetching &&
