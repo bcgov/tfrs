@@ -60,3 +60,21 @@
     }
   }
 }
+
+.organization-edit-details {
+  .main-form {
+    margin-left: -15px;
+    margin-right: -15px;
+
+    label {
+      font-weight: normal;
+      width: 100%;
+    }
+  }
+
+  .organization-actions {
+    .btn-container {
+      text-align: right;
+    }  
+  }
+}

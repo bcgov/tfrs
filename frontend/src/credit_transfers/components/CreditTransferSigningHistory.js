@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import moment from 'moment';
 
 import { CREDIT_TRANSFER_STATUS } from '../../../src/constants/values';
-import arrayMove from '../../utils/functions';
+import { arrayMove } from '../../utils/functions';
 
 class CreditTransferSigningHistory extends Component {
   static recordedFound (histories) {
