@@ -3,12 +3,12 @@
  * All data handling & manipulation should be handled here.
  */
 
-import React, {Component} from 'react';
-import {connect} from 'react-redux';
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import {bindActionCreators} from 'redux';
+import { bindActionCreators } from 'redux';
 
-import {addOrganization, getOrganization, updateOrganization} from '../actions/organizationActions';
+import { addOrganization, getOrganization, updateOrganization } from '../actions/organizationActions';
 import Loading from '../app/components/Loading';
 import OrganizationEditForm from './components/OrganizationEditForm';
 import history from '../app/History';
@@ -17,7 +17,7 @@ import ORGANIZATION from '../constants/routes/Organizations';
 import Modal from '../app/components/Modal';
 
 class OrganizationEditContainer extends Component {
-  constructor(props) {
+  constructor (props) {
     super(props);
 
     this.state = {
@@ -34,8 +34,7 @@ class OrganizationEditContainer extends Component {
         type: 2,
         actionsType: 1,
         status: 1
-      },
-      validationErrors: {}
+      }
     };
 
     this.submitted = false;
@@ -45,7 +44,7 @@ class OrganizationEditContainer extends Component {
     this._handleUpdate = this._handleUpdate.bind(this);
   }
 
-  componentDidMount() {
+  componentDidMount () {
     if (this.props.mode === 'add') {
       return;
     }
@@ -53,8 +52,7 @@ class OrganizationEditContainer extends Component {
     this.loadData(this.props.match.params.id);
   }
 
-
-  componentWillReceiveProps(props) {
+  componentWillReceiveProps (props) {
     if (props.mode === 'add') {
       return;
     }
@@ -62,12 +60,11 @@ class OrganizationEditContainer extends Component {
     this.loadPropsToFieldState(props);
   }
 
-
-  loadData(id) {
+  loadData (id) {
     this.props.getOrganization(id);
   }
 
-  loadPropsToFieldState(props) {
+  loadPropsToFieldState (props) {
     if (Object.keys(props.organization.details).length !== 0 && !this.submitted) {
       const org = props.organization.details;
       let addr = {};
@@ -90,7 +87,7 @@ class OrganizationEditContainer extends Component {
     }
   }
 
-  _modalConfirm() {
+  _modalConfirm () {
     return (
       <Modal
         handleSubmit={(event) => {
@@ -104,9 +101,9 @@ class OrganizationEditContainer extends Component {
     );
   }
 
-  _handleInputChange(event) {
-    const {value, name} = event.target;
-    const fieldState = {...this.state.fields};
+  _handleInputChange (event) {
+    const { value, name } = event.target;
+    const fieldState = { ...this.state.fields };
     const numericFields = ['type', 'actionsType', 'status'];
 
     if (numericFields.includes(name)) {
@@ -120,7 +117,7 @@ class OrganizationEditContainer extends Component {
     });
   }
 
-  _handleUpdate(event) {
+  _handleUpdate (event) {
     event.preventDefault();
 
     const data = {
@@ -150,7 +147,7 @@ class OrganizationEditContainer extends Component {
     return false;
   }
 
-  _handleCreate() {
+  _handleCreate () {
     const data = {
       name: this.state.fields.name,
       type: this.state.fields.type,
@@ -177,13 +174,13 @@ class OrganizationEditContainer extends Component {
     return false;
   }
 
-  render() {
+  render () {
     const isFetching = this.props.organization.isFetching ||
       this.props.referenceData.isFetching ||
       !this.props.referenceData.isSuccessful;
 
     if (isFetching) {
-      return (<Loading/>);
+      return (<Loading />);
     }
 
     switch (this.props.mode) {
@@ -197,7 +194,7 @@ class OrganizationEditContainer extends Component {
           }}
           mode={this.props.mode}
         />,
-          this._modalConfirm()]);
+        this._modalConfirm()]);
       case 'gov_edit':
       case 'edit':
         return (<OrganizationEditForm
@@ -208,7 +205,7 @@ class OrganizationEditContainer extends Component {
           mode={this.props.mode}
         />);
       default:
-        return (<div/>);
+        return (<div />);
     }
   }
 }

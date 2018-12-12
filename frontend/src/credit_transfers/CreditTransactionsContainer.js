@@ -90,6 +90,7 @@ class CreditTransactionsContainer extends Component {
     return (
       <CreditTransactionsPage
         creditTransfers={this._getCreditTransfers()}
+        handleDownload={this._handleDownload}
         highlight={this.props.match.params.id}
         loggedInUser={this.props.loggedInUser}
         organization={this._selectedOrganization()}

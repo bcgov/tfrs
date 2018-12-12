@@ -19,6 +19,7 @@ module.exports = {
     "import/no-extraneous-dependencies": ["error", {"devDependencies": true}]
   },
   "env": {
+    "browser": true,
     "jest/globals": true
   }
 };
