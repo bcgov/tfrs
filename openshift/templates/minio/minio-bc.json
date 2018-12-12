@@ -1,0 +1,85 @@
+{
+    "kind": "Template",
+    "apiVersion": "v1",
+    "metadata": {
+        "name": "tfrs-minio",
+        "creationTimestamp": null
+    },
+    "objects": [
+        {
+            "kind": "ImageStream",
+            "apiVersion": "v1",
+            "metadata": {
+                "name": "tfrs-minio",
+                "generation": 1,
+                "creationTimestamp": null
+            },
+            "spec": {
+                "lookupPolicy": {
+                    "local": false
+                }
+            },
+            "status": {
+                "dockerImageRepository": ""
+            }
+        },
+        {
+            "kind": "BuildConfig",
+            "apiVersion": "v1",
+            "metadata": {
+                "name": "tfrs-minio",
+                "creationTimestamp": null,
+                "labels": {
+                    "app": "tfrs-minio",
+                    "name": "tfrs-minio",
+                    "template": "tfrs-minio"
+                }
+            },
+            "spec": {
+                "triggers": [],
+                "runPolicy": "Parallel",
+                "source": {
+                    "type": "Git",
+                    "git": {
+                        "uri": "https://github.com/BCDevOps/minio-openshift",
+                        "ref": "master"
+                    }
+                },
+                "strategy": {
+                    "type": "Docker",
+                    "dockerStrategy": {
+                        "env": [
+                            {
+                                "name": "MINIO_ACCESS_KEY"
+                            },
+                            {
+                                "name": "MINIO_SECRET_KEY"
+                            },
+                            {
+                                "name": "MINIO_CONFIG_DIR"
+                            },
+                            {
+                                "name": "MINIO_DATA_DIR"
+                            },
+                            {
+                                "name": "MINIO_BIN"
+                            }
+                        ]
+                    }
+                },
+                "output": {
+                    "to": {
+                        "kind": "ImageStreamTag",
+                        "name": "tfrs-minio:latest"
+                    }
+                },
+                "resources": {},
+                "postCommit": {},
+                "nodeSelector": {}
+            },
+            "status": {
+                "lastVersion": 0
+            }
+        }
+    ]
+}
