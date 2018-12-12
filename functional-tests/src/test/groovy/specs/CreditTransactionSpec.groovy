@@ -184,4 +184,18 @@ class CreditTransactionSpec extends LoggedInSpec {
     then: 'My credit balance was updated correctly based on the amounts awarded, validated, and reduced'
       getCreditBalance() == receivingFuelSupplier_initialCreditBalance + 11 + 22 - 44
   }
+
+  void 'Log in as a Director and download the credit transactions as XLS'() {
+    given: 'I am logged in as a Director'
+      logInAsDirector()
+    and: 'I am at the Transactions Page'
+      at CreditTransactionsPage
+    when: 'I click on the Download button'
+      clickDownloadButton()
+    then: 
+      getDownloadButtonText() == 'Downloading...'
+      sleep(10000)
+    and:
+      getDownloadButtonText() == 'Download as .xls'
+  }
 }
