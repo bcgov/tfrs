@@ -22,6 +22,7 @@ const OrganizationEditForm = props => (
                 className="form-control"
                 id="organization-name"
                 name="name"
+                placeholder="Fuel Supplier Name"
                 onChange={props.handleInputChange}
                 value={props.fields.name}
               />
@@ -217,9 +218,10 @@ const OrganizationEditForm = props => (
           <FontAwesomeIcon icon="arrow-circle-left" /> {Lang.BTN_APP_CANCEL}
         </button>
         <button
-          type="submit"
           className="btn btn-primary"
+          id="save-organization"
           onClick={e => props.handleSubmit(e)}
+          type="submit"
         >
           <FontAwesomeIcon icon="save" /> {Lang.BTN_SAVE}
         </button>

@@ -24,6 +24,7 @@ const OrganizationsPage = (props) => {
           <FontAwesomeIcon icon="plus-circle" /> Create Organization
         </button>
         <button
+          id="create-organization"
           className="btn btn-info"
           type="button"
           onClick={(e) => {

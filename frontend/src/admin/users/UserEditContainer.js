@@ -45,18 +45,12 @@ class UserEditContainer extends Component {
     this._toggleCheck = this._toggleCheck.bind(this);
   }
 
-  componentWillMount () {
+  componentDidMount () {
     this.loadData(this.props.match.params.id);
   }
 
   componentWillReceiveProps (props) {
     this.loadPropsToFieldState(props);
-  }
-
-  componentWillReceiveNewProps (prevProps, newProps) {
-    if (prevProps.match.params.id !== newProps.match.params.id) {
-      this.loadData(newProps.match.params.id);
-    }
   }
 
   loadData (id) {

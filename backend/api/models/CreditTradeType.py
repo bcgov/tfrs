@@ -23,11 +23,13 @@
 
 from django.db import models
 
+from api.models.mixins.DisplayOrder import DisplayOrder
+from api.models.mixins.EffectiveDates import EffectiveDates
 from auditable.models import Auditable
 from api.managers.CreditTradeTypeManager import CreditTradeTypeManager
 
 
-class CreditTradeType(Auditable):
+class CreditTradeType(Auditable, DisplayOrder, EffectiveDates):
     """
     Holds the different types of Credit Trades and if they're only usable
     by government users only
@@ -41,12 +43,7 @@ class CreditTradeType(Auditable):
     )
     description = models.CharField(
         max_length=1000, blank=True, null=True, db_comment='Description of the credit trade type. This is the displayed name.')
-    display_order = models.IntegerField(
-        db_comment='Relative rank in display sorting order')
-    effective_date = models.DateField(
-        blank=True, null=True, db_comment='The calendar date the credit trade type value became valid.')
-    expiration_date = models.DateField(
-        blank=True, null=True, db_comment='The calendar date the credit trade type value is no longer valid.')
+
     is_gov_only_type = models.BooleanField(
         db_comment='Flag. True if only government users can create this type '
                    'of transfer.'

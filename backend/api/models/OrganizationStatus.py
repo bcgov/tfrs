@@ -21,10 +21,14 @@
 
 from django.db import models
 
+from api.models.mixins.DisplayOrder import DisplayOrder
+from api.models.mixins.EffectiveDates import EffectiveDates
 from auditable.models import Auditable
 from api.managers.OrganizationStatusManager import OrganizationStatusManager
 
-class OrganizationStatus(Auditable):
+
+class OrganizationStatus(Auditable, EffectiveDates, DisplayOrder):
+
     status = models.CharField(max_length=25,
                               unique=True,
                               db_comment='Enumerated value to describe the organization status.')
@@ -32,9 +36,7 @@ class OrganizationStatus(Auditable):
                                    blank=True,
                                    null=True,
                                    db_comment='Description of the organization status. This is the displayed name.')
-    display_order = models.IntegerField(db_comment='Relative rank in display sorting order')
-    effective_date = models.DateField(blank=True, null=True, db_comment='The calendar date that the organization status type value became valid.')
-    expiration_date = models.DateField(blank=True, null=True, db_comment='The calendar date that the organization status type value is no longer valid.')
+
     objects = OrganizationStatusManager()
 
     def natural_key(self):

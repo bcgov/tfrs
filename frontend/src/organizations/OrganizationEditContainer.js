@@ -93,8 +93,8 @@ class OrganizationEditContainer extends Component {
         handleSubmit={(event) => {
           this._handleCreate();
         }}
-        id="confirmFuelSupplierAdd"
-        key="confirmFuelSupplierAdd"
+        id="confirmSubmit"
+        key="confirmSubmit"
       >
         Are you sure you want to add this Fuel Supplier?
       </Modal>
@@ -168,7 +168,7 @@ class OrganizationEditContainer extends Component {
     this.props.addOrganization(data).then((id) => {
       const viewUrl = ORGANIZATION.DETAILS.replace(':id', id);
       history.push(viewUrl);
-      toastr.organizationSuccess();
+      toastr.organizationSuccess('Organization created.');
     });
 
     return false;
@@ -190,7 +190,7 @@ class OrganizationEditContainer extends Component {
           handleInputChange={this._handleInputChange}
           referenceData={this.props.referenceData}
           handleSubmit={() => {
-            $('#confirmFuelSupplierAdd').modal('show');
+            $('#confirmSubmit').modal('show');
           }}
           mode={this.props.mode}
         />,

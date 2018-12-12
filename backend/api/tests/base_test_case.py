@@ -94,7 +94,11 @@ class BaseTestCase(TestCase):
 
     def setUp(self):
         """Configure test clients"""
+
         super().setUp()
+
+        # Turn the documents API on
+        settings.DOCUMENTS_API['ENABLED'] = True
 
         self.patcher = mock.patch('api.notifications.notifications.send_amqp_notification')
         self.patcher.start()
