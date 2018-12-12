@@ -2,40 +2,77 @@
     "kind": "Template",
     "apiVersion": "v1",
     "metadata": {
-        "name": "backend-bc",
+        "name": "tfrs-backend-bc",
         "creationTimestamp": null
     },
-    "labels": {
-        "template": "tfrs-backend-template"
-    },
     "parameters": [
-      {
-        "name": "NAME_SUFFIX",
-        "displayName": "Name Suffix",
-        "description": "A suffix appended to all objects",
-        "required": true
-      },
-      {
-        "name": "SOURCE_REPOSITORY_URL",
-        "required": true
-      },
-      {
-        "name": "ENV_NAME",
-        "required": true
-      }
+        {
+            "name": "NAME_SUFFIX",
+            "description": "TFRS name suffix, such as -dev-pr-5",
+            "required": true
+        },
+        {
+            "name": "PR_NUM",
+            "description": "TFRS pull request number, such as pr-5",
+            "required": true
+        },
+        {
+            "name": "TFRS_SOURCE_REPO_URL",
+            "description": "TFRS Git Repo URL",
+            "required": true
+        },
+        {
+            "name": "TFRS_SOURCE_REPO_REF",
+            "description": "TFRS Git Pull Request Reference, like pull/CHANGE_ID/head",
+            "required": true
+        }
     ],
     "objects": [
         {
             "kind": "ImageStream",
             "apiVersion": "v1",
             "metadata": {
-                "name": "backend${NAME_SUFFIX}",
+                "name": "tfrs-python",
+                "labels": {
+                    "appver": "tfrs-python"
+                },
+                "creationTimestamp": null,
+                "annotations": {
+                    "description": "TFRS Python Base Image"
+                }
+            },
+            "spec": {
+                "lookupPolicy": {
+                    "local": false
+                },
+                "tags":[
+                    {
+                        "name": "3.6",
+                        "annotations": null,
+                        "from": {
+                            "kind": "ImageStreamTag",
+                            "namespace": "openshift",
+                            "name": "python:3.6"
+                        },
+                        "importPolicy": {},
+                        "referencePolicy": {
+                            "type": "Source"
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            "kind": "ImageStream",
+            "apiVersion": "v1",
+            "metadata": {
+                "name": "tfrs-backend${NAME_SUFFIX}",
                 "creationTimestamp": null,
                 "labels": {
-                    "base-name":"backend"
+                    "base-name":"tfrs-backend"
                 },
                 "annotations": {
-                    "description": "Keeps track of changes in the backend application image"
+                    "description": "Keeps track of changes in the tfrs backend image"
                 }
             },
             "spec": {
@@ -49,13 +86,13 @@
             "kind": "BuildConfig",
             "apiVersion": "v1",
             "metadata": {
-                "name": "backend${NAME_SUFFIX}",
+                "name": "tfrs-backend${NAME_SUFFIX}",
                 "creationTimestamp": null,
                 "labels": {
-                    "base-name":"backend"
+                    "base-name":"tfrs-backend"
                 },                
                 "annotations": {
-                    "description": "Defines how to build the application"
+                    "description": "Defines how to build tfrs backend"
                 }
             },
             "spec": {
@@ -72,8 +109,8 @@
                 "source": {
                     "type": "Git",
                     "git": {
-                        "uri": "${SOURCE_REPOSITORY_URL}",
-                        "ref": "master"
+                        "uri": "${TFRS_SOURCE_REPO_URL}",
+                        "ref": "${TFRS_SOURCE_REPO_REF}"
                     },
                     "contextDir": "backend"
                 },
@@ -82,8 +119,7 @@
                     "sourceStrategy": {
                         "from": {
                             "kind": "ImageStreamTag",
-                            "namespace": "openshift",
-                            "name": "python:3.6"
+                            "name": "tfrs-python:3.6"
                         },
                         "env": [
                             {
@@ -95,7 +131,7 @@
                 "output": {
                     "to": {
                         "kind": "ImageStreamTag",
-                        "name": "backend${NAME_SUFFIX}:${ENV_NAME}"
+                        "name": "tfrs-backend:${PR_NUM}"
                     }
                 },
                 "resources": {},
