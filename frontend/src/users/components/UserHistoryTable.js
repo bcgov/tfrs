@@ -135,7 +135,7 @@ class UserHistoryTable extends React.Component {
 
     return (
       <ReactTable
-        defaultPageSize={15}
+        defaultPageSize={10}
         defaultSorted={[{
           id: 'updateTimestamp',
           desc: true
