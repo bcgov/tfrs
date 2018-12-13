@@ -68,6 +68,7 @@ const RolesTable = (props) => {
         return {};
       }}
       columns={columns}
+      defaultPageSize={10}
     />
   );
 };

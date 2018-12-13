@@ -36,6 +36,7 @@ const Permissions = (props) => {
     <ReactTable
       className="searchable"
       data={props.items}
+      defaultPageSize={10}
       defaultSorted={[{
         id: 'permission'
       }]}
