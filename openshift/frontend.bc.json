@@ -10,18 +10,24 @@
     },
     "parameters": [
         {
-          "name": "NAME_SUFFIX",
-          "displayName": "Name Suffix",
-          "description": "A suffix appended to all objects",
-          "required": true
+            "name": "NAME_SUFFIX",
+            "description": "TFRS name suffix, such as -dev-pr-5",
+            "required": true
         },
         {
-          "name": "SOURCE_REPOSITORY_URL",
-          "required": true
+            "name": "PR_NUM",
+            "description": "TFRS pull request number, such as pr-5",
+            "required": true
         },
         {
-          "name": "ENV_NAME",
-          "required": true
+            "name": "TFRS_SOURCE_REPO_URL",
+            "description": "TFRS Git Repo URL",
+            "required": true
+        },
+        {
+            "name": "TFRS_SOURCE_REPO_REF",
+            "description": "TFRS Git Repo Reference of the pull request",
+            "required": true
         }
       ],
     "objects": [
@@ -29,11 +35,48 @@
             "kind": "ImageStream",
             "apiVersion": "v1",
             "metadata": {
-                "name": "frontend-angular-app${NAME_SUFFIX}",
+                "name": "tfrs-nodejs",
+                "labels": {
+                    "appver": "tfrs-nodejs"
+                },
+                "creationTimestamp": null,
+                "annotations": {
+                    "description": "TFRS Nodejs Base Image"
+                }
+            },
+            "spec": {
+                "lookupPolicy": {
+                    "local": false
+                },
+                "tags":[
+                    {
+                        "name": "8",
+                        "annotations": null,
+                        "from": {
+                            "kind": "ImageStreamTag",
+                            "namespace": "openshift",
+                            "name": "nodejs:8"
+                        },
+                        "importPolicy": {},
+                        "referencePolicy": {
+                            "type": "Source"
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            "kind": "ImageStream",
+            "apiVersion": "v1",
+            "metadata": {
+                "name": "tfrs-frontend-angular-app",
                 "generation": 1,
                 "creationTimestamp": null,
                 "labels": {
-                    "base-name":"frontend-angular-app"
+                    "base-name":"tfrs-frontend-angular-app"
+                },
+                "annotations": {
+                    "description": "Keeps track of changes in tfrs frontend image"
                 }
             },
             "spec": {
@@ -47,13 +90,13 @@
             "kind": "ImageStream",
             "apiVersion": "v1",
             "metadata": {
-                "name": "frontend${NAME_SUFFIX}",
+                "name": "tfrs-frontend",
                 "creationTimestamp": null,
                 "labels": {
-                    "base-name":"frontend"
+                    "base-name":"tfrs-frontend"
                 },
                 "annotations": {
-                    "description": "Keeps track of changes in the frontend image"
+                    "description": "This applies nginx on top of tfrs-frontend-angular-app"
                 }
             },
             "spec": {
@@ -67,10 +110,10 @@
             "kind": "BuildConfig",
             "apiVersion": "v1",
             "metadata": {
-                "name": "frontend-angular-app-build${NAME_SUFFIX}",
+                "name": "tfrs-frontend-angular-app${NAME_SUFFIX}",
                 "creationTimestamp": null,
                 "labels": {
-                    "base-name":"frontend"
+                    "base-name":"tfrs-frontend-angular-app"
                 }
             },
             "spec": {
@@ -87,8 +130,8 @@
                 "source": {
                     "type": "Git",
                     "git": {
-                        "uri": "${SOURCE_REPOSITORY_URL}",
-                        "ref": "master"
+                        "uri": "${TFRS_SOURCE_REPO_URL}",
+                        "ref": "${TFRS_SOURCE_REPO_REF}"
                     },
                     "contextDir": "frontend"
                 },
@@ -97,26 +140,17 @@
                     "sourceStrategy": {
                         "from": {
                             "kind": "ImageStreamTag",
-                            "namespace": "openshift",
-                            "name": "nodejs:6"
+                            "name": "tfrs-nodejs:8"
                         }
                     }
                 },
                 "output": {
                     "to": {
                         "kind": "ImageStreamTag",
-                        "name": "frontend-angular-app${NAME_SUFFIX}:${ENV_NAME}"
+                        "name": "tfrs-frontend-angular-app:${PR_NUM}"
                     }
                 },
-                "resources": {
-                    "limits": {
-                        "cpu": "1",
-                        "memory": "4Gi"
-                    },
-                    "requests": {
-                        "memory": "2Gi"
-                    }
-                },
+                "resources": {},
                 "postCommit": {},
                 "nodeSelector": null
             },
@@ -128,7 +162,7 @@
             "kind": "BuildConfig",
             "apiVersion": "v1",
             "metadata": {
-                "name": "frontend${NAME_SUFFIX}",
+                "name": "tfrs-frontend${NAME_SUFFIX}",
                 "creationTimestamp": null,
                 "annotations": {
                     "description": "Defines how to build the frontend image"
@@ -147,12 +181,12 @@
                 "runPolicy": "Serial",
                 "source": {
                     "type": "Dockerfile",
-                    "dockerfile": "FROM frontend-angular-app${NAME_SUFFIX}:${ENV_NAME}\nCOPY * /tmp/app/dist/\nCMD  /usr/libexec/s2i/run",
+                    "dockerfile": "FROM tfrs-frontend-angular-app:${PR_NUM}\nCOPY * /tmp/app/dist/\nCMD  /usr/libexec/s2i/run",
                     "images": [
                         {
                             "from": {
                                 "kind": "ImageStreamTag",
-                                "name": "frontend-angular-app${NAME_SUFFIX}:${ENV_NAME}"
+                                "name": "tfrs-frontend-angular-app:${PR_NUM}"
                             },
                             "paths": [
                                 {
@@ -175,15 +209,10 @@
                 "output": {
                     "to": {
                         "kind": "ImageStreamTag",
-                        "name": "frontend${NAME_SUFFIX}:${ENV_NAME}"
+                        "name": "tfrs-frontend:${PR_NUM}"
                     }
                 },
-                "resources": {
-                    "limits": {
-                        "cpu": "2",
-                        "memory": "4Gi"
-                    }
-                },
+                "resources": {},
                 "postCommit": {},
                 "nodeSelector": null
             },
