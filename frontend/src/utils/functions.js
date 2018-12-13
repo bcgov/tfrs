@@ -27,6 +27,7 @@ const validateFiles = files => (
     switch (file.type) {
       case 'application/msoutlook':
       case 'application/pdf':
+      case 'application/vnd.ms-excel':
       case 'application/vnd.openxmlformats-officedocument.presentationml.presentation':
       case 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet':
       case 'image/gif':
@@ -37,7 +38,7 @@ const validateFiles = files => (
       case 'text/plain':
         return file.type;
       default:
-        if (file.name.split('.').pop() === 'xls' || file.name.split('.').pop() === 'ppt') {
+        if (file.name.endsWith('xls') || file.name.endsWith('ppt')) {
           return file;
         }
 
