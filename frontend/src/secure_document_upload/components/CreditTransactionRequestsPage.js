@@ -41,16 +41,6 @@ const CreditTransactionRequestsPage = (props) => {
               <li>
                 <button
                   onClick={() => {
-                    props.requestURL();
-                  }}
-                  type="button"
-                >
-                Request URL
-                </button>
-              </li>
-              <li>
-                <button
-                  onClick={() => {
                     const route = SECURE_DOCUMENT_UPLOAD.ADD.replace(':type', 'application');
 
                     history.push(route);
@@ -117,7 +107,6 @@ CreditTransactionRequestsPage.defaultProps = {
 
 CreditTransactionRequestsPage.propTypes = {
   title: PropTypes.string.isRequired,
-  requestURL: PropTypes.func.isRequired,
 };
 
 export default CreditTransactionRequestsPage;

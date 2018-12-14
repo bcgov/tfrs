@@ -1,4 +1,3 @@
-# coding: utf-8
 """
     REST API Documentation for the NRS TFRS Credit Trading Application
 
@@ -21,31 +20,23 @@
     See the License for the specific language governing permissions and
     limitations under the License.
 """
-from db_comments.patch_fields import patch_fields
+from api.models.Document import Document
+from api.models.mixins.AttachmentData import AttachmentData
+from auditable.models import Auditable
+from django.db import models
 
-from . import User
-from . import CreditTrade
-from . import CompliancePeriod
-from . import CreditTradeHistory
-from . import CreditTradeZeroReason
-from . import DocumentStatus
-from . import DocumentType
-from . import OrganizationActionsType
-from . import OrganizationAddress
-from . import OrganizationBalance
-from . import OrganizationStatus
-from . import OrganizationType
-from . import Role
-from . import Permission
-from . import RolePermission
-from . import SigningAuthorityAssertion
-from . import SigningAuthorityConfirmation
-from . import UserRole
-from . import CreditTradeComment
-from . import OrganizationAddress
-from . import UserCreationRequest
-from . import Document
-from . import DocumentHistory
-from . import DocumentFileAttachment
 
-patch_fields()
+class DocumentFileAttachment(Auditable, AttachmentData):
+    """
+    Holds file metadata
+    """
+    document = models.ForeignKey(
+        Document,
+        related_name='attachments',
+        null=False,
+        on_delete=models.PROTECT)
+
+    class Meta:
+        db_table = 'document_file'
+
+    db_table_comment = ''

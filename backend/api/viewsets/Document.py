@@ -23,14 +23,14 @@ from api.notifications.notifications import AMQPNotificationService, \
     EffectiveSubscriptionSerializer, EffectiveSubscriptionUpdateSerializer
 from api.permissions.Documents import DocumentPermissions
 from api.permissions.Notifications import NotificationPermissions
-from api.serializers.Document import DocumentSerializer, DocumentMinSerializer
+from api.serializers.Document import DocumentSerializer, DocumentMinSerializer, DocumentCreateSerializer
 from api.serializers.DocumentCategory import DocumentCategorySerializer
 from api.serializers.DocumentStatus import DocumentStatusSerializer
-from api.serializers.Notifications import NotificationMessageSerializer
 from auditable.views import AuditableMixin
 from tfrs.settings import MINIO
 
 class DocumentViewSet(AuditableMixin,
+                      mixins.CreateModelMixin,
                       mixins.ListModelMixin,
                       mixins.RetrieveModelMixin,
                       viewsets.GenericViewSet):
@@ -40,6 +40,7 @@ class DocumentViewSet(AuditableMixin,
 
     serializer_classes = {
         'default': DocumentSerializer,
+        'create': DocumentCreateSerializer,
         'list': DocumentMinSerializer,
         'categories': DocumentCategorySerializer,
         'statuses': DocumentStatusSerializer
@@ -56,19 +57,6 @@ class DocumentViewSet(AuditableMixin,
         categories = DocumentCategory.objects.all()
 
         serializer = self.get_serializer(categories,
-                                         read_only=True,
-                                         many=True)
-
-        return Response(serializer.data)
-
-    @list_route(methods=['get'], permission_classes=[AllowAny])
-    def statuses(self, request):
-        """
-            Reference data for UI
-        """
-        statuses = DocumentStatus.objects.all()
-
-        serializer = self.get_serializer(statuses,
                                          read_only=True,
                                          many=True)
 
@@ -100,13 +88,7 @@ class DocumentViewSet(AuditableMixin,
                       secure=MINIO['USE_SSL'])
         url = minio.presigned_put_object(bucket_name=MINIO['BUCKET_NAME'],
                                          object_name=uuid.uuid4().hex,
-                                         expires=timedelta(hours=2))
+                                         expires=timedelta(hours=1))
 
         return HttpResponse(url)
 
-# def list(self, request, *args, **kwargs):
-    #     """
-    #     Lists all the documents.
-    #     """
-    #     return super().list(self, request, *args, **kwargs)
-    #

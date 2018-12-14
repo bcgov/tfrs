@@ -25,10 +25,9 @@ from api.models.mixins.DocumentData import DocumentData
 from auditable.models import Auditable
 
 
-class Document(Auditable, DocumentData, AttachmentData):
+class Document(Auditable, DocumentData):
     """
-    Holds the credit trade proposal information between the
-    organizations
+    Holds the documents that constitute evidence or compliance records etc.
     """
     class Meta:
         db_table = 'document'

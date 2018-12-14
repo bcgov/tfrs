@@ -1,3 +1,4 @@
+from api.models.CompliancePeriod import CompliancePeriod
 from api.models.DocumentStatus import DocumentStatus
 from django.db import models
 
@@ -10,6 +11,12 @@ class DocumentData(models.Model):
 
     title = models.CharField(
         max_length=120
+    )
+
+    comment = models.CharField(
+        max_length=1024,
+        null=True,
+        blank=True
     )
 
     status = models.ForeignKey(
@@ -26,6 +33,12 @@ class DocumentData(models.Model):
 
     creating_organization = models.ForeignKey(
         Organization,
+        on_delete=models.PROTECT,
+        null=False
+    )
+
+    compliance_period = models.ForeignKey(
+        CompliancePeriod,
         on_delete=models.PROTECT,
         null=False
     )
