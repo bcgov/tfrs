@@ -1,0 +1,28 @@
+
+
+
+
+/postgresql-backup is mounted to both 9.5 and 9.6 pod, it is shared pvc "RWX (Read-Write-Many)"
+
+1. oc project to the environment project
+
+2. manually delete autoscalers for both client and tfrs
+
+3. scale down both client and tfrs to 0
+
+4 login current postgresql 9.5 pod and run command to back up all the data
+pg_dump tfrs | gzip > /postgresql-backup/SQLDump/dev/tfrs-dev-20181214-122400.gz
+
+5. scale down postgresql to 0
+
+6. run below oc command to create a new PVC and new postgresql 9.6 deployment config, wait till the new pod uop and running
+oc process -f ./postgresql96.dc.json PVC_SIZE=5Gi | oc create -f -
+
+7. login the new postgresql 9.6 pod and run below command to restore all the data from backup
+gunzip -c /postgresql-backup/SQLDump/dev/tfrs-dev-20181214-122400.gz | psql tfrs
+
+8. modify service postgresql, set selector name to postgresql96 to choose 9.6 pod
+
+9. scale tfrs and client to 1 pod
+
+10. add autoscaler back for tfrs and client
