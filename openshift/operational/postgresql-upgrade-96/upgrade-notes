@@ -4,25 +4,33 @@
 
 /postgresql-backup is mounted to both 9.5 and 9.6 pod, it is shared pvc "RWX (Read-Write-Many)"
 
-1. oc project to the environment project
+* 1. oc project to the environment project
 
-2. manually delete autoscalers for both client and tfrs
+* 1.5 login to Keycloak to verify if there are any active user sessions
 
-3. scale down both client and tfrs to 0
+* 2. manually delete autoscalers for both client and tfrs but need to write down the configurations as we need to add them back later on
 
-4 login current postgresql 9.5 pod and run command to back up all the data
+* 3. scale down both client and tfrs to 0
+
+* 4 login current postgresql 9.5 pod and run command to back up all the data
 pg_dump tfrs | gzip > /postgresql-backup/SQLDump/dev/tfrs-dev-20181214-122400.gz
+pg_dump tfrs | gzip > /postgresql-backup/SQLDump/test/tfrs-test-20181217-103500.gz
 
-5. scale down postgresql to 0
+* 5. scale down postgresql to 0
 
-6. run below oc command to create a new PVC and new postgresql 9.6 deployment config, wait till the new pod uop and running
+* 6. run below oc command to create a new PVC and new postgresql 9.6 deployment config
 oc process -f ./postgresql96.dc.json PVC_SIZE=5Gi | oc create -f -
+Verify if a new PVC postgresql96-cns and a new dc postgresql96 have been created sucessfully.
+also the new pod of posgresal96 should have been up and running before going to next step
 
-7. login the new postgresql 9.6 pod and run below command to restore all the data from backup
+* 7. login the new postgresql 9.6 pod and run below command to restore all the data from backup
 gunzip -c /postgresql-backup/SQLDump/dev/tfrs-dev-20181214-122400.gz | psql tfrs
+gunzip -c /postgresql-backup/SQLDump/test/tfrs-test-20181217-103500.gz | psql tfrs
 
-8. modify service postgresql, set selector name to postgresql96 to choose 9.6 pod
+* 8. modify service postgresql, set selector name to postgresql96 to choose 9.6 pod
 
-9. scale tfrs and client to 1 pod
+* 9. scale tfrs and client to 1 pod
 
-10. add autoscaler back for tfrs and client
+* 10. add autoscaler back for tfrs and client
+
+11. The PVC/postgresql-cns and DC/postgresql for Postgresql 9.5 need to be kept for a week or so before deleting it
