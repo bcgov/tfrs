@@ -42,9 +42,9 @@ from . import SigningAuthorityAssertion
 from . import SigningAuthorityConfirmation
 from . import UserRole
 from . import CreditTradeComment
-from . import OrganizationAddress
 from . import UserCreationRequest
 from . import Document
 from . import DocumentHistory
+from . import DocumentFileAttachment
 
 patch_fields()

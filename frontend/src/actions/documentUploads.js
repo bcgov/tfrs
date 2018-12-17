@@ -120,6 +120,39 @@ const addDocumentUploadError = error => ({
   errorMessage: error
 });
 
+const getDocumentUploadURL = data => (dispatch) => {
+  dispatch(getDocumentUploadURLRequest());
+
+  return axios
+    .post(Routes.BASE_URL + Routes.SECURE_DOCUMENT_UPLOAD.API + '/generate_upload_url', data)
+    .then((response) => {
+      dispatch(getDocumentUploadURLSuccess(response.data));
+      return Promise.resolve(response);
+    }).catch((error) => {
+      dispatch(getDocumentUploadURLError(error.response.data));
+      return Promise.reject(error);
+    });
+};
+
+const getDocumentUploadURLRequest = () => ({
+  name: ReducerTypes.GET_UPLOAD_URL_REQUEST,
+  type: ActionTypes.GET_UPLOAD_URL
+});
+
+const getDocumentUploadURLSuccess = data => ({
+  name: ReducerTypes.SUCCESS_GET_UPLOAD_URL,
+  type: ActionTypes.SUCCESS_GET_UPLOAD_URL,
+  data
+});
+
+const getDocumentUploadURLError = error => ({
+  name: ReducerTypes.ERROR_GET_UPLOAD_URL,
+  type: ActionTypes.ERROR,
+  errorMessage: error
+});
+
+
+
 const updateDocumentUpload = (data, id) => (dispatch) => {
   dispatch(updateDocumentUploadRequest({ id, data }));
 
@@ -154,5 +187,6 @@ export {
   deleteDocumentUpload,
   getDocumentUpload,
   getDocumentUploads,
+  getDocumentUploadURL,
   updateDocumentUpload
 };

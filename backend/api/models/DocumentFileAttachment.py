@@ -20,12 +20,23 @@
     See the License for the specific language governing permissions and
     limitations under the License.
 """
-from rest_framework import serializers
+from api.models.Document import Document
+from api.models.mixins.AttachmentData import AttachmentData
+from auditable.models import Auditable
+from django.db import models
 
-from api.models.DocumentType import DocumentType
 
+class DocumentFileAttachment(Auditable, AttachmentData):
+    """
+    Holds file metadata
+    """
+    document = models.ForeignKey(
+        Document,
+        related_name='attachments',
+        null=False,
+        on_delete=models.PROTECT)
 
-class DocumentTypeSerializer(serializers.ModelSerializer):
     class Meta:
-        model = DocumentType
-        fields = ('the_type', 'id')
+        db_table = 'document_file'
+
+    db_table_comment = ''

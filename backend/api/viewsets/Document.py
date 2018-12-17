@@ -1,41 +1,38 @@
-import base64
-import random
-from functools import wraps
+import uuid
+from datetime import timedelta
 
 from django.db.models import Q
-from django.views.decorators.cache import never_cache
+from django.http import HttpResponse
+from minio import Minio
 
-from rest_framework import viewsets, serializers, mixins, status
+from rest_framework import viewsets, mixins
 from rest_framework.decorators import list_route
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 
-from api.decorators import permission_required
 from api.models.Document import Document
 from api.models.DocumentCategory import DocumentCategory
-from api.models.DocumentStatus import DocumentStatus
-from api.models.NotificationMessage import NotificationMessage
-from api.notifications.notifications import AMQPNotificationService, \
-    EffectiveSubscriptionSerializer, EffectiveSubscriptionUpdateSerializer
 from api.permissions.Documents import DocumentPermissions
-from api.permissions.Notifications import NotificationPermissions
-from api.serializers.Document import DocumentSerializer, DocumentMinSerializer
+from api.serializers.Document import \
+    DocumentSerializer, DocumentMinSerializer, DocumentCreateSerializer
 from api.serializers.DocumentCategory import DocumentCategorySerializer
 from api.serializers.DocumentStatus import DocumentStatusSerializer
-from api.serializers.Notifications import NotificationMessageSerializer
 from auditable.views import AuditableMixin
+from tfrs.settings import MINIO
 
 
 class DocumentViewSet(AuditableMixin,
+                      mixins.CreateModelMixin,
                       mixins.ListModelMixin,
                       mixins.RetrieveModelMixin,
                       viewsets.GenericViewSet):
 
     permission_classes = (DocumentPermissions,)
-    http_method_names = ['get']
+    http_method_names = ['get', 'post']
 
     serializer_classes = {
         'default': DocumentSerializer,
+        'create': DocumentCreateSerializer,
         'list': DocumentMinSerializer,
         'categories': DocumentCategorySerializer,
         'statuses': DocumentStatusSerializer
@@ -52,19 +49,6 @@ class DocumentViewSet(AuditableMixin,
         categories = DocumentCategory.objects.all()
 
         serializer = self.get_serializer(categories,
-                                         read_only=True,
-                                         many=True)
-
-        return Response(serializer.data)
-
-    @list_route(methods=['get'], permission_classes=[AllowAny])
-    def statuses(self, request):
-        """
-            Reference data for UI
-        """
-        statuses = DocumentStatus.objects.all()
-
-        serializer = self.get_serializer(statuses,
                                          read_only=True,
                                          many=True)
 
@@ -88,9 +72,14 @@ class DocumentViewSet(AuditableMixin,
             Q(creating_organization__id=user.organization.id)
         ).all()
 
-    # def list(self, request, *args, **kwargs):
-    #     """
-    #     Lists all the documents.
-    #     """
-    #     return super().list(self, request, *args, **kwargs)
-    #
+    @list_route(methods=['post'])
+    def generate_upload_url(self, request):
+        minio = Minio(MINIO['ENDPOINT'],
+                      access_key=MINIO['ACCESS_KEY'],
+                      secret_key=MINIO['SECRET_KEY'],
+                      secure=MINIO['USE_SSL'])
+        url = minio.presigned_put_object(bucket_name=MINIO['BUCKET_NAME'],
+                                         object_name=uuid.uuid4().hex,
+                                         expires=timedelta(hours=1))
+
+        return HttpResponse(url)

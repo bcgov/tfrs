@@ -106,7 +106,7 @@ CreditTransactionRequestsPage.defaultProps = {
 };
 
 CreditTransactionRequestsPage.propTypes = {
-  title: PropTypes.string.isRequired
+  title: PropTypes.string.isRequired,
 };
 
 export default CreditTransactionRequestsPage;

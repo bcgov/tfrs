@@ -397,12 +397,10 @@ class Navbar extends Component {
 }
 
 Navbar.defaultProps = {
-  dispatch: null,
   unreadNotificationsCount: null
 };
 
 Navbar.propTypes = {
-  dispatch: PropTypes.func,
   getNotifications: PropTypes.func.isRequired,
   isAuthenticated: PropTypes.bool.isRequired,
   loggedInUser: PropTypes.shape({

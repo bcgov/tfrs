@@ -28,6 +28,7 @@ class CreditTransactionRequestForm extends Component {
             this.props.handleSubmit(event, CREDIT_TRANSFER_STATUS.draft)}
         >
           <CreditTransactionRequestFormDetails
+            categories={this.props.categories}
             compliancePeriods={this.props.compliancePeriods}
             fields={this.props.fields}
             handleInputChange={this.props.handleInputChange}
@@ -95,7 +96,8 @@ CreditTransactionRequestForm.propTypes = {
   handleInputChange: PropTypes.func.isRequired,
   handleSubmit: PropTypes.func.isRequired,
   id: PropTypes.number,
-  title: PropTypes.string
+  title: PropTypes.string,
+  categories: PropTypes.arrayOf(PropTypes.shape()).isRequired,
 };
 
 const mapStateToProps = state => ({

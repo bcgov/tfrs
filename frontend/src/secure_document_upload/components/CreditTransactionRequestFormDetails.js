@@ -1,23 +1,23 @@
 /*
  * Presentational component
  */
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import Dropzone from 'react-dropzone';
 import FontAwesomeIcon from '@fortawesome/react-fontawesome';
 
 import InputWithTooltip from '../../app/components/InputWithTooltip';
-import { CREDIT_TRANSFER_TYPES } from '../../constants/values';
+import {CREDIT_TRANSFER_TYPES} from '../../constants/values';
 
 class CreditTransactionRequestFormDetails extends Component {
-  constructor (props) {
+  constructor(props) {
     super(props);
 
     this.onDrop = this.onDrop.bind(this);
     this.removeFile = this.removeFile.bind(this);
   }
 
-  onDrop (files) {
+  onDrop(files) {
     const attachedFiles = [
       ...this.props.fields.files,
       ...files
@@ -35,7 +35,7 @@ class CreditTransactionRequestFormDetails extends Component {
     });
   }
 
-  removeFile (file) {
+  removeFile(file) {
     const found = this.props.fields.files.findIndex(item => (item === file));
     this.props.fields.files.splice(found, 1);
 
@@ -49,7 +49,7 @@ class CreditTransactionRequestFormDetails extends Component {
     });
   }
 
-  render () {
+  render() {
     return (
       <div className="credit-transaction-request-details">
         <div className="row main-form">
@@ -57,11 +57,12 @@ class CreditTransactionRequestFormDetails extends Component {
             <div className="row main-form">
               <div className="form-group col-md-12">
                 <label htmlFor="">Attachment Category:
-                  <input className="form-control" />
+                  <input className="form-control"/>
                 </label>
               </div>
             </div>
             <div className="row main-form">
+
               <div className="form-group col-md-12">
                 <label htmlFor="compliance-period">Compliance Period:
                   <select
@@ -71,13 +72,13 @@ class CreditTransactionRequestFormDetails extends Component {
                     onChange={this.props.handleInputChange}
                     required="required"
                   >
-                    <option key="0" value="" default />
+                    <option key="0" value="" default/>
                     {this.props.compliancePeriods &&
-                      this.props.compliancePeriods.map(period => (
-                        <option key={period.id} value={period.id}>
-                          {period.description}
-                        </option>
-                      ))}
+                    this.props.compliancePeriods.map(period => (
+                      <option key={period.id} value={period.id}>
+                        {period.description}
+                      </option>
+                    ))}
                   </select>
                 </label>
               </div>
@@ -134,13 +135,26 @@ class CreditTransactionRequestFormDetails extends Component {
           <div className="col-md-6">
             <div className="row main-form">
               <div className="form-group col-md-12">
-                <label htmlFor="attachment-type">Attachment Type:
-                  <div className="btn-group" role="group" id="attachment-type">
-                    <button type="button" className={`btn btn-default ${(this.props.fields.attachmentType === 'application') ? 'active' : ''}`} name="attachmentType" value="application" onClick={this.props.handleInputChange}>P3A Application</button>
-                    <button type="button" className={`btn btn-default ${(this.props.fields.attachmentType === 'evidence') ? 'active' : ''}`} name="attachmentType" value="evidence" onClick={this.props.handleInputChange}>P3A Milestone Evidence</button>
-                    <button type="button" className={`btn btn-default ${(this.props.fields.attachmentType === 'records') ? 'active' : ''}`} name="attachmentType" value="records" onClick={this.props.handleInputChange}>Fuel Supply Records</button>
-                    <button type="button" className={`btn btn-default ${(this.props.fields.attachmentType === 'other') ? 'active' : ''}`} name="attachmentType" value="other" onClick={this.props.handleInputChange}>Other</button>
-                  </div>
+                <label htmlFor="document-type">Attachment Type:
+
+                  <select
+                    className="form-control"
+                    id="document-type"
+                    name="documentType"
+                    onChange={this.props.handleInputChange}
+                    required="required"
+                  >
+                    {this.props.categories &&
+                    this.props.categories.map(category => (
+                      <optgroup key={category.id} label={category.name}>
+                        {category.types.map(t => (
+                          <option key={`'type-${t.id}'`} value={t.id}>
+                            {t.theType}
+                          </option>
+                        ))}
+                      </optgroup>
+                    ))}
+                  </select>
                 </label>
               </div>
             </div>
@@ -153,7 +167,7 @@ class CreditTransactionRequestFormDetails extends Component {
                     className="dropzone"
                     onDrop={this.onDrop}
                   >
-                    <FontAwesomeIcon icon="cloud-upload-alt" size="2x" />
+                    <FontAwesomeIcon icon="cloud-upload-alt" size="2x"/>
                     <div>
                       Drop files here or click to select files to upload.
                     </div>
@@ -168,11 +182,12 @@ class CreditTransactionRequestFormDetails extends Component {
                   <ul>
                     {this.props.fields.files.map(file => (
                       <li key={file.name}>
-                        {file.name} - {file.size} bytes <button type="button" onClick={() => this.removeFile(file)}><FontAwesomeIcon icon="minus-circle" /></button>
+                        {file.name} - {file.size} bytes <button type="button" onClick={() => this.removeFile(file)}>
+                        <FontAwesomeIcon icon="minus-circle"/></button>
                       </li>
                     ))}
                     {this.props.fields.files.length === 0 &&
-                      <li>No files selected.</li>
+                    <li>No files selected.</li>
                     }
                   </ul>
                 </div>
@@ -182,7 +197,8 @@ class CreditTransactionRequestFormDetails extends Component {
         </div>
 
         <div className="row">
-          <div className="form-group col-md-12">
+          <div
+            className="form-group col-md-12">
             {this.props.children}
           </div>
         </div>
@@ -201,6 +217,7 @@ CreditTransactionRequestFormDetails.propTypes = {
     PropTypes.node
   ]),
   compliancePeriods: PropTypes.arrayOf(PropTypes.shape()).isRequired,
+  categories: PropTypes.arrayOf(PropTypes.shape()).isRequired,
   fields: PropTypes.shape({
     agreementName: PropTypes.string,
     attachmentType: PropTypes.string,
