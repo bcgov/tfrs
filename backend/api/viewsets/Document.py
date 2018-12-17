@@ -2,7 +2,6 @@ import uuid
 from datetime import timedelta
 
 from django.db.models import Q
-from django.http import HttpResponse
 from minio import Minio
 
 from rest_framework import viewsets, mixins
@@ -78,8 +77,19 @@ class DocumentViewSet(AuditableMixin,
                       access_key=MINIO['ACCESS_KEY'],
                       secret_key=MINIO['SECRET_KEY'],
                       secure=MINIO['USE_SSL'])
-        url = minio.presigned_put_object(bucket_name=MINIO['BUCKET_NAME'],
-                                         object_name=uuid.uuid4().hex,
-                                         expires=timedelta(hours=1))
 
-        return HttpResponse(url)
+        object_name = uuid.uuid4().hex
+        put_url = minio.presigned_put_object(
+            bucket_name=MINIO['BUCKET_NAME'],
+            object_name=object_name,
+            expires=timedelta(hours=1))
+
+        get_url = minio.presigned_get_object(
+            bucket_name=MINIO['BUCKET_NAME'],
+            object_name=object_name,
+            expires=timedelta(hours=1))
+
+        return Response({
+            'put': put_url,
+            'get': get_url
+        })

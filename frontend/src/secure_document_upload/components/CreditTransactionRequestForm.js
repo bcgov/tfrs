@@ -97,7 +97,7 @@ CreditTransactionRequestForm.propTypes = {
   handleSubmit: PropTypes.func.isRequired,
   id: PropTypes.number,
   title: PropTypes.string,
-  categories: PropTypes.arrayOf(PropTypes.shape()).isRequired,
+  categories: PropTypes.arrayOf(PropTypes.shape()).isRequired
 };
 
 const mapStateToProps = state => ({

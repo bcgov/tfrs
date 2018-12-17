@@ -22,6 +22,7 @@ import USERS from './constants/routes/Users';
 import CreditTransactionsHistoryContainer from './admin/credit_trade_history/CreditTradeHistoryContainer';
 import CreditTransactionRequestsContainer from './secure_document_upload/CreditTransactionRequestsContainer';
 import CreditTransactionRequestAddContainer from './secure_document_upload/CreditTransactionRequestAddContainer';
+import CreditTransactonRequestDetailContainer from './secure_document_upload/CreditTransactonRequestDetailContainer';
 import CreditTransactionRequestEditContainer from './secure_document_upload/CreditTransactionRequestEditContainer';
 import HistoricalDataEntryContainer from './admin/historical_data_entry/HistoricalDataEntryContainer';
 import HistoricalDataEntryEditContainer from './admin/historical_data_entry/HistoricalDataEntryEditContainer';
@@ -220,6 +221,11 @@ const Router = props => (
             key="secure_document_upload_add"
             path={SECURE_DOCUMENT_UPLOAD.ADD}
             component={withRouter(CreditTransactionRequestAddContainer)}
+          />,
+          <Route
+            key="secure_document_upload_details"
+            path={SECURE_DOCUMENT_UPLOAD.DETAILS}
+            component={withRouter(CreditTransactonRequestDetailContainer)}
           />,
           <Route
             key="secure_document_upload_edit"

@@ -7,33 +7,41 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
+import { getDocumentUpload } from '../actions/documentUploads';
+
+import CreditTransactionRequestDetails from './components/CreditTransactionRequestDetails';
+
 class CreditTransactionRequestDetailContainer extends Component {
   componentDidMount () {
     this.loadData(this.props.match.params.id);
   }
 
   loadData (id) {
-    this.props.invalidateCreditTransfer();
-    this.props.getCreditTransactionRequest(id);
+    this.props.getDocumentUpload(id);
   }
 
   render () {
-    const { isFetching, item, loggedInUser } = this.props;
+    const { isFetching, item } = this.props.documentUpload;
 
-    return (<CreditTransactionRequestDetails />);
+    return (<CreditTransactionRequestDetails
+      isFetching={isFetching}
+      item={item}
+    />);
   }
 }
 
 CreditTransactionRequestDetailContainer.defaultProps = {
-  errors: {},
-  item: {}
+  errors: {}
 };
 
 CreditTransactionRequestDetailContainer.propTypes = {
+  documentUpload: PropTypes.shape({
+    isFetching: PropTypes.bool.isRequired,
+    item: PropTypes.shape({
+    })
+  }).isRequired,
   errors: PropTypes.shape({}),
-  isFetching: PropTypes.bool.isRequired,
-  item: PropTypes.shape({
-  }),
+  getDocumentUpload: PropTypes.func.isRequired,
   loggedInUser: PropTypes.shape({
     displayName: PropTypes.string,
     hasPermission: PropTypes.func,
@@ -50,13 +58,16 @@ CreditTransactionRequestDetailContainer.propTypes = {
 };
 
 const mapStateToProps = state => ({
-  errors: state.rootReducer.creditTransfer.errors,
-  isFetching: state.rootReducer.creditTransfer.isFetching,
-  item: state.rootReducer.creditTransfer.item,
+  documentUpload: {
+    errors: state.rootReducer.documentUpload.errors,
+    isFetching: state.rootReducer.documentUpload.isFetching,
+    item: state.rootReducer.documentUpload.item
+  },
   loggedInUser: state.rootReducer.userRequest.loggedInUser
 });
 
 const mapDispatchToProps = dispatch => ({
+  getDocumentUpload: bindActionCreators(getDocumentUpload, dispatch)
 });
 
 export default connect(

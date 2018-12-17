@@ -1,11 +1,13 @@
 import ActionTypes from '../constants/actionTypes/ReferenceData';
-import ReducerTypes from "../constants/reducerTypes/ReferenceData";
+import ReducerTypes from '../constants/reducerTypes/ReferenceData';
 
 const referenceData = (state = {
   isFetching: false,
   success: false,
   errorMessage: [],
-  data: {}
+  data: {
+    documentCategories: []
+  }
 }, action) => {
   if (action.name === ReducerTypes.REFERENCE_DATA) {
     switch (action.type) {
@@ -37,4 +39,4 @@ const referenceData = (state = {
   }
 };
 
-export {referenceData};
+export { referenceData };

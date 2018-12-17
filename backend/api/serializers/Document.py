@@ -38,8 +38,8 @@ class DocumentFileAttachmentSerializer(serializers.ModelSerializer):
     """
     class Meta:
         model = DocumentFileAttachment
-    fields = ('url', 'security_scan_status', 'mime_type', 'size')
-    read_only_fields = ('url', 'security_scan_status', 'mime_type', 'size')
+        fields = ('url', 'security_scan_status', 'mime_type', 'size')
+        read_only_fields = ('url', 'security_scan_status', 'mime_type', 'size')
 
 
 class DocumentFileAttachmentCreateSerializer(serializers.ModelSerializer):
@@ -48,7 +48,7 @@ class DocumentFileAttachmentCreateSerializer(serializers.ModelSerializer):
     """
     class Meta:
         model = DocumentFileAttachment
-        fields = ('url',)
+        fields = ('url', 'mime_type', 'size')
 
 
 class DocumentSerializer(serializers.ModelSerializer):
@@ -63,15 +63,15 @@ class DocumentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Document
         fields = (
-            'id', 'title', 'url',
+            'id', 'title',
             'create_timestamp', 'update_timestamp', 'create_user',
             'update_user', 'creating_organization',
-            'status', 'type', 'mime_type', 'size')
+            'status', 'type')
 
         read_only_fields = ('id', 'create_timestamp', 'create_user',
-                            'update_timestamp', 'update_user', 'url',
+                            'update_timestamp', 'update_user',
                             'title', 'creating_organization',
-                            'status', 'type', 'mime_type', 'size')
+                            'status', 'type')
 
 
 class DocumentCreateSerializer(serializers.ModelSerializer):
@@ -80,14 +80,15 @@ class DocumentCreateSerializer(serializers.ModelSerializer):
     """
 
     type = PrimaryKeyRelatedField(queryset=DocumentType.objects.all())
-    compliance_period = PrimaryKeyRelatedField(queryset=CompliancePeriod.objects.all())
-    attachments = DocumentFileAttachmentCreateSerializer(many=True)
+    compliance_period = PrimaryKeyRelatedField(
+        queryset=CompliancePeriod.objects.all())
+    attachments = DocumentFileAttachmentCreateSerializer(
+        many=True, required=False)
 
-    def validate(self, data):
-        return data
+    # def validate(self, data):
+    #     return data
 
     def save(self, **kwargs):
-
         files = self.validated_data.pop('attachments')
 
         obj = Document(
@@ -116,7 +117,7 @@ class DocumentMinSerializer(serializers.ModelSerializer):
     creating_organization = OrganizationMinSerializer(read_only=True)
     type = DocumentTypeSerializer(read_only=True)
     status = DocumentStatusSerializer(read_only=True)
-    attachments = DocumentFileAttachmentSerializer(read_only=True, many=True)
+    attachments = DocumentFileAttachmentSerializer(many=True)
 
     """
     Minimal Serializer for Documents

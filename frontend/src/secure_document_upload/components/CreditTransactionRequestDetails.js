@@ -3,13 +3,9 @@
  */
 import React from 'react';
 import PropTypes from 'prop-types';
+import axios from 'axios';
 
-import { getCreditTransferType } from '../../actions/creditTransfersActions';
-import Errors from '../../app/components/Errors';
 import Loading from '../../app/components/Loading';
-import * as Lang from '../../constants/langEnUs';
-import { CREDIT_TRANSFER_STATUS, CREDIT_TRANSFER_TYPES } from '../../constants/values';
-import PERMISSIONS_CREDIT_TRANSACTIONS from '../../constants/permissions/CreditTransactions';
 
 const CreditTransactionRequestDetails = props => (
   <div className="credit-transaction-details">
@@ -46,8 +42,25 @@ const CreditTransactionRequestDetails = props => (
         </div>
 
         <div className="col-6">
+          <img id="img" />
           <label>
             Files:
+            <button
+              type="button"
+              onClick={() => {
+                const imageEl = document.getElementById('img');
+                axios.get('http://127.0.0.1:9000/tfrs/c0230918c9944c35ae71a2ece527bf8e?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=H74MGVE2X8NSPDZTIE72%2F20181217%2F%2Fs3%2Faws4_request&X-Amz-Date=20181217T222012Z&X-Amz-Expires=604800&X-Amz-SignedHeaders=host&X-Amz-Signature=782df3178667221e046888e962af73b34b4720b79bb5f7bb861b30993cbbeb1a', { responseType: 'blob' }).then((response) => {
+                  const reader = new window.FileReader();
+                  reader.readAsDataURL(response.data);
+                  reader.onload = () => {
+                    const imageDataUrl = reader.result;
+                    imageEl.setAttribute('src', imageDataUrl);
+                  };
+                });
+              }}
+            >
+              Test
+            </button>
           </label>
         </div>
       </div>
@@ -56,32 +69,11 @@ const CreditTransactionRequestDetails = props => (
 );
 
 CreditTransactionRequestDetails.defaultProps = {
-  errors: {},
-  id: 0,
-  status: {
-    id: 0,
-    status: ''
-  }
 };
 
 CreditTransactionRequestDetails.propTypes = {
-  changeStatus: PropTypes.func.isRequired,
-  errors: PropTypes.shape(),
-  loggedInUser: PropTypes.shape({
-    displayName: PropTypes.string,
-    hasPermission: PropTypes.func,
-    organization: PropTypes.shape({
-      name: PropTypes.string,
-      id: PropTypes.number
-    })
-  }).isRequired,
-  id: PropTypes.number,
   isFetching: PropTypes.bool.isRequired,
-  status: PropTypes.shape({
-    id: PropTypes.number,
-    status: PropTypes.string
-  }),
-  toggleCheck: PropTypes.func.isRequired
+  item: PropTypes.shape().isRequired
 };
 
 export default CreditTransactionRequestDetails;

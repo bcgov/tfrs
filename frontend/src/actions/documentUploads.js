@@ -151,8 +151,6 @@ const getDocumentUploadURLError = error => ({
   errorMessage: error
 });
 
-
-
 const updateDocumentUpload = (data, id) => (dispatch) => {
   dispatch(updateDocumentUploadRequest({ id, data }));
 

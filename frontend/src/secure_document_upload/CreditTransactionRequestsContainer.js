@@ -10,7 +10,7 @@ import PropTypes from 'prop-types';
 
 import CreditTransactionRequestsPage from './components/CreditTransactionRequestsPage';
 
-import {getDocumentUploads, getDocumentUploadURL} from '../actions/documentUploads';
+import { getDocumentUploads, getDocumentUploadURL } from '../actions/documentUploads';
 
 class CreditTransactionRequestsContainer extends Component {
   constructor (props) {
@@ -30,8 +30,9 @@ class CreditTransactionRequestsContainer extends Component {
   render () {
     return (
       <CreditTransactionRequestsPage
-        title="Secure Document Upload Submissions"
+        documentUploads={this.props.documentUploads}
         requestURL={this.props.requestURL}
+        title="Secure Document Upload Submissions"
       />
     );
   }
@@ -41,18 +42,25 @@ CreditTransactionRequestsContainer.defaultProps = {
 };
 
 CreditTransactionRequestsContainer.propTypes = {
+  documentUploads: PropTypes.shape({
+    isFetching: PropTypes.bool,
+    items: PropTypes.arrayOf(PropTypes.shape())
+  }).isRequired,
   getDocumentUploads: PropTypes.func.isRequired,
   requestURL: PropTypes.func.isRequired,
   items: PropTypes.arrayOf(PropTypes.shape).isRequired
 };
 
 const mapStateToProps = state => ({
-  items: state.rootReducer.documentUploads.items
+  documentUploads: {
+    isFetching: state.rootReducer.documentUploads.isFetching,
+    items: state.rootReducer.documentUploads.items
+  }
 });
 
 const mapDispatchToProps = dispatch => ({
   getDocumentUploads: bindActionCreators(getDocumentUploads, dispatch),
-  requestURL: bindActionCreators(getDocumentUploadURL, dispatch),
+  requestURL: bindActionCreators(getDocumentUploadURL, dispatch)
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(CreditTransactionRequestsContainer);

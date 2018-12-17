@@ -123,9 +123,9 @@ TEST_RUNNER = 'django_nose.NoseTestSuiteRunner'
 # https://docs.djangoproject.com/en/1.8/ref/settings/#databases
 
 try:
-     from . import database  
+    from . import database
 except:
-     import database 
+    import database
 
 DATABASES = {
     'default': database.config()

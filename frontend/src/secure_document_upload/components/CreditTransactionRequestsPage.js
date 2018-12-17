@@ -9,11 +9,8 @@ import history from '../../app/History';
 import CreditTransferRequestTable from './CreditTransferRequestTable';
 
 const CreditTransactionRequestsPage = (props) => {
-  // const { isFetching, items } = props.creditTransfers;
-  const isFetching = false;
-  const isEmpty = false;
-  const items = [];
-  // const isEmpty = items.length === 0;
+  const { isFetching, items } = props.documentUploads;
+  const isEmpty = items.length === 0;
 
   return (
     <div className="page_secure_document_upload">
@@ -106,7 +103,11 @@ CreditTransactionRequestsPage.defaultProps = {
 };
 
 CreditTransactionRequestsPage.propTypes = {
-  title: PropTypes.string.isRequired,
+  documentUploads: PropTypes.shape({
+    isFetching: PropTypes.bool,
+    items: PropTypes.arrayOf(PropTypes.shape)
+  }).isRequired,
+  title: PropTypes.string.isRequired
 };
 
 export default CreditTransactionRequestsPage;

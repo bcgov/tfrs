@@ -1,7 +1,7 @@
 import ActionTypes from '../constants/actionTypes/DocumentUploads';
 
 const documentUpload = (state = {
-  item: [],
+  item: {},
   isFetching: false,
   success: false,
   errorMessage: []
