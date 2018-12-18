@@ -31,6 +31,7 @@ class CreditTransactionRequestsContainer extends Component {
     return (
       <CreditTransactionRequestsPage
         documentUploads={this.props.documentUploads}
+        loggedInUser={this.props.loggedInUser}
         requestURL={this.props.requestURL}
         title="Secure Document Upload Submissions"
       />
@@ -47,6 +48,7 @@ CreditTransactionRequestsContainer.propTypes = {
     items: PropTypes.arrayOf(PropTypes.shape())
   }).isRequired,
   getDocumentUploads: PropTypes.func.isRequired,
+  loggedInUser: PropTypes.shape().isRequired,
   requestURL: PropTypes.func.isRequired
 };
 
@@ -54,7 +56,8 @@ const mapStateToProps = state => ({
   documentUploads: {
     isFetching: state.rootReducer.documentUploads.isFetching,
     items: state.rootReducer.documentUploads.items
-  }
+  },
+  loggedInUser: state.rootReducer.userRequest.loggedInUser
 });
 
 const mapDispatchToProps = dispatch => ({

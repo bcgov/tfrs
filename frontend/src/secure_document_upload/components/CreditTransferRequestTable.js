@@ -23,7 +23,8 @@ const CreditTransferRequestTable = (props) => {
     className: 'col-organization',
     Header: 'Organization',
     id: 'organization',
-    minWidth: 100
+    minWidth: 100,
+    show: props.loggedInUser.isGovernmentUser
   }, {
     accessor: item => (item.type ? item.type.theType : ''),
     className: 'col-attachment-type',
@@ -110,7 +111,10 @@ CreditTransferRequestTable.propTypes = {
     })
   })).isRequired,
   isEmpty: PropTypes.bool.isRequired,
-  isFetching: PropTypes.bool.isRequired
+  isFetching: PropTypes.bool.isRequired,
+  loggedInUser: PropTypes.shape({
+    isGovernmentUser: PropTypes.bool
+  }).isRequired
 };
 
 export default CreditTransferRequestTable;

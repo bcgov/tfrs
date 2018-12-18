@@ -6,6 +6,7 @@ import SECURE_DOCUMENT_UPLOAD from '../../constants/routes/SecureDocumentUpload'
 import Loading from '../../app/components/Loading';
 import * as Lang from '../../constants/langEnUs';
 import history from '../../app/History';
+import PERMISSIONS_SECURE_DOCUMENT_UPLOAD from '../../constants/permissions/SecureDocumentUpload';
 import CreditTransferRequestTable from './CreditTransferRequestTable';
 
 const CreditTransactionRequestsPage = (props) => {
@@ -17,6 +18,7 @@ const CreditTransactionRequestsPage = (props) => {
       <h1>{props.title}</h1>
       <div className="right-toolbar-container">
         <div className="actions-container">
+          {props.loggedInUser.hasPermission(PERMISSIONS_SECURE_DOCUMENT_UPLOAD.DRAFT) &&
           <div className="btn-group">
             <button
               id="new-submission"
@@ -85,6 +87,7 @@ const CreditTransactionRequestsPage = (props) => {
               </li>
             </ul>
           </div>
+          }
         </div>
       </div>
       {isFetching && <Loading />}
@@ -93,6 +96,7 @@ const CreditTransactionRequestsPage = (props) => {
         items={items}
         isFetching={isFetching}
         isEmpty={isEmpty}
+        loggedInUser={props.loggedInUser}
       />
       }
     </div>
@@ -106,6 +110,9 @@ CreditTransactionRequestsPage.propTypes = {
   documentUploads: PropTypes.shape({
     isFetching: PropTypes.bool,
     items: PropTypes.arrayOf(PropTypes.shape)
+  }).isRequired,
+  loggedInUser: PropTypes.shape({
+    hasPermission: PropTypes.func
   }).isRequired,
   title: PropTypes.string.isRequired
 };

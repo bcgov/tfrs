@@ -1,5 +1,4 @@
 import uuid
-from datetime import timedelta
 
 from django.db.models import Q
 from minio import Minio
@@ -88,12 +87,12 @@ class DocumentViewSet(AuditableMixin,
         put_url = minio.presigned_put_object(
             bucket_name=MINIO['BUCKET_NAME'],
             object_name=object_name,
-            expires=timedelta(days=1))
+            expires=MINIO['EXPIRY'])
 
         get_url = minio.presigned_get_object(
             bucket_name=MINIO['BUCKET_NAME'],
             object_name=object_name,
-            expires=timedelta(days=1))
+            expires=MINIO['EXPIRY'])
 
         return Response({
             'put': put_url,
