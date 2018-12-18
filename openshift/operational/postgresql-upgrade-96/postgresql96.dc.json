@@ -206,7 +206,7 @@
                 ],
                 "resources": {
                     "requests": {
-                        "storage": "5Gi"
+                        "storage": "${PVC_SIZE}"
                     }
                 }
             },
