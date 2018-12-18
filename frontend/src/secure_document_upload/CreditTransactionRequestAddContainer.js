@@ -11,6 +11,7 @@ import Modal from '../app/components/Modal';
 import CreditTransactionRequestForm from './components/CreditTransactionRequestForm';
 import history from '../app/History';
 import { addDocumentUpload, getDocumentUploadURL, uploadDocument } from '../actions/documentUploads';
+import DOCUMENT_STATUSES from '../constants/documentStatuses';
 import SECURE_DOCUMENT_UPLOAD from '../constants/routes/SecureDocumentUpload';
 import toastr from '../utils/toastr';
 
@@ -105,9 +106,10 @@ class CreditTransactionRequestAddContainer extends Component {
 
     // API data structure
     const data = {
-      title: this.state.fields.agreementName,
       comment: this.state.fields.comment,
       compliancePeriod: this.state.fields.compliancePeriod.id,
+      status: status.id,
+      title: this.state.fields.agreementName,
       type: this.state.fields.documentType.id,
       attachments
     };
@@ -147,7 +149,7 @@ class CreditTransactionRequestAddContainer extends Component {
       />,
       <Modal
         handleSubmit={(event) => {
-          this._handleSubmit(event);
+          this._handleSubmit(event, DOCUMENT_STATUSES.submitted);
         }}
         id="confirmSubmit"
         key="confirmSubmit"

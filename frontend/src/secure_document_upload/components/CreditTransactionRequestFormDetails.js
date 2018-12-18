@@ -48,7 +48,7 @@ class CreditTransactionRequestFormDetails extends Component {
 
   render () {
     return (
-      <div className="credit-transaction-request-details">
+      <div className="credit-transaction-request-form-details">
         <div className="row main-form">
           <div className="col-md-6">
             <div className="row main-form">
@@ -121,11 +121,12 @@ class CreditTransactionRequestFormDetails extends Component {
                 <div className="form-group col-md-12">
                   <label htmlFor="comment">Comment:
                     <textarea
-                      id="comment"
                       className="form-control"
-                      rows="5"
+                      id="comment"
                       name="comment"
+                      onChange={this.props.handleInputChange}
                       placeholder="Provide an explanation of your Part 3 award milestone completion"
+                      rows="5"
                     />
                   </label>
                 </div>
@@ -137,25 +138,23 @@ class CreditTransactionRequestFormDetails extends Component {
             <div className="row main-form">
               <div className="form-group col-md-12">
                 <label htmlFor="document-type">Attachment Type:
-
-                  <select
-                    className="form-control"
-                    id="document-type"
-                    name="documentType"
-                    onChange={this.props.handleInputChange}
-                    required="required"
-                  >
+                  <div className="btn-group" role="group" id="document-type">
                     {this.props.categories &&
-                    this.props.categories.map(category => (
-                      <optgroup key={category.id} label={category.name}>
-                        {category.types.map(t => (
-                          <option key={`'type-${t.id}'`} value={t.id}>
+                      this.props.categories.map(category => (
+                        (category.types.map(t => (
+                          <button
+                            className={`btn btn-default ${(this.props.fields.documentType.id === t.id) ? 'active' : ''}`}
+                            key={t.id}
+                            name="documentType"
+                            onClick={this.props.handleInputChange}
+                            type="button"
+                            value={t.id}
+                          >
                             {t.theType}
-                          </option>
-                        ))}
-                      </optgroup>
-                    ))}
-                  </select>
+                          </button>
+                        )))
+                      ))}
+                  </div>
                 </label>
               </div>
             </div>
@@ -220,9 +219,11 @@ CreditTransactionRequestFormDetails.propTypes = {
   categories: PropTypes.arrayOf(PropTypes.shape()).isRequired,
   fields: PropTypes.shape({
     agreementName: PropTypes.string,
-    attachmentType: PropTypes.string,
     compliancePeriod: PropTypes.shape({
       description: PropTypes.string,
+      id: PropTypes.number
+    }),
+    documentType: PropTypes.shape({
       id: PropTypes.number
     }),
     files: PropTypes.arrayOf(PropTypes.shape()),

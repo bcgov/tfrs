@@ -30,3 +30,67 @@
     }
   }
 }
+
+.page-credit-transaction-request-details {
+  .btn-container {
+    text-align: right;
+  }
+
+  .credit-transaction-request-details {
+    label {
+      font-weight: normal;
+    }
+
+    .row {
+      margin-left: -15px;
+      margin-right: -15px;
+    }
+
+    .value {
+      font-weight: bold;
+
+      button {
+        border: 0;
+        color: $link-color;
+        text-align: left;
+
+        &:hover {
+          color: $link-color-hover;
+        }
+      }
+
+      &.files {
+        list-style-position: outside;
+        list-style-type: none;
+        padding: 0;
+
+        li {
+          padding: 0.25rem 0 0.25rem 2.5rem;
+          position: relative;
+
+          .icon {
+            bottom: 0;
+            color: $link-color;
+            display: flex;
+            height: 100%;
+            left: 0;
+            position: absolute;
+            text-align: center;
+            top: 0;
+            width: 2rem;
+
+            svg {
+              align-self: center;
+              margin-left: auto;
+              margin-right: 0;
+            }
+          }
+        }
+      }
+    }
+
+    div.value {
+      padding: 0.5rem 1rem;
+    }
+  }
+}

@@ -22,15 +22,12 @@
 """
 from rest_framework import serializers
 
-from api.models.CompliancePeriod import CompliancePeriod
 from api.models.DocumentFileAttachment import DocumentFileAttachment
-from api.models.DocumentStatus import DocumentStatus
-from api.models.DocumentType import DocumentType
 from api.models.Document import Document
-from api.serializers import OrganizationMinSerializer, PrimaryKeyRelatedField
 from api.serializers.CompliancePeriod import CompliancePeriodSerializer
 from api.serializers.DocumentStatus import DocumentStatusSerializer
 from api.serializers.DocumentType import DocumentTypeSerializer
+from api.serializers.User import UserMinSerializer
 
 
 class DocumentFileAttachmentSerializer(serializers.ModelSerializer):
@@ -58,61 +55,41 @@ class DocumentSerializer(serializers.ModelSerializer):
     """
     Default Serializer for Documents
     """
-
-    creating_organization = OrganizationMinSerializer(read_only=True)
     type = DocumentTypeSerializer(read_only=True)
     status = DocumentStatusSerializer(read_only=True)
 
     class Meta:
         model = Document
         fields = (
-            'id', 'title',
-            'create_timestamp', 'update_timestamp', 'create_user',
-            'update_user', 'creating_organization',
-            'status', 'type', 'update_timestamp')
+            'id', 'title', 'status', 'type', 'create_timestamp',
+            'create_user', 'update_timestamp', 'update_user')
 
-        read_only_fields = ('id', 'create_timestamp', 'create_user',
-                            'update_timestamp', 'update_user',
-                            'title', 'creating_organization',
-                            'status', 'type')
+        read_only_fields = ('id', 'title', 'status', 'type',
+                            'create_timestamp', 'create_user',
+                            'update_timestamp', 'update_user')
 
 
 class DocumentCreateSerializer(serializers.ModelSerializer):
     """
     Creation Serializer for Documents
     """
-
-    type = PrimaryKeyRelatedField(queryset=DocumentType.objects.all())
-    compliance_period = PrimaryKeyRelatedField(
-        queryset=CompliancePeriod.objects.all())
-    attachments = DocumentFileAttachmentCreateSerializer(
-        many=True, required=False)
-
-    # def validate(self, data):
-    #     return data
-
     def save(self, **kwargs):
-        files = self.validated_data.pop('attachments')
-
-        obj = Document(
-            compliance_period=self.validated_data['compliance_period'],
-            type=self.validated_data['type'],
-            status=DocumentStatus.objects.get_by_natural_key('Submitted'),
-            creating_organization=self.context['request'].user.organization
-        )
-        obj.save()
+        super().save(**kwargs)
+        request = self.context['request']
+        files = request.data.get('attachments')
 
         for file in files:
             DocumentFileAttachment.objects.create(
-                document=obj,
+                document=self.instance,
                 **file
             )
 
-        return obj
+        return self.instance
 
     class Meta:
         model = Document
-        fields = ('id', 'type', 'compliance_period', 'attachments')
+        fields = ('comment', 'compliance_period', 'create_user', 'id',
+                  'status', 'title', 'type')
         read_only_fields = ('id',)
 
 
@@ -121,7 +98,6 @@ class DocumentDetailSerializer(serializers.ModelSerializer):
     Document Serializer with Full Details
     """
     compliance_period = CompliancePeriodSerializer(read_only=True)
-    creating_organization = OrganizationMinSerializer(read_only=True)
     type = DocumentTypeSerializer(read_only=True)
     status = DocumentStatusSerializer(read_only=True)
     attachments = DocumentFileAttachmentSerializer(many=True)
@@ -130,32 +106,30 @@ class DocumentDetailSerializer(serializers.ModelSerializer):
         model = Document
         fields = (
             'id', 'title',
-            'create_timestamp', 'update_timestamp', 'create_user',
-            'update_user', 'creating_organization',
-            'status', 'type', 'update_timestamp',
-            'attachments', 'compliance_period')
+            'create_timestamp', 'create_user', 'update_timestamp',
+            'update_user', 'status', 'type', 'attachments',
+            'compliance_period', 'comment')
 
         read_only_fields = ('id', 'create_timestamp', 'create_user',
                             'update_timestamp', 'update_user',
-                            'title', 'creating_organization',
-                            'status', 'type', 'attachments',
-                            'compliance_period')
+                            'title', 'status', 'type', 'attachments',
+                            'compliance_period', 'comment')
 
 
 class DocumentMinSerializer(serializers.ModelSerializer):
     """
     Minimal Serializer for Documents
     """
-    creating_organization = OrganizationMinSerializer(read_only=True)
-    type = DocumentTypeSerializer(read_only=True)
-    status = DocumentStatusSerializer(read_only=True)
     attachments = DocumentFileAttachmentSerializer(many=True)
+    create_user = UserMinSerializer(read_only=True)
+    status = DocumentStatusSerializer(read_only=True)
+    type = DocumentTypeSerializer(read_only=True)
 
     class Meta:
         model = Document
         fields = (
-            'id', 'title', 'creating_organization', 'status', 'type',
+            'id', 'title', 'create_user', 'status', 'type',
             'attachments', 'update_timestamp')
         read_only_fields = (
-            'id', 'title', 'creating_organization', 'status', 'type',
+            'id', 'title', 'create_user', 'status', 'type',
             'attachments', 'update_timestamp')

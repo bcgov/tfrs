@@ -3,7 +3,6 @@ from django.db import models
 from api.models.CompliancePeriod import CompliancePeriod
 from api.models.DocumentStatus import DocumentStatus
 from api.models.DocumentType import DocumentType
-from api.models.Organization import Organization
 
 
 class DocumentData(models.Model):
@@ -27,12 +26,6 @@ class DocumentData(models.Model):
 
     type = models.ForeignKey(
         DocumentType,
-        on_delete=models.PROTECT,
-        null=False
-    )
-
-    creating_organization = models.ForeignKey(
-        Organization,
         on_delete=models.PROTECT,
         null=False
     )

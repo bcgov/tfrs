@@ -70,7 +70,7 @@ class DocumentViewSet(AuditableMixin,
             ).all()
 
         return self.queryset.filter(
-            Q(creating_organization__id=user.organization.id)
+            Q(create_user__organization__id=user.organization.id)
         ).all()
 
     @list_route(methods=['get'])
@@ -88,12 +88,12 @@ class DocumentViewSet(AuditableMixin,
         put_url = minio.presigned_put_object(
             bucket_name=MINIO['BUCKET_NAME'],
             object_name=object_name,
-            expires=timedelta(hours=1))
+            expires=timedelta(days=1))
 
         get_url = minio.presigned_get_object(
             bucket_name=MINIO['BUCKET_NAME'],
             object_name=object_name,
-            expires=timedelta(hours=1))
+            expires=timedelta(days=1))
 
         return Response({
             'put': put_url,

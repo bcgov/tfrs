@@ -6,31 +6,62 @@ import PropTypes from 'prop-types';
 import FontAwesomeIcon from '@fortawesome/react-fontawesome';
 import axios from 'axios';
 
-import * as Routes from '../../constants/routes';
-import SECURE_DOCUMENT_UPLOAD from '../../constants/routes/SecureDocumentUpload';
-import { download } from '../../utils/functions';
+import history from '../../app/History';
+import * as Lang from '../../constants/langEnUs';
+
+const getIcon = (mimeType) => {
+  switch (mimeType) {
+    case 'application/pdf':
+      return 'file-pdf';
+    case 'application/vnd.ms-excel':
+    case 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet':
+      return 'file-excel';
+    case 'application/vnd.ms-powerpoint':
+    case 'application/vnd.openxmlformats-officedocument.presentationml.presentation':
+      return 'file-powerpoint';
+    case 'application/msword':
+    case 'application/vnd.openxmlformats-officedocument.wordprocessingml.document':
+      return 'file-word';
+    case 'image/gif':
+    case 'image/jpg':
+    case 'image/jpeg':
+    case 'image/png':
+      return 'file-image';
+    case 'text/csv':
+      return 'file-csv';
+    case 'text/plain':
+      return 'file-alt';
+    default:
+      return 'file-download';
+  }
+};
 
 const CreditTransactionRequestDetails = props => (
-  <div className="credit-transaction-request-details">
-    <div className="row">
-      <div className="col-md-6">
-        <div className="row">
-          <div className="form-group col-md-12">
-            <label htmlFor="attachment-category">Attachment Category:
-            </label>
+  <div className="page-credit-transaction-request-details">
+    <h1>{props.item.type.theType}</h1>
+    <div className="credit-transaction-request-details">
+      <div className="row">
+        <div className="col-md-6">
+          <div className="row">
+            <div className="form-group col-md-12">
+              <label htmlFor="attachment-category">Attachment Category:
+                <div className="value">&nbsp;</div>
+              </label>
+            </div>
           </div>
-        </div>
 
-        <div className="row main-form">
-          <div className="form-group col-md-12">
-            <label htmlFor="compliance-period">Compliance Period:
-              <div className="value">{props.item.compliancePeriod.description}</div>
-            </label>
+          <div className="row">
+            <div className="form-group col-md-12">
+              <label htmlFor="compliance-period">Compliance Period:
+                <div className="value">{props.item.compliancePeriod.description}</div>
+              </label>
+            </div>
           </div>
 
           <div className="row">
             <div className="form-group col-md-12">
               <label htmlFor="milestone-id">Milestone:
+                <div className="value">&nbsp;</div>
               </label>
             </div>
           </div>
@@ -38,6 +69,9 @@ const CreditTransactionRequestDetails = props => (
           <div className="row">
             <div className="form-group col-md-12">
               <label htmlFor="agreement-name">Part 3 Agreement Name:
+                <div className="value">
+                  {props.item.title}
+                </div>
               </label>
             </div>
           </div>
@@ -45,58 +79,68 @@ const CreditTransactionRequestDetails = props => (
           <div className="row">
             <div className="form-group col-md-12">
               <label htmlFor="comment">Comment:
+                <div className="value">
+                  {props.item.comment}
+                </div>
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <div className="col-md-6">
+          <div className="row">
+            <div className="form-group col-md-12">
+              <label htmlFor="document-type">Attachment Type:
+                <div className="value">
+                  {props.item.type.theType}
+                </div>
+              </label>
+            </div>
+          </div>
+
+          <div className="row">
+            <div className="form-group col-md-12">
+              <label htmlFor="document-type">Attachments:
+                <ul className="value files">
+                  {props.item.attachments.map(attachment => (
+                    <li key={attachment.url}>
+                      <span className="icon">
+                        <FontAwesomeIcon icon={getIcon(attachment.mimeType)} />
+                      </span>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          axios.get(attachment.url, {
+                            responseType: 'blob'
+                          }).then((response) => {
+                            const objectURL = window.URL.createObjectURL(new Blob([response.data]));
+                            const link = document.createElement('a');
+                            link.href = objectURL;
+                            link.setAttribute('download', attachment.filename);
+                            document.body.appendChild(link);
+                            link.click();
+                          });
+                        }}
+                      >
+                        {attachment.filename} - {attachment.size} bytes
+                      </button>
+                    </li>
+                  ))}
+                </ul>
               </label>
             </div>
           </div>
         </div>
       </div>
-
-      <div className="col-md-6">
-        <div className="row main-form">
-          <div className="form-group col-md-12">
-            <label htmlFor="document-type">Attachment Type:
-            </label>
-          </div>
-        </div>
-
-        <div className="row main-form">
-          <div className="form-group col-md-12">
-            <label htmlFor="comment">Attachments:
-            </label>
-          </div>
-        </div>
-
-        <div className="row">
-          <div className="form-group col-md-12 main-form files">
-            <div>Files:
-              <ul>
-                {props.item.attachments.map(attachment => (
-                  <li key={attachment.name}>
-                    {attachment.filename} - {attachment.size} bytes
-                    <button
-                      type="button"
-                      onClick={() => {
-                        axios.get(attachment.url, {
-                          responseType: 'blob'
-                        }).then((response) => {
-                          const objectURL = window.URL.createObjectURL(new Blob([response.data]));
-                          const link = document.createElement('a');
-                          link.href = objectURL;
-                          link.setAttribute('download', attachment.filename);
-                          document.body.appendChild(link);
-                          link.click();
-                        });
-                      }}
-                    >
-                      <FontAwesomeIcon icon="file-download" />
-                    </button>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </div>
-        </div>
-      </div>
+    </div>
+    <div className="btn-container">
+      <button
+        className="btn btn-default"
+        onClick={() => history.goBack()}
+        type="button"
+      >
+        <FontAwesomeIcon icon="arrow-circle-left" /> {Lang.BTN_APP_CANCEL}
+      </button>
     </div>
   </div>
 );

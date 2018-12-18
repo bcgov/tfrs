@@ -19,7 +19,7 @@ const CreditTransferRequestTable = (props) => {
     resizable: false,
     width: 45
   }, {
-    accessor: item => (item.creatingOrganization ? item.creatingOrganization.name : ''),
+    accessor: item => (item.createUser.organization ? item.createUser.organization.name : ''),
     className: 'col-organization',
     Header: 'Organization',
     id: 'organization',
@@ -97,8 +97,10 @@ CreditTransferRequestTable.defaultProps = {
 
 CreditTransferRequestTable.propTypes = {
   items: PropTypes.arrayOf(PropTypes.shape({
-    creatingOrganization: PropTypes.shape({
-      id: PropTypes.integer
+    createUser: PropTypes.shape({
+      organization: PropTypes.shape({
+        name: PropTypes.string
+      })
     }),
     status: PropTypes.shape({
       status: PropTypes.string
