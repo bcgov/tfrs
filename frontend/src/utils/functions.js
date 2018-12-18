@@ -41,7 +41,8 @@ const validateFiles = files => (
       case 'text/plain':
         return file.type;
       default:
-        if (file.name.split('.').pop() === 'xls' || file.name.split('.').pop() === 'ppt') {
+        if (file.name.split('.').pop() === 'xls' || file.name.split('.').pop() === 'ppt' ||
+        file.name.split('.').pop() === 'doc') {
           return file;
         }
 
