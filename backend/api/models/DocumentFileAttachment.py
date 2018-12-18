@@ -20,10 +20,10 @@
     See the License for the specific language governing permissions and
     limitations under the License.
 """
+from django.db import models
 from api.models.Document import Document
 from api.models.mixins.AttachmentData import AttachmentData
 from auditable.models import Auditable
-from django.db import models
 
 
 class DocumentFileAttachment(Auditable, AttachmentData):
@@ -39,4 +39,4 @@ class DocumentFileAttachment(Auditable, AttachmentData):
     class Meta:
         db_table = 'document_file'
 
-    db_table_comment = ''
+    db_table_comment = 'File Attachments'

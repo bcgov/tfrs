@@ -6,6 +6,7 @@ import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
+import Loading from '../app/components/Loading';
 
 import { getDocumentUpload } from '../actions/documentUploads';
 
@@ -21,12 +22,15 @@ class CreditTransactionRequestDetailContainer extends Component {
   }
 
   render () {
-    const { isFetching, item } = this.props.documentUpload;
+    const { item, success } = this.props.documentUpload;
 
-    return (<CreditTransactionRequestDetails
-      isFetching={isFetching}
-      item={item}
-    />);
+    if (success) {
+      return (<CreditTransactionRequestDetails
+        item={item}
+      />);
+    }
+
+    return <Loading />;
   }
 }
 
@@ -38,7 +42,8 @@ CreditTransactionRequestDetailContainer.propTypes = {
   documentUpload: PropTypes.shape({
     isFetching: PropTypes.bool.isRequired,
     item: PropTypes.shape({
-    })
+    }),
+    success: PropTypes.bool
   }).isRequired,
   errors: PropTypes.shape({}),
   getDocumentUpload: PropTypes.func.isRequired,
@@ -61,7 +66,8 @@ const mapStateToProps = state => ({
   documentUpload: {
     errors: state.rootReducer.documentUpload.errors,
     isFetching: state.rootReducer.documentUpload.isFetching,
-    item: state.rootReducer.documentUpload.item
+    item: state.rootReducer.documentUpload.item,
+    success: state.rootReducer.documentUpload.success
   },
   loggedInUser: state.rootReducer.userRequest.loggedInUser
 });

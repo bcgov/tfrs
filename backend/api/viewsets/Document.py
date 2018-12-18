@@ -13,7 +13,8 @@ from api.models.Document import Document
 from api.models.DocumentCategory import DocumentCategory
 from api.permissions.Documents import DocumentPermissions
 from api.serializers.Document import \
-    DocumentSerializer, DocumentMinSerializer, DocumentCreateSerializer
+    DocumentCreateSerializer, DocumentDetailSerializer, \
+    DocumentMinSerializer, DocumentSerializer
 from api.serializers.DocumentCategory import DocumentCategorySerializer
 from api.serializers.DocumentStatus import DocumentStatusSerializer
 from auditable.views import AuditableMixin
@@ -34,6 +35,7 @@ class DocumentViewSet(AuditableMixin,
         'create': DocumentCreateSerializer,
         'list': DocumentMinSerializer,
         'categories': DocumentCategorySerializer,
+        'retrieve': DocumentDetailSerializer,
         'statuses': DocumentStatusSerializer
     }
 

@@ -28,6 +28,7 @@ from api.models.DocumentStatus import DocumentStatus
 from api.models.DocumentType import DocumentType
 from api.models.Document import Document
 from api.serializers import OrganizationMinSerializer, PrimaryKeyRelatedField
+from api.serializers.CompliancePeriod import CompliancePeriodSerializer
 from api.serializers.DocumentStatus import DocumentStatusSerializer
 from api.serializers.DocumentType import DocumentTypeSerializer
 
@@ -38,8 +39,10 @@ class DocumentFileAttachmentSerializer(serializers.ModelSerializer):
     """
     class Meta:
         model = DocumentFileAttachment
-        fields = ('url', 'security_scan_status', 'mime_type', 'size')
-        read_only_fields = ('url', 'security_scan_status', 'mime_type', 'size')
+        fields = ('url', 'security_scan_status', 'mime_type', 'size',
+                  'filename')
+        read_only_fields = ('url', 'security_scan_status', 'mime_type',
+                            'size', 'filename')
 
 
 class DocumentFileAttachmentCreateSerializer(serializers.ModelSerializer):
@@ -48,7 +51,7 @@ class DocumentFileAttachmentCreateSerializer(serializers.ModelSerializer):
     """
     class Meta:
         model = DocumentFileAttachment
-        fields = ('url', 'mime_type', 'size')
+        fields = ('url', 'mime_type', 'size', 'filename')
 
 
 class DocumentSerializer(serializers.ModelSerializer):
@@ -66,7 +69,7 @@ class DocumentSerializer(serializers.ModelSerializer):
             'id', 'title',
             'create_timestamp', 'update_timestamp', 'create_user',
             'update_user', 'creating_organization',
-            'status', 'type')
+            'status', 'type', 'update_timestamp')
 
         read_only_fields = ('id', 'create_timestamp', 'create_user',
                             'update_timestamp', 'update_user',
@@ -113,19 +116,46 @@ class DocumentCreateSerializer(serializers.ModelSerializer):
         read_only_fields = ('id',)
 
 
-class DocumentMinSerializer(serializers.ModelSerializer):
+class DocumentDetailSerializer(serializers.ModelSerializer):
+    """
+    Document Serializer with Full Details
+    """
+    compliance_period = CompliancePeriodSerializer(read_only=True)
     creating_organization = OrganizationMinSerializer(read_only=True)
     type = DocumentTypeSerializer(read_only=True)
     status = DocumentStatusSerializer(read_only=True)
     attachments = DocumentFileAttachmentSerializer(many=True)
 
+    class Meta:
+        model = Document
+        fields = (
+            'id', 'title',
+            'create_timestamp', 'update_timestamp', 'create_user',
+            'update_user', 'creating_organization',
+            'status', 'type', 'update_timestamp',
+            'attachments', 'compliance_period')
+
+        read_only_fields = ('id', 'create_timestamp', 'create_user',
+                            'update_timestamp', 'update_user',
+                            'title', 'creating_organization',
+                            'status', 'type', 'attachments',
+                            'compliance_period')
+
+
+class DocumentMinSerializer(serializers.ModelSerializer):
     """
     Minimal Serializer for Documents
     """
+    creating_organization = OrganizationMinSerializer(read_only=True)
+    type = DocumentTypeSerializer(read_only=True)
+    status = DocumentStatusSerializer(read_only=True)
+    attachments = DocumentFileAttachmentSerializer(many=True)
 
     class Meta:
         model = Document
-        fields = ('id', 'title', 'creating_organization', 'status',
-                  'type', 'attachments')
-        read_only_fields = ('id', 'title', 'creating_organization',
-                            'status', 'type', 'attachments')
+        fields = (
+            'id', 'title', 'creating_organization', 'status', 'type',
+            'attachments', 'update_timestamp')
+        read_only_fields = (
+            'id', 'title', 'creating_organization', 'status', 'type',
+            'attachments', 'update_timestamp')

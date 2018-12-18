@@ -90,6 +90,7 @@ class CreditTransactionRequestAddContainer extends Component {
             uploadDocument(response.data.put, blob);
 
             attachments.push({
+              filename: attachedFiles[file].name,
               mimeType: attachedFiles[file].type,
               size: attachedFiles[file].size,
               url: response.data.get

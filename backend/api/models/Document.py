@@ -20,7 +20,6 @@
     See the License for the specific language governing permissions and
     limitations under the License.
 """
-from api.models.mixins.AttachmentData import AttachmentData
 from api.models.mixins.DocumentData import DocumentData
 from auditable.models import Auditable
 
@@ -32,4 +31,4 @@ class Document(Auditable, DocumentData):
     class Meta:
         db_table = 'document'
 
-    db_table_comment = ''
+    db_table_comment = 'Document Submission.'

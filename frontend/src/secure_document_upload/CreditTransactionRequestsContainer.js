@@ -47,8 +47,7 @@ CreditTransactionRequestsContainer.propTypes = {
     items: PropTypes.arrayOf(PropTypes.shape())
   }).isRequired,
   getDocumentUploads: PropTypes.func.isRequired,
-  requestURL: PropTypes.func.isRequired,
-  items: PropTypes.arrayOf(PropTypes.shape).isRequired
+  requestURL: PropTypes.func.isRequired
 };
 
 const mapStateToProps = state => ({

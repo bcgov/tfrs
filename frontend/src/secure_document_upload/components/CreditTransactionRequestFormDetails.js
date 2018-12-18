@@ -6,9 +6,6 @@ import PropTypes from 'prop-types';
 import Dropzone from 'react-dropzone';
 import FontAwesomeIcon from '@fortawesome/react-fontawesome';
 
-import InputWithTooltip from '../../app/components/InputWithTooltip';
-import { CREDIT_TRANSFER_TYPES } from '../../constants/values';
-
 class CreditTransactionRequestFormDetails extends Component {
   constructor (props) {
     super(props);
@@ -56,13 +53,17 @@ class CreditTransactionRequestFormDetails extends Component {
           <div className="col-md-6">
             <div className="row main-form">
               <div className="form-group col-md-12">
-                <label htmlFor="">Attachment Category:
-                  <input className="form-control" />
+                <label htmlFor="attachment-category">Attachment Category:
+                  <input
+                    className="form-control"
+                    id="attachment-category"
+                    name="attachmentCategory"
+                  />
                 </label>
               </div>
             </div>
-            <div className="row main-form">
 
+            <div className="row main-form">
               <div className="form-group col-md-12">
                 <label htmlFor="compliance-period">Compliance Period:
                   <select
@@ -167,7 +168,7 @@ class CreditTransactionRequestFormDetails extends Component {
                     className="dropzone"
                     onDrop={this.onDrop}
                   >
-                    <FontAwesomeIcon icon="cloud-upload-alt" size="2x"/>
+                    <FontAwesomeIcon icon="cloud-upload-alt" size="2x" />
                     <div>
                       Drop files here or click to select files to upload.
                     </div>

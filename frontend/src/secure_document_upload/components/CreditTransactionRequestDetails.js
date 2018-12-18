@@ -3,68 +3,101 @@
  */
 import React from 'react';
 import PropTypes from 'prop-types';
+import FontAwesomeIcon from '@fortawesome/react-fontawesome';
 import axios from 'axios';
 
-import Loading from '../../app/components/Loading';
+import * as Routes from '../../constants/routes';
+import SECURE_DOCUMENT_UPLOAD from '../../constants/routes/SecureDocumentUpload';
+import { download } from '../../utils/functions';
 
 const CreditTransactionRequestDetails = props => (
-  <div className="credit-transaction-details">
-    {props.isFetching && <Loading />}
-    {!props.isFetching &&
-      <div className="row">
-        <div className="col-6">
-          <div className="row">
-            <div className="col-12">
-              <label>
-                Compliance Period:
-                <span className="value"></span>
-              </label>
-            </div>
-          </div>
-
-          <div className="row">
-            <div className="col-12">
-              <label>
-                Milestone ID:
-                <span className="value"></span>
-              </label>
-            </div>
-          </div>
-
-          <div className="row">
-            <div className="col-12">
-              <label>
-                Agreement Name:
-                <span className="value"></span>
-              </label>
-            </div>
+  <div className="credit-transaction-request-details">
+    <div className="row">
+      <div className="col-md-6">
+        <div className="row">
+          <div className="form-group col-md-12">
+            <label htmlFor="attachment-category">Attachment Category:
+            </label>
           </div>
         </div>
 
-        <div className="col-6">
-          <img id="img" />
-          <label>
-            Files:
-            <button
-              type="button"
-              onClick={() => {
-                const imageEl = document.getElementById('img');
-                axios.get('http://127.0.0.1:9000/tfrs/c0230918c9944c35ae71a2ece527bf8e?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=H74MGVE2X8NSPDZTIE72%2F20181217%2F%2Fs3%2Faws4_request&X-Amz-Date=20181217T222012Z&X-Amz-Expires=604800&X-Amz-SignedHeaders=host&X-Amz-Signature=782df3178667221e046888e962af73b34b4720b79bb5f7bb861b30993cbbeb1a', { responseType: 'blob' }).then((response) => {
-                  const reader = new window.FileReader();
-                  reader.readAsDataURL(response.data);
-                  reader.onload = () => {
-                    const imageDataUrl = reader.result;
-                    imageEl.setAttribute('src', imageDataUrl);
-                  };
-                });
-              }}
-            >
-              Test
-            </button>
-          </label>
+        <div className="row main-form">
+          <div className="form-group col-md-12">
+            <label htmlFor="compliance-period">Compliance Period:
+              <div className="value">{props.item.compliancePeriod.description}</div>
+            </label>
+          </div>
+
+          <div className="row">
+            <div className="form-group col-md-12">
+              <label htmlFor="milestone-id">Milestone:
+              </label>
+            </div>
+          </div>
+
+          <div className="row">
+            <div className="form-group col-md-12">
+              <label htmlFor="agreement-name">Part 3 Agreement Name:
+              </label>
+            </div>
+          </div>
+
+          <div className="row">
+            <div className="form-group col-md-12">
+              <label htmlFor="comment">Comment:
+              </label>
+            </div>
+          </div>
         </div>
       </div>
-    }
+
+      <div className="col-md-6">
+        <div className="row main-form">
+          <div className="form-group col-md-12">
+            <label htmlFor="document-type">Attachment Type:
+            </label>
+          </div>
+        </div>
+
+        <div className="row main-form">
+          <div className="form-group col-md-12">
+            <label htmlFor="comment">Attachments:
+            </label>
+          </div>
+        </div>
+
+        <div className="row">
+          <div className="form-group col-md-12 main-form files">
+            <div>Files:
+              <ul>
+                {props.item.attachments.map(attachment => (
+                  <li key={attachment.name}>
+                    {attachment.filename} - {attachment.size} bytes
+                    <button
+                      type="button"
+                      onClick={() => {
+                        axios.get(attachment.url, {
+                          responseType: 'blob'
+                        }).then((response) => {
+                          const objectURL = window.URL.createObjectURL(new Blob([response.data]));
+                          const link = document.createElement('a');
+                          link.href = objectURL;
+                          link.setAttribute('download', attachment.filename);
+                          document.body.appendChild(link);
+                          link.click();
+                        });
+                      }}
+                    >
+                      <FontAwesomeIcon icon="file-download" />
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 );
 
@@ -72,7 +105,6 @@ CreditTransactionRequestDetails.defaultProps = {
 };
 
 CreditTransactionRequestDetails.propTypes = {
-  isFetching: PropTypes.bool.isRequired,
   item: PropTypes.shape().isRequired
 };
 
