@@ -124,7 +124,7 @@ const getDocumentUploadURL = data => (dispatch) => {
   dispatch(getDocumentUploadURLRequest());
 
   return axios
-    .post(Routes.BASE_URL + Routes.SECURE_DOCUMENT_UPLOAD.API + '/generate_upload_url', data)
+    .get(`${Routes.BASE_URL}${Routes.SECURE_DOCUMENT_UPLOAD.API}/upload_url`, data)
     .then((response) => {
       dispatch(getDocumentUploadURLSuccess(response.data));
       return Promise.resolve(response);
@@ -180,11 +180,16 @@ const updateDocumentUploadSuccess = response => ({
   type: ActionTypes.SUCCESS_UPDATE_DOCUMENT_UPLOAD
 });
 
+const uploadDocument = (url, blob) => (axios.put(url, blob, {
+  'content-type': 'multipart/form-data'
+}));
+
 export {
   addDocumentUpload,
   deleteDocumentUpload,
   getDocumentUpload,
   getDocumentUploads,
   getDocumentUploadURL,
+  uploadDocument,
   updateDocumentUpload
 };

@@ -71,8 +71,12 @@ class DocumentViewSet(AuditableMixin,
             Q(creating_organization__id=user.organization.id)
         ).all()
 
-    @list_route(methods=['post'])
-    def generate_upload_url(self, request):
+    @list_route(methods=['get'])
+    def upload_url(self, request):
+        """
+        Generates the presigned URL for uploading and retrieving
+        the file
+        """
         minio = Minio(MINIO['ENDPOINT'],
                       access_key=MINIO['ACCESS_KEY'],
                       secret_key=MINIO['SECRET_KEY'],

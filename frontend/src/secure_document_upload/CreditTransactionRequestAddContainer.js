@@ -6,12 +6,11 @@ import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import axios from 'axios';
 
 import Modal from '../app/components/Modal';
 import CreditTransactionRequestForm from './components/CreditTransactionRequestForm';
 import history from '../app/History';
-import { addDocumentUpload, getDocumentUploadURL } from '../actions/documentUploads';
+import { addDocumentUpload, getDocumentUploadURL, uploadDocument } from '../actions/documentUploads';
 import SECURE_DOCUMENT_UPLOAD from '../constants/routes/SecureDocumentUpload';
 import toastr from '../utils/toastr';
 
@@ -88,12 +87,8 @@ class CreditTransactionRequestAddContainer extends Component {
           const blob = reader.result;
 
           this.props.requestURL().then((response) => {
-            axios.put(
-              response.data.put,
-              blob, {
-                'content-type': 'multipart/form-data'
-              }
-            );
+            uploadDocument(response.data.put, blob);
+
             attachments.push({
               mimeType: attachedFiles[file].type,
               size: attachedFiles[file].size,
