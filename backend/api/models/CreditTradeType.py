@@ -23,10 +23,10 @@
 
 from django.db import models
 
+from api.managers.CreditTradeTypeManager import CreditTradeTypeManager
 from api.models.mixins.DisplayOrder import DisplayOrder
 from api.models.mixins.EffectiveDates import EffectiveDates
 from auditable.models import Auditable
-from api.managers.CreditTradeTypeManager import CreditTradeTypeManager
 
 
 class CreditTradeType(Auditable, DisplayOrder, EffectiveDates):

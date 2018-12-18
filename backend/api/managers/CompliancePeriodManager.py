@@ -20,12 +20,10 @@
     See the License for the specific language governing permissions and
     limitations under the License.
 """
-from rest_framework import serializers
 
-from api.models.DocumentStatus import DocumentStatus
+from django.db import models
 
 
-class DocumentStatusSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = DocumentStatus
-        fields = ('status',)
+class CompliancePeriodManager(models.Manager):
+    def get_by_natural_key(self, description):
+        return self.get(description=description)
