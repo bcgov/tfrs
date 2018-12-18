@@ -6,18 +6,25 @@ import PropTypes from 'prop-types';
 import Dropzone from 'react-dropzone';
 import FontAwesomeIcon from '@fortawesome/react-fontawesome';
 
+import { validateFiles } from '../../utils/functions';
+
 class CreditTransactionRequestFormDetails extends Component {
   constructor (props) {
     super(props);
 
-    this.onDrop = this.onDrop.bind(this);
-    this.removeFile = this.removeFile.bind(this);
+    this.rejectedFiles = [];
+
+    this._onDrop = this._onDrop.bind(this);
+    this._removeFile = this._removeFile.bind(this);
   }
 
-  onDrop (files) {
+  _onDrop (files) {
+    const acceptedFiles = validateFiles(files);
+    const rejectedFiles = files.filter(file => !acceptedFiles.includes(file));
+
     const attachedFiles = [
       ...this.props.fields.files,
-      ...files
+      ...acceptedFiles
     ];
 
     const newFiles = attachedFiles.filter((item, position, arr) => (
@@ -30,9 +37,14 @@ class CreditTransactionRequestFormDetails extends Component {
         value: newFiles
       }
     });
+
+    this.rejectedFiles = [
+      ...this.rejectedFiles,
+      ...rejectedFiles
+    ];
   }
 
-  removeFile (file) {
+  _removeFile (file) {
     const found = this.props.fields.files.findIndex(item => (item === file));
     this.props.fields.files.splice(found, 1);
 
@@ -165,7 +177,7 @@ class CreditTransactionRequestFormDetails extends Component {
                   <Dropzone
                     activeClassName="is-dragover"
                     className="dropzone"
-                    onDrop={this.onDrop}
+                    onDrop={this._onDrop}
                   >
                     <FontAwesomeIcon icon="cloud-upload-alt" size="2x" />
                     <div>
@@ -183,13 +195,30 @@ class CreditTransactionRequestFormDetails extends Component {
                     {this.props.fields.files.map(file => (
                       <li key={file.name}>
                         {file.name} - {file.size} bytes
-                        <button type="button" onClick={() => this.removeFile(file)}>
+                        <button type="button" onClick={() => this._removeFile(file)}>
                           <FontAwesomeIcon icon="minus-circle" />
                         </button>
                       </li>
                     ))}
                     {this.props.fields.files.length === 0 &&
                     <li>No files selected.</li>
+                    }
+                  </ul>
+                </div>
+              </div>
+            </div>
+
+            <div className="row">
+              <div className="form-group col-md-12 main-form files">
+                <div>Invalid Files/File Types (These files will not be uploaded):
+                  <ul>
+                    {this.rejectedFiles.map(file => (
+                      <li key={file.name}>
+                        {file.name} - {file.size} bytes
+                      </li>
+                    ))}
+                    {this.rejectedFiles.length === 0 &&
+                      <li>None</li>
                     }
                   </ul>
                 </div>
