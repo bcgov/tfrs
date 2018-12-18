@@ -43,6 +43,16 @@
             "name": "S3_ROOT_BUCKET",
             "value": "tfrs-docs",
             "required": true
+        },
+        {
+            "name": "MINIO_CONFIG_VOLUME_SIZE",
+            "value": "1Gi",
+            "required": true
+        },
+        {
+            "name": "MINIO_DATA_VOLUME_SIZE",
+            "value": "2Gi",
+            "required": true
         }
     ],
     "objects": [
@@ -84,7 +94,7 @@
                 ],
                 "resources": {
                     "requests": {
-                        "storage": "2Gi"
+                        "storage": "${MINIO_DATA_VOLUME_SIZE}"
                     }
                 }
             },
@@ -110,7 +120,7 @@
                 ],
                 "resources": {
                     "requests": {
-                        "storage": "512Mi"
+                        "storage": "${MINIO_CONFIG_VOLUME_SIZE}"
                     }
                 }
             },
