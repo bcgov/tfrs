@@ -109,6 +109,7 @@ class Navbar extends Component {
             Credit Transactions
           </NavLink>
           {CONFIG.SECURE_DOCUMENT_UPLOAD.ENABLED &&
+          typeof this.props.loggedInUser.hasPermission === 'function' &&
           this.props.loggedInUser.hasPermission(PERMISSIONS_SECURE_DOCUMENT_UPLOAD.VIEW) &&
           <NavLink
             activeClassName="active"
@@ -222,6 +223,7 @@ class Navbar extends Component {
             </NavLink>
           </li>
           {CONFIG.SECURE_DOCUMENT_UPLOAD.ENABLED &&
+          typeof this.props.loggedInUser.hasPermission === 'function' &&
           this.props.loggedInUser.hasPermission(PERMISSIONS_SECURE_DOCUMENT_UPLOAD.VIEW) &&
           <li>
             <NavLink

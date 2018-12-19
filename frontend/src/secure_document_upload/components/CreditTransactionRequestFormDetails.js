@@ -6,7 +6,7 @@ import PropTypes from 'prop-types';
 import Dropzone from 'react-dropzone';
 import FontAwesomeIcon from '@fortawesome/react-fontawesome';
 
-import { validateFiles } from '../../utils/functions';
+import { getIcon, validateFiles } from '../../utils/functions';
 
 class CreditTransactionRequestFormDetails extends Component {
   constructor (props) {
@@ -162,7 +162,7 @@ class CreditTransactionRequestFormDetails extends Component {
                             type="button"
                             value={t.id}
                           >
-                            {t.theType}
+                            {t.description}
                           </button>
                         )))
                       ))}
@@ -189,11 +189,14 @@ class CreditTransactionRequestFormDetails extends Component {
             </div>
 
             <div className="row">
-              <div className="form-group col-md-12 main-form files">
+              <div className="form-group col-md-12 main-form">
                 <div>Files:
-                  <ul>
+                  <ul className="files">
                     {this.props.fields.files.map(file => (
                       <li key={file.name}>
+                        <span className="icon">
+                          <FontAwesomeIcon icon={getIcon(file.type)} />
+                        </span>
                         {file.name} - {file.size} bytes
                         <button type="button" onClick={() => this._removeFile(file)}>
                           <FontAwesomeIcon icon="minus-circle" />
@@ -201,7 +204,7 @@ class CreditTransactionRequestFormDetails extends Component {
                       </li>
                     ))}
                     {this.props.fields.files.length === 0 &&
-                    <li>No files selected.</li>
+                    <li>- No files selected.</li>
                     }
                   </ul>
                 </div>
@@ -209,16 +212,19 @@ class CreditTransactionRequestFormDetails extends Component {
             </div>
 
             <div className="row">
-              <div className="form-group col-md-12 main-form files">
+              <div className="form-group col-md-12 main-form">
                 <div>Invalid Files/File Types (These files will not be uploaded):
-                  <ul>
+                  <ul className="files">
                     {this.rejectedFiles.map(file => (
                       <li key={file.name}>
+                        <span className="icon">
+                          <FontAwesomeIcon icon={getIcon(file.type)} />
+                        </span>
                         {file.name} - {file.size} bytes
                       </li>
                     ))}
                     {this.rejectedFiles.length === 0 &&
-                      <li>None</li>
+                      <li>- None</li>
                     }
                   </ul>
                 </div>

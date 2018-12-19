@@ -30,6 +30,7 @@ class CreditTransactionRequestsContainer extends Component {
   render () {
     return (
       <CreditTransactionRequestsPage
+        categories={this.props.referenceData.documentCategories}
         documentUploads={this.props.documentUploads}
         loggedInUser={this.props.loggedInUser}
         requestURL={this.props.requestURL}
@@ -49,6 +50,11 @@ CreditTransactionRequestsContainer.propTypes = {
   }).isRequired,
   getDocumentUploads: PropTypes.func.isRequired,
   loggedInUser: PropTypes.shape().isRequired,
+  referenceData: PropTypes.shape({
+    documentCategories: PropTypes.arrayOf(PropTypes.shape),
+    isFetching: PropTypes.bool,
+    isSuccessful: PropTypes.bool
+  }).isRequired,
   requestURL: PropTypes.func.isRequired
 };
 
@@ -57,7 +63,12 @@ const mapStateToProps = state => ({
     isFetching: state.rootReducer.documentUploads.isFetching,
     items: state.rootReducer.documentUploads.items
   },
-  loggedInUser: state.rootReducer.userRequest.loggedInUser
+  loggedInUser: state.rootReducer.userRequest.loggedInUser,
+  referenceData: {
+    documentCategories: state.rootReducer.referenceData.data.documentCategories,
+    isFetching: state.rootReducer.referenceData.isFetching,
+    isSuccessful: state.rootReducer.referenceData.success
+  }
 });
 
 const mapDispatchToProps = dispatch => ({

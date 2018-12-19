@@ -28,4 +28,4 @@ from api.models.DocumentType import DocumentType
 class DocumentTypeSerializer(serializers.ModelSerializer):
     class Meta:
         model = DocumentType
-        fields = ('the_type', 'id')
+        fields = ('the_type', 'id', 'description')

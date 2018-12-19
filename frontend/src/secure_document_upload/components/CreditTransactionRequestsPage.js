@@ -37,54 +37,23 @@ const CreditTransactionRequestsPage = (props) => {
               <span className="sr-only">Toggle Dropdown</span>
             </button>
             <ul className="dropdown-menu">
-              <li>
-                <button
-                  onClick={() => {
-                    const route = SECURE_DOCUMENT_UPLOAD.ADD.replace(':type', 'application');
+              {props.categories &&
+                props.categories.map(category => (
+                  (category.types.map(t => (
+                    <li>
+                      <button
+                        onClick={() => {
+                          const route = SECURE_DOCUMENT_UPLOAD.ADD.replace(':type', t.id);
 
-                    history.push(route);
-                  }}
-                  type="button"
-                >
-                  Part 3 Award Application
-                </button>
-              </li>
-              <li>
-                <button
-                  onClick={() => {
-                    const route = SECURE_DOCUMENT_UPLOAD.ADD.replace(':type', 'evidence');
-
-                    history.push(route);
-                  }}
-                  type="button"
-                >
-                  Part 3 Award Milestone Evidence
-                </button>
-              </li>
-              <li>
-                <button
-                  onClick={() => {
-                    const route = SECURE_DOCUMENT_UPLOAD.ADD.replace(':type', 'records');
-
-                    history.push(route);
-                  }}
-                  type="button"
-                >
-                  Fuel Supply Records
-                </button>
-              </li>
-              <li>
-                <button
-                  onClick={() => {
-                    const route = SECURE_DOCUMENT_UPLOAD.ADD.replace(':type', 'other');
-
-                    history.push(route);
-                  }}
-                  type="button"
-                >
-                  Other
-                </button>
-              </li>
+                          history.push(route);
+                        }}
+                        type="button"
+                      >
+                        {t.description}
+                      </button>
+                    </li>
+                  )))
+                ))}
             </ul>
           </div>
           }
@@ -107,6 +76,7 @@ CreditTransactionRequestsPage.defaultProps = {
 };
 
 CreditTransactionRequestsPage.propTypes = {
+  categories: PropTypes.arrayOf(PropTypes.shape()).isRequired,
   documentUploads: PropTypes.shape({
     isFetching: PropTypes.bool,
     items: PropTypes.arrayOf(PropTypes.shape)

@@ -8,33 +8,7 @@ import axios from 'axios';
 
 import history from '../../app/History';
 import * as Lang from '../../constants/langEnUs';
-
-const getIcon = (mimeType) => {
-  switch (mimeType) {
-    case 'application/pdf':
-      return 'file-pdf';
-    case 'application/vnd.ms-excel':
-    case 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet':
-      return 'file-excel';
-    case 'application/vnd.ms-powerpoint':
-    case 'application/vnd.openxmlformats-officedocument.presentationml.presentation':
-      return 'file-powerpoint';
-    case 'application/msword':
-    case 'application/vnd.openxmlformats-officedocument.wordprocessingml.document':
-      return 'file-word';
-    case 'image/gif':
-    case 'image/jpg':
-    case 'image/jpeg':
-    case 'image/png':
-      return 'file-image';
-    case 'text/csv':
-      return 'file-csv';
-    case 'text/plain':
-      return 'file-alt';
-    default:
-      return 'file-download';
-  }
-};
+import { getIcon } from '../../utils/functions';
 
 const CreditTransactionRequestDetails = props => (
   <div className="page-credit-transaction-request-details">

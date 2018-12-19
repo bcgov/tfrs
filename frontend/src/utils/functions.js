@@ -22,6 +22,33 @@ const download = (url, params = {}) => (
   })
 );
 
+const getIcon = (mimeType) => {
+  switch (mimeType) {
+    case 'application/pdf':
+      return 'file-pdf';
+    case 'application/vnd.ms-excel':
+    case 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet':
+      return 'file-excel';
+    case 'application/vnd.ms-powerpoint':
+    case 'application/vnd.openxmlformats-officedocument.presentationml.presentation':
+      return 'file-powerpoint';
+    case 'application/msword':
+    case 'application/vnd.openxmlformats-officedocument.wordprocessingml.document':
+      return 'file-word';
+    case 'image/gif':
+    case 'image/jpg':
+    case 'image/jpeg':
+    case 'image/png':
+      return 'file-image';
+    case 'text/csv':
+      return 'file-csv';
+    case 'text/plain':
+      return 'file-alt';
+    default:
+      return 'file-download';
+  }
+};
+
 const validateFiles = files => (
   files.filter((file) => {
     switch (file.type) {
@@ -51,4 +78,4 @@ const validateFiles = files => (
   })
 );
 
-export { arrayMove, download, validateFiles };
+export { arrayMove, download, getIcon, validateFiles };

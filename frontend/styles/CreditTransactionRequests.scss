@@ -23,9 +23,35 @@
     }
 
     .files {
+      list-style-position: outside;
+      list-style-type: none;
+      padding: 0;
+
       button {
         border: 0;
         color: $red;
+      }
+
+      li {
+        padding: 0.25rem 0 0.25rem 2.5rem;
+        position: relative;
+
+        .icon {
+          bottom: 0;
+          display: flex;
+          height: 100%;
+          left: 0;
+          position: absolute;
+          text-align: center;
+          top: 0;
+          width: 2rem;
+
+          svg {
+            align-self: center;
+            margin-left: auto;
+            margin-right: 0;
+          }
+        }
       }
     }
   }

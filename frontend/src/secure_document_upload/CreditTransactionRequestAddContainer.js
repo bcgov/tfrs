@@ -25,10 +25,11 @@ class CreditTransactionRequestAddContainer extends Component {
       fields: {
         agreementName: '',
         attachmentCategory: '',
-        attachmentType: props.match.params.type ? props.match.params.type : 'other',
         comment: '',
         compliancePeriod: { id: 0, description: '' },
-        documentType: { id: 2 },
+        documentType: {
+          id: props.match.params.type ? parseInt(props.match.params.type, 10) : 1
+        },
         files: [],
         milestoneId: ''
       },
@@ -115,8 +116,8 @@ class CreditTransactionRequestAddContainer extends Component {
     };
 
     Promise.all(uploadPromises).then(() => {
-      this.setState({ uploadState: 'success' });
       this.props.addDocumentUpload(data).then((response) => {
+        this.setState({ uploadState: 'success' });
         history.push(SECURE_DOCUMENT_UPLOAD.LIST);
         toastr.documentUpload(status.id);
       });
@@ -205,7 +206,6 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
   addDocumentUpload: bindActionCreators(addDocumentUpload, dispatch),
   requestURL: bindActionCreators(getDocumentUploadURL, dispatch)
-
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(CreditTransactionRequestAddContainer);

@@ -141,7 +141,6 @@ CreditTransactionsPage.propTypes = {
     items: PropTypes.arrayOf(PropTypes.shape()).isRequired,
     isFetching: PropTypes.bool.isRequired
   }).isRequired,
-  handleDownload: PropTypes.func.isRequired,
   highlight: PropTypes.string,
   loggedInUser: PropTypes.shape({
     displayName: PropTypes.string,
