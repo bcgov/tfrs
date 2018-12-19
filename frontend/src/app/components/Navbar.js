@@ -200,7 +200,7 @@ class Navbar extends Component {
                 to={ORGANIZATIONS.MINE}
               >
                 Company Details
-              </NavLink>,
+              </NavLink>
             </li>,
             <li key="credit-market-report">
               <a
