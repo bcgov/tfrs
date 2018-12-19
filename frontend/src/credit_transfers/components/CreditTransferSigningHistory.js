@@ -42,11 +42,15 @@ class CreditTransferSigningHistory extends Component {
   }
 
   _renderApproved (history) {
-    let roleDisplay = history.userRole.description;
+    let roleDisplay = null;
 
-    if (history.userRole.name === 'GovDeputyDirector' ||
-        history.userRole.name === 'GovDirector') {
-      roleDisplay = roleDisplay.replace('Government ', '');
+    if (history.userRole) {
+      roleDisplay = history.userRole.description;
+
+      if (history.userRole.name === 'GovDeputyDirector' ||
+          history.userRole.name === 'GovDirector') {
+        roleDisplay = roleDisplay.replace('Government ', '');
+      }
     }
 
     // if "recorded" status was found, this means this credit trade
@@ -56,13 +60,15 @@ class CreditTransferSigningHistory extends Component {
     return (
       <p key={history.createTimestamp}>
         <strong className="text-success">Approved </strong>
-        {CreditTransferSigningHistory.recordedFound(this.props.history) &&
+        {(CreditTransferSigningHistory.recordedFound(this.props.history) ||
+        !roleDisplay) &&
           <span>
             on {moment(this.props.tradeEffectiveDate).format('LL')} by the
             <strong> Director </strong> under the
           </span>
         }
         {!CreditTransferSigningHistory.recordedFound(this.props.history) &&
+        roleDisplay &&
           <span>
             on {moment(history.createTimestamp).format('LL')} by
             <strong> {history.user.firstName} {history.user.lastName},</strong>
