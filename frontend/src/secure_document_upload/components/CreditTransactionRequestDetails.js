@@ -12,7 +12,7 @@ import { getIcon } from '../../utils/functions';
 
 const CreditTransactionRequestDetails = props => (
   <div className="page-credit-transaction-request-details">
-    <h1>{props.item.type.theType}</h1>
+    <h1>{props.item.type.description}</h1>
     <div className="credit-transaction-request-details">
       <div className="row">
         <div className="col-md-6">
@@ -66,7 +66,7 @@ const CreditTransactionRequestDetails = props => (
             <div className="form-group col-md-12">
               <label htmlFor="document-type">Attachment Type:
                 <div className="value">
-                  {props.item.type.theType}
+                  {props.item.type.description}
                 </div>
               </label>
             </div>
