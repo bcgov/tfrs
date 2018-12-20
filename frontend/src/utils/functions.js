@@ -28,6 +28,7 @@ const getIcon = (mimeType) => {
       return 'file-pdf';
     case 'application/vnd.ms-excel':
     case 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet':
+    case 'text/csv':
       return 'file-excel';
     case 'application/vnd.ms-powerpoint':
     case 'application/vnd.openxmlformats-officedocument.presentationml.presentation':
@@ -40,8 +41,6 @@ const getIcon = (mimeType) => {
     case 'image/jpeg':
     case 'image/png':
       return 'file-image';
-    case 'text/csv':
-      return 'file-csv';
     case 'text/plain':
       return 'file-alt';
     default:

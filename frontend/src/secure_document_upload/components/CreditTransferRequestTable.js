@@ -26,7 +26,7 @@ const CreditTransferRequestTable = (props) => {
     minWidth: 100,
     show: props.loggedInUser.isGovernmentUser
   }, {
-    accessor: item => (item.type ? item.type.theType : ''),
+    accessor: item => (item.type ? item.type.description : ''),
     className: 'col-attachment-type',
     Header: 'Attachment Type',
     id: 'attachment-type',

@@ -24,7 +24,6 @@ from django.db import models
 
 from api.models.Document import Document
 from api.models.Role import Role
-from api.models.User import User
 from api.models.mixins.DocumentData import DocumentData
 from auditable.models import Auditable
 
@@ -41,13 +40,7 @@ class DocumentHistory(Auditable, DocumentData):
         null=False
     )
 
-    modifying_user = models.ForeignKey(
-        User,
-        related_name='users',
-        on_delete=models.PROTECT,
-        null=False)
-
-    modifying_user_role = models.ForeignKey(
+    user_role = models.ForeignKey(
         Role,
         related_name='role',
         on_delete=models.PROTECT,

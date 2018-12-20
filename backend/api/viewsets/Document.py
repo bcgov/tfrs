@@ -16,6 +16,7 @@ from api.serializers.Document import \
     DocumentMinSerializer, DocumentSerializer
 from api.serializers.DocumentCategory import DocumentCategorySerializer
 from api.serializers.DocumentStatus import DocumentStatusSerializer
+from api.services.DocumentService import DocumentService
 from auditable.views import AuditableMixin
 from tfrs.settings import MINIO
 
@@ -25,6 +26,9 @@ class DocumentViewSet(AuditableMixin,
                       mixins.ListModelMixin,
                       mixins.RetrieveModelMixin,
                       viewsets.GenericViewSet):
+    """
+    This viewset automatically provides `list`, `create`, `retrieve`.
+    """
 
     permission_classes = (DocumentPermissions,)
     http_method_names = ['get', 'post']
@@ -71,6 +75,11 @@ class DocumentViewSet(AuditableMixin,
         return self.queryset.filter(
             Q(create_user__organization__id=user.organization.id)
         ).all()
+
+    def perform_create(self, serializer):
+        document = serializer.save()
+        DocumentService.create_history(document, True)
+        # DocumentService.dispatch_notifications(None, document)
 
     @list_route(methods=['get'])
     def upload_url(self, request):
