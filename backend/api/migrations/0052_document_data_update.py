@@ -97,6 +97,5 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        # This is a one-way trip
         RunPython(update_document_types, revert_document_types)
     ]

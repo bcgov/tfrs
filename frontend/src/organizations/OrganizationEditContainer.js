@@ -96,7 +96,7 @@ class OrganizationEditContainer extends Component {
         id="confirmSubmit"
         key="confirmSubmit"
       >
-        Are you sure you want to add this Fuel Supplier?
+        Are you sure you want to create this organization?
       </Modal>
     );
   }

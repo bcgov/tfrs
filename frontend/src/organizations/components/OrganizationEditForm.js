@@ -11,7 +11,7 @@ import * as Lang from '../../constants/langEnUs';
 const OrganizationEditForm = props => (
   <div className="organization-edit-details">
     <h1>
-      {props.mode === 'add' ? 'Adding ' : 'Updating '} Fuel Supplier
+      {props.mode === 'add' ? 'Create ' : 'Edit '} Organization
     </h1>
     <div className="main-form">
       <div className="row">
@@ -52,22 +52,6 @@ const OrganizationEditForm = props => (
       <div className="row">
         <div className="col-sm-6">
           <div className="form-group">
-            <label htmlFor="organization-actions-type">Organization Actions Type:
-              <select
-                className="form-control"
-                id="organization-actions-type"
-                name="actionsType"
-                onChange={props.handleInputChange}
-                value={props.fields.actionsType}
-              >
-                {props.referenceData.organizationActionsTypes
-                  .map(t => (<option key={t.id} value={t.id}>{t.description}</option>))}
-              </select>
-            </label>
-          </div>
-        </div>
-        <div className="col-sm-6">
-          <div className="form-group">
             <label htmlFor="organization-status">Organization Status:
               <select
                 className="form-control"
@@ -77,6 +61,22 @@ const OrganizationEditForm = props => (
                 value={props.fields.status}
               >
                 {props.referenceData.organizationStatuses
+                  .map(t => (<option key={t.id} value={t.id}>{t.description}</option>))}
+              </select>
+            </label>
+          </div>
+        </div>
+        <div className="col-sm-6">
+          <div className="form-group">
+            <label htmlFor="organization-actions-type">Organization Actions Type:
+              <select
+                className="form-control"
+                id="organization-actions-type"
+                name="actionsType"
+                onChange={props.handleInputChange}
+                value={props.fields.actionsType}
+              >
+                {props.referenceData.organizationActionsTypes
                   .map(t => (<option key={t.id} value={t.id}>{t.description}</option>))}
               </select>
             </label>
@@ -146,7 +146,7 @@ const OrganizationEditForm = props => (
         </div>
         <div className="col-sm-6">
           <div className="form-group">
-            <label htmlFor="organization-postal-code">Postal Code:
+            <label htmlFor="organization-postal-code">Postal Code / ZIP:
               <input
                 className="form-control"
                 id="organization-postal-code"
@@ -178,7 +178,7 @@ const OrganizationEditForm = props => (
       <div className="row">
         <div className="col-sm-6">
           <div className="form-group">
-            <label htmlFor="organization-state">State:
+            <label htmlFor="organization-state">Province / State:
               <input
                 className="form-control"
                 id="organization-state"
