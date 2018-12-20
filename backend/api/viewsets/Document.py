@@ -79,7 +79,6 @@ class DocumentViewSet(AuditableMixin,
     def perform_create(self, serializer):
         document = serializer.save()
         DocumentService.create_history(document, True)
-        # DocumentService.dispatch_notifications(None, document)
 
     @list_route(methods=['get'])
     def upload_url(self, request):
