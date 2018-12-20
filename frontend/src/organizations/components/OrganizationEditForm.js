@@ -254,9 +254,9 @@ OrganizationEditForm.propTypes = {
   handleInputChange: PropTypes.func.isRequired,
   handleSubmit: PropTypes.func.isRequired,
   referenceData: PropTypes.shape({
-    organizationActionsTypes: PropTypes.string,
-    organizationStatuses: PropTypes.string,
-    organizationTypes: PropTypes.string
+    organizationActionsTypes: PropTypes.arrayOf(PropTypes.shape()),
+    organizationStatuses: PropTypes.arrayOf(PropTypes.shape()),
+    organizationTypes: PropTypes.arrayOf(PropTypes.shape())
   }),
   mode: PropTypes.oneOf(['add', 'edit', 'admin_edit'])
 };

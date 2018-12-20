@@ -186,6 +186,7 @@ class OrganizationEditContainer extends Component {
     switch (this.props.mode) {
       case 'add':
         return ([<OrganizationEditForm
+          key="organization-edit-form"
           fields={this.state.fields}
           handleInputChange={this._handleInputChange}
           referenceData={this.props.referenceData}

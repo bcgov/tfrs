@@ -17,6 +17,7 @@ const OrganizationPage = (props) => {
       {!isFetching && [
         <OrganizationDetails
           key="details"
+          loggedInUser={props.loggedInUser}
           organization={details}
         />,
         <OrganizationMembers
