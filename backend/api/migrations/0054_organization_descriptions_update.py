@@ -1,14 +1,10 @@
-from datetime import datetime
-
 from django.db import migrations
 from django.db.migrations import RunPython
 
 
 def update_organization_descriptions(apps, schema_editor):
     """
-    Adds the description for Application and Evidence.
-    Add 'Other' Category
-    Adds Fuel Supply Records and Other
+    Updates the descriptions for Organization Status and Types
     """
     db_alias = schema_editor.connection.alias
 
@@ -56,10 +52,7 @@ def update_organization_descriptions(apps, schema_editor):
 
 def revert_organization_descriptions(apps, schema_editor):
     """
-    Reverts the changes to document types.
-    Removes the description for Application Evidence.
-    Removes 'Other' Category
-    Removes Fuel Supply Records and Other
+    Reverts the descriptions for Organization Status and Types
     """
     db_alias = schema_editor.connection.alias
 

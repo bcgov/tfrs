@@ -1,22 +1,22 @@
-import {call, put, takeLatest, all} from 'redux-saga/effects';
-import {delay} from 'redux-saga';
-import userManager from "./oidc-usermanager";
-import {loadUser} from "redux-oidc";
-import {getLoggedInUser} from "../actions/userActions";
+import { loadUser } from 'redux-oidc';
+import { call, put, takeLatest, all } from 'redux-saga/effects';
+import { delay } from 'redux-saga';
+import userManager from './oidc-usermanager';
+import { getLoggedInUser } from '../actions/userActions';
 
 const LOGIN_TRIGGERING_ACTIONS = [
   'redux-oidc/USER_EXPIRED'
 ];
 
-function* triggerLoginFlow() {
+function* triggerLoginFlow () {
   userManager.signinRedirect();
 }
 
-function* getBackendUser() {
+function* getBackendUser () {
   yield put(getLoggedInUser());
 }
 
-export default function* authenticationStateSaga(store) {
+export default function* authenticationStateSaga (store) {
 
   loadUser(store, userManager).then((user) => {
     if (user == null && store.getState().routing.location.pathname !== '/authCallback') {
