@@ -40,7 +40,7 @@ const CreditTransactionRequestsPage = (props) => {
               {props.categories &&
                 props.categories.map(category => (
                   (category.types.map(t => (
-                    <li>
+                    <li key={t.id}>
                       <button
                         onClick={() => {
                           const route = SECURE_DOCUMENT_UPLOAD.ADD.replace(':type', t.id);

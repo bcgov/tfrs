@@ -28,6 +28,7 @@ from api.serializers.CompliancePeriod import CompliancePeriodSerializer
 from api.serializers.DocumentStatus import DocumentStatusSerializer
 from api.serializers.DocumentType import DocumentTypeSerializer
 from api.serializers.User import UserMinSerializer
+from api.services.DocumentActions import DocumentActions
 
 
 class DocumentFileAttachmentSerializer(serializers.ModelSerializer):
@@ -101,6 +102,28 @@ class DocumentDetailSerializer(serializers.ModelSerializer):
     type = DocumentTypeSerializer(read_only=True)
     status = DocumentStatusSerializer(read_only=True)
     attachments = DocumentFileAttachmentSerializer(many=True)
+    actions = serializers.SerializerMethodField()
+
+    def get_actions(self, obj):
+        """
+        If the user doesn't have any roles assigned, treat as though the user
+        doesn't have available permissions
+        """
+        cur_status = obj.status.status
+        request = self.context.get('request')
+
+        # If the user doesn't have any roles assigned, treat as though the user
+        # doesn't have available permissions
+        if not request.user.roles:
+            return []
+
+        if cur_status == "Draft":
+            return DocumentActions.draft(request)
+
+        if cur_status == "Submitted":
+            return DocumentActions.submitted(request)
+
+        return []
 
     class Meta:
         model = Document
@@ -108,12 +131,12 @@ class DocumentDetailSerializer(serializers.ModelSerializer):
             'id', 'title',
             'create_timestamp', 'create_user', 'update_timestamp',
             'update_user', 'status', 'type', 'attachments',
-            'compliance_period', 'comment')
+            'compliance_period', 'comment', 'actions')
 
         read_only_fields = ('id', 'create_timestamp', 'create_user',
                             'update_timestamp', 'update_user',
                             'title', 'status', 'type', 'attachments',
-                            'compliance_period', 'comment')
+                            'compliance_period', 'comment', 'actions')
 
 
 class DocumentMinSerializer(serializers.ModelSerializer):
@@ -133,3 +156,14 @@ class DocumentMinSerializer(serializers.ModelSerializer):
         read_only_fields = (
             'id', 'title', 'create_user', 'status', 'type',
             'attachments', 'update_timestamp')
+
+
+class DocumentUpdateSerializer(serializers.ModelSerializer):
+    """
+    Update Serializer for Documents
+    """
+    class Meta:
+        model = Document
+        fields = ('comment', 'compliance_period', 'update_user', 'id',
+                  'status', 'title', 'type')
+        read_only_fields = ('id',)

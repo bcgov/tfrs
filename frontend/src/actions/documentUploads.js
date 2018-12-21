@@ -151,6 +151,19 @@ const getDocumentUploadURLError = error => ({
   errorMessage: error
 });
 
+export const partialUpdateDocument = (id, data) => (dispatch) => {
+  dispatch(updateDocumentUploadRequest({ id, data }));
+
+  return axios.patch(`${Routes.BASE_URL}${Routes.SECURE_DOCUMENT_UPLOAD.API}/${id}`, data)
+    .then((response) => {
+      dispatch(updateDocumentUploadSuccess(response.data));
+      return Promise.resolve(response);
+    }).catch((error) => {
+      dispatch(updateDocumentUploadError(error.response.data));
+      return Promise.reject(error);
+    });
+};
+
 const updateDocumentUpload = (data, id) => (dispatch) => {
   dispatch(updateDocumentUploadRequest({ id, data }));
 

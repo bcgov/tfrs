@@ -7,15 +7,14 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
-import Modal from '../app/components/Modal';
 import CreditTransactionRequestForm from './components/CreditTransactionRequestForm';
+import Loading from '../app/components/Loading';
+import Modal from '../app/components/Modal';
 import history from '../app/History';
 import { addDocumentUpload, getDocumentUploadURL, uploadDocument } from '../actions/documentUploads';
 import DOCUMENT_STATUSES from '../constants/documentStatuses';
 import SECURE_DOCUMENT_UPLOAD from '../constants/routes/SecureDocumentUpload';
 import toastr from '../utils/toastr';
-
-import Loading from '../app/components/Loading';
 
 class CreditTransactionRequestAddContainer extends Component {
   constructor (props) {

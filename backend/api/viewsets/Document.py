@@ -13,7 +13,7 @@ from api.models.DocumentCategory import DocumentCategory
 from api.permissions.Documents import DocumentPermissions
 from api.serializers.Document import \
     DocumentCreateSerializer, DocumentDetailSerializer, \
-    DocumentMinSerializer, DocumentSerializer
+    DocumentMinSerializer, DocumentSerializer, DocumentUpdateSerializer
 from api.serializers.DocumentCategory import DocumentCategorySerializer
 from api.serializers.DocumentStatus import DocumentStatusSerializer
 from api.services.DocumentService import DocumentService
@@ -25,13 +25,14 @@ class DocumentViewSet(AuditableMixin,
                       mixins.CreateModelMixin,
                       mixins.ListModelMixin,
                       mixins.RetrieveModelMixin,
+                      mixins.UpdateModelMixin,
                       viewsets.GenericViewSet):
     """
     This viewset automatically provides `list`, `create`, `retrieve`.
     """
 
     permission_classes = (DocumentPermissions,)
-    http_method_names = ['get', 'post']
+    http_method_names = ['get', 'post', 'patch']
 
     serializer_classes = {
         'default': DocumentSerializer,
@@ -39,7 +40,9 @@ class DocumentViewSet(AuditableMixin,
         'list': DocumentMinSerializer,
         'categories': DocumentCategorySerializer,
         'retrieve': DocumentDetailSerializer,
-        'statuses': DocumentStatusSerializer
+        'statuses': DocumentStatusSerializer,
+        'partial_update': DocumentUpdateSerializer,
+        'update': DocumentUpdateSerializer
     }
 
     queryset = Document.objects.all()
@@ -79,6 +82,10 @@ class DocumentViewSet(AuditableMixin,
     def perform_create(self, serializer):
         document = serializer.save()
         DocumentService.create_history(document, True)
+
+    def perform_update(self, serializer):
+        document = serializer.save()
+        DocumentService.create_history(document, False)
 
     @list_route(methods=['get'])
     def upload_url(self, request):

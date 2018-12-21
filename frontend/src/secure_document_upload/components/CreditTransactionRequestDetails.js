@@ -115,6 +115,16 @@ const CreditTransactionRequestDetails = props => (
       >
         <FontAwesomeIcon icon="arrow-circle-left" /> {Lang.BTN_APP_CANCEL}
       </button>
+      {props.availableActions.includes('Received') &&
+      <button
+        className="btn btn-primary"
+        data-target="#confirmSubmit"
+        data-toggle="modal"
+        type="button"
+      >
+        <FontAwesomeIcon icon="check" /> Received
+      </button>
+      }
     </div>
   </div>
 );
@@ -123,6 +133,7 @@ CreditTransactionRequestDetails.defaultProps = {
 };
 
 CreditTransactionRequestDetails.propTypes = {
+  availableActions: PropTypes.arrayOf(PropTypes.string).isRequired,
   item: PropTypes.shape().isRequired
 };
 
