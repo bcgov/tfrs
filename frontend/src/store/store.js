@@ -19,6 +19,7 @@ import userManager from './oidc-usermanager';
 import CONFIG from '../config';
 import { getLoggedInUser } from '../actions/userActions';
 import sessionTimeoutSaga from './sessionTimeout';
+import authenticationStateSaga from "./authenticationState";
 
 const middleware = routerMiddleware(history);
 const sagaMiddleware = createSagaMiddleware();
@@ -56,39 +57,33 @@ const store = createStore(
   enhancer
 );
 
-let subscriptionProcessing = false;
+// let subscriptionProcessing = false;
 
-store.subscribe(() => {
-  const state = store.getState();
-  if (!subscriptionProcessing) {
-    subscriptionProcessing = true;
-
-    if (state.rootReducer.notifications.serverInitiatedReloadRequested === true) {
-      store.dispatch(getNotifications());
-    }
-
-    if (CONFIG.KEYCLOAK.ENABLED) {
-      if (state.oidc.user && !state.oidc.user.expired &&
-        !state.rootReducer.userRequest.isFetching &&
-        !state.rootReducer.userRequest.isAuthenticated &&
-        !state.rootReducer.userRequest.serverError) {
-        store.dispatch(getLoggedInUser());
-      }
-    }
-
-    subscriptionProcessing = false;
-  }
-});
+// store.subscribe(() => {
+//   const state = store.getState();
+//   if (!subscriptionProcessing) {
+//     subscriptionProcessing = true;
+//
+//     if (state.rootReducer.notifications.serverInitiatedReloadRequested === true) {
+//       store.dispatch(getNotifications());
+//     }
+//
+//     if (CONFIG.KEYCLOAK.ENABLED) {
+//       if (state.oidc.user && !state.oidc.user.expired &&
+//         !state.rootReducer.userRequest.isFetching &&
+//         !state.rootReducer.userRequest.isAuthenticated &&
+//         !state.rootReducer.userRequest.serverError) {
+//         store.dispatch(getLoggedInUser());
+//       }
+//     }
+//
+//     subscriptionProcessing = false;
+//   }
+// });
 
 sagaMiddleware.run(sessionTimeoutSaga);
-
 if (CONFIG.KEYCLOAK.ENABLED) {
-  loadUser(store, userManager).then((user) => {
-    if (user == null && store.getState().routing.location.pathname !== '/authCallback') {
-      userManager.signinRedirect();
-    }
-  }).catch((reason) => {
-  });
+  sagaMiddleware.run(authenticationStateSaga, store);
 }
 
 export default store;

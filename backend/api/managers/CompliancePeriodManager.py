@@ -20,15 +20,10 @@
     See the License for the specific language governing permissions and
     limitations under the License.
 """
-from api.models.mixins.DocumentData import DocumentData
-from auditable.models import Auditable
+
+from django.db import models
 
 
-class Document(Auditable, DocumentData):
-    """
-    Holds the documents that constitute evidence or compliance records etc.
-    """
-    class Meta:
-        db_table = 'document'
-
-    db_table_comment = 'Document Submission.'
+class CompliancePeriodManager(models.Manager):
+    def get_by_natural_key(self, description):
+        return self.get(description=description)

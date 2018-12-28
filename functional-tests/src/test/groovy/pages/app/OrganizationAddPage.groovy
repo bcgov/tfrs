@@ -1,7 +1,7 @@
 package pages
 
 class OrganizationAddPage extends BaseAppPage {
-  static at = { isReactReady() && pageTitle.text() == 'Adding Fuel Supplier' }
+  static at = { isReactReady() && pageTitle.text() == 'Create Organization' }
   static url = '/organizations/add'
   static content = {
     pageTitle { $('#main .organization-edit-details h1') }

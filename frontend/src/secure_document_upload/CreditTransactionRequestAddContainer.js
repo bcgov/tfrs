@@ -7,11 +7,12 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
-import Modal from '../app/components/Modal';
 import CreditTransactionRequestForm from './components/CreditTransactionRequestForm';
-
+import Loading from '../app/components/Loading';
+import Modal from '../app/components/Modal';
 import history from '../app/History';
-import { addDocumentUpload } from '../actions/documentUploads';
+import { addDocumentUpload, getDocumentUploadURL, uploadDocument } from '../actions/documentUploads';
+import DOCUMENT_STATUSES from '../constants/documentStatuses';
 import SECURE_DOCUMENT_UPLOAD from '../constants/routes/SecureDocumentUpload';
 import toastr from '../utils/toastr';
 
@@ -23,13 +24,16 @@ class CreditTransactionRequestAddContainer extends Component {
       fields: {
         agreementName: '',
         attachmentCategory: '',
-        attachmentType: props.match.params.type ? props.match.params.type : 'other',
         comment: '',
         compliancePeriod: { id: 0, description: '' },
+        documentType: {
+          id: props.match.params.type ? parseInt(props.match.params.type, 10) : 1
+        },
         files: [],
         milestoneId: ''
       },
-      validationErrors: {}
+      validationErrors: {},
+      uploadState: ''
     };
 
     this._handleInputChange = this._handleInputChange.bind(this);
@@ -69,27 +73,71 @@ class CreditTransactionRequestAddContainer extends Component {
   _handleSubmit (event, status) {
     event.preventDefault();
 
+    this.setState({
+      uploadState: 'progress'
+    });
+
+    const uploadPromises = [];
+    const attachments = [];
+    const attachedFiles = this.state.fields.files;
+
+    Object.keys(this.state.fields.files).forEach((file) => {
+      uploadPromises.push(new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => {
+          const blob = reader.result;
+
+          this.props.requestURL().then((response) => {
+            uploadDocument(response.data.put, blob);
+
+            attachments.push({
+              filename: attachedFiles[file].name,
+              mimeType: attachedFiles[file].type,
+              size: attachedFiles[file].size,
+              url: response.data.get
+            });
+            resolve();
+          });
+        };
+
+        reader.readAsArrayBuffer(attachedFiles[file]);
+      }));
+    });
+
     // API data structure
     const data = {
-      agreementName: this.state.fields.agreementName,
       comment: this.state.fields.comment,
       compliancePeriod: this.state.fields.compliancePeriod.id,
-      files: this.state.fields.files,
-      milestoneId: this.state.fields.milestoneId
+      status: status.id,
+      title: this.state.fields.agreementName,
+      type: this.state.fields.documentType.id,
+      attachments
     };
 
-    this.props.addDocumentUpload(data).then((response) => {
-      history.push(SECURE_DOCUMENT_UPLOAD.LIST);
-      toastr.documentUpload('Draft saved.');
+    Promise.all(uploadPromises).then(() => {
+      this.props.addDocumentUpload(data).then((response) => {
+        this.setState({ uploadState: 'success' });
+        history.push(SECURE_DOCUMENT_UPLOAD.LIST);
+        toastr.documentUpload(status.id);
+      });
+    }).catch((reason) => {
+      this.setState({
+        uploadState: 'failed'
+      });
     });
 
     return true;
   }
 
   render () {
+    if (this.state.uploadState === 'progress' || this.props.referenceData.isFetching) {
+      return (<Loading />);
+    }
+
     return ([
       <CreditTransactionRequestForm
         addToFields={this._addToFields}
+        categories={this.props.referenceData.documentCategories}
         errors={this.props.errors}
         fields={this.state.fields}
         handleInputChange={this._handleInputChange}
@@ -101,7 +149,7 @@ class CreditTransactionRequestAddContainer extends Component {
       />,
       <Modal
         handleSubmit={(event) => {
-          this._handleSubmit(event);
+          this._handleSubmit(event, DOCUMENT_STATUSES.submitted);
         }}
         id="confirmSubmit"
         key="confirmSubmit"
@@ -131,19 +179,32 @@ CreditTransactionRequestAddContainer.propTypes = {
   }).isRequired,
   match: PropTypes.shape({
     params: PropTypes.shape({
-      id: PropTypes.string.isRequired
-    }).isRequired
+      id: PropTypes.string,
+      type: PropTypes.string
+    })
   }).isRequired,
-  validationErrors: PropTypes.shape()
+  referenceData: PropTypes.shape({
+    documentCategories: PropTypes.arrayOf(PropTypes.shape),
+    isFetching: PropTypes.bool,
+    isSuccessful: PropTypes.bool
+  }).isRequired,
+  validationErrors: PropTypes.shape(),
+  requestURL: PropTypes.func.isRequired
 };
 
 const mapStateToProps = state => ({
   errors: state.rootReducer.creditTransfer.errors,
-  loggedInUser: state.rootReducer.userRequest.loggedInUser
+  loggedInUser: state.rootReducer.userRequest.loggedInUser,
+  referenceData: {
+    documentCategories: state.rootReducer.referenceData.data.documentCategories,
+    isFetching: state.rootReducer.referenceData.isFetching,
+    isSuccessful: state.rootReducer.referenceData.success
+  }
 });
 
 const mapDispatchToProps = dispatch => ({
-  addDocumentUpload: bindActionCreators(addDocumentUpload, dispatch)
+  addDocumentUpload: bindActionCreators(addDocumentUpload, dispatch),
+  requestURL: bindActionCreators(getDocumentUploadURL, dispatch)
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(CreditTransactionRequestAddContainer);

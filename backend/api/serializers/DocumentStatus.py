@@ -22,9 +22,7 @@
 """
 from rest_framework import serializers
 
-from api.models.CreditTradeType import CreditTradeType
 from api.models.DocumentStatus import DocumentStatus
-from api.models.DocumentType import DocumentType
 
 
 class DocumentStatusSerializer(serializers.ModelSerializer):

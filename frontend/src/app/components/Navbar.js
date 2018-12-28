@@ -7,13 +7,14 @@ import { NavLink } from 'react-router-dom';
 import { bindActionCreators } from 'redux';
 
 import { getNotifications } from '../../actions/notificationActions';
+import { signUserOut } from '../../actions/userActions';
 import history from '../../app/History';
+import PERMISSIONS_SECURE_DOCUMENT_UPLOAD from '../../constants/permissions/SecureDocumentUpload';
 import * as Routes from '../../constants/routes';
 import { HISTORICAL_DATA_ENTRY } from '../../constants/routes/Admin';
 import SECURE_DOCUMENT_UPLOAD from '../../constants/routes/SecureDocumentUpload';
 import CREDIT_TRANSACTIONS from '../../constants/routes/CreditTransactions';
 import ORGANIZATIONS from '../../constants/routes/Organizations';
-import { signUserOut } from '../../actions/userActions';
 import CONFIG from '../../config';
 
 class Navbar extends Component {
@@ -108,6 +109,8 @@ class Navbar extends Component {
             Credit Transactions
           </NavLink>
           {CONFIG.SECURE_DOCUMENT_UPLOAD.ENABLED &&
+          typeof this.props.loggedInUser.hasPermission === 'function' &&
+          this.props.loggedInUser.hasPermission(PERMISSIONS_SECURE_DOCUMENT_UPLOAD.VIEW) &&
           <NavLink
             activeClassName="active"
             id="navbar-secure-document-upload"
@@ -197,7 +200,7 @@ class Navbar extends Component {
                 to={ORGANIZATIONS.MINE}
               >
                 Company Details
-              </NavLink>,
+              </NavLink>
             </li>,
             <li key="credit-market-report">
               <a
@@ -220,6 +223,8 @@ class Navbar extends Component {
             </NavLink>
           </li>
           {CONFIG.SECURE_DOCUMENT_UPLOAD.ENABLED &&
+          typeof this.props.loggedInUser.hasPermission === 'function' &&
+          this.props.loggedInUser.hasPermission(PERMISSIONS_SECURE_DOCUMENT_UPLOAD.VIEW) &&
           <li>
             <NavLink
               activeClassName="active"
@@ -397,16 +402,15 @@ class Navbar extends Component {
 }
 
 Navbar.defaultProps = {
-  dispatch: null,
   unreadNotificationsCount: null
 };
 
 Navbar.propTypes = {
-  dispatch: PropTypes.func,
   getNotifications: PropTypes.func.isRequired,
   isAuthenticated: PropTypes.bool.isRequired,
   loggedInUser: PropTypes.shape({
     displayName: PropTypes.string,
+    hasPermission: PropTypes.func,
     isGovernmentUser: PropTypes.bool,
     organization: PropTypes.shape({
       name: PropTypes.string,
