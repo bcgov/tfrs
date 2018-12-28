@@ -74,6 +74,7 @@ class UserCreateSerializer(serializers.ModelSerializer):
         return data
 
     def create(self, validated_data):
+        request = self.context.get('request')
         roles = validated_data.pop('roles')
         organization = validated_data.pop('organization')
 
@@ -81,7 +82,11 @@ class UserCreateSerializer(serializers.ModelSerializer):
         user.organization = organization
         user.save()
         for role in roles:
-            UserRole.objects.create(user=user, role=role)
+            UserRole.objects.create(
+                user=user,
+                role=role,
+                create_user=request.user
+            )
 
         return user
 
@@ -121,7 +126,11 @@ class UserUpdateSerializer(serializers.ModelSerializer):
                     if not UserRole.objects.filter(
                             user=instance,
                             role=role).exists():
-                        UserRole.objects.create(user=instance, role=role)
+                        UserRole.objects.create(
+                            user=instance,
+                            role=role,
+                            create_user=request.user
+                        )
 
             instance.is_active = validated_data.get(
                 'is_active', instance.is_active)
