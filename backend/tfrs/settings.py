@@ -15,6 +15,8 @@ import os
 import sys
 
 from pika import ConnectionParameters, PlainCredentials
+
+from . import minio
 from . import amqp
 from . import keycloak
 from . import email
@@ -121,9 +123,9 @@ TEST_RUNNER = 'django_nose.NoseTestSuiteRunner'
 # https://docs.djangoproject.com/en/1.8/ref/settings/#databases
 
 try:
-     from . import database  
+    from . import database
 except:
-     import database 
+    import database
 
 DATABASES = {
     'default': database.config()
@@ -141,6 +143,8 @@ AMQP_CONNECTION_PARAMETERS = ConnectionParameters(
 KEYCLOAK = keycloak.config()
 
 EMAIL = email.config()
+
+MINIO = minio.config()
 
 # Internationalization
 # https://docs.djangoproject.com/en/1.8/topics/i18n/

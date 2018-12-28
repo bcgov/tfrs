@@ -1,5 +1,6 @@
 import { toastr as reduxToastr } from 'react-redux-toastr';
 import { CREDIT_TRANSFER_STATUS, CREDIT_TRANSFER_TYPES } from '../constants/values';
+import DOCUMENT_STATUSES from '../constants/documentStatuses';
 
 const toastr = {
   creditTransactionSuccess: (statusId, item, message = '') => {
@@ -54,13 +55,25 @@ const toastr = {
         reduxToastr.success('Success!', `${text} saved.`);
     }
   },
-  documentUpload: (message = '') => {
+  documentUpload: (statusId, message = '') => {
     if (message !== '') { // message is only used to override
       reduxToastr.success('Success!', message);
       return;
     }
 
-    reduxToastr.success('Success!', 'Document uploaded.');
+    switch (statusId) {
+      case DOCUMENT_STATUSES.draft.id:
+        reduxToastr.success('Success!', 'Draft saved.');
+        break;
+      case DOCUMENT_STATUSES.received.id:
+        reduxToastr.success('Success!', 'Document received.');
+        break;
+      case DOCUMENT_STATUSES.submitted.id:
+        reduxToastr.success('Success!', 'Document submitted.');
+        break;
+      default:
+        reduxToastr.success('Success!', 'Document uploaded.');
+    }
   },
   subscriptionsSuccess: (message = '') => {
     if (message !== '') { // message is only used to override

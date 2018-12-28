@@ -22,4 +22,59 @@ const download = (url, params = {}) => (
   })
 );
 
-export { arrayMove, download };
+const getIcon = (mimeType) => {
+  switch (mimeType) {
+    case 'application/pdf':
+      return 'file-pdf';
+    case 'application/vnd.ms-excel':
+    case 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet':
+    case 'text/csv':
+      return 'file-excel';
+    case 'application/vnd.ms-powerpoint':
+    case 'application/vnd.openxmlformats-officedocument.presentationml.presentation':
+      return 'file-powerpoint';
+    case 'application/msword':
+    case 'application/vnd.openxmlformats-officedocument.wordprocessingml.document':
+      return 'file-word';
+    case 'image/gif':
+    case 'image/jpg':
+    case 'image/jpeg':
+    case 'image/png':
+      return 'file-image';
+    case 'text/plain':
+      return 'file-alt';
+    default:
+      return 'file-download';
+  }
+};
+
+const validateFiles = files => (
+  files.filter((file) => {
+    switch (file.type) {
+      case 'application/msoutlook':
+      case 'application/msword':
+      case 'application/pdf':
+      case 'application/vnd.ms-excel':
+      case 'application/vnd.ms-powerpoint':
+      case 'application/vnd.openxmlformats-officedocument.presentationml.presentation':
+      case 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet':
+      case 'application/vnd.openxmlformats-officedocument.wordprocessingml.document':
+      case 'image/gif':
+      case 'image/jpg':
+      case 'image/jpeg':
+      case 'image/png':
+      case 'text/csv':
+      case 'text/plain':
+        return file.type;
+      default:
+        if (file.name.split('.').pop() === 'xls' || file.name.split('.').pop() === 'ppt' ||
+        file.name.split('.').pop() === 'doc') {
+          return file;
+        }
+
+        return false;
+    }
+  })
+);
+
+export { arrayMove, download, getIcon, validateFiles };

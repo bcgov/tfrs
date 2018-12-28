@@ -27,7 +27,15 @@ from api.serializers.DocumentType import DocumentTypeSerializer
 
 
 class DocumentCategorySerializer(serializers.ModelSerializer):
-    types = DocumentTypeSerializer(many=True,read_only=True)
+    types = serializers.SerializerMethodField()
+
+    def get_types(self, instance):
+        """
+        Explicit function to ensure that the ordering works as expected
+        """
+        types = instance.types.all().order_by('description')
+        serializer = DocumentTypeSerializer(types, many=True, read_only=True)
+        return serializer.data
 
     class Meta:
         model = DocumentCategory

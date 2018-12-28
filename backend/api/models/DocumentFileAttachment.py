@@ -20,15 +20,23 @@
     See the License for the specific language governing permissions and
     limitations under the License.
 """
-from api.models.mixins.DocumentData import DocumentData
+from django.db import models
+from api.models.Document import Document
+from api.models.mixins.AttachmentData import AttachmentData
 from auditable.models import Auditable
 
 
-class Document(Auditable, DocumentData):
+class DocumentFileAttachment(Auditable, AttachmentData):
     """
-    Holds the documents that constitute evidence or compliance records etc.
+    Holds file metadata
     """
-    class Meta:
-        db_table = 'document'
+    document = models.ForeignKey(
+        Document,
+        related_name='attachments',
+        null=False,
+        on_delete=models.PROTECT)
 
-    db_table_comment = 'Document Submission.'
+    class Meta:
+        db_table = 'document_file'
+
+    db_table_comment = 'File Attachments'
