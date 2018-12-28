@@ -1,44 +1,48 @@
-import base64
-import random
-from functools import wraps
+import uuid
 
 from django.db.models import Q
-from django.views.decorators.cache import never_cache
+from minio import Minio
 
-from rest_framework import viewsets, serializers, mixins, status
+from rest_framework import viewsets, mixins
 from rest_framework.decorators import list_route
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 
-from api.decorators import permission_required
 from api.models.Document import Document
 from api.models.DocumentCategory import DocumentCategory
-from api.models.DocumentStatus import DocumentStatus
-from api.models.NotificationMessage import NotificationMessage
-from api.notifications.notifications import AMQPNotificationService, \
-    EffectiveSubscriptionSerializer, EffectiveSubscriptionUpdateSerializer
 from api.permissions.Documents import DocumentPermissions
-from api.permissions.Notifications import NotificationPermissions
-from api.serializers.Document import DocumentSerializer, DocumentMinSerializer
+from api.serializers.Document import \
+    DocumentCreateSerializer, DocumentDetailSerializer, \
+    DocumentMinSerializer, DocumentSerializer, DocumentUpdateSerializer
 from api.serializers.DocumentCategory import DocumentCategorySerializer
 from api.serializers.DocumentStatus import DocumentStatusSerializer
-from api.serializers.Notifications import NotificationMessageSerializer
+from api.services.DocumentService import DocumentService
 from auditable.views import AuditableMixin
+from tfrs.settings import MINIO
 
 
 class DocumentViewSet(AuditableMixin,
+                      mixins.CreateModelMixin,
                       mixins.ListModelMixin,
                       mixins.RetrieveModelMixin,
+                      mixins.UpdateModelMixin,
                       viewsets.GenericViewSet):
+    """
+    This viewset automatically provides `list`, `create`, `retrieve`.
+    """
 
     permission_classes = (DocumentPermissions,)
-    http_method_names = ['get']
+    http_method_names = ['get', 'post', 'patch']
 
     serializer_classes = {
         'default': DocumentSerializer,
+        'create': DocumentCreateSerializer,
         'list': DocumentMinSerializer,
         'categories': DocumentCategorySerializer,
-        'statuses': DocumentStatusSerializer
+        'retrieve': DocumentDetailSerializer,
+        'statuses': DocumentStatusSerializer,
+        'partial_update': DocumentUpdateSerializer,
+        'update': DocumentUpdateSerializer
     }
 
     queryset = Document.objects.all()
@@ -52,19 +56,6 @@ class DocumentViewSet(AuditableMixin,
         categories = DocumentCategory.objects.all()
 
         serializer = self.get_serializer(categories,
-                                         read_only=True,
-                                         many=True)
-
-        return Response(serializer.data)
-
-    @list_route(methods=['get'], permission_classes=[AllowAny])
-    def statuses(self, request):
-        """
-            Reference data for UI
-        """
-        statuses = DocumentStatus.objects.all()
-
-        serializer = self.get_serializer(statuses,
                                          read_only=True,
                                          many=True)
 
@@ -85,12 +76,40 @@ class DocumentViewSet(AuditableMixin,
             ).all()
 
         return self.queryset.filter(
-            Q(creating_organization__id=user.organization.id)
+            Q(create_user__organization__id=user.organization.id)
         ).all()
 
-    # def list(self, request, *args, **kwargs):
-    #     """
-    #     Lists all the documents.
-    #     """
-    #     return super().list(self, request, *args, **kwargs)
-    #
+    def perform_create(self, serializer):
+        document = serializer.save()
+        DocumentService.create_history(document, True)
+
+    def perform_update(self, serializer):
+        document = serializer.save()
+        DocumentService.create_history(document, False)
+
+    @list_route(methods=['get'])
+    def upload_url(self, request):
+        """
+        Generates the presigned URL for uploading and retrieving
+        the file
+        """
+        minio = Minio(MINIO['ENDPOINT'],
+                      access_key=MINIO['ACCESS_KEY'],
+                      secret_key=MINIO['SECRET_KEY'],
+                      secure=MINIO['USE_SSL'])
+
+        object_name = uuid.uuid4().hex
+        put_url = minio.presigned_put_object(
+            bucket_name=MINIO['BUCKET_NAME'],
+            object_name=object_name,
+            expires=MINIO['EXPIRY'])
+
+        get_url = minio.presigned_get_object(
+            bucket_name=MINIO['BUCKET_NAME'],
+            object_name=object_name,
+            expires=MINIO['EXPIRY'])
+
+        return Response({
+            'put': put_url,
+            'get': get_url
+        })

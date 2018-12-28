@@ -22,47 +22,148 @@
 """
 from rest_framework import serializers
 
+from api.models.DocumentFileAttachment import DocumentFileAttachment
 from api.models.Document import Document
-from api.serializers import OrganizationMinSerializer
+from api.serializers.CompliancePeriod import CompliancePeriodSerializer
 from api.serializers.DocumentStatus import DocumentStatusSerializer
 from api.serializers.DocumentType import DocumentTypeSerializer
+from api.serializers.User import UserMinSerializer
+from api.services.DocumentActions import DocumentActions
+
+
+class DocumentFileAttachmentSerializer(serializers.ModelSerializer):
+    """
+    Readonly Serializer for Document attachments
+    """
+    class Meta:
+        model = DocumentFileAttachment
+        fields = ('url', 'security_scan_status', 'mime_type', 'size',
+                  'filename')
+        read_only_fields = ('url', 'security_scan_status', 'mime_type',
+                            'size', 'filename')
+
+
+class DocumentFileAttachmentCreateSerializer(serializers.ModelSerializer):
+    """
+    Create Serializer for Document attachments
+    """
+    class Meta:
+        model = DocumentFileAttachment
+        fields = ('url', 'mime_type', 'size', 'filename')
 
 
 class DocumentSerializer(serializers.ModelSerializer):
     """
     Default Serializer for Documents
     """
-
-    creating_organization = OrganizationMinSerializer(read_only=True)
     type = DocumentTypeSerializer(read_only=True)
     status = DocumentStatusSerializer(read_only=True)
 
     class Meta:
         model = Document
         fields = (
-            'id', 'title', 'url',
-            'create_timestamp', 'update_timestamp', 'create_user',
-            'update_user', 'creating_organization',
-            'status', 'type', 'mime_type', 'size')
+            'id', 'title', 'status', 'type', 'create_timestamp',
+            'create_user', 'update_timestamp', 'update_user')
 
-        read_only_fields = ('id', 'create_timestamp', 'create_user',
-                            'update_timestamp', 'update_user', 'url',
-                            'title', 'creating_organization',
-                            'status', 'type', 'mime_type', 'size')
+        read_only_fields = ('id', 'title', 'status', 'type',
+                            'create_timestamp', 'create_user',
+                            'update_timestamp', 'update_user')
 
 
-class DocumentMinSerializer(serializers.ModelSerializer):
-    creating_organization = OrganizationMinSerializer(read_only=True)
-    type = DocumentTypeSerializer(read_only=True)
-    status = DocumentStatusSerializer(read_only=True)
-
+class DocumentCreateSerializer(serializers.ModelSerializer):
     """
-    Minimal Serializer for Documents
+    Creation Serializer for Documents
     """
+    def save(self, **kwargs):
+        super().save(**kwargs)
+        request = self.context['request']
+        files = request.data.get('attachments')
+
+        for file in files:
+            DocumentFileAttachment.objects.create(
+                document=self.instance,
+                **file
+            )
+
+        return self.instance
 
     class Meta:
         model = Document
-        fields = ('id', 'title', 'url', 'creating_organization', 'status',
-                  'type', 'mime_type', 'size')
-        read_only_fields = ('id', 'title', 'url', 'creating_organization',
-                            'status', 'type')
+        fields = ('comment', 'compliance_period', 'create_user', 'id',
+                  'status', 'title', 'type')
+        read_only_fields = ('id',)
+
+
+class DocumentDetailSerializer(serializers.ModelSerializer):
+    """
+    Document Serializer with Full Details
+    """
+    compliance_period = CompliancePeriodSerializer(read_only=True)
+    type = DocumentTypeSerializer(read_only=True)
+    status = DocumentStatusSerializer(read_only=True)
+    attachments = DocumentFileAttachmentSerializer(many=True)
+    actions = serializers.SerializerMethodField()
+
+    def get_actions(self, obj):
+        """
+        If the user doesn't have any roles assigned, treat as though the user
+        doesn't have available permissions
+        """
+        cur_status = obj.status.status
+        request = self.context.get('request')
+
+        # If the user doesn't have any roles assigned, treat as though the user
+        # doesn't have available permissions
+        if not request.user.roles:
+            return []
+
+        if cur_status == "Draft":
+            return DocumentActions.draft(request)
+
+        if cur_status == "Submitted":
+            return DocumentActions.submitted(request)
+
+        return []
+
+    class Meta:
+        model = Document
+        fields = (
+            'id', 'title',
+            'create_timestamp', 'create_user', 'update_timestamp',
+            'update_user', 'status', 'type', 'attachments',
+            'compliance_period', 'comment', 'actions')
+
+        read_only_fields = ('id', 'create_timestamp', 'create_user',
+                            'update_timestamp', 'update_user',
+                            'title', 'status', 'type', 'attachments',
+                            'compliance_period', 'comment', 'actions')
+
+
+class DocumentMinSerializer(serializers.ModelSerializer):
+    """
+    Minimal Serializer for Documents
+    """
+    attachments = DocumentFileAttachmentSerializer(many=True)
+    create_user = UserMinSerializer(read_only=True)
+    status = DocumentStatusSerializer(read_only=True)
+    type = DocumentTypeSerializer(read_only=True)
+
+    class Meta:
+        model = Document
+        fields = (
+            'id', 'title', 'create_user', 'status', 'type',
+            'attachments', 'update_timestamp')
+        read_only_fields = (
+            'id', 'title', 'create_user', 'status', 'type',
+            'attachments', 'update_timestamp')
+
+
+class DocumentUpdateSerializer(serializers.ModelSerializer):
+    """
+    Update Serializer for Documents
+    """
+    class Meta:
+        model = Document
+        fields = ('comment', 'compliance_period', 'update_user', 'id',
+                  'status', 'title', 'type')
+        read_only_fields = ('id',)

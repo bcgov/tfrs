@@ -46,4 +46,4 @@ class DocumentPermissions(permissions.BasePermission):
         if is_government and obj.status.status is not 'Draft':
             return True
 
-        return obj.creating_organization.id == request.user.organization.id
+        return obj.create_user.organization.id == request.user.organization.id

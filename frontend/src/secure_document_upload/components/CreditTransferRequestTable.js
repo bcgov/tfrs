@@ -3,8 +3,13 @@
  */
 import React from 'react';
 import PropTypes from 'prop-types';
+import { Link } from 'react-router-dom';
 import ReactTable from 'react-table';
 import 'react-table/react-table.css';
+import FontAwesomeIcon from '@fortawesome/react-fontawesome';
+import moment from 'moment';
+
+import SECURE_DOCUMENT_UPLOAD from '../../constants/routes/SecureDocumentUpload';
 
 const CreditTransferRequestTable = (props) => {
   const columns = [{
@@ -14,16 +19,20 @@ const CreditTransferRequestTable = (props) => {
     resizable: false,
     width: 45
   }, {
+    accessor: item => (item.createUser.organization ? item.createUser.organization.name : ''),
     className: 'col-organization',
     Header: 'Organization',
     id: 'organization',
-    minWidth: 100
+    minWidth: 100,
+    show: props.loggedInUser.isGovernmentUser
   }, {
+    accessor: item => (item.type ? item.type.description : ''),
     className: 'col-attachment-type',
     Header: 'Attachment Type',
     id: 'attachment-type',
     minWidth: 100
   }, {
+    accessor: item => (item.status ? item.status.status : ''),
     className: 'col-status',
     Header: 'Status',
     id: 'status',
@@ -39,11 +48,18 @@ const CreditTransferRequestTable = (props) => {
     id: 'credit-transaction-id',
     minWidth: 75
   }, {
+    accessor: item => (item.updateTimestamp ? moment(item.updateTimestamp).format('YYYY-MM-DD') : '-'),
     className: 'col-date',
     Header: 'Last Updated On',
     id: 'updateTimestamp',
     minWidth: 75
   }, {
+    accessor: 'id',
+    Cell: (row) => {
+      const viewUrl = SECURE_DOCUMENT_UPLOAD.DETAILS.replace(':id', row.value);
+
+      return <Link to={viewUrl}><FontAwesomeIcon icon="box-open" /></Link>;
+    },
     className: 'col-actions',
     filterable: false,
     Header: '',
@@ -81,9 +97,24 @@ CreditTransferRequestTable.defaultProps = {
 };
 
 CreditTransferRequestTable.propTypes = {
-  items: PropTypes.arrayOf(PropTypes.object).isRequired,
+  items: PropTypes.arrayOf(PropTypes.shape({
+    createUser: PropTypes.shape({
+      organization: PropTypes.shape({
+        name: PropTypes.string
+      })
+    }),
+    status: PropTypes.shape({
+      status: PropTypes.string
+    }),
+    type: PropTypes.shape({
+      id: PropTypes.integer
+    })
+  })).isRequired,
   isEmpty: PropTypes.bool.isRequired,
-  isFetching: PropTypes.bool.isRequired
+  isFetching: PropTypes.bool.isRequired,
+  loggedInUser: PropTypes.shape({
+    isGovernmentUser: PropTypes.bool
+  }).isRequired
 };
 
 export default CreditTransferRequestTable;

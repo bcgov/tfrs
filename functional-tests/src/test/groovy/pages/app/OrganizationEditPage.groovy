@@ -4,7 +4,7 @@ class OrganizationEditPage extends BaseAppPage {
   static at = {
     isReactReady() &&
     browser.getCurrentUrl() =~ /organizations\/edit\/[0-9]+$/ &&
-    pageTitle.text() == 'Updating Fuel Supplier'
+    pageTitle.text() == 'Edit Organization'
   }
   static content = {
     pageTitle { $('#main .organization-edit-details h1') }

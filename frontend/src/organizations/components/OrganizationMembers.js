@@ -85,7 +85,10 @@ OrganizationMembers.propTypes = {
       })
     }))
   }).isRequired,
-  organizationId: PropTypes.string
+  organizationId: PropTypes.oneOfType([
+    PropTypes.number,
+    PropTypes.string
+  ])
 };
 
 const mapStateToProps = state => ({

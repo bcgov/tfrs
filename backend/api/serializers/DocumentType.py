@@ -22,11 +22,10 @@
 """
 from rest_framework import serializers
 
-from api.models.CreditTradeType import CreditTradeType
 from api.models.DocumentType import DocumentType
 
 
 class DocumentTypeSerializer(serializers.ModelSerializer):
     class Meta:
         model = DocumentType
-        fields = ('the_type',)
+        fields = ('the_type', 'id', 'description')

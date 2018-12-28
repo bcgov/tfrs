@@ -35,8 +35,7 @@ class TestReferenceData(BaseTestCase):
             '/api/organizations/actions_types',
             '/api/organizations/types',
             '/api/organizations/statuses',
-            '/api/documents/categories',
-            '/api/documents/statuses'
+            '/api/documents/categories'
         ]
 
         for client_name, client in self.clients.items():
