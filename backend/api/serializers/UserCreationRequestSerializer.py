@@ -36,7 +36,8 @@ class UserCreationRequestSerializer(serializers.Serializer):
         return data
 
     def create(self, validated_data):
-        user_serializer = UserCreateSerializer(data=self.data['user'])
+        context = self.context
+        user_serializer = UserCreateSerializer(data=self.data['user'], context=context)
         user_serializer.is_valid()
         user = user_serializer.save()
 

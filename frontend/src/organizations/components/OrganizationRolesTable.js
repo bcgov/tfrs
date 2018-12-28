@@ -53,6 +53,7 @@ const OrganizationRolesTable = (props) => {
       defaultSorted={[{
         id: 'role'
       }]}
+      defaultPageSize={10}
       filterable={filterable}
       getTrProps={(state, row) => {
         if (row && row.original) {
