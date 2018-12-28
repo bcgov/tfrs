@@ -120,6 +120,50 @@ const addDocumentUploadError = error => ({
   errorMessage: error
 });
 
+const getDocumentUploadURL = data => (dispatch) => {
+  dispatch(getDocumentUploadURLRequest());
+
+  return axios
+    .get(`${Routes.BASE_URL}${Routes.SECURE_DOCUMENT_UPLOAD.API}/upload_url`, data)
+    .then((response) => {
+      dispatch(getDocumentUploadURLSuccess(response.data));
+      return Promise.resolve(response);
+    }).catch((error) => {
+      dispatch(getDocumentUploadURLError(error.response.data));
+      return Promise.reject(error);
+    });
+};
+
+const getDocumentUploadURLRequest = () => ({
+  name: ReducerTypes.GET_UPLOAD_URL_REQUEST,
+  type: ActionTypes.GET_UPLOAD_URL
+});
+
+const getDocumentUploadURLSuccess = data => ({
+  name: ReducerTypes.SUCCESS_GET_UPLOAD_URL,
+  type: ActionTypes.SUCCESS_GET_UPLOAD_URL,
+  data
+});
+
+const getDocumentUploadURLError = error => ({
+  name: ReducerTypes.ERROR_GET_UPLOAD_URL,
+  type: ActionTypes.ERROR,
+  errorMessage: error
+});
+
+export const partialUpdateDocument = (id, data) => (dispatch) => {
+  dispatch(updateDocumentUploadRequest({ id, data }));
+
+  return axios.patch(`${Routes.BASE_URL}${Routes.SECURE_DOCUMENT_UPLOAD.API}/${id}`, data)
+    .then((response) => {
+      dispatch(updateDocumentUploadSuccess(response.data));
+      return Promise.resolve(response);
+    }).catch((error) => {
+      dispatch(updateDocumentUploadError(error.response.data));
+      return Promise.reject(error);
+    });
+};
+
 const updateDocumentUpload = (data, id) => (dispatch) => {
   dispatch(updateDocumentUploadRequest({ id, data }));
 
@@ -149,10 +193,16 @@ const updateDocumentUploadSuccess = response => ({
   type: ActionTypes.SUCCESS_UPDATE_DOCUMENT_UPLOAD
 });
 
+const uploadDocument = (url, blob) => (axios.put(url, blob, {
+  'content-type': 'multipart/form-data'
+}));
+
 export {
   addDocumentUpload,
   deleteDocumentUpload,
   getDocumentUpload,
   getDocumentUploads,
+  getDocumentUploadURL,
+  uploadDocument,
   updateDocumentUpload
 };

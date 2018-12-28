@@ -125,6 +125,15 @@ const getLoggedInUserError = error => ({
   errorData: error
 });
 
+const getUpdatedLoggedInUser = () => (dispatch) => {
+  axios.get(Routes.BASE_URL + Routes.CURRENT_USER)
+    .then((response) => {
+      dispatch(getLoggedInUserSuccess(response.data));
+    }).catch((error) => {
+      dispatch(getLoggedInUserError(error.response));
+    });
+};
+
 const getUser = id => (dispatch) => {
   dispatch(getUserRequest());
   axios.get(`${Routes.BASE_URL}${Routes.USERS}/${id}`)
@@ -191,5 +200,5 @@ const clearUserErrorRequest = () => ({
 
 export {
   getUsers, getLoggedInUser, createUser, updateUser, getUser, getUserByUsername,
-  signUserOut, clearUsersRequestError
+  signUserOut, clearUsersRequestError, getUpdatedLoggedInUser
 };

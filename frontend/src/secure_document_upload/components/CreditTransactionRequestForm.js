@@ -12,7 +12,7 @@ import CreditTransactionRequestFormDetails from './CreditTransactionRequestFormD
 import Errors from '../../app/components/Errors';
 import history from '../../app/History';
 import * as Lang from '../../constants/langEnUs';
-import { CREDIT_TRANSFER_STATUS } from '../../constants/values';
+import DOCUMENT_STATUSES from '../../constants/documentStatuses';
 
 class CreditTransactionRequestForm extends Component {
   componentDidMount () {
@@ -25,9 +25,10 @@ class CreditTransactionRequestForm extends Component {
         <h1>{this.props.title}</h1>
         <form
           onSubmit={(event, status) =>
-            this.props.handleSubmit(event, CREDIT_TRANSFER_STATUS.draft)}
+            this.props.handleSubmit(event, DOCUMENT_STATUSES.draft)}
         >
           <CreditTransactionRequestFormDetails
+            categories={this.props.categories}
             compliancePeriods={this.props.compliancePeriods}
             fields={this.props.fields}
             handleInputChange={this.props.handleInputChange}
@@ -95,7 +96,8 @@ CreditTransactionRequestForm.propTypes = {
   handleInputChange: PropTypes.func.isRequired,
   handleSubmit: PropTypes.func.isRequired,
   id: PropTypes.number,
-  title: PropTypes.string
+  title: PropTypes.string,
+  categories: PropTypes.arrayOf(PropTypes.shape()).isRequired
 };
 
 const mapStateToProps = state => ({

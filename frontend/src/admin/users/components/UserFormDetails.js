@@ -49,7 +49,11 @@ const UserFormDetails = props => (
         <div className="col-sm-6">
           <div className="form-group">
             {props.isAdding &&
-              <label htmlFor="bceid">BCeID Email Address:
+              <label htmlFor="bceid">
+                {document.location.pathname.indexOf('/admin/users/') < 0 &&
+                  'BCeID Email Address:'}
+                {document.location.pathname.indexOf('/admin/users/') >= 0 &&
+                  'IDIR Email Address:'}
                 <input
                   className="form-control"
                   id="bceid"

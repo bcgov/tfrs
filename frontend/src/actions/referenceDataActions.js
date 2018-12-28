@@ -7,19 +7,14 @@ import * as Routes from '../constants/routes';
 const getReferenceData = () => (dispatch) => {
   dispatch(getReferenceDataRequest());
 
-  let referenceData = {};
-  Promise.all(
-    Object.keys(Routes.REFERENCE_DATA_API_ENDPOINTS).map(stateName =>
-      axios.get(Routes.BASE_URL + Routes.REFERENCE_DATA_API_ENDPOINTS[stateName]).then((response =>
-        referenceData[stateName] = response.data))
-    )
-  ).then(() => {
-      dispatch(getReferenceDataSuccess(referenceData));
-    }
-  ).catch(error =>
-    dispatch(getReferenceDataError(error.response))
-  );
-
+  const referenceData = {};
+  Promise.all(Object.keys(Routes.REFERENCE_DATA_API_ENDPOINTS).map(stateName =>
+    axios.get(Routes.BASE_URL + Routes.REFERENCE_DATA_API_ENDPOINTS[stateName]).then((response) => {
+      referenceData[stateName] = response.data;
+    }))).then(() => {
+    dispatch(getReferenceDataSuccess(referenceData));
+  }).catch(error =>
+    dispatch(getReferenceDataError(error.response)));
 };
 
 const getReferenceDataRequest = () => ({
@@ -39,4 +34,4 @@ const getReferenceDataError = error => ({
   errorMessage: error
 });
 
-export {getReferenceData};
+export { getReferenceData };
