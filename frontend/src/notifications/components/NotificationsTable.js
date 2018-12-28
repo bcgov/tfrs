@@ -139,7 +139,7 @@ const NotificationsTable = (props) => {
       className="searchable"
       columns={columns}
       data={props.items}
-      defaultPageSize={15}
+      defaultPageSize={10}
       defaultSorted={[{
         id: 'date',
         desc: true
