@@ -5,7 +5,7 @@
       "email": "fs_air_liquide@test.com",
       "username": "fs_air_liquide",
       "authorization_id": "fs_air_liquide",
-      "display_name": "Air Liquide User",
+      "_display_name": "Air Liquide User",
       "first_name": "Test",
       "last_name": "FS",
       "organization": [
@@ -33,7 +33,7 @@
       "email": "fs_husky@test.com",
       "username": "fs_husky",
       "authorization_id": "fs_husky",
-      "display_name": "Husky User",
+      "_display_name": "Husky User",
       "first_name": "Test",
       "last_name": "FS",
       "organization": [
@@ -61,7 +61,7 @@
       "email": "test_fs_shell@test.com",
       "username": "fs_shell",
       "authorization_id": "fs_shell",
-      "display_name": "Test FS Shell",
+      "_display_name": "Test FS Shell",
       "first_name": "Test",
       "last_name": "FS",
       "organization": [
