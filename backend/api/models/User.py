@@ -78,8 +78,8 @@ class User(AbstractUser, Auditable):
         db_comment='Siteminder Header (normally IDIR or BCeID)')
     authorization_email = models.EmailField(
         blank=True, null=True, db_comment='Siteminder Header')
-    display_name = models.CharField(
-        max_length=500, blank=True, null=True,
+    _display_name = models.CharField(
+        max_length=500, blank=True, null=True, db_column='display_name',
         db_comment='Siteminder Header (Displayed name for user)')
 
     def __str__(self):
@@ -131,6 +131,22 @@ class User(AbstractUser, Auditable):
             return True
 
         return False
+
+    @property
+    def display_name(self):
+        if self._display_name is not None and len(self._display_name.strip()) > 0:
+            return self._display_name
+
+        fallback_name = '{} {}'.format(self.first_name, self.last_name)
+
+        if len(fallback_name.strip()) == 0:
+            fallback_name = 'TFRS User'
+
+        return fallback_name
+
+    @display_name.setter
+    def display_name(self, value):
+        self._display_name = value
 
     objects = UserManager()
 
