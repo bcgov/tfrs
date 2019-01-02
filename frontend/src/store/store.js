@@ -82,6 +82,7 @@ const store = createStore(
 // });
 
 sagaMiddleware.run(sessionTimeoutSaga);
+
 if (CONFIG.KEYCLOAK.ENABLED) {
   sagaMiddleware.run(authenticationStateSaga, store);
 }
