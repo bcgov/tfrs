@@ -536,6 +536,9 @@ class CreditTradeService(object):
 
         notification_map[StatusChange('Approved')] = [
             ResultingNotification(
+                credit_trade.respondent,
+                NotificationType.PVR_APPROVED),
+            ResultingNotification(
                 government,
                 NotificationType.PVR_APPROVED),
         ]
