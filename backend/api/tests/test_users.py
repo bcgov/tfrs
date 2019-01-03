@@ -86,7 +86,7 @@ class TestUsers(BaseTestCase):
                 'last_name': 'lastname',
                 'username': 'new_user_1',
                 'organization': 1,
-                'roles': [],
+                'roles': (1,),
                 'email': 'email@email.com'
             }
         }

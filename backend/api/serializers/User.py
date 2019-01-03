@@ -116,11 +116,15 @@ class UserUpdateSerializer(serializers.ModelSerializer):
         data['display_name'] = '{} {}'.format(
             data.get('first_name'), data.get('last_name'))
 
-        roles = data.get('roles')
-        if len(roles) == 0:
-            raise serializers.ValidationError({
-                'roles': 'At least one role is required'
-            })
+        request = self.context.get('request')
+
+        if request.user.has_perm('USER_MANAGEMENT') and 'roles' in data:
+            roles = data.get('roles')
+            if roles is not None:
+                if len(roles) == 0:
+                    raise serializers.ValidationError({
+                        'roles': 'At least one role is required'
+                    })
 
         return data
 
