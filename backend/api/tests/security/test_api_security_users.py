@@ -156,7 +156,7 @@ class TestUsersAPI(BaseAPISecurityTestCase):
                         'last_name': 'Pilot',
                         'email': 'test_pilot_{0!s}@test.com'.format(index),
                         'username': 'test_pilot_{0!s}'.format(index),
-                        'roles': [],
+                        'roles': (1, 2),
                         'organization': 1
                     }
                 }
@@ -219,7 +219,7 @@ class TestUsersAPI(BaseAPISecurityTestCase):
                     'authorization_guid': str(uuid.uuid4()),
                     'authorization_directory': 'IDIR',
                     'display_name': 'Canary',
-                    'roles': [],
+                    'roles': (5, 6),
                     'is_active': True
                 }
 
@@ -277,7 +277,7 @@ class TestUsersAPI(BaseAPISecurityTestCase):
                     'authorization_guid': str(uuid.uuid4()),
                     'authorization_directory': 'IDIR',
                     'display_name': 'Canary',
-                    'roles': [],
+                    'roles': (1, 2),
                     'is_active': True
                 }
 

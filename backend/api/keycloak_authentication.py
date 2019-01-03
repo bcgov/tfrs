@@ -46,7 +46,6 @@ class UserAuthentication(authentication.BaseAuthentication):
         decoded_keys = {}
 
         for key in keys['keys']:
-            print('key: {}'.format(key))
             if key['alg'] in ['RS256', 'RS384', 'RS512']:
                 decoded_keys[key['kid']] = RSAAlgorithm.from_jwk(json.dumps(key)).public_bytes(
                     format=serialization.PublicFormat.SubjectPublicKeyInfo,
