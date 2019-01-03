@@ -68,7 +68,6 @@ INSTALLED_APPS = (
 MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',
     'corsheaders.middleware.CorsMiddleware',
-    'api.middleware.SMUserMiddleware',  # this can go away when Siteminder is removed
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -82,10 +81,7 @@ MIDDLEWARE_CLASSES = (
 AUTH_USER_MODEL = 'api.User'
 
 REST_FRAMEWORK = {
-#   'DEFAULT_AUTHENTICATION_CLASSES': ('rest_framework.permissions.AllowAny',),
-# User authentication is commented out here to allow tests to pass, remove comment to re-enable
-    'DEFAULT_AUTHENTICATION_CLASSES': ('api.keycloak_authentication.UserAuthentication',
-                                       'api.sm_authentication.UserAuthentication'),
+    'DEFAULT_AUTHENTICATION_CLASSES': ('api.keycloak_authentication.UserAuthentication',),
     'DEFAULT_PERMISSION_CLASSES': ('rest_framework.permissions.IsAuthenticated',),
     # 'EXCEPTION_HANDLER': 'core.exceptions.exception_handler',
     'DEFAULT_RENDERER_CLASSES': (

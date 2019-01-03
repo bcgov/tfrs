@@ -107,7 +107,7 @@ class User(AbstractUser, Auditable):
         Filters are to be restricted based on the user's role.
         """
         history = CreditTradeHistory.objects.filter(
-            filters, user_id=self.id
+            filters, Q(create_user_id=self.id) | Q(update_user_id=self.id)
         ).order_by('-update_timestamp')
 
         return history

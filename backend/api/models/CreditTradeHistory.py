@@ -35,10 +35,6 @@ class CreditTradeHistory(Auditable):
         related_name='credit_trade_histories',
         null=True,
         on_delete=models.PROTECT)
-    user = models.ForeignKey(
-        'User', related_name='credit_trade_histories',
-        on_delete=models.PROTECT)
-    credit_trade_update_time = models.DateTimeField()
     respondent = models.ForeignKey(
         'Organization',
         related_name='credit_trade_histories',
@@ -87,6 +83,14 @@ class CreditTradeHistory(Auditable):
         on_delete=models.SET_NULL,
         db_comment='Role of the user that made the change.'
     )
+
+    @property
+    def user(self):
+        return next((u for u in [self.update_user, self.create_user] if u is not None), None)
+
+    @property
+    def credit_trade_update_timestamp(self):
+        return next((t for t in [self.update_timestamp, self.create_timestamp] if t is not None), None)
 
     class Meta:
         db_table = 'credit_trade_history'
