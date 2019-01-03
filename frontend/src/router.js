@@ -53,11 +53,11 @@ const Router = props => (
   <ConnectedRouter history={history} key={Math.random()}>
     <App>
       <Switch>
-        {CONFIG.KEYCLOAK.ENABLED && <Route
+        <Route
           exact
           path="/authCallback"
           component={withRouter(AuthCallback)}
-        />}
+        />
         <Route
           exact
           path={Routes.HOME}
