@@ -71,6 +71,13 @@ class UserCreateSerializer(serializers.ModelSerializer):
 
     def validate(self, data):
         data['display_name'] = '{} {}'.format(data['first_name'], data['last_name'])
+
+        roles = data.get('roles')
+        if len(roles) == 0:
+            raise serializers.ValidationError({
+                'roles': 'At least one role is required'
+            })
+
         return data
 
     def create(self, validated_data):
@@ -108,6 +115,13 @@ class UserUpdateSerializer(serializers.ModelSerializer):
     def validate(self, data):
         data['display_name'] = '{} {}'.format(
             data.get('first_name'), data.get('last_name'))
+
+        roles = data.get('roles')
+        if len(roles) == 0:
+            raise serializers.ValidationError({
+                'roles': 'At least one role is required'
+            })
+
         return data
 
     def update(self, instance, validated_data):
