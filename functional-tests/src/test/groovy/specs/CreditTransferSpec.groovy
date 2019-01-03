@@ -49,9 +49,7 @@ class CreditTransferSpec extends LoggedInSpec {
     and: 'I am shown a success toast popup'
       at new ToastModal('Success!', 'Credit Transfer Proposal sent.')
     and: 'My unread notification count has increased by 1'
-      waitFor {
-        headerModule.getNotificationCount() == initialNotificationCount+1
-      }
+      headerModule.getNotificationCount() == initialNotificationCount+1
     and: 'My credit balance has not changed'
       page(HomePage)
       getCreditBalance() == sendingFuelSupplier_initialCreditBalance
@@ -77,9 +75,7 @@ class CreditTransferSpec extends LoggedInSpec {
     and: 'I am shown a success toast popup'
       at new ToastModal('Success!', 'Credit Transfer Proposal accepted.')
     and: 'My unread notification count has not increased'
-      waitFor {
-        headerModule.getNotificationCount() == initialNotificationCount
-      }
+      headerModule.getNotificationCount() == initialNotificationCount
     and: 'My credit balance has not changed'
       page(HomePage)
       getCreditBalance() == receivingFuelSupplier_initialCreditBalance
@@ -104,9 +100,7 @@ class CreditTransferSpec extends LoggedInSpec {
     and: 'I am shown a success toast popup'
       at new ToastModal('Success!', 'Credit Transfer Proposal recommended.')
     and: 'My unread notification count has not increased'
-      waitFor {
-        headerModule.getNotificationCount() == initialNotificationCount
-      }
+      headerModule.getNotificationCount() == initialNotificationCount
   }
 
   void 'Log in as a Director and approve the credit transfer'() {
@@ -128,9 +122,7 @@ class CreditTransferSpec extends LoggedInSpec {
     and: 'I am shown a success toast popup'
       at new ToastModal('Success!', 'Credit Transfer Proposal approved.')
     and: 'My unread notification count has not increased'
-      waitFor {
-        headerModule.getNotificationCount() == initialNotificationCount
-      }
+      headerModule.getNotificationCount() == initialNotificationCount
   }
 
   void 'Log in as the sending fuel supplier and verify my credit balance has decreased'() {

@@ -51,9 +51,7 @@ class CreditTransactionSpec extends LoggedInSpec {
       at new ToastModal('Success!', 'Credit transaction recommended.')
     and: 'My unread notification count has increased by 1'
       page(HomePage)
-      waitFor {
-        headerModule.getNotificationCount() == initialNotificationCount+1
-      }
+      headerModule.getNotificationCount() == initialNotificationCount+1
   }
 
   void 'Log in as a Director and approve the part 3 award credit transaction'() {
@@ -76,9 +74,7 @@ class CreditTransactionSpec extends LoggedInSpec {
       at new ToastModal('Success!', 'Credit transaction approved.')
     and: 'My unread notification count has increased by 1'
       page(HomePage)
-      waitFor {
-        headerModule.getNotificationCount() == initialNotificationCount
-      }
+      headerModule.getNotificationCount() == initialNotificationCount
   }
 
   // Validation
@@ -104,9 +100,7 @@ class CreditTransactionSpec extends LoggedInSpec {
       at new ToastModal('Success!', 'Credit transaction recommended.')
     and: 'My unread notification count has increased by 1'
       page(HomePage)
-      waitFor {
-        headerModule.getNotificationCount() == initialNotificationCount+1
-      }
+      headerModule.getNotificationCount() == initialNotificationCount+1
   }
 
   void 'Log in as a Director and approve the validation credit transaction'() {
@@ -129,9 +123,7 @@ class CreditTransactionSpec extends LoggedInSpec {
       at new ToastModal('Success!', 'Credit transaction approved.')
     and: 'My unread notification count has increased by 1'
       page(HomePage)
-      waitFor {
-        headerModule.getNotificationCount() == initialNotificationCount
-      }
+      headerModule.getNotificationCount() == initialNotificationCount
   }
 
   // Reduction
@@ -157,9 +149,7 @@ class CreditTransactionSpec extends LoggedInSpec {
       at new ToastModal('Success!', 'Credit transaction recommended.')
     and: 'My unread notification count has increased by 1'
       page(HomePage)
-      waitFor {
-        headerModule.getNotificationCount() == initialNotificationCount+1
-      }
+      headerModule.getNotificationCount() == initialNotificationCount+1
   }
 
   void 'Log in as a Director and approve the reduction credit transaction'() {
@@ -182,9 +172,7 @@ class CreditTransactionSpec extends LoggedInSpec {
       at new ToastModal('Success!', 'Credit transaction approved.')
     and: 'My unread notification count has increased by 1'
       page(HomePage)
-      waitFor {
-        headerModule.getNotificationCount() == initialNotificationCount
-      }
+      headerModule.getNotificationCount() == initialNotificationCount
   }
 
   // Verify credit balance after all 3 above transactions completed
