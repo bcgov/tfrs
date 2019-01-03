@@ -5,7 +5,7 @@
       "email": "gov_director@test.com",
       "username": "gov_director",
       "authorization_id": "gov_director",
-      "display_name": "Gov Director",
+      "_display_name": "Gov Director",
       "first_name": "Gov",
       "last_name": "Gov",
       "organization": [
@@ -33,7 +33,7 @@
       "email": "gov_analyst@test.com",
       "username": "gov_analyst",
       "authorization_id": "gov_analyst",
-      "display_name": "Gov Analyst",
+      "_display_name": "Gov Analyst",
       "first_name": "Gov",
       "last_name": "Gov",
       "organization": [
@@ -61,7 +61,7 @@
       "email": "gov_admin@test.com",
       "username": "gov_admin",
       "authorization_id": "gov_admin",
-      "display_name": "Gov Admin",
+      "_display_name": "Gov Admin",
       "first_name": "Gov",
       "last_name": "Admin",
       "organization": [
