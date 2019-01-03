@@ -30,9 +30,9 @@ const NotificationsTable = (props) => {
     id: 'mark',
     width: 50
   }, {
-    accessor: item => NOTIFICATION_TYPES[item.message],
+    accessor: item => NOTIFICATION_TYPES[item.message].replace(/PVR/, item.relatedCreditTrade.type.theType),
     Cell: (row) => {
-      const viewUrl = CREDIT_TRANSACTIONS.DETAILS.replace(':id', row.original.relatedCreditTrade);
+      const viewUrl = CREDIT_TRANSACTIONS.DETAILS.replace(':id', row.original.relatedCreditTrade.id);
 
       return (
         <button
@@ -81,7 +81,7 @@ const NotificationsTable = (props) => {
     id: 'user',
     width: 150
   }, {
-    accessor: item => item.relatedCreditTrade,
+    accessor: item => item.relatedCreditTrade.id,
     Cell: (row) => {
       const viewUrl = CREDIT_TRANSACTIONS.DETAILS.replace(':id', row.value);
 
