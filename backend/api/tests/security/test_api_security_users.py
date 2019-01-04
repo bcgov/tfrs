@@ -62,7 +62,6 @@ class TestUsersAPI(BaseAPISecurityTestCase):
                 self.assertEqual(response.status_code, expected_results[(user,)]['status'])
 
                 # quick checks for fields which have been blacklisted
-                self.assertNotIn(response_data, "authorizationGuid")
                 self.assertNotIn(response_data, 'organizationBalance')
 
     def test_get_by_id(self):
@@ -214,10 +213,7 @@ class TestUsersAPI(BaseAPISecurityTestCase):
                     'last_name': 'Pilot',
                     'email': 'test_pilot_{0!s}@test.com'.format(index),
                     'phone': '5558675309',
-                    'authorization_id': 'test_pilot_{0!s}'.format(index),
                     'username': 'test_pilot_{0!s}'.format(index),
-                    'authorization_guid': str(uuid.uuid4()),
-                    'authorization_directory': 'IDIR',
                     'display_name': 'Canary',
                     'roles': (5, 6),
                     'is_active': True
@@ -271,11 +267,8 @@ class TestUsersAPI(BaseAPISecurityTestCase):
                     'first_name': 'Test',
                     'last_name': 'Pilot',
                     'email': 'test_pilot_{0!s}@test.com'.format(index),
-                    'authorization_id': 'test_pilot_{0!s}'.format(index),
                     'username': user,
                     'phone': '5558675309',
-                    'authorization_guid': str(uuid.uuid4()),
-                    'authorization_directory': 'IDIR',
                     'display_name': 'Canary',
                     'roles': (1, 2),
                     'is_active': True

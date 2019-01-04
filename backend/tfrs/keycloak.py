@@ -3,7 +3,7 @@ import os
 
 def config():
     return {
-        'ENABLED': bool(os.getenv('KEYCLOAK_ENABLED', 'False').lower() in ['true', 1]),
+        'ENABLED': True,
         'REALM': os.getenv('KEYCLOAK_REALM_URL', 'http://localhost:8888/auth/realms/tfrs'),
         'CLIENT_ID': os.getenv('KEYCLOAK_CLIENT_ID', 'tfrs-app'),
         'AUDIENCE': os.getenv('KEYCLOAK_AUDIENCE', 'tfrs-app'),

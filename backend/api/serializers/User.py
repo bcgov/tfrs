@@ -45,8 +45,8 @@ class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = (
-            'id', 'first_name', 'last_name', 'email', 'authorization_id',
-            'username', 'authorization_directory', 'display_name', 'is_active',
+            'id', 'first_name', 'last_name', 'email',
+            'username', 'display_name', 'is_active',
             'organization', 'roles', 'is_government_user', 'permissions',
             'phone', 'cell_phone')
 
@@ -206,6 +206,6 @@ class UserViewSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = (
-            'authorization_id', 'cell_phone', 'display_name', 'email',
+            'cell_phone', 'display_name', 'email',
             'first_name', 'id', 'is_active', 'last_name',
             'organization', 'phone', 'roles')

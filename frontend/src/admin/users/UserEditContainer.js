@@ -73,7 +73,7 @@ class UserEditContainer extends Component {
       const fieldState = {
         firstName: props.user.details.firstName || '',
         lastName: props.user.details.lastName || '',
-        bceid: props.user.details.authorizationId || '',
+        bceid: '',
         email: props.user.details.email || '',
         organization: props.user.details.organization || null,
         mobilePhone: props.user.details.cellPhone || '',

@@ -10,7 +10,7 @@ const getConfig = (value, def) => {
 
 const CONFIG = {
   KEYCLOAK: {
-    ENABLED: getConfig('keycloak.enabled', false),
+    ENABLED: true,
     AUTHORITY: getConfig('keycloak.authority', 'unconfigured'),
     CLIENT_ID: getConfig('keycloak.client_id', 'unconfigured'),
     CALLBACK_URL: getConfig('keycloak.callback_url', 'unconfigured'),
