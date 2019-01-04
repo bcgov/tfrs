@@ -93,7 +93,6 @@ UserDetails.propTypes = {
   }).isRequired,
   user: PropTypes.shape({
     details: PropTypes.shape({
-      authorizationId: PropTypes.string,
       cellPhone: PropTypes.string,
       email: PropTypes.string,
       firstName: PropTypes.string,

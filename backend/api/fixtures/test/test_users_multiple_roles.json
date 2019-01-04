@@ -1,10 +1,8 @@
 [
   {
     "fields": {
-      "authorization_guid": "2c04e271-6fc2-4822-b231-7cd3dc7e9ec4",
       "email": "gov_multi_role@test.com",
       "username": "gov_multi_role",
-      "authorization_id": "gov_multi_role",
       "_display_name": "Multi Role",
       "first_name": "Multi",
       "last_name": "Role",
