@@ -67,6 +67,9 @@ const UserDetails = props => (
             </strong>
           </div>
         }
+        <div>Title:
+          <strong> {props.user.details.title}</strong>
+        </div>
         <div className="user_history">
           <h3>User Activity</h3>
           {props.user.details.id &&
@@ -105,7 +108,8 @@ UserDetails.propTypes = {
       phone: PropTypes.string,
       roles: PropTypes.arrayOf(PropTypes.shape({
         id: PropTypes.number
-      }))
+      })),
+      title: PropTypes.string
     }),
     errors: PropTypes.shape({}),
     isFetching: PropTypes.bool.isRequired
