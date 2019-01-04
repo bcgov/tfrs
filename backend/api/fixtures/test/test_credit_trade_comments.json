@@ -1,10 +1,8 @@
 [
   {
     "fields": {
-      "authorization_guid": "6c239bc5-5f08-4ddd-855a-b3bf39096937",
       "email": "fs_air_liquide@test.com",
       "username": "fs_air_liquide",
-      "authorization_id": "fs_air_liquide",
       "_display_name": "Air Liquide User",
       "first_name": "Test",
       "last_name": "FS",
@@ -29,10 +27,8 @@
   },
   {
     "fields": {
-      "authorization_guid": "74aa4148-5e62-41e7-a57e-35b35685b7b1",
       "email": "fs_husky@test.com",
       "username": "fs_husky",
-      "authorization_id": "fs_husky",
       "_display_name": "Husky User",
       "first_name": "Test",
       "last_name": "FS",
@@ -57,10 +53,8 @@
   },
   {
     "fields": {
-      "authorization_guid": "1dfbe008-d321-4a1f-912d-ecca36730895",
       "email": "test_fs_shell@test.com",
       "username": "fs_shell",
-      "authorization_id": "fs_shell",
       "_display_name": "Test FS Shell",
       "first_name": "Test",
       "last_name": "FS",
