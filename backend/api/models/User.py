@@ -66,18 +66,6 @@ class User(AbstractUser, Auditable):
         'Organization', related_name='users', blank=True, null=True,
         on_delete=models.SET_NULL)
 
-
-    # Siteminder headers
-    authorization_id = models.CharField(
-        max_length=500, blank=True, null=True, db_comment='Siteminder Header')
-    authorization_guid = models.UUIDField(
-        unique=True, default=None, null=True,
-        db_comment='Siteminder Header. GUID used for authentication')
-    authorization_directory = models.CharField(
-        max_length=100, blank=True, null=True,
-        db_comment='Siteminder Header (normally IDIR or BCeID)')
-    authorization_email = models.EmailField(
-        blank=True, null=True, db_comment='Siteminder Header')
     _display_name = models.CharField(
         max_length=500, blank=True, null=True, db_column='display_name',
         db_comment='Siteminder Header (Displayed name for user)')
@@ -107,7 +95,7 @@ class User(AbstractUser, Auditable):
         Filters are to be restricted based on the user's role.
         """
         history = CreditTradeHistory.objects.filter(
-            filters, user_id=self.id
+            filters, Q(create_user_id=self.id) | Q(update_user_id=self.id)
         ).order_by('-update_timestamp')
 
         return history

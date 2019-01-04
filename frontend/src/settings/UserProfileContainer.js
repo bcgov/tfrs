@@ -47,7 +47,7 @@ class UserProfileContainer extends Component {
       const fieldState = {
         firstName: this.props.loggedInUser.firstName || '',
         lastName: this.props.loggedInUser.lastName || '',
-        bceid: this.props.loggedInUser.authorizationId || '',
+        bceid: '',
         email: this.props.loggedInUser.email || '',
         mobilePhone: this.props.loggedInUser.cellPhone || '',
         status: this.props.loggedInUser.isActive ? 'active' : 'inactive',
@@ -143,7 +143,6 @@ UserProfileContainer.propTypes = {
   ]),
   getUpdatedLoggedInUser: PropTypes.func.isRequired,
   loggedInUser: PropTypes.shape({
-    authorizationId: PropTypes.string.isRequired,
     cellPhone: PropTypes.string,
     email: PropTypes.string.isRequired,
     firstName: PropTypes.string.isRequired,

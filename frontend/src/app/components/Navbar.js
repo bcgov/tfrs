@@ -270,7 +270,6 @@ class Navbar extends Component {
             </NavLink>
           </li>
           <li>
-            {CONFIG.KEYCLOAK.ENABLED &&
             <NavLink
               id="navbar-logout"
               onClick={(e) => { e.preventDefault(); this.props.signUserOut(); }}
@@ -278,12 +277,7 @@ class Navbar extends Component {
             >
               Log Out
             </NavLink>
-            }
-            {CONFIG.KEYCLOAK.ENABLED ||
-            <NavLink id="navbar-logout" to={Routes.LOGOUT}>
-              Log Out
-            </NavLink>
-            }
+
 
           </li>
         </ul>
@@ -367,19 +361,12 @@ class Navbar extends Component {
                         >
                           <FontAwesomeIcon icon="cog" /> Settings
                         </MenuItem>
-                        {CONFIG.KEYCLOAK.ENABLED &&
                         <MenuItem onClick={(e) => {
                           e.preventDefault(); this.props.signUserOut();
                         }}
                         >
                           <FontAwesomeIcon icon="sign-out-alt" /> Log Out
                         </MenuItem>
-                        }
-                        {!CONFIG.KEYCLOAK.ENABLED &&
-                        <MenuItem href={Routes.LOGOUT}>
-                          <FontAwesomeIcon icon="sign-out-alt" /> Log Out
-                        </MenuItem>
-                        }
                       </DropdownButton>
                     }
                   </h5>

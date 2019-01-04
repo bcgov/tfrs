@@ -49,10 +49,8 @@
   },
   {
     "fields": {
-      "authorization_guid": "33eba826-5e03-4140-92b5-379be817638a",
       "email": "fuel_supplier_1@test.com",
       "username": "fs_user_1",
-      "authorization_id": "fs_user_1",
       "_display_name": "Fuel Supplier User 1",
       "first_name": "Fuel",
       "last_name": "Supplier 1",
@@ -77,10 +75,8 @@
   },
   {
     "fields": {
-      "authorization_guid": "7f945204-9a22-4e0f-96d1-4bda5794254d",
       "email": "fuel_supplier_2@test.com",
       "username": "fs_user_2",
-      "authorization_id": "fs_user_2",
       "_display_name": "Fuel Supplier User 2",
       "first_name": "Fuel",
       "last_name": "Supplier 2",
@@ -105,10 +101,8 @@
   },
   {
     "fields": {
-      "authorization_guid": "d21f817b-f123-443a-b383-4982ac749015",
       "email": "fuel_supplier_3@test.com",
       "username": "fs_user_3",
-      "authorization_id": "fs_user_3",
       "_display_name": "Fuel Supplier User 3",
       "first_name": "Fuel",
       "last_name": "Supplier 3",
