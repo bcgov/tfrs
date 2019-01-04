@@ -26,6 +26,7 @@ class UserProfileContainer extends Component {
         organization: null,
         mobilePhone: '',
         status: 'active',
+        title: '',
         workPhone: '',
         roles: []
       }
@@ -51,6 +52,7 @@ class UserProfileContainer extends Component {
         email: this.props.loggedInUser.email || '',
         mobilePhone: this.props.loggedInUser.cellPhone || '',
         status: this.props.loggedInUser.isActive ? 'active' : 'inactive',
+        title: this.props.loggedInUser.title,
         workPhone: this.props.loggedInUser.phone || ''
       };
 
@@ -94,7 +96,8 @@ class UserProfileContainer extends Component {
       email: this.state.fields.email,
       firstName: this.state.fields.firstName,
       lastName: this.state.fields.lastName,
-      phone: this.state.fields.workPhone
+      phone: this.state.fields.workPhone,
+      title: this.state.fields.title
     };
 
     const { id } = this.props.loggedInUser;
@@ -149,7 +152,8 @@ UserProfileContainer.propTypes = {
     id: PropTypes.number.isRequired,
     isActive: PropTypes.bool.isRequired,
     lastName: PropTypes.string.isRequired,
-    phone: PropTypes.string
+    phone: PropTypes.string,
+    title: PropTypes.string
   }).isRequired,
   updateUser: PropTypes.func.isRequired
 };
