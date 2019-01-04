@@ -48,7 +48,7 @@ class UserSerializer(serializers.ModelSerializer):
             'id', 'first_name', 'last_name', 'email',
             'username', 'display_name', 'is_active',
             'organization', 'roles', 'is_government_user', 'permissions',
-            'phone', 'cell_phone')
+            'phone', 'cell_phone', 'title')
 
 
 class UserBasicSerializer(serializers.ModelSerializer):
@@ -100,9 +100,8 @@ class UserCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = (
-            'first_name', 'last_name', 'email',
-            'username', 'display_name', 'id',
-            'organization', 'roles', 'is_government_user')
+            'first_name', 'last_name', 'email', 'username', 'display_name',
+            'id', 'organization', 'roles', 'is_government_user', 'title')
 
 
 class UserUpdateSerializer(serializers.ModelSerializer):
@@ -165,7 +164,8 @@ class UserUpdateSerializer(serializers.ModelSerializer):
             'cell_phone', instance.cell_phone)
         instance.phone = validated_data.get(
             'phone', instance.phone)
-
+        instance.title = validated_data.get(
+            'title', instance.title)
         instance.save()
 
         return instance
@@ -174,7 +174,7 @@ class UserUpdateSerializer(serializers.ModelSerializer):
         model = User
         fields = (
             'id', 'first_name', 'last_name', 'display_name', 'email', 'phone',
-            'roles', 'is_active', 'organization', 'cell_phone'
+            'roles', 'is_active', 'organization', 'cell_phone', 'title'
         )
         read_only_fields = (
             'organization', 'id', 'is_government_user'
@@ -206,6 +206,6 @@ class UserViewSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = (
-            'cell_phone', 'display_name', 'email',
-            'first_name', 'id', 'is_active', 'last_name',
-            'organization', 'phone', 'roles')
+            'cell_phone', 'display_name', 'email', 'first_name', 'id',
+            'is_active', 'last_name', 'organization', 'phone', 'roles',
+            'title')
