@@ -114,9 +114,6 @@ class CreditTradeCommentPermissions(permissions.BasePermission):
 
     @staticmethod
     def user_can_edit_comment(user, comment: CreditTradeComment):
-        if not user.has_perm('ADD_COMMENT'):
-            return False
-
         if user.id != comment.create_user.id:
             return False
 

@@ -28,7 +28,7 @@ def add_comment_permission(apps, schema_editor):
     role_permissions = []
 
     roles = role.objects.using(db_alias).filter(name__in=[
-        "Admin", "FSAdmin", "FSDoc", "FSDocSubmit", "FSManager",
+        "Admin", "FSAdmin", "FSDoc", "FSDocSubmit", "FSManager", "FSUser",
         "GovDeputyDirector", "GovDirector", "GovUser"
     ])
 
