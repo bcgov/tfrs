@@ -23,14 +23,18 @@ const download = (url, params = {}) => (
   })
 );
 
-const getMBSize = (bytes) => {
+const getFileSize = (bytes) => {
   if (bytes === 0) {
-    return '0 Bytes';
+    return '0 bytes';
   }
 
   const k = 1000;
-  const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
-  const i = Math.floor(Math.log(bytes) / Math.log(k));
+  const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
+  let i = Math.floor(Math.log(bytes) / Math.log(k));
+
+  if (i > 4) { // nothing bigger than a terrabyte
+    i = 4;
+  }
 
   const filesize = parseFloat((bytes / k ** i).toFixed(1));
 
@@ -96,4 +100,4 @@ const validateFiles = files => (
   })
 );
 
-export { arrayMove, download, getMBSize, getIcon, validateFiles };
+export { arrayMove, download, getFileSize, getIcon, validateFiles };

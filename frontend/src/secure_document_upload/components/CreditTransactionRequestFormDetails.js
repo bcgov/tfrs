@@ -7,7 +7,7 @@ import Dropzone from 'react-dropzone';
 import FontAwesomeIcon from '@fortawesome/react-fontawesome';
 
 import CONFIG from '../../config';
-import { getMBSize, getIcon, validateFiles } from '../../utils/functions';
+import { getFileSize, getIcon, validateFiles } from '../../utils/functions';
 
 class CreditTransactionRequestFormDetails extends Component {
   constructor (props) {
@@ -198,7 +198,7 @@ class CreditTransactionRequestFormDetails extends Component {
                         <span className="icon">
                           <FontAwesomeIcon icon={getIcon(file.type)} />
                         </span>
-                        {file.name} - {getMBSize(file.size)}
+                        {file.name} - {getFileSize(file.size)}
                         <button type="button" onClick={() => this._removeFile(file)}>
                           <FontAwesomeIcon icon="minus-circle" />
                         </button>
@@ -221,7 +221,7 @@ class CreditTransactionRequestFormDetails extends Component {
                         <span className="icon">
                           <FontAwesomeIcon icon={getIcon(file.type)} />
                         </span>
-                        {file.name} - {getMBSize(file.size)}
+                        {file.name} - {getFileSize(file.size)}
                         {file.size > CONFIG.SECURE_DOCUMENT_UPLOAD.MAX_FILE_SIZE &&
                         <span className="error-message"> File size too large </span>
                         }
