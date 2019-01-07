@@ -1,4 +1,5 @@
 import axios from 'axios';
+import CONFIG from '../config';
 
 const arrayMove = (arr, currentIndex, targetIndex) => {
   arr.splice(targetIndex, 0, arr.splice(currentIndex, 1)[0]);
@@ -21,6 +22,20 @@ const download = (url, params = {}) => (
     link.click();
   })
 );
+
+const getMBSize = (bytes) => {
+  if (bytes === 0) {
+    return '0 Bytes';
+  }
+
+  const k = 1000;
+  const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
+  const i = Math.floor(Math.log(bytes) / Math.log(k));
+
+  const filesize = parseFloat((bytes / k ** i).toFixed(1));
+
+  return `${filesize} ${sizes[i]}`;
+};
 
 const getIcon = (mimeType) => {
   switch (mimeType) {
@@ -50,6 +65,10 @@ const getIcon = (mimeType) => {
 
 const validateFiles = files => (
   files.filter((file) => {
+    if (file.size > CONFIG.SECURE_DOCUMENT_UPLOAD.MAX_FILE_SIZE) {
+      return false;
+    }
+
     switch (file.type) {
       case 'application/msoutlook':
       case 'application/msword':
@@ -77,4 +96,4 @@ const validateFiles = files => (
   })
 );
 
-export { arrayMove, download, getIcon, validateFiles };
+export { arrayMove, download, getMBSize, getIcon, validateFiles };
