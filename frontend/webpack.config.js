@@ -32,8 +32,7 @@ const config = {
       'babel-polyfill',
       tokenRenewalPath
     ]
-  }
-  ,
+  },
 
   output: {
     // We need to give Webpack a path. It does not actually need it,
