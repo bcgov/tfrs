@@ -24,6 +24,7 @@ from django.db.models import Q
 from rest_framework import serializers
 from rest_framework.relations import PrimaryKeyRelatedField
 
+from api.models.UserCreationRequest import UserCreationRequest
 from api.models.Organization import Organization
 from api.models.Role import Role
 from api.models.User import User
@@ -202,10 +203,23 @@ class UserViewSerializer(serializers.ModelSerializer):
     """
     organization = OrganizationMinSerializer(read_only=True)
     roles = RoleMinSerializer(many=True, read_only=True)
+    keycloak_email = serializers.SerializerMethodField()
+
+    def get_keycloak_email(self, obj):
+        """
+        Retrieves the keycloak email saved  when the user was created
+        """
+        user_creation_request = UserCreationRequest.objects.filter(
+            user_id=obj.id).first()
+
+        if user_creation_request:
+            return user_creation_request.keycloak_email
+
+        return None
 
     class Meta:
         model = User
         fields = (
             'cell_phone', 'display_name', 'email',
             'first_name', 'id', 'is_active', 'last_name',
-            'organization', 'phone', 'roles')
+            'organization', 'phone', 'roles', 'keycloak_email')
