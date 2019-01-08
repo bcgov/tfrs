@@ -1,5 +1,3 @@
-import COMMENTS from '../constants/permissions/Comments';
-
 export default class CreditTransferUtilityFunctions {
   static canComment (loggedInUser, item) {
     if (!item.commentActions) {

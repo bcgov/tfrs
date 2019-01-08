@@ -9,6 +9,8 @@ import axios from 'axios';
 import history from '../../app/History';
 import * as Lang from '../../constants/langEnUs';
 import { getIcon } from '../../utils/functions';
+import CreditTransactionRequestCommentButtons from './CreditTransactionRequestCommentButtons';
+import CreditTransactionRequestCommentForm from './CreditTransactionRequestCommentForm';
 
 const CreditTransactionRequestDetails = props => (
   <div className="page-credit-transaction-request-details">
@@ -106,6 +108,24 @@ const CreditTransactionRequestDetails = props => (
           </div>
         </div>
       </div>
+
+      <div className="row">
+        <div className="col-md-12">
+          <CreditTransactionRequestCommentButtons
+            addComment={props.addComment}
+            canComment={props.canComment}
+            canCreatePrivilegedComment={props.canCreatePrivilegedComment}
+            isCommenting={props.isCommenting}
+          />
+          {props.isCommenting &&
+            <CreditTransactionRequestCommentForm
+              cancelComment={props.cancelComment}
+              isCreatingPrivilegedComment={props.isCreatingPrivilegedComment}
+              saveComment={props.saveComment}
+            />
+          }
+        </div>
+      </div>
     </div>
     <div className="btn-container">
       <button
@@ -133,8 +153,15 @@ CreditTransactionRequestDetails.defaultProps = {
 };
 
 CreditTransactionRequestDetails.propTypes = {
+  addComment: PropTypes.func.isRequired,
   availableActions: PropTypes.arrayOf(PropTypes.string).isRequired,
-  item: PropTypes.shape().isRequired
+  cancelComment: PropTypes.func.isRequired,
+  canComment: PropTypes.bool.isRequired,
+  canCreatePrivilegedComment: PropTypes.bool.isRequired,
+  isCommenting: PropTypes.bool.isRequired,
+  isCreatingPrivilegedComment: PropTypes.bool.isRequired,
+  item: PropTypes.shape().isRequired,
+  saveComment: PropTypes.func.isRequired
 };
 
 export default CreditTransactionRequestDetails;
