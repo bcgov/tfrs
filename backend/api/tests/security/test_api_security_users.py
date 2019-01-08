@@ -24,7 +24,7 @@
 
 import json
 import logging
-import uuid
+
 from collections import defaultdict
 
 from rest_framework import status
@@ -41,16 +41,20 @@ class TestUsersAPI(BaseAPISecurityTestCase):
     """
 
     def test_get_list(self):
-        """Test that getting users list is not a valid action unless you have an admin role"""
+        """Test that getting users list is not a valid action unless you have
+        an admin role"""
 
         url = "/api/users"
 
         all_users = self.users
-        expected_results = defaultdict(lambda: {'status': status.HTTP_403_FORBIDDEN,
-                                                'reason': "Default response should be no access"})
+        expected_results = defaultdict(lambda: {
+            'status': status.HTTP_403_FORBIDDEN,
+            'reason': "Default response should be no access"})
 
-        expected_results[('gov_admin',)] = {'status': status.HTTP_200_OK,
-                                            'reason': 'Admin should have read access to users'}
+        expected_results[(
+            'gov_admin',
+        )] = {'status': status.HTTP_200_OK,
+              'reason': 'Admin should have read access to users'}
         for user in all_users:
             with self.subTest(user=user,
                               expected_status=expected_results[(user,)]['status'],
@@ -66,7 +70,7 @@ class TestUsersAPI(BaseAPISecurityTestCase):
 
     def test_get_by_id(self):
         """Test that getting another user directly is not a valid action
-         unless you have an admin role"""
+         unless you have a government role"""
 
         url = "/api/users/{0!s}"
 
@@ -77,8 +81,21 @@ class TestUsersAPI(BaseAPISecurityTestCase):
         expected_results = defaultdict(lambda: {'status': status.HTTP_403_FORBIDDEN,
                                                 'reason': "Default response should be no access"})
 
-        expected_results[('gov_admin',)] = {'status': status.HTTP_200_OK,
-                                            'reason': 'Admin should have read access to users'}
+        expected_results[('gov_admin',)] = {
+            'status': status.HTTP_200_OK,
+            'reason': 'Admin should have read access to users'}
+
+        expected_results[('gov_director',)] = {
+            'status': status.HTTP_200_OK,
+            'reason': 'Director should have read access to users'}
+
+        expected_results[('gov_analyst',)] = {
+            'status': status.HTTP_200_OK,
+            'reason': 'Analyst should have read access to users'}
+
+        expected_results[('gov_multi_role',)] = {
+            'status': status.HTTP_200_OK,
+            'reason': 'Multi-role should have read access to users'}
 
         for user in all_users:
             with self.subTest(user=user,
