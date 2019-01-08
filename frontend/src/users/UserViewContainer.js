@@ -50,12 +50,6 @@ UserViewContainer.defaultProps = {
     details: {},
     error: {},
     isFetching: true
-  },
-  match: {
-    params: {
-      id: null,
-      username: null
-    }
   }
 };
 

@@ -82,6 +82,23 @@ const UserFormDetails = props => (
       <div className="row">
         <div className="col-sm-6">
           <div className="form-group">
+            <label htmlFor="title">Title:
+              <input
+                className="form-control"
+                id="title"
+                name="title"
+                onChange={props.handleInputChange}
+                type="text"
+                value={props.fields.title}
+              />
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <div className="row">
+        <div className="col-sm-6">
+          <div className="form-group">
             <label htmlFor="work-phone">Work Phone:
               <input
                 className="form-control"
@@ -275,6 +292,7 @@ UserFormDetails.propTypes = {
     }),
     roles: PropTypes.array,
     status: PropTypes.string,
+    title: PropTypes.string,
     workPhone: PropTypes.string
   }).isRequired,
   fuelSuppliers: PropTypes.arrayOf(PropTypes.shape()),
