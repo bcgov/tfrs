@@ -36,6 +36,11 @@
         padding: 0.25rem 0 0.25rem 2.5rem;
         position: relative;
 
+        .error-message {
+          color: $red;
+          font-style: italic;
+        }
+
         .icon {
           bottom: 0;
           display: flex;

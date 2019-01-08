@@ -5,7 +5,7 @@ import ReducerTypes from '../constants/reducerTypes/Users';
 import * as Routes from '../constants/routes';
 import userManager from '../store/oidc-usermanager';
 import CONFIG from '../config';
-import {getReferenceData} from './referenceDataActions';
+import { getReferenceData } from './referenceDataActions';
 
 const getUsers = () => (dispatch) => {
   dispatch(getUsersRequest());
@@ -13,8 +13,8 @@ const getUsers = () => (dispatch) => {
     .then((response) => {
       dispatch(getUsersSuccess(response.data));
     }).catch((error) => {
-    dispatch(getUsersError(error.response));
-  });
+      dispatch(getUsersError(error.response));
+    });
 };
 
 const createUser = payload => (dispatch) => {
@@ -45,10 +45,10 @@ const getLoggedInUser = () => (dispatch) => {
     .then((response) => {
       dispatch(getLoggedInUserSuccess(response.data));
     }).catch((error) => {
-    dispatch(getLoggedInUserError(error.response));
-  }).then(() => {
-    dispatch(getReferenceData());
-  });
+      dispatch(getLoggedInUserError(error.response));
+    }).then(() => {
+      dispatch(getReferenceData());
+    });
 };
 
 const signUserOut = () => (dispatch) => {
@@ -126,8 +126,8 @@ const getUpdatedLoggedInUser = () => (dispatch) => {
     .then((response) => {
       dispatch(getLoggedInUserSuccess(response.data));
     }).catch((error) => {
-    dispatch(getLoggedInUserError(error.response));
-  });
+      dispatch(getLoggedInUserError(error.response));
+    });
 };
 
 const getUser = id => (dispatch) => {
@@ -136,8 +136,8 @@ const getUser = id => (dispatch) => {
     .then((response) => {
       dispatch(getUserSuccess(response.data));
     }).catch((error) => {
-    dispatch(getUserError(error.response));
-  });
+      dispatch(getUserError(error.response));
+    });
 };
 
 const getUserByUsername = username => (dispatch) => {
@@ -146,8 +146,8 @@ const getUserByUsername = username => (dispatch) => {
     .then((response) => {
       dispatch(getUserSuccess(response.data));
     }).catch((error) => {
-    dispatch(getUserError(error.response));
-  });
+      dispatch(getUserError(error.response));
+    });
 };
 
 const getUserError = error => ({
