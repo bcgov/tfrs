@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import {Provider} from 'react-redux';
-import {OidcProvider} from 'redux-oidc';
+import { Provider } from 'react-redux';
+import { OidcProvider } from 'redux-oidc';
 
 import store from './store/store';
 
@@ -21,7 +21,7 @@ configureAxios();
 ReactDOM.render(
   <Provider store={store}>
     <OidcProvider store={store} userManager={userManager}>
-      <Router/>
+      <Router />
     </OidcProvider>
   </Provider>,
   document.getElementById('root')

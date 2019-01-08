@@ -48,12 +48,12 @@ const UserFormDetails = props => (
       <div className="row">
         <div className="col-sm-6">
           <div className="form-group">
-            {props.isAdding &&
-              <label htmlFor="bceid">
-                {document.location.pathname.indexOf('/admin/users/') < 0 &&
-                  'BCeID Email Address:'}
-                {document.location.pathname.indexOf('/admin/users/') >= 0 &&
-                  'IDIR Email Address:'}
+            <label htmlFor="bceid">
+              {document.location.pathname.indexOf('/admin/users/') < 0 &&
+                'BCeID Email Address:'}
+              {document.location.pathname.indexOf('/admin/users/') >= 0 &&
+                'IDIR Email Address:'}
+              {props.isAdding &&
                 <input
                   className="form-control"
                   id="bceid"
@@ -63,15 +63,18 @@ const UserFormDetails = props => (
                   type="email"
                   value={props.fields.bceid}
                 />
-              </label>
-            }
-            {!props.isAdding &&
-              <label htmlFor="bceid">BCeID:
-                <span className="form-control read-only">
-                  {props.fields.bceid}
-                </span>
-              </label>
-            }
+              }
+              {!props.isAdding &&
+                <div
+                  className="form-control read-only"
+                >
+                  {props.fields.bceid === ''
+                    ? <em>None</em>
+                    : props.fields.bceid
+                  }
+                </div>
+              }
+            </label>
           </div>
         </div>
       </div>
