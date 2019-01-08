@@ -20,6 +20,7 @@ import CONFIG from '../config';
 import { getLoggedInUser } from '../actions/userActions';
 import sessionTimeoutSaga from './sessionTimeout';
 import authenticationStateSaga from "./authenticationState";
+import notificationsSaga from "./notificationTrigger";
 
 const middleware = routerMiddleware(history);
 const sagaMiddleware = createSagaMiddleware();
@@ -58,7 +59,7 @@ const store = createStore(
 );
 
 sagaMiddleware.run(sessionTimeoutSaga);
-
+sagaMiddleware.run(notificationsSaga, store);
 sagaMiddleware.run(authenticationStateSaga, store);
 
 export default store;
