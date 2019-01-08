@@ -88,6 +88,9 @@ class CreditTradeCommentPermissions(permissions.BasePermission):
 
         (Which is used by the serializer to to present available options to the user. DRY.)
         """
+        if not user.has_perm('ADD_COMMENT'):
+            return False
+
         is_government = user.organization.id == 1
 
         relationship = None
