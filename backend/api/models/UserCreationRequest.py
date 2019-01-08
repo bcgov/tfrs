@@ -22,25 +22,16 @@
 """
 
 from django.db import models
-from django.db.models import Q
-from django.contrib.auth.models import AbstractUser
-from django.core.validators import RegexValidator
-import django.contrib.auth.validators
 
 from auditable.models import Auditable
-from api.managers.UserManager import UserManager
-
-from .CreditTradeHistory import CreditTradeHistory
-from .Permission import Permission
-from .Role import Role
-from .UserRole import UserRole
 
 
 class UserCreationRequest(Auditable):
-    keycloak_email = models.EmailField(blank=False,
-                                       null=False,
-                                       unique=True,
-                                       db_comment='Keycloak email address to associate on first login')
+    keycloak_email = models.EmailField(
+        blank=False,
+        null=False,
+        unique=True,
+        db_comment='Keycloak email address to associate on first login')
 
     user = models.OneToOneField(
         'User',
@@ -50,8 +41,9 @@ class UserCreationRequest(Auditable):
         db_comment='The user to be associated with a Keycloak account'
     )
 
-    is_mapped = models.BooleanField(default=False,
-                                    db_comment='True if this request has been acted on')
+    is_mapped = models.BooleanField(
+        default=False,
+        db_comment='True if this request has been acted on')
 
     class Meta:
         db_table = 'user_creation_request'
