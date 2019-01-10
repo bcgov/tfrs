@@ -19,8 +19,10 @@ type config struct {
 	AMQPUser     string
 	AMQPPassword string
 
+	MinioEndpoint	string
 	MinioAccessKey	string
 	MinioSecretKey	string
+	MinioSecure		bool
 }
 
 func getAMQPConnectionString(config *config) string {
@@ -38,13 +40,6 @@ func getClamAVConnectionString(config *config) string {
 		"tcp://%s:%d",
 		config.ClamAVHost,
 		config.ClamAVPort)
-}
-
-func getMinioAuthorizationHeader(config *config) string {
-	return fmt.Sprintf(
-		"AWS %s:%s",
-		config.MinioAccessKey,
-		config.MinioSecretKey)
 }
 
 func getEnv(key, fallback string) string {

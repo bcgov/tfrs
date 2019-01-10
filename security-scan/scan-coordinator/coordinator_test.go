@@ -5,5 +5,9 @@ import (
 )
 
 func TestRequestResponse(t *testing.T) {
-	handleRequest([]byte("{\"filename\": \"test-file-name\", \"url\": \"http://test-url.document\", \"message\": \"scan-request\", \"id\": 1}"))
+	conf := config{
+		BypassMode: true,
+	}
+	handleRequest(&conf,[]byte("{\"filename\": \"test-file-name\", \"url\": \"http://test-url.document\", \"message\": \"scan-request\", \"id\": 1}"))
 }
+

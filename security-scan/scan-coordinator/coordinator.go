@@ -1,19 +1,16 @@
 package main
 
 import (
-	//"bytes"
-	"net/http"
-
-	//"bytes"
-	//  "fmt"
+	"net/url"
+	"strings"
 	"log"
-
-	// "time"
 	"encoding/json"
 	"github.com/streadway/amqp"
 	"github.com/dutchcoders/go-clamd"
+	"github.com/minio/minio-go"
 )
 
+// AMQP message format
 type ScanRequest struct {
 	Url      string `json:"url"`
 	Filename string `json:"filename"`
@@ -21,6 +18,7 @@ type ScanRequest struct {
 	Id       int64  `json:"id"`
 }
 
+// AMQP message format
 type ScanResponse struct {
 	ScanComplete bool   `json:"scanComplete"`
 	ScanPassed   bool   `json:"scanPassed"`
@@ -31,23 +29,30 @@ type ScanResponse struct {
 
 func main() {
 
+	//load config from environment
 	conf := config{
-		BypassMode:   getEnvBool("BYPASS_CLAMAV", false),
-		ClamAVHost:   getEnv("CLAMAV_HOST", "localhost"),
-		ClamAVPort:   getEnvUint16("CLAMAV_PORT", 3310),
-		AMQPHost:     getEnv("AMQP_HOST", "localhost"),
-		AMQPVHost:    getEnv("AMQP_VHOST", "/"),
-		AMQPPort:     getEnvUint16("AMQP_PORT", 5672),
-		AMQPUser:     getEnv("AMQP_USER", "guest"),
-		AMQPPassword: getEnv("AMQP_PASSWORD", "guest"),
+		BypassMode:     getEnvBool("BYPASS_CLAMAV", false),
+		ClamAVHost:     getEnv("CLAMAV_HOST", "localhost"),
+		ClamAVPort:     getEnvUint16("CLAMAV_PORT", 3310),
+		AMQPHost:       getEnv("AMQP_HOST", "localhost"),
+		AMQPVHost:      getEnv("AMQP_VHOST", "/"),
+		AMQPPort:       getEnvUint16("AMQP_PORT", 5672),
+		AMQPUser:       getEnv("AMQP_USER", "guest"),
+		AMQPPassword:   getEnv("AMQP_PASSWORD", "guest"),
 		MinioAccessKey: getEnv("MINIO_ACCESS_KEY", ""),
 		MinioSecretKey: getEnv("MINIO_SECRET_KEY", ""),
+		MinioEndpoint:  getEnv("MINIO_ENDPOINT", ""),
+		MinioSecure:    getEnvBool("MINIO_USE_SSL", false),
 	}
+
 
 	if !conf.BypassMode {
 		testClamAVConnection(&conf)
 	}
 
+	testMinioConnection(&conf)
+
+	//connect to rabbit
 	conn, err := amqp.Dial(getAMQPConnectionString(&conf))
 	if err != nil {
 		panic(err)
@@ -60,7 +65,7 @@ func main() {
 	}
 	defer ch.Close()
 
-	//declare queues
+	//declare queues (idempotent)
 	q, err := ch.QueueDeclare(
 		"security-scan-requests",
 		false,
@@ -100,6 +105,7 @@ func main() {
 
 	forever := make(chan bool)
 
+	//goroutine to perpetually await and handle messages
 	go func() {
 		for d := range msgs {
 			log.Printf("Received a request: %s", d.Body)
@@ -138,6 +144,24 @@ func testClamAVConnection(conf *config) {
 	}
 }
 
+func testMinioConnection(conf *config) {
+	log.Printf("Verifying Minio connection")
+
+	client, err := minio.New(conf.MinioEndpoint,
+		conf.MinioAccessKey,
+		conf.MinioSecretKey,
+		conf.MinioSecure)
+	if err != nil {
+		panic(err)
+	}
+
+	_, err = client.ListBuckets()
+	if err != nil {
+		panic(err)
+	}
+}
+
+// handle each incoming message by streaming it to clamAV for scan
 func handleRequest(conf *config, body []byte) (response ScanResponse) {
 	req := ScanRequest{}
 	json.Unmarshal(body, &req)
@@ -147,37 +171,53 @@ func handleRequest(conf *config, body []byte) (response ScanResponse) {
 	if !conf.BypassMode {
 		clamav := clamd.NewClamd(getClamAVConnectionString(conf))
 
-		client := &http.Client{}
-		httpreq, err := http.NewRequest(
-			"GET",
-			req.Url,
-			nil)
+		log.Printf("Streaming object to ClamAV for scan")
 
-		log.Printf("Streaming to ClamAV for scan")
-
-		httpreq.Header.Add("Authorization", getMinioAuthorizationHeader(conf))
-		resp, err := client.Do(httpreq)
+		u, err := url.Parse(req.Url)
 		if err != nil {
-			panic(err)
+			log.Print(err)
+			return
 		}
 
-		log.Printf("Got HTTP response: %+v\n", resp)
-
-		defer resp.Body.Close()
-
-		resultChannel,err := clamav.ScanStream(resp.Body, make(chan bool))
-
-		if err != nil {
-			panic(err)
+		tokens := strings.Split(u.Path, "/")
+		if len(tokens) != 3 {
+			log.Print("Unexpected URL length, don't know how to parse into bucket:object")
+			return
 		}
 
-		result := <- resultChannel
+		bucket := tokens[1]
+		obj := tokens[2]
+
+		client, err := minio.New(conf.MinioEndpoint,
+			conf.MinioAccessKey,
+			conf.MinioSecretKey,
+			conf.MinioSecure)
+		if err != nil {
+			log.Print(err)
+			return
+		}
+
+		resp, err := client.GetObject(bucket, obj, minio.GetObjectOptions{})
+		if err != nil {
+			log.Print(err)
+			return
+		}
+
+		defer resp.Close()
+
+		resultChannel, err := clamav.ScanStream(resp, make(chan bool))
+
+		if err != nil {
+			log.Print(err)
+			return
+		}
+
+		result := <-resultChannel
 
 		log.Printf("Scan result: %+v", result)
 
 		scanPassed = result.Status == clamd.RES_OK
 	}
-
 
 	response.Id = req.Id
 	response.Url = req.Url
