@@ -4,6 +4,42 @@ import ActionTypes from '../constants/actionTypes/DocumentUploads';
 import ReducerTypes from '../constants/reducerTypes/DocumentUploads';
 import * as Routes from '../constants/routes';
 
+/*
+ * Add comment to document
+ */
+const addCommentToDocument = data => (dispatch) => {
+  dispatch(addCommentToDocumentRequest());
+
+  return axios
+    .post(`${Routes.BASE_URL}${Routes.SECURE_DOCUMENT_UPLOAD.COMMENTS_API}`, data)
+    .then((response) => {
+      dispatch(addCommentToDocumentSuccess(response.data));
+    }).catch((error) => {
+      dispatch(addCommentToDocumentError(error.response.data));
+      return Promise.reject(error);
+    });
+};
+
+const addCommentToDocumentRequest = () => ({
+  name: ReducerTypes.ADD_COMMENT_TO_DOCUMENT_REQUEST,
+  type: ActionTypes.REQUEST
+});
+
+const addCommentToDocumentSuccess = data => ({
+  name: ReducerTypes.SUCCESS_ADD_COMMENT_TO_DOCUMENT,
+  type: ActionTypes.SUCCESS,
+  data
+});
+
+const addCommentToDocumentError = error => ({
+  name: ReducerTypes.ERROR_ADD_COMMENT_TO_DOCUMENT,
+  type: ActionTypes.ERROR,
+  errorMessage: error
+});
+
+/*
+ * Get Documents
+ */
 const getDocumentUploads = () => (dispatch) => {
   dispatch(getDocumentUploadRequests());
   return axios.get(Routes.BASE_URL + Routes.SECURE_DOCUMENT_UPLOAD.API)
@@ -164,6 +200,42 @@ export const partialUpdateDocument = (id, data) => (dispatch) => {
     });
 };
 
+/*
+ * Update comment on documents
+ */
+const updateCommentOnDocument = (id, data) => (dispatch) => {
+  dispatch(updateCommentOnDocumentRequest());
+
+  return axios
+    .put(`${Routes.BASE_URL}${Routes.SECURE_DOCUMENT_UPLOAD.COMMENTS_API}/${id}`, data)
+    .then((response) => {
+      dispatch(updateCommentOnDocumentSuccess(response.data));
+    }).catch((error) => {
+      dispatch(updateCommentOnDocumentError(error.response.data));
+      return Promise.reject(error);
+    });
+};
+
+const updateCommentOnDocumentRequest = () => ({
+  name: ReducerTypes.UPDATE_COMMENT_ON_DOCUMENT_REQUEST,
+  type: ActionTypes.REQUEST
+});
+
+const updateCommentOnDocumentSuccess = data => ({
+  name: ReducerTypes.SUCCESS_UPDATE_COMMENT_ON_DOCUMENT,
+  type: ActionTypes.SUCCESS,
+  data
+});
+
+const updateCommentOnDocumentError = error => ({
+  name: ReducerTypes.ERROR_UPDATE_COMMENT_ON_DOCUMENT,
+  type: ActionTypes.ERROR,
+  errorMessage: error
+});
+
+/*
+ * Update documents
+ */
 const updateDocumentUpload = (data, id) => (dispatch) => {
   dispatch(updateDocumentUploadRequest({ id, data }));
 
@@ -198,11 +270,13 @@ const uploadDocument = (url, blob) => (axios.put(url, blob, {
 }));
 
 export {
+  addCommentToDocument,
   addDocumentUpload,
   deleteDocumentUpload,
   getDocumentUpload,
   getDocumentUploads,
   getDocumentUploadURL,
+  updateCommentOnDocument,
   uploadDocument,
   updateDocumentUpload
 };

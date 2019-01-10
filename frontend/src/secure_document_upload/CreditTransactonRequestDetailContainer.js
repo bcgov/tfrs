@@ -9,7 +9,7 @@ import { bindActionCreators } from 'redux';
 import Loading from '../app/components/Loading';
 import CreditTransactionUtilityFunctions from './CreditTransactionRequestUtilityFunctions';
 
-import { getDocumentUpload, partialUpdateDocument } from '../actions/documentUploads';
+import { addCommentToDocument, getDocumentUpload, partialUpdateDocument, updateCommentOnDocument } from '../actions/documentUploads';
 import Modal from '../app/components/Modal';
 import history from '../app/History';
 import CreditTransactionRequestDetails from './components/CreditTransactionRequestDetails';
@@ -27,7 +27,10 @@ class CreditTransactionRequestDetailContainer extends Component {
       isCreatingPrivilegedComment: false
     };
 
+    this._addComment = this._addComment.bind(this);
+    this._cancelComment = this._cancelComment.bind(this);
     this._handleSubmit = this._handleSubmit.bind(this);
+    this._saveComment = this._saveComment.bind(this);
   }
 
   componentDidMount () {
@@ -75,16 +78,15 @@ class CreditTransactionRequestDetailContainer extends Component {
 
     // API data structure
     const data = {
-      credit_trade: item.id,
+      document: item.id,
       comment: comment.comment,
       privilegedAccess: comment.privilegedAccess
     };
 
     switch (comment.id) {
       case null:
-        this.props.addCommentToCreditTransfer(data).then(() => {
-          this.props.invalidateCreditTransfer(this.props.documentUpload.item);
-          this.props.getCreditTransferIfNeeded(this.props.documentUpload.item.id);
+        this.props.addCommentToDocument(data).then(() => {
+          this.props.getDocumentUpload(this.props.documentUpload.item.id);
           this.setState({
             hasCommented: true,
             isCommenting: false,
@@ -96,9 +98,8 @@ class CreditTransactionRequestDetailContainer extends Component {
         break;
       default:
         // we are saving a pre-existing comment
-        this.props.updateCommentOnCreditTransfer(comment.id, data).then(() => {
-          this.props.invalidateCreditTransfer(this.props.item);
-          this.props.getCreditTransferIfNeeded(this.props.item.id);
+        this.props.updateCommentOnDocument(comment.id, data).then(() => {
+          this.props.getDocumentUpload(this.props.documentUpload.item.id);
           this.setState({
             hasCommented: true,
             isCommenting: false,
@@ -143,10 +144,19 @@ class CreditTransactionRequestDetailContainer extends Component {
           handleSubmit={(event) => {
             this._handleSubmit(event, DOCUMENT_STATUSES.received);
           }}
+          id="confirmReceived"
+          key="confirmReceived"
+        >
+          Are you sure you want to mark this as received?
+        </Modal>,
+        <Modal
+          handleSubmit={(event) => {
+            this._handleSubmit(event, DOCUMENT_STATUSES.submitted);
+          }}
           id="confirmSubmit"
           key="confirmSubmit"
         >
-          Are you sure you want to add this request?
+          Are you sure you want to submit this request?
         </Modal>
       ]);
     }
@@ -160,6 +170,7 @@ CreditTransactionRequestDetailContainer.defaultProps = {
 };
 
 CreditTransactionRequestDetailContainer.propTypes = {
+  addCommentToDocument: PropTypes.func.isRequired,
   documentUpload: PropTypes.shape({
     isFetching: PropTypes.bool.isRequired,
     item: PropTypes.shape({
@@ -182,7 +193,8 @@ CreditTransactionRequestDetailContainer.propTypes = {
       id: PropTypes.string.isRequired
     }).isRequired
   }).isRequired,
-  partialUpdateDocument: PropTypes.func.isRequired
+  partialUpdateDocument: PropTypes.func.isRequired,
+  updateCommentOnDocument: PropTypes.func.isRequired
 };
 
 const mapStateToProps = state => ({
@@ -196,8 +208,10 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
+  addCommentToDocument: bindActionCreators(addCommentToDocument, dispatch),
   getDocumentUpload: bindActionCreators(getDocumentUpload, dispatch),
-  partialUpdateDocument: bindActionCreators(partialUpdateDocument, dispatch)
+  partialUpdateDocument: bindActionCreators(partialUpdateDocument, dispatch),
+  updateCommentOnDocument: bindActionCreators(updateCommentOnDocument, dispatch)
 });
 
 export default connect(

@@ -72,6 +72,24 @@
       font-weight: normal;
     }
 
+    .row.comment-form {
+      margin-left: 0;
+      margin-right: 0;
+
+      .disclosure-notice {
+        margin-right: 2rem;
+        margin-top: 2rem;
+      }
+
+      .note {
+        padding-bottom: 1rem;
+
+        label {
+          width: 100%;
+        }
+      }
+    }
+
     .row {
       margin-left: -15px;
       margin-right: -15px;

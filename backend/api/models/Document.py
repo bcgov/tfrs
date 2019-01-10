@@ -23,11 +23,38 @@
 from api.models.mixins.DocumentData import DocumentData
 from auditable.models import Auditable
 
+from .DocumentComment import DocumentComment
+
 
 class Document(Auditable, DocumentData):
     """
     Holds the documents that constitute evidence or compliance records etc.
     """
+    @property
+    def comments(self):
+        """
+        Comments that are only viewable for roles that have a
+        specific permission
+        """
+        comments = DocumentComment.objects.filter(
+            document=self.id
+        )
+
+        return comments
+
+    @property
+    def unprivileged_comments(self):
+        """
+        Comments that are unrestricted
+        """
+        comments = DocumentComment.objects.filter(
+            document=self.id
+        ).filter(
+            privileged_access=False
+        )
+
+        return comments
+
     class Meta:
         db_table = 'document'
 

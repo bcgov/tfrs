@@ -4,6 +4,7 @@ const BASE_PATH = '/secure_document_upload';
 const SECURE_DOCUMENT_UPLOAD = {
   API,
   ADD: `${BASE_PATH}/add/:type?`,
+  COMMENTS_API: `${API}_comments`,
   DETAILS: `${BASE_PATH}/view/:id`,
   EDIT: `${BASE_PATH}/edit/:id`,
   LIST: BASE_PATH

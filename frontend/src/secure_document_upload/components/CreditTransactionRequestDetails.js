@@ -9,6 +9,7 @@ import axios from 'axios';
 import history from '../../app/History';
 import * as Lang from '../../constants/langEnUs';
 import { getIcon } from '../../utils/functions';
+import CreditTransactionRequestComment from './CreditTransactionRequestComment';
 import CreditTransactionRequestCommentButtons from './CreditTransactionRequestCommentButtons';
 import CreditTransactionRequestCommentForm from './CreditTransactionRequestCommentForm';
 
@@ -109,6 +110,11 @@ const CreditTransactionRequestDetails = props => (
         </div>
       </div>
 
+      {props.item.comments.length > 0 && <h3 className="comments-header">Comments</h3>}
+      {props.item.comments.map(c => (
+        <CreditTransactionRequestComment comment={c} key={c.id} saveComment={props.saveComment} />
+      ))
+      }
       <div className="row">
         <div className="col-md-12">
           <CreditTransactionRequestCommentButtons
@@ -135,10 +141,20 @@ const CreditTransactionRequestDetails = props => (
       >
         <FontAwesomeIcon icon="arrow-circle-left" /> {Lang.BTN_APP_CANCEL}
       </button>
-      {props.availableActions.includes('Received') &&
+      {props.availableActions.includes('Submitted') &&
       <button
         className="btn btn-primary"
         data-target="#confirmSubmit"
+        data-toggle="modal"
+        type="button"
+      >
+        <FontAwesomeIcon icon="share-square" /> Submit
+      </button>
+      }
+      {props.availableActions.includes('Received') &&
+      <button
+        className="btn btn-primary"
+        data-target="#confirmReceived"
         data-toggle="modal"
         type="button"
       >
