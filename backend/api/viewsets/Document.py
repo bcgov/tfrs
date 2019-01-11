@@ -10,6 +10,7 @@ from rest_framework.response import Response
 
 from api.models.Document import Document
 from api.models.DocumentCategory import DocumentCategory
+from api.models.DocumentFileAttachment import DocumentFileAttachment
 from api.permissions.Documents import DocumentPermissions
 from api.serializers.Document import \
     DocumentCreateSerializer, DocumentDetailSerializer, \
@@ -17,6 +18,7 @@ from api.serializers.Document import \
 from api.serializers.DocumentCategory import DocumentCategorySerializer
 from api.serializers.DocumentStatus import DocumentStatusSerializer
 from api.services.DocumentService import DocumentService
+from api.services.SecurityScan import SecurityScan
 from auditable.views import AuditableMixin
 from tfrs.settings import MINIO
 
@@ -82,10 +84,18 @@ class DocumentViewSet(AuditableMixin,
     def perform_create(self, serializer):
         document = serializer.save()
         DocumentService.create_history(document, True)
+        files = DocumentFileAttachment.objects.filter(document=document,
+                                                      security_scan_status='NOT RUN')
+        for file in files:
+            SecurityScan.send_scan_request(file)
 
     def perform_update(self, serializer):
         document = serializer.save()
         DocumentService.create_history(document, False)
+        files = DocumentFileAttachment.objects.filter(document=document,
+                                                      security_scan_status='NOT RUN')
+        for file in files:
+            SecurityScan.send_scan_request(file)
 
     @list_route(methods=['get'])
     def upload_url(self, request):
