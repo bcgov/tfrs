@@ -44,6 +44,7 @@ from . import UserRole
 from . import CreditTradeComment
 from . import UserCreationRequest
 from . import Document
+from . import DocumentComment
 from . import DocumentHistory
 from . import DocumentFileAttachment
 

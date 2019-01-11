@@ -26,15 +26,14 @@ from django.db import models
 from auditable.models import Auditable
 
 
-class CreditTradeComment(Auditable):
+class DocumentComment(Auditable):
     """
     Contains all correspondence from fuel suppliers and government
-    (including those with privileged access) related to credit transactions
-    (Credit Transfer, Part 3 Award, Validation, and Reduction).
+    (including those with privileged access) related to Secure Document Upload.
     """
-    credit_trade = models.ForeignKey(
-        'CreditTrade',
-        related_name='credit_trade_comments',
+    document = models.ForeignKey(
+        'Document',
+        related_name='document_comments',
         null=False,
         on_delete=models.PROTECT)
 
@@ -42,12 +41,11 @@ class CreditTradeComment(Auditable):
         max_length=4000,
         blank=True,
         null=True,
-        db_column='credit_trade_comment',
-        db_comment='Contains all comments related to a credit transaction '
-                   '(credit transfer, part 3 award, validation, reduction). '
+        db_column='document_comment',
+        db_comment='Contains all comments related to a document submission.'
                    'Comments may be added by fuel suppliers or government, '
-                   'with some government comments being flagged as internal '
-                   'only.')
+                   'with some government comments being flagged as '
+                   'internal only.')
 
     # require a permission to view
     privileged_access = models.BooleanField(
@@ -59,18 +57,17 @@ class CreditTradeComment(Auditable):
     )
 
     # For tracking the status at the point in time the comment was made
-    trade_history_at_creation = models.ForeignKey(
-        'CreditTradeHistory',
-        related_name='credit_trade_comments',
+    document_history_at_creation = models.ForeignKey(
+        'DocumentHistory',
+        related_name='document_comments',
         null=True,
         on_delete=models.PROTECT
     )
 
     class Meta:
-        db_table = 'credit_trade_comment'
+        db_table = 'document_comments'
         ordering = ['create_timestamp']
 
-    db_table_comment = 'Contains all correspondence from fuel suppliers and ' \
-                       'government (including those with privileged access) ' \
-                       'related to credit transactions (Credit Transfer, ' \
-                       'Part 3 Award, Validation, and Reduction).'
+    db_table_comment = 'Contains all correspondence from fuel suppliers ' \
+                       'and government (including those with privileged ' \
+                       'access) related to Secure Document Upload.'
