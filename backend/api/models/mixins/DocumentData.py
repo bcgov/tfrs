@@ -12,12 +12,6 @@ class DocumentData(models.Model):
         max_length=120
     )
 
-    comment = models.CharField(
-        max_length=1024,
-        null=True,
-        blank=True
-    )
-
     status = models.ForeignKey(
         DocumentStatus,
         on_delete=models.PROTECT,
