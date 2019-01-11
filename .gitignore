@@ -92,3 +92,7 @@ sonar-runner/.settings/
 
 # local settings
 minio.env
+
+# package-lock
+package-lock.json
+supervisord.pid
