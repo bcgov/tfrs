@@ -9,6 +9,7 @@ import 'react-table/react-table.css';
 import FontAwesomeIcon from '@fortawesome/react-fontawesome';
 import moment from 'moment';
 
+import history from '../../app/History';
 import SECURE_DOCUMENT_UPLOAD from '../../constants/routes/SecureDocumentUpload';
 
 const CreditTransferRequestTable = (props) => {
@@ -79,16 +80,30 @@ const CreditTransferRequestTable = (props) => {
   return (
     <ReactTable
       className="searchable"
+      columns={columns}
       data={props.items}
+      defaultFilterMethod={filterMethod}
       defaultPageSize={10}
       defaultSorted={[{
         id: 'id',
         desc: true
       }]}
       filterable={filterable}
+      getTrProps={(state, row) => {
+        if (row && row.original) {
+          return {
+            onClick: (e) => {
+              const viewUrl = SECURE_DOCUMENT_UPLOAD.DETAILS.replace(':id', row.original.id);
+
+              history.push(viewUrl);
+            },
+            className: 'clickable'
+          };
+        }
+
+        return {};
+      }}
       pageSizeOptions={[5, 10, 15, 20, 25, 50, 100]}
-      defaultFilterMethod={filterMethod}
-      columns={columns}
     />
   );
 };

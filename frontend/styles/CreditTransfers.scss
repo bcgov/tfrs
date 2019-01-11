@@ -16,7 +16,11 @@
 
   .comment-form {
     .disclosure-notice {
-      margin-top: 5rem;
+      margin: 3rem 1rem 0 0;
+
+      .alert {
+        margin: 0;
+      }
     }
   }
 
@@ -264,7 +268,7 @@
 
   .note {
     display: block;
-    padding: 3rem 0 1rem 0;
+    padding: 1rem;
 
     textarea {
       display: block;
@@ -438,6 +442,14 @@
 .comment-form {
   margin-bottom: 1rem;
   background-color: #fbfbfb;
+
+  &.well {
+    padding: 1rem 1rem 0;
+
+    .note {
+      margin: 0;
+    }
+  }
 }
 
 .notice {

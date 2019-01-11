@@ -20,55 +20,67 @@
     See the License for the specific language governing permissions and
     limitations under the License.
 """
-from api.models import CreditTrade, CreditTradeComment
-from api.models.CreditTradeHistory import CreditTradeHistory
-from api.permissions.CreditTradeComment import CreditTradeCommentPermissions
+from api.models.Document import Document
+from api.models.DocumentComment import DocumentComment
+from api.models.DocumentHistory import DocumentHistory
+from api.permissions.DocumentComment import DocumentCommentPermissions
 
 
-class CreditTradeCommentActions(object):
+class DocumentCommentActions(object):
     """
     Provide available commenting actions to simplify frontend presentation
     logic
     """
 
     @staticmethod
-    def available_comment_actions(request, trade: CreditTrade):
+    def available_comment_actions(
+            request, document: Document):
+        """
+        Available actions for the user as a whole
+        """
         available_actions = []
 
-        if CreditTradeCommentPermissions.user_can_comment(
-                request.user, trade, False):
+        if DocumentCommentPermissions.user_can_comment(
+                request.user, document, False):
             available_actions.append('ADD_COMMENT')
 
-        if CreditTradeCommentPermissions.user_can_comment(
-                request.user, trade, True):
+        if DocumentCommentPermissions.user_can_comment(
+                request.user, document, True):
             available_actions.append('ADD_PRIVILEGED_COMMENT')
 
         return available_actions
 
     @staticmethod
-    def available_individual_comment_actions(request, comment: CreditTradeComment):
+    def available_individual_comment_actions(
+            request, comment: DocumentComment):
+        """
+        Available actions for the user for individual comments
+        """
         available_actions = []
 
-        if CreditTradeCommentPermissions.user_can_edit_comment(
+        if DocumentCommentPermissions.user_can_edit_comment(
                 request.user, comment):
             available_actions = ['EDIT_COMMENT']
 
         return available_actions
 
 
-class CreditTradeCommentService(object):
+class DocumentCommentService(object):
+    """
+    Helper service for Document Comments
+    """
 
     @staticmethod
-    def associate_history(credit_trade_comment: CreditTradeComment):
+    def associate_history(document_comment: DocumentComment):
         """
-        Associate the Credit Trade's latest history with this comment
+        Associate the Document's latest history with this comment
         """
         try:
-            history = CreditTradeHistory.objects \
+            history = DocumentHistory.objects \
                 .select_related('status') \
-                .filter(credit_trade=credit_trade_comment.credit_trade.id) \
+                .filter(document=document_comment.document.id) \
                 .latest('create_timestamp')
-        except CreditTradeHistory.DoesNotExist:
+        except DocumentHistory.DoesNotExist:
             history = None
 
-        credit_trade_comment.trade_history_at_creation = history
+        document_comment.trade_history_at_creation = history
