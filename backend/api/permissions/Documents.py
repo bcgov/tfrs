@@ -27,8 +27,6 @@ class DocumentPermissions(permissions.BasePermission):
     """Used by Viewset to check permissions for API requests"""
 
     def has_permission(self, request, view):
-
-        print('request obj {}'.format(hasattr(request, 'reference_data')))
         # For list
         if not request.user.has_perm('DOCUMENTS_VIEW'):
             return False
