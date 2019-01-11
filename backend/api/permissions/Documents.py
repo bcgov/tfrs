@@ -28,7 +28,6 @@ class DocumentPermissions(permissions.BasePermission):
 
     def has_permission(self, request, view):
 
-        print('request obj {}'.format(hasattr(request, 'reference_data')))
         # For list
         if not request.user.has_perm('DOCUMENTS_VIEW'):
             return False

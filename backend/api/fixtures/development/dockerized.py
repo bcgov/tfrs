@@ -32,9 +32,6 @@ class DockerEnvironment(OperationalDataScript):
 
     _orgs = ['Fuel Supplier 1', 'Fuel Supplier 2', 'Fuel Supplier 3']
 
-    _portbase = 10920
-    _proxied_portbase = 5001
-
     def check_run_preconditions(self):
         for username in self._usernames:
             if User.objects.filter(username=username).exists():
@@ -94,81 +91,15 @@ class DockerEnvironment(OperationalDataScript):
              organization=Organization.objects.get(id=1)).save()
 
         UserRole(user=User.objects.get(username='fs1'), role=Role.objects.get_by_natural_key('FSManager')).save()
+        UserRole(user=User.objects.get(username='fs1'), role=Role.objects.get_by_natural_key('FSDoc')).save()
         UserRole(user=User.objects.get(username='fs2'), role=Role.objects.get_by_natural_key('FSManager')).save()
+        UserRole(user=User.objects.get(username='fs2'), role=Role.objects.get_by_natural_key('FSDoc')).save()
         UserRole(user=User.objects.get(username='fs3'), role=Role.objects.get_by_natural_key('FSManager')).save()
+        UserRole(user=User.objects.get(username='fs3'), role=Role.objects.get_by_natural_key('FSDoc')).save()
         UserRole(user=User.objects.get(username='fs3'), role=Role.objects.get_by_natural_key('FSAdmin')).save()
         UserRole(user=User.objects.get(username='analyst'), role=Role.objects.get_by_natural_key('GovUser')).save()
         UserRole(user=User.objects.get(username='director'), role=Role.objects.get_by_natural_key('GovDirector')).save()
         UserRole(user=User.objects.get(username='tfrsadmin'), role=Role.objects.get_by_natural_key('Admin')).save()
-
-        self.dump_nginx_config()
-
-    def dump_nginx_config(self):
-
-        with open('/shared/reverse_proxy.conf', 'w') as f:
-            conf = 'server {{\n' \
-                   '\tlisten {port};\n' \
-                   '\tserver_name localhost;\n' \
-                   '\tlocation /api/ {{\n' \
-                   '\t\tproxy_set_header Host $host;\n' \
-                   '\t\tproxy_set_header X-Forwarded-For $remote_addr;\n' \
-                   '\t\tproxy_pass http://django:8000/api/;\n' \
-                   '\t}}\n' \
-                   '\tlocation / {{\n' \
-                   '\t\tproxy_set_header Host $host;\n' \
-                   '\t\tproxy_set_header X-Forwarded-For $remote_addr;\n' \
-                   '\t\tproxy_pass http://node:3000/;\n' \
-                   '\t}}\n' \
-                   '\tlocation /sockjs-node/ {{\n' \
-                   '\t\tproxy_http_version 1.1;\n' \
-                   '\t\tproxy_set_header Upgrade $http_upgrade;\n' \
-                   '\t\tproxy_set_header Connection "Upgrade";\n' \
-                   '\t\tproxy_set_header Host $host;\n' \
-                   '\t\tproxy_pass http://node:3000/sockjs-node/;\n' \
-                   '\t}}\n' \
-                   '\tlocation /socket.io/ {{\n' \
-                   '\t\tproxy_http_version 1.1;\n' \
-                   '\t\tproxy_set_header Upgrade $http_upgrade;\n' \
-                   '\t\tproxy_set_header Connection "Upgrade";\n' \
-                   '\t\tproxy_set_header Host $host;\n' \
-                   '\t\tproxy_pass http://node:3000/socket.io/;\n' \
-                   '\t}}\n' \
-                   '}}\n\n'.format(port=self._portbase)
-
-            f.write(conf)
-
-            f.write('# end of nginx config stanzas')
-
-        try:
-            os.mkdir('/shared/content')
-        except FileExistsError:
-            pass
-
-        with open('/shared/content/index.html', 'w') as html:
-            html.write('<html><head><title>TFRS Local Navigation</title></head>')
-            html.write('<body>')
-            html.write('<h1>TFRS Local Navigation</h1>')
-            html.write('<p>The keycloak password for all users is <pre>tfrs</pre></p>')
-            html.write('<p>Users available include:</p>')
-            html.write('<ul>')
-            for (i, username) in enumerate(self._usernames):
-                conf = '<li>{user}</li>'.format(user=username)
-                html.write(conf)
-            html.write('</ul>')
-            html.write('<h2><a target="_blank" href="http://localhost:{port}/">Access TFRS here</a></h2>'.
-                       format(port=self._proxied_portbase))
-
-
-            html.write('<h4><a target="_blank" href="http://localhost:8888/">'
-                       'Keycloak Admin</a></h4>')
-
-            html.write('<h4><a target="_blank" href="http://localhost:8080/">'
-                       'Mailslurper (View sent mails)</a></h4>')
-
-            html.write('<h4><a target="_blank" href="http://localhost:9000/">'
-                       'Minio</a></h4>')
-
-            html.write('</body></html>')
 
 
 script_class = DockerEnvironment

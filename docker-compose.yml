@@ -55,7 +55,6 @@ services:
         expose:
             - 8000
         volumes:
-            - shared:/shared
             - ./backend:/app
     node:
         build:
@@ -95,14 +94,9 @@ services:
             context: ./nginx
         ports:
             - 5001:10920
-            - 5000:10000
-        volumes:
-            - shared:/shared
         command: >
                 bash -c
-                "/wfi/wait-for-it.sh -t 14400 django:8000 &&
-                /wfi/wait-for-it.sh -t 14400 node:3000 &&
-                cat /tfrs/ready.txt &&
+                "cat /tfrs/ready.txt &&
                 nginx -g \"daemon off;\""
     rabbit:
         image: rabbitmq:3.7-management
@@ -153,7 +147,6 @@ services:
         - 9000:9000
       command: "server /export"
 volumes:
-    shared:
     node_modules:
     postgres_keycloak_data:
     minio_data:
