@@ -5,12 +5,13 @@ const getConfig = (value, def) => {
   if (global.tfrs_config) {
     return global.tfrs_config[value] || def;
   }
+
   return def;
 };
 
 const CONFIG = {
   KEYCLOAK: {
-    ENABLED: getConfig('keycloak.enabled', false),
+    ENABLED: true,
     AUTHORITY: getConfig('keycloak.authority', 'unconfigured'),
     CLIENT_ID: getConfig('keycloak.client_id', 'unconfigured'),
     CALLBACK_URL: getConfig('keycloak.callback_url', 'unconfigured'),
@@ -20,7 +21,8 @@ const CONFIG = {
     ENABLED: getConfig('debug.enabled', false)
   },
   SECURE_DOCUMENT_UPLOAD: {
-    ENABLED: getConfig('secure_document_upload.enabled', false)
+    ENABLED: getConfig('secure_document_upload.enabled', false),
+    MAX_FILE_SIZE: getConfig('secure_document_upload.max_file_size', 50000000)
   }
 };
 

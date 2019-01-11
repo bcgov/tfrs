@@ -7,37 +7,22 @@ import store from './store/store';
 
 import './app/FontAwesome';
 
-import { getLoggedInUser } from './actions/userActions';
 import Router from './router';
 
 import '../styles/index.scss';
 
-import CONFIG from './config';
 import configureAxios from './store/authorizationInterceptor';
 import userManager from './store/oidc-usermanager';
 
-if (CONFIG.KEYCLOAK.ENABLED) {
-  // Inject the keycloak provider
+// Inject the keycloak provider
 
-  configureAxios();
+configureAxios();
 
-  ReactDOM.render(
-    <Provider store={store}>
-      <OidcProvider store={store} userManager={userManager}>
-        <Router />
-      </OidcProvider>
-    </Provider>,
-    document.getElementById('root')
-  );
-} else {
-  // Keycloak is off -- old behaviour
-
-  store.dispatch(getLoggedInUser());
-
-  ReactDOM.render(
-    <Provider store={store}>
+ReactDOM.render(
+  <Provider store={store}>
+    <OidcProvider store={store} userManager={userManager}>
       <Router />
-    </Provider>,
-    document.getElementById('root')
-  );
-}
+    </OidcProvider>
+  </Provider>,
+  document.getElementById('root')
+);

@@ -26,6 +26,7 @@ class UserProfileContainer extends Component {
         organization: null,
         mobilePhone: '',
         status: 'active',
+        title: '',
         workPhone: '',
         roles: []
       }
@@ -47,10 +48,11 @@ class UserProfileContainer extends Component {
       const fieldState = {
         firstName: this.props.loggedInUser.firstName || '',
         lastName: this.props.loggedInUser.lastName || '',
-        bceid: this.props.loggedInUser.authorizationId || '',
+        bceid: '',
         email: this.props.loggedInUser.email || '',
         mobilePhone: this.props.loggedInUser.cellPhone || '',
         status: this.props.loggedInUser.isActive ? 'active' : 'inactive',
+        title: this.props.loggedInUser.title,
         workPhone: this.props.loggedInUser.phone || ''
       };
 
@@ -94,7 +96,8 @@ class UserProfileContainer extends Component {
       email: this.state.fields.email,
       firstName: this.state.fields.firstName,
       lastName: this.state.fields.lastName,
-      phone: this.state.fields.workPhone
+      phone: this.state.fields.workPhone,
+      title: this.state.fields.title
     };
 
     const { id } = this.props.loggedInUser;
@@ -143,14 +146,14 @@ UserProfileContainer.propTypes = {
   ]),
   getUpdatedLoggedInUser: PropTypes.func.isRequired,
   loggedInUser: PropTypes.shape({
-    authorizationId: PropTypes.string.isRequired,
     cellPhone: PropTypes.string,
     email: PropTypes.string.isRequired,
     firstName: PropTypes.string.isRequired,
     id: PropTypes.number.isRequired,
     isActive: PropTypes.bool.isRequired,
     lastName: PropTypes.string.isRequired,
-    phone: PropTypes.string
+    phone: PropTypes.string,
+    title: PropTypes.string
   }).isRequired,
   updateUser: PropTypes.func.isRequired
 };

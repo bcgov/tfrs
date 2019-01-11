@@ -20,6 +20,7 @@ import CONFIG from '../config';
 import { getLoggedInUser } from '../actions/userActions';
 import sessionTimeoutSaga from './sessionTimeout';
 import authenticationStateSaga from "./authenticationState";
+import notificationsSaga from "./notificationTrigger";
 
 const middleware = routerMiddleware(history);
 const sagaMiddleware = createSagaMiddleware();
@@ -57,34 +58,8 @@ const store = createStore(
   enhancer
 );
 
-// let subscriptionProcessing = false;
-
-// store.subscribe(() => {
-//   const state = store.getState();
-//   if (!subscriptionProcessing) {
-//     subscriptionProcessing = true;
-//
-//     if (state.rootReducer.notifications.serverInitiatedReloadRequested === true) {
-//       store.dispatch(getNotifications());
-//     }
-//
-//     if (CONFIG.KEYCLOAK.ENABLED) {
-//       if (state.oidc.user && !state.oidc.user.expired &&
-//         !state.rootReducer.userRequest.isFetching &&
-//         !state.rootReducer.userRequest.isAuthenticated &&
-//         !state.rootReducer.userRequest.serverError) {
-//         store.dispatch(getLoggedInUser());
-//       }
-//     }
-//
-//     subscriptionProcessing = false;
-//   }
-// });
-
 sagaMiddleware.run(sessionTimeoutSaga);
-
-if (CONFIG.KEYCLOAK.ENABLED) {
-  sagaMiddleware.run(authenticationStateSaga, store);
-}
+sagaMiddleware.run(notificationsSaga, store);
+sagaMiddleware.run(authenticationStateSaga, store);
 
 export default store;

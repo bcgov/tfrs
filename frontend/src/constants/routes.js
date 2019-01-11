@@ -18,14 +18,14 @@ export const CREDIT_TRADE_API = '/credit_trades';
 export const COMMENTS_API = '/comments';
 
 // to add additional reference data, just add the endpoint and desired state name here
-export let REFERENCE_DATA_API_ENDPOINTS = {
+export const REFERENCE_DATA_API_ENDPOINTS = {
   organizationTypes: '/organizations/types',
   organizationActionsTypes: '/organizations/actions_types',
   organizationStatuses: '/organizations/statuses'
 };
 
 if (CONFIG.SECURE_DOCUMENT_UPLOAD.ENABLED) {
-  REFERENCE_DATA_API_ENDPOINTS['documentCategories'] = '/documents/categories'
+  REFERENCE_DATA_API_ENDPOINTS.documentCategories = '/documents/categories';
 }
 
 export const USERS = '/users';

@@ -43,11 +43,9 @@ class DataCreationUtilities(object):
     def create_test_user() -> dict:
         """Create a test fuel supplier user"""
         user = User()
-        user.authorization_guid = str(uuid.uuid4())
 
-        generated_name = 'test_{0}'.format(user.authorization_guid[8:])
+        generated_name = 'test_{0}'.format(str(uuid.uuid4())[8:])
         user.username = generated_name
-        user.authorization_email = '{0}@test.com'.format(generated_name)
 
         user.first_name = 'Test'
         user.last_name = 'User'

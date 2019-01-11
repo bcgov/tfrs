@@ -29,6 +29,7 @@ class UserAddContainer extends Component {
         organization: null,
         mobilePhone: '',
         status: 'active',
+        title: '',
         workPhone: '',
         roles: []
       }
@@ -126,7 +127,8 @@ class UserAddContainer extends Component {
 
           return false;
         }),
-        is_active: this.state.fields.status === 'active'
+        is_active: this.state.fields.status === 'active',
+        title: this.state.fields.title
       },
       email: this.state.fields.bceid
     };

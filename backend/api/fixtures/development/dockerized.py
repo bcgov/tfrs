@@ -74,25 +74,23 @@ class DockerEnvironment(OperationalDataScript):
         OrganizationBalance(organization=Organization.objects.get_by_natural_key(self._orgs[2]), credit_trade=None,
                             validated_credits=1000, effective_date=datetime.today().strftime('%Y-%m-%d')).save()
 
-        User(email='fs1@email.com', authorization_guid=uuid.uuid4(), username='fs1', authorization_id='fs1',
-             first_name='FS1', last_name='Supplier', display_name='Fuel Supplier', authorization_directory='BCeID',
+        User(email='fs1@email.com', username='fs1',
+             first_name='FS1', last_name='Supplier', display_name='Fuel Supplier',
              organization=Organization.objects.get_by_natural_key(self._orgs[0])).save()
-        User(email='fs2@email.com', authorization_guid=uuid.uuid4(), username='fs2', authorization_id='fs2',
+        User(email='fs2@email.com', username='fs2',
              first_name='FS2', last_name='Supplier', display_name='Another Fuel Supplier',
-             authorization_directory='BCeID',
              organization=Organization.objects.get_by_natural_key(self._orgs[1])).save()
-        User(email='fs3@email.com', authorization_guid=uuid.uuid4(), username='fs3', authorization_id='fs3',
+        User(email='fs3@email.com', username='fs3',
              first_name='FS3', last_name='Supplier', display_name='Third Fuel Supplier',
-             authorization_directory='BCeID',
              organization=Organization.objects.get_by_natural_key(self._orgs[2])).save()
-        User(email='analyst@email.com', authorization_guid=uuid.uuid4(), username='analyst', authorization_id='analyst',
-             first_name='Analyst', last_name='Government', display_name='(Analyst)', authorization_directory='IDIR',
+        User(email='analyst@email.com', username='analyst',
+             first_name='Analyst', last_name='Government', display_name='Analyst',
              organization=Organization.objects.get(id=1)).save()
-        User(email='director@email.com', authorization_guid=uuid.uuid4(), username='director',
-             authorization_id='director', first_name='Director', last_name='Government', display_name='(Director)',
-             authorization_directory='IDIR', organization=Organization.objects.get(id=1)).save()
-        User(email='tfrsadmin@email.com', authorization_guid=uuid.uuid4(), username='tfrsadmin', authorization_id='tfrsadmin',
-             first_name='TfrsAdmin', last_name='Government', display_name='(TfrsAdmin)', authorization_directory='IDIR',
+        User(email='director@email.com', username='director',
+             first_name='Director', last_name='Government', display_name='(Director)',
+             organization=Organization.objects.get(id=1)).save()
+        User(email='tfrsadmin@email.com', username='tfrsadmin',
+             first_name='TfrsAdmin', last_name='Government', display_name='(TfrsAdmin)',
              organization=Organization.objects.get(id=1)).save()
 
         UserRole(user=User.objects.get(username='fs1'), role=Role.objects.get_by_natural_key('FSManager')).save()

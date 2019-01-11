@@ -93,11 +93,6 @@ class CreditTradeService(object):
                  (previous_history is None or previous_history.status.status == 'Draft'))):
             is_internal_history_record = True
 
-        credit_trade_update_time = (
-            credit_trade.create_timestamp
-            if is_new
-            else credit_trade.update_timestamp)
-
         user = (
             credit_trade.create_user
             if is_new
@@ -130,11 +125,9 @@ class CreditTradeService(object):
             note=credit_trade.note,
             compliance_period_id=credit_trade.compliance_period_id,
             is_internal_history_record=is_internal_history_record,
-            credit_trade_update_time=credit_trade_update_time,
             is_rescinded=credit_trade.is_rescinded,
             create_user=user,
             update_user=user,
-            user=user,
             user_role_id=role_id
         )
 

@@ -32,6 +32,7 @@ class UserEditContainer extends Component {
         organization: null,
         mobilePhone: '',
         status: 'active',
+        title: '',
         workPhone: '',
         roles: []
       }
@@ -73,11 +74,12 @@ class UserEditContainer extends Component {
       const fieldState = {
         firstName: props.user.details.firstName || '',
         lastName: props.user.details.lastName || '',
-        bceid: props.user.details.authorizationId || '',
+        bceid: props.user.details.keycloakEmail || '',
         email: props.user.details.email || '',
         organization: props.user.details.organization || null,
         mobilePhone: props.user.details.cellPhone || '',
         status: props.user.details.isActive ? 'active' : 'inactive',
+        title: props.user.details.title || '',
         workPhone: props.user.details.phone || '',
         roles: props.user.details.roles.map(role => ({
           id: role.id,
@@ -133,7 +135,8 @@ class UserEditContainer extends Component {
         }
         return false;
       }),
-      is_active: this.state.fields.status === 'active'
+      is_active: this.state.fields.status === 'active',
+      title: this.state.fields.title
     };
 
     const { id } = this.props.user.details;
