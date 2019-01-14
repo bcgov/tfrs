@@ -95,10 +95,15 @@ class CreditTradeViewSet(AuditableMixin, mixins.CreateModelMixin,
             Q(create_timestamp=None)) \
             .order_by('-create_timestamp').first()
 
+        most_recent_updated_organization = Organization.objects.filter(
+            ~Q(update_timestamp=None)) \
+            .order_by('-update_timestamp').first()
+
         digest = hashlib.sha256()
         # you could use anything here (like perhaps the PID or startup time
         digest.update(b'salt')
         digest.update('user {}'.format(self.request.user.username).encode('utf-8'))
+        digest.update('org {}'.format(most_recent_updated_organization.name).encode('utf-8'))
         digest.update(most_recent_updated_credit_trade.update_timestamp
                       .isoformat()
                       .encode('utf-8')
