@@ -27,18 +27,31 @@
       list-style-type: none;
       padding: 0;
 
-      button {
-        border: 0;
-        color: $red;
-      }
-
       li {
-        padding: 0.25rem 0 0.25rem 2.5rem;
+        padding: 0.25rem 0 0.25rem 3rem;
         position: relative;
+
+        button {
+          border: 0;
+          color: $red;
+        }
+
+        span {
+          vertical-align: middle;
+        }
 
         .error-message {
           color: $red;
           font-style: italic;
+        }
+
+        .filename {
+          display: inline-block;
+          max-width: 100%;
+          overflow: hidden;
+          text-align: left;
+          text-overflow: ellipsis;
+          vertical-align: middle;
         }
 
         .icon {
@@ -98,24 +111,28 @@
     .value {
       font-weight: bold;
 
-      button {
-        border: 0;
-        color: $link-color;
-        text-align: left;
-
-        &:hover {
-          color: $link-color-hover;
-        }
-      }
-
       &.files {
         list-style-position: outside;
         list-style-type: none;
         padding: 0;
 
         li {
-          padding: 0.25rem 0 0.25rem 2.5rem;
+          padding: 0.25rem 0 0.25rem 3rem;
           position: relative;
+
+          button {
+            border: 0;
+            color: $link-color;
+            max-width: 100%;
+            overflow: hidden;
+            padding: 0;
+            text-align: left;
+            text-overflow: ellipsis;
+    
+            &:hover {
+              color: $link-color-hover;
+            }
+          }
 
           .icon {
             bottom: 0;
