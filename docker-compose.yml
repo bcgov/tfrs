@@ -1,6 +1,28 @@
 version: '3'
 
 services:
+    scan-coordinator:
+      depends_on:
+        - clamav
+        - rabbit
+      environment:
+        - BYPASS_CLAMAV=false
+        - AMQP_HOST=rabbit
+        - AMQP_VHOST=/tfrs
+        - AMQP_USER=rabbitmq
+        - AMQP_PASSWORD=rabbitmq
+        - CLAMAV_HOST=clamav
+      env_file:
+      - minio.env
+      command: >
+        bash -c
+        "/wfi/wait-for-it.sh -t 14400 rabbit:5672 &&
+        /wfi/wait-for-it.sh -t 14400 clamav:3310 &&
+        scan-coordinator"
+      build:
+        dockerfile: Dockerfile
+        context: ./security-scan/scan-coordinator
+
     db:
         build:
             dockerfile: Dockerfile-postgres
@@ -51,7 +73,7 @@ services:
                 python3 manage.py makemigrations &&
                 python3 manage.py migrate &&
                 python3 manage.py load_ops_data api/fixtures/development/dockerized.py &&
-                python3 manage.py runserver 0.0.0.0:8000"
+                supervisord"
         expose:
             - 8000
         volumes:
@@ -98,6 +120,10 @@ services:
                 bash -c
                 "cat /tfrs/ready.txt &&
                 nginx -g \"daemon off;\""
+    clamav:
+      image: mkodockx/docker-clamav
+      ports:
+        - 3310:3310
     rabbit:
         image: rabbitmq:3.7-management
         hostname: "rabbit"

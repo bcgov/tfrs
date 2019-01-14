@@ -1,4 +1,4 @@
-export default class CreditTransferUtilityFunctions {
+export default class CreditTransactionRequestUtilityFunctions {
   static canComment (loggedInUser, item) {
     if (!item.commentActions) {
       return false;

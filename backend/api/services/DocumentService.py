@@ -27,7 +27,6 @@ class DocumentService(object):
             role_id = user.roles.first().id
 
         history = DocumentHistory(
-            comment=document.comment,
             compliance_period_id=document.compliance_period_id,
             create_user=document.create_user,
             document_id=document.id,
