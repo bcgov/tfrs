@@ -53,12 +53,12 @@ test('Validate Files should only return allowed file types', () => {
   }]);
 });
 
-test('Get File size should convert bytes to MB', () => {
+test('Get File size should convert bytes to mb', () => {
   expect(getFileSize(0)).toEqual('0 bytes');
-  expect(getFileSize(1000)).toEqual('1 KB');
-  expect(getFileSize(1000000)).toEqual('1 MB');
-  expect(getFileSize(1000000000)).toEqual('1 GB');
-  expect(getFileSize(1000000000000)).toEqual('1 TB');
+  expect(getFileSize(1000)).toEqual('1 kb');
+  expect(getFileSize(1000000)).toEqual('1 mb');
+  expect(getFileSize(1000000000)).toEqual('1 gb');
+  expect(getFileSize(1000000000000)).toEqual('1 tb');
 });
 
 test('Get Mime Type should return a font-awesome icon to be used', () => {
