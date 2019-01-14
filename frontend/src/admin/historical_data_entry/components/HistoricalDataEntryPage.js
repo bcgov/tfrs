@@ -60,7 +60,7 @@ const HistoricalDataEntryPage = (props) => {
         id="confirmDelete"
         title="Confirm Delete"
       >
-        Do you want to delete this credit transfer?
+        Do you want to delete this credit transaction?
       </Modal>
 
       <Modal
