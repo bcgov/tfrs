@@ -69,7 +69,7 @@ class TestCreditTradesCaching(BaseTestCase):
         got_etag = response['ETag']
         self.assertGreater(len(got_etag), 32)
 
-        response = self.clients['gov_analyst']\
+        response = self.clients['gov_analyst'] \
             .get('/api/credit_trades', HTTP_IF_NONE_MATCH='nonsense etag')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         got_etag = response['ETag']
@@ -84,7 +84,7 @@ class TestCreditTradesCaching(BaseTestCase):
         # they see different things
         self.assertNotEqual(got_etag_for_fs1, got_etag)
 
-        response = self.clients['gov_analyst']\
+        response = self.clients['gov_analyst'] \
             .get('/api/credit_trades', HTTP_IF_NONE_MATCH=got_etag)
         self.assertEqual(response.status_code, status.HTTP_304_NOT_MODIFIED)
 
@@ -130,13 +130,13 @@ class TestCreditTradesCaching(BaseTestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
         # now our etag should be invalid again
-        response = self.clients['gov_analyst']\
+        response = self.clients['gov_analyst'] \
             .get('/api/credit_trades', HTTP_IF_NONE_MATCH=got_etag)
         got_etag = response['ETag']
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
         # now good again (but different)
-        response = self.clients['gov_analyst']\
+        response = self.clients['gov_analyst'] \
             .get('/api/credit_trades', HTTP_IF_NONE_MATCH=got_etag)
         self.assertEqual(response.status_code, status.HTTP_304_NOT_MODIFIED)
 
@@ -149,12 +149,28 @@ class TestCreditTradesCaching(BaseTestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
         # now our etag should be invalid yet again
-        response = self.clients['gov_analyst']\
+        response = self.clients['gov_analyst'] \
             .get('/api/credit_trades', HTTP_IF_NONE_MATCH=got_etag)
         got_etag = response['ETag']
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
         # now good again (but different)
-        response = self.clients['gov_analyst']\
+        response = self.clients['gov_analyst'] \
             .get('/api/credit_trades', HTTP_IF_NONE_MATCH=got_etag)
         self.assertEqual(response.status_code, status.HTTP_304_NOT_MODIFIED)
+
+        # Rename an organization and confirm that this invalidates the Etag
+        response = self.clients['gov_analyst'].patch('/api/organizations/{}'.format(
+            self.users['fs_user_2'].organization.id
+        ),
+            content_type='application/json',
+            data=json.dumps({
+                'name': 'Renamed FS2'
+            })
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        response = self.clients['gov_analyst'] \
+            .get('/api/credit_trades', HTTP_IF_NONE_MATCH=got_etag)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
