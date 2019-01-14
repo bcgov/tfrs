@@ -1,6 +1,6 @@
 {
     "kind": "Template",
-    "apiVersion": "v1",
+    "apiVersion": "template.openshift.io/v1",
     "metadata": {
         "name": "tfrs-develop",
         "creationTimestamp": null
@@ -8,10 +8,10 @@
     "objects": [
         {
             "kind": "ImageStream",
-            "apiVersion": "v1",
+            "apiVersion": "image.openshift.io/v1",
             "metadata": {
                 "name": "tfrs-develop",
-                "generation": 239,
+                "generation": 306,
                 "creationTimestamp": null
             },
             "spec": {
@@ -26,7 +26,7 @@
                             "kind": "DockerImage",
                             "name": "docker-registry.default.svc:5000/mem-tfrs-tools/tfrs-develop:dev"
                         },
-                        "generation": 239,
+                        "generation": 306,
                         "importPolicy": {},
                         "referencePolicy": {
                             "type": "Source"
@@ -66,7 +66,7 @@
         },
         {
             "kind": "BuildConfig",
-            "apiVersion": "v1",
+            "apiVersion": "build.openshift.io/v1",
             "metadata": {
                 "name": "tfrs-develop",
                 "creationTimestamp": null,

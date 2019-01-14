@@ -1,6 +1,6 @@
 {
     "kind": "Template",
-    "apiVersion": "v1",
+    "apiVersion": "template.openshift.io/v1",
     "metadata": {
         "name": "sonarqube",
         "creationTimestamp": null
@@ -8,10 +8,10 @@
     "objects": [
         {
             "kind": "DeploymentConfig",
-            "apiVersion": "v1",
+            "apiVersion": "apps.openshift.io/v1",
             "metadata": {
                 "name": "postgresql-sonarqube",
-                "generation": 1,
+                "generation": 6,
                 "creationTimestamp": null,
                 "labels": {
                     "app": "sonarqube",
@@ -39,7 +39,8 @@
                                 "kind": "ImageStreamTag",
                                 "namespace": "openshift",
                                 "name": "postgresql:9.5"
-                            }
+                            },
+                            "lastTriggeredImage": "docker-registry.default.svc:5000/openshift/postgresql@sha256:f90b4ce7c2328e2f38d01e37b3a69cf60f06433df907ecb9432b0934af9624ed"
                         }
                     },
                     {
@@ -72,7 +73,7 @@
                         "containers": [
                             {
                                 "name": "postgresql",
-                                "image": "registry.access.redhat.com/rhscl/postgresql-95-rhel7@sha256:f90b4ce7c2328e2f38d01e37b3a69cf60f06433df907ecb9432b0934af9624ed",
+                                "image": "docker-registry.default.svc:5000/openshift/postgresql@sha256:f90b4ce7c2328e2f38d01e37b3a69cf60f06433df907ecb9432b0934af9624ed",
                                 "ports": [
                                     {
                                         "containerPort": 5432,
@@ -162,10 +163,10 @@
         },
         {
             "kind": "DeploymentConfig",
-            "apiVersion": "v1",
+            "apiVersion": "apps.openshift.io/v1",
             "metadata": {
                 "name": "sonarqube",
-                "generation": 1,
+                "generation": 10,
                 "creationTimestamp": null,
                 "labels": {
                     "app": "sonarqube",
@@ -200,7 +201,8 @@
                                 "kind": "ImageStreamTag",
                                 "namespace": "openshift",
                                 "name": "sonarqube:6.7.1"
-                            }
+                            },
+                            "lastTriggeredImage": "172.50.0.2:5000/openshift/sonarqube@sha256:6f42c766e3db030f154f1ebca7188191a3717990537e0c7dc08bf0a680d4b1f1"
                         }
                     }
                 ],
@@ -406,7 +408,7 @@
         },
         {
             "kind": "Route",
-            "apiVersion": "v1",
+            "apiVersion": "route.openshift.io/v1",
             "metadata": {
                 "name": "sonarqube",
                 "creationTimestamp": null,

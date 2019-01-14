@@ -1,6 +1,6 @@
 {
     "kind": "Template",
-    "apiVersion": "v1",
+    "apiVersion": "template.openshift.io/v1",
     "metadata": {
         "name": "test-schemaspy",
         "creationTimestamp": null
@@ -72,7 +72,7 @@
         },
         {
             "kind": "Route",
-            "apiVersion": "v1",
+            "apiVersion": "route.openshift.io/v1",
             "metadata": {
                 "name": "schema-spy-public",
                 "creationTimestamp": null,
@@ -115,7 +115,7 @@
         },
         {
             "kind": "Route",
-            "apiVersion": "v1",
+            "apiVersion": "route.openshift.io/v1",
             "metadata": {
                 "name": "schema-spy-audit",
                 "creationTimestamp": null,
@@ -158,10 +158,10 @@
         },
         {
             "kind": "DeploymentConfig",
-            "apiVersion": "v1",
+            "apiVersion": "apps.openshift.io/v1",
             "metadata": {
                 "name": "schema-spy-audit",
-                "generation": 1,
+                "generation": 39,
                 "creationTimestamp": null,
                 "labels": {
                     "template": "schema-spy-public-template"
@@ -191,7 +191,8 @@
                                 "kind": "ImageStreamTag",
                                 "namespace": "mem-tfrs-tools",
                                 "name": "schema-spy:latest"
-                            }
+                            },
+                            "lastTriggeredImage": "docker-registry.default.svc:5000/mem-tfrs-tools/schema-spy@sha256:15963e2ee8916126459a8d8018667d7001d626b188668a2f13428e6e881d24ca"
                         }
                     },
                     {
@@ -256,7 +257,7 @@
                                 ],
                                 "resources": {
                                     "limits": {
-                                        "cpu": "250m",
+                                        "cpu": "500m",
                                         "memory": "1Gi"
                                     }
                                 },
@@ -308,10 +309,10 @@
         },
         {
             "kind": "DeploymentConfig",
-            "apiVersion": "v1",
+            "apiVersion": "apps.openshift.io/v1",
             "metadata": {
                 "name": "schema-spy-public",
-                "generation": 1,
+                "generation": 43,
                 "creationTimestamp": null,
                 "labels": {
                     "template": "schema-spy-public-template"
@@ -341,7 +342,8 @@
                                 "kind": "ImageStreamTag",
                                 "namespace": "mem-tfrs-tools",
                                 "name": "schema-spy:latest"
-                            }
+                            },
+                            "lastTriggeredImage": "docker-registry.default.svc:5000/mem-tfrs-tools/schema-spy@sha256:15963e2ee8916126459a8d8018667d7001d626b188668a2f13428e6e881d24ca"
                         }
                     },
                     {
@@ -402,7 +404,7 @@
                                 ],
                                 "resources": {
                                     "limits": {
-                                        "cpu": "250m",
+                                        "cpu": "1",
                                         "memory": "1Gi"
                                     }
                                 },
