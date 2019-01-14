@@ -198,10 +198,12 @@ class CreditTransactionRequestFormDetails extends Component {
                         <span className="icon">
                           <FontAwesomeIcon icon={getIcon(file.type)} />
                         </span>
-                        {file.name} - {getFileSize(file.size)}
-                        <button type="button" onClick={() => this._removeFile(file)}>
-                          <FontAwesomeIcon icon="minus-circle" />
-                        </button>
+                        <span className="filename">{file.name}</span>
+                        <span> - {getFileSize(file.size)}
+                          <button type="button" onClick={() => this._removeFile(file)}>
+                            <FontAwesomeIcon icon="minus-circle" />
+                          </button>
+                        </span>
                       </li>
                     ))}
                     {this.props.fields.files.length === 0 &&
@@ -221,7 +223,8 @@ class CreditTransactionRequestFormDetails extends Component {
                         <span className="icon">
                           <FontAwesomeIcon icon={getIcon(file.type)} />
                         </span>
-                        {file.name} - {getFileSize(file.size)}
+                        <span className="filename">{file.name}</span>
+                        <span> - {getFileSize(file.size)}</span>
                         {file.size > CONFIG.SECURE_DOCUMENT_UPLOAD.MAX_FILE_SIZE &&
                         <span className="error-message"> File size too large </span>
                         }
