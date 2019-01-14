@@ -1,6 +1,6 @@
 {
     "kind": "Template",
-    "apiVersion": "v1",
+    "apiVersion": "template.openshift.io/v1",
     "metadata": {
         "name": "prod-schemaspy",
         "creationTimestamp": null
@@ -72,7 +72,7 @@
         },
         {
             "kind": "Route",
-            "apiVersion": "v1",
+            "apiVersion": "route.openshift.io/v1",
             "metadata": {
                 "name": "schema-spy-public",
                 "creationTimestamp": null,
@@ -81,7 +81,7 @@
                 }
             },
             "spec": {
-                "host": "schema-spy-public-mem-tfrs-test.pathfinder.gov.bc.ca",
+                "host": "schema-spy-public-mem-tfrs-prod.pathfinder.gov.bc.ca",
                 "to": {
                     "kind": "Service",
                     "name": "schema-spy-public",
@@ -99,13 +99,13 @@
             "status": {
                 "ingress": [
                     {
-                        "host": "schema-spy-public-mem-tfrs-test.pathfinder.gov.bc.ca",
+                        "host": "schema-spy-public-mem-tfrs-prod.pathfinder.gov.bc.ca",
                         "routerName": "router",
                         "conditions": [
                             {
                                 "type": "Admitted",
                                 "status": "True",
-                                "lastTransitionTime": "2018-08-31T23:12:15Z"
+                                "lastTransitionTime": "2018-08-31T23:25:31Z"
                             }
                         ],
                         "wildcardPolicy": "None"
@@ -115,7 +115,7 @@
         },
         {
             "kind": "Route",
-            "apiVersion": "v1",
+            "apiVersion": "route.openshift.io/v1",
             "metadata": {
                 "name": "schema-spy-audit",
                 "creationTimestamp": null,
@@ -124,7 +124,7 @@
                 }
             },
             "spec": {
-                "host": "schema-spy-audit-mem-tfrs-test.pathfinder.gov.bc.ca",
+                "host": "schema-spy-audit-mem-tfrs-prod.pathfinder.gov.bc.ca",
                 "to": {
                     "kind": "Service",
                     "name": "schema-spy-audit",
@@ -142,13 +142,13 @@
             "status": {
                 "ingress": [
                     {
-                        "host": "schema-spy-audit-mem-tfrs-test.pathfinder.gov.bc.ca",
+                        "host": "schema-spy-audit-mem-tfrs-prod.pathfinder.gov.bc.ca",
                         "routerName": "router",
                         "conditions": [
                             {
                                 "type": "Admitted",
                                 "status": "True",
-                                "lastTransitionTime": "2018-08-31T23:09:19Z"
+                                "lastTransitionTime": "2018-08-31T23:25:06Z"
                             }
                         ],
                         "wildcardPolicy": "None"
@@ -158,10 +158,10 @@
         },
         {
             "kind": "DeploymentConfig",
-            "apiVersion": "v1",
+            "apiVersion": "apps.openshift.io/v1",
             "metadata": {
                 "name": "schema-spy-audit",
-                "generation": 1,
+                "generation": 11,
                 "creationTimestamp": null,
                 "labels": {
                     "template": "schema-spy-public-template"
@@ -191,7 +191,8 @@
                                 "kind": "ImageStreamTag",
                                 "namespace": "mem-tfrs-tools",
                                 "name": "schema-spy:latest"
-                            }
+                            },
+                            "lastTriggeredImage": "docker-registry.default.svc:5000/mem-tfrs-tools/schema-spy@sha256:15963e2ee8916126459a8d8018667d7001d626b188668a2f13428e6e881d24ca"
                         }
                     },
                     {
@@ -256,7 +257,7 @@
                                 ],
                                 "resources": {
                                     "limits": {
-                                        "cpu": "250m",
+                                        "cpu": "500m",
                                         "memory": "1Gi"
                                     }
                                 },
@@ -308,10 +309,10 @@
         },
         {
             "kind": "DeploymentConfig",
-            "apiVersion": "v1",
+            "apiVersion": "apps.openshift.io/v1",
             "metadata": {
                 "name": "schema-spy-public",
-                "generation": 1,
+                "generation": 11,
                 "creationTimestamp": null,
                 "labels": {
                     "template": "schema-spy-public-template"
@@ -341,7 +342,8 @@
                                 "kind": "ImageStreamTag",
                                 "namespace": "mem-tfrs-tools",
                                 "name": "schema-spy:latest"
-                            }
+                            },
+                            "lastTriggeredImage": "docker-registry.default.svc:5000/mem-tfrs-tools/schema-spy@sha256:15963e2ee8916126459a8d8018667d7001d626b188668a2f13428e6e881d24ca"
                         }
                     },
                     {
@@ -402,7 +404,7 @@
                                 ],
                                 "resources": {
                                     "limits": {
-                                        "cpu": "250m",
+                                        "cpu": "1",
                                         "memory": "1Gi"
                                     }
                                 },
@@ -412,7 +414,7 @@
                                         "port": 8080,
                                         "scheme": "HTTP"
                                     },
-                                    "initialDelaySeconds": 200,
+                                    "initialDelaySeconds": 300,
                                     "timeoutSeconds": 3000,
                                     "periodSeconds": 10,
                                     "successThreshold": 1,
@@ -424,7 +426,7 @@
                                         "port": 8080,
                                         "scheme": "HTTP"
                                     },
-                                    "initialDelaySeconds": 200,
+                                    "initialDelaySeconds": 300,
                                     "timeoutSeconds": 3000,
                                     "periodSeconds": 10,
                                     "successThreshold": 1,

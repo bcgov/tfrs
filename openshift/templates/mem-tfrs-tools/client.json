@@ -1,6 +1,6 @@
 {
     "kind": "Template",
-    "apiVersion": "v1",
+    "apiVersion": "template.openshift.io/v1",
     "metadata": {
         "name": "client",
         "creationTimestamp": null
@@ -8,10 +8,10 @@
     "objects": [
         {
             "kind": "ImageStream",
-            "apiVersion": "v1",
+            "apiVersion": "image.openshift.io/v1",
             "metadata": {
                 "name": "client",
-                "generation": 574,
+                "generation": 595,
                 "creationTimestamp": null,
                 "annotations": {
                     "description": "Keeps track of changes in the client / front end image"
@@ -42,7 +42,7 @@
                             "kind": "DockerImage",
                             "name": "docker-registry.default.svc:5000/mem-tfrs-tools/client:prod"
                         },
-                        "generation": 567,
+                        "generation": 595,
                         "importPolicy": {},
                         "referencePolicy": {
                             "type": "Source"
@@ -55,7 +55,20 @@
                             "kind": "DockerImage",
                             "name": "docker-registry.default.svc:5000/mem-tfrs-tools/client:test"
                         },
-                        "generation": 574,
+                        "generation": 594,
+                        "importPolicy": {},
+                        "referencePolicy": {
+                            "type": "Source"
+                        }
+                    },
+                    {
+                        "name": "testbackup",
+                        "annotations": null,
+                        "from": {
+                            "kind": "DockerImage",
+                            "name": "docker-registry.default.svc:5000/mem-tfrs-tools/client:testbackup"
+                        },
+                        "generation": 592,
                         "importPolicy": {},
                         "referencePolicy": {
                             "type": "Source"
@@ -69,7 +82,7 @@
         },
         {
             "kind": "ImageStream",
-            "apiVersion": "v1",
+            "apiVersion": "image.openshift.io/v1",
             "metadata": {
                 "name": "client-angular-app",
                 "generation": 1,
@@ -104,7 +117,7 @@
         },
         {
             "kind": "BuildConfig",
-            "apiVersion": "v1",
+            "apiVersion": "build.openshift.io/v1",
             "metadata": {
                 "name": "client",
                 "creationTimestamp": null,
@@ -132,6 +145,7 @@
                                 "kind": "ImageStreamTag",
                                 "name": "client-angular-app:latest"
                             },
+                            "as": null,
                             "paths": [
                                 {
                                     "sourcePath": "/opt/app-root/src/public/.",
@@ -171,7 +185,7 @@
         },
         {
             "kind": "BuildConfig",
-            "apiVersion": "v1",
+            "apiVersion": "build.openshift.io/v1",
             "metadata": {
                 "name": "client-angular-app-build",
                 "creationTimestamp": null,
@@ -194,7 +208,7 @@
                     "type": "Git",
                     "git": {
                         "uri": "https://github.com/bcgov/tfrs.git",
-                        "ref": "v1.0.7"
+                        "ref": "v1.2.7"
                     },
                     "contextDir": "frontend"
                 },
@@ -204,7 +218,7 @@
                         "from": {
                             "kind": "ImageStreamTag",
                             "namespace": "openshift",
-                            "name": "nodejs:6"
+                            "name": "nodejs:8"
                         }
                     }
                 },

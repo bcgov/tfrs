@@ -1,16 +1,16 @@
-apiVersion: v1
+apiVersion: template.openshift.io/v1
 kind: Template
 metadata:
   creationTimestamp: null
   name: dev-schemaspy--output=json
 objects:
-- apiVersion: v1
+- apiVersion: apps.openshift.io/v1
   kind: DeploymentConfig
   metadata:
     annotations:
       description: Defines how to deploy the container.
     creationTimestamp: null
-    generation: 1
+    generation: 148
     labels:
       template: tfrs-schemaspy-public-template
     name: schema-spy-audit
@@ -79,7 +79,7 @@ objects:
             timeoutSeconds: 3000
           resources:
             limits:
-              cpu: "1"
+              cpu: 500m
               memory: 1Gi
           terminationMessagePath: /dev/termination-log
           terminationMessagePolicy: File
@@ -98,6 +98,7 @@ objects:
           kind: ImageStreamTag
           name: schema-spy:latest
           namespace: mem-tfrs-tools
+        lastTriggeredImage: docker-registry.default.svc:5000/mem-tfrs-tools/schema-spy@sha256:15963e2ee8916126459a8d8018667d7001d626b188668a2f13428e6e881d24ca
       type: ImageChange
     - type: ConfigChange
   status:
@@ -107,13 +108,13 @@ objects:
     replicas: 0
     unavailableReplicas: 0
     updatedReplicas: 0
-- apiVersion: v1
+- apiVersion: apps.openshift.io/v1
   kind: DeploymentConfig
   metadata:
     annotations:
       description: Defines how to deploy the container.
     creationTimestamp: null
-    generation: 1
+    generation: 151
     labels:
       template: schema-spy-public-template
     name: schema-spy-public
@@ -197,6 +198,7 @@ objects:
           kind: ImageStreamTag
           name: schema-spy:latest
           namespace: mem-tfrs-tools
+        lastTriggeredImage: docker-registry.default.svc:5000/mem-tfrs-tools/schema-spy@sha256:15963e2ee8916126459a8d8018667d7001d626b188668a2f13428e6e881d24ca
       type: ImageChange
     - type: ConfigChange
   status:
@@ -248,7 +250,7 @@ objects:
     type: ClusterIP
   status:
     loadBalancer: {}
-- apiVersion: v1
+- apiVersion: route.openshift.io/v1
   kind: Route
   metadata:
     creationTimestamp: null
@@ -276,7 +278,7 @@ objects:
       host: schema-spy-public-mem-tfrs-dev.pathfinder.gov.bc.ca
       routerName: router
       wildcardPolicy: None
-- apiVersion: v1
+- apiVersion: route.openshift.io/v1
   kind: Route
   metadata:
     creationTimestamp: null
