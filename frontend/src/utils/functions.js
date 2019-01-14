@@ -29,7 +29,7 @@ const getFileSize = (bytes) => {
   }
 
   const k = 1000;
-  const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
+  const sizes = ['bytes', 'kb', 'mb', 'gb', 'tb'];
   let i = Math.floor(Math.log(bytes) / Math.log(k));
 
   if (i > 4) { // nothing bigger than a terrabyte
