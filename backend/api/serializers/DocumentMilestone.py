@@ -36,6 +36,6 @@ class DocumentMilestoneSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = DocumentMilestone
-        fields = ('agreement_name', 'create_timestamp', 'create_user',
-                  'milestone', 'update_timestamp', 'update_user')
+        fields = ('create_timestamp', 'create_user', 'milestone',
+                  'update_timestamp', 'update_user')
         read_only_fields = ('id',)

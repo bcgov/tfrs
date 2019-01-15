@@ -30,6 +30,7 @@ from api.models.DocumentMilestone import DocumentMilestone
 
 from api.serializers.CompliancePeriod import CompliancePeriodSerializer
 from api.serializers.DocumentComment import DocumentCommentSerializer
+from api.serializers.DocumentMilestone import DocumentMilestoneSerializer
 from api.serializers.DocumentStatus import DocumentStatusSerializer
 from api.serializers.DocumentType import DocumentTypeSerializer
 from api.serializers.User import UserMinSerializer
@@ -105,7 +106,6 @@ class DocumentCreateSerializer(serializers.ModelSerializer):
             DocumentMilestone.objects.create(
                 document=document,
                 create_user=document.create_user,
-                agreement_name=request.data.get('agreement_name'),
                 milestone=request.data.get('milestone')
             )
 
@@ -127,7 +127,7 @@ class DocumentCreateSerializer(serializers.ModelSerializer):
         model = Document
         fields = ('compliance_period', 'create_user', 'id',
                   'status', 'title', 'type', 'milestone',
-                  'attachments', 'comments')
+                  'attachments', 'comments', 'record_number')
         read_only_fields = ('id',)
 
 
@@ -140,6 +140,7 @@ class DocumentDetailSerializer(serializers.ModelSerializer):
     comment_actions = serializers.SerializerMethodField()
     comments = serializers.SerializerMethodField()
     compliance_period = CompliancePeriodSerializer(read_only=True)
+    milestone = serializers.SerializerMethodField()
     status = DocumentStatusSerializer(read_only=True)
     type = DocumentTypeSerializer(read_only=True)
 
@@ -192,18 +193,31 @@ class DocumentDetailSerializer(serializers.ModelSerializer):
         request = self.context.get('request')
         return DocumentCommentActions.available_comment_actions(request, obj)
 
+    def get_milestone(self, obj):
+        """
+        Additional information for milestone evidences
+        """
+        if obj.type.the_type == 'Evidence':
+            milestone = obj.milestone
+            serializer = DocumentMilestoneSerializer(milestone)
+
+            return serializer.data
+
+        return None
+
     class Meta:
         model = Document
         fields = (
             'id', 'title',
             'create_timestamp', 'create_user', 'update_timestamp',
             'update_user', 'status', 'type', 'attachments',
-            'compliance_period', 'actions', 'comment_actions', 'comments')
+            'compliance_period', 'actions', 'comment_actions', 'comments',
+            'milestone')
 
         read_only_fields = (
             'id', 'create_timestamp', 'create_user', 'update_timestamp',
             'update_user', 'title', 'status', 'type', 'attachments',
-            'compliance_period', 'actions', 'comment_actions')
+            'compliance_period', 'actions', 'comment_actions', 'milestone')
 
 
 class DocumentMinSerializer(serializers.ModelSerializer):

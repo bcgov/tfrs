@@ -21,27 +21,21 @@ const CreditTransactionRequestDetails = props => (
         <div className="col-md-6">
           <div className="row">
             <div className="form-group col-md-12">
-              <label htmlFor="attachment-category">Attachment Category:
-                <div className="value">&nbsp;</div>
-              </label>
-            </div>
-          </div>
-
-          <div className="row">
-            <div className="form-group col-md-12">
               <label htmlFor="compliance-period">Compliance Period:
                 <div className="value">{props.item.compliancePeriod.description}</div>
               </label>
             </div>
           </div>
 
+          {props.item.milestone &&
           <div className="row">
             <div className="form-group col-md-12">
               <label htmlFor="milestone-id">Milestone:
-                <div className="value">&nbsp;</div>
+                <div className="value">{props.item.milestone.milestone}</div>
               </label>
             </div>
           </div>
+          }
 
           <div className="row">
             <div className="form-group col-md-12">

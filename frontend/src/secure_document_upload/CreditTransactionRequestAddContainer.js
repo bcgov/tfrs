@@ -22,7 +22,6 @@ class CreditTransactionRequestAddContainer extends Component {
 
     this.state = {
       fields: {
-        agreementName: '',
         attachmentCategory: '',
         comment: '',
         compliancePeriod: { id: 0, description: '' },
@@ -30,7 +29,9 @@ class CreditTransactionRequestAddContainer extends Component {
           id: props.match.params.type ? parseInt(props.match.params.type, 10) : 1
         },
         files: [],
-        milestone: ''
+        milestone: '',
+        recordNumber: '',
+        title: ''
       },
       validationErrors: {},
       uploadState: ''
@@ -106,12 +107,12 @@ class CreditTransactionRequestAddContainer extends Component {
 
     // API data structure
     const data = {
-      agreementName: this.state.fields.agreementName,
       comment: this.state.fields.comment,
       compliancePeriod: this.state.fields.compliancePeriod.id,
       milestone: this.state.fields.milestone,
+      recordNumber: this.state.fields.recordNumber,
       status: status.id,
-      title: this.state.fields.agreementName,
+      title: this.state.fields.title,
       type: this.state.fields.documentType.id,
       attachments
     };

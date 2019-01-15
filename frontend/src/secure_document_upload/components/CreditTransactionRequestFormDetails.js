@@ -66,18 +66,6 @@ class CreditTransactionRequestFormDetails extends Component {
           <div className="col-md-6">
             <div className="row main-form">
               <div className="form-group col-md-12">
-                <label htmlFor="attachment-category">Attachment Category:
-                  <input
-                    className="form-control"
-                    id="attachment-category"
-                    name="attachmentCategory"
-                  />
-                </label>
-              </div>
-            </div>
-
-            <div className="row main-form">
-              <div className="form-group col-md-12">
                 <label htmlFor="compliance-period">Compliance Period:
                   <select
                     className="form-control"
@@ -120,15 +108,15 @@ class CreditTransactionRequestFormDetails extends Component {
                 </div>,
                 <div className="row" key="agreement-name">
                   <div className="form-group col-md-12">
-                    <label htmlFor="agreement-name">Part 3 Agreement Name:
+                    <label htmlFor="title">Part 3 Agreement Name:
                       <input
                         className="form-control"
-                        id="agreement-name"
-                        name="agreementName"
+                        id="title"
+                        name="title"
                         onChange={this.props.handleInputChange}
                         required="required"
                         type="text"
-                        value={this.props.fields.agreementName}
+                        value={this.props.fields.title}
                       />
                     </label>
                   </div>
@@ -148,6 +136,42 @@ class CreditTransactionRequestFormDetails extends Component {
                   </div>
                 </div>
               ]}
+
+              {this.props.categories.find(category => (
+                category.types.find(type => (
+                  type.theType !== 'Evidence' && type.id === this.props.fields.documentType.id
+                ))
+              )) &&
+              <div className="row" key="title">
+                <div className="form-group col-md-12">
+                  <label htmlFor="title">Title:
+                    <input
+                      className="form-control"
+                      id="title"
+                      name="title"
+                      onChange={this.props.handleInputChange}
+                      required="required"
+                      type="text"
+                      value={this.props.fields.title}
+                    />
+                  </label>
+                </div>
+              </div>
+              }
+              <div className="row">
+                <div className="form-group col-md-12">
+                  <label htmlFor="record-number">Record Number:
+                    <input
+                      className="form-control"
+                      id="record-number"
+                      name="recordNumber"
+                      onChange={this.props.handleInputChange}
+                      type="text"
+                      value={this.props.fields.recordNumber}
+                    />
+                  </label>
+                </div>
+              </div>
             </div>
           </div>
 
@@ -261,7 +285,6 @@ CreditTransactionRequestFormDetails.propTypes = {
   compliancePeriods: PropTypes.arrayOf(PropTypes.shape()).isRequired,
   categories: PropTypes.arrayOf(PropTypes.shape()).isRequired,
   fields: PropTypes.shape({
-    agreementName: PropTypes.string,
     compliancePeriod: PropTypes.shape({
       description: PropTypes.string,
       id: PropTypes.number
@@ -270,7 +293,9 @@ CreditTransactionRequestFormDetails.propTypes = {
       id: PropTypes.number
     }),
     files: PropTypes.arrayOf(PropTypes.shape()),
-    milestone: PropTypes.string
+    milestone: PropTypes.string,
+    recordNumber: PropTypes.string,
+    title: PropTypes.string
   }).isRequired,
   handleInputChange: PropTypes.func.isRequired
 };

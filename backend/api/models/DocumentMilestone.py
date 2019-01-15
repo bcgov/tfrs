@@ -38,10 +38,6 @@ class DocumentMilestone(Auditable):
         null=False
     )
 
-    agreement_name = models.CharField(
-        blank=True, max_length=1000, null=True,
-    )
-
     milestone = models.CharField(
         blank=True, max_length=1000, null=True,
         db_comment="Record section of agreement containing milestone."
