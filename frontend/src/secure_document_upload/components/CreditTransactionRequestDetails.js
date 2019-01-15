@@ -8,7 +8,7 @@ import axios from 'axios';
 
 import history from '../../app/History';
 import * as Lang from '../../constants/langEnUs';
-import { getIcon } from '../../utils/functions';
+import { getFileSize, getIcon } from '../../utils/functions';
 import CreditTransactionRequestComment from './CreditTransactionRequestComment';
 import CreditTransactionRequestCommentButtons from './CreditTransactionRequestCommentButtons';
 import CreditTransactionRequestCommentForm from './CreditTransactionRequestCommentForm';
@@ -18,7 +18,7 @@ const CreditTransactionRequestDetails = props => (
     <h1>{props.item.type.description}</h1>
     <div className="credit-transaction-request-details">
       <div className="row">
-        <div className="col-md-6">
+        <div className="col-md-4">
           <div className="row">
             <div className="form-group col-md-12">
               <label htmlFor="compliance-period">Compliance Period:
@@ -58,7 +58,7 @@ const CreditTransactionRequestDetails = props => (
           </div>
         </div>
 
-        <div className="col-md-6">
+        <div className="col-md-8">
           <div className="row">
             <div className="form-group col-md-12">
               <label htmlFor="document-type">Attachment Type:
@@ -93,8 +93,8 @@ const CreditTransactionRequestDetails = props => (
                           });
                         }}
                       >
-                        {attachment.filename} - {attachment.size} bytes
-                      </button>
+                        {attachment.filename}
+                      </button> - {getFileSize(attachment.size)}
                     </li>
                   ))}
                 </ul>
