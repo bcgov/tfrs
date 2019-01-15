@@ -26,6 +26,7 @@ from rest_framework import serializers
 from api.models.DocumentFileAttachment import DocumentFileAttachment
 from api.models.Document import Document
 from api.models.DocumentComment import DocumentComment
+from api.models.DocumentMilestone import DocumentMilestone
 
 from api.serializers.CompliancePeriod import CompliancePeriodSerializer
 from api.serializers.DocumentComment import DocumentCommentSerializer
@@ -79,22 +80,40 @@ class DocumentCreateSerializer(serializers.ModelSerializer):
     """
     Creation Serializer for Documents
     """
+    from .DocumentMilestone import DocumentMilestoneSerializer
+
+    attachments = DocumentFileAttachmentSerializer(many=True, read_only=True)
+    comments = DocumentCommentSerializer(many=True, read_only=True)
+    milestone = DocumentMilestoneSerializer(read_only=True)
+
     def save(self, **kwargs):
         super().save(**kwargs)
+
+        document = self.instance
         request = self.context['request']
+
         files = request.data.get('attachments')
 
         for file in files:
             DocumentFileAttachment.objects.create(
-                document=self.instance,
+                document=document,
+                create_user=document.create_user,
                 **file
+            )
+
+        if document.type.the_type == 'Evidence':
+            DocumentMilestone.objects.create(
+                document=document,
+                create_user=document.create_user,
+                agreement_name=request.data.get('agreement_name'),
+                milestone=request.data.get('milestone')
             )
 
         comment = request.data.get('comment')
 
         if comment.strip():
             DocumentComment.objects.create(
-                document=self.instance,
+                document=document,
                 comment=comment,
                 create_user=request.user,
                 update_user=request.user,
@@ -107,7 +126,8 @@ class DocumentCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Document
         fields = ('compliance_period', 'create_user', 'id',
-                  'status', 'title', 'type')
+                  'status', 'title', 'type', 'milestone',
+                  'attachments', 'comments')
         read_only_fields = ('id',)
 
 

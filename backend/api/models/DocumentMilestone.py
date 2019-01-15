@@ -1,4 +1,3 @@
-# coding: utf-8
 """
     REST API Documentation for the NRS TFRS Credit Trading Application
 
@@ -21,32 +20,35 @@
     See the License for the specific language governing permissions and
     limitations under the License.
 """
-from db_comments.patch_fields import patch_fields
+from django.db import models
 
-from . import User
-from . import CreditTrade
-from . import CompliancePeriod
-from . import CreditTradeHistory
-from . import CreditTradeZeroReason
-from . import DocumentMilestone
-from . import DocumentStatus
-from . import DocumentType
-from . import OrganizationActionsType
-from . import OrganizationAddress
-from . import OrganizationBalance
-from . import OrganizationStatus
-from . import OrganizationType
-from . import Role
-from . import Permission
-from . import RolePermission
-from . import SigningAuthorityAssertion
-from . import SigningAuthorityConfirmation
-from . import UserRole
-from . import CreditTradeComment
-from . import UserCreationRequest
-from . import Document
-from . import DocumentComment
-from . import DocumentHistory
-from . import DocumentFileAttachment
+from api.models.Document import Document
+from auditable.models import Auditable
 
-patch_fields()
+
+class DocumentMilestone(Auditable):
+    """
+    Holds the credit trade proposal information between the
+    organizations
+    """
+    document = models.ForeignKey(
+        Document,
+        related_name='milestones',
+        on_delete=models.PROTECT,
+        null=False
+    )
+
+    agreement_name = models.CharField(
+        blank=True, max_length=1000, null=True,
+    )
+
+    milestone = models.CharField(
+        blank=True, max_length=1000, null=True,
+        db_comment="Record section of agreement containing milestone."
+    )
+
+    class Meta:
+        db_table = 'document_milestone'
+
+    db_table_comment = "Extension of the Document File for Milestone " \
+                       "attachment types."

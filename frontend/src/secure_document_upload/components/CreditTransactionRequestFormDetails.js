@@ -97,53 +97,57 @@ class CreditTransactionRequestFormDetails extends Component {
                 </label>
               </div>
 
-              <div className="row">
-                <div className="form-group col-md-12">
-                  <label htmlFor="milestone-id">Milestone:
-                    <input
-                      className="form-control"
-                      id="milestone-id"
-                      name="milestoneId"
-                      onChange={this.props.handleInputChange}
-                      placeholder="Record section of agreement containing milestone"
-                      required="required"
-                      type="text"
-                      value={this.props.fields.milestoneId}
-                    />
-                  </label>
+              {this.props.categories.find(category => (
+                category.types.find(type => (
+                  type.theType === 'Evidence' && type.id === this.props.fields.documentType.id
+                ))
+              )) && [
+                <div className="row" key="milestones">
+                  <div className="form-group col-md-12">
+                    <label htmlFor="milestone">Milestone:
+                      <input
+                        className="form-control"
+                        id="milestone"
+                        name="milestone"
+                        onChange={this.props.handleInputChange}
+                        placeholder="Record section of agreement containing milestone"
+                        required="required"
+                        type="text"
+                        value={this.props.fields.milestone}
+                      />
+                    </label>
+                  </div>
+                </div>,
+                <div className="row" key="agreement-name">
+                  <div className="form-group col-md-12">
+                    <label htmlFor="agreement-name">Part 3 Agreement Name:
+                      <input
+                        className="form-control"
+                        id="agreement-name"
+                        name="agreementName"
+                        onChange={this.props.handleInputChange}
+                        required="required"
+                        type="text"
+                        value={this.props.fields.agreementName}
+                      />
+                    </label>
+                  </div>
+                </div>,
+                <div className="row" key="agreement-comments">
+                  <div className="form-group col-md-12">
+                    <label htmlFor="comment">Comment:
+                      <textarea
+                        className="form-control"
+                        id="comment"
+                        name="comment"
+                        onChange={this.props.handleInputChange}
+                        placeholder="Provide an explanation of your Part 3 award milestone completion"
+                        rows="5"
+                      />
+                    </label>
+                  </div>
                 </div>
-              </div>
-
-              <div className="row">
-                <div className="form-group col-md-12">
-                  <label htmlFor="agreement-name">Part 3 Agreement Name:
-                    <input
-                      className="form-control"
-                      id="agreement-name"
-                      name="agreementName"
-                      onChange={this.props.handleInputChange}
-                      required="required"
-                      type="text"
-                      value={this.props.fields.agreementName}
-                    />
-                  </label>
-                </div>
-              </div>
-
-              <div className="row">
-                <div className="form-group col-md-12">
-                  <label htmlFor="comment">Comment:
-                    <textarea
-                      className="form-control"
-                      id="comment"
-                      name="comment"
-                      onChange={this.props.handleInputChange}
-                      placeholder="Provide an explanation of your Part 3 award milestone completion"
-                      rows="5"
-                    />
-                  </label>
-                </div>
-              </div>
+              ]}
             </div>
           </div>
 
@@ -266,7 +270,7 @@ CreditTransactionRequestFormDetails.propTypes = {
       id: PropTypes.number
     }),
     files: PropTypes.arrayOf(PropTypes.shape()),
-    milestoneId: PropTypes.string
+    milestone: PropTypes.string
   }).isRequired,
   handleInputChange: PropTypes.func.isRequired
 };

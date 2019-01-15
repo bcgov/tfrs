@@ -1,4 +1,3 @@
-# coding: utf-8
 """
     REST API Documentation for the NRS TFRS Credit Trading Application
 
@@ -21,32 +20,22 @@
     See the License for the specific language governing permissions and
     limitations under the License.
 """
-from db_comments.patch_fields import patch_fields
+from rest_framework import serializers
 
-from . import User
-from . import CreditTrade
-from . import CompliancePeriod
-from . import CreditTradeHistory
-from . import CreditTradeZeroReason
-from . import DocumentMilestone
-from . import DocumentStatus
-from . import DocumentType
-from . import OrganizationActionsType
-from . import OrganizationAddress
-from . import OrganizationBalance
-from . import OrganizationStatus
-from . import OrganizationType
-from . import Role
-from . import Permission
-from . import RolePermission
-from . import SigningAuthorityAssertion
-from . import SigningAuthorityConfirmation
-from . import UserRole
-from . import CreditTradeComment
-from . import UserCreationRequest
-from . import Document
-from . import DocumentComment
-from . import DocumentHistory
-from . import DocumentFileAttachment
+from api.models.DocumentMilestone import DocumentMilestone
 
-patch_fields()
+
+class DocumentMilestoneSerializer(serializers.ModelSerializer):
+    """
+    Default Serializer for Milestone type attachments
+    """
+    from .User import UserMinSerializer
+
+    create_user = UserMinSerializer(read_only=True)
+    update_user = UserMinSerializer(read_only=True)
+
+    class Meta:
+        model = DocumentMilestone
+        fields = ('agreement_name', 'create_timestamp', 'create_user',
+                  'milestone', 'update_timestamp', 'update_user')
+        read_only_fields = ('id',)

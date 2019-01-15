@@ -30,7 +30,7 @@ class CreditTransactionRequestAddContainer extends Component {
           id: props.match.params.type ? parseInt(props.match.params.type, 10) : 1
         },
         files: [],
-        milestoneId: ''
+        milestone: ''
       },
       validationErrors: {},
       uploadState: ''
@@ -106,8 +106,10 @@ class CreditTransactionRequestAddContainer extends Component {
 
     // API data structure
     const data = {
+      agreementName: this.state.fields.agreementName,
       comment: this.state.fields.comment,
       compliancePeriod: this.state.fields.compliancePeriod.id,
+      milestone: this.state.fields.milestone,
       status: status.id,
       title: this.state.fields.agreementName,
       type: this.state.fields.documentType.id,
