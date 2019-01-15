@@ -90,7 +90,6 @@ class OrganizationViewSet(AuditableMixin, viewsets.GenericViewSet,
         Get the organization balance
         """
         organization = self.get_object()
-        # print("Organization")
         balance = OrganizationBalance.objects.get(
             organization=organization,
             expiration_date=None)
