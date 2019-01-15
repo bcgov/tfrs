@@ -1,6 +1,6 @@
 {
     "kind": "Template",
-    "apiVersion": "v1",
+    "apiVersion": "template.openshift.io/v1",
     "metadata": {
         "name": "jenkins",
         "creationTimestamp": null
@@ -8,7 +8,7 @@
     "objects": [
         {
             "kind": "BuildConfig",
-            "apiVersion": "v1",
+            "apiVersion": "build.openshift.io/v1",
             "metadata": {
                 "name": "jenkins",
                 "creationTimestamp": null,
@@ -65,10 +65,10 @@
         },
         {
             "kind": "DeploymentConfig",
-            "apiVersion": "v1",
+            "apiVersion": "apps.openshift.io/v1",
             "metadata": {
                 "name": "jenkins",
-                "generation": 1,
+                "generation": 59,
                 "creationTimestamp": null,
                 "labels": {
                     "app": "jenkins-ephemeral",
@@ -100,7 +100,8 @@
                                 "kind": "ImageStreamTag",
                                 "namespace": "mem-tfrs-tools",
                                 "name": "jenkins:latest"
-                            }
+                            },
+                            "lastTriggeredImage": "docker-registry.default.svc:5000/mem-tfrs-tools/jenkins@sha256:a4a52031b04b8d1758ae36312bd255e312b0826adc05d462349de1f0114e8ada"
                         }
                     },
                     {
@@ -252,7 +253,7 @@
         },
         {
             "kind": "ImageStream",
-            "apiVersion": "v1",
+            "apiVersion": "image.openshift.io/v1",
             "metadata": {
                 "name": "jenkins",
                 "generation": 1,
@@ -352,7 +353,7 @@
         },
         {
             "kind": "Route",
-            "apiVersion": "v1",
+            "apiVersion": "route.openshift.io/v1",
             "metadata": {
                 "name": "jenkins",
                 "creationTimestamp": null,
