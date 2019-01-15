@@ -10,6 +10,7 @@ import CREDIT_TRANSFER_NOTIFICATIONS from '../../constants/settings/notification
 import GOVERNMENT_TRANSFER_NOTIFICATIONS from '../../constants/settings/notificationsGovernmentTransfers';
 import * as Lang from '../../constants/langEnUs';
 import SettingsTabs from './SettingsTabs';
+import DOCUMENT_NOTIFICATIONS from "../../constants/settings/notificationsDocuments";
 
 const SettingsDetails = props => (
   <div className="page_settings">
@@ -61,6 +62,17 @@ const SettingsDetails = props => (
           key="table-pvr"
           toggleCheck={props.toggleCheck}
           type="government-transfer"
+        />,
+        <h3 key="header-doc">
+          Document Uploads
+        </h3>,
+        <NotificationsCreditTransactionsTable
+          addToFields={props.addToFields}
+          fields={props.fields.settings.notifications}
+          items={DOCUMENT_NOTIFICATIONS}
+          key="table-doc"
+          toggleCheck={props.toggleCheck}
+          type="documents"
         />,
         <div className="btn-container" key="container-buttons">
           <button
