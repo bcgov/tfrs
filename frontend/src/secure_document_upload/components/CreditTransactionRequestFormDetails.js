@@ -158,20 +158,6 @@ class CreditTransactionRequestFormDetails extends Component {
                 </div>
               </div>
               }
-              <div className="row">
-                <div className="form-group col-md-12">
-                  <label htmlFor="record-number">Record Number:
-                    <input
-                      className="form-control"
-                      id="record-number"
-                      name="recordNumber"
-                      onChange={this.props.handleInputChange}
-                      type="text"
-                      value={this.props.fields.recordNumber}
-                    />
-                  </label>
-                </div>
-              </div>
             </div>
           </div>
 
@@ -263,6 +249,21 @@ class CreditTransactionRequestFormDetails extends Component {
                     }
                   </ul>
                 </div>
+              </div>
+            </div>
+
+            <div className="row main-form">
+              <div className="form-group col-md-12">
+                <label htmlFor="record-number">Record Number:
+                  <input
+                    className="form-control"
+                    id="record-number"
+                    name="recordNumber"
+                    onChange={this.props.handleInputChange}
+                    type="text"
+                    value={this.props.fields.recordNumber}
+                  />
+                </label>
               </div>
             </div>
           </div>

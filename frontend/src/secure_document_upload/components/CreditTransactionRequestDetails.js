@@ -105,6 +105,14 @@ const CreditTransactionRequestDetails = props => (
               </label>
             </div>
           </div>
+
+          <div className="row">
+            <div className="form-group col-md-12">
+              <label htmlFor="record-number">Record Number:
+                {props.item.recordNumber}
+              </label>
+            </div>
+          </div>
         </div>
       </div>
 
