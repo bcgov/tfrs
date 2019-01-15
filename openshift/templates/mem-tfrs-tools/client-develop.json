@@ -1,6 +1,6 @@
 {
     "kind": "Template",
-    "apiVersion": "v1",
+    "apiVersion": "template.openshift.io/v1",
     "metadata": {
         "name": "client-develop",
         "creationTimestamp": null
@@ -8,10 +8,10 @@
     "objects": [
         {
             "kind": "ImageStream",
-            "apiVersion": "v1",
+            "apiVersion": "image.openshift.io/v1",
             "metadata": {
                 "name": "client-develop",
-                "generation": 209,
+                "generation": 306,
                 "creationTimestamp": null
             },
             "spec": {
@@ -26,7 +26,20 @@
                             "kind": "DockerImage",
                             "name": "docker-registry.default.svc:5000/mem-tfrs-tools/client-develop:dev"
                         },
-                        "generation": 209,
+                        "generation": 306,
+                        "importPolicy": {},
+                        "referencePolicy": {
+                            "type": "Source"
+                        }
+                    },
+                    {
+                        "name": "devbackup",
+                        "annotations": null,
+                        "from": {
+                            "kind": "DockerImage",
+                            "name": "docker-registry.default.svc:5000/mem-tfrs-tools/client-develop:devbackup"
+                        },
+                        "generation": 299,
                         "importPolicy": {},
                         "referencePolicy": {
                             "type": "Source"
@@ -57,6 +70,19 @@
                         "referencePolicy": {
                             "type": "Source"
                         }
+                    },
+                    {
+                        "name": "testbackup",
+                        "annotations": null,
+                        "from": {
+                            "kind": "DockerImage",
+                            "name": "docker-registry.default.svc:5000/mem-tfrs-tools/client-develop:testbackup"
+                        },
+                        "generation": 301,
+                        "importPolicy": {},
+                        "referencePolicy": {
+                            "type": "Source"
+                        }
                     }
                 ]
             },
@@ -66,7 +92,7 @@
         },
         {
             "kind": "ImageStream",
-            "apiVersion": "v1",
+            "apiVersion": "image.openshift.io/v1",
             "metadata": {
                 "name": "client-develop-angular-app",
                 "generation": 1,
@@ -101,7 +127,7 @@
         },
         {
             "kind": "BuildConfig",
-            "apiVersion": "v1",
+            "apiVersion": "build.openshift.io/v1",
             "metadata": {
                 "name": "client-develop",
                 "creationTimestamp": null,
@@ -129,6 +155,7 @@
                                 "kind": "ImageStreamTag",
                                 "name": "client-develop-angular-app:latest"
                             },
+                            "as": null,
                             "paths": [
                                 {
                                     "sourcePath": "/opt/app-root/src/public/.",
@@ -168,7 +195,7 @@
         },
         {
             "kind": "BuildConfig",
-            "apiVersion": "v1",
+            "apiVersion": "build.openshift.io/v1",
             "metadata": {
                 "name": "client-develop-angular-app-build",
                 "creationTimestamp": null,
@@ -201,7 +228,7 @@
                         "from": {
                             "kind": "ImageStreamTag",
                             "namespace": "openshift",
-                            "name": "nodejs:6"
+                            "name": "nodejs:8"
                         }
                     }
                 },

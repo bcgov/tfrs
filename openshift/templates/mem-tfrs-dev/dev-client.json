@@ -1,6 +1,6 @@
 {
     "kind": "Template",
-    "apiVersion": "v1",
+    "apiVersion": "template.openshift.io/v1",
     "metadata": {
         "name": "dev-client",
         "creationTimestamp": null
@@ -8,10 +8,10 @@
     "objects": [
         {
             "kind": "DeploymentConfig",
-            "apiVersion": "v1",
+            "apiVersion": "apps.openshift.io/v1",
             "metadata": {
                 "name": "client",
-                "generation": 1,
+                "generation": 805,
                 "creationTimestamp": null,
                 "labels": {
                     "template": "tfrs-app-environment"
@@ -24,7 +24,18 @@
                 "strategy": {
                     "type": "Recreate",
                     "recreateParams": {
-                        "timeoutSeconds": 600
+                        "timeoutSeconds": 600,
+                        "post": {
+                            "failurePolicy": "Abort",
+                            "execNewPod": {
+                                "command": [
+                                    "/bin/sh",
+                                    "-c",
+                                    "echo \"testing\" \u003e /tmp/app/dist/config/qqq"
+                                ],
+                                "containerName": "client"
+                            }
+                        }
                     },
                     "resources": {},
                     "activeDeadlineSeconds": 21600
@@ -41,14 +52,15 @@
                                 "kind": "ImageStreamTag",
                                 "namespace": "mem-tfrs-tools",
                                 "name": "client-develop:dev"
-                            }
+                            },
+                            "lastTriggeredImage": "docker-registry.default.svc:5000/mem-tfrs-tools/client-develop@sha256:a90eb73d3a6120483d657e1c7adb0411ced37428ba2cba611ac611fa3a520b11"
                         }
                     },
                     {
                         "type": "ConfigChange"
                     }
                 ],
-                "replicas": 2,
+                "replicas": 1,
                 "test": false,
                 "selector": {
                     "name": "client"
@@ -74,7 +86,7 @@
                         "containers": [
                             {
                                 "name": "client",
-                                "image": "172.50.0.2:5000/mem-tfrs-tools/client-develop@sha256:f3b8eca2ae2dc679099609222de7ac4ec343e0d6ac4a4510a1ff321354ff6947",
+                                "image": "docker-registry.default.svc:5000/mem-tfrs-tools/client-develop@sha256:a90eb73d3a6120483d657e1c7adb0411ced37428ba2cba611ac611fa3a520b11",
                                 "ports": [
                                     {
                                         "containerPort": 3000,
@@ -95,14 +107,14 @@
                                         "name": "HTTP_BASIC"
                                     },
                                     {
-                                        "name": "KEYCLOAK_ENABLED",
-                                        "value": "true"
+                                        "name": "BUILD_NUMBER",
+                                        "value": "pr-44"
                                     }
                                 ],
                                 "resources": {
                                     "limits": {
-                                        "cpu": "125m",
-                                        "memory": "250Mi"
+                                        "cpu": "500m",
+                                        "memory": "1Gi"
                                     },
                                     "requests": {
                                         "memory": "200Mi"
@@ -194,7 +206,7 @@
         },
         {
             "kind": "Route",
-            "apiVersion": "v1",
+            "apiVersion": "route.openshift.io/v1",
             "metadata": {
                 "name": "dev-lowcarbonfuels-frontend",
                 "creationTimestamp": null,

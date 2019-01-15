@@ -1,6 +1,6 @@
 {
     "kind": "Template",
-    "apiVersion": "v1",
+    "apiVersion": "template.openshift.io/v1",
     "metadata": {
         "name": "dev-notification",
         "creationTimestamp": null
@@ -8,7 +8,7 @@
     "objects": [
         {
             "kind": "StatefulSet",
-            "apiVersion": "apps/v1beta1",
+            "apiVersion": "apps/v1",
             "metadata": {
                 "name": "rabbitmq",
                 "generation": 1,
@@ -113,19 +113,33 @@
                         }
                     }
                 ],
-                "serviceName": ""
+                "serviceName": "",
+                "podManagementPolicy": "OrderedReady",
+                "updateStrategy": {
+                    "type": "RollingUpdate",
+                    "rollingUpdate": {
+                        "partition": 0
+                    }
+                },
+                "revisionHistoryLimit": 10
             },
             "status": {
                 "observedGeneration": 1,
-                "replicas": 1
+                "replicas": 1,
+                "readyReplicas": 1,
+                "currentReplicas": 1,
+                "updatedReplicas": 1,
+                "currentRevision": "rabbitmq-544f5c9847",
+                "updateRevision": "rabbitmq-544f5c9847",
+                "collisionCount": 0
             }
         },
         {
             "kind": "DeploymentConfig",
-            "apiVersion": "v1",
+            "apiVersion": "apps.openshift.io/v1",
             "metadata": {
                 "name": "notification-server",
-                "generation": 1,
+                "generation": 110,
                 "creationTimestamp": null,
                 "labels": {
                     "template": "notification-server"
@@ -152,7 +166,8 @@
                                 "kind": "ImageStreamTag",
                                 "namespace": "mem-tfrs-tools",
                                 "name": "notification-server-develop:dev"
-                            }
+                            },
+                            "lastTriggeredImage": "docker-registry.default.svc:5000/mem-tfrs-tools/notification-server-develop@sha256:86f910ef1d6eede1caf00ec8eab4996e26f04a0ffa4a56f3364ab0f6dc3b10da"
                         }
                     },
                     {
@@ -176,7 +191,7 @@
                         "containers": [
                             {
                                 "name": "notification-server",
-                                "image": "172.50.0.2:5000/mem-tfrs-tools/notification-server-develop@sha256:a38f6d3c820f7cdc611ffbc1b67a4c023b1f88c0dbdf181ca10b3deb526371b9",
+                                "image": "docker-registry.default.svc:5000/mem-tfrs-tools/notification-server-develop@sha256:86f910ef1d6eede1caf00ec8eab4996e26f04a0ffa4a56f3364ab0f6dc3b10da",
                                 "ports": [
                                     {
                                         "containerPort": 3000,
@@ -210,7 +225,12 @@
                                         "value": "start:notifications"
                                     }
                                 ],
-                                "resources": {},
+                                "resources": {
+                                    "limits": {
+                                        "cpu": "250m",
+                                        "memory": "500Mi"
+                                    }
+                                },
                                 "readinessProbe": {
                                     "httpGet": {
                                         "path": "/",
@@ -304,7 +324,7 @@
         },
         {
             "kind": "Route",
-            "apiVersion": "v1",
+            "apiVersion": "route.openshift.io/v1",
             "metadata": {
                 "name": "dev-lowcarbonfuels-notification",
                 "creationTimestamp": null

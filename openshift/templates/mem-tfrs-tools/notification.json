@@ -1,6 +1,6 @@
 {
     "kind": "Template",
-    "apiVersion": "v1",
+    "apiVersion": "template.openshift.io/v1",
     "metadata": {
         "name": "notification",
         "creationTimestamp": null
@@ -8,7 +8,7 @@
     "objects": [
         {
             "kind": "ImageStream",
-            "apiVersion": "v1",
+            "apiVersion": "image.openshift.io/v1",
             "metadata": {
                 "name": "rabbitmq-tfrs",
                 "generation": 1,
@@ -40,10 +40,10 @@
         },
         {
             "kind": "ImageStream",
-            "apiVersion": "v1",
+            "apiVersion": "image.openshift.io/v1",
             "metadata": {
                 "name": "notification-server",
-                "generation": 1,
+                "generation": 20,
                 "creationTimestamp": null
             },
             "spec": {
@@ -63,6 +63,32 @@
                         "referencePolicy": {
                             "type": ""
                         }
+                    },
+                    {
+                        "name": "prod",
+                        "annotations": null,
+                        "from": {
+                            "kind": "DockerImage",
+                            "name": "docker-registry.default.svc:5000/mem-tfrs-tools/notification-server:prod"
+                        },
+                        "generation": 20,
+                        "importPolicy": {},
+                        "referencePolicy": {
+                            "type": "Source"
+                        }
+                    },
+                    {
+                        "name": "test",
+                        "annotations": null,
+                        "from": {
+                            "kind": "DockerImage",
+                            "name": "docker-registry.default.svc:5000/mem-tfrs-tools/notification-server:test"
+                        },
+                        "generation": 19,
+                        "importPolicy": {},
+                        "referencePolicy": {
+                            "type": "Source"
+                        }
                     }
                 ]
             },
@@ -72,10 +98,10 @@
         },
         {
             "kind": "ImageStream",
-            "apiVersion": "v1",
+            "apiVersion": "image.openshift.io/v1",
             "metadata": {
                 "name": "notification-server-develop",
-                "generation": 2,
+                "generation": 92,
                 "creationTimestamp": null
             },
             "spec": {
@@ -90,7 +116,7 @@
                             "kind": "DockerImage",
                             "name": "docker-registry.default.svc:5000/mem-tfrs-tools/notification-server-develop:dev"
                         },
-                        "generation": 2,
+                        "generation": 92,
                         "importPolicy": {},
                         "referencePolicy": {
                             "type": "Source"
@@ -117,7 +143,7 @@
         },
         {
             "kind": "BuildConfig",
-            "apiVersion": "v1",
+            "apiVersion": "build.openshift.io/v1",
             "metadata": {
                 "name": "rabbitmq-tfrs",
                 "creationTimestamp": null
@@ -170,7 +196,7 @@
         },
         {
             "kind": "BuildConfig",
-            "apiVersion": "v1",
+            "apiVersion": "build.openshift.io/v1",
             "metadata": {
                 "name": "notification-server",
                 "creationTimestamp": null,
@@ -185,7 +211,7 @@
                     "type": "Git",
                     "git": {
                         "uri": "https://github.com/bcgov/tfrs.git",
-                        "ref": "v1.0.7"
+                        "ref": "v1.2.7"
                     },
                     "contextDir": "frontend"
                 },
@@ -205,9 +231,18 @@
                         "name": "notification-server:latest"
                     }
                 },
-                "resources": {},
+                "resources": {
+                    "limits": {
+                        "cpu": "1",
+                        "memory": "4Gi"
+                    },
+                    "requests": {
+                        "memory": "2Gi"
+                    }
+                },
                 "postCommit": {},
-                "nodeSelector": null
+                "nodeSelector": null,
+                "failedBuildsHistoryLimit": 5
             },
             "status": {
                 "lastVersion": 0
@@ -215,7 +250,7 @@
         },
         {
             "kind": "BuildConfig",
-            "apiVersion": "v1",
+            "apiVersion": "build.openshift.io/v1",
             "metadata": {
                 "name": "notification-server-develop",
                 "creationTimestamp": null,
@@ -250,7 +285,15 @@
                         "name": "notification-server-develop:latest"
                     }
                 },
-                "resources": {},
+                "resources": {
+                    "limits": {
+                        "cpu": "1",
+                        "memory": "4Gi"
+                    },
+                    "requests": {
+                        "memory": "2Gi"
+                    }
+                },
                 "postCommit": {},
                 "nodeSelector": null,
                 "successfulBuildsHistoryLimit": 5,

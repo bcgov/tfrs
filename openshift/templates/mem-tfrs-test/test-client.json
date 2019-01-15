@@ -1,6 +1,6 @@
 {
     "kind": "Template",
-    "apiVersion": "v1",
+    "apiVersion": "template.openshift.io/v1",
     "metadata": {
         "name": "test-client",
         "creationTimestamp": null
@@ -8,10 +8,10 @@
     "objects": [
         {
             "kind": "DeploymentConfig",
-            "apiVersion": "v1",
+            "apiVersion": "apps.openshift.io/v1",
             "metadata": {
                 "name": "client",
-                "generation": 1,
+                "generation": 227,
                 "creationTimestamp": null,
                 "annotations": {
                     "description": "Defines how to deploy the application server"
@@ -42,7 +42,8 @@
                                 "kind": "ImageStreamTag",
                                 "namespace": "mem-tfrs-tools",
                                 "name": "client:test"
-                            }
+                            },
+                            "lastTriggeredImage": "docker-registry.default.svc:5000/mem-tfrs-tools/client@sha256:12f29d5ce7b0ec4c6d76b7181cd0e50a2bcba7aa71a126488538b2ab748b4960"
                         }
                     },
                     {
@@ -63,10 +64,19 @@
                         }
                     },
                     "spec": {
+                        "volumes": [
+                            {
+                                "name": "keycloak-config-data",
+                                "configMap": {
+                                    "name": "keycloak-config",
+                                    "defaultMode": 420
+                                }
+                            }
+                        ],
                         "containers": [
                             {
                                 "name": "client",
-                                "image": "docker-registry.default.svc:5000/mem-tfrs-tools/client@sha256:2ec2d2b848ebcf508878a4dd233b82176d1252cba59056cd2fa362b641643ddd",
+                                "image": "docker-registry.default.svc:5000/mem-tfrs-tools/client@sha256:12f29d5ce7b0ec4c6d76b7181cd0e50a2bcba7aa71a126488538b2ab748b4960",
                                 "ports": [
                                     {
                                         "containerPort": 3000,
@@ -105,6 +115,12 @@
                                         "memory": "400Mi"
                                     }
                                 },
+                                "volumeMounts": [
+                                    {
+                                        "name": "keycloak-config-data",
+                                        "mountPath": "/tmp/app/dist/config"
+                                    }
+                                ],
                                 "terminationMessagePath": "/dev/termination-log",
                                 "terminationMessagePolicy": "File",
                                 "imagePullPolicy": "IfNotPresent"
@@ -161,16 +177,16 @@
         },
         {
             "kind": "Route",
-            "apiVersion": "v1",
+            "apiVersion": "route.openshift.io/v1",
             "metadata": {
-                "name": "main",
+                "name": "test-lowcarbonfuels-frontend",
                 "creationTimestamp": null,
                 "labels": {
                     "template": "tfrs-app-environment"
                 }
             },
             "spec": {
-                "host": "test-lowcarbonfuels.pathfinder.bcgov",
+                "host": "test-lowcarbonfuels.pathfinder.gov.bc.ca",
                 "to": {
                     "kind": "Service",
                     "name": "client",
@@ -180,22 +196,57 @@
                     "targetPort": "web"
                 },
                 "tls": {
-                    "termination": "edge",
-                    "certificate": "-----BEGIN CERTIFICATE-----\nMIIEoTCCAy0CCQCCIK9n/7FxGzANBgkqhkiG9w0BAQUFADCBtTELMAkGA1UEBhMC\nQ0ExGTAXBgNVBAgMEEJyaXRpc2ggQ29sdW1iaWExETAPBgNVBAcMCFZpY3Rvcmlh\nMTcwNQYDVQQKDC5Hb3Zlcm5tZW50IG9mIHRoZSBQcm92aW5jZSBvZiBCcml0aXNo\nIENvbHVtYmlhMRAwDgYDVQQLDAdGTE5ST1JEMS0wKwYDVQQDDCR0ZXN0LWxvd2Nh\ncmJvbmZ1ZWxzLnBhdGhmaW5kZXIuYmNnb3YwIBcNMTgwMzI3MTk1NTE2WhgPMjEx\nODAzMDMxOTU1MTZaMIG1MQswCQYDVQQGEwJDQTEZMBcGA1UECAwQQnJpdGlzaCBD\nb2x1bWJpYTERMA8GA1UEBwwIVmljdG9yaWExNzA1BgNVBAoMLkdvdmVybm1lbnQg\nb2YgdGhlIFByb3ZpbmNlIG9mIEJyaXRpc2ggQ29sdW1iaWExEDAOBgNVBAsMB0ZM\nTlJPUkQxLTArBgNVBAMMJHRlc3QtbG93Y2FyYm9uZnVlbHMucGF0aGZpbmRlci5i\nY2dvdjCCAX0wDQYJKoZIhvcNAQEBBQADggFqADCCAWUCggFcAYzERqGC5OBqo5f1\nPxbMg9SGQ2c+KgmI2csjSQ1mqG0gA5r2SdByFt3y6pl9OrY0tmJvtFvKjDB79/hL\niTdPGVwtXgDPzw8IBOpupk0fKJ6ZC8Cft2XTYk8y+T79yk8LrNjWF01dGwuuM5sI\nVH6X/IaSlTaIKu9wjn6DKNlOVdloVymO9Y5/Q6k9P2O+KHwkibAOvFpre0QEpVT4\nU1/4clXCe/9XvFhLnZ13wSIjtiOHTJ96CP7OX0reLkEka3m2tZja+xeyXV7IE85W\nO3URxRhqR9EQ3TgTSiZNoYuPwKk623bzd4WzH/GXFhASKFHA1ajIoLbQSHCH5iP/\n1iqnyeQ1uoEUlluskFckJdD4r4eKP5laMDIpVVpn7r3m3ZDLl8e42fl1UafQsIi/\nfu7rQNzyWj65gCz8pu+IuvO6kq1N8s3UEo/W26Eac4QzQPeFiwHWE8aUSxxbfKLp\nAgMBAAEwDQYJKoZIhvcNAQEFBQADggFdAAAymyusRJjqZIQTI5y8j8ZtYz5mwfhQ\nUDGkZlUoS+NS1ALUJ0iXCj/IzOopVHeuogdQTZf6zY9Ij0X6adZWaV2E6Z3oaX8N\no++mLCxAjp0BH8wlEmafAn+qnki98PWeJr7ZJCLR63tu2Uk2xbBG5nxHT5YBAIPo\nXwGoC5NlrjxBe6lK+KHLa2HL+LQCq/RX+RCWRLvo/2hGSG6duVULfGA25PQ7r17Y\nCSVHc6umJXiFAlDVOazoTMZs8eG8ZEpCJMBH+yY0z8S3q82B9/8+PrKuXXUTcoAe\n62L8WgO5OMYly2tb69iN72M1uhBM75OjfKCtNMXaId96Jo1y4NNGjQ4lfF9zYYij\nspa8RmN5aWYqNy+aMwMmcWsYYNBhQqLyRDubL8hb9IhNsgWVLNX6mDIMiiroPusG\nNKxZuroKDZes8V7YGux7xki8l9XjY0fEyEjowcBT4qm/bzmwWg==\n-----END CERTIFICATE-----",
-                    "key": "-----BEGIN RSA PRIVATE KEY-----\n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\nET3F1ULakKxiCcT8LWjA3w==\n-----END RSA PRIVATE KEY-----"
+                    "termination": "edge"
                 },
                 "wildcardPolicy": "None"
             },
             "status": {
                 "ingress": [
                     {
-                        "host": "test-lowcarbonfuels.pathfinder.bcgov",
+                        "host": "test-lowcarbonfuels.pathfinder.gov.bc.ca",
                         "routerName": "router",
                         "conditions": [
                             {
                                 "type": "Admitted",
                                 "status": "True",
-                                "lastTransitionTime": "2018-04-17T18:53:15Z"
+                                "lastTransitionTime": "2018-10-25T17:33:18Z"
+                            }
+                        ],
+                        "wildcardPolicy": "None"
+                    }
+                ]
+            }
+        },
+        {
+            "kind": "Route",
+            "apiVersion": "route.openshift.io/v1",
+            "metadata": {
+                "name": "test-lowcarbonfuels-notification",
+                "creationTimestamp": null
+            },
+            "spec": {
+                "host": "test-lowcarbonfuels.pathfinder.gov.bc.ca",
+                "path": "/socket.io",
+                "to": {
+                    "kind": "Service",
+                    "name": "notification-server",
+                    "weight": 100
+                },
+                "tls": {
+                    "termination": "edge"
+                },
+                "wildcardPolicy": "None"
+            },
+            "status": {
+                "ingress": [
+                    {
+                        "host": "test-lowcarbonfuels.pathfinder.gov.bc.ca",
+                        "routerName": "router",
+                        "conditions": [
+                            {
+                                "type": "Admitted",
+                                "status": "True",
+                                "lastTransitionTime": "2018-10-25T17:33:32Z"
                             }
                         ],
                         "wildcardPolicy": "None"

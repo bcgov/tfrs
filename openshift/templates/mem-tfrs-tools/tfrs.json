@@ -1,6 +1,6 @@
 {
     "kind": "Template",
-    "apiVersion": "v1",
+    "apiVersion": "template.openshift.io/v1",
     "metadata": {
         "name": "tfrs",
         "creationTimestamp": null
@@ -8,10 +8,10 @@
     "objects": [
         {
             "kind": "ImageStream",
-            "apiVersion": "v1",
+            "apiVersion": "image.openshift.io/v1",
             "metadata": {
                 "name": "tfrs",
-                "generation": 145,
+                "generation": 164,
                 "creationTimestamp": null
             },
             "spec": {
@@ -39,7 +39,7 @@
                             "kind": "DockerImage",
                             "name": "docker-registry.default.svc:5000/mem-tfrs-tools/tfrs:prod"
                         },
-                        "generation": 138,
+                        "generation": 164,
                         "importPolicy": {},
                         "referencePolicy": {
                             "type": "Source"
@@ -52,7 +52,7 @@
                             "kind": "DockerImage",
                             "name": "docker-registry.default.svc:5000/mem-tfrs-tools/tfrs:test"
                         },
-                        "generation": 145,
+                        "generation": 163,
                         "importPolicy": {},
                         "referencePolicy": {
                             "type": "Source"
@@ -66,7 +66,7 @@
         },
         {
             "kind": "BuildConfig",
-            "apiVersion": "v1",
+            "apiVersion": "build.openshift.io/v1",
             "metadata": {
                 "name": "tfrs",
                 "creationTimestamp": null,
@@ -89,7 +89,7 @@
                     "type": "Git",
                     "git": {
                         "uri": "https://github.com/bcgov/tfrs.git",
-                        "ref": "v1.0.7"
+                        "ref": "v1.2.7"
                     },
                     "contextDir": "backend"
                 },

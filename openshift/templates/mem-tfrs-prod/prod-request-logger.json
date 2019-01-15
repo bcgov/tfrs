@@ -1,6 +1,6 @@
 {
     "kind": "Template",
-    "apiVersion": "v1",
+    "apiVersion": "template.openshift.io/v1",
     "metadata": {
         "name": "prod-request-logger",
         "creationTimestamp": null
@@ -37,7 +37,7 @@
         },
         {
             "kind": "Route",
-            "apiVersion": "v1",
+            "apiVersion": "route.openshift.io/v1",
             "metadata": {
                 "name": "sminfo",
                 "creationTimestamp": null,
@@ -46,7 +46,7 @@
                 }
             },
             "spec": {
-                "host": "test-lowcarbonfuels.pathfinder.bcgov",
+                "host": "prod-lowcarbonfuels.pathfinder.bcgov",
                 "path": "/sminfo",
                 "to": {
                     "kind": "Service",
@@ -58,21 +58,22 @@
                 },
                 "tls": {
                     "termination": "edge",
-                    "certificate": "-----BEGIN CERTIFICATE-----\nMIIEoTCCAy0CCQCCIK9n/7FxGzANBgkqhkiG9w0BAQUFADCBtTELMAkGA1UEBhMC\nQ0ExGTAXBgNVBAgMEEJyaXRpc2ggQ29sdW1iaWExETAPBgNVBAcMCFZpY3Rvcmlh\nMTcwNQYDVQQKDC5Hb3Zlcm5tZW50IG9mIHRoZSBQcm92aW5jZSBvZiBCcml0aXNo\nIENvbHVtYmlhMRAwDgYDVQQLDAdGTE5ST1JEMS0wKwYDVQQDDCR0ZXN0LWxvd2Nh\ncmJvbmZ1ZWxzLnBhdGhmaW5kZXIuYmNnb3YwIBcNMTgwMzI3MTk1NTE2WhgPMjEx\nODAzMDMxOTU1MTZaMIG1MQswCQYDVQQGEwJDQTEZMBcGA1UECAwQQnJpdGlzaCBD\nb2x1bWJpYTERMA8GA1UEBwwIVmljdG9yaWExNzA1BgNVBAoMLkdvdmVybm1lbnQg\nb2YgdGhlIFByb3ZpbmNlIG9mIEJyaXRpc2ggQ29sdW1iaWExEDAOBgNVBAsMB0ZM\nTlJPUkQxLTArBgNVBAMMJHRlc3QtbG93Y2FyYm9uZnVlbHMucGF0aGZpbmRlci5i\nY2dvdjCCAX0wDQYJKoZIhvcNAQEBBQADggFqADCCAWUCggFcAYzERqGC5OBqo5f1\nPxbMg9SGQ2c+KgmI2csjSQ1mqG0gA5r2SdByFt3y6pl9OrY0tmJvtFvKjDB79/hL\niTdPGVwtXgDPzw8IBOpupk0fKJ6ZC8Cft2XTYk8y+T79yk8LrNjWF01dGwuuM5sI\nVH6X/IaSlTaIKu9wjn6DKNlOVdloVymO9Y5/Q6k9P2O+KHwkibAOvFpre0QEpVT4\nU1/4clXCe/9XvFhLnZ13wSIjtiOHTJ96CP7OX0reLkEka3m2tZja+xeyXV7IE85W\nO3URxRhqR9EQ3TgTSiZNoYuPwKk623bzd4WzH/GXFhASKFHA1ajIoLbQSHCH5iP/\n1iqnyeQ1uoEUlluskFckJdD4r4eKP5laMDIpVVpn7r3m3ZDLl8e42fl1UafQsIi/\nfu7rQNzyWj65gCz8pu+IuvO6kq1N8s3UEo/W26Eac4QzQPeFiwHWE8aUSxxbfKLp\nAgMBAAEwDQYJKoZIhvcNAQEFBQADggFdAAAymyusRJjqZIQTI5y8j8ZtYz5mwfhQ\nUDGkZlUoS+NS1ALUJ0iXCj/IzOopVHeuogdQTZf6zY9Ij0X6adZWaV2E6Z3oaX8N\no++mLCxAjp0BH8wlEmafAn+qnki98PWeJr7ZJCLR63tu2Uk2xbBG5nxHT5YBAIPo\nXwGoC5NlrjxBe6lK+KHLa2HL+LQCq/RX+RCWRLvo/2hGSG6duVULfGA25PQ7r17Y\nCSVHc6umJXiFAlDVOazoTMZs8eG8ZEpCJMBH+yY0z8S3q82B9/8+PrKuXXUTcoAe\n62L8WgO5OMYly2tb69iN72M1uhBM75OjfKCtNMXaId96Jo1y4NNGjQ4lfF9zYYij\nspa8RmN5aWYqNy+aMwMmcWsYYNBhQqLyRDubL8hb9IhNsgWVLNX6mDIMiiroPusG\nNKxZuroKDZes8V7YGux7xki8l9XjY0fEyEjowcBT4qm/bzmwWg==\n-----END CERTIFICATE-----",
-                    "key": "-----BEGIN RSA PRIVATE KEY-----\n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\nET3F1ULakKxiCcT8LWjA3w==\n-----END RSA PRIVATE KEY-----"
+                    "certificate": "-----BEGIN CERTIFICATE-----\nMIIEoTCCAy0CCQChZjkgDBrgvzANBgkqhkiG9w0BAQUFADCBtTELMAkGA1UEBhMC\nQ0ExGTAXBgNVBAgMEEJyaXRpc2ggQ29sdW1iaWExETAPBgNVBAcMCFZpY3Rvcmlh\nMTcwNQYDVQQKDC5Hb3Zlcm5tZW50IG9mIHRoZSBQcm92aW5jZSBvZiBCcml0aXNo\nIENvbHVtYmlhMRAwDgYDVQQLDAdGTE5ST1JEMS0wKwYDVQQDDCRwcm9kLWxvd2Nh\ncmJvbmZ1ZWxzLnBhdGhmaW5kZXIuYmNnb3YwIBcNMTgwMzE2MTY1NTA0WhgPMjEx\nODAyMjAxNjU1MDRaMIG1MQswCQYDVQQGEwJDQTEZMBcGA1UECAwQQnJpdGlzaCBD\nb2x1bWJpYTERMA8GA1UEBwwIVmljdG9yaWExNzA1BgNVBAoMLkdvdmVybm1lbnQg\nb2YgdGhlIFByb3ZpbmNlIG9mIEJyaXRpc2ggQ29sdW1iaWExEDAOBgNVBAsMB0ZM\nTlJPUkQxLTArBgNVBAMMJHByb2QtbG93Y2FyYm9uZnVlbHMucGF0aGZpbmRlci5i\nY2dvdjCCAX0wDQYJKoZIhvcNAQEBBQADggFqADCCAWUCggFcAXJnPZefF2EbJbeQ\niswOlnOyV6RYUkccrTKmYxXigocHzkoKrDWwjxKEAh/D7+kZ+f4w9fAsaa0Wb2lv\n0cLaxq/fYh5o57OIslrdwh8ik6+wKKwqzj0KDGQmCodIP8MXJ+KWLCKjpMYoOcA0\nABzUzlzz3EuxLljbBXNDAzElcOv9I0mt0B7daJjHnprEA8PWsnN6Vql02AOUDLzs\nbyc/fmP41plEioBy2ZuAaGKMAN2ZH3a+pPU2yT7CMDvnsCU2S3H53T3lwLl+5scZ\nbV+riXF1gT+2Dhdn1Isn0cj5zsv1SuMk9W9D0sjgaTgylGdn4i8XrdKx0K0Di8O4\nf54xVD8/SufZoclYHe8DcRKHGwaK/mN2L8ubk3wxqfox430dLOPdXRfD51Uorkgk\nM+7X9abH50w16I9jxZmvZCMReNPtTECxlhTixBB3zwfTdE8u95Ug72mzjTUq62nR\nAgMBAAEwDQYJKoZIhvcNAQEFBQADggFdAAERlcUuwpcCtxd3POVeUZaTYUGToo98\nhxcFJ59o3tCgpiKmulW4yWtyQGAQvcd5Tz+3Nu7DFsKEtjFgkgy4MnazOAK8x9Nj\nusW3eIDazgz6d0KHKApwHq74MVk0kuJk/3J9I7fhNj2FeKmahipnraSmzlYb8nIW\nh9oLXrJE8zJNdmtwS11VuKb2cqNzSfUi4uNH7nM/N4OQaRqJJuvfOasQ2qLoKpVE\nzLJHS3nSMyPCJ6pqFoP04r1x3CiF69MaVBGp61Vg+4+VoneTpEGEdPSuds7C2/Ya\ni5XZ1ReN6U+Cd4hstByIhJdOGUD2EfoAWJZrmv+P9+70uNj9DPk9Hvb03DB+J3m4\n3oGpgq1x06/NI/ZG/uUIRx+m4psPyb4NI3sahuswqEk+DXRT8mdecOUW/l5MLdHl\ndXCXsu9wAYnLUk8zckyQsrjJTjlKBagE6rCt2XjzhWe4nIqSwg==\n-----END CERTIFICATE-----\n",
+                    "key": "-----BEGIN RSA PRIVATE KEY-----\n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\nyjxNFxKqwrYc+P8UIdiXFw==\n-----END RSA PRIVATE KEY-----\n",
+                    "insecureEdgeTerminationPolicy": "Allow"
                 },
                 "wildcardPolicy": "None"
             },
             "status": {
                 "ingress": [
                     {
-                        "host": "test-lowcarbonfuels.pathfinder.bcgov",
+                        "host": "prod-lowcarbonfuels.pathfinder.bcgov",
                         "routerName": "router",
                         "conditions": [
                             {
                                 "type": "Admitted",
                                 "status": "True",
-                                "lastTransitionTime": "2018-04-20T21:03:26Z"
+                                "lastTransitionTime": "2018-04-20T15:42:44Z"
                             }
                         ],
                         "wildcardPolicy": "None"
