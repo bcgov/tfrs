@@ -31,7 +31,7 @@ def add_new_document_statuses(apps, schema_editor):
 
 class Migration(migrations.Migration):
     dependencies = [
-        ('api', '0062_documents_permission_update'),
+        ('api', '0063_documents_permission_update'),
     ]
 
     operations = [
