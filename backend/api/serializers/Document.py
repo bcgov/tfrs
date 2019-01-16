@@ -212,12 +212,13 @@ class DocumentDetailSerializer(serializers.ModelSerializer):
             'create_timestamp', 'create_user', 'update_timestamp',
             'update_user', 'status', 'type', 'attachments',
             'compliance_period', 'actions', 'comment_actions', 'comments',
-            'milestone')
+            'milestone', 'record_number')
 
         read_only_fields = (
             'id', 'create_timestamp', 'create_user', 'update_timestamp',
             'update_user', 'title', 'status', 'type', 'attachments',
-            'compliance_period', 'actions', 'comment_actions', 'milestone')
+            'compliance_period', 'actions', 'comment_actions', 'milestone',
+            'record_number')
 
 
 class DocumentMinSerializer(serializers.ModelSerializer):

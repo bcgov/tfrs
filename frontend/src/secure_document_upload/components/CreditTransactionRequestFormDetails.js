@@ -16,6 +16,7 @@ class CreditTransactionRequestFormDetails extends Component {
     this.rejectedFiles = [];
 
     this._onDrop = this._onDrop.bind(this);
+    this._removeAttachment = this._removeAttachment.bind(this);
     this._removeFile = this._removeFile.bind(this);
   }
 
@@ -43,6 +44,20 @@ class CreditTransactionRequestFormDetails extends Component {
       ...this.rejectedFiles,
       ...rejectedFiles
     ];
+  }
+
+  _removeAttachment (attachment) {
+    const found = this.props.fields.attachments.findIndex(item => (item === attachment));
+    this.props.fields.attachments.splice(found, 1);
+
+    const attachedFiles = this.props.fields.attachments;
+
+    this.props.handleInputChange({
+      target: {
+        name: 'attachments',
+        value: attachedFiles
+      }
+    });
   }
 
   _removeFile (file) {
@@ -73,6 +88,7 @@ class CreditTransactionRequestFormDetails extends Component {
                     name="compliancePeriod"
                     onChange={this.props.handleInputChange}
                     required="required"
+                    value={this.props.fields.compliancePeriod.id}
                   >
                     <option key="0" value="" default />
                     {this.props.compliancePeriods &&
@@ -207,6 +223,23 @@ class CreditTransactionRequestFormDetails extends Component {
               <div className="form-group col-md-12 main-form">
                 <div>Files:
                   <ul className="files">
+                    {this.props.fields.attachments.map(attachment => (
+                      <li key={attachment.filename}>
+                        <span className="icon">
+                          <FontAwesomeIcon icon={getIcon(attachment.mimeType)} />
+                        </span>
+                        <span className="filename">{attachment.filename}</span>
+                        <span> - {getFileSize(attachment.size)}
+                          <button type="button" onClick={() => this._removeAttachment(attachment)}>
+                            <FontAwesomeIcon icon="minus-circle" />
+                          </button>
+                        </span>
+                      </li>
+                    ))}
+                    {this.props.fields.attachments.length === 0 &&
+                    this.props.fields.files.length === 0 &&
+                    <li>- No files selected.</li>
+                    }
                     {this.props.fields.files.map(file => (
                       <li key={file.name}>
                         <span className="icon">
@@ -220,9 +253,6 @@ class CreditTransactionRequestFormDetails extends Component {
                         </span>
                       </li>
                     ))}
-                    {this.props.fields.files.length === 0 &&
-                    <li>- No files selected.</li>
-                    }
                   </ul>
                 </div>
               </div>
@@ -289,6 +319,7 @@ CreditTransactionRequestFormDetails.propTypes = {
   compliancePeriods: PropTypes.arrayOf(PropTypes.shape()).isRequired,
   categories: PropTypes.arrayOf(PropTypes.shape()).isRequired,
   fields: PropTypes.shape({
+    attachments: PropTypes.arrayOf(PropTypes.shape()),
     compliancePeriod: PropTypes.shape({
       description: PropTypes.string,
       id: PropTypes.number

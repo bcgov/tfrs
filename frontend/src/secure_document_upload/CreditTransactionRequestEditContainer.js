@@ -21,14 +21,21 @@ class CreditTransactionRequestEditContainer extends Component {
 
     this.state = {
       fields: {
-        agreementName: '',
-        comment: '',
+        attachmentCategory: '',
+        attachments: [],
         compliancePeriod: { id: 0, description: '' },
+        documentType: {
+          id: 1
+        },
         files: [],
-        milestoneId: ''
+        milestone: '',
+        recordNumber: '',
+        title: ''
       },
       validationErrors: {}
     };
+
+    this.submitted = false;
 
     this._handleInputChange = this._handleInputChange.bind(this);
     this._handleSubmit = this._handleSubmit.bind(this);
@@ -36,6 +43,10 @@ class CreditTransactionRequestEditContainer extends Component {
 
   componentDidMount () {
     this.loadData(this.props.match.params.id);
+  }
+
+  componentWillReceiveProps (props) {
+    this.loadPropsToFieldState(props);
   }
 
   changeObjectProp (id, name) {
@@ -51,6 +62,26 @@ class CreditTransactionRequestEditContainer extends Component {
     this.props.getDocumentUpload(id);
   }
 
+  loadPropsToFieldState (props) {
+    const { item } = props;
+
+    if (Object.keys(item).length > 0 && !this.submitted) {
+      const fieldState = {
+        attachments: item.attachments,
+        compliancePeriod: item.compliancePeriod,
+        documentType: item.type,
+        files: [],
+        milestone: item.milestone ? item.milestone.milestone : '',
+        recordNumber: item.recordNumber || '',
+        title: item.title
+      };
+
+      this.setState({
+        fields: fieldState
+      });
+    }
+  }
+
   _deleteCreditTransferRequest (id) {
     this.props.deleteDocumentUpload(id).then(() => {
       history.push(SECURE_DOCUMENT_UPLOAD.LIST);
@@ -63,7 +94,7 @@ class CreditTransactionRequestEditContainer extends Component {
     const fieldState = { ...this.state.fields };
 
     if (typeof fieldState[name] === 'object' &&
-      name !== 'files') {
+      name !== 'files' && name !== 'attachments') {
       this.changeObjectProp(parseInt(value, 10), name);
     } else {
       fieldState[name] = value;
@@ -80,11 +111,11 @@ class CreditTransactionRequestEditContainer extends Component {
 
     // API data structure
     const data = {
-      agreementName: this.state.fields.agreementName,
       comment: this.state.fields.comment,
       compliancePeriod: this.state.fields.compliancePeriod.id,
       files: this.state.fields.files,
-      milestoneId: this.state.fields.milestoneId
+      milestoneId: this.state.fields.milestoneId,
+      title: this.state.fields.title
     };
 
     this.props.updateDocumentUpload(data, id).then((response) => {
@@ -101,6 +132,7 @@ class CreditTransactionRequestEditContainer extends Component {
     return ([
       <CreditTransactionRequestForm
         addToFields={this._addToFields}
+        categories={this.props.referenceData.documentCategories}
         edit
         errors={this.props.errors}
         fields={this.state.fields}
@@ -157,6 +189,11 @@ CreditTransactionRequestEditContainer.propTypes = {
       id: PropTypes.string.isRequired
     }).isRequired
   }).isRequired,
+  referenceData: PropTypes.shape({
+    documentCategories: PropTypes.arrayOf(PropTypes.shape),
+    isFetching: PropTypes.bool,
+    isSuccessful: PropTypes.bool
+  }).isRequired,
   updateDocumentUpload: PropTypes.func.isRequired,
   validationErrors: PropTypes.shape()
 };
@@ -164,7 +201,12 @@ CreditTransactionRequestEditContainer.propTypes = {
 const mapStateToProps = state => ({
   errors: state.rootReducer.creditTransfer.errors,
   item: state.rootReducer.documentUpload.item,
-  loggedInUser: state.rootReducer.userRequest.loggedInUser
+  loggedInUser: state.rootReducer.userRequest.loggedInUser,
+  referenceData: {
+    documentCategories: state.rootReducer.referenceData.data.documentCategories,
+    isFetching: state.rootReducer.referenceData.isFetching,
+    isSuccessful: state.rootReducer.referenceData.success
+  }
 });
 
 const mapDispatchToProps = dispatch => ({

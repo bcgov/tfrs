@@ -23,6 +23,7 @@ class CreditTransactionRequestAddContainer extends Component {
     this.state = {
       fields: {
         attachmentCategory: '',
+        attachments: [],
         comment: '',
         compliancePeriod: { id: 0, description: '' },
         documentType: {

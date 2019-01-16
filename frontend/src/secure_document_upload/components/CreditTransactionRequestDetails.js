@@ -8,6 +8,7 @@ import axios from 'axios';
 
 import history from '../../app/History';
 import * as Lang from '../../constants/langEnUs';
+import SECURE_DOCUMENT_UPLOAD from '../../constants/routes/SecureDocumentUpload';
 import { getFileSize, getIcon } from '../../utils/functions';
 import CreditTransactionRequestComment from './CreditTransactionRequestComment';
 import CreditTransactionRequestCommentButtons from './CreditTransactionRequestCommentButtons';
@@ -16,6 +17,7 @@ import CreditTransactionRequestCommentForm from './CreditTransactionRequestComme
 const CreditTransactionRequestDetails = props => (
   <div className="page-credit-transaction-request-details">
     <h1>{props.item.type.description}</h1>
+
     <div className="credit-transaction-request-details">
       <div className="row">
         <div className="col-md-4">
@@ -109,7 +111,9 @@ const CreditTransactionRequestDetails = props => (
           <div className="row">
             <div className="form-group col-md-12">
               <label htmlFor="record-number">Record Number:
-                {props.item.recordNumber}
+                <div className="value">
+                  {props.item.recordNumber}
+                </div>
               </label>
             </div>
           </div>
@@ -147,6 +151,15 @@ const CreditTransactionRequestDetails = props => (
       >
         <FontAwesomeIcon icon="arrow-circle-left" /> {Lang.BTN_APP_CANCEL}
       </button>
+
+      <button
+        className="btn btn-default"
+        type="button"
+        onClick={() => history.push(SECURE_DOCUMENT_UPLOAD.EDIT.replace(':id', props.item.id))}
+      >
+        <FontAwesomeIcon icon="edit" /> Edit
+      </button>
+
       {props.availableActions.includes('Submitted') &&
       <button
         className="btn btn-primary"
