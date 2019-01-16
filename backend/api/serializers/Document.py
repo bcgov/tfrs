@@ -44,9 +44,9 @@ class DocumentFileAttachmentSerializer(serializers.ModelSerializer):
     """
     class Meta:
         model = DocumentFileAttachment
-        fields = ('url', 'security_scan_status', 'mime_type', 'size',
+        fields = ('id', 'url', 'security_scan_status', 'mime_type', 'size',
                   'filename')
-        read_only_fields = ('url', 'security_scan_status', 'mime_type',
+        read_only_fields = ('id', 'url', 'security_scan_status', 'mime_type',
                             'size', 'filename')
 
 
@@ -81,8 +81,6 @@ class DocumentCreateSerializer(serializers.ModelSerializer):
     """
     Creation Serializer for Documents
     """
-    from .DocumentMilestone import DocumentMilestoneSerializer
-
     attachments = DocumentFileAttachmentSerializer(many=True, read_only=True)
     comments = DocumentCommentSerializer(many=True, read_only=True)
     milestone = DocumentMilestoneSerializer(read_only=True)
@@ -136,7 +134,7 @@ class DocumentDetailSerializer(serializers.ModelSerializer):
     Document Serializer with Full Details
     """
     actions = serializers.SerializerMethodField()
-    attachments = DocumentFileAttachmentSerializer(many=True)
+    attachments = serializers.SerializerMethodField()
     comment_actions = serializers.SerializerMethodField()
     comments = serializers.SerializerMethodField()
     compliance_period = CompliancePeriodSerializer(read_only=True)
@@ -164,6 +162,20 @@ class DocumentDetailSerializer(serializers.ModelSerializer):
             return DocumentActions.submitted(request)
 
         return []
+
+    def get_attachments(self, obj):
+        """
+        Returns all file attachments for the document.
+        We have to make sure not to include attachments that have been
+        marked for removal.
+        """
+        attachments = DocumentFileAttachment.objects.filter(
+            document_id=obj.id,
+            is_removed=False)
+
+        serializer = DocumentFileAttachmentSerializer(attachments, many=True)
+
+        return serializer.data
 
     def get_comments(self, obj):
         """
@@ -244,8 +256,60 @@ class DocumentUpdateSerializer(serializers.ModelSerializer):
     """
     Update Serializer for Documents
     """
+    attachments = DocumentFileAttachmentSerializer(many=True, read_only=True)
+    comments = DocumentCommentSerializer(many=True, read_only=True)
+    milestone = DocumentMilestoneSerializer(read_only=True)
+
+    def save(self, **kwargs):
+        super().save(**kwargs)
+
+        document = self.instance
+        request = self.context['request']
+
+        attachments_to_be_removed = request.data.get('attachments_to_be_removed')
+
+        DocumentFileAttachment.objects.filter(
+            id__in=attachments_to_be_removed
+        ).update(
+            is_removed=True
+        )
+
+        # for attachment in attachments_to_be_removed:
+        #     print(attachment)
+
+        # files = request.data.get('attachments')
+
+        # for file in files:
+        #     DocumentFileAttachment.objects.create(
+        #         document=document,
+        #         create_user=document.create_user,
+        #         **file
+        #     )
+
+        # if document.type.the_type == 'Evidence':
+        #     DocumentMilestone.objects.update(
+        #         document=document,
+        #         create_user=document.create_user,
+        #         milestone=request.data.get('milestone')
+        #     )
+
+        # comment = request.data.get('comment')
+
+        # if comment.strip():
+        #     DocumentComment.objects.create(
+        #         document=document,
+        #         comment=comment,
+        #         create_user=request.user,
+        #         update_user=request.user,
+        #         create_timestamp=datetime.now(),
+        #         privileged_access=False
+        #     )
+
+        return self.instance
+
     class Meta:
         model = Document
         fields = ('compliance_period', 'update_user', 'id',
-                  'status', 'title', 'type')
+                  'status', 'title', 'type', 'milestone',
+                  'record_number', 'attachments', 'comments')
         read_only_fields = ('id',)
