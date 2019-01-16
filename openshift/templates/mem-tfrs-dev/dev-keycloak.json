@@ -1,6 +1,6 @@
 {
     "kind": "Template",
-    "apiVersion": "v1",
+    "apiVersion": "template.openshift.io/v1",
     "metadata": {
         "name": "dev-keycloak",
         "creationTimestamp": null
@@ -14,7 +14,7 @@
                 "creationTimestamp": null
             },
             "data": {
-                "features.js": "window.tfrs_config = {\n  \"keycloak.enabled\": true,\n  \"keycloak.authority\": \"https://sso-dev.pathfinder.gov.bc.ca/auth/realms/tfrs-dev\" ,\n  \"keycloak.client_id\": \"tfrs-dev\",\n  \"keycloak.callback_url\": \"https://dev-lowcarbonfuels.pathfinder.gov.bc.ca/authCallback\" ,\n  \"keycloak.post_logout_url\": \"https://dev-lowcarbonfuels.pathfinder.gov.bc.ca/\" \n};\n"
+                "features.js": "window.tfrs_config = {\n  \"keycloak.enabled\": true,\n  \"keycloak.authority\": \"https://sso-dev.pathfinder.gov.bc.ca/auth/realms/tfrs-dev\" ,\n  \"keycloak.client_id\": \"tfrs-dev\",\n  \"keycloak.callback_url\": \"https://dev-lowcarbonfuels.pathfinder.gov.bc.ca/authCallback\" ,\n  \"keycloak.post_logout_url\": \"https://dev-lowcarbonfuels.pathfinder.gov.bc.ca/\",\n  \"debug.enabled\": true\n};\n"
             }
         }
     ]
