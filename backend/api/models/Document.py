@@ -62,7 +62,7 @@ class Document(Auditable, DocumentData):
         """
         from .DocumentMilestone import DocumentMilestone
 
-        return DocumentMilestone.objects.get(document_id=self.id)
+        return DocumentMilestone.objects.filter(document_id=self.id).first()
 
     class Meta:
         db_table = 'document'
