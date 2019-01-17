@@ -24,3 +24,7 @@ class NotificationType(Enum):
     PVR_COMMENT = "PVR Comment Created Or Updated"
     PVR_INTERNAL_COMMENT = "PVR Internal Comment Created Or Updated"
     PVR_RETURNED_TO_ANALYST = "PVR Returned to Analyst"
+
+    DOCUMENT_PENDING_SUBMISSION = "Document Pending Submission"
+    DOCUMENT_SUBMITTED = "Document Submitted"
+    DOCUMENT_SCAN_FAILED = "Document Security Scan Failed"
