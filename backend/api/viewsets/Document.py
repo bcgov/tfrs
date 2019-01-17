@@ -11,6 +11,9 @@ from rest_framework.response import Response
 from api.models.Document import Document
 from api.models.DocumentCategory import DocumentCategory
 from api.models.DocumentFileAttachment import DocumentFileAttachment
+from api.models.DocumentStatus import DocumentStatus
+from api.notifications.notification_types import NotificationType
+from api.notifications.notifications import AMQPNotificationService
 from api.permissions.Documents import DocumentPermissions
 from api.serializers.Document import \
     DocumentCreateSerializer, DocumentDetailSerializer, \
@@ -82,18 +85,46 @@ class DocumentViewSet(AuditableMixin,
         ).all()
 
     def perform_create(self, serializer):
+        user = self.request.user
+
         document = serializer.save()
         DocumentService.create_history(document, True)
         files = DocumentFileAttachment.objects.filter(document=document,
                                                       security_scan_status='NOT RUN')
+
+        if len(files) != 0 and document.status.status != 'Draft':
+            document.status = DocumentStatus.objects.get(status='Pending Submission')
+            document.save()
+
+            AMQPNotificationService.send_notification(
+                interested_organization=user.organization,
+                message=NotificationType.DOCUMENT_PENDING_SUBMISSION.name,
+                notification_type=NotificationType.DOCUMENT_PENDING_SUBMISSION,
+                originating_user=user
+            )
+
         for file in files:
             SecurityScan.send_scan_request(file)
 
     def perform_update(self, serializer):
+        user = self.request.user
+
         document = serializer.save()
         DocumentService.create_history(document, False)
         files = DocumentFileAttachment.objects.filter(document=document,
                                                       security_scan_status='NOT RUN')
+
+        if len(files) != 0 and document.status.status != 'Draft':
+            document.status = DocumentStatus.objects.get(status='Pending Submission')
+            document.save()
+
+            AMQPNotificationService.send_notification(
+                interested_organization=user.organization,
+                message=NotificationType.DOCUMENT_PENDING_SUBMISSION.name,
+                notification_type=NotificationType.DOCUMENT_PENDING_SUBMISSION,
+                originating_user=user
+            )
+
         for file in files:
             SecurityScan.send_scan_request(file)
 

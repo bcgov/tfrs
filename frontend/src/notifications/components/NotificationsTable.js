@@ -30,17 +30,30 @@ const NotificationsTable = (props) => {
     id: 'mark',
     width: 50
   }, {
-    accessor: item => NOTIFICATION_TYPES[item.message].replace(/PVR/, item.relatedCreditTrade.type.theType),
+    accessor: item => {
+      if (item.relatedCreditTrade) {
+        return NOTIFICATION_TYPES[item.message].replace(/PVR/, item.relatedCreditTrade.type.theType);
+      }
+      return NOTIFICATION_TYPES[item.message];
+    },
     Cell: (row) => {
-      const viewUrl = CREDIT_TRANSACTIONS.DETAILS.replace(':id', row.original.relatedCreditTrade.id);
+      let viewUrl = null;
+
+      if (row.original.relatedCreditTrade) {
+        viewUrl = CREDIT_TRANSACTIONS.DETAILS.replace(':id', row.original.relatedCreditTrade.id);
+      }
 
       return (
+
         <button
           type="button"
           onClick={() => {
-            props.updateNotification(row.original.id, { isRead: true });
+            props.updateNotification(row.original.id, {isRead: true});
 
-            history.push(viewUrl);
+            if (viewUrl) {
+
+              history.push(viewUrl);
+            }
           }}
         >
           {row.value}
@@ -81,7 +94,7 @@ const NotificationsTable = (props) => {
     id: 'user',
     width: 150
   }, {
-    accessor: item => item.relatedCreditTrade.id,
+    accessor: item => item.relatedCreditTrade ? item.relatedCreditTrade.id : '-',
     Cell: (row) => {
       const viewUrl = CREDIT_TRANSACTIONS.DETAILS.replace(':id', row.value);
 
@@ -89,7 +102,7 @@ const NotificationsTable = (props) => {
         <button
           type="button"
           onClick={() => {
-            props.updateNotification(row.original.id, { isRead: true });
+            props.updateNotification(row.original.id, {isRead: true});
 
             history.push(viewUrl);
           }}
