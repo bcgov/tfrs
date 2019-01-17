@@ -8,6 +8,7 @@ import (
 	"github.com/streadway/amqp"
 	"github.com/dutchcoders/go-clamd"
 	"github.com/minio/minio-go"
+	"io"
 )
 
 // AMQP message format
@@ -44,7 +45,6 @@ func main() {
 		MinioEndpoint:  getEnv("MINIO_ENDPOINT", ""),
 		MinioSecure:    getEnvBool("MINIO_USE_SSL", false),
 	}
-
 
 	if !conf.BypassMode {
 		testClamAVConnection(&conf)
@@ -203,9 +203,14 @@ func handleRequest(conf *config, body []byte) (response ScanResponse) {
 			return
 		}
 
-		defer resp.Close()
+		piper, pipew := io.Pipe()
+		go func() {
+			defer pipew.Close()
+			defer resp.Close()
+			io.Copy(pipew, resp)
+		}()
 
-		resultChannel, err := clamav.ScanStream(resp, make(chan bool))
+		resultChannel, err := clamav.ScanStream(piper, make(chan bool))
 
 		if err != nil {
 			log.Print(err)

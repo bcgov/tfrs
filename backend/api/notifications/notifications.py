@@ -38,6 +38,8 @@ def send_amqp_notification():
                                   delivery_mode=1
                               ),
                               mandatory=True)
+
+        connection.close()
     except AMQPError as error:
         raise NotificationDeliveryFailure(error)
 
