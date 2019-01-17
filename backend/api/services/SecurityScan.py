@@ -27,10 +27,59 @@ import pika
 from pika.exceptions import AMQPError
 
 from api.models.DocumentFileAttachment import DocumentFileAttachment
+from api.models.DocumentStatus import DocumentStatus
+from api.notifications.notification_types import NotificationType
+from api.notifications.notifications import AMQPNotificationService
 from tfrs.settings import AMQP_CONNECTION_PARAMETERS
 
 
 class SecurityScan:
+
+    @staticmethod
+    def update_status_and_send_notifications(attachment):
+        """Update document status and send notifications is it is required"""
+
+        not_run_files = DocumentFileAttachment.objects.filter(document=attachment.document,
+                                                              security_scan_status='NOT RUN')
+
+        in_progress_files = DocumentFileAttachment.objects.filter(document=attachment.document,
+                                                                  security_scan_status='IN PROGRESS')
+
+        failed_files = DocumentFileAttachment.objects.filter(document=attachment.document,
+                                                             security_scan_status='FAIL')
+
+        if len(not_run_files) > 0 or len(in_progress_files) > 0:
+            # The verdict is not in yet
+            return
+
+        user = attachment.document.update_user
+        if user is None:
+            user = attachment.document.create_user
+
+        if len(failed_files) > 0:
+            attachment.document.status = DocumentStatus.objects.get(status='Security Scan Failed')
+            attachment.document.save()
+
+            AMQPNotificationService.send_notification(
+                interested_organization=user.organization,
+                message=NotificationType.DOCUMENT_SCAN_FAILED.name,
+                notification_type=NotificationType.DOCUMENT_SCAN_FAILED,
+                originating_user=user
+            )
+            return
+        else:
+            AMQPNotificationService.send_notification(
+                interested_organization=user.organization,
+                message=NotificationType.DOCUMENT_SUBMITTED.name,
+                notification_type=NotificationType.DOCUMENT_SUBMITTED,
+                originating_user=user
+            )
+
+            s = DocumentStatus.objects.get(status='Submitted')
+            attachment.document.status = s
+
+            attachment.document.save()
+
 
     @staticmethod
     def handle_scan_response(body):
@@ -47,6 +96,7 @@ class SecurityScan:
 
         attachment.update_timestamp = datetime.now()
         attachment.save()
+        SecurityScan.update_status_and_send_notifications(attachment)
 
     @staticmethod
     def send_scan_request(file: DocumentFileAttachment):
