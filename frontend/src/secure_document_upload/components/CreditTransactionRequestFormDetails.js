@@ -281,21 +281,6 @@ class CreditTransactionRequestFormDetails extends Component {
                 </div>
               </div>
             </div>
-
-            <div className="row main-form">
-              <div className="form-group col-md-12">
-                <label htmlFor="record-number">Record Number:
-                  <input
-                    className="form-control"
-                    id="record-number"
-                    name="recordNumber"
-                    onChange={this.props.handleInputChange}
-                    type="text"
-                    value={this.props.fields.recordNumber}
-                  />
-                </label>
-              </div>
-            </div>
           </div>
         </div>
 
@@ -329,7 +314,6 @@ CreditTransactionRequestFormDetails.propTypes = {
     }),
     files: PropTypes.arrayOf(PropTypes.shape()),
     milestone: PropTypes.string,
-    recordNumber: PropTypes.string,
     title: PropTypes.string
   }).isRequired,
   handleInputChange: PropTypes.func.isRequired

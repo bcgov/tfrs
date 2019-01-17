@@ -31,7 +31,6 @@ class CreditTransactionRequestAddContainer extends Component {
         },
         files: [],
         milestone: '',
-        recordNumber: '',
         title: ''
       },
       validationErrors: {},
@@ -83,7 +82,7 @@ class CreditTransactionRequestAddContainer extends Component {
     const attachments = [];
     const attachedFiles = this.state.fields.files;
 
-    Object.keys(this.state.fields.files).forEach((file) => {
+    Object.keys(attachedFiles).forEach((file) => {
       uploadPromises.push(new Promise((resolve, reject) => {
         const reader = new FileReader();
         reader.onload = () => {
@@ -111,7 +110,6 @@ class CreditTransactionRequestAddContainer extends Component {
       comment: this.state.fields.comment,
       compliancePeriod: this.state.fields.compliancePeriod.id,
       milestone: this.state.fields.milestone,
-      recordNumber: this.state.fields.recordNumber,
       status: status.id,
       title: this.state.fields.title,
       type: this.state.fields.documentType.id,

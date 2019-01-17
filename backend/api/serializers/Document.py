@@ -274,36 +274,36 @@ class DocumentUpdateSerializer(serializers.ModelSerializer):
             is_removed=True
         )
 
-        # for attachment in attachments_to_be_removed:
-        #     print(attachment)
+        files = request.data.get('attachments')
 
-        # files = request.data.get('attachments')
+        for file in files:
+            DocumentFileAttachment.objects.create(
+                document=document,
+                create_user=document.create_user,
+                **file
+            )
 
-        # for file in files:
-        #     DocumentFileAttachment.objects.create(
-        #         document=document,
-        #         create_user=document.create_user,
-        #         **file
-        #     )
+        if document.type.the_type == 'Evidence':
+            DocumentMilestone.objects.update_or_create(
+                document=document,
+                defaults={
+                    'create_user': document.create_user,
+                    'milestone': request.data.get('milestone')
+                }
+            )
 
-        # if document.type.the_type == 'Evidence':
-        #     DocumentMilestone.objects.update(
-        #         document=document,
-        #         create_user=document.create_user,
-        #         milestone=request.data.get('milestone')
-        #     )
+        comment = request.data.get('comment')
 
-        # comment = request.data.get('comment')
-
-        # if comment.strip():
-        #     DocumentComment.objects.create(
-        #         document=document,
-        #         comment=comment,
-        #         create_user=request.user,
-        #         update_user=request.user,
-        #         create_timestamp=datetime.now(),
-        #         privileged_access=False
-        #     )
+        if comment and comment.strip():
+            comment = DocumentComment(
+                document=document,
+                comment=comment,
+                create_user=request.user,
+                update_user=request.user,
+                create_timestamp=datetime.now(),
+                privileged_access=False
+            )
+            comment.save()
 
         return self.instance
 

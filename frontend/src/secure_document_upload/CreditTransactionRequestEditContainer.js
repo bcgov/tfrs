@@ -33,7 +33,6 @@ class CreditTransactionRequestEditContainer extends Component {
         },
         files: [],
         milestone: '',
-        recordNumber: '',
         title: ''
       },
       uploadState: '',
@@ -78,7 +77,6 @@ class CreditTransactionRequestEditContainer extends Component {
         documentType: item.type,
         files: [],
         milestone: (item.milestone ? item.milestone.milestone : '') || '',
-        recordNumber: item.recordNumber || '',
         title: item.title
       };
 
@@ -124,7 +122,7 @@ class CreditTransactionRequestEditContainer extends Component {
     const attachments = [];
     const attachedFiles = this.state.fields.files;
 
-    Object.keys(this.state.fields.files).forEach((file) => {
+    Object.keys(attachedFiles).forEach((file) => {
       uploadPromises.push(new Promise((resolve, reject) => {
         const reader = new FileReader();
         reader.onload = () => {
@@ -165,13 +163,19 @@ class CreditTransactionRequestEditContainer extends Component {
       comment: this.state.fields.comment,
       compliancePeriod: this.state.fields.compliancePeriod.id,
       milestone: this.state.fields.milestone,
-      recordNumber: this.state.fields.recordNumber,
       title: this.state.fields.title
     };
 
-    this.props.updateDocumentUpload(data, id).then((response) => {
-      // history.push(SECURE_DOCUMENT_UPLOAD.LIST);
-      // toastr.documentUpload('Draft saved.');
+    Promise.all(uploadPromises).then(() => {
+      this.props.updateDocumentUpload(data, id).then((response) => {
+        this.setState({ uploadState: 'success' });
+        history.push(SECURE_DOCUMENT_UPLOAD.LIST);
+        // toastr.documentUpload(status.id);
+      });
+    }).catch((reason) => {
+      this.setState({
+        uploadState: 'failed'
+      });
     });
 
     return true;
