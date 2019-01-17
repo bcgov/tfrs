@@ -1,6 +1,6 @@
 {
     "kind": "Template",
-    "apiVersion": "v1",
+    "apiVersion": "template.openshift.io/v1",
     "metadata": {
         "name": "dev-postgresql",
         "creationTimestamp": null
@@ -8,10 +8,10 @@
     "objects": [
         {
             "kind": "DeploymentConfig",
-            "apiVersion": "v1",
+            "apiVersion": "apps.openshift.io/v1",
             "metadata": {
                 "name": "postgresql",
-                "generation": 1,
+                "generation": 140,
                 "creationTimestamp": null,
                 "labels": {
                     "app": "postgresql-persistent",
@@ -39,14 +39,15 @@
                                 "kind": "ImageStreamTag",
                                 "namespace": "openshift",
                                 "name": "postgresql:9.5"
-                            }
+                            },
+                            "lastTriggeredImage": "docker-registry.default.svc:5000/openshift/postgresql@sha256:f90b4ce7c2328e2f38d01e37b3a69cf60f06433df907ecb9432b0934af9624ed"
                         }
                     },
                     {
                         "type": "ConfigChange"
                     }
                 ],
-                "replicas": 1,
+                "replicas": 0,
                 "test": false,
                 "selector": {
                     "name": "postgresql"
@@ -115,7 +116,7 @@
                                 ],
                                 "resources": {
                                     "limits": {
-                                        "cpu": "200m",
+                                        "cpu": "1",
                                         "memory": "1Gi"
                                     },
                                     "requests": {
@@ -209,7 +210,7 @@
                     }
                 ],
                 "selector": {
-                    "name": "postgresql"
+                    "name": "postgresql96"
                 },
                 "type": "ClusterIP",
                 "sessionAffinity": "None"

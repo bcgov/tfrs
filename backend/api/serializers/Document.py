@@ -295,15 +295,21 @@ class DocumentUpdateSerializer(serializers.ModelSerializer):
         comment = request.data.get('comment')
 
         if comment and comment.strip():
-            comment = DocumentComment(
-                document=document,
-                comment=comment,
-                create_user=request.user,
-                update_user=request.user,
-                create_timestamp=datetime.now(),
-                privileged_access=False
-            )
-            comment.save()
+            document_comment = DocumentComment.objects.filter(
+                document=document).first()
+
+            if document_comment:
+                document_comment.comment = comment
+                document_comment.update_timestamp = datetime.now()
+                document_comment.update_user = request.user
+                document_comment.save()
+            else:
+                DocumentComment.objects.create(
+                    document=document,
+                    comment=comment,
+                    create_user=request.user,
+                    create_timestamp=datetime.now()
+                )
 
         return self.instance
 

@@ -1,6 +1,6 @@
 {
     "kind": "Template",
-    "apiVersion": "v1",
+    "apiVersion": "template.openshift.io/v1",
     "metadata": {
         "name": "pipeline",
         "creationTimestamp": null
@@ -8,7 +8,7 @@
     "objects": [
         {
             "kind": "BuildConfig",
-            "apiVersion": "v1",
+            "apiVersion": "build.openshift.io/v1",
             "metadata": {
                 "name": "develop-client-pipeline",
                 "creationTimestamp": null,
@@ -32,13 +32,71 @@
                     "type": "Git",
                     "git": {
                         "uri": "https://github.com/bcgov/tfrs.git",
-                        "ref": "devops-pipeline-notification"
+                        "ref": "master"
                     }
                 },
                 "strategy": {
                     "type": "JenkinsPipeline",
                     "jenkinsPipelineStrategy": {
-                        "jenkinsfilePath": "frontend/Jenkinsfile-develop"
+                        "jenkinsfilePath": "frontend/Jenkinsfile-develop",
+                        "env": [
+                            {
+                                "name": "SUPPLIER_ONE_USERNAME",
+                                "value": "bdd-fuelsupplier1"
+                            },
+                            {
+                                "name": "SUPPLIER_ONE_PASSWORD",
+                                "value": "lowcarbonfue1s"
+                            },
+                            {
+                                "name": "SUPPLIER_TWO_USERNAME",
+                                "value": "bdd-fuelsupplier2"
+                            },
+                            {
+                                "name": "SUPPLIER_TWO_PASSWORD",
+                                "value": "lowcarbonfue1s"
+                            },
+                            {
+                                "name": "SUPPLIER_TWO_ORG",
+                                "value": "TFRS IMBeing Green"
+                            },
+                            {
+                                "name": "ANALYST_USERNAME",
+                                "value": "bdd-analyst"
+                            },
+                            {
+                                "name": "ANALYST_PASSWORD",
+                                "value": "lowcarbonfue1s"
+                            },
+                            {
+                                "name": "DIRECTOR_USERNAME",
+                                "value": "bdd-director"
+                            },
+                            {
+                                "name": "DIRECTOR_PASSWORD",
+                                "value": "lowcarbonfue1s"
+                            },
+                            {
+                                "name": "SUPPLIER_ONE_ORG",
+                                "value": "TFRS Fantastic Fuels"
+                            },
+                            {
+                                "name": "SUPPLIER_ONE_ADMIN_USERNAME",
+                                "value": "bdd-fuelsupplier1admin"
+                            },
+                            {
+                                "name": "SUPPLIER_ONE_ADMIN_PASSWORD",
+                                "value": "lowcarbonfue1s"
+                            },
+                            {
+                                "name": "ADMIN_USERNAME",
+                                "value": "bdd-admin"
+                            },
+                            {
+                                "name": "ADMIN_PASSWORD",
+                                "value": "lowcarbonfue1s"
+                            }
+                        ]
                     }
                 },
                 "output": {},
@@ -52,7 +110,7 @@
         },
         {
             "kind": "BuildConfig",
-            "apiVersion": "v1",
+            "apiVersion": "build.openshift.io/v1",
             "metadata": {
                 "name": "develop-tfrs-pipeline",
                 "creationTimestamp": null,
@@ -96,7 +154,7 @@
         },
         {
             "kind": "BuildConfig",
-            "apiVersion": "v1",
+            "apiVersion": "build.openshift.io/v1",
             "metadata": {
                 "name": "master-client-pipeline",
                 "creationTimestamp": null,
@@ -120,7 +178,7 @@
                     "type": "Git",
                     "git": {
                         "uri": "https://github.com/bcgov/tfrs.git",
-                        "ref": "v1.0.7"
+                        "ref": "v1.2.7"
                     }
                 },
                 "strategy": {
@@ -140,7 +198,7 @@
         },
         {
             "kind": "BuildConfig",
-            "apiVersion": "v1",
+            "apiVersion": "build.openshift.io/v1",
             "metadata": {
                 "name": "master-tfrs-pipeline",
                 "creationTimestamp": null,
@@ -164,7 +222,7 @@
                     "type": "Git",
                     "git": {
                         "uri": "https://github.com/bcgov/tfrs.git",
-                        "ref": "v1.0.7"
+                        "ref": "v1.2.7"
                     }
                 },
                 "strategy": {
@@ -184,7 +242,7 @@
         },
         {
             "kind": "BuildConfig",
-            "apiVersion": "v1",
+            "apiVersion": "build.openshift.io/v1",
             "metadata": {
                 "name": "prod-client-pipeline",
                 "creationTimestamp": null,
@@ -201,7 +259,7 @@
                     "type": "Git",
                     "git": {
                         "uri": "https://github.com/bcgov/tfrs.git",
-                        "ref": "v1.0.0-hotfix"
+                        "ref": "v1.1.0"
                     }
                 },
                 "strategy": {
@@ -221,7 +279,7 @@
         },
         {
             "kind": "BuildConfig",
-            "apiVersion": "v1",
+            "apiVersion": "build.openshift.io/v1",
             "metadata": {
                 "name": "prod-tfrs-pipeline",
                 "creationTimestamp": null,
@@ -238,7 +296,7 @@
                     "type": "Git",
                     "git": {
                         "uri": "https://github.com/bcgov/tfrs.git",
-                        "ref": "v1.0.0-hotfix"
+                        "ref": "v1.1.0"
                     }
                 },
                 "strategy": {
