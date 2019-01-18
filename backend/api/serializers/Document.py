@@ -36,6 +36,7 @@ from api.serializers.DocumentType import DocumentTypeSerializer
 from api.serializers.User import UserMinSerializer
 from api.services.DocumentActions import DocumentActions
 from api.services.DocumentCommentActions import DocumentCommentActions
+from api.services.DocumentService import DocumentService
 
 
 class DocumentFileAttachmentSerializer(serializers.ModelSerializer):
@@ -268,11 +269,11 @@ class DocumentUpdateSerializer(serializers.ModelSerializer):
 
         attachments_to_be_removed = request.data.get('attachments_to_be_removed')
 
-        DocumentFileAttachment.objects.filter(
-            id__in=attachments_to_be_removed
-        ).update(
-            is_removed=True
-        )
+        if attachments_to_be_removed:
+            DocumentService.delete_attachments(
+                document_id=document.id,
+                attachment_ids=attachments_to_be_removed
+            )
 
         files = request.data.get('attachments')
 
@@ -308,7 +309,8 @@ class DocumentUpdateSerializer(serializers.ModelSerializer):
                     document=document,
                     comment=comment,
                     create_user=request.user,
-                    create_timestamp=datetime.now()
+                    create_timestamp=datetime.now(),
+                    privileged_access=False
                 )
 
         return self.instance

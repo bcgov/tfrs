@@ -16,6 +16,7 @@ import {
   uploadDocument
 } from '../actions/documentUploads';
 import history from '../app/History';
+import DOCUMENT_STATUSES from '../constants/documentStatuses';
 import SECURE_DOCUMENT_UPLOAD from '../constants/routes/SecureDocumentUpload';
 import toastr from '../utils/toastr';
 
@@ -73,6 +74,7 @@ class CreditTransactionRequestEditContainer extends Component {
     if (Object.keys(item).length > 0 && !this.submitted) {
       const fieldState = {
         attachments: item.attachments, // updated source to be compared with the original
+        comment: (item.comments.length > 0) ? item.comments[0].comment : '',
         compliancePeriod: item.compliancePeriod,
         documentType: item.type,
         files: [],
@@ -163,6 +165,7 @@ class CreditTransactionRequestEditContainer extends Component {
       comment: this.state.fields.comment,
       compliancePeriod: this.state.fields.compliancePeriod.id,
       milestone: this.state.fields.milestone,
+      status: status.id,
       title: this.state.fields.title
     };
 
@@ -170,7 +173,7 @@ class CreditTransactionRequestEditContainer extends Component {
       this.props.updateDocumentUpload(data, id).then((response) => {
         this.setState({ uploadState: 'success' });
         history.push(SECURE_DOCUMENT_UPLOAD.LIST);
-        // toastr.documentUpload(status.id);
+        toastr.documentUpload(status.id);
       });
     }).catch((reason) => {
       this.setState({
@@ -203,7 +206,7 @@ class CreditTransactionRequestEditContainer extends Component {
       />,
       <Modal
         handleSubmit={(event) => {
-          this._handleSubmit(event);
+          this._handleSubmit(event, DOCUMENT_STATUSES.submitted);
         }}
         id="confirmSubmit"
         key="confirmSubmit"

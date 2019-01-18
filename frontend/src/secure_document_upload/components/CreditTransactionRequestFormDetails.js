@@ -147,6 +147,7 @@ class CreditTransactionRequestFormDetails extends Component {
                         onChange={this.props.handleInputChange}
                         placeholder="Provide an explanation of your Part 3 award milestone completion"
                         rows="5"
+                        value={this.props.fields.comment}
                       />
                     </label>
                   </div>
@@ -189,6 +190,7 @@ class CreditTransactionRequestFormDetails extends Component {
                             className={`btn btn-default ${(this.props.fields.documentType.id === t.id) ? 'active' : ''}`}
                             key={t.id}
                             name="documentType"
+                            disabled={this.props.edit}
                             onClick={this.props.handleInputChange}
                             type="button"
                             value={t.id}
@@ -204,7 +206,7 @@ class CreditTransactionRequestFormDetails extends Component {
 
             <div className="row main-form">
               <div className="form-group col-md-12">
-                <label htmlFor="comment">Attachments:
+                <label htmlFor="attachment">Attachments:
                   <Dropzone
                     activeClassName="is-dragover"
                     className="dropzone"
@@ -293,7 +295,8 @@ class CreditTransactionRequestFormDetails extends Component {
 }
 
 CreditTransactionRequestFormDetails.defaultProps = {
-  children: null
+  children: null,
+  edit: false
 };
 
 CreditTransactionRequestFormDetails.propTypes = {
@@ -303,8 +306,10 @@ CreditTransactionRequestFormDetails.propTypes = {
   ]),
   compliancePeriods: PropTypes.arrayOf(PropTypes.shape()).isRequired,
   categories: PropTypes.arrayOf(PropTypes.shape()).isRequired,
+  edit: PropTypes.bool,
   fields: PropTypes.shape({
     attachments: PropTypes.arrayOf(PropTypes.shape()),
+    comment: PropTypes.string,
     compliancePeriod: PropTypes.shape({
       description: PropTypes.string,
       id: PropTypes.number

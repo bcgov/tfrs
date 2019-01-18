@@ -1,6 +1,11 @@
+from urllib.parse import urlsplit
+import logging
 from django.core.exceptions import ValidationError
+from minio import Minio
 
+from api.models.DocumentFileAttachment import DocumentFileAttachment
 from api.models.DocumentHistory import DocumentHistory
+from tfrs.settings import MINIO
 
 
 class DocumentService(object):
@@ -44,3 +49,36 @@ class DocumentService(object):
             raise ValidationError(error)
 
         history.save()
+
+    @staticmethod
+    def delete_attachments(document_id, attachment_ids):
+        """
+        Sends a request to the minio instance to delete the files associated
+        to the DocumentFile records related to the provided parameters
+        """
+        minio = Minio(MINIO['ENDPOINT'],
+                      access_key=MINIO['ACCESS_KEY'],
+                      secret_key=MINIO['SECRET_KEY'],
+                      secure=MINIO['USE_SSL'])
+
+        attachments = DocumentFileAttachment.objects.filter(
+            document_id=document_id,  # additional security
+            id__in=attachment_ids
+        )
+
+        object_names = map(DocumentService.get_filename, attachments)
+        for error in minio.remove_objects(MINIO['BUCKET_NAME'], object_names):
+            logging.error(error)
+
+        attachments.update(
+            is_removed=True
+        )
+
+    @staticmethod
+    def get_filename(attachment):
+        """
+        This parses the url from DocumentFile and gets the filename that you
+        can send to minio for deletion
+        """
+        pathname = urlsplit(attachment.url).path
+        return pathname.replace('/{}/'.format(MINIO['BUCKET_NAME']), '')
