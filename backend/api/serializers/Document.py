@@ -27,6 +27,7 @@ from api.models.DocumentFileAttachment import DocumentFileAttachment
 from api.models.Document import Document
 from api.models.DocumentComment import DocumentComment
 from api.models.DocumentMilestone import DocumentMilestone
+from api.models.DocumentStatus import DocumentStatus
 
 from api.serializers.CompliancePeriod import CompliancePeriodSerializer
 from api.serializers.DocumentComment import DocumentCommentSerializer
@@ -94,12 +95,13 @@ class DocumentCreateSerializer(serializers.ModelSerializer):
 
         files = request.data.get('attachments')
 
-        for file in files:
-            DocumentFileAttachment.objects.create(
-                document=document,
-                create_user=document.create_user,
-                **file
-            )
+        if files:
+            for file in files:
+                DocumentFileAttachment.objects.create(
+                    document=document,
+                    create_user=document.create_user,
+                    **file
+                )
 
         if document.type.the_type == 'Evidence':
             DocumentMilestone.objects.create(
@@ -110,7 +112,7 @@ class DocumentCreateSerializer(serializers.ModelSerializer):
 
         comment = request.data.get('comment')
 
-        if comment.strip():
+        if comment and comment.strip():
             DocumentComment.objects.create(
                 document=document,
                 comment=comment,
@@ -261,6 +263,27 @@ class DocumentUpdateSerializer(serializers.ModelSerializer):
     comments = DocumentCommentSerializer(many=True, read_only=True)
     milestone = DocumentMilestoneSerializer(read_only=True)
 
+    def validate(self, data):
+        status = data.get('status')
+
+        if status != DocumentStatus.objects.get(status='Draft'):
+            document = self.instance
+
+            if document.title != data.get('title') or \
+                    document.type_id != data.get('type') or \
+                    document.compliance_period_id != \
+                    data.get('compliance_period') or \
+                    document.record_number != data.get('record_number') or \
+                    document.milestone.milestone != data.get('milestone') or \
+                    data.get('attachments_to_be_removed') or \
+                    data.get('attachments'):
+                raise serializers.ValidationError({
+                    'readOnly': "Cannot update other fields unless the "
+                                "document is in draft."
+                })
+
+        return data
+
     def save(self, **kwargs):
         super().save(**kwargs)
 
@@ -277,12 +300,13 @@ class DocumentUpdateSerializer(serializers.ModelSerializer):
 
         files = request.data.get('attachments')
 
-        for file in files:
-            DocumentFileAttachment.objects.create(
-                document=document,
-                create_user=document.create_user,
-                **file
-            )
+        if files:
+            for file in files:
+                DocumentFileAttachment.objects.create(
+                    document=document,
+                    create_user=document.create_user,
+                    **file
+                )
 
         if document.type.the_type == 'Evidence':
             DocumentMilestone.objects.update_or_create(
