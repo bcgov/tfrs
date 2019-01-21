@@ -38,26 +38,29 @@ class NotificationSubscription(Auditable):
         User,
         on_delete=models.PROTECT,
         null=False,
-        db_comment='The user subscribing to notifications on this channel'
+        db_comment="The user subscribing to notifications on this channel"
     )
-
-    notification_type = models.CharField(db_comment='The event that can trigger this notification',
-                                         choices=[(d, d.value) for d in NotificationType],
-                                         max_length=128,
-                                         null=False,
-                                         blank=False)
-
+    notification_type = models.CharField(
+        choices=[(d, d.value) for d in NotificationType],
+        max_length=128,
+        null=False,
+        blank=False,
+        db_comment="The event that can trigger this notification"
+    )
     channel = models.ForeignKey(
         NotificationChannel,
         on_delete=models.CASCADE,
         null=False
     )
-
-    enabled = models.BooleanField(db_comment='Enable subscription',
-                                  null=False)
+    enabled = models.BooleanField(
+        null=False,
+        db_comment="Flag. True if the user is set to received notifications "
+                   "for this channel."
+    )
 
     class Meta:
         db_table = 'notification_subscription'
         unique_together = ('user', 'channel', 'notification_type')
 
-    db_table_comment = "Represents a user's subscription to notification events"
+    db_table_comment = "Represents a user's subscription to notification " \
+                       "events"

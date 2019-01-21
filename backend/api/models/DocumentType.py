@@ -30,39 +30,43 @@ from auditable.models import Auditable
 
 
 class DocumentType(Auditable, EffectiveDates):
-
     """
-    Holds the different types of Credit Trades and if they're only usable
-    by government users only
+    Contains a list of types used to classify a document.
     """
     the_type = models.CharField(
         max_length=100,
         blank=True,
         null=True,
         unique=True,
-        db_comment='Short descriptive name of the document type.'
+        db_comment="Short descriptive name of the document type."
     )
 
     description = models.CharField(
-        max_length=1000, blank=True, null=True, db_comment='Description of '
-                                                           'the document type. This is the displayed name.')
+        max_length=1000, blank=True, null=True,
+        db_comment="Description of the document type. This is the "
+                   "displayed name."
+    )
 
-    category = models.ForeignKey(DocumentCategory,
-                                 blank=False,
-                                 null=False,
-                                 unique=False,
-                                 related_name='types')
+    category = models.ForeignKey(
+        DocumentCategory,
+        blank=False,
+        null=False,
+        unique=False,
+        related_name='types'
+    )
 
     objects = DocumentTypeManager()
 
     def natural_key(self):
         """
-        Allows type 'description' (Sell, Buy, etc) to be used to identify
-        a row in the table
+        Allows type 'description' (Application, Evidence, etc.) to be used to
+        identify a row in the table
         """
         return (self.the_type,)
 
     class Meta:
         db_table = 'document_type'
 
-    db_table_comment = 'Contains a list of document types.'
+    db_table_comment = "Contains a list of types used to classify a " \
+                       "document such as P3A Application, " \
+                       "Milestone Evidence, Fuel Supply Records, etc."
