@@ -3,23 +3,6 @@
 from __future__ import unicode_literals
 
 from django.db import migrations, models
-from django.db.migrations import RunPython
-import django.db.models.deletion
-
-
-def remove_user_role(_apps, _schema_editor):
-    migrations.RemoveField(
-        model_name='documenthistory',
-        name='user_role'
-    )
-
-
-def add_user_role(_apps, _schema_editor):
-    migrations.AddField(
-        model_name='documenthistory',
-        name='user_role',
-        field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='document_history_roles', to='api.Role'),
-    )
 
 
 class Migration(migrations.Migration):
@@ -29,5 +12,8 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        RunPython(remove_user_role, add_user_role)
+        migrations.RemoveField(
+            model_name='documenthistory',
+            name='user_role'
+        ),
     ]
