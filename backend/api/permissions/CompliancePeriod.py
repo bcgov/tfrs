@@ -30,7 +30,7 @@ class CompliancePeriodPermissions(permissions.BasePermission):
         """Check permissions When an object does not yet exist (POST)"""
 
         if request.method in permissions.SAFE_METHODS:
-            return request.user.has_perm('VIEW_COMPLIANCE_PERIODS')
+            return True
 
         return request.user.has_perm('EDIT_COMPLIANCE_PERIODS')
 
