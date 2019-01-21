@@ -49,7 +49,7 @@ class SpreadSheetBuilder(object):
                     "Credit Validation", "Part 3 Award"]:
                 worksheet.write(row_index, 3, credit_trade.credits_from.name)
 
-            if credit_trade.type.the_type not in ["Credit Retirement"]:
+            if credit_trade.type.the_type not in ["Credit Reduction"]:
                 worksheet.write(row_index, 4, credit_trade.credits_to.name)
 
             worksheet.write(row_index, 5, credit_trade.number_of_credits,
