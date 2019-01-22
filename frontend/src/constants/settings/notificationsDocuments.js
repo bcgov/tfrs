@@ -1,4 +1,4 @@
-const DOCUMENT_NOTIFICATIONS = [ {
+const DOCUMENT_NOTIFICATIONS = [{
   id: 1,
   code: 'DOCUMENT_PENDING_SUBMISSION',
   description: 'File Pending Submission',

@@ -20,7 +20,7 @@ class CreditTransactionRequestFormDetails extends Component {
 
     if (documentType && documentType.theType === 'Evidence') {
       return {
-        titlePlaceholder: 'e.g. Milestone B.2 - Construction, Milestone B.4 & B.5, etc.',
+        titlePlaceholder: 'e.g. P3A-18COM1, Cold Weather Biodiesel, etc.',
         commentPlaceholder: 'Optional: provide any additional information with respect to your P3A evidence submission'
       };
     }
