@@ -64,7 +64,7 @@ const SettingsDetails = props => (
           type="government-transfer"
         />,
         <h3 key="header-doc">
-          Document Uploads
+          File Submission
         </h3>,
         <NotificationsCreditTransactionsTable
           addToFields={props.addToFields}
