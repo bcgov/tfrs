@@ -89,18 +89,21 @@ class DocumentViewSet(AuditableMixin,
 
         document = serializer.save()
         DocumentService.create_history(document, True)
-        files = DocumentFileAttachment.objects.filter(document=document,
-                                                      security_scan_status='NOT RUN')
+        files = DocumentFileAttachment.objects.filter(
+            document=document,
+            security_scan_status='NOT RUN')
 
-        if len(files) != 0 and document.status.status != 'Draft':
-            document.status = DocumentStatus.objects.get(status='Pending Submission')
+        if files and document.status.status != 'Draft':
+            document.status = DocumentStatus.objects.get(
+                status='Pending Submission')
             document.save()
 
             AMQPNotificationService.send_notification(
                 interested_organization=user.organization,
                 message=NotificationType.DOCUMENT_PENDING_SUBMISSION.name,
                 notification_type=NotificationType.DOCUMENT_PENDING_SUBMISSION,
-                originating_user=user
+                originating_user=user,
+                related_document=document
             )
 
         for file in files:
@@ -111,18 +114,21 @@ class DocumentViewSet(AuditableMixin,
 
         document = serializer.save()
         DocumentService.create_history(document, False)
-        files = DocumentFileAttachment.objects.filter(document=document,
-                                                      security_scan_status='NOT RUN')
+        files = DocumentFileAttachment.objects.filter(
+            document=document,
+            security_scan_status='NOT RUN')
 
-        if len(files) != 0 and document.status.status != 'Draft':
-            document.status = DocumentStatus.objects.get(status='Pending Submission')
+        if files and document.status.status != 'Draft':
+            document.status = DocumentStatus.objects.get(
+                status='Pending Submission')
             document.save()
 
             AMQPNotificationService.send_notification(
                 interested_organization=user.organization,
                 message=NotificationType.DOCUMENT_PENDING_SUBMISSION.name,
                 notification_type=NotificationType.DOCUMENT_PENDING_SUBMISSION,
-                originating_user=user
+                originating_user=user,
+                related_document=document
             )
 
         for file in files:

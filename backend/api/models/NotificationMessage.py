@@ -23,9 +23,10 @@
 
 from django.db import models
 
-from api.models.User import User
 from api.models.CreditTrade import CreditTrade
+from api.models.Document import Document
 from api.models.Organization import Organization
+from api.models.User import User
 from auditable.models import Auditable
 
 
@@ -33,30 +34,33 @@ class NotificationMessage(Auditable):
     """
     Notification Message
     """
-
     user = models.ForeignKey(
         User,
         on_delete=models.PROTECT,
         null=False,
         db_comment='The user receiving the notification'
     )
-
     related_organization = models.ForeignKey(
         Organization,
         on_delete=models.PROTECT,
-        null=True)
-
+        null=True
+    )
     related_credit_trade = models.ForeignKey(
         CreditTrade,
         on_delete=models.PROTECT,
-        null=True)
-
+        null=True
+    )
+    related_document = models.ForeignKey(
+        Document,
+        on_delete=models.PROTECT,
+        null=True
+    )
     related_user = models.ForeignKey(
         User,
         on_delete=models.PROTECT,
         related_name='notification_related_user',
-        null=True)
-
+        null=True
+    )
     originating_user = models.ForeignKey(
         User,
         on_delete=models.PROTECT,
@@ -64,32 +68,27 @@ class NotificationMessage(Auditable):
         related_name='notification_originating_user',
         db_comment='The (possibly NULL) user that caused this notification to be created'
     )
-
     message = models.CharField(
         null=False,
         blank=False,
         max_length=4000,
         db_comment="The text of the message"
     )
-
     is_read = models.BooleanField(
         default=False,
         null=False,
         db_comment="Flag. True if this message marked as having been read"
     )
-
     is_warning = models.BooleanField(
         default=False,
         null=False,
         db_comment="Flag. True if this conveys information about a warning"
     )
-
     is_error = models.BooleanField(
         default=False,
         null=False,
         db_comment="Flag. True if this conveys information about an error"
     )
-
     is_archived = models.BooleanField(
         default=False,
         null=False,
@@ -99,4 +98,5 @@ class NotificationMessage(Auditable):
     class Meta:
         db_table = 'notification_message'
 
-    db_table_comment = "Represents a notification message sent to an application user"
+    db_table_comment = "Represents a notification message sent to an " \
+                       "application user"

@@ -34,19 +34,25 @@ from tfrs.settings import AMQP_CONNECTION_PARAMETERS
 
 
 class SecurityScan:
-
+    """
+    Class to update and send notifications for the file attachments
+    """
     @staticmethod
     def update_status_and_send_notifications(attachment):
         """Update document status and send notifications is it is required"""
 
-        not_run_files = DocumentFileAttachment.objects.filter(document=attachment.document,
-                                                              security_scan_status='NOT RUN')
-
-        in_progress_files = DocumentFileAttachment.objects.filter(document=attachment.document,
-                                                                  security_scan_status='IN PROGRESS')
-
-        failed_files = DocumentFileAttachment.objects.filter(document=attachment.document,
-                                                             security_scan_status='FAIL')
+        not_run_files = DocumentFileAttachment.objects.filter(
+            document=attachment.document,
+            security_scan_status='NOT RUN'
+        )
+        in_progress_files = DocumentFileAttachment.objects.filter(
+            document=attachment.document,
+            security_scan_status='IN PROGRESS'
+        )
+        failed_files = DocumentFileAttachment.objects.filter(
+            document=attachment.document,
+            security_scan_status='FAIL'
+        )
 
         if len(not_run_files) > 0 or len(in_progress_files) > 0:
             # The verdict is not in yet
@@ -57,14 +63,16 @@ class SecurityScan:
             user = attachment.document.create_user
 
         if len(failed_files) > 0:
-            attachment.document.status = DocumentStatus.objects.get(status='Security Scan Failed')
+            attachment.document.status = DocumentStatus.objects.get(
+                status='Security Scan Failed')
             attachment.document.save()
 
             AMQPNotificationService.send_notification(
                 interested_organization=user.organization,
                 message=NotificationType.DOCUMENT_SCAN_FAILED.name,
                 notification_type=NotificationType.DOCUMENT_SCAN_FAILED,
-                originating_user=user
+                originating_user=user,
+                related_document=attachment.document
             )
             return
         else:
@@ -72,22 +80,26 @@ class SecurityScan:
                 interested_organization=user.organization,
                 message=NotificationType.DOCUMENT_SUBMITTED.name,
                 notification_type=NotificationType.DOCUMENT_SUBMITTED,
-                originating_user=user
+                originating_user=user,
+                related_document=attachment.document
             )
 
-            s = DocumentStatus.objects.get(status='Submitted')
-            attachment.document.status = s
+            submitted_status = DocumentStatus.objects.get(status='Submitted')
+            attachment.document.status = submitted_status
 
             attachment.document.save()
 
-
     @staticmethod
     def handle_scan_response(body):
+        """
+        Method to parse the response from the scan and update the status
+        accordingly
+        """
         response = json.loads(body)
-        id = response['id']
+        file_id = response['id']
         scan_complete = response['scanComplete']
         scan_passed = response['scanPassed']
-        attachment = DocumentFileAttachment.objects.get(id=id)
+        attachment = DocumentFileAttachment.objects.get(id=file_id)
         if scan_complete:
             if scan_passed:
                 attachment.security_scan_status = 'PASS'
@@ -100,6 +112,9 @@ class SecurityScan:
 
     @staticmethod
     def send_scan_request(file: DocumentFileAttachment):
+        """
+        Method to send the notification
+        """
         try:
             parameters = AMQP_CONNECTION_PARAMETERS
             connection = pika.BlockingConnection(parameters)
