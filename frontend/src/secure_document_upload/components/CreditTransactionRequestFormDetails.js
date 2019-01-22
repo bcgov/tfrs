@@ -66,6 +66,8 @@ class CreditTransactionRequestFormDetails extends Component {
       }
     });
 
+    this.props.handlePageTitle(documentType.description);
+
     return documentType;
   }
 
@@ -336,7 +338,8 @@ CreditTransactionRequestFormDetails.propTypes = {
     recordNumber: PropTypes.string,
     title: PropTypes.string
   }).isRequired,
-  handleInputChange: PropTypes.func.isRequired
+  handleInputChange: PropTypes.func.isRequired,
+  handlePageTitle: PropTypes.func.isRequired
 };
 
 export default CreditTransactionRequestFormDetails;
