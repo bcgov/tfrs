@@ -12,10 +12,12 @@ from api.models.NotificationMessage import NotificationMessage
 from api.models.NotificationSubscription import NotificationSubscription
 from api.models.User import User
 from api.models.CreditTrade import CreditTrade
+from api.models.Document import Document
 from api.models.Organization import Organization
 from api.models.Role import Role
 from api.notifications.notification_types import NotificationType
 from tfrs.settings import AMQP_CONNECTION_PARAMETERS, EMAIL
+
 
 def send_amqp_notification():
     try:
@@ -224,13 +226,13 @@ class AMQPNotificationService:
                 enabled=subscribed
             ).save()
 
-
     @staticmethod
     @transaction.atomic
     def send_notification(message: str,
                           interested_organization: Organization,
                           interested_roles: List[Role] = [],
                           related_credit_trade: CreditTrade = None,
+                          related_document: Document = None,
                           related_organization: Organization = None,
                           related_user: User = None,
                           is_error: bool = False,
@@ -240,8 +242,11 @@ class AMQPNotificationService:
                           originating_user: User = None):
 
         if interested_organization is None and not is_global:
-            raise InvalidNotificationArguments('interested_organization is required'
-                                               ' if this is not a global notification')
+            raise InvalidNotificationArguments(
+                'interested_organization is required'
+                ' if this is not a global notification'
+            )
+
         if message is None or len(message) == 0:
             raise InvalidNotificationArguments('msg is required')
 
@@ -254,6 +259,7 @@ class AMQPNotificationService:
                 user=recipient,
                 originating_user=originating_user,
                 related_credit_trade=related_credit_trade,
+                related_document=related_document,
                 related_organization=related_organization,
                 related_user=related_user,
                 message=message,
@@ -263,6 +269,7 @@ class AMQPNotificationService:
             notification.save()
 
             effective_subscriptions = AMQPNotificationService.compute_effective_subscriptions(recipient)
+
             target_subscription = EffectiveSubscription(
                 channel=NotificationChannel.objects.get(channel='EMAIL'),
                 notification_type=notification_type,
@@ -270,7 +277,8 @@ class AMQPNotificationService:
             )
 
             if target_subscription in effective_subscriptions:
-                AMQPNotificationService.send_email_for_notification(notification)
+                AMQPNotificationService.send_email_for_notification(
+                    notification)
 
         send_amqp_notification()
 

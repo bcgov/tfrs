@@ -66,13 +66,13 @@ const toastr = {
         reduxToastr.success('Success!', 'Draft saved.');
         break;
       case DOCUMENT_STATUSES.received.id:
-        reduxToastr.success('Success!', 'Document received.');
+        reduxToastr.success('Success!', 'File received.');
         break;
       case DOCUMENT_STATUSES.submitted.id:
-        reduxToastr.success('Success!', 'Document uploaded.');
+        reduxToastr.success('Success!', 'File submitted.');
         break;
       default:
-        reduxToastr.success('Success!', 'Document uploaded.');
+        reduxToastr.success('Success!', 'File uploaded.');
     }
   },
   subscriptionsSuccess: (message = '') => {
