@@ -12,6 +12,7 @@ import CheckBox from '../../app/components/CheckBox';
 import history from '../../app/History';
 import NOTIFICATION_TYPES from '../../constants/notificationTypes';
 import CREDIT_TRANSACTIONS from '../../constants/routes/CreditTransactions';
+import SECURE_DOCUMENT_UPLOAD from '../../constants/routes/SecureDocumentUpload';
 
 const NotificationsTable = (props) => {
   const columns = [{
@@ -40,19 +41,19 @@ const NotificationsTable = (props) => {
     Cell: (row) => {
       let viewUrl = null;
 
-      if (row.original.relatedCreditTrade) {
+      if (row.original.relatedDocument) {
+        viewUrl = SECURE_DOCUMENT_UPLOAD.DETAILS.replace(':id', row.original.relatedDocument.id);
+      } else if (row.original.relatedCreditTrade) {
         viewUrl = CREDIT_TRANSACTIONS.DETAILS.replace(':id', row.original.relatedCreditTrade.id);
       }
 
       return (
-
         <button
           type="button"
           onClick={() => {
-            props.updateNotification(row.original.id, {isRead: true});
+            props.updateNotification(row.original.id, { isRead: true });
 
             if (viewUrl) {
-
               history.push(viewUrl);
             }
           }}
@@ -95,7 +96,7 @@ const NotificationsTable = (props) => {
     id: 'user',
     width: 150
   }, {
-    accessor: item => item.relatedCreditTrade ? item.relatedCreditTrade.id : '-',
+    accessor: item => (item.relatedCreditTrade ? item.relatedCreditTrade.id : '-'),
     Cell: (row) => {
       const viewUrl = CREDIT_TRANSACTIONS.DETAILS.replace(':id', row.value);
 
@@ -103,7 +104,7 @@ const NotificationsTable = (props) => {
         <button
           type="button"
           onClick={() => {
-            props.updateNotification(row.original.id, {isRead: true});
+            props.updateNotification(row.original.id, { isRead: true });
 
             history.push(viewUrl);
           }}

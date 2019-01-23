@@ -33,6 +33,7 @@ class CreditTransactionRequestForm extends Component {
             edit={this.props.edit}
             fields={this.props.fields}
             handleInputChange={this.props.handleInputChange}
+            handlePageTitle={this.props.handlePageTitle}
           />
 
           {Object.keys(this.props.errors).length > 0 &&
@@ -82,11 +83,13 @@ class CreditTransactionRequestForm extends Component {
 
 CreditTransactionRequestForm.defaultProps = {
   edit: false,
+  handlePageTitle: () => {},
   id: 0,
   title: 'New Credit Transaction Request'
 };
 
 CreditTransactionRequestForm.propTypes = {
+  categories: PropTypes.arrayOf(PropTypes.shape()).isRequired,
   compliancePeriods: PropTypes.arrayOf(PropTypes.shape()).isRequired,
   edit: PropTypes.bool,
   errors: PropTypes.shape({}).isRequired,
@@ -95,10 +98,10 @@ CreditTransactionRequestForm.propTypes = {
   }).isRequired,
   getCompliancePeriods: PropTypes.func.isRequired,
   handleInputChange: PropTypes.func.isRequired,
+  handlePageTitle: PropTypes.func,
   handleSubmit: PropTypes.func.isRequired,
   id: PropTypes.number,
-  title: PropTypes.string,
-  categories: PropTypes.arrayOf(PropTypes.shape()).isRequired
+  title: PropTypes.string
 };
 
 const mapStateToProps = state => ({

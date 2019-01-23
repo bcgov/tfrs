@@ -19,9 +19,9 @@ const NOTIFICATION_TYPES = {
   PVR_PULLED_BACK: 'PVR Recalled as draft',
   PVR_RECOMMENDED_FOR_APPROVAL: 'PVR Recommended For Approval',
   PVR_RETURNED_TO_ANALYST: 'PVR Returned to Analyst',
-  DOCUMENT_PENDING_SUBMISSION: 'Document Pending Submission',
-  DOCUMENT_SUBMITTED: 'Document Submitted',
-  DOCUMENT_SCAN_FAILED: 'Document Security Scan Failed'
+  DOCUMENT_PENDING_SUBMISSION: 'File Pending Submission',
+  DOCUMENT_SUBMITTED: 'File Submitted',
+  DOCUMENT_SCAN_FAILED: 'File Security Scan Failed'
 };
 
 export default NOTIFICATION_TYPES;

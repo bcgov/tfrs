@@ -1,13 +1,13 @@
-const DOCUMENT_NOTIFICATIONS = [ {
+const DOCUMENT_NOTIFICATIONS = [{
   id: 1,
   code: 'DOCUMENT_PENDING_SUBMISSION',
-  description: 'Document Pending Submission',
+  description: 'File Pending Submission',
   key: 'pending',
   recipients: ['fuel_supplier']
 }, {
   id: 2,
   code: 'DOCUMENT_SUBMITTED',
-  description: 'Document Submitted',
+  description: 'File Submitted',
   key: 'submitted',
   recipients: ['fuel_supplier']
 }, {
