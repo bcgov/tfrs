@@ -8,7 +8,7 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('api', '0066_permissions_remove_view_compliance_periods'),
+        ('api', '0068_rename_fuel_supply_records'),
     ]
 
     operations = [
