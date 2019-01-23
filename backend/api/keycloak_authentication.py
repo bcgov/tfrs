@@ -15,6 +15,9 @@ from cryptography.hazmat.primitives import serialization
 from api.models.User import User
 from api.models.UserCreationRequest import UserCreationRequest
 from api.services.KeycloakAPI import map_user
+from django.core.cache import caches
+
+cache = caches['keycloak']
 
 
 class UserAuthentication(authentication.BaseAuthentication):
@@ -33,16 +36,20 @@ class UserAuthentication(authentication.BaseAuthentication):
         if not settings.KEYCLOAK['DOWNLOAD_CERTS']:
             return decoded_keys
 
-        # TODO cache the keys for some amount of time (in the db, perhaps)
+        keys = cache.get('verification_keys')
 
-        # Download a key directly from Keycloak
-        response = requests.get(settings.KEYCLOAK['CERTS_URL'], timeout=5)
+        if keys is None:
+            # Cache miss. Download a key directly from Keycloak
+            response = requests.get(settings.KEYCLOAK['CERTS_URL'], timeout=5)
 
-        if not response:
-            raise RuntimeError('keys not available from {}'.format(
-                settings.KEYCLOAK['CERTS_URL']))
+            if not response:
+                raise RuntimeError('keys not available from {}'.format(
+                    settings.KEYCLOAK['CERTS_URL']))
 
-        keys = response.json()
+            keys = response.json()
+
+            cache.set('verification_keys', keys, 600)
+
         decoded_keys = {}
 
         for key in keys['keys']:
