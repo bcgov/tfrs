@@ -23,15 +23,14 @@
 from django.db import models
 
 from api.models.Document import Document
-from api.models.Role import Role
 from api.models.mixins.DocumentData import DocumentData
 from auditable.models import Auditable
 
 
 class DocumentHistory(Auditable, DocumentData):
     """
-    Holds the credit trade proposal information between the
-    organizations
+    List of changes that was applied to the document's information such as
+    title, compliance period, etc.
     """
     document = models.ForeignKey(
         Document,
@@ -40,14 +39,8 @@ class DocumentHistory(Auditable, DocumentData):
         null=False
     )
 
-    user_role = models.ForeignKey(
-        Role,
-        related_name='role',
-        on_delete=models.PROTECT,
-        null=False
-    )
-
     class Meta:
         db_table = 'document_history'
 
-    db_table_comment = ''
+    db_table_comment = "List of changes that was applied to the document's " \
+                       "information such as title, compliance period, etc."

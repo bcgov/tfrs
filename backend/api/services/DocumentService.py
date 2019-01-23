@@ -38,8 +38,7 @@ class DocumentService(object):
             status_id=document.status.id,
             title=document.title,
             type_id=document.type.id,
-            update_user=document.update_user,
-            user_role_id=role_id
+            update_user=document.update_user
         )
 
         # Validate

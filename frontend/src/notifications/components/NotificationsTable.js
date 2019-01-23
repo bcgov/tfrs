@@ -30,10 +30,11 @@ const NotificationsTable = (props) => {
     id: 'mark',
     width: 50
   }, {
-    accessor: item => {
+    accessor: (item) => {
       if (item.relatedCreditTrade) {
         return NOTIFICATION_TYPES[item.message].replace(/PVR/, item.relatedCreditTrade.type.theType);
       }
+
       return NOTIFICATION_TYPES[item.message];
     },
     Cell: (row) => {

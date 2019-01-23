@@ -29,14 +29,16 @@ from auditable.models import Auditable
 
 
 class DocumentStatus(Auditable, DisplayOrder, EffectiveDates):
-
+    """
+    List of Possible statuses for documents.
+    """
     status = models.CharField(
         max_length=25,
         blank=True,
         null=True,
         unique=True,
-        db_comment="Contains an enumerated value to describe the document status."
-                   "This is a unique natural key."
+        db_comment="Contains an enumerated value to describe the document "
+                   "status. This is a unique natural key."
     )
 
     objects = DocumentStatusManager()
@@ -51,4 +53,6 @@ class DocumentStatus(Auditable, DisplayOrder, EffectiveDates):
     class Meta:
         db_table = 'document_status'
 
-    db_table_comment = ''
+    db_table_comment = "List of possible statuses." \
+                       "(Draft, Submitted, Received, Security Scan Failed, " \
+                       "Pending Submission)"
