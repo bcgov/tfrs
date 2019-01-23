@@ -8,7 +8,8 @@ import axios from 'axios';
 
 import history from '../../app/History';
 import * as Lang from '../../constants/langEnUs';
-import {getFileSize, getIcon, getScanStatusIcon} from '../../utils/functions';
+import SECURE_DOCUMENT_UPLOAD from '../../constants/routes/SecureDocumentUpload';
+import { getFileSize, getIcon, getScanStatusIcon } from '../../utils/functions';
 import CreditTransactionRequestComment from './CreditTransactionRequestComment';
 import CreditTransactionRequestCommentButtons from './CreditTransactionRequestCommentButtons';
 import CreditTransactionRequestCommentForm from './CreditTransactionRequestCommentForm';
@@ -16,6 +17,7 @@ import CreditTransactionRequestCommentForm from './CreditTransactionRequestComme
 const CreditTransactionRequestDetails = props => (
   <div className="page-credit-transaction-request-details">
     <h1>{props.item.type.description}</h1>
+
     <div className="credit-transaction-request-details">
 
       <div className="row">
@@ -89,10 +91,13 @@ const CreditTransactionRequestDetails = props => (
                   {props.item.attachments.map(attachment => (
                     <li key={attachment.url}>
                       <span className="document-icon">
-                        <FontAwesomeIcon icon={getIcon(attachment.mimeType)} fixedWidth/>
+                        <FontAwesomeIcon icon={getIcon(attachment.mimeType)} fixedWidth />
                       </span>
                       <span className="document-icon" data-security-scan-status={attachment.securityScanStatus}>
-                        <FontAwesomeIcon icon={getScanStatusIcon(attachment.securityScanStatus)} fixedWidth/>
+                        <FontAwesomeIcon
+                          icon={getScanStatusIcon(attachment.securityScanStatus)}
+                          fixedWidth
+                        />
                       </span>
                       <button
                         type="button"
@@ -118,20 +123,12 @@ const CreditTransactionRequestDetails = props => (
               </label>
             </div>
           </div>
-
-          <div className="row">
-            <div className="form-group col-md-12">
-              <label htmlFor="record-number">Record Number:
-                {props.item.recordNumber}
-              </label>
-            </div>
-          </div>
         </div>
       </div>
 
       {props.item.comments.length > 0 && <h3 className="comments-header">Comments</h3>}
       {props.item.comments.map(c => (
-        <CreditTransactionRequestComment comment={c} key={c.id} saveComment={props.saveComment}/>
+        <CreditTransactionRequestComment comment={c} key={c.id} saveComment={props.saveComment} />
       ))
       }
       <div className="row">
@@ -158,8 +155,17 @@ const CreditTransactionRequestDetails = props => (
         onClick={() => history.goBack()}
         type="button"
       >
-        <FontAwesomeIcon icon="arrow-circle-left"/> {Lang.BTN_APP_CANCEL}
+        <FontAwesomeIcon icon="arrow-circle-left" /> {Lang.BTN_APP_CANCEL}
       </button>
+
+      <button
+        className="btn btn-default"
+        type="button"
+        onClick={() => history.push(SECURE_DOCUMENT_UPLOAD.EDIT.replace(':id', props.item.id))}
+      >
+        <FontAwesomeIcon icon="edit" /> Edit
+      </button>
+
       {props.availableActions.includes('Submitted') &&
       <button
         className="btn btn-primary"
@@ -167,7 +173,7 @@ const CreditTransactionRequestDetails = props => (
         data-toggle="modal"
         type="button"
       >
-        <FontAwesomeIcon icon="share-square"/> Submit
+        <FontAwesomeIcon icon="share-square" /> Submit
       </button>
       }
       {props.availableActions.includes('Received') &&
@@ -177,7 +183,7 @@ const CreditTransactionRequestDetails = props => (
         data-toggle="modal"
         type="button"
       >
-        <FontAwesomeIcon icon="check"/> Received
+        <FontAwesomeIcon icon="check" /> Received
       </button>
       }
     </div>

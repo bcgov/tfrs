@@ -19,6 +19,11 @@
 
       .btn {
         margin-right: 0;
+
+        &.active:disabled { /* remove hover effects */
+          background-color: #e6e6e6;
+          border-color: #adadad;
+        }
       }
     }
 
