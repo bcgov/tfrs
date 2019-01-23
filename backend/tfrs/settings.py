@@ -192,3 +192,13 @@ CORS_ORIGIN_ALLOW_ALL = True
 
 # List of origin hostnames that are authorized to make cross-site HTTP requests
 CORS_ORIGIN_WHITELIST = ()
+
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.dummy.DummyCache',
+    },
+    'keycloak': {
+        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
+        'LOCATION': 'keycloak',
+    }
+}
