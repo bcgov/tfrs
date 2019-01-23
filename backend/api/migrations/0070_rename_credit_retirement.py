@@ -43,7 +43,7 @@ class Migration(migrations.Migration):
     Attaches the functions for the migrations
     """
     dependencies = [
-        ('api', '0067_remove_documenthistory_user_role'),
+        ('api', '0069_remove_documenthistory_user_role'),
     ]
 
     operations = [
