@@ -42,11 +42,14 @@ class CreditTradeType(Auditable, DisplayOrder, EffectiveDates):
         db_comment='Enumerated value to describe the credit trade type.'
     )
     description = models.CharField(
-        max_length=1000, blank=True, null=True, db_comment='Description of the credit trade type. This is the displayed name.')
+        max_length=1000, blank=True, null=True,
+        db_comment="Description of the credit trade type. This is the "
+                   "displayed name."
+    )
 
     is_gov_only_type = models.BooleanField(
-        db_comment='Flag. True if only government users can create this type '
-                   'of transfer.'
+        db_comment="Flag. True if only government users can create this type "
+                   "of transfer."
     )
 
     objects = CreditTradeTypeManager()
@@ -61,7 +64,9 @@ class CreditTradeType(Auditable, DisplayOrder, EffectiveDates):
     class Meta:
         db_table = 'credit_trade_type'
 
-    db_table_comment = 'Contains a list of credit transaction types, which are credit transfer, part 3 award, validation and reduction.'
+    db_table_comment = "Contains a list of credit transaction types, which " \
+                       "are credit transfer, part 3 award, validation and " \
+                       "reduction."
 
     @property
     def friendly_name(self):
@@ -70,9 +75,11 @@ class CreditTradeType(Auditable, DisplayOrder, EffectiveDates):
         """
         if self.the_type in ["Buy", "Sell"]:
             return "Credit Transfer"
-        elif self.the_type == "Credit Retirement":
+
+        if self.the_type == "Credit Reduction":
             return "Reduction"
-        elif self.the_type == "Credit Validation":
+
+        if self.the_type == "Credit Validation":
             return "Validation"
 
         return self.the_type

@@ -68,6 +68,6 @@ class DocumentComment(Auditable):
         db_table = 'document_comments'
         ordering = ['create_timestamp']
 
-    db_table_comment = 'Contains all correspondence from fuel suppliers ' \
-                       'and government (including those with privileged ' \
-                       'access) related to Secure Document Upload.'
+    db_table_comment = "Contains all correspondence from fuel suppliers " \
+                       "and government (including those with privileged " \
+                       "access) related to Secure Document Upload."

@@ -20,7 +20,6 @@
     See the License for the specific language governing permissions and
     limitations under the License.
 """
-
 from django.db import models
 
 from auditable.models import Auditable
@@ -36,12 +35,14 @@ class Role(Auditable):
     name = models.CharField(
         max_length=200,
         unique=True,
-        db_comment="Role code. Natural key."
+        db_comment="Role code. Natural key. Used internally."
+                   "eg Admin, GovUser, GovDirector, etc"
     )
 
     description = models.CharField(
         max_length=1000,
-        db_comment="Descriptive text explaining this role."
+        db_comment="Descriptive text explaining this role. "
+                   "This is what's shown to the user."
     )
 
     is_government_role = models.BooleanField(
@@ -76,3 +77,6 @@ class Role(Auditable):
     # Add effective_date and expiration_date
     class Meta:
         db_table = 'role'
+
+    db_table_comment = "Table that will hold all the available Roles " \
+                       "and descriptions."

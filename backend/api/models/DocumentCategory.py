@@ -25,35 +25,30 @@ from django.db import models
 
 from api.managers.DocumentCategoryManager import DocumentCategoryManager
 from api.models.mixins.DisplayOrder import DisplayOrder
-from api.models.mixins.EffectiveDates import EffectiveDates
 from auditable.models import Auditable
-from api.managers.CreditTradeTypeManager import CreditTradeTypeManager
 
 
 class DocumentCategory(Auditable, DisplayOrder):
-
     """
-    Holds the different types of Credit Trades and if they're only usable
-    by government users only
+    List of tags used to identify the document.
     """
     name = models.CharField(
         max_length=120,
         blank=True,
         null=True,
         unique=True,
-        db_comment='Category Name'
+        db_comment="Short description of the category."
     )
 
     objects = DocumentCategoryManager()
 
     def natural_key(self):
         """
-        Allows type 'description' (Sell, Buy, etc) to be used to identify
-        a row in the table
+        Allows name to identify a row in the table
         """
         return (self.name,)
 
     class Meta:
         db_table = 'document_category'
 
-    db_table_comment = 'Contains a list of document categories.'
+    db_table_comment = "List of tags used to identify the document."
