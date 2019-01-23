@@ -34,7 +34,7 @@ class CreditTransactionRequestsContainer extends Component {
         documentUploads={this.props.documentUploads}
         loggedInUser={this.props.loggedInUser}
         requestURL={this.props.requestURL}
-        title="Secure Document Upload Submissions"
+        title="Secure File Submissions"
       />
     );
   }

@@ -33,18 +33,14 @@ class CreditTransactionRequestAddContainer extends Component {
         milestone: '',
         title: ''
       },
+      pageTitle: 'Submission',
       validationErrors: {},
       uploadState: ''
     };
 
     this._handleInputChange = this._handleInputChange.bind(this);
+    this._handlePageTitle = this._handlePageTitle.bind(this);
     this._handleSubmit = this._handleSubmit.bind(this);
-  }
-
-  componentDidMount () {
-  }
-
-  componentWillReceiveProps (props) {
   }
 
   changeObjectProp (id, name) {
@@ -131,6 +127,12 @@ class CreditTransactionRequestAddContainer extends Component {
     return true;
   }
 
+  _handlePageTitle (pageTitle) {
+    this.setState({
+      pageTitle
+    });
+  }
+
   render () {
     if (this.state.uploadState === 'progress' || this.props.referenceData.isFetching) {
       return (<Loading />);
@@ -143,10 +145,11 @@ class CreditTransactionRequestAddContainer extends Component {
         errors={this.props.errors}
         fields={this.state.fields}
         handleInputChange={this._handleInputChange}
+        handlePageTitle={this._handlePageTitle}
         handleSubmit={this._handleSubmit}
         key="creditTransactionForm"
         loggedInUser={this.props.loggedInUser}
-        title="New P3A Application Submission"
+        title={`New ${this.state.pageTitle}`}
         validationErrors={this.state.validationErrors}
       />,
       <Modal

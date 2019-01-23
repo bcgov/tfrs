@@ -10,14 +10,66 @@ import CONFIG from '../../config';
 import { getFileSize, getIcon, validateFiles } from '../../utils/functions';
 
 class CreditTransactionRequestFormDetails extends Component {
+  static getPlaceholders (documentType) {
+    if (documentType && documentType.theType === 'Application') {
+      return {
+        titlePlaceholder: 'e.g. Cold Weather Biodiesel, Co-processing, etc.',
+        commentPlaceholder: 'Optional: provide any additional information with respect to your P3A Application submission'
+      };
+    }
+
+    if (documentType && documentType.theType === 'Evidence') {
+      return {
+        titlePlaceholder: 'e.g. P3A-18COM1, Cold Weather Biodiesel, etc.',
+        commentPlaceholder: 'Optional: provide any additional information with respect to your P3A evidence submission'
+      };
+    }
+
+    if (documentType && documentType.theType === 'Records') {
+      return {
+        titlePlaceholder: 'e.g. Compliance Report, Supplemental Report, Exclusion Report, etc.',
+        commentPlaceholder: 'Optional: provide any additional information with respect to your submission'
+      };
+    }
+
+    return {
+      titlePlaceholder: '',
+      commentPlaceholder: 'Optional: provide any additional information with respect to your submission'
+    };
+  }
+
   constructor (props) {
     super(props);
 
+    this.documentType = null;
     this.rejectedFiles = [];
 
     this._onDrop = this._onDrop.bind(this);
     this._removeAttachment = this._removeAttachment.bind(this);
     this._removeFile = this._removeFile.bind(this);
+  }
+
+  componentWillReceiveProps (props) {
+    if (props.fields.documentType) {
+      this.documentType = this._getType(props.fields.documentType.id);
+    }
+  }
+
+  _getType (typeId) {
+    let documentType = null;
+
+    this.props.categories.forEach((category) => {
+      const foundType = category.types
+        .find(type => (type.id === typeId));
+
+      if (foundType) {
+        documentType = foundType;
+      }
+    });
+
+    this.props.handlePageTitle(documentType.description);
+
+    return documentType;
   }
 
   _onDrop (files) {
@@ -75,6 +127,9 @@ class CreditTransactionRequestFormDetails extends Component {
   }
 
   render () {
+    const { titlePlaceholder, commentPlaceholder } = CreditTransactionRequestFormDetails
+      .getPlaceholders(this.documentType);
+
     return (
       <div className="credit-transaction-request-form-details">
         <div className="row main-form">
@@ -101,12 +156,8 @@ class CreditTransactionRequestFormDetails extends Component {
                 </label>
               </div>
 
-              {this.props.categories.find(category => (
-                category.types.find(type => (
-                  type.theType === 'Evidence' && type.id === this.props.fields.documentType.id
-                ))
-              )) && [
-                <div className="row" key="milestones">
+              {this.documentType && this.documentType.theType === 'Evidence' &&
+                <div className="row">
                   <div className="form-group col-md-12">
                     <label htmlFor="milestone">Milestone:
                       <input
@@ -114,59 +165,27 @@ class CreditTransactionRequestFormDetails extends Component {
                         id="milestone"
                         name="milestone"
                         onChange={this.props.handleInputChange}
-                        placeholder="Record section of agreement containing milestone"
+                        placeholder="e.g. Milestone B.2 - Construction, Milestone B.4 & B.5, etc."
                         required="required"
                         type="text"
                         value={this.props.fields.milestone}
                       />
                     </label>
                   </div>
-                </div>,
-                <div className="row" key="agreement-name">
-                  <div className="form-group col-md-12">
-                    <label htmlFor="title">Part 3 Agreement Name:
-                      <input
-                        className="form-control"
-                        id="title"
-                        name="title"
-                        onChange={this.props.handleInputChange}
-                        required="required"
-                        type="text"
-                        value={this.props.fields.title}
-                      />
-                    </label>
-                  </div>
-                </div>,
-                <div className="row" key="agreement-comments">
-                  <div className="form-group col-md-12">
-                    <label htmlFor="comment">Comment:
-                      <textarea
-                        className="form-control"
-                        id="comment"
-                        name="comment"
-                        onChange={this.props.handleInputChange}
-                        placeholder="Provide an explanation of your Part 3 award milestone completion"
-                        rows="5"
-                        value={this.props.fields.comment}
-                      />
-                    </label>
-                  </div>
                 </div>
-              ]}
+              }
 
-              {this.props.categories.find(category => (
-                category.types.find(type => (
-                  type.theType !== 'Evidence' && type.id === this.props.fields.documentType.id
-                ))
-              )) &&
               <div className="row" key="title">
                 <div className="form-group col-md-12">
-                  <label htmlFor="title">Title:
+                  <label htmlFor="title">
+                    {this.documentType &&
+                      this.documentType.theType === 'Evidence' ? 'Part 3 Agreement' : 'Title'}:
                     <input
                       className="form-control"
                       id="title"
                       name="title"
                       onChange={this.props.handleInputChange}
+                      placeholder={titlePlaceholder}
                       required="required"
                       type="text"
                       value={this.props.fields.title}
@@ -174,7 +193,22 @@ class CreditTransactionRequestFormDetails extends Component {
                   </label>
                 </div>
               </div>
-              }
+
+              <div className="row">
+                <div className="form-group col-md-12">
+                  <label htmlFor="comment">Comment:
+                    <textarea
+                      className="form-control"
+                      id="comment"
+                      name="comment"
+                      onChange={this.props.handleInputChange}
+                      placeholder={commentPlaceholder}
+                      rows="5"
+                      value={this.props.fields.comment}
+                    />
+                  </label>
+                </div>
+              </div>
             </div>
           </div>
 
@@ -182,24 +216,27 @@ class CreditTransactionRequestFormDetails extends Component {
             <div className="row main-form">
               <div className="form-group col-md-12">
                 <label htmlFor="document-type">Attachment Type:
-                  <div className="btn-group" role="group" id="document-type">
+                  <select
+                    className="form-control"
+                    disabled={this.props.edit}
+                    id="document-type"
+                    name="documentType"
+                    onChange={this.props.handleInputChange}
+                    required="required"
+                    value={this.props.fields.documentType.id}
+                  >
                     {this.props.categories &&
                       this.props.categories.map(category => (
                         (category.types.map(t => (
-                          <button
-                            className={`btn btn-default ${(this.props.fields.documentType.id === t.id) ? 'active' : ''}`}
+                          <option
                             key={t.id}
-                            name="documentType"
-                            disabled={this.props.edit}
-                            onClick={this.props.handleInputChange}
-                            type="button"
                             value={t.id}
                           >
                             {t.description}
-                          </button>
+                          </option>
                         )))
                       ))}
-                  </div>
+                  </select>
                 </label>
               </div>
             </div>
@@ -321,7 +358,8 @@ CreditTransactionRequestFormDetails.propTypes = {
     milestone: PropTypes.string,
     title: PropTypes.string
   }).isRequired,
-  handleInputChange: PropTypes.func.isRequired
+  handleInputChange: PropTypes.func.isRequired,
+  handlePageTitle: PropTypes.func.isRequired
 };
 
 export default CreditTransactionRequestFormDetails;
