@@ -5,7 +5,6 @@ import { ConnectedRouter } from 'react-router-redux';
 import App from './app/App';
 import history from './app/History';
 
-/* global __LOGOUT_URL__, __LOGOUT_TEST_URL__ */
 import * as Routes from './constants/routes';
 import {
   CREDIT_TRANSACTIONS_HISTORY,
@@ -63,18 +62,6 @@ const Router = props => (
           path={Routes.HOME}
           component={withRouter(CreditTransactionsContainer)
           }
-        />
-        <Route
-          exact
-          path={Routes.LOGOUT}
-          component={() => {
-            const logoutUrl = (window.location.host === 'dev-lowcarbonfuels.pathfinder.gov.bc.ca' ||
-                  window.location.host === 'test-lowcarbonfuels.pathfinder.gov.bc.ca')
-              ? `${__LOGOUT_TEST_URL__}?returl=${window.location.origin}`
-              : `${__LOGOUT_URL__}?returl=${window.location.origin}`;
-
-            window.location = logoutUrl;
-          }}
         />
         <Route
           exact
