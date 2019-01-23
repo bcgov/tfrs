@@ -9,7 +9,8 @@ class DocumentData(models.Model):
     """Common fields for Document and DocumentHistory"""
 
     title = models.CharField(
-        max_length=120
+        max_length=120,
+        db_comment="High-level description of the Submission."
     )
 
     status = models.ForeignKey(
@@ -32,7 +33,7 @@ class DocumentData(models.Model):
 
     record_number = models.CharField(
         blank=True, max_length=100, null=True,
-        db_comment='Number stored in TRIM'
+        db_comment="Number stored in TRIM"
     )
 
     class Meta:

@@ -28,7 +28,7 @@ from auditable.models import Auditable
 
 class DocumentFileAttachment(Auditable, AttachmentData):
     """
-    Holds file metadata
+    Attachment information for the documents.
     """
     document = models.ForeignKey(
         Document,
@@ -39,4 +39,6 @@ class DocumentFileAttachment(Auditable, AttachmentData):
     class Meta:
         db_table = 'document_file'
 
-    db_table_comment = 'File Attachments'
+    db_table_comment = "Attachment information for the documents." \
+                       "Contains information such as mime type, file size, " \
+                       "minio URL."

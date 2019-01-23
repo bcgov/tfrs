@@ -67,4 +67,6 @@ class Document(Auditable, DocumentData):
     class Meta:
         db_table = 'document'
 
-    db_table_comment = 'Document Submission.'
+    db_table_comment = "Document File Submissions." \
+                       "Contains a list of requests from fuel suppliers for " \
+                       "compliance reporting, part 3 agreement evidence, etc."

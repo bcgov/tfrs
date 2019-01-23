@@ -7,7 +7,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
-import { getUser, updateUser } from '../../actions/userActions';
+import { clearUsersRequestError, getUser, updateUser } from '../../actions/userActions';
 import Modal from '../../app/components/Modal';
 import Loading from '../../app/components/Loading';
 import history from '../../app/History';
@@ -47,6 +47,7 @@ class UserEditContainer extends Component {
   }
 
   componentDidMount () {
+    this.props.clearUsersRequestError();
     this.loadData(this.props.match.params.id);
   }
 
@@ -212,7 +213,7 @@ class UserEditContainer extends Component {
         roles={this.props.roles}
         title="Edit User"
         toggleCheck={this._toggleCheck}
-        errors={this.props.user.error}
+        errors={this.props.error}
       />,
       <Modal
         handleSubmit={(event) => {
@@ -228,14 +229,16 @@ class UserEditContainer extends Component {
 }
 
 UserEditContainer.defaultProps = {
+  error: {},
   user: {
     details: {},
-    error: {},
     isFetching: true
   }
 };
 
 UserEditContainer.propTypes = {
+  clearUsersRequestError: PropTypes.func.isRequired,
+  error: PropTypes.shape({}),
   fuelSuppliers: PropTypes.arrayOf(PropTypes.shape()).isRequired,
   getFuelSuppliers: PropTypes.func.isRequired,
   getRoles: PropTypes.func.isRequired,
@@ -254,7 +257,6 @@ UserEditContainer.propTypes = {
     details: PropTypes.shape({
       id: PropTypes.number
     }),
-    error: PropTypes.shape({}),
     isFetching: PropTypes.bool
   }),
   updateUser: PropTypes.func.isRequired
@@ -266,13 +268,13 @@ const mapStateToProps = state => ({
   roles: state.rootReducer.roles,
   user: {
     details: state.rootReducer.userViewRequest.user,
-    error: state.rootReducer.userViewRequest.error,
     isFetching: state.rootReducer.userViewRequest.isFetching
   },
   error: state.rootReducer.userAdmin.error
 });
 
 const mapDispatchToProps = dispatch => ({
+  clearUsersRequestError: bindActionCreators(clearUsersRequestError, dispatch),
   getFuelSuppliers: bindActionCreators(getFuelSuppliers, dispatch),
   getRoles: bindActionCreators(getRoles, dispatch),
   getUser: bindActionCreators(getUser, dispatch),
