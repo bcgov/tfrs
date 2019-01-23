@@ -67,6 +67,17 @@ const getIcon = (mimeType) => {
   }
 };
 
+const getScanStatusIcon = (status) => {
+  switch (status) {
+    case 'PASS':
+      return 'check';
+    case 'FAIL':
+      return 'times';
+    default:
+      return 'hourglass';
+  }
+}
+
 const validateFiles = files => (
   files.filter((file) => {
     if (file.size > CONFIG.SECURE_DOCUMENT_UPLOAD.MAX_FILE_SIZE) {
@@ -91,7 +102,7 @@ const validateFiles = files => (
         return file.type;
       default:
         if (file.name.split('.').pop() === 'xls' || file.name.split('.').pop() === 'ppt' ||
-        file.name.split('.').pop() === 'doc') {
+          file.name.split('.').pop() === 'doc') {
           return file;
         }
 
@@ -100,4 +111,4 @@ const validateFiles = files => (
   })
 );
 
-export { arrayMove, download, getFileSize, getIcon, validateFiles };
+export {arrayMove, download, getFileSize, getIcon, getScanStatusIcon, validateFiles};
