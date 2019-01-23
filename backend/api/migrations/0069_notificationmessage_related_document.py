@@ -9,7 +9,7 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('api', '0070_rename_document_upload'),
+        ('api', '0068_rename_document_upload'),
     ]
 
     operations = [

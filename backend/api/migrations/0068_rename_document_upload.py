@@ -132,7 +132,7 @@ class Migration(migrations.Migration):
     Attaches the functions for the migrations
     """
     dependencies = [
-        ('api', '0069_rename_fuel_supply_records'),
+        ('api', '0067_rename_fuel_supply_records'),
     ]
 
     operations = [

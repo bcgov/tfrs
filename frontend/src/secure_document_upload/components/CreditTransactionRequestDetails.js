@@ -8,7 +8,8 @@ import axios from 'axios';
 
 import history from '../../app/History';
 import * as Lang from '../../constants/langEnUs';
-import { getFileSize, getIcon } from '../../utils/functions';
+import SECURE_DOCUMENT_UPLOAD from '../../constants/routes/SecureDocumentUpload';
+import { getFileSize, getIcon, getScanStatusIcon } from '../../utils/functions';
 import CreditTransactionRequestComment from './CreditTransactionRequestComment';
 import CreditTransactionRequestCommentButtons from './CreditTransactionRequestCommentButtons';
 import CreditTransactionRequestCommentForm from './CreditTransactionRequestCommentForm';
@@ -16,7 +17,17 @@ import CreditTransactionRequestCommentForm from './CreditTransactionRequestComme
 const CreditTransactionRequestDetails = props => (
   <div className="page-credit-transaction-request-details">
     <h1>{props.item.type.description}</h1>
+
     <div className="credit-transaction-request-details">
+
+      <div className="row">
+        <div className="form-group col-md-12">
+          <label htmlFor="document-status">Document Submission Status:
+            <div className="value">{props.item.status.status}</div>
+          </label>
+        </div>
+      </div>
+
       <div className="row">
         <div className="col-md-4">
           <div className="row">
@@ -79,8 +90,14 @@ const CreditTransactionRequestDetails = props => (
                 <ul className="value files">
                   {props.item.attachments.map(attachment => (
                     <li key={attachment.url}>
-                      <span className="icon">
-                        <FontAwesomeIcon icon={getIcon(attachment.mimeType)} />
+                      <span className="document-icon">
+                        <FontAwesomeIcon icon={getIcon(attachment.mimeType)} fixedWidth />
+                      </span>
+                      <span className="document-icon" data-security-scan-status={attachment.securityScanStatus}>
+                        <FontAwesomeIcon
+                          icon={getScanStatusIcon(attachment.securityScanStatus)}
+                          fixedWidth
+                        />
                       </span>
                       <button
                         type="button"
@@ -98,18 +115,11 @@ const CreditTransactionRequestDetails = props => (
                         }}
                       >
                         {attachment.filename}
-                      </button> - {getFileSize(attachment.size)}
+                      </button>
+                      - {getFileSize(attachment.size)}
                     </li>
                   ))}
                 </ul>
-              </label>
-            </div>
-          </div>
-
-          <div className="row">
-            <div className="form-group col-md-12">
-              <label htmlFor="record-number">Record Number:
-                {props.item.recordNumber}
               </label>
             </div>
           </div>
@@ -130,11 +140,11 @@ const CreditTransactionRequestDetails = props => (
             isCommenting={props.isCommenting}
           />
           {props.isCommenting &&
-            <CreditTransactionRequestCommentForm
-              cancelComment={props.cancelComment}
-              isCreatingPrivilegedComment={props.isCreatingPrivilegedComment}
-              saveComment={props.saveComment}
-            />
+          <CreditTransactionRequestCommentForm
+            cancelComment={props.cancelComment}
+            isCreatingPrivilegedComment={props.isCreatingPrivilegedComment}
+            saveComment={props.saveComment}
+          />
           }
         </div>
       </div>
@@ -147,6 +157,15 @@ const CreditTransactionRequestDetails = props => (
       >
         <FontAwesomeIcon icon="arrow-circle-left" /> {Lang.BTN_APP_CANCEL}
       </button>
+
+      <button
+        className="btn btn-default"
+        type="button"
+        onClick={() => history.push(SECURE_DOCUMENT_UPLOAD.EDIT.replace(':id', props.item.id))}
+      >
+        <FontAwesomeIcon icon="edit" /> Edit
+      </button>
+
       {props.availableActions.includes('Submitted') &&
       <button
         className="btn btn-primary"
@@ -171,8 +190,7 @@ const CreditTransactionRequestDetails = props => (
   </div>
 );
 
-CreditTransactionRequestDetails.defaultProps = {
-};
+CreditTransactionRequestDetails.defaultProps = {};
 
 CreditTransactionRequestDetails.propTypes = {
   addComment: PropTypes.func.isRequired,

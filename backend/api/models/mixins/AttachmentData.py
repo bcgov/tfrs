@@ -25,6 +25,10 @@ class AttachmentData(models.Model):
         default='NOT RUN', null=False, max_length=20,
         db_comment="Security Scan Status"
     )
+    is_removed = models.BooleanField(
+        default=False,
+        db_comment="Whether it was marked as deleted"
+    )
 
     class Meta:
         abstract = True

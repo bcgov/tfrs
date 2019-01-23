@@ -1,50 +1,70 @@
 import FontAwesomeIcon from '@fortawesome/react-fontawesome';
 import PropTypes from 'prop-types';
-import React, { Component } from 'react';
-import { DropdownButton, MenuItem } from 'react-bootstrap';
-import { connect } from 'react-redux';
-import { NavLink } from 'react-router-dom';
-import { bindActionCreators } from 'redux';
+import React, {Component} from 'react';
+import {DropdownButton, MenuItem} from 'react-bootstrap';
+import {connect} from 'react-redux';
+import {NavLink} from 'react-router-dom';
+import {bindActionCreators} from 'redux';
 
-import { getNotifications } from '../../actions/notificationActions';
-import { signUserOut } from '../../actions/userActions';
+import {getNotifications} from '../../actions/notificationActions';
+import {signUserOut} from '../../actions/userActions';
 import history from '../../app/History';
 import PERMISSIONS_SECURE_DOCUMENT_UPLOAD from '../../constants/permissions/SecureDocumentUpload';
 import * as Routes from '../../constants/routes';
-import { HISTORICAL_DATA_ENTRY } from '../../constants/routes/Admin';
+import {HISTORICAL_DATA_ENTRY} from '../../constants/routes/Admin';
 import SECURE_DOCUMENT_UPLOAD from '../../constants/routes/SecureDocumentUpload';
 import CREDIT_TRANSACTIONS from '../../constants/routes/CreditTransactions';
 import ORGANIZATIONS from '../../constants/routes/Organizations';
 import CONFIG from '../../config';
 
 class Navbar extends Component {
-  static updateContainerPadding () {
+
+  constructor() {
+    super();
+
+    this.state = {
+      unreadCount: 0
+    };
+  }
+
+  componentWillReceiveProps(newProps) {
+
+    if (newProps.unreadNotificationsCount != null) {
+      let unreadCount = 0;
+
+      if (newProps.unreadNotificationsCount > 0 && newProps.unreadNotificationsCount < 1000) {
+        unreadCount = newProps.unreadNotificationsCount;
+      }
+
+      if (unreadCount > 1000) {
+        unreadCount = '∞';
+      }
+
+      this.setState({
+        unreadCount
+      });
+    }
+
+  }
+
+  static updateContainerPadding() {
     const headerHeight = document.getElementById('header-main').clientHeight;
     const topSpacing = 30;
     const totalSpacing = headerHeight + topSpacing;
     document.getElementById('main').setAttribute('style', `padding-top: ${totalSpacing}px;`);
   }
 
-  componentDidMount () {
+  componentDidMount() {
     this.props.getNotifications(); // ensure that the notifications are up-to-date
     Navbar.updateContainerPadding();
     window.addEventListener('resize', () => Navbar.updateContainerPadding());
   }
 
-  componentDidUpdate () {
+  componentDidUpdate() {
     Navbar.updateContainerPadding();
   }
 
-  render () {
-    let unreadCount = 0;
-
-    if (this.props.unreadNotificationsCount > 0 && this.props.unreadNotificationsCount < 1000) {
-      unreadCount = this.props.unreadNotificationsCount;
-    }
-
-    if (this.props.unreadNotificationsCount > 1000) {
-      unreadCount = '∞';
-    }
+  render() {
 
     const SecondLevelNavigation = (
       <div className="level2Navigation">
@@ -141,9 +161,9 @@ class Navbar extends Component {
             to={Routes.NOTIFICATIONS.LIST}
           >
             <span className="fa-layers">
-              <FontAwesomeIcon icon="bell" />
-              {unreadCount > 0 &&
-                <span className="fa-layers-counter">{unreadCount}</span>
+              <FontAwesomeIcon icon="bell"/>
+              {this.state.unreadCount > 0 &&
+              <span className="fa-layers-counter">{this.state.unreadCount}</span>
               }
             </span>
           </NavLink>
@@ -219,7 +239,7 @@ class Navbar extends Component {
               id="collapse-navbar-credit-transactions"
               to={CREDIT_TRANSACTIONS.LIST}
             >
-            Credit Transactions
+              Credit Transactions
             </NavLink>
           </li>
           {CONFIG.SECURE_DOCUMENT_UPLOAD.ENABLED &&
@@ -258,9 +278,9 @@ class Navbar extends Component {
               id="navbar-notifications"
               to={Routes.NOTIFICATIONS.LIST}
             >
-                Notifications
-              {unreadCount > 0 &&
-                <span> ({unreadCount})</span>
+              Notifications
+              {this.state.unreadCount > 0 &&
+              <span> ({this.state.unreadCount})</span>
               }
             </NavLink>
           </li>
@@ -272,7 +292,10 @@ class Navbar extends Component {
           <li>
             <NavLink
               id="navbar-logout"
-              onClick={(e) => { e.preventDefault(); this.props.signUserOut(); }}
+              onClick={(e) => {
+                e.preventDefault();
+                this.props.signUserOut();
+              }}
               to={Routes.LOGOUT}
             >
               Log Out
@@ -334,7 +357,7 @@ class Navbar extends Component {
                   aria-expanded="true"
                   aria-label="Burger Navigation"
                 >
-                  <img src="/assets/images/menu-open-mobile.png" alt="menu" />
+                  <img src="/assets/images/menu-open-mobile.png" alt="menu"/>
                 </button>
               </div>
               <div className="col-sm-5 col-md-6 col-lg-6 hidden-xs">
@@ -346,41 +369,42 @@ class Navbar extends Component {
                 <div className="pull-right">
                   <h5 id="display_name">
                     {this.props.loggedInUser.displayName &&
-                      <DropdownButton
-                        className="display-name-button"
-                        id="display-name-button"
-                        pullRight
-                        title={this.props.loggedInUser.displayName}
+                    <DropdownButton
+                      className="display-name-button"
+                      id="display-name-button"
+                      pullRight
+                      title={this.props.loggedInUser.displayName}
+                    >
+                      <MenuItem className="dropdown-menu-caret" header>
+                        <FontAwesomeIcon icon="caret-up" size="2x"/>
+                      </MenuItem>
+                      <MenuItem onClick={() => {
+                        history.push(Routes.SETTINGS);
+                      }}
                       >
-                        <MenuItem className="dropdown-menu-caret" header>
-                          <FontAwesomeIcon icon="caret-up" size="2x" />
-                        </MenuItem>
-                        <MenuItem onClick={() => {
-                          history.push(Routes.SETTINGS);
-                        }}
-                        >
-                          <FontAwesomeIcon icon="cog" /> Settings
-                        </MenuItem>
-                        <MenuItem onClick={(e) => {
-                          e.preventDefault(); this.props.signUserOut();
-                        }}
-                        >
-                          <FontAwesomeIcon icon="sign-out-alt" /> Log Out
-                        </MenuItem>
-                      </DropdownButton>
+                        <FontAwesomeIcon icon="cog"/> Settings
+                      </MenuItem>
+                      <MenuItem onClick={(e) => {
+                        e.preventDefault();
+                        this.props.signUserOut();
+                      }}
+                      >
+                        <FontAwesomeIcon icon="sign-out-alt"/> Log Out
+                      </MenuItem>
+                    </DropdownButton>
                     }
                   </h5>
                   <span id="user_organization">
                     {this.props.loggedInUser.organization &&
-                      this.props.loggedInUser.organization.name}
+                    this.props.loggedInUser.organization.name}
                   </span>
                 </div>
               </div>
-              { this.props.isAuthenticated && CollapsedNavigation }
+              {this.props.isAuthenticated && CollapsedNavigation}
             </div>
           </div>
           <div className="navigationRibbon hidden-xs">
-            { this.props.isAuthenticated && SecondLevelNavigation }
+            {this.props.isAuthenticated && SecondLevelNavigation}
           </div>
         </div>
       </div>

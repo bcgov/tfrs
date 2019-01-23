@@ -239,7 +239,7 @@ const updateCommentOnDocumentError = error => ({
 const updateDocumentUpload = (data, id) => (dispatch) => {
   dispatch(updateDocumentUploadRequest({ id, data }));
 
-  return axios.put(`${Routes.BASE_URL}${Routes.SECURE_DOCUMENT_UPLOAD.API}/${id}`, data)
+  return axios.patch(`${Routes.BASE_URL}${Routes.SECURE_DOCUMENT_UPLOAD.API}/${id}`, data)
     .then((response) => {
       dispatch(updateDocumentUploadSuccess(response.data));
     }).catch((error) => {

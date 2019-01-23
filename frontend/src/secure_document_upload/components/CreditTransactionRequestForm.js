@@ -30,6 +30,7 @@ class CreditTransactionRequestForm extends Component {
           <CreditTransactionRequestFormDetails
             categories={this.props.categories}
             compliancePeriods={this.props.compliancePeriods}
+            edit={this.props.edit}
             fields={this.props.fields}
             handleInputChange={this.props.handleInputChange}
             handlePageTitle={this.props.handlePageTitle}

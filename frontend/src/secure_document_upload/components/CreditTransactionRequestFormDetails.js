@@ -45,6 +45,7 @@ class CreditTransactionRequestFormDetails extends Component {
     this.rejectedFiles = [];
 
     this._onDrop = this._onDrop.bind(this);
+    this._removeAttachment = this._removeAttachment.bind(this);
     this._removeFile = this._removeFile.bind(this);
   }
 
@@ -97,6 +98,20 @@ class CreditTransactionRequestFormDetails extends Component {
     ];
   }
 
+  _removeAttachment (attachment) {
+    const found = this.props.fields.attachments.findIndex(item => (item === attachment));
+    this.props.fields.attachments.splice(found, 1);
+
+    const attachedFiles = this.props.fields.attachments;
+
+    this.props.handleInputChange({
+      target: {
+        name: 'attachments',
+        value: attachedFiles
+      }
+    });
+  }
+
   _removeFile (file) {
     const found = this.props.fields.files.findIndex(item => (item === file));
     this.props.fields.files.splice(found, 1);
@@ -128,6 +143,7 @@ class CreditTransactionRequestFormDetails extends Component {
                     name="compliancePeriod"
                     onChange={this.props.handleInputChange}
                     required="required"
+                    value={this.props.fields.compliancePeriod.id}
                   >
                     <option key="0" value="" default />
                     {this.props.compliancePeriods &&
@@ -188,6 +204,7 @@ class CreditTransactionRequestFormDetails extends Component {
                       onChange={this.props.handleInputChange}
                       placeholder={commentPlaceholder}
                       rows="5"
+                      value={this.props.fields.comment}
                     />
                   </label>
                 </div>
@@ -201,6 +218,7 @@ class CreditTransactionRequestFormDetails extends Component {
                 <label htmlFor="document-type">Attachment Type:
                   <select
                     className="form-control"
+                    disabled={this.props.edit}
                     id="document-type"
                     name="documentType"
                     onChange={this.props.handleInputChange}
@@ -225,7 +243,7 @@ class CreditTransactionRequestFormDetails extends Component {
 
             <div className="row main-form">
               <div className="form-group col-md-12">
-                <label htmlFor="comment">Attachments:
+                <label htmlFor="attachment">Attachments:
                   <Dropzone
                     activeClassName="is-dragover"
                     className="dropzone"
@@ -244,6 +262,23 @@ class CreditTransactionRequestFormDetails extends Component {
               <div className="form-group col-md-12 main-form">
                 <div>Files:
                   <ul className="files">
+                    {this.props.fields.attachments.map(attachment => (
+                      <li key={attachment.filename}>
+                        <span className="icon">
+                          <FontAwesomeIcon icon={getIcon(attachment.mimeType)} />
+                        </span>
+                        <span className="filename">{attachment.filename}</span>
+                        <span> - {getFileSize(attachment.size)}
+                          <button type="button" onClick={() => this._removeAttachment(attachment)}>
+                            <FontAwesomeIcon icon="minus-circle" />
+                          </button>
+                        </span>
+                      </li>
+                    ))}
+                    {this.props.fields.attachments.length === 0 &&
+                    this.props.fields.files.length === 0 &&
+                    <li>- No files selected.</li>
+                    }
                     {this.props.fields.files.map(file => (
                       <li key={file.name}>
                         <span className="icon">
@@ -257,9 +292,6 @@ class CreditTransactionRequestFormDetails extends Component {
                         </span>
                       </li>
                     ))}
-                    {this.props.fields.files.length === 0 &&
-                    <li>- No files selected.</li>
-                    }
                   </ul>
                 </div>
               </div>
@@ -288,21 +320,6 @@ class CreditTransactionRequestFormDetails extends Component {
                 </div>
               </div>
             </div>
-
-            <div className="row main-form">
-              <div className="form-group col-md-12">
-                <label htmlFor="record-number">Record Number:
-                  <input
-                    className="form-control"
-                    id="record-number"
-                    name="recordNumber"
-                    onChange={this.props.handleInputChange}
-                    type="text"
-                    value={this.props.fields.recordNumber}
-                  />
-                </label>
-              </div>
-            </div>
           </div>
         </div>
 
@@ -315,7 +332,8 @@ class CreditTransactionRequestFormDetails extends Component {
 }
 
 CreditTransactionRequestFormDetails.defaultProps = {
-  children: null
+  children: null,
+  edit: false
 };
 
 CreditTransactionRequestFormDetails.propTypes = {
@@ -325,7 +343,10 @@ CreditTransactionRequestFormDetails.propTypes = {
   ]),
   compliancePeriods: PropTypes.arrayOf(PropTypes.shape()).isRequired,
   categories: PropTypes.arrayOf(PropTypes.shape()).isRequired,
+  edit: PropTypes.bool,
   fields: PropTypes.shape({
+    attachments: PropTypes.arrayOf(PropTypes.shape()),
+    comment: PropTypes.string,
     compliancePeriod: PropTypes.shape({
       description: PropTypes.string,
       id: PropTypes.number
@@ -335,7 +356,6 @@ CreditTransactionRequestFormDetails.propTypes = {
     }),
     files: PropTypes.arrayOf(PropTypes.shape()),
     milestone: PropTypes.string,
-    recordNumber: PropTypes.string,
     title: PropTypes.string
   }).isRequired,
   handleInputChange: PropTypes.func.isRequired,
