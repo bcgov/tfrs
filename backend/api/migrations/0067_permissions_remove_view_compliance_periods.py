@@ -71,7 +71,7 @@ class Migration(migrations.Migration):
     Attaches the functions for the migrations
     """
     dependencies = [
-        ('api', '0065_auto_20190114_2347'),
+        ('api', '0066_documentfileattachment_is_removed'),
     ]
 
     operations = [
