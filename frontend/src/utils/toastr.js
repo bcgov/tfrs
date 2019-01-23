@@ -69,7 +69,7 @@ const toastr = {
         reduxToastr.success('Success!', 'Document received.');
         break;
       case DOCUMENT_STATUSES.submitted.id:
-        reduxToastr.success('Success!', 'Document submitted.');
+        reduxToastr.success('Success!', 'Document uploaded.');
         break;
       default:
         reduxToastr.success('Success!', 'Document uploaded.');
