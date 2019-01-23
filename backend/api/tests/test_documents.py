@@ -26,8 +26,12 @@ import json
 
 from rest_framework import status
 
-from api.models.OrganizationAddress import OrganizationAddress
-from api.models.OrganizationType import OrganizationType
+from api.models.CompliancePeriod import CompliancePeriod
+from api.models.Document import Document
+from api.models.DocumentMilestone import DocumentMilestone
+from api.models.DocumentStatus import DocumentStatus
+from api.models.DocumentType import DocumentType
+
 from .base_test_case import BaseTestCase
 
 
@@ -86,21 +90,16 @@ class TestDocuments(BaseTestCase):
         """
         Test that the documents load as the creator
         """
-
         response = self.clients['fs_user_1'].get(
             "/api/documents/1"
         )
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
-#        response_data = json.loads(response.content.decode("utf-8"))
-
     def test_get_document_as_other(self):
         """
         Test that the documents don't load as another fs
         """
-
-        #
         response = self.clients['fs_user_2'].get(
             "/api/documents/1"
         )
@@ -112,7 +111,6 @@ class TestDocuments(BaseTestCase):
         Test that draft documents don't load for gov
         """
 
-        #
         response = self.clients['gov_analyst'].get(
             "/api/documents/1"
         )
@@ -130,6 +128,113 @@ class TestDocuments(BaseTestCase):
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
+    def test_add_document_evidence_as_fuel_supplier(self):
+        """
+        Test adding a document as a fuel supplier
+        """
+        compliance_period = CompliancePeriod.objects.first()
+        status_draft = DocumentStatus.objects.filter(status="Draft").first()
+        type_evidence = DocumentType.objects.filter(
+            the_type="Evidence").first()
+
+        document_title = 'Test Title'
+        document_milestone = 'Document Milestone'
+
+        payload = {
+            'compliancePeriod': compliance_period.id,
+            'title': document_title,
+            'status': status_draft.id,
+            'type': type_evidence.id,
+            'milestone': document_milestone
+        }
+
+        response = self.clients['fs_user_1'].post(
+            "/api/documents",
+            content_type='application/json',
+            data=json.dumps(payload)
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+
+        response_data = json.loads(response.content.decode("utf-8"))
+
+        document = Document.objects.get(id=response_data['id'])
+
+        self.assertEqual(document.title, document_title)
+        self.assertEqual(document.milestone.milestone, document_milestone)
+
+    def test_update_document_evidence_as_fuel_supplier(self):
+        """
+        Test updating a document as a fuel supplier
+        """
+        create_user = self.users['fs_user_1']
+        compliance_period = CompliancePeriod.objects.first()
+        status_draft = DocumentStatus.objects.filter(status="Draft").first()
+        type_evidence = DocumentType.objects.filter(
+            the_type="Evidence").first()
+
+        created_document = Document.objects.create(
+            create_user_id=create_user.id,
+            compliance_period_id=compliance_period.id,
+            status_id=status_draft.id,
+            title="Test Title",
+            type_id=type_evidence.id
+        )
+
+        document_title = "Different Title"
+
+        payload = {
+            'compliancePeriod': compliance_period.id,
+            'status': status_draft.id,
+            'title': document_title,
+            'type': type_evidence.id
+        }
+
+        response = self.clients['fs_user_1'].patch(
+            "/api/documents/{}".format(created_document.id),
+            content_type='application/json',
+            data=json.dumps(payload)
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        document = Document.objects.get(id=created_document.id)
+
+        self.assertEqual(document.title, document_title)
 
 
+    def test_update_document_status_and_title(self):
+        """
+        Test updating a document status to submitted and attempt to
+        modify the title (this should fail)
+        """
+        create_user = self.users['fs_user_1']
+        compliance_period = CompliancePeriod.objects.first()
+        status_draft = DocumentStatus.objects.filter(status="Draft").first()
+        type_evidence = DocumentType.objects.filter(
+            the_type="Evidence").first()
 
+        created_document = Document.objects.create(
+            create_user_id=create_user.id,
+            compliance_period_id=compliance_period.id,
+            status_id=status_draft.id,
+            title="Test Title",
+            type_id=type_evidence.id
+        )
+
+        status_submitted = DocumentStatus.objects.filter(status="Submitted").first()
+
+        payload = {
+            'compliancePeriod': compliance_period.id,
+            'status': status_submitted.id,
+            'title': "Different Title",
+            'type': type_evidence.id
+        }
+
+        response = self.clients['fs_user_1'].patch(
+            "/api/documents/{}".format(created_document.id),
+            content_type='application/json',
+            data=json.dumps(payload)
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
