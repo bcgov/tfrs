@@ -1,0 +1,69 @@
+{
+    "kind": "Template",
+    "apiVersion": "v1",
+    "metadata": {
+        "name": "clamav",
+        "creationTimestamp": null
+    },
+    "objects": [
+        {
+            "kind": "ImageStream",
+            "apiVersion": "v1",
+            "metadata": {
+                "name": "clamav",
+                "generation": 1,
+                "creationTimestamp": null
+            },
+            "spec": {
+                "lookupPolicy": {
+                    "local": false
+                }
+            },
+            "status": {
+                "dockerImageRepository": ""
+            }
+        },
+        {
+            "kind": "BuildConfig",
+            "apiVersion": "v1",
+            "metadata": {
+                "name": "clamav",
+                "creationTimestamp": null,
+                "labels": {
+                    "app": "clamav",
+                    "name": "clamav",
+                    "template": "clamav"
+                }
+            },
+            "spec": {
+                "triggers": [],
+                "runPolicy": "Serial",
+                "source": {
+                    "type": "Git",
+                    "git": {
+                        "ref":"stretch-slim-OpenShift-stable",
+                        "uri": "https://github.com/bcgov/docker-clamav.git"
+                    }
+                },
+                "strategy": {
+                    "type": "Docker",
+                    "dockerStrategy": {
+                        "forcePull": true
+                    }
+                },
+                "output": {
+                    "to": {
+                        "kind": "ImageStreamTag",
+                        "name": "clamav:latest"
+                    }
+                },
+                "resources": {},
+                "postCommit": {},
+                "nodeSelector": {}
+            },
+            "status": {
+                "lastVersion": 0
+            }
+        }
+    ]
+}
