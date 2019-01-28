@@ -7,7 +7,7 @@ import Dropzone from 'react-dropzone';
 import FontAwesomeIcon from '@fortawesome/react-fontawesome';
 
 import CONFIG from '../../config';
-import { getFileSize, getIcon, validateFiles } from '../../utils/functions';
+import { getFileSize, getIcon, getScanStatusIcon, validateFiles } from '../../utils/functions';
 
 class CreditTransactionRequestFormDetails extends Component {
   static getPlaceholders (documentType) {
@@ -261,38 +261,69 @@ class CreditTransactionRequestFormDetails extends Component {
             <div className="row">
               <div className="form-group col-md-12 main-form">
                 <div>Files:
-                  <ul className="files">
+                  <div className="file-submission-attachments">
+                    <div className="row">
+                      <div className="col-xs-6 header">Filename</div>
+                      <div className="col-xs-2 size header">Size</div>
+                      <div className="col-xs-3 security-scan-status header">Security Scan</div>
+                    </div>
                     {this.props.fields.attachments.map(attachment => (
-                      <li key={attachment.filename}>
-                        <span className="icon">
-                          <FontAwesomeIcon icon={getIcon(attachment.mimeType)} />
-                        </span>
-                        <span className="filename">{attachment.filename}</span>
-                        <span> - {getFileSize(attachment.size)}
+                      <div className="row" key={attachment.filename}>
+                        <div className="col-xs-6 filename">
+                          <span className="icon">
+                            <FontAwesomeIcon icon={getIcon(attachment.mimeType)} fixedWidth />
+                          </span>
+                          <span className="text">{attachment.filename}</span>
+                        </div>
+
+                        <div className="col-xs-2 size">
+                          <span>{getFileSize(attachment.size)}</span>
+                        </div>
+
+                        <div className="col-xs-3 security-scan-status">
+                          <span className="security-scan-icon" data-security-scan-status={attachment.securityScanStatus}>
+                            <FontAwesomeIcon
+                              icon={getScanStatusIcon(attachment.securityScanStatus)}
+                              fixedWidth
+                            />
+                          </span>
+                        </div>
+
+                        <div className="col-xs-1 actions">
                           <button type="button" onClick={() => this._removeAttachment(attachment)}>
                             <FontAwesomeIcon icon="minus-circle" />
                           </button>
-                        </span>
-                      </li>
+                        </div>
+                      </div>
                     ))}
                     {this.props.fields.attachments.length === 0 &&
                     this.props.fields.files.length === 0 &&
-                    <li>- No files selected.</li>
+                    <div className="row">
+                      <div className="col-xs-12">No files selected.</div>
+                    </div>
                     }
                     {this.props.fields.files.map(file => (
-                      <li key={file.name}>
-                        <span className="icon">
-                          <FontAwesomeIcon icon={getIcon(file.type)} />
-                        </span>
-                        <span className="filename">{file.name}</span>
-                        <span> - {getFileSize(file.size)}
+                      <div className="row" key={file.name}>
+                        <div className="col-xs-6 filename">
+                          <span className="icon">
+                            <FontAwesomeIcon icon={getIcon(file.type)} />
+                          </span>
+                          <span className="text">{file.name}</span>
+                        </div>
+                        <div className="col-xs-2 size">
+                          {getFileSize(file.size)}
+                        </div>
+                        <div className="col-xs-3 security-scan-status">
+                          <FontAwesomeIcon icon="ellipsis-h" fixedWidth />
+                        </div>
+                        <div className="col-xs-1 actions">
                           <button type="button" onClick={() => this._removeFile(file)}>
                             <FontAwesomeIcon icon="minus-circle" />
                           </button>
-                        </span>
-                      </li>
+                        </div>
+                      </div>
                     ))}
-                  </ul>
+                  </div>
                 </div>
               </div>
             </div>
@@ -300,23 +331,35 @@ class CreditTransactionRequestFormDetails extends Component {
             <div className="row">
               <div className="form-group col-md-12 main-form">
                 <div>Invalid Files/File Types (These files will not be uploaded):
-                  <ul className="files">
+                  <div className="file-submission-attachments">
+                    <div className="row">
+                      <div className="col-xs-6 header">Filename</div>
+                      <div className="col-xs-2 size header">Size</div>
+                    </div>
                     {this.rejectedFiles.map(file => (
-                      <li key={file.name}>
-                        <span className="icon">
-                          <FontAwesomeIcon icon={getIcon(file.type)} />
-                        </span>
-                        <span className="filename">{file.name}</span>
-                        <span> - {getFileSize(file.size)}</span>
-                        {file.size > CONFIG.SECURE_DOCUMENT_UPLOAD.MAX_FILE_SIZE &&
-                        <span className="error-message"> File size too large </span>
-                        }
-                      </li>
+                      <div className="row" key={file.name}>
+                        <div className="col-xs-6 filename">
+                          <span className="icon">
+                            <FontAwesomeIcon icon={getIcon(file.type)} />
+                          </span>
+                          <span className="text">{file.name}</span>
+                        </div>
+                        <div className="col-xs-2 size">
+                          <span>{getFileSize(file.size)}</span>
+                        </div>
+                        <div className="col-xs-4">
+                          {file.size > CONFIG.SECURE_DOCUMENT_UPLOAD.MAX_FILE_SIZE &&
+                          <span className="error-message"> File size too large </span>
+                          }
+                        </div>
+                      </div>
                     ))}
                     {this.rejectedFiles.length === 0 &&
-                      <li>- None</li>
+                      <div className="row">
+                        <div className="col-xs-12">None</div>
+                      </div>
                     }
-                  </ul>
+                  </div>
                 </div>
               </div>
             </div>

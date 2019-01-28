@@ -174,6 +174,10 @@ class CreditTransactionRequestEditContainer extends Component {
         this.setState({ uploadState: 'success' });
         history.push(SECURE_DOCUMENT_UPLOAD.LIST);
         toastr.documentUpload(status.id);
+      }).catch((reason) => {
+        this.setState({
+          uploadState: 'failed'
+        });
       });
     }).catch((reason) => {
       this.setState({

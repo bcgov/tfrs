@@ -130,6 +130,19 @@ class DocumentCreateSerializer(serializers.ModelSerializer):
                   'status', 'title', 'type', 'milestone',
                   'attachments', 'comments', 'record_number')
         read_only_fields = ('id',)
+        extra_kwargs = {
+            'compliance_period': {
+                'error_messages': {
+                    'does_not_exist': "Please specify the Compliance Period "
+                                      "in which the request relates."
+                }
+            },
+            'title': {
+                'error_messages': {
+                    'blank': "Please provide a Title."
+                }
+            }
+        }
 
 
 class DocumentDetailSerializer(serializers.ModelSerializer):
@@ -157,6 +170,9 @@ class DocumentDetailSerializer(serializers.ModelSerializer):
         # doesn't have available permissions
         if not request.user.roles:
             return []
+
+        if cur_status == "Security Scan Failed":
+            return DocumentActions.scan_failed(request)
 
         if cur_status == "Draft":
             return DocumentActions.draft(request)
@@ -264,23 +280,31 @@ class DocumentUpdateSerializer(serializers.ModelSerializer):
     milestone = DocumentMilestoneSerializer(read_only=True)
 
     def validate(self, data):
+        document_statuses = DocumentStatus.objects.all().only('id', 'status')
+        status_dict = {s.status: s for s in document_statuses}
+
+        document = self.instance
         status = data.get('status')
+        draft_status = status_dict["Draft"]
+        security_scan_failed_status = status_dict["Security Scan Failed"]
 
-        if status != DocumentStatus.objects.get(status='Draft'):
-            document = self.instance
-
-            if document.title != data.get('title') or \
-                    document.type_id != data.get('type') or \
-                    document.compliance_period_id != \
-                    data.get('compliance_period') or \
-                    document.record_number != data.get('record_number') or \
-                    document.milestone.milestone != data.get('milestone') or \
-                    data.get('attachments_to_be_removed') or \
-                    data.get('attachments'):
+        if document.status != draft_status and \
+                document.status != security_scan_failed_status:
+            if status == draft_status:
                 raise serializers.ValidationError({
-                    'readOnly': "Cannot update other fields unless the "
-                                "document is in draft."
+                    'readOnly': "Cannot update the status back to draft when "
+                                "it's no longer in draft."
                 })
+
+            # if there's a key that's not about updating the status or user
+            # invalidate the request as we're not allowing modifications
+            # to other fields
+            for key in data:
+                if key not in ('status', 'update_user'):
+                    raise serializers.ValidationError({
+                        'readOnly': "Cannot update other fields unless the "
+                                    "document is in draft."
+                    })
 
         return data
 

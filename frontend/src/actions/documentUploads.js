@@ -242,8 +242,10 @@ const updateDocumentUpload = (data, id) => (dispatch) => {
   return axios.patch(`${Routes.BASE_URL}${Routes.SECURE_DOCUMENT_UPLOAD.API}/${id}`, data)
     .then((response) => {
       dispatch(updateDocumentUploadSuccess(response.data));
+      return Promise.resolve(response);
     }).catch((error) => {
       dispatch(updateDocumentUploadError(error.response));
+      return Promise.reject(error);
     });
 };
 

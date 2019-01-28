@@ -57,6 +57,24 @@ class DocumentActions(object):
         return serializer.data
 
     @staticmethod
+    def scan_failed(request):
+        """
+        When the status is Security Scan Failed, available actions should be:
+        draft (to make corrections to the files that failed)
+        """
+        status_dict = {s.status: s for s in DocumentActions.__statuses}
+
+        available_statuses = []
+        if request.user.has_perm('DOCUMENTS_CREATE_DRAFT'):
+            available_statuses.append(
+                status_dict["Draft"]
+            )
+
+        serializer = DocumentStatusSerializer(
+            available_statuses, many=True)
+        return serializer.data
+
+    @staticmethod
     def submitted(request):
         """
         When the status is submitted available actions should be:

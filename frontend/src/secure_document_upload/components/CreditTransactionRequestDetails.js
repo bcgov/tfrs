@@ -29,7 +29,7 @@ const CreditTransactionRequestDetails = props => (
       </div>
 
       <div className="row">
-        <div className="col-md-4">
+        <div className="col-md-6">
           <div className="row">
             <div className="form-group col-md-12">
               <label htmlFor="compliance-period">Compliance Period:
@@ -73,7 +73,7 @@ const CreditTransactionRequestDetails = props => (
           }
         </div>
 
-        <div className="col-md-8">
+        <div className="col-md-6">
           <div className="row">
             <div className="form-group col-md-12">
               <label htmlFor="document-type">Attachment Type:
@@ -86,26 +86,27 @@ const CreditTransactionRequestDetails = props => (
 
           <div className="row">
             <div className="form-group col-md-12">
-              <label htmlFor="document-type">Attachments:
-                <ul className="value files">
-                  {props.item.attachments.map(attachment => (
-                    <li key={attachment.url}>
-                      <span className="document-icon">
+              <label htmlFor="document-type">Attachments:</label>
+              <div className="file-submission-attachments">
+                <div className="row">
+                  <div className="col-md-7 header">Filename</div>
+                  <div className="col-md-2 size header">Size</div>
+                  <div className="col-md-3 security-scan-status header">Security Scan</div>
+                </div>
+                {props.item.attachments.map(attachment => (
+                  <div className="row" key={attachment.url}>
+                    <div className="col-md-7 filename">
+                      <span className="icon">
                         <FontAwesomeIcon icon={getIcon(attachment.mimeType)} fixedWidth />
                       </span>
-                      <span className="document-icon" data-security-scan-status={attachment.securityScanStatus}>
-                        <FontAwesomeIcon
-                          icon={getScanStatusIcon(attachment.securityScanStatus)}
-                          fixedWidth
-                        />
-                      </span>
                       <button
-                        type="button"
+                        className="text"
                         onClick={() => {
                           axios.get(attachment.url, {
                             responseType: 'blob'
                           }).then((response) => {
-                            const objectURL = window.URL.createObjectURL(new Blob([response.data]));
+                            const objectURL =
+                              window.URL.createObjectURL(new Blob([response.data]));
                             const link = document.createElement('a');
                             link.href = objectURL;
                             link.setAttribute('download', attachment.filename);
@@ -113,14 +114,27 @@ const CreditTransactionRequestDetails = props => (
                             link.click();
                           });
                         }}
+                        type="button"
                       >
                         {attachment.filename}
                       </button>
-                      - {getFileSize(attachment.size)}
-                    </li>
-                  ))}
-                </ul>
-              </label>
+                    </div>
+
+                    <div className="col-md-2 size">
+                      <span>{getFileSize(attachment.size)}</span>
+                    </div>
+
+                    <div className="col-md-3 security-scan-status">
+                      <span className="security-scan-icon" data-security-scan-status={attachment.securityScanStatus}>
+                        <FontAwesomeIcon
+                          icon={getScanStatusIcon(attachment.securityScanStatus)}
+                          fixedWidth
+                        />
+                      </span>
+                    </div>
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
         </div>
@@ -158,6 +172,7 @@ const CreditTransactionRequestDetails = props => (
         <FontAwesomeIcon icon="arrow-circle-left" /> {Lang.BTN_APP_CANCEL}
       </button>
 
+      {props.availableActions.includes('Draft') &&
       <button
         className="btn btn-default"
         type="button"
@@ -165,6 +180,7 @@ const CreditTransactionRequestDetails = props => (
       >
         <FontAwesomeIcon icon="edit" /> Edit
       </button>
+      }
 
       {props.availableActions.includes('Submitted') &&
       <button

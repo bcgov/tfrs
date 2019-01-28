@@ -113,10 +113,14 @@ class CreditTransactionRequestAddContainer extends Component {
     };
 
     Promise.all(uploadPromises).then(() => {
-      this.props.addDocumentUpload(data).then((response) => {
+      return this.props.addDocumentUpload(data).then((response) => {
         this.setState({ uploadState: 'success' });
         history.push(SECURE_DOCUMENT_UPLOAD.LIST);
         toastr.documentUpload(status.id);
+      }).catch((reason) => {
+        this.setState({
+          uploadState: 'failed'
+        });
       });
     }).catch((reason) => {
       this.setState({

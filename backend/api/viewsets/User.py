@@ -11,6 +11,7 @@ from api.serializers \
 from api.serializers.UserCreationRequestSerializer \
     import UserCreationRequestSerializer
 from auditable.views import AuditableMixin
+from api.services.KeycloakAPI import create_user, get_token
 
 
 class UserViewSet(AuditableMixin, viewsets.GenericViewSet,
@@ -158,3 +159,5 @@ class UserViewSet(AuditableMixin, viewsets.GenericViewSet,
     def perform_create(self, serializer):
         serializer.is_valid(raise_exception=True)
         serializer.save()
+
+        create_user(get_token(), )
