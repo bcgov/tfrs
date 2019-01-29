@@ -61,7 +61,7 @@ class CreditTransactionRequestDetailContainer extends Component {
   _deleteCreditTransferRequest (id) {
     this.props.deleteDocumentUpload(id).then(() => {
       history.push(SECURE_DOCUMENT_UPLOAD.LIST);
-      toastr.documentUpload('Draft deleted.');
+      toastr.documentUpload(null, 'Draft deleted.');
     });
   }
 

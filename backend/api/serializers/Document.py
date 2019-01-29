@@ -160,6 +160,41 @@ class DocumentCreateSerializer(serializers.ModelSerializer):
         }
 
 
+class DocumentDeleteSerializer(serializers.ModelSerializer):
+    """
+    Delete serializer for Documents
+    """
+    def destroy(self):
+        """
+        Delete function to mark the document as cancelled.
+        Also, sets the file attachments as removed (including sending a
+        request to minio to delete the actual files)
+        """
+        document = self.instance
+
+        if document.status != DocumentStatus.objects.get(status="Draft"):
+            raise serializers.ValidationError({
+                'readOnly': "Cannot delete a submission that's not a draft."
+            })
+
+        attachments_to_be_removed = DocumentFileAttachment.objects.filter(
+            document=document,
+            is_removed=False).values_list('id')
+
+        if attachments_to_be_removed:
+            DocumentService.delete_attachments(
+                document_id=document.id,
+                attachment_ids=attachments_to_be_removed
+            )
+
+        document.status = DocumentStatus.objects.get(status="Cancelled")
+        document.save()
+
+    class Meta:
+        model = Document
+        fields = '__all__'
+
+
 class DocumentDetailSerializer(serializers.ModelSerializer):
     """
     Document Serializer with Full Details
