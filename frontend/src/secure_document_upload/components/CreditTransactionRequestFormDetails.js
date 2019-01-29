@@ -22,21 +22,21 @@ class CreditTransactionRequestFormDetails extends Component {
   }
 
   _getPlaceholders (documentType) {
-    if (this.props.title === 'P3A Application') {
+    if (this.props.documentType && this.props.documentType.theType === 'Application') {
       return {
         titlePlaceholder: 'e.g. Cold Weather Biodiesel, Co-processing, etc.',
         commentPlaceholder: 'Optional: provide any additional information with respect to your P3A Application submission'
       };
     }
 
-    if (this.props.title === 'P3A Milestone Evidence') {
+    if (this.props.documentType && this.props.documentType.theType === 'Evidence') {
       return {
         titlePlaceholder: 'e.g. P3A-18COM1, Cold Weather Biodiesel, etc.',
         commentPlaceholder: 'Optional: provide any additional information with respect to your P3A evidence submission'
       };
     }
 
-    if (this.props.title === 'Compliance Reporting Materials') {
+    if (this.props.documentType && this.props.documentType.theType === 'Records') {
       return {
         titlePlaceholder: 'e.g. Compliance Report, Supplemental Report, Exclusion Report, etc.',
         commentPlaceholder: 'Optional: provide any additional information with respect to your submission'
@@ -132,7 +132,7 @@ class CreditTransactionRequestFormDetails extends Component {
                 </label>
               </div>
 
-              {this.props.title === 'P3A Milestone Evidence' &&
+              {this.props.documentType && this.props.documentType.theType === 'Evidence' &&
                 <div className="row">
                   <div className="form-group col-md-12">
                     <label htmlFor="milestone">Milestone:
@@ -154,7 +154,7 @@ class CreditTransactionRequestFormDetails extends Component {
               <div className="row" key="title">
                 <div className="form-group col-md-12">
                   <label htmlFor="title">
-                    {this.props.title === 'P3A Milestone Evidence' ? 'Part 3 Agreement' : 'Title'}:
+                    {this.props.documentType && this.props.documentType.theType === 'Evidence' ? 'Part 3 Agreement' : 'Title'}:
                     <input
                       className="form-control"
                       id="title"
@@ -361,6 +361,10 @@ CreditTransactionRequestFormDetails.propTypes = {
   ]),
   compliancePeriods: PropTypes.arrayOf(PropTypes.shape()).isRequired,
   categories: PropTypes.arrayOf(PropTypes.shape()).isRequired,
+  documentType: PropTypes.shape({
+    description: PropTypes.string,
+    theType: PropTypes.string
+  }).isRequired,
   edit: PropTypes.bool,
   fields: PropTypes.shape({
     attachments: PropTypes.arrayOf(PropTypes.shape()),
@@ -376,8 +380,7 @@ CreditTransactionRequestFormDetails.propTypes = {
     milestone: PropTypes.string,
     title: PropTypes.string
   }).isRequired,
-  handleInputChange: PropTypes.func.isRequired,
-  title: PropTypes.string.isRequired
+  handleInputChange: PropTypes.func.isRequired
 };
 
 export default CreditTransactionRequestFormDetails;

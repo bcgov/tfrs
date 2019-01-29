@@ -22,7 +22,7 @@ class CreditTransactionRequestForm extends Component {
   render () {
     return (
       <div className="credit-transaction-requests">
-        <h1>{this.props.edit ? 'Edit' : 'New'} {this.props.title} Submission</h1>
+        <h1>{this.props.edit ? 'Edit' : 'New'} {this.props.documentType ? this.props.documentType.description : ''} Submission</h1>
         <form
           onSubmit={(event, status) =>
             this.props.handleSubmit(event, DOCUMENT_STATUSES.draft)}
@@ -30,10 +30,10 @@ class CreditTransactionRequestForm extends Component {
           <CreditTransactionRequestFormDetails
             categories={this.props.categories}
             compliancePeriods={this.props.compliancePeriods}
+            documentType={this.props.documentType}
             edit={this.props.edit}
             fields={this.props.fields}
             handleInputChange={this.props.handleInputChange}
-            title={this.props.title}
           />
 
           {Object.keys(this.props.errors).length > 0 &&
@@ -87,8 +87,7 @@ class CreditTransactionRequestForm extends Component {
 
 CreditTransactionRequestForm.defaultProps = {
   edit: false,
-  id: 0,
-  title: 'New Credit Transaction Request'
+  id: 0
 };
 
 CreditTransactionRequestForm.propTypes = {
@@ -97,14 +96,17 @@ CreditTransactionRequestForm.propTypes = {
   compliancePeriods: PropTypes.arrayOf(PropTypes.shape()).isRequired,
   edit: PropTypes.bool,
   errors: PropTypes.shape({}).isRequired,
+  documentType: PropTypes.shape({
+    description: PropTypes.string,
+    theType: PropTypes.string
+  }).isRequired,
   fields: PropTypes.shape({
     comment: PropTypes.string
   }).isRequired,
   getCompliancePeriods: PropTypes.func.isRequired,
   handleInputChange: PropTypes.func.isRequired,
   handleSubmit: PropTypes.func.isRequired,
-  id: PropTypes.number,
-  title: PropTypes.string
+  id: PropTypes.number
 };
 
 const mapStateToProps = state => ({

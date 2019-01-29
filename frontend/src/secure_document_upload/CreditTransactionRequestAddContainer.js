@@ -50,7 +50,7 @@ class CreditTransactionRequestAddContainer extends Component {
     });
   }
 
-  _getTitle () {
+  _getDocumentType () {
     let documentTypes = [];
     this.props.referenceData.documentCategories.forEach((category) => {
       documentTypes = documentTypes.concat(category.types);
@@ -59,10 +59,10 @@ class CreditTransactionRequestAddContainer extends Component {
     const foundType = documentTypes.find(type => (type.id === this.state.fields.documentType.id));
 
     if (foundType) {
-      return foundType.description;
+      return foundType;
     }
 
-    return '';
+    return false;
   }
 
   _handleInputChange (event) {
@@ -156,13 +156,13 @@ class CreditTransactionRequestAddContainer extends Component {
         addToFields={this._addToFields}
         availableActions={availableActions}
         categories={this.props.referenceData.documentCategories}
+        documentType={this._getDocumentType()}
         errors={this.props.errors}
         fields={this.state.fields}
         handleInputChange={this._handleInputChange}
         handleSubmit={this._handleSubmit}
         key="creditTransactionForm"
         loggedInUser={this.props.loggedInUser}
-        title={this._getTitle()}
         validationErrors={this.state.validationErrors}
       />,
       <Modal

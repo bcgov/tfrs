@@ -100,6 +100,21 @@ class CreditTransactionRequestEditContainer extends Component {
     });
   }
 
+  _getDocumentType () {
+    let documentTypes = [];
+    this.props.referenceData.documentCategories.forEach((category) => {
+      documentTypes = documentTypes.concat(category.types);
+    });
+
+    const foundType = documentTypes.find(type => (type.id === this.state.fields.documentType.id));
+
+    if (foundType) {
+      return foundType;
+    }
+
+    return false;
+  }
+
   _handleInputChange (event) {
     const { value, name } = event.target;
     const fieldState = { ...this.state.fields };
@@ -113,21 +128,6 @@ class CreditTransactionRequestEditContainer extends Component {
         fields: fieldState
       });
     }
-  }
-
-  _getTitle () {
-    let documentTypes = [];
-    this.props.referenceData.documentCategories.forEach((category) => {
-      documentTypes = documentTypes.concat(category.types);
-    });
-
-    const foundType = documentTypes.find(type => (type.id === this.state.fields.documentType.id));
-
-    if (foundType) {
-      return foundType.description;
-    }
-
-    return '';
   }
 
   _handleSubmit (event, status) {
@@ -221,6 +221,7 @@ class CreditTransactionRequestEditContainer extends Component {
         addToFields={this._addToFields}
         availableActions={availableActions}
         categories={this.props.referenceData.documentCategories}
+        documentType={this._getDocumentType()}
         edit
         errors={this.props.errors}
         fields={this.state.fields}
@@ -228,7 +229,6 @@ class CreditTransactionRequestEditContainer extends Component {
         handleSubmit={this._handleSubmit}
         key="creditTransactionForm"
         loggedInUser={this.props.loggedInUser}
-        title={this._getTitle()}
         validationErrors={this.state.validationErrors}
       />,
       <Modal
