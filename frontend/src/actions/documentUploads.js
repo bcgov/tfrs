@@ -236,7 +236,7 @@ const updateCommentOnDocumentError = error => ({
 /*
  * Update documents
  */
-const updateDocumentUpload = (data, id) => (dispatch) => {
+const updateDocumentUpload = (id, data) => (dispatch) => {
   dispatch(updateDocumentUploadRequest({ id, data }));
 
   return axios.patch(`${Routes.BASE_URL}${Routes.SECURE_DOCUMENT_UPLOAD.API}/${id}`, data)

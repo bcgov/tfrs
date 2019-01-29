@@ -12,7 +12,7 @@ import Modal from '../app/components/Modal';
 import CreditTransactionRequestForm from './components/CreditTransactionRequestForm';
 
 import {
-  deleteDocumentUpload, getDocumentUpload, getDocumentUploadURL, updateDocumentUpload,
+  deleteDocumentUpload, getDocumentUpload, getDocumentUploadURL, partialUpdateDocument,
   uploadDocument
 } from '../actions/documentUploads';
 import history from '../app/History';
@@ -40,8 +40,8 @@ class CreditTransactionRequestEditContainer extends Component {
       validationErrors: {}
     };
 
+    this.loaded = false;
     this.originalAttachments = [];
-    this.submitted = false;
 
     this._handleInputChange = this._handleInputChange.bind(this);
     this._handleSubmit = this._handleSubmit.bind(this);
@@ -71,7 +71,7 @@ class CreditTransactionRequestEditContainer extends Component {
   loadPropsToFieldState (props) {
     const { item } = props;
 
-    if (Object.keys(item).length > 0 && !this.submitted) {
+    if (Object.keys(item).length > 0 && !this.loaded) {
       const fieldState = {
         attachments: item.attachments, // updated source to be compared with the original
         comment: (item.comments.length > 0) ? item.comments[0].comment : '',
@@ -88,6 +88,8 @@ class CreditTransactionRequestEditContainer extends Component {
       this.setState({
         fields: fieldState
       });
+
+      this.loaded = true;
     }
   }
 
@@ -169,8 +171,8 @@ class CreditTransactionRequestEditContainer extends Component {
       title: this.state.fields.title
     };
 
-    Promise.all(uploadPromises).then(() => {
-      this.props.updateDocumentUpload(data, id).then((response) => {
+    Promise.all(uploadPromises).then(() => (
+      this.props.partialUpdateDocument(id, data).then((response) => {
         this.setState({ uploadState: 'success' });
         history.push(SECURE_DOCUMENT_UPLOAD.LIST);
         toastr.documentUpload(status.id);
@@ -178,8 +180,8 @@ class CreditTransactionRequestEditContainer extends Component {
         this.setState({
           uploadState: 'failed'
         });
-      });
-    }).catch((reason) => {
+      })
+    )).catch((reason) => {
       this.setState({
         uploadState: 'failed'
       });
@@ -189,7 +191,7 @@ class CreditTransactionRequestEditContainer extends Component {
   }
 
   render () {
-    if (this.state.uploadState === 'progress' || this.props.referenceData.isFetching) {
+    if (this.state.uploadState === 'progress' || this.props.referenceData.isFetching || !this.loaded) {
       return (<Loading />);
     }
     const { item } = this.props;
@@ -260,12 +262,12 @@ CreditTransactionRequestEditContainer.propTypes = {
     isSuccessful: PropTypes.bool
   }).isRequired,
   requestURL: PropTypes.func.isRequired,
-  updateDocumentUpload: PropTypes.func.isRequired,
+  partialUpdateDocument: PropTypes.func.isRequired,
   validationErrors: PropTypes.shape()
 };
 
 const mapStateToProps = state => ({
-  errors: state.rootReducer.creditTransfer.errors,
+  errors: state.rootReducer.documentUpload.errors,
   item: state.rootReducer.documentUpload.item,
   loggedInUser: state.rootReducer.userRequest.loggedInUser,
   referenceData: {
@@ -279,7 +281,7 @@ const mapDispatchToProps = dispatch => ({
   deleteDocumentUpload: bindActionCreators(deleteDocumentUpload, dispatch),
   getDocumentUpload: bindActionCreators(getDocumentUpload, dispatch),
   requestURL: bindActionCreators(getDocumentUploadURL, dispatch),
-  updateDocumentUpload: bindActionCreators(updateDocumentUpload, dispatch)
+  partialUpdateDocument: bindActionCreators(partialUpdateDocument, dispatch)
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(CreditTransactionRequestEditContainer);

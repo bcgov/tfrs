@@ -87,6 +87,21 @@ class DocumentCreateSerializer(serializers.ModelSerializer):
     comments = DocumentCommentSerializer(many=True, read_only=True)
     milestone = DocumentMilestoneSerializer(read_only=True)
 
+    def validate(self, data):
+        request = self.context['request']
+        submitted_status = DocumentStatus.objects.get(status="Submitted")
+
+        if data.get('status') == submitted_status:
+            attachments = request.data.get('attachments')
+
+            if not attachments:
+                raise serializers.ValidationError({
+                    'attachments': "At least one file needs to be attached "
+                                   "before this can be submitted."
+                })
+
+        return data
+
     def save(self, **kwargs):
         super().save(**kwargs)
 
@@ -280,6 +295,7 @@ class DocumentUpdateSerializer(serializers.ModelSerializer):
     milestone = DocumentMilestoneSerializer(read_only=True)
 
     def validate(self, data):
+        request = self.context['request']
         document_statuses = DocumentStatus.objects.all().only('id', 'status')
         status_dict = {s.status: s for s in document_statuses}
 
@@ -306,6 +322,18 @@ class DocumentUpdateSerializer(serializers.ModelSerializer):
                                     "document is in draft."
                     })
 
+        submitted_status = status_dict["Submitted"]
+
+        if data.get('status') == submitted_status:
+            current_attachments = document.attachments
+            attachments = request.data.get('attachments')
+
+            if not attachments and not current_attachments:
+                raise serializers.ValidationError({
+                    'attachments': "At least one file needs to be attached "
+                                   "before this can be submitted."
+                })
+
         return data
 
     def save(self, **kwargs):
@@ -314,7 +342,8 @@ class DocumentUpdateSerializer(serializers.ModelSerializer):
         document = self.instance
         request = self.context['request']
 
-        attachments_to_be_removed = request.data.get('attachments_to_be_removed')
+        attachments_to_be_removed = request.data.get(
+            'attachments_to_be_removed')
 
         if attachments_to_be_removed:
             DocumentService.delete_attachments(
@@ -369,3 +398,16 @@ class DocumentUpdateSerializer(serializers.ModelSerializer):
                   'status', 'title', 'type', 'milestone',
                   'record_number', 'attachments', 'comments')
         read_only_fields = ('id',)
+        extra_kwargs = {
+            'compliance_period': {
+                'error_messages': {
+                    'does_not_exist': "Please specify the Compliance Period "
+                                      "in which the request relates."
+                }
+            },
+            'title': {
+                'error_messages': {
+                    'blank': "Please provide a Title."
+                }
+            }
+        }

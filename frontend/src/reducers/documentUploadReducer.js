@@ -4,7 +4,7 @@ const documentUpload = (state = {
   item: {},
   isFetching: false,
   success: false,
-  errorMessage: []
+  errors: {}
 }, action) => {
   switch (action.type) {
     case ActionTypes.GET_REQUEST:
@@ -17,6 +17,7 @@ const documentUpload = (state = {
     case ActionTypes.RECEIVE_REQUEST:
       return {
         ...state,
+        errors: {},
         isFetching: false,
         item: action.data,
         success: true
@@ -24,7 +25,7 @@ const documentUpload = (state = {
     case ActionTypes.ERROR:
       return {
         ...state,
-        errorMessage: action.errorMessage,
+        errors: action.errorMessage,
         isFetching: false,
         success: false
       };

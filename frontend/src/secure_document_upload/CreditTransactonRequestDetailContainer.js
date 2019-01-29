@@ -112,10 +112,12 @@ class CreditTransactionRequestDetailContainer extends Component {
   }
 
   render () {
-    const { item, success } = this.props.documentUpload;
+    const {
+      errors, item, isFetching, success
+    } = this.props.documentUpload;
     let availableActions = [];
 
-    if (success) {
+    if (success || (!isFetching && Object.keys(errors).length > 0)) {
       availableActions = item.actions.map(action => (
         action.status
       ));
@@ -133,6 +135,7 @@ class CreditTransactionRequestDetailContainer extends Component {
               this.props.documentUpload.item
             )
           }
+          errors={errors}
           hasCommented={this.state.hasCommented}
           isCommenting={this.state.isCommenting}
           isCreatingPrivilegedComment={this.state.isCreatingPrivilegedComment}
@@ -166,19 +169,18 @@ class CreditTransactionRequestDetailContainer extends Component {
 }
 
 CreditTransactionRequestDetailContainer.defaultProps = {
-  errors: {}
 };
 
 CreditTransactionRequestDetailContainer.propTypes = {
   addCommentToDocument: PropTypes.func.isRequired,
   documentUpload: PropTypes.shape({
+    errors: PropTypes.shape(),
     isFetching: PropTypes.bool.isRequired,
     item: PropTypes.shape({
       id: PropTypes.number
     }),
     success: PropTypes.bool
   }).isRequired,
-  errors: PropTypes.shape({}),
   getDocumentUpload: PropTypes.func.isRequired,
   loggedInUser: PropTypes.shape({
     displayName: PropTypes.string,

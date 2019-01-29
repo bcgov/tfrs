@@ -6,6 +6,7 @@ import PropTypes from 'prop-types';
 import FontAwesomeIcon from '@fortawesome/react-fontawesome';
 import axios from 'axios';
 
+import Errors from '../../app/components/Errors';
 import history from '../../app/History';
 import * as Lang from '../../constants/langEnUs';
 import SECURE_DOCUMENT_UPLOAD from '../../constants/routes/SecureDocumentUpload';
@@ -134,11 +135,24 @@ const CreditTransactionRequestDetails = props => (
                     </div>
                   </div>
                 ))}
+                {props.item.attachments.length === 0 &&
+                  <div className="row">
+                    <div className="col-md-12">No files attached.</div>
+                  </div>
+                }
               </div>
             </div>
           </div>
         </div>
       </div>
+
+      {Object.keys(props.errors).length > 0 &&
+        <div className="row">
+          <div className="col-md-12">
+            <Errors errors={props.errors} />
+          </div>
+        </div>
+      }
 
       {props.item.comments.length > 0 && <h3 className="comments-header">Comments</h3>}
       {props.item.comments.map(c => (
@@ -163,6 +177,7 @@ const CreditTransactionRequestDetails = props => (
         </div>
       </div>
     </div>
+
     <div className="btn-container">
       <button
         className="btn btn-default"
@@ -206,7 +221,9 @@ const CreditTransactionRequestDetails = props => (
   </div>
 );
 
-CreditTransactionRequestDetails.defaultProps = {};
+CreditTransactionRequestDetails.defaultProps = {
+  errors: {}
+};
 
 CreditTransactionRequestDetails.propTypes = {
   addComment: PropTypes.func.isRequired,
@@ -214,6 +231,7 @@ CreditTransactionRequestDetails.propTypes = {
   cancelComment: PropTypes.func.isRequired,
   canComment: PropTypes.bool.isRequired,
   canCreatePrivilegedComment: PropTypes.bool.isRequired,
+  errors: PropTypes.shape(),
   isCommenting: PropTypes.bool.isRequired,
   isCreatingPrivilegedComment: PropTypes.bool.isRequired,
   item: PropTypes.shape().isRequired,

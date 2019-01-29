@@ -118,7 +118,7 @@ class UserAuthentication(authentication.BaseAuthentication):
             # try email
             if 'email' in user_token:
                 creation_request = UserCreationRequest.objects.filter(
-                    keycloak_email=user_token['email']
+                    keycloak_email__iexact=user_token['email']
                 )
 
                 if not creation_request.exists():

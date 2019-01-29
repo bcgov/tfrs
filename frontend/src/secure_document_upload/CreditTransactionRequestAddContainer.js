@@ -112,8 +112,8 @@ class CreditTransactionRequestAddContainer extends Component {
       attachments
     };
 
-    Promise.all(uploadPromises).then(() => {
-      return this.props.addDocumentUpload(data).then((response) => {
+    Promise.all(uploadPromises).then(() => (
+      this.props.addDocumentUpload(data).then((response) => {
         this.setState({ uploadState: 'success' });
         history.push(SECURE_DOCUMENT_UPLOAD.LIST);
         toastr.documentUpload(status.id);
@@ -121,8 +121,8 @@ class CreditTransactionRequestAddContainer extends Component {
         this.setState({
           uploadState: 'failed'
         });
-      });
-    }).catch((reason) => {
+      })
+    )).catch((reason) => {
       this.setState({
         uploadState: 'failed'
       });
@@ -153,7 +153,7 @@ class CreditTransactionRequestAddContainer extends Component {
         handleSubmit={this._handleSubmit}
         key="creditTransactionForm"
         loggedInUser={this.props.loggedInUser}
-        title={`New ${this.state.pageTitle}`}
+        title={`New ${this.state.pageTitle} Submission`}
         validationErrors={this.state.validationErrors}
       />,
       <Modal
@@ -202,7 +202,7 @@ CreditTransactionRequestAddContainer.propTypes = {
 };
 
 const mapStateToProps = state => ({
-  errors: state.rootReducer.creditTransfer.errors,
+  errors: state.rootReducer.documentUpload.errors,
   loggedInUser: state.rootReducer.userRequest.loggedInUser,
   referenceData: {
     documentCategories: state.rootReducer.referenceData.data.documentCategories,
