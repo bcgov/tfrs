@@ -115,6 +115,16 @@ class CreditTransactionRequestEditContainer extends Component {
     return false;
   }
 
+  _getErrors () {
+    if ('title' in this.props.errors && this._getDocumentType().theType === 'Evidence') {
+      this.props.errors.title.forEach((error, index) => {
+        this.props.errors.title[index] = error.replace(/Title/, 'Part 3 Agreement');
+      });
+    }
+
+    return this.props.errors;
+  }
+
   _handleInputChange (event) {
     const { value, name } = event.target;
     const fieldState = { ...this.state.fields };
@@ -223,7 +233,7 @@ class CreditTransactionRequestEditContainer extends Component {
         categories={this.props.referenceData.documentCategories}
         documentType={this._getDocumentType()}
         edit
-        errors={this.props.errors}
+        errors={this._getErrors()}
         fields={this.state.fields}
         handleInputChange={this._handleInputChange}
         handleSubmit={this._handleSubmit}
@@ -258,7 +268,9 @@ CreditTransactionRequestEditContainer.defaultProps = {
 
 CreditTransactionRequestEditContainer.propTypes = {
   deleteDocumentUpload: PropTypes.func.isRequired,
-  errors: PropTypes.shape({}),
+  errors: PropTypes.shape({
+    title: PropTypes.arrayOf(PropTypes.string)
+  }),
   getDocumentUpload: PropTypes.func.isRequired,
   item: PropTypes.shape({
     id: PropTypes.number

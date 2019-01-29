@@ -96,10 +96,13 @@ CreditTransactionRequestForm.propTypes = {
   compliancePeriods: PropTypes.arrayOf(PropTypes.shape()).isRequired,
   edit: PropTypes.bool,
   errors: PropTypes.shape({}).isRequired,
-  documentType: PropTypes.shape({
-    description: PropTypes.string,
-    theType: PropTypes.string
-  }).isRequired,
+  documentType: PropTypes.oneOfType([
+    PropTypes.bool,
+    PropTypes.shape({
+      description: PropTypes.string,
+      theType: PropTypes.string
+    })
+  ]).isRequired,
   fields: PropTypes.shape({
     comment: PropTypes.string
   }).isRequired,

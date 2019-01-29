@@ -11,7 +11,7 @@ import CreditTransactionRequestForm from './components/CreditTransactionRequestF
 import Loading from '../app/components/Loading';
 import Modal from '../app/components/Modal';
 import history from '../app/History';
-import { addDocumentUpload, getDocumentUploadURL, uploadDocument } from '../actions/documentUploads';
+import { addDocumentUpload, clearDocumentUploadError, getDocumentUploadURL, uploadDocument } from '../actions/documentUploads';
 import DOCUMENT_STATUSES from '../constants/documentStatuses';
 import SECURE_DOCUMENT_UPLOAD from '../constants/routes/SecureDocumentUpload';
 import toastr from '../utils/toastr';
@@ -41,6 +41,10 @@ class CreditTransactionRequestAddContainer extends Component {
     this._handleSubmit = this._handleSubmit.bind(this);
   }
 
+  componentDidMount () {
+    this.props.clearDocumentUploadError();
+  }
+
   changeObjectProp (id, name) {
     const fieldState = { ...this.state.fields };
 
@@ -63,6 +67,16 @@ class CreditTransactionRequestAddContainer extends Component {
     }
 
     return false;
+  }
+
+  _getErrors () {
+    if ('title' in this.props.errors && this._getDocumentType().theType === 'Evidence') {
+      this.props.errors.title.forEach((error, index) => {
+        this.props.errors.title[index] = error.replace(/Title/, 'Part 3 Agreement');
+      });
+    }
+
+    return this.props.errors;
   }
 
   _handleInputChange (event) {
@@ -157,7 +171,7 @@ class CreditTransactionRequestAddContainer extends Component {
         availableActions={availableActions}
         categories={this.props.referenceData.documentCategories}
         documentType={this._getDocumentType()}
-        errors={this.props.errors}
+        errors={this._getErrors()}
         fields={this.state.fields}
         handleInputChange={this._handleInputChange}
         handleSubmit={this._handleSubmit}
@@ -185,7 +199,10 @@ CreditTransactionRequestAddContainer.defaultProps = {
 
 CreditTransactionRequestAddContainer.propTypes = {
   addDocumentUpload: PropTypes.func.isRequired,
-  errors: PropTypes.shape({}),
+  clearDocumentUploadError: PropTypes.func.isRequired,
+  errors: PropTypes.shape({
+    title: PropTypes.arrayOf(PropTypes.string)
+  }),
   loggedInUser: PropTypes.shape({
     displayName: PropTypes.string,
     hasPermission: PropTypes.func,
@@ -222,6 +239,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   addDocumentUpload: bindActionCreators(addDocumentUpload, dispatch),
+  clearDocumentUploadError: bindActionCreators(clearDocumentUploadError, dispatch),
   requestURL: bindActionCreators(getDocumentUploadURL, dispatch)
 });
 

@@ -361,10 +361,13 @@ CreditTransactionRequestFormDetails.propTypes = {
   ]),
   compliancePeriods: PropTypes.arrayOf(PropTypes.shape()).isRequired,
   categories: PropTypes.arrayOf(PropTypes.shape()).isRequired,
-  documentType: PropTypes.shape({
-    description: PropTypes.string,
-    theType: PropTypes.string
-  }).isRequired,
+  documentType: PropTypes.oneOfType([
+    PropTypes.bool,
+    PropTypes.shape({
+      description: PropTypes.string,
+      theType: PropTypes.string
+    })
+  ]).isRequired,
   edit: PropTypes.bool,
   fields: PropTypes.shape({
     attachments: PropTypes.arrayOf(PropTypes.shape()),

@@ -7,6 +7,11 @@ const documentUpload = (state = {
   errors: {}
 }, action) => {
   switch (action.type) {
+    case ActionTypes.CLEAR_ERROR:
+      return {
+        ...state,
+        errors: {}
+      };
     case ActionTypes.GET_REQUEST:
       return {
         ...state,
