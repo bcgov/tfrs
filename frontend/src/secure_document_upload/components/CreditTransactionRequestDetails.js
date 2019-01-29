@@ -17,7 +17,7 @@ import CreditTransactionRequestCommentForm from './CreditTransactionRequestComme
 
 const CreditTransactionRequestDetails = props => (
   <div className="page-credit-transaction-request-details">
-    <h1>{props.item.type.description}</h1>
+    <h1>{props.item.type.description} Submission</h1>
 
     <div className="credit-transaction-request-details">
 
@@ -187,13 +187,24 @@ const CreditTransactionRequestDetails = props => (
         <FontAwesomeIcon icon="arrow-circle-left" /> {Lang.BTN_APP_CANCEL}
       </button>
 
+      {props.availableActions.includes('Cancelled') &&
+        <button
+          className="btn btn-danger"
+          data-target="#confirmDelete"
+          data-toggle="modal"
+          type="button"
+        >
+          <FontAwesomeIcon icon="minus-circle" /> {Lang.BTN_DELETE_DRAFT}
+        </button>
+      }
+
       {props.availableActions.includes('Draft') &&
       <button
         className="btn btn-default"
         type="button"
         onClick={() => history.push(SECURE_DOCUMENT_UPLOAD.EDIT.replace(':id', props.item.id))}
       >
-        <FontAwesomeIcon icon="edit" /> Edit
+        <FontAwesomeIcon icon="edit" /> {Lang.BTN_EDIT}
       </button>
       }
 

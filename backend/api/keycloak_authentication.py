@@ -1,21 +1,18 @@
 import json
-import uuid
-from time import sleep
-
 import jwt
-
 from jwt import InvalidTokenError
 from jwt.algorithms import RSAAlgorithm
 import requests
+
+from cryptography.hazmat.primitives import serialization
+from django.core.cache import caches
+from django.conf import settings
 from rest_framework import authentication
 from rest_framework import exceptions
-from django.conf import settings
-from cryptography.hazmat.primitives import serialization
 
 from api.models.User import User
 from api.models.UserCreationRequest import UserCreationRequest
 from api.services.KeycloakAPI import map_user
-from django.core.cache import caches
 
 cache = caches['keycloak']
 
@@ -70,12 +67,14 @@ class UserAuthentication(authentication.BaseAuthentication):
         auth = request.META.get('HTTP_AUTHORIZATION', None)
 
         if not auth:
-            raise exceptions.AuthenticationFailed('Authorization header required')
+            raise exceptions.AuthenticationFailed(
+                'Authorization header required')
 
         try:
             scheme, token = auth.split()
         except ValueError:
-            raise exceptions.AuthenticationFailed('Invalid format for authorization header')
+            raise exceptions.AuthenticationFailed(
+                'Invalid format for authorization header')
 
         if scheme != 'Bearer':
             raise exceptions.AuthenticationFailed(

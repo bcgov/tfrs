@@ -33,13 +33,11 @@ class CreditTransactionRequestAddContainer extends Component {
         milestone: '',
         title: ''
       },
-      pageTitle: 'Submission',
       validationErrors: {},
       uploadState: ''
     };
 
     this._handleInputChange = this._handleInputChange.bind(this);
-    this._handlePageTitle = this._handlePageTitle.bind(this);
     this._handleSubmit = this._handleSubmit.bind(this);
   }
 
@@ -50,6 +48,21 @@ class CreditTransactionRequestAddContainer extends Component {
     this.setState({
       fields: fieldState
     });
+  }
+
+  _getTitle () {
+    let documentTypes = [];
+    this.props.referenceData.documentCategories.forEach((category) => {
+      documentTypes = documentTypes.concat(category.types);
+    });
+
+    const foundType = documentTypes.find(type => (type.id === this.state.fields.documentType.id));
+
+    if (foundType) {
+      return foundType.description;
+    }
+
+    return '';
   }
 
   _handleInputChange (event) {
@@ -131,29 +144,25 @@ class CreditTransactionRequestAddContainer extends Component {
     return true;
   }
 
-  _handlePageTitle (pageTitle) {
-    this.setState({
-      pageTitle
-    });
-  }
-
   render () {
     if (this.state.uploadState === 'progress' || this.props.referenceData.isFetching) {
       return (<Loading />);
     }
 
+    const availableActions = ['Draft', 'Submitted'];
+
     return ([
       <CreditTransactionRequestForm
         addToFields={this._addToFields}
+        availableActions={availableActions}
         categories={this.props.referenceData.documentCategories}
         errors={this.props.errors}
         fields={this.state.fields}
         handleInputChange={this._handleInputChange}
-        handlePageTitle={this._handlePageTitle}
         handleSubmit={this._handleSubmit}
         key="creditTransactionForm"
         loggedInUser={this.props.loggedInUser}
-        title={`New ${this.state.pageTitle} Submission`}
+        title={this._getTitle()}
         validationErrors={this.state.validationErrors}
       />,
       <Modal

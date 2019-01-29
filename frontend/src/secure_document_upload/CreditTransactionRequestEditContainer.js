@@ -115,6 +115,21 @@ class CreditTransactionRequestEditContainer extends Component {
     }
   }
 
+  _getTitle () {
+    let documentTypes = [];
+    this.props.referenceData.documentCategories.forEach((category) => {
+      documentTypes = documentTypes.concat(category.types);
+    });
+
+    const foundType = documentTypes.find(type => (type.id === this.state.fields.documentType.id));
+
+    if (foundType) {
+      return foundType.description;
+    }
+
+    return '';
+  }
+
   _handleSubmit (event, status) {
     event.preventDefault();
 
@@ -195,10 +210,16 @@ class CreditTransactionRequestEditContainer extends Component {
       return (<Loading />);
     }
     const { item } = this.props;
+    let availableActions = [];
+
+    availableActions = item.actions.map(action => (
+      action.status
+    ));
 
     return ([
       <CreditTransactionRequestForm
         addToFields={this._addToFields}
+        availableActions={availableActions}
         categories={this.props.referenceData.documentCategories}
         edit
         errors={this.props.errors}
@@ -207,7 +228,7 @@ class CreditTransactionRequestEditContainer extends Component {
         handleSubmit={this._handleSubmit}
         key="creditTransactionForm"
         loggedInUser={this.props.loggedInUser}
-        title="New Credit Transaction Request"
+        title={this._getTitle()}
         validationErrors={this.state.validationErrors}
       />,
       <Modal

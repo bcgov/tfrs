@@ -10,34 +10,6 @@ import CONFIG from '../../config';
 import { getFileSize, getIcon, getScanStatusIcon, validateFiles } from '../../utils/functions';
 
 class CreditTransactionRequestFormDetails extends Component {
-  static getPlaceholders (documentType) {
-    if (documentType && documentType.theType === 'Application') {
-      return {
-        titlePlaceholder: 'e.g. Cold Weather Biodiesel, Co-processing, etc.',
-        commentPlaceholder: 'Optional: provide any additional information with respect to your P3A Application submission'
-      };
-    }
-
-    if (documentType && documentType.theType === 'Evidence') {
-      return {
-        titlePlaceholder: 'e.g. P3A-18COM1, Cold Weather Biodiesel, etc.',
-        commentPlaceholder: 'Optional: provide any additional information with respect to your P3A evidence submission'
-      };
-    }
-
-    if (documentType && documentType.theType === 'Records') {
-      return {
-        titlePlaceholder: 'e.g. Compliance Report, Supplemental Report, Exclusion Report, etc.',
-        commentPlaceholder: 'Optional: provide any additional information with respect to your submission'
-      };
-    }
-
-    return {
-      titlePlaceholder: '',
-      commentPlaceholder: 'Optional: provide any additional information with respect to your submission'
-    };
-  }
-
   constructor (props) {
     super(props);
 
@@ -49,27 +21,32 @@ class CreditTransactionRequestFormDetails extends Component {
     this._removeFile = this._removeFile.bind(this);
   }
 
-  componentWillReceiveProps (props) {
-    if (props.fields.documentType) {
-      this.documentType = this._getType(props.fields.documentType.id);
+  _getPlaceholders (documentType) {
+    if (this.props.title === 'P3A Application') {
+      return {
+        titlePlaceholder: 'e.g. Cold Weather Biodiesel, Co-processing, etc.',
+        commentPlaceholder: 'Optional: provide any additional information with respect to your P3A Application submission'
+      };
     }
-  }
 
-  _getType (typeId) {
-    let documentType = null;
+    if (this.props.title === 'P3A Milestone Evidence') {
+      return {
+        titlePlaceholder: 'e.g. P3A-18COM1, Cold Weather Biodiesel, etc.',
+        commentPlaceholder: 'Optional: provide any additional information with respect to your P3A evidence submission'
+      };
+    }
 
-    this.props.categories.forEach((category) => {
-      const foundType = category.types
-        .find(type => (type.id === typeId));
+    if (this.props.title === 'Compliance Reporting Materials') {
+      return {
+        titlePlaceholder: 'e.g. Compliance Report, Supplemental Report, Exclusion Report, etc.',
+        commentPlaceholder: 'Optional: provide any additional information with respect to your submission'
+      };
+    }
 
-      if (foundType) {
-        documentType = foundType;
-      }
-    });
-
-    this.props.handlePageTitle(documentType.description);
-
-    return documentType;
+    return {
+      titlePlaceholder: '',
+      commentPlaceholder: 'Optional: provide any additional information with respect to your submission'
+    };
   }
 
   _onDrop (files) {
@@ -127,8 +104,7 @@ class CreditTransactionRequestFormDetails extends Component {
   }
 
   render () {
-    const { titlePlaceholder, commentPlaceholder } = CreditTransactionRequestFormDetails
-      .getPlaceholders(this.documentType);
+    const { titlePlaceholder, commentPlaceholder } = this._getPlaceholders(this.documentType);
 
     return (
       <div className="credit-transaction-request-form-details">
@@ -156,7 +132,7 @@ class CreditTransactionRequestFormDetails extends Component {
                 </label>
               </div>
 
-              {this.documentType && this.documentType.theType === 'Evidence' &&
+              {this.props.title === 'P3A Milestone Evidence' &&
                 <div className="row">
                   <div className="form-group col-md-12">
                     <label htmlFor="milestone">Milestone:
@@ -178,8 +154,7 @@ class CreditTransactionRequestFormDetails extends Component {
               <div className="row" key="title">
                 <div className="form-group col-md-12">
                   <label htmlFor="title">
-                    {this.documentType &&
-                      this.documentType.theType === 'Evidence' ? 'Part 3 Agreement' : 'Title'}:
+                    {this.props.title === 'P3A Milestone Evidence' ? 'Part 3 Agreement' : 'Title'}:
                     <input
                       className="form-control"
                       id="title"
@@ -402,7 +377,7 @@ CreditTransactionRequestFormDetails.propTypes = {
     title: PropTypes.string
   }).isRequired,
   handleInputChange: PropTypes.func.isRequired,
-  handlePageTitle: PropTypes.func.isRequired
+  title: PropTypes.string.isRequired
 };
 
 export default CreditTransactionRequestFormDetails;
