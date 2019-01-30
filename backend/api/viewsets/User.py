@@ -159,5 +159,3 @@ class UserViewSet(AuditableMixin, viewsets.GenericViewSet,
     def perform_create(self, serializer):
         serializer.is_valid(raise_exception=True)
         serializer.save()
-
-        create_user(get_token(), )
