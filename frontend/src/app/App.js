@@ -18,7 +18,7 @@ App.propTypes = {
   children: PropTypes.oneOfType([
     PropTypes.arrayOf(PropTypes.node),
     PropTypes.node
-  ]).isRequired,
+  ]).isRequired
 };
 
 export default withRouter(connect(state => ({}))(App));

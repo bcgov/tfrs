@@ -3,7 +3,7 @@ import uuid
 from django.db.models import Q
 from minio import Minio
 
-from rest_framework import viewsets, mixins
+from rest_framework import viewsets, status, mixins
 from rest_framework.decorators import list_route
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
@@ -16,8 +16,9 @@ from api.notifications.notification_types import NotificationType
 from api.notifications.notifications import AMQPNotificationService
 from api.permissions.Documents import DocumentPermissions
 from api.serializers.Document import \
-    DocumentCreateSerializer, DocumentDetailSerializer, \
-    DocumentMinSerializer, DocumentSerializer, DocumentUpdateSerializer
+    DocumentCreateSerializer, DocumentDeleteSerializer, \
+    DocumentDetailSerializer, DocumentMinSerializer, DocumentSerializer, \
+    DocumentUpdateSerializer
 from api.serializers.DocumentCategory import DocumentCategorySerializer
 from api.serializers.DocumentStatus import DocumentStatusSerializer
 from api.services.DocumentService import DocumentService
@@ -37,10 +38,11 @@ class DocumentViewSet(AuditableMixin,
     """
 
     permission_classes = (DocumentPermissions,)
-    http_method_names = ['get', 'post', 'patch']
+    http_method_names = ['delete', 'get', 'post', 'patch']
 
     serializer_classes = {
         'default': DocumentSerializer,
+        'destroy': DocumentDeleteSerializer,
         'create': DocumentCreateSerializer,
         'list': DocumentMinSerializer,
         'categories': DocumentCategorySerializer,
@@ -66,6 +68,17 @@ class DocumentViewSet(AuditableMixin,
 
         return Response(serializer.data)
 
+    def destroy(self, request, *args, **kwargs):
+        document = self.get_object()
+
+        serializer = self.get_serializer(
+            document,
+            read_only=True)
+
+        serializer.destroy()
+
+        return Response(None, status=status.HTTP_200_OK)
+
     def get_serializer_class(self):
         if self.action in list(self.serializer_classes.keys()):
             return self.serializer_classes[self.action]
@@ -77,11 +90,12 @@ class DocumentViewSet(AuditableMixin,
 
         if user.organization.id == 1:
             return self.queryset.filter(
-                ~Q(status__status__in=['Draft'])
+                ~Q(status__status__in=['Draft', 'Cancelled'])
             ).all()
 
         return self.queryset.filter(
-            Q(create_user__organization__id=user.organization.id)
+            Q(create_user__organization__id=user.organization.id),
+            ~Q(status__status__in=['Cancelled'])
         ).all()
 
     def perform_create(self, serializer):

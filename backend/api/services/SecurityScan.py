@@ -113,7 +113,7 @@ class SecurityScan:
     @staticmethod
     def send_scan_request(file: DocumentFileAttachment):
         """
-        Method to send the notification
+        Method to send the request for scanning the files
         """
         try:
             parameters = AMQP_CONNECTION_PARAMETERS
