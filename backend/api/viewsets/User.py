@@ -7,11 +7,10 @@ from api.models.User import User
 from api.permissions.User import UserPermissions
 from api.serializers \
     import UserSerializer, UserViewSerializer, UserUpdateSerializer, \
-        CreditTradeHistoryMinSerializer, Q
+            CreditTradeHistoryMinSerializer, Q
 from api.serializers.UserCreationRequestSerializer \
     import UserCreationRequestSerializer
 from auditable.views import AuditableMixin
-from api.services.KeycloakAPI import create_user, get_token
 
 
 class UserViewSet(AuditableMixin, viewsets.GenericViewSet,
