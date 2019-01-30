@@ -22,15 +22,6 @@ class DocumentService(object):
             if is_new
             else document.update_user)
 
-        role_id = None
-
-        if user.roles.filter(name="GovUser").exists():
-            role_id = user.roles.get(name="GovUser").id
-        elif user.roles.filter(name="FSDocSubmit").exists():
-            role_id = user.roles.get(name="FSDocSubmit").id
-        else:
-            role_id = user.roles.first().id
-
         history = DocumentHistory(
             compliance_period_id=document.compliance_period_id,
             create_user=document.create_user,

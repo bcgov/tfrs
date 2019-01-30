@@ -11,7 +11,7 @@ import CreditTransactionRequestForm from './components/CreditTransactionRequestF
 import Loading from '../app/components/Loading';
 import Modal from '../app/components/Modal';
 import history from '../app/History';
-import { addDocumentUpload, getDocumentUploadURL, uploadDocument } from '../actions/documentUploads';
+import { addDocumentUpload, clearDocumentUploadError, getDocumentUploadURL, uploadDocument } from '../actions/documentUploads';
 import DOCUMENT_STATUSES from '../constants/documentStatuses';
 import SECURE_DOCUMENT_UPLOAD from '../constants/routes/SecureDocumentUpload';
 import toastr from '../utils/toastr';
@@ -33,14 +33,16 @@ class CreditTransactionRequestAddContainer extends Component {
         milestone: '',
         title: ''
       },
-      pageTitle: 'Submission',
       validationErrors: {},
       uploadState: ''
     };
 
     this._handleInputChange = this._handleInputChange.bind(this);
-    this._handlePageTitle = this._handlePageTitle.bind(this);
     this._handleSubmit = this._handleSubmit.bind(this);
+  }
+
+  componentDidMount () {
+    this.props.clearDocumentUploadError();
   }
 
   changeObjectProp (id, name) {
@@ -50,6 +52,31 @@ class CreditTransactionRequestAddContainer extends Component {
     this.setState({
       fields: fieldState
     });
+  }
+
+  _getDocumentType () {
+    let documentTypes = [];
+    this.props.referenceData.documentCategories.forEach((category) => {
+      documentTypes = documentTypes.concat(category.types);
+    });
+
+    const foundType = documentTypes.find(type => (type.id === this.state.fields.documentType.id));
+
+    if (foundType) {
+      return foundType;
+    }
+
+    return false;
+  }
+
+  _getErrors () {
+    if ('title' in this.props.errors && this._getDocumentType().theType === 'Evidence') {
+      this.props.errors.title.forEach((error, index) => {
+        this.props.errors.title[index] = error.replace(/Title/, 'Part 3 Agreement');
+      });
+    }
+
+    return this.props.errors;
   }
 
   _handleInputChange (event) {
@@ -112,13 +139,17 @@ class CreditTransactionRequestAddContainer extends Component {
       attachments
     };
 
-    Promise.all(uploadPromises).then(() => {
+    Promise.all(uploadPromises).then(() => (
       this.props.addDocumentUpload(data).then((response) => {
         this.setState({ uploadState: 'success' });
         history.push(SECURE_DOCUMENT_UPLOAD.LIST);
         toastr.documentUpload(status.id);
-      });
-    }).catch((reason) => {
+      }).catch((reason) => {
+        this.setState({
+          uploadState: 'failed'
+        });
+      })
+    )).catch((reason) => {
       this.setState({
         uploadState: 'failed'
       });
@@ -127,29 +158,25 @@ class CreditTransactionRequestAddContainer extends Component {
     return true;
   }
 
-  _handlePageTitle (pageTitle) {
-    this.setState({
-      pageTitle
-    });
-  }
-
   render () {
     if (this.state.uploadState === 'progress' || this.props.referenceData.isFetching) {
       return (<Loading />);
     }
 
+    const availableActions = ['Draft', 'Submitted'];
+
     return ([
       <CreditTransactionRequestForm
         addToFields={this._addToFields}
+        availableActions={availableActions}
         categories={this.props.referenceData.documentCategories}
-        errors={this.props.errors}
+        documentType={this._getDocumentType()}
+        errors={this._getErrors()}
         fields={this.state.fields}
         handleInputChange={this._handleInputChange}
-        handlePageTitle={this._handlePageTitle}
         handleSubmit={this._handleSubmit}
         key="creditTransactionForm"
         loggedInUser={this.props.loggedInUser}
-        title={`New ${this.state.pageTitle}`}
         validationErrors={this.state.validationErrors}
       />,
       <Modal
@@ -172,7 +199,10 @@ CreditTransactionRequestAddContainer.defaultProps = {
 
 CreditTransactionRequestAddContainer.propTypes = {
   addDocumentUpload: PropTypes.func.isRequired,
-  errors: PropTypes.shape({}),
+  clearDocumentUploadError: PropTypes.func.isRequired,
+  errors: PropTypes.shape({
+    title: PropTypes.arrayOf(PropTypes.string)
+  }),
   loggedInUser: PropTypes.shape({
     displayName: PropTypes.string,
     hasPermission: PropTypes.func,
@@ -198,7 +228,7 @@ CreditTransactionRequestAddContainer.propTypes = {
 };
 
 const mapStateToProps = state => ({
-  errors: state.rootReducer.creditTransfer.errors,
+  errors: state.rootReducer.documentUpload.errors,
   loggedInUser: state.rootReducer.userRequest.loggedInUser,
   referenceData: {
     documentCategories: state.rootReducer.referenceData.data.documentCategories,
@@ -209,6 +239,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   addDocumentUpload: bindActionCreators(addDocumentUpload, dispatch),
+  clearDocumentUploadError: bindActionCreators(clearDocumentUploadError, dispatch),
   requestURL: bindActionCreators(getDocumentUploadURL, dispatch)
 });
 

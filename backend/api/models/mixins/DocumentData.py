@@ -10,7 +10,8 @@ class DocumentData(models.Model):
 
     title = models.CharField(
         max_length=120,
-        db_comment="High-level description of the Submission."
+        db_comment="High-level description of the Submission.",
+        blank=False
     )
 
     status = models.ForeignKey(

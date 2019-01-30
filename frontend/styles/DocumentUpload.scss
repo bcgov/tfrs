@@ -1,23 +1,20 @@
-span.document-icon {
-
+span.security-scan-icon {
   &[data-security-scan-status="PASS"] {
-    color: green;
+    color: $green;
   };
   &[data-security-scan-status="FAIL"] {
-    color: red;
+    color: $red;
   };
   &[data-security-scan-status="NOT RUN"] {
-    color: blue
+    color: $blue
   };
   &[data-security-scan-status="IN PROGRESS"] {
-    color: blue;
+    color: $blue;
   };
 
-  color: $link-color;
-  padding: 0;
   margin: 0;
+  padding: 0;
   width: 2rem;
-  display: inline-block;
 
   svg {
     align-self: center;
