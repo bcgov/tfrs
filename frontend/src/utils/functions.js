@@ -74,9 +74,9 @@ const getScanStatusIcon = (status) => {
     case 'FAIL':
       return 'times';
     default:
-      return 'hourglass';
+      return 'hourglass-half';
   }
-}
+};
 
 const validateFiles = files => (
   files.filter((file) => {
@@ -111,4 +111,4 @@ const validateFiles = files => (
   })
 );
 
-export {arrayMove, download, getFileSize, getIcon, getScanStatusIcon, validateFiles};
+export { arrayMove, download, getFileSize, getIcon, getScanStatusIcon, validateFiles };

@@ -24,12 +24,26 @@ from api.models.mixins.DocumentData import DocumentData
 from auditable.models import Auditable
 
 from .DocumentComment import DocumentComment
+from .DocumentFileAttachment import DocumentFileAttachment
 
 
 class Document(Auditable, DocumentData):
     """
     Holds the documents that constitute evidence or compliance records etc.
     """
+
+    @property
+    def attachments(self):
+        """
+        File(s) attached to the Document
+        """
+        attachments = DocumentFileAttachment.objects.filter(
+            document=self.id,
+            is_removed=False
+        )
+
+        return attachments
+
     @property
     def comments(self):
         """

@@ -28,6 +28,7 @@ from api.models.Document import Document
 from api.models.DocumentComment import DocumentComment
 from api.models.DocumentMilestone import DocumentMilestone
 from api.models.DocumentStatus import DocumentStatus
+from api.models.DocumentType import DocumentType
 
 from api.serializers.CompliancePeriod import CompliancePeriodSerializer
 from api.serializers.DocumentComment import DocumentCommentSerializer
@@ -87,6 +88,29 @@ class DocumentCreateSerializer(serializers.ModelSerializer):
     comments = DocumentCommentSerializer(many=True, read_only=True)
     milestone = DocumentMilestoneSerializer(read_only=True)
 
+    def validate(self, data):
+        request = self.context['request']
+        submitted_status = DocumentStatus.objects.get(status="Submitted")
+
+        if data.get('status') == submitted_status:
+            if data.get('type') == DocumentType.objects.get(
+                    the_type="Evidence"):
+                if not request.data.get('milestone'):
+                    raise serializers.ValidationError({
+                        'milestone': "Milestone is required for P3A Milestone "
+                                     "Evidence."
+                    })
+
+            attachments = request.data.get('attachments')
+
+            if not attachments:
+                raise serializers.ValidationError({
+                    'attachments': "At least one file needs to be attached "
+                                   "before this can be submitted."
+                })
+
+        return data
+
     def save(self, **kwargs):
         super().save(**kwargs)
 
@@ -130,6 +154,54 @@ class DocumentCreateSerializer(serializers.ModelSerializer):
                   'status', 'title', 'type', 'milestone',
                   'attachments', 'comments', 'record_number')
         read_only_fields = ('id',)
+        extra_kwargs = {
+            'compliance_period': {
+                'error_messages': {
+                    'does_not_exist': "Please specify the Compliance Period "
+                                      "in which the request relates."
+                }
+            },
+            'title': {
+                'error_messages': {
+                    'blank': "Please provide a Title."
+                }
+            }
+        }
+
+
+class DocumentDeleteSerializer(serializers.ModelSerializer):
+    """
+    Delete serializer for Documents
+    """
+    def destroy(self):
+        """
+        Delete function to mark the document as cancelled.
+        Also, sets the file attachments as removed (including sending a
+        request to minio to delete the actual files)
+        """
+        document = self.instance
+        if document.status not in DocumentStatus.objects.filter(
+                status__in=["Draft", "Security Scan Failed"]):
+            raise serializers.ValidationError({
+                'readOnly': "Cannot delete a submission that's not a draft."
+            })
+
+        attachments_to_be_removed = DocumentFileAttachment.objects.filter(
+            document=document,
+            is_removed=False).values_list('id')
+
+        if attachments_to_be_removed:
+            DocumentService.delete_attachments(
+                document_id=document.id,
+                attachment_ids=attachments_to_be_removed
+            )
+
+        document.status = DocumentStatus.objects.get(status="Cancelled")
+        document.save()
+
+    class Meta:
+        model = Document
+        fields = '__all__'
 
 
 class DocumentDetailSerializer(serializers.ModelSerializer):
@@ -157,6 +229,9 @@ class DocumentDetailSerializer(serializers.ModelSerializer):
         # doesn't have available permissions
         if not request.user.roles:
             return []
+
+        if cur_status == "Security Scan Failed":
+            return DocumentActions.scan_failed(request)
 
         if cur_status == "Draft":
             return DocumentActions.draft(request)
@@ -264,22 +339,50 @@ class DocumentUpdateSerializer(serializers.ModelSerializer):
     milestone = DocumentMilestoneSerializer(read_only=True)
 
     def validate(self, data):
+        request = self.context['request']
+        document_statuses = DocumentStatus.objects.all().only('id', 'status')
+        status_dict = {s.status: s for s in document_statuses}
+
+        document = self.instance
         status = data.get('status')
+        draft_status = status_dict["Draft"]
+        security_scan_failed_status = status_dict["Security Scan Failed"]
 
-        if status != DocumentStatus.objects.get(status='Draft'):
-            document = self.instance
-
-            if document.title != data.get('title') or \
-                    document.type_id != data.get('type') or \
-                    document.compliance_period_id != \
-                    data.get('compliance_period') or \
-                    document.record_number != data.get('record_number') or \
-                    document.milestone.milestone != data.get('milestone') or \
-                    data.get('attachments_to_be_removed') or \
-                    data.get('attachments'):
+        if document.status != draft_status and \
+                document.status != security_scan_failed_status:
+            if status == draft_status:
                 raise serializers.ValidationError({
-                    'readOnly': "Cannot update other fields unless the "
-                                "document is in draft."
+                    'readOnly': "Cannot update the status back to draft when "
+                                "it's no longer in draft."
+                })
+
+            # if there's a key that's not about updating the status or user
+            # invalidate the request as we're not allowing modifications
+            # to other fields
+            for key in data:
+                if key not in ('status', 'update_user'):
+                    raise serializers.ValidationError({
+                        'readOnly': "Cannot update other fields unless the "
+                                    "document is in draft."
+                    })
+
+        submitted_status = status_dict["Submitted"]
+
+        if data.get('status') == submitted_status:
+            if document.type.the_type == "Evidence":
+                if not request.data.get('milestone'):
+                    raise serializers.ValidationError({
+                        'milestone': "Milestone is required for P3A Milestone "
+                                     "Evidence."
+                    })
+
+            current_attachments = document.attachments
+            attachments = request.data.get('attachments')
+
+            if not attachments and not current_attachments:
+                raise serializers.ValidationError({
+                    'attachments': "At least one file needs to be attached "
+                                   "before this can be submitted."
                 })
 
         return data
@@ -290,7 +393,8 @@ class DocumentUpdateSerializer(serializers.ModelSerializer):
         document = self.instance
         request = self.context['request']
 
-        attachments_to_be_removed = request.data.get('attachments_to_be_removed')
+        attachments_to_be_removed = request.data.get(
+            'attachments_to_be_removed')
 
         if attachments_to_be_removed:
             DocumentService.delete_attachments(
@@ -345,3 +449,16 @@ class DocumentUpdateSerializer(serializers.ModelSerializer):
                   'status', 'title', 'type', 'milestone',
                   'record_number', 'attachments', 'comments')
         read_only_fields = ('id',)
+        extra_kwargs = {
+            'compliance_period': {
+                'error_messages': {
+                    'does_not_exist': "Please specify the Compliance Period "
+                                      "in which the request relates."
+                }
+            },
+            'title': {
+                'error_messages': {
+                    'blank': "Please provide a Title."
+                }
+            }
+        }

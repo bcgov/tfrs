@@ -6,6 +6,7 @@ import PropTypes from 'prop-types';
 import FontAwesomeIcon from '@fortawesome/react-fontawesome';
 import axios from 'axios';
 
+import Errors from '../../app/components/Errors';
 import history from '../../app/History';
 import * as Lang from '../../constants/langEnUs';
 import SECURE_DOCUMENT_UPLOAD from '../../constants/routes/SecureDocumentUpload';
@@ -16,7 +17,7 @@ import CreditTransactionRequestCommentForm from './CreditTransactionRequestComme
 
 const CreditTransactionRequestDetails = props => (
   <div className="page-credit-transaction-request-details">
-    <h1>{props.item.type.description}</h1>
+    <h1>{props.item.type.description} Submission</h1>
 
     <div className="credit-transaction-request-details">
 
@@ -29,7 +30,7 @@ const CreditTransactionRequestDetails = props => (
       </div>
 
       <div className="row">
-        <div className="col-md-4">
+        <div className="col-md-6">
           <div className="row">
             <div className="form-group col-md-12">
               <label htmlFor="compliance-period">Compliance Period:
@@ -73,7 +74,7 @@ const CreditTransactionRequestDetails = props => (
           }
         </div>
 
-        <div className="col-md-8">
+        <div className="col-md-6">
           <div className="row">
             <div className="form-group col-md-12">
               <label htmlFor="document-type">Attachment Type:
@@ -86,26 +87,27 @@ const CreditTransactionRequestDetails = props => (
 
           <div className="row">
             <div className="form-group col-md-12">
-              <label htmlFor="document-type">Attachments:
-                <ul className="value files">
-                  {props.item.attachments.map(attachment => (
-                    <li key={attachment.url}>
-                      <span className="document-icon">
+              <label htmlFor="document-type">Attachments:</label>
+              <div className="file-submission-attachments">
+                <div className="row">
+                  <div className="col-md-7 header">Filename</div>
+                  <div className="col-md-2 size header">Size</div>
+                  <div className="col-md-3 security-scan-status header">Security Scan</div>
+                </div>
+                {props.item.attachments.map(attachment => (
+                  <div className="row" key={attachment.url}>
+                    <div className="col-md-7 filename">
+                      <span className="icon">
                         <FontAwesomeIcon icon={getIcon(attachment.mimeType)} fixedWidth />
                       </span>
-                      <span className="document-icon" data-security-scan-status={attachment.securityScanStatus}>
-                        <FontAwesomeIcon
-                          icon={getScanStatusIcon(attachment.securityScanStatus)}
-                          fixedWidth
-                        />
-                      </span>
                       <button
-                        type="button"
+                        className="text"
                         onClick={() => {
                           axios.get(attachment.url, {
                             responseType: 'blob'
                           }).then((response) => {
-                            const objectURL = window.URL.createObjectURL(new Blob([response.data]));
+                            const objectURL =
+                              window.URL.createObjectURL(new Blob([response.data]));
                             const link = document.createElement('a');
                             link.href = objectURL;
                             link.setAttribute('download', attachment.filename);
@@ -113,18 +115,44 @@ const CreditTransactionRequestDetails = props => (
                             link.click();
                           });
                         }}
+                        type="button"
                       >
                         {attachment.filename}
                       </button>
-                      - {getFileSize(attachment.size)}
-                    </li>
-                  ))}
-                </ul>
-              </label>
+                    </div>
+
+                    <div className="col-md-2 size">
+                      <span>{getFileSize(attachment.size)}</span>
+                    </div>
+
+                    <div className="col-md-3 security-scan-status">
+                      <span className="security-scan-icon" data-security-scan-status={attachment.securityScanStatus}>
+                        <FontAwesomeIcon
+                          icon={getScanStatusIcon(attachment.securityScanStatus)}
+                          fixedWidth
+                        />
+                      </span>
+                    </div>
+                  </div>
+                ))}
+                {props.item.attachments.length === 0 &&
+                  <div className="row">
+                    <div className="col-md-12">No files attached.</div>
+                  </div>
+                }
+              </div>
             </div>
           </div>
         </div>
       </div>
+
+      {Object.keys(props.errors).length > 0 &&
+        <div className="row">
+          <div className="col-md-12">
+            <Errors errors={props.errors} />
+          </div>
+        </div>
+      }
 
       {props.item.comments.length > 0 && <h3 className="comments-header">Comments</h3>}
       {props.item.comments.map(c => (
@@ -149,6 +177,7 @@ const CreditTransactionRequestDetails = props => (
         </div>
       </div>
     </div>
+
     <div className="btn-container">
       <button
         className="btn btn-default"
@@ -158,13 +187,26 @@ const CreditTransactionRequestDetails = props => (
         <FontAwesomeIcon icon="arrow-circle-left" /> {Lang.BTN_APP_CANCEL}
       </button>
 
+      {props.availableActions.includes('Cancelled') &&
+        <button
+          className="btn btn-danger"
+          data-target="#confirmDelete"
+          data-toggle="modal"
+          type="button"
+        >
+          <FontAwesomeIcon icon="minus-circle" /> {Lang.BTN_DELETE_DRAFT}
+        </button>
+      }
+
+      {props.availableActions.includes('Draft') &&
       <button
         className="btn btn-default"
         type="button"
         onClick={() => history.push(SECURE_DOCUMENT_UPLOAD.EDIT.replace(':id', props.item.id))}
       >
-        <FontAwesomeIcon icon="edit" /> Edit
+        <FontAwesomeIcon icon="edit" /> {Lang.BTN_EDIT}
       </button>
+      }
 
       {props.availableActions.includes('Submitted') &&
       <button
@@ -190,7 +232,9 @@ const CreditTransactionRequestDetails = props => (
   </div>
 );
 
-CreditTransactionRequestDetails.defaultProps = {};
+CreditTransactionRequestDetails.defaultProps = {
+  errors: {}
+};
 
 CreditTransactionRequestDetails.propTypes = {
   addComment: PropTypes.func.isRequired,
@@ -198,6 +242,7 @@ CreditTransactionRequestDetails.propTypes = {
   cancelComment: PropTypes.func.isRequired,
   canComment: PropTypes.bool.isRequired,
   canCreatePrivilegedComment: PropTypes.bool.isRequired,
+  errors: PropTypes.shape(),
   isCommenting: PropTypes.bool.isRequired,
   isCreatingPrivilegedComment: PropTypes.bool.isRequired,
   item: PropTypes.shape().isRequired,

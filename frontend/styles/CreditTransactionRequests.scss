@@ -26,57 +26,6 @@
         }
       }
     }
-
-    .files {
-      list-style-position: outside;
-      list-style-type: none;
-      padding: 0;
-
-      li {
-        padding: 0.25rem 0 0.25rem 3rem;
-        position: relative;
-
-        button {
-          border: 0;
-          color: $red;
-        }
-
-        span {
-          vertical-align: middle;
-        }
-
-        .error-message {
-          color: $red;
-          font-style: italic;
-        }
-
-        .filename {
-          display: inline-block;
-          max-width: 100%;
-          overflow: hidden;
-          text-align: left;
-          text-overflow: ellipsis;
-          vertical-align: middle;
-        }
-
-        .icon {
-          bottom: 0;
-          display: flex;
-          height: 100%;
-          left: 0;
-          position: absolute;
-          text-align: center;
-          top: 0;
-          width: 2rem;
-
-          svg {
-            align-self: center;
-            margin-left: auto;
-            margin-right: 0;
-          }
-        }
-      }
-    }
   }
 }
 
@@ -115,53 +64,103 @@
 
     .value {
       font-weight: bold;
-
-      &.files {
-        list-style-position: outside;
-        list-style-type: none;
-        padding: 0;
-
-        li {
-          padding: 0.25rem 0 0.25rem 3rem;
-          position: relative;
-
-          button {
-            border: 0;
-            color: $link-color;
-            max-width: 100%;
-            overflow: hidden;
-            padding: 0;
-            text-align: left;
-            text-overflow: ellipsis;
-    
-            &:hover {
-              color: $link-color-hover;
-            }
-          }
-
-          .icon {
-            bottom: 0;
-            color: $link-color;
-            display: flex;
-            height: 100%;
-            left: 0;
-            position: absolute;
-            text-align: center;
-            top: 0;
-            width: 2rem;
-
-            svg {
-              align-self: center;
-              margin-left: auto;
-              margin-right: 0;
-            }
-          }
-        }
-      }
     }
 
     div.value {
       padding: 0.5rem 1rem;
+    }
+  }
+}
+
+.file-submission-attachments {
+  padding: 0 1rem;
+
+  button {
+    background-color: transparent;
+    border: 0;
+  }
+
+  .actions {
+    padding: 0;
+
+    button {
+      color: $red;
+      padding: 0;
+      vertical-align: middle;
+  
+      &:hover {
+        color: $dark-red;
+      }
+    }
+  }
+
+  .filename {
+    position: relative;
+
+    button.text {
+      color: $link-color;
+      margin: 1px 0;
+      padding-bottom: 0;
+      padding-top: 0;
+
+      &:hover {
+        color: $link-color-hover;
+      }
+    }
+
+    .icon {
+      bottom: 0;
+      color: $link-color;
+      height: 100%;
+      position: absolute;
+      text-align: center;
+      top: 0;
+      width: 2rem;
+
+      svg {
+        align-self: center;
+        margin-left: auto;
+        margin-right: 0;
+        vertical-align: middle;
+      }
+    }
+
+    .text {
+      display: block;
+      max-width: 100%;
+      overflow: hidden;
+      padding-left: 2rem;
+      text-align: left;
+      text-overflow: ellipsis;
+    }
+
+    span.text {
+      margin: 1px 0;
+    }
+  }
+
+  .header {
+    font-weight: bold;
+  }
+
+  .row:nth-of-type(even) {
+    background-color: $background-grey;
+  }
+
+  .security-scan-status {
+    padding: 0;
+    text-align: center;
+
+    svg {
+      vertical-align: middle;
+    }
+  }
+
+  .size {
+    padding: 0;
+
+    span {
+      vertical-align: middle;
     }
   }
 }

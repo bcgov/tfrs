@@ -7,37 +7,9 @@ import Dropzone from 'react-dropzone';
 import FontAwesomeIcon from '@fortawesome/react-fontawesome';
 
 import CONFIG from '../../config';
-import { getFileSize, getIcon, validateFiles } from '../../utils/functions';
+import { getFileSize, getIcon, getScanStatusIcon, validateFiles } from '../../utils/functions';
 
 class CreditTransactionRequestFormDetails extends Component {
-  static getPlaceholders (documentType) {
-    if (documentType && documentType.theType === 'Application') {
-      return {
-        titlePlaceholder: 'e.g. Cold Weather Biodiesel, Co-processing, etc.',
-        commentPlaceholder: 'Optional: provide any additional information with respect to your P3A Application submission'
-      };
-    }
-
-    if (documentType && documentType.theType === 'Evidence') {
-      return {
-        titlePlaceholder: 'e.g. P3A-18COM1, Cold Weather Biodiesel, etc.',
-        commentPlaceholder: 'Optional: provide any additional information with respect to your P3A evidence submission'
-      };
-    }
-
-    if (documentType && documentType.theType === 'Records') {
-      return {
-        titlePlaceholder: 'e.g. Compliance Report, Supplemental Report, Exclusion Report, etc.',
-        commentPlaceholder: 'Optional: provide any additional information with respect to your submission'
-      };
-    }
-
-    return {
-      titlePlaceholder: '',
-      commentPlaceholder: 'Optional: provide any additional information with respect to your submission'
-    };
-  }
-
   constructor (props) {
     super(props);
 
@@ -49,27 +21,32 @@ class CreditTransactionRequestFormDetails extends Component {
     this._removeFile = this._removeFile.bind(this);
   }
 
-  componentWillReceiveProps (props) {
-    if (props.fields.documentType) {
-      this.documentType = this._getType(props.fields.documentType.id);
+  _getPlaceholders (documentType) {
+    if (this.props.documentType && this.props.documentType.theType === 'Application') {
+      return {
+        titlePlaceholder: 'e.g. Cold Weather Biodiesel, Co-processing, etc.',
+        commentPlaceholder: 'Optional: provide any additional information with respect to your P3A Application submission'
+      };
     }
-  }
 
-  _getType (typeId) {
-    let documentType = null;
+    if (this.props.documentType && this.props.documentType.theType === 'Evidence') {
+      return {
+        titlePlaceholder: 'e.g. P3A-18COM1, Cold Weather Biodiesel, etc.',
+        commentPlaceholder: 'Optional: provide any additional information with respect to your P3A evidence submission'
+      };
+    }
 
-    this.props.categories.forEach((category) => {
-      const foundType = category.types
-        .find(type => (type.id === typeId));
+    if (this.props.documentType && this.props.documentType.theType === 'Records') {
+      return {
+        titlePlaceholder: 'e.g. Compliance Report, Supplemental Report, Exclusion Report, etc.',
+        commentPlaceholder: 'Optional: provide any additional information with respect to your submission'
+      };
+    }
 
-      if (foundType) {
-        documentType = foundType;
-      }
-    });
-
-    this.props.handlePageTitle(documentType.description);
-
-    return documentType;
+    return {
+      titlePlaceholder: '',
+      commentPlaceholder: 'Optional: provide any additional information with respect to your submission'
+    };
   }
 
   _onDrop (files) {
@@ -127,8 +104,7 @@ class CreditTransactionRequestFormDetails extends Component {
   }
 
   render () {
-    const { titlePlaceholder, commentPlaceholder } = CreditTransactionRequestFormDetails
-      .getPlaceholders(this.documentType);
+    const { titlePlaceholder, commentPlaceholder } = this._getPlaceholders(this.documentType);
 
     return (
       <div className="credit-transaction-request-form-details">
@@ -156,7 +132,7 @@ class CreditTransactionRequestFormDetails extends Component {
                 </label>
               </div>
 
-              {this.documentType && this.documentType.theType === 'Evidence' &&
+              {this.props.documentType && this.props.documentType.theType === 'Evidence' &&
                 <div className="row">
                   <div className="form-group col-md-12">
                     <label htmlFor="milestone">Milestone:
@@ -178,8 +154,7 @@ class CreditTransactionRequestFormDetails extends Component {
               <div className="row" key="title">
                 <div className="form-group col-md-12">
                   <label htmlFor="title">
-                    {this.documentType &&
-                      this.documentType.theType === 'Evidence' ? 'Part 3 Agreement' : 'Title'}:
+                    {this.props.documentType && this.props.documentType.theType === 'Evidence' ? 'Part 3 Agreement' : 'Title'}:
                     <input
                       className="form-control"
                       id="title"
@@ -261,38 +236,69 @@ class CreditTransactionRequestFormDetails extends Component {
             <div className="row">
               <div className="form-group col-md-12 main-form">
                 <div>Files:
-                  <ul className="files">
+                  <div className="file-submission-attachments">
+                    <div className="row">
+                      <div className="col-xs-6 header">Filename</div>
+                      <div className="col-xs-2 size header">Size</div>
+                      <div className="col-xs-3 security-scan-status header">Security Scan</div>
+                    </div>
                     {this.props.fields.attachments.map(attachment => (
-                      <li key={attachment.filename}>
-                        <span className="icon">
-                          <FontAwesomeIcon icon={getIcon(attachment.mimeType)} />
-                        </span>
-                        <span className="filename">{attachment.filename}</span>
-                        <span> - {getFileSize(attachment.size)}
+                      <div className="row" key={attachment.filename}>
+                        <div className="col-xs-6 filename">
+                          <span className="icon">
+                            <FontAwesomeIcon icon={getIcon(attachment.mimeType)} fixedWidth />
+                          </span>
+                          <span className="text">{attachment.filename}</span>
+                        </div>
+
+                        <div className="col-xs-2 size">
+                          <span>{getFileSize(attachment.size)}</span>
+                        </div>
+
+                        <div className="col-xs-3 security-scan-status">
+                          <span className="security-scan-icon" data-security-scan-status={attachment.securityScanStatus}>
+                            <FontAwesomeIcon
+                              icon={getScanStatusIcon(attachment.securityScanStatus)}
+                              fixedWidth
+                            />
+                          </span>
+                        </div>
+
+                        <div className="col-xs-1 actions">
                           <button type="button" onClick={() => this._removeAttachment(attachment)}>
                             <FontAwesomeIcon icon="minus-circle" />
                           </button>
-                        </span>
-                      </li>
+                        </div>
+                      </div>
                     ))}
                     {this.props.fields.attachments.length === 0 &&
                     this.props.fields.files.length === 0 &&
-                    <li>- No files selected.</li>
+                    <div className="row">
+                      <div className="col-xs-12">No files selected.</div>
+                    </div>
                     }
                     {this.props.fields.files.map(file => (
-                      <li key={file.name}>
-                        <span className="icon">
-                          <FontAwesomeIcon icon={getIcon(file.type)} />
-                        </span>
-                        <span className="filename">{file.name}</span>
-                        <span> - {getFileSize(file.size)}
+                      <div className="row" key={file.name}>
+                        <div className="col-xs-6 filename">
+                          <span className="icon">
+                            <FontAwesomeIcon icon={getIcon(file.type)} />
+                          </span>
+                          <span className="text">{file.name}</span>
+                        </div>
+                        <div className="col-xs-2 size">
+                          {getFileSize(file.size)}
+                        </div>
+                        <div className="col-xs-3 security-scan-status">
+                          <FontAwesomeIcon icon="ellipsis-h" fixedWidth />
+                        </div>
+                        <div className="col-xs-1 actions">
                           <button type="button" onClick={() => this._removeFile(file)}>
                             <FontAwesomeIcon icon="minus-circle" />
                           </button>
-                        </span>
-                      </li>
+                        </div>
+                      </div>
                     ))}
-                  </ul>
+                  </div>
                 </div>
               </div>
             </div>
@@ -300,23 +306,35 @@ class CreditTransactionRequestFormDetails extends Component {
             <div className="row">
               <div className="form-group col-md-12 main-form">
                 <div>Invalid Files/File Types (These files will not be uploaded):
-                  <ul className="files">
+                  <div className="file-submission-attachments">
+                    <div className="row">
+                      <div className="col-xs-6 header">Filename</div>
+                      <div className="col-xs-2 size header">Size</div>
+                    </div>
                     {this.rejectedFiles.map(file => (
-                      <li key={file.name}>
-                        <span className="icon">
-                          <FontAwesomeIcon icon={getIcon(file.type)} />
-                        </span>
-                        <span className="filename">{file.name}</span>
-                        <span> - {getFileSize(file.size)}</span>
-                        {file.size > CONFIG.SECURE_DOCUMENT_UPLOAD.MAX_FILE_SIZE &&
-                        <span className="error-message"> File size too large </span>
-                        }
-                      </li>
+                      <div className="row" key={file.name}>
+                        <div className="col-xs-6 filename">
+                          <span className="icon">
+                            <FontAwesomeIcon icon={getIcon(file.type)} />
+                          </span>
+                          <span className="text">{file.name}</span>
+                        </div>
+                        <div className="col-xs-2 size">
+                          <span>{getFileSize(file.size)}</span>
+                        </div>
+                        <div className="col-xs-4">
+                          {file.size > CONFIG.SECURE_DOCUMENT_UPLOAD.MAX_FILE_SIZE &&
+                          <span className="error-message"> File size too large </span>
+                          }
+                        </div>
+                      </div>
                     ))}
                     {this.rejectedFiles.length === 0 &&
-                      <li>- None</li>
+                      <div className="row">
+                        <div className="col-xs-12">None</div>
+                      </div>
                     }
-                  </ul>
+                  </div>
                 </div>
               </div>
             </div>
@@ -343,6 +361,13 @@ CreditTransactionRequestFormDetails.propTypes = {
   ]),
   compliancePeriods: PropTypes.arrayOf(PropTypes.shape()).isRequired,
   categories: PropTypes.arrayOf(PropTypes.shape()).isRequired,
+  documentType: PropTypes.oneOfType([
+    PropTypes.bool,
+    PropTypes.shape({
+      description: PropTypes.string,
+      theType: PropTypes.string
+    })
+  ]).isRequired,
   edit: PropTypes.bool,
   fields: PropTypes.shape({
     attachments: PropTypes.arrayOf(PropTypes.shape()),
@@ -358,8 +383,7 @@ CreditTransactionRequestFormDetails.propTypes = {
     milestone: PropTypes.string,
     title: PropTypes.string
   }).isRequired,
-  handleInputChange: PropTypes.func.isRequired,
-  handlePageTitle: PropTypes.func.isRequired
+  handleInputChange: PropTypes.func.isRequired
 };
 
 export default CreditTransactionRequestFormDetails;

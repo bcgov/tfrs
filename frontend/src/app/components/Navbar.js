@@ -1,25 +1,31 @@
 import FontAwesomeIcon from '@fortawesome/react-fontawesome';
 import PropTypes from 'prop-types';
-import React, {Component} from 'react';
-import {DropdownButton, MenuItem} from 'react-bootstrap';
-import {connect} from 'react-redux';
-import {NavLink} from 'react-router-dom';
-import {bindActionCreators} from 'redux';
+import React, { Component } from 'react';
+import { DropdownButton, MenuItem } from 'react-bootstrap';
+import { connect } from 'react-redux';
+import { NavLink } from 'react-router-dom';
+import { bindActionCreators } from 'redux';
 
-import {getNotifications} from '../../actions/notificationActions';
-import {signUserOut} from '../../actions/userActions';
+import { getNotifications } from '../../actions/notificationActions';
+import { signUserOut } from '../../actions/userActions';
 import history from '../../app/History';
 import PERMISSIONS_SECURE_DOCUMENT_UPLOAD from '../../constants/permissions/SecureDocumentUpload';
 import * as Routes from '../../constants/routes';
-import {HISTORICAL_DATA_ENTRY} from '../../constants/routes/Admin';
+import { HISTORICAL_DATA_ENTRY } from '../../constants/routes/Admin';
 import SECURE_DOCUMENT_UPLOAD from '../../constants/routes/SecureDocumentUpload';
 import CREDIT_TRANSACTIONS from '../../constants/routes/CreditTransactions';
 import ORGANIZATIONS from '../../constants/routes/Organizations';
 import CONFIG from '../../config';
 
 class Navbar extends Component {
+  static updateContainerPadding () {
+    const headerHeight = document.getElementById('header-main').clientHeight;
+    const topSpacing = 30;
+    const totalSpacing = headerHeight + topSpacing;
+    document.getElementById('main').setAttribute('style', `padding-top: ${totalSpacing}px;`);
+  }
 
-  constructor() {
+  constructor () {
     super();
 
     this.state = {
@@ -27,8 +33,13 @@ class Navbar extends Component {
     };
   }
 
-  componentWillReceiveProps(newProps) {
+  componentDidMount () {
+    this.props.getNotifications(); // ensure that the notifications are up-to-date
+    Navbar.updateContainerPadding();
+    window.addEventListener('resize', () => Navbar.updateContainerPadding());
+  }
 
+  componentWillReceiveProps (newProps) {
     if (newProps.unreadNotificationsCount != null) {
       let unreadCount = 0;
 
@@ -44,28 +55,13 @@ class Navbar extends Component {
         unreadCount
       });
     }
-
   }
 
-  static updateContainerPadding() {
-    const headerHeight = document.getElementById('header-main').clientHeight;
-    const topSpacing = 30;
-    const totalSpacing = headerHeight + topSpacing;
-    document.getElementById('main').setAttribute('style', `padding-top: ${totalSpacing}px;`);
-  }
-
-  componentDidMount() {
-    this.props.getNotifications(); // ensure that the notifications are up-to-date
-    Navbar.updateContainerPadding();
-    window.addEventListener('resize', () => Navbar.updateContainerPadding());
-  }
-
-  componentDidUpdate() {
+  componentDidUpdate () {
     Navbar.updateContainerPadding();
   }
 
-  render() {
-
+  render () {
     const SecondLevelNavigation = (
       <div className="level2Navigation">
         <div className="container">
@@ -161,7 +157,7 @@ class Navbar extends Component {
             to={Routes.NOTIFICATIONS.LIST}
           >
             <span className="fa-layers">
-              <FontAwesomeIcon icon="bell"/>
+              <FontAwesomeIcon icon="bell" />
               {this.state.unreadCount > 0 &&
               <span className="fa-layers-counter">{this.state.unreadCount}</span>
               }
@@ -300,8 +296,6 @@ class Navbar extends Component {
             >
               Log Out
             </NavLink>
-
-
           </li>
         </ul>
       </div>);
@@ -357,7 +351,7 @@ class Navbar extends Component {
                   aria-expanded="true"
                   aria-label="Burger Navigation"
                 >
-                  <img src="/assets/images/menu-open-mobile.png" alt="menu"/>
+                  <img src="/assets/images/menu-open-mobile.png" alt="menu" />
                 </button>
               </div>
               <div className="col-sm-5 col-md-6 col-lg-6 hidden-xs">
@@ -376,20 +370,20 @@ class Navbar extends Component {
                       title={this.props.loggedInUser.displayName}
                     >
                       <MenuItem className="dropdown-menu-caret" header>
-                        <FontAwesomeIcon icon="caret-up" size="2x"/>
+                        <FontAwesomeIcon icon="caret-up" size="2x" />
                       </MenuItem>
                       <MenuItem onClick={() => {
                         history.push(Routes.SETTINGS);
                       }}
                       >
-                        <FontAwesomeIcon icon="cog"/> Settings
+                        <FontAwesomeIcon icon="cog" /> Settings
                       </MenuItem>
                       <MenuItem onClick={(e) => {
                         e.preventDefault();
                         this.props.signUserOut();
                       }}
                       >
-                        <FontAwesomeIcon icon="sign-out-alt"/> Log Out
+                        <FontAwesomeIcon icon="sign-out-alt" /> Log Out
                       </MenuItem>
                     </DropdownButton>
                     }

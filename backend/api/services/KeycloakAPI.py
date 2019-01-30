@@ -3,6 +3,12 @@ from tfrs.settings import KEYCLOAK
 
 
 def get_token():
+    """
+    This function will generate the token for the Service Account.
+    This token is most likely going to be used to update information
+    for the logged-in user (not to be confused with the service account)
+    such as auto-mapping the user upon first login.
+    """
     token_url = '{keycloak}/auth/realms/{realm}/protocol/openid-connect/token'.format(
         keycloak=KEYCLOAK['SERVICE_ACCOUNT_KEYCLOAK_API_BASE'],
         realm=KEYCLOAK['SERVICE_ACCOUNT_REALM'])
@@ -18,6 +24,11 @@ def get_token():
 
 
 def list_users(token):
+    """
+    Retrieves the list of users found in Keycloak.
+    Not to be confused with the list of users found in the actual
+    database.
+    """
     users_url = '{keycloak}/auth/admin/realms/{realm}/users'.format(
         keycloak=KEYCLOAK['SERVICE_ACCOUNT_KEYCLOAK_API_BASE'],
         realm=KEYCLOAK['SERVICE_ACCOUNT_REALM'])
@@ -38,7 +49,8 @@ def list_users(token):
                                 headers=headers)
 
     if response.status_code != 200:
-        raise RuntimeError('bad response code: {}'.format(response.status_code))
+        raise RuntimeError(
+            'bad response code: {}'.format(response.status_code))
 
 
 def associate_federated_identity_with_user(token, id, provider, username):
@@ -60,7 +72,13 @@ def associate_federated_identity_with_user(token, id, provider, username):
 
 
 def map_user(keycloak_user_id, tfrs_user_id):
-
+    """
+    Maps the logged-in user to their keycloak account.
+    Please note that the get_token doesn't refer to the logged-in user's
+    account.
+    get_token retrieves the token for the service account that's going to
+    update the user information in keycloak.
+    """
     users_url = '{keycloak}/auth/admin/realms/{realm}/users/{user_id}'.format(
         keycloak=KEYCLOAK['SERVICE_ACCOUNT_KEYCLOAK_API_BASE'],
         realm=KEYCLOAK['SERVICE_ACCOUNT_REALM'],
@@ -85,6 +103,9 @@ def map_user(keycloak_user_id, tfrs_user_id):
 
 
 def create_user(token, user_name, maps_to_id):
+    """
+    Creates the user account in Keycloak
+    """
     users_url = '{keycloak}/auth/admin/realms/{realm}/users'.format(
         keycloak=KEYCLOAK['SERVICE_ACCOUNT_KEYCLOAK_API_BASE'],
         realm=KEYCLOAK['SERVICE_ACCOUNT_REALM'])
@@ -104,9 +125,10 @@ def create_user(token, user_name, maps_to_id):
                              json=data)
 
     if response.status_code != 204:
-        raise RuntimeError('bad response code: {}'.format(response.status_code))
+        raise RuntimeError(
+            'bad response code: {}'.format(response.status_code))
 
-    created_user_response = requests.get(response.headers['Location'], headers=headers)
+    created_user_response = requests.get(response.headers['Location'],
+                                         headers=headers)
 
     return created_user_response.json()['id']
-
