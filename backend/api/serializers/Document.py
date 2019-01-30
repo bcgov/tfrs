@@ -28,6 +28,7 @@ from api.models.Document import Document
 from api.models.DocumentComment import DocumentComment
 from api.models.DocumentMilestone import DocumentMilestone
 from api.models.DocumentStatus import DocumentStatus
+from api.models.DocumentType import DocumentType
 
 from api.serializers.CompliancePeriod import CompliancePeriodSerializer
 from api.serializers.DocumentComment import DocumentCommentSerializer
@@ -92,6 +93,14 @@ class DocumentCreateSerializer(serializers.ModelSerializer):
         submitted_status = DocumentStatus.objects.get(status="Submitted")
 
         if data.get('status') == submitted_status:
+            if data.get('type') == DocumentType.objects.get(
+                    the_type="Evidence"):
+                if not request.data.get('milestone'):
+                    raise serializers.ValidationError({
+                        'milestone': "Milestone is required for P3A Milestone "
+                                     "Evidence."
+                    })
+
             attachments = request.data.get('attachments')
 
             if not attachments:
@@ -171,8 +180,8 @@ class DocumentDeleteSerializer(serializers.ModelSerializer):
         request to minio to delete the actual files)
         """
         document = self.instance
-
-        if document.status != DocumentStatus.objects.get(status="Draft"):
+        if document.status not in DocumentStatus.objects.filter(
+                status__in=["Draft", "Security Scan Failed"]):
             raise serializers.ValidationError({
                 'readOnly': "Cannot delete a submission that's not a draft."
             })
@@ -360,6 +369,13 @@ class DocumentUpdateSerializer(serializers.ModelSerializer):
         submitted_status = status_dict["Submitted"]
 
         if data.get('status') == submitted_status:
+            if document.type.the_type == "Evidence":
+                if not request.data.get('milestone'):
+                    raise serializers.ValidationError({
+                        'milestone': "Milestone is required for P3A Milestone "
+                                     "Evidence."
+                    })
+
             current_attachments = document.attachments
             attachments = request.data.get('attachments')
 

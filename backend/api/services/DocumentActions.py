@@ -67,8 +67,14 @@ class DocumentActions(object):
 
         available_statuses = []
         if request.user.has_perm('DOCUMENTS_CREATE_DRAFT'):
+            available_statuses.extend([
+                status_dict["Draft"],
+                status_dict["Cancelled"]
+            ])
+
+        if request.user.has_perm('DOCUMENTS_SUBMIT'):
             available_statuses.append(
-                status_dict["Draft"]
+                status_dict["Submitted"]
             )
 
         serializer = DocumentStatusSerializer(

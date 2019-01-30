@@ -222,9 +222,11 @@ class CreditTransactionRequestEditContainer extends Component {
     const { item } = this.props;
     let availableActions = [];
 
-    availableActions = item.actions.map(action => (
-      action.status
-    ));
+    if (item.actions) {
+      availableActions = item.actions.map(action => (
+        action.status
+      ));
+    }
 
     return ([
       <CreditTransactionRequestForm

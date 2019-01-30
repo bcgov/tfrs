@@ -90,6 +90,7 @@ const deleteDocumentUpload = id => (dispatch) => {
       dispatch(deleteDocumentUploadRequestSuccess(response.data));
     }).catch((error) => {
       dispatch(deleteDocumentUploadRequestError(error.response.data));
+      return Promise.reject(error);
     });
 };
 
