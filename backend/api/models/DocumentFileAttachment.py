@@ -21,7 +21,6 @@
     limitations under the License.
 """
 from django.db import models
-from api.models.Document import Document
 from api.models.mixins.AttachmentData import AttachmentData
 from auditable.models import Auditable
 
@@ -31,8 +30,8 @@ class DocumentFileAttachment(Auditable, AttachmentData):
     Attachment information for the documents.
     """
     document = models.ForeignKey(
-        Document,
-        related_name='attachments',
+        'Document',
+        related_name='document_attachments',
         null=False,
         on_delete=models.PROTECT)
 

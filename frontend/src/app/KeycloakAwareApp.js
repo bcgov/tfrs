@@ -1,26 +1,26 @@
-import StatusInterceptor from './components/StatusInterceptor';
-import {IntlProvider} from 'react-intl';
+import PropTypes from 'prop-types';
+import React from 'react';
+import { IntlProvider } from 'react-intl';
+import connect from 'react-redux/es/connect/connect';
+import { withRouter } from 'react-router';
 import ReduxToastr from 'react-redux-toastr';
+
+import StatusInterceptor from './components/StatusInterceptor';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
+import SessionTimer from './components/SessionTimer';
 import SigninPage from './SigninPage';
-import PropTypes from 'prop-types';
-import {withRouter} from 'react-router';
-import connect from 'react-redux/es/connect/connect';
-import React from 'react';
-import SessionTimer from "./components/SessionTimer";
 
 class KeycloakAwareApp extends React.Component {
-
-  render() {
+  render () {
     let content;
 
     if (this.props.errorRequest.hasErrors &&
       this.props.errorRequest.error &&
       this.props.errorRequest.error.status) {
-      content = <StatusInterceptor statusCode={this.props.errorRequest.error.status}/>;
+      content = <StatusInterceptor statusCode={this.props.errorRequest.error.status} />;
     } else if (this.props.userRequest.serverError) {
-      content = <StatusInterceptor statusCode={401}/>;
+      content = <StatusInterceptor statusCode={401} />;
     } else {
       content = this.props.children;
     }
@@ -55,10 +55,10 @@ class KeycloakAwareApp extends React.Component {
               unreadNotificationsCount={this.props.unreadNotificationsCount}
             />
             <div id="main" className="template container">
-              <SessionTimer/>
+              <SessionTimer />
               {content}
             </div>
-            <Footer/>
+            <Footer />
           </div>
         </IntlProvider>
       );
@@ -68,14 +68,13 @@ class KeycloakAwareApp extends React.Component {
 
     // we're not logged in and not in the process of logging in. trigger one.
     //
-    if ((!this.props.keycloak.user || this.props.keycloak.user.expired)
-      && !this.props.keycloak.isFetching) {
-
+    if ((!this.props.keycloak.user || this.props.keycloak.user.expired) &&
+    !this.props.keycloak.isFetching) {
       return (
         <div className="App">
-          <SigninPage/>
+          <SigninPage />
         </div>
-      )
+      );
     }
 
     return null;
@@ -86,6 +85,9 @@ KeycloakAwareApp.defaultProps = {
   errorRequest: {
     error: {},
     hasErrors: false
+  },
+  location: {
+    pathname: ''
   },
   unreadNotificationsCount: null,
   keycloak: {}
@@ -102,6 +104,9 @@ KeycloakAwareApp.propTypes = {
       statusText: PropTypes.string
     }),
     hasErrors: PropTypes.bool
+  }),
+  location: PropTypes.shape({
+    pathname: PropTypes.string
   }),
   loggedInUser: PropTypes.shape({
     displayName: PropTypes.string,

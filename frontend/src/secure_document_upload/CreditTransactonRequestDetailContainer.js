@@ -9,7 +9,10 @@ import { bindActionCreators } from 'redux';
 import Loading from '../app/components/Loading';
 import CreditTransactionUtilityFunctions from './CreditTransactionRequestUtilityFunctions';
 
-import { addCommentToDocument, getDocumentUpload, partialUpdateDocument, updateCommentOnDocument } from '../actions/documentUploads';
+import {
+  addCommentToDocument, deleteDocumentUpload, getDocumentUpload, partialUpdateDocument,
+  updateCommentOnDocument
+} from '../actions/documentUploads';
 import Modal from '../app/components/Modal';
 import history from '../app/History';
 import CreditTransactionRequestDetails from './components/CreditTransactionRequestDetails';
@@ -52,6 +55,13 @@ class CreditTransactionRequestDetailContainer extends Component {
     this.setState({
       isCommenting: false,
       isCreatingPrivilegedComment: false
+    });
+  }
+
+  _deleteCreditTransferRequest (id) {
+    this.props.deleteDocumentUpload(id).then(() => {
+      history.push(SECURE_DOCUMENT_UPLOAD.LIST);
+      toastr.documentUpload(null, 'Draft deleted.');
     });
   }
 
@@ -112,10 +122,12 @@ class CreditTransactionRequestDetailContainer extends Component {
   }
 
   render () {
-    const { item, success } = this.props.documentUpload;
+    const {
+      errors, item, isFetching, success
+    } = this.props.documentUpload;
     let availableActions = [];
 
-    if (success) {
+    if (success || (!isFetching && Object.keys(errors).length > 0)) {
       availableActions = item.actions.map(action => (
         action.status
       ));
@@ -133,6 +145,7 @@ class CreditTransactionRequestDetailContainer extends Component {
               this.props.documentUpload.item
             )
           }
+          errors={errors}
           hasCommented={this.state.hasCommented}
           isCommenting={this.state.isCommenting}
           isCreatingPrivilegedComment={this.state.isCreatingPrivilegedComment}
@@ -148,6 +161,13 @@ class CreditTransactionRequestDetailContainer extends Component {
           key="confirmReceived"
         >
           Are you sure you want to mark this as received?
+        </Modal>,
+        <Modal
+          handleSubmit={() => this._deleteCreditTransferRequest(item.id)}
+          id="confirmDelete"
+          key="confirmDelete"
+        >
+          Are you sure you want to delete this draft?
         </Modal>,
         <Modal
           handleSubmit={(event) => {
@@ -166,19 +186,19 @@ class CreditTransactionRequestDetailContainer extends Component {
 }
 
 CreditTransactionRequestDetailContainer.defaultProps = {
-  errors: {}
 };
 
 CreditTransactionRequestDetailContainer.propTypes = {
   addCommentToDocument: PropTypes.func.isRequired,
+  deleteDocumentUpload: PropTypes.func.isRequired,
   documentUpload: PropTypes.shape({
+    errors: PropTypes.shape(),
     isFetching: PropTypes.bool.isRequired,
     item: PropTypes.shape({
       id: PropTypes.number
     }),
     success: PropTypes.bool
   }).isRequired,
-  errors: PropTypes.shape({}),
   getDocumentUpload: PropTypes.func.isRequired,
   loggedInUser: PropTypes.shape({
     displayName: PropTypes.string,
@@ -209,6 +229,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   addCommentToDocument: bindActionCreators(addCommentToDocument, dispatch),
+  deleteDocumentUpload: bindActionCreators(deleteDocumentUpload, dispatch),
   getDocumentUpload: bindActionCreators(getDocumentUpload, dispatch),
   partialUpdateDocument: bindActionCreators(partialUpdateDocument, dispatch),
   updateCommentOnDocument: bindActionCreators(updateCommentOnDocument, dispatch)

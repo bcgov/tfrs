@@ -22,7 +22,7 @@ class CreditTransactionRequestForm extends Component {
   render () {
     return (
       <div className="credit-transaction-requests">
-        <h1>{this.props.title}</h1>
+        <h1>{this.props.edit ? 'Edit' : 'New'} {this.props.documentType ? this.props.documentType.description : ''} Submission</h1>
         <form
           onSubmit={(event, status) =>
             this.props.handleSubmit(event, DOCUMENT_STATUSES.draft)}
@@ -30,10 +30,10 @@ class CreditTransactionRequestForm extends Component {
           <CreditTransactionRequestFormDetails
             categories={this.props.categories}
             compliancePeriods={this.props.compliancePeriods}
+            documentType={this.props.documentType}
             edit={this.props.edit}
             fields={this.props.fields}
             handleInputChange={this.props.handleInputChange}
-            handlePageTitle={this.props.handlePageTitle}
           />
 
           {Object.keys(this.props.errors).length > 0 &&
@@ -49,7 +49,7 @@ class CreditTransactionRequestForm extends Component {
               >
                 <FontAwesomeIcon icon="arrow-circle-left" /> {Lang.BTN_APP_CANCEL}
               </button>
-              {this.props.edit &&
+              {this.props.availableActions.includes('Cancelled') &&
                 <button
                   className="btn btn-danger"
                   data-target="#confirmDelete"
@@ -59,12 +59,15 @@ class CreditTransactionRequestForm extends Component {
                   <FontAwesomeIcon icon="minus-circle" /> {Lang.BTN_DELETE_DRAFT}
                 </button>
               }
+              {this.props.availableActions.includes('Draft') &&
               <button
                 className="btn btn-default"
                 type="submit"
               >
                 <FontAwesomeIcon icon="save" /> {Lang.BTN_SAVE_DRAFT}
               </button>
+              }
+              {this.props.availableActions.includes('Submitted') &&
               <button
                 className="btn btn-primary"
                 data-target="#confirmSubmit"
@@ -73,6 +76,7 @@ class CreditTransactionRequestForm extends Component {
               >
                 <FontAwesomeIcon icon="upload" /> Submit
               </button>
+              }
             </div>
           </div>
         </form>
@@ -83,25 +87,29 @@ class CreditTransactionRequestForm extends Component {
 
 CreditTransactionRequestForm.defaultProps = {
   edit: false,
-  handlePageTitle: () => {},
-  id: 0,
-  title: 'New Credit Transaction Request'
+  id: 0
 };
 
 CreditTransactionRequestForm.propTypes = {
+  availableActions: PropTypes.arrayOf(PropTypes.string).isRequired,
   categories: PropTypes.arrayOf(PropTypes.shape()).isRequired,
   compliancePeriods: PropTypes.arrayOf(PropTypes.shape()).isRequired,
   edit: PropTypes.bool,
   errors: PropTypes.shape({}).isRequired,
+  documentType: PropTypes.oneOfType([
+    PropTypes.bool,
+    PropTypes.shape({
+      description: PropTypes.string,
+      theType: PropTypes.string
+    })
+  ]).isRequired,
   fields: PropTypes.shape({
     comment: PropTypes.string
   }).isRequired,
   getCompliancePeriods: PropTypes.func.isRequired,
   handleInputChange: PropTypes.func.isRequired,
-  handlePageTitle: PropTypes.func,
   handleSubmit: PropTypes.func.isRequired,
-  id: PropTypes.number,
-  title: PropTypes.string
+  id: PropTypes.number
 };
 
 const mapStateToProps = state => ({

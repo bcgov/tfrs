@@ -38,6 +38,80 @@ const addCommentToDocumentError = error => ({
 });
 
 /*
+ * Add Document Upload
+ */
+const addDocumentUpload = data => (dispatch) => {
+  dispatch(addDocumentUploadRequest());
+
+  return axios
+    .post(Routes.BASE_URL + Routes.SECURE_DOCUMENT_UPLOAD.API, data)
+    .then((response) => {
+      dispatch(addDocumentUploadSuccess(response.data));
+      return Promise.resolve(response);
+    }).catch((error) => {
+      dispatch(addDocumentUploadError(error.response.data));
+      return Promise.reject(error);
+    });
+};
+
+const addDocumentUploadRequest = () => ({
+  name: ReducerTypes.ADD_DOCUMENT_UPLOAD_REQUEST,
+  type: ActionTypes.ADD_DOCUMENT_UPLOAD
+});
+
+const addDocumentUploadSuccess = data => ({
+  name: ReducerTypes.SUCCESS_ADD_DOCUMENT_UPLOAD,
+  type: ActionTypes.SUCCESS_ADD_DOCUMENT_UPLOAD,
+  data
+});
+
+const addDocumentUploadError = error => ({
+  name: ReducerTypes.ERROR_ADD_DOCUMENT_UPLOAD,
+  type: ActionTypes.ERROR,
+  errorMessage: error
+});
+
+/*
+ * Clear Error Messages
+ */
+const clearDocumentUploadError = () => ({
+  type: ActionTypes.CLEAR_ERROR
+});
+
+/*
+ * Delete Document Upload
+ */
+const deleteDocumentUpload = id => (dispatch) => {
+  dispatch(deleteDocumentUploadRequest());
+
+  return axios
+    .delete(`${Routes.BASE_URL}${Routes.SECURE_DOCUMENT_UPLOAD.API}/${id}`)
+    .then((response) => {
+      dispatch(deleteDocumentUploadRequestSuccess(response.data));
+    }).catch((error) => {
+      dispatch(deleteDocumentUploadRequestError(error.response.data));
+      return Promise.reject(error);
+    });
+};
+
+const deleteDocumentUploadRequest = () => ({
+  name: ReducerTypes.DELETE_DOCUMENT_UPLOAD_REQUEST,
+  type: ActionTypes.REQUEST
+});
+
+const deleteDocumentUploadRequestSuccess = data => ({
+  name: ReducerTypes.SUCCESS_DELETE_DOCUMENT_UPLOAD,
+  type: ActionTypes.SUCCESS,
+  data
+});
+
+const deleteDocumentUploadRequestError = error => ({
+  name: ReducerTypes.ERROR_DELETE_DOCUMENT_UPLOAD,
+  type: ActionTypes.ERROR,
+  errorMessage: error
+});
+
+/*
  * Get Documents
  */
 const getDocumentUploads = () => (dispatch) => {
@@ -92,66 +166,6 @@ const getDocumentUploadRequestSuccess = requests => ({
 
 const getDocumentUploadRequestError = error => ({
   name: ReducerTypes.ERROR_DOCUMENT_UPLOAD_REQUEST,
-  type: ActionTypes.ERROR,
-  errorMessage: error
-});
-
-const deleteDocumentUpload = id => (dispatch) => {
-  dispatch(deleteDocumentUploadRequest());
-
-  return axios
-    .delete(`${Routes.BASE_URL}${Routes.SECURE_DOCUMENT_UPLOAD.API}/${id}`)
-    .then((response) => {
-      dispatch(deleteDocumentUploadRequestSuccess(response.data));
-    }).catch((error) => {
-      dispatch(deleteDocumentUploadRequestError(error.response.data));
-    });
-};
-
-const deleteDocumentUploadRequest = () => ({
-  name: ReducerTypes.DELETE_DOCUMENT_UPLOAD_REQUEST,
-  type: ActionTypes.REQUEST
-});
-
-const deleteDocumentUploadRequestSuccess = data => ({
-  name: ReducerTypes.SUCCESS_DELETE_DOCUMENT_UPLOAD,
-  type: ActionTypes.SUCCESS,
-  data
-});
-
-const deleteDocumentUploadRequestError = error => ({
-  name: ReducerTypes.ERROR_DELETE_DOCUMENT_UPLOAD,
-  type: ActionTypes.ERROR,
-  errorMessage: error
-});
-
-const addDocumentUpload = data => (dispatch) => {
-  dispatch(addDocumentUploadRequest());
-
-  return axios
-    .post(Routes.BASE_URL + Routes.SECURE_DOCUMENT_UPLOAD.API, data)
-    .then((response) => {
-      dispatch(addDocumentUploadSuccess(response.data));
-      return Promise.resolve(response);
-    }).catch((error) => {
-      dispatch(addDocumentUploadError(error.response.data));
-      return Promise.reject(error);
-    });
-};
-
-const addDocumentUploadRequest = () => ({
-  name: ReducerTypes.ADD_DOCUMENT_UPLOAD_REQUEST,
-  type: ActionTypes.ADD_DOCUMENT_UPLOAD
-});
-
-const addDocumentUploadSuccess = data => ({
-  name: ReducerTypes.SUCCESS_ADD_DOCUMENT_UPLOAD,
-  type: ActionTypes.SUCCESS_ADD_DOCUMENT_UPLOAD,
-  data
-});
-
-const addDocumentUploadError = error => ({
-  name: ReducerTypes.ERROR_ADD_DOCUMENT_UPLOAD,
   type: ActionTypes.ERROR,
   errorMessage: error
 });
@@ -236,14 +250,16 @@ const updateCommentOnDocumentError = error => ({
 /*
  * Update documents
  */
-const updateDocumentUpload = (data, id) => (dispatch) => {
+const updateDocumentUpload = (id, data) => (dispatch) => {
   dispatch(updateDocumentUploadRequest({ id, data }));
 
   return axios.patch(`${Routes.BASE_URL}${Routes.SECURE_DOCUMENT_UPLOAD.API}/${id}`, data)
     .then((response) => {
       dispatch(updateDocumentUploadSuccess(response.data));
+      return Promise.resolve(response);
     }).catch((error) => {
       dispatch(updateDocumentUploadError(error.response));
+      return Promise.reject(error);
     });
 };
 
@@ -272,6 +288,7 @@ const uploadDocument = (url, blob) => (axios.put(url, blob, {
 export {
   addCommentToDocument,
   addDocumentUpload,
+  clearDocumentUploadError,
   deleteDocumentUpload,
   getDocumentUpload,
   getDocumentUploads,
