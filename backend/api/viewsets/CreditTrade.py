@@ -103,7 +103,9 @@ class CreditTradeViewSet(AuditableMixin, mixins.CreateModelMixin,
         # you could use anything here (like perhaps the PID or startup time
         digest.update(b'salt')
         digest.update('user {}'.format(self.request.user.username).encode('utf-8'))
-        digest.update('org {}'.format(most_recent_updated_organization.name).encode('utf-8'))
+        if most_recent_updated_organization:
+            digest.update('org {}'.format(
+                most_recent_updated_organization.name).encode('utf-8'))
         digest.update(most_recent_updated_credit_trade.update_timestamp
                       .isoformat()
                       .encode('utf-8')
