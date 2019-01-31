@@ -23,7 +23,7 @@ app.conf.update({
     'beat_schedule': {
         'minio-orphan-cleanup': {
             'task': 'api.tasks.remove_orphans',
-            'schedule': 30.0
+            'schedule': 3600.0
         }
     }
 })
