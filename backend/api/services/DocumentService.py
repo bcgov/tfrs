@@ -65,6 +65,34 @@ class DocumentService(object):
         )
 
     @staticmethod
+    def remove_orphans():
+        """
+        Sends a request to the minio instance to delete the files associated
+        to the DocumentFile records related to the provided parameters
+        """
+        minio = Minio(MINIO['ENDPOINT'],
+                      access_key=MINIO['ACCESS_KEY'],
+                      secret_key=MINIO['SECRET_KEY'],
+                      secure=MINIO['USE_SSL'])
+
+        objects = minio.list_objects(MINIO['BUCKET_NAME'], recursive=True)
+
+        attachments = DocumentFileAttachment.objects.filter(
+            is_removed=False
+        )
+        object_names = map(DocumentService.get_filename, attachments)
+        to_delete = []
+
+        for o in objects:
+            if not o.is_dir:
+                if o.object_name not in object_names:
+                    print('deleting: {} since it is not referenced'.format(o.object_name))
+                    to_delete.append(o.object_name)
+
+        for error in minio.remove_objects(MINIO['BUCKET_NAME'], to_delete):
+            logging.error(error)
+
+    @staticmethod
     def get_filename(attachment):
         """
         This parses the url from DocumentFile and gets the filename that you
