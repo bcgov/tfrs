@@ -21,8 +21,7 @@ class AuthCallback extends React.Component {
   error (e) { // state is most likely empty, redirect back to try the authentication again
     const target = this.props.targetPath;
 
-    // using history seems to be causing the page to get stuck
-    // so using window.location instead
+    // using window.location to actually refresh the page
     if (target) {
       window.location.replace(target);
     } else {
