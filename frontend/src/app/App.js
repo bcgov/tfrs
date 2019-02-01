@@ -4,15 +4,11 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 
-import CONFIG from '../config';
-
 import KeycloakAwareApp from './KeycloakAwareApp';
 
-const App = (props) => {
-  if (CONFIG.KEYCLOAK.ENABLED) {
-    return <KeycloakAwareApp>{props.children}</KeycloakAwareApp>;
-  }
-};
+const App = props => (
+  <KeycloakAwareApp>{props.children}</KeycloakAwareApp>
+);
 
 App.propTypes = {
   children: PropTypes.oneOfType([
