@@ -21,13 +21,20 @@
 
 import inspect
 import pkgutil
+import smtplib
 import sys
 from collections import namedtuple
 
+import pika
 from django.apps import AppConfig
-from django.db.models.signals import post_migrate
+from django.db.models.signals import post_migrate, post_init
+from minio import Minio
+from minio.error import MinioError
+from pika.exceptions import AMQPError
 
+from api.services.KeycloakAPI import list_users, get_token
 from db_comments.db_actions import create_db_comments, create_db_comments_from_models
+from tfrs.settings import AMQP_CONNECTION_PARAMETERS, MINIO, DOCUMENTS_API, KEYCLOAK, EMAIL
 
 
 class APIAppConfig(AppConfig):
@@ -40,6 +47,59 @@ class APIAppConfig(AppConfig):
 
         # register our interest in the post_migrate signal
         post_migrate.connect(post_migration_callback, sender=self)
+
+        try:
+            check_external_services()
+        except RuntimeError as e:
+            print('Startup checks failed. Not starting.')
+            print(e)
+            exit(-1)  # Django doesn't seem to do this automatically.
+
+
+def check_external_services():
+    """Called after initialization. Use it to validate settings"""
+
+    print('Checking AMQP connection')
+
+    try:
+        parameters = AMQP_CONNECTION_PARAMETERS
+        connection = pika.BlockingConnection(parameters)
+        connection.channel()
+        connection.close()
+    except AMQPError as e:
+        raise RuntimeError('AMQP connection failed')
+
+    if DOCUMENTS_API['ENABLED']:
+        print('Documents API enabled. Checking Minio connection')
+
+        try:
+            minio = Minio(MINIO['ENDPOINT'],
+                          access_key=MINIO['ACCESS_KEY'],
+                          secret_key=MINIO['SECRET_KEY'],
+                          secure=MINIO['USE_SSL'])
+
+            objects = minio.list_buckets()
+        except MinioError as e:
+            raise RuntimeError('Minio connection failed')
+
+    if KEYCLOAK['ENABLED']:
+        print ('Keycloak enabled. Checking connection')
+
+        try:
+            list_users(get_token())
+        except Exception as e:
+            raise RuntimeError('Keycloak connection failed')
+
+    if EMAIL['ENABLED']:
+        print ('Email sending enabled. Checking connection')
+
+        try:
+            with smtplib.SMTP(host=EMAIL['SMTP_SERVER_HOST'],
+                              port=EMAIL['SMTP_SERVER_PORT']) as server:
+                server.noop()
+        except Exception as e:
+            print(e)
+            raise RuntimeError('SMTP Connection failed')
 
 
 def post_migration_callback(sender, **kwargs):
