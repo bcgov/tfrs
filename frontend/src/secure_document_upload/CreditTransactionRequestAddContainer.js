@@ -186,7 +186,7 @@ class CreditTransactionRequestAddContainer extends Component {
         id="confirmSubmit"
         key="confirmSubmit"
       >
-        Are you sure you want to add this request?
+        Are you sure you want to securely submit these files to the Government of British Columbia?
       </Modal>
     ]);
   }

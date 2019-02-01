@@ -13,15 +13,10 @@ class DocumentService(object):
     Helper functions for Document Service
     """
     @staticmethod
-    def create_history(document, is_new=False):
+    def create_history(document):
         """
         Create the Document History
         """
-        user = (
-            document.create_user
-            if is_new
-            else document.update_user)
-
         history = DocumentHistory(
             compliance_period_id=document.compliance_period_id,
             create_user=document.create_user,
