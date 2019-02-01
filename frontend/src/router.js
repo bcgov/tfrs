@@ -53,9 +53,8 @@ const Router = props => (
     <App>
       <Switch>
         <Route
-          exact
           path="/authCallback"
-          component={withRouter(AuthCallback)}
+          component={AuthCallback}
         />
         <Route
           exact
