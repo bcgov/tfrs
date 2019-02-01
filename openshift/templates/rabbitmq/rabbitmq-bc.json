@@ -1,0 +1,118 @@
+{
+    "kind": "Template",
+    "apiVersion": "v1",
+    "metadata": {
+        "name": "rabbitmq-bc",
+        "creationTimestamp": null
+    },
+    "parameters": [
+        {
+            "name": "ADMIN_PASSWORD",
+            "from": "[a-zA-Z0-9]{16}",
+            "generate": "expression",
+            "required": true
+        },
+        {
+            "name": "TFRS_PASSWORD",
+            "from": "[a-zA-Z0-9]{16}",
+            "generate": "expression",
+            "required": true
+        }
+    ],
+    "objects": [
+        {
+            "kind": "BuildConfig",
+            "apiVersion": "v1",
+            "metadata": {
+                "name": "rabbitmq-tfrs",
+                "creationTimestamp": null
+            },
+            "spec": {
+                "triggers": [],
+                "runPolicy": "Serial",
+                "source": {
+                    "type": "Dockerfile",
+                    "dockerfile": "FROM rabbitmq:3.7.7-management\nRUN apt-get update\nRUN apt-get install -y gettext-base\nARG ADMIN_PASSWORD\nARG TFRS_PASSWORD\nRUN echo \"H4sICHQioFsCA2RlZmluaXRpb25zLnN0cmlwcGVkLmpzb24AtVLLasMwELz7K4zpqQQXWtpAb4FQ6KEP4kIPpZiNLUsCWzLSKmkx/vdKwrYgNukpF4FmdjWzs+qiOE4U7Pcc8wNRmkuRPMbJXbpO18nKkUZb2GJf9hLHnT8tLKAhrhLKhgtf6eEWtD5KVTrqarN9eX7N3zdZ9vm224YiBppxQXOoqVQcWeOqBxPjA/lYpBnc3j+EZgSqJ2GuUQFKlXi2Xy17xMpOsGzx42mXXcrhYMqe3z7JA5Maz0R5432eNLVENVy7vSx0ut3MB/Q64cEJL6SoODXKi6XXgTjaEWegIlAO2GK4o/bJB7iQ+JQH+SkYCErO5Cgk8ooXgD60f53hb+vbKhDSYMBLYxdeOwqVIRMMBmVekpp41xXUOnBcIFEC6hkBipqGCL/9rg8jRX30B3tV1p2CAwAA\" | base64 -d | gunzip - | envsubst \u003e /etc/rabbitmq/definitions.json"
+                },
+                "strategy": {
+                    "type": "Docker",
+                    "dockerStrategy": {
+                        "env": [
+                            {
+                                "name": "ADMIN_PASSWORD",
+                                "valueFrom": {
+                                    "secretKeyRef": {
+                                        "name": "rabbitmq-tfrs",
+                                        "key": "ADMIN_PASSWORD"
+                                    }
+                                }
+                            },
+                            {
+                                "name": "TFRS_PASSWORD",
+                                "valueFrom": {
+                                    "secretKeyRef": {
+                                        "name": "rabbitmq-tfrs",
+                                        "key": "TFRS_PASSWORD"
+                                    }
+                                }
+                            }
+                        ]
+                    }
+                },
+                "output": {
+                    "to": {
+                        "kind": "ImageStreamTag",
+                        "name": "rabbitmq-tfrs:latest"
+                    }
+                },
+                "resources": {},
+                "postCommit": {},
+                "nodeSelector": null
+            },
+            "status": {
+                "lastVersion": 0
+            }
+        },
+        {
+            "kind": "Secret",
+            "apiVersion": "v1",
+            "metadata": {
+                "name": "rabbitmq-tfrs",
+                "creationTimestamp": null
+            },
+            "stringData": {
+                "ADMIN_PASSWORD": "${ADMIN_PASSWORD}",
+                "TFRS_PASSWORD": "${TFRS_PASSWORD}"
+            }
+        },
+        {
+            "kind": "ImageStream",
+            "apiVersion": "v1",
+            "metadata": {
+                "name": "rabbitmq-tfrs",
+                "generation": 1,
+                "creationTimestamp": null
+            },
+            "spec": {
+                "tags": [
+                    {
+                        "name": "latest",
+                        "annotations": null,
+                        "from": {
+                            "kind": "DockerImage",
+                            "name": "docker-registry.default.svc:5000/mem-tfrs-tools/rabbitmq-tfrs:latest"
+                        },
+                        "generation": null,
+                        "importPolicy": {},
+                        "referencePolicy": {
+                            "type": ""
+                        }
+                    }
+                ]
+            },
+            "status": {
+                "dockerImageRepository": ""
+            }
+        }
+    ]
+}
