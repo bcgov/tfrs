@@ -27,14 +27,14 @@ from collections import namedtuple
 
 import pika
 from django.apps import AppConfig
-from django.db.models.signals import post_migrate, post_init
+from django.db.models.signals import post_migrate
 from minio import Minio
 from minio.error import MinioError
 from pika.exceptions import AMQPError
 
 from api.services.KeycloakAPI import list_users, get_token
 from db_comments.db_actions import create_db_comments, create_db_comments_from_models
-from tfrs.settings import AMQP_CONNECTION_PARAMETERS, MINIO, DOCUMENTS_API, KEYCLOAK, EMAIL
+from tfrs.settings import AMQP_CONNECTION_PARAMETERS, MINIO, DOCUMENTS_API, KEYCLOAK, EMAIL, TESTING
 
 
 class APIAppConfig(AppConfig):
@@ -48,12 +48,13 @@ class APIAppConfig(AppConfig):
         # register our interest in the post_migrate signal
         post_migrate.connect(post_migration_callback, sender=self)
 
-        try:
-            check_external_services()
-        except RuntimeError as e:
-            print('Startup checks failed. Not starting.')
-            print(e)
-            exit(-1)  # Django doesn't seem to do this automatically.
+        if not TESTING:
+            try:
+                check_external_services()
+            except RuntimeError as e:
+                print('Startup checks failed. Not starting.')
+                print(e)
+                exit(-1)  # Django doesn't seem to do this automatically.
 
 
 def check_external_services():
