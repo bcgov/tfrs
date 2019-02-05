@@ -9,7 +9,6 @@ import StatusInterceptor from './components/StatusInterceptor';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import SessionTimer from './components/SessionTimer';
-import SigninPage from './SigninPage';
 
 class KeycloakAwareApp extends React.Component {
   render () {
@@ -72,7 +71,7 @@ class KeycloakAwareApp extends React.Component {
     !this.props.keycloak.isFetching) {
       return (
         <div className="App">
-          <SigninPage />
+          <p>Redirecting...</p>
         </div>
       );
     }

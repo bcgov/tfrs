@@ -28,10 +28,7 @@ export default function * authenticationStateSaga (store) {
   const { routing } = store.getState();
 
   if (!routing.location || routing.location.pathname !== '/authCallback') {
-    loadUser(store, userManager).then((user) => {
-      // no action required
-    }).catch((reason) => {
-    });
+    loadUser(store, userManager);
   }
   yield all([
     takeLatest('redux-oidc/USER_FOUND', getBackendUser),
