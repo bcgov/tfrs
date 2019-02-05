@@ -1,0 +1,125 @@
+{
+    "kind": "Template",
+    "apiVersion": "v1",
+    "metadata": {
+        "name": "rabbitmq-dc",
+        "creationTimestamp": null
+    },
+    "parameters": [
+        {
+            "name": "ENV_NAME",
+            "required": true
+        }
+    ],
+    "objects": [
+        {
+            "kind": "StatefulSet",
+            "apiVersion": "apps/v1",
+            "metadata": {
+                "name": "rabbitmq",
+                "creationTimestamp": null,
+                "labels": {
+                    "template": "tfrs-app-environment"
+                },
+                "annotations": {
+                    "description": "Deploys a RabbitMQ instance within a TFRS environment"
+                }
+            },
+            "spec": {
+                "replicas": 1,
+                "selector": {
+                    "matchLabels": {
+                        "app": "rabbitmq"
+                    }
+                },
+                "template": {
+                    "metadata": {
+                        "creationTimestamp": null,
+                        "labels": {
+                            "app": "rabbitmq"
+                        }
+                    },
+                    "spec": {
+                        "containers": [
+                            {
+                                "name": "rabbitmq",
+                                "image": "docker-registry.default.svc:5000/mem-tfrs-tools/rabbitmq-tfrs:${ENV_NAME}",
+                                "command": [
+                                    "rabbitmq-server"
+                                ],
+                                "ports": [
+                                    {
+                                        "name": "web-management",
+                                        "containerPort": 15672,
+                                        "protocol": "TCP"
+                                    },
+                                    {
+                                        "name": "amqp",
+                                        "containerPort": 5672,
+                                        "protocol": "TCP"
+                                    }
+                                ],
+                                "resources": {
+                                    "limits": {
+                                        "cpu": "200m",
+                                        "memory": "1Gi"
+                                    },
+                                    "requests": {
+                                        "cpu": "100m",
+                                        "memory": "512Mi"
+                                    }
+                                },
+                                "volumeMounts": [
+                                    {
+                                        "name": "rabbit",
+                                        "mountPath": "/var/lib/rabbitmq"
+                                    }
+                                ],
+                                "readinessProbe": {
+                                    "tcpSocket": {
+                                        "port": 5672
+                                    },
+                                    "initialDelaySeconds": 30,
+                                    "timeoutSeconds": 3,
+                                    "periodSeconds": 10,
+                                    "successThreshold": 1,
+                                    "failureThreshold": 3
+                                },
+                                "terminationMessagePath": "/dev/termination-log",
+                                "imagePullPolicy": "Always"
+                            }
+                        ],
+                        "restartPolicy": "Always",
+                        "terminationGracePeriodSeconds": 30,
+                        "dnsPolicy": "ClusterFirst",
+                        "securityContext": {}
+                    }
+                },
+                "volumeClaimTemplates": [
+                    {
+                        "metadata": {
+                            "name": "rabbit",
+                            "creationTimestamp": null
+                        },
+                        "spec": {
+                            "accessModes": [
+                                "ReadWriteOnce"
+                            ],
+                            "resources": {
+                                "requests": {
+                                    "storage": "512Mi"
+                                }
+                            }
+                        },
+                        "status": {
+                            "phase": "Pending"
+                        }
+                    }
+                ],
+                "serviceName": ""
+            },
+            "status": {
+            }
+        }
+    ]
+}
