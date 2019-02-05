@@ -1,27 +1,35 @@
-import React from "react";
-import { connect } from "react-redux";
-import { CallbackComponent } from "redux-oidc";
+import React from 'react';
+import { connect } from 'react-redux';
+import { CallbackComponent } from 'redux-oidc';
+import PropTypes from 'prop-types';
 import history from '../app/History';
 import userManager from '../store/oidc-usermanager';
-import {bindActionCreators} from "redux";
 
 class AuthCallback extends React.Component {
-
-  constructor() {
+  constructor () {
     super();
     this.success = this.success.bind(this);
+    this.error = this.error.bind(this);
   }
 
-  success(user) {
+  success (user) {
     const target = this.props.targetPath;
+
     history.push(target);
-
   }
 
-  error(e)  {
+  error (e) { // state is most likely empty, redirect back to try the authentication again
+    const target = this.props.targetPath;
+
+    // using window.location to actually refresh the page
+    if (target) {
+      window.location.replace(target);
+    } else {
+      window.location.replace('/');
+    }
   }
 
-  render() {
+  render () {
     return (
       <CallbackComponent
         userManager={userManager}
@@ -34,18 +42,17 @@ class AuthCallback extends React.Component {
   }
 }
 
-const mapStateToProps = state => {
-  return {
-    targetPath: state.targetPath.target
-  }
+AuthCallback.propTypes = {
+  targetPath: PropTypes.string.isRequired
 };
 
-const mapDispatchToProps = dispatch => {
-  return {
-  }
-};
+const mapStateToProps = state => ({
+  targetPath: state.targetPath.target
+});
+
+const mapDispatchToProps = dispatch => ({});
 
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(AuthCallback)
+)(AuthCallback);
