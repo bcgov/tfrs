@@ -239,6 +239,9 @@ class DocumentDetailSerializer(serializers.ModelSerializer):
         if cur_status == "Submitted":
             return DocumentActions.submitted(request)
 
+        if cur_status == "Received":
+            return DocumentActions.received(request)
+
         return []
 
     def get_attachments(self, obj):
@@ -370,7 +373,8 @@ class DocumentUpdateSerializer(serializers.ModelSerializer):
 
         if data.get('status') == submitted_status:
             if document.type.the_type == "Evidence":
-                if not request.data.get('milestone'):
+                if 'milestone' in request.data and \
+                        not request.data.get('milestone'):
                     raise serializers.ValidationError({
                         'milestone': "Milestone is required for P3A Milestone "
                                      "Evidence."

@@ -10,6 +10,10 @@ const DOCUMENT_STATUSES = {
   received: {
     id: 3,
     description: 'Received'
+  },
+  archived: {
+    id: 14,
+    description: 'Archived'
   }
 };
 

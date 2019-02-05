@@ -88,13 +88,14 @@ const CreditTransactionRequestDetails = props => (
           <div className="row">
             <div className="form-group col-md-12">
               <label htmlFor="document-type">Attachments:</label>
-              <div className="file-submission-attachments">
+              <div className={`file-submission-attachments ${(props.item.status.status === 'Received' && props.availableActions.includes('Archived')) ? 'hide-security-scan' : 'hide-trim'}`}>
                 <div className="row">
                   <div className="col-md-7 header">Filename</div>
                   <div className="col-md-2 size header">Size</div>
                   <div className="col-md-3 security-scan-status header">Security Scan</div>
+                  <div className="col-md-3 trim-record-number header">TRIM Record #</div>
                 </div>
-                {props.item.attachments.map(attachment => (
+                {props.item.attachments.map((attachment, index) => (
                   <div className="row" key={attachment.url}>
                     <div className="col-md-7 filename">
                       <span className="icon">
@@ -132,6 +133,20 @@ const CreditTransactionRequestDetails = props => (
                           fixedWidth
                         />
                       </span>
+                    </div>
+
+                    <div className="col-md-3 trim-record-number">
+                      <input
+                        className="form-control"
+                        id={`record-number-${index}`}
+                        name="recordNumbers"
+                        onChange={(event) => {
+                          props.handleRecordNumberChange(event, index, attachment.id);
+                        }}
+                        required="required"
+                        type="text"
+                        value={props.fields.recordNumbers[index] ? props.fields.recordNumbers[index].value : ''}
+                      />
                     </div>
                   </div>
                 ))}
@@ -228,6 +243,16 @@ const CreditTransactionRequestDetails = props => (
         <FontAwesomeIcon icon="check" /> Received
       </button>
       }
+      {props.availableActions.includes('Archived') &&
+      <button
+        className="btn btn-primary"
+        data-target="#confirmArchived"
+        data-toggle="modal"
+        type="button"
+      >
+        <FontAwesomeIcon icon="archive" /> Archive
+      </button>
+      }
     </div>
   </div>
 );
@@ -243,6 +268,10 @@ CreditTransactionRequestDetails.propTypes = {
   canComment: PropTypes.bool.isRequired,
   canCreatePrivilegedComment: PropTypes.bool.isRequired,
   errors: PropTypes.shape(),
+  fields: PropTypes.shape({
+    recordNumbers: PropTypes.arrayOf(PropTypes.shape())
+  }).isRequired,
+  handleRecordNumberChange: PropTypes.func.isRequired,
   isCommenting: PropTypes.bool.isRequired,
   isCreatingPrivilegedComment: PropTypes.bool.isRequired,
   item: PropTypes.shape().isRequired,

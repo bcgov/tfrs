@@ -25,6 +25,9 @@ class CreditTransactionRequestDetailContainer extends Component {
     super(props);
 
     this.state = {
+      fields: {
+        recordNumbers: []
+      },
       hasCommented: false,
       isCommenting: false,
       isCreatingPrivilegedComment: false
@@ -32,6 +35,7 @@ class CreditTransactionRequestDetailContainer extends Component {
 
     this._addComment = this._addComment.bind(this);
     this._cancelComment = this._cancelComment.bind(this);
+    this._handleRecordNumberChange = this._handleRecordNumberChange.bind(this);
     this._handleSubmit = this._handleSubmit.bind(this);
     this._saveComment = this._saveComment.bind(this);
   }
@@ -65,6 +69,20 @@ class CreditTransactionRequestDetailContainer extends Component {
     });
   }
 
+  _handleRecordNumberChange (event, index, id) {
+    const { value, name } = event.target;
+    const fieldState = { ...this.state.fields };
+
+    fieldState[name][index] = {
+      id,
+      value
+    };
+
+    this.setState({
+      fields: fieldState
+    });
+  }
+
   _handleSubmit (event, status) {
     event.preventDefault();
 
@@ -74,6 +92,11 @@ class CreditTransactionRequestDetailContainer extends Component {
     const data = {
       status: status.id
     };
+
+    if (this.state.fields.recordNumbers.length > 0) {
+      console.log(this.state.fields.recordNumbers);
+      data.recordNumbers = this.state.fields.recordNumbers;
+    }
 
     this.props.partialUpdateDocument(id, data).then((response) => {
       history.push(SECURE_DOCUMENT_UPLOAD.LIST);
@@ -146,6 +169,8 @@ class CreditTransactionRequestDetailContainer extends Component {
             )
           }
           errors={errors}
+          fields={this.state.fields}
+          handleRecordNumberChange={this._handleRecordNumberChange}
           hasCommented={this.state.hasCommented}
           isCommenting={this.state.isCommenting}
           isCreatingPrivilegedComment={this.state.isCreatingPrivilegedComment}
@@ -161,6 +186,15 @@ class CreditTransactionRequestDetailContainer extends Component {
           key="confirmReceived"
         >
           Are you sure you want to mark this as received?
+        </Modal>,
+        <Modal
+          handleSubmit={(event) => {
+            this._handleSubmit(event, DOCUMENT_STATUSES.archived);
+          }}
+          id="confirmArchived"
+          key="confirmArchived"
+        >
+          Are you sure you want to archive this submission?
         </Modal>,
         <Modal
           handleSubmit={() => this._deleteCreditTransferRequest(item.id)}
