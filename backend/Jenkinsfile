@@ -62,11 +62,20 @@ podTemplate(label: "master-backend-maven-${env.BUILD_NUMBER}", name: "master-bac
 ) {
 node("master-backend-maven-${env.BUILD_NUMBER}") {
     
-    stage('Build') {
+    stage('Build Backend') {
         openshiftBuild bldCfg: 'tfrs', showBuildLogs: 'true'
         echo ">> Getting Image Hash"
         IMAGE_HASH = sh (
             script: 'oc get istag tfrs:latest -o template --template="{{.image.dockerImageReference}}"|awk -F ":" \'{print $3}\'',
+ 	            returnStdout: true).trim()
+        echo ">> IMAGE_HASH: $IMAGE_HASH"
+    }
+
+    stage('Build-Scan-Coordinator') {
+        openshiftBuild bldCfg: 'scan-coordinator', showBuildLogs: 'true'
+        echo ">> Getting Image Hash"
+        IMAGE_HASH = sh (
+            script: 'oc get istag scan-coordinator:latest -o template --template="{{.image.dockerImageReference}}"|awk -F ":" \'{print $3}\'',
  	            returnStdout: true).trim()
         echo ">> IMAGE_HASH: $IMAGE_HASH"
     }
@@ -76,6 +85,8 @@ node("master-backend-maven-${env.BUILD_NUMBER}") {
         echo "Deploying to Test: ${BUILD_ID}"
         openshiftTag destStream: 'tfrs', verbose: 'true', destTag: 'test', srcStream: 'tfrs', srcTag: "${IMAGE_HASH}"
         openshiftVerifyDeployment depCfg: 'tfrs', namespace: 'mem-tfrs-test', replicaCount: 1, verbose: 'false'
+        openshiftTag destStream: 'scan-coordinator', verbose: 'true', destTag: 'test', srcStream: 'scan-coordinator', srcTag: "${IMAGE_HASH}"
+        openshiftVerifyDeployment depCfg: 'scan-coordinator', namespace: 'mem-tfrs-test', replicaCount: 1, verbose: 'false'
     }
     
     stage('Refresh SchemaSpy Test') {
@@ -97,6 +108,8 @@ node("master-backend-maven-${env.BUILD_NUMBER}") {
         echo "Deploying to Prod: ${BUILD_ID}"
         openshiftTag destStream: 'tfrs', verbose: 'true', destTag: 'prod', srcStream: 'tfrs', srcTag: "${IMAGE_HASH}"
         openshiftVerifyDeployment depCfg: 'tfrs', namespace: 'mem-tfrs-prod', replicaCount: 1, verbose: 'false'
+        openshiftTag destStream: 'scan-coordinator', verbose: 'true', destTag: 'prod', srcStream: 'scan-coordinator', srcTag: "${IMAGE_HASH}"
+        openshiftVerifyDeployment depCfg: 'scan-coordinator', namespace: 'mem-tfrs-prod', replicaCount: 1, verbose: 'false'
     }    
     
     stage('Refresh SchemaSpy Prod') {
