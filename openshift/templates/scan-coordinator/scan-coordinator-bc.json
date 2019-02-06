@@ -5,6 +5,12 @@
         "name": "scan-coordinator-bc",
         "creationTimestamp": null
     },
+    "parameters": [
+        {
+            "name": "TAG_NAME",
+            "required": true
+        }
+    ],
     "objects": [
         {
             "kind": "ImageStream",
@@ -35,7 +41,7 @@
                 "runPolicy": "Serial",
                 "source": {
                     "type": "Dockerfile",
-                    "dockerfile":  "FROM golang:1.11\nWORKDIR /go/src\nRUN git clone https://github.com/bcgov/tfrs.git\nWORKDIR /go/src/tfrs\nRUN git checkout master\nRUN cp -r /go/src/tfrs/security-scan/scan-coordinator /go/src\nRUN rm -rf /go/src/tfrs\nWORKDIR /go/src/scan-coordinator\nADD https://github.com/vishnubob/wait-for-it/compare/master...HEAD /dev/null\nRUN git clone https://github.com/vishnubob/wait-for-it.git /wfi\nRUN go get -d -v ./...\nRUN go install -v ./...\nCMD [\"scan-coordinator\"]"
+                    "dockerfile":  "FROM golang:1.11\nWORKDIR /go/src\nRUN git clone https://github.com/bcgov/tfrs.git\nWORKDIR /go/src/tfrs\nRUN git checkout ${TAG_NAME}\nRUN cp -r /go/src/tfrs/security-scan/scan-coordinator /go/src\nRUN rm -rf /go/src/tfrs\nWORKDIR /go/src/scan-coordinator\nADD https://github.com/vishnubob/wait-for-it/compare/master...HEAD /dev/null\nRUN git clone https://github.com/vishnubob/wait-for-it.git /wfi\nRUN go get -d -v ./...\nRUN go install -v ./...\nCMD [\"scan-coordinator\"]"
                 },
                 "strategy": {
                     "type": "Docker",

@@ -1,0 +1,152 @@
+{
+    "kind": "Template",
+    "apiVersion": "v1",
+    "metadata": {
+        "name": "scan-supervisor-dc",
+        "creationTimestamp": null
+    },
+    "parameters": [
+        {
+            "name": "ENV_NAME",
+            "required": true
+        },
+        {
+            "name": "IS_NAME",
+            "required": true
+        }
+    ],
+    "objects": [
+        {
+            "kind": "DeploymentConfig",
+            "apiVersion": "v1",
+            "metadata": {
+                "name": "scan-supervisor",
+                "generation": 1,
+                "creationTimestamp": null,
+                "labels": {
+                    "template": "scan-supervisor"
+                },
+                "annotations": {
+                    "description": "Defines how to deploy the application server"
+                }
+            },
+            "spec": {
+                "strategy": {
+                    "type": "Recreate",
+                    "recreateParams": {
+                        "timeoutSeconds": 600,
+                        "post": {
+                            "failurePolicy": "Abort",
+                            "execNewPod": {
+                                "command": [
+                                    "/bin/sh",
+                                    "-c",
+                                    "python manage.py manage.py runscript api.scripts.handle_security_scans"
+                                ],
+                                "containerName": "scan-supervisor"
+                            }
+                        }
+                    },
+                    "resources": {},
+                    "activeDeadlineSeconds": 21600
+                },
+                "triggers": [
+                    {
+                        "type": "ImageChange",
+                        "imageChangeParams": {
+                            "automatic": true,
+                            "containerNames": [
+                                "scan-supervisor"
+                            ],
+                            "from": {
+                                "kind": "ImageStreamTag",
+                                "namespace": "mem-tfrs-tools",
+                                "name": "${IS_NAME}:${ENV_NAME}"
+                            }
+                        }
+                    },
+                    {
+                        "type": "ConfigChange"
+                    }
+                ],
+                "replicas": 1,
+                "test": false,
+                "selector": {
+                    "name": "scan-supervisor"
+                },
+                "template": {
+                    "metadata": {
+                        "name": "scan-supervisor",
+                        "creationTimestamp": null,
+                        "labels": {
+                            "name": "scan-supervisor"
+                        }
+                    },
+                    "spec": {
+                        "containers": [
+                            {
+                                "name": "scan-supervisor",
+                                "image": "",
+                                "ports": [
+                                    {
+                                        "containerPort": 8080,
+                                        "protocol": "TCP"
+                                    }
+                                ],
+                                "env": [],
+                                "resources": {
+                                    "limits": {
+                                        "cpu": "500m",
+                                        "memory": "500Mi"
+                                    },
+                                    "requests": {
+                                        "cpu": "250m",
+                                        "memory": "256Mi"
+                                    }
+                                },
+                                "livenessProbe": {
+                                    "httpGet": {
+                                        "path": "/health",
+                                        "port": 8080,
+                                        "scheme": "HTTP"
+                                    },
+                                    "initialDelaySeconds": 30,
+                                    "timeoutSeconds": 3,
+                                    "periodSeconds": 10,
+                                    "successThreshold": 1,
+                                    "failureThreshold": 3
+                                },
+                                "readinessProbe": {
+                                    "httpGet": {
+                                        "path": "/health",
+                                        "port": 8080,
+                                        "scheme": "HTTP"
+                                    },
+                                    "initialDelaySeconds": 30,
+                                    "timeoutSeconds": 3,
+                                    "periodSeconds": 10,
+                                    "successThreshold": 1,
+                                    "failureThreshold": 3
+                                },
+                                "terminationMessagePath": "/dev/termination-log",
+                                "imagePullPolicy": "IfNotPresent"
+                            }
+                        ],
+                        "restartPolicy": "Always",
+                        "terminationGracePeriodSeconds": 30,
+                        "dnsPolicy": "ClusterFirst",
+                        "securityContext": {}
+                    }
+                }
+            },
+            "status": {
+                "latestVersion": 0,
+                "observedGeneration": 0,
+                "replicas": 0,
+                "updatedReplicas": 0,
+                "availableReplicas": 0,
+                "unavailableReplicas": 0
+            }
+        }
+    ]
+}

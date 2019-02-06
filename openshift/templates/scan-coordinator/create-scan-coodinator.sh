@@ -7,7 +7,7 @@ oc process -f ./scan-coordinator-dc.json ENV_NAME=dev IS_NAME=scan-coordinator-d
 
 # test
 ## Create image stream scan-coordinator and build the image
-oc process -f ./scan-coordinator-bc.json  -n mem-tfrs-tools 
+oc process -f ./scan-coordinator-bc.json  TAG-NAME=master -n mem-tfrs-tools 
 ## Create the deplpoyment config
 oc project mem-tfrs-dev
 oc process -f ./scan-coordinator-dc.json ENV_NAME=test IS_NAME=scan-coordinator BYPASS_CLAMAV=false CLAMAV_HOST=clamav.mem-tfrs-test.svc CLAMAV_PORT=3310 AMQP_HOST=rabbit.mem-tfrs-test.svc AMQP_VHOST=/tfrs AMQP_PORT=5672 AMQP_USER=tfrs MINIO_ENDPOINT=docs-mem-tfrs-test.pathfinder.gov.bc.ca:443 MINIO_USE_SSL=true | oc create -f -
