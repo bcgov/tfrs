@@ -85,26 +85,26 @@ node("develop-backend-maven-${env.BUILD_NUMBER}") {
     stage('Build-Backend') {
         openshiftBuild bldCfg: 'tfrs-develop', showBuildLogs: 'true'
         echo ">> Getting Image Hash"
-        IMAGE_HASH = sh (
+        IMAGE_HASH_BACKEND = sh (
             script: 'oc get istag tfrs-develop:latest -o template --template="{{.image.dockerImageReference}}"|awk -F ":" \'{print $3}\'',
  	            returnStdout: true).trim()
-        echo ">> IMAGE_HASH: $IMAGE_HASH"
+        echo ">> IMAGE_HASH_BACKEND: $IMAGE_HASH_BACKEND"
     }
 
     stage('Build-Scan-Coordinator') {
         openshiftBuild bldCfg: 'scan-coordinator-develop', showBuildLogs: 'true'
         echo ">> Getting Image Hash"
-        IMAGE_HASH = sh (
+        IMAGE_HASH_SCAN_COORDINATOR = sh (
             script: 'oc get istag scan-coordinator-develop:latest -o template --template="{{.image.dockerImageReference}}"|awk -F ":" \'{print $3}\'',
  	            returnStdout: true).trim()
-        echo ">> IMAGE_HASH: $IMAGE_HASH"
+        echo ">> IMAGE_HASH_SCAN_COORDINATOR: $IMAGE_HASH_SCAN_COORDINATOR"
     }
 
     stage('Deploy on Dev') {
         echo "Deploying to Dev: ${BUILD_ID}"
-        openshiftTag destStream: 'tfrs-develop', verbose: 'true', destTag: 'dev', srcStream: 'tfrs-develop', srcTag: "${IMAGE_HASH}"
+        openshiftTag destStream: 'tfrs-develop', verbose: 'true', destTag: 'dev', srcStream: 'tfrs-develop', srcTag: "${IMAGE_HASH_BACKEND}"
         openshiftVerifyDeployment depCfg: 'tfrs', namespace: 'mem-tfrs-dev', replicaCount: 1, verbose: 'false'
-        openshiftTag destStream: 'scan-coordinator-develop', verbose: 'true', destTag: 'dev', srcStream: 'scan-coordinator-develop', srcTag: "${IMAGE_HASH}"
+        openshiftTag destStream: 'scan-coordinator-develop', verbose: 'true', destTag: 'dev', srcStream: 'scan-coordinator-develop', srcTag: "${IMAGE_HASH_SCAN_COORDINATOR}"
         openshiftVerifyDeployment depCfg: 'scan-coordinator', namespace: 'mem-tfrs-dev', replicaCount: 1, verbose: 'false'
     }
     
