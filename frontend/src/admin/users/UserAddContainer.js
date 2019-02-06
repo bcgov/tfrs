@@ -12,7 +12,8 @@ import history from '../../app/History';
 import { getFuelSuppliers, getOrganization } from '../../actions/organizationActions';
 import { getRoles } from '../../actions/roleActions';
 import UserForm from './components/UserForm';
-import { USERS } from '../../constants/routes/Admin';
+import { USERS as ADMIN_USERS } from '../../constants/routes/Admin';
+import USERS from '../../constants/routes/Users';
 import toastr from '../../utils/toastr';
 import { clearUsersRequestError, createUser } from '../../actions/userActions';
 
@@ -114,7 +115,7 @@ class UserAddContainer extends Component {
     const data = {
       user: {
         cellPhone: this.state.fields.mobilePhone,
-        username: 'user' + (new Date().getTime()),
+        username: `user${(new Date().getTime())}`,
         email: this.state.fields.email,
         firstName: this.state.fields.firstName,
         lastName: this.state.fields.lastName,
@@ -134,7 +135,13 @@ class UserAddContainer extends Component {
     };
 
     this.props.createUser(data).then(() => {
-      history.push(USERS.DETAILS_BY_USERNAME.replace(':username', this.props.createdUsername));
+      let viewUrl = USERS.DETAILS_BY_USERNAME.replace(':username', this.props.createdUsername);
+
+      if (document.location.pathname.indexOf('/admin/') >= 0) {
+        viewUrl = ADMIN_USERS.DETAILS_BY_USERNAME.replace(':username', this.props.createdUsername);
+      }
+
+      history.push(viewUrl);
       toastr.userSuccess('User created.');
     });
 
