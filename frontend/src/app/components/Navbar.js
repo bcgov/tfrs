@@ -151,6 +151,13 @@ class Navbar extends Component {
             Administration
           </NavLink>
           }
+          <a
+            href={`/assets/files/Transportation_Fuels_Reporting_System_-_${this.props.loggedInUser.isGovernmentUser ? 'IDIR' : 'BCeID'}_Manual_v1.0.pdf`}
+            rel="noopener noreferrer"
+            target="_blank"
+          >
+            Help
+          </a>
           <NavLink
             activeClassName="active"
             id="navbar-notifications"
@@ -284,6 +291,15 @@ class Navbar extends Component {
             <NavLink id="navbar-settings" to={Routes.SETTINGS}>
               Settings
             </NavLink>
+          </li>
+          <li>
+            <a
+              href={`/assets/files/Transportation_Fuels_Reporting_System_-_${this.props.loggedInUser.isGovernmentUser ? 'IDIR' : 'BCeID'}_Manual_v1.0.pdf`}
+              rel="noopener noreferrer"
+              target="_blank"
+            >
+              Help
+            </a>
           </li>
           <li>
             <NavLink
