@@ -3,6 +3,7 @@ from email.utils import make_msgid
 from typing import List
 
 import pika
+from django.core.cache import caches
 from pika.exceptions import AMQPError
 from django.db import transaction
 from rest_framework import serializers
@@ -18,6 +19,7 @@ from api.models.Role import Role
 from api.notifications.notification_types import NotificationType
 from tfrs.settings import AMQP_CONNECTION_PARAMETERS, EMAIL
 
+subscription_cache = caches['notification_subscriptions']
 
 def send_amqp_notification():
     try:
@@ -182,6 +184,11 @@ class AMQPNotificationService:
 
     @staticmethod
     def compute_effective_subscriptions(user: User) -> List[EffectiveSubscription]:
+
+        cached = subscription_cache.get(user.username)
+        if cached is not None:
+            return cached
+
         all_channels = NotificationChannel.objects.all()
         user_subscriptions = NotificationSubscription.objects.filter(user_id=user.id)
         all_notification_types = NotificationType
@@ -200,6 +207,9 @@ class AMQPNotificationService:
                                           notification_type=notification_type,
                                           subscribed=is_subscribed)
                 )
+
+        subscription_cache.set(user.username, effective_subscriptions)
+
         return effective_subscriptions
 
     @staticmethod
@@ -225,6 +235,10 @@ class AMQPNotificationService:
                 notification_type=notification_type,
                 enabled=subscribed
             ).save()
+
+            subscription_cache.delete(user.username)
+            AMQPNotificationService.compute_effective_subscriptions(user)  # repopulate the cache
+
 
     @staticmethod
     @transaction.atomic
