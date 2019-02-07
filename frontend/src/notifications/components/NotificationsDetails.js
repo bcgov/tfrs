@@ -53,6 +53,7 @@ const NotificationsDetails = props => (
       selectIdForModal={props.selectIdForModal}
       toggleCheck={props.toggleCheck}
       updateNotification={props.updateNotification}
+      isFetching={props.isFetching}
     />
   </div>
 );
