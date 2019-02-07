@@ -8,7 +8,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import PropTypes from 'prop-types';
 
-import { updateNotifications } from '../actions/notificationActions';
+import {getNotifications, updateNotifications} from '../actions/notificationActions';
 import NotificationsDetails from './components/NotificationsDetails';
 import Modal from '../app/components/Modal';
 
@@ -27,6 +27,10 @@ class NotificationsContainer extends Component {
     this._toggleCheck = this._toggleCheck.bind(this);
     this._updateNotification = this._updateNotification.bind(this);
     this._updateNotifications = this._updateNotifications.bind(this);
+  }
+
+  componentWillMount() {
+    this.props.getNotifications();
   }
 
   _addToFields (value) {
@@ -142,7 +146,8 @@ class NotificationsContainer extends Component {
 NotificationsContainer.propTypes = {
   items: PropTypes.arrayOf(PropTypes.shape()).isRequired,
   isFetching: PropTypes.bool.isRequired,
-  updateNotifications: PropTypes.func.isRequired
+  updateNotifications: PropTypes.func.isRequired,
+  getNotifications: PropTypes.func.isRequired
 };
 
 const mapStateToProps = state => ({
@@ -151,7 +156,8 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  updateNotifications: bindActionCreators(updateNotifications, dispatch)
+  updateNotifications: bindActionCreators(updateNotifications, dispatch),
+  getNotifications: bindActionCreators(getNotifications, dispatch)
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(NotificationsContainer);

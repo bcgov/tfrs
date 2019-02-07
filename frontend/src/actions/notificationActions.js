@@ -36,6 +36,32 @@ const getNotificationsSuccess = notifications => ({
 });
 
 /*
+ * Get Notifications Count
+ */
+
+const getNotificationsCount = () => (dispatch) => {
+  dispatch(getNotificationsCountRequest());
+
+  axios.get(Routes.BASE_URL + Routes.NOTIFICATIONS.COUNT)
+    .then((response) => {
+      dispatch(getNotificationsCountSuccess(response.data));
+    }).catch((error) => {
+    dispatch(getNotificationsError(error.response));
+  });
+};
+
+const getNotificationsCountRequest = () => ({
+  name: ReducerTypes.GET_NOTIFICATIONS_COUNT_REQUEST,
+  type: ActionTypes.GET_NOTIFICATIONS_COUNT
+});
+
+const getNotificationsCountSuccess = notifications => ({
+  data: notifications,
+  name: ReducerTypes.RECEIVE_NOTIFICATIONS_COUNT_REQUEST,
+  type: ActionTypes.RECEIVE_NOTIFICATIONS_COUNT
+});
+
+/*
  * Get Subscriptions
  */
 const getSubscriptions = () => (dispatch) => {
@@ -131,4 +157,4 @@ const updateSubscriptionsError = error => ({
   errorMessage: error
 });
 
-export { getNotifications, getSubscriptions, updateNotifications, updateSubscriptions };
+export { getNotifications, getNotificationsCount, getSubscriptions, updateNotifications, updateSubscriptions };
