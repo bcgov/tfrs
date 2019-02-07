@@ -145,5 +145,7 @@ export default withRouter(connect(state => ({
     user: state.oidc.user,
     isFetching: state.oidc.isLoadingUser
   },
-  unreadNotificationsCount: state.rootReducer.notifications.count.unreadCount
+  unreadNotificationsCount: state.rootReducer.notifications.isFetching
+    ? null
+    : state.rootReducer.notifications.items.filter(n => !n.isRead).length
 }))(KeycloakAwareApp));
