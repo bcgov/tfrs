@@ -5,6 +5,7 @@ from minio import Minio
 
 from api.models.DocumentFileAttachment import DocumentFileAttachment
 from api.models.DocumentHistory import DocumentHistory
+from api.models.DocumentStatus import DocumentStatus
 from tfrs.settings import MINIO
 
 
@@ -100,3 +101,33 @@ class DocumentService(object):
         """
         pathname = urlsplit(attachment.url).path
         return pathname.replace('/{}/'.format(MINIO['BUCKET_NAME']), '')
+
+    @staticmethod
+    def validate_status(current_status, next_status):
+        """
+        This function checks if the next status is actually valid for the
+        current status
+        """
+        document_statuses = DocumentStatus.objects.all().only('id', 'status')
+        status_dict = {s.status: s for s in document_statuses}
+
+        if current_status in [
+                status_dict["Archived"],
+                status_dict["Cancelled"],
+                status_dict["Pending Submission"]]:
+            return False
+
+        if current_status == status_dict["Received"] and \
+                next_status != status_dict["Archived"]:
+            return False
+
+        if current_status == status_dict["Submitted"] and \
+                next_status != status_dict["Received"]:
+            return False
+
+        if current_status not in [
+                status_dict["Draft"], status_dict["Security Scan Failed"]]:
+            if next_status == status_dict["Draft"]:
+                return False
+
+        return True

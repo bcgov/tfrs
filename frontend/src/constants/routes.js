@@ -26,6 +26,7 @@ export const REFERENCE_DATA_API_ENDPOINTS = {
 
 if (CONFIG.SECURE_DOCUMENT_UPLOAD.ENABLED) {
   REFERENCE_DATA_API_ENDPOINTS.documentCategories = '/documents/categories';
+  REFERENCE_DATA_API_ENDPOINTS.documentStatuses = '/documents/statuses';
 }
 
 export const USERS = '/users';

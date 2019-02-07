@@ -348,17 +348,21 @@ class DocumentUpdateSerializer(serializers.ModelSerializer):
 
         document = self.instance
         status = data.get('status')
-        draft_status = status_dict["Draft"]
-        security_scan_failed_status = status_dict["Security Scan Failed"]
 
-        if document.status != draft_status and \
-                document.status != security_scan_failed_status:
-            if status == draft_status:
-                raise serializers.ValidationError({
-                    'readOnly': "Cannot update the status back to draft when "
-                                "it's no longer in draft."
-                })
+        if not DocumentService.validate_status(document.status, status):
+            for document_status in document_statuses:
+                if document_status == status:
+                    raise serializers.ValidationError({
+                        'invalidStatus': "Submission cannot be {} as it "
+                                         "currently has a status of {}."
+                                         .format(
+                                             document_status.status,
+                                             document.status.status
+                                         )
+                    })
 
+        if document.status != status_dict["Draft"] and \
+                document.status != status_dict["Security Scan Failed"]:
             # if there's a key that's not about updating the status or user
             # invalidate the request as we're not allowing modifications
             # to other fields
@@ -369,9 +373,7 @@ class DocumentUpdateSerializer(serializers.ModelSerializer):
                                     "document is in draft."
                     })
 
-        submitted_status = status_dict["Submitted"]
-
-        if data.get('status') == submitted_status:
+        if status == status_dict["Submitted"]:
             if document.type.the_type == "Evidence":
                 if 'milestone' in request.data and \
                         not request.data.get('milestone'):

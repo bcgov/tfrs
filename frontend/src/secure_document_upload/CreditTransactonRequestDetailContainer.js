@@ -16,7 +16,6 @@ import {
 import Modal from '../app/components/Modal';
 import history from '../app/History';
 import CreditTransactionRequestDetails from './components/CreditTransactionRequestDetails';
-import DOCUMENT_STATUSES from '../constants/documentStatuses';
 import SECURE_DOCUMENT_UPLOAD from '../constants/routes/SecureDocumentUpload';
 import toastr from '../utils/toastr';
 
@@ -35,6 +34,7 @@ class CreditTransactionRequestDetailContainer extends Component {
 
     this._addComment = this._addComment.bind(this);
     this._cancelComment = this._cancelComment.bind(this);
+    this._getDocumentStatus = this._getDocumentStatus.bind(this);
     this._handleRecordNumberChange = this._handleRecordNumberChange.bind(this);
     this._handleSubmit = this._handleSubmit.bind(this);
     this._saveComment = this._saveComment.bind(this);
@@ -69,6 +69,11 @@ class CreditTransactionRequestDetailContainer extends Component {
     });
   }
 
+  _getDocumentStatus (status) {
+    return this.props.referenceData.documentStatuses.find(documentStatus =>
+      (documentStatus.status === status));
+  }
+
   _handleRecordNumberChange (event, index, id) {
     const { value, name } = event.target;
     const fieldState = { ...this.state.fields };
@@ -94,13 +99,12 @@ class CreditTransactionRequestDetailContainer extends Component {
     };
 
     if (this.state.fields.recordNumbers.length > 0) {
-      console.log(this.state.fields.recordNumbers);
       data.recordNumbers = this.state.fields.recordNumbers;
     }
 
     this.props.partialUpdateDocument(id, data).then((response) => {
       history.push(SECURE_DOCUMENT_UPLOAD.LIST);
-      toastr.documentUpload(status.id);
+      toastr.documentUpload(status.status);
     });
 
     return true;
@@ -180,7 +184,7 @@ class CreditTransactionRequestDetailContainer extends Component {
         />,
         <Modal
           handleSubmit={(event) => {
-            this._handleSubmit(event, DOCUMENT_STATUSES.received);
+            this._handleSubmit(event, this._getDocumentStatus('Received'));
           }}
           id="confirmReceived"
           key="confirmReceived"
@@ -189,7 +193,7 @@ class CreditTransactionRequestDetailContainer extends Component {
         </Modal>,
         <Modal
           handleSubmit={(event) => {
-            this._handleSubmit(event, DOCUMENT_STATUSES.archived);
+            this._handleSubmit(event, this._getDocumentStatus('Archived'));
           }}
           id="confirmArchived"
           key="confirmArchived"
@@ -205,7 +209,7 @@ class CreditTransactionRequestDetailContainer extends Component {
         </Modal>,
         <Modal
           handleSubmit={(event) => {
-            this._handleSubmit(event, DOCUMENT_STATUSES.submitted);
+            this._handleSubmit(event, this._getDocumentStatus('Submitted'));
           }}
           id="confirmSubmit"
           key="confirmSubmit"
@@ -248,6 +252,11 @@ CreditTransactionRequestDetailContainer.propTypes = {
     }).isRequired
   }).isRequired,
   partialUpdateDocument: PropTypes.func.isRequired,
+  referenceData: PropTypes.shape({
+    documentStatuses: PropTypes.arrayOf(PropTypes.shape),
+    isFetching: PropTypes.bool,
+    isSuccessful: PropTypes.bool
+  }).isRequired,
   updateCommentOnDocument: PropTypes.func.isRequired
 };
 
@@ -258,7 +267,12 @@ const mapStateToProps = state => ({
     item: state.rootReducer.documentUpload.item,
     success: state.rootReducer.documentUpload.success
   },
-  loggedInUser: state.rootReducer.userRequest.loggedInUser
+  loggedInUser: state.rootReducer.userRequest.loggedInUser,
+  referenceData: {
+    documentStatuses: state.rootReducer.referenceData.data.documentStatuses,
+    isFetching: state.rootReducer.referenceData.isFetching,
+    isSuccessful: state.rootReducer.referenceData.success
+  }
 });
 
 const mapDispatchToProps = dispatch => ({
