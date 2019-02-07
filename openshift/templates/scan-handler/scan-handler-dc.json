@@ -2,7 +2,7 @@
     "kind": "Template",
     "apiVersion": "v1",
     "metadata": {
-        "name": "scan-supervisor-dc",
+        "name": "scan-handler-dc",
         "creationTimestamp": null
     },
     "parameters": [
@@ -20,11 +20,11 @@
             "kind": "DeploymentConfig",
             "apiVersion": "v1",
             "metadata": {
-                "name": "scan-supervisor",
+                "name": "scan-handler",
                 "generation": 1,
                 "creationTimestamp": null,
                 "labels": {
-                    "app": "scan-supervisor"
+                    "app": "scan-handler"
                 },
                 "annotations": {
                     "openshift.io/generated-by": "OpenShiftWebConsole"
@@ -45,7 +45,7 @@
                         "imageChangeParams": {
                             "automatic": true,
                             "containerNames": [
-                                "scan-supervisor"
+                                "scan-handler"
                             ],
                             "from": {
                                 "kind": "ImageStreamTag",
@@ -61,15 +61,15 @@
                 "replicas": 1,
                 "test": false,
                 "selector": {
-                    "app": "scan-supervisor",
-                    "deploymentconfig": "scan-supervisor"
+                    "app": "scan-handler",
+                    "deploymentconfig": "scan-handler"
                 },
                 "template": {
                     "metadata": {
                         "creationTimestamp": null,
                         "labels": {
-                            "app": "scan-supervisor",
-                            "deploymentconfig": "scan-supervisor"
+                            "app": "scan-handler",
+                            "deploymentconfig": "scan-handler"
                         },
                         "annotations": {
                             "openshift.io/generated-by": "OpenShiftWebConsole"
@@ -78,7 +78,7 @@
                     "spec": {
                         "containers": [
                             {
-                                "name": "scan-supervisor",
+                                "name": "scan-handler",
                                 "image": "",
                                 "ports": [],
                                 "env": [],

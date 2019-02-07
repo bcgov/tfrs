@@ -2,7 +2,7 @@
     "kind": "Template",
     "apiVersion": "v1",
     "metadata": {
-        "name": "scan-supervisor-bc-develop",
+        "name": "scan-handler-bc-develop",
         "creationTimestamp": null
     },
     "objects": [
@@ -10,7 +10,7 @@
             "kind": "ImageStream",
             "apiVersion": "v1",
             "metadata": {
-                "name": "scan-supervisor-develop",
+                "name": "scan-handler-develop",
                 "generation": 1,
                 "creationTimestamp": null
             },
@@ -27,7 +27,7 @@
             "kind": "BuildConfig",
             "apiVersion": "v1",
             "metadata": {
-                "name": "scan-supervisor-develop",
+                "name": "scan-handler-develop",
                 "creationTimestamp": null
             },
             "spec": {
@@ -46,7 +46,7 @@
                 "output": {
                     "to": {
                         "kind": "ImageStreamTag",
-                        "name": "scan-supervisor-develop:latest"
+                        "name": "scan-handler-develop:latest"
                     }
                 },
                 "resources": {},
