@@ -135,23 +135,22 @@ class Navbar extends Component {
             Secure File Submission
           </NavLink>
           }
-          {this.props.loggedInUser.isGovernmentUser && [
-            <NavLink
-              activeClassName="active"
-              id="navbar-administration"
-              isActive={(match, location) => {
-                if (location.pathname.indexOf('/admin/') >= 0) {
-                  return true;
-                }
+          {this.props.loggedInUser.isGovernmentUser &&
+          <NavLink
+            activeClassName="active"
+            id="navbar-administration"
+            isActive={(match, location) => {
+              if (location.pathname.indexOf('/admin/') >= 0) {
+                return true;
+              }
 
-                return false;
-              }}
-              key="historical-data-entry"
-              to={HISTORICAL_DATA_ENTRY.LIST}
-            >
-              Administration
-            </NavLink>
-          ]}
+              return false;
+            }}
+            to={HISTORICAL_DATA_ENTRY.LIST}
+          >
+            Administration
+          </NavLink>
+          }
           <a
             href={`/assets/files/Transportation_Fuels_Reporting_System_-_${this.props.loggedInUser.isGovernmentUser ? 'IDIR' : 'BCeID'}_Manual_v1.0.pdf`}
             rel="noopener noreferrer"
