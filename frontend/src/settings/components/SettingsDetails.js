@@ -10,7 +10,7 @@ import CREDIT_TRANSFER_NOTIFICATIONS from '../../constants/settings/notification
 import GOVERNMENT_TRANSFER_NOTIFICATIONS from '../../constants/settings/notificationsGovernmentTransfers';
 import * as Lang from '../../constants/langEnUs';
 import SettingsTabs from './SettingsTabs';
-import DOCUMENT_NOTIFICATIONS from "../../constants/settings/notificationsDocuments";
+import DOCUMENT_NOTIFICATIONS from '../../constants/settings/notificationsDocuments';
 
 const SettingsDetails = props => (
   <div className="page_settings">
@@ -52,6 +52,7 @@ const SettingsDetails = props => (
           Part 3 Awards, Credit Validations, and Credit Reductions
         </h3>,
         <NotificationsCreditTransactionsTable
+          addToFields={props.addToFields}
           fields={props.fields.settings.notifications}
           items={GOVERNMENT_TRANSFER_NOTIFICATIONS.filter(notification =>
             (props.loggedInUser.isGovernmentUser
@@ -66,6 +67,7 @@ const SettingsDetails = props => (
           File Submission
         </h3>,
         <NotificationsCreditTransactionsTable
+          addToFields={props.addToFields}
           fields={props.fields.settings.notifications}
           items={DOCUMENT_NOTIFICATIONS}
           key="table-doc"

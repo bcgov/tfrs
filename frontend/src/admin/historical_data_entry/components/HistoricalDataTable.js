@@ -106,8 +106,31 @@ const HistoricalDataTable = (props) => {
         content = ZERO_DOLLAR_REASON.other.description;
       }
 
-      return content;
+      return content || '';
     }
+  }, {
+    id: 'actions',
+    Header: '',
+    accessor: 'id',
+    filterable: false,
+    Cell: (row) => {
+      const editUrl = HISTORICAL_DATA_ENTRY.EDIT.replace(':id', row.value);
+
+      return (
+        <div className="col-actions">
+          <Link className="action" to={editUrl}><FontAwesomeIcon icon="edit" /></Link>
+          <button
+            className="action"
+            data-toggle="modal"
+            data-target="#confirmDelete"
+            onClick={() => props.selectIdForModal(row.value)}
+          >
+            <FontAwesomeIcon icon="trash" />
+          </button>
+        </div>
+      );
+    },
+    maxWidth: 75
   }];
 
   const filterMethod = (filter, row, column) => {
