@@ -135,22 +135,30 @@ class Navbar extends Component {
             Secure File Submission
           </NavLink>
           }
-          {this.props.loggedInUser.isGovernmentUser &&
-          <NavLink
-            activeClassName="active"
-            id="navbar-administration"
-            isActive={(match, location) => {
-              if (location.pathname.indexOf('/admin/') >= 0) {
-                return true;
-              }
+          {this.props.loggedInUser.isGovernmentUser && [
+            <NavLink
+              activeClassName="active"
+              id="navbar-administration"
+              isActive={(match, location) => {
+                if (location.pathname.indexOf('/admin/') >= 0) {
+                  return true;
+                }
 
-              return false;
-            }}
-            to={HISTORICAL_DATA_ENTRY.LIST}
+                return false;
+              }}
+              key="historical-data-entry"
+              to={HISTORICAL_DATA_ENTRY.LIST}
+            >
+              Administration
+            </NavLink>
+          ]}
+          <a
+            href={`/assets/files/Transportation_Fuels_Reporting_System_-_${this.props.loggedInUser.isGovernmentUser ? 'IDIR' : 'BCeID'}_Manual_v1.0.pdf`}
+            rel="noopener noreferrer"
+            target="_blank"
           >
-            Administration
-          </NavLink>
-          }
+            Help
+          </a>
           <NavLink
             activeClassName="active"
             id="navbar-notifications"
@@ -284,6 +292,15 @@ class Navbar extends Component {
             <NavLink id="navbar-settings" to={Routes.SETTINGS}>
               Settings
             </NavLink>
+          </li>
+          <li>
+            <a
+              href={`/assets/files/Transportation_Fuels_Reporting_System_-_${this.props.loggedInUser.isGovernmentUser ? 'IDIR' : 'BCeID'}_Manual_v1.0.pdf`}
+              rel="noopener noreferrer"
+              target="_blank"
+            >
+              Help
+            </a>
           </li>
           <li>
             <NavLink
