@@ -10,7 +10,7 @@ import CREDIT_TRANSFER_NOTIFICATIONS from '../../constants/settings/notification
 import GOVERNMENT_TRANSFER_NOTIFICATIONS from '../../constants/settings/notificationsGovernmentTransfers';
 import * as Lang from '../../constants/langEnUs';
 import SettingsTabs from './SettingsTabs';
-import DOCUMENT_NOTIFICATIONS from "../../constants/settings/notificationsDocuments";
+import DOCUMENT_NOTIFICATIONS from '../../constants/settings/notificationsDocuments';
 
 const SettingsDetails = props => (
   <div className="page_settings">
