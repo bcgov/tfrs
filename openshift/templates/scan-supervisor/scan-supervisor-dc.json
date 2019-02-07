@@ -24,28 +24,17 @@
                 "generation": 1,
                 "creationTimestamp": null,
                 "labels": {
-                    "template": "scan-supervisor"
+                    "app": "scan-supervisor"
                 },
                 "annotations": {
-                    "description": "Defines how to deploy the application server"
+                    "openshift.io/generated-by": "OpenShiftWebConsole"
                 }
             },
             "spec": {
                 "strategy": {
                     "type": "Recreate",
                     "recreateParams": {
-                        "timeoutSeconds": 600,
-                        "post": {
-                            "failurePolicy": "Abort",
-                            "execNewPod": {
-                                "command": [
-                                    "/bin/sh",
-                                    "-c",
-                                    "python manage.py manage.py runscript api.scripts.handle_security_scans"
-                                ],
-                                "containerName": "scan-supervisor"
-                            }
-                        }
+                        "timeoutSeconds": 600
                     },
                     "resources": {},
                     "activeDeadlineSeconds": 21600
@@ -72,14 +61,18 @@
                 "replicas": 1,
                 "test": false,
                 "selector": {
-                    "name": "scan-supervisor"
+                    "app": "scan-supervisor",
+                    "deploymentconfig": "scan-supervisor"
                 },
                 "template": {
                     "metadata": {
-                        "name": "scan-supervisor",
                         "creationTimestamp": null,
                         "labels": {
-                            "name": "scan-supervisor"
+                            "app": "scan-supervisor",
+                            "deploymentconfig": "scan-supervisor"
+                        },
+                        "annotations": {
+                            "openshift.io/generated-by": "OpenShiftWebConsole"
                         }
                     },
                     "spec": {
@@ -87,55 +80,23 @@
                             {
                                 "name": "scan-supervisor",
                                 "image": "",
-                                "ports": [
-                                    {
-                                        "containerPort": 8080,
-                                        "protocol": "TCP"
-                                    }
-                                ],
+                                "ports": [],
                                 "env": [],
                                 "resources": {
                                     "limits": {
-                                        "cpu": "500m",
-                                        "memory": "500Mi"
-                                    },
-                                    "requests": {
-                                        "cpu": "250m",
-                                        "memory": "256Mi"
+                                        "cpu": "250m"
                                     }
                                 },
-                                "livenessProbe": {
-                                    "httpGet": {
-                                        "path": "/health",
-                                        "port": 8080,
-                                        "scheme": "HTTP"
-                                    },
-                                    "initialDelaySeconds": 30,
-                                    "timeoutSeconds": 3,
-                                    "periodSeconds": 10,
-                                    "successThreshold": 1,
-                                    "failureThreshold": 3
-                                },
-                                "readinessProbe": {
-                                    "httpGet": {
-                                        "path": "/health",
-                                        "port": 8080,
-                                        "scheme": "HTTP"
-                                    },
-                                    "initialDelaySeconds": 30,
-                                    "timeoutSeconds": 3,
-                                    "periodSeconds": 10,
-                                    "successThreshold": 1,
-                                    "failureThreshold": 3
-                                },
                                 "terminationMessagePath": "/dev/termination-log",
-                                "imagePullPolicy": "IfNotPresent"
+                                "terminationMessagePolicy": "File",
+                                "imagePullPolicy": "Always"
                             }
                         ],
                         "restartPolicy": "Always",
                         "terminationGracePeriodSeconds": 30,
                         "dnsPolicy": "ClusterFirst",
-                        "securityContext": {}
+                        "securityContext": {},
+                        "schedulerName": "default-scheduler"
                     }
                 }
             },
