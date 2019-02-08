@@ -1,11 +1,14 @@
 import {call, put, takeLatest} from 'redux-saga/effects';
 import {delay} from 'redux-saga';
 import {getNotificationsCount} from "../actions/notificationActions";
-import ActionTypes from "../constants/actionTypes/Users";
+import UserActionTypes from "../constants/actionTypes/Users";
+import NotificationActionTypes from "../constants/actionTypes/Notifications";
+
 
 const TRIGGERING_ACTIONS = [
   'SERVER_INITIATED_NOTIFICATION_RELOAD',
-  ActionTypes.RECEIVE_LOGGED_IN_USER
+  UserActionTypes.RECEIVE_LOGGED_IN_USER,
+  NotificationActionTypes.SUCCESS_NOTIFICATIONS
 ];
 
 function* fetchNotifications(store) {
