@@ -21,6 +21,7 @@ from tfrs.settings import AMQP_CONNECTION_PARAMETERS, EMAIL
 
 subscription_cache = caches['notification_subscriptions']
 
+
 def send_amqp_notification():
     try:
         parameters = AMQP_CONNECTION_PARAMETERS
@@ -219,6 +220,7 @@ class AMQPNotificationService:
             notification_type: NotificationType,
             subscribed: bool
     ):
+
         existing_subscription = NotificationSubscription.objects.filter(
             user_id=user.id,
             channel=channel,
@@ -236,9 +238,7 @@ class AMQPNotificationService:
                 enabled=subscribed
             ).save()
 
-            subscription_cache.delete(user.username)
-            AMQPNotificationService.compute_effective_subscriptions(user)  # repopulate the cache
-
+        subscription_cache.delete(user.username)
 
     @staticmethod
     @transaction.atomic
@@ -269,6 +269,14 @@ class AMQPNotificationService:
                 interested_roles=interested_roles,
                 interested_organization=interested_organization
         ):
+            effective_subscriptions = AMQPNotificationService.compute_effective_subscriptions(recipient)
+
+            app_subscription = EffectiveSubscription(
+                channel=NotificationChannel.objects.get(channel='IN_APP'),
+                notification_type=notification_type,
+                subscribed=True
+            )
+
             notification = NotificationMessage(
                 user=recipient,
                 originating_user=originating_user,
@@ -281,20 +289,16 @@ class AMQPNotificationService:
                 is_warning=is_warning
             )
             notification.save()
+            send_amqp_notification()
 
-            effective_subscriptions = AMQPNotificationService.compute_effective_subscriptions(recipient)
-
-            target_subscription = EffectiveSubscription(
+            email_subscription = EffectiveSubscription(
                 channel=NotificationChannel.objects.get(channel='EMAIL'),
                 notification_type=notification_type,
                 subscribed=True
             )
 
-            if target_subscription in effective_subscriptions:
-                AMQPNotificationService.send_email_for_notification(
-                    notification)
-
-        send_amqp_notification()
+            if email_subscription in effective_subscriptions:
+                AMQPNotificationService.send_email_for_notification(notification)
 
 
 class InvalidNotificationArguments(Exception):
