@@ -38,7 +38,7 @@ class Migration(migrations.Migration):
     Attaches the functions for the migrations
     """
     dependencies = [
-        ('api', '0074_add_document_statuses'),
+        ('api', '0075_remove_document_rescinded_status'),
     ]
 
     operations = [
