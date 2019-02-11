@@ -81,7 +81,63 @@
                                 "name": "scan-handler",
                                 "image": "",
                                 "ports": [],
-                                "env": [],
+                                "env": [
+                                    {
+                                        "name": "RABBITMQ_VHOST",
+                                        "value": "/tfrs"
+                                    },
+                                    {
+                                        "name": "RABBITMQ_USER",
+                                        "value": "tfrs"
+                                    },
+                                    {
+                                        "name": "RABBITMQ_PASSWORD",
+                                        "valueFrom": {
+                                            "secretKeyRef": {
+                                                "name": "rabbitmq-tfrs",
+                                                "key": "TFRS_PASSWORD"
+                                            }
+                                        }
+                                    },
+                                    {
+                                        "name": "RABBITMQ_HOST",
+                                        "value": "rabbit.mem-tfrs-${ENV_NAME}.svc"
+                                    },
+                                    {
+                                        "name": "RABBITMQ_PORT",
+                                        "value": "5672"
+                                    },
+                                    {
+                                        "name": "DATABASE_SERVICE_NAME",
+                                        "value": "postgresql"
+                                    },
+                                    {
+                                        "name": "DATABASE_ENGINE",
+                                        "value": "postgresql"
+                                    },
+                                    {
+                                        "name": "DATABASE_NAME",
+                                        "value": "tfrs"
+                                    },
+                                    {
+                                        "name": "DATABASE_USER",
+                                        "valueFrom": {
+                                            "secretKeyRef": {
+                                                "name": "tfrs-postgresql",
+                                                "key": "DATABASE_USER"
+                                            }
+                                        }
+                                    },
+                                    {
+                                        "name": "DATABASE_USER",
+                                        "valueFrom": {
+                                            "secretKeyRef": {
+                                                "name": "tfrs-postgresql",
+                                                "key": "DATABASE_PASSWORD"
+                                            }
+                                        }
+                                    }
+                                ],
                                 "resources": {
                                     "limits": {
                                         "cpu": "250m"
