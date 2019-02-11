@@ -159,6 +159,7 @@ const NotificationsTable = (props) => {
         id: 'date',
         desc: true
       }]}
+      loading={props.isFetching}
       filterable={filterable}
       getTrProps={(state, rowInfo) => ({
         className: (rowInfo && rowInfo.original.isRead) ? 'read' : 'unread'
@@ -174,6 +175,7 @@ NotificationsTable.propTypes = {
     notifications: PropTypes.array
   }).isRequired,
   items: PropTypes.arrayOf(PropTypes.object).isRequired,
+  isFetching: PropTypes.bool.isRequired,
   selectIdForModal: PropTypes.func.isRequired,
   toggleCheck: PropTypes.func.isRequired,
   updateNotification: PropTypes.func.isRequired

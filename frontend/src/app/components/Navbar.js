@@ -6,7 +6,6 @@ import { connect } from 'react-redux';
 import { NavLink } from 'react-router-dom';
 import { bindActionCreators } from 'redux';
 
-import { getNotifications } from '../../actions/notificationActions';
 import { signUserOut } from '../../actions/userActions';
 import history from '../../app/History';
 import PERMISSIONS_SECURE_DOCUMENT_UPLOAD from '../../constants/permissions/SecureDocumentUpload';
@@ -34,7 +33,6 @@ class Navbar extends Component {
   }
 
   componentDidMount () {
-    this.props.getNotifications(); // ensure that the notifications are up-to-date
     Navbar.updateContainerPadding();
     window.addEventListener('resize', () => Navbar.updateContainerPadding());
   }
@@ -427,7 +425,6 @@ Navbar.defaultProps = {
 };
 
 Navbar.propTypes = {
-  getNotifications: PropTypes.func.isRequired,
   isAuthenticated: PropTypes.bool.isRequired,
   loggedInUser: PropTypes.shape({
     displayName: PropTypes.string,
@@ -446,7 +443,6 @@ Navbar.propTypes = {
 };
 
 const mapDispatchToProps = dispatch => ({
-  getNotifications: bindActionCreators(getNotifications, dispatch),
   signUserOut: bindActionCreators(signUserOut, dispatch)
 });
 
