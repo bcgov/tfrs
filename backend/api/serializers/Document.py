@@ -421,25 +421,26 @@ class DocumentUpdateSerializer(serializers.ModelSerializer):
                 }
             )
 
-        comment = request.data.get('comment')
+        if document.status.status not in ['Archived', 'Received']:
+            comment = request.data.get('comment')
 
-        if comment and comment.strip():
-            document_comment = DocumentComment.objects.filter(
-                document=document).first()
+            if comment and comment.strip():
+                document_comment = DocumentComment.objects.filter(
+                    document=document).first()
 
-            if document_comment:
-                document_comment.comment = comment
-                document_comment.update_timestamp = datetime.now()
-                document_comment.update_user = request.user
-                document_comment.save()
-            else:
-                DocumentComment.objects.create(
-                    document=document,
-                    comment=comment,
-                    create_user=request.user,
-                    create_timestamp=datetime.now(),
-                    privileged_access=False
-                )
+                if document_comment:
+                    document_comment.comment = comment
+                    document_comment.update_timestamp = datetime.now()
+                    document_comment.update_user = request.user
+                    document_comment.save()
+                else:
+                    DocumentComment.objects.create(
+                        document=document,
+                        comment=comment,
+                        create_user=request.user,
+                        create_timestamp=datetime.now(),
+                        privileged_access=False
+                    )
 
         return self.instance
 

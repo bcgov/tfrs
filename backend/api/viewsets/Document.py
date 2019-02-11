@@ -148,6 +148,24 @@ class DocumentViewSet(AuditableMixin,
         for file in files:
             SecurityScan.send_scan_request(file)
 
+        if document.status.status == 'Received':
+            AMQPNotificationService.send_notification(
+                interested_organization=user.organization,
+                message=NotificationType.DOCUMENT_RECEIVED.name,
+                notification_type=NotificationType.DOCUMENT_RECEIVED,
+                originating_user=user,
+                related_document=document
+            )
+
+        if document.status.status == 'Archived':
+            AMQPNotificationService.send_notification(
+                interested_organization=user.organization,
+                message=NotificationType.DOCUMENT_ARCHIVED.name,
+                notification_type=NotificationType.DOCUMENT_ARCHIVED,
+                originating_user=user,
+                related_document=document
+            )
+
     @list_route(methods=['get'])
     def upload_url(self, request):
         """
