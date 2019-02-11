@@ -23,6 +23,7 @@ export const BTN_PULL_BACK = 'Recall as Draft';
 export const BTN_REFUSE = 'Refuse';
 export const BTN_RECOMMEND_FOR_DECISION = 'Recommend for Approval';
 export const BTN_RESCIND = 'Rescind';
+export const BTN_RESCIND_AS_DRAFT = 'Rescind as Draft';
 export const BTN_RETURN_TO_DRAFT = 'Return to Analyst';
 export const BTN_SAVE = 'Save';
 export const BTN_SAVE_DRAFT = 'Save Draft';

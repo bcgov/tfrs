@@ -9,7 +9,7 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('api', '0074_add_document_statuses'),
+        ('api', '0075_remove_document_rescinded_status'),
     ]
 
     operations = [
