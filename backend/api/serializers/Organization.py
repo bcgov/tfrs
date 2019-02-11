@@ -21,6 +21,7 @@
     limitations under the License.
 """
 from django.core.exceptions import ValidationError
+from django.utils import timezone
 from rest_framework import serializers
 from rest_framework.relations import PrimaryKeyRelatedField
 
@@ -50,8 +51,6 @@ class OrganizationSerializer(serializers.ModelSerializer):
         """
         Shows the organization address
         """
-        from api.models.OrganizationAddress import OrganizationAddress
-
         organization_address = OrganizationAddress.objects.filter(
             organization_id=obj.id).first()
 
@@ -77,12 +76,13 @@ class OrganizationSerializer(serializers.ModelSerializer):
 
 
 class OrganizationCreateSerializer(serializers.ModelSerializer):
-
+    """
+    Serializer for creating organizations
+    """
     organization_address = OrganizationAddressSerializer(allow_null=True)
     actions_type = PrimaryKeyRelatedField(queryset=OrganizationActionsType.objects.all())
     status = PrimaryKeyRelatedField(queryset=OrganizationStatus.objects.all())
     type = PrimaryKeyRelatedField(queryset=OrganizationType.objects.all())
-
 
     def validate(self, attrs):
         type = attrs['type']
@@ -119,18 +119,20 @@ class OrganizationCreateSerializer(serializers.ModelSerializer):
 
 
 class OrganizationUpdateSerializer(serializers.ModelSerializer):
-
+    """
+    Update Serializer for Organization
+    """
     organization_address = OrganizationAddressSerializer(allow_null=True)
     actions_type = PrimaryKeyRelatedField(queryset=OrganizationActionsType.objects.all())
     status = PrimaryKeyRelatedField(queryset=OrganizationStatus.objects.all())
     type = PrimaryKeyRelatedField(queryset=OrganizationType.objects.all())
 
     def update(self, obj, validated_data):
-
         Organization.objects.filter(id=obj.id).update(
             name=validated_data['name'],
             actions_type=validated_data['actions_type'],
-            status=validated_data['status']
+            status=validated_data['status'],
+            update_timestamp=timezone.now()
         )
 
         addr = validated_data.pop('organization_address')
@@ -146,7 +148,7 @@ class OrganizationUpdateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Organization
         fields = ('id', 'name', 'type', 'status', 'actions_type',
-                  'organization_address')
+                  'organization_address', 'update_timestamp')
         read_only_fields = ('id', 'type')
 
 
