@@ -96,6 +96,11 @@ class DocumentActions(object):
                 status_dict["Received"]
             )
 
+        if request.user.has_perm('DOCUMENTS_SUBMIT'):
+            available_statuses.append(
+                status_dict["Draft"]
+            )
+
         serializer = DocumentStatusSerializer(
             available_statuses, many=True)
         return serializer.data
