@@ -152,7 +152,7 @@ class DocumentCreateSerializer(serializers.ModelSerializer):
         model = Document
         fields = ('compliance_period', 'create_user', 'id',
                   'status', 'title', 'type', 'milestone',
-                  'attachments', 'comments', 'record_number')
+                  'attachments', 'comments')
         read_only_fields = ('id',)
         extra_kwargs = {
             'compliance_period': {
@@ -305,13 +305,12 @@ class DocumentDetailSerializer(serializers.ModelSerializer):
             'create_timestamp', 'create_user', 'update_timestamp',
             'update_user', 'status', 'type', 'attachments',
             'compliance_period', 'actions', 'comment_actions', 'comments',
-            'milestone', 'record_number')
+            'milestone')
 
         read_only_fields = (
             'id', 'create_timestamp', 'create_user', 'update_timestamp',
             'update_user', 'title', 'status', 'type', 'attachments',
-            'compliance_period', 'actions', 'comment_actions', 'milestone',
-            'record_number')
+            'compliance_period', 'actions', 'comment_actions', 'milestone')
 
 
 class DocumentMinSerializer(serializers.ModelSerializer):
@@ -442,6 +441,18 @@ class DocumentUpdateSerializer(serializers.ModelSerializer):
                     **file
                 )
 
+        if 'record_numbers' in request.data:
+            record_numbers_dict = {
+                record_number.get('id'): record_number for
+                record_number in request.data.get('record_numbers')
+                if record_number
+            }
+
+            for attachment in document.attachments:
+                attachment.record_number = \
+                    record_numbers_dict[attachment.id].get('value')
+                attachment.save()
+
         if document.type.the_type == 'Evidence':
             DocumentMilestone.objects.update_or_create(
                 document=document,
@@ -475,9 +486,10 @@ class DocumentUpdateSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Document
-        fields = ('compliance_period', 'update_user', 'id',
-                  'status', 'title', 'type', 'milestone',
-                  'record_number', 'attachments', 'comments')
+        fields = (
+            'compliance_period', 'update_user', 'id', 'status',
+            'title', 'type', 'milestone', 'attachments', 'comments'
+        )
         read_only_fields = ('id',)
         extra_kwargs = {
             'compliance_period': {

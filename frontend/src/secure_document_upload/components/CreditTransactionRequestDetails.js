@@ -90,14 +90,14 @@ const CreditTransactionRequestDetails = props => (
               <label htmlFor="document-type">Attachments:</label>
               <div className={`file-submission-attachments ${(props.item.status.status === 'Received' && props.availableActions.includes('Archived')) ? 'hide-security-scan' : 'hide-trim'}`}>
                 <div className="row">
-                  <div className="col-xs-7 header">Filename</div>
-                  <div className="col-xs-2 size header">Size</div>
+                  <div className="col-xs-6 header">Filename</div>
+                  <div className="col-xs-3 size header">Size</div>
                   <div className="col-xs-3 security-scan-status header">Security Scan</div>
                   <div className="col-xs-3 trim-record-number header">TRIM Record #</div>
                 </div>
                 {props.item.attachments.map((attachment, index) => (
                   <div className="row" key={attachment.url}>
-                    <div className="col-xs-7 filename">
+                    <div className="col-xs-6 filename">
                       <span className="icon">
                         <FontAwesomeIcon icon={getIcon(attachment.mimeType)} fixedWidth />
                       </span>
@@ -122,7 +122,7 @@ const CreditTransactionRequestDetails = props => (
                       </button>
                     </div>
 
-                    <div className="col-xs-2 size">
+                    <div className="col-xs-3 size">
                       <span>{getFileSize(attachment.size)}</span>
                     </div>
 
