@@ -106,7 +106,7 @@ const HistoricalDataTable = (props) => {
         content = ZERO_DOLLAR_REASON.other.description;
       }
 
-      return content;
+      return content || '';
     }
   }, {
     id: 'actions',

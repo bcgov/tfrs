@@ -1,6 +1,7 @@
 import base64
 import random
 
+from django.http import JsonResponse
 from django.views.decorators.cache import never_cache
 
 from rest_framework import viewsets, serializers, mixins, status
@@ -44,7 +45,7 @@ class NotificationViewSet(AuditableMixin,
     http_method_names = ['get', 'put', 'post']
     serializer_classes = {
         'update_subscription': EffectiveSubscriptionUpdateSerializer,
-        'default': NotificationMessageSerializer,
+        'default': NotificationMessageSerializer
     }
 
     queryset = NotificationMessage.objects.all()
@@ -62,6 +63,23 @@ class NotificationViewSet(AuditableMixin,
             is_archived=False,
             user=user
         ).all()
+
+    @never_cache
+    @list_route(methods=['get'])
+    def count(self, request):
+        user = self.request.user
+
+        count = NotificationMessage.objects.filter(
+            is_archived=False,
+            is_read=False,
+            user=user
+        ).count()
+
+        data = {
+            'unreadCount': count
+        }
+
+        return JsonResponse(data)
 
     @never_cache
     def list(self, request, *args, **kwargs):
