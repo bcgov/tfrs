@@ -350,13 +350,13 @@ class DocumentUpdateSerializer(serializers.ModelSerializer):
         status = data.get('status')
 
         if not DocumentService.validate_status(document.status, status):
-            for document_status in document_statuses:
-                if document_status == status:
+            for list_status in document_statuses:
+                if list_status == status:
                     raise serializers.ValidationError({
                         'invalidStatus': "Submission cannot be {} as it "
                                          "currently has a status of {}."
                                          .format(
-                                             document_status.status,
+                                             list_status.status,
                                              document.status.status
                                          )
                     })
@@ -390,6 +390,30 @@ class DocumentUpdateSerializer(serializers.ModelSerializer):
                     'attachments': "At least one file needs to be attached "
                                    "before this can be submitted."
                 })
+
+        if status == status_dict["Archived"]:
+            record_numbers = request.data.get('record_numbers', [])
+
+            record_numbers_dict = {
+                record_number.get('id'): record_number for
+                record_number in record_numbers if record_number
+            }
+
+            errors = {}
+            # go through each file attached to the document and make sure
+            # that trim numbers are provided
+            for attachment in document.attachments:
+                if not record_numbers_dict.get(attachment.id):
+                    filename = (attachment.filename[:50] + '...') \
+                        if len(attachment.filename) > 50 \
+                        else attachment.filename
+                    errors[attachment.filename] = \
+                        "TRIM must be provided for {}".format(
+                            filename
+                        )
+
+            if errors:
+                raise serializers.ValidationError(errors)
 
         return data
 
