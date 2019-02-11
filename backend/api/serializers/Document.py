@@ -86,21 +86,31 @@ class DocumentCreateSerializer(serializers.ModelSerializer):
     """
     attachments = DocumentFileAttachmentSerializer(many=True, read_only=True)
     comments = DocumentCommentSerializer(many=True, read_only=True)
-    milestone = DocumentMilestoneSerializer(read_only=True)
+    milestone = serializers.CharField(
+        required=False, max_length=1000, allow_blank=True)
+
+    def validate_milestone(self, value):
+        """
+        Milestone validation so we can include the error message as part of
+        the basic validation (instead of a separate check after title and
+        compliance period)
+        """
+        request = self.context['request']
+
+        if request.data.get('type') == DocumentType.objects.get(
+                the_type="Evidence").id:
+            if not value:
+                raise serializers.ValidationError(
+                    "Milestone is required for P3A Milestone Evidence."
+                )
+
+        return value
 
     def validate(self, data):
         request = self.context['request']
         submitted_status = DocumentStatus.objects.get(status="Submitted")
 
         if data.get('status') == submitted_status:
-            if data.get('type') == DocumentType.objects.get(
-                    the_type="Evidence"):
-                if not request.data.get('milestone'):
-                    raise serializers.ValidationError({
-                        'milestone': "Milestone is required for P3A Milestone "
-                                     "Evidence."
-                    })
-
             attachments = request.data.get('attachments')
 
             if not attachments:
@@ -110,6 +120,19 @@ class DocumentCreateSerializer(serializers.ModelSerializer):
                 })
 
         return data
+
+    def create(self, validated_data):
+        milestone = validated_data.pop('milestone', None)
+        document = Document.objects.create(**validated_data)
+
+        if document.type.the_type == 'Evidence':
+            DocumentMilestone.objects.create(
+                document=document,
+                create_user=document.create_user,
+                milestone=milestone
+            )
+
+        return document
 
     def save(self, **kwargs):
         super().save(**kwargs)
@@ -126,13 +149,6 @@ class DocumentCreateSerializer(serializers.ModelSerializer):
                     create_user=document.create_user,
                     **file
                 )
-
-        if document.type.the_type == 'Evidence':
-            DocumentMilestone.objects.create(
-                document=document,
-                create_user=document.create_user,
-                milestone=request.data.get('milestone')
-            )
 
         comment = request.data.get('comment')
 
@@ -236,7 +252,7 @@ class DocumentDetailSerializer(serializers.ModelSerializer):
         if cur_status == "Draft":
             return DocumentActions.draft(request)
 
-        if cur_status == "Submitted":
+        if cur_status == "Submitted" or cur_status == 'Pending Submission':
             return DocumentActions.submitted(request)
 
         if cur_status == "Received":
@@ -338,7 +354,26 @@ class DocumentUpdateSerializer(serializers.ModelSerializer):
     """
     attachments = DocumentFileAttachmentSerializer(many=True, read_only=True)
     comments = DocumentCommentSerializer(many=True, read_only=True)
-    milestone = DocumentMilestoneSerializer(read_only=True)
+    milestone = serializers.CharField(
+        required=False, max_length=1000, allow_blank=True)
+    type = DocumentTypeSerializer(read_only=True)
+
+    def validate_milestone(self, value):
+        """
+        Milestone validation so we can include the error message as part of
+        the basic validation (instead of a separate check after title and
+        compliance period)
+        """
+        document = self.instance
+
+        if document.type == DocumentType.objects.get(
+                the_type="Evidence"):
+            if not value:
+                raise serializers.ValidationError(
+                    "Milestone is required for P3A Milestone Evidence."
+                )
+
+        return value
 
     def validate(self, data):
         request = self.context['request']
@@ -415,6 +450,22 @@ class DocumentUpdateSerializer(serializers.ModelSerializer):
                 raise serializers.ValidationError(errors)
 
         return data
+
+    def update(self, document, validated_data):
+        milestone = validated_data.pop('milestone', None)
+
+        if document.type.the_type == 'Evidence':
+            DocumentMilestone.objects.update_or_create(
+                document=document,
+                defaults={
+                    'create_user': document.create_user,
+                    'milestone': milestone
+                }
+            )
+
+        Document.objects.filter(id=document.id).update(**validated_data)
+
+        return document
 
     def save(self, **kwargs):
         super().save(**kwargs)
@@ -496,6 +547,13 @@ class DocumentUpdateSerializer(serializers.ModelSerializer):
                 'error_messages': {
                     'does_not_exist': "Please specify the Compliance Period "
                                       "in which the request relates."
+                }
+            },
+            'milestone': {
+                'error_messages': {
+                    'blank': "Please provide a Milestone.",
+                    'null': "Please provide a Milestone.",
+                    'required': "Please provide a Milestone."
                 }
             },
             'title': {

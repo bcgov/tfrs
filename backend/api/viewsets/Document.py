@@ -103,9 +103,9 @@ class DocumentViewSet(AuditableMixin,
 
     def perform_create(self, serializer):
         user = self.request.user
-
         document = serializer.save()
-        DocumentService.create_history(document, True)
+        DocumentService.create_history(document)
+
         files = DocumentFileAttachment.objects.filter(
             document=document,
             security_scan_status='NOT RUN')
@@ -130,7 +130,7 @@ class DocumentViewSet(AuditableMixin,
         user = self.request.user
 
         document = serializer.save()
-        DocumentService.create_history(document, False)
+        DocumentService.create_history(document)
         files = DocumentFileAttachment.objects.filter(
             document=document,
             security_scan_status='NOT RUN')

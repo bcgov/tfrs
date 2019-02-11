@@ -201,6 +201,15 @@ class CreditTransactionRequestDetailContainer extends Component {
           Are you sure you want to archive this submission?
         </Modal>,
         <Modal
+          handleSubmit={(event) => {
+            this._handleSubmit(event, this._getDocumentStatus('Draft'));
+          }}
+          id="confirmRescind"
+          key="confirmRescind"
+        >
+          Are you sure you want to rescind this submission back to draft?
+        </Modal>,
+        <Modal
           handleSubmit={() => this._deleteCreditTransferRequest(item.id)}
           id="confirmDelete"
           key="confirmDelete"
@@ -214,7 +223,8 @@ class CreditTransactionRequestDetailContainer extends Component {
           id="confirmSubmit"
           key="confirmSubmit"
         >
-          Are you sure you want to submit this request?
+          Are you sure you want to securely submit these files to the
+          Government of British Columbia?
         </Modal>
       ]);
     }

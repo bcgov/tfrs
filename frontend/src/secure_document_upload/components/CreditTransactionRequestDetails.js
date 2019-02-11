@@ -214,12 +214,25 @@ const CreditTransactionRequestDetails = props => (
       }
 
       {props.availableActions.includes('Draft') &&
+      props.item.status.status === 'Draft' &&
       <button
         className="btn btn-default"
         type="button"
         onClick={() => history.push(SECURE_DOCUMENT_UPLOAD.EDIT.replace(':id', props.item.id))}
       >
         <FontAwesomeIcon icon="edit" /> {Lang.BTN_EDIT}
+      </button>
+      }
+
+      {props.availableActions.includes('Draft') &&
+      ['Submitted', 'Pending Submission'].includes(props.item.status.status) &&
+      <button
+        className="btn btn-danger"
+        data-target="#confirmRescind"
+        data-toggle="modal"
+        type="button"
+      >
+        <FontAwesomeIcon icon="undo-alt" /> {Lang.BTN_RESCIND_AS_DRAFT}
       </button>
       }
 
