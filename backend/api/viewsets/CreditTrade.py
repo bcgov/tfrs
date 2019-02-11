@@ -39,7 +39,13 @@ class CreditTradeViewSet(AuditableMixin, mixins.CreateModelMixin,
 
     permission_classes = (permissions.AllowAny,)
     http_method_names = ['get', 'post', 'put', 'patch']
-    queryset = CreditTrade.objects.all()
+    queryset = CreditTrade.objects.select_related('status'
+                                                  'initiator',
+                                                  'respondent',
+                                                  'type',
+                                                  'zero_reason',
+                                                  'compliance_period')\
+        .prefetch_related('credits_from', 'credits_to')
     filter_backends = (filters.OrderingFilter,)
     ordering_fields = '__all__'
     ordering = ('-id',)
@@ -88,7 +94,7 @@ class CreditTradeViewSet(AuditableMixin, mixins.CreateModelMixin,
 
         # For hash computation
         most_recent_updated_credit_trade = self.get_queryset().exclude(
-            Q(update_timestamp=None))\
+            Q(update_timestamp=None)) \
             .order_by('-update_timestamp').first()
 
         most_recent_created_credit_trade = self.get_queryset().exclude(
@@ -191,7 +197,7 @@ class CreditTradeViewSet(AuditableMixin, mixins.CreateModelMixin,
         Returns a list of Recorded Credit Trades only
         """
         status_approved = CreditTradeStatus.objects \
-                                           .get(status="Recorded")
+            .get(status="Recorded")
 
         credit_trades = CreditTrade.objects.filter(
             status_id=status_approved.id).order_by('id')
@@ -206,7 +212,7 @@ class CreditTradeViewSet(AuditableMixin, mixins.CreateModelMixin,
         Call the approve function on multiple Credit Trades
         """
         status_approved = CreditTradeStatus.objects \
-                                           .get(status="Recorded")
+            .get(status="Recorded")
 
         credit_trades = CreditTrade.objects.filter(
             status_id=status_approved.id).order_by('id')
@@ -220,7 +226,7 @@ class CreditTradeViewSet(AuditableMixin, mixins.CreateModelMixin,
                 None, credit_trade)
 
         return Response({"message":
-                         "Approved credit transactions have been processed."},
+                             "Approved credit transactions have been processed."},
                         status=status.HTTP_200_OK)
 
     @list_route(methods=['get'])
@@ -258,7 +264,7 @@ class CreditTradeViewSet(AuditableMixin, mixins.CreateModelMixin,
             fuel_suppliers = Organization.objects.extra(
                 select={'lower_name': 'lower(name)'}) \
                 .filter(type=OrganizationType.objects.get(
-                    type="Part3FuelSupplier")) \
+                type="Part3FuelSupplier")) \
                 .order_by('lower_name')
 
             workbook.add_fuel_suppliers(fuel_suppliers)
