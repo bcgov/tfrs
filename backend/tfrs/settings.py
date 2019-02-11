@@ -202,5 +202,37 @@ CACHES = {
     'keycloak': {
         'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
         'LOCATION': 'keycloak',
+    },
+    'notification_subscriptions': {
+        'BACKEND': 'django.core.cache.backends.db.DatabaseCache',
+        'LOCATION': 'cached_notification_subscriptions',
+        'TIMEOUT': None,
+        'OPTIONS': {
+            'MAX_ENTRIES': 100000
+        }
     }
 }
+
+
+# Uncomment this stanza to see database calls in the log (quite verbose)
+# LOGGING = {
+#     'version': 1,
+#     'disable_existing_loggers': False,
+#     'filters': {
+#         'require_debug_false': {
+#             '()': 'django.utils.log.RequireDebugFalse'
+#         }
+#     },
+#     'handlers': {
+#         'console': {
+#             'level': 'DEBUG',
+#             'class': 'logging.StreamHandler',
+#         },
+#     },
+#     'loggers': {
+#         'django.db.backends': {
+#             'level': 'DEBUG',
+#             'handlers': ['console'],
+#         },
+#     }
+# }

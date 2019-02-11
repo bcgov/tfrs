@@ -1,17 +1,21 @@
 import {call, put, takeLatest} from 'redux-saga/effects';
 import {delay} from 'redux-saga';
-import {signUserOut} from '../actions/userActions';
-import {getNotifications} from "../actions/notificationActions";
+import {getNotificationsCount} from "../actions/notificationActions";
+import UserActionTypes from "../constants/actionTypes/Users";
+import NotificationActionTypes from "../constants/actionTypes/Notifications";
+
 
 const TRIGGERING_ACTIONS = [
   'SERVER_INITIATED_NOTIFICATION_RELOAD',
+  UserActionTypes.RECEIVE_LOGGED_IN_USER,
+  NotificationActionTypes.SUCCESS_NOTIFICATIONS
 ];
 
 function* fetchNotifications(store) {
   yield call(delay, 250); //debounce
 
   if (store.getState().rootReducer.userRequest.isAuthenticated) {
-    yield put(getNotifications());
+    yield put(getNotificationsCount());
   }
 }
 
