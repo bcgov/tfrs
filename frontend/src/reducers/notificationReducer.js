@@ -4,6 +4,10 @@ const notifications = (state = {
   errorMessage: [],
   isFetching: false,
   items: [],
+  count: {
+    isFetching: false,
+    unreadCount: null
+  },
   serverInitiatedReloadRequested: false,
   success: false
 }, action) => {
@@ -14,6 +18,21 @@ const notifications = (state = {
         isFetching: true,
         serverInitiatedReloadRequested: false,
         success: false
+      };
+    case ActionTypes.GET_NOTIFICATIONS_COUNT:
+      return {
+        ...state,
+        count: {
+          isFetching: true,
+        }
+      };
+    case ActionTypes.RECEIVE_NOTIFICATIONS_COUNT:
+      return {
+        ...state,
+        count: {
+          isFetching: false,
+          unreadCount: action.data.unreadCount
+        }
       };
     case ActionTypes.RECEIVE_NOTIFICATIONS:
       return {
