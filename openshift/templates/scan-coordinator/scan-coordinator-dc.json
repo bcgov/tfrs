@@ -13,42 +13,6 @@
         {
             "name": "IS_NAME",
             "required": true
-        },
-        {
-            "name": "BYPASS_CLAMAV",
-            "required": true
-        },
-        {
-            "name": "CLAMAV_HOST",
-            "required": true
-        },
-        {
-            "name": "CLAMAV_PORT",
-            "required": true
-        },
-        {
-            "name": "AMQP_HOST",
-            "required": true
-        },
-        {
-            "name": "AMQP_VHOST",
-            "required": true
-        },
-        {
-            "name": "AMQP_PORT",
-            "required": true
-        },
-        {
-            "name": "AMQP_USER",
-            "required": true
-        },
-        {
-            "name": "MINIO_ENDPOINT",
-            "required": true
-        },
-        {
-            "name": "MINIO_USE_SSL",
-            "required": true
         }
     ],
     "objects": [
@@ -95,6 +59,7 @@
                     }
                 ],
                 "replicas": 1,
+                "revisionHistoryLimit": 10,
                 "test": false,
                 "selector": {
                     "app": "scan-coordinator",
@@ -115,45 +80,43 @@
                         "containers": [
                             {
                                 "name": "scan-coordinator",
-                                "image": "docker-registry.default.svc:5000/mem-tfrs-tools/scan-coordinator:${ENV_NAME}",
-                                "ports": [
-                                ],
+                                "image": "",
                                 "env": [
                                     {
                                         "name": "BYPASS_CLAMAV",
-                                        "value": "${BYPASS_CLAMAV}"
+                                        "value": "false"
                                     },
                                     {
                                         "name": "CLAMAV_HOST",
-                                        "value": "${CLAMAV_HOST}"
+                                        "value": "clamav.mem-tfrs-${ENV_NAME}.svc"
                                     },
                                     {
                                         "name": "CLAMAV_PORT",
-                                        "value": "${CLAMAV_PORT}"
+                                        "value": "3310"
                                     },
                                     {
                                         "name": "AMQP_HOST",
-                                        "value": "${AMQP_HOST}"
+                                        "value": "rabbit.mem-tfrs-${ENV_NAME}.svc"
                                     },
                                     {
                                         "name": "AMQP_VHOST",
-                                        "value": "${AMQP_VHOST}"
+                                        "value": "/tfrs"
                                     },
                                     {
                                         "name": "AMQP_PORT",
-                                        "value": "${AMQP_PORT}"
+                                        "value": "5672"
                                     },
                                     {
                                         "name": "AMQP_USER",
-                                        "value": "${AMQP_USER}"
+                                        "value": "tfrs"
                                     },
                                     {
                                         "name": "MINIO_ENDPOINT",
-                                        "value": "${MINIO_ENDPOINT}"
+                                        "value": "docs-mem-tfrs-${ENV_NAME}.pathfinder.gov.bc.ca:443"
                                     },
                                     {
                                         "name": "MINIO_USE_SSL",
-                                        "value": "${MINIO_USE_SSL}"
+                                        "value": "true"
                                     },
                                     {
                                         "name": "AMQP_PASSWORD",
@@ -189,15 +152,13 @@
                                     }
                                 },
                                 "terminationMessagePath": "/dev/termination-log",
-                                "terminationMessagePolicy": "File",
                                 "imagePullPolicy": "Always"
                             }
                         ],
                         "restartPolicy": "Always",
                         "terminationGracePeriodSeconds": 30,
                         "dnsPolicy": "ClusterFirst",
-                        "securityContext": {},
-                        "schedulerName": "default-scheduler"
+                        "securityContext": {}
                     }
                 }
             },
