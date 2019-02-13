@@ -2,7 +2,7 @@
     "kind": "Template",
     "apiVersion": "v1",
     "metadata": {
-        "name": "celery-bc-develop",
+        "name": "scan-handler-bc",
         "creationTimestamp": null
     },
     "objects": [
@@ -10,7 +10,7 @@
             "kind": "ImageStream",
             "apiVersion": "v1",
             "metadata": {
-                "name": "celery-develop",
+                "name": "scan-handler",
                 "generation": 1,
                 "creationTimestamp": null
             },
@@ -27,7 +27,7 @@
             "kind": "BuildConfig",
             "apiVersion": "v1",
             "metadata": {
-                "name": "celery-develop",
+                "name": "scan-handler",
                 "creationTimestamp": null
             },
             "spec": {
@@ -35,7 +35,7 @@
                 "runPolicy": "Serial",
                 "source": {
                     "type": "Dockerfile",
-                    "dockerfile": "FROM python:3.6.8-slim-stretch\nRUN apt-get update \\\n    \u0026\u0026 apt-get install -y git \\\n    \u0026\u0026 apt-get install -y supervisor\nWORKDIR /app\nRUN git clone https://github.com/bcgov/tfrs.git\nWORKDIR /app/tfrs\nRUN git checkout master\nRUN pip install --upgrade pip \\\n    \u0026\u0026 pip install -r backend/requirements.txt\nRUN cp /app/tfrs/security-scan/scan-handler/celery.conf /etc/supervisor/conf.d\nRUN chgrp -R root /var/log/supervisor\nRUN chmod -R g+w /var/log/supervisor\nRUN chmod -R g+w /run\nRUN chmod -R g+w /app\nCMD [\"supervisord\"]\n"
+                    "dockerfile": "FROM python:3.6.8-slim-stretch\nRUN apt-get update \\\n    \u0026\u0026 apt-get install -y git \\\n    \u0026\u0026 apt-get install -y supervisor\nWORKDIR /app\nRUN git clone https://github.com/bcgov/tfrs.git\nWORKDIR /app/tfrs\nRUN git checkout master\nRUN pip install --upgrade pip \\\n    \u0026\u0026 pip install -r backend/requirements.txt\nRUN cp /app/tfrs/security-scan/scan-handler/scan-handler.conf /etc/supervisor/conf.d\nRUN chgrp -R root /var/log/supervisor\nRUN chmod -R g+w /var/log/supervisor\nRUN chmod -R g+w /run\nRUN chmod -R g+w /app\n# RUN sed -i \"s/chmod=0700/chmod=0770/g\" /etc/supervisor/supervisord.conf\nCMD [\"supervisord\"]\n"
                 },
                 "strategy": {
                     "type": "Docker",
@@ -47,7 +47,7 @@
                 "output": {
                     "to": {
                         "kind": "ImageStreamTag",
-                        "name": "celery-develop:latest"
+                        "name": "scan-handler:latest"
                     }
                 },
                 "resources": {},

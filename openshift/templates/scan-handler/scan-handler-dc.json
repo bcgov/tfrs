@@ -59,6 +59,7 @@
                     }
                 ],
                 "replicas": 1,
+                "revisionHistoryLimit": 10,
                 "test": false,
                 "selector": {
                     "app": "scan-handler",
@@ -80,7 +81,6 @@
                             {
                                 "name": "scan-handler",
                                 "image": "",
-                                "ports": [],
                                 "env": [
                                     {
                                         "name": "RABBITMQ_VHOST",
@@ -129,7 +129,7 @@
                                         }
                                     },
                                     {
-                                        "name": "DATABASE_USER",
+                                        "name": "DATABASE_PASSWORD",
                                         "valueFrom": {
                                             "secretKeyRef": {
                                                 "name": "tfrs-postgresql",
@@ -144,15 +144,13 @@
                                     }
                                 },
                                 "terminationMessagePath": "/dev/termination-log",
-                                "terminationMessagePolicy": "File",
                                 "imagePullPolicy": "Always"
                             }
                         ],
                         "restartPolicy": "Always",
                         "terminationGracePeriodSeconds": 30,
                         "dnsPolicy": "ClusterFirst",
-                        "securityContext": {},
-                        "schedulerName": "default-scheduler"
+                        "securityContext": {}
                     }
                 }
             },
