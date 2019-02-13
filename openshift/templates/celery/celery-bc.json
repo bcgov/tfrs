@@ -2,7 +2,7 @@
     "kind": "Template",
     "apiVersion": "v1",
     "metadata": {
-        "name": "celery-bc-develop",
+        "name": "celery-bc",
         "creationTimestamp": null
     },
     "objects": [
@@ -10,7 +10,7 @@
             "kind": "ImageStream",
             "apiVersion": "v1",
             "metadata": {
-                "name": "celery-develop",
+                "name": "celery",
                 "generation": 1,
                 "creationTimestamp": null
             },
@@ -27,7 +27,7 @@
             "kind": "BuildConfig",
             "apiVersion": "v1",
             "metadata": {
-                "name": "celery-develop",
+                "name": "celery",
                 "creationTimestamp": null
             },
             "spec": {
@@ -47,7 +47,7 @@
                 "output": {
                     "to": {
                         "kind": "ImageStreamTag",
-                        "name": "celery-develop:latest"
+                        "name": "celery:latest"
                     }
                 },
                 "resources": {},
