@@ -4,6 +4,8 @@ import { signUserOut } from '../actions/userActions';
 
 const NON_RESETTING_ACTIONS = [
   'RECEIVE_NOTIFICATIONS',
+  'RECEIVE_NOTIFICATIONS_COUNT',
+  'GET_NOTIFICATIONS_COUNT',
   'SERVER_INITIATED_CONNECTION_RELOAD',
   'redux-oidc/USER_FOUND',
   'redux-oidc/USER_EXPIRING',
