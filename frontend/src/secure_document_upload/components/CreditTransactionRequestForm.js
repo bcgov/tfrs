@@ -33,7 +33,6 @@ class CreditTransactionRequestForm extends Component {
             documentType={this.props.documentType}
             edit={this.props.edit}
             fields={this.props.fields}
-            progress={this.props.progress}
             handleInputChange={this.props.handleInputChange}
           />
 
@@ -107,7 +106,6 @@ CreditTransactionRequestForm.propTypes = {
   fields: PropTypes.shape({
     comment: PropTypes.string
   }).isRequired,
-  progress:   PropTypes.arrayOf(PropTypes.shape).isRequired,
   getCompliancePeriods: PropTypes.func.isRequired,
   handleInputChange: PropTypes.func.isRequired,
   handleSubmit: PropTypes.func.isRequired,
