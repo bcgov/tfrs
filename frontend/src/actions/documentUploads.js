@@ -202,7 +202,7 @@ const getDocumentUploadURLError = error => ({
 });
 
 export const partialUpdateDocument = (id, data) => (dispatch) => {
-  dispatch(updateDocumentUploadRequest({ id, data }));
+  dispatch(updateDocumentUploadRequest({id, data}));
 
   return axios.patch(`${Routes.BASE_URL}${Routes.SECURE_DOCUMENT_UPLOAD.API}/${id}`, data)
     .then((response) => {
@@ -251,7 +251,7 @@ const updateCommentOnDocumentError = error => ({
  * Update documents
  */
 const updateDocumentUpload = (id, data) => (dispatch) => {
-  dispatch(updateDocumentUploadRequest({ id, data }));
+  dispatch(updateDocumentUploadRequest({id, data}));
 
   return axios.patch(`${Routes.BASE_URL}${Routes.SECURE_DOCUMENT_UPLOAD.API}/${id}`, data)
     .then((response) => {
@@ -281,9 +281,18 @@ const updateDocumentUploadSuccess = response => ({
   type: ActionTypes.SUCCESS_UPDATE_DOCUMENT_UPLOAD
 });
 
-const uploadDocument = (url, blob) => (axios.put(url, blob, {
-  'content-type': 'multipart/form-data'
-}));
+const uploadDocument = (url, blob, callback = null) => (dispatch) => {
+
+  return axios.put(url, blob, {
+    'content-type': 'multipart/form-data',
+    onUploadProgress: (progressEvent) => {
+      if (callback) {
+        callback(progressEvent);
+      }
+    }
+  });
+};
+
 
 export {
   addCommentToDocument,
