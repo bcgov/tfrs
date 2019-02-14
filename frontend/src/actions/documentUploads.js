@@ -281,55 +281,17 @@ const updateDocumentUploadSuccess = response => ({
   type: ActionTypes.SUCCESS_UPDATE_DOCUMENT_UPLOAD
 });
 
-
-const uploadStarted = (data) => ({
-  name: ReducerTypes.UPLOAD_PROGRESS_STARTED,
-  type: ActionTypes.UPLOAD_PROGRESS_STARTED,
-  data
-});
-
-
-const uploadComplete = (data) => ({
-  name: ReducerTypes.UPLOAD_PROGRESS_COMPLETE,
-  type: ActionTypes.UPLOAD_PROGRESS_COMPLETE,
-  data
-});
-
-const uploadError = (data) => ({
-  name: ReducerTypes.UPLOAD_PROGRESS_ERROR,
-  type: ActionTypes.UPLOAD_PROGRESS_ERROR,
-  data
-});
-
-const uploadProgress = (data) => ({
-  name: ReducerTypes.UPLOAD_PROGRESS_REPORT,
-  type: ActionTypes.UPLOAD_PROGRESS_REPORT,
-  data
-});
-
-
-const uploadDocument = (url, blob) => (dispatch) => {
-
-  dispatch(uploadStarted({url}));
+const uploadDocument = (url, blob, callback = null) => (dispatch) => {
 
   return axios.put(url, blob, {
     'content-type': 'multipart/form-data',
     onUploadProgress: (progressEvent) => {
-      dispatch(uploadProgress({url, progressEvent}))
+      if (callback) {
+        callback(progressEvent);
+      }
     }
-  })
-    .then((response) => {
-      dispatch(uploadComplete({
-        url
-      }))
-    })
-    .catch((reason) => {
-      dispatch(uploadError({
-        url,
-        reason
-      }))
-    });
-}
+  });
+};
 
 
 export {
