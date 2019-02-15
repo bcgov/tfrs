@@ -10,7 +10,7 @@ import Errors from '../../app/components/Errors';
 import history from '../../app/History';
 import * as Lang from '../../constants/langEnUs';
 import SECURE_DOCUMENT_UPLOAD from '../../constants/routes/SecureDocumentUpload';
-import { getFileSize, getIcon, getScanStatusIcon } from '../../utils/functions';
+import {getFileSize, getIcon, getScanStatusIcon} from '../../utils/functions';
 import CreditTransactionRequestComment from './CreditTransactionRequestComment';
 import CreditTransactionRequestCommentButtons from './CreditTransactionRequestCommentButtons';
 import CreditTransactionRequestCommentForm from './CreditTransactionRequestCommentForm';
@@ -88,7 +88,10 @@ const CreditTransactionRequestDetails = props => (
           <div className="row">
             <div className="form-group col-md-12">
               <label htmlFor="document-type">Attachments:</label>
-              <div className={`file-submission-attachments ${(props.item.status.status === 'Received' && props.availableActions.includes('Archived')) ? 'hide-security-scan' : 'hide-trim'}`}>
+              <div className={`file-submission-attachments ${
+                ((props.item.status.status === 'Received' && props.availableActions.includes('Archived'))
+                  || props.item.status.status === 'Archived') ? 'hide-security-scan' : 'hide-trim'}`
+              }>
                 <div className="row">
                   <div className="col-xs-6 header">Filename</div>
                   <div className="col-xs-3 size header">Size</div>
@@ -99,7 +102,7 @@ const CreditTransactionRequestDetails = props => (
                   <div className="row" key={attachment.url}>
                     <div className="col-xs-6 filename">
                       <span className="icon">
-                        <FontAwesomeIcon icon={getIcon(attachment.mimeType)} fixedWidth />
+                        <FontAwesomeIcon icon={getIcon(attachment.mimeType)} fixedWidth/>
                       </span>
                       <button
                         className="text"
@@ -136,6 +139,7 @@ const CreditTransactionRequestDetails = props => (
                     </div>
 
                     <div className="col-xs-3 trim-record-number">
+                      {props.item.status.status === 'Received' &&
                       <input
                         className="form-control"
                         id={`record-number-${index}`}
@@ -147,13 +151,17 @@ const CreditTransactionRequestDetails = props => (
                         type="text"
                         value={props.fields.recordNumbers[index] ? props.fields.recordNumbers[index].value : ''}
                       />
+                      }
+                      {props.item.status.status === 'Archived' &&
+                      <span>{attachment.recordNumber}</span>
+                      }
                     </div>
                   </div>
                 ))}
                 {props.item.attachments.length === 0 &&
-                  <div className="row">
-                    <div className="col-xs-12">No files attached.</div>
-                  </div>
+                <div className="row">
+                  <div className="col-xs-12">No files attached.</div>
+                </div>
                 }
               </div>
             </div>
@@ -162,36 +170,36 @@ const CreditTransactionRequestDetails = props => (
       </div>
 
       {Object.keys(props.errors).length > 0 &&
-        <div className="row">
-          <div className="col-md-12">
-            <Errors errors={props.errors} />
-          </div>
+      <div className="row">
+        <div className="col-md-12">
+          <Errors errors={props.errors}/>
         </div>
+      </div>
       }
 
       {props.item.comments.length > 0 && <h3 className="comments-header">Comments</h3>}
       {props.item.comments.map(c => (
-        <CreditTransactionRequestComment comment={c} key={c.id} saveComment={props.saveComment} />
+        <CreditTransactionRequestComment comment={c} key={c.id} saveComment={props.saveComment}/>
       ))
       }
       {!['Archived', 'Received'].includes(props.item.status.status) &&
-        <div className="row">
-          <div className="col-md-12">
-            <CreditTransactionRequestCommentButtons
-              addComment={props.addComment}
-              canComment={props.canComment}
-              canCreatePrivilegedComment={props.canCreatePrivilegedComment}
-              isCommenting={props.isCommenting}
-            />
-            {props.isCommenting &&
-            <CreditTransactionRequestCommentForm
-              cancelComment={props.cancelComment}
-              isCreatingPrivilegedComment={props.isCreatingPrivilegedComment}
-              saveComment={props.saveComment}
-            />
-            }
-          </div>
+      <div className="row">
+        <div className="col-md-12">
+          <CreditTransactionRequestCommentButtons
+            addComment={props.addComment}
+            canComment={props.canComment}
+            canCreatePrivilegedComment={props.canCreatePrivilegedComment}
+            isCommenting={props.isCommenting}
+          />
+          {props.isCommenting &&
+          <CreditTransactionRequestCommentForm
+            cancelComment={props.cancelComment}
+            isCreatingPrivilegedComment={props.isCreatingPrivilegedComment}
+            saveComment={props.saveComment}
+          />
+          }
         </div>
+      </div>
       }
     </div>
 
@@ -201,18 +209,18 @@ const CreditTransactionRequestDetails = props => (
         onClick={() => history.goBack()}
         type="button"
       >
-        <FontAwesomeIcon icon="arrow-circle-left" /> {Lang.BTN_APP_CANCEL}
+        <FontAwesomeIcon icon="arrow-circle-left"/> {Lang.BTN_APP_CANCEL}
       </button>
 
       {props.availableActions.includes('Cancelled') &&
-        <button
-          className="btn btn-danger"
-          data-target="#confirmDelete"
-          data-toggle="modal"
-          type="button"
-        >
-          <FontAwesomeIcon icon="minus-circle" /> {Lang.BTN_DELETE_DRAFT}
-        </button>
+      <button
+        className="btn btn-danger"
+        data-target="#confirmDelete"
+        data-toggle="modal"
+        type="button"
+      >
+        <FontAwesomeIcon icon="minus-circle"/> {Lang.BTN_DELETE_DRAFT}
+      </button>
       }
 
       {props.availableActions.includes('Draft') &&
@@ -222,7 +230,7 @@ const CreditTransactionRequestDetails = props => (
         type="button"
         onClick={() => history.push(SECURE_DOCUMENT_UPLOAD.EDIT.replace(':id', props.item.id))}
       >
-        <FontAwesomeIcon icon="edit" /> {Lang.BTN_EDIT}
+        <FontAwesomeIcon icon="edit"/> {Lang.BTN_EDIT}
       </button>
       }
 
@@ -234,7 +242,7 @@ const CreditTransactionRequestDetails = props => (
         data-toggle="modal"
         type="button"
       >
-        <FontAwesomeIcon icon="undo-alt" /> {Lang.BTN_RESCIND_AS_DRAFT}
+        <FontAwesomeIcon icon="undo-alt"/> {Lang.BTN_RESCIND_AS_DRAFT}
       </button>
       }
 
@@ -245,7 +253,7 @@ const CreditTransactionRequestDetails = props => (
         data-toggle="modal"
         type="button"
       >
-        <FontAwesomeIcon icon="share-square" /> Submit
+        <FontAwesomeIcon icon="share-square"/> Submit
       </button>
       }
       {props.availableActions.includes('Received') &&
@@ -255,7 +263,7 @@ const CreditTransactionRequestDetails = props => (
         data-toggle="modal"
         type="button"
       >
-        <FontAwesomeIcon icon="check" /> Received
+        <FontAwesomeIcon icon="check"/> Received
       </button>
       }
       {props.availableActions.includes('Archived') &&
@@ -265,7 +273,7 @@ const CreditTransactionRequestDetails = props => (
         data-toggle="modal"
         type="button"
       >
-        <FontAwesomeIcon icon="archive" /> Archive
+        <FontAwesomeIcon icon="archive"/> Archive
       </button>
       }
     </div>
