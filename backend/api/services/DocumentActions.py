@@ -82,6 +82,25 @@ class DocumentActions(object):
         return serializer.data
 
     @staticmethod
+    def received(request):
+        """
+        When the status is received available actions should be:
+        archive (files have been moved to TRIM and is ready to be
+        marked as archived)
+        """
+        status_dict = {s.status: s for s in DocumentActions.__statuses}
+
+        available_statuses = []
+        if request.user.has_perm('DOCUMENTS_GOVERNMENT_REVIEW'):
+            available_statuses.append(
+                status_dict["Archived"]
+            )
+
+        serializer = DocumentStatusSerializer(
+            available_statuses, many=True)
+        return serializer.data
+
+    @staticmethod
     def submitted(request):
         """
         When the status is submitted available actions should be:

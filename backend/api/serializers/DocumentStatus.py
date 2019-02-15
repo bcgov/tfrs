@@ -28,4 +28,4 @@ from api.models.DocumentStatus import DocumentStatus
 class DocumentStatusSerializer(serializers.ModelSerializer):
     class Meta:
         model = DocumentStatus
-        fields = ('status',)
+        fields = ('id', 'status',)
