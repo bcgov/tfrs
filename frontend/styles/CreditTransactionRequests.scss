@@ -75,6 +75,18 @@
 .file-submission-attachments {
   padding: 0 1rem;
 
+  &.hide-security-scan {
+    .security-scan-status {
+      display: none;
+    }
+  }
+
+  &.hide-trim {
+    .trim-record-number {
+      display: none;
+    }
+  }
+
   button {
     background-color: transparent;
     border: 0;
@@ -141,14 +153,22 @@
 
   .header {
     font-weight: bold;
+    padding-bottom: 0.5rem;
+    padding-top: 0.5rem;
   }
 
-  .row:nth-of-type(even) {
-    background-color: $background-grey;
+  .row {
+    display: flex;
+    align-items: center;
+
+    &:nth-of-type(even) {
+      background-color: $background-grey;
+    }
   }
 
   .security-scan-status {
-    padding: 0;
+    padding-bottom: 0.5rem;
+    padding-top: 0.5rem;
     text-align: center;
 
     svg {
@@ -157,10 +177,12 @@
   }
 
   .size {
-    padding: 0;
-
     span {
       vertical-align: middle;
     }
+  }
+
+  .trim-record-number {
+    padding: 0.5rem;
   }
 }
