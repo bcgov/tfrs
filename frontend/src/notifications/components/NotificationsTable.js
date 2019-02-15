@@ -100,6 +100,10 @@ const NotificationsTable = (props) => {
     Cell: (row) => {
       const viewUrl = CREDIT_TRANSACTIONS.DETAILS.replace(':id', row.value);
 
+      if (row.value === '-') {
+        return '-';
+      }
+
       return (
         <button
           type="button"
