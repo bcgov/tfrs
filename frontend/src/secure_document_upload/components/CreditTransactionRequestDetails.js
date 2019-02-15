@@ -174,23 +174,25 @@ const CreditTransactionRequestDetails = props => (
         <CreditTransactionRequestComment comment={c} key={c.id} saveComment={props.saveComment} />
       ))
       }
-      <div className="row">
-        <div className="col-md-12">
-          <CreditTransactionRequestCommentButtons
-            addComment={props.addComment}
-            canComment={props.canComment}
-            canCreatePrivilegedComment={props.canCreatePrivilegedComment}
-            isCommenting={props.isCommenting}
-          />
-          {props.isCommenting &&
-          <CreditTransactionRequestCommentForm
-            cancelComment={props.cancelComment}
-            isCreatingPrivilegedComment={props.isCreatingPrivilegedComment}
-            saveComment={props.saveComment}
-          />
-          }
+      {!['Archived', 'Received'].includes(props.item.status.status) &&
+        <div className="row">
+          <div className="col-md-12">
+            <CreditTransactionRequestCommentButtons
+              addComment={props.addComment}
+              canComment={props.canComment}
+              canCreatePrivilegedComment={props.canCreatePrivilegedComment}
+              isCommenting={props.isCommenting}
+            />
+            {props.isCommenting &&
+            <CreditTransactionRequestCommentForm
+              cancelComment={props.cancelComment}
+              isCreatingPrivilegedComment={props.isCreatingPrivilegedComment}
+              saveComment={props.saveComment}
+            />
+            }
+          </div>
         </div>
-      </div>
+      }
     </div>
 
     <div className="btn-container">
