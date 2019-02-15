@@ -153,7 +153,7 @@
                     "valueFrom": {
                       "secretKeyRef": {
                         "name": "${DATABASE_DEPLOYMENT_NAME}",
-                        "key": "database-user"
+                        "key": "DATABASE_USER"
                       }
                     }
                   },
@@ -162,7 +162,7 @@
                     "valueFrom": {
                       "secretKeyRef": {
                         "name": "${DATABASE_DEPLOYMENT_NAME}",
-                        "key": "database-password"
+                        "key": "DATABASE_PASSWORD"
                       }
                     }
                   },
