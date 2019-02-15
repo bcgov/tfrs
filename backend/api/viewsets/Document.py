@@ -58,17 +58,20 @@ class DocumentViewSet(AuditableMixin,
     @list_route(methods=['get'], permission_classes=[AllowAny])
     def categories(self, request):
         """
-            Reference Data for UI
+        Reference Data for UI
         """
         categories = DocumentCategory.objects.all()
 
-        serializer = self.get_serializer(categories,
-                                         read_only=True,
-                                         many=True)
+        serializer = self.get_serializer(
+            categories, read_only=True, many=True)
 
         return Response(serializer.data)
 
     def destroy(self, request, *args, **kwargs):
+        """
+        'Delete' functionality for individual submissions
+        Triggers when a DELETE request has been sent
+        """
         document = self.get_object()
 
         serializer = self.get_serializer(
@@ -165,6 +168,18 @@ class DocumentViewSet(AuditableMixin,
                 originating_user=user,
                 related_document=document
             )
+
+    @list_route(methods=['get'], permission_classes=[AllowAny])
+    def statuses(self, request):
+        """
+        Gets the list of statuses that can be applied to a document
+        """
+        statuses = DocumentStatus.objects.all()
+
+        serializer = self.get_serializer(
+            statuses, read_only=True, many=True)
+
+        return Response(serializer.data)
 
     @list_route(methods=['get'])
     def upload_url(self, request):

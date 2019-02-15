@@ -80,6 +80,24 @@ node("master-backend-maven-${env.BUILD_NUMBER}") {
         echo ">> IMAGE_HASH_SCAN_COORDINATOR: $IMAGE_HASH_SCAN_COORDINATOR"
     }
 
+    stage('Build-Scan-Handler') {
+        openshiftBuild bldCfg: 'scan-handler', showBuildLogs: 'true'
+        echo ">> Getting Image Hash"
+        IMAGE_HASH_SCAN_HANDLER = sh (
+            script: 'oc get istag scan-handler:latest -o template --template="{{.image.dockerImageReference}}"|awk -F ":" \'{print $3}\'',
+ 	            returnStdout: true).trim()
+        echo ">> IMAGE_HASH_SCAN_HANDLER: $IMAGE_HASH_SCAN_HANDLER"
+    }
+
+    stage('Build-Celery') {
+        openshiftBuild bldCfg: 'celery', showBuildLogs: 'true'
+        echo ">> Getting Image Hash"
+        IMAGE_HASH_CELERY = sh (
+            script: 'oc get istag celery:latest -o template --template="{{.image.dockerImageReference}}"|awk -F ":" \'{print $3}\'',
+ 	            returnStdout: true).trim()
+        echo ">> IMAGE_HASH_CELERY: $IMAGE_HASH_CELERY"
+    }
+
     stage('Deploy to Test') {
         input "Deploy to Test?"
         echo "Deploying to Test: ${BUILD_ID}"
@@ -87,6 +105,10 @@ node("master-backend-maven-${env.BUILD_NUMBER}") {
         openshiftVerifyDeployment depCfg: 'tfrs', namespace: 'mem-tfrs-test', replicaCount: 1, verbose: 'false'
         openshiftTag destStream: 'scan-coordinator', verbose: 'true', destTag: 'test', srcStream: 'scan-coordinator', srcTag: "${IMAGE_HASH_SCAN_COORDINATOR}"
         openshiftVerifyDeployment depCfg: 'scan-coordinator', namespace: 'mem-tfrs-test', replicaCount: 1, verbose: 'false'
+        openshiftTag destStream: 'scan-handler', verbose: 'true', destTag: 'test', srcStream: 'scan-handler', srcTag: "${IMAGE_HASH_SCAN_HANDLER}"
+        openshiftVerifyDeployment depCfg: 'scan-handler', namespace: 'mem-tfrs-test', replicaCount: 1, verbose: 'false'
+        openshiftTag destStream: 'celery', verbose: 'true', destTag: 'test', srcStream: 'celery', srcTag: "${IMAGE_HASH_CELERY}"
+        openshiftVerifyDeployment depCfg: 'celery', namespace: 'mem-tfrs-test', replicaCount: 1, verbose: 'false'
     }
     
     stage('Refresh SchemaSpy Test') {
@@ -110,6 +132,10 @@ node("master-backend-maven-${env.BUILD_NUMBER}") {
         openshiftVerifyDeployment depCfg: 'tfrs', namespace: 'mem-tfrs-prod', replicaCount: 1, verbose: 'false'
         openshiftTag destStream: 'scan-coordinator', verbose: 'true', destTag: 'prod', srcStream: 'scan-coordinator', srcTag: "${IMAGE_HASH_SCAN_COORDINATOR}"
         openshiftVerifyDeployment depCfg: 'scan-coordinator', namespace: 'mem-tfrs-prod', replicaCount: 1, verbose: 'false'
+        openshiftTag destStream: 'scan-handler', verbose: 'true', destTag: 'prod', srcStream: 'scan-handler', srcTag: "${IMAGE_HASH_SCAN_HANDLER}"
+        openshiftVerifyDeployment depCfg: 'scan-handler', namespace: 'mem-tfrs-prod', replicaCount: 1, verbose: 'false'
+        openshiftTag destStream: 'celery', verbose: 'true', destTag: 'prod', srcStream: 'celery', srcTag: "${IMAGE_HASH_CELERY}"
+        openshiftVerifyDeployment depCfg: 'celery', namespace: 'mem-tfrs-prod', replicaCount: 1, verbose: 'false'
     }    
     
     stage('Refresh SchemaSpy Prod') {

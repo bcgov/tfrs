@@ -168,7 +168,7 @@ class DocumentCreateSerializer(serializers.ModelSerializer):
         model = Document
         fields = ('compliance_period', 'create_user', 'id',
                   'status', 'title', 'type', 'milestone',
-                  'attachments', 'comments', 'record_number')
+                  'attachments', 'comments')
         read_only_fields = ('id',)
         extra_kwargs = {
             'compliance_period': {
@@ -255,6 +255,9 @@ class DocumentDetailSerializer(serializers.ModelSerializer):
         if cur_status == "Submitted" or cur_status == 'Pending Submission':
             return DocumentActions.submitted(request)
 
+        if cur_status == "Received":
+            return DocumentActions.received(request)
+
         return []
 
     def get_attachments(self, obj):
@@ -318,13 +321,12 @@ class DocumentDetailSerializer(serializers.ModelSerializer):
             'create_timestamp', 'create_user', 'update_timestamp',
             'update_user', 'status', 'type', 'attachments',
             'compliance_period', 'actions', 'comment_actions', 'comments',
-            'milestone', 'record_number')
+            'milestone')
 
         read_only_fields = (
             'id', 'create_timestamp', 'create_user', 'update_timestamp',
             'update_user', 'title', 'status', 'type', 'attachments',
-            'compliance_period', 'actions', 'comment_actions', 'milestone',
-            'record_number')
+            'compliance_period', 'actions', 'comment_actions', 'milestone')
 
 
 class DocumentMinSerializer(serializers.ModelSerializer):
@@ -380,20 +382,21 @@ class DocumentUpdateSerializer(serializers.ModelSerializer):
 
         document = self.instance
         status = data.get('status')
-        draft_status = status_dict["Draft"]
-        pending_submission_status = status_dict["Pending Submission"]
-        submitted_status = status_dict["Submitted"]
-        security_scan_failed_status = status_dict["Security Scan Failed"]
 
-        if document.status != draft_status and \
-                document.status != security_scan_failed_status:
-            if status == draft_status and document.status not in [
-                    pending_submission_status, submitted_status]:
-                raise serializers.ValidationError({
-                    'readOnly': "Can no longer update the status back to "
-                                "draft."
-                })
+        if not DocumentService.validate_status(document.status, status):
+            for list_status in document_statuses:
+                if list_status == status:
+                    raise serializers.ValidationError({
+                        'invalidStatus': "Submission cannot be {} as it "
+                                         "currently has a status of {}."
+                                         .format(
+                                             list_status.status,
+                                             document.status.status
+                                         )
+                    })
 
+        if document.status != status_dict["Draft"] and \
+                document.status != status_dict["Security Scan Failed"]:
             # if there's a key that's not about updating the status or user
             # invalidate the request as we're not allowing modifications
             # to other fields
@@ -404,7 +407,15 @@ class DocumentUpdateSerializer(serializers.ModelSerializer):
                                     "document is in draft."
                     })
 
-        if data.get('status') == submitted_status:
+        if status == status_dict["Submitted"]:
+            if document.type.the_type == "Evidence":
+                if 'milestone' in request.data and \
+                        not request.data.get('milestone'):
+                    raise serializers.ValidationError({
+                        'milestone': "Milestone is required for P3A Milestone "
+                                     "Evidence."
+                    })
+
             current_attachments = document.attachments
             attachments = request.data.get('attachments')
 
@@ -413,6 +424,30 @@ class DocumentUpdateSerializer(serializers.ModelSerializer):
                     'attachments': "At least one file needs to be attached "
                                    "before this can be submitted."
                 })
+
+        if status == status_dict["Archived"]:
+            record_numbers = request.data.get('record_numbers', [])
+
+            record_numbers_dict = {
+                record_number.get('id'): record_number for
+                record_number in record_numbers if record_number
+            }
+
+            errors = {}
+            # go through each file attached to the document and make sure
+            # that trim numbers are provided
+            for attachment in document.attachments:
+                if not record_numbers_dict.get(attachment.id):
+                    filename = (attachment.filename[:50] + '...') \
+                        if len(attachment.filename) > 50 \
+                        else attachment.filename
+                    errors[attachment.filename] = \
+                        "TRIM must be provided for {}".format(
+                            filename
+                        )
+
+            if errors:
+                raise serializers.ValidationError(errors)
 
         return data
 
@@ -457,6 +492,18 @@ class DocumentUpdateSerializer(serializers.ModelSerializer):
                     **file
                 )
 
+        if 'record_numbers' in request.data:
+            record_numbers_dict = {
+                record_number.get('id'): record_number for
+                record_number in request.data.get('record_numbers')
+                if record_number
+            }
+
+            for attachment in document.attachments:
+                attachment.record_number = \
+                    record_numbers_dict[attachment.id].get('value')
+                attachment.save()
+
         if document.type.the_type == 'Evidence':
             DocumentMilestone.objects.update_or_create(
                 document=document,
@@ -491,9 +538,10 @@ class DocumentUpdateSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Document
-        fields = ('compliance_period', 'update_user', 'id',
-                  'status', 'title', 'type', 'milestone',
-                  'record_number', 'attachments', 'comments')
+        fields = (
+            'compliance_period', 'update_user', 'id', 'status',
+            'title', 'type', 'milestone', 'attachments', 'comments'
+        )
         read_only_fields = ('id',)
         extra_kwargs = {
             'compliance_period': {

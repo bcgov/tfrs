@@ -277,7 +277,7 @@ class CreditTransactionRequestFormDetails extends Component {
                       <div className="col-xs-12">No files selected.</div>
                     </div>
                     }
-                    {this.props.fields.files.map(file => (
+                    {this.props.fields.files.map((file, index) => (
                       <div className="row" key={file.name}>
                         <div className="col-xs-6 filename">
                           <span className="icon">
