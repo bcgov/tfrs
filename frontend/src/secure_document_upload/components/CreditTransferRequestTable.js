@@ -39,9 +39,10 @@ const CreditTransferRequestTable = (props) => {
     id: 'status',
     minWidth: 50
   }, {
-    className: 'col-category',
-    Header: 'Category',
-    id: 'category',
+    accessor: item => (item.listTitle),
+    className: 'col-title',
+    Header: 'Title',
+    id: 'title',
     minWidth: 100
   }, {
     className: 'col-credit-transaction-id',
@@ -121,6 +122,7 @@ CreditTransferRequestTable.propTypes = {
     status: PropTypes.shape({
       status: PropTypes.string
     }),
+    listTitle: PropTypes.string,
     type: PropTypes.shape({
       id: PropTypes.integer
     })

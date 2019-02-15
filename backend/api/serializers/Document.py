@@ -20,8 +20,10 @@
     See the License for the specific language governing permissions and
     limitations under the License.
 """
+from collections import defaultdict
 from datetime import datetime
 from rest_framework import serializers
+from rest_framework.fields import SerializerMethodField
 
 from api.models.DocumentFileAttachment import DocumentFileAttachment
 from api.models.Document import Document
@@ -337,14 +339,21 @@ class DocumentMinSerializer(serializers.ModelSerializer):
     create_user = UserMinSerializer(read_only=True)
     status = DocumentStatusSerializer(read_only=True)
     type = DocumentTypeSerializer(read_only=True)
+    list_title = SerializerMethodField()
+
+    def get_list_title(self, obj):
+        title_mapping = defaultdict(lambda: lambda i: i.title)
+        title_mapping['Evidence'] = lambda i: '{}: {}'.format(i.title, i.milestone.milestone)
+
+        return title_mapping[obj.type.the_type](obj)
 
     class Meta:
         model = Document
         fields = (
-            'id', 'title', 'create_user', 'status', 'type',
+            'id', 'title', 'list_title', 'create_user', 'status', 'type',
             'attachments', 'update_timestamp')
         read_only_fields = (
-            'id', 'title', 'create_user', 'status', 'type',
+            'id', 'title', 'list_title', 'create_user', 'status', 'type',
             'attachments', 'update_timestamp')
 
 
