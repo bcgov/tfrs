@@ -28,3 +28,5 @@ class NotificationType(Enum):
     DOCUMENT_PENDING_SUBMISSION = "Document Pending Submission"
     DOCUMENT_SUBMITTED = "Document Submitted"
     DOCUMENT_SCAN_FAILED = "Document Security Scan Failed"
+    DOCUMENT_RECEIVED = "Document Received"
+    DOCUMENT_ARCHIVED = "Document Archived"

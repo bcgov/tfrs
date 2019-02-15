@@ -61,6 +61,19 @@ class DocumentCommentUpdateSerializer(serializers.ModelSerializer):
     """
     create_user = UserMinSerializer(read_only=True)
 
+    def validate(self, data):
+        document = self.instance.document
+        print(document.status.status)
+        if document.status.status in ['Archived', 'Received']:
+            raise serializers.ValidationError({
+                'readOnly': "Cannot add a comment on a submission that's "
+                            "been {}.".format(
+                                document.status.status.lower()
+                            )
+            })
+
+        return data
+
     class Meta:
         model = DocumentComment
         fields = (
@@ -77,6 +90,19 @@ class DocumentCommentCreateSerializer(serializers.ModelSerializer):
     Serializer to create comments for documents.
     Has the basic fields needed.
     """
+    def validate(self, data):
+        document = data.get('document')
+
+        if document.status.status in ['Archived', 'Received']:
+            raise serializers.ValidationError({
+                'readOnly': "Cannot add a comment on a submission that's "
+                            "been {}.".format(
+                                document.status.status.lower()
+                            )
+            })
+
+        return data
+
     class Meta:
         model = DocumentComment
         fields = ('id', 'document', 'comment', 'privileged_access',
