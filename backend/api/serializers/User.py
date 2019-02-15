@@ -22,6 +22,7 @@
 """
 from django.db.models import Q
 from rest_framework import serializers
+from rest_framework.fields import CharField
 from rest_framework.relations import PrimaryKeyRelatedField
 
 from api.models.UserCreationRequest import UserCreationRequest
@@ -69,6 +70,18 @@ class UserCreateSerializer(serializers.ModelSerializer):
     organization = PrimaryKeyRelatedField(queryset=Organization.objects.all())
     roles = PrimaryKeyRelatedField(queryset=Role.objects.all(), many=True)
     id = serializers.ReadOnlyField()
+    first_name = CharField(required=True, allow_blank=True)
+    last_name = CharField(required=True, allow_blank=True)
+
+    def validate_first_name(self, value):
+        if not value:
+            raise serializers.ValidationError('A First Name is required')
+        return value
+
+    def validate_last_name(self, value):
+        if not value:
+            raise serializers.ValidationError('A Last Name is required')
+        return value
 
     def validate(self, data):
         data['display_name'] = '{} {}'.format(data['first_name'], data['last_name'])
@@ -111,6 +124,18 @@ class UserUpdateSerializer(serializers.ModelSerializer):
     """
     organization = OrganizationMinSerializer(read_only=True)
     roles = PrimaryKeyRelatedField(queryset=Role.objects.all(), many=True)
+    first_name = CharField(required=True, allow_blank=True)
+    last_name = CharField(required=True, allow_blank=True)
+
+    def validate_first_name(self, value):
+        if not value:
+            raise serializers.ValidationError('A First Name is required')
+        return value
+
+    def validate_last_name(self, value):
+        if not value:
+            raise serializers.ValidationError('A Last Name is required')
+        return value
 
     def validate(self, data):
         data['display_name'] = '{} {}'.format(
