@@ -48,9 +48,9 @@ class DocumentFileAttachmentSerializer(serializers.ModelSerializer):
     class Meta:
         model = DocumentFileAttachment
         fields = ('id', 'url', 'security_scan_status', 'mime_type', 'size',
-                  'filename')
+                  'filename', 'record_number')
         read_only_fields = ('id', 'url', 'security_scan_status', 'mime_type',
-                            'size', 'filename')
+                            'size', 'filename', 'record_number')
 
 
 class DocumentFileAttachmentCreateSerializer(serializers.ModelSerializer):
