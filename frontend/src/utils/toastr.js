@@ -55,20 +55,23 @@ const toastr = {
         reduxToastr.success('Success!', `${text} saved.`);
     }
   },
-  documentUpload: (statusId, message = '') => {
+  documentUpload: (status, message = '') => {
     if (message !== '') { // message is only used to override
       reduxToastr.success('Success!', message);
       return;
     }
 
-    switch (statusId) {
-      case DOCUMENT_STATUSES.draft.id:
+    switch (status) {
+      case 'Archived':
+        reduxToastr.success('Success!', 'File archived.');
+        break;
+      case 'Draft':
         reduxToastr.success('Success!', 'Draft saved.');
         break;
-      case DOCUMENT_STATUSES.received.id:
+      case 'Received':
         reduxToastr.success('Success!', 'File received.');
         break;
-      case DOCUMENT_STATUSES.submitted.id:
+      case 'Submitted':
         reduxToastr.success('Success!', 'File submitted.');
         break;
       default:

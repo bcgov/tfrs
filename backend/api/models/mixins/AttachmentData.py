@@ -34,6 +34,10 @@ class AttachmentData(models.Model):
         default=False,
         db_comment="Whether it was marked as deleted"
     )
+    record_number = models.CharField(
+        blank=True, max_length=100, null=True,
+        db_comment="Number stored in TRIM"
+    )
 
     class Meta:
         abstract = True

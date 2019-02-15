@@ -32,10 +32,5 @@ class DocumentData(models.Model):
         null=False
     )
 
-    record_number = models.CharField(
-        blank=True, max_length=100, null=True,
-        db_comment="Number stored in TRIM"
-    )
-
     class Meta:
         abstract = True
