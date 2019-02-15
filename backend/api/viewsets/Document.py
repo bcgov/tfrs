@@ -90,7 +90,9 @@ class DocumentViewSet(AuditableMixin,
 
         if user.organization.id == 1:
             return self.queryset.filter(
-                ~Q(status__status__in=['Draft', 'Cancelled'])
+                ~Q(status__status__in=['Draft',
+                                       'Cancelled',
+                                       'Pending Submission'])
             ).all()
 
         return self.queryset.filter(
