@@ -472,7 +472,7 @@ class DocumentUpdateSerializer(serializers.ModelSerializer):
     def save(self, **kwargs):
         super().save(**kwargs)
 
-        document = self.instance
+        document = Document.objects.get(id=self.instance.id)
         request = self.context['request']
 
         attachments_to_be_removed = request.data.get(
@@ -536,7 +536,7 @@ class DocumentUpdateSerializer(serializers.ModelSerializer):
                         privileged_access=False
                     )
 
-        return self.instance
+        return document
 
     class Meta:
         model = Document
