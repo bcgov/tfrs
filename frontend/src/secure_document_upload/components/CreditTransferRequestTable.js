@@ -3,7 +3,7 @@
  */
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Link } from 'react-router-dom';
+import {Link} from 'react-router-dom';
 import ReactTable from 'react-table';
 import 'react-table/react-table.css';
 import FontAwesomeIcon from '@fortawesome/react-fontawesome';
@@ -39,7 +39,16 @@ const CreditTransferRequestTable = (props) => {
     id: 'status',
     minWidth: 50
   }, {
-    accessor: item => (item.listTitle),
+    accessor: item => {
+      if (item.type.theType === 'Evidence') {
+        if (item.milestone !== null && item.milestone.milestone.length > 0) {
+          return item.title + ': ' + item.milestone.milestone;
+        }
+        return item.title;
+      } else {
+        return item.title;
+      }
+    },
     className: 'col-title',
     Header: 'Title',
     id: 'title',
@@ -60,7 +69,7 @@ const CreditTransferRequestTable = (props) => {
     Cell: (row) => {
       const viewUrl = SECURE_DOCUMENT_UPLOAD.DETAILS.replace(':id', row.value);
 
-      return <Link to={viewUrl}><FontAwesomeIcon icon="box-open" /></Link>;
+      return <Link to={viewUrl}><FontAwesomeIcon icon="box-open"/></Link>;
     },
     className: 'col-actions',
     filterable: false,
@@ -109,8 +118,7 @@ const CreditTransferRequestTable = (props) => {
   );
 };
 
-CreditTransferRequestTable.defaultProps = {
-};
+CreditTransferRequestTable.defaultProps = {};
 
 CreditTransferRequestTable.propTypes = {
   items: PropTypes.arrayOf(PropTypes.shape({

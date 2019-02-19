@@ -339,21 +339,28 @@ class DocumentMinSerializer(serializers.ModelSerializer):
     create_user = UserMinSerializer(read_only=True)
     status = DocumentStatusSerializer(read_only=True)
     type = DocumentTypeSerializer(read_only=True)
-    list_title = SerializerMethodField()
+    milestone = SerializerMethodField()
 
-    def get_list_title(self, obj):
-        title_mapping = defaultdict(lambda: lambda i: i.title)
-        title_mapping['Evidence'] = lambda i: '{}: {}'.format(i.title, i.milestone.milestone)
+    def get_milestone(self, obj):
+        """
+        Additional information for milestone evidences
+        """
+        if obj.type.the_type == 'Evidence':
+            milestone = obj.milestone
+            serializer = DocumentMilestoneSerializer(milestone)
 
-        return title_mapping[obj.type.the_type](obj)
+            return serializer.data
+
+        return None
+
 
     class Meta:
         model = Document
         fields = (
-            'id', 'title', 'list_title', 'create_user', 'status', 'type',
+            'id', 'title', 'create_user', 'status', 'type', 'milestone',
             'attachments', 'update_timestamp')
         read_only_fields = (
-            'id', 'title', 'list_title', 'create_user', 'status', 'type',
+            'id', 'title', 'create_user', 'status', 'type', 'milestone',
             'attachments', 'update_timestamp')
 
 
