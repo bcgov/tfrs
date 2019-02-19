@@ -70,7 +70,6 @@ class CreditTradeHistoryViewSet(AuditableMixin, mixins.ListModelMixin,
         """
         user = self.request.user
         return CreditTradeHistory.objects.filter(
-            Q(update_user__organization_id=user.organization_id) |
             Q(create_user__organization_id=user.organization_id)
         )
 
@@ -85,7 +84,7 @@ class CreditTradeHistoryViewSet(AuditableMixin, mixins.ListModelMixin,
 
         limit = None
         offset = None
-        sort_by = 'update_timestamp'
+        sort_by = 'create_timestamp'
         sort_direction = '-'
 
         if 'limit' in request.GET:

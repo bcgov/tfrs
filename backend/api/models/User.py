@@ -24,7 +24,6 @@
 from django.db import models
 from django.db.models import Q
 from django.contrib.auth.models import AbstractUser
-from django.core.validators import RegexValidator
 import django.contrib.auth.validators
 
 from auditable.models import Auditable
@@ -95,8 +94,8 @@ class User(AbstractUser, Auditable):
         Filters are to be restricted based on the user's role.
         """
         history = CreditTradeHistory.objects.filter(
-            filters, Q(create_user_id=self.id) | Q(update_user_id=self.id)
-        ).order_by('-update_timestamp')
+            filters, Q(create_user_id=self.id)
+        ).order_by('-create_timestamp')
 
         return history
 
