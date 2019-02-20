@@ -39,8 +39,7 @@ class CreditTradeHistorySerializer(serializers.ModelSerializer):
         fields = ('id', 'credit_trade', 'user',
                   'respondent', 'status', 'type',
                   'number_of_credits', 'fair_market_value_per_credit',
-                  'zero_reason', 'trade_effective_date',
-                  'note', 'is_internal_history_record', 'compliance_period',
+                  'zero_reason', 'trade_effective_date', 'compliance_period',
                   'is_rescinded')
 
 
@@ -77,7 +76,7 @@ class CreditTradeHistoryMinSerializer(serializers.ModelSerializer):
     class Meta:
         model = CreditTradeHistory
         fields = ('id', 'credit_trade_id', 'fuel_supplier', 'is_rescinded',
-                  'status_id', 'type')
+                  'status_id', 'type', 'credit_trade_update_timestamp')
 
     def get_fuel_supplier(self, obj):
         """
