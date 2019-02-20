@@ -40,7 +40,7 @@ class DocumentPermissions(permissions.BasePermission):
         if not request.user.has_perm('DOCUMENTS_VIEW'):
             return False
 
-        is_government = request.user.organization.id == 1
+        is_government = request.user.is_government_user
 
         if is_government and obj.status.status is not 'Draft':
             return True

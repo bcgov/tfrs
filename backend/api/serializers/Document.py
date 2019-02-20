@@ -20,8 +20,10 @@
     See the License for the specific language governing permissions and
     limitations under the License.
 """
+from collections import defaultdict
 from datetime import datetime
 from rest_framework import serializers
+from rest_framework.fields import SerializerMethodField
 
 from api.models.DocumentFileAttachment import DocumentFileAttachment
 from api.models.Document import Document
@@ -50,9 +52,9 @@ class DocumentFileAttachmentSerializer(serializers.ModelSerializer):
     class Meta:
         model = DocumentFileAttachment
         fields = ('id', 'url', 'security_scan_status', 'mime_type', 'size',
-                  'filename')
+                  'filename', 'record_number')
         read_only_fields = ('id', 'url', 'security_scan_status', 'mime_type',
-                            'size', 'filename')
+                            'size', 'filename', 'record_number')
 
 
 class DocumentFileAttachmentCreateSerializer(serializers.ModelSerializer):
@@ -93,6 +95,24 @@ class DocumentCreateSerializer(serializers.ModelSerializer):
     comments = DocumentCommentSerializer(many=True, read_only=True)
     milestone = serializers.CharField(
         required=False, max_length=1000, allow_blank=True)
+    title = serializers.CharField(allow_blank=True)  # we must allow_blank for custom validation to occur
+
+    def validate_title(self, value):
+        request = self.context['request']
+
+        if request.data.get('type') == DocumentType.objects.get(
+                the_type="Evidence").id:
+            if not value:
+                raise serializers.ValidationError(
+                    "Please provide the name of the Part 3 Agreement to which the submission relates."
+                )
+
+        if not value:
+            raise serializers.ValidationError(
+                "Please provide a Title"
+            )
+
+        return value
 
     def validate_milestone(self, value):
         """
@@ -106,7 +126,7 @@ class DocumentCreateSerializer(serializers.ModelSerializer):
                 the_type="Evidence").id:
             if not value:
                 raise serializers.ValidationError(
-                    "Milestone is required for P3A Milestone Evidence."
+                    "Please indicate the Milestone(s) to which the submission relates."
                 )
 
         return value
@@ -120,8 +140,8 @@ class DocumentCreateSerializer(serializers.ModelSerializer):
 
             if not attachments:
                 raise serializers.ValidationError({
-                    'attachments': "At least one file needs to be attached "
-                                   "before this can be submitted."
+                    'attachments': "Please attach at least one file"
+                                   " before submitting."
                 })
 
         return data
@@ -179,12 +199,7 @@ class DocumentCreateSerializer(serializers.ModelSerializer):
             'compliance_period': {
                 'error_messages': {
                     'does_not_exist': "Please specify the Compliance Period "
-                                      "in which the request relates."
-                }
-            },
-            'title': {
-                'error_messages': {
-                    'blank': "Please provide a Title."
+                                      "to which the request relates."
                 }
             }
         }
@@ -391,6 +406,23 @@ class DocumentUpdateSerializer(serializers.ModelSerializer):
     milestone = serializers.CharField(
         required=False, max_length=1000, allow_blank=True)
     type = DocumentTypeSerializer(read_only=True)
+    title = serializers.CharField(allow_blank=True)  # we must allow_blank for custom validation to occur
+
+    def validate_title(self, value):
+        document = self.instance
+
+        if document.type == DocumentType.objects.get(the_type="Evidence").id:
+            if not value:
+                raise serializers.ValidationError(
+                    "Please provide the name of the Part 3 Agreement to which the submission relates."
+                )
+
+        if not value:
+            raise serializers.ValidationError(
+                "Please provide a Title"
+            )
+
+        return value
 
     def validate_milestone(self, value):
         """
@@ -404,33 +436,35 @@ class DocumentUpdateSerializer(serializers.ModelSerializer):
                 the_type="Evidence"):
             if not value:
                 raise serializers.ValidationError(
-                    "Milestone is required for P3A Milestone Evidence."
+                    "Please indicate the Milestone(s) to which the submission relates."
                 )
 
         return value
 
     def validate(self, data):
         request = self.context['request']
-        document_statuses = DocumentStatus.objects.all().only('id', 'status')
-        status_dict = {s.status: s for s in document_statuses}
 
         document = self.instance
         status = data.get('status')
 
-        if not DocumentService.validate_status(document.status, status):
-            for list_status in document_statuses:
-                if list_status == status:
-                    raise serializers.ValidationError({
-                        'invalidStatus': "Submission cannot be {} as it "
-                                         "currently has a status of {}."
-                                         .format(
-                                             list_status.status,
-                                             document.status.status
-                                         )
-                    })
+        if status.status in ["Received", "Archived"] and \
+                not request.user.has_perm('DOCUMENTS_GOVERNMENT_REVIEW'):
+            raise serializers.ValidationError({
+                'invalidStatus': "You do not have permission to set "
+                                 "the status to `{}`.".format(status.status)
+            })
 
-        if document.status != status_dict["Draft"] and \
-                document.status != status_dict["Security Scan Failed"]:
+        if not DocumentService.validate_status(document.status, status):
+            raise serializers.ValidationError({
+                'invalidStatus': "Submission cannot be {} as it currently "
+                                 "has a status of {}.".format(
+                                     status.status,
+                                     document.status.status
+                                 )
+            })
+
+        if document.status.status != "Draft" and \
+                document.status.status != "Security Scan Failed":
             # if there's a key that's not about updating the status or user
             # invalidate the request as we're not allowing modifications
             # to other fields
@@ -441,13 +475,12 @@ class DocumentUpdateSerializer(serializers.ModelSerializer):
                                     "document is in draft."
                     })
 
-        if status == status_dict["Submitted"]:
+        if status.status == "Submitted":
             if document.type.the_type == "Evidence":
                 if 'milestone' in request.data and \
                         not request.data.get('milestone'):
                     raise serializers.ValidationError({
-                        'milestone': "Milestone is required for P3A Milestone "
-                                     "Evidence."
+                        'milestone': "Please indicate the Milestone(s) to which the submission relates."
                     })
 
             current_attachments = document.attachments
@@ -455,11 +488,11 @@ class DocumentUpdateSerializer(serializers.ModelSerializer):
 
             if not attachments and not current_attachments:
                 raise serializers.ValidationError({
-                    'attachments': "At least one file needs to be attached "
-                                   "before this can be submitted."
+                    'attachments': "Please attach at least one file"
+                                   " before submitting."
                 })
 
-        if status == status_dict["Archived"]:
+        if status.status == "Archived":
             record_numbers = request.data.get('record_numbers', [])
 
             record_numbers_dict = {
@@ -504,7 +537,7 @@ class DocumentUpdateSerializer(serializers.ModelSerializer):
     def save(self, **kwargs):
         super().save(**kwargs)
 
-        document = self.instance
+        document = Document.objects.get(id=self.instance.id)
         request = self.context['request']
 
         attachments_to_be_removed = request.data.get(
@@ -568,7 +601,7 @@ class DocumentUpdateSerializer(serializers.ModelSerializer):
                         privileged_access=False
                     )
 
-        return self.instance
+        return document
 
     class Meta:
         model = Document
@@ -581,7 +614,7 @@ class DocumentUpdateSerializer(serializers.ModelSerializer):
             'compliance_period': {
                 'error_messages': {
                     'does_not_exist': "Please specify the Compliance Period "
-                                      "in which the request relates."
+                                      "to which the request relates."
                 }
             },
             'milestone': {
@@ -589,11 +622,6 @@ class DocumentUpdateSerializer(serializers.ModelSerializer):
                     'blank': "Please provide a Milestone.",
                     'null': "Please provide a Milestone.",
                     'required': "Please provide a Milestone."
-                }
-            },
-            'title': {
-                'error_messages': {
-                    'blank': "Please provide a Title."
                 }
             }
         }

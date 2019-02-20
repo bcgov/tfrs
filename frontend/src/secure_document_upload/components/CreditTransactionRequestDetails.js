@@ -90,8 +90,10 @@ const CreditTransactionRequestDetails = props => (
           <div className="row">
             <div className="form-group col-md-12">
               <label htmlFor="document-type">Attachments:</label>
-              <div
-                className={`file-submission-attachments ${(props.item.status.status === 'Received' && props.availableActions.includes('Archived')) ? 'hide-security-scan' : 'hide-trim'}`}>
+              <div className={`file-submission-attachments ${
+                ((props.item.status.status === 'Received' && props.availableActions.includes('Archived'))
+                  || props.item.status.status === 'Archived') ? 'hide-security-scan' : 'hide-trim'}`
+              }>
                 <div className="row">
                   <div className="col-xs-6 header">Filename</div>
                   <div className="col-xs-3 size header">Size</div>
@@ -139,6 +141,7 @@ const CreditTransactionRequestDetails = props => (
                     </div>
 
                     <div className="col-xs-3 trim-record-number">
+                      {props.item.status.status === 'Received' &&
                       <input
                         className="form-control"
                         id={`record-number-${index}`}
@@ -150,6 +153,10 @@ const CreditTransactionRequestDetails = props => (
                         type="text"
                         value={props.fields.recordNumbers[index] ? props.fields.recordNumbers[index].value : ''}
                       />
+                      }
+                      {props.item.status.status === 'Archived' &&
+                      <span>{attachment.recordNumber}</span>
+                      }
                     </div>
                   </div>
                 ))}
