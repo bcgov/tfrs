@@ -12,7 +12,7 @@ class UserCreationRequestSerializer(serializers.Serializer):
     email = serializers.EmailField(
         allow_null=False, allow_blank=False,
         error_messages={
-            'blank': 'BCeID/IDIR Email Address cannot be blank.',
+            'blank': 'A BCeID/IDIR Email Address is required',
             'invalid': 'Please enter a valid BCeID/IDIR Email Address.'
         })
 
