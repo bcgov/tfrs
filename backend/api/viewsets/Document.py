@@ -133,11 +133,11 @@ class DocumentViewSet(AuditableMixin,
 
         document = serializer.save()
         DocumentService.create_history(document)
-        files = DocumentFileAttachment.objects.filter(
-            document=document,
-            security_scan_status='NOT RUN')
+        files = document.attachments.filter(
+            security_scan_status='NOT RUN'
+        )
 
-        if files and document.status.status != 'Draft':
+        if files and document.status.status == 'Submitted':
             document.status = DocumentStatus.objects.get(
                 status='Pending Submission')
             document.save()
