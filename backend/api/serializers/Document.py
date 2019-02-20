@@ -88,6 +88,24 @@ class DocumentCreateSerializer(serializers.ModelSerializer):
     comments = DocumentCommentSerializer(many=True, read_only=True)
     milestone = serializers.CharField(
         required=False, max_length=1000, allow_blank=True)
+    title = serializers.CharField(allow_blank=True)  # we must allow_blank for custom validation to occur
+
+    def validate_title(self, value):
+        request = self.context['request']
+
+        if request.data.get('type') == DocumentType.objects.get(
+                the_type="Evidence").id:
+            if not value:
+                raise serializers.ValidationError(
+                    "Please provide the name of the Part 3 Agreement to which the submission relates."
+                )
+
+        if not value:
+            raise serializers.ValidationError(
+                "Please provide a Title"
+            )
+
+        return value
 
     def validate_milestone(self, value):
         """
@@ -101,7 +119,7 @@ class DocumentCreateSerializer(serializers.ModelSerializer):
                 the_type="Evidence").id:
             if not value:
                 raise serializers.ValidationError(
-                    "Milestone is required for P3A Milestone Evidence."
+                    "Please indicate the Milestone(s) to which the submission relates."
                 )
 
         return value
@@ -115,8 +133,8 @@ class DocumentCreateSerializer(serializers.ModelSerializer):
 
             if not attachments:
                 raise serializers.ValidationError({
-                    'attachments': "At least one file needs to be attached "
-                                   "before this can be submitted."
+                    'attachments': "Please attach at least one file"
+                                   " before submitting."
                 })
 
         return data
@@ -174,12 +192,7 @@ class DocumentCreateSerializer(serializers.ModelSerializer):
             'compliance_period': {
                 'error_messages': {
                     'does_not_exist': "Please specify the Compliance Period "
-                                      "in which the request relates."
-                }
-            },
-            'title': {
-                'error_messages': {
-                    'blank': "Please provide a Title."
+                                      "to which the request relates."
                 }
             }
         }
@@ -357,6 +370,23 @@ class DocumentUpdateSerializer(serializers.ModelSerializer):
     milestone = serializers.CharField(
         required=False, max_length=1000, allow_blank=True)
     type = DocumentTypeSerializer(read_only=True)
+    title = serializers.CharField(allow_blank=True)  # we must allow_blank for custom validation to occur
+
+    def validate_title(self, value):
+        document = self.instance
+
+        if document.type == DocumentType.objects.get(the_type="Evidence").id:
+            if not value:
+                raise serializers.ValidationError(
+                    "Please provide the name of the Part 3 Agreement to which the submission relates."
+                )
+
+        if not value:
+            raise serializers.ValidationError(
+                "Please provide a Title"
+            )
+
+        return value
 
     def validate_milestone(self, value):
         """
@@ -370,7 +400,7 @@ class DocumentUpdateSerializer(serializers.ModelSerializer):
                 the_type="Evidence"):
             if not value:
                 raise serializers.ValidationError(
-                    "Milestone is required for P3A Milestone Evidence."
+                    "Please indicate the Milestone(s) to which the submission relates."
                 )
 
         return value
@@ -412,8 +442,7 @@ class DocumentUpdateSerializer(serializers.ModelSerializer):
                 if 'milestone' in request.data and \
                         not request.data.get('milestone'):
                     raise serializers.ValidationError({
-                        'milestone': "Milestone is required for P3A Milestone "
-                                     "Evidence."
+                        'milestone': "Please indicate the Milestone(s) to which the submission relates."
                     })
 
             current_attachments = document.attachments
@@ -421,8 +450,8 @@ class DocumentUpdateSerializer(serializers.ModelSerializer):
 
             if not attachments and not current_attachments:
                 raise serializers.ValidationError({
-                    'attachments': "At least one file needs to be attached "
-                                   "before this can be submitted."
+                    'attachments': "Please attach at least one file"
+                                   " before submitting."
                 })
 
         if status == status_dict["Archived"]:
@@ -547,7 +576,7 @@ class DocumentUpdateSerializer(serializers.ModelSerializer):
             'compliance_period': {
                 'error_messages': {
                     'does_not_exist': "Please specify the Compliance Period "
-                                      "in which the request relates."
+                                      "to which the request relates."
                 }
             },
             'milestone': {
@@ -555,11 +584,6 @@ class DocumentUpdateSerializer(serializers.ModelSerializer):
                     'blank': "Please provide a Milestone.",
                     'null': "Please provide a Milestone.",
                     'required': "Please provide a Milestone."
-                }
-            },
-            'title': {
-                'error_messages': {
-                    'blank': "Please provide a Title."
                 }
             }
         }
