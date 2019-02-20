@@ -26,13 +26,13 @@ def run():
         credit_trade_history = CreditTradeHistory.objects.filter(
             credit_trade_id=credit_trade.id,
             status_id=status_approved.id
-        ).order_by('-update_timestamp', '-id').first()
+        ).order_by('-create_timestamp', '-id').first()
 
         if credit_trade_history:
             credit_trade_history_complete = CreditTradeHistory.objects.filter(
                 credit_trade_id=credit_trade.id,
                 status_id=status_completed.id
-            ).order_by('-update_timestamp', '-id').first()
+            ).order_by('-create_timestamp', '-id').first()
 
             if credit_trade_history_complete.trade_effective_date != \
                credit_trade_history.trade_effective_date and \

@@ -23,10 +23,8 @@
 
 from django.db import models
 
-from auditable.models import Auditable
 
-
-class CreditTradeHistory(Auditable):
+class CreditTradeHistory(models.Model):
     """
     History of changes for the Credit Trades table
     """
@@ -72,13 +70,6 @@ class CreditTradeHistory(Auditable):
         blank=True, null=True,
         db_comment="Date on when the transaction was approved."
     )
-    note = models.CharField(
-        max_length=4000, blank=True, null=True,
-        db_comment="Notes about the transaction. Deprecated field."
-    )
-    is_internal_history_record = models.BooleanField(
-        db_comment=""
-    )
     compliance_period = models.ForeignKey(
         'CompliancePeriod',
         related_name='credit_trade_histories',
@@ -97,6 +88,17 @@ class CreditTradeHistory(Auditable):
         on_delete=models.SET_NULL,
         db_comment="Role of the user that made the change."
     )
+    create_timestamp = models.DateTimeField(
+        auto_now_add=True, blank=True, null=True,
+        db_comment='Creation timestamp'
+    )
+    create_user = models.ForeignKey(
+        'User',
+        related_name='%(app_label)s_%(class)s_CREATE_USER',
+        blank=True, null=True,
+        on_delete=models.CASCADE,
+        db_comment='creating user'
+    )
 
     @property
     def user(self):
@@ -104,9 +106,7 @@ class CreditTradeHistory(Auditable):
         Attribute to get the user who made the most recent change to the
         record.
         """
-        return next((u for u in [
-            self.update_user, self.create_user
-        ] if u is not None), None)
+        return self.create_user
 
     @property
     def credit_trade_update_timestamp(self):
@@ -114,9 +114,7 @@ class CreditTradeHistory(Auditable):
         Attribute to get the timestamp on when the most recent change was
         applied.
         """
-        return next((t for t in [
-            self.update_timestamp, self.create_timestamp
-        ] if t is not None), None)
+        return self.create_timestamp
 
     class Meta:
         db_table = 'credit_trade_history'

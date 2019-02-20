@@ -34,7 +34,7 @@ class UserViewSet(AuditableMixin, viewsets.GenericViewSet,
     }
 
     column_sort_mappings = {
-        'updateTimestamp': 'update_timestamp',
+        'createTimestamp': 'create_timestamp',
         'creditTradeId': 'id',
         'creditType': 'type__the_type',
         'action': 'status__status'
@@ -59,7 +59,7 @@ class UserViewSet(AuditableMixin, viewsets.GenericViewSet,
 
         limit = None
         offset = None
-        sort_by = 'update_timestamp'
+        sort_by = 'create_timestamp'
         sort_direction = '-'
 
         if 'limit' in request.GET:
