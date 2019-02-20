@@ -103,26 +103,28 @@ class DocumentService(object):
         This function checks if the next status is actually valid for the
         current status
         """
-        document_statuses = DocumentStatus.objects.all().only('id', 'status')
-        status_dict = {s.status: s for s in document_statuses}
+        if current_status.status in ["Submitted", "Pending Submission"] and \
+                next_status.status == "Draft":
+            return True
 
-        if current_status in [
-                status_dict["Archived"],
-                status_dict["Cancelled"],
-                status_dict["Pending Submission"]]:
+        if current_status.status in ["Archived", "Cancelled"]:
             return False
 
-        if current_status == status_dict["Received"] and \
-                next_status != status_dict["Archived"]:
+        if current_status.status == "Received" and \
+                next_status.status != "Archived":
             return False
 
-        if current_status == status_dict["Submitted"] and \
-                next_status != status_dict["Received"]:
+        if current_status.status == "Submitted" and \
+                next_status.status != "Received":
             return False
 
-        if current_status not in [
-                status_dict["Draft"], status_dict["Security Scan Failed"]]:
-            if next_status == status_dict["Draft"]:
+        if current_status.status == "Pending Submission" and \
+                next_status.status != "Draft":
+            return False
+
+        if current_status.status not in [
+                "Draft", "Security Scan Failed"]:
+            if next_status.status == "Draft":
                 return False
 
         return True

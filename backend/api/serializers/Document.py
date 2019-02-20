@@ -407,26 +407,28 @@ class DocumentUpdateSerializer(serializers.ModelSerializer):
 
     def validate(self, data):
         request = self.context['request']
-        document_statuses = DocumentStatus.objects.all().only('id', 'status')
-        status_dict = {s.status: s for s in document_statuses}
 
         document = self.instance
         status = data.get('status')
 
-        if not DocumentService.validate_status(document.status, status):
-            for list_status in document_statuses:
-                if list_status == status:
-                    raise serializers.ValidationError({
-                        'invalidStatus': "Submission cannot be {} as it "
-                                         "currently has a status of {}."
-                                         .format(
-                                             list_status.status,
-                                             document.status.status
-                                         )
-                    })
+        if status.status in ["Received", "Archived"] and \
+                not request.user.has_perm('DOCUMENTS_GOVERNMENT_REVIEW'):
+            raise serializers.ValidationError({
+                'invalidStatus': "You do not have permission to set "
+                                 "the status to `{}`.".format(status.status)
+            })
 
-        if document.status != status_dict["Draft"] and \
-                document.status != status_dict["Security Scan Failed"]:
+        if not DocumentService.validate_status(document.status, status):
+            raise serializers.ValidationError({
+                'invalidStatus': "Submission cannot be {} as it currently "
+                                 "has a status of {}.".format(
+                                     status.status,
+                                     document.status.status
+                                 )
+            })
+
+        if document.status.status != "Draft" and \
+                document.status.status != "Security Scan Failed":
             # if there's a key that's not about updating the status or user
             # invalidate the request as we're not allowing modifications
             # to other fields
@@ -437,7 +439,7 @@ class DocumentUpdateSerializer(serializers.ModelSerializer):
                                     "document is in draft."
                     })
 
-        if status == status_dict["Submitted"]:
+        if status.status == "Submitted":
             if document.type.the_type == "Evidence":
                 if 'milestone' in request.data and \
                         not request.data.get('milestone'):
@@ -454,7 +456,7 @@ class DocumentUpdateSerializer(serializers.ModelSerializer):
                                    " before submitting."
                 })
 
-        if status == status_dict["Archived"]:
+        if status.status == "Archived":
             record_numbers = request.data.get('record_numbers', [])
 
             record_numbers_dict = {
@@ -499,7 +501,7 @@ class DocumentUpdateSerializer(serializers.ModelSerializer):
     def save(self, **kwargs):
         super().save(**kwargs)
 
-        document = self.instance
+        document = Document.objects.get(id=self.instance.id)
         request = self.context['request']
 
         attachments_to_be_removed = request.data.get(
@@ -563,7 +565,7 @@ class DocumentUpdateSerializer(serializers.ModelSerializer):
                         privileged_access=False
                     )
 
-        return self.instance
+        return document
 
     class Meta:
         model = Document
