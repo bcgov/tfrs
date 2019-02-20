@@ -99,8 +99,8 @@ class UserHistoryTable extends React.Component {
       width: 100
     }, {
       accessor: (item) => {
-        if (item.creditTradeUpdateTime) {
-          const ts = Date.parse(item.creditTradeUpdateTime);
+        if (item.creditTradeUpdateTimestamp) {
+          const ts = Date.parse(item.creditTradeUpdateTimestamp);
 
           return formatter.format(ts);
         }
@@ -109,7 +109,7 @@ class UserHistoryTable extends React.Component {
       },
       className: 'col-timestamp',
       Header: 'Timestamp',
-      id: 'updateTimestamp',
+      id: 'createTimestamp',
       minWidth: 75
     }, {
       accessor: item => item.fuelSupplier.name,
@@ -137,7 +137,7 @@ class UserHistoryTable extends React.Component {
       <ReactTable
         defaultPageSize={10}
         defaultSorted={[{
-          id: 'updateTimestamp',
+          id: 'createTimestamp',
           desc: true
         }]}
         filterable={false}
