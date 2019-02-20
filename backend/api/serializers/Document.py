@@ -233,6 +233,7 @@ class DocumentDetailSerializer(serializers.ModelSerializer):
     actions = serializers.SerializerMethodField()
     attachments = serializers.SerializerMethodField()
     comment_actions = serializers.SerializerMethodField()
+    link_actions = serializers.SerializerMethodField()
     comments = serializers.SerializerMethodField()
     compliance_period = CompliancePeriodSerializer(read_only=True)
     milestone = serializers.SerializerMethodField()
@@ -266,6 +267,17 @@ class DocumentDetailSerializer(serializers.ModelSerializer):
             return DocumentActions.received(request)
 
         return []
+
+    def get_link_actions(self, obj):
+        cur_status = obj.status.status
+        request = self.context.get('request')
+
+        # If the user doesn't have any roles assigned, treat as though the user
+        # doesn't have available permissions
+        if not request.user.roles:
+            return []
+
+        return DocumentActions.link_actions(request, cur_status)
 
     def get_attachments(self, obj):
         """
@@ -328,13 +340,13 @@ class DocumentDetailSerializer(serializers.ModelSerializer):
             'create_timestamp', 'create_user', 'update_timestamp',
             'update_user', 'status', 'type', 'attachments',
             'compliance_period', 'actions', 'comment_actions', 'comments',
-            'milestone', 'credit_trades')
+            'link_actions', 'milestone', 'credit_trades')
 
         read_only_fields = (
             'id', 'create_timestamp', 'create_user', 'update_timestamp',
             'update_user', 'title', 'status', 'type', 'attachments',
             'compliance_period', 'actions', 'comment_actions', 'milestone',
-            'credit_trades')
+            'link_actions', 'credit_trades')
 
 
 class DocumentMinSerializer(serializers.ModelSerializer):

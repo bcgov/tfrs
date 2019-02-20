@@ -8,6 +8,7 @@ from rest_framework.decorators import list_route, detail_route
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 
+from api.decorators import permission_required
 from api.models.Document import Document
 from api.models.DocumentCategory import DocumentCategory
 from api.models.DocumentFileAttachment import DocumentFileAttachment
@@ -176,6 +177,7 @@ class DocumentViewSet(AuditableMixin,
             )
 
     @detail_route(methods=['put'])
+    @permission_required('DOCUMENTS_LINK_TO_CREDIT_TRADE')
     def link(self, request, pk=None):
         """
         Link a credit trade to this document
@@ -194,9 +196,10 @@ class DocumentViewSet(AuditableMixin,
         return Response(None, status=status.HTTP_202_ACCEPTED)
 
     @detail_route(methods=['put'])
+    @permission_required('DOCUMENTS_LINK_TO_CREDIT_TRADE')
     def unlink(self, request, pk=None):
         """
-        Link a credit trade to this document
+        Unlink a credit trade from this document
         """
         document = self.get_object()
 

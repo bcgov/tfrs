@@ -248,14 +248,14 @@ class TestDocuments(BaseTestCase):
         """
         create_user = self.users['fs_user_1']
         compliance_period = CompliancePeriod.objects.first()
-        status_draft = DocumentStatus.objects.filter(status="Draft").first()
+        status_received = DocumentStatus.objects.filter(status="Received").first()
         type_evidence = DocumentType.objects.filter(
             the_type="Evidence").first()
 
         created_document = Document.objects.create(
             create_user_id=create_user.id,
             compliance_period_id=compliance_period.id,
-            status_id=status_draft.id,
+            status_id=status_received.id,
             title="Test Title",
             type_id=type_evidence.id
         )
@@ -273,7 +273,9 @@ class TestDocuments(BaseTestCase):
 
         # Link the credit transfer
 
-        response = self.clients['fs_user_1'].put(
+        print('url: ' + "/api/documents/{}/link".format(created_document.id))
+
+        response = self.clients['gov_analyst'].put(
             "/api/documents/{}/link".format(created_document.id),
             content_type='application/json',
             data=json.dumps(payload)
@@ -281,7 +283,7 @@ class TestDocuments(BaseTestCase):
 
         self.assertEqual(response.status_code, status.HTTP_202_ACCEPTED)
 
-        response = self.clients['fs_user_1'].get(
+        response = self.clients['gov_analyst'].get(
             "/api/documents/{}".format(created_document.id)
         )
         response_data = json.loads(response.content.decode("utf-8"))
@@ -294,7 +296,7 @@ class TestDocuments(BaseTestCase):
             'creditTrade': credit_trade['id']
         }
 
-        response = self.clients['fs_user_1'].put(
+        response = self.clients['gov_analyst'].put(
             "/api/documents/{}/unlink".format(created_document.id),
             content_type='application/json',
             data=json.dumps(payload)
@@ -304,7 +306,7 @@ class TestDocuments(BaseTestCase):
 
         # Confirm unlinked
 
-        response = self.clients['fs_user_1'].get(
+        response = self.clients['gov_analyst'].get(
             "/api/documents/{}".format(created_document.id)
         )
         response_data = json.loads(response.content.decode("utf-8"))
