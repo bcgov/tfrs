@@ -27,10 +27,13 @@ import json
 from rest_framework import status
 
 from api.models.CompliancePeriod import CompliancePeriod
+from api.models.CreditTrade import CreditTrade
+from api.models.CreditTradeStatus import CreditTradeStatus
 from api.models.Document import Document
 from api.models.DocumentMilestone import DocumentMilestone
 from api.models.DocumentStatus import DocumentStatus
 from api.models.DocumentType import DocumentType
+from api.tests.data_creation_utilities import DataCreationUtilities
 
 from .base_test_case import BaseTestCase
 
@@ -202,7 +205,6 @@ class TestDocuments(BaseTestCase):
 
         self.assertEqual(document.title, document_title)
 
-
     def test_update_document_status_and_title(self):
         """
         Test updating a document status to submitted and attempt to
@@ -238,3 +240,76 @@ class TestDocuments(BaseTestCase):
         )
 
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+    def test_link_document_to_credit_transaction(self):
+        """
+        Test updating a document status to submitted and attempt to
+        modify the title (this should fail)
+        """
+        create_user = self.users['fs_user_1']
+        compliance_period = CompliancePeriod.objects.first()
+        status_draft = DocumentStatus.objects.filter(status="Draft").first()
+        type_evidence = DocumentType.objects.filter(
+            the_type="Evidence").first()
+
+        created_document = Document.objects.create(
+            create_user_id=create_user.id,
+            compliance_period_id=compliance_period.id,
+            status_id=status_draft.id,
+            title="Test Title",
+            type_id=type_evidence.id
+        )
+
+        credit_trade = DataCreationUtilities.create_credit_trade(
+            initiating_organization=self.users['fs_user_1'].organization,
+            responding_organization=self.users['fs_user_2'].organization,
+            status=CreditTradeStatus.objects.get_by_natural_key('Approved'),
+            is_rescinded=False
+        )
+
+        payload = {
+            'creditTrade': credit_trade['id']
+        }
+
+        # Link the credit transfer
+
+        response = self.clients['fs_user_1'].put(
+            "/api/documents/{}/link".format(created_document.id),
+            content_type='application/json',
+            data=json.dumps(payload)
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_202_ACCEPTED)
+
+        response = self.clients['fs_user_1'].get(
+            "/api/documents/{}".format(created_document.id)
+        )
+        response_data = json.loads(response.content.decode("utf-8"))
+
+        # Confirm link
+        self.assertEqual(len(response_data['creditTrades']), 1)
+
+        # Unlink it
+        payload = {
+            'creditTrade': credit_trade['id']
+        }
+
+        response = self.clients['fs_user_1'].put(
+            "/api/documents/{}/unlink".format(created_document.id),
+            content_type='application/json',
+            data=json.dumps(payload)
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_202_ACCEPTED)
+
+        # Confirm unlinked
+
+        response = self.clients['fs_user_1'].get(
+            "/api/documents/{}".format(created_document.id)
+        )
+        response_data = json.loads(response.content.decode("utf-8"))
+
+        self.assertEqual(len(response_data['creditTrades']), 0)
+
+
+

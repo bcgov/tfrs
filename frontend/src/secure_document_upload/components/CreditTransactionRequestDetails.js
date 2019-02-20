@@ -14,6 +14,8 @@ import { getFileSize, getIcon, getScanStatusIcon } from '../../utils/functions';
 import CreditTransactionRequestComment from './CreditTransactionRequestComment';
 import CreditTransactionRequestCommentButtons from './CreditTransactionRequestCommentButtons';
 import CreditTransactionRequestCommentForm from './CreditTransactionRequestCommentForm';
+import {Link} from "react-router-dom";
+import CREDIT_TRANSACTIONS from "../../constants/routes/CreditTransactions";
 
 const CreditTransactionRequestDetails = props => (
   <div className="page-credit-transaction-request-details">
@@ -159,6 +161,40 @@ const CreditTransactionRequestDetails = props => (
             </div>
           </div>
         </div>
+
+        <div className="col-md-6">
+          <div className="row">
+            <div className="form-group col-md-12">
+              <label htmlFor="credit-transactions">Linked Credit Transactions:
+                {(props.item.creditTrades && props.item.creditTrades.length > 0) ?
+                  (<table>
+                  <thead>
+                  <tr>
+                    <th>Type</th>
+                    <th>Status</th>
+                    <th>Link</th>
+                  </tr>
+                  </thead>
+                  <tbody>
+                  {props.item.creditTrades.map(creditTrade => (
+                    <tr key={creditTrade.id}>
+                      <td>{creditTrade.type.theType}</td>
+                      <td>{creditTrade.status.status}</td>
+                      <td>
+                        <Link to={CREDIT_TRANSACTIONS.DETAILS.replace(':id', creditTrade.id)}>
+                          <FontAwesomeIcon icon="box-open"/>
+                        </Link>
+                      </td>
+                    </tr>
+                  ))}
+                  </tbody>
+                  </table>) : (<p>None</p>)
+                }
+              </label>
+            </div>
+          </div>
+        </div>
+
       </div>
 
       {Object.keys(props.errors).length > 0 &&

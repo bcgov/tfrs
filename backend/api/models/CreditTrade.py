@@ -23,10 +23,11 @@
 from decimal import Decimal
 from typing import List
 from django.db import models
-from django.db.models import Count
+from django.db.models import Count, ManyToManyField
 from django.db.models import Max
 from django.db.models import Q
 from api import validators
+
 from auditable.models import Auditable
 
 from .CompliancePeriod import CompliancePeriod
@@ -101,6 +102,10 @@ class CreditTrade(Auditable):
         default=False,
         db_comment='Flag. True if the trade was rescinded before completion '
                    'by either party.'
+    )
+    documents = ManyToManyField(
+        'Document',
+        through='DocumentCreditTrade'
     )
 
     @property
