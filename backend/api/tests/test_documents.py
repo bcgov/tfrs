@@ -28,7 +28,7 @@ from rest_framework import status
 
 from api.models.CompliancePeriod import CompliancePeriod
 from api.models.Document import Document
-from api.models.DocumentMilestone import DocumentMilestone
+from api.models.DocumentFileAttachment import DocumentFileAttachment
 from api.models.DocumentStatus import DocumentStatus
 from api.models.DocumentType import DocumentType
 
@@ -128,7 +128,7 @@ class TestDocuments(BaseTestCase):
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
-    def test_add_document_evidence_as_fuel_supplier(self):
+    def test_add_draft_as_fuel_supplier(self):
         """
         Test adding a document as a fuel supplier
         """
@@ -163,7 +163,7 @@ class TestDocuments(BaseTestCase):
         self.assertEqual(document.title, document_title)
         self.assertEqual(document.milestone.milestone, document_milestone)
 
-    def test_update_document_evidence_as_fuel_supplier(self):
+    def test_update_draft_as_fuel_supplier(self):
         """
         Test updating a document as a fuel supplier
         """
@@ -202,8 +202,50 @@ class TestDocuments(BaseTestCase):
 
         self.assertEqual(document.title, document_title)
 
+    def test_submit_document(self):
+        """
+        Test updating a document status to submitted
+        """
+        create_user = self.users['fs_user_1']
+        compliance_period = CompliancePeriod.objects.first()
+        status_draft = DocumentStatus.objects.filter(status="Draft").first()
+        type_evidence = DocumentType.objects.filter(
+            the_type="Evidence").first()
 
-    def test_update_document_status_and_title(self):
+        created_document = Document.objects.create(
+            create_user_id=create_user.id,
+            compliance_period_id=compliance_period.id,
+            status_id=status_draft.id,
+            title="Test Title",
+            type_id=type_evidence.id
+        )
+
+        DocumentFileAttachment.objects.create(
+            url="http://localhost/test.jpg",
+            filename="test.jpg",
+            size=1,
+            document_id=created_document.id,
+            security_scan_status="PASS"
+        )
+
+        status_submitted = DocumentStatus.objects.filter(status="Submitted").first()
+
+        payload = {
+            'compliancePeriod': compliance_period.id,
+            'status': status_submitted.id,
+            'title': "Different Title",
+            'type': type_evidence.id
+        }
+
+        response = self.clients['fs_user_1'].patch(
+            "/api/documents/{}".format(created_document.id),
+            content_type='application/json',
+            data=json.dumps(payload)
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_submit_document_and_update_title(self):
         """
         Test updating a document status to submitted and attempt to
         modify the title (this should fail)
@@ -229,6 +271,300 @@ class TestDocuments(BaseTestCase):
             'status': status_submitted.id,
             'title': "Different Title",
             'type': type_evidence.id
+        }
+
+        response = self.clients['fs_user_1'].patch(
+            "/api/documents/{}".format(created_document.id),
+            content_type='application/json',
+            data=json.dumps(payload)
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+    def test_receive_document_as_government_user(self):
+        """
+        Test updating a document status to received as government user
+        """
+        create_user = self.users['fs_user_1']
+        compliance_period = CompliancePeriod.objects.first()
+        status_submitted = DocumentStatus.objects.filter(status="Submitted").first()
+        type_evidence = DocumentType.objects.filter(
+            the_type="Evidence").first()
+
+        created_document = Document.objects.create(
+            create_user_id=create_user.id,
+            compliance_period_id=compliance_period.id,
+            status_id=status_submitted.id,
+            title="Test Title",
+            type_id=type_evidence.id
+        )
+
+        DocumentFileAttachment.objects.create(
+            url="http://localhost/test.jpg",
+            filename="test.jpg",
+            size=1,
+            document_id=created_document.id,
+            security_scan_status="PASS"
+        )
+
+        status_received = DocumentStatus.objects.filter(status="Received").first()
+
+        payload = {
+            'status': status_received.id
+        }
+
+        response = self.clients['gov_analyst'].patch(
+            "/api/documents/{}".format(created_document.id),
+            content_type='application/json',
+            data=json.dumps(payload)
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_receive_document_as_fuel_supplier(self):
+        """
+        Test updating a document status to received as fuel supplier user
+        (this should fail)
+        """
+        create_user = self.users['fs_user_1']
+        compliance_period = CompliancePeriod.objects.first()
+        status_submitted = DocumentStatus.objects.filter(status="Submitted").first()
+        type_evidence = DocumentType.objects.filter(
+            the_type="Evidence").first()
+
+        created_document = Document.objects.create(
+            create_user_id=create_user.id,
+            compliance_period_id=compliance_period.id,
+            status_id=status_submitted.id,
+            title="Test Title",
+            type_id=type_evidence.id
+        )
+
+        status_received = DocumentStatus.objects.filter(status="Received").first()
+
+        payload = {
+            'status': status_received.id
+        }
+
+        response = self.clients['fs_user_1'].patch(
+            "/api/documents/{}".format(created_document.id),
+            content_type='application/json',
+            data=json.dumps(payload)
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+    def test_archive_document_as_government_user(self):
+        """
+        Test updating a document status to archived as government user
+        """
+        create_user = self.users['fs_user_1']
+        compliance_period = CompliancePeriod.objects.first()
+        status_received = DocumentStatus.objects.filter(status="Received").first()
+        type_evidence = DocumentType.objects.filter(
+            the_type="Evidence").first()
+
+        created_document = Document.objects.create(
+            create_user_id=create_user.id,
+            compliance_period_id=compliance_period.id,
+            status_id=status_received.id,
+            title="Test Title",
+            type_id=type_evidence.id
+        )
+
+        document_file = DocumentFileAttachment.objects.create(
+            url="http://localhost/test.jpg",
+            filename="test.jpg",
+            size=1,
+            document_id=created_document.id,
+            security_scan_status="PASS"
+        )
+
+        status_archived = DocumentStatus.objects.filter(status="Archived").first()
+
+        payload = {
+            'status': status_archived.id
+        }
+
+        response = self.clients['gov_analyst'].patch(
+            "/api/documents/{}".format(created_document.id),
+            content_type='application/json',
+            data=json.dumps(payload)
+        )
+
+        # 400 since we didn't provide a record number for the file
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+        payload = {
+            'recordNumbers': [{
+                'id': document_file.id,
+                'value': '123'
+            }],
+            'status': status_archived.id
+        }
+
+        response = self.clients['gov_analyst'].patch(
+            "/api/documents/{}".format(created_document.id),
+            content_type='application/json',
+            data=json.dumps(payload)
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_archive_document_as_fuel_supplier(self):
+        """
+        Test updating a document status to archived as fuel supplier user
+        """
+        create_user = self.users['fs_user_1']
+        compliance_period = CompliancePeriod.objects.first()
+        status_received = DocumentStatus.objects.filter(status="Received").first()
+        type_evidence = DocumentType.objects.filter(
+            the_type="Evidence").first()
+
+        created_document = Document.objects.create(
+            create_user_id=create_user.id,
+            compliance_period_id=compliance_period.id,
+            status_id=status_received.id,
+            title="Test Title",
+            type_id=type_evidence.id
+        )
+
+        status_archived = DocumentStatus.objects.filter(status="Archived").first()
+
+        payload = {
+            'status': status_archived.id
+        }
+
+        response = self.clients['fs_user_1'].patch(
+            "/api/documents/{}".format(created_document.id),
+            content_type='application/json',
+            data=json.dumps(payload)
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+    def test_rescind_document_as_fuel_supplier(self):
+        """
+        Test rescinding a document as a fuel supplier.
+        Rescinding is really setting the status back to draft
+        """
+        create_user = self.users['fs_user_1']
+        compliance_period = CompliancePeriod.objects.first()
+        status_submitted = DocumentStatus.objects.filter(status="Submitted").first()
+        type_evidence = DocumentType.objects.filter(
+            the_type="Evidence").first()
+
+        created_document = Document.objects.create(
+            create_user_id=create_user.id,
+            compliance_period_id=compliance_period.id,
+            status_id=status_submitted.id,
+            title="Test Title",
+            type_id=type_evidence.id
+        )
+
+        status_draft = DocumentStatus.objects.filter(status="Draft").first()
+
+        payload = {
+            'status': status_draft.id
+        }
+
+        response = self.clients['fs_user_1'].patch(
+            "/api/documents/{}".format(created_document.id),
+            content_type='application/json',
+            data=json.dumps(payload)
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_rescind_pending_submission_as_fuel_supplier(self):
+        """
+        Test rescinding a document that's been pending submission as a fuel supplier.
+        Rescinding is really setting the status back to draft
+        """
+        create_user = self.users['fs_user_1']
+        compliance_period = CompliancePeriod.objects.first()
+        status_pending = DocumentStatus.objects.filter(status="Pending Submission").first()
+        type_evidence = DocumentType.objects.filter(
+            the_type="Evidence").first()
+
+        created_document = Document.objects.create(
+            create_user_id=create_user.id,
+            compliance_period_id=compliance_period.id,
+            status_id=status_pending.id,
+            title="Test Title",
+            type_id=type_evidence.id
+        )
+
+        status_draft = DocumentStatus.objects.filter(status="Draft").first()
+
+        payload = {
+            'status': status_draft.id
+        }
+
+        response = self.clients['fs_user_1'].patch(
+            "/api/documents/{}".format(created_document.id),
+            content_type='application/json',
+            data=json.dumps(payload)
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_rescind_received_document_as_fuel_supplier(self):
+        """
+        Test rescinding a received document as a fuel supplier.
+        (This should fail)
+        """
+        create_user = self.users['fs_user_1']
+        compliance_period = CompliancePeriod.objects.first()
+        status_received = DocumentStatus.objects.filter(status="Received").first()
+        type_evidence = DocumentType.objects.filter(
+            the_type="Evidence").first()
+
+        created_document = Document.objects.create(
+            create_user_id=create_user.id,
+            compliance_period_id=compliance_period.id,
+            status_id=status_received.id,
+            title="Test Title",
+            type_id=type_evidence.id
+        )
+
+        status_draft = DocumentStatus.objects.filter(status="Draft").first()
+
+        payload = {
+            'status': status_draft.id
+        }
+
+        response = self.clients['fs_user_1'].patch(
+            "/api/documents/{}".format(created_document.id),
+            content_type='application/json',
+            data=json.dumps(payload)
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+    def test_rescind_archived_document_as_fuel_supplier(self):
+        """
+        Test rescinding an archived document as a fuel supplier.
+        (This should fail)
+        """
+        create_user = self.users['fs_user_1']
+        compliance_period = CompliancePeriod.objects.first()
+        status_archived = DocumentStatus.objects.filter(status="Archived").first()
+        type_evidence = DocumentType.objects.filter(
+            the_type="Evidence").first()
+
+        created_document = Document.objects.create(
+            create_user_id=create_user.id,
+            compliance_period_id=compliance_period.id,
+            status_id=status_archived.id,
+            title="Test Title",
+            type_id=type_evidence.id
+        )
+
+        status_draft = DocumentStatus.objects.filter(status="Draft").first()
+
+        payload = {
+            'status': status_draft.id
         }
 
         response = self.clients['fs_user_1'].patch(
