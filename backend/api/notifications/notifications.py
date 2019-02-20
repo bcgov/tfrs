@@ -277,28 +277,29 @@ class AMQPNotificationService:
                 subscribed=True
             )
 
-            notification = NotificationMessage(
-                user=recipient,
-                originating_user=originating_user,
-                related_credit_trade=related_credit_trade,
-                related_document=related_document,
-                related_organization=related_organization,
-                related_user=related_user,
-                message=message,
-                is_error=is_error,
-                is_warning=is_warning
-            )
-            notification.save()
-            send_amqp_notification()
-
             email_subscription = EffectiveSubscription(
                 channel=NotificationChannel.objects.get(channel='EMAIL'),
                 notification_type=notification_type,
                 subscribed=True
             )
 
-            if email_subscription in effective_subscriptions:
-                AMQPNotificationService.send_email_for_notification(notification)
+            if app_subscription in effective_subscriptions:
+                notification = NotificationMessage(
+                    user=recipient,
+                    originating_user=originating_user,
+                    related_credit_trade=related_credit_trade,
+                    related_document=related_document,
+                    related_organization=related_organization,
+                    related_user=related_user,
+                    message=message,
+                    is_error=is_error,
+                    is_warning=is_warning
+                )
+                notification.save()
+                send_amqp_notification()
+
+                if email_subscription in effective_subscriptions:
+                    AMQPNotificationService.send_email_for_notification(notification)
 
 
 class InvalidNotificationArguments(Exception):
