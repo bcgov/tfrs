@@ -29,9 +29,9 @@ class OrganizationSpecs extends LoggedInSpec {
       at OrganizationAddPage
     and: 'I populate all required fields to create a new organization'
       setNameField(organizationName)
-      setType('A Part 3 Fuel Supplier who can do credit transfers')
-      setActionsType('An Organization permitted to only to Sell Low Carbon Credits.')
-      setStatus('The Fuel Supplier has been archived and is no longer a participant in the Low Carbon Credits trading market.')
+      setType('Part 3 Fuel Supplier')
+      setActionsType('Permitted to Buy and Sell Low Carbon Fuel Credits.')
+      setStatus('Inactive')
       setAddressLine1('111 city')
       setAddressLine2('222 block')
       setAddressLine3('333 suite')
@@ -63,8 +63,8 @@ class OrganizationSpecs extends LoggedInSpec {
     and: 'I populate all required fields to create a new organization'
       sleep(5000)
       setNameField("${organizationName}Edit")
-      setActionsType('An Organization not currently permitted to either Buy and Sell Low Carbon Credits.')
-      setStatus('The Fuel Supplier is an active participant in the Low Carbon Credits trading market.')
+      setActionsType('Not Permitted to Buy and Sell Low Carbon Fuel Credits.')
+      setStatus('Active')
       setAddressLine1('111 city edit')
       setAddressLine2('222 block edit')
       setAddressLine3('333 suite edit')
