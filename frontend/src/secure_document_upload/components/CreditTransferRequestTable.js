@@ -41,7 +41,9 @@ const CreditTransferRequestTable = (props) => {
   }, {
     accessor: item => {
       if (item.type.theType === 'Evidence') {
-        if (item.milestone !== null && item.milestone.milestone.length > 0) {
+        if (item.milestone !== null &&
+          item.milestone.milestone &&
+          item.milestone.milestone.length > 0) {
           return item.title + ': ' + item.milestone.milestone;
         }
         return item.title;
