@@ -25,7 +25,7 @@ const HistoricalDataEntryFormDetails = props => (
                 max="9999-12-31"
                 name="tradeEffectiveDate"
                 onChange={props.handleInputChange}
-                placeholder="Effective Date"
+                placeholder="Effective Date (YYYY-MM-DD)"
                 required="required"
                 type="date"
                 value={props.fields.tradeEffectiveDate}

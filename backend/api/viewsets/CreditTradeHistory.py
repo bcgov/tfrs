@@ -19,6 +19,7 @@
     See the License for the specific language governing permissions and
     limitations under the License.
 """
+from django.db.models import Q
 from rest_framework import filters, mixins, viewsets
 from rest_framework.decorators import list_route
 from rest_framework.response import Response
@@ -47,13 +48,13 @@ class CreditTradeHistoryViewSet(AuditableMixin, mixins.ListModelMixin,
     }
 
     column_sort_mappings = {
-        'updateTimestamp': 'credit_trade_update_time',
+        'updateTimestamp': 'update_timestamp',
         'creditTradeId': 'id',
         'creditType': 'type__the_type',
         'action': 'status__status',
         'initiator': 'credit_trade__initiator__name',
-        'respondent': 'respondent__name',
-        'user': 'user__display_name'
+        'respondent': 'respondent__name'#,
+        # 'user': 'user__display_name'
     }
 
     def get_serializer_class(self):
@@ -69,7 +70,7 @@ class CreditTradeHistoryViewSet(AuditableMixin, mixins.ListModelMixin,
         """
         user = self.request.user
         return CreditTradeHistory.objects.filter(
-            user__organization_id=user.organization_id
+            Q(create_user__organization_id=user.organization_id)
         )
 
     def list(self, request, **kwargs):
@@ -83,7 +84,7 @@ class CreditTradeHistoryViewSet(AuditableMixin, mixins.ListModelMixin,
 
         limit = None
         offset = None
-        sort_by = 'credit_trade_update_time'
+        sort_by = 'create_timestamp'
         sort_direction = '-'
 
         if 'limit' in request.GET:

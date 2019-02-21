@@ -24,78 +24,30 @@
 from db_comments.patch_fields import patch_fields
 
 from . import User
-from . import CreditTradeComment
+from . import CreditTrade
+from . import CompliancePeriod
+from . import CreditTradeHistory
+from . import CreditTradeZeroReason
+from . import DocumentMilestone
+from . import DocumentStatus
+from . import DocumentType
+from . import OrganizationActionsType
 from . import OrganizationAddress
+from . import OrganizationBalance
+from . import OrganizationStatus
+from . import OrganizationType
+from . import Role
+from . import Permission
+from . import RolePermission
+from . import SigningAuthorityAssertion
+from . import SigningAuthorityConfirmation
+from . import UserRole
+from . import CreditTradeComment
 from . import UserCreationRequest
 from . import FuelCode
+from . import Document
+from . import DocumentComment
+from . import DocumentHistory
+from . import DocumentFileAttachment
 
 patch_fields()
-
-
-# from __future__ import absolute_import
-
-# import models into model package
-# try:
-#     from . import CreditTrade
-# except:
-#     import CreditTrade
-# try:
-#     from . import CreditTradeHistory
-# except:
-#     import CreditTradeHistory
-# try:
-#     from . import CreditTradeStatus
-# except:
-#     import CreditTradeStatus
-# try:
-#     from . import CreditTradeType
-# except:
-#     import CreditTradeType
-# try:
-#     from . import CreditTradeZeroReason
-# except:
-#     import CreditTradeZeroReason
-# try:
-#     from . import CurrentUserViewModel
-# except:
-#     import CurrentUserViewModel
-# try:
-#     from . import Organization
-# except:
-#     import Organization
-# try:
-#     from . import OrganizationActionsType
-# except:
-#     import OrganizationActionsType
-# try:
-#     from . import OrganizationAttachment
-# except:
-#     import OrganizationAttachment
-#  try:
-#     from . import OrganizationBalance
-# except:
-#     import OrganizationBalance
-# try:
-#     from . import OrganizationHistory
-# except:
-#     import OrganizationHistory
-# try:
-#     from . import OrganizationStatus
-# except:
-#     import OrganizationStatus
-# try:
-#     from . import Permission
-# except:
-#     import Permission
-# try:
-#     from . import Role
-# except:
-#     import Role
-# try:
-#     from . import RolePermission
-# except:
-#     import RolePermission
-# try:
-#     from . import User
-# except:
-#     import User

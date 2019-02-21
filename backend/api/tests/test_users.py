@@ -27,6 +27,7 @@ import json
 from rest_framework import status
 
 from .base_test_case import BaseTestCase
+from api.models.User import User
 
 
 class TestUsers(BaseTestCase):
@@ -41,18 +42,13 @@ class TestUsers(BaseTestCase):
                               first_name=user.first_name,
                               last_name=user.last_name,
                               display_name=user.display_name,
-                              email=user.email,
-                              authorization_id=user.authorization_id):
+                              email=user.email):
                 response = self.clients[user.username].get('/api/users/current')
                 self.assertEqual(response.status_code, status.HTTP_200_OK)
                 response_data = json.loads(response.content.decode("utf-8"))
 
-                self.assertEqual(response_data['authorizationId'], user.authorization_id, "Authid")
                 self.assertEqual(response_data['email'], user.email, "Email")
                 self.assertEqual(response_data['displayName'], user.display_name, "Display Name")
-
-                # don't want to leak GUID
-                self.assertNotIn('authorizationGuid', response_data, "GUID")
 
     def test_get_by_username_as_admin(self):
         """Test that by_username user endpoint returns expected data for client"""
@@ -63,18 +59,13 @@ class TestUsers(BaseTestCase):
                               first_name=user.first_name,
                               last_name=user.last_name,
                               display_name=user.display_name,
-                              email=user.email,
-                              authorization_id=user.authorization_id):
+                              email=user.email):
                 response = self.clients['gov_admin'].get('/api/users/by_username?username={}'.format(user.username))
                 self.assertEqual(response.status_code, status.HTTP_200_OK)
                 response_data = json.loads(response.content.decode("utf-8"))
 
-                self.assertEqual(response_data['authorizationId'], user.authorization_id, "Authid")
                 self.assertEqual(response_data['email'], user.email, "Email")
                 self.assertEqual(response_data['displayName'], user.display_name, "Display Name")
-
-                # don't want to leak GUID
-                self.assertNotIn('authorizationGuid', response_data, "GUID")
 
     def test_create_user(self):
         """Test that create user endpoint works"""
@@ -85,7 +76,7 @@ class TestUsers(BaseTestCase):
                 'last_name': 'lastname',
                 'username': 'new_user_1',
                 'organization': 1,
-                'roles': [],
+                'roles': (1,),
                 'email': 'email@email.com'
             }
         }
@@ -93,3 +84,34 @@ class TestUsers(BaseTestCase):
                                                   content_type='application/json',
                                                   data=json.dumps(payload))
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+
+    def test_update_self(self):
+        """Test that updating self works"""
+
+        payload = {
+            'first_name': 'firstname',
+            'last_name': 'lastname',
+            'email': 'email@email.com',
+            'cell_phone': '123456789',
+            'phone': '123456788',
+            'username': 'new_user_1'
+        }
+
+        user = User.objects.get(id=self.users['fs_user_1'].id)
+
+        response = self.clients['fs_user_1'].patch(
+            '/api/users/{}'.format(user.id),
+            content_type='application/json',
+            data=json.dumps(payload))
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        # not all fields should've been updated
+        user = User.objects.get(id=self.users['fs_user_1'].id)
+
+        self.assertEqual(user.first_name, 'firstname')
+        self.assertEqual(user.last_name, 'lastname')
+        self.assertEqual(user.email, 'email@email.com')
+        self.assertEqual(user.phone, '123456788')
+        self.assertEqual(user.cell_phone, '123456789')
+        self.assertNotEqual(user.username, 'new_user_1')

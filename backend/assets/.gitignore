@@ -2,3 +2,6 @@
 *
 # Except this file
 !.gitignore
+
+# ...and this image
+!bcgov.png

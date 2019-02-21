@@ -7,15 +7,16 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
-import { getUser, updateUser } from '../../actions/userActions';
+import { clearUsersRequestError, getUser, updateUser } from '../../actions/userActions';
 import Modal from '../../app/components/Modal';
-import history from '../../app/History';
 import Loading from '../../app/components/Loading';
+import history from '../../app/History';
 import { getFuelSuppliers } from '../../actions/organizationActions';
 import { getRoles } from '../../actions/roleActions';
 import UserForm from './components/UserForm';
-import USERS from '../../constants/routes/Users';
+import PERMISSIONS_USERS from '../../constants/permissions/Users';
 import { USERS as ADMIN_USERS } from '../../constants/routes/Admin';
+import USERS from '../../constants/routes/Users';
 import toastr from '../../utils/toastr';
 
 class UserEditContainer extends Component {
@@ -31,6 +32,7 @@ class UserEditContainer extends Component {
         organization: null,
         mobilePhone: '',
         status: 'active',
+        title: '',
         workPhone: '',
         roles: []
       }
@@ -44,18 +46,13 @@ class UserEditContainer extends Component {
     this._toggleCheck = this._toggleCheck.bind(this);
   }
 
-  componentWillMount () {
+  componentDidMount () {
+    this.props.clearUsersRequestError();
     this.loadData(this.props.match.params.id);
   }
 
   componentWillReceiveProps (props) {
     this.loadPropsToFieldState(props);
-  }
-
-  componentWillReceiveNewProps (prevProps, newProps) {
-    if (prevProps.match.params.id !== newProps.match.params.id) {
-      this.loadData(newProps.match.params.id);
-    }
   }
 
   loadData (id) {
@@ -78,11 +75,12 @@ class UserEditContainer extends Component {
       const fieldState = {
         firstName: props.user.details.firstName || '',
         lastName: props.user.details.lastName || '',
-        bceid: props.user.details.authorizationId || '',
+        bceid: props.user.details.keycloakEmail || '',
         email: props.user.details.email || '',
         organization: props.user.details.organization || null,
         mobilePhone: props.user.details.cellPhone || '',
         status: props.user.details.isActive ? 'active' : 'inactive',
+        title: props.user.details.title || '',
         workPhone: props.user.details.phone || '',
         roles: props.user.details.roles.map(role => ({
           id: role.id,
@@ -138,7 +136,8 @@ class UserEditContainer extends Component {
         }
         return false;
       }),
-      is_active: this.state.fields.status === 'active'
+      is_active: this.state.fields.status === 'active',
+      title: this.state.fields.title
     };
 
     const { id } = this.props.user.details;
@@ -171,6 +170,18 @@ class UserEditContainer extends Component {
       fieldState.roles[index].value = !fieldState.roles[index].value;
     }
 
+    // search for duplicates and get rid of them. they should be very unlikely, but just in case
+    const indexesFound = [];
+    fieldState.roles.forEach((role) => {
+      if (role.id === key) {
+        indexesFound.push(role);
+      }
+    });
+
+    if (indexesFound.length > 1) {
+      fieldState.roles.splice(index, 1);
+    }
+
     this.setState({
       fields: fieldState
     });
@@ -193,6 +204,7 @@ class UserEditContainer extends Component {
     return ([
       <UserForm
         addToFields={this._addToFields}
+        editPrimaryFields={this.props.loggedInUser.hasPermission(PERMISSIONS_USERS.USER_MANAGEMENT)}
         fields={this.state.fields}
         fuelSuppliers={this.props.fuelSuppliers}
         handleInputChange={this._handleInputChange}
@@ -201,7 +213,7 @@ class UserEditContainer extends Component {
         roles={this.props.roles}
         title="Edit User"
         toggleCheck={this._toggleCheck}
-        errors={this.props.user.error}
+        errors={this.props.error}
       />,
       <Modal
         handleSubmit={(event) => {
@@ -217,14 +229,16 @@ class UserEditContainer extends Component {
 }
 
 UserEditContainer.defaultProps = {
+  error: {},
   user: {
     details: {},
-    error: {},
     isFetching: true
   }
 };
 
 UserEditContainer.propTypes = {
+  clearUsersRequestError: PropTypes.func.isRequired,
+  error: PropTypes.shape({}),
   fuelSuppliers: PropTypes.arrayOf(PropTypes.shape()).isRequired,
   getFuelSuppliers: PropTypes.func.isRequired,
   getRoles: PropTypes.func.isRequired,
@@ -235,13 +249,14 @@ UserEditContainer.propTypes = {
     }).isRequired
   }).isRequired,
   loggedInUser: PropTypes.shape({
+    isGovernmentUser: PropTypes.bool,
+    hasPermission: PropTypes.func
   }).isRequired,
   roles: PropTypes.shape().isRequired,
   user: PropTypes.shape({
     details: PropTypes.shape({
       id: PropTypes.number
     }),
-    error: PropTypes.shape({}),
     isFetching: PropTypes.bool
   }),
   updateUser: PropTypes.func.isRequired
@@ -253,13 +268,13 @@ const mapStateToProps = state => ({
   roles: state.rootReducer.roles,
   user: {
     details: state.rootReducer.userViewRequest.user,
-    error: state.rootReducer.userViewRequest.error,
     isFetching: state.rootReducer.userViewRequest.isFetching
   },
   error: state.rootReducer.userAdmin.error
 });
 
 const mapDispatchToProps = dispatch => ({
+  clearUsersRequestError: bindActionCreators(clearUsersRequestError, dispatch),
   getFuelSuppliers: bindActionCreators(getFuelSuppliers, dispatch),
   getRoles: bindActionCreators(getRoles, dispatch),
   getUser: bindActionCreators(getUser, dispatch),

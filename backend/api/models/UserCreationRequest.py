@@ -22,38 +22,40 @@
 """
 
 from django.db import models
-from django.db.models import Q
-from django.contrib.auth.models import AbstractUser
-from django.core.validators import RegexValidator
-import django.contrib.auth.validators
 
 from auditable.models import Auditable
-from api.managers.UserManager import UserManager
-
-from .CreditTradeHistory import CreditTradeHistory
-from .Permission import Permission
-from .Role import Role
-from .UserRole import UserRole
 
 
 class UserCreationRequest(Auditable):
-    keycloak_email = models.EmailField(blank=False,
-                                       null=False,
-                                       unique=True,
-                                       db_comment='Keycloak email address to associate on first login')
+    """
+    Contains a list of users that were created by the system.
+    This is used to map out the relationship between the email used via
+    keycloak and the actual user in the system.
+    """
+    keycloak_email = models.EmailField(
+        blank=False,
+        null=False,
+        unique=True,
+        db_comment="Keycloak email address to associate on first login."
+    )
 
     user = models.OneToOneField(
         'User',
         related_name='creation_request',
         on_delete=models.PROTECT,
         unique=True,
-        db_comment='The user to be associated with a Keycloak account'
+        db_comment="The user to be associated with a Keycloak account."
     )
 
-    is_mapped = models.BooleanField(default=False,
-                                    db_comment='True if this request has been acted on')
+    is_mapped = models.BooleanField(
+        default=False,
+        db_comment="True if this request has been acted on")
 
     class Meta:
         db_table = 'user_creation_request'
 
-    db_table_comment = 'Users who may access the application'
+    db_table_comment = "Contains a list of users that were created by the " \
+                       "system. " \
+                       "This is used to map out the relationship between " \
+                       "the email used via keycloak and the actual user in " \
+                       "the system."

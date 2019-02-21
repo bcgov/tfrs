@@ -1,4 +1,4 @@
-import {createUserManager} from "redux-oidc";
+import { createUserManager } from 'redux-oidc';
 import CONFIG from '../config';
 
 const settings = {
@@ -13,4 +13,3 @@ const settings = {
 const userManager = createUserManager(settings);
 
 export default userManager;
-

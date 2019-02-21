@@ -3,7 +3,6 @@ import axios from 'axios';
 import ActionTypes from '../constants/actionTypes/Notifications';
 import ReducerTypes from '../constants/reducerTypes/Notifications';
 import * as Routes from '../constants/routes';
-import userManager from "../store/oidc-usermanager";
 
 /*
  * Get Notifications
@@ -11,15 +10,12 @@ import userManager from "../store/oidc-usermanager";
 const getNotifications = () => (dispatch) => {
   dispatch(getNotificationsRequest());
 
-
-    axios.get(Routes.BASE_URL + Routes.NOTIFICATIONS.LIST)
-      .then((response) => {
-        dispatch(getNotificationsSuccess(response.data));
-      }).catch((error) => {
+  axios.get(Routes.BASE_URL + Routes.NOTIFICATIONS.LIST)
+    .then((response) => {
+      dispatch(getNotificationsSuccess(response.data));
+    }).catch((error) => {
       dispatch(getNotificationsError(error.response));
     });
-
-
 };
 
 const getNotificationsError = error => ({
@@ -37,6 +33,32 @@ const getNotificationsSuccess = notifications => ({
   data: notifications,
   name: ReducerTypes.RECEIVE_NOTIFICATIONS_REQUEST,
   type: ActionTypes.RECEIVE_NOTIFICATIONS
+});
+
+/*
+ * Get Notifications Count
+ */
+
+const getNotificationsCount = () => (dispatch) => {
+  dispatch(getNotificationsCountRequest());
+
+  axios.get(Routes.BASE_URL + Routes.NOTIFICATIONS.COUNT)
+    .then((response) => {
+      dispatch(getNotificationsCountSuccess(response.data));
+    }).catch((error) => {
+    dispatch(getNotificationsError(error.response));
+  });
+};
+
+const getNotificationsCountRequest = () => ({
+  name: ReducerTypes.GET_NOTIFICATIONS_COUNT_REQUEST,
+  type: ActionTypes.GET_NOTIFICATIONS_COUNT
+});
+
+const getNotificationsCountSuccess = notifications => ({
+  data: notifications,
+  name: ReducerTypes.RECEIVE_NOTIFICATIONS_COUNT_REQUEST,
+  type: ActionTypes.RECEIVE_NOTIFICATIONS_COUNT
 });
 
 /*
@@ -135,4 +157,4 @@ const updateSubscriptionsError = error => ({
   errorMessage: error
 });
 
-export { getNotifications, getSubscriptions, updateNotifications, updateSubscriptions };
+export { getNotifications, getNotificationsCount, getSubscriptions, updateNotifications, updateSubscriptions };

@@ -57,7 +57,7 @@ class CreditTradeActions(object):
         if request.user.has_perm('RECOMMEND_CREDIT_TRANSFER') and \
                 credit_trade.type.the_type in [
                         "Credit Validation",
-                        "Credit Retirement",
+                        "Credit Reduction",
                         "Part 3 Award"
                 ]:
             available_statuses.append(

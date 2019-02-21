@@ -23,10 +23,11 @@
 
 from django.db import models
 
+from api.models.mixins.EffectiveDates import EffectiveDates
 from auditable.models import Auditable
 
 
-class OrganizationBalance(Auditable):
+class OrganizationBalance(Auditable, EffectiveDates):
     """
     Credit Trade Balance for the Fuel Supplier
     """
@@ -37,11 +38,6 @@ class OrganizationBalance(Auditable):
     validated_credits = models.BigIntegerField(
         db_comment='The actual balance of validated Low Carbon Fuel credits held by a fuel supplier between the effective_date and the expiration_date. If expiration_date is NULL then we assume that it is the current balance.'
     )
-
-    effective_date = models.DateField(
-        blank=True, null=True, db_comment='The date and time that the referenced credit balance for an organization become valid')
-    expiration_date = models.DateField(
-        blank=True, null=True, db_comment='The date and time that the referenced credit balance for an organization become invalid (i.e. changed).')
 
     credit_trade = models.ForeignKey(
         'CreditTrade',

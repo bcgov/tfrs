@@ -21,13 +21,22 @@
 
 import inspect
 import pkgutil
+import smtplib
 import sys
 from collections import namedtuple
 
+import pika
+from pika.exceptions import AMQPError
 from django.apps import AppConfig
 from django.db.models.signals import post_migrate
+from minio import Minio
+from minio.error import MinioError
 
-from db_comments.db_actions import create_db_comments, create_db_comments_from_models
+from api.services.KeycloakAPI import list_users, get_token
+from db_comments.db_actions import create_db_comments, \
+    create_db_comments_from_models
+from tfrs.settings import AMQP_CONNECTION_PARAMETERS, MINIO, DOCUMENTS_API, \
+    KEYCLOAK, EMAIL, TESTING, RUNSERVER
 
 
 class APIAppConfig(AppConfig):
@@ -40,6 +49,60 @@ class APIAppConfig(AppConfig):
 
         # register our interest in the post_migrate signal
         post_migrate.connect(post_migration_callback, sender=self)
+
+        if RUNSERVER:
+            try:
+                check_external_services()
+            except RuntimeError as error:
+                print('Startup checks failed. Not starting.')
+                print(error)
+                exit(-1)  # Django doesn't seem to do this automatically.
+
+
+def check_external_services():
+    """Called after initialization. Use it to validate settings"""
+
+    print('Checking AMQP connection')
+
+    try:
+        parameters = AMQP_CONNECTION_PARAMETERS
+        connection = pika.BlockingConnection(parameters)
+        connection.channel()
+        connection.close()
+    except AMQPError as _error:
+        raise RuntimeError('AMQP connection failed')
+
+    if DOCUMENTS_API['ENABLED']:
+        print('Documents API enabled. Checking Minio connection')
+
+        try:
+            minio = Minio(MINIO['ENDPOINT'],
+                          access_key=MINIO['ACCESS_KEY'],
+                          secret_key=MINIO['SECRET_KEY'],
+                          secure=MINIO['USE_SSL'])
+
+            _objects = minio.list_buckets()
+        except MinioError as _error:
+            raise RuntimeError('Minio connection failed')
+
+    if KEYCLOAK['ENABLED']:
+        print('Keycloak enabled. Checking connection')
+
+        try:
+            list_users(get_token())
+        except Exception as _error:
+            raise RuntimeError('Keycloak connection failed')
+
+    if EMAIL['ENABLED']:
+        print('Email sending enabled. Checking connection')
+
+        try:
+            with smtplib.SMTP(host=EMAIL['SMTP_SERVER_HOST'],
+                              port=EMAIL['SMTP_SERVER_PORT']) as server:
+                server.noop()
+        except Exception as error:
+            print(error)
+            raise RuntimeError('SMTP Connection failed')
 
 
 def post_migration_callback(sender, **kwargs):
@@ -93,7 +156,9 @@ def post_migration_callback(sender, **kwargs):
 
 
 def get_all_model_classes():
-    """Get all the model classes in api.models. Easier than maintaining a list."""
+    """
+    Get all the model classes in api.models. Easier than maintaining a list.
+    """
 
     # Has to be a local import. Must be loaded late.
     import api.models
@@ -107,7 +172,7 @@ def get_all_model_classes():
             prefix='api.models.'
     ):
 
-        sub_module = ModuleInfo(module_finder,name,ispkg)
+        sub_module = ModuleInfo(module_finder, name, ispkg)
 
         if sub_module.name in sys.modules:
             # we're already loaded (probably as a dependency of another)

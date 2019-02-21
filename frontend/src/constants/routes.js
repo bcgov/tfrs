@@ -1,8 +1,11 @@
 // Page Routes
 
+import CONFIG from '../config';
+
 export const HOME = '/';
 export const LOGOUT = '/logout';
 export const SETTINGS = '/settings';
+export const SETTINGS_PROFILE = '/settings/profile';
 
 // API Routes
 export const BASE_URL = `${window.location.protocol}//${window.location.host}/api`;
@@ -21,6 +24,11 @@ export const REFERENCE_DATA_API_ENDPOINTS = {
   organizationStatuses: '/organizations/statuses'
 };
 
+if (CONFIG.SECURE_DOCUMENT_UPLOAD.ENABLED) {
+  REFERENCE_DATA_API_ENDPOINTS.documentCategories = '/documents/categories';
+  REFERENCE_DATA_API_ENDPOINTS.documentStatuses = '/documents/statuses';
+}
+
 export const USERS = '/users';
 export const CURRENT_USER = '/users/current';
 
@@ -35,3 +43,4 @@ export { default as ROLES } from './routes/Roles';
 export { default as SIGNING_AUTHORITY_ASSERTIONS } from './routes/SigningAuthorityAssertions';
 export { default as SIGNING_AUTHORITY_CONFIRMATIONS } from './routes/SigningAuthorityConfirmations';
 export { default as NOTIFICATIONS } from './routes/Notifications';
+export { default as SECURE_DOCUMENT_UPLOAD } from './routes/SecureDocumentUpload';

@@ -5,7 +5,7 @@ import ReducerTypes from '../constants/reducerTypes/Users';
 import * as Routes from '../constants/routes';
 import userManager from '../store/oidc-usermanager';
 import CONFIG from '../config';
-import {getReferenceData} from "./referenceDataActions";
+import { getReferenceData } from './referenceDataActions';
 
 const getUsers = () => (dispatch) => {
   dispatch(getUsersRequest());
@@ -30,7 +30,7 @@ const createUser = payload => (dispatch) => {
 
 const updateUser = (id, payload) => (dispatch) => {
   dispatch(updateUserRequest(id));
-  return axios.put(`${Routes.BASE_URL}${Routes.USERS}/${id}`, payload)
+  return axios.patch(`${Routes.BASE_URL}${Routes.USERS}/${id}`, payload)
     .then((response) => {
       dispatch(updateUserSuccess(response.data));
     }).catch((error) => {
@@ -52,17 +52,15 @@ const getLoggedInUser = () => (dispatch) => {
 };
 
 const signUserOut = () => (dispatch) => {
-  if (CONFIG.KEYCLOAK.ENABLED) {
-    userManager.removeUser().then(() => {
-      return userManager.signoutRedirect({
-        post_logout_redirect_uri: CONFIG.KEYCLOAK.POST_LOGOUT_URL
-      }).then(() => {
-        dispatch(signUserOutAction());
-      });
-    });
-  } else {
-    dispatch(signUserOutAction());
-  }
+  userManager.clearStaleState();
+
+  userManager.removeUser().then(() => (
+    userManager.signoutRedirect({
+      post_logout_redirect_uri: CONFIG.KEYCLOAK.POST_LOGOUT_URL
+    }).then(() => {
+      dispatch(signUserOutAction());
+    })
+  ));
 };
 
 const createUserRequest = payload => ({
@@ -123,6 +121,15 @@ const getLoggedInUserError = error => ({
   errorData: error
 });
 
+const getUpdatedLoggedInUser = () => (dispatch) => {
+  axios.get(Routes.BASE_URL + Routes.CURRENT_USER)
+    .then((response) => {
+      dispatch(getLoggedInUserSuccess(response.data));
+    }).catch((error) => {
+      dispatch(getLoggedInUserError(error.response));
+    });
+};
+
 const getUser = id => (dispatch) => {
   dispatch(getUserRequest());
   axios.get(`${Routes.BASE_URL}${Routes.USERS}/${id}`)
@@ -178,7 +185,16 @@ const getUsersError = error => ({
   errorMessage: error
 });
 
+const clearUsersRequestError = () => (dispatch) => {
+  dispatch(clearUserErrorRequest());
+};
+
+const clearUserErrorRequest = () => ({
+  name: ReducerTypes.CLEAR_ERROR_REQUEST,
+  type: ActionTypes.CLEAR_ERROR
+});
+
 export {
   getUsers, getLoggedInUser, createUser, updateUser, getUser, getUserByUsername,
-  signUserOut
+  signUserOut, clearUsersRequestError, getUpdatedLoggedInUser
 };

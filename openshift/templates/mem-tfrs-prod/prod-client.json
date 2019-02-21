@@ -1,6 +1,6 @@
 {
     "kind": "Template",
-    "apiVersion": "v1",
+    "apiVersion": "template.openshift.io/v1",
     "metadata": {
         "name": "prod-client",
         "creationTimestamp": null
@@ -8,10 +8,10 @@
     "objects": [
         {
             "kind": "DeploymentConfig",
-            "apiVersion": "v1",
+            "apiVersion": "apps.openshift.io/v1",
             "metadata": {
                 "name": "client",
-                "generation": 1,
+                "generation": 119,
                 "creationTimestamp": null,
                 "annotations": {
                     "description": "Defines how to deploy the application server"
@@ -19,13 +19,9 @@
             },
             "spec": {
                 "strategy": {
-                    "type": "Rolling",
-                    "rollingParams": {
-                        "updatePeriodSeconds": 1,
-                        "intervalSeconds": 1,
-                        "timeoutSeconds": 600,
-                        "maxUnavailable": "25%",
-                        "maxSurge": "25%"
+                    "type": "Recreate",
+                    "recreateParams": {
+                        "timeoutSeconds": 600
                     },
                     "resources": {},
                     "activeDeadlineSeconds": 21600
@@ -41,8 +37,9 @@
                             "from": {
                                 "kind": "ImageStreamTag",
                                 "namespace": "mem-tfrs-tools",
-                                "name": "client:test"
-                            }
+                                "name": "client:prod"
+                            },
+                            "lastTriggeredImage": "docker-registry.default.svc:5000/mem-tfrs-tools/client@sha256:12f29d5ce7b0ec4c6d76b7181cd0e50a2bcba7aa71a126488538b2ab748b4960"
                         }
                     },
                     {
@@ -63,10 +60,19 @@
                         }
                     },
                     "spec": {
+                        "volumes": [
+                            {
+                                "name": "keycloak-config-data",
+                                "configMap": {
+                                    "name": "keycloak-config",
+                                    "defaultMode": 420
+                                }
+                            }
+                        ],
                         "containers": [
                             {
                                 "name": "client",
-                                "image": "docker-registry.default.svc:5000/mem-tfrs-tools/client@sha256:2ec2d2b848ebcf508878a4dd233b82176d1252cba59056cd2fa362b641643ddd",
+                                "image": "docker-registry.default.svc:5000/mem-tfrs-tools/client@sha256:12f29d5ce7b0ec4c6d76b7181cd0e50a2bcba7aa71a126488538b2ab748b4960",
                                 "ports": [
                                     {
                                         "containerPort": 3000,
@@ -76,7 +82,7 @@
                                 "env": [
                                     {
                                         "name": "API_URL",
-                                        "value": "http://backend-mem-tfrs-test.pathfinder.gov.bc.ca/api/"
+                                        "value": "http://backend-mem-tfrs-prod.pathfinder.gov.bc.ca/api/"
                                     },
                                     {
                                         "name": "RealIpFrom"
@@ -92,18 +98,48 @@
                                     },
                                     {
                                         "name": "API_URL",
-                                        "value": "http://backend.mem-tfrs-test.svc.cluster.local:8080/api/"
+                                        "value": "http://backend.mem-tfrs-prod.svc.cluster.local:8080/api/"
                                     }
                                 ],
                                 "resources": {
                                     "limits": {
-                                        "cpu": "500m",
-                                        "memory": "500Mi"
+                                        "cpu": "125m",
+                                        "memory": "250Mi"
                                     },
                                     "requests": {
-                                        "cpu": "400m",
-                                        "memory": "400Mi"
+                                        "cpu": "100m",
+                                        "memory": "200Mi"
                                     }
+                                },
+                                "volumeMounts": [
+                                    {
+                                        "name": "keycloak-config-data",
+                                        "mountPath": "/tmp/app/dist/config"
+                                    }
+                                ],
+                                "livenessProbe": {
+                                    "httpGet": {
+                                        "path": "/",
+                                        "port": 8080,
+                                        "scheme": "HTTP"
+                                    },
+                                    "initialDelaySeconds": 20,
+                                    "timeoutSeconds": 3,
+                                    "periodSeconds": 10,
+                                    "successThreshold": 1,
+                                    "failureThreshold": 3
+                                },
+                                "readinessProbe": {
+                                    "httpGet": {
+                                        "path": "/",
+                                        "port": 8080,
+                                        "scheme": "HTTP"
+                                    },
+                                    "initialDelaySeconds": 10,
+                                    "timeoutSeconds": 3,
+                                    "periodSeconds": 10,
+                                    "successThreshold": 1,
+                                    "failureThreshold": 3
                                 },
                                 "terminationMessagePath": "/dev/termination-log",
                                 "terminationMessagePolicy": "File",
@@ -161,16 +197,16 @@
         },
         {
             "kind": "Route",
-            "apiVersion": "v1",
+            "apiVersion": "route.openshift.io/v1",
             "metadata": {
-                "name": "main",
+                "name": "lowcarbonfuels-frontend",
                 "creationTimestamp": null,
                 "labels": {
                     "template": "tfrs-app-environment"
                 }
             },
             "spec": {
-                "host": "test-lowcarbonfuels.pathfinder.bcgov",
+                "host": "lowcarbonfuels.gov.bc.ca",
                 "to": {
                     "kind": "Service",
                     "name": "client",
@@ -181,21 +217,62 @@
                 },
                 "tls": {
                     "termination": "edge",
-                    "certificate": "-----BEGIN CERTIFICATE-----\nMIIEoTCCAy0CCQCCIK9n/7FxGzANBgkqhkiG9w0BAQUFADCBtTELMAkGA1UEBhMC\nQ0ExGTAXBgNVBAgMEEJyaXRpc2ggQ29sdW1iaWExETAPBgNVBAcMCFZpY3Rvcmlh\nMTcwNQYDVQQKDC5Hb3Zlcm5tZW50IG9mIHRoZSBQcm92aW5jZSBvZiBCcml0aXNo\nIENvbHVtYmlhMRAwDgYDVQQLDAdGTE5ST1JEMS0wKwYDVQQDDCR0ZXN0LWxvd2Nh\ncmJvbmZ1ZWxzLnBhdGhmaW5kZXIuYmNnb3YwIBcNMTgwMzI3MTk1NTE2WhgPMjEx\nODAzMDMxOTU1MTZaMIG1MQswCQYDVQQGEwJDQTEZMBcGA1UECAwQQnJpdGlzaCBD\nb2x1bWJpYTERMA8GA1UEBwwIVmljdG9yaWExNzA1BgNVBAoMLkdvdmVybm1lbnQg\nb2YgdGhlIFByb3ZpbmNlIG9mIEJyaXRpc2ggQ29sdW1iaWExEDAOBgNVBAsMB0ZM\nTlJPUkQxLTArBgNVBAMMJHRlc3QtbG93Y2FyYm9uZnVlbHMucGF0aGZpbmRlci5i\nY2dvdjCCAX0wDQYJKoZIhvcNAQEBBQADggFqADCCAWUCggFcAYzERqGC5OBqo5f1\nPxbMg9SGQ2c+KgmI2csjSQ1mqG0gA5r2SdByFt3y6pl9OrY0tmJvtFvKjDB79/hL\niTdPGVwtXgDPzw8IBOpupk0fKJ6ZC8Cft2XTYk8y+T79yk8LrNjWF01dGwuuM5sI\nVH6X/IaSlTaIKu9wjn6DKNlOVdloVymO9Y5/Q6k9P2O+KHwkibAOvFpre0QEpVT4\nU1/4clXCe/9XvFhLnZ13wSIjtiOHTJ96CP7OX0reLkEka3m2tZja+xeyXV7IE85W\nO3URxRhqR9EQ3TgTSiZNoYuPwKk623bzd4WzH/GXFhASKFHA1ajIoLbQSHCH5iP/\n1iqnyeQ1uoEUlluskFckJdD4r4eKP5laMDIpVVpn7r3m3ZDLl8e42fl1UafQsIi/\nfu7rQNzyWj65gCz8pu+IuvO6kq1N8s3UEo/W26Eac4QzQPeFiwHWE8aUSxxbfKLp\nAgMBAAEwDQYJKoZIhvcNAQEFBQADggFdAAAymyusRJjqZIQTI5y8j8ZtYz5mwfhQ\nUDGkZlUoS+NS1ALUJ0iXCj/IzOopVHeuogdQTZf6zY9Ij0X6adZWaV2E6Z3oaX8N\no++mLCxAjp0BH8wlEmafAn+qnki98PWeJr7ZJCLR63tu2Uk2xbBG5nxHT5YBAIPo\nXwGoC5NlrjxBe6lK+KHLa2HL+LQCq/RX+RCWRLvo/2hGSG6duVULfGA25PQ7r17Y\nCSVHc6umJXiFAlDVOazoTMZs8eG8ZEpCJMBH+yY0z8S3q82B9/8+PrKuXXUTcoAe\n62L8WgO5OMYly2tb69iN72M1uhBM75OjfKCtNMXaId96Jo1y4NNGjQ4lfF9zYYij\nspa8RmN5aWYqNy+aMwMmcWsYYNBhQqLyRDubL8hb9IhNsgWVLNX6mDIMiiroPusG\nNKxZuroKDZes8V7YGux7xki8l9XjY0fEyEjowcBT4qm/bzmwWg==\n-----END CERTIFICATE-----",
-                    "key": "-----BEGIN RSA PRIVATE KEY-----\n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\nET3F1ULakKxiCcT8LWjA3w==\n-----END RSA PRIVATE KEY-----"
+                    "certificate": "-----BEGIN CERTIFICATE-----\nMIIHDzCCBfegAwIBAgIQVxDWMUYLGaAAAAAAUOppVjANBgkqhkiG9w0BAQsFADCB\nujELMAkGA1UEBhMCVVMxFjAUBgNVBAoTDUVudHJ1c3QsIEluYy4xKDAmBgNVBAsT\nH1NlZSB3d3cuZW50cnVzdC5uZXQvbGVnYWwtdGVybXMxOTA3BgNVBAsTMChjKSAy\nMDEyIEVudHJ1c3QsIEluYy4gLSBmb3IgYXV0aG9yaXplZCB1c2Ugb25seTEuMCwG\nA1UEAxMlRW50cnVzdCBDZXJ0aWZpY2F0aW9uIEF1dGhvcml0eSAtIEwxSzAeFw0x\nODExMjEyMTE4NDBaFw0xOTExMjQyMTQ4MzlaMIGXMQswCQYDVQQGEwJDQTEZMBcG\nA1UECBMQQnJpdGlzaCBDb2x1bWJpYTERMA8GA1UEBxMIVmljdG9yaWExNzA1BgNV\nBAoTLkdvdmVybm1lbnQgb2YgdGhlIFByb3ZpbmNlIG9mIEJyaXRpc2ggQ29sdW1i\naWExITAfBgNVBAMTGGxvd2NhcmJvbmZ1ZWxzLmdvdi5iYy5jYTCCASIwDQYJKoZI\nhvcNAQEBBQADggEPADCCAQoCggEBAOmeR02pL2G/bswBIiCk/SArupaDcSHOo3z3\nYdX7YfwHg191+5Sqg2jALzHUj/RrbYWvcBkboVlvIeRTGB8918ubvLYo1R5eWPzj\nLe3SHUilYn24NYtG2fBvODBNV2oyXl4N7Lc/CrHTIWLc5HZm89MxgoJCyJqS9S5w\n1bEk3YGU8P+J1yG727tupUmzA7+k8CDS00aIyTo40Ra1bt1vM6ujtc+niKctBWdr\n27Mj7aMS2S6ctPm3RXCgofozL0MA5vlGH2ybgIrtnPZbbdjwN3CsJhB07cGAKhmH\nwU+TgRgzjukNa+PL3PvO+VVaZwuArFWB7IKTb6WYB8kNqwxQljsCAwEAAaOCAzAw\nggMsMEEGA1UdEQQ6MDiCGGxvd2NhcmJvbmZ1ZWxzLmdvdi5iYy5jYYIcd3d3Lmxv\nd2NhcmJvbmZ1ZWxzLmdvdi5iYy5jYTCCAX8GCisGAQQB1nkCBAIEggFvBIIBawFp\nAHYAVYHUwhaQNgFK6gubVzxT8MDkOHhwJQgXL6OqHQcT0wwAAAFnOD8iiwAABAMA\nRzBFAiEAtAzgLmXcuLJlpMwJ5S9V/udcSEkJrnhtlTYI9OXBtlsCIDz5IsjdCK28\n3r0vm0CunICKS87udcaZGQeKT6h8Bi29AHcAh3W/51l8+IxDmV+9827/Vo1HVjb/\nSrVgwbTq/16ggw8AAAFnOD8iqgAABAMASDBGAiEAuSAX3KB1DWWiAGKLldSTqy7a\n3L85R6ynaRxVo5Z3RjoCIQCCAOazEg8+MV4aWsPs7fBKU/HurLgpmqUXobO1xgMY\nWwB2ALvZ37wfinG1k5Qjl6qSe0c4V5UKq1LoGpCWZDaOHtGFAAABZzg/ImcAAAQD\nAEcwRQIgC9Z8am3EJxlnoT0PhZnCIIveLdwMN7Rx9gvuyZFBAcgCIQDzObLwOB9a\n3DDdJBRtFhIxo6jd5OwUHVzBRrIK6omIczAOBgNVHQ8BAf8EBAMCBaAwHQYDVR0l\nBBYwFAYIKwYBBQUHAwEGCCsGAQUFBwMCMDMGA1UdHwQsMCowKKAmoCSGImh0dHA6\nLy9jcmwuZW50cnVzdC5uZXQvbGV2ZWwxay5jcmwwSwYDVR0gBEQwQjA2BgpghkgB\nhvpsCgEFMCgwJgYIKwYBBQUHAgEWGmh0dHA6Ly93d3cuZW50cnVzdC5uZXQvcnBh\nMAgGBmeBDAECAjBoBggrBgEFBQcBAQRcMFowIwYIKwYBBQUHMAGGF2h0dHA6Ly9v\nY3NwLmVudHJ1c3QubmV0MDMGCCsGAQUFBzAChidodHRwOi8vYWlhLmVudHJ1c3Qu\nbmV0L2wxay1jaGFpbjI1Ni5jZXIwHwYDVR0jBBgwFoAUgqJwdN28Uz/Pe9T3zX+n\nYMYKTL8wHQYDVR0OBBYEFFmgDDOf5ODHv3TkuXQdMi90w9a8MAkGA1UdEwQCMAAw\nDQYJKoZIhvcNAQELBQADggEBAJiDLCcOjtJTcnQF7/sCOMHIVd0zCcXS5DokfJ22\n6u1E7duYGws/9NvrHhnWyrT1UwRsA6g0+eyS4z5JBu0baN9r+FY5zN6H5sf/dr7X\nMhkY3wqo8i8YXMvSwyHknSCAVK4JCYFUZlOVng/ydMVg6o4HydzwiFnXZ5OFxLIf\nvCC+GjEEk8JNdZPC0C1rQrIw3FexCeEpeASJFbczepaE+GSPQjh2xLwEflkolYoL\niqB4ldLN4pyYs8lQayQQQGKooreHNEK5wPXQcEXMhgbm9KY/2GT4gp7cT9B++D6i\n039rbpjibS3Rnt9jjCT41O1nURFlKNuLpjvu5ihOoPPDomQ=\n-----END CERTIFICATE-----",
+                    "key": "-----BEGIN RSA PRIVATE KEY-----\nMIIEpQIBAAKCAQEA6Z5HTakvYb9uzAEiIKT9ICu6loNxIc6jfPdh1fth/AeDX3X7\nlKqDaMAvMdSP9Gttha9wGRuhWW8h5FMYHz3Xy5u8tijVHl5Y/OMt7dIdSKVifbg1\ni0bZ8G84ME1XajJeXg3stz8KsdMhYtzkdmbz0zGCgkLImpL1LnDVsSTdgZTw/4nX\nIbvbu26lSbMDv6TwINLTRojJOjjRFrVu3W8zq6O1z6eIpy0FZ2vbsyPtoxLZLpy0\n+bdFcKCh+jMvQwDm+UYfbJuAiu2c9ltt2PA3cKwmEHTtwYAqGYfBT5OBGDOO6Q1r\n48vc+875VVpnC4CsVYHsgpNvpZgHyQ2rDFCWOwIDAQABAoIBAHioPrtlfgtGC7th\nenbRv8o1y5ChInULfHS2b9lMlDbOypMrJFyMFIKtf7KEzjS2p0I8cfEFzDecpix+\nnh7EmgeWz8hlHm0o3Vz/GGGT+3vhrxSvZzgfx7/eMW8BAvzeNs7s8i1Safudx8h/\nvZ9JXPTexUDxrRnofKkXrcZn+99ISOMu84LMaW5l4ckImuaFkVY/uj2ykFsOhhS3\nos9Q6de6wfzKerFYsmwJihJUK3/20W1/GqxDMaGUesMJIn/V4iEIRA+32bdyMQQN\nJY07qJ+RqHPC3VaaDl0Cxklw6C9WFAHXT7JRT4al4Qwkx2SXGvrOju8JAwmKnFMl\nEvCeaoECgYEA+gx861Vg4S6vri8i1fz3wcXkdwBhw+PWsLBz3toG4iEs4Wi9LrZP\nEFXJVU3KFg8D8rHEzot4kvzwUabu9Vv5I5dhZ7qa3a1rM45V7+7UpNQjtiV+r7gX\nB8BrpV58BnBHbzmE/6JwqBYMzgs5V5/nq7r/QPYoJkUih67cbSL1GdkCgYEA7y2u\nirvWf+If9GOi2GS1G8BFLruOzZGv/SkaHclLNNs0YaA9u3KBWt1Ec+mRxBBwycZ5\nkf/mAvLyWm7y3VI+YpTSOYp2bhwK+EYXcy/cmjX1WPH0mbEjJuSgpwM/4ntnOk8P\nw0AT+jUKalJA3ApgT8qKV1e4DYRqzphlmAWp8DMCgYEArTQBQ7H8TX7dSjZ0Vu3H\nYH4HZzbogZxMlk9js7YqlnCMegbnJHg8BACoWWJs3SLBhVcGEFwjxQ1YGfccBvES\nfkjZu9RSecMqQqgRdwVkXlhj9EO8oVNPAJuU9ROhrYQQt0aMjdajWosLi53StpOZ\nEieRsBnSbc/tvzaskRxp0uECgYEAlEen7A6j3sibsvGKZcmZlkjPGzfgQoXNq4+t\nx0WiQHSdtuCXJPzKQUDoTUxCuGDQ6+cGO4OAX9eqdHJQUvHIB2noIxA6d+0ex+j8\nZMcJZvmIz8nBMP9moZggGSqkko6a4sVdKlkxiW8Us/GmkERGjXEt7xRM4OR1KvvE\nEEmCn40CgYEAkJIry/JuAlSfnqnJA1+EpaOw9TJa6vHOkwRzu+IOF8Rotn8HFGrv\nT0toEiVlYCH5H2QbCk6FHSLvLZur50s9+Zarr8iliZ0OWVTF1kncne4Mluo5GRi3\nnFAFmhMNbGoyO1AVrmIEUMKR278FfOJQuNkS9TLEckHlNukiJhmugLA=\n-----END RSA PRIVATE KEY-----",
+                    "caCertificate": "-----BEGIN CERTIFICATE-----\nMIIFDjCCA/agAwIBAgIMDulMwwAAAABR03eFMA0GCSqGSIb3DQEBCwUAMIG+MQsw\nCQYDVQQGEwJVUzEWMBQGA1UEChMNRW50cnVzdCwgSW5jLjEoMCYGA1UECxMfU2Vl\nIHd3dy5lbnRydXN0Lm5ldC9sZWdhbC10ZXJtczE5MDcGA1UECxMwKGMpIDIwMDkg\nRW50cnVzdCwgSW5jLiAtIGZvciBhdXRob3JpemVkIHVzZSBvbmx5MTIwMAYDVQQD\nEylFbnRydXN0IFJvb3QgQ2VydGlmaWNhdGlvbiBBdXRob3JpdHkgLSBHMjAeFw0x\nNTEwMDUxOTEzNTZaFw0zMDEyMDUxOTQzNTZaMIG6MQswCQYDVQQGEwJVUzEWMBQG\nA1UEChMNRW50cnVzdCwgSW5jLjEoMCYGA1UECxMfU2VlIHd3dy5lbnRydXN0Lm5l\ndC9sZWdhbC10ZXJtczE5MDcGA1UECxMwKGMpIDIwMTIgRW50cnVzdCwgSW5jLiAt\nIGZvciBhdXRob3JpemVkIHVzZSBvbmx5MS4wLAYDVQQDEyVFbnRydXN0IENlcnRp\nZmljYXRpb24gQXV0aG9yaXR5IC0gTDFLMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8A\nMIIBCgKCAQEA2j+W0E25L0Tn2zlem1DuXKVh2kFnUwmqAJqOV38pa9vH4SEkqjrQ\njUcj0u1yFvCRIdJdt7hLqIOPt5EyaM/OJZMssn2XyP7BtBe6CZ4DkJN7fEmDImiK\nm95HwzGYei59QAvS7z7Tsoyqj0ip/wDoKVgG97aTWpRzJiatWA7lQrjV6nN5ZGhT\nJbiEz5R6rgZFDKNrTdDGvuoYpDbwkrK6HIiPOlJ/915tgxyd8B/lw9bdpXiSPbBt\nLOrJz5RBGXFEaLpHPATpXbo+8DX3Fbae8i4VHj9HyMg4p3NFXU2wO7GOFyk36t0F\nASK7lDYqjVs1/lMZLwhGwSqzGmIdTivZGwIDAQABo4IBDDCCAQgwDgYDVR0PAQH/\nBAQDAgEGMBIGA1UdEwEB/wQIMAYBAf8CAQAwMwYIKwYBBQUHAQEEJzAlMCMGCCsG\nAQUFBzABhhdodHRwOi8vb2NzcC5lbnRydXN0Lm5ldDAwBgNVHR8EKTAnMCWgI6Ah\nhh9odHRwOi8vY3JsLmVudHJ1c3QubmV0L2cyY2EuY3JsMDsGA1UdIAQ0MDIwMAYE\nVR0gADAoMCYGCCsGAQUFBwIBFhpodHRwOi8vd3d3LmVudHJ1c3QubmV0L3JwYTAd\nBgNVHQ4EFgQUgqJwdN28Uz/Pe9T3zX+nYMYKTL8wHwYDVR0jBBgwFoAUanImetAe\n733nO2lR1GyNn5ASZqswDQYJKoZIhvcNAQELBQADggEBADnVjpiDYcgsY9NwHRkw\ny/YJrMxp1cncN0HyMg/vdMNY9ngnCTQIlZIv19+4o/0OgemknNM/TWgrFTEKFcxS\nBJPok1DD2bHi4Wi3Ogl08TRYCj93mEC45mj/XeTIRsXsgdfJghhcg85x2Ly/rJkC\nk9uUmITSnKa1/ly78EqvIazCP0kkZ9Yujs+szGQVGHLlbHfTUqi53Y2sAEo1GdRv\nc6N172tkw+CNgxKhiucOhk3YtCAbvmqljEtoZuMrx1gL+1YQ1JH7HdMxWBCMRON1\nexCdtTix9qrKgWRs6PLigVWXUX/hwidQosk8WwBD9lu51aX8/wdQQGcHsFXwt35u\nLcw=\n-----END CERTIFICATE-----"
                 },
                 "wildcardPolicy": "None"
             },
             "status": {
                 "ingress": [
                     {
-                        "host": "test-lowcarbonfuels.pathfinder.bcgov",
+                        "host": "lowcarbonfuels.gov.bc.ca",
                         "routerName": "router",
                         "conditions": [
                             {
                                 "type": "Admitted",
                                 "status": "True",
-                                "lastTransitionTime": "2018-04-17T18:53:15Z"
+                                "lastTransitionTime": "2018-12-11T21:29:12Z"
+                            }
+                        ],
+                        "wildcardPolicy": "None"
+                    }
+                ]
+            }
+        },
+        {
+            "kind": "Route",
+            "apiVersion": "route.openshift.io/v1",
+            "metadata": {
+                "name": "lowcarbonfuels-notification",
+                "creationTimestamp": null
+            },
+            "spec": {
+                "host": "lowcarbonfuels.gov.bc.ca",
+                "path": "/socket.io",
+                "to": {
+                    "kind": "Service",
+                    "name": "notification-server",
+                    "weight": 100
+                },
+                "tls": {
+                    "termination": "edge",
+                    "certificate": "-----BEGIN CERTIFICATE-----\nMIIHDzCCBfegAwIBAgIQVxDWMUYLGaAAAAAAUOppVjANBgkqhkiG9w0BAQsFADCB\nujELMAkGA1UEBhMCVVMxFjAUBgNVBAoTDUVudHJ1c3QsIEluYy4xKDAmBgNVBAsT\nH1NlZSB3d3cuZW50cnVzdC5uZXQvbGVnYWwtdGVybXMxOTA3BgNVBAsTMChjKSAy\nMDEyIEVudHJ1c3QsIEluYy4gLSBmb3IgYXV0aG9yaXplZCB1c2Ugb25seTEuMCwG\nA1UEAxMlRW50cnVzdCBDZXJ0aWZpY2F0aW9uIEF1dGhvcml0eSAtIEwxSzAeFw0x\nODExMjEyMTE4NDBaFw0xOTExMjQyMTQ4MzlaMIGXMQswCQYDVQQGEwJDQTEZMBcG\nA1UECBMQQnJpdGlzaCBDb2x1bWJpYTERMA8GA1UEBxMIVmljdG9yaWExNzA1BgNV\nBAoTLkdvdmVybm1lbnQgb2YgdGhlIFByb3ZpbmNlIG9mIEJyaXRpc2ggQ29sdW1i\naWExITAfBgNVBAMTGGxvd2NhcmJvbmZ1ZWxzLmdvdi5iYy5jYTCCASIwDQYJKoZI\nhvcNAQEBBQADggEPADCCAQoCggEBAOmeR02pL2G/bswBIiCk/SArupaDcSHOo3z3\nYdX7YfwHg191+5Sqg2jALzHUj/RrbYWvcBkboVlvIeRTGB8918ubvLYo1R5eWPzj\nLe3SHUilYn24NYtG2fBvODBNV2oyXl4N7Lc/CrHTIWLc5HZm89MxgoJCyJqS9S5w\n1bEk3YGU8P+J1yG727tupUmzA7+k8CDS00aIyTo40Ra1bt1vM6ujtc+niKctBWdr\n27Mj7aMS2S6ctPm3RXCgofozL0MA5vlGH2ybgIrtnPZbbdjwN3CsJhB07cGAKhmH\nwU+TgRgzjukNa+PL3PvO+VVaZwuArFWB7IKTb6WYB8kNqwxQljsCAwEAAaOCAzAw\nggMsMEEGA1UdEQQ6MDiCGGxvd2NhcmJvbmZ1ZWxzLmdvdi5iYy5jYYIcd3d3Lmxv\nd2NhcmJvbmZ1ZWxzLmdvdi5iYy5jYTCCAX8GCisGAQQB1nkCBAIEggFvBIIBawFp\nAHYAVYHUwhaQNgFK6gubVzxT8MDkOHhwJQgXL6OqHQcT0wwAAAFnOD8iiwAABAMA\nRzBFAiEAtAzgLmXcuLJlpMwJ5S9V/udcSEkJrnhtlTYI9OXBtlsCIDz5IsjdCK28\n3r0vm0CunICKS87udcaZGQeKT6h8Bi29AHcAh3W/51l8+IxDmV+9827/Vo1HVjb/\nSrVgwbTq/16ggw8AAAFnOD8iqgAABAMASDBGAiEAuSAX3KB1DWWiAGKLldSTqy7a\n3L85R6ynaRxVo5Z3RjoCIQCCAOazEg8+MV4aWsPs7fBKU/HurLgpmqUXobO1xgMY\nWwB2ALvZ37wfinG1k5Qjl6qSe0c4V5UKq1LoGpCWZDaOHtGFAAABZzg/ImcAAAQD\nAEcwRQIgC9Z8am3EJxlnoT0PhZnCIIveLdwMN7Rx9gvuyZFBAcgCIQDzObLwOB9a\n3DDdJBRtFhIxo6jd5OwUHVzBRrIK6omIczAOBgNVHQ8BAf8EBAMCBaAwHQYDVR0l\nBBYwFAYIKwYBBQUHAwEGCCsGAQUFBwMCMDMGA1UdHwQsMCowKKAmoCSGImh0dHA6\nLy9jcmwuZW50cnVzdC5uZXQvbGV2ZWwxay5jcmwwSwYDVR0gBEQwQjA2BgpghkgB\nhvpsCgEFMCgwJgYIKwYBBQUHAgEWGmh0dHA6Ly93d3cuZW50cnVzdC5uZXQvcnBh\nMAgGBmeBDAECAjBoBggrBgEFBQcBAQRcMFowIwYIKwYBBQUHMAGGF2h0dHA6Ly9v\nY3NwLmVudHJ1c3QubmV0MDMGCCsGAQUFBzAChidodHRwOi8vYWlhLmVudHJ1c3Qu\nbmV0L2wxay1jaGFpbjI1Ni5jZXIwHwYDVR0jBBgwFoAUgqJwdN28Uz/Pe9T3zX+n\nYMYKTL8wHQYDVR0OBBYEFFmgDDOf5ODHv3TkuXQdMi90w9a8MAkGA1UdEwQCMAAw\nDQYJKoZIhvcNAQELBQADggEBAJiDLCcOjtJTcnQF7/sCOMHIVd0zCcXS5DokfJ22\n6u1E7duYGws/9NvrHhnWyrT1UwRsA6g0+eyS4z5JBu0baN9r+FY5zN6H5sf/dr7X\nMhkY3wqo8i8YXMvSwyHknSCAVK4JCYFUZlOVng/ydMVg6o4HydzwiFnXZ5OFxLIf\nvCC+GjEEk8JNdZPC0C1rQrIw3FexCeEpeASJFbczepaE+GSPQjh2xLwEflkolYoL\niqB4ldLN4pyYs8lQayQQQGKooreHNEK5wPXQcEXMhgbm9KY/2GT4gp7cT9B++D6i\n039rbpjibS3Rnt9jjCT41O1nURFlKNuLpjvu5ihOoPPDomQ=\n-----END CERTIFICATE-----",
+                    "key": "-----BEGIN RSA PRIVATE KEY-----\nMIIEpQIBAAKCAQEA6Z5HTakvYb9uzAEiIKT9ICu6loNxIc6jfPdh1fth/AeDX3X7\nlKqDaMAvMdSP9Gttha9wGRuhWW8h5FMYHz3Xy5u8tijVHl5Y/OMt7dIdSKVifbg1\ni0bZ8G84ME1XajJeXg3stz8KsdMhYtzkdmbz0zGCgkLImpL1LnDVsSTdgZTw/4nX\nIbvbu26lSbMDv6TwINLTRojJOjjRFrVu3W8zq6O1z6eIpy0FZ2vbsyPtoxLZLpy0\n+bdFcKCh+jMvQwDm+UYfbJuAiu2c9ltt2PA3cKwmEHTtwYAqGYfBT5OBGDOO6Q1r\n48vc+875VVpnC4CsVYHsgpNvpZgHyQ2rDFCWOwIDAQABAoIBAHioPrtlfgtGC7th\nenbRv8o1y5ChInULfHS2b9lMlDbOypMrJFyMFIKtf7KEzjS2p0I8cfEFzDecpix+\nnh7EmgeWz8hlHm0o3Vz/GGGT+3vhrxSvZzgfx7/eMW8BAvzeNs7s8i1Safudx8h/\nvZ9JXPTexUDxrRnofKkXrcZn+99ISOMu84LMaW5l4ckImuaFkVY/uj2ykFsOhhS3\nos9Q6de6wfzKerFYsmwJihJUK3/20W1/GqxDMaGUesMJIn/V4iEIRA+32bdyMQQN\nJY07qJ+RqHPC3VaaDl0Cxklw6C9WFAHXT7JRT4al4Qwkx2SXGvrOju8JAwmKnFMl\nEvCeaoECgYEA+gx861Vg4S6vri8i1fz3wcXkdwBhw+PWsLBz3toG4iEs4Wi9LrZP\nEFXJVU3KFg8D8rHEzot4kvzwUabu9Vv5I5dhZ7qa3a1rM45V7+7UpNQjtiV+r7gX\nB8BrpV58BnBHbzmE/6JwqBYMzgs5V5/nq7r/QPYoJkUih67cbSL1GdkCgYEA7y2u\nirvWf+If9GOi2GS1G8BFLruOzZGv/SkaHclLNNs0YaA9u3KBWt1Ec+mRxBBwycZ5\nkf/mAvLyWm7y3VI+YpTSOYp2bhwK+EYXcy/cmjX1WPH0mbEjJuSgpwM/4ntnOk8P\nw0AT+jUKalJA3ApgT8qKV1e4DYRqzphlmAWp8DMCgYEArTQBQ7H8TX7dSjZ0Vu3H\nYH4HZzbogZxMlk9js7YqlnCMegbnJHg8BACoWWJs3SLBhVcGEFwjxQ1YGfccBvES\nfkjZu9RSecMqQqgRdwVkXlhj9EO8oVNPAJuU9ROhrYQQt0aMjdajWosLi53StpOZ\nEieRsBnSbc/tvzaskRxp0uECgYEAlEen7A6j3sibsvGKZcmZlkjPGzfgQoXNq4+t\nx0WiQHSdtuCXJPzKQUDoTUxCuGDQ6+cGO4OAX9eqdHJQUvHIB2noIxA6d+0ex+j8\nZMcJZvmIz8nBMP9moZggGSqkko6a4sVdKlkxiW8Us/GmkERGjXEt7xRM4OR1KvvE\nEEmCn40CgYEAkJIry/JuAlSfnqnJA1+EpaOw9TJa6vHOkwRzu+IOF8Rotn8HFGrv\nT0toEiVlYCH5H2QbCk6FHSLvLZur50s9+Zarr8iliZ0OWVTF1kncne4Mluo5GRi3\nnFAFmhMNbGoyO1AVrmIEUMKR278FfOJQuNkS9TLEckHlNukiJhmugLA=\n-----END RSA PRIVATE KEY-----",
+                    "caCertificate": "-----BEGIN CERTIFICATE-----\nMIIFDjCCA/agAwIBAgIMDulMwwAAAABR03eFMA0GCSqGSIb3DQEBCwUAMIG+MQsw\nCQYDVQQGEwJVUzEWMBQGA1UEChMNRW50cnVzdCwgSW5jLjEoMCYGA1UECxMfU2Vl\nIHd3dy5lbnRydXN0Lm5ldC9sZWdhbC10ZXJtczE5MDcGA1UECxMwKGMpIDIwMDkg\nRW50cnVzdCwgSW5jLiAtIGZvciBhdXRob3JpemVkIHVzZSBvbmx5MTIwMAYDVQQD\nEylFbnRydXN0IFJvb3QgQ2VydGlmaWNhdGlvbiBBdXRob3JpdHkgLSBHMjAeFw0x\nNTEwMDUxOTEzNTZaFw0zMDEyMDUxOTQzNTZaMIG6MQswCQYDVQQGEwJVUzEWMBQG\nA1UEChMNRW50cnVzdCwgSW5jLjEoMCYGA1UECxMfU2VlIHd3dy5lbnRydXN0Lm5l\ndC9sZWdhbC10ZXJtczE5MDcGA1UECxMwKGMpIDIwMTIgRW50cnVzdCwgSW5jLiAt\nIGZvciBhdXRob3JpemVkIHVzZSBvbmx5MS4wLAYDVQQDEyVFbnRydXN0IENlcnRp\nZmljYXRpb24gQXV0aG9yaXR5IC0gTDFLMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8A\nMIIBCgKCAQEA2j+W0E25L0Tn2zlem1DuXKVh2kFnUwmqAJqOV38pa9vH4SEkqjrQ\njUcj0u1yFvCRIdJdt7hLqIOPt5EyaM/OJZMssn2XyP7BtBe6CZ4DkJN7fEmDImiK\nm95HwzGYei59QAvS7z7Tsoyqj0ip/wDoKVgG97aTWpRzJiatWA7lQrjV6nN5ZGhT\nJbiEz5R6rgZFDKNrTdDGvuoYpDbwkrK6HIiPOlJ/915tgxyd8B/lw9bdpXiSPbBt\nLOrJz5RBGXFEaLpHPATpXbo+8DX3Fbae8i4VHj9HyMg4p3NFXU2wO7GOFyk36t0F\nASK7lDYqjVs1/lMZLwhGwSqzGmIdTivZGwIDAQABo4IBDDCCAQgwDgYDVR0PAQH/\nBAQDAgEGMBIGA1UdEwEB/wQIMAYBAf8CAQAwMwYIKwYBBQUHAQEEJzAlMCMGCCsG\nAQUFBzABhhdodHRwOi8vb2NzcC5lbnRydXN0Lm5ldDAwBgNVHR8EKTAnMCWgI6Ah\nhh9odHRwOi8vY3JsLmVudHJ1c3QubmV0L2cyY2EuY3JsMDsGA1UdIAQ0MDIwMAYE\nVR0gADAoMCYGCCsGAQUFBwIBFhpodHRwOi8vd3d3LmVudHJ1c3QubmV0L3JwYTAd\nBgNVHQ4EFgQUgqJwdN28Uz/Pe9T3zX+nYMYKTL8wHwYDVR0jBBgwFoAUanImetAe\n733nO2lR1GyNn5ASZqswDQYJKoZIhvcNAQELBQADggEBADnVjpiDYcgsY9NwHRkw\ny/YJrMxp1cncN0HyMg/vdMNY9ngnCTQIlZIv19+4o/0OgemknNM/TWgrFTEKFcxS\nBJPok1DD2bHi4Wi3Ogl08TRYCj93mEC45mj/XeTIRsXsgdfJghhcg85x2Ly/rJkC\nk9uUmITSnKa1/ly78EqvIazCP0kkZ9Yujs+szGQVGHLlbHfTUqi53Y2sAEo1GdRv\nc6N172tkw+CNgxKhiucOhk3YtCAbvmqljEtoZuMrx1gL+1YQ1JH7HdMxWBCMRON1\nexCdtTix9qrKgWRs6PLigVWXUX/hwidQosk8WwBD9lu51aX8/wdQQGcHsFXwt35u\nLcw=\n-----END CERTIFICATE-----"
+                },
+                "wildcardPolicy": "None"
+            },
+            "status": {
+                "ingress": [
+                    {
+                        "host": "lowcarbonfuels.gov.bc.ca",
+                        "routerName": "router",
+                        "conditions": [
+                            {
+                                "type": "Admitted",
+                                "status": "True",
+                                "lastTransitionTime": "2018-12-11T21:31:03Z"
                             }
                         ],
                         "wildcardPolicy": "None"

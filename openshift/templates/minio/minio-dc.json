@@ -1,0 +1,339 @@
+{
+    "kind": "Template",
+    "apiVersion": "v1",
+    "metadata": {
+        "name": "tfrs-minio-deploy",
+        "creationTimestamp": null
+    },
+    "parameters": [
+        {
+            "name": "ENV_NAME",
+            "required": true
+        },
+        {
+            "name": "MINIO_SECRET_KEY",
+            "description": "Username for PostgreSQL user that will be used for accessing the database.",
+            "from": "user[A-Z0-9]{3}",
+            "generate": "expression",
+            "required": true
+        },
+        {
+            "name": "MINIO_ACCESS_KEY",
+            "value": "tfrsinternal",
+            "required": true
+        },
+        {
+            "name": "MINIO_SECRET_KEY",
+            "from": "[a-zA-Z0-9]{16}",
+            "generate": "expression",
+            "required": true
+        },
+        {
+            "name": "S3_PUBLIC_ACCESS_KEY",
+            "value": "tfrsinternal",
+            "required": true
+        },
+        {
+            "name": "S3_PUBLIC_SECRET_KEY",
+            "from": "[a-zA-Z0-9]{16}",
+            "generate": "expression",
+            "required": true
+        },
+        {
+            "name": "S3_ROOT_BUCKET",
+            "value": "tfrs-docs",
+            "required": true
+        },
+        {
+            "name": "MINIO_CONFIG_VOLUME_SIZE",
+            "value": "1Gi",
+            "required": true
+        },
+        {
+            "name": "MINIO_DATA_VOLUME_SIZE",
+            "value": "2Gi",
+            "required": true
+        }
+    ],
+    "objects": [
+        {
+            "apiVersion": "v1",
+            "kind": "Secret",
+            "metadata": {
+                "annotations": {
+                },
+                "name": "tfrs-minio-secret",
+                "labels":{
+                }
+            },
+            "stringData": {
+                "MINIO_ACCESS_KEY": "${MINIO_ACCESS_KEY}",
+                "MINIO_SECRET_KEY": "${MINIO_SECRET_KEY}",
+                "S3_PUBLIC_ACCESS_KEY": "${S3_PUBLIC_ACCESS_KEY}",
+                "S3_PUBLIC_SECRET_KEY": "${S3_PUBLIC_SECRET_KEY}",
+                "S3_ROOT_BUCKET": "${S3_ROOT_BUCKET}"
+            }
+        },
+        {
+            "kind": "PersistentVolumeClaim",
+            "apiVersion": "v1",
+            "metadata": {
+                "name": "minio-data-vol",
+                "creationTimestamp": null,
+                "annotations": {
+                    "volume.beta.kubernetes.io/storage-class": "gluster-file",
+                    "template.openshift.io.bcgov/create": "true"
+                },
+                "finalizers": [
+                    "kubernetes.io/pvc-protection"
+                ]
+            },
+            "spec": {
+                "accessModes": [
+                    "ReadWriteOnce"
+                ],
+                "resources": {
+                    "requests": {
+                        "storage": "${MINIO_DATA_VOLUME_SIZE}"
+                    }
+                }
+            },
+            "status": {}
+        },
+        {
+            "kind": "PersistentVolumeClaim",
+            "apiVersion": "v1",
+            "metadata": {
+                "name": "minio-config-vol",
+                "creationTimestamp": null,
+                "annotations": {
+                    "volume.beta.kubernetes.io/storage-class": "gluster-file",
+                    "template.openshift.io.bcgov/create": "true"
+                },
+                "finalizers": [
+                    "kubernetes.io/pvc-protection"
+                ]
+            },
+            "spec": {
+                "accessModes": [
+                    "ReadWriteOnce"
+                ],
+                "resources": {
+                    "requests": {
+                        "storage": "${MINIO_CONFIG_VOLUME_SIZE}"
+                    }
+                }
+            },
+            "status": {}
+        },
+        {
+            "kind": "Service",
+            "apiVersion": "v1",
+            "metadata": {
+                "name": "tfrs-minio",
+                "creationTimestamp": null,
+                "labels": {
+                    "app": "tfrs-minio"
+                },
+                "annotations": {
+                    "openshift.io/generated-by": "OpenShiftWebConsole"
+                }
+            },
+            "spec": {
+                "ports": [
+                    {
+                        "name": "9000-tcp",
+                        "protocol": "TCP",
+                        "port": 9000,
+                        "targetPort": 9000
+                    }
+                ],
+                "selector": {
+                    "deploymentconfig": "tfrs-minio"
+                },
+                "type": "ClusterIP",
+                "sessionAffinity": "None"
+            },
+            "status": {
+                "loadBalancer": {}
+            }
+        },
+        {
+            "kind": "Route",
+            "apiVersion": "v1",
+            "metadata": {
+                "name": "docs",
+                "creationTimestamp": null,
+                "annotations": {
+                    "openshift.io/host.generated": "true"
+                }
+            },
+            "spec": {
+                "host": "docs-mem-tfrs-${ENV_NAME}.pathfinder.gov.bc.ca",
+                "to": {
+                    "kind": "Service",
+                    "name": "tfrs-minio",
+                    "weight": 100
+                },
+                "port": {
+                    "targetPort": "9000-tcp"
+                },
+                "tls": {
+                    "termination": "edge"
+                },
+                "wildcardPolicy": "None"
+            },
+            "status": {
+            }
+        },
+        {
+            "kind": "DeploymentConfig",
+            "apiVersion": "v1",
+            "metadata": {
+                "name": "tfrs-minio",
+                "generation": 1,
+                "creationTimestamp": null,
+                "labels": {
+                    "app": "tfrs-minio"
+                },
+                "annotations": {
+                    "openshift.io/generated-by": "OpenShiftWebConsole"
+                }
+            },
+            "spec": {
+                "strategy": {
+                    "type": "Recreate",
+                    "recreateParams": {
+                        "timeoutSeconds": 600
+                    },
+                    "resources": {},
+                    "activeDeadlineSeconds": 21600
+                },
+                "triggers": [
+                    {
+                        "type": "ImageChange",
+                        "imageChangeParams": {
+                            "automatic": true,
+                            "containerNames": [
+                                "tfrs-minio"
+                            ],
+                            "from": {
+                                "kind": "ImageStreamTag",
+                                "namespace": "mem-tfrs-tools",
+                                "name": "tfrs-minio:latest"
+                            }
+                        }
+                    },
+                    {
+                        "type": "ConfigChange"
+                    }
+                ],
+                "replicas": 1,
+                "test": false,
+                "selector": {
+                    "app": "tfrs-minio",
+                    "deploymentconfig": "tfrs-minio"
+                },
+                "template": {
+                    "metadata": {
+                        "creationTimestamp": null,
+                        "labels": {
+                            "app": "tfrs-minio",
+                            "deploymentconfig": "tfrs-minio"
+                        },
+                        "annotations": {
+                            "openshift.io/generated-by": "OpenShiftWebConsole"
+                        }
+                    },
+                    "spec": {
+                        "volumes": [
+                            {
+                                "name": "volume-ri42p",
+                                "persistentVolumeClaim": {
+                                    "claimName": "minio-data-vol"
+                                }
+                            },
+                            {
+                                "name": "volume-ri42q",
+                                "persistentVolumeClaim": {
+                                    "claimName": "minio-config-vol"
+                                }
+                            }
+                        ],
+                        "containers": [
+                            {
+                                "name": "tfrs-minio",
+                                "image": "docker-registry.default.svc:5000/mem-tfrs-tools/tfrs-minio:${ENV_NAME}",
+                                "ports": [
+                                    {
+                                        "containerPort": 9000,
+                                        "protocol": "TCP"
+                                    }
+                                ],
+                                "env": [
+                                    {
+                                        "name": "MINIO_ACCESS_KEY",
+                                        "valueFrom": {
+                                            "secretKeyRef": {
+                                                "name": "tfrs-minio-secret",
+                                                "key": "MINIO_ACCESS_KEY"
+                                            }
+                                        }
+                                    },
+                                    {
+                                        "name": "MINIO_SECRET_KEY",
+                                        "valueFrom": {
+                                            "secretKeyRef": {
+                                                "name": "tfrs-minio-secret",
+                                                "key": "MINIO_SECRET_KEY"
+                                            }
+                                        }
+                                    },
+                                    {
+                                        "name": "MINIO_DATA_DIR",
+                                        "value": "/opt/minio/s3/data"
+                                    },
+                                    {
+                                        "name": "MINIO_CONFIG_DIR",
+                                        "value": "/opt/minio/s3/config"
+                                    }
+                                ],
+                                "resources": {
+                                    "limits": {
+                                        "cpu": "250m"
+                                    }
+                                },
+                                "volumeMounts": [
+                                    {
+                                        "name": "volume-ri42p",
+                                        "mountPath": "/opt/minio/s3/data"
+                                    },
+                                    {
+                                        "name": "volume-ri42q",
+                                        "mountPath": "/opt/minio/s3/config"
+                                    }
+                                ],
+                                "terminationMessagePath": "/dev/termination-log",
+                                "terminationMessagePolicy": "File",
+                                "imagePullPolicy": "Always"
+                            }
+                        ],
+                        "restartPolicy": "Always",
+                        "terminationGracePeriodSeconds": 30,
+                        "dnsPolicy": "ClusterFirst",
+                        "securityContext": {},
+                        "schedulerName": "default-scheduler"
+                    }
+                }
+            },
+            "status": {
+                "latestVersion": 0,
+                "observedGeneration": 0,
+                "replicas": 0,
+                "updatedReplicas": 0,
+                "availableReplicas": 0,
+                "unavailableReplicas": 0
+            }
+        }
+    ]
+}

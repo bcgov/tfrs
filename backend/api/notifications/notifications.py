@@ -1,7 +1,9 @@
 import json
+from email.utils import make_msgid
 from typing import List
 
 import pika
+from django.core.cache import caches
 from pika.exceptions import AMQPError
 from django.db import transaction
 from rest_framework import serializers
@@ -11,10 +13,13 @@ from api.models.NotificationMessage import NotificationMessage
 from api.models.NotificationSubscription import NotificationSubscription
 from api.models.User import User
 from api.models.CreditTrade import CreditTrade
+from api.models.Document import Document
 from api.models.Organization import Organization
 from api.models.Role import Role
 from api.notifications.notification_types import NotificationType
 from tfrs.settings import AMQP_CONNECTION_PARAMETERS, EMAIL
+
+subscription_cache = caches['notification_subscriptions']
 
 
 def send_amqp_notification():
@@ -38,6 +43,8 @@ def send_amqp_notification():
                                   delivery_mode=1
                               ),
                               mandatory=True)
+
+        connection.close()
     except AMQPError as error:
         raise NotificationDeliveryFailure(error)
 
@@ -124,6 +131,50 @@ class AMQPNotificationService:
         import smtplib
         msg = EmailMessage()
         msg.set_content('You have received a new notification in TFRS.\nPlease sign in to view it.')
+        bcgov_cid = make_msgid()
+        msg.add_alternative("""\
+        <html>
+        <head>
+        <style type="text/css">
+        td {{
+        padding: 15px 8px 15px 8px;
+        }}
+        </style>
+        </head>
+        <body>
+        <table style="width: 100%; font-family: sans-serif; border-collapse: collapse; border: 2px solid #003366;">
+        <tbody>
+        <tr style="background: #003366; font-size: 24px; color: white;">
+        <td width="185"
+        style="text-align: right">
+        <img alt="Government of British Columbia" width="155" height="52" src="cid:{bcgov_cid}"/>
+        </td>
+        <td style="font-weight: 400;">
+        Transportation Fuels Reporting System
+        </td>
+        </tr>
+        <tr style="min-height: 400px'">
+        <td colspan="2"
+        style="font-weight: bold;
+        border-top: 4px solid #fcba19;
+        font-size: 13px;
+        line-height: 20px;
+        padding-top: 20px;
+        padding-bottom: 20px;">
+        <p style="margin-left: 20px;">You have received a new notification in TFRS.</p>
+        <p style="margin-left: 20px;">Please <a href="https://lowcarbonfuels.gov.bc.ca">sign in</a>
+        to view it.</p>
+        </td>
+        </tr>
+        </tbody>
+        </table>
+        </body>
+        </html>
+        """.format(bcgov_cid=bcgov_cid[1:-1]), subtype='html')
+
+        with open('assets/bcgov.png', 'rb') as image:
+            msg.get_payload()[1].add_related(image.read(), 'image', 'png', cid=bcgov_cid)
+
         msg['Subject'] = 'TFRS Notification'
         msg['From'] = EMAIL['FROM_ADDRESS']
         msg['To'] = email_recipient
@@ -132,9 +183,13 @@ class AMQPNotificationService:
                           port=EMAIL['SMTP_SERVER_PORT']) as server:
             server.send_message(msg)
 
-
     @staticmethod
     def compute_effective_subscriptions(user: User) -> List[EffectiveSubscription]:
+
+        cached = subscription_cache.get(user.username)
+        if cached is not None:
+            return cached
+
         all_channels = NotificationChannel.objects.all()
         user_subscriptions = NotificationSubscription.objects.filter(user_id=user.id)
         all_notification_types = NotificationType
@@ -153,6 +208,9 @@ class AMQPNotificationService:
                                           notification_type=notification_type,
                                           subscribed=is_subscribed)
                 )
+
+        subscription_cache.set(user.username, effective_subscriptions)
+
         return effective_subscriptions
 
     @staticmethod
@@ -162,6 +220,7 @@ class AMQPNotificationService:
             notification_type: NotificationType,
             subscribed: bool
     ):
+
         existing_subscription = NotificationSubscription.objects.filter(
             user_id=user.id,
             channel=channel,
@@ -179,6 +238,7 @@ class AMQPNotificationService:
                 enabled=subscribed
             ).save()
 
+        subscription_cache.delete(user.username)
 
     @staticmethod
     @transaction.atomic
@@ -186,6 +246,7 @@ class AMQPNotificationService:
                           interested_organization: Organization,
                           interested_roles: List[Role] = [],
                           related_credit_trade: CreditTrade = None,
+                          related_document: Document = None,
                           related_organization: Organization = None,
                           related_user: User = None,
                           is_error: bool = False,
@@ -195,8 +256,11 @@ class AMQPNotificationService:
                           originating_user: User = None):
 
         if interested_organization is None and not is_global:
-            raise InvalidNotificationArguments('interested_organization is required'
-                                               ' if this is not a global notification')
+            raise InvalidNotificationArguments(
+                'interested_organization is required'
+                ' if this is not a global notification'
+            )
+
         if message is None or len(message) == 0:
             raise InvalidNotificationArguments('msg is required')
 
@@ -205,29 +269,37 @@ class AMQPNotificationService:
                 interested_roles=interested_roles,
                 interested_organization=interested_organization
         ):
-            notification = NotificationMessage(
-                user=recipient,
-                originating_user=originating_user,
-                related_credit_trade=related_credit_trade,
-                related_organization=related_organization,
-                related_user=related_user,
-                message=message,
-                is_error=is_error,
-                is_warning=is_warning
-            )
-            notification.save()
-
             effective_subscriptions = AMQPNotificationService.compute_effective_subscriptions(recipient)
-            target_subscription = EffectiveSubscription(
+
+            app_subscription = EffectiveSubscription(
+                channel=NotificationChannel.objects.get(channel='IN_APP'),
+                notification_type=notification_type,
+                subscribed=True
+            )
+
+            email_subscription = EffectiveSubscription(
                 channel=NotificationChannel.objects.get(channel='EMAIL'),
                 notification_type=notification_type,
                 subscribed=True
             )
 
-            if target_subscription in effective_subscriptions:
-                AMQPNotificationService.send_email_for_notification(notification)
+            if app_subscription in effective_subscriptions:
+                notification = NotificationMessage(
+                    user=recipient,
+                    originating_user=originating_user,
+                    related_credit_trade=related_credit_trade,
+                    related_document=related_document,
+                    related_organization=related_organization,
+                    related_user=related_user,
+                    message=message,
+                    is_error=is_error,
+                    is_warning=is_warning
+                )
+                notification.save()
+                send_amqp_notification()
 
-        send_amqp_notification()
+                if email_subscription in effective_subscriptions:
+                    AMQPNotificationService.send_email_for_notification(notification)
 
 
 class InvalidNotificationArguments(Exception):

@@ -27,17 +27,20 @@ from api.permissions.CreditTradeComment import CreditTradeCommentPermissions
 
 class CreditTradeCommentActions(object):
     """
-    Provide available commenting actions to simplify frontend presentation logic
+    Provide available commenting actions to simplify frontend presentation
+    logic
     """
 
     @staticmethod
     def available_comment_actions(request, trade: CreditTrade):
         available_actions = []
 
-        if CreditTradeCommentPermissions.user_can_comment(request.user, trade, False):
+        if CreditTradeCommentPermissions.user_can_comment(
+                request.user, trade, False):
             available_actions.append('ADD_COMMENT')
 
-        if CreditTradeCommentPermissions.user_can_comment(request.user, trade, True):
+        if CreditTradeCommentPermissions.user_can_comment(
+                request.user, trade, True):
             available_actions.append('ADD_PRIVILEGED_COMMENT')
 
         return available_actions
@@ -46,7 +49,8 @@ class CreditTradeCommentActions(object):
     def available_individual_comment_actions(request, comment: CreditTradeComment):
         available_actions = []
 
-        if CreditTradeCommentPermissions.user_can_edit_comment(request.user, comment):
+        if CreditTradeCommentPermissions.user_can_edit_comment(
+                request.user, comment):
             available_actions = ['EDIT_COMMENT']
 
         return available_actions

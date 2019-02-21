@@ -4,7 +4,6 @@ import CONFIG from '../config';
 
 function configureAxios () {
   if (CONFIG.KEYCLOAK) {
-
     axios.interceptors.request.use((config) => {
       const loadconfig = async () => {
         const user = await userManager.getUser();

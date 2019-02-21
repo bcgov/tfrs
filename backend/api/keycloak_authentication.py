@@ -1,26 +1,28 @@
 import json
-import uuid
-
 import jwt
-from django.conf import settings
-from django.db.models import Q
 from jwt import InvalidTokenError
-from cryptography.hazmat.primitives import serialization
-from api.services.KeycloakAPI import map_user
-
 from jwt.algorithms import RSAAlgorithm
-from rest_framework import authentication
-from rest_framework import exceptions
-from api.models.User import User
 import requests
 
+from cryptography.hazmat.primitives import serialization
+from django.core.cache import caches
+from django.conf import settings
+from rest_framework import authentication
+from rest_framework import exceptions
+
+from api.models.User import User
 from api.models.UserCreationRequest import UserCreationRequest
+from api.services.KeycloakAPI import map_user
+
+cache = caches['keycloak']
 
 
 class UserAuthentication(authentication.BaseAuthentication):
 
     def _get_keys(self):
-        """Assemble a list of valid signing public keys we use to verify the token"""
+        """
+        Assemble a list of valid signing public keys we use to verify the token
+        """
 
         decoded_keys = {}
 
@@ -31,19 +33,23 @@ class UserAuthentication(authentication.BaseAuthentication):
         if not settings.KEYCLOAK['DOWNLOAD_CERTS']:
             return decoded_keys
 
-        # TODO cache the keys for some amount of time (in the db, perhaps)
+        keys = cache.get('verification_keys')
 
-        # Download a key directly from Keycloak
-        response = requests.get(settings.KEYCLOAK['CERTS_URL'], timeout=5)
+        if keys is None:
+            # Cache miss. Download a key directly from Keycloak
+            response = requests.get(settings.KEYCLOAK['CERTS_URL'], timeout=5)
 
-        if not response:
-            raise RuntimeError('keys not available from {}'.format(settings.KEYCLOAK['CERTS_URL']))
+            if not response:
+                raise RuntimeError('keys not available from {}'.format(
+                    settings.KEYCLOAK['CERTS_URL']))
 
-        keys = response.json()
+            keys = response.json()
+
+            cache.set('verification_keys', keys, 600)
+
         decoded_keys = {}
 
         for key in keys['keys']:
-            print('key: {}'.format(key))
             if key['alg'] in ['RS256', 'RS384', 'RS512']:
                 decoded_keys[key['kid']] = RSAAlgorithm.from_jwk(json.dumps(key)).public_bytes(
                     format=serialization.PublicFormat.SubjectPublicKeyInfo,
@@ -61,12 +67,14 @@ class UserAuthentication(authentication.BaseAuthentication):
         auth = request.META.get('HTTP_AUTHORIZATION', None)
 
         if not auth:
-            raise exceptions.AuthenticationFailed('Authorization header required')
+            raise exceptions.AuthenticationFailed(
+                'Authorization header required')
 
         try:
             scheme, token = auth.split()
         except ValueError:
-            raise exceptions.AuthenticationFailed('Invalid format for authorization header')
+            raise exceptions.AuthenticationFailed(
+                'Invalid format for authorization header')
 
         if scheme != 'Bearer':
             raise exceptions.AuthenticationFailed(
@@ -84,17 +92,18 @@ class UserAuthentication(authentication.BaseAuthentication):
         keys = self._get_keys().items()
 
         if len(keys) == 0:
-            raise exceptions.AuthenticationFailed('no keys available for verification')
+            raise exceptions.AuthenticationFailed(
+                'no keys available for verification')
 
-        for kid, key in keys:
+        for _kid, key in keys:
             try:
                 user_token = jwt.decode(token,
                                         key=str(key),
                                         audience=settings.KEYCLOAK['AUDIENCE'],
                                         issuer=settings.KEYCLOAK['ISSUER'])
                 break
-            except InvalidTokenError as e:
-                token_validation_errors.append(e)
+            except InvalidTokenError as error:
+                token_validation_errors.append(error)
 
         if not user_token:
             raise exceptions.AuthenticationFailed(
@@ -107,29 +116,33 @@ class UserAuthentication(authentication.BaseAuthentication):
         if 'user_id' not in user_token:
             # try email
             if 'email' in user_token:
-                qs = UserCreationRequest.objects.filter(
-                    keycloak_email=user_token['email']
+                creation_request = UserCreationRequest.objects.filter(
+                    keycloak_email__iexact=user_token['email']
                 )
 
-                if not qs.exists():
+                if not creation_request.exists():
                     raise exceptions.AuthenticationFailed('user does not exist')
 
-                ucr = qs.first()
+                user_creation_request = creation_request.first()
 
-                if not ucr.is_mapped:
-                    map_user(user_token['sub'], ucr.user.username)
+                if not user_creation_request.is_mapped:
+                    map_user(user_token['sub'], user_creation_request.user.username)
 
-                    ucr.is_mapped = True
-                    ucr.save()
+                    user_creation_request.is_mapped = True
+                    user_creation_request.save()
 
-                user_found_via_email = ucr.user.username
+                user_found_via_email = user_creation_request.user.username
             else:
-                raise exceptions.AuthenticationFailed('user_id or email is required in jwt payload')
+                raise exceptions.AuthenticationFailed(
+                    'user_id or email is required in jwt payload')
 
         username = user_token['user_id'] if 'user_id' in user_token else user_found_via_email
 
         try:
             user = User.objects.get_by_natural_key(username)
+
+            if not user.is_active:
+                raise exceptions.AuthenticationFailed('user_id "{}" does not exist'.format(username))
         except User.DoesNotExist:
             raise exceptions.AuthenticationFailed('user_id "{}" does not exist'.format(username))
 

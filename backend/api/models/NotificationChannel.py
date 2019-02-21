@@ -31,25 +31,34 @@ class NotificationChannel(Auditable):
     """A channel for communicating notifications"""
 
     class AvailableChannels(Enum):
+        """
+        List of possible channels for the notifications
+        """
         IN_APP = "In-Application"
         SMS = "SMS"
         EMAIL = "Email"
 
-    channel = models.CharField(db_comment='The unique channel ID (delivery-mode) for this subscription',
-                               choices=[(d, d.name) for d in AvailableChannels],
-                               max_length=64,
-                               null=False,
-                               blank=False,
-                               unique=True)
-
-    enabled = models.BooleanField(db_comment='Enable delivery',
-                                  null=False)
-
-    subscribe_by_default = models.BooleanField(db_comment='Flag. Should a notification be dispatched on this '
-                                                          'channel if the user does not have a subscription record?',
-                                               null=False)
+    channel = models.CharField(
+        choices=[(d, d.name) for d in AvailableChannels],
+        max_length=64,
+        null=False,
+        blank=False,
+        unique=True,
+        db_comment="The unique channel ID (delivery-mode) for this "
+                   "subscription."
+    )
+    enabled = models.BooleanField(
+        null=False,
+        db_comment="Flag. True if the channel should be available to use."
+    )
+    subscribe_by_default = models.BooleanField(
+        null=False,
+        db_comment="Flag. Should a notification be dispatched on this channel "
+                   "if the user does not have a subscription record?"
+    )
 
     class Meta:
         db_table = 'notification_channel'
 
-    db_table_comment = "Tracks the state and defaults for communication channels"
+    db_table_comment = "Tracks the state and defaults for communication " \
+                       "channels"

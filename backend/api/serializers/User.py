@@ -21,9 +21,11 @@
     limitations under the License.
 """
 from django.db.models import Q
-from rest_framework import exceptions, serializers
-from rest_framework.relations import PrimaryKeyRelatedField, HyperlinkedIdentityField
+from rest_framework import serializers
+from rest_framework.fields import CharField
+from rest_framework.relations import PrimaryKeyRelatedField
 
+from api.models.UserCreationRequest import UserCreationRequest
 from api.models.Organization import Organization
 from api.models.Role import Role
 from api.models.User import User
@@ -45,9 +47,10 @@ class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = (
-            'id', 'first_name', 'last_name', 'email', 'authorization_id',
-            'username', 'authorization_directory', 'display_name', 'is_active',
-            'organization', 'roles', 'is_government_user', 'permissions')
+            'id', 'first_name', 'last_name', 'email',
+            'username', 'display_name', 'is_active',
+            'organization', 'roles', 'is_government_user', 'permissions',
+            'phone', 'cell_phone', 'title')
 
 
 class UserBasicSerializer(serializers.ModelSerializer):
@@ -67,12 +70,26 @@ class UserCreateSerializer(serializers.ModelSerializer):
     organization = PrimaryKeyRelatedField(queryset=Organization.objects.all())
     roles = PrimaryKeyRelatedField(queryset=Role.objects.all(), many=True)
     id = serializers.ReadOnlyField()
+    first_name = CharField(required=True,
+                           allow_blank=False,
+                           error_messages={'blank': 'A First Name is required'})
+    last_name = CharField(required=True,
+                          allow_blank=False,
+                          error_messages={'blank': 'A Last Name is required'})
 
     def validate(self, data):
         data['display_name'] = '{} {}'.format(data['first_name'], data['last_name'])
+
+        roles = data.get('roles')
+        if not roles:
+            raise serializers.ValidationError({
+                'roles': 'Please select at least one role for the user'
+            })
+
         return data
 
     def create(self, validated_data):
+        request = self.context.get('request')
         roles = validated_data.pop('roles')
         organization = validated_data.pop('organization')
 
@@ -80,16 +97,19 @@ class UserCreateSerializer(serializers.ModelSerializer):
         user.organization = organization
         user.save()
         for role in roles:
-            UserRole.objects.create(user=user, role=role)
+            UserRole.objects.create(
+                user=user,
+                role=role,
+                create_user=request.user
+            )
 
         return user
 
     class Meta:
         model = User
         fields = (
-            'first_name', 'last_name', 'email',
-            'username', 'display_name', 'id',
-            'organization', 'roles', 'is_government_user')
+            'first_name', 'last_name', 'email', 'username', 'display_name',
+            'id', 'organization', 'roles', 'is_government_user', 'title')
 
 
 class UserUpdateSerializer(serializers.ModelSerializer):
@@ -98,30 +118,68 @@ class UserUpdateSerializer(serializers.ModelSerializer):
     """
     organization = OrganizationMinSerializer(read_only=True)
     roles = PrimaryKeyRelatedField(queryset=Role.objects.all(), many=True)
+    first_name = CharField(required=True,
+                           allow_blank=False,
+                           error_messages={'blank': 'A First Name is required'})
+    last_name = CharField(required=True,
+                          allow_blank=False,
+                          error_messages={'blank': 'A Last Name is required'})
 
     def validate(self, data):
-        data['display_name'] = '{} {}'.format(data['first_name'], data['last_name'])
+        data['display_name'] = '{} {}'.format(
+            data.get('first_name'), data.get('last_name'))
+
+        request = self.context.get('request')
+
+        if request.user.has_perm('USER_MANAGEMENT') and 'roles' in data:
+            roles = data.get('roles')
+            if roles is not None:
+                if not roles:
+                    raise serializers.ValidationError({
+                        'roles': 'Please select at least one role for the user'
+                    })
+
         return data
 
     def update(self, instance, validated_data):
-        roles = validated_data.pop('roles')
+        request = self.context.get('request')
 
-        role_mappings = UserRole.objects.filter(user=instance)
-        for user_role in role_mappings:
-            if user_role.role not in roles:
-                user_role.delete()
+        if request.user.has_perm('USER_MANAGEMENT'):
+            if 'roles' in validated_data:
+                roles = validated_data.pop('roles')
 
-        for role in roles:
-            if not UserRole.objects.filter(user=instance,role=role).exists():
-                UserRole.objects.create(user=instance, role=role)
+                role_mappings = UserRole.objects.filter(user=instance)
+                for user_role in role_mappings:
+                    if user_role.role not in roles:
+                        user_role.delete()
 
-        instance.first_name = validated_data['first_name']
-        instance.last_name = validated_data['last_name']
-        instance.display_name = validated_data['display_name']
-        instance.email = validated_data['email']
-        instance.phone = validated_data['phone']
-        instance.is_active = validated_data['is_active']
+                for role in roles:
+                    if not UserRole.objects.filter(
+                            user=instance,
+                            role=role).exists():
+                        UserRole.objects.create(
+                            user=instance,
+                            role=role,
+                            create_user=request.user
+                        )
 
+            instance.is_active = validated_data.get(
+                'is_active', instance.is_active)
+
+        instance.first_name = validated_data.get(
+            'first_name', instance.first_name)
+        instance.last_name = validated_data.get(
+            'last_name', instance.last_name)
+        instance.display_name = validated_data.get(
+            'display_name', instance.display_name)
+        instance.email = validated_data.get(
+            'email', instance.email)
+        instance.cell_phone = validated_data.get(
+            'cell_phone', instance.cell_phone)
+        instance.phone = validated_data.get(
+            'phone', instance.phone)
+        instance.title = validated_data.get(
+            'title', instance.title)
         instance.save()
 
         return instance
@@ -130,7 +188,7 @@ class UserUpdateSerializer(serializers.ModelSerializer):
         model = User
         fields = (
             'id', 'first_name', 'last_name', 'display_name', 'email', 'phone',
-            'roles', 'is_active', 'organization'
+            'roles', 'is_active', 'organization', 'cell_phone', 'title'
         )
         read_only_fields = (
             'organization', 'id', 'is_government_user'
@@ -158,10 +216,23 @@ class UserViewSerializer(serializers.ModelSerializer):
     """
     organization = OrganizationMinSerializer(read_only=True)
     roles = RoleMinSerializer(many=True, read_only=True)
+    keycloak_email = serializers.SerializerMethodField()
+
+    def get_keycloak_email(self, obj):
+        """
+        Retrieves the keycloak email saved  when the user was created
+        """
+        user_creation_request = UserCreationRequest.objects.filter(
+            user_id=obj.id).first()
+
+        if user_creation_request:
+            return user_creation_request.keycloak_email
+
+        return None
 
     class Meta:
         model = User
         fields = (
-            'authorization_id', 'cell_phone', 'display_name', 'email',
-            'first_name', 'id', 'is_active', 'last_name',
-            'organization', 'phone', 'roles')
+            'cell_phone', 'display_name', 'email', 'first_name', 'id',
+            'is_active', 'last_name', 'organization', 'phone', 'roles',
+            'keycloak_email', 'title')

@@ -1,6 +1,7 @@
 const BASE_PATH = '/organizations';
 
 const ORGANIZATIONS = {
+  ADD_USER: `${BASE_PATH}/view/:organizationId/add-user`,
   BULLETIN: `https://www2.gov.bc.ca/assets/gov/farming-natural-resources-and-industry/electricity-alternative-energy/transportation/renewable-low-carbon-fuels/rlcf-013.pdf`,
   CREDIT_MARKET_REPORT: `https://www2.gov.bc.ca/assets/gov/farming-natural-resources-and-industry/electricity-alternative-energy/transportation/renewable-low-carbon-fuels/rlcf-017.pdf`,
   DETAILS: `${BASE_PATH}/view/:id`,

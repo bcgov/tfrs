@@ -50,5 +50,9 @@ class UserPermissions(permissions.BasePermission):
         if obj.organization == request.user.organization:
             return True
 
+        # Government users should be able to view users
+        if request.method == 'GET' and request.user.is_government_user:
+            return True
+
         # not authorized
         return False

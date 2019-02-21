@@ -23,17 +23,16 @@
 from django.db import models
 
 from api.managers.SigningAuthorityAssertionManager import SigningAuthorityAssertionManager
+from api.models.mixins.DisplayOrder import DisplayOrder
+from api.models.mixins.EffectiveDates import EffectiveDates
 from auditable.models import Auditable
 
 
-class SigningAuthorityAssertion(Auditable):
+class SigningAuthorityAssertion(Auditable, DisplayOrder, EffectiveDates):
     description = models.CharField(max_length=4000,
                                    blank=True,
                                    null=True,
                                    db_comment='Description of the signing authority assertion statement. This is the displayed name.')
-    display_order = models.IntegerField(db_comment='Relative rank in display sorting order')
-    effective_date = models.DateField(blank=True, null=True, db_comment='The calendar date that the signing authority assertion statement became valid.')
-    expiration_date = models.DateField(blank=True, null=True, db_comment='The calendar date that the signing authority assertion statement is no longer valid.')
 
     objects = SigningAuthorityAssertionManager()
 

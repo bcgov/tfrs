@@ -20,7 +20,7 @@ class HistoricalDataEntryPage extends BaseAppPage {
 
     addToQueueButton { $('button', type:'submit', text:'Add to Queue') }
 
-    queueTable { $('.ReactTable') }
+    queueTable(wait:true) { $('.ReactTable') }
 
     commitButton { $('button', type:'button', text:'Commit') }
 
@@ -52,10 +52,12 @@ class HistoricalDataEntryPage extends BaseAppPage {
   }
 
   void setCreditsFrom(String respondentFrom) {
+    respondentFrom = respondentFrom.replace("\"", "")
     waitFor { creditsFromDropdown.$('option', text:respondentFrom).click() }
   }
 
   void setCreditsTo(String respondentTo) {
+    respondentTo = respondentTo.replace("\"", "")
     waitFor { creditsToDropdown.$('option', text:respondentTo).click() }
   }
 

@@ -21,8 +21,10 @@
     limitations under the License.
 """
 from rest_framework import serializers
+from rest_framework.fields import SerializerMethodField
 
 from api.models.CreditTradeHistory import CreditTradeHistory
+from api.serializers import UserMinSerializer
 
 from .CreditTradeStatus import CreditTradeStatusSerializer, \
                                CreditTradeStatusMinSerializer
@@ -34,11 +36,10 @@ from .Organization import OrganizationMinSerializer
 class CreditTradeHistorySerializer(serializers.ModelSerializer):
     class Meta:
         model = CreditTradeHistory
-        fields = ('id', 'credit_trade', 'user', 'credit_trade_update_time',
+        fields = ('id', 'credit_trade', 'user',
                   'respondent', 'status', 'type',
                   'number_of_credits', 'fair_market_value_per_credit',
-                  'zero_reason', 'trade_effective_date',
-                  'note', 'is_internal_history_record', 'compliance_period',
+                  'zero_reason', 'trade_effective_date', 'compliance_period',
                   'is_rescinded')
 
 
@@ -75,7 +76,7 @@ class CreditTradeHistoryMinSerializer(serializers.ModelSerializer):
     class Meta:
         model = CreditTradeHistory
         fields = ('id', 'credit_trade_id', 'fuel_supplier', 'is_rescinded',
-                  'status_id', 'type', 'credit_trade_update_time')
+                  'status_id', 'type', 'credit_trade_update_timestamp')
 
     def get_fuel_supplier(self, obj):
         """
@@ -110,15 +111,20 @@ class CreditTradeHistoryReviewedSerializer(serializers.ModelSerializer):
     """
     from .CreditTrade import CreditTradeMinSerializer
     from .Role import RoleMinSerializer
-    from .User import UserMinSerializer
 
     credit_trade = CreditTradeMinSerializer(read_only=True)
     status = CreditTradeStatusMinSerializer(read_only=True)
-    user = UserMinSerializer(read_only=True)
+    user = SerializerMethodField()
     user_role = RoleMinSerializer(read_only=True)
+
+    def get_user(self, obj):
+        serializer = UserMinSerializer(
+            obj.user,
+            read_only=True)
+
+        return serializer.data
 
     class Meta:
         model = CreditTradeHistory
-        fields = ('credit_trade', 'user', 'status', 'is_rescinded',
-                  'create_timestamp', 'credit_trade_update_time',
-                  'user_role')
+        fields = ('credit_trade', 'status', 'is_rescinded',
+                  'create_timestamp', 'user', 'user_role')

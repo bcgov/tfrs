@@ -1,6 +1,6 @@
 {
     "kind": "Template",
-    "apiVersion": "v1",
+    "apiVersion": "template.openshift.io/v1",
     "metadata": {
         "name": "test-notification",
         "creationTimestamp": null
@@ -8,7 +8,7 @@
     "objects": [
         {
             "kind": "StatefulSet",
-            "apiVersion": "apps/v1beta1",
+            "apiVersion": "apps/v1",
             "metadata": {
                 "name": "rabbitmq",
                 "generation": 1,
@@ -113,19 +113,30 @@
                         }
                     }
                 ],
-                "serviceName": ""
+                "serviceName": "",
+                "podManagementPolicy": "OrderedReady",
+                "updateStrategy": {
+                    "type": "OnDelete"
+                },
+                "revisionHistoryLimit": 10
             },
             "status": {
                 "observedGeneration": 1,
-                "replicas": 1
+                "replicas": 1,
+                "readyReplicas": 1,
+                "currentReplicas": 1,
+                "updatedReplicas": 1,
+                "currentRevision": "rabbitmq-544f5c9847",
+                "updateRevision": "rabbitmq-544f5c9847",
+                "collisionCount": 0
             }
         },
         {
             "kind": "DeploymentConfig",
-            "apiVersion": "v1",
+            "apiVersion": "apps.openshift.io/v1",
             "metadata": {
                 "name": "notification-server",
-                "generation": 1,
+                "generation": 25,
                 "creationTimestamp": null,
                 "labels": {
                     "template": "notification-server"
@@ -151,8 +162,9 @@
                             "from": {
                                 "kind": "ImageStreamTag",
                                 "namespace": "mem-tfrs-tools",
-                                "name": "notification-server-develop:dev"
-                            }
+                                "name": "notification-server:test"
+                            },
+                            "lastTriggeredImage": "docker-registry.default.svc:5000/mem-tfrs-tools/notification-server@sha256:bd7cad373726652d379e6ab59f436672addd64c09cdfea3aaa75c7e026acc259"
                         }
                     },
                     {
@@ -176,7 +188,7 @@
                         "containers": [
                             {
                                 "name": "notification-server",
-                                "image": "docker-registry.default.svc:5000/mem-tfrs-tools/notification-server-develop@sha256:8c46584bdcfc242768a9f296b41e716d5a46f4219e3d4c4a993dfe7e47695302",
+                                "image": "docker-registry.default.svc:5000/mem-tfrs-tools/notification-server@sha256:bd7cad373726652d379e6ab59f436672addd64c09cdfea3aaa75c7e026acc259",
                                 "ports": [
                                     {
                                         "containerPort": 3000,
@@ -304,7 +316,7 @@
         },
         {
             "kind": "Route",
-            "apiVersion": "v1",
+            "apiVersion": "route.openshift.io/v1",
             "metadata": {
                 "name": "notification-server",
                 "creationTimestamp": null

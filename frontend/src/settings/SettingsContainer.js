@@ -30,7 +30,7 @@ class SettingsContainer extends Component {
     this._toggleCheck = this._toggleCheck.bind(this);
   }
 
-  componentWillMount () {
+  componentDidMount () {
     this.loadData();
   }
 
@@ -84,6 +84,7 @@ class SettingsContainer extends Component {
     });
 
     this.props.updateSubscriptions(data).then(() => {
+      this.props.getSubscriptions(); // update the subscriptions
       toastr.subscriptionsSuccess();
     });
 
@@ -91,12 +92,25 @@ class SettingsContainer extends Component {
   }
 
   _toggleCheck (id, fields) {
+
     const fieldState = { ...this.state.fields };
     const index = fieldState.settings.notifications.findIndex(state => (
       state.id === id && state.type === fields.type && state.field === fields.field));
 
     fieldState.settings.notifications[index].value =
         !fieldState.settings.notifications[index].value;
+
+    if (fields.field === 'email' && fieldState.settings.notifications[index].value) {
+      const inAppIndex = fieldState.settings.notifications.findIndex(state => (
+        state.id === id && state.type === fields.type && state.field === 'in_app'));
+      fieldState.settings.notifications[inAppIndex].value = true;
+    }
+
+    if (fields.field === 'in_app' && !fieldState.settings.notifications[index].value) {
+      const emailIndex = fieldState.settings.notifications.findIndex(state => (
+        state.id === id && state.type === fields.type && state.field === 'email'));
+      fieldState.settings.notifications[emailIndex].value = false;
+    }
 
     this.setState({
       fields: fieldState

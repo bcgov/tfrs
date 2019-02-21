@@ -17,7 +17,7 @@ class CreditTransactionsConfirmRecommendModal extends BaseAppPage {
    * @param checkClosed enable or disable checking if the modal closed.  This is often necessary if the modal closes
    *  slowly, and the test needs to wait for it to fully close before continuing.  If the modal triggers a change of
    *  page, this check should NOT be enabled as the modal reference is now stale, and cannot be accessed.
-   *  (Optional, default: true)
+   *  (Optional, default: false)
    */
   void recommendCreditTransaction(Boolean checkClosed=false) {
     modalModule.isOpen(modalSelector)

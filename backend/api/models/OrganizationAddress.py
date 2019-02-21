@@ -23,10 +23,11 @@
 
 from django.db import models
 
+from api.models.mixins.EffectiveDates import EffectiveDates
 from auditable.models import Auditable
 
 
-class OrganizationAddress(Auditable):
+class OrganizationAddress(Auditable, EffectiveDates):
     """
     Address(es) of the Fuel Supplier
     """
@@ -57,12 +58,6 @@ class OrganizationAddress(Auditable):
     other = models.CharField(
         max_length=100, blank=True, null=True,
         db_comment="Other Address Details")
-    effective_date = models.DateField(
-        blank=True, null=True,
-        db_comment='The calendar date the organization address became valid.')
-    expiration_date = models.DateField(
-        blank=True, null=True,
-        db_comment='The calendar date the organization address is no longer valid.')
 
     class Meta:
         db_table = 'organization_address'

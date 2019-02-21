@@ -24,7 +24,6 @@
 from django.db import models
 from django.db.models import Q
 from django.contrib.auth.models import AbstractUser
-from django.core.validators import RegexValidator
 import django.contrib.auth.validators
 
 from auditable.models import Auditable
@@ -33,7 +32,6 @@ from api.managers.UserManager import UserManager
 from .CreditTradeHistory import CreditTradeHistory
 from .Permission import Permission
 from .Role import Role
-from .UserRole import UserRole
 
 
 class User(AbstractUser, Auditable):
@@ -49,10 +47,6 @@ class User(AbstractUser, Auditable):
         verbose_name='username',
         db_comment='Login Username'
     )
-    phone_regex = RegexValidator(
-        regex=r'^\+?1?\d{9,15}$',
-        message="Phone number must be entered in the "
-                "format: '+999999999'. Up to 15 digits allowed.")
 
     password = models.CharField(
         max_length=128, blank=True, null=True, db_comment='Password hash')
@@ -62,30 +56,17 @@ class User(AbstractUser, Auditable):
     title = models.CharField(
         max_length=100, blank=True, null=True, db_comment='Professional Title')
     phone = models.CharField(
-        validators=[phone_regex], max_length=17, blank=True, null=True,
+        max_length=17, blank=True, null=True,
         db_comment='Primary phone number')
     cell_phone = models.CharField(
-        validators=[phone_regex], max_length=17, blank=True, null=True,
+        max_length=17, blank=True, null=True,
         db_comment='Mobile phone number')
     organization = models.ForeignKey(
         'Organization', related_name='users', blank=True, null=True,
         on_delete=models.SET_NULL)
-    effective_date = models.DateField(auto_now_add=True, blank=True, null=True)
-    expiration_date = models.DateField(blank=True, null=True)
 
-    # Siteminder headers
-    authorization_id = models.CharField(
-        max_length=500, blank=True, null=True, db_comment='Siteminder Header')
-    authorization_guid = models.UUIDField(
-        unique=True, default=None, null=True,
-        db_comment='Siteminder Header. GUID used for authentication')
-    authorization_directory = models.CharField(
-        max_length=100, blank=True, null=True,
-        db_comment='Siteminder Header (normally IDIR or BCeID)')
-    authorization_email = models.EmailField(
-        blank=True, null=True, db_comment='Siteminder Header')
-    display_name = models.CharField(
-        max_length=500, blank=True, null=True,
+    _display_name = models.CharField(
+        max_length=500, blank=True, null=True, db_column='display_name',
         db_comment='Siteminder Header (Displayed name for user)')
 
     def __str__(self):
@@ -113,8 +94,8 @@ class User(AbstractUser, Auditable):
         Filters are to be restricted based on the user's role.
         """
         history = CreditTradeHistory.objects.filter(
-            filters, user_id=self.id
-        ).order_by('-update_timestamp')
+            filters, Q(create_user_id=self.id)
+        ).order_by('-create_timestamp')
 
         return history
 
@@ -137,6 +118,22 @@ class User(AbstractUser, Auditable):
             return True
 
         return False
+
+    @property
+    def display_name(self):
+        if self._display_name is not None and len(self._display_name.strip()) > 0:
+            return self._display_name
+
+        fallback_name = '{} {}'.format(self.first_name, self.last_name)
+
+        if len(fallback_name.strip()) == 0:
+            fallback_name = 'TFRS User'
+
+        return fallback_name
+
+    @display_name.setter
+    def display_name(self, value):
+        self._display_name = value
 
     objects = UserManager()
 

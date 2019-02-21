@@ -10,60 +10,26 @@
     },
     "parameters": [
         {
-            "description": "TFRS database image stream name.",
-            "displayName": "IMAGE_STREAM_NAME",
-            "name": "IMAGE_STREAM_NAME",
-            "value": "postgresql"
+            "name": "ENV_NAME",
+            "required": true
         },
         {
-            "description": "The OpenShift Namespace where TFRS database image stream resides. Not being used.",
-            "displayName": "Namespace",
-            "name": "IMAGE_STREAM_NAMESPACE",
-            "value": "openshift"
-        },
-        {
-            "description": "The name of the OpenShift Service exposed for the database.",
-            "displayName": "Database Service Name",
-            "name": "DATABASE_SERVICE_NAME",
-            "required": true,
-            "value": "postgresql"
-        },
-        {
-            "description": "Name of the PostgreSQL database accessed.",
-            "displayName": "PostgreSQL Database Name",
-            "name": "POSTGRESQL_DATABASE",
-            "required": true,
-            "value": "tfrs"
+            "name": "NAME_SUFFIX",
+            "required": true
         },
         {
             "description": "Username for PostgreSQL user that will be used for accessing the database.",
-            "displayName": "PostgreSQL Connection Username",
             "from": "user[A-Z0-9]{3}",
             "generate": "expression",
-            "name": "POSTGRESQL_USER",
+            "name": "TFRS_DB_USER",
             "required": true
         },
         {
             "description": "Password for the PostgreSQL connection user.",
-            "displayName": "PostgreSQL Connection Password",
             "from": "[a-zA-Z0-9]{16}",
             "generate": "expression",
-            "name": "POSTGRESQL_PASSWORD",
+            "name": "TFRS_DB_PASSWORD",
             "required": true
-        },
-        {
-            "description": "Volume space available for data, e.g. 512Mi, 2Gi.",
-            "displayName": "Volume Capacity",
-            "name": "VOLUME_CAPACITY",
-            "required": true,
-            "value": "1Gi"
-        },
-        {
-            "description": "Not being used. The version of PostgreSQL image to be used (9.2, 9.4, 9.5 or latest).",
-            "displayName": "Version of PostgreSQL Image",
-            "name": "IMAGE_STREAM_VERSION",
-            "required": true,
-            "value": "9.5"
         }
     ],
     "objects": [
@@ -77,22 +43,21 @@
                     "template.openshift.io/expose-username": "{.data['database-user']}",
                     "as-copy-of": "tfrs-postgresql-secrets"
                 },
-                "name": "${DATABASE_SERVICE_NAME}",
+                "name": "tfrs-postgresql${NAME_SUFFIX}",
                 "labels":{
                     "template": "tfrs-postgresql-persistent-template"
                 }
             },
             "stringData": {
-                "database-name": "${POSTGRESQL_DATABASE}",
-                "database-password": "${POSTGRESQL_PASSWORD}",
-                "database-user": "${POSTGRESQL_USER}"
+                "database-user": "${TFRS_DB_USER}",
+                "database-password": "${TFRS_DB_PASSWORD}"
             }
         },
         {
             "kind": "Service",
             "apiVersion": "v1",
             "metadata": {
-                "name": "${DATABASE_SERVICE_NAME}",
+                "name": "tfrs-postgresql${NAME_SUFFIX}",
                 "annotations": {
                     "template.openshift.io/expose-uri": "postgres://{.spec.clusterIP}:{.spec.ports[?(.name==\"postgresql\")].port}"
                 }
@@ -107,7 +72,7 @@
                     }
                 ],
                 "selector": {
-                    "name": "${DATABASE_SERVICE_NAME}"
+                    "name": "tfrs-postgresql${NAME_SUFFIX}"
                 },
                 "type": "ClusterIP",
                 "sessionAffinity": "None"
@@ -120,7 +85,7 @@
             "apiVersion": "v1",
             "kind": "PersistentVolumeClaim",
             "metadata": {
-                "name": "${DATABASE_SERVICE_NAME}",
+                "name": "tfrs-postgresql${NAME_SUFFIX}",
                 "annotations":{
                     "template.openshift.io.bcgov/create": "true"
                 }
@@ -131,7 +96,7 @@
                 ],
                 "resources": {
                     "requests": {
-                        "storage": "${VOLUME_CAPACITY}"
+                        "storage": "1Gi"
                     }
                 }
             }
@@ -140,10 +105,11 @@
             "kind": "ImageStream",
             "apiVersion": "v1",
             "metadata": {
-                "name": "${IMAGE_STREAM_NAME}",
+                "name": "tfrs-postgresql${NAME_SUFFIX}",
                 "creationTimestamp": null,
                 "labels": {
-                    "base-name": "tfrs-postgresql"
+                    "base-name": "tfrs-postgresql",
+                    "appver": "tfrs${NAME_SUFFIX}"
                 },
                 "annotations": {}
             },
@@ -160,7 +126,7 @@
                 "annotations": {
                     "template.alpha.openshift.io/wait-for-ready": "true"
                 },
-                "name": "${DATABASE_SERVICE_NAME}"
+                "name": "tfrs-postgresql${NAME_SUFFIX}"
             },
             "spec": {
                 "replicas": 1,
@@ -177,7 +143,7 @@
                             ],
                             "from": {
                                 "kind": "ImageStreamTag",
-                                "name": "${IMAGE_STREAM_NAME}:${IMAGE_STREAM_VERSION}"
+                                "name": "tfrs-postgresql${NAME_SUFFIX}:${ENV_NAME}"
                             }
                         }
                     },
@@ -187,21 +153,21 @@
                 ],
                 "test": false,
                 "selector": {
-                    "name": "${DATABASE_SERVICE_NAME}"
+                    "name": "tfrs-postgresql${NAME_SUFFIX}"
                 },
                 "template": {
                     "metadata": {
                         "creationTimestamp": null,
                         "labels": {
-                            "name": "${DATABASE_SERVICE_NAME}"
+                            "name": "tfrs-postgresql${NAME_SUFFIX}"
                         }
                     },
                     "spec": {
                         "volumes": [
                             {
-                                "name": "${DATABASE_SERVICE_NAME}",
+                                "name": "tfrs-postgresql${NAME_SUFFIX}",
                                 "persistentVolumeClaim": {
-                                    "claimName": "${DATABASE_SERVICE_NAME}"
+                                    "claimName": "tfrs-postgresql${NAME_SUFFIX}"
                                 }
                             }
                         ],
@@ -218,18 +184,13 @@
                                 "env": [
                                     {
                                         "name": "POSTGRESQL_DATABASE",
-                                        "valueFrom": {
-                                            "secretKeyRef": {
-                                                "name": "${DATABASE_SERVICE_NAME}",
-                                                "key": "database-name"
-                                            }
-                                        }
+                                        "value": "tfrs${NAME_SUFFIX}"
                                     },
                                     {
                                         "name": "POSTGRESQL_USER",
                                         "valueFrom": {
                                             "secretKeyRef": {
-                                                "name": "${DATABASE_SERVICE_NAME}",
+                                                "name": "tfrs-postgresql${NAME_SUFFIX}",
                                                 "key": "database-user"
                                             }
                                         }
@@ -238,7 +199,7 @@
                                         "name": "POSTGRESQL_PASSWORD",
                                         "valueFrom": {
                                             "secretKeyRef": {
-                                                "name": "${DATABASE_SERVICE_NAME}",
+                                                "name": "tfrs-postgresql${NAME_SUFFIX}",
                                                 "key": "database-password"
                                             }
                                         }
@@ -256,7 +217,7 @@
                                 },
                                 "volumeMounts": [
                                     {
-                                        "name": "${DATABASE_SERVICE_NAME}",
+                                        "name": "tfrs-postgresql${NAME_SUFFIX}",
                                         "mountPath": "/var/lib/pgsql/data"
                                     }
                                 ],
@@ -276,7 +237,7 @@
                                             "/bin/sh",
                                             "-i",
                                             "-c",
-                                            "psql -h 127.0.0.1 -U $POSTGRESQL_USER -q -d $POSTGRESQL_DATABASE -c 'SELECT 1'"
+                                            "psql -h 127.0.0.1 -U $TFRS_DB_USER -q -d tfrs -c 'SELECT 1'"
                                         ]
                                     },
                                     "initialDelaySeconds": 5,

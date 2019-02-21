@@ -1,10 +1,14 @@
-import random
-
 import requests
 from tfrs.settings import KEYCLOAK
 
 
 def get_token():
+    """
+    This function will generate the token for the Service Account.
+    This token is most likely going to be used to update information
+    for the logged-in user (not to be confused with the service account)
+    such as auto-mapping the user upon first login.
+    """
     token_url = '{keycloak}/auth/realms/{realm}/protocol/openid-connect/token'.format(
         keycloak=KEYCLOAK['SERVICE_ACCOUNT_KEYCLOAK_API_BASE'],
         realm=KEYCLOAK['SERVICE_ACCOUNT_REALM'])
@@ -14,16 +18,17 @@ def get_token():
                                    KEYCLOAK['SERVICE_ACCOUNT_CLIENT_SECRET']),
                              data={'grant_type': 'client_credentials'})
 
-    # print ('response: {}'.format(response.text))
-
     token = response.json()['access_token']
-
-    # print('have token: {}'.format(token))
 
     return token
 
 
 def list_users(token):
+    """
+    Retrieves the list of users found in Keycloak.
+    Not to be confused with the list of users found in the actual
+    database.
+    """
     users_url = '{keycloak}/auth/admin/realms/{realm}/users'.format(
         keycloak=KEYCLOAK['SERVICE_ACCOUNT_KEYCLOAK_API_BASE'],
         realm=KEYCLOAK['SERVICE_ACCOUNT_REALM'])
@@ -32,8 +37,6 @@ def list_users(token):
 
     response = requests.get(users_url,
                             headers=headers)
-
-    print(response.text)
 
     all_users = response.json()
     for user in all_users:
@@ -45,10 +48,9 @@ def list_users(token):
         response = requests.get(users_detail_url,
                                 headers=headers)
 
-        print('user detail for {username}:\n{json}\n--\n'.format(username=user['username'], json=response.text))
-
     if response.status_code != 200:
-        raise RuntimeError('bad response code: {}'.format(response.status_code))
+        raise RuntimeError(
+            'bad response code: {}'.format(response.status_code))
 
 
 def associate_federated_identity_with_user(token, id, provider, username):
@@ -57,8 +59,6 @@ def associate_federated_identity_with_user(token, id, provider, username):
         realm=KEYCLOAK['SERVICE_ACCOUNT_REALM'],
         user_id=id,
         provider=provider)
-
-    print(users_url)
 
     headers = {'Authorization': 'Bearer {}'.format(token)}
 
@@ -70,12 +70,15 @@ def associate_federated_identity_with_user(token, id, provider, username):
                              headers=headers,
                              json=data)
 
-    print(response.status_code)
-    print(response.text)
-
 
 def map_user(keycloak_user_id, tfrs_user_id):
-
+    """
+    Maps the logged-in user to their keycloak account.
+    Please note that the get_token doesn't refer to the logged-in user's
+    account.
+    get_token retrieves the token for the service account that's going to
+    update the user information in keycloak.
+    """
     users_url = '{keycloak}/auth/admin/realms/{realm}/users/{user_id}'.format(
         keycloak=KEYCLOAK['SERVICE_ACCOUNT_KEYCLOAK_API_BASE'],
         realm=KEYCLOAK['SERVICE_ACCOUNT_REALM'],
@@ -89,8 +92,6 @@ def map_user(keycloak_user_id, tfrs_user_id):
         }
     }
 
-    print('posting: {} to {}'.format(data, keycloak_user_id))
-
     response = requests.put(
         users_url,
         headers=headers,
@@ -100,12 +101,11 @@ def map_user(keycloak_user_id, tfrs_user_id):
     if response.status_code not in [200, 201, 204]:
         raise RuntimeError('bad response code: {}'.format(response.status_code))
 
-    #created_user_response = requests.get(response.headers['Location'], headers=headers)
-
-    #return created_user_response.json()['id']
-
 
 def create_user(token, user_name, maps_to_id):
+    """
+    Creates the user account in Keycloak
+    """
     users_url = '{keycloak}/auth/admin/realms/{realm}/users'.format(
         keycloak=KEYCLOAK['SERVICE_ACCOUNT_KEYCLOAK_API_BASE'],
         realm=KEYCLOAK['SERVICE_ACCOUNT_REALM'])
@@ -125,25 +125,10 @@ def create_user(token, user_name, maps_to_id):
                              json=data)
 
     if response.status_code != 204:
-        raise RuntimeError('bad response code: {}'.format(response.status_code))
+        raise RuntimeError(
+            'bad response code: {}'.format(response.status_code))
 
-    created_user_response = requests.get(response.headers['Location'], headers=headers)
+    created_user_response = requests.get(response.headers['Location'],
+                                         headers=headers)
 
     return created_user_response.json()['id']
-
-
-def main():
-    token = get_token()
-    user_name = 'generated-{}'.format(str(random.randint(1000, 100000000)))
-
-    print('using username {}'.format(user_name))
-    # list_users(token)
-    user_id = create_user(token,
-                          user_name,
-                          'fs3')
-
-    associate_federated_identity_with_user(token, user_id, 'github', 'plasticviking')
-
-
-if __name__ == "__main__":
-    main()

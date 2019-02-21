@@ -90,7 +90,6 @@ class OrganizationViewSet(AuditableMixin, viewsets.GenericViewSet,
         Get the organization balance
         """
         organization = self.get_object()
-        # print("Organization")
         balance = OrganizationBalance.objects.get(
             organization=organization,
             expiration_date=None)
@@ -145,8 +144,6 @@ class OrganizationViewSet(AuditableMixin, viewsets.GenericViewSet,
         """
             Reference data for UI
         """
-
-        #.filter(~Q(id=1))
         types = OrganizationType.objects.all()
 
         serializer = self.get_serializer(types,

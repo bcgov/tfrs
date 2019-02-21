@@ -3,9 +3,9 @@
 """
     REST API Documentation for the NRS TFRS Credit Trading Application
 
-    The Transportation Fuels Reporting System is being designed to streamline compliance reporting
-    for transportation fuel suppliers in accordance with the Renewable & Low Carbon Fuel
-    Requirements Regulation.
+    The Transportation Fuels Reporting System is being designed to streamline
+    compliance reporting for transportation fuel suppliers in accordance with
+    the Renewable & Low Carbon Fuel Requirements Regulation.
 
     OpenAPI spec version: v1
 
@@ -24,7 +24,7 @@
 
 import json
 import logging
-import uuid
+
 from collections import defaultdict
 
 from rest_framework import status
@@ -41,33 +41,39 @@ class TestUsersAPI(BaseAPISecurityTestCase):
     """
 
     def test_get_list(self):
-        """Test that getting users list is not a valid action unless you have an admin role"""
+        """Test that getting users list is not a valid action unless you have
+        an admin role"""
 
         url = "/api/users"
 
         all_users = self.users
-        expected_results = defaultdict(lambda: {'status': status.HTTP_403_FORBIDDEN,
-                                                'reason': "Default response should be no access"})
+        expected_results = defaultdict(lambda: {
+            'status': status.HTTP_403_FORBIDDEN,
+            'reason': "Default response should be no access"})
 
-        expected_results[('gov_admin',)] = {'status': status.HTTP_200_OK,
-                                            'reason': 'Admin should have read access to users'}
+        expected_results[(
+            'gov_admin',
+        )] = {'status': status.HTTP_200_OK,
+              'reason': 'Admin should have read access to users'}
+
         for user in all_users:
-            with self.subTest(user=user,
-                              expected_status=expected_results[(user,)]['status'],
-                              reason=expected_results[(user,)]['reason']):
+            with self.subTest(
+                    user=user,
+                    expected_status=expected_results[(user,)]['status'],
+                    reason=expected_results[(user,)]['reason']):
                 response = self.clients[user].get(url)
                 response_data = response.content.decode('utf-8')
                 logging.debug(response_data)
 
-                self.assertEqual(response.status_code, expected_results[(user,)]['status'])
+                self.assertEqual(
+                    response.status_code, expected_results[(user,)]['status'])
 
                 # quick checks for fields which have been blacklisted
-                self.assertNotIn(response_data, "authorizationGuid")
                 self.assertNotIn(response_data, 'organizationBalance')
 
     def test_get_by_id(self):
         """Test that getting another user directly is not a valid action
-         unless you have an admin role"""
+         unless you have a government role"""
 
         url = "/api/users/{0!s}"
 
@@ -75,23 +81,43 @@ class TestUsersAPI(BaseAPISecurityTestCase):
 
         user_that_exists = DataCreationUtilities.create_test_user()
 
-        expected_results = defaultdict(lambda: {'status': status.HTTP_403_FORBIDDEN,
-                                                'reason': "Default response should be no access"})
+        expected_results = defaultdict(lambda: {
+            'status': status.HTTP_403_FORBIDDEN,
+            'reason': "Default response should be no access"})
 
-        expected_results[('gov_admin',)] = {'status': status.HTTP_200_OK,
-                                            'reason': 'Admin should have read access to users'}
+        expected_results[('gov_admin',)] = {
+            'status': status.HTTP_200_OK,
+            'reason': 'Admin should have read access to users'}
+
+        expected_results[('gov_director',)] = {
+            'status': status.HTTP_200_OK,
+            'reason': 'Director should have read access to users'}
+
+        expected_results[('gov_analyst',)] = {
+            'status': status.HTTP_200_OK,
+            'reason': 'Analyst should have read access to users'}
+
+        expected_results[('gov_multi_role',)] = {
+            'status': status.HTTP_200_OK,
+            'reason': 'Multi-role should have read access to users'}
 
         for user in all_users:
-            with self.subTest(user=user,
-                              expected_status=expected_results[(user,)]['status'],
-                              reason=expected_results[(user,)]['reason']):
-                response = self.clients[user].get(url.format(user_that_exists['id']))
+            with self.subTest(
+                    user=user,
+                    expected_status=expected_results[(user,)]['status'],
+                    reason=expected_results[(user,)]['reason']):
+                response = self.clients[user].get(url.format(
+                    user_that_exists['id']))
+
                 logging.debug(response.content.decode('utf-8'))
-                self.assertEqual(response.status_code, expected_results[(user,)]['status'])
+                self.assertEqual(
+                    response.status_code, expected_results[(user,)]['status'])
 
     def test_get_by_username(self):
-        """Test that getting another user directly is not a valid action
-         unless you have an admin role"""
+        """
+        Test that getting another user directly is not a valid action
+        unless you have an admin role
+        """
 
         url = "/api/users/by_username?username={0!s}"
 
@@ -99,56 +125,77 @@ class TestUsersAPI(BaseAPISecurityTestCase):
 
         user_that_exists = DataCreationUtilities.create_test_user()
 
-        expected_results = defaultdict(lambda: {'status': status.HTTP_403_FORBIDDEN,
-                                                'reason': "Default response should be no access"})
+        expected_results = defaultdict(lambda: {
+            'status': status.HTTP_403_FORBIDDEN,
+            'reason': "Default response should be no access"})
 
-        expected_results[('gov_admin',)] = {'status': status.HTTP_200_OK,
-                                            'reason': 'Admin should have read access to users'}
+        expected_results[('gov_admin',)] = {
+            'status': status.HTTP_200_OK,
+            'reason': 'Admin should have read access to users'}
 
         for user in all_users:
-            with self.subTest(user=user,
-                              expected_status=expected_results[(user,)]['status'],
-                              reason=expected_results[(user,)]['reason']):
+            with self.subTest(
+                    user=user,
+                    expected_status=expected_results[(user,)]['status'],
+                    reason=expected_results[(user,)]['reason']):
                 response = self.clients[user].get(url.format(user_that_exists['username']))
+
                 logging.debug(response.content.decode('utf-8'))
-                self.assertEqual(response.status_code, expected_results[(user,)]['status'])
+
+                self.assertEqual(
+                    response.status_code, expected_results[(user,)]['status'])
 
     def test_search(self):
-        """Test that searching users is not a valid action unless you have an admin role"""
+        """
+        Test that searching users is not a valid action unless you have an
+        admin role
+        """
         url = "/api/users/search"
 
         all_users = self.users
 
-        expected_results = defaultdict(lambda: {'status': status.HTTP_403_FORBIDDEN,
-                                                'reason': "Default response should be no access"})
+        expected_results = defaultdict(lambda: {
+            'status': status.HTTP_403_FORBIDDEN,
+            'reason': "Default response should be no access"})
 
-        expected_results[('gov_admin',)] = {'status': status.HTTP_200_OK,
-                                            'reason': 'Admin should have read access to users'}
+        expected_results[('gov_admin',)] = {
+            'status': status.HTTP_200_OK,
+            'reason': 'Admin should have read access to users'}
 
         for user in all_users:
-            with self.subTest(user=user,
-                              expected_status=expected_results[(user,)]['status'],
-                              reason=expected_results[(user,)]['reason']):
+            with self.subTest(
+                    user=user,
+                    expected_status=expected_results[(user,)]['status'],
+                    reason=expected_results[(user,)]['reason']):
                 response = self.clients[user].get(url)
+
                 logging.debug(response.content.decode('utf-8'))
-                self.assertEqual(response.status_code, expected_results[(user,)]['status'])
+
+                self.assertEqual(
+                    response.status_code, expected_results[(user,)]['status'])
 
     def test_post(self):
-        """Test that posting new users is not a valid action unless you have an admin role"""
+        """
+        Test that posting new users is not a valid action unless you have
+        an admin role
+        """
         url = "/api/users"
 
         all_users = self.users
 
-        expected_results = defaultdict(lambda: {'status': status.HTTP_403_FORBIDDEN,
-                                                'reason': "Default response should be no access"})
+        expected_results = defaultdict(lambda: {
+            'status': status.HTTP_403_FORBIDDEN,
+            'reason': "Default response should be no access"})
 
-        expected_results[('gov_admin',)] = {'status': status.HTTP_201_CREATED,
-                                            'reason': 'Admin should have create access for users'}
+        expected_results[('gov_admin',)] = {
+            'status': status.HTTP_201_CREATED,
+            'reason': 'Admin should have create access for users'}
 
         for index, user in enumerate(all_users):
-            with self.subTest(user=user,
-                              expected_status=expected_results[(user,)]['status'],
-                              reason=expected_results[(user,)]['reason']):
+            with self.subTest(
+                    user=user,
+                    expected_status=expected_results[(user,)]['status'],
+                    reason=expected_results[(user,)]['reason']):
                 payload = {
                     'email': 'test_pilot_{0!s}@test.com'.format(index),
                     'user': {
@@ -156,17 +203,19 @@ class TestUsersAPI(BaseAPISecurityTestCase):
                         'last_name': 'Pilot',
                         'email': 'test_pilot_{0!s}@test.com'.format(index),
                         'username': 'test_pilot_{0!s}'.format(index),
-                        'roles': [],
+                        'roles': (1, 2),
                         'organization': 1
                     }
                 }
 
-                response = self.clients[user].post(url,
-                                                   content_type='application/json',
-                                                   data=json.dumps(payload))
+                response = self.clients[user].post(
+                    url,
+                    content_type='application/json',
+                    data=json.dumps(payload))
 
                 logging.debug(response.content.decode('utf-8'))
-                self.assertEqual(response.status_code, expected_results[(user,)]['status'])
+                self.assertEqual(
+                    response.status_code, expected_results[(user,)]['status'])
 
     def test_delete(self):
         """Test that deleting users is not a semantically valid action"""
@@ -175,18 +224,24 @@ class TestUsersAPI(BaseAPISecurityTestCase):
 
         all_users = self.users
 
-        expected_results = defaultdict(lambda: {'status': [status.HTTP_405_METHOD_NOT_ALLOWED,
-                                                           status.HTTP_403_FORBIDDEN],
-                                                'reason': "Default response should be no access"})
+        expected_results = defaultdict(lambda: {
+            'status': [status.HTTP_405_METHOD_NOT_ALLOWED,
+                       status.HTTP_403_FORBIDDEN],
+            'reason': "Default response should be no access"})
 
         for user in all_users:
-            with self.subTest(user=user,
-                              expected_statuses=expected_results[(user,)]['status'],
-                              reason=expected_results[(user,)]['reason']):
+            with self.subTest(
+                    user=user,
+                    expected_statuses=expected_results[(user,)]['status'],
+                    reason=expected_results[(user,)]['reason']):
                 user_that_exists = DataCreationUtilities.create_test_user()
-                response = self.clients[user].delete(url.format(user_that_exists['id']))
+                response = self.clients[user].delete(
+                    url.format(user_that_exists['id']))
+
                 logging.debug(response)
-                self.assertIn(response.status_code, expected_results[(user,)]['status'])
+
+                self.assertIn(
+                    response.status_code, expected_results[(user,)]['status'])
 
     def test_put_or_patch_to_other(self):
         """
@@ -197,16 +252,19 @@ class TestUsersAPI(BaseAPISecurityTestCase):
 
         all_users = self.users
 
-        expected_results = defaultdict(lambda: {'status': status.HTTP_403_FORBIDDEN,
-                                                'reason': "Default response should be no access"})
+        expected_results = defaultdict(lambda: {
+            'status': status.HTTP_403_FORBIDDEN,
+            'reason': "Default response should be no access"})
 
-        expected_results[('gov_admin',)] = ({'status': status.HTTP_200_OK,
-                                             'reason': "Admin should have write access"})
+        expected_results[('gov_admin',)] = ({
+            'status': status.HTTP_200_OK,
+            'reason': "Admin should have write access"})
 
         for index, user in enumerate(all_users):
-            with self.subTest(user=user,
-                              expected_status=expected_results[(user,)]['status'],
-                              reason=expected_results[(user,)]['reason']):
+            with self.subTest(
+                    user=user,
+                    expected_status=expected_results[(user,)]['status'],
+                    reason=expected_results[(user,)]['reason']):
                 user_that_exists = DataCreationUtilities.create_test_user()
 
                 payload = {
@@ -214,12 +272,9 @@ class TestUsersAPI(BaseAPISecurityTestCase):
                     'last_name': 'Pilot',
                     'email': 'test_pilot_{0!s}@test.com'.format(index),
                     'phone': '5558675309',
-                    'authorization_id': 'test_pilot_{0!s}'.format(index),
                     'username': 'test_pilot_{0!s}'.format(index),
-                    'authorization_guid': str(uuid.uuid4()),
-                    'authorization_directory': 'IDIR',
                     'display_name': 'Canary',
-                    'roles': [],
+                    'roles': (5, 6),
                     'is_active': True
                 }
 
@@ -227,11 +282,13 @@ class TestUsersAPI(BaseAPISecurityTestCase):
                     url.format(user_that_exists['id']),
                     content_type='application/json',
                     data=json.dumps(payload)
-
                 )
+
                 logging.debug(response)
 
-                self.assertEqual(response.status_code, expected_results[(user,)]['status'], "PUT")
+                self.assertEqual(
+                    response.status_code,
+                    expected_results[(user,)]['status'], "PUT")
 
                 payload = {
                     'first_name': 'Defaced'
@@ -245,7 +302,9 @@ class TestUsersAPI(BaseAPISecurityTestCase):
                 )
                 logging.debug(response)
 
-                self.assertEqual(response.status_code, expected_results[(user,)]['status'], "PATCH")
+                self.assertEqual(
+                    response.status_code,
+                    expected_results[(user,)]['status'], "PATCH")
 
     def test_put_or_patch_on_self(self):
         """
@@ -255,29 +314,28 @@ class TestUsersAPI(BaseAPISecurityTestCase):
 
         all_users = self.users
 
-        expected_results = defaultdict(lambda: {'status': status.HTTP_200_OK,
-                                                'reason': "Updating self is accepted"
-                                                          " (for certain fields)"})
+        expected_results = defaultdict(lambda: {
+            'status': status.HTTP_200_OK,
+            'reason': "Updating self is accepted (for certain fields)"})
 
-        # TODO check certain fields one at a time for read-only / read-write access
+        # TODO check certain fields one at a time for read-only /
+        # read-write access
 
         for index, user in enumerate(all_users):
-            with self.subTest(user=user,
-                              expected_status=expected_results[(user,)]['status'],
-                              reason=expected_results[(user,)]['reason']):
+            with self.subTest(
+                    user=user,
+                    expected_status=expected_results[(user,)]['status'],
+                    reason=expected_results[(user,)]['reason']):
                 self_id = User.objects.get_by_natural_key(user).id
 
                 payload = {
                     'first_name': 'Test',
                     'last_name': 'Pilot',
                     'email': 'test_pilot_{0!s}@test.com'.format(index),
-                    'authorization_id': 'test_pilot_{0!s}'.format(index),
                     'username': user,
                     'phone': '5558675309',
-                    'authorization_guid': str(uuid.uuid4()),
-                    'authorization_directory': 'IDIR',
                     'display_name': 'Canary',
-                    'roles': [],
+                    'roles': (1, 2),
                     'is_active': True
                 }
 
@@ -289,7 +347,9 @@ class TestUsersAPI(BaseAPISecurityTestCase):
                 )
                 logging.debug(response)
 
-                self.assertEqual(response.status_code, expected_results[(user,)]['status'], "PUT")
+                self.assertEqual(
+                    response.status_code,
+                    expected_results[(user,)]['status'], "PUT")
 
                 payload = {
                     'first_name': 'Defaced'
@@ -303,4 +363,6 @@ class TestUsersAPI(BaseAPISecurityTestCase):
                 )
                 logging.debug(response)
 
-                self.assertEqual(response.status_code, expected_results[(user,)]['status'], "PATCH")
+                self.assertEqual(
+                    response.status_code,
+                    expected_results[(user,)]['status'], "PATCH")

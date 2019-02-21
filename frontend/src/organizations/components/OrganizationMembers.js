@@ -10,6 +10,7 @@ import Loading from '../../app/components/Loading';
 import history from '../../app/History';
 import * as Lang from '../../constants/langEnUs';
 import PERMISSIONS_USERS from '../../constants/permissions/Users';
+import ORGANIZATIONS from '../../constants/routes/Organizations';
 import USERS from '../../constants/routes/Users';
 import FuelSupplierTabs from './FuelSupplierTabs';
 import OrganizationMembersTable from './OrganizationMembersTable';
@@ -33,7 +34,15 @@ const OrganizationMembers = (props) => {
             <button
               id="new-user"
               className="btn btn-primary"
-              onClick={() => history.push(USERS.ADD)}
+              onClick={() => {
+                let addUrl = USERS.ADD;
+
+                if (props.loggedInUser.isGovernmentUser && props.organizationId) {
+                  addUrl = ORGANIZATIONS.ADD_USER.replace(':organizationId', props.organizationId);
+                }
+
+                history.push(addUrl);
+              }}
               type="button"
             >
               <FontAwesomeIcon icon="plus-circle" /> {Lang.BTN_NEW_USER}
@@ -54,7 +63,8 @@ const OrganizationMembers = (props) => {
 };
 
 OrganizationMembers.defaultProps = {
-  loggedInUser: null
+  loggedInUser: null,
+  organizationId: null
 };
 
 OrganizationMembers.propTypes = {
@@ -74,7 +84,11 @@ OrganizationMembers.propTypes = {
         id: PropTypes.number
       })
     }))
-  }).isRequired
+  }).isRequired,
+  organizationId: PropTypes.oneOfType([
+    PropTypes.number,
+    PropTypes.string
+  ])
 };
 
 const mapStateToProps = state => ({

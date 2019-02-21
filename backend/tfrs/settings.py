@@ -12,8 +12,11 @@ https://docs.djangoproject.com/en/1.8/ref/settings/
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
+import sys
 
 from pika import ConnectionParameters, PlainCredentials
+
+from . import minio
 from . import amqp
 from . import keycloak
 from . import email
@@ -33,11 +36,15 @@ SECRET_KEY = os.getenv(
 )
 
 # SECURITY WARNING: don't run with debug turned on in production!
-#DEBUG = True
+# DEBUG = True
 DEBUG = os.getenv('DJANGO_DEBUG', 'True') == 'True'
 
 # SECURITY WARNING: never set this on in production
 BYPASS_AUTH = os.getenv('BYPASS_HEADER_AUTHENTICATION', False)
+
+TESTING = 'test' in sys.argv
+RUNSERVER = 'runserver' in sys.argv
+
 
 # ALLOWED_HOSTS = ['*']
 
@@ -52,6 +59,7 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django_extensions',
+    'django_celery_beat',
     'rest_framework',
     'tfrs',
     'api.app.APIAppConfig',
@@ -60,9 +68,9 @@ INSTALLED_APPS = (
 )
 
 MIDDLEWARE_CLASSES = (
+    'api.nocache.NoCacheMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'corsheaders.middleware.CorsMiddleware',
-    'api.middleware.SMUserMiddleware',  # this can go away when Siteminder is removed
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -76,10 +84,7 @@ MIDDLEWARE_CLASSES = (
 AUTH_USER_MODEL = 'api.User'
 
 REST_FRAMEWORK = {
-#   'DEFAULT_AUTHENTICATION_CLASSES': ('rest_framework.permissions.AllowAny',),
-# User authentication is commented out here to allow tests to pass, remove comment to re-enable
-    'DEFAULT_AUTHENTICATION_CLASSES': ('api.keycloak_authentication.UserAuthentication',
-                                       'api.sm_authentication.UserAuthentication'),
+    'DEFAULT_AUTHENTICATION_CLASSES': ('api.keycloak_authentication.UserAuthentication',),
     'DEFAULT_PERMISSION_CLASSES': ('rest_framework.permissions.IsAuthenticated',),
     # 'EXCEPTION_HANDLER': 'core.exceptions.exception_handler',
     'DEFAULT_RENDERER_CLASSES': (
@@ -117,9 +122,9 @@ TEST_RUNNER = 'django_nose.NoseTestSuiteRunner'
 # https://docs.djangoproject.com/en/1.8/ref/settings/#databases
 
 try:
-     from . import database  
+    from . import database
 except:
-     import database 
+    import database
 
 DATABASES = {
     'default': database.config()
@@ -138,6 +143,8 @@ KEYCLOAK = keycloak.config()
 
 EMAIL = email.config()
 
+MINIO = minio.config()
+
 # Internationalization
 # https://docs.djangoproject.com/en/1.8/topics/i18n/
 
@@ -150,6 +157,10 @@ USE_I18N = True
 USE_L10N = True
 
 USE_TZ = True
+
+DOCUMENTS_API = {
+    'ENABLED': bool(os.getenv('DOCUMENTS_API_ENABLED', 'False').lower() in ['true', 1]),
+}
 
 
 # Static files (CSS, JavaScript, Images)
@@ -184,3 +195,45 @@ CORS_ORIGIN_ALLOW_ALL = True
 
 # List of origin hostnames that are authorized to make cross-site HTTP requests
 CORS_ORIGIN_WHITELIST = ()
+
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.dummy.DummyCache',
+    },
+    'keycloak': {
+        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
+        'LOCATION': 'keycloak',
+    },
+    'notification_subscriptions': {
+        'BACKEND': 'django.core.cache.backends.db.DatabaseCache',
+        'LOCATION': 'cached_notification_subscriptions',
+        'TIMEOUT': None,
+        'OPTIONS': {
+            'MAX_ENTRIES': 100000
+        }
+    }
+}
+
+
+# Uncomment this stanza to see database calls in the log (quite verbose)
+# LOGGING = {
+#     'version': 1,
+#     'disable_existing_loggers': False,
+#     'filters': {
+#         'require_debug_false': {
+#             '()': 'django.utils.log.RequireDebugFalse'
+#         }
+#     },
+#     'handlers': {
+#         'console': {
+#             'level': 'DEBUG',
+#             'class': 'logging.StreamHandler',
+#         },
+#     },
+#     'loggers': {
+#         'django.db.backends': {
+#             'level': 'DEBUG',
+#             'handlers': ['console'],
+#         },
+#     }
+# }

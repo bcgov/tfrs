@@ -9,7 +9,12 @@ class UserCreationRequestSerializer(serializers.Serializer):
     Serializer for creating a user
     """
     user = UserCreateSerializer(allow_null=False)
-    email = serializers.EmailField(allow_null=False, allow_blank=False)
+    email = serializers.EmailField(
+        allow_null=False, allow_blank=False,
+        error_messages={
+            'blank': 'A BCeID/IDIR Email Address is required',
+            'invalid': 'Please enter a valid BCeID/IDIR Email Address.'
+        })
 
     def __init__(self, *args, **kwargs):
         """
@@ -36,7 +41,8 @@ class UserCreationRequestSerializer(serializers.Serializer):
         return data
 
     def create(self, validated_data):
-        user_serializer = UserCreateSerializer(data=self.data['user'])
+        context = self.context
+        user_serializer = UserCreateSerializer(data=self.data['user'], context=context)
         user_serializer.is_valid()
         user = user_serializer.save()
 

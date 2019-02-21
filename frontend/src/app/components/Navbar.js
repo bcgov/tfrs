@@ -4,13 +4,16 @@ import React, { Component } from 'react';
 import { DropdownButton, MenuItem } from 'react-bootstrap';
 import { connect } from 'react-redux';
 import { NavLink } from 'react-router-dom';
+import { bindActionCreators } from 'redux';
 
+import { signUserOut } from '../../actions/userActions';
 import history from '../../app/History';
+import PERMISSIONS_SECURE_DOCUMENT_UPLOAD from '../../constants/permissions/SecureDocumentUpload';
 import * as Routes from '../../constants/routes';
 import { HISTORICAL_DATA_ENTRY } from '../../constants/routes/Admin';
+import SECURE_DOCUMENT_UPLOAD from '../../constants/routes/SecureDocumentUpload';
 import CREDIT_TRANSACTIONS from '../../constants/routes/CreditTransactions';
 import ORGANIZATIONS from '../../constants/routes/Organizations';
-import { signUserOut } from '../../actions/userActions';
 import CONFIG from '../../config';
 
 class Navbar extends Component {
@@ -21,9 +24,35 @@ class Navbar extends Component {
     document.getElementById('main').setAttribute('style', `padding-top: ${totalSpacing}px;`);
   }
 
+  constructor () {
+    super();
+
+    this.state = {
+      unreadCount: 0
+    };
+  }
+
   componentDidMount () {
     Navbar.updateContainerPadding();
     window.addEventListener('resize', () => Navbar.updateContainerPadding());
+  }
+
+  componentWillReceiveProps (newProps) {
+    if (newProps.unreadNotificationsCount != null) {
+      let unreadCount = 0;
+
+      if (newProps.unreadNotificationsCount > 0 && newProps.unreadNotificationsCount < 1000) {
+        unreadCount = newProps.unreadNotificationsCount;
+      }
+
+      if (unreadCount > 1000) {
+        unreadCount = '∞';
+      }
+
+      this.setState({
+        unreadCount
+      });
+    }
   }
 
   componentDidUpdate () {
@@ -31,16 +60,6 @@ class Navbar extends Component {
   }
 
   render () {
-    let unreadCount = 0;
-
-    if (this.props.unreadNotificationsCount > 0 && this.props.unreadNotificationsCount < 1000) {
-      unreadCount = this.props.unreadNotificationsCount;
-    }
-
-    if (this.props.unreadNotificationsCount > 1000) {
-      unreadCount = '∞';
-    }
-
     const SecondLevelNavigation = (
       <div className="level2Navigation">
         <div className="container">
@@ -103,6 +122,17 @@ class Navbar extends Component {
           >
             Credit Transactions
           </NavLink>
+          {CONFIG.SECURE_DOCUMENT_UPLOAD.ENABLED &&
+          typeof this.props.loggedInUser.hasPermission === 'function' &&
+          this.props.loggedInUser.hasPermission(PERMISSIONS_SECURE_DOCUMENT_UPLOAD.VIEW) &&
+          <NavLink
+            activeClassName="active"
+            id="navbar-secure-document-upload"
+            to={SECURE_DOCUMENT_UPLOAD.LIST}
+          >
+            Secure File Submission
+          </NavLink>
+          }
           {this.props.loggedInUser.isGovernmentUser &&
           <NavLink
             activeClassName="active"
@@ -119,6 +149,13 @@ class Navbar extends Component {
             Administration
           </NavLink>
           }
+          <a
+            href={`/assets/files/Transportation_Fuels_Reporting_System_-_${this.props.loggedInUser.isGovernmentUser ? 'IDIR' : 'BCeID'}_Manual_v1.0.pdf`}
+            rel="noopener noreferrer"
+            target="_blank"
+          >
+            Help
+          </a>
           <NavLink
             activeClassName="active"
             id="navbar-notifications"
@@ -126,8 +163,8 @@ class Navbar extends Component {
           >
             <span className="fa-layers">
               <FontAwesomeIcon icon="bell" />
-              {unreadCount > 0 &&
-                <span className="fa-layers-counter">{unreadCount}</span>
+              {this.state.unreadCount > 0 &&
+              <span className="fa-layers-counter">{this.state.unreadCount}</span>
               }
             </span>
           </NavLink>
@@ -184,7 +221,7 @@ class Navbar extends Component {
                 to={ORGANIZATIONS.MINE}
               >
                 Company Details
-              </NavLink>,
+              </NavLink>
             </li>,
             <li key="credit-market-report">
               <a
@@ -203,9 +240,22 @@ class Navbar extends Component {
               id="collapse-navbar-credit-transactions"
               to={CREDIT_TRANSACTIONS.LIST}
             >
-            Credit Transactions
+              Credit Transactions
             </NavLink>
           </li>
+          {CONFIG.SECURE_DOCUMENT_UPLOAD.ENABLED &&
+          typeof this.props.loggedInUser.hasPermission === 'function' &&
+          this.props.loggedInUser.hasPermission(PERMISSIONS_SECURE_DOCUMENT_UPLOAD.VIEW) &&
+          <li>
+            <NavLink
+              activeClassName="active"
+              id="collapse-navbar-secure-document-upload"
+              to={SECURE_DOCUMENT_UPLOAD.LIST}
+            >
+              Secure File Submission
+            </NavLink>
+          </li>
+          }
           {this.props.loggedInUser.isGovernmentUser &&
           <li>
             <NavLink
@@ -229,9 +279,9 @@ class Navbar extends Component {
               id="navbar-notifications"
               to={Routes.NOTIFICATIONS.LIST}
             >
-                Notifications
-              {unreadCount > 0 &&
-                <span> ({unreadCount})</span>
+              Notifications
+              {this.state.unreadCount > 0 &&
+              <span> ({this.state.unreadCount})</span>
               }
             </NavLink>
           </li>
@@ -241,21 +291,25 @@ class Navbar extends Component {
             </NavLink>
           </li>
           <li>
-            {CONFIG.KEYCLOAK.ENABLED &&
+            <a
+              href={`/assets/files/Transportation_Fuels_Reporting_System_-_${this.props.loggedInUser.isGovernmentUser ? 'IDIR' : 'BCeID'}_Manual_v1.0.pdf`}
+              rel="noopener noreferrer"
+              target="_blank"
+            >
+              Help
+            </a>
+          </li>
+          <li>
             <NavLink
               id="navbar-logout"
-              onClick={(e) => { e.preventDefault(); this.props.dispatch(signUserOut()); }}
+              onClick={(e) => {
+                e.preventDefault();
+                this.props.signUserOut();
+              }}
               to={Routes.LOGOUT}
             >
               Log Out
             </NavLink>
-            }
-            {CONFIG.KEYCLOAK.ENABLED ||
-            <NavLink id="navbar-logout" to={Routes.LOGOUT}>
-              Log Out
-            </NavLink>
-            }
-
           </li>
         </ul>
       </div>);
@@ -323,48 +377,42 @@ class Navbar extends Component {
                 <div className="pull-right">
                   <h5 id="display_name">
                     {this.props.loggedInUser.displayName &&
-                      <DropdownButton
-                        className="display-name-button"
-                        id="display-name-button"
-                        pullRight
-                        title={this.props.loggedInUser.displayName}
+                    <DropdownButton
+                      className="display-name-button"
+                      id="display-name-button"
+                      pullRight
+                      title={this.props.loggedInUser.displayName}
+                    >
+                      <MenuItem className="dropdown-menu-caret" header>
+                        <FontAwesomeIcon icon="caret-up" size="2x" />
+                      </MenuItem>
+                      <MenuItem onClick={() => {
+                        history.push(Routes.SETTINGS);
+                      }}
                       >
-                        <MenuItem className="dropdown-menu-caret" header>
-                          <FontAwesomeIcon icon="caret-up" size="2x" />
-                        </MenuItem>
-                        <MenuItem onClick={() => {
-                          history.push(Routes.SETTINGS);
-                        }}
-                        >
-                          <FontAwesomeIcon icon="cog" /> Settings
-                        </MenuItem>
-                        {CONFIG.KEYCLOAK.ENABLED &&
-                        <MenuItem onClick={(e) => {
-                          e.preventDefault(); this.props.dispatch(signUserOut());
-                        }}
-                        >
-                          <FontAwesomeIcon icon="sign-out-alt" /> Log Out
-                        </MenuItem>
-                        }
-                        {CONFIG.KEYCLOAK.ENABLED ||
-                        <MenuItem href={Routes.LOGOUT}>
-                          <FontAwesomeIcon icon="sign-out-alt" /> Log Out
-                        </MenuItem>
-                        }
-                      </DropdownButton>
+                        <FontAwesomeIcon icon="cog" /> Settings
+                      </MenuItem>
+                      <MenuItem onClick={(e) => {
+                        e.preventDefault();
+                        this.props.signUserOut();
+                      }}
+                      >
+                        <FontAwesomeIcon icon="sign-out-alt" /> Log Out
+                      </MenuItem>
+                    </DropdownButton>
                     }
                   </h5>
                   <span id="user_organization">
                     {this.props.loggedInUser.organization &&
-                      this.props.loggedInUser.organization.name}
+                    this.props.loggedInUser.organization.name}
                   </span>
                 </div>
               </div>
-              { this.props.isAuthenticated && CollapsedNavigation }
+              {this.props.isAuthenticated && CollapsedNavigation}
             </div>
           </div>
           <div className="navigationRibbon hidden-xs">
-            { this.props.isAuthenticated && SecondLevelNavigation }
+            {this.props.isAuthenticated && SecondLevelNavigation}
           </div>
         </div>
       </div>
@@ -373,15 +421,14 @@ class Navbar extends Component {
 }
 
 Navbar.defaultProps = {
-  dispatch: null,
   unreadNotificationsCount: null
 };
 
 Navbar.propTypes = {
-  dispatch: PropTypes.func,
   isAuthenticated: PropTypes.bool.isRequired,
   loggedInUser: PropTypes.shape({
     displayName: PropTypes.string,
+    hasPermission: PropTypes.func,
     isGovernmentUser: PropTypes.bool,
     organization: PropTypes.shape({
       name: PropTypes.string,
@@ -391,13 +438,18 @@ Navbar.propTypes = {
       id: PropTypes.number
     }))
   }).isRequired,
+  signUserOut: PropTypes.func.isRequired,
   unreadNotificationsCount: PropTypes.number
 };
+
+const mapDispatchToProps = dispatch => ({
+  signUserOut: bindActionCreators(signUserOut, dispatch)
+});
 
 // export default Navbar;
 export default connect(state => ({
   loggedInUser: state.rootReducer.userRequest.loggedInUser,
   isAuthenticated: state.rootReducer.userRequest.isAuthenticated
-}), null, null, {
+}), mapDispatchToProps, null, {
   pure: false
 })(Navbar);

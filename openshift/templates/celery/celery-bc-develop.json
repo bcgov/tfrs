@@ -1,0 +1,62 @@
+{
+    "kind": "Template",
+    "apiVersion": "v1",
+    "metadata": {
+        "name": "celery-bc-develop",
+        "creationTimestamp": null
+    },
+    "objects": [
+        {
+            "kind": "ImageStream",
+            "apiVersion": "v1",
+            "metadata": {
+                "name": "celery-develop",
+                "generation": 1,
+                "creationTimestamp": null
+            },
+            "spec": {
+                "lookupPolicy": {
+                    "local": false
+                }
+            },
+            "status": {
+                "dockerImageRepository": ""
+            }
+        },
+        {
+            "kind": "BuildConfig",
+            "apiVersion": "v1",
+            "metadata": {
+                "name": "celery-develop",
+                "creationTimestamp": null
+            },
+            "spec": {
+                "triggers": [],
+                "runPolicy": "Serial",
+                "source": {
+                    "type": "Dockerfile",
+                    "dockerfile": "FROM python:3.6.8-slim-stretch\nRUN apt-get update \\\n    \u0026\u0026 apt-get install -y git \\\n    \u0026\u0026 apt-get install -y supervisor\nWORKDIR /app\nRUN git clone https://github.com/bcgov/tfrs.git\nWORKDIR /app/tfrs\nRUN git checkout master\nRUN pip install --upgrade pip \\\n    \u0026\u0026 pip install -r backend/requirements.txt\nRUN cp /app/tfrs/security-scan/scan-handler/celery.conf /etc/supervisor/conf.d\nRUN chgrp -R root /var/log/supervisor\nRUN chmod -R g+w /var/log/supervisor\nRUN chmod -R g+w /run\nRUN chmod -R g+w /app\nCMD [\"supervisord\"]\n"
+                },
+                "strategy": {
+                    "type": "Docker",
+                    "dockerStrategy": {
+                        "noCache": true,
+                        "forcePull": true
+                    }
+                },
+                "output": {
+                    "to": {
+                        "kind": "ImageStreamTag",
+                        "name": "celery-develop:latest"
+                    }
+                },
+                "resources": {},
+                "postCommit": {},
+                "nodeSelector": null
+            },
+            "status": {
+                "lastVersion": 0
+            }
+        }
+    ]
+}

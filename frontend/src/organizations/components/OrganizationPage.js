@@ -17,12 +17,14 @@ const OrganizationPage = (props) => {
       {!isFetching && [
         <OrganizationDetails
           key="details"
+          loggedInUser={props.loggedInUser}
           organization={details}
         />,
         <OrganizationMembers
           key="members"
           loggedInUser={props.loggedInUser}
           members={props.members}
+          organizationId={details.id}
         />,
         <div
           className="btn-container"

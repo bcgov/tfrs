@@ -3,28 +3,26 @@ import PropTypes from 'prop-types';
 import FontAwesomeIcon from '@fortawesome/react-fontawesome';
 
 class CheckBox extends Component {
-  constructor (props) {
-    super(props);
-
+  componentDidMount () {
     const obj = {
-      id: props.id
+      id: this.props.id
     };
 
-    if (props.field) {
-      obj.field = props.field;
+    if (this.props.field) {
+      obj.field = this.props.field;
     }
 
-    if (props.type) {
-      obj.type = props.type;
+    if (this.props.type) {
+      obj.type = this.props.type;
     }
 
-    if (props.value) {
+    if (this.props.value) {
       obj.value = true;
     } else {
       obj.value = false;
     }
 
-    props.addToFields(obj);
+    this.props.addToFields(obj);
   }
 
   render () {

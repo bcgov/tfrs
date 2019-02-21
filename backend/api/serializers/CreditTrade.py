@@ -136,7 +136,7 @@ class CreditTradeCreateSerializer(serializers.ModelSerializer):
                 CreditTradeType.objects.filter(
                     the_type__in=[
                         "Credit Validation",
-                        "Credit Retirement",
+                        "Credit Reduction",
                         "Part 3 Award"
                     ]
                 ).only('id')
@@ -202,14 +202,10 @@ class CreditTradeCreateSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = CreditTrade
-        fields = ('id', 'status',
-                  'initiator', 'respondent',
-                  'type', 'number_of_credits',
-                  'fair_market_value_per_credit', 'total_value',
-                  'zero_reason',
-                  'trade_effective_date',
-                  'update_timestamp', 'note',
-                  'create_user', 'update_user',
+        fields = ('id', 'status', 'initiator', 'respondent', 'type',
+                  'number_of_credits', 'fair_market_value_per_credit',
+                  'total_value', 'zero_reason', 'trade_effective_date',
+                  'update_timestamp', 'create_user', 'update_user',
                   'compliance_period', 'is_rescinded', 'comment')
         extra_kwargs = {
             'compliance_period': {
@@ -426,7 +422,7 @@ class CreditTradeUpdateSerializer(serializers.ModelSerializer):
         if data.get('fair_market_value_per_credit') == 0 and \
                 data.get('zero_reason') is None:
             allowed_types = list(CreditTradeType.objects.filter(the_type__in=[
-                "Credit Validation", "Credit Retirement", "Part 3 Award"
+                "Credit Validation", "Credit Reduction", "Part 3 Award"
             ]).only('id'))
 
             credit_trade_type = data.get('type')
@@ -524,7 +520,7 @@ class CreditTradeUpdateSerializer(serializers.ModelSerializer):
                   'fair_market_value_per_credit', 'total_value',
                   'zero_reason',
                   'trade_effective_date',
-                  'update_timestamp', 'note',
+                  'update_timestamp',
                   'create_user', 'update_user',
                   'compliance_period', 'is_rescinded', 'comment')
         extra_kwargs = {
@@ -589,7 +585,7 @@ class CreditTradeApproveSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = CreditTrade
-        fields = ('id', 'trade_effective_date', 'note',)
+        fields = ('id', 'trade_effective_date',)
         read_only_fields = ('status', 'number_of_credits',
                             'type',
                             'fair_market_value_per_credit',
@@ -622,7 +618,7 @@ class CreditTrade2Serializer(serializers.ModelSerializer):
                   'fair_market_value_per_credit', 'total_value',
                   'zero_reason',
                   'trade_effective_date', 'credits_from', 'credits_to',
-                  'update_timestamp', 'actions', 'comment_actions', 'note',
+                  'update_timestamp', 'actions', 'comment_actions',
                   'compliance_period', 'comments', 'is_rescinded',
                   'signatures', 'history')
 

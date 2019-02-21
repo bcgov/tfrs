@@ -23,10 +23,8 @@
 
 from django.db import models
 
-from auditable.models import Auditable
 
-
-class CreditTradeHistory(Auditable):
+class CreditTradeHistory(models.Model):
     """
     History of changes for the Credit Trades table
     """
@@ -34,41 +32,44 @@ class CreditTradeHistory(Auditable):
         'CreditTrade',
         related_name='credit_trade_histories',
         null=True,
-        on_delete=models.PROTECT)
-    user = models.ForeignKey(
-        'User', related_name='credit_trade_histories',
-        on_delete=models.PROTECT)
-    credit_trade_update_time = models.DateTimeField()
+        on_delete=models.PROTECT
+    )
     respondent = models.ForeignKey(
         'Organization',
         related_name='credit_trade_histories',
         on_delete=models.PROTECT,
-        db_comment='fk: responding organization id')
+        db_comment="fk: responding organization id"
+    )
     status = models.ForeignKey(
         'CreditTradeStatus',
         related_name='credit_trade_histories',
-        on_delete=models.PROTECT)
+        on_delete=models.PROTECT
+    )
     type = models.ForeignKey(
         'CreditTradeType',
         related_name='credit_trade_histories',
-        on_delete=models.PROTECT)
+        on_delete=models.PROTECT
+    )
     number_of_credits = models.IntegerField(
-        db_comment='Number of credits to be transferred on approval'
+        db_comment="Number of credits to be transferred on approval"
     )
     fair_market_value_per_credit = models.DecimalField(
         null=True, blank=True, max_digits=999,
         decimal_places=2,
         default=None,
-        db_comment='Value of each credit being transferred')
+        db_comment="Value of each credit being transferred"
+    )
     zero_reason = models.ForeignKey(
         'CreditTradeZeroReason',
         related_name='credit_trade_histories',
         blank=True, null=True,
         on_delete=models.PROTECT,
-        db_comment='Rationale for zero-valued transfer')
-    trade_effective_date = models.DateField(blank=True, null=True)
-    note = models.CharField(max_length=4000, blank=True, null=True)
-    is_internal_history_record = models.BooleanField()
+        db_comment="Rationale for zero-valued transfer"
+    )
+    trade_effective_date = models.DateField(
+        blank=True, null=True,
+        db_comment="Date on when the transaction was approved."
+    )
     compliance_period = models.ForeignKey(
         'CompliancePeriod',
         related_name='credit_trade_histories',
@@ -77,19 +78,46 @@ class CreditTradeHistory(Auditable):
     )
     is_rescinded = models.BooleanField(
         default=False,
-        db_comment='Flag. True if the trade was rescinded before completion '
-                   'by either party.'
+        db_comment="Flag. True if the trade was rescinded before completion "
+                   "by either party."
     )
     user_role = models.ForeignKey(
         'Role',
         related_name='roles',
         blank=True, null=True,
         on_delete=models.SET_NULL,
-        db_comment='Role of the user that made the change.'
+        db_comment="Role of the user that made the change."
     )
+    create_timestamp = models.DateTimeField(
+        auto_now_add=True, blank=True, null=True,
+        db_comment='Creation timestamp'
+    )
+    create_user = models.ForeignKey(
+        'User',
+        related_name='%(app_label)s_%(class)s_CREATE_USER',
+        blank=True, null=True,
+        on_delete=models.CASCADE,
+        db_comment='creating user'
+    )
+
+    @property
+    def user(self):
+        """
+        Attribute to get the user who made the most recent change to the
+        record.
+        """
+        return self.create_user
+
+    @property
+    def credit_trade_update_timestamp(self):
+        """
+        Attribute to get the timestamp on when the most recent change was
+        applied.
+        """
+        return self.create_timestamp
 
     class Meta:
         db_table = 'credit_trade_history'
         ordering = ['-create_timestamp']
 
-    db_table_comment = 'Maintains a history of credit transfer state changes'
+    db_table_comment = "Maintains a history of credit transfer state changes"

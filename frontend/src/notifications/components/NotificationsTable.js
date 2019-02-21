@@ -12,6 +12,7 @@ import CheckBox from '../../app/components/CheckBox';
 import history from '../../app/History';
 import NOTIFICATION_TYPES from '../../constants/notificationTypes';
 import CREDIT_TRANSACTIONS from '../../constants/routes/CreditTransactions';
+import SECURE_DOCUMENT_UPLOAD from '../../constants/routes/SecureDocumentUpload';
 
 const NotificationsTable = (props) => {
   const columns = [{
@@ -30,9 +31,21 @@ const NotificationsTable = (props) => {
     id: 'mark',
     width: 50
   }, {
-    accessor: item => NOTIFICATION_TYPES[item.message],
+    accessor: (item) => {
+      if (item.relatedCreditTrade) {
+        return NOTIFICATION_TYPES[item.message].replace(/PVR/, item.relatedCreditTrade.type.theType);
+      }
+
+      return NOTIFICATION_TYPES[item.message];
+    },
     Cell: (row) => {
-      const viewUrl = CREDIT_TRANSACTIONS.DETAILS.replace(':id', row.original.relatedCreditTrade);
+      let viewUrl = null;
+
+      if (row.original.relatedDocument) {
+        viewUrl = SECURE_DOCUMENT_UPLOAD.DETAILS.replace(':id', row.original.relatedDocument.id);
+      } else if (row.original.relatedCreditTrade) {
+        viewUrl = CREDIT_TRANSACTIONS.DETAILS.replace(':id', row.original.relatedCreditTrade.id);
+      }
 
       return (
         <button
@@ -40,7 +53,9 @@ const NotificationsTable = (props) => {
           onClick={() => {
             props.updateNotification(row.original.id, { isRead: true });
 
-            history.push(viewUrl);
+            if (viewUrl) {
+              history.push(viewUrl);
+            }
           }}
         >
           {row.value}
@@ -81,9 +96,13 @@ const NotificationsTable = (props) => {
     id: 'user',
     width: 150
   }, {
-    accessor: item => item.relatedCreditTrade,
+    accessor: item => (item.relatedCreditTrade ? item.relatedCreditTrade.id : '-'),
     Cell: (row) => {
       const viewUrl = CREDIT_TRANSACTIONS.DETAILS.replace(':id', row.value);
+
+      if (row.value === '-') {
+        return '-';
+      }
 
       return (
         <button
@@ -139,11 +158,12 @@ const NotificationsTable = (props) => {
       className="searchable"
       columns={columns}
       data={props.items}
-      defaultPageSize={15}
+      defaultPageSize={10}
       defaultSorted={[{
         id: 'date',
         desc: true
       }]}
+      loading={props.isFetching}
       filterable={filterable}
       getTrProps={(state, rowInfo) => ({
         className: (rowInfo && rowInfo.original.isRead) ? 'read' : 'unread'
@@ -159,6 +179,7 @@ NotificationsTable.propTypes = {
     notifications: PropTypes.array
   }).isRequired,
   items: PropTypes.arrayOf(PropTypes.object).isRequired,
+  isFetching: PropTypes.bool.isRequired,
   selectIdForModal: PropTypes.func.isRequired,
   toggleCheck: PropTypes.func.isRequired,
   updateNotification: PropTypes.func.isRequired

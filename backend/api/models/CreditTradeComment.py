@@ -27,24 +27,35 @@ from auditable.models import Auditable
 
 
 class CreditTradeComment(Auditable):
+    """
+    Contains all correspondence from fuel suppliers and government
+    (including those with privileged access) related to credit transactions
+    (Credit Transfer, Part 3 Award, Validation, and Reduction).
+    """
     credit_trade = models.ForeignKey(
         'CreditTrade',
         related_name='credit_trade_comments',
         null=False,
         on_delete=models.PROTECT)
 
-    comment = models.CharField(max_length=4000,
-                               blank=True,
-                               null=True,
-                               db_column='credit_trade_comment',
-                               db_comment='Contains all comments related to a credit transaction (credit transfer, part 3 award, validation, reduction). Comments may be added by fuel suppliers or government, with some government comments being flagged as internal only.')
+    comment = models.CharField(
+        max_length=4000,
+        blank=True,
+        null=True,
+        db_column='credit_trade_comment',
+        db_comment='Contains all comments related to a credit transaction '
+                   '(credit transfer, part 3 award, validation, reduction). '
+                   'Comments may be added by fuel suppliers or government, '
+                   'with some government comments being flagged as internal '
+                   'only.')
 
     # require a permission to view
     privileged_access = models.BooleanField(
         null=False,
         default=True,
         db_column='is_privileged_access',
-        db_comment='Flag. True if this is for internal government viewing only.'
+        db_comment='Flag. True if this is for internal government viewing '
+                   'only.'
     )
 
     # For tracking the status at the point in time the comment was made
@@ -59,4 +70,7 @@ class CreditTradeComment(Auditable):
         db_table = 'credit_trade_comment'
         ordering = ['create_timestamp']
 
-    db_table_comment = 'Contains all correspondence from fuel suppliers and government (including those with privileged access) related to credit transactions (Credit Transfer, Part 3 Award, Validation, and Reduction).'
+    db_table_comment = 'Contains all correspondence from fuel suppliers and ' \
+                       'government (including those with privileged access) ' \
+                       'related to credit transactions (Credit Transfer, ' \
+                       'Part 3 Award, Validation, and Reduction).'

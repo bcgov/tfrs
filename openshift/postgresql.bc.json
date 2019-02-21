@@ -1,20 +1,10 @@
 {
     "kind": "Template",
     "apiVersion": "v1",
-    "metadata": {
-        "name": "postgresql-bc"
-    },
-    "labels": {
-        "template": "tfrs-postgresql-persistent-template"
-    },
+    "metadata": {},
     "parameters": [
         {
-            "name": "NAME_SUFFIX",
-            "displayName": "Name Suffix",
-            "description": "A suffix appended to all objects",
-            "required": true
-        },     
-        {
+            "description":"Environment name dev, test and prod",
             "name": "ENV_NAME",
             "required": true
         }
@@ -24,10 +14,11 @@
             "kind": "ImageStream",
             "apiVersion": "v1",
             "metadata": {
-                "name": "tfrs-postgresql${NAME_SUFFIX}",
+                "name": "tfrs-postgresql",
                 "creationTimestamp": null,
                 "labels": {
-                    "base-name": "tfrs-postgresql"
+                    "base-name": "tfrs-postgresql",
+                    "appver": "tfrs-postgresql"
                 },
                 "annotations": {}
             },
@@ -37,7 +28,6 @@
                 },
                 "tags":[
                     {
-                        "name": "${ENV_NAME}",
                         "annotations": null,
                         "from": {
                             "kind": "ImageStreamTag",
@@ -45,6 +35,7 @@
                             "namespace": "openshift"
                         },
                         "importPolicy": {},
+                        "name": "${ENV_NAME}",
                         "referencePolicy": {
                             "type": "Source"
                         }

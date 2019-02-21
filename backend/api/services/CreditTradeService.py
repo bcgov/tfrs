@@ -71,33 +71,6 @@ class CreditTradeService(object):
         """
         Create the CreditTradeHistory
         """
-        new_status = credit_trade.status
-
-        try:
-            previous_history = CreditTradeHistory.objects \
-                .select_related('status') \
-                .filter(credit_trade=credit_trade.id) \
-                .latest('create_timestamp')
-        except CreditTradeHistory.DoesNotExist:
-            previous_history = None
-
-        # This is only set to true if:
-        # - the status of the Credit Trade is "Draft"
-        # - the previous status of the Credit Trade is "Draft" and the new
-        #   status of the Credit Trade is "Cancelled".
-        is_internal_history_record = False
-
-        if (new_status.status == 'Draft' or
-                (not is_new and
-                 new_status.status == 'Cancelled' and
-                 (previous_history is None or previous_history.status.status == 'Draft'))):
-            is_internal_history_record = True
-
-        credit_trade_update_time = (
-            credit_trade.create_timestamp
-            if is_new
-            else credit_trade.update_timestamp)
-
         user = (
             credit_trade.create_user
             if is_new
@@ -127,14 +100,9 @@ class CreditTradeService(object):
             fair_market_value_per_credit,
             zero_reason_id=zero_reason,
             trade_effective_date=credit_trade.trade_effective_date,
-            note=credit_trade.note,
             compliance_period_id=credit_trade.compliance_period_id,
-            is_internal_history_record=is_internal_history_record,
-            credit_trade_update_time=credit_trade_update_time,
             is_rescinded=credit_trade.is_rescinded,
             create_user=user,
-            update_user=user,
-            user=user,
             user_role_id=role_id
         )
 
@@ -535,6 +503,9 @@ class CreditTradeService(object):
         ]
 
         notification_map[StatusChange('Approved')] = [
+            ResultingNotification(
+                credit_trade.respondent,
+                NotificationType.PVR_APPROVED),
             ResultingNotification(
                 government,
                 NotificationType.PVR_APPROVED),

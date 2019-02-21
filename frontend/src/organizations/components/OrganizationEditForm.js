@@ -3,15 +3,15 @@
  */
 import React from 'react';
 import PropTypes from 'prop-types';
-import numeral from 'numeral';
+import FontAwesomeIcon from '@fortawesome/react-fontawesome';
 
-import * as NumberFormat from '../../constants/numeralFormats';
-import * as Lang from "../../constants/langEnUs";
+import history from '../../app/History';
+import * as Lang from '../../constants/langEnUs';
 
 const OrganizationEditForm = props => (
   <div className="organization-edit-details">
     <h1>
-      Editing {props.fields.name}
+      {props.mode === 'add' ? 'Create ' : 'Edit '} Organization
     </h1>
     <div className="main-form">
       <div className="row">
@@ -22,52 +22,31 @@ const OrganizationEditForm = props => (
                 className="form-control"
                 id="organization-name"
                 name="name"
+                placeholder="Fuel Supplier Name"
                 onChange={props.handleInputChange}
                 value={props.fields.name}
               />
             </label>
           </div>
         </div>
-      </div>
-
-      {props.mode === "add" &&
-      <div className="row">
-        <div className="col-sm-6">
-          <div className="form-group">
-            <label htmlFor="organization-type">Organization Type:
-              <select
-                className="form-control"
-                id="organization-type"
-                name="type"
-                onChange={props.handleInputChange}
-                value={props.fields.type}
-              >
-                {props.referenceData.organizationTypes.filter(t => (t.id !== 1)).map(
-                  t => (<option key={t.id} value={t.id}>{t['type']}</option>))}
-              </select>
-            </label>
+        {props.mode === 'add' &&
+          <div className="col-sm-6">
+            <div className="form-group">
+              <label htmlFor="organization-type">Organization Type:
+                <select
+                  className="form-control"
+                  id="organization-type"
+                  name="type"
+                  onChange={props.handleInputChange}
+                  value={props.fields.type}
+                >
+                  {props.referenceData.organizationTypes.filter(t => (t.id !== 1))
+                    .map(t => (<option key={t.id} value={t.id}>{t.description}</option>))}
+                </select>
+              </label>
+            </div>
           </div>
-        </div>
-      </div>
-      }
-
-      <div className="row">
-        <div className="col-sm-6">
-          <div className="form-group">
-            <label htmlFor="organization-actions-type">Organization Actions Type:
-              <select
-                className="form-control"
-                id="organization-actions-type"
-                name="actionsType"
-                onChange={props.handleInputChange}
-                value={props.fields.actionsType}
-              >
-                {props.referenceData.organizationActionsTypes.map(
-                  t => (<option key={t.id} value={t.id}>{t.theType}</option>))}
-              </select>
-            </label>
-          </div>
-        </div>
+        }
       </div>
 
       <div className="row">
@@ -81,8 +60,24 @@ const OrganizationEditForm = props => (
                 onChange={props.handleInputChange}
                 value={props.fields.status}
               >
-                {props.referenceData.organizationStatuses.map(
-                  t => (<option key={t.id}  value={t.id}>{t.status}</option>))}
+                {props.referenceData.organizationStatuses
+                  .map(t => (<option key={t.id} value={t.id}>{t.description}</option>))}
+              </select>
+            </label>
+          </div>
+        </div>
+        <div className="col-sm-6">
+          <div className="form-group">
+            <label htmlFor="organization-actions-type">Organization Actions Type:
+              <select
+                className="form-control"
+                id="organization-actions-type"
+                name="actionsType"
+                onChange={props.handleInputChange}
+                value={props.fields.actionsType}
+              >
+                {props.referenceData.organizationActionsTypes
+                  .map(t => (<option key={t.id} value={t.id}>{t.description}</option>))}
               </select>
             </label>
           </div>
@@ -105,7 +100,6 @@ const OrganizationEditForm = props => (
         </div>
       </div>
 
-
       <div className="row">
         <div className="col-sm-6">
           <div className="form-group">
@@ -120,10 +114,7 @@ const OrganizationEditForm = props => (
             </label>
           </div>
         </div>
-      </div>
 
-
-      <div className="row">
         <div className="col-sm-6">
           <div className="form-group">
             <label htmlFor="organization-address-line-3">Address Line 3:
@@ -139,7 +130,6 @@ const OrganizationEditForm = props => (
         </div>
       </div>
 
-
       <div className="row">
         <div className="col-sm-6">
           <div className="form-group">
@@ -154,12 +144,9 @@ const OrganizationEditForm = props => (
             </label>
           </div>
         </div>
-      </div>
-
-      <div className="row">
         <div className="col-sm-6">
           <div className="form-group">
-            <label htmlFor="organization-postal-code">Postal Code:
+            <label htmlFor="organization-postal-code">Postal Code / ZIP:
               <input
                 className="form-control"
                 id="organization-postal-code"
@@ -191,7 +178,7 @@ const OrganizationEditForm = props => (
       <div className="row">
         <div className="col-sm-6">
           <div className="form-group">
-            <label htmlFor="organization-state">State:
+            <label htmlFor="organization-state">Province / State:
               <input
                 className="form-control"
                 id="organization-state"
@@ -220,17 +207,34 @@ const OrganizationEditForm = props => (
         </div>
       </div>
     </div>
-    <button
-      type="submit"
-      className="btn btn-primary"
-      onClick={(e) => props.handleSubmit(e)}
-    >
-      {Lang.BTN_SAVE}
-    </button>
+
+    <div className="organization-actions">
+      <div className="btn-container">
+        <button
+          className="btn btn-default"
+          onClick={() => history.goBack()}
+          type="button"
+        >
+          <FontAwesomeIcon icon="arrow-circle-left" /> {Lang.BTN_APP_CANCEL}
+        </button>
+        <button
+          className="btn btn-primary"
+          id="save-organization"
+          onClick={e => props.handleSubmit(e)}
+          type="submit"
+        >
+          <FontAwesomeIcon icon="save" /> {Lang.BTN_SAVE}
+        </button>
+      </div>
+    </div>
   </div>
 );
 
-OrganizationEditForm.defaultProps = {};
+OrganizationEditForm.defaultProps = {
+  fields: {},
+  referenceData: {},
+  mode: 'add'
+};
 
 OrganizationEditForm.propTypes = {
   fields: PropTypes.shape({
@@ -249,7 +253,11 @@ OrganizationEditForm.propTypes = {
   }),
   handleInputChange: PropTypes.func.isRequired,
   handleSubmit: PropTypes.func.isRequired,
-  referenceData: PropTypes.object,
+  referenceData: PropTypes.shape({
+    organizationActionsTypes: PropTypes.arrayOf(PropTypes.shape()),
+    organizationStatuses: PropTypes.arrayOf(PropTypes.shape()),
+    organizationTypes: PropTypes.arrayOf(PropTypes.shape())
+  }),
   mode: PropTypes.oneOf(['add', 'edit', 'admin_edit'])
 };
 

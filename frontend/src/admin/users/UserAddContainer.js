@@ -3,21 +3,22 @@
  * All data handling & manipulation should be handled here.
  */
 import PropTypes from 'prop-types';
-import React, {Component} from 'react';
-import {connect} from 'react-redux';
-import {bindActionCreators} from 'redux';
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 
 import Modal from '../../app/components/Modal';
 import history from '../../app/History';
-import { getFuelSuppliers } from '../../actions/organizationActions';
+import { getFuelSuppliers, getOrganization } from '../../actions/organizationActions';
 import { getRoles } from '../../actions/roleActions';
 import UserForm from './components/UserForm';
-import {USERS} from '../../constants/routes/Admin';
+import { USERS as ADMIN_USERS } from '../../constants/routes/Admin';
+import USERS from '../../constants/routes/Users';
 import toastr from '../../utils/toastr';
-import {createUser} from "../../actions/userActions";
+import { clearUsersRequestError, createUser } from '../../actions/userActions';
 
 class UserAddContainer extends Component {
-  constructor(props) {
+  constructor (props) {
     super(props);
 
     this.state = {
@@ -29,6 +30,7 @@ class UserAddContainer extends Component {
         organization: null,
         mobilePhone: '',
         status: 'active',
+        title: '',
         workPhone: '',
         roles: []
       }
@@ -41,24 +43,41 @@ class UserAddContainer extends Component {
   }
 
   componentDidMount () {
+    this.props.clearUsersRequestError();
     this.loadData();
   }
 
+  componentWillReceiveProps (nextProps) {
+    if (nextProps.organization.id !== this.props.organization.id) {
+      this.setState({
+        fields: {
+          ...this.state.fields,
+          organization: nextProps.organization
+        }
+      });
+    }
+  }
+
   loadData () {
-    this.props.getFuelSuppliers();
+    if (this.props.match.params.organizationId) {
+      this.props.getOrganization(this.props.match.params.organizationId);
+    } else {
+      this.props.getFuelSuppliers();
+    }
 
     if (document.location.pathname.indexOf('/admin/') >= 0) {
       this.props.getRoles({
         government_roles_only: true
       });
+
       this.setState({
         fields: {
           ...this.state.fields,
           organization: {
             id: 1
           }
-        },
-      })
+        }
+      });
     } else {
       this.props.getRoles({
         fuel_supplier_roles_only: true
@@ -66,8 +85,8 @@ class UserAddContainer extends Component {
     }
   }
 
-  _addToFields(value) {
-    const fieldState = {...this.state.fields};
+  _addToFields (value) {
+    const fieldState = { ...this.state.fields };
 
     if (value &&
       fieldState.roles.findIndex(role => (role.id === value.id)) < 0) {
@@ -79,9 +98,9 @@ class UserAddContainer extends Component {
     });
   }
 
-  _handleInputChange(event) {
-    const {value, name} = event.target;
-    const fieldState = {...this.state.fields};
+  _handleInputChange (event) {
+    const { value, name } = event.target;
+    const fieldState = { ...this.state.fields };
 
     fieldState[name] = value;
     this.setState({
@@ -89,14 +108,14 @@ class UserAddContainer extends Component {
     });
   }
 
-  _handleSubmit(event) {
+  _handleSubmit (event) {
     event.preventDefault();
 
     // API data structure
     const data = {
       user: {
         cellPhone: this.state.fields.mobilePhone,
-        username: 'user' + (new Date().getTime()),
+        username: `user${(new Date().getTime())}`,
         email: this.state.fields.email,
         firstName: this.state.fields.firstName,
         lastName: this.state.fields.lastName,
@@ -109,16 +128,22 @@ class UserAddContainer extends Component {
 
           return false;
         }),
-        is_active: this.state.fields.status === 'active'
+        is_active: this.state.fields.status === 'active',
+        title: this.state.fields.title
       },
       email: this.state.fields.bceid
     };
 
     this.props.createUser(data).then(() => {
-      history.push(USERS.DETAILS_BY_USERNAME.replace(':username', this.props.createdUsername));
-      toastr.userSuccess('User created.');
-    }).catch(error => {});
+      let viewUrl = USERS.DETAILS_BY_USERNAME.replace(':username', this.props.createdUsername);
 
+      if (document.location.pathname.indexOf('/admin/') >= 0) {
+        viewUrl = ADMIN_USERS.DETAILS_BY_USERNAME.replace(':username', this.props.createdUsername);
+      }
+
+      history.push(viewUrl);
+      toastr.userSuccess('User created.');
+    });
 
     return true;
   }
@@ -141,22 +166,24 @@ class UserAddContainer extends Component {
     });
   }
 
-  changeObjectProp(id, name) {
-    const fieldState = {...this.state.fields};
+  changeObjectProp (id, name) {
+    const fieldState = { ...this.state.fields };
 
-    fieldState[name] = {id: id || 0};
+    fieldState[name] = { id: id || 0 };
     this.setState({
       fields: fieldState
     });
   }
 
-  render() {
+  render () {
     return ([
       <UserForm
         addToFields={this._addToFields}
+        editPrimaryFields
         fields={this.state.fields}
         fuelSuppliers={this.props.fuelSuppliers}
         handleInputChange={this._handleInputChange}
+        isAdding
         key="userForm"
         loggedInUser={this.props.loggedInUser}
         roles={this.props.roles}
@@ -178,18 +205,39 @@ class UserAddContainer extends Component {
 }
 
 UserAddContainer.defaultProps = {
+  createdUsername: null,
+  error: {},
+  match: {
+    params: {
+      organizationId: null
+    }
+  },
+  organization: {
+    id: null
+  }
 };
 
 UserAddContainer.propTypes = {
+  clearUsersRequestError: PropTypes.func.isRequired,
   fuelSuppliers: PropTypes.arrayOf(PropTypes.shape()).isRequired,
   getFuelSuppliers: PropTypes.func.isRequired,
+  getOrganization: PropTypes.func.isRequired,
   getRoles: PropTypes.func.isRequired,
   roles: PropTypes.shape().isRequired,
   createUser: PropTypes.func.isRequired,
   createdUsername: PropTypes.string,
   error: PropTypes.shape({}),
   loggedInUser: PropTypes.shape({
-  }).isRequired
+  }).isRequired,
+  match: PropTypes.shape({
+    params: PropTypes.shape({
+      organizationId: PropTypes.string
+    })
+  }),
+  organization: PropTypes.shape({
+    id: PropTypes.number,
+    name: PropTypes.string
+  })
 };
 
 const mapStateToProps = state => ({
@@ -198,12 +246,15 @@ const mapStateToProps = state => ({
   roles: state.rootReducer.roles,
   error: state.rootReducer.userAdmin.error,
   createdUsername: state.rootReducer.userAdmin.user
-    .hasOwnProperty('user') ? state.rootReducer.userAdmin.user.user.username : null
+    .hasOwnProperty('user') ? state.rootReducer.userAdmin.user.user.username : null,
+  organization: state.rootReducer.organizationRequest.fuelSupplier
 });
 
 const mapDispatchToProps = dispatch => ({
   getFuelSuppliers: bindActionCreators(getFuelSuppliers, dispatch),
+  getOrganization: bindActionCreators(getOrganization, dispatch),
   getRoles: bindActionCreators(getRoles, dispatch),
+  clearUsersRequestError: bindActionCreators(clearUsersRequestError, dispatch),
   createUser: bindActionCreators(createUser, dispatch)
 });
 

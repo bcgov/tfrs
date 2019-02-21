@@ -89,3 +89,10 @@ _book/
 backend/sonar-runner/.settings/
 frontend/sonar-runner/.settings/
 sonar-runner/.settings/
+
+# local settings
+minio.env
+
+# package-lock
+package-lock.json
+supervisord.pid
