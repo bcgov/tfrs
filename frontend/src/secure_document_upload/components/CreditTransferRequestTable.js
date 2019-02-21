@@ -36,12 +36,49 @@ const CreditTransferRequestTable = (props) => {
     accessor: (item) => {
       if (item.status) {
         if (item.status.status === 'Pending Submission') {
-          return `Scanned: ${item.attachments.filter(attachment => (
+          const attachmentsScanned = item.attachments.filter(attachment => (
             ['PASS', 'FAIL'].indexOf(attachment.securityScanStatus) >= 0
-          )).length}/${item.attachments.length} file(s)`;
+          )).length;
+          // ensure that we always have at least 1 so we don't divide by 0
+          const totalAttachments = (item.attachments.length > 0
+            ? item.attachments.length : 1);
+
+          return `Scan Progress: ${((attachmentsScanned / totalAttachments) * 100).toFixed(0)}%`;
         }
 
         return item.status.status;
+      }
+
+      return false;
+    },
+    Cell: (row) => {
+      if (row.original.status) {
+        const attachmentsScanned = row.original.attachments.filter(attachment => (
+          ['PASS', 'FAIL'].indexOf(attachment.securityScanStatus) >= 0
+        )).length;
+        // ensure that we always have at least 1 so we don't divide by 0
+        const totalAttachments = (row.original.attachments.length > 0
+          ? row.original.attachments.length : 1);
+
+        return (
+          row.original.status.status !== 'Pending Submission'
+            ? row.original.status.status
+            : (
+              <div className="progress">
+                <div
+                  className="progress-bar"
+                  role="progressbar"
+                  aria-valuenow={attachmentsScanned}
+                  aria-valuemin="0"
+                  aria-valuemax="100"
+                  style={{
+                    width: `${(attachmentsScanned / totalAttachments) * 100}%`
+                  }}
+                />
+                <span className="text">Scan Progress: {((attachmentsScanned / totalAttachments) * 100).toFixed(0)}%</span>
+              </div>
+            )
+        );
       }
 
       return false;
@@ -82,7 +119,7 @@ const CreditTransferRequestTable = (props) => {
     Cell: (row) => {
       const viewUrl = SECURE_DOCUMENT_UPLOAD.DETAILS.replace(':id', row.value);
 
-      return <Link to={viewUrl}><FontAwesomeIcon icon="box-open"/></Link>;
+      return <Link to={viewUrl}><FontAwesomeIcon icon="box-open" /></Link>;
     },
     className: 'col-actions',
     filterable: false,
