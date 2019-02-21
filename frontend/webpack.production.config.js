@@ -35,7 +35,8 @@ const config = {
         loader: 'babel-loader',
         exclude: [nodeModulesPath],
         query: {
-          presets: ['react', 'env']
+          presets: ['react', 'env'],
+          plugins: ['transform-object-rest-spread']
         }
       },
       {
