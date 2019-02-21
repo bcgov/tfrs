@@ -51,38 +51,6 @@ const CreditTransferRequestTable = (props) => {
 
       return false;
     },
-    Cell: (row) => {
-      if (row.original.status) {
-        const attachmentsScanned = row.original.attachments.filter(attachment => (
-          ['PASS', 'FAIL'].indexOf(attachment.securityScanStatus) >= 0
-        )).length;
-        // ensure that we always have at least 1 so we don't divide by 0
-        const totalAttachments = (row.original.attachments.length > 0
-          ? row.original.attachments.length : 1);
-
-        return (
-          row.original.status.status !== 'Pending Submission'
-            ? row.original.status.status
-            : (
-              <div className="progress">
-                <div
-                  className="progress-bar"
-                  role="progressbar"
-                  aria-valuenow={attachmentsScanned}
-                  aria-valuemin="0"
-                  aria-valuemax="100"
-                  style={{
-                    width: `${(attachmentsScanned / totalAttachments) * 100}%`
-                  }}
-                />
-                <span className="text">Scan Progress: {((attachmentsScanned / totalAttachments) * 100).toFixed(0)}%</span>
-              </div>
-            )
-        );
-      }
-
-      return false;
-    },
     className: 'col-status',
     Header: 'Status',
     id: 'status',

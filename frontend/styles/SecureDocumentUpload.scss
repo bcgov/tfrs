@@ -35,33 +35,8 @@
       text-align: right;
     }
 
-    .col-actions {
+    .col-actions, .col-status {
       text-align: center;
-    }
-
-    .col-status {
-      padding-left: 2rem;
-      padding-right: 2rem;
-      text-align: center;
-
-      .progress {
-        background-color: $light-font;
-        color: $white;
-        margin: 0;
-        position: relative;
-
-        .progress-bar {
-          background-color: $blue;
-          text-align: center;
-        }
-
-        .text {
-          left: 0;
-          position: absolute;
-          right: 0;
-          text-align: center;
-        }
-      }
     }
   }
 }
