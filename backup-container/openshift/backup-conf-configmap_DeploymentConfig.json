@@ -1,0 +1,11 @@
+{
+    "kind": "ConfigMap",
+    "apiVersion": "v1",
+    "metadata": {
+        "name": "backup-conf",
+        "creationTimestamp": null
+    },
+    "data": {
+        "backup.conf": "# =========================================================\n# List the databases you want backed up here.\n# Databases will be backed up in the order they are listed.\n#\n# The entries must be in one of the following forms:\n# - \u003cHostname/\u003e/\u003cDatabaseName/\u003e\n# - \u003cHostname/\u003e:\u003cPort/\u003e/\u003cDatabaseName/\u003e\n#\n# Examples:\n# - postgresql/my_database\n# - postgresql:5432/my_database\n# --------------------------------------------------------\npostgresql/tfrs"
+    }
+}
