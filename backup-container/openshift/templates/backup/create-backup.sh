@@ -5,7 +5,9 @@ GIT_REF=master \
 SOURCE_CONTEXT_DIR=/backup-container/docker | oc create -f -
 
 ## dev
+cd backup-container/openshift
 oc create -f backup-conf-configmap_DeploymentConfig.json -n mem-tfrs-dev
+cd backup-container/openshift/templates/backup
 oc process -f ./backup-deploy.json \
 IMAGE_NAMESPACE=mem-tfrs-tools \
 BACKUP_STRATEGY=daily \
@@ -25,7 +27,9 @@ ENVIRONMENT_NAME=dev  | oc create -f -
 
 
 ## test
+cd backup-container/openshift
 oc create -f backup-conf-configmap_DeploymentConfig.json -n mem-tfrs-test
+cd backup-container/openshift/templates/backup
 oc process -f ./backup-deploy.json \
 IMAGE_NAMESPACE=mem-tfrs-tools \
 BACKUP_STRATEGY=daily \
@@ -46,7 +50,9 @@ under backup-containers/openshift
 run command: oc create -f backup-conf-configmap_DeploymentConfig.json -n mem-tfrs-test
 
 ## prod
+cd backup-container/openshift
 oc create -f backup-conf-configmap_DeploymentConfig.json -n mem-tfrs-prod
+cd backup-container/openshift/templates/backup
 oc process -f ./backup-deploy.json \
 IMAGE_NAMESPACE=mem-tfrs-tools \
 BACKUP_STRATEGY=daily \
@@ -62,3 +68,4 @@ DATABASE_USER_KEY_NAME=DATABASE_USER \
 DATABASE_PASSWORD_KEY_NAME=DATABASE_PASSWORD \
 ENVIRONMENT_FRIENDLY_NAME=prod \
 ENVIRONMENT_NAME=prod  | oc create -f -
+
