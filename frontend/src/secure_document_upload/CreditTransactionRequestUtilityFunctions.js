@@ -1,4 +1,14 @@
 export default class CreditTransactionRequestUtilityFunctions {
+
+  static canLinkCreditTransfer (loggedInUser, item) {
+    if (!item.linkActions) {
+      return false;
+    }
+
+    return item.linkActions.includes('ADD_LINK');
+  }
+
+
   static canComment (loggedInUser, item) {
     if (!item.commentActions) {
       return false;

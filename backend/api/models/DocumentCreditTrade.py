@@ -7,6 +7,7 @@
 
     OpenAPI spec version: v1
 
+
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
     You may obtain a copy of the License at
@@ -19,23 +20,26 @@
     See the License for the specific language governing permissions and
     limitations under the License.
 """
+from django.db import models
 
-from .CompliancePeriod import *
-from .CreditTrade import *
-from .CreditTradeHistory import *
-from .CreditTradeStatus import *
-from .CreditTradeType import *
-from .CreditTradeZeroReason import *
-from .DocumentCreditTrade import *
-from .Organization import *
-from .OrganizationActionsType import *
-from .OrganizationBalance import *
-from .OrganizationHistory import *
-from .OrganizationStatus import *
-from .Permission import *
-from .Role import *
-from .RolePermission import *
-from .SigningAuthorityAssertion import *
-from .SigningAuthorityConfirmation import *
-from .User import *
-from .UserRole import *
+from auditable.models import Auditable
+
+
+class DocumentCreditTrade(Auditable):
+
+    credit_trade = models.ForeignKey(
+        'CreditTrade',
+        on_delete=models.PROTECT
+    )
+
+    document = models.ForeignKey(
+        'Document',
+        on_delete=models.PROTECT
+    )
+
+    class Meta:
+        db_table = 'document_credit_trade'
+        unique_together = (('credit_trade', 'document'),)
+
+    db_table_comment = "Maintain a bidirectional many-many association" \
+                       " between credit trades and secure file submissions"
