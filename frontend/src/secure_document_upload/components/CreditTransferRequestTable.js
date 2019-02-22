@@ -3,7 +3,7 @@
  */
 import React from 'react';
 import PropTypes from 'prop-types';
-import {Link} from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import ReactTable from 'react-table';
 import 'react-table/react-table.css';
 import FontAwesomeIcon from '@fortawesome/react-fontawesome';
@@ -24,32 +24,48 @@ const CreditTransferRequestTable = (props) => {
     className: 'col-organization',
     Header: 'Organization',
     id: 'organization',
-    minWidth: 100,
+    minWidth: 75,
     show: props.loggedInUser.isGovernmentUser
   }, {
     accessor: item => (item.type ? item.type.description : ''),
     className: 'col-attachment-type',
     Header: 'Attachment Type',
     id: 'attachment-type',
-    minWidth: 100
+    minWidth: 75
   }, {
-    accessor: item => (item.status ? item.status.status : ''),
+    accessor: (item) => {
+      if (item.status) {
+        if (item.status.status === 'Pending Submission') {
+          const attachmentsScanned = item.attachments.filter(attachment => (
+            ['PASS', 'FAIL'].indexOf(attachment.securityScanStatus) >= 0
+          )).length;
+          // ensure that we always have at least 1 so we don't divide by 0
+          const totalAttachments = (item.attachments.length > 0
+            ? item.attachments.length : 1);
+
+          return `Scan Progress: ${((attachmentsScanned / totalAttachments) * 100).toFixed(0)}%`;
+        }
+
+        return item.status.status;
+      }
+
+      return false;
+    },
     className: 'col-status',
     Header: 'Status',
     id: 'status',
-    minWidth: 50
+    minWidth: 75
   }, {
-    accessor: item => {
+    accessor: (item) => {
       if (item.type.theType === 'Evidence') {
-        if (item.milestone !== null &&
+        if (item.milestone &&
           item.milestone.milestone &&
           item.milestone.milestone.length > 0) {
-          return item.title + ': ' + item.milestone.milestone;
+          return `${item.title}: ${item.milestone.milestone}`;
         }
-        return item.title;
-      } else {
-        return item.title;
       }
+
+      return item.title;
     },
     className: 'col-title',
     Header: 'Title',
@@ -59,19 +75,19 @@ const CreditTransferRequestTable = (props) => {
     className: 'col-credit-transaction-id',
     Header: 'Credit Transaction ID',
     id: 'credit-transaction-id',
-    minWidth: 75
+    minWidth: 70
   }, {
     accessor: item => (item.updateTimestamp ? moment(item.updateTimestamp).format('YYYY-MM-DD') : '-'),
     className: 'col-date',
     Header: 'Last Updated On',
     id: 'updateTimestamp',
-    minWidth: 75
+    minWidth: 65
   }, {
     accessor: 'id',
     Cell: (row) => {
       const viewUrl = SECURE_DOCUMENT_UPLOAD.DETAILS.replace(':id', row.value);
 
-      return <Link to={viewUrl}><FontAwesomeIcon icon="box-open"/></Link>;
+      return <Link to={viewUrl}><FontAwesomeIcon icon="box-open" /></Link>;
     },
     className: 'col-actions',
     filterable: false,
