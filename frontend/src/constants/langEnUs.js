@@ -38,6 +38,10 @@ export const BTN_CANCEL_COMMENT = 'Cancel';
 export const BTN_SAVE_COMMENT = 'Save Comment';
 export const BTN_EDIT_COMMENT = 'Edit Comment';
 
+export const BTN_LINK_CREDIT_TRANSACTION = 'Link Credit Transaction';
+export const BTN_CANCEL_LINK_CREDIT_TRANSACTION = 'Cancel';
+
+
 export const TEXT_COMMENT_PLACEHOLDER = 'Use this field to communicate relevant details';
 export const TEXT_COMMENT_PLACEHOLDER_PRIVILEGED = 'Use this field to provide background for ' +
                                                    'recommendations or decisions';

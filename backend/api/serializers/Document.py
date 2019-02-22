@@ -31,6 +31,7 @@ from api.models.DocumentComment import DocumentComment
 from api.models.DocumentMilestone import DocumentMilestone
 from api.models.DocumentStatus import DocumentStatus
 from api.models.DocumentType import DocumentType
+from api.serializers import CreditTradeAuxiliarySerializer
 
 from api.serializers.CompliancePeriod import CompliancePeriodSerializer
 from api.serializers.DocumentComment import DocumentCommentSerializer
@@ -38,6 +39,7 @@ from api.serializers.DocumentMilestone import DocumentMilestoneSerializer
 from api.serializers.DocumentStatus import DocumentStatusSerializer
 from api.serializers.DocumentType import DocumentTypeSerializer
 from api.serializers.User import UserMinSerializer
+
 from api.services.DocumentActions import DocumentActions
 from api.services.DocumentCommentActions import DocumentCommentActions
 from api.services.DocumentService import DocumentService
@@ -70,16 +72,19 @@ class DocumentSerializer(serializers.ModelSerializer):
     """
     type = DocumentTypeSerializer(read_only=True)
     status = DocumentStatusSerializer(read_only=True)
+    credit_trades = CreditTradeAuxiliarySerializer(many=True, read_only=True)
 
     class Meta:
         model = Document
         fields = (
             'id', 'title', 'status', 'type', 'create_timestamp',
-            'create_user', 'update_timestamp', 'update_user')
+            'create_user', 'update_timestamp', 'update_user',
+            'credit_trades')
 
         read_only_fields = ('id', 'title', 'status', 'type',
                             'create_timestamp', 'create_user',
-                            'update_timestamp', 'update_user')
+                            'update_timestamp', 'update_user',
+                            'credit_trades')
 
 
 class DocumentCreateSerializer(serializers.ModelSerializer):
@@ -239,14 +244,17 @@ class DocumentDetailSerializer(serializers.ModelSerializer):
     """
     Document Serializer with Full Details
     """
+
     actions = serializers.SerializerMethodField()
     attachments = serializers.SerializerMethodField()
     comment_actions = serializers.SerializerMethodField()
+    link_actions = serializers.SerializerMethodField()
     comments = serializers.SerializerMethodField()
     compliance_period = CompliancePeriodSerializer(read_only=True)
     milestone = serializers.SerializerMethodField()
     status = DocumentStatusSerializer(read_only=True)
     type = DocumentTypeSerializer(read_only=True)
+    credit_trades = CreditTradeAuxiliarySerializer(many=True, read_only=True)
 
     def get_actions(self, obj):
         """
@@ -274,6 +282,17 @@ class DocumentDetailSerializer(serializers.ModelSerializer):
             return DocumentActions.received(request)
 
         return []
+
+    def get_link_actions(self, obj):
+        cur_status = obj.status.status
+        request = self.context.get('request')
+
+        # If the user doesn't have any roles assigned, treat as though the user
+        # doesn't have available permissions
+        if not request.user.roles:
+            return []
+
+        return DocumentActions.link_actions(request, cur_status)
 
     def get_attachments(self, obj):
         """
@@ -336,12 +355,13 @@ class DocumentDetailSerializer(serializers.ModelSerializer):
             'create_timestamp', 'create_user', 'update_timestamp',
             'update_user', 'status', 'type', 'attachments',
             'compliance_period', 'actions', 'comment_actions', 'comments',
-            'milestone')
+            'link_actions', 'milestone', 'credit_trades')
 
         read_only_fields = (
             'id', 'create_timestamp', 'create_user', 'update_timestamp',
             'update_user', 'title', 'status', 'type', 'attachments',
-            'compliance_period', 'actions', 'comment_actions', 'milestone')
+            'compliance_period', 'actions', 'comment_actions', 'milestone',
+            'link_actions', 'credit_trades')
 
 
 class DocumentMinSerializer(serializers.ModelSerializer):
@@ -352,7 +372,8 @@ class DocumentMinSerializer(serializers.ModelSerializer):
     create_user = UserMinSerializer(read_only=True)
     status = DocumentStatusSerializer(read_only=True)
     type = DocumentTypeSerializer(read_only=True)
-    milestone = SerializerMethodField()
+    milestone = serializers.SerializerMethodField()
+    credit_trades = CreditTradeAuxiliarySerializer(many=True, read_only=True)
 
     def get_milestone(self, obj):
         """
@@ -366,15 +387,14 @@ class DocumentMinSerializer(serializers.ModelSerializer):
 
         return None
 
-
     class Meta:
         model = Document
         fields = (
             'id', 'title', 'create_user', 'status', 'type', 'milestone',
-            'attachments', 'update_timestamp')
+            'credit_trades', 'attachments', 'update_timestamp')
         read_only_fields = (
             'id', 'title', 'create_user', 'status', 'type', 'milestone',
-            'attachments', 'update_timestamp')
+            'credit_trades', 'attachments', 'update_timestamp')
 
 
 class DocumentUpdateSerializer(serializers.ModelSerializer):
