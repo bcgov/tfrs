@@ -6,7 +6,7 @@ class LoginPage extends Page {
   static at = {
     // Regex being used to temporarily cover the differences between dev and keycloak login pages
     title.trim() =~ 'Log in to (TFRS|Transportation Fuels Reporting System)' &&
-    pageTitle.text().trim() =~ '(TFRS|TRANSPORTATION FUELS REPORTING SYSTEM)'
+    pageTitle.text().trim() =~ '(TFRS|TRANSPORTATION FUELS REPORTING SYSTEM|Transportation Fuels Reporting System)'
   }
   static content = {
     pageTitle { $('#kc-header-wrapper') }

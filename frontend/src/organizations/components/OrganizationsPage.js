@@ -17,6 +17,7 @@ const OrganizationsPage = (props) => {
       <h1>{props.title}</h1>
       <div className="actions-container">
         <button
+          id="create-organization"
           className="btn btn-primary"
           type="button"
           onClick={() => history.push(ORGANIZATIONS.ADD)}
@@ -24,7 +25,7 @@ const OrganizationsPage = (props) => {
           <FontAwesomeIcon icon="plus-circle" /> Create Organization
         </button>
         <button
-          id="create-organization"
+          id="download-xls"
           className="btn btn-info"
           type="button"
           onClick={(e) => {
