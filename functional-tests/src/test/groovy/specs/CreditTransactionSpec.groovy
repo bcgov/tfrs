@@ -60,7 +60,7 @@ class CreditTransactionSpec extends LoggedInSpec {
       Integer initialNotificationCount = headerModule.getNotificationCount()
     and: 'I populate all required fields to approve the recommended part 3 award credit transaction'
       to NotificationsPage
-      getCreditTransferLinkByText('PVR Recommended For Approval').click()
+      getCreditTransferLinkByText('Part 3 Award Recommended For Approval').click()
       page(new CreditTransactionsViewPage('Part 3 Award'))
       addComment('Log in as a Director and approve the part 3 award credit transaction')
       addInternalComment('Log in as a Director and approve the part 3 award credit transaction')
@@ -109,7 +109,7 @@ class CreditTransactionSpec extends LoggedInSpec {
       Integer initialNotificationCount = headerModule.getNotificationCount()
     and: 'I populate all required fields to approve the recommended validation credit transaction'
       to NotificationsPage
-      getCreditTransferLinkByText('PVR Recommended For Approval').click()
+      getCreditTransferLinkByText('Credit Validation Recommended For Approval').click()
       page(new CreditTransactionsViewPage('Validation'))
       addComment('Log in as a Director and approve the validation credit transaction')
       addInternalComment('Log in as a Director and approve the validation credit transaction')
@@ -158,7 +158,7 @@ class CreditTransactionSpec extends LoggedInSpec {
       Integer initialNotificationCount = headerModule.getNotificationCount()
     and: 'I populate all required fields to approve the recommended reduction credit transaction'
       to NotificationsPage
-      getCreditTransferLinkByText('PVR Recommended For Approval').click()
+      getCreditTransferLinkByText('Credit Reduction Recommended For Approval').click()
       page(new CreditTransactionsViewPage('Reduction'))
       addComment('Log in as a Director and approve the reduction credit transaction')
       addInternalComment('Log in as a Director and approve the reduction credit transaction')
