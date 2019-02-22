@@ -20,6 +20,9 @@
     See the License for the specific language governing permissions and
     limitations under the License.
 """
+from django.db.models import ManyToManyField
+
+
 from api.models.mixins.DocumentData import DocumentData
 from auditable.models import Auditable
 
@@ -31,6 +34,11 @@ class Document(Auditable, DocumentData):
     """
     Holds the documents that constitute evidence or compliance records etc.
     """
+
+    credit_trades = ManyToManyField(
+        'CreditTrade',
+        through='DocumentCreditTrade'
+    )
 
     @property
     def attachments(self):

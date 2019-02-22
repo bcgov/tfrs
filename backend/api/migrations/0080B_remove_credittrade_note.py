@@ -8,7 +8,7 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('api', '0079_auto_20190219_1859'),
+        ('api', '0080A_document_link_permissions'),
     ]
 
     operations = [

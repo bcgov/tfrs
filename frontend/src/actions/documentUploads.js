@@ -293,6 +293,72 @@ const uploadDocument = (url, blob, callback = null) => (dispatch) => {
   });
 };
 
+/*
+ * Handle Document Linking and Unlinking
+ */
+const linkDocument = (id, data) => (dispatch) => {
+  dispatch(addDocumentLinkRequest());
+
+  return axios
+    .put(`${Routes.BASE_URL}${Routes.SECURE_DOCUMENT_UPLOAD.API}/${id}/link`, data)
+    .then((response) => {
+      dispatch(addDocumentLinkSuccess(response.data));
+      return Promise.resolve(response);
+    }).catch((error) => {
+      dispatch(addDocumentLinkError(error.response.data));
+      return Promise.reject(error);
+    });
+};
+
+const addDocumentLinkRequest = () => ({
+  name: ReducerTypes.ADD_DOCUMENT_LINK,
+  type: ActionTypes.ADD_DOCUMENT_LINK
+});
+
+const addDocumentLinkSuccess = data => ({
+  name: ReducerTypes.SUCCESS_ADD_DOCUMENT_LINK,
+  type: ActionTypes.SUCCESS_ADD_DOCUMENT_LINK,
+  data
+});
+
+const addDocumentLinkError = error => ({
+  name: ReducerTypes.ERROR_ADD_DOCUMENT_LINK,
+  type: ActionTypes.ERROR,
+  errorMessage: error
+});
+
+const unlinkDocument = (id, data) => (dispatch) => {
+  dispatch(removeDocumentLinkRequest());
+
+  return axios
+    .put(`${Routes.BASE_URL}${Routes.SECURE_DOCUMENT_UPLOAD.API}/${id}/unlink`, data)
+    .then((response) => {
+      dispatch(removeDocumentLinkSuccess(response.data));
+      return Promise.resolve(response);
+    }).catch((error) => {
+      dispatch(removeDocumentLinkError(error.response.data));
+      return Promise.reject(error);
+    });
+};
+
+
+const removeDocumentLinkRequest = () => ({
+  name: ReducerTypes.REMOVE_DOCUMENT_LINK,
+  type: ActionTypes.REMOVE_DOCUMENT_LINK
+});
+
+const removeDocumentLinkSuccess = data => ({
+  name: ReducerTypes.SUCCESS_REMOVE_DOCUMENT_LINK,
+  type: ActionTypes.SUCCESS_REMOVE_DOCUMENT_LINK,
+  data
+});
+
+const removeDocumentLinkError = error => ({
+  name: ReducerTypes.ERROR_REMOVE_DOCUMENT_LINK,
+  type: ActionTypes.ERROR,
+  errorMessage: error
+});
+
 
 export {
   addCommentToDocument,
@@ -304,5 +370,7 @@ export {
   getDocumentUploadURL,
   updateCommentOnDocument,
   uploadDocument,
-  updateDocumentUpload
+  updateDocumentUpload,
+  linkDocument,
+  unlinkDocument
 };
