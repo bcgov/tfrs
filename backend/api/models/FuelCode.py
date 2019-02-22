@@ -23,6 +23,8 @@
 from django.db import models
 from auditable.models import Auditable
 
+from api.models.FuelCodeStatus import FuelCodeStatus
+
 
 class FuelCode(Auditable):
     """
@@ -111,6 +113,11 @@ class FuelCode(Auditable):
         blank=True,
         null=True,
         db_comment='Approval Date.'
+    )
+    status = models.ForeignKey(
+        FuelCodeStatus,
+        on_delete=models.PROTECT,
+        null=False
     )
 
     class Meta:

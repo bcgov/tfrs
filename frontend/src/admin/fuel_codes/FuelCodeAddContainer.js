@@ -9,6 +9,7 @@ import { bindActionCreators } from 'redux';
 
 import { addFuelCode } from '../../actions/fuelCodeActions';
 
+import history from '../../app/History';
 import AdminTabs from '../components/AdminTabs';
 import FuelCodeForm from './components/FuelCodeForm';
 import toastr from '../../utils/toastr';
@@ -94,10 +95,8 @@ class FuelCodeAddContainer extends Component {
       fuelTransportMode: this.state.fields.fuelTransportMode
     };
 
-    debugger;
-
     this.props.addFuelCode(data).then((response) => {
-      history.push(CREDIT_TRANSACTIONS.HIGHLIGHT.replace(':id', response.data.id));
+      // history.push(CREDIT_TRANSACTIONS.HIGHLIGHT.replace(':id', response.data.id));
       toastr.creditTransactionSuccess(status.id, data);
     });
 
@@ -129,6 +128,7 @@ FuelCodeAddContainer.defaultProps = {
 };
 
 FuelCodeAddContainer.propTypes = {
+  addFuelCode: PropTypes.func.isRequired,
   error: PropTypes.shape({}),
   loggedInUser: PropTypes.shape({
     organization: PropTypes.shape({
