@@ -123,3 +123,11 @@ class DocumentActions(object):
         serializer = DocumentStatusSerializer(
             available_statuses, many=True)
         return serializer.data
+
+    @staticmethod
+    def link_actions(request, status):
+        if request.user.has_perm('DOCUMENTS_LINK_TO_CREDIT_TRADE'):
+            if status not in ["Security Scan Failed", "Draft"]:
+                return ["ADD_LINK"]
+
+        return []

@@ -4,14 +4,16 @@ from django.db.models import Q
 from minio import Minio
 
 from rest_framework import viewsets, status, mixins
-from rest_framework.decorators import list_route
+from rest_framework.decorators import list_route, detail_route
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 
+from api.decorators import permission_required
 from api.models.Document import Document
 from api.models.DocumentCategory import DocumentCategory
 from api.models.DocumentFileAttachment import DocumentFileAttachment
 from api.models.DocumentStatus import DocumentStatus
+from api.models.DocumentCreditTrade import DocumentCreditTrade
 from api.notifications.notification_types import NotificationType
 from api.notifications.notifications import AMQPNotificationService
 from api.permissions.Documents import DocumentPermissions
@@ -21,6 +23,7 @@ from api.serializers.Document import \
     DocumentUpdateSerializer
 from api.serializers.DocumentCategory import DocumentCategorySerializer
 from api.serializers.DocumentStatus import DocumentStatusSerializer
+from api.serializers.DocumentCreditTrade import CreditTradeLinkSerializer
 from api.services.DocumentService import DocumentService
 from api.services.SecurityScan import SecurityScan
 from auditable.views import AuditableMixin
@@ -38,7 +41,7 @@ class DocumentViewSet(AuditableMixin,
     """
 
     permission_classes = (DocumentPermissions,)
-    http_method_names = ['delete', 'get', 'post', 'patch']
+    http_method_names = ['delete', 'get', 'put', 'post', 'patch']
 
     serializer_classes = {
         'default': DocumentSerializer,
@@ -49,7 +52,9 @@ class DocumentViewSet(AuditableMixin,
         'retrieve': DocumentDetailSerializer,
         'statuses': DocumentStatusSerializer,
         'partial_update': DocumentUpdateSerializer,
-        'update': DocumentUpdateSerializer
+        'update': DocumentUpdateSerializer,
+        'link': CreditTradeLinkSerializer,
+        'unlink': CreditTradeLinkSerializer
     }
 
     queryset = Document.objects.all()
@@ -170,6 +175,49 @@ class DocumentViewSet(AuditableMixin,
                 originating_user=user,
                 related_document=document
             )
+
+    @detail_route(methods=['put'])
+    @permission_required('DOCUMENTS_LINK_TO_CREDIT_TRADE')
+    def link(self, request, pk=None):
+        """
+        Link a credit trade to this document
+        """
+        document = self.get_object()
+
+        print(request.data)
+        serializer = CreditTradeLinkSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+
+        credit_trade = serializer.validated_data['credit_trade']
+
+        DocumentCreditTrade.objects.create(credit_trade=credit_trade,
+                                           document=document)
+
+        return Response(None, status=status.HTTP_202_ACCEPTED)
+
+    @detail_route(methods=['put'])
+    @permission_required('DOCUMENTS_LINK_TO_CREDIT_TRADE')
+    def unlink(self, request, pk=None):
+        """
+        Unlink a credit trade from this document
+        """
+        document = self.get_object()
+
+        print(request.data)
+        serializer = CreditTradeLinkSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+
+        credit_trade = serializer.validated_data['credit_trade']
+
+        result = DocumentCreditTrade.objects.filter(credit_trade=credit_trade,
+                                                    document=document)
+
+        if not result.exists():
+            return Response(None, status=status.HTTP_400_BAD_REQUEST)
+
+        result.first().delete()
+
+        return Response(None, status=status.HTTP_202_ACCEPTED)
 
     @list_route(methods=['get'], permission_classes=[AllowAny])
     def statuses(self, request):
