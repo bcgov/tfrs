@@ -10,14 +10,20 @@
                 "displayName": "Name",
                 "description": "The suffix for all created objects",
                 "required": false,
-                "value": "proxy-caddy"
+                "value": "maintenance-page"
+            },
+            {
+                "name": "ENV_NAME",
+                "displayName": "Environment name",
+                "description": "The environment name",
+                "required": true
             },
             {
                 "name": "BUILD_PROJECT",
                 "displayName": "Build project",
                 "description": "The suffix for all created objects",
                 "required": false,
-                "value": "moe-gwells-tools"
+                "value": "mem-tfrs-tools"
             }
     ],
     "objects": [
@@ -92,7 +98,15 @@
                                         "protocol": "TCP"
                                     }
                                 ],
-                                "resources": {},
+                                "resources": {
+                                    "limits": {
+                                        "cpu": "100m",
+                                        "memory": "128Mi"
+                                    },
+                                    "requests": {
+                                        "memory": "128Mi"
+                                    }
+                                },
                                 "terminationMessagePath": "/dev/termination-log",
                                 "terminationMessagePolicy": "File",
                                 "imagePullPolicy": "Always"
@@ -132,6 +146,32 @@
                 },
                 "type": "ClusterIP",
                 "sessionAffinity": "None"
+            }
+        },
+        {
+            "kind": "Route",
+            "apiVersion": "route.openshift.io/v1",
+            "metadata": {
+                "name": "${NAME}",
+                "creationTimestamp": null,
+                "labels": {
+                    "app": "${NAME}"
+                },
+                "annotations": {
+                    "openshift.io/host.generated": "true"
+                }
+            },
+            "spec": {
+                "host": "${NAME}-mem-tfrs-${ENV_NAME}.pathfinder.gov.bc.ca",
+                "to": {
+                    "kind": "Service",
+                    "name": "${NAME}",
+                    "weight": 100
+                },
+                "port": {
+                    "targetPort": "2015-tcp"
+                },
+                "wildcardPolicy": "None"
             }
         }
     ]
