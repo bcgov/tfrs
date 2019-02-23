@@ -16,13 +16,13 @@ VERBOSE=${VERBOSE:-}
 
 # App and build settings
 #
-APPLICATION_NAME=${APPLICATION_NAME:-gwells}
+APPLICATION_NAME=${APPLICATION_NAME:-frs}
 APPLICATION_PORT=${APPLICATION_PORT:-web}
 STATIC_PAGE_NAME=${STATIC_PAGE_NAME:-proxy-caddy}
 STATIC_PAGE_PORT=${STATIC_PAGE_PORT:-2015-tcp}
 #
 IMG_SRC=${IMG_SRC:-bcgov-s2i-caddy}
-GIT_REPO=${GIT_REPO:-https://github.com/bcgov/gwells.git}
+GIT_REPO=${GIT_REPO:-https://github.com/bcgov/frs.git}
 GIT_BRANCH=${GIT_BRANCH:-master}
 OC_BUILD=${OC_BUILD:-../openshift/templates/caddy.bc.json}
 OC_DEPLOY=${OC_DEPLOY:-../openshift/templates/caddy.dc.json}

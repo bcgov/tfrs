@@ -10,14 +10,14 @@
                 "displayName": "Name",
                 "description": "The suffix for all created objects",
                 "required": false,
-                "value": "proxy-caddy"
+                "value": "maintenance-page"
             },
             {
                 "name": "GIT_REPO",
                 "displayName": "GIT_REPO",
                 "description": "URL to GitHub repo with static content",
                 "required": false,
-                "value": "https://github.com/bcgov/gwells.git"
+                "value": "https://github.com/bcgov/tfrs.git"
             },
             {
                 "name": "GIT_BRANCH",
@@ -96,6 +96,7 @@
                 "output": {
                     "to": {
                         "kind": "ImageStreamTag",
+                        "namespace": "mem-tfrs-tools",
                         "name": "${NAME}:latest"
                     }
                 },
