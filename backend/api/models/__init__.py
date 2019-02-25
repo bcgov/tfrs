@@ -48,6 +48,7 @@ from . import FuelCode
 from . import FuelCodeStatus
 from . import Document
 from . import DocumentComment
+from . import DocumentCreditTrade
 from . import DocumentHistory
 from . import DocumentFileAttachment
 
