@@ -12,6 +12,7 @@ export const BTN_DELETE_DRAFT = 'Delete Draft';
 export const BTN_EDIT = 'Edit';
 export const BTN_EDIT_DRAFT = 'Edit Draft';
 export const BTN_EDIT_PVR_DRAFT = 'Edit PVR';
+export const BTN_NEW_FUEL_CODE = 'New Fuel Code';
 export const BTN_NEW_USER = 'New User';
 export const BTN_NEW_SUBMISSION = 'New Submission';
 export const BTN_NEW_TRANSFER = 'New Transfer';

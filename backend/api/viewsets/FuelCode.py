@@ -47,11 +47,11 @@ class FuelCodeViewSet(AuditableMixin,
 
         if user.is_government_user:
             return self.queryset.filter(
-                ~Q(status__status__in=['Cancelled', 'Draft'])
+                ~Q(status__status__in=['Cancelled'])
             ).all()
 
         return self.queryset.filter(
-            ~Q(status__status__in=['Cancelled'])
+            ~Q(status__status__in=['Cancelled', 'Draft'])
         ).all()
 
     @list_route(methods=['get'], permission_classes=[AllowAny])

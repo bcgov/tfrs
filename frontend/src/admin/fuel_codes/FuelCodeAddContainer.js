@@ -12,6 +12,8 @@ import { addFuelCode } from '../../actions/fuelCodeActions';
 import history from '../../app/History';
 import AdminTabs from '../components/AdminTabs';
 import FuelCodeForm from './components/FuelCodeForm';
+import Modal from '../../app/components/Modal';
+import FUEL_CODES from '../../constants/routes/FuelCodes';
 import toastr from '../../utils/toastr';
 
 class FuelCodeAddContainer extends Component {
@@ -30,7 +32,7 @@ class FuelCodeAddContainer extends Component {
         facilityNameplate: '',
         feedstock: '',
         feedstockLocation: '',
-        feedstockMiscellaneous: '',
+        feedstockMisc: '',
         feedstockTransportMode: '',
         formerCompany: '',
         fuel: '',
@@ -93,7 +95,7 @@ class FuelCodeAddContainer extends Component {
       facilityNameplate: this.state.fields.facilityNameplate,
       feedstock: this.state.fields.feedstock,
       feedstockLocation: this.state.fields.feedstockLocation,
-      feedstockMiscellaneous: this.state.fields.feedstockMiscellaneous,
+      feedstockMisc: this.state.fields.feedstockMisc,
       feedstockTransportMode: this.state.fields.feedstockTransportMode,
       formerCompany: this.state.fields.formerCompany,
       fuel: this.state.fields.fuel,
@@ -103,8 +105,8 @@ class FuelCodeAddContainer extends Component {
     };
 
     this.props.addFuelCode(data).then((response) => {
-      // history.push(CREDIT_TRANSACTIONS.HIGHLIGHT.replace(':id', response.data.id));
-      toastr.fuelCodeSuccess(status, data);
+      history.push(FUEL_CODES.LIST);
+      toastr.fuelCodeSuccess(status);
     });
 
     return true;
@@ -125,7 +127,16 @@ class FuelCodeAddContainer extends Component {
         handleSubmit={this._handleSubmit}
         key="form"
         title="New Fuel Code"
-      />
+      />,
+      <Modal
+        handleSubmit={(event) => {
+          this._handleSubmit(event, 'Submitted');
+        }}
+        id="confirmSubmit"
+        key="confirmSubmit"
+      >
+        Are you sure you want to add this Fuel code?
+      </Modal>
     ]);
   }
 }

@@ -23,21 +23,27 @@
 from rest_framework import serializers
 
 from api.models.FuelCode import FuelCode
+from api.serializers.FuelCodeStatus import FuelCodeStatusSerializer
+from api.serializers.User import UserMinSerializer
 
 
 class FuelCodeSerializer(serializers.ModelSerializer):
     """
     Default Serializer for Fuel Codes
     """
+    status = FuelCodeStatusSerializer(read_only=True)
+    create_user = UserMinSerializer(read_only=True)
+    update_user = UserMinSerializer(read_only=True)
+
     class Meta:
         model = FuelCode
         fields = (
-            'id', 'fuel_code', 'fuel', 'company', 'create_timestamp',
+            'id', 'fuel_code', 'fuel', 'company', 'status', 'create_timestamp',
             'create_user', 'update_timestamp', 'update_user')
 
-        read_only_fields = ('id', 'fuel_code', 'fuel', 'company',
-                            'create_timestamp', 'create_user',
-                            'update_timestamp', 'update_user')
+        read_only_fields = (
+            'id', 'fuel_code', 'fuel', 'company', 'status', 'create_timestamp',
+            'create_user', 'update_timestamp', 'update_user')
 
 
 class FuelCodeCreateSerializer(serializers.ModelSerializer):

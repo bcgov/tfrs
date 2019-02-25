@@ -11,7 +11,7 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('api', '0080_remove_credittrade_note'),
+        ('api', '0080B_remove_credittrade_note'),
     ]
 
     operations = [

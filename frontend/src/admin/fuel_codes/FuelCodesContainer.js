@@ -32,7 +32,7 @@ class FuelCodesContainer extends Component {
       <FuelCodesPage
         fuelCodes={this.props.fuelCodes}
         loggedInUser={this.props.loggedInUser}
-        title="Secure File Submissions"
+        title="Fuel Codes"
       />
     );
   }
