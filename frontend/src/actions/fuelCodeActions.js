@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 import ActionTypes from '../constants/actionTypes/FuelCodes';
-import ReducerTypes from '../constants/reducerTypes/CreditTransfers';
+import ReducerTypes from '../constants/reducerTypes/FuelCodes';
 import * as Routes from '../constants/routes';
 import FUEL_CODES from '../constants/routes/FuelCodes';
 

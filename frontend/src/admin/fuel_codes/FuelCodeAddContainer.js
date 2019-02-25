@@ -40,6 +40,7 @@ class FuelCodeAddContainer extends Component {
     };
 
     this._addToFields = this._addToFields.bind(this);
+    this._getFuelCodeStatus = this._getFuelCodeStatus.bind(this);
     this._handleInputChange = this._handleInputChange.bind(this);
     this._handleSubmit = this._handleSubmit.bind(this);
   }
@@ -58,6 +59,11 @@ class FuelCodeAddContainer extends Component {
     });
   }
 
+  _getFuelCodeStatus (status) {
+    return this.props.referenceData.fuelCodeStatuses.find(fuelCodeStatus =>
+      (fuelCodeStatus.status === status));
+  }
+
   _handleInputChange (event) {
     const { value, name } = event.target;
     const fieldState = { ...this.state.fields };
@@ -72,7 +78,7 @@ class FuelCodeAddContainer extends Component {
     }
   }
 
-  _handleSubmit (event, status) {
+  _handleSubmit (event, status = 'Draft') {
     event.preventDefault();
 
     // API data structure
@@ -92,12 +98,13 @@ class FuelCodeAddContainer extends Component {
       formerCompany: this.state.fields.formerCompany,
       fuel: this.state.fields.fuel,
       fuelCode: this.state.fields.fuelCode,
-      fuelTransportMode: this.state.fields.fuelTransportMode
+      fuelTransportMode: this.state.fields.fuelTransportMode,
+      status: this._getFuelCodeStatus(status).id
     };
 
     this.props.addFuelCode(data).then((response) => {
       // history.push(CREDIT_TRANSACTIONS.HIGHLIGHT.replace(':id', response.data.id));
-      toastr.creditTransactionSuccess(status.id, data);
+      toastr.fuelCodeSuccess(status, data);
     });
 
     return true;
@@ -139,11 +146,21 @@ FuelCodeAddContainer.propTypes = {
       }),
       statusDisplay: PropTypes.string
     })
+  }).isRequired,
+  referenceData: PropTypes.shape({
+    fuelCodeStatuses: PropTypes.arrayOf(PropTypes.shape),
+    isFetching: PropTypes.bool,
+    isSuccessful: PropTypes.bool
   }).isRequired
 };
 
 const mapStateToProps = state => ({
-  loggedInUser: state.rootReducer.userRequest.loggedInUser
+  loggedInUser: state.rootReducer.userRequest.loggedInUser,
+  referenceData: {
+    fuelCodeStatuses: state.rootReducer.referenceData.data.fuelCodeStatuses,
+    isFetching: state.rootReducer.referenceData.isFetching,
+    isSuccessful: state.rootReducer.referenceData.success
+  }
 });
 
 const mapDispatchToProps = dispatch => ({
