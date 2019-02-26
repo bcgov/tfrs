@@ -7,7 +7,7 @@ RUN chown -R nagios.nagios /var/run/supervisord
 RUN mkdir /docroot
 RUN chown -R nagios.nagios /docroot
 WORKDIR /
-# ADD docroot /docroot   temp commented out
+ADD docroot /docroot
 ADD apache2 /etc/apache2
 ADD supervisord /etc
 # remove the default configuration
@@ -21,4 +21,6 @@ RUN chown -R nagios.nagios /var/lib/nagios/.kube
 # USER nagios
 RUN chgrp -R root /var/log/supervisor
 RUN chmod -R g+w /var/log/supervisor
+RUN chgrp -R root /run/supervisord
+RUN chmod -R g+w /run/supervisord
 CMD supervisord
