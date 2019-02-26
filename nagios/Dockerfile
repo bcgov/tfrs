@@ -1,4 +1,4 @@
-FROM tfrs_nagios:base
+FROM nagios:base
 EXPOSE 8080
 RUN mkdir /var/run/apache2-supervisord
 RUN chown -R nagios.nagios /var/run/apache2-supervisord
