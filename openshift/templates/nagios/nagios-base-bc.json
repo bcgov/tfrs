@@ -2,7 +2,7 @@
     "kind": "Template",
     "apiVersion": "v1",
     "metadata": {
-        "name": "nagios-bc",
+        "name": "nagios-base-bc",
         "creationTimestamp": null
     },
     "objects": [
@@ -10,7 +10,7 @@
             "kind": "ImageStream",
             "apiVersion": "v1",
             "metadata": {
-                "name": "nagios",
+                "name": "nagios-base",
                 "generation": 1,
                 "creationTimestamp": null
             },
@@ -27,7 +27,7 @@
             "kind": "BuildConfig",
             "apiVersion": "v1",
             "metadata": {
-                "name": "nagios",
+                "name": "nagios-base",
                 "creationTimestamp": null
             },
             "spec": {
@@ -52,7 +52,7 @@
                 "output": {
                     "to": {
                         "kind": "ImageStreamTag",
-                        "name": "nagios:latest"
+                        "name": "nagios-base:latest"
                     }
                 },
                 "resources": {},
