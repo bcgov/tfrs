@@ -1,0 +1,120 @@
+{
+    "kind": "Template",
+    "apiVersion": "v1",
+    "metadata": {
+        "name": "nagios-dc",
+        "creationTimestamp": null
+    },
+    "parameters": [
+        {
+            "name": "ENV_NAME",
+            "required": true
+        },
+        {
+            "name": "IS_NAME",
+            "required": true
+        }
+    ],
+    "objects": [
+        {
+            "kind": "DeploymentConfig",
+            "apiVersion": "v1",
+            "metadata": {
+                "name": "nagios",
+                "generation": 1,
+                "creationTimestamp": null,
+                "labels": {
+                    "app": "nagios"
+                },
+                "annotations": {
+                    "openshift.io/generated-by": "OpenShiftWebConsole"
+                }
+            },
+            "spec": {
+                "strategy": {
+                    "type": "Recreate",
+                    "recreateParams": {
+                        "timeoutSeconds": 600
+                    },
+                    "resources": {
+                        "requests": {
+                            "cpu": "100m",
+                            "memory": "1Gi"
+                          },
+                          "limits": {
+                            "cpu": "100m",
+                            "memory": "2Gi"
+                          }
+                    },
+                    "activeDeadlineSeconds": 21600
+                },
+                "triggers": [
+                    {
+                        "type": "ImageChange",
+                        "imageChangeParams": {
+                            "automatic": true,
+                            "containerNames": [
+                                "nagios"
+                            ],
+                            "from": {
+                                "kind": "ImageStreamTag",
+                                "namespace": "mem-tfrs-tools",
+                                "name": "${IS_NAME}:${ENV_NAME}"
+                            }
+                        }
+                    },
+                    {
+                        "type": "ConfigChange"
+                    }
+                ],
+                "replicas": 1,
+                "revisionHistoryLimit": 10,
+                "test": false,
+                "selector": {
+                    "app": "nagios",
+                    "deploymentconfig": "nagios"
+                },
+                "template": {
+                    "metadata": {
+                        "creationTimestamp": null,
+                        "labels": {
+                            "app": "nagios",
+                            "deploymentconfig": "nagios"
+                        },
+                        "annotations": {
+                            "openshift.io/generated-by": "OpenShiftWebConsole"
+                        }
+                    },
+                    "spec": {
+                        "containers": [
+                            {
+                                "name": "nagios",
+                                "image": "",
+                                "env": [],
+                                "resources": {
+                                    "limits": {
+                                        "cpu": "250m"
+                                    }
+                                },
+                                "terminationMessagePath": "/dev/termination-log",
+                                "imagePullPolicy": "Always"
+                            }
+                        ],
+                        "restartPolicy": "Always",
+                        "terminationGracePeriodSeconds": 30,
+                        "dnsPolicy": "ClusterFirst",
+                        "securityContext": {}
+                    }
+                }
+            },
+            "status": {
+                "latestVersion": 0,
+                "observedGeneration": 0,
+                "replicas": 0,
+                "updatedReplicas": 0,
+                "availableReplicas": 0,
+                "unavailableReplicas": 0
+            }
+        }
+    ]
+}
