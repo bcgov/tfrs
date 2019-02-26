@@ -7,7 +7,7 @@ RUN chown -R nagios.nagios /var/run/supervisord
 RUN mkdir /docroot
 RUN chown -R nagios.nagios /docroot
 WORKDIR /
-ADD docroot /docroot
+#ADD docroot /docroot
 ADD apache2 /etc/apache2
 ADD supervisord /etc
 # remove the default configuration
