@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from django.db import migrations, IntegrityError
+from django.db import migrations
 from django.db.migrations import RunPython
 
 

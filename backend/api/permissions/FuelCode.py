@@ -24,11 +24,32 @@ from rest_framework import permissions
 
 
 class FuelCodePermissions(permissions.BasePermission):
-    """Used by Viewset to check permissions for API requests"""
+    """
+    Used by Viewset to check permissions for API requests
+    This check is made before has_object_permission
+    If there's any permission check needed for POST, it has to be in here
+    """
 
     def has_permission(self, request, view):
-        return True
+        if request.user.has_perm('FUEL_CODES_MANAGE'):
+            return True
+
+        if request.method != 'POST' and \
+                request.user.has_perm('FUEL_CODES_VIEW'):
+            return True
+
+        return False
 
     def has_object_permission(self, request, view, obj):
-        """Check permissions When an object does exist (PUT, GET)"""
-        return True
+        """
+        Check permissions When an object does exist (GET, PUT, DELETE)
+        POST is NOT included here
+        """
+        if request.method == 'GET' and \
+                request.user.has_perm('FUEL_CODES_VIEW'):
+            return True
+
+        if request.user.has_perm('FUEL_CODES_MANAGE'):
+            return True
+
+        return False

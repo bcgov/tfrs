@@ -51,6 +51,16 @@ class TestFuelCodes(BaseTestCase):
 
         self.assertGreaterEqual(len(response_data), 1)
 
+        response = self.clients['fs_user_1'].get(
+            "/api/fuel_codes"
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        response_data = json.loads(response.content.decode("utf-8"))
+
+        self.assertGreaterEqual(len(response_data), 1)
+
     def test_add_draft_as_gov_user(self):
         """
         Test adding a fuel code as a government user
@@ -93,3 +103,40 @@ class TestFuelCodes(BaseTestCase):
 
         self.assertEqual(fuel_code_obj.fuel_code, fuel_code)
         self.assertEqual(fuel_code_obj.fuel, fuel)
+
+    def test_add_draft_as_fuel_supplier(self):
+        """
+        Test adding a fuel code as a fuel supplier
+        Note: This should fail
+        """
+        status_draft = FuelCodeStatus.objects.filter(status="Draft").first()
+        fuel_code = 'Test Fuel Code'
+        fuel = 'Test Fuel'
+
+        payload = {
+            'applicationDate': '2019-01-01',
+            'approvalDate': '2019-01-01',
+            'carbonIntensity': '10',
+            'company': 'Test',
+            'effectiveDate': '2019-01-01',
+            'expiryDate': '2020-01-01',
+            'facilityLocation': 'Test',
+            'facilityNameplate': '123',
+            'feedstock': 'Test',
+            'feedstockLocation': 'Test',
+            'feedstockMisc': 'Test',
+            'feedstockTransportMode': 'Test',
+            'formerCompany': 'Test',
+            'fuel': fuel,
+            'fuelCode': fuel_code,
+            'fuelTransportMode': 'Test',
+            'status': status_draft.id
+        }
+
+        response = self.clients['fs_user_1'].post(
+            "/api/fuel_codes",
+            content_type='application/json',
+            data=json.dumps(payload)
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)

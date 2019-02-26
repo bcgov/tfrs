@@ -6,6 +6,7 @@ import FUEL_CODES from '../../../constants/routes/FuelCodes';
 import Loading from '../../../app/components/Loading';
 import * as Lang from '../../../constants/langEnUs';
 import history from '../../../app/History';
+import PERMISSIONS_FUEL_CODES from '../../../constants/permissions/FuelCodes';
 import FuelCodesTable from './FuelCodesTable';
 
 const FuelCodesPage = (props) => {
@@ -17,6 +18,7 @@ const FuelCodesPage = (props) => {
       <h1>{props.title}</h1>
       <div className="right-toolbar-container">
         <div className="actions-container">
+          {props.loggedInUser.hasPermission(PERMISSIONS_FUEL_CODES.MANAGE) &&
           <button
             id="new-submission"
             className="btn btn-primary"
@@ -29,6 +31,7 @@ const FuelCodesPage = (props) => {
           >
             <FontAwesomeIcon icon="plus-circle" /> {Lang.BTN_NEW_FUEL_CODE}
           </button>
+          }
         </div>
       </div>
       {isFetching && <Loading />}
