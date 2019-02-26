@@ -23,6 +23,12 @@ RUN chgrp -R root /var/log/supervisor
 RUN chmod -R g+w /var/log/supervisor
 RUN chgrp -R root /run/supervisord
 RUN chmod -R g+w /run/supervisord
+RUN chgrp -R root /run/apache2
+RUN chmod -R g+w /run/apache2
+RUN chgrp -R root /run/apache2-supervisord
+RUN chmod -R g+w /run/apache2-supervisord
+RUN chgrp -R root /run/nagios3
+RUN chmod -R g+w /run/nagios3
 RUN chgrp -R root /etc/nagios3
 RUN chmod -R g+w /etc/nagios3
 RUN chgrp -R root /var/cache/nagios3
