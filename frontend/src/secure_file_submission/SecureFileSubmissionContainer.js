@@ -11,9 +11,9 @@ import PropTypes from 'prop-types';
 
 
 import { getDocumentUploads, getDocumentUploadURL } from '../actions/documentUploads';
-import SecureDocumentSubmissionsPage from './components/SecureDocumentSubmissionsPage';
+import SecureFileSubmissionsPage from './components/SecureFileSubmissionsPage';
 
-class SecureDocumentSubmissionContainer extends Component {
+class SecureFileSubmissionContainer extends Component {
   constructor (props) {
     super(props);
     this.state = {
@@ -30,7 +30,7 @@ class SecureDocumentSubmissionContainer extends Component {
 
   render () {
     return (
-      <SecureDocumentSubmissionsPage
+      <SecureFileSubmissionsPage
         categories={this.props.referenceData.documentCategories}
         documentUploads={this.props.documentUploads}
         loggedInUser={this.props.loggedInUser}
@@ -41,10 +41,10 @@ class SecureDocumentSubmissionContainer extends Component {
   }
 }
 
-SecureDocumentSubmissionContainer.defaultProps = {
+SecureFileSubmissionContainer.defaultProps = {
 };
 
-SecureDocumentSubmissionContainer.propTypes = {
+SecureFileSubmissionContainer.propTypes = {
   documentUploads: PropTypes.shape({
     isFetching: PropTypes.bool,
     items: PropTypes.arrayOf(PropTypes.shape())
@@ -77,4 +77,4 @@ const mapDispatchToProps = dispatch => ({
   requestURL: bindActionCreators(getDocumentUploadURL, dispatch)
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(SecureDocumentSubmissionContainer);
+export default connect(mapStateToProps, mapDispatchToProps)(SecureFileSubmissionContainer);

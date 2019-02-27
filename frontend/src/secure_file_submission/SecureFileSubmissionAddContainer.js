@@ -7,7 +7,6 @@ import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 
-import CreditTransactionRequestForm from './components/SecureDocumentSubmissionForm';
 import Loading from '../app/components/Loading';
 import Modal from '../app/components/Modal';
 import history from '../app/History';
@@ -21,8 +20,9 @@ import DOCUMENT_STATUSES from '../constants/documentStatuses';
 import SECURE_DOCUMENT_UPLOAD from '../constants/routes/SecureDocumentUpload';
 import toastr from '../utils/toastr';
 import FileUploadProgress from "./components/FileUploadProgress";
+import SecureFileSubmissionForm from "./components/SecureFileSubmissionForm";
 
-class SecureDocumentSubmissionAddContainer extends Component {
+class SecureFileSubmissionAddContainer extends Component {
   constructor(props) {
     super(props);
 
@@ -260,7 +260,7 @@ class SecureDocumentSubmissionAddContainer extends Component {
     const availableActions = ['Draft', 'Submitted'];
 
     return ([
-      <CreditTransactionRequestForm
+      <SecureFileSubmissionForm
         addToFields={this._addToFields}
         availableActions={availableActions}
         categories={this.props.referenceData.documentCategories}
@@ -269,7 +269,7 @@ class SecureDocumentSubmissionAddContainer extends Component {
         fields={this.state.fields}
         handleInputChange={this._handleInputChange}
         handleSubmit={this._handleSubmit}
-        key="creditTransactionForm"
+        key="secureFileSubmission"
         loggedInUser={this.props.loggedInUser}
         validationErrors={this.state.validationErrors}
       />,
@@ -286,12 +286,12 @@ class SecureDocumentSubmissionAddContainer extends Component {
   }
 }
 
-SecureDocumentSubmissionAddContainer.defaultProps = {
+SecureFileSubmissionAddContainer.defaultProps = {
   errors: {},
   validationErrors: {}
 };
 
-SecureDocumentSubmissionAddContainer.propTypes = {
+SecureFileSubmissionAddContainer.propTypes = {
   addDocumentUpload: PropTypes.func.isRequired,
   clearDocumentUploadError: PropTypes.func.isRequired,
   errors: PropTypes.shape({
@@ -340,4 +340,4 @@ const mapDispatchToProps = dispatch => ({
   uploadDocument: bindActionCreators(uploadDocument, dispatch)
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(SecureDocumentSubmissionAddContainer);
+export default connect(mapStateToProps, mapDispatchToProps)(SecureFileSubmissionAddContainer);

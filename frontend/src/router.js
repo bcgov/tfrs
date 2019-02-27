@@ -19,10 +19,10 @@ import SECURE_DOCUMENT_UPLOAD from './constants/routes/SecureDocumentUpload';
 import USERS from './constants/routes/Users';
 
 import CreditTransactionsHistoryContainer from './admin/credit_trade_history/CreditTradeHistoryContainer';
-import SecureDocumentSubmissionsContainer from './secure_document_upload/SecureDocumentSubmissionContainer';
-import SecureDocumentSubmissionAddContainer from './secure_document_upload/SecureDocumentSubmissionAddContainer';
-import SecureDocumentSubmissionDetailContainer from './secure_document_upload/SecureDocumentSubmissionDetailContainer';
-import SecureDocumentSubmissionEditContainer from './secure_document_upload/SecureDocumentSubmissionEditContainer';
+import SecureDocumentSubmissionsContainer from './secure_file_submission/SecureFileSubmissionContainer';
+import SecureDocumentSubmissionAddContainer from './secure_file_submission/SecureFileSubmissionAddContainer';
+import SecureDocumentSubmissionDetailContainer from './secure_file_submission/SecureFileSubmissionDetailContainer';
+import SecureDocumentSubmissionEditContainer from './secure_file_submission/SecureFileSubmissionEditContainer';
 import HistoricalDataEntryContainer from './admin/historical_data_entry/HistoricalDataEntryContainer';
 import HistoricalDataEntryEditContainer from './admin/historical_data_entry/HistoricalDataEntryEditContainer';
 import RolesContainer from './admin/roles/RolesContainer';

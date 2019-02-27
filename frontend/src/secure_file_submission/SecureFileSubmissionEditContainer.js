@@ -9,7 +9,7 @@ import { bindActionCreators } from 'redux';
 
 import Loading from '../app/components/Loading';
 import Modal from '../app/components/Modal';
-import CreditTransactionRequestForm from './components/SecureDocumentSubmissionForm';
+
 
 import {
   deleteDocumentUpload, getDocumentUpload, getDocumentUploadURL, partialUpdateDocument,
@@ -19,8 +19,9 @@ import history from '../app/History';
 import DOCUMENT_STATUSES from '../constants/documentStatuses';
 import SECURE_DOCUMENT_UPLOAD from '../constants/routes/SecureDocumentUpload';
 import toastr from '../utils/toastr';
+import SecureFileSubmissionForm from "./components/SecureFileSubmissionForm";
 
-class SecureDocumentSubmissionEditContainer extends Component {
+class SecureFileSubmissionEditContainer extends Component {
   constructor (props) {
     super(props);
 
@@ -229,7 +230,7 @@ class SecureDocumentSubmissionEditContainer extends Component {
     }
 
     return ([
-      <CreditTransactionRequestForm
+      <SecureFileSubmissionForm
         addToFields={this._addToFields}
         availableActions={availableActions}
         categories={this.props.referenceData.documentCategories}
@@ -239,7 +240,7 @@ class SecureDocumentSubmissionEditContainer extends Component {
         fields={this.state.fields}
         handleInputChange={this._handleInputChange}
         handleSubmit={this._handleSubmit}
-        key="creditTransactionForm"
+        key="secureFileSubmissionForm"
         loggedInUser={this.props.loggedInUser}
         validationErrors={this.state.validationErrors}
       />,
@@ -263,12 +264,12 @@ class SecureDocumentSubmissionEditContainer extends Component {
   }
 }
 
-SecureDocumentSubmissionEditContainer.defaultProps = {
+SecureFileSubmissionEditContainer.defaultProps = {
   errors: {},
   validationErrors: {}
 };
 
-SecureDocumentSubmissionEditContainer.propTypes = {
+SecureFileSubmissionEditContainer.propTypes = {
   deleteDocumentUpload: PropTypes.func.isRequired,
   errors: PropTypes.shape({
     title: PropTypes.arrayOf(PropTypes.string)
@@ -319,4 +320,4 @@ const mapDispatchToProps = dispatch => ({
   partialUpdateDocument: bindActionCreators(partialUpdateDocument, dispatch)
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(SecureDocumentSubmissionEditContainer);
+export default connect(mapStateToProps, mapDispatchToProps)(SecureFileSubmissionEditContainer);

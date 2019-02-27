@@ -11,13 +11,13 @@ import history from '../../app/History';
 import * as Lang from '../../constants/langEnUs';
 import SECURE_DOCUMENT_UPLOAD from '../../constants/routes/SecureDocumentUpload';
 import {getFileSize, getIcon, getScanStatusIcon} from '../../utils/functions';
-import SecureDocumentSubmissionComment from './SecureDocumentSubmissionComment';
-import SecureDocumentSubmissionCommentButtons from './SecureDocumentSubmissionCommentButtons';
-import CreditTransactionRequestCommentForm from './SecureDocumentSubmissionCommentForm';
+import SecureFileSubmissionComment from './SecureFileSubmissionComment';
+import SecureFileSubmissionCommentButtons from './SecureFileSubmissionCommentButtons';
+import SecureFileSubmissionCommentForm from './SecureFileSubmissionCommentForm';
 import {Link} from "react-router-dom";
 import CREDIT_TRANSACTIONS from "../../constants/routes/CreditTransactions";
 
-const SecureDocumentSubmissionDetails = props => (
+const SecureFileSubmissionDetails = props => (
   <div className="page-credit-transaction-request-details">
     <h1>{props.item.type.description} Submission</h1>
 
@@ -236,20 +236,20 @@ const SecureDocumentSubmissionDetails = props => (
 
       {props.item.comments.length > 0 && <h3 className="comments-header">Comments</h3>}
       {props.item.comments.map(c => (
-        <SecureDocumentSubmissionComment comment={c} key={c.id} saveComment={props.saveComment}/>
+        <SecureFileSubmissionComment comment={c} key={c.id} saveComment={props.saveComment}/>
       ))
       }
       {!['Archived', 'Received'].includes(props.item.status.status) &&
       <div className="row">
         <div className="col-md-12">
-          <SecureDocumentSubmissionCommentButtons
+          <SecureFileSubmissionCommentButtons
             addComment={props.addComment}
             canComment={props.canComment}
             canCreatePrivilegedComment={props.canCreatePrivilegedComment}
             isCommenting={props.isCommenting}
           />
           {props.isCommenting &&
-          <CreditTransactionRequestCommentForm
+          <SecureFileSubmissionCommentForm
             cancelComment={props.cancelComment}
             isCreatingPrivilegedComment={props.isCreatingPrivilegedComment}
             saveComment={props.saveComment}
@@ -337,11 +337,11 @@ const SecureDocumentSubmissionDetails = props => (
   </div>
 );
 
-SecureDocumentSubmissionDetails.defaultProps = {
+SecureFileSubmissionDetails.defaultProps = {
   errors: {}
 };
 
-SecureDocumentSubmissionDetails.propTypes = {
+SecureFileSubmissionDetails.propTypes = {
   addComment: PropTypes.func.isRequired,
   availableActions: PropTypes.arrayOf(PropTypes.string).isRequired,
   cancelComment: PropTypes.func.isRequired,
@@ -361,4 +361,4 @@ SecureDocumentSubmissionDetails.propTypes = {
   saveComment: PropTypes.func.isRequired
 };
 
-export default SecureDocumentSubmissionDetails;
+export default SecureFileSubmissionDetails;

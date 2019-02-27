@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import FontAwesomeIcon from '@fortawesome/react-fontawesome';
 import * as Lang from '../../constants/langEnUs';
-import SecureDocumentSubmissionCommentForm from './SecureDocumentSubmissionCommentForm';
+import SecureFileSubmissionCommentForm from './SecureFileSubmissionCommentForm';
 import ReactTable from "react-table";
 import moment from "moment";
 import {Link} from "react-router-dom";

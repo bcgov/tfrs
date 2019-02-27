@@ -9,7 +9,7 @@ import FontAwesomeIcon from '@fortawesome/react-fontawesome';
 import CONFIG from '../../config';
 import { getFileSize, getIcon, getScanStatusIcon, validateFiles } from '../../utils/functions';
 
-class SecureDocumentSubmissionFormDetails extends Component {
+class SecureFileSubmissionFormDetails extends Component {
   constructor (props) {
     super(props);
 
@@ -349,12 +349,12 @@ class SecureDocumentSubmissionFormDetails extends Component {
   }
 }
 
-SecureDocumentSubmissionFormDetails.defaultProps = {
+SecureFileSubmissionFormDetails.defaultProps = {
   children: null,
   edit: false
 };
 
-SecureDocumentSubmissionFormDetails.propTypes = {
+SecureFileSubmissionFormDetails.propTypes = {
   children: PropTypes.oneOfType([
     PropTypes.arrayOf(PropTypes.node),
     PropTypes.node
@@ -386,4 +386,4 @@ SecureDocumentSubmissionFormDetails.propTypes = {
   handleInputChange: PropTypes.func.isRequired
 };
 
-export default SecureDocumentSubmissionFormDetails;
+export default SecureFileSubmissionFormDetails;

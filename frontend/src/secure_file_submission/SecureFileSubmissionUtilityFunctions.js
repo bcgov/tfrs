@@ -1,4 +1,4 @@
-export default class SecureDocumentSubmissionUtilityFunctions {
+export default class SecureFileSubmissionUtilityFunctions {
 
   static canLinkCreditTransfer (loggedInUser, item) {
     if (!item.linkActions) {

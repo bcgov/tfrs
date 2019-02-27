@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import * as Lang from '../../constants/langEnUs';
 
-class SecureDocumentSubmissionCommentForm extends Component {
+class SecureFileSubmissionCommentForm extends Component {
   static titleText (props) {
     if (props.isCommentingOnUnsavedCreditTransfer) {
       return Lang.TEXT_ADD_INITIAL_COMMENT;
@@ -69,7 +69,7 @@ class SecureDocumentSubmissionCommentForm extends Component {
       <div className={`comment-form row ${this.props.embedded ? '' : 'well'}`}>
         {this.props.embedded ||
         <h2>
-          {SecureDocumentSubmissionCommentForm.titleText(this.props)}
+          {SecureFileSubmissionCommentForm.titleText(this.props)}
         </h2>
         }
         <div className={`note col-xs-8 ${this.props.embedded ? '' : 'form-group'}`}>
@@ -122,7 +122,7 @@ class SecureDocumentSubmissionCommentForm extends Component {
   }
 }
 
-SecureDocumentSubmissionCommentForm.defaultProps = {
+SecureFileSubmissionCommentForm.defaultProps = {
   comment: '',
   isEditingExistingComment: false,
   isCommentingOnUnsavedCreditTransfer: false,
@@ -133,7 +133,7 @@ SecureDocumentSubmissionCommentForm.defaultProps = {
   handleCommentChanged: null
 };
 
-SecureDocumentSubmissionCommentForm.propTypes = {
+SecureFileSubmissionCommentForm.propTypes = {
   comment: PropTypes.string,
   id: PropTypes.number,
   isCreatingPrivilegedComment: PropTypes.bool.isRequired,
@@ -145,4 +145,4 @@ SecureDocumentSubmissionCommentForm.propTypes = {
   handleCommentChanged: PropTypes.func
 };
 
-export default SecureDocumentSubmissionCommentForm;
+export default SecureFileSubmissionCommentForm;

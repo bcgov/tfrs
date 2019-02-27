@@ -7,9 +7,9 @@ import Loading from '../../app/components/Loading';
 import * as Lang from '../../constants/langEnUs';
 import history from '../../app/History';
 import PERMISSIONS_SECURE_DOCUMENT_UPLOAD from '../../constants/permissions/SecureDocumentUpload';
-import SecureDocumentSubmissionTable from './SecureDocumentSubmissionTable';
+import SecureFileSubmissionTable from './SecureFileSubmissionTable';
 
-const SecureDocumentSubmissionsPage = (props) => {
+const SecureFileSubmissionsPage = (props) => {
   const { isFetching, items } = props.documentUploads;
   const isEmpty = items.length === 0;
 
@@ -61,7 +61,7 @@ const SecureDocumentSubmissionsPage = (props) => {
       </div>
       {isFetching && <Loading />}
       {!isFetching &&
-      <SecureDocumentSubmissionTable
+      <SecureFileSubmissionTable
         items={items}
         isFetching={isFetching}
         isEmpty={isEmpty}
@@ -72,10 +72,10 @@ const SecureDocumentSubmissionsPage = (props) => {
   );
 };
 
-SecureDocumentSubmissionsPage.defaultProps = {
+SecureFileSubmissionsPage.defaultProps = {
 };
 
-SecureDocumentSubmissionsPage.propTypes = {
+SecureFileSubmissionsPage.propTypes = {
   categories: PropTypes.arrayOf(PropTypes.shape()).isRequired,
   documentUploads: PropTypes.shape({
     isFetching: PropTypes.bool,
@@ -87,4 +87,4 @@ SecureDocumentSubmissionsPage.propTypes = {
   title: PropTypes.string.isRequired
 };
 
-export default SecureDocumentSubmissionsPage;
+export default SecureFileSubmissionsPage;
