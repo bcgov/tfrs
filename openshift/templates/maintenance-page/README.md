@@ -4,7 +4,7 @@
 
 ### Usage
 
-Maintanence-page pods serving static html are deployed to our prod, dev and test environments.  To enable maintenance mode switch the routes between the tfrs and maintanence-page services.  A namespace (project) for deployment must be specified.
+Maintenance-page pods serving static html are deployed to our prod, dev and test environments.  To enable maintenance mode switch the routes between the tfrs and Maintenance-page services.  A namespace (project) for deployment must be specified.
 
 Expected namespaces:
 
@@ -12,14 +12,14 @@ Expected namespaces:
 * mem-tfrs-dev
 * mem-tfrs-test
 
-1. ##### Build Miantanence Page Image
+1. ##### Build Maintenance Page Image
 
     ```
     oc project mem-tfrs-tools
     oc process -f ./maintenance-page.bc.json | oc create -f -
     ```
 
-2. ##### Deploy Miantanence Page Image
+2. ##### Deploy Maintenance Page Image
 
     ```
     oc project mem-tfrs-[ENV_NAME]
