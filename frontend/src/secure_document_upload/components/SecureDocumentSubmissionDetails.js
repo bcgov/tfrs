@@ -11,13 +11,13 @@ import history from '../../app/History';
 import * as Lang from '../../constants/langEnUs';
 import SECURE_DOCUMENT_UPLOAD from '../../constants/routes/SecureDocumentUpload';
 import {getFileSize, getIcon, getScanStatusIcon} from '../../utils/functions';
-import CreditTransactionRequestComment from './CreditTransactionRequestComment';
-import CreditTransactionRequestCommentButtons from './CreditTransactionRequestCommentButtons';
-import CreditTransactionRequestCommentForm from './CreditTransactionRequestCommentForm';
+import SecureDocumentSubmissionComment from './SecureDocumentSubmissionComment';
+import SecureDocumentSubmissionCommentButtons from './SecureDocumentSubmissionCommentButtons';
+import CreditTransactionRequestCommentForm from './SecureDocumentSubmissionCommentForm';
 import {Link} from "react-router-dom";
 import CREDIT_TRANSACTIONS from "../../constants/routes/CreditTransactions";
 
-const CreditTransactionRequestDetails = props => (
+const SecureDocumentSubmissionDetails = props => (
   <div className="page-credit-transaction-request-details">
     <h1>{props.item.type.description} Submission</h1>
 
@@ -236,13 +236,13 @@ const CreditTransactionRequestDetails = props => (
 
       {props.item.comments.length > 0 && <h3 className="comments-header">Comments</h3>}
       {props.item.comments.map(c => (
-        <CreditTransactionRequestComment comment={c} key={c.id} saveComment={props.saveComment}/>
+        <SecureDocumentSubmissionComment comment={c} key={c.id} saveComment={props.saveComment}/>
       ))
       }
       {!['Archived', 'Received'].includes(props.item.status.status) &&
       <div className="row">
         <div className="col-md-12">
-          <CreditTransactionRequestCommentButtons
+          <SecureDocumentSubmissionCommentButtons
             addComment={props.addComment}
             canComment={props.canComment}
             canCreatePrivilegedComment={props.canCreatePrivilegedComment}
@@ -337,11 +337,11 @@ const CreditTransactionRequestDetails = props => (
   </div>
 );
 
-CreditTransactionRequestDetails.defaultProps = {
+SecureDocumentSubmissionDetails.defaultProps = {
   errors: {}
 };
 
-CreditTransactionRequestDetails.propTypes = {
+SecureDocumentSubmissionDetails.propTypes = {
   addComment: PropTypes.func.isRequired,
   availableActions: PropTypes.arrayOf(PropTypes.string).isRequired,
   cancelComment: PropTypes.func.isRequired,
@@ -361,4 +361,4 @@ CreditTransactionRequestDetails.propTypes = {
   saveComment: PropTypes.func.isRequired
 };
 
-export default CreditTransactionRequestDetails;
+export default SecureDocumentSubmissionDetails;

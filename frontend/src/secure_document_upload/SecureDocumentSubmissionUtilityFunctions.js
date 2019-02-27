@@ -1,4 +1,4 @@
-export default class CreditTransactionRequestUtilityFunctions {
+export default class SecureDocumentSubmissionUtilityFunctions {
 
   static canLinkCreditTransfer (loggedInUser, item) {
     if (!item.linkActions) {

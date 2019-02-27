@@ -7,7 +7,7 @@ import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import Loading from '../app/components/Loading';
-import CreditTransactionUtilityFunctions from './CreditTransactionRequestUtilityFunctions';
+import SecureDocumentSubmissionUtilityFunctions from './SecureDocumentSubmissionUtilityFunctions';
 
 import {
   addCommentToDocument, deleteDocumentUpload, getDocumentUpload, linkDocument, partialUpdateDocument, unlinkDocument,
@@ -15,13 +15,13 @@ import {
 } from '../actions/documentUploads';
 import Modal from '../app/components/Modal';
 import history from '../app/History';
-import CreditTransactionRequestDetails from './components/CreditTransactionRequestDetails';
+import SecureDocumentSubmissionDetails from './components/SecureDocumentSubmissionDetails';
 import SECURE_DOCUMENT_UPLOAD from '../constants/routes/SecureDocumentUpload';
 import toastr from '../utils/toastr';
 import LinkedCreditTransferSelection from "./components/LinkedCreditTransferSelection";
 import {getCreditTransfers} from "../actions/creditTransfersActions";
 
-class CreditTransactionRequestDetailContainer extends Component {
+class SecureDocumentSubmissionDetailContainer extends Component {
   constructor(props) {
     super(props);
 
@@ -214,21 +214,21 @@ class CreditTransactionRequestDetailContainer extends Component {
       ));
 
       return ([
-        <CreditTransactionRequestDetails
+        <SecureDocumentSubmissionDetails
           addComment={this._addComment}
           availableActions={availableActions}
           cancelComment={this._cancelComment}
           addLink={this._addLink}
           unLink={this._unLink}
-          canComment={CreditTransactionUtilityFunctions
+          canComment={SecureDocumentSubmissionUtilityFunctions
             .canComment(this.props.loggedInUser, this.props.documentUpload.item)}
           canCreatePrivilegedComment={
-            CreditTransactionUtilityFunctions.canCreatePrivilegedComment(
+            SecureDocumentSubmissionUtilityFunctions.canCreatePrivilegedComment(
               this.props.loggedInUser,
               this.props.documentUpload.item
             )
           }
-          canLink={CreditTransactionUtilityFunctions.canLinkCreditTransfer(this.props.loggedInUser,
+          canLink={SecureDocumentSubmissionUtilityFunctions.canLinkCreditTransfer(this.props.loggedInUser,
             this.props.documentUpload.item)}
           errors={errors}
           fields={this.state.fields}
@@ -314,9 +314,9 @@ class CreditTransactionRequestDetailContainer extends Component {
   }
 }
 
-CreditTransactionRequestDetailContainer.defaultProps = {};
+SecureDocumentSubmissionDetailContainer.defaultProps = {};
 
-CreditTransactionRequestDetailContainer.propTypes = {
+SecureDocumentSubmissionDetailContainer.propTypes = {
   addCommentToDocument: PropTypes.func.isRequired,
   deleteDocumentUpload: PropTypes.func.isRequired,
   documentUpload: PropTypes.shape({
@@ -393,4 +393,4 @@ const mapDispatchToProps = dispatch => ({
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(CreditTransactionRequestDetailContainer);
+)(SecureDocumentSubmissionDetailContainer);

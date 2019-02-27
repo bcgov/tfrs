@@ -8,13 +8,13 @@ import { bindActionCreators } from 'redux';
 import FontAwesomeIcon from '@fortawesome/react-fontawesome';
 
 import getCompliancePeriods from '../../actions/compliancePeriodsActions';
-import CreditTransactionRequestFormDetails from './CreditTransactionRequestFormDetails';
+import SecureDocumentSubmissionFormDetails from './SecureDocumentSubmissionFormDetails';
 import Errors from '../../app/components/Errors';
 import history from '../../app/History';
 import * as Lang from '../../constants/langEnUs';
 import DOCUMENT_STATUSES from '../../constants/documentStatuses';
 
-class CreditTransactionRequestForm extends Component {
+class SecureDocumentSubmissionForm extends Component {
   componentDidMount () {
     this.props.getCompliancePeriods();
   }
@@ -27,7 +27,7 @@ class CreditTransactionRequestForm extends Component {
           onSubmit={(event, status) =>
             this.props.handleSubmit(event, DOCUMENT_STATUSES.draft)}
         >
-          <CreditTransactionRequestFormDetails
+          <SecureDocumentSubmissionFormDetails
             categories={this.props.categories}
             compliancePeriods={this.props.compliancePeriods}
             documentType={this.props.documentType}
@@ -85,12 +85,12 @@ class CreditTransactionRequestForm extends Component {
   }
 }
 
-CreditTransactionRequestForm.defaultProps = {
+SecureDocumentSubmissionForm.defaultProps = {
   edit: false,
   id: 0
 };
 
-CreditTransactionRequestForm.propTypes = {
+SecureDocumentSubmissionForm.propTypes = {
   availableActions: PropTypes.arrayOf(PropTypes.string).isRequired,
   categories: PropTypes.arrayOf(PropTypes.shape()).isRequired,
   compliancePeriods: PropTypes.arrayOf(PropTypes.shape()).isRequired,
@@ -120,4 +120,4 @@ const mapDispatchToProps = dispatch => ({
   getCompliancePeriods: bindActionCreators(getCompliancePeriods, dispatch)
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(CreditTransactionRequestForm);
+export default connect(mapStateToProps, mapDispatchToProps)(SecureDocumentSubmissionForm);

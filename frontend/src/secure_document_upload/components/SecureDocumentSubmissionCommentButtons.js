@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 
 import * as Lang from '../../constants/langEnUs';
 
-const CreditTransactionRequestCommentButtons = props => (
+const SecureDocumentSubmissionCommentButtons = props => (
   <div>
     {(props.canComment && !props.isCommenting) &&
     <button
@@ -30,11 +30,11 @@ const CreditTransactionRequestCommentButtons = props => (
   </div>
 );
 
-CreditTransactionRequestCommentButtons.propTypes = {
+SecureDocumentSubmissionCommentButtons.propTypes = {
   canComment: PropTypes.bool.isRequired,
   canCreatePrivilegedComment: PropTypes.bool.isRequired,
   addComment: PropTypes.func.isRequired,
   isCommenting: PropTypes.bool.isRequired
 };
 
-export default CreditTransactionRequestCommentButtons;
+export default SecureDocumentSubmissionCommentButtons;

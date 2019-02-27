@@ -19,10 +19,10 @@ import SECURE_DOCUMENT_UPLOAD from './constants/routes/SecureDocumentUpload';
 import USERS from './constants/routes/Users';
 
 import CreditTransactionsHistoryContainer from './admin/credit_trade_history/CreditTradeHistoryContainer';
-import CreditTransactionRequestsContainer from './secure_document_upload/CreditTransactionRequestsContainer';
-import CreditTransactionRequestAddContainer from './secure_document_upload/CreditTransactionRequestAddContainer';
-import CreditTransactonRequestDetailContainer from './secure_document_upload/CreditTransactonRequestDetailContainer';
-import CreditTransactionRequestEditContainer from './secure_document_upload/CreditTransactionRequestEditContainer';
+import SecureDocumentSubmissionsContainer from './secure_document_upload/SecureDocumentSubmissionContainer';
+import SecureDocumentSubmissionAddContainer from './secure_document_upload/SecureDocumentSubmissionAddContainer';
+import SecureDocumentSubmissionDetailContainer from './secure_document_upload/SecureDocumentSubmissionDetailContainer';
+import SecureDocumentSubmissionEditContainer from './secure_document_upload/SecureDocumentSubmissionEditContainer';
 import HistoricalDataEntryContainer from './admin/historical_data_entry/HistoricalDataEntryContainer';
 import HistoricalDataEntryEditContainer from './admin/historical_data_entry/HistoricalDataEntryEditContainer';
 import RolesContainer from './admin/roles/RolesContainer';
@@ -201,22 +201,22 @@ const Router = props => (
             exact
             key="secure_document_upload_list"
             path={SECURE_DOCUMENT_UPLOAD.LIST}
-            component={withRouter(CreditTransactionRequestsContainer)}
+            component={withRouter(SecureDocumentSubmissionsContainer)}
           />,
           <Route
             key="secure_document_upload_add"
             path={SECURE_DOCUMENT_UPLOAD.ADD}
-            component={withRouter(CreditTransactionRequestAddContainer)}
+            component={withRouter(SecureDocumentSubmissionAddContainer)}
           />,
           <Route
             key="secure_document_upload_details"
             path={SECURE_DOCUMENT_UPLOAD.DETAILS}
-            component={withRouter(CreditTransactonRequestDetailContainer)}
+            component={withRouter(SecureDocumentSubmissionDetailContainer)}
           />,
           <Route
             key="secure_document_upload_edit"
             path={SECURE_DOCUMENT_UPLOAD.EDIT}
-            component={withRouter(CreditTransactionRequestEditContainer)}
+            component={withRouter(SecureDocumentSubmissionEditContainer)}
           />
         ]}
         <Route component={NotFound} />

@@ -3,9 +3,9 @@ import PropTypes from 'prop-types';
 import FontAwesomeIcon from '@fortawesome/react-fontawesome';
 import * as Lang from '../../constants/langEnUs';
 import LocalTimestamp from '../../app/components/LocalTimestamp';
-import CreditTransactionRequestCommentForm from './CreditTransactionRequestCommentForm';
+import CreditTransactionRequestCommentForm from './SecureDocumentSubmissionCommentForm';
 
-class CreditTransactionRequestComment extends Component {
+class SecureDocumentSubmissionComment extends Component {
   constructor (props) {
     super(props);
     this.state = {
@@ -97,12 +97,12 @@ class CreditTransactionRequestComment extends Component {
   }
 }
 
-CreditTransactionRequestComment.defaultProps = {
+SecureDocumentSubmissionComment.defaultProps = {
   isReadOnly: false,
   saveComment: () => {}
 };
 
-CreditTransactionRequestComment.propTypes = {
+SecureDocumentSubmissionComment.propTypes = {
   comment: PropTypes.shape({
     id: PropTypes.number,
     createTimestamp: PropTypes.string,
@@ -126,4 +126,4 @@ CreditTransactionRequestComment.propTypes = {
   isReadOnly: PropTypes.bool
 };
 
-export default CreditTransactionRequestComment;
+export default SecureDocumentSubmissionComment;
