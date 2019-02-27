@@ -19,10 +19,10 @@ import SECURE_DOCUMENT_UPLOAD from './constants/routes/SecureDocumentUpload';
 import USERS from './constants/routes/Users';
 
 import CreditTransactionsHistoryContainer from './admin/credit_trade_history/CreditTradeHistoryContainer';
-import SecureDocumentSubmissionsContainer from './secure_file_submission/SecureFileSubmissionContainer';
-import SecureDocumentSubmissionAddContainer from './secure_file_submission/SecureFileSubmissionAddContainer';
-import SecureDocumentSubmissionDetailContainer from './secure_file_submission/SecureFileSubmissionDetailContainer';
-import SecureDocumentSubmissionEditContainer from './secure_file_submission/SecureFileSubmissionEditContainer';
+import SecureFileSubmissionsContainer from './secure_file_submission/SecureFileSubmissionContainer';
+import SecureFileSubmissionAddContainer from './secure_file_submission/SecureFileSubmissionAddContainer';
+import SecureFileSubmissionDetailContainer from './secure_file_submission/SecureFileSubmissionDetailContainer';
+import SecureFileSubmissionEditContainer from './secure_file_submission/SecureFileSubmissionEditContainer';
 import HistoricalDataEntryContainer from './admin/historical_data_entry/HistoricalDataEntryContainer';
 import HistoricalDataEntryEditContainer from './admin/historical_data_entry/HistoricalDataEntryEditContainer';
 import RolesContainer from './admin/roles/RolesContainer';
@@ -201,22 +201,22 @@ const Router = props => (
             exact
             key="secure_document_upload_list"
             path={SECURE_DOCUMENT_UPLOAD.LIST}
-            component={withRouter(SecureDocumentSubmissionsContainer)}
+            component={withRouter(SecureFileSubmissionsContainer)}
           />,
           <Route
             key="secure_document_upload_add"
             path={SECURE_DOCUMENT_UPLOAD.ADD}
-            component={withRouter(SecureDocumentSubmissionAddContainer)}
+            component={withRouter(SecureFileSubmissionAddContainer)}
           />,
           <Route
             key="secure_document_upload_details"
             path={SECURE_DOCUMENT_UPLOAD.DETAILS}
-            component={withRouter(SecureDocumentSubmissionDetailContainer)}
+            component={withRouter(SecureFileSubmissionDetailContainer)}
           />,
           <Route
             key="secure_document_upload_edit"
             path={SECURE_DOCUMENT_UPLOAD.EDIT}
-            component={withRouter(SecureDocumentSubmissionEditContainer)}
+            component={withRouter(SecureFileSubmissionEditContainer)}
           />
         ]}
         <Route component={NotFound} />
