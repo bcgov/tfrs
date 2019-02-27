@@ -100,6 +100,8 @@
                                 "imagePullPolicy": "Always"
                             }
                         ],
+                        "serviceAccount": "nagios",
+                        "serviceAccountName": "nagios",
                         "restartPolicy": "Always",
                         "terminationGracePeriodSeconds": 30,
                         "dnsPolicy": "ClusterFirst",
@@ -114,6 +116,67 @@
                 "updatedReplicas": 0,
                 "availableReplicas": 0,
                 "unavailableReplicas": 0
+            }
+        },
+        {
+            "kind": "Service",
+            "apiVersion": "v1",
+            "metadata": {
+                "name": "nagios",
+                "creationTimestamp": null,
+                "labels": {
+                    "app": "nagios"
+                },
+                "annotations": {
+                    "openshift.io/generated-by": "OpenShiftWebConsole"
+                }
+            },
+            "spec": {
+                "ports": [
+                    {
+                        "name": "8080-tcp",
+                        "protocol": "TCP",
+                        "port": 8080,
+                        "targetPort": 8080
+                    }
+                ],
+                "selector": {
+                    "deploymentconfig": "nagios"
+                },
+                "type": "ClusterIP",
+                "sessionAffinity": "None"
+            },
+            "status": {
+                "loadBalancer": {}
+            }
+        },
+        {
+            "kind": "Route",
+            "apiVersion": "route.openshift.io/v1",
+            "metadata": {
+                "name": "nagios",
+                "creationTimestamp": null,
+                "labels": {
+                    "app": "nagios"
+                },
+                "annotations": {
+                    "openshift.io/host.generated": "true"
+                }
+            },
+            "spec": {
+                "host": "nagios-mem-tfrs-${ENV_NAME}.pathfinder.gov.bc.ca",
+                "to": {
+                    "kind": "Service",
+                    "name": "nagios",
+                    "weight": 100
+                },
+                "port": {
+                    "targetPort": "8080-tcp"
+                },
+                "tls": {
+                    "termination": "edge"
+                },
+                "wildcardPolicy": "None"
             }
         }
     ]
