@@ -46,7 +46,7 @@ def remove_fuel_code_statuses(apps, schema_editor):
 
 class Migration(migrations.Migration):
     dependencies = [
-        ('api', '0082_fuelcodestatus'),
+        ('api', '0084_fuelcodestatus'),
     ]
 
     operations = [
