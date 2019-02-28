@@ -84,8 +84,10 @@ MIDDLEWARE_CLASSES = (
 AUTH_USER_MODEL = 'api.User'
 
 REST_FRAMEWORK = {
-    'DEFAULT_AUTHENTICATION_CLASSES': ('api.keycloak_authentication.UserAuthentication',),
-    'DEFAULT_PERMISSION_CLASSES': ('rest_framework.permissions.IsAuthenticated',),
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'api.keycloak_authentication.UserAuthentication',),
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.IsAuthenticated',),
     # 'EXCEPTION_HANDLER': 'core.exceptions.exception_handler',
     'DEFAULT_RENDERER_CLASSES': (
         'djangorestframework_camel_case.render.CamelCaseJSONRenderer',
@@ -159,7 +161,13 @@ USE_L10N = True
 USE_TZ = True
 
 DOCUMENTS_API = {
-    'ENABLED': bool(os.getenv('DOCUMENTS_API_ENABLED', 'False').lower() in ['true', 1]),
+    'ENABLED': bool(
+        os.getenv('DOCUMENTS_API_ENABLED', 'False').lower() in ['true', 1]),
+}
+
+FUEL_CODES_API = {
+    'ENABLED': bool(
+        os.getenv('FUEL_CODES_API_ENABLED', 'False').lower() in ['true', 1]),
 }
 
 

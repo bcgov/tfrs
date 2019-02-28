@@ -29,6 +29,10 @@ if (CONFIG.SECURE_DOCUMENT_UPLOAD.ENABLED) {
   REFERENCE_DATA_API_ENDPOINTS.documentStatuses = '/documents/statuses';
 }
 
+if (CONFIG.FUEL_CODES.ENABLED) {
+  REFERENCE_DATA_API_ENDPOINTS.fuelCodeStatuses = '/fuel_codes/statuses';
+}
+
 export const USERS = '/users';
 export const CURRENT_USER = '/users/current';
 

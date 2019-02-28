@@ -44,6 +44,8 @@ from . import SigningAuthorityConfirmation
 from . import UserRole
 from . import CreditTradeComment
 from . import UserCreationRequest
+from . import FuelCode
+from . import FuelCodeStatus
 from . import Document
 from . import DocumentComment
 from . import DocumentCreditTrade

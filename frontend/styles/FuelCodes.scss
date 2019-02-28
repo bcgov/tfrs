@@ -1,0 +1,18 @@
+@import './variables.scss';
+@import './mixins.scss';
+
+.page_admin_fuel_code {
+  label {
+    font-weight: normal;
+    width: 100%;
+  }
+
+  .btn-container {
+    text-align: right;
+  } 
+
+  .main-form {
+    margin-left: -15px;
+    margin-right: -15px;
+  }
+}
