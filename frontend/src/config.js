@@ -23,6 +23,9 @@ const CONFIG = {
   SECURE_DOCUMENT_UPLOAD: {
     ENABLED: getConfig('secure_document_upload.enabled', false),
     MAX_FILE_SIZE: getConfig('secure_document_upload.max_file_size', 50000000)
+  },
+  FUEL_CODES: {
+    ENABLED: getConfig('fuel_codes.enabled', false)
   }
 };
 
