@@ -20,7 +20,7 @@ const FuelCodesTable = (props) => {
     resizable: false,
     width: 45
   }, {
-    accessor: item => `BCLCF-${item.fuelCode}`,
+    accessor: item => `${item.fuelCode}`,
     className: 'col-title',
     Header: 'Fuel Code',
     id: 'title',

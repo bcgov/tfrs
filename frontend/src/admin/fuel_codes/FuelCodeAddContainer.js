@@ -99,7 +99,7 @@ class FuelCodeAddContainer extends Component {
       feedstockTransportMode: this.state.fields.feedstockTransportMode,
       formerCompany: this.state.fields.formerCompany,
       fuel: this.state.fields.fuel,
-      fuelCode: this.state.fields.fuelCode,
+      fuelCode: `BCLCF${this.state.fields.fuelCode}`,
       fuelTransportMode: this.state.fields.fuelTransportMode,
       status: this._getFuelCodeStatus(status).id
     };
