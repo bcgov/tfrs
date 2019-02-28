@@ -99,7 +99,7 @@ class Migration(migrations.Migration):
     Attaches the functions for the migrations
     """
     dependencies = [
-        ('api', '0084_fuelcode_status'),
+        ('api', '0086_fuelcode_status'),
     ]
 
     operations = [
