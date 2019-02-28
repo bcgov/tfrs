@@ -1,6 +1,7 @@
 // Credit Transactions
 export const BTN_ACCEPT = 'Accept';
 export const BTN_APPROVE = 'Approve';
+export const BTN_ADD = 'Add';
 export const BTN_ADD_TO_QUEUE = 'Add to Queue';
 export const BTN_APP_CANCEL = 'Back';
 export const BTN_COMMIT = 'Commit';
@@ -11,6 +12,7 @@ export const BTN_DELETE_DRAFT = 'Delete Draft';
 export const BTN_EDIT = 'Edit';
 export const BTN_EDIT_DRAFT = 'Edit Draft';
 export const BTN_EDIT_PVR_DRAFT = 'Edit PVR';
+export const BTN_NEW_FUEL_CODE = 'New Fuel Code';
 export const BTN_NEW_USER = 'New User';
 export const BTN_NEW_SUBMISSION = 'New Submission';
 export const BTN_NEW_TRANSFER = 'New Transfer';

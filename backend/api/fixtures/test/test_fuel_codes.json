@@ -1,0 +1,23 @@
+[{
+  "fields": {
+    "application_date": "2019-01-01",
+    "approval_date": "2019-01-01",
+    "carbon_intensity": "10",
+    "company": "Test",
+    "effective_date": "2019-01-01",
+    "expiry_date": "2020-01-01",
+    "facility_location": "Test",
+    "facility_nameplate": "123",
+    "feedstock": "Test",
+    "feedstock_location": "Test",
+    "feedstock_misc": "Test",
+    "feedstock_transport_mode": "Test",
+    "former_company": "Test",
+    "fuel": "Fuel Test",
+    "fuel_code": "Submitted Fuel Code",
+    "fuel_transport_mode": "Test",
+    "status": ["Submitted"]
+  },
+  "model": "api.fuelcode",
+  "pk": null
+}]

@@ -8,6 +8,7 @@ import history from './app/History';
 import * as Routes from './constants/routes';
 import {
   CREDIT_TRANSACTIONS_HISTORY,
+  FUEL_CODES,
   HISTORICAL_DATA_ENTRY,
   ROLES,
   USERS as ADMIN_USERS
@@ -18,6 +19,8 @@ import ORGANIZATIONS from './constants/routes/Organizations';
 import SECURE_DOCUMENT_UPLOAD from './constants/routes/SecureDocumentUpload';
 import USERS from './constants/routes/Users';
 
+import FuelCodeAddContainer from './admin/fuel_codes/FuelCodeAddContainer';
+import FuelCodesContainer from './admin/fuel_codes/FuelCodesContainer';
 import CreditTransactionsHistoryContainer from './admin/credit_trade_history/CreditTradeHistoryContainer';
 import SecureFileSubmissionsContainer from './secure_file_submission/SecureFileSubmissionContainer';
 import SecureFileSubmissionAddContainer from './secure_file_submission/SecureFileSubmissionAddContainer';
@@ -48,7 +51,7 @@ import AuthCallback from './app/AuthCallback';
 import CONFIG from './config';
 import OrganizationEditContainer from './organizations/OrganizationEditContainer';
 
-const Router = props => (
+const Router = routerProps => (
   <ConnectedRouter history={history} key={Math.random()}>
     <App>
       <Switch>
@@ -125,6 +128,15 @@ const Router = props => (
         <Route
           path={CREDIT_TRANSACTIONS.EDIT}
           component={withRouter(CreditTransferEditContainer)}
+        />
+        <Route
+          path={FUEL_CODES.ADD}
+          component={withRouter(FuelCodeAddContainer)}
+        />
+        <Route
+          exact
+          path={FUEL_CODES.LIST}
+          component={withRouter(FuelCodesContainer)}
         />
         <Route
           exact

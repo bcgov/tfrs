@@ -31,8 +31,8 @@ from api.models.DocumentComment import DocumentComment
 from api.models.DocumentMilestone import DocumentMilestone
 from api.models.DocumentStatus import DocumentStatus
 from api.models.DocumentType import DocumentType
-from api.serializers import CreditTradeAuxiliarySerializer
 
+from api.serializers import CreditTradeAuxiliarySerializer
 from api.serializers.CompliancePeriod import CompliancePeriodSerializer
 from api.serializers.DocumentComment import DocumentCommentSerializer
 from api.serializers.DocumentMilestone import DocumentMilestoneSerializer
