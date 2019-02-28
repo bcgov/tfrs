@@ -22,7 +22,7 @@ from tfrs.settings import AMQP_CONNECTION_PARAMETERS, EMAIL
 subscription_cache = caches['notification_subscriptions']
 
 
-def send_amqp_notification():
+def send_amqp_notification(user):
     try:
         parameters = AMQP_CONNECTION_PARAMETERS
         connection = pika.BlockingConnection(parameters)
@@ -36,7 +36,8 @@ def send_amqp_notification():
         channel.basic_publish(exchange='notifications',
                               routing_key='global',
                               body=json.dumps({
-                                  'message': 'notification'
+                                  'audience': user.username,
+                                  'type': 'notification'
                               }),
                               properties=pika.BasicProperties(
                                   content_type='application/json',
@@ -296,7 +297,7 @@ class AMQPNotificationService:
                     is_warning=is_warning
                 )
                 notification.save()
-                send_amqp_notification()
+                send_amqp_notification(recipient)
 
                 if email_subscription in effective_subscriptions:
                     AMQPNotificationService.send_email_for_notification(notification)
