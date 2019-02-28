@@ -8,7 +8,7 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('api', '0085_add_fuel_code_permissions'),
+        ('api', '0087_add_fuel_code_permissions'),
     ]
 
     operations = [
