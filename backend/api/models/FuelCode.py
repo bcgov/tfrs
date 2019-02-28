@@ -118,6 +118,7 @@ class FuelCode(Auditable):
         db_comment="Mode of transportation for the feedstock to the fuel "
                    "production facility."
                    "e.g. truck, rail, etc."
+                   "This will eventually use a reference table."
     )
     fuel_transport_mode = models.CharField(
         max_length=100,
@@ -125,6 +126,7 @@ class FuelCode(Auditable):
         null=True,
         db_comment="Mode of transporation for the finished fuel to BC."
                    "e.g. truck, rail, etc."
+                   "This will eventually use a reference table."
     )
     former_company = models.CharField(
         max_length=100,
