@@ -11,7 +11,7 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('api', '0081_fuelcode'),
+        ('api', '0083_fuelcode'),
     ]
 
     operations = [
