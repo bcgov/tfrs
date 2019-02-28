@@ -7,6 +7,7 @@ const notifications = require('./notifications');
 
 const http = require('http');
 
+
 const devServerOptions = {
   contentBase: path.join(__dirname, 'public'),
   publicPath: '/build/',
@@ -39,12 +40,8 @@ const io = require('socket.io')(httpServer);
 
 httpServer.listen(4000);
 
-io.on('connect', (socket) => {
-  socket.join('global');
-  socket.emit('action', { type: 'SERVER_INITIATED_NOTIFICATION_RELOAD', message: 'connected' });
-});
+notifications.setup(io);
 
-notifications.connect(io);
 
 server.listen(3000, '0.0.0.0', () => {
   console.log('Starting server');

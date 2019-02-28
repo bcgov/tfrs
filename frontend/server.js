@@ -30,16 +30,11 @@ if (!isProduction) {
   app.use(fallback('index.html', { root: publicPath }));
 }
 
-io.on('connect', (socket) => {
-  socket.join('global');
-  socket.emit('action', { type: 'SERVER_INITIATED_NOTIFICATION_RELOAD', message: 'connected' });
-});
-
 proxy.on('error', (e) => {
   console.log('Could not connect to proxy please try again');
 });
 
-notifications.connect(io);
+notifications.setup(io);
 
 server.listen(port, () => {
   console.log(`server running on Port ${port}`);
