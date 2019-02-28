@@ -5,6 +5,11 @@ const CREDIT_TRANSACTIONS_HISTORY = {
   LIST: `${BASE_PATH}/credit_transactions_history`
 };
 
+const FUEL_CODES = {
+  ADD: `${BASE_PATH}/fuel_codes/add`,
+  LIST: `${BASE_PATH}/fuel_codes`
+};
+
 const HISTORICAL_DATA_ENTRY = {
   EDIT: `${BASE_PATH}/historical_data_entry/edit/:id`,
   LIST: `${BASE_PATH}/historical_data_entry`
@@ -25,6 +30,7 @@ const USERS = {
 
 export {
   CREDIT_TRANSACTIONS_HISTORY,
+  FUEL_CODES,
   HISTORICAL_DATA_ENTRY,
   ROLES,
   USERS
