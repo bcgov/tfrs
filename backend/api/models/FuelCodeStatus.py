@@ -24,10 +24,11 @@ from django.db import models
 
 from api.managers.FuelCodeStatusManager import FuelCodeStatusManager
 from api.models.mixins.DisplayOrder import DisplayOrder
+from api.models.mixins.EffectiveDates import EffectiveDates
 from auditable.models import Auditable
 
 
-class FuelCodeStatus(Auditable, DisplayOrder):
+class FuelCodeStatus(Auditable, DisplayOrder, EffectiveDates):
     """
     List of Possible statuses for documents.
     """
