@@ -9,7 +9,7 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('api', '0083_add_fuel_code_statuses'),
+        ('api', '0085_add_fuel_code_statuses'),
     ]
 
     operations = [
