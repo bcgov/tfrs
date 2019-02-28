@@ -37,13 +37,14 @@ class FuelCode(Auditable):
     company = models.CharField(
         max_length=100,
         db_comment="Company that produces the fuel. Can be used in "
+                   "Freeform Text"
                    "Auto-suggestion (Will contain repeat entries)."
                    "Not to be confused with the fuel suppliers."
     )
     carbon_intensity = models.DecimalField(
         blank=True,
         null=True,
-        max_digits=999,
+        max_digits=5,
         decimal_places=2,
         default=None,
         db_comment="Number value in gCO2e/MJ; negative values are allowed."
@@ -78,6 +79,7 @@ class FuelCode(Auditable):
         blank=True,
         null=True,
         db_comment="Feedstock used to produce the fuel. "
+                   "Freeform Text"
                    "Auto-suggestion (Will contain repeat entries)."
                    "e.g. Corn, used cooking oil, cow manure, etc."
     )
@@ -86,6 +88,7 @@ class FuelCode(Auditable):
         blank=True,
         null=True,
         db_comment="Region where the feedstock originates."
+                   "Freeform Text"
                    "Auto-suggestion (Will contain repeat entries)."
                    "e.g. US Central"
     )
@@ -95,6 +98,7 @@ class FuelCode(Auditable):
         null=True,
         db_comment="Feedstock Miscellaneous."
                    "Unique aspects to the feedstock production process."
+                   "Freeform Text"
                    "Auto-suggestion (Will contain repeat entries)."
                    "e.g. Methane capture, peat, no peat"
     )
