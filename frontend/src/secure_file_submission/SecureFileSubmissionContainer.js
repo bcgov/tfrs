@@ -8,11 +8,12 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import PropTypes from 'prop-types';
 
-import CreditTransactionRequestsPage from './components/CreditTransactionRequestsPage';
+
 
 import { getDocumentUploads, getDocumentUploadURL } from '../actions/documentUploads';
+import SecureFileSubmissionsPage from './components/SecureFileSubmissionsPage';
 
-class CreditTransactionRequestsContainer extends Component {
+class SecureFileSubmissionContainer extends Component {
   constructor (props) {
     super(props);
     this.state = {
@@ -29,7 +30,7 @@ class CreditTransactionRequestsContainer extends Component {
 
   render () {
     return (
-      <CreditTransactionRequestsPage
+      <SecureFileSubmissionsPage
         categories={this.props.referenceData.documentCategories}
         documentUploads={this.props.documentUploads}
         loggedInUser={this.props.loggedInUser}
@@ -40,10 +41,10 @@ class CreditTransactionRequestsContainer extends Component {
   }
 }
 
-CreditTransactionRequestsContainer.defaultProps = {
+SecureFileSubmissionContainer.defaultProps = {
 };
 
-CreditTransactionRequestsContainer.propTypes = {
+SecureFileSubmissionContainer.propTypes = {
   documentUploads: PropTypes.shape({
     isFetching: PropTypes.bool,
     items: PropTypes.arrayOf(PropTypes.shape())
@@ -76,4 +77,4 @@ const mapDispatchToProps = dispatch => ({
   requestURL: bindActionCreators(getDocumentUploadURL, dispatch)
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(CreditTransactionRequestsContainer);
+export default connect(mapStateToProps, mapDispatchToProps)(SecureFileSubmissionContainer);

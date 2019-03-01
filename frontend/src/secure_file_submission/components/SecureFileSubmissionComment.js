@@ -3,9 +3,9 @@ import PropTypes from 'prop-types';
 import FontAwesomeIcon from '@fortawesome/react-fontawesome';
 import * as Lang from '../../constants/langEnUs';
 import LocalTimestamp from '../../app/components/LocalTimestamp';
-import CreditTransactionRequestCommentForm from './CreditTransactionRequestCommentForm';
+import SecureFileSubmissionCommentForm from './SecureFileSubmissionCommentForm';
 
-class CreditTransactionRequestComment extends Component {
+class SecureFileSubmissionComment extends Component {
   constructor (props) {
     super(props);
     this.state = {
@@ -29,7 +29,7 @@ class CreditTransactionRequestComment extends Component {
 
   renderEditing () {
     return (
-      <CreditTransactionRequestCommentForm
+      <SecureFileSubmissionCommentForm
         isCreatingPrivilegedComment={this.props.comment.privilegedAccess}
         isEditingExistingComment
         comment={this.props.comment.comment}
@@ -97,12 +97,12 @@ class CreditTransactionRequestComment extends Component {
   }
 }
 
-CreditTransactionRequestComment.defaultProps = {
+SecureFileSubmissionComment.defaultProps = {
   isReadOnly: false,
   saveComment: () => {}
 };
 
-CreditTransactionRequestComment.propTypes = {
+SecureFileSubmissionComment.propTypes = {
   comment: PropTypes.shape({
     id: PropTypes.number,
     createTimestamp: PropTypes.string,
@@ -126,4 +126,4 @@ CreditTransactionRequestComment.propTypes = {
   isReadOnly: PropTypes.bool
 };
 
-export default CreditTransactionRequestComment;
+export default SecureFileSubmissionComment;
