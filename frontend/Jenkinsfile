@@ -49,6 +49,8 @@ node("master-frontend-maven-${env.BUILD_NUMBER}") {
 	
     stage('Deploy on Prod') {
 	    input "Deploy to Prod?"
+        input "Deploy to Prod? Please confirm again."
+        input "Deploy to Prod? This is the last confirmation required."
         echo "Deploying to Prod..."
         openshiftTag destStream: 'client', verbose: 'true', destTag: 'prod', srcStream: 'client', srcTag: "${IMAGE_HASH_FRONTEND}"
         sh 'sleep 10s'
@@ -56,6 +58,7 @@ node("master-frontend-maven-${env.BUILD_NUMBER}") {
         openshiftTag destStream: 'notification-server', verbose: 'true', destTag: 'prod', srcStream: 'notification-server', srcTag: "${IMAGE_HASH_NOTIFICATION}"
         sh 'sleep 10s'
         openshiftVerifyDeployment depCfg: 'notification-server', namespace: 'mem-tfrs-prod', replicaCount: 1, verbose: 'false'
+        input "Reminder of deactivating of maintenance page"
     }	
 } //end of node
 
