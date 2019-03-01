@@ -154,7 +154,7 @@
             "kind": "Route",
             "apiVersion": "route.openshift.io/v1",
             "metadata": {
-                "name": "nagios",
+                "name": "monitor",
                 "creationTimestamp": null,
                 "labels": {
                     "app": "nagios"
@@ -164,7 +164,8 @@
                 }
             },
             "spec": {
-                "host": "nagios-mem-tfrs-${ENV_NAME}.pathfinder.gov.bc.ca",
+                "host": "monitor-mem-tfrs-${ENV_NAME}.pathfinder.gov.bc.ca",
+                "path": "/nagios3",
                 "to": {
                     "kind": "Service",
                     "name": "nagios",

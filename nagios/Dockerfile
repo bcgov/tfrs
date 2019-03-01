@@ -35,5 +35,5 @@ RUN chgrp -R root /var/cache/nagios3
 RUN chmod -R g+w /var/cache/nagios3
 RUN chgrp -R root /var/lib/nagios3
 RUN chmod -R g+w /var/lib/nagios3
-RUN chmod -R g+w /
+RUN chmod g+w /
 CMD supervisord
