@@ -20,7 +20,6 @@
     See the License for the specific language governing permissions and
     limitations under the License.
 """
-from django.db.models import Q
 from rest_framework import serializers
 from rest_framework.fields import CharField
 from rest_framework.relations import PrimaryKeyRelatedField
@@ -70,15 +69,19 @@ class UserCreateSerializer(serializers.ModelSerializer):
     organization = PrimaryKeyRelatedField(queryset=Organization.objects.all())
     roles = PrimaryKeyRelatedField(queryset=Role.objects.all(), many=True)
     id = serializers.ReadOnlyField()
-    first_name = CharField(required=True,
-                           allow_blank=False,
-                           error_messages={'blank': 'A First Name is required'})
-    last_name = CharField(required=True,
-                          allow_blank=False,
-                          error_messages={'blank': 'A Last Name is required'})
+    first_name = CharField(
+        required=True,
+        allow_blank=False,
+        error_messages={'blank': 'A First Name is required'})
+
+    last_name = CharField(
+        required=True,
+        allow_blank=False,
+        error_messages={'blank': 'A Last Name is required'})
 
     def validate(self, data):
-        data['display_name'] = '{} {}'.format(data['first_name'], data['last_name'])
+        data['display_name'] = '{} {}'.format(
+            data['first_name'], data['last_name'])
 
         roles = data.get('roles')
         if not roles:
@@ -216,17 +219,21 @@ class UserViewSerializer(serializers.ModelSerializer):
     """
     organization = OrganizationMinSerializer(read_only=True)
     roles = RoleMinSerializer(many=True, read_only=True)
-    keycloak_email = serializers.SerializerMethodField()
+    user_creation_request = serializers.SerializerMethodField()
 
-    def get_keycloak_email(self, obj):
+    def get_user_creation_request(self, obj):
         """
-        Retrieves the keycloak email saved  when the user was created
+        Retrieves the UserCreationRequest linked to the user
+        (Running into errors trying to import it as a serializer)
         """
         user_creation_request = UserCreationRequest.objects.filter(
             user_id=obj.id).first()
 
         if user_creation_request:
-            return user_creation_request.keycloak_email
+            return {
+                'keycloak_email': user_creation_request.keycloak_email,
+                'external_username': user_creation_request.external_username
+            }
 
         return None
 
@@ -235,4 +242,4 @@ class UserViewSerializer(serializers.ModelSerializer):
         fields = (
             'cell_phone', 'display_name', 'email', 'first_name', 'id',
             'is_active', 'last_name', 'organization', 'phone', 'roles',
-            'keycloak_email', 'title')
+            'user_creation_request', 'title')
