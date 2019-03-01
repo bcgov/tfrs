@@ -7,9 +7,9 @@ import Loading from '../../app/components/Loading';
 import * as Lang from '../../constants/langEnUs';
 import history from '../../app/History';
 import PERMISSIONS_SECURE_DOCUMENT_UPLOAD from '../../constants/permissions/SecureDocumentUpload';
-import CreditTransferRequestTable from './CreditTransferRequestTable';
+import SecureFileSubmissionTable from './SecureFileSubmissionTable';
 
-const CreditTransactionRequestsPage = (props) => {
+const SecureFileSubmissionsPage = (props) => {
   const { isFetching, items } = props.documentUploads;
   const isEmpty = items.length === 0;
 
@@ -61,7 +61,7 @@ const CreditTransactionRequestsPage = (props) => {
       </div>
       {isFetching && <Loading />}
       {!isFetching &&
-      <CreditTransferRequestTable
+      <SecureFileSubmissionTable
         items={items}
         isFetching={isFetching}
         isEmpty={isEmpty}
@@ -72,10 +72,10 @@ const CreditTransactionRequestsPage = (props) => {
   );
 };
 
-CreditTransactionRequestsPage.defaultProps = {
+SecureFileSubmissionsPage.defaultProps = {
 };
 
-CreditTransactionRequestsPage.propTypes = {
+SecureFileSubmissionsPage.propTypes = {
   categories: PropTypes.arrayOf(PropTypes.shape()).isRequired,
   documentUploads: PropTypes.shape({
     isFetching: PropTypes.bool,
@@ -87,4 +87,4 @@ CreditTransactionRequestsPage.propTypes = {
   title: PropTypes.string.isRequired
 };
 
-export default CreditTransactionRequestsPage;
+export default SecureFileSubmissionsPage;
