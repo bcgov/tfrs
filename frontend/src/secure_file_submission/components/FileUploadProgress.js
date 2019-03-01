@@ -3,11 +3,7 @@
  */
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import Dropzone from 'react-dropzone';
-import FontAwesomeIcon from '@fortawesome/react-fontawesome';
-
-import CONFIG from '../../config';
-import { getFileSize, getIcon, getScanStatusIcon, validateFiles } from '../../utils/functions';
+import { getFileSize } from '../../utils/functions';
 import {ProgressBar} from "react-bootstrap";
 
 class FileUploadProgress extends Component {
