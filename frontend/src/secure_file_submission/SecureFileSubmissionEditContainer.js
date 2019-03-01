@@ -10,7 +10,6 @@ import { bindActionCreators } from 'redux';
 import Loading from '../app/components/Loading';
 import Modal from '../app/components/Modal';
 
-
 import {
   deleteDocumentUpload, getDocumentUpload, getDocumentUploadURL, partialUpdateDocument,
   uploadDocument
@@ -19,7 +18,7 @@ import history from '../app/History';
 import DOCUMENT_STATUSES from '../constants/documentStatuses';
 import SECURE_DOCUMENT_UPLOAD from '../constants/routes/SecureDocumentUpload';
 import toastr from '../utils/toastr';
-import SecureFileSubmissionForm from "./components/SecureFileSubmissionForm";
+import SecureFileSubmissionForm from './components/SecureFileSubmissionForm';
 
 class SecureFileSubmissionEditContainer extends Component {
   constructor (props) {
