@@ -5,7 +5,36 @@
         "name": "nagios-bc",
         "creationTimestamp": null
     },
+    "parameters": [
+        {
+            "name": "NAGIOS_PASSWORD",
+            "description": "Password for Nagios user.",
+            "from": "[a-zA-Z0-9]{16}",
+            "generate": "expression",
+            "required": true
+        },
+        {
+            "name": "NAGIOS_USER",
+            "value": "nagiosadmin",
+            "required": true
+        }
+    ],
     "objects": [
+        {
+            "apiVersion": "v1",
+            "kind": "Secret",
+            "metadata": {
+                "annotations": {
+                },
+                "name": "nagios-secret",
+                "labels":{
+                }
+            },
+            "stringData": {
+                "NAGIOS_USER": "${MINIO_ACCESS_KEY}",
+                "NAGIOS_PASSWORD": "${MINIO_SECRET_KEY}"
+            }
+        },
         {
             "kind": "ImageStream",
             "apiVersion": "v1",
@@ -44,6 +73,26 @@
                 "strategy": {
                     "type": "Docker",
                     "dockerStrategy": {
+                        "env": [
+                            {
+                                "name": "NAGIOS_USER",
+                                "valueFrom": {
+                                    "secretKeyRef": {
+                                        "name": "nagios-secret",
+                                        "key": "NAGIOS_USER"
+                                    }
+                                }
+                            },
+                            {
+                                "name": "NAGIOS_PASSWORD",
+                                "valueFrom": {
+                                    "secretKeyRef": {
+                                        "name": "nagios-secret",
+                                        "key": "NAGIOS_PASSWORD"
+                                    }
+                                }
+                            }
+                        ],
                         "forcePull": true,
                         "noCache": true
                     }
