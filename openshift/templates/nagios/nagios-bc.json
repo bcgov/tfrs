@@ -31,8 +31,8 @@
                 }
             },
             "stringData": {
-                "NAGIOS_USER": "${MINIO_ACCESS_KEY}",
-                "NAGIOS_PASSWORD": "${MINIO_SECRET_KEY}"
+                "NAGIOS_USER": "${NAGIOS_USER}",
+                "NAGIOS_PASSWORD": "${NAGIOS_PASSWORD}"
             }
         },
         {
