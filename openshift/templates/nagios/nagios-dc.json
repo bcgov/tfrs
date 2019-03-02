@@ -93,7 +93,8 @@
                                 "env": [],
                                 "resources": {
                                     "limits": {
-                                        "cpu": "250m"
+                                        "cpu": "125m",
+                                        "memory": "3Gi"
                                     }
                                 },
                                 "terminationMessagePath": "/dev/termination-log",
