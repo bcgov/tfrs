@@ -1,0 +1,14 @@
+# A simple wildcard hostgroup
+define hostgroup {
+        hostgroup_name  all
+		alias           All Servers
+		members         *
+        }
+
+define hostgroup {
+        hostgroup_name  openshift-services
+		alias           Openshift Services
+		members         dev, test, prod
+        }
+
+
