@@ -17,7 +17,7 @@ ADD nagios3 /etc/nagios3
 RUN chown -R nagios.nagios /etc/nagios3
 ARG NAGIOS_USER
 ARG NAGIOS_PASSWORD
-RUN htpasswd -bc /etc/nagios3/htpasswd.users ${NAGIOS_USER} ${NAGIOS_PASSWORD}
+RUN htpasswd -bc /etc/nagios3/htpasswd.users $NAGIOS_USER $NAGIOS_PASSWORD
 ADD .kube /var/lib/nagios/.kube
 RUN chown -R nagios.nagios /var/lib/nagios/.kube
 # USER nagios
