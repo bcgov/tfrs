@@ -9,6 +9,8 @@ import StatusInterceptor from './components/StatusInterceptor';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import SessionTimer from './components/SessionTimer';
+import Login from './Login';
+import CONFIG from '../config';
 
 class KeycloakAwareApp extends React.Component {
   render () {
@@ -65,15 +67,15 @@ class KeycloakAwareApp extends React.Component {
       return (this.props.children);
     }
 
-    // we're not logged in and not in the process of logging in. trigger one.
-    //
     if ((!this.props.keycloak.user || this.props.keycloak.user.expired) &&
     !this.props.keycloak.isFetching) {
-      return (
-        <div className="App">
-          <p>Redirecting...</p>
-        </div>
-      );
+      if (!CONFIG.KEYCLOAK.CUSTOM_LOGIN ||
+        (window.location.hash.indexOf('session_state') >= 0 &&
+        window.location.hash.indexOf('access_token') >= 0)) {
+        return (<div>Redirecting...</div>);
+      }
+
+      return (<Login />);
     }
 
     return null;
