@@ -96,7 +96,7 @@ class UserAuthentication(authentication.BaseAuthentication):
 
         keys = self._get_keys().items()
 
-        if not keys:
+        if len(keys) == 0:
             raise exceptions.AuthenticationFailed(
                 'no keys available for verification')
 
