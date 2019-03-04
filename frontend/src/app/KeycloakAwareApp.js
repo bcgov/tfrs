@@ -72,7 +72,11 @@ class KeycloakAwareApp extends React.Component {
       if (!CONFIG.KEYCLOAK.CUSTOM_LOGIN ||
         (window.location.hash.indexOf('session_state') >= 0 &&
         window.location.hash.indexOf('access_token') >= 0)) {
-        return (<div>Redirecting...</div>);
+        return (
+          <div className="App">
+            <p>Redirecting...</p>
+          </div>
+        );
       }
 
       return (<Login />);
