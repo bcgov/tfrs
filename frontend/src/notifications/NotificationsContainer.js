@@ -8,7 +8,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import PropTypes from 'prop-types';
 
-import {getNotifications, updateNotifications} from '../actions/notificationActions';
+import { getNotifications, updateNotifications } from '../actions/notificationActions';
 import NotificationsDetails from './components/NotificationsDetails';
 import Modal from '../app/components/Modal';
 
@@ -29,7 +29,7 @@ class NotificationsContainer extends Component {
     this._updateNotifications = this._updateNotifications.bind(this);
   }
 
-  componentWillMount() {
+  componentWillMount () {
     this.props.getNotifications();
   }
 
