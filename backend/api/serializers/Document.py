@@ -509,7 +509,7 @@ class DocumentUpdateSerializer(serializers.ModelSerializer):
                         if len(attachment.filename) > 50 \
                         else attachment.filename
                     errors[attachment.filename] = \
-                        "TRIM must be provided for {}".format(
+                        "Please provide a TRIM Record # for {}".format(
                             filename
                         )
 
