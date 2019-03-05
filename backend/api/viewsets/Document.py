@@ -14,8 +14,6 @@ from api.models.DocumentCategory import DocumentCategory
 from api.models.DocumentFileAttachment import DocumentFileAttachment
 from api.models.DocumentStatus import DocumentStatus
 from api.models.DocumentCreditTrade import DocumentCreditTrade
-from api.notifications.notification_types import NotificationType
-from api.notifications.notifications import AMQPNotificationService
 from api.permissions.Documents import DocumentPermissions
 from api.serializers.Document import \
     DocumentCreateSerializer, DocumentDeleteSerializer, \
@@ -122,16 +120,10 @@ class DocumentViewSet(AuditableMixin,
                 status='Pending Submission')
             document.save()
 
-            AMQPNotificationService.send_notification(
-                interested_organization=user.organization,
-                message=NotificationType.DOCUMENT_PENDING_SUBMISSION.name,
-                notification_type=NotificationType.DOCUMENT_PENDING_SUBMISSION,
-                originating_user=user,
-                related_document=document
-            )
+            for file in files:
+                SecurityScan.send_scan_request(file)
 
-        for file in files:
-            SecurityScan.send_scan_request(file)
+        DocumentService.send_notification(document, user)
 
     def perform_update(self, serializer):
         user = self.request.user
@@ -147,34 +139,10 @@ class DocumentViewSet(AuditableMixin,
                 status='Pending Submission')
             document.save()
 
-            AMQPNotificationService.send_notification(
-                interested_organization=user.organization,
-                message=NotificationType.DOCUMENT_PENDING_SUBMISSION.name,
-                notification_type=NotificationType.DOCUMENT_PENDING_SUBMISSION,
-                originating_user=user,
-                related_document=document
-            )
+            for file in files:
+                SecurityScan.send_scan_request(file)
 
-        for file in files:
-            SecurityScan.send_scan_request(file)
-
-        if document.status.status == 'Received':
-            AMQPNotificationService.send_notification(
-                interested_organization=user.organization,
-                message=NotificationType.DOCUMENT_RECEIVED.name,
-                notification_type=NotificationType.DOCUMENT_RECEIVED,
-                originating_user=user,
-                related_document=document
-            )
-
-        if document.status.status == 'Archived':
-            AMQPNotificationService.send_notification(
-                interested_organization=user.organization,
-                message=NotificationType.DOCUMENT_ARCHIVED.name,
-                notification_type=NotificationType.DOCUMENT_ARCHIVED,
-                originating_user=user,
-                related_document=document
-            )
+        DocumentService.send_notification(document, user)
 
     @detail_route(methods=['put'])
     @permission_required('DOCUMENTS_LINK_TO_CREDIT_TRADE')
