@@ -457,9 +457,9 @@ class DocumentUpdateSerializer(serializers.ModelSerializer):
         if not DocumentService.validate_status(document.status, status):
             if status.status == 'Draft':
                 raise serializers.ValidationError({
-                    'invalidStatus': "Error! The submission cannot be "
-                                     "rescinded because it has been marked "
-                                     "as received by a Government user."
+                    'invalidStatus': "The submission cannot be rescinded "
+                                     "because it has been marked as received "
+                                     "by a Government user."
                                      "Please refresh your browser."
                 })
 
