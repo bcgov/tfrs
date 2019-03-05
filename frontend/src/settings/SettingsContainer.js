@@ -92,7 +92,6 @@ class SettingsContainer extends Component {
   }
 
   _toggleCheck (id, fields) {
-
     const fieldState = { ...this.state.fields };
     const index = fieldState.settings.notifications.findIndex(state => (
       state.id === id && state.type === fields.type && state.field === fields.field));
