@@ -5,12 +5,16 @@ from rest_framework.decorators import list_route
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 
+from api.models.ApprovedFuel import ApprovedFuel
 from api.models.FuelCode import FuelCode
 from api.models.FuelCodeStatus import FuelCodeStatus
+from api.models.TransportMode import TransportMode
 from api.permissions.FuelCode import FuelCodePermissions
+from api.serializers.ApprovedFuel import ApprovedFuelSerializer
 from api.serializers.FuelCode import \
     FuelCodeCreateSerializer, FuelCodeSerializer
 from api.serializers.FuelCodeStatus import FuelCodeStatusSerializer
+from api.serializers.TransportMode import TransportModeSerializer
 from auditable.views import AuditableMixin
 
 
@@ -31,6 +35,9 @@ class FuelCodeViewSet(AuditableMixin,
         'default': FuelCodeSerializer,
         'create': FuelCodeCreateSerializer,
         'statuses': FuelCodeStatusSerializer,
+        'transport_modes': TransportModeSerializer,
+        'approved_fuels': ApprovedFuelSerializer,
+
     }
 
     queryset = FuelCode.objects.all()
@@ -65,3 +72,28 @@ class FuelCodeViewSet(AuditableMixin,
             statuses, read_only=True, many=True)
 
         return Response(serializer.data)
+
+    @list_route(methods=['get'], permission_classes=[AllowAny])
+    def transport_modes(self, request):
+        """
+        Gets the list of transport modes
+        """
+        transport_modes = TransportMode.objects.all()
+
+        serializer = self.get_serializer(
+            transport_modes, read_only=True, many=True)
+
+        return Response(serializer.data)
+
+    @list_route(methods=['get'], permission_classes=[AllowAny])
+    def approved_fuels(self, request):
+        """
+        Gets the list of transport modes
+        """
+        approved_fuels = ApprovedFuel.objects.all()
+
+        serializer = self.get_serializer(
+            approved_fuels, read_only=True, many=True)
+
+        return Response(serializer.data)
+
