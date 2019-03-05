@@ -19,6 +19,8 @@ const FuelCodeForm = props => (
       <FuelCodeFormDetails
         addToFields={props.addToFields}
         fields={props.fields}
+        approvedFuels={props.approvedFuels}
+        transportModes={props.transportModes}
         handleInputChange={props.handleInputChange}
       />
 
@@ -67,6 +69,8 @@ FuelCodeForm.propTypes = {
   }).isRequired,
   handleInputChange: PropTypes.func.isRequired,
   handleSubmit: PropTypes.func.isRequired,
+  approvedFuels: PropTypes.arrayOf(PropTypes.shape()).isRequired,
+  transportModes: PropTypes.arrayOf(PropTypes.shape()).isRequired,
   title: PropTypes.string.isRequired
 };
 
