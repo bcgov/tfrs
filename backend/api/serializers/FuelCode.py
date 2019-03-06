@@ -21,8 +21,11 @@
     limitations under the License.
 """
 from rest_framework import serializers
+from rest_framework.relations import PrimaryKeyRelatedField, SlugRelatedField
 
+from api.models.ApprovedFuel import ApprovedFuel
 from api.models.FuelCode import FuelCode
+from api.models.TransportMode import TransportMode, FeedstockTransportMode, FuelTransportMode
 from api.serializers.FuelCodeStatus import FuelCodeStatusSerializer
 from api.serializers.User import UserMinSerializer
 
@@ -34,6 +37,9 @@ class FuelCodeSerializer(serializers.ModelSerializer):
     status = FuelCodeStatusSerializer(read_only=True)
     create_user = UserMinSerializer(read_only=True)
     update_user = UserMinSerializer(read_only=True)
+
+    fuel = SlugRelatedField(read_only=True,
+                            slug_field='name')
 
     class Meta:
         model = FuelCode
@@ -50,6 +56,44 @@ class FuelCodeCreateSerializer(serializers.ModelSerializer):
     """
     Creation Serializer for Fuel Codes
     """
+
+    fuel = SlugRelatedField(allow_null=False,
+                            slug_field='name',
+                            queryset=ApprovedFuel.objects.all())
+
+    feedstock_transport_mode = SlugRelatedField(allow_null=False,
+                                                many=True,
+                                                slug_field='name',
+                                                queryset=TransportMode.objects.all())
+
+    fuel_transport_mode = SlugRelatedField(allow_null=False,
+                                           many=True,
+                                           slug_field='name',
+                                           queryset=TransportMode.objects.all())
+
+    def create(self, validated_data):
+
+        feedstock_modes = validated_data.pop('feedstock_transport_mode')
+        fuel_modes = validated_data.pop('fuel_transport_mode')
+
+        instance = FuelCode.objects.create(**validated_data)
+
+        if feedstock_modes:
+            for feedstock_mode in feedstock_modes:
+                FeedstockTransportMode.objects.create(
+                    fuel_code=instance,
+                    transport_mode=feedstock_mode
+                )
+
+        if fuel_modes:
+            for fuel_mode in fuel_modes:
+                FuelTransportMode.objects.create(
+                    fuel_code=instance,
+                    transport_mode=fuel_mode
+                )
+
+        return instance
+
     class Meta:
         model = FuelCode
         fields = '__all__'
