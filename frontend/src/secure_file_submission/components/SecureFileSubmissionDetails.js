@@ -5,19 +5,19 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import FontAwesomeIcon from '@fortawesome/react-fontawesome';
 import axios from 'axios';
+import { Link } from 'react-router-dom';
 
 import Errors from '../../app/components/Errors';
 import history from '../../app/History';
 import * as Lang from '../../constants/langEnUs';
 import SECURE_DOCUMENT_UPLOAD from '../../constants/routes/SecureDocumentUpload';
-import {getFileSize, getIcon, getScanStatusIcon} from '../../utils/functions';
-import CreditTransactionRequestComment from './CreditTransactionRequestComment';
-import CreditTransactionRequestCommentButtons from './CreditTransactionRequestCommentButtons';
-import CreditTransactionRequestCommentForm from './CreditTransactionRequestCommentForm';
-import {Link} from "react-router-dom";
-import CREDIT_TRANSACTIONS from "../../constants/routes/CreditTransactions";
+import { getFileSize, getIcon, getScanStatusIcon } from '../../utils/functions';
+import SecureFileSubmissionComment from './SecureFileSubmissionComment';
+import SecureFileSubmissionCommentButtons from './SecureFileSubmissionCommentButtons';
+import SecureFileSubmissionCommentForm from './SecureFileSubmissionCommentForm';
+import CREDIT_TRANSACTIONS from '../../constants/routes/CreditTransactions';
 
-const CreditTransactionRequestDetails = props => (
+const SecureFileSubmissionDetails = props => (
   <div className="page-credit-transaction-request-details">
     <h1>{props.item.type.description} Submission</h1>
 
@@ -91,9 +91,10 @@ const CreditTransactionRequestDetails = props => (
             <div className="form-group col-md-12">
               <label htmlFor="document-type">Attachments:</label>
               <div className={`file-submission-attachments ${
-                ((props.item.status.status === 'Received' && props.availableActions.includes('Archived'))
-                  || props.item.status.status === 'Archived') ? 'hide-security-scan' : 'hide-trim'}`
-              }>
+                ((props.item.status.status === 'Received' && props.availableActions.includes('Archived')) ||
+                props.item.status.status === 'Archived') ? 'hide-security-scan' : 'hide-trim'}`
+              }
+              >
                 <div className="row">
                   <div className="col-xs-6 header">Filename</div>
                   <div className="col-xs-3 size header">Size</div>
@@ -104,7 +105,7 @@ const CreditTransactionRequestDetails = props => (
                   <div className="row" key={attachment.url}>
                     <div className="col-xs-6 filename">
                       <span className="icon">
-                        <FontAwesomeIcon icon={getIcon(attachment.mimeType)} fixedWidth/>
+                        <FontAwesomeIcon icon={getIcon(attachment.mimeType)} fixedWidth />
                       </span>
                       <button
                         className="text"
@@ -174,51 +175,52 @@ const CreditTransactionRequestDetails = props => (
           <div className="row">
             <div className="form-group col-md-12">
               <label htmlFor="credit-transactions">Linked Credit Transactions:
-                {(props.item.creditTrades && props.item.creditTrades.length > 0) ?
-                  (<table>
-                    <thead>
-                    <tr>
-                      <th>Type</th>
-                      <th>Status</th>
-                      <th>Link</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    {props.item.creditTrades.map(creditTrade => (
-                      <tr key={creditTrade.id}>
-                        <td>{creditTrade.type.theType}</td>
-                        <td>{creditTrade.status.status}</td>
-                        <td>
-                          <Link to={CREDIT_TRANSACTIONS.DETAILS.replace(':id', creditTrade.id)}>
-                            <FontAwesomeIcon icon="box-open"/>
-                          </Link>
-                        </td>
-                        <td>
-                          <button
-                            className="btn btn-danger"
-                            type="button"
-                            onClick={() => props.unLink(creditTrade.id)}
-                          >
-                            <FontAwesomeIcon icon="trash"/>
-                          </button>
-                        </td>
-                      </tr>
-                    ))}
-                    </tbody>
-                  </table>) : (<p>None</p>)
+                {(props.item.creditTrades && props.item.creditTrades.length > 0)
+                  ? (
+                    <table>
+                      <thead>
+                        <tr>
+                          <th>Type</th>
+                          <th>Status</th>
+                          <th>Link</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {props.item.creditTrades.map(creditTrade => (
+                          <tr key={creditTrade.id}>
+                            <td>{creditTrade.type.theType}</td>
+                            <td>{creditTrade.status.status}</td>
+                            <td>
+                              <Link to={CREDIT_TRANSACTIONS.DETAILS.replace(':id', creditTrade.id)}>
+                                <FontAwesomeIcon icon="box-open" />
+                              </Link>
+                            </td>
+                            <td>
+                              <button
+                                className="btn btn-danger"
+                                type="button"
+                                onClick={() => props.unLink(creditTrade.id)}
+                              >
+                                <FontAwesomeIcon icon="trash" />
+                              </button>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>) : (<p>None</p>)
                 }
               </label>
             </div>
             {props.canLink &&
             <div className="form-group col-md-12">
-                <button
-                  id="add-credit-transfer-link"
-                  className="btn btn-primary"
-                  onClick={() => props.addLink()}
-                  type="button"
-                >
-                  {Lang.BTN_LINK_CREDIT_TRANSACTION}
-                </button>
+              <button
+                id="add-credit-transfer-link"
+                className="btn btn-primary"
+                onClick={() => props.addLink()}
+                type="button"
+              >
+                {Lang.BTN_LINK_CREDIT_TRANSACTION}
+              </button>
             </div>
             }
           </div>
@@ -229,27 +231,26 @@ const CreditTransactionRequestDetails = props => (
       {Object.keys(props.errors).length > 0 &&
       <div className="row">
         <div className="col-md-12">
-          <Errors errors={props.errors}/>
+          <Errors errors={props.errors} />
         </div>
       </div>
       }
 
       {props.item.comments.length > 0 && <h3 className="comments-header">Comments</h3>}
       {props.item.comments.map(c => (
-        <CreditTransactionRequestComment comment={c} key={c.id} saveComment={props.saveComment}/>
+        <SecureFileSubmissionComment comment={c} key={c.id} saveComment={props.saveComment} />
       ))
       }
-      {!['Archived', 'Received'].includes(props.item.status.status) &&
       <div className="row">
         <div className="col-md-12">
-          <CreditTransactionRequestCommentButtons
+          <SecureFileSubmissionCommentButtons
             addComment={props.addComment}
             canComment={props.canComment}
             canCreatePrivilegedComment={props.canCreatePrivilegedComment}
             isCommenting={props.isCommenting}
           />
           {props.isCommenting &&
-          <CreditTransactionRequestCommentForm
+          <SecureFileSubmissionCommentForm
             cancelComment={props.cancelComment}
             isCreatingPrivilegedComment={props.isCreatingPrivilegedComment}
             saveComment={props.saveComment}
@@ -257,7 +258,6 @@ const CreditTransactionRequestDetails = props => (
           }
         </div>
       </div>
-      }
     </div>
 
     <div className="btn-container">
@@ -266,7 +266,7 @@ const CreditTransactionRequestDetails = props => (
         onClick={() => history.goBack()}
         type="button"
       >
-        <FontAwesomeIcon icon="arrow-circle-left"/> {Lang.BTN_APP_CANCEL}
+        <FontAwesomeIcon icon="arrow-circle-left" /> {Lang.BTN_APP_CANCEL}
       </button>
 
       {props.availableActions.includes('Cancelled') &&
@@ -276,18 +276,18 @@ const CreditTransactionRequestDetails = props => (
         data-toggle="modal"
         type="button"
       >
-        <FontAwesomeIcon icon="minus-circle"/> {Lang.BTN_DELETE_DRAFT}
+        <FontAwesomeIcon icon="minus-circle" /> {Lang.BTN_DELETE_DRAFT}
       </button>
       }
 
       {props.availableActions.includes('Draft') &&
-      props.item.status.status === 'Draft' &&
+      ['Draft', 'Security Scan Failed'].includes(props.item.status.status) &&
       <button
         className="btn btn-default"
         type="button"
         onClick={() => history.push(SECURE_DOCUMENT_UPLOAD.EDIT.replace(':id', props.item.id))}
       >
-        <FontAwesomeIcon icon="edit"/> {Lang.BTN_EDIT}
+        <FontAwesomeIcon icon="edit" /> {Lang.BTN_EDIT}
       </button>
       }
 
@@ -299,7 +299,7 @@ const CreditTransactionRequestDetails = props => (
         data-toggle="modal"
         type="button"
       >
-        <FontAwesomeIcon icon="undo-alt"/> {Lang.BTN_RESCIND_AS_DRAFT}
+        <FontAwesomeIcon icon="undo-alt" /> {Lang.BTN_RESCIND_AS_DRAFT}
       </button>
       }
 
@@ -310,7 +310,7 @@ const CreditTransactionRequestDetails = props => (
         data-toggle="modal"
         type="button"
       >
-        <FontAwesomeIcon icon="share-square"/> Submit
+        <FontAwesomeIcon icon="share-square" /> Submit
       </button>
       }
       {props.availableActions.includes('Received') &&
@@ -320,7 +320,7 @@ const CreditTransactionRequestDetails = props => (
         data-toggle="modal"
         type="button"
       >
-        <FontAwesomeIcon icon="check"/> Received
+        <FontAwesomeIcon icon="check" /> Received
       </button>
       }
       {props.availableActions.includes('Archived') &&
@@ -330,18 +330,18 @@ const CreditTransactionRequestDetails = props => (
         data-toggle="modal"
         type="button"
       >
-        <FontAwesomeIcon icon="archive"/> Archive
+        <FontAwesomeIcon icon="archive" /> Archive
       </button>
       }
     </div>
   </div>
 );
 
-CreditTransactionRequestDetails.defaultProps = {
+SecureFileSubmissionDetails.defaultProps = {
   errors: {}
 };
 
-CreditTransactionRequestDetails.propTypes = {
+SecureFileSubmissionDetails.propTypes = {
   addComment: PropTypes.func.isRequired,
   availableActions: PropTypes.arrayOf(PropTypes.string).isRequired,
   cancelComment: PropTypes.func.isRequired,
@@ -361,4 +361,4 @@ CreditTransactionRequestDetails.propTypes = {
   saveComment: PropTypes.func.isRequired
 };
 
-export default CreditTransactionRequestDetails;
+export default SecureFileSubmissionDetails;

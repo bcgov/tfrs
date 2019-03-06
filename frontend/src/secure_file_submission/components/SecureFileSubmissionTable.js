@@ -12,7 +12,7 @@ import moment from 'moment';
 import history from '../../app/History';
 import SECURE_DOCUMENT_UPLOAD from '../../constants/routes/SecureDocumentUpload';
 
-const CreditTransferRequestTable = (props) => {
+const SecureFileSubmissionTable = (props) => {
   const columns = [{
     accessor: 'id',
     className: 'col-id',
@@ -136,9 +136,9 @@ const CreditTransferRequestTable = (props) => {
   );
 };
 
-CreditTransferRequestTable.defaultProps = {};
+SecureFileSubmissionTable.defaultProps = {};
 
-CreditTransferRequestTable.propTypes = {
+SecureFileSubmissionTable.propTypes = {
   items: PropTypes.arrayOf(PropTypes.shape({
     createUser: PropTypes.shape({
       organization: PropTypes.shape({
@@ -160,4 +160,4 @@ CreditTransferRequestTable.propTypes = {
   }).isRequired
 };
 
-export default CreditTransferRequestTable;
+export default SecureFileSubmissionTable;

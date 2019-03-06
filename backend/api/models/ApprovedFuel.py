@@ -22,36 +22,33 @@
 """
 from django.db import models
 
-from api.managers.FuelCodeStatusManager import FuelCodeStatusManager
-from api.models.mixins.DisplayOrder import DisplayOrder
+from api.managers.ApprovedFuelManager import ApprovedFuelManager
 from api.models.mixins.EffectiveDates import EffectiveDates
 from auditable.models import Auditable
 
 
-class FuelCodeStatus(Auditable, DisplayOrder, EffectiveDates):
+class ApprovedFuel(Auditable, EffectiveDates):
     """
-    List of Possible statuses for documents.
+    Approved Fuels
     """
-    status = models.CharField(
-        max_length=25,
-        blank=True,
-        null=True,
+    name = models.CharField(
+        max_length=100,
+        blank=False,
+        null=False,
         unique=True,
-        db_comment="Contains an enumerated value to describe the fuel code "
-                   "status. This is a unique natural key."
+        db_comment="Approved fuel name"
     )
 
-    objects = FuelCodeStatusManager()
+    objects = ApprovedFuelManager()
 
     def natural_key(self):
         """
-        Allows type 'status' to be used to identify
+        Allows type 'name' to be used to identify
         a row in the table
         """
-        return (self.status,)
+        return (self.name,)
 
     class Meta:
-        db_table = 'fuel_code_status'
+        db_table = 'approved_fuel_type'
 
-    db_table_comment = "List of possible statuses." \
-                       "(Cancelled, Draft, Submitted)"
+    db_table_comment = "List of approved fuel types (eg LNG, Ethanol)"

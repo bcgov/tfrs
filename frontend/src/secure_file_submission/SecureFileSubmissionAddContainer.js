@@ -7,7 +7,6 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
-import CreditTransactionRequestForm from './components/CreditTransactionRequestForm';
 import Loading from '../app/components/Loading';
 import Modal from '../app/components/Modal';
 import history from '../app/History';
@@ -21,8 +20,9 @@ import DOCUMENT_STATUSES from '../constants/documentStatuses';
 import SECURE_DOCUMENT_UPLOAD from '../constants/routes/SecureDocumentUpload';
 import toastr from '../utils/toastr';
 import FileUploadProgress from './components/FileUploadProgress';
+import SecureFileSubmissionForm from './components/SecureFileSubmissionForm';
 
-class CreditTransactionRequestAddContainer extends Component {
+class SecureFileSubmissionAddContainer extends Component {
   constructor (props) {
     super(props);
 
@@ -155,23 +155,20 @@ class CreditTransactionRequestAddContainer extends Component {
               uploadProgress
             });
 
-            this.props.uploadDocument(
-              response.data.put, blob,
-              (progressEvent) => {
-                let uploadProgress = this.state.uploadProgress;
-                uploadProgress[i] = {
-                  ...uploadProgress[i],
-                  progress: {
-                    loaded: progressEvent.loaded,
-                    total: progressEvent.total
-                  }
-                };
-                this.setState({
-                  ...this.state,
-                  uploadProgress
-                });
-              }
-            ).then(() => {
+            this.props.uploadDocument(response.data.put, blob, (progressEvent) => {
+              let uploadProgress = this.state.uploadProgress;
+              uploadProgress[i] = {
+                ...uploadProgress[i],
+                progress: {
+                  loaded: progressEvent.loaded,
+                  total: progressEvent.total
+                }
+              };
+              this.setState({
+                ...this.state,
+                uploadProgress
+              });
+            }).then(() => {
               let uploadProgress = this.state.uploadProgress;
               uploadProgress[i] = {
                 ...uploadProgress[i],
@@ -245,18 +242,16 @@ class CreditTransactionRequestAddContainer extends Component {
     }
 
     if (this.state.uploadState === 'progress') {
-      return (
-        <FileUploadProgress
-          progress={this.state.uploadProgress}
-          files={this.state.fields.files}
-        />
-      );
+      return (<FileUploadProgress
+        progress={this.state.uploadProgress}
+        files={this.state.fields.files}
+      />);
     }
 
     const availableActions = ['Draft', 'Submitted'];
 
     return ([
-      <CreditTransactionRequestForm
+      <SecureFileSubmissionForm
         addToFields={this._addToFields}
         availableActions={availableActions}
         categories={this.props.referenceData.documentCategories}
@@ -265,7 +260,7 @@ class CreditTransactionRequestAddContainer extends Component {
         fields={this.state.fields}
         handleInputChange={this._handleInputChange}
         handleSubmit={this._handleSubmit}
-        key="creditTransactionForm"
+        key="secureFileSubmission"
         loggedInUser={this.props.loggedInUser}
         validationErrors={this.state.validationErrors}
       />,
@@ -282,12 +277,12 @@ class CreditTransactionRequestAddContainer extends Component {
   }
 }
 
-CreditTransactionRequestAddContainer.defaultProps = {
+SecureFileSubmissionAddContainer.defaultProps = {
   errors: {},
   validationErrors: {}
 };
 
-CreditTransactionRequestAddContainer.propTypes = {
+SecureFileSubmissionAddContainer.propTypes = {
   addDocumentUpload: PropTypes.func.isRequired,
   clearDocumentUploadError: PropTypes.func.isRequired,
   errors: PropTypes.shape({
@@ -336,4 +331,4 @@ const mapDispatchToProps = dispatch => ({
   uploadDocument: bindActionCreators(uploadDocument, dispatch)
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(CreditTransactionRequestAddContainer);
+export default connect(mapStateToProps, mapDispatchToProps)(SecureFileSubmissionAddContainer);

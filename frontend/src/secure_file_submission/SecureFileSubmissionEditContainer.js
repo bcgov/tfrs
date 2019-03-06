@@ -9,7 +9,6 @@ import { bindActionCreators } from 'redux';
 
 import Loading from '../app/components/Loading';
 import Modal from '../app/components/Modal';
-import CreditTransactionRequestForm from './components/CreditTransactionRequestForm';
 
 import {
   deleteDocumentUpload, getDocumentUpload, getDocumentUploadURL, partialUpdateDocument,
@@ -19,8 +18,9 @@ import history from '../app/History';
 import DOCUMENT_STATUSES from '../constants/documentStatuses';
 import SECURE_DOCUMENT_UPLOAD from '../constants/routes/SecureDocumentUpload';
 import toastr from '../utils/toastr';
+import SecureFileSubmissionForm from './components/SecureFileSubmissionForm';
 
-class CreditTransactionRequestEditContainer extends Component {
+class SecureFileSubmissionEditContainer extends Component {
   constructor (props) {
     super(props);
 
@@ -229,7 +229,7 @@ class CreditTransactionRequestEditContainer extends Component {
     }
 
     return ([
-      <CreditTransactionRequestForm
+      <SecureFileSubmissionForm
         addToFields={this._addToFields}
         availableActions={availableActions}
         categories={this.props.referenceData.documentCategories}
@@ -239,7 +239,7 @@ class CreditTransactionRequestEditContainer extends Component {
         fields={this.state.fields}
         handleInputChange={this._handleInputChange}
         handleSubmit={this._handleSubmit}
-        key="creditTransactionForm"
+        key="secureFileSubmissionForm"
         loggedInUser={this.props.loggedInUser}
         validationErrors={this.state.validationErrors}
       />,
@@ -263,12 +263,12 @@ class CreditTransactionRequestEditContainer extends Component {
   }
 }
 
-CreditTransactionRequestEditContainer.defaultProps = {
+SecureFileSubmissionEditContainer.defaultProps = {
   errors: {},
   validationErrors: {}
 };
 
-CreditTransactionRequestEditContainer.propTypes = {
+SecureFileSubmissionEditContainer.propTypes = {
   deleteDocumentUpload: PropTypes.func.isRequired,
   errors: PropTypes.shape({
     title: PropTypes.arrayOf(PropTypes.string)
@@ -319,4 +319,4 @@ const mapDispatchToProps = dispatch => ({
   partialUpdateDocument: bindActionCreators(partialUpdateDocument, dispatch)
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(CreditTransactionRequestEditContainer);
+export default connect(mapStateToProps, mapDispatchToProps)(SecureFileSubmissionEditContainer);

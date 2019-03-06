@@ -58,6 +58,7 @@ services:
           - SMTP_SERVER_PORT=2500
           - EMAIL_SENDING_ENABLED=True
           - EMAIL_FROM_ADDRESS=tfrs-dev@test.local
+          - FUEL_CODES_API_ENABLED=True
         env_file:
             - minio.env
         depends_on:

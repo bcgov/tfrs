@@ -21,7 +21,7 @@ export const COMMENTS_API = '/comments';
 export const REFERENCE_DATA_API_ENDPOINTS = {
   organizationTypes: '/organizations/types',
   organizationActionsTypes: '/organizations/actions_types',
-  organizationStatuses: '/organizations/statuses'
+  organizationStatuses: '/organizations/statuses',
 };
 
 if (CONFIG.SECURE_DOCUMENT_UPLOAD.ENABLED) {
@@ -31,6 +31,8 @@ if (CONFIG.SECURE_DOCUMENT_UPLOAD.ENABLED) {
 
 if (CONFIG.FUEL_CODES.ENABLED) {
   REFERENCE_DATA_API_ENDPOINTS.fuelCodeStatuses = '/fuel_codes/statuses';
+  REFERENCE_DATA_API_ENDPOINTS.approvedFuels = '/fuel_codes/approved_fuels';
+  REFERENCE_DATA_API_ENDPOINTS.transportModes = '/fuel_codes/transport_modes';
 }
 
 export const USERS = '/users';

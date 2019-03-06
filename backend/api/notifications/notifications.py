@@ -3,8 +3,8 @@ from email.utils import make_msgid
 from typing import List
 
 import pika
-from django.core.cache import caches
 from pika.exceptions import AMQPError
+from django.core.cache import caches
 from django.db import transaction
 from rest_framework import serializers
 
@@ -192,7 +192,8 @@ class AMQPNotificationService:
             return cached
 
         all_channels = NotificationChannel.objects.all()
-        user_subscriptions = NotificationSubscription.objects.filter(user_id=user.id)
+        user_subscriptions = NotificationSubscription.objects.filter(
+            user_id=user.id)
         all_notification_types = NotificationType
 
         effective_subscriptions = []
@@ -265,24 +266,27 @@ class AMQPNotificationService:
         if message is None or len(message) == 0:
             raise InvalidNotificationArguments('msg is required')
 
+        app_subscription = EffectiveSubscription(
+            channel=NotificationChannel.objects.get(channel='IN_APP'),
+            notification_type=notification_type,
+            subscribed=True
+        )
+
+        email_subscription = EffectiveSubscription(
+            channel=NotificationChannel.objects.get(channel='EMAIL'),
+            notification_type=notification_type,
+            subscribed=True
+        )
+
         for recipient in AMQPNotificationService.__determine_message_recipients(
                 is_global=is_global,
                 interested_roles=interested_roles,
                 interested_organization=interested_organization
         ):
+            if not recipient.is_active:
+                continue
+
             effective_subscriptions = AMQPNotificationService.compute_effective_subscriptions(recipient)
-
-            app_subscription = EffectiveSubscription(
-                channel=NotificationChannel.objects.get(channel='IN_APP'),
-                notification_type=notification_type,
-                subscribed=True
-            )
-
-            email_subscription = EffectiveSubscription(
-                channel=NotificationChannel.objects.get(channel='EMAIL'),
-                notification_type=notification_type,
-                subscribed=True
-            )
 
             if app_subscription in effective_subscriptions:
                 notification = NotificationMessage(

@@ -51,5 +51,7 @@ from . import DocumentComment
 from . import DocumentCreditTrade
 from . import DocumentHistory
 from . import DocumentFileAttachment
+from . import ApprovedFuel
+from . import TransportMode
 
 patch_fields()

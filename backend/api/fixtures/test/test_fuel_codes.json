@@ -11,13 +11,25 @@
     "feedstock": "Test",
     "feedstock_location": "Test",
     "feedstock_misc": "Test",
-    "feedstock_transport_mode": "Test",
     "former_company": "Test",
-    "fuel": "Fuel Test",
+    "fuel": ["LNG"],
     "fuel_code": "Submitted Fuel Code",
-    "fuel_transport_mode": "Test",
     "status": ["Submitted"]
   },
   "model": "api.fuelcode",
-  "pk": null
-}]
+  "pk": 1
+},
+  {
+    "fields": {
+      "fuel_code": 1,
+      "transport_mode": ["Pipeline"]
+    },
+    "model": "api.feedstocktransportmode"
+  },  {
+  "fields": {
+    "fuel_code": 1,
+    "transport_mode": ["Rail"]
+  },
+  "model": "api.fueltransportmode"
+}
+]
