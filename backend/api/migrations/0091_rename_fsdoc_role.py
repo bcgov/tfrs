@@ -35,7 +35,7 @@ class Migration(migrations.Migration):
     Attaches the functions for the migrations
     """
     dependencies = [
-        ('api', '0088_auto_20190228_1911'),
+        ('api', '0090_fuel_code_status_set_effective_dates'),
     ]
 
     operations = [

@@ -82,7 +82,7 @@ def remove_transport_modes_and_approved_fuels(apps, schema_editor):
 
 class Migration(migrations.Migration):
     dependencies = [
-        ('api', '0091_auto_20190305_0417'),
+        ('api', '0092_auto_20190305_0417'),
     ]
 
     operations = [

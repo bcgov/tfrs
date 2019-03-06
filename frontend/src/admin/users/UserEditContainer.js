@@ -27,7 +27,10 @@ class UserEditContainer extends Component {
       fields: {
         firstName: '',
         lastName: '',
-        bceid: '',
+        userCreationRequest: {
+          keycloakEmail: '',
+          externalUsername: ''
+        },
         email: '',
         organization: null,
         mobilePhone: '',
@@ -75,12 +78,15 @@ class UserEditContainer extends Component {
       const fieldState = {
         firstName: props.user.details.firstName || '',
         lastName: props.user.details.lastName || '',
-        bceid: props.user.details.keycloakEmail || '',
         email: props.user.details.email || '',
         organization: props.user.details.organization || null,
         mobilePhone: props.user.details.cellPhone || '',
         status: props.user.details.isActive ? 'active' : 'inactive',
         title: props.user.details.title || '',
+        userCreationRequest: props.user.details.userCreationRequest || {
+          keycloakEmail: '',
+          externalUsername: ''
+        },
         workPhone: props.user.details.phone || '',
         roles: props.user.details.roles.map(role => ({
           id: role.id,

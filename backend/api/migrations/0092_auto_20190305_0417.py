@@ -11,7 +11,7 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('api', '0090_fuel_code_status_set_effective_dates'),
+        ('api', '0091_rename_fsdoc_role'),
     ]
 
     operations = [
