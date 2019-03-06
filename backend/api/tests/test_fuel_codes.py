@@ -67,7 +67,6 @@ class TestFuelCodes(BaseTestCase):
         """
         status_draft = FuelCodeStatus.objects.filter(status="Draft").first()
         fuel_code = 'Test Fuel Code'
-        fuel = 'Test Fuel'
 
         payload = {
             'applicationDate': '2019-01-01',
@@ -81,11 +80,11 @@ class TestFuelCodes(BaseTestCase):
             'feedstock': 'Test',
             'feedstockLocation': 'Test',
             'feedstockMisc': 'Test',
-            'feedstockTransportMode': 'Test',
+            'feedstockTransportMode': ['Pipeline', 'Truck'],
             'formerCompany': 'Test',
-            'fuel': fuel,
+            'fuel': 'LNG',
             'fuelCode': fuel_code,
-            'fuelTransportMode': 'Test',
+            'fuelTransportMode': ['Rail'],
             'status': status_draft.id
         }
 
@@ -102,9 +101,10 @@ class TestFuelCodes(BaseTestCase):
         fuel_code_obj = FuelCode.objects.get(id=response_data['id'])
 
         self.assertEqual(fuel_code_obj.fuel_code, fuel_code)
-        self.assertEqual(fuel_code_obj.fuel, fuel)
+        self.assertEqual(fuel_code_obj.fuel.name, 'LNG')
 
-    def test_add_draft_as_fuel_supplier(self):
+
+def test_add_draft_as_fuel_supplier(self):
         """
         Test adding a fuel code as a fuel supplier
         Note: This should fail
