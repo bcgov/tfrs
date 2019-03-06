@@ -1,5 +1,6 @@
 // Credit Transactions
 export const BTN_ACCEPT = 'Accept';
+export const BTN_ARCHIVE = 'Archive';
 export const BTN_APPROVE = 'Approve';
 export const BTN_ADD = 'Add';
 export const BTN_ADD_TO_QUEUE = 'Add to Queue';
@@ -22,6 +23,7 @@ export const BTN_NOT_RECOMMENDED_FOR_DECISION = 'Not Recommended for Approval';
 export const BTN_PROCESS = 'Confirm';
 export const BTN_PROPOSE = 'Propose';
 export const BTN_PULL_BACK = 'Recall as Draft';
+export const BTN_RECEIVED = 'Received';
 export const BTN_REFUSE = 'Refuse';
 export const BTN_RECOMMEND_FOR_DECISION = 'Recommend for Approval';
 export const BTN_RESCIND = 'Rescind';

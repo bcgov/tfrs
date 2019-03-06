@@ -86,6 +86,32 @@ class SecureFileSubmissionAddContainer extends Component {
     return this.props.errors;
   }
 
+  _getValidationMessages () {
+    const validationMessage = [];
+
+    if (this.state.fields.compliancePeriod.id === 0) {
+      validationMessage.push('Please specify the Compliance Period to which the request relates.');
+    }
+
+    if (this._getDocumentType().theType === 'Evidence') {
+      if (this.state.fields.title === '') {
+        validationMessage.push('Please provide the name of the Part 3 Agreement to which the submission relates.');
+      }
+
+      if (this.state.fields.milestone === '') {
+        validationMessage.push('Please indicate the Milestone(s) to which the submission relates.');
+      }
+    } else if (this.state.fields.title === '') {
+      validationMessage.push('Please provide a Title.');
+    }
+
+    if (this.state.fields.files.length === 0) {
+      validationMessage.push('Please attach at least one file before submitting.');
+    }
+
+    return validationMessage;
+  }
+
   _handleInputChange (event) {
     const { value, name } = event.target;
     const fieldState = { ...this.state.fields };
@@ -236,32 +262,6 @@ class SecureFileSubmissionAddContainer extends Component {
     return true;
   }
 
-  _getValidationMessage () {
-    const validationMessage = [];
-
-    if (this.state.fields.compliancePeriod.id === 0) {
-      validationMessage.push('Please specify the Compliance Period to which the request relates.');
-    }
-
-    if (this._getDocumentType().theType === 'Evidence') {
-      if (this.state.fields.title === '') {
-        validationMessage.push('Please provide the name of the Part 3 Agreement to which the submission relates.');
-      }
-
-      if (this.state.fields.milestone === '') {
-        validationMessage.push('Please indicate the Milestone(s) to which the submission relates.');
-      }
-    } else if (this.state.fields.title === '') {
-      validationMessage.push('Please provide a Title.');
-    }
-
-    if (this.state.fields.files.length === 0) {
-      validationMessage.push('Please attach at least one file before submitting.');
-    }
-
-    return validationMessage;
-  }
-
   render () {
     if (this.props.referenceData.isFetching) {
       return (<Loading />);
@@ -284,7 +284,7 @@ class SecureFileSubmissionAddContainer extends Component {
         documentType={this._getDocumentType()}
         errors={this._getErrors()}
         fields={this.state.fields}
-        formValidationMessage={this._getValidationMessage()}
+        formValidationMessage={this._getValidationMessages()}
         handleInputChange={this._handleInputChange}
         handleSubmit={this._handleSubmit}
         key="secureFileSubmission"
