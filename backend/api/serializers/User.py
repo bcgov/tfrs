@@ -67,23 +67,28 @@ class UserCreateSerializer(serializers.ModelSerializer):
     """
     Serializer for user creation via API
     """
-    organization = PrimaryKeyRelatedField(queryset=Organization.objects.all())
+    organization = PrimaryKeyRelatedField(
+        queryset=Organization.objects.all(),
+        error_messages={'null': "Please select the user's Organization."})
     roles = PrimaryKeyRelatedField(queryset=Role.objects.all(), many=True)
     id = serializers.ReadOnlyField()
-    first_name = CharField(required=True,
-                           allow_blank=False,
-                           error_messages={'blank': 'A First Name is required'})
-    last_name = CharField(required=True,
-                          allow_blank=False,
-                          error_messages={'blank': 'A Last Name is required'})
+    first_name = CharField(
+        required=True, allow_blank=False,
+        error_messages={'blank': "A First Name is required"}
+    )
+    last_name = CharField(
+        required=True, allow_blank=False,
+        error_messages={'blank': "A Last Name is required"}
+    )
 
     def validate(self, data):
-        data['display_name'] = '{} {}'.format(data['first_name'], data['last_name'])
+        data['display_name'] = '{} {}'.format(
+            data['first_name'], data['last_name'])
 
         roles = data.get('roles')
         if not roles:
             raise serializers.ValidationError({
-                'roles': 'Please select at least one role for the user'
+                'roles': "Please select at least one role for the user"
             })
 
         return data
@@ -110,7 +115,6 @@ class UserCreateSerializer(serializers.ModelSerializer):
         fields = (
             'first_name', 'last_name', 'email', 'username', 'display_name',
             'id', 'organization', 'roles', 'is_government_user', 'title')
-
 
 class UserUpdateSerializer(serializers.ModelSerializer):
     """
