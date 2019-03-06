@@ -91,13 +91,14 @@ class DockerEnvironment(OperationalDataScript):
              organization=Organization.objects.get(id=1)).save()
 
         UserRole(user=User.objects.get(username='fs1'), role=Role.objects.get_by_natural_key('FSManager')).save()
-        UserRole(user=User.objects.get(username='fs1'), role=Role.objects.get_by_natural_key('FSDoc')).save()
+        UserRole(user=User.objects.get(username='fs1'), role=Role.objects.get_by_natural_key('FSDocSubmit')).save()
         UserRole(user=User.objects.get(username='fs2'), role=Role.objects.get_by_natural_key('FSManager')).save()
-        UserRole(user=User.objects.get(username='fs2'), role=Role.objects.get_by_natural_key('FSDoc')).save()
+        UserRole(user=User.objects.get(username='fs2'), role=Role.objects.get_by_natural_key('FSDocSubmit')).save()
         UserRole(user=User.objects.get(username='fs3'), role=Role.objects.get_by_natural_key('FSManager')).save()
-        UserRole(user=User.objects.get(username='fs3'), role=Role.objects.get_by_natural_key('FSDoc')).save()
+        UserRole(user=User.objects.get(username='fs3'), role=Role.objects.get_by_natural_key('FSDocSubmit')).save()
         UserRole(user=User.objects.get(username='fs3'), role=Role.objects.get_by_natural_key('FSAdmin')).save()
         UserRole(user=User.objects.get(username='analyst'), role=Role.objects.get_by_natural_key('GovUser')).save()
+        UserRole(user=User.objects.get(username='analyst'), role=Role.objects.get_by_natural_key('GovDoc')).save()
         UserRole(user=User.objects.get(username='director'), role=Role.objects.get_by_natural_key('GovDirector')).save()
         UserRole(user=User.objects.get(username='tfrsadmin'), role=Role.objects.get_by_natural_key('Admin')).save()
 
