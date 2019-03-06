@@ -18,7 +18,9 @@ cache = caches['keycloak']
 
 
 class UserAuthentication(authentication.BaseAuthentication):
-
+    """
+    Class to handle authentication when after logging into keycloak
+    """
     def _get_keys(self):
         """
         Assemble a list of valid signing public keys we use to verify the token
@@ -51,9 +53,12 @@ class UserAuthentication(authentication.BaseAuthentication):
 
         for key in keys['keys']:
             if key['alg'] in ['RS256', 'RS384', 'RS512']:
-                decoded_keys[key['kid']] = RSAAlgorithm.from_jwk(json.dumps(key)).public_bytes(
+                decoded_keys[key['kid']] = RSAAlgorithm.from_jwk(
+                    json.dumps(key)
+                ).public_bytes(
                     format=serialization.PublicFormat.SubjectPublicKeyInfo,
-                    encoding=serialization.Encoding.PEM).decode('utf-8')
+                    encoding=serialization.Encoding.PEM
+                ).decode('utf-8')
 
         return decoded_keys
 
@@ -121,12 +126,22 @@ class UserAuthentication(authentication.BaseAuthentication):
                 )
 
                 if not creation_request.exists():
-                    raise exceptions.AuthenticationFailed('user does not exist')
+                    raise exceptions.AuthenticationFailed(
+                        "User does not exist.")
+
+                if creation_request.count() > 1:
+                    _, preferred_username = user_token[
+                        'preferred_username'].split('\\')
+
+                    creation_request = creation_request.filter(
+                        external_username__iexact=preferred_username
+                    )
 
                 user_creation_request = creation_request.first()
 
                 if not user_creation_request.is_mapped:
-                    map_user(user_token['sub'], user_creation_request.user.username)
+                    map_user(user_token['sub'],
+                             user_creation_request.user.username)
 
                     user_creation_request.is_mapped = True
                     user_creation_request.save()
@@ -142,8 +157,10 @@ class UserAuthentication(authentication.BaseAuthentication):
             user = User.objects.get_by_natural_key(username)
 
             if not user.is_active:
-                raise exceptions.AuthenticationFailed('user_id "{}" does not exist'.format(username))
+                raise exceptions.AuthenticationFailed(
+                    'user_id "{}" does not exist'.format(username))
         except User.DoesNotExist:
-            raise exceptions.AuthenticationFailed('user_id "{}" does not exist'.format(username))
+            raise exceptions.AuthenticationFailed(
+                'user_id "{}" does not exist'.format(username))
 
         return user, None
