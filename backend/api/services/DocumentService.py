@@ -122,6 +122,10 @@ class DocumentService(object):
                 next_status.status != "Draft":
             return False
 
+        if current_status.status in ["Security Scan Failed"] and \
+                next_status.status != "Draft":
+            return False
+
         if current_status.status not in [
                 "Draft", "Security Scan Failed"]:
             if next_status.status == "Draft":
