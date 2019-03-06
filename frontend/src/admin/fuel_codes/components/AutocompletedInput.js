@@ -27,10 +27,6 @@ class AutocompletedInput extends Component {
       });
     }
     else {
-      // this.setState({
-      //   items: []
-      // });
-
       axios.get(Routes.BASE_URL + Routes.AUTOCOMPLETE_API
         + '?field=' + this.props.autocompleteFieldName + '&q=' + value)
         .then((response) => {
