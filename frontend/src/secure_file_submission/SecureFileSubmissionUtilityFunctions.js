@@ -1,5 +1,4 @@
 export default class SecureFileSubmissionUtilityFunctions {
-
   static canLinkCreditTransfer (loggedInUser, item) {
     if (!item.linkActions) {
       return false;
@@ -7,7 +6,6 @@ export default class SecureFileSubmissionUtilityFunctions {
 
     return item.linkActions.includes('ADD_LINK');
   }
-
 
   static canComment (loggedInUser, item) {
     if (!item.commentActions) {

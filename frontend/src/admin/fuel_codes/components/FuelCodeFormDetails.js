@@ -122,15 +122,16 @@ const FuelCodeFormDetails = props => (
         <div className="col-sm-6">
           <div className="form-group">
             <label htmlFor="fuel">Fuel:
-              <input
-                className="form-control"
-                id="fuel"
-                name="fuel"
-                onChange={props.handleInputChange}
-                required="required"
-                type="text"
-                value={props.fields.fuel}
-              />
+              <select className="form-control"
+                      name="fuel"
+                      onChange={props.handleInputChange}
+                      required="required"
+                      id="fuel"
+              >
+                {props.approvedFuels.map(mode => (
+                  <option key={mode.name} value={mode.name}>{mode.name}</option>
+                ))}
+              </select>
             </label>
           </div>
         </div>
@@ -224,30 +225,44 @@ const FuelCodeFormDetails = props => (
         <div className="col-sm-6">
           <div className="form-group">
             <label htmlFor="feedstock-transport-mode">Feedstock Transport Mode:
-              <input
-                className="form-control"
-                id="feedstock-transport-mode"
-                name="feedstockTransportMode"
-                onChange={props.handleInputChange}
-                required="required"
-                type="text"
-                value={props.fields.feedstockTransportMode}
-              />
+              <select multiple
+                      className="form-control"
+                      name="feedstockTransportMode"
+                      onChange={props.handleInputChange}
+                      required="required"
+                      id="feedstock-transport-mode"
+                      value={props.fields.feedstockTransportMode}
+              >
+                {props.transportModes.map(mode => (
+                  <option key={mode.name}
+                          value={mode.name}
+                  >
+                    {mode.name}
+                  </option>
+                ))}
+              </select>
             </label>
           </div>
         </div>
         <div className="col-sm-6">
           <div className="form-group">
             <label htmlFor="fuel-transport-mode">Finished Fuel Transport Mode:
-              <input
-                className="form-control"
-                id="fuel-transport-mode"
-                name="fuelTransportMode"
-                onChange={props.handleInputChange}
-                required="required"
-                type="text"
-                value={props.fields.fuelTransportMode}
-              />
+              <select multiple
+                      className="form-control"
+                      name="fuelTransportMode"
+                      onChange={props.handleInputChange}
+                      required="required"
+                      id="fuel-transport-mode"
+                      value={props.fields.fuelTransportMode}
+              >
+                {props.transportModes.map(mode => (
+                  <option key={mode.name}
+                          value={mode.name}
+                  >
+                    {mode.name}
+                  </option>
+                ))}
+              </select>
             </label>
           </div>
         </div>
@@ -289,8 +304,7 @@ const FuelCodeFormDetails = props => (
   </div>
 );
 
-FuelCodeFormDetails.defaultProps = {
-};
+FuelCodeFormDetails.defaultProps = {};
 
 FuelCodeFormDetails.propTypes = {
   addToFields: PropTypes.func.isRequired,
@@ -306,12 +320,14 @@ FuelCodeFormDetails.propTypes = {
     feedstock: PropTypes.string,
     feedstockLocation: PropTypes.string,
     feedstockMiscellaneous: PropTypes.string,
-    feedstockTransportMode: PropTypes.string,
+    feedstockTransportMode: PropTypes.arrayOf(PropTypes.string),
     formerCompany: PropTypes.string,
     fuel: PropTypes.string,
     fuelCode: PropTypes.string,
-    fuelTransportMode: PropTypes.string
+    fuelTransportMode: PropTypes.arrayOf(PropTypes.string)
   }).isRequired,
+  approvedFuels: PropTypes.arrayOf(PropTypes.shape()).isRequired,
+  transportModes: PropTypes.arrayOf(PropTypes.shape()).isRequired,
   handleInputChange: PropTypes.func.isRequired
 };
 

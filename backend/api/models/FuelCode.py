@@ -21,6 +21,8 @@
     limitations under the License.
 """
 from django.db import models
+from django.db.models import PROTECT
+
 from auditable.models import Auditable
 
 from api.models.FuelCodeStatus import FuelCodeStatus
@@ -67,13 +69,7 @@ class FuelCode(Auditable):
         db_comment="Expiry Date; The date that the approved fiel code "
                    "expires"
     )
-    fuel = models.CharField(
-        max_length=100,
-        blank=True,
-        null=True,
-        db_comment="Type of Fuel as specified by act or regulation."
-                   "This will become a lookup table."
-    )
+    fuel = models.ForeignKey('ApprovedFuel', blank=False, null=False, on_delete=PROTECT)
     feedstock = models.CharField(
         max_length=100,
         blank=True,
@@ -115,22 +111,15 @@ class FuelCode(Auditable):
         db_comment="Production capacity of the fuel production facility."
                    "How much they can produce in a year?"
     )
-    feedstock_transport_mode = models.CharField(
-        max_length=100,
-        blank=True,
-        null=True,
-        db_comment="Mode of transportation for the feedstock to the fuel "
-                   "production facility."
-                   "e.g. truck, rail, etc."
-                   "This will eventually use a reference table."
+    feedstock_transport_mode = models.ManyToManyField(
+        'TransportMode',
+        through='FeedstockTransportMode',
+        related_name='+'
     )
-    fuel_transport_mode = models.CharField(
-        max_length=100,
-        blank=True,
-        null=True,
-        db_comment="Mode of transporation for the finished fuel to BC."
-                   "e.g. truck, rail, etc."
-                   "This will eventually use a reference table."
+    fuel_transport_mode = models.ManyToManyField(
+        'TransportMode',
+        through='FuelTransportMode',
+        related_name='+'
     )
     former_company = models.CharField(
         max_length=100,

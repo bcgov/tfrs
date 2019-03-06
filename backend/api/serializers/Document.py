@@ -455,9 +455,17 @@ class DocumentUpdateSerializer(serializers.ModelSerializer):
             })
 
         if not DocumentService.validate_status(document.status, status):
+            if status.status == 'Draft':
+                raise serializers.ValidationError({
+                    'invalidStatus': "The submission cannot be rescinded "
+                                     "because it has been marked as received "
+                                     "by a Government user."
+                                     "Please refresh your browser."
+                })
+
             raise serializers.ValidationError({
-                'invalidStatus': "Submission cannot be {} as it currently "
-                                 "has a status of {}.".format(
+                'invalidStatus': "Submission cannot be set to {} as it "
+                                 "currently has a status of {}.".format(
                                      status.status,
                                      document.status.status
                                  )
@@ -509,7 +517,7 @@ class DocumentUpdateSerializer(serializers.ModelSerializer):
                         if len(attachment.filename) > 50 \
                         else attachment.filename
                     errors[attachment.filename] = \
-                        "TRIM must be provided for {}".format(
+                        "Please provide a TRIM Record # for {}".format(
                             filename
                         )
 
