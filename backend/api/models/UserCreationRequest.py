@@ -35,10 +35,14 @@ class UserCreationRequest(Auditable):
     keycloak_email = models.EmailField(
         blank=False,
         null=False,
-        unique=True,
         db_comment="Keycloak email address to associate on first login."
     )
-
+    external_username = models.CharField(
+        blank=True,
+        max_length=150,
+        null=True,
+        db_comment="BCeID or IDIR username"
+    )
     user = models.OneToOneField(
         'User',
         related_name='creation_request',
@@ -46,13 +50,14 @@ class UserCreationRequest(Auditable):
         unique=True,
         db_comment="The user to be associated with a Keycloak account."
     )
-
     is_mapped = models.BooleanField(
         default=False,
-        db_comment="True if this request has been acted on")
+        db_comment="True if this request has been acted on"
+    )
 
     class Meta:
         db_table = 'user_creation_request'
+        unique_together = (('keycloak_email', 'external_username'),)
 
     db_table_comment = "Contains a list of users that were created by the " \
                        "system. " \
