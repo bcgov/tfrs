@@ -1,8 +1,0 @@
-define host{
-        use                     generic-host
-        host_name               test
-        alias                   tfrs-test
-        address                 test-lowcarbonfuels.pathfinder.gov.bc.ca
-        }
-
-
