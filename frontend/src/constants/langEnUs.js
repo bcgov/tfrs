@@ -32,6 +32,7 @@ export const BTN_SAVE_DRAFT = 'Save Draft';
 export const BTN_SAVE_USER = 'Save User';
 export const BTN_SIGN_1_2 = 'Sign 1 of 2';
 export const BTN_SIGN_2_2 = 'Sign 2 of 2';
+export const BTN_SUBMIT = 'Submit';
 export const BTN_YES = 'Yes';
 
 export const BTN_COMMENT = 'Add Comment';
@@ -42,7 +43,6 @@ export const BTN_EDIT_COMMENT = 'Edit Comment';
 
 export const BTN_LINK_CREDIT_TRANSACTION = 'Link Credit Transaction';
 export const BTN_CANCEL_LINK_CREDIT_TRANSACTION = 'Cancel';
-
 
 export const TEXT_COMMENT_PLACEHOLDER = 'Use this field to communicate relevant details';
 export const TEXT_COMMENT_PLACEHOLDER_PRIVILEGED = 'Use this field to provide background for ' +
