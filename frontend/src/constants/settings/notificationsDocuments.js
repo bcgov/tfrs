@@ -27,7 +27,7 @@ const DOCUMENT_NOTIFICATIONS = [{
   code: 'DOCUMENT_ARCHIVED',
   description: 'Submission Archived',
   key: 'archived',
-  recipients: ['government']
+  recipients: ['fuel_supplier', 'government']
 }];
 
 export default DOCUMENT_NOTIFICATIONS;
