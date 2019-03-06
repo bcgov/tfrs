@@ -75,7 +75,8 @@ class SecurityScan:
                 related_document=attachment.document
             )
             return
-        else:
+
+        if attachment.document.status.status != 'Draft':
             AMQPNotificationService.send_notification(
                 interested_organization=user.organization,
                 message=NotificationType.DOCUMENT_SUBMITTED.name,
