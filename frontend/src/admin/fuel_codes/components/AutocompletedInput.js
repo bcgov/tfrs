@@ -14,6 +14,8 @@ class AutocompletedInput extends Component {
     };
 
     this._onChange = this._onChange.bind(this);
+    this._onSelect = this._onSelect.bind(this);
+
   }
 
   _onChange(event) {
@@ -25,9 +27,9 @@ class AutocompletedInput extends Component {
       });
     }
     else {
-      this.setState({
-        items: []
-      });
+      // this.setState({
+      //   items: []
+      // });
 
       axios.get(Routes.BASE_URL + Routes.AUTOCOMPLETE_API
         + '?field=' + this.props.autocompleteFieldName + '&q=' + value)
@@ -36,11 +38,29 @@ class AutocompletedInput extends Component {
             items: response.data
           });
         }).catch((error) => {
+        this.setState({
+          items: []
+        });
       });
     }
 
     return this.props.handleInputChange(event);
 
+  }
+
+  _onSelect(value) {
+
+    //pass it up to the container, faking an event
+    this.props.handleInputChange({
+      target: {
+        name: this.props.inputProps.name,
+        value: value
+      }
+    });
+
+    this.setState({
+      items: []
+    })
   }
 
   render() {
@@ -51,26 +71,29 @@ class AutocompletedInput extends Component {
         inputProps={this.props.inputProps}
         getItemValue={item => (item)}
         value={this.props.value}
-        onSelect={(val) => {
-          this.props.handleInputChange({
-            target: {
-              name: this.props.inputProps.name,
-              value: val
-            }
-          })
-        }}
+        onSelect={this._onSelect}
+        selectOnBlur
         renderItem={(item, isHighlighted) => (
           <div
             key={item}
             style={
               {
                 background: isHighlighted ? '#ccc' : '#fff',
-                zIndex: 500000
               }
             }
           >
             {item}
           </div>
+        )}
+        renderMenu={(items, value, style) => (
+          <div
+            style={{
+              ...style,
+              position: 'fixed',
+              zIndex: '400'
+            }}
+            children={items}
+          />
         )}
       />
     );
