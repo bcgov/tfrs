@@ -49,9 +49,11 @@ class TransportMode(Auditable, EffectiveDates):
         return (self.name,)
 
     class Meta:
-        db_table = 'fuel_transport_mode'
+        db_table = 'fuel_transport_mode_type'
 
-    db_table_comment = "List of transportation modes for fuel or feedstock"
+    db_table_comment = "List of transportation modes available " \
+                       "for fuel or feedstock (eg Truck, Rail) as part of " \
+                       "a fuel code definition"
 
 
 class FeedstockTransportMode(Auditable):
@@ -71,7 +73,9 @@ class FeedstockTransportMode(Auditable):
     class Meta:
         db_table = 'feedstock_transport_mode_fuel_code'
 
-    db_table_comment = "Relationship table for fuel codes to feedstock transport modes"
+    db_table_comment = "Maintains a many-to-many relationship between the fuel code " \
+                       "table and transport mode table to capture the fuel code feedstock " \
+                       "transport mode."
 
 
 class FuelTransportMode(Auditable):
@@ -91,4 +95,7 @@ class FuelTransportMode(Auditable):
     class Meta:
         db_table = 'fuel_transport_mode_fuel_code'
 
-    db_table_comment = "Relationship table for fuel codes to finished fuel transport modes"
+    db_table_comment = "Maintains a many-to-many relationship between the fuel code " \
+                       "table and transport mode table to capture the fuel code finished fuel " \
+                       "transport mode."
+

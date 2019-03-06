@@ -49,6 +49,6 @@ class ApprovedFuel(Auditable, EffectiveDates):
         return (self.name,)
 
     class Meta:
-        db_table = 'approved_fuel'
+        db_table = 'approved_fuel_type'
 
-    db_table_comment = "List of approved fuel types"
+    db_table_comment = "List of approved fuel types (eg LNG, Ethanol)"
