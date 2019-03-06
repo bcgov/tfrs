@@ -8,8 +8,6 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import PropTypes from 'prop-types';
 
-
-
 import { getDocumentUploads, getDocumentUploadURL } from '../actions/documentUploads';
 import SecureFileSubmissionsPage from './components/SecureFileSubmissionsPage';
 
