@@ -241,7 +241,6 @@ const SecureFileSubmissionDetails = props => (
         <SecureFileSubmissionComment comment={c} key={c.id} saveComment={props.saveComment} />
       ))
       }
-      {!['Archived', 'Received'].includes(props.item.status.status) &&
       <div className="row">
         <div className="col-md-12">
           <SecureFileSubmissionCommentButtons
@@ -259,7 +258,6 @@ const SecureFileSubmissionDetails = props => (
           }
         </div>
       </div>
-      }
     </div>
 
     <div className="btn-container">

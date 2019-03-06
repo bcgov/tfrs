@@ -34,16 +34,17 @@ class DocumentCommentPermissions(permissions.BasePermission):
         """
         Check whether the user should have authority to add a comment.
         Government Users with abilities to review the documents should
-        always have authority to add a comment.
+        always have authority to add a comment, unless it's archived.
         Fuel Suppliers with abilities to add or submit can add a comment
         if the document is either in draft or submitted status.
         """
         if user.is_government_user and \
-                user.has_perm('DOCUMENTS_GOVERNMENT_REVIEW'):
+                user.has_perm('DOCUMENTS_GOVERNMENT_REVIEW') and \
+                document.status.status in ['Received', 'Submitted']:
             return True
 
         if not user.is_government_user and not privileged and \
-                document.status.status != 'Received':
+                document.status.status in ['Draft', 'Submitted']:
             return True
 
         return False
