@@ -21,7 +21,7 @@ def config():
         name = os.path.join(settings.BASE_DIR, 'db.sqlite3')
 
     if bool(os.getenv('FIX_BROKEN_SQLITE', 'False').lower() in ['true', 1]):
-        connection_created.connect(activate_foreign_keys)
+        connection_created.connect(activate_legacy_table_fix)
 
     return {
             'ENGINE': engine,
@@ -33,7 +33,7 @@ def config():
         }
 
 
-def activate_foreign_keys(sender, connection, **kwargs):
+def activate_legacy_table_fix(sender, connection, **kwargs):
     """Until Django fixes the sqlite >= 3.26 issue"""
     if connection.vendor == 'sqlite':
         cursor = connection.cursor()
