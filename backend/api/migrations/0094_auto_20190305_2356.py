@@ -8,7 +8,7 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('api', '0092_initial_transport_modes_and_approved_fuels'),
+        ('api', '0093_initial_transport_modes_and_approved_fuels'),
     ]
 
     operations = [
