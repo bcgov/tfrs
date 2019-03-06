@@ -3,6 +3,7 @@
  */
 import React from 'react';
 import PropTypes from 'prop-types';
+import AutocompletedInput from "./AutocompletedInput";
 
 const FuelCodeFormDetails = props => (
   <div className="fuel-code-details">
@@ -32,14 +33,18 @@ const FuelCodeFormDetails = props => (
         <div className="col-sm-6">
           <div className="form-group">
             <label htmlFor="company">Company:
-              <input
-                className="form-control"
-                id="company"
-                name="company"
-                onChange={props.handleInputChange}
-                required="required"
-                type="text"
+              <AutocompletedInput
+                handleInputChange={props.handleInputChange}
+                autocompleteFieldName="fuel_code.company"
                 value={props.fields.company}
+                inputProps={
+                  {
+                    className: 'form-control',
+                    required: true,
+                    name: 'company',
+                    id:'company'
+                  }
+                }
               />
             </label>
           </div>
@@ -140,14 +145,18 @@ const FuelCodeFormDetails = props => (
         <div className="col-sm-6">
           <div className="form-group">
             <label htmlFor="feedstock">Feedstock:
-              <input
-                className="form-control"
-                id="feedstock"
-                name="feedstock"
-                onChange={props.handleInputChange}
-                required="required"
-                type="text"
+              <AutocompletedInput
+                handleInputChange={props.handleInputChange}
+                autocompleteFieldName="fuel_code.feedstock"
                 value={props.fields.feedstock}
+                inputProps={
+                  {
+                    className: 'form-control',
+                    required: true,
+                    name: 'feedstock',
+                    id:'feedstock'
+                  }
+                }
               />
             </label>
           </div>
@@ -158,14 +167,18 @@ const FuelCodeFormDetails = props => (
         <div className="col-sm-6">
           <div className="form-group">
             <label htmlFor="feedstock-location">Feedstock Location:
-              <input
-                className="form-control"
-                id="feedstock-location"
-                name="feedstockLocation"
-                onChange={props.handleInputChange}
-                required="required"
-                type="text"
+              <AutocompletedInput
+                handleInputChange={props.handleInputChange}
+                autocompleteFieldName="fuel_code.feedstock_location"
                 value={props.fields.feedstockLocation}
+                inputProps={
+                  {
+                    className: 'form-control',
+                    required: true,
+                    name: 'feedstockLocation',
+                    id:'feedstockLocation'
+                  }
+                }
               />
             </label>
           </div>
@@ -173,14 +186,18 @@ const FuelCodeFormDetails = props => (
         <div className="col-sm-6">
           <div className="form-group">
             <label htmlFor="feedstock-miscellaneous">Feedstock Miscellaneous:
-              <input
-                className="form-control"
-                id="feedstock-miscellaneous"
-                name="feedstockMiscellaneous"
-                onChange={props.handleInputChange}
-                required="required"
-                type="text"
+              <AutocompletedInput
+                handleInputChange={props.handleInputChange}
+                autocompleteFieldName="fuel_code.feedstock_misc"
                 value={props.fields.feedstockMiscellaneous}
+                inputProps={
+                  {
+                    className: 'form-control',
+                    required: true,
+                    name: 'feedstockMiscellaneous',
+                    id:'feedstockMiscellaneous'
+                  }
+                }
               />
             </label>
           </div>
@@ -256,14 +273,18 @@ const FuelCodeFormDetails = props => (
       <div className="row">
         <div className="col-sm-6">
           <label htmlFor="former-company-name">Former Company Name:
-            <input
-              className="form-control"
-              id="former-company-name"
-              name="formerCompany"
-              onChange={props.handleInputChange}
-              required="required"
-              type="text"
+            <AutocompletedInput
+              handleInputChange={props.handleInputChange}
+              autocompleteFieldName="fuel_code.former_company"
               value={props.fields.formerCompany}
+              inputProps={
+                {
+                  className: 'form-control',
+                  required: true,
+                  name: 'formerCompany',
+                  id:'formerCompany'
+                }
+              }
             />
           </label>
         </div>
@@ -289,8 +310,7 @@ const FuelCodeFormDetails = props => (
   </div>
 );
 
-FuelCodeFormDetails.defaultProps = {
-};
+FuelCodeFormDetails.defaultProps = {};
 
 FuelCodeFormDetails.propTypes = {
   addToFields: PropTypes.func.isRequired,
