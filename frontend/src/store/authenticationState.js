@@ -2,6 +2,7 @@ import { loadUser } from 'redux-oidc';
 import { put, takeLatest, all } from 'redux-saga/effects';
 import userManager from './oidc-usermanager';
 import { getLoggedInUser } from '../actions/userActions';
+import CONFIG from '../config';
 
 const LOGIN_TRIGGERING_ACTIONS = [
   'redux-oidc/USER_EXPIRED'
@@ -12,7 +13,7 @@ function triggerLoginFlow (store) {
 
   if (routing.location &&
     routing.location.pathname !== '/authCallback') {
-    return userManager.signinRedirect();
+    return CONFIG.KEYCLOAK.CUSTOM_LOGIN ? userManager.signinSilent() : userManager.signinRedirect();
   }
 
   return false;

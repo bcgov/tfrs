@@ -15,7 +15,8 @@ const CONFIG = {
     AUTHORITY: getConfig('keycloak.authority', 'unconfigured'),
     CLIENT_ID: getConfig('keycloak.client_id', 'unconfigured'),
     CALLBACK_URL: getConfig('keycloak.callback_url', 'unconfigured'),
-    POST_LOGOUT_URL: getConfig('keycloak.post_logout_url', 'unconfigured')
+    POST_LOGOUT_URL: getConfig('keycloak.post_logout_url', 'unconfigured'),
+    CUSTOM_LOGIN: getConfig('keycloak.custom_login', false)
   },
   DEBUG: {
     ENABLED: getConfig('debug.enabled', false)

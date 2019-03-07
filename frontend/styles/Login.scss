@@ -1,0 +1,210 @@
+@font-face {
+  font-family: "MyriadWebPro";
+  src: url('/assets/fonts/MyriadWebPro.ttf');
+}
+
+#link-bceid {
+  background-color: #002663;
+  border-radius: 0.7rem;
+  color: #ffffff;
+  display: block;
+  font-size: 2.5rem;
+  margin: 2.5rem auto;
+  padding: 2rem 1rem;
+  text-align: center;
+  text-decoration: none;
+  width: 100%;
+
+  &:hover {
+    background-color: #38598a;
+  }
+  
+  .text {
+    display: inline-block;
+    vertical-align: middle;
+  }
+  
+  .display-name {
+    background-image: url('/assets/images/bceid.png');
+    background-position-x: left;
+    background-position-y: center;
+    background-repeat: no-repeat;
+    background-size: contain;
+    color: transparent;
+    display: inline-block;
+    height: 2.5rem;
+    vertical-align: middle;
+    width: 10rem;
+  }
+}
+
+#link-idir {
+  background-color: #ffffff;
+  border: 1px solid #002663;
+  border-radius: 0.7rem;
+  color: #002663;
+  display: block;
+  font-size: 2.5rem;
+  margin: 2.5rem auto;
+  padding: 2rem 1rem;
+  text-align: center;
+  text-decoration: none;
+  width: 100%;
+
+  &:hover {
+    background-color: #38598a;
+    color: #ffffff;
+  }
+
+  .display-name {
+    font-weight: bold;
+  }
+}
+
+#login {
+  background-image: url('/assets/images/bg.jpg');
+  background-position-x: left;
+  background-position-y: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  height: 100%;
+  margin: 0;
+  min-height: 100%;
+  padding: 0;
+  position: relative;
+  width: 100%;
+}
+
+.login-tfrs-page {
+  background-color: $white;
+  background-color: rgba(255, 255, 255, 0.8);
+  bottom: 0;
+  height: 100%;
+  left: 0;
+  min-width: 40rem;
+  position: absolute;
+  top: 0;
+
+  .card-tfrs {
+    align-content: center;
+    bottom: 0;
+    display: flex;
+    justify-content: center;
+    overflow: hidden;
+    position: absolute;
+    top: 10%;
+    width: 100%;
+  }
+
+  .login-tfrs-brand {
+    background-image: url('/assets/images/BCID_H_rgb_pos.png');
+    background-position-x: center;
+    background-position-y: center;
+    background-repeat: no-repeat;
+    background-size: contain;
+    height: 15%;
+    margin: 1rem auto;
+    padding: 0;
+    width: 100%;
+  }
+}
+
+.login-tfrs-page-header {
+  height: 15%;
+  margin: 1rem 0;
+  padding: 0 5rem;
+  position: fixed;
+  width: 100%;
+
+  .login-tfrs-page-header-text {
+    color: #ffffff;
+    font-family: "MyriadWebPro", sans-serif;
+    font-size: 3.5rem;
+    line-height: normal;
+    position: relative;
+    top: 50%;
+    transform: translateY(-50%);
+    -webkit-transform: translateY(-50%);
+       -moz-transform: translateY(-50%);
+        -ms-transform: translateY(-50%);
+         -o-transform: translateY(-50%);
+  }
+}
+
+.social-section {
+  align-self: center;
+  margin-top: -15%;
+  max-height: 100%;
+  max-height: calc(100% + 15%);
+  overflow: hidden;
+  padding: 1rem 5rem;
+  width: 100%;
+
+  .oidc:not(:first-child) {
+    border-top: 1px solid #fcba19;
+  }
+}
+
+.ie-specific {
+  color: #494949;
+  font-size: 1.2rem;
+  font-weight: bold;
+}
+
+.ie-specific .realm-name {
+  text-transform: uppercase;
+}
+
+@media (min-width: 992px) {
+  .login-tfrs-page {
+    width: 50rem;
+  }
+
+  .login-tfrs-page-header {
+    padding-left: 55rem;
+  }
+}
+
+@media (min-width: 769px) and (max-width: 992px) {
+  .login-tfrs-page {
+    width: 40rem;
+  }
+
+  .login-tfrs-page-header {
+    padding-left: 45rem;
+  }
+}
+
+@media (max-width: 768px) {
+  #link-bceid, #link-idir {
+    font-size: 4vw;
+  }
+
+  #link-bceid .display-name {
+      height: 100%;
+      width: 20vw;
+  }
+
+  .login-tfrs-page {
+    min-width: 30rem;
+    width: 100%;
+
+    .login-tfrs-brand {
+      background-image: url('/assets/images/BCID_V_rgb_pos.png');
+      background-position-x: 3rem;
+      background-position-y: center;
+      background-size: contain;
+    }
+  }
+
+  .login-tfrs-page-header {
+    z-index: 999;
+
+    .login-tfrs-page-header-text {
+      color: #002663;
+      font-size: 4.5vw;
+      padding-left: 10rem;
+      text-align: center;
+    }
+  }
+}
