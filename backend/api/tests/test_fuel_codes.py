@@ -103,8 +103,7 @@ class TestFuelCodes(BaseTestCase):
         self.assertEqual(fuel_code_obj.fuel_code, fuel_code)
         self.assertEqual(fuel_code_obj.fuel.name, 'LNG')
 
-
-def test_add_draft_as_fuel_supplier(self):
+    def test_add_draft_as_fuel_supplier(self):
         """
         Test adding a fuel code as a fuel supplier
         Note: This should fail
