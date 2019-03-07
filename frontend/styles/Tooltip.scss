@@ -9,6 +9,12 @@
     .tooltip-inner {
       background-color: $dark-red;
       max-width: 500px;
+
+      * {
+        max-width: 100%;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
     }  
   }
 

@@ -8,6 +8,7 @@ import axios from 'axios';
 import { Link } from 'react-router-dom';
 
 import Errors from '../../app/components/Errors';
+import TooltipWhenDisabled from '../../app/components/TooltipWhenDisabled';
 import history from '../../app/History';
 import * as Lang from '../../constants/langEnUs';
 import SECURE_DOCUMENT_UPLOAD from '../../constants/routes/SecureDocumentUpload';
@@ -310,7 +311,7 @@ const SecureFileSubmissionDetails = props => (
         data-toggle="modal"
         type="button"
       >
-        <FontAwesomeIcon icon="share-square" /> Submit
+        <FontAwesomeIcon icon="share-square" /> {Lang.BTN_SUBMIT}
       </button>
       }
       {props.availableActions.includes('Received') &&
@@ -320,25 +321,32 @@ const SecureFileSubmissionDetails = props => (
         data-toggle="modal"
         type="button"
       >
-        <FontAwesomeIcon icon="check" /> Received
+        <FontAwesomeIcon icon="check" /> {Lang.BTN_RECEIVED}
       </button>
       }
       {props.availableActions.includes('Archived') &&
-      <button
-        className="btn btn-primary"
-        data-target="#confirmArchived"
-        data-toggle="modal"
-        type="button"
+      <TooltipWhenDisabled
+        disabled={props.formValidationMessage.length > 0}
+        title={props.formValidationMessage}
       >
-        <FontAwesomeIcon icon="archive" /> Archive
-      </button>
+        <button
+          className="btn btn-primary"
+          data-target="#confirmArchived"
+          data-toggle="modal"
+          disabled={props.formValidationMessage.length > 0}
+          type="button"
+        >
+          <FontAwesomeIcon icon="archive" /> {Lang.BTN_ARCHIVE}
+        </button>
+      </TooltipWhenDisabled>
       }
     </div>
   </div>
 );
 
 SecureFileSubmissionDetails.defaultProps = {
-  errors: {}
+  errors: {},
+  formValidationMessage: []
 };
 
 SecureFileSubmissionDetails.propTypes = {
@@ -354,6 +362,7 @@ SecureFileSubmissionDetails.propTypes = {
   fields: PropTypes.shape({
     recordNumbers: PropTypes.arrayOf(PropTypes.shape())
   }).isRequired,
+  formValidationMessage: PropTypes.arrayOf(PropTypes.string),
   handleRecordNumberChange: PropTypes.func.isRequired,
   isCommenting: PropTypes.bool.isRequired,
   isCreatingPrivilegedComment: PropTypes.bool.isRequired,
