@@ -20,7 +20,7 @@ import CreditTransferCommentForm from './CreditTransferCommentForm';
 import CreditTransferComment from './CreditTransferComment';
 import CreditTransferCommentButtons from './CreditTransferCommentButtons';
 import CreditTransferSigningHistory from './CreditTransferSigningHistory';
-import CreditTransferDocumentList from "./CreditTransferDocumentList";
+import CreditTransferDocumentList from './CreditTransferDocumentList';
 
 const CreditTransferDetails = props => (
   <div className="credit-transfer">
@@ -77,7 +77,7 @@ const CreditTransferDetails = props => (
           />
           }
           {props.documents && props.documents.length > 0 &&
-          <CreditTransferDocumentList documents={props.documents}/>
+          <CreditTransferDocumentList documents={props.documents} />
           }
           {props.status.id !== CREDIT_TRANSFER_STATUS.draft.id &&
           (props.history.length > 0 || props.signatures.length > 0) &&
@@ -278,10 +278,7 @@ CreditTransferDetails.propTypes = {
   hasCommented: PropTypes.bool.isRequired,
   canCreatePrivilegedComment: PropTypes.bool.isRequired,
   isCreatingPrivilegedComment: PropTypes.bool.isRequired,
-  documents: PropTypes.arrayOf(
-    PropTypes.shape
-  ).isRequired
-
+  documents: PropTypes.arrayOf(PropTypes.shape).isRequired
 };
 
 export default CreditTransferDetails;

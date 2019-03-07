@@ -21,7 +21,7 @@ export const COMMENTS_API = '/comments';
 export const REFERENCE_DATA_API_ENDPOINTS = {
   organizationTypes: '/organizations/types',
   organizationActionsTypes: '/organizations/actions_types',
-  organizationStatuses: '/organizations/statuses',
+  organizationStatuses: '/organizations/statuses'
 };
 
 if (CONFIG.SECURE_DOCUMENT_UPLOAD.ENABLED) {
