@@ -10,6 +10,7 @@ import FontAwesomeIcon from '@fortawesome/react-fontawesome';
 import getCompliancePeriods from '../../actions/compliancePeriodsActions';
 import SecureFileSubmissionFormDetails from './SecureFileSubmissionFormDetails';
 import Errors from '../../app/components/Errors';
+import TooltipWhenDisabled from '../../app/components/TooltipWhenDisabled';
 import history from '../../app/History';
 import * as Lang from '../../constants/langEnUs';
 import DOCUMENT_STATUSES from '../../constants/documentStatuses';
@@ -68,14 +69,20 @@ class SecureFileSubmissionForm extends Component {
               </button>
               }
               {this.props.availableActions.includes('Submitted') &&
-              <button
-                className="btn btn-primary"
-                data-target="#confirmSubmit"
-                data-toggle="modal"
-                type="button"
+              <TooltipWhenDisabled
+                disabled={this.props.formValidationMessage.length > 0}
+                title={this.props.formValidationMessage}
               >
-                <FontAwesomeIcon icon="upload" /> Submit
-              </button>
+                <button
+                  className="btn btn-primary"
+                  data-target="#confirmSubmit"
+                  data-toggle="modal"
+                  disabled={this.props.formValidationMessage.length > 0}
+                  type="button"
+                >
+                  <FontAwesomeIcon icon="upload" /> {Lang.BTN_SUBMIT}
+                </button>
+              </TooltipWhenDisabled>
               }
             </div>
           </div>
@@ -87,6 +94,7 @@ class SecureFileSubmissionForm extends Component {
 
 SecureFileSubmissionForm.defaultProps = {
   edit: false,
+  formValidationMessage: ['Form is missing one or more required fields.'],
   id: 0
 };
 
@@ -106,6 +114,7 @@ SecureFileSubmissionForm.propTypes = {
   fields: PropTypes.shape({
     comment: PropTypes.string
   }).isRequired,
+  formValidationMessage: PropTypes.arrayOf(PropTypes.string),
   getCompliancePeriods: PropTypes.func.isRequired,
   handleInputChange: PropTypes.func.isRequired,
   handleSubmit: PropTypes.func.isRequired,
