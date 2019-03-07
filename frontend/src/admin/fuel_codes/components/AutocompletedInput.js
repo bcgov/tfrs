@@ -91,6 +91,15 @@ class AutocompletedInput extends Component {
             children={items}
           />
         )}
+        renderInput={ props => (
+          <input
+            type="text"
+            className="form-control"
+            {...props}
+          />
+        )
+        }
+        wrapperStyle={{}}
       />
     );
   }

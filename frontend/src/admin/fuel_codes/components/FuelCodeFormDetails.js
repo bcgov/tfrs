@@ -39,7 +39,6 @@ const FuelCodeFormDetails = props => (
                 value={props.fields.company}
                 inputProps={
                   {
-                    className: 'form-control',
                     required: true,
                     name: 'company',
                     id:'company'
@@ -151,7 +150,6 @@ const FuelCodeFormDetails = props => (
                 value={props.fields.feedstock}
                 inputProps={
                   {
-                    className: 'form-control',
                     required: true,
                     name: 'feedstock',
                     id:'feedstock'
@@ -173,7 +171,6 @@ const FuelCodeFormDetails = props => (
                 value={props.fields.feedstockLocation}
                 inputProps={
                   {
-                    className: 'form-control',
                     required: true,
                     name: 'feedstockLocation',
                     id:'feedstockLocation'
@@ -192,7 +189,6 @@ const FuelCodeFormDetails = props => (
                 value={props.fields.feedstockMiscellaneous}
                 inputProps={
                   {
-                    className: 'form-control',
                     required: true,
                     name: 'feedstockMiscellaneous',
                     id:'feedstockMiscellaneous'
@@ -279,7 +275,6 @@ const FuelCodeFormDetails = props => (
               value={props.fields.formerCompany}
               inputProps={
                 {
-                  className: 'form-control',
                   required: true,
                   name: 'formerCompany',
                   id:'formerCompany'
