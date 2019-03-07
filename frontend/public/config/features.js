@@ -8,5 +8,6 @@ window.tfrs_config = {
   'debug.enabled': true,
   'secure_document_upload.enabled': true,
   'secure_document_upload.max_file_size': 50000000,
-  'fuel_codes.enabled': false
+  'fuel_codes.enabled': true,
+  'keycloak.custom_login': true
 };
