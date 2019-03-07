@@ -39,7 +39,7 @@ class SecureFileSubmissionAddContainer extends Component {
         milestone: '',
         title: ''
       },
-      validationErrors: {},
+      isFormIncomplete: true,
       uploadState: '',
       uploadProgress: []
     };
@@ -84,6 +84,32 @@ class SecureFileSubmissionAddContainer extends Component {
     }
 
     return this.props.errors;
+  }
+
+  _getValidationMessages () {
+    const validationMessage = [];
+
+    if (this.state.fields.compliancePeriod.id === 0) {
+      validationMessage.push('Please specify the Compliance Period to which the request relates.');
+    }
+
+    if (this._getDocumentType().theType === 'Evidence') {
+      if (this.state.fields.title === '') {
+        validationMessage.push('Please provide the name of the Part 3 Agreement to which the submission relates.');
+      }
+
+      if (this.state.fields.milestone === '') {
+        validationMessage.push('Please indicate the Milestone(s) to which the submission relates.');
+      }
+    } else if (this.state.fields.title === '') {
+      validationMessage.push('Please provide a Title.');
+    }
+
+    if (this.state.fields.files.length === 0) {
+      validationMessage.push('Please attach at least one file before submitting.');
+    }
+
+    return validationMessage;
   }
 
   _handleInputChange (event) {
@@ -258,11 +284,10 @@ class SecureFileSubmissionAddContainer extends Component {
         documentType={this._getDocumentType()}
         errors={this._getErrors()}
         fields={this.state.fields}
+        formValidationMessage={this._getValidationMessages()}
         handleInputChange={this._handleInputChange}
         handleSubmit={this._handleSubmit}
         key="secureFileSubmission"
-        loggedInUser={this.props.loggedInUser}
-        validationErrors={this.state.validationErrors}
       />,
       <Modal
         handleSubmit={(event) => {
@@ -278,8 +303,7 @@ class SecureFileSubmissionAddContainer extends Component {
 }
 
 SecureFileSubmissionAddContainer.defaultProps = {
-  errors: {},
-  validationErrors: {}
+  errors: {}
 };
 
 SecureFileSubmissionAddContainer.propTypes = {
@@ -288,15 +312,6 @@ SecureFileSubmissionAddContainer.propTypes = {
   errors: PropTypes.shape({
     title: PropTypes.arrayOf(PropTypes.string)
   }),
-  loggedInUser: PropTypes.shape({
-    displayName: PropTypes.string,
-    hasPermission: PropTypes.func,
-    isGovernmentUser: PropTypes.bool,
-    organization: PropTypes.shape({
-      name: PropTypes.string,
-      id: PropTypes.number
-    })
-  }).isRequired,
   match: PropTypes.shape({
     params: PropTypes.shape({
       id: PropTypes.string,
@@ -308,7 +323,6 @@ SecureFileSubmissionAddContainer.propTypes = {
     isFetching: PropTypes.bool,
     isSuccessful: PropTypes.bool
   }).isRequired,
-  validationErrors: PropTypes.shape(),
   requestURL: PropTypes.func.isRequired,
   uploadDocument: PropTypes.func.isRequired
 
@@ -316,7 +330,6 @@ SecureFileSubmissionAddContainer.propTypes = {
 
 const mapStateToProps = state => ({
   errors: state.rootReducer.documentUpload.errors,
-  loggedInUser: state.rootReducer.userRequest.loggedInUser,
   referenceData: {
     documentCategories: state.rootReducer.referenceData.data.documentCategories,
     isFetching: state.rootReducer.referenceData.isFetching,

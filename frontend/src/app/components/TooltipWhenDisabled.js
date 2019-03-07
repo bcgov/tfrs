@@ -16,7 +16,12 @@ class TooltipWhenDisabled extends Component {
   _tooltip () {
     return (
       <Tooltip className="danger" id="tooltip">
-        {this.props.title}
+        {Array.isArray(this.props.title) &&
+          this.props.title.map(title => (<div key={title}>{title}</div>))
+        }
+        {!Array.isArray(this.props.title) &&
+          this.props.title
+        }
       </Tooltip>
     );
   }
@@ -40,7 +45,10 @@ TooltipWhenDisabled.propTypes = {
     PropTypes.node
   ]).isRequired,
   disabled: PropTypes.bool,
-  title: PropTypes.string.isRequired
+  title: PropTypes.oneOfType([
+    PropTypes.string,
+    PropTypes.arrayOf(PropTypes.string)
+  ]).isRequired
 };
 
 export default TooltipWhenDisabled;

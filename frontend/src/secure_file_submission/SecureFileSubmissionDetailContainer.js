@@ -99,6 +99,20 @@ class SecureFileSubmissionDetailContainer extends Component {
     });
   }
 
+  _getValidationMessages () {
+    const validationMessage = [];
+
+    this.props.documentUpload.item.attachments.forEach((attachment) => {
+      const recordNumber = this.state.fields.recordNumbers.find(item => item.id === attachment.id);
+
+      if (!recordNumber || recordNumber.value === '') {
+        validationMessage.push(`Please provide a TRIM Record # for ${attachment.filename}`);
+      }
+    });
+
+    return validationMessage;
+  }
+
   _unLink (id) {
     const docid = this.props.documentUpload.item.id;
 
@@ -223,10 +237,15 @@ class SecureFileSubmissionDetailContainer extends Component {
               this.props.documentUpload.item
             )
           }
-          canLink={SecureFileSubmissionUtilityFunctions.canLinkCreditTransfer(
-            this.props.loggedInUser, this.props.documentUpload.item)}
+          canLink={
+            SecureFileSubmissionUtilityFunctions.canLinkCreditTransfer(
+              this.props.loggedInUser,
+              this.props.documentUpload.item
+            )
+          }
           errors={errors}
           fields={this.state.fields}
+          formValidationMessage={this._getValidationMessages()}
           handleRecordNumberChange={this._handleRecordNumberChange}
           hasCommented={this.state.hasCommented}
           isCommenting={this.state.isCommenting}
@@ -306,7 +325,10 @@ class SecureFileSubmissionDetailContainer extends Component {
   }
 }
 
-SecureFileSubmissionDetailContainer.defaultProps = {};
+SecureFileSubmissionDetailContainer.defaultProps = {
+  creditTransfers: {},
+  isFetching: false
+};
 
 SecureFileSubmissionDetailContainer.propTypes = {
   addCommentToDocument: PropTypes.func.isRequired,
@@ -315,11 +337,13 @@ SecureFileSubmissionDetailContainer.propTypes = {
     errors: PropTypes.shape(),
     isFetching: PropTypes.bool.isRequired,
     item: PropTypes.shape({
-      id: PropTypes.number
+      id: PropTypes.number,
+      attachments: PropTypes.arrayOf(PropTypes.shape)
     }),
     success: PropTypes.bool
   }).isRequired,
   getDocumentUpload: PropTypes.func.isRequired,
+  isFetching: PropTypes.bool,
   loggedInUser: PropTypes.shape({
     displayName: PropTypes.string,
     hasPermission: PropTypes.func,
