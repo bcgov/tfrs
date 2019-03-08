@@ -46,8 +46,8 @@ const getNotificationsCount = () => (dispatch) => {
     .then((response) => {
       dispatch(getNotificationsCountSuccess(response.data));
     }).catch((error) => {
-    dispatch(getNotificationsError(error.response));
-  });
+      dispatch(getNotificationsError(error.response));
+    });
 };
 
 const getNotificationsCountRequest = () => ({
@@ -157,4 +157,7 @@ const updateSubscriptionsError = error => ({
   errorMessage: error
 });
 
-export { getNotifications, getNotificationsCount, getSubscriptions, updateNotifications, updateSubscriptions };
+export {
+  getNotifications, getNotificationsCount, getSubscriptions,
+  updateNotifications, updateSubscriptions
+};

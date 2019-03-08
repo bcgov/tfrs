@@ -186,3 +186,12 @@
     padding: 0.5rem;
   }
 }
+
+.progress-bars .text {
+  display: block;
+  max-width: 100%;
+  overflow: hidden;
+  padding-left: 2rem;
+  text-align: left;
+  text-overflow: ellipsis;
+}

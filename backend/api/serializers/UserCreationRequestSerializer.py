@@ -15,6 +15,9 @@ class UserCreationRequestSerializer(serializers.Serializer):
             'blank': 'A BCeID/IDIR Email Address is required',
             'invalid': 'Please enter a valid BCeID/IDIR Email Address.'
         })
+    username = serializers.CharField(
+        allow_null=True, allow_blank=True, required=False
+    )
 
     def __init__(self, *args, **kwargs):
         """
@@ -34,19 +37,22 @@ class UserCreationRequestSerializer(serializers.Serializer):
         Validation to check that the email hasn't been used yet.
         """
         if UserCreationRequest.objects.filter(
-                keycloak_email=data['email']).exists():
+                keycloak_email=data.get('email'),
+                external_username=data.get('username')).exists():
             raise serializers.ValidationError(
-                'This SSO email is already associated with a user')
+                'This SSO email is already associated with that user')
 
         return data
 
     def create(self, validated_data):
         context = self.context
-        user_serializer = UserCreateSerializer(data=self.data['user'], context=context)
+        user_serializer = UserCreateSerializer(
+            data=self.data['user'], context=context)
         user_serializer.is_valid()
         user = user_serializer.save()
 
         return UserCreationRequest.objects.create(
-            keycloak_email=validated_data['email'],
+            keycloak_email=validated_data.get('email'),
+            external_username=validated_data.get('username'),
             user=user
         )

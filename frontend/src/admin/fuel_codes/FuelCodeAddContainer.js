@@ -17,6 +17,7 @@ import FUEL_CODES from '../../constants/routes/FuelCodes';
 import toastr from '../../utils/toastr';
 import axios from "axios";
 import * as Routes from "../../constants/routes";
+import Loading from "../../app/components/Loading";
 
 class FuelCodeAddContainer extends Component {
   constructor(props) {
@@ -35,11 +36,11 @@ class FuelCodeAddContainer extends Component {
         feedstock: '',
         feedstockLocation: '',
         feedstockMisc: '',
-        feedstockTransportMode: '',
+        feedstockTransportMode: [],
         formerCompany: '',
         fuel: '',
         fuelCode: '',
-        fuelTransportMode: ''
+        fuelTransportMode: []
       }
     };
 
@@ -73,7 +74,10 @@ class FuelCodeAddContainer extends Component {
     const fieldState = {...this.state.fields};
 
     if (typeof fieldState[name] === 'object') {
-      this.changeObjectProp(parseInt(value, 10), name);
+      fieldState[name] = [...event.target.options].filter(o => o.selected).map(o => o.value);
+      this.setState({
+        fields: fieldState
+      });
     } else {
       fieldState[name] = value;
       this.setState({
@@ -115,6 +119,13 @@ class FuelCodeAddContainer extends Component {
   }
 
   render() {
+
+
+    if (this.props.referenceData.isFetching ||
+      !this.props.referenceData.isSuccessful) {
+      return (<Loading/>);
+    }
+
     return ([
       <AdminTabs
         active="fuel-codes"
@@ -127,6 +138,8 @@ class FuelCodeAddContainer extends Component {
         fields={this.state.fields}
         handleInputChange={this._handleInputChange}
         handleSubmit={this._handleSubmit}
+        transportModes={this.props.referenceData.transportModes}
+        approvedFuels={this.props.referenceData.approvedFuels}
         key="form"
         title="New Fuel Code"
       />,
@@ -162,6 +175,8 @@ FuelCodeAddContainer.propTypes = {
   }).isRequired,
   referenceData: PropTypes.shape({
     fuelCodeStatuses: PropTypes.arrayOf(PropTypes.shape),
+    approvedFuels: PropTypes.arrayOf(PropTypes.shape),
+    transportModes: PropTypes.arrayOf(PropTypes.shape),
     isFetching: PropTypes.bool,
     isSuccessful: PropTypes.bool
   }).isRequired
@@ -171,6 +186,8 @@ const mapStateToProps = state => ({
   loggedInUser: state.rootReducer.userRequest.loggedInUser,
   referenceData: {
     fuelCodeStatuses: state.rootReducer.referenceData.data.fuelCodeStatuses,
+    approvedFuels: state.rootReducer.referenceData.data.approvedFuels,
+    transportModes: state.rootReducer.referenceData.data.transportModes,
     isFetching: state.rootReducer.referenceData.isFetching,
     isSuccessful: state.rootReducer.referenceData.success
   }

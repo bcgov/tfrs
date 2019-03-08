@@ -25,12 +25,15 @@ class UserAddContainer extends Component {
       fields: {
         firstName: '',
         lastName: '',
-        bceid: '',
         email: '',
         organization: null,
         mobilePhone: '',
         status: 'active',
         title: '',
+        userCreationRequest: {
+          keycloakEmail: '',
+          externalUsername: ''
+        },
         workPhone: '',
         roles: []
       }
@@ -102,7 +105,12 @@ class UserAddContainer extends Component {
     const { value, name } = event.target;
     const fieldState = { ...this.state.fields };
 
-    fieldState[name] = value;
+    if (['keycloakEmail', 'externalUsername'].indexOf(name) >= 0) {
+      fieldState.userCreationRequest[name] = value;
+    } else {
+      fieldState[name] = value;
+    }
+
     this.setState({
       fields: fieldState
     });
@@ -131,7 +139,8 @@ class UserAddContainer extends Component {
         is_active: this.state.fields.status === 'active',
         title: this.state.fields.title
       },
-      email: this.state.fields.bceid
+      email: this.state.fields.userCreationRequest.keycloakEmail,
+      username: this.state.fields.userCreationRequest.externalUsername
     };
 
     this.props.createUser(data).then(() => {

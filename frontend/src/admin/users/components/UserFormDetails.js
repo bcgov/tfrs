@@ -48,7 +48,7 @@ const UserFormDetails = props => (
       <div className="row">
         <div className="col-sm-6">
           <div className="form-group">
-            <label htmlFor="bceid">
+            <label htmlFor="keycloak-email">
               {document.location.pathname.indexOf('/admin/users/') < 0 &&
                 'BCeID Email Address:'}
               {document.location.pathname.indexOf('/admin/users/') >= 0 &&
@@ -56,21 +56,54 @@ const UserFormDetails = props => (
               {props.isAdding &&
                 <input
                   className="form-control"
-                  id="bceid"
-                  name="bceid"
+                  id="keycloak-email"
+                  name="keycloakEmail"
                   onChange={props.handleInputChange}
                   required="required"
                   type="email"
-                  value={props.fields.bceid}
+                  value={props.fields.userCreationRequest.keycloakEmail}
                 />
               }
               {!props.isAdding &&
                 <div
                   className="form-control read-only"
                 >
-                  {props.fields.bceid === ''
+                  {props.fields.userCreationRequest.keycloakEmail === ''
                     ? <em>None</em>
-                    : props.fields.bceid
+                    : props.fields.userCreationRequest.keycloakEmail
+                  }
+                </div>
+              }
+            </label>
+          </div>
+        </div>
+
+        <div className="col-sm-6">
+          <div className="form-group">
+            <label htmlFor="external-username">
+              {document.location.pathname.indexOf('/admin/users/') < 0 &&
+                'BCeID:'}
+              {document.location.pathname.indexOf('/admin/users/') >= 0 &&
+                'IDIR Username:'}
+              {props.isAdding &&
+                <input
+                  className="form-control"
+                  id="external-username"
+                  maxLength="150"
+                  name="externalUsername"
+                  onChange={props.handleInputChange}
+                  required="required"
+                  type="text"
+                  value={props.fields.userCreationRequest.externalUsername}
+                />
+              }
+              {!props.isAdding &&
+                <div
+                  className="form-control read-only"
+                >
+                  {props.fields.userCreationRequest.externalUsername === ''
+                    ? <em>None</em>
+                    : props.fields.userCreationRequest.externalUsername
                   }
                 </div>
               }
@@ -281,7 +314,6 @@ UserFormDetails.propTypes = {
   addToFields: PropTypes.func.isRequired,
   editPrimaryFields: PropTypes.bool.isRequired,
   fields: PropTypes.shape({
-    bceid: PropTypes.string,
     email: PropTypes.string,
     firstName: PropTypes.string,
     lastName: PropTypes.string,
@@ -293,6 +325,10 @@ UserFormDetails.propTypes = {
     roles: PropTypes.array,
     status: PropTypes.string,
     title: PropTypes.string,
+    userCreationRequest: PropTypes.shape({
+      externalUsername: PropTypes.string,
+      keycloakEmail: PropTypes.string
+    }),
     workPhone: PropTypes.string
   }).isRequired,
   fuelSuppliers: PropTypes.arrayOf(PropTypes.shape()),

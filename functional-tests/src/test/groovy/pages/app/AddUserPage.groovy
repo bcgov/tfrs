@@ -8,7 +8,7 @@ class AddUserPage extends BaseAppPage {
 
     firstNameField { $('#first-name') }
     lastNameField { $('#last-name') }
-    bceidEmailField { $('#bceid') }
+    bceidEmailField { $('#keycloak-email') }
     workPhoneField { $('#work-phone') }
     mobilePooneField { $('#mobile-phone') }
     emailField { $('#email') }

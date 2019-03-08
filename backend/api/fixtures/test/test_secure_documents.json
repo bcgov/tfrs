@@ -2,7 +2,7 @@
   {
     "fields": {
       "role": [
-        "FSDoc"
+        "FSDocSubmit"
       ],
       "user": [
         "fs_user_1"

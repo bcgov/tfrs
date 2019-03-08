@@ -10,7 +10,6 @@ import { bindActionCreators } from 'redux';
 import Loading from '../app/components/Loading';
 import Modal from '../app/components/Modal';
 
-
 import {
   deleteDocumentUpload, getDocumentUpload, getDocumentUploadURL, partialUpdateDocument,
   uploadDocument
@@ -19,7 +18,7 @@ import history from '../app/History';
 import DOCUMENT_STATUSES from '../constants/documentStatuses';
 import SECURE_DOCUMENT_UPLOAD from '../constants/routes/SecureDocumentUpload';
 import toastr from '../utils/toastr';
-import SecureFileSubmissionForm from "./components/SecureFileSubmissionForm";
+import SecureFileSubmissionForm from './components/SecureFileSubmissionForm';
 
 class SecureFileSubmissionEditContainer extends Component {
   constructor (props) {
@@ -124,6 +123,32 @@ class SecureFileSubmissionEditContainer extends Component {
     }
 
     return this.props.errors;
+  }
+
+  _getValidationMessages () {
+    const validationMessage = [];
+
+    if (this.state.fields.compliancePeriod.id === 0) {
+      validationMessage.push('Please specify the Compliance Period to which the request relates.');
+    }
+
+    if (this._getDocumentType().theType === 'Evidence') {
+      if (this.state.fields.title === '') {
+        validationMessage.push('Please provide the name of the Part 3 Agreement to which the submission relates.');
+      }
+
+      if (this.state.fields.milestone === '') {
+        validationMessage.push('Please indicate the Milestone(s) to which the submission relates.');
+      }
+    } else if (this.state.fields.title === '') {
+      validationMessage.push('Please provide a Title.');
+    }
+
+    if (this.state.fields.files.length === 0 && this.state.fields.attachments.length === 0) {
+      validationMessage.push('Please attach at least one file before submitting.');
+    }
+
+    return validationMessage;
   }
 
   _handleInputChange (event) {
@@ -238,6 +263,7 @@ class SecureFileSubmissionEditContainer extends Component {
         edit
         errors={this._getErrors()}
         fields={this.state.fields}
+        formValidationMessage={this._getValidationMessages()}
         handleInputChange={this._handleInputChange}
         handleSubmit={this._handleSubmit}
         key="secureFileSubmissionForm"
