@@ -195,3 +195,17 @@
   text-align: left;
   text-overflow: ellipsis;
 }
+
+#linkCreditTransfer {
+  .modal-dialog {
+    width: 90%;
+
+    .modal-body {
+      padding: 0;
+
+      .ReactTable {
+        border: none;
+      }
+    }
+  }
+}

@@ -217,7 +217,8 @@ const SecureFileSubmissionDetails = props => (
               <button
                 id="add-credit-transfer-link"
                 className="btn btn-primary"
-                onClick={() => props.addLink()}
+                data-target="#linkCreditTransfer"
+                data-toggle="modal"
                 type="button"
               >
                 {Lang.BTN_LINK_CREDIT_TRANSACTION}

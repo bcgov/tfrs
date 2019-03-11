@@ -17,6 +17,7 @@ import Modal from '../app/components/Modal';
 import history from '../app/History';
 import SecureFileSubmissionDetails from './components/SecureFileSubmissionDetails';
 import SECURE_DOCUMENT_UPLOAD from '../constants/routes/SecureDocumentUpload';
+import * as Lang from '../constants/langEnUs';
 import toastr from '../utils/toastr';
 import LinkedCreditTransferSelection from './components/LinkedCreditTransferSelection';
 import { getCreditTransfers } from '../actions/creditTransfersActions';
@@ -297,9 +298,22 @@ class SecureFileSubmissionDetailContainer extends Component {
         >
           Are you sure you want to securely submit these files to the
           Government of British Columbia?
+        </Modal>,
+        <Modal
+          cancelLabel={Lang.BTN_CANCEL_LINK_CREDIT_TRANSACTION}
+          id="linkCreditTransfer"
+          key="linkCreditTransfer"
+          showConfirmButton={false}
+          title="Link Credit Transaction"
+        >
+          <LinkedCreditTransferSelection
+            creditTransfers={this.props.creditTransfers.items}
+            establishLink={this._establishLink}
+          />
         </Modal>
       ]);
     }
+
     return <Loading />;
   }
 
@@ -312,13 +326,6 @@ class SecureFileSubmissionDetailContainer extends Component {
       if (this.props.creditTransfers.isFetching) {
         return <Loading />;
       }
-
-      return (
-        <LinkedCreditTransferSelection
-          creditTransfers={this.props.creditTransfers.items}
-          cancelLink={this._cancelLink}
-          establishLink={this._establishLink}
-        />);
     }
 
     return this.renderStatic();
