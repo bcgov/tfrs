@@ -15,6 +15,8 @@ import FuelCodeForm from './components/FuelCodeForm';
 import Modal from '../../app/components/Modal';
 import FUEL_CODES from '../../constants/routes/FuelCodes';
 import toastr from '../../utils/toastr';
+import axios from "axios";
+import * as Routes from "../../constants/routes";
 import Loading from "../../app/components/Loading";
 
 class FuelCodeAddContainer extends Component {
@@ -117,6 +119,7 @@ class FuelCodeAddContainer extends Component {
   }
 
   render() {
+
 
     if (this.props.referenceData.isFetching ||
       !this.props.referenceData.isSuccessful) {
