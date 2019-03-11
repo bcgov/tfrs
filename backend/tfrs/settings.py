@@ -212,6 +212,13 @@ CACHES = {
         'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
         'LOCATION': 'keycloak',
     },
+    'autocomplete': {
+        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
+        'LOCATION': 'cached_autocomplete',
+        'OPTIONS': {
+            'MAX_ENTRIES': 25
+        }
+    },
     'notification_subscriptions': {
         'BACKEND': 'django.core.cache.backends.db.DatabaseCache',
         'LOCATION': 'cached_notification_subscriptions',
