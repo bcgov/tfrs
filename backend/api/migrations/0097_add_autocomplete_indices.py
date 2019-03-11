@@ -38,7 +38,7 @@ class Migration(migrations.Migration):
     Attaches the functions for the migrations
     """
     dependencies = [
-        ('api', '0091_add_trgm_extension'),
+        ('api', '0096_add_trgm_extension'),
     ]
 
     operations = [
