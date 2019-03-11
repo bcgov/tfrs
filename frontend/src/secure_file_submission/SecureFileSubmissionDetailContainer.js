@@ -11,7 +11,8 @@ import SecureFileSubmissionUtilityFunctions from './SecureFileSubmissionUtilityF
 
 import {
   addCommentToDocument, deleteDocumentUpload, getDocumentUpload,
-  linkDocument, partialUpdateDocument, unlinkDocument, updateCommentOnDocument
+  linkDocument, partialUpdateDocument, unlinkDocument, updateCommentOnDocument,
+  getLinkableCreditTransactions
 } from '../actions/documentUploads';
 import Modal from '../app/components/Modal';
 import history from '../app/History';
@@ -20,7 +21,6 @@ import SECURE_DOCUMENT_UPLOAD from '../constants/routes/SecureDocumentUpload';
 import * as Lang from '../constants/langEnUs';
 import toastr from '../utils/toastr';
 import LinkedCreditTransferSelection from './components/LinkedCreditTransferSelection';
-import { getCreditTransfers } from '../actions/creditTransfersActions';
 
 class SecureFileSubmissionDetailContainer extends Component {
   constructor (props) {
@@ -33,18 +33,18 @@ class SecureFileSubmissionDetailContainer extends Component {
       hasCommented: false,
       isCommenting: false,
       isCreatingPrivilegedComment: false,
-      isLinking: false
+      selectedLinkId: null
     };
 
     this._addComment = this._addComment.bind(this);
+    this._addLink = this._addLink.bind(this);
     this._cancelComment = this._cancelComment.bind(this);
+    this._establishLink = this._establishLink.bind(this);
     this._getDocumentStatus = this._getDocumentStatus.bind(this);
     this._handleRecordNumberChange = this._handleRecordNumberChange.bind(this);
     this._handleSubmit = this._handleSubmit.bind(this);
     this._saveComment = this._saveComment.bind(this);
-    this._addLink = this._addLink.bind(this);
-    this._cancelLink = this._cancelLink.bind(this);
-    this._establishLink = this._establishLink.bind(this);
+    this._selectLinkIdForModal = this._selectLinkIdForModal.bind(this);
     this._unLink = this._unLink.bind(this);
   }
 
@@ -63,6 +63,10 @@ class SecureFileSubmissionDetailContainer extends Component {
     });
   }
 
+  _addLink () {
+    this.props.fetchCreditTransfers(this.props.match.params.id);
+  }
+
   _cancelComment () {
     this.setState({
       isCommenting: false,
@@ -70,32 +74,21 @@ class SecureFileSubmissionDetailContainer extends Component {
     });
   }
 
-  _cancelLink () {
-    this.setState({
-      isLinking: false
-    });
-  }
-
-  _addLink () {
-    this.props.fetchCreditTransfers();
-
-    this.setState({
-      isLinking: true
+  _deleteCreditTransferRequest (id) {
+    this.props.deleteDocumentUpload(id).then(() => {
+      history.push(SECURE_DOCUMENT_UPLOAD.LIST);
+      toastr.documentUpload(null, 'Draft deleted.');
     });
   }
 
   _establishLink (id) {
-    const docid = this.props.documentUpload.item.id;
-
-    this.setState({
-      isLinking: false
-    });
+    const docId = this.props.documentUpload.item.id;
 
     const data = {
       creditTrade: id
     };
 
-    this.props.linkDocument(docid, data).then((response) => {
+    this.props.linkDocument(docId, data).then((response) => {
       this.props.getDocumentUpload(this.props.documentUpload.item.id);
     });
   }
@@ -112,25 +105,6 @@ class SecureFileSubmissionDetailContainer extends Component {
     });
 
     return validationMessage;
-  }
-
-  _unLink (id) {
-    const docid = this.props.documentUpload.item.id;
-
-    const data = {
-      creditTrade: id
-    };
-
-    this.props.unlinkDocument(docid, data).then((response) => {
-      this.props.getDocumentUpload(this.props.documentUpload.item.id);
-    });
-  }
-
-  _deleteCreditTransferRequest (id) {
-    this.props.deleteDocumentUpload(id).then(() => {
-      history.push(SECURE_DOCUMENT_UPLOAD.LIST);
-      toastr.documentUpload(null, 'Draft deleted.');
-    });
   }
 
   _getDocumentStatus (status) {
@@ -212,6 +186,24 @@ class SecureFileSubmissionDetailContainer extends Component {
     }
   }
 
+  _selectLinkIdForModal (id) {
+    this.setState({
+      selectedLinkId: id
+    });
+  }
+
+  _unLink (id) {
+    const docId = this.props.documentUpload.item.id;
+
+    const data = {
+      creditTrade: id
+    };
+
+    this.props.unlinkDocument(docId, data).then((response) => {
+      this.props.getDocumentUpload(this.props.documentUpload.item.id);
+    });
+  }
+
   renderStatic () {
     const {
       errors, item, isFetching, success
@@ -227,9 +219,8 @@ class SecureFileSubmissionDetailContainer extends Component {
         <SecureFileSubmissionDetails
           addComment={this._addComment}
           availableActions={availableActions}
-          cancelComment={this._cancelComment}
           addLink={this._addLink}
-          unLink={this._unLink}
+          cancelComment={this._cancelComment}
           canComment={SecureFileSubmissionUtilityFunctions
             .canComment(this.props.loggedInUser, this.props.documentUpload.item)}
           canCreatePrivilegedComment={
@@ -254,6 +245,7 @@ class SecureFileSubmissionDetailContainer extends Component {
           item={item}
           key="details"
           saveComment={this._saveComment}
+          selectLinkIdForModal={this._selectLinkIdForModal}
         />,
         <Modal
           handleSubmit={(event) => {
@@ -300,16 +292,26 @@ class SecureFileSubmissionDetailContainer extends Component {
           Government of British Columbia?
         </Modal>,
         <Modal
-          cancelLabel={Lang.BTN_CANCEL_LINK_CREDIT_TRANSACTION}
-          id="linkCreditTransfer"
-          key="linkCreditTransfer"
-          showConfirmButton={false}
-          title="Link Credit Transaction"
+          handleSubmit={() => this._unLink(this.state.selectedLinkId)}
+          id="confirmUnlink"
+          key="confirmUnlink"
         >
+          Are you sure you want to delete this link with the credit transaction?
+        </Modal>,
+        <Modal
+          cancelLabel={Lang.BTN_CANCEL_LINK_CREDIT_TRANSACTION}
+          id="modalCreditTransfer"
+          key="modalCreditTransfer"
+          showConfirmButton={false}
+          title={Lang.BTN_LINK_CREDIT_TRANSACTION}
+        >
+          {this.props.creditTransfers.isFetching && <Loading />}
+          {!this.props.creditTransfers.isFetching &&
           <LinkedCreditTransferSelection
             creditTransfers={this.props.creditTransfers.items}
             establishLink={this._establishLink}
           />
+          }
         </Modal>
       ]);
     }
@@ -320,12 +322,6 @@ class SecureFileSubmissionDetailContainer extends Component {
   render () {
     if (this.props.isFetching) {
       return <Loading />;
-    }
-
-    if (this.state.isLinking) {
-      if (this.props.creditTransfers.isFetching) {
-        return <Loading />;
-      }
     }
 
     return this.renderStatic();
@@ -406,7 +402,7 @@ const mapDispatchToProps = dispatch => ({
   getDocumentUpload: bindActionCreators(getDocumentUpload, dispatch),
   partialUpdateDocument: bindActionCreators(partialUpdateDocument, dispatch),
   updateCommentOnDocument: bindActionCreators(updateCommentOnDocument, dispatch),
-  fetchCreditTransfers: bindActionCreators(getCreditTransfers, dispatch),
+  fetchCreditTransfers: bindActionCreators(getLinkableCreditTransactions, dispatch),
   linkDocument: bindActionCreators(linkDocument, dispatch),
   unlinkDocument: bindActionCreators(unlinkDocument, dispatch)
 });

@@ -16,13 +16,13 @@ const LinkedCreditTransferSelection = (props) => {
     className: 'col-id',
     Header: 'ID',
     resizable: false,
-    width: 45
+    width: 50
   }, {
     accessor: item => (item.compliancePeriod ? item.compliancePeriod.description : ''),
     className: 'col-compliance-period',
     Header: 'Compliance Period',
     id: 'compliancePeriod',
-    minWidth: 45
+    minWidth: 90
   }, {
     accessor: item => getCreditTransferType(item.type.id),
     className: 'col-transfer-type',
@@ -45,7 +45,7 @@ const LinkedCreditTransferSelection = (props) => {
     },
     Header: 'Credits From',
     id: 'creditsFrom',
-    minWidth: 190
+    minWidth: 200
   }, {
     accessor: item => ((item.type.id === CREDIT_TRANSFER_TYPES.retirement.id) ? '' : item.creditsTo.name),
     Cell: (row) => {
@@ -59,7 +59,7 @@ const LinkedCreditTransferSelection = (props) => {
     },
     Header: 'Credits To',
     id: 'creditsTo',
-    minWidth: 190
+    minWidth: 200
   }, {
     accessor: item => item.numberOfCredits,
     className: 'col-credits',
@@ -67,7 +67,7 @@ const LinkedCreditTransferSelection = (props) => {
     filterMethod: (filter, row) => filterNumber(filter.value, row.numberOfCredits, 0),
     Header: 'Quantity of Credits',
     id: 'numberOfCredits',
-    minWidth: 75
+    minWidth: 100
   }, {
     accessor: (item) => {
       if (item.type.id === CREDIT_TRANSFER_TYPES.part3Award.id ||
@@ -85,7 +85,7 @@ const LinkedCreditTransferSelection = (props) => {
     filterMethod: (filter, row) => filterNumber(filter.value, row.fairMarketValuePerCredit),
     Header: 'Value Per Credit',
     id: 'fairMarketValuePerCredit',
-    minWidth: 65
+    minWidth: 100
   }, {
     accessor: item => (item.isRescinded
       ? CREDIT_TRANSFER_STATUS.rescinded.description
@@ -100,14 +100,13 @@ const LinkedCreditTransferSelection = (props) => {
     accessor: item => (item.updateTimestamp ? moment(item.updateTimestamp).format('YYYY-MM-DD') : '-'),
     className: 'col-date',
     Header: 'Last Updated On',
-    id: 'updateTimestamp',
-    minWidth: 95
+    id: 'updateTimestamp'
   }, {
     accessor: 'id',
     Cell: row => (
       <button
-        id="credit-transfer-link"
-        className="btn btn-primary"
+        className="credit-transfer-link"
+        data-dismiss="modal"
         onClick={() => props.establishLink(row.value)}
         type="button"
       >
@@ -118,7 +117,7 @@ const LinkedCreditTransferSelection = (props) => {
     filterable: false,
     Header: 'Link',
     id: 'actions',
-    minWidth: 100
+    minWidth: 50
   }];
 
   const filterMethod = (filter, row, column) => {
@@ -141,6 +140,7 @@ const LinkedCreditTransferSelection = (props) => {
         id: 'id',
         desc: true
       }]}
+      id="link-credit-transfer-table"
       filterable={filterable}
       pageSizeOptions={[5, 10, 15, 20, 25, 50, 100]}
     />

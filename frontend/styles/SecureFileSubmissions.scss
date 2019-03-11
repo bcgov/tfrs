@@ -37,6 +37,10 @@
   .credit-transaction-request-details {
     label {
       font-weight: normal;
+
+      &.label-credit-transactions {
+        width: 100%;
+      }
     }
 
     .row.comment-form {
@@ -187,6 +191,39 @@
   }
 }
 
+.linked-credit-transactions {
+  padding: 0 1rem;
+
+  .header {
+    font-weight: bold;
+    padding-bottom: 0.5rem;
+    padding-top: 0.5rem;
+  }
+
+  .row {
+    display: flex;
+    align-items: center;
+
+    &:nth-of-type(even) {
+      background-color: $background-grey;
+    }
+  }
+
+  .status, .unlink {
+    text-align: center;
+  }
+
+  .unlink-action {
+    background: transparent;
+    border: none;
+    margin: 0.5rem;
+
+    &:hover {
+      color: $red;
+    }
+  }
+}
+
 .progress-bars .text {
   display: block;
   max-width: 100%;
@@ -196,7 +233,11 @@
   text-overflow: ellipsis;
 }
 
-#linkCreditTransfer {
+#add-credit-transfer-link {
+  margin-top: 1rem;
+}
+
+#modalCreditTransfer {
   .modal-dialog {
     width: 90%;
 
@@ -205,6 +246,26 @@
 
       .ReactTable {
         border: none;
+
+        .col-actions .credit-transfer-link {
+          background-color: transparent;
+          border: none;
+          color: $blue;
+          margin: 0;
+          padding: 0;
+        }
+
+        .col-credits, .col-date, .col-id, .col-price {
+          text-align: right;
+        }
+
+        .col-status {
+          text-align: center;
+        }
+      }
+
+      .text-center {
+        margin: 5rem;
       }
     }
   }

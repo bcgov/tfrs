@@ -9,12 +9,15 @@ from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 
 from api.decorators import permission_required
+from api.models.CreditTrade import CreditTrade
+from api.models.CreditTradeStatus import CreditTradeStatus
 from api.models.Document import Document
 from api.models.DocumentCategory import DocumentCategory
 from api.models.DocumentFileAttachment import DocumentFileAttachment
 from api.models.DocumentStatus import DocumentStatus
 from api.models.DocumentCreditTrade import DocumentCreditTrade
 from api.permissions.Documents import DocumentPermissions
+from api.serializers.CreditTrade import CreditTradeListSerializer
 from api.serializers.Document import \
     DocumentCreateSerializer, DocumentDeleteSerializer, \
     DocumentDetailSerializer, DocumentMinSerializer, DocumentSerializer, \
@@ -22,6 +25,7 @@ from api.serializers.Document import \
 from api.serializers.DocumentCategory import DocumentCategorySerializer
 from api.serializers.DocumentStatus import DocumentStatusSerializer
 from api.serializers.DocumentCreditTrade import CreditTradeLinkSerializer
+from api.services.CreditTradeService import CreditTradeService
 from api.services.DocumentService import DocumentService
 from api.services.SecurityScan import SecurityScan
 from auditable.views import AuditableMixin
@@ -52,7 +56,8 @@ class DocumentViewSet(AuditableMixin,
         'partial_update': DocumentUpdateSerializer,
         'update': DocumentUpdateSerializer,
         'link': CreditTradeLinkSerializer,
-        'unlink': CreditTradeLinkSerializer
+        'unlink': CreditTradeLinkSerializer,
+        'linkable_credit_transactions': CreditTradeListSerializer
     }
 
     queryset = Document.objects.all()
@@ -152,7 +157,6 @@ class DocumentViewSet(AuditableMixin,
         """
         document = self.get_object()
 
-        print(request.data)
         serializer = CreditTradeLinkSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
 
@@ -171,7 +175,6 @@ class DocumentViewSet(AuditableMixin,
         """
         document = self.get_object()
 
-        print(request.data)
         serializer = CreditTradeLinkSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
 
@@ -225,3 +228,26 @@ class DocumentViewSet(AuditableMixin,
             'put': put_url,
             'get': get_url
         })
+
+    @detail_route(methods=['get'])
+    @permission_required('DOCUMENTS_LINK_TO_CREDIT_TRADE')
+    def linkable_credit_transactions(self, request, pk=None):
+        """
+        Returns all the credit transactions that are available for the
+        File Submission.
+        (Returns all credit transactions that are associated with the fuel
+        supplier that haven't been linked to the file submission)
+        """
+        document = self.get_object()
+
+        credit_trades = CreditTradeService.get_organization_credit_trades(
+            document.create_user.organization
+        )
+
+        credit_trades = credit_trades.exclude(
+            id__in=document.credit_trades.values('id')
+        )
+
+        serializer = self.get_serializer(credit_trades, many=True)
+
+        return Response(serializer.data)

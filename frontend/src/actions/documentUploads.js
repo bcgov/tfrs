@@ -1,5 +1,7 @@
 import axios from 'axios';
 
+import CreditTransferActionTypes from '../constants/actionTypes/CreditTransfers';
+import CreditTransferReducerTypes from '../constants/reducerTypes/CreditTransfers';
 import ActionTypes from '../constants/actionTypes/DocumentUploads';
 import ReducerTypes from '../constants/reducerTypes/DocumentUploads';
 import * as Routes from '../constants/routes';
@@ -341,7 +343,6 @@ const unlinkDocument = (id, data) => (dispatch) => {
     });
 };
 
-
 const removeDocumentLinkRequest = () => ({
   name: ReducerTypes.REMOVE_DOCUMENT_LINK,
   type: ActionTypes.REMOVE_DOCUMENT_LINK
@@ -359,6 +360,40 @@ const removeDocumentLinkError = error => ({
   errorMessage: error
 });
 
+/*
+ * Get Linkable Credit Transactions
+ */
+const getLinkableCreditTransactions = id => (dispatch) => {
+  dispatch(getCreditTransfersRequest());
+
+  return axios
+    .get(`${Routes.BASE_URL}${Routes.SECURE_DOCUMENT_UPLOAD.API}/${id}/linkable_credit_transactions`)
+    .then((response) => {
+      dispatch(getCreditTransfersSuccess(response.data));
+      return Promise.resolve(response);
+    }).catch((error) => {
+      dispatch(getCreditTransfersError(error.response));
+      return Promise.reject(error);
+    });
+};
+
+const getCreditTransfersRequest = () => ({
+  name: CreditTransferReducerTypes.GET_CREDIT_TRANSFERS_REQUEST,
+  type: CreditTransferActionTypes.GET_CREDIT_TRANSFERS
+});
+
+const getCreditTransfersSuccess = creditTransfers => ({
+  name: CreditTransferReducerTypes.RECEIVE_CREDIT_TRANSFERS_REQUEST,
+  type: CreditTransferActionTypes.RECEIVE_CREDIT_TRANSFERS,
+  data: creditTransfers,
+  receivedAt: Date.now()
+});
+
+const getCreditTransfersError = error => ({
+  name: CreditTransferReducerTypes.ERROR_CREDIT_TRANSFERS_REQUEST,
+  type: CreditTransferActionTypes.ERROR,
+  errorMessage: error
+});
 
 export {
   addCommentToDocument,
@@ -368,6 +403,7 @@ export {
   getDocumentUpload,
   getDocumentUploads,
   getDocumentUploadURL,
+  getLinkableCreditTransactions,
   updateCommentOnDocument,
   uploadDocument,
   updateDocumentUpload,
