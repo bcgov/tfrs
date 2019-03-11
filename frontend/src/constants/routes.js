@@ -17,6 +17,8 @@ export const ORGANIZATIONS_FUEL_SUPPLIERS = '/organizations/fuel_suppliers';
 export const CREDIT_TRADE_API = '/credit_trades';
 export const COMMENTS_API = '/comments';
 
+export const AUTOCOMPLETE_API = '/autocomplete';
+
 // to add additional reference data, just add the endpoint and desired state name here
 export const REFERENCE_DATA_API_ENDPOINTS = {
   organizationTypes: '/organizations/types',
