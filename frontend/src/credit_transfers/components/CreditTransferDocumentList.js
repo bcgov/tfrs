@@ -2,52 +2,44 @@
  * Presentational component
  */
 import React from 'react';
+import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import CREDIT_TRANSACTIONS from "../../constants/routes/CreditTransactions";
-import {Link} from "react-router-dom";
-import FontAwesomeIcon from "@fortawesome/react-fontawesome";
-import SECURE_DOCUMENT_UPLOAD from "../../constants/routes/SecureDocumentUpload";
+
+import SECURE_DOCUMENT_UPLOAD from '../../constants/routes/SecureDocumentUpload';
 
 const CreditTransferDocumentList = props => (
   <div className="credit-transfer-documents">
     <h3 className="documents-header" key="header">Linked Secure File Submissions</h3>
-    <table>
-      <thead>
-      <tr>
-        <th>Title</th>
-        <th>Type</th>
-        <th>Status</th>
-        <th>Link</th>
-      </tr>
-      </thead>
-      <tbody>
+    <div className="linked-file-submissions">
+      <div className="row">
+        <div className="col-xs-3 header">ID</div>
+        <div className="col-xs-3 header">Title</div>
+        <div className="col-xs-3 header">Type</div>
+        <div className="col-xs-3 status header">Status</div>
+      </div>
       {props.documents.map(document => (
-        <tr key={document.id}>
-          <td>{document.title}</td>
-          <td>{document.type.theType}</td>
-          <td>{document.status.status}</td>
-          <td>
+        <div className="row" key={document.id}>
+          <div className="col-xs-3">
             <Link to={SECURE_DOCUMENT_UPLOAD.DETAILS.replace(':id', document.id)}>
-              <FontAwesomeIcon icon="box-open"/>
+              {document.id}
             </Link>
-          </td>
-        </tr>
+          </div>
+          <div className="col-xs-3">{document.title}</div>
+          <div className="col-xs-3">{document.type.theType}</div>
+          <div className="col-xs-3 status">{document.status.status}</div>
+        </div>
       ))}
-      </tbody>
-    </table>
+    </div>
   </div>
 );
 
-
 CreditTransferDocumentList.propTypes = {
-  documents: PropTypes.arrayOf(
-    PropTypes.shape({
-      id: PropTypes.number,
-      title: PropTypes.string,
-      type: PropTypes.shape,
-      status: PropTypes.shape
-    })
-  ).isRequired
+  documents: PropTypes.arrayOf(PropTypes.shape({
+    id: PropTypes.number,
+    title: PropTypes.string,
+    type: PropTypes.shape,
+    status: PropTypes.shape
+  })).isRequired
 };
 
 export default CreditTransferDocumentList;

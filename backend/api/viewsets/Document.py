@@ -9,6 +9,7 @@ from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 
 from api.decorators import permission_required
+from api.models.CreditTrade import CreditTrade
 from api.models.Document import Document
 from api.models.DocumentCategory import DocumentCategory
 from api.models.DocumentFileAttachment import DocumentFileAttachment
@@ -23,7 +24,6 @@ from api.serializers.Document import \
 from api.serializers.DocumentCategory import DocumentCategorySerializer
 from api.serializers.DocumentStatus import DocumentStatusSerializer
 from api.serializers.DocumentCreditTrade import CreditTradeLinkSerializer
-from api.services.CreditTradeService import CreditTradeService
 from api.services.DocumentService import DocumentService
 from api.services.SecurityScan import SecurityScan
 from auditable.views import AuditableMixin
@@ -233,15 +233,30 @@ class DocumentViewSet(AuditableMixin,
         """
         Returns all the credit transactions that are available for the
         File Submission.
-        (Returns all credit transactions that are associated with the fuel
-        supplier that haven't been linked to the file submission)
+        (Returns credit transactions (with certain statuses) that are
+        associated with the fuel supplier that haven't been linked to the
+        file submission)
         """
         document = self.get_object()
 
-        credit_trades = CreditTradeService.get_organization_credit_trades(
-            document.create_user.organization
+        organization = document.create_user.organization
+
+        # filter out credit transactions that are not associated with
+        # the organization attached to the file submission
+        # also filter out statuses that don't apply
+        credit_trades = CreditTrade.objects.filter(
+            (Q(initiator=organization) | Q(respondent=organization)) &
+            Q(is_rescinded=False) & (
+                (Q(status__status__in=[
+                    "Accepted", "Approved", "Declined", "Recommended",
+                    "Not Recommended", "Recorded"])) |
+                (Q(type__is_gov_only_type=True) &
+                 Q(status__status__in=[
+                     "Draft", "Submitted"]))
+            )
         )
 
+        # filter out already attached credit transactions
         credit_trades = credit_trades.exclude(
             id__in=document.credit_trades.values('id')
         )

@@ -23,7 +23,6 @@
 from django.db import models
 
 from auditable.models import Auditable
-from api.managers.DocumentCreditManager import DocumentCreditManager
 
 
 class DocumentCreditTrade(Auditable):
@@ -40,8 +39,6 @@ class DocumentCreditTrade(Auditable):
         'Document',
         on_delete=models.PROTECT
     )
-
-    objects = DocumentCreditManager()
 
     class Meta:
         db_table = 'document_credit_trade'

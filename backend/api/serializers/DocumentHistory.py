@@ -20,11 +20,25 @@
     See the License for the specific language governing permissions and
     limitations under the License.
 """
+from rest_framework import serializers
 
-from django.db import models
+from api.models.DocumentHistory import DocumentHistory
+
+from .DocumentStatus import DocumentStatusSerializer
 
 
-class DocumentCreditManager(models.Manager):
-    def get_queryset(self):
-        print(self)
-        return super(DocumentCreditManager, self).get_queryset()
+class DocumentHistorySerializer(serializers.ModelSerializer):
+    """
+    Default serializer for Document history
+    """
+    status = DocumentStatusSerializer(read_only=True)
+
+    class Meta:
+        model = DocumentHistory
+        fields = (
+            'id', 'title', 'status', 'create_timestamp', 'create_user',
+            'update_timestamp', 'update_user', 'document_id')
+
+        read_only_fields = (
+            'id', 'title', 'status', 'create_timestamp', 'create_user',
+            'update_timestamp', 'update_user', 'document_id')
