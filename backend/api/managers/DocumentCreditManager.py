@@ -20,32 +20,11 @@
     See the License for the specific language governing permissions and
     limitations under the License.
 """
+
 from django.db import models
 
-from auditable.models import Auditable
-from api.managers.DocumentCreditManager import DocumentCreditManager
 
-
-class DocumentCreditTrade(Auditable):
-    """
-    Maintain a bidirectional many-many association between credit trades and
-    secure file submissions
-    """
-    credit_trade = models.ForeignKey(
-        'CreditTrade',
-        on_delete=models.PROTECT
-    )
-
-    document = models.ForeignKey(
-        'Document',
-        on_delete=models.PROTECT
-    )
-
-    objects = DocumentCreditManager()
-
-    class Meta:
-        db_table = 'document_credit_trade'
-        unique_together = (('credit_trade', 'document'),)
-
-    db_table_comment = "Maintain a bidirectional many-many association" \
-                       " between credit trades and secure file submissions"
+class DocumentCreditManager(models.Manager):
+    def get_queryset(self):
+        print(self)
+        return super(DocumentCreditManager, self).get_queryset()

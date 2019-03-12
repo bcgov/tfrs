@@ -9,8 +9,6 @@ from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 
 from api.decorators import permission_required
-from api.models.CreditTrade import CreditTrade
-from api.models.CreditTradeStatus import CreditTradeStatus
 from api.models.Document import Document
 from api.models.DocumentCategory import DocumentCategory
 from api.models.DocumentFileAttachment import DocumentFileAttachment
