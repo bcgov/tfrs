@@ -96,3 +96,4 @@ minio.env
 # package-lock
 package-lock.json
 supervisord.pid
+celerybeat.pid
