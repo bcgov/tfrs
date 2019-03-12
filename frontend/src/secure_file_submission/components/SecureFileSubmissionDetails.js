@@ -70,10 +70,7 @@ const SecureFileSubmissionDetails = props => (
                 {(props.item.creditTrades && props.item.creditTrades.length > 0)
                   ? (
                     <LinkedCreditTransactions
-<<<<<<< HEAD
                       canLink={props.canLink}
-=======
->>>>>>> master
                       creditTrades={props.item.creditTrades}
                       selectLinkIdForModal={props.selectLinkIdForModal}
                     />)
