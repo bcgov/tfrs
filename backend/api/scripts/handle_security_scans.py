@@ -18,6 +18,8 @@ def run():
 
     except AMQPError as error:
         print('AMQP Error {}'.format(error))
+    except Exception as error:
+        print('Exception: {}'.format(error))
 
 
 def handle_message(ch, method, props, body):
