@@ -17,6 +17,8 @@ export const ORGANIZATIONS_FUEL_SUPPLIERS = '/organizations/fuel_suppliers';
 export const CREDIT_TRADE_API = '/credit_trades';
 export const COMMENTS_API = '/comments';
 
+export const AUTOCOMPLETE_API = '/autocomplete';
+
 // to add additional reference data, just add the endpoint and desired state name here
 export const REFERENCE_DATA_API_ENDPOINTS = {
   organizationTypes: '/organizations/types',
@@ -26,6 +28,13 @@ export const REFERENCE_DATA_API_ENDPOINTS = {
 
 if (CONFIG.SECURE_DOCUMENT_UPLOAD.ENABLED) {
   REFERENCE_DATA_API_ENDPOINTS.documentCategories = '/documents/categories';
+  REFERENCE_DATA_API_ENDPOINTS.documentStatuses = '/documents/statuses';
+}
+
+if (CONFIG.FUEL_CODES.ENABLED) {
+  REFERENCE_DATA_API_ENDPOINTS.fuelCodeStatuses = '/fuel_codes/statuses';
+  REFERENCE_DATA_API_ENDPOINTS.approvedFuels = '/fuel_codes/approved_fuels';
+  REFERENCE_DATA_API_ENDPOINTS.transportModes = '/fuel_codes/transport_modes';
 }
 
 export const USERS = '/users';

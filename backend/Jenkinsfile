@@ -17,23 +17,18 @@ stage('Unit Test') {
     ){
     node("master-backend-python-${env.BUILD_NUMBER}") {
         checkout scm
-        try {
-            sh 'cd backend && pip install --upgrade pip && pip install -r requirements.txt'
-            sh 'cd backend && coverage erase && coverage run --source=. manage.py test && coverage html && coverage xml'
-        } catch(Throwable t) {
-            result = 1;
-            mail (from: "${EMAIL_FROM}", to: "${EMAIL_TO}", subject: "FYI: Job '${env.JOB_NAME}' (${env.BUILD_NUMBER}) unit test failed", body: "See ${env.BUILD_URL} for details. ");
-        } finally {
-            if(fileExists('backend/htmlcov/index.html')) {
-                publishHTML (target: [
-                    allowMissing: true,
-                    alwaysLinkToLastBuild: true,
-                    keepAll: true,
-                    reportDir: 'backend/htmlcov',
-                    reportFiles: 'index.html',
-                    reportName: "Unit Test Code Coverage Report" ])
+        dir('backend') {
+            try {
+                sh 'pip install --upgrade pip && pip install -r requirements.txt'
+                sh 'python manage.py collectstatic && python manage.py migrate'
+                sh 'python manage.py test -c nose.cfg'
+            } catch(Throwable t) {
+                result = 1;
+            } finally {
+                stash includes: 'nosetests.xml,coverage.xml', name: 'coverage'
+                junit 'nosetests.xml'
             }
-        } //end of finally
+        }
     } //end of node
     } //end of podTemplate
 } //end of stage
@@ -90,7 +85,7 @@ node("master-backend-maven-${env.BUILD_NUMBER}") {
     }
 
     stage('Build-Celery') {
-        openshiftBuild bldCfg: 'Celery', showBuildLogs: 'true'
+        openshiftBuild bldCfg: 'celery', showBuildLogs: 'true'
         echo ">> Getting Image Hash"
         IMAGE_HASH_CELERY = sh (
             script: 'oc get istag celery:latest -o template --template="{{.image.dockerImageReference}}"|awk -F ":" \'{print $3}\'',
@@ -100,6 +95,8 @@ node("master-backend-maven-${env.BUILD_NUMBER}") {
 
     stage('Deploy to Test') {
         input "Deploy to Test?"
+        input "Reminder of full datase backup and point in time backup have been done."
+        input "Deploy to Test? This is the last confirmation required."
         echo "Deploying to Test: ${BUILD_ID}"
         openshiftTag destStream: 'tfrs', verbose: 'true', destTag: 'test', srcStream: 'tfrs', srcTag: "${IMAGE_HASH_BACKEND}"
         openshiftVerifyDeployment depCfg: 'tfrs', namespace: 'mem-tfrs-test', replicaCount: 1, verbose: 'false'
@@ -125,6 +122,7 @@ node("master-backend-maven-${env.BUILD_NUMBER}") {
     
     stage('Deploy to Prod') {
         input "Deploy to Prod?"
+        input "Reminder of full datase backup and point in time backup have been done."
         input "Deploy to Prod? Please confirm again."
         input "Deploy to Prod? This is the last confirmation required."
         echo "Deploying to Prod: ${BUILD_ID}"

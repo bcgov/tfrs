@@ -1,6 +1,6 @@
 {
   "name": "tfrs",
-  "version": "1.2.14",
+  "version": "1.2.18",
   "private": true,
   "dependencies": {
     "@fortawesome/fontawesome": "^1.1.8",
@@ -19,12 +19,15 @@
     "history": "^4.6.1",
     "http-proxy": "^1.17.0",
     "isomorphic-fetch": "^2.2.1",
+    "jsonwebtoken": "^8.5.0",
+    "jwks-rsa": "^1.4.0",
     "moment": "^2.23.0",
     "numeral": "^2.0.6",
     "oidc-client": "^1.6.1",
     "path": "^0.12.7",
     "prop-types": "^15.6.2",
     "react": "~16.7.0",
+    "react-autocomplete": "^1.8.1",
     "react-bootstrap": "^0.31.5",
     "react-bootstrap-autosuggest": "^0.5.0",
     "react-bootstrap-table": "^4.3.1",

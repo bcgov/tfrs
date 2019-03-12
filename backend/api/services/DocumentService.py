@@ -5,6 +5,9 @@ from minio import Minio
 
 from api.models.DocumentFileAttachment import DocumentFileAttachment
 from api.models.DocumentHistory import DocumentHistory
+from api.models.Organization import Organization
+from api.notifications.notifications import AMQPNotificationService
+from api.notifications.notification_types import NotificationType
 from tfrs.settings import MINIO
 
 
@@ -95,3 +98,76 @@ class DocumentService(object):
         """
         pathname = urlsplit(attachment.url).path
         return pathname.replace('/{}/'.format(MINIO['BUCKET_NAME']), '')
+
+    @staticmethod
+    def validate_status(current_status, next_status):
+        """
+        This function checks if the next status is actually valid for the
+        current status
+        """
+        if current_status.status in ["Submitted", "Pending Submission"] and \
+                next_status.status == "Draft":
+            return True
+
+        if current_status.status in ["Archived", "Cancelled"]:
+            return False
+
+        if current_status.status == "Received" and \
+                next_status.status != "Archived":
+            return False
+
+        if current_status.status == "Submitted" and \
+                next_status.status != "Received":
+            return False
+
+        if current_status.status == "Pending Submission" and \
+                next_status.status != "Draft":
+            return False
+
+        if current_status.status in ["Security Scan Failed"] and \
+                next_status.status != "Draft":
+            return False
+
+        if current_status.status not in [
+                "Draft", "Security Scan Failed"]:
+            if next_status.status == "Draft":
+                return False
+
+        return True
+
+    @staticmethod
+    def send_notification(document, originating_user):
+        interested_organizations = []
+
+        government = Organization.objects.filter(
+            type__type='Government').first()
+
+        user = document.create_user
+
+        notification_type = None
+
+        if document.status.status == "Submitted":
+            interested_organizations.extend([government, user.organization])
+            notification_type = NotificationType.DOCUMENT_SUBMITTED
+
+        elif document.status.status == "Pending Submission":
+            interested_organizations.append(user.organization)
+            notification_type = NotificationType.DOCUMENT_PENDING_SUBMISSION
+
+        elif document.status.status == "Received":
+            interested_organizations.extend([government, user.organization])
+            notification_type = NotificationType.DOCUMENT_RECEIVED
+
+        elif document.status.status == "Archived":
+            interested_organizations.extend([government, user.organization])
+            notification_type = NotificationType.DOCUMENT_ARCHIVED
+
+        if notification_type:
+            for organization in interested_organizations:
+                AMQPNotificationService.send_notification(
+                    interested_organization=organization,
+                    message=notification_type.name,
+                    notification_type=notification_type,
+                    originating_user=originating_user,
+                    related_document=document
+                )

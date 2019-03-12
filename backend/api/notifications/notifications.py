@@ -3,8 +3,8 @@ from email.utils import make_msgid
 from typing import List
 
 import pika
-from django.core.cache import caches
 from pika.exceptions import AMQPError
+from django.core.cache import caches
 from django.db import transaction
 from rest_framework import serializers
 
@@ -22,7 +22,7 @@ from tfrs.settings import AMQP_CONNECTION_PARAMETERS, EMAIL
 subscription_cache = caches['notification_subscriptions']
 
 
-def send_amqp_notification():
+def send_amqp_notification(user):
     try:
         parameters = AMQP_CONNECTION_PARAMETERS
         connection = pika.BlockingConnection(parameters)
@@ -36,7 +36,8 @@ def send_amqp_notification():
         channel.basic_publish(exchange='notifications',
                               routing_key='global',
                               body=json.dumps({
-                                  'message': 'notification'
+                                  'audience': user.username,
+                                  'type': 'notification'
                               }),
                               properties=pika.BasicProperties(
                                   content_type='application/json',
@@ -191,7 +192,8 @@ class AMQPNotificationService:
             return cached
 
         all_channels = NotificationChannel.objects.all()
-        user_subscriptions = NotificationSubscription.objects.filter(user_id=user.id)
+        user_subscriptions = NotificationSubscription.objects.filter(
+            user_id=user.id)
         all_notification_types = NotificationType
 
         effective_subscriptions = []
@@ -264,41 +266,45 @@ class AMQPNotificationService:
         if message is None or len(message) == 0:
             raise InvalidNotificationArguments('msg is required')
 
+        app_subscription = EffectiveSubscription(
+            channel=NotificationChannel.objects.get(channel='IN_APP'),
+            notification_type=notification_type,
+            subscribed=True
+        )
+
+        email_subscription = EffectiveSubscription(
+            channel=NotificationChannel.objects.get(channel='EMAIL'),
+            notification_type=notification_type,
+            subscribed=True
+        )
+
         for recipient in AMQPNotificationService.__determine_message_recipients(
                 is_global=is_global,
                 interested_roles=interested_roles,
                 interested_organization=interested_organization
         ):
+            if not recipient.is_active:
+                continue
+
             effective_subscriptions = AMQPNotificationService.compute_effective_subscriptions(recipient)
 
-            app_subscription = EffectiveSubscription(
-                channel=NotificationChannel.objects.get(channel='IN_APP'),
-                notification_type=notification_type,
-                subscribed=True
-            )
+            if app_subscription in effective_subscriptions:
+                notification = NotificationMessage(
+                    user=recipient,
+                    originating_user=originating_user,
+                    related_credit_trade=related_credit_trade,
+                    related_document=related_document,
+                    related_organization=related_organization,
+                    related_user=related_user,
+                    message=message,
+                    is_error=is_error,
+                    is_warning=is_warning
+                )
+                notification.save()
+                send_amqp_notification(recipient)
 
-            notification = NotificationMessage(
-                user=recipient,
-                originating_user=originating_user,
-                related_credit_trade=related_credit_trade,
-                related_document=related_document,
-                related_organization=related_organization,
-                related_user=related_user,
-                message=message,
-                is_error=is_error,
-                is_warning=is_warning
-            )
-            notification.save()
-            send_amqp_notification()
-
-            email_subscription = EffectiveSubscription(
-                channel=NotificationChannel.objects.get(channel='EMAIL'),
-                notification_type=notification_type,
-                subscribed=True
-            )
-
-            if email_subscription in effective_subscriptions:
-                AMQPNotificationService.send_email_for_notification(notification)
+                if email_subscription in effective_subscriptions:
+                    AMQPNotificationService.send_email_for_notification(notification)
 
 
 class InvalidNotificationArguments(Exception):

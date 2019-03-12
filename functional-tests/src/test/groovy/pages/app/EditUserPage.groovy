@@ -16,7 +16,7 @@ class EditUserPage extends BaseAppPage {
     // the new first item in the list (or to all items in general).
     firstNameField(wait:true) { $('#first-name') }
     lastNameField { $('#last-name') }
-    bceidEmailField { $('#bceid') }
+    bceidEmailField { $('#keycloak-email') }
     workPhoneField { $('#work-phone') }
     mobilePooneField { $('#mobile-phone') }
     emailField { $('#email') }

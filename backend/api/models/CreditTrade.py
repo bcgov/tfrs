@@ -23,10 +23,11 @@
 from decimal import Decimal
 from typing import List
 from django.db import models
-from django.db.models import Count
+from django.db.models import Count, ManyToManyField
 from django.db.models import Max
 from django.db.models import Q
 from api import validators
+
 from auditable.models import Auditable
 
 from .CompliancePeriod import CompliancePeriod
@@ -48,48 +49,49 @@ class CreditTrade(Auditable):
     status = models.ForeignKey(
         CreditTradeStatus,
         related_name='credit_trades',
-        on_delete=models.PROTECT)
+        on_delete=models.PROTECT
+    )
     initiator = models.ForeignKey(
         Organization,
         related_name='initiator_credit_trades',
         blank=True, null=True,
-        on_delete=models.PROTECT)
+        on_delete=models.PROTECT
+    )
     respondent = models.ForeignKey(
         Organization,
         related_name='respondent_credit_trades',
         on_delete=models.PROTECT,
-        db_comment='fk: reference to the organization that will respond to the'
-                   ' credit transfer proposal')
+        db_comment="fk: reference to the organization that will respond to the"
+                   " credit transfer proposal"
+    )
     type = models.ForeignKey(
         CreditTradeType,
         related_name='credit_trades',
         on_delete=models.PROTECT)
     number_of_credits = models.IntegerField(
         validators=[validators.CreditTradeNumberOfCreditsValidator],
-        db_comment='Number of credits to be transferred on approval')
+        db_comment="Number of credits to be transferred on approval"
+    )
     fair_market_value_per_credit = models.DecimalField(
         null=True, blank=True, max_digits=999,
         decimal_places=2,
         default=Decimal('0.00'),
         validators=[validators.CreditTradeFairMarketValueValidator],
-        db_comment='The fair market value of any consideration, in Canadian dollars, per validated credit being transferred.')
+        db_comment="The fair market value of any consideration, in Canadian "
+                   "dollars, per validated credit being transferred."
+    )
     zero_reason = models.ForeignKey(
         CreditTradeZeroReason,
         related_name='credit_trades',
         blank=True,
         null=True,
         on_delete=models.PROTECT,
-        db_comment='Rationale for zero-valued transfer')
+        db_comment="Rationale for zero-valued transfer"
+    )
     trade_effective_date = models.DateField(
         blank=True, null=True,
-        db_comment='Date on which this transfer will become effective if '
-                   'approved'
-    )
-    note = models.CharField(
-        max_length=4000,
-        blank=True,
-        null=True,
-        db_comment='Notes. Soon to be deprecated.'
+        db_comment="Date on which this transfer will become effective if "
+                   "approved"
     )
     compliance_period = models.ForeignKey(
         CompliancePeriod,
@@ -101,6 +103,10 @@ class CreditTrade(Auditable):
         default=False,
         db_comment='Flag. True if the trade was rescinded before completion '
                    'by either party.'
+    )
+    documents = ManyToManyField(
+        'Document',
+        through='DocumentCreditTrade'
     )
 
     @property
@@ -212,7 +218,7 @@ class CreditTrade(Auditable):
         history = CreditTradeHistory.objects.filter(
             Q(status__status__in=statuses) | Q(is_rescinded=True),
             credit_trade_id=self.id
-        ).order_by('update_timestamp')
+        ).order_by('create_timestamp')
 
         return history
 
@@ -227,4 +233,5 @@ class CreditTrade(Auditable):
     class Meta:
         db_table = 'credit_trade'
 
-    db_table_comment = 'Records all Credit Transfer Proposals, from creation to statutory decision to approved or decline.'
+    db_table_comment = "Records all Credit Transfer Proposals, from " \
+                       "creation to statutory decision to approved or decline."

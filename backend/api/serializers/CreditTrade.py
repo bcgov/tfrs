@@ -23,6 +23,7 @@
 from datetime import datetime
 
 from rest_framework import serializers
+from rest_framework.relations import PrimaryKeyRelatedField
 
 from api.models.CreditTrade import CreditTrade
 from api.models.CreditTradeComment import CreditTradeComment
@@ -30,6 +31,7 @@ from api.models.CreditTradeStatus import CreditTradeStatus
 from api.models.CreditTradeType import CreditTradeType
 from api.models.CreditTradeZeroReason import CreditTradeZeroReason
 from api.models.User import User
+from api.serializers.DocumentCreditTrade import DocumentAuxiliarySerializer
 from api.services.CreditTradeActions import CreditTradeActions
 from api.services.CreditTradeCommentActions import CreditTradeCommentActions
 from api.services.CreditTradeService import CreditTradeService
@@ -41,20 +43,6 @@ from .CreditTradeZeroReason import CreditTradeZeroReasonSerializer
 from .CompliancePeriod import CompliancePeriodSerializer
 from .Organization import OrganizationMinSerializer
 from .User import UserMinSerializer
-
-
-class CreditTradeSerializer(serializers.ModelSerializer):
-    """
-    Default Serializer for Credit Trade
-    """
-
-    class Meta:
-        model = CreditTrade
-        fields = ('id', 'status', 'initiator', 'respondent',
-                  'type', 'number_of_credits',
-                  'fair_market_value_per_credit', 'zero_reason',
-                  'trade_effective_date', 'compliance_period',
-                  'is_rescinded')
 
 
 class CreditTradeCreateSerializer(serializers.ModelSerializer):
@@ -202,14 +190,10 @@ class CreditTradeCreateSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = CreditTrade
-        fields = ('id', 'status',
-                  'initiator', 'respondent',
-                  'type', 'number_of_credits',
-                  'fair_market_value_per_credit', 'total_value',
-                  'zero_reason',
-                  'trade_effective_date',
-                  'update_timestamp', 'note',
-                  'create_user', 'update_user',
+        fields = ('id', 'status', 'initiator', 'respondent', 'type',
+                  'number_of_credits', 'fair_market_value_per_credit',
+                  'total_value', 'zero_reason', 'trade_effective_date',
+                  'update_timestamp', 'create_user', 'update_user',
                   'compliance_period', 'is_rescinded', 'comment')
         extra_kwargs = {
             'compliance_period': {
@@ -524,7 +508,7 @@ class CreditTradeUpdateSerializer(serializers.ModelSerializer):
                   'fair_market_value_per_credit', 'total_value',
                   'zero_reason',
                   'trade_effective_date',
-                  'update_timestamp', 'note',
+                  'update_timestamp',
                   'create_user', 'update_user',
                   'compliance_period', 'is_rescinded', 'comment')
         extra_kwargs = {
@@ -589,7 +573,7 @@ class CreditTradeApproveSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = CreditTrade
-        fields = ('id', 'trade_effective_date', 'note',)
+        fields = ('id', 'trade_effective_date',)
         read_only_fields = ('status', 'number_of_credits',
                             'type',
                             'fair_market_value_per_credit',
@@ -597,6 +581,7 @@ class CreditTradeApproveSerializer(serializers.ModelSerializer):
 
 
 class CreditTrade2Serializer(serializers.ModelSerializer):
+
     """
     Credit Trade Serializer with the eager loading
     """
@@ -613,16 +598,17 @@ class CreditTrade2Serializer(serializers.ModelSerializer):
     comments = serializers.SerializerMethodField()
     history = serializers.SerializerMethodField()
     signatures = serializers.SerializerMethodField()
+    documents = DocumentAuxiliarySerializer(many=True, read_only=True)
 
     class Meta:
         model = CreditTrade
         fields = ('id', 'status',
-                  'initiator', 'respondent',
+                  'initiator', 'respondent', 'documents',
                   'type', 'number_of_credits',
                   'fair_market_value_per_credit', 'total_value',
                   'zero_reason',
                   'trade_effective_date', 'credits_from', 'credits_to',
-                  'update_timestamp', 'actions', 'comment_actions', 'note',
+                  'update_timestamp', 'actions', 'comment_actions',
                   'compliance_period', 'comments', 'is_rescinded',
                   'signatures', 'history')
 

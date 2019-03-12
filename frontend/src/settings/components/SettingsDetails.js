@@ -69,7 +69,11 @@ const SettingsDetails = props => (
         <NotificationsCreditTransactionsTable
           addToFields={props.addToFields}
           fields={props.fields.settings.notifications}
-          items={DOCUMENT_NOTIFICATIONS}
+          items={DOCUMENT_NOTIFICATIONS.filter(notification =>
+            (props.loggedInUser.isGovernmentUser
+              ? notification.recipients.includes('government')
+              : notification.recipients.includes('fuel_supplier')
+            ))}
           key="table-doc"
           toggleCheck={props.toggleCheck}
           type="documents"

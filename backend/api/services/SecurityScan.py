@@ -75,7 +75,8 @@ class SecurityScan:
                 related_document=attachment.document
             )
             return
-        else:
+
+        if attachment.document.status.status != 'Draft':
             AMQPNotificationService.send_notification(
                 interested_organization=user.organization,
                 message=NotificationType.DOCUMENT_SUBMITTED.name,
@@ -99,16 +100,19 @@ class SecurityScan:
         file_id = response['id']
         scan_complete = response['scanComplete']
         scan_passed = response['scanPassed']
-        attachment = DocumentFileAttachment.objects.get(id=file_id)
-        if scan_complete:
-            if scan_passed:
-                attachment.security_scan_status = 'PASS'
-            else:
-                attachment.security_scan_status = 'FAIL'
+        try:
+            attachment = DocumentFileAttachment.objects.get(id=file_id)
+            if scan_complete:
+                if scan_passed:
+                    attachment.security_scan_status = 'PASS'
+                else:
+                    attachment.security_scan_status = 'FAIL'
 
-        attachment.update_timestamp = datetime.now()
-        attachment.save()
-        SecurityScan.update_status_and_send_notifications(attachment)
+            attachment.update_timestamp = datetime.now()
+            attachment.save()
+            SecurityScan.update_status_and_send_notifications(attachment)
+        except DocumentFileAttachment.DoesNotExist:
+            print('File does not exist. Ignoring...')
 
     @staticmethod
     def send_scan_request(file: DocumentFileAttachment):

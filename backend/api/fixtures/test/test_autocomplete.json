@@ -1,0 +1,82 @@
+[{
+  "fields": {
+    "application_date": "2019-01-01",
+    "approval_date": "2019-01-01",
+    "carbon_intensity": "10",
+    "company": "Company A",
+    "effective_date": "2019-01-01",
+    "expiry_date": "2020-01-01",
+    "facility_location": "Test",
+    "facility_nameplate": "123",
+    "feedstock": "Crude Oil",
+    "feedstock_location": "Somewhere",
+    "feedstock_misc": "Extra sticky",
+    "former_company": null,
+    "fuel_code": "Submitted Fuel Code",
+    "status": ["Submitted"]
+  },
+  "model": "api.fuelcode",
+  "pk": null
+},
+  {
+    "fields": {
+      "application_date": "2019-01-01",
+      "approval_date": "2019-01-01",
+      "carbon_intensity": "10",
+      "company": "Company B",
+      "effective_date": "2019-01-01",
+      "expiry_date": "2020-01-01",
+      "facility_location": "Test",
+      "facility_nameplate": "123",
+      "feedstock": "Crude Oil",
+      "feedstock_location": "Someplace",
+      "feedstock_misc": "Less sticky",
+      "former_company": "Company A",
+      "fuel_code": "Submitted Fuel Code",
+      "status": ["Submitted"]
+    },
+    "model": "api.fuelcode",
+    "pk": null
+  }
+,
+  {
+    "fields": {
+      "application_date": "2019-01-01",
+      "approval_date": "2019-01-01",
+      "carbon_intensity": "10",
+      "company": "Company B",
+      "effective_date": "2019-01-01",
+      "expiry_date": "2020-01-01",
+      "facility_location": "Zanzibar",
+      "facility_nameplate": "123",
+      "feedstock": "Crude Corn",
+      "feedstock_location": "Nowhere Nice",
+      "feedstock_misc": "Extra buttery",
+      "former_company": "Company A",
+      "fuel_code": "Submitted Fuel Code",
+      "status": ["Submitted"]
+    },
+    "model": "api.fuelcode",
+    "pk": null
+  },
+  {
+    "fields": {
+      "application_date": "2019-01-01",
+      "approval_date": "2019-01-01",
+      "carbon_intensity": "10",
+      "company": "Unrelated company",
+      "effective_date": "2019-01-01",
+      "expiry_date": "2020-01-01",
+      "facility_location": "Gotham",
+      "facility_nameplate": "123",
+      "feedstock": "Corn oil",
+      "feedstock_location": "!@#",
+      "feedstock_misc": "",
+      "former_company": "",
+      "fuel_code": "Submitted Fuel Code",
+      "status": ["Submitted"]
+    },
+    "model": "api.fuelcode",
+    "pk": null
+  }
+]

@@ -99,6 +99,18 @@ class SettingsContainer extends Component {
     fieldState.settings.notifications[index].value =
         !fieldState.settings.notifications[index].value;
 
+    if (fields.field === 'email' && fieldState.settings.notifications[index].value) {
+      const inAppIndex = fieldState.settings.notifications.findIndex(state => (
+        state.id === id && state.type === fields.type && state.field === 'in_app'));
+      fieldState.settings.notifications[inAppIndex].value = true;
+    }
+
+    if (fields.field === 'in_app' && !fieldState.settings.notifications[index].value) {
+      const emailIndex = fieldState.settings.notifications.findIndex(state => (
+        state.id === id && state.type === fields.type && state.field === 'email'));
+      fieldState.settings.notifications[emailIndex].value = false;
+    }
+
     this.setState({
       fields: fieldState
     });

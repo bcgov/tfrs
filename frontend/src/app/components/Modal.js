@@ -57,6 +57,7 @@ const Modal = props => (
           >
             {props.cancelLabel}
           </button>
+          {props.showConfirmButton &&
           <button
             id="modal-yes"
             type="button"
@@ -67,6 +68,7 @@ const Modal = props => (
           >
             {props.confirmLabel}
           </button>
+          }
         </div>
       </div>
     </div>
@@ -77,6 +79,7 @@ Modal.defaultProps = {
   cancelLabel: Lang.BTN_NO,
   confirmLabel: Lang.BTN_YES,
   handleSubmit: null,
+  showConfirmButton: true,
   showExtraConfirm: false,
   canBypassExtraConfirm: true,
   extraConfirmType: 'info',
@@ -86,19 +89,20 @@ Modal.defaultProps = {
 
 Modal.propTypes = {
   cancelLabel: PropTypes.string,
+  canBypassExtraConfirm: PropTypes.bool,
   children: PropTypes.oneOfType([
     PropTypes.arrayOf(PropTypes.node),
     PropTypes.node
   ]).isRequired,
   confirmLabel: PropTypes.string,
-  showExtraConfirm: PropTypes.bool,
   extraConfirmText: PropTypes.string,
   extraConfirmType: PropTypes.oneOf([
     'info', 'warning', 'error'
   ]),
-  canBypassExtraConfirm: PropTypes.bool,
   handleSubmit: PropTypes.func,
   id: PropTypes.string.isRequired,
+  showConfirmButton: PropTypes.bool,
+  showExtraConfirm: PropTypes.bool,
   title: PropTypes.string
 };
 

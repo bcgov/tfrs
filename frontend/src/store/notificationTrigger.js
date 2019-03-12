@@ -12,7 +12,7 @@ const TRIGGERING_ACTIONS = [
 ];
 
 function* fetchNotifications(store) {
-  yield call(delay, 250); //debounce
+  yield call(delay, 1000); //debounce
 
   if (store.getState().rootReducer.userRequest.isAuthenticated) {
     yield put(getNotificationsCount());

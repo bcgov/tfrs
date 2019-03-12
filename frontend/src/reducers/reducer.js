@@ -8,6 +8,7 @@ import { organizationRequest, organizations, organizationMembers, fuelSuppliersR
 import errorRequest from './errorReducer';
 import compliancePeriods from './compliancePeriodReducer';
 import { documentUpload, documentUploads } from './documentUploadReducer';
+import { fuelCodes } from './fuelCodesReducer';
 import { roleRequest, roles } from './roleReducer';
 import signingAuthorityAssertions from './signingAuthorityAssertionReducer';
 import { notifications, subscriptions } from './notificationReducer';
@@ -22,6 +23,7 @@ const rootReducer = combineReducers({
   documentUpload,
   documentUploads,
   errorRequest,
+  fuelCodes,
   fuelSuppliersRequest,
   notifications,
   organizationMembers,

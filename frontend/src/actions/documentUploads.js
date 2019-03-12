@@ -1,5 +1,7 @@
 import axios from 'axios';
 
+import CreditTransferActionTypes from '../constants/actionTypes/CreditTransfers';
+import CreditTransferReducerTypes from '../constants/reducerTypes/CreditTransfers';
 import ActionTypes from '../constants/actionTypes/DocumentUploads';
 import ReducerTypes from '../constants/reducerTypes/DocumentUploads';
 import * as Routes from '../constants/routes';
@@ -202,7 +204,7 @@ const getDocumentUploadURLError = error => ({
 });
 
 export const partialUpdateDocument = (id, data) => (dispatch) => {
-  dispatch(updateDocumentUploadRequest({ id, data }));
+  dispatch(updateDocumentUploadRequest({id, data}));
 
   return axios.patch(`${Routes.BASE_URL}${Routes.SECURE_DOCUMENT_UPLOAD.API}/${id}`, data)
     .then((response) => {
@@ -251,7 +253,7 @@ const updateCommentOnDocumentError = error => ({
  * Update documents
  */
 const updateDocumentUpload = (id, data) => (dispatch) => {
-  dispatch(updateDocumentUploadRequest({ id, data }));
+  dispatch(updateDocumentUploadRequest({id, data}));
 
   return axios.patch(`${Routes.BASE_URL}${Routes.SECURE_DOCUMENT_UPLOAD.API}/${id}`, data)
     .then((response) => {
@@ -281,9 +283,117 @@ const updateDocumentUploadSuccess = response => ({
   type: ActionTypes.SUCCESS_UPDATE_DOCUMENT_UPLOAD
 });
 
-const uploadDocument = (url, blob) => (axios.put(url, blob, {
-  'content-type': 'multipart/form-data'
-}));
+const uploadDocument = (url, blob, callback = null) => (dispatch) => {
+
+  return axios.put(url, blob, {
+    'content-type': 'multipart/form-data',
+    onUploadProgress: (progressEvent) => {
+      if (callback) {
+        callback(progressEvent);
+      }
+    }
+  });
+};
+
+/*
+ * Handle Document Linking and Unlinking
+ */
+const linkDocument = (id, data) => (dispatch) => {
+  dispatch(addDocumentLinkRequest());
+
+  return axios
+    .put(`${Routes.BASE_URL}${Routes.SECURE_DOCUMENT_UPLOAD.API}/${id}/link`, data)
+    .then((response) => {
+      dispatch(addDocumentLinkSuccess(response.data));
+      return Promise.resolve(response);
+    }).catch((error) => {
+      dispatch(addDocumentLinkError(error.response.data));
+      return Promise.reject(error);
+    });
+};
+
+const addDocumentLinkRequest = () => ({
+  name: ReducerTypes.ADD_DOCUMENT_LINK,
+  type: ActionTypes.ADD_DOCUMENT_LINK
+});
+
+const addDocumentLinkSuccess = data => ({
+  name: ReducerTypes.SUCCESS_ADD_DOCUMENT_LINK,
+  type: ActionTypes.SUCCESS_ADD_DOCUMENT_LINK,
+  data
+});
+
+const addDocumentLinkError = error => ({
+  name: ReducerTypes.ERROR_ADD_DOCUMENT_LINK,
+  type: ActionTypes.ERROR,
+  errorMessage: error
+});
+
+const unlinkDocument = (id, data) => (dispatch) => {
+  dispatch(removeDocumentLinkRequest());
+
+  return axios
+    .put(`${Routes.BASE_URL}${Routes.SECURE_DOCUMENT_UPLOAD.API}/${id}/unlink`, data)
+    .then((response) => {
+      dispatch(removeDocumentLinkSuccess(response.data));
+      return Promise.resolve(response);
+    }).catch((error) => {
+      dispatch(removeDocumentLinkError(error.response.data));
+      return Promise.reject(error);
+    });
+};
+
+const removeDocumentLinkRequest = () => ({
+  name: ReducerTypes.REMOVE_DOCUMENT_LINK,
+  type: ActionTypes.REMOVE_DOCUMENT_LINK
+});
+
+const removeDocumentLinkSuccess = data => ({
+  name: ReducerTypes.SUCCESS_REMOVE_DOCUMENT_LINK,
+  type: ActionTypes.SUCCESS_REMOVE_DOCUMENT_LINK,
+  data
+});
+
+const removeDocumentLinkError = error => ({
+  name: ReducerTypes.ERROR_REMOVE_DOCUMENT_LINK,
+  type: ActionTypes.ERROR,
+  errorMessage: error
+});
+
+/*
+ * Get Linkable Credit Transactions
+ */
+const getLinkableCreditTransactions = id => (dispatch) => {
+  dispatch(getCreditTransfersRequest());
+
+  return axios
+    .get(`${Routes.BASE_URL}${Routes.SECURE_DOCUMENT_UPLOAD.API}/${id}/linkable_credit_transactions`)
+    .then((response) => {
+      dispatch(getCreditTransfersSuccess(response.data));
+      return Promise.resolve(response);
+    }).catch((error) => {
+      dispatch(getCreditTransfersError(error.response));
+      return Promise.reject(error);
+    });
+};
+
+const getCreditTransfersRequest = () => ({
+  name: CreditTransferReducerTypes.GET_CREDIT_TRANSFERS_REQUEST,
+  type: CreditTransferActionTypes.GET_CREDIT_TRANSFERS
+});
+
+const getCreditTransfersSuccess = creditTransfers => ({
+  name: CreditTransferReducerTypes.RECEIVE_CREDIT_TRANSFERS_REQUEST,
+  type: CreditTransferActionTypes.RECEIVE_CREDIT_TRANSFERS,
+  data: creditTransfers,
+  receivedAt: Date.now()
+});
+
+const getCreditTransfersError = error => ({
+  name: CreditTransferReducerTypes.ERROR_CREDIT_TRANSFERS_REQUEST,
+  type: CreditTransferActionTypes.ERROR,
+  errorMessage: error
+});
 
 export {
   addCommentToDocument,
@@ -293,7 +403,10 @@ export {
   getDocumentUpload,
   getDocumentUploads,
   getDocumentUploadURL,
+  getLinkableCreditTransactions,
   updateCommentOnDocument,
   uploadDocument,
-  updateDocumentUpload
+  updateDocumentUpload,
+  linkDocument,
+  unlinkDocument
 };

@@ -1,6 +1,5 @@
 import { toastr as reduxToastr } from 'react-redux-toastr';
 import { CREDIT_TRANSFER_STATUS, CREDIT_TRANSFER_TYPES } from '../constants/values';
-import DOCUMENT_STATUSES from '../constants/documentStatuses';
 
 const toastr = {
   creditTransactionSuccess: (statusId, item, message = '') => {
@@ -55,24 +54,47 @@ const toastr = {
         reduxToastr.success('Success!', `${text} saved.`);
     }
   },
-  documentUpload: (statusId, message = '') => {
+  documentUpload: (status, message = '') => {
     if (message !== '') { // message is only used to override
       reduxToastr.success('Success!', message);
       return;
     }
 
-    switch (statusId) {
-      case DOCUMENT_STATUSES.draft.id:
+    switch (status) {
+      case 'Archived':
+        reduxToastr.success('Success!', 'File archived.');
+        break;
+      case 'Draft':
         reduxToastr.success('Success!', 'Draft saved.');
         break;
-      case DOCUMENT_STATUSES.received.id:
+      case 'Received':
         reduxToastr.success('Success!', 'File received.');
         break;
-      case DOCUMENT_STATUSES.submitted.id:
+      case 'Submitted':
         reduxToastr.success('Success!', 'File submitted.');
         break;
       default:
         reduxToastr.success('Success!', 'File uploaded.');
+    }
+  },
+  fuelCodeSuccess: (status, message = '') => {
+    if (message !== '') { // message is only used to override
+      reduxToastr.success('Success!', message);
+      return;
+    }
+
+    switch (status) {
+      case 'Cancelled':
+        reduxToastr.success('Success!', 'Fuel Code deleted.');
+        break;
+      case 'Draft':
+        reduxToastr.success('Success!', 'Draft saved.');
+        break;
+      case 'Submitted':
+        reduxToastr.success('Success!', 'Fuel Code added.');
+        break;
+      default:
+        reduxToastr.success('Success!', 'Fuel Code saved.');
     }
   },
   subscriptionsSuccess: (message = '') => {

@@ -8,6 +8,7 @@ import history from './app/History';
 import * as Routes from './constants/routes';
 import {
   CREDIT_TRANSACTIONS_HISTORY,
+  FUEL_CODES,
   HISTORICAL_DATA_ENTRY,
   ROLES,
   USERS as ADMIN_USERS
@@ -18,11 +19,13 @@ import ORGANIZATIONS from './constants/routes/Organizations';
 import SECURE_DOCUMENT_UPLOAD from './constants/routes/SecureDocumentUpload';
 import USERS from './constants/routes/Users';
 
+import FuelCodeAddContainer from './admin/fuel_codes/FuelCodeAddContainer';
+import FuelCodesContainer from './admin/fuel_codes/FuelCodesContainer';
 import CreditTransactionsHistoryContainer from './admin/credit_trade_history/CreditTradeHistoryContainer';
-import CreditTransactionRequestsContainer from './secure_document_upload/CreditTransactionRequestsContainer';
-import CreditTransactionRequestAddContainer from './secure_document_upload/CreditTransactionRequestAddContainer';
-import CreditTransactonRequestDetailContainer from './secure_document_upload/CreditTransactonRequestDetailContainer';
-import CreditTransactionRequestEditContainer from './secure_document_upload/CreditTransactionRequestEditContainer';
+import SecureFileSubmissionsContainer from './secure_file_submission/SecureFileSubmissionContainer';
+import SecureFileSubmissionAddContainer from './secure_file_submission/SecureFileSubmissionAddContainer';
+import SecureFileSubmissionDetailContainer from './secure_file_submission/SecureFileSubmissionDetailContainer';
+import SecureFileSubmissionEditContainer from './secure_file_submission/SecureFileSubmissionEditContainer';
 import HistoricalDataEntryContainer from './admin/historical_data_entry/HistoricalDataEntryContainer';
 import HistoricalDataEntryEditContainer from './admin/historical_data_entry/HistoricalDataEntryEditContainer';
 import RolesContainer from './admin/roles/RolesContainer';
@@ -48,7 +51,7 @@ import AuthCallback from './app/AuthCallback';
 import CONFIG from './config';
 import OrganizationEditContainer from './organizations/OrganizationEditContainer';
 
-const Router = props => (
+const Router = routerProps => (
   <ConnectedRouter history={history} key={Math.random()}>
     <App>
       <Switch>
@@ -127,6 +130,15 @@ const Router = props => (
           component={withRouter(CreditTransferEditContainer)}
         />
         <Route
+          path={FUEL_CODES.ADD}
+          component={withRouter(FuelCodeAddContainer)}
+        />
+        <Route
+          exact
+          path={FUEL_CODES.LIST}
+          component={withRouter(FuelCodesContainer)}
+        />
+        <Route
           exact
           path={HISTORICAL_DATA_ENTRY.LIST}
           component={withRouter(HistoricalDataEntryContainer)}
@@ -201,22 +213,22 @@ const Router = props => (
             exact
             key="secure_document_upload_list"
             path={SECURE_DOCUMENT_UPLOAD.LIST}
-            component={withRouter(CreditTransactionRequestsContainer)}
+            component={withRouter(SecureFileSubmissionsContainer)}
           />,
           <Route
             key="secure_document_upload_add"
             path={SECURE_DOCUMENT_UPLOAD.ADD}
-            component={withRouter(CreditTransactionRequestAddContainer)}
+            component={withRouter(SecureFileSubmissionAddContainer)}
           />,
           <Route
             key="secure_document_upload_details"
             path={SECURE_DOCUMENT_UPLOAD.DETAILS}
-            component={withRouter(CreditTransactonRequestDetailContainer)}
+            component={withRouter(SecureFileSubmissionDetailContainer)}
           />,
           <Route
             key="secure_document_upload_edit"
             path={SECURE_DOCUMENT_UPLOAD.EDIT}
-            component={withRouter(CreditTransactionRequestEditContainer)}
+            component={withRouter(SecureFileSubmissionEditContainer)}
           />
         ]}
         <Route component={NotFound} />

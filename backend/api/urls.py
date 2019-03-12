@@ -23,10 +23,12 @@ from django.conf.urls import url, include
 from rest_framework.documentation import include_docs_urls
 from rest_framework.routers import DefaultRouter
 
+from api.viewsets.Autocomplete import AutocompleteViewSet
 from api.viewsets.Document import DocumentViewSet
 from api.viewsets.DocumentComments import DocumentCommentsViewSet
+from api.viewsets.FuelCode import FuelCodeViewSet
 from api.viewsets.Notification import NotificationViewSet
-from tfrs.settings import DOCUMENTS_API, TESTING
+from tfrs.settings import DOCUMENTS_API, FUEL_CODES_API, TESTING
 from .viewsets.CompliancePeriod import CompliancePeriodViewSet
 from .viewsets.CreditTrade import CreditTradeViewSet
 from .viewsets.CreditTradeHistory import CreditTradeHistoryViewSet
@@ -52,11 +54,20 @@ ROUTER.register(r'signing_authority_assertions',
 ROUTER.register(r'signing_authority_confirmations',
                 SigningAuthorityConfirmationViewSet)
 ROUTER.register(r'users', UserViewSet)
-ROUTER.register(r'notifications', NotificationViewSet, base_name='notification')
+ROUTER.register(r'notifications',
+                NotificationViewSet,
+                base_name='notification')
+
+ROUTER.register(r'autocomplete',
+                AutocompleteViewSet,
+                base_name='autocomplete')
 
 if DOCUMENTS_API['ENABLED'] or TESTING:
     ROUTER.register(r'documents', DocumentViewSet)
     ROUTER.register(r'documents_comments', DocumentCommentsViewSet)
+
+if FUEL_CODES_API['ENABLED'] or TESTING:
+    ROUTER.register(r'fuel_codes', FuelCodeViewSet)
 
 urlpatterns = [
     # Swagger documentation

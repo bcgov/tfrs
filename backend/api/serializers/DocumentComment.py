@@ -23,6 +23,7 @@
 from rest_framework import serializers
 
 from api.models.DocumentComment import DocumentComment
+from api.permissions.DocumentComment import DocumentCommentPermissions
 from api.services.DocumentCommentActions import DocumentCommentActions
 
 from .User import UserMinSerializer
@@ -61,6 +62,21 @@ class DocumentCommentUpdateSerializer(serializers.ModelSerializer):
     """
     create_user = UserMinSerializer(read_only=True)
 
+    def validate(self, data):
+        document = self.instance.document
+        user = data.get('update_user')
+        comment = self.instance
+
+        if not DocumentCommentPermissions.user_can_edit_comment(user, comment):
+            raise serializers.ValidationError({
+                'readOnly': "Cannot add a comment on a submission that's "
+                            "been {}.".format(
+                                document.status.status.lower()
+                            )
+            })
+
+        return data
+
     class Meta:
         model = DocumentComment
         fields = (
@@ -77,6 +93,22 @@ class DocumentCommentCreateSerializer(serializers.ModelSerializer):
     Serializer to create comments for documents.
     Has the basic fields needed.
     """
+    def validate(self, data):
+        document = data.get('document')
+        user = data.get('create_user')
+        privileged = data.get('privileged_access')
+
+        if not DocumentCommentPermissions.user_can_comment(
+                user, document, privileged):
+            raise serializers.ValidationError({
+                'readOnly': "Cannot add a comment on a submission that's "
+                            "been {}.".format(
+                                document.status.status.lower()
+                            )
+            })
+
+        return data
+
     class Meta:
         model = DocumentComment
         fields = ('id', 'document', 'comment', 'privileged_access',

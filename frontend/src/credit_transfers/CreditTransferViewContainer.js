@@ -553,6 +553,7 @@ class CreditTransferViewContainer extends Component {
       compliancePeriod={item.compliancePeriod}
       creditsFrom={item.creditsFrom}
       creditsTo={item.creditsTo}
+      documents={item.documents}
       errors={this.props.errors}
       fairMarketValuePerCredit={item.fairMarketValuePerCredit}
       fields={this.state.fields}
@@ -611,6 +612,9 @@ CreditTransferViewContainer.propTypes = {
     commentActions: PropTypes.arrayOf(PropTypes.string),
     creditsFrom: PropTypes.shape({}),
     creditsTo: PropTypes.shape({}),
+    documents: PropTypes.arrayOf(
+      PropTypes.shape
+    ).isRequired,
     status: PropTypes.shape({}),
     fairMarketValuePerCredit: PropTypes.oneOfType([
       PropTypes.string,

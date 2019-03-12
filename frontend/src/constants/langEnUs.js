@@ -1,6 +1,8 @@
 // Credit Transactions
 export const BTN_ACCEPT = 'Accept';
+export const BTN_ARCHIVE = 'Archive';
 export const BTN_APPROVE = 'Approve';
+export const BTN_ADD = 'Add';
 export const BTN_ADD_TO_QUEUE = 'Add to Queue';
 export const BTN_APP_CANCEL = 'Back';
 export const BTN_COMMIT = 'Commit';
@@ -11,6 +13,7 @@ export const BTN_DELETE_DRAFT = 'Delete Draft';
 export const BTN_EDIT = 'Edit';
 export const BTN_EDIT_DRAFT = 'Edit Draft';
 export const BTN_EDIT_PVR_DRAFT = 'Edit PVR';
+export const BTN_NEW_FUEL_CODE = 'New Fuel Code';
 export const BTN_NEW_USER = 'New User';
 export const BTN_NEW_SUBMISSION = 'New Submission';
 export const BTN_NEW_TRANSFER = 'New Transfer';
@@ -20,6 +23,7 @@ export const BTN_NOT_RECOMMENDED_FOR_DECISION = 'Not Recommended for Approval';
 export const BTN_PROCESS = 'Confirm';
 export const BTN_PROPOSE = 'Propose';
 export const BTN_PULL_BACK = 'Recall as Draft';
+export const BTN_RECEIVED = 'Received';
 export const BTN_REFUSE = 'Refuse';
 export const BTN_RECOMMEND_FOR_DECISION = 'Recommend for Approval';
 export const BTN_RESCIND = 'Rescind';
@@ -30,6 +34,7 @@ export const BTN_SAVE_DRAFT = 'Save Draft';
 export const BTN_SAVE_USER = 'Save User';
 export const BTN_SIGN_1_2 = 'Sign 1 of 2';
 export const BTN_SIGN_2_2 = 'Sign 2 of 2';
+export const BTN_SUBMIT = 'Submit';
 export const BTN_YES = 'Yes';
 
 export const BTN_COMMENT = 'Add Comment';
@@ -37,6 +42,9 @@ export const BTN_COMMENT_PRIVILEGED = 'Add Internal Comment';
 export const BTN_CANCEL_COMMENT = 'Cancel';
 export const BTN_SAVE_COMMENT = 'Save Comment';
 export const BTN_EDIT_COMMENT = 'Edit Comment';
+
+export const BTN_LINK_CREDIT_TRANSACTION = 'Link Credit Transaction';
+export const BTN_CANCEL_LINK_CREDIT_TRANSACTION = 'Cancel';
 
 export const TEXT_COMMENT_PLACEHOLDER = 'Use this field to communicate relevant details';
 export const TEXT_COMMENT_PLACEHOLDER_PRIVILEGED = 'Use this field to provide background for ' +

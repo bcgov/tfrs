@@ -1,13 +1,14 @@
 from rest_framework import mixins, viewsets
 from rest_framework.decorators import list_route, detail_route
 from rest_framework.response import Response
+from django.db.models import Q
 
 from api.decorators import permission_required, exceptions
 from api.models.User import User
 from api.permissions.User import UserPermissions
 from api.serializers \
     import UserSerializer, UserViewSerializer, UserUpdateSerializer, \
-            CreditTradeHistoryMinSerializer, Q
+            CreditTradeHistoryMinSerializer
 from api.serializers.UserCreationRequestSerializer \
     import UserCreationRequestSerializer
 from auditable.views import AuditableMixin
@@ -34,7 +35,7 @@ class UserViewSet(AuditableMixin, viewsets.GenericViewSet,
     }
 
     column_sort_mappings = {
-        'updateTimestamp': 'update_timestamp',
+        'createTimestamp': 'create_timestamp',
         'creditTradeId': 'id',
         'creditType': 'type__the_type',
         'action': 'status__status'
@@ -59,7 +60,7 @@ class UserViewSet(AuditableMixin, viewsets.GenericViewSet,
 
         limit = None
         offset = None
-        sort_by = 'update_timestamp'
+        sort_by = 'create_timestamp'
         sort_direction = '-'
 
         if 'limit' in request.GET:

@@ -20,6 +20,23 @@ const NotificationsCreditTransactionsTable = (props) => {
     Cell: row => (
       <CheckBox
         addToFields={props.addToFields}
+        field="in_app"
+        fields={props.fields}
+        id={row.value}
+        toggleCheck={props.toggleCheck}
+        type={props.type}
+        value
+      />
+    ),
+    className: 'col-in-app',
+    Header: 'Enabled',
+    id: 'in-app',
+    sortable: false
+  }, {
+    accessor: item => (item.code),
+    Cell: row => (
+      <CheckBox
+        addToFields={props.addToFields}
         field="email"
         fields={props.fields}
         id={row.value}
@@ -50,23 +67,6 @@ const NotificationsCreditTransactionsTable = (props) => {
     id: 'sms',
     sortable: false,
     show: false
-  }, {
-    accessor: item => (item.code),
-    Cell: row => (
-      <CheckBox
-        addToFields={props.addToFields}
-        field="in_app"
-        fields={props.fields}
-        id={row.value}
-        toggleCheck={props.toggleCheck}
-        type={props.type}
-        value
-      />
-    ),
-    className: 'col-in-app',
-    Header: 'Receive In-App Notification',
-    id: 'in-app',
-    sortable: false
   }];
 
   return (

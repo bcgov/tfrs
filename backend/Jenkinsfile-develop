@@ -26,7 +26,6 @@ stage('Unit Test') {
                     sh 'python manage.py test -c nose.cfg'
                 } catch(Throwable t) {
                     result = 1;
-                    mail (from: "${EMAIL_FROM}", to: "${EMAIL_TO}", subject: "FYI: Job '${env.JOB_NAME}' (${env.BUILD_NUMBER}) unit test failed", body: "See ${env.BUILD_URL} for details. ");
                 } finally {
                     stash includes: 'nosetests.xml,coverage.xml', name: 'coverage'
                     junit 'nosetests.xml'

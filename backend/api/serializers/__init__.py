@@ -26,6 +26,7 @@ from .CreditTradeHistory import *
 from .CreditTradeStatus import *
 from .CreditTradeType import *
 from .CreditTradeZeroReason import *
+from .DocumentCreditTrade import *
 from .Organization import *
 from .OrganizationActionsType import *
 from .OrganizationBalance import *
