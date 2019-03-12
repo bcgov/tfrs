@@ -414,7 +414,8 @@ class DocumentUpdateSerializer(serializers.ModelSerializer):
         if document.type == DocumentType.objects.get(the_type="Evidence").id:
             if not value:
                 raise serializers.ValidationError(
-                    "Please provide the name of the Part 3 Agreement to which the submission relates."
+                    "Please provide the name of the Part 3 Agreement to which "
+                    "the submission relates."
                 )
 
         if not value:
@@ -436,7 +437,8 @@ class DocumentUpdateSerializer(serializers.ModelSerializer):
                 the_type="Evidence"):
             if not value:
                 raise serializers.ValidationError(
-                    "Please indicate the Milestone(s) to which the submission relates."
+                    "Please indicate the Milestone(s) to which the submission "
+                    "relates."
                 )
 
         return value
@@ -488,7 +490,8 @@ class DocumentUpdateSerializer(serializers.ModelSerializer):
                 if 'milestone' in request.data and \
                         not request.data.get('milestone'):
                     raise serializers.ValidationError({
-                        'milestone': "Please indicate the Milestone(s) to which the submission relates."
+                        'milestone': "Please indicate the Milestone(s) to "
+                        "which the submission relates."
                     })
 
             current_attachments = document.attachments
@@ -528,8 +531,10 @@ class DocumentUpdateSerializer(serializers.ModelSerializer):
 
     def update(self, document, validated_data):
         milestone = validated_data.pop('milestone', None)
+        status = validated_data.get('status', document.status)
 
-        if document.type.the_type == 'Evidence':
+        if document.type.the_type == 'Evidence' and milestone and \
+                status.status in ['Draft', 'Submitted']:
             DocumentMilestone.objects.update_or_create(
                 document=document,
                 defaults={
@@ -579,16 +584,7 @@ class DocumentUpdateSerializer(serializers.ModelSerializer):
                     record_numbers_dict[attachment.id].get('value')
                 attachment.save()
 
-        if document.type.the_type == 'Evidence':
-            DocumentMilestone.objects.update_or_create(
-                document=document,
-                defaults={
-                    'create_user': document.create_user,
-                    'milestone': request.data.get('milestone')
-                }
-            )
-
-        if document.status.status not in ['Archived', 'Received']:
+        if document.status.status in ['Draft', 'Submitted']:
             comment = request.data.get('comment')
 
             if comment and comment.strip():
@@ -608,6 +604,16 @@ class DocumentUpdateSerializer(serializers.ModelSerializer):
                         create_timestamp=datetime.now(),
                         privileged_access=False
                     )
+
+            if document.type.the_type == 'Evidence' and \
+                    request.data.get('milestone'):
+                DocumentMilestone.objects.update_or_create(
+                    document=document,
+                    defaults={
+                        'create_user': document.create_user,
+                        'milestone': request.data.get('milestone')
+                    }
+                )
 
         return document
 
