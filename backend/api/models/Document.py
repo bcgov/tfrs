@@ -65,6 +65,19 @@ class Document(Auditable, DocumentData):
         return comments
 
     @property
+    def history(self):
+        """
+        Changes made to the File Submission
+        """
+        from .DocumentHistory import DocumentHistory
+
+        history = DocumentHistory.objects.filter(
+            document=self.id
+        ).order_by('-create_timestamp')
+
+        return history
+
+    @property
     def unprivileged_comments(self):
         """
         Comments that are unrestricted
