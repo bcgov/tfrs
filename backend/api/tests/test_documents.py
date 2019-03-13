@@ -356,9 +356,6 @@ class TestDocuments(BaseTestCase):
 
         self.assertEqual(len(response_data['creditTrades']), 0)
 
-
-
-
     def test_receive_document_as_government_user(self):
         """
         Test updating a document status to received as government user
@@ -652,3 +649,60 @@ class TestDocuments(BaseTestCase):
         )
 
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+    def test_view_linkable_transactions_as_fuel_supplier(self):
+        """
+        Test whether fuel suppliers can view the credit transactions
+        that can be linked to the file submission
+        (They shouldn't be able to access the API)
+        """
+        create_user = self.users['fs_user_1']
+        compliance_period = CompliancePeriod.objects.first()
+        status_submitted = DocumentStatus.objects.filter(
+            status="Submitted").first()
+        type_evidence = DocumentType.objects.filter(
+            the_type="Evidence").first()
+
+        created_document = Document.objects.create(
+            create_user_id=create_user.id,
+            compliance_period_id=compliance_period.id,
+            status_id=status_submitted.id,
+            title="Test Title",
+            type_id=type_evidence.id
+        )
+
+        response = self.clients['fs_user_1'].get(
+            "/api/documents/{}/linkable_credit_transactions".format(
+                created_document.id),
+            content_type='application/json'
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+    def test_view_linkable_transactions_as_gov_analyst(self):
+        """
+        Test whether government analyst can view the credit transactions
+        that can be linked to the file submission
+        """
+        create_user = self.users['fs_user_1']
+        compliance_period = CompliancePeriod.objects.first()
+        status_submitted = DocumentStatus.objects.filter(
+            status="Submitted").first()
+        type_evidence = DocumentType.objects.filter(
+            the_type="Evidence").first()
+
+        created_document = Document.objects.create(
+            create_user_id=create_user.id,
+            compliance_period_id=compliance_period.id,
+            status_id=status_submitted.id,
+            title="Test Title",
+            type_id=type_evidence.id
+        )
+
+        response = self.clients['gov_analyst'].get(
+            "/api/documents/{}/linkable_credit_transactions".format(
+                created_document.id),
+            content_type='application/json'
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
