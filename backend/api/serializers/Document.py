@@ -20,10 +20,8 @@
     See the License for the specific language governing permissions and
     limitations under the License.
 """
-from collections import defaultdict
 from datetime import datetime
 from rest_framework import serializers
-from rest_framework.fields import SerializerMethodField
 
 from api.models.DocumentFileAttachment import DocumentFileAttachment
 from api.models.Document import Document
@@ -35,6 +33,7 @@ from api.models.DocumentType import DocumentType
 from api.serializers import CreditTradeAuxiliarySerializer
 from api.serializers.CompliancePeriod import CompliancePeriodSerializer
 from api.serializers.DocumentComment import DocumentCommentSerializer
+from api.serializers.DocumentHistory import DocumentHistorySerializer
 from api.serializers.DocumentMilestone import DocumentMilestoneSerializer
 from api.serializers.DocumentStatus import DocumentStatusSerializer
 from api.serializers.DocumentType import DocumentTypeSerializer
@@ -77,14 +76,12 @@ class DocumentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Document
         fields = (
-            'id', 'title', 'status', 'type', 'create_timestamp',
-            'create_user', 'update_timestamp', 'update_user',
-            'credit_trades')
+            'id', 'title', 'status', 'type', 'create_timestamp', 'create_user',
+            'update_timestamp', 'update_user', 'credit_trades')
 
-        read_only_fields = ('id', 'title', 'status', 'type',
-                            'create_timestamp', 'create_user',
-                            'update_timestamp', 'update_user',
-                            'credit_trades')
+        read_only_fields = (
+            'id', 'title', 'status', 'type', 'create_timestamp', 'create_user',
+            'update_timestamp', 'update_user', 'credit_trades')
 
 
 class DocumentCreateSerializer(serializers.ModelSerializer):
@@ -95,7 +92,8 @@ class DocumentCreateSerializer(serializers.ModelSerializer):
     comments = DocumentCommentSerializer(many=True, read_only=True)
     milestone = serializers.CharField(
         required=False, max_length=1000, allow_blank=True)
-    title = serializers.CharField(allow_blank=True)  # we must allow_blank for custom validation to occur
+    # we must allow_blank for custom validation to occur
+    title = serializers.CharField(allow_blank=True)
 
     def validate_title(self, value):
         request = self.context['request']
@@ -104,7 +102,8 @@ class DocumentCreateSerializer(serializers.ModelSerializer):
                 the_type="Evidence").id:
             if not value:
                 raise serializers.ValidationError(
-                    "Please provide the name of the Part 3 Agreement to which the submission relates."
+                    "Please provide the name of the Part 3 Agreement to which "
+                    "the submission relates."
                 )
 
         if not value:
@@ -126,7 +125,8 @@ class DocumentCreateSerializer(serializers.ModelSerializer):
                 the_type="Evidence").id:
             if not value:
                 raise serializers.ValidationError(
-                    "Please indicate the Milestone(s) to which the submission relates."
+                    "Please indicate the Milestone(s) to which the submission "
+                    "relates."
                 )
 
         return value
@@ -244,7 +244,6 @@ class DocumentDetailSerializer(serializers.ModelSerializer):
     """
     Document Serializer with Full Details
     """
-
     actions = serializers.SerializerMethodField()
     attachments = serializers.SerializerMethodField()
     comment_actions = serializers.SerializerMethodField()
@@ -254,7 +253,7 @@ class DocumentDetailSerializer(serializers.ModelSerializer):
     milestone = serializers.SerializerMethodField()
     status = DocumentStatusSerializer(read_only=True)
     type = DocumentTypeSerializer(read_only=True)
-    credit_trades = CreditTradeAuxiliarySerializer(many=True, read_only=True)
+    credit_trades = serializers.SerializerMethodField()
 
     def get_actions(self, obj):
         """
@@ -336,6 +335,23 @@ class DocumentDetailSerializer(serializers.ModelSerializer):
         request = self.context.get('request')
         return DocumentCommentActions.available_comment_actions(request, obj)
 
+    def get_credit_trades(self, obj):
+        """
+        Returns the linked credit transactions to the file submission
+        Will also filter based on the user type
+        """
+        request = self.context.get('request')
+        credit_trades = obj.credit_trades
+
+        if not request.user.is_government_user:
+            credit_trades = credit_trades.filter(
+                status__status__in=["Approved", "Declined"])
+
+        serializer = CreditTradeAuxiliarySerializer(
+            credit_trades, many=True, read_only=True)
+
+        return serializer.data
+
     def get_milestone(self, obj):
         """
         Additional information for milestone evidences
@@ -374,6 +390,7 @@ class DocumentMinSerializer(serializers.ModelSerializer):
     type = DocumentTypeSerializer(read_only=True)
     milestone = serializers.SerializerMethodField()
     credit_trades = CreditTradeAuxiliarySerializer(many=True, read_only=True)
+    history = DocumentHistorySerializer(many=True, read_only=True)
 
     def get_milestone(self, obj):
         """
@@ -391,10 +408,10 @@ class DocumentMinSerializer(serializers.ModelSerializer):
         model = Document
         fields = (
             'id', 'title', 'create_user', 'status', 'type', 'milestone',
-            'credit_trades', 'attachments', 'update_timestamp')
+            'credit_trades', 'attachments', 'update_timestamp', 'history')
         read_only_fields = (
             'id', 'title', 'create_user', 'status', 'type', 'milestone',
-            'credit_trades', 'attachments', 'update_timestamp')
+            'credit_trades', 'attachments', 'update_timestamp', 'history')
 
 
 class DocumentUpdateSerializer(serializers.ModelSerializer):
@@ -406,7 +423,8 @@ class DocumentUpdateSerializer(serializers.ModelSerializer):
     milestone = serializers.CharField(
         required=False, max_length=1000, allow_blank=True)
     type = DocumentTypeSerializer(read_only=True)
-    title = serializers.CharField(allow_blank=True)  # we must allow_blank for custom validation to occur
+    # we must allow_blank for custom validation to occur
+    title = serializers.CharField(allow_blank=True)
 
     def validate_title(self, value):
         document = self.instance
@@ -491,7 +509,7 @@ class DocumentUpdateSerializer(serializers.ModelSerializer):
                         not request.data.get('milestone'):
                     raise serializers.ValidationError({
                         'milestone': "Please indicate the Milestone(s) to "
-                        "which the submission relates."
+                                     "which the submission relates."
                     })
 
             current_attachments = document.attachments

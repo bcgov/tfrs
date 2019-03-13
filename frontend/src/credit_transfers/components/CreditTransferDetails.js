@@ -77,7 +77,11 @@ const CreditTransferDetails = props => (
           />
           }
           {props.documents && props.documents.length > 0 &&
-          <CreditTransferDocumentList documents={props.documents} />
+            <div className="row">
+              <div className="col-md-6">
+                <CreditTransferDocumentList documents={props.documents} />
+              </div>
+            </div>
           }
           {props.status.id !== CREDIT_TRANSFER_STATUS.draft.id &&
           (props.history.length > 0 || props.signatures.length > 0) &&

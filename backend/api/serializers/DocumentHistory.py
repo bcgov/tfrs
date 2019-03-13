@@ -20,29 +20,25 @@
     See the License for the specific language governing permissions and
     limitations under the License.
 """
-from django.db import models
+from rest_framework import serializers
 
-from auditable.models import Auditable
+from api.models.DocumentHistory import DocumentHistory
+
+from .DocumentStatus import DocumentStatusSerializer
 
 
-class DocumentCreditTrade(Auditable):
+class DocumentHistorySerializer(serializers.ModelSerializer):
     """
-    Maintain a bidirectional many-many association between credit trades and
-    secure file submissions
+    Default serializer for Document history
     """
-    credit_trade = models.ForeignKey(
-        'CreditTrade',
-        on_delete=models.PROTECT
-    )
-
-    document = models.ForeignKey(
-        'Document',
-        on_delete=models.PROTECT
-    )
+    status = DocumentStatusSerializer(read_only=True)
 
     class Meta:
-        db_table = 'document_credit_trade'
-        unique_together = (('credit_trade', 'document'),)
+        model = DocumentHistory
+        fields = (
+            'id', 'title', 'status', 'create_timestamp', 'create_user',
+            'update_timestamp', 'update_user', 'document_id')
 
-    db_table_comment = "Maintain a bidirectional many-many association" \
-                       " between credit trades and secure file submissions"
+        read_only_fields = (
+            'id', 'title', 'status', 'create_timestamp', 'create_user',
+            'update_timestamp', 'update_user', 'document_id')

@@ -14,7 +14,9 @@ const LinkedCreditTransactions = props => (
       <div className="col-xs-2 header">ID</div>
       <div className="col-xs-4 header">Type</div>
       <div className="col-xs-4 status header">Status</div>
-      <div className="col-xs-2 unlink header">Unlink</div>
+      {props.canLink &&
+        <div className="col-xs-2 unlink header">Unlink</div>
+      }
     </div>
     {props.creditTrades.map(creditTrade => (
       <div className="row" key={creditTrade.id}>
@@ -25,23 +27,26 @@ const LinkedCreditTransactions = props => (
         </div>
         <div className="col-xs-4">{creditTrade.type.theType}</div>
         <div className="col-xs-4 status">{creditTrade.status.status}</div>
-        <div className="col-xs-2 unlink">
-          <button
-            className="unlink-action text-danger"
-            data-target="#confirmUnlink"
-            data-toggle="modal"
-            onClick={() => props.selectLinkIdForModal(creditTrade.id)}
-            type="button"
-          >
-            <FontAwesomeIcon icon="unlink" />
-          </button>
-        </div>
+        {props.canLink &&
+          <div className="col-xs-2 unlink">
+            <button
+              className="unlink-action text-danger"
+              data-target="#confirmUnlink"
+              data-toggle="modal"
+              onClick={() => props.selectLinkIdForModal(creditTrade.id)}
+              type="button"
+            >
+              <FontAwesomeIcon icon="unlink" />
+            </button>
+          </div>
+        }
       </div>
     ))}
   </div>
 );
 
 LinkedCreditTransactions.propTypes = {
+  canLink: PropTypes.bool.isRequired,
   creditTrades: PropTypes.arrayOf(PropTypes.shape({
     id: PropTypes.number,
     status: PropTypes.shape(),
