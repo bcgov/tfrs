@@ -6,6 +6,7 @@ import PropTypes from 'prop-types';
 import FontAwesomeIcon from '@fortawesome/react-fontawesome';
 
 import Errors from '../../app/components/Errors';
+import LocalTimestamp from '../../app/components/LocalTimestamp';
 import TooltipWhenDisabled from '../../app/components/TooltipWhenDisabled';
 import history from '../../app/History';
 import * as Lang from '../../constants/langEnUs';
@@ -25,7 +26,10 @@ const SecureFileSubmissionDetails = props => (
       <div className="row">
         <div className="form-group col-md-12">
           <label htmlFor="document-status">Document Submission Status:
-            <div className="value">{props.item.status.status}</div>
+            <div>
+              <span className="value">{props.item.status.status}</span> on
+              <span className="value"> <LocalTimestamp iso8601Date={props.item.updateTimestamp} /></span>
+            </div>
           </label>
         </div>
       </div>
@@ -66,6 +70,7 @@ const SecureFileSubmissionDetails = props => (
                 {(props.item.creditTrades && props.item.creditTrades.length > 0)
                   ? (
                     <LinkedCreditTransactions
+                      canLink={props.canLink}
                       creditTrades={props.item.creditTrades}
                       selectLinkIdForModal={props.selectLinkIdForModal}
                     />)

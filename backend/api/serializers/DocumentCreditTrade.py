@@ -59,5 +59,3 @@ class CreditTradeLinkSerializer(serializers.Serializer):
     Credit Trade by-id Serializer
     """
     credit_trade = PrimaryKeyRelatedField(queryset=CreditTrade.objects.all())
-
-
