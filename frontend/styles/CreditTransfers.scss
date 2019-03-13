@@ -282,6 +282,44 @@
     }
   }
 
+  .credit-transfer-documents {
+    margin: 0 -15px;
+
+    .linked-file-submissions {
+      margin: 0 -15px;
+      padding: 0 1rem;
+    
+      .header {
+        font-weight: bold;
+        padding-bottom: 0.5rem;
+        padding-top: 0.5rem;
+      }
+    
+      .row {
+        display: flex;
+        align-items: center;
+    
+        &:nth-of-type(even) {
+          background-color: $background-grey;
+        }
+      }
+    
+      .status, .unlink {
+        text-align: center;
+      }
+    
+      .unlink-action {
+        background: transparent;
+        border: none;
+        margin: 0.5rem;
+    
+        &:hover {
+          color: $red;
+        }
+      }
+    }
+  }
+
   .terms {
     margin-bottom: 15px;
     padding-left: 4rem;

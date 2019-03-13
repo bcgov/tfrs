@@ -264,7 +264,7 @@ class CreditTradeViewSet(AuditableMixin, mixins.CreateModelMixin,
             fuel_suppliers = Organization.objects.extra(
                 select={'lower_name': 'lower(name)'}) \
                 .filter(type=OrganizationType.objects.get(
-                type="Part3FuelSupplier")) \
+                    type="Part3FuelSupplier")) \
                 .order_by('lower_name')
 
             workbook.add_fuel_suppliers(fuel_suppliers)

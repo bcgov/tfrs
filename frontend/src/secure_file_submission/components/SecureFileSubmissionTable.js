@@ -77,9 +77,17 @@ const SecureFileSubmissionTable = (props) => {
     id: 'credit-transaction-id',
     minWidth: 70
   }, {
-    accessor: item => (item.updateTimestamp ? moment(item.updateTimestamp).format('YYYY-MM-DD') : '-'),
+    accessor: (item) => {
+      const historyFound = item.history.find(itemHistory => (itemHistory.status.status === 'Submitted'));
+
+      if (historyFound) {
+        return moment(historyFound.createTimestamp).format('YYYY-MM-DD');
+      }
+
+      return '-';
+    },
     className: 'col-date',
-    Header: 'Last Updated On',
+    Header: 'Submitted On',
     id: 'updateTimestamp',
     minWidth: 65
   }, {
