@@ -254,6 +254,7 @@ class DocumentDetailSerializer(serializers.ModelSerializer):
     status = DocumentStatusSerializer(read_only=True)
     type = DocumentTypeSerializer(read_only=True)
     credit_trades = serializers.SerializerMethodField()
+    create_user = UserMinSerializer(read_only=True)
 
     def get_actions(self, obj):
         """

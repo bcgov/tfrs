@@ -245,6 +245,7 @@ class SecureFileSubmissionDetailContainer extends Component {
           isCreatingPrivilegedComment={this.state.isCreatingPrivilegedComment}
           item={item}
           key="details"
+          loggedInUser={this.props.loggedInUser}
           saveComment={this._saveComment}
           selectLinkIdForModal={this._selectLinkIdForModal}
         />,
