@@ -1,0 +1,67 @@
+{
+    "kind": "Template",
+    "apiVersion": "v1",
+    "metadata": {
+        "name": "nagios-base-bc",
+        "creationTimestamp": null
+    },
+    "objects": [
+        {
+            "kind": "ImageStream",
+            "apiVersion": "v1",
+            "metadata": {
+                "name": "nagios-base",
+                "generation": 1,
+                "creationTimestamp": null
+            },
+            "spec": {
+                "lookupPolicy": {
+                    "local": false
+                }
+            },
+            "status": {
+                "dockerImageRepository": ""
+            }
+        },
+        {
+            "kind": "BuildConfig",
+            "apiVersion": "v1",
+            "metadata": {
+                "name": "nagios-base",
+                "creationTimestamp": null
+            },
+            "spec": {
+                "triggers": [],
+                "runPolicy": "Serial",
+                "source": {
+                    "type": "Git",
+                    "git": {
+                        "ref":"devops-nagios-new",
+                        "uri": "https://github.com/bcgov/tfrs.git"
+                    },
+                    "contextDir": "nagios"
+                },
+                "strategy": {
+                    "type": "Docker",
+                    "dockerStrategy": {
+                        "dockerfilePath": "Dockerfile-base",
+                        "forcePull": true,
+                        "noCache": true
+                    }
+                },
+                "output": {
+                    "to": {
+                        "kind": "ImageStreamTag",
+                        "name": "nagios-base:latest"
+                    }
+                },
+                "resources": {},
+                "postCommit": {},
+                "nodeSelector": null
+            },
+            "status": {
+                "lastVersion": 0
+            }
+        }
+    ]
+}
