@@ -28,8 +28,7 @@ from pika.exceptions import AMQPError
 
 from api.models.DocumentFileAttachment import DocumentFileAttachment
 from api.models.DocumentStatus import DocumentStatus
-from api.notifications.notification_types import NotificationType
-from api.notifications.notifications import AMQPNotificationService
+from api.services.DocumentService import DocumentService
 from tfrs.settings import AMQP_CONNECTION_PARAMETERS
 
 
@@ -51,7 +50,8 @@ class SecurityScan:
         )
         failed_files = DocumentFileAttachment.objects.filter(
             document=attachment.document,
-            security_scan_status='FAIL'
+            security_scan_status='FAIL',
+            is_removed=False
         )
 
         if len(not_run_files) > 0 or len(in_progress_files) > 0:
@@ -64,31 +64,16 @@ class SecurityScan:
 
         if len(failed_files) > 0:
             attachment.document.status = DocumentStatus.objects.get(
-                status='Security Scan Failed')
+                status="Security Scan Failed")
             attachment.document.save()
 
-            AMQPNotificationService.send_notification(
-                interested_organization=user.organization,
-                message=NotificationType.DOCUMENT_SCAN_FAILED.name,
-                notification_type=NotificationType.DOCUMENT_SCAN_FAILED,
-                originating_user=user,
-                related_document=attachment.document
-            )
-            return
-
-        if attachment.document.status.status != 'Draft':
-            AMQPNotificationService.send_notification(
-                interested_organization=user.organization,
-                message=NotificationType.DOCUMENT_SUBMITTED.name,
-                notification_type=NotificationType.DOCUMENT_SUBMITTED,
-                originating_user=user,
-                related_document=attachment.document
-            )
-
-            submitted_status = DocumentStatus.objects.get(status='Submitted')
+        elif attachment.document.status.status == "Pending Submission":
+            submitted_status = DocumentStatus.objects.get(status="Submitted")
             attachment.document.status = submitted_status
 
             attachment.document.save()
+
+        DocumentService.send_notification(attachment.document, user)
 
     @staticmethod
     def handle_scan_response(body):
