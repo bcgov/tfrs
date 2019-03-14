@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import FontAwesomeIcon from '@fortawesome/react-fontawesome';
 import * as Lang from '../../constants/langEnUs';
 import LocalTimestamp from '../../app/components/LocalTimestamp';
+import TooltipWhenDisabled from '../../app/components/TooltipWhenDisabled';
 import CreditTransferCommentForm from './CreditTransferCommentForm';
 
 class CreditTransferComment extends Component {
@@ -62,13 +63,20 @@ class CreditTransferComment extends Component {
             </div>
             <div className="col-xs-1 text-right">
               {this.props.comment.privilegedAccess &&
-              <span title={Lang.TEXT_VISIBLE_TO_GOV}>
-                <FontAwesomeIcon size="2x" icon="lock" className="text-success" />
-              </span>}
+              <TooltipWhenDisabled
+                disabled
+                title={Lang.TEXT_VISIBLE_TO_GOV}
+              >
+                <FontAwesomeIcon size="2x" icon="eye-slash" />
+              </TooltipWhenDisabled>
+              }
               {this.props.comment.privilegedAccess ||
-              <span title={Lang.TEXT_VISIBLE_TO_ALL}>
-                <FontAwesomeIcon size="2x" icon="unlock" className="" />
-              </span>
+              <TooltipWhenDisabled
+                disabled
+                title={Lang.TEXT_VISIBLE_TO_ALL}
+              >
+                <FontAwesomeIcon size="2x" icon="eye" />
+              </TooltipWhenDisabled>
               }
             </div>
           </div>
