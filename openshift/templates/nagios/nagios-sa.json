@@ -1,0 +1,24 @@
+{
+    "kind": "Template",
+    "apiVersion": "template.openshift.io/v1",
+    "metadata": {
+        "name": "true",
+        "creationTimestamp": null
+    },
+    "objects": [
+        {
+            "kind": "ServiceAccount",
+            "apiVersion": "v1",
+            "metadata": {
+                "name": "nagios",
+                "creationTimestamp": null,
+                "labels": {
+                    "app": "nagios"
+                },
+                "annotations": {
+                    "serviceaccounts.openshift.io/oauth-redirectreference.nagios": "{\"kind\":\"OAuthRedirectReference\",\"apiVersion\":\"v1\",\"reference\":{\"kind\":\"Route\",\"name\":\"nagios\"}}"
+                }
+            }
+        }
+    ]
+}
