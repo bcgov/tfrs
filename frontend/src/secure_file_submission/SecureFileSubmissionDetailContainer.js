@@ -97,7 +97,8 @@ class SecureFileSubmissionDetailContainer extends Component {
     const validationMessage = [];
 
     this.props.documentUpload.item.attachments.forEach((attachment) => {
-      const recordNumber = this.state.fields.recordNumbers.find(item => item.id === attachment.id);
+      const recordNumber = this.state.fields.recordNumbers.find(item =>
+        item && item.id === attachment.id);
 
       if (!recordNumber || recordNumber.value === '') {
         validationMessage.push(`Please provide a TRIM Record # for ${attachment.filename}`);
