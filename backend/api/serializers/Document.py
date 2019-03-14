@@ -479,7 +479,7 @@ class DocumentUpdateSerializer(serializers.ModelSerializer):
                 raise serializers.ValidationError({
                     'invalidStatus': "The submission cannot be rescinded "
                                      "because it has been marked as received "
-                                     "by a Government user."
+                                     "by a Government user. "
                                      "Please refresh your browser."
                 })
 
