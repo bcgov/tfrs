@@ -1,0 +1,115 @@
+{
+    "kind": "Template",
+    "apiVersion": "v1",
+    "metadata": {
+        "name": "nagios-bc",
+        "creationTimestamp": null
+    },
+    "parameters": [
+        {
+            "name": "NAGIOS_PASSWORD",
+            "description": "Password for Nagios user.",
+            "from": "[a-zA-Z0-9]{16}",
+            "generate": "expression",
+            "required": true
+        },
+        {
+            "name": "NAGIOS_USER",
+            "value": "nagiosadmin",
+            "required": true
+        }
+    ],
+    "objects": [
+        {
+            "apiVersion": "v1",
+            "kind": "Secret",
+            "metadata": {
+                "annotations": {
+                },
+                "name": "nagios-secret",
+                "labels":{
+                }
+            },
+            "stringData": {
+                "NAGIOS_USER": "${NAGIOS_USER}",
+                "NAGIOS_PASSWORD": "${NAGIOS_PASSWORD}"
+            }
+        },
+        {
+            "kind": "ImageStream",
+            "apiVersion": "v1",
+            "metadata": {
+                "name": "nagios",
+                "generation": 1,
+                "creationTimestamp": null
+            },
+            "spec": {
+                "lookupPolicy": {
+                    "local": false
+                }
+            },
+            "status": {
+                "dockerImageRepository": ""
+            }
+        },
+        {
+            "kind": "BuildConfig",
+            "apiVersion": "v1",
+            "metadata": {
+                "name": "nagios",
+                "creationTimestamp": null
+            },
+            "spec": {
+                "triggers": [],
+                "runPolicy": "Serial",
+                "source": {
+                    "type": "Git",
+                    "git": {
+                        "ref":"devops-nagios-new",
+                        "uri": "https://github.com/bcgov/tfrs.git"
+                    },
+                    "contextDir": "nagios"
+                },
+                "strategy": {
+                    "type": "Docker",
+                    "dockerStrategy": {
+                        "env": [
+                            {
+                                "name": "NAGIOS_USER",
+                                "valueFrom": {
+                                    "secretKeyRef": {
+                                        "name": "nagios-secret",
+                                        "key": "NAGIOS_USER"
+                                    }
+                                }
+                            },
+                            {
+                                "name": "NAGIOS_PASSWORD",
+                                "valueFrom": {
+                                    "secretKeyRef": {
+                                        "name": "nagios-secret",
+                                        "key": "NAGIOS_PASSWORD"
+                                    }
+                                }
+                            }
+                        ],
+                        "forcePull": true,
+                        "noCache": true
+                    }
+                },
+                "output": {
+                    "to": {
+                        "kind": "ImageStreamTag",
+                        "name": "nagios:latest"
+                    }
+                },
+                "resources": {},
+                "postCommit": {},
+                "nodeSelector": null
+            },
+            "status": {
+                "lastVersion": 0
+            }
+        }
+    ]
+}
