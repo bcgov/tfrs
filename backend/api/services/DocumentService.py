@@ -162,6 +162,10 @@ class DocumentService(object):
             interested_organizations.extend([government, user.organization])
             notification_type = NotificationType.DOCUMENT_ARCHIVED
 
+        elif document.status.status == "Security Scan Failed":
+            interested_organizations.append(user.organization)
+            notification_type = NotificationType.DOCUMENT_SCAN_FAILED
+
         if notification_type:
             for organization in interested_organizations:
                 AMQPNotificationService.send_notification(
