@@ -33,6 +33,61 @@
     }
   }
 
+  .credit-transfer-actions {
+    .btn-container {
+      text-align: right;
+    }
+  }
+
+  .credit-transfer-documents {
+    margin: 0 -15px;
+
+    .linked-file-submissions {
+      margin: 0 -15px;
+      padding: 0 1rem;
+    
+      .header {
+        font-weight: bold;
+        padding-bottom: 0.5rem;
+        padding-top: 0.5rem;
+      }
+    
+      .row {
+        display: flex;
+        align-items: center;
+    
+        &:nth-of-type(even) {
+          background-color: $background-grey;
+        }
+      }
+    
+      .status, .unlink {
+        text-align: center;
+      }
+
+      .title, .type {
+        overflow: hidden;
+
+        .value {
+          display: block;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+        }
+      }
+    
+      .unlink-action {
+        background: transparent;
+        border: none;
+        margin: 0.5rem;
+    
+        &:hover {
+          color: $red;
+        }
+      }
+    }
+  }
+
   .credit-transfer-progress-bar {
     padding: 1rem 0rem 1rem 0rem;
 
@@ -243,6 +298,10 @@
     }
   }
 
+  .credit-transfer-signing-history, .credit-transfer-document-list, .credit-transfer-terms {
+    margin-bottom: 3.5rem;
+  }
+
   .main-form {
     padding: 2rem;
     border: 1px solid $border-grey;
@@ -273,50 +332,6 @@
     textarea {
       display: block;
       width: 100%;
-    }
-  }
-
-  .credit-transfer-actions{
-    .btn-container {
-      text-align: right;
-    }
-  }
-
-  .credit-transfer-documents {
-    margin: 0 -15px;
-
-    .linked-file-submissions {
-      margin: 0 -15px;
-      padding: 0 1rem;
-    
-      .header {
-        font-weight: bold;
-        padding-bottom: 0.5rem;
-        padding-top: 0.5rem;
-      }
-    
-      .row {
-        display: flex;
-        align-items: center;
-    
-        &:nth-of-type(even) {
-          background-color: $background-grey;
-        }
-      }
-    
-      .status, .unlink {
-        text-align: center;
-      }
-    
-      .unlink-action {
-        background: transparent;
-        border: none;
-        margin: 0.5rem;
-    
-        &:hover {
-          color: $red;
-        }
-      }
     }
   }
 
@@ -379,6 +394,7 @@
   flex-wrap: wrap;
   align-items: center;
   justify-content: center;
+  padding: 2rem 0;
 
   .col-md-4 {
     text-align: center;
@@ -387,9 +403,7 @@
   .arrow {
     display: inline-block;
     margin: 2rem;
-    padding: 2rem;
     border-radius: 5px;
-    min-width: 15em;
     text-align: center;
 
     @include mobile {
