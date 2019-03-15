@@ -6,7 +6,9 @@ import PropTypes from 'prop-types';
 import FontAwesomeIcon from '@fortawesome/react-fontawesome';
 import { Link } from 'react-router-dom';
 
+import { getCreditTransferType } from '../../actions/creditTransfersActions';
 import CREDIT_TRANSACTIONS from '../../constants/routes/CreditTransactions';
+import { CREDIT_TRANSFER_STATUS } from '../../constants/values';
 
 const LinkedCreditTransactions = props => (
   <div className="linked-credit-transactions">
@@ -25,8 +27,8 @@ const LinkedCreditTransactions = props => (
             {creditTrade.id}
           </Link>
         </div>
-        <div className="col-xs-4">{creditTrade.type.theType}</div>
-        <div className="col-xs-4 status">{creditTrade.status.status}</div>
+        <div className="col-xs-4">{getCreditTransferType(creditTrade.type.id)}</div>
+        <div className="col-xs-4 status">{Object.values(CREDIT_TRANSFER_STATUS).find(element => element.id === creditTrade.status.id).description}</div>
         {props.canLink &&
           <div className="col-xs-2 unlink">
             <button

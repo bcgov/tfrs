@@ -13,7 +13,8 @@
     "feedstock_misc": "Extra sticky",
     "former_company": null,
     "fuel_code": "Submitted Fuel Code",
-    "status": ["Submitted"]
+    "status": ["Submitted"],
+    "fuel": ["Biodiesel"]
   },
   "model": "api.fuelcode",
   "pk": null
@@ -33,7 +34,8 @@
       "feedstock_misc": "Less sticky",
       "former_company": "Company A",
       "fuel_code": "Submitted Fuel Code",
-      "status": ["Submitted"]
+      "status": ["Submitted"],
+      "fuel": ["LNG"]
     },
     "model": "api.fuelcode",
     "pk": null
@@ -54,7 +56,8 @@
       "feedstock_misc": "Extra buttery",
       "former_company": "Company A",
       "fuel_code": "Submitted Fuel Code",
-      "status": ["Submitted"]
+      "status": ["Submitted"],
+      "fuel": ["Ethanol"]
     },
     "model": "api.fuelcode",
     "pk": null
@@ -74,7 +77,8 @@
       "feedstock_misc": "",
       "former_company": "",
       "fuel_code": "Submitted Fuel Code",
-      "status": ["Submitted"]
+      "status": ["Submitted"],
+      "fuel": ["Propane"]
     },
     "model": "api.fuelcode",
     "pk": null
