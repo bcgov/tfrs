@@ -23,6 +23,7 @@ class AutocompleteViewSet(ViewSet):
             result = Autocomplete.get_matches(field, q)
             response = JsonResponse(result, safe=False)
             response['Cache-Control'] = 'max-age=3600'
+
             return response
         except NoSuchFieldError as e:
             raise NotFound()
