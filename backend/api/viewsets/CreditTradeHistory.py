@@ -41,20 +41,19 @@ class CreditTradeHistoryViewSet(AuditableMixin, mixins.ListModelMixin,
     queryset = CreditTradeHistory.objects.all()
     filter_backends = (filters.OrderingFilter,)
     ordering_fields = '__all__'
-    ordering = ('-update_timestamp', '-create_timestamp', '-id',)
+    ordering = ('-create_timestamp', '-id',)
     serializer_class = CreditTradeHistorySerializer
     serializer_classes = {
         'list': CreditTradeHistoryReviewedSerializer
     }
 
     column_sort_mappings = {
-        'updateTimestamp': 'update_timestamp',
+        'updateTimestamp': 'create_timestamp',
         'creditTradeId': 'id',
         'creditType': 'type__the_type',
         'action': 'status__status',
         'initiator': 'credit_trade__initiator__name',
-        'respondent': 'respondent__name'#,
-        # 'user': 'user__display_name'
+        'respondent': 'respondent__name'
     }
 
     def get_serializer_class(self):
