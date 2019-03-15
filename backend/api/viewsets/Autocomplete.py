@@ -1,6 +1,5 @@
 from django.http import JsonResponse
-from rest_framework.exceptions import NotFound, APIException, ValidationError
-from rest_framework.response import Response
+from rest_framework.exceptions import NotFound, ValidationError
 
 from rest_framework.viewsets import ViewSet
 
@@ -14,10 +13,11 @@ class AutocompleteViewSet(ViewSet):
 
     def list(self, request):
         field = request.GET.get('field')
-        q = request.GET.get('q')
+        q = request.GET.get('q').lower()
 
         if not field or not q:
-            raise ValidationError('required query parameter field or q not present')
+            raise ValidationError(
+                'required query parameter field or q not present')
 
         try:
             result = Autocomplete.get_matches(field, q)
@@ -26,4 +26,3 @@ class AutocompleteViewSet(ViewSet):
             return response
         except NoSuchFieldError as e:
             raise NotFound()
-
