@@ -77,7 +77,7 @@ const CreditTransferDetails = props => (
           />
           }
           {props.documents && props.documents.length > 0 &&
-            <div className="row">
+            <div className="row credit-transfer-document-list">
               <div className="col-md-6">
                 <CreditTransferDocumentList documents={props.documents} />
               </div>
@@ -174,7 +174,8 @@ CreditTransferDetails.defaultProps = {
   tradeType: {
     theType: 'sell'
   },
-  comments: []
+  comments: [],
+  documents: []
 };
 
 CreditTransferDetails.propTypes = {
@@ -282,7 +283,7 @@ CreditTransferDetails.propTypes = {
   hasCommented: PropTypes.bool.isRequired,
   canCreatePrivilegedComment: PropTypes.bool.isRequired,
   isCreatingPrivilegedComment: PropTypes.bool.isRequired,
-  documents: PropTypes.arrayOf(PropTypes.shape).isRequired
+  documents: PropTypes.arrayOf(PropTypes.shape)
 };
 
 export default CreditTransferDetails;
