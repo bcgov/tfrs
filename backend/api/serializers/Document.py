@@ -521,6 +521,30 @@ class DocumentUpdateSerializer(serializers.ModelSerializer):
                                    " before submitting."
                 })
 
+            attachments_to_be_removed = request.data.get(
+                'attachments_to_be_removed')
+
+            for attachment in current_attachments:
+                if attachment.security_scan_status == 'FAIL' and \
+                        not attachment.is_removed and \
+                        attachment.id not in attachments_to_be_removed:
+                    raise serializers.ValidationError({
+                        'attachments': "An attachment failing security scan "
+                                       "is preventing this {} from being "
+                                       "submitted".format(
+                                           document.type.description
+                                       )
+                    })
+
+                if attachment.security_scan_status == 'IN PROGRESS' and \
+                        not attachment.is_removed and \
+                        attachment.id not in attachments_to_be_removed:
+                    raise serializers.ValidationError({
+                        'attachments': "Please wait until the attachments "
+                                       "completed security scan before "
+                                       "submitting."
+                    })
+
         if status.status == "Archived":
             record_numbers = request.data.get('record_numbers', [])
 
