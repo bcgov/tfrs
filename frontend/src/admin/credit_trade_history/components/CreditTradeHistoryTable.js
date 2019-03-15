@@ -108,8 +108,8 @@ class CreditTradeHistoryTable extends React.Component {
       minWidth: 100
     }, {
       accessor: (item) => {
-        if (item.creditTradeUpdateTime) {
-          const ts = Date.parse(item.creditTradeUpdateTime);
+        if (item.createTimestamp) {
+          const ts = Date.parse(item.createTimestamp);
 
           return formatter.format(ts);
         }
