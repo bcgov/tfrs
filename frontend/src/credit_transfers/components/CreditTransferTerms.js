@@ -30,7 +30,7 @@ class CreditTransferTerms extends Component {
       </div>
     )));
 
-    return content;
+    return (<div className="credit-transfer-terms">{content}</div>);
   }
 }
 

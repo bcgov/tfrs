@@ -24,7 +24,7 @@ const SecureFileSubmissionDetails = props => (
     <div className="credit-transaction-request-details">
 
       <div className="row">
-        <div className="form-group col-md-12">
+        <div className="form-group col-md-6">
           <label htmlFor="document-status">Document Submission Status:
             <div>
               <span className="value">{props.item.status.status}</span> on
@@ -32,6 +32,14 @@ const SecureFileSubmissionDetails = props => (
             </div>
           </label>
         </div>
+
+        {props.loggedInUser.isGovernmentUser &&
+        <div className="form-group col-md-6">
+          <label htmlFor="document-status">Organization:
+            <div className="value">{props.item.createUser.organization.name}</div>
+          </label>
+        </div>
+        }
       </div>
 
       <div className="row">
@@ -257,6 +265,9 @@ SecureFileSubmissionDetails.propTypes = {
   isCommenting: PropTypes.bool.isRequired,
   isCreatingPrivilegedComment: PropTypes.bool.isRequired,
   item: PropTypes.shape().isRequired,
+  loggedInUser: PropTypes.shape({
+    isGovernmentUser: PropTypes.bool
+  }).isRequired,
   saveComment: PropTypes.func.isRequired,
   selectLinkIdForModal: PropTypes.func.isRequired
 };

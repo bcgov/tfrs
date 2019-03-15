@@ -160,7 +160,7 @@ class CreditTransferSigningHistory extends Component {
 
   render () {
     return (
-      <div>
+      <div className="credit-transfer-signing-history">
         <h3 className="signing-authority-header" key="header">Transaction History</h3>
         {this.props.history.length > 0 &&
         this.props.history.map((history, index, arr) => {
