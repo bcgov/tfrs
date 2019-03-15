@@ -254,6 +254,7 @@ class DocumentDetailSerializer(serializers.ModelSerializer):
     status = DocumentStatusSerializer(read_only=True)
     type = DocumentTypeSerializer(read_only=True)
     credit_trades = serializers.SerializerMethodField()
+    create_user = UserMinSerializer(read_only=True)
 
     def get_actions(self, obj):
         """
@@ -479,7 +480,7 @@ class DocumentUpdateSerializer(serializers.ModelSerializer):
                 raise serializers.ValidationError({
                     'invalidStatus': "The submission cannot be rescinded "
                                      "because it has been marked as received "
-                                     "by a Government user."
+                                     "by a Government user. "
                                      "Please refresh your browser."
                 })
 

@@ -612,9 +612,7 @@ CreditTransferViewContainer.propTypes = {
     commentActions: PropTypes.arrayOf(PropTypes.string),
     creditsFrom: PropTypes.shape({}),
     creditsTo: PropTypes.shape({}),
-    documents: PropTypes.arrayOf(
-      PropTypes.shape
-    ).isRequired,
+    documents: PropTypes.arrayOf(PropTypes.shape),
     status: PropTypes.shape({}),
     fairMarketValuePerCredit: PropTypes.oneOfType([
       PropTypes.string,
