@@ -20,6 +20,7 @@ import SECURE_DOCUMENT_UPLOAD from './constants/routes/SecureDocumentUpload';
 import USERS from './constants/routes/Users';
 
 import FuelCodeAddContainer from './admin/fuel_codes/FuelCodeAddContainer';
+import FuelCodeDetailContainer from './admin/fuel_codes/FuelCodeDetailContainer';
 import FuelCodesContainer from './admin/fuel_codes/FuelCodesContainer';
 import CreditTransactionsHistoryContainer from './admin/credit_trade_history/CreditTradeHistoryContainer';
 import SecureFileSubmissionsContainer from './secure_file_submission/SecureFileSubmissionContainer';
@@ -130,15 +131,6 @@ const Router = routerProps => (
           component={withRouter(CreditTransferEditContainer)}
         />
         <Route
-          path={FUEL_CODES.ADD}
-          component={withRouter(FuelCodeAddContainer)}
-        />
-        <Route
-          exact
-          path={FUEL_CODES.LIST}
-          component={withRouter(FuelCodesContainer)}
-        />
-        <Route
           exact
           path={HISTORICAL_DATA_ENTRY.LIST}
           component={withRouter(HistoricalDataEntryContainer)}
@@ -208,6 +200,24 @@ const Router = routerProps => (
           path={Routes.NOTIFICATIONS.LIST}
           component={withRouter(NotificationsContainer)}
         />
+        {CONFIG.FUEL_CODES.ENABLED && [
+          <Route
+            exact
+            key="fuel_codes_list"
+            path={FUEL_CODES.LIST}
+            component={withRouter(FuelCodesContainer)}
+          />,
+          <Route
+            key="fuel_codes_add"
+            path={FUEL_CODES.ADD}
+            component={withRouter(FuelCodeAddContainer)}
+          />,
+          <Route
+            key="fuel_code_details"
+            path={FUEL_CODES.DETAILS}
+            component={withRouter(FuelCodeDetailContainer)}
+          />
+        ]}
         {CONFIG.SECURE_DOCUMENT_UPLOAD.ENABLED && [
           <Route
             exact

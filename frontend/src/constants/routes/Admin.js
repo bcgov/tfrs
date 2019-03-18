@@ -7,6 +7,8 @@ const CREDIT_TRANSACTIONS_HISTORY = {
 
 const FUEL_CODES = {
   ADD: `${BASE_PATH}/fuel_codes/add`,
+  API: `/fuel_codes`,
+  DETAILS: `${BASE_PATH}/fuel_codes/view/:id`,
   LIST: `${BASE_PATH}/fuel_codes`
 };
 

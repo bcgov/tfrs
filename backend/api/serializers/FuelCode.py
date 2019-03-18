@@ -21,11 +21,12 @@
     limitations under the License.
 """
 from rest_framework import serializers
-from rest_framework.relations import PrimaryKeyRelatedField, SlugRelatedField
+from rest_framework.relations import SlugRelatedField
 
 from api.models.ApprovedFuel import ApprovedFuel
 from api.models.FuelCode import FuelCode
-from api.models.TransportMode import TransportMode, FeedstockTransportMode, FuelTransportMode
+from api.models.TransportMode import TransportMode, FeedstockTransportMode, \
+    FuelTransportMode
 from api.serializers.FuelCodeStatus import FuelCodeStatusSerializer
 from api.serializers.User import UserMinSerializer
 
@@ -38,18 +39,42 @@ class FuelCodeSerializer(serializers.ModelSerializer):
     create_user = UserMinSerializer(read_only=True)
     update_user = UserMinSerializer(read_only=True)
 
-    fuel = SlugRelatedField(read_only=True,
-                            slug_field='name')
+    feedstock_transport_mode = SlugRelatedField(
+        allow_null=False,
+        many=True,
+        slug_field='name',
+        queryset=TransportMode.objects.all()
+    )
+    fuel = SlugRelatedField(
+        read_only=True,
+        slug_field='name'
+    )
+    fuel_transport_mode = SlugRelatedField(
+        allow_null=False,
+        many=True,
+        slug_field='name',
+        queryset=TransportMode.objects.all()
+    )
 
     class Meta:
         model = FuelCode
         fields = (
-            'id', 'fuel_code', 'fuel', 'company', 'status', 'create_timestamp',
-            'create_user', 'update_timestamp', 'update_user')
+            'application_date', 'approval_date', 'carbon_intensity', 'company',
+            'create_timestamp', 'create_user', 'effective_date', 'expiry_date',
+            'facility_location', 'facility_nameplate', 'feedstock',
+            'feedstock_location', 'feedstock_misc', 'feedstock_transport_mode',
+            'former_company', 'fuel', 'fuel_code', 'fuel_transport_mode',
+            'id', 'status', 'update_timestamp', 'update_user'
+        )
 
         read_only_fields = (
-            'id', 'fuel_code', 'fuel', 'company', 'status', 'create_timestamp',
-            'create_user', 'update_timestamp', 'update_user')
+            'application_date', 'approval_date', 'carbon_intensity', 'company',
+            'create_timestamp', 'create_user', 'effective_date', 'expiry_date',
+            'facility_location', 'facility_nameplate', 'feedstock',
+            'feedstock_location', 'feedstock_misc', 'feedstock_transport_mode',
+            'former_company', 'fuel', 'fuel_code', 'fuel_transport_mode',
+            'id', 'status', 'update_timestamp', 'update_user'
+        )
 
 
 class FuelCodeCreateSerializer(serializers.ModelSerializer):
@@ -57,19 +82,23 @@ class FuelCodeCreateSerializer(serializers.ModelSerializer):
     Creation Serializer for Fuel Codes
     """
 
-    fuel = SlugRelatedField(allow_null=False,
-                            slug_field='name',
-                            queryset=ApprovedFuel.objects.all())
-
-    feedstock_transport_mode = SlugRelatedField(allow_null=False,
-                                                many=True,
-                                                slug_field='name',
-                                                queryset=TransportMode.objects.all())
-
-    fuel_transport_mode = SlugRelatedField(allow_null=False,
-                                           many=True,
-                                           slug_field='name',
-                                           queryset=TransportMode.objects.all())
+    fuel = SlugRelatedField(
+        allow_null=False,
+        slug_field='name',
+        queryset=ApprovedFuel.objects.all()
+    )
+    feedstock_transport_mode = SlugRelatedField(
+        allow_null=False,
+        many=True,
+        slug_field='name',
+        queryset=TransportMode.objects.all()
+    )
+    fuel_transport_mode = SlugRelatedField(
+        allow_null=False,
+        many=True,
+        slug_field='name',
+        queryset=TransportMode.objects.all()
+    )
 
     def create(self, validated_data):
 

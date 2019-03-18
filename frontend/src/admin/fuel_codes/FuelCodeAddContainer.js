@@ -14,7 +14,7 @@ import AdminTabs from '../components/AdminTabs';
 import FuelCodeForm from './components/FuelCodeForm';
 import Loading from '../../app/components/Loading';
 import Modal from '../../app/components/Modal';
-import FUEL_CODES from '../../constants/routes/FuelCodes';
+import { FUEL_CODES } from '../../constants/routes/Admin';
 import toastr from '../../utils/toastr';
 
 class FuelCodeAddContainer extends Component {

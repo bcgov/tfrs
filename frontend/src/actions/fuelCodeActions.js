@@ -3,7 +3,7 @@ import axios from 'axios';
 import ActionTypes from '../constants/actionTypes/FuelCodes';
 import ReducerTypes from '../constants/reducerTypes/FuelCodes';
 import * as Routes from '../constants/routes';
-import FUEL_CODES from '../constants/routes/FuelCodes';
+import { FUEL_CODES } from '../constants/routes/Admin';
 
 /*
  * Fuel Codes
@@ -37,7 +37,7 @@ const getFuelCodesError = error => ({
 });
 
 /*
- * Add Credit Transfers
+ * Add Fuel Code
  */
 export const addFuelCode = data => (dispatch) => {
   dispatch(addFuelCodeRequest());
@@ -66,6 +66,37 @@ const addFuelCodeSuccess = data => ({
 
 const addFuelCodeError = error => ({
   name: ReducerTypes.ERROR_ADD_FUEL_CODE,
+  type: ActionTypes.ERROR,
+  errorMessage: error
+});
+
+/*
+ * Get Fuel Code
+ */
+export const getFuelCode = id => (dispatch) => {
+  dispatch(getFuelCodeRequest());
+  return axios.get(`${Routes.BASE_URL}${FUEL_CODES.API}/${id}`)
+    .then((response) => {
+      dispatch(getFuelCodeSuccess(response.data));
+    }).catch((error) => {
+      dispatch(getFuelCodeError(error.response));
+    });
+};
+
+const getFuelCodeRequest = () => ({
+  name: ReducerTypes.GET_FUEL_CODE_REQUEST,
+  type: ActionTypes.GET_FUEL_CODE
+});
+
+const getFuelCodeSuccess = fuelCodes => ({
+  name: ReducerTypes.RECEIVE_FUEL_CODE_REQUEST,
+  type: ActionTypes.RECEIVE_FUEL_CODE,
+  data: fuelCodes,
+  receivedAt: Date.now()
+});
+
+const getFuelCodeError = error => ({
+  name: ReducerTypes.ERROR_FUEL_CODE_REQUEST,
   type: ActionTypes.ERROR,
   errorMessage: error
 });

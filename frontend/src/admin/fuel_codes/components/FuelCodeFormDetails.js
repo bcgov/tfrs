@@ -185,16 +185,16 @@ const FuelCodeFormDetails = props => (
         </div>
         <div className="col-sm-6">
           <div className="form-group">
-            <label htmlFor="feedstock-miscellaneous">Feedstock Miscellaneous:
+            <label htmlFor="feedstock-miscellaneous">Feedstock Misc:
               <AutocompletedInput
                 handleInputChange={props.handleInputChange}
                 autocompleteFieldName="fuel_code.feedstock_misc"
-                value={props.fields.feedstockMiscellaneous}
+                value={props.fields.feedstockMisc}
                 inputProps={
                   {
                     required: true,
-                    name: 'feedstockMiscellaneous',
-                    id: 'feedstockMiscellaneous'
+                    name: 'feedstockMisc',
+                    id: 'feedstockMisc'
                   }
                 }
               />
@@ -341,7 +341,7 @@ FuelCodeFormDetails.propTypes = {
     facilityNameplate: PropTypes.string,
     feedstock: PropTypes.string,
     feedstockLocation: PropTypes.string,
-    feedstockMiscellaneous: PropTypes.string,
+    feedstockMisc: PropTypes.string,
     feedstockTransportMode: PropTypes.arrayOf(PropTypes.string),
     formerCompany: PropTypes.string,
     fuel: PropTypes.string,
