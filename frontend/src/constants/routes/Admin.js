@@ -9,6 +9,7 @@ const FUEL_CODES = {
   ADD: `${BASE_PATH}/fuel_codes/add`,
   API: `/fuel_codes`,
   DETAILS: `${BASE_PATH}/fuel_codes/view/:id`,
+  EDIT: `${BASE_PATH}/fuel_codes/edit/:id`,
   LIST: `${BASE_PATH}/fuel_codes`
 };
 

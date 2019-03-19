@@ -8,12 +8,10 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
 import { addFuelCode } from '../../actions/fuelCodeActions';
-
 import history from '../../app/History';
-import AdminTabs from '../components/AdminTabs';
-import FuelCodeForm from './components/FuelCodeForm';
 import Loading from '../../app/components/Loading';
 import Modal from '../../app/components/Modal';
+import FuelCodeForm from './components/FuelCodeForm';
 import { FUEL_CODES } from '../../constants/routes/Admin';
 import toastr from '../../utils/toastr';
 
@@ -123,11 +121,6 @@ class FuelCodeAddContainer extends Component {
     }
 
     return ([
-      <AdminTabs
-        active="fuel-codes"
-        key="nav"
-        loggedInUser={this.props.loggedInUser}
-      />,
       <FuelCodeForm
         addToFields={this._addToFields}
         errors={this.props.error}

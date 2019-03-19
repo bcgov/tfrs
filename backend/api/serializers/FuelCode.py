@@ -77,11 +77,10 @@ class FuelCodeSerializer(serializers.ModelSerializer):
         )
 
 
-class FuelCodeCreateSerializer(serializers.ModelSerializer):
+class FuelCodeSaveSerializer(serializers.ModelSerializer):
     """
     Creation Serializer for Fuel Codes
     """
-
     fuel = SlugRelatedField(
         allow_null=False,
         slug_field='name',
@@ -101,7 +100,6 @@ class FuelCodeCreateSerializer(serializers.ModelSerializer):
     )
 
     def create(self, validated_data):
-
         feedstock_modes = validated_data.pop('feedstock_transport_mode')
         fuel_modes = validated_data.pop('fuel_transport_mode')
 
@@ -110,6 +108,7 @@ class FuelCodeCreateSerializer(serializers.ModelSerializer):
         if feedstock_modes:
             for feedstock_mode in feedstock_modes:
                 FeedstockTransportMode.objects.create(
+                    create_user=instance.create_user,
                     fuel_code=instance,
                     transport_mode=feedstock_mode
                 )
@@ -117,9 +116,44 @@ class FuelCodeCreateSerializer(serializers.ModelSerializer):
         if fuel_modes:
             for fuel_mode in fuel_modes:
                 FuelTransportMode.objects.create(
+                    create_user=instance.create_user,
                     fuel_code=instance,
                     transport_mode=fuel_mode
                 )
+
+        return instance
+
+    def update(self, instance, validated_data):
+        feedstock_modes = validated_data.pop('feedstock_transport_mode')
+        fuel_modes = validated_data.pop('fuel_transport_mode')
+
+        if feedstock_modes:
+            for feedstock_mode in feedstock_modes:
+                FeedstockTransportMode.objects.update_or_create(
+                    fuel_code=instance,
+                    transport_mode=feedstock_mode,
+                    defaults={
+                        'create_user': instance.create_user,
+                        'update_user': instance.update_user,
+                        'fuel_code': instance,
+                        'transport_mode': feedstock_mode
+                    }
+                )
+
+        if fuel_modes:
+            for fuel_mode in fuel_modes:
+                FuelTransportMode.objects.update_or_create(
+                    fuel_code=instance,
+                    transport_mode=fuel_mode,
+                    defaults={
+                        'create_user': instance.create_user,
+                        'update_user': instance.update_user,
+                        'fuel_code': instance,
+                        'transport_mode': fuel_mode
+                    }
+                )
+
+        FuelCode.objects.filter(id=instance.id).update(**validated_data)
 
         return instance
 

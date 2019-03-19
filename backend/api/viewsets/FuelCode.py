@@ -12,7 +12,7 @@ from api.models.TransportMode import TransportMode
 from api.permissions.FuelCode import FuelCodePermissions
 from api.serializers.ApprovedFuel import ApprovedFuelSerializer
 from api.serializers.FuelCode import \
-    FuelCodeCreateSerializer, FuelCodeSerializer
+    FuelCodeSaveSerializer, FuelCodeSerializer
 from api.serializers.FuelCodeStatus import FuelCodeStatusSerializer
 from api.serializers.TransportMode import TransportModeSerializer
 from auditable.views import AuditableMixin
@@ -33,11 +33,12 @@ class FuelCodeViewSet(AuditableMixin,
 
     serializer_classes = {
         'default': FuelCodeSerializer,
-        'create': FuelCodeCreateSerializer,
+        'approved_fuels': ApprovedFuelSerializer,
+        'create': FuelCodeSaveSerializer,
+        'partial_update': FuelCodeSaveSerializer,
         'statuses': FuelCodeStatusSerializer,
         'transport_modes': TransportModeSerializer,
-        'approved_fuels': ApprovedFuelSerializer,
-
+        'update': FuelCodeSaveSerializer
     }
 
     queryset = FuelCode.objects.all()

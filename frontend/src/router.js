@@ -21,6 +21,7 @@ import USERS from './constants/routes/Users';
 
 import FuelCodeAddContainer from './admin/fuel_codes/FuelCodeAddContainer';
 import FuelCodeDetailContainer from './admin/fuel_codes/FuelCodeDetailContainer';
+import FuelCodeEditContainer from './admin/fuel_codes/FuelCodeEditContainer';
 import FuelCodesContainer from './admin/fuel_codes/FuelCodesContainer';
 import CreditTransactionsHistoryContainer from './admin/credit_trade_history/CreditTradeHistoryContainer';
 import SecureFileSubmissionsContainer from './secure_file_submission/SecureFileSubmissionContainer';
@@ -216,6 +217,11 @@ const Router = routerProps => (
             key="fuel_code_details"
             path={FUEL_CODES.DETAILS}
             component={withRouter(FuelCodeDetailContainer)}
+          />,
+          <Route
+            key="fuel_code_edit"
+            path={FUEL_CODES.EDIT}
+            component={withRouter(FuelCodeEditContainer)}
           />
         ]}
         {CONFIG.SECURE_DOCUMENT_UPLOAD.ENABLED && [

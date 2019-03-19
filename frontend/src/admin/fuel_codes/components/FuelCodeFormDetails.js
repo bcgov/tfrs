@@ -60,7 +60,8 @@ const FuelCodeFormDetails = props => (
                 name="carbonIntensity"
                 onChange={props.handleInputChange}
                 required="required"
-                type="text"
+                step="0.01"
+                type="number"
                 value={props.fields.carbonIntensity}
               />
             </label>
@@ -132,6 +133,7 @@ const FuelCodeFormDetails = props => (
                 onChange={props.handleInputChange}
                 required="required"
                 id="fuel"
+                value={props.fields.fuel}
               >
                 <option key="0" value="" default />
                 {props.approvedFuels.map(mode => (
@@ -228,7 +230,7 @@ const FuelCodeFormDetails = props => (
                 name="facilityNameplate"
                 onChange={props.handleInputChange}
                 required="required"
-                type="text"
+                type="number"
                 value={props.fields.facilityNameplate}
               />
             </label>
@@ -338,7 +340,10 @@ FuelCodeFormDetails.propTypes = {
     effectiveDate: PropTypes.string,
     expiryDate: PropTypes.string,
     facilityLocation: PropTypes.string,
-    facilityNameplate: PropTypes.string,
+    facilityNameplate: PropTypes.oneOfType([
+      PropTypes.number,
+      PropTypes.string
+    ]),
     feedstock: PropTypes.string,
     feedstockLocation: PropTypes.string,
     feedstockMisc: PropTypes.string,

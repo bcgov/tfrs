@@ -10,12 +10,11 @@ import { FUEL_CODES } from '../constants/routes/Admin';
  */
 export const getFuelCodes = () => (dispatch) => {
   dispatch(getFuelCodesRequest());
-  return axios.get(Routes.BASE_URL + FUEL_CODES.API)
-    .then((response) => {
-      dispatch(getFuelCodesSuccess(response.data));
-    }).catch((error) => {
-      dispatch(getFuelCodesError(error.response));
-    });
+  return axios.get(Routes.BASE_URL + FUEL_CODES.API).then((response) => {
+    dispatch(getFuelCodesSuccess(response.data));
+  }).catch((error) => {
+    dispatch(getFuelCodesError(error.response));
+  });
 };
 
 const getFuelCodesRequest = () => ({
@@ -42,15 +41,13 @@ const getFuelCodesError = error => ({
 export const addFuelCode = data => (dispatch) => {
   dispatch(addFuelCodeRequest());
 
-  return axios
-    .post(Routes.BASE_URL + FUEL_CODES.API, data)
-    .then((response) => {
-      dispatch(addFuelCodeSuccess(response.data));
-      return Promise.resolve(response);
-    }).catch((error) => {
-      dispatch(addFuelCodeError(error.response.data));
-      return Promise.reject(error);
-    });
+  return axios.post(Routes.BASE_URL + FUEL_CODES.API, data).then((response) => {
+    dispatch(addFuelCodeSuccess(response.data));
+    return Promise.resolve(response);
+  }).catch((error) => {
+    dispatch(addFuelCodeError(error.response.data));
+    return Promise.reject(error);
+  });
 };
 
 const addFuelCodeRequest = () => ({
@@ -75,12 +72,11 @@ const addFuelCodeError = error => ({
  */
 export const getFuelCode = id => (dispatch) => {
   dispatch(getFuelCodeRequest());
-  return axios.get(`${Routes.BASE_URL}${FUEL_CODES.API}/${id}`)
-    .then((response) => {
-      dispatch(getFuelCodeSuccess(response.data));
-    }).catch((error) => {
-      dispatch(getFuelCodeError(error.response));
-    });
+  return axios.get(`${Routes.BASE_URL}${FUEL_CODES.API}/${id}`).then((response) => {
+    dispatch(getFuelCodeSuccess(response.data));
+  }).catch((error) => {
+    dispatch(getFuelCodeError(error.response));
+  });
 };
 
 const getFuelCodeRequest = () => ({
@@ -97,6 +93,38 @@ const getFuelCodeSuccess = fuelCodes => ({
 
 const getFuelCodeError = error => ({
   name: ReducerTypes.ERROR_FUEL_CODE_REQUEST,
+  type: ActionTypes.ERROR,
+  errorMessage: error
+});
+
+/*
+ * Update Fuel Code
+ */
+export const updateFuelCode = (id, data) => (dispatch) => {
+  dispatch(updateFuelCodeRequest());
+
+  return axios.patch(`${Routes.BASE_URL}${FUEL_CODES.API}/${id}`, data).then((response) => {
+    dispatch(updateFuelCodeSuccess(response.data));
+    return Promise.resolve(response);
+  }).catch((error) => {
+    dispatch(updateFuelCodeError(error.response.data));
+    return Promise.reject(error);
+  });
+};
+
+const updateFuelCodeRequest = () => ({
+  name: ReducerTypes.UPDATE_FUEL_CODE_REQUEST,
+  type: ActionTypes.UPDATE_FUEL_CODE
+});
+
+const updateFuelCodeSuccess = data => ({
+  name: ReducerTypes.SUCCESS_UPDATE_FUEL_CODE,
+  type: ActionTypes.SUCCESS,
+  data
+});
+
+const updateFuelCodeError = error => ({
+  name: ReducerTypes.ERROR_UPDATE_FUEL_CODE,
   type: ActionTypes.ERROR,
   errorMessage: error
 });
