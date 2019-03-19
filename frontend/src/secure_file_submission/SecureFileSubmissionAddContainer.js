@@ -123,7 +123,7 @@ class SecureFileSubmissionAddContainer extends Component {
       const progress = [];
       fieldState[name] = value;
 
-      for (let i = 0; i < value.length; i++) {
+      for (let i = 0; i < value.length; i += 1) {
         progress.push({
           index: i,
           started: false,
@@ -161,7 +161,7 @@ class SecureFileSubmissionAddContainer extends Component {
     const attachments = [];
     const attachedFiles = this.state.fields.files;
 
-    for (let i = 0; i < attachedFiles.length; i++) {
+    for (let i = 0; i < attachedFiles.length; i += 1) {
       const file = attachedFiles[i];
 
       uploadPromises.push(new Promise((resolve, reject) => {
@@ -171,18 +171,18 @@ class SecureFileSubmissionAddContainer extends Component {
           const blob = reader.result;
 
           this.props.requestURL().then((response) => {
-            let uploadProgress = this.state.uploadProgress;
-            uploadProgress[i] = {
-              ...uploadProgress[i],
+            const progress = this.state.uploadProgress;
+            progress[i] = {
+              ...progress[i],
               started: true
             };
             this.setState({
               ...this.state,
-              uploadProgress
+              uploadProgress: progress
             });
 
             this.props.uploadDocument(response.data.put, blob, (progressEvent) => {
-              let uploadProgress = this.state.uploadProgress;
+              const { uploadProgress } = this.state;
               uploadProgress[i] = {
                 ...uploadProgress[i],
                 progress: {
@@ -195,7 +195,7 @@ class SecureFileSubmissionAddContainer extends Component {
                 uploadProgress
               });
             }).then(() => {
-              let uploadProgress = this.state.uploadProgress;
+              const { uploadProgress } = this.state;
               uploadProgress[i] = {
                 ...uploadProgress[i],
                 complete: true,
@@ -206,7 +206,7 @@ class SecureFileSubmissionAddContainer extends Component {
                 uploadProgress
               });
             }).catch(() => {
-              let uploadProgress = this.state.uploadProgress;
+              const { uploadProgress } = this.state;
               uploadProgress[i] = {
                 ...uploadProgress[i],
                 complete: false,
