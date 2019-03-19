@@ -133,7 +133,7 @@ node("master-backend-maven-${env.BUILD_NUMBER}") {
 
     stage ('Confirm to deploy to Prod') {
         input "Deploy to Prod?"
-        input "Reminder of full datase backup and point in time backup have been done."
+        input "Reminder of full datase backup and updating maintenance page."
         input "Deploy to Prod? Please confirm again."
         input "Deploy to Prod? This is the last confirmation required."
         echo "Deploying to Prod: ${BUILD_ID}"
