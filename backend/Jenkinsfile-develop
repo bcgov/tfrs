@@ -135,7 +135,7 @@ node("develop-backend-maven-${env.BUILD_NUMBER}") {
         openshiftTag destStream: 'celery-develop', verbose: 'true', destTag: 'dev', srcStream: 'celery-develop', srcTag: "${IMAGE_HASH_CELERY}"
         openshiftVerifyDeployment depCfg: 'celery', namespace: 'mem-tfrs-dev', replicaCount: 1, verbose: 'false'
     }
-    
+
     stage('Refresh SchemaSpy') {
         echo "Refreshing SchemaSpy for Dev Database"
         openshiftScale depCfg: 'schema-spy-public', namespace: 'mem-tfrs-dev', replicaCount: 0, verbose: 'false', verifyReplicaCount: 'true'
