@@ -18,6 +18,7 @@ import history from '../app/History';
 import DOCUMENT_STATUSES from '../constants/documentStatuses';
 import SECURE_DOCUMENT_UPLOAD from '../constants/routes/SecureDocumentUpload';
 import toastr from '../utils/toastr';
+import FileUploadProgress from './components/FileUploadProgress';
 import SecureFileSubmissionForm from './components/SecureFileSubmissionForm';
 
 class SecureFileSubmissionEditContainer extends Component {
@@ -36,6 +37,7 @@ class SecureFileSubmissionEditContainer extends Component {
         milestone: '',
         title: ''
       },
+      uploadProgress: [],
       uploadState: '',
       validationErrors: {}
     };
@@ -158,6 +160,28 @@ class SecureFileSubmissionEditContainer extends Component {
     if (typeof fieldState[name] === 'object' &&
       name !== 'files' && name !== 'attachments') {
       this.changeObjectProp(parseInt(value, 10), name);
+    } else if (name === 'files') {
+      const progress = [];
+      fieldState[name] = value;
+
+      for (let i = 0; i < value.length; i += 1) {
+        progress.push({
+          index: i,
+          started: false,
+          complete: false,
+          error: false,
+          progress: {
+            loaded: 0,
+            total: 1
+          }
+        });
+      }
+
+      this.setState({
+        ...this.state,
+        uploadProgress: progress,
+        fields: fieldState
+      });
     } else {
       fieldState[name] = value;
       this.setState({
@@ -177,28 +201,76 @@ class SecureFileSubmissionEditContainer extends Component {
     const attachments = [];
     const attachedFiles = this.state.fields.files;
 
-    Object.keys(attachedFiles).forEach((file) => {
+    for (let i = 0; i < attachedFiles.length; i += 1) {
+      const file = attachedFiles[i];
+
       uploadPromises.push(new Promise((resolve, reject) => {
         const reader = new FileReader();
+
         reader.onload = () => {
           const blob = reader.result;
 
           this.props.requestURL().then((response) => {
-            uploadDocument(response.data.put, blob);
+            const progress = this.state.uploadProgress;
+            progress[i] = {
+              ...progress[i],
+              started: true
+            };
+            this.setState({
+              ...this.state,
+              uploadProgress: progress
+            });
+
+            this.props.uploadDocument(response.data.put, blob, (progressEvent) => {
+              const { uploadProgress } = this.state;
+              uploadProgress[i] = {
+                ...uploadProgress[i],
+                progress: {
+                  loaded: progressEvent.loaded,
+                  total: progressEvent.total
+                }
+              };
+              this.setState({
+                ...this.state,
+                uploadProgress
+              });
+            }).then(() => {
+              const { uploadProgress } = this.state;
+              uploadProgress[i] = {
+                ...uploadProgress[i],
+                complete: true,
+                error: false
+              };
+              this.setState({
+                ...this.state,
+                uploadProgress
+              });
+            }).catch(() => {
+              const { uploadProgress } = this.state;
+              uploadProgress[i] = {
+                ...uploadProgress[i],
+                complete: false,
+                error: true
+              };
+              this.setState({
+                ...this.state,
+                uploadProgress
+              });
+            });
 
             attachments.push({
-              filename: attachedFiles[file].name,
-              mimeType: attachedFiles[file].type,
-              size: attachedFiles[file].size,
+              filename: file.name,
+              mimeType: file.type,
+              size: file.size,
               url: response.data.get
             });
             resolve();
           });
         };
 
-        reader.readAsArrayBuffer(attachedFiles[file]);
+        reader.readAsArrayBuffer(file);
       }));
-    });
+    }
 
     // goes through the original attachments and see if something is missing
     // then we just fetch the id of the missing ones (ie removed), and send that to the backend
@@ -242,9 +314,17 @@ class SecureFileSubmissionEditContainer extends Component {
   }
 
   render () {
-    if (this.state.uploadState === 'progress' || this.props.referenceData.isFetching || !this.loaded) {
+    if (this.props.referenceData.isFetching || !this.loaded) {
       return (<Loading />);
     }
+
+    if (this.state.uploadState === 'progress') {
+      return (<FileUploadProgress
+        progress={this.state.uploadProgress}
+        files={this.state.fields.files}
+      />);
+    }
+
     const { item } = this.props;
     let availableActions = [];
 
@@ -325,6 +405,7 @@ SecureFileSubmissionEditContainer.propTypes = {
   }).isRequired,
   requestURL: PropTypes.func.isRequired,
   partialUpdateDocument: PropTypes.func.isRequired,
+  uploadDocument: PropTypes.func.isRequired,
   validationErrors: PropTypes.shape()
 };
 
@@ -343,7 +424,8 @@ const mapDispatchToProps = dispatch => ({
   deleteDocumentUpload: bindActionCreators(deleteDocumentUpload, dispatch),
   getDocumentUpload: bindActionCreators(getDocumentUpload, dispatch),
   requestURL: bindActionCreators(getDocumentUploadURL, dispatch),
-  partialUpdateDocument: bindActionCreators(partialUpdateDocument, dispatch)
+  partialUpdateDocument: bindActionCreators(partialUpdateDocument, dispatch),
+  uploadDocument: bindActionCreators(uploadDocument, dispatch)
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(SecureFileSubmissionEditContainer);

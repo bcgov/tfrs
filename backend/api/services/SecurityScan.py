@@ -39,14 +39,15 @@ class SecurityScan:
     @staticmethod
     def update_status_and_send_notifications(attachment):
         """Update document status and send notifications is it is required"""
-
         not_run_files = DocumentFileAttachment.objects.filter(
             document=attachment.document,
-            security_scan_status='NOT RUN'
+            security_scan_status='NOT RUN',
+            is_removed=False
         )
         in_progress_files = DocumentFileAttachment.objects.filter(
             document=attachment.document,
-            security_scan_status='IN PROGRESS'
+            security_scan_status='IN PROGRESS',
+            is_removed=False
         )
         failed_files = DocumentFileAttachment.objects.filter(
             document=attachment.document,
