@@ -77,17 +77,22 @@ class SimpleDatabaseCompletion(Completion):
         elif connection.vendor == 'postgresql':
             return self._get_matches_postgres(q)
         else:
-            raise Exception('Completions not available for engine'.format(connection.vendor))
+            raise Exception('Completions not available for engine: {}'.format(
+                connection.vendor))
 
 
 class Autocomplete:
-
     completions = {
-        'fuel_code.company': SimpleDatabaseCompletion('fuel_code', 'company'),
-        'fuel_code.former_company': SimpleDatabaseCompletion('fuel_code', 'former_company'),
-        'fuel_code.feedstock': SimpleDatabaseCompletion('fuel_code', 'feedstock'),
-        'fuel_code.feedstock_location': SimpleDatabaseCompletion('fuel_code', 'feedstock_location'),
-        'fuel_code.feedstock_misc': SimpleDatabaseCompletion('fuel_code', 'feedstock_misc')
+        'fuel_code.company': SimpleDatabaseCompletion(
+            'fuel_code', 'company'),
+        'fuel_code.former_company': SimpleDatabaseCompletion(
+            'fuel_code', 'former_company'),
+        'fuel_code.feedstock': SimpleDatabaseCompletion(
+            'fuel_code', 'feedstock'),
+        'fuel_code.feedstock_location': SimpleDatabaseCompletion(
+            'fuel_code', 'feedstock_location'),
+        'fuel_code.feedstock_misc': SimpleDatabaseCompletion(
+            'fuel_code', 'feedstock_misc')
     }
 
     @staticmethod
@@ -103,5 +108,3 @@ class Autocomplete:
             cache.set(cache_key, result)
 
         return result
-
-

@@ -11,6 +11,7 @@ import PropTypes from 'prop-types';
 import FuelCodesPage from './components/FuelCodesPage';
 
 import { getFuelCodes } from '../../actions/fuelCodeActions';
+import AdminTabs from '../components/AdminTabs';
 
 class FuelCodesContainer extends Component {
   constructor (props) {
@@ -28,13 +29,19 @@ class FuelCodesContainer extends Component {
   }
 
   render () {
-    return (
+    return ([
+      <AdminTabs
+        active="fuel-codes"
+        key="nav"
+        loggedInUser={this.props.loggedInUser}
+      />,
       <FuelCodesPage
         fuelCodes={this.props.fuelCodes}
+        key="fuel-codes"
         loggedInUser={this.props.loggedInUser}
         title="Fuel Codes"
       />
-    );
+    ]);
   }
 }
 

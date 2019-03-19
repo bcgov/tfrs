@@ -3,24 +3,22 @@
  * All data handling & manipulation should be handled here.
  */
 import PropTypes from 'prop-types';
-import React, {Component} from 'react';
-import {connect} from 'react-redux';
-import {bindActionCreators} from 'redux';
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 
-import {addFuelCode} from '../../actions/fuelCodeActions';
+import { addFuelCode } from '../../actions/fuelCodeActions';
 
 import history from '../../app/History';
 import AdminTabs from '../components/AdminTabs';
 import FuelCodeForm from './components/FuelCodeForm';
+import Loading from '../../app/components/Loading';
 import Modal from '../../app/components/Modal';
 import FUEL_CODES from '../../constants/routes/FuelCodes';
 import toastr from '../../utils/toastr';
-import axios from "axios";
-import * as Routes from "../../constants/routes";
-import Loading from "../../app/components/Loading";
 
 class FuelCodeAddContainer extends Component {
-  constructor(props) {
+  constructor (props) {
     super(props);
 
     this.state = {
@@ -50,8 +48,8 @@ class FuelCodeAddContainer extends Component {
     this._handleSubmit = this._handleSubmit.bind(this);
   }
 
-  _addToFields(value) {
-    const fieldState = {...this.state.fields};
+  _addToFields (value) {
+    const fieldState = { ...this.state.fields };
 
     const found = this.state.fields.terms.find(term => term.id === value.id);
 
@@ -64,14 +62,14 @@ class FuelCodeAddContainer extends Component {
     });
   }
 
-  _getFuelCodeStatus(status) {
+  _getFuelCodeStatus (status) {
     return this.props.referenceData.fuelCodeStatuses.find(fuelCodeStatus =>
       (fuelCodeStatus.status === status));
   }
 
-  _handleInputChange(event) {
-    const {value, name} = event.target;
-    const fieldState = {...this.state.fields};
+  _handleInputChange (event) {
+    const { value, name } = event.target;
+    const fieldState = { ...this.state.fields };
 
     if (typeof fieldState[name] === 'object') {
       fieldState[name] = [...event.target.options].filter(o => o.selected).map(o => o.value);
@@ -86,7 +84,7 @@ class FuelCodeAddContainer extends Component {
     }
   }
 
-  _handleSubmit(event, status = 'Draft') {
+  _handleSubmit (event, status = 'Draft') {
     event.preventDefault();
 
     // API data structure
@@ -118,12 +116,10 @@ class FuelCodeAddContainer extends Component {
     return true;
   }
 
-  render() {
-
-
+  render () {
     if (this.props.referenceData.isFetching ||
       !this.props.referenceData.isSuccessful) {
-      return (<Loading/>);
+      return (<Loading />);
     }
 
     return ([
