@@ -3,7 +3,7 @@
  */
 import React from 'react';
 import PropTypes from 'prop-types';
-import AutocompletedInput from "./AutocompletedInput";
+import AutocompletedInput from './AutocompletedInput';
 
 const FuelCodeFormDetails = props => (
   <div className="fuel-code-details">
@@ -41,7 +41,7 @@ const FuelCodeFormDetails = props => (
                   {
                     required: true,
                     name: 'company',
-                    id:'company'
+                    id: 'company'
                   }
                 }
               />
@@ -126,12 +126,14 @@ const FuelCodeFormDetails = props => (
         <div className="col-sm-6">
           <div className="form-group">
             <label htmlFor="fuel">Fuel:
-              <select className="form-control"
-                      name="fuel"
-                      onChange={props.handleInputChange}
-                      required="required"
-                      id="fuel"
+              <select
+                className="form-control"
+                name="fuel"
+                onChange={props.handleInputChange}
+                required="required"
+                id="fuel"
               >
+                <option key="0" value="" default />
                 {props.approvedFuels.map(mode => (
                   <option key={mode.name} value={mode.name}>{mode.name}</option>
                 ))}
@@ -153,7 +155,7 @@ const FuelCodeFormDetails = props => (
                   {
                     required: true,
                     name: 'feedstock',
-                    id:'feedstock'
+                    id: 'feedstock'
                   }
                 }
               />
@@ -174,7 +176,7 @@ const FuelCodeFormDetails = props => (
                   {
                     required: true,
                     name: 'feedstockLocation',
-                    id:'feedstockLocation'
+                    id: 'feedstockLocation'
                   }
                 }
               />
@@ -192,7 +194,7 @@ const FuelCodeFormDetails = props => (
                   {
                     required: true,
                     name: 'feedstockMiscellaneous',
-                    id:'feedstockMiscellaneous'
+                    id: 'feedstockMiscellaneous'
                   }
                 }
               />
@@ -204,7 +206,7 @@ const FuelCodeFormDetails = props => (
       <div className="row">
         <div className="col-sm-6">
           <div className="form-group">
-            <label htmlFor="facility-location">Fuel Production Facility Location:
+            <label htmlFor="facility-location">Fuel Production Facility Location (City, Province/State/Country):
               <input
                 className="form-control"
                 id="facility-location"
@@ -219,7 +221,7 @@ const FuelCodeFormDetails = props => (
         </div>
         <div className="col-sm-6">
           <div className="form-group">
-            <label htmlFor="facility-nameplate">Fuel Production Facility Nameplate Capacity:
+            <label htmlFor="facility-nameplate">Fuel Production Facility Nameplate Capacity (litres/GJ per year):
               <input
                 className="form-control"
                 id="facility-nameplate"
@@ -237,18 +239,20 @@ const FuelCodeFormDetails = props => (
       <div className="row">
         <div className="col-sm-6">
           <div className="form-group">
-            <label htmlFor="feedstock-transport-mode">Feedstock Transport Mode:
-              <select multiple
-                      className="form-control"
-                      name="feedstockTransportMode"
-                      onChange={props.handleInputChange}
-                      required="required"
-                      id="feedstock-transport-mode"
-                      value={props.fields.feedstockTransportMode}
+            <label htmlFor="feedstock-transport-mode">Feedstock Transport Mode (use ctrl key to select multiple modes):
+              <select
+                multiple
+                className="form-control"
+                name="feedstockTransportMode"
+                onChange={props.handleInputChange}
+                required="required"
+                id="feedstock-transport-mode"
+                value={props.fields.feedstockTransportMode}
               >
                 {props.transportModes.map(mode => (
-                  <option key={mode.name}
-                          value={mode.name}
+                  <option
+                    key={mode.name}
+                    value={mode.name}
                   >
                     {mode.name}
                   </option>
@@ -259,18 +263,20 @@ const FuelCodeFormDetails = props => (
         </div>
         <div className="col-sm-6">
           <div className="form-group">
-            <label htmlFor="fuel-transport-mode">Finished Fuel Transport Mode:
-              <select multiple
-                      className="form-control"
-                      name="fuelTransportMode"
-                      onChange={props.handleInputChange}
-                      required="required"
-                      id="fuel-transport-mode"
-                      value={props.fields.fuelTransportMode}
+            <label htmlFor="fuel-transport-mode">Finished Fuel Transport Mode (use ctrl key to select multiple modes):
+              <select
+                multiple
+                className="form-control"
+                name="fuelTransportMode"
+                onChange={props.handleInputChange}
+                required="required"
+                id="fuel-transport-mode"
+                value={props.fields.fuelTransportMode}
               >
                 {props.transportModes.map(mode => (
-                  <option key={mode.name}
-                          value={mode.name}
+                  <option
+                    key={mode.name}
+                    value={mode.name}
                   >
                     {mode.name}
                   </option>
@@ -292,7 +298,7 @@ const FuelCodeFormDetails = props => (
                 {
                   required: true,
                   name: 'formerCompany',
-                  id:'formerCompany'
+                  id: 'formerCompany'
                 }
               }
             />

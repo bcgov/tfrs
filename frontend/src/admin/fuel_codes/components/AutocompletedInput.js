@@ -1,12 +1,11 @@
 import Autocomplete from 'react-autocomplete';
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import axios from 'axios';
-import * as Routes from "../../../constants/routes";
+import * as Routes from '../../../constants/routes';
 
 class AutocompletedInput extends Component {
-
-  constructor(props) {
+  constructor (props) {
     super(props);
 
     this.state = {
@@ -15,51 +14,48 @@ class AutocompletedInput extends Component {
 
     this._onChange = this._onChange.bind(this);
     this._onSelect = this._onSelect.bind(this);
-
   }
 
-  _onChange(event) {
-    const {value} = event.target;
+  _onChange (event) {
+    const { value } = event.target;
 
     if (value.length < 3) {
       this.setState({
         items: []
       });
-    }
-    else {
-      axios.get(Routes.BASE_URL + Routes.AUTOCOMPLETE_API
-        + '?field=' + this.props.autocompleteFieldName + '&q=' + value)
+    } else {
+      axios.get(`${Routes.BASE_URL}${Routes.AUTOCOMPLETE_API}?field=${this.props.autocompleteFieldName}&q=${value}`)
         .then((response) => {
           this.setState({
             items: response.data
           });
         }).catch((error) => {
-        this.setState({
-          items: []
+          console.log(error);
+
+          this.setState({
+            items: []
+          });
         });
-      });
     }
 
     return this.props.handleInputChange(event);
-
   }
 
-  _onSelect(value) {
-
-    //pass it up to the container, faking an event
+  _onSelect (value) {
+    // pass it up to the container, faking an event
     this.props.handleInputChange({
       target: {
         name: this.props.inputProps.name,
-        value: value
+        value
       }
     });
 
     this.setState({
       items: []
-    })
+    });
   }
 
-  render() {
+  render () {
     return (
       <Autocomplete
         items={this.state.items}
@@ -91,14 +87,13 @@ class AutocompletedInput extends Component {
             children={items}
           />
         )}
-        renderInput={ props => (
+        renderInput={props => (
           <input
             type="text"
             className="form-control"
             {...props}
           />
-        )
-        }
+        )}
         wrapperStyle={{}}
       />
     );
@@ -112,9 +107,8 @@ AutocompletedInput.defaultProps = {
 AutocompletedInput.propTypes = {
   handleInputChange: PropTypes.func.isRequired,
   autocompleteFieldName: PropTypes.string.isRequired,
-  inputProps: PropTypes.object,
+  inputProps: PropTypes.shape(),
   value: PropTypes.any
 };
-
 
 export default AutocompletedInput;
