@@ -4,7 +4,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
-import ReactTable from 'react-table';
 import 'react-table/react-table.css';
 import numeral from 'numeral';
 
@@ -12,6 +11,7 @@ import * as NumberFormat from '../../constants/numeralFormats';
 import CREDIT_TRANSACTIONS from '../../constants/routes/CreditTransactions';
 import ORGANIZATIONS from '../../constants/routes/Organizations';
 import ORGANIZATION_STATUSES from '../../constants/organizationStatuses';
+import StateSavingReactTable from "../../app/components/StateSavingReactTable";
 
 const OrganizationsTable = (props) => {
   const columns = [{
@@ -73,7 +73,8 @@ const OrganizationsTable = (props) => {
   const filterable = true;
 
   return (
-    <ReactTable
+    <StateSavingReactTable
+      stateKey="organizations"
       className="searchable"
       data={props.items}
       defaultPageSize={10}
