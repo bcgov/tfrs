@@ -14,7 +14,7 @@ const FuelCodesPage = (props) => {
   const isEmpty = items.length === 0;
 
   return (
-    <div className="page_fuel_codes">
+    <div className="page-fuel-codes">
       <h1>{props.title}</h1>
       <div className="right-toolbar-container">
         <div className="actions-container">

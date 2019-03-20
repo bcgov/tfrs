@@ -1,7 +1,7 @@
 @import './variables.scss';
 @import './mixins.scss';
 
-.page_admin_fuel_code {
+.page-admin-fuel-code {
   label {
     font-weight: normal;
     width: 100%;
@@ -14,6 +14,20 @@
   .main-form {
     margin-left: -15px;
     margin-right: -15px;
+  }
+}
+
+.page-fuel-codes {
+  .col-id, .col-carbon-intensity, .col-date {
+    text-align: right;
+  }
+
+  .col-status {
+    text-align: center;
+  }
+
+  .right-toolbar-container .actions-container {
+    margin-bottom: 1rem;
   }
 }
 

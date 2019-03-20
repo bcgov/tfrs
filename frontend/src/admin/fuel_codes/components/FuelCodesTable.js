@@ -39,19 +39,19 @@ const FuelCodesTable = (props) => {
     width: 150
   }, {
     accessor: item => item.applicationDate,
-    className: 'col-application-date',
+    className: 'col-date',
     Header: 'Application Date',
     id: 'application-date',
     width: 150
   }, {
     accessor: item => item.effectiveDate,
-    className: 'col-effective-date',
+    className: 'col-date',
     Header: 'Effective Date',
     id: 'effective-date',
     width: 150
   }, {
     accessor: item => item.expiryDate,
-    className: 'col-expiry-date',
+    className: 'col-date',
     Header: 'Expiry Date',
     id: 'expiry-date',
     width: 150
@@ -90,7 +90,7 @@ const FuelCodesTable = (props) => {
     className: 'col-facility-nameplate',
     Header: 'Fuel Production Facility Nameplate Capacity',
     id: 'facility-nameplate',
-    width: 250
+    width: 300
   }, {
     accessor: item => item.feedstockTransportMode && item.feedstockTransportMode.join(', '),
     className: 'col-feedstock-transport-mode',
@@ -111,7 +111,7 @@ const FuelCodesTable = (props) => {
     width: 200
   }, {
     accessor: item => item.approvalDate,
-    className: 'col-approval-date',
+    className: 'col-date',
     Header: 'Approval Date',
     id: 'approval-date',
     width: 150
@@ -158,8 +158,8 @@ const FuelCodesTable = (props) => {
       defaultFilterMethod={filterMethod}
       defaultPageSize={10}
       defaultSorted={[{
-        id: 'id',
-        desc: true
+        id: 'title',
+        desc: false
       }]}
       filterable={filterable}
       getTrProps={(state, row) => {

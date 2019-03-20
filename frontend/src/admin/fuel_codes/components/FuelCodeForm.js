@@ -68,7 +68,7 @@ class FuelCodeForm extends Component {
 
   render () {
     return (
-      <div className="page_admin_fuel_code">
+      <div className="page-admin-fuel-code">
         <h1>{this.props.title}</h1>
         <form
           onSubmit={event => this.props.handleSubmit(event)}
