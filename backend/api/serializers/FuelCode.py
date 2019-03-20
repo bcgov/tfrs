@@ -21,11 +21,12 @@
     limitations under the License.
 """
 from rest_framework import serializers
-from rest_framework.relations import PrimaryKeyRelatedField, SlugRelatedField
+from rest_framework.relations import SlugRelatedField
 
 from api.models.ApprovedFuel import ApprovedFuel
 from api.models.FuelCode import FuelCode
-from api.models.TransportMode import TransportMode, FeedstockTransportMode, FuelTransportMode
+from api.models.TransportMode import TransportMode, FeedstockTransportMode, \
+    FuelTransportMode
 from api.serializers.FuelCodeStatus import FuelCodeStatusSerializer
 from api.serializers.User import UserMinSerializer
 
@@ -38,41 +39,67 @@ class FuelCodeSerializer(serializers.ModelSerializer):
     create_user = UserMinSerializer(read_only=True)
     update_user = UserMinSerializer(read_only=True)
 
-    fuel = SlugRelatedField(read_only=True,
-                            slug_field='name')
+    feedstock_transport_mode = SlugRelatedField(
+        allow_null=False,
+        many=True,
+        slug_field='name',
+        queryset=TransportMode.objects.all()
+    )
+    fuel = SlugRelatedField(
+        read_only=True,
+        slug_field='name'
+    )
+    fuel_transport_mode = SlugRelatedField(
+        allow_null=False,
+        many=True,
+        slug_field='name',
+        queryset=TransportMode.objects.all()
+    )
 
     class Meta:
         model = FuelCode
         fields = (
-            'id', 'fuel_code', 'fuel', 'company', 'status', 'create_timestamp',
-            'create_user', 'update_timestamp', 'update_user')
+            'application_date', 'approval_date', 'carbon_intensity', 'company',
+            'create_timestamp', 'create_user', 'effective_date', 'expiry_date',
+            'facility_location', 'facility_nameplate', 'feedstock',
+            'feedstock_location', 'feedstock_misc', 'feedstock_transport_mode',
+            'former_company', 'fuel', 'fuel_code', 'fuel_transport_mode',
+            'id', 'status', 'update_timestamp', 'update_user'
+        )
 
         read_only_fields = (
-            'id', 'fuel_code', 'fuel', 'company', 'status', 'create_timestamp',
-            'create_user', 'update_timestamp', 'update_user')
+            'application_date', 'approval_date', 'carbon_intensity', 'company',
+            'create_timestamp', 'create_user', 'effective_date', 'expiry_date',
+            'facility_location', 'facility_nameplate', 'feedstock',
+            'feedstock_location', 'feedstock_misc', 'feedstock_transport_mode',
+            'former_company', 'fuel', 'fuel_code', 'fuel_transport_mode',
+            'id', 'status', 'update_timestamp', 'update_user'
+        )
 
 
-class FuelCodeCreateSerializer(serializers.ModelSerializer):
+class FuelCodeSaveSerializer(serializers.ModelSerializer):
     """
     Creation Serializer for Fuel Codes
     """
-
-    fuel = SlugRelatedField(allow_null=False,
-                            slug_field='name',
-                            queryset=ApprovedFuel.objects.all())
-
-    feedstock_transport_mode = SlugRelatedField(allow_null=False,
-                                                many=True,
-                                                slug_field='name',
-                                                queryset=TransportMode.objects.all())
-
-    fuel_transport_mode = SlugRelatedField(allow_null=False,
-                                           many=True,
-                                           slug_field='name',
-                                           queryset=TransportMode.objects.all())
+    fuel = SlugRelatedField(
+        allow_null=False,
+        slug_field='name',
+        queryset=ApprovedFuel.objects.all()
+    )
+    feedstock_transport_mode = SlugRelatedField(
+        allow_null=False,
+        many=True,
+        slug_field='name',
+        queryset=TransportMode.objects.all()
+    )
+    fuel_transport_mode = SlugRelatedField(
+        allow_null=False,
+        many=True,
+        slug_field='name',
+        queryset=TransportMode.objects.all()
+    )
 
     def create(self, validated_data):
-
         feedstock_modes = validated_data.pop('feedstock_transport_mode')
         fuel_modes = validated_data.pop('fuel_transport_mode')
 
@@ -81,6 +108,7 @@ class FuelCodeCreateSerializer(serializers.ModelSerializer):
         if feedstock_modes:
             for feedstock_mode in feedstock_modes:
                 FeedstockTransportMode.objects.create(
+                    create_user=instance.create_user,
                     fuel_code=instance,
                     transport_mode=feedstock_mode
                 )
@@ -88,9 +116,44 @@ class FuelCodeCreateSerializer(serializers.ModelSerializer):
         if fuel_modes:
             for fuel_mode in fuel_modes:
                 FuelTransportMode.objects.create(
+                    create_user=instance.create_user,
                     fuel_code=instance,
                     transport_mode=fuel_mode
                 )
+
+        return instance
+
+    def update(self, instance, validated_data):
+        feedstock_modes = validated_data.pop('feedstock_transport_mode')
+        fuel_modes = validated_data.pop('fuel_transport_mode')
+
+        if feedstock_modes:
+            for feedstock_mode in feedstock_modes:
+                FeedstockTransportMode.objects.update_or_create(
+                    fuel_code=instance,
+                    transport_mode=feedstock_mode,
+                    defaults={
+                        'create_user': instance.create_user,
+                        'update_user': instance.update_user,
+                        'fuel_code': instance,
+                        'transport_mode': feedstock_mode
+                    }
+                )
+
+        if fuel_modes:
+            for fuel_mode in fuel_modes:
+                FuelTransportMode.objects.update_or_create(
+                    fuel_code=instance,
+                    transport_mode=fuel_mode,
+                    defaults={
+                        'create_user': instance.create_user,
+                        'update_user': instance.update_user,
+                        'fuel_code': instance,
+                        'transport_mode': fuel_mode
+                    }
+                )
+
+        FuelCode.objects.filter(id=instance.id).update(**validated_data)
 
         return instance
 
