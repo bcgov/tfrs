@@ -97,4 +97,6 @@ This repository is maintained by [Low Carbon Fuels Branch](http://www2.gov.bc.ca
 
 ## Testing Thanks
 
-Thanks to BrowserStack for Testing Tool support via OpenSource Licensing [![BrowserStack](browserstack-logo-white-small.png)](http://browserstack.com/)]
+Thanks to BrowserStack for Testing Tool support via OpenSource Licensing
+
+[![BrowserStack](browserstack-logo-white-small.png)](http://browserstack.com/)
