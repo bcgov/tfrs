@@ -13,7 +13,10 @@ class AutocompleteViewSet(ViewSet):
 
     def list(self, request):
         field = request.GET.get('field')
-        q = request.GET.get('q').lower()
+        q = request.GET.get('q')
+
+        if q:
+            q = q.lower()
 
         if not field or not q:
             raise ValidationError(
