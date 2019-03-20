@@ -147,8 +147,8 @@ node("master-backend-maven-${env.BUILD_NUMBER}") {
 
     stage('Bring up Maintenance Page') {
         sh returnStatus: true, script: "oc scale dc maintenance-page -n mem-tfrs-prod --replicas=1 --timeout=20s"
-        sh returnStatus: true, script: "oc patch route/prod-lowcarbonfuels-frontend -n mem-tfrs-prod -p '{\"spec\":{\"to\":{\"name\":\"maintenance-page\"}, \"port\":{\"targetPort\":\"2015-tcp\"}}}'"
-        sh returnStatus: true, script: "oc patch route/prod-lowcarbonfuels-backend -n mem-tfrs-prod -p '{\"spec\":{\"to\":{\"name\":\"maintenance-page\"}, \"port\":{\"targetPort\":\"2015-tcp\"}}}'"
+        sh returnStatus: true, script: "oc patch route/lowcarbonfuels-frontend -n mem-tfrs-prod -p '{\"spec\":{\"to\":{\"name\":\"maintenance-page\"}, \"port\":{\"targetPort\":\"2015-tcp\"}}}'"
+        sh returnStatus: true, script: "oc patch route/lowcarbonfuels-backend -n mem-tfrs-prod -p '{\"spec\":{\"to\":{\"name\":\"maintenance-page\"}, \"port\":{\"targetPort\":\"2015-tcp\"}}}'"
     }
 
     stage('Backup Prod Database') {
