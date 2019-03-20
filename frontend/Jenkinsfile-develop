@@ -77,6 +77,7 @@
 
 } //end of podTemplate
 
+/****
 stage('FT on Dev') {
 
     podTemplate(label: "develop-frontend-bddstack-${env.BUILD_NUMBER}", name: "develop-frontend-bddstack-${env.BUILD_NUMBER}", serviceAccount: 'jenkins', cloud: 'openshift',
@@ -103,8 +104,8 @@ stage('FT on Dev') {
 	    try {   
                 sh './gradlew --info --stacktrace chromeHeadlessTest'
 	    } finally {
-		archiveArtifacts allowEmptyArchive: true, artifacts: 'build/reports/**/*'
-                archiveArtifacts allowEmptyArchive: true, artifacts: 'build/test-results/**/*'
+		archiveArtifacts allowEmptyArchive: true, artifacts: 'build/reports/ * *  / *'
+                archiveArtifacts allowEmptyArchive: true, artifacts: 'build/test-results/ * * / *'
                 junit 'build/test-results/**/*.xml'
                 publishHTML (target: [
                             allowMissing: false,
@@ -126,5 +127,7 @@ stage('FT on Dev') {
         } //end of dir
     } //end of node
     } //end of podTemplate 
+
 } //end of stage
 
+****/

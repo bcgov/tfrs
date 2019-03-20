@@ -1,5 +1,5 @@
-def result = 0;
-
+def tfrs_release='v1.2.18'
+def result = 0
 stage('Unit Test') {
     podTemplate(label: "develop-backend-python-${env.BUILD_NUMBER}", name: "develop-backend-python-${env.BUILD_NUMBER}", serviceAccount: 'jenkins', cloud: 'openshift',
         containers: [
@@ -117,6 +117,13 @@ node("develop-backend-maven-${env.BUILD_NUMBER}") {
         echo ">> IMAGE_HASH_CELERY: $IMAGE_HASH_CELERY"
     }
 
+    stage('Datebase Backup') {
+        postgresql_pod_name=sh (script: 'oc get pods -n mem-tfrs-dev | grep postgresql96 | awk \'{print $1}\'', returnStdout: true).trim()
+        echo "start backup script tfrsdump-dev.sh on dev, postgresql_pod_name is ${postgresql_pod_name}"
+        sh returnStdout: true, script: "oc exec ${postgresql_pod_name} -c postgresql96 -n mem-tfrs-dev -- bash /postgresql-backup/tfrs-backup.sh ${tfrs_release} dev"
+        echo 'backup script completed'
+    }
+
     stage('Deploy on Dev') {
         echo "Deploying to Dev: ${BUILD_ID}"
         openshiftTag destStream: 'tfrs-develop', verbose: 'true', destTag: 'dev', srcStream: 'tfrs-develop', srcTag: "${IMAGE_HASH_BACKEND}"
@@ -128,7 +135,7 @@ node("develop-backend-maven-${env.BUILD_NUMBER}") {
         openshiftTag destStream: 'celery-develop', verbose: 'true', destTag: 'dev', srcStream: 'celery-develop', srcTag: "${IMAGE_HASH_CELERY}"
         openshiftVerifyDeployment depCfg: 'celery', namespace: 'mem-tfrs-dev', replicaCount: 1, verbose: 'false'
     }
-    
+
     stage('Refresh SchemaSpy') {
         echo "Refreshing SchemaSpy for Dev Database"
         openshiftScale depCfg: 'schema-spy-public', namespace: 'mem-tfrs-dev', replicaCount: 0, verbose: 'false', verifyReplicaCount: 'true'
