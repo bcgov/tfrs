@@ -1,7 +1,8 @@
-        
-node('maven') {
-oc scale dc maintenance-page --replicas=1 --timeout=20s
-oc patch route/dev-lowcarbonfuels-frontend -n mem-tfrs-dev -p '{"spec":{"to":{"name":"maintenance-page"}, "port":{"targetPort":"2015-tcp"}}}'
-oc patch route/dev-lowcarbonfuels-backend -n mem-tfrs-dev -p '{"spec":{"to":{"name":"maintenance-page"}, "port":{"targetPort":"2015-tcp"}}}'
-
-}
+        node('maven') {
+          sh returnStatus: true, script: "oc scale dc maintenance-page -n mem-tfrs-dev --replicas=1 --timeout=20s"
+          sh returnStatus: true, script: "oc patch route/dev-lowcarbonfuels-frontend -n mem-tfrs-dev -p '{\"spec\":{\"to\":{\"name\":\"maintenance-page\"}, \"port\":{\"targetPort\":\"2015-tcp\"}}}'"
+          sh returnStatus: true, script: "oc patch route/dev-lowcarbonfuels-backend -n mem-tfrs-dev -p '{\"spec\":{\"to\":{\"name\":\"maintenance-page\"}, \"port\":{\"targetPort\":\"2015-tcp\"}}}'"
+          sh returnStatus: true, script: "oc patch route/dev-lowcarbonfuels-backend -n mem-tfrs-dev -p '{\"spec\":{\"to\":{\"name\":\"backend\"}, \"port\":{\"targetPort\":\"web\"}}}'"
+          sh returnStatus: true, script: "oc patch route/dev-lowcarbonfuels-frontend -n mem-tfrs-dev -p '{\"spec\":{\"to\":{\"name\":\"client\"}, \"port\":{\"targetPort\":\"web\"}}}'"
+          sh returnStatus: true, script: "oc scale dc maintenance-page -n mem-tfrs-dev --replicas=0 --timeout=20s"
+        }

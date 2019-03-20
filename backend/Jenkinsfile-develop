@@ -125,9 +125,9 @@ node("develop-backend-maven-${env.BUILD_NUMBER}") {
     }
 
     stage('Bring up Maintenance Page') {
-        sh "oc scale dc maintenance-page --replicas=1 --timeout=20s"
-        sh "oc patch route/dev-lowcarbonfuels-frontend -n mem-tfrs-dev -p '{"spec":{"to":{"name":"maintenance-page"}, "port":{"targetPort":"2015-tcp"}}}'"
-        sh "oc patch route/dev-lowcarbonfuels-backend -n mem-tfrs-dev -p '{"spec":{"to":{"name":"maintenance-page"}, "port":{"targetPort":"2015-tcp"}}}'"
+        sh returnStatus: true, script: "oc scale dc maintenance-page -n mem-tfrs-dev --replicas=1 --timeout=20s"
+        sh returnStatus: true, script: "oc patch route/dev-lowcarbonfuels-frontend -n mem-tfrs-dev -p '{\"spec\":{\"to\":{\"name\":\"maintenance-page\"}, \"port\":{\"targetPort\":\"2015-tcp\"}}}'"
+        sh returnStatus: true, script: "oc patch route/dev-lowcarbonfuels-backend -n mem-tfrs-dev -p '{\"spec\":{\"to\":{\"name\":\"maintenance-page\"}, \"port\":{\"targetPort\":\"2015-tcp\"}}}'"
     }
 
     stage('Deploy on Dev') {
@@ -143,9 +143,9 @@ node("develop-backend-maven-${env.BUILD_NUMBER}") {
     }
 
     stage('Take down Maintenance Page') {
-        sh "oc patch route/dev-lowcarbonfuels-frontend -n mem-tfrs-dev -p '{"spec":{"to":{"name":"client"}, "port":{"targetPort":"web"}}}'"
-        sh "oc patch route/dev-lowcarbonfuels-backend -n mem-tfrs-dev -p '{"spec":{"to":{"name":"backend"}, "port":{"targetPort":"web"}}}'"
-        sh "oc scale dc maintenance-page --replicas=0 --timeout=20s"
+        sh returnStatus: true, script: "oc patch route/dev-lowcarbonfuels-backend -n mem-tfrs-dev -p '{\"spec\":{\"to\":{\"name\":\"backend\"}, \"port\":{\"targetPort\":\"web\"}}}'"
+        sh returnStatus: true, script: "oc patch route/dev-lowcarbonfuels-frontend -n mem-tfrs-dev -p '{\"spec\":{\"to\":{\"name\":\"client\"}, \"port\":{\"targetPort\":\"web\"}}}'"
+        sh returnStatus: true, script: "oc scale dc maintenance-page -n mem-tfrs-dev --replicas=0 --timeout=20s"
     }
 
     stage('Refresh SchemaSpy') {
