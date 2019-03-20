@@ -124,6 +124,12 @@ node("develop-backend-maven-${env.BUILD_NUMBER}") {
         echo 'backup script completed'
     }
 
+    stage('Bring up Maintenance Page') {
+        sh "oc scale dc maintenance-page --replicas=1 --timeout=20s"
+        sh "oc patch route/dev-lowcarbonfuels-frontend -n mem-tfrs-dev -p '{"spec":{"to":{"name":"maintenance-page"}, "port":{"targetPort":"2015-tcp"}}}'"
+        sh "oc patch route/dev-lowcarbonfuels-backend -n mem-tfrs-dev -p '{"spec":{"to":{"name":"maintenance-page"}, "port":{"targetPort":"2015-tcp"}}}'"
+    }
+
     stage('Deploy on Dev') {
         echo "Deploying to Dev: ${BUILD_ID}"
         openshiftTag destStream: 'tfrs-develop', verbose: 'true', destTag: 'dev', srcStream: 'tfrs-develop', srcTag: "${IMAGE_HASH_BACKEND}"
@@ -134,6 +140,12 @@ node("develop-backend-maven-${env.BUILD_NUMBER}") {
         openshiftVerifyDeployment depCfg: 'scan-handler', namespace: 'mem-tfrs-dev', replicaCount: 1, verbose: 'false'
         openshiftTag destStream: 'celery-develop', verbose: 'true', destTag: 'dev', srcStream: 'celery-develop', srcTag: "${IMAGE_HASH_CELERY}"
         openshiftVerifyDeployment depCfg: 'celery', namespace: 'mem-tfrs-dev', replicaCount: 1, verbose: 'false'
+    }
+
+    stage('Take down Maintenance Page') {
+        sh "oc patch route/dev-lowcarbonfuels-frontend -n mem-tfrs-dev -p '{"spec":{"to":{"name":"client"}, "port":{"targetPort":"web"}}}'"
+        sh "oc patch route/dev-lowcarbonfuels-backend -n mem-tfrs-dev -p '{"spec":{"to":{"name":"backend"}, "port":{"targetPort":"web"}}}'"
+        sh "oc scale dc maintenance-page --replicas=0 --timeout=20s"
     }
 
     stage('Refresh SchemaSpy') {
