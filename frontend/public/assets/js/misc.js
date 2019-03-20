@@ -790,7 +790,7 @@ function addScrollableBurgerMenu() {
 	$menu.removeClass("scrollable");	
 	
 	// Position of the burger menu from the top of the page (px)
-	var menuTopOffset = $("#header-main > .container").height();
+	var menuTopOffset = $("#header-main > .container-fluid").height();
 	
 	// If the QA banner is on the page, need to add its height to menuTopOffset
 	if($(".qa-banner").length) {

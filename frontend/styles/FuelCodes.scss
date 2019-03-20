@@ -16,3 +16,11 @@
     margin-right: -15px;
   }
 }
+
+.page_fuel_codes {
+  overflow-x: auto;
+
+  .ReactTable {
+    width: 100%;
+  }
+}

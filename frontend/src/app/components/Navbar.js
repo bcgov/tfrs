@@ -62,7 +62,7 @@ class Navbar extends Component {
   render () {
     const SecondLevelNavigation = (
       <div className="level2Navigation">
-        <div className="container">
+        <div className="container-fluid">
           {this.props.loggedInUser.isGovernmentUser &&
           <NavLink
             activeClassName="active"
@@ -317,96 +317,94 @@ class Navbar extends Component {
     return (
       <div id="header" role="banner">
         <div id="header-main" className="navbar navbar-default navbar-fixed-top">
-          <div className="container">
-            <div id="header-main-row" className="row">
-              <div className="col-sm-3 col-md-2 col-lg-2 header-main-left">
-                <div id="logo">
-                  <a href="http://gov.bc.ca">
-                    <img
-                      src="/assets/images/gov3_bc_logo.png"
-                      alt="Province of British Columbia"
-                      title="Province of British Columbia logo"
-                    />
-                  </a>
-                </div>
-                <div id="access">
-                  <ul>
-                    <li aria-label="Keyboard Tab Skip">
-                      <a
-                        href="#main-content-anchor"
-                        aria-label="Skip to main content"
-                      >
-                        Skip to main content
-                      </a>
-                    </li>
-                    <li aria-label="Keyboard Tab Skip">
-                      <a
-                        href="#navigation-anchor"
-                        aria-label="Skip to navigation"
-                      >
-                        Skip to navigation
-                      </a>
-                    </li>
-                    <li aria-label="Keyboard Tab Skip">
-                      <a
-                        href="http://gov.bc.ca/webaccessibility/"
-                        aria-label="Accessibility Statement"
-                      >
-                        Accessibility Statement
-                      </a>
-                    </li>
-                  </ul>
-                </div>
-                <button
-                  type="button"
-                  className="navbar-toggle env-button-custom collapsed"
-                  data-toggle="collapse"
-                  data-target="#navbar"
-                  aria-expanded="true"
-                  aria-label="Burger Navigation"
-                >
-                  <img src="/assets/images/menu-open-mobile.png" alt="menu" />
-                </button>
+          <div className="container-fluid">
+            <div id="header-main-row">
+              <div id="logo">
+                <a href="http://gov.bc.ca">
+                  <img
+                    src="/assets/images/gov3_bc_logo.png"
+                    alt="Province of British Columbia"
+                    title="Province of British Columbia logo"
+                  />
+                </a>
               </div>
-              <div className="col-sm-5 col-md-6 col-lg-6 hidden-xs">
-                <div className="bcgov-title">
-                  <h1>Transportation Fuels Reporting System</h1>
-                </div>
-              </div>
-              <div className="col-sm-4 col-md-4 col-lg-4 hidden-xs">
-                <div className="pull-right">
-                  <h5 id="display_name">
-                    {this.props.loggedInUser.displayName &&
-                    <DropdownButton
-                      className="display-name-button"
-                      id="display-name-button"
-                      pullRight
-                      title={this.props.loggedInUser.displayName}
+
+              <div id="access">
+                <ul>
+                  <li aria-label="Keyboard Tab Skip">
+                    <a
+                      href="#main-content-anchor"
+                      aria-label="Skip to main content"
                     >
-                      <MenuItem className="dropdown-menu-caret" header>
-                        <FontAwesomeIcon icon="caret-up" size="2x" />
-                      </MenuItem>
-                      <MenuItem onClick={() => {
-                        history.push(Routes.SETTINGS);
-                      }}
-                      >
-                        <FontAwesomeIcon icon="cog" /> Settings
-                      </MenuItem>
-                      <MenuItem onClick={(e) => {
-                        e.preventDefault();
-                        this.props.signUserOut();
-                      }}
-                      >
-                        <FontAwesomeIcon icon="sign-out-alt" /> Log Out
-                      </MenuItem>
-                    </DropdownButton>
-                    }
-                  </h5>
-                  <span id="user_organization">
-                    {this.props.loggedInUser.organization &&
-                    this.props.loggedInUser.organization.name}
-                  </span>
-                </div>
+                      Skip to main content
+                    </a>
+                  </li>
+                  <li aria-label="Keyboard Tab Skip">
+                    <a
+                      href="#navigation-anchor"
+                      aria-label="Skip to navigation"
+                    >
+                      Skip to navigation
+                    </a>
+                  </li>
+                  <li aria-label="Keyboard Tab Skip">
+                    <a
+                      href="http://gov.bc.ca/webaccessibility/"
+                      aria-label="Accessibility Statement"
+                    >
+                      Accessibility Statement
+                    </a>
+                  </li>
+                </ul>
+              </div>
+
+              <button
+                type="button"
+                className="navbar-toggle env-button-custom collapsed"
+                data-toggle="collapse"
+                data-target="#navbar"
+                aria-expanded="true"
+                aria-label="Burger Navigation"
+              >
+                <img src="/assets/images/menu-open-mobile.png" alt="menu" />
+              </button>
+
+              <div className="bcgov-title hidden-xs">
+                <h1>Transportation Fuels Reporting System</h1>
+              </div>
+
+              <div className="pull-right">
+                <h5 id="display_name">
+                  {this.props.loggedInUser.displayName &&
+                  <DropdownButton
+                    className="display-name-button"
+                    id="display-name-button"
+                    pullRight
+                    title={this.props.loggedInUser.displayName}
+                  >
+                    <MenuItem className="dropdown-menu-caret" header>
+                      <FontAwesomeIcon icon="caret-up" size="2x" />
+                    </MenuItem>
+                    <MenuItem onClick={() => {
+                      history.push(Routes.SETTINGS);
+                    }}
+                    >
+                      <FontAwesomeIcon icon="cog" /> Settings
+                    </MenuItem>
+                    <MenuItem onClick={(e) => {
+                      e.preventDefault();
+                      this.props.signUserOut();
+                    }}
+                    >
+                      <FontAwesomeIcon icon="sign-out-alt" /> Log Out
+                    </MenuItem>
+                  </DropdownButton>
+                  }
+                </h5>
+                <span id="user_organization">
+                  {this.props.loggedInUser.organization &&
+                  this.props.loggedInUser.organization.name}
+                </span>
               </div>
               {this.props.isAuthenticated && CollapsedNavigation}
             </div>
