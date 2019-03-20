@@ -1,15 +1,15 @@
-import { loadUser } from 'redux-oidc';
-import { put, takeLatest, all } from 'redux-saga/effects';
+import {loadUser} from 'redux-oidc';
+import {put, takeLatest, all} from 'redux-saga/effects';
 import userManager from './oidc-usermanager';
-import { getLoggedInUser } from '../actions/userActions';
+import {getLoggedInUser} from '../actions/userActions';
 import CONFIG from '../config';
 
 const LOGIN_TRIGGERING_ACTIONS = [
   'redux-oidc/USER_EXPIRED'
 ];
 
-function triggerLoginFlow (store) {
-  const { routing } = store.getState();
+function triggerLoginFlow(store) {
+  const {routing} = store.getState();
 
   if (routing.location &&
     routing.location.pathname !== '/authCallback') {
@@ -19,20 +19,23 @@ function triggerLoginFlow (store) {
   return false;
 }
 
-function * getBackendUser () {
-  yield put(getLoggedInUser());
+function* getBackendUser(store) {
+  const {rootReducer} = store.getState();
+  if (!rootReducer.userRequest.isAuthenticated) {
+    yield put(getLoggedInUser());
+  }
 }
 
-export default function * authenticationStateSaga (store) {
+export default function* authenticationStateSaga(store) {
   userManager.clearStaleState();
 
-  const { routing } = store.getState();
+  const {routing} = store.getState();
 
   if (!routing.location || routing.location.pathname !== '/authCallback') {
     loadUser(store, userManager);
   }
   yield all([
-    takeLatest('redux-oidc/USER_FOUND', getBackendUser),
+    takeLatest('redux-oidc/USER_FOUND', getBackendUser, store),
     takeLatest(
       action => (LOGIN_TRIGGERING_ACTIONS.includes(action.type)),
       triggerLoginFlow,
