@@ -124,6 +124,12 @@ node("develop-backend-maven-${env.BUILD_NUMBER}") {
         echo 'backup script completed'
     }
 
+    stage('Bring up Maintenance Page') {
+        sh returnStatus: true, script: "oc scale dc maintenance-page -n mem-tfrs-dev --replicas=1 --timeout=20s"
+        sh returnStatus: true, script: "oc patch route/dev-lowcarbonfuels-frontend -n mem-tfrs-dev -p '{\"spec\":{\"to\":{\"name\":\"maintenance-page\"}, \"port\":{\"targetPort\":\"2015-tcp\"}}}'"
+        sh returnStatus: true, script: "oc patch route/dev-lowcarbonfuels-backend -n mem-tfrs-dev -p '{\"spec\":{\"to\":{\"name\":\"maintenance-page\"}, \"port\":{\"targetPort\":\"2015-tcp\"}}}'"
+    }
+
     stage('Deploy on Dev') {
         echo "Deploying to Dev: ${BUILD_ID}"
         openshiftTag destStream: 'tfrs-develop', verbose: 'true', destTag: 'dev', srcStream: 'tfrs-develop', srcTag: "${IMAGE_HASH_BACKEND}"
