@@ -4,7 +4,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import ReactTable from 'react-table';
 import FontAwesomeIcon from '@fortawesome/react-fontawesome';
 import { Link } from 'react-router-dom';
 import 'react-table/react-table.css';
@@ -12,6 +11,7 @@ import 'react-table/react-table.css';
 import history from '../../app/History';
 import { USERS as ADMIN_USERS } from '../../constants/routes/Admin';
 import USERS from '../../constants/routes/Users';
+import StateSavingReactTable from "../../app/components/StateSavingReactTable";
 
 const OrganizationMembersTable = (props) => {
   const columns = [{
@@ -73,7 +73,8 @@ const OrganizationMembersTable = (props) => {
   const filterable = true;
 
   return (
-    <ReactTable
+    <StateSavingReactTable
+      stateKey="organizations-members"
       className="searchable"
       data={props.items}
       defaultPageSize={10}
