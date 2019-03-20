@@ -142,12 +142,6 @@ node("develop-backend-maven-${env.BUILD_NUMBER}") {
         openshiftVerifyDeployment depCfg: 'celery', namespace: 'mem-tfrs-dev', replicaCount: 1, verbose: 'false'
     }
 
-    stage('Take down Maintenance Page') {
-        sh returnStatus: true, script: "oc patch route/dev-lowcarbonfuels-backend -n mem-tfrs-dev -p '{\"spec\":{\"to\":{\"name\":\"backend\"}, \"port\":{\"targetPort\":\"web\"}}}'"
-        sh returnStatus: true, script: "oc patch route/dev-lowcarbonfuels-frontend -n mem-tfrs-dev -p '{\"spec\":{\"to\":{\"name\":\"client\"}, \"port\":{\"targetPort\":\"web\"}}}'"
-        sh returnStatus: true, script: "oc scale dc maintenance-page -n mem-tfrs-dev --replicas=0 --timeout=20s"
-    }
-
     stage('Refresh SchemaSpy') {
         echo "Refreshing SchemaSpy for Dev Database"
         openshiftScale depCfg: 'schema-spy-public', namespace: 'mem-tfrs-dev', replicaCount: 0, verbose: 'false', verifyReplicaCount: 'true'
