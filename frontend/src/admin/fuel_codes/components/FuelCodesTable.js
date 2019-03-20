@@ -11,6 +11,7 @@ import moment from 'moment';
 
 import history from '../../../app/History';
 import { FUEL_CODES } from '../../../constants/routes/Admin';
+import StateSavingReactTable from "../../../app/components/StateSavingReactTable";
 
 const FuelCodesTable = (props) => {
   const columns = [{
@@ -73,7 +74,8 @@ const FuelCodesTable = (props) => {
   const filterable = true;
 
   return (
-    <ReactTable
+    <StateSavingReactTable
+      statekey="fuel-codes"
       className="searchable"
       columns={columns}
       data={props.items}
