@@ -95,6 +95,6 @@ Please note that this project is released with a [Contributor Code of Conduct](c
 
 This repository is maintained by [Low Carbon Fuels Branch](http://www2.gov.bc.ca/gov/content/industry/electricity-alternative-energy/transportation-energies/renewable-low-carbon-fuels). Click [here](https://github.com/bcgov/?q=tfrs) for a complete list of our repositories on GitHub.
 
-# Testing Thanks
+## Testing Thanks
 
-Thanks to BrowserStack for Testing Tool support via OpenSource Licensing ![BrowserStack](browserstack-logo-white-small.png)
+Thanks to BrowserStack for Testing Tool support via OpenSource Licensing [![BrowserStack](browserstack-logo-white-small.png)](http://browserstack.com/)]
