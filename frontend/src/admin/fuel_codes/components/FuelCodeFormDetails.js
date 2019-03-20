@@ -60,7 +60,8 @@ const FuelCodeFormDetails = props => (
                 name="carbonIntensity"
                 onChange={props.handleInputChange}
                 required="required"
-                type="text"
+                step="0.01"
+                type="number"
                 value={props.fields.carbonIntensity}
               />
             </label>
@@ -132,6 +133,7 @@ const FuelCodeFormDetails = props => (
                 onChange={props.handleInputChange}
                 required="required"
                 id="fuel"
+                value={props.fields.fuel}
               >
                 <option key="0" value="" default />
                 {props.approvedFuels.map(mode => (
@@ -185,16 +187,16 @@ const FuelCodeFormDetails = props => (
         </div>
         <div className="col-sm-6">
           <div className="form-group">
-            <label htmlFor="feedstock-miscellaneous">Feedstock Miscellaneous:
+            <label htmlFor="feedstock-miscellaneous">Feedstock Misc:
               <AutocompletedInput
                 handleInputChange={props.handleInputChange}
                 autocompleteFieldName="fuel_code.feedstock_misc"
-                value={props.fields.feedstockMiscellaneous}
+                value={props.fields.feedstockMisc}
                 inputProps={
                   {
                     required: true,
-                    name: 'feedstockMiscellaneous',
-                    id: 'feedstockMiscellaneous'
+                    name: 'feedstockMisc',
+                    id: 'feedstockMisc'
                   }
                 }
               />
@@ -228,7 +230,7 @@ const FuelCodeFormDetails = props => (
                 name="facilityNameplate"
                 onChange={props.handleInputChange}
                 required="required"
-                type="text"
+                type="number"
                 value={props.fields.facilityNameplate}
               />
             </label>
@@ -338,10 +340,13 @@ FuelCodeFormDetails.propTypes = {
     effectiveDate: PropTypes.string,
     expiryDate: PropTypes.string,
     facilityLocation: PropTypes.string,
-    facilityNameplate: PropTypes.string,
+    facilityNameplate: PropTypes.oneOfType([
+      PropTypes.number,
+      PropTypes.string
+    ]),
     feedstock: PropTypes.string,
     feedstockLocation: PropTypes.string,
-    feedstockMiscellaneous: PropTypes.string,
+    feedstockMisc: PropTypes.string,
     feedstockTransportMode: PropTypes.arrayOf(PropTypes.string),
     formerCompany: PropTypes.string,
     fuel: PropTypes.string,
