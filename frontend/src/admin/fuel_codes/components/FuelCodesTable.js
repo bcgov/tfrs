@@ -10,7 +10,7 @@ import FontAwesomeIcon from '@fortawesome/react-fontawesome';
 import moment from 'moment';
 
 import history from '../../../app/History';
-import FUEL_CODES from '../../../constants/routes/FuelCodes';
+import { FUEL_CODES } from '../../../constants/routes/Admin';
 
 const FuelCodesTable = (props) => {
   const columns = [{

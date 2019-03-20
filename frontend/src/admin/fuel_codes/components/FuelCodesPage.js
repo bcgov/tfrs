@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import FontAwesomeIcon from '@fortawesome/react-fontawesome';
 
-import FUEL_CODES from '../../../constants/routes/FuelCodes';
+import { FUEL_CODES } from '../../../constants/routes/Admin';
 import Loading from '../../../app/components/Loading';
 import * as Lang from '../../../constants/langEnUs';
 import history from '../../../app/History';

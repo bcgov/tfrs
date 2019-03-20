@@ -9,7 +9,7 @@
 
   .btn-container {
     text-align: right;
-  } 
+  }
 
   .main-form {
     margin-left: -15px;
@@ -17,10 +17,15 @@
   }
 }
 
-.page_fuel_codes {
-  overflow-x: auto;
+.page-fuel-code-details {
+  .btn-container {
+    text-align: right;
+  }
 
-  .ReactTable {
-    width: 100%;
+  .fuel-code-details {
+    div.value {
+      font-weight: normal;
+      padding: 0.5rem 1rem;
+    }  
   }
 }
