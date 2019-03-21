@@ -155,7 +155,7 @@ class FuelCodeEditContainer extends Component {
 
     this.props.updateFuelCode(id, data).then((response) => {
       history.push(FUEL_CODES.LIST);
-      toastr.fuelCodeSuccess(status);
+      toastr.fuelCodeSuccess(status, 'Fuel code updated.');
     });
 
     return true;
@@ -175,23 +175,24 @@ class FuelCodeEditContainer extends Component {
       return ([
         <FuelCodeForm
           addToFields={this._addToFields}
+          approvedFuels={this.props.referenceData.approvedFuels}
+          edit
           errors={this.props.error}
           fields={this.state.fields}
           handleInputChange={this._handleInputChange}
           handleSubmit={this._handleSubmit}
-          transportModes={this.props.referenceData.transportModes}
-          approvedFuels={this.props.referenceData.approvedFuels}
           key="form"
           title="Edit Fuel Code"
+          transportModes={this.props.referenceData.transportModes}
         />,
         <Modal
           handleSubmit={(event) => {
-            this._handleSubmit(event, 'Submitted');
+            this._handleSubmit(event, 'Approved');
           }}
           id="confirmSubmit"
           key="confirmSubmit"
         >
-          Are you sure you want to add this Fuel code?
+          Are you sure you want to update this Fuel code?
         </Modal>
       ]);
     }

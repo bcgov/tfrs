@@ -35,6 +35,7 @@ export const BTN_SAVE_USER = 'Save User';
 export const BTN_SIGN_1_2 = 'Sign 1 of 2';
 export const BTN_SIGN_2_2 = 'Sign 2 of 2';
 export const BTN_SUBMIT = 'Submit';
+export const BTN_UPDATE = 'Update';
 export const BTN_YES = 'Yes';
 
 export const BTN_COMMENT = 'Add Comment';

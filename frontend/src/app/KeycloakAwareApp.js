@@ -55,7 +55,7 @@ class KeycloakAwareApp extends React.Component {
               loggedInUser={this.props.loggedInUser}
               unreadNotificationsCount={this.props.unreadNotificationsCount}
             />
-            <div id="main" className="template container">
+            <div id="main" className="template container-fluid">
               <SessionTimer />
               {content}
             </div>
