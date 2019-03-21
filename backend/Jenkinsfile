@@ -1,4 +1,4 @@
-def tfrs_release='v1.2.18'
+def tfrs_release='v1.2.19'
 def result = 0
 stage('Unit Test') {
     podTemplate(label: "master-backend-python-${env.BUILD_NUMBER}", name: "master-backend-python-${env.BUILD_NUMBER}", serviceAccount: 'jenkins', cloud: 'openshift',
