@@ -4,12 +4,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
-import ReactTable from 'react-table';
 import FontAwesomeIcon from '@fortawesome/react-fontawesome';
 import 'react-table/react-table.css';
 
 import { ROLES } from '../../constants/routes/Admin';
 import history from '../../app/History';
+import StateSavingReactTable from "../../app/components/StateSavingReactTable";
 
 const OrganizationRolesTable = (props) => {
   const columns = [{
@@ -46,7 +46,8 @@ const OrganizationRolesTable = (props) => {
   const filterable = true;
 
   return (
-    <ReactTable
+    <StateSavingReactTable
+      stateKey="organizations-roles"
       className="searchable"
       data={props.items}
       defaultFilterMethod={filterMethod}

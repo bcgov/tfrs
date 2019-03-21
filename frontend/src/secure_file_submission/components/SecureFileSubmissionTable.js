@@ -4,13 +4,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
-import ReactTable from 'react-table';
 import 'react-table/react-table.css';
 import FontAwesomeIcon from '@fortawesome/react-fontawesome';
 import moment from 'moment';
 
 import history from '../../app/History';
 import SECURE_DOCUMENT_UPLOAD from '../../constants/routes/SecureDocumentUpload';
+import StateSavingReactTable from "../../app/components/StateSavingReactTable";
 
 const SecureFileSubmissionTable = (props) => {
   const columns = [{
@@ -114,7 +114,8 @@ const SecureFileSubmissionTable = (props) => {
   const filterable = true;
 
   return (
-    <ReactTable
+    <StateSavingReactTable
+      stateKey="sfs"
       className="searchable"
       columns={columns}
       data={props.items}
