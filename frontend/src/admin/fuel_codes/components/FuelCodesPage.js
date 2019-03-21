@@ -9,6 +9,9 @@ import history from '../../../app/History';
 import PERMISSIONS_FUEL_CODES from '../../../constants/permissions/FuelCodes';
 import FuelCodesTable from './FuelCodesTable';
 
+import { download } from '../../../utils/functions';
+import * as Routes from '../../../constants/routes';
+
 const FuelCodesPage = (props) => {
   const { isFetching, items } = props.fuelCodes;
   const isEmpty = items.length === 0;
@@ -32,6 +35,23 @@ const FuelCodesPage = (props) => {
             <FontAwesomeIcon icon="plus-circle" /> {Lang.BTN_NEW_FUEL_CODE}
           </button>
           }
+        <button
+          className="btn btn-info"
+          id="download-fuel-codes"
+          type="button"
+          onClick={(e) => {
+            const element = e.target;
+            const original = element.innerHTML;
+
+            element.firstChild.textContent = ' Downloading...';
+
+            return download(Routes.BASE_URL + FUEL_CODES.EXPORT, {}).then(() => {
+              element.innerHTML = original;
+            });
+          }}
+        >
+          <FontAwesomeIcon icon="file-excel" /> <span>Download as .xls</span>
+        </button>
         </div>
       </div>
       {isFetching && <Loading />}

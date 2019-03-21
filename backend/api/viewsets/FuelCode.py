@@ -1,10 +1,14 @@
+import datetime
+
 from django.db.models import Q
+from django.http import HttpResponse
 
 from rest_framework import viewsets, mixins
 from rest_framework.decorators import list_route
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 
+from api.decorators import permission_required
 from api.models.ApprovedFuel import ApprovedFuel
 from api.models.FuelCode import FuelCode
 from api.models.FuelCodeStatus import FuelCodeStatus
@@ -15,6 +19,7 @@ from api.serializers.FuelCode import \
     FuelCodeSaveSerializer, FuelCodeSerializer
 from api.serializers.FuelCodeStatus import FuelCodeStatusSerializer
 from api.serializers.TransportMode import TransportModeSerializer
+from api.services.SpreadSheetBuilder import SpreadSheetBuilder
 from auditable.views import AuditableMixin
 
 
@@ -98,3 +103,27 @@ class FuelCodeViewSet(AuditableMixin,
 
         return Response(serializer.data)
 
+    @list_route(methods=['get'])
+    #@permission_required('FUEL_CODES_VIEW')
+    def xls(self, request):
+        """
+        Exports the credit transfers and organizations table
+        as a spreadsheet
+        """
+        response = HttpResponse(content_type='application/ms-excel')
+        response['Content-Disposition'] = (
+            'attachment; filename="{}.xls"'.format(
+                datetime.datetime.now().strftime(
+                    "BC-LCFS_fuel_codes_%Y-%m-%d")
+            ))
+
+        fuel_codes = self.get_queryset().filter(
+            ~Q(status__status__in=["Draft"])
+        )
+
+        workbook = SpreadSheetBuilder()
+        workbook.add_fuel_codes(fuel_codes)
+
+        workbook.save(response)
+
+        return response
