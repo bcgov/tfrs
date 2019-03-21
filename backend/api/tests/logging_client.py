@@ -27,7 +27,9 @@ from django.test import Client
 
 
 class ClientLoggingMetaclass(type):
-    """A metaclass for adding functionality to Django Client test utility"""
+    """
+    A metaclass for adding functionality to Django Client test utility
+    """
 
     wrapped_calls = ['get', 'post', 'put', 'patch', 'delete', 'head']
 
@@ -37,7 +39,8 @@ class ClientLoggingMetaclass(type):
         for base in bases:
             for key, value in base.__dict__.items():
                 if hasattr(value, "__call__") and key in ClientLoggingMetaclass.wrapped_calls:
-                    dictionary[key] = ClientLoggingMetaclass.wrap_call(key, value)
+                    dictionary[key] = ClientLoggingMetaclass.wrap_call(
+                        key, value)
 
         return type.__new__(mcs, name, bases, dictionary)
 
@@ -50,14 +53,17 @@ class ClientLoggingMetaclass(type):
         data_param = None
         path_param = None
 
-        for index, param in enumerate(inspect.signature(method).parameters.values()):
+        for index, param in enumerate(
+                inspect.signature(method).parameters.values()):
             if param.name == "data":
                 data_param = (index, param)
             if param.name == "path":
                 path_param = (index, param)
 
         def call(*args, **kw):
-            """Delegate to target, but log HTTP request and response attributes"""
+            """
+            Delegate to target, but log HTTP request and response attributes
+            """
             results = method(*args, **kw)
             try:
                 data = 'N/A'
@@ -81,9 +87,14 @@ class ClientLoggingMetaclass(type):
                         results.status_code,
                         data,
                         results.content.decode('utf-8')
-                    ))
+                        ))
+            except UnicodeError:
+                logging.error(
+                    'Error when trying to decode.'
+                    'If this is related to xls, this can be ignored')
             except (KeyError, AttributeError):
-                logging.error('unexpected error while wrapping network request call')
+                logging.error(
+                    'unexpected error while wrapping network request call')
 
             return results
 
@@ -91,5 +102,8 @@ class ClientLoggingMetaclass(type):
 
 
 class LoggingClient(Client, metaclass=ClientLoggingMetaclass):
-    """A Client that logs network exchanges. Drop-in descendant of django.test.client"""
+    """
+    A Client that logs network exchanges.
+    Drop-in descendant of django.test.client
+    """
     pass
