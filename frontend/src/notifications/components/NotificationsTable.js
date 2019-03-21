@@ -13,6 +13,7 @@ import history from '../../app/History';
 import NOTIFICATION_TYPES from '../../constants/notificationTypes';
 import CREDIT_TRANSACTIONS from '../../constants/routes/CreditTransactions';
 import SECURE_DOCUMENT_UPLOAD from '../../constants/routes/SecureDocumentUpload';
+import StateSavingReactTable from "../../app/components/StateSavingReactTable";
 
 const NotificationsTable = (props) => {
   const columns = [{
@@ -154,7 +155,8 @@ const NotificationsTable = (props) => {
   const filterable = true;
 
   return (
-    <ReactTable
+    <StateSavingReactTable
+      stateKey="notifications"
       className="searchable"
       columns={columns}
       data={props.items}

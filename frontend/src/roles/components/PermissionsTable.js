@@ -5,6 +5,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import ReactTable from 'react-table';
 import 'react-table/react-table.css';
+import StateSavingReactTable from "../../app/components/StateSavingReactTable";
 
 const Permissions = (props) => {
   const columns = [{
@@ -33,7 +34,8 @@ const Permissions = (props) => {
   const filterable = true;
 
   return (
-    <ReactTable
+    <StateSavingReactTable
+      stateKey="permissions"
       className="searchable"
       data={props.items}
       defaultPageSize={10}
