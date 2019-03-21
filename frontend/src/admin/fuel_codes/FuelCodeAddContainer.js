@@ -123,18 +123,18 @@ class FuelCodeAddContainer extends Component {
     return ([
       <FuelCodeForm
         addToFields={this._addToFields}
+        approvedFuels={this.props.referenceData.approvedFuels}
         errors={this.props.error}
         fields={this.state.fields}
         handleInputChange={this._handleInputChange}
         handleSubmit={this._handleSubmit}
-        transportModes={this.props.referenceData.transportModes}
-        approvedFuels={this.props.referenceData.approvedFuels}
         key="form"
         title="New Fuel Code"
+        transportModes={this.props.referenceData.transportModes}
       />,
       <Modal
         handleSubmit={(event) => {
-          this._handleSubmit(event, 'Submitted');
+          this._handleSubmit(event, 'Approved');
         }}
         id="confirmSubmit"
         key="confirmSubmit"

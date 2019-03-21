@@ -18,7 +18,7 @@ class HeaderModule extends Module {
     // enables us to distinguish between them as only the browser version has sub elements.
     notificationButton { $('#navbar-notifications .fa-layers') }
 
-    headerNavigationBar { $('#header #header-main .navigationRibbon .level2Navigation .container') }
+    headerNavigationBar { $('#header #header-main .navigationRibbon .level2Navigation .container-fluid') }
   }
 
   /**
