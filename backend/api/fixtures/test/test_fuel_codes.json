@@ -14,7 +14,7 @@
     "former_company": "Test",
     "fuel": ["LNG"],
     "fuel_code": "Submitted Fuel Code",
-    "status": ["Submitted"]
+    "status": ["Approved"]
   },
   "model": "api.fuelcode",
   "pk": 1

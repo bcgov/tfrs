@@ -25,6 +25,7 @@ from rest_framework.relations import SlugRelatedField
 
 from api.models.ApprovedFuel import ApprovedFuel
 from api.models.FuelCode import FuelCode
+from api.models.FuelCodeStatus import FuelCodeStatus
 from api.models.TransportMode import TransportMode, FeedstockTransportMode, \
     FuelTransportMode
 from api.serializers.FuelCodeStatus import FuelCodeStatusSerializer
@@ -122,6 +123,23 @@ class FuelCodeSaveSerializer(serializers.ModelSerializer):
                 )
 
         return instance
+
+    def destroy(self):
+        """
+        We don't really delete records so we mark them as Cancelled, instead
+        """
+        cancelled_status = FuelCodeStatus.objects.get(status="Cancelled")
+
+        fuel_code = self.instance
+
+        if fuel_code.status not in FuelCodeStatus.objects.filter(
+                status__in=["Draft"]):
+            raise serializers.ValidationError({
+                'readOnly': "Cannot delete a fuel code that's not a draft."
+            })
+
+        fuel_code.status = cancelled_status
+        fuel_code.save()
 
     def update(self, instance, validated_data):
         feedstock_modes = validated_data.pop('feedstock_transport_mode')
