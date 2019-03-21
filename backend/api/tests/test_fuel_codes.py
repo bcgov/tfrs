@@ -28,6 +28,7 @@ from rest_framework import status
 
 from api.models.FuelCode import FuelCode
 from api.models.FuelCodeStatus import FuelCodeStatus
+from api.serializers.FuelCode import FuelCodeSaveSerializer
 
 from .base_test_case import BaseTestCase
 
@@ -110,7 +111,6 @@ class TestFuelCodes(BaseTestCase):
         """
         status_draft = FuelCodeStatus.objects.filter(status="Draft").first()
         fuel_code = 'Test Fuel Code'
-        fuel = 'Test Fuel'
 
         payload = {
             'applicationDate': '2019-01-01',
@@ -126,7 +126,7 @@ class TestFuelCodes(BaseTestCase):
             'feedstockMisc': 'Test',
             'feedstockTransportMode': 'Test',
             'formerCompany': 'Test',
-            'fuel': fuel,
+            'fuel': 'LNG',
             'fuelCode': fuel_code,
             'fuelTransportMode': 'Test',
             'status': status_draft.id
@@ -139,6 +139,117 @@ class TestFuelCodes(BaseTestCase):
         )
 
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+    def test_delete_draft_as_gov_user(self):
+        """
+        Test deleting a fuel code as a government analyst
+        """
+        status_draft = FuelCodeStatus.objects.filter(status="Draft").first()
+
+        data = {
+            'application_date': '2019-01-01',
+            'approval_date': '2019-01-01',
+            'carbon_intensity': '10',
+            'company': 'Test',
+            'effective_date': '2019-01-01',
+            'expiry_date': '2020-01-01',
+            'facility_location': 'Test',
+            'facility_nameplate': '123',
+            'feedstock': 'Test',
+            'feedstock_location': 'Test',
+            'feedstock_misc': 'Test',
+            'feedstock_transport_mode': ['Rail'],
+            'former_company': 'Test',
+            'fuel': 'LNG',
+            'fuel_code': 'Test Fuel Code',
+            'fuel_transport_mode': ['Rail'],
+            'status': status_draft.id
+        }
+
+        serializer = FuelCodeSaveSerializer(data=data)
+        serializer.is_valid(raise_exception=True)
+        fuel_code = serializer.save()
+
+        response = self.clients['gov_analyst'].delete(
+            "/api/fuel_codes/{}".format(fuel_code.id)
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_delete_draft_as_fuel_supplier(self):
+        """
+        Test deleting a fuel code as a fuel supplier
+        Note: This should fail (well, they shouldn't see the code at all)
+        """
+        status_draft = FuelCodeStatus.objects.filter(status="Draft").first()
+
+        data = {
+            'application_date': '2019-01-01',
+            'approval_date': '2019-01-01',
+            'carbon_intensity': '10',
+            'company': 'Test',
+            'effective_date': '2019-01-01',
+            'expiry_date': '2020-01-01',
+            'facility_location': 'Test',
+            'facility_nameplate': '123',
+            'feedstock': 'Test',
+            'feedstock_location': 'Test',
+            'feedstock_misc': 'Test',
+            'feedstock_transport_mode': ['Rail'],
+            'former_company': 'Test',
+            'fuel': 'LNG',
+            'fuel_code': 'Test Fuel Code',
+            'fuel_transport_mode': ['Rail'],
+            'status': status_draft.id
+        }
+
+        serializer = FuelCodeSaveSerializer(data=data)
+        serializer.is_valid(raise_exception=True)
+        fuel_code = serializer.save()
+
+        response = self.clients['fs_user_1'].delete(
+            "/api/fuel_codes/{}".format(fuel_code.id)
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+
+    def test_delete_approved(self):
+        """
+        Test deleting an approved fuel code
+        Note: This should fail as you shouldn't be able to delete approved
+        fuel codes
+        """
+        status_approved = FuelCodeStatus.objects.filter(status="Approved").first()
+
+        data = {
+            'application_date': '2019-01-01',
+            'approval_date': '2019-01-01',
+            'carbon_intensity': '10',
+            'company': 'Test',
+            'effective_date': '2019-01-01',
+            'expiry_date': '2020-01-01',
+            'facility_location': 'Test',
+            'facility_nameplate': '123',
+            'feedstock': 'Test',
+            'feedstock_location': 'Test',
+            'feedstock_misc': 'Test',
+            'feedstock_transport_mode': ['Rail'],
+            'former_company': 'Test',
+            'fuel': 'LNG',
+            'fuel_code': 'Test Fuel Code',
+            'fuel_transport_mode': ['Rail'],
+            'status': status_approved.id
+        }
+
+        serializer = FuelCodeSaveSerializer(data=data)
+        serializer.is_valid(raise_exception=True)
+        fuel_code = serializer.save()
+
+        response = self.clients['gov_analyst'].delete(
+            "/api/fuel_codes/{}".format(fuel_code.id)
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
     def test_get_fuel_code_export(self):
         """

@@ -8,8 +8,12 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import Loading from '../../app/components/Loading';
 
-import { getFuelCode } from '../../actions/fuelCodeActions';
+import { deleteFuelCode, getFuelCode } from '../../actions/fuelCodeActions';
+import Modal from '../../app/components/Modal';
+import history from '../../app/History';
 import FuelCodeDetails from './components/FuelCodeDetails';
+import { FUEL_CODES } from '../../constants/routes/Admin';
+import toastr from '../../utils/toastr';
 
 class FuelCodeDetailContainer extends Component {
   constructor (props) {
@@ -27,6 +31,24 @@ class FuelCodeDetailContainer extends Component {
     this.props.getFuelCode(id);
   }
 
+  _getFuelCodeStatus (status) {
+    return this.props.referenceData.fuelCodeStatuses.find(fuelCodeStatus =>
+      (fuelCodeStatus.status === status));
+  }
+
+  _handleDelete (event) {
+    event.preventDefault();
+
+    const { id } = this.props.fuelCode.item;
+
+    this.props.deleteFuelCode(id).then(() => {
+      history.push(FUEL_CODES.LIST);
+      toastr.fuelCodeSuccess('Cancelled');
+    });
+
+    return true;
+  }
+
   render () {
     const {
       errors, item, isFetching, success
@@ -37,12 +59,20 @@ class FuelCodeDetailContainer extends Component {
     }
 
     if (success || (!isFetching && Object.keys(errors).length > 0)) {
-      return (
+      return ([
         <FuelCodeDetails
           errors={errors}
           item={item}
-        />
-      );
+          key="fuel-code-details"
+        />,
+        <Modal
+          handleSubmit={event => this._handleDelete(event)}
+          id="confirmDelete"
+          key="confirm-delete"
+        >
+          Are you sure you want to delete this draft?
+        </Modal>
+      ]);
     }
 
     return <Loading />;
@@ -53,6 +83,7 @@ FuelCodeDetailContainer.defaultProps = {
 };
 
 FuelCodeDetailContainer.propTypes = {
+  deleteFuelCode: PropTypes.func.isRequired,
   fuelCode: PropTypes.shape({
     errors: PropTypes.shape(),
     isFetching: PropTypes.bool.isRequired,
@@ -74,6 +105,9 @@ FuelCodeDetailContainer.propTypes = {
     params: PropTypes.shape({
       id: PropTypes.string.isRequired
     }).isRequired
+  }).isRequired,
+  referenceData: PropTypes.shape({
+    fuelCodeStatuses: PropTypes.arrayOf(PropTypes.shape)
   }).isRequired
 };
 
@@ -84,10 +118,14 @@ const mapStateToProps = state => ({
     item: state.rootReducer.fuelCode.item,
     success: state.rootReducer.fuelCode.success
   },
-  loggedInUser: state.rootReducer.userRequest.loggedInUser
+  loggedInUser: state.rootReducer.userRequest.loggedInUser,
+  referenceData: {
+    fuelCodeStatuses: state.rootReducer.referenceData.data.fuelCodeStatuses
+  }
 });
 
 const mapDispatchToProps = dispatch => ({
+  deleteFuelCode: bindActionCreators(deleteFuelCode, dispatch),
   getFuelCode: bindActionCreators(getFuelCode, dispatch)
 });
 

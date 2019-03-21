@@ -68,6 +68,38 @@ const addFuelCodeError = error => ({
 });
 
 /*
+ * Delete a Fuel Code
+ */
+export const deleteFuelCode = id => (dispatch) => {
+  dispatch(deleteFuelCodeRequest());
+
+  return axios.delete(`${Routes.BASE_URL}${FUEL_CODES.API}/${id}`).then((response) => {
+    dispatch(deleteFuelCodeSuccess(response.data));
+    return Promise.resolve(response);
+  }).catch((error) => {
+    dispatch(deleteFuelCodeError(error.response.data));
+    return Promise.reject(error);
+  });
+};
+
+const deleteFuelCodeRequest = () => ({
+  name: ReducerTypes.DELETE_FUEL_CODE_REQUEST,
+  type: ActionTypes.DELETE_FUEL_CODE
+});
+
+const deleteFuelCodeSuccess = data => ({
+  name: ReducerTypes.SUCCESS_DELETE_FUEL_CODE,
+  type: ActionTypes.SUCCESS,
+  data
+});
+
+const deleteFuelCodeError = error => ({
+  name: ReducerTypes.ERROR_DELETE_FUEL_CODE,
+  type: ActionTypes.ERROR,
+  errorMessage: error
+});
+
+/*
  * Get Fuel Code
  */
 export const getFuelCode = id => (dispatch) => {
