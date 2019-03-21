@@ -166,6 +166,17 @@ const FuelCodeDetails = props => (
 
       {props.item.status && props.item.status.status === 'Draft' &&
       <button
+        className="btn btn-danger"
+        data-target="#confirmDelete"
+        data-toggle="modal"
+        type="button"
+      >
+        <FontAwesomeIcon icon="minus-circle" /> {Lang.BTN_DELETE_DRAFT}
+      </button>
+      }
+
+      {props.item.status && props.item.status.status === 'Draft' &&
+      <button
         className="btn btn-default"
         type="button"
         onClick={() => history.push(FUEL_CODES.EDIT.replace(':id', props.item.id))}

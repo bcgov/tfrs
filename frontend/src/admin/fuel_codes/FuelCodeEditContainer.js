@@ -185,9 +185,7 @@ class FuelCodeEditContainer extends Component {
           title="Edit Fuel Code"
         />,
         <Modal
-          handleSubmit={(event) => {
-            this._handleSubmit(event, 'Submitted');
-          }}
+          handleSubmit={event => this._handleSubmit(event, 'Submitted')}
           id="confirmSubmit"
           key="confirmSubmit"
         >

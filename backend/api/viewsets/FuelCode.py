@@ -1,6 +1,6 @@
 from django.db.models import Q
 
-from rest_framework import viewsets, mixins
+from rest_framework import viewsets, status, mixins
 from rest_framework.decorators import list_route
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
@@ -35,6 +35,7 @@ class FuelCodeViewSet(AuditableMixin,
         'default': FuelCodeSerializer,
         'approved_fuels': ApprovedFuelSerializer,
         'create': FuelCodeSaveSerializer,
+        'destroy': FuelCodeSaveSerializer,
         'partial_update': FuelCodeSaveSerializer,
         'statuses': FuelCodeStatusSerializer,
         'transport_modes': TransportModeSerializer,
@@ -61,6 +62,19 @@ class FuelCodeViewSet(AuditableMixin,
         return self.queryset.filter(
             ~Q(status__status__in=['Cancelled', 'Draft'])
         ).all()
+
+    def destroy(self, request, *args, **kwargs):
+        """
+        Marks the fuel code as 'Cancelled'
+        """
+        fuel_code = self.get_object()
+
+        serializer = self.get_serializer(
+            fuel_code)
+
+        serializer.destroy()
+
+        return Response(None, status=status.HTTP_200_OK)
 
     @list_route(methods=['get'], permission_classes=[AllowAny])
     def statuses(self, request):
@@ -97,4 +111,3 @@ class FuelCodeViewSet(AuditableMixin,
             approved_fuels, read_only=True, many=True)
 
         return Response(serializer.data)
-
