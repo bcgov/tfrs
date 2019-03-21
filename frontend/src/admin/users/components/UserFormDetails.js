@@ -45,6 +45,7 @@ const UserFormDetails = props => (
         </div>
       </div>
 
+      {props.fields.userCreationRequest &&
       <div className="row">
         <div className="col-sm-6">
           <div className="form-group">
@@ -111,6 +112,7 @@ const UserFormDetails = props => (
           </div>
         </div>
       </div>
+      }
 
       <div className="row">
         <div className="col-sm-6">

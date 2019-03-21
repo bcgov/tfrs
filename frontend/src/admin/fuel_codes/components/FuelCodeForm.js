@@ -12,7 +12,7 @@ import Errors from '../../../app/components/Errors';
 import TooltipWhenDisabled from '../../../app/components/TooltipWhenDisabled';
 
 class FuelCodeForm extends Component {
-  _getValidationMessages () {
+  _getValidationMessagesForDraft () {
     const validationMessage = [];
 
     if (this.props.fields.fuelCode === '') {
@@ -23,16 +23,8 @@ class FuelCodeForm extends Component {
       validationMessage.push('Please enter a company.');
     }
 
-    if (this.props.fields.applicationDate === '') {
-      validationMessage.push('Please enter an application date.');
-    }
-
-    if (this.props.fields.effectiveDate === '') {
-      validationMessage.push('Please enter an effective date.');
-    }
-
-    if (this.props.fields.expiryDate === '') {
-      validationMessage.push('Please enter an expiry date.');
+    if (this.props.fields.carbonIntensity === '') {
+      validationMessage.push('Please enter the carbon intensity.');
     }
 
     if (this.props.fields.fuel === '') {
@@ -52,11 +44,29 @@ class FuelCodeForm extends Component {
     }
 
     if (this.props.fields.feedstockTransportMode === '') {
-      validationMessage.push('Please enter a feedstock transport mode.');
+      validationMessage.push('Please select a feedstock transport mode.');
     }
 
     if (this.props.fields.fuelTransportMode === '') {
-      validationMessage.push('Please enter a finished fuel transport mode.');
+      validationMessage.push('Please select a finished fuel transport mode.');
+    }
+
+    return validationMessage;
+  }
+
+  _getValidationMessagesForApproval () {
+    const validationMessage = this._getValidationMessagesForDraft();
+
+    if (this.props.fields.applicationDate === '') {
+      validationMessage.push('Please enter an application date.');
+    }
+
+    if (this.props.fields.effectiveDate === '') {
+      validationMessage.push('Please enter an effective date.');
+    }
+
+    if (this.props.fields.expiryDate === '') {
+      validationMessage.push('Please enter an expiry date.');
     }
 
     if (this.props.fields.approvalDate === '') {
@@ -68,7 +78,7 @@ class FuelCodeForm extends Component {
 
   render () {
     return (
-      <div className="page_admin_fuel_code">
+      <div className="page-admin-fuel-code">
         <h1>{this.props.title}</h1>
         <form
           onSubmit={event => this.props.handleSubmit(event)}
@@ -95,29 +105,30 @@ class FuelCodeForm extends Component {
                 <FontAwesomeIcon icon="arrow-circle-left" /> {Lang.BTN_APP_CANCEL}
               </button>
               <TooltipWhenDisabled
-                disabled={this._getValidationMessages().length > 0}
-                title={this._getValidationMessages()}
+                disabled={this._getValidationMessagesForDraft().length > 0}
+                title={this._getValidationMessagesForDraft()}
               >
                 <button
                   className="btn btn-default"
-                  disabled={this._getValidationMessages().length > 0}
+                  disabled={this._getValidationMessagesForDraft().length > 0}
                   type="submit"
                 >
                   <FontAwesomeIcon icon="save" /> {Lang.BTN_SAVE_DRAFT}
                 </button>
               </TooltipWhenDisabled>
               <TooltipWhenDisabled
-                disabled={this._getValidationMessages().length > 0}
-                title={this._getValidationMessages()}
+                disabled={this._getValidationMessagesForApproval().length > 0}
+                title={this._getValidationMessagesForApproval()}
               >
                 <button
                   className="btn btn-primary"
                   data-target="#confirmSubmit"
                   data-toggle="modal"
-                  disabled={this._getValidationMessages().length > 0}
+                  disabled={this._getValidationMessagesForApproval().length > 0}
                   type="button"
                 >
-                  <FontAwesomeIcon icon="plus" /> {Lang.BTN_ADD}
+                  <FontAwesomeIcon icon={this.props.edit ? 'save' : 'plus'} />
+                  {this.props.edit ? ` ${Lang.BTN_UPDATE}` : ` ${Lang.BTN_ADD}`}
                 </button>
               </TooltipWhenDisabled>
             </div>
@@ -129,11 +140,13 @@ class FuelCodeForm extends Component {
 }
 
 FuelCodeForm.defaultProps = {
+  edit: false,
   errors: []
 };
 
 FuelCodeForm.propTypes = {
   addToFields: PropTypes.func.isRequired,
+  edit: PropTypes.bool,
   errors: PropTypes.shape(),
   fields: PropTypes.shape({
     applicationDate: PropTypes.string,

@@ -212,3 +212,14 @@ class TestFuelCodes(BaseTestCase):
         )
 
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+
+    def test_get_fuel_code_export(self):
+        """
+        Test that the fuel codes XLS generation returns 200
+        """
+        # View the organization that fs_user_1 belongs to
+        response = self.clients['gov_analyst'].get(
+            "/api/fuel_codes/xls"
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)

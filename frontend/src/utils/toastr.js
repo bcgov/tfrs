@@ -90,11 +90,11 @@ const toastr = {
       case 'Draft':
         reduxToastr.success('Success!', 'Draft saved.');
         break;
-      case 'Submitted':
-        reduxToastr.success('Success!', 'Fuel Code added.');
+      case 'Approved':
+        reduxToastr.success('Success!', 'Fuel code added.');
         break;
       default:
-        reduxToastr.success('Success!', 'Fuel Code saved.');
+        reduxToastr.success('Success!', 'Fuel code saved.');
     }
   },
   subscriptionsSuccess: (message = '') => {

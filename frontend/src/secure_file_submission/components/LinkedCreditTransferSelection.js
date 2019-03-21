@@ -9,6 +9,7 @@ import { CREDIT_TRANSFER_STATUS, CREDIT_TRANSFER_TYPES } from '../../constants/v
 import { getCreditTransferType } from '../../actions/creditTransfersActions';
 import * as NumberFormat from '../../constants/numeralFormats';
 import filterNumber from '../../utils/filters';
+import StateSavingReactTable from "../../app/components/StateSavingReactTable";
 
 const LinkedCreditTransferSelection = (props) => {
   const columns = [{
@@ -130,7 +131,9 @@ const LinkedCreditTransferSelection = (props) => {
   const filterable = true;
 
   return (
-    <ReactTable
+    <StateSavingReactTable
+      stateKey="linked-credit-transfer"
+      saveState={false}
       className="searchable"
       columns={columns}
       data={props.creditTransfers}
