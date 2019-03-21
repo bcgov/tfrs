@@ -1,6 +1,6 @@
 @import './variables.scss';
 
-.level2Navigation .container {
+.level2Navigation .container, .level2Navigation .container-fluid {
   position: relative;
 
   a {
@@ -18,7 +18,7 @@
     height: 100%;
     padding: 0.25rem 0;
     position: absolute;
-    right: 0;
+    right: 1.5rem;
     text-decoration: none;
     top: 0;
     width: 5rem;

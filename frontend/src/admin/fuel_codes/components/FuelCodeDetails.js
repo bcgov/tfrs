@@ -163,8 +163,6 @@ const FuelCodeDetails = props => (
       >
         <FontAwesomeIcon icon="arrow-circle-left" /> {Lang.BTN_APP_CANCEL}
       </button>
-
-      {props.item.status && props.item.status.status === 'Draft' &&
       <button
         className="btn btn-default"
         type="button"
@@ -172,7 +170,6 @@ const FuelCodeDetails = props => (
       >
         <FontAwesomeIcon icon="edit" /> {Lang.BTN_EDIT}
       </button>
-      }
     </div>
   </div>
 );
