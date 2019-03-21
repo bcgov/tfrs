@@ -11,6 +11,15 @@
     margin-left: -15px;
     margin-right: -15px;
 
+    #organization .dropdown-menu {
+      max-height: 30rem;
+      overflow-y: auto;
+
+      @media (max-height: 910px) {
+        max-height: 22rem;
+      }
+    }
+
     .roles {
       .checkbox-group {
         margin-bottom: 1rem;
