@@ -133,9 +133,7 @@ class FuelCodeAddContainer extends Component {
         transportModes={this.props.referenceData.transportModes}
       />,
       <Modal
-        handleSubmit={(event) => {
-          this._handleSubmit(event, 'Approved');
-        }}
+        handleSubmit={event => this._handleSubmit(event, 'Approved')}
         id="confirmSubmit"
         key="confirmSubmit"
       >
