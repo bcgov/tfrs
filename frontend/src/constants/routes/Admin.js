@@ -10,7 +10,8 @@ const FUEL_CODES = {
   API: `/fuel_codes`,
   DETAILS: `${BASE_PATH}/fuel_codes/view/:id`,
   EDIT: `${BASE_PATH}/fuel_codes/edit/:id`,
-  LIST: `${BASE_PATH}/fuel_codes`
+  LIST: `${BASE_PATH}/fuel_codes`,
+  EXPORT: `/fuel_codes/xls`
 };
 
 const HISTORICAL_DATA_ENTRY = {
