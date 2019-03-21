@@ -104,10 +104,9 @@ class FuelCodeViewSet(AuditableMixin,
         return Response(serializer.data)
 
     @list_route(methods=['get'])
-    #@permission_required('FUEL_CODES_VIEW')
     def xls(self, request):
         """
-        Exports the credit transfers and organizations table
+        Exports the fuel codes table
         as a spreadsheet
         """
         response = HttpResponse(content_type='application/ms-excel')
