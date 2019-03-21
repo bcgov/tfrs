@@ -68,7 +68,7 @@ class FuelCodeForm extends Component {
 
   render () {
     return (
-      <div className="page_admin_fuel_code">
+      <div className="page-admin-fuel-code">
         <h1>{this.props.title}</h1>
         <form
           onSubmit={event => this.props.handleSubmit(event)}
@@ -117,7 +117,8 @@ class FuelCodeForm extends Component {
                   disabled={this._getValidationMessages().length > 0}
                   type="button"
                 >
-                  <FontAwesomeIcon icon="plus" /> {Lang.BTN_ADD}
+                  <FontAwesomeIcon icon={this.props.edit ? 'save' : 'plus'} />
+                  {this.props.edit ? ` ${Lang.BTN_UPDATE}` : ` ${Lang.BTN_ADD}`}
                 </button>
               </TooltipWhenDisabled>
             </div>
@@ -129,11 +130,13 @@ class FuelCodeForm extends Component {
 }
 
 FuelCodeForm.defaultProps = {
+  edit: false,
   errors: []
 };
 
 FuelCodeForm.propTypes = {
   addToFields: PropTypes.func.isRequired,
+  edit: PropTypes.bool,
   errors: PropTypes.shape(),
   fields: PropTypes.shape({
     applicationDate: PropTypes.string,

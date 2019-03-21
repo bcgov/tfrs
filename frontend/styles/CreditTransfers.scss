@@ -111,7 +111,7 @@
       height: 0;
     }
 
-    .container {
+    .container, .container-fluid {
       font-family: 'Lato', sans-serif;
       width: 1000px;
       margin: 0 auto;
@@ -125,10 +125,6 @@
 
     .nav {
       margin-top: 40px;
-    }
-
-    .pull-right {
-      float: right;
     }
 
     a, a:active {

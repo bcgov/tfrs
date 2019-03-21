@@ -14,7 +14,7 @@ const FuelCodesPage = (props) => {
   const isEmpty = items.length === 0;
 
   return (
-    <div className="page_secure_document_upload">
+    <div className="page-fuel-codes">
       <h1>{props.title}</h1>
       <div className="right-toolbar-container">
         <div className="actions-container">
