@@ -10,6 +10,7 @@ import 'react-table/react-table.css';
 
 import { ROLES } from '../../../constants/routes/Admin';
 import history from '../../../app/History';
+import StateSavingReactTable from "../../../app/components/StateSavingReactTable";
 
 const RolesTable = (props) => {
   const columns = [{
@@ -46,7 +47,8 @@ const RolesTable = (props) => {
   const filterable = true;
 
   return (
-    <ReactTable
+    <StateSavingReactTable
+      stateKey="roles"
       className="searchable"
       data={props.items}
       defaultFilterMethod={filterMethod}

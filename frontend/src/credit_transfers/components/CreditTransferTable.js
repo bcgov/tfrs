@@ -4,7 +4,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
-import ReactTable from 'react-table';
 import 'react-table/react-table.css';
 import moment from 'moment';
 import FontAwesomeIcon from '@fortawesome/react-fontawesome';
@@ -16,6 +15,7 @@ import CREDIT_TRANSACTIONS from '../../constants/routes/CreditTransactions';
 import { CREDIT_TRANSFER_STATUS, CREDIT_TRANSFER_TYPES } from '../../constants/values';
 import { getCreditTransferType } from '../../actions/creditTransfersActions';
 import filterNumber from '../../utils/filters';
+import StateSavingReactTable from "../../app/components/StateSavingReactTable";
 
 const CreditTransferTable = (props) => {
   const columns = [{
@@ -133,7 +133,8 @@ const CreditTransferTable = (props) => {
   const filterable = true;
 
   return (
-    <ReactTable
+    <StateSavingReactTable
+      stateKey="credit-transfers"
       className="searchable"
       data={props.items}
       defaultPageSize={10}
