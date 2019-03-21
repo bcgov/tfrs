@@ -1,3 +1,5 @@
+from collections import namedtuple
+
 import xlwt
 
 
@@ -5,8 +7,63 @@ class SpreadSheetBuilder(object):
     """
     Class to build spreadsheets
     """
+
     def __init__(self):
         self.workbook = xlwt.Workbook(encoding='utf-8')
+
+    def add_fuel_codes(self, fuel_codes):
+        """
+        Adds a worksheet for fuel codes
+        """
+        worksheet = self.workbook.add_sheet("Fuel Codes")
+
+        Column = namedtuple('Column',
+                            ('header',
+                             'format',
+                             'width',
+                             'value_accessor'))
+
+        date_format = xlwt.easyxf(num_format_str='yyyy-mm-dd')
+        quantity_format = xlwt.easyxf(num_format_str='#,##0')
+        value_format = xlwt.easyxf(num_format_str='#,##0.000')
+        string_format = xlwt.XFStyle()
+        header_style = xlwt.easyxf('font: bold on')
+
+        columns = [
+            Column("Fuel Code", string_format, 4000, lambda f: f.fuel_code),
+            Column("Application Date", date_format, 4000, lambda f: f.application_date),
+            Column("Approval Date", date_format, 4000, lambda f: f.approval_date),
+            Column("Carbon Intensity", value_format, 4000, lambda f: f.carbon_intensity),
+            Column("Company", string_format, 6000, lambda f: f.company),
+            Column("Effective Date", date_format, 4000, lambda f: f.effective_date),
+            Column("Expiry Date", date_format, 4000, lambda f: f.expiry_date),
+            Column("Facility Location", string_format, 6000, lambda f: f.facility_location),
+            Column("Facility Nameplate", quantity_format, 4000, lambda f: f.facility_nameplate),
+            Column("Feedstock", string_format, 6000, lambda f: f.feedstock),
+            Column("Feedstock Location", string_format, 6000, lambda f: f.feedstock_location),
+            Column("Feedstock Misc", string_format, 6000, lambda f: f.feedstock_misc),
+            Column("Feedstock Transport Modes", string_format, 7000,
+                   lambda f: ", ".join(map(lambda tm: tm.name,
+                                           f.feedstock_transport_mode.all().order_by('name')))),
+            Column("Former Company", string_format, 6000, lambda f: f.former_company),
+            Column("Fuel", string_format, 5000, lambda f: f.fuel.name),
+            Column("Fuel Transport Modes", string_format, 7000,
+                   lambda f: ", ".join(map(lambda tm: tm.name,
+                                           f.fuel_transport_mode.all().order_by('name')))),
+            Column("Status", string_format, 4500, lambda f: f.status.status)
+        ]
+
+        for col_index, col in enumerate(columns):
+            worksheet.write(0, col_index, col.header, header_style)
+            worksheet.col(col_index).width = col.width
+
+        for row_index, fuel_code in enumerate(fuel_codes):
+            for col_index, col in enumerate(columns):
+                worksheet.write(row_index + 1,
+                                col_index,
+                                col.value_accessor(fuel_code),
+                                col.format)
+
 
     def add_credit_transfers(self, credit_trades):
         """
@@ -46,7 +103,7 @@ class SpreadSheetBuilder(object):
                 worksheet.write(row_index, 2, credit_trade.type.friendly_name)
 
             if credit_trade.type.the_type not in [
-                    "Credit Validation", "Part 3 Award"]:
+                "Credit Validation", "Part 3 Award"]:
                 worksheet.write(row_index, 3, credit_trade.credits_from.name)
 
             if credit_trade.type.the_type not in ["Credit Reduction"]:
