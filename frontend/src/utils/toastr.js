@@ -85,7 +85,7 @@ const toastr = {
 
     switch (status) {
       case 'Cancelled':
-        reduxToastr.success('Success!', 'Fuel Code deleted.');
+        reduxToastr.success('Success!', 'Draft deleted.');
         break;
       case 'Draft':
         reduxToastr.success('Success!', 'Draft saved.');
