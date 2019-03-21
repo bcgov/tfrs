@@ -213,6 +213,44 @@ class TestFuelCodes(BaseTestCase):
 
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
+    def test_delete_approved(self):
+        """
+        Test deleting an approved fuel code
+        Note: This should fail as you shouldn't be able to delete approved
+        fuel codes
+        """
+        status_approved = FuelCodeStatus.objects.filter(status="Approved").first()
+
+        data = {
+            'application_date': '2019-01-01',
+            'approval_date': '2019-01-01',
+            'carbon_intensity': '10',
+            'company': 'Test',
+            'effective_date': '2019-01-01',
+            'expiry_date': '2020-01-01',
+            'facility_location': 'Test',
+            'facility_nameplate': '123',
+            'feedstock': 'Test',
+            'feedstock_location': 'Test',
+            'feedstock_misc': 'Test',
+            'feedstock_transport_mode': ['Rail'],
+            'former_company': 'Test',
+            'fuel': 'LNG',
+            'fuel_code': 'Test Fuel Code',
+            'fuel_transport_mode': ['Rail'],
+            'status': status_approved.id
+        }
+
+        serializer = FuelCodeSaveSerializer(data=data)
+        serializer.is_valid(raise_exception=True)
+        fuel_code = serializer.save()
+
+        response = self.clients['gov_analyst'].delete(
+            "/api/fuel_codes/{}".format(fuel_code.id)
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
     def test_get_fuel_code_export(self):
         """
         Test that the fuel codes XLS generation returns 200

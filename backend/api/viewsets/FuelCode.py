@@ -8,7 +8,6 @@ from rest_framework.decorators import list_route
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 
-from api.decorators import permission_required
 from api.models.ApprovedFuel import ApprovedFuel
 from api.models.FuelCode import FuelCode
 from api.models.FuelCodeStatus import FuelCodeStatus
