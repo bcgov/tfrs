@@ -81,8 +81,7 @@ node("develop-backend-maven-${env.BUILD_NUMBER}") {
         }
     }
 
-parallel 
-    Build-Backend: {
+parallel Build-Backend: {
         stage('Build-Backend') {
             openshiftBuild bldCfg: 'tfrs-develop', showBuildLogs: 'true'
             echo ">> Getting Image Hash"
