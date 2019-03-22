@@ -81,7 +81,8 @@ node("develop-backend-maven-${env.BUILD_NUMBER}") {
         }
     }
 
-parallel Build-Backend: {
+parallel 
+    buildBackend: {
         stage('Build-Backend') {
             openshiftBuild bldCfg: 'tfrs-develop', showBuildLogs: 'true'
             echo ">> Getting Image Hash"
@@ -91,7 +92,7 @@ parallel Build-Backend: {
             echo ">> IMAGE_HASH_BACKEND: $IMAGE_HASH_BACKEND"
         } 
     }, 
-    Build-Scan-Coordinator {
+    buildScanCoordinator {
         stage('Build-Scan-Coordinator') {
             openshiftBuild bldCfg: 'scan-coordinator-develop', showBuildLogs: 'true'
             echo ">> Getting Image Hash"
@@ -101,7 +102,7 @@ parallel Build-Backend: {
             echo ">> IMAGE_HASH_SCAN_COORDINATOR: $IMAGE_HASH_SCAN_COORDINATOR"
         }
     },
-    Build-Scan-Handler {
+    buildScanHandler {
         stage('Build-Scan-Handler') {
             openshiftBuild bldCfg: 'scan-handler-develop', showBuildLogs: 'true'
             echo ">> Getting Image Hash"
@@ -111,7 +112,7 @@ parallel Build-Backend: {
             echo ">> IMAGE_HASH_SCAN_HANDLER: $IMAGE_HASH_SCAN_HANDLER"
         }
     },
-    Build-Celery {
+    buildCelery {
         stage('Build-Celery') {
             openshiftBuild bldCfg: 'celery-develop', showBuildLogs: 'true'
             echo ">> Getting Image Hash"
