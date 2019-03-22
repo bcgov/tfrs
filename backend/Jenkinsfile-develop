@@ -110,11 +110,6 @@ def prepareCodeQulityCheck() {
                 returnStdout: true
             ).trim()
             echo ">> SONARQUBE_URL: ${SONARQUBE_URL}"
-
-            dir('backend/sonar-runner') {
-                unstash 'coverage'
-                sh returnStdout: true, script: "./gradlew sonarqube -Dsonar.host.url=${SONARQUBE_URL} -Dsonar.verbose=true --stacktrace --info"
-            }
         }
     }   
 }
@@ -151,6 +146,11 @@ podTemplate(label: "develop-backend-python-${env.BUILD_NUMBER}", name: "develop-
                     build.call()
                 }
             }
+        }
+        
+        dir('backend/sonar-runner') {
+            unstash 'coverage'
+            sh returnStdout: true, script: "./gradlew sonarqube -Dsonar.host.url=${SONARQUBE_URL} -Dsonar.verbose=true --stacktrace --info"
         }
         
     } //end node
