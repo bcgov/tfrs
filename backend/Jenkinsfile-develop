@@ -79,7 +79,6 @@ def prepareBuildCelery() {
 def prepareUnitTest() {
     return {
         stage('Unit Test') {
-            checkout scm
             dir('backend') {
                 try {
                     sh 'pip install --upgrade pip && pip install -r requirements.txt'
@@ -99,7 +98,6 @@ def prepareUnitTest() {
 def prepareCodeQulityCheck() {
      return {
         stage('Code Quality Check') {
-            checkout scm
             echo('Quality Check')
             SONARQUBE_PWD = sh (
                 script: 'oc env dc/sonarqube --list | awk  -F  "=" \'/SONARQUBE_ADMINPW/{print $2}\'',
@@ -141,6 +139,8 @@ podTemplate(label: "develop-backend-python-${env.BUILD_NUMBER}", name: "develop-
 ){
     
     node("develop-backend-python-${env.BUILD_NUMBER}") {
+
+        checkout scm
 
         for (builds in unitTestCodeQulityCheckStages) {
             if (runParallel) {
