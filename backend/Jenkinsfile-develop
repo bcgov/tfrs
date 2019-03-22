@@ -2,7 +2,6 @@ def tfrs_release='v1.2.18'
 def result = 0
 def runParallel = true
 def buildStages
-def unitTestCodeQulityCheckStages
 
 def prepareBuildStages() {
     def buildList = []
@@ -11,15 +10,7 @@ def prepareBuildStages() {
     buildStages.put('Build Scan Coordinator', prepareBuildScanCoordinator())
     buildStages.put('Build ScanHandler', prepareBuildScanHandler())
     buildStages.put('Build Celery', prepareBuildCelery())
-    buildList.add(buildStages)
-    return buildList
-}
-
-def prepareUnitTestCodeQulityCheckStages() {
-    def buildList = []
-    def buildStages = [:]
-    buildStages.put('Unit Test', prepareUnitTest())
-    buildStages.put('Code Quality Check', prepareCodeQulityCheck())
+    buildStages.put('Code Qulity Check', prepareCodeQulityCheck())
     buildList.add(buildStages)
     return buildList
 }
@@ -76,27 +67,8 @@ def prepareBuildCelery() {
   }
 }
 
-def prepareUnitTest() {
-    return {
-        stage('Unit Test') {
-            dir('backend') {
-                try {
-                    sh 'pip install --upgrade pip && pip install -r requirements.txt'
-                    sh 'python manage.py collectstatic && python manage.py migrate'
-                    sh 'python manage.py test -c nose.cfg'
-                } catch(Throwable t) {
-                    result = 1;
-                } finally {
-                    stash includes: 'nosetests.xml,coverage.xml', name: 'coverage'
-                    junit 'nosetests.xml'
-                }
-            }
-        }
-    }
-}
-
 def prepareCodeQulityCheck() {
-     return {
+    return {
         stage('Code Quality Check') {
             echo('Quality Check')
             SONARQUBE_PWD = sh (
@@ -110,12 +82,15 @@ def prepareCodeQulityCheck() {
                 returnStdout: true
             ).trim()
             echo ">> SONARQUBE_URL: ${SONARQUBE_URL}"
+            dir('backend/sonar-runner') {
+                unstash 'coverage'
+                sh returnStdout: true, script: "./gradlew sonarqube -Dsonar.host.url=${SONARQUBE_URL} -Dsonar.verbose=true --stacktrace --info"
+            }
         }
     }   
 }
 
 buildStages = prepareBuildStages()
-unitTestCodeQulityCheckStages = prepareUnitTestCodeQulityCheckStages()
 
 podTemplate(label: "develop-backend-python-${env.BUILD_NUMBER}", name: "develop-backend-python-${env.BUILD_NUMBER}", serviceAccount: 'jenkins', cloud: 'openshift',
     containers: [
@@ -134,25 +109,22 @@ podTemplate(label: "develop-backend-python-${env.BUILD_NUMBER}", name: "develop-
 ){
     
     node("develop-backend-python-${env.BUILD_NUMBER}") {
-
-        checkout scm
-
-        for (builds in unitTestCodeQulityCheckStages) {
-            if (runParallel) {
-                parallel(builds)
-            } else {
-                // run serially (nb. Map is unordered! )
-                for (build in builds.values()) {
-                    build.call()
+        stage('Unit Test') {
+            checkout scm
+            dir('backend') {
+                try {
+                    sh 'pip install --upgrade pip && pip install -r requirements.txt'
+                    sh 'python manage.py collectstatic && python manage.py migrate'
+                    sh 'python manage.py test -c nose.cfg'
+                } catch(Throwable t) {
+                    result = 1;
+                } finally {
+                    stash includes: 'nosetests.xml,coverage.xml', name: 'coverage'
+                    junit 'nosetests.xml'
                 }
             }
         }
-        
-        dir('backend/sonar-runner') {
-            unstash 'coverage'
-            sh returnStdout: true, script: "./gradlew sonarqube -Dsonar.host.url=${SONARQUBE_URL} -Dsonar.verbose=true --stacktrace --info"
-        }
-        
+
     } //end node
 } //end podTemplate
 
