@@ -65,14 +65,14 @@ class FuelCodeEditContainer extends Component {
 
     if (Object.keys(item).length > 0 && !this.loaded) {
       const fieldState = {
-        applicationDate: item.applicationDate,
-        approvalDate: item.approvalDate,
+        applicationDate: item.applicationDate || '',
+        approvalDate: item.approvalDate || '',
         carbonIntensity: item.carbonIntensity,
         company: item.company,
-        effectiveDate: item.effectiveDate,
-        expiryDate: item.expiryDate,
+        effectiveDate: item.effectiveDate || '',
+        expiryDate: item.expiryDate || '',
         facilityLocation: item.facilityLocation,
-        facilityNameplate: item.facilityNameplate,
+        facilityNameplate: item.facilityNameplate || '',
         feedstock: item.feedstock,
         feedstockLocation: item.feedstockLocation,
         feedstockMisc: item.feedstockMisc,
@@ -134,14 +134,14 @@ class FuelCodeEditContainer extends Component {
 
     // API data structure
     const data = {
-      applicationDate: this.state.fields.applicationDate,
-      approvalDate: this.state.fields.approvalDate,
+      applicationDate: this.state.fields.applicationDate !== '' ? this.state.fields.applicationDate : null,
+      approvalDate: this.state.fields.approvalDate !== '' ? this.state.fields.approvalDate : null,
       carbonIntensity: this.state.fields.carbonIntensity,
       company: this.state.fields.company,
-      effectiveDate: this.state.fields.effectiveDate,
-      expiryDate: this.state.fields.expiryDate,
+      effectiveDate: this.state.fields.effectiveDate !== '' ? this.state.fields.effectiveDate : null,
+      expiryDate: this.state.fields.expiryDate !== '' ? this.state.fields.expiryDate : null,
       facilityLocation: this.state.fields.facilityLocation,
-      facilityNameplate: this.state.fields.facilityNameplate,
+      facilityNameplate: this.state.fields.facilityNameplate !== '' ? this.state.fields.facilityNameplate : null,
       feedstock: this.state.fields.feedstock,
       feedstockLocation: this.state.fields.feedstockLocation,
       feedstockMisc: this.state.fields.feedstockMisc,
@@ -152,6 +152,12 @@ class FuelCodeEditContainer extends Component {
       fuelTransportMode: this.state.fields.fuelTransportMode,
       status: this._getFuelCodeStatus(status).id
     };
+
+    Object.entries(data).forEach((prop) => {
+      if (prop[1] === null) {
+        delete data[prop[0]];
+      }
+    });
 
     this.props.updateFuelCode(id, data).then((response) => {
       history.push(FUEL_CODES.LIST);
@@ -177,7 +183,7 @@ class FuelCodeEditContainer extends Component {
           addToFields={this._addToFields}
           approvedFuels={this.props.referenceData.approvedFuels}
           edit
-          errors={this.props.error}
+          errors={errors}
           fields={this.state.fields}
           handleInputChange={this._handleInputChange}
           handleSubmit={this._handleSubmit}
@@ -200,11 +206,9 @@ class FuelCodeEditContainer extends Component {
 }
 
 FuelCodeEditContainer.defaultProps = {
-  error: {}
 };
 
 FuelCodeEditContainer.propTypes = {
-  error: PropTypes.shape({}),
   fuelCode: PropTypes.shape({
     errors: PropTypes.shape(),
     isFetching: PropTypes.bool.isRequired,

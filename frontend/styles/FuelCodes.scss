@@ -8,7 +8,9 @@
   }
 
   .btn-container {
+    position: relative;
     text-align: right;
+    z-index: 100;
   }
 
   .main-form {
@@ -41,5 +43,13 @@
       font-weight: normal;
       padding: 0.5rem 1rem;
     }  
+  }
+}
+
+.adjust-tooltip {
+  z-index: 99;
+
+  .tooltip-inner, .tooltip-arrow {
+    margin-bottom: 1.5rem;
   }
 }
