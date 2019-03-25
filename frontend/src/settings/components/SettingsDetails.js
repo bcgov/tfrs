@@ -11,6 +11,7 @@ import GOVERNMENT_TRANSFER_NOTIFICATIONS from '../../constants/settings/notifica
 import * as Lang from '../../constants/langEnUs';
 import SettingsTabs from './SettingsTabs';
 import DOCUMENT_NOTIFICATIONS from '../../constants/settings/notificationsDocuments';
+import CONFIG from '../../config';
 
 const SettingsDetails = props => (
   <div className="page_settings">
@@ -62,9 +63,12 @@ const SettingsDetails = props => (
           key="table-pvr"
           toggleCheck={props.toggleCheck}
           type="government-transfer"
-        />,
+        />
+      ]}
+      {!props.subscriptions.isFetching && props.subscriptions.success &&
+      CONFIG.SECURE_DOCUMENT_UPLOAD.ENABLED && [
         <h3 key="header-doc">
-          File Submission
+          File Submission {CONFIG.SECURE_DOCUMENT_UPLOAD.ENABLED}
         </h3>,
         <NotificationsCreditTransactionsTable
           addToFields={props.addToFields}
@@ -77,7 +81,9 @@ const SettingsDetails = props => (
           key="table-doc"
           toggleCheck={props.toggleCheck}
           type="documents"
-        />,
+        />
+      ]}
+      {!props.subscriptions.isFetching && props.subscriptions.success && [
         <div className="btn-container" key="container-buttons">
           <button
             className="btn btn-primary"
