@@ -1,5 +1,7 @@
 def runParallel = true
 def buildStages
+def IMAGE_HASH_FRONTEND
+def IMAGE_HASH_NOTIFICATION
 
 def prepareBuildStages() {
     def buildList = []
