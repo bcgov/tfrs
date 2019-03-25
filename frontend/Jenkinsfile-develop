@@ -65,7 +65,7 @@ podTemplate(label: "develop-frontend-maven-${env.BUILD_NUMBER}", name: "develop-
 ) {
 
     node("develop-frontend-maven-${env.BUILD_NUMBER}") {
-
+/****
         stage('Code Quality Check') {
             checkout scm
             SONARQUBE_PWD = sh (
@@ -83,17 +83,20 @@ podTemplate(label: "develop-frontend-maven-${env.BUILD_NUMBER}", name: "develop-
             sh returnStdout: true, script: "./gradlew sonarqube -Dsonar.host.url=${SONARQUBE_URL} -Dsonar.verbose=true --stacktrace --info"
             }
         }
+*****/
 
-        for (builds in buildStages) {
-            if (runParallel) {
-                parallel(builds)
-            } else {
-                for (build in builds.values()) {
-                    build.call()
+        script {
+            for (builds in buildStages) {
+                if (runParallel) {
+                    parallel(builds)
+                } else {
+                    for (build in builds.values()) {
+                        build.call()
+                    }
                 }
             }
+            echo ">>>>>>>>>> IMAGE_HASH_FRONTEND: $IMAGE_HASH_FRONTEND"
         }
-        echo ">>>>>>>>>> IMAGE_HASH_FRONTEND: $IMAGE_HASH_FRONTEND"
 
         stage('Deploy on Dev') {
             echo "Deploying to dev..."
