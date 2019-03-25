@@ -9,9 +9,20 @@ const notifications = (state = {
     unreadCount: null
   },
   serverInitiatedReloadRequested: false,
+  onNotificationsPage: false,
   success: false
 }, action) => {
   switch (action.type) {
+    case ActionTypes.MOUNT_NOTIFICATIONS_TABLE:
+      return {
+        ...state,
+        onNotificationsPage: true,
+      };
+    case ActionTypes.UNMOUNT_NOTIFICATIONS_TABLE:
+      return {
+        ...state,
+        onNotificationsPage: false,
+      };
     case ActionTypes.GET_NOTIFICATIONS:
       return {
         ...state,

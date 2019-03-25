@@ -1,6 +1,6 @@
 import {call, put, takeLatest} from 'redux-saga/effects';
 import {delay} from 'redux-saga';
-import {getNotificationsCount} from "../actions/notificationActions";
+import {getNotifications, getNotificationsCount} from "../actions/notificationActions";
 import UserActionTypes from "../constants/actionTypes/Users";
 import NotificationActionTypes from "../constants/actionTypes/Notifications";
 
@@ -17,6 +17,11 @@ function* fetchNotifications(store) {
   if (store.getState().rootReducer.userRequest.isAuthenticated) {
     yield put(getNotificationsCount());
   }
+
+  if (store.getState().rootReducer.notifications.onNotificationsPage) {
+    yield put(getNotifications());
+  }
+
 }
 
 export default function* notificationsSaga(store) {

@@ -92,7 +92,9 @@ class Autocomplete:
         'fuel_code.feedstock_location': SimpleDatabaseCompletion(
             'fuel_code', 'feedstock_location'),
         'fuel_code.feedstock_misc': SimpleDatabaseCompletion(
-            'fuel_code', 'feedstock_misc')
+            'fuel_code', 'feedstock_misc'),
+        'fuel_code.facility_location': SimpleDatabaseCompletion(
+            'fuel_code', 'facility_location')
     }
 
     @staticmethod
