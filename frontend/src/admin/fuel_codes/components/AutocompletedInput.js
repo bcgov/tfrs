@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import axios from 'axios';
 import * as Routes from '../../../constants/routes';
+import {connect} from "react-redux";
 
 class AutocompletedInput extends Component {
   constructor (props) {
@@ -24,7 +25,7 @@ class AutocompletedInput extends Component {
         items: []
       });
     } else {
-      axios.get(`${Routes.BASE_URL}${Routes.AUTOCOMPLETE_API}?field=${this.props.autocompleteFieldName}&q=${value}`)
+      axios.get(`${Routes.BASE_URL}${Routes.AUTOCOMPLETE_API}?field=${this.props.autocompleteFieldName}&q=${value}&cacheSerial=${this.props.cacheSerial}`)
         .then((response) => {
           this.setState({
             items: response.data
@@ -108,7 +109,16 @@ AutocompletedInput.propTypes = {
   handleInputChange: PropTypes.func.isRequired,
   autocompleteFieldName: PropTypes.string.isRequired,
   inputProps: PropTypes.shape(),
-  value: PropTypes.any
+  value: PropTypes.any,
+  cacheSerial: PropTypes.number.isRequired
 };
 
-export default AutocompletedInput;
+const mapStateToProps = state => ({
+  cacheSerial: state.rootReducer.autocomplete.serial,
+});
+
+const mapDispatchToProps = dispatch => ({
+});
+
+
+export default connect(mapStateToProps, mapDispatchToProps)(AutocompletedInput);
