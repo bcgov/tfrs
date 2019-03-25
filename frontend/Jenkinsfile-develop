@@ -1,7 +1,6 @@
-def runParallel = true
-def buildStages
-def IMAGE_HASH_FRONTEND
-def IMAGE_HASH_NOTIFICATION
+runParallel = true
+IMAGE_HASH_FRONTEND = 'nonexist123'
+IMAGE_HASH_NOTIFICATION = 'nonexist123'
 
 def prepareBuildStages() {
     def buildList = []
@@ -85,7 +84,7 @@ podTemplate(label: "develop-frontend-maven-${env.BUILD_NUMBER}", name: "develop-
         }
 *****/
 
-        script {
+            echo ">>>>>>>>>> runParallel: $runParallel"
             for (builds in buildStages) {
                 if (runParallel) {
                     parallel(builds)
@@ -96,7 +95,6 @@ podTemplate(label: "develop-frontend-maven-${env.BUILD_NUMBER}", name: "develop-
                 }
             }
             echo ">>>>>>>>>> IMAGE_HASH_FRONTEND: $IMAGE_HASH_FRONTEND"
-        }
 
         stage('Deploy on Dev') {
             echo "Deploying to dev..."
