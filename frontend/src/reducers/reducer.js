@@ -15,8 +15,10 @@ import { notifications, subscriptions } from './notificationReducer';
 import { referenceData } from './referenceDataReducer';
 import sessionTimeout from './sessionTimeoutReducer';
 import tableState from './tableStateReducer';
+import { autocomplete } from './autocompleteReducer';
 
 const rootReducer = combineReducers({
+  autocomplete,
   approvedCreditTransfers,
   compliancePeriods,
   creditTransfer,
