@@ -19,6 +19,7 @@ import sessionTimeoutSaga from './sessionTimeout';
 import authenticationStateSaga from './authenticationState';
 import notificationsSaga from './notificationTrigger';
 import socketAuthenticationSaga from "./socketAuthentication";
+import autocompleteInvalidatorSaga from './autocompleteInvalidator';
 
 const middleware = routerMiddleware(history);
 const sagaMiddleware = createSagaMiddleware();
@@ -60,5 +61,6 @@ sagaMiddleware.run(sessionTimeoutSaga);
 sagaMiddleware.run(notificationsSaga, store);
 sagaMiddleware.run(authenticationStateSaga, store);
 sagaMiddleware.run(socketAuthenticationSaga, store);
+sagaMiddleware.run(autocompleteInvalidatorSaga, store);
 
 export default store;

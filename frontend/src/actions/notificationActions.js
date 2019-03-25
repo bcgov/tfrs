@@ -14,8 +14,8 @@ const getNotifications = () => (dispatch) => {
     .then((response) => {
       dispatch(getNotificationsSuccess(response.data));
     }).catch((error) => {
-      dispatch(getNotificationsError(error.response));
-    });
+    dispatch(getNotificationsError(error.response));
+  });
 };
 
 const getNotificationsError = error => ({
@@ -46,8 +46,8 @@ const getNotificationsCount = () => (dispatch) => {
     .then((response) => {
       dispatch(getNotificationsCountSuccess(response.data));
     }).catch((error) => {
-      dispatch(getNotificationsError(error.response));
-    });
+    dispatch(getNotificationsError(error.response));
+  });
 };
 
 const getNotificationsCountRequest = () => ({
@@ -71,8 +71,8 @@ const getSubscriptions = () => (dispatch) => {
     .then((response) => {
       dispatch(getSubscriptionsSuccess(response.data));
     }).catch((error) => {
-      dispatch(getSubscriptionsError(error.response));
-    });
+    dispatch(getSubscriptionsError(error.response));
+  });
 };
 
 const getSubscriptionsError = error => ({
@@ -157,7 +157,22 @@ const updateSubscriptionsError = error => ({
   errorMessage: error
 });
 
+const mountNotificationsTable = () => (dispatch) => {
+  dispatch({
+    name: ReducerTypes.MOUNT_NOTIFICATIONS_TABLE,
+    type: ActionTypes.MOUNT_NOTIFICATIONS_TABLE
+  });
+}
+
+const unmountNotificationsTable = () => (dispatch) => {
+  dispatch({
+    name: ReducerTypes.UNMOUNT_NOTIFICATIONS_TABLE,
+    type: ActionTypes.UNMOUNT_NOTIFICATIONS_TABLE
+  });
+}
+
 export {
   getNotifications, getNotificationsCount, getSubscriptions,
-  updateNotifications, updateSubscriptions
+  updateNotifications, updateSubscriptions, mountNotificationsTable,
+  unmountNotificationsTable
 };
