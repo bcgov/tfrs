@@ -8,7 +8,12 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import PropTypes from 'prop-types';
 
-import { getNotifications, updateNotifications } from '../actions/notificationActions';
+import {
+  getNotifications,
+  mountNotificationsTable,
+  unmountNotificationsTable,
+  updateNotifications
+} from '../actions/notificationActions';
 import NotificationsDetails from './components/NotificationsDetails';
 import Modal from '../app/components/Modal';
 
@@ -29,8 +34,15 @@ class NotificationsContainer extends Component {
     this._updateNotifications = this._updateNotifications.bind(this);
   }
 
-  componentWillMount () {
+
+
+  componentDidMount () {
     this.props.getNotifications();
+    this.props.autoloadNotificationsEnable();
+  }
+
+  componentWillUnmount() {
+    this.props.autoloadNotificationsDisable();
   }
 
   _addToFields (value) {
@@ -147,7 +159,9 @@ NotificationsContainer.propTypes = {
   items: PropTypes.arrayOf(PropTypes.shape()).isRequired,
   isFetching: PropTypes.bool.isRequired,
   updateNotifications: PropTypes.func.isRequired,
-  getNotifications: PropTypes.func.isRequired
+  getNotifications: PropTypes.func.isRequired,
+  autoloadNotificationsEnable: PropTypes.func.isRequired,
+  autoloadNotificationsDisable: PropTypes.func.isRequired
 };
 
 const mapStateToProps = state => ({
@@ -157,7 +171,9 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   updateNotifications: bindActionCreators(updateNotifications, dispatch),
-  getNotifications: bindActionCreators(getNotifications, dispatch)
+  getNotifications: bindActionCreators(getNotifications, dispatch),
+  autoloadNotificationsEnable: bindActionCreators(mountNotificationsTable, dispatch),
+  autoloadNotificationsDisable: bindActionCreators(unmountNotificationsTable, dispatch),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(NotificationsContainer);
