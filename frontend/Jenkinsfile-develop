@@ -81,7 +81,7 @@ def prepareBuildNotificationServer() {
         sh returnStdout: true, script: "./gradlew sonarqube -Dsonar.host.url=${SONARQUBE_URL} -Dsonar.verbose=true --stacktrace --info"
         }
     }
-
+    buildStages = prepareBuildStages()
     for (builds in buildStages) {
         if (runParallel) {
             parallel(builds)
