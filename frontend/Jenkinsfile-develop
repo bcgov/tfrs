@@ -1,4 +1,47 @@
+def runParallel = true
+def buildStages
 
+def prepareBuildStages() {
+    def buildList = []
+    def buildStages = [:]
+    buildStages.put('Build Frontend', prepareBuildFrontend())
+    buildStages.put('Build Notification Server', prepareBuildNotificationServer())
+    buildList.add(buildStages)
+    return buildList
+}
+
+def prepareBuildFrontend() {
+    return {
+        stage('Build Frontend') {
+            echo "Building Frontend..."
+            timeout(30) {
+                openshiftBuild bldCfg: 'client-develop-angular-app-build', showBuildLogs: 'true'
+            }
+            openshiftBuild bldCfg: 'client-develop', showBuildLogs: 'true'
+            echo ">> Getting Image Hash for frontend"
+            IMAGE_HASH_FRONTEND = sh (
+                script: 'oc get istag client-develop:latest -o template --template="{{.image.dockerImageReference}}"|awk -F ":" \'{print $3}\'',
+                    returnStdout: true).trim()
+            echo ">> IMAGE_HASH_FRONTEND: $IMAGE_HASH_FRONTEND"
+        }
+    }
+}
+
+def prepareBuildNotificationServer() {
+    return {
+        stage('Build Notification Server') {
+            echo "Building Notification Server ..."
+            timeout(30) {
+                openshiftBuild bldCfg: 'notification-server-develop', showBuildLogs: 'true'
+            }
+            echo ">> Getting Image Hash for notification server"
+            IMAGE_HASH_NOTIFICATION = sh (
+                script: 'oc get istag notification-server-develop:latest -o template --template="{{.image.dockerImageReference}}"|awk -F ":" \'{print $3}\'',
+                    returnStdout: true).trim()
+            echo ">> IMAGE_HASH_NOTIFICATION: $IMAGE_HASH_NOTIFICATION"
+        }
+    }
+}
 
     //timeout 30 minutes
     podTemplate(label: "develop-frontend-maven-${env.BUILD_NUMBER}", name: "develop-frontend-maven-${env.BUILD_NUMBER}", serviceAccount: 'jenkins', cloud: 'openshift',
@@ -33,33 +76,18 @@
         ).trim()
         echo ">> SONARQUBE_URL: ${SONARQUBE_URL}"
         dir('frontend/sonar-runner') {
-          sh returnStdout: true, script: "./gradlew sonarqube -Dsonar.host.url=${SONARQUBE_URL} -Dsonar.verbose=true --stacktrace --info"
+        sh returnStdout: true, script: "./gradlew sonarqube -Dsonar.host.url=${SONARQUBE_URL} -Dsonar.verbose=true --stacktrace --info"
         }
     }
 
-    stage('Build Frontend') {
-        echo "Building Frontend..."
-	timeout(30) {
-	    openshiftBuild bldCfg: 'client-develop-angular-app-build', showBuildLogs: 'true'
-	}
-        openshiftBuild bldCfg: 'client-develop', showBuildLogs: 'true'
-        echo ">> Getting Image Hash for frontend"
-        IMAGE_HASH_FRONTEND = sh (
-            script: 'oc get istag client-develop:latest -o template --template="{{.image.dockerImageReference}}"|awk -F ":" \'{print $3}\'',
- 	            returnStdout: true).trim()
-        echo ">> IMAGE_HASH_FRONTEND: $IMAGE_HASH_FRONTEND"
-    }
-
-    stage('Build Notification Server') {
-        echo "Building Notification Server ..."
-	timeout(30) {
-	    openshiftBuild bldCfg: 'notification-server-develop', showBuildLogs: 'true'
-	}
-        echo ">> Getting Image Hash for notification server"
-        IMAGE_HASH_NOTIFICATION = sh (
-            script: 'oc get istag notification-server-develop:latest -o template --template="{{.image.dockerImageReference}}"|awk -F ":" \'{print $3}\'',
- 	            returnStdout: true).trim()
-        echo ">> IMAGE_HASH_NOTIFICATION: $IMAGE_HASH_NOTIFICATION"
+    for (builds in buildStages) {
+        if (runParallel) {
+            parallel(builds)
+        } else {
+            for (build in builds.values()) {
+                build.call()
+            }
+        }
     }
 
     stage('Deploy on Dev') {
