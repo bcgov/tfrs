@@ -117,6 +117,7 @@ class FuelCodeForm extends Component {
                 </button>
               </TooltipWhenDisabled>
               <TooltipWhenDisabled
+                className="adjust-tooltip"
                 disabled={this._getValidationMessagesForApproval().length > 0}
                 title={this._getValidationMessagesForApproval()}
               >
