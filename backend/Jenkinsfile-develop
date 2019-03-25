@@ -90,6 +90,8 @@ def prepareCodeQulityCheck() {
     }   
 }
 
+buildStages = prepareBuildStages()
+
 podTemplate(label: "develop-backend-python-${env.BUILD_NUMBER}", name: "develop-backend-python-${env.BUILD_NUMBER}", serviceAccount: 'jenkins', cloud: 'openshift',
     containers: [
         containerTemplate(
@@ -150,7 +152,6 @@ podTemplate(label: "develop-backend-maven-${env.BUILD_NUMBER}", name: "develop-b
 ) {
 node("develop-backend-maven-${env.BUILD_NUMBER}") {
 
-    buildStages = prepareBuildStages()
     for (builds in buildStages) {
         if (runParallel) {
             parallel(builds)
