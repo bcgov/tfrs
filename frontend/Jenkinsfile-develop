@@ -81,6 +81,7 @@ def prepareBuildNotificationServer() {
         sh returnStdout: true, script: "./gradlew sonarqube -Dsonar.host.url=${SONARQUBE_URL} -Dsonar.verbose=true --stacktrace --info"
         }
     }
+
     buildStages = prepareBuildStages()
     for (builds in buildStages) {
         if (runParallel) {
@@ -91,9 +92,11 @@ def prepareBuildNotificationServer() {
             }
         }
     }
+    echo ">>>>>>>>>> IMAGE_HASH_FRONTEND: $IMAGE_HASH_FRONTEND"
 
     stage('Deploy on Dev') {
         echo "Deploying to dev..."
+            echo ">>>>>>>>>>222222 IMAGE_HASH_FRONTEND: $IMAGE_HASH_FRONTEND"
         openshiftTag destStream: 'client-develop', verbose: 'true', destTag: 'dev', srcStream: 'client-develop', srcTag: "${IMAGE_HASH_FRONTEND}"
         sh 'sleep 10s'
 	    openshiftVerifyDeployment depCfg: 'client', namespace: 'mem-tfrs-dev', replicaCount: 1, verbose: 'false'
