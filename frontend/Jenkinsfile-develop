@@ -64,7 +64,7 @@ podTemplate(label: "develop-frontend-maven-${env.BUILD_NUMBER}", name: "develop-
 ) {
 
     node("develop-frontend-maven-${env.BUILD_NUMBER}") {
-/****
+
         stage('Code Quality Check') {
             checkout scm
             SONARQUBE_PWD = sh (
@@ -82,23 +82,19 @@ podTemplate(label: "develop-frontend-maven-${env.BUILD_NUMBER}", name: "develop-
             sh returnStdout: true, script: "./gradlew sonarqube -Dsonar.host.url=${SONARQUBE_URL} -Dsonar.verbose=true --stacktrace --info"
             }
         }
-*****/
 
-            echo ">>>>>>>>>> runParallel: $runParallel"
-            for (builds in buildStages) {
-                if (runParallel) {
-                    parallel(builds)
-                } else {
-                    for (build in builds.values()) {
-                        build.call()
-                    }
+        for (builds in buildStages) {
+            if (runParallel) {
+                parallel(builds)
+            } else {
+                for (build in builds.values()) {
+                    build.call()
                 }
             }
-            echo ">>>>>>>>>> IMAGE_HASH_FRONTEND: $IMAGE_HASH_FRONTEND"
+        }
 
         stage('Deploy on Dev') {
             echo "Deploying to dev..."
-                echo ">>>>>>>>>>222222 IMAGE_HASH_FRONTEND: $IMAGE_HASH_FRONTEND"
             openshiftTag destStream: 'client-develop', verbose: 'true', destTag: 'dev', srcStream: 'client-develop', srcTag: "${IMAGE_HASH_FRONTEND}"
             sh 'sleep 10s'
             openshiftVerifyDeployment depCfg: 'client', namespace: 'mem-tfrs-dev', replicaCount: 1, verbose: 'false'

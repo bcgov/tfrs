@@ -80,15 +80,6 @@ def prepareBuildCelery() {
   }
 }
 
-def prepareBuildStages() {
-    def buildList = []
-    def buildStages = [:]
-    buildStages.put('Build Frontend', prepareBuildFrontend())
-    buildStages.put('Build Notification Server', prepareBuildNotificationServer())
-    buildList.add(buildStages)
-    return buildList
-}
-
 def prepareBuildFrontend() {
     return {
         stage('Build Frontend') {
@@ -246,16 +237,16 @@ node("develop-maven-${env.BUILD_NUMBER}") {
         echo 'backup script completed'
     }
 
-    stage('Deploy on Dev') {
-        echo "Deploying to Dev: ${BUILD_ID}"
-        //deploy frontend
+    stage('Deploy Frontend on Dev') {
         openshiftTag destStream: 'client-develop', verbose: 'true', destTag: 'dev', srcStream: 'client-develop', srcTag: "${IMAGE_HASH_FRONTEND}"
         sh 'sleep 5s'
         openshiftVerifyDeployment depCfg: 'client', namespace: 'mem-tfrs-dev', replicaCount: 1, verbose: 'false'
         openshiftTag destStream: 'notification-server-develop', verbose: 'true', destTag: 'dev', srcStream: 'notification-server-develop', srcTag: "${IMAGE_HASH_NOTIFICATION}"
         sh 'sleep 5s'
         openshiftVerifyDeployment depCfg: 'notification-server', namespace: 'mem-tfrs-dev', replicaCount: 1, verbose: 'false'
-        //deploy backend
+    }
+
+    stage('Deploy Backend on Dev') {
         openshiftTag destStream: 'tfrs-develop', verbose: 'true', destTag: 'dev', srcStream: 'tfrs-develop', srcTag: "${IMAGE_HASH_BACKEND}"
         sh 'sleep 5s'
         openshiftVerifyDeployment depCfg: 'tfrs', namespace: 'mem-tfrs-dev', replicaCount: 1, verbose: 'false'
