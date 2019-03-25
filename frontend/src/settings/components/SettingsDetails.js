@@ -40,11 +40,23 @@ const SettingsDetails = props => (
         <NotificationsCreditTransactionsTable
           addToFields={props.addToFields}
           fields={props.fields.settings.notifications}
-          items={CREDIT_TRANSFER_NOTIFICATIONS.filter(notification =>
-            (props.loggedInUser.isGovernmentUser
-              ? notification.recipients.includes('government')
-              : notification.recipients.includes('fuel_supplier')
-            ))}
+          items={CREDIT_TRANSFER_NOTIFICATIONS.filter((notification) => {
+            if (props.loggedInUser.isGovernmentUser) {
+              return notification.recipients.includes('government');
+            }
+
+            if (notification.recipients.includes('fuel_supplier')) {
+              if (notification.feature === 'base') {
+                return true;
+              }
+
+              if (CONFIG.CREDIT_TRANSFER.ENABLED && notification.feature === 'credit_transfer') {
+                return true;
+              }
+            }
+
+            return false;
+          })}
           key="table-credit-transactions"
           toggleCheck={props.toggleCheck}
           type="credit-transfer"
