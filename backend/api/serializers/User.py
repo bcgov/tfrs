@@ -113,7 +113,8 @@ class UserCreateSerializer(serializers.ModelSerializer):
         model = User
         fields = (
             'first_name', 'last_name', 'email', 'username', 'display_name',
-            'id', 'organization', 'roles', 'is_government_user', 'title')
+            'id', 'organization', 'roles', 'is_government_user', 'title',
+            'phone', 'cell_phone')
 
 class UserUpdateSerializer(serializers.ModelSerializer):
     """
