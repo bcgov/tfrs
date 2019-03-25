@@ -87,14 +87,14 @@ class FuelCodeAddContainer extends Component {
 
     // API data structure
     const data = {
-      applicationDate: this.state.fields.applicationDate,
-      approvalDate: this.state.fields.approvalDate,
+      applicationDate: this.state.fields.applicationDate !== '' ? this.state.fields.applicationDate : null,
+      approvalDate: this.state.fields.approvalDate !== '' ? this.state.fields.approvalDate : null,
       carbonIntensity: this.state.fields.carbonIntensity,
       company: this.state.fields.company,
-      effectiveDate: this.state.fields.effectiveDate,
-      expiryDate: this.state.fields.expiryDate,
+      effectiveDate: this.state.fields.effectiveDate !== '' ? this.state.fields.effectiveDate : null,
+      expiryDate: this.state.fields.expiryDate !== '' ? this.state.fields.expiryDate : null,
       facilityLocation: this.state.fields.facilityLocation,
-      facilityNameplate: this.state.fields.facilityNameplate,
+      facilityNameplate: this.state.fields.facilityNameplate !== '' ? this.state.fields.facilityNameplate : null,
       feedstock: this.state.fields.feedstock,
       feedstockLocation: this.state.fields.feedstockLocation,
       feedstockMisc: this.state.fields.feedstockMisc,
@@ -105,6 +105,12 @@ class FuelCodeAddContainer extends Component {
       fuelTransportMode: this.state.fields.fuelTransportMode,
       status: this._getFuelCodeStatus(status).id
     };
+
+    Object.entries(data).forEach((prop) => {
+      if (prop[1] === null) {
+        delete data[prop[0]];
+      }
+    });
 
     this.props.addFuelCode(data).then((response) => {
       history.push(FUEL_CODES.LIST);
@@ -124,7 +130,7 @@ class FuelCodeAddContainer extends Component {
       <FuelCodeForm
         addToFields={this._addToFields}
         approvedFuels={this.props.referenceData.approvedFuels}
-        errors={this.props.error}
+        errors={this.props.errors}
         fields={this.state.fields}
         handleInputChange={this._handleInputChange}
         handleSubmit={this._handleSubmit}
@@ -144,12 +150,12 @@ class FuelCodeAddContainer extends Component {
 }
 
 FuelCodeAddContainer.defaultProps = {
-  error: {}
+  errors: {}
 };
 
 FuelCodeAddContainer.propTypes = {
   addFuelCode: PropTypes.func.isRequired,
-  error: PropTypes.shape({}),
+  errors: PropTypes.shape({}),
   loggedInUser: PropTypes.shape({
     organization: PropTypes.shape({
       id: PropTypes.number,
@@ -170,6 +176,7 @@ FuelCodeAddContainer.propTypes = {
 };
 
 const mapStateToProps = state => ({
+  errors: state.rootReducer.fuelCode.errors,
   loggedInUser: state.rootReducer.userRequest.loggedInUser,
   referenceData: {
     fuelCodeStatuses: state.rootReducer.referenceData.data.fuelCodeStatuses,
