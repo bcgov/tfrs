@@ -79,7 +79,6 @@ const FuelCodeFormDetails = props => (
                 max="9999-12-31"
                 name="applicationDate"
                 onChange={props.handleInputChange}
-                required="required"
                 type="date"
                 value={props.fields.applicationDate}
               />
@@ -98,7 +97,6 @@ const FuelCodeFormDetails = props => (
                 max="9999-12-31"
                 name="effectiveDate"
                 onChange={props.handleInputChange}
-                required="required"
                 type="date"
                 value={props.fields.effectiveDate}
               />
@@ -114,7 +112,6 @@ const FuelCodeFormDetails = props => (
                 max="9999-12-31"
                 name="expiryDate"
                 onChange={props.handleInputChange}
-                required="required"
                 type="date"
                 value={props.fields.expiryDate}
               />
@@ -194,7 +191,7 @@ const FuelCodeFormDetails = props => (
                 value={props.fields.feedstockMisc}
                 inputProps={
                   {
-                    required: true,
+                    required: false,
                     name: 'feedstockMisc',
                     id: 'feedstockMisc'
                   }
@@ -232,7 +229,6 @@ const FuelCodeFormDetails = props => (
                 id="facility-nameplate"
                 name="facilityNameplate"
                 onChange={props.handleInputChange}
-                required="required"
                 type="number"
                 value={props.fields.facilityNameplate}
               />
@@ -250,7 +246,6 @@ const FuelCodeFormDetails = props => (
                 className="form-control"
                 name="feedstockTransportMode"
                 onChange={props.handleInputChange}
-                required="required"
                 id="feedstock-transport-mode"
                 value={props.fields.feedstockTransportMode}
               >
@@ -274,7 +269,6 @@ const FuelCodeFormDetails = props => (
                 className="form-control"
                 name="fuelTransportMode"
                 onChange={props.handleInputChange}
-                required="required"
                 id="fuel-transport-mode"
                 value={props.fields.fuelTransportMode}
               >
@@ -301,7 +295,7 @@ const FuelCodeFormDetails = props => (
               value={props.fields.formerCompany}
               inputProps={
                 {
-                  required: true,
+                  required: false,
                   name: 'formerCompany',
                   id: 'formerCompany'
                 }
@@ -320,7 +314,6 @@ const FuelCodeFormDetails = props => (
               max="9999-12-31"
               name="approvalDate"
               onChange={props.handleInputChange}
-              required="required"
               type="date"
               value={props.fields.approvalDate}
             />
