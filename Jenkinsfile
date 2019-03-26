@@ -189,9 +189,7 @@ node("master-maven-${env.BUILD_NUMBER}") {
     }
 
     stage ('Confirm to deploy to Test') {
-        input "Deploy release ${env.tfrs_release} to Test?"
-        input "Reminder of full database backup and point in time backup have been done."
-        input "Deploy to Test? This is the last confirmation required."
+        input "Deploy release ${env.tfrs_release} to Test? There will be one more confirmation before deploying on Test."
     }
 
     stage('Bring up Maintenance Page on Test') {
@@ -208,6 +206,7 @@ node("master-maven-${env.BUILD_NUMBER}") {
     }
 
     stage('Deploy Frontend on Test') {
+        input "Maintenance Pageeploy is up and Test Database backuo has completed, confirm to deploy ${env.tfrs_release} to Test? This is the last confirmation required."
         openshiftTag destStream: 'client', verbose: 'true', destTag: 'test', srcStream: 'client', srcTag: "${IMAGE_HASH_FRONTEND}"
         sh 'sleep 5s'
         openshiftVerifyDeployment depCfg: 'client', namespace: 'mem-tfrs-test', replicaCount: 1, verbose: 'false'
@@ -250,10 +249,7 @@ node("master-maven-${env.BUILD_NUMBER}") {
     }    
 
     stage ('Confirm to deploy to Prod') {
-        input "Deploy release ${env.tfrs_release} to Prod?"
-        input "Reminder of full database backup and updating maintenance page."
-        input "Deploy to Prod? Please confirm again."
-        input "Deploy to Prod? This is the last confirmation required."
+        input "Deploy release ${env.tfrs_release} to Prod? There will be one more confirmation before deploying on Prod."
     }
 
     stage('Bring up Maintenance Page on Prod') {
@@ -270,6 +266,7 @@ node("master-maven-${env.BUILD_NUMBER}") {
     }
 
     stage('Deploy to Prod') {
+        input "Maintenance Page is up and Prod Database backup has completed, confirm to deploy ${env.tfrs_release} to Prod? This is the last confirmation required."
         openshiftTag destStream: 'tfrs', verbose: 'true', destTag: 'prod', srcStream: 'tfrs', srcTag: "${IMAGE_HASH_BACKEND}"
         sh 'sleep 5s'
         openshiftVerifyDeployment depCfg: 'tfrs', namespace: 'mem-tfrs-prod', replicaCount: 1, verbose: 'false'
