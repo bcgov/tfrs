@@ -32,7 +32,6 @@ def prepareBuildBackend() {
   return {
     stage('Build Backend') {
         openshiftBuild bldCfg: 'tfrs', showBuildLogs: 'true'
-        echo ">> Getting Image Hash"
         IMAGE_HASH_BACKEND = sh (
             script: 'oc get istag tfrs:latest -o template --template="{{.image.dockerImageReference}}"|awk -F ":" \'{print $3}\'',
  	            returnStdout: true).trim()
@@ -45,7 +44,6 @@ def prepareBuildScanCoordinator() {
   return {
     stage('Build-Scan-Coordinator') {
         openshiftBuild bldCfg: 'scan-coordinator', showBuildLogs: 'true'
-        echo ">> Getting Image Hash"
         IMAGE_HASH_SCAN_COORDINATOR = sh (
             script: 'oc get istag scan-coordinator:latest -o template --template="{{.image.dockerImageReference}}"|awk -F ":" \'{print $3}\'',
  	            returnStdout: true).trim()
@@ -58,7 +56,6 @@ def prepareBuildScanHandler() {
   return {
     stage('Build-Scan-Handler') {
         openshiftBuild bldCfg: 'scan-handler', showBuildLogs: 'true'
-        echo ">> Getting Image Hash"
         IMAGE_HASH_SCAN_HANDLER = sh (
             script: 'oc get istag scan-handler:latest -o template --template="{{.image.dockerImageReference}}"|awk -F ":" \'{print $3}\'',
  	            returnStdout: true).trim()
@@ -71,7 +68,6 @@ def prepareBuildCelery() {
   return {
     stage('Build-Celery') {
         openshiftBuild bldCfg: 'celery', showBuildLogs: 'true'
-        echo ">> Getting Image Hash"
         IMAGE_HASH_CELERY = sh (
             script: 'oc get istag celery:latest -o template --template="{{.image.dockerImageReference}}"|awk -F ":" \'{print $3}\'',
  	            returnStdout: true).trim()
@@ -86,7 +82,6 @@ def prepareBuildFrontend() {
         echo "Building Frontend..."
 	    openshiftBuild bldCfg: 'client-angular-app-build', showBuildLogs: 'true'
         openshiftBuild bldCfg: 'client', showBuildLogs: 'true'
-        echo ">> Getting Image Hash"
         IMAGE_HASH_FRONTEND = sh (
             script: 'oc get istag client:latest -o template --template="{{.image.dockerImageReference}}"|awk -F ":" \'{print $3}\'',
  	            returnStdout: true).trim()
@@ -100,7 +95,6 @@ def prepareBuildNotificationServer() {
     stage('Build Notification') {
         echo "Building Notification Server ..."
 	    openshiftBuild bldCfg: 'notification-server', showBuildLogs: 'true'
-        echo ">> Getting Image Hash"
         IMAGE_HASH_NOTIFICATION = sh (
             script: 'oc get istag notification-server:latest -o template --template="{{.image.dockerImageReference}}"|awk -F ":" \'{print $3}\'',
  	            returnStdout: true).trim()
@@ -150,6 +144,9 @@ if (result != 0) {
     currentBuild.result = 'FAILURE'
     return
 }
+
+backendBuildStages = prepareBackendBuildStages()
+frontendBuildStages = prepareFrontendBuildStages()
         
 podTemplate(label: "master-maven-${env.BUILD_NUMBER}", name: "master-maven-${env.BUILD_NUMBER}", serviceAccount: 'jenkins', cloud: 'openshift',
         containers: [
