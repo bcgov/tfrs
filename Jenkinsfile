@@ -1,4 +1,3 @@
-tfrs_release='v1.2.19'
 result = 0
 runParallel = true
 IMAGE_HASH_FRONTEND = 'nonexist123'
@@ -190,13 +189,12 @@ node("master-maven-${env.BUILD_NUMBER}") {
     }
 
     stage ('Confirm to deploy to Test') {
-        input "Deploy to Test?"
+        input "Deploy release ${env.tfrs_release} to Test?"
         input "Reminder of full database backup and point in time backup have been done."
         input "Deploy to Test? This is the last confirmation required."
-        echo "Deploying to Test: ${BUILD_ID}"
     }
 
-    stage('Bring up Maintenance Page') {
+    stage('Bring up Maintenance Page on Test') {
         sh returnStatus: true, script: "oc scale dc maintenance-page -n mem-tfrs-test --replicas=1 --timeout=20s"
         sh returnStatus: true, script: "oc patch route/test-lowcarbonfuels-frontend -n mem-tfrs-test -p '{\"spec\":{\"to\":{\"name\":\"maintenance-page\"}, \"port\":{\"targetPort\":\"2015-tcp\"}}}'"
         sh returnStatus: true, script: "oc patch route/test-lowcarbonfuels-backend -n mem-tfrs-test -p '{\"spec\":{\"to\":{\"name\":\"maintenance-page\"}, \"port\":{\"targetPort\":\"2015-tcp\"}}}'"
@@ -205,7 +203,7 @@ node("master-maven-${env.BUILD_NUMBER}") {
     stage('Backup Test Database') {
         postgresql_pod_name=sh (script: 'oc get pods -n mem-tfrs-test | grep postgresql96 | awk \'{print $1}\'', returnStdout: true).trim()
         echo "start backup script tfrs-backup.sh on test, postgresql_pod_name is ${postgresql_pod_name}"
-        sh returnStdout: true, script: "oc exec ${postgresql_pod_name} -c postgresql96 -n mem-tfrs-test -- bash /postgresql-backup/tfrs-backup.sh ${tfrs_release} test"
+        sh returnStdout: true, script: "oc exec ${postgresql_pod_name} -c postgresql96 -n mem-tfrs-test -- bash /postgresql-backup/tfrs-backup.sh ${env.tfrs_release} test"
         echo 'backup script completed'
     }
 
@@ -239,7 +237,7 @@ node("master-maven-${env.BUILD_NUMBER}") {
         sh returnStatus: true, script: "oc scale dc maintenance-page -n mem-tfrs-test --replicas=0 --timeout=20s"
     }
 
-    stage('Refresh SchemaSpy Test') {
+    stage('Refresh SchemaSpy on Test') {
         echo "Refreshing SchemaSpy for Test Database"
         openshiftScale depCfg: 'schema-spy-public', namespace: 'mem-tfrs-test', replicaCount: 0, verbose: 'false', verifyReplicaCount: 'true'
         sh 'sleep 5s'
@@ -252,14 +250,13 @@ node("master-maven-${env.BUILD_NUMBER}") {
     }    
 
     stage ('Confirm to deploy to Prod') {
-        input "Deploy to Prod?"
+        input "Deploy release ${env.tfrs_release} to Prod?"
         input "Reminder of full database backup and updating maintenance page."
         input "Deploy to Prod? Please confirm again."
         input "Deploy to Prod? This is the last confirmation required."
-        echo "Deploying to Prod: ${BUILD_ID}"
     }
 
-    stage('Bring up Maintenance Page') {
+    stage('Bring up Maintenance Page on Prod') {
         sh returnStatus: true, script: "oc scale dc maintenance-page -n mem-tfrs-prod --replicas=1 --timeout=20s"
         sh returnStatus: true, script: "oc patch route/lowcarbonfuels-frontend -n mem-tfrs-prod -p '{\"spec\":{\"to\":{\"name\":\"maintenance-page\"}, \"port\":{\"targetPort\":\"2015-tcp\"}}}'"
         sh returnStatus: true, script: "oc patch route/lowcarbonfuels-backend -n mem-tfrs-prod -p '{\"spec\":{\"to\":{\"name\":\"maintenance-page\"}, \"port\":{\"targetPort\":\"2015-tcp\"}}}'"
@@ -268,7 +265,7 @@ node("master-maven-${env.BUILD_NUMBER}") {
     stage('Backup Prod Database') {
         postgresql_pod_name=sh (script: 'oc get pods -n mem-tfrs-prod | grep postgresql96 | awk \'{print $1}\'', returnStdout: true).trim()
         echo "start backup script tfrsdump-prod.sh on prod, postgresql_pod_name is ${postgresql_pod_name}"
-        sh returnStdout: true, script: "oc exec ${postgresql_pod_name} -c postgresql96 -n mem-tfrs-prod -- bash /postgresql-backup/tfrs-backup.sh ${tfrs_release} prod"
+        sh returnStdout: true, script: "oc exec ${postgresql_pod_name} -c postgresql96 -n mem-tfrs-prod -- bash /postgresql-backup/tfrs-backup.sh ${env.tfrs_release} prod"
         echo 'backup script completed'
     }
 
@@ -293,7 +290,7 @@ node("master-maven-${env.BUILD_NUMBER}") {
         sh returnStatus: true, script: "oc scale dc maintenance-page -n mem-tfrs-prod --replicas=0 --timeout=20s"
     }
 
-    stage('Refresh SchemaSpy Prod') {
+    stage('Refresh SchemaSpy on Prod') {
         echo "Refreshing SchemaSpy for Test Database"
         openshiftScale depCfg: 'schema-spy-public', namespace: 'mem-tfrs-prod', replicaCount: 0, verbose: 'false', verifyReplicaCount: 'true'
         sh 'sleep 5s'

@@ -1,4 +1,3 @@
-tfrs_release='v1.2.18'
 result = 0
 runParallel = true
 IMAGE_HASH_FRONTEND = 'nonexist123'
@@ -233,7 +232,7 @@ node("develop-maven-${env.BUILD_NUMBER}") {
     stage('Datebase Backup') {
         postgresql_pod_name=sh (script: 'oc get pods -n mem-tfrs-dev | grep postgresql96 | awk \'{print $1}\'', returnStdout: true).trim()
         echo "start backup script tfrsdump-dev.sh on dev, postgresql_pod_name is ${postgresql_pod_name}"
-        sh returnStdout: true, script: "oc exec ${postgresql_pod_name} -c postgresql96 -n mem-tfrs-dev -- bash /postgresql-backup/tfrs-backup.sh ${tfrs_release} dev"
+        sh returnStdout: true, script: "oc exec ${postgresql_pod_name} -c postgresql96 -n mem-tfrs-dev -- bash /postgresql-backup/tfrs-backup.sh master dev"
         echo 'backup script completed'
     }
 
