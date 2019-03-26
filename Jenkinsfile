@@ -1,11 +1,11 @@
 result = 0
 runParallel = true
-IMAGE_HASH_FRONTEND = 'nonexist123'
-IMAGE_HASH_NOTIFICATION = 'nonexist123'
-IMAGE_HASH_BACKEND = 'nonexist123'
-IMAGE_HASH_SCAN_COORDINATOR = 'nonexist123'
-IMAGE_HASH_SCAN_HANDLER = 'nonexist123'
-IMAGE_HASH_CELERY = 'nonexist123'
+IMAGE_HASH_FRONTEND = ''
+IMAGE_HASH_NOTIFICATION = ''
+IMAGE_HASH_BACKEND = ''
+IMAGE_HASH_SCAN_COORDINATOR = ''
+IMAGE_HASH_SCAN_HANDLER = ''
+IMAGE_HASH_CELERY = ''
 
 def prepareBackendBuildStages() {
     def buildBackendList = []
