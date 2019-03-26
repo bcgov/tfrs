@@ -138,7 +138,6 @@ class CreditTradeHistoryTable extends React.Component {
 
     return (
       <ReactTable
-        stateKey="credit-trade-history"
         defaultPageSize={10}
         defaultSorted={[{
           id: 'updateTimestamp',
