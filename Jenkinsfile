@@ -206,7 +206,7 @@ node("master-maven-${env.BUILD_NUMBER}") {
     }
 
     stage('Deploy Frontend on Test') {
-        input "Maintenance Pageeploy is up and Test Database backuo has completed, confirm to deploy ${env.tfrs_release} to Test? This is the last confirmation required."
+        input "Maintenance Page is up and Test Database backup has completed, confirm to deploy ${env.tfrs_release} to Test? This is the last confirmation required."
         openshiftTag destStream: 'client', verbose: 'true', destTag: 'test', srcStream: 'client', srcTag: "${IMAGE_HASH_FRONTEND}"
         sh 'sleep 5s'
         openshiftVerifyDeployment depCfg: 'client', namespace: 'mem-tfrs-test', replicaCount: 1, verbose: 'false'
