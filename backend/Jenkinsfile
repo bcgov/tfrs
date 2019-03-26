@@ -1,5 +1,4 @@
-def tfrs_release='v1.2.19'
-def result = 0
+result = 0
 stage('Unit Test') {
     podTemplate(label: "master-backend-python-${env.BUILD_NUMBER}", name: "master-backend-python-${env.BUILD_NUMBER}", serviceAccount: 'jenkins', cloud: 'openshift',
         containers: [
@@ -110,7 +109,7 @@ node("master-backend-maven-${env.BUILD_NUMBER}") {
     stage('Backup Test Database') {
         postgresql_pod_name=sh (script: 'oc get pods -n mem-tfrs-test | grep postgresql96 | awk \'{print $1}\'', returnStdout: true).trim()
         echo "start backup script tfrs-backup.sh on test, postgresql_pod_name is ${postgresql_pod_name}"
-        sh returnStdout: true, script: "oc exec ${postgresql_pod_name} -c postgresql96 -n mem-tfrs-test -- bash /postgresql-backup/tfrs-backup.sh ${tfrs_release} test"
+        sh returnStdout: true, script: "oc exec ${postgresql_pod_name} -c postgresql96 -n mem-tfrs-test -- bash /postgresql-backup/tfrs-backup.sh ${env.tfrs_release} test"
         echo 'backup script completed'
     }
 
@@ -154,7 +153,7 @@ node("master-backend-maven-${env.BUILD_NUMBER}") {
     stage('Backup Prod Database') {
         postgresql_pod_name=sh (script: 'oc get pods -n mem-tfrs-prod | grep postgresql96 | awk \'{print $1}\'', returnStdout: true).trim()
         echo "start backup script tfrsdump-prod.sh on prod, postgresql_pod_name is ${postgresql_pod_name}"
-        sh returnStdout: true, script: "oc exec ${postgresql_pod_name} -c postgresql96 -n mem-tfrs-prod -- bash /postgresql-backup/tfrs-backup.sh ${tfrs_release} prod"
+        sh returnStdout: true, script: "oc exec ${postgresql_pod_name} -c postgresql96 -n mem-tfrs-prod -- bash /postgresql-backup/tfrs-backup.sh ${env.tfrs_release} prod"
         echo 'backup script completed'
     }
 
