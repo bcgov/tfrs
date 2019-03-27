@@ -206,18 +206,18 @@ const FuelCodeFormDetails = props => (
         <div className="col-sm-6">
           <div className="form-group">
             <label htmlFor="facility-location">Fuel Production Facility Location (City, Province/State/Country):
-                <AutocompletedInput
-                  handleInputChange={props.handleInputChange}
-                  autocompleteFieldName="fuel_code.facility_location"
-                  value={props.fields.facilityLocation}
-                  inputProps={
-                    {
-                      required: true,
-                      name: 'facilityLocation',
-                      id: 'facilityLocation'
-                    }
+              <AutocompletedInput
+                handleInputChange={props.handleInputChange}
+                autocompleteFieldName="fuel_code.facility_location"
+                value={props.fields.facilityLocation}
+                inputProps={
+                  {
+                    required: true,
+                    name: 'facilityLocation',
+                    id: 'facilityLocation'
                   }
-                />
+                }
+              />
             </label>
           </div>
         </div>
