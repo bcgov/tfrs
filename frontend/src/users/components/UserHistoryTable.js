@@ -14,7 +14,6 @@ import history from '../../app/History';
 import CREDIT_TRANSACTIONS from '../../constants/routes/CreditTransactions';
 import { CREDIT_TRANSFER_STATUS } from '../../constants/values';
 import * as Routes from '../../constants/routes';
-import StateSavingReactTable from "../../app/components/StateSavingReactTable";
 
 class UserHistoryTable extends React.Component {
   constructor () {
@@ -135,8 +134,7 @@ class UserHistoryTable extends React.Component {
     const { data, pages, loading } = this.state;
 
     return (
-      <StateSavingReactTable
-        stateKey="userHistory"
+      <ReactTable
         defaultPageSize={10}
         defaultSorted={[{
           id: 'createTimestamp',
