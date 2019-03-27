@@ -13,7 +13,6 @@ import CREDIT_TRANSACTIONS from '../../../constants/routes/CreditTransactions';
 import { CREDIT_TRANSFER_STATUS } from '../../../constants/values';
 import * as Routes from '../../../constants/routes';
 import { CREDIT_TRANSACTIONS_HISTORY } from '../../../constants/routes/Admin';
-import StateSavingReactTable from "../../../app/components/StateSavingReactTable";
 
 class CreditTradeHistoryTable extends React.Component {
   constructor () {
@@ -138,8 +137,7 @@ class CreditTradeHistoryTable extends React.Component {
     const { data, pages, loading } = this.state;
 
     return (
-      <StateSavingReactTable
-        stateKey="credit-trade-history"
+      <ReactTable
         defaultPageSize={10}
         defaultSorted={[{
           id: 'updateTimestamp',

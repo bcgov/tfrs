@@ -13,10 +13,27 @@ import Login from './Login';
 import CONFIG from '../config';
 
 class KeycloakAwareApp extends React.Component {
+  constructor (props) {
+    super(props);
+    this.state = { hasErrors: false };
+  }
+
+  static getDerivedStateFromError (_errors) {
+    return { hasErrors: true };
+  }
+
+  componentDidCatch (_error, info) {
+    this.setState({
+      hasErrors: true
+    });
+  }
+
   render () {
     let content;
 
-    if (this.props.errorRequest.hasErrors &&
+    if (this.state.hasErrors) {
+      content = <StatusInterceptor statusCode={500} />;
+    } else if (this.props.errorRequest.hasErrors &&
       this.props.errorRequest.error &&
       this.props.errorRequest.error.status) {
       content = <StatusInterceptor statusCode={this.props.errorRequest.error.status} />;
