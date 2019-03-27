@@ -4,8 +4,8 @@
 import React from 'react';
 import FontAwesomeIcon from '@fortawesome/react-fontawesome';
 import { Link } from 'react-router-dom';
-import 'react-table/react-table.css';
 import ReactTable from 'react-table';
+import 'react-table/react-table.css';
 import axios from 'axios';
 
 import history from '../../../app/History';
@@ -13,7 +13,7 @@ import CREDIT_TRANSACTIONS from '../../../constants/routes/CreditTransactions';
 import { CREDIT_TRANSFER_STATUS } from '../../../constants/values';
 import * as Routes from '../../../constants/routes';
 import { CREDIT_TRANSACTIONS_HISTORY } from '../../../constants/routes/Admin';
-// import ReactTable from '../../../app/components/StateSavingReactTable';
+import StateSavingReactTable from "../../../app/components/StateSavingReactTable";
 
 class CreditTradeHistoryTable extends React.Component {
   constructor () {
@@ -138,7 +138,7 @@ class CreditTradeHistoryTable extends React.Component {
     const { data, pages, loading } = this.state;
 
     return (
-      <ReactTable
+      <StateSavingReactTable
         stateKey="credit-trade-history"
         defaultPageSize={10}
         defaultSorted={[{
