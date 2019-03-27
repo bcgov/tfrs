@@ -32,7 +32,7 @@ const FuelCodeFormDetails = props => (
 
         <div className="col-sm-6">
           <div className="form-group">
-            <label htmlFor="company">Company:
+            <label htmlFor="company">Company (full legal operating name):
               <AutocompletedInput
                 handleInputChange={props.handleInputChange}
                 autocompleteFieldName="fuel_code.company"
@@ -53,7 +53,7 @@ const FuelCodeFormDetails = props => (
       <div className="row">
         <div className="col-sm-6">
           <div className="form-group">
-            <label htmlFor="carbon-intensity">Carbon Intensity:
+            <label htmlFor="carbon-intensity">Carbon Intensity (gCO<sub>2</sub>e/MJ):
               <input
                 className="form-control"
                 id="carbon-intensity"
@@ -166,7 +166,7 @@ const FuelCodeFormDetails = props => (
       <div className="row">
         <div className="col-sm-6">
           <div className="form-group">
-            <label htmlFor="feedstock-location">Feedstock Location:
+            <label htmlFor="feedstock-location">Feedstock Location (e.g. US Central, Manitoba, Japan):
               <AutocompletedInput
                 handleInputChange={props.handleInputChange}
                 autocompleteFieldName="fuel_code.feedstock_location"
@@ -184,7 +184,7 @@ const FuelCodeFormDetails = props => (
         </div>
         <div className="col-sm-6">
           <div className="form-group">
-            <label htmlFor="feedstock-miscellaneous">Feedstock Misc:
+            <label htmlFor="feedstock-miscellaneous">Feedstock Misc (e.g. methane capture, no peat, etc.):
               <AutocompletedInput
                 handleInputChange={props.handleInputChange}
                 autocompleteFieldName="fuel_code.feedstock_misc"
@@ -206,18 +206,18 @@ const FuelCodeFormDetails = props => (
         <div className="col-sm-6">
           <div className="form-group">
             <label htmlFor="facility-location">Fuel Production Facility Location (City, Province/State/Country):
-                <AutocompletedInput
-                  handleInputChange={props.handleInputChange}
-                  autocompleteFieldName="fuel_code.facility_location"
-                  value={props.fields.facilityLocation}
-                  inputProps={
-                    {
-                      required: true,
-                      name: 'facilityLocation',
-                      id: 'facilityLocation'
-                    }
+              <AutocompletedInput
+                handleInputChange={props.handleInputChange}
+                autocompleteFieldName="fuel_code.facility_location"
+                value={props.fields.facilityLocation}
+                inputProps={
+                  {
+                    required: true,
+                    name: 'facilityLocation',
+                    id: 'facilityLocation'
                   }
-                />
+                }
+              />
             </label>
           </div>
         </div>
