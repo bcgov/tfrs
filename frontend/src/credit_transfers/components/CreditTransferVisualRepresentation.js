@@ -10,19 +10,15 @@ import { getCreditTransferType } from '../../actions/creditTransfersActions';
 class CreditTransferVisualRepresentation extends Component {
   _renderPart3Award () {
     return (
-      <div className="row visual-representation">
-        <div className="col-sm-6 col-lg-3 col-lg-offset-1">
+      <div className="row visual-representation container">
+        <div className="col-xs-10 col-sm-8 col-md-4">
           <div className="respondent-container">
-            <div>
-              { this.props.creditsTo && this.props.creditsTo.name }
-            </div>
+            {this.props.creditsTo && this.props.creditsTo.name}
           </div>
         </div>
-        <div className="col-sm-4 col-lg-4">
-          <div className="arrow">
-            <div>{numeral(this.props.numberOfCredits).format(NumberFormat.INT)} credit{this.props.numberOfCredits > 1 && 's'}</div>
-            <FontAwesomeIcon icon="arrow-alt-circle-up" size="4x" /> <div>{getCreditTransferType(this.props.tradeType.id)}</div>
-          </div>
+        <div className="col-xs-12 col-md-2 arrow">
+          <div>{numeral(this.props.numberOfCredits).format(NumberFormat.INT)} credit{this.props.numberOfCredits > 1 && 's'}</div>
+          <FontAwesomeIcon icon="arrow-alt-circle-up" size="4x" /> <div>{getCreditTransferType(this.props.tradeType.id)}</div>
         </div>
       </div>
     );
@@ -30,19 +26,15 @@ class CreditTransferVisualRepresentation extends Component {
 
   _renderRetirement () {
     return (
-      <div className="row visual-representation">
-        <div className="col-sm-6 col-lg-3 col-lg-offset-1">
+      <div className="row visual-representation container">
+        <div className="col-xs-10 col-sm-8 col-md-4">
           <div className="initiator-container">
-            <div>
-              { this.props.creditsFrom && this.props.creditsFrom.name }
-            </div>
+            {this.props.creditsFrom && this.props.creditsFrom.name}
           </div>
         </div>
-        <div className="col-sm-4 col-lg-4">
-          <div className="arrow">
-            <div>{numeral(this.props.numberOfCredits).format(NumberFormat.INT)} credit{this.props.numberOfCredits > 2 && 's'}</div>
-            <FontAwesomeIcon icon="arrow-alt-circle-down" size="4x" /> <div>{getCreditTransferType(this.props.tradeType.id)}</div>
-          </div>
+        <div className="col-xs-12 col-md-2 arrow">
+          <div>{numeral(this.props.numberOfCredits).format(NumberFormat.INT)} credit{this.props.numberOfCredits > 2 && 's'}</div>
+          <FontAwesomeIcon icon="arrow-alt-circle-down" size="4x" /> <div>{getCreditTransferType(this.props.tradeType.id)}</div>
         </div>
       </div>
     );
@@ -73,31 +65,27 @@ class CreditTransferVisualRepresentation extends Component {
 
   _renderCreditTransfer () {
     return (
-      <div className="row visual-representation">
-        <div className="col-sm-4 col-md-4">
+      <div className="row visual-representation container">
+        <div className="col-xs-10 col-sm-8 col-md-4">
           <div className="initiator-container">
-            <div>
-              { this.props.creditsFrom && this.props.creditsFrom.name }
-            </div>
+            {this.props.creditsFrom && this.props.creditsFrom.name}
           </div>
         </div>
-        <div className="col-sm-2 col-md-2">
-          <div className="arrow">
-            {(Number(this.props.numberOfCredits) > 0) &&
-            <div>{numeral(this.props.numberOfCredits).format(NumberFormat.INT)} credit{this.props.numberOfCredits > 1 && 's'}</div>
-            }
-            <FontAwesomeIcon
-              icon={this._creditTransferIcon().icon}
-              className={this._creditTransferIcon().className}
-              size="6x"
-            />
-            {Number(this.props.totalValue) > 0 &&
-            <div>{numeral(this.props.totalValue).format(NumberFormat.CURRENCY)}</div>}
-          </div>
+        <div className="col-xs-12 col-md-2 arrow">
+          {(Number(this.props.numberOfCredits) > 0) &&
+          <div>{numeral(this.props.numberOfCredits).format(NumberFormat.INT)} credit{this.props.numberOfCredits > 1 && 's'}</div>
+          }
+          <FontAwesomeIcon
+            icon={this._creditTransferIcon().icon}
+            className={this._creditTransferIcon().className}
+            size="6x"
+          />
+          {Number(this.props.totalValue) > 0 &&
+          <div>{numeral(this.props.totalValue).format(NumberFormat.CURRENCY)}</div>}
         </div>
-        <div className="col-sm-4 col-md-4">
+        <div className="col-xs-10 col-sm-8 col-md-4">
           <div className="respondent-container">
-            <div>{this.props.creditsTo.name}</div>
+            {this.props.creditsTo && this.props.creditsTo.name}
           </div>
         </div>
       </div>

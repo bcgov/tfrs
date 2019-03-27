@@ -392,14 +392,16 @@
   justify-content: center;
   padding: 2rem 0;
 
+  &.container {
+    margin: 0 auto;
+  }
+
   .col-md-4 {
     text-align: center;
   }
 
   .arrow {
-    display: inline-block;
-    margin: 2rem;
-    border-radius: 5px;
+    padding: 2rem;
     text-align: center;
 
     @include mobile {
@@ -479,7 +481,7 @@
   }
   .initiator-container {
     border-color: $green;
-    margin-right: 1em;
+
     &::before {
       content: "\f1bb\00a0";
       color: $green;
