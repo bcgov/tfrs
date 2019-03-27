@@ -1,9 +1,10 @@
 import Autocomplete from 'react-autocomplete';
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import axios from 'axios';
+
 import * as Routes from '../../../constants/routes';
-import {connect} from "react-redux";
 
 class AutocompletedInput extends Component {
   constructor (props) {
@@ -59,34 +60,30 @@ class AutocompletedInput extends Component {
   render () {
     return (
       <Autocomplete
+        getItemValue={item => (item)}
+        inputProps={this.props.inputProps}
         items={this.state.items}
         onChange={this._onChange}
-        inputProps={this.props.inputProps}
-        getItemValue={item => (item)}
-        value={this.props.value}
         onSelect={this._onSelect}
-        selectOnBlur
         renderItem={(item, isHighlighted) => (
           <div
+            className={`autocomplete-item ${isHighlighted ? 'highlight' : ''}`}
             key={item}
-            style={
-              {
-                background: isHighlighted ? '#ccc' : '#fff',
-              }
-            }
           >
             {item}
           </div>
         )}
         renderMenu={(items, value, style) => (
           <div
+            className={items.length > 0 ? `autocomplete-menu` : ''}
             style={{
               ...style,
               position: 'fixed',
               zIndex: '400'
             }}
-            children={items}
-          />
+          >
+            {items}
+          </div>
         )}
         renderInput={props => (
           <input
@@ -95,6 +92,8 @@ class AutocompletedInput extends Component {
             {...props}
           />
         )}
+        selectOnBlur
+        value={this.props.value}
         wrapperStyle={{}}
       />
     );
@@ -102,7 +101,8 @@ class AutocompletedInput extends Component {
 }
 
 AutocompletedInput.defaultProps = {
-  inputProps: {}
+  inputProps: {},
+  value: ''
 };
 
 AutocompletedInput.propTypes = {
@@ -114,11 +114,10 @@ AutocompletedInput.propTypes = {
 };
 
 const mapStateToProps = state => ({
-  cacheSerial: state.rootReducer.autocomplete.serial,
+  cacheSerial: state.rootReducer.autocomplete.serial
 });
 
 const mapDispatchToProps = dispatch => ({
 });
-
 
 export default connect(mapStateToProps, mapDispatchToProps)(AutocompletedInput);
