@@ -80,7 +80,7 @@ const SettingsDetails = props => (
       {!props.subscriptions.isFetching && props.subscriptions.success &&
       CONFIG.SECURE_DOCUMENT_UPLOAD.ENABLED && [
         <h3 key="header-doc">
-          File Submission {CONFIG.SECURE_DOCUMENT_UPLOAD.ENABLED}
+          File Submission
         </h3>,
         <NotificationsCreditTransactionsTable
           addToFields={props.addToFields}
