@@ -3,11 +3,10 @@
  */
 import React from 'react';
 import PropTypes from 'prop-types';
-import ReactTable from 'react-table';
 import 'react-table/react-table.css';
 
 import CheckBox from '../../app/components/CheckBox';
-import StateSavingReactTable from "../../app/components/StateSavingReactTable";
+import ReactTable from '../../app/components/StateSavingReactTable';
 
 const NotificationsCreditTransactionsTable = (props) => {
   const columns = [{
@@ -71,7 +70,7 @@ const NotificationsCreditTransactionsTable = (props) => {
   }];
 
   return (
-    <StateSavingReactTable
+    <ReactTable
       stateKey="notifications-credit-transactions"
       data={props.items}
       defaultPageSize={props.items.length}
