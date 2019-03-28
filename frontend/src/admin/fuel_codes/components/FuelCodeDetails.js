@@ -115,7 +115,7 @@ const FuelCodeDetails = props => (
         <div className="col-sm-6">
           <div className="form-group">
             <label htmlFor="facility-nameplate">Fuel Production Facility Nameplate Capacity (litres/GJ per year):
-              <div className="value">{props.item.facilityNameplate}</div>
+              <div className="value">{props.item.facilityNameplate.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')}</div>
             </label>
           </div>
         </div>
