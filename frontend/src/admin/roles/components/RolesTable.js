@@ -3,14 +3,11 @@
  */
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Link } from 'react-router-dom';
-import ReactTable from 'react-table';
-import FontAwesomeIcon from '@fortawesome/react-fontawesome';
 import 'react-table/react-table.css';
 
 import { ROLES } from '../../../constants/routes/Admin';
 import history from '../../../app/History';
-import StateSavingReactTable from "../../../app/components/StateSavingReactTable";
+import ReactTable from '../../../app/components/StateSavingReactTable';
 
 const RolesTable = (props) => {
   const columns = [{
@@ -23,18 +20,6 @@ const RolesTable = (props) => {
     accessor: item => (item.description),
     Header: 'Role',
     id: 'role'
-  }, {
-    accessor: 'id',
-    Cell: (row) => {
-      const viewUrl = ROLES.DETAILS.replace(':id', row.value);
-
-      return <Link to={viewUrl} key="view"><FontAwesomeIcon icon="box-open" /></Link>;
-    },
-    className: 'col-actions',
-    filterable: false,
-    Header: '',
-    id: 'actions',
-    maxWidth: 50
   }];
 
   const filterMethod = (filter, row, column) => {
@@ -47,7 +32,7 @@ const RolesTable = (props) => {
   const filterable = true;
 
   return (
-    <StateSavingReactTable
+    <ReactTable
       stateKey="roles"
       className="searchable"
       data={props.items}

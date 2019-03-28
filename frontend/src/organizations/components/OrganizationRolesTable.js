@@ -9,7 +9,7 @@ import 'react-table/react-table.css';
 
 import { ROLES } from '../../constants/routes/Admin';
 import history from '../../app/History';
-import StateSavingReactTable from "../../app/components/StateSavingReactTable";
+import ReactTable from '../../app/components/StateSavingReactTable';
 
 const OrganizationRolesTable = (props) => {
   const columns = [{
@@ -22,18 +22,6 @@ const OrganizationRolesTable = (props) => {
     accessor: item => (item.description),
     Header: 'Role',
     id: 'role'
-  }, {
-    accessor: 'id',
-    Cell: (row) => {
-      const viewUrl = ROLES.DETAILS.replace(':id', row.value);
-
-      return <Link to={viewUrl} key="view"><FontAwesomeIcon icon="box-open" /></Link>;
-    },
-    className: 'col-actions',
-    filterable: false,
-    Header: '',
-    id: 'actions',
-    maxWidth: 50
   }];
 
   const filterMethod = (filter, row, column) => {
@@ -46,7 +34,7 @@ const OrganizationRolesTable = (props) => {
   const filterable = true;
 
   return (
-    <StateSavingReactTable
+    <ReactTable
       stateKey="organizations-roles"
       className="searchable"
       data={props.items}
