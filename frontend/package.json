@@ -78,7 +78,8 @@
     "eslint-plugin-standard": "^3.1.0",
     "extract-text-webpack-plugin": "^3.0.2",
     "html-webpack-plugin": "^3.2.0",
-    "jest": "^23.6.0",
+    "istanbul-lib-report": "1.1.4",
+    "jest": "23.6.0",
     "node-sass": "^4.9.3",
     "react-scripts": "^0.9.5",
     "react-test-renderer": "~16.7.0",
@@ -95,20 +96,6 @@
     "build": "webpack",
     "test": "jest --coverage",
     "snyk-protect": "snyk protect"
-  },
-  "jest": {
-    "collectCoverageFrom": [
-      "src/**/*.{js,jsx}"
-    ],
-    "coverageThreshold": {
-      "global": {
-        "branches": 90,
-        "functions": 90,
-        "lines": 90,
-        "statements": -50
-      }
-    },
-    "testURL": "http://localhost/"
   },
   "snyk": false
 }
