@@ -66,7 +66,8 @@ class FuelCodeAddContainer extends Component {
   }
 
   _handleInputChange (event) {
-    const { value, name } = event.target;
+    const { name } = event.target;
+    let { value } = event.target;
     const fieldState = { ...this.state.fields };
 
     if (typeof fieldState[name] === 'object') {
@@ -75,6 +76,13 @@ class FuelCodeAddContainer extends Component {
         fields: fieldState
       });
     } else {
+      if (name === 'facilityNameplate') {
+        // as you're typing remove non-numeric values
+        // (this is so we don't mess our count, but we'll add commas later)
+        value = value.replace(/\D/g, '');
+        value = value.replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,');
+      }
+
       fieldState[name] = value;
       this.setState({
         fields: fieldState
@@ -94,7 +102,7 @@ class FuelCodeAddContainer extends Component {
       effectiveDate: this.state.fields.effectiveDate !== '' ? this.state.fields.effectiveDate : null,
       expiryDate: this.state.fields.expiryDate !== '' ? this.state.fields.expiryDate : null,
       facilityLocation: this.state.fields.facilityLocation,
-      facilityNameplate: this.state.fields.facilityNameplate !== '' ? this.state.fields.facilityNameplate : null,
+      facilityNameplate: this.state.fields.facilityNameplate !== '' ? this.state.fields.facilityNameplate.replace(/\D/g, '') : null,
       feedstock: this.state.fields.feedstock,
       feedstockLocation: this.state.fields.feedstockLocation,
       feedstockMisc: this.state.fields.feedstockMisc,
