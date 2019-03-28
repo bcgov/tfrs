@@ -3,8 +3,6 @@
  */
 import React from 'react';
 import PropTypes from 'prop-types';
-import FontAwesomeIcon from '@fortawesome/react-fontawesome';
-import { Link } from 'react-router-dom';
 import ReactTable from 'react-table';
 import 'react-table/react-table.css';
 import axios from 'axios';
@@ -117,18 +115,6 @@ class UserHistoryTable extends React.Component {
       id: 'fuelSupplier',
       minWidth: 100,
       sortable: false
-    }, {
-      accessor: item => item.creditTradeId,
-      Cell: (row) => {
-        const viewUrl = CREDIT_TRANSACTIONS.DETAILS.replace(':id', row.value);
-
-        return <Link to={viewUrl}><FontAwesomeIcon icon="box-open" /></Link>;
-      },
-      className: 'col-actions',
-      filterable: false,
-      Header: '',
-      id: 'actions',
-      width: 30
     }];
 
     const { data, pages, loading } = this.state;
