@@ -4,6 +4,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import AutocompletedInput from './AutocompletedInput';
+import InputWithTooltip from '../../../app/components/InputWithTooltip';
 
 const FuelCodeFormDetails = props => (
   <div className="fuel-code-details">
@@ -22,7 +23,8 @@ const FuelCodeFormDetails = props => (
                   name="fuelCode"
                   onChange={props.handleInputChange}
                   required="required"
-                  type="text"
+                  step="0.01"
+                  type="number"
                   value={props.fields.fuelCode}
                 />
               </div>
@@ -54,14 +56,15 @@ const FuelCodeFormDetails = props => (
         <div className="col-sm-6">
           <div className="form-group">
             <label htmlFor="carbon-intensity">Carbon Intensity (gCO<sub>2</sub>e/MJ):
-              <input
-                className="form-control"
+              <InputWithTooltip
+                allowNegative
+                dataNumberToFixed={2}
+                handleInputChange={props.handleInputChange}
                 id="carbon-intensity"
+                min="0"
                 name="carbonIntensity"
-                onChange={props.handleInputChange}
-                required="required"
+                required
                 step="0.01"
-                type="number"
                 value={props.fields.carbonIntensity}
               />
             </label>
@@ -229,7 +232,7 @@ const FuelCodeFormDetails = props => (
                 id="facility-nameplate"
                 name="facilityNameplate"
                 onChange={props.handleInputChange}
-                type="number"
+                type="text"
                 value={props.fields.facilityNameplate}
               />
             </label>
