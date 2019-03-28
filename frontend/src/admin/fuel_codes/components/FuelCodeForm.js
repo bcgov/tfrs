@@ -51,6 +51,10 @@ class FuelCodeForm extends Component {
       validationMessage.push('Please select a finished fuel transport mode.');
     }
 
+    if (this.props.fields.expiryDate < this.props.fields.effectiveDate) {
+      validationMessage.push('The expiry date proceeds the effective date.');
+    }
+
     return validationMessage;
   }
 
