@@ -4,14 +4,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
-import ReactTable from 'react-table';
 import 'react-table/react-table.css';
 import FontAwesomeIcon from '@fortawesome/react-fontawesome';
 import moment from 'moment';
 
 import history from '../../../app/History';
 import { FUEL_CODES } from '../../../constants/routes/Admin';
-import StateSavingReactTable from "../../../app/components/StateSavingReactTable";
+import ReactTable from '../../../app/components/StateSavingReactTable';
 
 const FuelCodesTable = (props) => {
   const columns = [{
@@ -87,7 +86,7 @@ const FuelCodesTable = (props) => {
     id: 'facility-loc',
     width: 250
   }, {
-    accessor: item => item.facilityNameplate,
+    accessor: item => (item.facilityNameplate ? item.facilityNameplate.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,') : ''),
     className: 'col-facility-nameplate',
     Header: 'Fuel Production Facility Nameplate Capacity',
     id: 'facility-nameplate',
@@ -152,7 +151,7 @@ const FuelCodesTable = (props) => {
   const filterable = true;
 
   return (
-    <StateSavingReactTable
+    <ReactTable
       statekey="fuel-codes"
       className="searchable"
       columns={columns}
