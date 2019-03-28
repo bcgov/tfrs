@@ -38,24 +38,4 @@ describe('Test Fuel Code Form', () => {
     const tree = component.toJSON();
     expect(tree).toMatchSnapshot();
   });
-
-  test('Click on the Submit button', () => {
-    const { root } = renderer.create(
-      <Provider store={store}>
-        <FuelCodeForm
-          addToFields={() => {}}
-          approvedFuels={approvedFuels}
-          errors={errors}
-          fields={fields}
-          handleInputChange={() => {}}
-          handleSubmit={() => {}}
-          title="Edit Fuel"
-          transportModes={transportModes}
-        />
-      </Provider>
-    );
-    console.log(root.instance);
-    root.instance.find('button.btn-primary').click();
-    // console.log(renderer.root.inst);
-  });
 });
