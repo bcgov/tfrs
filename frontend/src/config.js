@@ -27,6 +27,9 @@ const CONFIG = {
   },
   FUEL_CODES: {
     ENABLED: getConfig('fuel_codes.enabled', false)
+  },
+  CREDIT_TRANSFER: {
+    ENABLED: getConfig('credit_transfer.enabled', false)
   }
 };
 

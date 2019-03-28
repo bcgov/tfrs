@@ -16,7 +16,7 @@ const Footer = props => (
     </a>
     <div id="footerWrapper">
       <div id="footerAdminSection">
-        <div id="footerAdminLinksContainer" className="container">
+        <div id="footerAdminLinksContainer" className="container-fluid">
           <div id="footerAdminLinks" className="row">
             <ul className="inline">
               <li>
