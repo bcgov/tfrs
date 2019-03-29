@@ -25,32 +25,50 @@ class SpreadSheetBuilder(object):
 
         date_format = xlwt.easyxf(num_format_str='yyyy-mm-dd')
         quantity_format = xlwt.easyxf(num_format_str='#,##0')
-        value_format = xlwt.easyxf(num_format_str='#,##0.000')
+        value_format = xlwt.easyxf(num_format_str='#,##0.00')
         string_format = xlwt.XFStyle()
         header_style = xlwt.easyxf('font: bold on')
 
         columns = [
-            Column("Fuel Code", string_format, 4000, lambda f: f.fuel_code),
-            Column("Application Date", date_format, 4000, lambda f: f.application_date),
-            Column("Approval Date", date_format, 4000, lambda f: f.approval_date),
-            Column("Carbon Intensity", value_format, 4000, lambda f: f.carbon_intensity),
-            Column("Company", string_format, 6000, lambda f: f.company),
-            Column("Effective Date", date_format, 4000, lambda f: f.effective_date),
-            Column("Expiry Date", date_format, 4000, lambda f: f.expiry_date),
-            Column("Facility Location", string_format, 6000, lambda f: f.facility_location),
-            Column("Facility Nameplate", quantity_format, 4000, lambda f: f.facility_nameplate),
-            Column("Feedstock", string_format, 6000, lambda f: f.feedstock),
-            Column("Feedstock Location", string_format, 6000, lambda f: f.feedstock_location),
-            Column("Feedstock Misc", string_format, 6000, lambda f: f.feedstock_misc),
-            Column("Feedstock Transport Modes", string_format, 7000,
-                   lambda f: ", ".join(map(lambda tm: tm.name,
-                                           f.feedstock_transport_mode.all().order_by('name')))),
-            Column("Former Company", string_format, 6000, lambda f: f.former_company),
-            Column("Fuel", string_format, 5000, lambda f: f.fuel.name),
-            Column("Fuel Transport Modes", string_format, 7000,
-                   lambda f: ", ".join(map(lambda tm: tm.name,
-                                           f.fuel_transport_mode.all().order_by('name')))),
-            Column("Status", string_format, 4500, lambda f: f.status.status)
+            Column("Low Carbon Fuel Code", string_format, 5000,
+                   lambda f: f.fuel_code),
+            Column("Company", string_format, 6000,
+                   lambda f: f.company),
+            Column("Carbon Intensity", value_format, 4000,
+                   lambda f: f.carbon_intensity),
+            Column("Application Date", date_format, 4000,
+                   lambda f: f.application_date),
+            Column("Effective Date", date_format, 4000,
+                   lambda f: f.effective_date),
+            Column("Expiry Date", date_format, 4000,
+                   lambda f: f.expiry_date),
+            Column("Fuel", string_format, 5000,
+                   lambda f: f.fuel.name),
+            Column("Feedstock", string_format, 6000,
+                   lambda f: f.feedstock),
+            Column("Feedstock Location", string_format, 6000,
+                   lambda f: f.feedstock_location),
+            Column("Feedstock Misc", string_format, 6000,
+                   lambda f: f.feedstock_misc),
+            Column("Fuel Production Facility Location", string_format, 7500,
+                   lambda f: f.facility_location),
+            Column("Fuel Production Facility Nameplate Capacity",
+                   quantity_format, 10000,
+                   lambda f: f.facility_nameplate),
+            Column("Feedstock Transport Mode", string_format, 7000,
+                   lambda f: ", ".join(map(
+                       lambda tm: tm.name,
+                       f.feedstock_transport_mode.all().order_by('name')))),
+            Column("Finished Fuel Transport Mode", string_format, 7000,
+                   lambda f: ", ".join(map(
+                       lambda tm: tm.name,
+                       f.fuel_transport_mode.all().order_by('name')))),
+            Column("Former Company", string_format, 6000,
+                   lambda f: f.former_company),
+            Column("Approval Date", date_format, 4000,
+                   lambda f: f.approval_date),
+            Column("Status", string_format, 4500,
+                   lambda f: f.status.status)
         ]
 
         for col_index, col in enumerate(columns):
@@ -103,7 +121,7 @@ class SpreadSheetBuilder(object):
                 worksheet.write(row_index, 2, credit_trade.type.friendly_name)
 
             if credit_trade.type.the_type not in [
-                "Credit Validation", "Part 3 Award"]:
+                    "Credit Validation", "Part 3 Award"]:
                 worksheet.write(row_index, 3, credit_trade.credits_from.name)
 
             if credit_trade.type.the_type not in ["Credit Reduction"]:
