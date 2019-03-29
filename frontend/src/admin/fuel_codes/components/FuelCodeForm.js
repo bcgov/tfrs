@@ -52,7 +52,7 @@ class FuelCodeForm extends Component {
     }
 
     if (this.props.fields.expiryDate < this.props.fields.effectiveDate) {
-      validationMessage.push('The expiry date proceeds the effective date.');
+      validationMessage.push('The expiry date precedes the effective date.');
     }
 
     return validationMessage;
