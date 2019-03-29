@@ -106,7 +106,7 @@ class FuelCodeSaveSerializer(serializers.ModelSerializer):
         """
         if data['expiry_date'] < data['effective_date']:
             raise serializers.ValidationError({
-                'invalid': "The expiry date proceeds the effective date"
+                'invalid': "The expiry date precedes the effective date"
             })
 
         return data
