@@ -79,7 +79,7 @@ class FuelCodeEditContainer extends Component {
         feedstockTransportMode: item.feedstockTransportMode,
         formerCompany: item.formerCompany,
         fuel: item.fuel,
-        fuelCode: (item.fuelCode.indexOf('BCLCF') >= 0) ? item.fuelCode.replace(/BCLCF/g, '') : item.fuelCode,
+        fuelCode: `${item.fuelCodeVersion}${(item.fuelCodeVersionMinor) ? `.${item.fuelCodeVersionMinor}` : ''}`,
         fuelTransportMode: item.fuelTransportMode
       };
 
@@ -139,6 +139,7 @@ class FuelCodeEditContainer extends Component {
     event.preventDefault();
 
     const { id } = this.props.fuelCode.item;
+    const fuelCode = this.state.fields.fuelCode.split('.');
 
     // API data structure
     const data = {
@@ -156,7 +157,9 @@ class FuelCodeEditContainer extends Component {
       feedstockTransportMode: this.state.fields.feedstockTransportMode,
       formerCompany: this.state.fields.formerCompany,
       fuel: this.state.fields.fuel,
-      fuelCode: `BCLCF${this.state.fields.fuelCode}`,
+      fuelCode: 'BCLCF',
+      fuelCodeVersion: fuelCode.length > 0 ? fuelCode[0] : null,
+      fuelCodeVersionMinor: fuelCode.length > 1 ? fuelCode[1] : null,
       fuelTransportMode: this.state.fields.fuelTransportMode,
       status: this._getFuelCodeStatus(status).id
     };

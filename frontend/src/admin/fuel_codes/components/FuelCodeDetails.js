@@ -16,7 +16,7 @@ const FuelCodeDetails = props => (
         <div className="col-sm-6">
           <div className="form-group">
             <label htmlFor="fuel-code">Low Carbon Fuel Code:
-              <div className="value">{props.item.fuelCode}</div>
+              <div className="value">{props.item.fuelCode}{props.item.fuelCodeVersion}{props.item.fuelCodeVersionMinor && `.${props.item.fuelCodeVersionMinor}`}</div>
             </label>
           </div>
         </div>
@@ -204,6 +204,8 @@ FuelCodeDetails.propTypes = {
     formerCompany: PropTypes.string,
     fuel: PropTypes.string,
     fuelCode: PropTypes.string,
+    fuelCodeVersion: PropTypes.string,
+    fuelCodeVersionMinor: PropTypes.string,
     fuelTransportMode: PropTypes.arrayOf(PropTypes.string),
     id: PropTypes.number,
     status: PropTypes.shape({

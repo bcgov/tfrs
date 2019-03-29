@@ -93,6 +93,8 @@ class FuelCodeAddContainer extends Component {
   _handleSubmit (event, status = 'Draft') {
     event.preventDefault();
 
+    const fuelCode = this.state.fields.fuelCode.split('.');
+
     // API data structure
     const data = {
       applicationDate: this.state.fields.applicationDate !== '' ? this.state.fields.applicationDate : null,
@@ -109,7 +111,9 @@ class FuelCodeAddContainer extends Component {
       feedstockTransportMode: this.state.fields.feedstockTransportMode,
       formerCompany: this.state.fields.formerCompany,
       fuel: this.state.fields.fuel,
-      fuelCode: `BCLCF${this.state.fields.fuelCode}`,
+      fuelCode: 'BCLCF',
+      fuelCodeVersion: fuelCode.length > 0 ? fuelCode[0] : null,
+      fuelCodeVersionMinor: fuelCode.length > 1 ? fuelCode[1] : null,
       fuelTransportMode: this.state.fields.fuelTransportMode,
       status: this._getFuelCodeStatus(status).id
     };

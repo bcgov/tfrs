@@ -20,7 +20,7 @@ const FuelCodesTable = (props) => {
     resizable: false,
     width: 45
   }, {
-    accessor: item => `${item.fuelCode}`,
+    accessor: item => `${item.fuelCode}${item.fuelCodeVersion}${item.fuelCodeVersionMinor ? `.${item.fuelCodeVersionMinor}` : ''}`,
     className: 'col-title',
     Header: 'Low Carbon Fuel Code',
     id: 'title',
@@ -152,7 +152,7 @@ const FuelCodesTable = (props) => {
 
   return (
     <ReactTable
-      statekey="fuel-codes"
+      stateKey="fuel-codes"
       className="searchable"
       columns={columns}
       data={props.items}
