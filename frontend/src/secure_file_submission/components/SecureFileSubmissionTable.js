@@ -10,7 +10,7 @@ import moment from 'moment';
 
 import history from '../../app/History';
 import SECURE_DOCUMENT_UPLOAD from '../../constants/routes/SecureDocumentUpload';
-import StateSavingReactTable from "../../app/components/StateSavingReactTable";
+import ReactTable from '../../app/components/StateSavingReactTable';
 
 const SecureFileSubmissionTable = (props) => {
   const columns = [{
@@ -114,7 +114,7 @@ const SecureFileSubmissionTable = (props) => {
   const filterable = true;
 
   return (
-    <StateSavingReactTable
+    <ReactTable
       stateKey="sfs"
       className="searchable"
       columns={columns}
@@ -128,13 +128,14 @@ const SecureFileSubmissionTable = (props) => {
       filterable={filterable}
       getTrProps={(state, row) => {
         if (row && row.original) {
+          const securityScanFailed = row.original.status && row.original.status.status === 'Security Scan Failed';
           return {
             onClick: (e) => {
               const viewUrl = SECURE_DOCUMENT_UPLOAD.DETAILS.replace(':id', row.original.id);
 
               history.push(viewUrl);
             },
-            className: 'clickable'
+            className: `clickable ${securityScanFailed && 'scan-failed'}`
           };
         }
 
