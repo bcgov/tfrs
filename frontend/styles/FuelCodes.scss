@@ -41,6 +41,7 @@
   .fuel-code-details {
     div.value {
       font-weight: normal;
+      min-height: 2.5rem;
       padding: 0.5rem 1rem;
     }  
   }
@@ -49,7 +50,15 @@
 .adjust-tooltip {
   z-index: 99;
 
-  .tooltip-inner, .tooltip-arrow {
-    margin-bottom: 1.5rem;
+  &.adjust-for-facility-nameplate {
+    .tooltip-inner, .tooltip-arrow {
+      margin-bottom: 1.5rem;
+      white-space: normal;
+    }  
+  }
+
+  .tooltip-inner {
+    margin-left: -15rem;
+    white-space: nowrap;
   }
 }

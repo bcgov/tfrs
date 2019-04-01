@@ -115,7 +115,7 @@ const FuelCodeDetails = props => (
         <div className="col-sm-6">
           <div className="form-group">
             <label htmlFor="facility-nameplate">Fuel Production Facility Nameplate Capacity (litres/GJ per year):
-              <div className="value">{props.item.facilityNameplate}</div>
+              <div className="value">{props.item.facilityNameplate.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')}</div>
             </label>
           </div>
         </div>
@@ -125,14 +125,14 @@ const FuelCodeDetails = props => (
         <div className="col-sm-6">
           <div className="form-group">
             <label htmlFor="feedstock-transport-mode">Feedstock Transport Mode
-              <div className="value">{props.item.feedstockTransportMode.join(', ')}</div>
+              <div className="value">{props.item.feedstockTransportMode && props.item.feedstockTransportMode.join(', ')}</div>
             </label>
           </div>
         </div>
         <div className="col-sm-6">
           <div className="form-group">
             <label htmlFor="fuel-transport-mode">Finished Fuel Transport Mode
-              <div className="value">{props.item.fuelTransportMode.join(', ')}</div>
+              <div className="value">{props.item.fuelTransportMode && props.item.fuelTransportMode.join(', ')}</div>
             </label>
           </div>
         </div>
