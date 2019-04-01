@@ -15,7 +15,7 @@ import CREDIT_TRANSACTIONS from '../../constants/routes/CreditTransactions';
 import { CREDIT_TRANSFER_STATUS, CREDIT_TRANSFER_TYPES } from '../../constants/values';
 import { getCreditTransferType } from '../../actions/creditTransfersActions';
 import filterNumber from '../../utils/filters';
-import StateSavingReactTable from "../../app/components/StateSavingReactTable";
+import ReactTable from '../../app/components/StateSavingReactTable';
 
 const CreditTransferTable = (props) => {
   const columns = [{
@@ -133,7 +133,7 @@ const CreditTransferTable = (props) => {
   const filterable = true;
 
   return (
-    <StateSavingReactTable
+    <ReactTable
       stateKey="credit-transfers"
       className="searchable"
       data={props.items}
@@ -151,7 +151,7 @@ const CreditTransferTable = (props) => {
 
               history.push(viewUrl);
             },
-            className: (row && row.original.id.toString() === props.highlight) ? 'clickable highlight' : 'clickable'
+            className: `clickable ${(row && row.original.id.toString() === props.highlight) && 'highlight'}`
           };
         }
 
