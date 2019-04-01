@@ -3,10 +3,8 @@
  */
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Link } from 'react-router-dom';
 import 'react-table/react-table.css';
 import moment from 'moment';
-import FontAwesomeIcon from '@fortawesome/react-fontawesome';
 import numeral from 'numeral';
 
 import history from '../../app/History';
@@ -109,18 +107,6 @@ const CreditTransferTable = (props) => {
     Header: 'Last Updated On',
     id: 'updateTimestamp',
     minWidth: 95
-  }, {
-    accessor: 'id',
-    Cell: (row) => {
-      const viewUrl = CREDIT_TRANSACTIONS.DETAILS.replace(':id', row.value);
-
-      return <Link to={viewUrl}><FontAwesomeIcon icon="box-open" /></Link>;
-    },
-    className: 'col-actions',
-    filterable: false,
-    Header: '',
-    id: 'actions',
-    minWidth: 25
   }];
 
   const filterMethod = (filter, row, column) => {

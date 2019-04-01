@@ -3,9 +3,7 @@
  */
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Link } from 'react-router-dom';
 import 'react-table/react-table.css';
-import FontAwesomeIcon from '@fortawesome/react-fontawesome';
 import moment from 'moment';
 
 import history from '../../app/History';
@@ -90,18 +88,6 @@ const SecureFileSubmissionTable = (props) => {
     Header: 'Submitted On',
     id: 'updateTimestamp',
     minWidth: 65
-  }, {
-    accessor: 'id',
-    Cell: (row) => {
-      const viewUrl = SECURE_DOCUMENT_UPLOAD.DETAILS.replace(':id', row.value);
-
-      return <Link to={viewUrl}><FontAwesomeIcon icon="box-open" /></Link>;
-    },
-    className: 'col-actions',
-    filterable: false,
-    Header: '',
-    id: 'actions',
-    minWidth: 25
   }];
 
   const filterMethod = (filter, row, column) => {

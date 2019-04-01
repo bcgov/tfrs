@@ -2,23 +2,6 @@
 @import './mixins.scss';
 
 .ReactTable {
-  &.searchable {
-    .-filters {
-      .rt-th:last-child {
-        position: relative;
-        
-        &:before {
-          font-family: 'FontAwesome';
-          position: absolute;
-          content: "\f002";
-          left: 50%;
-          top: 50%;
-          transform: translate(-50%, -50%);
-        }
-      }
-    }
-  }
-
   .-filters .rt-th input[type=text] {
     border-color: $border-grey;
   }
