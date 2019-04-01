@@ -56,10 +56,10 @@ class User(AbstractUser, Auditable):
     title = models.CharField(
         max_length=100, blank=True, null=True, db_comment='Professional Title')
     phone = models.CharField(
-        max_length=17, blank=True, null=True,
+        max_length=50, blank=True, null=True,
         db_comment='Primary phone number')
     cell_phone = models.CharField(
-        max_length=17, blank=True, null=True,
+        max_length=50, blank=True, null=True,
         db_comment='Mobile phone number')
     organization = models.ForeignKey(
         'Organization', related_name='users', blank=True, null=True,
