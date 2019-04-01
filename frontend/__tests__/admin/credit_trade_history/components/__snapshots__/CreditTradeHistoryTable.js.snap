@@ -1,0 +1,1493 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`CreditTradeHistoryTable should display 1`] = `
+<div
+  className="ReactTable"
+  style={Object {}}
+>
+  <div
+    className="rt-table"
+    role="grid"
+  >
+    <div
+      className="rt-thead -header"
+      style={
+        Object {
+          "minWidth": "505px",
+        }
+      }
+    >
+      <div
+        className="rt-tr"
+        role="row"
+      >
+        <div
+          className="rt-th rt-resizable-header -cursor-pointer"
+          onClick={[Function]}
+          role="columnheader"
+          style={
+            Object {
+              "flex": "50 0 auto",
+              "maxWidth": null,
+              "width": "50px",
+            }
+          }
+          tabIndex="-1"
+        >
+          <div
+            className="rt-resizable-header-content"
+          >
+            User
+          </div>
+          <div
+            className="rt-resizer"
+            onMouseDown={[Function]}
+            onTouchStart={[Function]}
+          />
+        </div>
+        <div
+          className="rt-th rt-resizable-header -cursor-pointer"
+          onClick={[Function]}
+          role="columnheader"
+          style={
+            Object {
+              "flex": "50 0 auto",
+              "maxWidth": null,
+              "width": "50px",
+            }
+          }
+          tabIndex="-1"
+        >
+          <div
+            className="rt-resizable-header-content"
+          >
+            Action Taken
+          </div>
+          <div
+            className="rt-resizer"
+            onMouseDown={[Function]}
+            onTouchStart={[Function]}
+          />
+        </div>
+        <div
+          className="rt-th -cursor-pointer"
+          onClick={[Function]}
+          role="columnheader"
+          style={
+            Object {
+              "flex": "100 0 auto",
+              "maxWidth": "100px",
+              "width": "100px",
+            }
+          }
+          tabIndex="-1"
+        >
+          <div
+            className=""
+          >
+            Transaction ID
+          </div>
+        </div>
+        <div
+          className="rt-th rt-resizable-header -cursor-pointer"
+          onClick={[Function]}
+          role="columnheader"
+          style={
+            Object {
+              "flex": "100 0 auto",
+              "maxWidth": null,
+              "width": "100px",
+            }
+          }
+          tabIndex="-1"
+        >
+          <div
+            className="rt-resizable-header-content"
+          >
+            Initiator
+          </div>
+          <div
+            className="rt-resizer"
+            onMouseDown={[Function]}
+            onTouchStart={[Function]}
+          />
+        </div>
+        <div
+          className="rt-th rt-resizable-header -cursor-pointer"
+          onClick={[Function]}
+          role="columnheader"
+          style={
+            Object {
+              "flex": "100 0 auto",
+              "maxWidth": null,
+              "width": "100px",
+            }
+          }
+          tabIndex="-1"
+        >
+          <div
+            className="rt-resizable-header-content"
+          >
+            Respondent
+          </div>
+          <div
+            className="rt-resizer"
+            onMouseDown={[Function]}
+            onTouchStart={[Function]}
+          />
+        </div>
+        <div
+          className="rt-th rt-resizable-header -sort-desc -cursor-pointer"
+          onClick={[Function]}
+          role="columnheader"
+          style={
+            Object {
+              "flex": "75 0 auto",
+              "maxWidth": null,
+              "width": "75px",
+            }
+          }
+          tabIndex="-1"
+        >
+          <div
+            className="rt-resizable-header-content"
+          >
+            Timestamp
+          </div>
+          <div
+            className="rt-resizer"
+            onMouseDown={[Function]}
+            onTouchStart={[Function]}
+          />
+        </div>
+        <div
+          className="rt-th rt-resizable-header -cursor-pointer"
+          onClick={[Function]}
+          role="columnheader"
+          style={
+            Object {
+              "flex": "30 0 auto",
+              "maxWidth": "30px",
+              "width": "30px",
+            }
+          }
+          tabIndex="-1"
+        >
+          <div
+            className="rt-resizable-header-content"
+          >
+            
+          </div>
+          <div
+            className="rt-resizer"
+            onMouseDown={[Function]}
+            onTouchStart={[Function]}
+          />
+        </div>
+      </div>
+    </div>
+    <div
+      className="rt-tbody"
+      style={
+        Object {
+          "minWidth": "505px",
+        }
+      }
+    >
+      <div
+        className="rt-tr-group"
+        role="rowgroup"
+      >
+        <div
+          className="rt-tr -padRow -odd"
+          role="row"
+          style={Object {}}
+        >
+          <div
+            className="rt-td col-user"
+            role="gridcell"
+            style={
+              Object {
+                "flex": "50 0 auto",
+                "maxWidth": null,
+                "width": "50px",
+              }
+            }
+          >
+            <span>
+               
+            </span>
+          </div>
+          <div
+            className="rt-td col-action"
+            role="gridcell"
+            style={
+              Object {
+                "flex": "50 0 auto",
+                "maxWidth": null,
+                "width": "50px",
+              }
+            }
+          >
+            <span>
+               
+            </span>
+          </div>
+          <div
+            className="rt-td col-id"
+            role="gridcell"
+            style={
+              Object {
+                "flex": "100 0 auto",
+                "maxWidth": "100px",
+                "width": "100px",
+              }
+            }
+          >
+            <span>
+               
+            </span>
+          </div>
+          <div
+            className="rt-td col-initiator"
+            role="gridcell"
+            style={
+              Object {
+                "flex": "100 0 auto",
+                "maxWidth": null,
+                "width": "100px",
+              }
+            }
+          >
+            <span>
+               
+            </span>
+          </div>
+          <div
+            className="rt-td col-respondent"
+            role="gridcell"
+            style={
+              Object {
+                "flex": "100 0 auto",
+                "maxWidth": null,
+                "width": "100px",
+              }
+            }
+          >
+            <span>
+               
+            </span>
+          </div>
+          <div
+            className="rt-td col-timestamp"
+            role="gridcell"
+            style={
+              Object {
+                "flex": "75 0 auto",
+                "maxWidth": null,
+                "width": "75px",
+              }
+            }
+          >
+            <span>
+               
+            </span>
+          </div>
+          <div
+            className="rt-td col-actions"
+            role="gridcell"
+            style={
+              Object {
+                "flex": "30 0 auto",
+                "maxWidth": "30px",
+                "width": "30px",
+              }
+            }
+          >
+            <span>
+               
+            </span>
+          </div>
+        </div>
+      </div>
+      <div
+        className="rt-tr-group"
+        role="rowgroup"
+      >
+        <div
+          className="rt-tr -padRow -even"
+          role="row"
+          style={Object {}}
+        >
+          <div
+            className="rt-td col-user"
+            role="gridcell"
+            style={
+              Object {
+                "flex": "50 0 auto",
+                "maxWidth": null,
+                "width": "50px",
+              }
+            }
+          >
+            <span>
+               
+            </span>
+          </div>
+          <div
+            className="rt-td col-action"
+            role="gridcell"
+            style={
+              Object {
+                "flex": "50 0 auto",
+                "maxWidth": null,
+                "width": "50px",
+              }
+            }
+          >
+            <span>
+               
+            </span>
+          </div>
+          <div
+            className="rt-td col-id"
+            role="gridcell"
+            style={
+              Object {
+                "flex": "100 0 auto",
+                "maxWidth": "100px",
+                "width": "100px",
+              }
+            }
+          >
+            <span>
+               
+            </span>
+          </div>
+          <div
+            className="rt-td col-initiator"
+            role="gridcell"
+            style={
+              Object {
+                "flex": "100 0 auto",
+                "maxWidth": null,
+                "width": "100px",
+              }
+            }
+          >
+            <span>
+               
+            </span>
+          </div>
+          <div
+            className="rt-td col-respondent"
+            role="gridcell"
+            style={
+              Object {
+                "flex": "100 0 auto",
+                "maxWidth": null,
+                "width": "100px",
+              }
+            }
+          >
+            <span>
+               
+            </span>
+          </div>
+          <div
+            className="rt-td col-timestamp"
+            role="gridcell"
+            style={
+              Object {
+                "flex": "75 0 auto",
+                "maxWidth": null,
+                "width": "75px",
+              }
+            }
+          >
+            <span>
+               
+            </span>
+          </div>
+          <div
+            className="rt-td col-actions"
+            role="gridcell"
+            style={
+              Object {
+                "flex": "30 0 auto",
+                "maxWidth": "30px",
+                "width": "30px",
+              }
+            }
+          >
+            <span>
+               
+            </span>
+          </div>
+        </div>
+      </div>
+      <div
+        className="rt-tr-group"
+        role="rowgroup"
+      >
+        <div
+          className="rt-tr -padRow -odd"
+          role="row"
+          style={Object {}}
+        >
+          <div
+            className="rt-td col-user"
+            role="gridcell"
+            style={
+              Object {
+                "flex": "50 0 auto",
+                "maxWidth": null,
+                "width": "50px",
+              }
+            }
+          >
+            <span>
+               
+            </span>
+          </div>
+          <div
+            className="rt-td col-action"
+            role="gridcell"
+            style={
+              Object {
+                "flex": "50 0 auto",
+                "maxWidth": null,
+                "width": "50px",
+              }
+            }
+          >
+            <span>
+               
+            </span>
+          </div>
+          <div
+            className="rt-td col-id"
+            role="gridcell"
+            style={
+              Object {
+                "flex": "100 0 auto",
+                "maxWidth": "100px",
+                "width": "100px",
+              }
+            }
+          >
+            <span>
+               
+            </span>
+          </div>
+          <div
+            className="rt-td col-initiator"
+            role="gridcell"
+            style={
+              Object {
+                "flex": "100 0 auto",
+                "maxWidth": null,
+                "width": "100px",
+              }
+            }
+          >
+            <span>
+               
+            </span>
+          </div>
+          <div
+            className="rt-td col-respondent"
+            role="gridcell"
+            style={
+              Object {
+                "flex": "100 0 auto",
+                "maxWidth": null,
+                "width": "100px",
+              }
+            }
+          >
+            <span>
+               
+            </span>
+          </div>
+          <div
+            className="rt-td col-timestamp"
+            role="gridcell"
+            style={
+              Object {
+                "flex": "75 0 auto",
+                "maxWidth": null,
+                "width": "75px",
+              }
+            }
+          >
+            <span>
+               
+            </span>
+          </div>
+          <div
+            className="rt-td col-actions"
+            role="gridcell"
+            style={
+              Object {
+                "flex": "30 0 auto",
+                "maxWidth": "30px",
+                "width": "30px",
+              }
+            }
+          >
+            <span>
+               
+            </span>
+          </div>
+        </div>
+      </div>
+      <div
+        className="rt-tr-group"
+        role="rowgroup"
+      >
+        <div
+          className="rt-tr -padRow -even"
+          role="row"
+          style={Object {}}
+        >
+          <div
+            className="rt-td col-user"
+            role="gridcell"
+            style={
+              Object {
+                "flex": "50 0 auto",
+                "maxWidth": null,
+                "width": "50px",
+              }
+            }
+          >
+            <span>
+               
+            </span>
+          </div>
+          <div
+            className="rt-td col-action"
+            role="gridcell"
+            style={
+              Object {
+                "flex": "50 0 auto",
+                "maxWidth": null,
+                "width": "50px",
+              }
+            }
+          >
+            <span>
+               
+            </span>
+          </div>
+          <div
+            className="rt-td col-id"
+            role="gridcell"
+            style={
+              Object {
+                "flex": "100 0 auto",
+                "maxWidth": "100px",
+                "width": "100px",
+              }
+            }
+          >
+            <span>
+               
+            </span>
+          </div>
+          <div
+            className="rt-td col-initiator"
+            role="gridcell"
+            style={
+              Object {
+                "flex": "100 0 auto",
+                "maxWidth": null,
+                "width": "100px",
+              }
+            }
+          >
+            <span>
+               
+            </span>
+          </div>
+          <div
+            className="rt-td col-respondent"
+            role="gridcell"
+            style={
+              Object {
+                "flex": "100 0 auto",
+                "maxWidth": null,
+                "width": "100px",
+              }
+            }
+          >
+            <span>
+               
+            </span>
+          </div>
+          <div
+            className="rt-td col-timestamp"
+            role="gridcell"
+            style={
+              Object {
+                "flex": "75 0 auto",
+                "maxWidth": null,
+                "width": "75px",
+              }
+            }
+          >
+            <span>
+               
+            </span>
+          </div>
+          <div
+            className="rt-td col-actions"
+            role="gridcell"
+            style={
+              Object {
+                "flex": "30 0 auto",
+                "maxWidth": "30px",
+                "width": "30px",
+              }
+            }
+          >
+            <span>
+               
+            </span>
+          </div>
+        </div>
+      </div>
+      <div
+        className="rt-tr-group"
+        role="rowgroup"
+      >
+        <div
+          className="rt-tr -padRow -odd"
+          role="row"
+          style={Object {}}
+        >
+          <div
+            className="rt-td col-user"
+            role="gridcell"
+            style={
+              Object {
+                "flex": "50 0 auto",
+                "maxWidth": null,
+                "width": "50px",
+              }
+            }
+          >
+            <span>
+               
+            </span>
+          </div>
+          <div
+            className="rt-td col-action"
+            role="gridcell"
+            style={
+              Object {
+                "flex": "50 0 auto",
+                "maxWidth": null,
+                "width": "50px",
+              }
+            }
+          >
+            <span>
+               
+            </span>
+          </div>
+          <div
+            className="rt-td col-id"
+            role="gridcell"
+            style={
+              Object {
+                "flex": "100 0 auto",
+                "maxWidth": "100px",
+                "width": "100px",
+              }
+            }
+          >
+            <span>
+               
+            </span>
+          </div>
+          <div
+            className="rt-td col-initiator"
+            role="gridcell"
+            style={
+              Object {
+                "flex": "100 0 auto",
+                "maxWidth": null,
+                "width": "100px",
+              }
+            }
+          >
+            <span>
+               
+            </span>
+          </div>
+          <div
+            className="rt-td col-respondent"
+            role="gridcell"
+            style={
+              Object {
+                "flex": "100 0 auto",
+                "maxWidth": null,
+                "width": "100px",
+              }
+            }
+          >
+            <span>
+               
+            </span>
+          </div>
+          <div
+            className="rt-td col-timestamp"
+            role="gridcell"
+            style={
+              Object {
+                "flex": "75 0 auto",
+                "maxWidth": null,
+                "width": "75px",
+              }
+            }
+          >
+            <span>
+               
+            </span>
+          </div>
+          <div
+            className="rt-td col-actions"
+            role="gridcell"
+            style={
+              Object {
+                "flex": "30 0 auto",
+                "maxWidth": "30px",
+                "width": "30px",
+              }
+            }
+          >
+            <span>
+               
+            </span>
+          </div>
+        </div>
+      </div>
+      <div
+        className="rt-tr-group"
+        role="rowgroup"
+      >
+        <div
+          className="rt-tr -padRow -even"
+          role="row"
+          style={Object {}}
+        >
+          <div
+            className="rt-td col-user"
+            role="gridcell"
+            style={
+              Object {
+                "flex": "50 0 auto",
+                "maxWidth": null,
+                "width": "50px",
+              }
+            }
+          >
+            <span>
+               
+            </span>
+          </div>
+          <div
+            className="rt-td col-action"
+            role="gridcell"
+            style={
+              Object {
+                "flex": "50 0 auto",
+                "maxWidth": null,
+                "width": "50px",
+              }
+            }
+          >
+            <span>
+               
+            </span>
+          </div>
+          <div
+            className="rt-td col-id"
+            role="gridcell"
+            style={
+              Object {
+                "flex": "100 0 auto",
+                "maxWidth": "100px",
+                "width": "100px",
+              }
+            }
+          >
+            <span>
+               
+            </span>
+          </div>
+          <div
+            className="rt-td col-initiator"
+            role="gridcell"
+            style={
+              Object {
+                "flex": "100 0 auto",
+                "maxWidth": null,
+                "width": "100px",
+              }
+            }
+          >
+            <span>
+               
+            </span>
+          </div>
+          <div
+            className="rt-td col-respondent"
+            role="gridcell"
+            style={
+              Object {
+                "flex": "100 0 auto",
+                "maxWidth": null,
+                "width": "100px",
+              }
+            }
+          >
+            <span>
+               
+            </span>
+          </div>
+          <div
+            className="rt-td col-timestamp"
+            role="gridcell"
+            style={
+              Object {
+                "flex": "75 0 auto",
+                "maxWidth": null,
+                "width": "75px",
+              }
+            }
+          >
+            <span>
+               
+            </span>
+          </div>
+          <div
+            className="rt-td col-actions"
+            role="gridcell"
+            style={
+              Object {
+                "flex": "30 0 auto",
+                "maxWidth": "30px",
+                "width": "30px",
+              }
+            }
+          >
+            <span>
+               
+            </span>
+          </div>
+        </div>
+      </div>
+      <div
+        className="rt-tr-group"
+        role="rowgroup"
+      >
+        <div
+          className="rt-tr -padRow -odd"
+          role="row"
+          style={Object {}}
+        >
+          <div
+            className="rt-td col-user"
+            role="gridcell"
+            style={
+              Object {
+                "flex": "50 0 auto",
+                "maxWidth": null,
+                "width": "50px",
+              }
+            }
+          >
+            <span>
+               
+            </span>
+          </div>
+          <div
+            className="rt-td col-action"
+            role="gridcell"
+            style={
+              Object {
+                "flex": "50 0 auto",
+                "maxWidth": null,
+                "width": "50px",
+              }
+            }
+          >
+            <span>
+               
+            </span>
+          </div>
+          <div
+            className="rt-td col-id"
+            role="gridcell"
+            style={
+              Object {
+                "flex": "100 0 auto",
+                "maxWidth": "100px",
+                "width": "100px",
+              }
+            }
+          >
+            <span>
+               
+            </span>
+          </div>
+          <div
+            className="rt-td col-initiator"
+            role="gridcell"
+            style={
+              Object {
+                "flex": "100 0 auto",
+                "maxWidth": null,
+                "width": "100px",
+              }
+            }
+          >
+            <span>
+               
+            </span>
+          </div>
+          <div
+            className="rt-td col-respondent"
+            role="gridcell"
+            style={
+              Object {
+                "flex": "100 0 auto",
+                "maxWidth": null,
+                "width": "100px",
+              }
+            }
+          >
+            <span>
+               
+            </span>
+          </div>
+          <div
+            className="rt-td col-timestamp"
+            role="gridcell"
+            style={
+              Object {
+                "flex": "75 0 auto",
+                "maxWidth": null,
+                "width": "75px",
+              }
+            }
+          >
+            <span>
+               
+            </span>
+          </div>
+          <div
+            className="rt-td col-actions"
+            role="gridcell"
+            style={
+              Object {
+                "flex": "30 0 auto",
+                "maxWidth": "30px",
+                "width": "30px",
+              }
+            }
+          >
+            <span>
+               
+            </span>
+          </div>
+        </div>
+      </div>
+      <div
+        className="rt-tr-group"
+        role="rowgroup"
+      >
+        <div
+          className="rt-tr -padRow -even"
+          role="row"
+          style={Object {}}
+        >
+          <div
+            className="rt-td col-user"
+            role="gridcell"
+            style={
+              Object {
+                "flex": "50 0 auto",
+                "maxWidth": null,
+                "width": "50px",
+              }
+            }
+          >
+            <span>
+               
+            </span>
+          </div>
+          <div
+            className="rt-td col-action"
+            role="gridcell"
+            style={
+              Object {
+                "flex": "50 0 auto",
+                "maxWidth": null,
+                "width": "50px",
+              }
+            }
+          >
+            <span>
+               
+            </span>
+          </div>
+          <div
+            className="rt-td col-id"
+            role="gridcell"
+            style={
+              Object {
+                "flex": "100 0 auto",
+                "maxWidth": "100px",
+                "width": "100px",
+              }
+            }
+          >
+            <span>
+               
+            </span>
+          </div>
+          <div
+            className="rt-td col-initiator"
+            role="gridcell"
+            style={
+              Object {
+                "flex": "100 0 auto",
+                "maxWidth": null,
+                "width": "100px",
+              }
+            }
+          >
+            <span>
+               
+            </span>
+          </div>
+          <div
+            className="rt-td col-respondent"
+            role="gridcell"
+            style={
+              Object {
+                "flex": "100 0 auto",
+                "maxWidth": null,
+                "width": "100px",
+              }
+            }
+          >
+            <span>
+               
+            </span>
+          </div>
+          <div
+            className="rt-td col-timestamp"
+            role="gridcell"
+            style={
+              Object {
+                "flex": "75 0 auto",
+                "maxWidth": null,
+                "width": "75px",
+              }
+            }
+          >
+            <span>
+               
+            </span>
+          </div>
+          <div
+            className="rt-td col-actions"
+            role="gridcell"
+            style={
+              Object {
+                "flex": "30 0 auto",
+                "maxWidth": "30px",
+                "width": "30px",
+              }
+            }
+          >
+            <span>
+               
+            </span>
+          </div>
+        </div>
+      </div>
+      <div
+        className="rt-tr-group"
+        role="rowgroup"
+      >
+        <div
+          className="rt-tr -padRow -odd"
+          role="row"
+          style={Object {}}
+        >
+          <div
+            className="rt-td col-user"
+            role="gridcell"
+            style={
+              Object {
+                "flex": "50 0 auto",
+                "maxWidth": null,
+                "width": "50px",
+              }
+            }
+          >
+            <span>
+               
+            </span>
+          </div>
+          <div
+            className="rt-td col-action"
+            role="gridcell"
+            style={
+              Object {
+                "flex": "50 0 auto",
+                "maxWidth": null,
+                "width": "50px",
+              }
+            }
+          >
+            <span>
+               
+            </span>
+          </div>
+          <div
+            className="rt-td col-id"
+            role="gridcell"
+            style={
+              Object {
+                "flex": "100 0 auto",
+                "maxWidth": "100px",
+                "width": "100px",
+              }
+            }
+          >
+            <span>
+               
+            </span>
+          </div>
+          <div
+            className="rt-td col-initiator"
+            role="gridcell"
+            style={
+              Object {
+                "flex": "100 0 auto",
+                "maxWidth": null,
+                "width": "100px",
+              }
+            }
+          >
+            <span>
+               
+            </span>
+          </div>
+          <div
+            className="rt-td col-respondent"
+            role="gridcell"
+            style={
+              Object {
+                "flex": "100 0 auto",
+                "maxWidth": null,
+                "width": "100px",
+              }
+            }
+          >
+            <span>
+               
+            </span>
+          </div>
+          <div
+            className="rt-td col-timestamp"
+            role="gridcell"
+            style={
+              Object {
+                "flex": "75 0 auto",
+                "maxWidth": null,
+                "width": "75px",
+              }
+            }
+          >
+            <span>
+               
+            </span>
+          </div>
+          <div
+            className="rt-td col-actions"
+            role="gridcell"
+            style={
+              Object {
+                "flex": "30 0 auto",
+                "maxWidth": "30px",
+                "width": "30px",
+              }
+            }
+          >
+            <span>
+               
+            </span>
+          </div>
+        </div>
+      </div>
+      <div
+        className="rt-tr-group"
+        role="rowgroup"
+      >
+        <div
+          className="rt-tr -padRow -even"
+          role="row"
+          style={Object {}}
+        >
+          <div
+            className="rt-td col-user"
+            role="gridcell"
+            style={
+              Object {
+                "flex": "50 0 auto",
+                "maxWidth": null,
+                "width": "50px",
+              }
+            }
+          >
+            <span>
+               
+            </span>
+          </div>
+          <div
+            className="rt-td col-action"
+            role="gridcell"
+            style={
+              Object {
+                "flex": "50 0 auto",
+                "maxWidth": null,
+                "width": "50px",
+              }
+            }
+          >
+            <span>
+               
+            </span>
+          </div>
+          <div
+            className="rt-td col-id"
+            role="gridcell"
+            style={
+              Object {
+                "flex": "100 0 auto",
+                "maxWidth": "100px",
+                "width": "100px",
+              }
+            }
+          >
+            <span>
+               
+            </span>
+          </div>
+          <div
+            className="rt-td col-initiator"
+            role="gridcell"
+            style={
+              Object {
+                "flex": "100 0 auto",
+                "maxWidth": null,
+                "width": "100px",
+              }
+            }
+          >
+            <span>
+               
+            </span>
+          </div>
+          <div
+            className="rt-td col-respondent"
+            role="gridcell"
+            style={
+              Object {
+                "flex": "100 0 auto",
+                "maxWidth": null,
+                "width": "100px",
+              }
+            }
+          >
+            <span>
+               
+            </span>
+          </div>
+          <div
+            className="rt-td col-timestamp"
+            role="gridcell"
+            style={
+              Object {
+                "flex": "75 0 auto",
+                "maxWidth": null,
+                "width": "75px",
+              }
+            }
+          >
+            <span>
+               
+            </span>
+          </div>
+          <div
+            className="rt-td col-actions"
+            role="gridcell"
+            style={
+              Object {
+                "flex": "30 0 auto",
+                "maxWidth": "30px",
+                "width": "30px",
+              }
+            }
+          >
+            <span>
+               
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div
+    className="pagination-bottom"
+  >
+    <div
+      className="-pagination"
+    >
+      <div
+        className="-previous"
+      >
+        <button
+          className="-btn"
+          disabled={true}
+          onClick={[Function]}
+          type="button"
+        >
+          Previous
+        </button>
+      </div>
+      <div
+        className="-center"
+      >
+        <span
+          className="-pageInfo"
+        >
+          Page
+           
+          <div
+            className="-pageJump"
+          >
+            <input
+              onBlur={[Function]}
+              onChange={[Function]}
+              onKeyPress={[Function]}
+              type="number"
+              value={1}
+            />
+          </div>
+           
+          of
+           
+          <span
+            className="-totalPages"
+          >
+            1
+          </span>
+        </span>
+        <span
+          className="select-wrap -pageSizeOptions"
+        >
+          <select
+            onChange={[Function]}
+            value={10}
+          >
+            <option
+              value={5}
+            >
+              5
+               
+              rows
+            </option>
+            <option
+              value={10}
+            >
+              10
+               
+              rows
+            </option>
+            <option
+              value={15}
+            >
+              15
+               
+              rows
+            </option>
+            <option
+              value={20}
+            >
+              20
+               
+              rows
+            </option>
+            <option
+              value={25}
+            >
+              25
+               
+              rows
+            </option>
+            <option
+              value={50}
+            >
+              50
+               
+              rows
+            </option>
+            <option
+              value={100}
+            >
+              100
+               
+              rows
+            </option>
+          </select>
+        </span>
+      </div>
+      <div
+        className="-next"
+      >
+        <button
+          className="-btn"
+          disabled={true}
+          onClick={[Function]}
+          type="button"
+        >
+          Next
+        </button>
+      </div>
+    </div>
+  </div>
+  <div
+    className="rt-noData"
+  >
+    No rows found
+  </div>
+  <div
+    className="-loading -active"
+  >
+    <div
+      className="-loading-inner"
+    >
+      Loading...
+    </div>
+  </div>
+</div>
+`;

@@ -3,6 +3,7 @@
  */
 import React from 'react';
 import PropTypes from 'prop-types';
+
 import 'react-table/react-table.css';
 import moment from 'moment';
 
@@ -84,7 +85,7 @@ const FuelCodesTable = (props) => {
     id: 'facility-loc',
     width: 250
   }, {
-    accessor: item => item.facilityNameplate,
+    accessor: item => (item.facilityNameplate ? item.facilityNameplate.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,') : ''),
     className: 'col-facility-nameplate',
     Header: 'Fuel Production Facility Nameplate Capacity',
     id: 'facility-nameplate',
