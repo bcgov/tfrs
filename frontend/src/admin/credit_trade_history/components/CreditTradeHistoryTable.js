@@ -2,8 +2,6 @@
  * Presentational component
  */
 import React from 'react';
-import FontAwesomeIcon from '@fortawesome/react-fontawesome';
-import { Link } from 'react-router-dom';
 import ReactTable from 'react-table';
 import 'react-table/react-table.css';
 import axios from 'axios';
@@ -120,18 +118,6 @@ class CreditTradeHistoryTable extends React.Component {
       Header: 'Timestamp',
       id: 'updateTimestamp',
       minWidth: 75
-    }, {
-      accessor: item => item.creditTrade.id,
-      Cell: (row) => {
-        const viewUrl = CREDIT_TRANSACTIONS.DETAILS.replace(':id', row.value);
-
-        return <Link to={viewUrl}><FontAwesomeIcon icon="box-open" /></Link>;
-      },
-      className: 'col-actions',
-      filterable: false,
-      Header: '',
-      id: 'actions',
-      width: 30
     }];
 
     const { data, pages, loading } = this.state;
