@@ -38,5 +38,22 @@
     .col-actions, .col-status {
       text-align: center;
     }
+
+    .scan-failed {
+      background-color: $red;
+      color: $white;
+
+      svg {
+        color: $white;
+      }
+
+      &:hover {
+        color: $font;
+
+        svg {
+          color: $link-color;
+        }
+      }
+    }
   }
 }
