@@ -67,7 +67,6 @@ class TestFuelCodes(BaseTestCase):
         Test adding a fuel code as a government user
         """
         status_draft = FuelCodeStatus.objects.filter(status="Draft").first()
-        fuel_code = 'Test Fuel Code'
 
         payload = {
             'applicationDate': '2019-01-01',
@@ -84,7 +83,8 @@ class TestFuelCodes(BaseTestCase):
             'feedstockTransportMode': ['Pipeline', 'Truck'],
             'formerCompany': 'Test',
             'fuel': 'LNG',
-            'fuelCode': fuel_code,
+            'fuelCode': 'BCLCF',
+            'fuelCodeVersion': '101',
             'fuelTransportMode': ['Rail'],
             'status': status_draft.id
         }
@@ -101,7 +101,6 @@ class TestFuelCodes(BaseTestCase):
 
         fuel_code_obj = FuelCode.objects.get(id=response_data['id'])
 
-        self.assertEqual(fuel_code_obj.fuel_code, fuel_code)
         self.assertEqual(fuel_code_obj.fuel.name, 'LNG')
 
     def test_add_draft_as_fuel_supplier(self):
@@ -110,7 +109,6 @@ class TestFuelCodes(BaseTestCase):
         Note: This should fail
         """
         status_draft = FuelCodeStatus.objects.filter(status="Draft").first()
-        fuel_code = 'Test Fuel Code'
 
         payload = {
             'applicationDate': '2019-01-01',
@@ -127,7 +125,9 @@ class TestFuelCodes(BaseTestCase):
             'feedstockTransportMode': 'Test',
             'formerCompany': 'Test',
             'fuel': 'LNG',
-            'fuelCode': fuel_code,
+            'fuelCode': 'BCLCF',
+            'fuelCodeVersion': '101',
+            'fuelCodeVersionMinor': '1',
             'fuelTransportMode': 'Test',
             'status': status_draft.id
         }
@@ -161,7 +161,9 @@ class TestFuelCodes(BaseTestCase):
             'feedstock_transport_mode': ['Rail'],
             'former_company': 'Test',
             'fuel': 'LNG',
-            'fuel_code': 'Test Fuel Code',
+            'fuel_code': 'BCLCF',
+            'fuel_code_version': '101',
+            'fuel_code_version_minor': '1',
             'fuel_transport_mode': ['Rail'],
             'status': status_draft.id
         }
@@ -198,7 +200,9 @@ class TestFuelCodes(BaseTestCase):
             'feedstock_transport_mode': ['Rail'],
             'former_company': 'Test',
             'fuel': 'LNG',
-            'fuel_code': 'Test Fuel Code',
+            'fuel_code': 'BCLCF',
+            'fuel_code_version': '101',
+            'fuel_code_version_minor': '2',
             'fuel_transport_mode': ['Rail'],
             'status': status_draft.id
         }
@@ -219,7 +223,8 @@ class TestFuelCodes(BaseTestCase):
         Note: This should fail as you shouldn't be able to delete approved
         fuel codes
         """
-        status_approved = FuelCodeStatus.objects.filter(status="Approved").first()
+        status_approved = FuelCodeStatus.objects.filter(
+            status="Approved").first()
 
         data = {
             'application_date': '2019-01-01',
@@ -236,7 +241,9 @@ class TestFuelCodes(BaseTestCase):
             'feedstock_transport_mode': ['Rail'],
             'former_company': 'Test',
             'fuel': 'LNG',
-            'fuel_code': 'Test Fuel Code',
+            'fuel_code': 'BCLCF',
+            'fuel_code_version': '101',
+            'fuel_code_version_minor': '2',
             'fuel_transport_mode': ['Rail'],
             'status': status_approved.id
         }

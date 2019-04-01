@@ -24,6 +24,9 @@ from abc import ABC, abstractmethod
 
 from django.core.cache import caches
 from django.db import connection
+from django.db.models import Max
+
+from api.models.FuelCode import FuelCode
 
 cache = caches['autocomplete']
 
@@ -40,6 +43,51 @@ class Completion(ABC):
         pass
 
 
+class GetNextIncrement(Completion):
+    """
+    Gets the next available value by getting the max value provided
+    in 'increment' and filtered by 'column'
+    """
+
+    def __init__(self, table, column):
+        self.table = table
+        self.column = column
+
+        if column == 'fuel_code_version':
+            self.table = FuelCode
+            self.increment = 'fuel_code_version_minor'
+
+    def get_matches(self, q):
+        # get only digits
+        if not q.isdigit():
+            digits = ''
+
+            for character in q:
+                if character.isdigit():
+                    digits = digits + character
+
+            q = digits
+
+        if q == '':
+            return []
+
+        kwargs = {
+            self.column: q
+        }
+
+        query = self.table.objects.filter(**kwargs).aggregate(
+            Max(self.increment)
+        )
+
+        increment = query.get('{0}__max'.format(self.increment), None)
+
+        if increment:
+            return ['{version}.{increment}'.format(
+                version=q.strip(), increment=increment + 1)]
+
+        return []
+
+
 class SimpleDatabaseCompletion(Completion):
     """Completions based on a single column in SQLite or PostgreSQL"""
 
@@ -49,25 +97,27 @@ class SimpleDatabaseCompletion(Completion):
 
     def _get_matches_sqlite(self, q):
         with connection.cursor() as cursor:
-            cursor.execute("select distinct {col} from {table} WHERE {col} like '%%' || %s || '%%'"
-                           "order by {col} limit 10"
-                           .format(table=self.table, col=self.column),
-                           [q])
-
+            cursor.execute(
+                "SELECT DISTINCT {col} FROM {table}"
+                " WHERE {col} LIKE '%%' || %s || '%%'"
+                " ORDER BY {col} "
+                " LIMIT 10"
+                .format(table=self.table, col=self.column), [q]
+            )
             matches = [row[0] for row in cursor.fetchall]
             return matches
 
     def _get_matches_postgres(self, q):
         """Use Postgres Trigram extension for fancy, ranked matching"""
         with connection.cursor() as cursor:
-            cursor.execute("SELECT distinct {col}, similarity({col}, %s) as sim"
-                           " FROM {table}"
-                           " WHERE similarity({col}, %s) > 0.1"
-                           " ORDER BY sim DESC, {col}"
-                           " limit 10"
-                           .format(table=self.table, col=self.column),
-                           [q, q])
-
+            cursor.execute(
+                "SELECT DISTINCT {col}, similarity({col}, %s) AS sim"
+                " FROM {table}"
+                " WHERE similarity({col}, %s) > 0.1"
+                " ORDER BY sim DESC, {col}"
+                " LIMIT 10"
+                .format(table=self.table, col=self.column), [q, q]
+            )
             matches = [row[0] for row in cursor.fetchall()]
             return matches
 
@@ -94,7 +144,9 @@ class Autocomplete:
         'fuel_code.feedstock_misc': SimpleDatabaseCompletion(
             'fuel_code', 'feedstock_misc'),
         'fuel_code.facility_location': SimpleDatabaseCompletion(
-            'fuel_code', 'facility_location')
+            'fuel_code', 'facility_location'),
+        'fuel_code.fuel_code_version': GetNextIncrement(
+            'fuel_code', 'fuel_code_version'),
     }
 
     @staticmethod

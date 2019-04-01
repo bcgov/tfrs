@@ -89,6 +89,7 @@ class FuelCodeForm extends Component {
         >
           <FuelCodeFormDetails
             addToFields={this.props.addToFields}
+            edit={this.props.edit}
             fields={this.props.fields}
             approvedFuels={this.props.approvedFuels}
             transportModes={this.props.transportModes}

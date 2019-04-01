@@ -98,4 +98,3 @@ class FuelTransportMode(Auditable):
     db_table_comment = "Maintains a many-to-many relationship between the fuel code " \
                        "table and transport mode table to capture the fuel code finished fuel " \
                        "transport mode."
-

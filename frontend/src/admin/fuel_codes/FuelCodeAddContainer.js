@@ -68,6 +68,7 @@ class FuelCodeAddContainer extends Component {
   _handleInputChange (event) {
     const { name } = event.target;
     let { value } = event.target;
+
     const fieldState = { ...this.state.fields };
 
     if (typeof fieldState[name] === 'object') {

@@ -16,7 +16,7 @@ const FuelCodeDetails = props => (
         <div className="col-sm-6">
           <div className="form-group">
             <label htmlFor="fuel-code">Low Carbon Fuel Code:
-              <div className="value">{props.item.fuelCode}{props.item.fuelCodeVersion}{props.item.fuelCodeVersionMinor && `.${props.item.fuelCodeVersionMinor}`}</div>
+              <div className="value">{props.item.fuelCode}{props.item.fuelCodeVersion}{props.item.fuelCodeVersionMinor ? `.${props.item.fuelCodeVersionMinor}` : '.0'}</div>
             </label>
           </div>
         </div>

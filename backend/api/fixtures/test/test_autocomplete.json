@@ -12,7 +12,9 @@
     "feedstock_location": "Somewhere",
     "feedstock_misc": "Extra sticky",
     "former_company": null,
-    "fuel_code": "Submitted Fuel Code",
+    "fuel_code": "BCLCF",
+    "fuel_code_version": "100",
+    "fuel_code_version_minor": "0",
     "status": ["Approved"],
     "fuel": ["Biodiesel"]
   },
@@ -33,7 +35,9 @@
       "feedstock_location": "Someplace",
       "feedstock_misc": "Less sticky",
       "former_company": "Company A",
-      "fuel_code": "Submitted Fuel Code",
+      "fuel_code": "BCLCF",
+      "fuel_code_version": "101",
+      "fuel_code_version_minor": "0",
       "status": ["Approved"],
       "fuel": ["LNG"]
     },
@@ -55,7 +59,9 @@
       "feedstock_location": "Nowhere Nice",
       "feedstock_misc": "Extra buttery",
       "former_company": "Company A",
-      "fuel_code": "Submitted Fuel Code",
+      "fuel_code": "BCLCF",
+      "fuel_code_version": "101",
+      "fuel_code_version_minor": "1",
       "status": ["Approved"],
       "fuel": ["Ethanol"]
     },
@@ -76,7 +82,9 @@
       "feedstock_location": "!@#",
       "feedstock_misc": "",
       "former_company": "",
-      "fuel_code": "Submitted Fuel Code",
+      "fuel_code": "BCLCF",
+      "fuel_code_version": "102",
+      "fuel_code_version_minor": "0",
       "status": ["Approved"],
       "fuel": ["Propane"]
     },

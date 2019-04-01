@@ -79,7 +79,7 @@ class FuelCodeEditContainer extends Component {
         feedstockTransportMode: item.feedstockTransportMode,
         formerCompany: item.formerCompany,
         fuel: item.fuel,
-        fuelCode: `${item.fuelCodeVersion}${(item.fuelCodeVersionMinor) ? `.${item.fuelCodeVersionMinor}` : ''}`,
+        fuelCode: `${item.fuelCodeVersion}${(item.fuelCodeVersionMinor) ? `.${item.fuelCodeVersionMinor}` : '.0'}`,
         fuelTransportMode: item.fuelTransportMode
       };
 

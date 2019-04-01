@@ -22,6 +22,7 @@
     See the License for the specific language governing permissions and
     limitations under the License.
 """
+import json
 from rest_framework import status
 
 from api.services.Autocomplete import Autocomplete
@@ -37,6 +38,7 @@ class TestAutocomplete(BaseTestCase):
     ]
 
     def test_auto_complete(self):
+        """test autocomplete API"""
         result = Autocomplete.get_matches('fuel_code.company', 'Company')
         self.assertIn('Company A', result)
         self.assertGreaterEqual(len(result), 3)
@@ -45,7 +47,8 @@ class TestAutocomplete(BaseTestCase):
         self.assertIn('Company A', result)
         self.assertGreaterEqual(len(result), 2)
 
-        result = Autocomplete.get_matches('fuel_code.feedstock_location', 'here')
+        result = Autocomplete.get_matches(
+            'fuel_code.feedstock_location', 'here')
         self.assertIn('Nowhere Nice', result)
         self.assertIn('Somewhere', result)
         self.assertNotIn('Someplace', result)
@@ -53,8 +56,10 @@ class TestAutocomplete(BaseTestCase):
 
     def test_autocomplete_api_authorized(self):
         """test autocomplete API with an authorized user"""
-        response = self.clients['gov_analyst'].get('/api/autocomplete?field={}&q={}'
-                                                   .format('fuel_code.company', 'comp'))
+        response = self.clients['gov_analyst'].get(
+            '/api/autocomplete?field={}&q={}'.format(
+                'fuel_code.company', 'comp'))
+
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
         suggestions = response.json()
@@ -62,18 +67,37 @@ class TestAutocomplete(BaseTestCase):
 
     def test_autocomplete_api_unauthorized(self):
         """test autocomplete API with an unauthorized user"""
-        response = self.clients['fs_user_1'].get('/api/autocomplete?field={}&q={}'
-                                                   .format('fuel_code.company', 'com'))
+        response = self.clients['fs_user_1'].get(
+            '/api/autocomplete?field={}&q={}'.format(
+                'fuel_code.company', 'com'))
+
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
     def test_autocomplete_api_invalid_field(self):
         """test autocomplete API with an unknown field"""
-        response = self.clients['gov_analyst'].get('/api/autocomplete?field={}&q={}'
-                                                   .format('nonexistent.field', 'com'))
+        response = self.clients['gov_analyst'].get(
+            '/api/autocomplete?field={}&q={}'.format(
+                'nonexistent.field', 'com'))
+
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
     def test_autocomplete_api_bad_params(self):
         """test autocomplete API with a required parameter missing"""
-        response = self.clients['gov_analyst'].get('/api/autocomplete?field={}'
-                                                   .format('fuel_code.company', 'com'))
+        response = self.clients['gov_analyst'].get(
+            '/api/autocomplete?field={}'.format('fuel_code.company'))
+
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+    def test_autocomplete_increment_api(self):
+        """
+        test the get next increment function
+        """
+        response = self.clients['gov_analyst'].get(
+            '/api/autocomplete?field={}&q={}'.format(
+                'fuel_code.fuel_code_version', '101'))
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        response_data = json.loads(response.content.decode("utf-8"))
+
+        self.assertEqual(response_data, ["101.2"])

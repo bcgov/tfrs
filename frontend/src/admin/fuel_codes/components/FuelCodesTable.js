@@ -20,7 +20,7 @@ const FuelCodesTable = (props) => {
     resizable: false,
     width: 45
   }, {
-    accessor: item => `${item.fuelCode}${item.fuelCodeVersion}${item.fuelCodeVersionMinor ? `.${item.fuelCodeVersionMinor}` : ''}`,
+    accessor: item => `${item.fuelCode}${item.fuelCodeVersion}${item.fuelCodeVersionMinor ? `.${item.fuelCodeVersionMinor}` : '.0'}`,
     className: 'col-title',
     Header: 'Low Carbon Fuel Code',
     id: 'title',

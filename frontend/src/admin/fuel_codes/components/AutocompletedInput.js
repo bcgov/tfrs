@@ -15,6 +15,7 @@ class AutocompletedInput extends Component {
     };
 
     this._onChange = this._onChange.bind(this);
+    this._onKeyPress = this._onKeyPress.bind(this);
     this._onSelect = this._onSelect.bind(this);
   }
 
@@ -41,6 +42,14 @@ class AutocompletedInput extends Component {
     }
 
     return this.props.handleInputChange(event);
+  }
+
+  _onKeyPress (event) {
+    if (this.props.integersOnly) {
+      if (event.key.match(/\D/g)) {
+        event.preventDefault();
+      }
+    }
   }
 
   _onSelect (value) {
@@ -88,6 +97,7 @@ class AutocompletedInput extends Component {
         renderInput={props => (
           <input
             type="text"
+            onKeyPress={this._onKeyPress}
             className="form-control"
             {...props}
           />
@@ -102,15 +112,17 @@ class AutocompletedInput extends Component {
 
 AutocompletedInput.defaultProps = {
   inputProps: {},
+  integersOnly: false,
   value: ''
 };
 
 AutocompletedInput.propTypes = {
-  handleInputChange: PropTypes.func.isRequired,
   autocompleteFieldName: PropTypes.string.isRequired,
+  cacheSerial: PropTypes.number.isRequired,
+  handleInputChange: PropTypes.func.isRequired,
   inputProps: PropTypes.shape(),
-  value: PropTypes.any,
-  cacheSerial: PropTypes.number.isRequired
+  integersOnly: PropTypes.bool,
+  value: PropTypes.any
 };
 
 const mapStateToProps = state => ({

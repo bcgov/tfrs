@@ -41,8 +41,9 @@ class FuelCode(Auditable):
         db_comment="Low Carbon Fuel Code [2nd Part] (eg 101 in BCLCF101.4)"
     )
     fuel_code_version_minor = models.IntegerField(
-        blank=True,
-        null=True,
+        blank=False,
+        default=0,
+        null=False,
         db_comment="Low Carbon Fuel Code [3rd Part] (eg 4 in BCLCF101.4)"
     )
     company = models.CharField(
@@ -151,6 +152,8 @@ class FuelCode(Auditable):
 
     class Meta:
         db_table = 'fuel_code'
+        unique_together = (('fuel_code', 'fuel_code_version',
+                            'fuel_code_version_minor'),)
 
     db_table_comment = "Fuel Codes." \
                        "List of recognized fuel pathways in BC" \
