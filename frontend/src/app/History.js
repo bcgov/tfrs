@@ -1,4 +1,4 @@
-import createHistory from 'history/createBrowserHistory'; // 'history/createHashHistory' for  '#'
+import { createBrowserHistory } from 'history';
 
 let config = {};
 
@@ -16,6 +16,6 @@ if (build && window.location.host === 'dev-lowcarbonfuels.pathfinder.gov.bc.ca')
   };
 }
 
-const history = createHistory(config);
+const history = createBrowserHistory(config);
 
 export default history;

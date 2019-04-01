@@ -27,6 +27,10 @@ class FuelCodeForm extends Component {
       validationMessage.push('Please enter the carbon intensity.');
     }
 
+    if (this.props.fields.applicationDate === '') {
+      validationMessage.push('Please enter an application date.');
+    }
+
     if (this.props.fields.fuel === '') {
       validationMessage.push('Please select a fuel.');
     }
@@ -43,12 +47,16 @@ class FuelCodeForm extends Component {
       validationMessage.push('Please enter a fuel production facility location.');
     }
 
-    if (this.props.fields.feedstockTransportMode === '') {
+    if (this.props.fields.feedstockTransportMode.length === 0) {
       validationMessage.push('Please select a feedstock transport mode.');
     }
 
-    if (this.props.fields.fuelTransportMode === '') {
+    if (this.props.fields.fuelTransportMode.length === 0) {
       validationMessage.push('Please select a finished fuel transport mode.');
+    }
+
+    if (this.props.fields.expiryDate < this.props.fields.effectiveDate) {
+      validationMessage.push('The expiry date precedes the effective date.');
     }
 
     return validationMessage;
@@ -57,16 +65,16 @@ class FuelCodeForm extends Component {
   _getValidationMessagesForApproval () {
     const validationMessage = this._getValidationMessagesForDraft();
 
-    if (this.props.fields.applicationDate === '') {
-      validationMessage.push('Please enter an application date.');
-    }
-
     if (this.props.fields.effectiveDate === '') {
       validationMessage.push('Please enter an effective date.');
     }
 
     if (this.props.fields.expiryDate === '') {
       validationMessage.push('Please enter an expiry date.');
+    }
+
+    if (this.props.fields.facilityNameplate === '') {
+      validationMessage.push('Please enter a fuel production facility nameplate capacity.');
     }
 
     if (this.props.fields.approvalDate === '') {
@@ -117,7 +125,7 @@ class FuelCodeForm extends Component {
                 </button>
               </TooltipWhenDisabled>
               <TooltipWhenDisabled
-                className="adjust-tooltip"
+                className={`adjust-tooltip ${this.props.fields.facilityNameplate === '' ? 'adjust-for-facility-nameplate' : ''}`}
                 disabled={this._getValidationMessagesForApproval().length > 0}
                 title={this._getValidationMessagesForApproval()}
               >
