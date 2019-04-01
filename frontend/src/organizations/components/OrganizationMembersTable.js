@@ -4,14 +4,12 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import FontAwesomeIcon from '@fortawesome/react-fontawesome';
-import { Link } from 'react-router-dom';
 import 'react-table/react-table.css';
 
 import history from '../../app/History';
 import { USERS as ADMIN_USERS } from '../../constants/routes/Admin';
 import USERS from '../../constants/routes/Users';
-import StateSavingReactTable from "../../app/components/StateSavingReactTable";
+import ReactTable from '../../app/components/StateSavingReactTable';
 
 const OrganizationMembersTable = (props) => {
   const columns = [{
@@ -45,22 +43,6 @@ const OrganizationMembersTable = (props) => {
     Header: 'Status',
     id: 'status',
     minWidth: 100
-  }, {
-    accessor: item => item.id,
-    Cell: (row) => {
-      let viewUrl = USERS.DETAILS.replace(':id', row.value);
-
-      if (document.location.pathname.indexOf('/admin/') >= 0) {
-        viewUrl = ADMIN_USERS.DETAILS.replace(':id', row.value);
-      }
-
-      return <Link to={viewUrl} key="view"><FontAwesomeIcon icon="box-open" /></Link>;
-    },
-    className: 'col-actions',
-    filterable: false,
-    Header: '',
-    id: 'actions',
-    maxWidth: 50
   }];
 
   const filterMethod = (filter, row, column) => {
@@ -73,7 +55,7 @@ const OrganizationMembersTable = (props) => {
   const filterable = true;
 
   return (
-    <StateSavingReactTable
+    <ReactTable
       stateKey="organizations-members"
       className="searchable"
       data={props.items}
