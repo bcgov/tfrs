@@ -100,6 +100,17 @@ class FuelCodeSaveSerializer(serializers.ModelSerializer):
         queryset=TransportMode.objects.all()
     )
 
+    def validate(self, data):
+        """
+        Validation to check that the expiry date is after the effective date.
+        """
+        if data['expiry_date'] < data['effective_date']:
+            raise serializers.ValidationError({
+                'invalid': "The expiry date precedes the effective date"
+            })
+
+        return data
+
     def create(self, validated_data):
         feedstock_modes = validated_data.pop('feedstock_transport_mode')
         fuel_modes = validated_data.pop('fuel_transport_mode')
