@@ -204,7 +204,11 @@ node("master-maven-${env.BUILD_NUMBER}") {
         sh returnStdout: true, script: "oc exec ${postgresql_pod_name} -c postgresql96 -n mem-tfrs-test -- bash /postgresql-backup/tfrs-backup.sh ${env.tfrs_release} test"
         echo 'backup script completed'
     }
-
+	
+    stage ('Last confirmation to deploy to Test') {
+        input "Maintenance Page is up and Test Database backup has completed, confirm to deploy ${env.tfrs_release} to Test? This is the last confirmation required."
+    }
+	
     stage('Deploy Backend to Test') {
         openshiftTag destStream: 'tfrs', verbose: 'true', destTag: 'test', srcStream: 'tfrs', srcTag: "${IMAGE_HASH_BACKEND}"
         sh 'sleep 5s'
@@ -221,7 +225,6 @@ node("master-maven-${env.BUILD_NUMBER}") {
     }
 
     stage('Deploy Frontend on Test') {
-        input "Maintenance Page is up and Test Database backup has completed, confirm to deploy ${env.tfrs_release} to Test? This is the last confirmation required."
         openshiftTag destStream: 'client', verbose: 'true', destTag: 'test', srcStream: 'client', srcTag: "${IMAGE_HASH_FRONTEND}"
         sh 'sleep 5s'
         openshiftVerifyDeployment depCfg: 'client', namespace: 'mem-tfrs-test', replicaCount: 1, verbose: 'false', waitTime: '10', waitUnit: 'min'
@@ -265,8 +268,11 @@ node("master-maven-${env.BUILD_NUMBER}") {
         echo 'backup script completed'
     }
 
-    stage('Deploy Backend to Prod') {
+    stage ('Last confirmation to deploy to Prod') {
         input "Maintenance Page is up and Prod Database backup has completed, confirm to deploy ${env.tfrs_release} to Prod? This is the last confirmation required."
+    }
+	
+    stage('Deploy Backend to Prod') {
         openshiftTag destStream: 'tfrs', verbose: 'true', destTag: 'prod', srcStream: 'tfrs', srcTag: "${IMAGE_HASH_BACKEND}"
         sh 'sleep 5s'
         openshiftVerifyDeployment depCfg: 'tfrs', namespace: 'mem-tfrs-prod', replicaCount: 1, verbose: 'false', waitTime: '10', waitUnit: 'min'
@@ -282,7 +288,6 @@ node("master-maven-${env.BUILD_NUMBER}") {
     }    
 	
     stage('Deploy Frontend on Prod') {
-        input "Maintenance Page is up and Prod Database backup has completed, confirm to deploy ${env.tfrs_release} to Prod? This is the last confirmation required."
         openshiftTag destStream: 'client', verbose: 'true', destTag: 'prod', srcStream: 'client', srcTag: "${IMAGE_HASH_FRONTEND}"
         sh 'sleep 5s'
         openshiftVerifyDeployment depCfg: 'client', namespace: 'mem-tfrs-prod', replicaCount: 1, verbose: 'false', waitTime: '10', waitUnit: 'min'
