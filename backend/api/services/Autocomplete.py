@@ -81,7 +81,7 @@ class GetNextIncrement(Completion):
 
         increment = query.get('{0}__max'.format(self.increment), None)
 
-        if increment:
+        if increment is not None:
             return ['{version}.{increment}'.format(
                 version=q.strip(), increment=increment + 1)]
 
