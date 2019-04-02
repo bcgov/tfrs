@@ -104,6 +104,12 @@ class FuelCodeCreateSerializer(serializers.ModelSerializer):
     )
 
     def validate(self, data):
+        """
+        Validation
+        Checks that the fuel code is not a duplicate
+        Checks that the fuel code isn't skipping any version
+        Checks that the expiry date is after the effective date.
+        """
         # check if fuel code is correct
         fuel_code = data.get('fuel_code')
         fuel_code_version = data.get('fuel_code_version')
@@ -139,6 +145,11 @@ class FuelCodeCreateSerializer(serializers.ModelSerializer):
                         next_available_version[0]
                     )
                 )
+
+        if data['expiry_date'] < data['effective_date']:
+            raise serializers.ValidationError({
+                'invalid': "The expiry date precedes the effective date"
+            })
 
         return data
 
@@ -193,6 +204,17 @@ class FuelCodeSaveSerializer(serializers.ModelSerializer):
         slug_field='name',
         queryset=TransportMode.objects.all()
     )
+
+    def validate(self, data):
+        """
+        Checks that the expiry date is after the effective date.
+        """
+        if data['expiry_date'] < data['effective_date']:
+            raise serializers.ValidationError({
+                'invalid': "The expiry date precedes the effective date"
+            })
+
+        return data
 
     def destroy(self):
         """
