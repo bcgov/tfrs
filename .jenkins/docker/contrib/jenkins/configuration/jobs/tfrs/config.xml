@@ -29,7 +29,7 @@
     <data>
       <jenkins.branch.BranchSource>
         <source class="org.jenkinsci.plugins.github_branch_source.GitHubSCMSource" plugin="github-branch-source@2.3.6">
-          <id>841d3e93-e43b-4d52-a00b-b8744a388b12</id>
+          <id>6809510e-2eee-4a66-908d-c06ca4646bea</id>
           <credentialsId>github-account</credentialsId>
           <repoOwner>jleach</repoOwner>
           <repository>tfrs</repository>
