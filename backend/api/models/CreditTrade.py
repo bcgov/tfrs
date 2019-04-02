@@ -73,7 +73,7 @@ class CreditTrade(Auditable):
         db_comment="Number of credits to be transferred on approval"
     )
     fair_market_value_per_credit = models.DecimalField(
-        null=True, blank=True, max_digits=999,
+        null=True, blank=True, max_digits=10,
         decimal_places=2,
         default=Decimal('0.00'),
         validators=[validators.CreditTradeFairMarketValueValidator],

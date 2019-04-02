@@ -54,6 +54,7 @@ const OrganizationMembers = (props) => {
       {isFetching && <Loading />}
       {!isFetching && props.members &&
         <OrganizationMembersTable
+          stateKey={`organizations-members-${props.organizationId}`}
           items={users}
           loggedInUser={props.loggedInUser}
         />
