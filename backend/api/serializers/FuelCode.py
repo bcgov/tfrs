@@ -104,7 +104,6 @@ class FuelCodeCreateSerializer(serializers.ModelSerializer):
     )
 
     def validate(self, data):
-        print('wow')
         # check if fuel code is correct
         fuel_code = data.get('fuel_code')
         fuel_code_version = data.get('fuel_code_version')
@@ -115,10 +114,6 @@ class FuelCodeCreateSerializer(serializers.ModelSerializer):
             fuel_code_version=fuel_code_version,
             fuel_code_version_minor=fuel_code_version_minor
         )
-
-        print(fuel_code)
-        print(fuel_code_version)
-        print(fuel_code_version_minor)
 
         if matches.exists():
             raise serializers.ValidationError(
@@ -134,8 +129,6 @@ class FuelCodeCreateSerializer(serializers.ModelSerializer):
         next_available_version = Autocomplete.get_matches(
             'fuel_code.fuel_code_version', str(fuel_code_version))
 
-        print(next_available_version)
-        print('wow')
         if next_available_version:
             if next_available_version[0] != '{}.{}'.format(
                     fuel_code_version,
