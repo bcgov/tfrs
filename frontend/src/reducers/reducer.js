@@ -16,6 +16,7 @@ import { referenceData } from './referenceDataReducer';
 import sessionTimeout from './sessionTimeoutReducer';
 import tableState from './tableStateReducer';
 import { autocomplete } from './autocompleteReducer';
+import {defaultCarbonIntensities, carbonIntensityLimits, energyDensities, energyEffectivenessRatios} from "./creditCalculationReducers";
 
 const rootReducer = combineReducers({
   autocomplete,
@@ -43,7 +44,11 @@ const rootReducer = combineReducers({
   tableState,
   userAdmin,
   userRequest,
-  userViewRequest
+  userViewRequest,
+  defaultCarbonIntensities,
+  carbonIntensityLimits,
+  energyDensities,
+  energyEffectivenessRatios
 });
 
 export default rootReducer;
