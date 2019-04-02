@@ -53,5 +53,6 @@ from . import DocumentHistory
 from . import DocumentFileAttachment
 from . import ApprovedFuel
 from . import TransportMode
+from . import CarbonIntensityLimits
 
 patch_fields()
