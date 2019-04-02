@@ -139,7 +139,7 @@ const FuelCodesTable = (props) => {
 
   return (
     <ReactTable
-      statekey="fuel-codes"
+      stateKey="fuel-codes"
       className="searchable"
       columns={columns}
       data={props.items}

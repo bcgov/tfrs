@@ -2,7 +2,10 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { Link } from 'react-router-dom';
 
-import { CREDIT_TRANSACTIONS_HISTORY, FUEL_CODES, HISTORICAL_DATA_ENTRY, ROLES, USERS } from '../../constants/routes/Admin';
+import {
+  COMPLIANCE_REPORTING, CREDIT_TRANSACTIONS_HISTORY, FUEL_CODES,
+  HISTORICAL_DATA_ENTRY, ROLES, USERS
+} from '../../constants/routes/Admin';
 import PERMISSIONS_CREDIT_TRANSACTIONS from '../../constants/permissions/CreditTransactions';
 import CONFIG from '../../config';
 
@@ -52,6 +55,16 @@ const AdminTabs = props => (
       >
         <Link to={FUEL_CODES.LIST}>
           Fuel Codes
+        </Link>
+      </li>
+    }
+    {CONFIG.COMPLIANCE_REPORTING.ENABLED &&
+      <li
+        role="presentation"
+        className={`${(props.active === 'compliance-reporting') ? 'active' : ''}`}
+      >
+        <Link to={COMPLIANCE_REPORTING.LIST}>
+          Compliance Reporting
         </Link>
       </li>
     }
