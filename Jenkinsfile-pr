@@ -169,6 +169,14 @@ stages {
         script {
           openshift.withCluster() {
             openshift.withProject(TOOLS_PROJECT) {
+          
+              echo "Frontend-angular-app build started"
+              notifyStageStatus ("Frontend-angular-app build", "PENDING")
+              def appBuildFrontendAngularApp = openshift.selector("bc", "tfrs-frontend-angular-app${NAME_SUFFIX}")
+              appBuildFrontendAngularApp.startBuild("--wait", "--env=ENABLE_DATA_ENTRY=True").logs("-f")
+              notifyStageStatus ("Frontend-angular-app build", "SUCCESS")
+              echo "Frontend-angular-app build completed"
+              
               echo "Frontend build started"
               notifyStageStatus ("Frontend build", "PENDING")
               def appBuildFrontend = openshift.selector("bc", "tfrs-frontend${NAME_SUFFIX}")
