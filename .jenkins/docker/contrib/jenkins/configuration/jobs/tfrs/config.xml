@@ -32,7 +32,7 @@
           <id>6809510e-2eee-4a66-908d-c06ca4646bea</id>
           <credentialsId>github-account</credentialsId>
           <repoOwner>kuanfandevops</repoOwner>
-          <repository>tfrs</repository>
+          <repository>bcgov/tfrs</repository>
           <traits>
             <org.jenkinsci.plugins.github__branch__source.OriginPullRequestDiscoveryTrait>
               <strategyId>2</strategyId>
