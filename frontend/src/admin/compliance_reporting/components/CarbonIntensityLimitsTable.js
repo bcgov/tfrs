@@ -10,27 +10,27 @@ import ReactTable from '../../../app/components/StateSavingReactTable';
 
 const CarbonIntensityLimitsTable = (props) => {
   const columns = [{
-    accessor: item => (item.compliancePeriod ? item.compliancePeriod.description : ''),
+    accessor: item => item.name,
     className: 'col-title',
     Header: 'Compliance Period',
     id: 'title'
   }, {
-    accessor: item => item.dieselClassLimit,
+    accessor: item => (item.limits.diesel ? item.limits.diesel.density : 0),
     className: 'col-diesel',
     Header: (
       <div>
         Carbon Intensity Limit for Diesel Class Fuel
-        <div>gCO<sub>2</sub>e/MJ</div>
+        <div className="unit-of-measure">gCO<sub>2</sub>e/MJ</div>
       </div>
     ),
     id: 'diesel'
   }, {
-    accessor: item => item.gasolineClassLimit,
+    accessor: item => (item.limits.diesel ? item.limits.gasoline.density : 0),
     className: 'col-gasoline',
     Header: (
       <div>
         Carbon Intensity Limit for Gasoline Class Fuel
-        <div>gCO<sub>2</sub>e/MJ</div>
+        <div className="unit-of-measure">gCO<sub>2</sub>e/MJ</div>
       </div>
     ),
     id: 'gasoline'

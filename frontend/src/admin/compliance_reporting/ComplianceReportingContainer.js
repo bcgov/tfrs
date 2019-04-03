@@ -24,29 +24,12 @@ class ComplianceReportingContainer extends Component {
   render () {
     return ([
       <AdminTabs
-        active="fuel-codes"
+        active="compliance-reporting"
         key="nav"
         loggedInUser={this.props.loggedInUser}
       />,
       <ComplianceReportingPage
-        carbonIntensityLimits={{
-          items: [{
-            compliancePeriod: {
-              id: 1,
-              description: '2017'
-            },
-            dieselClassLimit: '90.02',
-            gasolineClassLimit: '83.74'
-          }, {
-            compliancePeriod: {
-              id: 2,
-              description: '2018'
-            },
-            dieselClassLimit: '88.60',
-            gasolineClassLimit: '82.41'
-          }],
-          isFetching: false
-        }}
+        carbonIntensityLimits={this.props.carbonIntensityLimits}
         key="compliance-reporting"
         loggedInUser={this.props.loggedInUser}
         title="Compliance Reporting"
@@ -59,10 +42,18 @@ ComplianceReportingContainer.defaultProps = {
 };
 
 ComplianceReportingContainer.propTypes = {
+  carbonIntensityLimits: PropTypes.shape({
+    isFetching: PropTypes.bool,
+    items: PropTypes.arrayOf(PropTypes.shape())
+  }).isRequired,
   loggedInUser: PropTypes.shape().isRequired
 };
 
 const mapStateToProps = state => ({
+  carbonIntensityLimits: {
+    isFetching: state.rootReducer.carbonIntensityLimits.isFetching,
+    items: state.rootReducer.carbonIntensityLimits.items
+  },
   loggedInUser: state.rootReducer.userRequest.loggedInUser
 });
 

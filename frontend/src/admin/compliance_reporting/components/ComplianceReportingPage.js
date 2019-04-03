@@ -9,7 +9,7 @@ const ComplianceReportingPage = (props) => {
   const isEmpty = items.length === 0;
 
   return (
-    <div className="page-fuel-codes">
+    <div className="page-compliance-reporting">
       <h1>{props.title}</h1>
       <div className="right-toolbar-container">
         <div className="actions-container" />
