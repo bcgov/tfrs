@@ -1,0 +1,188 @@
+import groovy.json.JsonOutput
+import bcgov.GitHubHelper
+
+// Notify stage status and pass to Jenkins-GitHub library
+void notifyStageStatus (String name, String status) {
+    GitHubHelper.createCommitStatus(
+        this,
+        GitHubHelper.getPullRequestLastCommitId(this),
+        status,
+        "${env.BUILD_URL}",
+        "",
+        "Stage: ${name}"
+    )
+}
+
+// Create deployment status and pass to Jenkins-GitHub library
+void createDeploymentStatus (String suffix, String status, String targetURL) {
+    def ghDeploymentId = new GitHubHelper().createDeployment(
+        this,
+        "pull/${env.CHANGE_ID}/head",
+        [
+            'environment':"${suffix}",
+            'task':"deploy:pull:${env.CHANGE_ID}"
+        ]
+    )
+
+    new GitHubHelper().createDeploymentStatus(
+        this,
+        ghDeploymentId,
+        "${status}",
+        ['targetUrl':"${targetURL}"]
+    )
+
+    if ('SUCCESS'.equalsIgnoreCase("${status}")) {
+        echo "${suffix} deployment successful!"
+    } else if ('PENDING'.equalsIgnoreCase("${status}")){
+        echo "${suffix} deployment pending."
+    }
+}
+
+// Print stack trace of error
+@NonCPS
+private static String stackTraceAsString(Throwable t) {
+    StringWriter sw = new StringWriter();
+    t.printStackTrace(new PrintWriter(sw));
+    return sw.toString()
+}
+
+pipeline {
+  environment {
+
+    APP_NAME = "tfrs"
+    REPOSITORY = 'https://github.com/bcgov/tfrs.git'
+    TFRS_SOURCE_REPO_URL='https://github.com/bcgov/tfrs.git'
+    TFRS_SOURCE_REPO_REF="pull/${CHANGE_ID}/head"
+
+    // TOOLS_PROJECT is where images are built
+    TOOLS_PROJECT = "mem-tfrs-tools"
+
+    // DEV_PROJECT is the project where individual development environments are spun up
+    // for example: a pull request PR-999 will result in tfrs-dev-pr-999.pathfinder.gov.bc.ca
+    DEV_PROJECT = "mem-tfrs-dev"
+    DEV_SUFFIX = "dev"
+
+    // TEST_PROJECT contains the test deployment. The test image is a candidate for promotion to prod.
+    TEST_PROJECT = "mem-tfrs-test"
+    TEST_SUFFIX = "staging"
+
+    // PROD_PROJECT is the prod deployment.
+    // New production images can be deployed by tagging an existing "test" image as "prod".
+    PROD_PROJECT = "mem-tfrs-prod"
+    PROD_SUFFIX= "production"
+
+    // PR_NUM is the pull request number e.g. 'pr-4'
+    PR_NUM = "${env.JOB_BASE_NAME}".toLowerCase()
+
+    OPENSHIFT_NAMESPACE="openshift"
+
+    NAME_SUFFIX="-${DEV_SUFFIX}-${PR_NUM}"
+    TFRS_DB_IS_NAME="tfrs-postgresql"
+    TFRS_DB_IS_BASE_NAME="tfrs-postgresql"
+
+    TFRS_DB_SERVICE_NAME="tfrs-postgresql-${DEV_SUFFIX}-${PR_NUM}"
+    TFRS_DB_NAME="tfrs"
+    TFRS_DB_VOLUME_CAPACITY="1Gi"
+    
+    TFRS_BACKEND_IMAGE_TAG="${PR_NUM}"
+    TFRS_BACKEND_DC_NAME="tfrs-backend-${DEV_SUFFIX}-${PR_NUM}"
+    TFRS_BACKEND_DC_BASE_NAME="tfrs-backend-${DEV_SUFFIX}-${PR_NUM}"
+
+    //frontend
+    //the output image is TFRS_FRONTEND_ANGULAR_APP_IS_NAME:TFRS_FRONTEND_ANGULAR_APP_IS_TAG, e.g. tfrs-frontend-angular-app:pr-99
+    //the output image is TFRS_FRONTEND_ANGULAR_APP_IS_NAME:TFRS_FRONTEND_ANGULAR_APP_IS_TAG, e.g. tfrs-frontend-angular-app:pr-99
+    TFRS_NODEJS_IS_NAME="tfrs-nodejs"
+    NODEJS_IS_FROM_NAME="nodejs"
+    NODEJS_IS_FROM_VERSION="8"
+    TFRS_FRONTEND_ANGULAR_APP_IS_NAME="tfrs-frontend-angular-app"
+    TFRS_FRONTEND_ANGULAR_APP_IS_BASE_NAME="tfrs-frontend-angular-app"
+    TFRS_FRONTEND_IS_NAME="tfrs-frontend"
+    TFRS_FRONTEND_IS_BASE_NAME="tfrs-frontend"
+    TFRS_FRONTEND_ANGULAR_APP_BC_NAME="tfrs-frontend-angular-app-${DEV_SUFFIX}-${PR_NUM}"
+    TFRS_FRONTEND_ANGULAR_APP_BC_BASE_NAME="tfrs-frontend-angular-app"
+    TFRS_FRONTEND_ANGULAR_APP_IS_TAG="${PR_NUM}"
+    TFRS_FRONTEND_BC_NAME="tfrs-frontend-${DEV_SUFFIX}-${PR_NUM}"
+    TFRS_FRONTEND_BC_BASE_NAME="tfrs-frontend"
+    TFRS_FRONTEND_IS_TAG="${PR_NUM}"
+
+  } //end of environment
+
+  agent any
+stages {
+
+    // the Start Pipeline stage will process and apply OpenShift build templates which will create
+    // buildconfigs and an imagestream for built images.
+    // each pull request gets its own buildconfig but all new builds are pushed to a single imagestream,
+    // to be tagged with the pull request number.
+    // e.g.:  tfrs-backend:pr-999  and   tfrs-frontend
+
+    stage('Build') {
+      steps {
+        script {
+          echo "PR_NUM=${PR_NUM}"
+          echo "NAME_SUFFIX=${NAME_SUFFIX}"
+          echo "Cancelling previous builds..."
+          timeout(10) {
+            abortAllPreviousBuildInProgress(currentBuild)
+          }
+          echo "Previous builds cancelled"
+          openshift.withCluster() {
+            openshift.withProject(TOOLS_PROJECT) {
+              notifyStageStatus ("Build", "PENDING")
+              //backend build template
+              def buildtemplateBackend = openshift.process("-f",
+                "openshift/backend.bc.json",
+                "NAME_SUFFIX=${NAME_SUFFIX}",
+                "PR_NUM=${PR_NUM}",
+                "TFRS_SOURCE_REPO_URL=${TFRS_SOURCE_REPO_URL}",
+                "TFRS_SOURCE_REPO_REF=${TFRS_SOURCE_REPO_REF}"
+              )
+              //frontend build template
+              def buildtemplateFrontend = openshift.process("-f",
+                "openshift/frontend.bc.json",
+                "NAME_SUFFIX=${NAME_SUFFIX}",
+                "PR_NUM=${PR_NUM}",
+                "TFRS_SOURCE_REPO_URL=${TFRS_SOURCE_REPO_URL}",
+                "TFRS_SOURCE_REPO_REF=${TFRS_SOURCE_REPO_REF}"
+              )
+              //create tfrs backend build config and image streams
+              echo "Preparing backend imagestream and buildconfig"
+              //echo " \$ oc process -f openshift/backend.bc.json -p ENV_NAME=${DEV_SUFFIX} -p NAME_SUFFIX=-${DEV_SUFFIX}-${PR_NUM} -p APP_IMAGE_TAG=${PR_NUM} -p SOURCE_REPOSITORY_URL=${REPOSITORY} -p SOURCE_REPOSITORY_REF=pull/${CHANGE_ID}/head | oc apply -n mem-tfrs-tools -f -"
+              openshift.apply(buildtemplateBackend)
+              //create tfrs frontend build config and image streams
+              //echo "Preparing frontend imagestream and buildconfig"
+              //echo " \$ oc process -f openshift/frontend.bc.json -p ENV_NAME=${DEV_SUFFIX} -p NAME_SUFFIX=-${DEV_SUFFIX}-${PR_NUM} -p APP_IMAGE_TAG=${PR_NUM} -p SOURCE_REPOSITORY_URL=${REPOSITORY} -p SOURCE_REPOSITORY_REF=pull/${CHANGE_ID}/head | oc apply -n mem-tfrs-tools -f -"
+              //openshift.apply(buildtemplateFrontend)
+              notifyStageStatus ("Build", "SUCCESS")
+            }
+          }
+        }
+      }
+    }
+
+        // the Build stage runs unit tests and builds files. an image will be outputted to the app's imagestream
+    // builds use the source to image strategy. See /app/.s2i/assemble for image build script
+    stage('Unit Test') {
+      steps {
+        script {
+          openshift.withCluster() {
+            openshift.withProject(TOOLS_PROJECT) {
+              echo "Running unit tests and building images..."
+              echo "This may take several minutes. Logs are not forwarded to Jenkins by default (at this time)."
+              echo "Additional logs can be found by monitoring builds in ${TOOLS_PROJECT}"
+              notifyStageStatus ("Unit Test", "PENDING")
+              // Select appropriate buildconfig
+              def appBuild = openshift.selector("bc", "tfrs-backend${NAME_SUFFIX}")
+              // temporarily set ENABLE_DATA_ENTRY=True during testing because False currently leads to a failing unit test
+              echo "Building"
+              //echo " \$ oc start-build -n moe-gwells-tools ${APP_NAME}-${DEV_SUFFIX}-${PR_NUM} --wait --env=ENABLE_DATA_ENTRY=true --follow=true"
+              appBuild.startBuild("--wait", "--env=ENABLE_DATA_ENTRY=True").logs("-f")
+              notifyStageStatus ("Unit Test", "SUCCESS")
+            }
+          }
+        }
+      }
+    } //end of stage
+
+  } //end of stages
+} //end of pipeline
