@@ -31,7 +31,7 @@
         <source class="org.jenkinsci.plugins.github_branch_source.GitHubSCMSource" plugin="github-branch-source@2.3.6">
           <id>6809510e-2eee-4a66-908d-c06ca4646bea</id>
           <credentialsId>github-account</credentialsId>
-          <repoOwner>jleach</repoOwner>
+          <repoOwner>kuanfandevops</repoOwner>
           <repository>tfrs</repository>
           <traits>
             <org.jenkinsci.plugins.github__branch__source.OriginPullRequestDiscoveryTrait>

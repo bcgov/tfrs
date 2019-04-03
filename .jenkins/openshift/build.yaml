@@ -2,7 +2,7 @@ apiVersion: template.openshift.io/v1
 kind: Template
 metadata:
   creationTimestamp: null
-  name: jenkinsbasic
+  name: jenkins
   namespace: default
 objects:
 - apiVersion: v1
@@ -58,7 +58,7 @@ parameters:
   displayName: Name
   name: NAME
   required: true
-  value: jenkinsbasic
+  value: jenkins
 - description: A name suffix used for all objects
   displayName: Suffix
   name: SUFFIX
