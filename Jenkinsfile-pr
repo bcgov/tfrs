@@ -116,7 +116,6 @@ stages {
     // to be tagged with the pull request number.
     // e.g.:  tfrs-backend:pr-999  and   tfrs-frontend
 
-    /**
     stage('Build') {
       steps {
         script {
