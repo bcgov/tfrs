@@ -25,38 +25,41 @@ from django.db import models
 
 from auditable.models import Auditable
 
+from api.models.mixins.EffectiveDates import EffectiveDates
 from .CompliancePeriod import CompliancePeriod
+from .FuelClass import FuelClass
 
 
-class CarbonIntensityLimits(Auditable):
+class CarbonIntensityLimit(Auditable, EffectiveDates):
     """
-    Contains the carbon intensity limits for diesel and gasoline.
+    Contains the carbon intensity limits for related classes:
+    diesel and gasoline most likely
     """
     compliance_period = models.ForeignKey(
         CompliancePeriod,
-        related_name='carbon_intensity',
+        related_name='carbon_intensity_limits',
         blank=True, null=True,
         on_delete=models.PROTECT
     )
 
-    diesel_class_limit = models.DecimalField(
-        null=True, blank=True, max_digits=5,
-        decimal_places=2,
-        default=Decimal('0.00'),
-        db_comment="Carbon Intensity Limit for diesel class fuel."
+    fuel_class = models.ForeignKey(
+        FuelClass,
+        related_name='carbon_intensity_limits',
+        blank=True, null=True,
+        on_delete=models.PROTECT
     )
 
-    gasoline_class_limit = models.DecimalField(
+    density = models.DecimalField(
         null=True, blank=True, max_digits=5,
         decimal_places=2,
         default=Decimal('0.00'),
-        db_comment="Carbon Intensity Limit for gasoline class fuel."
+        db_comment="Carbon Intensity Limit for the related class"
     )
 
     class Meta:
-        db_table = 'carbon_intensity_limits'
+        db_table = 'carbon_intensity_limit'
 
-    db_table_comment = "Contains the carbon intensity limits for the two " \
-                       "fuel limits: Diesel and Gasoline." \
+    db_table_comment = "Contains the carbon intensity limits for the " \
+                       "related classes: Diesel and Gasoline most likely." \
                        "The data in this table is to help users understand " \
                        "how current and future credits will be calculated."
