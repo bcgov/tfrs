@@ -9,5 +9,7 @@ window.tfrs_config = {
   'secure_document_upload.enabled': true,
   'secure_document_upload.max_file_size': 50000000,
   'fuel_codes.enabled': true,
-  'keycloak.custom_login': true
+  'keycloak.custom_login': true,
+  'credit_transfer.enabled': true,
+  'compliance_reporting.enabled': true
 };
