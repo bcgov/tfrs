@@ -1,5 +1,10 @@
 const BASE_PATH = '/admin';
 
+const COMPLIANCE_REPORTING = {
+  CARBON_INTENSITY_LIMITS_API: '/compliance_reporting/carbon_intensity_limits',
+  LIST: `${BASE_PATH}/compliance_reporting`
+};
+
 const CREDIT_TRANSACTIONS_HISTORY = {
   API: `/credit_trades_history`,
   LIST: `${BASE_PATH}/credit_transactions_history`
@@ -33,6 +38,7 @@ const USERS = {
 };
 
 export {
+  COMPLIANCE_REPORTING,
   CREDIT_TRANSACTIONS_HISTORY,
   FUEL_CODES,
   HISTORICAL_DATA_ENTRY,
