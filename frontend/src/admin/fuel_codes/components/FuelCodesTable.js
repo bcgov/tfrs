@@ -19,10 +19,43 @@ const FuelCodesTable = (props) => {
     resizable: false,
     width: 45
   }, {
-    accessor: item => `${item.fuelCode}`,
+    accessor: item => `${item.fuelCode}${item.fuelCodeVersion}${item.fuelCodeVersionMinor ? `.${item.fuelCodeVersionMinor}` : '.0'}`,
     className: 'col-title',
     Header: 'Low Carbon Fuel Code',
     id: 'title',
+    sortMethod: (a, b, desc) => {
+      // if the first set of digits are equal, we have to parse the decimals as a separate set
+      // e.g. 101.10 is greater than 101.5
+      const currentSet = a.toString().split('.');
+      const previousSet = b.toString().split('.');
+
+      if (currentSet[0] === previousSet[0]) {
+        const currentDecimal = (currentSet.length > 1) ? currentSet[1] : 0;
+        const previousDecimal = (previousSet.length > 1) ? previousSet[1] : 0;
+
+        if (parseInt(currentDecimal, 10) > parseInt(previousDecimal, 10)) {
+          return 1;
+        }
+
+        if (parseInt(currentDecimal, 10) < parseInt(previousDecimal, 10)) {
+          return -1;
+        }
+
+        return 0;
+      }
+
+      // Return either 1 or -1 to indicate a sort priority
+      if (currentSet[0] > previousSet[0]) {
+        return 1;
+      }
+
+      if (currentSet[0] < previousSet[0]) {
+        return -1;
+      }
+      // returning 0, undefined or any falsey value will use subsequent sorts or
+      // the index as a tiebreaker
+      return 0;
+    },
     width: 200
   }, {
     accessor: item => item.company,
@@ -139,7 +172,7 @@ const FuelCodesTable = (props) => {
 
   return (
     <ReactTable
-      statekey="fuel-codes"
+      stateKey="fuel-codes"
       className="searchable"
       columns={columns}
       data={props.items}

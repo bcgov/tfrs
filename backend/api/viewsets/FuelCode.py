@@ -15,7 +15,7 @@ from api.models.TransportMode import TransportMode
 from api.permissions.FuelCode import FuelCodePermissions
 from api.serializers.ApprovedFuel import ApprovedFuelSerializer
 from api.serializers.FuelCode import \
-    FuelCodeSaveSerializer, FuelCodeSerializer
+    FuelCodeCreateSerializer, FuelCodeSaveSerializer, FuelCodeSerializer
 from api.serializers.FuelCodeStatus import FuelCodeStatusSerializer
 from api.serializers.TransportMode import TransportModeSerializer
 from api.services.SpreadSheetBuilder import SpreadSheetBuilder
@@ -38,7 +38,7 @@ class FuelCodeViewSet(AuditableMixin,
     serializer_classes = {
         'default': FuelCodeSerializer,
         'approved_fuels': ApprovedFuelSerializer,
-        'create': FuelCodeSaveSerializer,
+        'create': FuelCodeCreateSerializer,
         'destroy': FuelCodeSaveSerializer,
         'partial_update': FuelCodeSaveSerializer,
         'statuses': FuelCodeStatusSerializer,
