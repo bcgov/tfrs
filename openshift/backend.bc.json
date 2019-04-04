@@ -32,45 +32,8 @@
             "kind": "ImageStream",
             "apiVersion": "v1",
             "metadata": {
-                "name": "tfrs-python",
-                "labels": {
-                    "appver": "tfrs-python"
-                },
+                "name": "tfrs-backend",
                 "creationTimestamp": null,
-                "annotations": {
-                    "description": "TFRS Python Base Image"
-                }
-            },
-            "spec": {
-                "lookupPolicy": {
-                    "local": false
-                },
-                "tags":[
-                    {
-                        "name": "3.6",
-                        "annotations": null,
-                        "from": {
-                            "kind": "ImageStreamTag",
-                            "namespace": "openshift",
-                            "name": "python:3.6"
-                        },
-                        "importPolicy": {},
-                        "referencePolicy": {
-                            "type": "Source"
-                        }
-                    }
-                ]
-            }
-        },
-        {
-            "kind": "ImageStream",
-            "apiVersion": "v1",
-            "metadata": {
-                "name": "tfrs-backend${NAME_SUFFIX}",
-                "creationTimestamp": null,
-                "labels": {
-                    "base-name":"tfrs-backend"
-                },
                 "annotations": {
                     "description": "Keeps track of changes in the tfrs backend image"
                 }
@@ -119,7 +82,8 @@
                     "sourceStrategy": {
                         "from": {
                             "kind": "ImageStreamTag",
-                            "name": "tfrs-python:3.6"
+                            "namespace": "openshift",
+                            "name": "python:3.6"
                         },
                         "env": [
                             {
