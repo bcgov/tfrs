@@ -116,7 +116,7 @@ stages {
     // to be tagged with the pull request number.
     // e.g.:  tfrs-backend:pr-999  and   tfrs-frontend
 
-    stage('Build') {
+    stage('Create Build Config') {
       steps {
         script {
           echo "PR_NUM=${PR_NUM}"
@@ -128,16 +128,11 @@ stages {
           echo "Previous builds cancelled"
           openshift.withCluster() {
             openshift.withProject(TOOLS_PROJECT) {
-              notifyStageStatus ("Build", "PENDING")
-              //backend build template
-              def buildtemplateBackend = openshift.process("-f",
-                "openshift/backend.bc.json",
-                "NAME_SUFFIX=${NAME_SUFFIX}",
-                "PR_NUM=${PR_NUM}",
-                "TFRS_SOURCE_REPO_URL=${TFRS_SOURCE_REPO_URL}",
-                "TFRS_SOURCE_REPO_REF=${TFRS_SOURCE_REPO_REF}"
-              )
-              //frontend build template
+
+              notifyStageStatus ("Create Build Config", "PENDING")
+
+              echo "creating tfrs frontend build config and image streams"
+              //echo " \$ oc process -f openshift/backend.bc.json -p ENV_NAME=${DEV_SUFFIX} -p NAME_SUFFIX=-${DEV_SUFFIX}-${PR_NUM} -p APP_IMAGE_TAG=${PR_NUM} -p SOURCE_REPOSITORY_URL=${REPOSITORY} -p SOURCE_REPOSITORY_REF=pull/${CHANGE_ID}/head | oc apply -n mem-tfrs-tools -f -"
               def buildtemplateFrontend = openshift.process("-f",
                 "openshift/frontend.bc.json",
                 "NAME_SUFFIX=${NAME_SUFFIX}",
@@ -145,15 +140,20 @@ stages {
                 "TFRS_SOURCE_REPO_URL=${TFRS_SOURCE_REPO_URL}",
                 "TFRS_SOURCE_REPO_REF=${TFRS_SOURCE_REPO_REF}"
               )
-              //create tfrs backend build config and image streams
-              echo "Preparing backend imagestream and buildconfig"
-              //echo " \$ oc process -f openshift/backend.bc.json -p ENV_NAME=${DEV_SUFFIX} -p NAME_SUFFIX=-${DEV_SUFFIX}-${PR_NUM} -p APP_IMAGE_TAG=${PR_NUM} -p SOURCE_REPOSITORY_URL=${REPOSITORY} -p SOURCE_REPOSITORY_REF=pull/${CHANGE_ID}/head | oc apply -n mem-tfrs-tools -f -"
-              openshift.apply(buildtemplateBackend)
-              //create tfrs frontend build config and image streams
-              //echo "Preparing frontend imagestream and buildconfig"
+              openshift.apply(buildtemplateFrontend)
+
+              echo "creating tfrs backend build config and image streams"
               //echo " \$ oc process -f openshift/frontend.bc.json -p ENV_NAME=${DEV_SUFFIX} -p NAME_SUFFIX=-${DEV_SUFFIX}-${PR_NUM} -p APP_IMAGE_TAG=${PR_NUM} -p SOURCE_REPOSITORY_URL=${REPOSITORY} -p SOURCE_REPOSITORY_REF=pull/${CHANGE_ID}/head | oc apply -n mem-tfrs-tools -f -"
-              //openshift.apply(buildtemplateFrontend)
-              notifyStageStatus ("Build", "SUCCESS")
+              def buildtemplateBackend = openshift.process("-f",
+                "openshift/backend.bc.json",
+                "NAME_SUFFIX=${NAME_SUFFIX}",
+                "PR_NUM=${PR_NUM}",
+                "TFRS_SOURCE_REPO_URL=${TFRS_SOURCE_REPO_URL}",
+                "TFRS_SOURCE_REPO_REF=${TFRS_SOURCE_REPO_REF}"
+              )
+              openshift.apply(buildtemplateBackend)
+
+              notifyStageStatus ("Create Build Config", "SUCCESS")
             }
           }
         }
@@ -162,22 +162,24 @@ stages {
 
         // the Build stage runs unit tests and builds files. an image will be outputted to the app's imagestream
     // builds use the source to image strategy. See /app/.s2i/assemble for image build script
-    stage('Unit Test') {
+    stage('Build and Unit Test') {
       steps {
         script {
           openshift.withCluster() {
             openshift.withProject(TOOLS_PROJECT) {
-              echo "Running unit tests and building images..."
-              echo "This may take several minutes. Logs are not forwarded to Jenkins by default (at this time)."
-              echo "Additional logs can be found by monitoring builds in ${TOOLS_PROJECT}"
-              notifyStageStatus ("Unit Test", "PENDING")
-              // Select appropriate buildconfig
-              def appBuild = openshift.selector("bc", "tfrs-backend${NAME_SUFFIX}")
-              // temporarily set ENABLE_DATA_ENTRY=True during testing because False currently leads to a failing unit test
-              echo "Building"
+
+              notifyStageStatus ("Build and Unit Test", "PENDING")
+
+              echo "Building frontend"
+              def frontendBuild = openshift.selector("bc", "tfrs-frontend${NAME_SUFFIX}")
+              frontendBuild.startBuild("--wait", "--env=ENABLE_DATA_ENTRY=True").logs("-f")
+
+              echo "Build Backend and Unit Test"
+              def backendBuild = openshift.selector("bc", "tfrs-backend${NAME_SUFFIX}")
+              //temporarily set ENABLE_DATA_ENTRY=True during testing because False currently leads to a failing unit test
               //echo " \$ oc start-build -n moe-gwells-tools ${APP_NAME}-${DEV_SUFFIX}-${PR_NUM} --wait --env=ENABLE_DATA_ENTRY=true --follow=true"
-              appBuild.startBuild("--wait", "--env=ENABLE_DATA_ENTRY=True").logs("-f")
-              notifyStageStatus ("Unit Test", "SUCCESS")
+              backendBuild.startBuild("--wait", "--env=ENABLE_DATA_ENTRY=True").logs("-f")
+              notifyStageStatus ("Build and Unit Test", "SUCCESS")
             }
           }
         }

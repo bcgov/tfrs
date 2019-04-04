@@ -35,40 +35,6 @@
             "kind": "ImageStream",
             "apiVersion": "v1",
             "metadata": {
-                "name": "tfrs-nodejs",
-                "labels": {
-                    "appver": "tfrs-nodejs"
-                },
-                "creationTimestamp": null,
-                "annotations": {
-                    "description": "TFRS Nodejs Base Image"
-                }
-            },
-            "spec": {
-                "lookupPolicy": {
-                    "local": false
-                },
-                "tags":[
-                    {
-                        "name": "8",
-                        "annotations": null,
-                        "from": {
-                            "kind": "ImageStreamTag",
-                            "namespace": "openshift",
-                            "name": "nodejs:8"
-                        },
-                        "importPolicy": {},
-                        "referencePolicy": {
-                            "type": "Source"
-                        }
-                    }
-                ]
-            }
-        },
-        {
-            "kind": "ImageStream",
-            "apiVersion": "v1",
-            "metadata": {
                 "name": "tfrs-frontend-angular-app",
                 "generation": 1,
                 "creationTimestamp": null,
@@ -140,7 +106,8 @@
                     "sourceStrategy": {
                         "from": {
                             "kind": "ImageStreamTag",
-                            "name": "tfrs-nodejs:8"
+                            "namespace": "openshift",
+                            "name": "nodejs:8"
                         }
                     }
                 },
