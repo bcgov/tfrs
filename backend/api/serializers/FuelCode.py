@@ -30,6 +30,7 @@ from api.models.TransportMode import TransportMode, FeedstockTransportMode, \
     FuelTransportMode
 from api.serializers.FuelCodeStatus import FuelCodeStatusSerializer
 from api.serializers.User import UserMinSerializer
+from api.services.Autocomplete import Autocomplete
 
 
 class FuelCodeSerializer(serializers.ModelSerializer):
@@ -64,8 +65,9 @@ class FuelCodeSerializer(serializers.ModelSerializer):
             'create_timestamp', 'create_user', 'effective_date', 'expiry_date',
             'facility_location', 'facility_nameplate', 'feedstock',
             'feedstock_location', 'feedstock_misc', 'feedstock_transport_mode',
-            'former_company', 'fuel', 'fuel_code', 'fuel_transport_mode',
-            'id', 'status', 'update_timestamp', 'update_user'
+            'former_company', 'fuel', 'fuel_code', 'fuel_code_version',
+            'fuel_code_version_minor', 'fuel_transport_mode', 'id', 'status',
+            'update_timestamp', 'update_user'
         )
 
         read_only_fields = (
@@ -73,12 +75,13 @@ class FuelCodeSerializer(serializers.ModelSerializer):
             'create_timestamp', 'create_user', 'effective_date', 'expiry_date',
             'facility_location', 'facility_nameplate', 'feedstock',
             'feedstock_location', 'feedstock_misc', 'feedstock_transport_mode',
-            'former_company', 'fuel', 'fuel_code', 'fuel_transport_mode',
-            'id', 'status', 'update_timestamp', 'update_user'
+            'former_company', 'fuel', 'fuel_code', 'fuel_code_version',
+            'fuel_code_version_minor', 'fuel_transport_mode', 'id', 'status',
+            'update_timestamp', 'update_user'
         )
 
 
-class FuelCodeSaveSerializer(serializers.ModelSerializer):
+class FuelCodeCreateSerializer(serializers.ModelSerializer):
     """
     Creation Serializer for Fuel Codes
     """
@@ -102,8 +105,47 @@ class FuelCodeSaveSerializer(serializers.ModelSerializer):
 
     def validate(self, data):
         """
-        Validation to check that the expiry date is after the effective date.
+        Validation
+        Checks that the fuel code is not a duplicate
+        Checks that the fuel code isn't skipping any version
+        Checks that the expiry date is after the effective date.
         """
+        # check if fuel code is correct
+        fuel_code = data.get('fuel_code')
+        fuel_code_version = data.get('fuel_code_version')
+        fuel_code_version_minor = data.get('fuel_code_version_minor')
+
+        matches = FuelCode.objects.filter(
+            fuel_code=fuel_code,
+            fuel_code_version=fuel_code_version,
+            fuel_code_version_minor=fuel_code_version_minor
+        )
+
+        if matches.exists():
+            raise serializers.ValidationError(
+                'The fuel code {}{}.{} is already in use. '
+                'Please consult the Fuel Codes table to ensure that this '
+                'entry does not already exist.'.format(
+                    fuel_code,
+                    fuel_code_version,
+                    fuel_code_version_minor
+                )
+            )
+
+        next_available_version = Autocomplete.get_matches(
+            'fuel_code.fuel_code_version', str(fuel_code_version))
+
+        if next_available_version:
+            if next_available_version[0] != '{}.{}'.format(
+                    fuel_code_version,
+                    fuel_code_version_minor
+            ):
+                raise serializers.ValidationError(
+                    'The next available Fuel Code is {}'.format(
+                        next_available_version[0]
+                    )
+                )
+
         if data['expiry_date'] < data['effective_date']:
             raise serializers.ValidationError({
                 'invalid': "The expiry date precedes the effective date"
@@ -134,6 +176,45 @@ class FuelCodeSaveSerializer(serializers.ModelSerializer):
                 )
 
         return instance
+
+    class Meta:
+        model = FuelCode
+        fields = '__all__'
+
+
+class FuelCodeSaveSerializer(serializers.ModelSerializer):
+    """
+    Update Serializer for Fuel Codes
+    Counts the delete functionality
+    """
+    fuel = SlugRelatedField(
+        allow_null=False,
+        slug_field='name',
+        queryset=ApprovedFuel.objects.all()
+    )
+    feedstock_transport_mode = SlugRelatedField(
+        allow_null=False,
+        many=True,
+        slug_field='name',
+        queryset=TransportMode.objects.all()
+    )
+    fuel_transport_mode = SlugRelatedField(
+        allow_null=False,
+        many=True,
+        slug_field='name',
+        queryset=TransportMode.objects.all()
+    )
+
+    def validate(self, data):
+        """
+        Checks that the expiry date is after the effective date.
+        """
+        if data['expiry_date'] < data['effective_date']:
+            raise serializers.ValidationError({
+                'invalid': "The expiry date precedes the effective date"
+            })
+
+        return data
 
     def destroy(self):
         """
@@ -189,3 +270,8 @@ class FuelCodeSaveSerializer(serializers.ModelSerializer):
     class Meta:
         model = FuelCode
         fields = '__all__'
+
+        read_only_fields = (
+            'id', 'create_timestamp', 'create_user', 'fuel_code',
+            'fuel_code_version', 'fuel_code_version_minor'
+        )
