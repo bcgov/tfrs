@@ -33,8 +33,18 @@ class FuelCode(Auditable):
     Fuel codes for the Secure Document Upload
     """
     fuel_code = models.CharField(
-        max_length=100,
-        db_comment="Low Carbon Fuel Code (Example: BCLCF101.4, BCLCF488.11)"
+        default="BCLCF",
+        max_length=10,
+        db_comment="Low Carbon Fuel Code [1st Part] (eg BCLCF in BCLCF101.4)"
+    )
+    fuel_code_version = models.IntegerField(
+        db_comment="Low Carbon Fuel Code [2nd Part] (eg 101 in BCLCF101.4)"
+    )
+    fuel_code_version_minor = models.IntegerField(
+        blank=False,
+        default=0,
+        null=False,
+        db_comment="Low Carbon Fuel Code [3rd Part] (eg 4 in BCLCF101.4)"
     )
     company = models.CharField(
         max_length=100,
@@ -142,6 +152,8 @@ class FuelCode(Auditable):
 
     class Meta:
         db_table = 'fuel_code'
+        unique_together = (('fuel_code', 'fuel_code_version',
+                            'fuel_code_version_minor'),)
 
     db_table_comment = "Fuel Codes." \
                        "List of recognized fuel pathways in BC" \
