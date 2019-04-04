@@ -139,7 +139,7 @@ podTemplate(label: "develop-backend-python-${env.BUILD_NUMBER}", name: "develop-
                 } catch(Throwable t) {
                     result = 1;
                 } finally {
-                    stash includes: 'nosetests.xml,coverage.xml', name: 'coverage'
+                    //stash includes: 'nosetests.xml,coverage.xml', name: 'coverage'
                     junit 'nosetests.xml'
                 }
             }
@@ -176,7 +176,7 @@ podTemplate(label: "develop-maven-${env.BUILD_NUMBER}", name: "develop-maven-${e
 ) {
 
 node("develop-maven-${env.BUILD_NUMBER}") {
-
+/****
     stage('Code Quality Check') {
         checkout scm
         SONARQUBE_PWD = sh (
@@ -198,6 +198,7 @@ node("develop-maven-${env.BUILD_NUMBER}") {
             sh returnStdout: true, script: "./gradlew sonarqube -Dsonar.host.url=${SONARQUBE_URL} -Dsonar.verbose=true --stacktrace --info"
         }
     }
+****/
 
     //run frontend builds
     for (builds in frontendBuildStages) {
