@@ -38,9 +38,6 @@
                 "name": "tfrs-frontend-angular-app",
                 "generation": 1,
                 "creationTimestamp": null,
-                "labels": {
-                    "base-name":"tfrs-frontend-angular-app"
-                },
                 "annotations": {
                     "description": "Keeps track of changes in tfrs frontend image"
                 }
@@ -58,9 +55,6 @@
             "metadata": {
                 "name": "tfrs-frontend",
                 "creationTimestamp": null,
-                "labels": {
-                    "base-name":"tfrs-frontend"
-                },
                 "annotations": {
                     "description": "This applies nginx on top of tfrs-frontend-angular-app"
                 }
