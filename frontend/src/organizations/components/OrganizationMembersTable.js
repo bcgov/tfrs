@@ -56,7 +56,7 @@ const OrganizationMembersTable = (props) => {
 
   return (
     <ReactTable
-      stateKey="organizations-members"
+      stateKey={props.stateKey}
       className="searchable"
       data={props.items}
       defaultPageSize={10}
@@ -90,6 +90,10 @@ const OrganizationMembersTable = (props) => {
   );
 };
 
+OrganizationMembersTable.defaultProps = {
+  stateKey: 'organizations-members'
+};
+
 OrganizationMembersTable.propTypes = {
   items: PropTypes.arrayOf(PropTypes.shape({
     email: PropTypes.string,
@@ -103,7 +107,8 @@ OrganizationMembersTable.propTypes = {
   })).isRequired,
   loggedInUser: PropTypes.shape({
     hasPermission: PropTypes.func
-  }).isRequired
+  }).isRequired,
+  stateKey: PropTypes.string
 };
 
 const mapStateToProps = state => ({

@@ -13,7 +13,9 @@
     "feedstock_misc": "Test",
     "former_company": "Test",
     "fuel": ["LNG"],
-    "fuel_code": "Submitted Fuel Code",
+    "fuel_code": "BCLCF",
+    "fuel_code_version": "100",
+    "fuel_code_version_minor": "0",
     "status": ["Approved"]
   },
   "model": "api.fuelcode",
