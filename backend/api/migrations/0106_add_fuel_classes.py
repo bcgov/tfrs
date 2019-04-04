@@ -40,7 +40,7 @@ class Migration(migrations.Migration):
     Attaches the functions for the migrations
     """
     dependencies = [
-        ('api', '0102_add_credit_calculation_permissions'),
+        ('api', '0105_add_credit_calculation_permissions'),
     ]
 
     operations = [

@@ -41,19 +41,18 @@ class CarbonIntensityLimit(Auditable, EffectiveDates):
         blank=True, null=True,
         on_delete=models.PROTECT
     )
-
     fuel_class = models.ForeignKey(
         FuelClass,
         related_name='carbon_intensity_limits',
         blank=True, null=True,
         on_delete=models.PROTECT
     )
-
     density = models.DecimalField(
         null=True, blank=True, max_digits=5,
         decimal_places=2,
         default=Decimal('0.00'),
-        db_comment="Carbon Intensity Limit for the related class"
+        db_comment="Carbon Intensity Limit for the related class."
+                   "Values will use this formula: gCO2e/MJ"
     )
 
     class Meta:
