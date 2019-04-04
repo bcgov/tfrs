@@ -34,7 +34,7 @@ from .base_test_case import BaseTestCase
 
 
 class TestFuelCodes(BaseTestCase):
-    """Tests for the documents endpoint"""
+    """Tests for the fuel codes endpoint"""
     extra_fixtures = ['test/test_fuel_codes.json']
 
     def test_get_fuel_code_list(self):

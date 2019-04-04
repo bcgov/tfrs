@@ -30,6 +30,9 @@ const CONFIG = {
   },
   CREDIT_TRANSFER: {
     ENABLED: getConfig('credit_transfer.enabled', false)
+  },
+  COMPLIANCE_REPORTING: {
+    ENABLED: getConfig('compliance_reporting.enabled', false)
   }
 };
 

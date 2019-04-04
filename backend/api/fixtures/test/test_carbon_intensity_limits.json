@@ -1,0 +1,73 @@
+[{
+  "fields": {
+    "compliance_period": ["2017"],
+    "fuel_class": ["Diesel"],
+    "density": "90.02",
+    "effective_date": "2017-01-01"
+  },
+  "model": "api.carbonintensitylimit",
+  "pk": null
+}, {
+  "fields": {
+    "compliance_period": ["2017"],
+    "fuel_class": ["Gasoline"],
+    "density": "83.74",
+    "effective_date": "2017-01-01"
+  },
+  "model": "api.carbonintensitylimit",
+  "pk": null
+}, {
+  "fields": {
+    "compliance_period": ["2018"],
+    "fuel_class": ["Diesel"],
+    "density": "88.60",
+    "effective_date": "2017-01-01"
+  },
+  "model": "api.carbonintensitylimit",
+  "pk": null
+}, {
+  "fields": {
+    "compliance_period": ["2018"],
+    "fuel_class": ["Gasoline"],
+    "density": "82.41",
+    "effective_date": "2017-01-01"
+  },
+  "model": "api.carbonintensitylimit",
+  "pk": null
+}, {
+  "fields": {
+    "compliance_period": ["2019"],
+    "fuel_class": ["Diesel"],
+    "density": "87.18",
+    "effective_date": "2017-01-01"
+  },
+  "model": "api.carbonintensitylimit",
+  "pk": null
+}, {
+  "fields": {
+    "compliance_period": ["2019"],
+    "fuel_class": ["Gasoline"],
+    "density": "81.09",
+    "effective_date": "2017-01-01"
+  },
+  "model": "api.carbonintensitylimit",
+  "pk": null
+}, {
+  "fields": {
+    "compliance_period": ["2020"],
+    "fuel_class": ["Diesel"],
+    "density": "85.28",
+    "effective_date": "2017-01-01"
+  },
+  "model": "api.carbonintensitylimit",
+  "pk": null
+}, {
+  "fields": {
+    "compliance_period": ["2020"],
+    "fuel_class": ["Gasoline"],
+    "density": "79.33",
+    "effective_date": "2017-01-01"
+  },
+  "model": "api.carbonintensitylimit",
+  "pk": null
+}]

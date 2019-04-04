@@ -28,7 +28,8 @@ from api.viewsets.Document import DocumentViewSet
 from api.viewsets.DocumentComments import DocumentCommentsViewSet
 from api.viewsets.FuelCode import FuelCodeViewSet
 from api.viewsets.Notification import NotificationViewSet
-from tfrs.settings import DOCUMENTS_API, FUEL_CODES_API, TESTING
+from tfrs.settings import DOCUMENTS_API, FUEL_CODES_API, \
+    CREDIT_CALCULATION_API, TESTING
 from .viewsets.CompliancePeriod import CompliancePeriodViewSet
 from .viewsets.CreditTrade import CreditTradeViewSet
 from .viewsets.CreditTradeHistory import CreditTradeHistoryViewSet
@@ -40,6 +41,7 @@ from .viewsets.SigningAuthorityConfirmation \
     import SigningAuthorityConfirmationViewSet
 from .viewsets.User import UserViewSet
 from .viewsets.CreditTradeComments import CreditTradeCommentsViewSet
+from .viewsets.CreditCalculation import CreditCalculationViewSet
 
 # Create a router and register our views with it.
 ROUTER = DefaultRouter(trailing_slash=False)
@@ -68,6 +70,9 @@ if DOCUMENTS_API['ENABLED'] or TESTING:
 
 if FUEL_CODES_API['ENABLED'] or TESTING:
     ROUTER.register(r'fuel_codes', FuelCodeViewSet)
+
+if CREDIT_CALCULATION_API['ENABLED'] or TESTING:
+    ROUTER.register(r'credit_calculation', CreditCalculationViewSet)
 
 urlpatterns = [
     # Swagger documentation

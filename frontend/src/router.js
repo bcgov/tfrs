@@ -7,6 +7,7 @@ import history from './app/History';
 
 import * as Routes from './constants/routes';
 import {
+  COMPLIANCE_REPORTING,
   CREDIT_TRANSACTIONS_HISTORY,
   FUEL_CODES,
   HISTORICAL_DATA_ENTRY,
@@ -23,6 +24,7 @@ import FuelCodeAddContainer from './admin/fuel_codes/FuelCodeAddContainer';
 import FuelCodeDetailContainer from './admin/fuel_codes/FuelCodeDetailContainer';
 import FuelCodeEditContainer from './admin/fuel_codes/FuelCodeEditContainer';
 import FuelCodesContainer from './admin/fuel_codes/FuelCodesContainer';
+import ComplianceReportingContainer from './admin/compliance_reporting/ComplianceReportingContainer';
 import CreditTransactionsHistoryContainer from './admin/credit_trade_history/CreditTradeHistoryContainer';
 import SecureFileSubmissionsContainer from './secure_file_submission/SecureFileSubmissionContainer';
 import SecureFileSubmissionAddContainer from './secure_file_submission/SecureFileSubmissionAddContainer';
@@ -245,6 +247,13 @@ const Router = routerProps => (
             key="secure_document_upload_edit"
             path={SECURE_DOCUMENT_UPLOAD.EDIT}
             component={withRouter(SecureFileSubmissionEditContainer)}
+          />
+        ]}
+        {CONFIG.COMPLIANCE_REPORTING.ENABLED && [
+          <Route
+            key="compliance_reporting_list"
+            path={COMPLIANCE_REPORTING.LIST}
+            component={withRouter(ComplianceReportingContainer)}
           />
         ]}
         <Route component={NotFound} />
