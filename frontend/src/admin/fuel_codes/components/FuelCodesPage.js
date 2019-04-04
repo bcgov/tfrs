@@ -35,23 +35,23 @@ const FuelCodesPage = (props) => {
             <FontAwesomeIcon icon="plus-circle" /> {Lang.BTN_NEW_FUEL_CODE}
           </button>
           }
-        <button
-          className="btn btn-info"
-          id="download-fuel-codes"
-          type="button"
-          onClick={(e) => {
-            const element = e.target;
-            const original = element.innerHTML;
+          <button
+            className="btn btn-info"
+            id="download-fuel-codes"
+            type="button"
+            onClick={(e) => {
+              const element = e.target;
+              const original = element.innerHTML;
 
-            element.firstChild.textContent = ' Downloading...';
+              element.firstChild.textContent = ' Downloading...';
 
-            return download(Routes.BASE_URL + FUEL_CODES.EXPORT, {}).then(() => {
-              element.innerHTML = original;
-            });
-          }}
-        >
-          <FontAwesomeIcon icon="file-excel" /> <span>Download as .xls</span>
-        </button>
+              return download(Routes.BASE_URL + FUEL_CODES.EXPORT, {}).then(() => {
+                element.innerHTML = original;
+              });
+            }}
+          >
+            <FontAwesomeIcon icon="file-excel" /> <span>Download as .xls</span>
+          </button>
         </div>
       </div>
       {isFetching && <Loading />}

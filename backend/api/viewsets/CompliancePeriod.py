@@ -1,14 +1,9 @@
-from rest_framework import viewsets, permissions, status, mixins
-from rest_framework.decorators import list_route, detail_route
-from rest_framework.response import Response
-from rest_framework import filters
-
-from api.permissions.CompliancePeriod import CompliancePeriodPermissions
-from auditable.views import AuditableMixin
+from rest_framework import viewsets, permissions, status, mixins, filters
 
 from api.models.CompliancePeriod import CompliancePeriod
-
+from api.permissions.CompliancePeriod import CompliancePeriodPermissions
 from api.serializers import CompliancePeriodSerializer
+from auditable.views import AuditableMixin
 
 
 class CompliancePeriodViewSet(AuditableMixin, mixins.CreateModelMixin,
