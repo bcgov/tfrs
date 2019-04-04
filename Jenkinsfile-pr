@@ -177,7 +177,7 @@ stages {
               def frontendBuild = openshift.selector("bc", "tfrs-frontend${NAME_SUFFIX}")
               frontendBuild.startBuild("--wait", "--env=ENABLE_DATA_ENTRY=True").logs("-f")
 ******/
-              echo "Build Backend and Unit Test"
+              echo "Building Backend and Unit Testing"
               def backendBuild = openshift.selector("bc", "tfrs-backend${NAME_SUFFIX}")
               backendBuild.startBuild("--wait", "--env=ENABLE_DATA_ENTRY=True").logs("-f")
               
