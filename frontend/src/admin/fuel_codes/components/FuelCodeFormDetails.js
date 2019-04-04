@@ -17,15 +17,25 @@ const FuelCodeFormDetails = props => (
                 className="input-group"
               >
                 <span className="input-group-addon">BCLCF</span>
-                <input
-                  className="form-control"
-                  id="fuel-code"
-                  name="fuelCode"
-                  onChange={props.handleInputChange}
-                  required="required"
-                  step="0.01"
-                  type="number"
+                <AutocompletedInput
+                  handleInputChange={props.handleInputChange}
+                  autocompleteFieldName="fuel_code.fuel_code_version"
                   value={props.fields.fuelCode}
+                  inputProps={
+                    {
+                      onPaste: (event) => {
+                        const clipboard = event.clipboardData.getData('Text');
+                        if (clipboard.match(/\D/g)) {
+                          event.preventDefault();
+                        }
+                      },
+                      readOnly: props.edit,
+                      required: true,
+                      name: 'fuelCode',
+                      id: 'fuelCode'
+                    }
+                  }
+                  integersOnly
                 />
               </div>
             </label>
@@ -327,10 +337,13 @@ const FuelCodeFormDetails = props => (
   </div>
 );
 
-FuelCodeFormDetails.defaultProps = {};
+FuelCodeFormDetails.defaultProps = {
+  edit: false
+};
 
 FuelCodeFormDetails.propTypes = {
   addToFields: PropTypes.func.isRequired,
+  edit: PropTypes.bool,
   fields: PropTypes.shape({
     applicationDate: PropTypes.string,
     approvalDate: PropTypes.string,

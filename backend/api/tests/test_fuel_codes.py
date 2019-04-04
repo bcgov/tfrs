@@ -28,7 +28,7 @@ from rest_framework import status
 
 from api.models.FuelCode import FuelCode
 from api.models.FuelCodeStatus import FuelCodeStatus
-from api.serializers.FuelCode import FuelCodeSaveSerializer
+from api.serializers.FuelCode import FuelCodeCreateSerializer
 
 from .base_test_case import BaseTestCase
 
@@ -67,7 +67,6 @@ class TestFuelCodes(BaseTestCase):
         Test adding a fuel code as a government user
         """
         status_draft = FuelCodeStatus.objects.filter(status="Draft").first()
-        fuel_code = 'Test Fuel Code'
 
         payload = {
             'applicationDate': '2019-01-01',
@@ -84,7 +83,8 @@ class TestFuelCodes(BaseTestCase):
             'feedstockTransportMode': ['Pipeline', 'Truck'],
             'formerCompany': 'Test',
             'fuel': 'LNG',
-            'fuelCode': fuel_code,
+            'fuelCode': 'BCLCF',
+            'fuelCodeVersion': '105',
             'fuelTransportMode': ['Rail'],
             'status': status_draft.id
         }
@@ -101,7 +101,6 @@ class TestFuelCodes(BaseTestCase):
 
         fuel_code_obj = FuelCode.objects.get(id=response_data['id'])
 
-        self.assertEqual(fuel_code_obj.fuel_code, fuel_code)
         self.assertEqual(fuel_code_obj.fuel.name, 'LNG')
 
     def test_add_draft_as_fuel_supplier(self):
@@ -110,7 +109,6 @@ class TestFuelCodes(BaseTestCase):
         Note: This should fail
         """
         status_draft = FuelCodeStatus.objects.filter(status="Draft").first()
-        fuel_code = 'Test Fuel Code'
 
         payload = {
             'applicationDate': '2019-01-01',
@@ -127,7 +125,9 @@ class TestFuelCodes(BaseTestCase):
             'feedstockTransportMode': 'Test',
             'formerCompany': 'Test',
             'fuel': 'LNG',
-            'fuelCode': fuel_code,
+            'fuelCode': 'BCLCF',
+            'fuelCodeVersion': '101',
+            'fuelCodeVersionMinor': '1',
             'fuelTransportMode': 'Test',
             'status': status_draft.id
         }
@@ -161,12 +161,14 @@ class TestFuelCodes(BaseTestCase):
             'feedstock_transport_mode': ['Rail'],
             'former_company': 'Test',
             'fuel': 'LNG',
-            'fuel_code': 'Test Fuel Code',
+            'fuel_code': 'BCLCF',
+            'fuel_code_version': '101',
+            'fuel_code_version_minor': '1',
             'fuel_transport_mode': ['Rail'],
             'status': status_draft.id
         }
 
-        serializer = FuelCodeSaveSerializer(data=data)
+        serializer = FuelCodeCreateSerializer(data=data)
         serializer.is_valid(raise_exception=True)
         fuel_code = serializer.save()
 
@@ -198,12 +200,14 @@ class TestFuelCodes(BaseTestCase):
             'feedstock_transport_mode': ['Rail'],
             'former_company': 'Test',
             'fuel': 'LNG',
-            'fuel_code': 'Test Fuel Code',
+            'fuel_code': 'BCLCF',
+            'fuel_code_version': '101',
+            'fuel_code_version_minor': '2',
             'fuel_transport_mode': ['Rail'],
             'status': status_draft.id
         }
 
-        serializer = FuelCodeSaveSerializer(data=data)
+        serializer = FuelCodeCreateSerializer(data=data)
         serializer.is_valid(raise_exception=True)
         fuel_code = serializer.save()
 
@@ -219,7 +223,8 @@ class TestFuelCodes(BaseTestCase):
         Note: This should fail as you shouldn't be able to delete approved
         fuel codes
         """
-        status_approved = FuelCodeStatus.objects.filter(status="Approved").first()
+        status_approved = FuelCodeStatus.objects.filter(
+            status="Approved").first()
 
         data = {
             'application_date': '2019-01-01',
@@ -236,12 +241,14 @@ class TestFuelCodes(BaseTestCase):
             'feedstock_transport_mode': ['Rail'],
             'former_company': 'Test',
             'fuel': 'LNG',
-            'fuel_code': 'Test Fuel Code',
+            'fuel_code': 'BCLCF',
+            'fuel_code_version': '101',
+            'fuel_code_version_minor': '2',
             'fuel_transport_mode': ['Rail'],
             'status': status_approved.id
         }
 
-        serializer = FuelCodeSaveSerializer(data=data)
+        serializer = FuelCodeCreateSerializer(data=data)
         serializer.is_valid(raise_exception=True)
         fuel_code = serializer.save()
 
@@ -261,3 +268,83 @@ class TestFuelCodes(BaseTestCase):
         )
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_create_fuel_code_validation(self):
+        """
+        Tests that the serializer throws a proper error when a duplicate
+        fuel code is being added.
+        It will then test and make sure that we don't skip any version.
+        """
+        status_approved = FuelCodeStatus.objects.filter(
+            status="Approved").first()
+
+        payload = {
+            'applicationDate': '2019-01-01',
+            'approvalDate': '2019-01-01',
+            'carbonIntensity': '10',
+            'company': 'Test',
+            'effectiveDate': '2019-01-01',
+            'expiryDate': '2020-01-01',
+            'facilityLocation': 'Test',
+            'facilityNameplate': '123',
+            'feedstock': 'Test',
+            'feedstockLocation': 'Test',
+            'feedstockMisc': 'Test',
+            'feedstockTransportMode': ['Pipeline', 'Truck'],
+            'formerCompany': 'Test',
+            'fuel': 'LNG',
+            'fuelCode': 'BCLCF',
+            'fuelCodeVersion': '100',
+            'fuelCodeVersionMinor': '0',
+            'fuelTransportMode': ['Rail'],
+            'status': status_approved.id
+        }
+
+        response = self.clients['gov_analyst'].post(
+            "/api/fuel_codes",
+            content_type='application/json',
+            data=json.dumps(payload)
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+        payload['fuelCodeVersionMinor'] = '50'
+
+        response = self.clients['gov_analyst'].post(
+            "/api/fuel_codes",
+            content_type='application/json',
+            data=json.dumps(payload)
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+    def test_prevent_fuel_code_update_read_only(self):
+        """
+        Tests that the serializer prevents the version from being updated as
+        it's a read-only field
+        """
+        fuel_code = FuelCode.objects.get(
+            fuel_code="BCLCF",
+            fuel_code_version="100",
+            fuel_code_version_minor="0"
+        )
+
+        payload = {
+            'fuelCodeVersion': '110',
+            'fuelCodeVersionMinor': '10'
+        }
+
+        self.clients['gov_analyst'].put(
+            "/api/fuel_codes/{}".format(
+                fuel_code.id
+            ),
+            content_type='application/json',
+            data=json.dumps(payload)
+        )
+
+        fuel_code = FuelCode.objects.get(
+            id=fuel_code.id
+        )
+
+        self.assertEqual(fuel_code.fuel_code_version, 100)
+        self.assertEqual(fuel_code.fuel_code_version_minor, 0)
