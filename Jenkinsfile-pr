@@ -131,6 +131,7 @@ stages {
             openshift.withProject(TOOLS_PROJECT) {
               notifyStageStatus ("Create Build Config", "PENDING")
 
+/*****
               echo "creating tfrs frontend build config"
               //echo " \$ oc process -f openshift/backend.bc.json -p ENV_NAME=${DEV_SUFFIX} -p NAME_SUFFIX=-${DEV_SUFFIX}-${PR_NUM} -p APP_IMAGE_TAG=${PR_NUM} -p SOURCE_REPOSITORY_URL=${REPOSITORY} -p SOURCE_REPOSITORY_REF=pull/${CHANGE_ID}/head | oc apply -n mem-tfrs-tools -f -"
               def buildtemplateFrontend = openshift.process("-f",
@@ -141,7 +142,8 @@ stages {
                 "TFRS_SOURCE_REPO_REF=${TFRS_SOURCE_REPO_REF}"
               )
               openshift.apply(buildtemplateFrontend)
-              
+******/
+
               echo "Creating backend buildconfig"
               //echo " \$ oc process -f openshift/backend.bc.json -p ENV_NAME=${DEV_SUFFIX} -p NAME_SUFFIX=-${DEV_SUFFIX}-${PR_NUM} -p APP_IMAGE_TAG=${PR_NUM} -p SOURCE_REPOSITORY_URL=${REPOSITORY} -p SOURCE_REPOSITORY_REF=pull/${CHANGE_ID}/head | oc apply -n mem-tfrs-tools -f -"
               def buildtemplateBackend = openshift.process("-f",
@@ -170,11 +172,11 @@ stages {
             openshift.withProject(TOOLS_PROJECT) {
 
               notifyStageStatus ("Build and Unit Test", "PENDING")
-
+/*****
               echo "Building frontend"
               def frontendBuild = openshift.selector("bc", "tfrs-frontend${NAME_SUFFIX}")
               frontendBuild.startBuild("--wait", "--env=ENABLE_DATA_ENTRY=True").logs("-f")
-
+******/
               echo "Build Backend and Unit Test"
               def backendBuild = openshift.selector("bc", "tfrs-backend${NAME_SUFFIX}")
               backendBuild.startBuild("--wait", "--env=ENABLE_DATA_ENTRY=True").logs("-f")
