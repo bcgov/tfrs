@@ -144,7 +144,7 @@ stages {
               openshift.apply(buildtemplateFrontend)
 ******/
 
-              echo "Building backend and Running Unit Test"
+              echo "Creating Backend Build Config"
               //echo " \$ oc process -f openshift/backend.bc.json -p ENV_NAME=${DEV_SUFFIX} -p NAME_SUFFIX=-${DEV_SUFFIX}-${PR_NUM} -p APP_IMAGE_TAG=${PR_NUM} -p SOURCE_REPOSITORY_URL=${REPOSITORY} -p SOURCE_REPOSITORY_REF=pull/${CHANGE_ID}/head | oc apply -n mem-tfrs-tools -f -"
               def buildtemplateBackend = openshift.process("-f",
                 "openshift/backend.bc.json",
