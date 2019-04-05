@@ -154,7 +154,9 @@ stages {
                 "TFRS_SOURCE_REPO_REF=${TFRS_SOURCE_REPO_REF}"
               )
               openshift.apply(buildtemplateBackend)
-
+              echo "  sleep 1"
+              sleep(time:120,unit:"SECONDS")
+              echo "  sleep 1 woke up"
               notifyStageStatus ("Build Backend and Run Unit Test", "SUCCESS")
 
             }
