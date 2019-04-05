@@ -173,11 +173,11 @@ stages {
             openshift.withProject(TOOLS_PROJECT) {
 
               notifyStageStatus ("Build and Unit Test", "PENDING")
-
+/**
               echo "Building frontend"
               def frontendBuild = openshift.selector("bc", "tfrs-frontend${NAME_SUFFIX}")
               frontendBuild.startBuild("--wait", "--env=ENABLE_DATA_ENTRY=True").logs("-f")
-
+**/
               echo "Building Backend and Unit Testing"
               def backendBuild = openshift.selector("bc", "tfrs-backend${NAME_SUFFIX}")
               backendBuild.startBuild("--wait", "--env=ENABLE_DATA_ENTRY=True").logs("-f")
