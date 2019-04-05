@@ -141,7 +141,7 @@ stages {
                 "TFRS_SOURCE_REPO_URL=${TFRS_SOURCE_REPO_URL}",
                 "TFRS_SOURCE_REPO_REF=${TFRS_SOURCE_REPO_REF}"
               )
-              openshift.create(buildtemplateFrontend)
+              openshift.apply(buildtemplateFrontend)
 ******/
 
               echo "Building backend and Running Unit Test"
@@ -153,7 +153,7 @@ stages {
                 "TFRS_SOURCE_REPO_URL=${TFRS_SOURCE_REPO_URL}",
                 "TFRS_SOURCE_REPO_REF=${TFRS_SOURCE_REPO_REF}"
               )
-              openshift.create(buildtemplateBackend)
+              openshift.apply(buildtemplateBackend)
               echo "  sleep 1"
               sleep(time:10,unit:"SECONDS")
               echo "  sleep 1 woke up"
