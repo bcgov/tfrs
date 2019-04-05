@@ -191,5 +191,25 @@ stages {
       }
     } //end of stage
 
+    stage('Build and Unit Test') {
+      steps {
+        script {
+          openshift.withCluster() {
+            openshift.withProject(TOOLS_PROJECT) {
+              notifyStageStatus ("Remove Build Configs", "PENDING")
+
+              echo "Deleting build configs"
+              def backendBuild = openshift.selector("bc", "tfrs-backend${NAME_SUFFIX}")
+              backendBuild.delete()
+
+              notifyStageStatus ("Remove Build Configs", "SUCCESS")
+            }
+          }
+        }
+      }
+
+
+    } //end of stage
+
   } //end of stages
 } //end of pipeline
