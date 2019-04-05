@@ -191,7 +191,7 @@ stages {
       }
     } //end of stage
 
-    stage('Build and Unit Test') {
+    stage('Remove Build Configs') {
       steps {
         script {
           openshift.withCluster() {
