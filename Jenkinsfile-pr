@@ -153,6 +153,10 @@ stages {
                 "TFRS_SOURCE_REPO_URL=${TFRS_SOURCE_REPO_URL}",
                 "TFRS_SOURCE_REPO_REF=${TFRS_SOURCE_REPO_REF}"
               )
+              echo "  sleep 1"
+              sleep 3m
+              echo "  sleep 1 woke up"
+
               openshift.apply(buildtemplateBackend)
 
               notifyStageStatus ("Create Build Config", "SUCCESS")
@@ -179,6 +183,9 @@ stages {
 ******/
               echo "Building Backend and Unit Testing"
               def backendBuild = openshift.selector("bc", "tfrs-backend${NAME_SUFFIX}")
+              echo "  sleep 2"
+              sleep 3m
+              echo "  sleep 2 woke up"
               backendBuild.startBuild("--wait", "--env=ENABLE_DATA_ENTRY=True").logs("-f")
               
               //temporarily set ENABLE_DATA_ENTRY=True during testing because False currently leads to a failing unit test
