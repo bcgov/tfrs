@@ -155,8 +155,15 @@ stages {
               )
               openshift.create(buildtemplateBackend)
               echo "  sleep 1"
-              sleep(time:120,unit:"SECONDS")
+              sleep(time:10,unit:"SECONDS")
               echo "  sleep 1 woke up"
+              echo "Cancelling previous builds..."
+              timeout(10) {
+                abortAllPreviousBuildInProgress(currentBuild)
+              }
+              echo "  sleep 2"
+              sleep(time:120,unit:"SECONDS")
+              echo "  sleep 2 woke up"
               notifyStageStatus ("Build Backend and Run Unit Test", "SUCCESS")
 
             }
