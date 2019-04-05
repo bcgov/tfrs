@@ -52,7 +52,7 @@
                 "name": "tfrs-backend${NAME_SUFFIX}",
                 "creationTimestamp": null,
                 "labels": {
-                    "base-name":"tfrs-backend"
+                    "created-by": "pr-based-pipeline"
                 },                
                 "annotations": {
                     "description": "Defines how to build tfrs backend"
