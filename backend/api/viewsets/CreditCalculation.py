@@ -4,10 +4,12 @@ from rest_framework.response import Response
 
 from auditable.views import AuditableMixin
 
+from api.models.ApprovedFuel import ApprovedFuel
 from api.models.CompliancePeriod import CompliancePeriod
 from api.permissions.CreditCalculation import \
         CreditCalculationPermissions
-from api.serializers.CreditCalculation import CarbonIntensityLimitSerializer
+from api.serializers.CreditCalculation import \
+        CarbonIntensityLimitSerializer, EnergyEffectivenessRatioSerializer
 
 
 class CreditCalculationViewSet(
@@ -25,6 +27,7 @@ class CreditCalculationViewSet(
     serializer_class = CarbonIntensityLimitSerializer
     serializer_classes = {
         'list_carbon_intensity_limit': CarbonIntensityLimitSerializer,
+        'list_energy_effectiveness_ratio': EnergyEffectivenessRatioSerializer
     }
 
     def get_serializer_class(self):
@@ -40,5 +43,15 @@ class CreditCalculationViewSet(
         """
         compliance_periods = self.get_queryset().order_by(*self.ordering)
         serializer = self.get_serializer(compliance_periods, many=True)
+
+        return Response(serializer.data)
+
+    @list_route(methods=['get'])
+    def list_energy_effectiveness_ratio(self, request):
+        """
+        Returns a list of Energy Effectiveness Ratio
+        """
+        fuels = ApprovedFuel.objects.all().order_by('name')
+        serializer = self.get_serializer(fuels, many=True)
 
         return Response(serializer.data)

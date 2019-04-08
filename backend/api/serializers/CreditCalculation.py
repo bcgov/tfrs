@@ -22,14 +22,22 @@
 """
 from rest_framework import serializers
 
+from api.models.ApprovedFuel import ApprovedFuel
 from api.models.CarbonIntensityLimit import CarbonIntensityLimit
 from api.models.CompliancePeriod import CompliancePeriod
+from api.models.EnergyEffectivenessRatio import EnergyEffectivenessRatio
 
 
 class CarbonIntensityLimitSerializer(serializers.ModelSerializer):
+    """
+    Default Carbon Intensity Limit Serializer
+    """
     limits = serializers.SerializerMethodField()
 
     def get_limits(self, obj):
+        """
+        Gets the Carbon Intensity Limits for the compliance period
+        """
         diesel_limit = CarbonIntensityLimit.objects.filter(
             compliance_period=obj.id,
             fuel_class__fuel_class="Diesel"
@@ -54,3 +62,41 @@ class CarbonIntensityLimitSerializer(serializers.ModelSerializer):
     class Meta:
         model = CompliancePeriod
         fields = ('id', 'description', 'display_order', 'limits')
+
+
+class EnergyEffectivenessRatioSerializer(serializers.ModelSerializer):
+    """
+    Default Energy Effectiveness Ratio Serializer
+    """
+    energy_effectiveness_ratio = serializers.SerializerMethodField()
+
+    def get_energy_effectiveness_ratio(self, obj):
+        """
+        Gets the Energy Effectiveness Ratio for the Approved Fuel
+        """
+        diesel_ratio = EnergyEffectivenessRatio.objects.filter(
+            fuel=obj.id,
+            fuel_class__fuel_class="Diesel"
+        ).order_by('-effective_date').first()
+
+        gasoline_ratio = EnergyEffectivenessRatio.objects.filter(
+            fuel=obj.id,
+            fuel_class__fuel_class="Gasoline"
+        ).order_by('-effective_date').first()
+
+        return {
+            "diesel": {
+                "fuel": "Diesel Class",
+                "ratio": diesel_ratio.ratio if diesel_ratio else None
+            },
+            "gasoline": {
+                "fuel": "Gasoline Class",
+                "ratio": gasoline_ratio.ratio if gasoline_ratio else None
+            }
+        }
+
+    class Meta:
+        model = ApprovedFuel
+        fields = (
+            'id', 'name', 'energy_effectiveness_ratio'
+        )
