@@ -31,12 +31,13 @@ from .base_test_case import BaseTestCase
 class TestCreditCalculation(BaseTestCase):
     """Tests for the credit calculation endpoint"""
     extra_fixtures = [
+        'test/test_carbon_intensity.json',
         'test/test_carbon_intensity_limits.json',
         'test/test_energy_densities.json',
         'test/test_energy_effectiveness_ratio.json'
     ]
 
-    def test_get_carbon_intensity_list(self):
+    def test_get_carbon_intensity_limits_list(self):
         """
         Test that the carbon intensity limit shows up properly
         """
@@ -56,6 +57,25 @@ class TestCreditCalculation(BaseTestCase):
             response_data[8]["limits"]["gasoline"]["fuel"], "Gasoline Class")
         self.assertEqual(
             response_data[8]["limits"]["gasoline"]["density"], 82.41)
+
+    def test_get_carbon_intensity_list(self):
+        """
+        Test that the carbon intensity shows up properly
+        """
+        response = self.clients['gov_analyst'].get(
+            "/api/credit_calculation/carbon_intensity"
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        response_data = json.loads(response.content.decode("utf-8"))
+
+        self.assertEqual(response_data[1]["name"], "CNG")
+        self.assertEqual(response_data[1]["carbonIntensity"], 63.64)
+        self.assertEqual(response_data[6]["name"], "LNG")
+        self.assertEqual(response_data[6]["carbonIntensity"], 112.65)
 
     def test_get_energy_density_list(self):
         """
