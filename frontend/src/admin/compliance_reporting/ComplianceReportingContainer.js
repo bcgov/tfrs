@@ -30,6 +30,7 @@ class ComplianceReportingContainer extends Component {
       />,
       <ComplianceReportingPage
         carbonIntensityLimits={this.props.carbonIntensityLimits}
+        energyEffectivenessRatios={this.props.energyEffectivenessRatios}
         key="compliance-reporting"
         loggedInUser={this.props.loggedInUser}
         title="Compliance Reporting"
@@ -46,6 +47,10 @@ ComplianceReportingContainer.propTypes = {
     isFetching: PropTypes.bool,
     items: PropTypes.arrayOf(PropTypes.shape())
   }).isRequired,
+  energyEffectivenessRatios: PropTypes.shape({
+    isFetching: PropTypes.bool,
+    items: PropTypes.arrayOf(PropTypes.shape())
+  }).isRequired,
   loggedInUser: PropTypes.shape().isRequired
 };
 
@@ -53,6 +58,10 @@ const mapStateToProps = state => ({
   carbonIntensityLimits: {
     isFetching: state.rootReducer.carbonIntensityLimits.isFetching,
     items: state.rootReducer.carbonIntensityLimits.items
+  },
+  energyEffectivenessRatios: {
+    isFetching: state.rootReducer.energyEffectivenessRatios.isFetching,
+    items: state.rootReducer.energyEffectivenessRatios.items
   },
   loggedInUser: state.rootReducer.userRequest.loggedInUser
 });

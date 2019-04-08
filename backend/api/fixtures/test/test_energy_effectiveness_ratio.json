@@ -1,0 +1,46 @@
+[{
+  "fields": {
+    "fuel": ["Hydrogen"],
+    "fuel_class": ["Diesel"],
+    "ratio": "1.9",
+    "effective_date": "2017-01-01"
+  },
+  "model": "api.energyeffectivenessratio",
+  "pk": null
+}, {
+  "fields": {
+    "fuel": ["Hydrogen"],
+    "fuel_class": ["Gasoline"],
+    "ratio": "2.5",
+    "effective_date": "2017-01-01"
+  },
+  "model": "api.energyeffectivenessratio",
+  "pk": null
+}, {
+  "fields": {
+    "fuel": ["LNG"],
+    "fuel_class": ["Diesel"],
+    "ratio": "1.0",
+    "effective_date": "2017-01-01"
+  },
+  "model": "api.energyeffectivenessratio",
+  "pk": null
+}, {
+  "fields": {
+    "fuel": ["CNG"],
+    "fuel_class": ["Diesel"],
+    "ratio": "0.9",
+    "effective_date": "2017-01-01"
+  },
+  "model": "api.energyeffectivenessratio",
+  "pk": null
+}, {
+  "fields": {
+    "fuel": ["CNG"],
+    "fuel_class": ["Gasoline"],
+    "ratio": "1.0",
+    "effective_date": "2017-01-01"
+  },
+  "model": "api.energyeffectivenessratio",
+  "pk": null
+}]
