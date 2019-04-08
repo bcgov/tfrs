@@ -10,7 +10,7 @@ from api.permissions.CreditCalculation import \
 from api.serializers.CreditCalculation import CarbonIntensityLimitSerializer
 
 
-class CreditCalculationViewSet(
+class CarbonIntensityLimitViewSet(
         AuditableMixin, mixins.ListModelMixin, viewsets.GenericViewSet):
     """
     This viewset automatically provides `list`
@@ -24,7 +24,7 @@ class CreditCalculationViewSet(
     ordering = ('display_order',)
     serializer_class = CarbonIntensityLimitSerializer
     serializer_classes = {
-        'list_carbon_intensity_limit': CarbonIntensityLimitSerializer,
+        'list': CarbonIntensityLimitSerializer,
     }
 
     def get_serializer_class(self):
@@ -32,13 +32,3 @@ class CreditCalculationViewSet(
             return self.serializer_classes[self.action]
 
         return self.serializer_classes['default']
-
-    @list_route(methods=['get'])
-    def list_carbon_intensity_limit(self, request):
-        """
-        Returns a list of Carbon Intensity Limits
-        """
-        compliance_periods = self.get_queryset().order_by(*self.ordering)
-        serializer = self.get_serializer(compliance_periods, many=True)
-
-        return Response(serializer.data)

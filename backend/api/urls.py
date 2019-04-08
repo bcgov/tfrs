@@ -41,7 +41,7 @@ from .viewsets.SigningAuthorityConfirmation \
     import SigningAuthorityConfirmationViewSet
 from .viewsets.User import UserViewSet
 from .viewsets.CreditTradeComments import CreditTradeCommentsViewSet
-from .viewsets.CreditCalculation import CreditCalculationViewSet
+from .viewsets.CreditCalculation import CarbonIntensityLimitViewSet
 
 # Create a router and register our views with it.
 ROUTER = DefaultRouter(trailing_slash=False)
@@ -72,7 +72,7 @@ if FUEL_CODES_API['ENABLED'] or TESTING:
     ROUTER.register(r'fuel_codes', FuelCodeViewSet)
 
 if CREDIT_CALCULATION_API['ENABLED'] or TESTING:
-    ROUTER.register(r'credit_calculation', CreditCalculationViewSet)
+    ROUTER.register(r'credit_calculation/carbon_intensity_limits', CarbonIntensityLimitViewSet)
 
 urlpatterns = [
     # Swagger documentation
