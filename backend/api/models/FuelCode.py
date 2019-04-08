@@ -79,7 +79,12 @@ class FuelCode(Auditable):
         db_comment="Expiry Date; The date that the approved fiel code "
                    "expires"
     )
-    fuel = models.ForeignKey('ApprovedFuel', blank=False, null=False, on_delete=PROTECT)
+    fuel = models.ForeignKey(
+        'ApprovedFuel',
+        blank=False,
+        null=False,
+        on_delete=PROTECT
+    )
     feedstock = models.CharField(
         max_length=100,
         blank=True,
