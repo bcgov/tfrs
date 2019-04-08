@@ -23,9 +23,9 @@
 from rest_framework import serializers
 
 from api.models.ApprovedFuel import ApprovedFuel
-from api.models.CarbonIntensity import CarbonIntensity
 from api.models.CarbonIntensityLimit import CarbonIntensityLimit
 from api.models.CompliancePeriod import CompliancePeriod
+from api.models.DefaultCarbonIntensity import DefaultCarbonIntensity
 from api.models.EnergyDensity import EnergyDensity
 from api.models.EnergyEffectivenessRatio import EnergyEffectivenessRatio
 
@@ -66,7 +66,7 @@ class CarbonIntensityLimitSerializer(serializers.ModelSerializer):
         fields = ('id', 'description', 'display_order', 'limits')
 
 
-class CarbonIntensitySerializer(serializers.ModelSerializer):
+class DefaultCarbonIntensitySerializer(serializers.ModelSerializer):
     """
     Default Carbon Intensity Serializer
     """
@@ -76,7 +76,7 @@ class CarbonIntensitySerializer(serializers.ModelSerializer):
         """
         Gets the Carbon Intensity for the Approved Fuel
         """
-        density = CarbonIntensity.objects.filter(
+        density = DefaultCarbonIntensity.objects.filter(
             fuel=obj.id
         ).order_by('-effective_date').first()
 
@@ -105,7 +105,7 @@ class EnergyDensitySerializer(serializers.ModelSerializer):
 
         return {
             "density": density.density if density else None,
-            "unit_of_measure": density.unit_of_measure if density else None
+            "unit_of_measure": density.unit_of_measure.name if density else None
         }
 
     class Meta:

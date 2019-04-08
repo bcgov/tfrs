@@ -20,38 +20,25 @@
     See the License for the specific language governing permissions and
     limitations under the License.
 """
-from decimal import Decimal
 from django.db import models
-from django.db.models import PROTECT
 
+from api.managers.UnitOfMeasureManager import UnitOfMeasureManager
 from api.models.mixins.EffectiveDates import EffectiveDates
 from auditable.models import Auditable
 
 
-class EnergyDensity(Auditable, EffectiveDates):
+class UnitOfMeasure(Auditable, EffectiveDates):
     """
-    Energy Densities for Approved Fuel
+    Unit of Measure
     """
-    fuel = models.ForeignKey(
-        'ApprovedFuel',
-        related_name='energy_density',
-        on_delete=PROTECT
+    name = models.CharField(
+        max_length=50,
+        db_comment="Freeform text for Unit of Measure"
     )
-    density = models.DecimalField(
-        decimal_places=2,
-        default=Decimal('0.00'),
-        max_digits=5,
-        db_comment="Energy density for the specific fuel class"
-    )
-    unit_of_measure = models.ForeignKey(
-        'UnitOfMeasure',
-        related_name='energy_density',
-        on_delete=PROTECT
-    )
+
+    objects = UnitOfMeasureManager()
 
     class Meta:
-        db_table = 'energy_density'
+        db_table = 'unit_of_measure'
 
-    db_table_comment = "Contains the energy density for each approved fuel. " \
-                       "These densities should help the user understand how " \
-                       "current and future credits will be calculated."
+    db_table_comment = "Unit of Measure lookup table"

@@ -28,7 +28,7 @@ from api.models.mixins.EffectiveDates import EffectiveDates
 from auditable.models import Auditable
 
 
-class CarbonIntensity(Auditable, EffectiveDates):
+class DefaultCarbonIntensity(Auditable, EffectiveDates):
     """
     Carbon Intensities for Approved Fuel
     """
@@ -36,7 +36,7 @@ class CarbonIntensity(Auditable, EffectiveDates):
         'ApprovedFuel',
         blank=False,
         null=False,
-        related_name='carbon_intensity',
+        related_name='default_carbon_intensity',
         on_delete=PROTECT
     )
     density = models.DecimalField(
@@ -49,9 +49,9 @@ class CarbonIntensity(Auditable, EffectiveDates):
     )
 
     class Meta:
-        db_table = 'carbon_intensity'
+        db_table = 'default_carbon_intensity'
 
-    db_table_comment = "Contains the carbon intensity for each approved " \
-                       "fuel. These densities should help the user " \
+    db_table_comment = "Contains the default carbon intensity for each " \
+                       "approved fuel. These densities should help the user " \
                        "understand how current and future credits will be " \
                        "calculated."

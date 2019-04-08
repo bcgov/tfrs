@@ -8,7 +8,7 @@ from api.permissions.CreditCalculation import \
         CreditCalculationPermissions
 from api.serializers.CreditCalculation import \
         CarbonIntensityLimitSerializer, \
-        CarbonIntensitySerializer, \
+        DefaultCarbonIntensitySerializer, \
         EnergyDensitySerializer, \
         EnergyEffectivenessRatioSerializer
 
@@ -36,7 +36,7 @@ class CarbonIntensityLimitViewSet(
         return self.serializer_classes['default']
 
 
-class CarbonIntensityViewSet(
+class DefaultCarbonIntensityViewSet(
         AuditableMixin, mixins.ListModelMixin, viewsets.GenericViewSet):
     """
     This viewset automatically provides `list`
@@ -47,9 +47,9 @@ class CarbonIntensityViewSet(
     filter_backends = (filters.OrderingFilter,)
     ordering_fields = '__all__'
     ordering = ('name',)
-    serializer_class = CarbonIntensitySerializer
+    serializer_class = DefaultCarbonIntensitySerializer
     serializer_classes = {
-        'list': CarbonIntensitySerializer
+        'list': DefaultCarbonIntensitySerializer
     }
 
     def get_serializer_class(self):
