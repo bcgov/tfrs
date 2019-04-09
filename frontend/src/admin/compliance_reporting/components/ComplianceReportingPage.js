@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import Loading from '../../../app/components/Loading';
-import CarbonIntensitiesTable from './CarbonIntensitiesTable';
+import DefaultCarbonIntensitiesTable from './DefaultCarbonIntensitiesTable';
 import CarbonIntensityLimitsTable from './CarbonIntensityLimitsTable';
 import EnergyEffectivenessRatiosTable from './EnergyEffectivenessRatiosTable';
 import EnergyDensitiesTable from './EnergyDensitiesTable';
@@ -57,15 +57,15 @@ const ComplianceReportingPage = props => (
 
     <div className="row">
       <div className="col-md-12 col-lg-6">
-        <h2>Carbon Intensities</h2>
-        {props.carbonIntensities.isFetching && <Loading />}
-        {!props.carbonIntensities.isFetching &&
-          <CarbonIntensitiesTable
-            items={props.carbonIntensities.items}
-            isFetching={props.carbonIntensities.isFetching}
+        <h2>Default Carbon Intensities</h2>
+        {props.defaultCarbonIntensities.isFetching && <Loading />}
+        {!props.defaultCarbonIntensities.isFetching &&
+          <DefaultCarbonIntensitiesTable
+            items={props.defaultCarbonIntensities.items.filter(item => item.carbonIntensity)}
+            isFetching={props.defaultCarbonIntensities.isFetching}
             isEmpty={
-              props.carbonIntensities.items &&
-              props.carbonIntensities.items.length === 0
+              props.defaultCarbonIntensities.items &&
+              props.defaultCarbonIntensities.items.length === 0
             }
             loggedInUser={props.loggedInUser}
           />
@@ -77,7 +77,8 @@ const ComplianceReportingPage = props => (
         {props.energyDensities.isFetching && <Loading />}
         {!props.energyDensities.isFetching &&
           <EnergyDensitiesTable
-            items={props.energyDensities.items}
+            items={props.energyDensities.items.filter(item =>
+              item.energyDensity && item.energyDensity.density)}
             isFetching={props.energyDensities.isFetching}
             isEmpty={
               props.energyDensities.items &&
@@ -95,11 +96,11 @@ ComplianceReportingPage.defaultProps = {
 };
 
 ComplianceReportingPage.propTypes = {
-  carbonIntensities: PropTypes.shape({
+  carbonIntensityLimits: PropTypes.shape({
     isFetching: PropTypes.bool,
     items: PropTypes.arrayOf(PropTypes.shape)
   }).isRequired,
-  carbonIntensityLimits: PropTypes.shape({
+  defaultCarbonIntensities: PropTypes.shape({
     isFetching: PropTypes.bool,
     items: PropTypes.arrayOf(PropTypes.shape)
   }).isRequired,

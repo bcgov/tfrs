@@ -16,8 +16,9 @@ import { referenceData } from './referenceDataReducer';
 import sessionTimeout from './sessionTimeoutReducer';
 import tableState from './tableStateReducer';
 import { autocomplete } from './autocompleteReducer';
-import { defaultCarbonIntensities, energyDensities } from './creditCalculationReducers';
 import { carbonIntensities } from '../actions/carbonIntensities';
+import { defaultCarbonIntensities } from '../actions/defaultCarbonIntensities';
+import { energyDensities } from '../actions/energyDensities';
 import { energyEffectivenessRatios } from '../actions/energyEffectivenessRatios';
 
 const rootReducer = combineReducers({
@@ -47,9 +48,9 @@ const rootReducer = combineReducers({
   userAdmin,
   userRequest,
   userViewRequest,
-  defaultCarbonIntensities,
+  defaultCarbonIntensities: defaultCarbonIntensities.reducer(),
   carbonIntensityLimits: carbonIntensities.reducer(),
-  energyDensities,
+  energyDensities: energyDensities.reducer(),
   energyEffectivenessRatios: energyEffectivenessRatios.reducer()
 });
 

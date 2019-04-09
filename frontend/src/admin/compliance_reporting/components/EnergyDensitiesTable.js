@@ -15,10 +15,11 @@ const EnergyDensitiesTable = (props) => {
     Header: 'Fuel',
     id: 'title'
   }, {
-    accessor: item => (item.energyDensity && `${item.energyDensity.density.toFixed(2)} ${item.energyDensity.unitOfMeasure}`),
+    accessor: item => (item.energyDensity && item.energyDensity.density && `${item.energyDensity.density.toFixed(2)} ${item.energyDensity.unitOfMeasure}`),
     className: 'col-density',
     Header: 'Energy Density/Unit',
-    id: 'energy-density'
+    id: 'energy-density',
+    width: 250
   }];
 
   const filterMethod = (filter, row, column) => {
