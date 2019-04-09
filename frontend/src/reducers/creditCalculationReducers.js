@@ -1,27 +1,71 @@
 const MOCKDATA_energyEffectivenessRatios = {
   items: [
     {
-      compliancePeriod: 4,
-      name: '2018 and thereafter',
-      effectiveDate: '20170101T000000-0800',
+      name: 'Hydrogen',
+      effectiveDate: '2017-01-01',
       expiryDate: null,
-      energyEffectivenessRatios: [
-        {
-          fuel: "Petroleum-based Diesel",
-          diesel: 1.0,
-          gasoline: null
+      energyEffectivenessRatio: {
+        diesel: {
+          fuel: 'Diesel Class',
+          ratio: 1.9
         },
-        {
-          fuel: "Petroleum-based gasoline",
-          diesel: null,
-          gasoline: 1.0
+        gasoline: {
+          fuel: 'Gasoline Class',
+          ratio: 2.5
+        }
+      }
+    }, {
+      name: 'LNG',
+      effectiveDate: '2017-01-01',
+      expiryDate: null,
+      energyEffectivenessRatio: {
+        diesel: {
+          fuel: 'Diesel Class',
+          ratio: 1.0
+        }
+      }
+    }, {
+      name: 'CNG',
+      effectiveDate: '2017-01-01',
+      expiryDate: null,
+      energyEffectivenessRatio: {
+        diesel: {
+          fuel: 'Diesel Class',
+          ratio: 0.9
         },
-        {
-          fuel: "Hydrogen",
-          diesel: 1.9,
-          gasoline: 2.5
+        gasoline: {
+          fuel: 'Gasoline Class',
+          ratio: 1.0
+        }
+      }
+    }, {
+      name: 'Electricity',
+      effectiveDate: '2017-01-01',
+      expiryDate: null,
+      energyEffectivenessRatio: {
+        diesel: {
+          fuel: 'Diesel Class',
+          ratio: 2.7
         },
-      ]
+        gasoline: {
+          fuel: 'Gasoline Class',
+          ratio: 3.4
+        }
+      }
+    }, {
+      name: 'Propane',
+      effectiveDate: '2017-01-01',
+      expiryDate: null,
+      energyEffectivenessRatio: {
+        diesel: {
+          fuel: 'Diesel Class',
+          ratio: 1.0
+        },
+        gasoline: {
+          fuel: 'Gasoline Class',
+          ratio: 1.0
+        }
+      }
     }
   ],
   isFetching: false,

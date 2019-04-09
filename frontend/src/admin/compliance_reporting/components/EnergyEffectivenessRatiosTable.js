@@ -8,29 +8,29 @@ import 'react-table/react-table.css';
 
 import ReactTable from '../../../app/components/StateSavingReactTable';
 
-const CarbonIntensityLimitsTable = (props) => {
+const EnergyEffectivenessRatiosTable = (props) => {
   const columns = [{
     accessor: item => item.name,
     className: 'col-title',
     Header: 'Compliance Period',
     id: 'title'
   }, {
-    accessor: item => (item.limits.diesel ? item.limits.diesel.density : 0),
+    accessor: item => (item.energyEffectivenessRatio.diesel ? item.energyEffectivenessRatio.diesel.ratio.toFixed(1) : 'N/A'),
     className: 'col-diesel',
     Header: (
       <div>
-        Carbon Intensity Limit <br />for Diesel Class Fuel
-        <div className="unit-of-measure">gCO<sub>2</sub>e/MJ</div>
+        Diesel Class Fuel<br />
+        Energy Effectiveness Ratio
       </div>
     ),
     id: 'diesel'
   }, {
-    accessor: item => (item.limits.diesel ? item.limits.gasoline.density : 0),
+    accessor: item => (item.energyEffectivenessRatio.gasoline ? item.energyEffectivenessRatio.gasoline.ratio.toFixed(1) : 'N/A'),
     className: 'col-gasoline',
     Header: (
       <div>
-        Carbon Intensity Limit <br />for Gasoline Class Fuel
-        <div className="unit-of-measure">gCO<sub>2</sub>e/MJ</div>
+        Gasoline Class Fuel<br />
+        Energy Effectiveness Ratio
       </div>
     ),
     id: 'gasoline'
@@ -63,9 +63,9 @@ const CarbonIntensityLimitsTable = (props) => {
   );
 };
 
-CarbonIntensityLimitsTable.defaultProps = {};
+EnergyEffectivenessRatiosTable.defaultProps = {};
 
-CarbonIntensityLimitsTable.propTypes = {
+EnergyEffectivenessRatiosTable.propTypes = {
   items: PropTypes.arrayOf(PropTypes.shape({
   })).isRequired,
   isEmpty: PropTypes.bool.isRequired,
@@ -75,4 +75,4 @@ CarbonIntensityLimitsTable.propTypes = {
   }).isRequired
 };
 
-export default CarbonIntensityLimitsTable;
+export default EnergyEffectivenessRatiosTable;

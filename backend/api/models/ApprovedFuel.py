@@ -39,6 +39,12 @@ class ApprovedFuel(Auditable, EffectiveDates):
         db_comment="Approved fuel name"
     )
 
+    credit_calculation_only = models.BooleanField(
+        default=False,
+        db_comment="Flag. True if this fuel type is only applicable for "
+                   "Credit Calculation functions."
+    )
+
     objects = ApprovedFuelManager()
 
     def natural_key(self):
