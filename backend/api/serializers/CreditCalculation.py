@@ -25,6 +25,8 @@ from rest_framework import serializers
 from api.models.ApprovedFuel import ApprovedFuel
 from api.models.CarbonIntensityLimit import CarbonIntensityLimit
 from api.models.CompliancePeriod import CompliancePeriod
+from api.models.DefaultCarbonIntensity import DefaultCarbonIntensity
+from api.models.EnergyDensity import EnergyDensity
 from api.models.EnergyEffectivenessRatio import EnergyEffectivenessRatio
 
 
@@ -62,6 +64,55 @@ class CarbonIntensityLimitSerializer(serializers.ModelSerializer):
     class Meta:
         model = CompliancePeriod
         fields = ('id', 'description', 'display_order', 'limits')
+
+
+class DefaultCarbonIntensitySerializer(serializers.ModelSerializer):
+    """
+    Default Carbon Intensity Serializer
+    """
+    carbon_intensity = serializers.SerializerMethodField()
+
+    def get_carbon_intensity(self, obj):
+        """
+        Gets the Carbon Intensity for the Approved Fuel
+        """
+        density = DefaultCarbonIntensity.objects.filter(
+            fuel=obj.id
+        ).order_by('-effective_date').first()
+
+        return density.density if density else None
+
+    class Meta:
+        model = ApprovedFuel
+        fields = (
+            'id', 'name', 'carbon_intensity'
+        )
+
+
+class EnergyDensitySerializer(serializers.ModelSerializer):
+    """
+    Default Energy Density Serializer
+    """
+    energy_density = serializers.SerializerMethodField()
+
+    def get_energy_density(self, obj):
+        """
+        Gets the Energy Density for the Approved Fuel
+        """
+        density = EnergyDensity.objects.filter(
+            fuel=obj.id
+        ).order_by('-effective_date').first()
+
+        return {
+            "density": density.density if density else None,
+            "unit_of_measure": density.unit_of_measure.name if density else None
+        }
+
+    class Meta:
+        model = ApprovedFuel
+        fields = (
+            'id', 'name', 'energy_density'
+        )
 
 
 class EnergyEffectivenessRatioSerializer(serializers.ModelSerializer):

@@ -1,11 +1,9 @@
 .page-compliance-reporting {
   .unit-of-measure {
     border-top: 1px solid $border-grey;
-    margin-top: 0.5rem;
-    padding-top: 0.5rem;
   }
 
-  .col-diesel, .col-gasoline {
+  .col-diesel, .col-gasoline, .col-density {
     text-align: right;
   }
 }
