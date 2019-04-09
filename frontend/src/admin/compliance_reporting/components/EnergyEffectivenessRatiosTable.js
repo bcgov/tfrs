@@ -29,7 +29,8 @@ const EnergyEffectivenessRatiosTable = (props) => {
         Energy Effectiveness Ratio
       </div>
     ),
-    id: 'diesel'
+    id: 'diesel',
+    width: 200
   }, {
     accessor: item => (
       item.energyEffectivenessRatio.gasoline &&
@@ -43,7 +44,8 @@ const EnergyEffectivenessRatiosTable = (props) => {
         Energy Effectiveness Ratio
       </div>
     ),
-    id: 'gasoline'
+    id: 'gasoline',
+    width: 200
   }];
 
   const filterMethod = (filter, row, column) => {
