@@ -8,33 +8,21 @@ import 'react-table/react-table.css';
 
 import ReactTable from '../../../app/components/StateSavingReactTable';
 
-const CarbonIntensityLimitsTable = (props) => {
+const CarbonIntensitiesTable = (props) => {
   const columns = [{
     accessor: item => item.name,
     className: 'col-title',
-    Header: 'Compliance Period',
-    id: 'title',
-    width: 200
+    Header: 'Fuel',
+    id: 'title'
   }, {
-    accessor: item => (item.limits.diesel ? item.limits.diesel.density : 0),
-    className: 'col-diesel',
+    accessor: item => item.carbonIntensity,
+    className: 'col-density',
     Header: (
       <div>
-        Carbon Intensity Limit for Diesel Class Fuel
-        <div className="unit-of-measure">(gCO<sub>2</sub>e/MJ)</div>
+        Carbon Intensity (gCO<sub>2</sub>e/MJ)
       </div>
     ),
-    id: 'diesel'
-  }, {
-    accessor: item => (item.limits.diesel ? item.limits.gasoline.density : 0),
-    className: 'col-gasoline',
-    Header: (
-      <div>
-        Carbon Intensity Limit for Gasoline Class Fuel
-        <div className="unit-of-measure">(gCO<sub>2</sub>e/MJ)</div>
-      </div>
-    ),
-    id: 'gasoline'
+    id: 'carbon-intensity'
   }];
 
   const filterMethod = (filter, row, column) => {
@@ -48,7 +36,7 @@ const CarbonIntensityLimitsTable = (props) => {
 
   return (
     <ReactTable
-      stateKey="carbon-intensity-limit"
+      stateKey="carbon-intensity"
       className="searchable"
       columns={columns}
       data={props.items}
@@ -64,9 +52,9 @@ const CarbonIntensityLimitsTable = (props) => {
   );
 };
 
-CarbonIntensityLimitsTable.defaultProps = {};
+CarbonIntensitiesTable.defaultProps = {};
 
-CarbonIntensityLimitsTable.propTypes = {
+CarbonIntensitiesTable.propTypes = {
   items: PropTypes.arrayOf(PropTypes.shape({
   })).isRequired,
   isEmpty: PropTypes.bool.isRequired,
@@ -76,4 +64,4 @@ CarbonIntensityLimitsTable.propTypes = {
   }).isRequired
 };
 
-export default CarbonIntensityLimitsTable;
+export default CarbonIntensitiesTable;

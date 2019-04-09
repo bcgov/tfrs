@@ -1,0 +1,33 @@
+[{
+  "fields": {
+    "fuel": ["CNG"],
+    "density": "63.64",
+    "effective_date": "2017-01-01"
+  },
+  "model": "api.defaultcarbonintensity",
+  "pk": null
+}, {
+  "fields": {
+    "fuel": ["Hydrogen"],
+    "density": "96.82",
+    "effective_date": "2017-01-01"
+  },
+  "model": "api.defaultcarbonintensity",
+  "pk": null
+}, {
+  "fields": {
+    "fuel": ["LNG"],
+    "density": "112.65",
+    "effective_date": "2017-01-01"
+  },
+  "model": "api.defaultcarbonintensity",
+  "pk": null
+}, {
+  "fields": {
+    "fuel": ["Propane"],
+    "density": "98.96",
+    "effective_date": "2017-01-01"
+  },
+  "model": "api.defaultcarbonintensity",
+  "pk": null
+}]
