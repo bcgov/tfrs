@@ -11,5 +11,6 @@ window.tfrs_config = {
   'fuel_codes.enabled': true,
   'keycloak.custom_login': true,
   'credit_transfer.enabled': true,
-  'compliance_reporting.enabled': true
+  'compliance_reporting.enabled': true,
+  'credit_calculation_api.enabled': true
 };

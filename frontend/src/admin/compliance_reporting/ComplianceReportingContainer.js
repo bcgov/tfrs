@@ -10,6 +10,7 @@ import PropTypes from 'prop-types';
 import ComplianceReportingPage from './components/ComplianceReportingPage';
 
 import AdminTabs from '../components/AdminTabs';
+import { carbonIntensities } from '../../actions/carbonIntensities';
 
 class ComplianceReportingContainer extends Component {
   constructor (props) {
@@ -19,6 +20,7 @@ class ComplianceReportingContainer extends Component {
   }
 
   componentDidMount () {
+    this.props.loadCarbonIntensities();
   }
 
   render () {
@@ -61,7 +63,8 @@ ComplianceReportingContainer.propTypes = {
     isFetching: PropTypes.bool,
     items: PropTypes.arrayOf(PropTypes.shape())
   }).isRequired,
-  loggedInUser: PropTypes.shape().isRequired
+  loggedInUser: PropTypes.shape().isRequired,
+  loadCarbonIntensities: PropTypes.func.isRequired
 };
 
 const mapStateToProps = state => ({
@@ -84,7 +87,8 @@ const mapStateToProps = state => ({
   loggedInUser: state.rootReducer.userRequest.loggedInUser
 });
 
-const mapDispatchToProps = dispatch => ({
-});
+const mapDispatchToProps = {
+  loadCarbonIntensities: carbonIntensities.find
+};
 
 export default connect(mapStateToProps, mapDispatchToProps)(ComplianceReportingContainer);
