@@ -12,10 +12,16 @@ const EnergyEffectivenessRatiosTable = (props) => {
   const columns = [{
     accessor: item => item.name,
     className: 'col-title',
-    Header: 'Compliance Period',
+    Header: (
+      <div className="header-fuel">Fuel</div>
+    ),
     id: 'title'
   }, {
-    accessor: item => (item.energyEffectivenessRatio.diesel ? item.energyEffectivenessRatio.diesel.ratio.toFixed(1) : 'N/A'),
+    accessor: item => (
+      item.energyEffectivenessRatio.diesel &&
+      item.energyEffectivenessRatio.diesel.ratio
+        ? item.energyEffectivenessRatio.diesel.ratio.toFixed(1) : 'N/A'
+    ),
     className: 'col-diesel',
     Header: (
       <div>
@@ -25,7 +31,11 @@ const EnergyEffectivenessRatiosTable = (props) => {
     ),
     id: 'diesel'
   }, {
-    accessor: item => (item.energyEffectivenessRatio.gasoline ? item.energyEffectivenessRatio.gasoline.ratio.toFixed(1) : 'N/A'),
+    accessor: item => (
+      item.energyEffectivenessRatio.gasoline &&
+      item.energyEffectivenessRatio.gasoline.ratio
+        ? item.energyEffectivenessRatio.gasoline.ratio.toFixed(1) : 'N/A'
+    ),
     className: 'col-gasoline',
     Header: (
       <div>
@@ -47,7 +57,7 @@ const EnergyEffectivenessRatiosTable = (props) => {
 
   return (
     <ReactTable
-      stateKey="carbon-intensity-limit"
+      stateKey="energy-effectiveness-ratio"
       className="searchable"
       columns={columns}
       data={props.items}

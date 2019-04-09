@@ -10,13 +10,14 @@ import ReactTable from '../../../app/components/StateSavingReactTable';
 
 const CarbonIntensityLimitsTable = (props) => {
   const columns = [{
-    accessor: item => item.name,
-    className: 'col-title',
-    Header: 'Compliance Period',
-    id: 'title',
-    width: 200
+    accessor: item => item.description,
+    className: 'col-compliance-period',
+    Header: (
+      <div className="header-compliance-period">Compliance Period</div>
+    ),
+    id: 'title'
   }, {
-    accessor: item => (item.limits.diesel ? item.limits.diesel.density : 0),
+    accessor: item => (item.limits.diesel ? item.limits.diesel.density : 0).toFixed(2),
     className: 'col-diesel',
     Header: (
       <div>
@@ -24,9 +25,10 @@ const CarbonIntensityLimitsTable = (props) => {
         <div className="unit-of-measure">(gCO<sub>2</sub>e/MJ)</div>
       </div>
     ),
-    id: 'diesel'
+    id: 'diesel',
+    width: 300
   }, {
-    accessor: item => (item.limits.diesel ? item.limits.gasoline.density : 0),
+    accessor: item => (item.limits.diesel ? item.limits.gasoline.density : 0).toFixed(2),
     className: 'col-gasoline',
     Header: (
       <div>
@@ -34,7 +36,8 @@ const CarbonIntensityLimitsTable = (props) => {
         <div className="unit-of-measure">(gCO<sub>2</sub>e/MJ)</div>
       </div>
     ),
-    id: 'gasoline'
+    id: 'gasoline',
+    width: 300
   }];
 
   const filterMethod = (filter, row, column) => {

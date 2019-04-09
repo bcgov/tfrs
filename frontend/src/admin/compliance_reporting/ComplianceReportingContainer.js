@@ -11,6 +11,7 @@ import ComplianceReportingPage from './components/ComplianceReportingPage';
 
 import AdminTabs from '../components/AdminTabs';
 import { carbonIntensities } from '../../actions/carbonIntensities';
+import { energyEffectivenessRatios } from '../../actions/energyEffectivenessRatios';
 
 class ComplianceReportingContainer extends Component {
   constructor (props) {
@@ -21,6 +22,7 @@ class ComplianceReportingContainer extends Component {
 
   componentDidMount () {
     this.props.loadCarbonIntensities();
+    this.props.loadEnergyEffectivenessRatios();
   }
 
   render () {
@@ -64,7 +66,8 @@ ComplianceReportingContainer.propTypes = {
     items: PropTypes.arrayOf(PropTypes.shape())
   }).isRequired,
   loggedInUser: PropTypes.shape().isRequired,
-  loadCarbonIntensities: PropTypes.func.isRequired
+  loadCarbonIntensities: PropTypes.func.isRequired,
+  loadEnergyEffectivenessRatios: PropTypes.func.isRequired
 };
 
 const mapStateToProps = state => ({
@@ -88,7 +91,8 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = {
-  loadCarbonIntensities: carbonIntensities.find
+  loadCarbonIntensities: carbonIntensities.find,
+  loadEnergyEffectivenessRatios: energyEffectivenessRatios.find
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(ComplianceReportingContainer);

@@ -37,8 +37,6 @@ if (CONFIG.FUEL_CODES.ENABLED) {
   REFERENCE_DATA_API_ENDPOINTS.transportModes = '/fuel_codes/transport_modes';
 }
 
-export const CARBON_INTENSITIES = '/credit_calculation/carbon_intensity_limits';
-
 export const USERS = '/users';
 export const CURRENT_USER = '/users/current';
 
@@ -49,6 +47,7 @@ export const NOTIFICATIONS_API = '/notifications';
 
 export { default as COMPLIANCE_PERIODS } from './routes/CompliancePeriods';
 export { default as CONTACT_US } from './routes/ContactUs';
+export { default as CREDIT_CALCULATIONS } from './routes/CreditCalculations';
 export { default as ROLES } from './routes/Roles';
 export { default as SIGNING_AUTHORITY_ASSERTIONS } from './routes/SigningAuthorityAssertions';
 export { default as SIGNING_AUTHORITY_CONFIRMATIONS } from './routes/SigningAuthorityConfirmations';
