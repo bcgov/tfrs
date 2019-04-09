@@ -120,23 +120,35 @@ const MOCKDATA_carbonIntensityLimits = {
 
 const MOCKDATA_energyDensities = {
   items: [{
-    compliancePeriod: 4,
-    name: '2018 and thereafter',
-    effectiveDate: '20170101T000000-0800',
-    expiryDate: null,
-    energyDensities: [
-      {
-        fuel: "Biodiesel",
-        density: "34.40",
-        unit: "MJ/L"
-      },
-      {
-        fuel: "CNG",
-        density: "34.85",
-        unit: "MJ/m³"
-      }
-    ]
-
+    name: 'Propane',
+    energyDensity: {
+      density: 25.47,
+      unitOfMeasure: 'MJ/L'
+    }
+  }, {
+    name: 'LNG',
+    energyDensity: {
+      density: 52.46,
+      unitOfMeasure: 'MJ/kg'
+    }
+  }, {
+    name: 'CNG',
+    energyDensity: {
+      density: 37.85,
+      unitOfMeasure: 'MJ/m³'
+    }
+  }, {
+    name: 'Electricity',
+    energyDensity: {
+      density: 3.60,
+      unitOfMeasure: 'MJ/kWh'
+    }
+  }, {
+    name: 'Hydrogen',
+    energyDensity: {
+      density: 141.24,
+      unitOfMeasure: 'MJ/kg'
+    }
   }],
   isFetching: false,
   success: true,
@@ -146,28 +158,25 @@ const MOCKDATA_energyDensities = {
 const MOCKDATA_defaultCarbonIntensities =
   {
     items: [{
-      compliancePeriod: 4,
-      effectiveDate: '20170101T000000-0800', //should match value from compliancePeriod
-      expiryDate: null,
-      energyDensities: [
-        {
-          fuel: "Propane",
-          density: "73.35",
-          unit: "gCO₂e/MJ"
-        },
-        {
-          fuel: "CNG",
-          density: "63.64",
-          unit: "gCO₂e/MJ"
-        }
-      ]
-
+      name: 'Propane',
+      carbonIntensity: 75.35
+    }, {
+      name: 'LNG',
+      carbonIntensity: 112.65
+    }, {
+      name: 'CNG',
+      carbonIntensity: 63.64
+    }, {
+      name: 'Electricity',
+      carbonIntensity: 19.73
+    }, {
+      name: 'Hydrogen',
+      carbonIntensity: 96.82
     }],
     isFetching: false,
     success: true,
     errors: []
   };
-
 
 const energyEffectivenessRatios = (state = MOCKDATA_energyEffectivenessRatios, action) => (state);
 const defaultCarbonIntensities = (state = MOCKDATA_defaultCarbonIntensities, action) => (state);
