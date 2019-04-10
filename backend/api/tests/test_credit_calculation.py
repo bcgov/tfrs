@@ -75,8 +75,8 @@ class TestCreditCalculation(BaseTestCase):
 
         self.assertEqual(response_data[1]["name"], "CNG")
         self.assertEqual(response_data[1]["carbonIntensity"], 63.64)
-        self.assertEqual(response_data[6]["name"], "LNG")
-        self.assertEqual(response_data[6]["carbonIntensity"], 112.65)
+        self.assertEqual(response_data[7]["name"], "LNG")
+        self.assertEqual(response_data[7]["carbonIntensity"], 112.65)
 
     def test_get_energy_density_list(self):
         """

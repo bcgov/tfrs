@@ -32,7 +32,7 @@ class ApprovedFuel(Auditable, EffectiveDates):
     Approved Fuels
     """
     name = models.CharField(
-        max_length=100,
+        max_length=255,
         blank=False,
         null=False,
         unique=True,
