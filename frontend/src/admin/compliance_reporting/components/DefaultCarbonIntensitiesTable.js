@@ -22,7 +22,8 @@ const CarbonIntensitiesTable = (props) => {
         Carbon Intensity (gCO<sub>2</sub>e/MJ)
       </div>
     ),
-    id: 'carbon-intensity'
+    id: 'carbon-intensity',
+    width: 250
   }];
 
   const filterMethod = (filter, row, column) => {

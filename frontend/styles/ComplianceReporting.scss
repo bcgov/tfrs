@@ -1,9 +1,33 @@
 .page-compliance-reporting {
-  .unit-of-measure {
-    border-top: 1px solid $border-grey;
+  h2 {
+    margin-top: 2rem;
   }
 
-  .col-diesel, .col-gasoline, .col-density {
+  > div.row {
+    margin-left: -15px;
+    margin-right: -15px;
+
+    .ReactTable {
+      margin-bottom: 2rem;
+    }
+  }
+
+  .rt-resizable-header-content {
+    height: 100%;
+
+    .header-compliance-period, .header-fuel {
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      justify-content: center;
+    }
+  }
+
+  .col-compliance-period, .col-diesel, .col-gasoline, .col-density {
     text-align: right;
+  }
+
+  .unit-of-measure {
+    border-top: 1px solid $border-grey;
   }
 }
