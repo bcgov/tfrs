@@ -44,7 +44,7 @@ const EnergyDensitiesTable = (props) => {
         desc: false
       }]}
       filterable={filterable}
-      pageSizeOptions={[5, 10, 15, 20, 25, 50, 100]}
+      pageSizeOptions={[5, 10, 15, 20, 25]}
     />
   );
 };
@@ -55,10 +55,7 @@ EnergyDensitiesTable.propTypes = {
   items: PropTypes.arrayOf(PropTypes.shape({
   })).isRequired,
   isEmpty: PropTypes.bool.isRequired,
-  isFetching: PropTypes.bool.isRequired,
-  loggedInUser: PropTypes.shape({
-    isGovernmentUser: PropTypes.bool
-  }).isRequired
+  isFetching: PropTypes.bool.isRequired
 };
 
 export default EnergyDensitiesTable;
