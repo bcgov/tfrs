@@ -20,6 +20,7 @@ import authenticationStateSaga from './authenticationState';
 import notificationsSaga from './notificationTrigger';
 import socketAuthenticationSaga from "./socketAuthentication";
 import autocompleteInvalidatorSaga from './autocompleteInvalidator';
+import {carbonIntensities} from "../actions/carbonIntensities";
 
 const middleware = routerMiddleware(history);
 const sagaMiddleware = createSagaMiddleware();
@@ -62,5 +63,6 @@ sagaMiddleware.run(notificationsSaga, store);
 sagaMiddleware.run(authenticationStateSaga, store);
 sagaMiddleware.run(socketAuthenticationSaga, store);
 sagaMiddleware.run(autocompleteInvalidatorSaga, store);
+sagaMiddleware.run(carbonIntensities.saga);
 
 export default store;
