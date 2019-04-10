@@ -6,6 +6,7 @@ import PropTypes from 'prop-types';
 
 import Loading from '../../app/components/Loading';
 import NotificationsCreditTransactionsTable from './NotificationsCreditTransactionsTable';
+import PERMISSIONS_SECURE_DOCUMENT_UPLOAD from '../../constants/permissions/SecureDocumentUpload';
 import CREDIT_TRANSFER_NOTIFICATIONS from '../../constants/settings/notificationsCreditTransfers';
 import GOVERNMENT_TRANSFER_NOTIFICATIONS from '../../constants/settings/notificationsGovernmentTransfers';
 import * as Lang from '../../constants/langEnUs';
@@ -78,7 +79,9 @@ const SettingsDetails = props => (
         />
       ]}
       {!props.subscriptions.isFetching && props.subscriptions.success &&
-      CONFIG.SECURE_DOCUMENT_UPLOAD.ENABLED && [
+      CONFIG.SECURE_DOCUMENT_UPLOAD.ENABLED &&
+      typeof props.loggedInUser.hasPermission === 'function' &&
+      props.loggedInUser.hasPermission(PERMISSIONS_SECURE_DOCUMENT_UPLOAD.VIEW) && [
         <h3 key="header-doc">
           File Submission
         </h3>,
@@ -119,6 +122,7 @@ SettingsDetails.propTypes = {
   }).isRequired,
   handleSubmit: PropTypes.func.isRequired,
   loggedInUser: PropTypes.shape({
+    hasPermission: PropTypes.func.isRequired,
     isGovernmentUser: PropTypes.bool
   }).isRequired,
   subscriptions: PropTypes.shape({

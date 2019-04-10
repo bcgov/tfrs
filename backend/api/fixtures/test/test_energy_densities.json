@@ -1,0 +1,37 @@
+[{
+  "fields": {
+    "fuel": ["Biodiesel"],
+    "density": "35.40",
+    "effective_date": "2017-01-01",
+    "unit_of_measure": ["MJ/L"]
+  },
+  "model": "api.energydensity",
+  "pk": null
+}, {
+  "fields": {
+    "fuel": ["Hydrogen"],
+    "density": "141.24",
+    "effective_date": "2017-01-01",
+    "unit_of_measure": ["MJ/kg"]
+  },
+  "model": "api.energydensity",
+  "pk": null
+}, {
+  "fields": {
+    "fuel": ["LNG"],
+    "density": "52.46",
+    "effective_date": "2017-01-01",
+    "unit_of_measure": ["MJ/kg"]
+  },
+  "model": "api.energydensity",
+  "pk": null
+}, {
+  "fields": {
+    "fuel": ["Propane"],
+    "density": "25.47",
+    "effective_date": "2017-01-01",
+    "unit_of_measure": ["MJ/L"]
+  },
+  "model": "api.energydensity",
+  "pk": null
+}]

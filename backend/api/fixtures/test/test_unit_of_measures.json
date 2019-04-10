@@ -1,0 +1,15 @@
+[{
+  "fields": {
+    "effective_date": "2017-01-01",
+    "name": "MJ/L"
+  },
+  "model": "api.unitofmeasure",
+  "pk": null
+}, {
+  "fields": {
+    "effective_date": "2017-01-01",
+    "name": "MJ/kg"
+  },
+  "model": "api.unitofmeasure",
+  "pk": null
+}]

@@ -54,5 +54,6 @@ from . import DocumentFileAttachment
 from . import ApprovedFuel
 from . import TransportMode
 from . import CarbonIntensityLimit
+from . import UnitOfMeasure
 
 patch_fields()
