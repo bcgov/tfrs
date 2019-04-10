@@ -37,6 +37,8 @@ if (CONFIG.FUEL_CODES.ENABLED) {
   REFERENCE_DATA_API_ENDPOINTS.transportModes = '/fuel_codes/transport_modes';
 }
 
+export const CARBON_INTENSITIES = '/credit_calculation/carbon_intensity_limits';
+
 export const USERS = '/users';
 export const CURRENT_USER = '/users/current';
 

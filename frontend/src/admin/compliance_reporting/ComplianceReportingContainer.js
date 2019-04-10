@@ -61,6 +61,8 @@ ComplianceReportingContainer.propTypes = {
     isFetching: PropTypes.bool,
     items: PropTypes.arrayOf(PropTypes.shape())
   }).isRequired,
+  loggedInUser: PropTypes.shape().isRequired,
+  loadCarbonIntensities: PropTypes.func.isRequired,
   energyDensities: PropTypes.shape({
     isFetching: PropTypes.bool,
     items: PropTypes.arrayOf(PropTypes.shape())
