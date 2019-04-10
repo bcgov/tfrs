@@ -41,6 +41,7 @@ from .viewsets.SigningAuthorityConfirmation \
     import SigningAuthorityConfirmationViewSet
 from .viewsets.User import UserViewSet
 from .viewsets.CreditTradeComments import CreditTradeCommentsViewSet
+
 from .viewsets.CreditCalculation import CarbonIntensityLimitViewSet, \
     DefaultCarbonIntensityViewSet, EnergyDensityViewSet, \
     EnergyEffectivenessRatioViewSet
@@ -74,6 +75,7 @@ if FUEL_CODES_API['ENABLED'] or TESTING:
     ROUTER.register(r'fuel_codes', FuelCodeViewSet)
 
 if CREDIT_CALCULATION_API['ENABLED'] or TESTING:
+
     ROUTER.register(
         r'credit_calculation/carbon_intensity_limits',
         CarbonIntensityLimitViewSet

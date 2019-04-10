@@ -33,6 +33,10 @@ const CONFIG = {
   },
   COMPLIANCE_REPORTING: {
     ENABLED: getConfig('compliance_reporting.enabled', false)
+  },
+  CREDIT_CALCULATION_API: {
+    ENABLED: getConfig('credit_calculation_api.enabled', false)
+
   }
 };
 
