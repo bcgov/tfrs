@@ -32,7 +32,8 @@ const CONFIG = {
     ENABLED: getConfig('credit_transfer.enabled', false)
   },
   COMPLIANCE_REPORTING: {
-    ENABLED: getConfig('compliance_reporting.enabled', false)
+    ENABLED: getConfig('compliance_reporting.enabled', false),
+    STARTING_YEAR: getConfig('compliance_reporting.starting_year', 2017)
   },
   CREDIT_CALCULATION_API: {
     ENABLED: getConfig('credit_calculation_api.enabled', false)
