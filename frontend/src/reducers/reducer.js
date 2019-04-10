@@ -20,6 +20,7 @@ import { carbonIntensities } from '../actions/carbonIntensities';
 import { defaultCarbonIntensities } from '../actions/defaultCarbonIntensities';
 import { energyDensities } from '../actions/energyDensities';
 import { energyEffectivenessRatios } from '../actions/energyEffectivenessRatios';
+import { fuelTypes } from './creditCalculationReducers';
 
 const rootReducer = combineReducers({
   autocomplete,
@@ -51,7 +52,8 @@ const rootReducer = combineReducers({
   defaultCarbonIntensities: defaultCarbonIntensities.reducer(),
   carbonIntensityLimits: carbonIntensities.reducer(),
   energyDensities: energyDensities.reducer(),
-  energyEffectivenessRatios: energyEffectivenessRatios.reducer()
+  energyEffectivenessRatios: energyEffectivenessRatios.reducer(),
+  fuelTypes
 });
 
 export default rootReducer;

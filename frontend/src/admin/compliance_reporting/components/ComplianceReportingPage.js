@@ -6,6 +6,7 @@ import DefaultCarbonIntensitiesTable from './DefaultCarbonIntensitiesTable';
 import CarbonIntensityLimitsTable from './CarbonIntensityLimitsTable';
 import EnergyEffectivenessRatiosTable from './EnergyEffectivenessRatiosTable';
 import EnergyDensitiesTable from './EnergyDensitiesTable';
+import FuelTypesTable from './FuelTypesTable';
 import CONFIG from '../../../config';
 
 const ComplianceReportingPage = props => (
@@ -28,7 +29,6 @@ const ComplianceReportingPage = props => (
               props.carbonIntensityLimits.items &&
               props.carbonIntensityLimits.items.length === 0
             }
-            loggedInUser={props.loggedInUser}
           />
         }
       </div>
@@ -49,7 +49,6 @@ const ComplianceReportingPage = props => (
               props.energyEffectivenessRatios.items &&
               props.energyEffectivenessRatios.items.length === 0
             }
-            loggedInUser={props.loggedInUser}
           />
         }
       </div>
@@ -67,7 +66,6 @@ const ComplianceReportingPage = props => (
               props.defaultCarbonIntensities.items &&
               props.defaultCarbonIntensities.items.length === 0
             }
-            loggedInUser={props.loggedInUser}
           />
         }
       </div>
@@ -84,7 +82,23 @@ const ComplianceReportingPage = props => (
               props.energyDensities.items &&
               props.energyDensities.items.length === 0
             }
-            loggedInUser={props.loggedInUser}
+          />
+        }
+      </div>
+    </div>
+
+    <div className="row">
+      <div className="col-md-12 col-lg-6">
+        <h2>Fuel Types</h2>
+        {props.fuelTypes.isFetching && <Loading />}
+        {!props.fuelTypes.isFetching &&
+          <FuelTypesTable
+            items={props.fuelTypes.items}
+            isFetching={props.fuelTypes.isFetching}
+            isEmpty={
+              props.fuelTypes.items &&
+              props.fuelTypes.items.length === 0
+            }
           />
         }
       </div>
@@ -109,6 +123,10 @@ ComplianceReportingPage.propTypes = {
     items: PropTypes.arrayOf(PropTypes.shape)
   }).isRequired,
   energyEffectivenessRatios: PropTypes.shape({
+    isFetching: PropTypes.bool,
+    items: PropTypes.arrayOf(PropTypes.shape)
+  }).isRequired,
+  fuelTypes: PropTypes.shape({
     isFetching: PropTypes.bool,
     items: PropTypes.arrayOf(PropTypes.shape)
   }).isRequired,

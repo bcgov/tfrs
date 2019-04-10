@@ -8,22 +8,17 @@ import 'react-table/react-table.css';
 
 import ReactTable from '../../../app/components/StateSavingReactTable';
 
-const CarbonIntensitiesTable = (props) => {
+const FuelTypesTable = (props) => {
   const columns = [{
     accessor: item => item.name,
     className: 'col-title',
-    Header: 'Fuel',
+    Header: 'Type of fuel as specified by the Act or Regulation',
     id: 'title'
   }, {
-    accessor: item => item.carbonIntensity,
-    className: 'col-density',
-    Header: (
-      <div>
-        Carbon Intensity (gCO<sub>2</sub>e/MJ)
-      </div>
-    ),
-    id: 'carbon-intensity',
-    width: 250
+    accessor: item => item.alternatives.join(', '),
+    className: 'col-alternatives',
+    Header: 'Acceptable alternatives',
+    id: 'alternatives'
   }];
 
   const filterMethod = (filter, row, column) => {
@@ -37,7 +32,7 @@ const CarbonIntensitiesTable = (props) => {
 
   return (
     <ReactTable
-      stateKey="carbon-intensity"
+      stateKey="fuel-type"
       className="searchable"
       columns={columns}
       data={props.items}
@@ -53,13 +48,13 @@ const CarbonIntensitiesTable = (props) => {
   );
 };
 
-CarbonIntensitiesTable.defaultProps = {};
+FuelTypesTable.defaultProps = {};
 
-CarbonIntensitiesTable.propTypes = {
+FuelTypesTable.propTypes = {
   items: PropTypes.arrayOf(PropTypes.shape({
   })).isRequired,
   isEmpty: PropTypes.bool.isRequired,
   isFetching: PropTypes.bool.isRequired
 };
 
-export default CarbonIntensitiesTable;
+export default FuelTypesTable;
