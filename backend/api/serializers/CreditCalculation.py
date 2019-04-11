@@ -26,8 +26,14 @@ from api.models.ApprovedFuel import ApprovedFuel
 from api.models.CarbonIntensityLimit import CarbonIntensityLimit
 from api.models.CompliancePeriod import CompliancePeriod
 from api.models.DefaultCarbonIntensity import DefaultCarbonIntensity
+from api.models.DefaultCarbonIntensityCategory import \
+    DefaultCarbonIntensityCategory
 from api.models.EnergyDensity import EnergyDensity
+from api.models.EnergyDensityCategory import EnergyDensityCategory
 from api.models.EnergyEffectivenessRatio import EnergyEffectivenessRatio
+from api.models.EnergyEffectivenessRatioCategory import \
+    EnergyEffectivenessRatioCategory
+from api.models.UnitOfMeasure import UnitOfMeasure
 
 
 class CarbonIntensityLimitSerializer(serializers.ModelSerializer):
@@ -70,22 +76,22 @@ class DefaultCarbonIntensitySerializer(serializers.ModelSerializer):
     """
     Default Carbon Intensity Serializer
     """
-    carbon_intensity = serializers.SerializerMethodField()
+    density = serializers.SerializerMethodField()
 
-    def get_carbon_intensity(self, obj):
+    def get_density(self, obj):
         """
-        Gets the Carbon Intensity for the Approved Fuel
+        Gets the Energy Density
         """
         density = DefaultCarbonIntensity.objects.filter(
-            fuel=obj.id
+            category=obj.id
         ).order_by('-effective_date').first()
 
         return density.density if density else None
 
     class Meta:
-        model = ApprovedFuel
+        model = DefaultCarbonIntensityCategory
         fields = (
-            'id', 'name', 'carbon_intensity'
+            'id', 'name', 'density'
         )
 
 
@@ -93,25 +99,35 @@ class EnergyDensitySerializer(serializers.ModelSerializer):
     """
     Default Energy Density Serializer
     """
-    energy_density = serializers.SerializerMethodField()
+    density = serializers.SerializerMethodField()
+    unit_of_measure = serializers.SerializerMethodField()
 
-    def get_energy_density(self, obj):
+    def get_density(self, obj):
         """
-        Gets the Energy Density for the Approved Fuel
+        Gets the Energy Density
         """
         density = EnergyDensity.objects.filter(
-            fuel=obj.id
+            category=obj.id
         ).order_by('-effective_date').first()
 
-        return {
-            "density": density.density if density else None,
-            "unit_of_measure": density.unit_of_measure.name if density else None
-        }
+        return density.density if density else None
+
+    def get_unit_of_measure(self, obj):
+        """
+        Gets the unit of measure through the Approved Fuel model.
+        There should never ba case where Approved Fuels falling under the same
+        energy density category having differing unit of measures.
+        """
+        fuel = ApprovedFuel.objects.filter(
+            energy_density_category=obj.id
+        ).first()
+
+        return UnitOfMeasure.objects.get(id=fuel.unit_of_measure_id).name
 
     class Meta:
-        model = ApprovedFuel
+        model = EnergyDensityCategory
         fields = (
-            'id', 'name', 'energy_density'
+            'id', 'name', 'density', 'unit_of_measure'
         )
 
 
@@ -119,35 +135,33 @@ class EnergyEffectivenessRatioSerializer(serializers.ModelSerializer):
     """
     Default Energy Effectiveness Ratio Serializer
     """
-    energy_effectiveness_ratio = serializers.SerializerMethodField()
+    diesel_ratio = serializers.SerializerMethodField()
+    gasoline_ratio = serializers.SerializerMethodField()
 
-    def get_energy_effectiveness_ratio(self, obj):
+    def get_diesel_ratio(self, obj):
         """
-        Gets the Energy Effectiveness Ratio for the Approved Fuel
+        Gets the Energy Effectiveness Ratio for Diesel Class
         """
         diesel_ratio = EnergyEffectivenessRatio.objects.filter(
-            fuel=obj.id,
+            category=obj.id,
             fuel_class__fuel_class="Diesel"
         ).order_by('-effective_date').first()
 
+        return diesel_ratio.ratio if diesel_ratio else None
+
+    def get_gasoline_ratio(self, obj):
+        """
+        Gets the Energy Effectiveness Ratio for Gasoline Class
+        """
         gasoline_ratio = EnergyEffectivenessRatio.objects.filter(
-            fuel=obj.id,
+            category=obj.id,
             fuel_class__fuel_class="Gasoline"
         ).order_by('-effective_date').first()
 
-        return {
-            "diesel": {
-                "fuel": "Diesel Class",
-                "ratio": diesel_ratio.ratio if diesel_ratio else None
-            },
-            "gasoline": {
-                "fuel": "Gasoline Class",
-                "ratio": gasoline_ratio.ratio if gasoline_ratio else None
-            }
-        }
+        return gasoline_ratio.ratio if gasoline_ratio else None
 
     class Meta:
-        model = ApprovedFuel
+        model = EnergyEffectivenessRatioCategory
         fields = (
-            'id', 'name', 'energy_effectiveness_ratio'
+            'id', 'name', 'diesel_ratio', 'gasoline_ratio'
         )

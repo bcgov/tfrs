@@ -38,12 +38,7 @@ const ComplianceReportingPage = props => (
         {props.energyEffectivenessRatios.isFetching && <Loading />}
         {!props.energyEffectivenessRatios.isFetching &&
           <EnergyEffectivenessRatiosTable
-            items={props.energyEffectivenessRatios.items.filter(item => (
-              (item.energyEffectivenessRatio.gasoline &&
-                item.energyEffectivenessRatio.gasoline.ratio) ||
-              (item.energyEffectivenessRatio.diesel &&
-                item.energyEffectivenessRatio.diesel.ratio)
-            ))}
+            items={props.energyEffectivenessRatios.items}
             isFetching={props.energyEffectivenessRatios.isFetching}
             isEmpty={
               props.energyEffectivenessRatios.items &&
@@ -60,7 +55,7 @@ const ComplianceReportingPage = props => (
         {props.defaultCarbonIntensities.isFetching && <Loading />}
         {!props.defaultCarbonIntensities.isFetching &&
           <DefaultCarbonIntensitiesTable
-            items={props.defaultCarbonIntensities.items.filter(item => item.carbonIntensity)}
+            items={props.defaultCarbonIntensities.items.filter(item => (item.density))}
             isFetching={props.defaultCarbonIntensities.isFetching}
             isEmpty={
               props.defaultCarbonIntensities.items &&
@@ -75,8 +70,7 @@ const ComplianceReportingPage = props => (
         {props.energyDensities.isFetching && <Loading />}
         {!props.energyDensities.isFetching &&
           <EnergyDensitiesTable
-            items={props.energyDensities.items.filter(item =>
-              item.energyDensity && item.energyDensity.density)}
+            items={props.energyDensities.items}
             isFetching={props.energyDensities.isFetching}
             isEmpty={
               props.energyDensities.items &&
