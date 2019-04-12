@@ -22,14 +22,14 @@ pipeline {
                 }
                 echo "BRANCH_NAME:${env.BRANCH_NAME}\nCHANGE_ID:${env.CHANGE_ID}\nCHANGE_TARGET:${env.CHANGE_TARGET}"
                 echo "Building ..."
-                sh "cd .jenkins/.pipeline && ./npmw build -- --pr=${CHANGE_ID}"
+                sh "cd .jenkins/.pipeline && ./npmw run build -- --pr=${CHANGE_ID}"
             }
         }
         stage('Deploy (DEV)') {
             agent { label 'deploy' }
             steps {
                 echo "Deploying ..."
-                sh "cd .jenkins/.pipeline && DEBUG=info* ./npmw deploy -- --pr=${CHANGE_ID} --env=dev"
+                sh "cd .jenkins/.pipeline && DEBUG=info* ./npmw run deploy -- --pr=${CHANGE_ID} --env=dev"
             }
         }
         stage('Deploy (PROD)') {
@@ -40,7 +40,7 @@ pipeline {
             }
             steps {
                 echo "Deploying ..."
-                sh "cd .jenkins/.pipeline && ./npmw deploy -- --pr=${CHANGE_ID} --env=prod"
+                sh "cd .jenkins/.pipeline && ./npmw run deploy -- --pr=${CHANGE_ID} --env=prod"
             }
         }
         stage('Acceptance') {

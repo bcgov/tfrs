@@ -26,6 +26,13 @@
           "github_repo": "tfrs",
           "jenkinsFilePath": ".jenkins/Jenkinsfile",
           "uuid": "c769c0ac-e310-4be1-ac22-f51bff07a936"
+        },
+        "tfrs": {
+          "jenkinsJobName": "tfrs",
+          "github_owner": "bcgov",
+          "github_repo": "tfrs",
+          "jenkinsFilePath": "JenkinsFile",
+          "uuid": "4c4e36de-970a-40c8-9ee8-e81b324bbf77"
         }
       }
     }
