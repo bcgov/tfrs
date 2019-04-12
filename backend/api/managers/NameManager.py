@@ -26,4 +26,4 @@ from django.db import models
 
 class NameManager(models.Manager):
     def get_by_natural_key(self, name):
-        return self.get(the_name=name)
+        return self.get(name=name)
