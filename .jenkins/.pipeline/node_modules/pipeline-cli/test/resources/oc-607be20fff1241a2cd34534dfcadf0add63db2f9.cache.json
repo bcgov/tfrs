@@ -1,0 +1,291 @@
+{
+    "apiVersion": "image.openshift.io/v1",
+    "kind": "ImageStream",
+    "metadata": {
+        "annotations": {
+            "openshift.io/display-name": "Python"
+        },
+        "creationTimestamp": "2016-07-11T23:04:02Z",
+        "generation": 15,
+        "name": "python",
+        "namespace": "openshift",
+        "resourceVersion": "567967451",
+        "selfLink": "/apis/image.openshift.io/v1/namespaces/openshift/imagestreams/python",
+        "uid": "c230c383-47bb-11e6-b25f-005056832285"
+    },
+    "spec": {
+        "lookupPolicy": {
+            "local": false
+        },
+        "tags": [
+            {
+                "annotations": {
+                    "description": "Build and run Python 2.7 applications on RHEL 7. For more information about using this builder image, including OpenShift considerations, see https://github.com/sclorg/s2i-python-container/blob/master/2.7/README.md.",
+                    "iconClass": "icon-python",
+                    "openshift.io/display-name": "Python 2.7",
+                    "openshift.io/provider-display-name": "Red Hat, Inc.",
+                    "sampleRepo": "https://github.com/openshift/django-ex.git",
+                    "supports": "python:2.7,python",
+                    "tags": "builder,python",
+                    "version": "2.7"
+                },
+                "from": {
+                    "kind": "DockerImage",
+                    "name": "registry.access.redhat.com/rhscl/python-27-rhel7:latest"
+                },
+                "generation": 13,
+                "importPolicy": {},
+                "name": "2.7",
+                "referencePolicy": {
+                    "type": "Local"
+                }
+            },
+            {
+                "annotations": {
+                    "description": "Build and run Python 3.3 applications on RHEL 7. For more information about using this builder image, including OpenShift considerations, see https://github.com/sclorg/s2i-python-container/blob/master/3.3/README.md.",
+                    "iconClass": "icon-python",
+                    "openshift.io/display-name": "Python 3.3",
+                    "openshift.io/provider-display-name": "Red Hat, Inc.",
+                    "sampleRepo": "https://github.com/openshift/django-ex.git",
+                    "supports": "python:3.3,python",
+                    "tags": "hidden,builder,python",
+                    "version": "3.3"
+                },
+                "from": {
+                    "kind": "DockerImage",
+                    "name": "registry.access.redhat.com/openshift3/python-33-rhel7:latest"
+                },
+                "generation": 6,
+                "importPolicy": {},
+                "name": "3.3",
+                "referencePolicy": {
+                    "type": "Local"
+                }
+            },
+            {
+                "annotations": {
+                    "description": "Build and run Python 3.4 applications on RHEL 7. For more information about using this builder image, including OpenShift considerations, see https://github.com/sclorg/s2i-python-container/blob/master/3.4/README.md.",
+                    "iconClass": "icon-python",
+                    "openshift.io/display-name": "Python 3.4",
+                    "openshift.io/provider-display-name": "Red Hat, Inc.",
+                    "sampleRepo": "https://github.com/openshift/django-ex.git",
+                    "supports": "python:3.4,python",
+                    "tags": "hidden,builder,python",
+                    "version": "3.4"
+                },
+                "from": {
+                    "kind": "DockerImage",
+                    "name": "registry.access.redhat.com/rhscl/python-34-rhel7:latest"
+                },
+                "generation": 13,
+                "importPolicy": {},
+                "name": "3.4",
+                "referencePolicy": {
+                    "type": "Local"
+                }
+            },
+            {
+                "annotations": {
+                    "description": "Build and run Python 3.5 applications on RHEL 7. For more information about using this builder image, including OpenShift considerations, see https://github.com/sclorg/s2i-python-container/blob/master/3.5/README.md.",
+                    "iconClass": "icon-python",
+                    "openshift.io/display-name": "Python 3.5",
+                    "openshift.io/provider-display-name": "Red Hat, Inc.",
+                    "sampleRepo": "https://github.com/openshift/django-ex.git",
+                    "supports": "python:3.5,python",
+                    "tags": "builder,python",
+                    "version": "3.5"
+                },
+                "from": {
+                    "kind": "DockerImage",
+                    "name": "registry.access.redhat.com/rhscl/python-35-rhel7:latest"
+                },
+                "generation": 13,
+                "importPolicy": {},
+                "name": "3.5",
+                "referencePolicy": {
+                    "type": "Local"
+                }
+            },
+            {
+                "annotations": {
+                    "description": "Build and run Python 3.6 applications on RHEL 7. For more information about using this builder image, including OpenShift considerations, see https://github.com/sclorg/s2i-python-container/blob/master/3.6/README.md.",
+                    "iconClass": "icon-python",
+                    "openshift.io/display-name": "Python 3.6",
+                    "openshift.io/provider-display-name": "Red Hat, Inc.",
+                    "sampleRepo": "https://github.com/openshift/django-ex.git",
+                    "supports": "python:3.6,python",
+                    "tags": "builder,python",
+                    "version": "3.6"
+                },
+                "from": {
+                    "kind": "DockerImage",
+                    "name": "registry.access.redhat.com/rhscl/python-36-rhel7:latest"
+                },
+                "generation": 14,
+                "importPolicy": {},
+                "name": "3.6",
+                "referencePolicy": {
+                    "type": "Local"
+                }
+            },
+            {
+                "annotations": {
+                    "description": "Build and run Python applications on RHEL 7. For more information about using this builder image, including OpenShift considerations, see https://github.com/sclorg/s2i-python-container/blob/master/3.6/README.md.\n\nWARNING: By selecting this tag, your application will automatically update to use the latest version of Python available on OpenShift, including major versions updates.",
+                    "iconClass": "icon-python",
+                    "openshift.io/display-name": "Python (Latest)",
+                    "openshift.io/provider-display-name": "Red Hat, Inc.",
+                    "sampleRepo": "https://github.com/openshift/django-ex.git",
+                    "supports": "python",
+                    "tags": "builder,python"
+                },
+                "from": {
+                    "kind": "ImageStreamTag",
+                    "name": "3.6"
+                },
+                "generation": 14,
+                "importPolicy": {},
+                "name": "latest",
+                "referencePolicy": {
+                    "type": "Local"
+                }
+            }
+        ]
+    },
+    "status": {
+        "dockerImageRepository": "docker-registry.default.svc:5000/openshift/python",
+        "tags": [
+            {
+                "items": [
+                    {
+                        "created": "2018-02-27T23:08:15Z",
+                        "dockerImageReference": "registry.access.redhat.com/rhscl/python-27-rhel7@sha256:aabc9d170a0cf327d55890e30b1627210c964012c4b301d297191e0c06ad5fac",
+                        "generation": 13,
+                        "image": "sha256:aabc9d170a0cf327d55890e30b1627210c964012c4b301d297191e0c06ad5fac"
+                    },
+                    {
+                        "created": "2017-11-22T00:27:13Z",
+                        "dockerImageReference": "registry.access.redhat.com/rhscl/python-27-rhel7@sha256:892defe0bb04476ffd4f4520644bdbe87de7f181c244c5a3e2dce355dffd08e0",
+                        "generation": 11,
+                        "image": "sha256:892defe0bb04476ffd4f4520644bdbe87de7f181c244c5a3e2dce355dffd08e0"
+                    },
+                    {
+                        "created": "2017-11-09T19:40:21Z",
+                        "dockerImageReference": "registry.access.redhat.com/rhscl/python-27-rhel7@sha256:a7322cdc41cb9f07f76f6f16ebd8936f231d6c04ef5046035abc265c17d8cc34",
+                        "generation": 9,
+                        "image": "sha256:a7322cdc41cb9f07f76f6f16ebd8936f231d6c04ef5046035abc265c17d8cc34"
+                    }
+                ],
+                "tag": "2.7"
+            },
+            {
+                "items": [
+                    {
+                        "created": "2017-08-14T16:58:03Z",
+                        "dockerImageReference": "registry.access.redhat.com/openshift3/python-33-rhel7@sha256:10f52e526d723e970e06334b0590753747f222437af3e7f6fa1311a71088573e",
+                        "generation": 6,
+                        "image": "sha256:10f52e526d723e970e06334b0590753747f222437af3e7f6fa1311a71088573e"
+                    },
+                    {
+                        "created": "2017-01-04T17:36:18Z",
+                        "dockerImageReference": "registry.access.redhat.com/openshift3/python-33-rhel7@sha256:cc6ecaa9491ba7859f79a1a453336ee056f473e88dd711d47226001447f8b018",
+                        "generation": 4,
+                        "image": "sha256:cc6ecaa9491ba7859f79a1a453336ee056f473e88dd711d47226001447f8b018"
+                    },
+                    {
+                        "created": "2016-08-26T14:46:09Z",
+                        "dockerImageReference": "registry.access.redhat.com/openshift3/python-33-rhel7@sha256:a87c68ddaaad9c8ae044a17be81e47c3baec3d002785fc1f14bbdc4335821ce0",
+                        "generation": 3,
+                        "image": "sha256:a87c68ddaaad9c8ae044a17be81e47c3baec3d002785fc1f14bbdc4335821ce0"
+                    }
+                ],
+                "tag": "3.3"
+            },
+            {
+                "items": [
+                    {
+                        "created": "2018-02-27T23:08:15Z",
+                        "dockerImageReference": "registry.access.redhat.com/rhscl/python-34-rhel7@sha256:0677366367b1f1a736bdb50b926559c1bdeed02de1bce477f8fe7ed53336a572",
+                        "generation": 13,
+                        "image": "sha256:0677366367b1f1a736bdb50b926559c1bdeed02de1bce477f8fe7ed53336a572"
+                    },
+                    {
+                        "created": "2017-11-22T00:27:13Z",
+                        "dockerImageReference": "registry.access.redhat.com/rhscl/python-34-rhel7@sha256:de4483bc370603a494c35e902e7487d9792157523fcefee7c6b17e8fdf044fc4",
+                        "generation": 11,
+                        "image": "sha256:de4483bc370603a494c35e902e7487d9792157523fcefee7c6b17e8fdf044fc4"
+                    },
+                    {
+                        "created": "2017-11-09T19:40:21Z",
+                        "dockerImageReference": "registry.access.redhat.com/rhscl/python-34-rhel7@sha256:30b1e5df13964758e566a474d449df2b81b86f125f26797799cc20c80c023c66",
+                        "generation": 9,
+                        "image": "sha256:30b1e5df13964758e566a474d449df2b81b86f125f26797799cc20c80c023c66"
+                    }
+                ],
+                "tag": "3.4"
+            },
+            {
+                "items": [
+                    {
+                        "created": "2018-02-27T23:08:15Z",
+                        "dockerImageReference": "registry.access.redhat.com/rhscl/python-35-rhel7@sha256:27ce32b0855dea7b078048064b72e1554069ec737ef3398fa740cc72ec82ddb9",
+                        "generation": 13,
+                        "image": "sha256:27ce32b0855dea7b078048064b72e1554069ec737ef3398fa740cc72ec82ddb9"
+                    },
+                    {
+                        "created": "2017-11-22T00:27:13Z",
+                        "dockerImageReference": "registry.access.redhat.com/rhscl/python-35-rhel7@sha256:873ab7c799c5da39fb76e27e93f6420a5ab72e73c3daa8bcbc4d198dca53e379",
+                        "generation": 11,
+                        "image": "sha256:873ab7c799c5da39fb76e27e93f6420a5ab72e73c3daa8bcbc4d198dca53e379"
+                    },
+                    {
+                        "created": "2017-11-09T19:40:21Z",
+                        "dockerImageReference": "registry.access.redhat.com/rhscl/python-35-rhel7@sha256:be9df8f0385cb443c5c8ceabfa8b98aa3f213fa60ef1cd40c3649f650693df2e",
+                        "generation": 9,
+                        "image": "sha256:be9df8f0385cb443c5c8ceabfa8b98aa3f213fa60ef1cd40c3649f650693df2e"
+                    }
+                ],
+                "tag": "3.5"
+            },
+            {
+                "items": [
+                    {
+                        "created": "2017-11-09T19:40:21Z",
+                        "dockerImageReference": "registry.access.redhat.com/rhscl/python-36-rhel7@sha256:16f3db0b1408e68cadfdb9bb79191b0062a4eb2461d890d8818531a1b4f63cb6",
+                        "generation": 14,
+                        "image": "sha256:16f3db0b1408e68cadfdb9bb79191b0062a4eb2461d890d8818531a1b4f63cb6"
+                    }
+                ],
+                "tag": "3.6"
+            },
+            {
+                "items": [
+                    {
+                        "created": "2017-11-09T19:40:21Z",
+                        "dockerImageReference": "registry.access.redhat.com/rhscl/python-36-rhel7@sha256:16f3db0b1408e68cadfdb9bb79191b0062a4eb2461d890d8818531a1b4f63cb6",
+                        "generation": 14,
+                        "image": "sha256:16f3db0b1408e68cadfdb9bb79191b0062a4eb2461d890d8818531a1b4f63cb6"
+                    },
+                    {
+                        "created": "2018-02-27T23:08:15Z",
+                        "dockerImageReference": "registry.access.redhat.com/rhscl/python-35-rhel7@sha256:27ce32b0855dea7b078048064b72e1554069ec737ef3398fa740cc72ec82ddb9",
+                        "generation": 13,
+                        "image": "sha256:27ce32b0855dea7b078048064b72e1554069ec737ef3398fa740cc72ec82ddb9"
+                    },
+                    {
+                        "created": "2017-11-22T00:27:13Z",
+                        "dockerImageReference": "registry.access.redhat.com/rhscl/python-35-rhel7@sha256:873ab7c799c5da39fb76e27e93f6420a5ab72e73c3daa8bcbc4d198dca53e379",
+                        "generation": 11,
+                        "image": "sha256:873ab7c799c5da39fb76e27e93f6420a5ab72e73c3daa8bcbc4d198dca53e379"
+                    },
+                    {
+                        "created": "2017-11-09T19:40:21Z",
+                        "dockerImageReference": "registry.access.redhat.com/rhscl/python-35-rhel7@sha256:be9df8f0385cb443c5c8ceabfa8b98aa3f213fa60ef1cd40c3649f650693df2e",
+                        "generation": 9,
+                        "image": "sha256:be9df8f0385cb443c5c8ceabfa8b98aa3f213fa60ef1cd40c3649f650693df2e"
+                    }
+                ],
+                "tag": "latest"
+            }
+        ]
+    }
+}

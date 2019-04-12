@@ -1,0 +1,92 @@
+{
+  "kind": "Template",
+  "apiVersion": "v1",
+  "parameters":[
+    {"name":"NAME"},
+    {"name":"SUFFIX", "value":""}
+  ],
+  "objects":[
+    {
+      "kind": "ImageStream",
+      "apiVersion": "v1",
+      "metadata": {
+        "name":"${NAME}-core"
+      }
+    },
+    {
+      "kind": "BuildConfig",
+      "apiVersion": "v1",
+      "metadata": {
+        "name": "${NAME}-core",
+        "labels": {
+          "name": "${NAME}-core"
+        },
+        "annotations": {
+          "template.alpha.openshift.io/wait-for-ready": "true"
+        }
+      },
+      "spec": {
+        "triggers": [
+          {
+            "type": "GitHub",
+            "github": {
+              "secret": "secret101"
+            }
+          },
+          {
+            "type": "Generic",
+            "generic": {
+              "secret": "secret101",
+              "allowEnv": true
+            }
+          },
+          {
+            "type": "ImageChange",
+            "imageChange": {}
+          },
+          {
+            "type": "ConfigChange"
+          }
+        ],
+        "source": {
+          "type": "Git",
+          "git": {
+            "uri": "https://github.com/cvarjao-o/hello-world.git",
+            "ref": "WIP"
+          },
+          "contextDir": "app-base"
+        },
+        "strategy": {
+          "type": "Source",
+          "sourceStrategy": {
+            "from": {
+              "kind": "ImageStreamTag",
+              "name": "python:2.7",
+              "namespace": "openshift"
+            },
+            "env": [
+              {
+                "name": "EXAMPLE",
+                "value": "sample-app"
+              }
+            ]
+          }
+        },
+        "output": {
+          "to": {
+            "kind": "ImageStreamTag",
+            "name": "${NAME}-core:latest"
+          }
+        },
+        "resources": {
+          "limits":{
+            "cpu":"1000m"
+          }
+        }
+      },
+      "status": {
+        "lastVersion": 0
+      }
+    }
+  ]
+}

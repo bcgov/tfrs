@@ -1,0 +1,1 @@
+oc --namespace=csnr-devops-lab-tools get ImageStreamTag/my-test-app-core:latest --output=jsonpath={.image.metadata.name}

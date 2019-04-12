@@ -1,7 +1,6 @@
-FROM bcgov/jenkins-basic:v1-stable
+FROM jenkins/core/there
 
 USER 0
-
 COPY ./contrib/jenkins/configuration $JENKINS_REF_HOME
 
 RUN set -x && \

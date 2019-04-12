@@ -1,0 +1,1 @@
+oc --namespace=openshift get ImageStreamTag/python:2.7 --output=jsonpath={.image.metadata.name}

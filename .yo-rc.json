@@ -1,0 +1,33 @@
+{
+  "generator-bcdk": {
+    "promptValues": {
+      "modules": {
+        "jenkins": {
+          "path": ".jenkins",
+          "namespace": "mem-tfrs-tools",
+          "name": "jenkins-pr",
+          "version": "1.0.0",
+          "environments": {
+            "build": {
+              "namespace": "mem-tfrs-tools"
+            },
+            "dev": {
+              "namespace": "mem-tfrs-tools"
+            },
+            "test": {
+              "namespace": "mem-tfrs-tools"
+            },
+            "prod": {
+              "namespace": "mem-tfrs-tools"
+            }
+          },
+          "jenkinsJobName": "_jenkins",
+          "github_owner": "bcgov",
+          "github_repo": "tfrs",
+          "jenkinsFilePath": ".jenkins/Jenkinsfile",
+          "uuid": "c769c0ac-e310-4be1-ac22-f51bff07a936"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,1 @@
+oc --namespace=openshift get imagestream.image.openshift.io/python --output=json
