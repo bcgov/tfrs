@@ -41,7 +41,7 @@ class ComplianceReportingContainer extends Component {
         defaultCarbonIntensities={this.props.defaultCarbonIntensities}
         energyDensities={this.props.energyDensities}
         energyEffectivenessRatios={this.props.energyEffectivenessRatios}
-        fuelTypes={this.props.fuelTypes}
+        fuelTypes={this.props.referenceData.approvedFuels}
         key="compliance-reporting"
         loggedInUser={this.props.loggedInUser}
         title="Compliance Reporting"
@@ -70,15 +70,14 @@ ComplianceReportingContainer.propTypes = {
     isFetching: PropTypes.bool,
     items: PropTypes.arrayOf(PropTypes.shape())
   }).isRequired,
-  fuelTypes: PropTypes.shape({
-    isFetching: PropTypes.bool,
-    items: PropTypes.arrayOf(PropTypes.shape())
-  }).isRequired,
   loggedInUser: PropTypes.shape().isRequired,
   loadCarbonIntensities: PropTypes.func.isRequired,
   loadDefaultCarbonIntensities: PropTypes.func.isRequired,
   loadEnergyDensities: PropTypes.func.isRequired,
-  loadEnergyEffectivenessRatios: PropTypes.func.isRequired
+  loadEnergyEffectivenessRatios: PropTypes.func.isRequired,
+  referenceData: PropTypes.shape({
+    approvedFuels: PropTypes.arrayOf(PropTypes.shape)
+  }).isRequired
 };
 
 const mapStateToProps = state => ({
@@ -98,11 +97,10 @@ const mapStateToProps = state => ({
     isFetching: state.rootReducer.energyEffectivenessRatios.isFetching,
     items: state.rootReducer.energyEffectivenessRatios.items
   },
-  fuelTypes: {
-    isFetching: state.rootReducer.fuelTypes.isFetching,
-    items: state.rootReducer.fuelTypes.items
-  },
-  loggedInUser: state.rootReducer.userRequest.loggedInUser
+  loggedInUser: state.rootReducer.userRequest.loggedInUser,
+  referenceData: {
+    approvedFuels: state.rootReducer.referenceData.data.approvedFuels
+  }
 });
 
 const mapDispatchToProps = {
