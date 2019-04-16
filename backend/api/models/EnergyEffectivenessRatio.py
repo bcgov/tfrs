@@ -32,8 +32,8 @@ class EnergyEffectivenessRatio(Auditable, EffectiveDates):
     """
     Energy Effectiveness Ratio for Approved Fuel
     """
-    fuel = models.ForeignKey(
-        'ApprovedFuel',
+    category = models.ForeignKey(
+        'EnergyEffectivenessRatioCategory',
         blank=False,
         null=False,
         related_name='energy_effective_ratio',

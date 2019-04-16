@@ -18,9 +18,7 @@ const EnergyEffectivenessRatiosTable = (props) => {
     id: 'title'
   }, {
     accessor: item => (
-      item.energyEffectivenessRatio.diesel &&
-      item.energyEffectivenessRatio.diesel.ratio
-        ? item.energyEffectivenessRatio.diesel.ratio.toFixed(1) : 'N/A'
+      item.dieselRatio ? item.dieselRatio.toFixed(1) : 'N/A'
     ),
     className: 'col-diesel',
     Header: (
@@ -33,9 +31,7 @@ const EnergyEffectivenessRatiosTable = (props) => {
     width: 200
   }, {
     accessor: item => (
-      item.energyEffectivenessRatio.gasoline &&
-      item.energyEffectivenessRatio.gasoline.ratio
-        ? item.energyEffectivenessRatio.gasoline.ratio.toFixed(1) : 'N/A'
+      item.gasolineRatio ? item.gasolineRatio.toFixed(1) : 'N/A'
     ),
     className: 'col-gasoline',
     Header: (
