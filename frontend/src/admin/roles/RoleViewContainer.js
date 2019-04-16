@@ -5,9 +5,8 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
 
-import { getRole } from '../../actions/roleActions';
+import { roles } from '../../actions/roleActions';
 import RoleDetails from '../../roles/components/RoleDetails';
 
 class RoleViewContainer extends Component {
@@ -27,9 +26,7 @@ class RoleViewContainer extends Component {
 
   render () {
     return (
-      <RoleDetails
-        role={this.props.role}
-      />
+      <RoleDetails role={this.props.role}/>
     );
   }
 }
@@ -58,14 +55,14 @@ RoleViewContainer.propTypes = {
 
 const mapStateToProps = state => ({
   role: {
-    details: state.rootReducer.roleRequest.role,
-    error: state.rootReducer.roleRequest.error,
-    isFetching: state.rootReducer.roleRequest.isFetching
+    details: state.rootReducer.roles.item ? state.rootReducer.roles.item : null,
+    error: state.rootReducer.roles.errorMessage,
+    isGetting: state.rootReducer.roles.isGetting
   }
 });
 
-const mapDispatchToProps = dispatch => ({
-  getRole: bindActionCreators(getRole, dispatch)
-});
+const mapDispatchToProps ={
+  getRole: roles.get,
+};
 
 export default connect(mapStateToProps, mapDispatchToProps)(RoleViewContainer);

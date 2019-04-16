@@ -64,33 +64,34 @@ export class GenericRestTemplate {
       new Map([
         [this.find, (state, action) => ({
           ...state,
-          isFetching: true,
-          errorMessage: []
+          isFinding: true,
+          errorMessage: {}
         })],
         [this.findSuccess, (state, action) => ({
           ...state,
           items: action.payload,
           receivedAt: Date.now(),
-          isFetching: false,
+          isFinding: false,
           success: true
         })],
         [this.error, (state, action) => ({
           ...state,
           items: [],
-          isFetching: false,
+          isFinding: false,
+          isGetting: false,
           success: false,
           errorMessage: action.payload
         })],
         [this.get, (state, action) => ({
           ...state,
           item: null,
-          isFetching: true,
+          isGetting: true,
           id: action.payload
         })],
         [this.getSuccess, (state, action) => ({
           ...state,
           item: action.payload,
-          isFetching: false,
+          isGetting: false,
           success: true
         })],
           ...this.getCustomReducerMap()
@@ -99,9 +100,10 @@ export class GenericRestTemplate {
         items: [],
         item: null,
         id: null,
-        isFetching: false,
+        isFinding: false,
+        isGetting: false,
         success: false,
-        errorMessage: [],
+        errorMessage: {},
         validationErrors: {},
         ...this.getCustomDefaultState()
       }

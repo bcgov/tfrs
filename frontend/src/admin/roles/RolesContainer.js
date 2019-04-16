@@ -5,9 +5,8 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
 
-import { getRoles } from '../../actions/roleActions';
+import { roles } from '../../actions/roleActions';
 import AdminTabs from '../components/AdminTabs';
 import RolesPage from './components/RolesPage';
 
@@ -58,8 +57,8 @@ const mapStateToProps = state => ({
   roles: state.rootReducer.roles
 });
 
-const mapDispatchToProps = dispatch => ({
-  getRoles: bindActionCreators(getRoles, dispatch)
-});
+const mapDispatchToProps = {
+  getRoles: roles.find
+};
 
 export default connect(mapStateToProps, mapDispatchToProps)(RolesContainer);
