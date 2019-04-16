@@ -32,8 +32,8 @@ class DefaultCarbonIntensity(Auditable, EffectiveDates):
     """
     Carbon Intensities for Approved Fuel
     """
-    fuel = models.ForeignKey(
-        'ApprovedFuel',
+    category = models.ForeignKey(
+        'DefaultCarbonIntensityCategory',
         blank=False,
         null=False,
         related_name='default_carbon_intensity',

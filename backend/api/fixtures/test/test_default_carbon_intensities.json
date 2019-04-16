@@ -1,6 +1,6 @@
 [{
   "fields": {
-    "fuel": ["CNG"],
+    "category": ["CNG"],
     "density": "63.64",
     "effective_date": "2017-01-01"
   },
@@ -8,7 +8,7 @@
   "pk": null
 }, {
   "fields": {
-    "fuel": ["Hydrogen"],
+    "category": ["Hydrogen"],
     "density": "96.82",
     "effective_date": "2017-01-01"
   },
@@ -16,7 +16,7 @@
   "pk": null
 }, {
   "fields": {
-    "fuel": ["LNG"],
+    "category": ["LNG"],
     "density": "112.65",
     "effective_date": "2017-01-01"
   },
@@ -24,7 +24,7 @@
   "pk": null
 }, {
   "fields": {
-    "fuel": ["Propane"],
+    "category": ["Propane"],
     "density": "98.96",
     "effective_date": "2017-01-01"
   },
