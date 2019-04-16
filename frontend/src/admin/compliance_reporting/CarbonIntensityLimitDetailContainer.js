@@ -23,13 +23,9 @@ class CarbonIntensityLimitDetailContainer extends Component {
   }
 
   render () {
-    // const { item, isFetching, success } = this.props.carbonIntensityLimit;
-    const { items, isFetching, success } = this.props.carbonIntensityLimits;
+    const { item, isFetching, success } = this.props.carbonIntensityLimit;
 
-    if (success && !isFetching) {
-      const { id } = this.props.match.params;
-      const item = items.find(ele => ele.id == id);
-
+    if (!isFetching && success) {
       return (
         <CarbonIntensityLimitDetails
           item={item}
@@ -63,20 +59,15 @@ CarbonIntensityLimitDetailContainer.propTypes = {
 
 const mapStateToProps = state => ({
   carbonIntensityLimit: {
-    isFetching: state.rootReducer.carbonIntensityLimits.isFetching,
-    item: state.rootReducer.carbonIntensityLimits.item,
-    success: state.rootReducer.carbonIntensityLimits.success
-  },
-  carbonIntensityLimits: {
-    isFetching: state.rootReducer.carbonIntensityLimits.isFetching,
-    items: state.rootReducer.carbonIntensityLimits.items,
-    success: state.rootReducer.carbonIntensityLimits.success
+    isFetching: state.rootReducer.carbonIntensityLimit.isFetching,
+    item: state.rootReducer.carbonIntensityLimit.item,
+    success: state.rootReducer.carbonIntensityLimit.success
   },
   loggedInUser: state.rootReducer.userRequest.loggedInUser
 });
 
 const mapDispatchToProps = {
-  getCarbonIntensityLimit: carbonIntensities.find
+  getCarbonIntensityLimit: carbonIntensities.get
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(CarbonIntensityLimitDetailContainer);

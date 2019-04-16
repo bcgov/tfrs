@@ -18,7 +18,8 @@ from api.serializers.CreditCalculation import \
 
 
 class CarbonIntensityLimitViewSet(
-        AuditableMixin, mixins.ListModelMixin, viewsets.GenericViewSet):
+        AuditableMixin, mixins.ListModelMixin, mixins.RetrieveModelMixin,
+        viewsets.GenericViewSet):
     """
     This viewset automatically provides `list`
     """
@@ -30,7 +31,8 @@ class CarbonIntensityLimitViewSet(
     ordering = ('display_order',)
     serializer_class = CarbonIntensityLimitSerializer
     serializer_classes = {
-        'list': CarbonIntensityLimitSerializer
+        'list': CarbonIntensityLimitSerializer,
+        'default': CarbonIntensityLimitSerializer
     }
 
     def get_serializer_class(self):

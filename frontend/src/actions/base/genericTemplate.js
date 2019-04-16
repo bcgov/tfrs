@@ -82,7 +82,7 @@ export class GenericRestTemplate {
         })],
         [this.get, (state, action) => ({
           ...state,
-          item: {},
+          item: null,
           isFetching: true,
           id: action.payload
         })],
@@ -148,8 +148,9 @@ export class GenericRestTemplate {
     return axios.get(`${this.baseUrl}/${id}`);
   }
 
-  * getHandler () {
-    const id = yield (select(this.idSelector()));
+  * getHandler (action) {
+    const id = action.payload;
+
     try {
       const response = yield call(this.doGet, id);
       yield put(this.getSuccess(response.data));

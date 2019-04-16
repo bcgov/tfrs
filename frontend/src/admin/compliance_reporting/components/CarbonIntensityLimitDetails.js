@@ -102,9 +102,12 @@ CarbonIntensityLimitDetails.defaultProps = {};
 
 CarbonIntensityLimitDetails.propTypes = {
   item: PropTypes.shape({
-    compliancePeriod: PropTypes.shape(),
+    description: PropTypes.string,
     id: PropTypes.number,
-    limits: PropTypes.shape()
+    limits: PropTypes.shape({
+      diesel: PropTypes.shape(),
+      gasoline: PropTypes.shape()
+    })
   }).isRequired
 };
 

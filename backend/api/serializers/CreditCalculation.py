@@ -59,11 +59,19 @@ class CarbonIntensityLimitSerializer(serializers.ModelSerializer):
         return {
             "diesel": {
                 "fuel": "Diesel Class",
-                "density": diesel_limit.density if diesel_limit else 0
+                "density": diesel_limit.density if diesel_limit else 0,
+                "effective_date":
+                    diesel_limit.effective_date if diesel_limit else None,
+                "expiration_date":
+                    diesel_limit.expiration_date if diesel_limit else None
             },
             "gasoline": {
                 "fuel": "Gasoline Class",
-                "density": gasoline_limit.density if gasoline_limit else 0
+                "density": gasoline_limit.density if gasoline_limit else 0,
+                "effective_date":
+                    gasoline_limit.effective_date if gasoline_limit else None,
+                "expiration_date":
+                    gasoline_limit.expiration_date if gasoline_limit else None
             }
         }
 
