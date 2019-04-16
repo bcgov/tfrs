@@ -25,6 +25,7 @@ from django.db.models import PROTECT
 
 from api.managers.ApprovedFuelManager import ApprovedFuelManager
 from api.models.mixins.EffectiveDates import EffectiveDates
+from api.models.FuelClass import FuelClass
 from auditable.models import Auditable
 
 
@@ -38,6 +39,10 @@ class ApprovedFuel(Auditable, EffectiveDates):
         null=False,
         unique=True,
         db_comment="Approved fuel name"
+    )
+    description = models.CharField(
+        max_length=1000, blank=True, null=True,
+        db_comment="Further description of the fuel"
     )
     credit_calculation_only = models.BooleanField(
         default=False,
@@ -74,6 +79,18 @@ class ApprovedFuel(Auditable, EffectiveDates):
     )
 
     objects = ApprovedFuelManager()
+
+    @property
+    def fuel_classes(self):
+        """
+        Fuel Classes associated to the Fuel.
+        Relationship through ApprovedFuelClass
+        """
+        fuel_classes = FuelClass.objects.filter(
+            approved_fuel_class__fuel_id=self.id
+        )
+
+        return fuel_classes
 
     def natural_key(self):
         """
