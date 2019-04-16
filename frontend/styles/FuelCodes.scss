@@ -39,8 +39,12 @@
   }
 
   .fuel-code-details {
-    div.value {
+    label {
       font-weight: normal;
+    }
+
+    div.value {
+      font-weight: bold;
       min-height: 2.5rem;
       padding: 0.5rem 1rem;
     }  

@@ -7,7 +7,6 @@ import history from './app/History';
 
 import * as Routes from './constants/routes';
 import {
-  COMPLIANCE_REPORTING,
   CREDIT_TRANSACTIONS_HISTORY,
   FUEL_CODES,
   HISTORICAL_DATA_ENTRY,
@@ -15,6 +14,7 @@ import {
   USERS as ADMIN_USERS
 } from './constants/routes/Admin';
 import CONTACT_US from './constants/routes/ContactUs';
+import CREDIT_CALCULATIONS from './constants/routes/CreditCalculations';
 import CREDIT_TRANSACTIONS from './constants/routes/CreditTransactions';
 import ORGANIZATIONS from './constants/routes/Organizations';
 import SECURE_DOCUMENT_UPLOAD from './constants/routes/SecureDocumentUpload';
@@ -25,6 +25,8 @@ import FuelCodeDetailContainer from './admin/fuel_codes/FuelCodeDetailContainer'
 import FuelCodeEditContainer from './admin/fuel_codes/FuelCodeEditContainer';
 import FuelCodesContainer from './admin/fuel_codes/FuelCodesContainer';
 import ComplianceReportingContainer from './admin/compliance_reporting/ComplianceReportingContainer';
+import CarbonIntensityLimitDetailContainer from './admin/compliance_reporting/CarbonIntensityLimitDetailContainer';
+import CarbonIntensityLimitEditContainer from './admin/compliance_reporting/CarbonIntensityLimitEditContainer';
 import CreditTransactionsHistoryContainer from './admin/credit_trade_history/CreditTradeHistoryContainer';
 import SecureFileSubmissionsContainer from './secure_file_submission/SecureFileSubmissionContainer';
 import SecureFileSubmissionAddContainer from './secure_file_submission/SecureFileSubmissionAddContainer';
@@ -251,9 +253,20 @@ const Router = routerProps => (
         ]}
         {CONFIG.COMPLIANCE_REPORTING.ENABLED && [
           <Route
+            exact
             key="compliance_reporting_list"
-            path={COMPLIANCE_REPORTING.LIST}
+            path={CREDIT_CALCULATIONS.LIST}
             component={withRouter(ComplianceReportingContainer)}
+          />,
+          <Route
+            key="carbon_intensity_limit_details"
+            path={CREDIT_CALCULATIONS.CARBON_INTENSITIES_DETAILS}
+            component={withRouter(CarbonIntensityLimitDetailContainer)}
+          />,
+          <Route
+            key="carbon_intensity_limit_edit"
+            path={CREDIT_CALCULATIONS.CARBON_INTENSITIES_EDIT}
+            component={withRouter(CarbonIntensityLimitEditContainer)}
           />
         ]}
         <Route component={NotFound} />

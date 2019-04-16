@@ -1,6 +1,6 @@
-import {createActions, handleActions} from "redux-actions";
-import axios from "axios";
-import {call, all, put, select, takeLatest} from "redux-saga/effects";
+import axios from 'axios';
+import { createActions, handleActions } from 'redux-actions';
+import { call, all, put, select, takeLatest } from 'redux-saga/effects';
 
 export const RestActions = [
   'FIND',
@@ -21,24 +21,23 @@ export const RestActions = [
   'REMOVE',
   'REMOVE_SUCCESS',
 
-  'ERROR',
+  'ERROR'
 ];
 
-
 export class GenericRestTemplate {
-
-  constructor(name, baseUrl, stateName) {
+  constructor (name, baseUrl, stateName) {
     this.name = name;
     this.baseUrl = baseUrl;
     this.stateName = stateName;
 
-    let actionCreators = {
-      ...createActions({},
-        ...[...RestActions,...this.getCustomIdentityActions()],
-        {
-          prefix: this.name
-        }
-      )
+    const actionCreators = {
+      ...createActions({
+      }, ...[
+        ...RestActions,
+        ...this.getCustomIdentityActions()
+      ], {
+        prefix: this.name
+      })
     };
 
     Object.assign(this, actionCreators);
@@ -48,18 +47,18 @@ export class GenericRestTemplate {
     this.getCustomIdentityActions = this.getCustomIdentityActions.bind(this);
     this.getCustomDefaultState = this.getCustomDefaultState.bind(this);
 
-    this.saga=this.saga.bind(this);
+    this.saga = this.saga.bind(this);
 
     this.idSelector = this.idSelector.bind(this);
 
-    this.findHandler= this.findHandler.bind(this);
+    this.findHandler = this.findHandler.bind(this);
     this.doFind = this.doFind.bind(this);
 
-    this.getHandler= this.getHandler.bind(this);
+    this.getHandler = this.getHandler.bind(this);
     this.doGet = this.doGet.bind(this);
   }
 
-  reducer() {
+  reducer () {
     return handleActions(
       new Map([
         [this.find, (state, action) => ({
@@ -83,7 +82,7 @@ export class GenericRestTemplate {
         })],
         [this.get, (state, action) => ({
           ...state,
-          item: null,
+          item: {},
           isFetching: true,
           id: action.payload
         })],
@@ -93,8 +92,8 @@ export class GenericRestTemplate {
           isFetching: false,
           success: true
         })],
-          ...this.getCustomReducerMap()
-        ]),
+        ...this.getCustomReducerMap()
+      ]),
       {
         items: [],
         item: null,
@@ -109,70 +108,63 @@ export class GenericRestTemplate {
   }
 
   // override this to register custom actions
-  getCustomIdentityActions() {
+  getCustomIdentityActions () {
     return [];
   }
 
   // override this to register custom reductions
-  getCustomReducerMap() {
+  getCustomReducerMap () {
     return [];
   }
 
   // sagas
-  getCustomSagas() {
+  getCustomSagas () {
     return [];
   }
 
   // to add something to the state tree
-  getCustomDefaultState() {
+  getCustomDefaultState () {
     return {};
   }
 
-  idSelector() {
-    const that = this;
-
-    return (state) => {
-      return state.rootReducer[this.stateName].id
-    };
+  idSelector () {
+    return state => (state.rootReducer[this.stateName].id);
   }
 
-  doFind() {
+  doFind () {
     return axios.get(this.baseUrl);
-  };
+  }
 
-  * findHandler() {
+  * findHandler () {
     try {
       const response = yield call(this.doFind);
       yield put(this.findSuccess(response.data));
     } catch (error) {
-      yield put(this.error(error.response.data))
+      yield put(this.error(error.response.data));
     }
   }
 
-  doGet(id) {
+  doGet (id) {
     return axios.get(`${this.baseUrl}/${id}`);
   }
 
-  * getHandler() {
-    const id = yield(select(this.idSelector()));
+  * getHandler () {
+    const id = yield (select(this.idSelector()));
     try {
       const response = yield call(this.doGet, id);
       yield put(this.getSuccess(response.data));
     } catch (error) {
-      yield put(this.error(error.response.data))
+      yield put(this.error(error.response.data));
     }
-  };
+  }
 
-  * saga() {
+  * saga () {
     yield all([
       takeLatest(this.find, this.findHandler),
       takeLatest(this.get, this.getHandler),
       ...this.getCustomSagas()
     ]);
-
-  };
-
+  }
 }
-
 
 export default GenericRestTemplate;

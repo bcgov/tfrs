@@ -13,9 +13,7 @@ const FuelCodeFormDetails = props => (
         <div className="col-sm-6">
           <div className="form-group">
             <label htmlFor="fuel-code">Low Carbon Fuel Code:
-              <div
-                className="input-group"
-              >
+              <div className="input-group">
                 <span className="input-group-addon">BCLCF</span>
                 <AutocompletedInput
                   handleInputChange={props.handleInputChange}
