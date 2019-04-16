@@ -20,32 +20,29 @@
     See the License for the specific language governing permissions and
     limitations under the License.
 """
-from rest_framework import serializers
+from django.db import models
 
-from api.models.ApprovedFuel import ApprovedFuel
-from .FuelClass import FuelClassSerializer
+from auditable.models import Auditable
 
 
-class ApprovedFuelSerializer(serializers.ModelSerializer):
+class ApprovedFuelClass(Auditable):
     """
-    Default Serializer for Approved Fuels
+    Approved Fuel to Fuel Class relationship
     """
-    fuel_classes = serializers.SerializerMethodField()
+    fuel = models.ForeignKey(
+        'ApprovedFuel',
+        related_name='approved_fuel_class',
+        on_delete=models.PROTECT
+    )
 
-    def get_fuel_classes(self, obj):
-        """
-        Fuel classes attached to the approved fuel.
-        """
-        serializer = FuelClassSerializer(
-            obj.fuel_classes.order_by('fuel_class'),
-            many=True,
-            read_only=True
-        )
-
-        return serializer.data
+    fuel_class = models.ForeignKey(
+        'FuelClass',
+        related_name='approved_fuel_class',
+        on_delete=models.PROTECT
+    )
 
     class Meta:
-        model = ApprovedFuel
-        fields = 'id', 'name', 'description', 'fuel_classes'
+        db_table = 'approved_fuel_class'
 
-        read_only_fields = ('id', 'name', 'description')
+    db_table_comment = "Maintains the relationship between the fuel type " \
+                       "and the fuel class "

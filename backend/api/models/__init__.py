@@ -58,5 +58,6 @@ from . import UnitOfMeasure
 from . import DefaultCarbonIntensityCategory
 from . import EnergyDensityCategory
 from . import EnergyEffectivenessRatioCategory
+from . import ApprovedFuelClass
 
 patch_fields()
