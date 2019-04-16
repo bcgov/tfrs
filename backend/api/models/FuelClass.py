@@ -20,7 +20,6 @@
     See the License for the specific language governing permissions and
     limitations under the License.
 """
-from decimal import Decimal
 from django.db import models
 
 from api.managers.FuelClassManager import FuelClassManager

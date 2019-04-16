@@ -6,6 +6,7 @@ import DefaultCarbonIntensitiesTable from './DefaultCarbonIntensitiesTable';
 import CarbonIntensityLimitsTable from './CarbonIntensityLimitsTable';
 import EnergyEffectivenessRatiosTable from './EnergyEffectivenessRatiosTable';
 import EnergyDensitiesTable from './EnergyDensitiesTable';
+import FuelClassesTable from './FuelClassesTable';
 import FuelTypesTable from './FuelTypesTable';
 import CONFIG from '../../../config';
 
@@ -84,14 +85,25 @@ const ComplianceReportingPage = props => (
     <div className="row">
       <div className="col-md-12 col-lg-6">
         <h2>Fuel Types</h2>
-        {props.fuelTypes.isFetching && <Loading />}
-        {!props.fuelTypes.isFetching &&
+        {props.fuelTypes &&
           <FuelTypesTable
-            items={props.fuelTypes.items}
-            isFetching={props.fuelTypes.isFetching}
+            items={props.fuelTypes}
             isEmpty={
-              props.fuelTypes.items &&
-              props.fuelTypes.items.length === 0
+              props.fuelTypes &&
+              props.fuelTypes.length === 0
+            }
+          />
+        }
+      </div>
+
+      <div className="col-md-12 col-lg-6">
+        <h2>Fuel Classes</h2>
+        {props.fuelTypes &&
+          <FuelClassesTable
+            items={props.fuelTypes}
+            isEmpty={
+              props.fuelTypes &&
+              props.fuelTypes.length === 0
             }
           />
         }
@@ -101,6 +113,7 @@ const ComplianceReportingPage = props => (
 );
 
 ComplianceReportingPage.defaultProps = {
+  fuelTypes: []
 };
 
 ComplianceReportingPage.propTypes = {
@@ -120,10 +133,7 @@ ComplianceReportingPage.propTypes = {
     isFetching: PropTypes.bool,
     items: PropTypes.arrayOf(PropTypes.shape)
   }).isRequired,
-  fuelTypes: PropTypes.shape({
-    isFetching: PropTypes.bool,
-    items: PropTypes.arrayOf(PropTypes.shape)
-  }).isRequired,
+  fuelTypes: PropTypes.arrayOf(PropTypes.shape),
   loggedInUser: PropTypes.shape({
     hasPermission: PropTypes.func
   }).isRequired,
