@@ -9,6 +9,7 @@ import PropTypes from 'prop-types';
 
 import { carbonIntensities } from '../../actions/carbonIntensities';
 import Loading from '../../app/components/Loading';
+import Modal from '../../app/components/Modal';
 import CarbonIntensityLimitForm from './components/CarbonIntensityLimitForm';
 
 class CarbonIntensityLimitEditContainer extends Component {
@@ -25,26 +26,32 @@ class CarbonIntensityLimitEditContainer extends Component {
         gasolineExpirationDate: ''
       }
     };
+
+    this.loaded = false;
+
+    this._handleInputChange = this._handleInputChange.bind(this);
+    this._handleSubmit = this._handleSubmit.bind(this);
   }
 
   componentDidMount () {
     this.props.getCarbonIntensityLimit(this.props.match.params.id);
   }
 
-  loadPropsToFieldState (props) {
-    // const { item } = props.carbonIntensity;
-    const { items } = this.props.carbonIntensityLimits;
-    const { id } = this.props.match.params;
-    const item = items.find(ele => ele.id == id);
+  componentWillReceiveProps (props) {
+    this.loadPropsToFieldState(props);
+  }
 
-    if (Object.keys(item).length > 0 && !this.loaded) {
+  loadPropsToFieldState (props) {
+    const { item } = props.carbonIntensityLimit;
+
+    if (item && !this.loaded) {
       const fieldState = {
-        dieselCarbonIntensity: item.limits ? item.limits.diesel.density : '',
-        dieselEffectiveDate: item.limits ? item.limits.diesel.effectiveDate : '',
-        dieselExpirationDate: item.limits ? item.limits.diesel.expirationDate : '',
-        gasolineCarbonIntensity: item.limits ? item.limits.gasoline.density : '',
-        gasolineEffectiveDate: item.limits ? item.limits.gasoline.effectiveDate : '',
-        gasolineExpirationDate: item.limits ? item.limits.gasoline.expirationDate : ''
+        dieselCarbonIntensity: item.limits.diesel ? `${item.limits.diesel.density}` : '',
+        dieselEffectiveDate: item.limits.diesel ? item.limits.diesel.effectiveDate : '',
+        dieselExpirationDate: item.limits.diesel ? item.limits.diesel.expirationDate : '',
+        gasolineCarbonIntensity: item.limits.gasoline ? `${item.limits.gasoline.density}` : '',
+        gasolineEffectiveDate: item.limits.gasoline ? item.limits.gasoline.effectiveDate : '',
+        gasolineExpirationDate: item.limits.gasoline ? item.limits.gasoline.expirationDate : ''
       };
 
       this.setState({
@@ -81,23 +88,27 @@ class CarbonIntensityLimitEditContainer extends Component {
   }
 
   render () {
-    // const { item, isFetching, success } = this.props.carbonIntensityLimit;
-    const { items, isFetching, success } = this.props.carbonIntensityLimits;
+    const { item, isFetching, success } = this.props.carbonIntensityLimit;
 
     if (success && !isFetching) {
-      const { id } = this.props.match.params;
-      const item = items.find(ele => ele.id == id);
-
-      return (
+      return ([
         <CarbonIntensityLimitForm
-          item={item}
           fields={this.state.fields}
           handleInputChange={this._handleInputChange}
           handleSubmit={this._handleSubmit}
+          item={item}
+          key="carbon-intensity-limit-form"
           loggedInUser={this.props.loggedInUser}
           title="Edit Carbon Intensity Limit Details"
-        />
-      );
+        />,
+        <Modal
+          handleSubmit={event => this._handleSubmit(event, 'Approved')}
+          id="confirmSubmit"
+          key="confirmSubmit"
+        >
+          Are you sure you want to update this Fuel code?
+        </Modal>
+      ]);
     }
 
     return <Loading />;
@@ -124,20 +135,15 @@ CarbonIntensityLimitEditContainer.propTypes = {
 
 const mapStateToProps = state => ({
   carbonIntensityLimit: {
-    isFetching: state.rootReducer.carbonIntensityLimits.isFetching,
-    item: state.rootReducer.carbonIntensityLimits.item,
-    success: state.rootReducer.carbonIntensityLimits.success
-  },
-  carbonIntensityLimits: {
-    isFetching: state.rootReducer.carbonIntensityLimits.isFetching,
-    items: state.rootReducer.carbonIntensityLimits.items,
-    success: state.rootReducer.carbonIntensityLimits.success
+    isFetching: state.rootReducer.carbonIntensityLimit.isFetching,
+    item: state.rootReducer.carbonIntensityLimit.item,
+    success: state.rootReducer.carbonIntensityLimit.success
   },
   loggedInUser: state.rootReducer.userRequest.loggedInUser
 });
 
 const mapDispatchToProps = {
-  getCarbonIntensityLimit: carbonIntensities.find
+  getCarbonIntensityLimit: carbonIntensities.get
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(CarbonIntensityLimitEditContainer);

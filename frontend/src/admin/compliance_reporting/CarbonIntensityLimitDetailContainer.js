@@ -25,7 +25,7 @@ class CarbonIntensityLimitDetailContainer extends Component {
   render () {
     const { item, isFetching, success } = this.props.carbonIntensityLimit;
 
-    if (!isFetching && success) {
+    if (success && !isFetching && item) {
       return (
         <CarbonIntensityLimitDetails
           item={item}

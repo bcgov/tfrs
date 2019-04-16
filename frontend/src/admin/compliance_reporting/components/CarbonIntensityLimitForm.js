@@ -84,7 +84,7 @@ CarbonIntensityLimitForm.propTypes = {
   errors: PropTypes.arrayOf(PropTypes.shape()),
   fields: PropTypes.shape({
     compliancePeriod: PropTypes.string,
-    density: PropTypes.string,
+    density: PropTypes.number,
     effectiveDate: PropTypes.string,
     expiryDate: PropTypes.string
   }).isRequired,
