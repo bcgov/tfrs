@@ -15,7 +15,7 @@ const CarbonIntensitiesTable = (props) => {
     Header: 'Fuel',
     id: 'title'
   }, {
-    accessor: item => item.carbonIntensity,
+    accessor: item => (item.density && item.density.toFixed(2)),
     className: 'col-density',
     Header: (
       <div>

@@ -2,8 +2,12 @@ from rest_framework import viewsets, mixins, filters
 
 from auditable.views import AuditableMixin
 
-from api.models.ApprovedFuel import ApprovedFuel
 from api.models.CompliancePeriod import CompliancePeriod
+from api.models.DefaultCarbonIntensityCategory import \
+    DefaultCarbonIntensityCategory
+from api.models.EnergyDensityCategory import EnergyDensityCategory
+from api.models.EnergyEffectivenessRatioCategory import \
+    EnergyEffectivenessRatioCategory
 from api.permissions.CreditCalculation import \
         CreditCalculationPermissions
 from api.serializers.CreditCalculation import \
@@ -43,7 +47,7 @@ class DefaultCarbonIntensityViewSet(
     """
     permission_classes = (CreditCalculationPermissions,)
     http_method_names = ['get']
-    queryset = ApprovedFuel.objects.all()
+    queryset = DefaultCarbonIntensityCategory.objects.all()
     filter_backends = (filters.OrderingFilter,)
     ordering_fields = '__all__'
     ordering = ('name',)
@@ -66,7 +70,7 @@ class EnergyDensityViewSet(
     """
     permission_classes = (CreditCalculationPermissions,)
     http_method_names = ['get']
-    queryset = ApprovedFuel.objects.all()
+    queryset = EnergyDensityCategory.objects.all()
     filter_backends = (filters.OrderingFilter,)
     ordering_fields = '__all__'
     ordering = ('name',)
@@ -89,7 +93,7 @@ class EnergyEffectivenessRatioViewSet(
     """
     permission_classes = (CreditCalculationPermissions,)
     http_method_names = ['get']
-    queryset = ApprovedFuel.objects.all()
+    queryset = EnergyEffectivenessRatioCategory.objects.all()
     filter_backends = (filters.OrderingFilter,)
     ordering_fields = '__all__'
     ordering = ('name',)

@@ -21,6 +21,7 @@
     limitations under the License.
 """
 from django.db import models
+from django.db.models import PROTECT
 
 from api.managers.ApprovedFuelManager import ApprovedFuelManager
 from api.models.mixins.EffectiveDates import EffectiveDates
@@ -32,17 +33,44 @@ class ApprovedFuel(Auditable, EffectiveDates):
     Approved Fuels
     """
     name = models.CharField(
-        max_length=255,
+        max_length=100,
         blank=False,
         null=False,
         unique=True,
         db_comment="Approved fuel name"
     )
-
     credit_calculation_only = models.BooleanField(
         default=False,
         db_comment="Flag. True if this fuel type is only applicable for "
                    "Credit Calculation functions."
+    )
+    default_carbon_intensity_category = models.ForeignKey(
+        'DefaultCarbonIntensityCategory',
+        related_name='approved_fuel',
+        blank=True,
+        null=True,
+        on_delete=PROTECT
+    )
+    energy_density_category = models.ForeignKey(
+        'EnergyDensityCategory',
+        related_name='approved_fuel',
+        blank=True,
+        null=True,
+        on_delete=PROTECT
+    )
+    energy_effectiveness_ratio_category = models.ForeignKey(
+        'EnergyEffectivenessRatioCategory',
+        related_name='approved_fuel',
+        blank=True,
+        null=True,
+        on_delete=PROTECT
+    )
+    unit_of_measure = models.ForeignKey(
+        'UnitOfMeasure',
+        related_name='approved_fuel',
+        blank=True,
+        null=True,
+        on_delete=PROTECT
     )
 
     objects = ApprovedFuelManager()

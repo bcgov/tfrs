@@ -50,14 +50,16 @@ class TestCreditCalculation(BaseTestCase):
 
         response_data = json.loads(response.content.decode("utf-8"))
 
-        self.assertEqual(response_data[8]["description"], "2018")
-        self.assertEqual(
-            response_data[8]["limits"]["diesel"]["fuel"], "Diesel Class")
-        self.assertEqual(response_data[8]["limits"]["diesel"]["density"], 88.6)
-        self.assertEqual(
-            response_data[8]["limits"]["gasoline"]["fuel"], "Gasoline Class")
-        self.assertEqual(
-            response_data[8]["limits"]["gasoline"]["density"], 82.41)
+        for row in response_data:
+            if row["description"] == "2018":
+                self.assertEqual(
+                    row["limits"]["diesel"]["fuel"], "Diesel Class")
+                self.assertEqual(
+                    row["limits"]["diesel"]["density"], 88.6)
+                self.assertEqual(
+                    row["limits"]["gasoline"]["fuel"], "Gasoline Class")
+                self.assertEqual(
+                    row["limits"]["gasoline"]["density"], 82.41)
 
     def test_get_default_carbon_intensity_list(self):
         """
@@ -69,14 +71,14 @@ class TestCreditCalculation(BaseTestCase):
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-
         response_data = json.loads(response.content.decode("utf-8"))
 
-        self.assertEqual(response_data[1]["name"], "CNG")
-        self.assertEqual(response_data[1]["carbonIntensity"], 63.64)
-        self.assertEqual(response_data[7]["name"], "LNG")
-        self.assertEqual(response_data[7]["carbonIntensity"], 112.65)
+        for row in response_data:
+            if row["name"] == "CNG":
+                self.assertEqual(row["density"], 63.64)
+
+            elif row["name"] == "LNG":
+                self.assertEqual(row["density"], 112.65)
 
     def test_get_energy_density_list(self):
         """
@@ -90,14 +92,14 @@ class TestCreditCalculation(BaseTestCase):
 
         response_data = json.loads(response.content.decode("utf-8"))
 
-        self.assertEqual(response_data[0]["name"], "Biodiesel")
-        self.assertEqual(response_data[0]["energyDensity"]["density"], 35.40)
-        self.assertEqual(
-            response_data[0]["energyDensity"]["unitOfMeasure"], "MJ/L")
-        self.assertEqual(response_data[5]["name"], "Hydrogen")
-        self.assertEqual(response_data[5]["energyDensity"]["density"], 141.24)
-        self.assertEqual(
-            response_data[5]["energyDensity"]["unitOfMeasure"], "MJ/kg")
+        for row in response_data:
+            if row["name"] == "Biodiesel":
+                self.assertEqual(row["density"], 35.40)
+                self.assertEqual(row["unitOfMeasure"], "L")
+
+            elif row["name"] == "Hydrogen":
+                self.assertEqual(row["density"], 141.24)
+                self.assertEqual(row["unitOfMeasure"], "kg")
 
     def test_get_energy_effectiveness_ratio_list(self):
         """
@@ -111,20 +113,14 @@ class TestCreditCalculation(BaseTestCase):
 
         response_data = json.loads(response.content.decode("utf-8"))
 
-        self.assertEqual(response_data[0]["name"], "Biodiesel")
-        self.assertEqual(
-            response_data[0]["energyEffectivenessRatio"]["diesel"]["fuel"],
-            "Diesel Class"
-        )
-        self.assertEqual(
-            response_data[1]["energyEffectivenessRatio"]["diesel"]["ratio"],
-            0.9
-        )
-        self.assertEqual(
-            response_data[1]["energyEffectivenessRatio"]["gasoline"]["ratio"],
-            1
-        )
-        self.assertEqual(
-            response_data[2]["energyEffectivenessRatio"]["gasoline"]["ratio"],
-            None
-        )
+        for row in response_data:
+            if row["name"] == "CNG":
+                self.assertEqual(row["dieselRatio"], 0.9)
+
+            elif row["name"] == "LNG":
+                self.assertEqual(row["dieselRatio"], 1.0)
+                self.assertEqual(row["gasolineRatio"], None)
+
+            elif row["name"] == "Propane":
+                self.assertEqual(row["dieselRatio"], None)
+                self.assertEqual(row["gasolineRatio"], None)

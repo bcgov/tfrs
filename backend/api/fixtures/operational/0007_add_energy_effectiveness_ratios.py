@@ -1,8 +1,9 @@
 from django.db import transaction
 
 from api.management.data_script import OperationalDataScript
-from api.models.ApprovedFuel import ApprovedFuel
 from api.models.EnergyEffectivenessRatio import EnergyEffectivenessRatio
+from api.models.EnergyEffectivenessRatioCategory import \
+    EnergyEffectivenessRatioCategory
 from api.models.FuelClass import FuelClass
 
 
@@ -19,7 +20,7 @@ class AddEnergyEffectivenessRatios(OperationalDataScript):
     @transaction.atomic
     def run(self):
         EnergyEffectivenessRatio.objects.create(
-            fuel=ApprovedFuel.objects.get(
+            category=EnergyEffectivenessRatioCategory.objects.get(
                 name="Petroleum-based diesel fuel or renewable fuel in "
                      "relation to diesel class fuel"
             ),
@@ -28,7 +29,7 @@ class AddEnergyEffectivenessRatios(OperationalDataScript):
             fuel_class=FuelClass.objects.get(fuel_class="Diesel")
         )
         EnergyEffectivenessRatio.objects.create(
-            fuel=ApprovedFuel.objects.get(
+            category=EnergyEffectivenessRatioCategory.objects.get(
                 name="Petroleum-based gasoline, natural gas-based gasoline or "
                      "renewable fuel in relation to gasoline class fuel"
             ),
@@ -37,7 +38,7 @@ class AddEnergyEffectivenessRatios(OperationalDataScript):
             fuel_class=FuelClass.objects.get(fuel_class="Gasoline")
         )
         EnergyEffectivenessRatio.objects.create(
-            fuel=ApprovedFuel.objects.get(
+            category=EnergyEffectivenessRatioCategory.objects.get(
                 name="Hydrogen"
             ),
             effective_date="2017-01-01",
@@ -45,7 +46,7 @@ class AddEnergyEffectivenessRatios(OperationalDataScript):
             fuel_class=FuelClass.objects.get(fuel_class="Diesel")
         )
         EnergyEffectivenessRatio.objects.create(
-            fuel=ApprovedFuel.objects.get(
+            category=EnergyEffectivenessRatioCategory.objects.get(
                 name="Hydrogen"
             ),
             effective_date="2017-01-01",
@@ -53,7 +54,7 @@ class AddEnergyEffectivenessRatios(OperationalDataScript):
             fuel_class=FuelClass.objects.get(fuel_class="Gasoline")
         )
         EnergyEffectivenessRatio.objects.create(
-            fuel=ApprovedFuel.objects.get(
+            category=EnergyEffectivenessRatioCategory.objects.get(
                 name="LNG"
             ),
             effective_date="2017-01-01",
@@ -61,7 +62,7 @@ class AddEnergyEffectivenessRatios(OperationalDataScript):
             fuel_class=FuelClass.objects.get(fuel_class="Diesel")
         )
         EnergyEffectivenessRatio.objects.create(
-            fuel=ApprovedFuel.objects.get(
+            category=EnergyEffectivenessRatioCategory.objects.get(
                 name="CNG"
             ),
             effective_date="2017-01-01",
@@ -69,7 +70,7 @@ class AddEnergyEffectivenessRatios(OperationalDataScript):
             fuel_class=FuelClass.objects.get(fuel_class="Diesel")
         )
         EnergyEffectivenessRatio.objects.create(
-            fuel=ApprovedFuel.objects.get(
+            category=EnergyEffectivenessRatioCategory.objects.get(
                 name="CNG"
             ),
             effective_date="2017-01-01",
@@ -77,7 +78,7 @@ class AddEnergyEffectivenessRatios(OperationalDataScript):
             fuel_class=FuelClass.objects.get(fuel_class="Gasoline")
         )
         EnergyEffectivenessRatio.objects.create(
-            fuel=ApprovedFuel.objects.get(
+            category=EnergyEffectivenessRatioCategory.objects.get(
                 name="Propane"
             ),
             effective_date="2017-01-01",
@@ -85,7 +86,7 @@ class AddEnergyEffectivenessRatios(OperationalDataScript):
             fuel_class=FuelClass.objects.get(fuel_class="Diesel")
         )
         EnergyEffectivenessRatio.objects.create(
-            fuel=ApprovedFuel.objects.get(
+            category=EnergyEffectivenessRatioCategory.objects.get(
                 name="Propane"
             ),
             effective_date="2017-01-01",
@@ -93,7 +94,7 @@ class AddEnergyEffectivenessRatios(OperationalDataScript):
             fuel_class=FuelClass.objects.get(fuel_class="Gasoline")
         )
         EnergyEffectivenessRatio.objects.create(
-            fuel=ApprovedFuel.objects.get(
+            category=EnergyEffectivenessRatioCategory.objects.get(
                 name="Electricity"
             ),
             effective_date="2017-01-01",
@@ -101,7 +102,7 @@ class AddEnergyEffectivenessRatios(OperationalDataScript):
             fuel_class=FuelClass.objects.get(fuel_class="Diesel")
         )
         EnergyEffectivenessRatio.objects.create(
-            fuel=ApprovedFuel.objects.get(
+            category=EnergyEffectivenessRatioCategory.objects.get(
                 name="Electricity"
             ),
             effective_date="2017-01-01",
