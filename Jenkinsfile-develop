@@ -1,11 +1,11 @@
 result = 0
 runParallel = true
-IMAGE_HASH_FRONTEND = 'nonexist123'
-IMAGE_HASH_NOTIFICATION = 'nonexist123'
-IMAGE_HASH_BACKEND = 'nonexist123'
-IMAGE_HASH_SCAN_COORDINATOR = 'nonexist123'
-IMAGE_HASH_SCAN_HANDLER = 'nonexist123'
-IMAGE_HASH_CELERY = 'nonexist123'
+IMAGE_HASH_FRONTEND = ''
+IMAGE_HASH_NOTIFICATION = ''
+IMAGE_HASH_BACKEND = ''
+IMAGE_HASH_SCAN_COORDINATOR = ''
+IMAGE_HASH_SCAN_HANDLER = ''
+IMAGE_HASH_CELERY = ''
 
 def prepareBackendBuildStages() {
     def buildBackendList = []
@@ -228,13 +228,6 @@ node("develop-maven-${env.BUILD_NUMBER}") {
         sh returnStatus: true, script: "oc scale dc maintenance-page -n mem-tfrs-dev --replicas=1 --timeout=20s"
         sh returnStatus: true, script: "oc patch route/dev-lowcarbonfuels-frontend -n mem-tfrs-dev -p '{\"spec\":{\"to\":{\"name\":\"maintenance-page\"}, \"port\":{\"targetPort\":\"2015-tcp\"}}}'"
         sh returnStatus: true, script: "oc patch route/dev-lowcarbonfuels-backend -n mem-tfrs-dev -p '{\"spec\":{\"to\":{\"name\":\"maintenance-page\"}, \"port\":{\"targetPort\":\"2015-tcp\"}}}'"
-    }
-
-    stage('Datebase Backup') {
-        postgresql_pod_name=sh (script: 'oc get pods -n mem-tfrs-dev | grep postgresql96 | awk \'{print $1}\'', returnStdout: true).trim()
-        echo "start backup script tfrsdump-dev.sh on dev, postgresql_pod_name is ${postgresql_pod_name}"
-        sh returnStdout: true, script: "oc exec ${postgresql_pod_name} -c postgresql96 -n mem-tfrs-dev -- bash /postgresql-backup/tfrs-backup.sh master dev"
-        echo 'backup script completed'
     }
 
     stage('Deploy Frontend on Dev') {
