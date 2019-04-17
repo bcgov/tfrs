@@ -22,7 +22,8 @@ if [ ${databaseDiskUsage} -gt 70 ]; then
         diskusageAlarm=true
 fi
 if [ ${diskusageAlarm} = true ]; then
+        echo "CRITICAL - $1 disk usage checking failed"
         exit 2
 fi
-echo "check_diskusage passed successfully"
+echo "OK - $1 disk usage checking passed successfully"
 exit 0
