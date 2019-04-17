@@ -5,13 +5,13 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import FontAwesomeIcon from '@fortawesome/react-fontawesome';
 
-import CarbonIntensityLimitFormDetails from './CarbonIntensityLimitFormDetails';
+import DefaultCarbonIntensityFormDetails from './DefaultCarbonIntensityFormDetails';
 import history from '../../../app/History';
 import * as Lang from '../../../constants/langEnUs';
 import Errors from '../../../app/components/Errors';
 import TooltipWhenDisabled from '../../../app/components/TooltipWhenDisabled';
 
-class CarbonIntensityLimitForm extends Component {
+class DefaultCarbonIntensityForm extends Component {
   _getValidationMessages () {
     const validationMessage = [];
 
@@ -33,7 +33,7 @@ class CarbonIntensityLimitForm extends Component {
         <form
           onSubmit={event => this.props.handleSubmit(event)}
         >
-          <CarbonIntensityLimitFormDetails
+          <DefaultCarbonIntensityFormDetails
             edit={this.props.edit}
             fields={this.props.fields}
             handleInputChange={this.props.handleInputChange}
@@ -75,18 +75,17 @@ class CarbonIntensityLimitForm extends Component {
   }
 }
 
-CarbonIntensityLimitForm.defaultProps = {
+DefaultCarbonIntensityForm.defaultProps = {
   edit: false,
   errors: [],
   item: {}
 };
 
-CarbonIntensityLimitForm.propTypes = {
+DefaultCarbonIntensityForm.propTypes = {
   edit: PropTypes.bool,
   errors: PropTypes.arrayOf(PropTypes.shape()),
   fields: PropTypes.shape({
-    compliancePeriod: PropTypes.string,
-    density: PropTypes.number,
+    density: PropTypes.string,
     effectiveDate: PropTypes.string,
     expiryDate: PropTypes.string
   }).isRequired,
@@ -96,4 +95,4 @@ CarbonIntensityLimitForm.propTypes = {
   title: PropTypes.string.isRequired
 };
 
-export default CarbonIntensityLimitForm;
+export default DefaultCarbonIntensityForm;

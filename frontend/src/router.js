@@ -27,6 +27,10 @@ import FuelCodesContainer from './admin/fuel_codes/FuelCodesContainer';
 import ComplianceReportingContainer from './admin/compliance_reporting/ComplianceReportingContainer';
 import CarbonIntensityLimitDetailContainer from './admin/compliance_reporting/CarbonIntensityLimitDetailContainer';
 import CarbonIntensityLimitEditContainer from './admin/compliance_reporting/CarbonIntensityLimitEditContainer';
+import DefaultCarbonIntensityDetailContainer from './admin/compliance_reporting/DefaultCarbonIntensityDetailContainer';
+import DefaultCarbonIntensityEditContainer from './admin/compliance_reporting/DefaultCarbonIntensityEditContainer';
+import EnergyEffectivenessRatioDetailContainer from './admin/compliance_reporting/EnergyEffectivenessRatioDetailContainer';
+import EnergyEffectivenessRatioEditContainer from './admin/compliance_reporting/EnergyEffectivenessRatioEditContainer';
 import CreditTransactionsHistoryContainer from './admin/credit_trade_history/CreditTradeHistoryContainer';
 import SecureFileSubmissionsContainer from './secure_file_submission/SecureFileSubmissionContainer';
 import SecureFileSubmissionAddContainer from './secure_file_submission/SecureFileSubmissionAddContainer';
@@ -267,6 +271,26 @@ const Router = routerProps => (
             key="carbon_intensity_limit_edit"
             path={CREDIT_CALCULATIONS.CARBON_INTENSITIES_EDIT}
             component={withRouter(CarbonIntensityLimitEditContainer)}
+          />,
+          <Route
+            key="default_carbon_intensity_details"
+            path={CREDIT_CALCULATIONS.DEFAULT_CARBON_INTENSITIES_DETAILS}
+            component={withRouter(DefaultCarbonIntensityDetailContainer)}
+          />,
+          <Route
+            key="default_carbon_intensity_edit"
+            path={CREDIT_CALCULATIONS.DEFAULT_CARBON_INTENSITIES_EDIT}
+            component={withRouter(DefaultCarbonIntensityEditContainer)}
+          />,
+          <Route
+            key="energy_effectiveness_ratio_details"
+            path={CREDIT_CALCULATIONS.ENERGY_EFFECTIVENESS_RATIO_DETAILS}
+            component={withRouter(EnergyEffectivenessRatioDetailContainer)}
+          />,
+          <Route
+            key="energy_effectiveness_ratio_edit"
+            path={CREDIT_CALCULATIONS.ENERGY_EFFECTIVENESS_RATIO_EDIT}
+            component={withRouter(EnergyEffectivenessRatioEditContainer)}
           />
         ]}
         <Route component={NotFound} />

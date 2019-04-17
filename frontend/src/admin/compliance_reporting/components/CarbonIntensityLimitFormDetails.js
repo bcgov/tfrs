@@ -8,17 +8,21 @@ import InputWithTooltip from '../../../app/components/InputWithTooltip';
 const CarbonIntensityLimitFormDetails = props => (
   <div className="carbon-intensity-limit-details">
     <div className="main-form">
-      <div className="row">
+      <div className="row border-box">
         <div className="col-sm-6">
-          <div className="form-group">
-            <label htmlFor="fuel-code">Compliance Period:
-              <div className="value">{props.item.description}</div>
-            </label>
+          <div className="row">
+            <div className="col-sm-12">
+              <div className="form-group compliance-period">
+                <label htmlFor="compliance-period">Compliance Period:
+                  <div className="value">{props.item.description}</div>
+                </label>
+              </div>
+            </div>
           </div>
         </div>
       </div>
 
-      <div className="row">
+      <div className="row border-box">
         <div className="col-sm-6">
           <div className="row">
             <div className="col-sm-12">
@@ -59,7 +63,7 @@ const CarbonIntensityLimitFormDetails = props => (
                     dataNumberToFixed={2}
                     handleInputChange={props.handleInputChange}
                     id="diesel-carbon-intensity"
-                    min="0"z
+                    min="0"
                     name="dieselCarbonIntensity"
                     required
                     step="0.01"
@@ -106,7 +110,7 @@ const CarbonIntensityLimitFormDetails = props => (
         </div>
       </div>
 
-      <div className="row">
+      <div className="row border-box">
         <div className="col-sm-6">
           <div className="row">
             <div className="col-sm-6">

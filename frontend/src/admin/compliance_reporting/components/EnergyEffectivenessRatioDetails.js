@@ -9,7 +9,7 @@ import history from '../../../app/History';
 import * as Lang from '../../../constants/langEnUs';
 import CREDIT_CALCULATIONS from '../../../constants/routes/CreditCalculations';
 
-const CarbonIntensityLimitDetails = props => (
+const DefaultCarbonIntensityDetails = props => (
   <div className="page-compliance-reporting-details">
     <h1>{props.title}</h1>
 
@@ -17,8 +17,8 @@ const CarbonIntensityLimitDetails = props => (
       <div className="row">
         <div className="col-sm-6">
           <div className="form-group">
-            <label htmlFor="fuel-code">Compliance Period:
-              <div className="value">{props.item.description}</div>
+            <label htmlFor="fuel-code">Fuel:
+              <div className="value">{props.item.name}</div>
             </label>
           </div>
         </div>
@@ -27,8 +27,8 @@ const CarbonIntensityLimitDetails = props => (
       <div className="row">
         <div className="col-sm-6">
           <div className="form-group">
-            <label htmlFor="fuel-code">Carbon Intensity Limit for Diesel Class Fuel:
-              <div className="value">{props.item.limits.diesel.density}</div>
+            <label htmlFor="fuel-code">Diesel Class Fuel Energy Effectiveness Ratio:
+              <div className="value">{props.item.ratios.diesel.ratio ? props.item.ratios.diesel.ratio.toFixed(1) : 'N/A'}</div>
             </label>
           </div>
         </div>
@@ -38,7 +38,7 @@ const CarbonIntensityLimitDetails = props => (
         <div className="col-sm-3">
           <div className="form-group">
             <label htmlFor="effective-date">Effective Date:
-              <div className="value">{props.item.limits.diesel.effectiveDate}</div>
+              <div className="value">{props.item.ratios.diesel.effectiveDate}</div>
             </label>
           </div>
         </div>
@@ -46,7 +46,7 @@ const CarbonIntensityLimitDetails = props => (
         <div className="col-sm-3">
           <div className="form-group">
             <label htmlFor="expiry-date">Expiration Date:
-              <div className="value">{props.item.limits.diesel.expirationDate}</div>
+              <div className="value">{props.item.ratios.diesel.expirationDate}</div>
             </label>
           </div>
         </div>
@@ -56,7 +56,7 @@ const CarbonIntensityLimitDetails = props => (
         <div className="col-sm-6">
           <div className="form-group">
             <label htmlFor="fuel-code">Carbon Intensity Limit for Gasoline Class Fuel:
-              <div className="value">{props.item.limits.gasoline.density}</div>
+              <div className="value">{props.item.ratios.gasoline.ratio ? props.item.ratios.gasoline.ratio.toFixed(1) : 'N/A'}</div>
             </label>
           </div>
         </div>
@@ -66,7 +66,7 @@ const CarbonIntensityLimitDetails = props => (
         <div className="col-sm-3">
           <div className="form-group">
             <label htmlFor="effective-date">Effective Date:
-              <div className="value">{props.item.limits.gasoline.effectiveDate}</div>
+              <div className="value">{props.item.ratios.gasoline.effectiveDate}</div>
             </label>
           </div>
         </div>
@@ -74,7 +74,7 @@ const CarbonIntensityLimitDetails = props => (
         <div className="col-sm-3">
           <div className="form-group">
             <label htmlFor="expiry-date">Expiration Date:
-              <div className="value">{props.item.limits.gasoline.expirationDate}</div>
+              <div className="value">{props.item.ratios.gasoline.expirationDate}</div>
             </label>
           </div>
         </div>
@@ -92,7 +92,7 @@ const CarbonIntensityLimitDetails = props => (
       <button
         className="btn btn-default"
         type="button"
-        onClick={() => history.push(CREDIT_CALCULATIONS.CARBON_INTENSITIES_EDIT.replace(':id', props.item.id))}
+        onClick={() => history.push(CREDIT_CALCULATIONS.ENERGY_EFFECTIVENESS_RATIO_EDIT.replace(':id', props.item.id))}
       >
         <FontAwesomeIcon icon="edit" /> {Lang.BTN_EDIT}
       </button>
@@ -100,13 +100,13 @@ const CarbonIntensityLimitDetails = props => (
   </div>
 );
 
-CarbonIntensityLimitDetails.defaultProps = {};
+DefaultCarbonIntensityDetails.defaultProps = {};
 
-CarbonIntensityLimitDetails.propTypes = {
+DefaultCarbonIntensityDetails.propTypes = {
   item: PropTypes.shape({
-    description: PropTypes.string,
+    name: PropTypes.string,
     id: PropTypes.number,
-    limits: PropTypes.shape({
+    ratios: PropTypes.shape({
       diesel: PropTypes.shape(),
       gasoline: PropTypes.shape()
     })
@@ -114,4 +114,4 @@ CarbonIntensityLimitDetails.propTypes = {
   title: PropTypes.string.isRequired
 };
 
-export default CarbonIntensityLimitDetails;
+export default DefaultCarbonIntensityDetails;

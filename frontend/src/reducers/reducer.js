@@ -50,9 +50,11 @@ const rootReducer = combineReducers({
   userRequest,
   userViewRequest,
   defaultCarbonIntensities: defaultCarbonIntensities.reducer(),
+  defaultCarbonIntensity: defaultCarbonIntensities.reducer(),
   carbonIntensityLimit: carbonIntensities.reducer(),
   carbonIntensityLimits: carbonIntensities.reducer(),
   energyDensities: energyDensities.reducer(),
+  energyEffectivenessRatio: energyEffectivenessRatios.reducer(),
   energyEffectivenessRatios: energyEffectivenessRatios.reducer(),
   fuelTypes
 });

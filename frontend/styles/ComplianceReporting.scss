@@ -32,12 +32,15 @@
   }
 }
 
-.page-carbon-intensity-limit-details {
+.page-compliance-reporting-details {
   .btn-container {
     text-align: right;
   }
 
-  .carbon-intensity-limit-details {
+  .compliance-reporting-details {
+    margin-left: -15px;
+    margin-right: -15px;
+
     label {
       font-weight: normal;
 
@@ -50,7 +53,7 @@
   }
 }
 
-.page-admin-carbon-intensity-limits {
+.page-admin-compliance-reporting-details {
   label {
     font-weight: normal;
     width: 100%;
@@ -62,14 +65,39 @@
     }
   }
 
+  .border-box {
+    border: 1px solid $border-grey;
+    border-radius: 5px;
+    margin-left: 15px;
+    margin-right: 15px;
+
+    &.row {
+      margin-bottom: 15px;
+      padding-top: 15px;
+    }
+
+    label {
+      margin-bottom: 0;
+    }
+  }
+
   .btn-container {
     position: relative;
     text-align: right;
     z-index: 100;
   }
 
+  .compliance-period {
+    font-size: 1.75rem;
+  }
+
   .main-form {
     margin-left: -15px;
     margin-right: -15px;
+
+    .row .row {
+      margin-left: -15px;
+      margin-right: -15px;
+    }
   }
 }

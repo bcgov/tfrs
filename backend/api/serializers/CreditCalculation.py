@@ -90,11 +90,38 @@ class DefaultCarbonIntensitySerializer(serializers.ModelSerializer):
         """
         Gets the Energy Density
         """
-        density = DefaultCarbonIntensity.objects.filter(
+        row = DefaultCarbonIntensity.objects.filter(
             category=obj.id
         ).order_by('-effective_date').first()
 
-        return density.density if density else None
+        return row.density if row else None
+
+    class Meta:
+        model = DefaultCarbonIntensityCategory
+        fields = (
+            'id', 'name', 'density'
+        )
+
+
+class DefaultCarbonIntensityDetailSerializer(serializers.ModelSerializer):
+    """
+    Default Carbon Intensity Detail Serializer
+    """
+    density = serializers.SerializerMethodField()
+
+    def get_density(self, obj):
+        """
+        Gets the Energy Density
+        """
+        row = DefaultCarbonIntensity.objects.filter(
+            category=obj.id
+        ).order_by('-effective_date').first()
+
+        return {
+            "density": row.density if row else None,
+            "effective_date": row.effective_date if row else None,
+            "expiration_date": row.expiration_date if row else None
+        }
 
     class Meta:
         model = DefaultCarbonIntensityCategory
@@ -172,4 +199,50 @@ class EnergyEffectivenessRatioSerializer(serializers.ModelSerializer):
         model = EnergyEffectivenessRatioCategory
         fields = (
             'id', 'name', 'diesel_ratio', 'gasoline_ratio'
+        )
+
+
+class EnergyEffectivenessRatioDetailSerializer(serializers.ModelSerializer):
+    """
+    Energy Effectiveness Ratio Detail Serializer
+    """
+    ratios = serializers.SerializerMethodField()
+
+    def get_ratios(self, obj):
+        """
+        Gets the Energy Effectiveness Ratio for Diesel and Gasoline Class
+        """
+        diesel_ratio = EnergyEffectivenessRatio.objects.filter(
+            category=obj.id,
+            fuel_class__fuel_class="Diesel"
+        ).order_by('-effective_date').first()
+
+        gasoline_ratio = EnergyEffectivenessRatio.objects.filter(
+            category=obj.id,
+            fuel_class__fuel_class="Gasoline"
+        ).order_by('-effective_date').first()
+
+        return {
+            "diesel": {
+                "fuel": "Diesel Class",
+                "density": diesel_ratio.ratio if diesel_ratio else 0,
+                "effective_date":
+                    diesel_ratio.effective_date if diesel_ratio else None,
+                "expiration_date":
+                    diesel_ratio.expiration_date if diesel_ratio else None
+            },
+            "gasoline": {
+                "fuel": "Gasoline Class",
+                "ratio": gasoline_ratio.ratio if gasoline_ratio else 0,
+                "effective_date":
+                    gasoline_ratio.effective_date if gasoline_ratio else None,
+                "expiration_date":
+                    gasoline_ratio.expiration_date if gasoline_ratio else None
+            }
+        }
+
+    class Meta:
+        model = EnergyEffectivenessRatioCategory
+        fields = (
+            'id', 'name', 'ratios'
         )
