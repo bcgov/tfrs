@@ -15,6 +15,7 @@ from api.serializers.CreditCalculation import \
         DefaultCarbonIntensitySerializer, \
         DefaultCarbonIntensityDetailSerializer, \
         EnergyDensitySerializer, \
+        EnergyDensityDetailSerializer, \
         EnergyEffectivenessRatioSerializer, \
         EnergyEffectivenessRatioDetailSerializer
 
@@ -71,7 +72,8 @@ class DefaultCarbonIntensityViewSet(
 
 
 class EnergyDensityViewSet(
-        AuditableMixin, mixins.ListModelMixin, viewsets.GenericViewSet):
+        AuditableMixin, mixins.ListModelMixin, mixins.RetrieveModelMixin,
+        viewsets.GenericViewSet):
     """
     This viewset automatically provides `list`
     """
@@ -83,7 +85,9 @@ class EnergyDensityViewSet(
     ordering = ('name',)
     serializer_class = EnergyDensitySerializer
     serializer_classes = {
-        'list': EnergyDensitySerializer
+        'list': EnergyDensitySerializer,
+        'default': EnergyDensitySerializer,
+        'retrieve': EnergyDensityDetailSerializer
     }
 
     def get_serializer_class(self):

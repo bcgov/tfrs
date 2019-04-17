@@ -12,6 +12,8 @@ const CREDIT_CALCULATIONS = {
   DEFAULT_CARBON_INTENSITIES_EDIT: `${BASE_PATH}/default_carbon_intensities/edit/:id`,
   ENERGY_DENSITIES: `${BASE_PATH}/energy_densities`,
   ENERGY_DENSITIES_API: `${API_BASE_PATH}/energy_densities`,
+  ENERGY_DENSITIES_DETAILS: `${BASE_PATH}/energy_densities/view/:id`,
+  ENERGY_DENSITIES_EDIT: `${BASE_PATH}/energy_densities/edit/:id`,
   ENERGY_EFFECTIVENESS_RATIO: `${BASE_PATH}/energy_effectiveness_ratios`,
   ENERGY_EFFECTIVENESS_RATIO_API: `${API_BASE_PATH}/energy_effectiveness_ratios`,
   ENERGY_EFFECTIVENESS_RATIO_DETAILS: `${BASE_PATH}/energy_effectiveness_ratios/view/:id`,

@@ -166,6 +166,46 @@ class EnergyDensitySerializer(serializers.ModelSerializer):
         )
 
 
+class EnergyDensityDetailSerializer(serializers.ModelSerializer):
+    """
+    Energy Density Detail Serializer
+    """
+    density = serializers.SerializerMethodField()
+    unit_of_measure = serializers.SerializerMethodField()
+
+    def get_density(self, obj):
+        """
+        Gets the Energy Density
+        """
+        row = EnergyDensity.objects.filter(
+            category=obj.id
+        ).order_by('-effective_date').first()
+
+        return {
+            "density": row.density if row else None,
+            "effective_date": row.effective_date if row else None,
+            "expiration_date": row.expiration_date if row else None
+        }
+
+    def get_unit_of_measure(self, obj):
+        """
+        Gets the unit of measure through the Approved Fuel model.
+        There should never ba case where Approved Fuels falling under the same
+        energy density category having differing unit of measures.
+        """
+        fuel = ApprovedFuel.objects.filter(
+            energy_density_category=obj.id
+        ).first()
+
+        return UnitOfMeasure.objects.get(id=fuel.unit_of_measure_id).name
+
+    class Meta:
+        model = EnergyDensityCategory
+        fields = (
+            'id', 'name', 'density', 'unit_of_measure'
+        )
+
+
 class EnergyEffectivenessRatioSerializer(serializers.ModelSerializer):
     """
     Default Energy Effectiveness Ratio Serializer

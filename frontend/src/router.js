@@ -29,6 +29,8 @@ import CarbonIntensityLimitDetailContainer from './admin/compliance_reporting/Ca
 import CarbonIntensityLimitEditContainer from './admin/compliance_reporting/CarbonIntensityLimitEditContainer';
 import DefaultCarbonIntensityDetailContainer from './admin/compliance_reporting/DefaultCarbonIntensityDetailContainer';
 import DefaultCarbonIntensityEditContainer from './admin/compliance_reporting/DefaultCarbonIntensityEditContainer';
+import EnergyDensityDetailContainer from './admin/compliance_reporting/EnergyDensityDetailContainer';
+import EnergyDensityEditContainer from './admin/compliance_reporting/EnergyDensityEditContainer';
 import EnergyEffectivenessRatioDetailContainer from './admin/compliance_reporting/EnergyEffectivenessRatioDetailContainer';
 import EnergyEffectivenessRatioEditContainer from './admin/compliance_reporting/EnergyEffectivenessRatioEditContainer';
 import CreditTransactionsHistoryContainer from './admin/credit_trade_history/CreditTradeHistoryContainer';
@@ -281,6 +283,16 @@ const Router = routerProps => (
             key="default_carbon_intensity_edit"
             path={CREDIT_CALCULATIONS.DEFAULT_CARBON_INTENSITIES_EDIT}
             component={withRouter(DefaultCarbonIntensityEditContainer)}
+          />,
+          <Route
+            key="energy_effectiveness_ratio_details"
+            path={CREDIT_CALCULATIONS.ENERGY_DENSITIES_DETAILS}
+            component={withRouter(EnergyDensityDetailContainer)}
+          />,
+          <Route
+            key="energy_effectiveness_ratio_edit"
+            path={CREDIT_CALCULATIONS.ENERGY_DENSITIES_EDIT}
+            component={withRouter(EnergyDensityEditContainer)}
           />,
           <Route
             key="energy_effectiveness_ratio_details"

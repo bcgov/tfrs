@@ -132,7 +132,7 @@ class EnergyEffectivenessRatioEditContainer extends Component {
           id="confirmSubmit"
           key="confirmSubmit"
         >
-          Are you sure you want to update the default carbon intensities?
+          Are you sure you want to update the energy effectiveness ratios??
         </Modal>
       ]);
     }

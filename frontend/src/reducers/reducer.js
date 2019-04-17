@@ -53,6 +53,7 @@ const rootReducer = combineReducers({
   defaultCarbonIntensity: defaultCarbonIntensities.reducer(),
   carbonIntensityLimit: carbonIntensities.reducer(),
   carbonIntensityLimits: carbonIntensities.reducer(),
+  energyDensity: energyDensities.reducer(),
   energyDensities: energyDensities.reducer(),
   energyEffectivenessRatio: energyEffectivenessRatios.reducer(),
   energyEffectivenessRatios: energyEffectivenessRatios.reducer(),
