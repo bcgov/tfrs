@@ -46,9 +46,9 @@ class DefaultCarbonIntensityEditContainer extends Component {
 
     if (item && !this.loaded) {
       const fieldState = {
-        density: item.density.density ? `${item.density.density}` : '',
-        effectiveDate: item.density.effectiveDate ? item.density.effectiveDate : '',
-        expirationDate: item.density.expirationDate ? item.density.expirationDate : ''
+        density: `${item.density.density}` || '',
+        effectiveDate: item.density.effectiveDate || '',
+        expirationDate: item.density.expirationDate || ''
       };
 
       this.setState({

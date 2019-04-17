@@ -24,61 +24,63 @@ const DefaultCarbonIntensityDetails = props => (
         </div>
       </div>
 
-      <div className="row">
-        <div className="col-sm-6">
-          <div className="form-group">
-            <label htmlFor="fuel-code">Diesel Class Fuel Energy Effectiveness Ratio:
-              <div className="value">{props.item.ratios.diesel.ratio ? props.item.ratios.diesel.ratio.toFixed(1) : 'N/A'}</div>
-            </label>
+      {props.item.ratios.diesel.ratio && [
+        <div className="row" key="diesel-energy-effectiveness-ratio">
+          <div className="col-sm-6">
+            <div className="form-group">
+              <label htmlFor="fuel-code">Diesel Class Fuel Energy Effectiveness Ratio:
+                <div className="value">{props.item.ratios.diesel.ratio ? props.item.ratios.diesel.ratio.toFixed(1) : 'N/A'}</div>
+              </label>
+            </div>
           </div>
-        </div>
-      </div>
+        </div>,
+        <div className="row" key="diesel-energy-effectiveness-dates">
+          <div className="col-sm-3">
+            <div className="form-group">
+              <label htmlFor="effective-date">Effective Date:
+                <div className="value">{props.item.ratios.diesel.effectiveDate || 'N/A'}</div>
+              </label>
+            </div>
+          </div>
 
-      <div className="row">
-        <div className="col-sm-3">
-          <div className="form-group">
-            <label htmlFor="effective-date">Effective Date:
-              <div className="value">{props.item.ratios.diesel.effectiveDate}</div>
-            </label>
+          <div className="col-sm-3">
+            <div className="form-group">
+              <label htmlFor="expiry-date">Expiration Date:
+                <div className="value">{props.item.ratios.diesel.expirationDate || 'N/A'}</div>
+              </label>
+            </div>
           </div>
         </div>
+      ]}
 
-        <div className="col-sm-3">
-          <div className="form-group">
-            <label htmlFor="expiry-date">Expiration Date:
-              <div className="value">{props.item.ratios.diesel.expirationDate}</div>
-            </label>
+      {props.item.ratios.gasoline.ratio && [
+        <div className="row" key="gasoline-energy-effectiveness-ratio">
+          <div className="col-sm-6">
+            <div className="form-group">
+              <label htmlFor="fuel-code">Gasoline Class Fuel Energy Effectiveness Ratio:
+                <div className="value">{props.item.ratios.gasoline.ratio ? props.item.ratios.gasoline.ratio.toFixed(1) : 'N/A'}</div>
+              </label>
+            </div>
           </div>
-        </div>
-      </div>
+        </div>,
+        <div className="row" key="gasoline-energy-effectiveness-dates">
+          <div className="col-sm-3">
+            <div className="form-group">
+              <label htmlFor="effective-date">Effective Date:
+                <div className="value">{props.item.ratios.gasoline.effectiveDate || 'N/A'}</div>
+              </label>
+            </div>
+          </div>
 
-      <div className="row">
-        <div className="col-sm-6">
-          <div className="form-group">
-            <label htmlFor="fuel-code">Carbon Intensity Limit for Gasoline Class Fuel:
-              <div className="value">{props.item.ratios.gasoline.ratio ? props.item.ratios.gasoline.ratio.toFixed(1) : 'N/A'}</div>
-            </label>
+          <div className="col-sm-3">
+            <div className="form-group">
+              <label htmlFor="expiry-date">Expiration Date:
+                <div className="value">{props.item.ratios.gasoline.expirationDate || 'N/A'}</div>
+              </label>
+            </div>
           </div>
         </div>
-      </div>
-
-      <div className="row">
-        <div className="col-sm-3">
-          <div className="form-group">
-            <label htmlFor="effective-date">Effective Date:
-              <div className="value">{props.item.ratios.gasoline.effectiveDate}</div>
-            </label>
-          </div>
-        </div>
-
-        <div className="col-sm-3">
-          <div className="form-group">
-            <label htmlFor="expiry-date">Expiration Date:
-              <div className="value">{props.item.ratios.gasoline.expirationDate}</div>
-            </label>
-          </div>
-        </div>
-      </div>
+      ]}
     </div>
 
     <div className="btn-container">

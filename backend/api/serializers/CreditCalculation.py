@@ -59,7 +59,7 @@ class CarbonIntensityLimitSerializer(serializers.ModelSerializer):
         return {
             "diesel": {
                 "fuel": "Diesel Class",
-                "density": diesel_limit.density if diesel_limit else 0,
+                "density": diesel_limit.density if diesel_limit else None,
                 "effective_date":
                     diesel_limit.effective_date if diesel_limit else None,
                 "expiration_date":
@@ -67,7 +67,7 @@ class CarbonIntensityLimitSerializer(serializers.ModelSerializer):
             },
             "gasoline": {
                 "fuel": "Gasoline Class",
-                "density": gasoline_limit.density if gasoline_limit else 0,
+                "density": gasoline_limit.density if gasoline_limit else None,
                 "effective_date":
                     gasoline_limit.effective_date if gasoline_limit else None,
                 "expiration_date":
@@ -225,7 +225,7 @@ class EnergyEffectivenessRatioDetailSerializer(serializers.ModelSerializer):
         return {
             "diesel": {
                 "fuel": "Diesel Class",
-                "density": diesel_ratio.ratio if diesel_ratio else 0,
+                "ratio": diesel_ratio.ratio if diesel_ratio else None,
                 "effective_date":
                     diesel_ratio.effective_date if diesel_ratio else None,
                 "expiration_date":
@@ -233,7 +233,7 @@ class EnergyEffectivenessRatioDetailSerializer(serializers.ModelSerializer):
             },
             "gasoline": {
                 "fuel": "Gasoline Class",
-                "ratio": gasoline_ratio.ratio if gasoline_ratio else 0,
+                "ratio": gasoline_ratio.ratio if gasoline_ratio else None,
                 "effective_date":
                     gasoline_ratio.effective_date if gasoline_ratio else None,
                 "expiration_date":

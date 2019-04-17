@@ -5,16 +5,16 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import InputWithTooltip from '../../../app/components/InputWithTooltip';
 
-const CarbonIntensityLimitFormDetails = props => (
-  <div className="carbon-intensity-limit-details">
+const EnergyEffectivenessRatioFormDetails = props => (
+  <div className="energy-effectiveness-ratio-details">
     <div className="main-form">
       <div className="row border-box">
         <div className="col-sm-6">
           <div className="row">
             <div className="col-sm-12">
-              <div className="form-group compliance-period">
-                <label htmlFor="compliance-period">Compliance Period:
-                  <div className="value">{props.item.description}</div>
+              <div className="form-group fuel">
+                <label htmlFor="fuel">Fuel:
+                  <div className="value">{props.item.name}</div>
                 </label>
               </div>
             </div>
@@ -22,13 +22,14 @@ const CarbonIntensityLimitFormDetails = props => (
         </div>
       </div>
 
+      {props.item.ratios.diesel.ratio &&
       <div className="row border-box">
         <div className="col-sm-6">
           <div className="row">
             <div className="col-sm-12">
               <div className="form-group">
-                <label htmlFor="carbon-intensity">Current Carbon Intensity Limit for Diesel Class Fuel:
-                  <div className="value">{props.item.limits.diesel.density}</div>
+                <label htmlFor="fuel-code">Current Diesel Class Fuel Energy Effectiveness Ratio:
+                  <div className="value">{props.item.ratios.diesel.ratio ? props.item.ratios.diesel.ratio.toFixed(1) : 'N/A'}</div>
                 </label>
               </div>
             </div>
@@ -38,7 +39,7 @@ const CarbonIntensityLimitFormDetails = props => (
             <div className="col-sm-6">
               <div className="form-group">
                 <label htmlFor="effective-date">Effective Date:
-                  <div className="value">{props.item.limits.diesel.effectiveDate ? props.item.limits.diesel.effectiveDate : '2017-01-01'}</div>
+                  <div className="value">{props.item.ratios.diesel.effectiveDate || 'N/A'}</div>
                 </label>
               </div>
             </div>
@@ -46,7 +47,7 @@ const CarbonIntensityLimitFormDetails = props => (
             <div className="col-sm-6">
               <div className="form-group">
                 <label htmlFor="expiry-date">Expiration Date:
-                  <div className="value">{props.item.limits.diesel.expirationDate ? props.item.limits.diesel.expirationDate : 'N/A'}</div>
+                  <div className="value">{props.item.ratios.diesel.expirationDate || 'N/A'}</div>
                 </label>
               </div>
             </div>
@@ -57,17 +58,17 @@ const CarbonIntensityLimitFormDetails = props => (
           <div className="row">
             <div className="col-sm-6">
               <div className="form-group">
-                <label htmlFor="diesel-carbon-intensity">New Carbon Intensity Limit for Diesel Class Fuel:
+                <label htmlFor="diesel-ratio">New Diesel Class Fuel Energy Effectiveness Ratio:
                   <InputWithTooltip
                     allowNegative
                     dataNumberToFixed={2}
                     handleInputChange={props.handleInputChange}
-                    id="diesel-carbon-intensity"
+                    id="diesel-ratio"
                     min="0"
-                    name="dieselCarbonIntensity"
+                    name="dieselRatio"
                     required
-                    step="0.01"
-                    value={props.fields.dieselCarbonIntensity}
+                    step="0.1"
+                    value={props.fields.dieselRatio}
                   />
                 </label>
               </div>
@@ -109,14 +110,16 @@ const CarbonIntensityLimitFormDetails = props => (
           </div>
         </div>
       </div>
+      }
 
+      {props.item.ratios.gasoline.ratio &&
       <div className="row border-box">
         <div className="col-sm-6">
           <div className="row">
             <div className="col-sm-6">
               <div className="form-group">
-                <label htmlFor="carbon-intensity">Current Carbon Intensity Limit for Gasoline Class Fuel:
-                  <div className="value">{props.item.limits.gasoline.density}</div>
+                <label htmlFor="fuel-code">Current Gasoline Class Fuel Energy Effectiveness Ratio:
+                  <div className="value">{props.item.ratios.gasoline.ratio ? props.item.ratios.gasoline.ratio.toFixed(1) : 'N/A'}</div>
                 </label>
               </div>
             </div>
@@ -126,7 +129,7 @@ const CarbonIntensityLimitFormDetails = props => (
             <div className="col-sm-6">
               <div className="form-group">
                 <label htmlFor="effective-date">Effective Date:
-                  <div className="value">{props.item.limits.gasoline.effectiveDate ? props.item.limits.gasoline.effectiveDate : '2017-01-01'}</div>
+                  <div className="value">{props.item.ratios.gasoline.effectiveDate ? props.item.ratios.gasoline.effectiveDate : '2017-01-01'}</div>
                 </label>
               </div>
             </div>
@@ -134,7 +137,7 @@ const CarbonIntensityLimitFormDetails = props => (
             <div className="col-sm-6">
               <div className="form-group">
                 <label htmlFor="expiry-date">Expiration Date:
-                  <div className="value">{props.item.limits.gasoline.expirationDate ? props.item.limits.gasoline.expirationDate : 'N/A'}</div>
+                  <div className="value">{props.item.ratios.gasoline.expirationDate ? props.item.ratios.gasoline.expirationDate : 'N/A'}</div>
                 </label>
               </div>
             </div>
@@ -145,17 +148,17 @@ const CarbonIntensityLimitFormDetails = props => (
           <div className="row">
             <div className="col-sm-6">
               <div className="form-group">
-                <label htmlFor="gasoline-carbon-intensity">New Carbon Intensity Limit for Gasoline Class Fuel:
+                <label htmlFor="gasoline-ratio">New Gasoline Class Fuel Energy Effectiveness Ratio:
                   <InputWithTooltip
                     allowNegative
                     dataNumberToFixed={2}
                     handleInputChange={props.handleInputChange}
-                    id="gasoline-carbon-intensity"
+                    id="gasoline-ratio"
                     min="0"
-                    name="gasolineCarbonIntensity"
+                    name="gasolineRatio"
                     required
-                    step="0.01"
-                    value={props.fields.gasolineCarbonIntensity}
+                    step="0.1"
+                    value={props.fields.gasolineRatio}
                   />
                 </label>
               </div>
@@ -197,32 +200,33 @@ const CarbonIntensityLimitFormDetails = props => (
           </div>
         </div>
       </div>
+      }
     </div>
   </div>
 );
 
-CarbonIntensityLimitFormDetails.defaultProps = {
+EnergyEffectivenessRatioFormDetails.defaultProps = {
   edit: false
 };
 
-CarbonIntensityLimitFormDetails.propTypes = {
+EnergyEffectivenessRatioFormDetails.propTypes = {
   edit: PropTypes.bool,
   fields: PropTypes.shape({
-    dieselCarbonIntensity: PropTypes.string,
+    dieselRatio: PropTypes.string,
     dieselEffectiveDate: PropTypes.string,
     dieselExpirationDate: PropTypes.string,
-    gasolineCarbonIntensity: PropTypes.string,
+    gasolineRatio: PropTypes.string,
     gasolineEffectiveDate: PropTypes.string,
     gasolineExpirationDate: PropTypes.string
   }).isRequired,
   handleInputChange: PropTypes.func.isRequired,
   item: PropTypes.shape({
-    description: PropTypes.string,
-    limits: PropTypes.shape({
+    name: PropTypes.string,
+    ratios: PropTypes.shape({
       diesel: PropTypes.shape(),
       gasoline: PropTypes.shape()
     })
   }).isRequired
 };
 
-export default CarbonIntensityLimitFormDetails;
+export default EnergyEffectivenessRatioFormDetails;

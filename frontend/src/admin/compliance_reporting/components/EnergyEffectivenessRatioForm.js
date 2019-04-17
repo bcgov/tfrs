@@ -5,13 +5,13 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import FontAwesomeIcon from '@fortawesome/react-fontawesome';
 
-import DefaultCarbonIntensityFormDetails from './DefaultCarbonIntensityFormDetails';
+import EnergyEffectivenessRatioFormDetails from './EnergyEffectivenessRatioFormDetails';
 import history from '../../../app/History';
 import * as Lang from '../../../constants/langEnUs';
 import Errors from '../../../app/components/Errors';
 import TooltipWhenDisabled from '../../../app/components/TooltipWhenDisabled';
 
-class DefaultCarbonIntensityForm extends Component {
+class EnergyEffectivenessRatioForm extends Component {
   _getValidationMessages () {
     const validationMessage = [];
 
@@ -33,7 +33,7 @@ class DefaultCarbonIntensityForm extends Component {
         <form
           onSubmit={event => this.props.handleSubmit(event)}
         >
-          <DefaultCarbonIntensityFormDetails
+          <EnergyEffectivenessRatioFormDetails
             edit={this.props.edit}
             fields={this.props.fields}
             handleInputChange={this.props.handleInputChange}
@@ -44,7 +44,7 @@ class DefaultCarbonIntensityForm extends Component {
           <Errors errors={this.props.errors} />
           }
 
-          <div className="default-carbon-intensity-actions">
+          <div className="carbon-intensity-limits-actions">
             <div className="btn-container">
               <button
                 className="btn btn-default"
@@ -75,17 +75,18 @@ class DefaultCarbonIntensityForm extends Component {
   }
 }
 
-DefaultCarbonIntensityForm.defaultProps = {
+EnergyEffectivenessRatioForm.defaultProps = {
   edit: false,
   errors: [],
   item: {}
 };
 
-DefaultCarbonIntensityForm.propTypes = {
+EnergyEffectivenessRatioForm.propTypes = {
   edit: PropTypes.bool,
   errors: PropTypes.arrayOf(PropTypes.shape()),
   fields: PropTypes.shape({
-    density: PropTypes.string,
+    compliancePeriod: PropTypes.string,
+    density: PropTypes.number,
     effectiveDate: PropTypes.string,
     expiryDate: PropTypes.string
   }).isRequired,
@@ -95,4 +96,4 @@ DefaultCarbonIntensityForm.propTypes = {
   title: PropTypes.string.isRequired
 };
 
-export default DefaultCarbonIntensityForm;
+export default EnergyEffectivenessRatioForm;
