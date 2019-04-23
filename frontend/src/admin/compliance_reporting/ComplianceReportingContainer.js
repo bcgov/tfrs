@@ -41,7 +41,7 @@ class ComplianceReportingContainer extends Component {
         defaultCarbonIntensities={this.props.defaultCarbonIntensities}
         energyDensities={this.props.energyDensities}
         energyEffectivenessRatios={this.props.energyEffectivenessRatios}
-        fuelTypes={this.props.fuelTypes}
+        fuelTypes={this.props.referenceData.approvedFuels}
         key="compliance-reporting"
         loggedInUser={this.props.loggedInUser}
         title="Compliance Reporting"
@@ -78,7 +78,10 @@ ComplianceReportingContainer.propTypes = {
   loadCarbonIntensities: PropTypes.func.isRequired,
   loadDefaultCarbonIntensities: PropTypes.func.isRequired,
   loadEnergyDensities: PropTypes.func.isRequired,
-  loadEnergyEffectivenessRatios: PropTypes.func.isRequired
+  loadEnergyEffectivenessRatios: PropTypes.func.isRequired,
+  referenceData: PropTypes.shape({
+    approvedFuels: PropTypes.arrayOf(PropTypes.shape)
+  }).isRequired
 };
 
 const mapStateToProps = state => ({
@@ -98,11 +101,10 @@ const mapStateToProps = state => ({
     isFetching: state.rootReducer.energyEffectivenessRatios.isFinding,
     items: state.rootReducer.energyEffectivenessRatios.items
   },
-  fuelTypes: {
-    isFetching: state.rootReducer.fuelTypes.isFinding,
-    items: state.rootReducer.fuelTypes.items
-  },
-  loggedInUser: state.rootReducer.userRequest.loggedInUser
+  loggedInUser: state.rootReducer.userRequest.loggedInUser,
+  referenceData: {
+    approvedFuels: state.rootReducer.referenceData.data.approvedFuels
+  }
 });
 
 const mapDispatchToProps = {

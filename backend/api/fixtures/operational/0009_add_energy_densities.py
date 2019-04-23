@@ -1,9 +1,8 @@
 from django.db import transaction
 
 from api.management.data_script import OperationalDataScript
-from api.models.ApprovedFuel import ApprovedFuel
 from api.models.EnergyDensity import EnergyDensity
-from api.models.UnitOfMeasure import UnitOfMeasure
+from api.models.EnergyDensityCategory import EnergyDensityCategory
 
 
 class AddEnergyDensities(OperationalDataScript):
@@ -18,104 +17,77 @@ class AddEnergyDensities(OperationalDataScript):
 
     @transaction.atomic
     def run(self):
-        mj_l = UnitOfMeasure.objects.create(
-            name="MJ/L",
-            effective_date="2017-01-01"
-        )
-        mj_kg = UnitOfMeasure.objects.create(
-            name="MJ/kg",
-            effective_date="2017-01-01"
-        )
-        mj_kwh = UnitOfMeasure.objects.create(
-            name="MJ/kWh",
-            effective_date="2017-01-01"
-        )
-        mj_m3 = UnitOfMeasure.objects.create(
-            name="MJ/m³",
-            effective_date="2017-01-01"
-        )
-
         EnergyDensity.objects.create(
-            fuel=ApprovedFuel.objects.get(
+            category=EnergyDensityCategory.objects.get(
                 name="Petroleum-based diesel fuel or diesel fuel produced "
                      "from biomass"
             ),
             effective_date="2017-01-01",
-            density="38.65",
-            unit_of_measure=mj_l
+            density="38.65"
         )
         EnergyDensity.objects.create(
-            fuel=ApprovedFuel.objects.get(
+            category=EnergyDensityCategory.objects.get(
                 name="Hydrogenation-derived renewable diesel fuel"
             ),
             effective_date="2017-01-01",
-            density="36.51",
-            unit_of_measure=mj_l
+            density="36.51"
         )
         EnergyDensity.objects.create(
-            fuel=ApprovedFuel.objects.get(
+            category=EnergyDensityCategory.objects.get(
                 name="Biodiesel"
             ),
             effective_date="2017-01-01",
-            density="35.40",
-            unit_of_measure=mj_l
+            density="35.40"
         )
         EnergyDensity.objects.create(
-            fuel=ApprovedFuel.objects.get(
+            category=EnergyDensityCategory.objects.get(
                 name="Petroleum-based gasoline, natural gas-based "
                      "gasoline or gasoline produced from biomass"
             ),
             effective_date="2017-01-01",
-            density="34.69",
-            unit_of_measure=mj_l
+            density="34.69"
         )
         EnergyDensity.objects.create(
-            fuel=ApprovedFuel.objects.get(
+            category=EnergyDensityCategory.objects.get(
                 name="Ethanol"
             ),
             effective_date="2017-01-01",
-            density="23.58",
-            unit_of_measure=mj_l
+            density="23.58"
         )
         EnergyDensity.objects.create(
-            fuel=ApprovedFuel.objects.get(
+            category=EnergyDensityCategory.objects.get(
                 name="Hydrogen"
             ),
             effective_date="2017-01-01",
-            density="141.24",
-            unit_of_measure=mj_kg
+            density="141.24"
         )
         EnergyDensity.objects.create(
-            fuel=ApprovedFuel.objects.get(
+            category=EnergyDensityCategory.objects.get(
                 name="LNG"
             ),
             effective_date="2017-01-01",
-            density="52.46",
-            unit_of_measure=mj_kg
+            density="52.46"
         )
         EnergyDensity.objects.create(
-            fuel=ApprovedFuel.objects.get(
+            category=EnergyDensityCategory.objects.get(
                 name="CNG"
             ),
             effective_date="2017-01-01",
-            density="37.85",
-            unit_of_measure=mj_m3
+            density="37.85"
         )
         EnergyDensity.objects.create(
-            fuel=ApprovedFuel.objects.get(
+            category=EnergyDensityCategory.objects.get(
                 name="Propane"
             ),
             effective_date="2017-01-01",
-            density="25.47",
-            unit_of_measure=mj_l
+            density="25.47"
         )
         EnergyDensity.objects.create(
-            fuel=ApprovedFuel.objects.get(
+            category=EnergyDensityCategory.objects.get(
                 name="Electricity"
             ),
             effective_date="2017-01-01",
-            density="3.60",
-            unit_of_measure=mj_kwh
+            density="3.60"
         )
 
 script_class = AddEnergyDensities

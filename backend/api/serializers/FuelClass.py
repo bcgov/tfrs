@@ -22,30 +22,15 @@
 """
 from rest_framework import serializers
 
-from api.models.ApprovedFuel import ApprovedFuel
-from .FuelClass import FuelClassSerializer
+from api.models.FuelClass import FuelClass
 
 
-class ApprovedFuelSerializer(serializers.ModelSerializer):
+class FuelClassSerializer(serializers.ModelSerializer):
     """
-    Default Serializer for Approved Fuels
+    Default Serializer for Fuel Class
     """
-    fuel_classes = serializers.SerializerMethodField()
-
-    def get_fuel_classes(self, obj):
-        """
-        Fuel classes attached to the approved fuel.
-        """
-        serializer = FuelClassSerializer(
-            obj.fuel_classes.order_by('fuel_class'),
-            many=True,
-            read_only=True
-        )
-
-        return serializer.data
-
     class Meta:
-        model = ApprovedFuel
-        fields = 'id', 'name', 'description', 'fuel_classes'
+        model = FuelClass
+        fields = 'id', 'fuel_class'
 
-        read_only_fields = ('id', 'name', 'description')
+        read_only_fields = ('id', 'fuel_class')

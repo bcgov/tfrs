@@ -20,34 +20,31 @@
     See the License for the specific language governing permissions and
     limitations under the License.
 """
-from decimal import Decimal
-from django.db import models
-from django.db.models import PROTECT
 
-from api.models.mixins.EffectiveDates import EffectiveDates
+from django.db import models
+
+from api.managers.NameManager import NameManager
+from api.models.mixins.DisplayOrder import DisplayOrder
 from auditable.models import Auditable
 
 
-class EnergyDensity(Auditable, EffectiveDates):
+class EnergyEffectivenessRatioCategory(Auditable, DisplayOrder):
     """
-    Energy Densities for Approved Fuel
+    List of 'categories' used to classify the fuels for energy
+    effectiveness ratio
     """
-    category = models.ForeignKey(
-        'EnergyDensityCategory',
-        related_name='energy_density',
-        on_delete=PROTECT
+    name = models.CharField(
+        max_length=255,
+        blank=True,
+        null=True,
+        unique=True,
+        db_comment="Label for Energy Effectiveness Ratio Fuels."
     )
-    density = models.DecimalField(
-        decimal_places=2,
-        default=Decimal('0.00'),
-        max_digits=5,
-        db_comment="Energy density for the specific fuel class."
-                   "Values will be in MJ (Megajoule)"
-    )
+
+    objects = NameManager()
 
     class Meta:
-        db_table = 'energy_density'
+        db_table = 'energy_effectiveness_ratio_category'
 
-    db_table_comment = "Contains the energy density for each approved fuel. " \
-                       "These densities should help the user understand how " \
-                       "current and future credits will be calculated."
+    db_table_comment = "List of 'categories' used to classify the fuels for " \
+                       "energy effectiveness ratio."

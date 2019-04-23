@@ -20,32 +20,10 @@
     See the License for the specific language governing permissions and
     limitations under the License.
 """
-from rest_framework import serializers
 
-from api.models.ApprovedFuel import ApprovedFuel
-from .FuelClass import FuelClassSerializer
+from django.db import models
 
 
-class ApprovedFuelSerializer(serializers.ModelSerializer):
-    """
-    Default Serializer for Approved Fuels
-    """
-    fuel_classes = serializers.SerializerMethodField()
-
-    def get_fuel_classes(self, obj):
-        """
-        Fuel classes attached to the approved fuel.
-        """
-        serializer = FuelClassSerializer(
-            obj.fuel_classes.order_by('fuel_class'),
-            many=True,
-            read_only=True
-        )
-
-        return serializer.data
-
-    class Meta:
-        model = ApprovedFuel
-        fields = 'id', 'name', 'description', 'fuel_classes'
-
-        read_only_fields = ('id', 'name', 'description')
+class NameManager(models.Manager):
+    def get_by_natural_key(self, name):
+        return self.get(name=name)

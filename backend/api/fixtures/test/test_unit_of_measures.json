@@ -1,14 +1,14 @@
 [{
   "fields": {
     "effective_date": "2017-01-01",
-    "name": "MJ/L"
+    "name": "L"
   },
   "model": "api.unitofmeasure",
   "pk": null
 }, {
   "fields": {
     "effective_date": "2017-01-01",
-    "name": "MJ/kg"
+    "name": "kg"
   },
   "model": "api.unitofmeasure",
   "pk": null

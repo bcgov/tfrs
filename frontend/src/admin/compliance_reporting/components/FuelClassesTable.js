@@ -8,17 +8,18 @@ import 'react-table/react-table.css';
 
 import ReactTable from '../../../app/components/StateSavingReactTable';
 
-const FuelTypesTable = (props) => {
+const FuelClassesTable = (props) => {
   const columns = [{
     accessor: item => item.name,
     className: 'col-title',
-    Header: 'Type of fuel as specified by the Act or Regulation',
+    Header: 'Fuel Type',
     id: 'title'
   }, {
-    accessor: item => item.description,
-    className: 'col-alternatives',
-    Header: 'Description',
-    id: 'alternatives'
+    accessor: item => (item.fuelClasses.length > 0
+      ? item.fuelClasses.map(fuelClass => fuelClass.fuelClass).join('/') : ''),
+    className: 'col-classes',
+    Header: 'Fuel Classes',
+    id: 'classes'
   }];
 
   const filterMethod = (filter, row, column) => {
@@ -32,7 +33,7 @@ const FuelTypesTable = (props) => {
 
   return (
     <ReactTable
-      stateKey="fuel-type"
+      stateKey="fuel-classes"
       className="searchable"
       columns={columns}
       data={props.items}
@@ -48,12 +49,12 @@ const FuelTypesTable = (props) => {
   );
 };
 
-FuelTypesTable.defaultProps = {};
+FuelClassesTable.defaultProps = {};
 
-FuelTypesTable.propTypes = {
+FuelClassesTable.propTypes = {
   items: PropTypes.arrayOf(PropTypes.shape({
   })).isRequired,
   isEmpty: PropTypes.bool.isRequired
 };
 
-export default FuelTypesTable;
+export default FuelClassesTable;
