@@ -59,9 +59,9 @@ EnergyEffectivenessRatioDetailContainer.propTypes = {
 
 const mapStateToProps = state => ({
   energyEffectivenessRatio: {
-    isFetching: state.rootReducer.energyEffectivenessRatio.isFetching,
-    item: state.rootReducer.energyEffectivenessRatio.item,
-    success: state.rootReducer.energyEffectivenessRatio.success
+    isFetching: state.rootReducer.energyEffectivenessRatios.isGetting,
+    item: state.rootReducer.energyEffectivenessRatios.item,
+    success: state.rootReducer.energyEffectivenessRatios.success
   },
   loggedInUser: state.rootReducer.userRequest.loggedInUser
 });

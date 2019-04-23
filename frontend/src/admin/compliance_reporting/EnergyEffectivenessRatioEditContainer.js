@@ -20,6 +20,7 @@ class EnergyEffectivenessRatioEditContainer extends Component {
     super(props);
 
     this.state = {
+      updateCalled: false,
       fields: {
         dieselEffectiveDate: '',
         dieselExpirationDate: '',
@@ -42,6 +43,19 @@ class EnergyEffectivenessRatioEditContainer extends Component {
 
   componentWillReceiveProps (props) {
     this.loadPropsToFieldState(props);
+
+    if (this.state.updateInProgress && !this.props.energyDensity.isUpdating) {
+      this.setState(
+        {
+          updateCalled: false,
+          updateInProgress: false
+        }
+      );
+
+      history.push(CREDIT_CALCULATIONS.LIST);
+      toastr.fuelCodeSuccess(status, 'Energy effectiveness ratios saved.');
+    }
+
   }
 
   loadPropsToFieldState (props) {
@@ -87,7 +101,7 @@ class EnergyEffectivenessRatioEditContainer extends Component {
   _handleSubmit (event, status = 'Submitted') {
     event.preventDefault();
 
-    // const { id } = this.props.energyEffectivenessRatio.item;
+     const { id } = this.props.energyEffectivenessRatio.item;
 
     // API data structure
     const data = {
@@ -105,10 +119,7 @@ class EnergyEffectivenessRatioEditContainer extends Component {
       }
     });
 
-    // this.props.updateEnergyEffectivenessRatio(id, data).then((response) => {
-    history.push(CREDIT_CALCULATIONS.LIST);
-    toastr.fuelCodeSuccess(status, 'Energy effectiveness ratios saved.');
-    // });
+    this.props.updateEnergyEffectivenessRatio({id, state: data});
 
     return true;
   }
@@ -147,6 +158,7 @@ EnergyEffectivenessRatioEditContainer.defaultProps = {
 EnergyEffectivenessRatioEditContainer.propTypes = {
   energyEffectivenessRatio: PropTypes.shape({
     isFetching: PropTypes.bool,
+    isUpdating: PropTypes.bool,
     item: PropTypes.shape(),
     success: PropTypes.bool
   }).isRequired,
@@ -162,9 +174,10 @@ EnergyEffectivenessRatioEditContainer.propTypes = {
 
 const mapStateToProps = state => ({
   energyEffectivenessRatio: {
-    isFetching: state.rootReducer.energyEffectivenessRatio.isFetching,
-    item: state.rootReducer.energyEffectivenessRatio.item,
-    success: state.rootReducer.energyEffectivenessRatio.success
+    isFetching: state.rootReducer.energyEffectivenessRatios.isGetting,
+    isUpdating: state.rootReducer.energyEffectivenessRatios.isUpdating,
+    item: state.rootReducer.energyEffectivenessRatios.item,
+    success: state.rootReducer.energyEffectivenessRatios.success
   },
   loggedInUser: state.rootReducer.userRequest.loggedInUser
 });

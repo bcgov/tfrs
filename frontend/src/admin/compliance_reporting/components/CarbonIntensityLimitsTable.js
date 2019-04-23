@@ -19,7 +19,7 @@ const CarbonIntensityLimitsTable = (props) => {
     ),
     id: 'title'
   }, {
-    accessor: item => (item.limits.diesel ? item.limits.diesel.density : 0).toFixed(2),
+    accessor: item => (item.limits.diesel && item.limits.diesel.density ? item.limits.diesel.density: 0).toFixed(2),
     className: 'col-diesel',
     Header: (
       <div>
@@ -30,7 +30,7 @@ const CarbonIntensityLimitsTable = (props) => {
     id: 'diesel',
     width: 300
   }, {
-    accessor: item => (item.limits.diesel ? item.limits.gasoline.density : 0).toFixed(2),
+    accessor: item => (item.limits.diesel && item.limits.gasoline.density ? item.limits.gasoline.density : 0).toFixed(2),
     className: 'col-gasoline',
     Header: (
       <div>

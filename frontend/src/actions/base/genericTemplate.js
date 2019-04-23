@@ -1,5 +1,5 @@
 import {createActions, handleActions} from "redux-actions";
-import axios from "axios";
+import axios from 'axios';
 import {call, all, put, select, takeLatest} from "redux-saga/effects";
 
 export const RestActions = [
@@ -48,6 +48,8 @@ export class GenericRestTemplate {
     this.saga = this.saga.bind(this);
 
     this.idSelector = this.idSelector.bind(this);
+    this.createStateSelector = this.createStateSelector.bind(this);
+    this.updateStateSelector = this.updateStateSelector.bind(this);
 
     this.findHandler = this.findHandler.bind(this);
     this.doFind = this.doFind.bind(this);
@@ -102,36 +104,41 @@ export class GenericRestTemplate {
         })],
         [this.create, (state, action) => ({
           ...state,
+          createState: action.payload,
           isCreating: true,
           errorMessage: {}
         })],
         [this.createSuccess, (state, action) => ({
           ...state,
-          items: action.payload,
+          item: action.payload,
+          createState: null,
           receivedAt: Date.now(),
           isCreating: false,
           success: true
         })],
-          [this.update, (state, action) => ({
+        [this.update, (state, action) => ({
           ...state,
+          id: action.payload.id,
+          updateState: action.payload.state,
           isUpdating: true,
           errorMessage: {}
         })],
         [this.updateSuccess, (state, action) => ({
           ...state,
-          items: action.payload,
+          item: action.payload,
+          updateState: null,
           receivedAt: Date.now(),
           isUpdating: false,
           success: true
         })],
-          [this.remove, (state, action) => ({
+        [this.remove, (state, action) => ({
           ...state,
+          id: action.payload.id,
           isRemoving: true,
           errorMessage: {}
         })],
         [this.removeSuccess, (state, action) => ({
           ...state,
-          items: action.payload,
           receivedAt: Date.now(),
           isRemoving: false,
           success: true
@@ -176,10 +183,26 @@ export class GenericRestTemplate {
   }
 
   idSelector() {
-    const that = this;
+    const sn = this.stateName;
 
     return (state) => {
-      return state.rootReducer[this.stateName].id
+      return state.rootReducer[sn].id
+    };
+  }
+
+  createStateSelector() {
+    const sn = this.stateName;
+
+    return (state) => {
+      return state.rootReducer[sn].createState
+    };
+  }
+
+  updateStateSelector() {
+    const sn = this.stateName;
+
+    return (state) => {
+      return state.rootReducer[sn].updateState;
     };
   }
 
@@ -217,6 +240,8 @@ export class GenericRestTemplate {
 
   * updateHandler() {
     const id = yield(select(this.idSelector()));
+    const data = yield(select(this.updateStateSelector()));
+
     try {
       const response = yield call(this.doUpdate, id, data);
       yield put(this.updateSuccess(response.data));
@@ -244,6 +269,8 @@ export class GenericRestTemplate {
   }
 
   * createHandler() {
+    const data = yield(select(this.createStateSelector()));
+
     try {
       const response = yield call(this.doCreate, data);
       yield put(this.createSuccess(response.data));
@@ -263,8 +290,6 @@ export class GenericRestTemplate {
     ]);
 
   };
-
 }
-
 
 export default GenericRestTemplate;

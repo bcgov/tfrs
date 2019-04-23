@@ -61,7 +61,7 @@ const mapStateToProps = state => ({
   }
 });
 
-const mapDispatchToProps ={
+const mapDispatchToProps = {
   getRole: roles.get,
 };
 

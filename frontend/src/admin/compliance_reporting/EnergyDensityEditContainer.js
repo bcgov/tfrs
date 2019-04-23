@@ -3,11 +3,11 @@
  * All data handling & manipulation should be handled here.
  */
 
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
+import React, {Component} from 'react';
+import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 
-import { energyDensities } from '../../actions/energyDensities';
+import {energyDensities} from '../../actions/energyDensities';
 import Loading from '../../app/components/Loading';
 import Modal from '../../app/components/Modal';
 import history from '../../app/History';
@@ -16,10 +16,11 @@ import CREDIT_CALCULATIONS from '../../constants/routes/CreditCalculations';
 import toastr from '../../utils/toastr';
 
 class EnergyDensityEditContainer extends Component {
-  constructor (props) {
+  constructor(props) {
     super(props);
 
     this.state = {
+      updateCalled: false,
       fields: {
         density: '',
         effectiveDate: '',
@@ -33,16 +34,26 @@ class EnergyDensityEditContainer extends Component {
     this._handleSubmit = this._handleSubmit.bind(this);
   }
 
-  componentDidMount () {
+  componentDidMount() {
     this.props.getEnergyDensity(this.props.match.params.id);
   }
 
-  componentWillReceiveProps (props) {
+  componentWillReceiveProps(props) {
     this.loadPropsToFieldState(props);
+    if (this.state.updateInProgress && !this.props.energyDensity.isUpdating) {
+      this.setState(
+        {
+          updateCalled: false,
+          updateInProgress: false
+        }
+      );
+      history.push(CREDIT_CALCULATIONS.LIST);
+      toastr.fuelCodeSuccess(status, 'Energy densities saved.');
+    }
   }
 
-  loadPropsToFieldState (props) {
-    const { item } = props.energyDensity;
+  loadPropsToFieldState(props) {
+    const {item} = props.energyDensity;
 
     if (item && !this.loaded) {
       const fieldState = {
@@ -59,10 +70,10 @@ class EnergyDensityEditContainer extends Component {
     }
   }
 
-  _handleInputChange (event) {
-    const { name } = event.target;
-    const { value } = event.target;
-    const fieldState = { ...this.state.fields };
+  _handleInputChange(event) {
+    const {name} = event.target;
+    const {value} = event.target;
+    const fieldState = {...this.state.fields};
 
     if (typeof fieldState[name] === 'object') {
       fieldState[name] = [...event.target.options].filter(o => o.selected).map(o => o.value);
@@ -78,7 +89,7 @@ class EnergyDensityEditContainer extends Component {
     }
   }
 
-  _handleSubmit (event, status = 'Submitted') {
+  _handleSubmit(event, status = 'Submitted') {
     event.preventDefault();
 
     // const { id } = this.props.carbonIntensityLimit.item;
@@ -96,16 +107,16 @@ class EnergyDensityEditContainer extends Component {
       }
     });
 
-    // this.props.updateEnergyDensity(id, data).then((response) => {
-    history.push(CREDIT_CALCULATIONS.LIST);
-    toastr.fuelCodeSuccess(status, 'Energy densities saved.');
-    // });
+    this.setState({
+      updateCalled: true
+    });
+    this.props.updateEnergyDensity({id, state: data});
 
     return true;
   }
 
-  render () {
-    const { item, isFetching, success } = this.props.energyDensity;
+  render() {
+    const {item, isFetching, success} = this.props.energyDensity;
 
     if (success && !isFetching) {
       return ([
@@ -128,16 +139,16 @@ class EnergyDensityEditContainer extends Component {
       ]);
     }
 
-    return <Loading />;
+    return <Loading/>;
   }
 }
 
-EnergyDensityEditContainer.defaultProps = {
-};
+EnergyDensityEditContainer.defaultProps = {};
 
 EnergyDensityEditContainer.propTypes = {
   energyDensity: PropTypes.shape({
     isFetching: PropTypes.bool,
+    isUpdating: PropTypes.bool,
     item: PropTypes.shape(),
     success: PropTypes.bool
   }).isRequired,
@@ -153,9 +164,10 @@ EnergyDensityEditContainer.propTypes = {
 
 const mapStateToProps = state => ({
   energyDensity: {
-    isFetching: state.rootReducer.energyDensity.isFetching,
-    item: state.rootReducer.energyDensity.item,
-    success: state.rootReducer.energyDensity.success
+    isFetching: state.rootReducer.energyDensities.isGetting,
+    isUpdating: state.rootReducer.energyDensities.isUpdating,
+    item: state.rootReducer.energyDensities.item,
+    success: state.rootReducer.energyDensities.success
   },
   loggedInUser: state.rootReducer.userRequest.loggedInUser
 });

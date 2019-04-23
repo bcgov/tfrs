@@ -80,6 +80,21 @@ class CarbonIntensityLimitSerializer(serializers.ModelSerializer):
         fields = ('id', 'description', 'display_order', 'limits')
 
 
+class CarbonIntensityLimitUpdateSerializer(serializers.ModelSerializer):
+    """
+    Default Carbon Intensity Limit Serializer
+    """
+
+    def validate(self, data):
+        request = self.context['request']
+        print('saving: {}'.format(data))
+
+    class Meta:
+        model = CarbonIntensityLimit
+        fields = ('compliance_period', 'fuel_class', 'density')
+        read_only_fields = ('compliance_period', 'fuel_class')
+
+
 class DefaultCarbonIntensitySerializer(serializers.ModelSerializer):
     """
     Default Carbon Intensity Serializer
@@ -101,6 +116,15 @@ class DefaultCarbonIntensitySerializer(serializers.ModelSerializer):
         fields = (
             'id', 'name', 'density'
         )
+
+
+class DefaultCarbonIntensityUpdateSerializer(serializers.ModelSerializer):
+    """
+    Default Carbon Intensity Limit Serializer
+    """
+    class Meta:
+        model = DefaultCarbonIntensityCategory
+        fields = ('name', 'density')
 
 
 class DefaultCarbonIntensityDetailSerializer(serializers.ModelSerializer):
@@ -163,6 +187,15 @@ class EnergyDensitySerializer(serializers.ModelSerializer):
         model = EnergyDensityCategory
         fields = (
             'id', 'name', 'density', 'unit_of_measure'
+        )
+
+
+class EnergyDensityUpdateSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = EnergyDensityCategory
+        fields = (
+            'name', 'density', 'unit_of_measure'
         )
 
 
@@ -239,6 +272,14 @@ class EnergyEffectivenessRatioSerializer(serializers.ModelSerializer):
         model = EnergyEffectivenessRatioCategory
         fields = (
             'id', 'name', 'diesel_ratio', 'gasoline_ratio'
+        )
+
+
+class EnergyEffectivenessRatioUpdateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = EnergyEffectivenessRatioCategory
+        fields = (
+            'name', 'diesel_ratio', 'gasoline_ratio'
         )
 
 
