@@ -7,6 +7,8 @@ import PropTypes from 'prop-types';
 import 'react-table/react-table.css';
 
 import ReactTable from '../../../app/components/StateSavingReactTable';
+import history from '../../../app/History';
+import CREDIT_CALCULATIONS from '../../../constants/routes/CreditCalculations';
 
 const CarbonIntensityLimitsTable = (props) => {
   const columns = [{
@@ -62,6 +64,20 @@ const CarbonIntensityLimitsTable = (props) => {
         desc: false
       }]}
       filterable={filterable}
+      getTrProps={(state, row) => {
+        if (row && row.original) {
+          return {
+            onClick: (e) => {
+              const viewUrl = CREDIT_CALCULATIONS.CARBON_INTENSITIES_DETAILS.replace(':id', row.original.id);
+
+              history.push(viewUrl);
+            },
+            className: 'clickable'
+          };
+        }
+
+        return {};
+      }}
       pageSizeOptions={[5, 10, 15, 20, 25]}
     />
   );

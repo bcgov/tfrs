@@ -13,12 +13,16 @@ from api.permissions.CreditCalculation import \
 from api.serializers.CreditCalculation import \
         CarbonIntensityLimitSerializer, \
         DefaultCarbonIntensitySerializer, \
+        DefaultCarbonIntensityDetailSerializer, \
         EnergyDensitySerializer, \
-        EnergyEffectivenessRatioSerializer
+        EnergyDensityDetailSerializer, \
+        EnergyEffectivenessRatioSerializer, \
+        EnergyEffectivenessRatioDetailSerializer
 
 
 class CarbonIntensityLimitViewSet(
-        AuditableMixin, mixins.ListModelMixin, viewsets.GenericViewSet):
+        AuditableMixin, mixins.ListModelMixin, mixins.RetrieveModelMixin,
+        viewsets.GenericViewSet):
     """
     This viewset automatically provides `list`
     """
@@ -30,7 +34,8 @@ class CarbonIntensityLimitViewSet(
     ordering = ('display_order',)
     serializer_class = CarbonIntensityLimitSerializer
     serializer_classes = {
-        'list': CarbonIntensityLimitSerializer
+        'list': CarbonIntensityLimitSerializer,
+        'default': CarbonIntensityLimitSerializer
     }
 
     def get_serializer_class(self):
@@ -41,7 +46,8 @@ class CarbonIntensityLimitViewSet(
 
 
 class DefaultCarbonIntensityViewSet(
-        AuditableMixin, mixins.ListModelMixin, viewsets.GenericViewSet):
+        AuditableMixin, mixins.ListModelMixin, mixins.RetrieveModelMixin,
+        viewsets.GenericViewSet):
     """
     This viewset automatically provides `list`
     """
@@ -53,7 +59,9 @@ class DefaultCarbonIntensityViewSet(
     ordering = ('name',)
     serializer_class = DefaultCarbonIntensitySerializer
     serializer_classes = {
-        'list': DefaultCarbonIntensitySerializer
+        'list': DefaultCarbonIntensitySerializer,
+        'default': DefaultCarbonIntensitySerializer,
+        'retrieve': DefaultCarbonIntensityDetailSerializer
     }
 
     def get_serializer_class(self):
@@ -64,7 +72,8 @@ class DefaultCarbonIntensityViewSet(
 
 
 class EnergyDensityViewSet(
-        AuditableMixin, mixins.ListModelMixin, viewsets.GenericViewSet):
+        AuditableMixin, mixins.ListModelMixin, mixins.RetrieveModelMixin,
+        viewsets.GenericViewSet):
     """
     This viewset automatically provides `list`
     """
@@ -76,7 +85,9 @@ class EnergyDensityViewSet(
     ordering = ('name',)
     serializer_class = EnergyDensitySerializer
     serializer_classes = {
-        'list': EnergyDensitySerializer
+        'list': EnergyDensitySerializer,
+        'default': EnergyDensitySerializer,
+        'retrieve': EnergyDensityDetailSerializer
     }
 
     def get_serializer_class(self):
@@ -87,7 +98,8 @@ class EnergyDensityViewSet(
 
 
 class EnergyEffectivenessRatioViewSet(
-        AuditableMixin, mixins.ListModelMixin, viewsets.GenericViewSet):
+        AuditableMixin, mixins.ListModelMixin, mixins.RetrieveModelMixin,
+        viewsets.GenericViewSet):
     """
     This viewset automatically provides `list`
     """
@@ -99,7 +111,9 @@ class EnergyEffectivenessRatioViewSet(
     ordering = ('name',)
     serializer_class = EnergyEffectivenessRatioSerializer
     serializer_classes = {
-        'list': EnergyEffectivenessRatioSerializer
+        'list': EnergyEffectivenessRatioSerializer,
+        'default': EnergyEffectivenessRatioSerializer,
+        'retrieve': EnergyEffectivenessRatioDetailSerializer
     }
 
     def get_serializer_class(self):
