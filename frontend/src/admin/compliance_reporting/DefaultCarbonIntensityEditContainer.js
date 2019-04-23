@@ -153,9 +153,9 @@ DefaultCarbonIntensityEditContainer.propTypes = {
 
 const mapStateToProps = state => ({
   defaultCarbonIntensity: {
-    isFetching: state.rootReducer.defaultCarbonIntensity.isFetching,
-    item: state.rootReducer.defaultCarbonIntensity.item,
-    success: state.rootReducer.defaultCarbonIntensity.success
+    isFetching: state.rootReducer.defaultCarbonIntensities.isFetching,
+    item: state.rootReducer.defaultCarbonIntensities.item,
+    success: state.rootReducer.defaultCarbonIntensities.success
   },
   loggedInUser: state.rootReducer.userRequest.loggedInUser
 });

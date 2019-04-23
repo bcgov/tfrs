@@ -16,7 +16,7 @@ import { referenceData } from './referenceDataReducer';
 import sessionTimeout from './sessionTimeoutReducer';
 import tableState from './tableStateReducer';
 import { autocomplete } from './autocompleteReducer';
-import { carbonIntensities, carbonIntensity } from '../actions/carbonIntensities';
+import { carbonIntensities } from '../actions/carbonIntensities';
 import { defaultCarbonIntensities } from '../actions/defaultCarbonIntensities';
 import { energyDensities } from '../actions/energyDensities';
 import { energyEffectivenessRatios } from '../actions/energyEffectivenessRatios';
@@ -50,12 +50,8 @@ const rootReducer = combineReducers({
   userRequest,
   userViewRequest,
   defaultCarbonIntensities: defaultCarbonIntensities.reducer(),
-  defaultCarbonIntensity: defaultCarbonIntensities.reducer(),
-  carbonIntensityLimit: carbonIntensities.reducer(),
   carbonIntensityLimits: carbonIntensities.reducer(),
-  energyDensity: energyDensities.reducer(),
   energyDensities: energyDensities.reducer(),
-  energyEffectivenessRatio: energyEffectivenessRatios.reducer(),
   energyEffectivenessRatios: energyEffectivenessRatios.reducer(),
   fuelTypes
 });

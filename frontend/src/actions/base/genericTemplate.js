@@ -148,8 +148,8 @@ export class GenericRestTemplate {
     return axios.get(`${this.baseUrl}/${id}`);
   }
 
-  * getHandler (action) {
-    const id = action.payload;
+  * getHandler () {
+    const id = yield (select(this.idSelector()));
 
     try {
       const response = yield call(this.doGet, id);

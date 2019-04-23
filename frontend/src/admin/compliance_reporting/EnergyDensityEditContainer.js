@@ -153,9 +153,9 @@ EnergyDensityEditContainer.propTypes = {
 
 const mapStateToProps = state => ({
   energyDensity: {
-    isFetching: state.rootReducer.energyDensity.isFetching,
-    item: state.rootReducer.energyDensity.item,
-    success: state.rootReducer.energyDensity.success
+    isFetching: state.rootReducer.energyDensities.isFetching,
+    item: state.rootReducer.energyDensities.item,
+    success: state.rootReducer.energyDensities.success
   },
   loggedInUser: state.rootReducer.userRequest.loggedInUser
 });
