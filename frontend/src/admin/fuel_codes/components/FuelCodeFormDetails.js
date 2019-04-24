@@ -23,6 +23,9 @@ const FuelCodeFormDetails = props => (
                   value={props.fields.fuelCode}
                   inputProps={
                     {
+                      id: 'fuelCode',
+                      maxLength: 11,
+                      name: 'fuelCode',
                       onPaste: (event) => {
                         const clipboard = event.clipboardData.getData('Text');
                         if (clipboard.match(/\D/g)) {
@@ -30,9 +33,7 @@ const FuelCodeFormDetails = props => (
                         }
                       },
                       readOnly: props.edit,
-                      required: true,
-                      name: 'fuelCode',
-                      id: 'fuelCode'
+                      required: true
                     }
                   }
                   integersOnly
@@ -51,9 +52,10 @@ const FuelCodeFormDetails = props => (
                 value={props.fields.company}
                 inputProps={
                   {
-                    required: true,
+                    id: 'company',
+                    maxLength: 100,
                     name: 'company',
-                    id: 'company'
+                    required: true
                   }
                 }
               />
@@ -71,6 +73,7 @@ const FuelCodeFormDetails = props => (
                 dataNumberToFixed={2}
                 handleInputChange={props.handleInputChange}
                 id="carbon-intensity"
+                max="999.99"
                 min="0"
                 name="carbonIntensity"
                 required
@@ -165,9 +168,10 @@ const FuelCodeFormDetails = props => (
                 value={props.fields.feedstock}
                 inputProps={
                   {
-                    required: true,
+                    id: 'feedstock',
+                    maxLength: 100,
                     name: 'feedstock',
-                    id: 'feedstock'
+                    required: true
                   }
                 }
               />
@@ -186,6 +190,7 @@ const FuelCodeFormDetails = props => (
                 value={props.fields.feedstockLocation}
                 inputProps={
                   {
+                    maxLength: 100,
                     required: true,
                     name: 'feedstockLocation',
                     id: 'feedstockLocation'
@@ -204,9 +209,10 @@ const FuelCodeFormDetails = props => (
                 value={props.fields.feedstockMisc}
                 inputProps={
                   {
-                    required: false,
+                    id: 'feedstockMisc',
+                    maxLength: 100,
                     name: 'feedstockMisc',
-                    id: 'feedstockMisc'
+                    required: false
                   }
                 }
               />
@@ -225,9 +231,10 @@ const FuelCodeFormDetails = props => (
                 value={props.fields.facilityLocation}
                 inputProps={
                   {
-                    required: true,
+                    id: 'facilityLocation',
+                    maxLength: 100,
                     name: 'facilityLocation',
-                    id: 'facilityLocation'
+                    required: true
                   }
                 }
               />
@@ -240,6 +247,7 @@ const FuelCodeFormDetails = props => (
               <input
                 className="form-control"
                 id="facility-nameplate"
+                maxLength="13"
                 name="facilityNameplate"
                 onChange={props.handleInputChange}
                 type="text"
@@ -308,9 +316,10 @@ const FuelCodeFormDetails = props => (
               value={props.fields.formerCompany}
               inputProps={
                 {
-                  required: false,
+                  id: 'formerCompany',
+                  maxLength: 100,
                   name: 'formerCompany',
-                  id: 'formerCompany'
+                  required: false
                 }
               }
             />
