@@ -297,6 +297,7 @@ node("master-maven-${env.BUILD_NUMBER}") {
     }
 
     stage('Take down Maintenance Page on Prod') {
+	input "Before taking dowm the maintenance page, this is the last chance to make a change."
         sh returnStatus: true, script: "oc patch route/lowcarbonfuels-backend -n mem-tfrs-prod -p '{\"spec\":{\"to\":{\"name\":\"backend\"}, \"port\":{\"targetPort\":\"web\"}}}'"
         sh returnStatus: true, script: "oc patch route/lowcarbonfuels-frontend -n mem-tfrs-prod -p '{\"spec\":{\"to\":{\"name\":\"client\"}, \"port\":{\"targetPort\":\"web\"}}}'"
         sh returnStatus: true, script: "oc scale dc maintenance-page -n mem-tfrs-prod --replicas=0 --timeout=20s"
