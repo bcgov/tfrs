@@ -3,9 +3,10 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 
 import {
-  COMPLIANCE_REPORTING, CREDIT_TRANSACTIONS_HISTORY, FUEL_CODES,
+  CREDIT_TRANSACTIONS_HISTORY, FUEL_CODES,
   HISTORICAL_DATA_ENTRY, ROLES, USERS
 } from '../../constants/routes/Admin';
+import CREDIT_CALCULATIONS from '../../constants/routes/CreditCalculations';
 import PERMISSIONS_CREDIT_TRANSACTIONS from '../../constants/permissions/CreditTransactions';
 import CONFIG from '../../config';
 
@@ -63,7 +64,7 @@ const AdminTabs = props => (
         role="presentation"
         className={`${(props.active === 'compliance-reporting') ? 'active' : ''}`}
       >
-        <Link to={COMPLIANCE_REPORTING.LIST}>
+        <Link to={CREDIT_CALCULATIONS.LIST}>
           Compliance Reporting
         </Link>
       </li>

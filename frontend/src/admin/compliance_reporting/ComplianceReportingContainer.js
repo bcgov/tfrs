@@ -82,19 +82,19 @@ ComplianceReportingContainer.propTypes = {
 
 const mapStateToProps = state => ({
   carbonIntensityLimits: {
-    isFetching: state.rootReducer.carbonIntensityLimits.isFetching,
+    isFetching: state.rootReducer.carbonIntensityLimits.isFinding,
     items: state.rootReducer.carbonIntensityLimits.items
   },
   defaultCarbonIntensities: {
-    isFetching: state.rootReducer.defaultCarbonIntensities.isFetching,
+    isFetching: state.rootReducer.defaultCarbonIntensities.isFinding,
     items: state.rootReducer.defaultCarbonIntensities.items
   },
   energyDensities: {
-    isFetching: state.rootReducer.energyDensities.isFetching,
+    isFetching: state.rootReducer.energyDensities.isFinding,
     items: state.rootReducer.energyDensities.items
   },
   energyEffectivenessRatios: {
-    isFetching: state.rootReducer.energyEffectivenessRatios.isFetching,
+    isFetching: state.rootReducer.energyEffectivenessRatios.isFinding,
     items: state.rootReducer.energyEffectivenessRatios.items
   },
   loggedInUser: state.rootReducer.userRequest.loggedInUser,

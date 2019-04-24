@@ -12,8 +12,8 @@ import * as Lang from '../../constants/langEnUs';
 
 const RoleDetails = props => (
   <div className="page_role">
-    {props.role.isFetching && <Loading />}
-    {!props.role.isFetching &&
+    {props.role.isGetting && <Loading />}
+    {(!props.role.isGetting && props.role.details) &&
       <div>
         <h1>
           {`${props.role.details.description}`}
@@ -47,7 +47,7 @@ RoleDetails.propTypes = {
       permissions: PropTypes.arrayOf(PropTypes.shape())
     }),
     errors: PropTypes.shape({}),
-    isFetching: PropTypes.bool.isRequired
+    isGetting: PropTypes.bool.isRequired
   }).isRequired
 };
 
