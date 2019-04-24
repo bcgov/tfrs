@@ -204,8 +204,8 @@ FuelCodeDetails.propTypes = {
     formerCompany: PropTypes.string,
     fuel: PropTypes.string,
     fuelCode: PropTypes.string,
-    fuelCodeVersion: PropTypes.string,
-    fuelCodeVersionMinor: PropTypes.string,
+    fuelCodeVersion: PropTypes.number,
+    fuelCodeVersionMinor: PropTypes.number,
     fuelTransportMode: PropTypes.arrayOf(PropTypes.string),
     id: PropTypes.number,
     status: PropTypes.shape({
