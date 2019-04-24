@@ -20,7 +20,7 @@ class EnergyDensityEditContainer extends Component {
     super(props);
 
     this.state = {
-      updateCalled: false,
+      updateCompleted: false,
       fields: {
         density: '',
         effectiveDate: '',
@@ -39,17 +39,16 @@ class EnergyDensityEditContainer extends Component {
   }
 
   componentWillReceiveProps(props) {
-    this.loadPropsToFieldState(props);
-    if (this.state.updateInProgress && !this.props.energyDensity.isUpdating) {
-      this.setState(
-        {
-          updateCalled: false,
-          updateInProgress: false
-        }
-      );
-      history.push(CREDIT_CALCULATIONS.LIST);
-      toastr.fuelCodeSuccess(status, 'Energy densities saved.');
+
+    if (this.props.energyDensity.isUpdating && !props.energyDensity.isUpdating) {
+      if (props.energyDensity.success) {
+        history.push(CREDIT_CALCULATIONS.LIST);
+        toastr.fuelCodeSuccess(status, 'Energy densities saved.');
+      }
+      return;
     }
+
+    this.loadPropsToFieldState(props);
   }
 
   loadPropsToFieldState(props) {
@@ -92,7 +91,8 @@ class EnergyDensityEditContainer extends Component {
   _handleSubmit(event, status = 'Submitted') {
     event.preventDefault();
 
-    // const { id } = this.props.carbonIntensityLimit.item;
+    const id = this.props.match.params.id;
+    console.log(this.props);
 
     // API data structure
     const data = {
@@ -107,9 +107,6 @@ class EnergyDensityEditContainer extends Component {
       }
     });
 
-    this.setState({
-      updateCalled: true
-    });
     this.props.updateEnergyDensity({id, state: data});
 
     return true;
@@ -117,8 +114,9 @@ class EnergyDensityEditContainer extends Component {
 
   render() {
     const {item, isFetching, success} = this.props.energyDensity;
+    const updating = this.props.energyDensity.isUpdating;
 
-    if (success && !isFetching) {
+    if (!updating && success && (!isFetching)) {
       return ([
         <EnergyDensityForm
           fields={this.state.fields}

@@ -87,6 +87,9 @@ export class GenericRestTemplate {
           items: [],
           isFinding: false,
           isGetting: false,
+          isCreating: false,
+          isUpdating: false,
+          isRemoving: false,
           success: false,
           errorMessage: action.payload
         })],

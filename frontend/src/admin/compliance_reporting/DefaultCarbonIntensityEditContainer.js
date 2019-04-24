@@ -20,7 +20,6 @@ class DefaultCarbonIntensityEditContainer extends Component {
     super(props);
 
     this.state = {
-      updateCalled: false,
       fields: {
         density: '',
         effectiveDate: '',
@@ -39,18 +38,15 @@ class DefaultCarbonIntensityEditContainer extends Component {
   }
 
   componentWillReceiveProps (props) {
-    this.loadPropsToFieldState(props);
-
-    if (this.state.updateInProgress && !this.props.defaultCarbonIntensity.isUpdating) {
-      this.setState(
-        {
-          updateCalled: false,
-          updateInProgress: false
-        }
-      );
-      history.push(CREDIT_CALCULATIONS.LIST);
-      toastr.fuelCodeSuccess(status, 'Default carbon intensities saved.');
+    if (this.props.defaultCarbonIntensity.isUpdating && !props.defaultCarbonIntensity.isUpdating) {
+      if (props.defaultCarbonIntensity.success) {
+        history.push(CREDIT_CALCULATIONS.LIST);
+        toastr.fuelCodeSuccess(status, 'Default Carbon Intensity saved.');
+      }
+      return;
     }
+
+    this.loadPropsToFieldState(props);
 
   }
 
@@ -94,7 +90,7 @@ class DefaultCarbonIntensityEditContainer extends Component {
   _handleSubmit (event, status = 'Submitted') {
     event.preventDefault();
 
-    const { id } = this.props.carbonIntensityLimit.item;
+    const id  = this.props.match.params.id;
 
     // API data structure
     const data = {
@@ -109,9 +105,6 @@ class DefaultCarbonIntensityEditContainer extends Component {
       }
     });
 
-    this.setState({
-      updateCalled: true
-    });
     this.props.updateDefaultCarbonIntensity({id, state: data});
 
     return true;
@@ -119,8 +112,9 @@ class DefaultCarbonIntensityEditContainer extends Component {
 
   render () {
     const { item, isFetching, success } = this.props.defaultCarbonIntensity;
+    const updating = this.props.defaultCarbonIntensity.isUpdating;
 
-    if (success && !isFetching) {
+    if (!updating && success && (!isFetching)) {
       return ([
         <DefaultCarbonIntensityForm
           fields={this.state.fields}

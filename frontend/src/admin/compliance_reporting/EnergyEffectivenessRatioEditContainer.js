@@ -20,7 +20,6 @@ class EnergyEffectivenessRatioEditContainer extends Component {
     super(props);
 
     this.state = {
-      updateCalled: false,
       fields: {
         dieselEffectiveDate: '',
         dieselExpirationDate: '',
@@ -42,19 +41,18 @@ class EnergyEffectivenessRatioEditContainer extends Component {
   }
 
   componentWillReceiveProps (props) {
-    this.loadPropsToFieldState(props);
 
-    if (this.state.updateInProgress && !this.props.energyDensity.isUpdating) {
-      this.setState(
-        {
-          updateCalled: false,
-          updateInProgress: false
-        }
-      );
+    if (this.props.energyEffectivenessRatio.isUpdating && !props.energyEffectivenessRatio.isUpdating) {
 
-      history.push(CREDIT_CALCULATIONS.LIST);
-      toastr.fuelCodeSuccess(status, 'Energy effectiveness ratios saved.');
+      if (this.props.energyEffectivenessRatio.success) {
+        history.push(CREDIT_CALCULATIONS.LIST);
+        toastr.fuelCodeSuccess(status, 'Energy effectiveness ratios saved.');
+      }
+
+      return;
     }
+
+    this.loadPropsToFieldState(props);
 
   }
 
@@ -101,7 +99,7 @@ class EnergyEffectivenessRatioEditContainer extends Component {
   _handleSubmit (event, status = 'Submitted') {
     event.preventDefault();
 
-     const { id } = this.props.energyEffectivenessRatio.item;
+    const id  = this.props.match.params.id;
 
     // API data structure
     const data = {
@@ -126,8 +124,9 @@ class EnergyEffectivenessRatioEditContainer extends Component {
 
   render () {
     const { item, isFetching, success } = this.props.energyEffectivenessRatio;
+    const updating = this.props.energyEffectivenessRatio.isUpdating;
 
-    if (success && !isFetching) {
+    if (!updating && success && (!isFetching)) {
       return ([
         <EnergyEffectivenessRatioForm
           fields={this.state.fields}
