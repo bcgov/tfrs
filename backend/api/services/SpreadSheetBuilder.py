@@ -31,7 +31,7 @@ class SpreadSheetBuilder(object):
 
         columns = [
             Column("Low Carbon Fuel Code", string_format, 5000,
-                   lambda f: '{}.{}.{}'.format(
+                   lambda f: '{}{}.{}'.format(
                        f.fuel_code,
                        f.fuel_code_version,
                        f.fuel_code_version_minor

@@ -131,8 +131,8 @@ class FuelCodeViewSet(AuditableMixin,
             ))
 
         fuel_codes = self.get_queryset().filter(
-            ~Q(status__status__in=["Draft"])
-        )
+            ~Q(status__status__in=['Cancelled'])
+        ).order_by('fuel_code', 'fuel_code_version', 'fuel_code_version_minor')
 
         workbook = SpreadSheetBuilder()
         workbook.add_fuel_codes(fuel_codes)
