@@ -59,7 +59,7 @@ CarbonIntensityLimitDetailContainer.propTypes = {
 
 const mapStateToProps = state => ({
   carbonIntensityLimit: {
-    isFetching: state.rootReducer.carbonIntensityLimits.isFetching,
+    isFetching: state.rootReducer.carbonIntensityLimits.isGetting,
     item: state.rootReducer.carbonIntensityLimits.item,
     success: state.rootReducer.carbonIntensityLimits.success
   },

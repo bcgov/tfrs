@@ -15,9 +15,6 @@ export const RestActions = [
   'UPDATE',
   'UPDATE_SUCCESS',
 
-  'PATCH',
-  'PATCH_SUCCESS',
-
   'REMOVE',
   'REMOVE_SUCCESS',
 
@@ -31,13 +28,12 @@ export class GenericRestTemplate {
     this.stateName = stateName;
 
     const actionCreators = {
-      ...createActions({
-      }, ...[
-        ...RestActions,
-        ...this.getCustomIdentityActions()
-      ], {
-        prefix: this.name
-      })
+      ...createActions(
+        {}, ...[...RestActions, ...this.getCustomIdentityActions()],
+        {
+          prefix: this.name
+        }
+      )
     };
 
     Object.assign(this, actionCreators);
@@ -50,12 +46,23 @@ export class GenericRestTemplate {
     this.saga = this.saga.bind(this);
 
     this.idSelector = this.idSelector.bind(this);
+    this.createStateSelector = this.createStateSelector.bind(this);
+    this.updateStateSelector = this.updateStateSelector.bind(this);
 
     this.findHandler = this.findHandler.bind(this);
     this.doFind = this.doFind.bind(this);
 
     this.getHandler = this.getHandler.bind(this);
     this.doGet = this.doGet.bind(this);
+
+    this.createHandler = this.createHandler.bind(this);
+    this.doCreate = this.doCreate.bind(this);
+
+    this.updateHandler = this.updateHandler.bind(this);
+    this.doUpdate = this.doUpdate.bind(this);
+
+    this.removeHandler = this.removeHandler.bind(this);
+    this.doRemove = this.doRemove.bind(this);
   }
 
   reducer () {
@@ -63,33 +70,78 @@ export class GenericRestTemplate {
       new Map([
         [this.find, (state, action) => ({
           ...state,
-          isFetching: true,
-          errorMessage: []
+          isFinding: true,
+          errorMessage: {}
         })],
         [this.findSuccess, (state, action) => ({
           ...state,
           items: action.payload,
           receivedAt: Date.now(),
-          isFetching: false,
+          isFinding: false,
           success: true
         })],
         [this.error, (state, action) => ({
           ...state,
           items: [],
-          isFetching: false,
+          isFinding: false,
+          isGetting: false,
+          isCreating: false,
+          isUpdating: false,
+          isRemoving: false,
           success: false,
           errorMessage: action.payload
         })],
         [this.get, (state, action) => ({
           ...state,
           item: null,
-          isFetching: true,
+          isGetting: true,
           id: action.payload
         })],
         [this.getSuccess, (state, action) => ({
           ...state,
           item: action.payload,
-          isFetching: false,
+          isGetting: false,
+          success: true
+        })],
+        [this.create, (state, action) => ({
+          ...state,
+          createState: action.payload,
+          isCreating: true,
+          errorMessage: {}
+        })],
+        [this.createSuccess, (state, action) => ({
+          ...state,
+          item: action.payload,
+          createState: null,
+          receivedAt: Date.now(),
+          isCreating: false,
+          success: true
+        })],
+        [this.update, (state, action) => ({
+          ...state,
+          id: action.payload.id,
+          updateState: action.payload.state,
+          isUpdating: true,
+          errorMessage: {}
+        })],
+        [this.updateSuccess, (state, action) => ({
+          ...state,
+          item: action.payload,
+          updateState: null,
+          receivedAt: Date.now(),
+          isUpdating: false,
+          success: true
+        })],
+        [this.remove, (state, action) => ({
+          ...state,
+          id: action.payload.id,
+          isRemoving: true,
+          errorMessage: {}
+        })],
+        [this.removeSuccess, (state, action) => ({
+          ...state,
+          receivedAt: Date.now(),
+          isRemoving: false,
           success: true
         })],
         ...this.getCustomReducerMap()
@@ -98,9 +150,13 @@ export class GenericRestTemplate {
         items: [],
         item: null,
         id: null,
-        isFetching: false,
+        isFinding: false,
+        isGetting: false,
+        isCreating: false,
+        isUpdating: false,
+        isRemoving: false,
         success: false,
-        errorMessage: [],
+        errorMessage: {},
         validationErrors: {},
         ...this.getCustomDefaultState()
       }
@@ -128,7 +184,21 @@ export class GenericRestTemplate {
   }
 
   idSelector () {
-    return state => (state.rootReducer[this.stateName].id);
+    const sn = this.stateName;
+
+    return state => (state.rootReducer[sn].id);
+  }
+
+  createStateSelector () {
+    const sn = this.stateName;
+
+    return state => (state.rootReducer[sn].createState);
+  }
+
+  updateStateSelector () {
+    const sn = this.stateName;
+
+    return state => (state.rootReducer[sn].updateState);
   }
 
   doFind () {
@@ -159,10 +229,58 @@ export class GenericRestTemplate {
     }
   }
 
+  doUpdate (id, data) {
+    return axios.put(`${this.baseUrl}/${id}`, data);
+  }
+
+  * updateHandler () {
+    const id = yield (select(this.idSelector()));
+    const data = yield (select(this.updateStateSelector()));
+
+    try {
+      const response = yield call(this.doUpdate, id, data);
+      yield put(this.updateSuccess(response.data));
+    } catch (error) {
+      yield put(this.error(error.response.data));
+    }
+  }
+
+  doRemove (id) {
+    return axios.delete(`${this.baseUrl}/${id}`);
+  }
+
+  * removeHandler () {
+    const id = yield (select(this.idSelector()));
+    try {
+      const response = yield call(this.doRemove, id);
+      yield put(this.removeSuccess(response.data));
+    } catch (error) {
+      yield put(this.error(error.response.data));
+    }
+  }
+
+  doCreate (data) {
+    return axios.post(`${this.baseUrl}`, data);
+  }
+
+  * createHandler () {
+    const data = yield (select(this.createStateSelector()));
+
+    try {
+      const response = yield call(this.doCreate, data);
+      yield put(this.createSuccess(response.data));
+    } catch (error) {
+      yield put(this.error(error.response.data));
+    }
+  }
+
   * saga () {
     yield all([
       takeLatest(this.find, this.findHandler),
       takeLatest(this.get, this.getHandler),
+      takeLatest(this.create, this.createHandler),
+      takeLatest(this.update, this.updateHandler),
+      takeLatest(this.remove, this.removeHandler),
       ...this.getCustomSagas()
     ]);
   }

@@ -9,17 +9,18 @@ import errorRequest from './errorReducer';
 import compliancePeriods from './compliancePeriodReducer';
 import { documentUpload, documentUploads } from './documentUploadReducer';
 import { fuelCode, fuelCodes } from './fuelCodesReducer';
-import { roleRequest, roles } from './roleReducer';
 import signingAuthorityAssertions from './signingAuthorityAssertionReducer';
 import { notifications, subscriptions } from './notificationReducer';
 import { referenceData } from './referenceDataReducer';
 import sessionTimeout from './sessionTimeoutReducer';
 import tableState from './tableStateReducer';
 import { autocomplete } from './autocompleteReducer';
-import { carbonIntensities } from '../actions/carbonIntensities';
+import { carbonIntensities, carbonIntensity } from '../actions/carbonIntensities';
 import { defaultCarbonIntensities } from '../actions/defaultCarbonIntensities';
 import { energyDensities } from '../actions/energyDensities';
 import { energyEffectivenessRatios } from '../actions/energyEffectivenessRatios';
+import { roles } from '../actions/roleActions';
+
 import { fuelTypes } from './creditCalculationReducers';
 
 const rootReducer = combineReducers({
@@ -39,8 +40,6 @@ const rootReducer = combineReducers({
   organizationRequest,
   organizations,
   referenceData,
-  roleRequest,
-  roles,
   routing,
   sessionTimeout,
   signingAuthorityAssertions,
@@ -49,6 +48,7 @@ const rootReducer = combineReducers({
   userAdmin,
   userRequest,
   userViewRequest,
+  roles: roles.reducer(),
   defaultCarbonIntensities: defaultCarbonIntensities.reducer(),
   carbonIntensityLimits: carbonIntensities.reducer(),
   energyDensities: energyDensities.reducer(),

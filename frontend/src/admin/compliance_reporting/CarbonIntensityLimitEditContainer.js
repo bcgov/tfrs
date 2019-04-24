@@ -41,6 +41,15 @@ class CarbonIntensityLimitEditContainer extends Component {
   }
 
   componentWillReceiveProps (props) {
+    if (this.props.carbonIntensityLimit.isUpdating && !props.carbonIntensityLimit.isUpdating) {
+      if (props.carbonIntensityLimit.success) {
+        history.push(CREDIT_CALCULATIONS.LIST);
+        toastr.fuelCodeSuccess(null, 'Carbon intensity limits saved.');
+      }
+
+      return;
+    }
+
     this.loadPropsToFieldState(props);
   }
 
@@ -66,8 +75,7 @@ class CarbonIntensityLimitEditContainer extends Component {
   }
 
   _handleInputChange (event) {
-    const { name } = event.target;
-    const { value } = event.target;
+    const { name, value } = event.target;
     const fieldState = { ...this.state.fields };
 
     if (typeof fieldState[name] === 'object') {
@@ -87,7 +95,7 @@ class CarbonIntensityLimitEditContainer extends Component {
   _handleSubmit (event, status = 'Submitted') {
     event.preventDefault();
 
-    // const { id } = this.props.carbonIntensityLimit.item;
+    const { id } = this.props.match.params;
 
     // API data structure
     const data = {
@@ -105,18 +113,16 @@ class CarbonIntensityLimitEditContainer extends Component {
       }
     });
 
-    // this.props.updateCarbonIntensityLimit(id, data).then((response) => {
-    history.push(CREDIT_CALCULATIONS.LIST);
-    toastr.fuelCodeSuccess(status, 'Carbon intensity limits saved.');
-    // });
+    this.props.updateCarbonIntensityLimit({ id, state: data });
 
     return true;
   }
 
   render () {
     const { item, isFetching, success } = this.props.carbonIntensityLimit;
+    const updating = this.props.carbonIntensityLimit.isUpdating;
 
-    if (success && !isFetching) {
+    if (!updating && success && (!isFetching)) {
       return ([
         <CarbonIntensityLimitForm
           fields={this.state.fields}
@@ -141,12 +147,12 @@ class CarbonIntensityLimitEditContainer extends Component {
   }
 }
 
-CarbonIntensityLimitEditContainer.defaultProps = {
-};
+CarbonIntensityLimitEditContainer.defaultProps = {};
 
 CarbonIntensityLimitEditContainer.propTypes = {
   carbonIntensityLimit: PropTypes.shape({
     isFetching: PropTypes.bool,
+    isUpdating: PropTypes.bool,
     item: PropTypes.shape(),
     success: PropTypes.bool
   }).isRequired,
@@ -162,7 +168,8 @@ CarbonIntensityLimitEditContainer.propTypes = {
 
 const mapStateToProps = state => ({
   carbonIntensityLimit: {
-    isFetching: state.rootReducer.carbonIntensityLimits.isFetching,
+    isFetching: state.rootReducer.carbonIntensityLimits.isGetting,
+    isUpdating: state.rootReducer.carbonIntensityLimits.isUpdating,
     item: state.rootReducer.carbonIntensityLimits.item,
     success: state.rootReducer.carbonIntensityLimits.success
   },

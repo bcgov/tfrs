@@ -20,6 +20,7 @@ class EnergyDensityEditContainer extends Component {
     super(props);
 
     this.state = {
+      updateCompleted: false,
       fields: {
         density: '',
         effectiveDate: '',
@@ -38,6 +39,14 @@ class EnergyDensityEditContainer extends Component {
   }
 
   componentWillReceiveProps (props) {
+    if (this.props.energyDensity.isUpdating && !props.energyDensity.isUpdating) {
+      if (props.energyDensity.success) {
+        history.push(CREDIT_CALCULATIONS.LIST);
+        toastr.fuelCodeSuccess(null, 'Energy densities saved.');
+      }
+      return;
+    }
+
     this.loadPropsToFieldState(props);
   }
 
@@ -60,8 +69,7 @@ class EnergyDensityEditContainer extends Component {
   }
 
   _handleInputChange (event) {
-    const { name } = event.target;
-    const { value } = event.target;
+    const { name, value } = event.target;
     const fieldState = { ...this.state.fields };
 
     if (typeof fieldState[name] === 'object') {
@@ -81,7 +89,7 @@ class EnergyDensityEditContainer extends Component {
   _handleSubmit (event, status = 'Submitted') {
     event.preventDefault();
 
-    // const { id } = this.props.carbonIntensityLimit.item;
+    const { id } = this.props.match.params;
 
     // API data structure
     const data = {
@@ -96,18 +104,16 @@ class EnergyDensityEditContainer extends Component {
       }
     });
 
-    // this.props.updateEnergyDensity(id, data).then((response) => {
-    history.push(CREDIT_CALCULATIONS.LIST);
-    toastr.fuelCodeSuccess(status, 'Energy densities saved.');
-    // });
+    this.props.updateEnergyDensity({ id, state: data });
 
     return true;
   }
 
   render () {
     const { item, isFetching, success } = this.props.energyDensity;
+    const updating = this.props.energyDensity.isUpdating;
 
-    if (success && !isFetching) {
+    if (!updating && success && (!isFetching)) {
       return ([
         <EnergyDensityForm
           fields={this.state.fields}
@@ -132,12 +138,12 @@ class EnergyDensityEditContainer extends Component {
   }
 }
 
-EnergyDensityEditContainer.defaultProps = {
-};
+EnergyDensityEditContainer.defaultProps = {};
 
 EnergyDensityEditContainer.propTypes = {
   energyDensity: PropTypes.shape({
     isFetching: PropTypes.bool,
+    isUpdating: PropTypes.bool,
     item: PropTypes.shape(),
     success: PropTypes.bool
   }).isRequired,
@@ -153,7 +159,8 @@ EnergyDensityEditContainer.propTypes = {
 
 const mapStateToProps = state => ({
   energyDensity: {
-    isFetching: state.rootReducer.energyDensities.isFetching,
+    isFetching: state.rootReducer.energyDensities.isGetting,
+    isUpdating: state.rootReducer.energyDensities.isUpdating,
     item: state.rootReducer.energyDensities.item,
     success: state.rootReducer.energyDensities.success
   },

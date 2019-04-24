@@ -38,6 +38,14 @@ class DefaultCarbonIntensityEditContainer extends Component {
   }
 
   componentWillReceiveProps (props) {
+    if (this.props.defaultCarbonIntensity.isUpdating && !props.defaultCarbonIntensity.isUpdating) {
+      if (props.defaultCarbonIntensity.success) {
+        history.push(CREDIT_CALCULATIONS.LIST);
+        toastr.fuelCodeSuccess(null, 'Default Carbon Intensity saved.');
+      }
+      return;
+    }
+
     this.loadPropsToFieldState(props);
   }
 
@@ -81,7 +89,7 @@ class DefaultCarbonIntensityEditContainer extends Component {
   _handleSubmit (event, status = 'Submitted') {
     event.preventDefault();
 
-    // const { id } = this.props.carbonIntensityLimit.item;
+    const { id } = this.props.match.params;
 
     // API data structure
     const data = {
@@ -96,18 +104,16 @@ class DefaultCarbonIntensityEditContainer extends Component {
       }
     });
 
-    // this.props.updateDefaultCarbonIntensity(id, data).then((response) => {
-    history.push(CREDIT_CALCULATIONS.LIST);
-    toastr.fuelCodeSuccess(status, 'Default carbon intensities saved.');
-    // });
+    this.props.updateDefaultCarbonIntensity({ id, state: data });
 
     return true;
   }
 
   render () {
     const { item, isFetching, success } = this.props.defaultCarbonIntensity;
+    const updating = this.props.defaultCarbonIntensity.isUpdating;
 
-    if (success && !isFetching) {
+    if (!updating && success && (!isFetching)) {
       return ([
         <DefaultCarbonIntensityForm
           fields={this.state.fields}
@@ -138,6 +144,7 @@ DefaultCarbonIntensityEditContainer.defaultProps = {
 DefaultCarbonIntensityEditContainer.propTypes = {
   defaultCarbonIntensity: PropTypes.shape({
     isFetching: PropTypes.bool,
+    isUpdating: PropTypes.bool,
     item: PropTypes.shape(),
     success: PropTypes.bool
   }).isRequired,
@@ -153,7 +160,8 @@ DefaultCarbonIntensityEditContainer.propTypes = {
 
 const mapStateToProps = state => ({
   defaultCarbonIntensity: {
-    isFetching: state.rootReducer.defaultCarbonIntensities.isFetching,
+    isFetching: state.rootReducer.defaultCarbonIntensities.isGetting,
+    isUpdating: state.rootReducer.defaultCarbonIntensities.isUpdating,
     item: state.rootReducer.defaultCarbonIntensities.item,
     success: state.rootReducer.defaultCarbonIntensities.success
   },
