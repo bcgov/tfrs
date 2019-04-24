@@ -31,11 +31,6 @@ class FuelCodeDetailContainer extends Component {
     this.props.getFuelCode(id);
   }
 
-  _getFuelCodeStatus (status) {
-    return this.props.referenceData.fuelCodeStatuses.find(fuelCodeStatus =>
-      (fuelCodeStatus.status === status));
-  }
-
   _handleDelete (event) {
     event.preventDefault();
 

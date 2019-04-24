@@ -346,7 +346,7 @@ UserFormDetails.propTypes = {
   }).isRequired,
   roles: PropTypes.shape({
     items: PropTypes.arrayOf(PropTypes.shape()).isRequired,
-    isFetching: PropTypes.bool.isRequired
+    isFinding: PropTypes.bool.isRequired
   }),
   toggleCheck: PropTypes.func
 };
