@@ -41,19 +41,17 @@ class EnergyEffectivenessRatioEditContainer extends Component {
   }
 
   componentWillReceiveProps (props) {
-
-    if (this.props.energyEffectivenessRatio.isUpdating && !props.energyEffectivenessRatio.isUpdating) {
-
+    if (this.props.energyEffectivenessRatio.isUpdating &&
+      !props.energyEffectivenessRatio.isUpdating) {
       if (this.props.energyEffectivenessRatio.success) {
         history.push(CREDIT_CALCULATIONS.LIST);
-        toastr.fuelCodeSuccess(status, 'Energy effectiveness ratios saved.');
+        toastr.fuelCodeSuccess(null, 'Energy effectiveness ratios saved.');
       }
 
       return;
     }
 
     this.loadPropsToFieldState(props);
-
   }
 
   loadPropsToFieldState (props) {
@@ -99,7 +97,7 @@ class EnergyEffectivenessRatioEditContainer extends Component {
   _handleSubmit (event, status = 'Submitted') {
     event.preventDefault();
 
-    const id  = this.props.match.params.id;
+    const { id } = this.props.match.params;
 
     // API data structure
     const data = {
@@ -117,7 +115,7 @@ class EnergyEffectivenessRatioEditContainer extends Component {
       }
     });
 
-    this.props.updateEnergyEffectivenessRatio({id, state: data});
+    this.props.updateEnergyEffectivenessRatio({ id, state: data });
 
     return true;
   }

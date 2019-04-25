@@ -59,7 +59,7 @@ EnergyDensityDetailContainer.propTypes = {
 
 const mapStateToProps = state => ({
   energyDensity: {
-    isFetching: state.rootReducer.energyDensities.isFetching,
+    isFetching: state.rootReducer.energyDensities.isGetting,
     item: state.rootReducer.energyDensities.item,
     success: state.rootReducer.energyDensities.success
   },

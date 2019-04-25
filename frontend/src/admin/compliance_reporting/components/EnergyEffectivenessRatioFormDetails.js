@@ -22,7 +22,7 @@ const EnergyEffectivenessRatioFormDetails = props => (
         </div>
       </div>
 
-      {props.item.ratios.diesel.ratio &&
+      {props.item.ratios && props.item.ratios.diesel.ratio &&
       <div className="row border-box">
         <div className="col-sm-6">
           <div className="row">
@@ -112,7 +112,7 @@ const EnergyEffectivenessRatioFormDetails = props => (
       </div>
       }
 
-      {props.item.ratios.gasoline.ratio &&
+      {props.item.ratios && props.item.ratios.gasoline.ratio &&
       <div className="row border-box">
         <div className="col-sm-6">
           <div className="row">

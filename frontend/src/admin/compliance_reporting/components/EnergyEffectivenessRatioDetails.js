@@ -24,7 +24,7 @@ const DefaultCarbonIntensityDetails = props => (
         </div>
       </div>
 
-      {props.item.ratios.diesel.ratio && [
+      {props.item.ratios && props.item.ratios.diesel.ratio && [
         <div className="row" key="diesel-energy-effectiveness-ratio">
           <div className="col-sm-6">
             <div className="form-group">
@@ -53,7 +53,7 @@ const DefaultCarbonIntensityDetails = props => (
         </div>
       ]}
 
-      {props.item.ratios.gasoline.ratio && [
+      {props.item.ratios && props.item.ratios.gasoline.ratio && [
         <div className="row" key="gasoline-energy-effectiveness-ratio">
           <div className="col-sm-6">
             <div className="form-group">

@@ -3,11 +3,11 @@
  * All data handling & manipulation should be handled here.
  */
 
-import React, {Component} from 'react';
-import {connect} from 'react-redux';
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
-import {carbonIntensities} from '../../actions/carbonIntensities';
+import { carbonIntensities } from '../../actions/carbonIntensities';
 import Loading from '../../app/components/Loading';
 import Modal from '../../app/components/Modal';
 import history from '../../app/History';
@@ -16,7 +16,7 @@ import CREDIT_CALCULATIONS from '../../constants/routes/CreditCalculations';
 import toastr from '../../utils/toastr';
 
 class CarbonIntensityLimitEditContainer extends Component {
-  constructor(props) {
+  constructor (props) {
     super(props);
 
     this.state = {
@@ -36,25 +36,25 @@ class CarbonIntensityLimitEditContainer extends Component {
     this._handleSubmit = this._handleSubmit.bind(this);
   }
 
-  componentDidMount() {
+  componentDidMount () {
     this.props.getCarbonIntensityLimit(this.props.match.params.id);
   }
 
-  componentWillReceiveProps(props) {
-
+  componentWillReceiveProps (props) {
     if (this.props.carbonIntensityLimit.isUpdating && !props.carbonIntensityLimit.isUpdating) {
       if (props.carbonIntensityLimit.success) {
         history.push(CREDIT_CALCULATIONS.LIST);
-        toastr.fuelCodeSuccess(status, 'Carbon intensity limits saved.');
+        toastr.fuelCodeSuccess(null, 'Carbon intensity limits saved.');
       }
+
       return;
     }
 
     this.loadPropsToFieldState(props);
   }
 
-  loadPropsToFieldState(props) {
-    const {item} = props.carbonIntensityLimit;
+  loadPropsToFieldState (props) {
+    const { item } = props.carbonIntensityLimit;
 
     if (item && !this.loaded) {
       const fieldState = {
@@ -74,10 +74,9 @@ class CarbonIntensityLimitEditContainer extends Component {
     }
   }
 
-  _handleInputChange(event) {
-    const {name} = event.target;
-    const {value} = event.target;
-    const fieldState = {...this.state.fields};
+  _handleInputChange (event) {
+    const { name, value } = event.target;
+    const fieldState = { ...this.state.fields };
 
     if (typeof fieldState[name] === 'object') {
       fieldState[name] = [...event.target.options].filter(o => o.selected).map(o => o.value);
@@ -93,10 +92,10 @@ class CarbonIntensityLimitEditContainer extends Component {
     }
   }
 
-  _handleSubmit(event, status = 'Submitted') {
+  _handleSubmit (event, status = 'Submitted') {
     event.preventDefault();
 
-    const id  = this.props.match.params.id;
+    const { id } = this.props.match.params;
 
     // API data structure
     const data = {
@@ -114,15 +113,13 @@ class CarbonIntensityLimitEditContainer extends Component {
       }
     });
 
-    this.props.updateCarbonIntensityLimit({id, state: data});
-
-    console.log(this.state);
+    this.props.updateCarbonIntensityLimit({ id, state: data });
 
     return true;
   }
 
-  render() {
-    const {item, isFetching, success} = this.props.carbonIntensityLimit;
+  render () {
+    const { item, isFetching, success } = this.props.carbonIntensityLimit;
     const updating = this.props.carbonIntensityLimit.isUpdating;
 
     if (!updating && success && (!isFetching)) {
@@ -146,7 +143,7 @@ class CarbonIntensityLimitEditContainer extends Component {
       ]);
     }
 
-    return <Loading/>;
+    return <Loading />;
   }
 }
 
