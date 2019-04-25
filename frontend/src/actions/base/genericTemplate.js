@@ -1,6 +1,6 @@
-import {createActions, handleActions} from "redux-actions";
 import axios from 'axios';
-import {call, all, put, select, takeLatest} from "redux-saga/effects";
+import { createActions, handleActions } from 'redux-actions';
+import { call, all, put, select, takeLatest } from 'redux-saga/effects';
 
 export const RestActions = [
   'FIND',
@@ -18,20 +18,18 @@ export const RestActions = [
   'REMOVE',
   'REMOVE_SUCCESS',
 
-  'ERROR',
+  'ERROR'
 ];
 
-
 export class GenericRestTemplate {
-
-  constructor(name, baseUrl, stateName) {
+  constructor (name, baseUrl, stateName) {
     this.name = name;
     this.baseUrl = baseUrl;
     this.stateName = stateName;
 
-    let actionCreators = {
-      ...createActions({},
-        ...[...RestActions, ...this.getCustomIdentityActions()],
+    const actionCreators = {
+      ...createActions(
+        {}, ...[...RestActions, ...this.getCustomIdentityActions()],
         {
           prefix: this.name
         }
@@ -67,7 +65,7 @@ export class GenericRestTemplate {
     this.doRemove = this.doRemove.bind(this);
   }
 
-  reducer() {
+  reducer () {
     return handleActions(
       new Map([
         [this.find, (state, action) => ({
@@ -166,123 +164,117 @@ export class GenericRestTemplate {
   }
 
   // override this to register custom actions
-  getCustomIdentityActions() {
+  getCustomIdentityActions () {
     return [];
   }
 
   // override this to register custom reductions
-  getCustomReducerMap() {
+  getCustomReducerMap () {
     return [];
   }
 
   // sagas
-  getCustomSagas() {
+  getCustomSagas () {
     return [];
   }
 
   // to add something to the state tree
-  getCustomDefaultState() {
+  getCustomDefaultState () {
     return {};
   }
 
-  idSelector() {
+  idSelector () {
     const sn = this.stateName;
 
-    return (state) => {
-      return state.rootReducer[sn].id
-    };
+    return state => (state.rootReducer[sn].id);
   }
 
-  createStateSelector() {
+  createStateSelector () {
     const sn = this.stateName;
 
-    return (state) => {
-      return state.rootReducer[sn].createState
-    };
+    return state => (state.rootReducer[sn].createState);
   }
 
-  updateStateSelector() {
+  updateStateSelector () {
     const sn = this.stateName;
 
-    return (state) => {
-      return state.rootReducer[sn].updateState;
-    };
+    return state => (state.rootReducer[sn].updateState);
   }
 
-  doFind() {
+  doFind () {
     return axios.get(this.baseUrl);
-  };
+  }
 
-  * findHandler() {
+  * findHandler () {
     try {
       const response = yield call(this.doFind);
       yield put(this.findSuccess(response.data));
     } catch (error) {
-      yield put(this.error(error.response.data))
+      yield put(this.error(error.response.data));
     }
   }
 
-  doGet(id) {
+  doGet (id) {
     return axios.get(`${this.baseUrl}/${id}`);
   }
 
-  * getHandler() {
-    const id = yield(select(this.idSelector()));
+  * getHandler () {
+    const id = yield (select(this.idSelector()));
+
     try {
       const response = yield call(this.doGet, id);
       yield put(this.getSuccess(response.data));
     } catch (error) {
-      yield put(this.error(error.response.data))
+      yield put(this.error(error.response.data));
     }
-  };
+  }
 
-
-  doUpdate(id, data) {
+  doUpdate (id, data) {
     return axios.put(`${this.baseUrl}/${id}`, data);
   }
 
-  * updateHandler() {
-    const id = yield(select(this.idSelector()));
-    const data = yield(select(this.updateStateSelector()));
+  * updateHandler () {
+    const id = yield (select(this.idSelector()));
+    const data = yield (select(this.updateStateSelector()));
 
     try {
       const response = yield call(this.doUpdate, id, data);
       yield put(this.updateSuccess(response.data));
     } catch (error) {
-      yield put(this.error(error.response.data))
+      yield put(this.error(error.response.data));
     }
-  };
+  }
 
-  doRemove(id) {
+  doRemove (id) {
     return axios.delete(`${this.baseUrl}/${id}`);
   }
 
-  * removeHandler() {
-    const id = yield(select(this.idSelector()));
+  * removeHandler () {
+    const id = yield (select(this.idSelector()));
     try {
       const response = yield call(this.doRemove, id);
       yield put(this.removeSuccess(response.data));
     } catch (error) {
-      yield put(this.error(error.response.data))
+      yield put(this.error(error.response.data));
     }
-  };
+  }
 
-  doCreate(data) {
+  doCreate (data) {
     return axios.post(`${this.baseUrl}`, data);
   }
 
-  * createHandler() {
-    const data = yield(select(this.createStateSelector()));
+  * createHandler () {
+    const data = yield (select(this.createStateSelector()));
 
     try {
       const response = yield call(this.doCreate, data);
       yield put(this.createSuccess(response.data));
     } catch (error) {
-      yield put(this.error(error.response.data))
+      yield put(this.error(error.response.data));
     }
-  };
+  }
 
-  * saga() {
+  * saga () {
     yield all([
       takeLatest(this.find, this.findHandler),
       takeLatest(this.get, this.getHandler),
@@ -291,8 +283,7 @@ export class GenericRestTemplate {
       takeLatest(this.remove, this.removeHandler),
       ...this.getCustomSagas()
     ]);
-
-  };
+  }
 }
 
 export default GenericRestTemplate;
