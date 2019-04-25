@@ -142,6 +142,8 @@ class FuelCodeEditContainer extends Component {
 
     const { id } = this.props.fuelCode.item;
     const fuelCode = this.state.fields.fuelCode.split('.');
+    const approvedFuel = this.props.referenceData.approvedFuels.find(fuel => (
+      fuel.name === this.state.fields.fuel));
 
     // API data structure
     const data = {
@@ -163,7 +165,7 @@ class FuelCodeEditContainer extends Component {
       fuelCodeVersion: fuelCode.length > 0 ? fuelCode[0] : null,
       fuelCodeVersionMinor: fuelCode.length > 1 ? fuelCode[1] : null,
       fuelTransportMode: this.state.fields.fuelTransportMode,
-      renewablePercentage: this.state.fields.renewablePercentage !== '' ? this.state.fields.renewablePercentage : null,
+      renewablePercentage: (this.state.fields.renewablePercentage !== '' && approvedFuel.isPartiallyRenewable) ? this.state.fields.renewablePercentage : null,
       status: this._getFuelCodeStatus(status).id
     };
 

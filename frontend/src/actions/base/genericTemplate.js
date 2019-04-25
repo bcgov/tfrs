@@ -1,6 +1,6 @@
-import {createActions, handleActions} from "redux-actions";
-import axios from "axios";
-import {call, all, put, select, takeLatest} from "redux-saga/effects";
+import axios from 'axios';
+import { createActions, handleActions } from 'redux-actions';
+import { call, all, put, select, takeLatest } from 'redux-saga/effects';
 
 export const RestActions = [
   'FIND',
@@ -15,26 +15,21 @@ export const RestActions = [
   'UPDATE',
   'UPDATE_SUCCESS',
 
-  'PATCH',
-  'PATCH_SUCCESS',
-
   'REMOVE',
   'REMOVE_SUCCESS',
 
-  'ERROR',
+  'ERROR'
 ];
 
-
 export class GenericRestTemplate {
-
-  constructor(name, baseUrl, stateName) {
+  constructor (name, baseUrl, stateName) {
     this.name = name;
     this.baseUrl = baseUrl;
     this.stateName = stateName;
 
-    let actionCreators = {
-      ...createActions({},
-        ...[...RestActions,...this.getCustomIdentityActions()],
+    const actionCreators = {
+      ...createActions(
+        {}, ...[...RestActions, ...this.getCustomIdentityActions()],
         {
           prefix: this.name
         }
@@ -48,60 +43,120 @@ export class GenericRestTemplate {
     this.getCustomIdentityActions = this.getCustomIdentityActions.bind(this);
     this.getCustomDefaultState = this.getCustomDefaultState.bind(this);
 
-    this.saga=this.saga.bind(this);
+    this.saga = this.saga.bind(this);
 
     this.idSelector = this.idSelector.bind(this);
+    this.createStateSelector = this.createStateSelector.bind(this);
+    this.updateStateSelector = this.updateStateSelector.bind(this);
 
-    this.findHandler= this.findHandler.bind(this);
+    this.findHandler = this.findHandler.bind(this);
     this.doFind = this.doFind.bind(this);
 
-    this.getHandler= this.getHandler.bind(this);
+    this.getHandler = this.getHandler.bind(this);
     this.doGet = this.doGet.bind(this);
+
+    this.createHandler = this.createHandler.bind(this);
+    this.doCreate = this.doCreate.bind(this);
+
+    this.updateHandler = this.updateHandler.bind(this);
+    this.doUpdate = this.doUpdate.bind(this);
+
+    this.removeHandler = this.removeHandler.bind(this);
+    this.doRemove = this.doRemove.bind(this);
   }
 
-  reducer() {
+  reducer () {
     return handleActions(
       new Map([
         [this.find, (state, action) => ({
           ...state,
-          isFetching: true,
-          errorMessage: []
+          isFinding: true,
+          errorMessage: {}
         })],
         [this.findSuccess, (state, action) => ({
           ...state,
           items: action.payload,
           receivedAt: Date.now(),
-          isFetching: false,
+          isFinding: false,
           success: true
         })],
         [this.error, (state, action) => ({
           ...state,
           items: [],
-          isFetching: false,
+          isFinding: false,
+          isGetting: false,
+          isCreating: false,
+          isUpdating: false,
+          isRemoving: false,
           success: false,
           errorMessage: action.payload
         })],
         [this.get, (state, action) => ({
           ...state,
           item: null,
-          isFetching: true,
+          isGetting: true,
           id: action.payload
         })],
         [this.getSuccess, (state, action) => ({
           ...state,
           item: action.payload,
-          isFetching: false,
+          isGetting: false,
           success: true
         })],
-          ...this.getCustomReducerMap()
-        ]),
+        [this.create, (state, action) => ({
+          ...state,
+          createState: action.payload,
+          isCreating: true,
+          errorMessage: {}
+        })],
+        [this.createSuccess, (state, action) => ({
+          ...state,
+          item: action.payload,
+          createState: null,
+          receivedAt: Date.now(),
+          isCreating: false,
+          success: true
+        })],
+        [this.update, (state, action) => ({
+          ...state,
+          id: action.payload.id,
+          updateState: action.payload.state,
+          isUpdating: true,
+          errorMessage: {}
+        })],
+        [this.updateSuccess, (state, action) => ({
+          ...state,
+          item: action.payload,
+          updateState: null,
+          receivedAt: Date.now(),
+          isUpdating: false,
+          success: true
+        })],
+        [this.remove, (state, action) => ({
+          ...state,
+          id: action.payload.id,
+          isRemoving: true,
+          errorMessage: {}
+        })],
+        [this.removeSuccess, (state, action) => ({
+          ...state,
+          receivedAt: Date.now(),
+          isRemoving: false,
+          success: true
+        })],
+        ...this.getCustomReducerMap()
+      ]),
       {
         items: [],
         item: null,
         id: null,
-        isFetching: false,
+        isFinding: false,
+        isGetting: false,
+        isCreating: false,
+        isUpdating: false,
+        isRemoving: false,
         success: false,
-        errorMessage: [],
+        errorMessage: {},
         validationErrors: {},
         ...this.getCustomDefaultState()
       }
@@ -109,70 +164,126 @@ export class GenericRestTemplate {
   }
 
   // override this to register custom actions
-  getCustomIdentityActions() {
+  getCustomIdentityActions () {
     return [];
   }
 
   // override this to register custom reductions
-  getCustomReducerMap() {
+  getCustomReducerMap () {
     return [];
   }
 
   // sagas
-  getCustomSagas() {
+  getCustomSagas () {
     return [];
   }
 
   // to add something to the state tree
-  getCustomDefaultState() {
+  getCustomDefaultState () {
     return {};
   }
 
-  idSelector() {
-    const that = this;
+  idSelector () {
+    const sn = this.stateName;
 
-    return (state) => {
-      return state.rootReducer[this.stateName].id
-    };
+    return state => (state.rootReducer[sn].id);
   }
 
-  doFind() {
-    return axios.get(this.baseUrl);
-  };
+  createStateSelector () {
+    const sn = this.stateName;
 
-  * findHandler() {
+    return state => (state.rootReducer[sn].createState);
+  }
+
+  updateStateSelector () {
+    const sn = this.stateName;
+
+    return state => (state.rootReducer[sn].updateState);
+  }
+
+  doFind () {
+    return axios.get(this.baseUrl);
+  }
+
+  * findHandler () {
     try {
       const response = yield call(this.doFind);
       yield put(this.findSuccess(response.data));
     } catch (error) {
-      yield put(this.error(error.response.data))
+      yield put(this.error(error.response.data));
     }
   }
 
-  doGet(id) {
+  doGet (id) {
     return axios.get(`${this.baseUrl}/${id}`);
   }
 
-  * getHandler() {
-    const id = yield(select(this.idSelector()));
+  * getHandler () {
+    const id = yield (select(this.idSelector()));
+
     try {
       const response = yield call(this.doGet, id);
       yield put(this.getSuccess(response.data));
     } catch (error) {
-      yield put(this.error(error.response.data))
+      yield put(this.error(error.response.data));
     }
-  };
+  }
 
-  * saga() {
+  doUpdate (id, data) {
+    return axios.put(`${this.baseUrl}/${id}`, data);
+  }
+
+  * updateHandler () {
+    const id = yield (select(this.idSelector()));
+    const data = yield (select(this.updateStateSelector()));
+
+    try {
+      const response = yield call(this.doUpdate, id, data);
+      yield put(this.updateSuccess(response.data));
+    } catch (error) {
+      yield put(this.error(error.response.data));
+    }
+  }
+
+  doRemove (id) {
+    return axios.delete(`${this.baseUrl}/${id}`);
+  }
+
+  * removeHandler () {
+    const id = yield (select(this.idSelector()));
+    try {
+      const response = yield call(this.doRemove, id);
+      yield put(this.removeSuccess(response.data));
+    } catch (error) {
+      yield put(this.error(error.response.data));
+    }
+  }
+
+  doCreate (data) {
+    return axios.post(`${this.baseUrl}`, data);
+  }
+
+  * createHandler () {
+    const data = yield (select(this.createStateSelector()));
+
+    try {
+      const response = yield call(this.doCreate, data);
+      yield put(this.createSuccess(response.data));
+    } catch (error) {
+      yield put(this.error(error.response.data));
+    }
+  }
+
+  * saga () {
     yield all([
       takeLatest(this.find, this.findHandler),
       takeLatest(this.get, this.getHandler),
+      takeLatest(this.create, this.createHandler),
+      takeLatest(this.update, this.updateHandler),
+      takeLatest(this.remove, this.removeHandler),
       ...this.getCustomSagas()
     ]);
-
-  };
-
+  }
 }
-
 
 export default GenericRestTemplate;

@@ -35,9 +35,21 @@ class FuelCodeFormDetails extends Component {
   }
 
   _togglePartiallyRenewable () {
+    const showPartiallyRenewable = !this.state.showPartiallyRenewable;
+
     this.setState({
-      showPartiallyRenewable: !this.state.showPartiallyRenewable
+      showPartiallyRenewable
     });
+
+    // clear out the renewable percentage when it gets toggled off
+    if (!showPartiallyRenewable) {
+      this.props.handleInputChange({
+        target: {
+          name: 'renewablePercentage',
+          value: ''
+        }
+      });
+    }
   }
 
   render () {

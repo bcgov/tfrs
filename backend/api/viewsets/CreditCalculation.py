@@ -11,26 +11,36 @@ from api.models.EnergyEffectivenessRatioCategory import \
 from api.permissions.CreditCalculation import \
         CreditCalculationPermissions
 from api.serializers.CreditCalculation import \
-        CarbonIntensityLimitSerializer, \
-        DefaultCarbonIntensitySerializer, \
-        EnergyDensitySerializer, \
-        EnergyEffectivenessRatioSerializer
+    CarbonIntensityLimitSerializer, \
+    CarbonIntensityLimitUpdateSerializer, \
+    DefaultCarbonIntensityDetailSerializer, \
+    DefaultCarbonIntensitySerializer, \
+    DefaultCarbonIntensityUpdateSerializer, \
+    EnergyDensityDetailSerializer, \
+    EnergyDensitySerializer, \
+    EnergyDensityUpdateSerializer, \
+    EnergyEffectivenessRatioDetailSerializer, \
+    EnergyEffectivenessRatioSerializer, \
+    EnergyEffectivenessRatioUpdateSerializer
 
 
 class CarbonIntensityLimitViewSet(
-        AuditableMixin, mixins.ListModelMixin, viewsets.GenericViewSet):
+        AuditableMixin, mixins.ListModelMixin, mixins.RetrieveModelMixin,
+        mixins.UpdateModelMixin, viewsets.GenericViewSet):
     """
     This viewset automatically provides `list`
     """
     permission_classes = (CreditCalculationPermissions,)
-    http_method_names = ['get']
+    http_method_names = ['get', 'put']
     queryset = CompliancePeriod.objects.all()
     filter_backends = (filters.OrderingFilter,)
     ordering_fields = '__all__'
     ordering = ('display_order',)
     serializer_class = CarbonIntensityLimitSerializer
     serializer_classes = {
-        'list': CarbonIntensityLimitSerializer
+        'list': CarbonIntensityLimitSerializer,
+        'update': CarbonIntensityLimitUpdateSerializer,
+        'default': CarbonIntensityLimitSerializer
     }
 
     def get_serializer_class(self):
@@ -41,19 +51,23 @@ class CarbonIntensityLimitViewSet(
 
 
 class DefaultCarbonIntensityViewSet(
-        AuditableMixin, mixins.ListModelMixin, viewsets.GenericViewSet):
+        AuditableMixin, mixins.ListModelMixin, mixins.RetrieveModelMixin,
+        mixins.UpdateModelMixin, viewsets.GenericViewSet):
     """
     This viewset automatically provides `list`
     """
     permission_classes = (CreditCalculationPermissions,)
-    http_method_names = ['get']
+    http_method_names = ['get', 'put']
     queryset = DefaultCarbonIntensityCategory.objects.all()
     filter_backends = (filters.OrderingFilter,)
     ordering_fields = '__all__'
     ordering = ('name',)
     serializer_class = DefaultCarbonIntensitySerializer
     serializer_classes = {
-        'list': DefaultCarbonIntensitySerializer
+        'list': DefaultCarbonIntensitySerializer,
+        'default': DefaultCarbonIntensitySerializer,
+        'update': DefaultCarbonIntensityUpdateSerializer,
+        'retrieve': DefaultCarbonIntensityDetailSerializer
     }
 
     def get_serializer_class(self):
@@ -64,19 +78,23 @@ class DefaultCarbonIntensityViewSet(
 
 
 class EnergyDensityViewSet(
-        AuditableMixin, mixins.ListModelMixin, viewsets.GenericViewSet):
+        AuditableMixin, mixins.ListModelMixin, mixins.RetrieveModelMixin,
+        mixins.UpdateModelMixin, viewsets.GenericViewSet):
     """
     This viewset automatically provides `list`
     """
     permission_classes = (CreditCalculationPermissions,)
-    http_method_names = ['get']
+    http_method_names = ['get', 'put']
     queryset = EnergyDensityCategory.objects.all()
     filter_backends = (filters.OrderingFilter,)
     ordering_fields = '__all__'
     ordering = ('name',)
     serializer_class = EnergyDensitySerializer
     serializer_classes = {
-        'list': EnergyDensitySerializer
+        'list': EnergyDensitySerializer,
+        'default': EnergyDensitySerializer,
+        'update': EnergyDensityUpdateSerializer,
+        'retrieve': EnergyDensityDetailSerializer
     }
 
     def get_serializer_class(self):
@@ -87,19 +105,23 @@ class EnergyDensityViewSet(
 
 
 class EnergyEffectivenessRatioViewSet(
-        AuditableMixin, mixins.ListModelMixin, viewsets.GenericViewSet):
+        AuditableMixin, mixins.ListModelMixin, mixins.RetrieveModelMixin,
+        mixins.UpdateModelMixin, viewsets.GenericViewSet):
     """
     This viewset automatically provides `list`
     """
     permission_classes = (CreditCalculationPermissions,)
-    http_method_names = ['get']
+    http_method_names = ['get', 'put']
     queryset = EnergyEffectivenessRatioCategory.objects.all()
     filter_backends = (filters.OrderingFilter,)
     ordering_fields = '__all__'
     ordering = ('name',)
     serializer_class = EnergyEffectivenessRatioSerializer
     serializer_classes = {
-        'list': EnergyEffectivenessRatioSerializer
+        'list': EnergyEffectivenessRatioSerializer,
+        'default': EnergyEffectivenessRatioSerializer,
+        'update': EnergyEffectivenessRatioUpdateSerializer,
+        'retrieve': EnergyEffectivenessRatioDetailSerializer
     }
 
     def get_serializer_class(self):

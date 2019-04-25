@@ -59,17 +59,70 @@ class CarbonIntensityLimitSerializer(serializers.ModelSerializer):
         return {
             "diesel": {
                 "fuel": "Diesel Class",
-                "density": diesel_limit.density if diesel_limit else 0
+                "density": diesel_limit.density if diesel_limit else None,
+                "effective_date":
+                    diesel_limit.effective_date if diesel_limit else None,
+                "expiration_date":
+                    diesel_limit.expiration_date if diesel_limit else None
             },
             "gasoline": {
                 "fuel": "Gasoline Class",
-                "density": gasoline_limit.density if gasoline_limit else 0
+                "density": gasoline_limit.density if gasoline_limit else None,
+                "effective_date":
+                    gasoline_limit.effective_date if gasoline_limit else None,
+                "expiration_date":
+                    gasoline_limit.expiration_date if gasoline_limit else None
             }
         }
 
     class Meta:
         model = CompliancePeriod
         fields = ('id', 'description', 'display_order', 'limits')
+
+
+class CarbonIntensityLimitUpdateSerializer(serializers.Serializer):
+    """
+    Carbon Intensity Limit Update Serializer
+    """
+
+    diesel_carbon_intensity = serializers.FloatField(allow_null=False)
+    diesel_effective_date = serializers.DateField(allow_null=False)
+    diesel_expiration_date = serializers.DateField(allow_null=True, required=False)
+
+    gasoline_carbon_intensity = serializers.FloatField(allow_null=False)
+    gasoline_effective_date = serializers.DateField(allow_null=False)
+    gasoline_expiration_date = serializers.DateField(allow_null=True, required=False)
+
+    def __init__(self, *args, **kwargs):
+        super(CarbonIntensityLimitUpdateSerializer, self).__init__(*args, **kwargs)
+
+    def validate(self, data):
+        return data
+
+    def update(self, instance, validated_data):
+        diesel_limit = CarbonIntensityLimit.objects.filter(
+            compliance_period=instance.id,
+            fuel_class__fuel_class="Diesel"
+        ).first()
+
+        gasoline_limit = CarbonIntensityLimit.objects.filter(
+            compliance_period=instance.id,
+            fuel_class__fuel_class="Gasoline"
+        ).first()
+
+        diesel_limit.density = validated_data['diesel_carbon_intensity']
+        diesel_limit.effective_date = validated_data['diesel_effective_date']
+        if 'diesel_expiration_date' in validated_data:
+            diesel_limit.expiration_date = validated_data['diesel_expiration_date']
+        diesel_limit.save()
+
+        gasoline_limit.density = validated_data['gasoline_carbon_intensity']
+        gasoline_limit.effective_date = validated_data['gasoline_effective_date']
+        if 'gasoline_expiration_date' in validated_data:
+            gasoline_limit.expiration_date = validated_data['gasoline_expiration_date']
+        gasoline_limit.save()
+
+        return validated_data
 
 
 class DefaultCarbonIntensitySerializer(serializers.ModelSerializer):
@@ -82,11 +135,69 @@ class DefaultCarbonIntensitySerializer(serializers.ModelSerializer):
         """
         Gets the Energy Density
         """
-        density = DefaultCarbonIntensity.objects.filter(
+        row = DefaultCarbonIntensity.objects.filter(
             category=obj.id
         ).order_by('-effective_date').first()
 
-        return density.density if density else None
+        return row.density if row else None
+
+    class Meta:
+        model = DefaultCarbonIntensityCategory
+        fields = (
+            'id', 'name', 'density'
+        )
+
+
+class DefaultCarbonIntensityUpdateSerializer(serializers.Serializer):
+    """
+    Default Carbon Intensity Limit Serializer
+    """
+
+    density = serializers.FloatField(allow_null=False)
+    effective_date = serializers.DateField(allow_null=False)
+    expiration_date = serializers.DateField(allow_null=True, required=False)
+
+    def __init__(self, *args, **kwargs):
+        super(DefaultCarbonIntensityUpdateSerializer, self).__init__(*args, **kwargs)
+
+    def validate(self, data):
+        return data
+
+    def update(self, instance, validated_data):
+        row = DefaultCarbonIntensity.objects.filter(
+            category=instance.id
+        ).order_by('-effective_date').first()
+
+        row.density = validated_data['density']
+        row.effective_date = validated_data['effective_date']
+
+        if 'expiration_date' in validated_data:
+            row.expiration_date = validated_data['expiration_date']
+
+        row.save()
+
+        return validated_data
+
+
+class DefaultCarbonIntensityDetailSerializer(serializers.ModelSerializer):
+    """
+    Default Carbon Intensity Detail Serializer
+    """
+    density = serializers.SerializerMethodField()
+
+    def get_density(self, obj):
+        """
+        Gets the Energy Density
+        """
+        row = DefaultCarbonIntensity.objects.filter(
+            category=obj.id
+        ).order_by('-effective_date').first()
+
+        return {
+            "density": row.density if row else None,
+            "effective_date": row.effective_date if row else None,
+            "expiration_date": row.expiration_date if row else None
+        }
 
     class Meta:
         model = DefaultCarbonIntensityCategory
@@ -111,6 +222,77 @@ class EnergyDensitySerializer(serializers.ModelSerializer):
         ).order_by('-effective_date').first()
 
         return density.density if density else None
+
+    def get_unit_of_measure(self, obj):
+        """
+        Gets the unit of measure through the Approved Fuel model.
+        There should never ba case where Approved Fuels falling under the same
+        energy density category having differing unit of measures.
+        """
+        fuel = ApprovedFuel.objects.filter(
+            energy_density_category=obj.id
+        ).first()
+
+        return UnitOfMeasure.objects.get(id=fuel.unit_of_measure_id).name
+
+    class Meta:
+        model = EnergyDensityCategory
+        fields = (
+            'id', 'name', 'density', 'unit_of_measure'
+        )
+
+
+class EnergyDensityUpdateSerializer(serializers.Serializer):
+    """
+    Energy Density Update Serializer
+    """
+
+    density = serializers.FloatField(allow_null=False)
+    effective_date = serializers.DateField(allow_null=False)
+    expiration_date = serializers.DateField(allow_null=True, required=False)
+
+    def __init__(self, *args, **kwargs):
+        super(EnergyDensityUpdateSerializer, self).__init__(*args, **kwargs)
+
+    def validate(self, data):
+        return data
+
+    def update(self, instance, validated_data):
+        row = EnergyDensity.objects.filter(
+            category=instance.id
+        ).order_by('-effective_date').first()
+
+        row.density = validated_data['density']
+        row.effective_date = validated_data['effective_date']
+
+        if 'expiration_date' in validated_data:
+            row.expiration_date = validated_data['expiration_date']
+
+        row.save()
+
+        return validated_data
+
+
+class EnergyDensityDetailSerializer(serializers.ModelSerializer):
+    """
+    Energy Density Detail Serializer
+    """
+    density = serializers.SerializerMethodField()
+    unit_of_measure = serializers.SerializerMethodField()
+
+    def get_density(self, obj):
+        """
+        Gets the Energy Density
+        """
+        row = EnergyDensity.objects.filter(
+            category=obj.id
+        ).order_by('-effective_date').first()
+
+        return {
+            "density": row.density if row else None,
+            "effective_date": row.effective_date if row else None,
+            "expiration_date": row.expiration_date if row else None
+        }
 
     def get_unit_of_measure(self, obj):
         """
@@ -164,4 +346,101 @@ class EnergyEffectivenessRatioSerializer(serializers.ModelSerializer):
         model = EnergyEffectivenessRatioCategory
         fields = (
             'id', 'name', 'diesel_ratio', 'gasoline_ratio'
+        )
+
+
+class EnergyEffectivenessRatioUpdateSerializer(serializers.Serializer):
+    """
+    Energy Effectiveness Ratio Update Serializer
+    """
+
+    diesel_ratio = serializers.FloatField(allow_null=True, required=False)
+    gasoline_ratio = serializers.FloatField(allow_null=True, required=False)
+
+    diesel_effective_date = serializers.DateField(allow_null=True, required=False)
+    diesel_expiration_date = serializers.DateField(allow_null=True, required=False)
+    gasoline_effective_date = serializers.DateField(allow_null=True, required=False)
+    gasoline_expiration_date = serializers.DateField(allow_null=True, required=False)
+
+    def __init__(self, *args, **kwargs):
+        super(EnergyEffectivenessRatioUpdateSerializer, self).__init__(*args, **kwargs)
+
+    def validate(self, data):
+        return data
+
+    def update(self, instance, validated_data):
+        diesel_ratio = EnergyEffectivenessRatio.objects.filter(
+            category=instance.id,
+            fuel_class__fuel_class="Diesel"
+        ).order_by('-effective_date').first()
+
+        gasoline_ratio = EnergyEffectivenessRatio.objects.filter(
+            category=instance.id,
+            fuel_class__fuel_class="Gasoline"
+        ).order_by('-effective_date').first()
+
+        if 'diesel_ratio' in validated_data:
+            diesel_ratio.ratio = validated_data['diesel_ratio']
+            diesel_ratio.effective_date = validated_data['diesel_effective_date']
+
+            if 'diesel_expiration_date' in validated_data:
+                diesel_ratio.expiration_date = validated_data['diesel_expiration_date']
+
+            diesel_ratio.save()
+
+        if 'gasoline_ratio' in validated_data:
+            gasoline_ratio.ratio = validated_data['gasoline_ratio']
+            gasoline_ratio.effective_date = validated_data['gasoline_effective_date']
+
+            if 'gasoline_expiration_date' in validated_data:
+                gasoline_ratio.expiration_date = validated_data['gasoline_expiration_date']
+
+            gasoline_ratio.save()
+
+        return validated_data
+
+
+class EnergyEffectivenessRatioDetailSerializer(serializers.ModelSerializer):
+    """
+    Energy Effectiveness Ratio Detail Serializer
+    """
+    ratios = serializers.SerializerMethodField()
+
+    def get_ratios(self, obj):
+        """
+        Gets the Energy Effectiveness Ratio for Diesel and Gasoline Class
+        """
+        diesel_ratio = EnergyEffectivenessRatio.objects.filter(
+            category=obj.id,
+            fuel_class__fuel_class="Diesel"
+        ).order_by('-effective_date').first()
+
+        gasoline_ratio = EnergyEffectivenessRatio.objects.filter(
+            category=obj.id,
+            fuel_class__fuel_class="Gasoline"
+        ).order_by('-effective_date').first()
+
+        return {
+            "diesel": {
+                "fuel": "Diesel Class",
+                "ratio": diesel_ratio.ratio if diesel_ratio else None,
+                "effective_date":
+                    diesel_ratio.effective_date if diesel_ratio else None,
+                "expiration_date":
+                    diesel_ratio.expiration_date if diesel_ratio else None
+            },
+            "gasoline": {
+                "fuel": "Gasoline Class",
+                "ratio": gasoline_ratio.ratio if gasoline_ratio else None,
+                "effective_date":
+                    gasoline_ratio.effective_date if gasoline_ratio else None,
+                "expiration_date":
+                    gasoline_ratio.expiration_date if gasoline_ratio else None
+            }
+        }
+
+    class Meta:
+        model = EnergyEffectivenessRatioCategory
+        fields = (
+            'id', 'name', 'ratios'
         )
