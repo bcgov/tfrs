@@ -25,10 +25,11 @@ from django.db import models
 
 from api.managers.NameManager import NameManager
 from api.models.mixins.DisplayOrder import DisplayOrder
+from api.models.mixins.EffectiveDates import EffectiveDates
 from auditable.models import Auditable
 
 
-class EnergyEffectivenessRatioCategory(Auditable, DisplayOrder):
+class EnergyEffectivenessRatioCategory(Auditable, DisplayOrder, EffectiveDates):
     """
     List of 'categories' used to classify the fuels for energy
     effectiveness ratio
