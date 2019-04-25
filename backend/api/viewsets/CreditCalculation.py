@@ -12,13 +12,16 @@ from api.permissions.CreditCalculation import \
         CreditCalculationPermissions
 from api.serializers.CreditCalculation import \
     CarbonIntensityLimitSerializer, \
-    DefaultCarbonIntensitySerializer, \
+    CarbonIntensityLimitUpdateSerializer, \
     DefaultCarbonIntensityDetailSerializer, \
-    EnergyDensitySerializer, \
+    DefaultCarbonIntensitySerializer, \
+    DefaultCarbonIntensityUpdateSerializer, \
     EnergyDensityDetailSerializer, \
+    EnergyDensitySerializer, \
+    EnergyDensityUpdateSerializer, \
+    EnergyEffectivenessRatioDetailSerializer, \
     EnergyEffectivenessRatioSerializer, \
-    EnergyEffectivenessRatioDetailSerializer, CarbonIntensityLimitUpdateSerializer, \
-    EnergyEffectivenessRatioUpdateSerializer, EnergyDensityUpdateSerializer, DefaultCarbonIntensityUpdateSerializer
+    EnergyEffectivenessRatioUpdateSerializer
 
 
 class CarbonIntensityLimitViewSet(
@@ -49,7 +52,7 @@ class CarbonIntensityLimitViewSet(
 
 class DefaultCarbonIntensityViewSet(
         AuditableMixin, mixins.ListModelMixin, mixins.RetrieveModelMixin,
-        mixins.UpdateModelMixin,viewsets.GenericViewSet):
+        mixins.UpdateModelMixin, viewsets.GenericViewSet):
     """
     This viewset automatically provides `list`
     """

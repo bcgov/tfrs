@@ -41,13 +41,12 @@ class DefaultCarbonIntensityEditContainer extends Component {
     if (this.props.defaultCarbonIntensity.isUpdating && !props.defaultCarbonIntensity.isUpdating) {
       if (props.defaultCarbonIntensity.success) {
         history.push(CREDIT_CALCULATIONS.LIST);
-        toastr.fuelCodeSuccess(status, 'Default Carbon Intensity saved.');
+        toastr.fuelCodeSuccess(null, 'Default Carbon Intensity saved.');
       }
       return;
     }
 
     this.loadPropsToFieldState(props);
-
   }
 
   loadPropsToFieldState (props) {
@@ -90,7 +89,7 @@ class DefaultCarbonIntensityEditContainer extends Component {
   _handleSubmit (event, status = 'Submitted') {
     event.preventDefault();
 
-    const id  = this.props.match.params.id;
+    const { id } = this.props.match.params;
 
     // API data structure
     const data = {
@@ -105,7 +104,7 @@ class DefaultCarbonIntensityEditContainer extends Component {
       }
     });
 
-    this.props.updateDefaultCarbonIntensity({id, state: data});
+    this.props.updateDefaultCarbonIntensity({ id, state: data });
 
     return true;
   }

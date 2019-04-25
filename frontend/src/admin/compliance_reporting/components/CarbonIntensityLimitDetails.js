@@ -24,61 +24,60 @@ const CarbonIntensityLimitDetails = props => (
         </div>
       </div>
 
-      <div className="row">
-        <div className="col-sm-6">
-          <div className="form-group">
-            <label htmlFor="fuel-code">Carbon Intensity Limit for Diesel Class Fuel:
-              <div className="value">{props.item.limits.diesel.density}</div>
-            </label>
+      {props.item.limits && [
+        <div className="row" key="limits-diesel">
+          <div className="col-sm-6">
+            <div className="form-group">
+              <label htmlFor="fuel-code">Carbon Intensity Limit for Diesel Class Fuel:
+                <div className="value">{props.item.limits.diesel.density}</div>
+              </label>
+            </div>
           </div>
-        </div>
-      </div>
+        </div>,
+        <div className="row" key="limits-diesel-effective-date">
+          <div className="col-sm-3">
+            <div className="form-group">
+              <label htmlFor="effective-date">Effective Date:
+                <div className="value">{props.item.limits.diesel.effectiveDate}</div>
+              </label>
+            </div>
+          </div>
 
-      <div className="row">
-        <div className="col-sm-3">
-          <div className="form-group">
-            <label htmlFor="effective-date">Effective Date:
-              <div className="value">{props.item.limits.diesel.effectiveDate}</div>
-            </label>
+          <div className="col-sm-3">
+            <div className="form-group">
+              <label htmlFor="expiry-date">Expiration Date:
+                <div className="value">{props.item.limits.diesel.expirationDate}</div>
+              </label>
+            </div>
           </div>
-        </div>
+        </div>,
+        <div className="row" key="limits-gasoline">
+          <div className="col-sm-6">
+            <div className="form-group">
+              <label htmlFor="fuel-code">Carbon Intensity Limit for Gasoline Class Fuel:
+                <div className="value">{props.item.limits.gasoline.density}</div>
+              </label>
+            </div>
+          </div>
+        </div>,
+        <div className="row" key="limits-gasoline-effective-date">
+          <div className="col-sm-3">
+            <div className="form-group">
+              <label htmlFor="effective-date">Effective Date:
+                <div className="value">{props.item.limits.gasoline.effectiveDate}</div>
+              </label>
+            </div>
+          </div>
 
-        <div className="col-sm-3">
-          <div className="form-group">
-            <label htmlFor="expiry-date">Expiration Date:
-              <div className="value">{props.item.limits.diesel.expirationDate}</div>
-            </label>
+          <div className="col-sm-3">
+            <div className="form-group">
+              <label htmlFor="expiry-date">Expiration Date:
+                <div className="value">{props.item.limits.gasoline.expirationDate}</div>
+              </label>
+            </div>
           </div>
         </div>
-      </div>
-
-      <div className="row">
-        <div className="col-sm-6">
-          <div className="form-group">
-            <label htmlFor="fuel-code">Carbon Intensity Limit for Gasoline Class Fuel:
-              <div className="value">{props.item.limits.gasoline.density}</div>
-            </label>
-          </div>
-        </div>
-      </div>
-
-      <div className="row">
-        <div className="col-sm-3">
-          <div className="form-group">
-            <label htmlFor="effective-date">Effective Date:
-              <div className="value">{props.item.limits.gasoline.effectiveDate}</div>
-            </label>
-          </div>
-        </div>
-
-        <div className="col-sm-3">
-          <div className="form-group">
-            <label htmlFor="expiry-date">Expiration Date:
-              <div className="value">{props.item.limits.gasoline.expirationDate}</div>
-            </label>
-          </div>
-        </div>
-      </div>
+      ]}
     </div>
 
     <div className="btn-container">
