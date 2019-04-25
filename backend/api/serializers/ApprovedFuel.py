@@ -46,6 +46,9 @@ class ApprovedFuelSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = ApprovedFuel
-        fields = 'id', 'name', 'description', 'fuel_classes'
+        fields = 'id', 'name', 'description', 'fuel_classes', \
+            'is_partially_renewable'
 
-        read_only_fields = ('id', 'name', 'description')
+        read_only_fields = (
+            'id', 'name', 'description', 'is_partially_renewable'
+        )

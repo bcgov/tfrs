@@ -67,7 +67,7 @@ class FuelCodeSerializer(serializers.ModelSerializer):
             'feedstock_location', 'feedstock_misc', 'feedstock_transport_mode',
             'former_company', 'fuel', 'fuel_code', 'fuel_code_version',
             'fuel_code_version_minor', 'fuel_transport_mode', 'id', 'status',
-            'update_timestamp', 'update_user'
+            'renewable_percentage', 'update_timestamp', 'update_user'
         )
 
         read_only_fields = (
@@ -77,7 +77,7 @@ class FuelCodeSerializer(serializers.ModelSerializer):
             'feedstock_location', 'feedstock_misc', 'feedstock_transport_mode',
             'former_company', 'fuel', 'fuel_code', 'fuel_code_version',
             'fuel_code_version_minor', 'fuel_transport_mode', 'id', 'status',
-            'update_timestamp', 'update_user'
+            'renewable_percentage', 'update_timestamp', 'update_user'
         )
 
 
