@@ -208,11 +208,15 @@ class FuelCodeSaveSerializer(serializers.ModelSerializer):
     def validate(self, data):
         """
         Checks that the expiry date is after the effective date.
+        Also, checks if the renewable percentage should be cleared.
         """
         if data['expiry_date'] < data['effective_date']:
             raise serializers.ValidationError({
                 'invalid': "The expiry date precedes the effective date"
             })
+
+        if not data.get('renewable_percentage', None):
+            data['renewable_percentage'] = None
 
         return data
 
