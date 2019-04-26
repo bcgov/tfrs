@@ -5,9 +5,8 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
 
-import { getRoles } from '../actions/roleActions';
+import { roles } from '../actions/roleActions';
 import OrganizationDetails from './components/OrganizationDetails';
 import OrganizationRoles from './components/OrganizationRoles';
 
@@ -71,7 +70,7 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  getRoles: bindActionCreators(getRoles, dispatch)
+  getRoles: roles.find
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(OrganizationRolesContainer);
