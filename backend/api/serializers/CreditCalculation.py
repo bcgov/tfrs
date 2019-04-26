@@ -396,36 +396,53 @@ class EnergyEffectivenessRatioUpdateSerializer(serializers.Serializer):
             *args, **kwargs
         )
 
-    def validate(self, data):
-        return data
-
     def update(self, instance, validated_data):
+        request = self.context.get('request')
+
         diesel_ratio = EnergyEffectivenessRatio.objects.filter(
             category=instance.id,
             fuel_class__fuel_class="Diesel"
-        ).order_by('-effective_date').first()
+        ).order_by('-effective_date', '-update_timestamp').first()
 
         gasoline_ratio = EnergyEffectivenessRatio.objects.filter(
             category=instance.id,
             fuel_class__fuel_class="Gasoline"
-        ).order_by('-effective_date').first()
+        ).order_by('-effective_date', '-update_timestamp').first()
 
         if 'diesel_ratio' in validated_data:
-            diesel_ratio.ratio = validated_data['diesel_ratio']
-            diesel_ratio.effective_date = validated_data['diesel_effective_date']
+            new_ratio = EnergyEffectivenessRatio.objects.create(
+                category_id=instance.id,
+                create_user=request.user,
+                effective_date=validated_data['diesel_effective_date'],
+                fuel_class_id=diesel_ratio.fuel_class_id,
+                ratio=validated_data['diesel_ratio'],
+                update_user=request.user
+            )
 
-            if 'diesel_expiration_date' in validated_data:
-                diesel_ratio.expiration_date = validated_data['diesel_expiration_date']
+            expiration_date = new_ratio.effective_date - timedelta(days=1)
+            if expiration_date < diesel_ratio.effective_date:
+                expiration_date = diesel_ratio.effective_date
 
+            diesel_ratio.expiration_date = expiration_date
+            diesel_ratio.update_user = request.user
             diesel_ratio.save()
 
         if 'gasoline_ratio' in validated_data:
-            gasoline_ratio.ratio = validated_data['gasoline_ratio']
-            gasoline_ratio.effective_date = validated_data['gasoline_effective_date']
+            new_ratio = EnergyEffectivenessRatio.objects.create(
+                category_id=instance.id,
+                create_user=request.user,
+                effective_date=validated_data['gasoline_effective_date'],
+                fuel_class_id=gasoline_ratio.fuel_class_id,
+                ratio=validated_data['gasoline_ratio'],
+                update_user=request.user
+            )
 
-            if 'gasoline_expiration_date' in validated_data:
-                gasoline_ratio.expiration_date = validated_data['gasoline_expiration_date']
+            expiration_date = new_ratio.effective_date - timedelta(days=1)
+            if expiration_date < gasoline_ratio.effective_date:
+                expiration_date = gasoline_ratio.effective_date
 
+            gasoline_ratio.expiration_date = expiration_date
+            gasoline_ratio.update_user = request.user
             gasoline_ratio.save()
 
         return validated_data
