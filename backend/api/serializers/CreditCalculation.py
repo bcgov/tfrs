@@ -20,6 +20,7 @@
     See the License for the specific language governing permissions and
     limitations under the License.
 """
+from datetime import timedelta
 from rest_framework import serializers
 
 from api.models.ApprovedFuel import ApprovedFuel
@@ -164,16 +165,26 @@ class DefaultCarbonIntensityUpdateSerializer(serializers.Serializer):
         return data
 
     def update(self, instance, validated_data):
+        request = self.context.get('request')
+
         row = DefaultCarbonIntensity.objects.filter(
             category=instance.id
-        ).order_by('-effective_date').first()
+        ).order_by('-effective_date', '-update_timestamp').first()
 
-        row.density = validated_data['density']
-        row.effective_date = validated_data['effective_date']
+        new_intensity = DefaultCarbonIntensity.objects.create(
+            category_id=instance.id,
+            density=validated_data['density'],
+            effective_date=validated_data['effective_date'],
+            create_user=request.user,
+            update_user=request.user
+        )
 
-        if 'expiration_date' in validated_data:
-            row.expiration_date = validated_data['expiration_date']
+        expiration_date = new_intensity.effective_date - timedelta(days=1)
+        if expiration_date < row.effective_date:
+            expiration_date = row.effective_date
 
+        row.expiration_date = expiration_date
+        row.update_user = request.user
         row.save()
 
         return validated_data
@@ -254,20 +265,27 @@ class EnergyDensityUpdateSerializer(serializers.Serializer):
     def __init__(self, *args, **kwargs):
         super(EnergyDensityUpdateSerializer, self).__init__(*args, **kwargs)
 
-    def validate(self, data):
-        return data
-
     def update(self, instance, validated_data):
+        request = self.context.get('request')
+
         row = EnergyDensity.objects.filter(
             category=instance.id
-        ).order_by('-effective_date').first()
+        ).order_by('-effective_date', '-update_timestamp').first()
 
-        row.density = validated_data['density']
-        row.effective_date = validated_data['effective_date']
+        new_density = EnergyDensity.objects.create(
+            category_id=instance.id,
+            density=validated_data['density'],
+            effective_date=validated_data['effective_date'],
+            create_user=request.user,
+            update_user=request.user
+        )
 
-        if 'expiration_date' in validated_data:
-            row.expiration_date = validated_data['expiration_date']
+        expiration_date = new_density.effective_date - timedelta(days=1)
+        if expiration_date < row.effective_date:
+            expiration_date = row.effective_date
 
+        row.expiration_date = expiration_date
+        row.update_user = request.user
         row.save()
 
         return validated_data
@@ -354,16 +372,29 @@ class EnergyEffectivenessRatioUpdateSerializer(serializers.Serializer):
     Energy Effectiveness Ratio Update Serializer
     """
 
-    diesel_ratio = serializers.FloatField(allow_null=True, required=False)
-    gasoline_ratio = serializers.FloatField(allow_null=True, required=False)
-
-    diesel_effective_date = serializers.DateField(allow_null=True, required=False)
-    diesel_expiration_date = serializers.DateField(allow_null=True, required=False)
-    gasoline_effective_date = serializers.DateField(allow_null=True, required=False)
-    gasoline_expiration_date = serializers.DateField(allow_null=True, required=False)
+    diesel_ratio = serializers.FloatField(
+        allow_null=True, required=False
+    )
+    gasoline_ratio = serializers.FloatField(
+        allow_null=True, required=False
+    )
+    diesel_effective_date = serializers.DateField(
+        allow_null=True, required=False
+    )
+    diesel_expiration_date = serializers.DateField(
+        allow_null=True, required=False
+    )
+    gasoline_effective_date = serializers.DateField(
+        allow_null=True, required=False
+    )
+    gasoline_expiration_date = serializers.DateField(
+        allow_null=True, required=False
+    )
 
     def __init__(self, *args, **kwargs):
-        super(EnergyEffectivenessRatioUpdateSerializer, self).__init__(*args, **kwargs)
+        super(EnergyEffectivenessRatioUpdateSerializer, self).__init__(
+            *args, **kwargs
+        )
 
     def validate(self, data):
         return data

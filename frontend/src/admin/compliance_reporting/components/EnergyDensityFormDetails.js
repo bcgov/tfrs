@@ -122,11 +122,11 @@ EnergyDensityFormDetails.propTypes = {
   }).isRequired,
   handleInputChange: PropTypes.func.isRequired,
   item: PropTypes.shape({
-    density: PropTypes.shape({
+    density: PropTypes.oneOfType(PropTypes.shape({
       density: PropTypes.number,
       effectiveDate: PropTypes.string,
       expirationDate: PropTypes.string
-    }),
+    }), PropTypes.number),
     name: PropTypes.string,
     unitOfMeasure: PropTypes.string
   }).isRequired
