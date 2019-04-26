@@ -3,22 +3,21 @@
  * All data handling & manipulation should be handled here.
  */
 import PropTypes from 'prop-types';
-import React, {Component} from 'react';
-import {connect} from 'react-redux';
-import {bindActionCreators} from 'redux';
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
 
 import Modal from '../../app/components/Modal';
 import history from '../../app/History';
-import {getFuelSuppliers, getOrganization} from '../../actions/organizationActions';
-import {roles} from '../../actions/roleActions';
+import { getFuelSuppliers, getOrganization } from '../../actions/organizationActions';
+import { roles } from '../../actions/roleActions';
 import UserForm from './components/UserForm';
-import {USERS as ADMIN_USERS} from '../../constants/routes/Admin';
+import { USERS as ADMIN_USERS } from '../../constants/routes/Admin';
 import USERS from '../../constants/routes/Users';
 import toastr from '../../utils/toastr';
-import {clearUsersRequestError, createUser} from '../../actions/userActions';
+import { clearUsersRequestError, createUser } from '../../actions/userActions';
 
 class UserAddContainer extends Component {
-  constructor(props) {
+  constructor (props) {
     super(props);
 
     this.state = {
@@ -45,12 +44,12 @@ class UserAddContainer extends Component {
     this._toggleCheck = this._toggleCheck.bind(this);
   }
 
-  componentDidMount() {
+  componentDidMount () {
     this.props.clearUsersRequestError();
     this.loadData();
   }
 
-  componentWillReceiveProps(nextProps) {
+  componentWillReceiveProps (nextProps) {
     if (nextProps.organization.id !== this.props.organization.id) {
       this.setState({
         fields: {
@@ -61,7 +60,7 @@ class UserAddContainer extends Component {
     }
   }
 
-  loadData() {
+  loadData () {
     if (this.props.match.params.organizationId) {
       this.props.getOrganization(this.props.match.params.organizationId);
     } else {
@@ -88,8 +87,8 @@ class UserAddContainer extends Component {
     }
   }
 
-  _addToFields(value) {
-    const fieldState = {...this.state.fields};
+  _addToFields (value) {
+    const fieldState = { ...this.state.fields };
 
     if (value &&
       fieldState.roles.findIndex(role => (role.id === value.id)) < 0) {
@@ -101,9 +100,9 @@ class UserAddContainer extends Component {
     });
   }
 
-  _handleInputChange(event) {
-    const {value, name} = event.target;
-    const fieldState = {...this.state.fields};
+  _handleInputChange (event) {
+    const { value, name } = event.target;
+    const fieldState = { ...this.state.fields };
 
     if (['keycloakEmail', 'externalUsername'].indexOf(name) >= 0) {
       fieldState.userCreationRequest[name] = value;
@@ -116,7 +115,7 @@ class UserAddContainer extends Component {
     });
   }
 
-  _handleSubmit(event) {
+  _handleSubmit (event) {
     event.preventDefault();
 
     // API data structure
@@ -157,8 +156,8 @@ class UserAddContainer extends Component {
     return true;
   }
 
-  _toggleCheck(key) {
-    const fieldState = {...this.state.fields};
+  _toggleCheck (key) {
+    const fieldState = { ...this.state.fields };
     const index = fieldState.roles.findIndex(role => role.id === key);
 
     if (index < 0) {
@@ -175,16 +174,16 @@ class UserAddContainer extends Component {
     });
   }
 
-  changeObjectProp(id, name) {
-    const fieldState = {...this.state.fields};
+  changeObjectProp (id, name) {
+    const fieldState = { ...this.state.fields };
 
-    fieldState[name] = {id: id || 0};
+    fieldState[name] = { id: id || 0 };
     this.setState({
       fields: fieldState
     });
   }
 
-  render() {
+  render () {
     return ([
       <UserForm
         addToFields={this._addToFields}
