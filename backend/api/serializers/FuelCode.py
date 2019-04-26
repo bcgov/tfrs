@@ -151,6 +151,14 @@ class FuelCodeCreateSerializer(serializers.ModelSerializer):
                 'invalid': "The expiry date precedes the effective date"
             })
 
+        approved_fuel = data.get('fuel', None)
+
+        if not approved_fuel.is_partially_renewable:
+            data['renewable_percentage'] = None
+
+        if not data.get('renewable_percentage', None):
+            data['renewable_percentage'] = None
+
         return data
 
     def create(self, validated_data):
@@ -214,6 +222,11 @@ class FuelCodeSaveSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError({
                 'invalid': "The expiry date precedes the effective date"
             })
+
+        approved_fuel = data.get('fuel', None)
+
+        if not approved_fuel.is_partially_renewable:
+            data['renewable_percentage'] = None
 
         if not data.get('renewable_percentage', None):
             data['renewable_percentage'] = None
