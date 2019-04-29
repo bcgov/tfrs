@@ -124,3 +124,27 @@ class TestCreditCalculation(BaseTestCase):
             elif row["name"] == "Propane":
                 self.assertEqual(row["dieselRatio"], None)
                 self.assertEqual(row["gasolineRatio"], None)
+
+    def test_update_energy_effectiveness_ratio(self):
+        """
+        Test that the energy effectiveness ratio shows up properly
+        """
+        response = self.clients['gov_analyst'].get(
+            "/api/credit_calculation/energy_effectiveness_ratios"
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        response_data = json.loads(response.content.decode("utf-8"))
+
+        for row in response_data:
+            if row["name"] == "CNG":
+                self.assertEqual(row["dieselRatio"], 0.9)
+
+            elif row["name"] == "LNG":
+                self.assertEqual(row["dieselRatio"], 1.0)
+                self.assertEqual(row["gasolineRatio"], None)
+
+            elif row["name"] == "Propane":
+                self.assertEqual(row["dieselRatio"], None)
+                self.assertEqual(row["gasolineRatio"], None)
