@@ -21,6 +21,7 @@
     limitations under the License.
 """
 from datetime import timedelta
+from django.db.models import F
 from rest_framework import serializers
 
 from api.models.ApprovedFuel import ApprovedFuel
@@ -50,12 +51,14 @@ class CarbonIntensityLimitSerializer(serializers.ModelSerializer):
         diesel_limit = CarbonIntensityLimit.objects.filter(
             compliance_period=obj.id,
             fuel_class__fuel_class="Diesel"
-        ).first()
+        ).exclude(
+            expiration_date=F('effective_date')
+        ).order_by('-effective_date').first()
 
         gasoline_limit = CarbonIntensityLimit.objects.filter(
             compliance_period=obj.id,
             fuel_class__fuel_class="Gasoline"
-        ).first()
+        ).order_by('-effective_date').first()
 
         return {
             "diesel": {
@@ -88,11 +91,13 @@ class CarbonIntensityLimitUpdateSerializer(serializers.Serializer):
 
     diesel_carbon_intensity = serializers.FloatField(allow_null=False)
     diesel_effective_date = serializers.DateField(allow_null=False)
-    diesel_expiration_date = serializers.DateField(allow_null=True, required=False)
+    diesel_expiration_date = serializers.DateField(
+        allow_null=True, required=False)
 
     gasoline_carbon_intensity = serializers.FloatField(allow_null=False)
     gasoline_effective_date = serializers.DateField(allow_null=False)
-    gasoline_expiration_date = serializers.DateField(allow_null=True, required=False)
+    gasoline_expiration_date = serializers.DateField(
+        allow_null=True, required=False)
 
     def __init__(self, *args, **kwargs):
         super(CarbonIntensityLimitUpdateSerializer, self).__init__(*args, **kwargs)
@@ -101,6 +106,8 @@ class CarbonIntensityLimitUpdateSerializer(serializers.Serializer):
         return data
 
     def update(self, instance, validated_data):
+        request = self.context.get('request')
+
         diesel_limit = CarbonIntensityLimit.objects.filter(
             compliance_period=instance.id,
             fuel_class__fuel_class="Diesel"
@@ -111,17 +118,41 @@ class CarbonIntensityLimitUpdateSerializer(serializers.Serializer):
             fuel_class__fuel_class="Gasoline"
         ).first()
 
-        diesel_limit.density = validated_data['diesel_carbon_intensity']
-        diesel_limit.effective_date = validated_data['diesel_effective_date']
-        if 'diesel_expiration_date' in validated_data:
-            diesel_limit.expiration_date = validated_data['diesel_expiration_date']
-        diesel_limit.save()
+        if 'diesel_carbon_intensity' in validated_data:
+            new_density = CarbonIntensityLimit.objects.create(
+                compliance_period=instance,
+                create_user=request.user,
+                density=validated_data['diesel_carbon_intensity'],
+                effective_date=validated_data['diesel_effective_date'],
+                fuel_class_id=diesel_limit.fuel_class_id,
+                update_user=request.user
+            )
 
-        gasoline_limit.density = validated_data['gasoline_carbon_intensity']
-        gasoline_limit.effective_date = validated_data['gasoline_effective_date']
-        if 'gasoline_expiration_date' in validated_data:
-            gasoline_limit.expiration_date = validated_data['gasoline_expiration_date']
-        gasoline_limit.save()
+            expiration_date = new_density.effective_date - timedelta(days=1)
+            if expiration_date < diesel_limit.effective_date:
+                expiration_date = diesel_limit.effective_date
+
+            diesel_limit.expiration_date = expiration_date
+            diesel_limit.update_user = request.user
+            diesel_limit.save()
+
+        if 'gasoline_carbon_intensity' in validated_data:
+            new_density = CarbonIntensityLimit.objects.create(
+                compliance_period=instance,
+                create_user=request.user,
+                density=validated_data['gasoline_carbon_intensity'],
+                effective_date=validated_data['gasoline_effective_date'],
+                fuel_class_id=gasoline_limit.fuel_class_id,
+                update_user=request.user
+            )
+
+            expiration_date = new_density.effective_date - timedelta(days=1)
+            if expiration_date < gasoline_limit.effective_date:
+                expiration_date = gasoline_limit.effective_date
+
+            gasoline_limit.expiration_date = expiration_date
+            gasoline_limit.update_user = request.user
+            gasoline_limit.save()
 
         return validated_data
 
@@ -138,6 +169,8 @@ class DefaultCarbonIntensitySerializer(serializers.ModelSerializer):
         """
         row = DefaultCarbonIntensity.objects.filter(
             category=obj.id
+        ).exclude(
+            expiration_date=F('effective_date')
         ).order_by('-effective_date').first()
 
         return row.density if row else None
@@ -202,6 +235,8 @@ class DefaultCarbonIntensityDetailSerializer(serializers.ModelSerializer):
         """
         row = DefaultCarbonIntensity.objects.filter(
             category=obj.id
+        ).exclude(
+            expiration_date=F('effective_date')
         ).order_by('-effective_date').first()
 
         return {
@@ -230,6 +265,8 @@ class EnergyDensitySerializer(serializers.ModelSerializer):
         """
         density = EnergyDensity.objects.filter(
             category=obj.id
+        ).exclude(
+            expiration_date=F('effective_date')
         ).order_by('-effective_date').first()
 
         return density.density if density else None
@@ -304,6 +341,8 @@ class EnergyDensityDetailSerializer(serializers.ModelSerializer):
         """
         row = EnergyDensity.objects.filter(
             category=obj.id
+        ).exclude(
+            expiration_date=F('effective_date')
         ).order_by('-effective_date').first()
 
         return {
@@ -345,6 +384,8 @@ class EnergyEffectivenessRatioSerializer(serializers.ModelSerializer):
         diesel_ratio = EnergyEffectivenessRatio.objects.filter(
             category=obj.id,
             fuel_class__fuel_class="Diesel"
+        ).exclude(
+            expiration_date=F('effective_date')
         ).order_by('-effective_date').first()
 
         return diesel_ratio.ratio if diesel_ratio else None
@@ -356,6 +397,8 @@ class EnergyEffectivenessRatioSerializer(serializers.ModelSerializer):
         gasoline_ratio = EnergyEffectivenessRatio.objects.filter(
             category=obj.id,
             fuel_class__fuel_class="Gasoline"
+        ).exclude(
+            expiration_date=F('effective_date')
         ).order_by('-effective_date').first()
 
         return gasoline_ratio.ratio if gasoline_ratio else None
@@ -461,11 +504,15 @@ class EnergyEffectivenessRatioDetailSerializer(serializers.ModelSerializer):
         diesel_ratio = EnergyEffectivenessRatio.objects.filter(
             category=obj.id,
             fuel_class__fuel_class="Diesel"
+        ).exclude(
+            expiration_date=F('effective_date')
         ).order_by('-effective_date').first()
 
         gasoline_ratio = EnergyEffectivenessRatio.objects.filter(
             category=obj.id,
             fuel_class__fuel_class="Gasoline"
+        ).exclude(
+            expiration_date=F('effective_date')
         ).order_by('-effective_date').first()
 
         return {
