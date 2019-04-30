@@ -17,6 +17,17 @@
     margin-left: -15px;
     margin-right: -15px;
   }
+
+  .partially-renewable {
+    * {
+      display: inline-block;
+      vertical-align: middle;  
+    }
+
+    .value {
+      font-weight: bold;
+    }
+  }
 }
 
 .page-fuel-codes {
@@ -47,7 +58,7 @@
       font-weight: bold;
       min-height: 2.5rem;
       padding: 0.5rem 1rem;
-    }  
+    }
   }
 }
 

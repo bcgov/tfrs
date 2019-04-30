@@ -3,7 +3,6 @@
  */
 import React from 'react';
 import PropTypes from 'prop-types';
-import ReactTable from 'react-table';
 import 'react-table/react-table.css';
 import FontAwesomeIcon from '@fortawesome/react-fontawesome';
 import moment from 'moment';
@@ -13,7 +12,7 @@ import history from '../../app/History';
 import NOTIFICATION_TYPES from '../../constants/notificationTypes';
 import CREDIT_TRANSACTIONS from '../../constants/routes/CreditTransactions';
 import SECURE_DOCUMENT_UPLOAD from '../../constants/routes/SecureDocumentUpload';
-import StateSavingReactTable from "../../app/components/StateSavingReactTable";
+import ReactTable from '../../app/components/StateSavingReactTable';
 
 const NotificationsTable = (props) => {
   const columns = [{
@@ -155,7 +154,7 @@ const NotificationsTable = (props) => {
   const filterable = true;
 
   return (
-    <StateSavingReactTable
+    <ReactTable
       stateKey="notifications"
       className="searchable"
       columns={columns}

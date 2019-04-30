@@ -75,6 +75,23 @@ const FuelCodeDetails = props => (
             </label>
           </div>
         </div>
+
+        {props.item.renewablePercentage && props.item.renewablePercentage.length > 0 && [
+          <div className="col-sm-6 col-lg-2" key="is-partially-renewable">
+            <div className="form-group">
+              <label htmlFor="fuel">Is Partially Renewable?
+                <div className="value">Yes</div>
+              </label>
+            </div>
+          </div>,
+          <div className="col-sm-6 col-lg-4" key="renewable-percentage">
+            <div className="form-group">
+              <label htmlFor="fuel">Percentage of Part 2 fuel that is renewable (%):
+                <div className="value">{props.item.renewablePercentage}%</div>
+              </label>
+            </div>
+          </div>
+        ]}
       </div>
 
       <div className="row">
@@ -208,6 +225,7 @@ FuelCodeDetails.propTypes = {
     fuelCodeVersionMinor: PropTypes.number,
     fuelTransportMode: PropTypes.arrayOf(PropTypes.string),
     id: PropTypes.number,
+    renewablePercentage: PropTypes.string,
     status: PropTypes.shape({
       status: PropTypes.string
     })
