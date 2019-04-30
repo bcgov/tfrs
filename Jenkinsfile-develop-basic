@@ -35,13 +35,8 @@ def prepareBuildBackend() {
                 openshift.withCluster() {
                     openshift.withProject("mem-tfrs-tools") {
                         waitUntil {
-                            def buildtemplate = openshift.process("-f",
-                                "openshift/backend.bc.json",
-                                "ENV_NAME=${devSuffix}",
-                                "NAME_SUFFIX=-${devSuffix}-${prNumber}",
-                                "APP_IMAGE_TAG=${prNumber}",
-                                "SOURCE_REPOSITORY_URL=${repository}",
-                                "SOURCE_REPOSITORY_REF=pull/${CHANGE_ID}/head"
+                            def backendBuild = openshift.selector("bc", "tfrs-develop")
+                            backendBuild.startBuild("--wait").logs("-f")
                             )
                         } //end of waitUntil
                     } //end of openshift.withProject
@@ -223,9 +218,8 @@ node("develop-maven-${env.BUILD_NUMBER}") {
         }
     }
 ****/
-
-    //run frontend builds
-    for (builds in frontendBuildStages) {
+    //run backend builds
+    for (builds in backendBuildStages) {
         if (runParallel) {
             parallel(builds)
         } else {
@@ -235,9 +229,9 @@ node("develop-maven-${env.BUILD_NUMBER}") {
             }
         }
     }
-
-    //run backend builds
-    for (builds in backendBuildStages) {
+    
+    //run frontend builds
+    for (builds in frontendBuildStages) {
         if (runParallel) {
             parallel(builds)
         } else {
