@@ -20,19 +20,14 @@
     See the License for the specific language governing permissions and
     limitations under the License.
 """
-from datetime import date, timedelta
-from django.db.models import F
+from datetime import date
 from rest_framework import serializers
 
 from api.models.ApprovedFuel import ApprovedFuel
-from api.models.CarbonIntensityLimit import CarbonIntensityLimit
 from api.models.CompliancePeriod import CompliancePeriod
-from api.models.DefaultCarbonIntensity import DefaultCarbonIntensity
 from api.models.DefaultCarbonIntensityCategory import \
     DefaultCarbonIntensityCategory
-from api.models.EnergyDensity import EnergyDensity
 from api.models.EnergyDensityCategory import EnergyDensityCategory
-from api.models.EnergyEffectivenessRatio import EnergyEffectivenessRatio
 from api.models.EnergyEffectivenessRatioCategory import \
     EnergyEffectivenessRatioCategory
 from api.models.FuelClass import FuelClass
@@ -50,17 +45,19 @@ class CarbonIntensityLimitSerializer(serializers.ModelSerializer):
         """
         Gets the Carbon Intensity Limits for the compliance period
         """
-        diesel_limit = CarbonIntensityLimit.objects.filter(
-            compliance_period=obj.id,
-            fuel_class__fuel_class="Diesel"
-        ).exclude(
-            expiration_date=F('effective_date')
-        ).order_by('-effective_date').first()
+        diesel_limit = CreditCalculationService.get_effective(
+            compliance_period_id=obj.id,
+            date=date.today(),
+            fuel_class__fuel_class="Diesel",
+            model_name="CarbonIntensityLimit"
+        )
 
-        gasoline_limit = CarbonIntensityLimit.objects.filter(
-            compliance_period=obj.id,
-            fuel_class__fuel_class="Gasoline"
-        ).order_by('-effective_date', '-update_timestamp').first()
+        gasoline_limit = CreditCalculationService.get_effective(
+            compliance_period_id=obj.id,
+            date=date.today(),
+            fuel_class__fuel_class="Gasoline",
+            model_name="CarbonIntensityLimit"
+        )
 
         return {
             "diesel": {
@@ -102,59 +99,36 @@ class CarbonIntensityLimitUpdateSerializer(serializers.Serializer):
         allow_null=True, required=False)
 
     def __init__(self, *args, **kwargs):
-        super(CarbonIntensityLimitUpdateSerializer, self).__init__(*args, **kwargs)
-
-    def validate(self, data):
-        return data
+        super(CarbonIntensityLimitUpdateSerializer, self).__init__(
+            *args, **kwargs
+        )
 
     def update(self, instance, validated_data):
         request = self.context.get('request')
 
-        diesel_limit = CarbonIntensityLimit.objects.filter(
-            compliance_period=instance.id,
-            fuel_class__fuel_class="Diesel"
-        ).first()
-
-        gasoline_limit = CarbonIntensityLimit.objects.filter(
-            compliance_period=instance.id,
-            fuel_class__fuel_class="Gasoline"
-        ).first()
-
         if 'diesel_carbon_intensity' in validated_data:
-            new_density = CarbonIntensityLimit.objects.create(
-                compliance_period=instance,
-                create_user=request.user,
+            fuel_class_id = FuelClass.objects.get(fuel_class="Diesel").id
+
+            CreditCalculationService.update(
+                compliance_period_id=instance.id,
                 density=validated_data['diesel_carbon_intensity'],
                 effective_date=validated_data['diesel_effective_date'],
-                fuel_class_id=diesel_limit.fuel_class_id,
+                fuel_class_id=fuel_class_id,
+                model_name="CarbonIntensityLimit",
                 update_user=request.user
             )
-
-            expiration_date = new_density.effective_date - timedelta(days=1)
-            if expiration_date < diesel_limit.effective_date:
-                expiration_date = diesel_limit.effective_date
-
-            diesel_limit.expiration_date = expiration_date
-            diesel_limit.update_user = request.user
-            diesel_limit.save()
 
         if 'gasoline_carbon_intensity' in validated_data:
-            new_density = CarbonIntensityLimit.objects.create(
-                compliance_period=instance,
-                create_user=request.user,
+            fuel_class_id = FuelClass.objects.get(fuel_class="Gasoline").id
+
+            CreditCalculationService.update(
+                compliance_period_id=instance.id,
                 density=validated_data['gasoline_carbon_intensity'],
                 effective_date=validated_data['gasoline_effective_date'],
-                fuel_class_id=gasoline_limit.fuel_class_id,
+                fuel_class_id=fuel_class_id,
+                model_name="CarbonIntensityLimit",
                 update_user=request.user
             )
-
-            expiration_date = new_density.effective_date - timedelta(days=1)
-            if expiration_date < gasoline_limit.effective_date:
-                expiration_date = gasoline_limit.effective_date
-
-            gasoline_limit.expiration_date = expiration_date
-            gasoline_limit.update_user = request.user
-            gasoline_limit.save()
 
         return validated_data
 
@@ -194,7 +168,9 @@ class DefaultCarbonIntensityUpdateSerializer(serializers.Serializer):
     expiration_date = serializers.DateField(allow_null=True, required=False)
 
     def __init__(self, *args, **kwargs):
-        super(DefaultCarbonIntensityUpdateSerializer, self).__init__(*args, **kwargs)
+        super(DefaultCarbonIntensityUpdateSerializer, self).__init__(
+            *args, **kwargs
+        )
 
     def validate(self, data):
         return data
@@ -457,17 +433,17 @@ class EnergyEffectivenessRatioDetailSerializer(serializers.ModelSerializer):
         Gets the Energy Effectiveness Ratio for Diesel and Gasoline Class
         """
         diesel_ratio = CreditCalculationService.get_effective(
-            model_name="EnergyEffectivenessRatio",
             category_id=obj.id,
             date=date.today(),
-            fuel_class__fuel_class="Diesel"
+            fuel_class__fuel_class="Diesel",
+            model_name="EnergyEffectivenessRatio"
         )
 
         gasoline_ratio = CreditCalculationService.get_effective(
-            model_name="EnergyEffectivenessRatio",
             category_id=obj.id,
             date=date.today(),
-            fuel_class__fuel_class="Gasoline"
+            fuel_class__fuel_class="Gasoline",
+            model_name="EnergyEffectivenessRatio"
         )
 
         return {
