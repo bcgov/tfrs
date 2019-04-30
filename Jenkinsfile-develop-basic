@@ -11,9 +11,9 @@ def prepareBackendBuildStages() {
     def buildBackendList = []
     def buildBackendStages = [:]
     buildBackendStages.put('Build Backend', prepareBuildBackend())
-    buildBackendStages.put('Build Scan Coordinator', prepareBuildScanCoordinator())
-    buildBackendStages.put('Build ScanHandler', prepareBuildScanHandler())
-    buildBackendStages.put('Build Celery', prepareBuildCelery())
+    //buildBackendStages.put('Build Scan Coordinator', prepareBuildScanCoordinator())
+    //buildBackendStages.put('Build ScanHandler', prepareBuildScanHandler())
+    //buildBackendStages.put('Build Celery', prepareBuildCelery())
     buildBackendList.add(buildBackendStages)
     return buildBackendList
 }
@@ -31,8 +31,24 @@ def prepareBuildBackend() {
   return {
     stage('Build-Backend') {
         timeout(30) {
-            openshiftBuild bldCfg: 'tfrs-develop', showBuildLogs: 'true'
-        }
+            script {
+                openshift.withCluster() {
+                    openshift.withProject("mem-tfrs-tools") {
+                        waitUntil {
+                            def buildtemplate = openshift.process("-f",
+                                "openshift/backend.bc.json",
+                                "ENV_NAME=${devSuffix}",
+                                "NAME_SUFFIX=-${devSuffix}-${prNumber}",
+                                "APP_IMAGE_TAG=${prNumber}",
+                                "SOURCE_REPOSITORY_URL=${repository}",
+                                "SOURCE_REPOSITORY_REF=pull/${CHANGE_ID}/head"
+                            )
+                        } //end of waitUntil
+                    } //end of openshift.withProject
+                } //end of openshift.withCluster
+                //openshiftBuild bldCfg: 'tfrs-develop', showBuildLogs: 'true'
+            } //end of script
+        } //end of timeout
         echo ">> Getting Image Hash"
         IMAGE_HASH_BACKEND = sh (
             script: 'oc get istag tfrs-develop:latest -o template --template="{{.image.dockerImageReference}}"|awk -F ":" \'{print $3}\'',
