@@ -64,6 +64,10 @@ class AutocompletedInput extends Component {
     this.setState({
       items: []
     });
+
+    if (this.props.onSelectEvent) {
+      this.props.onSelectEvent();
+    }
   }
 
   render () {
@@ -113,6 +117,7 @@ class AutocompletedInput extends Component {
 AutocompletedInput.defaultProps = {
   inputProps: {},
   integersOnly: false,
+  onSelectEvent: null,
   value: ''
 };
 
@@ -122,6 +127,7 @@ AutocompletedInput.propTypes = {
   handleInputChange: PropTypes.func.isRequired,
   inputProps: PropTypes.shape(),
   integersOnly: PropTypes.bool,
+  onSelectEvent: PropTypes.func,
   value: PropTypes.any
 };
 

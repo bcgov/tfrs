@@ -100,6 +100,7 @@ class FuelCodeForm extends Component {
             }
             transportModes={this.props.transportModes}
             handleInputChange={this.props.handleInputChange}
+            handleSelect={this.props.handleSelect}
           />
 
           {Object.keys(this.props.errors).length > 0 &&
@@ -153,7 +154,8 @@ class FuelCodeForm extends Component {
 
 FuelCodeForm.defaultProps = {
   edit: false,
-  errors: []
+  errors: [],
+  handleSelect: null
 };
 
 FuelCodeForm.propTypes = {
@@ -182,6 +184,7 @@ FuelCodeForm.propTypes = {
     fuelTransportMode: PropTypes.arrayOf(PropTypes.string)
   }).isRequired,
   handleInputChange: PropTypes.func.isRequired,
+  handleSelect: PropTypes.func,
   handleSubmit: PropTypes.func.isRequired,
   approvedFuels: PropTypes.arrayOf(PropTypes.shape()).isRequired,
   transportModes: PropTypes.arrayOf(PropTypes.shape()).isRequired,

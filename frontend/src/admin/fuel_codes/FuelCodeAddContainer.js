@@ -4,6 +4,7 @@
  */
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
+import { Modal as PrepoluateModal } from 'react-bootstrap';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
@@ -12,6 +13,7 @@ import history from '../../app/History';
 import Loading from '../../app/components/Loading';
 import Modal from '../../app/components/Modal';
 import FuelCodeForm from './components/FuelCodeForm';
+import * as Lang from '../../constants/langEnUs';
 import { FUEL_CODES } from '../../constants/routes/Admin';
 import toastr from '../../utils/toastr';
 
@@ -38,13 +40,16 @@ class FuelCodeAddContainer extends Component {
         fuelCode: '',
         fuelTransportMode: [],
         renewablePercentage: ''
-      }
+      },
+      showModal: false
     };
 
     this._addToFields = this._addToFields.bind(this);
+    this._closeModal = this._closeModal.bind(this);
     this._getFuelCodeStatus = this._getFuelCodeStatus.bind(this);
     this._handleInputChange = this._handleInputChange.bind(this);
     this._handleSubmit = this._handleSubmit.bind(this);
+    this._openModal = this._openModal.bind(this);
   }
 
   _addToFields (value) {
@@ -58,6 +63,12 @@ class FuelCodeAddContainer extends Component {
 
     this.setState({
       fields: fieldState
+    });
+  }
+
+  _closeModal () {
+    this.setState({
+      showModal: false
     });
   }
 
@@ -135,6 +146,12 @@ class FuelCodeAddContainer extends Component {
     return true;
   }
 
+  _openModal () {
+    this.setState({
+      showModal: true
+    });
+  }
+
   render () {
     if (this.props.referenceData.isFetching ||
       !this.props.referenceData.isSuccessful) {
@@ -148,6 +165,7 @@ class FuelCodeAddContainer extends Component {
         errors={this.props.errors}
         fields={this.state.fields}
         handleInputChange={this._handleInputChange}
+        handleSelect={this._openModal}
         handleSubmit={this._handleSubmit}
         key="form"
         title="New Fuel Code"
@@ -159,7 +177,50 @@ class FuelCodeAddContainer extends Component {
         key="confirmSubmit"
       >
         Are you sure you want to add this Fuel code?
-      </Modal>
+      </Modal>,
+      <PrepoluateModal
+        show={this.state.showModal}
+        id="confirmPrepopulate"
+        key="confirmPrepopulate"
+      >
+        <PrepoluateModal.Header className="modal-header">
+          <button
+            type="button"
+            className="close"
+            aria-label="Close"
+            onClick={this._closeModal}
+          >
+            <span aria-hidden="true">&times;</span>
+          </button>
+          <PrepoluateModal.Title className="modal-title">
+          Confirmation
+          </PrepoluateModal.Title>
+        </PrepoluateModal.Header>
+        <PrepoluateModal.Body className="modal-body">
+          Would you like to pre-populate the values in the form based on the previous version&apos;s information?
+        </PrepoluateModal.Body>
+        <PrepoluateModal.Footer className="modal-footer">
+          <button
+            className="btn btn-default"
+            data-dismiss="modal"
+            onClick={this._closeModal}
+            type="button"
+          >
+            {Lang.BTN_NO}
+          </button>
+          <button
+            className="btn btn-primary"
+            data-dismiss="modal"
+            id="modal-yes"
+            onClick={() => {
+
+            }}
+            type="button"
+          >
+            {Lang.BTN_YES}
+          </button>
+        </PrepoluateModal.Footer>
+      </PrepoluateModal>
     ]);
   }
 }
