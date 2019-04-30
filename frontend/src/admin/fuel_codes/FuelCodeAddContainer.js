@@ -36,7 +36,8 @@ class FuelCodeAddContainer extends Component {
         formerCompany: '',
         fuel: '',
         fuelCode: '',
-        fuelTransportMode: []
+        fuelTransportMode: [],
+        renewablePercentage: ''
       }
     };
 
@@ -116,6 +117,7 @@ class FuelCodeAddContainer extends Component {
       fuelCodeVersion: fuelCode.length > 0 ? fuelCode[0] : null,
       fuelCodeVersionMinor: fuelCode.length > 1 ? fuelCode[1] : null,
       fuelTransportMode: this.state.fields.fuelTransportMode,
+      renewablePercentage: (this.state.fields.renewablePercentage !== '') ? this.state.fields.renewablePercentage : null,
       status: this._getFuelCodeStatus(status).id
     };
 

@@ -154,6 +154,14 @@ class FuelCode(Auditable):
         on_delete=models.PROTECT,
         null=False
     )
+    renewable_percentage = models.DecimalField(
+        blank=True,
+        null=True,
+        max_digits=5,
+        decimal_places=2,
+        default=None,
+        db_comment="If applicable, percentage of the fuel that is renewable."
+    )
 
     class Meta:
         db_table = 'fuel_code'

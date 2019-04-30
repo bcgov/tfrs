@@ -77,6 +77,10 @@ class ApprovedFuel(Auditable, EffectiveDates):
         null=True,
         on_delete=PROTECT
     )
+    is_partially_renewable = models.BooleanField(
+        default=False,
+        db_comment="Flag. True if the fuel type can be partially renewable."
+    )
 
     objects = ApprovedFuelManager()
 
