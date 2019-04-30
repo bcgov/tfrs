@@ -8,7 +8,7 @@ class CreditCalculationService(object):
     Helper functions for Credit Calculation
     """
     @staticmethod
-    def get_effective(**kwargs):
+    def get(**kwargs):
         """
         Gets the ratio/density that applies to the date provided
         """

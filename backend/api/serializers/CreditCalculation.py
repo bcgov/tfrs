@@ -45,14 +45,14 @@ class CarbonIntensityLimitSerializer(serializers.ModelSerializer):
         """
         Gets the Carbon Intensity Limits for the compliance period
         """
-        diesel_limit = CreditCalculationService.get_effective(
+        diesel_limit = CreditCalculationService.get(
             compliance_period_id=obj.id,
             date=date.today(),
             fuel_class__fuel_class="Diesel",
             model_name="CarbonIntensityLimit"
         )
 
-        gasoline_limit = CreditCalculationService.get_effective(
+        gasoline_limit = CreditCalculationService.get(
             compliance_period_id=obj.id,
             date=date.today(),
             fuel_class__fuel_class="Gasoline",
@@ -143,7 +143,7 @@ class DefaultCarbonIntensitySerializer(serializers.ModelSerializer):
         """
         Gets the Energy Density
         """
-        row = CreditCalculationService.get_effective(
+        row = CreditCalculationService.get(
             model_name="DefaultCarbonIntensity",
             category_id=obj.id,
             date=date.today()
@@ -199,7 +199,7 @@ class DefaultCarbonIntensityDetailSerializer(serializers.ModelSerializer):
         """
         Gets the Energy Density
         """
-        row = CreditCalculationService.get_effective(
+        row = CreditCalculationService.get(
             model_name="DefaultCarbonIntensity",
             category_id=obj.id,
             date=date.today()
@@ -229,7 +229,7 @@ class EnergyDensitySerializer(serializers.ModelSerializer):
         """
         Gets the Energy Density
         """
-        density = CreditCalculationService.get_effective(
+        density = CreditCalculationService.get(
             model_name="EnergyDensity",
             category_id=obj.id,
             date=date.today()
@@ -293,7 +293,7 @@ class EnergyDensityDetailSerializer(serializers.ModelSerializer):
         """
         Gets the Energy Density
         """
-        row = CreditCalculationService.get_effective(
+        row = CreditCalculationService.get(
             model_name="EnergyDensity",
             category_id=obj.id,
             date=date.today()
@@ -335,7 +335,7 @@ class EnergyEffectivenessRatioSerializer(serializers.ModelSerializer):
         """
         Gets the Energy Effectiveness Ratio for Diesel Class
         """
-        diesel_ratio = CreditCalculationService.get_effective(
+        diesel_ratio = CreditCalculationService.get(
             model_name="EnergyEffectivenessRatio",
             category_id=obj.id,
             date=date.today(),
@@ -348,7 +348,7 @@ class EnergyEffectivenessRatioSerializer(serializers.ModelSerializer):
         """
         Gets the Energy Effectiveness Ratio for Gasoline Class
         """
-        gasoline_ratio = CreditCalculationService.get_effective(
+        gasoline_ratio = CreditCalculationService.get(
             model_name="EnergyEffectivenessRatio",
             category_id=obj.id,
             date=date.today(),
@@ -432,14 +432,14 @@ class EnergyEffectivenessRatioDetailSerializer(serializers.ModelSerializer):
         """
         Gets the Energy Effectiveness Ratio for Diesel and Gasoline Class
         """
-        diesel_ratio = CreditCalculationService.get_effective(
+        diesel_ratio = CreditCalculationService.get(
             category_id=obj.id,
             date=date.today(),
             fuel_class__fuel_class="Diesel",
             model_name="EnergyEffectivenessRatio"
         )
 
-        gasoline_ratio = CreditCalculationService.get_effective(
+        gasoline_ratio = CreditCalculationService.get(
             category_id=obj.id,
             date=date.today(),
             fuel_class__fuel_class="Gasoline",
