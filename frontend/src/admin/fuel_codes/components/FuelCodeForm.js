@@ -95,7 +95,9 @@ class FuelCodeForm extends Component {
             addToFields={this.props.addToFields}
             edit={this.props.edit}
             fields={this.props.fields}
-            approvedFuels={this.props.approvedFuels}
+            approvedFuels={
+              this.props.approvedFuels.filter(fuel => fuel.creditCalculationOnly === false)
+            }
             transportModes={this.props.transportModes}
             handleInputChange={this.props.handleInputChange}
           />
