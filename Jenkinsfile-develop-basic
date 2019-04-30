@@ -37,7 +37,6 @@ def prepareBuildBackend() {
                         waitUntil {
                             def backendBuild = openshift.selector("bc", "tfrs-develop")
                             backendBuild.startBuild("--wait").logs("-f")
-                            )
                         } //end of waitUntil
                     } //end of openshift.withProject
                 } //end of openshift.withCluster
