@@ -109,9 +109,7 @@ class FuelCodeViewSet(AuditableMixin,
         """
         Gets the list of transport modes
         """
-        approved_fuels = ApprovedFuel.objects.filter(
-            credit_calculation_only=False
-        ).order_by('name')
+        approved_fuels = ApprovedFuel.objects.all().order_by('name')
 
         serializer = self.get_serializer(
             approved_fuels, read_only=True, many=True)
@@ -131,8 +129,8 @@ class FuelCodeViewSet(AuditableMixin,
             ))
 
         fuel_codes = self.get_queryset().filter(
-            ~Q(status__status__in=["Draft"])
-        )
+            ~Q(status__status__in=['Cancelled'])
+        ).order_by('fuel_code', 'fuel_code_version', 'fuel_code_version_minor')
 
         workbook = SpreadSheetBuilder()
         workbook.add_fuel_codes(fuel_codes)
