@@ -122,7 +122,7 @@ class DefaultCarbonIntensityEditContainer extends Component {
           item={item}
           key="carbon-intensity-limit-form"
           loggedInUser={this.props.loggedInUser}
-          title="Edit Carbon Intensity Limit Details"
+          title="Edit Default Carbon Intensity Details"
         />,
         <Modal
           handleSubmit={event => this._handleSubmit(event)}

@@ -8,7 +8,7 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('api', '0121_add_fuel_class_relationships'),
+        ('api', '0122_auto_20190425_1514'),
     ]
 
     operations = [
