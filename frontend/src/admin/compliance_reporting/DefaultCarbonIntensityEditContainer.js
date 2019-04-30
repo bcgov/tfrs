@@ -94,8 +94,7 @@ class DefaultCarbonIntensityEditContainer extends Component {
     // API data structure
     const data = {
       density: this.state.fields.density !== '' ? this.state.fields.density : null,
-      effectiveDate: this.state.fields.effectiveDate !== '' ? this.state.fields.effectiveDate : null,
-      expirationDate: this.state.fields.expirationDate !== '' ? this.state.fields.expirationDate : null
+      effectiveDate: this.state.fields.effectiveDate !== '' ? this.state.fields.effectiveDate : null
     };
 
     Object.entries(data).forEach((prop) => {
@@ -122,7 +121,7 @@ class DefaultCarbonIntensityEditContainer extends Component {
           item={item}
           key="carbon-intensity-limit-form"
           loggedInUser={this.props.loggedInUser}
-          title="Edit Carbon Intensity Limit Details"
+          title="Edit Default Carbon Intensity Details"
         />,
         <Modal
           handleSubmit={event => this._handleSubmit(event)}

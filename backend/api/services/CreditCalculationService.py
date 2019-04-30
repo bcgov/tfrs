@@ -132,10 +132,11 @@ class CreditCalculationService(object):
             **kwargs
         )
 
-        expiration_date = new_ratio.effective_date - timedelta(days=1)
-        if expiration_date < prior_ratio.effective_date:
-            expiration_date = prior_ratio.effective_date
+        if prior_ratio:
+            expiration_date = new_ratio.effective_date - timedelta(days=1)
+            if expiration_date < prior_ratio.effective_date:
+                expiration_date = prior_ratio.effective_date
 
-        prior_ratio.expiration_date = expiration_date
-        prior_ratio.update_user = update_user
-        prior_ratio.save()
+            prior_ratio.expiration_date = expiration_date
+            prior_ratio.update_user = update_user
+            prior_ratio.save()
