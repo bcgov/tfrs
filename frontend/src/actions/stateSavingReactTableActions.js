@@ -6,10 +6,10 @@ const saveTableState = (key, data) => (dispatch) => {
 };
 
 const saveTableStateAction = (key, data) => ({
-  key: key,
-  data: data,
-    name: ReducerTypes.SAVE_TABLE_STATE,
-    type: ActionTypes.SAVE_TABLE_STATE,
+  key,
+  data,
+  name: ReducerTypes.SAVE_TABLE_STATE,
+  type: ActionTypes.SAVE_TABLE_STATE
 });
 
 export default saveTableState;

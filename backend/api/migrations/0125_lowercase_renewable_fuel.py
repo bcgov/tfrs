@@ -22,6 +22,7 @@ def update_to_lowercase(apps, schema_editor):
         name="Renewable fuel in relation to gasoline class fuel"
     )
 
+
 def update_to_uppercase(apps, schema_editor):
     """
     Sets fuel to uppercase in Renewable fuel in relation to ...
@@ -48,7 +49,7 @@ class Migration(migrations.Migration):
     Attaches the functions for the migrations
     """
     dependencies = [
-        ('api', '0122_auto_20190425_1514'),
+        ('api', '0124_update_partially_renewable_fuels'),
     ]
 
     operations = [
