@@ -281,26 +281,20 @@ node("develop-maven-${env.BUILD_NUMBER}") {
 
     stage('Deploy Frontend on Dev') {
         openshift.tag("mem-tfrs-tools/client-develop:latest", "mem-tfrs-tools/client-develop:dev")
-        sh 'sleep 5s'
-        //openshiftVerifyDeployment depCfg: 'client', namespace: 'mem-tfrs-dev', replicaCount: 1, verbose: 'false', waitTime: '10', waitUnit: 'min'
-        openshift.tag("mem-tfrs-tools/notification-server-develop:${IMAGE_HASH_NOTIFICATION}", "mem-tfrs-tools/notification-server-develop:dev")
-        sh 'sleep 5s'
-        //openshiftVerifyDeployment depCfg: 'notification-server', namespace: 'mem-tfrs-dev', replicaCount: 1, verbose: 'false', waitTime: '10', waitUnit: 'min'
+        sh 'sleep 10s'
+        openshift.tag("mem-tfrs-tools/notification-server-develop:latest", "mem-tfrs-tools/notification-server-develop:dev")
+        sh 'sleep 10s'
     }
 
     stage('Deploy Backend on Dev') {
-        openshift.tag("mem-tfrs-tools/tfrs-develop:${IMAGE_HASH_BACKEND}", "mem-tfrs-tools/tfrs-develop:dev")
-        sh 'sleep 5s'
-        //openshiftVerifyDeployment depCfg: 'tfrs', namespace: 'mem-tfrs-dev', replicaCount: 1, verbose: 'false', waitTime: '10', waitUnit: 'min'
-        openshift.tag("mem-tfrs-tools/scan-coordinator-develop:${IMAGE_HASH_SCAN_COORDINATOR}", "mem-tfrs-tools/scan-coordinator-develop:dev")
-        sh 'sleep 5s'
-        //openshiftVerifyDeployment depCfg: 'scan-coordinator', namespace: 'mem-tfrs-dev', replicaCount: 1, verbose: 'false', waitTime: '10', waitUnit: 'min'
-        openshift.tag("mem-tfrs-tools/scan-handler-develop:${IMAGE_HASH_SCAN_HANDLER}", "mem-tfrs-tools/scan-handler-develop:dev")
-        sh 'sleep 5s'
-        //openshiftVerifyDeployment depCfg: 'scan-handler', namespace: 'mem-tfrs-dev', replicaCount: 1, verbose: 'false', waitTime: '10', waitUnit: 'min'
-        openshift.tag("mem-tfrs-tools/celery-develop:${IMAGE_HASH_CELERY}", "mem-tfrs-tools/celery-develop:dev")
-        sh 'sleep 5s'
-        //openshiftVerifyDeployment depCfg: 'celery', namespace: 'mem-tfrs-dev', replicaCount: 1, verbose: 'false', waitTime: '10', waitUnit: 'min'
+        openshift.tag("mem-tfrs-tools/tfrs-develop:latest", "mem-tfrs-tools/tfrs-develop:dev")
+        sh 'sleep 20s'
+        openshift.tag("mem-tfrs-tools/scan-coordinator-develop:latest", "mem-tfrs-tools/scan-coordinator-develop:dev")
+        sh 'sleep 10s'
+        openshift.tag("mem-tfrs-tools/scan-handler-develop:latest", "mem-tfrs-tools/scan-handler-develop:dev")
+        sh 'sleep 10s'
+        openshift.tag("mem-tfrs-tools/celery-develop:latest", "mem-tfrs-tools/celery-develop:dev")
+        sh 'sleep 10s'
     }
 
     stage('Refresh SchemaSpy') {
