@@ -259,11 +259,15 @@ node("develop-maven-${env.BUILD_NUMBER}") {
 *****/
     stage('Deploy Frontend on Dev') {
         script {
-            openshift.tag("mem-tfrs-tools/client-develop:latest", "mem-tfrs-tools/client-develop:dev")
+            openshift.withProject("mem-tfrs-tools") {
+                openshift.tag("mem-tfrs-tools/client-develop:latest", "mem-tfrs-tools/client-develop:dev")
+            }
         }
         sh 'sleep 10s'
         script {
-            openshift.tag("mem-tfrs-tools/notification-server-develop:latest", "mem-tfrs-tools/notification-server-develop:dev")
+            openshift.withProject("mem-tfrs-tools") {
+                openshift.tag("mem-tfrs-tools/notification-server-develop:latest", "mem-tfrs-tools/notification-server-develop:dev")
+            }
         }
         sh 'sleep 10s'
     }
