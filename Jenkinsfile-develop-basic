@@ -280,7 +280,7 @@ node("develop-maven-${env.BUILD_NUMBER}") {
     }
 
     stage('Deploy Frontend on Dev') {
-        openshift.tag("client-develop:${IMAGE_HASH_FRONTEND}", "client-develop:dev")
+        openshift.tag("mem-tfrs-tools/client-develop:latest", "mem-tfrs-tools/client-develop:dev")
         sh 'sleep 5s'
         //openshiftVerifyDeployment depCfg: 'client', namespace: 'mem-tfrs-dev', replicaCount: 1, verbose: 'false', waitTime: '10', waitUnit: 'min'
         openshift.tag("mem-tfrs-tools/notification-server-develop:${IMAGE_HASH_NOTIFICATION}", "mem-tfrs-tools/notification-server-develop:dev")
