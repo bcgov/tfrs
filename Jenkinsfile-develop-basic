@@ -256,7 +256,7 @@ node("develop-maven-${env.BUILD_NUMBER}") {
         sh returnStdout: true, script: "oc exec ${postgresql_pod_name} -c postgresql96 -n mem-tfrs-dev -- bash /postgresql-backup/tfrs-backup.sh ${env.tfrs_dev_release} dev"
         echo 'backup script completed'
     }
-*****/
+
     stage('Deploy Frontend on Dev') {
         script {
             openshift.withProject("mem-tfrs-tools") {
@@ -286,17 +286,15 @@ node("develop-maven-${env.BUILD_NUMBER}") {
             }
         }
     }
-
+*****/
     stage('Refresh SchemaSpy') {
         echo "Refreshing SchemaSpy for Dev Database"
         openshift.withProject("mem-tfrs-dev") {
             def schemaSpyPublicDeployment = openshift.selector("dc", "schema-spy-public")
-            schemaSpyPublicDeployment.narrow("dc")
             schemaSpyPublicDeployment.scale("0")
             sh 'sleep 10s'
             schemaSpyPublicDeployment.scale("1")
             def schemaSpyAuditDeployment = openshift.selector("dc", "schema-spy-audit")
-            schemaSpyAuditDeployment.narrow("dc")
             schemaSpyAuditDeployment.scale("0")
             sh 'sleep 10s'
             schemaSpyAuditDeployment.scale("1")
