@@ -11,9 +11,9 @@ def prepareBackendBuildStages() {
     def buildBackendList = []
     def buildBackendStages = [:]
     buildBackendStages.put('Build Backend', prepareBuildBackend())
-    //buildBackendStages.put('Build Scan Coordinator', prepareBuildScanCoordinator())
-    //buildBackendStages.put('Build ScanHandler', prepareBuildScanHandler())
-    //buildBackendStages.put('Build Celery', prepareBuildCelery())
+    buildBackendStages.put('Build Scan Coordinator', prepareBuildScanCoordinator())
+    buildBackendStages.put('Build ScanHandler', prepareBuildScanHandler())
+    buildBackendStages.put('Build Celery', prepareBuildCelery())
     buildBackendList.add(buildBackendStages)
     return buildBackendList
 }
@@ -40,7 +40,6 @@ def prepareBuildBackend() {
                         } //end of waitUntil
                     } //end of openshift.withProject
                 } //end of openshift.withCluster
-                //openshiftBuild bldCfg: 'tfrs-develop', showBuildLogs: 'true'
             } //end of script
         } //end of timeout
         echo ">> Getting Image Hash"
@@ -56,8 +55,17 @@ def prepareBuildScanCoordinator() {
   return {
     stage('Build-Scan-Coordinator') {
         timeout(30) {
-            openshiftBuild bldCfg: 'scan-coordinator-develop', showBuildLogs: 'true'
-        }
+            script {
+                openshift.withCluster() {
+                    openshift.withProject("mem-tfrs-tools") {
+                        waitUntil {
+                            def scanCoordinatorBuild = openshift.selector("bc", "scan-coordinator-develop")
+                            scanCoordinatorBuild.startBuild("--wait").logs("-f")
+                        } //end of waitUntil
+                    } //end of openshift.withProject
+                } //end of openshift.withCluster
+            } //end of script
+        } //end of timeout
         echo ">> Getting Image Hash"
         IMAGE_HASH_SCAN_COORDINATOR = sh (
             script: 'oc get istag scan-coordinator-develop:latest -o template --template="{{.image.dockerImageReference}}"|awk -F ":" \'{print $3}\'',
@@ -71,8 +79,17 @@ def prepareBuildScanHandler() {
   return {
     stage('Build-Scan-Handler') {
         timeout(30) {
-            openshiftBuild bldCfg: 'scan-handler-develop', showBuildLogs: 'true'
-        }
+            script {
+                openshift.withCluster() {
+                    openshift.withProject("mem-tfrs-tools") {
+                        waitUntil {
+                            def scanHandlerBuild = openshift.selector("bc", "scan-handler-develop")
+                            scanHandlerBuild.startBuild("--wait").logs("-f")
+                        } //end of waitUntil
+                    } //end of openshift.withProject
+                } //end of openshift.withCluster
+            } //end of script
+        } //end of timeout
         echo ">> Getting Image Hash"
         IMAGE_HASH_SCAN_HANDLER = sh (
             script: 'oc get istag scan-handler-develop:latest -o template --template="{{.image.dockerImageReference}}"|awk -F ":" \'{print $3}\'',
@@ -86,8 +103,17 @@ def prepareBuildCelery() {
   return {
     stage('Build-Celery') {
         timeout(30) {
-            openshiftBuild bldCfg: 'celery-develop', showBuildLogs: 'true'
-        }
+            script {
+                openshift.withCluster() {
+                    openshift.withProject("mem-tfrs-tools") {
+                        waitUntil {
+                            def celeryBuild = openshift.selector("bc", "celery-develop")
+                            celeryBuild.startBuild("--wait").logs("-f")
+                        } //end of waitUntil
+                    } //end of openshift.withProject
+                } //end of openshift.withCluster
+            } //end of script
+        } //end of timeout
         echo ">> Getting Image Hash"
         IMAGE_HASH_CELERY = sh (
             script: 'oc get istag celery-develop:latest -o template --template="{{.image.dockerImageReference}}"|awk -F ":" \'{print $3}\'',
@@ -102,9 +128,19 @@ def prepareBuildFrontend() {
         stage('Build Frontend') {
             echo "Building Frontend..."
             timeout(30) {
-                openshiftBuild bldCfg: 'client-develop-angular-app-build', showBuildLogs: 'true'
-            }
-            openshiftBuild bldCfg: 'client-develop', showBuildLogs: 'true'
+                script {
+                    openshift.withCluster() {
+                        openshift.withProject("mem-tfrs-tools") {
+                            waitUntil {
+                                def clientAngularBuild = openshift.selector("bc", "client-develop-angular-app-build")
+                                clientAngularBuild.startBuild("--wait").logs("-f")
+                                def clientBuild = openshift.selector("bc", "client-develop")
+                                clientBuild.startBuild("--wait").logs("-f")
+                            } //end of waitUntil
+                        } //end of openshift.withProject
+                    } //end of openshift.withCluster
+                } //end of script
+            } //end of timeout
             echo ">> Getting Image Hash for frontend"
             IMAGE_HASH_FRONTEND = sh (
                 script: 'oc get istag client-develop:latest -o template --template="{{.image.dockerImageReference}}"|awk -F ":" \'{print $3}\'',
@@ -119,8 +155,18 @@ def prepareBuildNotificationServer() {
         stage('Build Notification Server') {
             echo "Building Notification Server ..."
             timeout(30) {
-                openshiftBuild bldCfg: 'notification-server-develop', showBuildLogs: 'true'
-            }
+                script {
+                    openshift.withCluster() {
+                        openshift.withProject("mem-tfrs-tools") {
+                            waitUntil {
+                                openshiftBuild bldCfg: 'notification-server-develop', showBuildLogs: 'true'
+                                def notificationServerBuild = openshift.selector("bc", "notification-server-develop")
+                                notificationServerBuild.startBuild("--wait").logs("-f")
+                            } //end of waitUntil
+                        } //end of openshift.withProject
+                    } //end of openshift.withCluster
+                } //end of script
+            } //end of timeout
             echo ">> Getting Image Hash for notification server"
             IMAGE_HASH_NOTIFICATION = sh (
                 script: 'oc get istag notification-server-develop:latest -o template --template="{{.image.dockerImageReference}}"|awk -F ":" \'{print $3}\'',
