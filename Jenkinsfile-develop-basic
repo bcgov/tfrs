@@ -10,9 +10,9 @@ IMAGE_HASH_CELERY = ''
 def prepareBackendBuildStages() {
     def buildBackendList = []
     def buildBackendStages = [:]
-    buildBackendStages.put('Build Backend', prepareBuildBackend())
-    buildBackendStages.put('Build Scan Coordinator', prepareBuildScanCoordinator())
-    buildBackendStages.put('Build ScanHandler', prepareBuildScanHandler())
+    //buildBackendStages.put('Build Backend', prepareBuildBackend())
+    //buildBackendStages.put('Build Scan Coordinator', prepareBuildScanCoordinator())
+    //buildBackendStages.put('Build ScanHandler', prepareBuildScanHandler())
     buildBackendStages.put('Build Celery', prepareBuildCelery())
     buildBackendList.add(buildBackendStages)
     return buildBackendList
@@ -106,10 +106,10 @@ def prepareBuildCelery() {
             script {
                 openshift.withCluster() {
                     openshift.withProject("mem-tfrs-tools") {
-                        waitUntil {
+                            echo ">>>>>> Build-Celery before openshift.selector"
                             def celeryBuild = openshift.selector("bc", "celery-develop")
                             celeryBuild.startBuild("--wait")
-                        } //end of waitUntil
+                            echo ">>>>>> Build-Celery after openshift.selector"
                     } //end of openshift.withProject
                 } //end of openshift.withCluster
             } //end of script
@@ -276,7 +276,7 @@ node("develop-maven-${env.BUILD_NUMBER}") {
             }
         }
     }
-    
+    /***
     //run frontend builds
     for (builds in frontendBuildStages) {
         if (runParallel) {
@@ -287,7 +287,7 @@ node("develop-maven-${env.BUILD_NUMBER}") {
                 build.call()
             }
         }
-    }
+    }***/
 
     stage('Bring up Maintenance Page') {
         sh returnStatus: true, script: "oc scale dc maintenance-page -n mem-tfrs-dev --replicas=1 --timeout=20s"
