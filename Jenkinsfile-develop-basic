@@ -104,10 +104,12 @@ def prepareBuildCelery() {
     stage('Build-Celery') {
         timeout(30) {
             script {
+                openshift.withProject("mem-tfrs-tools") {
                             echo ">>>>>> Build-Celery before openshift.selector"
                             def celeryBuild = openshift.selector("bc", "celery-develop")
                             celeryBuild.startBuild("--wait")
                             echo ">>>>>> Build-Celery after openshift.selector"
+                }
             } //end of script
         } //end of timeout
         echo ">> Getting Image Hash"
