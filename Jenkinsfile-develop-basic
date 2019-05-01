@@ -33,10 +33,8 @@ def prepareBuildBackend() {
         timeout(30) {
             script {
                 openshift.withProject("mem-tfrs-tools") {
-                    waitUntil {
-                        def backendBuild = openshift.selector("bc", "tfrs-develop")
-                        backendBuild.startBuild("--wait")
-                    } //end of waitUntil
+                    def backendBuild = openshift.selector("bc", "tfrs-develop")
+                    backendBuild.startBuild("--wait")
                 } //end of openshift.withProject
             } //end of script
         } //end of timeout
@@ -55,10 +53,8 @@ def prepareBuildScanCoordinator() {
         timeout(30) {
             script {
                 openshift.withProject("mem-tfrs-tools") {
-                    waitUntil {
-                        def scanCoordinatorBuild = openshift.selector("bc", "scan-coordinator-develop")
-                        scanCoordinatorBuild.startBuild("--wait")
-                    } //end of waitUntil
+                    def scanCoordinatorBuild = openshift.selector("bc", "scan-coordinator-develop")
+                    scanCoordinatorBuild.startBuild("--wait")
                 } //end of openshift.withProject
             } //end of script
         } //end of timeout
@@ -77,10 +73,8 @@ def prepareBuildScanHandler() {
         timeout(30) {
             script {
                 openshift.withProject("mem-tfrs-tools") {
-                    waitUntil {
-                        def scanHandlerBuild = openshift.selector("bc", "scan-handler-develop")
-                        scanHandlerBuild.startBuild("--wait")
-                    } //end of waitUntil
+                    def scanHandlerBuild = openshift.selector("bc", "scan-handler-develop")
+                    scanHandlerBuild.startBuild("--wait")
                 } //end of openshift.withProject
             } //end of script
         } //end of timeout
@@ -122,12 +116,10 @@ def prepareBuildFrontend() {
             timeout(30) {
                 script {
                     openshift.withProject("mem-tfrs-tools") {
-                        waitUntil {
-                            def clientAngularBuild = openshift.selector("bc", "client-develop-angular-app-build")
-                            clientAngularBuild.startBuild("--wait").logs("-f")
-                            def clientBuild = openshift.selector("bc", "client-develop")
-                            clientBuild.startBuild("--wait")
-                        } //end of waitUntil
+                        def clientAngularBuild = openshift.selector("bc", "client-develop-angular-app-build")
+                        clientAngularBuild.startBuild("--wait").logs("-f")
+                        def clientBuild = openshift.selector("bc", "client-develop")
+                        clientBuild.startBuild("--wait")
                     } //end of openshift.withProject
                 } //end of script
             } //end of timeout
@@ -147,10 +139,8 @@ def prepareBuildNotificationServer() {
             timeout(30) {
                 script {
                     openshift.withProject("mem-tfrs-tools") {
-                        waitUntil {
-                            def notificationServerBuild = openshift.selector("bc", "notification-server-develop")
-                            notificationServerBuild.startBuild("--wait")
-                        } //end of waitUntil
+                        def notificationServerBuild = openshift.selector("bc", "notification-server-develop")
+                        notificationServerBuild.startBuild("--wait")
                     } //end of openshift.withProject
                 } //end of script
             } //end of timeout
