@@ -4,7 +4,7 @@ from django.db.models import Q
 from django.http import HttpResponse
 
 from rest_framework import viewsets, status, mixins
-from rest_framework.decorators import list_route, detail_route
+from rest_framework.decorators import list_route
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 
