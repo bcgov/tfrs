@@ -290,27 +290,27 @@ node("develop-maven-${env.BUILD_NUMBER}") {
     }
 
     stage('Deploy Frontend on Dev') {
-        openshiftTag destStream: 'client-develop', verbose: 'true', destTag: 'dev', srcStream: 'client-develop', srcTag: "${IMAGE_HASH_FRONTEND}"
+        openshift.tag("mem-tfrs-tools/client-develop:${IMAGE_HASH_FRONTEND}", "mem-tfrs-dev/client-develop:dev")
         sh 'sleep 5s'
-        openshiftVerifyDeployment depCfg: 'client', namespace: 'mem-tfrs-dev', replicaCount: 1, verbose: 'false', waitTime: '10', waitUnit: 'min'
-        openshiftTag destStream: 'notification-server-develop', verbose: 'true', destTag: 'dev', srcStream: 'notification-server-develop', srcTag: "${IMAGE_HASH_NOTIFICATION}"
+        //openshiftVerifyDeployment depCfg: 'client', namespace: 'mem-tfrs-dev', replicaCount: 1, verbose: 'false', waitTime: '10', waitUnit: 'min'
+        openshift.tag("mem-tfrs-tools/notification-server-develop:${IMAGE_HASH_NOTIFICATION}", "mem-tfrs-dev/notification-server-develop:dev")
         sh 'sleep 5s'
-        openshiftVerifyDeployment depCfg: 'notification-server', namespace: 'mem-tfrs-dev', replicaCount: 1, verbose: 'false', waitTime: '10', waitUnit: 'min'
+        //openshiftVerifyDeployment depCfg: 'notification-server', namespace: 'mem-tfrs-dev', replicaCount: 1, verbose: 'false', waitTime: '10', waitUnit: 'min'
     }
 
     stage('Deploy Backend on Dev') {
-        openshiftTag destStream: 'tfrs-develop', verbose: 'true', destTag: 'dev', srcStream: 'tfrs-develop', srcTag: "${IMAGE_HASH_BACKEND}"
+        openshift.tag("mem-tfrs-tools/tfrs-develop:${IMAGE_HASH_BACKEND}", "mem-tfrs-dev/tfrs-develop:dev")
         sh 'sleep 5s'
-        openshiftVerifyDeployment depCfg: 'tfrs', namespace: 'mem-tfrs-dev', replicaCount: 1, verbose: 'false', waitTime: '10', waitUnit: 'min'
-        openshiftTag destStream: 'scan-coordinator-develop', verbose: 'true', destTag: 'dev', srcStream: 'scan-coordinator-develop', srcTag: "${IMAGE_HASH_SCAN_COORDINATOR}"
+        //openshiftVerifyDeployment depCfg: 'tfrs', namespace: 'mem-tfrs-dev', replicaCount: 1, verbose: 'false', waitTime: '10', waitUnit: 'min'
+        openshift.tag("mem-tfrs-tools/scan-coordinator-develop:${IMAGE_HASH_SCAN_COORDINATOR}", "mem-tfrs-dev/scan-coordinator-develop:dev")
         sh 'sleep 5s'
-        openshiftVerifyDeployment depCfg: 'scan-coordinator', namespace: 'mem-tfrs-dev', replicaCount: 1, verbose: 'false', waitTime: '10', waitUnit: 'min'
-        openshiftTag destStream: 'scan-handler-develop', verbose: 'true', destTag: 'dev', srcStream: 'scan-handler-develop', srcTag: "${IMAGE_HASH_SCAN_HANDLER}"
+        //openshiftVerifyDeployment depCfg: 'scan-coordinator', namespace: 'mem-tfrs-dev', replicaCount: 1, verbose: 'false', waitTime: '10', waitUnit: 'min'
+        openshift.tag("mem-tfrs-tools/scan-handler-develop:${IMAGE_HASH_SCAN_HANDLER}", "mem-tfrs-dev/scan-handler-develop:dev")
         sh 'sleep 5s'
-        openshiftVerifyDeployment depCfg: 'scan-handler', namespace: 'mem-tfrs-dev', replicaCount: 1, verbose: 'false', waitTime: '10', waitUnit: 'min'
-        openshiftTag destStream: 'celery-develop', verbose: 'true', destTag: 'dev', srcStream: 'celery-develop', srcTag: "${IMAGE_HASH_CELERY}"
+        //openshiftVerifyDeployment depCfg: 'scan-handler', namespace: 'mem-tfrs-dev', replicaCount: 1, verbose: 'false', waitTime: '10', waitUnit: 'min'
+        openshift.tag("mem-tfrs-tools/celery-develop:${IMAGE_HASH_CELERY}", "mem-tfrs-dev/celery-develop:dev")
         sh 'sleep 5s'
-        openshiftVerifyDeployment depCfg: 'celery', namespace: 'mem-tfrs-dev', replicaCount: 1, verbose: 'false', waitTime: '10', waitUnit: 'min'
+        //openshiftVerifyDeployment depCfg: 'celery', namespace: 'mem-tfrs-dev', replicaCount: 1, verbose: 'false', waitTime: '10', waitUnit: 'min'
     }
 
     stage('Refresh SchemaSpy') {
