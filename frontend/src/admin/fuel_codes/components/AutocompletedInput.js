@@ -27,7 +27,7 @@ class AutocompletedInput extends Component {
         items: []
       });
     } else {
-      axios.get(`${Routes.BASE_URL}${Routes.AUTOCOMPLETE_API}?field=${this.props.autocompleteFieldName}&q=${value}&cacheSerial=${this.props.cacheSerial}`)
+      axios.get(`${Routes.BASE_URL}${Routes.AUTOCOMPLETE_API}?field=${this.props.autocompleteFieldName}&q=${value}&cacheSerial=${this.props.cacheSerial}${this.props.cache === false ? `&cache=False` : ''}`)
         .then((response) => {
           this.setState({
             items: response.data
@@ -115,6 +115,7 @@ class AutocompletedInput extends Component {
 }
 
 AutocompletedInput.defaultProps = {
+  cache: true,
   inputProps: {},
   integersOnly: false,
   onSelectEvent: null,
@@ -123,6 +124,7 @@ AutocompletedInput.defaultProps = {
 
 AutocompletedInput.propTypes = {
   autocompleteFieldName: PropTypes.string.isRequired,
+  cache: PropTypes.bool,
   cacheSerial: PropTypes.number.isRequired,
   handleInputChange: PropTypes.func.isRequired,
   inputProps: PropTypes.shape(),

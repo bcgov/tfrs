@@ -8,7 +8,7 @@ import { Modal as PrepoluateModal } from 'react-bootstrap';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
-import { addFuelCode } from '../../actions/fuelCodeActions';
+import { addFuelCode, getLatestFuelCode } from '../../actions/fuelCodeActions';
 import history from '../../app/History';
 import Loading from '../../app/components/Loading';
 import Modal from '../../app/components/Modal';
@@ -197,7 +197,13 @@ class FuelCodeAddContainer extends Component {
           </PrepoluateModal.Title>
         </PrepoluateModal.Header>
         <PrepoluateModal.Body className="modal-body">
-          Would you like to pre-populate the values in the form based on the previous version&apos;s information?
+          {!this.props.fuelCode.isFetching &&
+            <div>
+              Would you like to pre-populate the values in the form based on the previous
+              version&apos;s information?
+            </div>
+          }
+          {this.props.fuelCode.isFetching && <Loading />}
         </PrepoluateModal.Body>
         <PrepoluateModal.Footer className="modal-footer">
           <button
@@ -213,7 +219,42 @@ class FuelCodeAddContainer extends Component {
             data-dismiss="modal"
             id="modal-yes"
             onClick={() => {
+              const fuelCode = this.state.fields.fuelCode.split('.');
 
+              if (fuelCode.length > 0) {
+                this.props.getFuelCode({
+                  fuel_code: 'BCLCF',
+                  fuel_code_version: fuelCode[0]
+                }).then(() => {
+                  const { item } = this.props.fuelCode;
+                  const fieldState = { ...this.state.fields };
+
+                  Object.entries(item).forEach((prop) => {
+                    if ([
+                      'company', 'facilityLocation', 'facilityNameplate', 'feedstock',
+                      'feedstockLocation', 'feedstockMisc', 'feedstockTransportMode',
+                      'fuel', 'fuelTransportMode'
+                    ].includes(prop[0])) {
+                      const name = prop[0];
+                      let value = prop[1];
+
+                      if (name === 'facilityNameplate') {
+                        value = value.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,');
+                      }
+
+                      fieldState[name] = value;
+                    }
+                  });
+
+                  this.setState({
+                    fields: fieldState
+                  });
+
+                  this._closeModal();
+                });
+              } else {
+                this._closeModal();
+              }
             }}
             type="button"
           >
@@ -232,6 +273,15 @@ FuelCodeAddContainer.defaultProps = {
 FuelCodeAddContainer.propTypes = {
   addFuelCode: PropTypes.func.isRequired,
   errors: PropTypes.shape({}),
+  fuelCode: PropTypes.shape({
+    errors: PropTypes.shape(),
+    isFetching: PropTypes.bool.isRequired,
+    item: PropTypes.shape({
+      id: PropTypes.number
+    }),
+    success: PropTypes.bool
+  }).isRequired,
+  getFuelCode: PropTypes.func.isRequired,
   loggedInUser: PropTypes.shape({
     organization: PropTypes.shape({
       id: PropTypes.number,
@@ -253,6 +303,12 @@ FuelCodeAddContainer.propTypes = {
 
 const mapStateToProps = state => ({
   errors: state.rootReducer.fuelCode.errors,
+  fuelCode: {
+    errors: state.rootReducer.fuelCode.errors,
+    isFetching: state.rootReducer.fuelCode.isFetching,
+    item: state.rootReducer.fuelCode.item,
+    success: state.rootReducer.fuelCode.success
+  },
   loggedInUser: state.rootReducer.userRequest.loggedInUser,
   referenceData: {
     fuelCodeStatuses: state.rootReducer.referenceData.data.fuelCodeStatuses,
@@ -264,7 +320,8 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  addFuelCode: bindActionCreators(addFuelCode, dispatch)
+  addFuelCode: bindActionCreators(addFuelCode, dispatch),
+  getFuelCode: bindActionCreators(getLatestFuelCode, dispatch)
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(FuelCodeAddContainer);

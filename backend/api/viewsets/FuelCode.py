@@ -4,7 +4,7 @@ from django.db.models import Q
 from django.http import HttpResponse
 
 from rest_framework import viewsets, status, mixins
-from rest_framework.decorators import list_route
+from rest_framework.decorators import list_route, detail_route
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 
@@ -79,6 +79,29 @@ class FuelCodeViewSet(AuditableMixin,
         serializer.destroy()
 
         return Response(None, status=status.HTTP_200_OK)
+
+    @list_route(methods=['get'])
+    def latest(self, request):
+        """
+        Retrieves the latest fuel code that matches the version provided
+        """
+        fuel_code = None
+        fuel_code_version = None
+
+        if 'fuel_code' in request.GET:
+            fuel_code = request.GET['fuel_code']
+
+        if 'fuel_code' in request.GET:
+            fuel_code_version = request.GET['fuel_code_version']
+
+        fuel_code_object = FuelCode.objects.filter(
+            fuel_code=fuel_code,
+            fuel_code_version=fuel_code_version
+        ).order_by('-fuel_code_version_minor', '-id').first()
+
+        serializer = self.get_serializer(fuel_code_object, read_only=True)
+
+        return Response(serializer.data)
 
     @list_route(methods=['get'], permission_classes=[AllowAny])
     def statuses(self, request):

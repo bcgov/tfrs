@@ -66,6 +66,7 @@ class FuelCodeFormDetails extends Component {
                     <span className="input-group-addon">BCLCF</span>
                     <AutocompletedInput
                       autocompleteFieldName="fuel_code.fuel_code_version"
+                      cache={false}
                       handleInputChange={this.props.handleInputChange}
                       inputProps={
                         {
