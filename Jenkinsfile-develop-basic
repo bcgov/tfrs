@@ -219,29 +219,7 @@ podTemplate(label: "develop-maven-${env.BUILD_NUMBER}", name: "develop-maven-${e
 ) {
 
 node("develop-maven-${env.BUILD_NUMBER}") {
-/****
-    stage('Code Quality Check') {
-        checkout scm
-        SONARQUBE_PWD = sh (
-            script: 'oc env dc/sonarqube --list | awk  -F  "=" \'/SONARQUBE_ADMINPW/{print $2}\'',
-            returnStdout: true
-        ).trim()
-        echo ">> SONARQUBE_PWD: ${SONARQUBE_PWD}"
-
-        SONARQUBE_URL = sh (
-            script: 'oc get routes -o wide --no-headers | awk \'/sonarqube/{ print match($0,/edge/) ?  "https://"$2 : "http://"$2 }\'',
-            returnStdout: true
-        ).trim()
-        echo ">> SONARQUBE_URL: ${SONARQUBE_URL}"
-        dir('frontend/sonar-runner') {
-            sh returnStdout: true, script: "./gradlew sonarqube -Dsonar.host.url=${SONARQUBE_URL} -Dsonar.verbose=true --stacktrace --info"
-        }
-        dir('backend/sonar-runner') {
-            unstash 'coverage'
-            sh returnStdout: true, script: "./gradlew sonarqube -Dsonar.host.url=${SONARQUBE_URL} -Dsonar.verbose=true --stacktrace --info"
-        }
-    }
-****/
+/***
     //run backend builds
     for (builds in backendBuildStages) {
         if (runParallel) {
@@ -278,11 +256,15 @@ node("develop-maven-${env.BUILD_NUMBER}") {
         sh returnStdout: true, script: "oc exec ${postgresql_pod_name} -c postgresql96 -n mem-tfrs-dev -- bash /postgresql-backup/tfrs-backup.sh ${env.tfrs_dev_release} dev"
         echo 'backup script completed'
     }
-
+*****/
     stage('Deploy Frontend on Dev') {
-        openshift.tag("mem-tfrs-tools/client-develop:latest", "mem-tfrs-tools/client-develop:dev")
+        script {
+            openshift.tag("mem-tfrs-tools/client-develop:latest", "mem-tfrs-tools/client-develop:dev")
+        }
         sh 'sleep 10s'
-        openshift.tag("mem-tfrs-tools/notification-server-develop:latest", "mem-tfrs-tools/notification-server-develop:dev")
+        script {
+            openshift.tag("mem-tfrs-tools/notification-server-develop:latest", "mem-tfrs-tools/notification-server-develop:dev")
+        }
         sh 'sleep 10s'
     }
 
