@@ -305,11 +305,19 @@ node("develop-maven-${env.BUILD_NUMBER}") {
 
     stage('Refresh SchemaSpy') {
         echo "Refreshing SchemaSpy for Dev Database"
-        openshiftScale depCfg: 'schema-spy-public', namespace: 'mem-tfrs-dev', replicaCount: 0, verbose: 'false', verifyReplicaCount: 'true'
-        openshiftScale depCfg: 'schema-spy-public', namespace: 'mem-tfrs-dev', replicaCount: 1, verbose: 'false', verifyReplicaCount: 'true', waitTime: '10', waitUnit: 'min'
-        openshiftScale depCfg: 'schema-spy-audit', namespace: 'mem-tfrs-dev', replicaCount: 0, verbose: 'false', verifyReplicaCount: 'true'
-        openshiftScale depCfg: 'schema-spy-audit', namespace: 'mem-tfrs-dev', replicaCount: 1, verbose: 'false', verifyReplicaCount: 'true', waitTime: '10', waitUnit: 'min'
-    }    
+        openshift.withProject("mem-tfrs-dev") {
+            def schemaSpyPublicDeployment = openshift.selector("dc", "schema-spy-public")
+            schemaSpyPublicDeployment.narrow("dc")
+            schemaSpyPublicDeployment.scale("0")
+            sh 'sleep 10s'
+            schemaSpyPublicDeployment.scale("1")
+            def schemaSpyAuditDeployment = openshift.selector("dc", "schema-spy-audit")
+            schemaSpyAuditDeployment.narrow("dc")
+            schemaSpyAuditDeployment.scale("0")
+            sh 'sleep 10s'
+            schemaSpyAuditDeployment.scale("1")
+        }
+   }    
 
     stage('Take down Maintenance Page') {
         sh returnStatus: true, script: "oc patch route/dev-lowcarbonfuels-backend -n mem-tfrs-dev -p '{\"spec\":{\"to\":{\"name\":\"backend\"}, \"port\":{\"targetPort\":\"web\"}}}'"
