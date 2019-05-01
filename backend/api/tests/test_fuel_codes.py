@@ -85,6 +85,7 @@ class TestFuelCodes(BaseTestCase):
             'fuel': 'LNG',
             'fuelCode': 'BCLCF',
             'fuelCodeVersion': '105',
+            'fuelCodeVersionMinor': '0',
             'fuelTransportMode': ['Rail'],
             'status': status_draft.id
         }
