@@ -289,17 +289,12 @@ node("develop-maven-${env.BUILD_NUMBER}") {
 *****/
     stage('Refresh SchemaSpy') {
         echo "Refreshing SchemaSpy for Dev Database"
-        openshift.withProject("mem-tfrs-dev") {
-            def schemaSpyPublicDeployment = openshift.selector("dc/schema-spy-public")
-            schemaSpyPublicDeployment.scale("0")
-            sh 'sleep 10s'
-            schemaSpyPublicDeployment.scale("1")
-            sh 'sleep 10s'
-            def schemaSpyAuditDeployment = openshift.selector("dc/schema-spy-audit")
-            schemaSpyAuditDeployment.scale("0")
-            sh 'sleep 10s'
-            schemaSpyAuditDeployment.scale("1")
-        }
+        oc scale dc/schema-spy-public --replicas=0 -n mem-tfrs-dev
+        sh 'sleep 10s'
+        oc scale dc/schema-spy-public --replicas=1 -n mem-tfrs-dev
+        oc scale dc/schema-spy-audit --replicas=0 -n mem-tfrs-dev
+        sh 'sleep 10s'
+        oc scale dc/schema-spy-audit --replicas=1 -n mem-tfrs-dev
    }    
 
     stage('Take down Maintenance Page') {
