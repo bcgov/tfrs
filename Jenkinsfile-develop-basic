@@ -36,7 +36,7 @@ def prepareBuildBackend() {
                     openshift.withProject("mem-tfrs-tools") {
                         waitUntil {
                             def backendBuild = openshift.selector("bc", "tfrs-develop")
-                            backendBuild.startBuild("--wait").logs("-f")
+                            backendBuild.startBuild("--wait")
                         } //end of waitUntil
                     } //end of openshift.withProject
                 } //end of openshift.withCluster
@@ -60,7 +60,7 @@ def prepareBuildScanCoordinator() {
                     openshift.withProject("mem-tfrs-tools") {
                         waitUntil {
                             def scanCoordinatorBuild = openshift.selector("bc", "scan-coordinator-develop")
-                            scanCoordinatorBuild.startBuild("--wait").logs("-f")
+                            scanCoordinatorBuild.startBuild("--wait")
                         } //end of waitUntil
                     } //end of openshift.withProject
                 } //end of openshift.withCluster
@@ -84,7 +84,7 @@ def prepareBuildScanHandler() {
                     openshift.withProject("mem-tfrs-tools") {
                         waitUntil {
                             def scanHandlerBuild = openshift.selector("bc", "scan-handler-develop")
-                            scanHandlerBuild.startBuild("--wait").logs("-f")
+                            scanHandlerBuild.startBuild("--wait")
                         } //end of waitUntil
                     } //end of openshift.withProject
                 } //end of openshift.withCluster
@@ -108,7 +108,7 @@ def prepareBuildCelery() {
                     openshift.withProject("mem-tfrs-tools") {
                         waitUntil {
                             def celeryBuild = openshift.selector("bc", "celery-develop")
-                            celeryBuild.startBuild("--wait").logs("-f")
+                            celeryBuild.startBuild("--wait")
                         } //end of waitUntil
                     } //end of openshift.withProject
                 } //end of openshift.withCluster
@@ -135,7 +135,7 @@ def prepareBuildFrontend() {
                                 def clientAngularBuild = openshift.selector("bc", "client-develop-angular-app-build")
                                 clientAngularBuild.startBuild("--wait").logs("-f")
                                 def clientBuild = openshift.selector("bc", "client-develop")
-                                clientBuild.startBuild("--wait").logs("-f")
+                                clientBuild.startBuild("--wait")
                             } //end of waitUntil
                         } //end of openshift.withProject
                     } //end of openshift.withCluster
@@ -161,7 +161,7 @@ def prepareBuildNotificationServer() {
                             waitUntil {
                                 openshiftBuild bldCfg: 'notification-server-develop', showBuildLogs: 'true'
                                 def notificationServerBuild = openshift.selector("bc", "notification-server-develop")
-                                notificationServerBuild.startBuild("--wait").logs("-f")
+                                notificationServerBuild.startBuild("--wait")
                             } //end of waitUntil
                         } //end of openshift.withProject
                     } //end of openshift.withCluster
@@ -175,7 +175,7 @@ def prepareBuildNotificationServer() {
         }
     }
 }
-
+/*****
 podTemplate(label: "develop-backend-python-${env.BUILD_NUMBER}", name: "develop-backend-python-${env.BUILD_NUMBER}", serviceAccount: 'jenkins-basic', cloud: 'openshift',
     containers: [
         containerTemplate(
@@ -212,12 +212,14 @@ podTemplate(label: "develop-backend-python-${env.BUILD_NUMBER}", name: "develop-
     } //end node
 } //end podTemplate
 
+
 echo "result is ${result}"
 if (result != 0) {
     echo "[FAILURE] Unit Test stage failed"
     currentBuild.result = 'FAILURE'
     return
 }
+*******/
 
 //organize all build stages
 backendBuildStages = prepareBackendBuildStages()
