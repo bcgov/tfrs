@@ -11,6 +11,7 @@ import PropTypes from 'prop-types';
 import { getCreditTransfersIfNeeded } from '../actions/creditTransfersActions';
 import { getOrganization } from '../actions/organizationActions';
 import { getLoggedInUser } from '../actions/userActions';
+import saveTableState from '../actions/stateSavingReactTableActions';
 import CreditTransactionsPage from './components/CreditTransactionsPage';
 import CREDIT_TRANSACTIONS from '../constants/routes/CreditTransactions';
 
@@ -38,6 +39,18 @@ class CreditTransactionsContainer extends Component {
 
   loadData () {
     this.props.getCreditTransfersIfNeeded();
+
+    if ('credit-transfers' in this.props.savedState &&
+    'filterOrganization' in this.props.savedState['credit-transfers']) {
+      const { filterOrganization } = this.props.savedState['credit-transfers'];
+      if (filterOrganization !== -1) {
+        this.props.getOrganization(filterOrganization);
+
+        this.setState({
+          filterOrganization
+        });
+      }
+    }
   }
 
   _getCreditTransfers () {
@@ -83,6 +96,12 @@ class CreditTransactionsContainer extends Component {
 
     this.setState({
       filterOrganization: organizationId
+    });
+
+    this.props.saveTableState('credit-transfers', {
+      ...this.props.savedState,
+      filterOrganization: organizationId,
+      page: 0
     });
   }
 
@@ -134,7 +153,9 @@ CreditTransactionsContainer.propTypes = {
     organizationBalance: PropTypes.shape({
       validatedCredits: PropTypes.number
     })
-  })
+  }),
+  savedState: PropTypes.shape().isRequired,
+  saveTableState: PropTypes.func.isRequired
 };
 
 const mapStateToProps = state => ({
@@ -143,7 +164,8 @@ const mapStateToProps = state => ({
     isFetching: state.rootReducer.creditTransfers.isFetching
   },
   loggedInUser: state.rootReducer.userRequest.loggedInUser,
-  organization: state.rootReducer.organizationRequest.fuelSupplier
+  organization: state.rootReducer.organizationRequest.fuelSupplier,
+  savedState: state.rootReducer.tableState.savedState
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -151,7 +173,8 @@ const mapDispatchToProps = dispatch => ({
     dispatch(getCreditTransfersIfNeeded());
   },
   getLoggedInUser: bindActionCreators(getLoggedInUser, dispatch),
-  getOrganization: bindActionCreators(getOrganization, dispatch)
+  getOrganization: bindActionCreators(getOrganization, dispatch),
+  saveTableState: bindActionCreators(saveTableState, dispatch)
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(CreditTransactionsContainer);
