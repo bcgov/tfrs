@@ -1,4 +1,4 @@
-import { arrayMove, getFileSize, getIcon, validateFiles } from '../../src/utils/functions';
+import { arrayMove, formatFacilityNameplate, getFileSize, getIcon, validateFiles } from '../../src/utils/functions';
 
 test('Array Move to actually function as expected', () => {
   const arr = [1, 2, 3, 4, 5];
@@ -82,4 +82,19 @@ test('Get Mime Type should return a font-awesome icon to be used', () => {
   expect(getIcon('text/plain')).toEqual('file-alt');
 
   expect(getIcon('application/octet-stream')).toEqual('file-download');
+});
+
+test('Format Facility Nameplate should add commas for every 3 digits', () => {
+  const value = formatFacilityNameplate(1111111);
+  expect(value).toEqual('1,111,111');
+});
+
+test('Format Facility Nameplate should add commas for every 3 digits (even if the value is a string)', () => {
+  const value = formatFacilityNameplate('1111111');
+  expect(value).toEqual('1,111,111');
+});
+
+test('Format Facility Nameplate should ignore existing commas.', () => {
+  const value = formatFacilityNameplate('111,111,1');
+  expect(value).toEqual('1,111,111');
 });
