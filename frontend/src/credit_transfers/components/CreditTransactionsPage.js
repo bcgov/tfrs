@@ -64,6 +64,7 @@ const CreditTransactionsPage = (props) => {
                     const organizationId = parseInt(event.target.value, 10);
                     props.selectOrganization(organizationId);
                   }}
+                  value={props.organization.id}
                 >
                   <option value="-1">All Organizations</option>
                   {props.organizations.map(organization =>
