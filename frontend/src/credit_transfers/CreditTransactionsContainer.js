@@ -40,10 +40,10 @@ class CreditTransactionsContainer extends Component {
   loadData () {
     this.props.getCreditTransfersIfNeeded();
 
-    if ('credit-transfers' in this.props.savedState &&
-    'filterOrganization' in this.props.savedState['credit-transfers']) {
+    if ('credit-transfers' in this.props.savedState) {
       const { filterOrganization } = this.props.savedState['credit-transfers'];
-      if (filterOrganization !== -1) {
+
+      if (filterOrganization && filterOrganization !== -1) {
         this.props.getOrganization(filterOrganization);
 
         this.setState({
