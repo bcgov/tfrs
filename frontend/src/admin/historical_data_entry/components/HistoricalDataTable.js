@@ -4,7 +4,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
-import ReactTable from 'react-table';
 import 'react-table/react-table.css';
 import FontAwesomeIcon from '@fortawesome/react-fontawesome';
 import numeral from 'numeral';
@@ -14,7 +13,7 @@ import { HISTORICAL_DATA_ENTRY } from '../../../constants/routes/Admin';
 import { CREDIT_TRANSFER_TYPES, ZERO_DOLLAR_REASON } from '../../../constants/values';
 import { getCreditTransferType } from '../../../actions/creditTransfersActions';
 import filterNumber from '../../../utils/filters';
-import StateSavingReactTable from "../../../app/components/StateSavingReactTable";
+import ReactTable from '../../../app/components/StateSavingReactTable';
 
 const HistoricalDataTable = (props) => {
   const columns = [{
@@ -144,7 +143,7 @@ const HistoricalDataTable = (props) => {
   const filterable = true;
 
   return (
-    <StateSavingReactTable
+    <ReactTable
       stateKey="historical-data-entry"
       className="searchable"
       data={props.items}

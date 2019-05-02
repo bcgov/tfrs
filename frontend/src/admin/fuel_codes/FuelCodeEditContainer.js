@@ -13,6 +13,7 @@ import Modal from '../../app/components/Modal';
 import history from '../../app/History';
 import FuelCodeForm from './components/FuelCodeForm';
 import { FUEL_CODES } from '../../constants/routes/Admin';
+import { formatFacilityNameplate } from '../../utils/functions';
 import toastr from '../../utils/toastr';
 
 class FuelCodeEditContainer extends Component {
@@ -36,7 +37,8 @@ class FuelCodeEditContainer extends Component {
         formerCompany: '',
         fuel: '',
         fuelCode: '',
-        fuelTransportMode: []
+        fuelTransportMode: [],
+        renewablePercentage: ''
       }
     };
 
@@ -80,7 +82,8 @@ class FuelCodeEditContainer extends Component {
         formerCompany: item.formerCompany,
         fuel: item.fuel,
         fuelCode: `${item.fuelCodeVersion}${(item.fuelCodeVersionMinor) ? `.${item.fuelCodeVersionMinor}` : '.0'}`,
-        fuelTransportMode: item.fuelTransportMode
+        fuelTransportMode: item.fuelTransportMode,
+        renewablePercentage: item.renewablePercentage || ''
       };
 
       this.setState({
@@ -124,8 +127,7 @@ class FuelCodeEditContainer extends Component {
       if (name === 'facilityNameplate') {
         // as you're typing remove non-numeric values
         // (this is so we don't mess our count, but we'll add commas later)
-        value = value.replace(/\D/g, '');
-        value = value.replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,');
+        value = formatFacilityNameplate(value);
       }
 
       fieldState[name] = value;
@@ -161,6 +163,7 @@ class FuelCodeEditContainer extends Component {
       fuelCodeVersion: fuelCode.length > 0 ? fuelCode[0] : null,
       fuelCodeVersionMinor: fuelCode.length > 1 ? fuelCode[1] : null,
       fuelTransportMode: this.state.fields.fuelTransportMode,
+      renewablePercentage: this.state.fields.renewablePercentage !== '' ? this.state.fields.renewablePercentage : null,
       status: this._getFuelCodeStatus(status).id
     };
 

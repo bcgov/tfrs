@@ -1,5 +1,5 @@
 import { call, put, takeLatest } from 'redux-saga/effects';
-import AutocompleteActionTypes from "../constants/actionTypes/Autocomplete";
+import AutocompleteActionTypes from '../constants/actionTypes/Autocomplete';
 import FuelCodeActionTypes from '../constants/actionTypes/FuelCodes';
 
 const INVALIDATING_ACTIONS = [

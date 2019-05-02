@@ -67,7 +67,7 @@ class FuelCodeSerializer(serializers.ModelSerializer):
             'feedstock_location', 'feedstock_misc', 'feedstock_transport_mode',
             'former_company', 'fuel', 'fuel_code', 'fuel_code_version',
             'fuel_code_version_minor', 'fuel_transport_mode', 'id', 'status',
-            'update_timestamp', 'update_user'
+            'renewable_percentage', 'update_timestamp', 'update_user'
         )
 
         read_only_fields = (
@@ -77,7 +77,7 @@ class FuelCodeSerializer(serializers.ModelSerializer):
             'feedstock_location', 'feedstock_misc', 'feedstock_transport_mode',
             'former_company', 'fuel', 'fuel_code', 'fuel_code_version',
             'fuel_code_version_minor', 'fuel_transport_mode', 'id', 'status',
-            'update_timestamp', 'update_user'
+            'renewable_percentage', 'update_timestamp', 'update_user'
         )
 
 
@@ -111,29 +111,11 @@ class FuelCodeCreateSerializer(serializers.ModelSerializer):
         Checks that the expiry date is after the effective date.
         """
         # check if fuel code is correct
-        fuel_code = data.get('fuel_code')
         fuel_code_version = data.get('fuel_code_version')
         fuel_code_version_minor = data.get('fuel_code_version_minor')
 
-        matches = FuelCode.objects.filter(
-            fuel_code=fuel_code,
-            fuel_code_version=fuel_code_version,
-            fuel_code_version_minor=fuel_code_version_minor
-        )
-
-        if matches.exists():
-            raise serializers.ValidationError(
-                'The fuel code {}{}.{} is already in use. '
-                'Please consult the Fuel Codes table to ensure that this '
-                'entry does not already exist.'.format(
-                    fuel_code,
-                    fuel_code_version,
-                    fuel_code_version_minor
-                )
-            )
-
         next_available_version = Autocomplete.get_matches(
-            'fuel_code.fuel_code_version', str(fuel_code_version))
+            'fuel_code.fuel_code_version', str(fuel_code_version), False)
 
         if next_available_version:
             if next_available_version[0] != '{}.{}'.format(
@@ -150,6 +132,14 @@ class FuelCodeCreateSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError({
                 'invalid': "The expiry date precedes the effective date"
             })
+
+        approved_fuel = data.get('fuel', None)
+
+        if not approved_fuel.is_partially_renewable:
+            data['renewable_percentage'] = None
+
+        if not data.get('renewable_percentage', None):
+            data['renewable_percentage'] = None
 
         return data
 
@@ -180,6 +170,16 @@ class FuelCodeCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = FuelCode
         fields = '__all__'
+        validators = [
+            serializers.UniqueTogetherValidator(
+                queryset=FuelCode.objects.all(),
+                fields=('fuel_code', 'fuel_code_version',
+                        'fuel_code_version_minor'),
+                message=("The fuel code is already in use. "
+                         "Please consult the Fuel Codes table to ensure that"
+                         "this entry does not already exist.")
+            )
+        ]
 
 
 class FuelCodeSaveSerializer(serializers.ModelSerializer):
@@ -208,11 +208,20 @@ class FuelCodeSaveSerializer(serializers.ModelSerializer):
     def validate(self, data):
         """
         Checks that the expiry date is after the effective date.
+        Also, checks if the renewable percentage should be cleared.
         """
         if data['expiry_date'] < data['effective_date']:
             raise serializers.ValidationError({
                 'invalid': "The expiry date precedes the effective date"
             })
+
+        approved_fuel = data.get('fuel', None)
+
+        if not approved_fuel.is_partially_renewable:
+            data['renewable_percentage'] = None
+
+        if not data.get('renewable_percentage', None):
+            data['renewable_percentage'] = None
 
         return data
 
