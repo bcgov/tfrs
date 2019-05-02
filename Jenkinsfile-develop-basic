@@ -117,7 +117,7 @@ def prepareBuildFrontend() {
                 script {
                     openshift.withProject("mem-tfrs-tools") {
                         def clientAngularBuild = openshift.selector("bc", "client-develop-angular-app-build")
-                        clientAngularBuild.startBuild("--wait").logs("-f")
+                        clientAngularBuild.startBuild("--wait")
                         def clientBuild = openshift.selector("bc", "client-develop")
                         clientBuild.startBuild("--wait")
                     } //end of openshift.withProject
