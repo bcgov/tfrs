@@ -289,12 +289,12 @@ node("develop-maven-${env.BUILD_NUMBER}") {
 *****/
     stage('Refresh SchemaSpy') {
         echo "Refreshing SchemaSpy for Dev Database"
-        oc scale dc/schema-spy-public --replicas=0 -n mem-tfrs-dev
+        oc scale dc schema-spy-public --replicas=0 -n mem-tfrs-dev
         sh 'sleep 10s'
-        oc scale dc/schema-spy-public --replicas=1 -n mem-tfrs-dev
-        oc scale dc/schema-spy-audit --replicas=0 -n mem-tfrs-dev
+        oc scale dc schema-spy-public --replicas=1 -n mem-tfrs-dev
+        oc scale dc schema-spy-audit --replicas=0 -n mem-tfrs-dev
         sh 'sleep 10s'
-        oc scale dc/schema-spy-audit --replicas=1 -n mem-tfrs-dev
+        oc scale dc schema-spy-audit --replicas=1 -n mem-tfrs-dev
    }    
 
     stage('Take down Maintenance Page') {
