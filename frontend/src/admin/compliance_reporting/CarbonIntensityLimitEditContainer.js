@@ -101,10 +101,8 @@ class CarbonIntensityLimitEditContainer extends Component {
     const data = {
       dieselCarbonIntensity: this.state.fields.dieselCarbonIntensity !== '' ? this.state.fields.dieselCarbonIntensity : null,
       dieselEffectiveDate: this.state.fields.dieselEffectiveDate !== '' ? this.state.fields.dieselEffectiveDate : null,
-      dieselExpirationDate: this.state.fields.dieselExpirationDate !== '' ? this.state.fields.dieselExpirationDate : null,
       gasolineCarbonIntensity: this.state.fields.gasolineCarbonIntensity !== '' ? this.state.fields.gasolineCarbonIntensity : null,
-      gasolineEffectiveDate: this.state.fields.gasolineEffectiveDate !== '' ? this.state.fields.gasolineEffectiveDate : null,
-      gasolineExpirationDate: this.state.fields.gasolineExpirationDate !== '' ? this.state.fields.gasolineExpirationDate : null
+      gasolineEffectiveDate: this.state.fields.gasolineEffectiveDate !== '' ? this.state.fields.gasolineEffectiveDate : null
     };
 
     Object.entries(data).forEach((prop) => {
