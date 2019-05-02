@@ -111,29 +111,11 @@ class FuelCodeCreateSerializer(serializers.ModelSerializer):
         Checks that the expiry date is after the effective date.
         """
         # check if fuel code is correct
-        fuel_code = data.get('fuel_code')
         fuel_code_version = data.get('fuel_code_version')
         fuel_code_version_minor = data.get('fuel_code_version_minor')
 
-        matches = FuelCode.objects.filter(
-            fuel_code=fuel_code,
-            fuel_code_version=fuel_code_version,
-            fuel_code_version_minor=fuel_code_version_minor
-        )
-
-        if matches.exists():
-            raise serializers.ValidationError(
-                'The fuel code {}{}.{} is already in use. '
-                'Please consult the Fuel Codes table to ensure that this '
-                'entry does not already exist.'.format(
-                    fuel_code,
-                    fuel_code_version,
-                    fuel_code_version_minor
-                )
-            )
-
         next_available_version = Autocomplete.get_matches(
-            'fuel_code.fuel_code_version', str(fuel_code_version))
+            'fuel_code.fuel_code_version', str(fuel_code_version), False)
 
         if next_available_version:
             if next_available_version[0] != '{}.{}'.format(
@@ -188,6 +170,16 @@ class FuelCodeCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = FuelCode
         fields = '__all__'
+        validators = [
+            serializers.UniqueTogetherValidator(
+                queryset=FuelCode.objects.all(),
+                fields=('fuel_code', 'fuel_code_version',
+                        'fuel_code_version_minor'),
+                message=("The fuel code is already in use. "
+                         "Please consult the Fuel Codes table to ensure that"
+                         "this entry does not already exist.")
+            )
+        ]
 
 
 class FuelCodeSaveSerializer(serializers.ModelSerializer):

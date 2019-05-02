@@ -85,6 +85,7 @@ class TestFuelCodes(BaseTestCase):
             'fuel': 'LNG',
             'fuelCode': 'BCLCF',
             'fuelCodeVersion': '105',
+            'fuelCodeVersionMinor': '0',
             'fuelTransportMode': ['Rail'],
             'status': status_draft.id
         }
@@ -348,3 +349,19 @@ class TestFuelCodes(BaseTestCase):
 
         self.assertEqual(fuel_code.fuel_code_version, 100)
         self.assertEqual(fuel_code.fuel_code_version_minor, 0)
+
+    def test_get_latest_fuel_code(self):
+        """
+        Tests that the serializer fetches the latest fuel code
+        based on the version provided
+        """
+        response = self.clients['gov_analyst'].get(
+            "/api/fuel_codes/latest?fuel_code=BCLCF&fuel_code_version=100",
+            content_type='application/json'
+        )
+
+        response_data = json.loads(response.content.decode('utf-8'))
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response_data['company'], "Test")
+        self.assertEqual(response_data['feedstockLocation'], "Test")

@@ -150,13 +150,17 @@ class Autocomplete:
     }
 
     @staticmethod
-    def get_matches(name, q):
+    def get_matches(name, q, cache_results=True):
         if name not in Autocomplete.completions:
             raise NoSuchFieldError('No completion for field {}'.format(name))
 
         cache_key = '{}:{}'.format(name, q)
 
-        result = cache.get(cache_key)
+        if cache_results:
+            result = cache.get(cache_key)
+        else:
+            result = None
+
         if not result:
             result = Autocomplete.completions[name].get_matches(q)
             cache.set(cache_key, result)

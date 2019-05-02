@@ -23,6 +23,19 @@ const download = (url, params = {}) => (
   })
 );
 
+const formatFacilityNameplate = (value) => {
+  let newValue = value;
+
+  if (typeof newValue === 'number') {
+    newValue = newValue.toString();
+  }
+
+  newValue = newValue.replace(/\D/g, '');
+  newValue = newValue.replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,');
+
+  return newValue;
+};
+
 const getFileSize = (bytes) => {
   if (bytes === 0) {
     return '0 bytes';
@@ -111,4 +124,7 @@ const validateFiles = files => (
   })
 );
 
-export { arrayMove, download, getFileSize, getIcon, getScanStatusIcon, validateFiles };
+export {
+  arrayMove, download, getFileSize, getIcon, getScanStatusIcon,
+  formatFacilityNameplate, validateFiles
+};
