@@ -259,13 +259,13 @@ node("master-maven-${env.BUILD_NUMBER}") {
     stage('Deploy Backend to Test') {
         script {
             openshift.withProject("mem-tfrs-tools") {
-                openshift.tag("mem-tfrs-tools/tfrs:latest", "mem-tfrs-tools/tfrs-develop:test")
+                openshift.tag("mem-tfrs-tools/tfrs:latest", "mem-tfrs-tools/tfrs:test")
                 sh 'sleep 20s'
-                openshift.tag("mem-tfrs-tools/scan-coordinator:latest", "mem-tfrs-tools/scan-coordinator-develop:test")
+                openshift.tag("mem-tfrs-tools/scan-coordinator:latest", "mem-tfrs-tools/scan-coordinator:test")
                 sh 'sleep 10s'
-                openshift.tag("mem-tfrs-tools/scan-handler:latest", "mem-tfrs-tools/scan-handler-develop:test")
+                openshift.tag("mem-tfrs-tools/scan-handler:latest", "mem-tfrs-tools/scan-handler:test")
                 sh 'sleep 10s'
-                openshift.tag("mem-tfrs-tools/celery:latest", "mem-tfrs-tools/celery-develop:test")
+                openshift.tag("mem-tfrs-tools/celery:latest", "mem-tfrs-tools/celery:test")
                 sh 'sleep 10s'
             }
         }
@@ -323,13 +323,13 @@ node("master-maven-${env.BUILD_NUMBER}") {
     stage('Deploy Backend to Prod') {
         script {
             openshift.withProject("mem-tfrs-tools") {
-                openshift.tag("mem-tfrs-tools/tfrs:latest", "mem-tfrs-tools/tfrs-develop:prod")
+                openshift.tag("mem-tfrs-tools/tfrs:latest", "mem-tfrs-tools/tfrs:prod")
                 sh 'sleep 20s'
-                openshift.tag("mem-tfrs-tools/scan-coordinator:latest", "mem-tfrs-tools/scan-coordinator-develop:prod")
+                openshift.tag("mem-tfrs-tools/scan-coordinator:latest", "mem-tfrs-tools/scan-coordinator:prod")
                 sh 'sleep 10s'
-                openshift.tag("mem-tfrs-tools/scan-handler:latest", "mem-tfrs-tools/scan-handler-develop:prod")
+                openshift.tag("mem-tfrs-tools/scan-handler:latest", "mem-tfrs-tools/scan-handler:prod")
                 sh 'sleep 10s'
-                openshift.tag("mem-tfrs-tools/celery:latest", "mem-tfrs-tools/celery-develop:prod")
+                openshift.tag("mem-tfrs-tools/celery:latest", "mem-tfrs-tools/celery:prod")
                 sh 'sleep 10s'
             }
         }
