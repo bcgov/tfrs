@@ -94,8 +94,7 @@ class EnergyDensityEditContainer extends Component {
     // API data structure
     const data = {
       density: this.state.fields.density !== '' ? this.state.fields.density : null,
-      effectiveDate: this.state.fields.effectiveDate !== '' ? this.state.fields.effectiveDate : null,
-      expirationDate: this.state.fields.expirationDate !== '' ? this.state.fields.expirationDate : null
+      effectiveDate: this.state.fields.effectiveDate !== '' ? this.state.fields.effectiveDate : null
     };
 
     Object.entries(data).forEach((prop) => {
