@@ -91,22 +91,6 @@ const EnergyEffectivenessRatioFormDetails = props => (
                 </label>
               </div>
             </div>
-
-            <div className="col-sm-6">
-              <div className="form-group">
-                <label htmlFor="diesel-expiration-date">Expiration Date:
-                  <input
-                    className="form-control"
-                    id="diesel-expiration-date"
-                    max="9999-12-31"
-                    name="dieselExpirationDate"
-                    onChange={props.handleInputChange}
-                    type="date"
-                    value={props.fields.dieselExpirationDate}
-                  />
-                </label>
-              </div>
-            </div>
           </div>
         </div>
       </div>
@@ -177,22 +161,6 @@ const EnergyEffectivenessRatioFormDetails = props => (
                     onChange={props.handleInputChange}
                     type="date"
                     value={props.fields.gasolineEffectiveDate}
-                  />
-                </label>
-              </div>
-            </div>
-
-            <div className="col-sm-6">
-              <div className="form-group">
-                <label htmlFor="gasoline-expiration-date">Expiration Date:
-                  <input
-                    className="form-control"
-                    id="gasoline-expiration-date"
-                    max="9999-12-31"
-                    name="gasolineExpirationDate"
-                    onChange={props.handleInputChange}
-                    type="date"
-                    value={props.fields.gasolineExpirationDate}
                   />
                 </label>
               </div>

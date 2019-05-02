@@ -86,22 +86,6 @@ const EnergyDensityFormDetails = props => (
                 </label>
               </div>
             </div>
-
-            <div className="col-sm-6">
-              <div className="form-group">
-                <label htmlFor="expiration-date">Expiration Date:
-                  <input
-                    className="form-control"
-                    id="expiration-date"
-                    max="9999-12-31"
-                    name="expirationDate"
-                    onChange={props.handleInputChange}
-                    type="date"
-                    value={props.fields.expirationDate}
-                  />
-                </label>
-              </div>
-            </div>
           </div>
         </div>
       </div>
@@ -122,11 +106,14 @@ EnergyDensityFormDetails.propTypes = {
   }).isRequired,
   handleInputChange: PropTypes.func.isRequired,
   item: PropTypes.shape({
-    density: PropTypes.shape({
-      density: PropTypes.number,
-      effectiveDate: PropTypes.string,
-      expirationDate: PropTypes.string
-    }),
+    density: PropTypes.oneOfType([
+      PropTypes.shape({
+        density: PropTypes.number,
+        effectiveDate: PropTypes.string,
+        expirationDate: PropTypes.string
+      }),
+      PropTypes.number
+    ]),
     name: PropTypes.string,
     unitOfMeasure: PropTypes.string
   }).isRequired

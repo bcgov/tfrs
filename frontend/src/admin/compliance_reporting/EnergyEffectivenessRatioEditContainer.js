@@ -102,10 +102,8 @@ class EnergyEffectivenessRatioEditContainer extends Component {
     // API data structure
     const data = {
       dieselEffectiveDate: this.state.fields.dieselEffectiveDate !== '' ? this.state.fields.dieselEffectiveDate : null,
-      dieselExpirationDate: this.state.fields.dieselExpirationDate !== '' ? this.state.fields.dieselExpirationDate : null,
       dieselRatio: this.state.fields.dieselRatio !== '' ? this.state.fields.dieselRatio : null,
       gasolineEffectiveDate: this.state.fields.gasolineEffectiveDate !== '' ? this.state.fields.gasolineEffectiveDate : null,
-      gasolineExpirationDate: this.state.fields.gasolineExpirationDate !== '' ? this.state.fields.gasolineExpirationDate : null,
       gasolineRatio: this.state.fields.gasolineRatio !== '' ? this.state.fields.gasolineRatio : null
     };
 
