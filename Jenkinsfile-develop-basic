@@ -152,7 +152,7 @@ def prepareBuildNotificationServer() {
         }
     }
 }
-/*****
+
 podTemplate(label: "develop-backend-python-${env.BUILD_NUMBER}", name: "develop-backend-python-${env.BUILD_NUMBER}", serviceAccount: 'jenkins-basic', cloud: 'openshift',
     containers: [
         containerTemplate(
@@ -196,7 +196,6 @@ if (result != 0) {
     currentBuild.result = 'FAILURE'
     return
 }
-*******/
 
 //organize all build stages
 backendBuildStages = prepareBackendBuildStages()
@@ -219,7 +218,7 @@ podTemplate(label: "develop-maven-${env.BUILD_NUMBER}", name: "develop-maven-${e
 ) {
 
 node("develop-maven-${env.BUILD_NUMBER}") {
-/***
+
     //run backend builds
     for (builds in backendBuildStages) {
         if (runParallel) {
@@ -286,7 +285,7 @@ node("develop-maven-${env.BUILD_NUMBER}") {
             }
         }
     }
-*****/
+
     stage('Refresh SchemaSpy') {
         echo "Refreshing SchemaSpy for Dev Database"
         sh returnStdout: true, script: "oc scale dc schema-spy-public --replicas=0 -n mem-tfrs-dev"
