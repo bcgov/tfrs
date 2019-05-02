@@ -12,7 +12,10 @@ describe('Test Fuel Code Form', () => {
     name: 'Propane'
   }];
   const errors = {};
-  const fields = {};
+  const fields = {
+    feedstockTransportMode: [],
+    fuelTransportMode: []
+  };
   const transportModes = [{
     name: 'Truck'
   }, {

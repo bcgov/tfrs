@@ -37,14 +37,31 @@ exports[`Test Fuel Code Form FuelCodeForm should display 1`] = `
                   >
                     BCLCF
                   </span>
-                  <input
-                    className="form-control"
-                    id="fuel-code"
-                    name="fuelCode"
-                    onChange={[Function]}
-                    required="required"
-                    type="text"
-                  />
+                  <div
+                    style={Object {}}
+                  >
+                    <input
+                      aria-autocomplete="list"
+                      aria-expanded={false}
+                      autoComplete="off"
+                      className="form-control"
+                      id="fuelCode"
+                      maxLength={11}
+                      name="fuelCode"
+                      onBlur={[Function]}
+                      onChange={[Function]}
+                      onClick={[Function]}
+                      onFocus={[Function]}
+                      onKeyDown={[Function]}
+                      onKeyPress={[Function]}
+                      onPaste={[Function]}
+                      readOnly={false}
+                      required={true}
+                      role="combobox"
+                      type="text"
+                      value=""
+                    />
+                  </div>
                 </div>
               </label>
             </div>
@@ -58,7 +75,7 @@ exports[`Test Fuel Code Form FuelCodeForm should display 1`] = `
               <label
                 htmlFor="company"
               >
-                Company:
+                Company (full legal operating name):
                 <div
                   style={Object {}}
                 >
@@ -68,12 +85,14 @@ exports[`Test Fuel Code Form FuelCodeForm should display 1`] = `
                     autoComplete="off"
                     className="form-control"
                     id="company"
+                    maxLength={100}
                     name="company"
                     onBlur={[Function]}
                     onChange={[Function]}
                     onClick={[Function]}
                     onFocus={[Function]}
                     onKeyDown={[Function]}
+                    onKeyPress={[Function]}
                     required={true}
                     role="combobox"
                     type="text"
@@ -96,16 +115,31 @@ exports[`Test Fuel Code Form FuelCodeForm should display 1`] = `
               <label
                 htmlFor="carbon-intensity"
               >
-                Carbon Intensity:
-                <input
-                  className="form-control"
-                  id="carbon-intensity"
-                  name="carbonIntensity"
-                  onChange={[Function]}
-                  required="required"
-                  step="0.01"
-                  type="number"
-                />
+                Carbon Intensity (gCO
+                <sub>
+                  2
+                </sub>
+                e/MJ):
+                <div
+                  className=""
+                >
+                  <input
+                    className="form-control"
+                    data-number-to-fixed={2}
+                    id="carbon-intensity"
+                    max="999.99"
+                    min="0"
+                    name="carbonIntensity"
+                    onChange={[Function]}
+                    onKeyPress={[Function]}
+                    onPaste={[Function]}
+                    placeholder=""
+                    required={true}
+                    step="0.01"
+                    type="number"
+                    value=""
+                  />
+                </div>
               </label>
             </div>
           </div>
@@ -205,16 +239,6 @@ exports[`Test Fuel Code Form FuelCodeForm should display 1`] = `
                     default={true}
                     value=""
                   />
-                  <option
-                    value="LNG"
-                  >
-                    LNG
-                  </option>
-                  <option
-                    value="Propane"
-                  >
-                    Propane
-                  </option>
                 </select>
               </label>
             </div>
@@ -242,12 +266,14 @@ exports[`Test Fuel Code Form FuelCodeForm should display 1`] = `
                     autoComplete="off"
                     className="form-control"
                     id="feedstock"
+                    maxLength={100}
                     name="feedstock"
                     onBlur={[Function]}
                     onChange={[Function]}
                     onClick={[Function]}
                     onFocus={[Function]}
                     onKeyDown={[Function]}
+                    onKeyPress={[Function]}
                     required={true}
                     role="combobox"
                     type="text"
@@ -270,7 +296,7 @@ exports[`Test Fuel Code Form FuelCodeForm should display 1`] = `
               <label
                 htmlFor="feedstock-location"
               >
-                Feedstock Location:
+                Feedstock Location (e.g. US Central, Manitoba, Japan):
                 <div
                   style={Object {}}
                 >
@@ -280,12 +306,14 @@ exports[`Test Fuel Code Form FuelCodeForm should display 1`] = `
                     autoComplete="off"
                     className="form-control"
                     id="feedstockLocation"
+                    maxLength={100}
                     name="feedstockLocation"
                     onBlur={[Function]}
                     onChange={[Function]}
                     onClick={[Function]}
                     onFocus={[Function]}
                     onKeyDown={[Function]}
+                    onKeyPress={[Function]}
                     required={true}
                     role="combobox"
                     type="text"
@@ -304,7 +332,7 @@ exports[`Test Fuel Code Form FuelCodeForm should display 1`] = `
               <label
                 htmlFor="feedstock-miscellaneous"
               >
-                Feedstock Misc:
+                Feedstock Misc (e.g. methane capture, no peat, etc.):
                 <div
                   style={Object {}}
                 >
@@ -314,12 +342,14 @@ exports[`Test Fuel Code Form FuelCodeForm should display 1`] = `
                     autoComplete="off"
                     className="form-control"
                     id="feedstockMisc"
+                    maxLength={100}
                     name="feedstockMisc"
                     onBlur={[Function]}
                     onChange={[Function]}
                     onClick={[Function]}
                     onFocus={[Function]}
                     onKeyDown={[Function]}
+                    onKeyPress={[Function]}
                     required={false}
                     role="combobox"
                     type="text"
@@ -352,12 +382,14 @@ exports[`Test Fuel Code Form FuelCodeForm should display 1`] = `
                     autoComplete="off"
                     className="form-control"
                     id="facilityLocation"
+                    maxLength={100}
                     name="facilityLocation"
                     onBlur={[Function]}
                     onChange={[Function]}
                     onClick={[Function]}
                     onFocus={[Function]}
                     onKeyDown={[Function]}
+                    onKeyPress={[Function]}
                     required={true}
                     role="combobox"
                     type="text"
@@ -380,9 +412,10 @@ exports[`Test Fuel Code Form FuelCodeForm should display 1`] = `
                 <input
                   className="form-control"
                   id="facility-nameplate"
+                  maxLength="13"
                   name="facilityNameplate"
                   onChange={[Function]}
-                  type="number"
+                  type="text"
                 />
               </label>
             </div>
@@ -407,6 +440,7 @@ exports[`Test Fuel Code Form FuelCodeForm should display 1`] = `
                   multiple={true}
                   name="feedstockTransportMode"
                   onChange={[Function]}
+                  value={Array []}
                 >
                   <option
                     value="Truck"
@@ -438,6 +472,7 @@ exports[`Test Fuel Code Form FuelCodeForm should display 1`] = `
                   multiple={true}
                   name="fuelTransportMode"
                   onChange={[Function]}
+                  value={Array []}
                 >
                   <option
                     value="Truck"
@@ -473,12 +508,14 @@ exports[`Test Fuel Code Form FuelCodeForm should display 1`] = `
                   autoComplete="off"
                   className="form-control"
                   id="formerCompany"
+                  maxLength={100}
                   name="formerCompany"
                   onBlur={[Function]}
                   onChange={[Function]}
                   onClick={[Function]}
                   onFocus={[Function]}
                   onKeyDown={[Function]}
+                  onKeyPress={[Function]}
                   required={false}
                   role="combobox"
                   type="text"
@@ -525,23 +562,41 @@ exports[`Test Fuel Code Form FuelCodeForm should display 1`] = `
            
           Back
         </button>
-        <button
-          className="btn btn-default"
-          disabled={false}
-          type="submit"
+        <div
+          className="overlay-trigger"
+          onBlur={[Function]}
+          onClick={null}
+          onFocus={[Function]}
+          onMouseOut={[Function]}
+          onMouseOver={[Function]}
         >
-           
-          Save Draft
-        </button>
-        <button
-          className="btn btn-primary"
-          data-target="#confirmSubmit"
-          data-toggle="modal"
-          disabled={false}
-          type="button"
+          <button
+            className="btn btn-default"
+            disabled={true}
+            type="submit"
+          >
+             
+            Save Draft
+          </button>
+        </div>
+        <div
+          className="overlay-trigger"
+          onBlur={[Function]}
+          onClick={null}
+          onFocus={[Function]}
+          onMouseOut={[Function]}
+          onMouseOver={[Function]}
         >
-           Add
-        </button>
+          <button
+            className="btn btn-primary"
+            data-target="#confirmSubmit"
+            data-toggle="modal"
+            disabled={true}
+            type="button"
+          >
+             Add
+          </button>
+        </div>
       </div>
     </div>
   </form>

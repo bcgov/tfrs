@@ -1,5 +1,5 @@
 import * as Routes from '../constants/routes';
-import {GenericRestTemplate} from "./base/genericTemplate";
+import { GenericRestTemplate } from './base/genericTemplate';
 
 const roles = new GenericRestTemplate(
   'ROLES',
@@ -7,4 +7,4 @@ const roles = new GenericRestTemplate(
   'roles'
 );
 
-export {roles};
+export { roles };

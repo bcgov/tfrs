@@ -4,15 +4,18 @@
  */
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
+// import { Modal as PrepoluateModal } from 'react-bootstrap';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
-import { addFuelCode } from '../../actions/fuelCodeActions';
+import { addFuelCode, getLatestFuelCode } from '../../actions/fuelCodeActions';
 import history from '../../app/History';
 import Loading from '../../app/components/Loading';
 import Modal from '../../app/components/Modal';
+import CallableModal from '../../app/components/CallableModal';
 import FuelCodeForm from './components/FuelCodeForm';
 import { FUEL_CODES } from '../../constants/routes/Admin';
+import { formatFacilityNameplate } from '../../utils/functions';
 import toastr from '../../utils/toastr';
 
 class FuelCodeAddContainer extends Component {
@@ -38,13 +41,17 @@ class FuelCodeAddContainer extends Component {
         fuelCode: '',
         fuelTransportMode: [],
         renewablePercentage: ''
-      }
+      },
+      showModal: false
     };
 
     this._addToFields = this._addToFields.bind(this);
+    this._closeModal = this._closeModal.bind(this);
     this._getFuelCodeStatus = this._getFuelCodeStatus.bind(this);
     this._handleInputChange = this._handleInputChange.bind(this);
+    this._handlePrepopulate = this._handlePrepopulate.bind(this);
     this._handleSubmit = this._handleSubmit.bind(this);
+    this._openModal = this._openModal.bind(this);
   }
 
   _addToFields (value) {
@@ -58,6 +65,12 @@ class FuelCodeAddContainer extends Component {
 
     this.setState({
       fields: fieldState
+    });
+  }
+
+  _closeModal () {
+    this.setState({
+      showModal: false
     });
   }
 
@@ -81,14 +94,52 @@ class FuelCodeAddContainer extends Component {
       if (name === 'facilityNameplate') {
         // as you're typing remove non-numeric values
         // (this is so we don't mess our count, but we'll add commas later)
-        value = value.replace(/\D/g, '');
-        value = value.replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,');
+        value = formatFacilityNameplate(value);
       }
 
       fieldState[name] = value;
       this.setState({
         fields: fieldState
       });
+    }
+  }
+
+  _handlePrepopulate () {
+    const fuelCode = this.state.fields.fuelCode.split('.');
+
+    if (fuelCode.length > 0) {
+      this.props.getFuelCode({
+        fuel_code: 'BCLCF',
+        fuel_code_version: fuelCode[0]
+      }).then(() => {
+        const { item } = this.props.fuelCode;
+        const fieldState = { ...this.state.fields };
+
+        Object.entries(item).forEach((prop) => {
+          if ([
+            'company', 'facilityLocation', 'facilityNameplate', 'feedstock',
+            'feedstockLocation', 'feedstockMisc', 'feedstockTransportMode',
+            'fuel', 'fuelTransportMode'
+          ].includes(prop[0])) {
+            const name = prop[0];
+            let value = prop[1];
+
+            if (name === 'facilityNameplate') {
+              value = formatFacilityNameplate(value);
+            }
+
+            fieldState[name] = value;
+          }
+        });
+
+        this.setState({
+          fields: fieldState
+        });
+
+        this._closeModal();
+      });
+    } else {
+      this._closeModal();
     }
   }
 
@@ -115,7 +166,7 @@ class FuelCodeAddContainer extends Component {
       fuel: this.state.fields.fuel,
       fuelCode: 'BCLCF',
       fuelCodeVersion: fuelCode.length > 0 ? fuelCode[0] : null,
-      fuelCodeVersionMinor: fuelCode.length > 1 ? fuelCode[1] : null,
+      fuelCodeVersionMinor: fuelCode.length > 1 ? fuelCode[1] : 0,
       fuelTransportMode: this.state.fields.fuelTransportMode,
       renewablePercentage: (this.state.fields.renewablePercentage !== '') ? this.state.fields.renewablePercentage : null,
       status: this._getFuelCodeStatus(status).id
@@ -135,6 +186,12 @@ class FuelCodeAddContainer extends Component {
     return true;
   }
 
+  _openModal () {
+    this.setState({
+      showModal: true
+    });
+  }
+
   render () {
     if (this.props.referenceData.isFetching ||
       !this.props.referenceData.isSuccessful) {
@@ -148,6 +205,7 @@ class FuelCodeAddContainer extends Component {
         errors={this.props.errors}
         fields={this.state.fields}
         handleInputChange={this._handleInputChange}
+        handleSelect={this._openModal}
         handleSubmit={this._handleSubmit}
         key="form"
         title="New Fuel Code"
@@ -159,7 +217,22 @@ class FuelCodeAddContainer extends Component {
         key="confirmSubmit"
       >
         Are you sure you want to add this Fuel code?
-      </Modal>
+      </Modal>,
+      <CallableModal
+        close={this._closeModal}
+        handleSubmit={this._handlePrepopulate}
+        id="confirmPrepopulate"
+        key="confirmPrepopulate"
+        show={this.state.showModal}
+      >
+        {!this.props.fuelCode.isFetching &&
+          <div>
+            Would you like to pre-populate the values in the form based on the previous
+            version&apos;s information?
+          </div>
+        }
+        {this.props.fuelCode.isFetching && <Loading />}
+      </CallableModal>
     ]);
   }
 }
@@ -171,6 +244,15 @@ FuelCodeAddContainer.defaultProps = {
 FuelCodeAddContainer.propTypes = {
   addFuelCode: PropTypes.func.isRequired,
   errors: PropTypes.shape({}),
+  fuelCode: PropTypes.shape({
+    errors: PropTypes.shape(),
+    isFetching: PropTypes.bool.isRequired,
+    item: PropTypes.shape({
+      id: PropTypes.number
+    }),
+    success: PropTypes.bool
+  }).isRequired,
+  getFuelCode: PropTypes.func.isRequired,
   loggedInUser: PropTypes.shape({
     organization: PropTypes.shape({
       id: PropTypes.number,
@@ -192,6 +274,12 @@ FuelCodeAddContainer.propTypes = {
 
 const mapStateToProps = state => ({
   errors: state.rootReducer.fuelCode.errors,
+  fuelCode: {
+    errors: state.rootReducer.fuelCode.errors,
+    isFetching: state.rootReducer.fuelCode.isFetching,
+    item: state.rootReducer.fuelCode.item,
+    success: state.rootReducer.fuelCode.success
+  },
   loggedInUser: state.rootReducer.userRequest.loggedInUser,
   referenceData: {
     fuelCodeStatuses: state.rootReducer.referenceData.data.fuelCodeStatuses,
@@ -203,7 +291,8 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  addFuelCode: bindActionCreators(addFuelCode, dispatch)
+  addFuelCode: bindActionCreators(addFuelCode, dispatch),
+  getFuelCode: bindActionCreators(getLatestFuelCode, dispatch)
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(FuelCodeAddContainer);

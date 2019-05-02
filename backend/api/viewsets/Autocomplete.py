@@ -14,6 +14,9 @@ class AutocompleteViewSet(ViewSet):
     def list(self, request):
         field = request.GET.get('field')
         q = request.GET.get('q')
+        cache_results = request.GET.get('cache', True)
+        if cache_results == 'False':
+            cache_results = False
 
         if q:
             q = q.lower()
@@ -23,7 +26,7 @@ class AutocompleteViewSet(ViewSet):
                 'required query parameter field or q not present')
 
         try:
-            result = Autocomplete.get_matches(field, q)
+            result = Autocomplete.get_matches(field, q, cache_results)
             response = JsonResponse(result, safe=False)
             response['Cache-Control'] = 'max-age=3600'
 
