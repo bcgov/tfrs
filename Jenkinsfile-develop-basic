@@ -278,6 +278,7 @@ node("develop-maven-${env.BUILD_NUMBER}") {
                 sh 'sleep 10s'
                 openshift.tag("mem-tfrs-tools/notification-server-develop:latest", "mem-tfrs-tools/notification-server-develop:dev")
                 sh 'sleep 10s'
+            }
         }
     }
     
