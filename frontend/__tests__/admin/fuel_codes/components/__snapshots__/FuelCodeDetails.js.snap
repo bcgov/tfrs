@@ -22,7 +22,9 @@ exports[`FuelCodeDetails should display 1`] = `
             Low Carbon Fuel Code:
             <div
               className="value"
-            />
+            >
+              .0
+            </div>
           </label>
         </div>
       </div>

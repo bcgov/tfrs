@@ -65,9 +65,9 @@ class FuelCodeFormDetails extends Component {
                   >
                     <span className="input-group-addon">BCLCF</span>
                     <AutocompletedInput
-                      handleInputChange={this.props.handleInputChange}
                       autocompleteFieldName="fuel_code.fuel_code_version"
-                      value={this.props.fields.fuelCode}
+                      cache={false}
+                      handleInputChange={this.props.handleInputChange}
                       inputProps={
                         {
                           id: 'fuelCode',
@@ -84,6 +84,8 @@ class FuelCodeFormDetails extends Component {
                         }
                       }
                       integersOnly
+                      onSelectEvent={this.props.handleSelect}
+                      value={this.props.fields.fuelCode}
                     />
                   </div>
                 </label>
@@ -462,7 +464,8 @@ FuelCodeFormDetails.propTypes = {
   }).isRequired,
   approvedFuels: PropTypes.arrayOf(PropTypes.shape()).isRequired,
   transportModes: PropTypes.arrayOf(PropTypes.shape()).isRequired,
-  handleInputChange: PropTypes.func.isRequired
+  handleInputChange: PropTypes.func.isRequired,
+  handleSelect: PropTypes.func.isRequired
 };
 
 export default FuelCodeFormDetails;

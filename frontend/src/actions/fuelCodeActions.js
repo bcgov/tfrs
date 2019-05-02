@@ -130,6 +130,18 @@ const getFuelCodeError = error => ({
 });
 
 /*
+ * Fetch the first the latest Fuel Code that matches the version
+ */
+export const getLatestFuelCode = data => (dispatch) => {
+  dispatch(getFuelCodeRequest());
+  return axios.get(`${Routes.BASE_URL}${FUEL_CODES.API}/latest`, { params: data }).then((response) => {
+    dispatch(getFuelCodeSuccess(response.data));
+  }).catch((error) => {
+    dispatch(getFuelCodeError(error.response));
+  });
+};
+
+/*
  * Update Fuel Code
  */
 export const updateFuelCode = (id, data) => (dispatch) => {

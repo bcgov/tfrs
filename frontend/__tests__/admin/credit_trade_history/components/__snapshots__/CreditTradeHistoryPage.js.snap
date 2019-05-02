@@ -19,7 +19,7 @@ exports[`CreditTradeHistoryPage should display 1`] = `
         className="rt-thead -header"
         style={
           Object {
-            "minWidth": "505px",
+            "minWidth": "475px",
           }
         }
       >
@@ -166,37 +166,13 @@ exports[`CreditTradeHistoryPage should display 1`] = `
               onTouchStart={[Function]}
             />
           </div>
-          <div
-            className="rt-th rt-resizable-header -cursor-pointer"
-            onClick={[Function]}
-            role="columnheader"
-            style={
-              Object {
-                "flex": "30 0 auto",
-                "maxWidth": "30px",
-                "width": "30px",
-              }
-            }
-            tabIndex="-1"
-          >
-            <div
-              className="rt-resizable-header-content"
-            >
-              
-            </div>
-            <div
-              className="rt-resizer"
-              onMouseDown={[Function]}
-              onTouchStart={[Function]}
-            />
-          </div>
         </div>
       </div>
       <div
         className="rt-tbody"
         style={
           Object {
-            "minWidth": "505px",
+            "minWidth": "475px",
           }
         }
       >
@@ -299,21 +275,6 @@ exports[`CreditTradeHistoryPage should display 1`] = `
                  
               </span>
             </div>
-            <div
-              className="rt-td col-actions"
-              role="gridcell"
-              style={
-                Object {
-                  "flex": "30 0 auto",
-                  "maxWidth": "30px",
-                  "width": "30px",
-                }
-              }
-            >
-              <span>
-                 
-              </span>
-            </div>
           </div>
         </div>
         <div
@@ -408,21 +369,6 @@ exports[`CreditTradeHistoryPage should display 1`] = `
                   "flex": "75 0 auto",
                   "maxWidth": null,
                   "width": "75px",
-                }
-              }
-            >
-              <span>
-                 
-              </span>
-            </div>
-            <div
-              className="rt-td col-actions"
-              role="gridcell"
-              style={
-                Object {
-                  "flex": "30 0 auto",
-                  "maxWidth": "30px",
-                  "width": "30px",
                 }
               }
             >
@@ -531,21 +477,6 @@ exports[`CreditTradeHistoryPage should display 1`] = `
                  
               </span>
             </div>
-            <div
-              className="rt-td col-actions"
-              role="gridcell"
-              style={
-                Object {
-                  "flex": "30 0 auto",
-                  "maxWidth": "30px",
-                  "width": "30px",
-                }
-              }
-            >
-              <span>
-                 
-              </span>
-            </div>
           </div>
         </div>
         <div
@@ -640,21 +571,6 @@ exports[`CreditTradeHistoryPage should display 1`] = `
                   "flex": "75 0 auto",
                   "maxWidth": null,
                   "width": "75px",
-                }
-              }
-            >
-              <span>
-                 
-              </span>
-            </div>
-            <div
-              className="rt-td col-actions"
-              role="gridcell"
-              style={
-                Object {
-                  "flex": "30 0 auto",
-                  "maxWidth": "30px",
-                  "width": "30px",
                 }
               }
             >
@@ -763,21 +679,6 @@ exports[`CreditTradeHistoryPage should display 1`] = `
                  
               </span>
             </div>
-            <div
-              className="rt-td col-actions"
-              role="gridcell"
-              style={
-                Object {
-                  "flex": "30 0 auto",
-                  "maxWidth": "30px",
-                  "width": "30px",
-                }
-              }
-            >
-              <span>
-                 
-              </span>
-            </div>
           </div>
         </div>
         <div
@@ -872,21 +773,6 @@ exports[`CreditTradeHistoryPage should display 1`] = `
                   "flex": "75 0 auto",
                   "maxWidth": null,
                   "width": "75px",
-                }
-              }
-            >
-              <span>
-                 
-              </span>
-            </div>
-            <div
-              className="rt-td col-actions"
-              role="gridcell"
-              style={
-                Object {
-                  "flex": "30 0 auto",
-                  "maxWidth": "30px",
-                  "width": "30px",
                 }
               }
             >
@@ -995,21 +881,6 @@ exports[`CreditTradeHistoryPage should display 1`] = `
                  
               </span>
             </div>
-            <div
-              className="rt-td col-actions"
-              role="gridcell"
-              style={
-                Object {
-                  "flex": "30 0 auto",
-                  "maxWidth": "30px",
-                  "width": "30px",
-                }
-              }
-            >
-              <span>
-                 
-              </span>
-            </div>
           </div>
         </div>
         <div
@@ -1104,21 +975,6 @@ exports[`CreditTradeHistoryPage should display 1`] = `
                   "flex": "75 0 auto",
                   "maxWidth": null,
                   "width": "75px",
-                }
-              }
-            >
-              <span>
-                 
-              </span>
-            </div>
-            <div
-              className="rt-td col-actions"
-              role="gridcell"
-              style={
-                Object {
-                  "flex": "30 0 auto",
-                  "maxWidth": "30px",
-                  "width": "30px",
                 }
               }
             >
@@ -1227,21 +1083,6 @@ exports[`CreditTradeHistoryPage should display 1`] = `
                  
               </span>
             </div>
-            <div
-              className="rt-td col-actions"
-              role="gridcell"
-              style={
-                Object {
-                  "flex": "30 0 auto",
-                  "maxWidth": "30px",
-                  "width": "30px",
-                }
-              }
-            >
-              <span>
-                 
-              </span>
-            </div>
           </div>
         </div>
         <div
@@ -1336,21 +1177,6 @@ exports[`CreditTradeHistoryPage should display 1`] = `
                   "flex": "75 0 auto",
                   "maxWidth": null,
                   "width": "75px",
-                }
-              }
-            >
-              <span>
-                 
-              </span>
-            </div>
-            <div
-              className="rt-td col-actions"
-              role="gridcell"
-              style={
-                Object {
-                  "flex": "30 0 auto",
-                  "maxWidth": "30px",
-                  "width": "30px",
                 }
               }
             >

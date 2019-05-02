@@ -1,5 +1,4 @@
 import React from 'react';
-import ReactTable from 'react-table';
 import moment from 'moment';
 import numeral from 'numeral';
 import PropTypes from 'prop-types';
@@ -9,7 +8,7 @@ import { CREDIT_TRANSFER_STATUS, CREDIT_TRANSFER_TYPES } from '../../constants/v
 import { getCreditTransferType } from '../../actions/creditTransfersActions';
 import * as NumberFormat from '../../constants/numeralFormats';
 import filterNumber from '../../utils/filters';
-import StateSavingReactTable from "../../app/components/StateSavingReactTable";
+import ReactTable from '../../app/components/StateSavingReactTable';
 
 const LinkedCreditTransferSelection = (props) => {
   const columns = [{
@@ -131,7 +130,7 @@ const LinkedCreditTransferSelection = (props) => {
   const filterable = true;
 
   return (
-    <StateSavingReactTable
+    <ReactTable
       stateKey="linked-credit-transfer"
       saveState={false}
       className="searchable"
