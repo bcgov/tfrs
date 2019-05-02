@@ -7,9 +7,8 @@ import FontAwesomeIcon from '@fortawesome/react-fontawesome';
 
 import history from '../../../app/History';
 import * as Lang from '../../../constants/langEnUs';
-import CREDIT_CALCULATIONS from '../../../constants/routes/CreditCalculations';
 
-const DefaultCarbonIntensityDetails = props => (
+const CarbonIntensityDetails = props => (
   <div className="page-compliance-reporting-details">
     <h1>{props.title}</h1>
 
@@ -64,7 +63,7 @@ const DefaultCarbonIntensityDetails = props => (
       <button
         className="btn btn-default"
         type="button"
-        onClick={() => history.push(CREDIT_CALCULATIONS.DEFAULT_CARBON_INTENSITIES_EDIT.replace(':id', props.item.id))}
+        onClick={() => history.push(props.editUrl.replace(':id', props.item.id))}
       >
         <FontAwesomeIcon icon="edit" /> {Lang.BTN_EDIT}
       </button>
@@ -72,9 +71,10 @@ const DefaultCarbonIntensityDetails = props => (
   </div>
 );
 
-DefaultCarbonIntensityDetails.defaultProps = {};
+CarbonIntensityDetails.defaultProps = {};
 
-DefaultCarbonIntensityDetails.propTypes = {
+CarbonIntensityDetails.propTypes = {
+  editUrl: PropTypes.string.isRequired,
   item: PropTypes.shape({
     name: PropTypes.string,
     id: PropTypes.number,
@@ -87,4 +87,4 @@ DefaultCarbonIntensityDetails.propTypes = {
   title: PropTypes.string.isRequired
 };
 
-export default DefaultCarbonIntensityDetails;
+export default CarbonIntensityDetails;

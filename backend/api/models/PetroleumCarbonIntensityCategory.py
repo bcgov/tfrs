@@ -29,23 +29,24 @@ from api.models.mixins.EffectiveDates import EffectiveDates
 from auditable.models import Auditable
 
 
-class DefaultCarbonIntensityCategory(Auditable, DisplayOrder, EffectiveDates):
+class PetroleumCarbonIntensityCategory(
+        Auditable, DisplayOrder, EffectiveDates):
     """
-    List of 'categories' used to classify the fuels for default carbon
-    intensity
+    List of 'categories' used to classify the fuels for petroleum-based
+    carbon intensity
     """
     name = models.CharField(
         max_length=255,
         blank=True,
         null=True,
         unique=True,
-        db_comment="Label for Default Carbon Intensity Fuels."
+        db_comment="Label for Petroleum-based Carbon Intensity Fuels."
     )
 
     objects = NameManager()
 
     class Meta:
-        db_table = 'default_carbon_intensity_category'
+        db_table = 'petroleum_carbon_intensity_category'
 
     db_table_comment = "List of 'categories' used to classify the fuels for " \
-                       "default carbon intensity."
+                       "petroleum carbon intensity."

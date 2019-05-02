@@ -9,7 +9,7 @@ import history from '../../../app/History';
 import * as Lang from '../../../constants/langEnUs';
 import CREDIT_CALCULATIONS from '../../../constants/routes/CreditCalculations';
 
-const DefaultCarbonIntensityDetails = props => (
+const EnergyEffectivenessRatioDetails = props => (
   <div className="page-compliance-reporting-details">
     <h1>{props.title}</h1>
 
@@ -102,9 +102,9 @@ const DefaultCarbonIntensityDetails = props => (
   </div>
 );
 
-DefaultCarbonIntensityDetails.defaultProps = {};
+EnergyEffectivenessRatioDetails.defaultProps = {};
 
-DefaultCarbonIntensityDetails.propTypes = {
+EnergyEffectivenessRatioDetails.propTypes = {
   item: PropTypes.shape({
     name: PropTypes.string,
     id: PropTypes.number,
@@ -116,4 +116,4 @@ DefaultCarbonIntensityDetails.propTypes = {
   title: PropTypes.string.isRequired
 };
 
-export default DefaultCarbonIntensityDetails;
+export default EnergyEffectivenessRatioDetails;
