@@ -71,8 +71,8 @@ class CreditTransferSigningHistory extends Component {
         roleDisplay &&
           <span>
             on {moment(history.createTimestamp).format('LL')} by
-            <strong> {history.user.firstName} {history.user.lastName},</strong>
-            <strong> {roleDisplay} </strong> under the
+            <strong> {history.user.firstName} {history.user.lastName}</strong>
+            <strong>{roleDisplay && `, ${roleDisplay}`} </strong> under the
           </span>
         }
         <em> Greenhouse Gas Reduction (Renewable and Low Carbon Fuel Requirements) Act</em>
@@ -81,11 +81,15 @@ class CreditTransferSigningHistory extends Component {
   }
 
   _renderDeclined (history) {
-    let roleDisplay = history.userRole.description;
+    let roleDisplay = null;
 
-    if (history.userRole.name === 'GovDeputyDirector' ||
-        history.userRole.name === 'GovDirector') {
-      roleDisplay = roleDisplay.replace('Government ', '');
+    if (history.userRole) {
+      roleDisplay = history.userRole.description;
+
+      if (history.userRole.name === 'GovDeputyDirector' ||
+      history.userRole.name === 'GovDirector') {
+        roleDisplay = roleDisplay.replace('Government ', '');
+      }
     }
 
     // if "recorded" status was found, this means this credit trade
@@ -104,8 +108,8 @@ class CreditTransferSigningHistory extends Component {
         {!CreditTransferSigningHistory.recordedFound(this.props.history) &&
           <span>
             on {moment(history.createTimestamp).format('LL')} by
-            <strong> {history.user.firstName} {history.user.lastName},</strong>
-            <strong> {roleDisplay} </strong> under the
+            <strong> {history.user.firstName} {history.user.lastName}</strong>
+            <strong>{roleDisplay && `, ${roleDisplay}`} </strong> under the
           </span>
         }
         <em> Greenhouse Gas Reduction (Renewable and Low Carbon Fuel Requirements) Act</em>
