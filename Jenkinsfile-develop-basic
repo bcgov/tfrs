@@ -255,22 +255,7 @@ node("develop-maven-${env.BUILD_NUMBER}") {
         sh returnStdout: true, script: "oc exec ${postgresql_pod_name} -c postgresql96 -n mem-tfrs-dev -- bash /postgresql-backup/tfrs-backup.sh ${env.tfrs_dev_release} dev"
         echo 'backup script completed'
     }
-
-    stage('Deploy Frontend on Dev') {
-        script {
-            openshift.withProject("mem-tfrs-tools") {
-                openshift.tag("mem-tfrs-tools/client-develop:latest", "mem-tfrs-tools/client-develop:dev")
-            }
-        }
-        sh 'sleep 10s'
-        script {
-            openshift.withProject("mem-tfrs-tools") {
-                openshift.tag("mem-tfrs-tools/notification-server-develop:latest", "mem-tfrs-tools/notification-server-develop:dev")
-            }
-        }
-        sh 'sleep 10s'
-    }
-
+    
     stage('Deploy Backend on Dev') {
         script {
             openshift.withProject("mem-tfrs-tools") {
@@ -285,7 +270,17 @@ node("develop-maven-${env.BUILD_NUMBER}") {
             }
         }
     }
-
+  
+    stage('Deploy Frontend on Dev') {
+        script {
+            openshift.withProject("mem-tfrs-tools") {
+                openshift.tag("mem-tfrs-tools/client-develop:latest", "mem-tfrs-tools/client-develop:dev")
+                sh 'sleep 10s'
+                openshift.tag("mem-tfrs-tools/notification-server-develop:latest", "mem-tfrs-tools/notification-server-develop:dev")
+                sh 'sleep 10s'
+        }
+    }
+    
     stage('Refresh SchemaSpy') {
         echo "Refreshing SchemaSpy for Dev Database"
         sh returnStdout: true, script: "oc scale dc schema-spy-public --replicas=0 -n mem-tfrs-dev"
