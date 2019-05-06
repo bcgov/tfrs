@@ -69,8 +69,8 @@ const mapStateToProps = state => ({
   roles: state.rootReducer.roles
 });
 
-const mapDispatchToProps = dispatch => ({
+const mapDispatchToProps = {
   getRoles: roles.find
-});
+};
 
 export default connect(mapStateToProps, mapDispatchToProps)(OrganizationRolesContainer);
