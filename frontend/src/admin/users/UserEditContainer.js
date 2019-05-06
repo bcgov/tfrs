@@ -3,23 +3,23 @@
  * All data handling & manipulation should be handled here.
  */
 import PropTypes from 'prop-types';
-import React, {Component} from 'react';
-import {connect} from 'react-redux';
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
 
-import {clearUsersRequestError, getUser, updateUser} from '../../actions/userActions';
+import { clearUsersRequestError, getUser, updateUser } from '../../actions/userActions';
 import Modal from '../../app/components/Modal';
 import Loading from '../../app/components/Loading';
 import history from '../../app/History';
-import {getFuelSuppliers} from '../../actions/organizationActions';
-import {roles} from '../../actions/roleActions';
+import { getFuelSuppliers } from '../../actions/organizationActions';
+import { roles } from '../../actions/roleActions';
 import UserForm from './components/UserForm';
 import PERMISSIONS_USERS from '../../constants/permissions/Users';
-import {USERS as ADMIN_USERS} from '../../constants/routes/Admin';
+import { USERS as ADMIN_USERS } from '../../constants/routes/Admin';
 import USERS from '../../constants/routes/Users';
 import toastr from '../../utils/toastr';
 
 class UserEditContainer extends Component {
-  constructor(props) {
+  constructor (props) {
     super(props);
 
     this.state = {
@@ -48,16 +48,16 @@ class UserEditContainer extends Component {
     this._toggleCheck = this._toggleCheck.bind(this);
   }
 
-  componentDidMount() {
+  componentDidMount () {
     this.props.clearUsersRequestError();
     this.loadData(this.props.match.params.id);
   }
 
-  componentWillReceiveProps(props) {
+  componentWillReceiveProps (props) {
     this.loadPropsToFieldState(props);
   }
 
-  loadData(id) {
+  loadData (id) {
     this.props.getUser(id);
     this.props.getFuelSuppliers();
 
@@ -72,7 +72,7 @@ class UserEditContainer extends Component {
     }
   }
 
-  loadPropsToFieldState(props) {
+  loadPropsToFieldState (props) {
     if (!props.user.isFetching && !this.submitted) {
       const fieldState = {
         firstName: props.user.details.firstName || '',
@@ -99,8 +99,8 @@ class UserEditContainer extends Component {
     }
   }
 
-  _addToFields(value) {
-    const fieldState = {...this.state.fields};
+  _addToFields (value) {
+    const fieldState = { ...this.state.fields };
 
     if (value &&
       fieldState.roles.findIndex(role => (role.id === value.id)) < 0) {
@@ -112,9 +112,9 @@ class UserEditContainer extends Component {
     });
   }
 
-  _handleInputChange(event) {
-    const {value, name} = event.target;
-    const fieldState = {...this.state.fields};
+  _handleInputChange (event) {
+    const { value, name } = event.target;
+    const fieldState = { ...this.state.fields };
 
     fieldState[name] = value;
     this.setState({
@@ -122,7 +122,7 @@ class UserEditContainer extends Component {
     });
   }
 
-  _handleSubmit(event) {
+  _handleSubmit (event) {
     event.preventDefault();
 
     this.submitted = true;
@@ -145,7 +145,7 @@ class UserEditContainer extends Component {
       title: this.state.fields.title
     };
 
-    const {id} = this.props.user.details;
+    const { id } = this.props.user.details;
 
     let viewUrl = USERS.DETAILS.replace(':id', id);
 
@@ -162,8 +162,8 @@ class UserEditContainer extends Component {
     return true;
   }
 
-  _toggleCheck(key) {
-    const fieldState = {...this.state.fields};
+  _toggleCheck (key) {
+    const fieldState = { ...this.state.fields };
     const index = fieldState.roles.findIndex(role => role.id === key);
 
     if (index < 0) {
@@ -192,22 +192,22 @@ class UserEditContainer extends Component {
     });
   }
 
-  changeObjectProp(id, name) {
-    const fieldState = {...this.state.fields};
+  changeObjectProp (id, name) {
+    const fieldState = { ...this.state.fields };
 
-    fieldState[name] = {id: id || 0};
+    fieldState[name] = { id: id || 0 };
     this.setState({
       fields: fieldState
     });
   }
 
-  render() {
+  render () {
     if (this.props.user.isFetching) {
-      return <Loading/>;
+      return <Loading />;
     }
 
     if (this.props.roles.isFinding) {
-      return <Loading/>;
+      return <Loading />;
     }
 
     return ([
