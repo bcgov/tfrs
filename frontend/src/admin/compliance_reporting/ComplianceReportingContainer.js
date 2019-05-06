@@ -14,6 +14,7 @@ import { carbonIntensities } from '../../actions/carbonIntensities';
 import { defaultCarbonIntensities } from '../../actions/defaultCarbonIntensities';
 import { energyDensities } from '../../actions/energyDensities';
 import { energyEffectivenessRatios } from '../../actions/energyEffectivenessRatios';
+import { petroleumCarbonIntensities } from '../../actions/petroleumCarbonIntensities';
 
 class ComplianceReportingContainer extends Component {
   constructor (props) {
@@ -27,6 +28,7 @@ class ComplianceReportingContainer extends Component {
     this.props.loadDefaultCarbonIntensities();
     this.props.loadEnergyDensities();
     this.props.loadEnergyEffectivenessRatios();
+    this.props.loadPetroleumCarbonIntensities();
   }
 
   render () {
@@ -44,6 +46,7 @@ class ComplianceReportingContainer extends Component {
         fuelTypes={this.props.referenceData.approvedFuels}
         key="compliance-reporting"
         loggedInUser={this.props.loggedInUser}
+        petroleumCarbonIntensities={this.props.petroleumCarbonIntensities}
         title="Compliance Reporting"
       />
     ]);
@@ -75,6 +78,11 @@ ComplianceReportingContainer.propTypes = {
   loadDefaultCarbonIntensities: PropTypes.func.isRequired,
   loadEnergyDensities: PropTypes.func.isRequired,
   loadEnergyEffectivenessRatios: PropTypes.func.isRequired,
+  loadPetroleumCarbonIntensities: PropTypes.func.isRequired,
+  petroleumCarbonIntensities: PropTypes.shape({
+    isFetching: PropTypes.bool,
+    items: PropTypes.arrayOf(PropTypes.shape())
+  }).isRequired,
   referenceData: PropTypes.shape({
     approvedFuels: PropTypes.arrayOf(PropTypes.shape)
   }).isRequired
@@ -98,6 +106,10 @@ const mapStateToProps = state => ({
     items: state.rootReducer.energyEffectivenessRatios.items
   },
   loggedInUser: state.rootReducer.userRequest.loggedInUser,
+  petroleumCarbonIntensities: {
+    isFetching: state.rootReducer.petroleumCarbonIntensities.isFinding,
+    items: state.rootReducer.petroleumCarbonIntensities.items
+  },
   referenceData: {
     approvedFuels: state.rootReducer.referenceData.data.approvedFuels
   }
@@ -107,7 +119,8 @@ const mapDispatchToProps = {
   loadCarbonIntensities: carbonIntensities.find,
   loadEnergyDensities: energyDensities.find,
   loadDefaultCarbonIntensities: defaultCarbonIntensities.find,
-  loadEnergyEffectivenessRatios: energyEffectivenessRatios.find
+  loadEnergyEffectivenessRatios: energyEffectivenessRatios.find,
+  loadPetroleumCarbonIntensities: petroleumCarbonIntensities.find
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(ComplianceReportingContainer);

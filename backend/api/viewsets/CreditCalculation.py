@@ -8,6 +8,8 @@ from api.models.DefaultCarbonIntensityCategory import \
 from api.models.EnergyDensityCategory import EnergyDensityCategory
 from api.models.EnergyEffectivenessRatioCategory import \
     EnergyEffectivenessRatioCategory
+from api.models.PetroleumCarbonIntensityCategory import \
+    PetroleumCarbonIntensityCategory
 from api.permissions.CreditCalculation import \
         CreditCalculationPermissions
 from api.serializers.CreditCalculation import \
@@ -21,7 +23,10 @@ from api.serializers.CreditCalculation import \
     EnergyDensityUpdateSerializer, \
     EnergyEffectivenessRatioDetailSerializer, \
     EnergyEffectivenessRatioSerializer, \
-    EnergyEffectivenessRatioUpdateSerializer
+    EnergyEffectivenessRatioUpdateSerializer, \
+    PetroleumCarbonIntensitySerializer, \
+    PetroleumCarbonIntensityDetailSerializer, \
+    PetroleumCarbonIntensityUpdateSerializer
 
 
 class CarbonIntensityLimitViewSet(
@@ -122,6 +127,33 @@ class EnergyEffectivenessRatioViewSet(
         'default': EnergyEffectivenessRatioSerializer,
         'update': EnergyEffectivenessRatioUpdateSerializer,
         'retrieve': EnergyEffectivenessRatioDetailSerializer
+    }
+
+    def get_serializer_class(self):
+        if self.action in list(self.serializer_classes.keys()):
+            return self.serializer_classes[self.action]
+
+        return self.serializer_classes['default']
+
+
+class PetroleumCarbonIntensityViewSet(
+        AuditableMixin, mixins.ListModelMixin, mixins.RetrieveModelMixin,
+        mixins.UpdateModelMixin, viewsets.GenericViewSet):
+    """
+    This viewset automatically provides `list`
+    """
+    permission_classes = (CreditCalculationPermissions,)
+    http_method_names = ['get', 'put']
+    queryset = PetroleumCarbonIntensityCategory.objects.all()
+    filter_backends = (filters.OrderingFilter,)
+    ordering_fields = '__all__'
+    ordering = ('name',)
+    serializer_class = PetroleumCarbonIntensitySerializer
+    serializer_classes = {
+        'list': PetroleumCarbonIntensitySerializer,
+        'default': PetroleumCarbonIntensitySerializer,
+        'update': PetroleumCarbonIntensityUpdateSerializer,
+        'retrieve': PetroleumCarbonIntensityDetailSerializer
     }
 
     def get_serializer_class(self):

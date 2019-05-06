@@ -24,6 +24,7 @@ import { carbonIntensities } from '../actions/carbonIntensities';
 import { defaultCarbonIntensities } from '../actions/defaultCarbonIntensities';
 import { energyDensities } from '../actions/energyDensities';
 import { energyEffectivenessRatios } from '../actions/energyEffectivenessRatios';
+import { petroleumCarbonIntensities } from '../actions/petroleumCarbonIntensities';
 import { roles } from '../actions/roleActions';
 
 const middleware = routerMiddleware(history);
@@ -73,5 +74,6 @@ sagaMiddleware.run(carbonIntensities.saga);
 sagaMiddleware.run(defaultCarbonIntensities.saga);
 sagaMiddleware.run(energyDensities.saga);
 sagaMiddleware.run(energyEffectivenessRatios.saga);
+sagaMiddleware.run(petroleumCarbonIntensities.saga);
 
 export default store;

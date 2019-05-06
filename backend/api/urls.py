@@ -44,7 +44,7 @@ from .viewsets.CreditTradeComments import CreditTradeCommentsViewSet
 
 from .viewsets.CreditCalculation import CarbonIntensityLimitViewSet, \
     DefaultCarbonIntensityViewSet, EnergyDensityViewSet, \
-    EnergyEffectivenessRatioViewSet
+    EnergyEffectivenessRatioViewSet, PetroleumCarbonIntensityViewSet
 
 # Create a router and register our views with it.
 ROUTER = DefaultRouter(trailing_slash=False)
@@ -75,7 +75,6 @@ if FUEL_CODES_API['ENABLED'] or TESTING:
     ROUTER.register(r'fuel_codes', FuelCodeViewSet)
 
 if CREDIT_CALCULATION_API['ENABLED'] or TESTING:
-
     ROUTER.register(
         r'credit_calculation/carbon_intensity_limits',
         CarbonIntensityLimitViewSet
@@ -91,6 +90,10 @@ if CREDIT_CALCULATION_API['ENABLED'] or TESTING:
     ROUTER.register(
         r'credit_calculation/energy_effectiveness_ratios',
         EnergyEffectivenessRatioViewSet
+    )
+    ROUTER.register(
+        R'credit_calculation/petroleum_carbon_intensities',
+        PetroleumCarbonIntensityViewSet
     )
 
 urlpatterns = [

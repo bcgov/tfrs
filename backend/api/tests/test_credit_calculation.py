@@ -41,7 +41,8 @@ class TestCreditCalculation(BaseTestCase):
         'test/test_carbon_intensity_limits.json',
         'test/test_default_carbon_intensities.json',
         'test/test_energy_densities.json',
-        'test/test_energy_effectiveness_ratio.json'
+        'test/test_energy_effectiveness_ratio.json',
+        'test/test_petroleum_carbon_intensities.json'
     ]
 
     def test_get_carbon_intensity_limits_list(self):
@@ -131,9 +132,28 @@ class TestCreditCalculation(BaseTestCase):
                 self.assertEqual(row["dieselRatio"], None)
                 self.assertEqual(row["gasolineRatio"], None)
 
+    def test_get_petroleum_carbon_intensity_list(self):
+        """
+        Test that the petroleum-based carbon intensity shows up properly
+        """
+        response = self.clients['gov_analyst'].get(
+            "/api/credit_calculation/petroleum_carbon_intensities"
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        response_data = json.loads(response.content.decode("utf-8"))
+
+        for row in response_data:
+            if row["name"] == "Petroleum-based diesel":
+                self.assertEqual(row["density"], 94.76)
+
+            elif row["name"] == "Petroleum-based gasoline":
+                self.assertEqual(row["density"], 88.14)
+
     def test_update_energy_effectiveness_ratio(self):
         """
-        Test that the updating energy effectiveness ratio updates the
+        Test that the updating energy effectiveness ratio actually updates the
         effective and expiry dates properly.
         It should never overwrite the current record
         """
@@ -211,8 +231,8 @@ class TestCreditCalculation(BaseTestCase):
 
     def test_update_energy_density(self):
         """
-        Test that the updating energy density updates the effective and 
-        expiry dates properly.
+        Test that the updating energy density actually updates the effective
+        and expiry dates properly.
         It should never overwrite the current record
         """
         from api.models.EnergyDensity import \
@@ -259,8 +279,8 @@ class TestCreditCalculation(BaseTestCase):
 
     def test_update_default_carbon_intensity(self):
         """
-        Test that the updating default carbon intensity updates the effective
-        and expiry dates properly.
+        Test that the updating default carbon intensity actually updates the
+        effective and expiry dates properly.
         It should never overwrite the current record
         """
         from api.models.DefaultCarbonIntensity import \
@@ -307,7 +327,7 @@ class TestCreditCalculation(BaseTestCase):
 
     def test_update_carbon_intensity_limit(self):
         """
-        Test that the updating carbon intensity limit updates the
+        Test that the updating carbon intensity limit actually updates the
         effective and expiry dates properly.
         It should never overwrite the current record
         """
@@ -382,3 +402,55 @@ class TestCreditCalculation(BaseTestCase):
 
         # expiry date for the new record should be null
         self.assertIsNone(gasoline_density.expiration_date)
+
+    def test_update_petroleum_carbon_intensity(self):
+        """
+        Test that the updating petroleum carbon intensity actually updates
+        the effective and expiry dates properly.
+        It should never overwrite the current record
+        """
+        from api.models.PetroleumCarbonIntensity import \
+            PetroleumCarbonIntensity
+
+        from api.models.PetroleumCarbonIntensityCategory import \
+            PetroleumCarbonIntensityCategory
+
+        category = PetroleumCarbonIntensityCategory.objects.\
+            get(name="Petroleum-based diesel")
+
+        payload = {
+            "density": 95.76,
+            "effectiveDate": "2022-01-01"
+        }
+
+        response = self.clients['gov_analyst'].put(
+            "/api/credit_calculation/petroleum_carbon_intensities/{}".format(
+                category.id
+            ),
+            content_type='application/json',
+            data=json.dumps(payload)
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        current_density = PetroleumCarbonIntensity.objects.get(
+            category_id=category.id,
+            effective_date="2017-01-01"
+        )
+
+        # density should remain unchanged for the old record
+        self.assertEqual(current_density.density, Decimal('94.76'))
+
+        # but it should now have an expiry date
+        self.assertEqual(
+            current_density.expiration_date, date(2021, 12, 31))
+
+        new_density = PetroleumCarbonIntensity.objects.get(
+            category_id=category.id,
+            effective_date="2022-01-01"
+        )
+
+        self.assertEqual(new_density.density, Decimal('95.76'))
+
+        # expiry date for the new record should be null
+        self.assertIsNone(new_density.expiration_date)
