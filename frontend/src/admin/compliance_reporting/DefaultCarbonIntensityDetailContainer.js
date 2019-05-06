@@ -9,7 +9,8 @@ import PropTypes from 'prop-types';
 
 import { defaultCarbonIntensities } from '../../actions/defaultCarbonIntensities';
 import Loading from '../../app/components/Loading';
-import DefaultCarbonIntensityDetails from './components/DefaultCarbonIntensityDetails';
+import CarbonIntensityDetails from './components/CarbonIntensityDetails';
+import CREDIT_CALCULATIONS from '../../constants/routes/CreditCalculations';
 
 class DefaultCarbonIntensityDetailContainer extends Component {
   constructor (props) {
@@ -27,7 +28,8 @@ class DefaultCarbonIntensityDetailContainer extends Component {
 
     if (success && !isFetching && item) {
       return (
-        <DefaultCarbonIntensityDetails
+        <CarbonIntensityDetails
+          editUrl={CREDIT_CALCULATIONS.DEFAULT_CARBON_INTENSITIES_EDIT}
           item={item}
           loggedInUser={this.props.loggedInUser}
           title="Default Carbon Intensity Details"

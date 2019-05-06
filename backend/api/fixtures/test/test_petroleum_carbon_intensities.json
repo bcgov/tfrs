@@ -1,0 +1,17 @@
+[{
+  "fields": {
+    "category": ["Petroleum-based diesel"],
+    "density": "94.76",
+    "effective_date": "2017-01-01"
+  },
+  "model": "api.petroleumcarbonintensity",
+  "pk": null
+}, {
+  "fields": {
+    "category": ["Petroleum-based gasoline"],
+    "density": "88.14",
+    "effective_date": "2017-01-01"
+  },
+  "model": "api.petroleumcarbonintensity",
+  "pk": null
+}]
