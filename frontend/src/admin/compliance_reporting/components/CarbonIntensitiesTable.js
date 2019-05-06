@@ -8,7 +8,6 @@ import 'react-table/react-table.css';
 
 import ReactTable from '../../../app/components/StateSavingReactTable';
 import history from '../../../app/History';
-import CREDIT_CALCULATIONS from '../../../constants/routes/CreditCalculations';
 
 const CarbonIntensitiesTable = (props) => {
   const columns = [{
@@ -39,7 +38,7 @@ const CarbonIntensitiesTable = (props) => {
 
   return (
     <ReactTable
-      stateKey="carbon-intensity"
+      stateKey={props.stateKey}
       className="searchable"
       columns={columns}
       data={props.items}
@@ -54,7 +53,7 @@ const CarbonIntensitiesTable = (props) => {
         if (row && row.original) {
           return {
             onClick: (e) => {
-              const viewUrl = CREDIT_CALCULATIONS.DEFAULT_CARBON_INTENSITIES_DETAILS.replace(':id', row.original.id);
+              const viewUrl = props.viewUrl.replace(':id', row.original.id);
 
               history.push(viewUrl);
             },
@@ -69,13 +68,17 @@ const CarbonIntensitiesTable = (props) => {
   );
 };
 
-CarbonIntensitiesTable.defaultProps = {};
+CarbonIntensitiesTable.defaultProps = {
+  stateKey: 'carbon-intensity'
+};
 
 CarbonIntensitiesTable.propTypes = {
   items: PropTypes.arrayOf(PropTypes.shape({
   })).isRequired,
   isEmpty: PropTypes.bool.isRequired,
-  isFetching: PropTypes.bool.isRequired
+  isFetching: PropTypes.bool.isRequired,
+  stateKey: PropTypes.string,
+  viewUrl: PropTypes.string.isRequired
 };
 
 export default CarbonIntensitiesTable;

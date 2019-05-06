@@ -20,32 +20,39 @@
     See the License for the specific language governing permissions and
     limitations under the License.
 """
-
+from decimal import Decimal
 from django.db import models
+from django.db.models import PROTECT
 
-from api.managers.NameManager import NameManager
-from api.models.mixins.DisplayOrder import DisplayOrder
 from api.models.mixins.EffectiveDates import EffectiveDates
 from auditable.models import Auditable
 
 
-class DefaultCarbonIntensityCategory(Auditable, DisplayOrder, EffectiveDates):
+class PetroleumCarbonIntensity(Auditable, EffectiveDates):
     """
-    List of 'categories' used to classify the fuels for default carbon
-    intensity
+    Carbon Intensities for Petroleum Gasoline and Diesel
     """
-    name = models.CharField(
-        max_length=255,
+    category = models.ForeignKey(
+        'PetroleumCarbonIntensityCategory',
+        blank=False,
+        null=False,
+        related_name='petroleum_carbon_intensity',
+        on_delete=PROTECT
+    )
+    density = models.DecimalField(
         blank=True,
+        decimal_places=2,
+        default=Decimal('0.00'),
+        max_digits=5,
         null=True,
-        unique=True,
-        db_comment="Label for Default Carbon Intensity Fuels."
+        db_comment="Carbon Intensity (gCO2e/MJ) for the specific "
+                   "petroleum-based fuel"
     )
 
-    objects = NameManager()
-
     class Meta:
-        db_table = 'default_carbon_intensity_category'
+        db_table = 'petroleum_carbon_intensity'
 
-    db_table_comment = "List of 'categories' used to classify the fuels for " \
-                       "default carbon intensity."
+    db_table_comment = "Contains the carbon intensity for either of " \
+                       "petroleum-based gasoline or diesel." \
+                       "This will affect how the formula for section 6 (4) " \
+                       "of the act is calculated."

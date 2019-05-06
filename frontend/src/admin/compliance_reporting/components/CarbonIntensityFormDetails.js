@@ -5,7 +5,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import InputWithTooltip from '../../../app/components/InputWithTooltip';
 
-const DefaultCarbonIntensityFormDetails = props => (
+const CarbonIntensityFormDetails = props => (
   <div className="default-carbon-intensity-details">
     <div className="main-form">
       <div className="row">
@@ -93,11 +93,11 @@ const DefaultCarbonIntensityFormDetails = props => (
   </div>
 );
 
-DefaultCarbonIntensityFormDetails.defaultProps = {
+CarbonIntensityFormDetails.defaultProps = {
   edit: false
 };
 
-DefaultCarbonIntensityFormDetails.propTypes = {
+CarbonIntensityFormDetails.propTypes = {
   edit: PropTypes.bool,
   fields: PropTypes.shape({
     density: PropTypes.string,
@@ -118,4 +118,4 @@ DefaultCarbonIntensityFormDetails.propTypes = {
   }).isRequired
 };
 
-export default DefaultCarbonIntensityFormDetails;
+export default CarbonIntensityFormDetails;
