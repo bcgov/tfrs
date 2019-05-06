@@ -33,6 +33,8 @@ import EnergyDensityDetailContainer from './admin/compliance_reporting/EnergyDen
 import EnergyDensityEditContainer from './admin/compliance_reporting/EnergyDensityEditContainer';
 import EnergyEffectivenessRatioDetailContainer from './admin/compliance_reporting/EnergyEffectivenessRatioDetailContainer';
 import EnergyEffectivenessRatioEditContainer from './admin/compliance_reporting/EnergyEffectivenessRatioEditContainer';
+import PetroleumCarbonIntensityDetailContainer from './admin/compliance_reporting/PetroleumCarbonIntensityDetailContainer';
+import PetroleumCarbonIntensityEditContainer from './admin/compliance_reporting/PetroleumCarbonIntensityEditContainer';
 import CreditTransactionsHistoryContainer from './admin/credit_trade_history/CreditTradeHistoryContainer';
 import SecureFileSubmissionsContainer from './secure_file_submission/SecureFileSubmissionContainer';
 import SecureFileSubmissionAddContainer from './secure_file_submission/SecureFileSubmissionAddContainer';
@@ -303,6 +305,16 @@ const Router = routerProps => (
             key="energy_effectiveness_ratio_edit"
             path={CREDIT_CALCULATIONS.ENERGY_EFFECTIVENESS_RATIO_EDIT}
             component={withRouter(EnergyEffectivenessRatioEditContainer)}
+          />,
+          <Route
+            key="petroleum_carbon_intensity_details"
+            path={CREDIT_CALCULATIONS.PETROLEUM_CARBON_INTENSITIES_DETAILS}
+            component={withRouter(PetroleumCarbonIntensityDetailContainer)}
+          />,
+          <Route
+            key="petroleum_carbon_intensity_details"
+            path={CREDIT_CALCULATIONS.PETROLEUM_CARBON_INTENSITIES_EDIT}
+            component={withRouter(PetroleumCarbonIntensityEditContainer)}
           />
         ]}
         <Route component={NotFound} />

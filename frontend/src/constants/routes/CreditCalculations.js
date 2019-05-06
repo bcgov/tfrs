@@ -18,7 +18,11 @@ const CREDIT_CALCULATIONS = {
   ENERGY_EFFECTIVENESS_RATIO_API: `${API_BASE_PATH}/energy_effectiveness_ratios`,
   ENERGY_EFFECTIVENESS_RATIO_DETAILS: `${BASE_PATH}/energy_effectiveness_ratios/view/:id`,
   ENERGY_EFFECTIVENESS_RATIO_EDIT: `${BASE_PATH}/energy_effectiveness_ratios/edit/:id`,
-  LIST: BASE_PATH
+  LIST: BASE_PATH,
+  PETROLEUM_CARBON_INTENSITIES: `${BASE_PATH}/petroleum_carbon_intensities`,
+  PETROLEUM_CARBON_INTENSITIES_API: `${API_BASE_PATH}/petroleum_carbon_intensities`,
+  PETROLEUM_CARBON_INTENSITIES_DETAILS: `${BASE_PATH}/petroleum_carbon_intensities/view/:id`,
+  PETROLEUM_CARBON_INTENSITIES_EDIT: `${BASE_PATH}/petroleum_carbon_intensities/edit/:id`
 };
 
 export default CREDIT_CALCULATIONS;

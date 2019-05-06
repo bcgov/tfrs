@@ -7,7 +7,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
-import { defaultCarbonIntensities } from '../../actions/defaultCarbonIntensities';
+import { petroleumCarbonIntensities } from '../../actions/petroleumCarbonIntensities';
 import Loading from '../../app/components/Loading';
 import Modal from '../../app/components/Modal';
 import history from '../../app/History';
@@ -15,7 +15,7 @@ import CarbonIntensityForm from './components/CarbonIntensityForm';
 import CREDIT_CALCULATIONS from '../../constants/routes/CreditCalculations';
 import toastr from '../../utils/toastr';
 
-class DefaultCarbonIntensityEditContainer extends Component {
+class PetroleumCarbonIntensityEditContainer extends Component {
   constructor (props) {
     super(props);
 
@@ -34,14 +34,14 @@ class DefaultCarbonIntensityEditContainer extends Component {
   }
 
   componentDidMount () {
-    this.props.getDefaultCarbonIntensity(this.props.match.params.id);
+    this.props.getPetroleumCarbonIntensity(this.props.match.params.id);
   }
 
   componentWillReceiveProps (props) {
-    if (this.props.defaultCarbonIntensity.isUpdating && !props.defaultCarbonIntensity.isUpdating) {
-      if (props.defaultCarbonIntensity.success) {
+    if (this.props.carbonIntensity.isUpdating && !props.carbonIntensity.isUpdating) {
+      if (props.carbonIntensity.success) {
         history.push(CREDIT_CALCULATIONS.LIST);
-        toastr.fuelCodeSuccess(null, 'Default Carbon Intensity saved.');
+        toastr.fuelCodeSuccess(null, 'Carbon Intensity saved.');
       }
       return;
     }
@@ -50,7 +50,7 @@ class DefaultCarbonIntensityEditContainer extends Component {
   }
 
   loadPropsToFieldState (props) {
-    const { item } = props.defaultCarbonIntensity;
+    const { item } = props.carbonIntensity;
 
     if (item && !this.loaded) {
       const fieldState = {
@@ -103,14 +103,14 @@ class DefaultCarbonIntensityEditContainer extends Component {
       }
     });
 
-    this.props.updateDefaultCarbonIntensity({ id, state: data });
+    this.props.updatePetroleumCarbonIntensity({ id, state: data });
 
     return true;
   }
 
   render () {
-    const { item, isFetching, success } = this.props.defaultCarbonIntensity;
-    const updating = this.props.defaultCarbonIntensity.isUpdating;
+    const { item, isFetching, success } = this.props.carbonIntensity;
+    const updating = this.props.carbonIntensity.isUpdating;
 
     if (!updating && success && (!isFetching)) {
       return ([
@@ -121,14 +121,14 @@ class DefaultCarbonIntensityEditContainer extends Component {
           item={item}
           key="carbon-intensity-limit-form"
           loggedInUser={this.props.loggedInUser}
-          title="Edit Default Carbon Intensity Details"
+          title="Edit Carbon Intensity Details"
         />,
         <Modal
           handleSubmit={event => this._handleSubmit(event)}
           id="confirmSubmit"
           key="confirmSubmit"
         >
-          Are you sure you want to update the default carbon intensities?
+          Are you sure you want to update the carbon intensity?
         </Modal>
       ]);
     }
@@ -137,39 +137,39 @@ class DefaultCarbonIntensityEditContainer extends Component {
   }
 }
 
-DefaultCarbonIntensityEditContainer.defaultProps = {
+PetroleumCarbonIntensityEditContainer.defaultProps = {
 };
 
-DefaultCarbonIntensityEditContainer.propTypes = {
-  defaultCarbonIntensity: PropTypes.shape({
+PetroleumCarbonIntensityEditContainer.propTypes = {
+  carbonIntensity: PropTypes.shape({
     isFetching: PropTypes.bool,
     isUpdating: PropTypes.bool,
     item: PropTypes.shape(),
     success: PropTypes.bool
   }).isRequired,
-  getDefaultCarbonIntensity: PropTypes.func.isRequired,
+  getPetroleumCarbonIntensity: PropTypes.func.isRequired,
   loggedInUser: PropTypes.shape().isRequired,
   match: PropTypes.shape({
     params: PropTypes.shape({
       id: PropTypes.string.isRequired
     }).isRequired
   }).isRequired,
-  updateDefaultCarbonIntensity: PropTypes.func.isRequired
+  updatePetroleumCarbonIntensity: PropTypes.func.isRequired
 };
 
 const mapStateToProps = state => ({
-  defaultCarbonIntensity: {
-    isFetching: state.rootReducer.defaultCarbonIntensities.isGetting,
-    isUpdating: state.rootReducer.defaultCarbonIntensities.isUpdating,
-    item: state.rootReducer.defaultCarbonIntensities.item,
-    success: state.rootReducer.defaultCarbonIntensities.success
+  carbonIntensity: {
+    isFetching: state.rootReducer.petroleumCarbonIntensities.isGetting,
+    isUpdating: state.rootReducer.petroleumCarbonIntensities.isUpdating,
+    item: state.rootReducer.petroleumCarbonIntensities.item,
+    success: state.rootReducer.petroleumCarbonIntensities.success
   },
   loggedInUser: state.rootReducer.userRequest.loggedInUser
 });
 
 const mapDispatchToProps = {
-  getDefaultCarbonIntensity: defaultCarbonIntensities.get,
-  updateDefaultCarbonIntensity: defaultCarbonIntensities.update
+  getPetroleumCarbonIntensity: petroleumCarbonIntensities.get,
+  updatePetroleumCarbonIntensity: petroleumCarbonIntensities.update
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(DefaultCarbonIntensityEditContainer);
+export default connect(mapStateToProps, mapDispatchToProps)(PetroleumCarbonIntensityEditContainer);
