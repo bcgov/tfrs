@@ -1,0 +1,69 @@
+{
+    "apiVersion": "build.openshift.io/v1",
+    "kind": "BuildConfig",
+    "metadata": {
+        "annotations": {
+            "description": "Defines how to build the application"
+        },
+        "creationTimestamp": null,
+        "name": "tfrs-bc",
+        "selfLink": "/apis/build.openshift.io/v1/namespaces/mem-tfrs-tools/buildconfigs/tfrs"
+    },
+    "parameters": [
+        {
+            "name": "TFRS_IS_SUFFIX",
+            "value": "",
+            "description": "The TFRS image stream suffix, 2 possible values: -develop or empty.",
+            "required": true
+        },
+        {
+            "name": "TFRS_SOURCE_REPO_URL",
+            "value": "https://github.com/bcgov/tfrs.git",
+            "description": "TFRS Git Repo URL, such as https://github.com/bcgov/tfrs.git",
+            "required": true
+        },
+        {
+            "name": "TFRS_SOURCE_REPO_REF",
+            "description": "TFRS Git Pull Request Reference, like v1.3.8 or pull/CHANGE_ID/head",
+            "required": true
+        }
+    ],
+    "spec": {
+        "failedBuildsHistoryLimit": 5,
+        "nodeSelector": null,
+        "output": {
+            "to": {
+                "kind": "ImageStreamTag",
+                "name": "tfrs${TFRS_IS_SUFFIX}:latest"
+            }
+        },
+        "postCommit": {},
+        "resources": {},
+        "runPolicy": "SerialLatestOnly",
+        "source": {
+            "contextDir": "backend",
+            "git": {
+                "ref": "${TFRS_SOURCE_REPO_REF}",
+                "uri": "${TFRS_SOURCE_REPO_URL}"
+            },
+            "type": "Git"
+        },
+        "strategy": {
+            "sourceStrategy": {
+                "env": [
+                    {
+                        "name": "PIP_INDEX_URL"
+                    }
+                ],
+                "from": {
+                    "kind": "ImageStreamTag",
+                    "name": "python:3.6",
+                    "namespace": "openshift"
+                }
+            },
+            "type": "Source"
+        },
+        "successfulBuildsHistoryLimit": 5,
+        "triggers": []
+    }
+}
