@@ -10,7 +10,7 @@ import FuelSupplierTabs from './FuelSupplierTabs';
 import OrganizationRolesTable from './OrganizationRolesTable';
 
 const OrganizationRoles = (props) => {
-  const { isFetching, items } = props.data;
+  const { isFinding, items } = props.data;
 
   return (
     <div className="organization-members">
@@ -23,8 +23,8 @@ const OrganizationRoles = (props) => {
       }
       <h2>Roles</h2>
 
-      {isFetching && <Loading />}
-      {!isFetching &&
+      {isFinding && <Loading />}
+      {!isFinding &&
         <OrganizationRolesTable
           items={items}
           loggedInUser={props.loggedInUser}
@@ -41,7 +41,7 @@ OrganizationRoles.defaultProps = {
 OrganizationRoles.propTypes = {
   data: PropTypes.shape({
     items: PropTypes.arrayOf(PropTypes.shape()).isRequired,
-    isFetching: PropTypes.bool.isRequired
+    isFinding: PropTypes.bool.isRequired
   }).isRequired,
   loggedInUser: PropTypes.shape({
     hasPermission: PropTypes.func,
