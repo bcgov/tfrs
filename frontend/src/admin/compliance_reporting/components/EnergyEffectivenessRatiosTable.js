@@ -3,7 +3,7 @@
  */
 import React from 'react';
 import PropTypes from 'prop-types';
-
+import { OverlayTrigger, Tooltip } from 'react-bootstrap';
 import 'react-table/react-table.css';
 
 import ReactTable from '../../../app/components/StateSavingReactTable';
@@ -22,6 +22,28 @@ const EnergyEffectivenessRatiosTable = (props) => {
     accessor: item => (
       item.dieselRatio ? item.dieselRatio.toFixed(1) : 'N/A'
     ),
+    Cell: (row) => {
+      if (row.original.revisedDieselRatio) {
+        return (
+          <OverlayTrigger
+            placement="bottom"
+            overlay={(
+              <Tooltip id={`tooltip-${row.original.id}`} placement="bottom">
+                <div>
+                  Revised Energy Effectiveness Ratio:
+                  {` ${row.original.revisedDieselRatio.ratio}`}
+                </div>
+                <div>Effective Date: {row.original.revisedDieselRatio.effectiveDate}</div>
+              </Tooltip>
+            )}
+          >
+            <div className="has-revised-value">{row.value}</div>
+          </OverlayTrigger>
+        );
+      }
+
+      return row.value;
+    },
     className: 'col-diesel',
     Header: (
       <div>
@@ -35,6 +57,28 @@ const EnergyEffectivenessRatiosTable = (props) => {
     accessor: item => (
       item.gasolineRatio ? item.gasolineRatio.toFixed(1) : 'N/A'
     ),
+    Cell: (row) => {
+      if (row.original.revisedGasolineRatio) {
+        return (
+          <OverlayTrigger
+            placement="bottom"
+            overlay={(
+              <Tooltip id={`tooltip-${row.original.id}`} placement="bottom">
+                <div>
+                  Revised Energy Effectiveness Ratio:
+                  {` ${row.original.revisedGasolineRatio.ratio}`}
+                </div>
+                <div>Effective Date: {row.original.revisedGasolineRatio.effectiveDate}</div>
+              </Tooltip>
+            )}
+          >
+            <div className="has-revised-value">{row.value}</div>
+          </OverlayTrigger>
+        );
+      }
+
+      return row.value;
+    },
     className: 'col-gasoline',
     Header: (
       <div>
