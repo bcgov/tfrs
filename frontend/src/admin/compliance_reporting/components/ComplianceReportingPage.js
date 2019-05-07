@@ -2,13 +2,14 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import Loading from '../../../app/components/Loading';
-import DefaultCarbonIntensitiesTable from './DefaultCarbonIntensitiesTable';
+import CarbonIntensitiesTable from './CarbonIntensitiesTable';
 import CarbonIntensityLimitsTable from './CarbonIntensityLimitsTable';
 import EnergyEffectivenessRatiosTable from './EnergyEffectivenessRatiosTable';
 import EnergyDensitiesTable from './EnergyDensitiesTable';
 import FuelClassesTable from './FuelClassesTable';
 import FuelTypesTable from './FuelTypesTable';
 import CONFIG from '../../../config';
+import CREDIT_CALCULATIONS from '../../../constants/routes/CreditCalculations';
 
 const ComplianceReportingPage = props => (
   <div className="page-compliance-reporting">
@@ -55,13 +56,15 @@ const ComplianceReportingPage = props => (
         <h2>Default Carbon Intensities</h2>
         {props.defaultCarbonIntensities.isFetching && <Loading />}
         {!props.defaultCarbonIntensities.isFetching &&
-          <DefaultCarbonIntensitiesTable
+          <CarbonIntensitiesTable
             items={props.defaultCarbonIntensities.items.filter(item => (item.density))}
             isFetching={props.defaultCarbonIntensities.isFetching}
             isEmpty={
               props.defaultCarbonIntensities.items &&
               props.defaultCarbonIntensities.items.length === 0
             }
+            stateKey="default-carbon-intensity"
+            viewUrl={CREDIT_CALCULATIONS.DEFAULT_CARBON_INTENSITIES_DETAILS}
           />
         }
       </div>
@@ -77,6 +80,25 @@ const ComplianceReportingPage = props => (
               props.energyDensities.items &&
               props.energyDensities.items.length === 0
             }
+          />
+        }
+      </div>
+    </div>
+
+    <div className="row">
+      <div className="col-md-12 col-lg-6">
+        <h2>Petroleum-based Carbon Intensities</h2>
+        {props.petroleumCarbonIntensities.isFetching && <Loading />}
+        {!props.petroleumCarbonIntensities.isFetching &&
+          <CarbonIntensitiesTable
+            items={props.petroleumCarbonIntensities.items.filter(item => (item.density))}
+            isFetching={props.petroleumCarbonIntensities.isFetching}
+            isEmpty={
+              props.petroleumCarbonIntensities.items &&
+              props.petroleumCarbonIntensities.items.length === 0
+            }
+            stateKey="petroleum-carbon-intensity"
+            viewUrl={CREDIT_CALCULATIONS.PETROLEUM_CARBON_INTENSITIES_DETAILS}
           />
         }
       </div>
@@ -136,6 +158,10 @@ ComplianceReportingPage.propTypes = {
   fuelTypes: PropTypes.arrayOf(PropTypes.shape),
   loggedInUser: PropTypes.shape({
     hasPermission: PropTypes.func
+  }).isRequired,
+  petroleumCarbonIntensities: PropTypes.shape({
+    isFetching: PropTypes.bool,
+    items: PropTypes.arrayOf(PropTypes.shape)
   }).isRequired,
   title: PropTypes.string.isRequired
 };

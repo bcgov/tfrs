@@ -31,6 +31,8 @@ from api.models.EnergyDensityCategory import EnergyDensityCategory
 from api.models.EnergyEffectivenessRatioCategory import \
     EnergyEffectivenessRatioCategory
 from api.models.FuelClass import FuelClass
+from api.models.PetroleumCarbonIntensityCategory import \
+    PetroleumCarbonIntensityCategory
 from api.models.UnitOfMeasure import UnitOfMeasure
 from api.services.CreditCalculationService import CreditCalculationService
 
@@ -173,7 +175,7 @@ class DefaultCarbonIntensitySerializer(serializers.ModelSerializer):
 
     def get_density(self, obj):
         """
-        Gets the Energy Density
+        Gets the Carbon Intensity
         """
         row = CreditCalculationService.get(
             model_name="DefaultCarbonIntensity",
@@ -250,7 +252,7 @@ class DefaultCarbonIntensityDetailSerializer(serializers.ModelSerializer):
 
     def get_density(self, obj):
         """
-        Gets the Energy Density
+        Gets the Carbon Intensity
         """
         row = CreditCalculationService.get(
             model_name="DefaultCarbonIntensity",
@@ -574,4 +576,88 @@ class EnergyEffectivenessRatioDetailSerializer(serializers.ModelSerializer):
         model = EnergyEffectivenessRatioCategory
         fields = (
             'id', 'name', 'ratios', 'all_values'
+        )
+
+
+class PetroleumCarbonIntensitySerializer(serializers.ModelSerializer):
+    """
+    Default Petroleum Carbon Intensity Serializer
+    """
+    density = serializers.SerializerMethodField()
+
+    def get_density(self, obj):
+        """
+        Gets the carbon intensity
+        """
+        row = CreditCalculationService.get(
+            category_id=obj.id,
+            date=date.today(),
+            model_name="PetroleumCarbonIntensity"
+        )
+
+        return row.density if row else None
+
+    class Meta:
+        model = PetroleumCarbonIntensityCategory
+        fields = (
+            'id', 'name', 'density'
+        )
+
+
+class PetroleumCarbonIntensityUpdateSerializer(serializers.Serializer):
+    """
+    Default Petroleum Carbon Intensity Limit Serializer
+    """
+    density = serializers.FloatField(allow_null=False)
+    effective_date = serializers.DateField(allow_null=False)
+    expiration_date = serializers.DateField(allow_null=True, required=False)
+
+    def __init__(self, *args, **kwargs):
+        super(PetroleumCarbonIntensityUpdateSerializer, self).__init__(
+            *args, **kwargs
+        )
+
+    def validate(self, data):
+        return data
+
+    def update(self, instance, validated_data):
+        request = self.context.get('request')
+
+        CreditCalculationService.update(
+            category_id=instance.id,
+            effective_date=validated_data['effective_date'],
+            model_name="PetroleumCarbonIntensity",
+            density=validated_data['density'],
+            update_user=request.user
+        )
+
+        return validated_data
+
+
+class PetroleumCarbonIntensityDetailSerializer(serializers.ModelSerializer):
+    """
+    Petroleum Carbon Intensity Detail Serializer
+    """
+    density = serializers.SerializerMethodField()
+
+    def get_density(self, obj):
+        """
+        Gets the Carbon Intensity
+        """
+        row = CreditCalculationService.get(
+            model_name="PetroleumCarbonIntensity",
+            category_id=obj.id,
+            date=date.today()
+        )
+
+        return {
+            "density": row.density if row else None,
+            "effective_date": row.effective_date if row else None,
+            "expiration_date": row.expiration_date if row else None
+        }
+
+    class Meta:
+        model = PetroleumCarbonIntensityCategory
+        fields = (
+            'id', 'name', 'density'
         )
