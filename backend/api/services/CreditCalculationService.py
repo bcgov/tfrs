@@ -1,6 +1,6 @@
 from datetime import timedelta
 from django.apps import apps
-from django.db.models import F
+from django.db.models import F, Max
 
 
 class CreditCalculationService(object):
@@ -25,6 +25,40 @@ class CreditCalculationService(object):
         ).exclude(
             expiration_date=F('effective_date')
         ).order_by('-effective_date', '-update_timestamp').first()
+
+    @staticmethod
+    def get_all(**kwargs):
+        """
+        Gets the ratio/density that has an effective date prior to the
+        date provided.
+        This is so we can update it later an make sure no overlaps occur
+        """
+        category_id = kwargs.pop('category_id', None)
+        compliance_period_id = kwargs.pop('compliance_period_id', None)
+        fuel_class_id = kwargs.pop('fuel_class_id', None)
+        fuel_class__fuel_class = kwargs.get('fuel_class__fuel_class', None)
+        model_name = kwargs.pop('model_name')
+
+        model = apps.get_model('api', model_name)
+
+        filtered_rows = model.objects.all()
+
+        if category_id:
+            filtered_rows = filtered_rows.filter(category_id=category_id)
+
+        if compliance_period_id:
+            filtered_rows = filtered_rows.filter(compliance_period_id=compliance_period_id)
+
+        if fuel_class_id:
+            filtered_rows = filtered_rows.filter(fuel_class_id=fuel_class_id)
+
+        if fuel_class__fuel_class:
+            filtered_rows = filtered_rows.filter(fuel_class__fuel_class=fuel_class__fuel_class)
+
+        filtered_rows = filtered_rows.order_by('effective_date', '-create_timestamp')\
+            .distinct('effective_date')
+
+        return filtered_rows
 
     @staticmethod
     def get_later(**kwargs):

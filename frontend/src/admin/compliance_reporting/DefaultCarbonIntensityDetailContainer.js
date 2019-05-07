@@ -10,6 +10,8 @@ import PropTypes from 'prop-types';
 import { defaultCarbonIntensities } from '../../actions/defaultCarbonIntensities';
 import Loading from '../../app/components/Loading';
 import DefaultCarbonIntensityDetails from './components/DefaultCarbonIntensityDetails';
+import {Tab, Tabs} from "react-bootstrap";
+import PastAndFutureValuesTable from "./components/PastAndFutureValuesTable";
 
 class DefaultCarbonIntensityDetailContainer extends Component {
   constructor (props) {
@@ -26,12 +28,25 @@ class DefaultCarbonIntensityDetailContainer extends Component {
     const { item, isFetching, success } = this.props.defaultCarbonIntensity;
 
     if (success && !isFetching && item) {
+
       return (
-        <DefaultCarbonIntensityDetails
-          item={item}
-          loggedInUser={this.props.loggedInUser}
-          title="Default Carbon Intensity Details"
-        />
+        <Tabs defaultActiveKey="details" id="citabs">
+          <Tab eventKey="details" title="Current">
+            <DefaultCarbonIntensityDetails
+              item={item}
+              loggedInUser={this.props.loggedInUser}
+              title="Default Carbon Intensity Details"
+            />
+          </Tab>
+          <Tab eventKey="allValues" title="Past And Future">
+            <h1>Past and Future Values</h1>
+            <PastAndFutureValuesTable
+              items={item.allValues}
+              includeLimit
+            />
+
+          </Tab>
+        </Tabs>
       );
     }
 
