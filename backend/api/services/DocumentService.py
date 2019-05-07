@@ -82,12 +82,8 @@ class DocumentService(object):
         object_names = list(map(DocumentService.get_filename, attachments))
         to_delete = []
 
-        # print('list of object names: ' + '|'.join([o for o in object_names]))
-        # print('list of minio objects: ' + '|'.join([o.object_name for o in objects]))
-
         for o in objects:
             if not o.is_dir:
-                print('looking for ' + o.object_name + ' in ' + '|'.join(object_names))
                 if o.object_name not in object_names:
                     print('deleting: {} since it is not referenced'.format(o.object_name))
                     to_delete.append(o.object_name)
