@@ -1,175 +1,178 @@
 {
-    "kind": "Template",
-    "apiVersion": "v1",
+    "apiVersion": "apps.openshift.io/v1",
+    "kind": "DeploymentConfig",
     "metadata": {
-        "name": "scan-coordinator-dc",
-        "creationTimestamp": null
+        "annotations": {
+            "openshift.io/generated-by": "OpenShiftWebConsole"
+        },
+        "creationTimestamp": null,
+        "generation": 1,
+        "labels": {
+            "app": "scan-coordinator"
+        },
+        "name": "scan-coordinator",
+        "selfLink": "/apis/apps.openshift.io/v1/namespaces/mem-tfrs-dev/deploymentconfigs/scan-coordinator"
     },
     "parameters": [
         {
             "name": "ENV_NAME",
+            "displayName": "Environment name",
+            "description": "Sample values: dev, test and prod",
             "required": true
         },
         {
-            "name": "IS_NAME",
+            "name": "SOURCE_IS_NAME",
+            "displayName": "The source image stream name",
+            "description": "The image stream could trigger the deployment, sample values: scan-coordinator-develop and scan-coordinator",
+            "required": true
+        },
+        {
+            "name": "SOURCE_IS_TAG",
+            "displayName": "The source image stream tag name",
+            "description": "The source image stream plus tag could trigger the deployment, sample values: dev, test and prod",
             "required": true
         }
     ],
-    "objects": [
-        {
-            "kind": "DeploymentConfig",
-            "apiVersion": "v1",
+    "spec": {
+        "replicas": 1,
+        "revisionHistoryLimit": 10,
+        "selector": {
+            "app": "scan-coordinator",
+            "deploymentconfig": "scan-coordinator"
+        },
+        "strategy": {
+            "activeDeadlineSeconds": 21600,
+            "recreateParams": {
+                "timeoutSeconds": 600
+            },
+            "resources": {},
+            "type": "Recreate"
+        },
+        "template": {
             "metadata": {
-                "name": "scan-coordinator",
-                "generation": 1,
-                "creationTimestamp": null,
-                "labels": {
-                    "app": "scan-coordinator"
-                },
                 "annotations": {
                     "openshift.io/generated-by": "OpenShiftWebConsole"
+                },
+                "creationTimestamp": null,
+                "labels": {
+                    "app": "scan-coordinator",
+                    "deploymentconfig": "scan-coordinator"
                 }
             },
             "spec": {
-                "strategy": {
-                    "type": "Recreate",
-                    "recreateParams": {
-                        "timeoutSeconds": 600
-                    },
-                    "resources": {},
-                    "activeDeadlineSeconds": 21600
-                },
-                "triggers": [
+                "containers": [
                     {
-                        "type": "ImageChange",
-                        "imageChangeParams": {
-                            "automatic": true,
-                            "containerNames": [
-                                "scan-coordinator"
-                            ],
-                            "from": {
-                                "kind": "ImageStreamTag",
-                                "namespace": "mem-tfrs-tools",
-                                "name": "${IS_NAME}:${ENV_NAME}"
-                            }
-                        }
-                    },
-                    {
-                        "type": "ConfigChange"
-                    }
-                ],
-                "replicas": 1,
-                "revisionHistoryLimit": 10,
-                "test": false,
-                "selector": {
-                    "app": "scan-coordinator",
-                    "deploymentconfig": "scan-coordinator"
-                },
-                "template": {
-                    "metadata": {
-                        "creationTimestamp": null,
-                        "labels": {
-                            "app": "scan-coordinator",
-                            "deploymentconfig": "scan-coordinator"
-                        },
-                        "annotations": {
-                            "openshift.io/generated-by": "OpenShiftWebConsole"
-                        }
-                    },
-                    "spec": {
-                        "containers": [
+                        "env": [
                             {
-                                "name": "scan-coordinator",
-                                "image": "",
-                                "env": [
-                                    {
-                                        "name": "BYPASS_CLAMAV",
-                                        "value": "false"
-                                    },
-                                    {
-                                        "name": "CLAMAV_HOST",
-                                        "value": "clamav.mem-tfrs-${ENV_NAME}.svc"
-                                    },
-                                    {
-                                        "name": "CLAMAV_PORT",
-                                        "value": "3310"
-                                    },
-                                    {
-                                        "name": "AMQP_HOST",
-                                        "value": "rabbit.mem-tfrs-${ENV_NAME}.svc"
-                                    },
-                                    {
-                                        "name": "AMQP_VHOST",
-                                        "value": "/tfrs"
-                                    },
-                                    {
-                                        "name": "AMQP_PORT",
-                                        "value": "5672"
-                                    },
-                                    {
-                                        "name": "AMQP_USER",
-                                        "value": "tfrs"
-                                    },
-                                    {
-                                        "name": "MINIO_ENDPOINT",
-                                        "value": "docs-mem-tfrs-${ENV_NAME}.pathfinder.gov.bc.ca:443"
-                                    },
-                                    {
-                                        "name": "MINIO_USE_SSL",
-                                        "value": "true"
-                                    },
-                                    {
-                                        "name": "AMQP_PASSWORD",
-                                        "valueFrom": {
-                                            "secretKeyRef": {
-                                                "name": "rabbitmq-tfrs",
-                                                "key": "TFRS_PASSWORD"
-                                            }
-                                        }
-                                    },
-                                    {
-                                        "name": "MINIO_ACCESS_KEY",
-                                        "valueFrom": {
-                                            "secretKeyRef": {
-                                                "name": "tfrs-minio-secret",
-                                                "key": "MINIO_ACCESS_KEY"
-                                            }
-                                        }
-                                    },
-                                    {
-                                        "name": "MINIO_SECRET_KEY",
-                                        "valueFrom": {
-                                            "secretKeyRef": {
-                                                "name": "tfrs-minio-secret",
-                                                "key": "MINIO_SECRET_KEY"
-                                            }
-                                        }
+                                "name": "BYPASS_CLAMAV",
+                                "value": "false"
+                            },
+                            {
+                                "name": "CLAMAV_HOST",
+                                "value": "clamav.mem-tfrs-${ENV_NAME}.svc"
+                            },
+                            {
+                                "name": "CLAMAV_PORT",
+                                "value": "3310"
+                            },
+                            {
+                                "name": "AMQP_HOST",
+                                "value": "rabbit.mem-tfrs-${ENV_NAME}.svc"
+                            },
+                            {
+                                "name": "AMQP_VHOST",
+                                "value": "/tfrs"
+                            },
+                            {
+                                "name": "AMQP_PORT",
+                                "value": "5672"
+                            },
+                            {
+                                "name": "AMQP_USER",
+                                "value": "tfrs"
+                            },
+                            {
+                                "name": "MINIO_ENDPOINT",
+                                "value": "docs-mem-tfrs-${ENV_NAME}.pathfinder.gov.bc.ca:443"
+                            },
+                            {
+                                "name": "MINIO_USE_SSL",
+                                "value": "true"
+                            },
+                            {
+                                "name": "AMQP_PASSWORD",
+                                "valueFrom": {
+                                    "secretKeyRef": {
+                                        "key": "TFRS_PASSWORD",
+                                        "name": "rabbitmq-tfrs"
                                     }
-                                ],
-                                "resources": {
-                                    "limits": {
-                                        "cpu": "250m"
+                                }
+                            },
+                            {
+                                "name": "MINIO_ACCESS_KEY",
+                                "valueFrom": {
+                                    "secretKeyRef": {
+                                        "key": "MINIO_ACCESS_KEY",
+                                        "name": "tfrs-minio-secret"
                                     }
-                                },
-                                "terminationMessagePath": "/dev/termination-log",
-                                "imagePullPolicy": "Always"
+                                }
+                            },
+                            {
+                                "name": "MINIO_SECRET_KEY",
+                                "valueFrom": {
+                                    "secretKeyRef": {
+                                        "key": "MINIO_SECRET_KEY",
+                                        "name": "tfrs-minio-secret"
+                                    }
+                                }
                             }
                         ],
-                        "restartPolicy": "Always",
-                        "terminationGracePeriodSeconds": 30,
-                        "dnsPolicy": "ClusterFirst",
-                        "securityContext": {}
+                        "image": "",
+                        "imagePullPolicy": "Always",
+                        "name": "scan-coordinator",
+                        "resources": {
+                            "limits": {
+                                "cpu": "250m"
+                            }
+                        },
+                        "terminationMessagePath": "/dev/termination-log",
+                        "terminationMessagePolicy": "File"
                     }
-                }
-            },
-            "status": {
-                "latestVersion": 0,
-                "observedGeneration": 0,
-                "replicas": 0,
-                "updatedReplicas": 0,
-                "availableReplicas": 0,
-                "unavailableReplicas": 0
+                ],
+                "dnsPolicy": "ClusterFirst",
+                "restartPolicy": "Always",
+                "schedulerName": "default-scheduler",
+                "securityContext": {},
+                "terminationGracePeriodSeconds": 30
             }
-        }
-    ]
+        },
+        "test": false,
+        "triggers": [
+            {
+                "imageChangeParams": {
+                    "automatic": true,
+                    "containerNames": [
+                        "scan-coordinator"
+                    ],
+                    "from": {
+                        "kind": "ImageStreamTag",
+                        "name": "${SOURCE_IS_NAME}:${SOURCE_IS_TAG}",
+                        "namespace": "mem-tfrs-tools"
+                    }
+                },
+                "type": "ImageChange"
+            },
+            {
+                "type": "ConfigChange"
+            }
+        ]
+    },
+    "status": {
+        "availableReplicas": 0,
+        "latestVersion": 0,
+        "observedGeneration": 0,
+        "replicas": 0,
+        "unavailableReplicas": 0,
+        "updatedReplicas": 0
+    }
 }

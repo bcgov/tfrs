@@ -8,28 +8,28 @@
         "creationTimestamp": null,
         "generation": 1,
         "labels": {
-            "app": "scan-handler"
+            "app": "celery"
         },
-        "name": "scan-handler",
-        "selfLink": "/apis/apps.openshift.io/v1/namespaces/mem-tfrs-dev/deploymentconfigs/scan-handler"
+        "name": "celery-dc",
+        "selfLink": "/apis/apps.openshift.io/v1/namespaces/mem-tfrs-dev/deploymentconfigs/celery"
     },
     "parameters": [
         {
             "name": "ENV_NAME",
             "displayName": "Environment name",
-            "description": "Sample values: dev, test and prod",
+            "description": "Valid values: dev, test and prod",
             "required": true
         },
         {
             "name": "SOURCE_IS_NAME",
             "displayName": "The source image stream name",
-            "description": "The image stream could trigger the deployment, sample values: scan-handler-develop and scan-handler",
+            "description": "The image stream could trigger the deployment, valid values: celery-develop and celery",
             "required": true
         },
         {
             "name": "SOURCE_IS_TAG",
             "displayName": "The source image stream tag name",
-            "description": "The source image stream plus tag could trigger the deployment, sample values: dev, test and prod",
+            "description": "The source image stream plus tag could trigger the deployment, valid values: dev, test and prod",
             "required": true
         }
     ],
@@ -37,8 +37,8 @@
         "replicas": 1,
         "revisionHistoryLimit": 10,
         "selector": {
-            "app": "scan-handler",
-            "deploymentconfig": "scan-handler"
+            "app": "celery",
+            "deploymentconfig": "celery"
         },
         "strategy": {
             "activeDeadlineSeconds": 21600,
@@ -55,8 +55,8 @@
                 },
                 "creationTimestamp": null,
                 "labels": {
-                    "app": "scan-handler",
-                    "deploymentconfig": "scan-handler"
+                    "app": "celery",
+                    "deploymentconfig": "celery"
                 }
             },
             "spec": {
@@ -117,14 +117,45 @@
                                         "name": "tfrs-postgresql"
                                     }
                                 }
+                            },
+                            {
+                                "name": "MINIO_ENDPOINT",
+                                "value": "docs-mem-tfrs-${ENV_NAME}.pathfinder.gov.bc.ca:443"
+                            },
+                            {
+                                "name": "MINIO_USE_SSL",
+                                "value": "true"
+                            },
+                            {
+                                "name": "MINIO_ACCESS_KEY",
+                                "valueFrom": {
+                                    "secretKeyRef": {
+                                        "key": "MINIO_ACCESS_KEY",
+                                        "name": "tfrs-minio-secret"
+                                    }
+                                }
+                            },
+                            {
+                                "name": "MINIO_SECRET_KEY",
+                                "valueFrom": {
+                                    "secretKeyRef": {
+                                        "key": "MINIO_SECRET_KEY",
+                                        "name": "tfrs-minio-secret"
+                                    }
+                                }
+                            },
+                            {
+                                "name": "MINIO_BUCKET_NAME",
+                                "value": "tfrs"
                             }
                         ],
                         "image": "",
                         "imagePullPolicy": "Always",
-                        "name": "scan-handler",
+                        "name": "celery",
                         "resources": {
                             "limits": {
-                                "cpu": "250m"
+                                "cpu": "250m",
+                                "memory": "3Gi"
                             }
                         },
                         "terminationMessagePath": "/dev/termination-log",
@@ -144,11 +175,11 @@
                 "imageChangeParams": {
                     "automatic": true,
                     "containerNames": [
-                        "scan-handler"
+                        "celery"
                     ],
                     "from": {
                         "kind": "ImageStreamTag",
-                        "name": "${SOURCE_IS_NAME}:latest",
+                        "name": "${SOURCE_IS_NAME}:${SOURCE_IS_TAG}",
                         "namespace": "mem-tfrs-tools"
                     }
                 },

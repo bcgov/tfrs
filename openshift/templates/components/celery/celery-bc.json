@@ -3,8 +3,8 @@
     "kind": "BuildConfig",
     "metadata": {
         "creationTimestamp": null,
-        "name": "scan-coordinator",
-        "selfLink": "/apis/build.openshift.io/v1/namespaces/mem-tfrs-tools/buildconfigs/scan-coordinator"
+        "name": "celery",
+        "selfLink": "/apis/build.openshift.io/v1/namespaces/mem-tfrs-tools/buildconfigs/celery"
     },
     "parameters": [
         {
@@ -13,8 +13,8 @@
             "required": true
         },
         {
-            "name": "SCAN_COORDINATOR_IS_NAME",
-            "description": "The scan coordinator image stream name, valid values: scan_coordinator and scan_coordinator_develop",
+            "name": "CELERY_IS_NAME",
+            "description": "The celery image stream name, valid values: celery and celery-develop",
             "required": true
         }
     ],
@@ -24,14 +24,14 @@
         "output": {
             "to": {
                 "kind": "ImageStreamTag",
-                "name": "${SCAN_COORDINATOR_IS_NAME}:latest"
+                "name": "${CELERY_IS_NAME}:latest"
             }
         },
         "postCommit": {},
         "resources": {},
         "runPolicy": "Serial",
         "source": {
-            "dockerfile": "FROM golang:1.11\nWORKDIR /go/src\nRUN git clone https://github.com/bcgov/tfrs.git\nWORKDIR /go/src/tfrs\nRUN git checkout ${tfrs_release}\nRUN cp -r /go/src/tfrs/security-scan/scan-coordinator /go/src\nRUN rm -rf /go/src/tfrs\nWORKDIR /go/src/scan-coordinator\nADD https://github.com/vishnubob/wait-for-it/compare/master...HEAD /dev/null\nRUN git clone https://github.com/vishnubob/wait-for-it.git /wfi\nRUN go get -d -v ./...\nRUN go install -v ./...\nCMD [\"scan-coordinator\"]",
+            "dockerfile": "FROM python:3.6.8-slim-stretch\nRUN apt-get update \\\n    \u0026\u0026 apt-get install -y git \\\n    \u0026\u0026 apt-get install -y supervisor\nWORKDIR /app\nRUN git clone https://github.com/bcgov/tfrs.git\nWORKDIR /app/tfrs\nRUN git checkout ${tfrs_release}\nRUN pip install --upgrade pip \\\n    \u0026\u0026 pip install -r backend/requirements.txt\nRUN cp /app/tfrs/security-scan/scan-handler/celery.conf /etc/supervisor/conf.d\nRUN chgrp -R root /var/log/supervisor\nRUN chmod -R g+w /var/log/supervisor\nRUN chmod -R g+w /run\nRUN chmod -R g+w /app\nCMD [\"supervisord\"]\n",
             "type": "Dockerfile"
         },
         "strategy": {

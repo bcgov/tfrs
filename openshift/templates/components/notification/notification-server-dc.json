@@ -2,34 +2,43 @@
     "apiVersion": "apps.openshift.io/v1",
     "kind": "DeploymentConfig",
     "metadata": {
-        "annotations": {
-            "openshift.io/generated-by": "OpenShiftWebConsole"
-        },
         "creationTimestamp": null,
         "generation": 1,
         "labels": {
-            "app": "scan-handler"
+            "template": "notification-server"
         },
-        "name": "scan-handler",
-        "selfLink": "/apis/apps.openshift.io/v1/namespaces/mem-tfrs-dev/deploymentconfigs/scan-handler"
+        "name": "notification-server",
+        "selfLink": "/apis/apps.openshift.io/v1/namespaces/mem-tfrs-dev/deploymentconfigs/notification-server"
     },
     "parameters": [
         {
             "name": "ENV_NAME",
             "displayName": "Environment name",
-            "description": "Sample values: dev, test and prod",
+            "description": "Valid values: dev, test and prod",
             "required": true
         },
         {
             "name": "SOURCE_IS_NAME",
             "displayName": "The source image stream name",
-            "description": "The image stream could trigger the deployment, sample values: scan-handler-develop and scan-handler",
+            "description": "The image stream could trigger the deployment, valid values: notification-server-develop and notification-server",
             "required": true
         },
         {
             "name": "SOURCE_IS_TAG",
             "displayName": "The source image stream tag name",
-            "description": "The source image stream plus tag could trigger the deployment, sample values: dev, test and prod",
+            "description": "The source image stream plus tag could trigger the deployment, valid values: dev, test and prod",
+            "required": true
+        },
+        {
+            "name": "ENV_NAME_WITH_DASH",
+            "displayName": "Environment name",
+            "description": "Sample values: -dev, -test, and empty. empty means prod",
+            "required": true
+        },
+        {
+            "name": "SSO_HOST_NAME",
+            "displayName": "KeyCloak host name",
+            "description": "Sample values: sso-dev.pathfinder.gov.bc.ca, sso-test.pathfinder.gov.bc.ca and sso.pathfinder.gov.bc.ca",
             "required": true
         }
     ],
@@ -37,8 +46,7 @@
         "replicas": 1,
         "revisionHistoryLimit": 10,
         "selector": {
-            "app": "scan-handler",
-            "deploymentconfig": "scan-handler"
+            "name": "notification-server"
         },
         "strategy": {
             "activeDeadlineSeconds": 21600,
@@ -50,19 +58,20 @@
         },
         "template": {
             "metadata": {
-                "annotations": {
-                    "openshift.io/generated-by": "OpenShiftWebConsole"
-                },
                 "creationTimestamp": null,
                 "labels": {
-                    "app": "scan-handler",
-                    "deploymentconfig": "scan-handler"
-                }
+                    "name": "notification-server"
+                },
+                "name": "notification-server"
             },
             "spec": {
                 "containers": [
                     {
                         "env": [
+                            {
+                                "name": "RABBITMQ_HOST",
+                                "value": "rabbit.mem-tfrs-${ENV_NAME}.svc"
+                            },
                             {
                                 "name": "RABBITMQ_VHOST",
                                 "value": "/tfrs"
@@ -81,50 +90,39 @@
                                 }
                             },
                             {
-                                "name": "RABBITMQ_HOST",
-                                "value": "rabbit.mem-tfrs-${ENV_NAME}.svc"
+                                "name": "NPM_RUN",
+                                "value": "start:notifications"
                             },
                             {
-                                "name": "RABBITMQ_PORT",
-                                "value": "5672"
-                            },
-                            {
-                                "name": "DATABASE_SERVICE_NAME",
-                                "value": "postgresql"
-                            },
-                            {
-                                "name": "DATABASE_ENGINE",
-                                "value": "postgresql"
-                            },
-                            {
-                                "name": "DATABASE_NAME",
-                                "value": "tfrs"
-                            },
-                            {
-                                "name": "DATABASE_USER",
-                                "valueFrom": {
-                                    "secretKeyRef": {
-                                        "key": "DATABASE_USER",
-                                        "name": "tfrs-postgresql"
-                                    }
-                                }
-                            },
-                            {
-                                "name": "DATABASE_PASSWORD",
-                                "valueFrom": {
-                                    "secretKeyRef": {
-                                        "key": "DATABASE_PASSWORD",
-                                        "name": "tfrs-postgresql"
-                                    }
-                                }
+                                "name": "KEYCLOAK_CERTS_URL",
+                                "value": "https://${SSO_HOST_NAME}/auth/realms/tfrs${ENV_NAME_WITH_DASH}/protocol/openid-connect/certs"
                             }
                         ],
                         "image": "",
-                        "imagePullPolicy": "Always",
-                        "name": "scan-handler",
+                        "imagePullPolicy": "IfNotPresent",
+                        "name": "notification-server",
+                        "ports": [
+                            {
+                                "containerPort": 3000,
+                                "protocol": "TCP"
+                            }
+                        ],
+                        "readinessProbe": {
+                            "failureThreshold": 3,
+                            "httpGet": {
+                                "path": "/",
+                                "port": 3000,
+                                "scheme": "HTTP"
+                            },
+                            "initialDelaySeconds": 10,
+                            "periodSeconds": 10,
+                            "successThreshold": 1,
+                            "timeoutSeconds": 3
+                        },
                         "resources": {
                             "limits": {
-                                "cpu": "250m"
+                                "cpu": "250m",
+                                "memory": "500Mi"
                             }
                         },
                         "terminationMessagePath": "/dev/termination-log",
@@ -144,11 +142,11 @@
                 "imageChangeParams": {
                     "automatic": true,
                     "containerNames": [
-                        "scan-handler"
+                        "notification-server"
                     ],
                     "from": {
                         "kind": "ImageStreamTag",
-                        "name": "${SOURCE_IS_NAME}:latest",
+                        "name": "${SOURCE_IS_NAME}:${SOURCE_IS_TAG}",
                         "namespace": "mem-tfrs-tools"
                     }
                 },

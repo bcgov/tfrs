@@ -11,9 +11,9 @@
     },
     "parameters": [
         {
-            "name": "TFRS_IS_SUFFIX",
+            "name": "TFRS_IS_NAME",
             "value": "",
-            "description": "The TFRS image stream suffix, 2 possible values: -develop or empty.",
+            "description": "The TFRS image stream suffix, valid values: tfrs-develop or tfrs.",
             "required": true
         },
         {
@@ -34,7 +34,7 @@
         "output": {
             "to": {
                 "kind": "ImageStreamTag",
-                "name": "tfrs${TFRS_IS_SUFFIX}:latest"
+                "name": "${TFRS_IS_NAME}:latest"
             }
         },
         "postCommit": {},
