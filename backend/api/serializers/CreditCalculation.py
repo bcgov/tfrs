@@ -42,7 +42,39 @@ class CarbonIntensityLimitSerializer(serializers.ModelSerializer):
     Default Carbon Intensity Limit Serializer
     """
     limits = serializers.SerializerMethodField()
+    all_values = serializers.SerializerMethodField()
     revised_limits = serializers.SerializerMethodField()
+
+    def get_all_values(self, obj):
+
+        gasoline_rows = CreditCalculationService.get_all(
+            model_name="CarbonIntensityLimit",
+            fuel_class__fuel_class="Gasoline",
+            compliance_period_id=obj.id,
+        )
+
+        diesel_rows = CreditCalculationService.get_all(
+            model_name="CarbonIntensityLimit",
+            fuel_class__fuel_class="Diesel",
+            compliance_period_id=obj.id,
+        )
+
+        rows = list(gasoline_rows) + list(diesel_rows)
+
+        serialized = []
+
+        for row in rows:
+            serialized.append(
+                {
+                    "fuel_class": row.fuel_class.fuel_class,
+                    "density": row.density,
+                    "effective_date": row.effective_date,
+                    "expiration_date": row.effective_date,
+                    "create_timestamp": row.create_timestamp
+                }
+            )
+
+        return serialized
 
     def get_limits(self, obj):
         """
@@ -121,10 +153,10 @@ class CarbonIntensityLimitSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = CompliancePeriod
+
         fields = ('id', 'description', 'display_order', 'limits',
-                  'revised_limits')
-
-
+                  'all_values', 'revised_limits')
+        
 class CarbonIntensityLimitUpdateSerializer(serializers.Serializer):
     """
     Carbon Intensity Limit Update Serializer
@@ -255,6 +287,27 @@ class DefaultCarbonIntensityDetailSerializer(serializers.ModelSerializer):
     Default Carbon Intensity Detail Serializer
     """
     density = serializers.SerializerMethodField()
+    all_values = serializers.SerializerMethodField()
+
+    def get_all_values(self, obj):
+        rows = CreditCalculationService.get_all(
+            model_name="DefaultCarbonIntensity",
+            category_id=obj.id
+        )
+
+        serialized = []
+
+        for row in rows:
+            serialized.append(
+                {
+                    "density": row.density,
+                    "effective_date": row.effective_date,
+                    "expiration_date": row.effective_date,
+                    "create_timestamp": row.create_timestamp
+                }
+            )
+
+        return serialized
 
     def get_density(self, obj):
         """
@@ -278,7 +331,7 @@ class DefaultCarbonIntensityDetailSerializer(serializers.ModelSerializer):
     class Meta:
         model = DefaultCarbonIntensityCategory
         fields = (
-            'id', 'name', 'density'
+            'id', 'name', 'density', 'all_values'
         )
 
 
@@ -371,6 +424,27 @@ class EnergyDensityDetailSerializer(serializers.ModelSerializer):
     """
     density = serializers.SerializerMethodField()
     unit_of_measure = serializers.SerializerMethodField()
+    all_values = serializers.SerializerMethodField()
+
+    def get_all_values(self, obj):
+        rows = CreditCalculationService.get_all(
+            model_name="EnergyDensity",
+            category_id=obj.id
+        )
+
+        serialized = []
+
+        for row in rows:
+            serialized.append(
+                {
+                    "density": row.density,
+                    "effective_date": row.effective_date,
+                    "expiration_date": row.expiration_date,
+                    "create_timestamp": row.create_timestamp
+                }
+            )
+
+        return serialized
 
     def get_density(self, obj):
         """
@@ -406,7 +480,7 @@ class EnergyDensityDetailSerializer(serializers.ModelSerializer):
     class Meta:
         model = EnergyDensityCategory
         fields = (
-            'id', 'name', 'density', 'unit_of_measure'
+            'id', 'name', 'density', 'unit_of_measure', 'all_values'
         )
 
 
@@ -554,6 +628,37 @@ class EnergyEffectivenessRatioDetailSerializer(serializers.ModelSerializer):
     Energy Effectiveness Ratio Detail Serializer
     """
     ratios = serializers.SerializerMethodField()
+    all_values = serializers.SerializerMethodField()
+
+    def get_all_values(self, obj):
+        gasoline_rows = CreditCalculationService.get_all(
+            model_name="EnergyEffectivenessRatio",
+            fuel_class__fuel_class="Gasoline",
+            category_id=obj.id
+        )
+
+        diesel_rows = CreditCalculationService.get_all(
+            model_name="EnergyEffectivenessRatio",
+            fuel_class__fuel_class="Diesel",
+            category_id=obj.id
+        )
+
+        rows = list(gasoline_rows) + list(diesel_rows)
+
+        serialized = []
+
+        for row in rows:
+            serialized.append(
+                {
+                    "ratio": row.ratio,
+                    "fuel_class": row.fuel_class.fuel_class,
+                    "effective_date": row.effective_date,
+                    "expiration_date": row.expiration_date,
+                    "create_timestamp": row.create_timestamp
+                }
+            )
+
+        return serialized
 
     def get_ratios(self, obj):
         """
@@ -595,7 +700,7 @@ class EnergyEffectivenessRatioDetailSerializer(serializers.ModelSerializer):
     class Meta:
         model = EnergyEffectivenessRatioCategory
         fields = (
-            'id', 'name', 'ratios'
+            'id', 'name', 'ratios', 'all_values'
         )
 
 

@@ -10,6 +10,9 @@ import PropTypes from 'prop-types';
 import { energyEffectivenessRatios } from '../../actions/energyEffectivenessRatios';
 import Loading from '../../app/components/Loading';
 import EnergyEffectivenessRatioDetails from './components/EnergyEffectivenessRatioDetails';
+import {Tab, Tabs} from "react-bootstrap";
+import CarbonIntensityLimitDetails from "./CarbonIntensityLimitDetailContainer";
+import PastAndFutureValuesTable from "./components/PastAndFutureValuesTable";
 
 class EnergyEffectivenessRatioDetailContainer extends Component {
   constructor (props) {
@@ -27,12 +30,25 @@ class EnergyEffectivenessRatioDetailContainer extends Component {
 
     if (success && !isFetching && item) {
       return (
-        <EnergyEffectivenessRatioDetails
-          item={item}
-          loggedInUser={this.props.loggedInUser}
-          title="Energy Effectiveness Ratio Details"
-        />
-      );
+        <Tabs defaultActiveKey="details" id="citabs">
+          <Tab eventKey="details" title="Current">
+            <EnergyEffectivenessRatioDetails
+              item={item}
+              loggedInUser={this.props.loggedInUser}
+              title="Energy Effectiveness Ratio Details"
+            />
+          </Tab>
+          <Tab eventKey="allValues" title="Past And Future">
+            <h1>Past and Future Values</h1>
+
+            <PastAndFutureValuesTable
+              items={item.allValues}
+              includeFuelClass
+              includeRatio
+            />
+          </Tab>
+        </Tabs>
+      )
     }
 
     return <Loading />;
