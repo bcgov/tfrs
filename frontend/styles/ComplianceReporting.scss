@@ -9,6 +9,22 @@
 
     .ReactTable {
       margin-bottom: 2rem;
+
+      .has-revised-value {
+        position: relative;
+
+        &::before {
+          border-color: transparent;
+          border-left-color: $red;
+          border-style: solid;
+          border-top-color: $red;
+          border-width: 0.7rem;
+          content: '';
+          left: -5px;
+          position: absolute;
+          top: -7px;
+        }
+      }
     }
   }
 
