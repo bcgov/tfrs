@@ -43,6 +43,7 @@ class CarbonIntensityLimitSerializer(serializers.ModelSerializer):
     """
     limits = serializers.SerializerMethodField()
     all_values = serializers.SerializerMethodField()
+    revised_limits = serializers.SerializerMethodField()
 
     def get_all_values(self, obj):
 
@@ -81,14 +82,14 @@ class CarbonIntensityLimitSerializer(serializers.ModelSerializer):
         """
         diesel_limit = CreditCalculationService.get(
             compliance_period_id=obj.id,
-            date=date.today(),
+            effective_date=date.today(),
             fuel_class__fuel_class="Diesel",
             model_name="CarbonIntensityLimit"
         )
 
         gasoline_limit = CreditCalculationService.get(
             compliance_period_id=obj.id,
-            date=date.today(),
+            effective_date=date.today(),
             fuel_class__fuel_class="Gasoline",
             model_name="CarbonIntensityLimit"
         )
@@ -96,27 +97,66 @@ class CarbonIntensityLimitSerializer(serializers.ModelSerializer):
         return {
             "diesel": {
                 "fuel": "Diesel Class",
-                "density": diesel_limit.density if diesel_limit else None,
+                "density": diesel_limit.density,
                 "effective_date":
-                    diesel_limit.effective_date if diesel_limit else None,
+                    diesel_limit.effective_date,
                 "expiration_date":
-                    diesel_limit.expiration_date if diesel_limit else None
-            },
+                    diesel_limit.expiration_date
+            } if diesel_limit else None,
             "gasoline": {
                 "fuel": "Gasoline Class",
-                "density": gasoline_limit.density if gasoline_limit else None,
+                "density": gasoline_limit.density,
                 "effective_date":
-                    gasoline_limit.effective_date if gasoline_limit else None,
+                    gasoline_limit.effective_date,
                 "expiration_date":
-                    gasoline_limit.expiration_date if gasoline_limit else None
-            }
+                    gasoline_limit.expiration_date
+            } if gasoline_limit else None
+        }
+
+    def get_revised_limits(self, obj):
+        """
+        Gets the future Carbon Intensity Limits for the compliance period,
+        if applicable
+        """
+        diesel_limit = CreditCalculationService.get_later(
+            compliance_period_id=obj.id,
+            effective_date=date.today(),
+            fuel_class__fuel_class="Diesel",
+            model_name="CarbonIntensityLimit"
+        )
+
+        gasoline_limit = CreditCalculationService.get_later(
+            compliance_period_id=obj.id,
+            effective_date=date.today(),
+            fuel_class__fuel_class="Gasoline",
+            model_name="CarbonIntensityLimit"
+        )
+
+        return {
+            "diesel": {
+                "fuel": "Diesel Class",
+                "density": diesel_limit.density,
+                "effective_date":
+                    diesel_limit.effective_date,
+                "expiration_date":
+                    diesel_limit.expiration_date
+            }  if diesel_limit else None,
+            "gasoline": {
+                "fuel": "Gasoline Class",
+                "density": gasoline_limit.density,
+                "effective_date":
+                    gasoline_limit.effective_date,
+                "expiration_date":
+                    gasoline_limit.expiration_date
+            } if gasoline_limit else None
         }
 
     class Meta:
         model = CompliancePeriod
-        fields = ('id', 'description', 'display_order', 'limits', 'all_values')
 
-
+        fields = ('id', 'description', 'display_order', 'limits',
+                  'all_values', 'revised_limits')
+        
 class CarbonIntensityLimitUpdateSerializer(serializers.Serializer):
     """
     Carbon Intensity Limit Update Serializer
@@ -172,6 +212,7 @@ class DefaultCarbonIntensitySerializer(serializers.ModelSerializer):
     Default Carbon Intensity Serializer
     """
     density = serializers.SerializerMethodField()
+    revised_density = serializers.SerializerMethodField()
 
     def get_density(self, obj):
         """
@@ -180,15 +221,33 @@ class DefaultCarbonIntensitySerializer(serializers.ModelSerializer):
         row = CreditCalculationService.get(
             model_name="DefaultCarbonIntensity",
             category_id=obj.id,
-            date=date.today()
+            effective_date=date.today()
         )
 
         return row.density if row else None
 
+    def get_revised_density(self, obj):
+        """
+        Gets the future density value, if applicable
+        """
+        density = CreditCalculationService.get_later(
+            model_name="DefaultCarbonIntensity",
+            category_id=obj.id,
+            effective_date=date.today()
+        )
+
+        if not density:
+            return None
+
+        return {
+            "density": density.density,
+            "effective_date": density.effective_date
+        }
+
     class Meta:
         model = DefaultCarbonIntensityCategory
         fields = (
-            'id', 'name', 'density'
+            'id', 'name', 'density', 'revised_density'
         )
 
 
@@ -257,13 +316,16 @@ class DefaultCarbonIntensityDetailSerializer(serializers.ModelSerializer):
         row = CreditCalculationService.get(
             model_name="DefaultCarbonIntensity",
             category_id=obj.id,
-            date=date.today()
+            effective_date=date.today()
         )
 
+        if not row:
+            return None
+
         return {
-            "density": row.density if row else None,
-            "effective_date": row.effective_date if row else None,
-            "expiration_date": row.expiration_date if row else None
+            "density": row.density,
+            "effective_date": row.effective_date,
+            "expiration_date": row.expiration_date
         }
 
     class Meta:
@@ -278,6 +340,7 @@ class EnergyDensitySerializer(serializers.ModelSerializer):
     Default Energy Density Serializer
     """
     density = serializers.SerializerMethodField()
+    revised_density = serializers.SerializerMethodField()
     unit_of_measure = serializers.SerializerMethodField()
 
     def get_density(self, obj):
@@ -287,10 +350,28 @@ class EnergyDensitySerializer(serializers.ModelSerializer):
         density = CreditCalculationService.get(
             model_name="EnergyDensity",
             category_id=obj.id,
-            date=date.today()
+            effective_date=date.today()
         )
 
         return density.density if density else None
+
+    def get_revised_density(self, obj):
+        """
+        Gets the future density value, if applicable
+        """
+        density = CreditCalculationService.get_later(
+            model_name="EnergyDensity",
+            category_id=obj.id,
+            effective_date=date.today()
+        )
+
+        if not density:
+            return None
+
+        return {
+            "density": density.density,
+            "effective_date": density.effective_date
+        }
 
     def get_unit_of_measure(self, obj):
         """
@@ -307,7 +388,7 @@ class EnergyDensitySerializer(serializers.ModelSerializer):
     class Meta:
         model = EnergyDensityCategory
         fields = (
-            'id', 'name', 'density', 'unit_of_measure'
+            'id', 'name', 'density', 'revised_density', 'unit_of_measure'
         )
 
 
@@ -372,13 +453,16 @@ class EnergyDensityDetailSerializer(serializers.ModelSerializer):
         row = CreditCalculationService.get(
             model_name="EnergyDensity",
             category_id=obj.id,
-            date=date.today()
+            effective_date=date.today()
         )
 
+        if not row:
+            return None
+
         return {
-            "density": row.density if row else None,
-            "effective_date": row.effective_date if row else None,
-            "expiration_date": row.expiration_date if row else None
+            "density": row.density,
+            "effective_date": row.effective_date,
+            "expiration_date": row.expiration_date
         }
 
     def get_unit_of_measure(self, obj):
@@ -406,6 +490,8 @@ class EnergyEffectivenessRatioSerializer(serializers.ModelSerializer):
     """
     diesel_ratio = serializers.SerializerMethodField()
     gasoline_ratio = serializers.SerializerMethodField()
+    revised_diesel_ratio = serializers.SerializerMethodField()
+    revised_gasoline_ratio = serializers.SerializerMethodField()
 
     def get_diesel_ratio(self, obj):
         """
@@ -414,7 +500,7 @@ class EnergyEffectivenessRatioSerializer(serializers.ModelSerializer):
         diesel_ratio = CreditCalculationService.get(
             model_name="EnergyEffectivenessRatio",
             category_id=obj.id,
-            date=date.today(),
+            effective_date=date.today(),
             fuel_class__fuel_class="Diesel"
         )
 
@@ -427,16 +513,55 @@ class EnergyEffectivenessRatioSerializer(serializers.ModelSerializer):
         gasoline_ratio = CreditCalculationService.get(
             model_name="EnergyEffectivenessRatio",
             category_id=obj.id,
-            date=date.today(),
+            effective_date=date.today(),
             fuel_class__fuel_class="Gasoline"
         )
 
         return gasoline_ratio.ratio if gasoline_ratio else None
 
+    def get_revised_diesel_ratio(self, obj):
+        """
+        Gets the future diesel ratio, if applicable
+        """
+        ratio = CreditCalculationService.get_later(
+            model_name="EnergyEffectivenessRatio",
+            category_id=obj.id,
+            effective_date=date.today(),
+            fuel_class__fuel_class="Diesel"
+        )
+
+        if not ratio:
+            return None
+
+        return {
+            "ratio": ratio.ratio,
+            "effective_date": ratio.effective_date
+        }
+
+    def get_revised_gasoline_ratio(self, obj):
+        """
+        Gets the future gasoline ratio, if applicable
+        """
+        ratio = CreditCalculationService.get_later(
+            model_name="EnergyEffectivenessRatio",
+            category_id=obj.id,
+            effective_date=date.today(),
+            fuel_class__fuel_class="Gasoline"
+        )
+
+        if not ratio:
+            return None
+
+        return {
+            "ratio": ratio.ratio,
+            "effective_date": ratio.effective_date
+        }
+
     class Meta:
         model = EnergyEffectivenessRatioCategory
         fields = (
-            'id', 'name', 'diesel_ratio', 'gasoline_ratio'
+            'id', 'name', 'diesel_ratio', 'gasoline_ratio',
+            'revised_diesel_ratio', 'revised_gasoline_ratio'
         )
 
 
@@ -541,14 +666,14 @@ class EnergyEffectivenessRatioDetailSerializer(serializers.ModelSerializer):
         """
         diesel_ratio = CreditCalculationService.get(
             category_id=obj.id,
-            date=date.today(),
+            effective_date=date.today(),
             fuel_class__fuel_class="Diesel",
             model_name="EnergyEffectivenessRatio"
         )
 
         gasoline_ratio = CreditCalculationService.get(
             category_id=obj.id,
-            date=date.today(),
+            effective_date=date.today(),
             fuel_class__fuel_class="Gasoline",
             model_name="EnergyEffectivenessRatio"
         )
@@ -584,6 +709,7 @@ class PetroleumCarbonIntensitySerializer(serializers.ModelSerializer):
     Default Petroleum Carbon Intensity Serializer
     """
     density = serializers.SerializerMethodField()
+    revised_density = serializers.SerializerMethodField()
 
     def get_density(self, obj):
         """
@@ -591,16 +717,34 @@ class PetroleumCarbonIntensitySerializer(serializers.ModelSerializer):
         """
         row = CreditCalculationService.get(
             category_id=obj.id,
-            date=date.today(),
+            effective_date=date.today(),
             model_name="PetroleumCarbonIntensity"
         )
 
         return row.density if row else None
 
+    def get_revised_density(self, obj):
+        """
+        Gets the future density value, if applicable
+        """
+        density = CreditCalculationService.get_later(
+            model_name="PetroleumCarbonIntensity",
+            category_id=obj.id,
+            effective_date=date.today()
+        )
+
+        if not density:
+            return None
+
+        return {
+            "density": density.density,
+            "effective_date": density.effective_date
+        }
+
     class Meta:
         model = PetroleumCarbonIntensityCategory
         fields = (
-            'id', 'name', 'density'
+            'id', 'name', 'density', 'revised_density'
         )
 
 
@@ -647,13 +791,16 @@ class PetroleumCarbonIntensityDetailSerializer(serializers.ModelSerializer):
         row = CreditCalculationService.get(
             model_name="PetroleumCarbonIntensity",
             category_id=obj.id,
-            date=date.today()
+            effective_date=date.today()
         )
 
+        if not row:
+            return None
+
         return {
-            "density": row.density if row else None,
-            "effective_date": row.effective_date if row else None,
-            "expiration_date": row.expiration_date if row else None
+            "density": row.density,
+            "effective_date": row.effective_date,
+            "expiration_date": row.expiration_date
         }
 
     class Meta:

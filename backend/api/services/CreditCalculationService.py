@@ -13,15 +13,15 @@ class CreditCalculationService(object):
         Gets the ratio/density that applies to the date provided
         """
         model_name = kwargs.pop('model_name')
-        date = kwargs.pop('date')
+        effective_date = kwargs.pop('effective_date')
 
         model = apps.get_model('api', model_name)
 
         return model.objects.filter(
-            effective_date__lte=date,
+            effective_date__lte=effective_date,
             **kwargs
         ).exclude(
-            expiration_date__lt=date
+            expiration_date__lt=effective_date
         ).exclude(
             expiration_date=F('effective_date')
         ).order_by('-effective_date', '-update_timestamp').first()
@@ -70,9 +70,10 @@ class CreditCalculationService(object):
         category_id = kwargs.pop('category_id', None)
         compliance_period_id = kwargs.pop('compliance_period_id', None)
         effective_date = kwargs.pop('effective_date')
+        fuel_class__fuel_class = kwargs.get('fuel_class__fuel_class', None)
         fuel_class_id = kwargs.get('fuel_class_id', None)
         model_name = kwargs.pop('model_name')
-        _update_user = kwargs.pop('update_user')
+        _update_user = kwargs.pop('update_user', None)
 
         model = apps.get_model('api', model_name)
 
@@ -91,6 +92,9 @@ class CreditCalculationService(object):
         if fuel_class_id:
             rows = rows.filter(fuel_class_id=fuel_class_id)
 
+        if fuel_class__fuel_class:
+            rows = rows.filter(fuel_class__fuel_class=fuel_class__fuel_class)
+
         return rows.order_by('effective_date', '-update_timestamp').first()
 
     @staticmethod
@@ -103,6 +107,7 @@ class CreditCalculationService(object):
         category_id = kwargs.pop('category_id', None)
         compliance_period_id = kwargs.pop('compliance_period_id', None)
         effective_date = kwargs.pop('effective_date')
+        fuel_class__fuel_class = kwargs.get('fuel_class__fuel_class', None)
         fuel_class_id = kwargs.get('fuel_class_id', None)
         model_name = kwargs.pop('model_name')
         _update_user = kwargs.pop('update_user')
@@ -123,6 +128,9 @@ class CreditCalculationService(object):
 
         if fuel_class_id:
             rows = rows.filter(fuel_class_id=fuel_class_id)
+
+        if fuel_class__fuel_class:
+            rows = rows.filter(fuel_class__fuel_class=fuel_class__fuel_class)
 
         return rows.order_by('-effective_date', '-update_timestamp').first()
 
