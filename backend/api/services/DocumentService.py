@@ -1,3 +1,4 @@
+import re
 from urllib.parse import urlsplit
 import logging
 from django.core.exceptions import ValidationError
@@ -78,7 +79,7 @@ class DocumentService(object):
         attachments = DocumentFileAttachment.objects.filter(
             is_removed=False
         )
-        object_names = map(DocumentService.get_filename, attachments)
+        object_names = list(map(DocumentService.get_filename, attachments))
         to_delete = []
 
         for o in objects:
@@ -96,8 +97,7 @@ class DocumentService(object):
         This parses the url from DocumentFile and gets the filename that you
         can send to minio for deletion
         """
-        pathname = urlsplit(attachment.url).path
-        return pathname.replace('/{}/'.format(MINIO['BUCKET_NAME']), '')
+        return re.search(r".*/([^\?]+)", attachment.url).group(1)
 
     @staticmethod
     def validate_status(current_status, next_status):
