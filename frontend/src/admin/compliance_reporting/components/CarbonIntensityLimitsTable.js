@@ -3,7 +3,7 @@
  */
 import React from 'react';
 import PropTypes from 'prop-types';
-
+import { OverlayTrigger, Tooltip } from 'react-bootstrap';
 import 'react-table/react-table.css';
 
 import ReactTable from '../../../app/components/StateSavingReactTable';
@@ -21,6 +21,25 @@ const CarbonIntensityLimitsTable = (props) => {
   }, {
     accessor: item => (item.limits.diesel && item.limits.diesel.density
       ? item.limits.diesel.density : 0).toFixed(2),
+    Cell: (row) => {
+      if (row.original.revisedLimits && row.original.revisedLimits.diesel) {
+        return (
+          <OverlayTrigger
+            placement="bottom"
+            overlay={(
+              <Tooltip id={`tooltip-${row.original.id}`} placement="bottom">
+                <div>Revised Energy Density: {row.original.revisedLimits.diesel.density}</div>
+                <div>Effective Date: {row.original.revisedLimits.diesel.effectiveDate}</div>
+              </Tooltip>
+            )}
+          >
+            <div className="has-revised-value">{row.value}</div>
+          </OverlayTrigger>
+        );
+      }
+
+      return row.value;
+    },
     className: 'col-diesel',
     Header: (
       <div>
@@ -31,8 +50,27 @@ const CarbonIntensityLimitsTable = (props) => {
     id: 'diesel',
     width: 300
   }, {
-    accessor: item => (item.limits.diesel && item.limits.gasoline.density
+    accessor: item => (item.limits.gasoline && item.limits.gasoline.density
       ? item.limits.gasoline.density : 0).toFixed(2),
+    Cell: (row) => {
+      if (row.original.revisedLimits && row.original.revisedLimits.gasoline) {
+        return (
+          <OverlayTrigger
+            placement="bottom"
+            overlay={(
+              <Tooltip id={`tooltip-${row.original.id}`} placement="bottom">
+                <div>Revised Energy Density: {row.original.revisedLimits.gasoline.density}</div>
+                <div>Effective Date: {row.original.revisedLimits.gasoline.effectiveDate}</div>
+              </Tooltip>
+            )}
+          >
+            <div className="has-revised-value">{row.value}</div>
+          </OverlayTrigger>
+        );
+      }
+
+      return row.value;
+    },
     className: 'col-gasoline',
     Header: (
       <div>
