@@ -30,6 +30,7 @@ class SecureFileSubmissionDetailContainer extends Component {
       fields: {
         recordNumbers: []
       },
+      hasFailures: false,
       hasCommented: false,
       isCommenting: false,
       isCreatingPrivilegedComment: false,
@@ -54,6 +55,23 @@ class SecureFileSubmissionDetailContainer extends Component {
 
   loadData (id) {
     this.props.getDocumentUpload(id);
+  }
+
+  componentWillReceiveProps(newProps) {
+    let hasFailures = false;
+
+    let attachments = newProps.documentUpload.item.attachments;
+    if (attachments) {
+      attachments.forEach(attachment => {
+        if (attachment.securityScanStatus == "FAIL") {
+          hasFailures = true;
+        }
+      });
+    }
+
+    this.setState({
+      hasFailures
+    });
   }
 
   _addComment (privileged = false) {
@@ -240,6 +258,7 @@ class SecureFileSubmissionDetailContainer extends Component {
           fields={this.state.fields}
           formValidationMessage={this._getValidationMessages()}
           handleRecordNumberChange={this._handleRecordNumberChange}
+          hasFailures={this.state.hasFailures}
           hasCommented={this.state.hasCommented}
           isCommenting={this.state.isCommenting}
           isCreatingPrivilegedComment={this.state.isCreatingPrivilegedComment}
