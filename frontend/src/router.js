@@ -17,6 +17,7 @@ import CONTACT_US from './constants/routes/ContactUs';
 import CREDIT_CALCULATIONS from './constants/routes/CreditCalculations';
 import CREDIT_TRANSACTIONS from './constants/routes/CreditTransactions';
 import ORGANIZATIONS from './constants/routes/Organizations';
+import SCHEDULES from './constants/routes/Schedules';
 import SECURE_DOCUMENT_UPLOAD from './constants/routes/SecureDocumentUpload';
 import USERS from './constants/routes/Users';
 
@@ -57,6 +58,7 @@ import MyOrganizationContainer from './organizations/MyOrganizationContainer';
 import OrganizationsContainer from './organizations/OrganizationsContainer';
 import OrganizationViewContainer from './organizations/OrganizationViewContainer';
 import OrganizationRolesContainer from './organizations/OrganizationRolesContainer';
+import SchedulesContainer from './schedules/SchedulesContainer';
 import SettingsContainer from './settings/SettingsContainer';
 import UserProfileContainer from './settings/UserProfileContainer';
 import UserViewContainer from './users/UserViewContainer';
@@ -315,6 +317,11 @@ const Router = routerProps => (
             key="petroleum_carbon_intensity_details"
             path={CREDIT_CALCULATIONS.PETROLEUM_CARBON_INTENSITIES_EDIT}
             component={withRouter(PetroleumCarbonIntensityEditContainer)}
+          />,
+          <Route
+            key="schedules_list"
+            path={SCHEDULES.LIST}
+            component={withRouter(SchedulesContainer)}
           />
         ]}
         <Route component={NotFound} />

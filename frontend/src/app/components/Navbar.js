@@ -14,6 +14,7 @@ import { HISTORICAL_DATA_ENTRY } from '../../constants/routes/Admin';
 import SECURE_DOCUMENT_UPLOAD from '../../constants/routes/SecureDocumentUpload';
 import CREDIT_TRANSACTIONS from '../../constants/routes/CreditTransactions';
 import ORGANIZATIONS from '../../constants/routes/Organizations';
+import SCHEDULES from '../../constants/routes/Schedules';
 import CONFIG from '../../config';
 
 class Navbar extends Component {
@@ -147,6 +148,22 @@ class Navbar extends Component {
             to={HISTORICAL_DATA_ENTRY.LIST}
           >
             Administration
+          </NavLink>
+          }
+          {CONFIG.COMPLIANCE_REPORTING.ENABLED &&
+          <NavLink
+            activeClassName="active"
+            id="navbar-schedules"
+            isActive={(match, location) => {
+              if (location.pathname.indexOf('/schedules/') >= 0) {
+                return true;
+              }
+
+              return false;
+            }}
+            to={SCHEDULES.LIST}
+          >
+            Schedules
           </NavLink>
           }
           <a
@@ -290,6 +307,17 @@ class Navbar extends Component {
               Settings
             </NavLink>
           </li>
+          {CONFIG.COMPLIANCE_REPORTING.ENABLED &&
+          <li>
+            <NavLink
+              activeClassName="active"
+              id="collapse-navbar-schedules"
+              to={SCHEDULES.LIST}
+            >
+              Schedules
+            </NavLink>
+          </li>
+          }
           <li>
             <a
               href={`/assets/files/Transportation_Fuels_Reporting_System_-_${this.props.loggedInUser.isGovernmentUser ? 'IDIR' : 'BCeID'}_Manual_v1.0.pdf`}

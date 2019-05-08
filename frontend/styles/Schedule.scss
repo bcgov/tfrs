@@ -1,0 +1,52 @@
+.page_schedule {
+  .data-grid-container {
+    display: block;
+  
+    .schedule {
+      width: 100%;
+    
+      &.data-grid .cell {
+        height: 4rem;
+        padding: 0.5rem;
+        vertical-align: middle;
+
+        &.editing {
+          padding: 0;
+
+          input, select {
+            height: 100%;
+            padding: 0.5rem 1rem;
+            width: 100%;
+          }
+        }
+
+        &.no-top-border {
+          border-top: 0;
+        }
+
+        &.text {
+          text-align: left;
+        }
+
+        input {
+          min-height: 2rem;
+        }
+
+        select {
+          width: 100%;
+        }
+      }
+    }
+  }
+
+  .sheet-buttons {
+    text-align: right;
+
+    button {
+      border-top: 0;
+      border-top-left-radius: 0;
+      border-top-right-radius: 0;
+      margin: 0;
+    }
+  }
+}
