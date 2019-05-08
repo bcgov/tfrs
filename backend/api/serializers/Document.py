@@ -20,7 +20,10 @@
     See the License for the specific language governing permissions and
     limitations under the License.
 """
-from datetime import datetime
+import re
+from datetime import datetime, timedelta
+
+from minio import Minio
 from rest_framework import serializers
 
 from api.models.DocumentFileAttachment import DocumentFileAttachment
@@ -42,12 +45,32 @@ from api.serializers.User import UserMinSerializer
 from api.services.DocumentActions import DocumentActions
 from api.services.DocumentCommentActions import DocumentCommentActions
 from api.services.DocumentService import DocumentService
+from tfrs.settings import MINIO
 
 
 class DocumentFileAttachmentSerializer(serializers.ModelSerializer):
     """
     Readonly Serializer for Document attachments
     """
+
+    url = serializers.SerializerMethodField()
+
+    def get_url(self, obj):
+
+        minio = Minio(MINIO['ENDPOINT'],
+                      access_key=MINIO['ACCESS_KEY'],
+                      secret_key=MINIO['SECRET_KEY'],
+                      secure=MINIO['USE_SSL'])
+
+        object_name = re.search(r".*/([^\?]+)", obj.url).group(1)
+
+        get_url = minio.presigned_get_object(
+            bucket_name=MINIO['BUCKET_NAME'],
+            object_name=object_name,
+            expires=timedelta(seconds=3600))
+
+        return get_url;
+
     class Meta:
         model = DocumentFileAttachment
         fields = ('id', 'url', 'security_scan_status', 'mime_type', 'size',
@@ -134,6 +157,14 @@ class DocumentCreateSerializer(serializers.ModelSerializer):
     def validate(self, data):
         request = self.context['request']
         submitted_status = DocumentStatus.objects.get(status="Submitted")
+
+        attachments = request.data.get('attachments')
+        if attachments:
+            for attachment in attachments:
+                if '?' in attachment['url']:
+                    raise serializers.ValidationError({
+                        'attachments': 'should not contain query string'
+                    })
 
         if data.get('status') == submitted_status:
             attachments = request.data.get('attachments')
@@ -502,6 +533,14 @@ class DocumentUpdateSerializer(serializers.ModelSerializer):
                     raise serializers.ValidationError({
                         'readOnly': "Cannot update other fields unless the "
                                     "document is in draft."
+                    })
+
+        attachments = request.data.get('attachments')
+        if attachments:
+            for attachment in attachments:
+                if '?' in attachment['url']:
+                    raise serializers.ValidationError({
+                        'attachments': 'should not contain query string'
                     })
 
         if status.status == "Submitted":

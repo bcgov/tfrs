@@ -222,7 +222,7 @@ class SecureFileSubmissionAddContainer extends Component {
               filename: file.name,
               mimeType: file.type,
               size: file.size,
-              url: response.data.get
+              url: response.data.get.split(/[?#]/)[0]
             });
             resolve();
           });
