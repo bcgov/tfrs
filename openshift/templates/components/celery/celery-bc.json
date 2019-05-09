@@ -1,0 +1,56 @@
+{
+    "apiVersion": "build.openshift.io/v1",
+    "kind": "BuildConfig",
+    "metadata": {
+        "creationTimestamp": null,
+        "name": "celery",
+        "selfLink": "/apis/build.openshift.io/v1/namespaces/mem-tfrs-tools/buildconfigs/celery"
+    },
+    "parameters": [
+        {
+            "name": "TFRS_RELEASE_TAG",
+            "description": "The tag name for this release, sample value: v1.3.4",
+            "required": true
+        },
+        {
+            "name": "CELERY_IS_NAME",
+            "description": "The celery image stream name, valid values: celery and celery-develop",
+            "required": true
+        }
+    ],
+    "spec": {
+        "failedBuildsHistoryLimit": 5,
+        "nodeSelector": null,
+        "output": {
+            "to": {
+                "kind": "ImageStreamTag",
+                "name": "${CELERY_IS_NAME}:latest"
+            }
+        },
+        "postCommit": {},
+        "resources": {},
+        "runPolicy": "Serial",
+        "source": {
+            "dockerfile": "FROM python:3.6.8-slim-stretch\nRUN apt-get update \\\n    \u0026\u0026 apt-get install -y git \\\n    \u0026\u0026 apt-get install -y supervisor\nWORKDIR /app\nRUN git clone https://github.com/bcgov/tfrs.git\nWORKDIR /app/tfrs\nRUN git checkout ${tfrs_release}\nRUN pip install --upgrade pip \\\n    \u0026\u0026 pip install -r backend/requirements.txt\nRUN cp /app/tfrs/security-scan/scan-handler/celery.conf /etc/supervisor/conf.d\nRUN chgrp -R root /var/log/supervisor\nRUN chmod -R g+w /var/log/supervisor\nRUN chmod -R g+w /run\nRUN chmod -R g+w /app\nCMD [\"supervisord\"]\n",
+            "type": "Dockerfile"
+        },
+        "strategy": {
+            "dockerStrategy": {
+                "env": [
+                    {
+                        "name": "tfrs_release",
+                        "value": "${TFRS_RELEASE_TAG}"
+                    }
+                ],
+                "forcePull": true,
+                "noCache": true
+            },
+            "type": "Docker"
+        },
+        "successfulBuildsHistoryLimit": 5,
+        "triggers": []
+    },
+    "status": {
+        "lastVersion": 0
+    }
+}

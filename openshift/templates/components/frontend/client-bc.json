@@ -1,0 +1,75 @@
+{
+    "apiVersion": "build.openshift.io/v1",
+    "kind": "BuildConfig",
+    "metadata": {
+        "annotations": {
+            "description": "Defines how to build the client / front end image"
+        },
+        "creationTimestamp": null,
+        "name": "client",
+        "selfLink": "/apis/build.openshift.io/v1/namespaces/mem-tfrs-tools/buildconfigs/client"
+    },
+    "parameters": [
+        {
+            "name": "CLIENT_IS_NAME",
+            "description": "The client image stream name, valid values: client and client-develop",
+            "required": true
+        },
+        {
+            "name": "CLIENT_ANGULAR_APP_IS_NAME",
+            "description": "The client angular app image stream name, valid values: client-angular-appand client-develop-angular-app",
+            "required": true
+        }
+    ],
+    "spec": {
+        "failedBuildsHistoryLimit": 5,
+        "nodeSelector": null,
+        "output": {
+            "to": {
+                "kind": "ImageStreamTag",
+                "name": "${CLIENT_IS_NAME}:latest"
+            }
+        },
+        "postCommit": {},
+        "resources": {
+            "limits": {
+                "cpu": "2",
+                "memory": "4Gi"
+            }
+        },
+        "runPolicy": "Serial",
+        "source": {
+            "dockerfile": "FROM client-angular-app:latest\nCOPY * /tmp/app/dist/\nCMD  /usr/libexec/s2i/run",
+            "images": [
+                {
+                    "as": null,
+                    "from": {
+                        "kind": "ImageStreamTag",
+                        "name": "${CLIENT_ANGULAR_APP_IS_NAME}:latest"
+                    },
+                    "paths": [
+                        {
+                            "destinationDir": "tmp",
+                            "sourcePath": "/opt/app-root/src/public/."
+                        }
+                    ]
+                }
+            ],
+            "type": "Dockerfile"
+        },
+        "strategy": {
+            "dockerStrategy": {
+                "from": {
+                    "kind": "ImageStreamTag",
+                    "name": "nginx-runtime:latest"
+                }
+            },
+            "type": "Docker"
+        },
+        "successfulBuildsHistoryLimit": 5,
+        "triggers": []
+    },
+    "status": {
+        "lastVersion": 0
+    }
+}
