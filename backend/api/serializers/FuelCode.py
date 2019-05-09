@@ -176,7 +176,7 @@ class FuelCodeCreateSerializer(serializers.ModelSerializer):
                 fields=('fuel_code', 'fuel_code_version',
                         'fuel_code_version_minor'),
                 message=("The fuel code is already in use. "
-                         "Please consult the Fuel Codes table to ensure that"
+                         "Please consult the Fuel Codes table to ensure that "
                          "this entry does not already exist.")
             )
         ]
