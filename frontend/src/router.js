@@ -58,7 +58,7 @@ import MyOrganizationContainer from './organizations/MyOrganizationContainer';
 import OrganizationsContainer from './organizations/OrganizationsContainer';
 import OrganizationViewContainer from './organizations/OrganizationViewContainer';
 import OrganizationRolesContainer from './organizations/OrganizationRolesContainer';
-import SchedulesContainer from './schedules/SchedulesContainer';
+import ScheduleCContainer from './schedules/ScheduleCContainer';
 import SettingsContainer from './settings/SettingsContainer';
 import UserProfileContainer from './settings/UserProfileContainer';
 import UserViewContainer from './users/UserViewContainer';
@@ -321,7 +321,7 @@ const Router = routerProps => (
           <Route
             key="schedules_list"
             path={SCHEDULES.LIST}
-            component={withRouter(SchedulesContainer)}
+            component={withRouter(ScheduleCContainer)}
           />
         ]}
         <Route component={NotFound} />

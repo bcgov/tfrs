@@ -9,13 +9,15 @@ const SchedulesPage = props => (
     <ReactDataSheet
       className="schedule"
       data={props.data}
-      valueRenderer={cell => cell.value}
       onCellsChanged={props.handleCellsChanged}
+      valueRenderer={cell => cell.value}
     />
     <div className="sheet-buttons">
       <button
         className="btn btn-default"
-        onClick={props.addRow}
+        onClick={() => {
+          props.addRow();
+        }}
         type="button"
       >
         <FontAwesomeIcon icon="plus" /> Add Row
