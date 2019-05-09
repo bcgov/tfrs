@@ -5,6 +5,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { OverlayTrigger, Tooltip } from 'react-bootstrap';
 import 'react-table/react-table.css';
+import FontAwesomeIcon from '@fortawesome/react-fontawesome';
 
 import ReactTable from '../../../app/components/StateSavingReactTable';
 import history from '../../../app/History';
@@ -30,12 +31,12 @@ const EnergyDensitiesTable = (props) => {
               </Tooltip>
             )}
           >
-            <div className="has-revised-value">{row.value}</div>
+            <div className="has-revised-value">{row.value} <FontAwesomeIcon icon="info-circle" /></div>
           </OverlayTrigger>
         );
       }
 
-      return row.value;
+      return <div>{row.value} <span className="spacer" /></div>;
     },
     className: 'col-density',
     Header: 'Energy Density',
