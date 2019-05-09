@@ -1,0 +1,68 @@
+{
+    "apiVersion": "build.openshift.io/v1",
+    "kind": "BuildConfig",
+    "metadata": {
+        "creationTimestamp": null,
+        "labels": {
+            "build": "notification-server"
+        },
+        "name": "notification-server",
+        "selfLink": "/apis/build.openshift.io/v1/namespaces/mem-tfrs-tools/buildconfigs/notification-server"
+    },
+    "parameters": [
+        {
+            "name": "TFRS_RELEASE_TAG",
+            "description": "The tag name for this release, sample value: v1.3.4",
+            "required": true
+        },
+        {
+            "name": "NOTIFICATION_SERVER_IS_NAME",
+            "description": "The notification server image stream name, valid values: notification_server and notification_server_develop",
+            "required": true
+        }
+    ],
+    "spec": {
+        "failedBuildsHistoryLimit": 5,
+        "nodeSelector": null,
+        "output": {
+            "to": {
+                "kind": "ImageStreamTag",
+                "name": "${NOTIFICATION_SERVER_IS_NAME}:latest"
+            }
+        },
+        "postCommit": {},
+        "resources": {
+            "limits": {
+                "cpu": "1",
+                "memory": "4Gi"
+            },
+            "requests": {
+                "memory": "2Gi"
+            }
+        },
+        "runPolicy": "Serial",
+        "source": {
+            "contextDir": "frontend",
+            "git": {
+                "ref": "${TFRS_RELEASE_TAG}",
+                "uri": "https://github.com/bcgov/tfrs.git"
+            },
+            "type": "Git"
+        },
+        "strategy": {
+            "sourceStrategy": {
+                "from": {
+                    "kind": "ImageStreamTag",
+                    "name": "nodejs:8",
+                    "namespace": "openshift"
+                }
+            },
+            "type": "Source"
+        },
+        "successfulBuildsHistoryLimit": 5,
+        "triggers": []
+    },
+    "status": {
+        "lastVersion": 0
+    }
+}

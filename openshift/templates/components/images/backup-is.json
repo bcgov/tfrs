@@ -1,0 +1,33 @@
+{
+    "apiVersion": "image.openshift.io/v1",
+    "kind": "ImageStream",
+    "metadata": {
+        "creationTimestamp": null,
+        "generation": 1,
+        "name": "backup",
+        "selfLink": "/apis/image.openshift.io/v1/namespaces/mem-tfrs-tools/imagestreams/backup"
+    },
+    "spec": {
+        "lookupPolicy": {
+            "local": false
+        },
+        "tags": [
+            {
+                "annotations": null,
+                "from": {
+                    "kind": "ImageStreamImage",
+                    "name": "backup@sha256:150dceb84f4f81bb8ea6767c58b2a812803d2b79bf70bbe119497fcefef41daa"
+                },
+                "generation": 1,
+                "importPolicy": {},
+                "name": "dev",
+                "referencePolicy": {
+                    "type": "Source"
+                }
+            }
+        ]
+    },
+    "status": {
+        "dockerImageRepository": "docker-registry.default.svc:5000/backup"
+    }
+}

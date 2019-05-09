@@ -1,0 +1,168 @@
+{
+    "apiVersion": "apps.openshift.io/v1",
+    "kind": "DeploymentConfig",
+    "metadata": {
+        "creationTimestamp": null,
+        "generation": 1,
+        "labels": {
+            "template": "notification-server"
+        },
+        "name": "notification-server",
+        "selfLink": "/apis/apps.openshift.io/v1/namespaces/mem-tfrs-dev/deploymentconfigs/notification-server"
+    },
+    "parameters": [
+        {
+            "name": "ENV_NAME",
+            "displayName": "Environment name",
+            "description": "Valid values: dev, test and prod",
+            "required": true
+        },
+        {
+            "name": "SOURCE_IS_NAME",
+            "displayName": "The source image stream name",
+            "description": "The image stream could trigger the deployment, valid values: notification-server-develop and notification-server",
+            "required": true
+        },
+        {
+            "name": "SOURCE_IS_TAG",
+            "displayName": "The source image stream tag name",
+            "description": "The source image stream plus tag could trigger the deployment, valid values: dev, test and prod",
+            "required": true
+        },
+        {
+            "name": "ENV_NAME_WITH_DASH",
+            "displayName": "Environment name",
+            "description": "Sample values: -dev, -test, and empty. empty means prod",
+            "required": true
+        },
+        {
+            "name": "SSO_HOST_NAME",
+            "displayName": "KeyCloak host name",
+            "description": "Sample values: sso-dev.pathfinder.gov.bc.ca, sso-test.pathfinder.gov.bc.ca and sso.pathfinder.gov.bc.ca",
+            "required": true
+        }
+    ],
+    "spec": {
+        "replicas": 1,
+        "revisionHistoryLimit": 10,
+        "selector": {
+            "name": "notification-server"
+        },
+        "strategy": {
+            "activeDeadlineSeconds": 21600,
+            "recreateParams": {
+                "timeoutSeconds": 600
+            },
+            "resources": {},
+            "type": "Recreate"
+        },
+        "template": {
+            "metadata": {
+                "creationTimestamp": null,
+                "labels": {
+                    "name": "notification-server"
+                },
+                "name": "notification-server"
+            },
+            "spec": {
+                "containers": [
+                    {
+                        "env": [
+                            {
+                                "name": "RABBITMQ_HOST",
+                                "value": "rabbit.mem-tfrs-${ENV_NAME}.svc"
+                            },
+                            {
+                                "name": "RABBITMQ_VHOST",
+                                "value": "/tfrs"
+                            },
+                            {
+                                "name": "RABBITMQ_USER",
+                                "value": "tfrs"
+                            },
+                            {
+                                "name": "RABBITMQ_PASSWORD",
+                                "valueFrom": {
+                                    "secretKeyRef": {
+                                        "key": "TFRS_PASSWORD",
+                                        "name": "rabbitmq-tfrs"
+                                    }
+                                }
+                            },
+                            {
+                                "name": "NPM_RUN",
+                                "value": "start:notifications"
+                            },
+                            {
+                                "name": "KEYCLOAK_CERTS_URL",
+                                "value": "https://${SSO_HOST_NAME}/auth/realms/tfrs${ENV_NAME_WITH_DASH}/protocol/openid-connect/certs"
+                            }
+                        ],
+                        "image": "",
+                        "imagePullPolicy": "IfNotPresent",
+                        "name": "notification-server",
+                        "ports": [
+                            {
+                                "containerPort": 3000,
+                                "protocol": "TCP"
+                            }
+                        ],
+                        "readinessProbe": {
+                            "failureThreshold": 3,
+                            "httpGet": {
+                                "path": "/",
+                                "port": 3000,
+                                "scheme": "HTTP"
+                            },
+                            "initialDelaySeconds": 10,
+                            "periodSeconds": 10,
+                            "successThreshold": 1,
+                            "timeoutSeconds": 3
+                        },
+                        "resources": {
+                            "limits": {
+                                "cpu": "250m",
+                                "memory": "500Mi"
+                            }
+                        },
+                        "terminationMessagePath": "/dev/termination-log",
+                        "terminationMessagePolicy": "File"
+                    }
+                ],
+                "dnsPolicy": "ClusterFirst",
+                "restartPolicy": "Always",
+                "schedulerName": "default-scheduler",
+                "securityContext": {},
+                "terminationGracePeriodSeconds": 30
+            }
+        },
+        "test": false,
+        "triggers": [
+            {
+                "imageChangeParams": {
+                    "automatic": true,
+                    "containerNames": [
+                        "notification-server"
+                    ],
+                    "from": {
+                        "kind": "ImageStreamTag",
+                        "name": "${SOURCE_IS_NAME}:${SOURCE_IS_TAG}",
+                        "namespace": "mem-tfrs-tools"
+                    }
+                },
+                "type": "ImageChange"
+            },
+            {
+                "type": "ConfigChange"
+            }
+        ]
+    },
+    "status": {
+        "availableReplicas": 0,
+        "latestVersion": 0,
+        "observedGeneration": 0,
+        "replicas": 0,
+        "unavailableReplicas": 0,
+        "updatedReplicas": 0
+    }
+}
