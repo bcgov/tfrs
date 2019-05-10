@@ -22,37 +22,17 @@
 """
 from rest_framework import serializers
 
-from api.models.ApprovedFuel import ApprovedFuel
-from .FuelClass import FuelClassSerializer
-from .UnitOfMeasure import UnitOfMeasureSerializer
+from api.models.UnitOfMeasure import UnitOfMeasure
 
 
-class ApprovedFuelSerializer(serializers.ModelSerializer):
+class UnitOfMeasureSerializer(serializers.ModelSerializer):
     """
-    Default Serializer for Approved Fuels
+    Default Serializer for Unit of Measure
     """
-    fuel_classes = serializers.SerializerMethodField()
-    unit_of_measure = UnitOfMeasureSerializer(read_only=True)
-
-    def get_fuel_classes(self, obj):
-        """
-        Fuel classes attached to the approved fuel.
-        """
-        serializer = FuelClassSerializer(
-            obj.fuel_classes.order_by('fuel_class'),
-            many=True,
-            read_only=True
-        )
-
-        return serializer.data
-
     class Meta:
-        model = ApprovedFuel
-        fields = 'id', 'name', 'description', 'fuel_classes', \
-            'credit_calculation_only', 'is_partially_renewable', \
-            'unit_of_measure'
+        model = UnitOfMeasure
+        fields = 'id', 'name'
 
         read_only_fields = (
-            'id', 'name', 'description', 'credit_calculation_only',
-            'is_partially_renewable', 'unit_of_measure'
+            'id', 'name'
         )
