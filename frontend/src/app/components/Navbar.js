@@ -155,7 +155,7 @@ class Navbar extends Component {
             activeClassName="active"
             id="navbar-schedules"
             isActive={(match, location) => {
-              if (location.pathname.indexOf('/schedules/') >= 0) {
+              if (location.pathname.indexOf('/schedules') >= 0) {
                 return true;
               }
 
@@ -163,7 +163,7 @@ class Navbar extends Component {
             }}
             to={SCHEDULES.LIST}
           >
-            Schedules
+            Compliance Reporting
           </NavLink>
           }
           <a
@@ -314,7 +314,7 @@ class Navbar extends Component {
               id="collapse-navbar-schedules"
               to={SCHEDULES.LIST}
             >
-              Schedules
+              Compliance Reporting
             </NavLink>
           </li>
           }
