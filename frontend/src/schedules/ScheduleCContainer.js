@@ -7,6 +7,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
+import { expectedUses } from '../actions/expectedUses';
 import Loading from '../app/components/Loading';
 import Modal from '../app/components/Modal';
 import Input from './components/Input';
@@ -65,11 +66,8 @@ class ScheduleCContainer extends Component {
   }
 
   componentDidMount () {
-    this.loadData();
+    this.props.loadExpectedUses();
     this._addRow(2);
-  }
-
-  loadData () {
   }
 
   _addRow (numberOfRows = 1) {
@@ -249,18 +247,28 @@ ScheduleCContainer.defaultProps = {
 };
 
 ScheduleCContainer.propTypes = {
+  expectedUses: PropTypes.shape({
+    isFetching: PropTypes.bool,
+    items: PropTypes.arrayOf(PropTypes.shape())
+  }).isRequired,
+  loadExpectedUses: PropTypes.func.isRequired,
   referenceData: PropTypes.shape({
     approvedFuels: PropTypes.arrayOf(PropTypes.shape)
   }).isRequired
 };
 
 const mapStateToProps = state => ({
+  expectedUses: {
+    isFetching: state.rootReducer.expectedUses.isFinding,
+    items: state.rootReducer.expectedUses.items
+  },
   referenceData: {
     approvedFuels: state.rootReducer.referenceData.data.approvedFuels
   }
 });
 
 const mapDispatchToProps = {
+  loadExpectedUses: expectedUses.find
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(ScheduleCContainer);
