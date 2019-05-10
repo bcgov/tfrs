@@ -10,8 +10,6 @@ class Select extends PureComponent {
 
   handleChange (e) {
     this.props.onChange(e.target.value);
-
-    e.target.parentElement.editing = false;
   }
 
   render () {

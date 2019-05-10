@@ -20,6 +20,19 @@
           }
         }
 
+        &.number {
+          text-align: right;
+
+          > div {
+            position: relative;
+            height: 100%;
+          }
+
+          input {
+            text-align: right
+          }
+        }
+
         &.no-top-border {
           border-top: 0;
         }
@@ -47,6 +60,10 @@
       border-top-left-radius: 0;
       border-top-right-radius: 0;
       margin: 0;
+
+      &.left {
+        float: left;
+      }
     }
   }
 }

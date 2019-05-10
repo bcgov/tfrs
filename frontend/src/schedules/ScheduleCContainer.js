@@ -5,11 +5,11 @@
 
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
 import PropTypes from 'prop-types';
 
 import Loading from '../app/components/Loading';
 import Modal from '../app/components/Modal';
+import Input from './components/Input';
 import Select from './components/Select';
 import SchedulesPage from './components/SchedulesPage';
 import ScheduleTabs from './components/ScheduleTabs';
@@ -60,6 +60,8 @@ class ScheduleCContainer extends Component {
     this._getFuelTypes = this._getFuelTypes.bind(this);
     this._handleCellsChanged = this._handleCellsChanged.bind(this);
     this._handleSubmit = this._handleSubmit.bind(this);
+    this._validateFuelClassColumn = this._validateFuelClassColumn.bind(this);
+    this._validateFuelTypeColumn = this._validateFuelTypeColumn.bind(this);
   }
 
   componentDidMount () {
@@ -92,14 +94,20 @@ class ScheduleCContainer extends Component {
             value: 'fuelClass'
           }
         }, {
-          value: ''
+          attributes: {
+            dataNumberToFixed: 2,
+            step: '0.01'
+          },
+          className: 'number',
+          dataEditor: Input,
+          valueViewer: (props) => {
+            const { value } = props;
+            return <span>{value.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')}</span>;
+          }
         }, {
-          readOnly: true,
-          value: ''
+          readOnly: true
         }, {
-          value: ''
         }, {
-          value: ''
         }
       ]);
     }
@@ -122,7 +130,7 @@ class ScheduleCContainer extends Component {
     return [];
   }
 
-  _handleCellsChanged (changes) {
+  _handleCellsChanged (changes, addition = null) {
     const grid = this.state.grid.map(row => [...row]);
 
     changes.forEach((change) => {
@@ -139,19 +147,21 @@ class ScheduleCContainer extends Component {
         value
       };
 
-      if (col === 0) {
-        grid[row][1] = { // if fuel type is updated, reset fuel class
-          ...grid[row][1],
-          value: ''
-        };
+      if (col === 0) { // Fuel Type
+        grid[row] = this._validateFuelTypeColumn(grid[row], value);
+      }
 
-        const selectedFuel = this.props.referenceData.approvedFuels
-          .find(fuel => fuel.name === value);
+      if (col === 1) { // Fuel Class
+        grid[row] = this._validateFuelClassColumn(grid[row], value);
+      }
 
-        grid[row][3] = { // automatically load the unit of measure for this fuel type
-          ...grid[row][3],
-          value: selectedFuel.unitOfMeasure && selectedFuel.unitOfMeasure.name
-        };
+      if (col === 2) { // Quantity and Fuel Supplied
+        if (Number.isNaN(Number(value))) {
+          grid[row][2] = {
+            ...grid[row][2],
+            value: ''
+          };
+        }
       }
 
       this.setState({
@@ -163,6 +173,47 @@ class ScheduleCContainer extends Component {
   _handleSubmit () {
     console.log(this.state.grid);
     debugger;
+  }
+
+  _validateFuelClassColumn (currentRow, value) {
+    const row = currentRow;
+    const fuelType = currentRow[0];
+
+    const selectedFuel = this.props.referenceData.approvedFuels
+      .find(fuel => fuel.name === fuelType.value);
+
+    if (!selectedFuel ||
+      selectedFuel.fuelClasses.findIndex(fuelClass => fuelClass.fuelClass === value) < 0) {
+      row[1] = {
+        ...row[1],
+        value: ''
+      };
+    }
+
+    return row;
+  }
+
+  _validateFuelTypeColumn (currentRow, value) {
+    const row = currentRow;
+    const selectedFuel = this.props.referenceData.approvedFuels.find(fuel => fuel.name === value);
+
+    if (!selectedFuel) {
+      row[0] = {
+        value: ''
+      };
+    }
+
+    row[1] = { // if fuel type is updated, reset fuel class
+      ...row[1],
+      value: ''
+    };
+
+    row[3] = { // automatically load the unit of measure for this fuel type
+      ...row[3],
+      value: (selectedFuel && selectedFuel.unitOfMeasure) ? selectedFuel.unitOfMeasure.name : ''
+    };
+
+    return row;
   }
 
   render () {

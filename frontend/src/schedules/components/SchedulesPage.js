@@ -14,24 +14,21 @@ const SchedulesPage = props => (
     />
     <div className="sheet-buttons">
       <button
-        className="btn btn-default"
+        className="btn btn-primary"
+        data-target="#confirmSubmit"
+        data-toggle="modal"
+        type="button"
+      >
+        <FontAwesomeIcon icon="save" /> Save
+      </button>
+      <button
+        className="btn btn-default left"
         onClick={() => {
           props.addRow();
         }}
         type="button"
       >
         <FontAwesomeIcon icon="plus" /> Add Row
-      </button>
-    </div>
-
-    <div className="btn-container">
-      <button
-        className="btn btn-default"
-        data-target="#confirmSubmit"
-        data-toggle="modal"
-        type="button"
-      >
-        <FontAwesomeIcon icon="save" /> Save
       </button>
     </div>
   </div>
