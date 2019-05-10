@@ -10,19 +10,25 @@ class Input extends PureComponent {
     this.handleChange = this.handleChange.bind(this);
   }
 
+  componentDidMount () {
+    this._input.target.focus();
+  }
+
   handleChange (e) {
     this.props.onChange(e.target.value);
   }
 
   render () {
-    const { value } = this.props;
+    const { value, onKeyDown } = this.props;
     const { attributes } = this.props.cell;
 
     return (
       <InputWithTooltip
         className="data-editor"
         handleInputChange={this.handleChange}
+        handleKeyDown={onKeyDown}
         name="input"
+        ref={(input) => { this._input = input; }}
         value={value}
         {...attributes}
       />
@@ -39,6 +45,7 @@ Input.propTypes = {
     attributes: PropTypes.shape({}).isRequired
   }).isRequired,
   onChange: PropTypes.func.isRequired,
+  onKeyDown: PropTypes.func.isRequired,
   value: PropTypes.string
 };
 

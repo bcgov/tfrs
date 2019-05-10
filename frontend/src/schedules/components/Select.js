@@ -8,6 +8,10 @@ class Select extends PureComponent {
     this.handleChange = this.handleChange.bind(this);
   }
 
+  componentDidMount () {
+    this._input.focus();
+  }
+
   handleChange (e) {
     this.props.onChange(e.target.value);
   }
@@ -22,6 +26,7 @@ class Select extends PureComponent {
         className="form-control"
         onChange={this.handleChange}
         onKeyDown={onKeyDown}
+        ref={(input) => { this._input = input; }}
         value={value}
       >
         <option key="0" value="" default />

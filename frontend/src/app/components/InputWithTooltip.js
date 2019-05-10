@@ -143,6 +143,7 @@ class InputWithTooltip extends Component {
           min={this.props.min}
           name={this.props.name}
           onChange={this.handleInputChange}
+          onKeyDown={this.props.handleKeyDown}
           onKeyPress={this.patternMatch}
           onPaste={this.handlePaste}
           placeholder={this.props.placeholder}
@@ -177,6 +178,7 @@ InputWithTooltip.defaultProps = {
   allowNegative: false,
   className: 'form-control',
   dataNumberToFixed: 0,
+  handleKeyDown: null,
   id: null,
   max: null,
   min: null,
@@ -192,6 +194,7 @@ InputWithTooltip.propTypes = {
   className: PropTypes.string,
   dataNumberToFixed: PropTypes.number,
   handleInputChange: PropTypes.func.isRequired,
+  handleKeyDown: PropTypes.func,
   id: PropTypes.string,
   max: PropTypes.string,
   min: PropTypes.string,
