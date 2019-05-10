@@ -65,6 +65,8 @@ class InputWithTooltip extends Component {
       } else {
         tooltipMessage = TEXT_ERROR_MAX_DECIMALS;
       }
+    } else {
+      this.props.handleInputChange(event);
     }
 
     this.setState({
@@ -72,8 +74,6 @@ class InputWithTooltip extends Component {
       showTooltip,
       tooltipMessage
     });
-
-    this.props.handleInputChange(event);
   }
 
   handlePaste (event) {
@@ -136,13 +136,14 @@ class InputWithTooltip extends Component {
           <span className="input-group-addon">$</span>
         }
         <input
-          className="form-control"
+          className={this.props.className}
           data-number-to-fixed={this.props.dataNumberToFixed}
           id={this.props.id}
           max={this.props.max}
           min={this.props.min}
           name={this.props.name}
           onChange={this.handleInputChange}
+          onKeyDown={this.props.handleKeyDown}
           onKeyPress={this.patternMatch}
           onPaste={this.handlePaste}
           placeholder={this.props.placeholder}
@@ -175,7 +176,9 @@ class InputWithTooltip extends Component {
 
 InputWithTooltip.defaultProps = {
   allowNegative: false,
+  className: 'form-control',
   dataNumberToFixed: 0,
+  handleKeyDown: null,
   id: null,
   max: null,
   min: null,
@@ -188,8 +191,10 @@ InputWithTooltip.defaultProps = {
 
 InputWithTooltip.propTypes = {
   allowNegative: PropTypes.bool,
+  className: PropTypes.string,
   dataNumberToFixed: PropTypes.number,
   handleInputChange: PropTypes.func.isRequired,
+  handleKeyDown: PropTypes.func,
   id: PropTypes.string,
   max: PropTypes.string,
   min: PropTypes.string,
