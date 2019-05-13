@@ -58,7 +58,6 @@ class ScheduleCContainer extends Component {
     this.state = ScheduleCContainer.addHeaders();
 
     this._addRow = this._addRow.bind(this);
-    this._getExpectedUse = this._getExpectedUse.bind(this);
     this._getFuelClasses = this._getFuelClasses.bind(this);
     this._handleCellsChanged = this._handleCellsChanged.bind(this);
     this._handleSubmit = this._handleSubmit.bind(this);
