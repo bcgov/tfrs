@@ -64,8 +64,13 @@ class ScheduleCContainer extends Component {
 
     this.state = ScheduleCContainer.addHeaders();
     this.rowNumber = 1;
+    this.totals = {
+      diesel: 0,
+      gasoline: 0
+    };
 
     this._addRow = this._addRow.bind(this);
+    this._calculateTotal = this._calculateTotal.bind(this);
     this._getFuelClasses = this._getFuelClasses.bind(this);
     this._handleCellsChanged = this._handleCellsChanged.bind(this);
     this._handleSubmit = this._handleSubmit.bind(this);
@@ -105,6 +110,7 @@ class ScheduleCContainer extends Component {
         }, {
           attributes: {
             dataNumberToFixed: 2,
+            maxLength: '12',
             step: '0.01'
           },
           className: 'number',
@@ -134,6 +140,27 @@ class ScheduleCContainer extends Component {
     this.setState({
       grid
     });
+  }
+
+  _calculateTotal (grid) {
+    this.totals = { // reset the totals
+      diesel: 0,
+      gasoline: 0
+    };
+
+    for (let x = 2; x < grid.length; x += 1) { // then recalculate
+      let value = Number(grid[x][SCHEDULE_C.QUANTITY].value);
+
+      if (Number.isNaN(value)) {
+        value = 0;
+      }
+
+      if (grid[x][SCHEDULE_C.FUEL_CLASS].value === 'Gasoline') {
+        this.totals.gasoline += value;
+      } else if (grid[x][SCHEDULE_C.FUEL_CLASS].value === 'Diesel') {
+        this.totals.diesel += value;
+      }
+    }
   }
 
   _getFuelClasses (row) {
@@ -186,16 +213,17 @@ class ScheduleCContainer extends Component {
       if (col === SCHEDULE_C.EXPECTED_USE) { // Expected Use
         grid[row][SCHEDULE_C.EXPECTED_USE_OTHER].readOnly = (value !== 'Other');
       }
-
-      this.setState({
-        grid
-      });
     });
+
+    this.setState({
+      grid
+    });
+
+    this._calculateTotal(grid);
   }
 
   _handleSubmit () {
     console.log(this.state.grid);
-    debugger;
   }
 
   _validateFuelClassColumn (currentRow, value) {
@@ -263,7 +291,29 @@ class ScheduleCContainer extends Component {
         key="confirmSubmit"
       >
         Are you sure you want to save this schedule?
-      </Modal>
+      </Modal>,
+      <div
+        className="schedule-totals"
+        key="totals"
+      >
+        <div className="row">
+          <div className="col-md-12">
+            <h2>Totals</h2>
+          </div>
+        </div>
+        <div className="row">
+          <div className="col-md-7">
+            <label htmlFor="gasoline-class-excluded">Gasoline Class Excluded:</label>
+          </div>
+          <div className="col-md-5 value">{this.totals.gasoline.toFixed(2).toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')}</div>
+        </div>
+        <div className="row">
+          <div className="col-md-7">
+            <label htmlFor="diesel-class-excluded">Diesel Class Excluded:</label>
+          </div>
+          <div className="col-md-5 value">{this.totals.diesel.toFixed(2).toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')}</div>
+        </div>
+      </div>
     ]);
   }
 }
