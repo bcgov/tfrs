@@ -9,6 +9,12 @@
 
     .ReactTable {
       margin-bottom: 2rem;
+
+      .has-revised-value svg, .spacer {
+        color: $blue;
+        display: inline-block;
+        width: 2.5rem;
+      }
     }
   }
 

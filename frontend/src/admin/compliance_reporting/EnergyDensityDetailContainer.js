@@ -10,6 +10,9 @@ import PropTypes from 'prop-types';
 import { energyDensities } from '../../actions/energyDensities';
 import Loading from '../../app/components/Loading';
 import EnergyDensityDetails from './components/EnergyDensityDetails';
+import {Tab, Tabs} from "react-bootstrap";
+import DefaultCarbonIntensityDetails from "./DefaultCarbonIntensityDetailContainer";
+import PastAndFutureValuesTable from "./components/PastAndFutureValuesTable";
 
 class EnergyDensityDetailContainer extends Component {
   constructor (props) {
@@ -27,12 +30,26 @@ class EnergyDensityDetailContainer extends Component {
 
     if (success && !isFetching && item) {
       return (
-        <EnergyDensityDetails
-          item={item}
-          loggedInUser={this.props.loggedInUser}
-          title="Energy Density Details"
-        />
+        <Tabs defaultActiveKey="details" id="citabs">
+          <Tab eventKey="details" title="Current">
+            <EnergyDensityDetails
+              item={item}
+              loggedInUser={this.props.loggedInUser}
+              title="Energy Density Details"
+            />
+          </Tab>
+          <Tab eventKey="allValues" title="Past And Future">
+            <h1>Past and Future Values</h1>
+            <PastAndFutureValuesTable
+              items={item.allValues}
+              includeDensity
+              densityUnit={item.unitOfMeasure}
+            />
+
+          </Tab>
+        </Tabs>
       );
+
     }
 
     return <Loading />;

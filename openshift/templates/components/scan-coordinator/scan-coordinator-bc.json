@@ -1,0 +1,56 @@
+{
+    "apiVersion": "build.openshift.io/v1",
+    "kind": "BuildConfig",
+    "metadata": {
+        "creationTimestamp": null,
+        "name": "scan-coordinator",
+        "selfLink": "/apis/build.openshift.io/v1/namespaces/mem-tfrs-tools/buildconfigs/scan-coordinator"
+    },
+    "parameters": [
+        {
+            "name": "TFRS_RELEASE_TAG",
+            "description": "The tag name for this release, sample value: v1.3.4",
+            "required": true
+        },
+        {
+            "name": "SCAN_COORDINATOR_IS_NAME",
+            "description": "The scan coordinator image stream name, valid values: scan_coordinator and scan_coordinator_develop",
+            "required": true
+        }
+    ],
+    "spec": {
+        "failedBuildsHistoryLimit": 5,
+        "nodeSelector": null,
+        "output": {
+            "to": {
+                "kind": "ImageStreamTag",
+                "name": "${SCAN_COORDINATOR_IS_NAME}:latest"
+            }
+        },
+        "postCommit": {},
+        "resources": {},
+        "runPolicy": "Serial",
+        "source": {
+            "dockerfile": "FROM golang:1.11\nWORKDIR /go/src\nRUN git clone https://github.com/bcgov/tfrs.git\nWORKDIR /go/src/tfrs\nRUN git checkout ${tfrs_release}\nRUN cp -r /go/src/tfrs/security-scan/scan-coordinator /go/src\nRUN rm -rf /go/src/tfrs\nWORKDIR /go/src/scan-coordinator\nADD https://github.com/vishnubob/wait-for-it/compare/master...HEAD /dev/null\nRUN git clone https://github.com/vishnubob/wait-for-it.git /wfi\nRUN go get -d -v ./...\nRUN go install -v ./...\nCMD [\"scan-coordinator\"]",
+            "type": "Dockerfile"
+        },
+        "strategy": {
+            "dockerStrategy": {
+                "env": [
+                    {
+                        "name": "tfrs_release",
+                        "value": "${TFRS_RELEASE_TAG}"
+                    }
+                ],
+                "forcePull": true,
+                "noCache": true
+            },
+            "type": "Docker"
+        },
+        "successfulBuildsHistoryLimit": 5,
+        "triggers": []
+    },
+    "status": {
+        "lastVersion": 0
+    }
+}

@@ -46,7 +46,7 @@ const CarbonIntensityLimitDetails = props => (
           <div className="col-sm-3">
             <div className="form-group">
               <label htmlFor="expiry-date">Expiration Date:
-                <div className="value">{props.item.limits.diesel.expirationDate}</div>
+                <div className="value">{props.item.limits.diesel.expirationDate || 'N/A'}</div>
               </label>
             </div>
           </div>
@@ -72,7 +72,7 @@ const CarbonIntensityLimitDetails = props => (
           <div className="col-sm-3">
             <div className="form-group">
               <label htmlFor="expiry-date">Expiration Date:
-                <div className="value">{props.item.limits.gasoline.expirationDate}</div>
+                <div className="value">{props.item.limits.gasoline.expirationDate || 'N/A'}</div>
               </label>
             </div>
           </div>

@@ -3,8 +3,9 @@
  */
 import React from 'react';
 import PropTypes from 'prop-types';
-
+import { OverlayTrigger, Tooltip } from 'react-bootstrap';
 import 'react-table/react-table.css';
+import FontAwesomeIcon from '@fortawesome/react-fontawesome';
 
 import ReactTable from '../../../app/components/StateSavingReactTable';
 import history from '../../../app/History';
@@ -18,6 +19,25 @@ const EnergyDensitiesTable = (props) => {
     id: 'title'
   }, {
     accessor: item => (item.density && item.density.toFixed(2)),
+    Cell: (row) => {
+      if (row.original.revisedDensity) {
+        return (
+          <OverlayTrigger
+            placement="bottom"
+            overlay={(
+              <Tooltip id={`tooltip-${row.original.id}`} placement="bottom">
+                <div>Revised Energy Density: {row.original.revisedDensity.density}</div>
+                <div>Effective Date: {row.original.revisedDensity.effectiveDate}</div>
+              </Tooltip>
+            )}
+          >
+            <div className="has-revised-value">{row.value} <FontAwesomeIcon icon="info-circle" /></div>
+          </OverlayTrigger>
+        );
+      }
+
+      return <div>{row.value} <span className="spacer" /></div>;
+    },
     className: 'col-density',
     Header: 'Energy Density',
     id: 'energy-density',

@@ -3,9 +3,9 @@
  * All data handling & manipulation should be handled here.
  */
 import PropTypes from 'prop-types';
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
+import React, {Component} from 'react';
+import {connect} from 'react-redux';
+import {bindActionCreators} from 'redux';
 
 import Loading from '../app/components/Loading';
 import Modal from '../app/components/Modal';
@@ -22,14 +22,14 @@ import FileUploadProgress from './components/FileUploadProgress';
 import SecureFileSubmissionForm from './components/SecureFileSubmissionForm';
 
 class SecureFileSubmissionEditContainer extends Component {
-  constructor (props) {
+  constructor(props) {
     super(props);
 
     this.state = {
       fields: {
         attachmentCategory: '',
         attachments: [],
-        compliancePeriod: { id: 0, description: '' },
+        compliancePeriod: {id: 0, description: ''},
         documentType: {
           id: 1
         },
@@ -39,7 +39,8 @@ class SecureFileSubmissionEditContainer extends Component {
       },
       uploadProgress: [],
       uploadState: '',
-      validationErrors: {}
+      validationErrors: {},
+      hasFailures: false
     };
 
     this.loaded = false;
@@ -49,29 +50,29 @@ class SecureFileSubmissionEditContainer extends Component {
     this._handleSubmit = this._handleSubmit.bind(this);
   }
 
-  componentDidMount () {
+  componentDidMount() {
     this.loadData(this.props.match.params.id);
   }
 
-  componentWillReceiveProps (props) {
+  componentWillReceiveProps(props) {
     this.loadPropsToFieldState(props);
   }
 
-  changeObjectProp (id, name) {
-    const fieldState = { ...this.state.fields };
+  changeObjectProp(id, name) {
+    const fieldState = {...this.state.fields};
 
-    fieldState[name] = { id: id || 0 };
+    fieldState[name] = {id: id || 0};
     this.setState({
       fields: fieldState
     });
   }
 
-  loadData (id) {
+  loadData(id) {
     this.props.getDocumentUpload(id);
   }
 
-  loadPropsToFieldState (props) {
-    const { item } = props;
+  loadPropsToFieldState(props) {
+    const {item} = props;
 
     if (Object.keys(item).length > 0 && !this.loaded) {
       const fieldState = {
@@ -93,16 +94,31 @@ class SecureFileSubmissionEditContainer extends Component {
 
       this.loaded = true;
     }
+
+    let hasFailures = false;
+
+    let attachments = props.item.attachments;
+    if (attachments) {
+      attachments.forEach(attachment => {
+        if (attachment.securityScanStatus == "FAIL") {
+          hasFailures = true;
+        }
+      });
+    }
+
+    this.setState({
+      hasFailures
+    });
   }
 
-  _deleteCreditTransferRequest (id) {
+  _deleteCreditTransferRequest(id) {
     this.props.deleteDocumentUpload(id).then(() => {
       history.push(SECURE_DOCUMENT_UPLOAD.LIST);
       toastr.documentUpload(null, 'Draft deleted.');
     });
   }
 
-  _getDocumentType () {
+  _getDocumentType() {
     let documentTypes = [];
     this.props.referenceData.documentCategories.forEach((category) => {
       documentTypes = documentTypes.concat(category.types);
@@ -117,7 +133,7 @@ class SecureFileSubmissionEditContainer extends Component {
     return false;
   }
 
-  _getErrors () {
+  _getErrors() {
     if ('title' in this.props.errors && this._getDocumentType().theType === 'Evidence') {
       this.props.errors.title.forEach((error, index) => {
         this.props.errors.title[index] = error.replace(/Title/, 'Part 3 Agreement');
@@ -127,8 +143,12 @@ class SecureFileSubmissionEditContainer extends Component {
     return this.props.errors;
   }
 
-  _getValidationMessages () {
+  _getValidationMessages() {
     const validationMessage = [];
+
+    if (this.state.hasFailures) {
+      validationMessage.push('Please remove all attachments with failing security scans.');
+    }
 
     if (this.state.fields.compliancePeriod.id === 0) {
       validationMessage.push('Please specify the Compliance Period to which the request relates.');
@@ -153,9 +173,9 @@ class SecureFileSubmissionEditContainer extends Component {
     return validationMessage;
   }
 
-  _handleInputChange (event) {
-    const { value, name } = event.target;
-    const fieldState = { ...this.state.fields };
+  _handleInputChange(event) {
+    const {value, name} = event.target;
+    const fieldState = {...this.state.fields};
 
     if (typeof fieldState[name] === 'object' &&
       name !== 'files' && name !== 'attachments') {
@@ -188,9 +208,24 @@ class SecureFileSubmissionEditContainer extends Component {
         fields: fieldState
       });
     }
+
+    let hasFailures = false;
+
+    let attachments = fieldState.attachments;
+    if (attachments) {
+      attachments.forEach(attachment => {
+        if (attachment.securityScanStatus == "FAIL") {
+          hasFailures = true;
+        }
+      });
+    }
+
+    this.setState({
+      hasFailures
+    });
   }
 
-  _handleSubmit (event, status) {
+  _handleSubmit(event, status) {
     event.preventDefault();
 
     this.setState({
@@ -222,7 +257,7 @@ class SecureFileSubmissionEditContainer extends Component {
             });
 
             this.props.uploadDocument(response.data.put, blob, (progressEvent) => {
-              const { uploadProgress } = this.state;
+              const {uploadProgress} = this.state;
               uploadProgress[i] = {
                 ...uploadProgress[i],
                 progress: {
@@ -235,7 +270,7 @@ class SecureFileSubmissionEditContainer extends Component {
                 uploadProgress
               });
             }).then(() => {
-              const { uploadProgress } = this.state;
+              const {uploadProgress} = this.state;
               uploadProgress[i] = {
                 ...uploadProgress[i],
                 complete: true,
@@ -246,7 +281,7 @@ class SecureFileSubmissionEditContainer extends Component {
                 uploadProgress
               });
             }).catch(() => {
-              const { uploadProgress } = this.state;
+              const {uploadProgress} = this.state;
               uploadProgress[i] = {
                 ...uploadProgress[i],
                 complete: false,
@@ -262,7 +297,7 @@ class SecureFileSubmissionEditContainer extends Component {
               filename: file.name,
               mimeType: file.type,
               size: file.size,
-              url: response.data.get
+              url: response.data.get.split(/[?#]/)[0]
             });
             resolve();
           });
@@ -281,7 +316,7 @@ class SecureFileSubmissionEditContainer extends Component {
       ))
       .map(attachment => attachment.id);
 
-    const { id } = this.props.item;
+    const {id} = this.props.item;
 
     // API data structure
     const data = {
@@ -296,7 +331,7 @@ class SecureFileSubmissionEditContainer extends Component {
 
     Promise.all(uploadPromises).then(() => (
       this.props.partialUpdateDocument(id, data).then((response) => {
-        this.setState({ uploadState: 'success' });
+        this.setState({uploadState: 'success'});
         history.push(SECURE_DOCUMENT_UPLOAD.LIST);
         toastr.documentUpload(status.id);
       }).catch((reason) => {
@@ -313,9 +348,9 @@ class SecureFileSubmissionEditContainer extends Component {
     return true;
   }
 
-  render () {
+  render() {
     if (this.props.referenceData.isFetching || !this.loaded) {
-      return (<Loading />);
+      return (<Loading/>);
     }
 
     if (this.state.uploadState === 'progress') {
@@ -325,7 +360,7 @@ class SecureFileSubmissionEditContainer extends Component {
       />);
     }
 
-    const { item } = this.props;
+    const {item} = this.props;
     let availableActions = [];
 
     if (item.actions) {
