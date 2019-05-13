@@ -231,8 +231,8 @@ class ScheduleCContainer extends Component {
       value: ''
     };
 
-    row[4] = { // automatically load the unit of measure for this fuel type
-      ...row[4],
+    row[SCHEDULE_C.UNITS] = { // automatically load the unit of measure for this fuel type
+      ...row[SCHEDULE_C.UNITS],
       value: (selectedFuel && selectedFuel.unitOfMeasure) ? selectedFuel.unitOfMeasure.name : ''
     };
 
