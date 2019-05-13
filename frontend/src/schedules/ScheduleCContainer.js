@@ -58,7 +58,8 @@ class ScheduleCContainer extends Component {
     this.state = ScheduleCContainer.addHeaders();
 
     this._addRow = this._addRow.bind(this);
-    this._getFuelTypes = this._getFuelTypes.bind(this);
+    this._getExpectedUse = this._getExpectedUse.bind(this);
+    this._getFuelClasses = this._getFuelClasses.bind(this);
     this._handleCellsChanged = this._handleCellsChanged.bind(this);
     this._handleSubmit = this._handleSubmit.bind(this);
     this._validateFuelClassColumn = this._validateFuelClassColumn.bind(this);
@@ -86,7 +87,7 @@ class ScheduleCContainer extends Component {
         }, {
           className: 'text',
           dataEditor: Select,
-          getOptions: this._getFuelTypes,
+          getOptions: this._getFuelClasses,
           mapping: {
             key: 'id',
             value: 'fuelClass'
@@ -105,7 +106,15 @@ class ScheduleCContainer extends Component {
         }, {
           readOnly: true
         }, {
+          className: 'text',
+          dataEditor: Select,
+          getOptions: () => !this.props.expectedUses.isFetching && this.props.expectedUses.items,
+          mapping: {
+            key: 'id',
+            value: 'description'
+          }
         }, {
+          readOnly: true
         }
       ]);
     }
@@ -115,7 +124,7 @@ class ScheduleCContainer extends Component {
     });
   }
 
-  _getFuelTypes (row) {
+  _getFuelClasses (row) {
     const fuelType = this.state.grid[row][0];
 
     const selectedFuel = this.props.referenceData.approvedFuels
@@ -159,6 +168,14 @@ class ScheduleCContainer extends Component {
             ...grid[row][2],
             value: ''
           };
+        }
+      }
+
+      if (col === 4) { // Expected Use
+        if (value === 'Other') {
+          grid[row][5].readOnly = false;
+        } else {
+          grid[row][5].readOnly = true;
         }
       }
 
