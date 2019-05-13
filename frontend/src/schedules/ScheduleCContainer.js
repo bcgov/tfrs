@@ -14,6 +14,7 @@ import Input from './components/Input';
 import Select from './components/Select';
 import SchedulesPage from './components/SchedulesPage';
 import ScheduleTabs from './components/ScheduleTabs';
+import ScheduleTotals from './components/ScheduleTotals';
 import { SCHEDULE_C } from '../constants/schedules/scheduleColumns';
 
 class ScheduleCContainer extends Component {
@@ -292,28 +293,11 @@ class ScheduleCContainer extends Component {
       >
         Are you sure you want to save this schedule?
       </Modal>,
-      <div
-        className="schedule-totals"
-        key="totals"
-      >
-        <div className="row">
-          <div className="col-md-12">
-            <h2>Totals</h2>
-          </div>
-        </div>
-        <div className="row">
-          <div className="col-md-7">
-            <label htmlFor="gasoline-class-excluded">Gasoline Class Excluded:</label>
-          </div>
-          <div className="col-md-5 value">{this.totals.gasoline.toFixed(2).toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')}</div>
-        </div>
-        <div className="row">
-          <div className="col-md-7">
-            <label htmlFor="diesel-class-excluded">Diesel Class Excluded:</label>
-          </div>
-          <div className="col-md-5 value">{this.totals.diesel.toFixed(2).toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')}</div>
-        </div>
-      </div>
+      <ScheduleTotals
+        key="total"
+        dieselTotals={this.totals.diesel}
+        gasolineTotals={this.totals.gasoline}
+      />
     ]);
   }
 }
