@@ -41,7 +41,10 @@ class ExpectedUse(Auditable, DisplayOrder, EffectiveDates):
     objects = ExpectedUseManager()
 
     class Meta:
-        db_table = 'expected_use'
+        db_table = 'expected_use_type'
 
-    db_table_comment = "Different options for the Expected Use column in " \
-                       "Schedule C."
+    db_table_comment = "Look up table that will contain values for the " \
+                       "Expected Use column in Schedule C." \
+                       "It's suppose to classify what the fuel type is " \
+                       "going to be used for. e.g. Heating Oil, Aviation, " \
+                       "Department of National Defence, etc."
