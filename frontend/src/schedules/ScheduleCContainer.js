@@ -23,7 +23,6 @@ class ScheduleCContainer extends Component {
         [{
           className: 'no-top-border',
           readOnly: true,
-          rowSpan: 2,
           width: 50
         }, {
           className: 'no-top-border',
@@ -42,6 +41,8 @@ class ScheduleCContainer extends Component {
           value: 'If other, write in expected use:'
         }], // header
         [{
+          readOnly: true
+        }, {
           readOnly: true,
           value: 'Fuel Type'
         }, {
