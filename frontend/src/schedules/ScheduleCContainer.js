@@ -14,12 +14,18 @@ import Input from './components/Input';
 import Select from './components/Select';
 import SchedulesPage from './components/SchedulesPage';
 import ScheduleTabs from './components/ScheduleTabs';
+import { SCHEDULE_C } from '../constants/schedules/scheduleColumns';
 
 class ScheduleCContainer extends Component {
   static addHeaders () {
     return {
       grid: [
         [{
+          className: 'no-top-border',
+          readOnly: true,
+          rowSpan: 2,
+          width: 50
+        }, {
           className: 'no-top-border',
           colSpan: 4,
           readOnly: true,
@@ -56,6 +62,7 @@ class ScheduleCContainer extends Component {
     super(props);
 
     this.state = ScheduleCContainer.addHeaders();
+    this.rowNumber = 1;
 
     this._addRow = this._addRow.bind(this);
     this._getFuelClasses = this._getFuelClasses.bind(this);
@@ -76,6 +83,9 @@ class ScheduleCContainer extends Component {
     for (let x = 0; x < numberOfRows; x += 1) {
       grid.push([
         {
+          readOnly: true,
+          value: this.rowNumber
+        }, {
           className: 'text',
           dataEditor: Select,
           getOptions: () => this.props.referenceData.approvedFuels,
@@ -116,6 +126,8 @@ class ScheduleCContainer extends Component {
           readOnly: true
         }
       ]);
+
+      this.rowNumber += 1;
     }
 
     this.setState({
@@ -124,7 +136,7 @@ class ScheduleCContainer extends Component {
   }
 
   _getFuelClasses (row) {
-    const fuelType = this.state.grid[row][0];
+    const fuelType = this.state.grid[row][SCHEDULE_C.FUEL_TYPE];
 
     const selectedFuel = this.props.referenceData.approvedFuels
       .find(fuel => fuel.name === fuelType.value);
@@ -153,29 +165,25 @@ class ScheduleCContainer extends Component {
         value
       };
 
-      if (col === 0) { // Fuel Type
+      if (col === SCHEDULE_C.FUEL_TYPE) { // Fuel Type
         grid[row] = this._validateFuelTypeColumn(grid[row], value);
       }
 
-      if (col === 1) { // Fuel Class
+      if (col === SCHEDULE_C.FUEL_CLASS) { // Fuel Class
         grid[row] = this._validateFuelClassColumn(grid[row], value);
       }
 
-      if (col === 2) { // Quantity and Fuel Supplied
+      if (col === SCHEDULE_C.QUANTITY) { // Quantity and Fuel Supplied
         if (Number.isNaN(Number(value))) {
-          grid[row][2] = {
-            ...grid[row][2],
+          grid[row][SCHEDULE_C.QUANTITY] = {
+            ...grid[row][SCHEDULE_C.QUANTITY],
             value: ''
           };
         }
       }
 
-      if (col === 4) { // Expected Use
-        if (value === 'Other') {
-          grid[row][5].readOnly = false;
-        } else {
-          grid[row][5].readOnly = true;
-        }
+      if (col === SCHEDULE_C.EXPECTED_USE) { // Expected Use
+        grid[row][SCHEDULE_C.EXPECTED_USE_OTHER].readOnly = (value !== 'Other');
       }
 
       this.setState({
@@ -191,15 +199,15 @@ class ScheduleCContainer extends Component {
 
   _validateFuelClassColumn (currentRow, value) {
     const row = currentRow;
-    const fuelType = currentRow[0];
+    const fuelType = currentRow[SCHEDULE_C.FUEL_TYPE];
 
     const selectedFuel = this.props.referenceData.approvedFuels
       .find(fuel => fuel.name === fuelType.value);
 
     if (!selectedFuel ||
       selectedFuel.fuelClasses.findIndex(fuelClass => fuelClass.fuelClass === value) < 0) {
-      row[1] = {
-        ...row[1],
+      row[SCHEDULE_C.FUEL_CLASS] = {
+        ...row[SCHEDULE_C.FUEL_CLASS],
         value: ''
       };
     }
@@ -212,18 +220,18 @@ class ScheduleCContainer extends Component {
     const selectedFuel = this.props.referenceData.approvedFuels.find(fuel => fuel.name === value);
 
     if (!selectedFuel) {
-      row[0] = {
+      row[SCHEDULE_C.FUEL_TYPE] = {
         value: ''
       };
     }
 
-    row[1] = { // if fuel type is updated, reset fuel class
-      ...row[1],
+    row[SCHEDULE_C.FUEL_CLASS] = { // if fuel type is updated, reset fuel class
+      ...row[SCHEDULE_C.FUEL_CLASS],
       value: ''
     };
 
-    row[3] = { // automatically load the unit of measure for this fuel type
-      ...row[3],
+    row[4] = { // automatically load the unit of measure for this fuel type
+      ...row[4],
       value: (selectedFuel && selectedFuel.unitOfMeasure) ? selectedFuel.unitOfMeasure.name : ''
     };
 
