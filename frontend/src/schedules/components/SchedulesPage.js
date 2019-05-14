@@ -21,15 +21,36 @@ const SchedulesPage = props => (
       >
         <FontAwesomeIcon icon="save" /> Save
       </button>
-      <button
-        className="btn btn-default left"
-        onClick={() => {
-          props.addRow();
-        }}
-        type="button"
-      >
-        <FontAwesomeIcon icon="plus" /> Add Row
-      </button>
+
+      <div className="btn-group">
+        <button
+          className="btn btn-default left"
+          onClick={() => {
+            props.addRow();
+          }}
+          type="button"
+        >
+          <FontAwesomeIcon icon="plus" /> Add Row
+        </button>
+        <button type="button" className="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          <span className="caret" />
+          <span className="sr-only">Toggle Dropdown</span>
+        </button>
+        <ul className="dropdown-menu">
+          {[2, 5, 10].map(numberOfRows => (
+            <li key={numberOfRows}>
+              <button
+                onClick={() => {
+                  props.addRow(numberOfRows);
+                }}
+                type="button"
+              >
+                Add {numberOfRows} Rows
+              </button>
+            </li>
+          ))}
+        </ul>
+      </div>
     </div>
   </div>
 );

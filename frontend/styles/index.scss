@@ -194,6 +194,24 @@ h1 {
   }
 }
 
+.dropdown-menu {
+  button {
+    background: none;
+    border: none;
+    clear: both;
+    display: block;
+    margin: 0;
+    padding: 5px 20px;
+    text-align: left;
+    white-space: nowrap;
+    width: 100%;
+
+    &:hover {
+      background-color: $background-grey;
+    }
+  }
+}
+
 .not-implemented:hover {
   position: relative;
   z-index: 10000;

@@ -19,6 +19,7 @@ import { carbonIntensities } from '../actions/carbonIntensities';
 import { defaultCarbonIntensities } from '../actions/defaultCarbonIntensities';
 import { energyDensities } from '../actions/energyDensities';
 import { energyEffectivenessRatios } from '../actions/energyEffectivenessRatios';
+import { expectedUses } from '../actions/expectedUses';
 import { petroleumCarbonIntensities } from '../actions/petroleumCarbonIntensities';
 import { roles } from '../actions/roleActions';
 
@@ -54,6 +55,7 @@ const rootReducer = combineReducers({
   carbonIntensityLimits: carbonIntensities.reducer(),
   energyDensities: energyDensities.reducer(),
   energyEffectivenessRatios: energyEffectivenessRatios.reducer(),
+  expectedUses: expectedUses.reducer(),
   fuelTypes,
   petroleumCarbonIntensities: petroleumCarbonIntensities.reducer()
 });

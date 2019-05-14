@@ -123,6 +123,12 @@ class InputWithTooltip extends Component {
       });
     }
 
+    // prevent further typing when maxlength has been reached
+    // (ordinarily, type=number ignores maxlength)
+    if (this.props.maxLength > 0 && value.length >= this.props.maxLength) {
+      event.preventDefault();
+    }
+
     // prevent invalid characters
     if (event.key === 'e') {
       event.preventDefault();
@@ -140,6 +146,7 @@ class InputWithTooltip extends Component {
           data-number-to-fixed={this.props.dataNumberToFixed}
           id={this.props.id}
           max={this.props.max}
+          maxLength={this.props.maxLength}
           min={this.props.min}
           name={this.props.name}
           onChange={this.handleInputChange}
@@ -181,6 +188,7 @@ InputWithTooltip.defaultProps = {
   handleKeyDown: null,
   id: null,
   max: null,
+  maxLength: null,
   min: null,
   placeholder: '',
   required: false,
@@ -197,6 +205,7 @@ InputWithTooltip.propTypes = {
   handleKeyDown: PropTypes.func,
   id: PropTypes.string,
   max: PropTypes.string,
+  maxLength: PropTypes.string,
   min: PropTypes.string,
   name: PropTypes.string.isRequired,
   placeholder: PropTypes.string,
