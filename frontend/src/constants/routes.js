@@ -11,6 +11,8 @@ export const SETTINGS_PROFILE = '/settings/profile';
 export const BASE_URL = `${window.location.protocol}//${window.location.host}/api`;
 export const SOCKETIO_URL = `${window.location.protocol}//${window.location.host}/`;
 
+export const AUTOSAVE_API = `/autosave`;
+
 export const ORGANIZATIONS_API = '/organizations';
 export const ORGANIZATIONS_FUEL_SUPPLIERS = '/organizations/fuel_suppliers';
 

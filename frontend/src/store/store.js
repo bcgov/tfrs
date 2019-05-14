@@ -26,6 +26,7 @@ import { energyDensities } from '../actions/energyDensities';
 import { energyEffectivenessRatios } from '../actions/energyEffectivenessRatios';
 import { petroleumCarbonIntensities } from '../actions/petroleumCarbonIntensities';
 import { roles } from '../actions/roleActions';
+import autosaveSaga from "./autosaveStore";
 
 const middleware = routerMiddleware(history);
 const sagaMiddleware = createSagaMiddleware();
@@ -68,6 +69,7 @@ sagaMiddleware.run(notificationsSaga, store);
 sagaMiddleware.run(authenticationStateSaga, store);
 sagaMiddleware.run(socketAuthenticationSaga, store);
 sagaMiddleware.run(autocompleteInvalidatorSaga, store);
+sagaMiddleware.run(autosaveSaga);
 
 sagaMiddleware.run(roles.saga);
 sagaMiddleware.run(carbonIntensities.saga);

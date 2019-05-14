@@ -3,47 +3,56 @@
  * All data handling & manipulation should be handled here.
  */
 import PropTypes from 'prop-types';
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 // import { Modal as PrepoluateModal } from 'react-bootstrap';
-import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
+import {connect} from 'react-redux';
+import {bindActionCreators} from 'redux';
 
-import { addFuelCode, getLatestFuelCode } from '../../actions/fuelCodeActions';
+import {addFuelCode, getLatestFuelCode} from '../../actions/fuelCodeActions';
 import history from '../../app/History';
 import Loading from '../../app/components/Loading';
 import Modal from '../../app/components/Modal';
 import CallableModal from '../../app/components/CallableModal';
 import FuelCodeForm from './components/FuelCodeForm';
-import { FUEL_CODES } from '../../constants/routes/Admin';
-import { formatFacilityNameplate } from '../../utils/functions';
+import {FUEL_CODES} from '../../constants/routes/Admin';
+import {formatFacilityNameplate} from '../../utils/functions';
 import toastr from '../../utils/toastr';
+import autosaved from '../../utils/autosave_support';
 
 class FuelCodeAddContainer extends Component {
-  constructor (props) {
+  constructor(props) {
     super(props);
 
-    this.state = {
-      fields: {
-        applicationDate: '',
-        approvalDate: '',
-        carbonIntensity: '',
-        company: '',
-        effectiveDate: '',
-        expiryDate: '',
-        facilityLocation: '',
-        facilityNameplate: '',
-        feedstock: '',
-        feedstockLocation: '',
-        feedstockMisc: '',
-        feedstockTransportMode: [],
-        formerCompany: '',
-        fuel: '',
-        fuelCode: '',
-        fuelTransportMode: [],
-        renewablePercentage: ''
-      },
-      showModal: false
-    };
+    if (props.loadedState) {
+      this.state = {
+        ...this.props.loadedState,
+        showModal: false
+      }
+    } else {
+
+      this.state = {
+        fields: {
+          applicationDate: '',
+          approvalDate: '',
+          carbonIntensity: '',
+          company: '',
+          effectiveDate: '',
+          expiryDate: '',
+          facilityLocation: '',
+          facilityNameplate: '',
+          feedstock: '',
+          feedstockLocation: '',
+          feedstockMisc: '',
+          feedstockTransportMode: [],
+          formerCompany: '',
+          fuel: '',
+          fuelCode: '',
+          fuelTransportMode: [],
+          renewablePercentage: ''
+        },
+        showModal: false
+      };
+    }
 
     this._addToFields = this._addToFields.bind(this);
     this._closeModal = this._closeModal.bind(this);
@@ -52,10 +61,12 @@ class FuelCodeAddContainer extends Component {
     this._handlePrepopulate = this._handlePrepopulate.bind(this);
     this._handleSubmit = this._handleSubmit.bind(this);
     this._openModal = this._openModal.bind(this);
+
+
   }
 
-  _addToFields (value) {
-    const fieldState = { ...this.state.fields };
+  _addToFields(value) {
+    const fieldState = {...this.state.fields};
 
     const found = this.state.fields.terms.find(term => term.id === value.id);
 
@@ -68,22 +79,22 @@ class FuelCodeAddContainer extends Component {
     });
   }
 
-  _closeModal () {
+  _closeModal() {
     this.setState({
       showModal: false
     });
   }
 
-  _getFuelCodeStatus (status) {
+  _getFuelCodeStatus(status) {
     return this.props.referenceData.fuelCodeStatuses.find(fuelCodeStatus =>
       (fuelCodeStatus.status === status));
   }
 
-  _handleInputChange (event) {
-    const { name } = event.target;
-    let { value } = event.target;
+  _handleInputChange(event) {
+    const {name} = event.target;
+    let {value} = event.target;
 
-    const fieldState = { ...this.state.fields };
+    const fieldState = {...this.state.fields};
 
     if (typeof fieldState[name] === 'object') {
       fieldState[name] = [...event.target.options].filter(o => o.selected).map(o => o.value);
@@ -102,9 +113,11 @@ class FuelCodeAddContainer extends Component {
         fields: fieldState
       });
     }
+
+    this.props.updateStateToSave({fields: fieldState});
   }
 
-  _handlePrepopulate () {
+  _handlePrepopulate() {
     const fuelCode = this.state.fields.fuelCode.split('.');
 
     if (fuelCode.length > 0) {
@@ -112,8 +125,8 @@ class FuelCodeAddContainer extends Component {
         fuel_code: 'BCLCF',
         fuel_code_version: fuelCode[0]
       }).then(() => {
-        const { item } = this.props.fuelCode;
-        const fieldState = { ...this.state.fields };
+        const {item} = this.props.fuelCode;
+        const fieldState = {...this.state.fields};
 
         Object.entries(item).forEach((prop) => {
           if ([
@@ -143,7 +156,7 @@ class FuelCodeAddContainer extends Component {
     }
   }
 
-  _handleSubmit (event, status = 'Draft') {
+  _handleSubmit(event, status = 'Draft') {
     event.preventDefault();
 
     const fuelCode = this.state.fields.fuelCode.split('.');
@@ -186,16 +199,16 @@ class FuelCodeAddContainer extends Component {
     return true;
   }
 
-  _openModal () {
+  _openModal() {
     this.setState({
       showModal: true
     });
   }
 
-  render () {
+  render() {
     if (this.props.referenceData.isFetching ||
       !this.props.referenceData.isSuccessful) {
-      return (<Loading />);
+      return (<Loading/>);
     }
 
     return ([
@@ -226,12 +239,12 @@ class FuelCodeAddContainer extends Component {
         show={this.state.showModal}
       >
         {!this.props.fuelCode.isFetching &&
-          <div>
-            Would you like to pre-populate the values in the form based on the previous
-            version&apos;s information?
-          </div>
+        <div>
+          Would you like to pre-populate the values in the form based on the previous
+          version&apos;s information?
+        </div>
         }
-        {this.props.fuelCode.isFetching && <Loading />}
+        {this.props.fuelCode.isFetching && <Loading/>}
       </CallableModal>
     ]);
   }
@@ -295,4 +308,10 @@ const mapDispatchToProps = dispatch => ({
   getFuelCode: bindActionCreators(getLatestFuelCode, dispatch)
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(FuelCodeAddContainer);
+const autosaveConfig = {
+  name: 'fuelCodeAdd',
+  version: '20190513',
+  key: 'unsaved'
+};
+
+export default autosaved(autosaveConfig)(connect(mapStateToProps, mapDispatchToProps)(FuelCodeAddContainer));
