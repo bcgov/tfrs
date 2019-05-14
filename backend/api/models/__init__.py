@@ -64,5 +64,6 @@ from . import DefaultCarbonIntensity
 from . import EnergyDensity
 from . import PetroleumCarbonIntensity
 from . import PetroleumCarbonIntensityCategory
+from . import ExpectedUse
 
 patch_fields()
