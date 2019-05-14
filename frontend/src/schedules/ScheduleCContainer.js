@@ -56,7 +56,11 @@ class ScheduleCContainer extends Component {
           readOnly: true,
           value: 'Units'
         }]
-      ]
+      ],
+      totals: {
+        diesel: 0,
+        gasoline: 0
+      }
     };
   }
 
@@ -65,10 +69,6 @@ class ScheduleCContainer extends Component {
 
     this.state = ScheduleCContainer.addHeaders();
     this.rowNumber = 1;
-    this.totals = {
-      diesel: 0,
-      gasoline: 0
-    };
 
     this._addRow = this._addRow.bind(this);
     this._calculateTotal = this._calculateTotal.bind(this);
@@ -144,24 +144,30 @@ class ScheduleCContainer extends Component {
   }
 
   _calculateTotal (grid) {
-    this.totals = { // reset the totals
+    let { totals } = this.state;
+    totals = { // reset the totals to 0, as we're recounting everything
       diesel: 0,
       gasoline: 0
     };
 
     for (let x = 2; x < grid.length; x += 1) { // then recalculate
       let value = Number(grid[x][SCHEDULE_C.QUANTITY].value);
+      const fuelClass = grid[x][SCHEDULE_C.FUEL_CLASS].value;
 
       if (Number.isNaN(value)) {
         value = 0;
       }
 
-      if (grid[x][SCHEDULE_C.FUEL_CLASS].value === 'Gasoline') {
-        this.totals.gasoline += value;
-      } else if (grid[x][SCHEDULE_C.FUEL_CLASS].value === 'Diesel') {
-        this.totals.diesel += value;
+      if (fuelClass === 'Gasoline') {
+        totals.gasoline += value;
+      } else if (fuelClass === 'Diesel') {
+        totals.diesel += value;
       }
     }
+
+    this.setState({
+      totals
+    });
   }
 
   _getFuelClasses (row) {
@@ -212,7 +218,18 @@ class ScheduleCContainer extends Component {
       }
 
       if (col === SCHEDULE_C.EXPECTED_USE) { // Expected Use
-        grid[row][SCHEDULE_C.EXPECTED_USE_OTHER].readOnly = (value !== 'Other');
+        if (value !== 'Other') {
+          grid[row][SCHEDULE_C.EXPECTED_USE_OTHER] = {
+            ...grid[row][SCHEDULE_C.EXPECTED_USE_OTHER],
+            readOnly: true,
+            value: ''
+          };
+        } else {
+          grid[row][SCHEDULE_C.EXPECTED_USE_OTHER] = {
+            ...grid[row][SCHEDULE_C.EXPECTED_USE_OTHER],
+            readOnly: false
+          };
+        }
       }
     });
 
@@ -295,8 +312,8 @@ class ScheduleCContainer extends Component {
       </Modal>,
       <ScheduleTotals
         key="total"
-        dieselTotals={this.totals.diesel}
-        gasolineTotals={this.totals.gasoline}
+        dieselTotals={this.state.totals.diesel}
+        gasolineTotals={this.state.totals.gasoline}
       />
     ]);
   }
