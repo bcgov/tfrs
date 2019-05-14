@@ -31,7 +31,6 @@ class AutosavedFormDataSerializer(serializers.ModelSerializer):
     """
 
     def create(self, validated_data):
-        print(validated_data)
         autosaved = AutosavedFormData.objects.update_or_create(
             key=validated_data['key'],
             user=self.context['request'].user,

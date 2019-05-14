@@ -1,4 +1,4 @@
-from datetime import datetime
+from django.utils import timezone
 
 from django.http import JsonResponse, HttpResponse
 from rest_framework.permissions import IsAuthenticated
@@ -24,7 +24,7 @@ class AutosaveViewSet(ViewSet):
         if result is None:
             return HttpResponse(status=HTTP_404_NOT_FOUND)
 
-        result.last_access = datetime.now()
+        result.last_access = timezone.now()
         result.save()
 
         serializer = AutosavedFormDataSerializer(result)

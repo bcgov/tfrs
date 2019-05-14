@@ -54,6 +54,9 @@ class FuelCodeAddContainer extends Component {
       };
     }
 
+    this.props.updateStateToSave({fields: this.state.fields});
+
+
     this._addToFields = this._addToFields.bind(this);
     this._closeModal = this._closeModal.bind(this);
     this._getFuelCodeStatus = this._getFuelCodeStatus.bind(this);
