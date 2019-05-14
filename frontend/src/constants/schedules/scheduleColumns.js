@@ -1,0 +1,10 @@
+const SCHEDULE_C = {
+  FUEL_TYPE: 1,
+  FUEL_CLASS: 2,
+  QUANTITY: 3,
+  UNITS: 4,
+  EXPECTED_USE: 5,
+  EXPECTED_USE_OTHER: 6
+};
+
+export { SCHEDULE_C };

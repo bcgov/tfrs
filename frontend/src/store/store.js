@@ -24,6 +24,7 @@ import { carbonIntensities } from '../actions/carbonIntensities';
 import { defaultCarbonIntensities } from '../actions/defaultCarbonIntensities';
 import { energyDensities } from '../actions/energyDensities';
 import { energyEffectivenessRatios } from '../actions/energyEffectivenessRatios';
+import { expectedUses } from '../actions/expectedUses';
 import { petroleumCarbonIntensities } from '../actions/petroleumCarbonIntensities';
 import { roles } from '../actions/roleActions';
 
@@ -74,6 +75,7 @@ sagaMiddleware.run(carbonIntensities.saga);
 sagaMiddleware.run(defaultCarbonIntensities.saga);
 sagaMiddleware.run(energyDensities.saga);
 sagaMiddleware.run(energyEffectivenessRatios.saga);
+sagaMiddleware.run(expectedUses.saga);
 sagaMiddleware.run(petroleumCarbonIntensities.saga);
 
 export default store;

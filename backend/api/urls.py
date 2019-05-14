@@ -46,6 +46,8 @@ from .viewsets.CreditCalculation import CarbonIntensityLimitViewSet, \
     DefaultCarbonIntensityViewSet, EnergyDensityViewSet, \
     EnergyEffectivenessRatioViewSet, PetroleumCarbonIntensityViewSet
 
+from .viewsets.ExpectedUse import ExpectedUseViewSet
+
 # Create a router and register our views with it.
 ROUTER = DefaultRouter(trailing_slash=False)
 ROUTER.register(r'compliance_periods', CompliancePeriodViewSet)
@@ -90,6 +92,10 @@ if CREDIT_CALCULATION_API['ENABLED'] or TESTING:
     ROUTER.register(
         r'credit_calculation/energy_effectiveness_ratios',
         EnergyEffectivenessRatioViewSet
+    )
+    ROUTER.register(
+        R'credit_calculation/expected_uses',
+        ExpectedUseViewSet
     )
     ROUTER.register(
         R'credit_calculation/petroleum_carbon_intensities',
