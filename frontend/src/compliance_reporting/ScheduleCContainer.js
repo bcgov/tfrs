@@ -66,7 +66,6 @@ class ScheduleCContainer extends Component {
     this.rowNumber = 1;
 
     this._addRow = this._addRow.bind(this);
-    this._calculateTotal = this._calculateTotal.bind(this);
     this._getFuelClasses = this._getFuelClasses.bind(this);
     this._handleCellsChanged = this._handleCellsChanged.bind(this);
     this._handleSubmit = this._handleSubmit.bind(this);
@@ -135,33 +134,6 @@ class ScheduleCContainer extends Component {
 
     this.setState({
       grid
-    });
-  }
-
-  _calculateTotal (grid) { // we're hiding the schedule totals for now
-    let { totals } = this.state;
-    totals = { // reset the totals to 0, as we're recounting everything
-      diesel: 0,
-      gasoline: 0
-    };
-
-    for (let x = 2; x < grid.length; x += 1) { // then recalculate
-      let value = Number(grid[x][SCHEDULE_C.QUANTITY].value);
-      const fuelClass = grid[x][SCHEDULE_C.FUEL_CLASS].value;
-
-      if (Number.isNaN(value)) {
-        value = 0;
-      }
-
-      if (fuelClass === 'Gasoline') {
-        totals.gasoline += value;
-      } else if (fuelClass === 'Diesel') {
-        totals.diesel += value;
-      }
-    }
-
-    this.setState({
-      totals
     });
   }
 
@@ -242,8 +214,6 @@ class ScheduleCContainer extends Component {
     this.setState({
       grid
     });
-
-    this._calculateTotal(grid);
   }
 
   _handleSubmit () {
@@ -297,7 +267,11 @@ class ScheduleCContainer extends Component {
       return <Loading />;
     }
 
-    const { period } = this.props.match.params;
+    let { period } = this.props.match.params;
+
+    if (!period) {
+      period = `${new Date().getFullYear() - 1}`;
+    }
 
     return ([
       <ScheduleTabs
@@ -334,7 +308,7 @@ ScheduleCContainer.propTypes = {
   loadExpectedUses: PropTypes.func.isRequired,
   match: PropTypes.shape({
     params: PropTypes.shape({
-      period: PropTypes.string.isRequired
+      period: PropTypes.string
     }).isRequired
   }).isRequired,
   referenceData: PropTypes.shape({

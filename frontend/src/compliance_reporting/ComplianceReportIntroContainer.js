@@ -14,7 +14,11 @@ class ComplianceReportIntroContainer extends Component {
   }
 
   render () {
-    const { period } = this.props.match.params;
+    let { period } = this.props.match.params;
+
+    if (!period) {
+      period = `${new Date().getFullYear() - 1}`;
+    }
 
     return (
       <ComplianceReportIntro
@@ -34,7 +38,7 @@ ComplianceReportIntroContainer.propTypes = {
   loggedInUser: PropTypes.shape().isRequired,
   match: PropTypes.shape({
     params: PropTypes.shape({
-      period: PropTypes.string.isRequired
+      period: PropTypes.string
     }).isRequired
   }).isRequired
 };
