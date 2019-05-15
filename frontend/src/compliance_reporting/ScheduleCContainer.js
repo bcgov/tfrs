@@ -125,6 +125,7 @@ class ScheduleCContainer extends Component {
             value: 'description'
           }
         }, {
+          className: 'text',
           readOnly: true
         }
       ]);
