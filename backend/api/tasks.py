@@ -14,4 +14,4 @@ def remove_orphans():
 @celery_app.task
 def reap_autosave():
     print('starting autosave cache reaper')
-    AutosaveService.remove_expired_entries(timedelta(hours=48))
+    AutosaveService.remove_expired_entries(timedelta(days=90))

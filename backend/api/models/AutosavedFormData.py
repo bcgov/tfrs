@@ -36,7 +36,7 @@ class AutosavedFormData(models.Model, DBComments):
         User,
         blank=False, null=False,
         on_delete=models.CASCADE,
-        db_comment='associated user'
+        db_comment='The creating user'
     )
 
     key = models.CharField(
@@ -44,7 +44,8 @@ class AutosavedFormData(models.Model, DBComments):
         blank=False,
         null=False,
         max_length=256,
-        db_comment='A uniquely-identifying key for this form and instance'
+        db_comment='A uniquely-identifying key for this form and instance. A client-generated string composed of '
+                   'entity name, API version, and instance identifier.'
     )
 
     data = models.TextField('data',
@@ -62,4 +63,5 @@ class AutosavedFormData(models.Model, DBComments):
         unique_together = ['user', 'key']
 
     db_table_comment = "Autosaved (potentially uncommitted) form data from " \
-                       "the client-side React app"
+                       "the client-side React app. This table is a temporary store for the client " \
+                       "to retain state for in-progress editing processes."
