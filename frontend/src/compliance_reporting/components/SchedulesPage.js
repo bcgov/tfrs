@@ -6,12 +6,15 @@ import FontAwesomeIcon from '@fortawesome/react-fontawesome';
 
 const SchedulesPage = props => (
   <div className="page_schedule">
+    <h1>{props.title}</h1>
+
     <ReactDataSheet
       className="schedule"
       data={props.data}
       onCellsChanged={props.handleCellsChanged}
       valueRenderer={cell => cell.value}
     />
+
     <div className="sheet-buttons">
       <button
         className="btn btn-primary"

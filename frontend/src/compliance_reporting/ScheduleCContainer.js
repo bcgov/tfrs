@@ -14,7 +14,6 @@ import Input from './components/Input';
 import Select from './components/Select';
 import SchedulesPage from './components/SchedulesPage';
 import ScheduleTabs from './components/ScheduleTabs';
-import ScheduleTotals from './components/ScheduleTotals';
 import { SCHEDULE_C } from '../constants/schedules/scheduleColumns';
 
 class ScheduleCContainer extends Component {
@@ -22,21 +21,17 @@ class ScheduleCContainer extends Component {
     return {
       grid: [
         [{
-          className: 'no-top-border',
           readOnly: true,
           width: 50
         }, {
-          className: 'no-top-border',
           colSpan: 4,
           readOnly: true,
           value: 'FUEL IDENTIFICATION AND QUANTITY'
         }, {
-          className: 'no-top-border',
           readOnly: true,
           rowSpan: 2,
           value: 'Expected Use'
         }, {
-          className: 'no-top-border',
           readOnly: true,
           rowSpan: 2,
           value: 'If other, write in expected use:'
@@ -143,7 +138,7 @@ class ScheduleCContainer extends Component {
     });
   }
 
-  _calculateTotal (grid) {
+  _calculateTotal (grid) { // we're hiding the schedule totals for now
     let { totals } = this.state;
     totals = { // reset the totals to 0, as we're recounting everything
       diesel: 0,
@@ -213,6 +208,17 @@ class ScheduleCContainer extends Component {
           grid[row][SCHEDULE_C.QUANTITY] = {
             ...grid[row][SCHEDULE_C.QUANTITY],
             value: ''
+          };
+        } else {
+          let roundedValue = Math.round(value * 100) / 100;
+
+          if (roundedValue < 0) {
+            roundedValue *= -1;
+          }
+
+          grid[row][col] = {
+            ...grid[row][col],
+            value: roundedValue
           };
         }
       }
@@ -291,9 +297,12 @@ class ScheduleCContainer extends Component {
       return <Loading />;
     }
 
+    const { period } = this.props.match.params;
+
     return ([
       <ScheduleTabs
         active="schedule-c"
+        compliancePeriod={period}
         key="nav"
       />,
       <SchedulesPage
@@ -301,7 +310,7 @@ class ScheduleCContainer extends Component {
         data={this.state.grid}
         handleCellsChanged={this._handleCellsChanged}
         key="schedules"
-        title="Schedules"
+        title="Compliance Report - Schedule C"
       />,
       <Modal
         handleSubmit={event => this._handleSubmit(event)}
@@ -309,12 +318,7 @@ class ScheduleCContainer extends Component {
         key="confirmSubmit"
       >
         Are you sure you want to save this schedule?
-      </Modal>,
-      <ScheduleTotals
-        key="total"
-        dieselTotals={this.state.totals.diesel}
-        gasolineTotals={this.state.totals.gasoline}
-      />
+      </Modal>
     ]);
   }
 }
@@ -328,6 +332,11 @@ ScheduleCContainer.propTypes = {
     items: PropTypes.arrayOf(PropTypes.shape())
   }).isRequired,
   loadExpectedUses: PropTypes.func.isRequired,
+  match: PropTypes.shape({
+    params: PropTypes.shape({
+      period: PropTypes.string.isRequired
+    }).isRequired
+  }).isRequired,
   referenceData: PropTypes.shape({
     approvedFuels: PropTypes.arrayOf(PropTypes.shape)
   }).isRequired

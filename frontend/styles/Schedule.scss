@@ -33,10 +33,6 @@
           }
         }
 
-        &.no-top-border {
-          border-top: 0;
-        }
-
         &.text {
           text-align: left;
         }
@@ -67,6 +63,11 @@
       float: left;
     }
   }
+}
+
+.schedule-tabs {
+  margin: 0 -3rem 2rem;
+  padding: 0 3rem;
 }
 
 .schedule-totals {
