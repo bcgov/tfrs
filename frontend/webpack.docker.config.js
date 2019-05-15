@@ -12,6 +12,7 @@ const config = {
     bundle: [
       // Polyfill for Object.assign on IE11, etc
       'babel-polyfill',
+      'react-hot-loader/patch',
       mainPath
     ],
     tokenRenewal: [
@@ -38,7 +39,7 @@ const config = {
         exclude: [nodeModulesPath],
         query: {
           presets: ['react', 'env'],
-          plugins: ['transform-object-rest-spread']
+          plugins: ['react-hot-loader/babel', 'transform-object-rest-spread']
         }
       },
 
