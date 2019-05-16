@@ -24,7 +24,8 @@
 import logging
 
 from django.db.models import CharField, Field, EmailField, ForeignKey, \
-    DateField, UUIDField, BooleanField, IntegerField, BigIntegerField, AutoField, DecimalField
+    DateField, UUIDField, BooleanField, IntegerField, BigIntegerField, \
+    AutoField, DecimalField, BinaryField, TextField, DateTimeField
 
 
 class PatchedField(Field):
@@ -85,13 +86,16 @@ def patch_fields():
         CharField,
         EmailField,
         DateField,
+        DateTimeField,
         UUIDField,
         BooleanField,
         IntegerField,
         BigIntegerField,
         DecimalField,
         AutoField,
-        ForeignKey
+        ForeignKey,
+        BinaryField,
+        TextField
     ]
 
     for cls in to_patch:
