@@ -24,6 +24,10 @@ app.conf.update({
         'minio-orphan-cleanup': {
             'task': 'api.tasks.remove_orphans',
             'schedule': 3600.0
+        },
+        'remove-expired-autosave-entries': {
+            'task': 'api.tasks.reap_autosave',
+            'schedule': 3600.0
         }
     }
 })
