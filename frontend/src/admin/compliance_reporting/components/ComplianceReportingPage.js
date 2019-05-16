@@ -8,7 +8,6 @@ import EnergyEffectivenessRatiosTable from './EnergyEffectivenessRatiosTable';
 import EnergyDensitiesTable from './EnergyDensitiesTable';
 import FuelClassesTable from './FuelClassesTable';
 import FuelTypesTable from './FuelTypesTable';
-import CONFIG from '../../../config';
 import CREDIT_CALCULATIONS from '../../../constants/routes/CreditCalculations';
 
 const ComplianceReportingPage = props => (
@@ -24,7 +23,7 @@ const ComplianceReportingPage = props => (
         {!props.carbonIntensityLimits.isFetching &&
           <CarbonIntensityLimitsTable
             items={props.carbonIntensityLimits.items.filter(item => (
-              item.description >= CONFIG.COMPLIANCE_REPORTING.STARTING_YEAR
+              item.limits && (item.limits.diesel || item.limits.gasoline)
             ))}
             isFetching={props.carbonIntensityLimits.isFetching}
             isEmpty={

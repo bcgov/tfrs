@@ -33,7 +33,7 @@ const CONFIG = {
   },
   COMPLIANCE_REPORTING: {
     ENABLED: getConfig('compliance_reporting.enabled', false),
-    STARTING_YEAR: getConfig('compliance_reporting.starting_year', 2017)
+    CREATE_EFFECTIVE_DATE: getConfig('compliance_reporting.create_effective_date', '2013-07-01')
   },
   CREDIT_CALCULATION_API: {
     ENABLED: getConfig('credit_calculation_api.enabled', false)
