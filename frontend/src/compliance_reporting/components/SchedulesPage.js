@@ -4,6 +4,10 @@ import ReactDataSheet from 'react-datasheet';
 import 'react-datasheet/lib/react-datasheet.css';
 import FontAwesomeIcon from '@fortawesome/react-fontawesome';
 
+import history from '../../app/History';
+import * as Lang from '../../constants/langEnUs';
+import COMPLIANCE_REPORTING from '../../constants/routes/ComplianceReporting';
+
 const SchedulesPage = props => (
   <div className="page_schedule">
     <h1>{props.title}</h1>
@@ -16,15 +20,6 @@ const SchedulesPage = props => (
     />
 
     <div className="sheet-buttons">
-      <button
-        className="btn btn-primary"
-        data-target="#confirmSubmit"
-        data-toggle="modal"
-        type="button"
-      >
-        <FontAwesomeIcon icon="save" /> Save
-      </button>
-
       <div className="btn-group">
         <button
           className="btn btn-default left"
@@ -54,6 +49,24 @@ const SchedulesPage = props => (
           ))}
         </ul>
       </div>
+    </div>
+
+    <div className="btn-container">
+      <button
+        className="btn btn-default"
+        onClick={() => history.push(COMPLIANCE_REPORTING.LIST)}
+        type="button"
+      >
+        <FontAwesomeIcon icon="arrow-circle-left" /> {Lang.BTN_APP_CANCEL}
+      </button>
+      <button
+        className="btn btn-primary"
+        data-target="#confirmSubmit"
+        data-toggle="modal"
+        type="button"
+      >
+        <FontAwesomeIcon icon="save" /> Save
+      </button>
     </div>
   </div>
 );

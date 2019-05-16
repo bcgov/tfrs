@@ -1,7 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import FontAwesomeIcon from '@fortawesome/react-fontawesome';
 
 import ScheduleTabs from './ScheduleTabs';
+import history from '../../app/History';
+import * as Lang from '../../constants/langEnUs';
+import COMPLIANCE_REPORTING from '../../constants/routes/ComplianceReporting';
 
 const ComplianceReportIntro = (props) => {
   const complianceReportDueDate = `20${Number(props.compliancePeriod.substr(-2)) + 1}`;
@@ -74,6 +78,16 @@ const ComplianceReportIntro = (props) => {
         Please contact <a href="mailto:lcfrr@gov.bc.ca">lcfrr@gov.bc.ca</a> with any questions you
         may have about this form.
         </p>
+      </div>
+
+      <div className="btn-container">
+        <button
+          className="btn btn-default"
+          onClick={() => history.push(COMPLIANCE_REPORTING.LIST)}
+          type="button"
+        >
+          <FontAwesomeIcon icon="arrow-circle-left" /> {Lang.BTN_APP_CANCEL}
+        </button>
       </div>
     </div>
   );
