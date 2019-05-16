@@ -1,4 +1,7 @@
 const Webpack = require('webpack');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+var HardSourceWebpackPlugin = require('hard-source-webpack-plugin');
+
 const path = require('path');
 const packageJson = require('./package.json');
 
@@ -12,6 +15,7 @@ const config = {
     bundle: [
       // Polyfill for Object.assign on IE11, etc
       'babel-polyfill',
+      'react-hot-loader/patch',
       mainPath
     ],
     tokenRenewal: [
@@ -21,12 +25,23 @@ const config = {
   },
   output: {
     filename: "[name].js",
-    publicPath: '/build/',
+    publicPath: '/',
     path: buildPath
   },
   mode: 'development',
   resolve: {
     extensions: ['.js', '.jsx']
+  },
+  optimization: {
+    splitChunks: {
+      cacheGroups: {
+        commons: {
+          test: /[\\/]node_modules[\\/]/,
+          name: 'vendor',
+          chunks: 'all'
+        }
+      }
+    }
   },
   module: {
     rules: [
@@ -38,7 +53,7 @@ const config = {
         exclude: [nodeModulesPath],
         query: {
           presets: ['react', 'env'],
-          plugins: ['transform-object-rest-spread']
+          plugins: ['react-hot-loader/babel', 'transform-object-rest-spread']
         }
       },
 
@@ -78,7 +93,17 @@ const config = {
     new Webpack.DefinePlugin({
       __VERSION__: JSON.stringify(packageJson.version)
     }),
-    new Webpack.HotModuleReplacementPlugin()
+    new Webpack.HotModuleReplacementPlugin(),
+    new HtmlWebpackPlugin({
+      chunks: ['bundle', 'vendor'],
+      filename: 'generated_index.html',
+      template: 'index_template.html'
+    }),
+    new HtmlWebpackPlugin({
+      chunks: ['tokenRenewal', 'vendor'],
+      filename: 'token_renew.html',
+    }),
+    new HardSourceWebpackPlugin()
   ]
 };
 

@@ -30,7 +30,7 @@ from pika.exceptions import AMQPError
 from django.apps import AppConfig
 from django.db.models.signals import post_migrate
 from minio import Minio
-from minio.error import MinioError
+from minio.error import MinioError, ResponseError
 
 from api.services.KeycloakAPI import list_users, get_token
 from db_comments.db_actions import create_db_comments, \
@@ -82,6 +82,15 @@ def check_external_services():
                           secure=MINIO['USE_SSL'])
 
             _objects = minio.list_buckets()
+
+            if not minio.bucket_exists(MINIO['BUCKET_NAME']):
+                print('Minio bucket doesn\'t exist. Creating it')
+                try:
+                    minio.make_bucket(MINIO['BUCKET_NAME'])
+                except ResponseError as _error:
+                    print(_error)
+                    raise RuntimeError('Minio bucket creation failed')
+
         except MinioError as _error:
             raise RuntimeError('Minio connection failed')
 
