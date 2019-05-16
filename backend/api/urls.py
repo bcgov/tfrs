@@ -24,6 +24,7 @@ from rest_framework.documentation import include_docs_urls
 from rest_framework.routers import DefaultRouter
 
 from api.viewsets.Autocomplete import AutocompleteViewSet
+from api.viewsets.Autosave import AutosaveViewSet
 from api.viewsets.Document import DocumentViewSet
 from api.viewsets.DocumentComments import DocumentCommentsViewSet
 from api.viewsets.FuelCode import FuelCodeViewSet
@@ -68,6 +69,10 @@ ROUTER.register(r'notifications',
 ROUTER.register(r'autocomplete',
                 AutocompleteViewSet,
                 base_name='autocomplete')
+
+ROUTER.register(r'autosave',
+                AutosaveViewSet,
+                base_name='autosave')
 
 if DOCUMENTS_API['ENABLED'] or TESTING:
     ROUTER.register(r'documents', DocumentViewSet)
