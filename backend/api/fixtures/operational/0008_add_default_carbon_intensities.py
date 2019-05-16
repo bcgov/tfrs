@@ -20,56 +20,56 @@ class AddDefaultCarbonIntensities(OperationalDataScript):
     def run(self):
         DefaultCarbonIntensity.objects.create(
             category=DefaultCarbonIntensityCategory.objects.get(
-                name="Renewable Fuel in relation to diesel class fuel"
+                name__iexact="Renewable Fuel in relation to diesel class fuel"
             ),
             effective_date="2017-01-01",
             density="98.96"
         )
         DefaultCarbonIntensity.objects.create(
             category=DefaultCarbonIntensityCategory.objects.get(
-                name="Propane"
+                name__iexact="Propane"
             ),
             effective_date="2017-01-01",
             density="75.35"
         )
         DefaultCarbonIntensity.objects.create(
             category=DefaultCarbonIntensityCategory.objects.get(
-                name="Renewable Fuel in relation to gasoline class fuel"
+                name__iexact="Renewable Fuel in relation to gasoline class fuel"
             ),
             effective_date="2017-01-01",
             density="88.14"
         )
         DefaultCarbonIntensity.objects.create(
             category=DefaultCarbonIntensityCategory.objects.get(
-                name="Natural gas-based gasoline"
+                name__iexact="Natural gas-based gasoline"
             ),
             effective_date="2017-01-01",
             density="90.07"
         )
         DefaultCarbonIntensity.objects.create(
             category=DefaultCarbonIntensityCategory.objects.get(
-                name="LNG"
+                name__iexact="LNG"
             ),
             effective_date="2017-01-01",
             density="112.65"
         )
         DefaultCarbonIntensity.objects.create(
             category=DefaultCarbonIntensityCategory.objects.get(
-                name="CNG"
+                name__iexact="CNG"
             ),
             effective_date="2017-01-01",
             density="63.64"
         )
         DefaultCarbonIntensity.objects.create(
             category=DefaultCarbonIntensityCategory.objects.get(
-                name="Electricity"
+                name__iexact="Electricity"
             ),
             effective_date="2017-01-01",
             density="19.73"
         )
         DefaultCarbonIntensity.objects.create(
             category=DefaultCarbonIntensityCategory.objects.get(
-                name="Hydrogen"
+                name__iexact="Hydrogen"
             ),
             effective_date="2017-01-01",
             density="96.82"
