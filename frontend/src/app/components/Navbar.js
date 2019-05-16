@@ -11,10 +11,10 @@ import history from '../../app/History';
 import PERMISSIONS_SECURE_DOCUMENT_UPLOAD from '../../constants/permissions/SecureDocumentUpload';
 import * as Routes from '../../constants/routes';
 import { HISTORICAL_DATA_ENTRY } from '../../constants/routes/Admin';
+import COMPLIANCE_REPORTING from '../../constants/routes/ComplianceReporting';
 import SECURE_DOCUMENT_UPLOAD from '../../constants/routes/SecureDocumentUpload';
 import CREDIT_TRANSACTIONS from '../../constants/routes/CreditTransactions';
 import ORGANIZATIONS from '../../constants/routes/Organizations';
-import SCHEDULES from '../../constants/routes/Schedules';
 import CONFIG from '../../config';
 
 class Navbar extends Component {
@@ -153,15 +153,15 @@ class Navbar extends Component {
           {CONFIG.COMPLIANCE_REPORTING.ENABLED &&
           <NavLink
             activeClassName="active"
-            id="navbar-schedules"
+            id="navbar-compliance-reporting"
             isActive={(match, location) => {
-              if (location.pathname.indexOf('/schedules') >= 0) {
+              if (location.pathname.indexOf('/compliance_reporting') >= 0) {
                 return true;
               }
 
               return false;
             }}
-            to={SCHEDULES.LIST}
+            to={COMPLIANCE_REPORTING.LIST}
           >
             Compliance Reporting
           </NavLink>
@@ -311,8 +311,8 @@ class Navbar extends Component {
           <li>
             <NavLink
               activeClassName="active"
-              id="collapse-navbar-schedules"
-              to={SCHEDULES.LIST}
+              id="collapse-navbar-compliance-reporting"
+              to={COMPLIANCE_REPORTING.LIST}
             >
               Compliance Reporting
             </NavLink>
