@@ -6,12 +6,23 @@ from datetime import datetime
 from django.db import transaction
 
 from api.management.data_script import OperationalDataScript
+from api.models.CarbonIntensityLimit import CarbonIntensityLimit
 from api.models.CompliancePeriod import CompliancePeriod
+from api.models.DefaultCarbonIntensity import DefaultCarbonIntensity
+from api.models.DefaultCarbonIntensityCategory import DefaultCarbonIntensityCategory
+from api.models.EnergyDensity import EnergyDensity
+from api.models.EnergyDensityCategory import EnergyDensityCategory
+from api.models.EnergyEffectivenessRatio import EnergyEffectivenessRatio
+from api.models.EnergyEffectivenessRatioCategory import EnergyEffectivenessRatioCategory
+from api.models.ExpectedUse import ExpectedUse
+from api.models.FuelClass import FuelClass
 from api.models.Organization import Organization
 from api.models.OrganizationActionsType import OrganizationActionsType
 from api.models.OrganizationBalance import OrganizationBalance
 from api.models.OrganizationStatus import OrganizationStatus
 from api.models.OrganizationType import OrganizationType
+from api.models.PetroleumCarbonIntensity import PetroleumCarbonIntensity
+from api.models.PetroleumCarbonIntensityCategory import PetroleumCarbonIntensityCategory
 from api.models.Role import Role
 from api.models.User import User
 from api.models.UserRole import UserRole
@@ -48,8 +59,24 @@ class DockerEnvironment(OperationalDataScript):
     @transaction.atomic
     def run(self):
 
-        CompliancePeriod(description='2018', display_order=2,
-                         effective_date=datetime.today().strftime('%Y-%m-%d')).save()
+        CompliancePeriod.objects.get(description='Auto-generated initial compliance period').delete()
+
+        display_order = 10
+        compliance_periods = []
+
+        for period in range(2013, 2031):
+            display_order += 1
+
+            compliance_periods.append(
+                CompliancePeriod(
+                    description=period,
+                    display_order=display_order,
+                    effective_date="{}-01-01".format(period),
+                    expiration_date="{}-12-31".format(period)
+                )
+            )
+
+        CompliancePeriod.objects.bulk_create(compliance_periods)
 
         Organization(name=self._orgs[0],
                      actions_type=OrganizationActionsType.objects.get_by_natural_key("Buy And Sell"),
@@ -101,6 +128,347 @@ class DockerEnvironment(OperationalDataScript):
         UserRole(user=User.objects.get(username='analyst'), role=Role.objects.get_by_natural_key('GovDoc')).save()
         UserRole(user=User.objects.get(username='director'), role=Role.objects.get_by_natural_key('GovDirector')).save()
         UserRole(user=User.objects.get(username='tfrsadmin'), role=Role.objects.get_by_natural_key('Admin')).save()
+
+        # These are copied verbatim from operational scripts 0006 through 0012.
+        # They must be copied instead of run on startup since their precondition checks don't do anything
+
+        CarbonIntensityLimit.objects.create(
+            compliance_period=CompliancePeriod.objects.get(description="2017"),
+            effective_date="2017-01-01",
+            expiration_date="2017-12-31",
+            density="90.02",
+            fuel_class=FuelClass.objects.get(fuel_class="Diesel")
+        )
+        CarbonIntensityLimit.objects.create(
+            compliance_period=CompliancePeriod.objects.get(description="2017"),
+            effective_date="2017-01-01",
+            expiration_date="2017-12-31",
+            density="83.74",
+            fuel_class=FuelClass.objects.get(fuel_class="Gasoline")
+        )
+
+        #  2018
+        CarbonIntensityLimit.objects.create(
+            compliance_period=CompliancePeriod.objects.get(description="2018"),
+            effective_date="2018-01-01",
+            expiration_date="2018-12-31",
+            density="88.60",
+            fuel_class=FuelClass.objects.get(fuel_class="Diesel")
+        )
+        CarbonIntensityLimit.objects.create(
+            compliance_period=CompliancePeriod.objects.get(description="2018"),
+            effective_date="2018-01-01",
+            expiration_date="2018-12-31",
+            density="82.41",
+            fuel_class=FuelClass.objects.get(fuel_class="Gasoline")
+        )
+
+        #  2019
+        CarbonIntensityLimit.objects.create(
+            compliance_period=CompliancePeriod.objects.get(description="2019"),
+            effective_date="2019-01-01",
+            expiration_date="2019-12-31",
+            density="87.18",
+            fuel_class=FuelClass.objects.get(fuel_class="Diesel")
+        )
+        CarbonIntensityLimit.objects.create(
+            compliance_period=CompliancePeriod.objects.get(description="2019"),
+            effective_date="2019-01-01",
+            expiration_date="2019-12-31",
+            density="81.09",
+            fuel_class=FuelClass.objects.get(fuel_class="Gasoline")
+        )
+
+        carbon_intensities = []
+
+        for period in range(2020, 2031):
+            carbon_intensities.append(
+                CarbonIntensityLimit(
+                    compliance_period=CompliancePeriod.objects.get(
+                        description=period
+                    ),
+                    effective_date="{}-01-01".format(period),
+                    expiration_date="{}-12-31".format(period),
+                    density="85.28",
+                    fuel_class=FuelClass.objects.get(fuel_class="Diesel")
+                )
+            )
+
+            carbon_intensities.append(
+                CarbonIntensityLimit(
+                    compliance_period=CompliancePeriod.objects.get(
+                        description=period
+                    ),
+                    effective_date="{}-01-01".format(period),
+                    expiration_date="{}-12-31".format(period),
+                    density="79.33",
+                    fuel_class=FuelClass.objects.get(fuel_class="Gasoline")
+                )
+            )
+
+        CarbonIntensityLimit.objects.bulk_create(carbon_intensities)
+
+        EnergyEffectivenessRatio.objects.create(
+            category=EnergyEffectivenessRatioCategory.objects.get(
+                name="Petroleum-based diesel fuel or renewable fuel in "
+                     "relation to diesel class fuel"
+            ),
+            effective_date="2017-01-01",
+            ratio="1.0",
+            fuel_class=FuelClass.objects.get(fuel_class="Diesel")
+        )
+        EnergyEffectivenessRatio.objects.create(
+            category=EnergyEffectivenessRatioCategory.objects.get(
+                name="Petroleum-based gasoline, natural gas-based gasoline or "
+                     "renewable fuel in relation to gasoline class fuel"
+            ),
+            effective_date="2017-01-01",
+            ratio="1.0",
+            fuel_class=FuelClass.objects.get(fuel_class="Gasoline")
+        )
+        EnergyEffectivenessRatio.objects.create(
+            category=EnergyEffectivenessRatioCategory.objects.get(
+                name="Hydrogen"
+            ),
+            effective_date="2017-01-01",
+            ratio="1.9",
+            fuel_class=FuelClass.objects.get(fuel_class="Diesel")
+        )
+        EnergyEffectivenessRatio.objects.create(
+            category=EnergyEffectivenessRatioCategory.objects.get(
+                name="Hydrogen"
+            ),
+            effective_date="2017-01-01",
+            ratio="2.5",
+            fuel_class=FuelClass.objects.get(fuel_class="Gasoline")
+        )
+        EnergyEffectivenessRatio.objects.create(
+            category=EnergyEffectivenessRatioCategory.objects.get(
+                name="LNG"
+            ),
+            effective_date="2017-01-01",
+            ratio="1.0",
+            fuel_class=FuelClass.objects.get(fuel_class="Diesel")
+        )
+        EnergyEffectivenessRatio.objects.create(
+            category=EnergyEffectivenessRatioCategory.objects.get(
+                name="CNG"
+            ),
+            effective_date="2017-01-01",
+            ratio="0.9",
+            fuel_class=FuelClass.objects.get(fuel_class="Diesel")
+        )
+        EnergyEffectivenessRatio.objects.create(
+            category=EnergyEffectivenessRatioCategory.objects.get(
+                name="CNG"
+            ),
+            effective_date="2017-01-01",
+            ratio="1.0",
+            fuel_class=FuelClass.objects.get(fuel_class="Gasoline")
+        )
+        EnergyEffectivenessRatio.objects.create(
+            category=EnergyEffectivenessRatioCategory.objects.get(
+                name="Propane"
+            ),
+            effective_date="2017-01-01",
+            ratio="1.0",
+            fuel_class=FuelClass.objects.get(fuel_class="Diesel")
+        )
+        EnergyEffectivenessRatio.objects.create(
+            category=EnergyEffectivenessRatioCategory.objects.get(
+                name="Propane"
+            ),
+            effective_date="2017-01-01",
+            ratio="1.0",
+            fuel_class=FuelClass.objects.get(fuel_class="Gasoline")
+        )
+        EnergyEffectivenessRatio.objects.create(
+            category=EnergyEffectivenessRatioCategory.objects.get(
+                name="Electricity"
+            ),
+            effective_date="2017-01-01",
+            ratio="2.7",
+            fuel_class=FuelClass.objects.get(fuel_class="Diesel")
+        )
+        EnergyEffectivenessRatio.objects.create(
+            category=EnergyEffectivenessRatioCategory.objects.get(
+                name="Electricity"
+            ),
+            effective_date="2017-01-01",
+            ratio="3.4",
+            fuel_class=FuelClass.objects.get(fuel_class="Gasoline")
+        )
+
+        DefaultCarbonIntensity.objects.create(
+            category=DefaultCarbonIntensityCategory.objects.get(
+                name__iexact="Renewable Fuel in relation to diesel class fuel"
+            ),
+            effective_date="2017-01-01",
+            density="98.96"
+        )
+        DefaultCarbonIntensity.objects.create(
+            category=DefaultCarbonIntensityCategory.objects.get(
+                name__iexact="Propane"
+            ),
+            effective_date="2017-01-01",
+            density="75.35"
+        )
+        DefaultCarbonIntensity.objects.create(
+            category=DefaultCarbonIntensityCategory.objects.get(
+                name__iexact="Renewable Fuel in relation to gasoline class fuel"
+            ),
+            effective_date="2017-01-01",
+            density="88.14"
+        )
+        DefaultCarbonIntensity.objects.create(
+            category=DefaultCarbonIntensityCategory.objects.get(
+                name__iexact="Natural gas-based gasoline"
+            ),
+            effective_date="2017-01-01",
+            density="90.07"
+        )
+        DefaultCarbonIntensity.objects.create(
+            category=DefaultCarbonIntensityCategory.objects.get(
+                name__iexact="LNG"
+            ),
+            effective_date="2017-01-01",
+            density="112.65"
+        )
+        DefaultCarbonIntensity.objects.create(
+            category=DefaultCarbonIntensityCategory.objects.get(
+                name__iexact="CNG"
+            ),
+            effective_date="2017-01-01",
+            density="63.64"
+        )
+        DefaultCarbonIntensity.objects.create(
+            category=DefaultCarbonIntensityCategory.objects.get(
+                name__iexact="Electricity"
+            ),
+            effective_date="2017-01-01",
+            density="19.73"
+        )
+        DefaultCarbonIntensity.objects.create(
+            category=DefaultCarbonIntensityCategory.objects.get(
+                name__iexact="Hydrogen"
+            ),
+            effective_date="2017-01-01",
+            density="96.82"
+        )
+
+        EnergyDensity.objects.create(
+            category=EnergyDensityCategory.objects.get(
+                name="Petroleum-based diesel fuel or diesel fuel produced "
+                     "from biomass"
+            ),
+            effective_date="2017-01-01",
+            density="38.65"
+        )
+        EnergyDensity.objects.create(
+            category=EnergyDensityCategory.objects.get(
+                name="Hydrogenation-derived renewable diesel fuel"
+            ),
+            effective_date="2017-01-01",
+            density="36.51"
+        )
+        EnergyDensity.objects.create(
+            category=EnergyDensityCategory.objects.get(
+                name="Biodiesel"
+            ),
+            effective_date="2017-01-01",
+            density="35.40"
+        )
+        EnergyDensity.objects.create(
+            category=EnergyDensityCategory.objects.get(
+                name="Petroleum-based gasoline, natural gas-based "
+                     "gasoline or gasoline produced from biomass"
+            ),
+            effective_date="2017-01-01",
+            density="34.69"
+        )
+        EnergyDensity.objects.create(
+            category=EnergyDensityCategory.objects.get(
+                name="Ethanol"
+            ),
+            effective_date="2017-01-01",
+            density="23.58"
+        )
+        EnergyDensity.objects.create(
+            category=EnergyDensityCategory.objects.get(
+                name="Hydrogen"
+            ),
+            effective_date="2017-01-01",
+            density="141.24"
+        )
+        EnergyDensity.objects.create(
+            category=EnergyDensityCategory.objects.get(
+                name="LNG"
+            ),
+            effective_date="2017-01-01",
+            density="52.46"
+        )
+        EnergyDensity.objects.create(
+            category=EnergyDensityCategory.objects.get(
+                name="CNG"
+            ),
+            effective_date="2017-01-01",
+            density="37.85"
+        )
+        EnergyDensity.objects.create(
+            category=EnergyDensityCategory.objects.get(
+                name="Propane"
+            ),
+            effective_date="2017-01-01",
+            density="25.47"
+        )
+        EnergyDensity.objects.create(
+            category=EnergyDensityCategory.objects.get(
+                name="Electricity"
+            ),
+            effective_date="2017-01-01",
+            density="3.60"
+        )
+
+        CarbonIntensityLimit.objects.update(
+            effective_date="2017-01-01",
+            expiration_date=None
+        )
+
+        PetroleumCarbonIntensity.objects.create(
+            category=PetroleumCarbonIntensityCategory.objects.get(
+                name="Petroleum-based diesel"
+            ),
+            effective_date="2017-01-01",
+            density="94.76"
+        )
+        PetroleumCarbonIntensity.objects.create(
+            category=PetroleumCarbonIntensityCategory.objects.get(
+                name="Petroleum-based gasoline"
+            ),
+            effective_date="2017-01-01",
+            density="88.14"
+        )
+
+        ExpectedUse.objects.create(
+            description="Other",
+            display_order="99",
+            effective_date="2017-01-01"
+        )
+        ExpectedUse.objects.create(
+            description="Heating Oil",
+            display_order="1",
+            effective_date="2017-01-01"
+        )
+        ExpectedUse.objects.create(
+            description="Department of National Defence (Canada)",
+            display_order="2",
+            effective_date="2017-01-01"
+        )
+        ExpectedUse.objects.create(
+            description="Aviation",
+            display_order="3",
+            effective_date="2017-01-01"
+        )
 
 
 script_class = DockerEnvironment
