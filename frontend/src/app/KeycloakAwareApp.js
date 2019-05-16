@@ -18,7 +18,7 @@ class KeycloakAwareApp extends React.Component {
     this.state = { hasErrors: false };
   }
 
-  static getDerivedStateFromError (_errors) {
+  static getDerivedStateFromError (errors) {
     return { hasErrors: true };
   }
 

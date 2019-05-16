@@ -1,8 +1,9 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 
-import { connect } from 'react-redux';
-import { withRouter } from 'react-router';
+import {connect} from 'react-redux';
+import {withRouter} from 'react-router';
+import {hot} from 'react-hot-loader/root';
 
 import KeycloakAwareApp from './KeycloakAwareApp';
 
@@ -17,4 +18,4 @@ App.propTypes = {
   ]).isRequired
 };
 
-export default withRouter(connect(state => ({}))(App));
+export default hot(withRouter(connect(state => ({}))(App)));

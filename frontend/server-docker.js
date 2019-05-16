@@ -10,8 +10,11 @@ const http = require('http');
 
 const devServerOptions = {
   contentBase: path.join(__dirname, 'public'),
-  publicPath: '/build/',
-  historyApiFallback: true,
+  publicPath: '/',
+  index: 'generated_index.html',
+  historyApiFallback: {
+    verbose: true
+  },
   port: 3000,
   compress: true,
   public: 'localhost',
@@ -22,7 +25,6 @@ const devServerOptions = {
     }
   },
   hot: true,
-  //watch: true,
   watchOptions: {
     ignored: ['node_modules'],
     poll: 1500
@@ -32,6 +34,8 @@ const devServerOptions = {
 WebpackDevServer.addDevServerEntrypoints(webpackConfig, devServerOptions);
 const compiler = Webpack(webpackConfig);
 const server = new WebpackDevServer(compiler, devServerOptions);
+
+
 const httpServer = http.createServer((req, res) => {
   res.end();
 });
