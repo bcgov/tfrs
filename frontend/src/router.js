@@ -17,7 +17,7 @@ import CONTACT_US from './constants/routes/ContactUs';
 import CREDIT_CALCULATIONS from './constants/routes/CreditCalculations';
 import CREDIT_TRANSACTIONS from './constants/routes/CreditTransactions';
 import ORGANIZATIONS from './constants/routes/Organizations';
-import SCHEDULES from './constants/routes/Schedules';
+import COMPLIANCE_REPORTING from './constants/routes/ComplianceReporting';
 import SECURE_DOCUMENT_UPLOAD from './constants/routes/SecureDocumentUpload';
 import USERS from './constants/routes/Users';
 
@@ -25,7 +25,7 @@ import FuelCodeAddContainer from './admin/fuel_codes/FuelCodeAddContainer';
 import FuelCodeDetailContainer from './admin/fuel_codes/FuelCodeDetailContainer';
 import FuelCodeEditContainer from './admin/fuel_codes/FuelCodeEditContainer';
 import FuelCodesContainer from './admin/fuel_codes/FuelCodesContainer';
-import ComplianceReportingContainer from './admin/compliance_reporting/ComplianceReportingContainer';
+import AdminComplianceReportingContainer from './admin/compliance_reporting/ComplianceReportingContainer';
 import CarbonIntensityLimitDetailContainer from './admin/compliance_reporting/CarbonIntensityLimitDetailContainer';
 import CarbonIntensityLimitEditContainer from './admin/compliance_reporting/CarbonIntensityLimitEditContainer';
 import DefaultCarbonIntensityDetailContainer from './admin/compliance_reporting/DefaultCarbonIntensityDetailContainer';
@@ -49,6 +49,9 @@ import UsersContainer from './admin/users/UsersContainer';
 import UserAddContainer from './admin/users/UserAddContainer';
 import UserEditContainer from './admin/users/UserEditContainer';
 import NotFound from './app/components/NotFound';
+import ComplianceReportingContainer from './compliance_reporting/ComplianceReportingContainer';
+import ComplianceReportIntroContainer from './compliance_reporting/ComplianceReportIntroContainer';
+import ScheduleCContainer from './compliance_reporting/ScheduleCContainer';
 import ContactUsContainer from './contact_us/ContactUsContainer';
 import CreditTransactionsContainer from './credit_transfers/CreditTransactionsContainer';
 import CreditTransferAddContainer from './credit_transfers/CreditTransferAddContainer';
@@ -58,7 +61,6 @@ import MyOrganizationContainer from './organizations/MyOrganizationContainer';
 import OrganizationsContainer from './organizations/OrganizationsContainer';
 import OrganizationViewContainer from './organizations/OrganizationViewContainer';
 import OrganizationRolesContainer from './organizations/OrganizationRolesContainer';
-import ScheduleCContainer from './schedules/ScheduleCContainer';
 import SettingsContainer from './settings/SettingsContainer';
 import UserProfileContainer from './settings/UserProfileContainer';
 import UserViewContainer from './users/UserViewContainer';
@@ -266,7 +268,7 @@ const Router = routerProps => (
             exact
             key="compliance_reporting_list"
             path={CREDIT_CALCULATIONS.LIST}
-            component={withRouter(ComplianceReportingContainer)}
+            component={withRouter(AdminComplianceReportingContainer)}
           />,
           <Route
             key="carbon_intensity_limit_details"
@@ -319,9 +321,19 @@ const Router = routerProps => (
             component={withRouter(PetroleumCarbonIntensityEditContainer)}
           />,
           <Route
-            key="schedules_list"
-            path={SCHEDULES.LIST}
+            key="compliance_reporting_add"
+            path={COMPLIANCE_REPORTING.ADD}
+            component={withRouter(ComplianceReportIntroContainer)}
+          />,
+          <Route
+            key="compliance_reporting_add"
+            path={COMPLIANCE_REPORTING.ADD_SCHEDULE_C}
             component={withRouter(ScheduleCContainer)}
+          />,
+          <Route
+            key="compliance_reporting"
+            path={COMPLIANCE_REPORTING.LIST}
+            component={withRouter(ComplianceReportingContainer)}
           />
         ]}
         <Route component={NotFound} />
