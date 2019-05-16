@@ -23,10 +23,13 @@ function autosaved(config) {
           saving: false,
           loadedState: null,
           stateToSave: null,
+          dirty: false,
+          timerId: null
         };
 
         this.updateStateToSave = this.updateStateToSave.bind(this);
         this.updateAutosaveKey = this.updateAutosaveKey.bind(this);
+        this.tick = this.tick.bind(this);
       }
 
       _getKey() {
@@ -40,7 +43,7 @@ function autosaved(config) {
         });
 
         this.props.saveState(this._getKey(), this.state.stateToSave).then(() => {
-          this.setState({saving: false});
+          this.setState({saving: false, dirty: false});
         }).catch(() => {
           this.setState({saving: false});
         });
@@ -64,22 +67,35 @@ function autosaved(config) {
 
       updateAutosaveKey(key) {
         this.setState({
-          key
+          key,
+          dirty: true
         });
       }
 
       updateStateToSave(stateToSave) {
         this.setState({
-          stateToSave
+          stateToSave,
+          dirty: true
         });
       }
 
       componentDidMount() {
+        const timerId = setInterval(this.tick, 5000);
+        this.setState({
+          timerId
+        });
         this._doLoad();
+      }
+
+      tick() {
+        if (this.state.dirty) {
+          this._doSave();
+        }
       }
 
       componentWillUnmount() {
         this._doSave();
+        clearInterval(this.state.timerId);
       }
 
       render() {
