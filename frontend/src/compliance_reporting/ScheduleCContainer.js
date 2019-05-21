@@ -65,6 +65,12 @@ class ScheduleCContainer extends Component {
     this.state = ScheduleCContainer.addHeaders();
     this.rowNumber = 1;
 
+    if (document.location.pathname.indexOf('/edit/') >= 0) {
+      this.edit = true;
+    } else {
+      this.edit = false;
+    }
+
     this._addRow = this._addRow.bind(this);
     this._getFuelClasses = this._getFuelClasses.bind(this);
     this._handleCellsChanged = this._handleCellsChanged.bind(this);
@@ -268,6 +274,7 @@ class ScheduleCContainer extends Component {
       return <Loading />;
     }
 
+    const { id } = this.props.match.params;
     let { period } = this.props.match.params;
 
     if (!period) {
@@ -278,11 +285,14 @@ class ScheduleCContainer extends Component {
       <ScheduleTabs
         active="schedule-c"
         compliancePeriod={period}
+        edit={this.edit}
+        id={id}
         key="nav"
       />,
       <SchedulesPage
         addRow={this._addRow}
         data={this.state.grid}
+        edit={this.edit}
         handleCellsChanged={this._handleCellsChanged}
         key="schedules"
         title="Compliance Report - Schedule C"
@@ -309,6 +319,7 @@ ScheduleCContainer.propTypes = {
   loadExpectedUses: PropTypes.func.isRequired,
   match: PropTypes.shape({
     params: PropTypes.shape({
+      id: PropTypes.string,
       period: PropTypes.string
     }).isRequired
   }).isRequired,
