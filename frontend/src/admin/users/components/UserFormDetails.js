@@ -264,7 +264,13 @@ const UserFormDetails = props => (
           </div>
 
           <div className="row roles" id="user-roles">
-            {props.roles.items.map(role => (
+            {props.roles.items.filter((role) => {
+              if (document.location.pathname.indexOf('/admin/users/') >= 0) {
+                return role.isGovernmentRole;
+              }
+
+              return !role.isGovernmentRole;
+            }).map(role => (
               <div className="col-sm-4 checkbox-group" key={role.id}>
                 <CheckBox
                   addToFields={props.addToFields}
