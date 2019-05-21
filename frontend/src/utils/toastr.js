@@ -2,6 +2,23 @@ import { toastr as reduxToastr } from 'react-redux-toastr';
 import { CREDIT_TRANSFER_STATUS, CREDIT_TRANSFER_TYPES } from '../constants/values';
 
 const toastr = {
+  complianceReporting: (status, message = '') => {
+    if (message !== '') { // message is only used to override
+      reduxToastr.success('Success!', message);
+      return;
+    }
+
+    switch (status) {
+      case 'Cancelled':
+        reduxToastr.success('Success!', 'Draft deleted.');
+        break;
+      case 'Draft':
+        reduxToastr.success('Success!', 'Draft saved.');
+        break;
+      default:
+        reduxToastr.success('Success!', 'Compliance Report saved.');
+    }
+  },
   creditTransactionSuccess: (statusId, item, message = '') => {
     let text = 'Credit transaction';
 

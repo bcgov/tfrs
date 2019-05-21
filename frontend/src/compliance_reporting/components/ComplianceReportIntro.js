@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import ScheduleTabs from './ScheduleTabs';
+import ScheduleButtons from './ScheduleButtons';
 
 const ComplianceReportIntro = (props) => {
   const complianceReportDueDate = `20${Number(props.compliancePeriod.substr(-2)) + 1}`;
@@ -11,6 +12,8 @@ const ComplianceReportIntro = (props) => {
       <ScheduleTabs
         active="intro"
         compliancePeriod={props.compliancePeriod}
+        edit={props.edit}
+        id={props.id}
       />
       <div>
         <h1>Compliance Report for {props.compliancePeriod}</h1>
@@ -75,15 +78,23 @@ const ComplianceReportIntro = (props) => {
         may have about this form.
         </p>
       </div>
+
+      <ScheduleButtons
+        edit={props.edit}
+      />
     </div>
   );
 };
 
 ComplianceReportIntro.defaultProps = {
+  compliancePeriod: null,
+  id: null
 };
 
 ComplianceReportIntro.propTypes = {
-  compliancePeriod: PropTypes.string.isRequired,
+  compliancePeriod: PropTypes.string,
+  edit: PropTypes.bool.isRequired,
+  id: PropTypes.string,
   title: PropTypes.string.isRequired
 };
 
