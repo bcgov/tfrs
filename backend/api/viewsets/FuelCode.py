@@ -94,6 +94,9 @@ class FuelCodeViewSet(AuditableMixin,
         if 'fuel_code' in request.GET:
             fuel_code_version = request.GET['fuel_code_version']
 
+        if not fuel_code_version or not fuel_code_version.isdigit():
+            return Response(None)
+
         fuel_code_object = FuelCode.objects.filter(
             fuel_code=fuel_code,
             fuel_code_version=fuel_code_version
