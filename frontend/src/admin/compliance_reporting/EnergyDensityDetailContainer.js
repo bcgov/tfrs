@@ -6,13 +6,12 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
+import { Tab, Tabs } from 'react-bootstrap';
 
 import { energyDensities } from '../../actions/energyDensities';
 import Loading from '../../app/components/Loading';
 import EnergyDensityDetails from './components/EnergyDensityDetails';
-import {Tab, Tabs} from "react-bootstrap";
-import DefaultCarbonIntensityDetails from "./DefaultCarbonIntensityDetailContainer";
-import PastAndFutureValuesTable from "./components/PastAndFutureValuesTable";
+import PastAndFutureValuesTable from './components/PastAndFutureValuesTable';
 
 class EnergyDensityDetailContainer extends Component {
   constructor (props) {
@@ -45,7 +44,6 @@ class EnergyDensityDetailContainer extends Component {
               includeDensity
               densityUnit={item.unitOfMeasure}
             />
-
           </Tab>
         </Tabs>
       );
