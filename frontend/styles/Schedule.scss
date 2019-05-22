@@ -1,4 +1,18 @@
 .page_schedule {
+  .btn-container {
+    background-color: $background-grey;
+    border: 1px solid $border-grey;
+    border-radius: 0.5rem;
+    box-shadow: 2px 2px 7px rgba(0, 0, 0, .3);
+    bottom: 7rem;
+    font-size: 1.5rem;
+    padding: 1rem;
+    position: -webkit-sticky;
+    position: sticky;
+    text-align: right;
+    margin-left: auto;
+  }
+
   .data-grid-container {
     display: block;
   
@@ -49,7 +63,7 @@
   }
 
   .sheet-buttons {
-    margin-bottom: 17rem;
+    margin-bottom: 5rem;
     text-align: right;
 
     button {
