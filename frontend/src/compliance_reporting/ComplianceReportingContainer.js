@@ -28,7 +28,7 @@ class ComplianceReportingContainer extends Component {
     return (
       <ComplianceReportingPage
         compliancePeriods={this.props.compliancePeriods.filter(compliancePeriod =>
-          compliancePeriod.effectiveDate < currentEffectiveDate &&
+          compliancePeriod.effectiveDate <= currentEffectiveDate &&
           compliancePeriod.effectiveDate >= CONFIG.COMPLIANCE_REPORTING.CREATE_EFFECTIVE_DATE)
           .reverse()}
         complianceReports={{

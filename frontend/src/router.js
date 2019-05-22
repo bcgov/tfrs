@@ -326,8 +326,18 @@ const Router = routerProps => (
             component={withRouter(ComplianceReportIntroContainer)}
           />,
           <Route
-            key="compliance_reporting_add"
+            key="compliance_reporting_add_schedule_c"
             path={COMPLIANCE_REPORTING.ADD_SCHEDULE_C}
+            component={withRouter(ScheduleCContainer)}
+          />,
+          <Route
+            key="compliance_reporting_edit"
+            path={COMPLIANCE_REPORTING.EDIT}
+            component={withRouter(ComplianceReportIntroContainer)}
+          />,
+          <Route
+            key="compliance_reporting_edit_schedule_c"
+            path={COMPLIANCE_REPORTING.EDIT_SCHEDULE_C}
             component={withRouter(ScheduleCContainer)}
           />,
           <Route
