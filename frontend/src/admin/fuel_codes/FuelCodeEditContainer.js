@@ -38,6 +38,7 @@ class FuelCodeEditContainer extends Component {
         fuel: '',
         fuelCode: '',
         fuelTransportMode: [],
+        partiallyRenewable: false,
         renewablePercentage: ''
       }
     };
@@ -83,6 +84,7 @@ class FuelCodeEditContainer extends Component {
         fuel: item.fuel,
         fuelCode: `${item.fuelCodeVersion}${(item.fuelCodeVersionMinor) ? `.${item.fuelCodeVersionMinor}` : '.0'}`,
         fuelTransportMode: item.fuelTransportMode,
+        partiallyRenewable: item.renewablePercentage !== '',
         renewablePercentage: item.renewablePercentage || ''
       };
 
@@ -128,6 +130,11 @@ class FuelCodeEditContainer extends Component {
         // as you're typing remove non-numeric values
         // (this is so we don't mess our count, but we'll add commas later)
         value = formatFacilityNameplate(value);
+      }
+
+      // clear out the renewable percentage when it gets toggled off
+      if (name === 'partiallyRenewable' && value === false) {
+        fieldState.renewablePercentage = '';
       }
 
       fieldState[name] = value;

@@ -81,6 +81,10 @@ class FuelCodeForm extends Component {
       validationMessage.push('Please enter a approval date.');
     }
 
+    if (this.props.fields.partiallyRenewable && this.props.fields.renewablePercentage === '') {
+      validationMessage.push('Please enter a renewable percentage if this is partially renewable.');
+    }
+
     return validationMessage;
   }
 
@@ -181,7 +185,9 @@ FuelCodeForm.propTypes = {
     formerCompany: PropTypes.string,
     fuel: PropTypes.string,
     fuelCode: PropTypes.string,
-    fuelTransportMode: PropTypes.arrayOf(PropTypes.string)
+    fuelTransportMode: PropTypes.arrayOf(PropTypes.string),
+    partiallyRenewable: PropTypes.bool,
+    renewablePercentage: PropTypes.string
   }).isRequired,
   handleInputChange: PropTypes.func.isRequired,
   handleSelect: PropTypes.func,
