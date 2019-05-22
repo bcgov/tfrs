@@ -299,7 +299,7 @@ class ScheduleCContainer extends Component {
       >
         <p>
         Under section 6 (3) of the
-          <em>Greenhouse Gas Reduction (Renewable and Low Carbon Fuel Requirements) Act
+          <em> Greenhouse Gas Reduction (Renewable and Low Carbon Fuel Requirements) Act
           </em>
         , Part 3 requirements do not apply in relation to fuel quantities that the Part 3 fuel
         supplier expects, on reasonable grounds, will be used for a purpose other than
