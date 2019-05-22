@@ -135,7 +135,7 @@ const getFuelCodeError = error => ({
 export const getLatestFuelCode = data => (dispatch) => {
   dispatch(getLatestFuelCodeRequest());
   return axios.get(`${Routes.BASE_URL}${FUEL_CODES.API}/latest`, { params: data }).then((response) => {
-    dispatch(getFuelCodeSuccess(response.data));
+    dispatch(getLatestFuelCodeSuccess(response.data));
   }).catch((error) => {
     dispatch(getFuelCodeError(error.response));
   });
@@ -144,6 +144,13 @@ export const getLatestFuelCode = data => (dispatch) => {
 const getLatestFuelCodeRequest = () => ({
   name: ReducerTypes.GET_LATEST_FUEL_CODE_REQUEST,
   type: ActionTypes.GET_LATEST_FUEL_CODE
+});
+
+const getLatestFuelCodeSuccess = fuelCodes => ({
+  name: ReducerTypes.RECEIVE_LATEST_FUEL_CODE_REQUEST,
+  type: ActionTypes.RECEIVE_LATEST_FUEL_CODE,
+  data: fuelCodes,
+  receivedAt: Date.now()
 });
 
 /*

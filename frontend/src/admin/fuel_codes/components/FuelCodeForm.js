@@ -197,7 +197,7 @@ class FuelCodeForm extends Component {
       <CallableModal
         close={this._closeModal}
         handleSubmit={(event) => {
-          this.handleSubmit(event, 'Approved');
+          this.props.handleSubmit(event, 'Approved');
         }}
         id="confirmOverlap"
         key="confirmOverlap"
