@@ -11,7 +11,6 @@ import { bindActionCreators } from 'redux';
 import { addFuelCode, getLatestFuelCode } from '../../actions/fuelCodeActions';
 import history from '../../app/History';
 import Loading from '../../app/components/Loading';
-import Modal from '../../app/components/Modal';
 import CallableModal from '../../app/components/CallableModal';
 import FuelCodeForm from './components/FuelCodeForm';
 import { FUEL_CODES } from '../../constants/routes/Admin';
@@ -126,11 +125,11 @@ class FuelCodeAddContainer extends Component {
     const fuelCode = this.state.fields.fuelCode.split('.');
 
     if (fuelCode.length > 0) {
-      this.props.getFuelCode({
+      this.props.getLatestFuelCode({
         fuel_code: 'BCLCF',
         fuel_code_version: fuelCode[0]
       }).then(() => {
-        const { item } = this.props.fuelCode;
+        const { item } = this.props.latestFuelCode;
         const fieldState = { ...this.state.fields };
 
         Object.entries(item).forEach((prop) => {
@@ -226,20 +225,15 @@ class FuelCodeAddContainer extends Component {
         approvedFuels={this.props.referenceData.approvedFuels}
         errors={this.props.errors}
         fields={this.state.fields}
+        getLatestFuelCode={this.props.getLatestFuelCode}
         handleInputChange={this._handleInputChange}
         handleSelect={this._openModal}
         handleSubmit={this._handleSubmit}
         key="form"
+        latestFuelCode={this.props.latestFuelCode}
         title="New Fuel Code"
         transportModes={this.props.referenceData.transportModes}
       />,
-      <Modal
-        handleSubmit={event => this._handleSubmit(event, 'Approved')}
-        id="confirmSubmit"
-        key="confirmSubmit"
-      >
-        Are you sure you want to add this Fuel code?
-      </Modal>,
       <CallableModal
         close={this._closeModal}
         handleSubmit={this._handlePrepopulate}
@@ -247,13 +241,13 @@ class FuelCodeAddContainer extends Component {
         key="confirmPrepopulate"
         show={this.state.showModal}
       >
-        {!this.props.fuelCode.isFetching &&
+        {!this.props.latestFuelCode.isFetching &&
         <div>
           Would you like to pre-populate the values in the form based on the previous
           version&apos;s information?
         </div>
         }
-        {this.props.fuelCode.isFetching && <Loading />}
+        {this.props.latestFuelCode.isFetching && <Loading />}
       </CallableModal>
     ]);
   }
@@ -266,7 +260,8 @@ FuelCodeAddContainer.defaultProps = {
 FuelCodeAddContainer.propTypes = {
   addFuelCode: PropTypes.func.isRequired,
   errors: PropTypes.shape({}),
-  fuelCode: PropTypes.shape({
+  getLatestFuelCode: PropTypes.func.isRequired,
+  latestFuelCode: PropTypes.shape({
     errors: PropTypes.shape(),
     isFetching: PropTypes.bool.isRequired,
     item: PropTypes.shape({
@@ -274,7 +269,7 @@ FuelCodeAddContainer.propTypes = {
     }),
     success: PropTypes.bool
   }).isRequired,
-  getFuelCode: PropTypes.func.isRequired,
+  loadedState: PropTypes.shape().isRequired,
   loggedInUser: PropTypes.shape({
     organization: PropTypes.shape({
       id: PropTypes.number,
@@ -291,12 +286,13 @@ FuelCodeAddContainer.propTypes = {
     transportModes: PropTypes.arrayOf(PropTypes.shape),
     isFetching: PropTypes.bool,
     isSuccessful: PropTypes.bool
-  }).isRequired
+  }).isRequired,
+  updateStateToSave: PropTypes.func.isRequired
 };
 
 const mapStateToProps = state => ({
   errors: state.rootReducer.fuelCode.errors,
-  fuelCode: {
+  latestFuelCode: {
     errors: state.rootReducer.fuelCode.errors,
     isFetching: state.rootReducer.fuelCode.isFetching,
     item: state.rootReducer.fuelCode.item,
@@ -314,7 +310,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   addFuelCode: bindActionCreators(addFuelCode, dispatch),
-  getFuelCode: bindActionCreators(getLatestFuelCode, dispatch)
+  getLatestFuelCode: bindActionCreators(getLatestFuelCode, dispatch)
 });
 
 const autosaveConfig = {
@@ -323,4 +319,7 @@ const autosaveConfig = {
   key: 'unsaved'
 };
 
-export default autosaved(autosaveConfig)(connect(mapStateToProps, mapDispatchToProps)(FuelCodeAddContainer));
+export default autosaved(autosaveConfig)(connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(FuelCodeAddContainer));

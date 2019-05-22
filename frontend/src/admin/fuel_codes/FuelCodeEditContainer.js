@@ -7,9 +7,8 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
-import { getFuelCode, updateFuelCode } from '../../actions/fuelCodeActions';
+import { getFuelCode, getLatestFuelCode, updateFuelCode } from '../../actions/fuelCodeActions';
 import Loading from '../../app/components/Loading';
-import Modal from '../../app/components/Modal';
 import history from '../../app/History';
 import FuelCodeForm from './components/FuelCodeForm';
 import { FUEL_CODES } from '../../constants/routes/Admin';
@@ -199,27 +198,21 @@ class FuelCodeEditContainer extends Component {
     }
 
     if (success || (!isFetching && Object.keys(errors).length > 0)) {
-      return ([
+      return (
         <FuelCodeForm
           addToFields={this._addToFields}
           approvedFuels={this.props.referenceData.approvedFuels}
           edit
           errors={errors}
           fields={this.state.fields}
+          getLatestFuelCode={this.props.getLatestFuelCode}
           handleInputChange={this._handleInputChange}
           handleSubmit={this._handleSubmit}
-          key="form"
+          latestFuelCode={this.props.latestFuelCode}
           title="Edit Fuel Code"
           transportModes={this.props.referenceData.transportModes}
-        />,
-        <Modal
-          handleSubmit={event => this._handleSubmit(event, 'Approved')}
-          id="confirmSubmit"
-          key="confirmSubmit"
-        >
-          Are you sure you want to update this Fuel code?
-        </Modal>
-      ]);
+        />
+      );
     }
 
     return <Loading />;
@@ -239,6 +232,15 @@ FuelCodeEditContainer.propTypes = {
     success: PropTypes.bool
   }).isRequired,
   getFuelCode: PropTypes.func.isRequired,
+  getLatestFuelCode: PropTypes.func.isRequired,
+  latestFuelCode: PropTypes.shape({
+    errors: PropTypes.shape(),
+    isFetching: PropTypes.bool.isRequired,
+    item: PropTypes.shape({
+      id: PropTypes.number
+    }),
+    success: PropTypes.bool
+  }).isRequired,
   loggedInUser: PropTypes.shape({
     displayName: PropTypes.string,
     hasPermission: PropTypes.func,
@@ -269,6 +271,12 @@ const mapStateToProps = state => ({
     item: state.rootReducer.fuelCode.item,
     success: state.rootReducer.fuelCode.success
   },
+  latestFuelCode: {
+    errors: state.rootReducer.fuelCode.errors,
+    isFetching: state.rootReducer.fuelCode.isFetching,
+    item: state.rootReducer.fuelCode.item,
+    success: state.rootReducer.fuelCode.success
+  },
   loggedInUser: state.rootReducer.userRequest.loggedInUser,
   referenceData: {
     fuelCodeStatuses: state.rootReducer.referenceData.data.fuelCodeStatuses,
@@ -281,6 +289,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   getFuelCode: bindActionCreators(getFuelCode, dispatch),
+  getLatestFuelCode: bindActionCreators(getLatestFuelCode, dispatch),
   updateFuelCode: bindActionCreators(updateFuelCode, dispatch)
 });
 
