@@ -79,6 +79,10 @@ class FuelCodeForm extends Component {
       validationMessage.push('The expiry date precedes the effective date.');
     }
 
+    if (this.props.fields.partiallyRenewable && this.props.fields.renewablePercentage === '') {
+      validationMessage.push('Please enter a renewable percentage if this is partially renewable.');
+    }
+
     return validationMessage;
   }
 
@@ -99,10 +103,6 @@ class FuelCodeForm extends Component {
 
     if (this.props.fields.approvalDate === '') {
       validationMessage.push('Please enter a approval date.');
-    }
-
-    if (this.props.fields.partiallyRenewable && this.props.fields.renewablePercentage === '') {
-      validationMessage.push('Please enter a renewable percentage if this is partially renewable.');
     }
 
     return validationMessage;

@@ -295,8 +295,28 @@ class ScheduleCContainer extends Component {
         edit={this.edit}
         handleCellsChanged={this._handleCellsChanged}
         key="schedules"
-        title="Compliance Report - Schedule C"
-      />,
+        title="Schedule C - Fuels used for other purposes"
+      >
+        <p>
+        Under section 6 (3) of the
+          <em>Greenhouse Gas Reduction (Renewable and Low Carbon Fuel Requirements) Act
+          </em>
+        , Part 3 requirements do not apply in relation to fuel quantities that the Part 3 fuel
+        supplier expects, on reasonable grounds, will be used for a purpose other than
+        transportation. The quantities and expected uses of excluded fuels must be reported in
+        accordance with section 11.08 (4) (d) (ii) of the Regulation.
+        </p>
+        <p>
+          <strong>
+            The volumes reported here should not be reported in Schedule B. This form will
+            include the quantities entered in this Schedule in the Part 2 Summary section
+            as appropriate.
+          </strong>
+        </p>
+        <p>
+        Report &quot;middle-distillate&quot; spec diesel heating oil as Petroleum-based diesel.
+        </p>
+      </SchedulesPage>,
       <Modal
         handleSubmit={event => this._handleSubmit(event)}
         id="confirmSubmit"
