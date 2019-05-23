@@ -1,10 +1,9 @@
 {
-    "apiVersion": "build.openshift.io/v1",
-    "kind": "BuildConfig",
+    "kind": "Template",
+    "apiVersion": "template.openshift.io/v1",
     "metadata": {
-        "creationTimestamp": null,
         "name": "celery",
-        "selfLink": "/apis/build.openshift.io/v1/namespaces/mem-tfrs-tools/buildconfigs/celery"
+        "creationTimestamp": null
     },
     "parameters": [
         {
@@ -18,39 +17,49 @@
             "required": true
         }
     ],
-    "spec": {
-        "failedBuildsHistoryLimit": 5,
-        "nodeSelector": null,
-        "output": {
-            "to": {
-                "kind": "ImageStreamTag",
-                "name": "${CELERY_IS_NAME}:latest"
-            }
-        },
-        "postCommit": {},
-        "resources": {},
-        "runPolicy": "Serial",
-        "source": {
-            "dockerfile": "FROM python:3.6.8-slim-stretch\nRUN apt-get update \\\n    \u0026\u0026 apt-get install -y git \\\n    \u0026\u0026 apt-get install -y supervisor\nWORKDIR /app\nRUN git clone https://github.com/bcgov/tfrs.git\nWORKDIR /app/tfrs\nRUN git checkout ${tfrs_release}\nRUN pip install --upgrade pip \\\n    \u0026\u0026 pip install -r backend/requirements.txt\nRUN cp /app/tfrs/security-scan/scan-handler/celery.conf /etc/supervisor/conf.d\nRUN chgrp -R root /var/log/supervisor\nRUN chmod -R g+w /var/log/supervisor\nRUN chmod -R g+w /run\nRUN chmod -R g+w /app\nCMD [\"supervisord\"]\n",
-            "type": "Dockerfile"
-        },
-        "strategy": {
-            "dockerStrategy": {
-                "env": [
-                    {
-                        "name": "tfrs_release",
-                        "value": "${TFRS_RELEASE_TAG}"
-                    }
-                ],
-                "forcePull": true,
-                "noCache": true
+    "objects": [
+        {
+            "kind": "BuildConfig",
+            "apiVersion": "build.openshift.io/v1",
+            "metadata": {
+                "name": "${CELERY_IS_NAME}",
+                "creationTimestamp": null
             },
-            "type": "Docker"
-        },
-        "successfulBuildsHistoryLimit": 5,
-        "triggers": []
-    },
-    "status": {
-        "lastVersion": 0
-    }
+            "spec": {
+                "triggers": [],
+                "runPolicy": "Serial",
+                "source": {
+                    "type": "Dockerfile",
+                    "dockerfile": "FROM python:3.6.8-slim-stretch\nRUN apt-get update \\\n    \u0026\u0026 apt-get install -y git \\\n    \u0026\u0026 apt-get install -y supervisor\nWORKDIR /app\nRUN git clone https://github.com/bcgov/tfrs.git\nWORKDIR /app/tfrs\nRUN git checkout ${tfrs_release}\nRUN pip install --upgrade pip \\\n    \u0026\u0026 pip install -r backend/requirements.txt\nRUN cp /app/tfrs/security-scan/scan-handler/celery.conf /etc/supervisor/conf.d\nRUN chgrp -R root /var/log/supervisor\nRUN chmod -R g+w /var/log/supervisor\nRUN chmod -R g+w /run\nRUN chmod -R g+w /app\nCMD [\"supervisord\"]\n"
+                },
+                "strategy": {
+                    "type": "Docker",
+                    "dockerStrategy": {
+                        "noCache": true,
+                        "env": [
+                            {
+                                "name": "tfrs_release",
+                                "value": "${TFRS_RELEASE_TAG}"
+                            }
+                        ],
+                        "forcePull": true
+                    }
+                },
+                "output": {
+                    "to": {
+                        "kind": "ImageStreamTag",
+                        "name": "${CELERY_IS_NAME}:latest"
+                    }
+                },
+                "resources": {},
+                "postCommit": {},
+                "nodeSelector": null,
+                "successfulBuildsHistoryLimit": 5,
+                "failedBuildsHistoryLimit": 5
+            },
+            "status": {
+                "lastVersion": 0
+            }
+        }
+    ]
 }
