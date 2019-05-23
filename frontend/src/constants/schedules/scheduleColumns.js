@@ -1,3 +1,11 @@
+const SCHEDULE_A = {
+  LEGAL_NAME: 1,
+  POSTAL_ADDRESS: 2,
+  FUEL_CLASS: 3,
+  TRANSFER_TYPE: 4,
+  QUANTITY: 5
+};
+
 const SCHEDULE_C = {
   FUEL_TYPE: 1,
   FUEL_CLASS: 2,
@@ -7,4 +15,4 @@ const SCHEDULE_C = {
   EXPECTED_USE_OTHER: 6
 };
 
-export { SCHEDULE_C };
+export { SCHEDULE_A, SCHEDULE_C };

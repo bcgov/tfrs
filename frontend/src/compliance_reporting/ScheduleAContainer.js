@@ -7,17 +7,17 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
-import { expectedUses } from '../actions/expectedUses';
 import Loading from '../app/components/Loading';
 import Modal from '../app/components/Modal';
 import Input from './components/Input';
 import Select from './components/Select';
 import SchedulesPage from './components/SchedulesPage';
 import ScheduleTabs from './components/ScheduleTabs';
-import { SCHEDULE_C } from '../constants/schedules/scheduleColumns';
+import ScheduleATotals from './components/ScheduleATotals';
 import { getQuantity } from '../utils/functions';
+import { SCHEDULE_A } from '../constants/schedules/scheduleColumns';
 
-class ScheduleCContainer extends Component {
+class ScheduleAContainer extends Component {
   static addHeaders () {
     return {
       grid: [
@@ -25,41 +25,39 @@ class ScheduleCContainer extends Component {
           readOnly: true,
           width: 50
         }, {
-          colSpan: 4,
           readOnly: true,
-          value: 'FUEL IDENTIFICATION AND QUANTITY'
+          value: 'Legal Name of Trading Partner'
         }, {
           readOnly: true,
-          rowSpan: 2,
-          value: 'Expected Use'
-        }, {
-          readOnly: true,
-          rowSpan: 2,
-          value: 'If other, write in expected use:'
-        }], // header
-        [{
-          readOnly: true
-        }, {
-          readOnly: true,
-          value: 'Fuel Type'
+          value: 'Postal Address'
         }, {
           readOnly: true,
           value: 'Fuel Class'
         }, {
           readOnly: true,
-          value: 'Quantity of Fuel Supplied'
+          value: 'Received OR Transferred'
         }, {
           readOnly: true,
-          value: 'Units'
-        }]
-      ]
+          value: 'Quantity (L)'
+        }] // header
+      ],
+      totals: {
+        diesel: {
+          received: 0,
+          transferred: 0
+        },
+        gasoline: {
+          received: 0,
+          transferred: 0
+        }
+      }
     };
   }
 
   constructor (props) {
     super(props);
 
-    this.state = ScheduleCContainer.addHeaders();
+    this.state = ScheduleAContainer.addHeaders();
     this.rowNumber = 1;
 
     if (document.location.pathname.indexOf('/edit/') >= 0) {
@@ -69,15 +67,12 @@ class ScheduleCContainer extends Component {
     }
 
     this._addRow = this._addRow.bind(this);
-    this._getFuelClasses = this._getFuelClasses.bind(this);
+    this._calculateTotal = this._calculateTotal.bind(this);
     this._handleCellsChanged = this._handleCellsChanged.bind(this);
     this._handleSubmit = this._handleSubmit.bind(this);
-    this._validateFuelClassColumn = this._validateFuelClassColumn.bind(this);
-    this._validateFuelTypeColumn = this._validateFuelTypeColumn.bind(this);
   }
 
   componentDidMount () {
-    this.props.loadExpectedUses();
     this._addRow(2);
   }
 
@@ -89,20 +84,36 @@ class ScheduleCContainer extends Component {
         readOnly: true,
         value: this.rowNumber
       }, {
+        className: 'text'
+        // dataEditor: AutoSuggest
+      }, {
+        className: 'text'
+        // dataEditor: AutoSuggest
+      }, {
         className: 'text',
         dataEditor: Select,
-        getOptions: () => this.props.referenceData.approvedFuels,
+        getOptions: () => [{
+          fuelClass: 'Diesel',
+          id: 3
+        }, {
+          fuelClass: 'Gasoline',
+          id: 4
+        }],
         mapping: {
           key: 'id',
-          value: 'name'
+          value: 'fuelClass'
         }
       }, {
         className: 'text',
         dataEditor: Select,
-        getOptions: this._getFuelClasses,
+        getOptions: () => [{
+          value: 'Received'
+        }, {
+          value: 'Transferred'
+        }],
         mapping: {
-          key: 'id',
-          value: 'fuelClass'
+          key: 'value',
+          value: 'value'
         }
       }, {
         attributes: {
@@ -116,19 +127,6 @@ class ScheduleCContainer extends Component {
           const { value } = props;
           return <span>{value.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')}</span>;
         }
-      }, {
-        readOnly: true
-      }, {
-        className: 'text',
-        dataEditor: Select,
-        getOptions: () => !this.props.expectedUses.isFetching && this.props.expectedUses.items,
-        mapping: {
-          key: 'id',
-          value: 'description'
-        }
-      }, {
-        className: 'text',
-        readOnly: true
       }]);
 
       this.rowNumber += 1;
@@ -139,17 +137,42 @@ class ScheduleCContainer extends Component {
     });
   }
 
-  _getFuelClasses (row) {
-    const fuelType = this.state.grid[row][SCHEDULE_C.FUEL_TYPE];
+  _calculateTotal (grid) {
+    let { totals } = this.state;
+    totals = {
+      diesel: {
+        received: 0,
+        transferred: 0
+      },
+      gasoline: {
+        received: 0,
+        transferred: 0
+      }
+    };
 
-    const selectedFuel = this.props.referenceData.approvedFuels
-      .find(fuel => fuel.name === fuelType.value);
+    for (let x = 1; x < grid.length; x += 1) {
+      let value = Number(grid[x][SCHEDULE_A.QUANTITY].value);
+      const fuelClass = grid[x][SCHEDULE_A.FUEL_CLASS].value;
+      const transferType = grid[x][SCHEDULE_A.TRANSFER_TYPE].value; 
 
-    if (selectedFuel) {
-      return selectedFuel.fuelClasses;
+      if (Number.isNaN(value)) {
+        value = 0;
+      }
+
+      if (fuelClass === 'Gasoline' && transferType === 'Received') {
+        totals.gasoline.received += value;
+      } else if (fuelClass === 'Gasoline' && transferType === 'Transferred') {
+        totals.gasoline.transferred += value;
+      } else if (fuelClass === 'Diesel' && transferType === 'Received') {
+        totals.diesel.received += value;
+      } else if (fuelClass === 'Diesel' && transferType === 'Transferred') {
+        totals.diesel.transferred += value;
+      }
     }
 
-    return [];
+    this.setState({
+      totals
+    });
   }
 
   _handleCellsChanged (changes, addition = null) {
@@ -169,85 +192,23 @@ class ScheduleCContainer extends Component {
         value
       };
 
-      if (col === SCHEDULE_C.FUEL_TYPE) {
-        grid[row] = this._validateFuelTypeColumn(grid[row], value);
-      }
-
-      if (col === SCHEDULE_C.FUEL_CLASS) {
-        grid[row] = this._validateFuelClassColumn(grid[row], value);
-      }
-
-      if (col === SCHEDULE_C.QUANTITY) {
+      if (col === SCHEDULE_A.QUANTITY) {
         grid[row][col] = {
           ...grid[row][col],
           value: getQuantity(value)
         };
-      }
-
-      if (col === SCHEDULE_C.EXPECTED_USE) { // Expected Use
-        if (value !== 'Other') {
-          grid[row][SCHEDULE_C.EXPECTED_USE_OTHER] = {
-            ...grid[row][SCHEDULE_C.EXPECTED_USE_OTHER],
-            readOnly: true,
-            value: ''
-          };
-        } else {
-          grid[row][SCHEDULE_C.EXPECTED_USE_OTHER] = {
-            ...grid[row][SCHEDULE_C.EXPECTED_USE_OTHER],
-            readOnly: false
-          };
-        }
       }
     });
 
     this.setState({
       grid
     });
+
+    this._calculateTotal(grid);
   }
 
   _handleSubmit () {
     console.log(this.state.grid);
-  }
-
-  _validateFuelClassColumn (currentRow, value) {
-    const row = currentRow;
-    const fuelType = currentRow[SCHEDULE_C.FUEL_TYPE];
-
-    const selectedFuel = this.props.referenceData.approvedFuels
-      .find(fuel => fuel.name === fuelType.value);
-
-    if (!selectedFuel ||
-      selectedFuel.fuelClasses.findIndex(fuelClass => fuelClass.fuelClass === value) < 0) {
-      row[SCHEDULE_C.FUEL_CLASS] = {
-        ...row[SCHEDULE_C.FUEL_CLASS],
-        value: ''
-      };
-    }
-
-    return row;
-  }
-
-  _validateFuelTypeColumn (currentRow, value) {
-    const row = currentRow;
-    const selectedFuel = this.props.referenceData.approvedFuels.find(fuel => fuel.name === value);
-
-    if (!selectedFuel) {
-      row[SCHEDULE_C.FUEL_TYPE] = {
-        value: ''
-      };
-    }
-
-    row[SCHEDULE_C.FUEL_CLASS] = { // if fuel type is updated, reset fuel class
-      ...row[SCHEDULE_C.FUEL_CLASS],
-      value: ''
-    };
-
-    row[SCHEDULE_C.UNITS] = { // automatically load the unit of measure for this fuel type
-      ...row[SCHEDULE_C.UNITS],
-      value: (selectedFuel && selectedFuel.unitOfMeasure) ? selectedFuel.unitOfMeasure.name : ''
-    };
-
-    return row;
   }
 
   render () {
@@ -265,7 +226,7 @@ class ScheduleCContainer extends Component {
 
     return ([
       <ScheduleTabs
-        active="schedule-c"
+        active="schedule-a"
         compliancePeriod={period}
         edit={this.edit}
         id={id}
@@ -277,7 +238,26 @@ class ScheduleCContainer extends Component {
         edit={this.edit}
         handleCellsChanged={this._handleCellsChanged}
         key="schedules"
-        title="Compliance Report - Schedule C"
+        title="Schedule A - Notional Transfers of Renewable Fuel"
+      >
+        <p>
+          Under section 5.1 of the Act, a fuel supplier may transfer renewable fuel supplied in
+          excess of the required volume for that fuel class. Fuel suppliers may also receive the
+          excess renewable content supplied by another fuel supplier and apply that volume of
+          renewable fuel to meet their own renewable requirement.
+        </p>
+        <p>
+          For each fuel supplier that you notionally transferred fuel to, or notionally received
+          fuel from, you must report the fuel supplier name, address, contact information and the
+          total volumes notionally transferred to, and/or received from that supplier.  Volumes
+          &quot;transferred to&quot; are those volumes notionally transferred by you to another
+          supplier listed in the Schedule.  Volumes &quot;received from&quot; are those volumes
+          notionally received by you from another supplier listed in the Schedule.
+        </p>
+      </SchedulesPage>,
+      <ScheduleATotals
+        key="totals"
+        totals={this.state.totals}
       />,
       <Modal
         handleSubmit={event => this._handleSubmit(event)}
@@ -290,15 +270,14 @@ class ScheduleCContainer extends Component {
   }
 }
 
-ScheduleCContainer.defaultProps = {
+ScheduleAContainer.defaultProps = {
 };
 
-ScheduleCContainer.propTypes = {
+ScheduleAContainer.propTypes = {
   expectedUses: PropTypes.shape({
     isFetching: PropTypes.bool,
     items: PropTypes.arrayOf(PropTypes.shape())
   }).isRequired,
-  loadExpectedUses: PropTypes.func.isRequired,
   match: PropTypes.shape({
     params: PropTypes.shape({
       id: PropTypes.string,
@@ -321,7 +300,6 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = {
-  loadExpectedUses: expectedUses.find
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(ScheduleCContainer);
+export default connect(mapStateToProps, mapDispatchToProps)(ScheduleAContainer);
