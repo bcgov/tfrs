@@ -20,7 +20,7 @@ podTemplate(label: "develop-maven-${env.BUILD_NUMBER}", name: "develop-maven-${e
             timeout(30) {
                 script {
                     openshift.withProject("mem-tfrs-tools") {
-                        def celeryJson = openshift.process(readFile(file:'openshift/templates/components/celery/celery-bc.json'), "-p", "TFRS_RELEASE_TAG=v1.4.1 CELERY_IS_NAME=celery-develop-try")
+                        def celeryJson = openshift.process(readFile(file:'openshift/templates/components/celery/celery-bc.json'), "-p", "TFRS_RELEASE_TAG=v1.4.1", "CELERY_IS_NAME=celery-develop-try")
                         def celeryBuild = openshift.create(celeryJson)
                         def celeryBuildSelector = openshift.selector("bc", "celery-develop")
                         celeryBuildSelector.startBuild("--wait")
