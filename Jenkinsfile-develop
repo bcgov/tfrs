@@ -193,7 +193,9 @@ podTemplate(label: "develop-maven-${env.BUILD_NUMBER}", name: "develop-maven-${e
 
     node("develop-maven-${env.BUILD_NUMBER}") {
 
-        checkout changelog: false, poll: false, scm: [$class: 'GitSCM', branches: [[name: "${tfrsRelease}"]], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[credentialsId: 'github-account', url: 'https://github.com/bcgov/tfrs.git']]]
+        //supposed to checkout tfrsRelease
+        //this checkout is only to use bc and dc files
+        checkout changelog: false, poll: false, scm: [$class: 'GitSCM', branches: [[name: 'pr-pipeline-use-new-templates']], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[credentialsId: 'github-account', url: 'https://github.com/bcgov/tfrs.git']]]
         stage('Build-Celery') {
             timeout(30) {
                 script {
