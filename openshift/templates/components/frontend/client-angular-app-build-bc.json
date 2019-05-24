@@ -23,10 +23,7 @@
             "apiVersion": "build.openshift.io/v1",
             "metadata": {
                 "name": "${CLIENT_ANGULAR_APP_IS_NAME}",
-                "creationTimestamp": null,
-                "labels": {
-                    "build": "client-angular-app-build"
-                }
+                "creationTimestamp": null
             },
             "spec": {
                 "triggers": [

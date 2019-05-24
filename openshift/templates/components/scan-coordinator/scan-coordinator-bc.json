@@ -22,7 +22,7 @@
             "kind": "BuildConfig",
             "apiVersion": "build.openshift.io/v1",
             "metadata": {
-                "name": "scan-coordinator",
+                "name": "${SCAN_COORDINATOR_IS_NAME}",
                 "creationTimestamp": null
             },
             "spec": {

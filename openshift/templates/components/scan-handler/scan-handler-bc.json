@@ -22,7 +22,7 @@
             "kind": "BuildConfig",
             "apiVersion": "build.openshift.io/v1",
             "metadata": {
-                "name": "scan-handler",
+                "name": "${SCAN_HANDLER_IS_NAME}",
                 "creationTimestamp": null
             },
             "spec": {
