@@ -16,7 +16,7 @@ podTemplate(label: "develop-maven-${env.BUILD_NUMBER}", name: "develop-maven-${e
 
 /***
     node("develop-maven-${env.BUILD_NUMBER}") {
-        stage('Build-Backend') {
+        stage('Build-Celery') {
             checkout scm
             timeout(30) {
                 script {
@@ -31,10 +31,10 @@ podTemplate(label: "develop-maven-${env.BUILD_NUMBER}", name: "develop-maven-${e
 
         }
     }
-***/
+
 
     node("develop-maven-${env.BUILD_NUMBER}") {
-        stage('Build-Backend') {
+        stage('Build-Frontend') {
             checkout scm
             timeout(30) {
                 script {
@@ -53,14 +53,14 @@ podTemplate(label: "develop-maven-${env.BUILD_NUMBER}", name: "develop-maven-${e
 
         }
     }
-    
+***/
     node("develop-maven-${env.BUILD_NUMBER}") {
         stage('Build-Notification-Server') {
             checkout scm
             timeout(30) {
                 script {
                     openshift.withProject("mem-tfrs-tools") {
-                        def notificationJson = openshift.process(readFile(file:'openshift/templates/components/notification/notification-bc.json'), "-p", "TFRS_RELEASE_TAG=v1.4.1", "CELERY_IS_NAME=notification-server-develop")
+                        def notificationJson = openshift.process(readFile(file:'openshift/templates/components/notification/notification-server-bc.json'), "-p", "TFRS_RELEASE_TAG=v1.4.1", "CELERY_IS_NAME=notification-server-develop")
                         def notificationBuild = openshift.apply(celeryJson)
                         def notificationSelector = openshift.selector("bc", "notification-server-develop")
                         notificationSelector.startBuild("--wait")
