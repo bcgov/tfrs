@@ -1,13 +1,9 @@
 {
-    "apiVersion": "build.openshift.io/v1",
-    "kind": "BuildConfig",
+    "kind": "Template",
+    "apiVersion": "template.openshift.io/v1",
     "metadata": {
-        "annotations": {
-            "description": "Defines how to build the client / front end image"
-        },
-        "creationTimestamp": null,
-        "name": "client",
-        "selfLink": "/apis/build.openshift.io/v1/namespaces/mem-tfrs-tools/buildconfigs/client"
+        "name": "client-bc",
+        "creationTimestamp": null
     },
     "parameters": [
         {
@@ -17,59 +13,78 @@
         },
         {
             "name": "CLIENT_ANGULAR_APP_IS_NAME",
-            "description": "The client angular app image stream name, valid values: client-angular-appand client-develop-angular-app",
+            "description": "The client angular app image stream name, valid values: client-angular-app and client-develop-angular-app",
             "required": true
         }
     ],
-    "spec": {
-        "failedBuildsHistoryLimit": 5,
-        "nodeSelector": null,
-        "output": {
-            "to": {
-                "kind": "ImageStreamTag",
-                "name": "${CLIENT_IS_NAME}:latest"
-            }
-        },
-        "postCommit": {},
-        "resources": {
-            "limits": {
-                "cpu": "2",
-                "memory": "4Gi"
-            }
-        },
-        "runPolicy": "Serial",
-        "source": {
-            "dockerfile": "FROM client-angular-app:latest\nCOPY * /tmp/app/dist/\nCMD  /usr/libexec/s2i/run",
-            "images": [
-                {
-                    "as": null,
-                    "from": {
-                        "kind": "ImageStreamTag",
-                        "name": "${CLIENT_ANGULAR_APP_IS_NAME}:latest"
-                    },
-                    "paths": [
-                        {
-                            "destinationDir": "tmp",
-                            "sourcePath": "/opt/app-root/src/public/."
-                        }
-                    ]
-                }
-            ],
-            "type": "Dockerfile"
-        },
-        "strategy": {
-            "dockerStrategy": {
-                "from": {
-                    "kind": "ImageStreamTag",
-                    "name": "nginx-runtime:latest"
+    "objects": [
+        {
+            "kind": "BuildConfig",
+            "apiVersion": "build.openshift.io/v1",
+            "metadata": {
+                "name": "client",
+                "creationTimestamp": null,
+                "annotations": {
+                    "description": "Defines how to build the client / front end image"
                 }
             },
-            "type": "Docker"
-        },
-        "successfulBuildsHistoryLimit": 5,
-        "triggers": []
-    },
-    "status": {
-        "lastVersion": 0
-    }
+            "spec": {
+                "triggers": [
+                    {
+                        "type": "ImageChange",
+                        "imageChange": {}
+                    },
+                    {
+                        "type": "ConfigChange"
+                    }
+                ],
+                "runPolicy": "Serial",
+                "source": {
+                    "type": "Dockerfile",
+                    "dockerfile": "FROM client-angular-app:latest\nCOPY * /tmp/app/dist/\nCMD  /usr/libexec/s2i/run",
+                    "images": [
+                        {
+                            "from": {
+                                "kind": "ImageStreamTag",
+                                "name": "${CLIENT_ANGULAR_APP_IS_NAME}:latest"
+                            },
+                            "as": null,
+                            "paths": [
+                                {
+                                    "sourcePath": "/opt/app-root/src/public/.",
+                                    "destinationDir": "tmp"
+                                }
+                            ]
+                        }
+                    ]
+                },
+                "strategy": {
+                    "type": "Docker",
+                    "dockerStrategy": {
+                        "from": {
+                            "kind": "ImageStreamTag",
+                            "name": "nginx-runtime:latest"
+                        }
+                    }
+                },
+                "output": {
+                    "to": {
+                        "kind": "ImageStreamTag",
+                        "name": "${CLIENT_IS_NAME}:latest"
+                    }
+                },
+                "resources": {
+                    "limits": {
+                        "cpu": "2",
+                        "memory": "4Gi"
+                    }
+                },
+                "postCommit": {},
+                "nodeSelector": null
+            },
+            "status": {
+                "lastVersion": 0
+            }
+        }
+    ]
 }

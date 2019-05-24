@@ -14,6 +14,7 @@ podTemplate(label: "develop-maven-${env.BUILD_NUMBER}", name: "develop-maven-${e
     ]
 ) {
 
+/***
     node("develop-maven-${env.BUILD_NUMBER}") {
         stage('Build-Backend') {
             checkout scm
@@ -30,4 +31,28 @@ podTemplate(label: "develop-maven-${env.BUILD_NUMBER}", name: "develop-maven-${e
 
         }
     }
+***/
+
+    node("develop-maven-${env.BUILD_NUMBER}") {
+        stage('Build-Backend') {
+            checkout scm
+            timeout(30) {
+                script {
+                    openshift.withProject("mem-tfrs-tools") {
+                        def clientAngularJson = openshift.process(readFile(file:'openshift/templates/components/frontend/client-angular-app-build-bc.json'), "-p", "TFRS_RELEASE_TAG=v1.4.1", "CLIENT_ANGULAR_APP_IS_NAME=client-develop-angular-app-try")
+                        def clientAngularBuild = openshift.apply(clientAngularJson)
+                        def clientAngularBuildSelector = openshift.selector("bc", "client-develop-angular-app-try")
+                        clientAngularBuildSelector.startBuild("--wait")
+                        def clientJson = openshift.process(readFile(file:'openshift/templates/components/frontend/client-bc.json'), "-p", "CLIENT_IS_NAME=client-develop-try", "CLIENT_ANGULAR_APP_IS_NAME=client-develop-angular-app-try")
+                        def clientBuild = openshift.apply(clientJson)
+                        def clientBuildSelector = openshift.selector("bc", "client-develop-try")
+                        clientBuildSelector.startBuild("--wait")
+                    } //end of openshift.withProject
+                } //end of script
+            } //end of timeout
+
+        }
+    }
+
+
 }
