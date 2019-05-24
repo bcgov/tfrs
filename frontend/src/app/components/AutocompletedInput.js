@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import axios from 'axios';
 
-import * as Routes from '../../../constants/routes';
+import * as Routes from '../../constants/routes';
 
 class AutocompletedInput extends Component {
   constructor (props) {
@@ -98,6 +98,7 @@ class AutocompletedInput extends Component {
             {items}
           </div>
         )}
+        ref={(input) => { this.props.handleRef(input); }}
         renderInput={props => (
           <input
             type="text"
@@ -116,6 +117,7 @@ class AutocompletedInput extends Component {
 
 AutocompletedInput.defaultProps = {
   cache: true,
+  handleRef: null,
   inputProps: {},
   integersOnly: false,
   onSelectEvent: null,
@@ -127,6 +129,7 @@ AutocompletedInput.propTypes = {
   cache: PropTypes.bool,
   cacheSerial: PropTypes.number.isRequired,
   handleInputChange: PropTypes.func.isRequired,
+  handleRef: PropTypes.func,
   inputProps: PropTypes.shape(),
   integersOnly: PropTypes.bool,
   onSelectEvent: PropTypes.func,

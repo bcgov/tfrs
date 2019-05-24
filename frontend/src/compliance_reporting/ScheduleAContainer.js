@@ -9,6 +9,7 @@ import PropTypes from 'prop-types';
 
 import Loading from '../app/components/Loading';
 import Modal from '../app/components/Modal';
+import Autocomplete from './components/Autocomplete';
 import Input from './components/Input';
 import Select from './components/Select';
 import SchedulesPage from './components/SchedulesPage';
@@ -84,8 +85,9 @@ class ScheduleAContainer extends Component {
         readOnly: true,
         value: this.rowNumber
       }, {
-        className: 'text'
-        // dataEditor: AutoSuggest
+        attributes: {},
+        className: 'text',
+        dataEditor: Autocomplete
       }, {
         className: 'text'
         // dataEditor: AutoSuggest
