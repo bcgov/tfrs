@@ -21,9 +21,9 @@ podTemplate(label: "develop-maven-${env.BUILD_NUMBER}", name: "develop-maven-${e
             timeout(30) {
                 script {
                     openshift.withProject("mem-tfrs-tools") {
-                        def celeryJson = openshift.process(readFile(file:'openshift/templates/components/celery/celery-bc.json'), "-p", "TFRS_RELEASE_TAG=v1.4.1", "CELERY_IS_NAME=celery-develop-try")
+                        def celeryJson = openshift.process(readFile(file:'openshift/templates/components/celery/celery-bc.json'), "-p", "TFRS_RELEASE_TAG=v1.4.1", "CELERY_IS_NAME=celery-develop")
                         def celeryBuild = openshift.apply(celeryJson)
-                        def celeryBuildSelector = openshift.selector("bc", "celery-develop-try")
+                        def celeryBuildSelector = openshift.selector("bc", "celery-develop")
                         celeryBuildSelector.startBuild("--wait")
                     } //end of openshift.withProject
                 } //end of script
@@ -39,13 +39,13 @@ podTemplate(label: "develop-maven-${env.BUILD_NUMBER}", name: "develop-maven-${e
             timeout(30) {
                 script {
                     openshift.withProject("mem-tfrs-tools") {
-                        def clientAngularJson = openshift.process(readFile(file:'openshift/templates/components/frontend/client-angular-app-build-bc.json'), "-p", "TFRS_RELEASE_TAG=v1.4.1", "CLIENT_ANGULAR_APP_IS_NAME=client-develop-angular-app-try")
+                        def clientAngularJson = openshift.process(readFile(file:'openshift/templates/components/frontend/client-angular-app-build-bc.json'), "-p", "TFRS_RELEASE_TAG=v1.4.1", "CLIENT_ANGULAR_APP_IS_NAME=client-develop-angular-app")
                         def clientAngularBuild = openshift.apply(clientAngularJson)
-                        def clientAngularBuildSelector = openshift.selector("bc", "client-develop-angular-app-try")
+                        def clientAngularBuildSelector = openshift.selector("bc", "client-develop-angular-app")
                         clientAngularBuildSelector.startBuild("--wait")
-                        def clientJson = openshift.process(readFile(file:'openshift/templates/components/frontend/client-bc.json'), "-p", "CLIENT_IS_NAME=client-develop-try", "CLIENT_ANGULAR_APP_IS_NAME=client-develop-angular-app-try")
+                        def clientJson = openshift.process(readFile(file:'openshift/templates/components/frontend/client-bc.json'), "-p", "CLIENT_IS_NAME=client-develop", "CLIENT_ANGULAR_APP_IS_NAME=client-develop-angular-app")
                         def clientBuild = openshift.apply(clientJson)
-                        def clientBuildSelector = openshift.selector("bc", "client-develop-try")
+                        def clientBuildSelector = openshift.selector("bc", "client-develop")
                         clientBuildSelector.startBuild("--wait")
                     } //end of openshift.withProject
                 } //end of script
@@ -53,6 +53,21 @@ podTemplate(label: "develop-maven-${env.BUILD_NUMBER}", name: "develop-maven-${e
 
         }
     }
+    
+    node("develop-maven-${env.BUILD_NUMBER}") {
+        stage('Build-Notification-Server') {
+            checkout scm
+            timeout(30) {
+                script {
+                    openshift.withProject("mem-tfrs-tools") {
+                        def notificationJson = openshift.process(readFile(file:'openshift/templates/components/notification/notification-bc.json'), "-p", "TFRS_RELEASE_TAG=v1.4.1", "CELERY_IS_NAME=notification-server-develop")
+                        def notificationBuild = openshift.apply(celeryJson)
+                        def notificationSelector = openshift.selector("bc", "notification-server-develop")
+                        notificationSelector.startBuild("--wait")
+                    } //end of openshift.withProject
+                } //end of script
+            } //end of timeout
 
-
+        }
+    }
 }
