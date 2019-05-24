@@ -5,11 +5,11 @@ tfrsRelease="v1.4.1"
 def prepareBackendBuildStages() {
     def buildBackendList = []
     def buildBackendStages = [:]
-    buildBackendStages.put('Build Backend', prepareBuildBackend())
-    buildBackendStages.put('Build Scan Coordinator', prepareBuildScanCoordinator())
+    //buildBackendStages.put('Build Backend', prepareBuildBackend())
+    //buildBackendStages.put('Build Scan Coordinator', prepareBuildScanCoordinator())
     buildBackendStages.put('Build ScanHandler', prepareBuildScanHandler())
-    buildBackendStages.put('Build Celery', prepareBuildCelery())
-    buildBackendList.add(buildBackendStages)
+    //buildBackendStages.put('Build Celery', prepareBuildCelery())
+    //buildBackendList.add(buildBackendStages)
     return buildBackendList
 }
 
@@ -163,6 +163,7 @@ podTemplate(label: "develop-backend-python-${env.BUILD_NUMBER}", name: "develop-
     }
 }
 **/
+
 echo "result is ${result}"
 if (result != 0) {
     echo "[FAILURE] Unit Test stage failed"
@@ -205,7 +206,7 @@ podTemplate(label: "develop-maven-${env.BUILD_NUMBER}", name: "develop-maven-${e
                 }
             }
         }
-
+/****
         //run frontend builds
         for (builds in frontendBuildStages) {
             if (runParallel) {
@@ -216,7 +217,7 @@ podTemplate(label: "develop-maven-${env.BUILD_NUMBER}", name: "develop-maven-${e
                     build.call()
                 }
             }
-        }
+        } ****/
     } //end of node
 
 }
