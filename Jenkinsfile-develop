@@ -197,28 +197,29 @@ podTemplate(label: "develop-maven-${env.BUILD_NUMBER}", name: "develop-maven-${e
 
     node("develop-maven-${env.BUILD_NUMBER}") {
 
-    //run backend builds
-    for (builds in backendBuildStages) {
-        if (runParallel) {
-            parallel(builds)
-        } else {
-            // run serially (nb. Map is unordered! )
-            for (build in builds.values()) {
-                build.call()
+        //run backend builds
+        for (builds in backendBuildStages) {
+            if (runParallel) {
+                parallel(builds)
+            } else {
+                // run serially (nb. Map is unordered! )
+                for (build in builds.values()) {
+                    build.call()
+                }
             }
         }
-    }
 
-    //run frontend builds
-    for (builds in frontendBuildStages) {
-        if (runParallel) {
-            parallel(builds)
-        } else {
-            // run serially (nb. Map is unordered! )
-            for (build in builds.values()) {
-                build.call()
+        //run frontend builds
+        for (builds in frontendBuildStages) {
+            if (runParallel) {
+                parallel(builds)
+            } else {
+                // run serially (nb. Map is unordered! )
+                for (build in builds.values()) {
+                    build.call()
+                }
             }
         }
-    }
+    } //end of node
 
 }
