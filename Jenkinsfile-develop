@@ -194,14 +194,14 @@ podTemplate(label: "develop-maven-${env.BUILD_NUMBER}", name: "develop-maven-${e
     node("develop-maven-${env.BUILD_NUMBER}") {
 
         checkout changelog: false, poll: false, scm: [$class: 'GitSCM', branches: [[name: "${tfrsRelease}"]], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[credentialsId: 'github-account', url: 'https://github.com/bcgov/tfrs.git']]]
-        stage('Build-Scan-Handler') {
+        stage('Build-Celery') {
             timeout(30) {
                 script {
                     openshift.withProject("mem-tfrs-tools") {
-                        def scanHandlerJson = openshift.process(readFile(file:'openshift/templates/components/scan-handler/scan-handler-bc.json'), "-p", "TFRS_RELEASE_TAG=${tfrsRelease}", "SCAN_HANDLER_IS_NAME=scan-handler-develop")
-                        def sscanHandlerBuild = openshift.apply(scanHandlerJson)
-                        def scanHandlerSelector = openshift.selector("bc", "scan-handler-develop")
-                        scanHandlerSelector.startBuild("--wait")
+                        def celeryJson = openshift.process(readFile(file:'openshift/templates/components/celery/celery-bc.json'), "-p", "TFRS_RELEASE_TAG=${tfrsRelease}", "CELERY_IS_NAME=celery-develop")
+                        def celeryBuild = openshift.apply(celeryJson)
+                        def celeryBuildSelector = openshift.selector("bc", "celery-develop")
+                        celeryBuildSelector.startBuild("--wait")
                     } //end of openshift.withProject
                 } //end of script
             } //end of timeout
