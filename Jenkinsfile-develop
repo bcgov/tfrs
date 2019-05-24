@@ -25,7 +25,6 @@ def prepareFrontendBuildStages() {
 def prepareBuildBackend() {
     return {
         stage('Build-Backend') {
-            checkout scm
             timeout(30) {
                 script {
                     openshift.withProject("mem-tfrs-tools") {
@@ -43,7 +42,6 @@ def prepareBuildBackend() {
 def prepareBuildScanCoordinator() {
     return {
         stage('Build-Scan-Coordinator') {
-            checkout scm
             timeout(30) {
                 script {
                     openshift.withProject("mem-tfrs-tools") {
@@ -61,7 +59,6 @@ def prepareBuildScanCoordinator() {
 def prepareBuildScanHandler() {
     return {
         stage('Build-Scan-Handler') {
-            checkout scm
             timeout(30) {
                 script {
                     openshift.withProject("mem-tfrs-tools") {
@@ -79,7 +76,6 @@ def prepareBuildScanHandler() {
 def prepareBuildCelery() {
     return {
         stage('Build-Celery') {
-            checkout scm
             timeout(30) {
                 script {
                     openshift.withProject("mem-tfrs-tools") {
@@ -97,7 +93,6 @@ def prepareBuildCelery() {
 def prepareBuildFrontend() {
     return {
         stage('Build-Frontend') {
-            checkout scm
             timeout(30) {
                 script {
                     openshift.withProject("mem-tfrs-tools") {
@@ -119,7 +114,6 @@ def prepareBuildFrontend() {
 def prepareBuildNotificationServer() {
     return {
         stage('Build-Notification-Server') {
-            checkout scm
             timeout(30) {
                 script {
                     openshift.withProject("mem-tfrs-tools") {
@@ -151,7 +145,7 @@ podTemplate(label: "develop-backend-python-${env.BUILD_NUMBER}", name: "develop-
 ){    
     node("develop-backend-python-${env.BUILD_NUMBER}") {
         stage('Unit Test') {
-            checkout changelog: false, poll: false, scm: [$class: 'GitSCM', branches: [[name: 'v1.4.1']], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[credentialsId: 'github-account', url: 'https://github.com/bcgov/tfrs.git']]]
+            checkout changelog: false, poll: false, scm: [$class: 'GitSCM', branches: [[name: "${tfrsRelease}"]], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[credentialsId: 'github-account', url: 'https://github.com/bcgov/tfrs.git']]]
             dir('backend') {
                 try {
                     sh 'pip install --upgrade pip && pip install -r requirements.txt'
