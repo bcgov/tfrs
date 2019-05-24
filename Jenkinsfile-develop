@@ -5,11 +5,11 @@ tfrsRelease="v1.4.1"
 def prepareBackendBuildStages() {
     def buildBackendList = []
     def buildBackendStages = [:]
-    //buildBackendStages.put('Build Backend', prepareBuildBackend())
-    //buildBackendStages.put('Build Scan Coordinator', prepareBuildScanCoordinator())
+    buildBackendStages.put('Build Backend', prepareBuildBackend())
+    buildBackendStages.put('Build Scan Coordinator', prepareBuildScanCoordinator())
     buildBackendStages.put('Build ScanHandler', prepareBuildScanHandler())
-    //buildBackendStages.put('Build Celery', prepareBuildCelery())
-    //buildBackendList.add(buildBackendStages)
+    buildBackendStages.put('Build Celery', prepareBuildCelery())
+    buildBackendList.add(buildBackendStages)
     return buildBackendList
 }
 
@@ -194,22 +194,8 @@ podTemplate(label: "develop-maven-${env.BUILD_NUMBER}", name: "develop-maven-${e
     node("develop-maven-${env.BUILD_NUMBER}") {
 
         //supposed to checkout tfrsRelease
-        //this checkout is only to use bc and dc files
         checkout changelog: false, poll: false, scm: [$class: 'GitSCM', branches: [[name: 'pr-pipeline-use-new-templates']], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[credentialsId: 'github-account', url: 'https://github.com/bcgov/tfrs.git']]]
-        stage('Build-Celery') {
-            timeout(30) {
-                script {
-                    openshift.withProject("mem-tfrs-tools") {
-                        def celeryJson = openshift.process(readFile(file:'openshift/templates/components/celery/celery-bc.json'), "-p", "TFRS_RELEASE_TAG=${tfrsRelease}", "CELERY_IS_NAME=celery-develop")
-                        def celeryBuild = openshift.apply(celeryJson)
-                        def celeryBuildSelector = openshift.selector("bc", "celery-develop")
-                        celeryBuildSelector.startBuild("--wait")
-                    } //end of openshift.withProject
-                } //end of script
-            } //end of timeout
-        }
 
-/****
         //run backend builds
         for (builds in backendBuildStages) {
             if (runParallel) {
@@ -232,7 +218,7 @@ podTemplate(label: "develop-maven-${env.BUILD_NUMBER}", name: "develop-maven-${e
                     build.call()
                 }
             }
-        } ****/
+        }
     } //end of node
 
 }
