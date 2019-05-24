@@ -1,44 +1,107 @@
-podTemplate(label: "develop-maven-${env.BUILD_NUMBER}", name: "develop-maven-${env.BUILD_NUMBER}", serviceAccount: 'jenkins-basic', cloud: 'openshift',
-    containers: [
-        containerTemplate(
-            name: 'jnlp',
-            image: 'registry.access.redhat.com/openshift3/jenkins-slave-maven-rhel7:v3.9',
-            resourceRequestCpu: '500m',
-            resourceLimitCpu: '1000m',
-            resourceRequestMemory: '2Gi',
-            resourceLimitMemory: '4Gi',
-            workingDir: '/home/jenkins',
-            command: '',
-            args: '${computer.jnlpmac} ${computer.name}'
-        )
-    ]
-) {
-/**
-    node("develop-maven-${env.BUILD_NUMBER}") {
+result = 0
+runParallel = true
+tfrsRelease="v1.4.1"
+
+def prepareBackendBuildStages() {
+    def buildBackendList = []
+    def buildBackendStages = [:]
+    buildBackendStages.put('Build Backend', prepareBuildBackend())
+    buildBackendStages.put('Build Scan Coordinator', prepareBuildScanCoordinator())
+    buildBackendStages.put('Build ScanHandler', prepareBuildScanHandler())
+    buildBackendStages.put('Build Celery', prepareBuildCelery())
+    buildBackendList.add(buildBackendStages)
+    return buildBackendList
+}
+
+def prepareFrontendBuildStages() {
+    def buildFrontendList = []
+    def buildFrontendStages = [:]
+    buildFrontendStages.put('Build Frontend', prepareBuildFrontend())
+    buildFrontendStages.put('Build Notification Server', prepareBuildNotificationServer())
+    buildFrontendList.add(buildFrontendStages)
+    return buildFrontendList
+}
+
+def prepareBuildBackend() {
+    return {
+        stage('Build-Backend') {
+            checkout scm
+            timeout(30) {
+                script {
+                    openshift.withProject("mem-tfrs-tools") {
+                        def scanHandlerJson = openshift.process(readFile(file:'openshift/templates/components/scan-handler/scan-handler-bc.json'), "-p", "TFRS_RELEASE_TAG=${tfrsRelease}", "SCAN_HANDLER_IS_NAME=scan-handler-develop")
+                        def sscanHandlerBuild = openshift.apply(scanHandlerJson)
+                        def scanHandlerSelector = openshift.selector("bc", "scan-handler-develop")
+                        scanHandlerSelector.startBuild("--wait")
+                    } //end of openshift.withProject
+                } //end of script
+            } //end of timeout
+        }
+    }
+}
+
+def prepareBuildScanCoordinator() {
+    return {
+        stage('Build-Scan-Coordinator') {
+            checkout scm
+            timeout(30) {
+                script {
+                    openshift.withProject("mem-tfrs-tools") {
+                        def scanCoordinatorJson = openshift.process(readFile(file:'openshift/templates/components/scan-coordinator/scan-coordinator-bc.json'), "-p", "TFRS_RELEASE_TAG=${tfrsRelease}", "SCAN_COORDINATOR_IS_NAME=scan-coordinator-develop")
+                        def scanCoordinatorBuild = openshift.apply(scanCoordinatorJson)
+                        def scanCoordinatorSelector = openshift.selector("bc", "scan-coordinator-develop")
+                        scanCoordinatorSelector.startBuild("--wait")
+                    } //end of openshift.withProject
+                } //end of script
+            } //end of timeout
+        }
+    }
+}
+
+def prepareBuildScanHandler() {
+    return {
+        stage('Build-Scan-Handler') {
+            checkout scm
+            timeout(30) {
+                script {
+                    openshift.withProject("mem-tfrs-tools") {
+                        def scanHandlerJson = openshift.process(readFile(file:'openshift/templates/components/scan-handler/scan-handler-bc.json'), "-p", "TFRS_RELEASE_TAG=${tfrsRelease}", "SCAN_HANDLER_IS_NAME=scan-handler-develop")
+                        def sscanHandlerBuild = openshift.apply(scanHandlerJson)
+                        def scanHandlerSelector = openshift.selector("bc", "scan-handler-develop")
+                        scanHandlerSelector.startBuild("--wait")
+                    } //end of openshift.withProject
+                } //end of script
+            } //end of timeout
+        }
+    }
+}
+
+def prepareBuildCelery() {
+    return {
         stage('Build-Celery') {
             checkout scm
             timeout(30) {
                 script {
                     openshift.withProject("mem-tfrs-tools") {
-                        def celeryJson = openshift.process(readFile(file:'openshift/templates/components/celery/celery-bc.json'), "-p", "TFRS_RELEASE_TAG=v1.4.1", "CELERY_IS_NAME=celery-develop")
+                        def celeryJson = openshift.process(readFile(file:'openshift/templates/components/celery/celery-bc.json'), "-p", "TFRS_RELEASE_TAG=${tfrsRelease}", "CELERY_IS_NAME=celery-develop")
                         def celeryBuild = openshift.apply(celeryJson)
                         def celeryBuildSelector = openshift.selector("bc", "celery-develop")
                         celeryBuildSelector.startBuild("--wait")
                     } //end of openshift.withProject
                 } //end of script
             } //end of timeout
-
         }
     }
+}
 
-
-    node("develop-maven-${env.BUILD_NUMBER}") {
+def prepareBuildFrontend() {
+    return {
         stage('Build-Frontend') {
             checkout scm
             timeout(30) {
                 script {
                     openshift.withProject("mem-tfrs-tools") {
-                        def clientAngularJson = openshift.process(readFile(file:'openshift/templates/components/frontend/client-angular-app-build-bc.json'), "-p", "TFRS_RELEASE_TAG=v1.4.1", "CLIENT_ANGULAR_APP_IS_NAME=client-develop-angular-app")
+                        def clientAngularJson = openshift.process(readFile(file:'openshift/templates/components/frontend/client-angular-app-build-bc.json'), "-p", "TFRS_RELEASE_TAG=${tfrsRelease}", "CLIENT_ANGULAR_APP_IS_NAME=client-develop-angular-app")
                         def clientAngularBuild = openshift.apply(clientAngularJson)
                         def clientAngularBuildSelector = openshift.selector("bc", "client-develop-angular-app")
                         clientAngularBuildSelector.startBuild("--wait")
@@ -49,73 +112,112 @@ podTemplate(label: "develop-maven-${env.BUILD_NUMBER}", name: "develop-maven-${e
                     } //end of openshift.withProject
                 } //end of script
             } //end of timeout
-
         }
     }
+}
 
-    node("develop-maven-${env.BUILD_NUMBER}") {
+def prepareBuildNotificationServer() {
+    return {
         stage('Build-Notification-Server') {
             checkout scm
             timeout(30) {
                 script {
                     openshift.withProject("mem-tfrs-tools") {
-                        def notificationJson = openshift.process(readFile(file:'openshift/templates/components/notification/notification-server-bc.json'), "-p", "TFRS_RELEASE_TAG=v1.4.1", "NOTIFICATION_SERVER_IS_NAME=notification-server-develop")
+                        def notificationJson = openshift.process(readFile(file:'openshift/templates/components/notification/notification-server-bc.json'), "-p", "TFRS_RELEASE_TAG=${tfrsRelease}", "NOTIFICATION_SERVER_IS_NAME=notification-server-develop")
                         def notificationBuild = openshift.apply(notificationJson)
                         def notificationSelector = openshift.selector("bc", "notification-server-develop")
                         notificationSelector.startBuild("--wait")
                     } //end of openshift.withProject
                 } //end of script
             } //end of timeout
+        }
+    }
+}
 
+podTemplate(label: "develop-backend-python-${env.BUILD_NUMBER}", name: "develop-backend-python-${env.BUILD_NUMBER}", serviceAccount: 'jenkins-basic', cloud: 'openshift',
+    containers: [
+        containerTemplate(
+            name: 'jnlp',
+            image: 'docker-registry.default.svc:5000/openshift/jenkins-slave-python-rhel7',
+            resourceRequestCpu: '500m',
+            resourceLimitCpu: '1000m',
+            resourceRequestMemory: '2Gi',
+            resourceLimitMemory: '4Gi',
+            workingDir: '/home/jenkins',
+            command: '',
+            args: '${computer.jnlpmac} ${computer.name}'
+        )
+    ]
+){    
+    node("develop-backend-python-${env.BUILD_NUMBER}") {
+        stage('Unit Test') {
+            checkout scm
+            dir('backend') {
+                try {
+                    sh 'pip install --upgrade pip && pip install -r requirements.txt'
+                    sh 'python manage.py collectstatic && python manage.py migrate'
+                    sh 'python manage.py test -c nose.cfg'
+                } catch(Throwable t) {
+                    result = 1;
+                } finally {
+                    //stash includes: 'nosetests.xml,coverage.xml', name: 'coverage'
+                    junit 'nosetests.xml'
+                }
+            }
+        }
+    }
+}
+
+echo "result is ${result}"
+if (result != 0) {
+    echo "[FAILURE] Unit Test stage failed"
+    currentBuild.result = 'FAILURE'
+    return
+}
+
+//organize all build stages
+backendBuildStages = prepareBackendBuildStages()
+frontendBuildStages = prepareFrontendBuildStages()
+
+podTemplate(label: "develop-maven-${env.BUILD_NUMBER}", name: "develop-maven-${env.BUILD_NUMBER}", serviceAccount: 'jenkins-basic', cloud: 'openshift',
+        containers: [
+            containerTemplate(
+                name: 'jnlp',
+                image: 'registry.access.redhat.com/openshift3/jenkins-slave-maven-rhel7:v3.9',
+                resourceRequestCpu: '500m',
+                resourceLimitCpu: '1000m',
+                resourceRequestMemory: '2Gi',
+                resourceLimitMemory: '4Gi',
+                workingDir: '/home/jenkins',
+                command: '',
+                args: '${computer.jnlpmac} ${computer.name}'
+            )
+        ]
+) {
+
+    node("develop-maven-${env.BUILD_NUMBER}") {
+
+    //run backend builds
+    for (builds in backendBuildStages) {
+        if (runParallel) {
+            parallel(builds)
+        } else {
+            // run serially (nb. Map is unordered! )
+            for (build in builds.values()) {
+                build.call()
+            }
         }
     }
 
-    node("develop-maven-${env.BUILD_NUMBER}") {
-        stage('Build-Scan-Coordinator') {
-            checkout scm
-            timeout(30) {
-                script {
-                    openshift.withProject("mem-tfrs-tools") {
-                        def scanCoordinatorJson = openshift.process(readFile(file:'openshift/templates/components/scan-coordinator/scan-coordinator-bc.json'), "-p", "TFRS_RELEASE_TAG=v1.4.1", "SCAN_COORDINATOR_IS_NAME=scan-coordinator-develop")
-                        def scanCoordinatorBuild = openshift.apply(scanCoordinatorJson)
-                        def scanCoordinatorSelector = openshift.selector("bc", "scan-coordinator-develop")
-                        scanCoordinatorSelector.startBuild("--wait")
-                    } //end of openshift.withProject
-                } //end of script
-            } //end of timeout
-        }
-    }
-
-    node("develop-maven-${env.BUILD_NUMBER}") {
-        stage('Build-Scan-Handler') {
-            checkout scm
-            timeout(30) {
-                script {
-                    openshift.withProject("mem-tfrs-tools") {
-                        def scanHandlerJson = openshift.process(readFile(file:'openshift/templates/components/scan-handler/scan-handler-bc.json'), "-p", "TFRS_RELEASE_TAG=v1.4.1", "SCAN_HANDLER_IS_NAME=scan-handler-develop")
-                        def sscanHandlerBuild = openshift.apply(scanHandlerJson)
-                        def scanHandlerSelector = openshift.selector("bc", "scan-handler-develop")
-                        scanHandlerSelector.startBuild("--wait")
-                    } //end of openshift.withProject
-                } //end of script
-            } //end of timeout
-        }
-    }
-**/
-
-    node("develop-maven-${env.BUILD_NUMBER}") {
-        stage('Build-Backend') {
-            checkout scm
-            timeout(30) {
-                script {
-                    openshift.withProject("mem-tfrs-tools") {
-                        def scanHandlerJson = openshift.process(readFile(file:'openshift/templates/components/scan-handler/scan-handler-bc.json'), "-p", "TFRS_RELEASE_TAG=v1.4.1", "SCAN_HANDLER_IS_NAME=scan-handler-develop")
-                        def sscanHandlerBuild = openshift.apply(scanHandlerJson)
-                        def scanHandlerSelector = openshift.selector("bc", "scan-handler-develop")
-                        scanHandlerSelector.startBuild("--wait")
-                    } //end of openshift.withProject
-                } //end of script
-            } //end of timeout
+    //run frontend builds
+    for (builds in frontendBuildStages) {
+        if (runParallel) {
+            parallel(builds)
+        } else {
+            // run serially (nb. Map is unordered! )
+            for (build in builds.values()) {
+                build.call()
+            }
         }
     }
 
