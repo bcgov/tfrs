@@ -151,7 +151,7 @@ podTemplate(label: "develop-backend-python-${env.BUILD_NUMBER}", name: "develop-
 ){    
     node("develop-backend-python-${env.BUILD_NUMBER}") {
         stage('Unit Test') {
-            checkout scm: [branches:[[name:"$tfrsRelease"]]]
+            checkout changelog: false, poll: false, scm: [$class: 'GitSCM', branches: [[name: 'v1.4.1']], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[credentialsId: 'github-account', url: 'https://github.com/bcgov/tfrs.git']]]
             dir('backend') {
                 try {
                     sh 'pip install --upgrade pip && pip install -r requirements.txt'
