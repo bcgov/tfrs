@@ -61,7 +61,7 @@ podTemplate(label: "develop-maven-${env.BUILD_NUMBER}", name: "develop-maven-${e
                 script {
                     openshift.withProject("mem-tfrs-tools") {
                         def notificationJson = openshift.process(readFile(file:'openshift/templates/components/notification/notification-server-bc.json'), "-p", "TFRS_RELEASE_TAG=v1.4.1", "CELERY_IS_NAME=notification-server-develop")
-                        def notificationBuild = openshift.apply(celeryJson)
+                        def notificationBuild = openshift.apply(notificationJson)
                         def notificationSelector = openshift.selector("bc", "notification-server-develop")
                         notificationSelector.startBuild("--wait")
                     } //end of openshift.withProject
