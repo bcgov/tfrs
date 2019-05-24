@@ -70,7 +70,7 @@ podTemplate(label: "develop-maven-${env.BUILD_NUMBER}", name: "develop-maven-${e
 
         }
     }
-***/
+
     node("develop-maven-${env.BUILD_NUMBER}") {
         stage('Build-Scan-Coordinator') {
             checkout scm
@@ -81,6 +81,22 @@ podTemplate(label: "develop-maven-${env.BUILD_NUMBER}", name: "develop-maven-${e
                         def scanCoordinatorBuild = openshift.apply(scanCoordinatorJson)
                         def scanCoordinatorSelector = openshift.selector("bc", "scan-coordinator-develop")
                         scanCoordinatorSelector.startBuild("--wait")
+                    } //end of openshift.withProject
+                } //end of script
+            } //end of timeout
+        }
+    }
+***/
+    node("develop-maven-${env.BUILD_NUMBER}") {
+        stage('Build-Scan-Handler') {
+            checkout scm
+            timeout(30) {
+                script {
+                    openshift.withProject("mem-tfrs-tools") {
+                        def scanHandlerJson = openshift.process(readFile(file:'openshift/templates/components/scan-handler/scan-handler-bc.json'), "-p", "TFRS_RELEASE_TAG=v1.4.1", "SCAN_HANDLER_IS_NAME=scan-handler-develop")
+                        def sscanHandlerBuild = openshift.apply(scanHandlerJson)
+                        def scanHandlerSelector = openshift.selector("bc", "scan-handler-develop")
+                        scanHandlerSelector.startBuild("--wait")
                     } //end of openshift.withProject
                 } //end of script
             } //end of timeout
