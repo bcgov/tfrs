@@ -151,7 +151,7 @@ podTemplate(label: "develop-backend-python-${env.BUILD_NUMBER}", name: "develop-
 ){    
     node("develop-backend-python-${env.BUILD_NUMBER}") {
         stage('Unit Test') {
-            checkout scm
+            checkout scm: [branches:[[name:"$tfrsRelease"]]]
             dir('backend') {
                 try {
                     sh 'pip install --upgrade pip && pip install -r requirements.txt'
