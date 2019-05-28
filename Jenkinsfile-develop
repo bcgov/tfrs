@@ -1,6 +1,6 @@
 result = 0
 runParallel = true
-tfrsRelease="v1.4.1"
+tfrsRelease="v1.4.3"
 
 def prepareBackendBuildStages() {
     def buildBackendList = []
@@ -128,7 +128,7 @@ def prepareBuildNotificationServer() {
     }
 }
 
-/**
+
 podTemplate(label: "develop-backend-python-${env.BUILD_NUMBER}", name: "develop-backend-python-${env.BUILD_NUMBER}", serviceAccount: 'jenkins-basic', cloud: 'openshift',
     containers: [
         containerTemplate(
@@ -147,7 +147,7 @@ podTemplate(label: "develop-backend-python-${env.BUILD_NUMBER}", name: "develop-
     node("develop-backend-python-${env.BUILD_NUMBER}") {
         stage('Unit Test') {
             //supposed to checkout tfrsRelease
-            checkout changelog: false, poll: false, scm: [$class: 'GitSCM', branches: [[name: 'pr-pipeline-use-new-templates']], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[credentialsId: 'github-account', url: 'https://github.com/bcgov/tfrs.git']]]
+            checkout changelog: false, poll: false, scm: [$class: 'GitSCM', branches: [[name: "${tfrsRelease}"]], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[credentialsId: 'github-account', url: 'https://github.com/bcgov/tfrs.git']]]
             dir('backend') {
                 try {
                     sh 'pip install --upgrade pip && pip install -r requirements.txt'
@@ -163,7 +163,6 @@ podTemplate(label: "develop-backend-python-${env.BUILD_NUMBER}", name: "develop-
         }
     }
 }
-**/
 
 echo "result is ${result}"
 if (result != 0) {
@@ -195,7 +194,7 @@ podTemplate(label: "develop-maven-${env.BUILD_NUMBER}", name: "develop-maven-${e
     node("develop-maven-${env.BUILD_NUMBER}") {
 
         //supposed to checkout tfrsRelease
-        checkout changelog: false, poll: false, scm: [$class: 'GitSCM', branches: [[name: 'pr-pipeline-use-new-templates']], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[credentialsId: 'github-account', url: 'https://github.com/bcgov/tfrs.git']]]
+        checkout changelog: false, poll: false, scm: [$class: 'GitSCM', branches: [[name: "${tfrsRelease}"]], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[credentialsId: 'github-account', url: 'https://github.com/bcgov/tfrs.git']]]
 
         //run backend builds
         for (builds in backendBuildStages) {
@@ -230,7 +229,7 @@ podTemplate(label: "develop-maven-${env.BUILD_NUMBER}", name: "develop-maven-${e
         stage('Datebase Backup') {
             postgresql_pod_name=sh (script: 'oc get pods -n mem-tfrs-dev | grep postgresql96 | awk \'{print $1}\'', returnStdout: true).trim()
             echo "start backup script tfrsdump-dev.sh on dev, postgresql_pod_name is ${postgresql_pod_name}"
-            sh returnStdout: true, script: "oc exec ${postgresql_pod_name} -c postgresql96 -n mem-tfrs-dev -- bash /postgresql-backup/tfrs-backup.sh ${env.tfrs_dev_release} dev"
+            sh returnStdout: true, script: "oc exec ${postgresql_pod_name} -c postgresql96 -n mem-tfrs-dev -- bash /postgresql-backup/tfrs-backup.sh ${tfrsRelease} dev"
             echo 'backup script completed'
         }
         
@@ -268,7 +267,7 @@ podTemplate(label: "develop-maven-${env.BUILD_NUMBER}", name: "develop-maven-${e
             sh returnStdout: true, script: "oc scale dc schema-spy-audit --replicas=0 -n mem-tfrs-dev"
             sh 'sleep 10s'
             sh returnStdout: true, script: "oc scale dc schema-spy-audit --replicas=1 -n mem-tfrs-dev"
-    }    
+        }    
 
         stage('Take down Maintenance Page') {
             sh returnStatus: true, script: "oc patch route/dev-lowcarbonfuels-backend -n mem-tfrs-dev -p '{\"spec\":{\"to\":{\"name\":\"backend\"}, \"port\":{\"targetPort\":\"web\"}}}'"
@@ -276,7 +275,6 @@ podTemplate(label: "develop-maven-${env.BUILD_NUMBER}", name: "develop-maven-${e
             sh returnStatus: true, script: "oc scale dc maintenance-page -n mem-tfrs-dev --replicas=0 --timeout=20s"
         }
 
-
     } //end of node
 
-}
+} //end of podTemplate
