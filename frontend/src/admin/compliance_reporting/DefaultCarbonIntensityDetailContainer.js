@@ -6,11 +6,11 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
+import { Tab, Tabs } from 'react-bootstrap';
 
 import { defaultCarbonIntensities } from '../../actions/defaultCarbonIntensities';
 import Loading from '../../app/components/Loading';
-import {Tab, Tabs} from "react-bootstrap";
-import PastAndFutureValuesTable from "./components/PastAndFutureValuesTable";
+import PastAndFutureValuesTable from './components/PastAndFutureValuesTable';
 import CarbonIntensityDetails from './components/CarbonIntensityDetails';
 import CREDIT_CALCULATIONS from '../../constants/routes/CreditCalculations';
 

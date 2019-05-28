@@ -3,73 +3,63 @@
  */
 import React from 'react';
 import PropTypes from 'prop-types';
+import moment from 'moment';
 
 import 'react-table/react-table.css';
 
 import ReactTable from '../../../app/components/StateSavingReactTable';
-import moment from "moment";
 
 const PastAndFutureValuesTable = (props) => {
-
-  let valueColumns = [];
+  const valueColumns = [];
 
   if (props.includeDensity) {
-    valueColumns.push(
-      {
-        accessor: item => item.density.toFixed(2),
-        Header: `Density MJ/${props.densityUnit}`,
-        id: 'density'
-      }
-    );
+    valueColumns.push({
+      accessor: item => item.density.toFixed(2),
+      Header: `Density MJ/${props.densityUnit}`,
+      id: 'density'
+    });
   }
 
   if (props.includeLimit) {
-    valueColumns.push(
-      {
-        accessor: item => item.density.toFixed(2),
-        Header: 'Limit (gCO₂e/MJ)',
-        id: 'limit'
-      }
-    );
+    valueColumns.push({
+      accessor: item => item.density.toFixed(2),
+      Header: 'Limit (gCO₂e/MJ)',
+      id: 'limit'
+    });
   }
 
   if (props.includeFuelClass) {
-    valueColumns.push(
-      {
-        accessor: item => item.fuelClass,
-        Header: 'Fuel Class',
-        id: 'fuel-class'
-      }
-    );
+    valueColumns.push({
+      accessor: item => item.fuelClass,
+      Header: 'Fuel Class',
+      id: 'fuel-class'
+    });
   }
 
   if (props.includeRatio) {
-    valueColumns.push(
-      {
-        accessor: item => item.ratio.toFixed(1),
-        Header: 'Ratio',
-        id: 'ratio'
-      }
-    );
+    valueColumns.push({
+      accessor: item => item.ratio.toFixed(1),
+      Header: 'Ratio',
+      id: 'ratio'
+    });
   }
 
-  const dateColumns = [
-    {
-      accessor: item => item.effectiveDate,
-      Header: 'Effective Date',
-      id: 'effective-date'
-    },
-    {
-      accessor: item => item.expirationDate || 'N/A',
-      Header: 'Expiration Date',
-      id: 'expiration-date'
-    },
-    {
-      accessor: item => moment(item.createTimestamp).format('YYYY-MM-DD HHmm[h]'),
-      Header: 'Updated',
-      id: 'create-timestamp'
-    }];
-
+  const dateColumns = [{
+    accessor: item => item.effectiveDate,
+    className: 'col-date',
+    Header: 'Effective Date',
+    id: 'effective-date'
+  }, {
+    accessor: item => item.expirationDate || 'N/A',
+    className: 'col-date',
+    Header: 'Expiration Date',
+    id: 'expiration-date'
+  }, {
+    accessor: item => moment(item.createTimestamp).format('YYYY-MM-DD HH[:]mm'),
+    className: 'col-date',
+    Header: 'Updated',
+    id: 'create-timestamp'
+  }];
 
   const columns = [...valueColumns, ...dateColumns];
 

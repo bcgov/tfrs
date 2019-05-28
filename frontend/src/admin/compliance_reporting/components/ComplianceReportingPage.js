@@ -90,12 +90,14 @@ const ComplianceReportingPage = props => (
         {props.petroleumCarbonIntensities.isFetching && <Loading />}
         {!props.petroleumCarbonIntensities.isFetching &&
           <CarbonIntensitiesTable
+            defaultPageSize={2}
             items={props.petroleumCarbonIntensities.items.filter(item => (item.density))}
             isFetching={props.petroleumCarbonIntensities.isFetching}
             isEmpty={
               props.petroleumCarbonIntensities.items &&
               props.petroleumCarbonIntensities.items.length === 0
             }
+            pageSizeOptions={[2, 5, 10]}
             stateKey="petroleum-carbon-intensity"
             viewUrl={CREDIT_CALCULATIONS.PETROLEUM_CARBON_INTENSITIES_DETAILS}
           />
