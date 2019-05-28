@@ -212,10 +212,10 @@ InputWithTooltip.propTypes = {
   required: PropTypes.bool,
   showDollarSymbol: PropTypes.bool,
   step: PropTypes.string,
-  value: PropTypes.oneOfType(
+  value: PropTypes.oneOfType([
     PropTypes.number,
     PropTypes.string
-  )
+  ])
 };
 
 export default InputWithTooltip;
