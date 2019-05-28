@@ -6,10 +6,12 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
+import { Tab, Tabs } from 'react-bootstrap';
 
 import { petroleumCarbonIntensities } from '../../actions/petroleumCarbonIntensities';
 import Loading from '../../app/components/Loading';
 import CarbonIntensityDetails from './components/CarbonIntensityDetails';
+import PastAndFutureValuesTable from './components/PastAndFutureValuesTable';
 import CREDIT_CALCULATIONS from '../../constants/routes/CreditCalculations';
 
 class PetroleumCarbonIntensityDetailContainer extends Component {
@@ -28,12 +30,24 @@ class PetroleumCarbonIntensityDetailContainer extends Component {
 
     if (success && !isFetching && item) {
       return (
-        <CarbonIntensityDetails
-          editUrl={CREDIT_CALCULATIONS.PETROLEUM_CARBON_INTENSITIES_EDIT}
-          item={item}
-          loggedInUser={this.props.loggedInUser}
-          title="Carbon Intensity Details"
-        />
+        <Tabs defaultActiveKey="details" id="citabs">
+          <Tab eventKey="details" title="Current">
+            <CarbonIntensityDetails
+              editUrl={CREDIT_CALCULATIONS.PETROLEUM_CARBON_INTENSITIES_EDIT}
+              item={item}
+              loggedInUser={this.props.loggedInUser}
+              title="Carbon Intensity Details"
+            />
+          </Tab>
+          <Tab eventKey="allValues" title="Past And Future">
+            <h1>Past and Future Values</h1>
+            <PastAndFutureValuesTable
+              items={item.allValues}
+              includeLimit
+              includeFuelClass
+            />
+          </Tab>
+        </Tabs>
       );
     }
 

@@ -21,15 +21,17 @@ const ComplianceReportIntro = (props) => {
         <p>
         It is the responsibility of anyone who manufactures or imports fuel to determine whether
         their activities qualify them as a Part 2 (Renewable) and/or Part 3 (Low Carbon) fuel
-        supplier under the Greenhouse Gas Reduction (Renewable and Low Carbon Fuel Requirements) Act
-        (available online at <a href="http://www.bclaws.ca" rel="noopener noreferrer" target="_blank">www.bclaws.ca</a>
-        ).
+        supplier under the
+          <em> Greenhouse Gas Reduction (Renewable and Low Carbon Fuel Requirements) Act
+          </em> (available online at <a href="http://www.bclaws.ca" rel="noopener noreferrer" target="_blank">www.bclaws.ca</a>).
         </p>
         <p>
         All Part 2 and Part 3 fuel suppliers must report using this form unless they claim the Small
         Supplier Exemption (see below).  The {props.compliancePeriod} compliance period for Part 2
         and Part 3 requirements is from January 1 to December 31, {props.compliancePeriod}.
-        Compliance reports for {props.compliancePeriod} are due March 31, {complianceReportDueDate}.
+          <strong> Compliance reports for {props.compliancePeriod} are due
+            March 31, {complianceReportDueDate}.
+          </strong>
         </p>
         <p>
         The compliance report must be submitted by an officer or employee authorized by the fuel

@@ -6,13 +6,12 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
+import { Tab, Tabs } from 'react-bootstrap';
 
 import { energyEffectivenessRatios } from '../../actions/energyEffectivenessRatios';
 import Loading from '../../app/components/Loading';
 import EnergyEffectivenessRatioDetails from './components/EnergyEffectivenessRatioDetails';
-import {Tab, Tabs} from "react-bootstrap";
-import CarbonIntensityLimitDetails from "./CarbonIntensityLimitDetailContainer";
-import PastAndFutureValuesTable from "./components/PastAndFutureValuesTable";
+import PastAndFutureValuesTable from './components/PastAndFutureValuesTable';
 
 class EnergyEffectivenessRatioDetailContainer extends Component {
   constructor (props) {

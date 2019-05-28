@@ -63,7 +63,7 @@ const CarbonIntensitiesTable = (props) => {
       columns={columns}
       data={props.items}
       defaultFilterMethod={filterMethod}
-      defaultPageSize={10}
+      defaultPageSize={props.defaultPageSize}
       defaultSorted={[{
         id: 'title',
         desc: false
@@ -83,20 +83,24 @@ const CarbonIntensitiesTable = (props) => {
 
         return {};
       }}
-      pageSizeOptions={[5, 10, 15, 20, 25]}
+      pageSizeOptions={props.pageSizeOptions}
     />
   );
 };
 
 CarbonIntensitiesTable.defaultProps = {
+  defaultPageSize: 10,
+  pageSizeOptions: [5, 10, 15, 20, 25],
   stateKey: 'carbon-intensity'
 };
 
 CarbonIntensitiesTable.propTypes = {
+  defaultPageSize: PropTypes.number,
   items: PropTypes.arrayOf(PropTypes.shape({
   })).isRequired,
   isEmpty: PropTypes.bool.isRequired,
   isFetching: PropTypes.bool.isRequired,
+  pageSizeOptions: PropTypes.arrayOf(PropTypes.number),
   stateKey: PropTypes.string,
   viewUrl: PropTypes.string.isRequired
 };
