@@ -1,13 +1,9 @@
 {
-    "apiVersion": "build.openshift.io/v1",
-    "kind": "BuildConfig",
+    "kind": "Template",
+    "apiVersion": "template.openshift.io/v1",
     "metadata": {
-        "creationTimestamp": null,
-        "labels": {
-            "build": "notification-server"
-        },
-        "name": "notification-server",
-        "selfLink": "/apis/build.openshift.io/v1/namespaces/mem-tfrs-tools/buildconfigs/notification-server"
+        "name": "notification-server-bc",
+        "creationTimestamp": null
     },
     "parameters": [
         {
@@ -21,48 +17,57 @@
             "required": true
         }
     ],
-    "spec": {
-        "failedBuildsHistoryLimit": 5,
-        "nodeSelector": null,
-        "output": {
-            "to": {
-                "kind": "ImageStreamTag",
-                "name": "${NOTIFICATION_SERVER_IS_NAME}:latest"
+    "objects": [
+        {
+            "kind": "BuildConfig",
+            "apiVersion": "build.openshift.io/v1",
+            "metadata": {
+                "name": "${NOTIFICATION_SERVER_IS_NAME}",
+                "creationTimestamp": null
+            },
+            "spec": {
+                "triggers": [],
+                "runPolicy": "Serial",
+                "source": {
+                    "type": "Git",
+                    "git": {
+                        "uri": "https://github.com/bcgov/tfrs.git",
+                        "ref": "${TFRS_RELEASE_TAG}"
+                    },
+                    "contextDir": "frontend"
+                },
+                "strategy": {
+                    "type": "Source",
+                    "sourceStrategy": {
+                        "from": {
+                            "kind": "ImageStreamTag",
+                            "namespace": "openshift",
+                            "name": "nodejs:8"
+                        }
+                    }
+                },
+                "output": {
+                    "to": {
+                        "kind": "ImageStreamTag",
+                        "name": "${NOTIFICATION_SERVER_IS_NAME}:latest"
+                    }
+                },
+                "resources": {
+                    "limits": {
+                        "cpu": "1",
+                        "memory": "4Gi"
+                    },
+                    "requests": {
+                        "memory": "2Gi"
+                    }
+                },
+                "postCommit": {},
+                "nodeSelector": null,
+                "failedBuildsHistoryLimit": 5
+            },
+            "status": {
+                "lastVersion": 0
             }
-        },
-        "postCommit": {},
-        "resources": {
-            "limits": {
-                "cpu": "1",
-                "memory": "4Gi"
-            },
-            "requests": {
-                "memory": "2Gi"
-            }
-        },
-        "runPolicy": "Serial",
-        "source": {
-            "contextDir": "frontend",
-            "git": {
-                "ref": "${TFRS_RELEASE_TAG}",
-                "uri": "https://github.com/bcgov/tfrs.git"
-            },
-            "type": "Git"
-        },
-        "strategy": {
-            "sourceStrategy": {
-                "from": {
-                    "kind": "ImageStreamTag",
-                    "name": "nodejs:8",
-                    "namespace": "openshift"
-                }
-            },
-            "type": "Source"
-        },
-        "successfulBuildsHistoryLimit": 5,
-        "triggers": []
-    },
-    "status": {
-        "lastVersion": 0
-    }
+        }
+    ]
 }
