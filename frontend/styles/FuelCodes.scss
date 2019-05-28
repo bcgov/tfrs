@@ -42,6 +42,20 @@
   .right-toolbar-container .actions-container {
     margin-bottom: 1rem;
   }
+
+  .ReactTable .rt-tr.has-error {
+    background-color: $red;
+    color: $white;
+
+    &.-odd {
+      background-color: $dark-red;
+    }
+
+    &:hover {
+      background-color: $yellow;
+      color: $font;
+    }
+  }
 }
 
 .page-fuel-code-details {
