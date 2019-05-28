@@ -783,6 +783,27 @@ class PetroleumCarbonIntensityDetailSerializer(serializers.ModelSerializer):
     Petroleum Carbon Intensity Detail Serializer
     """
     density = serializers.SerializerMethodField()
+    all_values = serializers.SerializerMethodField()
+
+
+    def get_all_values(self, obj):
+        rows = CreditCalculationService.get_all(
+            model_name="PetroleumCarbonIntensity",
+            category_id=obj.id
+        )
+
+        serialized = []
+
+        for row in rows:
+            serialized.append({
+                "fuel_class": obj.name,
+                "density": row.density,
+                "effective_date": row.effective_date,
+                "expiration_date": row.effective_date,
+                "create_timestamp": row.create_timestamp
+            })
+
+        return serialized
 
     def get_density(self, obj):
         """
@@ -806,5 +827,5 @@ class PetroleumCarbonIntensityDetailSerializer(serializers.ModelSerializer):
     class Meta:
         model = PetroleumCarbonIntensityCategory
         fields = (
-            'id', 'name', 'density'
+            'id', 'name', 'density', 'all_values'
         )
