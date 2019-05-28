@@ -170,6 +170,12 @@ const FuelCodesTable = (props) => {
 
   const filterable = true;
 
+  const validateEffectiveDates = (row, items) => {
+    return items.find(item => (
+      (item.effectiveDate <= row.effectiveDate && item.expiryDate >= row.effectiveDate) ||
+      (item.effectiveDate <= row.expiryDate && item.effectiveDate >= row.effectiveDate)))
+  };
+
   return (
     <ReactTable
       stateKey="fuel-codes"
@@ -185,13 +191,19 @@ const FuelCodesTable = (props) => {
       filterable={filterable}
       getTrProps={(state, row) => {
         if (row && row.original) {
+          const filtered = props.items.filter(item =>
+            (item.fuelCode === row.original.fuelCode) &&
+            (item.fuelCodeVersion === row.original.fuelCodeVersion) &&
+            (item.fuelCodeVersionMinor !== row.original.fuelCodeVersionMinor));
+          const hasInvalidDates = validateEffectiveDates(row.original, filtered);
+
           return {
             onClick: (e) => {
               const viewUrl = FUEL_CODES.DETAILS.replace(':id', row.original.id);
 
               history.push(viewUrl);
             },
-            className: 'clickable'
+            className: `clickable ${hasInvalidDates ? 'has-error' : ''}`
           };
         }
 

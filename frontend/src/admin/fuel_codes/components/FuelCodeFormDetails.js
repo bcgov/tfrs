@@ -12,17 +12,13 @@ class FuelCodeFormDetails extends Component {
   constructor (props) {
     super(props);
 
-    this.state = {
-      showPartiallyRenewable: props.fields.renewablePercentage !== ''
-    };
-
     this._getPartiallyRenewableIcons = this._getPartiallyRenewableIcons.bind(this);
     this._showPartiallyRenewableCheckbox = this._showPartiallyRenewableCheckbox.bind(this);
     this._togglePartiallyRenewable = this._togglePartiallyRenewable.bind(this);
   }
 
   _getPartiallyRenewableIcons () {
-    if (this.state.showPartiallyRenewable) {
+    if (this.props.fields.partiallyRenewable) {
       return ['far', 'check-square'];
     }
 
@@ -35,21 +31,14 @@ class FuelCodeFormDetails extends Component {
   }
 
   _togglePartiallyRenewable () {
-    const showPartiallyRenewable = !this.state.showPartiallyRenewable;
+    const partiallyRenewable = !this.props.fields.partiallyRenewable;
 
-    this.setState({
-      showPartiallyRenewable
+    this.props.handleInputChange({
+      target: {
+        name: 'partiallyRenewable',
+        value: partiallyRenewable
+      }
     });
-
-    // clear out the renewable percentage when it gets toggled off
-    if (!showPartiallyRenewable) {
-      this.props.handleInputChange({
-        target: {
-          name: 'renewablePercentage',
-          value: ''
-        }
-      });
-    }
   }
 
   render () {
@@ -213,7 +202,7 @@ class FuelCodeFormDetails extends Component {
                   <div className="value partially-renewable">
                     <FontAwesomeIcon
                       icon={this._getPartiallyRenewableIcons()}
-                      onClick={() => this._togglePartiallyRenewable()}
+                      onClick={this._togglePartiallyRenewable}
                       size="2x"
                     /> <span className="value">Yes</span>
                   </div>
@@ -222,7 +211,7 @@ class FuelCodeFormDetails extends Component {
             </div>
             }
 
-            {this._showPartiallyRenewableCheckbox() && this.state.showPartiallyRenewable &&
+            {this._showPartiallyRenewableCheckbox() && this.props.fields.partiallyRenewable &&
             <div className="col-sm-6 col-lg-4">
               <div className="form-group">
                 <label htmlFor="renewable-percentage">Percentage of Part 2 fuel that is renewable (%):
@@ -460,6 +449,7 @@ FuelCodeFormDetails.propTypes = {
     fuel: PropTypes.string,
     fuelCode: PropTypes.string,
     fuelTransportMode: PropTypes.arrayOf(PropTypes.string),
+    partiallyRenewable: PropTypes.bool,
     renewablePercentage: PropTypes.string
   }).isRequired,
   approvedFuels: PropTypes.arrayOf(PropTypes.shape()).isRequired,
