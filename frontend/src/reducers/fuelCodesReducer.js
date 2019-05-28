@@ -34,6 +34,40 @@ const fuelCode = (state = {
   }
 };
 
+const latestFuelCode = (state = {
+  item: {},
+  isFetching: false,
+  success: false,
+  errors: {}
+}, action) => {
+  switch (action.type) {
+    case ActionTypes.GET_LATEST_FUEL_CODE:
+      return {
+        ...state,
+        isFetching: true,
+        item: {},
+        success: false
+      };
+    case ActionTypes.RECEIVE_LATEST_FUEL_CODE:
+      return {
+        ...state,
+        errors: {},
+        isFetching: false,
+        item: action.data,
+        success: true
+      };
+    case ActionTypes.ERROR:
+      return {
+        ...state,
+        errors: action.errorMessage,
+        isFetching: false,
+        success: false
+      };
+    default:
+      return state;
+  }
+};
+
 const fuelCodes = (state = {
   items: [],
   isFetching: false,
@@ -66,4 +100,4 @@ const fuelCodes = (state = {
   }
 };
 
-export { fuelCode, fuelCodes };
+export { fuelCode, fuelCodes, latestFuelCode };
