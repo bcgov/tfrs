@@ -8,10 +8,30 @@ import FontAwesomeIcon from '@fortawesome/react-fontawesome';
 import FuelCodeFormDetails from './FuelCodeFormDetails';
 import history from '../../../app/History';
 import * as Lang from '../../../constants/langEnUs';
+import CallableModal from '../../../app/components/CallableModal';
 import Errors from '../../../app/components/Errors';
 import TooltipWhenDisabled from '../../../app/components/TooltipWhenDisabled';
 
 class FuelCodeForm extends Component {
+  constructor (props) {
+    super(props);
+
+    this.state = {
+      showOverlapModal: false
+    };
+
+    this._closeModal = this._closeModal.bind(this);
+    this._getEffectiveDatesStatus = this._getEffectiveDatesStatus.bind(this);
+    this._openOverlapModal = this._openOverlapModal.bind(this);
+    this._validateEffectiveDates = this._validateEffectiveDates.bind(this);
+  }
+
+  _closeModal () {
+    this.setState({
+      showOverlapModal: false
+    });
+  }
+
   _getValidationMessagesForDraft () {
     const validationMessage = [];
 
@@ -84,9 +104,36 @@ class FuelCodeForm extends Component {
     return validationMessage;
   }
 
+  _getEffectiveDatesStatus () {
+    return this.props.latestFuelCode.success &&
+    ((this.props.latestFuelCode.item.effectiveDate <= this.props.fields.effectiveDate &&
+    this.props.latestFuelCode.item.expiryDate >= this.props.fields.effectiveDate) ||
+    (this.props.latestFuelCode.item.effectiveDate <= this.props.fields.expiryDate &&
+    this.props.latestFuelCode.item.effectiveDate >= this.props.fields.effectiveDate));
+  }
+
+  _openOverlapModal () {
+    this.setState({
+      showOverlapModal: true
+    });
+  }
+
+  _validateEffectiveDates () {
+    const fuelCode = this.props.fields.fuelCode.split('.');
+
+    if (fuelCode.length > 0) {
+      this.props.getLatestFuelCode({
+        fuel_code: 'BCLCF',
+        fuel_code_version: fuelCode[0]
+      }).then((response) => {
+        this._openOverlapModal();
+      });
+    }
+  }
+
   render () {
-    return (
-      <div className="page-admin-fuel-code">
+    return ([
+      <div className="page-admin-fuel-code" key="form">
         <h1>{this.props.title}</h1>
         <form
           onSubmit={event => this.props.handleSubmit(event)}
@@ -135,9 +182,8 @@ class FuelCodeForm extends Component {
               >
                 <button
                   className="btn btn-primary"
-                  data-target="#confirmSubmit"
-                  data-toggle="modal"
                   disabled={this._getValidationMessagesForApproval().length > 0}
+                  onClick={this._validateEffectiveDates}
                   type="button"
                 >
                   <FontAwesomeIcon icon={this.props.edit ? 'save' : 'plus'} />
@@ -147,15 +193,35 @@ class FuelCodeForm extends Component {
             </div>
           </div>
         </form>
-      </div>
-    );
+      </div>,
+      <CallableModal
+        close={this._closeModal}
+        handleSubmit={(event) => {
+          this.handleSubmit(event, 'Approved');
+        }}
+        id="confirmOverlap"
+        key="confirmOverlap"
+        show={this.state.showOverlapModal}
+      >
+        {this._getEffectiveDatesStatus() &&
+        <div className="alert alert-warning">
+          <p>
+          The effective dates of this fuel code overlap with
+            {` ${this.props.latestFuelCode.item.fuelCode}${this.props.latestFuelCode.item.fuelCodeVersion}.${this.props.latestFuelCode.item.fuelCodeVersionMinor}`} <br />
+          </p>
+        </div>
+        }
+
+        Are you sure you want to add this fuel code?
+      </CallableModal>
+    ]);
   }
 }
 
 FuelCodeForm.defaultProps = {
   edit: false,
   errors: [],
-  handleSelect: null
+  handleSelect: () => {}
 };
 
 FuelCodeForm.propTypes = {
@@ -183,9 +249,14 @@ FuelCodeForm.propTypes = {
     fuelCode: PropTypes.string,
     fuelTransportMode: PropTypes.arrayOf(PropTypes.string)
   }).isRequired,
+  getLatestFuelCode: PropTypes.func.isRequired,
   handleInputChange: PropTypes.func.isRequired,
   handleSelect: PropTypes.func,
   handleSubmit: PropTypes.func.isRequired,
+  latestFuelCode: PropTypes.shape({
+    item: PropTypes.shape(),
+    success: PropTypes.bool
+  }).isRequired,
   approvedFuels: PropTypes.arrayOf(PropTypes.shape()).isRequired,
   transportModes: PropTypes.arrayOf(PropTypes.shape()).isRequired,
   title: PropTypes.string.isRequired
