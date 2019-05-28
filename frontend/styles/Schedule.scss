@@ -27,10 +27,22 @@
         &.editing {
           padding: 0;
 
+          > div {
+            height: 100%;
+          }
+
           input, select {
+            border: 2px solid $selected-cell;
+            border-radius: 0;
             height: 100%;
             padding: 0.5rem 1rem;
             width: 100%;
+          }
+
+          select {
+            background-color: white;
+            border: 0;
+            outline: 2px solid $selected-cell;
           }
         }
 

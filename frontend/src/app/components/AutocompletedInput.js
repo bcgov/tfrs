@@ -52,7 +52,7 @@ class AutocompletedInput extends Component {
     }
   }
 
-  _onSelect (value) {
+  _onSelect (value, item) {
     // pass it up to the container, faking an event
     this.props.handleInputChange({
       target: {
@@ -66,39 +66,21 @@ class AutocompletedInput extends Component {
     });
 
     if (this.props.onSelectEvent) {
-      this.props.onSelectEvent();
+      this.props.onSelectEvent(item);
     }
   }
 
   render () {
     return (
       <Autocomplete
-        getItemValue={item => (item)}
+        getItemValue={this.props.getItemValue}
         inputProps={this.props.inputProps}
         items={this.state.items}
         onChange={this._onChange}
         onSelect={this._onSelect}
-        renderItem={(item, isHighlighted) => (
-          <div
-            className={`autocomplete-item ${isHighlighted ? 'highlight' : ''}`}
-            key={item}
-          >
-            {item}
-          </div>
-        )}
-        renderMenu={(items, value, style) => (
-          <div
-            className={items.length > 0 ? `autocomplete-menu` : ''}
-            style={{
-              ...style,
-              position: 'fixed',
-              zIndex: '400'
-            }}
-          >
-            {items}
-          </div>
-        )}
-        ref={(input) => { this.props.handleRef(input); }}
+        renderItem={this.props.renderItem}
+        renderMenu={this.props.renderMenu}
+        ref={(input) => { this.props.handleRef && this.props.handleRef(input); }}
         renderInput={props => (
           <input
             type="text"
@@ -117,10 +99,31 @@ class AutocompletedInput extends Component {
 
 AutocompletedInput.defaultProps = {
   cache: true,
+  getItemValue: item => (item),
   handleRef: null,
   inputProps: {},
   integersOnly: false,
   onSelectEvent: null,
+  renderItem: (item, isHighlighted) => (
+    <div
+      className={`autocomplete-item ${isHighlighted ? 'highlight' : ''}`}
+      key={item}
+    >
+      {item}
+    </div>
+  ),
+  renderMenu: (items, value, style) => (
+    <div
+      className={items.length > 0 ? `autocomplete-menu` : ''}
+      style={{
+        ...style,
+        position: 'fixed',
+        zIndex: '400'
+      }}
+    >
+      {items}
+    </div>
+  ),
   value: ''
 };
 
@@ -128,11 +131,14 @@ AutocompletedInput.propTypes = {
   autocompleteFieldName: PropTypes.string.isRequired,
   cache: PropTypes.bool,
   cacheSerial: PropTypes.number.isRequired,
+  getItemValue: PropTypes.func,
   handleInputChange: PropTypes.func.isRequired,
   handleRef: PropTypes.func,
   inputProps: PropTypes.shape(),
   integersOnly: PropTypes.bool,
   onSelectEvent: PropTypes.func,
+  renderItem: PropTypes.func,
+  renderMenu: PropTypes.func,
   value: PropTypes.any
 };
 

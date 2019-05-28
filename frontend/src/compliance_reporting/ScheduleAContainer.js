@@ -9,8 +9,8 @@ import PropTypes from 'prop-types';
 
 import Loading from '../app/components/Loading';
 import Modal from '../app/components/Modal';
-import Autocomplete from './components/Autocomplete';
 import Input from './components/Input';
+import OrganizationAutocomplete from './components/OrganizationAutocomplete';
 import Select from './components/Select';
 import SchedulesPage from './components/SchedulesPage';
 import ScheduleTabs from './components/ScheduleTabs';
@@ -87,7 +87,7 @@ class ScheduleAContainer extends Component {
       }, {
         attributes: {},
         className: 'text',
-        dataEditor: Autocomplete
+        dataEditor: OrganizationAutocomplete
       }, {
         className: 'text'
         // dataEditor: AutoSuggest
@@ -155,7 +155,7 @@ class ScheduleAContainer extends Component {
     for (let x = 1; x < grid.length; x += 1) {
       let value = Number(grid[x][SCHEDULE_A.QUANTITY].value);
       const fuelClass = grid[x][SCHEDULE_A.FUEL_CLASS].value;
-      const transferType = grid[x][SCHEDULE_A.TRANSFER_TYPE].value; 
+      const transferType = grid[x][SCHEDULE_A.TRANSFER_TYPE].value;
 
       if (Number.isNaN(value)) {
         value = 0;
@@ -199,6 +199,15 @@ class ScheduleAContainer extends Component {
           ...grid[row][col],
           value: getQuantity(value)
         };
+      }
+
+      if (col === SCHEDULE_A.LEGAL_NAME) {
+        if (cell.attributes.address) {
+          grid[row][SCHEDULE_A.POSTAL_ADDRESS] = {
+            ...grid[row][SCHEDULE_A.POSTAL_ADDRESS],
+            value: `${cell.attributes.address.address_line_1} ${cell.attributes.address.address_line_2} ${cell.attributes.address.address_line_3} ${cell.attributes.address.city}, ${cell.attributes.address.state}`
+          };
+        }
       }
     });
 
