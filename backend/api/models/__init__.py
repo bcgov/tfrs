@@ -65,5 +65,7 @@ from . import EnergyDensity
 from . import PetroleumCarbonIntensity
 from . import PetroleumCarbonIntensityCategory
 from . import ExpectedUse
+from . import ComplianceReport
+from . import ComplianceReportSchedules
 
 patch_fields()
