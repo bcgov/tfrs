@@ -1,17 +1,9 @@
 {
-    "apiVersion": "apps.openshift.io/v1",
-    "kind": "DeploymentConfig",
+    "kind": "Template",
+    "apiVersion": "template.openshift.io/v1",
     "metadata": {
-        "annotations": {
-            "openshift.io/generated-by": "OpenShiftWebConsole"
-        },
-        "creationTimestamp": null,
-        "generation": 1,
-        "labels": {
-            "app": "celery"
-        },
         "name": "celery-dc",
-        "selfLink": "/apis/apps.openshift.io/v1/namespaces/mem-tfrs-dev/deploymentconfigs/celery"
+        "creationTimestamp": null
     },
     "parameters": [
         {
@@ -25,177 +17,188 @@
             "displayName": "The source image stream name",
             "description": "The image stream could trigger the deployment, valid values: celery-develop and celery",
             "required": true
-        },
-        {
-            "name": "SOURCE_IS_TAG",
-            "displayName": "The source image stream tag name",
-            "description": "The source image stream plus tag could trigger the deployment, valid values: dev, test and prod",
-            "required": true
         }
     ],
-    "spec": {
-        "replicas": 1,
-        "revisionHistoryLimit": 10,
-        "selector": {
-            "app": "celery",
-            "deploymentconfig": "celery"
-        },
-        "strategy": {
-            "activeDeadlineSeconds": 21600,
-            "recreateParams": {
-                "timeoutSeconds": 600
-            },
-            "resources": {},
-            "type": "Recreate"
-        },
-        "template": {
+    "objects": [
+        {
+            "kind": "DeploymentConfig",
+            "apiVersion": "apps.openshift.io/v1",
             "metadata": {
-                "annotations": {
-                    "openshift.io/generated-by": "OpenShiftWebConsole"
-                },
+                "name": "celery",
                 "creationTimestamp": null,
                 "labels": {
-                    "app": "celery",
-                    "deploymentconfig": "celery"
+                    "app": "celery"
+                },
+                "annotations": {
+                    "openshift.io/generated-by": "OpenShiftWebConsole"
                 }
             },
             "spec": {
-                "containers": [
+                "strategy": {
+                    "type": "Recreate",
+                    "recreateParams": {
+                        "timeoutSeconds": 600
+                    },
+                    "resources": {},
+                    "activeDeadlineSeconds": 21600
+                },
+                "triggers": [
                     {
-                        "env": [
-                            {
-                                "name": "RABBITMQ_VHOST",
-                                "value": "/tfrs"
+                        "type": "ImageChange",
+                        "imageChangeParams": {
+                            "automatic": true,
+                            "containerNames": [
+                                "celery"
+                            ],
+                            "from": {
+                                "kind": "ImageStreamTag",
+                                "namespace": "mem-tfrs-tools",
+                                "name": "${SOURCE_IS_NAME}:${ENV_NAME}"
                             },
-                            {
-                                "name": "RABBITMQ_USER",
-                                "value": "tfrs"
-                            },
-                            {
-                                "name": "RABBITMQ_PASSWORD",
-                                "valueFrom": {
-                                    "secretKeyRef": {
-                                        "key": "TFRS_PASSWORD",
-                                        "name": "rabbitmq-tfrs"
-                                    }
-                                }
-                            },
-                            {
-                                "name": "RABBITMQ_HOST",
-                                "value": "rabbit.mem-tfrs-${ENV_NAME}.svc"
-                            },
-                            {
-                                "name": "RABBITMQ_PORT",
-                                "value": "5672"
-                            },
-                            {
-                                "name": "DATABASE_SERVICE_NAME",
-                                "value": "postgresql"
-                            },
-                            {
-                                "name": "DATABASE_ENGINE",
-                                "value": "postgresql"
-                            },
-                            {
-                                "name": "DATABASE_NAME",
-                                "value": "tfrs"
-                            },
-                            {
-                                "name": "DATABASE_USER",
-                                "valueFrom": {
-                                    "secretKeyRef": {
-                                        "key": "DATABASE_USER",
-                                        "name": "tfrs-postgresql"
-                                    }
-                                }
-                            },
-                            {
-                                "name": "DATABASE_PASSWORD",
-                                "valueFrom": {
-                                    "secretKeyRef": {
-                                        "key": "DATABASE_PASSWORD",
-                                        "name": "tfrs-postgresql"
-                                    }
-                                }
-                            },
-                            {
-                                "name": "MINIO_ENDPOINT",
-                                "value": "docs-mem-tfrs-${ENV_NAME}.pathfinder.gov.bc.ca:443"
-                            },
-                            {
-                                "name": "MINIO_USE_SSL",
-                                "value": "true"
-                            },
-                            {
-                                "name": "MINIO_ACCESS_KEY",
-                                "valueFrom": {
-                                    "secretKeyRef": {
-                                        "key": "MINIO_ACCESS_KEY",
-                                        "name": "tfrs-minio-secret"
-                                    }
-                                }
-                            },
-                            {
-                                "name": "MINIO_SECRET_KEY",
-                                "valueFrom": {
-                                    "secretKeyRef": {
-                                        "key": "MINIO_SECRET_KEY",
-                                        "name": "tfrs-minio-secret"
-                                    }
-                                }
-                            },
-                            {
-                                "name": "MINIO_BUCKET_NAME",
-                                "value": "tfrs"
-                            }
-                        ],
-                        "image": "",
-                        "imagePullPolicy": "Always",
-                        "name": "celery",
-                        "resources": {
-                            "limits": {
-                                "cpu": "250m",
-                                "memory": "3Gi"
-                            }
-                        },
-                        "terminationMessagePath": "/dev/termination-log",
-                        "terminationMessagePolicy": "File"
+                            "lastTriggeredImage": ""
+                        }
+                    },
+                    {
+                        "type": "ConfigChange"
                     }
                 ],
-                "dnsPolicy": "ClusterFirst",
-                "restartPolicy": "Always",
-                "schedulerName": "default-scheduler",
-                "securityContext": {},
-                "terminationGracePeriodSeconds": 30
-            }
-        },
-        "test": false,
-        "triggers": [
-            {
-                "imageChangeParams": {
-                    "automatic": true,
-                    "containerNames": [
-                        "celery"
-                    ],
-                    "from": {
-                        "kind": "ImageStreamTag",
-                        "name": "${SOURCE_IS_NAME}:${SOURCE_IS_TAG}",
-                        "namespace": "mem-tfrs-tools"
-                    }
+                "replicas": 1,
+                "revisionHistoryLimit": 10,
+                "test": false,
+                "selector": {
+                    "app": "celery",
+                    "deploymentconfig": "celery"
                 },
-                "type": "ImageChange"
+                "template": {
+                    "metadata": {
+                        "creationTimestamp": null,
+                        "labels": {
+                            "app": "celery",
+                            "deploymentconfig": "celery"
+                        },
+                        "annotations": {
+                            "openshift.io/generated-by": "OpenShiftWebConsole"
+                        }
+                    },
+                    "spec": {
+                        "containers": [
+                            {
+                                "name": "celery",
+                                "image": "",
+                                "env": [
+                                    {
+                                        "name": "RABBITMQ_VHOST",
+                                        "value": "/tfrs"
+                                    },
+                                    {
+                                        "name": "RABBITMQ_USER",
+                                        "value": "tfrs"
+                                    },
+                                    {
+                                        "name": "RABBITMQ_PASSWORD",
+                                        "valueFrom": {
+                                            "secretKeyRef": {
+                                                "name": "rabbitmq-tfrs",
+                                                "key": "TFRS_PASSWORD"
+                                            }
+                                        }
+                                    },
+                                    {
+                                        "name": "RABBITMQ_HOST",
+                                        "value": "rabbit.mem-tfrs-${ENV_NAME}.svc"
+                                    },
+                                    {
+                                        "name": "RABBITMQ_PORT",
+                                        "value": "5672"
+                                    },
+                                    {
+                                        "name": "DATABASE_SERVICE_NAME",
+                                        "value": "postgresql"
+                                    },
+                                    {
+                                        "name": "DATABASE_ENGINE",
+                                        "value": "postgresql"
+                                    },
+                                    {
+                                        "name": "DATABASE_NAME",
+                                        "value": "tfrs"
+                                    },
+                                    {
+                                        "name": "DATABASE_USER",
+                                        "valueFrom": {
+                                            "secretKeyRef": {
+                                                "name": "tfrs-postgresql",
+                                                "key": "DATABASE_USER"
+                                            }
+                                        }
+                                    },
+                                    {
+                                        "name": "DATABASE_PASSWORD",
+                                        "valueFrom": {
+                                            "secretKeyRef": {
+                                                "name": "tfrs-postgresql",
+                                                "key": "DATABASE_PASSWORD"
+                                            }
+                                        }
+                                    },
+                                    {
+                                        "name": "MINIO_ENDPOINT",
+                                        "value": "docs-mem-tfrs-${ENV_NAME}.pathfinder.gov.bc.ca:443"
+                                    },
+                                    {
+                                        "name": "MINIO_USE_SSL",
+                                        "value": "true"
+                                    },
+                                    {
+                                        "name": "MINIO_ACCESS_KEY",
+                                        "valueFrom": {
+                                            "secretKeyRef": {
+                                                "name": "tfrs-minio-secret",
+                                                "key": "MINIO_ACCESS_KEY"
+                                            }
+                                        }
+                                    },
+                                    {
+                                        "name": "MINIO_SECRET_KEY",
+                                        "valueFrom": {
+                                            "secretKeyRef": {
+                                                "name": "tfrs-minio-secret",
+                                                "key": "MINIO_SECRET_KEY"
+                                            }
+                                        }
+                                    },
+                                    {
+                                        "name": "MINIO_BUCKET_NAME",
+                                        "value": "tfrs"
+                                    }
+                                ],
+                                "resources": {
+                                    "limits": {
+                                        "cpu": "250m",
+                                        "memory": "3Gi"
+                                    }
+                                },
+                                "terminationMessagePath": "/dev/termination-log",
+                                "terminationMessagePolicy": "File",
+                                "imagePullPolicy": "Always"
+                            }
+                        ],
+                        "restartPolicy": "Always",
+                        "terminationGracePeriodSeconds": 30,
+                        "dnsPolicy": "ClusterFirst",
+                        "securityContext": {},
+                        "schedulerName": "default-scheduler"
+                    }
+                }
             },
-            {
-                "type": "ConfigChange"
+            "status": {
+                "latestVersion": 0,
+                "observedGeneration": 0,
+                "replicas": 0,
+                "updatedReplicas": 0,
+                "availableReplicas": 0,
+                "unavailableReplicas": 0
             }
-        ]
-    },
-    "status": {
-        "availableReplicas": 0,
-        "latestVersion": 0,
-        "observedGeneration": 0,
-        "replicas": 0,
-        "unavailableReplicas": 0,
-        "updatedReplicas": 0
-    }
+        }
+    ]
 }
