@@ -65,5 +65,6 @@ from . import EnergyDensity
 from . import PetroleumCarbonIntensity
 from . import PetroleumCarbonIntensityCategory
 from . import ExpectedUse
+from . import NotionalTransferType
 
 patch_fields()

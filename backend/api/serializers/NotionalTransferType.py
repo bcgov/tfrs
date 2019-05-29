@@ -22,13 +22,13 @@
 """
 from rest_framework import serializers
 
-from api.models.ExpectedUse import ExpectedUse
+from api.models.NotionalTransferType import NotionalTransferType
 
 
-class ExpectedUseSerializer(serializers.ModelSerializer):
+class NotionalTransferTypeSerializer(serializers.ModelSerializer):
     """
-    Basic Serializer for Expected Use
+    Basic Serializer for Notional Transfer Type
     """
     class Meta:
-        model = ExpectedUse
-        fields = ('id', 'description')
+        model = NotionalTransferType
+        fields = ('id', 'the_type')
