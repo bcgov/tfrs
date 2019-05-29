@@ -38,7 +38,8 @@ class TestReferenceData(BaseTestCase):
             '/api/documents/categories',
             '/api/fuel_codes/statuses',
             '/api/fuel_codes/transport_modes',
-            '/api/fuel_codes/approved_fuels'
+            '/api/fuel_codes/approved_fuels',
+            '/api/compliance_reports/types'
         ]
 
         for client_name, client in self.clients.items():
