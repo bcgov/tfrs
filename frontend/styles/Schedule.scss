@@ -8,11 +8,8 @@
     border: 1px solid $border-grey;
     border-radius: 0.5rem;
     box-shadow: 2px 2px 7px rgba(0, 0, 0, .3);
-    bottom: 7rem;
     font-size: 1.5rem;
     padding: 1rem;
-    position: -webkit-sticky;
-    position: sticky;
     text-align: right;
     margin-left: auto;
   }
@@ -78,6 +75,37 @@
     }
   }
 
+  .schedule-totals {
+    background-color: $background-grey;
+    border-radius: 0.5rem;
+    border: 1px solid $border-grey;
+    bottom: 8rem;
+    box-shadow: 2px 2px 7px rgba(0, 0, 0, .3);
+    cursor: move;
+    font-size: 1.5rem;
+    padding: 1rem;
+    position: absolute;
+    right: 0;
+    width: 30rem;
+    z-index: 2000;
+  
+    h2 {
+      font-weight: bold;
+    }
+  
+    .row {
+      margin: 1rem 0;
+    }
+  
+    .value {
+      overflow: hidden;
+      padding-left: 0;
+      text-align: right;
+      text-overflow: ellipsis;
+      white-space: pre-wrap;
+    }
+  }
+
   .sheet-buttons {
     margin-bottom: 5rem;
     text-align: right;
@@ -93,40 +121,14 @@
       float: left;
     }
   }
+
+  .sticky {
+    bottom: 7rem;
+    position: sticky;
+  }
 }
 
 .schedule-tabs {
   margin: 0 -3rem 2rem;
   padding: 0 3rem;
-}
-
-.schedule-totals {
-  background-color: $background-grey;
-  border: 1px solid $border-grey;
-  border-radius: 0.5rem;
-  box-shadow: 2px 2px 7px rgba(0, 0, 0, .3);
-  bottom: 15rem;
-  cursor: move;
-  font-size: 1.5rem;
-  padding: 1rem;
-  position: fixed;
-  right: 3rem;
-  width: 30rem;
-  z-index: 2000;
-
-  h2 {
-    font-weight: bold;
-  }
-
-  .row {
-    margin: 1rem 0;
-  }
-
-  .value {
-    overflow: hidden;
-    padding-left: 0;
-    text-align: right;
-    text-overflow: ellipsis;
-    white-space: pre-wrap;
-  }
 }

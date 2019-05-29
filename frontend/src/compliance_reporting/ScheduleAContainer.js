@@ -7,6 +7,8 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
+import { fuelClasses } from '../actions/fuelClasses';
+import { notionalTransferTypes } from '../actions/notionalTransferTypes';
 import Loading from '../app/components/Loading';
 import Modal from '../app/components/Modal';
 import Input from './components/Input';
@@ -14,7 +16,6 @@ import OrganizationAutocomplete from './components/OrganizationAutocomplete';
 import Select from './components/Select';
 import SchedulesPage from './components/SchedulesPage';
 import ScheduleTabs from './components/ScheduleTabs';
-import ScheduleATotals from './components/ScheduleATotals';
 import { getQuantity } from '../utils/functions';
 import { SCHEDULE_A } from '../constants/schedules/scheduleColumns';
 
@@ -74,7 +75,9 @@ class ScheduleAContainer extends Component {
   }
 
   componentDidMount () {
-    this._addRow(2);
+    this.props.loadFuelClasses();
+    this.props.loadNotionalTransferTypes();
+    this._addRow(5);
   }
 
   _addRow (numberOfRows = 1) {
@@ -94,13 +97,8 @@ class ScheduleAContainer extends Component {
       }, {
         className: 'text',
         dataEditor: Select,
-        getOptions: () => [{
-          fuelClass: 'Diesel',
-          id: 3
-        }, {
-          fuelClass: 'Gasoline',
-          id: 4
-        }],
+        getOptions: () => !this.props.fuelClasses.isFetching &&
+          this.props.fuelClasses.items,
         mapping: {
           key: 'id',
           value: 'fuelClass'
@@ -108,14 +106,11 @@ class ScheduleAContainer extends Component {
       }, {
         className: 'text',
         dataEditor: Select,
-        getOptions: () => [{
-          value: 'Received'
-        }, {
-          value: 'Transferred'
-        }],
+        getOptions: () => !this.props.notionalTransferTypes.isFetching &&
+          this.props.notionalTransferTypes.items,
         mapping: {
-          key: 'value',
-          value: 'value'
+          key: 'id',
+          value: 'theType'
         }
       }, {
         attributes: {
@@ -249,7 +244,9 @@ class ScheduleAContainer extends Component {
         edit={this.edit}
         handleCellsChanged={this._handleCellsChanged}
         key="schedules"
+        scheduleType="A"
         title="Schedule A - Notional Transfers of Renewable Fuel"
+        totals={this.state.totals}
       >
         <p>
           Under section 5.1 of the Act, a fuel supplier may transfer renewable fuel supplied in
@@ -266,10 +263,6 @@ class ScheduleAContainer extends Component {
           notionally received by you from another supplier listed in the Schedule.
         </p>
       </SchedulesPage>,
-      <ScheduleATotals
-        key="totals"
-        totals={this.state.totals}
-      />,
       <Modal
         handleSubmit={event => this._handleSubmit(event)}
         id="confirmSubmit"
@@ -285,15 +278,21 @@ ScheduleAContainer.defaultProps = {
 };
 
 ScheduleAContainer.propTypes = {
-  expectedUses: PropTypes.shape({
+  fuelClasses: PropTypes.shape({
     isFetching: PropTypes.bool,
     items: PropTypes.arrayOf(PropTypes.shape())
   }).isRequired,
+  loadFuelClasses: PropTypes.func.isRequired,
+  loadNotionalTransferTypes: PropTypes.func.isRequired,
   match: PropTypes.shape({
     params: PropTypes.shape({
       id: PropTypes.string,
       period: PropTypes.string
     }).isRequired
+  }).isRequired,
+  notionalTransferTypes: PropTypes.shape({
+    isFetching: PropTypes.bool,
+    items: PropTypes.arrayOf(PropTypes.shape())
   }).isRequired,
   referenceData: PropTypes.shape({
     approvedFuels: PropTypes.arrayOf(PropTypes.shape)
@@ -301,9 +300,13 @@ ScheduleAContainer.propTypes = {
 };
 
 const mapStateToProps = state => ({
-  expectedUses: {
-    isFetching: state.rootReducer.expectedUses.isFinding,
-    items: state.rootReducer.expectedUses.items
+  fuelClasses: {
+    isFetching: state.rootReducer.fuelClasses.isFinding,
+    items: state.rootReducer.fuelClasses.items
+  },
+  notionalTransferTypes: {
+    isFetching: state.rootReducer.notionalTransferTypes.isFinding,
+    items: state.rootReducer.notionalTransferTypes.items
   },
   referenceData: {
     approvedFuels: state.rootReducer.referenceData.data.approvedFuels
@@ -311,6 +314,8 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = {
+  loadFuelClasses: fuelClasses.find,
+  loadNotionalTransferTypes: notionalTransferTypes.find
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(ScheduleAContainer);

@@ -78,7 +78,7 @@ class ScheduleCContainer extends Component {
 
   componentDidMount () {
     this.props.loadExpectedUses();
-    this._addRow(2);
+    this._addRow(5);
   }
 
   _addRow (numberOfRows = 1) {
@@ -277,6 +277,7 @@ class ScheduleCContainer extends Component {
         edit={this.edit}
         handleCellsChanged={this._handleCellsChanged}
         key="schedules"
+        scheduleType="C"
         title="Schedule C - Fuels used for other purposes"
       >
         <p>
