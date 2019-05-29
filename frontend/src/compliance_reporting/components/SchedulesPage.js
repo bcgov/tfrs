@@ -10,6 +10,8 @@ const SchedulesPage = props => (
   <div className="page_schedule">
     <h1>{props.title}</h1>
 
+    {props.children}
+
     <ReactDataSheet
       className="schedule"
       data={props.data}
@@ -61,6 +63,10 @@ SchedulesPage.defaultProps = {
 
 SchedulesPage.propTypes = {
   addRow: PropTypes.func.isRequired,
+  children: PropTypes.oneOfType([
+    PropTypes.arrayOf(PropTypes.node),
+    PropTypes.node
+  ]).isRequired,
   data: PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.shape())).isRequired,
   edit: PropTypes.bool.isRequired,
   handleCellsChanged: PropTypes.func.isRequired,

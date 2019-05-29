@@ -3,28 +3,28 @@
  * All data handling & manipulation should be handled here.
  */
 
-import React, {Component} from 'react';
-import {connect} from 'react-redux';
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
+import { Tab, Tabs } from 'react-bootstrap';
 
-import {carbonIntensities} from '../../actions/carbonIntensities';
+import { carbonIntensities } from '../../actions/carbonIntensities';
 import Loading from '../../app/components/Loading';
 import CarbonIntensityLimitDetails from './components/CarbonIntensityLimitDetails';
-import PastAndFutureValuesTable from "./components/PastAndFutureValuesTable";
-import {Tab, Tabs} from "react-bootstrap";
+import PastAndFutureValuesTable from './components/PastAndFutureValuesTable';
 
 class CarbonIntensityLimitDetailContainer extends Component {
-  constructor(props) {
+  constructor (props) {
     super(props);
     this.state = {};
   }
 
-  componentDidMount() {
+  componentDidMount () {
     this.props.getCarbonIntensityLimit(this.props.match.params.id);
   }
 
-  render() {
-    const {item, isFetching, success} = this.props.carbonIntensityLimit;
+  render () {
+    const { item, isFetching, success } = this.props.carbonIntensityLimit;
 
     if (success && !isFetching && item) {
       return (
@@ -48,7 +48,7 @@ class CarbonIntensityLimitDetailContainer extends Component {
       );
     }
 
-    return <Loading/>;
+    return <Loading />;
   }
 }
 

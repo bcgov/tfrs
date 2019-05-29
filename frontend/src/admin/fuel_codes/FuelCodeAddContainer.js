@@ -46,6 +46,7 @@ class FuelCodeAddContainer extends Component {
           fuel: '',
           fuelCode: '',
           fuelTransportMode: [],
+          partiallyRenewable: false,
           renewablePercentage: ''
         },
         showModal: false
@@ -106,6 +107,11 @@ class FuelCodeAddContainer extends Component {
         value = formatFacilityNameplate(value);
       }
 
+      // clear out the renewable percentage when it gets toggled off
+      if (name === 'partiallyRenewable' && value === false) {
+        fieldState.renewablePercentage = '';
+      }
+
       fieldState[name] = value;
       this.setState({
         fields: fieldState
@@ -130,13 +136,17 @@ class FuelCodeAddContainer extends Component {
           if ([
             'company', 'facilityLocation', 'facilityNameplate', 'feedstock',
             'feedstockLocation', 'feedstockMisc', 'feedstockTransportMode',
-            'fuel', 'fuelTransportMode'
+            'fuel', 'fuelTransportMode', 'renewablePercentage'
           ].includes(prop[0])) {
             const name = prop[0];
             let value = prop[1];
 
             if (name === 'facilityNameplate') {
               value = formatFacilityNameplate(value);
+            }
+
+            if (name === 'renewablePercentage' && value !== '') {
+              fieldState.partiallyRenewable = true;
             }
 
             fieldState[name] = value;
