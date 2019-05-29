@@ -28,10 +28,10 @@ def prepareBuildBackend() {
             timeout(30) {
                 script {
                     openshift.withProject("mem-tfrs-tools") {
-                        def scanHandlerJson = openshift.process(readFile(file:'openshift/templates/components/scan-handler/scan-handler-bc.json'), "-p", "TFRS_RELEASE_TAG=${tfrsRelease}", "SCAN_HANDLER_IS_NAME=scan-handler-develop")
-                        def sscanHandlerBuild = openshift.apply(scanHandlerJson)
-                        def scanHandlerSelector = openshift.selector("bc", "scan-handler-develop")
-                        scanHandlerSelector.startBuild("--wait")
+                        def tfrsJson = openshift.process(readFile(file:'openshift/templates/components/backend/tfrs-bc.json'), "-p", "TFRS_RELEASE_TAG=${tfrsRelease}", "TFRS_IS_NAME=tfrs-develop")
+                        def tfrsBuild = openshift.apply(tfrsJson)
+                        def tfrsSelector = openshift.selector("bc", "tfrs-develop")
+                        tfrsSelector.startBuild("--wait")
                     } //end of openshift.withProject
                 } //end of script
             } //end of timeout
