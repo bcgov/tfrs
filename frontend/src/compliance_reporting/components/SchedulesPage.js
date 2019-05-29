@@ -13,12 +13,14 @@ const SchedulesPage = props => (
 
     {props.children}
 
-    <ReactDataSheet
-      className="schedule"
-      data={props.data}
-      onCellsChanged={props.handleCellsChanged}
-      valueRenderer={cell => cell.value}
-    />
+    <div className="scrollable">
+      <ReactDataSheet
+        className={`schedule ${props.scheduleType}`}
+        data={props.data}
+        onCellsChanged={props.handleCellsChanged}
+        valueRenderer={cell => cell.value}
+      />
+    </div>
 
     <div className="sheet-buttons">
       <div className="btn-group">
@@ -53,7 +55,7 @@ const SchedulesPage = props => (
     </div>
 
     <div className="sticky">
-      {props.scheduleType === 'A' &&
+      {props.scheduleType === 'schedule-a' &&
         <ScheduleATotals
           totals={props.totals}
         />
@@ -68,6 +70,7 @@ const SchedulesPage = props => (
 );
 
 SchedulesPage.defaultProps = {
+  children: null,
   totals: {}
 };
 
@@ -76,11 +79,11 @@ SchedulesPage.propTypes = {
   children: PropTypes.oneOfType([
     PropTypes.arrayOf(PropTypes.node),
     PropTypes.node
-  ]).isRequired,
+  ]),
   data: PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.shape())).isRequired,
   edit: PropTypes.bool.isRequired,
   handleCellsChanged: PropTypes.func.isRequired,
-  scheduleType: PropTypes.oneOf(['A', 'B', 'C']).isRequired,
+  scheduleType: PropTypes.oneOf(['schedule-a', 'schedule-b', 'schedule-c']).isRequired,
   title: PropTypes.string.isRequired,
   totals: PropTypes.shape()
 };

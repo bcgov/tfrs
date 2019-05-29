@@ -16,8 +16,11 @@
 
   .data-grid-container {
     display: block;
+    min-width: 1200px;
   
     .schedule {
+      overflow-x: auto;
+      table-layout: auto;
       width: 100%;
     
       &.data-grid .cell {
@@ -75,6 +78,11 @@
     }
   }
 
+  .scrollable {
+    overflow-x: auto;
+    width: 100%;
+  }
+
   .schedule-totals {
     background-color: $background-grey;
     border-radius: 0.5rem;
@@ -125,6 +133,113 @@
   .sticky {
     bottom: 7rem;
     position: sticky;
+  }
+}
+
+// columns
+.schedule-a {
+  .address {
+    min-width: 40rem;
+  }
+
+  .fuel-class {
+    min-width: 25rem;
+    width: 25rem;
+  }
+
+  .organization {
+    min-width: 35rem;
+    width: 35rem;
+  }
+
+  .quantity {
+    min-width: 20rem;
+    width: 20rem;
+  }
+
+  .transfer-type {
+    min-width: 25rem;
+    width: 25rem;
+  }
+}
+
+.schedule-b {
+  .credit, .debit {
+    min-width: 10rem;
+  }
+
+  .density {
+    min-width: 12rem;
+    width: 12rem;
+  }
+
+  .fuel-class {
+    min-width: 15rem;
+    width: 15rem;
+  }
+
+  .fuel-code {
+    min-width: 15rem;
+    width: 15rem;
+  }
+
+  .fuel-type {
+    min-width: 15rem;
+    width: 15rem;
+  }
+
+  .quantity {
+    min-width: 15rem;
+    width: 15rem;
+  }
+
+  .provision {
+    min-width: 25rem;
+    width: 25rem;
+  }
+
+  .row-number {
+    width: 5rem;
+  }
+
+  .units {
+    min-width: 10rem;
+    width: 10rem;
+  }
+}
+
+.schedule-c {
+  .expected-use {
+    min-width: 30rem;
+    width: 30rem;
+  }
+
+  .fuel-class {
+    min-width: 25rem;
+    width: 25rem;
+  }
+
+  .fuel-type {
+    min-width: 25rem;
+    width: 25rem;
+  }
+
+  .other {
+    min-width: 30rem;
+  }
+
+  .quantity {
+    min-width: 25rem;
+    width: 25rem;
+  }
+
+  .row-number {
+    width: 5rem;
+  }
+
+  .units {
+    min-width: 20rem;
+    width: 20rem;
   }
 }
 
