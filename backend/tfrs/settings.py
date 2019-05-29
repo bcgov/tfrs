@@ -175,6 +175,11 @@ CREDIT_CALCULATION_API = {
         os.getenv('CREDIT_CALCULATION_API_ENABLED', 'False').lower() in ['true', 1]),
 }
 
+COMPLIANCE_REPORTING_API = {
+    'ENABLED': bool(
+        os.getenv('COMPLIANCE_REPORTING_API_ENABLED', 'False').lower() in ['true', 1]),
+}
+
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.8/howto/static-files/

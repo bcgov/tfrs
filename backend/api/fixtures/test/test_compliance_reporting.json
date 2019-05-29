@@ -1,0 +1,53 @@
+[
+  {
+      "fields": {
+          "status": ["Draft"],
+          "type": ["Compliance Report"],
+          "organization": ["Test Org 1"],
+          "compliance_period": ["2018"]
+      },
+      "model": "api.compliancereport",
+      "pk": 1
+  },
+  {
+    "fields": {
+      "status": ["Submitted"],
+      "type": ["Exclusion Report"],
+      "organization": ["Test Org 1"],
+      "compliance_period": ["2018"]
+    },
+    "model": "api.compliancereport",
+    "pk": 2
+  },
+  {
+    "fields": {
+      "status": ["Draft"],
+      "type": ["Compliance Report"],
+      "organization": ["Test Org 1"],
+      "compliance_period": ["2019"]
+    },
+    "model": "api.compliancereport",
+    "pk": 3
+  },
+  {
+    "fields": {
+      "role": [
+        "ComplianceReporting"
+      ],
+      "user": [
+        "fs_user_1"
+      ]
+    },
+    "model": "api.userrole",
+    "pk": null
+  },
+  {
+    "fields": {
+      "description": "Other",
+      "display_order": 99,
+      "effective_date": "2017-01-01"
+    },
+    "model": "api.expecteduse",
+    "pk": 3
+  }
+]
