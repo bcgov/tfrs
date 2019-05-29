@@ -25,12 +25,13 @@ from rest_framework.routers import DefaultRouter
 
 from api.viewsets.Autocomplete import AutocompleteViewSet
 from api.viewsets.Autosave import AutosaveViewSet
+from api.viewsets.ComplianceReport import ComplianceReportViewSet
 from api.viewsets.Document import DocumentViewSet
 from api.viewsets.DocumentComments import DocumentCommentsViewSet
 from api.viewsets.FuelCode import FuelCodeViewSet
 from api.viewsets.Notification import NotificationViewSet
 from tfrs.settings import DOCUMENTS_API, FUEL_CODES_API, \
-    CREDIT_CALCULATION_API, TESTING
+    CREDIT_CALCULATION_API, TESTING, COMPLIANCE_REPORTING_API
 from .viewsets.CompliancePeriod import CompliancePeriodViewSet
 from .viewsets.CreditTrade import CreditTradeViewSet
 from .viewsets.CreditTradeHistory import CreditTradeHistoryViewSet
@@ -118,6 +119,9 @@ if CREDIT_CALCULATION_API['ENABLED'] or TESTING:
         R'credit_calculation/petroleum_carbon_intensities',
         PetroleumCarbonIntensityViewSet
     )
+
+if COMPLIANCE_REPORTING_API['ENABLED'] or TESTING:
+    ROUTER.register(r'compliance_reports', ComplianceReportViewSet)
 
 urlpatterns = [
     # Swagger documentation
