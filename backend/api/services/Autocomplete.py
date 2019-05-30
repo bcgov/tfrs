@@ -27,6 +27,7 @@ from django.db import connection
 from django.db.models import Max
 
 from api.models.FuelCode import FuelCode
+from .OrganizationAutocomplete import OrganizationAutocomplete
 
 cache = caches['autocomplete']
 
@@ -147,6 +148,7 @@ class Autocomplete:
             'fuel_code', 'facility_location'),
         'fuel_code.fuel_code_version': GetNextIncrement(
             'fuel_code', 'fuel_code_version'),
+        'organization.name': OrganizationAutocomplete()
     }
 
     @staticmethod

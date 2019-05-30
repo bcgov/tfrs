@@ -5,7 +5,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import FontAwesomeIcon from '@fortawesome/react-fontawesome';
 
-import AutocompletedInput from './AutocompletedInput';
+import AutocompletedInput from '../../../app/components/AutocompletedInput';
 import InputWithTooltip from '../../../app/components/InputWithTooltip';
 
 class FuelCodeFormDetails extends Component {

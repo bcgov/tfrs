@@ -44,11 +44,15 @@ from .viewsets.SigningAuthorityConfirmation \
 from .viewsets.User import UserViewSet
 from .viewsets.CreditTradeComments import CreditTradeCommentsViewSet
 
-from .viewsets.CreditCalculation import CarbonIntensityLimitViewSet, \
-    DefaultCarbonIntensityViewSet, EnergyDensityViewSet, \
-    EnergyEffectivenessRatioViewSet, PetroleumCarbonIntensityViewSet
+from .viewsets.CarbonIntensityLimit import CarbonIntensityLimitViewSet
+from .viewsets.DefaultCarbonIntensity import DefaultCarbonIntensityViewSet
+from .viewsets.EnergyDensity import EnergyDensityViewSet
+from .viewsets.EnergyEffectivenessRatio import EnergyEffectivenessRatioViewSet
+from .viewsets.PertroleumCarbonIntensity import PetroleumCarbonIntensityViewSet
 
 from .viewsets.ExpectedUse import ExpectedUseViewSet
+from .viewsets.FuelClass import FuelClassViewSet
+from .viewsets.NotionalTransferType import NotionalTransferTypeViewSet
 
 # Create a router and register our views with it.
 ROUTER = DefaultRouter(trailing_slash=False)
@@ -102,6 +106,14 @@ if CREDIT_CALCULATION_API['ENABLED'] or TESTING:
     ROUTER.register(
         R'credit_calculation/expected_uses',
         ExpectedUseViewSet
+    )
+    ROUTER.register(
+        R'credit_calculation/fuel_classes',
+        FuelClassViewSet
+    )
+    ROUTER.register(
+        R'credit_calculation/notional_transfer_types',
+        NotionalTransferTypeViewSet
     )
     ROUTER.register(
         R'credit_calculation/petroleum_carbon_intensities',
