@@ -1,17 +1,9 @@
 {
-    "apiVersion": "apps.openshift.io/v1",
-    "kind": "DeploymentConfig",
+    "kind": "Template",
+    "apiVersion": "template.openshift.io/v1",
     "metadata": {
-        "annotations": {
-            "description": "Defines how to deploy the application server"
-        },
-        "creationTimestamp": null,
-        "generation": 1,
-        "labels": {
-            "template": "tfrs-app-environment"
-        },
-        "name": "client",
-        "selfLink": "/apis/apps.openshift.io/v1/namespaces/mem-tfrs-dev/deploymentconfigs/client"
+        "name": "client-dc",
+        "creationTimestamp": null
     },
     "parameters": [
         {
@@ -25,159 +17,174 @@
             "displayName": "The source image stream name",
             "description": "The image stream could trigger the deployment, valid values: client-develop and client",
             "required": true
-        },
-        {
-            "name": "SOURCE_IS_TAG",
-            "displayName": "The source image stream tag name",
-            "description": "The source image stream plus tag could trigger the deployment, valid values: dev, test and prod",
-            "required": true
         }
     ],
-    "spec": {
-        "replicas": 1,
-        "revisionHistoryLimit": 10,
-        "selector": {
-            "name": "client"
-        },
-        "strategy": {
-            "activeDeadlineSeconds": 21600,
-            "recreateParams": {
-                "post": {
-                    "execNewPod": {
-                        "command": [
-                            "/bin/sh",
-                            "-c",
-                            "echo \"testing\" \u003e /tmp/app/dist/config/qqq"
-                        ],
-                        "containerName": "client"
-                    },
-                    "failurePolicy": "Abort"
-                },
-                "timeoutSeconds": 600
-            },
-            "resources": {},
-            "type": "Recreate"
-        },
-        "template": {
+    "objects": [
+        {
+            "kind": "DeploymentConfig",
+            "apiVersion": "apps.openshift.io/v1",
             "metadata": {
+                "name": "client",
+                "generation": 876,
                 "creationTimestamp": null,
                 "labels": {
-                    "name": "client"
+                    "template": "tfrs-app-environment"
                 },
-                "name": "client"
+                "annotations": {
+                    "description": "Defines how to deploy the application server"
+                }
             },
             "spec": {
-                "containers": [
+                "strategy": {
+                    "type": "Recreate",
+                    "recreateParams": {
+                        "timeoutSeconds": 600,
+                        "post": {
+                            "failurePolicy": "Abort",
+                            "execNewPod": {
+                                "command": [
+                                    "/bin/sh",
+                                    "-c",
+                                    "echo \"testing\" \u003e /tmp/app/dist/config/qqq"
+                                ],
+                                "containerName": "client"
+                            }
+                        }
+                    },
+                    "resources": {},
+                    "activeDeadlineSeconds": 21600
+                },
+                "triggers": [
                     {
-                        "env": [
-                            {
-                                "name": "RealIpFrom"
+                        "type": "ImageChange",
+                        "imageChangeParams": {
+                            "automatic": true,
+                            "containerNames": [
+                                "client"
+                            ],
+                            "from": {
+                                "kind": "ImageStreamTag",
+                                "namespace": "mem-tfrs-tools",
+                                "name": "${SOURCE_IS_NAME}:${ENV_NAME}"
                             },
-                            {
-                                "name": "AdditionalRealIpFromRules"
-                            },
-                            {
-                                "name": "IpFilterRules"
-                            },
-                            {
-                                "name": "HTTP_BASIC"
-                            }
-                        ],
-                        "image": "",
-                        "imagePullPolicy": "IfNotPresent",
-                        "livenessProbe": {
-                            "failureThreshold": 3,
-                            "httpGet": {
-                                "path": "/",
-                                "port": 8080,
-                                "scheme": "HTTP"
-                            },
-                            "initialDelaySeconds": 20,
-                            "periodSeconds": 10,
-                            "successThreshold": 1,
-                            "timeoutSeconds": 3
-                        },
-                        "name": "client",
-                        "ports": [
-                            {
-                                "containerPort": 3000,
-                                "protocol": "TCP"
-                            }
-                        ],
-                        "readinessProbe": {
-                            "failureThreshold": 3,
-                            "httpGet": {
-                                "path": "/",
-                                "port": 8080,
-                                "scheme": "HTTP"
-                            },
-                            "initialDelaySeconds": 10,
-                            "periodSeconds": 10,
-                            "successThreshold": 1,
-                            "timeoutSeconds": 3
-                        },
-                        "resources": {
-                            "limits": {
-                                "cpu": "500m",
-                                "memory": "1Gi"
-                            },
-                            "requests": {
-                                "memory": "200Mi"
-                            }
-                        },
-                        "terminationMessagePath": "/dev/termination-log",
-                        "terminationMessagePolicy": "File",
-                        "volumeMounts": [
-                            {
-                                "mountPath": "/tmp/app/dist/config",
-                                "name": "keycloak-config-data"
-                            }
-                        ]
+                            "lastTriggeredImage": ""
+                        }
+                    },
+                    {
+                        "type": "ConfigChange"
                     }
                 ],
-                "dnsPolicy": "ClusterFirst",
-                "restartPolicy": "Always",
-                "schedulerName": "default-scheduler",
-                "securityContext": {},
-                "terminationGracePeriodSeconds": 30,
-                "volumes": [
-                    {
-                        "configMap": {
-                            "defaultMode": 420,
-                            "name": "keycloak-config"
-                        },
-                        "name": "keycloak-config-data"
-                    }
-                ]
-            }
-        },
-        "test": false,
-        "triggers": [
-            {
-                "imageChangeParams": {
-                    "automatic": true,
-                    "containerNames": [
-                        "client"
-                    ],
-                    "from": {
-                        "kind": "ImageStreamTag",
-                        "name": "${SOURCE_IS_NAME}:${SOURCE_IS_TAG}",
-                        "namespace": "mem-tfrs-tools"
-                    }
+                "replicas": 1,
+                "test": false,
+                "selector": {
+                    "name": "client"
                 },
-                "type": "ImageChange"
+                "template": {
+                    "metadata": {
+                        "name": "client",
+                        "creationTimestamp": null,
+                        "labels": {
+                            "name": "client"
+                        }
+                    },
+                    "spec": {
+                        "volumes": [
+                            {
+                                "name": "keycloak-config-data",
+                                "configMap": {
+                                    "name": "keycloak-config",
+                                    "defaultMode": 420
+                                }
+                            }
+                        ],
+                        "containers": [
+                            {
+                                "name": "client",
+                                "image": "",
+                                "ports": [
+                                    {
+                                        "containerPort": 3000,
+                                        "protocol": "TCP"
+                                    }
+                                ],
+                                "env": [
+                                    {
+                                        "name": "RealIpFrom"
+                                    },
+                                    {
+                                        "name": "AdditionalRealIpFromRules"
+                                    },
+                                    {
+                                        "name": "IpFilterRules"
+                                    },
+                                    {
+                                        "name": "HTTP_BASIC"
+                                    },
+                                    {
+                                        "name": "BUILD_NUMBER",
+                                        "value": "pr-44"
+                                    }
+                                ],
+                                "resources": {
+                                    "limits": {
+                                        "cpu": "500m",
+                                        "memory": "1Gi"
+                                    },
+                                    "requests": {
+                                        "memory": "200Mi"
+                                    }
+                                },
+                                "volumeMounts": [
+                                    {
+                                        "name": "keycloak-config-data",
+                                        "mountPath": "/tmp/app/dist/config"
+                                    }
+                                ],
+                                "livenessProbe": {
+                                    "httpGet": {
+                                        "path": "/",
+                                        "port": 8080,
+                                        "scheme": "HTTP"
+                                    },
+                                    "initialDelaySeconds": 20,
+                                    "timeoutSeconds": 3,
+                                    "periodSeconds": 10,
+                                    "successThreshold": 1,
+                                    "failureThreshold": 3
+                                },
+                                "readinessProbe": {
+                                    "httpGet": {
+                                        "path": "/",
+                                        "port": 8080,
+                                        "scheme": "HTTP"
+                                    },
+                                    "initialDelaySeconds": 10,
+                                    "timeoutSeconds": 3,
+                                    "periodSeconds": 10,
+                                    "successThreshold": 1,
+                                    "failureThreshold": 3
+                                },
+                                "terminationMessagePath": "/dev/termination-log",
+                                "terminationMessagePolicy": "File",
+                                "imagePullPolicy": "IfNotPresent"
+                            }
+                        ],
+                        "restartPolicy": "Always",
+                        "terminationGracePeriodSeconds": 30,
+                        "dnsPolicy": "ClusterFirst",
+                        "securityContext": {},
+                        "schedulerName": "default-scheduler"
+                    }
+                }
             },
-            {
-                "type": "ConfigChange"
+            "status": {
+                "latestVersion": 0,
+                "observedGeneration": 0,
+                "replicas": 0,
+                "updatedReplicas": 0,
+                "availableReplicas": 0,
+                "unavailableReplicas": 0
             }
-        ]
-    },
-    "status": {
-        "availableReplicas": 0,
-        "latestVersion": 0,
-        "observedGeneration": 0,
-        "replicas": 0,
-        "unavailableReplicas": 0,
-        "updatedReplicas": 0
-    }
+        }
+    ]
 }
