@@ -15,6 +15,7 @@ import Select from './components/Select';
 import SchedulesPage from './components/SchedulesPage';
 import ScheduleTabs from './components/ScheduleTabs';
 import { SCHEDULE_C } from '../constants/schedules/scheduleColumns';
+import { getQuantity } from '../utils/functions';
 
 class ScheduleCContainer extends Component {
   static addHeaders () {
@@ -51,11 +52,7 @@ class ScheduleCContainer extends Component {
           readOnly: true,
           value: 'Units'
         }]
-      ],
-      totals: {
-        diesel: 0,
-        gasoline: 0
-      }
+      ]
     };
   }
 
@@ -81,60 +78,58 @@ class ScheduleCContainer extends Component {
 
   componentDidMount () {
     this.props.loadExpectedUses();
-    this._addRow(2);
+    this._addRow(5);
   }
 
   _addRow (numberOfRows = 1) {
     const { grid } = this.state;
 
     for (let x = 0; x < numberOfRows; x += 1) {
-      grid.push([
-        {
-          readOnly: true,
-          value: this.rowNumber
-        }, {
-          className: 'text',
-          dataEditor: Select,
-          getOptions: () => this.props.referenceData.approvedFuels,
-          mapping: {
-            key: 'id',
-            value: 'name'
-          }
-        }, {
-          className: 'text',
-          dataEditor: Select,
-          getOptions: this._getFuelClasses,
-          mapping: {
-            key: 'id',
-            value: 'fuelClass'
-          }
-        }, {
-          attributes: {
-            dataNumberToFixed: 2,
-            maxLength: '12',
-            step: '0.01'
-          },
-          className: 'number',
-          dataEditor: Input,
-          valueViewer: (props) => {
-            const { value } = props;
-            return <span>{value.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')}</span>;
-          }
-        }, {
-          readOnly: true
-        }, {
-          className: 'text',
-          dataEditor: Select,
-          getOptions: () => !this.props.expectedUses.isFetching && this.props.expectedUses.items,
-          mapping: {
-            key: 'id',
-            value: 'description'
-          }
-        }, {
-          className: 'text',
-          readOnly: true
+      grid.push([{
+        readOnly: true,
+        value: this.rowNumber
+      }, {
+        className: 'text',
+        dataEditor: Select,
+        getOptions: () => this.props.referenceData.approvedFuels,
+        mapping: {
+          key: 'id',
+          value: 'name'
         }
-      ]);
+      }, {
+        className: 'text',
+        dataEditor: Select,
+        getOptions: this._getFuelClasses,
+        mapping: {
+          key: 'id',
+          value: 'fuelClass'
+        }
+      }, {
+        attributes: {
+          dataNumberToFixed: 2,
+          maxLength: '12',
+          step: '0.01'
+        },
+        className: 'number',
+        dataEditor: Input,
+        valueViewer: (props) => {
+          const { value } = props;
+          return <span>{value.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')}</span>;
+        }
+      }, {
+        readOnly: true
+      }, {
+        className: 'text',
+        dataEditor: Select,
+        getOptions: () => !this.props.expectedUses.isFetching && this.props.expectedUses.items,
+        mapping: {
+          key: 'id',
+          value: 'description'
+        }
+      }, {
+        className: 'text',
+        readOnly: true
+      }]);
 
       this.rowNumber += 1;
     }
@@ -174,32 +169,19 @@ class ScheduleCContainer extends Component {
         value
       };
 
-      if (col === SCHEDULE_C.FUEL_TYPE) { // Fuel Type
+      if (col === SCHEDULE_C.FUEL_TYPE) {
         grid[row] = this._validateFuelTypeColumn(grid[row], value);
       }
 
-      if (col === SCHEDULE_C.FUEL_CLASS) { // Fuel Class
+      if (col === SCHEDULE_C.FUEL_CLASS) {
         grid[row] = this._validateFuelClassColumn(grid[row], value);
       }
 
-      if (col === SCHEDULE_C.QUANTITY) { // Quantity and Fuel Supplied
-        if (Number.isNaN(Number(value))) {
-          grid[row][SCHEDULE_C.QUANTITY] = {
-            ...grid[row][SCHEDULE_C.QUANTITY],
-            value: ''
-          };
-        } else {
-          let roundedValue = Math.round(value * 100) / 100;
-
-          if (roundedValue < 0) {
-            roundedValue *= -1;
-          }
-
-          grid[row][col] = {
-            ...grid[row][col],
-            value: roundedValue
-          };
-        }
+      if (col === SCHEDULE_C.QUANTITY) {
+        grid[row][col] = {
+          ...grid[row][col],
+          value: getQuantity(value)
+        };
       }
 
       if (col === SCHEDULE_C.EXPECTED_USE) { // Expected Use
@@ -295,6 +277,7 @@ class ScheduleCContainer extends Component {
         edit={this.edit}
         handleCellsChanged={this._handleCellsChanged}
         key="schedules"
+        scheduleType="C"
         title="Schedule C - Fuels used for other purposes"
       >
         <p>

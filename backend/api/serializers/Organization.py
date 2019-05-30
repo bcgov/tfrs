@@ -52,7 +52,7 @@ class OrganizationSerializer(serializers.ModelSerializer):
         Shows the organization address
         """
         organization_address = OrganizationAddress.objects.filter(
-            organization_id=obj.id).first()
+            organization_id=obj.id).order_by('-primary').first()
 
         if organization_address is None:
             return None
@@ -160,3 +160,29 @@ class OrganizationMinSerializer(serializers.ModelSerializer):
     class Meta:
         model = Organization
         fields = ('id', 'name', 'type')
+
+
+class OrganizationDisplaySerializer(serializers.ModelSerializer):
+    """
+    Display Serializer for the Fuel Supplier
+    Loads most information fields like address and name of the fuel supplier
+    """
+    organization_address = serializers.SerializerMethodField()
+
+    def get_organization_address(self, obj):
+        """
+        Shows the organization address
+        """
+        organization_address = OrganizationAddress.objects.filter(
+            organization_id=obj.id).order_by('-primary').first()
+
+        if organization_address is None:
+            return None
+
+        serializer = OrganizationAddressSerializer(organization_address,
+                                                   read_only=True)
+        return serializer.data
+
+    class Meta:
+        model = Organization
+        fields = ('id', 'name', 'organization_address')

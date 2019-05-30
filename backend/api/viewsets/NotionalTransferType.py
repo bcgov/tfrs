@@ -1,12 +1,12 @@
 from rest_framework import viewsets, permissions, mixins
 
-from api.models.ExpectedUse import ExpectedUse
-from api.serializers.ExpectedUse import ExpectedUseSerializer
+from api.models.NotionalTransferType import NotionalTransferType
+from api.serializers.NotionalTransferType import NotionalTransferTypeSerializer
 from auditable.views import AuditableMixin
 
 
-class ExpectedUseViewSet(AuditableMixin, mixins.ListModelMixin,
-                         viewsets.GenericViewSet):
+class NotionalTransferTypeViewSet(
+        AuditableMixin, mixins.ListModelMixin, viewsets.GenericViewSet):
     """
     This viewset automatically provides `list`
     """
@@ -15,10 +15,10 @@ class ExpectedUseViewSet(AuditableMixin, mixins.ListModelMixin,
     http_method_names = ['get']
     ordering_fields = '__all__'
     ordering = ('display_order',)
-    queryset = ExpectedUse.objects.all().order_by(*ordering)
-    serializer_class = ExpectedUseSerializer
+    queryset = NotionalTransferType.objects.all().order_by(*ordering)
+    serializer_class = NotionalTransferTypeSerializer
     serializer_classes = {
-        'default': ExpectedUseSerializer
+        'default': NotionalTransferTypeSerializer
     }
 
     def get_serializer_class(self):
