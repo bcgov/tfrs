@@ -20,15 +20,37 @@
     See the License for the specific language governing permissions and
     limitations under the License.
 """
-from rest_framework import serializers
+from abc import ABC, abstractmethod
 
-from api.models.ExpectedUse import ExpectedUse
+from django.core.cache import caches
+from django.db.models import Max
+
+from api.models.Organization import Organization
+from api.serializers.Organization import OrganizationDisplaySerializer
+
+cache = caches['autocomplete']
 
 
-class ExpectedUseSerializer(serializers.ModelSerializer):
+class Completion(ABC):
+    """Abstract base class defining the contract of a completion"""
+
+    @abstractmethod
+    def get_matches(self, q):
+        pass
+
+
+class OrganizationAutocomplete(Completion):
     """
-    Basic Serializer for Expected Use
+    Gets the next available value by getting the max value provided
+    in 'increment' and filtered by 'column'
     """
-    class Meta:
-        model = ExpectedUse
-        fields = ('id', 'description')
+
+    def get_matches(self, q):
+        results = Organization.objects.filter(
+            name__icontains=q
+        ).order_by('name')[:10]
+
+        serializer = OrganizationDisplaySerializer(
+            results, many=True, read_only=True)
+
+        return serializer.data

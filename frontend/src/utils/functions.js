@@ -91,6 +91,20 @@ const getScanStatusIcon = (status) => {
   }
 };
 
+const getQuantity = (value) => {
+  let roundedValue = '';
+
+  if (!Number.isNaN(Number(value))) {
+    roundedValue = Math.round(value * 100) / 100;
+
+    if (roundedValue < 0) {
+      roundedValue *= -1;
+    }
+  }
+
+  return roundedValue;
+};
+
 const validateFiles = files => (
   files.filter((file) => {
     if (file.size > CONFIG.SECURE_DOCUMENT_UPLOAD.MAX_FILE_SIZE) {
@@ -125,6 +139,6 @@ const validateFiles = files => (
 );
 
 export {
-  arrayMove, download, getFileSize, getIcon, getScanStatusIcon,
+  arrayMove, download, getFileSize, getIcon, getQuantity, getScanStatusIcon,
   formatFacilityNameplate, validateFiles
 };

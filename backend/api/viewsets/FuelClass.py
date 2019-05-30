@@ -1,12 +1,12 @@
 from rest_framework import viewsets, permissions, mixins
 
-from api.models.ExpectedUse import ExpectedUse
-from api.serializers.ExpectedUse import ExpectedUseSerializer
+from api.models.FuelClass import FuelClass
+from api.serializers.FuelClass import FuelClassSerializer
 from auditable.views import AuditableMixin
 
 
-class ExpectedUseViewSet(AuditableMixin, mixins.ListModelMixin,
-                         viewsets.GenericViewSet):
+class FuelClassViewSet(
+        AuditableMixin, mixins.ListModelMixin, viewsets.GenericViewSet):
     """
     This viewset automatically provides `list`
     """
@@ -15,10 +15,10 @@ class ExpectedUseViewSet(AuditableMixin, mixins.ListModelMixin,
     http_method_names = ['get']
     ordering_fields = '__all__'
     ordering = ('display_order',)
-    queryset = ExpectedUse.objects.all().order_by(*ordering)
-    serializer_class = ExpectedUseSerializer
+    queryset = FuelClass.objects.all().order_by(*ordering)
+    serializer_class = FuelClassSerializer
     serializer_classes = {
-        'default': ExpectedUseSerializer
+        'default': FuelClassSerializer
     }
 
     def get_serializer_class(self):
