@@ -20,10 +20,21 @@
     See the License for the specific language governing permissions and
     limitations under the License.
 """
+from rest_framework import serializers
 
-from django.db import models
+from api.models.ProvisionOfTheAct import \
+    ProvisionOfTheAct
+from .CarbonIntensityDeterminationType import DeterminationTypeSerializer
 
 
-class DocumentTypeManager(models.Manager):
-    def get_by_natural_key(self, the_type):
-        return self.get(the_type=the_type)
+class ProvisionOfTheActSerializer(serializers.ModelSerializer):
+    """
+    Basic serializer for Carbon Intensity Determination Type
+    """
+    determination_type = DeterminationTypeSerializer(read_only=True)
+
+    class Meta:
+        model = ProvisionOfTheAct
+        fields = ('id', 'description', 'determination_type')
+        read_only_fields = (
+            'id', 'description', 'determination_type')

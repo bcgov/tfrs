@@ -26,6 +26,7 @@ from django.db.models import PROTECT
 from api.managers.ApprovedFuelManager import ApprovedFuelManager
 from api.models.mixins.EffectiveDates import EffectiveDates
 from api.models.FuelClass import FuelClass
+from api.models.ProvisionOfTheAct import ProvisionOfTheAct
 from auditable.models import Auditable
 
 
@@ -95,6 +96,18 @@ class ApprovedFuel(Auditable, EffectiveDates):
         )
 
         return fuel_classes
+
+    @property
+    def provisions(self):
+        """
+        Provisions associated with the fuel.
+        Relationship through ApprovedFuelProvision
+        """
+        provisions = ProvisionOfTheAct.objects.filter(
+            fuel=self.id
+        )
+
+        return provisions
 
     def natural_key(self):
         """

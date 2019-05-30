@@ -24,6 +24,6 @@
 from django.db import models
 
 
-class ComplianceReportTypeManager(models.Manager):
+class TheTypeManager(models.Manager):
     def get_by_natural_key(self, the_type):
         return self.get(the_type=the_type)
