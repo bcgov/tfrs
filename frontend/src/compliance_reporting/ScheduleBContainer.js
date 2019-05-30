@@ -115,6 +115,7 @@ class ScheduleBContainer extends Component {
     this._addRow = this._addRow.bind(this);
     this._calculateTotal = this._calculateTotal.bind(this);
     this._getFuelClasses = this._getFuelClasses.bind(this);
+    this._getProvisions = this._getProvisions.bind(this);
     this._handleCellsChanged = this._handleCellsChanged.bind(this);
     this._handleSubmit = this._handleSubmit.bind(this);
     this._validateFuelClassColumn = this._validateFuelClassColumn.bind(this);
@@ -149,8 +150,13 @@ class ScheduleBContainer extends Component {
           value: 'fuelClass'
         }
       }, { // provision of the act
-        attributes: {},
-        className: 'text'
+        className: 'text',
+        dataEditor: Select,
+        getOptions: this._getProvisions,
+        mapping: {
+          key: 'id',
+          value: 'description'
+        }
       }, { // fuel code
         className: 'text'
       }, { // quantity of fuel supplied
@@ -232,6 +238,19 @@ class ScheduleBContainer extends Component {
     return [];
   }
 
+  _getProvisions (row) {
+    const fuelType = this.state.grid[row][SCHEDULE_B.FUEL_TYPE];
+
+    const selectedFuel = this.props.referenceData.approvedFuels
+      .find(fuel => fuel.name === fuelType.value);
+
+    if (selectedFuel) {
+      return selectedFuel.provisions;
+    }
+
+    return [];
+  }
+
   _handleCellsChanged (changes, addition = null) {
     const grid = this.state.grid.map(row => [...row]);
 
@@ -306,6 +325,11 @@ class ScheduleBContainer extends Component {
 
     row[SCHEDULE_B.FUEL_CLASS] = { // if fuel type is updated, reset fuel class
       ...row[SCHEDULE_B.FUEL_CLASS],
+      value: ''
+    };
+
+    row[SCHEDULE_B.PROVISION_OF_THE_ACT] = { // also reset the provision of the act
+      ...row[SCHEDULE_B.PROVISION_OF_THE_ACT],
       value: ''
     };
 
