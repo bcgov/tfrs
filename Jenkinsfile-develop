@@ -28,10 +28,10 @@ def prepareBuildBackend() {
             timeout(30) {
                 script {
                     openshift.withProject("mem-tfrs-tools") {
-                        def scanHandlerJson = openshift.process(readFile(file:'openshift/templates/components/scan-handler/scan-handler-bc.json'), "-p", "TFRS_RELEASE_TAG=${tfrsRelease}", "SCAN_HANDLER_IS_NAME=scan-handler-develop")
-                        def sscanHandlerBuild = openshift.apply(scanHandlerJson)
-                        def scanHandlerSelector = openshift.selector("bc", "scan-handler-develop")
-                        scanHandlerSelector.startBuild("--wait")
+                        def tfrsJson = openshift.process(readFile(file:'openshift/templates/components/backend/tfrs-bc.json'), "-p", "TFRS_RELEASE_TAG=${tfrsRelease}", "TFRS_IS_NAME=tfrs-develop")
+                        def tfrsBuild = openshift.apply(tfrsJson)
+                        def tfrsSelector = openshift.selector("bc", "tfrs-develop")
+                        tfrsSelector.startBuild("--wait")
                     } //end of openshift.withProject
                 } //end of script
             } //end of timeout
@@ -63,7 +63,7 @@ def prepareBuildScanHandler() {
                 script {
                     openshift.withProject("mem-tfrs-tools") {
                         def scanHandlerJson = openshift.process(readFile(file:'openshift/templates/components/scan-handler/scan-handler-bc.json'), "-p", "TFRS_RELEASE_TAG=${tfrsRelease}", "SCAN_HANDLER_IS_NAME=scan-handler-develop")
-                        def sscanHandlerBuild = openshift.apply(scanHandlerJson)
+                        def scanHandlerBuild = openshift.apply(scanHandlerJson)
                         def scanHandlerSelector = openshift.selector("bc", "scan-handler-develop")
                         scanHandlerSelector.startBuild("--wait")
                     } //end of openshift.withProject
@@ -96,7 +96,7 @@ def prepareBuildFrontend() {
             timeout(30) {
                 script {
                     openshift.withProject("mem-tfrs-tools") {
-                        def clientAngularJson = openshift.process(readFile(file:'openshift/templates/components/frontend/client-angular-app-build-bc.json'), "-p", "TFRS_RELEASE_TAG=${tfrsRelease}", "CLIENT_ANGULAR_APP_IS_NAME=client-develop-angular-app")
+                        def clientAngularJson = openshift.process(readFile(file:'openshift/templates/components/frontend/client-angular-app-bc.json'), "-p", "TFRS_RELEASE_TAG=${tfrsRelease}", "CLIENT_ANGULAR_APP_IS_NAME=client-develop-angular-app")
                         def clientAngularBuild = openshift.apply(clientAngularJson)
                         def clientAngularBuildSelector = openshift.selector("bc", "client-develop-angular-app")
                         clientAngularBuildSelector.startBuild("--wait")
@@ -146,7 +146,6 @@ podTemplate(label: "develop-backend-python-${env.BUILD_NUMBER}", name: "develop-
 ){    
     node("develop-backend-python-${env.BUILD_NUMBER}") {
         stage('Unit Test') {
-            //supposed to checkout tfrsRelease
             checkout changelog: false, poll: false, scm: [$class: 'GitSCM', branches: [[name: "${tfrsRelease}"]], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[credentialsId: 'github-account', url: 'https://github.com/bcgov/tfrs.git']]]
             dir('backend') {
                 try {

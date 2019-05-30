@@ -2,7 +2,7 @@
     "kind": "Template",
     "apiVersion": "template.openshift.io/v1",
     "metadata": {
-        "name": "client-angular-app-build",
+        "name": "client-angular-app",
         "creationTimestamp": null
     },
     "parameters": [
