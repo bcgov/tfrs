@@ -22,40 +22,36 @@
 
 from django.db import models
 
-from api.managers.OrganizationActionsTypeManager import \
-    OrganizationActionsTypeManager
+from api.managers.NotionalTransferTypeManager import \
+    NotionalTransferTypeManager
 from api.models.mixins.DisplayOrder import DisplayOrder
 from api.models.mixins.EffectiveDates import EffectiveDates
 from auditable.models import Auditable
 
 
-class OrganizationActionsType(Auditable, DisplayOrder, EffectiveDates):
+class NotionalTransferType(Auditable, DisplayOrder, EffectiveDates):
+    """
+    Contains a list of possible transfer types for Schedule A.
+    (Notional Transfers)
+    """
     the_type = models.CharField(
         max_length=25,
         unique=True,
-        db_comment="Enumerated value to describe the organization actions "
-                   "type."
-    )
-    description = models.CharField(
-        max_length=1000,
-        blank=True,
-        null=True,
-        db_comment="Description of the organization actions type. This is the "
-                   "displayed name."
+        db_comment="Transfer types for Schedule A."
+                   "e.g. Received or Transferred."
     )
 
-    objects = OrganizationActionsTypeManager()
+    def __str__(self):
+        return self.the_type
+
+    objects = NotionalTransferTypeManager()
 
     def natural_key(self):
         return (self.the_type,)
 
     class Meta:
-        db_table = 'organization_actions_type'
+        db_table = 'notional_transfer_type'
 
-    db_table_comment = "Contains a list of actions that each organization " \
-                       "type is permitted to do. Example actions include a " \
-                       "fuel supplier organization type being permitted to " \
-                       "create a new Credit Transfer Proposal whereas a " \
-                       "government organization type is permitted to create " \
-                       "a new credit transaction. For example; Part 3 " \
-                       "Award, Validation, or Reduction"
+    db_table_comment = "Contains a list of possible transfer types for " \
+                       "Schedule A (Notional Transfers)." \
+                       "e.g. Received or Transferred"

@@ -54,7 +54,7 @@ class ScheduleButtons extends Component {
       </Modal>
     ];
   }
-};
+}
 
 ScheduleButtons.defaultProps = {
   submit: false

@@ -4,6 +4,7 @@ import ReactDataSheet from 'react-datasheet';
 import 'react-datasheet/lib/react-datasheet.css';
 import FontAwesomeIcon from '@fortawesome/react-fontawesome';
 
+import ScheduleATotals from './ScheduleATotals';
 import ScheduleButtons from './ScheduleButtons';
 
 const SchedulesPage = props => (
@@ -51,14 +52,23 @@ const SchedulesPage = props => (
       </div>
     </div>
 
-    <ScheduleButtons
-      edit={props.edit}
-      submit
-    />
+    <div className="sticky">
+      {props.scheduleType === 'A' &&
+        <ScheduleATotals
+          totals={props.totals}
+        />
+      }
+
+      <ScheduleButtons
+        edit={props.edit}
+        submit
+      />
+    </div>
   </div>
 );
 
 SchedulesPage.defaultProps = {
+  totals: {}
 };
 
 SchedulesPage.propTypes = {
@@ -70,7 +80,9 @@ SchedulesPage.propTypes = {
   data: PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.shape())).isRequired,
   edit: PropTypes.bool.isRequired,
   handleCellsChanged: PropTypes.func.isRequired,
-  title: PropTypes.string.isRequired
+  scheduleType: PropTypes.oneOf(['A', 'B', 'C']).isRequired,
+  title: PropTypes.string.isRequired,
+  totals: PropTypes.shape()
 };
 
 export default SchedulesPage;
