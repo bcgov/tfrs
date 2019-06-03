@@ -138,7 +138,7 @@ class EnergyEffectivenessRatioEditContainer extends Component {
           id="confirmSubmit"
           key="confirmSubmit"
         >
-          Are you sure you want to update the energy effectiveness ratios??
+          Are you sure you want to update the energy effectiveness ratio(s)?
         </Modal>
       ]);
     }
