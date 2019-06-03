@@ -108,7 +108,7 @@ class EnergyEffectivenessRatioEditContainer extends Component {
     };
 
     Object.entries(data).forEach((prop) => {
-      if (prop[1] === null) {
+      if (prop[1] === null || prop[1] === 'null') {
         delete data[prop[0]];
       }
     });
