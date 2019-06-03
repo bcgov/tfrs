@@ -120,6 +120,7 @@ class ScheduleBContainer extends Component {
     this._handleSubmit = this._handleSubmit.bind(this);
     this._validateFuelClassColumn = this._validateFuelClassColumn.bind(this);
     this._validateFuelTypeColumn = this._validateFuelTypeColumn.bind(this);
+    this._validateProvisionColumn = this._validateProvisionColumn.bind(this);
   }
 
   componentDidMount () {
@@ -158,7 +159,8 @@ class ScheduleBContainer extends Component {
           value: 'description'
         }
       }, { // fuel code
-        className: 'text'
+        className: 'text',
+        readOnly: true
       }, { // quantity of fuel supplied
         attributes: {
           dataNumberToFixed: 2,
@@ -276,6 +278,10 @@ class ScheduleBContainer extends Component {
         grid[row] = this._validateFuelClassColumn(grid[row], value);
       }
 
+      if (col === SCHEDULE_B.PROVISION_OF_THE_ACT) {
+        grid[row] = this._validateProvisionColumn(grid[row], value);
+      }
+
       if (col === SCHEDULE_B.QUANTITY) {
         grid[row][col] = {
           ...grid[row][col],
@@ -337,6 +343,29 @@ class ScheduleBContainer extends Component {
       ...row[SCHEDULE_B.UNITS],
       value: (selectedFuel && selectedFuel.unitOfMeasure) ? selectedFuel.unitOfMeasure.name : ''
     };
+
+    return row;
+  }
+
+  _validateProvisionColumn (currentRow, value) {
+    const row = currentRow;
+    const fuelType = row[SCHEDULE_B.FUEL_TYPE].value;
+    const selectedFuel = this.props.referenceData.approvedFuels.find(fuel =>
+      fuel.name === fuelType);
+
+    const selectedProvision = selectedFuel.provisions.find(provision =>
+      provision.description === value);
+
+    if (selectedProvision && selectedProvision.description === 'Section 6 (5) (c)') {
+      row[SCHEDULE_B.FUEL_CODE] = {
+        readOnly: false
+      };
+    } else {
+      row[SCHEDULE_B.FUEL_CODE] = {
+        readOnly: true,
+        value: ''
+      };
+    }
 
     return row;
   }
