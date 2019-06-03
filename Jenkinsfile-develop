@@ -1,6 +1,6 @@
 result = 0
 runParallel = true
-tfrsRelease="v1.4.3"
+tfrsRelease="v1.4.4"
 
 def prepareBackendBuildStages() {
     def buildBackendList = []
@@ -192,7 +192,6 @@ podTemplate(label: "develop-maven-${env.BUILD_NUMBER}", name: "develop-maven-${e
 
     node("develop-maven-${env.BUILD_NUMBER}") {
 
-        //supposed to checkout tfrsRelease
         checkout changelog: false, poll: false, scm: [$class: 'GitSCM', branches: [[name: "${tfrsRelease}"]], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[credentialsId: 'github-account', url: 'https://github.com/bcgov/tfrs.git']]]
 
         //run backend builds
