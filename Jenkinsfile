@@ -1,11 +1,6 @@
 result = 0
 runParallel = true
-IMAGE_HASH_FRONTEND = ''
-IMAGE_HASH_NOTIFICATION = ''
-IMAGE_HASH_BACKEND = ''
-IMAGE_HASH_SCAN_COORDINATOR = ''
-IMAGE_HASH_SCAN_HANDLER = ''
-IMAGE_HASH_CELERY = ''
+tfrsRelease="v1.3.0"
 
 def prepareBackendBuildStages() {
     def buildBackendList = []
@@ -31,10 +26,16 @@ def prepareBuildBackend() {
   return {
     stage('Build Backend') {
         openshiftBuild bldCfg: 'tfrs', showBuildLogs: 'true'
-        IMAGE_HASH_BACKEND = sh (
-            script: 'oc get istag tfrs:latest -o template --template="{{.image.dockerImageReference}}"|awk -F ":" \'{print $3}\'',
- 	            returnStdout: true).trim()
-        echo ">> IMAGE_HASH_BACKEND: $IMAGE_HASH_BACKEND"
+        timeout(30) {
+            script {
+                openshift.withProject("mem-tfrs-tools") {
+                    def tfrsJson = openshift.process(readFile(file:'openshift/templates/components/backend/tfrs-bc.json'), "-p", "TFRS_RELEASE_TAG=${tfrsRelease}", "SCAN_HANDLER_IS_NAME=tfrs")
+                    def tfrsBuild = openshift.apply(tfrsJson)
+                    def tfrsSelector = openshift.selector("bc", "tfrs-develop")
+                    tfrsSelector.startBuild("--wait")
+                } //end of openshift.withProject
+            } //end of script
+        } //end of timeout
     }
   }
 }
@@ -42,11 +43,16 @@ def prepareBuildBackend() {
 def prepareBuildScanCoordinator() {
   return {
     stage('Build-Scan-Coordinator') {
-        openshiftBuild bldCfg: 'scan-coordinator', showBuildLogs: 'true'
-        IMAGE_HASH_SCAN_COORDINATOR = sh (
-            script: 'oc get istag scan-coordinator:latest -o template --template="{{.image.dockerImageReference}}"|awk -F ":" \'{print $3}\'',
- 	            returnStdout: true).trim()
-        echo ">> IMAGE_HASH_SCAN_COORDINATOR: $IMAGE_HASH_SCAN_COORDINATOR"
+            timeout(30) {
+                script {
+                    openshift.withProject("mem-tfrs-tools") {
+                        def scanCoordinatorJson = openshift.process(readFile(file:'openshift/templates/components/scan-coordinator/scan-coordinator-bc.json'), "-p", "TFRS_RELEASE_TAG=${tfrsRelease}", "SCAN_COORDINATOR_IS_NAME=scan-coordinator")
+                        def scanCoordinatorBuild = openshift.apply(scanCoordinatorJson)
+                        def scanCoordinatorSelector = openshift.selector("bc", "scan-coordinator")
+                        scanCoordinatorSelector.startBuild("--wait")
+                    } //end of openshift.withProject
+                } //end of script
+            } //end of timeout
     }
   }
 }
@@ -54,11 +60,16 @@ def prepareBuildScanCoordinator() {
 def prepareBuildScanHandler() {
   return {
     stage('Build-Scan-Handler') {
-        openshiftBuild bldCfg: 'scan-handler', showBuildLogs: 'true'
-        IMAGE_HASH_SCAN_HANDLER = sh (
-            script: 'oc get istag scan-handler:latest -o template --template="{{.image.dockerImageReference}}"|awk -F ":" \'{print $3}\'',
- 	            returnStdout: true).trim()
-        echo ">> IMAGE_HASH_SCAN_HANDLER: $IMAGE_HASH_SCAN_HANDLER"
+            timeout(30) {
+                script {
+                    openshift.withProject("mem-tfrs-tools") {
+                        def scanHandlerJson = openshift.process(readFile(file:'openshift/templates/components/scan-handler/scan-handler-bc.json'), "-p", "TFRS_RELEASE_TAG=${tfrsRelease}", "SCAN_HANDLER_IS_NAME=scan-handler")
+                        def scanHandlerBuild = openshift.apply(scanHandlerJson)
+                        def scanHandlerSelector = openshift.selector("bc", "scan-handler")
+                        scanHandlerSelector.startBuild("--wait")
+                    } //end of openshift.withProject
+                } //end of script
+            } //end of timeout
     }
   }
 }
@@ -66,11 +77,16 @@ def prepareBuildScanHandler() {
 def prepareBuildCelery() {
   return {
     stage('Build-Celery') {
-        openshiftBuild bldCfg: 'celery', showBuildLogs: 'true'
-        IMAGE_HASH_CELERY = sh (
-            script: 'oc get istag celery:latest -o template --template="{{.image.dockerImageReference}}"|awk -F ":" \'{print $3}\'',
- 	            returnStdout: true).trim()
-        echo ">> IMAGE_HASH_CELERY: $IMAGE_HASH_CELERY"
+            timeout(30) {
+                script {
+                    openshift.withProject("mem-tfrs-tools") {
+                        def celeryJson = openshift.process(readFile(file:'openshift/templates/components/celery/celery-bc.json'), "-p", "TFRS_RELEASE_TAG=${tfrsRelease}", "CELERY_IS_NAME=celery")
+                        def celeryBuild = openshift.apply(celeryJson)
+                        def celeryBuildSelector = openshift.selector("bc", "celery")
+                        celeryBuildSelector.startBuild("--wait")
+                    } //end of openshift.withProject
+                } //end of script
+            } //end of timeout
     }
   }
 }
@@ -78,13 +94,20 @@ def prepareBuildCelery() {
 def prepareBuildFrontend() {
   return {
     stage('Build Frontend') {
-        echo "Building Frontend..."
-	    openshiftBuild bldCfg: 'client-angular-app-build', showBuildLogs: 'true'
-        openshiftBuild bldCfg: 'client', showBuildLogs: 'true'
-        IMAGE_HASH_FRONTEND = sh (
-            script: 'oc get istag client:latest -o template --template="{{.image.dockerImageReference}}"|awk -F ":" \'{print $3}\'',
- 	            returnStdout: true).trim()
-        echo ">> IMAGE_HASH_FRONTEND: $IMAGE_HASH_FRONTEND"
+            timeout(30) {
+                script {
+                    openshift.withProject("mem-tfrs-tools") {
+                        def clientAngularJson = openshift.process(readFile(file:'openshift/templates/components/frontend/client-angular-app-bc.json'), "-p", "TFRS_RELEASE_TAG=${tfrsRelease}", "CLIENT_ANGULAR_APP_IS_NAME=client-angular-app")
+                        def clientAngularBuild = openshift.apply(clientAngularJson)
+                        def clientAngularBuildSelector = openshift.selector("bc", "client-angular-app")
+                        clientAngularBuildSelector.startBuild("--wait")
+                        def clientJson = openshift.process(readFile(file:'openshift/templates/components/frontend/client-bc.json'), "-p", "CLIENT_IS_NAME=client", "CLIENT_ANGULAR_APP_IS_NAME=client-angular-app")
+                        def clientBuild = openshift.apply(clientJson)
+                        def clientBuildSelector = openshift.selector("bc", "client")
+                        clientBuildSelector.startBuild("--wait")
+                    } //end of openshift.withProject
+                } //end of script
+            } //end of timeout
     }
   }
 }
@@ -92,12 +115,16 @@ def prepareBuildFrontend() {
 def prepareBuildNotificationServer() {
   return {
     stage('Build Notification') {
-        echo "Building Notification Server ..."
-	    openshiftBuild bldCfg: 'notification-server', showBuildLogs: 'true'
-        IMAGE_HASH_NOTIFICATION = sh (
-            script: 'oc get istag notification-server:latest -o template --template="{{.image.dockerImageReference}}"|awk -F ":" \'{print $3}\'',
- 	            returnStdout: true).trim()
-        echo ">> IMAGE_HASH_NOTIFICATION: $IMAGE_HASH_NOTIFICATION"
+            timeout(30) {
+                script {
+                    openshift.withProject("mem-tfrs-tools") {
+                        def notificationJson = openshift.process(readFile(file:'openshift/templates/components/notification/notification-server-bc.json'), "-p", "TFRS_RELEASE_TAG=${tfrsRelease}", "NOTIFICATION_SERVER_IS_NAME=notification-server")
+                        def notificationBuild = openshift.apply(notificationJson)
+                        def notificationSelector = openshift.selector("bc", "notification-server")
+                        notificationSelector.startBuild("--wait")
+                    } //end of openshift.withProject
+                } //end of script
+            } //end of timeout
     }
 
   }
@@ -120,7 +147,7 @@ stage('Unit Test') {
         ]
     ){
     node("master-backend-python-${env.BUILD_NUMBER}") {
-        checkout scm
+        checkout changelog: false, poll: false, scm: [$class: 'GitSCM', branches: [[name: "${tfrsRelease}"]], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[credentialsId: 'github-account', url: 'https://github.com/bcgov/tfrs.git']]]
         dir('backend') {
             try {
                 sh 'pip install --upgrade pip && pip install -r requirements.txt'
@@ -163,6 +190,8 @@ podTemplate(label: "master-maven-${env.BUILD_NUMBER}", name: "master-maven-${env
         ]
 ) {
 node("master-maven-${env.BUILD_NUMBER}") {
+
+    checkout changelog: false, poll: false, scm: [$class: 'GitSCM', branches: [[name: "${tfrsRelease}"]], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[credentialsId: 'github-account', url: 'https://github.com/bcgov/tfrs.git']]]
     
     //run frontend builds
     for (builds in frontendBuildStages) {
