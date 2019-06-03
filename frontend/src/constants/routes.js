@@ -52,6 +52,7 @@ export const NOTIFICATIONS_API = '/notifications';
 export { default as COMPLIANCE_PERIODS } from './routes/CompliancePeriods';
 export { default as CONTACT_US } from './routes/ContactUs';
 export { default as CREDIT_CALCULATIONS } from './routes/CreditCalculations';
+export { default as FUEL_CODES } from './routes/FuelCodes';
 export { default as ROLES } from './routes/Roles';
 export { default as SIGNING_AUTHORITY_ASSERTIONS } from './routes/SigningAuthorityAssertions';
 export { default as SIGNING_AUTHORITY_CONFIRMATIONS } from './routes/SigningAuthorityConfirmations';

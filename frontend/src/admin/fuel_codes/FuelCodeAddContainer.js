@@ -8,7 +8,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
-import { addFuelCode, getLatestFuelCode } from '../../actions/fuelCodeActions';
+import { addFuelCode, getLatestFuelCode } from '../../actions/fuelCodes';
 import history from '../../app/History';
 import Loading from '../../app/components/Loading';
 import CallableModal from '../../app/components/CallableModal';

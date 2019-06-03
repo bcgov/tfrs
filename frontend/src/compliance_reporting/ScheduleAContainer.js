@@ -203,7 +203,7 @@ class ScheduleAContainer extends Component {
         if (cell.attributes.address) {
           grid[row][SCHEDULE_A.POSTAL_ADDRESS] = {
             ...grid[row][SCHEDULE_A.POSTAL_ADDRESS],
-            value: `${cell.attributes.address.address_line_1} ${cell.attributes.address.address_line_2} ${cell.attributes.address.address_line_3} ${cell.attributes.address.city}, ${cell.attributes.address.state}`
+            value: `${cell.attributes.address.address_line_1} ${cell.attributes.address.address_line_2} ${cell.attributes.address.address_line_3} ${cell.attributes.address.city}, ${cell.attributes.address.state} ${cell.attributes.address.postal_code}`
           };
         }
       }

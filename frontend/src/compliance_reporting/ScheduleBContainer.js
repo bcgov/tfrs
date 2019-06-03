@@ -6,8 +6,10 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
+import { bindActionCreators } from 'redux';
 
 import { fuelClasses } from '../actions/fuelClasses';
+import { getEffectiveFuelCodes } from '../actions/fuelCodes';
 import Loading from '../app/components/Loading';
 import Modal from '../app/components/Modal';
 import Input from './components/Input';
@@ -115,6 +117,7 @@ class ScheduleBContainer extends Component {
     this._addRow = this._addRow.bind(this);
     this._calculateTotal = this._calculateTotal.bind(this);
     this._getFuelClasses = this._getFuelClasses.bind(this);
+    this._getFuelCodes = this._getFuelCodes.bind(this);
     this._getProvisions = this._getProvisions.bind(this);
     this._handleCellsChanged = this._handleCellsChanged.bind(this);
     this._handleSubmit = this._handleSubmit.bind(this);
@@ -160,6 +163,12 @@ class ScheduleBContainer extends Component {
         }
       }, { // fuel code
         className: 'text',
+        dataEditor: Select,
+        getOptions: this._getFuelCodes,
+        mapping: {
+          key: 'id',
+          value: 'value'
+        },
         readOnly: true
       }, { // quantity of fuel supplied
         attributes: {
@@ -240,6 +249,18 @@ class ScheduleBContainer extends Component {
     return [];
   }
 
+  _getFuelCodes (row) {
+    const fuelCodes = [];
+    this.props.fuelCodes.items.forEach((fuelCode) => {
+      fuelCodes.push({
+        id: fuelCode.id,
+        value: `${fuelCode.fuelCode}${fuelCode.fuelCodeVersion}.${fuelCode.fuelCodeVersionMinor}`
+      });
+    });
+
+    return fuelCodes;
+  }
+
   _getProvisions (row) {
     const fuelType = this.state.grid[row][SCHEDULE_B.FUEL_TYPE];
 
@@ -316,6 +337,19 @@ class ScheduleBContainer extends Component {
       };
     }
 
+    let { period } = this.props.match.params;
+
+    if (!period) {
+      period = `${new Date().getFullYear() - 1}`;
+    }
+
+    const data = {
+      compliance_period: period,
+      fuel_name: fuelType.value
+    };
+
+    this.props.getEffectiveFuelCodes(data);
+
     return row;
   }
 
@@ -334,8 +368,14 @@ class ScheduleBContainer extends Component {
       value: ''
     };
 
-    row[SCHEDULE_B.PROVISION_OF_THE_ACT] = { // also reset the provision of the act
+    row[SCHEDULE_B.PROVISION_OF_THE_ACT] = { // reset the provision of the act
       ...row[SCHEDULE_B.PROVISION_OF_THE_ACT],
+      value: ''
+    };
+
+    row[SCHEDULE_B.FUEL_CODE] = { // reset the fuel Code
+      ...row[SCHEDULE_B.FUEL_CODE],
+      readOnly: true,
       value: ''
     };
 
@@ -358,10 +398,12 @@ class ScheduleBContainer extends Component {
 
     if (selectedProvision && selectedProvision.description === 'Section 6 (5) (c)') {
       row[SCHEDULE_B.FUEL_CODE] = {
+        ...row[SCHEDULE_B.FUEL_CODE],
         readOnly: false
       };
     } else {
       row[SCHEDULE_B.FUEL_CODE] = {
+        ...row[SCHEDULE_B.FUEL_CODE],
         readOnly: true,
         value: ''
       };
@@ -416,10 +458,11 @@ ScheduleBContainer.defaultProps = {
 };
 
 ScheduleBContainer.propTypes = {
-  fuelClasses: PropTypes.shape({
+  fuelCodes: PropTypes.shape({
     isFetching: PropTypes.bool,
-    items: PropTypes.arrayOf(PropTypes.shape())
+    items: PropTypes.arrayOf(PropTypes.shape({}))
   }).isRequired,
+  getEffectiveFuelCodes: PropTypes.func.isRequired,
   loadFuelClasses: PropTypes.func.isRequired,
   match: PropTypes.shape({
     params: PropTypes.shape({
@@ -433,17 +476,20 @@ ScheduleBContainer.propTypes = {
 };
 
 const mapStateToProps = state => ({
-  fuelClasses: {
-    isFetching: state.rootReducer.fuelClasses.isFinding,
-    items: state.rootReducer.fuelClasses.items
+  fuelCodes: {
+    errors: state.rootReducer.fuelCodes.errors,
+    isFetching: state.rootReducer.fuelCodes.isFetching,
+    items: state.rootReducer.fuelCodes.items,
+    success: state.rootReducer.fuelCodes.success
   },
   referenceData: {
     approvedFuels: state.rootReducer.referenceData.data.approvedFuels
   }
 });
 
-const mapDispatchToProps = {
+const mapDispatchToProps = dispatch => ({
+  getEffectiveFuelCodes: bindActionCreators(getEffectiveFuelCodes, dispatch),
   loadFuelClasses: fuelClasses.find
-};
+});
 
 export default connect(mapStateToProps, mapDispatchToProps)(ScheduleBContainer);
