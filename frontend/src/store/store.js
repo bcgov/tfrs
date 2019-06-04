@@ -28,6 +28,7 @@ import { expectedUses } from '../actions/expectedUses';
 import { petroleumCarbonIntensities } from '../actions/petroleumCarbonIntensities';
 import { roles } from '../actions/roleActions';
 import autosaveSaga from './autosaveStore';
+import { complianceReporting } from "../actions/complianceReporting";
 
 const middleware = routerMiddleware(history);
 const sagaMiddleware = createSagaMiddleware();
@@ -73,6 +74,7 @@ sagaMiddleware.run(autocompleteInvalidatorSaga, store);
 sagaMiddleware.run(autosaveSaga);
 
 sagaMiddleware.run(roles.saga);
+sagaMiddleware.run(complianceReporting.saga);
 sagaMiddleware.run(carbonIntensities.saga);
 sagaMiddleware.run(defaultCarbonIntensities.saga);
 sagaMiddleware.run(energyDensities.saga);

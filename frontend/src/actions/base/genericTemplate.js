@@ -48,6 +48,7 @@ export class GenericRestTemplate {
     this.idSelector = this.idSelector.bind(this);
     this.createStateSelector = this.createStateSelector.bind(this);
     this.updateStateSelector = this.updateStateSelector.bind(this);
+    this.patchStateSelector = this.patchStateSelector.bind(this);
 
     this.findHandler = this.findHandler.bind(this);
     this.doFind = this.doFind.bind(this);
@@ -121,6 +122,7 @@ export class GenericRestTemplate {
           ...state,
           id: action.payload.id,
           updateState: action.payload.state,
+          updateUsingPatch: action.payload.patch || false,
           isUpdating: true,
           errorMessage: {}
         })],
@@ -155,6 +157,7 @@ export class GenericRestTemplate {
         isCreating: false,
         isUpdating: false,
         isRemoving: false,
+        updateUsingPatch: false,
         success: false,
         errorMessage: {},
         validationErrors: {},
@@ -201,6 +204,12 @@ export class GenericRestTemplate {
     return state => (state.rootReducer[sn].updateState);
   }
 
+  patchStateSelector () {
+    const sn = this.stateName;
+
+    return state => (state.rootReducer[sn].updateUsingPatch);
+  }
+
   doFind () {
     return axios.get(this.baseUrl);
   }
@@ -229,16 +238,22 @@ export class GenericRestTemplate {
     }
   }
 
-  doUpdate (id, data) {
-    return axios.put(`${this.baseUrl}/${id}`, data);
+  doUpdate (id, data, patch = false) {
+    if (patch) {
+      return axios.patch(`${this.baseUrl}/${id}`, data);
+    } else {
+      return axios.put(`${this.baseUrl}/${id}`, data);
+    }
   }
 
   * updateHandler () {
     const id = yield (select(this.idSelector()));
     const data = yield (select(this.updateStateSelector()));
+    const patch = yield (select(this.patchStateSelector()));
+
 
     try {
-      const response = yield call(this.doUpdate, id, data);
+      const response = yield call(this.doUpdate, id, data, patch);
       yield put(this.updateSuccess(response.data));
     } catch (error) {
       yield put(this.error(error.response.data));

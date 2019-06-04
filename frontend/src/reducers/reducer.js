@@ -22,6 +22,7 @@ import { energyEffectivenessRatios } from '../actions/energyEffectivenessRatios'
 import { expectedUses } from '../actions/expectedUses';
 import { petroleumCarbonIntensities } from '../actions/petroleumCarbonIntensities';
 import { roles } from '../actions/roleActions';
+import { complianceReporting } from "../actions/complianceReporting";
 
 import { fuelTypes } from './creditCalculationReducers';
 
@@ -57,6 +58,7 @@ const rootReducer = combineReducers({
   energyDensities: energyDensities.reducer(),
   energyEffectivenessRatios: energyEffectivenessRatios.reducer(),
   expectedUses: expectedUses.reducer(),
+  complianceReporting: complianceReporting.reducer(),
   fuelTypes,
   petroleumCarbonIntensities: petroleumCarbonIntensities.reducer()
 });
