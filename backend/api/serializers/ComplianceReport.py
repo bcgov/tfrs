@@ -54,7 +54,8 @@ class ComplianceReportListSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = ComplianceReport
-        fields = ('id', 'status', 'type', 'organization', 'compliance_period')
+        fields = ('id', 'status', 'type', 'organization', 'compliance_period',
+                  'update_timestamp')
 
 
 class ComplianceReportDetailSerializer(serializers.ModelSerializer):
@@ -73,8 +74,8 @@ class ComplianceReportCreateSerializer(serializers.ModelSerializer):
     status = SlugRelatedField(slug_field='status',
                               queryset=ComplianceReportStatus.objects.filter(status__in=['Draft']))
     type = SlugRelatedField(slug_field='the_type', queryset=ComplianceReportType.objects.all())
-    compliance_period = PrimaryKeyRelatedField(required=True,
-                                               queryset=CompliancePeriod.objects.all())
+    compliance_period = SlugRelatedField(slug_field='description',
+                                         queryset=CompliancePeriod.objects.all())
     organization = OrganizationMinSerializer(read_only=True)
     schedule_c = ScheduleCDetailSerializer(allow_null=True, required=False)
 
@@ -106,7 +107,7 @@ class ComplianceReportUpdateSerializer(serializers.ModelSerializer):
     status = SlugRelatedField(slug_field='status',
                               queryset=ComplianceReportStatus.objects.filter(status__in=['Draft']))
     type = SlugRelatedField(slug_field='the_type', read_only=True)
-    compliance_period = PrimaryKeyRelatedField(read_only=True)
+    compliance_period = SlugRelatedField(slug_field='description', read_only=True)
     organization = OrganizationMinSerializer(read_only=True)
     schedule_c = ScheduleCDetailSerializer(allow_null=True, required=False)
 

@@ -62,6 +62,7 @@ const SchedulesPage = props => (
       <ScheduleButtons
         edit={props.edit}
         submit
+        delete
       />
     </div>
   </div>
