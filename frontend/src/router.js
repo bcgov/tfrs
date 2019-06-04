@@ -1,6 +1,6 @@
 import React from 'react';
-import { Route, Switch, withRouter } from 'react-router';
-import { ConnectedRouter } from 'react-router-redux';
+import {Route, Switch, withRouter} from 'react-router';
+import {ConnectedRouter} from 'react-router-redux';
 
 import App from './app/App';
 import history from './app/History';
@@ -32,9 +32,11 @@ import DefaultCarbonIntensityDetailContainer from './admin/compliance_reporting/
 import DefaultCarbonIntensityEditContainer from './admin/compliance_reporting/DefaultCarbonIntensityEditContainer';
 import EnergyDensityDetailContainer from './admin/compliance_reporting/EnergyDensityDetailContainer';
 import EnergyDensityEditContainer from './admin/compliance_reporting/EnergyDensityEditContainer';
-import EnergyEffectivenessRatioDetailContainer from './admin/compliance_reporting/EnergyEffectivenessRatioDetailContainer';
+import EnergyEffectivenessRatioDetailContainer
+  from './admin/compliance_reporting/EnergyEffectivenessRatioDetailContainer';
 import EnergyEffectivenessRatioEditContainer from './admin/compliance_reporting/EnergyEffectivenessRatioEditContainer';
-import PetroleumCarbonIntensityDetailContainer from './admin/compliance_reporting/PetroleumCarbonIntensityDetailContainer';
+import PetroleumCarbonIntensityDetailContainer
+  from './admin/compliance_reporting/PetroleumCarbonIntensityDetailContainer';
 import PetroleumCarbonIntensityEditContainer from './admin/compliance_reporting/PetroleumCarbonIntensityEditContainer';
 import CreditTransactionsHistoryContainer from './admin/credit_trade_history/CreditTradeHistoryContainer';
 import SecureFileSubmissionsContainer from './secure_file_submission/SecureFileSubmissionContainer';
@@ -69,6 +71,7 @@ import NotificationsContainer from './notifications/NotificationsContainer';
 import AuthCallback from './app/AuthCallback';
 import CONFIG from './config';
 import OrganizationEditContainer from './organizations/OrganizationEditContainer';
+import withReferenceData from "./utils/reference_data_support";
 
 const Router = routerProps => (
   <ConnectedRouter history={history} key={Math.random()}>
@@ -120,11 +123,11 @@ const Router = routerProps => (
         <Route
           exact
           path={ORGANIZATIONS.ADD}
-          render={properties => <OrganizationEditContainer {...properties} mode="add" />}
+          render={properties => <OrganizationEditContainer {...properties} mode="add"/>}
         />
         <Route
           path={ORGANIZATIONS.EDIT}
-          render={properties => <OrganizationEditContainer {...properties} mode="edit" />}
+          render={properties => <OrganizationEditContainer {...properties} mode="edit"/>}
         />
         <Route
           exact
@@ -349,7 +352,7 @@ const Router = routerProps => (
           <Route
             key="compliance_reporting_edit_schedule_c"
             path={COMPLIANCE_REPORTING.EDIT_SCHEDULE_C}
-            component={withRouter(ScheduleCContainer)}
+            component={withRouter(withReferenceData()(ScheduleCContainer))}
           />,
           <Route
             key="compliance_reporting"
@@ -357,7 +360,7 @@ const Router = routerProps => (
             component={withRouter(ComplianceReportingContainer)}
           />
         ]}
-        <Route component={NotFound} />
+        <Route component={NotFound}/>
       </Switch>
     </App>
   </ConnectedRouter>

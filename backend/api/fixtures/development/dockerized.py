@@ -118,6 +118,7 @@ class DockerEnvironment(OperationalDataScript):
              organization=Organization.objects.get(id=1)).save()
 
         UserRole(user=User.objects.get(username='fs1'), role=Role.objects.get_by_natural_key('FSManager')).save()
+        UserRole(user=User.objects.get(username='fs1'), role=Role.objects.get_by_natural_key('ComplianceReporting')).save()
         UserRole(user=User.objects.get(username='fs1'), role=Role.objects.get_by_natural_key('FSDocSubmit')).save()
         UserRole(user=User.objects.get(username='fs2'), role=Role.objects.get_by_natural_key('FSManager')).save()
         UserRole(user=User.objects.get(username='fs2'), role=Role.objects.get_by_natural_key('FSDocSubmit')).save()

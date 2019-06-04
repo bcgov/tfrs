@@ -21,6 +21,8 @@ export const COMMENTS_API = '/comments';
 
 export const AUTOCOMPLETE_API = '/autocomplete';
 
+export const COMPLIANCE_REPORTING_API = '/compliance_reports';
+
 // to add additional reference data, just add the endpoint and desired state name here
 export const REFERENCE_DATA_API_ENDPOINTS = {
   organizationTypes: '/organizations/types',
@@ -37,6 +39,10 @@ if (CONFIG.FUEL_CODES.ENABLED) {
   REFERENCE_DATA_API_ENDPOINTS.fuelCodeStatuses = '/fuel_codes/statuses';
   REFERENCE_DATA_API_ENDPOINTS.approvedFuels = '/fuel_codes/approved_fuels';
   REFERENCE_DATA_API_ENDPOINTS.transportModes = '/fuel_codes/transport_modes';
+}
+
+if (CONFIG.COMPLIANCE_REPORTING.ENABLED) {
+  REFERENCE_DATA_API_ENDPOINTS.complianceReportTypes = '/compliance_reports/types';
 }
 
 export const CARBON_INTENSITIES = '/credit_calculation/carbon_intensity_limits';
