@@ -235,6 +235,7 @@ podTemplate(label: "develop-maven-${env.BUILD_NUMBER}", name: "develop-maven-${e
 ****/
         stage('Apply Deployment Configs') {
             script {
+                sh 'sleep 90s'
                 openshift.withProject("mem-tfrs-dev") {
                     def backendDCJson = openshift.process(readFile(file:'openshift/templates/components/backend/tfrs-dc.json'), "-p", "ENV_NAME=dev", "ENV_NAME_WITH_DASH=-dev", "SOURCE_IS_NAME=tfrs-develop")
                     def backendDC = openshift.apply(backendDCJson)
