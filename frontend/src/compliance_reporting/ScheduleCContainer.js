@@ -15,7 +15,6 @@ import Select from './components/Select';
 import SchedulesPage from './components/SchedulesPage';
 import ScheduleTabs from './components/ScheduleTabs';
 import { SCHEDULE_C } from '../constants/schedules/scheduleColumns';
-import { getQuantity } from '../utils/functions';
 
 class ScheduleCContainer extends Component {
   static addHeaders () {
@@ -112,6 +111,7 @@ class ScheduleCContainer extends Component {
         }
       }, {
         attributes: {
+          addCommas: true,
           dataNumberToFixed: 2,
           maxLength: '20',
           step: '0.01'
@@ -181,13 +181,6 @@ class ScheduleCContainer extends Component {
 
       if (col === SCHEDULE_C.FUEL_CLASS) {
         grid[row] = this._validateFuelClassColumn(grid[row], value);
-      }
-
-      if (col === SCHEDULE_C.QUANTITY) {
-        grid[row][col] = {
-          ...grid[row][col],
-          value: getQuantity(value)
-        };
       }
 
       if (col === SCHEDULE_C.EXPECTED_USE) { // Expected Use

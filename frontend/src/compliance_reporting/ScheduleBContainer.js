@@ -16,7 +16,6 @@ import Input from './components/Input';
 import Select from './components/Select';
 import SchedulesPage from './components/SchedulesPage';
 import ScheduleTabs from './components/ScheduleTabs';
-import { getQuantity } from '../utils/functions';
 import { SCHEDULE_B } from '../constants/schedules/scheduleColumns';
 
 class ScheduleBContainer extends Component {
@@ -172,6 +171,7 @@ class ScheduleBContainer extends Component {
         readOnly: true
       }, { // quantity of fuel supplied
         attributes: {
+          addCommas: true,
           dataNumberToFixed: 2,
           maxLength: '20',
           step: '0.01'
@@ -301,13 +301,6 @@ class ScheduleBContainer extends Component {
 
       if (col === SCHEDULE_B.PROVISION_OF_THE_ACT) {
         grid[row] = this._validateProvisionColumn(grid[row], value);
-      }
-
-      if (col === SCHEDULE_B.QUANTITY) {
-        grid[row][col] = {
-          ...grid[row][col],
-          value: getQuantity(value)
-        };
       }
     });
 
