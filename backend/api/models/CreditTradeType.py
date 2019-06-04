@@ -23,7 +23,7 @@
 
 from django.db import models
 
-from api.managers.CreditTradeTypeManager import CreditTradeTypeManager
+from api.managers.TheTypeManager import TheTypeManager
 from api.models.mixins.DisplayOrder import DisplayOrder
 from api.models.mixins.EffectiveDates import EffectiveDates
 from auditable.models import Auditable
@@ -52,7 +52,7 @@ class CreditTradeType(Auditable, DisplayOrder, EffectiveDates):
                    "of transfer."
     )
 
-    objects = CreditTradeTypeManager()
+    objects = TheTypeManager()
 
     def natural_key(self):
         """

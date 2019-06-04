@@ -20,10 +20,29 @@
     See the License for the specific language governing permissions and
     limitations under the License.
 """
-
 from django.db import models
 
+from auditable.models import Auditable
 
-class CreditTradeTypeManager(models.Manager):
-    def get_by_natural_key(self, the_type):
-        return self.get(the_type=the_type)
+
+class ApprovedFuelProvision(Auditable):
+    """
+    Maintain a bidirectional many-many association between approved fuels and
+    provisions of the act
+    """
+    fuel = models.ForeignKey(
+        'ApprovedFuel',
+        on_delete=models.PROTECT
+    )
+
+    provision = models.ForeignKey(
+        'ProvisionOfTheAct',
+        on_delete=models.PROTECT
+    )
+
+    class Meta:
+        db_table = 'approved_fuel_provision'
+        unique_together = (('fuel', 'provision'),)
+
+    db_table_comment = "Maintain a bidirectional many-many association " \
+                       "between approved fuels and provisions of the act"

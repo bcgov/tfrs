@@ -20,10 +20,18 @@
     See the License for the specific language governing permissions and
     limitations under the License.
 """
+from rest_framework import serializers
 
-from django.db import models
+from api.models.CarbonIntensityDeterminationType import \
+    CarbonIntensityDeterminationType
 
 
-class ComplianceReportTypeManager(models.Manager):
-    def get_by_natural_key(self, the_type):
-        return self.get(the_type=the_type)
+class DeterminationTypeSerializer(serializers.ModelSerializer):
+    """
+    Basic serializer for Carbon Intensity Determination Type
+    """
+    class Meta:
+        model = CarbonIntensityDeterminationType
+        fields = ('id', 'the_type', 'description')
+        read_only_fields = (
+            'id', 'the_type', 'description')

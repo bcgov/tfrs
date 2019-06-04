@@ -8,7 +8,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
-import { addFuelCode, getLatestFuelCode } from '../../actions/fuelCodeActions';
+import { addFuelCode, getLatestFuelCode } from '../../actions/fuelCodes';
 import history from '../../app/History';
 import Loading from '../../app/components/Loading';
 import CallableModal from '../../app/components/CallableModal';
@@ -16,44 +16,34 @@ import FuelCodeForm from './components/FuelCodeForm';
 import { FUEL_CODES } from '../../constants/routes/Admin';
 import { formatFacilityNameplate } from '../../utils/functions';
 import toastr from '../../utils/toastr';
-import autosaved from '../../utils/autosave_support';
 
 class FuelCodeAddContainer extends Component {
   constructor (props) {
     super(props);
 
-    if (props.loadedState) {
-      this.state = {
-        ...this.props.loadedState,
-        showModal: false
-      };
-    } else {
-      this.state = {
-        fields: {
-          applicationDate: '',
-          approvalDate: '',
-          carbonIntensity: '',
-          company: '',
-          effectiveDate: '',
-          expiryDate: '',
-          facilityLocation: '',
-          facilityNameplate: '',
-          feedstock: '',
-          feedstockLocation: '',
-          feedstockMisc: '',
-          feedstockTransportMode: [],
-          formerCompany: '',
-          fuel: '',
-          fuelCode: '',
-          fuelTransportMode: [],
-          partiallyRenewable: false,
-          renewablePercentage: ''
-        },
-        showModal: false
-      };
-    }
-
-    this.props.updateStateToSave({ fields: this.state.fields });
+    this.state = {
+      fields: {
+        applicationDate: '',
+        approvalDate: '',
+        carbonIntensity: '',
+        company: '',
+        effectiveDate: '',
+        expiryDate: '',
+        facilityLocation: '',
+        facilityNameplate: '',
+        feedstock: '',
+        feedstockLocation: '',
+        feedstockMisc: '',
+        feedstockTransportMode: [],
+        formerCompany: '',
+        fuel: '',
+        fuelCode: '',
+        fuelTransportMode: [],
+        partiallyRenewable: false,
+        renewablePercentage: ''
+      },
+      showModal: false
+    };
 
     this._addToFields = this._addToFields.bind(this);
     this._closeModal = this._closeModal.bind(this);
@@ -117,8 +107,6 @@ class FuelCodeAddContainer extends Component {
         fields: fieldState
       });
     }
-
-    this.props.updateStateToSave({ fields: fieldState });
   }
 
   _handlePrepopulate () {
@@ -269,7 +257,6 @@ FuelCodeAddContainer.propTypes = {
     }),
     success: PropTypes.bool
   }).isRequired,
-  loadedState: PropTypes.shape().isRequired,
   loggedInUser: PropTypes.shape({
     organization: PropTypes.shape({
       id: PropTypes.number,
@@ -286,17 +273,16 @@ FuelCodeAddContainer.propTypes = {
     transportModes: PropTypes.arrayOf(PropTypes.shape),
     isFetching: PropTypes.bool,
     isSuccessful: PropTypes.bool
-  }).isRequired,
-  updateStateToSave: PropTypes.func.isRequired
+  }).isRequired
 };
 
 const mapStateToProps = state => ({
   errors: state.rootReducer.fuelCode.errors,
   latestFuelCode: {
-    errors: state.rootReducer.fuelCode.errors,
-    isFetching: state.rootReducer.fuelCode.isFetching,
-    item: state.rootReducer.fuelCode.item,
-    success: state.rootReducer.fuelCode.success
+    errors: state.rootReducer.latestFuelCode.errors,
+    isFetching: state.rootReducer.latestFuelCode.isFetching,
+    item: state.rootReducer.latestFuelCode.item,
+    success: state.rootReducer.latestFuelCode.success
   },
   loggedInUser: state.rootReducer.userRequest.loggedInUser,
   referenceData: {
@@ -313,13 +299,7 @@ const mapDispatchToProps = dispatch => ({
   getLatestFuelCode: bindActionCreators(getLatestFuelCode, dispatch)
 });
 
-const autosaveConfig = {
-  name: 'fuelCodeAdd',
-  version: '20190513',
-  key: 'unsaved'
-};
-
-export default autosaved(autosaveConfig)(connect(
+export default (connect(
   mapStateToProps,
   mapDispatchToProps
 )(FuelCodeAddContainer));

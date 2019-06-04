@@ -9,7 +9,6 @@ import PropTypes from 'prop-types';
 
 import { fuelClasses } from '../actions/fuelClasses';
 import { notionalTransferTypes } from '../actions/notionalTransferTypes';
-import Loading from '../app/components/Loading';
 import Modal from '../app/components/Modal';
 import Input from './components/Input';
 import OrganizationAutocomplete from './components/OrganizationAutocomplete';
@@ -24,21 +23,26 @@ class ScheduleAContainer extends Component {
     return {
       grid: [
         [{
-          readOnly: true,
-          width: 50
+          className: 'row-number',
+          readOnly: true
         }, {
+          className: 'organization',
           readOnly: true,
           value: 'Legal Name of Trading Partner'
         }, {
+          className: 'address',
           readOnly: true,
           value: 'Postal Address'
         }, {
+          className: 'fuel-class',
           readOnly: true,
           value: 'Fuel Class'
         }, {
+          className: 'transfer-type',
           readOnly: true,
           value: 'Received OR Transferred'
         }, {
+          className: 'quantity',
           readOnly: true,
           value: 'Quantity (L)'
         }] // header
@@ -93,7 +97,6 @@ class ScheduleAContainer extends Component {
         dataEditor: OrganizationAutocomplete
       }, {
         className: 'text'
-        // dataEditor: AutoSuggest
       }, {
         className: 'text',
         dataEditor: Select,
@@ -200,7 +203,7 @@ class ScheduleAContainer extends Component {
         if (cell.attributes.address) {
           grid[row][SCHEDULE_A.POSTAL_ADDRESS] = {
             ...grid[row][SCHEDULE_A.POSTAL_ADDRESS],
-            value: `${cell.attributes.address.address_line_1} ${cell.attributes.address.address_line_2} ${cell.attributes.address.address_line_3} ${cell.attributes.address.city}, ${cell.attributes.address.state}`
+            value: `${cell.attributes.address.address_line_1} ${cell.attributes.address.address_line_2} ${cell.attributes.address.address_line_3} ${cell.attributes.address.city}, ${cell.attributes.address.state} ${cell.attributes.address.postal_code}`
           };
         }
       }
@@ -218,11 +221,6 @@ class ScheduleAContainer extends Component {
   }
 
   render () {
-    if (!this.props.referenceData ||
-    !this.props.referenceData.approvedFuels) {
-      return <Loading />;
-    }
-
     const { id } = this.props.match.params;
     let { period } = this.props.match.params;
 
@@ -244,7 +242,7 @@ class ScheduleAContainer extends Component {
         edit={this.edit}
         handleCellsChanged={this._handleCellsChanged}
         key="schedules"
-        scheduleType="A"
+        scheduleType="schedule-a"
         title="Schedule A - Notional Transfers of Renewable Fuel"
         totals={this.state.totals}
       >
@@ -293,9 +291,6 @@ ScheduleAContainer.propTypes = {
   notionalTransferTypes: PropTypes.shape({
     isFetching: PropTypes.bool,
     items: PropTypes.arrayOf(PropTypes.shape())
-  }).isRequired,
-  referenceData: PropTypes.shape({
-    approvedFuels: PropTypes.arrayOf(PropTypes.shape)
   }).isRequired
 };
 
@@ -307,9 +302,6 @@ const mapStateToProps = state => ({
   notionalTransferTypes: {
     isFetching: state.rootReducer.notionalTransferTypes.isFinding,
     items: state.rootReducer.notionalTransferTypes.items
-  },
-  referenceData: {
-    approvedFuels: state.rootReducer.referenceData.data.approvedFuels
   }
 });
 

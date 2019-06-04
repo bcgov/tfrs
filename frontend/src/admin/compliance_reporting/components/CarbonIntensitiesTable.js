@@ -25,7 +25,7 @@ const CarbonIntensitiesTable = (props) => {
             placement="bottom"
             overlay={(
               <Tooltip id={`tooltip-${row.original.id}`} placement="bottom">
-                <div>Revised Energy Density: {row.original.revisedDensity.density}</div>
+                <div>Revised Carbon Intensity: {row.original.revisedDensity.density}</div>
                 <div>Effective Date: {row.original.revisedDensity.effectiveDate}</div>
               </Tooltip>
             )}

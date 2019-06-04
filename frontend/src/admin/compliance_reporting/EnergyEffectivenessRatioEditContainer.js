@@ -108,7 +108,7 @@ class EnergyEffectivenessRatioEditContainer extends Component {
     };
 
     Object.entries(data).forEach((prop) => {
-      if (prop[1] === null) {
+      if (prop[1] === null || prop[1] === 'null') {
         delete data[prop[0]];
       }
     });
@@ -138,7 +138,7 @@ class EnergyEffectivenessRatioEditContainer extends Component {
           id="confirmSubmit"
           key="confirmSubmit"
         >
-          Are you sure you want to update the energy effectiveness ratios??
+          Are you sure you want to update the energy effectiveness ratio(s)?
         </Modal>
       ]);
     }
