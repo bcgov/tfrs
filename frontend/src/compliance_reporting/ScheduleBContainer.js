@@ -173,7 +173,7 @@ class ScheduleBContainer extends Component {
       }, { // quantity of fuel supplied
         attributes: {
           dataNumberToFixed: 2,
-          maxLength: '12',
+          maxLength: '20',
           step: '0.01'
         },
         className: 'number',
