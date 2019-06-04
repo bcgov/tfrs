@@ -9,6 +9,7 @@ from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 
 from api.models.ApprovedFuel import ApprovedFuel
+from api.models.CompliancePeriod import CompliancePeriod
 from api.models.FuelCode import FuelCode
 from api.models.FuelCodeStatus import FuelCodeStatus
 from api.models.TransportMode import TransportMode
@@ -67,6 +68,42 @@ class FuelCodeViewSet(AuditableMixin,
             ~Q(status__status__in=['Cancelled', 'Draft'])
         ).all()
 
+    @list_route(methods=['get'])
+    def filter(self, request, *args, **kwargs):
+        """
+        Retrieves all the fuel codes applicable to the fuel type.
+        Will also filter and make sure to retrieve only the ones that are
+        applicable to the compliance period provided
+        """
+        fuel_name = request.GET.get('fuel_name', None)
+        compliance_period = request.GET.get(
+            'compliance_period', None)
+
+        compliance_period_obj = CompliancePeriod.objects.filter(
+            description=compliance_period
+        ).first()
+
+        if fuel_name and compliance_period_obj:
+            effective_date = compliance_period_obj.effective_date
+            expiry_date = compliance_period_obj.expiration_date
+
+            fuel_codes = FuelCode.objects.filter(
+                fuel__name=fuel_name
+            ).filter(
+                Q(effective_date__gte=effective_date,
+                  effective_date__lte=expiry_date) |
+                Q(expiry_date__gte=effective_date,
+                  expiry_date__lte=expiry_date)
+            ).order_by(
+                'fuel_code', 'fuel_code_version', 'fuel_code_version_minor'
+            )
+        else:
+            fuel_codes = None
+
+        serializer = self.get_serializer(fuel_codes, read_only=True, many=True)
+
+        return Response(serializer.data)
+
     def destroy(self, request, *args, **kwargs):
         """
         Marks the fuel code as 'Cancelled'
@@ -85,14 +122,8 @@ class FuelCodeViewSet(AuditableMixin,
         """
         Retrieves the latest fuel code that matches the version provided
         """
-        fuel_code = None
-        fuel_code_version = None
-
-        if 'fuel_code' in request.GET:
-            fuel_code = request.GET['fuel_code']
-
-        if 'fuel_code' in request.GET:
-            fuel_code_version = request.GET['fuel_code_version']
+        fuel_code = request.GET.get('fuel_code', None)
+        fuel_code_version = request.GET.get('fuel_code_version', None)
 
         if not fuel_code_version or not fuel_code_version.isdigit():
             return Response(None)

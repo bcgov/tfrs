@@ -7,6 +7,7 @@
 
     OpenAPI spec version: v1
 
+
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
     You may obtain a copy of the License at
@@ -19,38 +20,39 @@
     See the License for the specific language governing permissions and
     limitations under the License.
 """
-
 from django.db import models
+from django.db.models import ManyToManyField
 
-from api.managers.TheTypeManager import TheTypeManager
-from api.models.mixins.DisplayOrder import DisplayOrder
-from api.models.mixins.EffectiveDates import EffectiveDates
 from auditable.models import Auditable
 
 
-class NotionalTransferType(Auditable, DisplayOrder, EffectiveDates):
+class ProvisionOfTheAct(Auditable):
     """
-    Contains a list of possible transfer types for Schedule A.
-    (Notional Transfers)
+    Provisions of the Act.
+    List of provisions that connects the fuel type to the determination
+    type for the carbon intensity
     """
-    the_type = models.CharField(
-        max_length=25,
-        unique=True,
-        db_comment="Transfer types for Schedule A."
-                   "e.g. Received or Transferred."
+    fuel = ManyToManyField(
+        'ApprovedFuel',
+        through='ApprovedFuelProvision'
     )
 
-    def __str__(self):
-        return self.the_type
+    determination_type = models.ForeignKey(
+        'CarbonIntensityDeterminationType',
+        blank=False,
+        null=False,
+        related_name='fuel_provisions',
+        on_delete=models.PROTECT
+    )
 
-    objects = TheTypeManager()
-
-    def natural_key(self):
-        return (self.the_type,)
+    description = models.CharField(
+        max_length=1000, blank=True, null=True,
+        db_comment="Description of the provision. This is the displayed name."
+    )
 
     class Meta:
-        db_table = 'notional_transfer_type'
+        db_table = 'fuel_provisions'
 
-    db_table_comment = "Contains a list of possible transfer types for " \
-                       "Schedule A (Notional Transfers)." \
-                       "e.g. Received or Transferred"
+    db_table_comment = "Provisions of the Act." \
+                       "List of provisions that connects the fuel type to " \
+                       "the determination type for the carbon intensity."

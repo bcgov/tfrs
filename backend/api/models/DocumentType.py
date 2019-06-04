@@ -23,7 +23,7 @@
 
 from django.db import models
 
-from api.managers.DocumentTypeManager import DocumentTypeManager
+from api.managers.TheTypeManager import TheTypeManager
 from api.models.DocumentCategory import DocumentCategory
 from api.models.mixins.EffectiveDates import EffectiveDates
 from auditable.models import Auditable
@@ -55,7 +55,7 @@ class DocumentType(Auditable, EffectiveDates):
         related_name='types'
     )
 
-    objects = DocumentTypeManager()
+    objects = TheTypeManager()
 
     def natural_key(self):
         """

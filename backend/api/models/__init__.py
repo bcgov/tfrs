@@ -68,6 +68,9 @@ from . import ExpectedUse
 from . import ComplianceReport
 from . import ComplianceReportSchedules
 from . import NotionalTransferType
+from . import CarbonIntensityDeterminationType
+from . import ProvisionOfTheAct
+from . import ApprovedFuelProvision
 
 
 patch_fields()

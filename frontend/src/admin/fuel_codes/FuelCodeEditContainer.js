@@ -7,7 +7,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
-import { getFuelCode, getLatestFuelCode, updateFuelCode } from '../../actions/fuelCodeActions';
+import { getFuelCode, getLatestFuelCode, updateFuelCode } from '../../actions/fuelCodes';
 import Loading from '../../app/components/Loading';
 import history from '../../app/History';
 import FuelCodeForm from './components/FuelCodeForm';
