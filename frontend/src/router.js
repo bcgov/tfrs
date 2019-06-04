@@ -54,6 +54,7 @@ import NotFound from './app/components/NotFound';
 import ComplianceReportingContainer from './compliance_reporting/ComplianceReportingContainer';
 import ComplianceReportIntroContainer from './compliance_reporting/ComplianceReportIntroContainer';
 import ScheduleAContainer from './compliance_reporting/ScheduleAContainer';
+import ScheduleBContainer from './compliance_reporting/ScheduleBContainer';
 import ScheduleCContainer from './compliance_reporting/ScheduleCContainer';
 import ContactUsContainer from './contact_us/ContactUsContainer';
 import CreditTransactionsContainer from './credit_transfers/CreditTransactionsContainer';
@@ -335,6 +336,11 @@ const Router = routerProps => (
             component={withRouter(ScheduleAContainer)}
           />,
           <Route
+            key="compliance_reporting_add_schedule_b"
+            path={COMPLIANCE_REPORTING.ADD_SCHEDULE_B}
+            component={withRouter(ScheduleBContainer)}
+          />,
+          <Route
             key="compliance_reporting_add_schedule_c"
             path={COMPLIANCE_REPORTING.ADD_SCHEDULE_C}
             component={withRouter(ScheduleCContainer)}
@@ -348,6 +354,11 @@ const Router = routerProps => (
             key="compliance_reporting_edit_schedule_a"
             path={COMPLIANCE_REPORTING.EDIT_SCHEDULE_A}
             component={withRouter(ScheduleAContainer)}
+          />,
+          <Route
+            key="compliance_reporting_edit_schedule_b"
+            path={COMPLIANCE_REPORTING.EDIT_SCHEDULE_B}
+            component={withRouter(ScheduleBContainer)}
           />,
           <Route
             key="compliance_reporting_edit_schedule_c"

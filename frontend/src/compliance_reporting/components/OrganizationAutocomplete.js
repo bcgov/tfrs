@@ -65,6 +65,7 @@ class OrganizationAutocomplete extends PureComponent {
               {` ${item.organization_address.address_line_2}`}
               {` ${item.organization_address.address_line_3}`}
               {` ${item.organization_address.city}`}, {item.organization_address.state}
+              {` ${item.organization_address.postal_code}`}
             </div>
           </div>
         )}

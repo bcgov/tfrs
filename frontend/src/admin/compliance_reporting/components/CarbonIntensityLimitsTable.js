@@ -29,7 +29,9 @@ const CarbonIntensityLimitsTable = (props) => {
             placement="bottom"
             overlay={(
               <Tooltip id={`tooltip-${row.original.id}`} placement="bottom">
-                <div>Revised Energy Density: {row.original.revisedLimits.diesel.density}</div>
+                <div>Revised Carbon Intensity Limit:
+                  {` ${row.original.revisedLimits.diesel.density}`}
+                </div>
                 <div>Effective Date: {row.original.revisedLimits.diesel.effectiveDate}</div>
               </Tooltip>
             )}
@@ -60,7 +62,9 @@ const CarbonIntensityLimitsTable = (props) => {
             placement="bottom"
             overlay={(
               <Tooltip id={`tooltip-${row.original.id}`} placement="bottom">
-                <div>Revised Energy Density: {row.original.revisedLimits.gasoline.density}</div>
+                <div>Revised Carbon Intensity Limit:
+                  {` ${row.original.revisedLimits.gasoline.density}`}
+                </div>
                 <div>Effective Date: {row.original.revisedLimits.gasoline.effectiveDate}</div>
               </Tooltip>
             )}

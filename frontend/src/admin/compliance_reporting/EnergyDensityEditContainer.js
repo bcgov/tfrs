@@ -128,7 +128,7 @@ class EnergyDensityEditContainer extends Component {
           id="confirmSubmit"
           key="confirmSubmit"
         >
-          Are you sure you want to update the energy densities?
+          Are you sure you want to update the energy density?
         </Modal>
       ]);
     }

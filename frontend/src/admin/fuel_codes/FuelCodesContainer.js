@@ -10,7 +10,7 @@ import PropTypes from 'prop-types';
 
 import FuelCodesPage from './components/FuelCodesPage';
 
-import { getFuelCodes } from '../../actions/fuelCodeActions';
+import { getFuelCodes } from '../../actions/fuelCodes';
 import AdminTabs from '../components/AdminTabs';
 
 class FuelCodesContainer extends Component {
