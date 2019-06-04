@@ -7,6 +7,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
+import { complianceReporting} from '../actions/complianceReporting';
 import { expectedUses } from '../actions/expectedUses';
 import Loading from '../app/components/Loading';
 import Modal from '../app/components/Modal';
