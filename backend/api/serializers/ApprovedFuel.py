@@ -24,6 +24,7 @@ from rest_framework import serializers
 
 from api.models.ApprovedFuel import ApprovedFuel
 from .FuelClass import FuelClassSerializer
+from .ProvisionOfTheAct import ProvisionOfTheActSerializer
 from .UnitOfMeasure import UnitOfMeasureSerializer
 
 
@@ -32,6 +33,7 @@ class ApprovedFuelSerializer(serializers.ModelSerializer):
     Default Serializer for Approved Fuels
     """
     fuel_classes = serializers.SerializerMethodField()
+    provisions = serializers.SerializerMethodField()
     unit_of_measure = UnitOfMeasureSerializer(read_only=True)
 
     def get_fuel_classes(self, obj):
@@ -46,13 +48,25 @@ class ApprovedFuelSerializer(serializers.ModelSerializer):
 
         return serializer.data
 
+    def get_provisions(self, obj):
+        """
+        Provisions allowed for the approved fuel
+        """
+        serializer = ProvisionOfTheActSerializer(
+            obj.provisions.order_by('description'),
+            many=True,
+            read_only=True
+        )
+
+        return serializer.data
+
     class Meta:
         model = ApprovedFuel
         fields = 'id', 'name', 'description', 'fuel_classes', \
             'credit_calculation_only', 'is_partially_renewable', \
-            'unit_of_measure'
+            'provisions', 'unit_of_measure'
 
         read_only_fields = (
             'id', 'name', 'description', 'credit_calculation_only',
-            'is_partially_renewable', 'unit_of_measure'
+            'is_partially_renewable', 'provisions', 'unit_of_measure'
         )

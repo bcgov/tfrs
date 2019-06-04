@@ -1,7 +1,8 @@
 from django.db import models
 
-from api.managers.ComplianceReportStatusManager import ComplianceReportStatusManager
-from api.managers.ComplianceReportTypeManager import ComplianceReportTypeManager
+from api.managers.ComplianceReportStatusManager import \
+    ComplianceReportStatusManager
+from api.managers.TheTypeManager import TheTypeManager
 from api.models.CompliancePeriod import CompliancePeriod
 from api.models.ComplianceReportSchedules import ScheduleC
 from api.models.Organization import Organization
@@ -19,8 +20,8 @@ class ComplianceReportStatus(Auditable, DisplayOrder, EffectiveDates):
         blank=True,
         null=True,
         unique=True,
-        db_comment="Contains an enumerated value to describe the compliance report "
-                   "status. This is a unique natural key."
+        db_comment="Contains an enumerated value to describe the compliance "
+                   "report status. This is a unique natural key."
     )
 
     objects = ComplianceReportStatusManager()
@@ -57,7 +58,7 @@ class ComplianceReportType(DisplayOrder):
                    "displayed name."
     )
 
-    objects = ComplianceReportTypeManager()
+    objects = TheTypeManager()
 
     def natural_key(self):
         """
@@ -111,4 +112,3 @@ class ComplianceReport(Auditable):
         db_table = 'compliance_report'
 
     db_table_comment = "Contains annual compliance report records"
-

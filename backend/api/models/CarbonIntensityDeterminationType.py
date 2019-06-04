@@ -7,6 +7,7 @@
 
     OpenAPI spec version: v1
 
+
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
     You may obtain a copy of the License at
@@ -28,33 +29,40 @@ from api.models.mixins.EffectiveDates import EffectiveDates
 from auditable.models import Auditable
 
 
-class OrganizationActionsType(Auditable, DisplayOrder, EffectiveDates):
+class CarbonIntensityDeterminationType(
+        Auditable, DisplayOrder, EffectiveDates):
+    """
+    Holds the different methods to determine the carbon intensities relating
+    to the Provision of the Act
+    """
     the_type = models.CharField(
         max_length=25,
-        unique=True,
-        db_comment="Enumerated value to describe the organization actions "
-                   "type."
-    )
-    description = models.CharField(
-        max_length=1000,
         blank=True,
         null=True,
-        db_comment="Description of the organization actions type. This is the "
+        unique=True,
+        db_comment="Determination Method to find out what the carbon "
+                   "intensity for the Provision of the Act"
+                   "e.g. Prescribed Carbon Intensity, Fuel Code, "
+                   "Default Carbon Intensity, etc."
+    )
+    description = models.CharField(
+        max_length=1000, blank=True, null=True,
+        db_comment="Description of the determination type. This is the "
                    "displayed name."
     )
 
     objects = TheTypeManager()
 
     def natural_key(self):
+        """
+        Allows the_type to be used to identify a row in the table
+        """
         return (self.the_type,)
 
     class Meta:
-        db_table = 'organization_actions_type'
+        db_table = 'carbon_intensity_determination_type'
 
-    db_table_comment = "Contains a list of actions that each organization " \
-                       "type is permitted to do. Example actions include a " \
-                       "fuel supplier organization type being permitted to " \
-                       "create a new Credit Transfer Proposal whereas a " \
-                       "government organization type is permitted to create " \
-                       "a new credit transaction. For example; Part 3 " \
-                       "Award, Validation, or Reduction"
+    db_table_comment = "Contains a list of determination types that will be " \
+                       "used by the Provision of the Act table." \
+                       "e.g. Prescribed Carbon Intensity, Fuel Code, " \
+                       "Default Carbon Intensity, etc."

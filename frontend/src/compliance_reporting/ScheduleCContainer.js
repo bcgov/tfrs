@@ -25,17 +25,19 @@ class ScheduleCContainer extends Component {
     return {
       grid: [
         [{
-          readOnly: true,
-          width: 50
+          className: 'row-number',
+          readOnly: true
         }, {
           colSpan: 4,
           readOnly: true,
           value: 'FUEL IDENTIFICATION AND QUANTITY'
         }, {
+          className: 'expected-use',
           readOnly: true,
           rowSpan: 2,
           value: 'Expected Use'
         }, {
+          className: 'other',
           readOnly: true,
           rowSpan: 2,
           value: 'If other, write in expected use:'
@@ -43,15 +45,19 @@ class ScheduleCContainer extends Component {
         [{
           readOnly: true
         }, {
+          className: 'fuel-type',
           readOnly: true,
           value: 'Fuel Type'
         }, {
+          className: 'fuel-class',
           readOnly: true,
           value: 'Fuel Class'
         }, {
+          className: 'quantity',
           readOnly: true,
           value: 'Quantity of Fuel Supplied'
         }, {
+          className: 'units',
           readOnly: true,
           value: 'Units'
         }]
@@ -389,7 +395,7 @@ class ScheduleCContainer extends Component {
         edit={this.edit}
         handleCellsChanged={this._handleCellsChanged}
         key="schedules"
-        scheduleType="C"
+        scheduleType="schedule-c"
         title="Schedule C - Fuels used for other purposes"
       >
         <p>
