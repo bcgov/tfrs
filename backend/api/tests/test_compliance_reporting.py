@@ -72,7 +72,7 @@ class TestComplianceReporting(BaseTestCase):
         payload = {
             'status': 'Draft',
             'type': 'Compliance Report',
-            'compliance_period': 10
+            'compliance_period': '2017'
         }
 
         response = self.clients['fs_user_1'].post(
