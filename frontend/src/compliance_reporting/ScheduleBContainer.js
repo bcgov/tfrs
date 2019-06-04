@@ -363,9 +363,11 @@ class ScheduleBContainer extends Component {
       };
     }
 
-    row[SCHEDULE_B.FUEL_CLASS] = { // if fuel type is updated, reset fuel class
+    // if fuel type only allows one fuel class, pre-select the fuel class
+    // otherwise, reset the fuel class
+    row[SCHEDULE_B.FUEL_CLASS] = {
       ...row[SCHEDULE_B.FUEL_CLASS],
-      value: ''
+      value: (selectedFuel.fuelClasses.length === 1) ? selectedFuel.fuelClasses[0].fuelClass : ''
     };
 
     row[SCHEDULE_B.PROVISION_OF_THE_ACT] = { // reset the provision of the act

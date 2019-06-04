@@ -243,9 +243,11 @@ class ScheduleCContainer extends Component {
       };
     }
 
-    row[SCHEDULE_C.FUEL_CLASS] = { // if fuel type is updated, reset fuel class
+    // if fuel type only allows one fuel class, pre-select the fuel class
+    // otherwise, reset the fuel class
+    row[SCHEDULE_C.FUEL_CLASS] = {
       ...row[SCHEDULE_C.FUEL_CLASS],
-      value: ''
+      value: (selectedFuel.fuelClasses.length === 1) ? selectedFuel.fuelClasses[0].fuelClass : ''
     };
 
     row[SCHEDULE_C.UNITS] = { // automatically load the unit of measure for this fuel type
