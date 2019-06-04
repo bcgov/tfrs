@@ -233,6 +233,7 @@ podTemplate(label: "develop-maven-${env.BUILD_NUMBER}", name: "develop-maven-${e
             echo 'backup script completed'
         }
 ****/
+        checkout changelog: false, poll: false, scm: [$class: 'GitSCM', branches: [[name: "devops-apply-dc-in-pipeline"]], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[credentialsId: 'github-account', url: 'https://github.com/bcgov/tfrs.git']]]
         stage('Apply Deployment Configs') {
             script {
                 sh 'sleep 90s'
