@@ -2,7 +2,7 @@
     "kind": "Template",
     "apiVersion": "template.openshift.io/v1",
     "metadata": {
-        "name": "notification-server-bc",
+        "name": "client-angular-app",
         "creationTimestamp": null
     },
     "parameters": [
@@ -12,8 +12,8 @@
             "required": true
         },
         {
-            "name": "NOTIFICATION_SERVER_IS_NAME",
-            "description": "The notification server image stream name, valid values: notification_server and notification_server_develop",
+            "name": "CLIENT_ANGULAR_APP_IS_NAME",
+            "description": "The client angular app image stream name, valid values: client-angular-app or client-develop-angular-app",
             "required": true
         }
     ],
@@ -22,11 +22,19 @@
             "kind": "BuildConfig",
             "apiVersion": "build.openshift.io/v1",
             "metadata": {
-                "name": "${NOTIFICATION_SERVER_IS_NAME}",
+                "name": "${CLIENT_ANGULAR_APP_IS_NAME}",
                 "creationTimestamp": null
             },
             "spec": {
-                "triggers": [],
+                "triggers": [
+                    {
+                        "type": "ConfigChange"
+                    },
+                    {
+                        "type": "ImageChange",
+                        "imageChange": {}
+                    }
+                ],
                 "runPolicy": "Serial",
                 "source": {
                     "type": "Git",
@@ -49,7 +57,7 @@
                 "output": {
                     "to": {
                         "kind": "ImageStreamTag",
-                        "name": "${NOTIFICATION_SERVER_IS_NAME}:latest"
+                        "name": "${CLIENT_ANGULAR_APP_IS_NAME}:latest"
                     }
                 },
                 "resources": {
@@ -63,6 +71,7 @@
                 },
                 "postCommit": {},
                 "nodeSelector": null,
+                "successfulBuildsHistoryLimit": 5,
                 "failedBuildsHistoryLimit": 5
             },
             "status": {

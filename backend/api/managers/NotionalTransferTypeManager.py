@@ -20,15 +20,10 @@
     See the License for the specific language governing permissions and
     limitations under the License.
 """
-from rest_framework import serializers
 
-from api.models.ExpectedUse import ExpectedUse
+from django.db import models
 
 
-class ExpectedUseSerializer(serializers.ModelSerializer):
-    """
-    Basic Serializer for Expected Use
-    """
-    class Meta:
-        model = ExpectedUse
-        fields = ('id', 'description')
+class NotionalTransferTypeManager(models.Manager):
+    def get_by_natural_key(self, the_type):
+        return self.get(the_type=the_type)

@@ -3,12 +3,11 @@
  * All data handling & manipulation should be handled here.
  */
 
-import React, {Component} from 'react';
-import {connect} from 'react-redux';
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
-import {expectedUses} from '../actions/expectedUses';
-import {complianceReporting} from "../actions/complianceReporting";
+import { expectedUses } from '../actions/expectedUses';
 import Loading from '../app/components/Loading';
 import Modal from '../app/components/Modal';
 import Input from './components/Input';
@@ -19,9 +18,10 @@ import {SCHEDULE_C} from '../constants/schedules/scheduleColumns';
 import COMPLIANCE_REPORTING from "../constants/routes/ComplianceReporting";
 import history from "../app/History";
 import toastr from "../utils/toastr";
+import { getQuantity } from '../utils/functions';
 
 class ScheduleCContainer extends Component {
-  static addHeaders() {
+  static addHeaders () {
     return {
       grid: [
         [{
@@ -63,7 +63,7 @@ class ScheduleCContainer extends Component {
     };
   }
 
-  constructor(props) {
+  constructor (props) {
     super(props);
 
     this.state = ScheduleCContainer.addHeaders();
@@ -83,10 +83,10 @@ class ScheduleCContainer extends Component {
     this._validateFuelTypeColumn = this._validateFuelTypeColumn.bind(this);
   }
 
-  componentDidMount() {
+  componentDidMount () {
     this.props.loadExpectedUses();
     if (!this.edit) {
-      this._addRow(2);
+      this._addRow(5);
     } else {
       this.loadData();
     }
@@ -197,7 +197,7 @@ class ScheduleCContainer extends Component {
     });
   }
 
-  _getFuelClasses(row) {
+  _getFuelClasses (row) {
     const fuelType = this.state.grid[row][SCHEDULE_C.FUEL_TYPE];
 
     const selectedFuel = this.props.referenceData.approvedFuels
@@ -210,7 +210,7 @@ class ScheduleCContainer extends Component {
     return [];
   }
 
-  _handleCellsChanged(changes, addition = null) {
+  _handleCellsChanged (changes, addition = null) {
     const grid = this.state.grid.map(row => [...row]);
 
     changes.forEach((change) => {
@@ -235,24 +235,11 @@ class ScheduleCContainer extends Component {
         grid[row] = this._validateFuelClassColumn(grid[row], value);
       }
 
-      if (col === SCHEDULE_C.QUANTITY) { // Quantity and Fuel Supplied
-        if (Number.isNaN(Number(value))) {
-          grid[row][SCHEDULE_C.QUANTITY] = {
-            ...grid[row][SCHEDULE_C.QUANTITY],
-            value: ''
-          };
-        } else {
-          let roundedValue = Math.round(value * 100) / 100;
-
-          if (roundedValue < 0) {
-            roundedValue *= -1;
-          }
-
-          grid[row][col] = {
-            ...grid[row][col],
-            value: roundedValue
-          };
-        }
+      if (col === SCHEDULE_C.QUANTITY) {
+        grid[row][col] = {
+          ...grid[row][col],
+          value: getQuantity(value)
+        };
       }
 
       if (col === SCHEDULE_C.EXPECTED_USE) { // Expected Use
@@ -286,7 +273,6 @@ class ScheduleCContainer extends Component {
   }
 
   _handleSubmit() {
-    console.log(this.state.grid);
     const starting_row = 2;
 
 
@@ -336,7 +322,7 @@ class ScheduleCContainer extends Component {
     }
   }
 
-  _validateFuelClassColumn(currentRow, value) {
+  _validateFuelClassColumn (currentRow, value) {
     const row = currentRow;
     const fuelType = currentRow[SCHEDULE_C.FUEL_TYPE];
 
@@ -354,7 +340,7 @@ class ScheduleCContainer extends Component {
     return row;
   }
 
-  _validateFuelTypeColumn(currentRow, value) {
+  _validateFuelTypeColumn (currentRow, value) {
     const row = currentRow;
     const selectedFuel = this.props.referenceData.approvedFuels.find(fuel => fuel.name === value);
 
@@ -382,8 +368,8 @@ class ScheduleCContainer extends Component {
       return <Loading/>;
     }
 
-    const {id} = this.props.match.params;
-    let {period} = this.props.match.params;
+    const { id } = this.props.match.params;
+    let { period } = this.props.match.params;
 
     if (!period) {
       period = `${new Date().getFullYear() - 1}`;
@@ -403,16 +389,17 @@ class ScheduleCContainer extends Component {
         edit={this.edit}
         handleCellsChanged={this._handleCellsChanged}
         key="schedules"
+        scheduleType="C"
         title="Schedule C - Fuels used for other purposes"
       >
         <p>
-          Under section 6 (3) of the
+        Under section 6 (3) of the
           <em> Greenhouse Gas Reduction (Renewable and Low Carbon Fuel Requirements) Act
           </em>
-          , Part 3 requirements do not apply in relation to fuel quantities that the Part 3 fuel
-          supplier expects, on reasonable grounds, will be used for a purpose other than
-          transportation. The quantities and expected uses of excluded fuels must be reported in
-          accordance with section 11.08 (4) (d) (ii) of the Regulation.
+        , Part 3 requirements do not apply in relation to fuel quantities that the Part 3 fuel
+        supplier expects, on reasonable grounds, will be used for a purpose other than
+        transportation. The quantities and expected uses of excluded fuels must be reported in
+        accordance with section 11.08 (4) (d) (ii) of the Regulation.
         </p>
         <p>
           <strong>
@@ -422,7 +409,7 @@ class ScheduleCContainer extends Component {
           </strong>
         </p>
         <p>
-          Report &quot;middle-distillate&quot; spec diesel heating oil as Petroleum-based diesel.
+        Report &quot;middle-distillate&quot; spec diesel heating oil as Petroleum-based diesel.
         </p>
       </SchedulesPage>,
       <Modal
@@ -443,7 +430,8 @@ class ScheduleCContainer extends Component {
   }
 }
 
-ScheduleCContainer.defaultProps = {};
+ScheduleCContainer.defaultProps = {
+};
 
 ScheduleCContainer.propTypes = {
   expectedUses: PropTypes.shape({

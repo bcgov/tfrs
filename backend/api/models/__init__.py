@@ -67,5 +67,7 @@ from . import PetroleumCarbonIntensityCategory
 from . import ExpectedUse
 from . import ComplianceReport
 from . import ComplianceReportSchedules
+from . import NotionalTransferType
+
 
 patch_fields()

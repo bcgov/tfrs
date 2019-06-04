@@ -45,7 +45,7 @@ class ScheduleButtons extends Component {
       </div>
     ];
   }
-};
+}
 
 ScheduleButtons.defaultProps = {
   submit: false,
