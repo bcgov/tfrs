@@ -237,6 +237,18 @@ node("master-maven-${env.BUILD_NUMBER}") {
     stage ('Last confirmation to deploy to Test') {
         input "Maintenance Page is up and Test Database backup has completed, confirm to deploy ${env.tfrs_release} to Test? This is the last confirmation required."
     }
+
+    stage('Apply Deployment Configs') {
+        timeout(30) {
+            script {
+                openshift.withProject("mem-tfrs-test") {
+                    def backendDCJson = openshift.process(readFile(file:'openshift/templates/components/backend/tfrs-dc.json'), "-p", "ENV_NAME=test", "ENV_NAME_WITH_DASH=-test", "SOURCE_IS_NAME=tfrs")
+                    def backendDC = openshift.apply(backendDCJson)
+                    sh 'sleep 120s'
+                } //end of openshift.withProject
+            } //end of script
+        }
+    }
 	
     stage('Deploy Backend to Test') {
         openshiftTag destStream: 'tfrs', verbose: 'true', destTag: 'test', srcStream: 'tfrs', srcTag: "${IMAGE_HASH_BACKEND}"
@@ -283,6 +295,18 @@ node("master-maven-${env.BUILD_NUMBER}") {
 
     stage ('Confirm to deploy to Prod') {
         input "Deploy release ${env.tfrs_release} to Prod? There will be one more confirmation before deploying on Prod."
+    }
+
+    stage('Apply Deployment Configs') {
+        timeout(30) {
+            script {
+                openshift.withProject("mem-tfrs-prod") {
+                    def backendDCJson = openshift.process(readFile(file:'openshift/templates/components/backend/tfrs-dc.json'), "-p", "ENV_NAME=prod", "ENV_NAME_WITH_DASH=", "SOURCE_IS_NAME=tfrs")
+                    def backendDC = openshift.apply(backendDCJson)
+                    sh 'sleep 120s'
+                } //end of openshift.withProject
+            } //end of script
+        }
     }
 
     stage('Bring up Maintenance Page on Prod') {
