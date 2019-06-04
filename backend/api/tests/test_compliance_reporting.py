@@ -23,13 +23,7 @@
 """
 import json
 
-from datetime import date
-from decimal import Decimal
 from rest_framework import status
-
-from api.models.ApprovedFuel import ApprovedFuel
-from api.models.CompliancePeriod import CompliancePeriod
-from api.models.FuelClass import FuelClass
 
 from .base_test_case import BaseTestCase
 
@@ -78,7 +72,7 @@ class TestComplianceReporting(BaseTestCase):
         payload = {
             'status': 'Draft',
             'type': 'Compliance Report',
-            'compliance_period': 10
+            'compliance_period': '2017'
         }
 
         response = self.clients['fs_user_1'].post(
@@ -99,14 +93,14 @@ class TestComplianceReporting(BaseTestCase):
         payload = {
             'status': 'Submitted',
             'type': 'Compliance Report',
-            'compliance_period': 10,
-            'schedule_c': {
+            'compliancePeriod': '2019',
+            'scheduleC': {
                 'records': [
                     {
-                        'fuel_type': 'LNG',
-                        'fuel_class': 'Diesel',
+                        'fuelType': 'LNG',
+                        'fuelClass': 'Diesel',
                         'quantity': 40,
-                        'expected_use': 'Other',
+                        'expectedUse': 'Other',
                         'rationale': 'Test rationale'
                     }
                 ]
@@ -125,7 +119,7 @@ class TestComplianceReporting(BaseTestCase):
         payload = {
             'status': 'Draft',
             'type': 'Compliance Report',
-            'compliancePeriod': 10,
+            'compliancePeriod': '2019',
             'scheduleC': {
                 'records': [
                     {
@@ -252,7 +246,7 @@ class TestComplianceReporting(BaseTestCase):
         payload = {
             'status': 'Draft',
             'type': 'Compliance Report',
-            'compliance_period': 10
+            'compliance_period': '2019'
         }
 
         response = self.clients['fs_user_2'].post(
@@ -267,7 +261,7 @@ class TestComplianceReporting(BaseTestCase):
         payload = {
             'status': 'Draft',
             'type': 'Compliance Report',
-            'compliance_period': 10
+            'compliance_period': '2019'
         }
 
         response = self.clients['gov_analyst'].post(

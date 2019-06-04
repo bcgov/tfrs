@@ -1,6 +1,6 @@
 {
   "name": "tfrs",
-  "version": "1.4.4",
+  "version": "1.4.5",
   "private": true,
   "dependencies": {
     "@fortawesome/fontawesome": "^1.1.8",
@@ -101,8 +101,7 @@
     "production": "NODE_ENV=production webpack -p --config webpack.production.config.js",
     "build": "webpack",
     "test": "jest --coverage",
-    "snyk-protect": "snyk protect",
-    "prepublish": "npm run snyk-protect"
+    "snyk-protect": "snyk protect"
   },
   "snyk": true
 }

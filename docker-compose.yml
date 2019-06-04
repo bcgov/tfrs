@@ -60,6 +60,7 @@ services:
           - EMAIL_FROM_ADDRESS=tfrs-dev@test.local
           - FUEL_CODES_API_ENABLED=True
           - CREDIT_CALCULATION_API_ENABLED=True
+          - COMPLIANCE_REPORTING_API_ENABLED=True
         env_file:
             - minio.env
         depends_on:

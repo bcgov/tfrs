@@ -15,6 +15,7 @@ from auditable.views import AuditableMixin
 class ComplianceReportViewSet(AuditableMixin, mixins.CreateModelMixin,
                               mixins.RetrieveModelMixin,
                               mixins.UpdateModelMixin,
+                              mixins.DestroyModelMixin,
                               mixins.ListModelMixin, viewsets.GenericViewSet):
     """
     This viewset automatically provides `list`, `create`, `retrieve`,
@@ -22,7 +23,7 @@ class ComplianceReportViewSet(AuditableMixin, mixins.CreateModelMixin,
     """
 
     permission_classes = (ComplianceReportPermissions,)
-    http_method_names = ['get', 'post', 'put', 'patch']
+    http_method_names = ['get', 'post', 'put', 'patch', 'delete']
     queryset = ComplianceReport.objects.all()
     filter_backends = (filters.OrderingFilter,)
     ordering_fields = '__all__'
