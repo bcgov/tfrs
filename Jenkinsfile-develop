@@ -1,6 +1,6 @@
 result = 0
 runParallel = true
-tfrsRelease="v1.4.5"
+tfrsRelease="v1.4.6"
 
 def prepareBackendBuildStages() {
     def buildBackendList = []
