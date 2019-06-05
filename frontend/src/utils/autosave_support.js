@@ -1,7 +1,8 @@
 import React, {Component} from 'react';
 import Loading from "../app/components/Loading";
-import {loadAutosaveData, saveAutosaveData} from "../actions/autosaveActions";
+import {loadAutosaveData, saveAutosaveData, clearAutosaveData} from "../actions/autosaveActions";
 import {connect} from "react-redux";
+import {withRouter} from "react-router";
 
 function getDisplayName(WrappedComponent) {
   return WrappedComponent.displayName || WrappedComponent.name || 'Component';
@@ -28,13 +29,17 @@ function autosaved(config) {
         };
 
         this.updateStateToSave = this.updateStateToSave.bind(this);
-        this.updateAutosaveKey = this.updateAutosaveKey.bind(this);
+        this.invalidateAutosaved = this.invalidateAutosaved.bind(this);
         this.tick = this.tick.bind(this);
       }
 
       _getKey() {
         const s = this.state;
-        return `autosave-${s.name}:${s.key}:${s.version}`
+        return `autosave-${s.name}:${s.key}:${s.version}:${this.props.location.pathname}`
+      }
+
+      invalidateAutosaved() {
+        this.props.clearState();
       }
 
       _doSave() {
@@ -47,6 +52,10 @@ function autosaved(config) {
         }).catch(() => {
           this.setState({saving: false});
         });
+      }
+
+      _doSaveNoStateUpdates() {
+        this.props.saveState(this._getKey(), this.state.stateToSave);
       }
 
       _doLoad() {
@@ -62,13 +71,6 @@ function autosaved(config) {
               loadedState: null
             }
           );
-        });
-      }
-
-      updateAutosaveKey(key) {
-        this.setState({
-          key,
-          dirty: true
         });
       }
 
@@ -94,8 +96,8 @@ function autosaved(config) {
       }
 
       componentWillUnmount() {
-        this._doSave();
         clearInterval(this.state.timerId);
+        this._doSaveNoStateUpdates();
       }
 
       render() {
@@ -104,9 +106,10 @@ function autosaved(config) {
         } else {
           return (<WrappedComponent
             updateStateToSave={this.updateStateToSave}
-            updateAutosaveKey={this.updateAutosaveKey}
             loadedState={this.state.loadedState}
+            invalidateAutosaved={this.invalidateAutosaved}
             saving={this.state.saving}
+            {...this.props}
           />)
         }
 
@@ -128,12 +131,16 @@ function autosaved(config) {
             return new Promise((resolve, reject) => {
               dispatch(saveAutosaveData({key, state, resolve, reject}));
             });
+          },
+          clearState: () => {
+            return new Promise((resolve, reject) => {
+              dispatch(clearAutosaveData({resolve, reject}));
+            });
           }
         }
       };
 
-
-    return connect(null, mapDispatchToProps)(AutosaveSupport);
+    return withRouter(connect(null, mapDispatchToProps)(AutosaveSupport));
   }
 
 };
