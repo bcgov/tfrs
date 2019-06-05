@@ -14,9 +14,9 @@
         },
         {
             "name": "ENV_NAME_WITH_DASH",
+	        "value": "",
             "displayName": "Environment name",
-            "description": "Sample values: -dev, -test, and empty. empty means prod",
-            "required": true
+            "description": "Sample values: -dev and -test. For prod, please don't passin anything for parameter ENV_NAME_WITH_DASH"
         },
         {
             "name": "SOURCE_IS_NAME",
