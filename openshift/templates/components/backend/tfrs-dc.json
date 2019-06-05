@@ -16,7 +16,7 @@
             "name": "ENV_NAME_WITH_DASH",
 	        "value": "",
             "displayName": "Environment name",
-            "description": "Sample values: -dev and -test. For prod, please don't passin anything for parameter ENV_NAME_WITH_DASH"
+            "description": "Sample values: -dev and -test. For prod, please don't pass in any value."
         },
         {
             "name": "SOURCE_IS_NAME",
