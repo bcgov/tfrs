@@ -1,6 +1,7 @@
 from django.utils import timezone
 
 from django.http import JsonResponse, HttpResponse
+from rest_framework.decorators import list_route
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.status import HTTP_200_OK, HTTP_202_ACCEPTED, HTTP_404_NOT_FOUND
 
@@ -30,6 +31,12 @@ class AutosaveViewSet(ViewSet):
         serializer = AutosavedFormDataSerializer(result)
 
         return JsonResponse(serializer.data, status=HTTP_200_OK)
+
+    @list_route(methods=['post'])
+    def clear(self, request):
+        user = self.request.user
+        AutosavedFormData.objects.filter(user=user).all().delete()
+        return HttpResponse(status=HTTP_200_OK)
 
     def create(self, request):
         serializer = AutosavedFormDataSerializer(data=request.data, context={'request': request})
