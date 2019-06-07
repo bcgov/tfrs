@@ -96,6 +96,15 @@
     right: 0;
     width: 30rem;
     z-index: 2000;
+
+    &.schedule-b {
+      width: 40rem;
+
+      .net-total {
+        border-top: 1px solid $primary;
+        padding-top: 1rem;
+      }
+    }
   
     h2 {
       font-weight: bold;

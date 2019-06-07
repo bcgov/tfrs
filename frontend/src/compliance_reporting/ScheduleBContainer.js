@@ -17,7 +17,7 @@ import Select from './components/Select';
 import SchedulesPage from './components/SchedulesPage';
 import ScheduleTabs from './components/ScheduleTabs';
 import { SCHEDULE_B } from '../constants/schedules/scheduleColumns';
-import { getQuantity } from '../utils/functions';
+import { formatNumeric, getQuantity } from '../utils/functions';
 
 class ScheduleBContainer extends Component {
   static addHeaders () {
@@ -110,8 +110,7 @@ class ScheduleBContainer extends Component {
 
     if (energyDensity && quantity) {
       value = Number(energyDensity) * Number(quantity.replace(/\D/g, ''));
-      value = value.toFixed(2);
-      value = value.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,'); // add commas
+      value = formatNumeric(value, 2); // add commas
     }
 
     row[SCHEDULE_B.ENERGY_CONTENT] = {
@@ -148,10 +147,10 @@ class ScheduleBContainer extends Component {
 
       if (rawValue >= 0) {
         credit.raw = rawValue;
-        credit.value = getQuantity(rawValue).toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,');
+        credit.value = formatNumeric(getQuantity(rawValue), 2);
       } else {
         debit.raw = rawValue;
-        debit.value = getQuantity(rawValue).toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,');
+        debit.value = formatNumeric(getQuantity(rawValue), 2);
       }
 
       row[SCHEDULE_B.CREDIT] = {
@@ -332,9 +331,9 @@ class ScheduleBContainer extends Component {
       debit: 0
     };
 
-    for (let x = 1; x < grid.length; x += 1) {
-      let credit = Number(grid[x][SCHEDULE_B.CREDIT].value);
-      let debit = Number(grid[x][SCHEDULE_B.DEBIT].value);
+    for (let x = 2; x < grid.length; x += 1) {
+      let credit = Number(grid[x][SCHEDULE_B.CREDIT].rawValue);
+      let debit = Number(grid[x][SCHEDULE_B.DEBIT].rawValue) * -1;
 
       if (Number.isNaN(credit)) {
         credit = 0;
