@@ -17,6 +17,7 @@ import Select from './components/Select';
 import SchedulesPage from './components/SchedulesPage';
 import ScheduleTabs from './components/ScheduleTabs';
 import { SCHEDULE_B } from '../constants/schedules/scheduleColumns';
+import { getQuantity } from '../utils/functions';
 
 class ScheduleBContainer extends Component {
   static addHeaders () {
@@ -81,7 +82,7 @@ class ScheduleBContainer extends Component {
           readOnly: true,
           value: 'EER'
         }, {
-          className: 'density',
+          className: 'energy-content',
           readOnly: true,
           value: <div>Energy content (MJ)</div>
         }, {
@@ -101,6 +102,74 @@ class ScheduleBContainer extends Component {
     };
   }
 
+  static calculateEnergyContent (currentRow) {
+    const row = currentRow;
+    const energyDensity = row[SCHEDULE_B.ENERGY_DENSITY].value;
+    const quantity = row[SCHEDULE_B.QUANTITY].value;
+    let value = '';
+
+    if (energyDensity && quantity) {
+      value = Number(energyDensity) * Number(quantity.replace(/\D/g, ''));
+      value = value.toFixed(2);
+      value = value.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,'); // add commas
+    }
+
+    row[SCHEDULE_B.ENERGY_CONTENT] = {
+      ...row[SCHEDULE_B.ENERGY_CONTENT],
+      value
+    };
+
+    return row;
+  }
+
+  static calculateCredit (currentRow) {
+    const row = currentRow;
+    const carbonIntensityFuel = row[SCHEDULE_B.CARBON_INTENSITY_FUEL].value;
+    const carbonIntensityLimit = row[SCHEDULE_B.CARBON_INTENSITY_LIMIT].value;
+    const energyEffectivenessRatio = row[SCHEDULE_B.EER].value;
+    const energyContent = row[SCHEDULE_B.ENERGY_CONTENT].value;
+
+    // Formula (CI class x EER fuel - CI fuel) x EC fuel / 1000000
+    if (carbonIntensityFuel && carbonIntensityLimit && energyContent && energyContent) {
+      let rawValue = Number(carbonIntensityLimit) * Number(energyEffectivenessRatio);
+      rawValue -= Number(carbonIntensityFuel);
+      rawValue *= Number(energyContent.replace(/\D/g, ''));
+      rawValue /= 1000000;
+
+      const credit = {
+        raw: 0,
+        value: '-'
+      };
+
+      const debit = {
+        raw: 0,
+        value: '-'
+      };
+
+      if (rawValue >= 0) {
+        credit.raw = rawValue;
+        credit.value = getQuantity(rawValue).toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,');
+      } else {
+        debit.raw = rawValue;
+        debit.value = getQuantity(rawValue).toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,');
+      }
+
+      row[SCHEDULE_B.CREDIT] = {
+        ...row[SCHEDULE_B.CREDIT],
+        rawValue: credit.raw,
+        value: credit.value
+      };
+
+      row[SCHEDULE_B.DEBIT] = {
+        ...row[SCHEDULE_B.DEBIT],
+        rawValue: debit.raw,
+        value: debit.value
+      };
+    }
+
+    return row;
+  }
+
   static getCarbonIntensityLimit (row, selectedFuel, fuelClass, values) {
     const provision = row[SCHEDULE_B.PROVISION_OF_THE_ACT];
     const fuelCode = row[SCHEDULE_B.FUEL_CODE];
@@ -117,8 +186,8 @@ class ScheduleBContainer extends Component {
     if (selectedFuel.provisions.length === 1 ||
       (determinationType.theType === 'Default Carbon Intensity')) {
       return (fuelClass === 'Diesel')
-        ? values.carbonIntensityLimit.diesel
-        : values.carbonIntensityLimit.gasoline;
+        ? values.carbonIntensityLimit.diesel.toFixed(2)
+        : values.carbonIntensityLimit.gasoline.toFixed(2);
     }
 
     if (determinationType.theType === 'Fuel Code' && fuelCode.value !== '') {
@@ -241,8 +310,10 @@ class ScheduleBContainer extends Component {
       }, { // energy content
         readOnly: true
       }, { // credit
+        rawValue: 0,
         readOnly: true
       }, { // debit
+        rawValue: 0,
         readOnly: true
       }]);
 
@@ -373,7 +444,22 @@ class ScheduleBContainer extends Component {
         grid[row] = this._validateProvisionColumn(grid[row], value);
       }
 
-      this._populateFuelCalculationValues(grid[row]);
+      if ([
+        SCHEDULE_B.FUEL_CODE,
+        SCHEDULE_B.FUEL_TYPE,
+        SCHEDULE_B.PROVISION_OF_THE_ACT
+      ].indexOf(col) >= 0) {
+        this._populateFuelCalculationValues(grid[row]);
+      }
+
+      if ([
+        SCHEDULE_B.ENERGY_DENSITY,
+        SCHEDULE_B.FUEL_CODE,
+        SCHEDULE_B.QUANTITY
+      ].indexOf(col) >= 0) {
+        grid[row] = ScheduleBContainer.calculateEnergyContent(grid[row]);
+        grid[row] = ScheduleBContainer.calculateCredit(grid[row]);
+      }
     });
 
     this.setState({
@@ -411,12 +497,12 @@ class ScheduleBContainer extends Component {
 
       row[SCHEDULE_B.CARBON_INTENSITY_FUEL] = {
         ...row[SCHEDULE_B.CARBON_INTENSITY_FUEL],
-        value: values.defaultCarbonIntensity
+        value: values.defaultCarbonIntensity.toFixed(2)
       };
 
       row[SCHEDULE_B.ENERGY_DENSITY] = {
         ...row[SCHEDULE_B.ENERGY_DENSITY],
-        value: values.energyDensity
+        value: values.energyDensity.toFixed(2)
       };
 
       row[SCHEDULE_B.EER] = {
@@ -476,8 +562,27 @@ class ScheduleBContainer extends Component {
         ? `${selectedFuel.provisions[0].provision} - ${selectedFuel.provisions[0].description}` : ''
     };
 
-    row[SCHEDULE_B.FUEL_CODE] = { // reset the fuel Code
+    // reset the following columns
+    row[SCHEDULE_B.CREDIT] = {
+      ...row[SCHEDULE_B.CREDIT],
+      readOnly: true,
+      value: ''
+    };
+
+    row[SCHEDULE_B.DEBIT] = {
+      ...row[SCHEDULE_B.DEBIT],
+      readOnly: true,
+      value: ''
+    };
+
+    row[SCHEDULE_B.FUEL_CODE] = {
       ...row[SCHEDULE_B.FUEL_CODE],
+      readOnly: true,
+      value: ''
+    };
+
+    row[SCHEDULE_B.ENERGY_CONTENT] = {
+      ...row[SCHEDULE_B.ENERGY_CONTENT],
       readOnly: true,
       value: ''
     };
