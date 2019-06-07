@@ -20,7 +20,6 @@ function* loadAutosaveData(action) {
   });
 }
 
-
 function* saveAutosaveData(action) {
   const {key, state, resolve, reject} = action.payload;
 
@@ -38,11 +37,27 @@ function* saveAutosaveData(action) {
   });
 }
 
+function* clearAutosaveData(action) {
+  const {resolve, reject} = action.payload;
+
+  axios
+    .post(`${Routes.BASE_URL}${Routes.AUTOSAVE_API}/clear`)
+    .then((response) => {
+      try {
+        resolve();
+      } catch (e) {
+        reject(e);
+      }
+    }).catch((error) => {
+    reject(error);
+  });
+}
 
 export default function* autosaveSaga() {
 
   yield all([
     takeEvery('LOAD_AUTOSAVE_DATA', loadAutosaveData),
-    takeEvery('SAVE_AUTOSAVE_DATA', saveAutosaveData)
+    takeEvery('SAVE_AUTOSAVE_DATA', saveAutosaveData),
+    takeEvery('CLEAR_AUTOSAVE_DATA', clearAutosaveData)
   ]);
 }
