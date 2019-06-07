@@ -5,6 +5,7 @@
 
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import { toastr as reduxToastr } from 'react-redux-toastr';
 import PropTypes from 'prop-types';
 
 import { complianceReporting } from '../actions/complianceReporting';
@@ -19,6 +20,8 @@ import { SCHEDULE_C } from '../constants/schedules/scheduleColumns';
 import COMPLIANCE_REPORTING from '../constants/routes/ComplianceReporting';
 import history from '../app/History';
 import toastr from '../utils/toastr';
+import { getQuantity } from '../utils/functions';
+import autosaved from '../utils/autosave_support';
 
 class ScheduleCContainer extends Component {
   static addHeaders () {
@@ -91,7 +94,10 @@ class ScheduleCContainer extends Component {
 
   componentDidMount () {
     this.props.loadExpectedUses();
-    if (!this.edit) {
+
+    if (this.props.loadedState) {
+      this.restoreFromAutosaved();
+    } else if (!this.edit) {
       this._addRow(5);
     } else {
       this.loadData();
@@ -99,16 +105,29 @@ class ScheduleCContainer extends Component {
   }
 
   componentWillReceiveProps (nextProps, nextContext) {
+    if (this.props.saving && !nextProps.saving) {
+      reduxToastr.success('Autosaved');
+    }
+
     if (this.props.complianceReporting.isCreating && !nextProps.complianceReporting.isCreating) {
-      // todo error check
-      history.push(COMPLIANCE_REPORTING.LIST);
-      toastr.complianceReporting('Draft');
+      if (!nextProps.complianceReporting.success) {
+        reduxToastr.error('Error saving');
+      } else {
+        history.push(COMPLIANCE_REPORTING.LIST);
+        toastr.complianceReporting('Draft');
+        this.props.invalidateAutosaved();
+      }
       return;
     }
 
     if (this.props.complianceReporting.isUpdating && !nextProps.complianceReporting.isUpdating) {
-      // todo error check
-      toastr.complianceReporting('Draft');
+      if (!nextProps.complianceReporting.success) {
+        console.log(nextProps);
+        reduxToastr.error('Error saving');
+      } else {
+        toastr.complianceReporting('Draft');
+        this.props.invalidateAutosaved();
+      }
     }
 
     if (this.props.complianceReporting.isGetting && !nextProps.complianceReporting.isGetting) {
@@ -137,6 +156,31 @@ class ScheduleCContainer extends Component {
 
   loadData () {
     this.props.getComplianceReport(this.props.match.params.id);
+  }
+
+  restoreFromAutosaved () {
+    const { loadedState } = this.props;
+
+    this.setState(ScheduleCContainer.addHeaders());
+    this.rowNumber = 1;
+    this._addRow(loadedState.grid.length - 2);
+
+    for (let i = 2; i < loadedState.grid.length; i += 1) {
+      const { grid } = this.state;
+      const record = loadedState.grid[i];
+
+      grid[i][SCHEDULE_C.FUEL_TYPE].value = record[SCHEDULE_C.FUEL_TYPE].value;
+      grid[i][SCHEDULE_C.FUEL_CLASS].value = record[SCHEDULE_C.FUEL_CLASS].value;
+      grid[i][SCHEDULE_C.EXPECTED_USE].value = record[SCHEDULE_C.EXPECTED_USE].value;
+      grid[i][SCHEDULE_C.EXPECTED_USE_OTHER].value = record[SCHEDULE_C.EXPECTED_USE_OTHER].value;
+      grid[i][SCHEDULE_C.QUANTITY].value = record[SCHEDULE_C.QUANTITY].value;
+      const selectedFuel = this.props.referenceData.approvedFuels.find(fuel =>
+        fuel.name === record[SCHEDULE_C.FUEL_TYPE].value);
+      grid[i][SCHEDULE_C.UNITS].value = (selectedFuel && selectedFuel.unitOfMeasure)
+        ? selectedFuel.unitOfMeasure.name : '';
+
+      this.setState({ grid });
+    }
   }
 
   _addRow (numberOfRows = 1) {
@@ -237,7 +281,14 @@ class ScheduleCContainer extends Component {
         grid[row] = this._validateFuelClassColumn(grid[row], value);
       }
 
-      if (col === SCHEDULE_C.EXPECTED_USE) { // Expected Use
+      if (col === SCHEDULE_C.QUANTITY) {
+        grid[row][col] = {
+          ...grid[row][col],
+          value: getQuantity(value)
+        };
+      }
+
+      if (col === SCHEDULE_C.EXPECTED_USE) { //  Expected Use
         if (value !== 'Other') {
           grid[row][SCHEDULE_C.EXPECTED_USE_OTHER] = {
             ...grid[row][SCHEDULE_C.EXPECTED_USE_OTHER],
@@ -256,6 +307,8 @@ class ScheduleCContainer extends Component {
     this.setState({
       grid
     });
+
+    this.props.updateStateToSave({ grid });
   }
 
   _handleDelete () {
@@ -264,6 +317,7 @@ class ScheduleCContainer extends Component {
     }
     history.push(COMPLIANCE_REPORTING.LIST);
     toastr.complianceReporting('Cancelled');
+    this.props.invalidateAutosaved();
   }
 
   _handleSubmit () {
@@ -389,13 +443,13 @@ class ScheduleCContainer extends Component {
         title="Schedule C - Fuels used for other purposes"
       >
         <p>
-        Under section 6 (3) of the
+          Under section 6 (3) of the
           <em> Greenhouse Gas Reduction (Renewable and Low Carbon Fuel Requirements) Act
           </em>
-        , Part 3 requirements do not apply in relation to fuel quantities that the Part 3 fuel
-        supplier expects, on reasonable grounds, will be used for a purpose other than
-        transportation. The quantities and expected uses of excluded fuels must be reported in
-        accordance with section 11.08 (4) (d) (ii) of the Regulation.
+          , Part 3 requirements do not apply in relation to fuel quantities that the Part 3 fuel
+          supplier expects, on reasonable grounds, will be used for a purpose other than
+          transportation. The quantities and expected uses of excluded fuels must be reported in
+          accordance with section 11.08 (4) (d) (ii) of the Regulation.
         </p>
         <p>
           <strong>
@@ -405,7 +459,7 @@ class ScheduleCContainer extends Component {
           </strong>
         </p>
         <p>
-        Report &quot;middle-distillate&quot; spec diesel heating oil as Petroleum-based diesel.
+          Report &quot;middle-distillate&quot; spec diesel heating oil as Petroleum-based diesel.
         </p>
       </SchedulesPage>,
       <Modal
@@ -427,6 +481,7 @@ class ScheduleCContainer extends Component {
 }
 
 ScheduleCContainer.defaultProps = {
+  saving: false
 };
 
 ScheduleCContainer.propTypes = {
@@ -438,7 +493,9 @@ ScheduleCContainer.propTypes = {
     isCreating: PropTypes.bool,
     isUpdating: PropTypes.bool,
     isGetting: PropTypes.bool,
-    item: PropTypes.shape()
+    success: PropTypes.bool,
+    item: PropTypes.shape(),
+    errorMessage: PropTypes.shape()
   }).isRequired,
   loadExpectedUses: PropTypes.func.isRequired,
   createComplianceReport: PropTypes.func.isRequired,
@@ -452,6 +509,10 @@ ScheduleCContainer.propTypes = {
       period: PropTypes.string
     }).isRequired
   }).isRequired,
+  updateStateToSave: PropTypes.func.isRequired,
+  invalidateAutosaved: PropTypes.func.isRequired,
+  loadedState: PropTypes.any,
+  saving: PropTypes.bool,
   referenceData: PropTypes.shape({
     approvedFuels: PropTypes.arrayOf(PropTypes.shape)
   }).isRequired
@@ -466,7 +527,9 @@ const mapStateToProps = state => ({
     isGetting: state.rootReducer.complianceReporting.isGetting,
     isCreating: state.rootReducer.complianceReporting.isCreating,
     isUpdating: state.rootReducer.complianceReporting.isUpdating,
-    item: state.rootReducer.complianceReporting.item
+    success: state.rootReducer.complianceReporting.success,
+    item: state.rootReducer.complianceReporting.item,
+    errorMessage: state.rootReducer.complianceReporting.errorMessage
   },
   referenceData: {
     approvedFuels: state.rootReducer.referenceData.data.approvedFuels
@@ -481,4 +544,10 @@ const mapDispatchToProps = {
   getComplianceReport: complianceReporting.get
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(ScheduleCContainer);
+const config = {
+  key: 'unsaved',
+  version: 1,
+  name: 'schedule-c'
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(autosaved(config)(ScheduleCContainer));
