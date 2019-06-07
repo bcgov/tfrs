@@ -128,7 +128,6 @@ def prepareBuildNotificationServer() {
     }
 }
 
-
 podTemplate(label: "develop-backend-python-${env.BUILD_NUMBER}", name: "develop-backend-python-${env.BUILD_NUMBER}", serviceAccount: 'jenkins-basic', cloud: 'openshift',
     containers: [
         containerTemplate(
@@ -192,7 +191,6 @@ podTemplate(label: "develop-maven-${env.BUILD_NUMBER}", name: "develop-maven-${e
 
     node("develop-maven-${env.BUILD_NUMBER}") {
 
-        //supposed to checkout tfrsRelease
         checkout changelog: false, poll: false, scm: [$class: 'GitSCM', branches: [[name: "${tfrsRelease}"]], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[credentialsId: 'github-account', url: 'https://github.com/bcgov/tfrs.git']]]
 
         //run backend builds
@@ -232,6 +230,18 @@ podTemplate(label: "develop-maven-${env.BUILD_NUMBER}", name: "develop-maven-${e
             echo 'backup script completed'
         }
         
+        stage('Apply Deployment Configs') {
+            timeout(30) {
+                script {
+                    openshift.withProject("mem-tfrs-dev") {
+                        def backendDCJson = openshift.process(readFile(file:'openshift/templates/components/backend/tfrs-dc.json'), "-p", "ENV_NAME=dev", "ENV_NAME_WITH_DASH=-dev", "SOURCE_IS_NAME=tfrs-develop")
+                        def backendDC = openshift.apply(backendDCJson)
+                        sh 'sleep 120s'
+                    } //end of openshift.withProject
+                } //end of script
+            }
+        }
+
         stage('Deploy Backend on Dev') {
             script {
                 openshift.withProject("mem-tfrs-tools") {
