@@ -165,7 +165,7 @@
 
 .schedule-b {
   .credit, .debit {
-    min-width: 10rem;
+    min-width: 8rem;
   }
 
   .density {
@@ -173,9 +173,14 @@
     width: 12rem;
   }
 
+  .energy-effectiveness-ratio {
+    min-width: 8rem;
+    width: 8rem;
+  }
+
   .fuel-class {
-    min-width: 15rem;
-    width: 15rem;
+    min-width: 12rem;
+    width: 12rem;
   }
 
   .fuel-code {
@@ -189,13 +194,13 @@
   }
 
   .quantity {
-    min-width: 15rem;
-    width: 15rem;
+    min-width: 12rem;
+    width: 12rem;
   }
 
   .provision {
-    min-width: 25rem;
-    width: 25rem;
+    min-width: 35rem;
+    width: 35rem;
   }
 
   .row-number {

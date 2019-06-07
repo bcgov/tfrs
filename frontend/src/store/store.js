@@ -30,7 +30,7 @@ import { notionalTransferTypes } from '../actions/notionalTransferTypes';
 import { petroleumCarbonIntensities } from '../actions/petroleumCarbonIntensities';
 import { roles } from '../actions/roleActions';
 import autosaveSaga from './autosaveStore';
-import { complianceReporting } from "../actions/complianceReporting";
+import { complianceReporting } from '../actions/complianceReporting';
 
 const middleware = routerMiddleware(history);
 const sagaMiddleware = createSagaMiddleware();
