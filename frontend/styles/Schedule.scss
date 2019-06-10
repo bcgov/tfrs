@@ -100,6 +100,10 @@
     &.schedule-b {
       width: 40rem;
 
+      .debit {
+        padding-right: 1rem;
+      }
+
       .net-total {
         border-top: 1px solid $primary;
         padding-top: 1rem;

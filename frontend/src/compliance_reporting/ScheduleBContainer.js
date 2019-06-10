@@ -162,6 +162,18 @@ class ScheduleBContainer extends Component {
     return row;
   }
 
+  static getCarbonIntensityLimit (fuelClass, values) {
+    if (fuelClass === 'Diesel') {
+      return values.carbonIntensityLimit.diesel.toFixed(2);
+    }
+
+    if (fuelClass === 'Gasoline') {
+      return values.carbonIntensityLimit.gasoline.toFixed(2);
+    }
+
+    return '-';
+  }
+
   static getDefaultCarbonIntensity (row, selectedFuel, values) {
     const provision = row[SCHEDULE_B.PROVISION_OF_THE_ACT];
     const fuelCode = row[SCHEDULE_B.FUEL_CODE];
@@ -187,6 +199,10 @@ class ScheduleBContainer extends Component {
         `${code.fuelCode}${code.fuelCodeVersion}.${code.fuelCodeVersionMinor}` === fuelCode.value);
 
       return selectedFuelCode.carbonIntensity;
+    }
+
+    if (determinationType.theType === 'Alternative') {
+      return '';
     }
 
     return '-';
@@ -294,14 +310,18 @@ class ScheduleBContainer extends Component {
         readOnly: true
       }, { // carbon intensity of fuel
         attributes: {
-          addCommas: true,
+          allowNegative: true,
           dataNumberToFixed: 2,
-          maxLength: '20',
+          maxLength: '7',
           step: '0.01'
         },
         className: 'number',
         dataEditor: Input,
-        readOnly: true
+        readOnly: true,
+        valueViewer: (props) => {
+          const { value } = props;
+          return <span>{value && value !== '-' ? formatNumeric(Number(value), 2) : value}</span>;
+        }
       }, { // energy density
         className: 'number',
         readOnly: true
@@ -459,6 +479,7 @@ class ScheduleBContainer extends Component {
       }
 
       if ([
+        SCHEDULE_B.FUEL_CLASS,
         SCHEDULE_B.FUEL_CODE,
         SCHEDULE_B.FUEL_TYPE,
         SCHEDULE_B.PROVISION_OF_THE_ACT
@@ -467,9 +488,11 @@ class ScheduleBContainer extends Component {
       }
 
       if ([
+        SCHEDULE_B.CARBON_INTENSITY_FUEL,
         SCHEDULE_B.ENERGY_DENSITY,
         SCHEDULE_B.FUEL_CODE,
-        SCHEDULE_B.QUANTITY
+        SCHEDULE_B.QUANTITY,
+        SCHEDULE_B.PROVISION_OF_THE_ACT
       ].indexOf(col) >= 0) {
         grid[row] = ScheduleBContainer.calculateEnergyContent(grid[row]);
         grid[row] = ScheduleBContainer.calculateCredit(grid[row]);
@@ -492,6 +515,7 @@ class ScheduleBContainer extends Component {
     const row = currentRow;
     const fuelClass = currentRow[SCHEDULE_B.FUEL_CLASS];
     const fuelType = currentRow[SCHEDULE_B.FUEL_TYPE];
+    const provision = row[SCHEDULE_B.PROVISION_OF_THE_ACT];
 
     const selectedFuel = this.props.referenceData.approvedFuels
       .find(fuel => fuel.name === fuelType.value);
@@ -501,19 +525,28 @@ class ScheduleBContainer extends Component {
     if (values) {
       row[SCHEDULE_B.CARBON_INTENSITY_LIMIT] = {
         ...row[SCHEDULE_B.CARBON_INTENSITY_LIMIT],
-        value: (fuelClass.value === 'Diesel')
-          ? values.carbonIntensityLimit.diesel.toFixed(2)
-          : values.carbonIntensityLimit.gasoline.toFixed(2)
+        value: ScheduleBContainer.getCarbonIntensityLimit(fuelClass.value, values)
       };
 
-      row[SCHEDULE_B.CARBON_INTENSITY_FUEL] = {
-        ...row[SCHEDULE_B.CARBON_INTENSITY_FUEL],
-        value: ScheduleBContainer.getDefaultCarbonIntensity(
-          row,
-          selectedFuel,
-          values
-        )
-      };
+      let determinationType = {};
+
+      if (provision.value) {
+        const selectedProvision = selectedFuel.provisions.find(item =>
+          `${item.provision} - ${item.description}` === provision.value);
+
+        ({ determinationType } = selectedProvision);
+      }
+
+      if (determinationType.theType !== 'Alternative') {
+        row[SCHEDULE_B.CARBON_INTENSITY_FUEL] = {
+          ...row[SCHEDULE_B.CARBON_INTENSITY_FUEL],
+          value: ScheduleBContainer.getDefaultCarbonIntensity(
+            row,
+            selectedFuel,
+            values
+          )
+        };
+      }
 
       row[SCHEDULE_B.ENERGY_DENSITY] = {
         ...row[SCHEDULE_B.ENERGY_DENSITY],
@@ -624,7 +657,8 @@ class ScheduleBContainer extends Component {
     if (selectedProvision && selectedProvision.determinationType.theType === 'Alternative') {
       row[SCHEDULE_B.CARBON_INTENSITY_FUEL] = {
         ...row[SCHEDULE_B.CARBON_INTENSITY_FUEL],
-        readOnly: false
+        readOnly: false,
+        value: ''
       };
     } else {
       row[SCHEDULE_B.CARBON_INTENSITY_FUEL] = {
