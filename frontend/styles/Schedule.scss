@@ -166,6 +166,11 @@
     width: 20rem;
   }
 
+  .row-number {
+    min-width: 4rem;
+    width: 4rem;
+  }
+
   .transfer-type {
     min-width: 25rem;
     width: 25rem;
@@ -218,7 +223,8 @@
   }
 
   .row-number {
-    width: 5rem;
+    min-width: 4rem;
+    width: 4rem;
   }
 
   .units {
@@ -253,7 +259,8 @@
   }
 
   .row-number {
-    width: 5rem;
+    min-width: 4rem;
+    width: 4rem;
   }
 
   .units {

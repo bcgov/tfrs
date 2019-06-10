@@ -17,7 +17,7 @@ import Select from './components/Select';
 import SchedulesPage from './components/SchedulesPage';
 import ScheduleTabs from './components/ScheduleTabs';
 import { SCHEDULE_B } from '../constants/schedules/scheduleColumns';
-import { formatNumeric, getQuantity } from '../utils/functions';
+import { formatNumeric } from '../utils/functions';
 
 class ScheduleBContainer extends Component {
   static addHeaders () {
@@ -110,7 +110,6 @@ class ScheduleBContainer extends Component {
 
     if (energyDensity && quantity) {
       value = Number(energyDensity) * Number(quantity.replace(/\D/g, ''));
-      value = formatNumeric(value, 2); // add commas
     }
 
     row[SCHEDULE_B.ENERGY_CONTENT] = {
@@ -132,36 +131,30 @@ class ScheduleBContainer extends Component {
     if (carbonIntensityFuel && carbonIntensityLimit && energyContent && energyContent) {
       let rawValue = Number(carbonIntensityLimit) * Number(energyEffectivenessRatio);
       rawValue -= Number(carbonIntensityFuel);
-      rawValue *= Number(energyContent.replace(/\D/g, ''));
+      rawValue *= Number(energyContent);
       rawValue /= 1000000;
 
       const credit = {
-        raw: 0,
-        value: '-'
+        value: 0
       };
 
       const debit = {
-        raw: 0,
-        value: '-'
+        value: 0
       };
 
       if (rawValue >= 0) {
-        credit.raw = rawValue;
-        credit.value = formatNumeric(getQuantity(rawValue), 2);
+        credit.value = rawValue;
       } else {
-        debit.raw = rawValue;
-        debit.value = formatNumeric(getQuantity(rawValue), 2);
+        debit.value = rawValue * -1;
       }
 
       row[SCHEDULE_B.CREDIT] = {
         ...row[SCHEDULE_B.CREDIT],
-        rawValue: credit.raw,
         value: credit.value
       };
 
       row[SCHEDULE_B.DEBIT] = {
         ...row[SCHEDULE_B.DEBIT],
-        rawValue: debit.raw,
         value: debit.value
       };
     }
@@ -169,7 +162,7 @@ class ScheduleBContainer extends Component {
     return row;
   }
 
-  static getCarbonIntensityLimit (row, selectedFuel, fuelClass, values) {
+  static getDefaultCarbonIntensity (row, selectedFuel, values) {
     const provision = row[SCHEDULE_B.PROVISION_OF_THE_ACT];
     const fuelCode = row[SCHEDULE_B.FUEL_CODE];
 
@@ -184,9 +177,7 @@ class ScheduleBContainer extends Component {
 
     if (selectedFuel.provisions.length === 1 ||
       (determinationType.theType === 'Default Carbon Intensity')) {
-      return (fuelClass === 'Diesel')
-        ? values.carbonIntensityLimit.diesel.toFixed(2)
-        : values.carbonIntensityLimit.gasoline.toFixed(2);
+      return values.defaultCarbonIntensity.toFixed(2);
     }
 
     if (determinationType.theType === 'Fuel Code' && fuelCode.value !== '') {
@@ -299,21 +290,45 @@ class ScheduleBContainer extends Component {
       }, { // units
         readOnly: true
       }, { // carbon intensity limit
+        className: 'number',
         readOnly: true
       }, { // carbon intensity of fuel
+        attributes: {
+          addCommas: true,
+          dataNumberToFixed: 2,
+          maxLength: '20',
+          step: '0.01'
+        },
+        className: 'number',
+        dataEditor: Input,
         readOnly: true
       }, { // energy density
+        className: 'number',
         readOnly: true
       }, { // EER
+        className: 'number',
         readOnly: true
       }, { // energy content
-        readOnly: true
+        className: 'number',
+        readOnly: true,
+        valueViewer: (props) => {
+          const { value } = props;
+          return <span>{value ? formatNumeric(Number(value), 2) : ''}</span>;
+        }
       }, { // credit
-        rawValue: 0,
-        readOnly: true
+        className: 'number',
+        readOnly: true,
+        valueViewer: (props) => {
+          const { value } = props;
+          return <span>{value ? formatNumeric(Number(value), 2) : ''}</span>;
+        }
       }, { // debit
-        rawValue: 0,
-        readOnly: true
+        className: 'number',
+        readOnly: true,
+        valueViewer: (props) => {
+          const { value } = props;
+          return <span>{value ? formatNumeric(Number(value), 2) : ''}</span>;
+        }
       }]);
 
       this.rowNumber += 1;
@@ -332,8 +347,8 @@ class ScheduleBContainer extends Component {
     };
 
     for (let x = 2; x < grid.length; x += 1) {
-      let credit = Number(grid[x][SCHEDULE_B.CREDIT].rawValue);
-      let debit = Number(grid[x][SCHEDULE_B.DEBIT].rawValue) * -1;
+      let credit = Number(grid[x][SCHEDULE_B.CREDIT].value);
+      let debit = Number(grid[x][SCHEDULE_B.DEBIT].value);
 
       if (Number.isNaN(credit)) {
         credit = 0;
@@ -486,17 +501,18 @@ class ScheduleBContainer extends Component {
     if (values) {
       row[SCHEDULE_B.CARBON_INTENSITY_LIMIT] = {
         ...row[SCHEDULE_B.CARBON_INTENSITY_LIMIT],
-        value: ScheduleBContainer.getCarbonIntensityLimit(
-          row,
-          selectedFuel,
-          fuelClass.value,
-          values
-        )
+        value: (fuelClass.value === 'Diesel')
+          ? values.carbonIntensityLimit.diesel.toFixed(2)
+          : values.carbonIntensityLimit.gasoline.toFixed(2)
       };
 
       row[SCHEDULE_B.CARBON_INTENSITY_FUEL] = {
         ...row[SCHEDULE_B.CARBON_INTENSITY_FUEL],
-        value: values.defaultCarbonIntensity.toFixed(2)
+        value: ScheduleBContainer.getDefaultCarbonIntensity(
+          row,
+          selectedFuel,
+          values
+        )
       };
 
       row[SCHEDULE_B.ENERGY_DENSITY] = {
@@ -604,6 +620,19 @@ class ScheduleBContainer extends Component {
 
     const selectedProvision = selectedFuel.provisions.find(provision =>
       `${provision.provision} - ${provision.description}` === value);
+
+    if (selectedProvision && selectedProvision.determinationType.theType === 'Alternative') {
+      row[SCHEDULE_B.CARBON_INTENSITY_FUEL] = {
+        ...row[SCHEDULE_B.CARBON_INTENSITY_FUEL],
+        readOnly: false
+      };
+    } else {
+      row[SCHEDULE_B.CARBON_INTENSITY_FUEL] = {
+        ...row[SCHEDULE_B.CARBON_INTENSITY_FUEL],
+        readOnly: true,
+        value: ''
+      };
+    }
 
     if (selectedProvision && selectedProvision.determinationType.theType === 'Fuel Code') {
       row[SCHEDULE_B.FUEL_CODE] = {
