@@ -5,6 +5,9 @@
         "name": "tfrs-dc",
         "creationTimestamp": null
     },
+    "labels": {
+        "template": "tfrs-backend-template"
+    },
     "parameters": [
         {
             "name": "ENV_NAME",
@@ -13,19 +16,123 @@
             "required": true
         },
         {
-            "name": "ENV_NAME_WITH_DASH",
-	        "value": "",
-            "displayName": "Environment name",
-            "description": "Sample values: -dev and -test. For prod, please don't pass in any value."
-        },
-        {
             "name": "SOURCE_IS_NAME",
             "displayName": "The source image stream name",
             "description": "The image stream could trigger the deployment, sample values: tfrs-develop and tfrs",
             "required": true
+        },
+        {
+            "name": "ROUTE_HOST_NAME",
+            "displayName": "Route host name",
+            "description": "Valid values: dev dev-lowcarbonfuels.pathfinder.gov.bc.ca",
+            "required": true
+        },
+        {
+            "name": "ROUTE_NAME",
+            "displayName": "Route name",
+            "description": "Valid values: dev dev-lowcarbonfuels-backend",
+            "required": true
+        },
+        {
+            "name": "KEYCLOAK_SA_BASEURL",
+            "displayName": "KEYCLOAK_SA_BASEURL",
+            "description": "Valid values: dev https://sso-dev.pathfinder.gov.bc.ca",
+            "required": true
+        },
+        {
+            "name": "KEYCLOAK_SA_CLIENT_ID",
+            "displayName": "KEYCLOAK_SA_CLIENT_ID",
+            "description": "Valid values: dev tfrs-dev-django-sa",
+            "required": true
+        },
+        {
+            "name": "KEYCLOAK_SA_REALM",
+            "displayName": "KEYCLOAK_SA_REALM",
+            "description": "Valid values: dev tfrs-dev",
+            "required": true
+        },
+        {
+            "name": "KEYCLOAK_AUDIENCE",
+            "displayName": "KEYCLOAK_AUDIENCE",
+            "description": "Valid values: dev tfrs-dev",
+            "required": true
+        },
+        {
+            "name": "KEYCLOAK_CERTS_URL",
+            "displayName": "KEYCLOAK_CERTS_URL",
+            "description": "Valid values: dev https://sso-dev.pathfinder.gov.bc.ca/auth/realms/tfrs-dev/protocol/openid-connect/certs",
+            "required": true
+        },
+        {
+            "name": "KEYCLOAK_CLIENT_ID",
+            "displayName": "KEYCLOAK_CLIENT_ID",
+            "description": "Valid values: dev tfrs-dev",
+            "required": true
+        },
+        {
+            "name": "KEYCLOAK_ISSUER",
+            "displayName": "KEYCLOAK_ISSUER",
+            "description": "Valid values: dev https://sso-dev.pathfinder.gov.bc.ca/auth/realms/tfrs-dev",
+            "required": true
+        },
+        {
+            "name": "KEYCLOAK_REALM",
+            "displayName": "KEYCLOAK_REALM",
+            "description": "Valid values: dev https://sso-dev.pathfinder.gov.bc.ca/auth/realms/tfrs-dev",
+            "required": true
         }
     ],
     "objects": [
+        {
+            "kind": "Service",
+            "apiVersion": "v1",
+            "metadata": {
+                "name": "backend"
+            },
+            "spec": {
+                "ports": [
+                    {
+                        "name": "web",
+                        "protocol": "TCP",
+                        "port": 8080,
+                        "targetPort": 8080
+                    }
+                ],
+                "selector": {
+                    "name": "tfrs"
+                },
+                "type": "ClusterIP",
+                "sessionAffinity": "None"
+            },
+            "status": {
+                "loadBalancer": {}
+            }
+        },
+        {
+            "kind": "Route",
+            "apiVersion": "v1",
+            "metadata": {
+                "name": "${ROUTE_NAME}",
+                "creationTimestamp": null,
+                "annotations": { }
+            },
+            "spec": {
+                "host": "${ROUTE_HOST_NAME}",
+                "path": "/api",
+                "to": {
+                    "kind": "Service",
+                    "name": "backend",
+                    "weight": 100
+                },
+                "port": {
+                    "targetPort": "web"
+                },
+                "tls": {
+                    "termination": "edge"
+                },
+                "wildcardPolicy": "None"
+            }
+        },
         {
             "kind": "DeploymentConfig",
             "apiVersion": "apps.openshift.io/v1",
@@ -106,6 +213,67 @@
                                 ],
                                 "env": [
                                     {
+                                        "name": "KEYCLOAK_SA_BASEURL",
+                                        "value": "${KEYCLOAK_SA_BASEURL}"
+                                    },
+                                    {
+                                        "name": "KEYCLOAK_SA_CLIENT_ID",
+                                        "value": "${KEYCLOAK_SA_CLIENT_ID}"
+                                    },
+                                    {
+                                        "name": "KEYCLOAK_SA_REALM",
+                                        "value": "${KEYCLOAK_SA_REALM}"
+                                    },
+                                    {
+                                        "name": "KEYCLOAK_AUDIENCE",
+                                        "value": "${KEYCLOAK_AUDIENCE}"
+                                    },
+                                    {
+                                        "name": "KEYCLOAK_CERTS_URL",
+                                        "value": "${KEYCLOAK_CERTS_URL}"
+                                    },
+                                    {
+                                        "name": "KEYCLOAK_CLIENT_ID",
+                                        "value": "${KEYCLOAK_CLIENT_ID}"
+                                    },
+                                    {
+                                        "name": "KEYCLOAK_ENABLED",
+                                        "value": "true"
+                                    },
+                                    {
+                                        "name": "KEYCLOAK_ISSUER",
+                                        "value": "${KEYCLOAK_ISSUER}"
+                                    },
+                                    {
+                                        "name": "KEYCLOAK_REALM",
+                                        "value": "${KEYCLOAK_REALM}"
+                                    },
+                                    {
+                                        "name": "KEYCLOAK_SA_CLIENT_SECRET",
+                                        "valueFrom": {
+                                            "secretKeyRef": {
+                                                "name": "keycloak-sa-client-secret",
+                                                "key": "KEYCLOAK_SA_CLIENT_SECRET"
+                                            }
+                                        }
+                                    },
+                                    {
+                                        "name": "AMQP_HOST",
+                                        "value": "rabbit.mem-tfrs-${ENV_NAME}.svc"
+                                    },
+                                    {
+                                        "name": "AMQP_USER",
+                                        "value": "tfrs"
+                                    },
+                                    {
+                                        "name": "AMQP_VHOST",
+                                        "value": "/tfrs"
+                                    },
+                                    {
+                                        "name": "BYPASS_CLAMAV",
+                                        "value": "false"
+                                    },
+                                    {
                                         "name": "EMAIL_FROM_ADDRESS",
                                         "value": "donotreply@gov.bc.ca"
                                     },
@@ -114,36 +282,12 @@
                                         "value": "true"
                                     },
                                     {
+                                        "name": "MINIO_BUCKET_NAME",
+                                        "value": "tfrs"
+                                    },
+                                    {
                                         "name": "SMTP_SERVER_HOST",
                                         "value": "apps.smtp.gov.bc.ca"
-                                    },
-                                    {
-                                        "name": "MINIO_ENDPOINT",
-                                        "value": "docs-mem-tfrs-${ENV_NAME}.pathfinder.gov.bc.ca:443"
-                                    },
-                                    {
-                                        "name": "MINIO_USE_SSL",
-                                        "value": "true"
-                                    },
-                                    {
-                                        "name": "DOCUMENTS_API_ENABLED",
-                                        "value": "true"
-                                    },
-                                    {
-                                        "name": "KEYCLOAK_ISSUER",
-                                        "value": "https://sso${ENV_NAME_WITH_DASH}.pathfinder.gov.bc.ca/auth/realms/tfrs${ENV_NAME_WITH_DASH}"
-                                    },
-                                    {
-                                        "name": "KEYCLOAK_AUDIENCE",
-                                        "value": "tfrs-dev"
-                                    },
-                                    {
-                                        "name": "KEYCLOAK_CERTS_URL",
-                                        "value": "https://sso${ENV_NAME_WITH_DASH}.pathfinder.gov.bc.ca/auth/realms/tfrs${ENV_NAME_WITH_DASH}/protocol/openid-connect/certs"
-                                    },
-                                    {
-                                        "name": "KEYCLOAK_CLIENT_ID",
-                                        "value": "tfrs${ENV_NAME_WITH_DASH}"
                                     },
                                     {
                                         "name": "DATABASE_SERVICE_NAME",
@@ -160,6 +304,24 @@
                                     {
                                         "name": "APP_CONFIG",
                                         "value": "/opt/app-root/src/gunicorn.cfg"
+                                    },
+                                    {
+                                        "name": "DATABASE_USER",
+                                        "valueFrom": {
+                                            "secretKeyRef": {
+                                                "name": "tfrs-postgresql",
+                                                "key": "DATABASE_USER"
+                                            }
+                                        }
+                                    },
+                                    {
+                                        "name": "DATABASE_PASSWORD",
+                                        "valueFrom": {
+                                            "secretKeyRef": {
+                                                "name": "tfrs-postgresql",
+                                                "key": "DATABASE_PASSWORD"
+                                            }
+                                        }
                                     },
                                     {
                                         "name": "RABBITMQ_USER",
@@ -183,30 +345,16 @@
                                         }
                                     },
                                     {
-                                        "name": "DATABASE_USER",
-                                        "valueFrom": {
-                                            "secretKeyRef": {
-                                                "name": "tfrs-postgresql",
-                                                "key": "DATABASE_USER"
-                                            }
-                                        }
+                                        "name": "MINIO_ENDPOINT",
+                                        "value": "docs-mem-tfrs-${ENV_NAME}.pathfinder.gov.bc.ca:443"
                                     },
                                     {
-                                        "name": "DATABASE_PASSWORD",
-                                        "valueFrom": {
-                                            "secretKeyRef": {
-                                                "name": "tfrs-postgresql",
-                                                "key": "DATABASE_PASSWORD"
-                                            }
-                                        }
-                                    },
-                                    {
-                                        "name": "KEYCLOAK_ENABLED",
+                                        "name": "MINIO_USE_SSL",
                                         "value": "true"
                                     },
                                     {
-                                        "name": "KEYCLOAK_REALM",
-                                        "value": "https://sso${ENV_NAME_WITH_DASH}.pathfinder.gov.bc.ca/auth/realms/tfrs${ENV_NAME_WITH_DASH}"
+                                        "name": "DOCUMENTS_API_ENABLED",
+                                        "value": "true"
                                     },
                                     {
                                         "name": "MINIO_ACCESS_KEY",
@@ -227,22 +375,6 @@
                                         }
                                     },
                                     {
-                                        "name": "CLAMAV_HOST",
-                                        "value": "clamav.mem-tfrs-${ENV_NAME}.svc"
-                                    },
-                                    {
-                                        "name": "AMQP_HOST",
-                                        "value": "rabbit.mem-tfrs-${ENV_NAME.svc"
-                                    },
-                                    {
-                                        "name": "AMQP_VHOST",
-                                        "value": "/tfrs"
-                                    },
-                                    {
-                                        "name": "AMQP_USER",
-                                        "value": "tfrs"
-                                    },
-                                    {
                                         "name": "AMQP_PASSWORD",
                                         "valueFrom": {
                                             "secretKeyRef": {
@@ -252,33 +384,8 @@
                                         }
                                     },
                                     {
-                                        "name": "BYPASS_CLAMAV",
-                                        "value": "false"
-                                    },
-                                    {
-                                        "name": "MINIO_BUCKET_NAME",
-                                        "value": "tfrs"
-                                    },
-                                    {
-                                        "name": "KEYCLOAK_SA_REALM",
-                                        "value": "tfrs${ENV_NAME_WITH_DASH}"
-                                    },
-                                    {
-                                        "name": "KEYCLOAK_SA_CLIENT_ID",
-                                        "value": "tfrs${ENV_NAME_WITH_DASH}-django-sa"
-                                    },
-                                    {
-                                        "name": "KEYCLOAK_SA_BASEURL",
-                                        "value": "https://sso${ENV_NAME_WITH_DASH}.pathfinder.gov.bc.ca"
-                                    },
-                                    {
-                                        "name": "KEYCLOAK_SA_CLIENT_SECRET",
-                                        "valueFrom": {
-                                            "secretKeyRef": {
-                                                "name": "keycloak-sa-client-secret",
-                                                "key": "KEYCLOAK_SA_CLIENT_SECRET"
-                                            }
-                                        }
+                                        "name": "CLAMAV_HOST",
+                                        "value": "rabbit.mem-tfrs-${ENV_NAME}.svc"
                                     },
                                     {
                                         "name": "FUEL_CODES_API_ENABLED",
@@ -286,10 +393,6 @@
                                     },
                                     {
                                         "name": "CREDIT_CALCULATION_API_ENABLED",
-                                        "value": "true"
-                                    },
-                                    {
-                                        "name": "COMPLIANCE_REPORTING_API_ENABLED",
                                         "value": "true"
                                     }
                                 ],

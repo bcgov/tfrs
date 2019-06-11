@@ -5,9 +5,9 @@ oc process -f ./minio-bc.json ENV_NAME=dev | oc create -f -
 # oc delete ImageStream/tfrs-minio bc/tfrs-minio
 
 # oc project mem-tfrs-dev
-oc process -f ./minio-dc.json ENV_NAME=dev | oc create -f -
+oc process -f ./minio-dc.json ENV_NAME=dev -n mem-tfrs-dev | oc create -f -
 # oc project mem-tfrs-test
-oc process -f ./minio-dc.json ENV_NAME=test | oc create -f -
+oc process -f ./minio-dc.json ENV_NAME=test -n mem-tfrs-test | oc create -f -
 # oc project mem-tfrs-prod
 # the default minio-config size is 1G, minio-data is 2G, it cna be changed by pass parameters
 oc process -f ./minio-dc.json ENV_NAME=prod | oc create -f -

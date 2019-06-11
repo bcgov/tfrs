@@ -34,13 +34,13 @@
                     "template.openshift.io/expose-password": "{.data['database-password']}",
                     "template.openshift.io/expose-username": "{.data['database-user']}"
                 },
-                "name": "postgresql",
+                "name": "tfrs-postgresql",
                 "labels":{
                 }
             },
             "stringData": {
-                "database-user": "${TFRS_DB_USER}",
-                "database-password": "${TFRS_DB_PASSWORD}"
+                "DATABASE_USER": "${TFRS_DB_USER}",
+                "DATABASE_PASSWORD": "${TFRS_DB_PASSWORD}"
             }
         },
         {
@@ -78,27 +78,6 @@
                 "name": "postgresql",
                 "annotations":{
                     "volume.beta.kubernetes.io/storage-class": "gluster-file-db",
-                    "template.openshift.io.bcgov/create": "true"
-                }
-            },
-            "spec": {
-                "accessModes": [
-                    "ReadWriteOnce"
-                ],
-                "resources": {
-                    "requests": {
-                        "storage": "5Gi"
-                    }
-                }
-            }
-        },
-        {
-            "apiVersion": "v1",
-            "kind": "PersistentVolumeClaim",
-            "metadata": {
-                "name": "postgresql-backup",
-                "annotations":{
-                    "volume.beta.kubernetes.io/storage-class": "nfs-backup",
                     "template.openshift.io.bcgov/create": "true"
                 }
             },
@@ -168,7 +147,7 @@
                             {
                                 "name": "postgresql-backup",
                                 "persistentVolumeClaim": {
-                                    "claimName": "postgresql-backup"
+                                    "claimName": "bk-mem-tfrs-dev-51gffzadghxs"
                                 }
                             }
                         ],
@@ -191,8 +170,8 @@
                                         "name": "POSTGRESQL_USER",
                                         "valueFrom": {
                                             "secretKeyRef": {
-                                                "name": "postgresql",
-                                                "key": "database-user"
+                                                "name": "tfrs-postgresql",
+                                                "key": "DATABASE_USER"
                                             }
                                         }
                                     },
@@ -200,8 +179,8 @@
                                         "name": "POSTGRESQL_PASSWORD",
                                         "valueFrom": {
                                             "secretKeyRef": {
-                                                "name": "postgresql",
-                                                "key": "database-password"
+                                                "name": "tfrs-postgresql",
+                                                "key": "DATABASE_PASSWORD"
                                             }
                                         }
                                     }
@@ -242,7 +221,7 @@
                                             "/bin/sh",
                                             "-i",
                                             "-c",
-                                            "psql -h 127.0.0.1 -U $TFRS_DB_USER -q -d tfrs -c 'SELECT 1'"
+                                            "psql -h 127.0.0.1 -U $POSTGRESQL_USER -q -d tfrs -c 'SELECT 1'"
                                         ]
                                     },
                                     "initialDelaySeconds": 5,
