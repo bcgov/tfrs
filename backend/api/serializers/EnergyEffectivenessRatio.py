@@ -193,15 +193,13 @@ class EnergyEffectivenessRatioDetailSerializer(serializers.ModelSerializer):
         serialized = []
 
         for row in rows:
-            serialized.append(
-                {
-                    "ratio": row.ratio,
-                    "fuel_class": row.fuel_class.fuel_class,
-                    "effective_date": row.effective_date,
-                    "expiration_date": row.expiration_date,
-                    "create_timestamp": row.create_timestamp
-                }
-            )
+            serialized.append({
+                "ratio": row.ratio,
+                "fuel_class": row.fuel_class.fuel_class,
+                "effective_date": row.effective_date,
+                "expiration_date": row.expiration_date,
+                "create_timestamp": row.create_timestamp
+            })
 
         return serialized
 

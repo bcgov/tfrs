@@ -45,6 +45,7 @@ from .viewsets.User import UserViewSet
 from .viewsets.CreditTradeComments import CreditTradeCommentsViewSet
 
 from .viewsets.CarbonIntensityLimit import CarbonIntensityLimitViewSet
+from .viewsets.CreditCalculation import CreditCalculationViewSet
 from .viewsets.DefaultCarbonIntensity import DefaultCarbonIntensityViewSet
 from .viewsets.EnergyDensity import EnergyDensityViewSet
 from .viewsets.EnergyEffectivenessRatio import EnergyEffectivenessRatioViewSet
@@ -118,6 +119,10 @@ if CREDIT_CALCULATION_API['ENABLED'] or TESTING:
     ROUTER.register(
         R'credit_calculation/petroleum_carbon_intensities',
         PetroleumCarbonIntensityViewSet
+    )
+    ROUTER.register(
+        R'credit_calculation/fuel_types',
+        CreditCalculationViewSet
     )
 
 if COMPLIANCE_REPORTING_API['ENABLED'] or TESTING:
