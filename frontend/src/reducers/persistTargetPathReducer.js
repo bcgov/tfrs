@@ -10,12 +10,12 @@ const persistTargetPathReducer = (state = {
           target: action.currentRoute.location.pathname
         };
       }
-      else {
-        return state;
-      }
+
+      return state;
+
     default:
       return state;
   }
 };
 
-export {persistTargetPathReducer};
+export { persistTargetPathReducer };

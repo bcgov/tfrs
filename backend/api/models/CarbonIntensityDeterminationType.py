@@ -20,8 +20,8 @@
     See the License for the specific language governing permissions and
     limitations under the License.
 """
-
 from django.db import models
+from django.db.models import ManyToManyField
 
 from api.managers.TheTypeManager import TheTypeManager
 from api.models.mixins.DisplayOrder import DisplayOrder
@@ -35,6 +35,16 @@ class CarbonIntensityDeterminationType(
     Holds the different methods to determine the carbon intensities relating
     to the Provision of the Act
     """
+    fuel = ManyToManyField(
+        'ApprovedFuel',
+        through='ApprovedFuelProvision'
+    )
+
+    provision_act = ManyToManyField(
+        'ProvisionOfTheAct',
+        through='ApprovedFuelProvision'
+    )
+
     the_type = models.CharField(
         max_length=25,
         blank=True,
@@ -44,11 +54,6 @@ class CarbonIntensityDeterminationType(
                    "intensity for the Provision of the Act"
                    "e.g. Prescribed Carbon Intensity, Fuel Code, "
                    "Default Carbon Intensity, etc."
-    )
-    description = models.CharField(
-        max_length=1000, blank=True, null=True,
-        db_comment="Description of the determination type. This is the "
-                   "displayed name."
     )
 
     objects = TheTypeManager()
@@ -60,7 +65,7 @@ class CarbonIntensityDeterminationType(
         return (self.the_type,)
 
     class Meta:
-        db_table = 'carbon_intensity_determination_type'
+        db_table = 'determination_type'
 
     db_table_comment = "Contains a list of determination types that will be " \
                        "used by the Provision of the Act table." \

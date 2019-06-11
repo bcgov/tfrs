@@ -24,35 +24,54 @@ from django.db import models
 from django.db.models import ManyToManyField
 
 from auditable.models import Auditable
+from api.models.CarbonIntensityDeterminationType import \
+    CarbonIntensityDeterminationType
+from api.models.mixins.DisplayOrder import DisplayOrder
+from api.models.mixins.EffectiveDates import EffectiveDates
 
 
-class ProvisionOfTheAct(Auditable):
+class ProvisionOfTheAct(Auditable, DisplayOrder, EffectiveDates):
     """
-    Provisions of the Act.
-    List of provisions that connects the fuel type to the determination
-    type for the carbon intensity
+    List of provisions within Greenhouse Gas Reduction
+    (Renewable and Low Carbon Fuel Requirement) Act.
+    e.g. Section 6 (5) (a)
     """
     fuel = ManyToManyField(
         'ApprovedFuel',
         through='ApprovedFuelProvision'
     )
 
-    determination_type = models.ForeignKey(
-        'CarbonIntensityDeterminationType',
-        blank=False,
-        null=False,
-        related_name='fuel_provisions',
-        on_delete=models.PROTECT
+    provision = models.CharField(
+        max_length=100,
+        db_comment="Name of the Provision. "
+                   "e.g. Section 6 (5) (a)"
     )
 
     description = models.CharField(
         max_length=1000, blank=True, null=True,
-        db_comment="Description of the provision. This is the displayed name."
+        db_comment="Description of the provision. This is the displayed name. "
+                   "e.g. Prescribed Carbon Intensity, Approved Fuel Code."
     )
 
-    class Meta:
-        db_table = 'fuel_provisions'
+    @property
+    def determination_type(self):
+        """
+        Determination Type for the Provision.
+        Relationship through ApprovedFuelProvision.
+        Fuel ID filter is just to reduce the number of records fetched,
+        but even without it, it should fetch the correct records, just
+        contains duplicated records of the same value
+        """
+        determination_type = CarbonIntensityDeterminationType.objects.filter(
+            fuel=self.fuel.first(),
+            provision_act=self.id
+        )
 
-    db_table_comment = "Provisions of the Act." \
-                       "List of provisions that connects the fuel type to " \
-                       "the determination type for the carbon intensity."
+        return determination_type.first()
+
+    class Meta:
+        db_table = 'provision_act'
+
+    db_table_comment = "List of provisions within Greenhouse Gas Reduction " \
+                       "(Renewable and Low Carbon Fuel Requirement) Act." \
+                       "e.g. Section 6 (5) (a)"

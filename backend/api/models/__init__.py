@@ -72,5 +72,4 @@ from . import CarbonIntensityDeterminationType
 from . import ProvisionOfTheAct
 from . import ApprovedFuelProvision
 
-
 patch_fields()

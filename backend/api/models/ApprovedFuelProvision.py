@@ -27,22 +27,30 @@ from auditable.models import Auditable
 
 class ApprovedFuelProvision(Auditable):
     """
-    Maintain a bidirectional many-many association between approved fuels and
-    provisions of the act
+    Cross-reference table to associate the provision, fuel type and the
+    determination method to get the carbon intensity.
     """
     fuel = models.ForeignKey(
         'ApprovedFuel',
         on_delete=models.PROTECT
     )
 
-    provision = models.ForeignKey(
+    provision_act = models.ForeignKey(
         'ProvisionOfTheAct',
         on_delete=models.PROTECT
     )
 
-    class Meta:
-        db_table = 'approved_fuel_provision'
-        unique_together = (('fuel', 'provision'),)
+    determination_type = models.ForeignKey(
+        'CarbonIntensityDeterminationType',
+        on_delete=models.PROTECT
+    )
 
-    db_table_comment = "Maintain a bidirectional many-many association " \
-                       "between approved fuels and provisions of the act"
+    class Meta:
+        db_table = 'carbon_intensity_fuel_determination'
+        unique_together = (('fuel', 'provision_act', 'determination_type'),)
+
+    db_table_comment = "Cross-reference table to associate the provision, " \
+                       "fuel type and the determination method to get the " \
+                       "carbon intensity." \
+                       "This should contain the information needed to get " \
+                       "the Carbon Intensity Record."

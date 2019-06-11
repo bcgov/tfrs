@@ -56,6 +56,23 @@ class InputWithTooltip extends Component {
 
     const parsed = value.split('.');
 
+    if (this.props.addCommas) {
+      let newValue = parsed[0];
+
+      if (typeof newValue === 'number') {
+        newValue = newValue.toString();
+      }
+
+      newValue = newValue.replace(/\D/g, '');
+      newValue = newValue.replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,');
+
+      if (parsed.length > 1) {
+        this.target.value = `${newValue}.${parsed[1]}`;
+      } else {
+        this.target.value = newValue;
+      }
+    }
+
     if (parsed.length > 1 && parsed[1].length > this.props.dataNumberToFixed) {
       this.target.value = this.state.currentValue;
       showTooltip = true;
@@ -159,7 +176,7 @@ class InputWithTooltip extends Component {
             this.target = input;
           }}
           step={this.props.step}
-          type="number"
+          type={this.props.addCommas ? 'text' : 'number'}
           value={this.props.value}
         />
         <Overlay
@@ -182,6 +199,7 @@ class InputWithTooltip extends Component {
 }
 
 InputWithTooltip.defaultProps = {
+  addCommas: false,
   allowNegative: false,
   className: 'form-control',
   dataNumberToFixed: 0,
@@ -198,6 +216,7 @@ InputWithTooltip.defaultProps = {
 };
 
 InputWithTooltip.propTypes = {
+  addCommas: PropTypes.bool,
   allowNegative: PropTypes.bool,
   className: PropTypes.string,
   dataNumberToFixed: PropTypes.number,

@@ -36,6 +36,19 @@ const formatFacilityNameplate = (value) => {
   return newValue;
 };
 
+// similar as above, but allows decimals
+const formatNumeric = (value, decimals = 2) => {
+  let newValue = value.toFixed(2);
+
+  if (typeof newValue === 'number') {
+    newValue = newValue.toString();
+  }
+
+  newValue = newValue.replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,');
+
+  return newValue;
+};
+
 const getFileSize = (bytes) => {
   if (bytes === 0) {
     return '0 bytes';
@@ -140,5 +153,5 @@ const validateFiles = files => (
 
 export {
   arrayMove, download, getFileSize, getIcon, getQuantity, getScanStatusIcon,
-  formatFacilityNameplate, validateFiles
+  formatFacilityNameplate, formatNumeric, validateFiles
 };

@@ -16,12 +16,12 @@ const notifications = (state = {
     case ActionTypes.MOUNT_NOTIFICATIONS_TABLE:
       return {
         ...state,
-        onNotificationsPage: true,
+        onNotificationsPage: true
       };
     case ActionTypes.UNMOUNT_NOTIFICATIONS_TABLE:
       return {
         ...state,
-        onNotificationsPage: false,
+        onNotificationsPage: false
       };
     case ActionTypes.GET_NOTIFICATIONS:
       return {
@@ -34,7 +34,7 @@ const notifications = (state = {
       return {
         ...state,
         count: {
-          isFetching: true,
+          isFetching: true
         }
       };
     case ActionTypes.RECEIVE_NOTIFICATIONS_COUNT:

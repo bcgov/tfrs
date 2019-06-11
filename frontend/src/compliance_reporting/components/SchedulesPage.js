@@ -5,6 +5,7 @@ import 'react-datasheet/lib/react-datasheet.css';
 import FontAwesomeIcon from '@fortawesome/react-fontawesome';
 
 import ScheduleATotals from './ScheduleATotals';
+import ScheduleBTotals from './ScheduleBTotals';
 import ScheduleButtons from './ScheduleButtons';
 
 const SchedulesPage = props => (
@@ -57,6 +58,12 @@ const SchedulesPage = props => (
     <div className="sticky">
       {props.scheduleType === 'schedule-a' &&
         <ScheduleATotals
+          totals={props.totals}
+        />
+      }
+
+      {props.scheduleType === 'schedule-b' &&
+        <ScheduleBTotals
           totals={props.totals}
         />
       }
