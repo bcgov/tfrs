@@ -1,10 +1,9 @@
 import React, { Component } from 'react';
-import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import 'react-datasheet/lib/react-datasheet.css';
 
 import ScheduleDPage from './ScheduleDPage';
-import { SCHEDULE_D } from '../../constants/schedules/scheduleColumns';
+import { SCHEDULE_D, SCHEDULE_D_INPUT } from '../../constants/schedules/scheduleColumns';
 
 class ScheduleDSheet extends Component {
   constructor (props) {
@@ -15,10 +14,11 @@ class ScheduleDSheet extends Component {
     this._addRow = this._addRow.bind(this);
     this._calculateTotal = this._calculateTotal.bind(this);
     this._handleCellsChanged = this._handleCellsChanged.bind(this);
+    this._validateFuelTypeColumn = this._validateFuelTypeColumn.bind(this);
   }
 
   componentDidMount () {
-    this._addRow(5);
+    this._addRow(10);
   }
 
   _addRow (numberOfRows = 1) {
@@ -43,7 +43,7 @@ class ScheduleDSheet extends Component {
       this.rowNumber += 1;
     }
 
-    this.props.handleSheetChanged(grid, this.props.index);
+    this.props.handleSheetChanged(grid, this.props.id);
   }
 
   _calculateTotal (grid) {
@@ -65,9 +65,31 @@ class ScheduleDSheet extends Component {
         ...input[row][col],
         value
       };
+
+      if (grid === 'input' && col === SCHEDULE_D_INPUT.FUEL_TYPE) {
+        input[row] = this._validateFuelTypeColumn(input[row], value);
+      }
     });
 
-    this.props.handleSheetChanged({ [grid]: input }, this.props.index);
+    this.props.handleSheetChanged({ [grid]: input }, this.props.id);
+  }
+
+  _validateFuelTypeColumn (currentRow, value) {
+    const row = currentRow;
+    const selectedFuel = this.props.referenceData.approvedFuels.find(fuel => fuel.name === value);
+
+    if (!selectedFuel) {
+      row[SCHEDULE_D_INPUT.FUEL_TYPE] = {
+        value: ''
+      };
+    }
+
+    row[SCHEDULE_D_INPUT.FUEL_CLASS] = { // pre-select the fuel class, if possible
+      ...row[SCHEDULE_D_INPUT.FUEL_CLASS],
+      value: (selectedFuel.fuelClasses.length === 1) ? selectedFuel.fuelClasses[0].fuelClass : ''
+    };
+
+    return row;
   }
 
   render () {
@@ -90,12 +112,15 @@ ScheduleDSheet.defaultProps = {
 ScheduleDSheet.propTypes = {
   edit: PropTypes.bool,
   handleSheetChanged: PropTypes.func.isRequired,
-  index: PropTypes.number.isRequired,
+  id: PropTypes.number.isRequired,
   match: PropTypes.shape({
     params: PropTypes.shape({
       id: PropTypes.string,
       period: PropTypes.string
     }).isRequired
+  }).isRequired,
+  referenceData: PropTypes.shape({
+    approvedFuels: PropTypes.arrayOf(PropTypes.shape)
   }).isRequired,
   sheet: PropTypes.shape({
     grid: PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.shape())),
@@ -104,10 +129,4 @@ ScheduleDSheet.propTypes = {
   }).isRequired
 };
 
-const mapStateToProps = state => ({
-});
-
-const mapDispatchToProps = {
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(ScheduleDSheet);
+export default ScheduleDSheet;

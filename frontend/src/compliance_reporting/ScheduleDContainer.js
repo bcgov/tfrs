@@ -12,9 +12,37 @@ import ScheduleButtons from './components/ScheduleButtons';
 import ScheduleDOutput from './components/ScheduleDOutput';
 import ScheduleDSheet from './components/ScheduleDSheet';
 import ScheduleTabs from './components/ScheduleTabs';
+import Select from './components/Select';
+import { SCHEDULE_D, SCHEDULE_D_INPUT } from '../constants/schedules/scheduleColumns';
 
 class ScheduleDContainer extends Component {
-  static addHeaders () {
+  constructor (props) {
+    super(props);
+
+    this.state = {
+      sheets: []
+    };
+
+    this.rowNumber = 1;
+
+    if (document.location.pathname.indexOf('/edit/') >= 0) {
+      this.edit = true;
+    } else {
+      this.edit = false;
+    }
+
+    this._addHeaders = this._addHeaders.bind(this);
+    this._addSheet = this._addSheet.bind(this);
+    this._calculateTotal = this._calculateTotal.bind(this);
+    this._handleSheetChanged = this._handleSheetChanged.bind(this);
+    this._handleSubmit = this._handleSubmit.bind(this);
+  }
+
+  componentDidMount () {
+    this._addSheet();
+  }
+
+  _addHeaders (id) {
     return {
       grid: [
         [{
@@ -57,47 +85,35 @@ class ScheduleDContainer extends Component {
           value: 'Fuel Class'
         }],
         [{
-          className: 'text'
+          className: 'text',
+          dataEditor: Select,
+          getOptions: () => this.props.referenceData.approvedFuels,
+          mapping: {
+            key: 'id',
+            value: 'name'
+          }
         }, {
           className: 'text'
         }, {
-          className: 'text'
+          className: 'text',
+          dataEditor: Select,
+          getOptions: row => this._getFuelClasses(row, id),
+          mapping: {
+            key: 'id',
+            value: 'fuelClass'
+          }
         }]
       ],
+      id,
       output: ScheduleDOutput,
       total: ''
     };
   }
 
-  constructor (props) {
-    super(props);
-
-    this.state = {
-      sheets: []
-    };
-
-    this.rowNumber = 1;
-
-    if (document.location.pathname.indexOf('/edit/') >= 0) {
-      this.edit = true;
-    } else {
-      this.edit = false;
-    }
-
-    this._addSheet = this._addSheet.bind(this);
-    this._calculateTotal = this._calculateTotal.bind(this);
-    this._handleSheetChanged = this._handleSheetChanged.bind(this);
-    this._handleSubmit = this._handleSubmit.bind(this);
-  }
-
-  componentDidMount () {
-    this._addSheet();
-  }
-
   _addSheet () {
     const { sheets } = this.state;
 
-    const sheet = ScheduleDContainer.addHeaders();
+    const sheet = this._addHeaders(sheets.length);
 
     sheets.push(sheet);
 
@@ -107,6 +123,19 @@ class ScheduleDContainer extends Component {
   }
 
   _calculateTotal (grid) {
+  }
+
+  _getFuelClasses (row, id) {
+    const fuelType = this.state.sheets[id].input[row][SCHEDULE_D_INPUT.FUEL_TYPE];
+
+    const selectedFuel = this.props.referenceData.approvedFuels
+      .find(fuel => fuel.name === fuelType.value);
+
+    if (selectedFuel) {
+      return selectedFuel.fuelClasses;
+    }
+
+    return [];
   }
 
   _handleSheetChanged (grid, index) {
@@ -137,10 +166,12 @@ class ScheduleDContainer extends Component {
 
         {sheets.map((sheet, index) => (
           <ScheduleDSheet
-            key={index} // eslint-disable-line react/no-array-index-key
+            addHeaders={this._addHeaders}
+            key={sheet.id}
             handleSheetChanged={this._handleSheetChanged}
-            index={index}
+            id={sheet.id}
             match={this.props.match}
+            referenceData={this.props.referenceData}
             sheet={sheet}
           />
         ))}
@@ -158,10 +189,16 @@ class ScheduleDContainer extends Component {
 
   render () {
     const { id } = this.props.match.params;
+    let { period } = this.props.match.params;
+
+    if (!period) {
+      period = `${new Date().getFullYear() - 1}`;
+    }
 
     return ([
       <ScheduleTabs
         active="schedule-d"
+        compliancePeriod={period}
         edit={this.edit}
         id={id}
         key="nav"
@@ -187,10 +224,16 @@ ScheduleDContainer.propTypes = {
       id: PropTypes.string,
       period: PropTypes.string
     }).isRequired
+  }).isRequired,
+  referenceData: PropTypes.shape({
+    approvedFuels: PropTypes.arrayOf(PropTypes.shape)
   }).isRequired
 };
 
 const mapStateToProps = state => ({
+  referenceData: {
+    approvedFuels: state.rootReducer.referenceData.data.approvedFuels
+  }
 });
 
 const mapDispatchToProps = {
