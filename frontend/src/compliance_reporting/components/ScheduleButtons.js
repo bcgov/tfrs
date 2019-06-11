@@ -1,18 +1,13 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import FontAwesomeIcon from '@fortawesome/react-fontawesome';
 
-import Modal from '../../app/components/Modal';
 import history from '../../app/History';
 import * as Lang from '../../constants/langEnUs';
 import COMPLIANCE_REPORTING from '../../constants/routes/ComplianceReporting';
-import toastr from '../../utils/toastr';
-import {complianceReporting} from "../../actions/complianceReporting";
-import {connect} from "react-redux";
 
 class ScheduleButtons extends Component {
-
-  render() {
+  render () {
     return [
       <div className="btn-container" key="btn-container">
         <button
@@ -20,7 +15,7 @@ class ScheduleButtons extends Component {
           onClick={() => history.push(COMPLIANCE_REPORTING.LIST)}
           type="button"
         >
-          <FontAwesomeIcon icon="arrow-circle-left"/> {Lang.BTN_APP_CANCEL}
+          <FontAwesomeIcon icon="arrow-circle-left" /> {Lang.BTN_APP_CANCEL}
         </button>
         {this.props.delete &&
         <button
@@ -29,7 +24,7 @@ class ScheduleButtons extends Component {
           data-toggle="modal"
           type="button"
         >
-          <FontAwesomeIcon icon="minus-circle"/> {Lang.BTN_DELETE_DRAFT}
+          <FontAwesomeIcon icon="minus-circle" /> {Lang.BTN_DELETE_DRAFT}
         </button>
         }
         {this.props.submit &&
@@ -39,7 +34,7 @@ class ScheduleButtons extends Component {
           data-toggle="modal"
           type="button"
         >
-          <FontAwesomeIcon icon="save"/> Save
+          <FontAwesomeIcon icon="save" /> Save
         </button>
         }
       </div>
@@ -57,6 +52,5 @@ ScheduleButtons.propTypes = {
   delete: PropTypes.bool,
   submit: PropTypes.bool
 };
-
 
 export default ScheduleButtons;

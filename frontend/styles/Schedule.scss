@@ -81,6 +81,14 @@
   .scrollable {
     overflow-x: auto;
     width: 100%;
+
+    &.output {
+      max-width: 600px;
+
+      .data-grid-container {
+        min-width: 500px;
+      }
+    }
   }
 
   .schedule-totals {
@@ -259,6 +267,47 @@
   .units {
     min-width: 20rem;
     width: 20rem;
+  }
+}
+
+.schedule-d {
+  &.input {
+    margin-bottom: 2rem;
+  }
+
+  &.output {
+    margin-bottom: 2rem;
+    min-width: 600px;
+    width: 50%;
+
+    .cell.output-label {
+      text-align: left;
+      width: 40%;
+    }
+  }
+
+  .fuel-class {
+    min-width: 200px;
+  }
+
+  .fuel-type, .feedstock {
+    min-width: 200px;
+    width: 33%;
+  }
+
+  .row-number {
+    min-width: 4rem;
+    width: 4rem;
+  }
+
+  .units, .worksheet-cell, .worksheet-value {
+    min-width: 20rem;
+    width: 20rem;
+  }
+
+  .worksheet-name {
+    min-width: 30rem;
+    width: 30rem;
   }
 }
 
