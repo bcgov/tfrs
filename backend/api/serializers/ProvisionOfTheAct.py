@@ -31,10 +31,18 @@ class ProvisionOfTheActSerializer(serializers.ModelSerializer):
     """
     Basic serializer for Carbon Intensity Determination Type
     """
-    determination_type = DeterminationTypeSerializer(read_only=True)
+    determination_type = serializers.SerializerMethodField()
+
+    def get_determination_type(self, obj):
+        serializer = DeterminationTypeSerializer(
+            obj.determination_type,
+            read_only=True
+        )
+
+        return serializer.data
 
     class Meta:
         model = ProvisionOfTheAct
-        fields = ('id', 'description', 'determination_type')
+        fields = ('id', 'provision', 'description', 'determination_type')
         read_only_fields = (
-            'id', 'description', 'determination_type')
+            'id', 'provision', 'description', 'determination_type')

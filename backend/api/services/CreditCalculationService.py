@@ -1,6 +1,6 @@
 from datetime import timedelta
 from django.apps import apps
-from django.db.models import F, Max
+from django.db.models import F
 
 
 class CreditCalculationService(object):
@@ -47,16 +47,21 @@ class CreditCalculationService(object):
             filtered_rows = filtered_rows.filter(category_id=category_id)
 
         if compliance_period_id:
-            filtered_rows = filtered_rows.filter(compliance_period_id=compliance_period_id)
+            filtered_rows = filtered_rows.filter(
+                compliance_period_id=compliance_period_id
+            )
 
         if fuel_class_id:
             filtered_rows = filtered_rows.filter(fuel_class_id=fuel_class_id)
 
         if fuel_class__fuel_class:
-            filtered_rows = filtered_rows.filter(fuel_class__fuel_class=fuel_class__fuel_class)
+            filtered_rows = filtered_rows.filter(
+                fuel_class__fuel_class=fuel_class__fuel_class
+            )
 
-        filtered_rows = filtered_rows.order_by('effective_date', '-create_timestamp')\
-            .distinct('effective_date')
+        filtered_rows = filtered_rows.order_by(
+            'effective_date', '-create_timestamp'
+        ).distinct('effective_date')
 
         return filtered_rows
 

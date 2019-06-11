@@ -20,6 +20,7 @@ const CREDIT_CALCULATIONS = {
   ENERGY_EFFECTIVENESS_RATIO_EDIT: `${BASE_PATH}/energy_effectiveness_ratios/edit/:id`,
   EXPECTED_USES: `${API_BASE_PATH}/expected_uses`,
   FUEL_CLASSES: `${API_BASE_PATH}/fuel_classes`,
+  FUEL_TYPES_API: `${API_BASE_PATH}/fuel_types`,
   LIST: BASE_PATH,
   NOTIONAL_TRANFER_TYPES: `${API_BASE_PATH}/notional_transfer_types`,
   PETROLEUM_CARBON_INTENSITIES: `${BASE_PATH}/petroleum_carbon_intensities`,

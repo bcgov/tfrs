@@ -11,7 +11,6 @@ import ComplianceReportingTable from './ComplianceReportingTable';
 const ComplianceReportingPage = (props) => {
   const { isFetching, items } = props.complianceReports;
   const isEmpty = items.length === 0;
-  const period = props.compliancePeriods[0] ? props.compliancePeriods[0].description : '';
 
   return (
     <div className="page-compliance-reporting">
@@ -22,11 +21,9 @@ const ComplianceReportingPage = (props) => {
             <button
               id="new-compliance-report"
               className="btn btn-primary"
-              onClick={() => {
-                const route = COMPLIANCE_REPORTING.ADD.replace(':period?', period);
-
-                history.push(route);
-              }}
+              data-toggle="dropdown"
+              aria-haspopup="true"
+              aria-expanded="false"
               type="button"
             >
               <FontAwesomeIcon icon="plus-circle" /> {Lang.BTN_NEW_COMPLIANCE_REPORT}

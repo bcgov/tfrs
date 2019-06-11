@@ -119,14 +119,12 @@ class DefaultCarbonIntensityDetailSerializer(serializers.ModelSerializer):
         serialized = []
 
         for row in rows:
-            serialized.append(
-                {
-                    "density": row.density,
-                    "effective_date": row.effective_date,
-                    "expiration_date": row.effective_date,
-                    "create_timestamp": row.create_timestamp
-                }
-            )
+            serialized.append({
+                "density": row.density,
+                "effective_date": row.effective_date,
+                "expiration_date": row.effective_date,
+                "create_timestamp": row.create_timestamp
+            })
 
         return serialized
 

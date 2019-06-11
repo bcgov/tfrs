@@ -32,6 +32,6 @@ class DeterminationTypeSerializer(serializers.ModelSerializer):
     """
     class Meta:
         model = CarbonIntensityDeterminationType
-        fields = ('id', 'the_type', 'description')
+        fields = ('id', 'the_type')
         read_only_fields = (
-            'id', 'the_type', 'description')
+            'id', 'the_type')
