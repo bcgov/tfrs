@@ -37,7 +37,6 @@ class CarbonIntensityLimitSerializer(serializers.ModelSerializer):
     revised_limits = serializers.SerializerMethodField()
 
     def get_all_values(self, obj):
-
         gasoline_rows = CreditCalculationService.get_all(
             model_name="CarbonIntensityLimit",
             fuel_class__fuel_class="Gasoline",
@@ -55,15 +54,13 @@ class CarbonIntensityLimitSerializer(serializers.ModelSerializer):
         serialized = []
 
         for row in rows:
-            serialized.append(
-                {
-                    "fuel_class": row.fuel_class.fuel_class,
-                    "density": row.density,
-                    "effective_date": row.effective_date,
-                    "expiration_date": row.effective_date,
-                    "create_timestamp": row.create_timestamp
-                }
-            )
+            serialized.append({
+                "fuel_class": row.fuel_class.fuel_class,
+                "density": row.density,
+                "effective_date": row.effective_date,
+                "expiration_date": row.effective_date,
+                "create_timestamp": row.create_timestamp
+            })
 
         return serialized
 

@@ -53,7 +53,7 @@ class ApprovedFuelSerializer(serializers.ModelSerializer):
         Provisions allowed for the approved fuel
         """
         serializer = ProvisionOfTheActSerializer(
-            obj.provisions.order_by('description'),
+            obj.provisions.order_by('display_order'),
             many=True,
             read_only=True
         )

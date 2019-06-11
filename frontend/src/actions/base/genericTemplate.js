@@ -47,6 +47,8 @@ export class GenericRestTemplate {
 
     this.idSelector = this.idSelector.bind(this);
     this.createStateSelector = this.createStateSelector.bind(this);
+    this.findStateSelector = this.findStateSelector.bind(this);
+    this.getStateSelector = this.getStateSelector.bind(this);
     this.updateStateSelector = this.updateStateSelector.bind(this);
     this.patchStateSelector = this.patchStateSelector.bind(this);
 
@@ -72,7 +74,8 @@ export class GenericRestTemplate {
         [this.find, (state, action) => ({
           ...state,
           isFinding: true,
-          errorMessage: {}
+          errorMessage: {},
+          findState: action.payload
         })],
         [this.findSuccess, (state, action) => ({
           ...state,
@@ -96,7 +99,8 @@ export class GenericRestTemplate {
           ...state,
           item: null,
           isGetting: true,
-          id: action.payload
+          id: action.payload.id || action.payload,
+          getState: action.payload.state || null
         })],
         [this.getSuccess, (state, action) => ({
           ...state,
@@ -198,6 +202,18 @@ export class GenericRestTemplate {
     return state => (state.rootReducer[sn].createState);
   }
 
+  findStateSelector () {
+    const sn = this.stateName;
+
+    return state => (state.rootReducer[sn].findState);
+  }
+
+  getStateSelector () {
+    const sn = this.stateName;
+
+    return state => (state.rootReducer[sn].getState);
+  }
+
   updateStateSelector () {
     const sn = this.stateName;
 
@@ -210,28 +226,31 @@ export class GenericRestTemplate {
     return state => (state.rootReducer[sn].updateUsingPatch);
   }
 
-  doFind () {
-    return axios.get(this.baseUrl);
+  doFind (data = null) {
+    return axios.get(this.baseUrl, { params: data });
   }
 
   * findHandler () {
+    const data = yield (select(this.findStateSelector()));
+
     try {
-      const response = yield call(this.doFind);
+      const response = yield call(this.doFind, data);
       yield put(this.findSuccess(response.data));
     } catch (error) {
       yield put(this.error(error.response.data));
     }
   }
 
-  doGet (id) {
-    return axios.get(`${this.baseUrl}/${id}`);
+  doGet (id, data = null) {
+    return axios.get(`${this.baseUrl}/${id}`, { params: data });
   }
 
   * getHandler () {
     const id = yield (select(this.idSelector()));
+    const data = yield (select(this.getStateSelector()));
 
     try {
-      const response = yield call(this.doGet, id);
+      const response = yield call(this.doGet, id, data);
       yield put(this.getSuccess(response.data));
     } catch (error) {
       yield put(this.error(error.response.data));
@@ -241,16 +260,15 @@ export class GenericRestTemplate {
   doUpdate (id, data, patch = false) {
     if (patch) {
       return axios.patch(`${this.baseUrl}/${id}`, data);
-    } else {
-      return axios.put(`${this.baseUrl}/${id}`, data);
     }
+
+    return axios.put(`${this.baseUrl}/${id}`, data);
   }
 
   * updateHandler () {
     const id = yield (select(this.idSelector()));
     const data = yield (select(this.updateStateSelector()));
     const patch = yield (select(this.patchStateSelector()));
-
 
     try {
       const response = yield call(this.doUpdate, id, data, patch);

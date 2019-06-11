@@ -24,9 +24,8 @@ import { fuelClasses } from '../actions/fuelClasses';
 import { notionalTransferTypes } from '../actions/notionalTransferTypes';
 import { petroleumCarbonIntensities } from '../actions/petroleumCarbonIntensities';
 import { roles } from '../actions/roleActions';
-import { complianceReporting } from "../actions/complianceReporting";
-
-import { fuelTypes } from './creditCalculationReducers';
+import { complianceReporting } from '../actions/complianceReporting';
+import creditCalculation from './creditCalculationReducer';
 
 const rootReducer = combineReducers({
   autocomplete,
@@ -57,12 +56,12 @@ const rootReducer = combineReducers({
   roles: roles.reducer(),
   defaultCarbonIntensities: defaultCarbonIntensities.reducer(),
   carbonIntensityLimits: carbonIntensities.reducer(),
+  creditCalculation,
   energyDensities: energyDensities.reducer(),
   energyEffectivenessRatios: energyEffectivenessRatios.reducer(),
   expectedUses: expectedUses.reducer(),
   complianceReporting: complianceReporting.reducer(),
   fuelClasses: fuelClasses.reducer(),
-  fuelTypes,
   notionalTransferTypes: notionalTransferTypes.reducer(),
   petroleumCarbonIntensities: petroleumCarbonIntensities.reducer()
 });
