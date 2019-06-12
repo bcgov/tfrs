@@ -22,7 +22,7 @@
             "kind": "BuildConfig",
             "apiVersion": "build.openshift.io/v1",
             "metadata": {
-                "name": "${CLIENT_ANGULAR_APP_IS_NAME}",
+                "name": "${CLIENT_IS_NAME}",
                 "creationTimestamp": null,
                 "annotations": {
                     "description": "Defines how to build the client / front end image"
