@@ -4,6 +4,7 @@ from django.db import models
 from api.models.ApprovedFuel import ApprovedFuel
 from api.models.ExpectedUse import ExpectedUse
 from api.models.FuelClass import FuelClass
+from api.models.NotionalTransferType import NotionalTransferType
 
 
 class ScheduleC(Model):
@@ -52,3 +53,51 @@ class ScheduleCRecord(Model):
 
     class Meta:
         db_table = 'compliance_report_schedule_c_record'
+
+
+class ScheduleA(Model):
+    class Meta:
+        db_table = 'compliance_report_schedule_a'
+
+
+class ScheduleARecord(Model):
+    schedule = models.ForeignKey(
+        ScheduleA,
+        related_name='records',
+        on_delete=models.PROTECT,
+        null=False
+    )
+
+    transfer_type = models.ForeignKey(
+        NotionalTransferType,
+        on_delete=models.PROTECT,
+        null=False
+    )
+
+    fuel_class = models.ForeignKey(
+        FuelClass,
+        on_delete=models.PROTECT,
+        null=False
+    )
+
+    quantity = models.DecimalField(
+        blank=False,
+        null=False,
+        decimal_places=2,
+        max_digits=20
+    )
+
+    trading_partner = models.CharField(
+        max_length=200,
+        blank=False,
+        null=False
+    )
+
+    postal_address = models.CharField(
+        max_length=200,
+        blank=False,
+        null=False
+    )
+
+    class Meta:
+        db_table = 'compliance_report_schedule_a_record'
