@@ -79,6 +79,10 @@
     }
   }
 
+  .inactive {
+    display: none;
+  }
+
   .scrollable {
     overflow-x: auto;
     width: 100%;
@@ -319,4 +323,26 @@
 .schedule-tabs {
   margin: 0 -3rem 2rem;
   padding: 0 3rem;
+}
+
+.schedule-d-tabs {
+  margin-bottom: 2rem;
+
+  li {
+    float: right;
+    margin-left: 1rem;
+
+    &.active button {
+      border: 1px solid $border-grey;
+      border-bottom: none;
+    }
+
+    button {
+      background-color: $white;
+      border: none;
+      border-radius: 4px 4px 0 0;
+      color: $link-color;
+      padding: 1rem;
+    }
+  }
 }

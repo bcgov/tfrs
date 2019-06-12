@@ -11,6 +11,7 @@ import Modal from '../app/components/Modal';
 import ScheduleButtons from './components/ScheduleButtons';
 import ScheduleDOutput from './components/ScheduleDOutput';
 import ScheduleDSheet from './components/ScheduleDSheet';
+import ScheduleDTabs from './components/ScheduleDTabs';
 import ScheduleTabs from './components/ScheduleTabs';
 import Select from './components/Select';
 import { SCHEDULE_D_INPUT } from '../constants/schedules/scheduleColumns';
@@ -20,6 +21,7 @@ class ScheduleDContainer extends Component {
     super(props);
 
     this.state = {
+      activeSheet: 0,
       sheets: []
     };
 
@@ -35,6 +37,7 @@ class ScheduleDContainer extends Component {
     this._addSheet = this._addSheet.bind(this);
     this._handleSheetChanged = this._handleSheetChanged.bind(this);
     this._handleSubmit = this._handleSubmit.bind(this);
+    this._setActiveSheet = this._setActiveSheet.bind(this);
   }
 
   componentDidMount () {
@@ -151,6 +154,12 @@ class ScheduleDContainer extends Component {
     console.log(this.state.sheets);
   }
 
+  _setActiveSheet (id) {
+    this.setState({
+      activeSheet: id
+    });
+  }
+
   renderSheets () {
     const { sheets } = this.state;
 
@@ -158,18 +167,24 @@ class ScheduleDContainer extends Component {
       <div className="page_schedule" key="sheets">
         <h1>Schedule D - GHGenius Input and Output Summaries</h1>
 
-        <button type="button" onClick={this._addSheet}>Add Sheet</button>
+        <ScheduleDTabs
+          active={this.state.activeSheet}
+          addSheet={this._addSheet}
+          sheets={sheets}
+          setActiveSheet={this._setActiveSheet}
+        />
 
-        {sheets.map((sheet, index) => (
-          <ScheduleDSheet
-            addHeaders={this._addHeaders}
-            key={sheet.id}
-            handleSheetChanged={this._handleSheetChanged}
-            id={sheet.id}
-            match={this.props.match}
-            referenceData={this.props.referenceData}
-            sheet={sheet}
-          />
+        {sheets.map(sheet => (
+          <div className={this.state.activeSheet === sheet.id ? 'active' : 'inactive'} key={sheet.id}>
+            <ScheduleDSheet
+              addHeaders={this._addHeaders}
+              handleSheetChanged={this._handleSheetChanged}
+              id={sheet.id}
+              match={this.props.match}
+              referenceData={this.props.referenceData}
+              sheet={sheet}
+            />
+          </div>
         ))}
 
         <div className="sticky">
