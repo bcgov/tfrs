@@ -1,5 +1,6 @@
 #!/bin/bash
 ## $1 is release name, $2 is env name
+## The script needs to be copied to /postgresql-backup on each database pod.
 current_time=`date +"20%y%m%d-%H%M%S"`
 dump_name=`echo "tfrs-$2-${current_time}-before-apply-$1"`
 echo "    Running full database backup"

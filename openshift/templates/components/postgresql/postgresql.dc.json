@@ -62,7 +62,7 @@
                     }
                 ],
                 "selector": {
-                    "name": "postgresql"
+                    "name": "postgresql96"
                 },
                 "type": "ClusterIP",
                 "sessionAffinity": "None"
@@ -75,7 +75,7 @@
             "apiVersion": "v1",
             "kind": "PersistentVolumeClaim",
             "metadata": {
-                "name": "postgresql",
+                "name": "postgresql96",
                 "annotations":{
                     "volume.beta.kubernetes.io/storage-class": "gluster-file-db",
                     "template.openshift.io.bcgov/create": "true"
