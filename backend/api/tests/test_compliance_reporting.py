@@ -120,6 +120,18 @@ class TestComplianceReporting(BaseTestCase):
             'status': 'Draft',
             'type': 'Compliance Report',
             'compliancePeriod': '2019',
+            'scheduleA': {
+              'records': [
+                  {
+                      'tradingPartner': 'Test 2',
+                      'postalAddress': '123 Main St\nVictoria, BC',
+                      'fuelClass': 'Diesel',
+                      'transferType': 'Received',
+                      'quantity': 98.1
+                  }
+
+              ]
+            },
             'scheduleC': {
                 'records': [
                     {
@@ -195,6 +207,18 @@ class TestComplianceReporting(BaseTestCase):
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         payload = {
+            'scheduleA': {
+                'records': [
+                    {
+                        'tradingPartner': 'Test 2',
+                        'postalAddress': '123 Main St\nVictoria, BC',
+                        'fuelClass': 'Diesel',
+                        'transferType': 'Received',
+                        'quantity': 98.1
+                    }
+
+                ]
+            },
             'scheduleC': {
                 'records': [
                     {
@@ -225,6 +249,45 @@ class TestComplianceReporting(BaseTestCase):
 
         self.assertIsNotNone(response_data['scheduleC'])
         self.assertEqual(len(response_data['scheduleC']['records']), 2)
+
+        self.assertIsNotNone(response_data['scheduleA'])
+        self.assertEqual(len(response_data['scheduleA']['records']), 1)
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        payload = {
+            'scheduleC': {
+                'records': [
+                    {
+                        'fuelType': 'LNG',
+                        'fuelClass': 'Diesel',
+                        'quantity': 88.1,
+                        'expectedUse': 'Other',
+                        'rationale': 'Patched'
+                    },
+                    {
+                        'fuelType': 'LNG',
+                        'fuelClass': 'Diesel',
+                        'quantity': 88.1,
+                        'expectedUse': 'Other',
+                        'rationale': 'Patched Again'
+                    }
+                ]
+            }
+        }
+
+        response = self.clients['fs_user_1'].patch(
+            '/api/compliance_reports/1',
+            content_type='application/json',
+            data=json.dumps(payload)
+        )
+
+        response_data = json.loads(response.content.decode("utf-8"))
+
+        self.assertIsNotNone(response_data['scheduleC'])
+        self.assertEqual(len(response_data['scheduleC']['records']), 2)
+        self.assertIsNotNone(response_data['scheduleA'])
+        self.assertEqual(len(response_data['scheduleA']['records']), 1)
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
