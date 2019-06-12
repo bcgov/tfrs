@@ -17,11 +17,7 @@ import Select from './components/Select';
 import SchedulesPage from './components/SchedulesPage';
 import ScheduleTabs from './components/ScheduleTabs';
 import { SCHEDULE_B } from '../constants/schedules/scheduleColumns';
-<<<<<<< HEAD
 import { formatNumeric } from '../utils/functions';
-=======
-import { formatNumeric, getQuantity } from '../utils/functions';
->>>>>>> master
 
 class ScheduleBContainer extends Component {
   static addHeaders () {
