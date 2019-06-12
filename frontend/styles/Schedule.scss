@@ -24,6 +24,7 @@
       width: 100%;
     
       &.data-grid .cell {
+        color: $font;
         height: 4rem;
         padding: 0.5rem;
         vertical-align: middle;
@@ -283,6 +284,10 @@
     .cell.output-label {
       text-align: left;
       width: 40%;
+
+      &.total {
+        font-weight: bold;
+      }
     }
   }
 

@@ -3,16 +3,38 @@ import PropTypes from 'prop-types';
 import 'react-datasheet/lib/react-datasheet.css';
 
 import ScheduleDPage from './ScheduleDPage';
-import { SCHEDULE_D, SCHEDULE_D_INPUT } from '../../constants/schedules/scheduleColumns';
+import { SCHEDULE_D_INPUT, SCHEDULE_D_OUTPUT } from '../../constants/schedules/scheduleColumns';
 
 class ScheduleDSheet extends Component {
+  static calculateTotal (grid) {
+    let total = 0;
+    for (let row = 0; row < SCHEDULE_D_OUTPUT.TOTAL; row += 1) {
+      if (!Number.isNaN(parseFloat(grid[row][1].value))) {
+        total += parseFloat(grid[row][1].value);
+      }
+    }
+
+    const updatedGrid = grid;
+
+    updatedGrid[SCHEDULE_D_OUTPUT.TOTAL][1] = {
+      ...updatedGrid[SCHEDULE_D_OUTPUT.TOTAL][1],
+      value: total
+    };
+
+    updatedGrid[SCHEDULE_D_OUTPUT.CARBON_INTENSITY][1] = {
+      ...updatedGrid[SCHEDULE_D_OUTPUT.CARBON_INTENSITY][1],
+      value: total / 1000
+    };
+
+    return updatedGrid;
+  }
+
   constructor (props) {
     super(props);
 
     this.rowNumber = 1;
 
     this._addRow = this._addRow.bind(this);
-    this._calculateTotal = this._calculateTotal.bind(this);
     this._handleCellsChanged = this._handleCellsChanged.bind(this);
     this._validateFuelTypeColumn = this._validateFuelTypeColumn.bind(this);
   }
@@ -46,11 +68,8 @@ class ScheduleDSheet extends Component {
     this.props.handleSheetChanged(grid, this.props.id);
   }
 
-  _calculateTotal (grid) {
-  }
-
-  _handleCellsChanged (grid, changes, addition = null) {
-    const input = this.props.sheet[grid].map(row => [...row]);
+  _handleCellsChanged (gridType, changes, addition = null) {
+    let grid = this.props.sheet[gridType].map(row => [...row]);
 
     changes.forEach((change) => {
       const {
@@ -61,17 +80,21 @@ class ScheduleDSheet extends Component {
         return;
       }
 
-      input[row][col] = {
-        ...input[row][col],
+      grid[row][col] = {
+        ...grid[row][col],
         value
       };
 
-      if (grid === 'input' && col === SCHEDULE_D_INPUT.FUEL_TYPE) {
-        input[row] = this._validateFuelTypeColumn(input[row], value);
+      if (gridType === 'input' && col === SCHEDULE_D_INPUT.FUEL_TYPE) {
+        grid[row] = this._validateFuelTypeColumn(grid[row], value);
+      }
+
+      if (gridType === 'output') {
+        grid = ScheduleDSheet.calculateTotal(grid);
       }
     });
 
-    this.props.handleSheetChanged({ [grid]: input }, this.props.id);
+    this.props.handleSheetChanged({ [gridType]: grid }, this.props.id);
   }
 
   _validateFuelTypeColumn (currentRow, value) {

@@ -13,7 +13,7 @@ import ScheduleDOutput from './components/ScheduleDOutput';
 import ScheduleDSheet from './components/ScheduleDSheet';
 import ScheduleTabs from './components/ScheduleTabs';
 import Select from './components/Select';
-import { SCHEDULE_D, SCHEDULE_D_INPUT } from '../constants/schedules/scheduleColumns';
+import { SCHEDULE_D_INPUT } from '../constants/schedules/scheduleColumns';
 
 class ScheduleDContainer extends Component {
   constructor (props) {
@@ -33,7 +33,6 @@ class ScheduleDContainer extends Component {
 
     this._addHeaders = this._addHeaders.bind(this);
     this._addSheet = this._addSheet.bind(this);
-    this._calculateTotal = this._calculateTotal.bind(this);
     this._handleSheetChanged = this._handleSheetChanged.bind(this);
     this._handleSubmit = this._handleSubmit.bind(this);
   }
@@ -120,9 +119,6 @@ class ScheduleDContainer extends Component {
     this.setState({
       sheets
     });
-  }
-
-  _calculateTotal (grid) {
   }
 
   _getFuelClasses (row, id) {
