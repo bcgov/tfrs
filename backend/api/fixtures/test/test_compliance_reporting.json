@@ -49,5 +49,14 @@
     },
     "model": "api.expecteduse",
     "pk": 3
+  },
+  {
+    "fields": {
+      "the_type": "Received",
+      "display_order": 99,
+      "effective_date": "2017-01-01"
+    },
+    "model": "api.notionaltransfertype",
+    "pk": 1
   }
 ]
