@@ -4,7 +4,7 @@ from api.managers.ComplianceReportStatusManager import \
     ComplianceReportStatusManager
 from api.managers.TheTypeManager import TheTypeManager
 from api.models.CompliancePeriod import CompliancePeriod
-from api.models.ComplianceReportSchedules import ScheduleC
+from api.models.ComplianceReportSchedules import ScheduleC, ScheduleA
 from api.models.Organization import Organization
 from api.models.mixins.DisplayOrder import DisplayOrder
 from api.models.mixins.EffectiveDates import EffectiveDates
@@ -99,6 +99,13 @@ class ComplianceReport(Auditable):
         CompliancePeriod,
         on_delete=models.DO_NOTHING,
         null=False
+    )
+
+    schedule_a = models.OneToOneField(
+        ScheduleA,
+        related_name='compliance_report',
+        on_delete=models.CASCADE,
+        null=True
     )
 
     schedule_c = models.OneToOneField(

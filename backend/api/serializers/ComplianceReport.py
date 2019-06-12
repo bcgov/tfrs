@@ -27,9 +27,9 @@ from rest_framework.relations import SlugRelatedField, PrimaryKeyRelatedField
 
 from api.models.CompliancePeriod import CompliancePeriod
 from api.models.ComplianceReport import ComplianceReportType, ComplianceReportStatus, ComplianceReport
-from api.models.ComplianceReportSchedules import ScheduleCRecord, ScheduleC
+from api.models.ComplianceReportSchedules import ScheduleCRecord, ScheduleC, ScheduleARecord, ScheduleA
 from api.serializers import OrganizationMinSerializer, CompliancePeriodSerializer, ValidationError
-from api.serializers.ComplianceReportSchedules import ScheduleCDetailSerializer
+from api.serializers.ComplianceReportSchedules import ScheduleCDetailSerializer, ScheduleADetailSerializer
 
 
 class ComplianceReportTypeSerializer(serializers.ModelSerializer):
@@ -63,11 +63,13 @@ class ComplianceReportDetailSerializer(serializers.ModelSerializer):
     type = ComplianceReportTypeSerializer(read_only=True)
     organization = OrganizationMinSerializer(read_only=True)
     compliance_period = CompliancePeriodSerializer(read_only=True)
+    schedule_a = ScheduleADetailSerializer(read_only=True)
     schedule_c = ScheduleCDetailSerializer(read_only=True)
 
     class Meta:
         model = ComplianceReport
-        fields = ['id', 'status', 'type', 'organization', 'compliance_period', 'schedule_c']
+        fields = ['id', 'status', 'type', 'organization', 'compliance_period',
+                  'schedule_a', 'schedule_c']
 
 
 class ComplianceReportCreateSerializer(serializers.ModelSerializer):
@@ -78,11 +80,16 @@ class ComplianceReportCreateSerializer(serializers.ModelSerializer):
                                          queryset=CompliancePeriod.objects.all())
     organization = OrganizationMinSerializer(read_only=True)
     schedule_c = ScheduleCDetailSerializer(allow_null=True, required=False)
+    schedule_a = ScheduleADetailSerializer(allow_null=True, required=False)
 
     def create(self, validated_data):
         schedule_c_data = None
         if 'schedule_c' in validated_data:
             schedule_c_data = validated_data.pop('schedule_c')
+
+        schedule_a_data = None
+        if 'schedule_a' in validated_data:
+            schedule_a_data = validated_data.pop('schedule_a')
 
         instance = ComplianceReport.objects.create(**validated_data)
 
@@ -95,12 +102,22 @@ class ComplianceReportCreateSerializer(serializers.ModelSerializer):
                 schedule_c.records.add(record)
                 schedule_c.save()
 
+        if schedule_a_data and 'records' in schedule_a_data:
+            records_data = schedule_a_data.pop('records')
+            schedule_a = ScheduleA.objects.create(**schedule_a_data, compliance_report=instance)
+            instance.schedule_a = schedule_a
+            for record_data in records_data:
+                record = ScheduleARecord.objects.create(**record_data, schedule=schedule_a)
+                schedule_a.records.add(record)
+                schedule_a.save()
+
         instance.save()
         return instance
 
     class Meta:
         model = ComplianceReport
-        fields = ('status', 'type', 'compliance_period', 'organization', 'schedule_c')
+        fields = ('status', 'type', 'compliance_period', 'organization',
+                  'schedule_a', 'schedule_c')
 
 
 class ComplianceReportUpdateSerializer(serializers.ModelSerializer):
@@ -109,6 +126,7 @@ class ComplianceReportUpdateSerializer(serializers.ModelSerializer):
     type = SlugRelatedField(slug_field='the_type', read_only=True)
     compliance_period = SlugRelatedField(slug_field='description', read_only=True)
     organization = OrganizationMinSerializer(read_only=True)
+    schedule_a = ScheduleADetailSerializer(allow_null=True, required=False)
     schedule_c = ScheduleCDetailSerializer(allow_null=True, required=False)
 
     def update(self, instance, validated_data):
@@ -132,12 +150,33 @@ class ComplianceReportUpdateSerializer(serializers.ModelSerializer):
 
             instance.save()
 
+        if 'schedule_a' in validated_data:
+            schedule_a_data = validated_data.pop('schedule_a')
+
+            if instance.schedule_a:
+                ScheduleARecord.objects.filter(schedule=instance.schedule_a).delete()
+                instance.schedule_a.delete()
+
+            if 'records' in schedule_a_data:
+                records_data = schedule_a_data.pop('records')
+
+                schedule_a = ScheduleA.objects.create(**schedule_a_data, compliance_report=instance)
+                instance.schedule_a = schedule_a
+
+                for record_data in records_data:
+                    record = ScheduleARecord.objects.create(**record_data, schedule=schedule_a)
+                    schedule_a.records.add(record)
+                    schedule_a.save()
+
+            instance.save()
+
         # all other fields are read-only
         return instance
 
     class Meta:
         model = ComplianceReport
-        fields = ('status', 'type', 'compliance_period', 'organization', 'schedule_c')
+        fields = ('status', 'type', 'compliance_period', 'organization',
+                  'schedule_a', 'schedule_c')
 
 
 class ComplianceReportDeleteSerializer(serializers.ModelSerializer):
