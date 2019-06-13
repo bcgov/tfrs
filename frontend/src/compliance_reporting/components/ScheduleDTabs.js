@@ -6,7 +6,8 @@ const ScheduleDTabs = (props) => {
   const renderTabs = (active) => {
     const elements = [];
     for (let x = props.sheets.length - 1; x >= 0; x -= 1) {
-      const label = props.sheets[x].input[1][SCHEDULE_D_INPUT.FUEL_TYPE].value || x + 1;
+      const label = props.sheets[x].input[1][SCHEDULE_D_INPUT.FUEL_TYPE].value || `Sheet ${x + 1}`;
+
       // eslint-disable-next-line function-paren-newline
       elements.push(
         <li

@@ -17,7 +17,7 @@ const numericInput = {
       return '';
     }
 
-    return <span>{getQuantity(value).toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')}</span>;
+    return <span>{getQuantity(value).toFixed(2).toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')}</span>;
   }
 };
 
