@@ -51,14 +51,14 @@ const ScheduleBTotals = (props) => {
           <div className="col-md-6">
             <label htmlFor="total-debit">Total Debit</label>
           </div>
-          <div className="col-md-6 value">{props.totals.debit > 0 ? `(${formatNumber(props.totals.debit)})` : '-'}</div>
+          <div className={`col-md-6 value ${props.totals.debit > 0 ? 'debit' : ''}`}>{props.totals.debit > 0 ? `(${formatNumber(props.totals.debit)})` : '-'}</div>
         </div>
 
         <div className="row net-total">
           <div className="col-md-6">
             <label htmlFor="net-total">Net Credit or (Debit)</label>
           </div>
-          <div className="col-md-6 value">{getNetTotal()}</div>
+          <div className={`col-md-6 value ${props.totals.debit > props.totals.credit ? 'debit' : ''}`}>{getNetTotal()}</div>
         </div>
       </div>
     </Draggable>
