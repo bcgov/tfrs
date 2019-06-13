@@ -115,7 +115,7 @@
                                         "memory": "6Gi"
                                     },
                                     "requests": {
-                                        "cpu": "500m",
+                                        "cpu": "100m",
                                         "memory": "512Mi"
                                     }
                                 },
@@ -125,8 +125,8 @@
                                         "port": 8080,
                                         "scheme": "HTTP"
                                     },
-                                    "initialDelaySeconds": 200,
-                                    "timeoutSeconds": 3000,
+                                    "initialDelaySeconds": 360,
+                                    "timeoutSeconds": 5,
                                     "periodSeconds": 10,
                                     "successThreshold": 1,
                                     "failureThreshold": 3
@@ -137,8 +137,8 @@
                                         "port": 8080,
                                         "scheme": "HTTP"
                                     },
-                                    "initialDelaySeconds": 200,
-                                    "timeoutSeconds": 3000,
+                                    "initialDelaySeconds": 360,
+                                    "timeoutSeconds": 5,
                                     "periodSeconds": 10,
                                     "successThreshold": 1,
                                     "failureThreshold": 3
@@ -183,7 +183,7 @@
                 "strategy": {
                     "type": "Recreate",
                     "recreateParams": {
-                        "timeoutSeconds": 600
+                        "timeoutSeconds": 1800
                     },
                     "resources": {},
                     "activeDeadlineSeconds": 21600

@@ -2,7 +2,7 @@
 1. postgresql
 1.1 create nfs-backup storage: https://github.com/BCDevOps/provision-nfs-apb
 bk-mem-tfrs-dev-51gffzadghxs
-1.2 oc process -f ./postgresql.dc.json | oc create -f - -n mem-tfrs-dev
+1.2 oc process -f ./postgresql.dc.json | oc create -f - -n mem-tfrs-dev --dry-run=true
 1.3 create extension
 tfrs=# create extension hstore;
 tfrs=# create extension pg_trgm;
@@ -17,7 +17,7 @@ tfrs-backup.sh
 notes: 
 	a. use same secret tfrs-postgresql from mem-tfrs-test
 	b. full database backup test database and recover to dev database
-
+	c. remember to enable bakcup in postgresql.conf according to tfrs wiki 
 
 2. rabbitmq
 2.1 create secret rabbitmq-tfrs, refer to the same one in mem-tfrs-tools project
@@ -84,7 +84,7 @@ KEYCLOAK_CALLBACK_URL=https://dev-lowcarbonfuels.pathfinder.gov.bc.ca/authCallba
 KEYCLOAK_LOGOUT_URL=https://logontest.gov.bc.ca/clp-cgi/logoff.cgi?returl=https%3A%2F%2Fdev-lowcarbonfuels.pathfinder.gov.bc.ca%2F ROUTE_HOST_NAME=dev-lowcarbonfuels.pathfinder.gov.bc.ca ROUTE_NAME=dev-lowcarbonfuels-frontend -n mem-tfrs-dev | oc create -f - --dry-run=true
 
 10. create notification server
-oc process -f ./notification-server-dc.json ENV_NAME=dev SOURCE_IS_NAME=notification-server-develop ENV_NAME_WITH_DASH=-dev ROUTE_NAME=dev-lowcarbonfuels-notification ROUTE_HOST=dev-lowcarbonfuels.pathfinder.gov.bc.ca -n mem-tfrs-dev | oc create -f -
+oc process -f ./notification-server-dc.json ENV_NAME=dev SOURCE_IS_NAME=notification-server-develop DASH_ENV_NAME=-dev ROUTE_NAME=dev-lowcarbonfuels-notification ROUTE_HOST=dev-lowcarbonfuels.pathfinder.gov.bc.ca -n mem-tfrs-dev | oc create -f -
 
 11. maintenance page
 oc process -f ./maintenance-page.dc.json ENV_NAME=dev -n mem-tfrs-dev | oc create -f - --dry-run=true

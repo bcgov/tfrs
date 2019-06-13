@@ -19,9 +19,9 @@
             "required": true
         },
         {
-            "name": "ENV_NAME_WITH_DASH",
+            "name": "DASH_ENV_NAME",
             "value": "",
-            "displayName": "Environment name",
+            "displayName": "Dash Environment name",
             "description": "Sample values: -dev and -test. For prod, please don't pass in any value."
         },
         {
@@ -177,7 +177,7 @@
                                     },
                                     {
                                         "name": "KEYCLOAK_CERTS_URL",
-                                        "value": "https://sso${ENV_NAME_WITH_DASH}.pathfinder.gov.bc.ca/auth/realms/tfrs${ENV_NAME_WITH_DASH}/protocol/openid-connect/certs"
+                                        "value": "https://sso${DASH_ENV_NAME}.pathfinder.gov.bc.ca/auth/realms/tfrs${DASH_ENV_NAME}/protocol/openid-connect/certs"
                                     }
                                 ],
                                 "resources": {
