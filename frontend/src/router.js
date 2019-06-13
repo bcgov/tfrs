@@ -1,6 +1,6 @@
 import React from 'react';
-import {Route, Switch, withRouter} from 'react-router';
-import {ConnectedRouter} from 'react-router-redux';
+import { Route, Switch, withRouter } from 'react-router';
+import { ConnectedRouter } from 'react-router-redux';
 
 import App from './app/App';
 import history from './app/History';
@@ -56,6 +56,7 @@ import ComplianceReportIntroContainer from './compliance_reporting/ComplianceRep
 import ScheduleAContainer from './compliance_reporting/ScheduleAContainer';
 import ScheduleBContainer from './compliance_reporting/ScheduleBContainer';
 import ScheduleCContainer from './compliance_reporting/ScheduleCContainer';
+import ScheduleDContainer from './compliance_reporting/ScheduleDContainer';
 import ContactUsContainer from './contact_us/ContactUsContainer';
 import CreditTransactionsContainer from './credit_transfers/CreditTransactionsContainer';
 import CreditTransferAddContainer from './credit_transfers/CreditTransferAddContainer';
@@ -72,7 +73,7 @@ import NotificationsContainer from './notifications/NotificationsContainer';
 import AuthCallback from './app/AuthCallback';
 import CONFIG from './config';
 import OrganizationEditContainer from './organizations/OrganizationEditContainer';
-import withReferenceData from "./utils/reference_data_support";
+import withReferenceData from './utils/reference_data_support';
 
 const Router = routerProps => (
   <ConnectedRouter history={history} key={Math.random()}>
@@ -346,6 +347,11 @@ const Router = routerProps => (
             component={withRouter(ScheduleCContainer)}
           />,
           <Route
+            key="compliance_reporting_add_schedule_d"
+            path={COMPLIANCE_REPORTING.ADD_SCHEDULE_D}
+            component={withRouter(ScheduleDContainer)}
+          />,
+          <Route
             key="compliance_reporting_edit"
             path={COMPLIANCE_REPORTING.EDIT}
             component={withRouter(ComplianceReportIntroContainer)}
@@ -366,12 +372,17 @@ const Router = routerProps => (
             component={withRouter(withReferenceData()(ScheduleCContainer))}
           />,
           <Route
+            key="compliance_reporting_edit_schedule_d"
+            path={COMPLIANCE_REPORTING.EDIT_SCHEDULE_D}
+            component={withRouter(withReferenceData()(ScheduleDContainer))}
+          />,
+          <Route
             key="compliance_reporting"
             path={COMPLIANCE_REPORTING.LIST}
             component={withRouter(ComplianceReportingContainer)}
           />
         ]}
-        <Route component={NotFound}/>
+        <Route component={NotFound} />
       </Switch>
     </App>
   </ConnectedRouter>

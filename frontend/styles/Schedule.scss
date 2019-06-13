@@ -24,6 +24,7 @@
       width: 100%;
     
       &.data-grid .cell {
+        color: $font;
         height: 4rem;
         padding: 0.5rem;
         vertical-align: middle;
@@ -78,9 +79,21 @@
     }
   }
 
+  .inactive {
+    display: none;
+  }
+
   .scrollable {
     overflow-x: auto;
     width: 100%;
+
+    &.output {
+      max-width: 600px;
+
+      .data-grid-container {
+        min-width: 500px;
+      }
+    }
   }
 
   .schedule-totals {
@@ -273,7 +286,74 @@
   }
 }
 
+.schedule-d {
+  &.input {
+    margin-bottom: 2rem;
+  }
+
+  &.output {
+    margin-bottom: 2rem;
+    min-width: 600px;
+    width: 50%;
+
+    .cell.output-label {
+      text-align: left;
+      width: 40%;
+
+      &.total {
+        font-weight: bold;
+      }
+    }
+  }
+
+  .fuel-class {
+    min-width: 200px;
+  }
+
+  .fuel-type, .feedstock {
+    min-width: 200px;
+    width: 33%;
+  }
+
+  .row-number {
+    min-width: 4rem;
+    width: 4rem;
+  }
+
+  .units, .worksheet-cell, .worksheet-value {
+    min-width: 20rem;
+    width: 20rem;
+  }
+
+  .worksheet-name {
+    min-width: 30rem;
+    width: 30rem;
+  }
+}
+
 .schedule-tabs {
   margin: 0 -3rem 2rem;
   padding: 0 3rem;
+}
+
+.schedule-d-tabs {
+  margin-bottom: 2rem;
+
+  li {
+    float: right;
+    margin-left: 1rem;
+
+    &.active button {
+      border: 1px solid $border-grey;
+      border-bottom: none;
+    }
+
+    button {
+      background-color: $white;
+      border: none;
+      border-radius: 4px 4px 0 0;
+      color: $link-color;
+      padding: 1rem;
+    }
+  }
 }
