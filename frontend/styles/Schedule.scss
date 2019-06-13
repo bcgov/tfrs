@@ -100,6 +100,10 @@
     &.schedule-b {
       width: 40rem;
 
+      .debit {
+        padding-right: 1rem;
+      }
+
       .net-total {
         border-top: 1px solid $primary;
         padding-top: 1rem;
@@ -166,6 +170,11 @@
     width: 20rem;
   }
 
+  .row-number {
+    min-width: 4rem;
+    width: 4rem;
+  }
+
   .transfer-type {
     min-width: 25rem;
     width: 25rem;
@@ -218,7 +227,8 @@
   }
 
   .row-number {
-    width: 5rem;
+    min-width: 4rem;
+    width: 4rem;
   }
 
   .units {
@@ -253,7 +263,8 @@
   }
 
   .row-number {
-    width: 5rem;
+    min-width: 4rem;
+    width: 4rem;
   }
 
   .units {

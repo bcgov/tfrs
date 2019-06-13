@@ -112,6 +112,7 @@ class FuelCodeFormDetails extends Component {
                     handleInputChange={this.props.handleInputChange}
                     id="carbon-intensity"
                     max="999.99"
+                    maxLength="7"
                     min="0"
                     name="carbonIntensity"
                     required
