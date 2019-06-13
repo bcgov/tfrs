@@ -174,10 +174,12 @@ class ScheduleCContainer extends Component {
       grid[i][SCHEDULE_C.EXPECTED_USE].value = record[SCHEDULE_C.EXPECTED_USE].value;
       grid[i][SCHEDULE_C.EXPECTED_USE_OTHER].value = record[SCHEDULE_C.EXPECTED_USE_OTHER].value;
       grid[i][SCHEDULE_C.QUANTITY].value = record[SCHEDULE_C.QUANTITY].value;
-      const selectedFuel = this.props.referenceData.approvedFuels.find(fuel =>
-        fuel.name === record[SCHEDULE_C.FUEL_TYPE].value);
-      grid[i][SCHEDULE_C.UNITS].value = (selectedFuel && selectedFuel.unitOfMeasure)
-        ? selectedFuel.unitOfMeasure.name : '';
+      if (!this.props.referenceData.isFetching) {
+        const selectedFuel = this.props.referenceData.approvedFuels.find(fuel =>
+          fuel.name === record[SCHEDULE_C.FUEL_TYPE].value);
+        grid[i][SCHEDULE_C.UNITS].value = (selectedFuel && selectedFuel.unitOfMeasure)
+          ? selectedFuel.unitOfMeasure.name : '';  
+      }
 
       this.setState({ grid });
     }
@@ -284,7 +286,7 @@ class ScheduleCContainer extends Component {
       if (col === SCHEDULE_C.QUANTITY) {
         grid[row][col] = {
           ...grid[row][col],
-          value: getQuantity(value)
+          value: getQuantity(value).toFixed(2)
         };
       }
 
@@ -514,7 +516,8 @@ ScheduleCContainer.propTypes = {
   loadedState: PropTypes.any,
   saving: PropTypes.bool,
   referenceData: PropTypes.shape({
-    approvedFuels: PropTypes.arrayOf(PropTypes.shape)
+    approvedFuels: PropTypes.arrayOf(PropTypes.shape),
+    isFetching: PropTypes.bool
   }).isRequired
 };
 
@@ -532,7 +535,8 @@ const mapStateToProps = state => ({
     errorMessage: state.rootReducer.complianceReporting.errorMessage
   },
   referenceData: {
-    approvedFuels: state.rootReducer.referenceData.data.approvedFuels
+    approvedFuels: state.rootReducer.referenceData.data.approvedFuels,
+    isFetching: state.rootReducer.referenceData.isFetching
   }
 });
 
