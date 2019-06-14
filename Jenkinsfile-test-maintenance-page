@@ -18,7 +18,7 @@ podTemplate(label: "test-maven-${env.BUILD_NUMBER}", name: "test-maven-${env.BUI
     node("test-maven-${env.BUILD_NUMBER}") {
 
         stage('Bring up Test Maintenance Page') {
-            input "Confirm to bring up Dev maintenance page"
+            input "Confirm to bring up Test maintenance page"
             sh returnStatus: true, script: "oc scale dc maintenance-page -n mem-tfrs-test --replicas=1 --timeout=20s"
             sh returnStatus: true, script: "oc patch route/test-lowcarbonfuels-frontend -n mem-tfrs-test -p '{\"spec\":{\"to\":{\"name\":\"maintenance-page\"}, \"port\":{\"targetPort\":\"2015-tcp\"}}}'"
             sh returnStatus: true, script: "oc patch route/test-lowcarbonfuels-backend -n mem-tfrs-test -p '{\"spec\":{\"to\":{\"name\":\"maintenance-page\"}, \"port\":{\"targetPort\":\"2015-tcp\"}}}'"
