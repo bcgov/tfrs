@@ -1,0 +1,36 @@
+
+podTemplate(label: "test-maven-${env.BUILD_NUMBER}", name: "test-maven-${env.BUILD_NUMBER}", serviceAccount: 'jenkins-basic', cloud: 'openshift',
+        containers: [
+            containerTemplate(
+                name: 'jnlp',
+                image: 'registry.access.redhat.com/openshift3/jenkins-slave-maven-rhel7:v3.9',
+                resourceRequestCpu: '500m',
+                resourceLimitCpu: '1000m',
+                resourceRequestMemory: '2Gi',
+                resourceLimitMemory: '4Gi',
+                workingDir: '/home/jenkins',
+                command: '',
+                args: '${computer.jnlpmac} ${computer.name}'
+            )
+        ]
+) {
+
+    node("test-maven-${env.BUILD_NUMBER}") {
+
+        stage('Bring up Test Maintenance Page') {
+            input "Confirm to bring up Dev maintenance page"
+            sh returnStatus: true, script: "oc scale dc maintenance-page -n mem-tfrs-test --replicas=1 --timeout=20s"
+            sh returnStatus: true, script: "oc patch route/test-lowcarbonfuels-frontend -n mem-tfrs-test -p '{\"spec\":{\"to\":{\"name\":\"maintenance-page\"}, \"port\":{\"targetPort\":\"2015-tcp\"}}}'"
+            sh returnStatus: true, script: "oc patch route/test-lowcarbonfuels-backend -n mem-tfrs-test -p '{\"spec\":{\"to\":{\"name\":\"maintenance-page\"}, \"port\":{\"targetPort\":\"2015-tcp\"}}}'"
+        }
+
+        stage('Take down Test Maintenance Page') {
+            input "Confirm to bring down Test maintenance page"
+            sh returnStatus: true, script: "oc patch route/test-lowcarbonfuels-backend -n mem-tfrs-test -p '{\"spec\":{\"to\":{\"name\":\"backend\"}, \"port\":{\"targetPort\":\"web\"}}}'"
+            sh returnStatus: true, script: "oc patch route/test-lowcarbonfuels-frontend -n mem-tfrs-test -p '{\"spec\":{\"to\":{\"name\":\"client\"}, \"port\":{\"targetPort\":\"web\"}}}'"
+            sh returnStatus: true, script: "oc scale dc maintenance-page -n mem-tfrs-test --replicas=0 --timeout=20s"
+        }
+
+    } //end of node
+
+} //end of podTemplate

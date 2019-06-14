@@ -18,15 +18,15 @@ podTemplate(label: "develop-maven-${env.BUILD_NUMBER}", name: "develop-maven-${e
 
     node("develop-maven-${env.BUILD_NUMBER}") {
 
-        stage('Bring up Maintenance Page') {
-            input "Confirm to bring up maintenance page"
+        stage('Bring up Dev Maintenance Page') {
+            input "Confirm to bring up Dev maintenance page"
             sh returnStatus: true, script: "oc scale dc maintenance-page -n mem-tfrs-dev --replicas=1 --timeout=20s"
             sh returnStatus: true, script: "oc patch route/dev-lowcarbonfuels-frontend -n mem-tfrs-dev -p '{\"spec\":{\"to\":{\"name\":\"maintenance-page\"}, \"port\":{\"targetPort\":\"2015-tcp\"}}}'"
             sh returnStatus: true, script: "oc patch route/dev-lowcarbonfuels-backend -n mem-tfrs-dev -p '{\"spec\":{\"to\":{\"name\":\"maintenance-page\"}, \"port\":{\"targetPort\":\"2015-tcp\"}}}'"
         }
 
-        stage('Take down Maintenance Page') {
-            input "Confirm to bring down maintenance page"
+        stage('Take down Dev Maintenance Page') {
+            input "Confirm to bring down Dev maintenance page"
             sh returnStatus: true, script: "oc patch route/dev-lowcarbonfuels-backend -n mem-tfrs-dev -p '{\"spec\":{\"to\":{\"name\":\"backend\"}, \"port\":{\"targetPort\":\"web\"}}}'"
             sh returnStatus: true, script: "oc patch route/dev-lowcarbonfuels-frontend -n mem-tfrs-dev -p '{\"spec\":{\"to\":{\"name\":\"client\"}, \"port\":{\"targetPort\":\"web\"}}}'"
             sh returnStatus: true, script: "oc scale dc maintenance-page -n mem-tfrs-dev --replicas=0 --timeout=20s"
