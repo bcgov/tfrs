@@ -266,31 +266,32 @@ node("master-maven-${env.BUILD_NUMBER}") {
     }
 	
     stage('Deploy Backend to Test') {
-        openshiftTag destStream: 'tfrs', verbose: 'true', destTag: 'test', srcStream: 'tfrs', srcTag: "${IMAGE_HASH_BACKEND}"
-        sh 'sleep 5s'
-        openshiftVerifyDeployment depCfg: 'tfrs', namespace: 'mem-tfrs-test', replicaCount: 1, verbose: 'false', waitTime: '10', waitUnit: 'min'
-        openshiftTag destStream: 'scan-coordinator', verbose: 'true', destTag: 'test', srcStream: 'scan-coordinator', srcTag: "${IMAGE_HASH_SCAN_COORDINATOR}"
-        sh 'sleep 5s'
-        openshiftVerifyDeployment depCfg: 'scan-coordinator', namespace: 'mem-tfrs-test', replicaCount: 1, verbose: 'false', waitTime: '10', waitUnit: 'min'
-        openshiftTag destStream: 'scan-handler', verbose: 'true', destTag: 'test', srcStream: 'scan-handler', srcTag: "${IMAGE_HASH_SCAN_HANDLER}"
-        sh 'sleep 5s'
-        openshiftVerifyDeployment depCfg: 'scan-handler', namespace: 'mem-tfrs-test', replicaCount: 1, verbose: 'false', waitTime: '10', waitUnit: 'min'
-        openshiftTag destStream: 'celery', verbose: 'true', destTag: 'test', srcStream: 'celery', srcTag: "${IMAGE_HASH_CELERY}"
-        sh 'sleep 5s'
-        openshiftVerifyDeployment depCfg: 'celery', namespace: 'mem-tfrs-test', replicaCount: 1, verbose: 'false', waitTime: '10', waitUnit: 'min'
+        script {
+            openshift.withProject("mem-tfrs-tools") {
+                openshift.tag("mem-tfrs-tools/tfrs:latest", "mem-tfrs-tools/tfrs:test")
+                sh 'sleep 20s'
+                openshift.tag("mem-tfrs-tools/scan-coordinator:latest", "mem-tfrs-tools/scan-coordinator:test")
+                sh 'sleep 10s'
+                openshift.tag("mem-tfrs-tools/scan-handler:latest", "mem-tfrs-tools/scan-handler:test")
+                sh 'sleep 10s'
+                openshift.tag("mem-tfrs-tools/celery:latest", "mem-tfrs-tools/celery:test")
+                sh 'sleep 10s'
+            }
+        }
     }
 
     stage('Deploy Frontend on Test') {
-        openshiftTag destStream: 'client', verbose: 'true', destTag: 'test', srcStream: 'client', srcTag: "${IMAGE_HASH_FRONTEND}"
-        sh 'sleep 5s'
-        openshiftVerifyDeployment depCfg: 'client', namespace: 'mem-tfrs-test', replicaCount: 1, verbose: 'false', waitTime: '10', waitUnit: 'min'
-        openshiftTag destStream: 'notification-server', verbose: 'true', destTag: 'test', srcStream: 'notification-server', srcTag: "${IMAGE_HASH_NOTIFICATION}"
-        sh 'sleep 5s'
-        openshiftVerifyDeployment depCfg: 'notification-server', namespace: 'mem-tfrs-test', replicaCount: 1, verbose: 'false', waitTime: '10', waitUnit: 'min'
+        script {
+            openshift.withProject("mem-tfrs-tools") {
+                openshift.tag("mem-tfrs-tools/client:latest", "mem-tfrs-tools/client:test")
+                sh 'sleep 10s'
+                openshift.tag("mem-tfrs-tools/notification-server:latest", "mem-tfrs-tools/notification-server:test")
+                sh 'sleep 10s'
+            }
+        }
     }
-
     stage('Take down Maintenance Page on Test') {
-	input "Before taking dowm the maintenance page, this is the last chance to make a change on Test."
+	    input "Before taking dowm the maintenance page, this is the last chance to make a change on Test."
         sh returnStatus: true, script: "oc patch route/test-lowcarbonfuels-backend -n mem-tfrs-test -p '{\"spec\":{\"to\":{\"name\":\"backend\"}, \"port\":{\"targetPort\":\"web\"}}}'"
         sh returnStatus: true, script: "oc patch route/test-lowcarbonfuels-frontend -n mem-tfrs-test -p '{\"spec\":{\"to\":{\"name\":\"client\"}, \"port\":{\"targetPort\":\"web\"}}}'"
         sh returnStatus: true, script: "oc scale dc maintenance-page -n mem-tfrs-test --replicas=0 --timeout=20s"
@@ -298,15 +299,13 @@ node("master-maven-${env.BUILD_NUMBER}") {
 
     stage('Refresh SchemaSpy on Test') {
         echo "Refreshing SchemaSpy for Test Database"
-        openshiftScale depCfg: 'schema-spy-public', namespace: 'mem-tfrs-test', replicaCount: 0, verbose: 'false', verifyReplicaCount: 'true'
-        sh 'sleep 5s'
-        openshiftScale depCfg: 'schema-spy-public', namespace: 'mem-tfrs-test', replicaCount: 1, verbose: 'false', verifyReplicaCount: 'true', waitTime: '10', waitUnit: 'min'
-        sh 'sleep 5s'
-        openshiftScale depCfg: 'schema-spy-audit', namespace: 'mem-tfrs-test', replicaCount: 0, verbose: 'false', verifyReplicaCount: 'true'
-        sh 'sleep 5s'
-        openshiftScale depCfg: 'schema-spy-audit', namespace: 'mem-tfrs-test', replicaCount: 1, verbose: 'false', verifyReplicaCount: 'true', waitTime: '10', waitUnit: 'min'
-        sh 'sleep 5s'
-    }    
+        sh returnStdout: true, script: "oc scale dc schema-spy-public --replicas=0 -n mem-tfrs-test"
+        sh 'sleep 10s'
+        sh returnStdout: true, script: "oc scale dc schema-spy-public --replicas=1 -n mem-tfrs-test"
+        sh returnStdout: true, script: "oc scale dc schema-spy-audit --replicas=0 -n mem-tfrs-test"
+        sh 'sleep 10s'
+        sh returnStdout: true, script: "oc scale dc schema-spy-audit --replicas=1 -n mem-tfrs-test"
+    }     
 
     stage ('Confirm to deploy to Prod') {
         input "Deploy release ${tfrsRelease} to Prod? There will be one more confirmation before deploying on Prod."
@@ -355,27 +354,29 @@ node("master-maven-${env.BUILD_NUMBER}") {
     }
 	
     stage('Deploy Backend to Prod') {
-        openshiftTag destStream: 'tfrs', verbose: 'true', destTag: 'prod', srcStream: 'tfrs', srcTag: "${IMAGE_HASH_BACKEND}"
-        sh 'sleep 5s'
-        openshiftVerifyDeployment depCfg: 'tfrs', namespace: 'mem-tfrs-prod', replicaCount: 1, verbose: 'false', waitTime: '10', waitUnit: 'min'
-        openshiftTag destStream: 'scan-coordinator', verbose: 'true', destTag: 'prod', srcStream: 'scan-coordinator', srcTag: "${IMAGE_HASH_SCAN_COORDINATOR}"
-        sh 'sleep 5s'
-        openshiftVerifyDeployment depCfg: 'scan-coordinator', namespace: 'mem-tfrs-prod', replicaCount: 1, verbose: 'false', waitTime: '10', waitUnit: 'min'
-        openshiftTag destStream: 'scan-handler', verbose: 'true', destTag: 'prod', srcStream: 'scan-handler', srcTag: "${IMAGE_HASH_SCAN_HANDLER}"
-        sh 'sleep 5s'
-        openshiftVerifyDeployment depCfg: 'scan-handler', namespace: 'mem-tfrs-prod', replicaCount: 1, verbose: 'false', waitTime: '10', waitUnit: 'min'
-        openshiftTag destStream: 'celery', verbose: 'true', destTag: 'prod', srcStream: 'celery', srcTag: "${IMAGE_HASH_CELERY}"
-        sh 'sleep 5s'
-        openshiftVerifyDeployment depCfg: 'celery', namespace: 'mem-tfrs-prod', replicaCount: 1, verbose: 'false', waitTime: '10', waitUnit: 'min'
-    }    
+        script {
+            openshift.withProject("mem-tfrs-tools") {
+                openshift.tag("mem-tfrs-tools/tfrs:latest", "mem-tfrs-tools/tfrs:prod")
+                sh 'sleep 20s'
+                openshift.tag("mem-tfrs-tools/scan-coordinator:latest", "mem-tfrs-tools/scan-coordinator:prod")
+                sh 'sleep 10s'
+                openshift.tag("mem-tfrs-tools/scan-handler:latest", "mem-tfrs-tools/scan-handler:prod")
+                sh 'sleep 10s'
+                openshift.tag("mem-tfrs-tools/celery:latest", "mem-tfrs-tools/celery:prod")
+                sh 'sleep 10s'
+            }
+        }
+    }
 	
     stage('Deploy Frontend on Prod') {
-        openshiftTag destStream: 'client', verbose: 'true', destTag: 'prod', srcStream: 'client', srcTag: "${IMAGE_HASH_FRONTEND}"
-        sh 'sleep 5s'
-        openshiftVerifyDeployment depCfg: 'client', namespace: 'mem-tfrs-prod', replicaCount: 1, verbose: 'false', waitTime: '10', waitUnit: 'min'
-        openshiftTag destStream: 'notification-server', verbose: 'true', destTag: 'prod', srcStream: 'notification-server', srcTag: "${IMAGE_HASH_NOTIFICATION}"
-        sh 'sleep 5s'
-        openshiftVerifyDeployment depCfg: 'notification-server', namespace: 'mem-tfrs-prod', replicaCount: 1, verbose: 'false', waitTime: '10', waitUnit: 'min'
+        script {
+            openshift.withProject("mem-tfrs-tools") {
+                openshift.tag("mem-tfrs-tools/client:latest", "mem-tfrs-tools/client:prod")
+                sh 'sleep 10s'
+                openshift.tag("mem-tfrs-tools/notification-server:latest", "mem-tfrs-tools/notification-server:prod")
+                sh 'sleep 10s'
+            }
+        }
     }
 
     stage('Take down Maintenance Page on Prod') {
@@ -387,15 +388,13 @@ node("master-maven-${env.BUILD_NUMBER}") {
 
     stage('Refresh SchemaSpy on Prod') {
         echo "Refreshing SchemaSpy for Prod Database"
-        openshiftScale depCfg: 'schema-spy-public', namespace: 'mem-tfrs-prod', replicaCount: 0, verbose: 'false', verifyReplicaCount: 'true'
-        sh 'sleep 5s'
-        openshiftScale depCfg: 'schema-spy-public', namespace: 'mem-tfrs-prod', replicaCount: 1, verbose: 'false', verifyReplicaCount: 'true', waitTime: '10', waitUnit: 'min'
-        sh 'sleep 5s'
-        openshiftScale depCfg: 'schema-spy-audit', namespace: 'mem-tfrs-prod', replicaCount: 0, verbose: 'false', verifyReplicaCount: 'true'
-        sh 'sleep 5s'
-        openshiftScale depCfg: 'schema-spy-audit', namespace: 'mem-tfrs-prod', replicaCount: 1, verbose: 'false', verifyReplicaCount: 'true', waitTime: '10', waitUnit: 'min'
-        sh 'sleep 5s'
-    }    
+        sh returnStdout: true, script: "oc scale dc schema-spy-public --replicas=0 -n mem-tfrs-prod"
+        sh 'sleep 10s'
+        sh returnStdout: true, script: "oc scale dc schema-spy-public --replicas=1 -n mem-tfrs-prod"
+        sh returnStdout: true, script: "oc scale dc schema-spy-audit --replicas=0 -n mem-tfrs-prod"
+        sh 'sleep 10s'
+        sh returnStdout: true, script: "oc scale dc schema-spy-audit --replicas=1 -n mem-tfrs-prod"
+    }      
 
 } //end of node
 } //end of podTemplate
