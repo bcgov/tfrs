@@ -130,7 +130,7 @@ def prepareBuildNotificationServer() {
 }
 
 stage('Unit Test') {
-    podTemplate(label: "master-backend-python-${env.BUILD_NUMBER}", name: "master-backend-python-${env.BUILD_NUMBER}", serviceAccount: 'jenkins', cloud: 'openshift',
+    podTemplate(label: "master-backend-python-${env.BUILD_NUMBER}", name: "master-backend-python-${env.BUILD_NUMBER}", serviceAccount: 'jenkins-basic', cloud: 'openshift',
         containers: [
             containerTemplate(
                 name: 'jnlp',
@@ -173,7 +173,7 @@ if (result != 0) {
 backendBuildStages = prepareBackendBuildStages()
 frontendBuildStages = prepareFrontendBuildStages()
         
-podTemplate(label: "master-maven-${env.BUILD_NUMBER}", name: "master-maven-${env.BUILD_NUMBER}", serviceAccount: 'jenkins', cloud: 'openshift',
+podTemplate(label: "master-maven-${env.BUILD_NUMBER}", name: "master-maven-${env.BUILD_NUMBER}", serviceAccount: 'jenkins-basic', cloud: 'openshift',
         containers: [
             containerTemplate(
                 name: 'jnlp',
