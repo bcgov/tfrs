@@ -1,6 +1,6 @@
 result = 0
 runParallel = true
-tfrsRelease="v1.4.8"
+tfrsRelease="v1.4.6"
 
 def prepareBackendBuildStages() {
     def buildBackendList = []
@@ -234,7 +234,21 @@ podTemplate(label: "develop-maven-${env.BUILD_NUMBER}", name: "develop-maven-${e
             timeout(30) {
                 script {
                     openshift.withProject("mem-tfrs-dev") {
-                        def backendDCJson = openshift.process(readFile(file:'openshift/templates/components/backend/tfrs-dc.json'), "-p", "ENV_NAME=dev", "ENV_NAME_WITH_DASH=-dev", "SOURCE_IS_NAME=tfrs-develop")
+                        def backendDCJson = openshift.process(readFile(file:'openshift/templates/components/backend/tfrs-dc.json'), 
+                        "-p", 
+                        "ENV_NAME=test", 
+                        "SOURCE_IS_NAME=tfrs",
+                        "ROUTE_HOST_NAME=test-lowcarbonfuels.pathfinder.gov.bc.ca",
+                        "ROUTE_NAME=test-lowcarbonfuels-backend",
+                        "KEYCLOAK_SA_BASEURL=https://dev-test.pathfinder.gov.bc.ca",
+                        "KEYCLOAK_SA_CLIENT_ID=tfrs-dev-django-sa",
+                        "KEYCLOAK_SA_REALM=tfrs-dev",
+                        "KEYCLOAK_AUDIENCE=tfrs-dev",
+                        "KEYCLOAK_CERTS_URL=https://sso-dev.pathfinder.gov.bc.ca/auth/realms/tfrs-dev/protocol/openid-connect/certs",
+                        "KEYCLOAK_CLIENT_ID=tfrs-dev",
+                        "KEYCLOAK_ISSUER=https://sso-dev.pathfinder.gov.bc.ca/auth/realms/tfrs-dev",
+                        "KEYCLOAK_REALM=https://sso-dev.pathfinder.gov.bc.ca/auth/realms/tfrs-dev")
+                        )
                         def backendDC = openshift.apply(backendDCJson)
                         sh 'sleep 120s'
                     } //end of openshift.withProject
