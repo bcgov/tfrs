@@ -1,6 +1,6 @@
 result = 0
 runParallel = true
-tfrsRelease="v1.3.0"
+tfrsRelease="v1.4.8-dc-pipeline-fix"
 
 def prepareBackendBuildStages() {
     def buildBackendList = []
@@ -23,21 +23,20 @@ def prepareFrontendBuildStages() {
 }
 
 def prepareBuildBackend() {
-  return {
-    stage('Build Backend') {
-        openshiftBuild bldCfg: 'tfrs', showBuildLogs: 'true'
-        timeout(30) {
-            script {
-                openshift.withProject("mem-tfrs-tools") {
-                    def tfrsJson = openshift.process(readFile(file:'openshift/templates/components/backend/tfrs-bc.json'), "-p", "TFRS_RELEASE_TAG=${tfrsRelease}", "SCAN_HANDLER_IS_NAME=tfrs")
-                    def tfrsBuild = openshift.apply(tfrsJson)
-                    def tfrsSelector = openshift.selector("bc", "tfrs-develop")
-                    tfrsSelector.startBuild("--wait")
-                } //end of openshift.withProject
-            } //end of script
-        } //end of timeout
+    return {
+        stage('Build Backend') {
+            timeout(30) {
+                script {
+                    openshift.withProject("mem-tfrs-tools") {
+                        def tfrsJson = openshift.process(readFile(file:'openshift/templates/components/backend/tfrs-bc.json'), "-p", "TFRS_RELEASE_TAG=${tfrsRelease}", "SCAN_HANDLER_IS_NAME=tfrs")
+                        def tfrsBuild = openshift.apply(tfrsJson)
+                        def tfrsSelector = openshift.selector("bc", "tfrs-develop")
+                        tfrsSelector.startBuild("--wait")
+                    } //end of openshift.withProject
+                } //end of script
+            } //end of timeout
+        }
     }
-  }
 }
 
 def prepareBuildScanCoordinator() {
