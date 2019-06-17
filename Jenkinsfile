@@ -242,7 +242,20 @@ node("master-maven-${env.BUILD_NUMBER}") {
         timeout(30) {
             script {
                 openshift.withProject("mem-tfrs-test") {
-                    def backendDCJson = openshift.process(readFile(file:'openshift/templates/components/backend/tfrs-dc.json'), "-p", "ENV_NAME=test", "ENV_NAME_WITH_DASH=-test", "SOURCE_IS_NAME=tfrs")
+                    def backendDCJson = openshift.process(readFile(file:'openshift/templates/components/backend/tfrs-dc.json'), 
+                        "-p", 
+                        "ENV_NAME=test", 
+                        "SOURCE_IS_NAME=tfrs",
+                        "ROUTE_HOST_NAME=test-lowcarbonfuels.pathfinder.gov.bc.ca",
+                        "ROUTE_NAME=test-lowcarbonfuels-backend",
+                        "KEYCLOAK_SA_BASEURL=https://sso-test.pathfinder.gov.bc.ca",
+                        "KEYCLOAK_SA_CLIENT_ID=tfrs-django-sa",
+                        "KEYCLOAK_SA_REALM=tfrs",
+                        "KEYCLOAK_AUDIENCE=tfrs",
+                        "KEYCLOAK_CERTS_URL=https://sso-test.pathfinder.gov.bc.ca/auth/realms/tfrs/protocol/openid-connect/certs",
+                        "KEYCLOAK_CLIENT_ID=tfrs",
+                        "KEYCLOAK_ISSUER=https://sso-test.pathfinder.gov.bc.ca/auth/realms/tfrs",
+                        "KEYCLOAK_REALM=https://sso-test.pathfinder.gov.bc.ca/auth/realms/tfrs")
                     def backendDC = openshift.apply(backendDCJson)
                     sh 'sleep 120s'
                 } //end of openshift.withProject
@@ -301,7 +314,20 @@ node("master-maven-${env.BUILD_NUMBER}") {
         timeout(30) {
             script {
                 openshift.withProject("mem-tfrs-prod") {
-                    def backendDCJson = openshift.process(readFile(file:'openshift/templates/components/backend/tfrs-dc.json'), "-p", "ENV_NAME=prod", "ENV_NAME_WITH_DASH=", "SOURCE_IS_NAME=tfrs")
+                    def backendDCJson = openshift.process(readFile(file:'openshift/templates/components/backend/tfrs-dc.json'), 
+                        "-p", 
+                        "ENV_NAME=prod", 
+                        "SOURCE_IS_NAME=tfrs",
+                        "ROUTE_HOST_NAME=lowcarbonfuels.gov.bc.ca",
+                        "ROUTE_NAME=lowcarbonfuels-backend",
+                        "KEYCLOAK_SA_BASEURL=https://sso.pathfinder.gov.bc.ca",
+                        "KEYCLOAK_SA_CLIENT_ID=tfrs-django-sa",
+                        "KEYCLOAK_SA_REALM=tfrs",
+                        "KEYCLOAK_AUDIENCE=tfrs",
+                        "KEYCLOAK_CERTS_URL=https://sso-test.pathfinder.gov.bc.ca/auth/realms/tfrs/protocol/openid-connect/certs",
+                        "KEYCLOAK_CLIENT_ID=tfrs",
+                        "KEYCLOAK_ISSUER=https://sso-test.pathfinder.gov.bc.ca/auth/realms/tfrs",
+                        "KEYCLOAK_REALM=https://sso-test.pathfinder.gov.bc.ca/auth/realms/tfrs")
                     def backendDC = openshift.apply(backendDCJson)
                     sh 'sleep 120s'
                 } //end of openshift.withProject
