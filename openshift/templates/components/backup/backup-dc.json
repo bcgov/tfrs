@@ -1,214 +1,244 @@
 {
-    "apiVersion": "apps.openshift.io/v1",
-    "kind": "DeploymentConfig",
+    "kind": "Template",
+    "apiVersion": "template.openshift.io/v1",
     "metadata": {
-        "annotations": {
-            "description": "Defines how to deploy the backup server"
-        },
-        "creationTimestamp": null,
-        "generation": 1,
-        "labels": {
-            "template": "backup-deployment"
-        },
-        "name": "backup",
-        "selfLink": "/apis/apps.openshift.io/v1/namespaces/mem-tfrs-test/deploymentconfigs/backup"
+        "name": "backup-dc",
+        "creationTimestamp": null
     },
-    "spec": {
-        "replicas": 1,
-        "revisionHistoryLimit": 10,
-        "selector": {
-            "name": "backup"
-        },
-        "strategy": {
-            "activeDeadlineSeconds": 21600,
-            "recreateParams": {
-                "timeoutSeconds": 600
-            },
-            "resources": {},
-            "type": "Recreate"
-        },
-        "template": {
+    "parameters": [
+        {
+            "name": "BACKUP_PVC_NAME",
+            "displayName": "The backup PVC name",
+            "description": "The backup volume should be nfs-backup type",
+            "required": true
+        }
+    ],
+    "objects": [
+        {
+            "kind": "ConfigMap",
+            "apiVersion": "v1",
             "metadata": {
+                "name": "backup-conf",
+                "creationTimestamp": null
+            },
+            "data": {
+                "backup.conf": "# =========================================================\n# List the databases you want backed up here.\n# Databases will be backed up in the order they are listed.\n#\n# The entries must be in one of the following forms:\n# - \u003cHostname/\u003e/\u003cDatabaseName/\u003e\n# - \u003cHostname/\u003e:\u003cPort/\u003e/\u003cDatabaseName/\u003e\n#\n# Examples:\n# - postgresql/my_database\n# - postgresql:5432/my_database\n# --------------------------------------------------------\npostgresql/tfrs"
+            }
+        },
+        {
+            "kind": "DeploymentConfig",
+            "apiVersion": "apps.openshift.io/v1",
+            "metadata": {
+                "name": "backup",
+                "generation": 10,
                 "creationTimestamp": null,
                 "labels": {
-                    "name": "backup"
+                    "template": "backup-deployment"
                 },
-                "name": "backup"
+                "annotations": {
+                    "description": "Defines how to deploy the backup server"
+                }
             },
             "spec": {
-                "containers": [
+                "strategy": {
+                    "type": "Recreate",
+                    "recreateParams": {
+                        "timeoutSeconds": 600
+                    },
+                    "resources": {},
+                    "activeDeadlineSeconds": 21600
+                },
+                "triggers": [
                     {
-                        "env": [
-                            {
-                                "name": "BACKUP_STRATEGY",
-                                "value": "daily"
-                            },
-                            {
-                                "name": "BACKUP_DIR",
-                                "value": "/backups/"
-                            },
-                            {
-                                "name": "NUM_BACKUPS",
-                                "value": "31"
-                            },
-                            {
-                                "name": "DAILY_BACKUPS",
-                                "value": "6"
-                            },
-                            {
-                                "name": "WEEKLY_BACKUPS",
-                                "value": "4"
-                            },
-                            {
-                                "name": "MONTHLY_BACKUPS",
-                                "value": "1"
-                            },
-                            {
-                                "name": "BACKUP_PERIOD",
-                                "value": "1d"
-                            },
-                            {
-                                "name": "DATABASE_SERVICE_NAME",
-                                "value": "postgresql"
-                            },
-                            {
-                                "name": "POSTGRESQL_DATABASE",
-                                "value": "tfrs"
-                            },
-                            {
-                                "name": "POSTGRESQL_USER",
-                                "valueFrom": {
-                                    "secretKeyRef": {
-                                        "key": "DATABASE_USER",
-                                        "name": "tfrs-postgresql"
-                                    }
-                                }
-                            },
-                            {
-                                "name": "POSTGRESQL_PASSWORD",
-                                "valueFrom": {
-                                    "secretKeyRef": {
-                                        "key": "DATABASE_PASSWORD",
-                                        "name": "tfrs-postgresql"
-                                    }
-                                }
-                            },
-                            {
-                                "name": "FTP_URL"
-                            },
-                            {
-                                "name": "FTP_USER",
-                                "valueFrom": {
-                                    "secretKeyRef": {
-                                        "key": "ftp-user",
-                                        "name": "ftp-secret"
-                                    }
-                                }
-                            },
-                            {
-                                "name": "FTP_PASSWORD",
-                                "valueFrom": {
-                                    "secretKeyRef": {
-                                        "key": "ftp-password",
-                                        "name": "ftp-secret"
-                                    }
-                                }
-                            },
-                            {
-                                "name": "WEBHOOK_URL"
-                            },
-                            {
-                                "name": "ENVIRONMENT_FRIENDLY_NAME",
-                                "value": "test"
-                            },
-                            {
-                                "name": "ENVIRONMENT_NAME",
-                                "value": "test"
-                            }
-                        ],
-                        "image": "docker-registry.default.svc:5000/mem-tfrs-tools/backup@sha256:150dceb84f4f81bb8ea6767c58b2a812803d2b79bf70bbe119497fcefef41daa",
-                        "imagePullPolicy": "IfNotPresent",
-                        "name": "backup",
-                        "resources": {
-                            "limits": {
-                                "cpu": "0",
-                                "memory": "0"
-                            },
-                            "requests": {
-                                "cpu": "0",
-                                "memory": "0"
-                            }
-                        },
-                        "terminationMessagePath": "/dev/termination-log",
-                        "terminationMessagePolicy": "File",
-                        "volumeMounts": [
-                            {
-                                "mountPath": "/backups/",
-                                "name": "backup"
-                            },
-                            {
-                                "mountPath": "/backup.conf",
-                                "name": "backup-config-volume",
-                                "subPath": "backup.conf"
-                            }
-                        ]
-                    }
-                ],
-                "dnsPolicy": "ClusterFirst",
-                "restartPolicy": "Always",
-                "schedulerName": "default-scheduler",
-                "securityContext": {},
-                "terminationGracePeriodSeconds": 30,
-                "volumes": [
-                    {
-                        "name": "backup",
-                        "persistentVolumeClaim": {
-                            "claimName": "backup-pvc"
-                        }
+                        "type": "ConfigChange"
                     },
                     {
-                        "configMap": {
-                            "defaultMode": 420,
-                            "items": [
-                                {
-                                    "key": "backup.conf",
-                                    "path": "backup.conf"
-                                }
+                        "type": "ImageChange",
+                        "imageChangeParams": {
+                            "automatic": true,
+                            "containerNames": [
+                                "backup"
                             ],
-                            "name": "backup-conf"
-                        },
-                        "name": "backup-config-volume"
+                            "from": {
+                                "kind": "ImageStreamTag",
+                                "namespace": "mem-tfrs-tools",
+                                "name": "backup:dev"
+                            },
+                            "lastTriggeredImage": "docker-registry.default.svc:5000/mem-tfrs-tools/backup@sha256:150dceb84f4f81bb8ea6767c58b2a812803d2b79bf70bbe119497fcefef41daa"
+                        }
                     }
-                ]
-            }
-        },
-        "test": false,
-        "triggers": [
-            {
-                "type": "ConfigChange"
-            },
-            {
-                "imageChangeParams": {
-                    "automatic": true,
-                    "containerNames": [
-                        "backup"
-                    ],
-                    "from": {
-                        "kind": "ImageStreamTag",
-                        "name": "backup:dev",
-                        "namespace": "mem-tfrs-tools"
-                    }
+                ],
+                "replicas": 1,
+                "revisionHistoryLimit": 10,
+                "test": false,
+                "selector": {
+                    "name": "backup"
                 },
-                "type": "ImageChange"
+                "template": {
+                    "metadata": {
+                        "name": "backup",
+                        "creationTimestamp": null,
+                        "labels": {
+                            "name": "backup"
+                        }
+                    },
+                    "spec": {
+                        "volumes": [
+                            {
+                                "name": "backup-config-volume",
+                                "configMap": {
+                                    "name": "backup-conf",
+                                    "items": [
+                                        {
+                                            "key": "backup.conf",
+                                            "path": "backup.conf"
+                                        }
+                                    ],
+                                    "defaultMode": 420
+                                }
+                            },
+                            {
+                                "name": "volume-i62yu",
+                                "persistentVolumeClaim": {
+                                    "claimName": "${BACKUP_PVC_NAME}"
+                                }
+                            }
+                        ],
+                        "containers": [
+                            {
+                                "name": "backup",
+                                "image": "docker-registry.default.svc:5000/mem-tfrs-tools/backup@sha256:150dceb84f4f81bb8ea6767c58b2a812803d2b79bf70bbe119497fcefef41daa",
+                                "env": [
+                                    {
+                                        "name": "BACKUP_STRATEGY",
+                                        "value": "daily"
+                                    },
+                                    {
+                                        "name": "BACKUP_DIR",
+                                        "value": "/backups/"
+                                    },
+                                    {
+                                        "name": "NUM_BACKUPS",
+                                        "value": "31"
+                                    },
+                                    {
+                                        "name": "DAILY_BACKUPS",
+                                        "value": "6"
+                                    },
+                                    {
+                                        "name": "WEEKLY_BACKUPS",
+                                        "value": "4"
+                                    },
+                                    {
+                                        "name": "MONTHLY_BACKUPS",
+                                        "value": "1"
+                                    },
+                                    {
+                                        "name": "BACKUP_PERIOD",
+                                        "value": "1d"
+                                    },
+                                    {
+                                        "name": "DATABASE_SERVICE_NAME",
+                                        "value": "postgresql"
+                                    },
+                                    {
+                                        "name": "POSTGRESQL_DATABASE",
+                                        "value": "tfrs"
+                                    },
+                                    {
+                                        "name": "POSTGRESQL_USER",
+                                        "valueFrom": {
+                                            "secretKeyRef": {
+                                                "name": "tfrs-postgresql",
+                                                "key": "DATABASE_USER"
+                                            }
+                                        }
+                                    },
+                                    {
+                                        "name": "POSTGRESQL_PASSWORD",
+                                        "valueFrom": {
+                                            "secretKeyRef": {
+                                                "name": "tfrs-postgresql",
+                                                "key": "DATABASE_PASSWORD"
+                                            }
+                                        }
+                                    },
+                                    {
+                                        "name": "FTP_URL"
+                                    },
+                                    {
+                                        "name": "FTP_USER",
+                                        "valueFrom": {
+                                            "secretKeyRef": {
+                                                "name": "ftp-secret",
+                                                "key": "ftp-user"
+                                            }
+                                        }
+                                    },
+                                    {
+                                        "name": "FTP_PASSWORD",
+                                        "valueFrom": {
+                                            "secretKeyRef": {
+                                                "name": "ftp-secret",
+                                                "key": "ftp-password"
+                                            }
+                                        }
+                                    },
+                                    {
+                                        "name": "WEBHOOK_URL"
+                                    },
+                                    {
+                                        "name": "ENVIRONMENT_FRIENDLY_NAME",
+                                        "value": "test"
+                                    },
+                                    {
+                                        "name": "ENVIRONMENT_NAME",
+                                        "value": "test"
+                                    }
+                                ],
+                                "resources": {
+                                    "limits": {
+                                        "cpu": "0",
+                                        "memory": "0"
+                                    },
+                                    "requests": {
+                                        "cpu": "0",
+                                        "memory": "0"
+                                    }
+                                },
+                                "volumeMounts": [
+                                    {
+                                        "name": "backup-config-volume",
+                                        "mountPath": "/backup.conf",
+                                        "subPath": "backup.conf"
+                                    },
+                                    {
+                                        "name": "volume-i62yu",
+                                        "mountPath": "/backups",
+                                        "subPath": "backup-container"
+                                    }
+                                ],
+                                "terminationMessagePath": "/dev/termination-log",
+                                "terminationMessagePolicy": "File",
+                                "imagePullPolicy": "IfNotPresent"
+                            }
+                        ],
+                        "restartPolicy": "Always",
+                        "terminationGracePeriodSeconds": 30,
+                        "dnsPolicy": "ClusterFirst",
+                        "securityContext": {},
+                        "schedulerName": "default-scheduler"
+                    }
+                }
+            },
+            "status": {
+                "latestVersion": 0,
+                "observedGeneration": 0,
+                "replicas": 0,
+                "updatedReplicas": 0,
+                "availableReplicas": 0,
+                "unavailableReplicas": 0
             }
-        ]
-    },
-    "status": {
-        "availableReplicas": 0,
-        "latestVersion": 0,
-        "observedGeneration": 0,
-        "replicas": 0,
-        "unavailableReplicas": 0,
-        "updatedReplicas": 0
-    }
+        }
+    ]
 }

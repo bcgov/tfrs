@@ -1,6 +1,6 @@
 ## 1. Postgresql Restore, working folder is openshift/templates/components/postgresql
 * Create nfs-backup PVC bk-mem-tfrs-dev-51gffzadghxs by following: https://github.com/BCDevOps/provision-nfs-apb 
-* oc process -f ./postgresql.dc.json | oc create -f - -n mem-tfrs-dev --dry-run=true 
+* oc process -f ./postgresql.dc.json BACKUP_PVC_NAME=[the pvc name generate by above step]| oc create -f - -n mem-tfrs-dev --dry-run=true 
 * Create extension in postgresql prompt
     * tfrs=# create extension hstore;
     * tfrs=# create extension pg_trgm;

@@ -24,61 +24,61 @@
         {
             "name": "ROUTE_HOST_NAME",
             "displayName": "Route host name",
-            "description": "Valid values: dev dev-lowcarbonfuels.pathfinder.gov.bc.ca",
+            "description": "Valid values: dev-lowcarbonfuels.pathfinder.gov.bc.ca, test-lowcarbonfuels.pathfinder.gov.bc.ca, lowcarbonfuels.gov.bc.ca",
             "required": true
         },
         {
             "name": "ROUTE_NAME",
             "displayName": "Route name",
-            "description": "Valid values: dev dev-lowcarbonfuels-backend",
+            "description": "Valid values: dev-lowcarbonfuels-backend, test-lowcarbonfuels-backend, lowcarbonfuels-backend",
             "required": true
         },
         {
             "name": "KEYCLOAK_SA_BASEURL",
             "displayName": "KEYCLOAK_SA_BASEURL",
-            "description": "Valid values: dev https://sso-dev.pathfinder.gov.bc.ca",
+            "description": "Valid values: https://sso-dev.pathfinder.gov.bc.ca, https://sso-test.pathfinder.gov.bc.ca, https://sso.pathfinder.gov.bc.ca",
             "required": true
         },
         {
             "name": "KEYCLOAK_SA_CLIENT_ID",
             "displayName": "KEYCLOAK_SA_CLIENT_ID",
-            "description": "Valid values: dev tfrs-dev-django-sa",
+            "description": "Valid values: tfrs-dev-django-sa, tfrs-django-sa, tfrs-django-sa",
             "required": true
         },
         {
             "name": "KEYCLOAK_SA_REALM",
             "displayName": "KEYCLOAK_SA_REALM",
-            "description": "Valid values: dev tfrs-dev",
+            "description": "Valid values: tfrs-dev, tfrs, tfrs",
             "required": true
         },
         {
             "name": "KEYCLOAK_AUDIENCE",
             "displayName": "KEYCLOAK_AUDIENCE",
-            "description": "Valid values: dev tfrs-dev",
+            "description": "Valid values: tfrs-dev, tfrs, tfrs",
             "required": true
         },
         {
             "name": "KEYCLOAK_CERTS_URL",
             "displayName": "KEYCLOAK_CERTS_URL",
-            "description": "Valid values: dev https://sso-dev.pathfinder.gov.bc.ca/auth/realms/tfrs-dev/protocol/openid-connect/certs",
+            "description": "Valid values: https://sso-dev.pathfinder.gov.bc.ca/auth/realms/tfrs-dev/protocol/openid-connect/certs, https://sso-test.pathfinder.gov.bc.ca/auth/realms/tfrs/protocol/openid-connect/certs, https://sso.pathfinder.gov.bc.ca/auth/realms/tfrs/protocol/openid-connect/certs",
             "required": true
         },
         {
             "name": "KEYCLOAK_CLIENT_ID",
             "displayName": "KEYCLOAK_CLIENT_ID",
-            "description": "Valid values: dev tfrs-dev",
+            "description": "Valid values: tfrs-dev, tfrs, tfrs",
             "required": true
         },
         {
             "name": "KEYCLOAK_ISSUER",
             "displayName": "KEYCLOAK_ISSUER",
-            "description": "Valid values: dev https://sso-dev.pathfinder.gov.bc.ca/auth/realms/tfrs-dev",
+            "description": "Valid values: https://sso-dev.pathfinder.gov.bc.ca/auth/realms/tfrs-dev, https://sso-test.pathfinder.gov.bc.ca/auth/realms/tfrs, https://sso.pathfinder.gov.bc.ca/auth/realms/tfrs",
             "required": true
         },
         {
             "name": "KEYCLOAK_REALM",
             "displayName": "KEYCLOAK_REALM",
-            "description": "Valid values: dev https://sso-dev.pathfinder.gov.bc.ca/auth/realms/tfrs-dev",
+            "description": "Valid values: https://sso-dev.pathfinder.gov.bc.ca/auth/realms/tfrs-dev, https://sso-test.pathfinder.gov.bc.ca/auth/realms/tfrs, https://sso.pathfinder.gov.bc.ca/auth/realms/tfrs",
             "required": true
         }
     ],
@@ -393,6 +393,10 @@
                                     },
                                     {
                                         "name": "CREDIT_CALCULATION_API_ENABLED",
+                                        "value": "true"
+                                    },
+                                    {
+                                        "name": "COMPLIANCE_REPORTING_API_ENABLED",
                                         "value": "true"
                                     }
                                 ],
