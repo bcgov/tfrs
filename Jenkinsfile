@@ -324,10 +324,10 @@ node("master-maven-${env.BUILD_NUMBER}") {
                         "KEYCLOAK_SA_CLIENT_ID=tfrs-django-sa",
                         "KEYCLOAK_SA_REALM=tfrs",
                         "KEYCLOAK_AUDIENCE=tfrs",
-                        "KEYCLOAK_CERTS_URL=https://sso-test.pathfinder.gov.bc.ca/auth/realms/tfrs/protocol/openid-connect/certs",
+                        "KEYCLOAK_CERTS_URL=https://sso.pathfinder.gov.bc.ca/auth/realms/tfrs/protocol/openid-connect/certs",
                         "KEYCLOAK_CLIENT_ID=tfrs",
-                        "KEYCLOAK_ISSUER=https://sso-test.pathfinder.gov.bc.ca/auth/realms/tfrs",
-                        "KEYCLOAK_REALM=https://sso-test.pathfinder.gov.bc.ca/auth/realms/tfrs")
+                        "KEYCLOAK_ISSUER=https://sso.pathfinder.gov.bc.ca/auth/realms/tfrs",
+                        "KEYCLOAK_REALM=https://sso.pathfinder.gov.bc.ca/auth/realms/tfrs")
                     def backendDC = openshift.apply(backendDCJson)
                     sh 'sleep 120s'
                 } //end of openshift.withProject
