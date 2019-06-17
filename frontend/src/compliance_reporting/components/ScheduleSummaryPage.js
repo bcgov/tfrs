@@ -9,24 +9,6 @@ const ScheduleSummaryPage = props => (
     <h1>{props.title}</h1>
 
     <div className="row">
-      <div className="col-md-12">
-        <button
-          data-toggle="collapse"
-          data-target="#instructions"
-          aria-expanded="true"
-          type="button"
-          aria-controls="instructions"
-        >
-          Show Instructions
-        </button>
-
-        <p id="instructions" className="collapse in">
-          Test Instructions
-        </p>
-      </div>
-    </div>
-
-    <div className="row">
       <div className="col-lg-6">
         <ReactDataSheet
           className="schedule"
