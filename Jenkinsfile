@@ -31,7 +31,7 @@ def prepareBuildBackend() {
                     openshift.withProject("mem-tfrs-tools") {
                         def tfrsJson = openshift.process(readFile(file:'openshift/templates/components/backend/tfrs-bc.json'), "-p", "TFRS_RELEASE_TAG=${tfrsRelease}", "TFRS_IS_NAME=tfrs")
                         def tfrsBuild = openshift.apply(tfrsJson)
-                        def tfrsSelector = openshift.selector("bc", "tfrs-develop")
+                        def tfrsSelector = openshift.selector("bc", "tfrs")
                         tfrsSelector.startBuild("--wait")
                     } //end of openshift.withProject
                 } //end of script
