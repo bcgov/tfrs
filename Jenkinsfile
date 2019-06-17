@@ -129,7 +129,7 @@ def prepareBuildNotificationServer() {
 
   }
 }
-
+/***
 stage('Unit Test') {
     podTemplate(label: "master-backend-python-${env.BUILD_NUMBER}", name: "master-backend-python-${env.BUILD_NUMBER}", serviceAccount: 'jenkins-basic', cloud: 'openshift',
         containers: [
@@ -171,6 +171,8 @@ if (result != 0) {
     return
 }
 
+***/
+
 backendBuildStages = prepareBackendBuildStages()
 frontendBuildStages = prepareFrontendBuildStages()
         
@@ -192,7 +194,7 @@ podTemplate(label: "master-maven-${env.BUILD_NUMBER}", name: "master-maven-${env
 node("master-maven-${env.BUILD_NUMBER}") {
 
     checkout changelog: false, poll: false, scm: [$class: 'GitSCM', branches: [[name: "${tfrsRelease}"]], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[credentialsId: 'github-account', url: 'https://github.com/bcgov/tfrs.git']]]
-    
+    /****
     //run frontend builds
     for (builds in frontendBuildStages) {
         if (runParallel) {
@@ -216,9 +218,9 @@ node("master-maven-${env.BUILD_NUMBER}") {
             }
         }
     }
-
+    ****/
     stage ('Confirm to deploy to Test') {
-        input "Deploy release ${env.tfrs_release} to Test? There will be one more confirmation before deploying on Test."
+        input "Deploy release ${tfrsRelease} to Test? There will be one more confirmation before deploying on Test."
     }
 
     stage('Bring up Maintenance Page on Test') {
@@ -230,12 +232,12 @@ node("master-maven-${env.BUILD_NUMBER}") {
     stage('Backup Test Database') {
         postgresql_pod_name=sh (script: 'oc get pods -n mem-tfrs-test | grep postgresql96 | awk \'{print $1}\'', returnStdout: true).trim()
         echo "start backup script tfrs-backup.sh on test, postgresql_pod_name is ${postgresql_pod_name}"
-        sh returnStdout: true, script: "oc exec ${postgresql_pod_name} -c postgresql96 -n mem-tfrs-test -- bash /postgresql-backup/tfrs-backup.sh ${env.tfrs_release} test"
+        sh returnStdout: true, script: "oc exec ${postgresql_pod_name} -c postgresql96 -n mem-tfrs-test -- bash /postgresql-backup/tfrs-backup.sh ${tfrsRelease} test"
         echo 'backup script completed'
     }
 	
     stage ('Last confirmation to deploy to Test') {
-        input "Maintenance Page is up and Test Database backup has completed, confirm to deploy ${env.tfrs_release} to Test? This is the last confirmation required."
+        input "Maintenance Page is up and Test Database backup has completed, confirm to deploy ${tfrsRelease} to Test? This is the last confirmation required."
     }
 
     stage('Apply Deployment Configs') {
@@ -307,7 +309,7 @@ node("master-maven-${env.BUILD_NUMBER}") {
     }    
 
     stage ('Confirm to deploy to Prod') {
-        input "Deploy release ${env.tfrs_release} to Prod? There will be one more confirmation before deploying on Prod."
+        input "Deploy release ${tfrsRelease} to Prod? There will be one more confirmation before deploying on Prod."
     }
 
     stage('Apply Deployment Configs') {
@@ -344,12 +346,12 @@ node("master-maven-${env.BUILD_NUMBER}") {
     stage('Backup Prod Database') {
         postgresql_pod_name=sh (script: 'oc get pods -n mem-tfrs-prod | grep postgresql96 | awk \'{print $1}\'', returnStdout: true).trim()
         echo "start backup script tfrsdump-prod.sh on prod, postgresql_pod_name is ${postgresql_pod_name}"
-        sh returnStdout: true, script: "oc exec ${postgresql_pod_name} -c postgresql96 -n mem-tfrs-prod -- bash /postgresql-backup/tfrs-backup.sh ${env.tfrs_release} prod"
+        sh returnStdout: true, script: "oc exec ${postgresql_pod_name} -c postgresql96 -n mem-tfrs-prod -- bash /postgresql-backup/tfrs-backup.sh ${tfrsRelease} prod"
         echo 'backup script completed'
     }
 
     stage ('Last confirmation to deploy to Prod') {
-        input "Maintenance Page is up and Prod Database backup has completed, confirm to deploy ${env.tfrs_release} to Prod? This is the last confirmation required."
+        input "Maintenance Page is up and Prod Database backup has completed, confirm to deploy ${tfrsRelease} to Prod? This is the last confirmation required."
     }
 	
     stage('Deploy Backend to Prod') {
