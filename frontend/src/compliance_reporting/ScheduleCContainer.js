@@ -3,28 +3,19 @@
  * All data handling & manipulation should be handled here.
  */
 
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
-import { toastr as reduxToastr } from 'react-redux-toastr';
+import React, {Component} from 'react';
+import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 
-import { complianceReporting } from '../actions/complianceReporting';
-import { expectedUses } from '../actions/expectedUses';
-import Loading from '../app/components/Loading';
-import Modal from '../app/components/Modal';
+import {expectedUses} from '../actions/expectedUses';
 import Input from './components/Input';
 import Select from './components/Select';
 import SchedulesPage from './components/SchedulesPage';
-import ScheduleTabs from './components/ScheduleTabs';
-import { SCHEDULE_C } from '../constants/schedules/scheduleColumns';
-import COMPLIANCE_REPORTING from '../constants/routes/ComplianceReporting';
-import history from '../app/History';
-import toastr from '../utils/toastr';
-import { getQuantity } from '../utils/functions';
-import autosaved from '../utils/autosave_support';
+import {SCHEDULE_C} from '../constants/schedules/scheduleColumns';
+import {getQuantity} from '../utils/functions';
 
 class ScheduleCContainer extends Component {
-  static addHeaders () {
+  static addHeaders() {
     return {
       grid: [
         [{
@@ -72,101 +63,64 @@ class ScheduleCContainer extends Component {
     };
   }
 
-  constructor (props) {
+  constructor(props) {
     super(props);
 
     this.state = ScheduleCContainer.addHeaders();
     this.rowNumber = 1;
 
-    if (document.location.pathname.indexOf('/edit/') >= 0) {
-      this.edit = true;
-    } else {
-      this.edit = false;
-    }
-
     this._addRow = this._addRow.bind(this);
     this._getFuelClasses = this._getFuelClasses.bind(this);
     this._handleCellsChanged = this._handleCellsChanged.bind(this);
-    this._handleSubmit = this._handleSubmit.bind(this);
     this._validateFuelClassColumn = this._validateFuelClassColumn.bind(this);
     this._validateFuelTypeColumn = this._validateFuelTypeColumn.bind(this);
   }
 
-  componentDidMount () {
+  componentDidMount() {
     this.props.loadExpectedUses();
 
     if (this.props.loadedState) {
       this.restoreFromAutosaved();
-    } else if (!this.edit) {
+    } else if (this.props.create || !this.props.complianceReport.scheduleC ) {
       this._addRow(5);
     } else {
-      this.loadData();
-    }
-  }
-
-  componentWillReceiveProps (nextProps, nextContext) {
-    if (this.props.saving && !nextProps.saving) {
-      reduxToastr.success('Autosaved');
-    }
-
-    if (this.props.complianceReporting.isCreating && !nextProps.complianceReporting.isCreating) {
-      if (!nextProps.complianceReporting.success) {
-        reduxToastr.error('Error saving');
-      } else {
-        history.push(COMPLIANCE_REPORTING.LIST);
-        toastr.complianceReporting('Draft');
-        this.props.invalidateAutosaved();
-      }
-      return;
-    }
-
-    if (this.props.complianceReporting.isUpdating && !nextProps.complianceReporting.isUpdating) {
-      if (!nextProps.complianceReporting.success) {
-        console.log(nextProps);
-        reduxToastr.error('Error saving');
-      } else {
-        toastr.complianceReporting('Draft');
-        this.props.invalidateAutosaved();
-      }
-    }
-
-    if (this.props.complianceReporting.isGetting && !nextProps.complianceReporting.isGetting) {
       this.setState(ScheduleCContainer.addHeaders());
       this.rowNumber = 1;
-      this._addRow(nextProps.complianceReporting.item.scheduleC.records.length);
+      this._addRow(this.props.complianceReport.scheduleC.records.length);
 
-      for (let i = 0; i < nextProps.complianceReporting.item.scheduleC.records.length; i += 1) {
-        const { grid } = this.state;
-        const record = nextProps.complianceReporting.item.scheduleC.records[i];
+      for (let i = 0; i < this.props.complianceReport.scheduleC.records.length; i += 1) {
+        const {grid} = this.state;
+        const record = this.props.complianceReport.scheduleC.records[i];
 
         grid[2 + i][SCHEDULE_C.FUEL_TYPE].value = record.fuelType;
         grid[2 + i][SCHEDULE_C.FUEL_CLASS].value = record.fuelClass;
         grid[2 + i][SCHEDULE_C.EXPECTED_USE].value = record.expectedUse;
         grid[2 + i][SCHEDULE_C.EXPECTED_USE_OTHER].value = record.rationale;
         grid[2 + i][SCHEDULE_C.QUANTITY].value = record.quantity;
+
         const selectedFuel = this.props.referenceData.approvedFuels.find(fuel =>
           fuel.name === record.fuelType);
+
         grid[2 + i][SCHEDULE_C.UNITS].value = (selectedFuel && selectedFuel.unitOfMeasure)
           ? selectedFuel.unitOfMeasure.name : '';
 
-        this.setState({ grid });
+        this.setState({grid});
       }
     }
   }
 
-  loadData () {
-    this.props.getComplianceReport(this.props.match.params.id);
+  componentWillReceiveProps(nextProps, nextContext) {
   }
 
-  restoreFromAutosaved () {
-    const { loadedState } = this.props;
+  restoreFromAutosaved() {
+    const {loadedState} = this.props;
 
     this.setState(ScheduleCContainer.addHeaders());
     this.rowNumber = 1;
     this._addRow(loadedState.grid.length - 2);
 
     for (let i = 2; i < loadedState.grid.length; i += 1) {
-      const { grid } = this.state;
+      const {grid} = this.state;
       const record = loadedState.grid[i];
 
       grid[i][SCHEDULE_C.FUEL_TYPE].value = record[SCHEDULE_C.FUEL_TYPE].value;
@@ -174,19 +128,18 @@ class ScheduleCContainer extends Component {
       grid[i][SCHEDULE_C.EXPECTED_USE].value = record[SCHEDULE_C.EXPECTED_USE].value;
       grid[i][SCHEDULE_C.EXPECTED_USE_OTHER].value = record[SCHEDULE_C.EXPECTED_USE_OTHER].value;
       grid[i][SCHEDULE_C.QUANTITY].value = record[SCHEDULE_C.QUANTITY].value;
-      if (!this.props.referenceData.isFetching) {
-        const selectedFuel = this.props.referenceData.approvedFuels.find(fuel =>
-          fuel.name === record[SCHEDULE_C.FUEL_TYPE].value);
-        grid[i][SCHEDULE_C.UNITS].value = (selectedFuel && selectedFuel.unitOfMeasure)
-          ? selectedFuel.unitOfMeasure.name : '';  
-      }
+      const selectedFuel = this.props.referenceData.approvedFuels.find(fuel =>
+        fuel.name === record[SCHEDULE_C.FUEL_TYPE].value);
+      grid[i][SCHEDULE_C.UNITS].value = (selectedFuel && selectedFuel.unitOfMeasure)
+        ? selectedFuel.unitOfMeasure.name : '';
 
-      this.setState({ grid });
+
+      this.setState({grid});
     }
   }
 
-  _addRow (numberOfRows = 1) {
-    const { grid } = this.state;
+  _addRow(numberOfRows = 1) {
+    const {grid} = this.state;
 
     for (let x = 0; x < numberOfRows; x += 1) {
       grid.push([
@@ -218,7 +171,7 @@ class ScheduleCContainer extends Component {
           className: 'number',
           dataEditor: Input,
           valueViewer: (props) => {
-            const { value } = props;
+            const {value} = props;
             return <span>{value.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')}</span>;
           }
         }, {
@@ -245,7 +198,7 @@ class ScheduleCContainer extends Component {
     });
   }
 
-  _getFuelClasses (row) {
+  _getFuelClasses(row) {
     const fuelType = this.state.grid[row][SCHEDULE_C.FUEL_TYPE];
 
     const selectedFuel = this.props.referenceData.approvedFuels
@@ -258,7 +211,7 @@ class ScheduleCContainer extends Component {
     return [];
   }
 
-  _handleCellsChanged (changes, addition = null) {
+  _handleCellsChanged(changes, addition = null) {
     const grid = this.state.grid.map(row => [...row]);
 
     changes.forEach((change) => {
@@ -310,25 +263,22 @@ class ScheduleCContainer extends Component {
       grid
     });
 
-    this.props.updateStateToSave({ grid });
+    this._gridStateToPayload({
+      grid
+    });
+
+    this.props.updateAutosaveState({grid});
   }
 
-  _handleDelete () {
-    if (this.edit) {
-      this.props.deleteComplianceReport({ id: this.props.match.params.id });
-    }
-    history.push(COMPLIANCE_REPORTING.LIST);
-    toastr.complianceReporting('Cancelled');
-    this.props.invalidateAutosaved();
-  }
+  _gridStateToPayload(state) {
 
-  _handleSubmit () {
     const startingRow = 2;
 
-    const records = [];
+    let records = [];
 
-    for (let i = startingRow; i < this.state.grid.length; i += 1) {
-      const row = this.state.grid[i];
+    for (let i = startingRow; i < state.grid.length; i += 1) {
+
+      const row = state.grid[i];
       const record = {
         expectedUse: row[5].value,
         fuelType: row[1].value,
@@ -337,42 +287,23 @@ class ScheduleCContainer extends Component {
         rationale: row[6].value
       };
 
-      const rowIsEmpty = !record.expectedUse && !record.fuelClass &&
-        !record.fuelType && !record.quantity;
+      const rowIsEmpty = !record.expectedUse || !record.fuelClass ||
+        !record.fuelType || !record.quantity;
 
       if (!rowIsEmpty) {
         records.push(record);
       }
     }
 
-    if (!this.edit) {
-      // creating new
-      const payload = {
-        status: 'Draft',
-        type: 'Compliance Report',
-        compliancePeriod: this.props.match.params.period,
-        scheduleC: {
-          records
-        }
-      };
+    this.props.updateScheduleState({
+      scheduleC: {
+        records
+      }
+    });
 
-      this.props.createComplianceReport(payload);
-    } else {
-      // patch existing
-      const payload = {
-        scheduleC: {
-          records
-        }
-      };
-      this.props.updateComplianceReport({
-        id: this.props.match.params.id,
-        state: payload,
-        patch: true
-      });
-    }
   }
 
-  _validateFuelClassColumn (currentRow, value) {
+  _validateFuelClassColumn(currentRow, value) {
     const row = currentRow;
     const fuelType = currentRow[SCHEDULE_C.FUEL_TYPE];
 
@@ -390,7 +321,7 @@ class ScheduleCContainer extends Component {
     return row;
   }
 
-  _validateFuelTypeColumn (currentRow, value) {
+  _validateFuelTypeColumn(currentRow, value) {
     const row = currentRow;
     const selectedFuel = this.props.referenceData.approvedFuels.find(fuel => fuel.name === value);
 
@@ -415,30 +346,12 @@ class ScheduleCContainer extends Component {
     return row;
   }
 
-  render () {
-    if (this.props.complianceReporting.isGetting) {
-      return <Loading />;
-    }
-
-    const { id } = this.props.match.params;
-    let { period } = this.props.match.params;
-
-    if (!period) {
-      period = `${new Date().getFullYear() - 1}`;
-    }
-
+  render() {
     return ([
-      <ScheduleTabs
-        active="schedule-c"
-        compliancePeriod={period}
-        edit={this.edit}
-        id={id}
-        key="nav"
-      />,
       <SchedulesPage
         addRow={this._addRow}
         data={this.state.grid}
-        edit={this.edit}
+        edit={this.props.edit}
         handleCellsChanged={this._handleCellsChanged}
         key="schedules"
         scheduleType="schedule-c"
@@ -463,27 +376,14 @@ class ScheduleCContainer extends Component {
         <p>
           Report &quot;middle-distillate&quot; spec diesel heating oil as Petroleum-based diesel.
         </p>
-      </SchedulesPage>,
-      <Modal
-        handleSubmit={event => this._handleSubmit(event)}
-        id="confirmSubmit"
-        key="confirmSubmit"
-      >
-        Are you sure you want to save this schedule?
-      </Modal>,
-      <Modal
-        handleSubmit={event => this._handleDelete(event)}
-        id="confirmDelete"
-        key="confirmDelete"
-      >
-        Are you sure you want to delete this draft?
-      </Modal>
+      </SchedulesPage>
     ]);
   }
 }
 
 ScheduleCContainer.defaultProps = {
-  saving: false
+  saving: false,
+  complianceReport: null
 };
 
 ScheduleCContainer.propTypes = {
@@ -491,34 +391,18 @@ ScheduleCContainer.propTypes = {
     isFetching: PropTypes.bool,
     items: PropTypes.arrayOf(PropTypes.shape())
   }).isRequired,
-  complianceReporting: PropTypes.shape({
-    isCreating: PropTypes.bool,
-    isUpdating: PropTypes.bool,
-    isGetting: PropTypes.bool,
-    success: PropTypes.bool,
-    item: PropTypes.shape(),
-    errorMessage: PropTypes.shape()
-  }).isRequired,
   loadExpectedUses: PropTypes.func.isRequired,
-  createComplianceReport: PropTypes.func.isRequired,
-  getComplianceReport: PropTypes.func.isRequired,
-  updateComplianceReport: PropTypes.func.isRequired,
-  deleteComplianceReport: PropTypes.func.isRequired,
-
-  match: PropTypes.shape({
-    params: PropTypes.shape({
-      id: PropTypes.string,
-      period: PropTypes.string
-    }).isRequired
-  }).isRequired,
-  updateStateToSave: PropTypes.func.isRequired,
-  invalidateAutosaved: PropTypes.func.isRequired,
-  loadedState: PropTypes.any,
-  saving: PropTypes.bool,
   referenceData: PropTypes.shape({
     approvedFuels: PropTypes.arrayOf(PropTypes.shape),
     isFetching: PropTypes.bool
-  }).isRequired
+  }).isRequired,
+  edit: PropTypes.bool.isRequired,
+  create: PropTypes.bool.isRequired,
+  complianceReport: PropTypes.object,
+  loadedState: PropTypes.any,
+  period: PropTypes.string.isRequired,
+  updateScheduleState: PropTypes.func.isRequired,
+  updateAutosaveState: PropTypes.func.isRequired
 };
 
 const mapStateToProps = state => ({
@@ -526,32 +410,13 @@ const mapStateToProps = state => ({
     isFetching: state.rootReducer.expectedUses.isFinding,
     items: state.rootReducer.expectedUses.items
   },
-  complianceReporting: {
-    isGetting: state.rootReducer.complianceReporting.isGetting,
-    isCreating: state.rootReducer.complianceReporting.isCreating,
-    isUpdating: state.rootReducer.complianceReporting.isUpdating,
-    success: state.rootReducer.complianceReporting.success,
-    item: state.rootReducer.complianceReporting.item,
-    errorMessage: state.rootReducer.complianceReporting.errorMessage
-  },
   referenceData: {
-    approvedFuels: state.rootReducer.referenceData.data.approvedFuels,
-    isFetching: state.rootReducer.referenceData.isFetching
+    approvedFuels: state.rootReducer.referenceData.data.approvedFuels
   }
 });
 
 const mapDispatchToProps = {
-  loadExpectedUses: expectedUses.find,
-  createComplianceReport: complianceReporting.create,
-  updateComplianceReport: complianceReporting.update,
-  deleteComplianceReport: complianceReporting.remove,
-  getComplianceReport: complianceReporting.get
+  loadExpectedUses: expectedUses.find
 };
 
-const config = {
-  key: 'unsaved',
-  version: 1,
-  name: 'schedule-c'
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(autosaved(config)(ScheduleCContainer));
+export default connect(mapStateToProps, mapDispatchToProps)(ScheduleCContainer);

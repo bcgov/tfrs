@@ -3,23 +3,23 @@
  * All data handling & manipulation should be handled here.
  */
 
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
+import React, {Component} from 'react';
+import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 
-import { fuelClasses } from '../actions/fuelClasses';
-import { notionalTransferTypes } from '../actions/notionalTransferTypes';
+import {fuelClasses} from '../actions/fuelClasses';
+import {notionalTransferTypes} from '../actions/notionalTransferTypes';
 import Modal from '../app/components/Modal';
 import Input from './components/Input';
 import OrganizationAutocomplete from './components/OrganizationAutocomplete';
 import Select from './components/Select';
 import SchedulesPage from './components/SchedulesPage';
 import ScheduleTabs from './components/ScheduleTabs';
-import { getQuantity } from '../utils/functions';
-import { SCHEDULE_A } from '../constants/schedules/scheduleColumns';
+import {getQuantity} from '../utils/functions';
+import {SCHEDULE_A} from '../constants/schedules/scheduleColumns';
 
 class ScheduleAContainer extends Component {
-  static addHeaders () {
+  static addHeaders() {
     return {
       grid: [
         [{
@@ -60,17 +60,11 @@ class ScheduleAContainer extends Component {
     };
   }
 
-  constructor (props) {
+  constructor(props) {
     super(props);
 
     this.state = ScheduleAContainer.addHeaders();
     this.rowNumber = 1;
-
-    if (document.location.pathname.indexOf('/edit/') >= 0) {
-      this.edit = true;
-    } else {
-      this.edit = false;
-    }
 
     this._addRow = this._addRow.bind(this);
     this._calculateTotal = this._calculateTotal.bind(this);
@@ -78,14 +72,37 @@ class ScheduleAContainer extends Component {
     this._handleSubmit = this._handleSubmit.bind(this);
   }
 
-  componentDidMount () {
+  componentDidMount() {
     this.props.loadFuelClasses();
     this.props.loadNotionalTransferTypes();
-    this._addRow(5);
+
+    if (this.props.loadedState) {
+      //this.restoreFromAutosaved();
+    } else if (this.props.create || !this.props.complianceReport.scheduleA) {
+      this._addRow(5);
+    } else {
+      this.setState(ScheduleAContainer.addHeaders());
+      this.rowNumber = 1;
+      this._addRow(this.props.complianceReport.scheduleA.records.length);
+
+      for (let i = 0; i < this.props.complianceReport.scheduleA.records.length; i += 1) {
+        const {grid} = this.state;
+        const record = this.props.complianceReport.scheduleA.records[i];
+
+        grid[1 + i][SCHEDULE_A.LEGAL_NAME].value = record.tradingPartner;
+        grid[1 + i][SCHEDULE_A.POSTAL_ADDRESS].value = record.postalAddress;
+        grid[1 + i][SCHEDULE_A.FUEL_CLASS].value = record.fuelClass;
+        grid[1 + i][SCHEDULE_A.TRANSFER_TYPE].value = record.transferType;
+        grid[1 + i][SCHEDULE_A.QUANTITY].value = record.quantity;
+        this.setState({grid});
+        this._calculateTotal(grid);
+      }
+
+    }
   }
 
-  _addRow (numberOfRows = 1) {
-    const { grid } = this.state;
+  _addRow(numberOfRows = 1) {
+    const {grid} = this.state;
 
     for (let x = 0; x < numberOfRows; x += 1) {
       grid.push([{
@@ -124,7 +141,7 @@ class ScheduleAContainer extends Component {
         className: 'number',
         dataEditor: Input,
         valueViewer: (props) => {
-          const { value } = props;
+          const {value} = props;
           return <span>{value.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')}</span>;
         }
       }]);
@@ -137,9 +154,8 @@ class ScheduleAContainer extends Component {
     });
   }
 
-  _calculateTotal (grid) {
-    let { totals } = this.state;
-    totals = {
+  _calculateTotal(grid) {
+    let totals = {
       diesel: {
         received: 0,
         transferred: 0
@@ -175,7 +191,7 @@ class ScheduleAContainer extends Component {
     });
   }
 
-  _handleCellsChanged (changes, addition = null) {
+  _handleCellsChanged(changes, addition = null) {
     const grid = this.state.grid.map(row => [...row]);
 
     changes.forEach((change) => {
@@ -213,33 +229,55 @@ class ScheduleAContainer extends Component {
       grid
     });
 
+    this._gridStateToPayload({
+      grid
+    });
+
     this._calculateTotal(grid);
   }
 
-  _handleSubmit () {
-    console.log(this.state.grid);
-  }
 
-  render () {
-    const { id } = this.props.match.params;
-    let { period } = this.props.match.params;
+  _gridStateToPayload(state) {
 
-    if (!period) {
-      period = `${new Date().getFullYear() - 1}`;
+    const startingRow = 1;
+
+    let records = [];
+
+    for (let i = startingRow; i < state.grid.length; i += 1) {
+
+
+      const row = state.grid[i];
+      const record = {
+        tradingPartner: row[SCHEDULE_A.LEGAL_NAME].value,
+        postalAddress: row[SCHEDULE_A.POSTAL_ADDRESS].value,
+        fuelClass: row[SCHEDULE_A.FUEL_CLASS].value,
+        quantity: row[SCHEDULE_A.QUANTITY].value,
+        transferType: row[SCHEDULE_A.TRANSFER_TYPE].value
+      };
+
+
+      const rowIsEmpty = !record.tradingPartner || !record.postalAddress ||
+        !record.fuelClass || !record.quantity || !record.transferType;
+
+      if (!rowIsEmpty) {
+        records.push(record);
+      }
     }
 
+    this.props.updateScheduleState({
+      scheduleA: {
+        records
+      }
+    });
+
+  }
+
+  render() {
     return ([
-      <ScheduleTabs
-        active="schedule-a"
-        compliancePeriod={period}
-        edit={this.edit}
-        id={id}
-        key="nav"
-      />,
       <SchedulesPage
         addRow={this._addRow}
         data={this.state.grid}
-        edit={this.edit}
+        edit={this.props.edit}
         handleCellsChanged={this._handleCellsChanged}
         key="schedules"
         scheduleType="schedule-a"
@@ -255,25 +293,17 @@ class ScheduleAContainer extends Component {
         <p>
           For each fuel supplier that you notionally transferred fuel to, or notionally received
           fuel from, you must report the fuel supplier name, address, contact information and the
-          total volumes notionally transferred to, and/or received from that supplier.  Volumes
+          total volumes notionally transferred to, and/or received from that supplier. Volumes
           &quot;transferred to&quot; are those volumes notionally transferred by you to another
-          supplier listed in the Schedule.  Volumes &quot;received from&quot; are those volumes
+          supplier listed in the Schedule. Volumes &quot;received from&quot; are those volumes
           notionally received by you from another supplier listed in the Schedule.
         </p>
-      </SchedulesPage>,
-      <Modal
-        handleSubmit={event => this._handleSubmit(event)}
-        id="confirmSubmit"
-        key="confirmSubmit"
-      >
-        Are you sure you want to save this schedule?
-      </Modal>
+      </SchedulesPage>
     ]);
   }
 }
 
-ScheduleAContainer.defaultProps = {
-};
+ScheduleAContainer.defaultProps = {};
 
 ScheduleAContainer.propTypes = {
   fuelClasses: PropTypes.shape({
@@ -282,16 +312,16 @@ ScheduleAContainer.propTypes = {
   }).isRequired,
   loadFuelClasses: PropTypes.func.isRequired,
   loadNotionalTransferTypes: PropTypes.func.isRequired,
-  match: PropTypes.shape({
-    params: PropTypes.shape({
-      id: PropTypes.string,
-      period: PropTypes.string
-    }).isRequired
-  }).isRequired,
   notionalTransferTypes: PropTypes.shape({
     isFetching: PropTypes.bool,
     items: PropTypes.arrayOf(PropTypes.shape())
-  }).isRequired
+  }).isRequired,
+  complianceReport: PropTypes.object,
+  create: PropTypes.bool.isRequired,
+  edit: PropTypes.bool.isRequired,
+  period: PropTypes.string.isRequired,
+  updateScheduleState: PropTypes.func.isRequired
+
 };
 
 const mapStateToProps = state => ({

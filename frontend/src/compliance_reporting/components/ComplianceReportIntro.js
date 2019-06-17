@@ -5,18 +5,12 @@ import ScheduleTabs from './ScheduleTabs';
 import ScheduleButtons from './ScheduleButtons';
 
 const ComplianceReportIntro = (props) => {
-  const complianceReportDueDate = `20${Number(props.compliancePeriod.substr(-2)) + 1}`;
+  const complianceReportDueDate = `20${Number(props.period.substr(-2)) + 1}`;
 
   return (
     <div className="page-compliance-reporting-intro">
-      <ScheduleTabs
-        active="intro"
-        compliancePeriod={props.compliancePeriod}
-        edit={props.edit}
-        id={props.id}
-      />
       <div>
-        <h1>Compliance Report for {props.compliancePeriod}</h1>
+        <h1>Compliance Report for {props.period}</h1>
         <h2>British Columbia Renewable and Low Carbon Fuel Requirements Regulation</h2>
         <p>
         It is the responsibility of anyone who manufactures or imports fuel to determine whether
@@ -88,15 +82,9 @@ const ComplianceReportIntro = (props) => {
   );
 };
 
-ComplianceReportIntro.defaultProps = {
-  compliancePeriod: null,
-  id: null
-};
-
 ComplianceReportIntro.propTypes = {
-  compliancePeriod: PropTypes.string,
+  period: PropTypes.string.isRequired,
   edit: PropTypes.bool.isRequired,
-  id: PropTypes.string,
   title: PropTypes.string.isRequired
 };
 
