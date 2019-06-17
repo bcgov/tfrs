@@ -1,0 +1,158 @@
+/*
+ * Container component
+ * All data handling & manipulation should be handled here.
+ */
+
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
+import 'react-datasheet/lib/react-datasheet.css';
+
+import { fuelClasses } from '../actions/fuelClasses';
+import { notionalTransferTypes } from '../actions/notionalTransferTypes';
+import Modal from '../app/components/Modal';
+import ScheduleTabs from './components/ScheduleTabs';
+import ScheduleSummaryDiesel from './components/ScheduleSummaryDiesel';
+import ScheduleSummaryGasoline from './components/ScheduleSummaryGasoline';
+import ScheduleSummaryPage from './components/ScheduleSummaryPage';
+
+class ScheduleSummaryContainer extends Component {
+  constructor (props) {
+    super(props);
+
+    this.state = {
+      diesel: ScheduleSummaryDiesel,
+      gasoline: ScheduleSummaryGasoline,
+      totals: {
+        diesel: 0,
+        gasoline: 0
+      }
+    };
+
+    this.rowNumber = 1;
+
+    if (document.location.pathname.indexOf('/edit/') >= 0) {
+      this.edit = true;
+    } else {
+      this.edit = false;
+    }
+
+    this._handleCellsChanged = this._handleCellsChanged.bind(this);
+    this._handleDieselChanged = this._handleDieselChanged.bind(this);
+    this._handleGasolineChanged = this._handleGasolineChanged.bind(this);
+    this._handleSubmit = this._handleSubmit.bind(this);
+  }
+
+  componentDidMount () {
+  }
+
+  _handleCellsChanged (gridName, changes, addition = null) {
+    const grid = this.state[gridName].map(row => [...row]);
+
+    changes.forEach((change) => {
+      const {
+        cell, row, col, value
+      } = change;
+
+      if (cell.component) {
+        return;
+      }
+
+      grid[row][col] = {
+        ...grid[row][col],
+        value
+      };
+    });
+
+    this.setState({
+      [gridName]: grid
+    });
+  }
+
+  _handleDieselChanged (changes, addition = null) {
+    this._handleCellsChanged('diesel', changes, addition);
+  }
+
+  _handleGasolineChanged (changes, addition = null) {
+    this._handleCellsChanged('gasoline', changes, addition);
+  }
+
+  _handleSubmit () {
+    console.log(this.state.grid);
+  }
+
+  render () {
+    const { id } = this.props.match.params;
+    let { period } = this.props.match.params;
+
+    if (!period) {
+      period = `${new Date().getFullYear() - 1}`;
+    }
+
+    return ([
+      <ScheduleTabs
+        active="schedule-summary"
+        compliancePeriod={period}
+        edit={this.edit}
+        id={id}
+        key="nav"
+      />,
+      <ScheduleSummaryPage
+        diesel={this.state.diesel}
+        edit={this.edit}
+        gasoline={this.state.gasoline}
+        handleDieselChanged={this._handleDieselChanged}
+        handleGasolineChanged={this._handleGasolineChanged}
+        key="summary"
+        title="Part 2 - Renewable Fuel Requirement Summary"
+      />,
+      <Modal
+        handleSubmit={event => this._handleSubmit(event)}
+        id="confirmSubmit"
+        key="confirmSubmit"
+      >
+        Are you sure you want to save this schedule?
+      </Modal>
+    ]);
+  }
+}
+
+ScheduleSummaryContainer.defaultProps = {
+};
+
+ScheduleSummaryContainer.propTypes = {
+  fuelClasses: PropTypes.shape({
+    isFetching: PropTypes.bool,
+    items: PropTypes.arrayOf(PropTypes.shape())
+  }).isRequired,
+  loadFuelClasses: PropTypes.func.isRequired,
+  loadNotionalTransferTypes: PropTypes.func.isRequired,
+  match: PropTypes.shape({
+    params: PropTypes.shape({
+      id: PropTypes.string,
+      period: PropTypes.string
+    }).isRequired
+  }).isRequired,
+  notionalTransferTypes: PropTypes.shape({
+    isFetching: PropTypes.bool,
+    items: PropTypes.arrayOf(PropTypes.shape())
+  }).isRequired
+};
+
+const mapStateToProps = state => ({
+  fuelClasses: {
+    isFetching: state.rootReducer.fuelClasses.isFinding,
+    items: state.rootReducer.fuelClasses.items
+  },
+  notionalTransferTypes: {
+    isFetching: state.rootReducer.notionalTransferTypes.isFinding,
+    items: state.rootReducer.notionalTransferTypes.items
+  }
+});
+
+const mapDispatchToProps = {
+  loadFuelClasses: fuelClasses.find,
+  loadNotionalTransferTypes: notionalTransferTypes.find
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(ScheduleSummaryContainer);

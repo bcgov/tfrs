@@ -57,6 +57,7 @@ import ScheduleAContainer from './compliance_reporting/ScheduleAContainer';
 import ScheduleBContainer from './compliance_reporting/ScheduleBContainer';
 import ScheduleCContainer from './compliance_reporting/ScheduleCContainer';
 import ScheduleDContainer from './compliance_reporting/ScheduleDContainer';
+import ScheduleSummaryContainer from './compliance_reporting/ScheduleSummaryContainer';
 import ContactUsContainer from './contact_us/ContactUsContainer';
 import CreditTransactionsContainer from './credit_transfers/CreditTransactionsContainer';
 import CreditTransferAddContainer from './credit_transfers/CreditTransferAddContainer';
@@ -352,6 +353,11 @@ const Router = routerProps => (
             component={withRouter(ScheduleDContainer)}
           />,
           <Route
+            key="compliance_reporting_add_schedule_summary"
+            path={COMPLIANCE_REPORTING.ADD_SCHEDULE_SUMMARY}
+            component={withRouter(ScheduleSummaryContainer)}
+          />,
+          <Route
             key="compliance_reporting_edit"
             path={COMPLIANCE_REPORTING.EDIT}
             component={withRouter(ComplianceReportIntroContainer)}
@@ -375,6 +381,11 @@ const Router = routerProps => (
             key="compliance_reporting_edit_schedule_d"
             path={COMPLIANCE_REPORTING.EDIT_SCHEDULE_D}
             component={withRouter(withReferenceData()(ScheduleDContainer))}
+          />,
+          <Route
+            key="compliance_reporting_edit_schedule_summary"
+            path={COMPLIANCE_REPORTING.EDIT_SCHEDULE_SUMMARY}
+            component={withRouter(ScheduleSummaryContainer)}
           />,
           <Route
             key="compliance_reporting"
