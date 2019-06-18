@@ -24,118 +24,141 @@ class AddProvisionsOfTheAct(OperationalDataScript):
     def run(self):
         prescribed_carbon_intensity = \
             CarbonIntensityDeterminationType.objects.create(
-                description="Prescribed carbon intensity",
                 display_order="1",
                 effective_date="2017-01-01",
                 the_type="Carbon Intensity"
             )
+
+        provision = ProvisionOfTheAct.objects.create(
+            description="Prescribed carbon intensity",
+            display_order="1",
+            effective_date="2017-01-01",
+            expiration_date=None,
+            provision="Section 6 (5) (a)"
+        )
+        ApprovedFuelProvision.objects.create(
+            fuel=ApprovedFuel.objects.get(name="Petroleum-based gasoline"),
+            provision_act=provision,
+            determination_type=prescribed_carbon_intensity
+        )
+
+        provision = ProvisionOfTheAct.objects.create(
+            description="Prescribed carbon intensity",
+            display_order="2",
+            effective_date="2017-01-01",
+            expiration_date=None,
+            provision="Section 6 (5) (b)"
+        )
+        ApprovedFuelProvision.objects.create(
+            fuel=ApprovedFuel.objects.get(name="Petroleum-based diesel"),
+            provision_act=provision,
+            determination_type=prescribed_carbon_intensity
+        )
+
+        # other fuel types
         approved_fuel_code = \
             CarbonIntensityDeterminationType.objects.create(
-                description="Approved fuel code",
                 display_order="2",
                 effective_date="2017-01-01",
                 the_type="Fuel Code"
             )
-        default_carbon_intensity = \
-            CarbonIntensityDeterminationType.objects.create(
-                description="Default Carbon Intensity Value",
-                display_order="3",
-                effective_date="2017-01-01",
-                the_type="Default Carbon Intensity"
-            )
-        gh_genius = \
-            CarbonIntensityDeterminationType.objects.create(
-                description="GHGenius modelled",
-                display_order="4",
-                effective_date="2017-01-01",
-                the_type="GHGenius"
-            )
-        alternative_method = \
-            CarbonIntensityDeterminationType.objects.create(
-                description="Alternative Method",
-                display_order="5",
-                effective_date="2017-01-01",
-                the_type="Alternative"
-            )
 
-        provision = ProvisionOfTheAct.objects.create(
-            description="Section 6 (5) (a)",
-            determination_type=prescribed_carbon_intensity
-        )
-        ApprovedFuelProvision.objects.create(
-            fuel=ApprovedFuel.objects.get(name="Petroleum-based gasoline"),
-            provision=provision
-        )
-
-        provision = ProvisionOfTheAct.objects.create(
-            description="Section 6 (5) (b)",
-            determination_type=prescribed_carbon_intensity
-        )
-        ApprovedFuelProvision.objects.create(
-            fuel=ApprovedFuel.objects.get(name="Petroleum-based diesel"),
-            provision=provision
-        )
-
-        # other fuel types
         fuel_types = ApprovedFuel.objects.exclude(
             name__in=["Petroleum-based diesel", "Petroleum-based gasoline"]
         )
 
         # Section 6 (5) (c)
         provision = ProvisionOfTheAct.objects.create(
-            description="Section 6 (5) (c)",
-            determination_type=approved_fuel_code
+            description="Approved fuel code",
+            display_order="3",
+            effective_date="2017-01-01",
+            expiration_date=None,
+            provision="Section 6 (5) (c)"
         )
 
         obj = [
             ApprovedFuelProvision(
                 fuel=fuel_type,
-                provision=provision
+                provision_act=provision,
+                determination_type=approved_fuel_code
             ) for fuel_type in fuel_types
         ]
 
         ApprovedFuelProvision.objects.bulk_create(obj)
 
         # Section 6 (5) (d) (i)
+        default_carbon_intensity = \
+            CarbonIntensityDeterminationType.objects.create(
+                display_order="3",
+                effective_date="2017-01-01",
+                the_type="Default Carbon Intensity"
+            )
+
         provision = ProvisionOfTheAct.objects.create(
-            description="Section 6 (5) (d) (i)",
-            determination_type=default_carbon_intensity
+            description="Default Carbon Intensity Value",
+            display_order="4",
+            effective_date="2017-01-01",
+            expiration_date=None,
+            provision="Section 6 (5) (d) (i)"
         )
 
         obj = [
             ApprovedFuelProvision(
                 fuel=fuel_type,
-                provision=provision
+                provision_act=provision,
+                determination_type=default_carbon_intensity
             ) for fuel_type in fuel_types
         ]
 
         ApprovedFuelProvision.objects.bulk_create(obj)
 
         # Section 6 (5) (d) (ii) (A)
+        gh_genius = \
+            CarbonIntensityDeterminationType.objects.create(
+                display_order="4",
+                effective_date="2017-01-01",
+                the_type="GHGenius"
+            )
+
         provision = ProvisionOfTheAct.objects.create(
-            description="Section 6 (5) (d) (ii) (A)",
-            determination_type=gh_genius
+            description="GHGenius modelled",
+            display_order="5",
+            effective_date="2017-01-01",
+            expiration_date=None,
+            provision="Section 6 (5) (d) (ii) (A)"
         )
 
         obj = [
             ApprovedFuelProvision(
                 fuel=fuel_type,
-                provision=provision
+                provision_act=provision,
+                determination_type=gh_genius
             ) for fuel_type in fuel_types
         ]
 
         ApprovedFuelProvision.objects.bulk_create(obj)
 
         # Section 6 (5) (d) (ii) (B)
+        alternative_method = \
+            CarbonIntensityDeterminationType.objects.create(
+                display_order="5",
+                effective_date="2017-01-01",
+                the_type="Alternative"
+            )
+
         provision = ProvisionOfTheAct.objects.create(
-            description="Section 6 (5) (d) (ii) (B)",
-            determination_type=alternative_method
+            description="Alternative Method",
+            display_order="6",
+            effective_date="2017-01-01",
+            expiration_date=None,
+            provision="Section 6 (5) (d) (ii) (B)"
         )
 
         obj = [
             ApprovedFuelProvision(
                 fuel=fuel_type,
-                provision=provision
+                provision_act=provision,
+                determination_type=alternative_method
             ) for fuel_type in fuel_types
         ]
 
