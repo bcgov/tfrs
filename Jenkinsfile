@@ -354,7 +354,7 @@ node("master-maven-${env.BUILD_NUMBER}") {
                         "KEYCLOAK_ISSUER=https://sso.pathfinder.gov.bc.ca/auth/realms/tfrs",
                         "KEYCLOAK_REALM=https://sso.pathfinder.gov.bc.ca/auth/realms/tfrs")
                     def backendDC = openshift.apply(backendDCJson)
-                    sh 'sleep 180s'
+                    sh 'sleep 300s'
                 } //end of openshift.withProject
             } //end of script
         }
