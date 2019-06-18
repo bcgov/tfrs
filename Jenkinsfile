@@ -264,18 +264,23 @@ node("master-maven-${env.BUILD_NUMBER}") {
             } //end of script
         }
     }
-	
     stage('Deploy Backend to Test') {
-        script {
             openshift.withProject("mem-tfrs-tools") {
                 openshift.tag("mem-tfrs-tools/tfrs:latest", "mem-tfrs-tools/tfrs:test")
-                sh 'sleep 20s'
+                sh 'sleep 120s'
+            }
+        }
+    }
+	
+    stage('Deploy scan-coordinator, scan-handler and celery to Test') {
+        script {
+            openshift.withProject("mem-tfrs-tools") {
                 openshift.tag("mem-tfrs-tools/scan-coordinator:latest", "mem-tfrs-tools/scan-coordinator:test")
-                sh 'sleep 10s'
+                sh 'sleep 30s'
                 openshift.tag("mem-tfrs-tools/scan-handler:latest", "mem-tfrs-tools/scan-handler:test")
-                sh 'sleep 10s'
+                sh 'sleep 30s'
                 openshift.tag("mem-tfrs-tools/celery:latest", "mem-tfrs-tools/celery:test")
-                sh 'sleep 10s'
+                sh 'sleep 30s'
             }
         }
     }
@@ -284,9 +289,9 @@ node("master-maven-${env.BUILD_NUMBER}") {
         script {
             openshift.withProject("mem-tfrs-tools") {
                 openshift.tag("mem-tfrs-tools/client:latest", "mem-tfrs-tools/client:test")
-                sh 'sleep 10s'
+                sh 'sleep 30s'
                 openshift.tag("mem-tfrs-tools/notification-server:latest", "mem-tfrs-tools/notification-server:test")
-                sh 'sleep 10s'
+                sh 'sleep 30s'
             }
         }
     }
@@ -352,18 +357,25 @@ node("master-maven-${env.BUILD_NUMBER}") {
     stage ('Last confirmation to deploy to Prod') {
         input "Maintenance Page is up and Prod Database backup has completed, confirm to deploy ${tfrsRelease} to Prod? This is the last confirmation required."
     }
-	
+
     stage('Deploy Backend to Prod') {
         script {
             openshift.withProject("mem-tfrs-tools") {
                 openshift.tag("mem-tfrs-tools/tfrs:latest", "mem-tfrs-tools/tfrs:prod")
-                sh 'sleep 20s'
+                sh 'sleep 120s'
+            }
+        }
+    }
+	
+    stage('Deploy scan-coordinator, scan-handler and celery to Prod') {
+        script {
+            openshift.withProject("mem-tfrs-tools") {
                 openshift.tag("mem-tfrs-tools/scan-coordinator:latest", "mem-tfrs-tools/scan-coordinator:prod")
-                sh 'sleep 10s'
+                sh 'sleep 30s'
                 openshift.tag("mem-tfrs-tools/scan-handler:latest", "mem-tfrs-tools/scan-handler:prod")
-                sh 'sleep 10s'
+                sh 'sleep 30s'
                 openshift.tag("mem-tfrs-tools/celery:latest", "mem-tfrs-tools/celery:prod")
-                sh 'sleep 10s'
+                sh 'sleep 30s'
             }
         }
     }
@@ -372,9 +384,9 @@ node("master-maven-${env.BUILD_NUMBER}") {
         script {
             openshift.withProject("mem-tfrs-tools") {
                 openshift.tag("mem-tfrs-tools/client:latest", "mem-tfrs-tools/client:prod")
-                sh 'sleep 10s'
+                sh 'sleep 30s'
                 openshift.tag("mem-tfrs-tools/notification-server:latest", "mem-tfrs-tools/notification-server:prod")
-                sh 'sleep 10s'
+                sh 'sleep 30s'
             }
         }
     }
