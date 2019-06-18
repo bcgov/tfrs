@@ -263,6 +263,7 @@ node("master-maven-${env.BUILD_NUMBER}") {
         }
     }
     stage('Deploy Backend to Test') {
+        script {
             openshift.withProject("mem-tfrs-tools") {
                 openshift.tag("mem-tfrs-tools/tfrs:latest", "mem-tfrs-tools/tfrs:test")
                 sh 'sleep 120s'
