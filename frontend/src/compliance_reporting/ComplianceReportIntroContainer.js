@@ -18,6 +18,7 @@ class ComplianceReportIntroContainer extends Component {
         edit={this.props.edit}
         loggedInUser={this.props.loggedInUser}
         title="Compliance Reporting"
+        saving={this.props.saving}
       />
     );
   }
@@ -29,7 +30,8 @@ ComplianceReportIntroContainer.defaultProps = {
 ComplianceReportIntroContainer.propTypes = {
   loggedInUser: PropTypes.shape().isRequired,
   period: PropTypes.string.isRequired,
-  edit: PropTypes.bool.isRequired
+  edit: PropTypes.bool.isRequired,
+  saving: PropTypes.bool.isRequired
 };
 
 const mapStateToProps = state => ({

@@ -23,6 +23,7 @@ import Modal from "../app/components/Modal";
 import history from "../app/History";
 import toastr from "../utils/toastr";
 import autosaved from "../utils/autosave_support";
+import AutosaveNotifier from "./components/AutosaveNotifier";
 
 class ComplianceReportingEditContainer extends Component {
 
@@ -137,10 +138,6 @@ class ComplianceReportingEditContainer extends Component {
       this.tabComponent = ComplianceReportingEditContainer._componentForTabName(tab);
     }
 
-    if (this.props.saving && !nextProps.saving) {
-      reduxToastr.success('Autosaved');
-    }
-
     if (this.props.complianceReporting.isCreating && !nextProps.complianceReporting.isCreating) {
       if (!nextProps.complianceReporting.success) {
         reduxToastr.error('Error saving');
@@ -156,6 +153,7 @@ class ComplianceReportingEditContainer extends Component {
       if (!nextProps.complianceReporting.success) {
         reduxToastr.error('Error saving');
       } else {
+        history.push(COMPLIANCE_REPORTING.LIST);
         toastr.complianceReporting('Draft');
         this.props.invalidateAutosaved();
       }
@@ -189,8 +187,13 @@ class ComplianceReportingEditContainer extends Component {
       return (<Loading/>);
     }
 
-    if (this.edit && this.props.complianceReporting.item) {
-      period = this.props.complianceReporting.item.compliancePeriod.description;
+    if (this.edit) {
+      if (this.props.complianceReporting.item) {
+        period = this.props.complianceReporting.item.compliancePeriod.description;
+        if (!period) {
+          return (<Loading/>);
+        }
+      }
     }
 
     return ([
@@ -209,9 +212,11 @@ class ComplianceReportingEditContainer extends Component {
         create={!this.edit}
         complianceReport={this.props.complianceReporting.item}
         updateScheduleState={this._updateScheduleState}
+        saving={this.props.saving}
         updateAutosaveState={(state) => {
           this._updateAutosaveState(tab, state)
-        }}/>,
+        }}
+      />,
 
       <Modal
         handleSubmit={event => this._handleSubmit(event)}
@@ -229,45 +234,50 @@ class ComplianceReportingEditContainer extends Component {
       </Modal>
     ]);
 
-  };
+  }
+  ;
 }
 
-ComplianceReportingEditContainer.propTypes = {
+ComplianceReportingEditContainer
+  .propTypes = {
   invalidateAutosaved: PropTypes.func.isRequired,
   loadedState: PropTypes.any,
-  saving: PropTypes.bool,
+  saving: PropTypes.bool.isRequired,
   updateStateToSave: PropTypes.func.isRequired
 };
 
-const mapDispatchToProps = {
-  createComplianceReport: complianceReporting.create,
-  updateComplianceReport: complianceReporting.update,
-  deleteComplianceReport: complianceReporting.remove,
-  getComplianceReport: complianceReporting.get
-};
+const
+  mapDispatchToProps = {
+    createComplianceReport: complianceReporting.create,
+    updateComplianceReport: complianceReporting.update,
+    deleteComplianceReport: complianceReporting.remove,
+    getComplianceReport: complianceReporting.get
+  };
 
-const mapStateToProps = state => ({
-  complianceReporting: {
-    isGetting: state.rootReducer.complianceReporting.isGetting,
-    isFinding: state.rootReducer.complianceReporting.isFinding,
-    isCreating: state.rootReducer.complianceReporting.isCreating,
-    isUpdating: state.rootReducer.complianceReporting.isUpdating,
-    success: state.rootReducer.complianceReporting.success,
-    item: state.rootReducer.complianceReporting.item,
-    errorMessage: state.rootReducer.complianceReporting.errorMessage
-  },
-  referenceData: {
-    approvedFuels: state.rootReducer.referenceData.data.approvedFuels,
-    isFetching: state.rootReducer.referenceData.isFetching
-  }
-});
+const
+  mapStateToProps = state => ({
+    complianceReporting: {
+      isGetting: state.rootReducer.complianceReporting.isGetting,
+      isFinding: state.rootReducer.complianceReporting.isFinding,
+      isCreating: state.rootReducer.complianceReporting.isCreating,
+      isUpdating: state.rootReducer.complianceReporting.isUpdating,
+      success: state.rootReducer.complianceReporting.success,
+      item: state.rootReducer.complianceReporting.item,
+      errorMessage: state.rootReducer.complianceReporting.errorMessage
+    },
+    referenceData: {
+      approvedFuels: state.rootReducer.referenceData.data.approvedFuels,
+      isFetching: state.rootReducer.referenceData.isFetching
+    }
+  });
 
 
-const config = {
-  key: 'unsaved',
-  version: 2,
-  name: 'compliance-report'
-};
+const
+  config = {
+    key: 'unsaved',
+    version: 2,
+    name: 'compliance-report'
+  };
 
 
 export default connect(mapStateToProps, mapDispatchToProps)(autosaved(config)(ComplianceReportingEditContainer));

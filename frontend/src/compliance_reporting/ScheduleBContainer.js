@@ -681,6 +681,7 @@ class ScheduleBContainer extends Component {
         scheduleType="schedule-b"
         title="Schedule B - Part 3 Fuel Supply"
         totals={this.state.totals}
+        saving={this.props.saving}
       />
     ]);
   }
@@ -719,7 +720,9 @@ ScheduleBContainer.propTypes = {
     approvedFuels: PropTypes.arrayOf(PropTypes.shape)
   }).isRequired,
   edit: PropTypes.bool.isRequired,
-  period: PropTypes.string.isRequired
+  period: PropTypes.string.isRequired,
+  saving: PropTypes.bool.isRequired,
+
 };
 
 const mapStateToProps = state => ({

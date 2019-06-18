@@ -77,6 +77,7 @@ const ComplianceReportIntro = (props) => {
 
       <ScheduleButtons
         edit={props.edit}
+        saving={props.saving}
       />
     </div>
   );
@@ -85,7 +86,8 @@ const ComplianceReportIntro = (props) => {
 ComplianceReportIntro.propTypes = {
   period: PropTypes.string.isRequired,
   edit: PropTypes.bool.isRequired,
-  title: PropTypes.string.isRequired
+  title: PropTypes.string.isRequired,
+  saving: PropTypes.bool.isRequired
 };
 
 export default ComplianceReportIntro;

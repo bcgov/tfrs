@@ -356,6 +356,7 @@ class ScheduleCContainer extends Component {
         key="schedules"
         scheduleType="schedule-c"
         title="Schedule C - Fuels used for other purposes"
+        saving={this.props.saving}
       >
         <p>
           Under section 6 (3) of the
@@ -398,6 +399,7 @@ ScheduleCContainer.propTypes = {
   }).isRequired,
   edit: PropTypes.bool.isRequired,
   create: PropTypes.bool.isRequired,
+  saving: PropTypes.bool.isRequired,
   complianceReport: PropTypes.object,
   loadedState: PropTypes.any,
   period: PropTypes.string.isRequired,

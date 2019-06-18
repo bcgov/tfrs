@@ -69,7 +69,6 @@ class ScheduleAContainer extends Component {
     this._addRow = this._addRow.bind(this);
     this._calculateTotal = this._calculateTotal.bind(this);
     this._handleCellsChanged = this._handleCellsChanged.bind(this);
-    this._handleSubmit = this._handleSubmit.bind(this);
   }
 
   componentDidMount() {
@@ -283,6 +282,7 @@ class ScheduleAContainer extends Component {
         scheduleType="schedule-a"
         title="Schedule A - Notional Transfers of Renewable Fuel"
         totals={this.state.totals}
+        saving={this.props.saving}
       >
         <p>
           Under section 5.1 of the Act, a fuel supplier may transfer renewable fuel supplied in
@@ -320,7 +320,8 @@ ScheduleAContainer.propTypes = {
   create: PropTypes.bool.isRequired,
   edit: PropTypes.bool.isRequired,
   period: PropTypes.string.isRequired,
-  updateScheduleState: PropTypes.func.isRequired
+  updateScheduleState: PropTypes.func.isRequired,
+  saving: PropTypes.bool.isRequired,
 
 };
 
