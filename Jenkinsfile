@@ -364,7 +364,7 @@ node("master-maven-${env.BUILD_NUMBER}") {
         script {
             openshift.withProject("mem-tfrs-tools") {
                 openshift.tag("mem-tfrs-tools/tfrs:latest", "mem-tfrs-tools/tfrs:prod")
-                sh 'sleep 180s'
+                sh 'sleep 300s'
             }
         }
     }
