@@ -262,7 +262,7 @@ node("master-maven-${env.BUILD_NUMBER}") {
             } //end of script
         }
     }
-    
+
     stage('Deploy Backend to Test') {
         script {
             openshift.withProject("mem-tfrs-tools") {
@@ -316,6 +316,23 @@ node("master-maven-${env.BUILD_NUMBER}") {
         input "Deploy release ${tfrsRelease} to Prod? There will be one more confirmation before deploying on Prod."
     }
 
+    stage('Bring up Maintenance Page on Prod') {
+        sh returnStatus: true, script: "oc scale dc maintenance-page -n mem-tfrs-prod --replicas=1 --timeout=20s"
+        sh returnStatus: true, script: "oc patch route/lowcarbonfuels-frontend -n mem-tfrs-prod -p '{\"spec\":{\"to\":{\"name\":\"maintenance-page\"}, \"port\":{\"targetPort\":\"2015-tcp\"}}}'"
+        sh returnStatus: true, script: "oc patch route/lowcarbonfuels-backend -n mem-tfrs-prod -p '{\"spec\":{\"to\":{\"name\":\"maintenance-page\"}, \"port\":{\"targetPort\":\"2015-tcp\"}}}'"
+    }
+
+    stage('Backup Prod Database') {
+        postgresql_pod_name=sh (script: 'oc get pods -n mem-tfrs-prod | grep postgresql96 | awk \'{print $1}\'', returnStdout: true).trim()
+        echo "start backup script tfrsdump-prod.sh on prod, postgresql_pod_name is ${postgresql_pod_name}"
+        sh returnStdout: true, script: "oc exec ${postgresql_pod_name} -c postgresql96 -n mem-tfrs-prod -- bash /postgresql-backup/tfrs-backup.sh ${tfrsRelease} prod"
+        echo 'backup script completed'
+    }
+
+    stage ('Last confirmation to deploy to Prod') {
+        input "Maintenance Page is up and Prod Database backup has completed, confirm to deploy ${tfrsRelease} to Prod? This is the last confirmation required."
+    }
+
     stage('Apply Deployment Configs') {
         timeout(30) {
             script {
@@ -339,23 +356,6 @@ node("master-maven-${env.BUILD_NUMBER}") {
                 } //end of openshift.withProject
             } //end of script
         }
-    }
-
-    stage('Bring up Maintenance Page on Prod') {
-        sh returnStatus: true, script: "oc scale dc maintenance-page -n mem-tfrs-prod --replicas=1 --timeout=20s"
-        sh returnStatus: true, script: "oc patch route/lowcarbonfuels-frontend -n mem-tfrs-prod -p '{\"spec\":{\"to\":{\"name\":\"maintenance-page\"}, \"port\":{\"targetPort\":\"2015-tcp\"}}}'"
-        sh returnStatus: true, script: "oc patch route/lowcarbonfuels-backend -n mem-tfrs-prod -p '{\"spec\":{\"to\":{\"name\":\"maintenance-page\"}, \"port\":{\"targetPort\":\"2015-tcp\"}}}'"
-    }
-
-    stage('Backup Prod Database') {
-        postgresql_pod_name=sh (script: 'oc get pods -n mem-tfrs-prod | grep postgresql96 | awk \'{print $1}\'', returnStdout: true).trim()
-        echo "start backup script tfrsdump-prod.sh on prod, postgresql_pod_name is ${postgresql_pod_name}"
-        sh returnStdout: true, script: "oc exec ${postgresql_pod_name} -c postgresql96 -n mem-tfrs-prod -- bash /postgresql-backup/tfrs-backup.sh ${tfrsRelease} prod"
-        echo 'backup script completed'
-    }
-
-    stage ('Last confirmation to deploy to Prod') {
-        input "Maintenance Page is up and Prod Database backup has completed, confirm to deploy ${tfrsRelease} to Prod? This is the last confirmation required."
     }
 
     stage('Deploy Backend to Prod') {
