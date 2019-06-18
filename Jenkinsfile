@@ -240,35 +240,33 @@ node("master-maven-${env.BUILD_NUMBER}") {
     }
 
     stage('Apply Deployment Configs') {
-        timeout(200) {
-            script {
-                openshift.withProject("mem-tfrs-test") {
-                    def backendDCJson = openshift.process(readFile(file:'openshift/templates/components/backend/tfrs-dc.json'), 
-                        "-p", 
-                        "ENV_NAME=test", 
-                        "SOURCE_IS_NAME=tfrs",
-                        "ROUTE_HOST_NAME=test-lowcarbonfuels.pathfinder.gov.bc.ca",
-                        "ROUTE_NAME=test-lowcarbonfuels-backend",
-                        "KEYCLOAK_SA_BASEURL=https://sso-test.pathfinder.gov.bc.ca",
-                        "KEYCLOAK_SA_CLIENT_ID=tfrs-django-sa",
-                        "KEYCLOAK_SA_REALM=tfrs",
-                        "KEYCLOAK_AUDIENCE=tfrs",
-                        "KEYCLOAK_CERTS_URL=https://sso-test.pathfinder.gov.bc.ca/auth/realms/tfrs/protocol/openid-connect/certs",
-                        "KEYCLOAK_CLIENT_ID=tfrs",
-                        "KEYCLOAK_ISSUER=https://sso-test.pathfinder.gov.bc.ca/auth/realms/tfrs",
-                        "KEYCLOAK_REALM=https://sso-test.pathfinder.gov.bc.ca/auth/realms/tfrs")
-                    def backendDC = openshift.apply(backendDCJson)
-                    sh 'sleep 180s'
-                } //end of openshift.withProject
-            } //end of script
-        }
+        script {
+            openshift.withProject("mem-tfrs-test") {
+                def backendDCJson = openshift.process(readFile(file:'openshift/templates/components/backend/tfrs-dc.json'), 
+                    "-p", 
+                    "ENV_NAME=test", 
+                    "SOURCE_IS_NAME=tfrs",
+                    "ROUTE_HOST_NAME=test-lowcarbonfuels.pathfinder.gov.bc.ca",
+                    "ROUTE_NAME=test-lowcarbonfuels-backend",
+                    "KEYCLOAK_SA_BASEURL=https://sso-test.pathfinder.gov.bc.ca",
+                    "KEYCLOAK_SA_CLIENT_ID=tfrs-django-sa",
+                    "KEYCLOAK_SA_REALM=tfrs",
+                    "KEYCLOAK_AUDIENCE=tfrs",
+                    "KEYCLOAK_CERTS_URL=https://sso-test.pathfinder.gov.bc.ca/auth/realms/tfrs/protocol/openid-connect/certs",
+                    "KEYCLOAK_CLIENT_ID=tfrs",
+                    "KEYCLOAK_ISSUER=https://sso-test.pathfinder.gov.bc.ca/auth/realms/tfrs",
+                    "KEYCLOAK_REALM=https://sso-test.pathfinder.gov.bc.ca/auth/realms/tfrs")
+                def backendDC = openshift.apply(backendDCJson)
+                sh 'sleep 560s'
+            } //end of openshift.withProject
+        } //end of script
     }
 
     stage('Deploy Backend to Test') {
         script {
             openshift.withProject("mem-tfrs-tools") {
                 openshift.tag("mem-tfrs-tools/tfrs:latest", "mem-tfrs-tools/tfrs:test")
-                sh 'sleep 180s'
+                sh 'sleep 560s'
             }
         }
     }
@@ -312,7 +310,7 @@ node("master-maven-${env.BUILD_NUMBER}") {
         sh 'sleep 10s'
         sh returnStdout: true, script: "oc scale dc schema-spy-audit --replicas=1 -n mem-tfrs-test"
     }     
-******/
+
 
     stage ('Confirm to deploy to Prod') {
         input "Deploy release ${tfrsRelease} to Prod? There will be one more confirmation before deploying on Prod."
@@ -336,39 +334,37 @@ node("master-maven-${env.BUILD_NUMBER}") {
     }
 
     stage('Apply Deployment Configs') {
-        timeout(200) {
-            script {
-                openshift.withProject("mem-tfrs-prod") {
-                    def backendDCJson = openshift.process(readFile(file:'openshift/templates/components/backend/tfrs-dc.json'), 
-                        "-p", 
-                        "ENV_NAME=prod", 
-                        "SOURCE_IS_NAME=tfrs",
-                        "ROUTE_HOST_NAME=lowcarbonfuels.gov.bc.ca",
-                        "ROUTE_NAME=lowcarbonfuels-backend",
-                        "KEYCLOAK_SA_BASEURL=https://sso.pathfinder.gov.bc.ca",
-                        "KEYCLOAK_SA_CLIENT_ID=tfrs-django-sa",
-                        "KEYCLOAK_SA_REALM=tfrs",
-                        "KEYCLOAK_AUDIENCE=tfrs",
-                        "KEYCLOAK_CERTS_URL=https://sso.pathfinder.gov.bc.ca/auth/realms/tfrs/protocol/openid-connect/certs",
-                        "KEYCLOAK_CLIENT_ID=tfrs",
-                        "KEYCLOAK_ISSUER=https://sso.pathfinder.gov.bc.ca/auth/realms/tfrs",
-                        "KEYCLOAK_REALM=https://sso.pathfinder.gov.bc.ca/auth/realms/tfrs")
-                    def backendDC = openshift.apply(backendDCJson)
-                    sh 'sleep 300s'
-                } //end of openshift.withProject
-            } //end of script
-        }
+        script {
+            openshift.withProject("mem-tfrs-prod") {
+                def backendDCJson = openshift.process(readFile(file:'openshift/templates/components/backend/tfrs-dc.json'), 
+                    "-p", 
+                    "ENV_NAME=prod", 
+                    "SOURCE_IS_NAME=tfrs",
+                    "ROUTE_HOST_NAME=lowcarbonfuels.gov.bc.ca",
+                    "ROUTE_NAME=lowcarbonfuels-backend",
+                    "KEYCLOAK_SA_BASEURL=https://sso.pathfinder.gov.bc.ca",
+                    "KEYCLOAK_SA_CLIENT_ID=tfrs-django-sa",
+                    "KEYCLOAK_SA_REALM=tfrs",
+                    "KEYCLOAK_AUDIENCE=tfrs",
+                    "KEYCLOAK_CERTS_URL=https://sso.pathfinder.gov.bc.ca/auth/realms/tfrs/protocol/openid-connect/certs",
+                    "KEYCLOAK_CLIENT_ID=tfrs",
+                    "KEYCLOAK_ISSUER=https://sso.pathfinder.gov.bc.ca/auth/realms/tfrs",
+                    "KEYCLOAK_REALM=https://sso.pathfinder.gov.bc.ca/auth/realms/tfrs")
+                def backendDC = openshift.apply(backendDCJson)
+                sh 'sleep 560s'
+            } //end of openshift.withProject
+        } //end of script
     }
 
     stage('Deploy Backend to Prod') {
         script {
             openshift.withProject("mem-tfrs-tools") {
                 openshift.tag("mem-tfrs-tools/tfrs:latest", "mem-tfrs-tools/tfrs:prod")
-                sh 'sleep 300s'
+                sh 'sleep 560s'
             }
         }
     }
-	
+****/
     stage('Deploy scan-coordinator, scan-handler and celery to Prod') {
         script {
             openshift.withProject("mem-tfrs-tools") {
