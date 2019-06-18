@@ -240,7 +240,7 @@ node("master-maven-${env.BUILD_NUMBER}") {
     }
 
     stage('Apply Deployment Configs') {
-        timeout(30) {
+        timeout(200) {
             script {
                 openshift.withProject("mem-tfrs-test") {
                     def backendDCJson = openshift.process(readFile(file:'openshift/templates/components/backend/tfrs-dc.json'), 
@@ -258,7 +258,7 @@ node("master-maven-${env.BUILD_NUMBER}") {
                         "KEYCLOAK_ISSUER=https://sso-test.pathfinder.gov.bc.ca/auth/realms/tfrs",
                         "KEYCLOAK_REALM=https://sso-test.pathfinder.gov.bc.ca/auth/realms/tfrs")
                     def backendDC = openshift.apply(backendDCJson)
-                    sh 'sleep 120s'
+                    sh 'sleep 180s'
                 } //end of openshift.withProject
             } //end of script
         }
@@ -268,7 +268,7 @@ node("master-maven-${env.BUILD_NUMBER}") {
         script {
             openshift.withProject("mem-tfrs-tools") {
                 openshift.tag("mem-tfrs-tools/tfrs:latest", "mem-tfrs-tools/tfrs:test")
-                sh 'sleep 120s'
+                sh 'sleep 180s'
             }
         }
     }
