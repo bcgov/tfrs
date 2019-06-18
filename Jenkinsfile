@@ -129,7 +129,7 @@ def prepareBuildNotificationServer() {
 
   }
 }
-/****
+
 stage('Unit Test') {
     podTemplate(label: "master-backend-python-${env.BUILD_NUMBER}", name: "master-backend-python-${env.BUILD_NUMBER}", serviceAccount: 'jenkins-basic', cloud: 'openshift',
         containers: [
@@ -173,7 +173,6 @@ if (result != 0) {
 
 backendBuildStages = prepareBackendBuildStages()
 frontendBuildStages = prepareFrontendBuildStages()
-****/
 
 podTemplate(label: "master-maven-${env.BUILD_NUMBER}", name: "master-maven-${env.BUILD_NUMBER}", serviceAccount: 'jenkins-basic', cloud: 'openshift',
         containers: [
@@ -193,7 +192,7 @@ podTemplate(label: "master-maven-${env.BUILD_NUMBER}", name: "master-maven-${env
 node("master-maven-${env.BUILD_NUMBER}") {
 
     checkout changelog: false, poll: false, scm: [$class: 'GitSCM', branches: [[name: "${tfrsRelease}"]], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[credentialsId: 'github-account', url: 'https://github.com/bcgov/tfrs.git']]]
-/****
+
     //run frontend builds
     for (builds in frontendBuildStages) {
         if (runParallel) {
@@ -364,7 +363,7 @@ node("master-maven-${env.BUILD_NUMBER}") {
             }
         }
     }
-****/
+
     stage('Deploy scan-coordinator, scan-handler and celery to Prod') {
         script {
             openshift.withProject("mem-tfrs-tools") {
