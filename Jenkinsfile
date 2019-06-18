@@ -129,7 +129,7 @@ def prepareBuildNotificationServer() {
 
   }
 }
-
+/****
 stage('Unit Test') {
     podTemplate(label: "master-backend-python-${env.BUILD_NUMBER}", name: "master-backend-python-${env.BUILD_NUMBER}", serviceAccount: 'jenkins-basic', cloud: 'openshift',
         containers: [
@@ -163,7 +163,7 @@ stage('Unit Test') {
     } //end of node
     } //end of podTemplate
 } //end of stage
-        
+
 echo "result is ${result}"
 if (result != 0) {
     echo "[FAILURE] Unit Test stage failed"
@@ -173,7 +173,8 @@ if (result != 0) {
 
 backendBuildStages = prepareBackendBuildStages()
 frontendBuildStages = prepareFrontendBuildStages()
-        
+****/
+
 podTemplate(label: "master-maven-${env.BUILD_NUMBER}", name: "master-maven-${env.BUILD_NUMBER}", serviceAccount: 'jenkins-basic', cloud: 'openshift',
         containers: [
             containerTemplate(
@@ -192,7 +193,7 @@ podTemplate(label: "master-maven-${env.BUILD_NUMBER}", name: "master-maven-${env
 node("master-maven-${env.BUILD_NUMBER}") {
 
     checkout changelog: false, poll: false, scm: [$class: 'GitSCM', branches: [[name: "${tfrsRelease}"]], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[credentialsId: 'github-account', url: 'https://github.com/bcgov/tfrs.git']]]
-
+/****
     //run frontend builds
     for (builds in frontendBuildStages) {
         if (runParallel) {
@@ -311,6 +312,7 @@ node("master-maven-${env.BUILD_NUMBER}") {
         sh 'sleep 10s'
         sh returnStdout: true, script: "oc scale dc schema-spy-audit --replicas=1 -n mem-tfrs-test"
     }     
+******/
 
     stage ('Confirm to deploy to Prod') {
         input "Deploy release ${tfrsRelease} to Prod? There will be one more confirmation before deploying on Prod."
@@ -334,7 +336,7 @@ node("master-maven-${env.BUILD_NUMBER}") {
     }
 
     stage('Apply Deployment Configs') {
-        timeout(30) {
+        timeout(200) {
             script {
                 openshift.withProject("mem-tfrs-prod") {
                     def backendDCJson = openshift.process(readFile(file:'openshift/templates/components/backend/tfrs-dc.json'), 
@@ -352,7 +354,7 @@ node("master-maven-${env.BUILD_NUMBER}") {
                         "KEYCLOAK_ISSUER=https://sso.pathfinder.gov.bc.ca/auth/realms/tfrs",
                         "KEYCLOAK_REALM=https://sso.pathfinder.gov.bc.ca/auth/realms/tfrs")
                     def backendDC = openshift.apply(backendDCJson)
-                    sh 'sleep 120s'
+                    sh 'sleep 180s'
                 } //end of openshift.withProject
             } //end of script
         }
@@ -362,7 +364,7 @@ node("master-maven-${env.BUILD_NUMBER}") {
         script {
             openshift.withProject("mem-tfrs-tools") {
                 openshift.tag("mem-tfrs-tools/tfrs:latest", "mem-tfrs-tools/tfrs:prod")
-                sh 'sleep 120s'
+                sh 'sleep 180s'
             }
         }
     }
