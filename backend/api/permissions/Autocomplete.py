@@ -34,4 +34,8 @@ class AutocompletePermissions(permissions.BasePermission):
         if request.user.is_government_user:
             return True
 
+        if field == 'organization.name' and \
+                request.user.has_perm('COMPLIANCE_REPORT_MANAGE'):
+            return True
+
         return False
