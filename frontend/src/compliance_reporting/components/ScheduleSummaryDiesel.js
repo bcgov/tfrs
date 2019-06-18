@@ -23,14 +23,15 @@ const numericInput = {
 
 const ScheduleSummaryDiesel = [
   [{
-    className: 'summary-label',
+    className: 'summary-label header',
     readOnly: true,
     value: 'Diesel Class - 4% Renewable Requirement'
   }, {
-    className: 'line',
-    readOnly: true
+    className: 'line header',
+    readOnly: true,
+    value: 'Line'
   }, {
-    className: 'litres',
+    className: 'litres header',
     readOnly: true,
     value: 'Litres (L)'
   }], // header

@@ -15,6 +15,8 @@ import ScheduleTabs from './components/ScheduleTabs';
 import ScheduleSummaryDiesel from './components/ScheduleSummaryDiesel';
 import ScheduleSummaryGasoline from './components/ScheduleSummaryGasoline';
 import ScheduleSummaryPage from './components/ScheduleSummaryPage';
+import ScheduleSummaryPart3 from './components/ScheduleSummaryPart3';
+import ScheduleSummaryPenalty from './components/ScheduleSummaryPenalty';
 
 class ScheduleSummaryContainer extends Component {
   constructor (props) {
@@ -23,6 +25,8 @@ class ScheduleSummaryContainer extends Component {
     this.state = {
       diesel: ScheduleSummaryDiesel,
       gasoline: ScheduleSummaryGasoline,
+      part3: ScheduleSummaryPart3,
+      penalty: ScheduleSummaryPenalty,
       totals: {
         diesel: 0,
         gasoline: 0
@@ -31,11 +35,7 @@ class ScheduleSummaryContainer extends Component {
 
     this.rowNumber = 1;
 
-    if (document.location.pathname.indexOf('/edit/') >= 0) {
-      this.edit = true;
-    } else {
-      this.edit = false;
-    }
+    this.edit = document.location.pathname.indexOf('/edit/') >= 0;
 
     this._handleCellsChanged = this._handleCellsChanged.bind(this);
     this._handleDieselChanged = this._handleDieselChanged.bind(this);
@@ -104,7 +104,8 @@ class ScheduleSummaryContainer extends Component {
         handleDieselChanged={this._handleDieselChanged}
         handleGasolineChanged={this._handleGasolineChanged}
         key="summary"
-        title="Part 2 - Renewable Fuel Requirement Summary"
+        part3={this.state.part3}
+        penalty={this.state.penalty}
       />,
       <Modal
         handleSubmit={event => this._handleSubmit(event)}

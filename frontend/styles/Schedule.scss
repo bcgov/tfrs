@@ -362,6 +362,11 @@
 }
 
 .schedule-summary {
+  > .row {
+    margin-left: -15px;
+    margin-right: -15px;
+  }
+
   .col-lg-6 {
     margin-bottom: 2rem;
   }
@@ -380,7 +385,7 @@
     min-width: 30rem;
   }
 
-  .total {
+  .total, .header {
     font-weight: bold;
   }
 }
