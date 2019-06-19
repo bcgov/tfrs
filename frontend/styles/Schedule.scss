@@ -1,4 +1,4 @@
-.page_schedule {
+.page_schedule, .schedule-summary {
   p {
     margin: 2.5rem 0;
   }
@@ -26,8 +26,7 @@
 
   .data-grid-container {
     display: block;
-    min-width: 1200px;
-
+  
     .schedule {
       overflow-x: auto;
       table-layout: auto;
@@ -365,5 +364,38 @@
       color: $link-color;
       padding: 1rem;
     }
+  }
+}
+
+.page_schedule .data-grid-container {
+  min-width: 1200px;
+}
+
+.schedule-summary {
+  > .row {
+    margin-left: -15px;
+    margin-right: -15px;
+  }
+
+  .col-lg-6 {
+    margin-bottom: 2rem;
+  }
+
+  .line {
+    min-width: 10rem;
+    width: 10rem;
+  }
+
+  .litres {
+    min-width: 15rem;
+    width: 15rem;
+  }
+
+  .summary-label {
+    min-width: 30rem;
+  }
+
+  .total, .header {
+    font-weight: bold;
   }
 }

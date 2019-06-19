@@ -10,12 +10,9 @@ import { bindActionCreators } from 'redux';
 
 import getCompliancePeriods from '../actions/compliancePeriodsActions';
 import getCreditCalculation from '../actions/creditCalculation';
-import Loading from '../app/components/Loading';
-import Modal from '../app/components/Modal';
 import Input from './components/Input';
 import Select from './components/Select';
 import SchedulesPage from './components/SchedulesPage';
-import ScheduleTabs from './components/ScheduleTabs';
 import { SCHEDULE_B } from '../constants/schedules/scheduleColumns';
 import { formatNumeric } from '../utils/functions';
 
@@ -721,8 +718,7 @@ ScheduleBContainer.propTypes = {
   }).isRequired,
   edit: PropTypes.bool.isRequired,
   period: PropTypes.string.isRequired,
-  saving: PropTypes.bool.isRequired,
-
+  saving: PropTypes.bool.isRequired
 };
 
 const mapStateToProps = state => ({

@@ -68,8 +68,7 @@ import NotificationsContainer from './notifications/NotificationsContainer';
 import AuthCallback from './app/AuthCallback';
 import CONFIG from './config';
 import OrganizationEditContainer from './organizations/OrganizationEditContainer';
-import withReferenceData from './utils/reference_data_support';
-import ComplianceReportingEditContainer from "./compliance_reporting/ComplianceReportingEditContainer";
+import ComplianceReportingEditContainer from './compliance_reporting/ComplianceReportingEditContainer';
 
 const Router = routerProps => (
   <ConnectedRouter history={history} key={Math.random()}>
@@ -121,11 +120,11 @@ const Router = routerProps => (
         <Route
           exact
           path={ORGANIZATIONS.ADD}
-          render={properties => <OrganizationEditContainer {...properties} mode="add"/>}
+          render={properties => <OrganizationEditContainer {...properties} mode="add" />}
         />
         <Route
           path={ORGANIZATIONS.EDIT}
-          render={properties => <OrganizationEditContainer {...properties} mode="edit"/>}
+          render={properties => <OrganizationEditContainer {...properties} mode="edit" />}
         />
         <Route
           exact
