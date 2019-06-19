@@ -3,19 +3,19 @@
  * All data handling & manipulation should be handled here.
  */
 
-import React, {Component} from 'react';
-import {connect} from 'react-redux';
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
-import {expectedUses} from '../actions/expectedUses';
+import { expectedUses } from '../actions/expectedUses';
 import Input from './components/Input';
 import Select from './components/Select';
 import SchedulesPage from './components/SchedulesPage';
-import {SCHEDULE_C} from '../constants/schedules/scheduleColumns';
-import {getQuantity} from '../utils/functions';
+import { SCHEDULE_C } from '../constants/schedules/scheduleColumns';
+import { getQuantity } from '../utils/functions';
 
 class ScheduleCContainer extends Component {
-  static addHeaders() {
+  static addHeaders () {
     return {
       grid: [
         [{
@@ -63,7 +63,7 @@ class ScheduleCContainer extends Component {
     };
   }
 
-  constructor(props) {
+  constructor (props) {
     super(props);
 
     this.state = ScheduleCContainer.addHeaders();
@@ -76,12 +76,12 @@ class ScheduleCContainer extends Component {
     this._validateFuelTypeColumn = this._validateFuelTypeColumn.bind(this);
   }
 
-  componentDidMount() {
+  componentDidMount () {
     this.props.loadExpectedUses();
 
     if (this.props.loadedState) {
       this.restoreFromAutosaved();
-    } else if (this.props.create || !this.props.complianceReport.scheduleC ) {
+    } else if (this.props.create || !this.props.complianceReport.scheduleC) {
       this._addRow(5);
     } else {
       this.setState(ScheduleCContainer.addHeaders());
@@ -89,7 +89,7 @@ class ScheduleCContainer extends Component {
       this._addRow(this.props.complianceReport.scheduleC.records.length);
 
       for (let i = 0; i < this.props.complianceReport.scheduleC.records.length; i += 1) {
-        const {grid} = this.state;
+        const { grid } = this.state;
         const record = this.props.complianceReport.scheduleC.records[i];
 
         grid[2 + i][SCHEDULE_C.FUEL_TYPE].value = record.fuelType;
@@ -104,23 +104,23 @@ class ScheduleCContainer extends Component {
         grid[2 + i][SCHEDULE_C.UNITS].value = (selectedFuel && selectedFuel.unitOfMeasure)
           ? selectedFuel.unitOfMeasure.name : '';
 
-        this.setState({grid});
+        this.setState({ grid });
       }
     }
   }
 
-  componentWillReceiveProps(nextProps, nextContext) {
+  componentWillReceiveProps (nextProps, nextContext) {
   }
 
-  restoreFromAutosaved() {
-    const {loadedState} = this.props;
+  restoreFromAutosaved () {
+    const { loadedState } = this.props;
 
     this.setState(ScheduleCContainer.addHeaders());
     this.rowNumber = 1;
     this._addRow(loadedState.grid.length - 2);
 
     for (let i = 2; i < loadedState.grid.length; i += 1) {
-      const {grid} = this.state;
+      const { grid } = this.state;
       const record = loadedState.grid[i];
 
       grid[i][SCHEDULE_C.FUEL_TYPE].value = record[SCHEDULE_C.FUEL_TYPE].value;
@@ -133,13 +133,12 @@ class ScheduleCContainer extends Component {
       grid[i][SCHEDULE_C.UNITS].value = (selectedFuel && selectedFuel.unitOfMeasure)
         ? selectedFuel.unitOfMeasure.name : '';
 
-
-      this.setState({grid});
+      this.setState({ grid });
     }
   }
 
-  _addRow(numberOfRows = 1) {
-    const {grid} = this.state;
+  _addRow (numberOfRows = 1) {
+    const { grid } = this.state;
 
     for (let x = 0; x < numberOfRows; x += 1) {
       grid.push([
@@ -171,7 +170,7 @@ class ScheduleCContainer extends Component {
           className: 'number',
           dataEditor: Input,
           valueViewer: (props) => {
-            const {value} = props;
+            const { value } = props;
             return <span>{value.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')}</span>;
           }
         }, {
@@ -198,7 +197,7 @@ class ScheduleCContainer extends Component {
     });
   }
 
-  _getFuelClasses(row) {
+  _getFuelClasses (row) {
     const fuelType = this.state.grid[row][SCHEDULE_C.FUEL_TYPE];
 
     const selectedFuel = this.props.referenceData.approvedFuels
@@ -211,7 +210,7 @@ class ScheduleCContainer extends Component {
     return [];
   }
 
-  _handleCellsChanged(changes, addition = null) {
+  _handleCellsChanged (changes, addition = null) {
     const grid = this.state.grid.map(row => [...row]);
 
     changes.forEach((change) => {
@@ -267,17 +266,15 @@ class ScheduleCContainer extends Component {
       grid
     });
 
-    this.props.updateAutosaveState({grid});
+    this.props.updateAutosaveState({ grid });
   }
 
-  _gridStateToPayload(state) {
-
+  _gridStateToPayload (state) {
     const startingRow = 2;
 
-    let records = [];
+    const records = [];
 
     for (let i = startingRow; i < state.grid.length; i += 1) {
-
       const row = state.grid[i];
       const record = {
         expectedUse: row[5].value,
@@ -300,10 +297,9 @@ class ScheduleCContainer extends Component {
         records
       }
     });
-
   }
 
-  _validateFuelClassColumn(currentRow, value) {
+  _validateFuelClassColumn (currentRow, value) {
     const row = currentRow;
     const fuelType = currentRow[SCHEDULE_C.FUEL_TYPE];
 
@@ -321,7 +317,7 @@ class ScheduleCContainer extends Component {
     return row;
   }
 
-  _validateFuelTypeColumn(currentRow, value) {
+  _validateFuelTypeColumn (currentRow, value) {
     const row = currentRow;
     const selectedFuel = this.props.referenceData.approvedFuels.find(fuel => fuel.name === value);
 
@@ -346,7 +342,7 @@ class ScheduleCContainer extends Component {
     return row;
   }
 
-  render() {
+  render () {
     return ([
       <SchedulesPage
         addRow={this._addRow}
@@ -383,8 +379,8 @@ class ScheduleCContainer extends Component {
 }
 
 ScheduleCContainer.defaultProps = {
-  saving: false,
-  complianceReport: null
+  complianceReport: null,
+  loadedState: null
 };
 
 ScheduleCContainer.propTypes = {
@@ -400,7 +396,10 @@ ScheduleCContainer.propTypes = {
   edit: PropTypes.bool.isRequired,
   create: PropTypes.bool.isRequired,
   saving: PropTypes.bool.isRequired,
-  complianceReport: PropTypes.object,
+  complianceReport: PropTypes.shape({
+    scheduleC: PropTypes.shape()
+  }),
+  // eslint-disable-next-line react/forbid-prop-types
   loadedState: PropTypes.any,
   period: PropTypes.string.isRequired,
   updateScheduleState: PropTypes.func.isRequired,
