@@ -372,7 +372,7 @@ class ScheduleBContainer extends Component {
 
   _fetchCreditCalculationValues (row, selectedFuel) {
     const compliancePeriod = this.props.compliancePeriods.find(period =>
-      period.description === this.period);
+      period.description === this.props.period);
 
     this.props.getCreditCalculation(selectedFuel.id, {
       compliance_period_id: compliancePeriod.id
