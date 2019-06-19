@@ -52,11 +52,6 @@ import UserAddContainer from './admin/users/UserAddContainer';
 import UserEditContainer from './admin/users/UserEditContainer';
 import NotFound from './app/components/NotFound';
 import ComplianceReportingContainer from './compliance_reporting/ComplianceReportingContainer';
-import ComplianceReportIntroContainer from './compliance_reporting/ComplianceReportIntroContainer';
-import ScheduleAContainer from './compliance_reporting/ScheduleAContainer';
-import ScheduleBContainer from './compliance_reporting/ScheduleBContainer';
-import ScheduleCContainer from './compliance_reporting/ScheduleCContainer';
-import ScheduleDContainer from './compliance_reporting/ScheduleDContainer';
 import ContactUsContainer from './contact_us/ContactUsContainer';
 import CreditTransactionsContainer from './credit_transfers/CreditTransactionsContainer';
 import CreditTransferAddContainer from './credit_transfers/CreditTransferAddContainer';
@@ -74,6 +69,7 @@ import AuthCallback from './app/AuthCallback';
 import CONFIG from './config';
 import OrganizationEditContainer from './organizations/OrganizationEditContainer';
 import withReferenceData from './utils/reference_data_support';
+import ComplianceReportingEditContainer from "./compliance_reporting/ComplianceReportingEditContainer";
 
 const Router = routerProps => (
   <ConnectedRouter history={history} key={Math.random()}>
@@ -329,56 +325,22 @@ const Router = routerProps => (
           <Route
             key="compliance_reporting_add"
             path={COMPLIANCE_REPORTING.ADD}
-            component={withRouter(ComplianceReportIntroContainer)}
-          />,
-          <Route
-            key="compliance_reporting_add_schedule_a"
-            path={COMPLIANCE_REPORTING.ADD_SCHEDULE_A}
-            component={withRouter(ScheduleAContainer)}
-          />,
-          <Route
-            key="compliance_reporting_add_schedule_b"
-            path={COMPLIANCE_REPORTING.ADD_SCHEDULE_B}
-            component={withRouter(ScheduleBContainer)}
-          />,
-          <Route
-            key="compliance_reporting_add_schedule_c"
-            path={COMPLIANCE_REPORTING.ADD_SCHEDULE_C}
-            component={withRouter(ScheduleCContainer)}
-          />,
-          <Route
-            key="compliance_reporting_add_schedule_d"
-            path={COMPLIANCE_REPORTING.ADD_SCHEDULE_D}
-            component={withRouter(ScheduleDContainer)}
+            exact={false}
+            strict={false}
+            component={withRouter(ComplianceReportingEditContainer)}
           />,
           <Route
             key="compliance_reporting_edit"
             path={COMPLIANCE_REPORTING.EDIT}
-            component={withRouter(ComplianceReportIntroContainer)}
-          />,
-          <Route
-            key="compliance_reporting_edit_schedule_a"
-            path={COMPLIANCE_REPORTING.EDIT_SCHEDULE_A}
-            component={withRouter(ScheduleAContainer)}
-          />,
-          <Route
-            key="compliance_reporting_edit_schedule_b"
-            path={COMPLIANCE_REPORTING.EDIT_SCHEDULE_B}
-            component={withRouter(ScheduleBContainer)}
-          />,
-          <Route
-            key="compliance_reporting_edit_schedule_c"
-            path={COMPLIANCE_REPORTING.EDIT_SCHEDULE_C}
-            component={withRouter(withReferenceData()(ScheduleCContainer))}
-          />,
-          <Route
-            key="compliance_reporting_edit_schedule_d"
-            path={COMPLIANCE_REPORTING.EDIT_SCHEDULE_D}
-            component={withRouter(withReferenceData()(ScheduleDContainer))}
+            exact={false}
+            strict={false}
+            component={withRouter(ComplianceReportingEditContainer)}
           />,
           <Route
             key="compliance_reporting"
             path={COMPLIANCE_REPORTING.LIST}
+            exact
+            strict
             component={withRouter(ComplianceReportingContainer)}
           />
         ]}
