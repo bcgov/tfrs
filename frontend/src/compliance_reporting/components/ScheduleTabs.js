@@ -11,6 +11,7 @@ const ScheduleTabs = (props) => {
     scheduleB: COMPLIANCE_REPORTING.ADD.replace(':period', props.compliancePeriod).replace(':tab', 'schedule-b'),
     scheduleC: COMPLIANCE_REPORTING.ADD.replace(':period', props.compliancePeriod).replace(':tab', 'schedule-c'),
     scheduleD: COMPLIANCE_REPORTING.ADD.replace(':period', props.compliancePeriod).replace(':tab', 'schedule-d'),
+    ScheduleSummary: COMPLIANCE_REPORTING.ADD.replace(':period', props.compliancePeriod).replace(':tab', 'schedule-summary'),
   };
 
   if (props.edit) {
@@ -19,7 +20,8 @@ const ScheduleTabs = (props) => {
       scheduleA: COMPLIANCE_REPORTING.EDIT.replace(':id', props.id).replace(':tab', 'schedule-a'),
       scheduleB: COMPLIANCE_REPORTING.EDIT.replace(':id', props.id).replace(':tab', 'schedule-b'),
       scheduleC: COMPLIANCE_REPORTING.EDIT.replace(':id', props.id).replace(':tab', 'schedule-c'),
-      scheduleD: COMPLIANCE_REPORTING.EDIT.replace(':id', props.id).replace(':tab', 'schedule-d')
+      scheduleD: COMPLIANCE_REPORTING.EDIT.replace(':id', props.id).replace(':tab', 'schedule-d'),
+      ScheduleSummary: COMPLIANCE_REPORTING.EDIT.replace(':id', props.id).replace(':tab', 'schedule-summary')
     };
   }
 
@@ -63,6 +65,14 @@ const ScheduleTabs = (props) => {
       >
         <Link id="navbar-administration" to={urls.scheduleD}>
           Schedule D
+        </Link>
+      </li>
+      <li
+        role="presentation"
+        className={`${(props.active === 'schedule-summary') && 'active'}`}
+      >
+        <Link id="navbar-administration" to={urls.ScheduleSummary}>
+          Summary &amp; Declaration
         </Link>
       </li>
     </ul>
