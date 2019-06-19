@@ -48,7 +48,6 @@
 
 .page-compliance-reporting-details {
   .btn-container {
-    text-align: right;
   }
 
   .compliance-reporting-details {
@@ -62,8 +61,8 @@
         font-weight: bold;
         min-height: 2.5rem;
         padding: 0.5rem 1rem;
-      } 
-    }  
+      }
+    }
   }
 }
 
@@ -153,6 +152,16 @@
     position: sticky;
     text-align: right;
     margin-left: auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    .left {
+      text-align: left;
+    }
+    .right {
+      text-align: right;
+    }
   }
 }
 

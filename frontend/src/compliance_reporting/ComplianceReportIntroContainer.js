@@ -10,35 +10,15 @@ import { connect } from 'react-redux';
 import ComplianceReportIntro from './components/ComplianceReportIntro';
 
 class ComplianceReportIntroContainer extends Component {
-  constructor () {
-    super();
-
-    if (document.location.pathname.indexOf('/edit/') >= 0) {
-      this.edit = true;
-    } else {
-      this.edit = false;
-    }
-  }
-
-  componentDidMount () {
-  }
-
   render () {
-    const { id } = this.props.match.params;
-    let { period } = this.props.match.params;
-
-    if (!period) {
-      period = `${new Date().getFullYear() - 1}`;
-    }
-
     return (
       <ComplianceReportIntro
         activeTab="intro"
-        compliancePeriod={period}
-        edit={this.edit}
-        id={id}
+        period={this.props.period}
+        edit={this.props.edit}
         loggedInUser={this.props.loggedInUser}
         title="Compliance Reporting"
+        saving={this.props.saving}
       />
     );
   }
@@ -49,19 +29,13 @@ ComplianceReportIntroContainer.defaultProps = {
 
 ComplianceReportIntroContainer.propTypes = {
   loggedInUser: PropTypes.shape().isRequired,
-  match: PropTypes.shape({
-    params: PropTypes.shape({
-      id: PropTypes.string,
-      period: PropTypes.string
-    }).isRequired
-  }).isRequired
+  period: PropTypes.string.isRequired,
+  edit: PropTypes.bool.isRequired,
+  saving: PropTypes.bool.isRequired
 };
 
 const mapStateToProps = state => ({
   loggedInUser: state.rootReducer.userRequest.loggedInUser
 });
 
-const mapDispatchToProps = dispatch => ({
-});
-
-export default connect(mapStateToProps, mapDispatchToProps)(ComplianceReportIntroContainer);
+export default connect(mapStateToProps, null)(ComplianceReportIntroContainer);

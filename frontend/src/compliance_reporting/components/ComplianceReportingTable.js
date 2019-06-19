@@ -68,7 +68,8 @@ const ComplianceReportingTable = (props) => {
         if (row && row.original) {
           return {
             onClick: (e) => {
-              const viewUrl = COMPLIANCE_REPORTING.EDIT.replace(':id', row.original.id);
+              const viewUrl = COMPLIANCE_REPORTING.EDIT.replace(':id', row.original.id)
+                .replace(':tab', 'intro');
 
               history.push(viewUrl);
             },
