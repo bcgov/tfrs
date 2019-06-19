@@ -58,5 +58,25 @@
     },
     "model": "api.notionaltransfertype",
     "pk": 1
+  },
+  {
+    "fields": {
+      "provision": "Alternative",
+      "description": "AlternativeMethod",
+      "display_order": 99,
+      "effective_date": "2017-01-01"
+    },
+    "model": "api.provisionoftheact",
+    "pk": 1
+  },
+  {
+    "fields": {
+      "provision": "Fuel Code",
+      "description": "Fuel Code Method",
+      "display_order": 99,
+      "effective_date": "2017-01-01"
+    },
+    "model": "api.provisionoftheact",
+    "pk": 2
   }
 ]

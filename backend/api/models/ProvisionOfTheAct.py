@@ -44,11 +44,14 @@ class ProvisionOfTheAct(Auditable, DisplayOrder, EffectiveDates):
     provision = models.CharField(
         max_length=100,
         db_comment="Name of the Provision. "
-                   "e.g. Section 6 (5) (a)"
+                   "e.g. Section 6 (5) (a)",
+        unique=True,
+        null=False,
+        blank=False
     )
 
     description = models.CharField(
-        max_length=1000, blank=True, null=True,
+        max_length=1000, blank=True, null=False,
         db_comment="Description of the provision. This is the displayed name. "
                    "e.g. Prescribed Carbon Intensity, Approved Fuel Code."
     )
