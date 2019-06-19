@@ -12,6 +12,16 @@
     padding: 1rem;
     text-align: right;
     margin-left: auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    .left {
+      text-align: left;
+    }
+    .right {
+      text-align: right;
+    }
   }
 
   .data-grid-container {
@@ -21,7 +31,7 @@
       overflow-x: auto;
       table-layout: auto;
       width: 100%;
-    
+
       &.data-grid .cell {
         color: $font;
         height: 4rem;
@@ -121,15 +131,15 @@
         padding-top: 1rem;
       }
     }
-  
+
     h2 {
       font-weight: bold;
     }
-  
+
     .row {
       margin: 1rem 0;
     }
-  
+
     .value {
       overflow: hidden;
       padding-left: 0;

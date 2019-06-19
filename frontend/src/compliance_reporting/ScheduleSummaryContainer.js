@@ -11,7 +11,6 @@ import 'react-datasheet/lib/react-datasheet.css';
 import { fuelClasses } from '../actions/fuelClasses';
 import { notionalTransferTypes } from '../actions/notionalTransferTypes';
 import Modal from '../app/components/Modal';
-import ScheduleTabs from './components/ScheduleTabs';
 import ScheduleSummaryDiesel from './components/ScheduleSummaryDiesel';
 import ScheduleSummaryGasoline from './components/ScheduleSummaryGasoline';
 import ScheduleSummaryPage from './components/ScheduleSummaryPage';
@@ -82,21 +81,13 @@ class ScheduleSummaryContainer extends Component {
   }
 
   render () {
-    const { id } = this.props.match.params;
-    let { period } = this.props.match.params;
+    let { period } = this.props;
 
     if (!period) {
       period = `${new Date().getFullYear() - 1}`;
     }
 
     return ([
-      <ScheduleTabs
-        active="schedule-summary"
-        compliancePeriod={period}
-        edit={this.edit}
-        id={id}
-        key="nav"
-      />,
       <ScheduleSummaryPage
         diesel={this.state.diesel}
         edit={this.edit}
@@ -119,6 +110,7 @@ class ScheduleSummaryContainer extends Component {
 }
 
 ScheduleSummaryContainer.defaultProps = {
+  period: null
 };
 
 ScheduleSummaryContainer.propTypes = {
@@ -128,16 +120,11 @@ ScheduleSummaryContainer.propTypes = {
   }).isRequired,
   loadFuelClasses: PropTypes.func.isRequired,
   loadNotionalTransferTypes: PropTypes.func.isRequired,
-  match: PropTypes.shape({
-    params: PropTypes.shape({
-      id: PropTypes.string,
-      period: PropTypes.string
-    }).isRequired
-  }).isRequired,
   notionalTransferTypes: PropTypes.shape({
     isFetching: PropTypes.bool,
     items: PropTypes.arrayOf(PropTypes.shape())
-  }).isRequired
+  }).isRequired,
+  period: PropTypes.string
 };
 
 const mapStateToProps = state => ({

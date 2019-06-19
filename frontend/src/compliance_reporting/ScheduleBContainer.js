@@ -10,12 +10,9 @@ import { bindActionCreators } from 'redux';
 
 import getCompliancePeriods from '../actions/compliancePeriodsActions';
 import getCreditCalculation from '../actions/creditCalculation';
-import Loading from '../app/components/Loading';
-import Modal from '../app/components/Modal';
 import Input from './components/Input';
 import Select from './components/Select';
 import SchedulesPage from './components/SchedulesPage';
-import ScheduleTabs from './components/ScheduleTabs';
 import { SCHEDULE_B } from '../constants/schedules/scheduleColumns';
 import { formatNumeric } from '../utils/functions';
 
@@ -213,20 +210,6 @@ class ScheduleBContainer extends Component {
 
     this.state = ScheduleBContainer.addHeaders();
     this.rowNumber = 1;
-
-    if (document.location.pathname.indexOf('/edit/') >= 0) {
-      this.edit = true;
-    } else {
-      this.edit = false;
-    }
-
-    let { period } = this.props.match.params;
-
-    if (!period) {
-      period = `${new Date().getFullYear() - 1}`;
-    }
-
-    this.period = period;
 
     this.fuelCodes = [];
     this.creditCalculationValues = [];
@@ -685,43 +668,18 @@ class ScheduleBContainer extends Component {
   }
 
   render () {
-    if (!this.props.referenceData ||
-    !this.props.referenceData.approvedFuels) {
-      return <Loading />;
-    }
-
-    const { id } = this.props.match.params;
-    let { period } = this.props.match.params;
-
-    if (!period) {
-      period = `${new Date().getFullYear() - 1}`;
-    }
-
     return ([
-      <ScheduleTabs
-        active="schedule-b"
-        compliancePeriod={period}
-        edit={this.edit}
-        id={id}
-        key="nav"
-      />,
       <SchedulesPage
         addRow={this._addRow}
         data={this.state.grid}
-        edit={this.edit}
+        edit={this.props.edit}
         handleCellsChanged={this._handleCellsChanged}
         key="schedules"
         scheduleType="schedule-b"
         title="Schedule B - Part 3 Fuel Supply"
         totals={this.state.totals}
-      />,
-      <Modal
-        handleSubmit={event => this._handleSubmit(event)}
-        id="confirmSubmit"
-        key="confirmSubmit"
-      >
-        Are you sure you want to save this schedule?
-      </Modal>
+        saving={this.props.saving}
+      />
     ]);
   }
 }
@@ -755,15 +713,12 @@ ScheduleBContainer.propTypes = {
   compliancePeriods: PropTypes.arrayOf(PropTypes.shape()).isRequired,
   getCompliancePeriods: PropTypes.func.isRequired,
   getCreditCalculation: PropTypes.func.isRequired,
-  match: PropTypes.shape({
-    params: PropTypes.shape({
-      id: PropTypes.string,
-      period: PropTypes.string
-    }).isRequired
-  }).isRequired,
   referenceData: PropTypes.shape({
     approvedFuels: PropTypes.arrayOf(PropTypes.shape)
-  }).isRequired
+  }).isRequired,
+  edit: PropTypes.bool.isRequired,
+  period: PropTypes.string.isRequired,
+  saving: PropTypes.bool.isRequired
 };
 
 const mapStateToProps = state => ({
