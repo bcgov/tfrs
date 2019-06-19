@@ -7,12 +7,10 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
-import Modal from '../app/components/Modal';
 import ScheduleButtons from './components/ScheduleButtons';
 import ScheduleDOutput from './components/ScheduleDOutput';
 import ScheduleDSheet from './components/ScheduleDSheet';
 import ScheduleDTabs from './components/ScheduleDTabs';
-import ScheduleTabs from './components/ScheduleTabs';
 import Select from './components/Select';
 import { SCHEDULE_D_INPUT } from '../constants/schedules/scheduleColumns';
 
