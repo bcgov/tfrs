@@ -72,6 +72,7 @@ const SchedulesPage = props => (
         edit={props.edit}
         submit
         delete
+        saving={props.saving}
       />
     </div>
   </div>
@@ -95,7 +96,8 @@ SchedulesPage.propTypes = {
     'schedule-a', 'schedule-b', 'schedule-c', 'schedule-d'
   ]).isRequired,
   title: PropTypes.string.isRequired,
-  totals: PropTypes.shape()
+  totals: PropTypes.shape(),
+  saving: PropTypes.bool.isRequired
 };
 
 export default SchedulesPage;
