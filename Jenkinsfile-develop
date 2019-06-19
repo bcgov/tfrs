@@ -1,6 +1,6 @@
 result = 0
 runParallel = true
-tfrsRelease="v1.4.6"
+tfrsRelease="v1.4.9"
 
 def prepareBackendBuildStages() {
     def buildBackendList = []
@@ -229,7 +229,7 @@ podTemplate(label: "develop-maven-${env.BUILD_NUMBER}", name: "develop-maven-${e
             sh returnStdout: true, script: "oc exec ${postgresql_pod_name} -c postgresql96 -n mem-tfrs-dev -- bash /postgresql-backup/tfrs-backup.sh ${tfrsRelease} dev"
             echo 'backup script completed'
         }
-        
+/****
         stage('Apply Deployment Configs') {
             timeout(30) {
                 script {
@@ -255,18 +255,16 @@ podTemplate(label: "develop-maven-${env.BUILD_NUMBER}", name: "develop-maven-${e
                 } //end of script
             }
         }
-
+*****/
         stage('Deploy Backend on Dev') {
             script {
                 openshift.withProject("mem-tfrs-tools") {
                     openshift.tag("mem-tfrs-tools/tfrs-develop:latest", "mem-tfrs-tools/tfrs-develop:dev")
-                    sh 'sleep 20s'
+                    sh 'sleep 300s'
                     openshift.tag("mem-tfrs-tools/scan-coordinator-develop:latest", "mem-tfrs-tools/scan-coordinator-develop:dev")
-                    sh 'sleep 10s'
                     openshift.tag("mem-tfrs-tools/scan-handler-develop:latest", "mem-tfrs-tools/scan-handler-develop:dev")
-                    sh 'sleep 10s'
                     openshift.tag("mem-tfrs-tools/celery-develop:latest", "mem-tfrs-tools/celery-develop:dev")
-                    sh 'sleep 10s'
+                    sh 'sleep 120s'
                 }
             }
         }
@@ -275,11 +273,16 @@ podTemplate(label: "develop-maven-${env.BUILD_NUMBER}", name: "develop-maven-${e
             script {
                 openshift.withProject("mem-tfrs-tools") {
                     openshift.tag("mem-tfrs-tools/client-develop:latest", "mem-tfrs-tools/client-develop:dev")
-                    sh 'sleep 10s'
                     openshift.tag("mem-tfrs-tools/notification-server-develop:latest", "mem-tfrs-tools/notification-server-develop:dev")
-                    sh 'sleep 10s'
+                    sh 'sleep 120s'
                 }
             }
+        }
+        
+        stage('Take down Maintenance Page') {
+            sh returnStatus: true, script: "oc patch route/dev-lowcarbonfuels-backend -n mem-tfrs-dev -p '{\"spec\":{\"to\":{\"name\":\"backend\"}, \"port\":{\"targetPort\":\"web\"}}}'"
+            sh returnStatus: true, script: "oc patch route/dev-lowcarbonfuels-frontend -n mem-tfrs-dev -p '{\"spec\":{\"to\":{\"name\":\"client\"}, \"port\":{\"targetPort\":\"web\"}}}'"
+            sh returnStatus: true, script: "oc scale dc maintenance-page -n mem-tfrs-dev --replicas=0 --timeout=20s"
         }
         
         stage('Refresh SchemaSpy') {
@@ -292,11 +295,7 @@ podTemplate(label: "develop-maven-${env.BUILD_NUMBER}", name: "develop-maven-${e
             sh returnStdout: true, script: "oc scale dc schema-spy-audit --replicas=1 -n mem-tfrs-dev"
         }    
 
-        stage('Take down Maintenance Page') {
-            sh returnStatus: true, script: "oc patch route/dev-lowcarbonfuels-backend -n mem-tfrs-dev -p '{\"spec\":{\"to\":{\"name\":\"backend\"}, \"port\":{\"targetPort\":\"web\"}}}'"
-            sh returnStatus: true, script: "oc patch route/dev-lowcarbonfuels-frontend -n mem-tfrs-dev -p '{\"spec\":{\"to\":{\"name\":\"client\"}, \"port\":{\"targetPort\":\"web\"}}}'"
-            sh returnStatus: true, script: "oc scale dc maintenance-page -n mem-tfrs-dev --replicas=0 --timeout=20s"
-        }
+
 
     } //end of node
 
