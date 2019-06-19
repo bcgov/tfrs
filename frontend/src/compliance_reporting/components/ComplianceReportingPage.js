@@ -37,7 +37,8 @@ const ComplianceReportingPage = (props) => {
                 <li key={compliancePeriod.description}>
                   <button
                     onClick={() => {
-                      const route = COMPLIANCE_REPORTING.ADD.replace(':period?', compliancePeriod.description);
+                      const route = COMPLIANCE_REPORTING.ADD.replace(':period', compliancePeriod.description)
+                        .replace(':tab', 'intro');
 
                       history.push(route);
                     }}

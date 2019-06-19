@@ -6,20 +6,20 @@ import COMPLIANCE_REPORTING from '../../constants/routes/ComplianceReporting';
 
 const ScheduleTabs = (props) => {
   let urls = {
-    intro: COMPLIANCE_REPORTING.ADD.replace(':period?', props.compliancePeriod),
-    scheduleA: COMPLIANCE_REPORTING.ADD_SCHEDULE_A.replace(':period?', props.compliancePeriod),
-    scheduleB: COMPLIANCE_REPORTING.ADD_SCHEDULE_B.replace(':period?', props.compliancePeriod),
-    scheduleC: COMPLIANCE_REPORTING.ADD_SCHEDULE_C.replace(':period?', props.compliancePeriod),
-    scheduleD: COMPLIANCE_REPORTING.ADD_SCHEDULE_D.replace(':period?', props.compliancePeriod)
+    intro: COMPLIANCE_REPORTING.ADD.replace(':period', props.compliancePeriod).replace(':tab', 'intro'),
+    scheduleA: COMPLIANCE_REPORTING.ADD.replace(':period', props.compliancePeriod).replace(':tab', 'schedule-a'),
+    scheduleB: COMPLIANCE_REPORTING.ADD.replace(':period', props.compliancePeriod).replace(':tab', 'schedule-b'),
+    scheduleC: COMPLIANCE_REPORTING.ADD.replace(':period', props.compliancePeriod).replace(':tab', 'schedule-c'),
+    scheduleD: COMPLIANCE_REPORTING.ADD.replace(':period', props.compliancePeriod).replace(':tab', 'schedule-d'),
   };
 
   if (props.edit) {
     urls = {
-      intro: COMPLIANCE_REPORTING.EDIT.replace(':id', props.id),
-      scheduleA: COMPLIANCE_REPORTING.EDIT_SCHEDULE_A.replace(':id', props.id),
-      scheduleB: COMPLIANCE_REPORTING.EDIT_SCHEDULE_B.replace(':id', props.id),
-      scheduleC: COMPLIANCE_REPORTING.EDIT_SCHEDULE_C.replace(':id', props.id),
-      scheduleD: COMPLIANCE_REPORTING.EDIT_SCHEDULE_D.replace(':id', props.id)
+      intro: COMPLIANCE_REPORTING.EDIT.replace(':id', props.id).replace(':tab', 'intro'),
+      scheduleA: COMPLIANCE_REPORTING.EDIT.replace(':id', props.id).replace(':tab', 'schedule-a'),
+      scheduleB: COMPLIANCE_REPORTING.EDIT.replace(':id', props.id).replace(':tab', 'schedule-b'),
+      scheduleC: COMPLIANCE_REPORTING.EDIT.replace(':id', props.id).replace(':tab', 'schedule-c'),
+      scheduleD: COMPLIANCE_REPORTING.EDIT.replace(':id', props.id).replace(':tab', 'schedule-d')
     };
   }
 

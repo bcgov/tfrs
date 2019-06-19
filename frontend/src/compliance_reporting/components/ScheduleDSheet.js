@@ -136,12 +136,6 @@ ScheduleDSheet.propTypes = {
   edit: PropTypes.bool,
   handleSheetChanged: PropTypes.func.isRequired,
   id: PropTypes.number.isRequired,
-  match: PropTypes.shape({
-    params: PropTypes.shape({
-      id: PropTypes.string,
-      period: PropTypes.string
-    }).isRequired
-  }).isRequired,
   referenceData: PropTypes.shape({
     approvedFuels: PropTypes.arrayOf(PropTypes.shape)
   }).isRequired,
