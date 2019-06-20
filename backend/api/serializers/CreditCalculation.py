@@ -53,6 +53,7 @@ class CreditCalculationSerializer(serializers.ModelSerializer):
             id=compliance_period_id
         )
 
+        self.compliance_period_id = compliance_period_id
         self.effective_date = compliance_period_obj.effective_date
         self.expiration_date = compliance_period_obj.expiration_date
 
@@ -61,12 +62,14 @@ class CreditCalculationSerializer(serializers.ModelSerializer):
         Gets the Carbon Intensity Limit
         """
         diesel_row = CreditCalculationService.get(
+            compliance_period_id=self.compliance_period_id,
             effective_date=self.effective_date,
             fuel_class__fuel_class="Diesel",
             model_name="CarbonIntensityLimit"
         )
 
         gasoline_row = CreditCalculationService.get(
+            compliance_period_id=self.compliance_period_id,
             effective_date=self.effective_date,
             fuel_class__fuel_class="Gasoline",
             model_name="CarbonIntensityLimit"
