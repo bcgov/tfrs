@@ -26,6 +26,11 @@ from auditable.models import Auditable
 
 
 class SigningAuthorityConfirmation(Auditable):
+    """
+    Contains a history of assertions having been accepted by the officer or
+    employee of the fuel supplier(s) (i.e. signing authority) of a Credit
+    Transfer Proposal, a Compliance Report, or an Exclusion Report.
+    """
     has_accepted = models.BooleanField(
         db_comment='Flag. True if the associated confirmation was accepted.'
     )
@@ -41,8 +46,8 @@ class SigningAuthorityConfirmation(Auditable):
     class Meta:
         db_table = 'signing_authority_confirmation'
 
-    db_table_comment = 'Contains a history of assertions having been accepted by the officer' \
-    			' or employee of the fuel supplier(s) (i.e. signing authority)' \
-    			' of a Credit Transfer Proposal, a Compliance Report,' \
-    			' or an Exclusion Report.'	
-
+    db_table_comment = "Contains a history of assertions having been " \
+                       "accepted by the officer or employee of the fuel " \
+                       "supplier(s) (i.e. signing authority) of a Credit " \
+                       "Transfer Proposal, a Compliance Report, or an " \
+                       "Exclusion Report."
