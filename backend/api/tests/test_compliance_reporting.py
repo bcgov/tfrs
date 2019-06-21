@@ -31,7 +31,8 @@ from .base_test_case import BaseTestCase
 class TestComplianceReporting(BaseTestCase):
     """Tests for the compliance reporting endpoint"""
     extra_fixtures = [
-        'test/test_compliance_reporting.json'
+        'test/test_compliance_reporting.json',
+        'test/test_fuel_codes.json'
     ]
 
     def test_list_compliance_reports_fs1(self):
@@ -217,6 +218,24 @@ class TestComplianceReporting(BaseTestCase):
                         'quantity': 98.1
                     }
 
+                ]
+            },
+            'scheduleB': {
+                'records': [
+                    {
+                        'fuelType': 'LNG',
+                        'fuelClass': 'Diesel',
+                        'quantity': 11.11,
+                        'provisionOfTheAct': 'Alternative',
+                        'fuelCode': None
+                    },
+                    {
+                        'fuelType': 'LNG',
+                        'fuelClass': 'Diesel',
+                        'quantity': 12.12,
+                        'provisionOfTheAct': 'Fuel Code',
+                        'fuelCode': 1
+                    }
                 ]
             },
             'scheduleC': {
