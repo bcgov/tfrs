@@ -216,7 +216,11 @@ podTemplate(label: "develop-maven-${env.BUILD_NUMBER}", name: "develop-maven-${e
                 }
             }
         }
-
+        
+        stage ('Confirm to deploy to Dev') {
+            input "Deploy release ${tfrsRelease} to Dev?"
+        }
+        
         stage('Bring up Maintenance Page') {
             sh returnStatus: true, script: "oc scale dc maintenance-page -n mem-tfrs-dev --replicas=1 --timeout=20s"
             sh returnStatus: true, script: "oc patch route/dev-lowcarbonfuels-frontend -n mem-tfrs-dev -p '{\"spec\":{\"to\":{\"name\":\"maintenance-page\"}, \"port\":{\"targetPort\":\"2015-tcp\"}}}'"
@@ -260,7 +264,7 @@ podTemplate(label: "develop-maven-${env.BUILD_NUMBER}", name: "develop-maven-${e
             script {
                 openshift.withProject("mem-tfrs-tools") {
                     openshift.tag("mem-tfrs-tools/tfrs-develop:latest", "mem-tfrs-tools/tfrs-develop:dev")
-                    sh 'sleep 300s'
+                    sh 'sleep 560s'
                     openshift.tag("mem-tfrs-tools/scan-coordinator-develop:latest", "mem-tfrs-tools/scan-coordinator-develop:dev")
                     openshift.tag("mem-tfrs-tools/scan-handler-develop:latest", "mem-tfrs-tools/scan-handler-develop:dev")
                     openshift.tag("mem-tfrs-tools/celery-develop:latest", "mem-tfrs-tools/celery-develop:dev")
