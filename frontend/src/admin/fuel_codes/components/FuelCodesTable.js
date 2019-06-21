@@ -2,7 +2,9 @@
  * Presentational component
  */
 import React from 'react';
+import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
+import { Overlay, Tooltip } from 'react-bootstrap';
 
 import 'react-table/react-table.css';
 import moment from 'moment';
@@ -161,7 +163,7 @@ const FuelCodesTable = (props) => {
     width: 150
   }];
 
-  const filterMethod = (filter, row, column) => {
+  const filterMethod = (filter, row) => {
     const id = filter.pivotId || filter.id;
     return row[id] !== undefined ? String(row[id])
       .toLowerCase()
@@ -170,13 +172,21 @@ const FuelCodesTable = (props) => {
 
   const filterable = true;
 
-  const validateEffectiveDates = (row, items) => {
-    return items.find(item => (
-      (item.effectiveDate <= row.effectiveDate && item.expiryDate >= row.effectiveDate) ||
-      (item.effectiveDate <= row.expiryDate && item.effectiveDate >= row.effectiveDate)))
+  const handleTooltip = ({ target }, show, message) => {
+    props.handleTooltip({
+      message,
+      show,
+      target
+    });
   };
 
-  return (
+  const validateEffectiveDates = (row, items) => (
+    items.find(item => (
+      (item.effectiveDate <= row.effectiveDate && item.expiryDate >= row.effectiveDate) ||
+      (item.effectiveDate <= row.expiryDate && item.effectiveDate >= row.effectiveDate)))
+  );
+
+  return ([
     <ReactTable
       stateKey="fuel-codes"
       className="searchable"
@@ -203,15 +213,37 @@ const FuelCodesTable = (props) => {
 
               history.push(viewUrl);
             },
+            onMouseOver: (e) => {
+              const message = `The effective dates of this fuel code overlap with
+                ${filtered[0].fuelCode}${filtered[0].fuelCodeVersion}.${filtered[0].fuelCodeVersionMinor}`;
+              const showTooltip = Boolean(hasInvalidDates);
+
+              handleTooltip(e, showTooltip, message);
+            },
+            onMouseOut: (e) => {
+              handleTooltip(e, false, '');
+            },
             className: `clickable ${hasInvalidDates ? 'has-error' : ''}`
           };
         }
 
         return {};
       }}
+      key="table"
       pageSizeOptions={[5, 10, 15, 20, 25, 50, 100]}
-    />
-  );
+    />,
+    <Overlay
+      key="overlay"
+      show={props.tooltips.show}
+      target={() => props.tooltips.target}
+      placement="top"
+      container={this}
+    >
+      <Tooltip className="no-animation" id="tooltip">
+        {props.tooltips.message}
+      </Tooltip>
+    </Overlay>
+  ]);
 };
 
 FuelCodesTable.defaultProps = {};
@@ -231,6 +263,15 @@ FuelCodesTable.propTypes = {
   isFetching: PropTypes.bool.isRequired,
   loggedInUser: PropTypes.shape({
     isGovernmentUser: PropTypes.bool
+  }).isRequired,
+  handleTooltip: PropTypes.func.isRequired,
+  tooltips: PropTypes.shape({
+    message: PropTypes.string,
+    show: PropTypes.bool,
+    target: PropTypes.oneOfType([
+      PropTypes.bool,
+      PropTypes.shape()
+    ])
   }).isRequired
 };
 
