@@ -26,7 +26,7 @@
         {
             "name": "BACKUP_PVC_NAME",
             "displayName": "The backup PVC name",
-            "description": "The backup volume should be nfs-backup type",
+            "description": "The backup volume should be nfs-backup type. It needs to be requested before applying this template. A folder named postgresql-backup should be create under this PVC.",
             "required": true
         }
     ],

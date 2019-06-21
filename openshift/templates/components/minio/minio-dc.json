@@ -50,8 +50,9 @@
             "required": true
         },
         {
-            "name": "MINIO_DATA_VOLUME_SIZE",
-            "value": "2Gi",
+            "name": "MINIO_DATA_PVC_NAME",
+            "displayName": "The Minio PVC name",
+            "description": "The PVC should be reuqested before applying this template. A folder named minio-data should be created under this PVC.",
             "required": true
         }
     ],
@@ -73,32 +74,6 @@
                 "S3_PUBLIC_SECRET_KEY": "${S3_PUBLIC_SECRET_KEY}",
                 "S3_ROOT_BUCKET": "${S3_ROOT_BUCKET}"
             }
-        },
-        {
-            "kind": "PersistentVolumeClaim",
-            "apiVersion": "v1",
-            "metadata": {
-                "name": "minio-data-vol",
-                "creationTimestamp": null,
-                "annotations": {
-                    "volume.beta.kubernetes.io/storage-class": "gluster-file",
-                    "template.openshift.io.bcgov/create": "true"
-                },
-                "finalizers": [
-                    "kubernetes.io/pvc-protection"
-                ]
-            },
-            "spec": {
-                "accessModes": [
-                    "ReadWriteOnce"
-                ],
-                "resources": {
-                    "requests": {
-                        "storage": "${MINIO_DATA_VOLUME_SIZE}"
-                    }
-                }
-            },
-            "status": {}
         },
         {
             "kind": "PersistentVolumeClaim",
@@ -256,7 +231,7 @@
                             {
                                 "name": "volume-ri42q",
                                 "persistentVolumeClaim": {
-                                    "claimName": "minio-config-vol"
+                                    "claimName": "${MINIO_DATA_PVC_NAME}"
                                 }
                             }
                         ],
@@ -306,7 +281,8 @@
                                 "volumeMounts": [
                                     {
                                         "name": "volume-ri42p",
-                                        "mountPath": "/opt/minio/s3/data"
+                                        "mountPath": "/opt/minio/s3/data",
+                                        "subPath": "minio-data"
                                     },
                                     {
                                         "name": "volume-ri42q",

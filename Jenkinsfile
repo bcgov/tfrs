@@ -1,6 +1,6 @@
 result = 0
 runParallel = true
-tfrsRelease="v1.3.0"
+tfrsRelease="v1.4.8-dc-pipeline-fix"
 
 def prepareBackendBuildStages() {
     def buildBackendList = []
@@ -23,21 +23,20 @@ def prepareFrontendBuildStages() {
 }
 
 def prepareBuildBackend() {
-  return {
-    stage('Build Backend') {
-        openshiftBuild bldCfg: 'tfrs', showBuildLogs: 'true'
-        timeout(30) {
-            script {
-                openshift.withProject("mem-tfrs-tools") {
-                    def tfrsJson = openshift.process(readFile(file:'openshift/templates/components/backend/tfrs-bc.json'), "-p", "TFRS_RELEASE_TAG=${tfrsRelease}", "SCAN_HANDLER_IS_NAME=tfrs")
-                    def tfrsBuild = openshift.apply(tfrsJson)
-                    def tfrsSelector = openshift.selector("bc", "tfrs-develop")
-                    tfrsSelector.startBuild("--wait")
-                } //end of openshift.withProject
-            } //end of script
-        } //end of timeout
+    return {
+        stage('Build Backend') {
+            timeout(30) {
+                script {
+                    openshift.withProject("mem-tfrs-tools") {
+                        def tfrsJson = openshift.process(readFile(file:'openshift/templates/components/backend/tfrs-bc.json'), "-p", "TFRS_RELEASE_TAG=${tfrsRelease}", "TFRS_IS_NAME=tfrs")
+                        def tfrsBuild = openshift.apply(tfrsJson)
+                        def tfrsSelector = openshift.selector("bc", "tfrs")
+                        tfrsSelector.startBuild("--wait")
+                    } //end of openshift.withProject
+                } //end of script
+            } //end of timeout
+        }
     }
-  }
 }
 
 def prepareBuildScanCoordinator() {
@@ -131,7 +130,7 @@ def prepareBuildNotificationServer() {
 }
 
 stage('Unit Test') {
-    podTemplate(label: "master-backend-python-${env.BUILD_NUMBER}", name: "master-backend-python-${env.BUILD_NUMBER}", serviceAccount: 'jenkins', cloud: 'openshift',
+    podTemplate(label: "master-backend-python-${env.BUILD_NUMBER}", name: "master-backend-python-${env.BUILD_NUMBER}", serviceAccount: 'jenkins-basic', cloud: 'openshift',
         containers: [
             containerTemplate(
                 name: 'jnlp',
@@ -174,7 +173,7 @@ if (result != 0) {
 backendBuildStages = prepareBackendBuildStages()
 frontendBuildStages = prepareFrontendBuildStages()
         
-podTemplate(label: "master-maven-${env.BUILD_NUMBER}", name: "master-maven-${env.BUILD_NUMBER}", serviceAccount: 'jenkins', cloud: 'openshift',
+podTemplate(label: "master-maven-${env.BUILD_NUMBER}", name: "master-maven-${env.BUILD_NUMBER}", serviceAccount: 'jenkins-basic', cloud: 'openshift',
         containers: [
             containerTemplate(
                 name: 'jnlp',
@@ -218,7 +217,7 @@ node("master-maven-${env.BUILD_NUMBER}") {
     }
 
     stage ('Confirm to deploy to Test') {
-        input "Deploy release ${env.tfrs_release} to Test? There will be one more confirmation before deploying on Test."
+        input "Deploy release ${tfrsRelease} to Test? There will be one more confirmation before deploying on Test."
     }
 
     stage('Bring up Maintenance Page on Test') {
@@ -230,12 +229,12 @@ node("master-maven-${env.BUILD_NUMBER}") {
     stage('Backup Test Database') {
         postgresql_pod_name=sh (script: 'oc get pods -n mem-tfrs-test | grep postgresql96 | awk \'{print $1}\'', returnStdout: true).trim()
         echo "start backup script tfrs-backup.sh on test, postgresql_pod_name is ${postgresql_pod_name}"
-        sh returnStdout: true, script: "oc exec ${postgresql_pod_name} -c postgresql96 -n mem-tfrs-test -- bash /postgresql-backup/tfrs-backup.sh ${env.tfrs_release} test"
+        sh returnStdout: true, script: "oc exec ${postgresql_pod_name} -c postgresql96 -n mem-tfrs-test -- bash /postgresql-backup/tfrs-backup.sh ${tfrsRelease} test"
         echo 'backup script completed'
     }
 	
     stage ('Last confirmation to deploy to Test') {
-        input "Maintenance Page is up and Test Database backup has completed, confirm to deploy ${env.tfrs_release} to Test? This is the last confirmation required."
+        input "Maintenance Page is up and Test Database backup has completed, confirm to deploy ${tfrsRelease} to Test? This is the last confirmation required."
     }
 
     stage('Apply Deployment Configs') {
@@ -307,7 +306,7 @@ node("master-maven-${env.BUILD_NUMBER}") {
     }    
 
     stage ('Confirm to deploy to Prod') {
-        input "Deploy release ${env.tfrs_release} to Prod? There will be one more confirmation before deploying on Prod."
+        input "Deploy release ${tfrsRelease} to Prod? There will be one more confirmation before deploying on Prod."
     }
 
     stage('Apply Deployment Configs') {
@@ -344,12 +343,12 @@ node("master-maven-${env.BUILD_NUMBER}") {
     stage('Backup Prod Database') {
         postgresql_pod_name=sh (script: 'oc get pods -n mem-tfrs-prod | grep postgresql96 | awk \'{print $1}\'', returnStdout: true).trim()
         echo "start backup script tfrsdump-prod.sh on prod, postgresql_pod_name is ${postgresql_pod_name}"
-        sh returnStdout: true, script: "oc exec ${postgresql_pod_name} -c postgresql96 -n mem-tfrs-prod -- bash /postgresql-backup/tfrs-backup.sh ${env.tfrs_release} prod"
+        sh returnStdout: true, script: "oc exec ${postgresql_pod_name} -c postgresql96 -n mem-tfrs-prod -- bash /postgresql-backup/tfrs-backup.sh ${tfrsRelease} prod"
         echo 'backup script completed'
     }
 
     stage ('Last confirmation to deploy to Prod') {
-        input "Maintenance Page is up and Prod Database backup has completed, confirm to deploy ${env.tfrs_release} to Prod? This is the last confirmation required."
+        input "Maintenance Page is up and Prod Database backup has completed, confirm to deploy ${tfrsRelease} to Prod? This is the last confirmation required."
     }
 	
     stage('Deploy Backend to Prod') {
