@@ -58,7 +58,8 @@
     "socket.io": "^2.2.0",
     "socket.io-client": "latest",
     "socket.io-middleware": "^0.2.1",
-    "webpack": "^4.28.3"
+    "webpack": "^4.28.3",
+    "winston": "^3.2.1"
   },
   "devDependencies": {
     "babel-core": "^6.26.3",
