@@ -221,7 +221,7 @@ class ScheduleBContainer extends Component {
     this._getFuelCodes = this._getFuelCodes.bind(this);
     this._getProvisions = this._getProvisions.bind(this);
     this._handleCellsChanged = this._handleCellsChanged.bind(this);
-    this._handleSubmit = this._handleSubmit.bind(this);
+    this._gridStateToPayload = this._gridStateToPayload.bind(this);
     this._populateFuelCalculationValues = this._populateFuelCalculationValues.bind(this);
     this._validateFuelClassColumn = this._validateFuelClassColumn.bind(this);
     this._validateFuelTypeColumn = this._validateFuelTypeColumn.bind(this);
@@ -230,7 +230,41 @@ class ScheduleBContainer extends Component {
 
   componentDidMount () {
     this.props.getCompliancePeriods();
-    this._addRow(5);
+
+    if (this.props.loadedState) {
+      this.restoreFromAutosaved();
+    } else if (this.props.create || !this.props.complianceReport.scheduleB) {
+      this._addRow(5);
+    } else {
+      this.setState(ScheduleBContainer.addHeaders());
+      this.rowNumber = 1;
+      this._addRow(this.props.complianceReport.scheduleB.records.length);
+
+      for (let i = 0; i < this.props.complianceReport.scheduleB.records.length; i += 1) {
+        const { grid } = this.state;
+        const record = this.props.complianceReport.scheduleB.records[i];
+
+        grid[2 + i][SCHEDULE_B.FUEL_TYPE].value = record.fuelType;
+        grid[2 + i][SCHEDULE_B.FUEL_CLASS].value = record.fuelClass;
+        grid[2 + i][SCHEDULE_B.QUANTITY].value = record.quantity;
+
+        // grid[2 + i][SCHEDULE_B.FUEL_CODE].value = record.fuelCode;
+
+        const selectedFuel = this.props.referenceData.approvedFuels.find(fuel =>
+          fuel.name === record.fuelType);
+
+        const selectedProvision = selectedFuel.provisions.find(provision =>
+          `${provision.provision}` === record.provisionOfTheAct);
+
+        grid[2 + i][SCHEDULE_B.PROVISION_OF_THE_ACT].value =
+          `${selectedProvision.provision} - ${selectedProvision.description}`;
+
+        grid[2 + i][SCHEDULE_B.UNITS].value = (selectedFuel && selectedFuel.unitOfMeasure)
+          ? selectedFuel.unitOfMeasure.name : '';
+
+        this.setState({ grid });
+      }
+    }
   }
 
   _addRow (numberOfRows = 1) {
@@ -486,11 +520,49 @@ class ScheduleBContainer extends Component {
       grid
     });
 
+    this._gridStateToPayload({
+      grid
+    });
+
     this._calculateTotal(grid);
   }
 
-  _handleSubmit () {
-    console.log(this.state.grid);
+  _gridStateToPayload (state) {
+    const startingRow = 2;
+
+    const records = [];
+
+    for (let i = startingRow; i < state.grid.length; i += 1) {
+      const row = state.grid[i];
+
+      const { value } = row[SCHEDULE_B.PROVISION_OF_THE_ACT];
+      const fuelType = row[SCHEDULE_B.FUEL_TYPE].value;
+      const selectedFuel = this.props.referenceData.approvedFuels.find(fuel =>
+        fuel.name === fuelType);
+
+      const selectedProvision = selectedFuel ? selectedFuel.provisions.find(provision =>
+        `${provision.provision} - ${provision.description}` === value) : null;
+
+      const record = {
+        fuelType: row[SCHEDULE_B.FUEL_TYPE].value,
+        fuelClass: row[SCHEDULE_B.FUEL_CLASS].value,
+        provisionOfTheAct: selectedProvision ? selectedProvision.provision : null,
+        quantity: row[SCHEDULE_B.QUANTITY].value
+      };
+
+      const rowIsEmpty = !record.fuelType || !record.fuelClass ||
+        !record.provisionOfTheAct || !record.quantity;
+
+      if (!rowIsEmpty) {
+        records.push(record);
+      }
+    }
+
+    this.props.updateScheduleState({
+      scheduleB: {
+        records
+      }
+    });
   }
 
   _populateFuelCalculationValues (currentRow) {
@@ -685,6 +757,8 @@ class ScheduleBContainer extends Component {
 }
 
 ScheduleBContainer.defaultProps = {
+  complianceReport: null,
+  loadedState: null
 };
 
 ScheduleBContainer.propTypes = {
@@ -711,14 +785,21 @@ ScheduleBContainer.propTypes = {
     success: PropTypes.bool
   }).isRequired,
   compliancePeriods: PropTypes.arrayOf(PropTypes.shape()).isRequired,
+  complianceReport: PropTypes.shape({
+    scheduleB: PropTypes.shape()
+  }),
+  create: PropTypes.bool.isRequired,
+  edit: PropTypes.bool.isRequired,
   getCompliancePeriods: PropTypes.func.isRequired,
   getCreditCalculation: PropTypes.func.isRequired,
+  // eslint-disable-next-line react/forbid-prop-types
+  loadedState: PropTypes.any,
+  period: PropTypes.string.isRequired,
   referenceData: PropTypes.shape({
     approvedFuels: PropTypes.arrayOf(PropTypes.shape)
   }).isRequired,
-  edit: PropTypes.bool.isRequired,
-  period: PropTypes.string.isRequired,
-  saving: PropTypes.bool.isRequired
+  saving: PropTypes.bool.isRequired,
+  updateScheduleState: PropTypes.func.isRequired
 };
 
 const mapStateToProps = state => ({
