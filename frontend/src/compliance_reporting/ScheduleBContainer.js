@@ -316,21 +316,21 @@ class ScheduleBContainer extends Component {
         readOnly: true,
         valueViewer: (props) => {
           const { value } = props;
-          return <span>{value ? formatNumeric(Number(value), 2) : ''}</span>;
+          return <span>{value ? formatNumeric(Math.round(value), 0) : ''}</span>;
         }
       }, { // credit
         className: 'number',
         readOnly: true,
         valueViewer: (props) => {
           const { value } = props;
-          return <span>{value ? formatNumeric(Number(value), 2) : ''}</span>;
+          return <span>{value ? formatNumeric(Math.round(value), 0) : ''}</span>;
         }
       }, { // debit
         className: 'number',
         readOnly: true,
         valueViewer: (props) => {
           const { value } = props;
-          return <span>{value ? formatNumeric(Number(value), 2) : ''}</span>;
+          return <span>{value ? formatNumeric(Math.round(value), 0) : ''}</span>;
         }
       }]);
 
