@@ -10,6 +10,17 @@ const amqpHost = process.env.RABBITMQ_HOST || 'localhost';
 const amqpPort = process.env.RABBITMQ_PORT || 5672;
 const jwksURI = process.env.KEYCLOAK_CERTS_URL || null;
 
+const winston = require('winston');
+const consoleTransport = new winston.transports.Console();
+const log = new winston.createLogger( {
+  format: winston.format.combine(
+    winston.format.timestamp(),
+    winston.format.prettyPrint()
+  ),
+  transports: [consoleTransport]
+});
+
+
 let client = jwksClient({jwksUri:jwksURI});
 
 function getSigningKey(header, callback) {
@@ -26,7 +37,7 @@ function getSigningKey(header, callback) {
 const setup = (io) => {
 
   if (!jwksURI) {
-    console.log('No KEYCLOAK_CERTS_URL in environment,' +
+    log.error('No KEYCLOAK_CERTS_URL in environment,' +
       ' cannot validate tokens and will not serve socket.io clients');
     return;
   }
@@ -43,7 +54,7 @@ const setup = (io) => {
           case 'socketio/AUTHENTICATE':
             jwt.verify(action.token, getSigningKey, {}, (err, decoded) => {
               if (err) {
-                console.log(`error verifying token ${err}`);
+                log.error(`error verifying token ${err}`);
                 authenticated = false;
               } else {
                 roomName = `user_${decoded.user_id}`;
@@ -59,7 +70,7 @@ const setup = (io) => {
             }
             break;
           default:
-            console.log('unknown action received ' + action.type);
+            log.error('unknown action received ' + action.type);
         }
       }
     );
@@ -79,11 +90,11 @@ const connect = (io) => {
   });
 
   connection.on('error', (e) => {
-    console.log('AMQP error: ', e);
+    log.error('AMQP error: ', e);
   });
 
   connection.on('ready', () => {
-    console.log('AMQP connection ready');
+    log.info('AMQP connection ready');
 
     connection.queue('', { exclusive: false, autoDelete: true }, (q) => {
       connection.exchange('notifications', {
@@ -107,7 +118,7 @@ const connect = (io) => {
         }
 
         if (!message.type) {
-          console.log('this message does not contain a type!');
+          log.error('this message does not contain a type!');
           return;
         }
 
@@ -119,7 +130,7 @@ const connect = (io) => {
             });
             break;
           default:
-            console.log(`unknown message type ${message.type}`);
+            log.error(`unknown message type ${message.type}`);
         }
       });
     });
