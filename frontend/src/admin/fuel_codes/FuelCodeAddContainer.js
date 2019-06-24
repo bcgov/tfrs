@@ -8,7 +8,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
-import { addFuelCode, getLatestFuelCode } from '../../actions/fuelCodes';
+import { addFuelCode, filterFuelCodes, getLatestFuelCode } from '../../actions/fuelCodes';
 import history from '../../app/History';
 import Loading from '../../app/components/Loading';
 import CallableModal from '../../app/components/CallableModal';
@@ -213,6 +213,8 @@ class FuelCodeAddContainer extends Component {
         approvedFuels={this.props.referenceData.approvedFuels}
         errors={this.props.errors}
         fields={this.state.fields}
+        filterFuelCodes={this.props.filterFuelCodes}
+        fuelCodes={this.props.fuelCodes}
         getLatestFuelCode={this.props.getLatestFuelCode}
         handleInputChange={this._handleInputChange}
         handleSelect={this._openModal}
@@ -249,6 +251,11 @@ FuelCodeAddContainer.propTypes = {
   addFuelCode: PropTypes.func.isRequired,
   errors: PropTypes.shape({}),
   getLatestFuelCode: PropTypes.func.isRequired,
+  filterFuelCodes: PropTypes.func.isRequired,
+  fuelCodes: PropTypes.shape({
+    isFetching: PropTypes.bool,
+    items: PropTypes.arrayOf(PropTypes.shape())
+  }).isRequired,
   latestFuelCode: PropTypes.shape({
     errors: PropTypes.shape(),
     isFetching: PropTypes.bool.isRequired,
@@ -278,6 +285,10 @@ FuelCodeAddContainer.propTypes = {
 
 const mapStateToProps = state => ({
   errors: state.rootReducer.fuelCode.errors,
+  fuelCodes: {
+    isFetching: state.rootReducer.fuelCodes.isFetching,
+    items: state.rootReducer.fuelCodes.items
+  },
   latestFuelCode: {
     errors: state.rootReducer.latestFuelCode.errors,
     isFetching: state.rootReducer.latestFuelCode.isFetching,
@@ -296,6 +307,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   addFuelCode: bindActionCreators(addFuelCode, dispatch),
+  filterFuelCodes: bindActionCreators(filterFuelCodes, dispatch),
   getLatestFuelCode: bindActionCreators(getLatestFuelCode, dispatch)
 });
 

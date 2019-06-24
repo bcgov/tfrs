@@ -81,6 +81,28 @@ class FuelCodeViewSet(AuditableMixin,
         return Response(None, status=status.HTTP_200_OK)
 
     @list_route(methods=['get'])
+    def filter(self, request):
+        """
+        Retrieves all the fuel codes that matches the parameters
+        provided
+        """
+        fuel_code = request.GET.get('fuel_code', None)
+        fuel_code_version = request.GET.get('fuel_code_version', None)
+
+        if not fuel_code_version or not fuel_code_version.isdigit():
+            return Response(None)
+
+        fuel_code_object = FuelCode.objects.filter(
+            fuel_code=fuel_code,
+            fuel_code_version=fuel_code_version
+        ).order_by('fuel_code_version_minor')
+
+        serializer = self.get_serializer(
+            fuel_code_object, read_only=True, many=True)
+
+        return Response(serializer.data)
+
+    @list_route(methods=['get'])
     def latest(self, request):
         """
         Retrieves the latest fuel code that matches the version provided

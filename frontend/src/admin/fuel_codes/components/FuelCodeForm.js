@@ -20,6 +20,8 @@ class FuelCodeForm extends Component {
       showOverlapModal: false
     };
 
+    this.conflictingFuelCode = {};
+
     this._closeModal = this._closeModal.bind(this);
     this._getEffectiveDatesStatus = this._getEffectiveDatesStatus.bind(this);
     this._openOverlapModal = this._openOverlapModal.bind(this);
@@ -109,11 +111,24 @@ class FuelCodeForm extends Component {
   }
 
   _getEffectiveDatesStatus () {
-    return this.props.latestFuelCode.success &&
-    ((this.props.latestFuelCode.item.effectiveDate <= this.props.fields.effectiveDate &&
-    this.props.latestFuelCode.item.expiryDate >= this.props.fields.effectiveDate) ||
-    (this.props.latestFuelCode.item.effectiveDate <= this.props.fields.expiryDate &&
-    this.props.latestFuelCode.item.effectiveDate >= this.props.fields.effectiveDate));
+    if (this.props.fuelCodes.isFetching || this.props.fuelCodes.items.length === 0) {
+      return false;
+    }
+
+    this.conflictingFuelCode = this.props.fuelCodes.items.find(fuelCode => (
+      this.props.fields.fuelCode !== `${fuelCode.fuelCodeVersion}.${fuelCode.fuelCodeVersionMinor}` && (
+        (fuelCode.effectiveDate <= this.props.fields.effectiveDate &&
+        fuelCode.expiryDate >= this.props.fields.effectiveDate) ||
+        (fuelCode.effectiveDate <= this.props.fields.expiryDate &&
+        fuelCode.effectiveDate >= this.props.fields.effectiveDate)
+      )
+    ));
+
+    if (this.conflictingFuelCode) {
+      return true;
+    }
+
+    return false;
   }
 
   _openOverlapModal () {
@@ -126,7 +141,7 @@ class FuelCodeForm extends Component {
     const fuelCode = this.props.fields.fuelCode.split('.');
 
     if (fuelCode.length > 0) {
-      this.props.getLatestFuelCode({
+      this.props.filterFuelCodes({
         fuel_code: 'BCLCF',
         fuel_code_version: fuelCode[0]
       }).then((response) => {
@@ -211,7 +226,9 @@ class FuelCodeForm extends Component {
         <div className="alert alert-warning">
           <p>
           The effective dates of this fuel code overlap with
-            {` ${this.props.latestFuelCode.item.fuelCode}${this.props.latestFuelCode.item.fuelCodeVersion}.${this.props.latestFuelCode.item.fuelCodeVersionMinor}`} <br />
+            <br />
+            {` ${this.conflictingFuelCode.fuelCode}${this.conflictingFuelCode.fuelCodeVersion}.${this.conflictingFuelCode.fuelCodeVersionMinor}`}
+            {` (${this.conflictingFuelCode.effectiveDate} - ${this.conflictingFuelCode.expiryDate})`}
           </p>
         </div>
         }
@@ -255,14 +272,14 @@ FuelCodeForm.propTypes = {
     partiallyRenewable: PropTypes.bool,
     renewablePercentage: PropTypes.string
   }).isRequired,
-  getLatestFuelCode: PropTypes.func.isRequired,
+  filterFuelCodes: PropTypes.func.isRequired,
+  fuelCodes: PropTypes.shape({
+    isFetching: PropTypes.bool,
+    items: PropTypes.arrayOf(PropTypes.shape())
+  }).isRequired,
   handleInputChange: PropTypes.func.isRequired,
   handleSelect: PropTypes.func,
   handleSubmit: PropTypes.func.isRequired,
-  latestFuelCode: PropTypes.shape({
-    item: PropTypes.shape(),
-    success: PropTypes.bool
-  }).isRequired,
   approvedFuels: PropTypes.arrayOf(PropTypes.shape()).isRequired,
   transportModes: PropTypes.arrayOf(PropTypes.shape()).isRequired,
   title: PropTypes.string.isRequired
