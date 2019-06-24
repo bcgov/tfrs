@@ -38,7 +38,7 @@ const formatFacilityNameplate = (value) => {
 
 // similar as above, but allows decimals
 const formatNumeric = (value, decimals = 2) => {
-  let newValue = value.toFixed(2);
+  let newValue = value.toFixed(decimals);
 
   if (typeof newValue === 'number') {
     newValue = newValue.toString();
