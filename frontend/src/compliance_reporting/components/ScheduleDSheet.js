@@ -8,9 +8,12 @@ import { SCHEDULE_D_INPUT, SCHEDULE_D_OUTPUT } from '../../constants/schedules/s
 class ScheduleDSheet extends Component {
   static calculateTotal (grid) {
     let total = 0;
+    let emptyCells = true;
+
     for (let row = 0; row < SCHEDULE_D_OUTPUT.TOTAL; row += 1) {
       if (!Number.isNaN(parseFloat(grid[row][1].value))) {
         total += parseFloat(grid[row][1].value);
+        emptyCells = false;
       }
     }
 
@@ -18,12 +21,12 @@ class ScheduleDSheet extends Component {
 
     updatedGrid[SCHEDULE_D_OUTPUT.TOTAL][1] = {
       ...updatedGrid[SCHEDULE_D_OUTPUT.TOTAL][1],
-      value: total
+      value: emptyCells ? '' : total
     };
 
     updatedGrid[SCHEDULE_D_OUTPUT.CARBON_INTENSITY][1] = {
       ...updatedGrid[SCHEDULE_D_OUTPUT.CARBON_INTENSITY][1],
-      value: total / 1000
+      value: emptyCells ? '' : total / 1000
     };
 
     return updatedGrid;
