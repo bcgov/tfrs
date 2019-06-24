@@ -17,6 +17,16 @@ export const getFuelCodes = () => (dispatch) => {
   });
 };
 
+export const filterFuelCodes = data => (dispatch) => {
+  dispatch(getFuelCodesRequest());
+
+  return axios.get(`${Routes.BASE_URL}${FUEL_CODES.API}/filter`, { params: data }).then((response) => {
+    dispatch(getFuelCodesSuccess(response.data));
+  }).catch((error) => {
+    dispatch(getFuelCodesError(error.response));
+  });
+};
+
 const getFuelCodesRequest = () => ({
   name: ReducerTypes.GET_FUEL_CODES_REQUEST,
   type: ActionTypes.GET_FUEL_CODES
