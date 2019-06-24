@@ -17,11 +17,25 @@ class FuelCodesContainer extends Component {
   constructor (props) {
     super(props);
     this.state = {
+      tooltips: {
+        message: '',
+        show: false,
+        target: false
+      }
     };
+
+    this._handleTooltip = this._handleTooltip.bind(this);
   }
 
   componentDidMount () {
     this.loadData();
+  }
+
+  _handleTooltip (tooltips) {
+    this.setState({
+      ...this.state,
+      tooltips
+    });
   }
 
   loadData () {
@@ -37,9 +51,11 @@ class FuelCodesContainer extends Component {
       />,
       <FuelCodesPage
         fuelCodes={this.props.fuelCodes}
+        handleTooltip={this._handleTooltip}
         key="fuel-codes"
         loggedInUser={this.props.loggedInUser}
         title="Fuel Codes"
+        tooltips={this.state.tooltips}
       />
     ]);
   }

@@ -57,10 +57,12 @@ const FuelCodesPage = (props) => {
       {isFetching && <Loading />}
       {!isFetching &&
       <FuelCodesTable
-        items={items}
-        isFetching={isFetching}
+        handleTooltip={props.handleTooltip}
         isEmpty={isEmpty}
+        isFetching={isFetching}
+        items={items}
         loggedInUser={props.loggedInUser}
+        tooltips={props.tooltips}
       />
       }
     </div>
@@ -75,10 +77,12 @@ FuelCodesPage.propTypes = {
     isFetching: PropTypes.bool,
     items: PropTypes.arrayOf(PropTypes.shape)
   }).isRequired,
+  handleTooltip: PropTypes.func.isRequired,
   loggedInUser: PropTypes.shape({
     hasPermission: PropTypes.func
   }).isRequired,
-  title: PropTypes.string.isRequired
+  title: PropTypes.string.isRequired,
+  tooltips: PropTypes.shape({}).isRequired
 };
 
 export default FuelCodesPage;
