@@ -49,7 +49,7 @@ class ScheduleBContainer extends Component {
         }, {
           className: 'provision',
           readOnly: true,
-          value: 'Provision of the Act relied upon to determine carbon intensity'
+          value: 'Provision of the Act Relied Upon to Determine Carbon Intensity'
         }, {
           className: 'fuel-code',
           readOnly: true,
@@ -81,7 +81,7 @@ class ScheduleBContainer extends Component {
         }, {
           className: 'energy-content',
           readOnly: true,
-          value: <div>Energy content (MJ)</div>
+          value: <div>Energy Content (MJ)</div>
         }, {
           className: 'credit',
           readOnly: true,
