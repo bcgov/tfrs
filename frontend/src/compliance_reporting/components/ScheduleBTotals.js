@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import Draggable from 'react-draggable';
 
-import { formatNumeric, getQuantity } from '../../utils/functions';
+import { formatNumeric } from '../../utils/functions';
 
 const ScheduleBTotals = (props) => {
   const formatNumber = (value) => {
@@ -10,7 +10,7 @@ const ScheduleBTotals = (props) => {
       return '-';
     }
 
-    return formatNumeric(getQuantity(value), 2);
+    return formatNumeric(Math.round(value), 0);
   };
 
   const getNetTotal = () => {
@@ -22,10 +22,10 @@ const ScheduleBTotals = (props) => {
     }
 
     if (value < 0) {
-      return `(${formatNumeric(getQuantity(value, 2))})`;
+      return `(${formatNumeric(Math.round(value * -1), 0)})`;
     }
 
-    return formatNumeric(getQuantity(value, 2));
+    return formatNumeric(Math.round(value), 0);
   };
 
   return (
