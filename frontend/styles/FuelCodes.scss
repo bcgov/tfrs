@@ -91,3 +91,9 @@
     white-space: nowrap;
   }
 }
+
+.tooltip.no-animation.fade {
+  -webkit-transition: none;
+  -o-transition: none;
+  transition: none;
+}
