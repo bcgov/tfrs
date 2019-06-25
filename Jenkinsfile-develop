@@ -1,6 +1,6 @@
 result = 0
 runParallel = true
-tfrsRelease="v1.4.6"
+tfrsRelease="v1.4.12"
 
 def prepareBackendBuildStages() {
     def buildBackendList = []
@@ -229,7 +229,7 @@ podTemplate(label: "develop-maven-${env.BUILD_NUMBER}", name: "develop-maven-${e
             sh returnStdout: true, script: "oc exec ${postgresql_pod_name} -c postgresql96 -n mem-tfrs-dev -- bash /postgresql-backup/tfrs-backup.sh ${tfrsRelease} dev"
             echo 'backup script completed'
         }
-        
+
         stage('Apply Backend Deployment Config') {
             timeout(300) {
                 script {
