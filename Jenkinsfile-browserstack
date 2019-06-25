@@ -24,7 +24,9 @@ stage('Test DEV using Browserstack') {
 
       dir('functional-tests') {
         try {
+          withCredentials([usernamePassword(credentialsId: 'browserstack', usernameVariable: 'BROWSERSTACK_USERNAME', passwordVariable: 'BROWSERSTACK_TOKEN')]) {
           sh './gradlew remoteTest'
+        }
         } catch (Throwable t) {
           result = 1
         } finally {
