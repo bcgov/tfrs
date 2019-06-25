@@ -53,12 +53,13 @@ class ScheduleSummaryContainer extends Component {
 
   loadSchedules () {
     const { diesel, gasoline } = this.state;
+    const { scheduleA, summary } = this.props.complianceReport;
     const {
       totalPetroleumDiesel,
       totalPetroleumGasoline,
       totalRenewableDiesel,
       totalRenewableGasoline
-    } = this.props.complianceReport.summary;
+    } = summary;
 
     let totalDiesel = 0;
     let totalGasoline = 0;
@@ -108,6 +109,45 @@ class ScheduleSummaryContainer extends Component {
       ...gasoline[SCHEDULE_SUMMARY.LINE_3][2],
       value: totalGasoline === 0 ? '' : totalGasoline
     };
+
+    diesel[SCHEDULE_SUMMARY.LINE_15][2] = { // line 15, 3rd column
+      ...diesel[SCHEDULE_SUMMARY.LINE_15][2],
+      value: totalDiesel * 0.04 // Line 14 x 4%
+    };
+
+    gasoline[SCHEDULE_SUMMARY.LINE_4][2] = { // line 4, 3rd column
+      ...gasoline[SCHEDULE_SUMMARY.LINE_4][2],
+      value: totalGasoline * 0.05 // Line 3 x 5%
+    };
+
+    if (scheduleA && scheduleA.records) {
+      let dieselReceived = 0;
+      let dieselTransferred = 0;
+      let gasolineReceived = 0;
+      let gasolineTransferred = 0;
+
+      scheduleA.records.forEach((record) => {
+        if (record.fuelClass === 'Diesel' && record.transferType === 'Transferred') {
+          dieselTransferred += Number(record.quantity);
+        } else if (record.fuelClass === 'Diesel' && record.transferType === 'Received') {
+          dieselReceived += Number(record.quantity);
+        } else if (record.fuelClass === 'Gasoline' && record.transferType === 'Transferred') {
+          gasolineTransferred += Number(record.quantity);
+        } else if (record.fuelClass === 'Gasoline' && record.transferType === 'Received') {
+          gasolineReceived += Number(record.quantity);
+        }
+      });
+
+      gasoline[SCHEDULE_SUMMARY.LINE_5][2] = { // line 5, 3rd column
+        ...gasoline[SCHEDULE_SUMMARY.LINE_5][2],
+        value: gasolineReceived - gasolineTransferred
+      };
+
+      diesel[SCHEDULE_SUMMARY.LINE_16][2] = { // line 5, 3rd column
+        ...diesel[SCHEDULE_SUMMARY.LINE_16][2],
+        value: dieselReceived - dieselTransferred
+      };
+    }
 
     this.setState({
       ...this.state,
@@ -188,6 +228,7 @@ ScheduleSummaryContainer.defaultProps = {
 
 ScheduleSummaryContainer.propTypes = {
   complianceReport: PropTypes.shape({
+    scheduleA: PropTypes.shape(),
     scheduleB: PropTypes.shape(),
     scheduleC: PropTypes.shape(),
     summary: PropTypes.shape({

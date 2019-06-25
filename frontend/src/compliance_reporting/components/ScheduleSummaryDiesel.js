@@ -4,6 +4,7 @@ import Input from './Input';
 import { getQuantity } from '../../utils/functions';
 
 const numericColumn = {
+  className: 'numeric',
   readOnly: true,
   value: '',
   valueViewer: (cell) => {
@@ -11,6 +12,10 @@ const numericColumn = {
 
     if (value === '') {
       return '-';
+    }
+
+    if (Number(value) < 0) {
+      return <span>({Math.round(value * -1).toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')})</span>;
     }
 
     return <span>{Math.round(value).toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')}</span>;
@@ -141,7 +146,7 @@ const ScheduleSummaryDiesel = [
     value: 'Line 22'
   }, {
     ...numericColumn,
-    className: 'total'
+    className: 'numeric total'
   }]
 ];
 
