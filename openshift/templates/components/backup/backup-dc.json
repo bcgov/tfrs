@@ -9,7 +9,7 @@
         {
             "name": "BACKUP_PVC_NAME",
             "displayName": "The backup PVC name",
-            "description": "The backup volume should be nfs-backup type",
+            "description": "The backup volume should be nfs-backup type. This PVC should have a directory backup-container created under root",
             "required": true
         }
     ],
