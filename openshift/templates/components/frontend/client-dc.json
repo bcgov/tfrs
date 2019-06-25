@@ -15,25 +15,25 @@
         {
             "name": "KEYCLOAK_AUTHORITY",
             "displayName": "keycloak.authority",
-            "description": "Value for test env https://sso-test.pathfinder.gov.bc.ca/auth/realms/tfrs-dev",
+            "description": "Values https://sso-dev.pathfinder.gov.bc.ca/auth/realms/tfrs-dev https://sso-test.pathfinder.gov.bc.ca/auth/realms/tfrs https://sso.pathfinder.gov.bc.ca/auth/realms/tfrs",
             "required": true
         },
         {
             "name": "KEYCLOAK_CLIENT_ID",
             "displayName": "keycloak.client_id",
-            "description": "Value for test env https://sso-test.pathfinder.gov.bc.ca/auth/realms/tfrs-dev",
+            "description": "Values tfrs-dev tfrs tfrs",
             "required": true
         },
         {
             "name": "KEYCLOAK_CALLBACK_URL",
             "displayName": "keycloak.callback_url",
-            "description": "Value for test env https://test-lowcarbonfuels.pathfinder.gov.bc.ca/authCallback",
+            "description": "Values https://dev-lowcarbonfuels.pathfinder.gov.bc.ca/authCallback https://test-lowcarbonfuels.pathfinder.gov.bc.ca/authCallback https://lowcarbonfuels.gov.bc.ca/authCallback",
             "required": true
         },
         {
             "name": "KEYCLOAK_LOGOUT_URL",
             "displayName": "keycloak.post_logout_url",
-            "description": "Value for test env https://logontest.gov.bc.ca/clp-cgi/logoff.cgi?returl=https%3A%2F%2Ftest-lowcarbonfuels.pathfinder.gov.bc.ca%2F",
+            "description": "Values https://logontest.gov.bc.ca/clp-cgi/logoff.cgi?returl=https%3A%2F%2Fdev-lowcarbonfuels.pathfinder.gov.bc.ca%2F https://logontest.gov.bc.ca/clp-cgi/logoff.cgi?returl=https%3A%2F%2Ftest-lowcarbonfuels.pathfinder.gov.bc.ca%2F https://logon.gov.bc.ca/clp-cgi/logoff.cgi?returl=https%3A%2F%2Flowcarbonfuels.gov.bc.ca%2F",
             "required": true
         },
         {
@@ -45,13 +45,13 @@
         {
             "name": "ROUTE_HOST_NAME",
             "displayName": "Route host name",
-            "description": "Valid values: dev dev-lowcarbonfuels.pathfinder.gov.bc.ca",
+            "description": "values dev-lowcarbonfuels.pathfinder.gov.bc.ca test-lowcarbonfuels.pathfinder.gov.bc.ca lowcarbonfuels.gov.bc.ca",
             "required": true
         },
         {
             "name": "ROUTE_NAME",
             "displayName": "Route name",
-            "description": "Valid values: dev dev-lowcarbonfuels-frontend",
+            "description": "Values dev-lowcarbonfuels-frontend test-lowcarbonfuels-frontend lowcarbonfuels-frontend",
             "required": true
         }
     ],

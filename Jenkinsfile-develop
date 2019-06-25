@@ -230,17 +230,17 @@ podTemplate(label: "develop-maven-${env.BUILD_NUMBER}", name: "develop-maven-${e
             echo 'backup script completed'
         }
         
-        stage('Apply Deployment Configs') {
-            timeout(30) {
+        stage('Apply Backend Deployment Config') {
+            timeout(300) {
                 script {
                     openshift.withProject("mem-tfrs-dev") {
                         def backendDCJson = openshift.process(readFile(file:'openshift/templates/components/backend/tfrs-dc.json'), 
                         "-p", 
-                        "ENV_NAME=test", 
+                        "ENV_NAME=dev", 
                         "SOURCE_IS_NAME=tfrs",
-                        "ROUTE_HOST_NAME=test-lowcarbonfuels.pathfinder.gov.bc.ca",
-                        "ROUTE_NAME=test-lowcarbonfuels-backend",
-                        "KEYCLOAK_SA_BASEURL=https://dev-test.pathfinder.gov.bc.ca",
+                        "ROUTE_HOST_NAME=dev-lowcarbonfuels.pathfinder.gov.bc.ca",
+                        "ROUTE_NAME=dev-lowcarbonfuels-backend",
+                        "KEYCLOAK_SA_BASEURL=https://sso-dev.pathfinder.gov.bc.ca",
                         "KEYCLOAK_SA_CLIENT_ID=tfrs-dev-django-sa",
                         "KEYCLOAK_SA_REALM=tfrs-dev",
                         "KEYCLOAK_AUDIENCE=tfrs-dev",
@@ -249,10 +249,93 @@ podTemplate(label: "develop-maven-${env.BUILD_NUMBER}", name: "develop-maven-${e
                         "KEYCLOAK_ISSUER=https://sso-dev.pathfinder.gov.bc.ca/auth/realms/tfrs-dev",
                         "KEYCLOAK_REALM=https://sso-dev.pathfinder.gov.bc.ca/auth/realms/tfrs-dev")
                         )
-                        def backendDC = openshift.apply(backendDCJson)
-                        sh 'sleep 120s'
-                    } //end of openshift.withProject
-                } //end of script
+                        openshift.apply(backendDCJson)
+                    }
+                }
+            }
+        }
+
+        stage('Apply Celery Deployment Config') {
+            timeout(30) {
+                script {
+                    openshift.withProject("mem-tfrs-dev") {
+                        def celeryDCJson = openshift.process(readFile(file:'openshift/templates/components/celery/celery-dc.json'), 
+                        "-p", 
+                        "ENV_NAME=dev", 
+                        "SOURCE_IS_NAME=celery-develop"
+                        )
+                        openshift.apply(celeryDCJson)
+                    }
+                }
+            }
+        }
+
+        stage('Apply Scan-coordinator Deployment Config') {
+            timeout(30) {
+                script {
+                    openshift.withProject("mem-tfrs-dev") {
+                        def scanCoordinatorDCJson = openshift.process(readFile(file:'openshift/templates/components/scan-coordinator/scan-coordinator-dc.json'), 
+                        "-p", 
+                        "ENV_NAME=dev", 
+                        "SOURCE_IS_NAME=scan-coordinator-develop"
+                        )
+                        openshift.apply(scanCoordinatorDCJson)
+                    }
+                }
+            }
+        }
+
+        stage('Apply Scan-handler Deployment Config') {
+            timeout(30) {
+                script {
+                    openshift.withProject("mem-tfrs-dev") {
+                        def scanHandlerDCJson = openshift.process(readFile(file:'openshift/templates/components/scan-handler/scan-handler-dc.json'), 
+                        "-p", 
+                        "ENV_NAME=dev", 
+                        "SOURCE_IS_NAME=scan-handler-develop"
+                        )
+                        openshift.apply(scanHandlerDCJson)
+                    }
+                }
+            }
+        }
+
+        stage('Apply Notificstion-server Deployment Config') {
+            timeout(30) {
+                script {
+                    openshift.withProject("mem-tfrs-dev") {
+                        def notificationServerDCJson = openshift.process(readFile(file:'openshift/templates/components/notification/notification-server-dc.json'), 
+                        "-p", 
+                        "ENV_NAME=dev", 
+                        "SOURCE_IS_NAME=notification-server-develop",
+                        "DASH_ENV_NAME=-dev",
+                        "ROUTE_NAME=dev-lowcarbonfuels-notification",
+                        "ROUTE_HOST=dev-lowcarbonfuels.pathfinder.gov.bc.ca"
+                        )
+                        openshift.apply(notificationServerDCJson)
+                    }
+                }
+            }
+        }
+
+        stage('Apply Client Deployment Config') {
+            timeout(30) {
+                script {
+                    openshift.withProject("mem-tfrs-dev") {
+                        def clientDCJson = openshift.process(readFile(file:'openshift/templates/components/frontend/client-dc.json'), 
+                        "-p", 
+                        "ENV_NAME=dev", 
+                        "KEYCLOAK_AUTHORITY=https://sso-dev.pathfinder.gov.bc.ca/auth/realms/tfrs-dev",
+                        "KEYCLOAK_CLIENT_ID=tfrs-dev",
+                        "KEYCLOAK_CALLBACK_URL=https://dev-lowcarbonfuels.pathfinder.gov.bc.ca/authCallback",
+                        "KEYCLOAK_LOGOUT_URL=https://logontest.gov.bc.ca/clp-cgi/logoff.cgi?returl=https%3A%2F%2Fdev-lowcarbonfuels.pathfinder.gov.bc.ca%2F",
+                        "SOURCE_IS_NAME=client-develop",
+                        "ROUTE_HOST_NAME=dev-lowcarbonfuels.pathfinder.gov.bc.ca",
+                        "ROUTE_NAME=dev-lowcarbonfuels-frontend"
+                        )
+                        openshift.apply(clientDCJson)
+                    }
+                }
             }
         }
 

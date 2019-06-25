@@ -12,8 +12,8 @@ oc tag --reference minio:stable minio:prod # use of reference here is so you *ha
 oc process -f https://raw.githubusercontent.com/BCDevOps/minio-openshift/master/openshift/minio-deployment.json \
 IMAGESTREAM_NAMESPACE=mem-tfrs-tools \
 IMAGESTREAM_TAG=dev \
-MINIO_ACCESS_KEY=tfrsinternal \
-MINIO_SECRET_KEY=2xBJwV1d88bknUIn \
+MINIO_ACCESS_KEY=*** \
+MINIO_SECRET_KEY=*** \
 VOLUME_CAPACITY=5Gi \
 | oc create -n mem-tfrs-dev -f - --dry-run=true
 
@@ -21,8 +21,8 @@ VOLUME_CAPACITY=5Gi \
 oc process -f https://raw.githubusercontent.com/BCDevOps/minio-openshift/master/openshift/minio-deployment.json \
 IMAGESTREAM_NAMESPACE=mem-tfrs-tools \
 IMAGESTREAM_TAG=test \
-MINIO_ACCESS_KEY=*** \
-MINIO_SECRET_KEY=*** \
+MINIO_ACCESS_KEY==*** \
+MINIO_SECRET_KEY==*** \
 VOLUME_CAPACITY=5Gi \
 | oc create -n mem-tfrs-test -f - --dry-run=true
 
@@ -30,7 +30,7 @@ VOLUME_CAPACITY=5Gi \
 oc process -f https://raw.githubusercontent.com/BCDevOps/minio-openshift/master/openshift/minio-deployment.json \
 IMAGESTREAM_NAMESPACE=mem-tfrs-tools \
 IMAGESTREAM_TAG=prod \
-MINIO_ACCESS_KEY=*** \
-MINIO_SECRET_KEY=*** \
+MINIO_ACCESS_KEY==*** \
+MINIO_SECRET_KEY==*** \
 VOLUME_CAPACITY=5Gi \
 | oc create -n mem-tfrs-prod -f - --dry-run=true
