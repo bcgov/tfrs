@@ -9,8 +9,8 @@ stage('Test DEV using Browserstack') {
               image: 'registry.access.redhat.com/openshift3/jenkins-slave-maven-rhel7:v3.9',
               resourceRequestCpu: '500m',
               resourceLimitCpu: '1000m',
-              resourceRequestMemory: '2Gi',
-              resourceLimitMemory: '4Gi',
+              resourceRequestMemory: '1Gi',
+              resourceLimitMemory: '1Gi',
               workingDir: '/home/jenkins',
               command: '',
               args: '${computer.jnlpmac} ${computer.name}'
@@ -19,7 +19,6 @@ stage('Test DEV using Browserstack') {
   ) {
 
     node("develop-maven-${env.BUILD_NUMBER}") {
-
 //checkout changelog: false, poll: false, scm: [$class: 'GitSCM', branches: [[name: "${tfrsRelease}"]], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[credentialsId: 'github-account', url: 'https://github.com/bcgov/tfrs.git']]]
       checkout scm
 
