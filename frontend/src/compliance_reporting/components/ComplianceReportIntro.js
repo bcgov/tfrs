@@ -1,7 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import ScheduleTabs from './ScheduleTabs';
 import ScheduleButtons from './ScheduleButtons';
 
 const ComplianceReportIntro = (props) => {
@@ -21,9 +20,9 @@ const ComplianceReportIntro = (props) => {
         </p>
         <p>
         All Part 2 and Part 3 fuel suppliers must report using this form unless they claim the Small
-        Supplier Exemption (see below).  The {props.compliancePeriod} compliance period for Part 2
-        and Part 3 requirements is from January 1 to December 31, {props.compliancePeriod}.
-          <strong> Compliance reports for {props.compliancePeriod} are due
+        Supplier Exemption (see below).  The {props.period} compliance period for Part 2
+        and Part 3 requirements is from January 1 to December 31, {props.period}.
+          <strong> Compliance reports for {props.period} are due
             March 31, {complianceReportDueDate}.
           </strong>
         </p>
@@ -45,7 +44,7 @@ const ComplianceReportIntro = (props) => {
         <h3>Small  Fuel Supplier Exemption</h3>
         <p>
         Fuel suppliers and their affiliates who supplied less than a total of 75 million litres of
-        gasoline and diesel class fuels (combined) in the {props.compliancePeriod} compliance period
+        gasoline and diesel class fuels (combined) in the {props.period} compliance period
         may apply to be exempted from Part 2 and/or Part 3 requirements.  A Part 2 or Part 3 fuel
         supplier who applies to be exempted must submit an Exemption Report, available from (
           <a href="http://www.gov.bc.ca/lowcarbonfuels" rel="noopener noreferrer" target="_blank">

@@ -206,6 +206,7 @@ class ComplianceReportingEditContainer extends Component {
         id={id}
         create={!this.edit}
         complianceReport={this.props.complianceReporting.item}
+        loadedState={this.props.loadedState}
         updateScheduleState={this._updateScheduleState}
         saving={this.props.saving}
         updateAutosaveState={(state) => {
@@ -236,7 +237,7 @@ ComplianceReportingEditContainer.defaultProps = {
     isCreating: false,
     success: false
   },
-  loadedState: false
+  loadedState: null
 };
 
 ComplianceReportingEditContainer.propTypes = {
@@ -255,8 +256,7 @@ ComplianceReportingEditContainer.propTypes = {
   deleteComplianceReport: PropTypes.func.isRequired,
   getComplianceReport: PropTypes.func.isRequired,
   invalidateAutosaved: PropTypes.func.isRequired,
-  // eslint-disable-next-line react/forbid-prop-types
-  loadedState: PropTypes.any,
+  loadedState: PropTypes.shape(),
   match: PropTypes.shape({
     params: PropTypes.shape({
       id: PropTypes.string,

@@ -117,11 +117,11 @@ class ScheduleCContainer extends Component {
 
     this.setState(ScheduleCContainer.addHeaders());
     this.rowNumber = 1;
-    this._addRow(loadedState.grid.length - 2);
+    this._addRow(loadedState.tab.grid.length - 2);
 
-    for (let i = 2; i < loadedState.grid.length; i += 1) {
+    for (let i = 2; i < loadedState.tab.grid.length; i += 1) {
       const { grid } = this.state;
-      const record = loadedState.grid[i];
+      const record = loadedState.tab.grid[i];
 
       grid[i][SCHEDULE_C.FUEL_TYPE].value = record[SCHEDULE_C.FUEL_TYPE].value;
       grid[i][SCHEDULE_C.FUEL_CLASS].value = record[SCHEDULE_C.FUEL_CLASS].value;
@@ -399,8 +399,7 @@ ScheduleCContainer.propTypes = {
   complianceReport: PropTypes.shape({
     scheduleC: PropTypes.shape()
   }),
-  // eslint-disable-next-line react/forbid-prop-types
-  loadedState: PropTypes.any,
+  loadedState: PropTypes.shape(),
   period: PropTypes.string.isRequired,
   updateScheduleState: PropTypes.func.isRequired,
   updateAutosaveState: PropTypes.func.isRequired
