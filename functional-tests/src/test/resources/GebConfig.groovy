@@ -48,7 +48,7 @@ environments {
       caps.setCapability("os_version", "10");
       caps.setCapability("resolution", "1920x1200");
       caps.setCapability("name", "Geb-integration-test")
-     
+
       String URL = "https://" + USERNAME + ":" + AUTOMATE_KEY + "@hub-cloud.browserstack.com/wd/hub"
 
       driver = new RemoteWebDriver(new URL(URL), caps)
@@ -61,10 +61,10 @@ environments {
 // To run the tests with all browsers just run “./gradlew test”
 baseNavigatorWaiting = true
 
-
-autoClearCookies = true
-autoClearWebStorage = true
-cacheDriverPerThread = true
+autoClearCookies = false
+autoClearWebStorage = false
+cacheDriver = false
+cacheDriverPerThread = false
 quitCachedDriverOnShutdown = true
 reportOnTestFailureOnly = false
 //reportingListener = new DocumentGenerationListener();

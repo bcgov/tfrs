@@ -9,6 +9,6 @@ import specs.traits.Utils
  *
  * All specs should extend this class.
  */
-abstract class BaseSpec extends GebReportingSpec implements Utils {
+abstract class BaseSpec extends BetterReportingSpec implements Utils {
 
 }
