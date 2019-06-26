@@ -2,7 +2,7 @@
     "kind": "Template",
     "apiVersion": "template.openshift.io/v1",
     "metadata": {
-        "name": "test-client",
+        "name": "prod-minio",
         "creationTimestamp": null
     },
     "objects": [
@@ -10,120 +10,114 @@
             "kind": "DeploymentConfig",
             "apiVersion": "apps.openshift.io/v1",
             "metadata": {
-                "name": "client",
-                "generation": 287,
+                "name": "minio",
+                "generation": 2,
                 "creationTimestamp": null,
-                "annotations": {
-                    "description": "Defines how to deploy the application server"
+                "labels": {
+                    "app": "minio"
                 }
             },
             "spec": {
                 "strategy": {
-                    "type": "Rolling",
-                    "rollingParams": {
-                        "updatePeriodSeconds": 1,
-                        "intervalSeconds": 1,
-                        "timeoutSeconds": 600,
-                        "maxUnavailable": "25%",
-                        "maxSurge": "25%"
+                    "type": "Recreate",
+                    "recreateParams": {
+                        "timeoutSeconds": 600
                     },
                     "resources": {},
                     "activeDeadlineSeconds": 21600
                 },
                 "triggers": [
                     {
+                        "type": "ConfigChange"
+                    },
+                    {
                         "type": "ImageChange",
                         "imageChangeParams": {
                             "automatic": true,
                             "containerNames": [
-                                "client"
+                                "minio"
                             ],
                             "from": {
                                 "kind": "ImageStreamTag",
                                 "namespace": "mem-tfrs-tools",
-                                "name": "client:test"
+                                "name": "minio:prod"
                             },
-                            "lastTriggeredImage": "docker-registry.default.svc:5000/mem-tfrs-tools/client@sha256:5bee9b731b35abd6a1febb85c37a79ab52c0f52d8e828730dc07b944bfb74b28"
+                            "lastTriggeredImage": "172.50.0.2:5000/openshift/minio@sha256:02f81d40a3515ab8ba4a311d73849e046d5d06cc2d68db938b33af45906fdded"
                         }
-                    },
-                    {
-                        "type": "ConfigChange"
                     }
                 ],
-                "replicas": 2,
+                "replicas": 1,
+                "revisionHistoryLimit": 10,
                 "test": false,
                 "selector": {
-                    "name": "client"
+                    "app": "minio",
+                    "deploymentconfig": "minio"
                 },
                 "template": {
                     "metadata": {
-                        "name": "client",
                         "creationTimestamp": null,
                         "labels": {
-                            "name": "client"
+                            "app": "minio",
+                            "deploymentconfig": "minio"
                         }
                     },
                     "spec": {
                         "volumes": [
                             {
-                                "name": "keycloak-config-data",
-                                "configMap": {
-                                    "name": "keycloak-config",
-                                    "defaultMode": 420
+                                "name": "minio-vol",
+                                "persistentVolumeClaim": {
+                                    "claimName": "minio-pv-claim"
                                 }
                             }
                         ],
                         "containers": [
                             {
-                                "name": "client",
-                                "image": "docker-registry.default.svc:5000/mem-tfrs-tools/client@sha256:5bee9b731b35abd6a1febb85c37a79ab52c0f52d8e828730dc07b944bfb74b28",
+                                "name": "minio",
+                                "image": "172.50.0.2:5000/openshift/minio@sha256:02f81d40a3515ab8ba4a311d73849e046d5d06cc2d68db938b33af45906fdded",
                                 "ports": [
                                     {
-                                        "containerPort": 3000,
+                                        "containerPort": 9000,
                                         "protocol": "TCP"
                                     }
                                 ],
                                 "env": [
                                     {
-                                        "name": "API_URL",
-                                        "value": "http://backend-mem-tfrs-test.pathfinder.gov.bc.ca/api/"
+                                        "name": "MINIO_ACCESS_KEY",
+                                        "valueFrom": {
+                                            "secretKeyRef": {
+                                                "name": "minio",
+                                                "key": "minioAccessKey"
+                                            }
+                                        }
                                     },
                                     {
-                                        "name": "RealIpFrom"
+                                        "name": "MINIO_SECRET_KEY",
+                                        "valueFrom": {
+                                            "secretKeyRef": {
+                                                "name": "minio",
+                                                "key": "minioSecretKey"
+                                            }
+                                        }
                                     },
                                     {
-                                        "name": "AdditionalRealIpFromRules"
+                                        "name": "MINIO_CONFIG_DIR",
+                                        "value": "/tmp"
                                     },
                                     {
-                                        "name": "IpFilterRules"
-                                    },
-                                    {
-                                        "name": "HTTP_BASIC"
-                                    },
-                                    {
-                                        "name": "API_URL",
-                                        "value": "http://backend.mem-tfrs-test.svc.cluster.local:8080/api/"
+                                        "name": "MINIO_DATA_DIR",
+                                        "value": "/data"
                                     }
                                 ],
-                                "resources": {
-                                    "limits": {
-                                        "cpu": "500m",
-                                        "memory": "500Mi"
-                                    },
-                                    "requests": {
-                                        "cpu": "200m",
-                                        "memory": "400Mi"
-                                    }
-                                },
+                                "resources": {},
                                 "volumeMounts": [
                                     {
-                                        "name": "keycloak-config-data",
-                                        "mountPath": "/tmp/app/dist/config"
+                                        "name": "minio-vol",
+                                        "mountPath": "/data"
                                     }
                                 ],
                                 "terminationMessagePath": "/dev/termination-log",
                                 "terminationMessagePolicy": "File",
-                                "imagePullPolicy": "IfNotPresent"
+                                "imagePullPolicy": "Always"
                             }
                         ],
                         "restartPolicy": "Always",
@@ -147,26 +141,23 @@
             "kind": "Service",
             "apiVersion": "v1",
             "metadata": {
-                "name": "client",
+                "name": "minio",
                 "creationTimestamp": null,
                 "labels": {
-                    "template": "tfrs-app-environment"
-                },
-                "annotations": {
-                    "description": "Exposes and load balances the front end pods"
+                    "app": "minio"
                 }
             },
             "spec": {
                 "ports": [
                     {
-                        "name": "web",
+                        "name": "9000-tcp",
                         "protocol": "TCP",
-                        "port": 8080,
-                        "targetPort": 8080
+                        "port": 9000,
+                        "targetPort": 9000
                     }
                 ],
                 "selector": {
-                    "name": "client"
+                    "deploymentconfig": "minio"
                 },
                 "type": "ClusterIP",
                 "sessionAffinity": "None"
@@ -179,21 +170,21 @@
             "kind": "Route",
             "apiVersion": "route.openshift.io/v1",
             "metadata": {
-                "name": "test-lowcarbonfuels-frontend",
+                "name": "docs",
                 "creationTimestamp": null,
-                "labels": {
-                    "template": "tfrs-app-environment"
+                "annotations": {
+                    "openshift.io/host.generated": "true"
                 }
             },
             "spec": {
-                "host": "test-lowcarbonfuels.pathfinder.gov.bc.ca",
+                "host": "docs-mem-tfrs-prod.pathfinder.gov.bc.ca",
                 "to": {
                     "kind": "Service",
-                    "name": "client",
+                    "name": "minio",
                     "weight": 100
                 },
                 "port": {
-                    "targetPort": "web"
+                    "targetPort": "9000-tcp"
                 },
                 "tls": {
                     "termination": "edge",
@@ -204,13 +195,13 @@
             "status": {
                 "ingress": [
                     {
-                        "host": "test-lowcarbonfuels.pathfinder.gov.bc.ca",
+                        "host": "docs-mem-tfrs-prod.pathfinder.gov.bc.ca",
                         "routerName": "router",
                         "conditions": [
                             {
                                 "type": "Admitted",
                                 "status": "True",
-                                "lastTransitionTime": "2018-10-25T17:33:18Z"
+                                "lastTransitionTime": "2018-12-17T21:56:36Z"
                             }
                         ],
                         "wildcardPolicy": "None"

@@ -2,7 +2,7 @@
     "kind": "Template",
     "apiVersion": "template.openshift.io/v1",
     "metadata": {
-        "name": "dev-client",
+        "name": "test-notification-server",
         "creationTimestamp": null
     },
     "objects": [
@@ -10,32 +10,18 @@
             "kind": "DeploymentConfig",
             "apiVersion": "apps.openshift.io/v1",
             "metadata": {
-                "name": "client",
-                "generation": 14,
+                "name": "notification-server",
+                "generation": 53,
                 "creationTimestamp": null,
                 "labels": {
-                    "template": "tfrs-app-environment"
-                },
-                "annotations": {
-                    "description": "Defines how to deploy the application server"
+                    "template": "notification-server"
                 }
             },
             "spec": {
                 "strategy": {
                     "type": "Recreate",
                     "recreateParams": {
-                        "timeoutSeconds": 600,
-                        "post": {
-                            "failurePolicy": "Abort",
-                            "execNewPod": {
-                                "command": [
-                                    "/bin/sh",
-                                    "-c",
-                                    "echo \"testing\" \u003e /tmp/app/dist/config/qqq"
-                                ],
-                                "containerName": "client"
-                            }
-                        }
+                        "timeoutSeconds": 600
                     },
                     "resources": {},
                     "activeDeadlineSeconds": 21600
@@ -46,14 +32,14 @@
                         "imageChangeParams": {
                             "automatic": true,
                             "containerNames": [
-                                "client"
+                                "notification-server"
                             ],
                             "from": {
                                 "kind": "ImageStreamTag",
                                 "namespace": "mem-tfrs-tools",
-                                "name": "client-develop:dev"
+                                "name": "notification-server:test"
                             },
-                            "lastTriggeredImage": "docker-registry.default.svc:5000/mem-tfrs-tools/client-develop@sha256:7fc5d53da1585d39c40ade0e44cace7c6b4d08621f842805ebb59a6d1d80b898"
+                            "lastTriggeredImage": "docker-registry.default.svc:5000/mem-tfrs-tools/notification-server@sha256:912180c065ec7be09d2c0ee8c8dc871d913c6c8dd61e39976fac14a6e661b13f"
                         }
                     },
                     {
@@ -61,33 +47,23 @@
                     }
                 ],
                 "replicas": 1,
-                "revisionHistoryLimit": 10,
                 "test": false,
                 "selector": {
-                    "name": "client"
+                    "name": "notification-server"
                 },
                 "template": {
                     "metadata": {
-                        "name": "client",
+                        "name": "notification-server",
                         "creationTimestamp": null,
                         "labels": {
-                            "name": "client"
+                            "name": "notification-server"
                         }
                     },
                     "spec": {
-                        "volumes": [
-                            {
-                                "name": "keycloak-config-data",
-                                "configMap": {
-                                    "name": "keycloak-config",
-                                    "defaultMode": 420
-                                }
-                            }
-                        ],
                         "containers": [
                             {
-                                "name": "client",
-                                "image": "docker-registry.default.svc:5000/mem-tfrs-tools/client-develop@sha256:7fc5d53da1585d39c40ade0e44cace7c6b4d08621f842805ebb59a6d1d80b898",
+                                "name": "notification-server",
+                                "image": "docker-registry.default.svc:5000/mem-tfrs-tools/notification-server@sha256:912180c065ec7be09d2c0ee8c8dc871d913c6c8dd61e39976fac14a6e661b13f",
                                 "ports": [
                                     {
                                         "containerPort": 3000,
@@ -96,57 +72,44 @@
                                 ],
                                 "env": [
                                     {
-                                        "name": "RealIpFrom"
+                                        "name": "RABBITMQ_HOST",
+                                        "value": "rabbit.mem-tfrs-test.svc"
                                     },
                                     {
-                                        "name": "AdditionalRealIpFromRules"
+                                        "name": "RABBITMQ_VHOST",
+                                        "value": "/tfrs"
                                     },
                                     {
-                                        "name": "IpFilterRules"
+                                        "name": "RABBITMQ_USER",
+                                        "value": "tfrs"
                                     },
                                     {
-                                        "name": "HTTP_BASIC"
+                                        "name": "RABBITMQ_PASSWORD",
+                                        "valueFrom": {
+                                            "secretKeyRef": {
+                                                "name": "rabbitmq-tfrs",
+                                                "key": "TFRS_PASSWORD"
+                                            }
+                                        }
                                     },
                                     {
-                                        "name": "BUILD_NUMBER",
-                                        "value": "pr-44"
+                                        "name": "NPM_RUN",
+                                        "value": "start:notifications"
                                     },
                                     {
-                                        "name": "API_URL",
-                                        "value": "http://backend.mem-tfrs-dev.svc.cluster.local:8080/api/"
+                                        "name": "KEYCLOAK_CERTS_URL",
+                                        "value": "https://sso-test.pathfinder.gov.bc.ca/auth/realms/tfrs/protocol/openid-connect/certs"
                                     }
                                 ],
                                 "resources": {
                                     "limits": {
-                                        "cpu": "500m",
-                                        "memory": "1Gi"
-                                    },
-                                    "requests": {
-                                        "memory": "200Mi"
+                                        "cpu": "250m"
                                     }
-                                },
-                                "volumeMounts": [
-                                    {
-                                        "name": "keycloak-config-data",
-                                        "mountPath": "/tmp/app/dist/config"
-                                    }
-                                ],
-                                "livenessProbe": {
-                                    "httpGet": {
-                                        "path": "/",
-                                        "port": 8080,
-                                        "scheme": "HTTP"
-                                    },
-                                    "initialDelaySeconds": 20,
-                                    "timeoutSeconds": 3,
-                                    "periodSeconds": 10,
-                                    "successThreshold": 1,
-                                    "failureThreshold": 3
                                 },
                                 "readinessProbe": {
                                     "httpGet": {
                                         "path": "/",
-                                        "port": 8080,
+                                        "port": 3000,
                                         "scheme": "HTTP"
                                     },
                                     "initialDelaySeconds": 10,
@@ -181,20 +144,19 @@
             "kind": "Service",
             "apiVersion": "v1",
             "metadata": {
-                "name": "client",
+                "name": "notification-server",
                 "creationTimestamp": null
             },
             "spec": {
                 "ports": [
                     {
-                        "name": "web",
                         "protocol": "TCP",
                         "port": 8080,
-                        "targetPort": 8080
+                        "targetPort": 3000
                     }
                 ],
                 "selector": {
-                    "name": "client"
+                    "name": "notification-server"
                 },
                 "type": "ClusterIP",
                 "sessionAffinity": "None"
@@ -207,38 +169,32 @@
             "kind": "Route",
             "apiVersion": "route.openshift.io/v1",
             "metadata": {
-                "name": "dev-lowcarbonfuels-frontend",
-                "creationTimestamp": null,
-                "labels": {
-                    "frontend": "true"
-                }
+                "name": "test-lowcarbonfuels-notification",
+                "creationTimestamp": null
             },
             "spec": {
-                "host": "dev-lowcarbonfuels.pathfinder.gov.bc.ca",
+                "host": "test-lowcarbonfuels.pathfinder.gov.bc.ca",
+                "path": "/socket.io",
                 "to": {
                     "kind": "Service",
-                    "name": "client",
+                    "name": "notification-server",
                     "weight": 100
                 },
-                "port": {
-                    "targetPort": "web"
-                },
                 "tls": {
-                    "termination": "edge",
-                    "insecureEdgeTerminationPolicy": "Redirect"
+                    "termination": "edge"
                 },
                 "wildcardPolicy": "None"
             },
             "status": {
                 "ingress": [
                     {
-                        "host": "dev-lowcarbonfuels.pathfinder.gov.bc.ca",
+                        "host": "test-lowcarbonfuels.pathfinder.gov.bc.ca",
                         "routerName": "router",
                         "conditions": [
                             {
                                 "type": "Admitted",
                                 "status": "True",
-                                "lastTransitionTime": "2019-06-10T03:05:44Z"
+                                "lastTransitionTime": "2018-10-25T17:33:32Z"
                             }
                         ],
                         "wildcardPolicy": "None"

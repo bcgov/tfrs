@@ -2,7 +2,7 @@
     "kind": "Template",
     "apiVersion": "template.openshift.io/v1",
     "metadata": {
-        "name": "prod-api",
+        "name": "prod-tfrs",
         "creationTimestamp": null
     },
     "objects": [
@@ -11,13 +11,14 @@
             "apiVersion": "apps.openshift.io/v1",
             "metadata": {
                 "name": "tfrs",
-                "generation": 150,
+                "generation": 196,
                 "creationTimestamp": null,
                 "labels": {
-                    "template": "tfrs-app-environment"
+                    "template": "tfrs-backend-template"
                 },
                 "annotations": {
-                    "description": "Defines how to deploy the application server"
+                    "description": "Defines how to deploy the application server",
+                    "kubectl.kubernetes.io/last-applied-configuration": "{\"apiVersion\":\"apps.openshift.io/v1\",\"kind\":\"DeploymentConfig\",\"metadata\":{\"annotations\":{\"description\":\"Defines how to deploy the application server\"},\"creationTimestamp\":null,\"generation\":1,\"labels\":{\"template\":\"tfrs-backend-template\"},\"name\":\"tfrs\",\"namespace\":\"mem-tfrs-prod\"},\"spec\":{\"replicas\":1,\"selector\":{\"name\":\"tfrs\"},\"strategy\":{\"activeDeadlineSeconds\":21600,\"recreateParams\":{\"mid\":{\"execNewPod\":{\"command\":[\"/bin/sh\",\"-c\",\"python manage.py migrate;\"],\"containerName\":\"tfrs-app\"},\"failurePolicy\":\"Abort\"},\"timeoutSeconds\":600},\"resources\":{},\"type\":\"Recreate\"},\"template\":{\"metadata\":{\"creationTimestamp\":null,\"labels\":{\"name\":\"tfrs\"},\"name\":\"tfrs\"},\"spec\":{\"containers\":[{\"env\":[{\"name\":\"KEYCLOAK_SA_BASEURL\",\"value\":\"https://sso.pathfinder.gov.bc.ca\"},{\"name\":\"KEYCLOAK_SA_CLIENT_ID\",\"value\":\"tfrs-django-sa\"},{\"name\":\"KEYCLOAK_SA_REALM\",\"value\":\"tfrs\"},{\"name\":\"KEYCLOAK_AUDIENCE\",\"value\":\"tfrs\"},{\"name\":\"KEYCLOAK_CERTS_URL\",\"value\":\"https://sso.pathfinder.gov.bc.ca/auth/realms/tfrs/protocol/openid-connect/certs\"},{\"name\":\"KEYCLOAK_CLIENT_ID\",\"value\":\"tfrs\"},{\"name\":\"KEYCLOAK_ENABLED\",\"value\":\"true\"},{\"name\":\"KEYCLOAK_ISSUER\",\"value\":\"https://sso.pathfinder.gov.bc.ca/auth/realms/tfrs\"},{\"name\":\"KEYCLOAK_REALM\",\"value\":\"https://sso.pathfinder.gov.bc.ca/auth/realms/tfrs\"},{\"name\":\"KEYCLOAK_SA_CLIENT_SECRET\",\"valueFrom\":{\"secretKeyRef\":{\"key\":\"KEYCLOAK_SA_CLIENT_SECRET\",\"name\":\"keycloak-sa-client-secret\"}}},{\"name\":\"AMQP_HOST\",\"value\":\"rabbit.mem-tfrs-prod.svc\"},{\"name\":\"AMQP_USER\",\"value\":\"tfrs\"},{\"name\":\"AMQP_VHOST\",\"value\":\"/tfrs\"},{\"name\":\"BYPASS_CLAMAV\",\"value\":\"false\"},{\"name\":\"EMAIL_FROM_ADDRESS\",\"value\":\"donotreply@gov.bc.ca\"},{\"name\":\"EMAIL_SENDING_ENABLED\",\"value\":\"true\"},{\"name\":\"MINIO_BUCKET_NAME\",\"value\":\"tfrs\"},{\"name\":\"SMTP_SERVER_HOST\",\"value\":\"apps.smtp.gov.bc.ca\"},{\"name\":\"DATABASE_SERVICE_NAME\",\"value\":\"postgresql\"},{\"name\":\"DATABASE_ENGINE\",\"value\":\"postgresql\"},{\"name\":\"DATABASE_NAME\",\"value\":\"tfrs\"},{\"name\":\"APP_CONFIG\",\"value\":\"/opt/app-root/src/gunicorn.cfg\"},{\"name\":\"DATABASE_USER\",\"valueFrom\":{\"secretKeyRef\":{\"key\":\"DATABASE_USER\",\"name\":\"tfrs-postgresql\"}}},{\"name\":\"DATABASE_PASSWORD\",\"valueFrom\":{\"secretKeyRef\":{\"key\":\"DATABASE_PASSWORD\",\"name\":\"tfrs-postgresql\"}}},{\"name\":\"RABBITMQ_USER\",\"value\":\"tfrs\"},{\"name\":\"RABBITMQ_VHOST\",\"value\":\"/tfrs\"},{\"name\":\"RABBITMQ_HOST\",\"value\":\"rabbit.mem-tfrs-prod.svc\"},{\"name\":\"RABBITMQ_PASSWORD\",\"valueFrom\":{\"secretKeyRef\":{\"key\":\"TFRS_PASSWORD\",\"name\":\"rabbitmq-tfrs\"}}},{\"name\":\"MINIO_ENDPOINT\",\"value\":\"docs-mem-tfrs-prod.pathfinder.gov.bc.ca:443\"},{\"name\":\"MINIO_USE_SSL\",\"value\":\"true\"},{\"name\":\"DOCUMENTS_API_ENABLED\",\"value\":\"true\"},{\"name\":\"MINIO_ACCESS_KEY\",\"valueFrom\":{\"secretKeyRef\":{\"key\":\"MINIO_ACCESS_KEY\",\"name\":\"tfrs-minio-secret\"}}},{\"name\":\"MINIO_SECRET_KEY\",\"valueFrom\":{\"secretKeyRef\":{\"key\":\"MINIO_SECRET_KEY\",\"name\":\"tfrs-minio-secret\"}}},{\"name\":\"AMQP_PASSWORD\",\"valueFrom\":{\"secretKeyRef\":{\"key\":\"TFRS_PASSWORD\",\"name\":\"rabbitmq-tfrs\"}}},{\"name\":\"CLAMAV_HOST\",\"value\":\"rabbit.mem-tfrs-prod.svc\"},{\"name\":\"FUEL_CODES_API_ENABLED\",\"value\":\"true\"},{\"name\":\"CREDIT_CALCULATION_API_ENABLED\",\"value\":\"true\"},{\"name\":\"COMPLIANCE_REPORTING_API_ENABLED\",\"value\":\"true\"}],\"image\":\"\",\"imagePullPolicy\":\"IfNotPresent\",\"livenessProbe\":{\"failureThreshold\":3,\"httpGet\":{\"path\":\"/health\",\"port\":8080,\"scheme\":\"HTTP\"},\"initialDelaySeconds\":30,\"periodSeconds\":10,\"successThreshold\":1,\"timeoutSeconds\":3},\"name\":\"tfrs-app\",\"ports\":[{\"containerPort\":8080,\"protocol\":\"TCP\"}],\"readinessProbe\":{\"failureThreshold\":3,\"httpGet\":{\"path\":\"/health\",\"port\":8080,\"scheme\":\"HTTP\"},\"initialDelaySeconds\":30,\"periodSeconds\":10,\"successThreshold\":1,\"timeoutSeconds\":3},\"resources\":{\"limits\":{\"cpu\":\"1\",\"memory\":\"1Gi\"},\"requests\":{\"cpu\":\"400m\",\"memory\":\"512Mi\"}},\"terminationMessagePath\":\"/dev/termination-log\",\"terminationMessagePolicy\":\"File\"}],\"dnsPolicy\":\"ClusterFirst\",\"restartPolicy\":\"Always\",\"schedulerName\":\"default-scheduler\",\"securityContext\":{},\"terminationGracePeriodSeconds\":30}},\"test\":false,\"triggers\":[{\"imageChangeParams\":{\"automatic\":true,\"containerNames\":[\"tfrs-app\"],\"from\":{\"kind\":\"ImageStreamTag\",\"name\":\"tfrs:prod\",\"namespace\":\"mem-tfrs-tools\"},\"lastTriggeredImage\":\"\"},\"type\":\"ImageChange\"},{\"type\":\"ConfigChange\"}]},\"status\":{\"availableReplicas\":0,\"latestVersion\":0,\"observedGeneration\":0,\"replicas\":0,\"unavailableReplicas\":0,\"updatedReplicas\":0}}\n"
                 }
             },
             "spec": {
@@ -31,7 +32,7 @@
                                 "command": [
                                     "/bin/sh",
                                     "-c",
-                                    "python manage.py migrate"
+                                    "python manage.py migrate;"
                                 ],
                                 "containerName": "tfrs-app"
                             }
@@ -53,7 +54,7 @@
                                 "namespace": "mem-tfrs-tools",
                                 "name": "tfrs:prod"
                             },
-                            "lastTriggeredImage": "docker-registry.default.svc:5000/mem-tfrs-tools/tfrs@sha256:5adca94c1fc788503a83c4dc2c8c0e249823f37abeb2bafc334aa9f712ffed31"
+                            "lastTriggeredImage": "docker-registry.default.svc:5000/mem-tfrs-tools/tfrs@sha256:9293d23725b37e4d8783c037bc0a5c0937ae296d3b6aed6ef435080d2b16f6e5"
                         }
                     },
                     {
@@ -77,7 +78,7 @@
                         "containers": [
                             {
                                 "name": "tfrs-app",
-                                "image": "docker-registry.default.svc:5000/mem-tfrs-tools/tfrs@sha256:5adca94c1fc788503a83c4dc2c8c0e249823f37abeb2bafc334aa9f712ffed31",
+                                "image": "docker-registry.default.svc:5000/mem-tfrs-tools/tfrs@sha256:9293d23725b37e4d8783c037bc0a5c0937ae296d3b6aed6ef435080d2b16f6e5",
                                 "ports": [
                                     {
                                         "containerPort": 8080,
@@ -85,6 +86,18 @@
                                     }
                                 ],
                                 "env": [
+                                    {
+                                        "name": "KEYCLOAK_SA_BASEURL",
+                                        "value": "https://sso.pathfinder.gov.bc.ca"
+                                    },
+                                    {
+                                        "name": "KEYCLOAK_SA_CLIENT_ID",
+                                        "value": "tfrs-django-sa"
+                                    },
+                                    {
+                                        "name": "KEYCLOAK_SA_REALM",
+                                        "value": "tfrs"
+                                    },
                                     {
                                         "name": "KEYCLOAK_AUDIENCE",
                                         "value": "tfrs"
@@ -108,6 +121,47 @@
                                     {
                                         "name": "KEYCLOAK_REALM",
                                         "value": "https://sso.pathfinder.gov.bc.ca/auth/realms/tfrs"
+                                    },
+                                    {
+                                        "name": "KEYCLOAK_SA_CLIENT_SECRET",
+                                        "valueFrom": {
+                                            "secretKeyRef": {
+                                                "name": "keycloak-sa-client-secret",
+                                                "key": "KEYCLOAK_SA_CLIENT_SECRET"
+                                            }
+                                        }
+                                    },
+                                    {
+                                        "name": "AMQP_HOST",
+                                        "value": "rabbit.mem-tfrs-prod.svc"
+                                    },
+                                    {
+                                        "name": "AMQP_USER",
+                                        "value": "tfrs"
+                                    },
+                                    {
+                                        "name": "AMQP_VHOST",
+                                        "value": "/tfrs"
+                                    },
+                                    {
+                                        "name": "BYPASS_CLAMAV",
+                                        "value": "false"
+                                    },
+                                    {
+                                        "name": "EMAIL_FROM_ADDRESS",
+                                        "value": "donotreply@gov.bc.ca"
+                                    },
+                                    {
+                                        "name": "EMAIL_SENDING_ENABLED",
+                                        "value": "true"
+                                    },
+                                    {
+                                        "name": "MINIO_BUCKET_NAME",
+                                        "value": "tfrs"
+                                    },
+                                    {
+                                        "name": "SMTP_SERVER_HOST",
+                                        "value": "apps.smtp.gov.bc.ca"
                                     },
                                     {
                                         "name": "DATABASE_SERVICE_NAME",
@@ -159,15 +213,70 @@
                                         "name": "RABBITMQ_PASSWORD",
                                         "valueFrom": {
                                             "secretKeyRef": {
-                                                "name": "rabbitmq",
-                                                "key": "password"
+                                                "name": "rabbitmq-tfrs",
+                                                "key": "TFRS_PASSWORD"
                                             }
                                         }
+                                    },
+                                    {
+                                        "name": "MINIO_ENDPOINT",
+                                        "value": "docs-mem-tfrs-prod.pathfinder.gov.bc.ca:443"
+                                    },
+                                    {
+                                        "name": "MINIO_USE_SSL",
+                                        "value": "true"
+                                    },
+                                    {
+                                        "name": "DOCUMENTS_API_ENABLED",
+                                        "value": "true"
+                                    },
+                                    {
+                                        "name": "MINIO_ACCESS_KEY",
+                                        "valueFrom": {
+                                            "secretKeyRef": {
+                                                "name": "tfrs-minio-secret",
+                                                "key": "MINIO_ACCESS_KEY"
+                                            }
+                                        }
+                                    },
+                                    {
+                                        "name": "MINIO_SECRET_KEY",
+                                        "valueFrom": {
+                                            "secretKeyRef": {
+                                                "name": "tfrs-minio-secret",
+                                                "key": "MINIO_SECRET_KEY"
+                                            }
+                                        }
+                                    },
+                                    {
+                                        "name": "AMQP_PASSWORD",
+                                        "valueFrom": {
+                                            "secretKeyRef": {
+                                                "name": "rabbitmq-tfrs",
+                                                "key": "TFRS_PASSWORD"
+                                            }
+                                        }
+                                    },
+                                    {
+                                        "name": "CLAMAV_HOST",
+                                        "value": "rabbit.mem-tfrs-prod.svc"
+                                    },
+                                    {
+                                        "name": "FUEL_CODES_API_ENABLED",
+                                        "value": "true"
+                                    },
+                                    {
+                                        "name": "CREDIT_CALCULATION_API_ENABLED",
+                                        "value": "true"
+                                    },
+                                    {
+                                        "name": "COMPLIANCE_REPORTING_API_ENABLED",
+                                        "value": "true"
                                     }
                                 ],
                                 "resources": {
                                     "limits": {
-                                        "cpu": "500m",
+                                        "cpu": "1",
                                         "memory": "1Gi"
                                     },
                                     "requests": {
@@ -228,10 +337,11 @@
                 "name": "backend",
                 "creationTimestamp": null,
                 "labels": {
-                    "template": "tfrs-app-environment"
+                    "template": "tfrs-backend-template"
                 },
                 "annotations": {
                     "description": "Exposes and load balances the application pods",
+                    "kubectl.kubernetes.io/last-applied-configuration": "{\"apiVersion\":\"v1\",\"kind\":\"Service\",\"metadata\":{\"annotations\":{},\"labels\":{\"template\":\"tfrs-backend-template\"},\"name\":\"backend\",\"namespace\":\"mem-tfrs-prod\"},\"spec\":{\"ports\":[{\"name\":\"web\",\"port\":8080,\"protocol\":\"TCP\",\"targetPort\":8080}],\"selector\":{\"name\":\"tfrs\"},\"sessionAffinity\":\"None\",\"type\":\"ClusterIP\"},\"status\":{\"loadBalancer\":{}}}\n",
                     "service.alpha.openshift.io/dependencies": "[{\"name\": \"postgresql\", \"kind\": \"Service\"}]"
                 }
             },
@@ -261,7 +371,10 @@
                 "name": "lowcarbonfuels-backend",
                 "creationTimestamp": null,
                 "labels": {
-                    "template": "tfrs-app-environment"
+                    "template": "tfrs-backend-template"
+                },
+                "annotations": {
+                    "kubectl.kubernetes.io/last-applied-configuration": "{\"apiVersion\":\"route.openshift.io/v1\",\"kind\":\"Route\",\"metadata\":{\"annotations\":{},\"creationTimestamp\":null,\"labels\":{\"template\":\"tfrs-backend-template\"},\"name\":\"lowcarbonfuels-backend\",\"namespace\":\"mem-tfrs-prod\"},\"spec\":{\"host\":\"lowcarbonfuels.gov.bc.ca\",\"path\":\"/api\",\"port\":{\"targetPort\":\"web\"},\"tls\":{\"termination\":\"edge\"},\"to\":{\"kind\":\"Service\",\"name\":\"backend\",\"weight\":100},\"wildcardPolicy\":\"None\"}}\n"
                 }
             },
             "spec": {
