@@ -66,13 +66,13 @@ podTemplate(label: "develop-maven-${env.BUILD_NUMBER}", name: "develop-maven-${e
 ) {
 
     node("develop-maven-${env.BUILD_NUMBER}") {
-        
-        sh 'sleep 300s'
+
+        checkout changelog: false, poll: false, scm: [$class: 'GitSCM', branches: [[name: "${tfrsRelease}"]], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[credentialsId: 'github-account', url: 'https://github.com/bcgov/tfrs.git']]]
+        pwd()
+        sh 'sleep 100s'
         prepareBuilds = load "${pwd()}/openshift/pipelines/scripts/prepareBuilds.groovy"
         backendBuildStages = builds.prepareBackendBuildStages()
         frontendBuildStages = builds.prepareFrontendBuildStages()
-
-        checkout changelog: false, poll: false, scm: [$class: 'GitSCM', branches: [[name: "${tfrsRelease}"]], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[credentialsId: 'github-account', url: 'https://github.com/bcgov/tfrs.git']]]
 
         //run backend builds
         for (builds in backendBuildStages) {
