@@ -25,7 +25,7 @@ stage('Test DEV using Browserstack') {
       dir('functional-tests') {
         try {
           withCredentials([usernamePassword(credentialsId: 'browserstack', usernameVariable: 'BROWSERSTACK_USERNAME', passwordVariable: 'BROWSERSTACK_TOKEN'),
-                           file(credentialsId: 'functional_test_users', variable: 'envfile']) {
+                           file(credentialsId: 'functional_test_users', variable: 'envfile')]) {
           sh "cp \$envfile .env"
           sh './gradlew remoteTest'
         }
