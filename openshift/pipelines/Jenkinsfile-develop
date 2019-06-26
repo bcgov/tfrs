@@ -67,6 +67,7 @@ podTemplate(label: "develop-maven-${env.BUILD_NUMBER}", name: "develop-maven-${e
 
     node("develop-maven-${env.BUILD_NUMBER}") {
         
+        sh 'sleep 300s'
         prepareBuilds = load "${pwd()}/openshift/pipelines/scripts/prepareBuilds.groovy"
         backendBuildStages = builds.prepareBackendBuildStages()
         frontendBuildStages = builds.prepareFrontendBuildStages()
