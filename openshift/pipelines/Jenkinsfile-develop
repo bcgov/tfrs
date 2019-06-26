@@ -126,7 +126,6 @@ podTemplate(label: "develop-maven-${env.BUILD_NUMBER}", name: "develop-maven-${e
                         "KEYCLOAK_CLIENT_ID=tfrs-dev",
                         "KEYCLOAK_ISSUER=https://sso-dev.pathfinder.gov.bc.ca/auth/realms/tfrs-dev",
                         "KEYCLOAK_REALM=https://sso-dev.pathfinder.gov.bc.ca/auth/realms/tfrs-dev")
-                        )
                         openshift.apply(backendDCJson)
                     }
                 }
