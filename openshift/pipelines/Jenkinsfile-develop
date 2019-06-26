@@ -1,6 +1,6 @@
 result = 0
 runParallel = true
-tfrsRelease="v1.4.12"
+tfrsRelease="devops-env-restore"
 
 builds = load './scripts/prepareBuilds.groovy'
 
