@@ -81,7 +81,7 @@ class ComplianceReportDetailSerializer(serializers.ModelSerializer):
         total_renewable_gasoline = 0
 
         schedule_b_records = ScheduleBRecord.objects.filter(
-            schedule_id=obj.schedule_b.id
+            schedule=obj.schedule_b
         )
 
         for record in schedule_b_records:
@@ -111,7 +111,7 @@ class ComplianceReportDetailSerializer(serializers.ModelSerializer):
                 total_petroleum_gasoline += record.quantity
 
         schedule_c_records = ScheduleCRecord.objects.filter(
-            schedule_id=obj.schedule_c.id
+            schedule=obj.schedule_c
         )
 
         for record in schedule_c_records:
