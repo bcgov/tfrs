@@ -123,3 +123,5 @@ def prepareBuildNotificationServer() {
         }
     }
 }
+
+return this
