@@ -2,7 +2,7 @@ result = 0
 runParallel = true
 tfrsRelease="devops-env-restore"
 
-builds = load './scripts/prepareBuilds.groovy'
+
 
 /****
 podTemplate(label: "develop-backend-python-${env.BUILD_NUMBER}", name: "develop-backend-python-${env.BUILD_NUMBER}", serviceAccount: 'jenkins-basic', cloud: 'openshift',
@@ -47,9 +47,7 @@ if (result != 0) {
     return
 }
 
-//organize all build stages
-backendBuildStages = builds.prepareBackendBuildStages()
-frontendBuildStages = builds.prepareFrontendBuildStages()
+
 
 podTemplate(label: "develop-maven-${env.BUILD_NUMBER}", name: "develop-maven-${env.BUILD_NUMBER}", serviceAccount: 'jenkins-basic', cloud: 'openshift',
         containers: [
@@ -68,6 +66,10 @@ podTemplate(label: "develop-maven-${env.BUILD_NUMBER}", name: "develop-maven-${e
 ) {
 
     node("develop-maven-${env.BUILD_NUMBER}") {
+        
+        prepareBuilds = load './scripts/prepareBuilds.groovy'
+        backendBuildStages = builds.prepareBackendBuildStages()
+        frontendBuildStages = builds.prepareFrontendBuildStages()
 
         checkout changelog: false, poll: false, scm: [$class: 'GitSCM', branches: [[name: "${tfrsRelease}"]], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[credentialsId: 'github-account', url: 'https://github.com/bcgov/tfrs.git']]]
 
