@@ -20,16 +20,17 @@
     See the License for the specific language governing permissions and
     limitations under the License.
 """
-import logging
 
 from rest_framework import serializers
 from rest_framework.relations import SlugRelatedField, PrimaryKeyRelatedField
 
 from api.models.CompliancePeriod import CompliancePeriod
 from api.models.ComplianceReport import ComplianceReportType, ComplianceReportStatus, ComplianceReport
-from api.models.ComplianceReportSchedules import ScheduleCRecord, ScheduleC, ScheduleARecord, ScheduleA, ScheduleBRecord, ScheduleB
+from api.models.ComplianceReportSchedules import ScheduleCRecord, ScheduleC, ScheduleARecord, ScheduleA,\
+    ScheduleBRecord, ScheduleB, ScheduleD, ScheduleDSheet, ScheduleDSheetInput, ScheduleDSheetOutput
 from api.serializers import OrganizationMinSerializer, CompliancePeriodSerializer
-from api.serializers.ComplianceReportSchedules import ScheduleCDetailSerializer, ScheduleADetailSerializer, ScheduleBDetailSerializer
+from api.serializers.ComplianceReportSchedules import ScheduleCDetailSerializer, ScheduleADetailSerializer,\
+    ScheduleBDetailSerializer, ScheduleDDetailSerializer
 
 
 class ComplianceReportTypeSerializer(serializers.ModelSerializer):
@@ -66,11 +67,12 @@ class ComplianceReportDetailSerializer(serializers.ModelSerializer):
     schedule_a = ScheduleADetailSerializer(read_only=True)
     schedule_b = ScheduleBDetailSerializer(read_only=True)
     schedule_c = ScheduleCDetailSerializer(read_only=True)
+    schedule_d = ScheduleDDetailSerializer(read_only=True)
 
     class Meta:
         model = ComplianceReport
         fields = ['id', 'status', 'type', 'organization', 'compliance_period',
-                  'schedule_a', 'schedule_b', 'schedule_c']
+                  'schedule_a', 'schedule_b', 'schedule_c', 'schedule_d']
 
 
 class ComplianceReportCreateSerializer(serializers.ModelSerializer):
@@ -80,11 +82,17 @@ class ComplianceReportCreateSerializer(serializers.ModelSerializer):
     compliance_period = SlugRelatedField(slug_field='description',
                                          queryset=CompliancePeriod.objects.all())
     organization = OrganizationMinSerializer(read_only=True)
-    schedule_c = ScheduleCDetailSerializer(allow_null=True, required=False)
-    schedule_b = ScheduleBDetailSerializer(allow_null=True, required=False)
+
     schedule_a = ScheduleADetailSerializer(allow_null=True, required=False)
+    schedule_b = ScheduleBDetailSerializer(allow_null=True, required=False)
+    schedule_c = ScheduleCDetailSerializer(allow_null=True, required=False)
+    schedule_d = ScheduleDDetailSerializer(allow_null=True, required=False)
 
     def create(self, validated_data):
+        schedule_d_data = None
+        if 'schedule_d' in validated_data:
+            schedule_d_data = validated_data.pop('schedule_d')
+
         schedule_c_data = None
         if 'schedule_c' in validated_data:
             schedule_c_data = validated_data.pop('schedule_c')
@@ -98,6 +106,29 @@ class ComplianceReportCreateSerializer(serializers.ModelSerializer):
             schedule_a_data = validated_data.pop('schedule_a')
 
         instance = ComplianceReport.objects.create(**validated_data)
+
+        if schedule_d_data and 'sheets' in schedule_d_data:
+            sheets_data = schedule_d_data.pop('sheets')
+            schedule_d = ScheduleD.objects.create(**schedule_d_data, compliance_report=instance)
+            instance.schedule_d = schedule_d
+            for sheet_data in sheets_data:
+                inputs_data = sheet_data.pop('inputs')
+                outputs_data = sheet_data.pop('outputs')
+                sheet = ScheduleDSheet.objects.create(**sheet_data, schedule=schedule_d)
+
+                for input_data in inputs_data:
+                    input = ScheduleDSheetInput.objects.create(**input_data, sheet=sheet)
+                    sheet.inputs.add(input)
+                    sheet.save()
+
+                for output_data in outputs_data:
+                    output = ScheduleDSheetOutput.objects.create(**output_data, sheet=sheet)
+                    sheet.outputs.add(output)
+                    sheet.save()
+
+                schedule_d.sheets.add(sheet)
+
+                schedule_d.save()
 
         if schedule_c_data and 'records' in schedule_c_data:
             records_data = schedule_c_data.pop('records')
@@ -132,7 +163,7 @@ class ComplianceReportCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = ComplianceReport
         fields = ('status', 'type', 'compliance_period', 'organization',
-                  'schedule_a', 'schedule_b', 'schedule_c')
+                  'schedule_a', 'schedule_b', 'schedule_c', 'schedule_d')
 
 
 class ComplianceReportUpdateSerializer(serializers.ModelSerializer):
@@ -144,8 +175,42 @@ class ComplianceReportUpdateSerializer(serializers.ModelSerializer):
     schedule_a = ScheduleADetailSerializer(allow_null=True, required=False)
     schedule_b = ScheduleBDetailSerializer(allow_null=True, required=False)
     schedule_c = ScheduleCDetailSerializer(allow_null=True, required=False)
+    schedule_d = ScheduleDDetailSerializer(allow_null=True, required=False)
 
     def update(self, instance, validated_data):
+
+        if 'schedule_d' in validated_data:
+            schedule_d_data = validated_data.pop('schedule_d')
+
+            if instance.schedule_d:
+                ScheduleDSheetInput.objects.filter(sheet__schedule=instance.schedule_d).delete()
+                ScheduleDSheetOutput.objects.filter(sheet__schedule=instance.schedule_d).delete()
+                ScheduleDSheet.objects.filter(schedule=instance.schedule_d).delete()
+                instance.schedule_d.delete()
+
+            sheets_data = schedule_d_data.pop('sheets')
+            schedule_d = ScheduleD.objects.create(**schedule_d_data, compliance_report=instance)
+            instance.schedule_d = schedule_d
+            for sheet_data in sheets_data:
+                inputs_data = sheet_data.pop('inputs')
+                outputs_data = sheet_data.pop('outputs')
+                sheet = ScheduleDSheet.objects.create(**sheet_data, schedule=schedule_d)
+
+                for input_data in inputs_data:
+                    input = ScheduleDSheetInput.objects.create(**input_data, sheet=sheet)
+                    sheet.inputs.add(input)
+                    sheet.save()
+
+                for output_data in outputs_data:
+                    output = ScheduleDSheetOutput.objects.create(**output_data, sheet=sheet)
+                    sheet.outputs.add(output)
+                    sheet.save()
+
+                schedule_d.sheets.add(sheet)
+                schedule_d.save()
+
+            instance.save()
+
         if 'schedule_c' in validated_data:
             schedule_c_data = validated_data.pop('schedule_c')
 
@@ -212,7 +277,7 @@ class ComplianceReportUpdateSerializer(serializers.ModelSerializer):
     class Meta:
         model = ComplianceReport
         fields = ('status', 'type', 'compliance_period', 'organization',
-                  'schedule_a', 'schedule_b', 'schedule_c')
+                  'schedule_a', 'schedule_b', 'schedule_c', 'schedule_d')
 
 
 class ComplianceReportDeleteSerializer(serializers.ModelSerializer):
