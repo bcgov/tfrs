@@ -12,6 +12,7 @@ podTemplate(label: "develop-backend-python-${env.BUILD_NUMBER}", name: "develop-
             resourceRequestMemory: '2Gi',
             resourceLimitMemory: '4Gi',
             workingDir: '/home/jenkins',
+            activeDeadlineSeconds: 600,
             command: '',
             args: '${computer.jnlpmac} ${computer.name}'
         )
@@ -53,6 +54,7 @@ podTemplate(label: "develop-maven-${env.BUILD_NUMBER}", name: "develop-maven-${e
                 resourceRequestMemory: '2Gi',
                 resourceLimitMemory: '4Gi',
                 workingDir: '/home/jenkins',
+                activeDeadlineSeconds: 600,
                 command: '',
                 args: '${computer.jnlpmac} ${computer.name}'
             )
