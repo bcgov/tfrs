@@ -113,8 +113,8 @@ podTemplate(label: "develop-maven-${env.BUILD_NUMBER}", name: "develop-maven-${e
         def prepareDCStages = load "openshift/pipelines/scripts/prepareDCStages.groovy"
 
         //apply all deployment dcs
-        prepareDCStages.backendDCStage("dev").call()
-        //prepareDCStages.celeryDCStage("dev").call()
+        //prepareDCStages.backendDCStage("dev").call()
+        prepareDCStages.celeryDCStage("dev").call()
         //prepareDCStages.scanCoordinatorDCStage("dev").call()
         //prepareDCStages.scanHandlerDCStage("dev").call()
         //prepareDCStages.notificationServerDCStage("dev").call()
