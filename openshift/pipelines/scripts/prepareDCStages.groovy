@@ -154,15 +154,15 @@ def scanCoordinatorDCStage (String envName) {
                     if(envName == 'dev') {
                         projectName = "mem-tfrs-dev"
                         ENV_NAME = 'dev'
-                        SOURCE_IS_NAME = 'celery-develop'
+                        SOURCE_IS_NAME = 'scan-coordinator-develop'
                     } else if(envName == 'test') {
                         projectName = "mem-tfrs-test"
                         ENV_NAME = 'test'
-                        SOURCE_IS_NAME = 'celery'
+                        SOURCE_IS_NAME = 'scan-coordinator'
                     } else if(envName == 'prod') {
                         projectName = "mem-tfrs-prod"
                         ENV_NAME = 'prod'
-                        SOURCE_IS_NAME = 'celery'
+                        SOURCE_IS_NAME = 'scan-coordinator'
                     }
                     openshift.withProject("${projectName}") {
                         def scanCoordinatorDCJson = openshift.process(readFile(file:'openshift/templates/components/scan-coordinator/scan-coordinator-dc.json'), 
@@ -189,15 +189,15 @@ def scanHandlerDCStage (String envName) {
                     if(envName == 'dev') {
                         projectName = "mem-tfrs-dev"
                         ENV_NAME = 'dev'
-                        SOURCE_IS_NAME = 'celery-develop'
+                        SOURCE_IS_NAME = 'scan-handler-develop'
                     } else if(envName == 'test') {
                         projectName = "mem-tfrs-test"
                         ENV_NAME = 'test'
-                        SOURCE_IS_NAME = 'celery'
+                        SOURCE_IS_NAME = 'scan-handler'
                     } else if(envName == 'prod') {
                         projectName = "mem-tfrs-prod"
                         ENV_NAME = 'prod'
-                        SOURCE_IS_NAME = 'celery'
+                        SOURCE_IS_NAME = 'scan-handler'
                     }
                     openshift.withProject("${projectName}") {
                         def scanHandlerDCJson = openshift.process(readFile(file:'openshift/templates/components/scan-handler/scan-handler-dc.json'), 
@@ -225,17 +225,17 @@ def notificationServerDCStage (String envName) {
                     if(envName == 'dev') {
                         projectName = 'mem-tfrs-dev'
                         ENV_NAME = 'dev'
-                        SOURCE_IS_NAME = 'celery-develop'
+                        SOURCE_IS_NAME = 'notification-server-develop'
                         KEYCLOAK_CERTS_URL = 'https://sso-dev.pathfinder.gov.bc.ca/auth/realms/tfrs-dev/protocol/openid-connect/certs'
                     } else if(envName == 'test') {
                         projectName = 'mem-tfrs-test'
                         ENV_NAME = 'test'
-                        SOURCE_IS_NAME = 'celery'
+                        SOURCE_IS_NAME = 'notification-server'
                         KEYCLOAK_CERTS_URL = 'https://sso-test.pathfinder.gov.bc.ca/auth/realms/tfrs/protocol/openid-connect/certs'
                     } else if(envName == 'prod') {
                         projectName = 'mem-tfrs-prod'
                         ENV_NAME = 'prod'
-                        SOURCE_IS_NAME = 'celery'
+                        SOURCE_IS_NAME = 'notification-server'
                         KEYCLOAK_CERTS_URL = 'https://sso.pathfinder.gov.bc.ca/auth/realms/tfrs/protocol/openid-connect/certs'
                     }
                     openshift.withProject("${projectName}") {
