@@ -5,6 +5,7 @@ def backendDCStage (String envName) {
                 script {
                     def projectName
                     def ENV_NAME
+                    def SOURCE_IS_NAME
                     def KEYCLOAK_SA_BASEURL
                     def KEYCLOAK_SA_CLIENT_ID
                     def KEYCLOAK_SA_REALM
@@ -16,6 +17,7 @@ def backendDCStage (String envName) {
                     if(envName == 'dev') {
                         projectName = "mem-tfrs-dev"
                         ENV_NAME = "dev"
+                        SOURCE_IS_NAME = 'tfrs-develop'
                         KEYCLOAK_SA_BASEURL = "https://sso-dev.pathfinder.gov.bc.ca"
                         KEYCLOAK_SA_CLIENT_ID = "tfrs-dev-django-sa"
                         KEYCLOAK_SA_REALM = "tfrs-dev"
@@ -27,6 +29,7 @@ def backendDCStage (String envName) {
                     } else if(envName == 'test') {
                         projectName = "mem-tfrs-test"
                         ENV_NAME = "test"
+                        SOURCE_IS_NAME = 'tfrs'
                         KEYCLOAK_SA_BASEURL = "https://sso-test.pathfinder.gov.bc.ca"
                         KEYCLOAK_SA_CLIENT_ID = "tfrs-django-sa"
                         KEYCLOAK_SA_REALM = "tfrs"
@@ -38,6 +41,7 @@ def backendDCStage (String envName) {
                     } else if(envName == 'prod') {
                         projectName = "mem-tfrs-prod"
                         ENV_NAME = "prod"
+                        SOURCE_IS_NAME = 'tfrs'
                         KEYCLOAK_SA_BASEURL = "https://sso.pathfinder.gov.bc.ca"
                         KEYCLOAK_SA_CLIENT_ID = "tfrs-django-sa"
                         KEYCLOAK_SA_REALM = "tfrs"
