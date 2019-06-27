@@ -1,10 +1,10 @@
 import React from 'react';
 
 import Input from './Input';
-import { getQuantity } from '../../utils/functions';
 
 const numericInput = {
   attributes: {
+    allowNegative: true,
     dataNumberToFixed: 50,
     step: '0.01'
   },
@@ -17,8 +17,18 @@ const numericInput = {
       return '';
     }
 
-    return <span>{getQuantity(value).toFixed(2).toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')}</span>;
+    return <span>{Number(value).toFixed(2).toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')}</span>;
   }
+};
+
+const totalViewer = (cell) => {
+  const { value } = cell;
+
+  if (value === '') {
+    return '';
+  }
+
+  return <span>{Number(value).toFixed(2).toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')}</span>;
 };
 
 const ScheduleDOutput = [
@@ -87,9 +97,9 @@ const ScheduleDOutput = [
     readOnly: true,
     value: 'Total (gCO₂e/GJ)'
   }, {
-    ...numericInput,
-    className: 'number',
-    readOnly: true
+    className: 'number total',
+    readOnly: true,
+    valueViewer: totalViewer
   }],
   [{
     className: 'output-label total',
@@ -97,8 +107,9 @@ const ScheduleDOutput = [
     value: 'Carbon Intensity (gCO₂e/MJ)'
   }, {
     ...numericInput,
-    className: 'number',
-    readOnly: true
+    className: 'number total',
+    readOnly: true,
+    valueViewer: totalViewer
   }]
 ];
 

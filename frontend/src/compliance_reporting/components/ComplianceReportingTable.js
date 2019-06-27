@@ -7,12 +7,17 @@ import 'react-table/react-table.css';
 import moment from 'moment';
 
 import ReactTable from '../../app/components/StateSavingReactTable';
-import CREDIT_TRANSACTIONS from "../../constants/routes/CreditTransactions";
-import history from "../../app/History";
-import COMPLIANCE_REPORTING from "../../constants/routes/ComplianceReporting";
+import history from '../../app/History';
+import COMPLIANCE_REPORTING from '../../constants/routes/ComplianceReporting';
 
 const ComplianceReportingTable = (props) => {
   const columns = [{
+    accessor: item => (item.compliancePeriod ? item.compliancePeriod.description : ''),
+    className: 'col-compliance-year',
+    Header: 'Compliance Period',
+    id: 'compliance-period',
+    minWidth: 50
+  }, {
     accessor: item => (item.organization ? item.organization.name : ''),
     className: 'col-organization',
     Header: 'Organization',
@@ -32,14 +37,13 @@ const ComplianceReportingTable = (props) => {
     id: 'status',
     minWidth: 75
   },
-    {
-      accessor: item => (item.updateTimestamp ? moment(item.updateTimestamp).format('YYYY-MM-DD') : '-'),
-      className: 'col-date',
-      Header: 'Last Updated On',
-      id: 'updateTimestamp',
-      minWidth: 95
-    }
-  ];
+  {
+    accessor: item => (item.updateTimestamp ? moment(item.updateTimestamp).format('YYYY-MM-DD') : '-'),
+    className: 'col-date',
+    Header: 'Last Updated On',
+    id: 'updateTimestamp',
+    minWidth: 95
+  }];
 
   const filterMethod = (filter, row, column) => {
     const id = filter.pivotId || filter.id;
@@ -92,8 +96,7 @@ ComplianceReportingTable.propTypes = {
       name: PropTypes.string
     }),
     status: PropTypes.string,
-    type: PropTypes.string,
-
+    type: PropTypes.string
   })).isRequired,
   isEmpty: PropTypes.bool.isRequired,
   isFetching: PropTypes.bool.isRequired,
