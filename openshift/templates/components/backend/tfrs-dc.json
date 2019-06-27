@@ -284,7 +284,7 @@
                                     },
                                     {
                                         "name": "MINIO_ENDPOINT",
-                                        "value": "minio-mem-tfrs-${ENV_NAME}.pathfinder.gov.bc.ca:443"
+                                        "value": "docs-mem-tfrs-${ENV_NAME}.pathfinder.gov.bc.ca:443"
                                     },
                                     {
                                         "name": "MINIO_USE_SSL",
