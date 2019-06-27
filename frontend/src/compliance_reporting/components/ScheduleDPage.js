@@ -69,9 +69,7 @@ const ScheduleDPage = props => ([
   </div>
 ]);
 
-ScheduleDPage.defaultProps = {
-  totals: {}
-};
+ScheduleDPage.defaultProps = {};
 
 ScheduleDPage.propTypes = {
   addRow: PropTypes.func.isRequired,
@@ -84,8 +82,7 @@ ScheduleDPage.propTypes = {
     grid: PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.shape())),
     input: PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.shape())),
     output: PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.shape()))
-  }).isRequired,
-  totals: PropTypes.shape()
+  }).isRequired
 };
 
 export default ScheduleDPage;

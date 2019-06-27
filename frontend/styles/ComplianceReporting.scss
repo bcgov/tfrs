@@ -33,6 +33,10 @@
     text-align: right;
   }
 
+  .col-date, .col-status, .col-compliance-year {
+    text-align: center;
+  }
+
   .right-toolbar-container .actions-container {
     margin-bottom: 1rem;
 
@@ -47,9 +51,6 @@
 }
 
 .page-compliance-reporting-details {
-  .btn-container {
-  }
-
   .compliance-reporting-details {
     margin-left: -15px;
     margin-right: -15px;
