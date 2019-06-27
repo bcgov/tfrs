@@ -6,6 +6,7 @@ import { getQuantity } from '../../utils/functions';
 const numericInput = {
   attributes: {
     dataNumberToFixed: 50,
+    maxLength: '100',
     step: '0.01'
   },
   className: 'number',
