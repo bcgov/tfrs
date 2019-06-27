@@ -16,6 +16,7 @@ import ScheduleSummaryGasoline from './components/ScheduleSummaryGasoline';
 import ScheduleSummaryPage from './components/ScheduleSummaryPage';
 import ScheduleSummaryPart3 from './components/ScheduleSummaryPart3';
 import ScheduleSummaryPenalty from './components/ScheduleSummaryPenalty';
+import { SCHEDULE_SUMMARY } from '../constants/schedules/scheduleColumns';
 
 class ScheduleSummaryContainer extends Component {
   constructor (props) {
@@ -43,6 +44,116 @@ class ScheduleSummaryContainer extends Component {
   }
 
   componentDidMount () {
+    if (this.props.loadedState) {
+      // this.restoreFromAutosaved();
+    } else if (!this.props.create) {
+      this.loadSchedules();
+    }
+  }
+
+  loadSchedules () {
+    const { diesel, gasoline } = this.state;
+    const { scheduleA, summary } = this.props.complianceReport;
+    const {
+      totalPetroleumDiesel,
+      totalPetroleumGasoline,
+      totalRenewableDiesel,
+      totalRenewableGasoline
+    } = summary;
+
+    let totalDiesel = 0;
+    let totalGasoline = 0;
+
+    if (totalPetroleumDiesel) {
+      diesel[SCHEDULE_SUMMARY.LINE_12][2] = { // line 12, 3rd column
+        ...diesel[SCHEDULE_SUMMARY.LINE_12][2],
+        value: totalPetroleumDiesel
+      };
+
+      totalDiesel += totalPetroleumDiesel;
+    }
+
+    if (totalPetroleumGasoline) {
+      gasoline[SCHEDULE_SUMMARY.LINE_1][2] = { // line 1, 3rd column
+        ...gasoline[SCHEDULE_SUMMARY.LINE_1][2],
+        value: totalPetroleumGasoline
+      };
+
+      totalGasoline += totalPetroleumGasoline;
+    }
+
+    if (totalRenewableDiesel) {
+      diesel[SCHEDULE_SUMMARY.LINE_13][2] = { // line 13, 3rd column
+        ...diesel[SCHEDULE_SUMMARY.LINE_13][2],
+        value: totalRenewableDiesel
+      };
+
+      totalDiesel += totalRenewableDiesel;
+    }
+
+    if (totalRenewableGasoline) {
+      gasoline[SCHEDULE_SUMMARY.LINE_2][2] = { // line 2, 3rd column
+        ...gasoline[SCHEDULE_SUMMARY.LINE_2][2],
+        value: totalRenewableGasoline
+      };
+
+      totalGasoline += totalRenewableGasoline;
+    }
+
+    diesel[SCHEDULE_SUMMARY.LINE_14][2] = { // line 14, 3rd column
+      ...diesel[SCHEDULE_SUMMARY.LINE_14][2],
+      value: totalDiesel === 0 ? '' : totalDiesel
+    };
+
+    gasoline[SCHEDULE_SUMMARY.LINE_3][2] = { // line 3, 3rd column
+      ...gasoline[SCHEDULE_SUMMARY.LINE_3][2],
+      value: totalGasoline === 0 ? '' : totalGasoline
+    };
+
+    diesel[SCHEDULE_SUMMARY.LINE_15][2] = { // line 15, 3rd column
+      ...diesel[SCHEDULE_SUMMARY.LINE_15][2],
+      value: totalDiesel * 0.04 // Line 14 x 4%
+    };
+
+    gasoline[SCHEDULE_SUMMARY.LINE_4][2] = { // line 4, 3rd column
+      ...gasoline[SCHEDULE_SUMMARY.LINE_4][2],
+      value: totalGasoline * 0.05 // Line 3 x 5%
+    };
+
+    if (scheduleA && scheduleA.records) {
+      let dieselReceived = 0;
+      let dieselTransferred = 0;
+      let gasolineReceived = 0;
+      let gasolineTransferred = 0;
+
+      scheduleA.records.forEach((record) => {
+        if (record.fuelClass === 'Diesel' && record.transferType === 'Transferred') {
+          dieselTransferred += Number(record.quantity);
+        } else if (record.fuelClass === 'Diesel' && record.transferType === 'Received') {
+          dieselReceived += Number(record.quantity);
+        } else if (record.fuelClass === 'Gasoline' && record.transferType === 'Transferred') {
+          gasolineTransferred += Number(record.quantity);
+        } else if (record.fuelClass === 'Gasoline' && record.transferType === 'Received') {
+          gasolineReceived += Number(record.quantity);
+        }
+      });
+
+      gasoline[SCHEDULE_SUMMARY.LINE_5][2] = { // line 5, 3rd column
+        ...gasoline[SCHEDULE_SUMMARY.LINE_5][2],
+        value: gasolineReceived - gasolineTransferred
+      };
+
+      diesel[SCHEDULE_SUMMARY.LINE_16][2] = { // line 5, 3rd column
+        ...diesel[SCHEDULE_SUMMARY.LINE_16][2],
+        value: dieselReceived - dieselTransferred
+      };
+    }
+
+    this.setState({
+      ...this.state,
+      diesel,
+      gasoline
+    });
   }
 
   _handleCellsChanged (gridName, changes, addition = null) {
@@ -110,21 +221,39 @@ class ScheduleSummaryContainer extends Component {
 }
 
 ScheduleSummaryContainer.defaultProps = {
+  complianceReport: null,
+  loadedState: null,
   period: null
 };
 
 ScheduleSummaryContainer.propTypes = {
+  complianceReport: PropTypes.shape({
+    scheduleA: PropTypes.shape(),
+    scheduleB: PropTypes.shape(),
+    scheduleC: PropTypes.shape(),
+    summary: PropTypes.shape({
+      totalPetroleumDiesel: PropTypes.number,
+      totalPetroleumGasoline: PropTypes.number,
+      totalRenewableDiesel: PropTypes.number,
+      totalRenewableGasoline: PropTypes.number
+    })
+  }),
+  create: PropTypes.bool.isRequired,
   fuelClasses: PropTypes.shape({
     isFetching: PropTypes.bool,
     items: PropTypes.arrayOf(PropTypes.shape())
   }).isRequired,
+  loadedState: PropTypes.shape(),
   loadFuelClasses: PropTypes.func.isRequired,
   loadNotionalTransferTypes: PropTypes.func.isRequired,
   notionalTransferTypes: PropTypes.shape({
     isFetching: PropTypes.bool,
     items: PropTypes.arrayOf(PropTypes.shape())
   }).isRequired,
-  period: PropTypes.string
+  period: PropTypes.string,
+  referenceData: PropTypes.shape({
+    approvedFuels: PropTypes.arrayOf(PropTypes.shape)
+  }).isRequired
 };
 
 const mapStateToProps = state => ({
@@ -135,6 +264,9 @@ const mapStateToProps = state => ({
   notionalTransferTypes: {
     isFetching: state.rootReducer.notionalTransferTypes.isFinding,
     items: state.rootReducer.notionalTransferTypes.items
+  },
+  referenceData: {
+    approvedFuels: state.rootReducer.referenceData.data.approvedFuels
   }
 });
 

@@ -16,6 +16,7 @@ class InputWithTooltip extends Component {
   constructor (props, context) {
     super(props, context);
 
+    this.getValue = this.getValue.bind(this);
     this.handleInputChange = this.handleInputChange.bind(this);
     this.handlePaste = this.handlePaste.bind(this);
     this.patternMatch = this.patternMatch.bind(this);
@@ -25,6 +26,19 @@ class InputWithTooltip extends Component {
       showTooltip: false,
       tooltipMessage: ''
     };
+  }
+
+  getValue () {
+    if (this.props.addCommas) {
+      let { value } = this.props;
+
+      value = value.replace(/\D/g, '');
+      value = value.replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,');
+
+      return value;
+    }
+
+    return this.props.value;
   }
 
   handleInputChange (event) {
@@ -177,7 +191,7 @@ class InputWithTooltip extends Component {
           }}
           step={this.props.step}
           type={this.props.addCommas ? 'text' : 'number'}
-          value={this.props.value}
+          value={this.getValue()}
         />
         <Overlay
           container={this}
