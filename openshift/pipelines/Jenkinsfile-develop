@@ -70,7 +70,7 @@ podTemplate(label: "develop-maven-${env.BUILD_NUMBER}", name: "develop-maven-${e
         def prepareBuilds = load "openshift/pipelines/scripts/prepareBuilds.groovy"
         backendBuildStages = prepareBuilds.prepareBackendBuildStages()
         frontendBuildStages = prepareBuilds.prepareFrontendBuildStages()
-        def prepareDCStages = load "openshift/pipelines/scripts/prepareDCStages.groovy"
+        
 /****
         //run backend builds
         for (builds in backendBuildStages) {
@@ -109,13 +109,16 @@ podTemplate(label: "develop-maven-${env.BUILD_NUMBER}", name: "develop-maven-${e
             echo 'backup script completed'
         }
 ****/
+
+        def prepareDCStages = load "openshift/pipelines/scripts/prepareDCStages.groovy"
+
         //apply all deployment dcs
-        prepareDCStages.backendDCStage("dev")
-        prepareDCStages.celeryDCStage("dev")
-        prepareDCStages.scanCoordinatorDCStage("dev")
-        prepareDCStages.scanHandlerDCStage("dev")
-        prepareDCStages.notificationServerDCStage("dev")
-        prepareDCStages.frontendDCStage("dev")
+        prepareDCStages.backendDCStage("dev").call()
+        prepareDCStages.celeryDCStage("dev").call()
+        prepareDCStages.scanCoordinatorDCStage("dev").call()
+        prepareDCStages.scanHandlerDCStage("dev").call()
+        prepareDCStages.notificationServerDCStage("dev").call()
+        prepareDCStages.frontendDCStage("dev").call()
 /***
         stage('Deploy Backend on Dev') {
             script {
