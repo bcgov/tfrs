@@ -246,9 +246,12 @@ ComplianceReportingEditContainer.propTypes = {
     isGetting: PropTypes.bool,
     isUpdating: PropTypes.bool,
     item: PropTypes.shape({
-      compliancePeriod: PropTypes.shape({
-        description: PropTypes.string
-      })
+      compliancePeriod: PropTypes.oneOfType([
+        PropTypes.shape({
+          description: PropTypes.string
+        }),
+        PropTypes.string
+      ])
     }),
     success: PropTypes.bool
   }),

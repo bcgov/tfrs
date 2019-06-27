@@ -85,24 +85,19 @@ class ComplianceReportDetailSerializer(serializers.ModelSerializer):
         )
 
         for record in schedule_b_records:
+            percentage = 100
+
+            if record.fuel_code is not None and \
+                    record.fuel_code.renewable_percentage and \
+                    record.fuel_code.renewable_percentage > 0:
+                percentage = record.fuel_code.renewable_percentage
+
             if record.fuel_type.name in [
                     "Biodiesel", "HDRD", "Renewable diesel"]:
-                if record.fuel_code is not None and \
-                        record.fuel_code.renewable_percentage > 0:
-                    total_renewable_diesel += record.quantity * (
-                        record.fuel_code.renewable_percentage/100
-                    )
-                else:
-                    total_renewable_diesel += record.quantity
+                total_renewable_diesel += record.quantity * percentage/100
 
             elif record.fuel_type.name in ["Ethanol", "Renewable gasoline"]:
-                if record.fuel_code is not None and \
-                        record.fuel_code.renewable_percentage > 0:
-                    total_renewable_gasoline += record.quantity * (
-                        record.fuel_code.renewable_percentage/100
-                    )
-                else:
-                    total_renewable_gasoline += record.quantity
+                total_renewable_gasoline += record.quantity * percentage/100
 
             elif record.fuel_type.name == "Petroleum-based diesel":
                 total_petroleum_diesel += record.quantity
