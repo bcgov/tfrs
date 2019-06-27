@@ -13,6 +13,7 @@ podTemplate(label: "develop-backend-python-${env.BUILD_NUMBER}", name: "develop-
             resourceLimitMemory: '4Gi',
             workingDir: '/home/jenkins',
             activeDeadlineSeconds: 600,
+            slaveConnectTimeout: 600,
             command: '',
             args: '${computer.jnlpmac} ${computer.name}'
         )
@@ -55,6 +56,7 @@ podTemplate(label: "develop-maven-${env.BUILD_NUMBER}", name: "develop-maven-${e
                 resourceLimitMemory: '4Gi',
                 workingDir: '/home/jenkins',
                 activeDeadlineSeconds: 600,
+                slaveConnectTimeout: 600,
                 command: '',
                 args: '${computer.jnlpmac} ${computer.name}'
             )
