@@ -377,6 +377,12 @@
     margin-right: -15px;
   }
 
+  .data-grid-container .cell {
+    &.numeric {
+      text-align: right;
+    }
+  }
+
   .col-lg-6 {
     margin-bottom: 2rem;
   }

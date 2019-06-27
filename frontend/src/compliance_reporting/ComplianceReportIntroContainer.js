@@ -3,26 +3,22 @@
  * All data handling & manipulation should be handled here.
  */
 
-import React, { Component } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
 import ComplianceReportIntro from './components/ComplianceReportIntro';
 
-class ComplianceReportIntroContainer extends Component {
-  render () {
-    return (
-      <ComplianceReportIntro
-        activeTab="intro"
-        period={this.props.period}
-        edit={this.props.edit}
-        loggedInUser={this.props.loggedInUser}
-        title="Compliance Reporting"
-        saving={this.props.saving}
-      />
-    );
-  }
-}
+const ComplianceReportIntroContainer = props => (
+  <ComplianceReportIntro
+    activeTab="intro"
+    period={props.period}
+    edit={props.edit}
+    loggedInUser={props.loggedInUser}
+    title="Compliance Reporting"
+    saving={props.saving}
+  />
+);
 
 ComplianceReportIntroContainer.defaultProps = {
 };

@@ -67,6 +67,7 @@ class ScheduleAContainer extends Component {
     this._addRow = this._addRow.bind(this);
     this._calculateTotal = this._calculateTotal.bind(this);
     this._handleCellsChanged = this._handleCellsChanged.bind(this);
+    this.loadData = this.loadData.bind(this);
   }
 
   componentDidMount () {
@@ -78,22 +79,26 @@ class ScheduleAContainer extends Component {
     } else if (this.props.create || !this.props.complianceReport.scheduleA) {
       this._addRow(5);
     } else {
-      this.setState(ScheduleAContainer.addHeaders());
-      this.rowNumber = 1;
-      this._addRow(this.props.complianceReport.scheduleA.records.length);
+      this.loadData();
+    }
+  }
 
-      for (let i = 0; i < this.props.complianceReport.scheduleA.records.length; i += 1) {
-        const { grid } = this.state;
-        const record = this.props.complianceReport.scheduleA.records[i];
+  loadData () {
+    this.rowNumber = 1;
+    this._addRow(this.props.complianceReport.scheduleA.records.length);
 
-        grid[1 + i][SCHEDULE_A.LEGAL_NAME].value = record.tradingPartner;
-        grid[1 + i][SCHEDULE_A.POSTAL_ADDRESS].value = record.postalAddress;
-        grid[1 + i][SCHEDULE_A.FUEL_CLASS].value = record.fuelClass;
-        grid[1 + i][SCHEDULE_A.TRANSFER_TYPE].value = record.transferType;
-        grid[1 + i][SCHEDULE_A.QUANTITY].value = record.quantity;
-        this.setState({ grid });
-        this._calculateTotal(grid);
-      }
+    for (let i = 0; i < this.props.complianceReport.scheduleA.records.length; i += 1) {
+      const { grid } = this.state;
+      const record = this.props.complianceReport.scheduleA.records[i];
+
+      grid[1 + i][SCHEDULE_A.LEGAL_NAME].value = record.tradingPartner;
+      grid[1 + i][SCHEDULE_A.POSTAL_ADDRESS].value = record.postalAddress;
+      grid[1 + i][SCHEDULE_A.FUEL_CLASS].value = record.fuelClass;
+      grid[1 + i][SCHEDULE_A.TRANSFER_TYPE].value = record.transferType;
+      grid[1 + i][SCHEDULE_A.QUANTITY].value = Number(record.quantity);
+
+      this.setState({ grid });
+      this._calculateTotal(grid);
     }
   }
 
