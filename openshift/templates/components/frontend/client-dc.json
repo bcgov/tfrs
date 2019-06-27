@@ -13,113 +13,13 @@
             "required": true
         },
         {
-            "name": "KEYCLOAK_AUTHORITY",
-            "displayName": "keycloak.authority",
-            "description": "Values https://sso-dev.pathfinder.gov.bc.ca/auth/realms/tfrs-dev https://sso-test.pathfinder.gov.bc.ca/auth/realms/tfrs https://sso.pathfinder.gov.bc.ca/auth/realms/tfrs",
-            "required": true
-        },
-        {
-            "name": "KEYCLOAK_CLIENT_ID",
-            "displayName": "keycloak.client_id",
-            "description": "Values tfrs-dev tfrs tfrs",
-            "required": true
-        },
-        {
-            "name": "KEYCLOAK_CALLBACK_URL",
-            "displayName": "keycloak.callback_url",
-            "description": "Values https://dev-lowcarbonfuels.pathfinder.gov.bc.ca/authCallback https://test-lowcarbonfuels.pathfinder.gov.bc.ca/authCallback https://lowcarbonfuels.gov.bc.ca/authCallback",
-            "required": true
-        },
-        {
-            "name": "KEYCLOAK_LOGOUT_URL",
-            "displayName": "keycloak.post_logout_url",
-            "description": "Values https://logontest.gov.bc.ca/clp-cgi/logoff.cgi?returl=https%3A%2F%2Fdev-lowcarbonfuels.pathfinder.gov.bc.ca%2F https://logontest.gov.bc.ca/clp-cgi/logoff.cgi?returl=https%3A%2F%2Ftest-lowcarbonfuels.pathfinder.gov.bc.ca%2F https://logon.gov.bc.ca/clp-cgi/logoff.cgi?returl=https%3A%2F%2Flowcarbonfuels.gov.bc.ca%2F",
-            "required": true
-        },
-        {
             "name": "SOURCE_IS_NAME",
             "displayName": "The source image stream name",
             "description": "The image stream could trigger the deployment, valid values: client-develop and client",
             "required": true
-        },
-        {
-            "name": "ROUTE_HOST_NAME",
-            "displayName": "Route host name",
-            "description": "values dev-lowcarbonfuels.pathfinder.gov.bc.ca test-lowcarbonfuels.pathfinder.gov.bc.ca lowcarbonfuels.gov.bc.ca",
-            "required": true
-        },
-        {
-            "name": "ROUTE_NAME",
-            "displayName": "Route name",
-            "description": "Values dev-lowcarbonfuels-frontend test-lowcarbonfuels-frontend lowcarbonfuels-frontend",
-            "required": true
         }
     ],
     "objects": [
-        {
-            "kind": "Service",
-            "apiVersion": "v1",
-            "metadata": {
-                "name": "client"
-            },
-            "spec": {
-                "ports": [
-                    {
-                        "name": "web",
-                        "protocol": "TCP",
-                        "port": 8080,
-                        "targetPort": 8080
-                    }
-                ],
-                "selector": {
-                    "name": "client"
-                },
-                "type": "ClusterIP",
-                "sessionAffinity": "None"
-            },
-            "status": {
-                "loadBalancer": {}
-            }
-        },
-        {
-            "kind": "Route",
-            "apiVersion": "v1",
-            "metadata": {
-                "name": "${ROUTE_NAME}",
-                "creationTimestamp": null,
-                "labels": {
-                    "frontend": "true"
-                },
-                "annotations": { }
-            },
-            "spec": {
-                "host": "${ROUTE_HOST_NAME}",
-                "to": {
-                    "kind": "Service",
-                    "name": "client",
-                    "weight": 100
-                },
-                "port": {
-                    "targetPort": "web"
-                },
-                "tls": {
-                    "termination": "edge",
-                    "insecureEdgeTerminationPolicy": "Redirect"
-                },
-                "wildcardPolicy": "None"
-            }
-        },
-        {
-            "kind": "ConfigMap",
-            "apiVersion": "v1",
-            "metadata": {
-                "name": "keycloak-config",
-                "creationTimestamp": null
-            },
-            "data": {
-                "features.js": "window.tfrs_config = {\n  \"keycloak.enabled\": true,\n  \"keycloak.authority\": \"${KEYCLOAK_AUTHORITY}\" ,\n  \"keycloak.client_id\": \"tfrs\",\n  \"keycloak.callback_url\": \"${KEYCLOAK_CALLBACK_URL}\",\n  \"keycloak.post_logout_url\": \"${KEYCLOAK_LOGOUT_URL}\",\n  \"debug.enabled\": false,\n  \"secure_document_upload.enabled\": false,\n  \"secure_document_upload.max_file_size\": 50000000,\n  \"fuel_codes.enabled\": false,\n  \"keycloak.custom_login\": true,\n  \"credit_transfer.enabled\": false,\n  \"compliance_reporting.enabled\": false,\n  \"credit_calculation_api.enabled\": false,\n  \"compliance_reporting.starting_year\": 2017\n};\n"
-            }
-        },
         {
             "kind": "DeploymentConfig",
             "apiVersion": "apps.openshift.io/v1",

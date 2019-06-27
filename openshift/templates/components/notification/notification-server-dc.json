@@ -19,72 +19,13 @@
             "required": true
         },
         {
-            "name": "DASH_ENV_NAME",
-            "value": "",
-            "displayName": "Dash Environment name",
-            "description": "Sample values: -dev and -test. For prod, please don't pass in any value."
-        },
-        {
-            "name": "ROUTE_NAME",
-            "value": "",
-            "displayName": "HOST name",
-            "description": "Sample values: for dev dev-lowcarbonfuels-notification"
-        },
-        {
-            "name": "ROUTE_HOST",
-            "value": "",
-            "displayName": "HOST name",
-            "description": "Sample values: for dev dev-lowcarbonfuels.pathfinder.gov.bc.ca"
+            "name": "KEYCLOAK_CERTS_URL",
+            "displayName": "KEYCLOAK_CERTS_URL",
+            "description": "Valid values: https://sso-dev.pathfinder.gov.bc.ca/auth/realms/tfrs-dev/protocol/openid-connect/certs, https://sso-test.pathfinder.gov.bc.ca/auth/realms/tfrs/protocol/openid-connect/certs, https://sso.pathfinder.gov.bc.ca/auth/realms/tfrs/protocol/openid-connect/certs",
+            "required": true
         }
     ],
     "objects": [
-        {
-            "kind": "Service",
-            "apiVersion": "v1",
-            "metadata": {
-                "name": "notification-server",
-                "creationTimestamp": null
-            },
-            "spec": {
-                "ports": [
-                    {
-                        "protocol": "TCP",
-                        "port": 8080,
-                        "targetPort": 3000
-                    }
-                ],
-                "selector": {
-                    "name": "notification-server"
-                },
-                "type": "ClusterIP",
-                "sessionAffinity": "None"
-            },
-            "status": {
-                "loadBalancer": {}
-            }
-        },
-        {
-            "kind": "Route",
-            "apiVersion": "route.openshift.io/v1",
-            "metadata": {
-                "name": "${ROUTE_NAME}",
-                "creationTimestamp": null
-            },
-            "spec": {
-                "host": "${ROUTE_HOST}",
-                "path": "/socket.io",
-                "to": {
-                    "kind": "Service",
-                    "name": "notification-server",
-                    "weight": 100
-                },
-                "tls": {
-                    "termination": "edge"
-                },
-                "wildcardPolicy": "None"
-            },
-            "status": {}
-        },
         {
             "kind": "DeploymentConfig",
             "apiVersion": "apps.openshift.io/v1",
@@ -177,7 +118,7 @@
                                     },
                                     {
                                         "name": "KEYCLOAK_CERTS_URL",
-                                        "value": "https://sso${DASH_ENV_NAME}.pathfinder.gov.bc.ca/auth/realms/tfrs${DASH_ENV_NAME}/protocol/openid-connect/certs"
+                                        "value": "${KEYCLOAK_CERTS_URL}"
                                     }
                                 ],
                                 "resources": {
