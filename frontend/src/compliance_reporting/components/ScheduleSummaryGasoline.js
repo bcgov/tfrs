@@ -3,6 +3,25 @@ import React from 'react';
 import Input from './Input';
 import { getQuantity } from '../../utils/functions';
 
+const numericColumn = {
+  className: 'numeric',
+  readOnly: true,
+  value: '',
+  valueViewer: (cell) => {
+    const { value } = cell;
+
+    if (value === '') {
+      return '-';
+    }
+
+    if (Number(value) < 0) {
+      return <span>({Math.round(value * -1).toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')})</span>;
+    }
+
+    return <span>{Math.round(value).toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')}</span>;
+  }
+};
+
 const numericInput = {
   attributes: {
     dataNumberToFixed: 50,
@@ -42,10 +61,7 @@ const ScheduleSummaryGasoline = [
   }, {
     readOnly: true,
     value: 'Line 1'
-  }, {
-    readOnly: true,
-    value: '-'
-  }],
+  }, numericColumn],
   [{
     className: 'text',
     readOnly: true,
@@ -53,10 +69,7 @@ const ScheduleSummaryGasoline = [
   }, {
     readOnly: true,
     value: 'Line 2'
-  }, {
-    readOnly: true,
-    value: '-'
-  }],
+  }, numericColumn],
   [{
     className: 'text',
     readOnly: true,
@@ -64,10 +77,7 @@ const ScheduleSummaryGasoline = [
   }, {
     readOnly: true,
     value: 'Line 3'
-  }, {
-    readOnly: true,
-    value: '-'
-  }],
+  }, numericColumn],
   [{
     className: 'text',
     readOnly: true,
@@ -75,10 +85,7 @@ const ScheduleSummaryGasoline = [
   }, {
     readOnly: true,
     value: 'Line 4'
-  }, {
-    readOnly: true,
-    value: '-'
-  }],
+  }, numericColumn],
   [{
     className: 'text',
     readOnly: true,
@@ -87,10 +94,7 @@ const ScheduleSummaryGasoline = [
   }, {
     readOnly: true,
     value: 'Line 5'
-  }, {
-    readOnly: true,
-    value: '-'
-  }],
+  }, numericColumn],
   [{
     className: 'text',
     readOnly: true,
@@ -131,10 +135,7 @@ const ScheduleSummaryGasoline = [
   }, {
     readOnly: true,
     value: 'Line 10'
-  }, {
-    readOnly: true,
-    value: '-'
-  }],
+  }, numericColumn],
   [{
     className: 'text total',
     readOnly: true,
@@ -144,9 +145,8 @@ const ScheduleSummaryGasoline = [
     readOnly: true,
     value: 'Line 11'
   }, {
-    className: 'total',
-    readOnly: true,
-    value: '-'
+    ...numericColumn,
+    className: 'numeric total'
   }]
 ];
 
