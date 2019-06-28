@@ -166,4 +166,12 @@ def takeDownMaintenancePageStage(String projectName) {
     }
 }
 
+def confirmStage(String message) {
+    return {
+        stage ('Confirmation required in order to continue') {
+            input "${message}"
+        }
+    }
+}
+
 return this

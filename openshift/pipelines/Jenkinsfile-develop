@@ -1,7 +1,7 @@
 result = 0
 runParallel = true
 tfrsRelease="devops-env-restore"
-/***
+
 podTemplate(label: "develop-backend-python-${env.BUILD_NUMBER}", name: "develop-backend-python-${env.BUILD_NUMBER}", serviceAccount: 'jenkins-basic', cloud: 'openshift',
     containers: [
         containerTemplate(
@@ -38,7 +38,6 @@ if (result != 0) {
     currentBuild.result = 'FAILURE'
     return
 }
-***/
 
 podTemplate(label: "develop-maven-${env.BUILD_NUMBER}", name: "develop-maven-${env.BUILD_NUMBER}", serviceAccount: 'jenkins-basic', cloud: 'openshift',
         containers: [
@@ -99,22 +98,26 @@ podTemplate(label: "develop-maven-${env.BUILD_NUMBER}", name: "develop-maven-${e
         //Datebase Backup
         prepareOtherStages.databaseBackupStage("mem-tfrs-dev", tfrsRelease).call()
 
-        //apply all deployment dcs
-        prepareDCStages.backendDCStage("dev").call()
-        prepareDCStages.celeryDCStage("dev").call()
-        prepareDCStages.scanCoordinatorDCStage("dev").call()
-        prepareDCStages.scanHandlerDCStage("dev").call()
-        prepareDCStages.notificationServerDCStage("dev").call()
-        prepareDCStages.frontendDCStage("dev").call()
+        //apply deployment configs
+        //if there is an new environment variable added to the invoked template, the stage needs to be applied.
+        //prepareDCStages.backendDCStage("dev").call()
+        //prepareDCStages.celeryDCStage("dev").call()
+        //prepareDCStages.scanCoordinatorDCStage("dev").call()
+        //prepareDCStages.scanHandlerDCStage("dev").call()
+        //prepareDCStages.notificationServerDCStage("dev").call()
+        //prepareDCStages.frontendDCStage("dev").call()
 
-        //Deploy Backend
+        //Deploy Backend, tag the latest to env tag
         prepareOtherStages.deployBackendStage("mem-tfrs-dev").call()
     
-        //Deploy Frontend
+        //Deploy Frontend, tag the latest to env tag
         prepareOtherStages.deployFrontendStage("mem-tfrs-dev").call()
 
         //Refresh SchemaSpy
         prepareOtherStages.refreshSchemaspyStage("mem-tfrs-dev").call()
+
+        //Ask for confirmation before take down maintenance page.
+        prepareOtherStages.confirmStage("Please confirm to take down the maintenance page").call()
         
         //Take down Maintenance Page
         prepareOtherStages.takeDownMaintenancePageStage("mem-tfrs-dev").call()
