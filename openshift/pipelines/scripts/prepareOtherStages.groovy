@@ -44,7 +44,7 @@ def bringUpMaintenancePageStage (String projectName) {
 def databaseBackupStage (String projectName, String tfrsRelease) {
     return {
         stage('Datebase Backup') {
-            postgresql_pod_name=sh (script: "oc get pods -n ${projectName} | grep postgresql96 | awk \'{print $1}\'", returnStdout: true).trim()
+            postgresql_pod_name=sh (script: "oc get pods -n $projectName | grep postgresql96 | awk \'{print $1}\'", returnStdout: true).trim()
             echo "start backup script on ${projectName}, postgresql_pod_name is ${postgresql_pod_name}"
             sh returnStdout: true, script: "oc exec ${postgresql_pod_name} -c postgresql96 -n ${projectName} -- bash /postgresql-backup/tfrs-backup.sh ${tfrsRelease} dev"
             echo 'backup script completed'
