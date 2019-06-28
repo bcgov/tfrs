@@ -2,12 +2,6 @@ result = 0
 runParallel = true
 tfrsRelease="devops-env-restore"
 
-script {
-    prepareBuilds = load "openshift/pipelines/scripts/prepareBuilds.groovy"
-    prepareDCStages = load "openshift/pipelines/scripts/prepareDCStages.groovy"
-    prepareOtherStages = load "openshift/pipelines/scripts/prepareOtherStages.groovy"
-}
-
 podTemplate(label: "develop-backend-python-${env.BUILD_NUMBER}", name: "develop-backend-python-${env.BUILD_NUMBER}", serviceAccount: 'jenkins-basic', cloud: 'openshift',
     containers: [
         containerTemplate(
@@ -25,6 +19,7 @@ podTemplate(label: "develop-backend-python-${env.BUILD_NUMBER}", name: "develop-
         )
     ]
 ){    
+    def prepareOtherStages = load "openshift/pipelines/scripts/prepareOtherStages.groovy"
     node("develop-backend-python-${env.BUILD_NUMBER}") {
         //unit test stage
         prepareOtherStages.unitTestStage(${tfrsRelease}).call()
@@ -60,6 +55,11 @@ podTemplate(label: "develop-maven-${env.BUILD_NUMBER}", name: "develop-maven-${e
 
         //checkout code
         checkout changelog: false, poll: false, scm: [$class: 'GitSCM', branches: [[name: "${tfrsRelease}"]], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[credentialsId: 'github-account', url: 'https://github.com/bcgov/tfrs.git']]]
+
+        //load groovy scripts
+        def prepareBuilds = load "openshift/pipelines/scripts/prepareBuilds.groovy"
+        defprepareDCStages = load "openshift/pipelines/scripts/prepareDCStages.groovy"
+        def prepareOtherStages = load "openshift/pipelines/scripts/prepareOtherStages.groovy"
 
         //run all the builds
         backendBuildStages = prepareBuilds.backendBuildStages()
