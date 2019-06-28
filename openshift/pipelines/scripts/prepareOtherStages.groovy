@@ -1,0 +1,167 @@
+def unitTestStage (String tfrsRelease) {
+    return {
+        stage('Unit Test') {
+            checkout changelog: false, poll: false, scm: [$class: 'GitSCM', branches: [[name: "${tfrsRelease}"]], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[credentialsId: 'github-account', url: 'https://github.com/bcgov/tfrs.git']]]
+            dir('backend') {
+                try {
+                    sh 'pip install --upgrade pip && pip install -r requirements.txt'
+                    sh 'python manage.py collectstatic && python manage.py migrate'
+                    sh 'python manage.py test -c nose.cfg'
+                } catch(Throwable t) {
+                    result = 1;
+                } finally {
+                    //stash includes: 'nosetests.xml,coverage.xml', name: 'coverage'
+                    junit 'nosetests.xml'
+                }
+            }
+        }
+    }
+}
+
+def bringUpMaintenancePageStage (String projectName) {
+    return {
+        stage('Bring up Maintenance Page') {
+            script {
+                def frontendRouteName
+                def backendRouteName
+                if(projectName == "mem-tfrs-dev") {
+                    frontendRouteName = "dev-lowcarbonfuels-frontend"
+                    backendRouteName = "dev-lowcarbonfuels-backend"
+                } else if(projectName == "mem-tfrs-test" ) {
+                    frontendRouteName = "test-lowcarbonfuels-frontend"
+                    backendRouteName = "test-lowcarbonfuels-backend"
+                } else if(projectName == "mem-tfrs-prod" ) {
+                    frontendRouteName = "lowcarbonfuels-frontend"
+                    backendRouteName = "lowcarbonfuels-backend"
+                }
+                sh returnStatus: true, script: "oc scale dc maintenance-page -n ${projectName} --replicas=1 --timeout=20s"
+                sh returnStatus: true, script: "oc patch route/${frontendRouteName} -n ${projectName} -p '{\"spec\":{\"to\":{\"name\":\"maintenance-page\"}, \"port\":{\"targetPort\":\"2015-tcp\"}}}'"
+                sh returnStatus: true, script: "oc patch route/${backendRouteName} -n ${projectName} -p '{\"spec\":{\"to\":{\"name\":\"maintenance-page\"}, \"port\":{\"targetPort\":\"2015-tcp\"}}}'"
+            }
+        }
+    }
+}
+
+def databaseBackupStage (String projectName, String tfrsRelease) {
+    return {
+        stage('Datebase Backup') {
+            postgresql_pod_name=sh (script: 'oc get pods -n ${projectName} | grep postgresql96 | awk \'{print $1}\'', returnStdout: true).trim()
+            echo "start backup script on ${projectName}, postgresql_pod_name is ${postgresql_pod_name}"
+            sh returnStdout: true, script: "oc exec ${postgresql_pod_name} -c postgresql96 -n ${projectName} -- bash /postgresql-backup/tfrs-backup.sh ${tfrsRelease} dev"
+            echo 'backup script completed'
+        }
+    }
+}
+
+/**
+ * Deploy Backend components.
+ * @param projectName the project name such as mem-tfrs-dev, mem-tfrs-test and mem-tfrs-prod
+*/
+def deployBackendStage (String projectName) {
+    return {
+        stage("Deploy Backend on ${projectName}") {
+            script {
+                def envName
+                def tfrsISName
+                def scanCoordinatorISName
+                def scanHandlerISName
+                def celeryISName
+                if(projectName == "mem-tfrs-dev") {
+                    envName = "dev"
+                    tfrsISName = "tfrs-develop"
+                    scanCoordinatorISName = "scan-coordinator-develop"
+                    scanHandlerISName = "scan-handler-develop"
+                    celeryISName = "celery-develop"
+                } else if(projectName == "mem-tfrs-test" || projectName == "mem-tfrs-prod") {
+                    if(projectName == "mem-tfrs-test") {
+                        envName = "test"
+                    } else if(projectName == "mem-tfrs-prod") {
+                        envName = "prod"
+                    }
+                    tfrsISName = "tfrs"
+                    scanCoordinatorISName = "scan-coordinator"
+                    scanHandlerISName = "scan-handler"
+                    celeryISName = "celery"
+                }
+                openshift.withProject("mem-tfrs-tools") {
+                    openshift.tag("mem-tfrs-tools/${tfrsISName}:latest", "mem-tfrs-tools/${tfrsISName}:${envName}")
+                    sh 'sleep 300s'
+                    openshift.tag("mem-tfrs-tools/${scanCoordinatorISName}:latest", "mem-tfrs-tools/${scanCoordinatorISName}:${envName}")
+                    openshift.tag("mem-tfrs-tools/${scanHandlerISName}:latest", "mem-tfrs-tools/${scanHandlerISName}:${envName}")
+                    openshift.tag("mem-tfrs-tools/${celeryISName}:latest", "mem-tfrs-tools/${celeryISName}:${envName}")
+                    sh 'sleep 180s'
+                }
+            }
+        }
+    }
+}
+
+def deployFrontendStage(String projectName) {
+    return {
+        stage("Deploy Frontend on ${projectName}") {
+            script {
+                def envName
+                def clientISName
+                def notificationServerISName
+                if(projectName == "mem-tfrs-dev") {
+                    clientISName = "client-develop"
+                    notificationServerISName = "notification-server-develop"
+                } else if(projectName == "mem-tfrs-test" || projectName == "mem-tfrs-prod") {
+                    if(projectName == "mem-tfrs-test") {
+                        envName = "test"
+                    } else if(projectName == "mem-tfrs-prod") {
+                        envName = "prod"
+                    }
+                    clientISName = "client"
+                    notificationServerISName = "notification-server"
+                }
+                clientISName = "client-develop"
+                openshift.withProject("mem-tfrs-tools") {
+                    openshift.tag("mem-tfrs-tools/${clientISName}:latest", "mem-tfrs-tools/${clientISName}:${envName}")
+                    openshift.tag("mem-tfrs-tools/${notificationServerISName}:latest", "mem-tfrs-tools/${notificationServerISName}:${envName}")
+                    sh 'sleep 120s'
+                }
+            }
+        }
+    }
+}
+
+def refreshSchemaspyStage(String projectName) {
+    return {
+        stage('Refresh SchemaSpy') {
+            echo "Refreshing SchemaSpy for Dev Database"
+            sh returnStdout: true, script: "oc scale dc schema-spy-public --replicas=0 -n ${projectName}"
+            sh 'sleep 30s'
+            sh returnStdout: true, script: "oc scale dc schema-spy-public --replicas=1 -n ${projectName}"
+            sh returnStdout: true, script: "oc scale dc schema-spy-audit --replicas=0 -n ${projectName}"
+            sh 'sleep 30s'
+            sh returnStdout: true, script: "oc scale dc schema-spy-audit --replicas=1 -n ${projectName}"
+            sh 'sleep 120s'
+        }    
+    }
+}
+
+def takeDownMaintenancePageStage(String projectName) {
+    return {
+        stage('Take down Maintenance Page') {
+            script {
+                def frontendRouteName
+                def backendRouteName
+                if(projectName == "mem-tfrs-dev") {
+                    frontendRouteName = "dev-lowcarbonfuels-frontend"
+                    backendRouteName = "dev-lowcarbonfuels-backend"
+                } else if(projectName == "mem-tfrs-test" ) {
+                    frontendRouteName = "test-lowcarbonfuels-frontend"
+                    backendRouteName = "test-lowcarbonfuels-backend"
+                } else if(projectName == "mem-tfrs-prod" ) {
+                    frontendRouteName = "lowcarbonfuels-frontend"
+                    backendRouteName = "lowcarbonfuels-backend"
+                }
+                sh returnStatus: true, script: "oc patch route/${frontendRouteName} -n ${projectName} -p '{\"spec\":{\"to\":{\"name\":\"backend\"}, \"port\":{\"targetPort\":\"web\"}}}'"
+                sh returnStatus: true, script: "oc patch route/${backendRouteName} -n ${projectName} -p '{\"spec\":{\"to\":{\"name\":\"client\"}, \"port\":{\"targetPort\":\"web\"}}}'"
+                sh returnStatus: true, script: "oc scale dc maintenance-page -n ${projectName} --replicas=0 --timeout=20s"
+            }
+        }
+    }
+}
+return this

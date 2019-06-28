@@ -1,4 +1,4 @@
-def prepareBackendBuildStages() {
+def backendBuildStages() {
     def buildBackendList = []
     def buildBackendStages = [:]
     buildBackendStages.put('Build Backend', prepareBuildBackend())
@@ -9,7 +9,7 @@ def prepareBackendBuildStages() {
     return buildBackendList
 }
 
-def prepareFrontendBuildStages() {
+def frontendBuildStages() {
     def buildFrontendList = []
     def buildFrontendStages = [:]
     buildFrontendStages.put('Build Frontend', prepareBuildFrontend())
