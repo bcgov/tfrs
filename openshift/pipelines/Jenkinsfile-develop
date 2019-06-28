@@ -19,8 +19,9 @@ podTemplate(label: "develop-backend-python-${env.BUILD_NUMBER}", name: "develop-
         )
     ]
 ){    
-    def prepareOtherStages = load "openshift/pipelines/scripts/prepareOtherStages.groovy"
+    
     node("develop-backend-python-${env.BUILD_NUMBER}") {
+        def prepareOtherStages = load "openshift/pipelines/scripts/prepareOtherStages.groovy"
         //unit test stage
         prepareOtherStages.unitTestStage(${tfrsRelease}).call()
     }
