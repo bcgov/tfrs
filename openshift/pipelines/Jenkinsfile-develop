@@ -21,7 +21,12 @@ podTemplate(label: "develop-backend-python-${env.BUILD_NUMBER}", name: "develop-
 ){    
     
     node("develop-backend-python-${env.BUILD_NUMBER}") {
+        //checkout code in order to load groovy scripts
+        checkout changelog: false, poll: false, scm: [$class: 'GitSCM', branches: [[name: "${tfrsRelease}"]], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[credentialsId: 'github-account', url: 'https://github.com/bcgov/tfrs.git']]]
+
+        //load prepareOtherStages.groovy
         def prepareOtherStages = load "openshift/pipelines/scripts/prepareOtherStages.groovy"
+
         //unit test stage
         prepareOtherStages.unitTestStage(${tfrsRelease}).call()
     }

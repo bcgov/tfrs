@@ -1,7 +1,6 @@
 def unitTestStage (String tfrsRelease) {
     return {
         stage('Unit Test') {
-            checkout changelog: false, poll: false, scm: [$class: 'GitSCM', branches: [[name: "${tfrsRelease}"]], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[credentialsId: 'github-account', url: 'https://github.com/bcgov/tfrs.git']]]
             dir('backend') {
                 try {
                     sh 'pip install --upgrade pip && pip install -r requirements.txt'
