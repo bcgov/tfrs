@@ -1,16 +1,36 @@
-# oc project mem-tfrs-tools
-oc process -f ./minio-bc.json ENV_NAME=dev | oc create -f -
-# after the image created, there is only latest tag, need to manually create dev, test and prod tags
-# remove created minio ressources
-# oc delete ImageStream/tfrs-minio bc/tfrs-minio
+## Minio repo
+https://github.com/BCDevOps/minio-openshift
 
-# oc project mem-tfrs-dev
-oc process -f ./minio-dc.json ENV_NAME=dev | oc create -f -
-# oc project mem-tfrs-test
-oc process -f ./minio-dc.json ENV_NAME=test | oc create -f -
-# oc project mem-tfrs-prod
-# the default minio-config size is 1G, minio-data is 2G, it cna be changed by pass parameters
-oc process -f ./minio-dc.json ENV_NAME=prod | oc create -f -
-oc process -f ./minio-dc.json ENV_NAME=prod MINIO_CONFIG_VOLUME_SIZE=1Gi MINIO_DATA_VOLUME_SIZE=10Gi | oc create -f -
-# remove create minio ressource
-# oc delete route/docs service/tfrs-minio secret/tfrs-minio-secret dc/tfrs-minio pvc/minio-data-vol pvc/minio-config-vol
+## create image stream and tag
+image stream,  mem-tfrs-tools:minio
+oc tag --alias openshift/minio:stable minio:stable # cross-project aliases like this don't seem to work ATM, but maybe one day...in the meantime, you'll need to update/re-tag periodically   
+oc tag --alias minio:stable minio:dev # use of --alias here is so dev will always be updated when stable is updated; omit --alias or use --reference if you prefer not to have this 
+oc tag --reference minio:stable minio:test  # use of reference here is so you *have* to explicitly tag in order to affect test
+oc tag --reference minio:stable minio:prod # use of reference here is so you *have* to explicitly tag in order to affect prod
+
+## Deploy on Dev
+oc process -f https://raw.githubusercontent.com/BCDevOps/minio-openshift/master/openshift/minio-deployment.json \
+IMAGESTREAM_NAMESPACE=mem-tfrs-tools \
+IMAGESTREAM_TAG=dev \
+MINIO_ACCESS_KEY=*** \
+MINIO_SECRET_KEY=*** \
+VOLUME_CAPACITY=5Gi \
+| oc create -n mem-tfrs-dev -f - --dry-run=true
+
+## Deploy on Test
+oc process -f https://raw.githubusercontent.com/BCDevOps/minio-openshift/master/openshift/minio-deployment.json \
+IMAGESTREAM_NAMESPACE=mem-tfrs-tools \
+IMAGESTREAM_TAG=test \
+MINIO_ACCESS_KEY==*** \
+MINIO_SECRET_KEY==*** \
+VOLUME_CAPACITY=5Gi \
+| oc create -n mem-tfrs-test -f - --dry-run=true
+
+## Deploy on Prod
+oc process -f https://raw.githubusercontent.com/BCDevOps/minio-openshift/master/openshift/minio-deployment.json \
+IMAGESTREAM_NAMESPACE=mem-tfrs-tools \
+IMAGESTREAM_TAG=prod \
+MINIO_ACCESS_KEY==*** \
+MINIO_SECRET_KEY==*** \
+VOLUME_CAPACITY=5Gi \
+| oc create -n mem-tfrs-prod -f - --dry-run=true

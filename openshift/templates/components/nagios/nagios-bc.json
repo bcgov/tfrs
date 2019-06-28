@@ -65,7 +65,7 @@
                 "source": {
                     "type": "Git",
                     "git": {
-                        "ref":"devops-nagios-new",
+                        "ref":"master",
                         "uri": "https://github.com/bcgov/tfrs.git"
                     },
                     "contextDir": "nagios"

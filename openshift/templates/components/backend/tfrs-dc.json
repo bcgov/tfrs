@@ -22,18 +22,6 @@
             "required": true
         },
         {
-            "name": "ROUTE_HOST_NAME",
-            "displayName": "Route host name",
-            "description": "Valid values: dev-lowcarbonfuels.pathfinder.gov.bc.ca, test-lowcarbonfuels.pathfinder.gov.bc.ca, lowcarbonfuels.gov.bc.ca",
-            "required": true
-        },
-        {
-            "name": "ROUTE_NAME",
-            "displayName": "Route name",
-            "description": "Valid values: dev-lowcarbonfuels-backend, test-lowcarbonfuels-backend, lowcarbonfuels-backend",
-            "required": true
-        },
-        {
             "name": "KEYCLOAK_SA_BASEURL",
             "displayName": "KEYCLOAK_SA_BASEURL",
             "description": "Valid values: https://sso-dev.pathfinder.gov.bc.ca, https://sso-test.pathfinder.gov.bc.ca, https://sso.pathfinder.gov.bc.ca",
@@ -83,56 +71,6 @@
         }
     ],
     "objects": [
-        {
-            "kind": "Service",
-            "apiVersion": "v1",
-            "metadata": {
-                "name": "backend"
-            },
-            "spec": {
-                "ports": [
-                    {
-                        "name": "web",
-                        "protocol": "TCP",
-                        "port": 8080,
-                        "targetPort": 8080
-                    }
-                ],
-                "selector": {
-                    "name": "tfrs"
-                },
-                "type": "ClusterIP",
-                "sessionAffinity": "None"
-            },
-            "status": {
-                "loadBalancer": {}
-            }
-        },
-        {
-            "kind": "Route",
-            "apiVersion": "v1",
-            "metadata": {
-                "name": "${ROUTE_NAME}",
-                "creationTimestamp": null,
-                "annotations": { }
-            },
-            "spec": {
-                "host": "${ROUTE_HOST_NAME}",
-                "path": "/api",
-                "to": {
-                    "kind": "Service",
-                    "name": "backend",
-                    "weight": 100
-                },
-                "port": {
-                    "targetPort": "web"
-                },
-                "tls": {
-                    "termination": "edge"
-                },
-                "wildcardPolicy": "None"
-            }
-        },
         {
             "kind": "DeploymentConfig",
             "apiVersion": "apps.openshift.io/v1",
@@ -360,8 +298,8 @@
                                         "name": "MINIO_ACCESS_KEY",
                                         "valueFrom": {
                                             "secretKeyRef": {
-                                                "name": "tfrs-minio-secret",
-                                                "key": "MINIO_ACCESS_KEY"
+                                                "name": "minio",
+                                                "key": "minioAccessKey"
                                             }
                                         }
                                     },
@@ -369,8 +307,8 @@
                                         "name": "MINIO_SECRET_KEY",
                                         "valueFrom": {
                                             "secretKeyRef": {
-                                                "name": "tfrs-minio-secret",
-                                                "key": "MINIO_SECRET_KEY"
+                                                "name": "minio",
+                                                "key": "minioSecretKey"
                                             }
                                         }
                                     },
