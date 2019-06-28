@@ -65,7 +65,7 @@ podTemplate(label: "develop-maven-${env.BUILD_NUMBER}", name: "develop-maven-${e
 
         //load groovy scripts
         def prepareBuilds = load "openshift/pipelines/scripts/prepareBuilds.groovy"
-        defprepareDCStages = load "openshift/pipelines/scripts/prepareDCStages.groovy"
+        def prepareDCStages = load "openshift/pipelines/scripts/prepareDCStages.groovy"
         def prepareOtherStages = load "openshift/pipelines/scripts/prepareOtherStages.groovy"
 
         //run all the builds
