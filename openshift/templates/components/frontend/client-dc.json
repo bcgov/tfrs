@@ -121,8 +121,8 @@
                                         "name": "HTTP_BASIC"
                                     },
                                     {
-                                        "name": "BUILD_NUMBER",
-                                        "value": "pr-44"
+                                        "name": "API_URL",
+                                        "value": "http://backend.mem-tfrs-${ENV_NAME}.svc.cluster.local:8080/api/"
                                     }
                                 ],
                                 "resources": {
