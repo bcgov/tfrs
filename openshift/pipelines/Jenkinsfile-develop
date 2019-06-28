@@ -28,7 +28,7 @@ podTemplate(label: "develop-backend-python-${env.BUILD_NUMBER}", name: "develop-
         def prepareOtherStages = load "openshift/pipelines/scripts/prepareOtherStages.groovy"
 
         //unit test stage
-        prepareOtherStages.unitTestStage(tfrsRelease).call()
+        prepareOtherStages.unitTestStage().call()
     }
 }
 
@@ -71,7 +71,7 @@ podTemplate(label: "develop-maven-${env.BUILD_NUMBER}", name: "develop-maven-${e
         //run all the builds
         backendBuildStages = prepareBuilds.backendBuildStages()
         frontendBuildStages = prepareBuilds.frontendBuildStages()
-        
+        /*** don't build
         for (builds in backendBuildStages) {
             if (runParallel) {
                 parallel(builds)
@@ -92,7 +92,7 @@ podTemplate(label: "develop-maven-${env.BUILD_NUMBER}", name: "develop-maven-${e
                 }
             }
         }
-        
+        ***/
         //Bring up Maintenance Page
         prepareOtherStages.bringUpMaintenancePageStage("mem-tfrs-dev", "dev-lowcarbonfuels-frontend", "dev-lowcarbonfuels-backend").call()
 

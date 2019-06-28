@@ -17,8 +17,6 @@ def unitTestStage () {
     }
 }
 
-/**
-
 def bringUpMaintenancePageStage (String projectName) {
     return {
         stage('Bring up Maintenance Page') {
@@ -162,5 +160,4 @@ def takeDownMaintenancePageStage(String projectName) {
     }
 }
 
-**/
 return this
