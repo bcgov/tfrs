@@ -1,0 +1,225 @@
+{
+    "kind": "Template",
+    "apiVersion": "template.openshift.io/v1",
+    "metadata": {
+        "name": "test-backup",
+        "creationTimestamp": null
+    },
+    "objects": [
+        {
+            "kind": "DeploymentConfig",
+            "apiVersion": "apps.openshift.io/v1",
+            "metadata": {
+                "name": "backup",
+                "generation": 10,
+                "creationTimestamp": null,
+                "labels": {
+                    "template": "backup-deployment"
+                },
+                "annotations": {
+                    "description": "Defines how to deploy the backup server"
+                }
+            },
+            "spec": {
+                "strategy": {
+                    "type": "Recreate",
+                    "recreateParams": {
+                        "timeoutSeconds": 600
+                    },
+                    "resources": {},
+                    "activeDeadlineSeconds": 21600
+                },
+                "triggers": [
+                    {
+                        "type": "ConfigChange"
+                    },
+                    {
+                        "type": "ImageChange",
+                        "imageChangeParams": {
+                            "automatic": true,
+                            "containerNames": [
+                                "backup"
+                            ],
+                            "from": {
+                                "kind": "ImageStreamTag",
+                                "namespace": "mem-tfrs-tools",
+                                "name": "backup:dev"
+                            },
+                            "lastTriggeredImage": "docker-registry.default.svc:5000/mem-tfrs-tools/backup@sha256:150dceb84f4f81bb8ea6767c58b2a812803d2b79bf70bbe119497fcefef41daa"
+                        }
+                    }
+                ],
+                "replicas": 1,
+                "revisionHistoryLimit": 10,
+                "test": false,
+                "selector": {
+                    "name": "backup"
+                },
+                "template": {
+                    "metadata": {
+                        "name": "backup",
+                        "creationTimestamp": null,
+                        "labels": {
+                            "name": "backup"
+                        }
+                    },
+                    "spec": {
+                        "volumes": [
+                            {
+                                "name": "backup-config-volume",
+                                "configMap": {
+                                    "name": "backup-conf",
+                                    "items": [
+                                        {
+                                            "key": "backup.conf",
+                                            "path": "backup.conf"
+                                        }
+                                    ],
+                                    "defaultMode": 420
+                                }
+                            },
+                            {
+                                "name": "volume-i62yu",
+                                "persistentVolumeClaim": {
+                                    "claimName": "bk-mem-tfrs-test-f2f7inx0x1ba"
+                                }
+                            }
+                        ],
+                        "containers": [
+                            {
+                                "name": "backup",
+                                "image": "docker-registry.default.svc:5000/mem-tfrs-tools/backup@sha256:150dceb84f4f81bb8ea6767c58b2a812803d2b79bf70bbe119497fcefef41daa",
+                                "env": [
+                                    {
+                                        "name": "BACKUP_STRATEGY",
+                                        "value": "daily"
+                                    },
+                                    {
+                                        "name": "BACKUP_DIR",
+                                        "value": "/backups/"
+                                    },
+                                    {
+                                        "name": "NUM_BACKUPS",
+                                        "value": "31"
+                                    },
+                                    {
+                                        "name": "DAILY_BACKUPS",
+                                        "value": "6"
+                                    },
+                                    {
+                                        "name": "WEEKLY_BACKUPS",
+                                        "value": "4"
+                                    },
+                                    {
+                                        "name": "MONTHLY_BACKUPS",
+                                        "value": "1"
+                                    },
+                                    {
+                                        "name": "BACKUP_PERIOD",
+                                        "value": "1d"
+                                    },
+                                    {
+                                        "name": "DATABASE_SERVICE_NAME",
+                                        "value": "postgresql"
+                                    },
+                                    {
+                                        "name": "POSTGRESQL_DATABASE",
+                                        "value": "tfrs"
+                                    },
+                                    {
+                                        "name": "POSTGRESQL_USER",
+                                        "valueFrom": {
+                                            "secretKeyRef": {
+                                                "name": "tfrs-postgresql",
+                                                "key": "DATABASE_USER"
+                                            }
+                                        }
+                                    },
+                                    {
+                                        "name": "POSTGRESQL_PASSWORD",
+                                        "valueFrom": {
+                                            "secretKeyRef": {
+                                                "name": "tfrs-postgresql",
+                                                "key": "DATABASE_PASSWORD"
+                                            }
+                                        }
+                                    },
+                                    {
+                                        "name": "FTP_URL"
+                                    },
+                                    {
+                                        "name": "FTP_USER",
+                                        "valueFrom": {
+                                            "secretKeyRef": {
+                                                "name": "ftp-secret",
+                                                "key": "ftp-user"
+                                            }
+                                        }
+                                    },
+                                    {
+                                        "name": "FTP_PASSWORD",
+                                        "valueFrom": {
+                                            "secretKeyRef": {
+                                                "name": "ftp-secret",
+                                                "key": "ftp-password"
+                                            }
+                                        }
+                                    },
+                                    {
+                                        "name": "WEBHOOK_URL"
+                                    },
+                                    {
+                                        "name": "ENVIRONMENT_FRIENDLY_NAME",
+                                        "value": "test"
+                                    },
+                                    {
+                                        "name": "ENVIRONMENT_NAME",
+                                        "value": "test"
+                                    }
+                                ],
+                                "resources": {
+                                    "limits": {
+                                        "cpu": "0",
+                                        "memory": "0"
+                                    },
+                                    "requests": {
+                                        "cpu": "0",
+                                        "memory": "0"
+                                    }
+                                },
+                                "volumeMounts": [
+                                    {
+                                        "name": "backup-config-volume",
+                                        "mountPath": "/backup.conf",
+                                        "subPath": "backup.conf"
+                                    },
+                                    {
+                                        "name": "volume-i62yu",
+                                        "mountPath": "/backups",
+                                        "subPath": "backup-container"
+                                    }
+                                ],
+                                "terminationMessagePath": "/dev/termination-log",
+                                "terminationMessagePolicy": "File",
+                                "imagePullPolicy": "IfNotPresent"
+                            }
+                        ],
+                        "restartPolicy": "Always",
+                        "terminationGracePeriodSeconds": 30,
+                        "dnsPolicy": "ClusterFirst",
+                        "securityContext": {},
+                        "schedulerName": "default-scheduler"
+                    }
+                }
+            },
+            "status": {
+                "latestVersion": 0,
+                "observedGeneration": 0,
+                "replicas": 0,
+                "updatedReplicas": 0,
+                "availableReplicas": 0,
+                "unavailableReplicas": 0
+            }
+        }
+    ]
+}

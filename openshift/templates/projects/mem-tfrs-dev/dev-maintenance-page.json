@@ -1,0 +1,200 @@
+{
+    "kind": "Template",
+    "apiVersion": "template.openshift.io/v1",
+    "metadata": {
+        "name": "dev-maintenance-page",
+        "creationTimestamp": null
+    },
+    "objects": [
+        {
+            "kind": "DeploymentConfig",
+            "apiVersion": "apps.openshift.io/v1",
+            "metadata": {
+                "name": "maintenance-page",
+                "generation": 18,
+                "creationTimestamp": null,
+                "labels": {
+                    "app": "maintenance-page"
+                }
+            },
+            "spec": {
+                "strategy": {
+                    "type": "Rolling",
+                    "rollingParams": {
+                        "updatePeriodSeconds": 1,
+                        "intervalSeconds": 1,
+                        "timeoutSeconds": 600,
+                        "maxUnavailable": "25%",
+                        "maxSurge": "25%"
+                    },
+                    "resources": {},
+                    "activeDeadlineSeconds": 21600
+                },
+                "triggers": [
+                    {
+                        "type": "ConfigChange"
+                    },
+                    {
+                        "type": "ImageChange",
+                        "imageChangeParams": {
+                            "automatic": true,
+                            "containerNames": [
+                                "maintenance-page"
+                            ],
+                            "from": {
+                                "kind": "ImageStreamTag",
+                                "namespace": "mem-tfrs-tools",
+                                "name": "maintenance-page:latest"
+                            },
+                            "lastTriggeredImage": "docker-registry.default.svc:5000/mem-tfrs-tools/maintenance-page@sha256:996f2561b33236e115356279368a12b9ffff476bde393c25c0f097e741d50443"
+                        }
+                    }
+                ],
+                "replicas": 0,
+                "revisionHistoryLimit": 10,
+                "test": false,
+                "selector": {
+                    "app": "maintenance-page",
+                    "deploymentconfig": "maintenance-page"
+                },
+                "template": {
+                    "metadata": {
+                        "creationTimestamp": null,
+                        "labels": {
+                            "app": "maintenance-page",
+                            "deploymentconfig": "maintenance-page"
+                        },
+                        "annotations": {
+                            "openshift.io/generated-by": "OpenShiftNewApp"
+                        }
+                    },
+                    "spec": {
+                        "volumes": [
+                            {
+                                "name": "volume-bojax",
+                                "persistentVolumeClaim": {
+                                    "claimName": "backup-pvc"
+                                }
+                            }
+                        ],
+                        "containers": [
+                            {
+                                "name": "maintenance-page",
+                                "image": "docker-registry.default.svc:5000/mem-tfrs-tools/maintenance-page@sha256:996f2561b33236e115356279368a12b9ffff476bde393c25c0f097e741d50443",
+                                "ports": [
+                                    {
+                                        "containerPort": 2015,
+                                        "protocol": "TCP"
+                                    }
+                                ],
+                                "resources": {
+                                    "limits": {
+                                        "cpu": "100m",
+                                        "memory": "128Mi"
+                                    },
+                                    "requests": {
+                                        "memory": "128Mi"
+                                    }
+                                },
+                                "volumeMounts": [
+                                    {
+                                        "name": "volume-bojax",
+                                        "mountPath": "/backup-pvc"
+                                    }
+                                ],
+                                "terminationMessagePath": "/dev/termination-log",
+                                "terminationMessagePolicy": "File",
+                                "imagePullPolicy": "Always"
+                            }
+                        ],
+                        "restartPolicy": "Always",
+                        "terminationGracePeriodSeconds": 30,
+                        "dnsPolicy": "ClusterFirst",
+                        "securityContext": {},
+                        "schedulerName": "default-scheduler"
+                    }
+                }
+            },
+            "status": {
+                "latestVersion": 0,
+                "observedGeneration": 0,
+                "replicas": 0,
+                "updatedReplicas": 0,
+                "availableReplicas": 0,
+                "unavailableReplicas": 0
+            }
+        },
+        {
+            "kind": "Service",
+            "apiVersion": "v1",
+            "metadata": {
+                "name": "maintenance-page",
+                "creationTimestamp": null,
+                "labels": {
+                    "app": "maintenance-page"
+                }
+            },
+            "spec": {
+                "ports": [
+                    {
+                        "name": "2015-tcp",
+                        "protocol": "TCP",
+                        "port": 2015,
+                        "targetPort": 2015
+                    }
+                ],
+                "selector": {
+                    "app": "maintenance-page",
+                    "deploymentconfig": "maintenance-page"
+                },
+                "type": "ClusterIP",
+                "sessionAffinity": "None"
+            },
+            "status": {
+                "loadBalancer": {}
+            }
+        },
+        {
+            "kind": "Route",
+            "apiVersion": "route.openshift.io/v1",
+            "metadata": {
+                "name": "maintenance-page",
+                "creationTimestamp": null,
+                "labels": {
+                    "app": "maintenance-page"
+                },
+                "annotations": {
+                    "openshift.io/host.generated": "true"
+                }
+            },
+            "spec": {
+                "host": "maintenance-page-mem-tfrs-dev.pathfinder.gov.bc.ca",
+                "to": {
+                    "kind": "Service",
+                    "name": "maintenance-page",
+                    "weight": 100
+                },
+                "port": {
+                    "targetPort": "2015-tcp"
+                },
+                "wildcardPolicy": "None"
+            },
+            "status": {
+                "ingress": [
+                    {
+                        "host": "maintenance-page-mem-tfrs-dev.pathfinder.gov.bc.ca",
+                        "routerName": "router",
+                        "conditions": [
+                            {
+                                "type": "Admitted",
+                                "status": "True",
+                                "lastTransitionTime": "2019-06-11T17:07:31Z"
+                            }
+                        ],
+                        "wildcardPolicy": "None"
+                    }
+                ]
+            }
+        }
+    ]
+}

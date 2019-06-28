@@ -1,13 +1,24 @@
-oc export imagestream/client imagestream/client-angular-app bc/client bc/client-angular-app-build --as-template='client' --output=json > client.json
-oc export imagestream/client-develop imagestream/client-develop-angular-app bc/client-develop bc/client-develop-angular-app-build --as-template='client-develop' --output=json > client-develop.json
-oc export imagestream/tfrs bc/tfrs --as-template='tfrs' --output=json > tfrs.json
-oc export imagestream/tfrs-develop bc/tfrs-develop --as-template='tfrs-develop' --output=json > tfrs-develop.json
-oc export imagestream/nginx-runtime bc/nginx-runtime --as-template='nginx' --output=json > nginx.json
-oc export bc/owasp-zap-openshift imagestream/owasp-zap-openshift --as-template='owasp-zap-openshift' --output=json > owasp-zap-openshift.json
-oc export bc/jenkins dc/jenkins imagestream/jenkins service/jenkins service/jenkins-jnlp route/jenkins  --as-template='jenkins' --output=json > jenkins.json
-oc export bc/develop-client-pipeline bc/develop-tfrs-pipeline bc/master-client-pipeline bc/master-tfrs-pipeline bc/prod-client-pipeline bc/prod-tfrs-pipeline --as-template='pipeline' --output=json > pipeline.json
-oc export imagestream/schema-spy bc/schema-spy --as-template='schema-spy' --output=json > schema-spy.json
-oc export imagestream/request-logger bc/request-logger --as-template='request-logger' --output=json > request-logger.json
-oc export dc/postgresql-sonarqube dc/sonarqube service/postgresql-sonarqube service/sonarqube route/sonarqube --as-template='sonarqube' --output=json > sonarqube.json
-oc export bc/client-prod-angular-app-build bc/client-prod bc/tfrs-prod bc/prod-client-pipeline bc/prod-tfrs-pipeline --as-template='prod-build-pipeline' --output=json > prod-build-pipeline.json
-oc export imagestream/rabbitmq-tfrs imagestream/notification-server imagestream/notification-server-develop bc/rabbitmq-tfrs bc/notification-server bc/notification-server-develop --as-template='notification' --output=json > notification.json
+
+oc export imagestream/backup bc/backup --as-template='backup' --output=json -n mem-tfrs-tools > backup.json
+oc export imagestream/celery bc/celery --as-template='celery' --output=json -n mem-tfrs-tools > celery.json
+oc export imagestream/celery-develop bc/celery-develop --as-template='celery-develop' --output=json -n mem-tfrs-tools > celery-develop.json
+oc export imagestream/clamav bc/clamav --as-template='clamav' --output=json -n mem-tfrs-tools > clamav.json
+oc export imagestream/client bc/client --as-template='client' --output=json -n mem-tfrs-tools > client.json
+oc export imagestream/client-angular-app bc/client-angular-app --as-template='client-angular-app' --output=json -n mem-tfrs-tools > client-angular-app.json
+oc export imagestream/client-develop bc/client-develop --as-template='client-develop' --output=json -n mem-tfrs-tools > client-develop.json
+oc export imagestream/client-develop-angular-app bc/client-develop-angular-app --as-template='client-develop-angular-app' --output=json -n mem-tfrs-tools > client-develop-angular-app.json
+oc export imagestream/maintenance-page bc/maintenance-page --as-template='maintenance-page' --output=json -n mem-tfrs-tools > maintenance-page.json
+oc export imagestream/nagios bc/nagios --as-template='nagios' --output=json -n mem-tfrs-tools > nagios.json
+oc export imagestream/nagios-base bc/nagios-base --as-template='nagios-base' --output=json -n mem-tfrs-tools > nagios-base.json
+oc export imagestream/nginx-runtime bc/nginx-runtime --as-template='nginx-runtime' --output=json -n mem-tfrs-tools > nginx-runtime.json
+oc export imagestream/notification-server bc/notification-server --as-template='notification-server' --output=json -n mem-tfrs-tools > notification-server.json
+oc export imagestream/notification-server-develop bc/notification-server-develop --as-template='notification-server-develop' --output=json -n mem-tfrs-tools > notification-server-develop.json
+oc export imagestream/rabbitmq-tfrs bc/rabbitmq-tfrs --as-template='rabbitmq-tfrs' --output=json -n mem-tfrs-tools > rabbitmq-tfrs.json
+oc export imagestream/request-logger bc/request-logger --as-template='request-logger' --output=json -n mem-tfrs-tools > request-logger.json
+oc export imagestream/scan-coordinator bc/scan-coordinator --as-template='scan-coordinator' --output=json -n mem-tfrs-tools > scan-coordinator.json
+oc export imagestream/scan-coordinator-develop bc/scan-coordinator-develop --as-template='scan-coordinator-develop' --output=json -n mem-tfrs-tools > scan-coordinator-develop.json
+oc export imagestream/scan-handler bc/scan-handler --as-template='scan-handler' --output=json -n mem-tfrs-tools > scan-handler.json
+oc export imagestream/scan-handler-develop bc/scan-handler-develop --as-template='scan-handler-develop' --output=json -n mem-tfrs-tools > nagios.json
+oc export imagestream/schema-spy bc/schema-spy --as-template='schema-spy' --output=json -n mem-tfrs-tools > schema-spy.json
+oc export imagestream/tfrs bc/tfrs --as-template='tfrs' --output=json -n mem-tfrs-tools > tfrs.json
+oc export imagestream/tfrs-develop bc/tfrs-develop --as-template='tfrs-develop' --output=json -n mem-tfrs-tools > tfrs-develop.json

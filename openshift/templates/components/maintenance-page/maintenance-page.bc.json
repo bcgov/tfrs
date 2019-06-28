@@ -11,27 +11,6 @@
                 "description": "The suffix for all created objects",
                 "required": false,
                 "value": "maintenance-page"
-            },
-            {
-                "name": "GIT_REPO",
-                "displayName": "GIT_REPO",
-                "description": "URL to GitHub repo with static content",
-                "required": false,
-                "value": "https://github.com/bcgov/tfrs.git"
-            },
-            {
-                "name": "GIT_BRANCH",
-                "displayName": "GIT_BRANCH",
-                "description": "Branch related to GitHub repo",
-                "required": false,
-                "value": "master"
-            },
-            {
-                "name": "IMG_SRC",
-                "displayName": "IMG_SRC",
-                "description": "Source image name",
-                "required": false,
-                "value": "bcgov-s2i-caddy"
             }
     ],
     "objects": [
@@ -79,8 +58,8 @@
                     "type": "Git",
                     "contextDir": "/maintenance",
                     "git": {
-                        "uri": "${GIT_REPO}",
-                        "ref": "${GIT_BRANCH}"
+                        "uri": "https://github.com/bcgov/tfrs.git",
+                        "ref": "master"
                     }
                 },
                 "strategy": {
@@ -89,7 +68,7 @@
                         "from": {
                             "kind": "ImageStreamTag",
                             "namespace": "openshift",
-                            "name": "${IMG_SRC}:latest"
+                            "name": "bcgov-s2i-caddy:latest"
                         }
                     }
                 },

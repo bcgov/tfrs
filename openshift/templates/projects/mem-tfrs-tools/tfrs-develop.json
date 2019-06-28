@@ -11,7 +11,7 @@
             "apiVersion": "image.openshift.io/v1",
             "metadata": {
                 "name": "tfrs-develop",
-                "generation": 306,
+                "generation": 382,
                 "creationTimestamp": null
             },
             "spec": {
@@ -26,7 +26,7 @@
                             "kind": "DockerImage",
                             "name": "docker-registry.default.svc:5000/mem-tfrs-tools/tfrs-develop:dev"
                         },
-                        "generation": 306,
+                        "generation": 382,
                         "importPolicy": {},
                         "referencePolicy": {
                             "type": "Source"
@@ -71,7 +71,8 @@
                 "name": "tfrs-develop",
                 "creationTimestamp": null,
                 "annotations": {
-                    "description": "Defines how to build the application"
+                    "description": "Defines how to build the application",
+                    "kubectl.kubernetes.io/last-applied-configuration": "{\"apiVersion\":\"build.openshift.io/v1\",\"kind\":\"BuildConfig\",\"metadata\":{\"annotations\":{\"description\":\"Defines how to build the application\"},\"creationTimestamp\":null,\"name\":\"tfrs-develop\",\"namespace\":\"mem-tfrs-tools\"},\"spec\":{\"nodeSelector\":null,\"output\":{\"to\":{\"kind\":\"ImageStreamTag\",\"name\":\"tfrs-develop:latest\"}},\"postCommit\":{},\"resources\":{},\"runPolicy\":\"SerialLatestOnly\",\"source\":{\"contextDir\":\"backend\",\"git\":{\"ref\":\"v1.4.11\",\"uri\":\"https://github.com/bcgov/tfrs.git\"},\"type\":\"Git\"},\"strategy\":{\"sourceStrategy\":{\"env\":[{\"name\":\"PIP_INDEX_URL\"}],\"from\":{\"kind\":\"ImageStreamTag\",\"name\":\"python:3.6\",\"namespace\":\"openshift\"}},\"type\":\"Source\"},\"triggers\":[{\"imageChange\":{},\"type\":\"ImageChange\"},{\"type\":\"ConfigChange\"}]},\"status\":{\"lastVersion\":0}}\n"
                 }
             },
             "spec": {
@@ -84,12 +85,12 @@
                         "type": "ConfigChange"
                     }
                 ],
-                "runPolicy": "Parallel",
+                "runPolicy": "SerialLatestOnly",
                 "source": {
                     "type": "Git",
                     "git": {
                         "uri": "https://github.com/bcgov/tfrs.git",
-                        "ref": "master"
+                        "ref": "v1.4.11"
                     },
                     "contextDir": "backend"
                 },

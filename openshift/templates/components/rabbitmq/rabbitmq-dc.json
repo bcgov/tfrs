@@ -13,6 +13,65 @@
     ],
     "objects": [
         {
+            "kind": "Service",
+            "apiVersion": "v1",
+            "metadata": {
+                "name": "rabbit",
+                "creationTimestamp": null
+            },
+            "spec": {
+                "ports": [
+                    {
+                        "name": "amqp",
+                        "protocol": "TCP",
+                        "port": 5672,
+                        "targetPort": 5672
+                    },
+                    {
+                        "name": "management-web",
+                        "protocol": "TCP",
+                        "port": 15672,
+                        "targetPort": 15672
+                    }
+                ],
+                "selector": {
+                    "app": "rabbitmq"
+                },
+                "type": "ClusterIP",
+                "sessionAffinity": "None"
+            },
+            "status": {
+                "loadBalancer": {}
+            }
+        },
+        {
+            "kind": "Route",
+            "apiVersion": "v1",
+            "metadata": {
+                "name": "rabbit",
+                "creationTimestamp": null,
+                "annotations": {
+                    "openshift.io/host.generated": "true"
+                }
+            },
+            "spec": {
+                "host": "rabbit-mem-tfrs-${ENV_NAME}.pathfinder.gov.bc.ca",
+                "to": {
+                    "kind": "Service",
+                    "name": "rabbit",
+                    "weight": 100
+                },
+                "port": {
+                    "targetPort": "management-web"
+                },
+                "tls": {
+                    "termination": "edge"
+                },
+                "wildcardPolicy": "None"
+            },
+            "status": {}
+        },
+        {
             "kind": "StatefulSet",
             "apiVersion": "apps/v1",
             "metadata": {
