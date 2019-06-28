@@ -1,0 +1,71 @@
+{
+    "kind": "Template",
+    "apiVersion": "template.openshift.io/v1",
+    "metadata": {
+        "name": "notification-server-dc",
+        "creationTimestamp": null
+    },
+    "parameters": [
+        {
+            "name": "ROUTE_NAME",
+            "value": "",
+            "displayName": "HOST name",
+            "description": "Sample values: for dev dev-lowcarbonfuels-notification"
+        },
+        {
+            "name": "ROUTE_HOST",
+            "value": "",
+            "displayName": "HOST name",
+            "description": "Sample values: for dev dev-lowcarbonfuels.pathfinder.gov.bc.ca"
+        }
+    ],
+    "objects": [
+        {
+            "kind": "Service",
+            "apiVersion": "v1",
+            "metadata": {
+                "name": "notification-server",
+                "creationTimestamp": null
+            },
+            "spec": {
+                "ports": [
+                    {
+                        "protocol": "TCP",
+                        "port": 8080,
+                        "targetPort": 3000
+                    }
+                ],
+                "selector": {
+                    "name": "notification-server"
+                },
+                "type": "ClusterIP",
+                "sessionAffinity": "None"
+            },
+            "status": {
+                "loadBalancer": {}
+            }
+        },
+        {
+            "kind": "Route",
+            "apiVersion": "route.openshift.io/v1",
+            "metadata": {
+                "name": "${ROUTE_NAME}",
+                "creationTimestamp": null
+            },
+            "spec": {
+                "host": "${ROUTE_HOST}",
+                "path": "/socket.io",
+                "to": {
+                    "kind": "Service",
+                    "name": "notification-server",
+                    "weight": 100
+                },
+                "tls": {
+                    "termination": "edge"
+                },
+                "wildcardPolicy": "None"
+            },
+            "status": {}
+        }
+    ]
+}

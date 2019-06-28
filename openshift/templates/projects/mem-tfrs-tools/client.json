@@ -11,7 +11,7 @@
             "apiVersion": "image.openshift.io/v1",
             "metadata": {
                 "name": "client",
-                "generation": 595,
+                "generation": 631,
                 "creationTimestamp": null,
                 "annotations": {
                     "description": "Keeps track of changes in the client / front end image"
@@ -22,6 +22,19 @@
                     "local": false
                 },
                 "tags": [
+                    {
+                        "name": "dev",
+                        "annotations": null,
+                        "from": {
+                            "kind": "DockerImage",
+                            "name": "docker-registry.default.svc:5000/mem-tfrs-tools/client:dev"
+                        },
+                        "generation": 603,
+                        "importPolicy": {},
+                        "referencePolicy": {
+                            "type": "Source"
+                        }
+                    },
                     {
                         "name": "latest",
                         "annotations": null,
@@ -42,7 +55,7 @@
                             "kind": "DockerImage",
                             "name": "docker-registry.default.svc:5000/mem-tfrs-tools/client:prod"
                         },
-                        "generation": 595,
+                        "generation": 631,
                         "importPolicy": {},
                         "referencePolicy": {
                             "type": "Source"
@@ -55,7 +68,7 @@
                             "kind": "DockerImage",
                             "name": "docker-registry.default.svc:5000/mem-tfrs-tools/client:test"
                         },
-                        "generation": 594,
+                        "generation": 630,
                         "importPolicy": {},
                         "referencePolicy": {
                             "type": "Source"
@@ -81,48 +94,14 @@
             }
         },
         {
-            "kind": "ImageStream",
-            "apiVersion": "image.openshift.io/v1",
-            "metadata": {
-                "name": "client-angular-app",
-                "generation": 1,
-                "creationTimestamp": null,
-                "labels": {
-                    "build": "client-angular-app-build"
-                }
-            },
-            "spec": {
-                "lookupPolicy": {
-                    "local": false
-                },
-                "tags": [
-                    {
-                        "name": "latest",
-                        "annotations": null,
-                        "from": {
-                            "kind": "DockerImage",
-                            "name": "docker-registry.default.svc:5000/mem-tfrs-tools/client-angular-app:latest"
-                        },
-                        "generation": null,
-                        "importPolicy": {},
-                        "referencePolicy": {
-                            "type": ""
-                        }
-                    }
-                ]
-            },
-            "status": {
-                "dockerImageRepository": ""
-            }
-        },
-        {
             "kind": "BuildConfig",
             "apiVersion": "build.openshift.io/v1",
             "metadata": {
                 "name": "client",
                 "creationTimestamp": null,
                 "annotations": {
-                    "description": "Defines how to build the client / front end image"
+                    "description": "Defines how to build the client / front end image",
+                    "kubectl.kubernetes.io/last-applied-configuration": "{\"apiVersion\":\"build.openshift.io/v1\",\"kind\":\"BuildConfig\",\"metadata\":{\"annotations\":{\"description\":\"Defines how to build the client / front end image\"},\"creationTimestamp\":null,\"name\":\"client\",\"namespace\":\"mem-tfrs-tools\"},\"spec\":{\"nodeSelector\":null,\"output\":{\"to\":{\"kind\":\"ImageStreamTag\",\"name\":\"client:latest\"}},\"postCommit\":{},\"resources\":{\"limits\":{\"cpu\":\"2\",\"memory\":\"4Gi\"}},\"runPolicy\":\"Serial\",\"source\":{\"dockerfile\":\"FROM client-angular-app:latest\\nCOPY * /tmp/app/dist/\\nCMD  /usr/libexec/s2i/run\",\"images\":[{\"as\":null,\"from\":{\"kind\":\"ImageStreamTag\",\"name\":\"client-angular-app:latest\"},\"paths\":[{\"destinationDir\":\"tmp\",\"sourcePath\":\"/opt/app-root/src/public/.\"}]}],\"type\":\"Dockerfile\"},\"strategy\":{\"dockerStrategy\":{\"from\":{\"kind\":\"ImageStreamTag\",\"name\":\"nginx-runtime:latest\"}},\"type\":\"Docker\"},\"triggers\":[{\"imageChange\":{},\"type\":\"ImageChange\"},{\"type\":\"ConfigChange\"}]},\"status\":{\"lastVersion\":0}}\n"
                 }
             },
             "spec": {
@@ -178,69 +157,6 @@
                 },
                 "postCommit": {},
                 "nodeSelector": null
-            },
-            "status": {
-                "lastVersion": 0
-            }
-        },
-        {
-            "kind": "BuildConfig",
-            "apiVersion": "build.openshift.io/v1",
-            "metadata": {
-                "name": "client-angular-app-build",
-                "creationTimestamp": null,
-                "labels": {
-                    "build": "client-angular-app-build"
-                }
-            },
-            "spec": {
-                "triggers": [
-                    {
-                        "type": "ConfigChange"
-                    },
-                    {
-                        "type": "ImageChange",
-                        "imageChange": {}
-                    }
-                ],
-                "runPolicy": "Serial",
-                "source": {
-                    "type": "Git",
-                    "git": {
-                        "uri": "https://github.com/bcgov/tfrs.git",
-                        "ref": "v1.2.7"
-                    },
-                    "contextDir": "frontend"
-                },
-                "strategy": {
-                    "type": "Source",
-                    "sourceStrategy": {
-                        "from": {
-                            "kind": "ImageStreamTag",
-                            "namespace": "openshift",
-                            "name": "nodejs:8"
-                        }
-                    }
-                },
-                "output": {
-                    "to": {
-                        "kind": "ImageStreamTag",
-                        "name": "client-angular-app:latest"
-                    }
-                },
-                "resources": {
-                    "limits": {
-                        "cpu": "1",
-                        "memory": "4Gi"
-                    },
-                    "requests": {
-                        "memory": "2Gi"
-                    }
-                },
-                "postCommit": {},
-                "nodeSelector": null,
-                "successfulBuildsHistoryLimit": 5,
-                "failedBuildsHistoryLimit": 5
             },
             "status": {
                 "lastVersion": 0
