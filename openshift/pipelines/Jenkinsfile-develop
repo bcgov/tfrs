@@ -28,7 +28,7 @@ podTemplate(label: "develop-backend-python-${env.BUILD_NUMBER}", name: "develop-
         def prepareOtherStages = load "openshift/pipelines/scripts/prepareOtherStages.groovy"
 
         //unit test stage
-        prepareOtherStages.unitTestStage(${tfrsRelease}).call()
+        prepareOtherStages.unitTestStage(tfrsRelease).call()
     }
 }
 
@@ -39,7 +39,7 @@ if (result != 0) {
     return
 }
 
-/**
+
 podTemplate(label: "develop-maven-${env.BUILD_NUMBER}", name: "develop-maven-${env.BUILD_NUMBER}", serviceAccount: 'jenkins-basic', cloud: 'openshift',
         containers: [
             containerTemplate(
@@ -97,7 +97,7 @@ podTemplate(label: "develop-maven-${env.BUILD_NUMBER}", name: "develop-maven-${e
         prepareOtherStages.bringUpMaintenancePageStage("mem-tfrs-dev", "dev-lowcarbonfuels-frontend", "dev-lowcarbonfuels-backend").call()
 
         //Datebase Backup
-        prepareOtherStages.databaseBackupStage("mem-tfrs-dev", ${tfrsRelease}).call()
+        prepareOtherStages.databaseBackupStage("mem-tfrs-dev", tfrsRelease).call()
 
         //apply all deployment dcs
         prepareDCStages.backendDCStage("dev").call()
@@ -122,5 +122,3 @@ podTemplate(label: "develop-maven-${env.BUILD_NUMBER}", name: "develop-maven-${e
     } //end of node
 
 } //end of podTemplate
-
-**/
