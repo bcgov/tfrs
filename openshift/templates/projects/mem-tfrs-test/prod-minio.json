@@ -1,0 +1,213 @@
+{
+    "kind": "Template",
+    "apiVersion": "template.openshift.io/v1",
+    "metadata": {
+        "name": "prod-minio",
+        "creationTimestamp": null
+    },
+    "objects": [
+        {
+            "kind": "DeploymentConfig",
+            "apiVersion": "apps.openshift.io/v1",
+            "metadata": {
+                "name": "minio",
+                "generation": 2,
+                "creationTimestamp": null,
+                "labels": {
+                    "app": "minio"
+                }
+            },
+            "spec": {
+                "strategy": {
+                    "type": "Recreate",
+                    "recreateParams": {
+                        "timeoutSeconds": 600
+                    },
+                    "resources": {},
+                    "activeDeadlineSeconds": 21600
+                },
+                "triggers": [
+                    {
+                        "type": "ConfigChange"
+                    },
+                    {
+                        "type": "ImageChange",
+                        "imageChangeParams": {
+                            "automatic": true,
+                            "containerNames": [
+                                "minio"
+                            ],
+                            "from": {
+                                "kind": "ImageStreamTag",
+                                "namespace": "mem-tfrs-tools",
+                                "name": "minio:prod"
+                            },
+                            "lastTriggeredImage": "172.50.0.2:5000/openshift/minio@sha256:02f81d40a3515ab8ba4a311d73849e046d5d06cc2d68db938b33af45906fdded"
+                        }
+                    }
+                ],
+                "replicas": 1,
+                "revisionHistoryLimit": 10,
+                "test": false,
+                "selector": {
+                    "app": "minio",
+                    "deploymentconfig": "minio"
+                },
+                "template": {
+                    "metadata": {
+                        "creationTimestamp": null,
+                        "labels": {
+                            "app": "minio",
+                            "deploymentconfig": "minio"
+                        }
+                    },
+                    "spec": {
+                        "volumes": [
+                            {
+                                "name": "minio-vol",
+                                "persistentVolumeClaim": {
+                                    "claimName": "minio-pv-claim"
+                                }
+                            }
+                        ],
+                        "containers": [
+                            {
+                                "name": "minio",
+                                "image": "172.50.0.2:5000/openshift/minio@sha256:02f81d40a3515ab8ba4a311d73849e046d5d06cc2d68db938b33af45906fdded",
+                                "ports": [
+                                    {
+                                        "containerPort": 9000,
+                                        "protocol": "TCP"
+                                    }
+                                ],
+                                "env": [
+                                    {
+                                        "name": "MINIO_ACCESS_KEY",
+                                        "valueFrom": {
+                                            "secretKeyRef": {
+                                                "name": "minio",
+                                                "key": "minioAccessKey"
+                                            }
+                                        }
+                                    },
+                                    {
+                                        "name": "MINIO_SECRET_KEY",
+                                        "valueFrom": {
+                                            "secretKeyRef": {
+                                                "name": "minio",
+                                                "key": "minioSecretKey"
+                                            }
+                                        }
+                                    },
+                                    {
+                                        "name": "MINIO_CONFIG_DIR",
+                                        "value": "/tmp"
+                                    },
+                                    {
+                                        "name": "MINIO_DATA_DIR",
+                                        "value": "/data"
+                                    }
+                                ],
+                                "resources": {},
+                                "volumeMounts": [
+                                    {
+                                        "name": "minio-vol",
+                                        "mountPath": "/data"
+                                    }
+                                ],
+                                "terminationMessagePath": "/dev/termination-log",
+                                "terminationMessagePolicy": "File",
+                                "imagePullPolicy": "Always"
+                            }
+                        ],
+                        "restartPolicy": "Always",
+                        "terminationGracePeriodSeconds": 30,
+                        "dnsPolicy": "ClusterFirst",
+                        "securityContext": {},
+                        "schedulerName": "default-scheduler"
+                    }
+                }
+            },
+            "status": {
+                "latestVersion": 0,
+                "observedGeneration": 0,
+                "replicas": 0,
+                "updatedReplicas": 0,
+                "availableReplicas": 0,
+                "unavailableReplicas": 0
+            }
+        },
+        {
+            "kind": "Service",
+            "apiVersion": "v1",
+            "metadata": {
+                "name": "minio",
+                "creationTimestamp": null,
+                "labels": {
+                    "app": "minio"
+                }
+            },
+            "spec": {
+                "ports": [
+                    {
+                        "name": "9000-tcp",
+                        "protocol": "TCP",
+                        "port": 9000,
+                        "targetPort": 9000
+                    }
+                ],
+                "selector": {
+                    "deploymentconfig": "minio"
+                },
+                "type": "ClusterIP",
+                "sessionAffinity": "None"
+            },
+            "status": {
+                "loadBalancer": {}
+            }
+        },
+        {
+            "kind": "Route",
+            "apiVersion": "route.openshift.io/v1",
+            "metadata": {
+                "name": "docs",
+                "creationTimestamp": null,
+                "annotations": {
+                    "openshift.io/host.generated": "true"
+                }
+            },
+            "spec": {
+                "host": "docs-mem-tfrs-prod.pathfinder.gov.bc.ca",
+                "to": {
+                    "kind": "Service",
+                    "name": "minio",
+                    "weight": 100
+                },
+                "port": {
+                    "targetPort": "9000-tcp"
+                },
+                "tls": {
+                    "termination": "edge",
+                    "insecureEdgeTerminationPolicy": "Redirect"
+                },
+                "wildcardPolicy": "None"
+            },
+            "status": {
+                "ingress": [
+                    {
+                        "host": "docs-mem-tfrs-prod.pathfinder.gov.bc.ca",
+                        "routerName": "router",
+                        "conditions": [
+                            {
+                                "type": "Admitted",
+                                "status": "True",
+                                "lastTransitionTime": "2018-12-17T21:56:36Z"
+                            }
+                        ],
+                        "wildcardPolicy": "None"
+                    }
+                ]
+            }
+        }
+    ]
+}

@@ -11,7 +11,7 @@
             "apiVersion": "image.openshift.io/v1",
             "metadata": {
                 "name": "client-develop",
-                "generation": 306,
+                "generation": 384,
                 "creationTimestamp": null
             },
             "spec": {
@@ -26,7 +26,7 @@
                             "kind": "DockerImage",
                             "name": "docker-registry.default.svc:5000/mem-tfrs-tools/client-develop:dev"
                         },
-                        "generation": 306,
+                        "generation": 384,
                         "importPolicy": {},
                         "referencePolicy": {
                             "type": "Source"
@@ -91,48 +91,14 @@
             }
         },
         {
-            "kind": "ImageStream",
-            "apiVersion": "image.openshift.io/v1",
-            "metadata": {
-                "name": "client-develop-angular-app",
-                "generation": 1,
-                "creationTimestamp": null,
-                "labels": {
-                    "build": "client-develop-angular-app-build"
-                }
-            },
-            "spec": {
-                "lookupPolicy": {
-                    "local": false
-                },
-                "tags": [
-                    {
-                        "name": "latest",
-                        "annotations": null,
-                        "from": {
-                            "kind": "DockerImage",
-                            "name": "docker-registry.default.svc:5000/mem-tfrs-tools/client-develop-angular-app:latest"
-                        },
-                        "generation": null,
-                        "importPolicy": {},
-                        "referencePolicy": {
-                            "type": ""
-                        }
-                    }
-                ]
-            },
-            "status": {
-                "dockerImageRepository": ""
-            }
-        },
-        {
             "kind": "BuildConfig",
             "apiVersion": "build.openshift.io/v1",
             "metadata": {
                 "name": "client-develop",
                 "creationTimestamp": null,
                 "annotations": {
-                    "description": "Defines how to build the client / front end image"
+                    "description": "Defines how to build the client / front end image",
+                    "kubectl.kubernetes.io/last-applied-configuration": "{\"apiVersion\":\"build.openshift.io/v1\",\"kind\":\"BuildConfig\",\"metadata\":{\"annotations\":{\"description\":\"Defines how to build the client / front end image\"},\"creationTimestamp\":null,\"name\":\"client-develop\",\"namespace\":\"mem-tfrs-tools\"},\"spec\":{\"nodeSelector\":null,\"output\":{\"to\":{\"kind\":\"ImageStreamTag\",\"name\":\"client-develop:latest\"}},\"postCommit\":{},\"resources\":{\"limits\":{\"cpu\":\"2\",\"memory\":\"4Gi\"}},\"runPolicy\":\"Serial\",\"source\":{\"dockerfile\":\"FROM client-angular-app:latest\\nCOPY * /tmp/app/dist/\\nCMD  /usr/libexec/s2i/run\",\"images\":[{\"as\":null,\"from\":{\"kind\":\"ImageStreamTag\",\"name\":\"client-develop-angular-app:latest\"},\"paths\":[{\"destinationDir\":\"tmp\",\"sourcePath\":\"/opt/app-root/src/public/.\"}]}],\"type\":\"Dockerfile\"},\"strategy\":{\"dockerStrategy\":{\"from\":{\"kind\":\"ImageStreamTag\",\"name\":\"nginx-runtime:latest\"}},\"type\":\"Docker\"},\"triggers\":[{\"imageChange\":{},\"type\":\"ImageChange\"},{\"type\":\"ConfigChange\"}]},\"status\":{\"lastVersion\":0}}\n"
                 }
             },
             "spec": {
@@ -148,7 +114,7 @@
                 "runPolicy": "Serial",
                 "source": {
                     "type": "Dockerfile",
-                    "dockerfile": "FROM client-develop-angular-app:latest\nCOPY * /tmp/app/dist/\nCMD  /usr/libexec/s2i/run",
+                    "dockerfile": "FROM client-angular-app:latest\nCOPY * /tmp/app/dist/\nCMD  /usr/libexec/s2i/run",
                     "images": [
                         {
                             "from": {
@@ -188,69 +154,6 @@
                 },
                 "postCommit": {},
                 "nodeSelector": null
-            },
-            "status": {
-                "lastVersion": 0
-            }
-        },
-        {
-            "kind": "BuildConfig",
-            "apiVersion": "build.openshift.io/v1",
-            "metadata": {
-                "name": "client-develop-angular-app-build",
-                "creationTimestamp": null,
-                "labels": {
-                    "build": "client-develop-angular-app-build"
-                }
-            },
-            "spec": {
-                "triggers": [
-                    {
-                        "type": "ConfigChange"
-                    },
-                    {
-                        "type": "ImageChange",
-                        "imageChange": {}
-                    }
-                ],
-                "runPolicy": "Serial",
-                "source": {
-                    "type": "Git",
-                    "git": {
-                        "uri": "https://github.com/bcgov/tfrs.git",
-                        "ref": "master"
-                    },
-                    "contextDir": "frontend"
-                },
-                "strategy": {
-                    "type": "Source",
-                    "sourceStrategy": {
-                        "from": {
-                            "kind": "ImageStreamTag",
-                            "namespace": "openshift",
-                            "name": "nodejs:8"
-                        }
-                    }
-                },
-                "output": {
-                    "to": {
-                        "kind": "ImageStreamTag",
-                        "name": "client-develop-angular-app:latest"
-                    }
-                },
-                "resources": {
-                    "limits": {
-                        "cpu": "1",
-                        "memory": "4Gi"
-                    },
-                    "requests": {
-                        "memory": "2Gi"
-                    }
-                },
-                "postCommit": {},
-                "nodeSelector": null,
-                "successfulBuildsHistoryLimit": 5,
-                "failedBuildsHistoryLimit": 5
             },
             "status": {
                 "lastVersion": 0

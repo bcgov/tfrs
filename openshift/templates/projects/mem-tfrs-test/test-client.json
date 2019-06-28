@@ -11,7 +11,7 @@
             "apiVersion": "apps.openshift.io/v1",
             "metadata": {
                 "name": "client",
-                "generation": 227,
+                "generation": 287,
                 "creationTimestamp": null,
                 "annotations": {
                     "description": "Defines how to deploy the application server"
@@ -43,7 +43,7 @@
                                 "namespace": "mem-tfrs-tools",
                                 "name": "client:test"
                             },
-                            "lastTriggeredImage": "docker-registry.default.svc:5000/mem-tfrs-tools/client@sha256:12f29d5ce7b0ec4c6d76b7181cd0e50a2bcba7aa71a126488538b2ab748b4960"
+                            "lastTriggeredImage": "docker-registry.default.svc:5000/mem-tfrs-tools/client@sha256:5bee9b731b35abd6a1febb85c37a79ab52c0f52d8e828730dc07b944bfb74b28"
                         }
                     },
                     {
@@ -76,7 +76,7 @@
                         "containers": [
                             {
                                 "name": "client",
-                                "image": "docker-registry.default.svc:5000/mem-tfrs-tools/client@sha256:12f29d5ce7b0ec4c6d76b7181cd0e50a2bcba7aa71a126488538b2ab748b4960",
+                                "image": "docker-registry.default.svc:5000/mem-tfrs-tools/client@sha256:5bee9b731b35abd6a1febb85c37a79ab52c0f52d8e828730dc07b944bfb74b28",
                                 "ports": [
                                     {
                                         "containerPort": 3000,
@@ -111,7 +111,7 @@
                                         "memory": "500Mi"
                                     },
                                     "requests": {
-                                        "cpu": "400m",
+                                        "cpu": "200m",
                                         "memory": "400Mi"
                                     }
                                 },
@@ -196,7 +196,8 @@
                     "targetPort": "web"
                 },
                 "tls": {
-                    "termination": "edge"
+                    "termination": "edge",
+                    "insecureEdgeTerminationPolicy": "Redirect"
                 },
                 "wildcardPolicy": "None"
             },
@@ -210,43 +211,6 @@
                                 "type": "Admitted",
                                 "status": "True",
                                 "lastTransitionTime": "2018-10-25T17:33:18Z"
-                            }
-                        ],
-                        "wildcardPolicy": "None"
-                    }
-                ]
-            }
-        },
-        {
-            "kind": "Route",
-            "apiVersion": "route.openshift.io/v1",
-            "metadata": {
-                "name": "test-lowcarbonfuels-notification",
-                "creationTimestamp": null
-            },
-            "spec": {
-                "host": "test-lowcarbonfuels.pathfinder.gov.bc.ca",
-                "path": "/socket.io",
-                "to": {
-                    "kind": "Service",
-                    "name": "notification-server",
-                    "weight": 100
-                },
-                "tls": {
-                    "termination": "edge"
-                },
-                "wildcardPolicy": "None"
-            },
-            "status": {
-                "ingress": [
-                    {
-                        "host": "test-lowcarbonfuels.pathfinder.gov.bc.ca",
-                        "routerName": "router",
-                        "conditions": [
-                            {
-                                "type": "Admitted",
-                                "status": "True",
-                                "lastTransitionTime": "2018-10-25T17:33:32Z"
                             }
                         ],
                         "wildcardPolicy": "None"
