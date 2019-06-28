@@ -2,9 +2,11 @@ result = 0
 runParallel = true
 tfrsRelease="devops-env-restore"
 
-def prepareBuilds = load "openshift/pipelines/scripts/prepareBuilds.groovy"
-def prepareDCStages = load "openshift/pipelines/scripts/prepareDCStages.groovy"
-def prepareOtherStages = load "openshift/pipelines/scripts/prepareOtherStages.groovy"
+script {
+    prepareBuilds = load "openshift/pipelines/scripts/prepareBuilds.groovy"
+    prepareDCStages = load "openshift/pipelines/scripts/prepareDCStages.groovy"
+    prepareOtherStages = load "openshift/pipelines/scripts/prepareOtherStages.groovy"
+}
 
 podTemplate(label: "develop-backend-python-${env.BUILD_NUMBER}", name: "develop-backend-python-${env.BUILD_NUMBER}", serviceAccount: 'jenkins-basic', cloud: 'openshift',
     containers: [
