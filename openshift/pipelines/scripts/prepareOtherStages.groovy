@@ -17,6 +17,8 @@ def unitTestStage () {
     }
 }
 
+/**
+
 def bringUpMaintenancePageStage (String projectName) {
     return {
         stage('Bring up Maintenance Page') {
@@ -52,10 +54,6 @@ def databaseBackupStage (String projectName, String tfrsRelease) {
     }
 }
 
-/**
- * Deploy Backend components.
- * @param projectName the project name such as mem-tfrs-dev, mem-tfrs-test and mem-tfrs-prod
-*/
 def deployBackendStage (String projectName) {
     return {
         stage("Deploy Backend on ${projectName}") {
@@ -163,4 +161,6 @@ def takeDownMaintenancePageStage(String projectName) {
         }
     }
 }
+
+**/
 return this
