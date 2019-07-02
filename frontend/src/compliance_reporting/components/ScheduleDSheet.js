@@ -106,13 +106,15 @@ class ScheduleDSheet extends Component {
 
     if (!selectedFuel) {
       row[SCHEDULE_D_INPUT.FUEL_TYPE] = {
+        ...row[SCHEDULE_D_INPUT.FUEL_TYPE],
         value: ''
       };
     }
 
     row[SCHEDULE_D_INPUT.FUEL_CLASS] = { // pre-select the fuel class, if possible
       ...row[SCHEDULE_D_INPUT.FUEL_CLASS],
-      value: (selectedFuel.fuelClasses.length === 1) ? selectedFuel.fuelClasses[0].fuelClass : ''
+      value: (selectedFuel && selectedFuel.fuelClasses.length === 1)
+        ? selectedFuel.fuelClasses[0].fuelClass : ''
     };
 
     return row;
