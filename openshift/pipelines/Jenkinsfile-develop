@@ -70,7 +70,7 @@ podTemplate(label: "develop-maven-${env.BUILD_NUMBER}", name: "develop-maven-${e
         //run all the builds
         backendBuildStages = prepareBuilds.backendBuildStages()
         frontendBuildStages = prepareBuilds.frontendBuildStages()
-        /*** don't build
+
         for (builds in backendBuildStages) {
             if (runParallel) {
                 parallel(builds)
@@ -91,7 +91,7 @@ podTemplate(label: "develop-maven-${env.BUILD_NUMBER}", name: "develop-maven-${e
                 }
             }
         }
-        ***/
+
         //Bring up Maintenance Page
         //prepareOtherStages.bringUpMaintenancePageStage("mem-tfrs-dev").call()
 
