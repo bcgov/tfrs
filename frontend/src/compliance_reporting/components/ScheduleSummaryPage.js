@@ -61,7 +61,6 @@ ScheduleSummaryPage.propTypes = {
     PropTypes.node
   ]),
   diesel: PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.shape())).isRequired,
-  edit: PropTypes.bool.isRequired,
   gasoline: PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.shape())).isRequired,
   handleDieselChanged: PropTypes.func.isRequired,
   handleGasolineChanged: PropTypes.func.isRequired,

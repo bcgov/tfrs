@@ -82,14 +82,12 @@ SchedulesPage.propTypes = {
     PropTypes.node
   ]),
   data: PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.shape())).isRequired,
-  edit: PropTypes.bool.isRequired,
   handleCellsChanged: PropTypes.func.isRequired,
   scheduleType: PropTypes.oneOf([
     'schedule-a', 'schedule-b', 'schedule-c', 'schedule-d'
   ]).isRequired,
   title: PropTypes.string.isRequired,
-  totals: PropTypes.shape(),
-  saving: PropTypes.bool.isRequired
+  totals: PropTypes.shape()
 };
 
 export default SchedulesPage;

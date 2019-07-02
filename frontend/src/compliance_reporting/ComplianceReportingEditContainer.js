@@ -201,7 +201,6 @@ class ComplianceReportingEditContainer extends Component {
         key="nav"
       />,
       <TabComponent
-        edit={this.edit}
         key="tab-component"
         period={period}
         id={id}
@@ -209,7 +208,6 @@ class ComplianceReportingEditContainer extends Component {
         complianceReport={this.props.complianceReporting.item}
         loadedState={this.props.loadedState}
         updateScheduleState={this._updateScheduleState}
-        saving={this.props.saving}
         updateAutosaveState={(state) => {
           this._updateAutosaveState(tab, state);
         }}

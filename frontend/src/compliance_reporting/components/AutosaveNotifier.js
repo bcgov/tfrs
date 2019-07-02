@@ -8,12 +8,13 @@ class AutosaveNotifier extends Component {
     this.state = {
       showMessage: false
     };
+
     this.handle = null;
     this.tick = this.tick.bind(this);
   }
 
   componentWillReceiveProps (nextProps, nextContext) {
-    if (this.props.saving && !nextProps.saving) {
+    if (this.props.saving && !nextProps.saving && this.mounted) {
       this.setState({
         showMessage: true
       });

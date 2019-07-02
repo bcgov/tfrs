@@ -77,9 +77,7 @@ const ComplianceReportIntro = (props) => {
 
 ComplianceReportIntro.propTypes = {
   period: PropTypes.string.isRequired,
-  edit: PropTypes.bool.isRequired,
-  title: PropTypes.string.isRequired,
-  saving: PropTypes.bool.isRequired
+  title: PropTypes.string.isRequired
 };
 
 export default ComplianceReportIntro;

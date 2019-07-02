@@ -272,13 +272,11 @@ class ScheduleAContainer extends Component {
       <SchedulesPage
         addRow={this._addRow}
         data={this.state.grid}
-        edit={this.props.edit}
         handleCellsChanged={this._handleCellsChanged}
         key="schedules"
         scheduleType="schedule-a"
         title="Schedule A - Notional Transfers of Renewable Fuel"
         totals={this.state.totals}
-        saving={this.props.saving}
       >
         <p>
           Under section 5.1 of the Act, a fuel supplier may transfer renewable fuel supplied in
@@ -321,10 +319,8 @@ ScheduleAContainer.propTypes = {
     scheduleA: PropTypes.shape()
   }),
   create: PropTypes.bool.isRequired,
-  edit: PropTypes.bool.isRequired,
   period: PropTypes.string.isRequired,
-  updateScheduleState: PropTypes.func.isRequired,
-  saving: PropTypes.bool.isRequired
+  updateScheduleState: PropTypes.func.isRequired
 };
 
 const mapStateToProps = state => ({

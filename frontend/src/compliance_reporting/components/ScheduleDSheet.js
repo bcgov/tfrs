@@ -122,7 +122,6 @@ class ScheduleDSheet extends Component {
     return (
       <ScheduleDPage
         addRow={this._addRow}
-        edit={this.props.edit}
         handleCellsChanged={this._handleCellsChanged}
         scheduleType="schedule-d"
         sheet={this.props.sheet}
@@ -132,11 +131,9 @@ class ScheduleDSheet extends Component {
 }
 
 ScheduleDSheet.defaultProps = {
-  edit: false
 };
 
 ScheduleDSheet.propTypes = {
-  edit: PropTypes.bool,
   handleSheetChanged: PropTypes.func.isRequired,
   id: PropTypes.number.isRequired,
   referenceData: PropTypes.shape({
