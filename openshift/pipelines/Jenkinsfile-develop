@@ -69,7 +69,7 @@ podTemplate(label: "develop-maven-${env.BUILD_NUMBER}", name: "develop-maven-${e
         def prepareOtherStages = load "openshift/pipelines/scripts/prepareOtherStages.groovy"
 
         //Sonarqube stage
-        prepareBuilds.sonarqubeStage()
+        prepareBuilds.sonarqubeStage().call()
 /***
         //run all the builds
         backendBuildStages = prepareBuilds.backendBuildStages()
