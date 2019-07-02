@@ -13,7 +13,9 @@ class AutosaveNotifier extends Component {
   }
 
   componentWillReceiveProps (nextProps, nextContext) {
+    console.log(nextProps);
     if (this.props.saving && !nextProps.saving) {
+      console.log(this.props.saving);
       this.setState({
         showMessage: true
       });
@@ -34,7 +36,6 @@ class AutosaveNotifier extends Component {
   }
 
   render () {
-
     if (this.props.saving) {
       return (<FontAwesomeIcon key="icon" icon="spinner" pulse />);
     }
