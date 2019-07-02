@@ -2,7 +2,6 @@ result = 0
 runParallel = true
 tfrsRelease="devops-pipeline-cleanup"
 
-/**
 podTemplate(label: "develop-backend-python-${env.BUILD_NUMBER}", name: "develop-backend-python-${env.BUILD_NUMBER}", serviceAccount: 'jenkins-basic', cloud: 'openshift',
     containers: [
         containerTemplate(
@@ -39,7 +38,7 @@ if (result != 0) {
     currentBuild.result = 'FAILURE'
     return
 }
-**/
+
 podTemplate(label: "develop-maven-${env.BUILD_NUMBER}", name: "develop-maven-${env.BUILD_NUMBER}", serviceAccount: 'jenkins-basic', cloud: 'openshift',
         containers: [
             containerTemplate(
@@ -69,7 +68,7 @@ podTemplate(label: "develop-maven-${env.BUILD_NUMBER}", name: "develop-maven-${e
         def prepareOtherStages = load "openshift/pipelines/scripts/prepareOtherStages.groovy"
 
         //Sonarqube stage
-        prepareBuilds.sonarqubeStage().call()
+        prepareOtherStages.sonarqubeStage().call()
 /***
         //run all the builds
         backendBuildStages = prepareBuilds.backendBuildStages()
