@@ -124,4 +124,31 @@ def prepareBuildNotificationServer() {
     }
 }
 
+def sonarqubeStage() {
+    return {
+        stage('Code Quality Check') {
+            //checkout scm
+            sh 'sleep 600s'
+            SONARQUBE_PWD = sh (
+                script: 'oc set env dc/sonarqube --list | awk  -F  "=" \'/SONARQUBE_ADMINPW/{print $2}\'',
+                returnStdout: true
+            ).trim()
+            echo ">> SONARQUBE_PWD: ${SONARQUBE_PWD}"
+
+            SONARQUBE_URL = sh (
+                script: 'oc get routes -o wide --no-headers | awk \'/sonarqube/{ print match($0,/edge/) ?  "https://"$2 : "http://"$2 }\'',
+                returnStdout: true
+            ).trim()
+            echo ">> SONARQUBE_URL: ${SONARQUBE_URL}"
+            dir('frontend/sonar-runner') {
+                sh returnStdout: true, script: "./gradlew sonarqube -Dsonar.host.url=${SONARQUBE_URL} -Dsonar.verbose=true --stacktrace --info"
+            }
+            dir('backend/sonar-runner') {
+                unstash 'coverage'
+                sh returnStdout: true, script: "./gradlew sonarqube -Dsonar.host.url=${SONARQUBE_URL} -Dsonar.verbose=true --stacktrace --info"
+            }
+        }
+    }
+}
+
 return this
