@@ -13,12 +13,11 @@ class AutosaveNotifier extends Component {
   }
 
   componentWillReceiveProps (nextProps, nextContext) {
-    console.log(nextProps);
     if (this.props.saving && !nextProps.saving) {
-      console.log(this.props.saving);
       this.setState({
         showMessage: true
       });
+
       this.handle = setInterval(this.tick, 1500);
     }
   }

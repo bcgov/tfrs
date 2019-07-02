@@ -5,9 +5,9 @@ import { withRouter } from 'react-router';
 import Loading from '../app/components/Loading';
 import { loadAutosaveData, saveAutosaveData, clearAutosaveData } from '../actions/autosaveActions';
 
-const getDisplayName = (WrappedComponent) => {
-  return WrappedComponent.displayName || WrappedComponent.name || 'Component';
-};
+const getDisplayName = WrappedComponent => (
+  WrappedComponent.displayName || WrappedComponent.name || 'Component'
+);
 
 function autosaved (config) {
   return function component (WrappedComponent) {
@@ -27,16 +27,14 @@ function autosaved (config) {
           timerId: null
         };
 
-        this.updateStateToSave = this.updateStateToSave.bind(this);
+        this._setTimer = this._setTimer.bind(this);
         this.invalidateAutosaved = this.invalidateAutosaved.bind(this);
         this.tick = this.tick.bind(this);
+        this.updateStateToSave = this.updateStateToSave.bind(this);
       }
 
       componentDidMount () {
-        const timerId = setInterval(this.tick, 5000);
-        this.setState({
-          timerId
-        });
+        this._setTimer();
         this._doLoad();
       }
 
@@ -81,6 +79,13 @@ function autosaved (config) {
             loading: false,
             loadedState: null
           });
+        });
+      }
+
+      _setTimer () {
+        const timerId = setInterval(this.tick, 5000);
+        this.setState({
+          timerId
         });
       }
 
