@@ -1,9 +1,9 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import FontAwesomeIcon from '@fortawesome/react-fontawesome';
 
 class AutosaveNotifier extends Component {
-  constructor(props) {
+  constructor (props) {
     super(props);
     this.state = {
       showMessage: false
@@ -12,7 +12,7 @@ class AutosaveNotifier extends Component {
     this.tick = this.tick.bind(this);
   }
 
-  componentWillReceiveProps(nextProps, nextContext) {
+  componentWillReceiveProps (nextProps, nextContext) {
     if (this.props.saving && !nextProps.saving) {
       this.setState({
         showMessage: true
@@ -21,32 +21,29 @@ class AutosaveNotifier extends Component {
     }
   }
 
-  tick() {
+  componentWillUnmount () {
+    if (this.handle !== null) {
+      clearInterval(this.handle);
+    }
+  }
+
+  tick () {
     this.setState({
       showMessage: false
-    })
+    });
   }
 
-  componentWillUnmount() {
-    if (this.handle !== null) {
-       clearInterval(this.handle);
-    }
-  }
-
-
-  render() {
+  render () {
 
     if (this.props.saving) {
-      return (<FontAwesomeIcon key="icon" icon="spinner" pulse/>)
+      return (<FontAwesomeIcon key="icon" icon="spinner" pulse />);
     }
-    ;
 
     if (this.state.showMessage) {
-      return (<span>Saved...</span>)
+      return (<span>Saved...</span>);
     }
 
     return null;
-
   }
 }
 

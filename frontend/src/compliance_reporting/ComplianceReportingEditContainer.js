@@ -18,6 +18,7 @@ import ScheduleSummaryContainer from './ScheduleSummaryContainer';
 import withReferenceData from '../utils/reference_data_support';
 import ComplianceReportIntroContainer from './ComplianceReportIntroContainer';
 import Loading from '../app/components/Loading';
+import ScheduleButtons from './components/ScheduleButtons';
 import ScheduleTabs from './components/ScheduleTabs';
 import Modal from '../app/components/Modal';
 import history from '../app/History';
@@ -213,7 +214,13 @@ class ComplianceReportingEditContainer extends Component {
           this._updateAutosaveState(tab, state);
         }}
       />,
-
+      <ScheduleButtons
+        edit={this.edit}
+        key="scheduleButtons"
+        submit
+        delete
+        saving={this.props.saving}
+      />,
       <Modal
         handleSubmit={event => this._handleSubmit(event)}
         id="confirmSubmit"

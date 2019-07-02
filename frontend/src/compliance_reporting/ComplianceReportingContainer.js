@@ -3,27 +3,26 @@
  * All data handling & manipulation should be handled here.
  */
 
-import React, {Component} from 'react';
-import {connect} from 'react-redux';
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import {bindActionCreators} from 'redux';
 
 import getCompliancePeriods from '../actions/compliancePeriodsActions';
 import ComplianceReportingPage from './components/ComplianceReportingPage';
-import {complianceReporting} from '../actions/complianceReporting';
+import { complianceReporting } from '../actions/complianceReporting';
 import CONFIG from '../config';
 
 class ComplianceReportingContainer extends Component {
-  componentDidMount() {
+  componentDidMount () {
     this.loadData();
   }
 
-  loadData() {
+  loadData () {
     this.props.getCompliancePeriods();
     this.props.getComplianceReports();
   }
 
-  render() {
+  render () {
     const currentYear = new Date().getFullYear();
     const currentEffectiveDate = `${currentYear}-01-01`;
 
@@ -48,11 +47,10 @@ ComplianceReportingContainer.defaultProps = {};
 
 ComplianceReportingContainer.propTypes = {
   compliancePeriods: PropTypes.arrayOf(PropTypes.shape()).isRequired,
-  complianceReports: PropTypes.shape(
-    {
-      items: PropTypes.arrayOf(PropTypes.shape()),
-      isFinding: PropTypes.bool
-    }),
+  complianceReports: PropTypes.shape({
+    items: PropTypes.arrayOf(PropTypes.shape()),
+    isFinding: PropTypes.bool
+  }).isRequired,
   getCompliancePeriods: PropTypes.func.isRequired,
   getComplianceReports: PropTypes.func.isRequired,
   loggedInUser: PropTypes.shape().isRequired

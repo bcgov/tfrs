@@ -6,7 +6,6 @@ import FontAwesomeIcon from '@fortawesome/react-fontawesome';
 
 import ScheduleATotals from './ScheduleATotals';
 import ScheduleBTotals from './ScheduleBTotals';
-import ScheduleButtons from './ScheduleButtons';
 
 const SchedulesPage = props => (
   <div className="page_schedule">
@@ -67,13 +66,6 @@ const SchedulesPage = props => (
           totals={props.totals}
         />
       }
-
-      <ScheduleButtons
-        edit={props.edit}
-        submit
-        delete
-        saving={props.saving}
-      />
     </div>
   </div>
 );
