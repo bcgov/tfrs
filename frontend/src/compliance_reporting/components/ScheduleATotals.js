@@ -12,7 +12,7 @@ const ScheduleATotals = (props) => {
   };
 
   return (
-    <Draggable>
+    <Draggable bounds="parent">
       <div
         className="schedule-totals"
         key="totals"
