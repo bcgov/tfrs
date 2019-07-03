@@ -13,10 +13,8 @@ const ComplianceReportIntroContainer = props => (
   <ComplianceReportIntro
     activeTab="intro"
     period={props.period}
-    edit={props.edit}
     loggedInUser={props.loggedInUser}
     title="Compliance Reporting"
-    saving={props.saving}
   />
 );
 
@@ -25,9 +23,7 @@ ComplianceReportIntroContainer.defaultProps = {
 
 ComplianceReportIntroContainer.propTypes = {
   loggedInUser: PropTypes.shape().isRequired,
-  period: PropTypes.string.isRequired,
-  edit: PropTypes.bool.isRequired,
-  saving: PropTypes.bool.isRequired
+  period: PropTypes.string.isRequired
 };
 
 const mapStateToProps = state => ({

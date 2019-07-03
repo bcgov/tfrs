@@ -354,12 +354,10 @@ class ScheduleCContainer extends Component {
       <SchedulesPage
         addRow={this._addRow}
         data={this.state.grid}
-        edit={this.props.edit}
         handleCellsChanged={this._handleCellsChanged}
         key="schedules"
         scheduleType="schedule-c"
         title="Schedule C - Fuels used for other purposes"
-        saving={this.props.saving}
       >
         <p>
           Under section 6 (3) of the
@@ -400,9 +398,7 @@ ScheduleCContainer.propTypes = {
     approvedFuels: PropTypes.arrayOf(PropTypes.shape),
     isFetching: PropTypes.bool
   }).isRequired,
-  edit: PropTypes.bool.isRequired,
   create: PropTypes.bool.isRequired,
-  saving: PropTypes.bool.isRequired,
   complianceReport: PropTypes.shape({
     scheduleC: PropTypes.shape()
   }),

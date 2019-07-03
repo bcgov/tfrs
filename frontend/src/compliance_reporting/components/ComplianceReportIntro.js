@@ -1,8 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import ScheduleButtons from './ScheduleButtons';
-
 const ComplianceReportIntro = (props) => {
   const complianceReportDueDate = `20${Number(props.period.substr(-2)) + 1}`;
 
@@ -73,20 +71,13 @@ const ComplianceReportIntro = (props) => {
         may have about this form.
         </p>
       </div>
-
-      <ScheduleButtons
-        edit={props.edit}
-        saving={props.saving}
-      />
     </div>
   );
 };
 
 ComplianceReportIntro.propTypes = {
   period: PropTypes.string.isRequired,
-  edit: PropTypes.bool.isRequired,
-  title: PropTypes.string.isRequired,
-  saving: PropTypes.bool.isRequired
+  title: PropTypes.string.isRequired
 };
 
 export default ComplianceReportIntro;

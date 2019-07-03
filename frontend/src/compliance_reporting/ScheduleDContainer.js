@@ -7,7 +7,6 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
-import ScheduleButtons from './components/ScheduleButtons';
 import ScheduleDOutput from './components/ScheduleDOutput';
 import ScheduleDSheet from './components/ScheduleDSheet';
 import ScheduleDTabs from './components/ScheduleDTabs';
@@ -99,8 +98,7 @@ class ScheduleDContainer extends Component {
         }]
       ],
       id,
-      output: ScheduleDOutput,
-      total: ''
+      output: ScheduleDOutput
     };
   }
 
@@ -178,12 +176,6 @@ class ScheduleDContainer extends Component {
             />
           </div>
         ))}
-
-        <ScheduleButtons
-          edit={this.props.edit}
-          submit
-          delete
-        />
       </div>
     );
   }
