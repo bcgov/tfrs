@@ -1,0 +1,384 @@
+{
+    "kind": "Template",
+    "apiVersion": "v1",
+    "metadata": {
+        "name": "backend",
+        "creationTimestamp": null
+    },
+    "labels": {
+        "template": "tfrs-backend-template"
+    },
+    "parameters": [
+        {
+            "name": "NAME_SUFFIX",
+            "displayName": "Name Suffix",
+            "description": "A suffix appended to all objects",
+            "required": true
+        },
+        {
+            "name": "ENV_NAME",
+            "required": true
+        },
+        {
+            "description": "The name of the OpenShift Service exposed for the database.",
+            "displayName": "Database Service Name",
+            "name": "DATABASE_SERVICE_NAME",
+            "required": true
+        },
+        {
+            "name": "HOST",
+            "required": false,
+            "value": ""
+        },
+        {
+            "description": "Name of the PostgreSQL database accessed.",
+            "displayName": "PostgreSQL Database Name",
+            "name": "POSTGRESQL_DATABASE",
+            "required": true,
+            "value": "tfrs"
+        }
+    ],
+    "objects": [
+        {
+            "kind": "ImageStream",
+            "apiVersion": "v1",
+            "metadata": {
+                "name": "tfrs-backend${NAME_SUFFIX}",
+                "creationTimestamp": null,
+                "labels": {
+                    "base-name":"tfrs-backend",
+                    "appver": "tfrs-backend${NAME_SUFFIX}"
+                },
+                "annotations": {
+                    "description": "Keeps track of changes in the tfrs-backend image"
+                }
+            },
+            "spec": {
+                "lookupPolicy": {
+                    "local": false
+                }
+            }
+        },
+        {
+            "kind": "Service",
+            "apiVersion": "v1",
+            "metadata": {
+                "name": "tfrs-backend${NAME_SUFFIX}"
+            },
+            "spec": {
+                "ports": [
+                    {
+                        "name": "web",
+                        "protocol": "TCP",
+                        "port": 8080,
+                        "targetPort": 8080
+                    }
+                ],
+                "selector": {
+                    "name": "tfrs-backend${NAME_SUFFIX}"
+                },
+                "type": "ClusterIP",
+                "sessionAffinity": "None"
+            },
+            "status": {
+                "loadBalancer": {}
+            }
+        },
+        {
+            "kind": "Route",
+            "apiVersion": "v1",
+            "metadata": {
+                "name": "tfrs-frontend${NAME_SUFFIX}",
+                "creationTimestamp": null,
+                "labels": {
+                    "frontend": "true"
+                },
+                "annotations": { }
+            },
+            "spec": {
+                "host": "",
+                "path": "/api",
+                "to": {
+                    "kind": "Service",
+                    "name": "tfrs-backend${NAME_SUFFIX}",
+                    "weight": 100
+                },
+                "port": {
+                    "targetPort": "web"
+                },
+                "tls": {
+                    "termination": "edge"
+                },
+                "wildcardPolicy": "None"
+            }
+        },
+        {
+            "kind": "DeploymentConfig",
+            "apiVersion": "v1",
+            "metadata": {
+                "name": "tfrs-backend${NAME_SUFFIX}",
+                "generation": 1,
+                "creationTimestamp": null,
+                "labels": {
+                    "appver": "tfrs-backend${NAME_SUFFIX}"
+                },
+                "annotations": {
+                    "description": "Defines how to deploy the application server"
+                }
+            },
+            "spec": {
+                "strategy": {
+                    "type": "Recreate",
+                    "recreateParams": {
+                        "timeoutSeconds": 600,
+                        "mid": {
+                            "failurePolicy": "Abort",
+                            "execNewPod": {
+                                "command": [
+                                    "/bin/sh",
+                                    "-c",
+                                    "python manage.py migrate"
+                                ],
+                                "containerName": "tfrs-backend-app${NAME_SUFFIX}"
+                            }
+                        }
+                    },
+                    "resources": {},
+                    "activeDeadlineSeconds": 21600
+                },
+                "triggers": [
+                    {
+                        "type": "ImageChange",
+                        "imageChangeParams": {
+                            "automatic": true,
+                            "containerNames": [
+                                "tfrs-backend-app${NAME_SUFFIX}"
+                            ],
+                            "from": {
+                                "kind": "ImageStreamTag",
+                                "name": "tfrs-backend${NAME_SUFFIX}:${ENV_NAME}"
+                            }
+                        }
+                    },
+                    {
+                        "type": "ConfigChange"
+                    }
+                ],
+                "replicas": 1,
+                "test": false,
+                "selector": {
+                    "name": "tfrs-backend${NAME_SUFFIX}"
+                },
+                "template": {
+                    "metadata": {
+                        "name": "tfrs-backend${NAME_SUFFIX}",
+                        "creationTimestamp": null,
+                        "labels": {
+                            "name": "tfrs-backend${NAME_SUFFIX}",
+                            "appver": "tfrs-backend${NAME_SUFFIX}"
+                        }
+                    },
+                    "spec": {
+                        "containers": [
+                            {
+                                "name": "tfrs-backend-app${NAME_SUFFIX}",
+                                "image": " ",
+                                "ports": [
+                                    {
+                                        "containerPort": 8080,
+                                        "protocol": "TCP"
+                                    }
+                                ],
+                                "env": [
+                                    {
+                                        "name": "KEYCLOAK_ISSUER",
+                                        "valueFrom": {
+                                            "configMapKeyRef": {
+                                                "key": "KEYCLOAK_ISSUER",
+                                                "name": "tfrs-global-config"
+                                            }
+                                        }
+                                    },
+                                    {
+                                        "name": "KEYCLOAK_AUDIENCE",
+                                        "valueFrom": {
+                                            "configMapKeyRef": {
+                                                "key": "KEYCLOAK_AUDIENCE",
+                                                "name": "tfrs-global-config"
+                                            }
+                                        }
+                                    },
+                                    {
+                                        "name": "KEYCLOAK_CERTS_URL",
+                                        "valueFrom": {
+                                            "configMapKeyRef": {
+                                                "key": "KEYCLOAK_CERTS_URL",
+                                                "name": "tfrs-global-config"
+                                            }
+                                        }
+                                    },
+                                    {
+                                        "name": "KEYCLOAK_CLIENT_ID",
+                                        "valueFrom": {
+                                            "configMapKeyRef": {
+                                                "key": "KEYCLOAK_CLIENT_ID",
+                                                "name": "tfrs-global-config"
+                                            }
+                                        }
+                                    },
+                                    {
+                                        "name": "KEYCLOAK_ENABLED",
+                                        "valueFrom": {
+                                            "configMapKeyRef": {
+                                                "key": "KEYCLOAK_ENABLED",
+                                                "name": "tfrs-global-config"
+                                            }
+                                        }
+                                    },
+                                    {
+                                        "name": "KEYCLOAK_REALM",
+                                        "valueFrom": {
+                                            "configMapKeyRef": {
+                                                "key": "KEYCLOAK_REALM",
+                                                "name": "tfrs-global-config"
+                                            }
+                                        }
+                                    },
+                                    {
+                                        "name": "DATABASE_SERVICE_NAME",
+                                        "valueFrom": {
+                                            "configMapKeyRef": {
+                                                "key": "DATABASE_SERVICE_NAME",
+                                                "name": "tfrs-global-config"
+                                            }
+                                        }
+                                    },
+                                    {
+                                        "name": "DATABASE_ENGINE",
+                                        "valueFrom": {
+                                            "configMapKeyRef": {
+                                                "key": "DATABASE_ENGINE",
+                                                "name": "tfrs-global-config"
+                                            }
+                                        }
+                                    },
+                                    {
+                                        "name": "DATABASE_NAME",
+                                        "value": "${POSTGRESQL_DATABASE}"
+                                    },
+                                    {
+                                        "name": "APP_CONFIG",
+                                        "valueFrom": {
+                                            "configMapKeyRef": {
+                                                "key": "APP_CONFIG",
+                                                "name": "tfrs-global-config"
+                                            }
+                                        }
+                                    },
+                                    {
+                                        "name": "RABBITMQ_USER",
+                                        "valueFrom": {
+                                            "configMapKeyRef": {
+                                                "key": "RABBITMQ_USER",
+                                                "name": "tfrs-global-config"
+                                            }
+                                        }
+                                    },
+                                    {
+                                        "name": "RABBITMQ_VHOST",
+                                        "valueFrom": {
+                                            "configMapKeyRef": {
+                                                "key": "RABBITMQ_VHOST",
+                                                "name": "tfrs-global-config"
+                                            }
+                                        }
+                                    },
+                                    {
+                                        "name": "RABBITMQ_HOST",
+                                        "valueFrom": {
+                                            "configMapKeyRef": {
+                                                "key": "RABBITMQ_HOST",
+                                                "name": "tfrs-global-config"
+                                            }
+                                        }
+                                    },
+                                    {
+                                        "name": "RABBITMQ_PASSWORD",
+                                        "valueFrom": {
+                                            "secretKeyRef": {
+                                                "key": "rabbitmq-password",
+                                                "name": "tfrs-global-secrets"
+                                            }
+                                        }
+                                    },
+                                    {
+                                        "name": "DATABASE_USER",
+                                        "valueFrom": {
+                                            "secretKeyRef": {
+                                                "name": "${DATABASE_SERVICE_NAME}",
+                                                "key": "database-user"
+                                            }
+                                        }
+                                    },
+                                    {
+                                        "name": "DATABASE_PASSWORD",
+                                        "valueFrom": {
+                                            "secretKeyRef": {
+                                                "name": "${DATABASE_SERVICE_NAME}",
+                                                "key": "database-password"
+                                            }
+                                        }
+                                    }
+                                ],
+                                "resources": {
+                                    "limits": {
+                                        "cpu": "500m",
+                                        "memory": "1Gi"
+                                    },
+                                    "requests": {
+                                        "cpu": "400m",
+                                        "memory": "512Mi"
+                                    }
+                                },
+                                "livenessProbe": {
+                                    "httpGet": {
+                                        "path": "/health",
+                                        "port": 8080,
+                                        "scheme": "HTTP"
+                                    },
+                                    "initialDelaySeconds": 30,
+                                    "timeoutSeconds": 3,
+                                    "periodSeconds": 10,
+                                    "successThreshold": 1,
+                                    "failureThreshold": 3
+                                },
+                                "readinessProbe": {
+                                    "httpGet": {
+                                        "path": "/health",
+                                        "port": 8080,
+                                        "scheme": "HTTP"
+                                    },
+                                    "initialDelaySeconds": 30,
+                                    "timeoutSeconds": 3,
+                                    "periodSeconds": 10,
+                                    "successThreshold": 1,
+                                    "failureThreshold": 3
+                                },
+                                "terminationMessagePath": "/dev/termination-log",
+                                "terminationMessagePolicy": "File",
+                                "imagePullPolicy": "IfNotPresent"
+                            }
+                        ],
+                        "restartPolicy": "Always",
+                        "terminationGracePeriodSeconds": 30,
+                        "dnsPolicy": "ClusterFirst",
+                        "securityContext": {},
+                        "schedulerName": "default-scheduler"
+                    }
+                }
+            },
+            "status": {
+            }
+        }
+    ]
+}
