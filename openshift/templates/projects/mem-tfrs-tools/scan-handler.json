@@ -1,0 +1,114 @@
+{
+    "kind": "Template",
+    "apiVersion": "template.openshift.io/v1",
+    "metadata": {
+        "name": "scan-handler",
+        "creationTimestamp": null
+    },
+    "objects": [
+        {
+            "kind": "ImageStream",
+            "apiVersion": "image.openshift.io/v1",
+            "metadata": {
+                "name": "scan-handler",
+                "generation": 24,
+                "creationTimestamp": null
+            },
+            "spec": {
+                "lookupPolicy": {
+                    "local": false
+                },
+                "tags": [
+                    {
+                        "name": "latest",
+                        "annotations": null,
+                        "from": {
+                            "kind": "DockerImage",
+                            "name": "docker-registry.default.svc:5000/mem-tfrs-tools/scan-handler:latest"
+                        },
+                        "generation": null,
+                        "importPolicy": {},
+                        "referencePolicy": {
+                            "type": ""
+                        }
+                    },
+                    {
+                        "name": "prod",
+                        "annotations": null,
+                        "from": {
+                            "kind": "DockerImage",
+                            "name": "docker-registry.default.svc:5000/mem-tfrs-tools/scan-handler:prod"
+                        },
+                        "generation": 24,
+                        "importPolicy": {},
+                        "referencePolicy": {
+                            "type": "Source"
+                        }
+                    },
+                    {
+                        "name": "test",
+                        "annotations": null,
+                        "from": {
+                            "kind": "DockerImage",
+                            "name": "docker-registry.default.svc:5000/mem-tfrs-tools/scan-handler:test"
+                        },
+                        "generation": 23,
+                        "importPolicy": {},
+                        "referencePolicy": {
+                            "type": "Source"
+                        }
+                    }
+                ]
+            },
+            "status": {
+                "dockerImageRepository": ""
+            }
+        },
+        {
+            "kind": "BuildConfig",
+            "apiVersion": "build.openshift.io/v1",
+            "metadata": {
+                "name": "scan-handler",
+                "creationTimestamp": null,
+                "annotations": {
+                    "kubectl.kubernetes.io/last-applied-configuration": "{\"apiVersion\":\"build.openshift.io/v1\",\"kind\":\"BuildConfig\",\"metadata\":{\"annotations\":{},\"creationTimestamp\":null,\"name\":\"scan-handler\",\"namespace\":\"mem-tfrs-tools\"},\"spec\":{\"failedBuildsHistoryLimit\":5,\"nodeSelector\":null,\"output\":{\"to\":{\"kind\":\"ImageStreamTag\",\"name\":\"scan-handler:latest\"}},\"postCommit\":{},\"resources\":{},\"runPolicy\":\"Serial\",\"source\":{\"dockerfile\":\"FROM python:3.6.8-slim-stretch\\nRUN apt-get update \\\\\\n    \\u0026\\u0026 apt-get install -y git \\\\\\n    \\u0026\\u0026 apt-get install -y supervisor\\nWORKDIR /app\\nRUN git clone https://github.com/bcgov/tfrs.git\\nWORKDIR /app/tfrs\\nRUN git checkout ${tfrs_release}\\nRUN pip install --upgrade pip \\\\\\n    \\u0026\\u0026 pip install -r backend/requirements.txt\\nRUN cp /app/tfrs/security-scan/scan-handler/scan-handler.conf /etc/supervisor/conf.d\\nRUN chgrp -R root /var/log/supervisor\\nRUN chmod -R g+w /var/log/supervisor\\nRUN chmod -R g+w /run\\nRUN chmod -R g+w /app\\n# RUN sed -i \\\"s/chmod=0700/chmod=0770/g\\\" /etc/supervisor/supervisord.conf\\nCMD [\\\"supervisord\\\"]\\n\",\"type\":\"Dockerfile\"},\"strategy\":{\"dockerStrategy\":{\"env\":[{\"name\":\"tfrs_release\",\"value\":\"v1.4.8-dc-pipeline-fix\"}],\"forcePull\":true,\"noCache\":true},\"type\":\"Docker\"},\"successfulBuildsHistoryLimit\":5,\"triggers\":[]},\"status\":{\"lastVersion\":0}}\n"
+                }
+            },
+            "spec": {
+                "triggers": [],
+                "runPolicy": "Serial",
+                "source": {
+                    "type": "Dockerfile",
+                    "dockerfile": "FROM python:3.6.8-slim-stretch\nRUN apt-get update \\\n    \u0026\u0026 apt-get install -y git \\\n    \u0026\u0026 apt-get install -y supervisor\nWORKDIR /app\nRUN git clone https://github.com/bcgov/tfrs.git\nWORKDIR /app/tfrs\nRUN git checkout ${tfrs_release}\nRUN pip install --upgrade pip \\\n    \u0026\u0026 pip install -r backend/requirements.txt\nRUN cp /app/tfrs/security-scan/scan-handler/scan-handler.conf /etc/supervisor/conf.d\nRUN chgrp -R root /var/log/supervisor\nRUN chmod -R g+w /var/log/supervisor\nRUN chmod -R g+w /run\nRUN chmod -R g+w /app\n# RUN sed -i \"s/chmod=0700/chmod=0770/g\" /etc/supervisor/supervisord.conf\nCMD [\"supervisord\"]\n"
+                },
+                "strategy": {
+                    "type": "Docker",
+                    "dockerStrategy": {
+                        "noCache": true,
+                        "env": [
+                            {
+                                "name": "tfrs_release",
+                                "value": "v1.4.8-dc-pipeline-fix"
+                            }
+                        ],
+                        "forcePull": true
+                    }
+                },
+                "output": {
+                    "to": {
+                        "kind": "ImageStreamTag",
+                        "name": "scan-handler:latest"
+                    }
+                },
+                "resources": {},
+                "postCommit": {},
+                "nodeSelector": null,
+                "successfulBuildsHistoryLimit": 5,
+                "failedBuildsHistoryLimit": 5
+            },
+            "status": {
+                "lastVersion": 0
+            }
+        }
+    ]
+}

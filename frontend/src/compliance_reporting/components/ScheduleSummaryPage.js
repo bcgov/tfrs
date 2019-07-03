@@ -52,6 +52,7 @@ const ScheduleSummaryPage = props => (
 
     <ScheduleButtons
       edit={props.edit}
+      saving={props.saving}
       submit
       delete
     />
@@ -73,7 +74,8 @@ ScheduleSummaryPage.propTypes = {
   handleDieselChanged: PropTypes.func.isRequired,
   handleGasolineChanged: PropTypes.func.isRequired,
   part3: PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.shape())).isRequired,
-  penalty: PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.shape())).isRequired
+  penalty: PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.shape())).isRequired,
+  saving: PropTypes.bool.isRequired
 };
 
 export default ScheduleSummaryPage;

@@ -219,7 +219,7 @@ class ComplianceReportingEditContainer extends Component {
         id="confirmSubmit"
         key="confirmSubmit"
       >
-        Are you sure you want to save this schedule?
+        Are you sure you want to save this compliance report?
       </Modal>,
       <Modal
         handleSubmit={event => this._handleDelete(event)}
