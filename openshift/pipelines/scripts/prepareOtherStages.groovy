@@ -105,6 +105,7 @@ def deployFrontendStage(String projectName) {
                 def clientISName
                 def notificationServerISName
                 if(projectName == "mem-tfrs-dev") {
+                    envName = "dev"
                     clientISName = "client-develop"
                     notificationServerISName = "notification-server-develop"
                 } else if(projectName == "mem-tfrs-test" || projectName == "mem-tfrs-prod") {
@@ -116,7 +117,6 @@ def deployFrontendStage(String projectName) {
                     clientISName = "client"
                     notificationServerISName = "notification-server"
                 }
-                clientISName = "client-develop"
                 openshift.withProject("mem-tfrs-tools") {
                     openshift.tag("mem-tfrs-tools/${clientISName}:latest", "mem-tfrs-tools/${clientISName}:${envName}")
                     openshift.tag("mem-tfrs-tools/${notificationServerISName}:latest", "mem-tfrs-tools/${notificationServerISName}:${envName}")
