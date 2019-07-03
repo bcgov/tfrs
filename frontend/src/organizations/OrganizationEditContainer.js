@@ -186,14 +186,15 @@ class OrganizationEditContainer extends Component {
     switch (this.props.mode) {
       case 'add':
         return ([<OrganizationEditForm
-          key="organization-edit-form"
           fields={this.state.fields}
           handleInputChange={this._handleInputChange}
-          referenceData={this.props.referenceData}
           handleSubmit={() => {
             $('#confirmSubmit').modal('show');
           }}
+          key="organization-edit-form"
+          loggedInUser={this.props.loggedInUser}
           mode={this.props.mode}
+          referenceData={this.props.referenceData}
         />,
         this._modalConfirm()]);
       case 'gov_edit':
@@ -201,9 +202,10 @@ class OrganizationEditContainer extends Component {
         return (<OrganizationEditForm
           fields={this.state.fields}
           handleInputChange={this._handleInputChange}
-          referenceData={this.props.referenceData}
           handleSubmit={this._handleUpdate}
+          loggedInUser={this.props.loggedInUser}
           mode={this.props.mode}
+          referenceData={this.props.referenceData}
         />);
       default:
         return (<div />);
@@ -218,6 +220,16 @@ OrganizationEditContainer.defaultProps = {
 };
 
 OrganizationEditContainer.propTypes = {
+  loggedInUser: PropTypes.shape({
+    organization: PropTypes.shape({
+      id: PropTypes.number,
+      name: PropTypes.string,
+      organizationBalance: PropTypes.shape({
+        validatedCredits: PropTypes.number
+      }),
+      statusDisplay: PropTypes.string
+    })
+  }).isRequired,
   match: PropTypes.shape({
     params: PropTypes.shape({
       id: PropTypes.string
@@ -259,6 +271,7 @@ OrganizationEditContainer.propTypes = {
 };
 
 const mapStateToProps = state => ({
+  loggedInUser: state.rootReducer.userRequest.loggedInUser,
   organization: {
     details: state.rootReducer.organizationRequest.fuelSupplier,
     isFetching: state.rootReducer.organizationRequest.isFetching
