@@ -29,7 +29,7 @@ const ScheduleBTotals = (props) => {
   };
 
   return (
-    <Draggable>
+    <Draggable bounds="parent">
       <div
         className="schedule-totals schedule-b"
         key="totals"

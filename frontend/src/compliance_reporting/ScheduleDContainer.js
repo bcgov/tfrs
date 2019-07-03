@@ -179,13 +179,11 @@ class ScheduleDContainer extends Component {
           </div>
         ))}
 
-        <div className="sticky">
-          <ScheduleButtons
-            edit={this.props.edit}
-            submit
-            delete
-          />
-        </div>
+        <ScheduleButtons
+          edit={this.props.edit}
+          submit
+          delete
+        />
       </div>
     );
   }
