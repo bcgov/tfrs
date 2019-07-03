@@ -9,7 +9,7 @@ def unitTestStage () {
                 } catch(Throwable t) {
                     result = 1;
                 } finally {
-                    //stash includes: 'nosetests.xml,coverage.xml', name: 'coverage'
+                    stash includes: 'nosetests.xml,coverage.xml', name: 'coverage'
                     junit 'nosetests.xml'
                 }
             }
@@ -170,6 +170,27 @@ def confirmStage(String message) {
     return {
         stage ('Confirmation required in order to continue') {
             input "${message}"
+        }
+    }
+}
+
+
+def sonarqubeStage() {
+    return {
+        stage('Code Quality Check') {
+            //checkout scm
+            SONARQUBE_URL = sh (
+                script: 'oc get routes -o wide --no-headers | awk \'/sonarqube/{ print match($0,/edge/) ?  "https://"$2 : "http://"$2 }\'',
+                returnStdout: true
+            ).trim()
+            echo ">> SONARQUBE_URL: ${SONARQUBE_URL}"
+            dir('frontend/sonar-runner') {
+                sh returnStdout: true, script: "./gradlew sonarqube -Dsonar.host.url=${SONARQUBE_URL} -Dsonar.verbose=true --stacktrace --info"
+            }
+            dir('backend/sonar-runner') {
+                unstash 'coverage'
+                sh returnStdout: true, script: "./gradlew sonarqube -Dsonar.host.url=${SONARQUBE_URL} -Dsonar.verbose=true --stacktrace --info"
+            }
         }
     }
 }
