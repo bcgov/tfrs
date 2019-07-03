@@ -212,7 +212,7 @@ class ScheduleAContainer extends Component {
       if (col === SCHEDULE_A.QUANTITY) {
         grid[row][col] = {
           ...grid[row][col],
-          value: getQuantity(value)
+          value: (value === '') ? '' : getQuantity(value)
         };
       }
 
