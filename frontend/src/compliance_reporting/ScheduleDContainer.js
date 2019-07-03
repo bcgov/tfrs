@@ -98,8 +98,7 @@ class ScheduleDContainer extends Component {
         }]
       ],
       id,
-      output: ScheduleDOutput,
-      total: ''
+      output: ScheduleDOutput
     };
   }
 
