@@ -17,8 +17,117 @@ import ScheduleSummaryPage from './components/ScheduleSummaryPage';
 import ScheduleSummaryPart3 from './components/ScheduleSummaryPart3';
 import ScheduleSummaryPenalty from './components/ScheduleSummaryPenalty';
 import { SCHEDULE_SUMMARY } from '../constants/schedules/scheduleColumns';
+import { formatNumeric } from '../utils/functions';
 
 class ScheduleSummaryContainer extends Component {
+  static calculateDieselPayable (grid) {
+    let totals = 0;
+
+    let payable = grid[SCHEDULE_SUMMARY.LINE_15][2].value;
+    if (payable && !Number.isNaN(payable)) {
+      totals += parseFloat(payable);
+    }
+
+    payable = grid[SCHEDULE_SUMMARY.LINE_21][2].value;
+    if (payable && !Number.isNaN(payable)) {
+      totals -= parseFloat(payable);
+    }
+
+    totals *= 0.45;
+
+    return totals;
+  }
+
+  static calculateDieselTotal (grid) {
+    let totals = 0;
+
+    let volume = grid[SCHEDULE_SUMMARY.LINE_13][2].value;
+    if (volume && !Number.isNaN(volume)) {
+      totals += parseFloat(volume);
+    }
+
+    volume = grid[SCHEDULE_SUMMARY.LINE_16][2].value;
+    if (volume && !Number.isNaN(volume)) {
+      totals += parseFloat(volume);
+    }
+
+    volume = grid[SCHEDULE_SUMMARY.LINE_17][2].value;
+    if (volume && !Number.isNaN(volume)) {
+      totals -= parseFloat(volume);
+    }
+
+    volume = grid[SCHEDULE_SUMMARY.LINE_18][2].value;
+    if (volume && !Number.isNaN(volume)) {
+      totals += parseFloat(volume);
+    }
+
+    volume = grid[SCHEDULE_SUMMARY.LINE_19][2].value;
+    if (volume && !Number.isNaN(volume)) {
+      totals += parseFloat(volume);
+    }
+
+    volume = grid[SCHEDULE_SUMMARY.LINE_20][2].value;
+    if (volume && !Number.isNaN(volume)) {
+      totals -= parseFloat(volume);
+    }
+
+    return totals;
+  }
+
+  static calculateGasolinePayable (grid) {
+    let totals = 0;
+
+    let payable = grid[SCHEDULE_SUMMARY.LINE_4][2].value;
+    if (payable && !Number.isNaN(payable)) {
+      totals += parseFloat(payable);
+    }
+
+    payable = grid[SCHEDULE_SUMMARY.LINE_10][2].value;
+    if (payable && !Number.isNaN(payable)) {
+      totals -= parseFloat(payable);
+    }
+
+    totals *= 0.30;
+
+    return totals;
+  }
+
+  static calculateGasolineTotal (grid) {
+    let totals = 0;
+
+    let volume = grid[SCHEDULE_SUMMARY.LINE_2][2].value;
+    if (volume && !Number.isNaN(volume)) {
+      totals += parseFloat(volume);
+    }
+
+    volume = grid[SCHEDULE_SUMMARY.LINE_5][2].value;
+    if (volume && !Number.isNaN(volume)) {
+      totals += parseFloat(volume);
+    }
+
+    volume = grid[SCHEDULE_SUMMARY.LINE_6][2].value;
+    if (volume && !Number.isNaN(volume)) {
+      totals -= parseFloat(volume);
+    }
+
+    volume = grid[SCHEDULE_SUMMARY.LINE_7][2].value;
+    if (volume && !Number.isNaN(volume)) {
+      totals += parseFloat(volume);
+    }
+
+    volume = grid[SCHEDULE_SUMMARY.LINE_8][2].value;
+    if (volume && !Number.isNaN(volume)) {
+      totals += parseFloat(volume);
+    }
+
+    volume = grid[SCHEDULE_SUMMARY.LINE_9][2].value;
+    if (volume && !Number.isNaN(volume)) {
+      totals -= parseFloat(volume);
+    }
+
+    return totals;
+  }
+
   constructor (props) {
     super(props);
 
@@ -80,15 +189,6 @@ class ScheduleSummaryContainer extends Component {
       totalGasoline += totalPetroleumGasoline;
     }
 
-    if (totalRenewableDiesel) {
-      diesel[SCHEDULE_SUMMARY.LINE_13][2] = { // line 13, 3rd column
-        ...diesel[SCHEDULE_SUMMARY.LINE_13][2],
-        value: totalRenewableDiesel
-      };
-
-      totalDiesel += totalRenewableDiesel;
-    }
-
     if (totalRenewableGasoline) {
       gasoline[SCHEDULE_SUMMARY.LINE_2][2] = { // line 2, 3rd column
         ...gasoline[SCHEDULE_SUMMARY.LINE_2][2],
@@ -98,24 +198,97 @@ class ScheduleSummaryContainer extends Component {
       totalGasoline += totalRenewableGasoline;
     }
 
-    diesel[SCHEDULE_SUMMARY.LINE_14][2] = { // line 14, 3rd column
-      ...diesel[SCHEDULE_SUMMARY.LINE_14][2],
-      value: totalDiesel === 0 ? '' : totalDiesel
-    };
-
     gasoline[SCHEDULE_SUMMARY.LINE_3][2] = { // line 3, 3rd column
       ...gasoline[SCHEDULE_SUMMARY.LINE_3][2],
       value: totalGasoline === 0 ? '' : totalGasoline
     };
 
-    diesel[SCHEDULE_SUMMARY.LINE_15][2] = { // line 15, 3rd column
-      ...diesel[SCHEDULE_SUMMARY.LINE_15][2],
-      value: totalDiesel * 0.04 // Line 14 x 4%
-    };
+    const line4Value = totalGasoline * 0.05;
 
     gasoline[SCHEDULE_SUMMARY.LINE_4][2] = { // line 4, 3rd column
       ...gasoline[SCHEDULE_SUMMARY.LINE_4][2],
-      value: totalGasoline * 0.05 // Line 3 x 5%
+      value: line4Value // Line 3 x 5%
+    };
+
+    const line6Value = Math.round(line4Value * 0.05); // Line 4 x 5%
+
+    gasoline[SCHEDULE_SUMMARY.LINE_6][0] = { // line 6, 1st column
+      ...gasoline[SCHEDULE_SUMMARY.LINE_6][0],
+      value: gasoline[SCHEDULE_SUMMARY.LINE_6][0]
+        .value.replace(')', ` is ${formatNumeric(line6Value, 0)} L)`)
+    };
+
+    gasoline[SCHEDULE_SUMMARY.LINE_6][2] = { // line 6, 3rd column
+      ...gasoline[SCHEDULE_SUMMARY.LINE_6][2],
+      attributes: {
+        ...gasoline[SCHEDULE_SUMMARY.LINE_6][2].attributes,
+        maxValue: line6Value
+      }
+    };
+
+    gasoline[SCHEDULE_SUMMARY.LINE_8][0] = { // line 8, 1st column
+      ...gasoline[SCHEDULE_SUMMARY.LINE_8][0],
+      value: gasoline[SCHEDULE_SUMMARY.LINE_8][0]
+        .value.replace(')', ` is ${formatNumeric(line6Value, 0)} L)`)
+    };
+
+    gasoline[SCHEDULE_SUMMARY.LINE_8][2] = { // line 8, 3rd column
+      ...gasoline[SCHEDULE_SUMMARY.LINE_8][2],
+      attributes: {
+        ...gasoline[SCHEDULE_SUMMARY.LINE_8][2].attributes,
+        maxValue: line6Value
+      }
+    };
+
+    if (totalRenewableDiesel) {
+      diesel[SCHEDULE_SUMMARY.LINE_13][2] = { // line 13, 3rd column
+        ...diesel[SCHEDULE_SUMMARY.LINE_13][2],
+        value: totalRenewableDiesel
+      };
+
+      totalDiesel += totalRenewableDiesel;
+    }
+
+    diesel[SCHEDULE_SUMMARY.LINE_14][2] = { // line 14, 3rd column
+      ...diesel[SCHEDULE_SUMMARY.LINE_14][2],
+      value: totalDiesel === 0 ? '' : totalDiesel
+    };
+
+    const line15Value = totalDiesel * 0.04;
+
+    diesel[SCHEDULE_SUMMARY.LINE_15][2] = { // line 15, 3rd column
+      ...diesel[SCHEDULE_SUMMARY.LINE_15][2],
+      value: line15Value // Line 14 x 4%
+    };
+
+    const line17Value = Math.round(line15Value * 0.05); // Line 15 x 5%
+
+    diesel[SCHEDULE_SUMMARY.LINE_17][0] = { // line 17, 1st column
+      ...diesel[SCHEDULE_SUMMARY.LINE_17][0],
+      value: diesel[SCHEDULE_SUMMARY.LINE_17][0]
+        .value.replace(')', ` is ${formatNumeric(line17Value, 0)} L)`)
+    };
+
+    diesel[SCHEDULE_SUMMARY.LINE_17][2] = { // line 17, 3rd column
+      ...diesel[SCHEDULE_SUMMARY.LINE_17][2],
+      attributes: {
+        ...diesel[SCHEDULE_SUMMARY.LINE_17][2].attributes,
+        maxValue: line17Value
+      }
+    };
+
+    diesel[SCHEDULE_SUMMARY.LINE_19][0] = { // line 19, 1st column
+      ...diesel[SCHEDULE_SUMMARY.LINE_19][0],
+      value: diesel[SCHEDULE_SUMMARY.LINE_19][0]
+        .value.replace(')', ` is ${formatNumeric(line17Value, 0)} L)`)
+    };
+
+    diesel[SCHEDULE_SUMMARY.LINE_19][2] = { // line 19, 3rd column
+      ...diesel[SCHEDULE_SUMMARY.LINE_19][2],
+      attributes: {
+        ...diesel[SCHEDULE_SUMMARY.LINE_19][2].attributes,
+        maxValue: line17Value
+      }
     };
 
     if (scheduleA && scheduleA.records) {
@@ -146,6 +319,18 @@ class ScheduleSummaryContainer extends Component {
         value: dieselReceived - dieselTransferred
       };
     }
+
+    gasoline[SCHEDULE_SUMMARY.LINE_10][2].value =
+    ScheduleSummaryContainer.calculateGasolineTotal(gasoline);
+
+    gasoline[SCHEDULE_SUMMARY.LINE_11][2].value =
+    ScheduleSummaryContainer.calculateGasolinePayable(gasoline);
+
+    diesel[SCHEDULE_SUMMARY.LINE_21][2].value =
+    ScheduleSummaryContainer.calculateDieselTotal(diesel);
+
+    diesel[SCHEDULE_SUMMARY.LINE_22][2].value =
+    ScheduleSummaryContainer.calculateDieselPayable(diesel);
 
     this.setState({
       ...this.state,
@@ -205,13 +390,14 @@ class ScheduleSummaryContainer extends Component {
         key="summary"
         part3={this.state.part3}
         penalty={this.state.penalty}
+        saving={this.props.saving}
       />,
       <Modal
         handleSubmit={event => this._handleSubmit(event)}
         id="confirmSubmit"
         key="confirmSubmit"
       >
-        Are you sure you want to save this schedule?
+        Are you sure you want to save this compliance report?
       </Modal>
     ]);
   }
@@ -250,7 +436,8 @@ ScheduleSummaryContainer.propTypes = {
   period: PropTypes.string,
   referenceData: PropTypes.shape({
     approvedFuels: PropTypes.arrayOf(PropTypes.shape)
-  }).isRequired
+  }).isRequired,
+  saving: PropTypes.bool.isRequired
 };
 
 const mapStateToProps = state => ({

@@ -1,6 +1,6 @@
 result = 0
 runParallel = true
-tfrsRelease="devops-env-restore"
+tfrsRelease="v1.4.12"
 
 podTemplate(label: "develop-backend-python-${env.BUILD_NUMBER}", name: "develop-backend-python-${env.BUILD_NUMBER}", serviceAccount: 'jenkins-basic', cloud: 'openshift',
     containers: [
@@ -67,10 +67,12 @@ podTemplate(label: "develop-maven-${env.BUILD_NUMBER}", name: "develop-maven-${e
         def prepareDCStages = load "openshift/pipelines/scripts/prepareDCStages.groovy"
         def prepareOtherStages = load "openshift/pipelines/scripts/prepareOtherStages.groovy"
 
+        //Sonarqube stage
+        prepareOtherStages.sonarqubeStage().call()
+
         //run all the builds
         backendBuildStages = prepareBuilds.backendBuildStages()
         frontendBuildStages = prepareBuilds.frontendBuildStages()
-        /*** don't build
         for (builds in backendBuildStages) {
             if (runParallel) {
                 parallel(builds)
@@ -91,7 +93,7 @@ podTemplate(label: "develop-maven-${env.BUILD_NUMBER}", name: "develop-maven-${e
                 }
             }
         }
-        ***/
+
         //Bring up Maintenance Page
         //prepareOtherStages.bringUpMaintenancePageStage("mem-tfrs-dev").call()
 
