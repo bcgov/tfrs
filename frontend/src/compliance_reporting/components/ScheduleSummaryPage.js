@@ -50,14 +50,12 @@ const ScheduleSummaryPage = props => (
       </div>
     </div>
 
-    <div className="sticky">
-      <ScheduleButtons
-        delete
-        edit={props.edit}
-        saving={props.saving}
-        submit
-      />
-    </div>
+    <ScheduleButtons
+      edit={props.edit}
+      saving={props.saving}
+      submit
+      delete
+    />
   </div>
 );
 
