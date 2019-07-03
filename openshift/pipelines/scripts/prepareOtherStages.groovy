@@ -158,8 +158,8 @@ def takeDownMaintenancePageStage(String projectName) {
                     frontendRouteName = "lowcarbonfuels-frontend"
                     backendRouteName = "lowcarbonfuels-backend"
                 }
-                sh returnStatus: true, script: "oc patch route/${frontendRouteName} -n ${projectName} -p '{\"spec\":{\"to\":{\"name\":\"backend\"}, \"port\":{\"targetPort\":\"web\"}}}'"
-                sh returnStatus: true, script: "oc patch route/${backendRouteName} -n ${projectName} -p '{\"spec\":{\"to\":{\"name\":\"client\"}, \"port\":{\"targetPort\":\"web\"}}}'"
+                sh returnStatus: true, script: "oc patch route/${backendRouteName} -n ${projectName} -p '{\"spec\":{\"to\":{\"name\":\"backend\"}, \"port\":{\"targetPort\":\"web\"}}}'"
+                sh returnStatus: true, script: "oc patch route/${frontendRouteName} -n ${projectName} -p '{\"spec\":{\"to\":{\"name\":\"client\"}, \"port\":{\"targetPort\":\"web\"}}}'"
                 sh returnStatus: true, script: "oc scale dc maintenance-page -n ${projectName} --replicas=0 --timeout=20s"
             }
         }
