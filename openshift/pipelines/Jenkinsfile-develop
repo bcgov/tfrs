@@ -1,6 +1,6 @@
 result = 0
 runParallel = true
-tfrsRelease="devops-pipeline-cleanup"
+tfrsRelease="v1.4.12"
 
 podTemplate(label: "develop-backend-python-${env.BUILD_NUMBER}", name: "develop-backend-python-${env.BUILD_NUMBER}", serviceAccount: 'jenkins-basic', cloud: 'openshift',
     containers: [
@@ -69,7 +69,7 @@ podTemplate(label: "develop-maven-${env.BUILD_NUMBER}", name: "develop-maven-${e
 
         //Sonarqube stage
         prepareOtherStages.sonarqubeStage().call()
-/***
+
         //run all the builds
         backendBuildStages = prepareBuilds.backendBuildStages()
         frontendBuildStages = prepareBuilds.frontendBuildStages()
@@ -123,7 +123,7 @@ podTemplate(label: "develop-maven-${env.BUILD_NUMBER}", name: "develop-maven-${e
         
         //Take down Maintenance Page
         prepareOtherStages.takeDownMaintenancePageStage("mem-tfrs-dev").call()
-***/
+
     } //end of node
 
 } //end of podTemplate
