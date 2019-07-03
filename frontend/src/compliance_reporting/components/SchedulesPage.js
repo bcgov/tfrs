@@ -6,7 +6,6 @@ import FontAwesomeIcon from '@fortawesome/react-fontawesome';
 
 import ScheduleATotals from './ScheduleATotals';
 import ScheduleBTotals from './ScheduleBTotals';
-import ScheduleButtons from './ScheduleButtons';
 
 const SchedulesPage = props => (
   <div className="page_schedule">
@@ -70,13 +69,6 @@ const SchedulesPage = props => (
 
       <div className={`spacer ${props.scheduleType}`} />
     </div>
-
-    <ScheduleButtons
-      edit={props.edit}
-      submit
-      delete
-      saving={props.saving}
-    />
   </div>
 );
 
@@ -92,14 +84,12 @@ SchedulesPage.propTypes = {
     PropTypes.node
   ]),
   data: PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.shape())).isRequired,
-  edit: PropTypes.bool.isRequired,
   handleCellsChanged: PropTypes.func.isRequired,
   scheduleType: PropTypes.oneOf([
     'schedule-a', 'schedule-b', 'schedule-c', 'schedule-d'
   ]).isRequired,
   title: PropTypes.string.isRequired,
-  totals: PropTypes.shape(),
-  saving: PropTypes.bool.isRequired
+  totals: PropTypes.shape()
 };
 
 export default SchedulesPage;

@@ -234,6 +234,10 @@ class ScheduleBContainer extends Component {
   }
 
   static getFuelCode (fuelCodes, value) {
+    if (!fuelCodes) {
+      return [];
+    }
+
     return fuelCodes.find(code => `${code.fuelCode}${code.fuelCodeVersion}.${code.fuelCodeVersionMinor}` === value);
   }
 
@@ -574,6 +578,10 @@ class ScheduleBContainer extends Component {
     const selectedFuel = this._getSelectedFuel(fuelType.value);
     const { fuelCodes } = this._getCreditCalculationValues(selectedFuel.id);
 
+    if (!fuelCodes) {
+      return [];
+    }
+
     return fuelCodes.map(fuelCode => ({
       id: fuelCode.id,
       value: `${fuelCode.fuelCode}${fuelCode.fuelCodeVersion}.${fuelCode.fuelCodeVersionMinor}`
@@ -831,13 +839,11 @@ class ScheduleBContainer extends Component {
       <SchedulesPage
         addRow={this._addRow}
         data={this.state.grid}
-        edit={this.props.edit}
         handleCellsChanged={this._handleCellsChanged}
         key="schedules"
         scheduleType="schedule-b"
         title="Schedule B - Part 3 Fuel Supply"
         totals={this.state.totals}
-        saving={this.props.saving}
       />
     ]);
   }
@@ -876,7 +882,6 @@ ScheduleBContainer.propTypes = {
     scheduleB: PropTypes.shape()
   }),
   create: PropTypes.bool.isRequired,
-  edit: PropTypes.bool.isRequired,
   getCompliancePeriods: PropTypes.func.isRequired,
   getCreditCalculation: PropTypes.func.isRequired,
   // eslint-disable-next-line react/forbid-prop-types
@@ -885,7 +890,6 @@ ScheduleBContainer.propTypes = {
   referenceData: PropTypes.shape({
     approvedFuels: PropTypes.arrayOf(PropTypes.shape)
   }).isRequired,
-  saving: PropTypes.bool.isRequired,
   updateScheduleState: PropTypes.func.isRequired
 };
 
