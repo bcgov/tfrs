@@ -24,8 +24,9 @@ const numericColumn = {
 
 const numericInput = {
   attributes: {
-    dataNumberToFixed: 50,
-    step: '0.01'
+    dataNumberToFixed: 0,
+    maxLength: '50',
+    step: '1'
   },
   className: 'number',
   dataEditor: Input,
@@ -110,7 +111,9 @@ const ScheduleSummaryGasoline = [
   }, {
     readOnly: true,
     value: 'Line 7'
-  }, numericInput],
+  }, {
+    readOnly: true
+  }],
   [{
     className: 'text',
     readOnly: true,
@@ -126,7 +129,9 @@ const ScheduleSummaryGasoline = [
   }, {
     readOnly: true,
     value: 'Line 9'
-  }, numericInput],
+  }, {
+    readOnly: true
+  }],
   [{
     className: 'text',
     readOnly: true,
@@ -145,8 +150,22 @@ const ScheduleSummaryGasoline = [
     readOnly: true,
     value: 'Line 11'
   }, {
-    ...numericColumn,
-    className: 'numeric total'
+    className: 'numeric',
+    readOnly: true,
+    value: '',
+    valueViewer: (cell) => {
+      const { value } = cell;
+
+      if (value === '') {
+        return '-';
+      }
+
+      if (Number(value) < 0) {
+        return <span>({Number(value * -1).toFixed(2).toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')}/L)</span>;
+      }
+
+      return <span>{Number(value).toFixed(2).toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')}/L</span>;
+    }
   }]
 ];
 
