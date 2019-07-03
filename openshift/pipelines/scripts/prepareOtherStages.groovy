@@ -105,6 +105,7 @@ def deployFrontendStage(String projectName) {
                 def clientISName
                 def notificationServerISName
                 if(projectName == "mem-tfrs-dev") {
+                    envName = "dev"
                     clientISName = "client-develop"
                     notificationServerISName = "notification-server-develop"
                 } else if(projectName == "mem-tfrs-test" || projectName == "mem-tfrs-prod") {
@@ -116,7 +117,6 @@ def deployFrontendStage(String projectName) {
                     clientISName = "client"
                     notificationServerISName = "notification-server"
                 }
-                clientISName = "client-develop"
                 openshift.withProject("mem-tfrs-tools") {
                     openshift.tag("mem-tfrs-tools/${clientISName}:latest", "mem-tfrs-tools/${clientISName}:${envName}")
                     openshift.tag("mem-tfrs-tools/${notificationServerISName}:latest", "mem-tfrs-tools/${notificationServerISName}:${envName}")
@@ -158,8 +158,8 @@ def takeDownMaintenancePageStage(String projectName) {
                     frontendRouteName = "lowcarbonfuels-frontend"
                     backendRouteName = "lowcarbonfuels-backend"
                 }
-                sh returnStatus: true, script: "oc patch route/${frontendRouteName} -n ${projectName} -p '{\"spec\":{\"to\":{\"name\":\"backend\"}, \"port\":{\"targetPort\":\"web\"}}}'"
-                sh returnStatus: true, script: "oc patch route/${backendRouteName} -n ${projectName} -p '{\"spec\":{\"to\":{\"name\":\"client\"}, \"port\":{\"targetPort\":\"web\"}}}'"
+                sh returnStatus: true, script: "oc patch route/${backendRouteName} -n ${projectName} -p '{\"spec\":{\"to\":{\"name\":\"backend\"}, \"port\":{\"targetPort\":\"web\"}}}'"
+                sh returnStatus: true, script: "oc patch route/${frontendRouteName} -n ${projectName} -p '{\"spec\":{\"to\":{\"name\":\"client\"}, \"port\":{\"targetPort\":\"web\"}}}'"
                 sh returnStatus: true, script: "oc scale dc maintenance-page -n ${projectName} --replicas=0 --timeout=20s"
             }
         }

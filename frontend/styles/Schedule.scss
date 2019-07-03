@@ -88,7 +88,7 @@
     background-color: $background-grey;
     border-radius: 0.5rem;
     border: 1px solid $border-grey;
-    bottom: 8rem;
+    bottom: 0;
     box-shadow: 2px 2px 7px rgba(0, 0, 0, .3);
     cursor: move;
     font-size: 1.5rem;
@@ -145,8 +145,24 @@
   }
 
   .sticky {
-    bottom: 7rem;
+    bottom: 20rem;
     position: sticky;
+  }
+
+  .draggable-bounds {
+    position: relative;
+
+    .spacer {
+      margin-bottom: 2rem;
+
+      &.schedule-a {
+        height: 26rem;
+      }
+
+      &.schedule-b {
+        height: 16rem;
+      }
+    }
   }
 }
 
