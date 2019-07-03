@@ -7,6 +7,7 @@ import { Overlay, Tooltip } from 'react-bootstrap';
 
 import {
   TEXT_ERROR_MAX_DECIMALS,
+  TEXT_ERROR_MAX_VALUE,
   TEXT_ERROR_MULTIPLE_DOTS,
   TEXT_ERROR_NEGATIVE_VALUE,
   TEXT_ERROR_NO_DECIMALS
@@ -66,6 +67,15 @@ class InputWithTooltip extends Component {
     if (event.target.value.includes('e') &&
       event.nativeEvent.inputType === 'insertFromPaste') {
       this.target.value = event.target.value.replace('e', '');
+    }
+
+    if (event.target.value > this.props.maxValue) {
+      this.target.value = this.state.currentValue;
+      showTooltip = true;
+
+      tooltipMessage = TEXT_ERROR_MAX_VALUE.replace(':number', this.props.maxValue);
+    } else {
+      this.props.handleInputChange(event);
     }
 
     const parsed = value.split('.');
@@ -221,6 +231,7 @@ InputWithTooltip.defaultProps = {
   id: null,
   max: null,
   maxLength: null,
+  maxValue: null,
   min: null,
   placeholder: '',
   required: false,
@@ -239,6 +250,7 @@ InputWithTooltip.propTypes = {
   id: PropTypes.string,
   max: PropTypes.string,
   maxLength: PropTypes.string,
+  maxValue: PropTypes.number,
   min: PropTypes.string,
   name: PropTypes.string.isRequired,
   placeholder: PropTypes.string,
