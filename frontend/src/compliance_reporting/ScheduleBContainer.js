@@ -53,7 +53,7 @@ class ScheduleBContainer extends Component {
         }, {
           className: 'fuel-code',
           readOnly: true,
-          value: 'Fuel Code or Determination Method'
+          value: 'Fuel Code (if applicable)'
         }, {
           className: 'quantity',
           readOnly: true,
@@ -502,11 +502,21 @@ class ScheduleBContainer extends Component {
         value: values.energyDensity.toFixed(2)
       };
 
+      let value = '';
+
+      if (values.energyEffectivenessRatio) {
+        if (values.energyEffectivenessRatio.diesel && fuelClass.value === 'Diesel') {
+          value = values.energyEffectivenessRatio.diesel.toFixed(1);
+        }
+
+        if (values.energyEffectivenessRatio.gasoline && fuelClass.value === 'Gasoline') {
+          value = values.energyEffectivenessRatio.gasoline.toFixed(1);
+        }
+      }
+
       row[SCHEDULE_B.EER] = {
         ...row[SCHEDULE_B.EER],
-        value: (fuelClass.value === 'Diesel')
-          ? values.energyEffectivenessRatio.diesel.toFixed(1)
-          : values.energyEffectivenessRatio.gasoline.toFixed(1)
+        value
       };
     }
 

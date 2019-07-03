@@ -2,7 +2,6 @@
  * Presentational component
  */
 import React from 'react';
-import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
 import { Overlay, Tooltip } from 'react-bootstrap';
 
@@ -180,7 +179,7 @@ const FuelCodesTable = (props) => {
     });
   };
 
-  const validateEffectiveDates = (row, items) => (
+  const getInvalidEffectiveDates = (row, items) => (
     items.find(item => (
       (item.effectiveDate <= row.effectiveDate && item.expiryDate >= row.effectiveDate) ||
       (item.effectiveDate <= row.expiryDate && item.effectiveDate >= row.effectiveDate)))
@@ -205,7 +204,7 @@ const FuelCodesTable = (props) => {
             (item.fuelCode === row.original.fuelCode) &&
             (item.fuelCodeVersion === row.original.fuelCodeVersion) &&
             (item.fuelCodeVersionMinor !== row.original.fuelCodeVersionMinor));
-          const hasInvalidDates = validateEffectiveDates(row.original, filtered);
+          const invalidDates = getInvalidEffectiveDates(row.original, filtered);
 
           return {
             onClick: (e) => {
@@ -215,15 +214,15 @@ const FuelCodesTable = (props) => {
             },
             onMouseOver: (e) => {
               const message = `The effective dates of this fuel code overlap with
-                ${filtered[0].fuelCode}${filtered[0].fuelCodeVersion}.${filtered[0].fuelCodeVersionMinor}`;
-              const showTooltip = Boolean(hasInvalidDates);
+                ${invalidDates.fuelCode}${invalidDates.fuelCodeVersion}.${invalidDates.fuelCodeVersionMinor}`;
+              const showTooltip = Boolean(invalidDates);
 
               handleTooltip(e, showTooltip, message);
             },
             onMouseOut: (e) => {
               handleTooltip(e, false, '');
             },
-            className: `clickable ${hasInvalidDates ? 'has-error' : ''}`
+            className: `clickable ${invalidDates ? 'has-error' : ''}`
           };
         }
 
