@@ -159,6 +159,34 @@ class ScheduleBContainer extends Component {
     return row;
   }
 
+  static clearCreditCalculationValues (currentRow) {
+    const row = currentRow;
+
+    row[SCHEDULE_B.CARBON_INTENSITY_LIMIT] = {
+      ...row[SCHEDULE_B.CARBON_INTENSITY_LIMIT],
+      readOnly: true,
+      value: ''
+    };
+
+    row[SCHEDULE_B.CARBON_INTENSITY_FUEL] = {
+      ...row[SCHEDULE_B.CARBON_INTENSITY_FUEL],
+      readOnly: true,
+      value: ''
+    };
+
+    row[SCHEDULE_B.ENERGY_DENSITY] = {
+      ...row[SCHEDULE_B.ENERGY_DENSITY],
+      readOnly: true,
+      value: ''
+    };
+
+    row[SCHEDULE_B.EER] = {
+      ...row[SCHEDULE_B.EER],
+      readOnly: true,
+      value: ''
+    };
+  }
+
   static getCarbonIntensityLimit (fuelClass, values) {
     if (fuelClass === 'Diesel') {
       return values.carbonIntensityLimit.diesel.toFixed(2);
@@ -443,6 +471,11 @@ class ScheduleBContainer extends Component {
     const compliancePeriod = this.props.compliancePeriods.find(period =>
       period.description === this.props.period);
 
+    if (!selectedFuel) {
+      ScheduleBContainer.clearCreditCalculationValues(currentRow);
+      return false;
+    }
+
     return this.props.getCreditCalculation(selectedFuel.id, {
       compliance_period_id: compliancePeriod.id
     }).then(() => {
@@ -705,18 +738,20 @@ class ScheduleBContainer extends Component {
 
     if (!selectedFuel) {
       row[SCHEDULE_B.FUEL_TYPE] = {
+        ...row[SCHEDULE_B.FUEL_TYPE],
         value: ''
       };
     }
 
     row[SCHEDULE_B.FUEL_CLASS] = { // pre-select the fuel class, if possible
       ...row[SCHEDULE_B.FUEL_CLASS],
-      value: (selectedFuel.fuelClasses.length === 1) ? selectedFuel.fuelClasses[0].fuelClass : ''
+      value: (selectedFuel && selectedFuel.fuelClasses.length === 1)
+        ? selectedFuel.fuelClasses[0].fuelClass : ''
     };
 
     row[SCHEDULE_B.PROVISION_OF_THE_ACT] = { // pre-select the provision of the act, if possible
       ...row[SCHEDULE_B.PROVISION_OF_THE_ACT],
-      value: (selectedFuel.provisions.length === 1)
+      value: (selectedFuel && selectedFuel.provisions.length === 1)
         ? `${selectedFuel.provisions[0].provision} - ${selectedFuel.provisions[0].description}` : ''
     };
 
