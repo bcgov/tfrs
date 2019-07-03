@@ -3,27 +3,6 @@
     margin: 2.5rem 0;
   }
 
-  .btn-container {
-    background-color: $background-grey;
-    border: 1px solid $border-grey;
-    border-radius: 0.5rem;
-    box-shadow: 2px 2px 7px rgba(0, 0, 0, .3);
-    font-size: 1.5rem;
-    padding: 1rem;
-    text-align: right;
-    margin-left: auto;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-
-    .left {
-      text-align: left;
-    }
-    .right {
-      text-align: right;
-    }
-  }
-
   .data-grid-container {
     display: block;
   
@@ -385,6 +364,30 @@
 
 .page_schedule .data-grid-container {
   min-width: 1200px;
+}
+
+.schedule-buttons {
+  background-color: $background-grey;
+  border: 1px solid $border-grey;
+  border-radius: 0.5rem;
+  font-size: 1.5rem;
+  padding: 1rem;
+  text-align: right;
+  margin-left: auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  .left {
+    text-align: left;
+
+    * {
+      text-align: left !important;
+    }
+  }
+  .right {
+    text-align: right;
+  }
 }
 
 .schedule-summary {

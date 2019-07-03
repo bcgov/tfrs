@@ -144,8 +144,6 @@ class ScheduleSummaryContainer extends Component {
 
     this.rowNumber = 1;
 
-    this.edit = document.location.pathname.indexOf('/edit/') >= 0;
-
     this._handleCellsChanged = this._handleCellsChanged.bind(this);
     this._handleDieselChanged = this._handleDieselChanged.bind(this);
     this._handleGasolineChanged = this._handleGasolineChanged.bind(this);
@@ -386,7 +384,6 @@ class ScheduleSummaryContainer extends Component {
     return ([
       <ScheduleSummaryPage
         diesel={this.state.diesel}
-        edit={this.edit}
         gasoline={this.state.gasoline}
         handleDieselChanged={this._handleDieselChanged}
         handleGasolineChanged={this._handleGasolineChanged}
