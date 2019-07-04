@@ -140,8 +140,9 @@ class OrganizationUpdateSerializer(serializers.ModelSerializer):
 
         organization_address = obj.organization_address
 
-        organization_address.expiration_date = date.today()
-        organization_address.save()
+        if organization_address:
+            organization_address.expiration_date = date.today()
+            organization_address.save()
 
         OrganizationAddress.objects.create(
             effective_date=date.today(),
