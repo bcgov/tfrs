@@ -33,6 +33,10 @@ class ScheduleSummaryContainer extends Component {
       totals -= parseFloat(payable);
     }
 
+    if (totals <= 0) {
+      return '';
+    }
+
     totals *= 0.45;
 
     return totals;
@@ -85,6 +89,10 @@ class ScheduleSummaryContainer extends Component {
     payable = grid[SCHEDULE_SUMMARY.LINE_10][2].value;
     if (payable && !Number.isNaN(payable)) {
       totals -= parseFloat(payable);
+    }
+
+    if (totals <= 0) {
+      return '';
     }
 
     totals *= 0.30;
@@ -155,12 +163,30 @@ class ScheduleSummaryContainer extends Component {
       // this.restoreFromAutosaved();
     } else if (!this.props.create) {
       this.loadSchedules();
+    } else {
+      this.createSchedules();
     }
   }
 
+  createSchedules () {
+    const summary = {
+      totalPetroleumDiesel: 0,
+      totalPetroleumGasoline: 0,
+      totalRenewableDiesel: 0,
+      totalRenewableGasoline: 0
+    };
+
+    this.populateSchedules(summary);
+  }
+
   loadSchedules () {
-    const { diesel, gasoline } = this.state;
     const { scheduleA, summary } = this.props.complianceReport;
+    this.populateSchedules(summary, scheduleA);
+  }
+
+  populateSchedules (summary, scheduleA = null) {
+    const { diesel, gasoline } = this.state;
+
     const {
       totalPetroleumDiesel,
       totalPetroleumGasoline,
@@ -171,30 +197,30 @@ class ScheduleSummaryContainer extends Component {
     let totalDiesel = 0;
     let totalGasoline = 0;
 
-    if (totalPetroleumDiesel) {
-      diesel[SCHEDULE_SUMMARY.LINE_12][2] = { // line 12, 3rd column
-        ...diesel[SCHEDULE_SUMMARY.LINE_12][2],
-        value: totalPetroleumDiesel
-      };
+    diesel[SCHEDULE_SUMMARY.LINE_12][2] = { // line 12, 3rd column
+      ...diesel[SCHEDULE_SUMMARY.LINE_12][2],
+      value: totalPetroleumDiesel
+    };
 
+    if (totalPetroleumDiesel) {
       totalDiesel += totalPetroleumDiesel;
     }
 
-    if (totalPetroleumGasoline) {
-      gasoline[SCHEDULE_SUMMARY.LINE_1][2] = { // line 1, 3rd column
-        ...gasoline[SCHEDULE_SUMMARY.LINE_1][2],
-        value: totalPetroleumGasoline
-      };
+    gasoline[SCHEDULE_SUMMARY.LINE_1][2] = { // line 1, 3rd column
+      ...gasoline[SCHEDULE_SUMMARY.LINE_1][2],
+      value: totalPetroleumGasoline
+    };
 
+    if (totalPetroleumGasoline) {
       totalGasoline += totalPetroleumGasoline;
     }
 
-    if (totalRenewableGasoline) {
-      gasoline[SCHEDULE_SUMMARY.LINE_2][2] = { // line 2, 3rd column
-        ...gasoline[SCHEDULE_SUMMARY.LINE_2][2],
-        value: totalRenewableGasoline
-      };
+    gasoline[SCHEDULE_SUMMARY.LINE_2][2] = { // line 2, 3rd column
+      ...gasoline[SCHEDULE_SUMMARY.LINE_2][2],
+      value: totalRenewableGasoline
+    };
 
+    if (totalRenewableGasoline) {
       totalGasoline += totalRenewableGasoline;
     }
 
@@ -215,7 +241,7 @@ class ScheduleSummaryContainer extends Component {
     gasoline[SCHEDULE_SUMMARY.LINE_6][0] = { // line 6, 1st column
       ...gasoline[SCHEDULE_SUMMARY.LINE_6][0],
       value: gasoline[SCHEDULE_SUMMARY.LINE_6][0]
-        .value.replace(')', ` is ${formatNumeric(line6Value, 0)} L)`)
+        .value.replace('4)', ` is ${formatNumeric(line6Value, 0)} L)`)
     };
 
     gasoline[SCHEDULE_SUMMARY.LINE_6][2] = { // line 6, 3rd column
@@ -229,7 +255,7 @@ class ScheduleSummaryContainer extends Component {
     gasoline[SCHEDULE_SUMMARY.LINE_8][0] = { // line 8, 1st column
       ...gasoline[SCHEDULE_SUMMARY.LINE_8][0],
       value: gasoline[SCHEDULE_SUMMARY.LINE_8][0]
-        .value.replace(')', ` is ${formatNumeric(line6Value, 0)} L)`)
+        .value.replace('4)', ` is ${formatNumeric(line6Value, 0)} L)`)
     };
 
     gasoline[SCHEDULE_SUMMARY.LINE_8][2] = { // line 8, 3rd column
@@ -240,12 +266,12 @@ class ScheduleSummaryContainer extends Component {
       }
     };
 
-    if (totalRenewableDiesel) {
-      diesel[SCHEDULE_SUMMARY.LINE_13][2] = { // line 13, 3rd column
-        ...diesel[SCHEDULE_SUMMARY.LINE_13][2],
-        value: totalRenewableDiesel
-      };
+    diesel[SCHEDULE_SUMMARY.LINE_13][2] = { // line 13, 3rd column
+      ...diesel[SCHEDULE_SUMMARY.LINE_13][2],
+      value: totalRenewableDiesel
+    };
 
+    if (totalRenewableDiesel) {
       totalDiesel += totalRenewableDiesel;
     }
 
@@ -266,7 +292,7 @@ class ScheduleSummaryContainer extends Component {
     diesel[SCHEDULE_SUMMARY.LINE_17][0] = { // line 17, 1st column
       ...diesel[SCHEDULE_SUMMARY.LINE_17][0],
       value: diesel[SCHEDULE_SUMMARY.LINE_17][0]
-        .value.replace(')', ` is ${formatNumeric(line17Value, 0)} L)`)
+        .value.replace('15)', ` is ${formatNumeric(line17Value, 0)} L)`)
     };
 
     diesel[SCHEDULE_SUMMARY.LINE_17][2] = { // line 17, 3rd column
@@ -280,7 +306,7 @@ class ScheduleSummaryContainer extends Component {
     diesel[SCHEDULE_SUMMARY.LINE_19][0] = { // line 19, 1st column
       ...diesel[SCHEDULE_SUMMARY.LINE_19][0],
       value: diesel[SCHEDULE_SUMMARY.LINE_19][0]
-        .value.replace(')', ` is ${formatNumeric(line17Value, 0)} L)`)
+        .value.replace('15)', ` is ${formatNumeric(line17Value, 0)} L)`)
     };
 
     diesel[SCHEDULE_SUMMARY.LINE_19][2] = { // line 19, 3rd column
@@ -291,12 +317,12 @@ class ScheduleSummaryContainer extends Component {
       }
     };
 
-    if (scheduleA && scheduleA.records) {
-      let dieselReceived = 0;
-      let dieselTransferred = 0;
-      let gasolineReceived = 0;
-      let gasolineTransferred = 0;
+    let dieselReceived = 0;
+    let dieselTransferred = 0;
+    let gasolineReceived = 0;
+    let gasolineTransferred = 0;
 
+    if (scheduleA && scheduleA.records) {
       scheduleA.records.forEach((record) => {
         if (record.fuelClass === 'Diesel' && record.transferType === 'Transferred') {
           dieselTransferred += Number(record.quantity);
@@ -308,17 +334,17 @@ class ScheduleSummaryContainer extends Component {
           gasolineReceived += Number(record.quantity);
         }
       });
-
-      gasoline[SCHEDULE_SUMMARY.LINE_5][2] = { // line 5, 3rd column
-        ...gasoline[SCHEDULE_SUMMARY.LINE_5][2],
-        value: gasolineReceived - gasolineTransferred
-      };
-
-      diesel[SCHEDULE_SUMMARY.LINE_16][2] = { // line 5, 3rd column
-        ...diesel[SCHEDULE_SUMMARY.LINE_16][2],
-        value: dieselReceived - dieselTransferred
-      };
     }
+
+    gasoline[SCHEDULE_SUMMARY.LINE_5][2] = { // line 5, 3rd column
+      ...gasoline[SCHEDULE_SUMMARY.LINE_5][2],
+      value: gasolineReceived - gasolineTransferred
+    };
+
+    diesel[SCHEDULE_SUMMARY.LINE_16][2] = { // line 5, 3rd column
+      ...diesel[SCHEDULE_SUMMARY.LINE_16][2],
+      value: dieselReceived - dieselTransferred
+    };
 
     gasoline[SCHEDULE_SUMMARY.LINE_10][2].value =
     ScheduleSummaryContainer.calculateGasolineTotal(gasoline);
@@ -357,6 +383,22 @@ class ScheduleSummaryContainer extends Component {
       };
     });
 
+    if (gridName === 'diesel') {
+      grid[SCHEDULE_SUMMARY.LINE_21][2].value =
+      ScheduleSummaryContainer.calculateDieselTotal(grid);
+
+      grid[SCHEDULE_SUMMARY.LINE_22][2].value =
+      ScheduleSummaryContainer.calculateDieselPayable(grid);
+    }
+
+    if (gridName === 'gasoline') {
+      grid[SCHEDULE_SUMMARY.LINE_10][2].value =
+      ScheduleSummaryContainer.calculateGasolineTotal(grid);
+
+      grid[SCHEDULE_SUMMARY.LINE_11][2].value =
+      ScheduleSummaryContainer.calculateGasolinePayable(grid);
+    }
+
     this.setState({
       [gridName]: grid
     });
@@ -390,7 +432,6 @@ class ScheduleSummaryContainer extends Component {
         key="summary"
         part3={this.state.part3}
         penalty={this.state.penalty}
-        saving={this.props.saving}
       />,
       <Modal
         handleSubmit={event => this._handleSubmit(event)}
@@ -436,8 +477,7 @@ ScheduleSummaryContainer.propTypes = {
   period: PropTypes.string,
   referenceData: PropTypes.shape({
     approvedFuels: PropTypes.arrayOf(PropTypes.shape)
-  }).isRequired,
-  saving: PropTypes.bool.isRequired
+  }).isRequired
 };
 
 const mapStateToProps = state => ({
