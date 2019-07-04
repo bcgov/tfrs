@@ -44,24 +44,28 @@ class AutosavedFormData(models.Model, DBComments):
         blank=False,
         null=False,
         max_length=256,
-        db_comment='A uniquely-identifying key for this form and instance. A client-generated string composed of '
-                   'entity name, API version, and instance identifier.'
+        db_comment="A uniquely-identifying key for this form and instance. "
+                   "A client-generated string composed of entity name, "
+                   "API version, and instance identifier."
     )
-
-    data = models.TextField('data',
-                            blank=False, null=True,
-                            db_comment='The (probably JSON) persisted values')
-
-    last_access = models.DateTimeField('last_access',
-                                       blank=False, null=False,
-                                       default=now,
-                                       db_comment='When the field was last updated or read via the API'
-                                                  ' (for cache expiration)')
+    data = models.TextField(
+        'data',
+        blank=False, null=True,
+        db_comment='The (probably JSON) persisted values'
+    )
+    last_access = models.DateTimeField(
+        'last_access',
+        blank=False, null=False,
+        default=now,
+        db_comment="When the field was last updated or read via the API "
+                   "(for cache expiration)"
+    )
 
     class Meta:
         db_table = 'autosaved_form_data'
         unique_together = ['user', 'key']
 
     db_table_comment = "Autosaved (potentially uncommitted) form data from " \
-                       "the client-side React app. This table is a temporary store for the client " \
-                       "to retain state for in-progress editing processes."
+                       "the client-side React app. This table is a " \
+                       "temporary store for the client to retain state for " \
+                       "in-progress editing processes."
