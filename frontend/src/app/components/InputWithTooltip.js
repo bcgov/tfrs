@@ -69,7 +69,7 @@ class InputWithTooltip extends Component {
       this.target.value = event.target.value.replace('e', '');
     }
 
-    if (event.target.value > this.props.maxValue) {
+    if (this.props.maxValue !== null && event.target.value > this.props.maxValue) {
       this.target.value = this.state.currentValue;
       showTooltip = true;
 
