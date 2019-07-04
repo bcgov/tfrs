@@ -20,28 +20,42 @@
     See the License for the specific language governing permissions and
     limitations under the License.
 """
-
+from datetime import date
 from django.db import models
+from django.db.models import F
+
 from api.managers.OrganizationManager import OrganizationManager
 from auditable.models import Auditable
+from .OrganizationAddress import OrganizationAddress
 from .OrganizationBalance import OrganizationBalance
 
 
 class Organization(Auditable):
-    name = models.CharField(max_length=500, db_comment='Organization\'s legal name')
+    """
+    Contains a list of all of the recognized Part 3 fuel suppliers, both
+    past and present, as well as an entry for the government which is also
+    considered an organization.
+    """
+    name = models.CharField(
+        max_length=500,
+        db_comment="Organization's legal name"
+    )
     status = models.ForeignKey(
         'OrganizationStatus',
         related_name='organizations',
-        on_delete=models.PROTECT)
+        on_delete=models.PROTECT
+    )
     actions_type = models.ForeignKey(
         'OrganizationActionsType',
         related_name='organizations',
-        on_delete=models.PROTECT)
+        on_delete=models.PROTECT
+    )
     type = models.ForeignKey(
         'OrganizationType',
         related_name='organizations',
         blank=True, null=True,
-        on_delete=models.PROTECT)
+        on_delete=models.PROTECT
+    )
     objects = OrganizationManager()
 
     def __str__(self):
@@ -50,6 +64,22 @@ class Organization(Auditable):
     @property
     def actions_type_display(self):
         return self.actions_type.the_type
+
+    @property
+    def organization_address(self):
+        """
+        Gets the active address for the organization
+        """
+        data = OrganizationAddress.objects.filter(
+            effective_date__lte=date.today(),
+            organization_id=self.id
+        ).exclude(
+            expiration_date__lt=date.today()
+        ).exclude(
+            expiration_date=F('effective_date')
+        ).order_by('-effective_date', '-update_timestamp').first()
+
+        return data
 
     @property
     def organization_balance(self):
@@ -74,5 +104,8 @@ class Organization(Auditable):
 
     class Meta:
         db_table = 'organization'
-        
-    db_table_comment = 'Contains a list of all of the recognized Part 3 fuel suppliers, both past and present, as well as an entry for the government which is also considered an organization.'
+
+    db_table_comment = "Contains a list of all of the recognized Part 3 " \
+                       "fuel suppliers, both past and present, as well as " \
+                       "an entry for the government which is also " \
+                       "considered an organization."

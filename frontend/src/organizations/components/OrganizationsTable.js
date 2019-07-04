@@ -11,7 +11,7 @@ import * as NumberFormat from '../../constants/numeralFormats';
 import CREDIT_TRANSACTIONS from '../../constants/routes/CreditTransactions';
 import ORGANIZATIONS from '../../constants/routes/Organizations';
 import ORGANIZATION_STATUSES from '../../constants/organizationStatuses';
-import StateSavingReactTable from "../../app/components/StateSavingReactTable";
+import ReactTable from '../../app/components/StateSavingReactTable';
 
 const OrganizationsTable = (props) => {
   const columns = [{
@@ -73,7 +73,7 @@ const OrganizationsTable = (props) => {
   const filterable = true;
 
   return (
-    <StateSavingReactTable
+    <ReactTable
       stateKey="organizations"
       className="searchable"
       data={props.items}

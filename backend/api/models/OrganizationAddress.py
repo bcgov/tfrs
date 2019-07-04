@@ -34,30 +34,62 @@ class OrganizationAddress(Auditable, EffectiveDates):
     organization = models.ForeignKey(
         'Organization',
         related_name='addresses',
-        on_delete=models.CASCADE)
-    primary = models.BooleanField(
-        default=False,
-        db_comment="Flag. True if the address it the main location."
+        on_delete=models.CASCADE
     )
     address_line_1 = models.CharField(
-        max_length=500, blank=True, null=True, db_comment="The first line of the organization's address.")
+        blank=True,
+        max_length=500,
+        null=True,
+        db_comment="The first line of the organization's address."
+    )
     address_line_2 = models.CharField(
-        max_length=100, blank=True, null=True, db_comment="The second line of the organization's address.")
+        blank=True,
+        max_length=100,
+        null=True,
+        db_comment="The second line of the organization's address."
+    )
     address_line_3 = models.CharField(
-        max_length=100, blank=True, null=True, db_comment="The third line of the organization's address.")
+        blank=True,
+        max_length=100,
+        null=True,
+        db_comment="The third line of the organization's address."
+    )
     city = models.CharField(
-        max_length=100, blank=True, null=True, db_comment="City")
+        blank=True,
+        max_length=100,
+        null=True,
+        db_comment="City"
+    )
     postal_code = models.CharField(
-        max_length=10, blank=True, null=True, db_comment="Postal Code")
+        blank=True,
+        max_length=10,
+        null=True,
+        db_comment="Postal Code"
+    )
     state = models.CharField(
-        max_length=50, blank=True, null=True, db_comment="State or Province")
+        blank=True,
+        max_length=50,
+        null=True,
+        db_comment="State or Province"
+    )
     county = models.CharField(
-        max_length=50, blank=True, null=True, db_comment="County Name")
+        blank=True,
+        max_length=50,
+        null=True,
+        db_comment="County Name"
+    )
     country = models.CharField(
-        max_length=100, blank=True, null=True, db_comment="Country")
+        blank=True,
+        max_length=100,
+        null=True,
+        db_comment="Country"
+    )
     other = models.CharField(
-        max_length=100, blank=True, null=True,
-        db_comment="Other Address Details")
+        blank=True,
+        max_length=100,
+        null=True,
+        db_comment="Other Address Details"
+    )
 
     class Meta:
         db_table = 'organization_address'

@@ -32,7 +32,7 @@ class OrganizationAddressSerializer(serializers.ModelSerializer):
     """
 
     def create(self, validated_data):
-        organization = validated_data.pop('organization')
+        _organization = validated_data.pop('organization')
 
         addr = OrganizationAddress.objects.create(**validated_data,
                                                   primary=True)
