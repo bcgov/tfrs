@@ -12,6 +12,7 @@ from api.models.NotionalTransferType import NotionalTransferType
 class ScheduleC(Model):
     class Meta:
         db_table = 'compliance_report_schedule_c'
+    db_table_comment = 'Container for a single instance of "Schedule C - Fuels Used for Other Purposes" report'
 
 
 class ScheduleCRecord(Model):
@@ -38,7 +39,8 @@ class ScheduleCRecord(Model):
         blank=False,
         null=False,
         decimal_places=2,
-        max_digits=20
+        max_digits=20,
+        db_comment='Quantity of fuel supplied'
     )
 
     expected_use = models.ForeignKey(
@@ -50,11 +52,13 @@ class ScheduleCRecord(Model):
     rationale = models.CharField(
         max_length=100,
         blank=True,
-        null=True
+        null=True,
+        db_comment='Alternate rationale when expected use is "other"'
     )
 
     class Meta:
         db_table = 'compliance_report_schedule_c_record'
+    db_table_comment = 'Line items for "Schedule C - Fuels Used for Other Purposes" report'
 
 
 class ScheduleA(Model):
