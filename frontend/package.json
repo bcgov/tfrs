@@ -54,7 +54,7 @@
     "redux-saga": "^0.16.2",
     "redux-socket.io": "^1.4.0",
     "redux-thunk": "^2.3.0",
-    "snyk": "^1.161.0",
+    "snyk": "^1.189.0",
     "socket.io": "^2.2.0",
     "socket.io-client": "latest",
     "socket.io-middleware": "^0.2.1",
@@ -102,7 +102,8 @@
     "production": "NODE_ENV=production webpack -p --config webpack.production.config.js",
     "build": "webpack",
     "test": "jest --coverage",
-    "snyk-protect": "snyk protect"
+    "snyk-protect": "snyk protect",
+    "prepublish": "npm run snyk-protect"
   },
   "snyk": true
 }
