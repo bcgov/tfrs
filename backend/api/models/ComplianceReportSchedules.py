@@ -117,6 +117,7 @@ class ScheduleARecord(Model):
 class ScheduleB(Model):
     class Meta:
         db_table = 'compliance_report_schedule_b'
+    db_table_comment = 'Container for a single instance of "Schedule B - Part 3 Fuel Supply" report.'
 
 
 class ScheduleBRecord(Model):
@@ -143,7 +144,8 @@ class ScheduleBRecord(Model):
         blank=False,
         null=False,
         decimal_places=2,
-        max_digits=20
+        max_digits=20,
+        db_comment='Quantity of fuel supplied.'
     )
 
     provision_of_the_act = models.ForeignKey(
@@ -160,3 +162,4 @@ class ScheduleBRecord(Model):
 
     class Meta:
         db_table = 'compliance_report_schedule_b_record'
+    db_table_comment = 'Line items for "Schedule B - Part 3 Fuel Supply" report.'
