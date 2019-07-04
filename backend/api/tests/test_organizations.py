@@ -57,7 +57,8 @@ class TestOrganizations(BaseTestCase):
         OrganizationAddress.objects.create(
             address_line_1="Test Address 1",
             city="Test City",
-            organization_id=self.users['fs_user_1'].organization.id
+            organization_id=self.users['fs_user_1'].organization.id,
+            effective_date="2017-01-01"
         )
 
         response = self.clients['fs_user_1'].get("/api/organizations/mine")

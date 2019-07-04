@@ -28,7 +28,6 @@ class OrganizationPermissions(permissions.BasePermission):
 
     def has_permission(self, request, view):
         """Check permissions When an object does not yet exist (POST)"""
-
         # Fallback to has_object_permission unless it's a POST
         if request.method != 'POST':
             return True
@@ -47,6 +46,10 @@ class OrganizationPermissions(permissions.BasePermission):
 
         if request.method == 'GET' and \
                 request.user.has_perm('VIEW_FUEL_SUPPLIERS'):
+            return True
+
+        if obj.id == request.user.organization.id and \
+                request.user.has_perm('EDIT_FUEL_SUPPLIER'):
             return True
 
         # not authorized
