@@ -33,7 +33,7 @@ class Migration(migrations.Migration):
     Attaches the functions for the migrations
     """
     dependencies = [
-        ('api', '0152_remove_organizationaddress_primary'),
+        ('api', '0153_remove_organizationaddress_primary'),
     ]
 
     operations = [

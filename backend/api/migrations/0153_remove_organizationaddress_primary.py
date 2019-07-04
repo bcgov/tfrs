@@ -8,7 +8,7 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('api', '0151_rename_table_sequences'),
+        ('api', '0152_edit_organization_address_permission'),
     ]
 
     operations = [
