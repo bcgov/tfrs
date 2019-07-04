@@ -9,12 +9,14 @@ import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
 
 import { addOrganization, getOrganization, updateOrganization } from '../actions/organizationActions';
+import { getUpdatedLoggedInUser } from '../actions/userActions';
 import Loading from '../app/components/Loading';
 import OrganizationEditForm from './components/OrganizationEditForm';
 import history from '../app/History';
 import toastr from '../utils/toastr';
 import ORGANIZATION from '../constants/routes/Organizations';
 import Modal from '../app/components/Modal';
+import PERMISSIONS_ORGANIZATIONS from '../constants/permissions/Organizations';
 
 class OrganizationEditContainer extends Component {
   constructor (props) {
@@ -137,9 +139,15 @@ class OrganizationEditContainer extends Component {
       }
     };
 
-    const viewUrl = ORGANIZATION.DETAILS.replace(':id', this.props.match.params.id);
+    let viewUrl = ORGANIZATION.MINE;
+
+    if (this.props.loggedInUser.hasPermission(PERMISSIONS_ORGANIZATIONS.EDIT_FUEL_SUPPLIERS)) {
+      viewUrl = ORGANIZATION.DETAILS.replace(':id', this.props.match.params.id);
+    }
 
     this.props.updateOrganization(data, this.props.match.params.id).then(() => {
+      // update the session for the logged in user (in case the user information got updated)
+      this.props.getUpdatedLoggedInUser();
       history.push(viewUrl);
       toastr.organizationSuccess();
     });
@@ -220,7 +228,9 @@ OrganizationEditContainer.defaultProps = {
 };
 
 OrganizationEditContainer.propTypes = {
+  getUpdatedLoggedInUser: PropTypes.func.isRequired,
   loggedInUser: PropTypes.shape({
+    hasPermission: PropTypes.func,
     organization: PropTypes.shape({
       id: PropTypes.number,
       name: PropTypes.string,
@@ -287,6 +297,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   getOrganization: bindActionCreators(getOrganization, dispatch),
+  getUpdatedLoggedInUser: bindActionCreators(getUpdatedLoggedInUser, dispatch),
   updateOrganization: bindActionCreators(updateOrganization, dispatch),
   addOrganization: bindActionCreators(addOrganization, dispatch)
 });

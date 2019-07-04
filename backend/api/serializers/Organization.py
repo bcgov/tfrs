@@ -20,6 +20,7 @@
     See the License for the specific language governing permissions and
     limitations under the License.
 """
+from datetime import date
 from django.core.exceptions import ValidationError
 from django.utils import timezone
 from rest_framework import serializers
@@ -51,14 +52,12 @@ class OrganizationSerializer(serializers.ModelSerializer):
         """
         Shows the organization address
         """
-        organization_address = OrganizationAddress.objects.filter(
-            organization_id=obj.id).order_by('-primary').first()
-
-        if organization_address is None:
+        if obj.organization_address is None:
             return None
 
-        serializer = OrganizationAddressSerializer(organization_address,
-                                                   read_only=True)
+        serializer = OrganizationAddressSerializer(
+            obj.organization_address, read_only=True
+        )
         return serializer.data
 
     def get_organization_balance(self, obj):
@@ -93,7 +92,6 @@ class OrganizationCreateSerializer(serializers.ModelSerializer):
         return attrs
 
     def create(self, validated_data):
-
         obj = Organization.objects.create(
             name=validated_data['name'],
             type=validated_data['type'],
@@ -105,7 +103,7 @@ class OrganizationCreateSerializer(serializers.ModelSerializer):
 
         OrganizationAddress.objects.create(
             organization=obj,
-            primary=True,
+            effective_date=date.today(),
             **addr
         )
 
@@ -128,19 +126,26 @@ class OrganizationUpdateSerializer(serializers.ModelSerializer):
     type = PrimaryKeyRelatedField(queryset=OrganizationType.objects.all())
 
     def update(self, obj, validated_data):
-        Organization.objects.filter(id=obj.id).update(
-            name=validated_data['name'],
-            actions_type=validated_data['actions_type'],
-            status=validated_data['status'],
-            update_timestamp=timezone.now()
-        )
+        request = self.context.get('request')
+
+        if request.user.has_perm('EDIT_FUEL_SUPPLIERS'):
+            Organization.objects.filter(id=obj.id).update(
+                name=validated_data['name'],
+                actions_type=validated_data['actions_type'],
+                status=validated_data['status'],
+                update_timestamp=timezone.now()
+            )
 
         addr = validated_data.pop('organization_address')
 
-        OrganizationAddress.objects.filter(organization_id=obj.id).delete()
+        organization_address = obj.organization_address
+
+        organization_address.expiration_date = date.today()
+        organization_address.save()
+
         OrganizationAddress.objects.create(
+            effective_date=date.today(),
             organization=obj,
-            primary=True,
             **addr
         )
         return obj
@@ -173,14 +178,12 @@ class OrganizationDisplaySerializer(serializers.ModelSerializer):
         """
         Shows the organization address
         """
-        organization_address = OrganizationAddress.objects.filter(
-            organization_id=obj.id).order_by('-primary').first()
-
-        if organization_address is None:
+        if obj.organization_address is None:
             return None
 
-        serializer = OrganizationAddressSerializer(organization_address,
-                                                   read_only=True)
+        serializer = OrganizationAddressSerializer(
+            obj.organization_address, read_only=True
+        )
         return serializer.data
 
     class Meta:
