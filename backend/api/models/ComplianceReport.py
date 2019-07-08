@@ -75,7 +75,7 @@ class ComplianceReportType(DisplayOrder):
 
 class ComplianceReport(Auditable):
     """
-    List of Possible statuses for compliance reports.
+    Compliance Report records
     """
     status = models.ForeignKey(
         ComplianceReportStatus,
