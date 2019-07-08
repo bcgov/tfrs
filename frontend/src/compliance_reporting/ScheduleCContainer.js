@@ -74,6 +74,7 @@ class ScheduleCContainer extends Component {
     this._handleCellsChanged = this._handleCellsChanged.bind(this);
     this._validateFuelClassColumn = this._validateFuelClassColumn.bind(this);
     this._validateFuelTypeColumn = this._validateFuelTypeColumn.bind(this);
+    this.loadData = this.loadData.bind(this);
   }
 
   componentDidMount () {
@@ -84,32 +85,35 @@ class ScheduleCContainer extends Component {
     } else if (this.props.create || !this.props.complianceReport.scheduleC) {
       this._addRow(5);
     } else {
-      this.setState(ScheduleCContainer.addHeaders());
-      this.rowNumber = 1;
-      this._addRow(this.props.complianceReport.scheduleC.records.length);
-
-      for (let i = 0; i < this.props.complianceReport.scheduleC.records.length; i += 1) {
-        const { grid } = this.state;
-        const record = this.props.complianceReport.scheduleC.records[i];
-
-        grid[2 + i][SCHEDULE_C.FUEL_TYPE].value = record.fuelType;
-        grid[2 + i][SCHEDULE_C.FUEL_CLASS].value = record.fuelClass;
-        grid[2 + i][SCHEDULE_C.EXPECTED_USE].value = record.expectedUse;
-        grid[2 + i][SCHEDULE_C.EXPECTED_USE_OTHER].value = record.rationale;
-        grid[2 + i][SCHEDULE_C.QUANTITY].value = record.quantity;
-
-        const selectedFuel = this.props.referenceData.approvedFuels.find(fuel =>
-          fuel.name === record.fuelType);
-
-        grid[2 + i][SCHEDULE_C.UNITS].value = (selectedFuel && selectedFuel.unitOfMeasure)
-          ? selectedFuel.unitOfMeasure.name : '';
-
-        this.setState({ grid });
-      }
+      this.loadData();
     }
   }
 
   componentWillReceiveProps (nextProps, nextContext) {
+  }
+
+  loadData () {
+    this.rowNumber = 1;
+    this._addRow(this.props.complianceReport.scheduleC.records.length);
+
+    for (let i = 0; i < this.props.complianceReport.scheduleC.records.length; i += 1) {
+      const { grid } = this.state;
+      const record = this.props.complianceReport.scheduleC.records[i];
+
+      grid[2 + i][SCHEDULE_C.FUEL_TYPE].value = record.fuelType;
+      grid[2 + i][SCHEDULE_C.FUEL_CLASS].value = record.fuelClass;
+      grid[2 + i][SCHEDULE_C.EXPECTED_USE].value = record.expectedUse;
+      grid[2 + i][SCHEDULE_C.EXPECTED_USE_OTHER].value = record.rationale;
+      grid[2 + i][SCHEDULE_C.QUANTITY].value = record.quantity;
+
+      const selectedFuel = this.props.referenceData.approvedFuels.find(fuel =>
+        fuel.name === record.fuelType);
+
+      grid[2 + i][SCHEDULE_C.UNITS].value = (selectedFuel && selectedFuel.unitOfMeasure)
+        ? selectedFuel.unitOfMeasure.name : '';
+
+      this.setState({ grid });
+    }
   }
 
   restoreFromAutosaved () {
@@ -117,11 +121,11 @@ class ScheduleCContainer extends Component {
 
     this.setState(ScheduleCContainer.addHeaders());
     this.rowNumber = 1;
-    this._addRow(loadedState.grid.length - 2);
+    this._addRow(loadedState.tab.grid.length - 2);
 
-    for (let i = 2; i < loadedState.grid.length; i += 1) {
+    for (let i = 2; i < loadedState.tab.grid.length; i += 1) {
       const { grid } = this.state;
-      const record = loadedState.grid[i];
+      const record = loadedState.tab.grid[i];
 
       grid[i][SCHEDULE_C.FUEL_TYPE].value = record[SCHEDULE_C.FUEL_TYPE].value;
       grid[i][SCHEDULE_C.FUEL_CLASS].value = record[SCHEDULE_C.FUEL_CLASS].value;
@@ -238,7 +242,7 @@ class ScheduleCContainer extends Component {
       if (col === SCHEDULE_C.QUANTITY) {
         grid[row][col] = {
           ...grid[row][col],
-          value: getQuantity(value).toFixed(2)
+          value: (value === '') ? '' : getQuantity(value).toFixed(2)
         };
       }
 
@@ -323,6 +327,7 @@ class ScheduleCContainer extends Component {
 
     if (!selectedFuel) {
       row[SCHEDULE_C.FUEL_TYPE] = {
+        ...row[SCHEDULE_C.FUEL_TYPE],
         value: ''
       };
     }
@@ -331,12 +336,14 @@ class ScheduleCContainer extends Component {
     // otherwise, reset the fuel class
     row[SCHEDULE_C.FUEL_CLASS] = {
       ...row[SCHEDULE_C.FUEL_CLASS],
-      value: (selectedFuel.fuelClasses.length === 1) ? selectedFuel.fuelClasses[0].fuelClass : ''
+      value: (selectedFuel && selectedFuel.fuelClasses.length === 1)
+        ? selectedFuel.fuelClasses[0].fuelClass : ''
     };
 
     row[SCHEDULE_C.UNITS] = { // automatically load the unit of measure for this fuel type
       ...row[SCHEDULE_C.UNITS],
-      value: (selectedFuel && selectedFuel.unitOfMeasure) ? selectedFuel.unitOfMeasure.name : ''
+      value: (selectedFuel && selectedFuel && selectedFuel.unitOfMeasure)
+        ? selectedFuel.unitOfMeasure.name : ''
     };
 
     return row;
@@ -347,12 +354,10 @@ class ScheduleCContainer extends Component {
       <SchedulesPage
         addRow={this._addRow}
         data={this.state.grid}
-        edit={this.props.edit}
         handleCellsChanged={this._handleCellsChanged}
         key="schedules"
         scheduleType="schedule-c"
         title="Schedule C - Fuels used for other purposes"
-        saving={this.props.saving}
       >
         <p>
           Under section 6 (3) of the
@@ -393,14 +398,11 @@ ScheduleCContainer.propTypes = {
     approvedFuels: PropTypes.arrayOf(PropTypes.shape),
     isFetching: PropTypes.bool
   }).isRequired,
-  edit: PropTypes.bool.isRequired,
   create: PropTypes.bool.isRequired,
-  saving: PropTypes.bool.isRequired,
   complianceReport: PropTypes.shape({
     scheduleC: PropTypes.shape()
   }),
-  // eslint-disable-next-line react/forbid-prop-types
-  loadedState: PropTypes.any,
+  loadedState: PropTypes.shape(),
   period: PropTypes.string.isRequired,
   updateScheduleState: PropTypes.func.isRequired,
   updateAutosaveState: PropTypes.func.isRequired

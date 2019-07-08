@@ -106,13 +106,15 @@ class ScheduleDSheet extends Component {
 
     if (!selectedFuel) {
       row[SCHEDULE_D_INPUT.FUEL_TYPE] = {
+        ...row[SCHEDULE_D_INPUT.FUEL_TYPE],
         value: ''
       };
     }
 
     row[SCHEDULE_D_INPUT.FUEL_CLASS] = { // pre-select the fuel class, if possible
       ...row[SCHEDULE_D_INPUT.FUEL_CLASS],
-      value: (selectedFuel.fuelClasses.length === 1) ? selectedFuel.fuelClasses[0].fuelClass : ''
+      value: (selectedFuel && selectedFuel.fuelClasses.length === 1)
+        ? selectedFuel.fuelClasses[0].fuelClass : ''
     };
 
     return row;
@@ -122,7 +124,6 @@ class ScheduleDSheet extends Component {
     return (
       <ScheduleDPage
         addRow={this._addRow}
-        edit={this.props.edit}
         handleCellsChanged={this._handleCellsChanged}
         scheduleType="schedule-d"
         sheet={this.props.sheet}
@@ -132,11 +133,9 @@ class ScheduleDSheet extends Component {
 }
 
 ScheduleDSheet.defaultProps = {
-  edit: false
 };
 
 ScheduleDSheet.propTypes = {
-  edit: PropTypes.bool,
   handleSheetChanged: PropTypes.func.isRequired,
   id: PropTypes.number.isRequired,
   referenceData: PropTypes.shape({

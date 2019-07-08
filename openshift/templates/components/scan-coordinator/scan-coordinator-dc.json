@@ -15,7 +15,7 @@
         {
             "name": "SOURCE_IS_NAME",
             "displayName": "The source image stream name",
-            "description": "The image stream could trigger the deployment, valid values: notification-server-develop and notification-server",
+            "description": "The image stream could trigger the deployment, valid values: scan-coordinator-develop and scan-coordinator",
             "required": true
         }
     ],

@@ -1,0 +1,114 @@
+{
+    "kind": "Template",
+    "apiVersion": "template.openshift.io/v1",
+    "metadata": {
+        "name": "scan-coordinator",
+        "creationTimestamp": null
+    },
+    "objects": [
+        {
+            "kind": "ImageStream",
+            "apiVersion": "image.openshift.io/v1",
+            "metadata": {
+                "name": "scan-coordinator",
+                "generation": 28,
+                "creationTimestamp": null
+            },
+            "spec": {
+                "lookupPolicy": {
+                    "local": false
+                },
+                "tags": [
+                    {
+                        "name": "latest",
+                        "annotations": null,
+                        "from": {
+                            "kind": "DockerImage",
+                            "name": "docker-registry.default.svc:5000/mem-tfrs-tools/scan-coordinator:latest"
+                        },
+                        "generation": null,
+                        "importPolicy": {},
+                        "referencePolicy": {
+                            "type": ""
+                        }
+                    },
+                    {
+                        "name": "prod",
+                        "annotations": null,
+                        "from": {
+                            "kind": "DockerImage",
+                            "name": "docker-registry.default.svc:5000/mem-tfrs-tools/scan-coordinator:prod"
+                        },
+                        "generation": 28,
+                        "importPolicy": {},
+                        "referencePolicy": {
+                            "type": "Source"
+                        }
+                    },
+                    {
+                        "name": "test",
+                        "annotations": null,
+                        "from": {
+                            "kind": "DockerImage",
+                            "name": "docker-registry.default.svc:5000/mem-tfrs-tools/scan-coordinator:test"
+                        },
+                        "generation": 27,
+                        "importPolicy": {},
+                        "referencePolicy": {
+                            "type": "Source"
+                        }
+                    }
+                ]
+            },
+            "status": {
+                "dockerImageRepository": ""
+            }
+        },
+        {
+            "kind": "BuildConfig",
+            "apiVersion": "build.openshift.io/v1",
+            "metadata": {
+                "name": "scan-coordinator",
+                "creationTimestamp": null,
+                "annotations": {
+                    "kubectl.kubernetes.io/last-applied-configuration": "{\"apiVersion\":\"build.openshift.io/v1\",\"kind\":\"BuildConfig\",\"metadata\":{\"annotations\":{},\"creationTimestamp\":null,\"name\":\"scan-coordinator\",\"namespace\":\"mem-tfrs-tools\"},\"spec\":{\"failedBuildsHistoryLimit\":5,\"nodeSelector\":null,\"output\":{\"to\":{\"kind\":\"ImageStreamTag\",\"name\":\"scan-coordinator:latest\"}},\"postCommit\":{},\"resources\":{},\"runPolicy\":\"Serial\",\"source\":{\"dockerfile\":\"FROM golang:1.11\\nWORKDIR /go/src\\nRUN git clone https://github.com/bcgov/tfrs.git\\nWORKDIR /go/src/tfrs\\nRUN git checkout ${tfrs_release}\\nRUN cp -r /go/src/tfrs/security-scan/scan-coordinator /go/src\\nRUN rm -rf /go/src/tfrs\\nWORKDIR /go/src/scan-coordinator\\nADD https://github.com/vishnubob/wait-for-it/compare/master...HEAD /dev/null\\nRUN git clone https://github.com/vishnubob/wait-for-it.git /wfi\\nRUN go get -d -v ./...\\nRUN go install -v ./...\\nCMD [\\\"scan-coordinator\\\"]\",\"type\":\"Dockerfile\"},\"strategy\":{\"dockerStrategy\":{\"env\":[{\"name\":\"tfrs_release\",\"value\":\"v1.4.8-dc-pipeline-fix\"}],\"forcePull\":true,\"noCache\":true},\"type\":\"Docker\"},\"successfulBuildsHistoryLimit\":5,\"triggers\":[]},\"status\":{\"lastVersion\":0}}\n"
+                }
+            },
+            "spec": {
+                "triggers": [],
+                "runPolicy": "Serial",
+                "source": {
+                    "type": "Dockerfile",
+                    "dockerfile": "FROM golang:1.11\nWORKDIR /go/src\nRUN git clone https://github.com/bcgov/tfrs.git\nWORKDIR /go/src/tfrs\nRUN git checkout ${tfrs_release}\nRUN cp -r /go/src/tfrs/security-scan/scan-coordinator /go/src\nRUN rm -rf /go/src/tfrs\nWORKDIR /go/src/scan-coordinator\nADD https://github.com/vishnubob/wait-for-it/compare/master...HEAD /dev/null\nRUN git clone https://github.com/vishnubob/wait-for-it.git /wfi\nRUN go get -d -v ./...\nRUN go install -v ./...\nCMD [\"scan-coordinator\"]"
+                },
+                "strategy": {
+                    "type": "Docker",
+                    "dockerStrategy": {
+                        "noCache": true,
+                        "env": [
+                            {
+                                "name": "tfrs_release",
+                                "value": "v1.4.8-dc-pipeline-fix"
+                            }
+                        ],
+                        "forcePull": true
+                    }
+                },
+                "output": {
+                    "to": {
+                        "kind": "ImageStreamTag",
+                        "name": "scan-coordinator:latest"
+                    }
+                },
+                "resources": {},
+                "postCommit": {},
+                "nodeSelector": null,
+                "successfulBuildsHistoryLimit": 5,
+                "failedBuildsHistoryLimit": 5
+            },
+            "status": {
+                "lastVersion": 0
+            }
+        }
+    ]
+}

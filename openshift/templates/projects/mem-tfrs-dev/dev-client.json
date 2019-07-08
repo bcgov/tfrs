@@ -11,7 +11,7 @@
             "apiVersion": "apps.openshift.io/v1",
             "metadata": {
                 "name": "client",
-                "generation": 805,
+                "generation": 14,
                 "creationTimestamp": null,
                 "labels": {
                     "template": "tfrs-app-environment"
@@ -53,7 +53,7 @@
                                 "namespace": "mem-tfrs-tools",
                                 "name": "client-develop:dev"
                             },
-                            "lastTriggeredImage": "docker-registry.default.svc:5000/mem-tfrs-tools/client-develop@sha256:a90eb73d3a6120483d657e1c7adb0411ced37428ba2cba611ac611fa3a520b11"
+                            "lastTriggeredImage": "docker-registry.default.svc:5000/mem-tfrs-tools/client-develop@sha256:7fc5d53da1585d39c40ade0e44cace7c6b4d08621f842805ebb59a6d1d80b898"
                         }
                     },
                     {
@@ -61,6 +61,7 @@
                     }
                 ],
                 "replicas": 1,
+                "revisionHistoryLimit": 10,
                 "test": false,
                 "selector": {
                     "name": "client"
@@ -86,7 +87,7 @@
                         "containers": [
                             {
                                 "name": "client",
-                                "image": "docker-registry.default.svc:5000/mem-tfrs-tools/client-develop@sha256:a90eb73d3a6120483d657e1c7adb0411ced37428ba2cba611ac611fa3a520b11",
+                                "image": "docker-registry.default.svc:5000/mem-tfrs-tools/client-develop@sha256:7fc5d53da1585d39c40ade0e44cace7c6b4d08621f842805ebb59a6d1d80b898",
                                 "ports": [
                                     {
                                         "containerPort": 3000,
@@ -109,6 +110,10 @@
                                     {
                                         "name": "BUILD_NUMBER",
                                         "value": "pr-44"
+                                    },
+                                    {
+                                        "name": "API_URL",
+                                        "value": "http://backend.mem-tfrs-dev.svc.cluster.local:8080/api/"
                                     }
                                 ],
                                 "resources": {
@@ -177,13 +182,7 @@
             "apiVersion": "v1",
             "metadata": {
                 "name": "client",
-                "creationTimestamp": null,
-                "labels": {
-                    "template": "tfrs-app-environment"
-                },
-                "annotations": {
-                    "description": "Exposes and load balances the front end pods"
-                }
+                "creationTimestamp": null
             },
             "spec": {
                 "ports": [
@@ -211,7 +210,7 @@
                 "name": "dev-lowcarbonfuels-frontend",
                 "creationTimestamp": null,
                 "labels": {
-                    "template": "tfrs-app-environment"
+                    "frontend": "true"
                 }
             },
             "spec": {
@@ -225,7 +224,8 @@
                     "targetPort": "web"
                 },
                 "tls": {
-                    "termination": "edge"
+                    "termination": "edge",
+                    "insecureEdgeTerminationPolicy": "Redirect"
                 },
                 "wildcardPolicy": "None"
             },
@@ -238,7 +238,7 @@
                             {
                                 "type": "Admitted",
                                 "status": "True",
-                                "lastTransitionTime": "2018-09-28T21:03:50Z"
+                                "lastTransitionTime": "2019-06-10T03:05:44Z"
                             }
                         ],
                         "wildcardPolicy": "None"

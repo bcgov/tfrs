@@ -9,10 +9,6 @@
         {
             "name": "ENV_NAME",
             "required": true
-        },
-        {
-            "name": "IS_NAME",
-            "required": true
         }
     ],
     "objects": [
@@ -59,7 +55,7 @@
                             "from": {
                                 "kind": "ImageStreamTag",
                                 "namespace": "mem-tfrs-tools",
-                                "name": "${IS_NAME}:${ENV_NAME}"
+                                "name": "nagios:${ENV_NAME}"
                             }
                         }
                     },
